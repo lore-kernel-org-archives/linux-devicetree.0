@@ -1,188 +1,248 @@
 From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 08/16] iio: adc: sun4i-gpadc-iio: rework: add
- interrupt support
-Date: Wed, 31 Jan 2018 20:07:18 +0100
-Message-ID: <20180131190718.ustqzwdxzw7mqe52@qschulz>
+Subject: Re: [PATCH v2 09/16] iio: adc: sun4i-gpadc-iio: add
+ support for H3 thermal sensor
+Date: Wed, 31 Jan 2018 20:23:54 +0100
+Message-ID: <20180131192354.sb7zmcwc6c3eisqj@qschulz>
 References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-9-embed3d@gmail.com>
+ <20180128232919.12639-10-embed3d@gmail.com>
+Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ael4ufwqprwhbxoy"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="wbbx6ysk7ybivvth"
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBV5PZDJQKGQEYFLPUXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180128232919.12639-9-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20180128232919.12639-10-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ael4ufwqprwhbxoy
-Content-Type: text/plain; charset=us-ascii
+--wbbx6ysk7ybivvth
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 Hi Philipp,
 
-On Mon, Jan 29, 2018 at 12:29:11AM +0100, Philipp Rossak wrote:
-> This patch rewors the driver to support interrupts for the thermal part
-> of the sensor.
->=20
-> This is only available for the newer sensor (currently H3 and A83T).
-> The interrupt will be trigerd on data available and triggers the update
-> for the thermal sensors. All newer sensors have different amount of
-> sensors and different interrupts for each device the reset of the
-> interrupts need to be done different
->=20
-> For the newer sensors is the autosuspend disabled.
->=20
+On Mon, Jan 29, 2018 at 12:29:12AM +0100, Philipp Rossak wrote:
+> This patch adds support for the H3 ths sensor.
+> 
+> The H3 supports interrupts. The interrupt is configured to update the
+> the sensor values every second. The calibration data is writen at the
+> begin of the init process.
+> 
 > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Jonathan  Cameron <jonathan.cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 60 +++++++++++++++++++++++++++++++++=
-++----
->  include/linux/mfd/sun4i-gpadc.h   |  2 ++
->  2 files changed, 56 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gp=
-adc-iio.c
-> index 74eeb5cd5218..b7b5451226b0 100644
+>  drivers/iio/adc/sun4i-gpadc-iio.c | 86 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/sun4i-gpadc.h   | 22 ++++++++++
+>  2 files changed, 108 insertions(+)
+> 
+> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+> index b7b5451226b0..8196203d65fe 100644
 > --- a/drivers/iio/adc/sun4i-gpadc-iio.c
 > +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -71,11 +71,14 @@ struct gpadc_data {
+> @@ -61,6 +61,9 @@ struct sun4i_gpadc_iio;
+>  static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info);
+>  static int sun4i_gpadc_sample_end(struct sun4i_gpadc_iio *info);
+>  
+> +static int sunxi_ths_sample_start(struct sun4i_gpadc_iio *info);
+> +static int sunxi_ths_sample_end(struct sun4i_gpadc_iio *info);
+> +
+
+We try to avoid using the generic sunxi prefix.
+
+>  struct gpadc_data {
+>  	int		temp_offset;
+>  	int		temp_scale;
+> @@ -71,6 +74,10 @@ struct gpadc_data {
 >  	unsigned int	temp_data[MAX_SENSOR_COUNT];
 >  	int		(*sample_start)(struct sun4i_gpadc_iio *info);
 >  	int		(*sample_end)(struct sun4i_gpadc_iio *info);
-> +	u32		irq_clear_map;
-> +	u32		irq_control_map;
-
-I would say to use a regmap_irq_chip for controlling IRQs.
-
+> +	u32		ctrl0_map;
+> +	u32		ctrl2_map;
+> +	u32		sensor_en_map;
+> +	u32		filter_map;
+>  	u32		irq_clear_map;
+>  	u32		irq_control_map;
 >  	bool		has_bus_clk;
->  	bool		has_bus_rst;
->  	bool		has_mod_clk;
->  	int		sensor_count;
->  	bool		supports_nvmem;
-> +	bool		support_irq;
+> @@ -138,6 +145,31 @@ static const struct gpadc_data sun8i_a33_gpadc_data = {
+>  	.support_irq = false,
 >  };
-> =20
->  static const struct gpadc_data sun4i_gpadc_data =3D {
-> @@ -90,6 +93,7 @@ static const struct gpadc_data sun4i_gpadc_data =3D {
->  	.sample_end =3D sun4i_gpadc_sample_end,
->  	.sensor_count =3D 1,
->  	.supports_nvmem =3D false,
-> +	.support_irq =3D false,
+>  
+> +static const struct gpadc_data sun8i_h3_ths_data = {
+> +	.temp_offset = -1791,
+> +	.temp_scale = -121,
+> +	.temp_data = {SUN8I_H3_THS_TDATA0, 0, 0, 0},
+> +	.sample_start = sunxi_ths_sample_start,
+> +	.sample_end = sunxi_ths_sample_end,
+> +	.has_bus_clk = true,
+> +	.has_bus_rst = true,
+> +	.has_mod_clk = true,
+> +	.sensor_count = 1,
+> +	.supports_nvmem = true,
+> +	.support_irq = true,
+> +	.ctrl0_map = SUN4I_GPADC_CTRL0_T_ACQ(0xff),
+> +	.ctrl2_map = SUN8I_H3_THS_ACQ1(0x3f),
+> +	.sensor_en_map = SUN8I_H3_THS_TEMP_SENSE_EN0,
+> +	.filter_map = SUN4I_GPADC_CTRL3_FILTER_EN |
+> +		SUN4I_GPADC_CTRL3_FILTER_TYPE(0x2),
+> +	.irq_clear_map = SUN8I_H3_THS_INTS_ALARM_INT_0 |
+> +			SUN8I_H3_THS_INTS_SHUT_INT_0   |
+> +			SUN8I_H3_THS_INTS_TDATA_IRQ_0  |
+> +			SUN8I_H3_THS_INTS_ALARM_OFF_0,
+> +	.irq_control_map = SUN8I_H3_THS_INTC_TDATA_IRQ_EN0 |
+> +		SUN8I_H3_THS_TEMP_PERIOD(0x7),
 
-False is the default, no need to set support_irq.
+>From what I've understood, ACQ regs are basically clock dividers. We
+should make a better job at explaining it :)
 
-[...]
-
+> +};
+> +
 >  struct sun4i_gpadc_iio {
-> @@ -332,6 +339,11 @@ static int sun4i_gpadc_temp_read(struct iio_dev *ind=
-io_dev, int *val,
->  		return 0;
->  	}
-> =20
-> +	if (info->data->support_irq) {
-> +		regmap_read(info->regmap, info->data->temp_data[sensor], val);
-> +		return 0;
-> +	}
-> +
-
-Maybe you could define a new thermal_zone_of_device_ops for these new
-thermal sensors? That way, you don't even need the boolean support_irq.
-
->  	return sun4i_gpadc_read(indio_dev, 0, val, info->temp_data_irq);
+>  	struct iio_dev			*indio_dev;
+>  	struct completion		completion;
+> @@ -462,6 +494,16 @@ static int sun4i_gpadc_sample_end(struct sun4i_gpadc_iio *info)
+>  	return 0;
 >  }
-> =20
-> @@ -429,6 +441,17 @@ static irqreturn_t sun4i_gpadc_fifo_data_irq_handler=
-(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
-> =20
-> +static irqreturn_t sunxi_irq_thread(int irq, void *data)
-
-I think we're trying to avoid sunxi mentions but rather using the name
-of the first IP (in term of product release, not support) using this
-function.
-
+>  
+> +static int sunxi_ths_sample_end(struct sun4i_gpadc_iio *info)
 > +{
-> +	struct sun4i_gpadc_iio *info =3D data;
+> +	/* Disable ths interrupt */
+> +	regmap_write(info->regmap, SUN8I_H3_THS_INTC, 0x0);
+> +	/* Disable temperature sensor */
+> +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL2, 0x0);
 > +
-> +	regmap_write(info->regmap, SUN8I_H3_THS_STAT, info->data->irq_clear_map=
-);
+> +	return 0;
+> +}
+> +
+>  static int sun4i_gpadc_runtime_suspend(struct device *dev)
+>  {
+>  	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
+> @@ -473,6 +515,17 @@ static int sun4i_gpadc_runtime_suspend(struct device *dev)
+>  	return info->data->sample_end(info);
+>  }
+>  
+> +static void sunxi_calibrate(struct sun4i_gpadc_iio *info)
+> +{
+> +	if (info->has_calibration_data[0])
+> +		regmap_write(info->regmap, SUNXI_THS_CDATA_0_1,
+> +			info->calibration_data[0]);
+> +
+> +	if (info->has_calibration_data[1])
+> +		regmap_write(info->regmap, SUNXI_THS_CDATA_2_3,
+> +			info->calibration_data[1]);
+> +}
+> +
+>  static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info)
+>  {
+>  	/* clkin = 6MHz */
+> @@ -492,6 +545,35 @@ static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info)
+>  	return 0;
+>  }
+>  
+> +static int sunxi_ths_sample_start(struct sun4i_gpadc_iio *info)
+> +{
+> +	u32 value;
+> +	sunxi_calibrate(info);
+> +
+> +	if (info->data->ctrl0_map)
+> +		regmap_write(info->regmap, SUN8I_H3_THS_CTRL0,
+> +			info->data->ctrl0_map);
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL2,
+> +		info->data->ctrl2_map);
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_STAT,
+> +			info->data->irq_clear_map);
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_FILTER,
+> +		info->data->filter_map);
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_INTC,
+> +		info->data->irq_control_map);
+> +
+> +	regmap_read(info->regmap, SUN8I_H3_THS_CTRL2, &value);
+> +
+> +	regmap_write(info->regmap, SUN8I_H3_THS_CTRL2,
+> +		info->data->sensor_en_map | value);
+> +
+> +	return 0;
+> +}
 > +
 
-Will be handled by regmap_irq_chip.
-[...]
-> -	info->no_irq =3D true;
-> +	if (info->data->support_irq) {
-> +		/* only the new versions of ths support right now irqs */
-> +		irq =3D platform_get_irq(pdev, 0);
-> +		if (irq < 0) {
-> +			dev_err(&pdev->dev, "failed to get IRQ: %d\n", irq);
-> +			return irq;
-> +		}
-> +
-> +		ret =3D devm_request_threaded_irq(&pdev->dev, irq, NULL,
-> +				sunxi_irq_thread, IRQF_ONESHOT,
-> +				dev_name(&pdev->dev), info);
-> +		if (ret)
-> +			return ret;
-> +
-> +	} else
-> +		info->no_irq =3D true;
-> +
+I'm a bit worried. Will all the sensors have the same sample start? Or
+will we need at some point also entries in info->data for register
+addresses, if they have ctrl2 or filter, etc...
 
-That's a bit funny to have two booleans named no_irq and support_irq :)
+Maybe we could define a sample_start for the h3 only and reuse-it if
+possible and if not declare another sample start? All depends if the
+sample start is most likely to change in the near future or not. If it
+is, then we should avoid adding a lot of variables in info->data and
+just go for a single sample_start per SoC.
 
->  	indio_dev->num_channels =3D ARRAY_SIZE(sun8i_a33_gpadc_channels);
->  	indio_dev->channels =3D sun8i_a33_gpadc_channels;
-> =20
-> @@ -789,11 +829,13 @@ static int sun4i_gpadc_probe(struct platform_device=
- *pdev)
->  	if (ret)
->  		return ret;
-> =20
-> -	pm_runtime_set_autosuspend_delay(&pdev->dev,
-> -					 SUN4I_GPADC_AUTOSUSPEND_DELAY);
-> -	pm_runtime_use_autosuspend(&pdev->dev);
-> -	pm_runtime_set_suspended(&pdev->dev);
-> -	pm_runtime_enable(&pdev->dev);
-> +	if (!info->data->support_irq) {
-> +		pm_runtime_set_autosuspend_delay(&pdev->dev,
-> +						 SUN4I_GPADC_AUTOSUSPEND_DELAY);
-> +		pm_runtime_use_autosuspend(&pdev->dev);
-> +		pm_runtime_set_suspended(&pdev->dev);
-> +		pm_runtime_enable(&pdev->dev);
-> +	}
+>  static int sun4i_gpadc_runtime_resume(struct device *dev)
+>  {
+>  	struct sun4i_gpadc_iio *info = iio_priv(dev_get_drvdata(dev));
+> @@ -582,6 +664,10 @@ static const struct of_device_id sun4i_gpadc_of_id[] = {
+>  		.compatible = "allwinner,sun8i-a33-ths",
+>  		.data = &sun8i_a33_gpadc_data,
+>  	},
+> +	{
+> +		.compatible = "allwinner,sun8i-h3-ths",
+> +		.data = &sun8i_h3_ths_data,
+> +	},
+>  	{ /* sentinel */ }
+>  };
+>  
+> diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
+> index 458f2159a95a..80b79c31cea3 100644
+> --- a/include/linux/mfd/sun4i-gpadc.h
+> +++ b/include/linux/mfd/sun4i-gpadc.h
+> @@ -91,7 +91,29 @@
+>  #define SUN4I_GPADC_AUTOSUSPEND_DELAY			10000
+>  
+>  /* SUNXI_THS COMMON REGISTERS + DEFINES */
+> +#define SUN8I_H3_THS_CTRL0				0x00
+> +#define SUN8I_H3_THS_CTRL2				0x40
+>  #define SUN8I_H3_THS_INTC				0x44
+> +#define SUN8I_H3_THS_STAT				0x48
+> +#define SUN8I_H3_THS_FILTER				0x70
+> +#define SUNXI_THS_CDATA_0_1				0x74
+> +#define SUNXI_THS_CDATA_2_3				0x78
+> +#define SUN8I_H3_THS_TDATA0				0x80
+> +
+> +#define SUN8I_H3_THS_ACQ1(x)				(GENMASK(31, 16) & ((x) << 16))
+> +
+> +#define SUN8I_H3_THS_TEMP_SENSE_EN0			BIT(0)
+> +
+> +#define SUN8I_H3_THS_TEMP_PERIOD(x)			(GENMASK(31, 12) & ((x) << 12))
+> +
+> +#define SUN8I_H3_THS_INTS_ALARM_INT_0			BIT(0)
+> +#define SUN8I_H3_THS_INTS_SHUT_INT_0			BIT(4)
+> +#define SUN8I_H3_THS_INTS_TDATA_IRQ_0			BIT(8)
+> +#define SUN8I_H3_THS_INTS_ALARM_OFF_0			BIT(12)
+> +
+> +#define SUN8I_H3_THS_INTC_ALARM_INT_EN0			BIT(0)
+> +#define SUN8I_H3_THS_INTC_SHUT_INT_EN0			BIT(4)
+> +#define SUN8I_H3_THS_INTC_TDATA_IRQ_EN0			BIT(8)
+>  
 
-Why would you not want your IP to do runtime PM?
+Personal taste here but I prefer the register bits to be defined just
+below the register address define.
+
+i.e.:
+
+#define SUN8I_H3_THS_CTRL2                           0x40
+#define SUN8I_H3_THS_ACQ1(x)                         (GENMASK(31, 16) & ((x) << 16))
+#define SUN8I_H3_THS_TEMP_SENSE_EN0                  BIT(0)
+
+that way we know for which register we should use which constants.
 
 Quentin
-
---ael4ufwqprwhbxoy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJachPjAAoJEIS4mnU+4PGjqA4P/ivU9fvKgSV51MN3iFIzFJIw
-d4lR+Yc5edBejRFtCdkV8Jmmth3F9PmxTEQaEGQcFPrbFQhS6SIziqiMI9XvCDHt
-D61htCtWBJRmkpIuo+QbvkWvX/Hj7gBPPmkD4onmgvwH0bE3Nj3oYjT7J/7JtATq
-A2mkC9CtkJFMvs7eucgnUcnELumHp/YlwGnwFgrJM3AabI1db2hCZWb8KKgopUW7
-E7IJ3SD1zok8DZx5BDldIgQh0U22prsGZwEjwj45wzF20p6I2wzTNNYrh6oSPQgp
-oACU9c2s//zUf4Dgt0fT1lcOd8Rj3Bf+2QHySubwLm1KqeKnvGAbStzjzmHjx2Xm
-LsMLVENr32XIhoIwFtJyLE2xsYqQtMkM3yeqECcH85lh1TZHhnBv2EE8185b1pXX
-wNE42P1eki/7EKjrcdKwsgo+14LcbsG//VlikBHl/7baRSKFZwZdpwrarrLUtpxK
-iY+i85EMI0aOxJEpJUg+H0jDOGzHw4LpP9nB6wClKEfrJniVJNa/sZHP6IPpY6RZ
-CdDpMlSSXCVnBSiYiPoY/NIr/vyfJjMHqUDSHQKv9mxSsQW++XJYQgyQvdlOQ9AZ
-akAxYlnOeUWX4VUvL9bs+LT8raV6kxsseRPWX6M/LyHsZ6uyeqen11RttiJTUqFm
-ajzPjaOBhc6jJN64riEP
-=fIxw
------END PGP SIGNATURE-----
-
---ael4ufwqprwhbxoy--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--wbbx6ysk7ybivvth--
