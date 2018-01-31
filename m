@@ -1,55 +1,51 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 0/5] add MFD support for MediaTek audio subsystem
-Date: Wed, 31 Jan 2018 15:42:40 +0800
-Message-ID: <cover.1515639336.git.ryder.lee@mediatek.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v2 1/5] clk: mediatek: update missing clock data for MT7622 audsys
+Date: Wed, 31 Jan 2018 15:42:41 +0800
+Message-ID: <ec2dfe750291a996c54cc8aaeafafa333b992c4f.1515639336.git.ryder.lee@mediatek.com>
+References: <cover.1515639336.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <cover.1515639336.git.ryder.lee@mediatek.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add missing clock data 'CLK_AUDIO_AFE_CONN' for MT7622 audsys.
 
-This is the 2nd version of the patch sets which modify clock driver to adapt
-audio subsystem.  I still keeping 'simple-mfd' in the binding for discussion.
-Rob, let me know if there is any problem with this.
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ drivers/clk/mediatek/clk-mt7622-aud.c  | 1 +
+ include/dt-bindings/clock/mt7622-clk.h | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-changes since v2:
- - Drop useless changes in clk-mt7622-aud.c.
- - Revise binding text: 
-	- Add more information about audio subsystem.
-	- Separate clock node and AFE node.
- - Update license header.
-changes since v1:
- - To avoid writing an MFD driver, we add "simple-mfd" in the audsys binding.
- - Move three top clocks to audio driver [1] as we remove mfd/mtk-audsys.c in v1.
-
-Ryder Lee (5):
-  clk: mediatek: update missing clock data for MT7622 audsys
-  clk: mediatek: modify MT7622 audsys to adapt MFD device
-  clk: mediatek: add audsys support for MT2701
-  dt-bindings: clock: mediatek: update audsys documentation to adapt MFD
-    device
-  arm: dts: mediatek: add audio-subsystem node for both MT2701 and
-    MT7623
-
- .../bindings/arm/mediatek/mediatek,audsys.txt      |  37 +++-
- arch/arm/boot/dts/mt2701.dtsi                      | 192 ++++++++++----------
- arch/arm/boot/dts/mt7623.dtsi                      | 193 ++++++++++-----------
- drivers/clk/mediatek/Kconfig                       |   6 +
- drivers/clk/mediatek/Makefile                      |   1 +
- drivers/clk/mediatek/clk-mt2701-aud.c              | 175 +++++++++++++++++++
- drivers/clk/mediatek/clk-mt7622-aud.c              |   4 +-
- include/dt-bindings/clock/mt7622-clk.h             |   3 +-
- 8 files changed, 406 insertions(+), 205 deletions(-)
- create mode 100644 drivers/clk/mediatek/clk-mt2701-aud.c
-
+diff --git a/drivers/clk/mediatek/clk-mt7622-aud.c b/drivers/clk/mediatek/clk-mt7622-aud.c
+index fad7d9f..13f752d 100644
+--- a/drivers/clk/mediatek/clk-mt7622-aud.c
++++ b/drivers/clk/mediatek/clk-mt7622-aud.c
+@@ -106,6 +106,7 @@
+ 	GATE_AUDIO1(CLK_AUDIO_INTDIR, "audio_intdir", "intdir_sel", 20),
+ 	GATE_AUDIO1(CLK_AUDIO_A1SYS, "audio_a1sys", "a1sys_hp_sel", 21),
+ 	GATE_AUDIO1(CLK_AUDIO_A2SYS, "audio_a2sys", "a2sys_hp_sel", 22),
++	GATE_AUDIO1(CLK_AUDIO_AFE_CONN, "audio_afe_conn", "a1sys_hp_sel", 23),
+ 	/* AUDIO2 */
+ 	GATE_AUDIO2(CLK_AUDIO_UL1, "audio_ul1", "a1sys_hp_sel", 0),
+ 	GATE_AUDIO2(CLK_AUDIO_UL2, "audio_ul2", "a1sys_hp_sel", 1),
+diff --git a/include/dt-bindings/clock/mt7622-clk.h b/include/dt-bindings/clock/mt7622-clk.h
+index 3e514ed..e9d77f0 100644
+--- a/include/dt-bindings/clock/mt7622-clk.h
++++ b/include/dt-bindings/clock/mt7622-clk.h
+@@ -235,7 +235,8 @@
+ #define CLK_AUDIO_MEM_ASRC3		43
+ #define CLK_AUDIO_MEM_ASRC4		44
+ #define CLK_AUDIO_MEM_ASRC5		45
+-#define CLK_AUDIO_NR_CLK		46
++#define CLK_AUDIO_AFE_CONN		46
++#define CLK_AUDIO_NR_CLK		47
+ 
+ /* SSUSBSYS */
+ 
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
