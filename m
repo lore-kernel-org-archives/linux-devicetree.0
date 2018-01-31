@@ -1,81 +1,168 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [RFC v3 11/25] watchdog: renesas_wdt: Add R-Car Gen2 support
-Date: Wed, 31 Jan 2018 13:13:13 +0100
-Message-ID: <CAMuHMdViQgCjVFbs0kkBObAAoFTzvz8yPFUHPWHrtYzkbnYm_g@mail.gmail.com>
-References: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1517343778-27902-12-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180130220504.GA16709@roeck-us.net> <TY1PR06MB0895ECB2936323F9D281C1EFC0FB0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 2/6] iommu/arm-smmu: Add pm_runtime/sleep ops
+Date: Wed, 31 Jan 2018 12:23:43 +0000
+Message-ID: <9942b74d-7437-21cc-cbd7-38f2844c5d1d@arm.com>
+References: <1516362223-22946-1-git-send-email-vivek.gautam@codeaurora.org>
+	<1516362223-22946-3-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <TY1PR06MB0895ECB2936323F9D281C1EFC0FB0-/PRLmSCtZ16EeHdvShrxA20DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>linux
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1516362223-22946-3-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+On 19/01/18 11:43, Vivek Gautam wrote:
+> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> The smmu needs to be functional only when the respective
+> master's using it are active. The device_link feature
+> helps to track such functional dependencies, so that the
+> iommu gets powered when the master device enables itself
+> using pm_runtime. So by adapting the smmu driver for
+> runtime pm, above said dependency can be addressed.
+> 
+> This patch adds the pm runtime/sleep callbacks to the
+> driver and also the functions to parse the smmu clocks
+> from DT and enable them in resume/suspend.
+> 
+> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> [vivek: Clock rework to request bulk of clocks]
+> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>   drivers/iommu/arm-smmu.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++--
+>   1 file changed, 53 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 78d4c6b8f1ba..21acffe91a1c 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -48,6 +48,7 @@
+>   #include <linux/of_iommu.h>
+>   #include <linux/pci.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+>   #include <linux/slab.h>
+>   #include <linux/spinlock.h>
+>   
+> @@ -205,6 +206,9 @@ struct arm_smmu_device {
+>   	u32				num_global_irqs;
+>   	u32				num_context_irqs;
+>   	unsigned int			*irqs;
+> +	struct clk_bulk_data		*clocks;
+> +	int				num_clks;
+> +	const char * const		*clk_names;
 
-On Wed, Jan 31, 2018 at 11:47 AM, Fabrizio Castro
-<fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
->> Subject: Re: [RFC v3 11/25] watchdog: renesas_wdt: Add R-Car Gen2 support
->> On Tue, Jan 30, 2018 at 08:22:44PM +0000, Fabrizio Castro wrote:
->> > On R-Car Gen2 and RZ/G1 the rwdt clock needs to be always ON, therefore
->> > when suspending to RAM we need to explicitly disable the counting by
->> > clearing TME from RWTCSRA.
->> > Also, on some systems RWDT is the only piece of HW that allows the SoC
->> > to be restarted, therefore this patch implements the restart callback.
->> >
->> > Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->> > Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
->> > ---
->> > Wolfram, was the restart callback implementation missing for a reason?
->> > Is its implementation going to break any Gen3 platform?
->>
->> The changes clearly are way more than claimed in the subject. Adding
->> restart handler and PM support may be prerequisites for Gen2, but the
->> changes apply to Gen3 as well. What happened to "one patch per logical
->> change" ?
->
-> The PM implementation should be ok for Gen3 too, without this patch series the kernel
-> would disable the rwdt clock when suspending to RAM, this would "pause" the counting.
-> This patch series declares the rwdt clock as critical for Gen2 and RZ/G1, which means we
-> need to explicitly disable the counting to keep the same behaviour in place.
+This seems unnecessary, as we use it a grand total of of once, during 
+initialisation when we have the source data directly to hand. Just pass 
+data->clks into arm_smmu_init_clks() as an additional argument.
 
-Note that if the kernel crashes after rwdt_suspend(), the watchdog won't
-restart the system. But that's an issue common to many watchdog driver, right?
+Otherwise, I think this looks reasonable; it's about as unobtrusive as 
+it's going to get.
 
-> With respect to the restart callback implementation, that may well have consequences on
-> Gen3, hopefully Wolfram will give us a feedback on this.
-> In particular I would like to know if we should be installing the restart callback only when
-> we use "renesas,rcar-gen2-wdt" as compatible string, or it's ok to make it available for
-> Gen3 as well.
+Robin.
 
-IIRC, the reason we don't have the restart callback on R-Car Gen3 is the
-arm64 maintainers insisting on using PSCI, and vetoing other means,
-to restart the system.
-
-Which leaves us with a few boards where we have to use the watchdog, and
-wait until the timeout triggers...
-
-> The only way to reboot iWave's boards iwg20d and iwg22d is to use the internal watchdog,
-> that's why the restart implementation was merged into this patch.
-> I can split this patch in two, one for PM support and one for restart support for the next
-> version, what do you think about this?
-
-Splitting in individual logical changes sounds like a good idea to me.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   	u32				cavium_id_base; /* Specific to Cavium */
+>   
+> @@ -1685,6 +1689,25 @@ static int arm_smmu_id_size_to_bits(int size)
+>   	}
+>   }
+>   
+> +static int arm_smmu_init_clocks(struct arm_smmu_device *smmu)
+> +{
+> +	int i;
+> +	int num = smmu->num_clks;
+> +
+> +	if (num < 1)
+> +		return 0;
+> +
+> +	smmu->clocks = devm_kcalloc(smmu->dev, num,
+> +				    sizeof(*smmu->clocks), GFP_KERNEL);
+> +	if (!smmu->clocks)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num; i++)
+> +		smmu->clocks[i].id = smmu->clk_names[i];
+> +
+> +	return devm_clk_bulk_get(smmu->dev, num, smmu->clocks);
+> +}
+> +
+>   static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+>   {
+>   	unsigned long size;
+> @@ -1897,10 +1920,12 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+>   struct arm_smmu_match_data {
+>   	enum arm_smmu_arch_version version;
+>   	enum arm_smmu_implementation model;
+> +	const char * const *clks;
+> +	int num_clks;
+>   };
+>   
+>   #define ARM_SMMU_MATCH_DATA(name, ver, imp)	\
+> -static struct arm_smmu_match_data name = { .version = ver, .model = imp }
+> +static const struct arm_smmu_match_data name = { .version = ver, .model = imp }
+>   
+>   ARM_SMMU_MATCH_DATA(smmu_generic_v1, ARM_SMMU_V1, GENERIC_SMMU);
+>   ARM_SMMU_MATCH_DATA(smmu_generic_v2, ARM_SMMU_V2, GENERIC_SMMU);
+> @@ -2001,6 +2026,8 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
+>   	data = of_device_get_match_data(dev);
+>   	smmu->version = data->version;
+>   	smmu->model = data->model;
+> +	smmu->clk_names = data->clks;
+> +	smmu->num_clks = data->num_clks;
+>   
+>   	parse_driver_options(smmu);
+>   
+> @@ -2099,6 +2126,10 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>   		smmu->irqs[i] = irq;
+>   	}
+>   
+> +	err = arm_smmu_init_clocks(smmu);
+> +	if (err)
+> +		return err;
+> +
+>   	err = arm_smmu_device_cfg_probe(smmu);
+>   	if (err)
+>   		return err;
+> @@ -2197,7 +2228,27 @@ static int __maybe_unused arm_smmu_pm_resume(struct device *dev)
+>   	return 0;
+>   }
+>   
+> -static SIMPLE_DEV_PM_OPS(arm_smmu_pm_ops, NULL, arm_smmu_pm_resume);
+> +static int __maybe_unused arm_smmu_runtime_resume(struct device *dev)
+> +{
+> +	struct arm_smmu_device *smmu = dev_get_drvdata(dev);
+> +
+> +	return clk_bulk_prepare_enable(smmu->num_clks, smmu->clocks);
+> +}
+> +
+> +static int __maybe_unused arm_smmu_runtime_suspend(struct device *dev)
+> +{
+> +	struct arm_smmu_device *smmu = dev_get_drvdata(dev);
+> +
+> +	clk_bulk_disable_unprepare(smmu->num_clks, smmu->clocks);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct dev_pm_ops arm_smmu_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, arm_smmu_pm_resume)
+> +	SET_RUNTIME_PM_OPS(arm_smmu_runtime_suspend,
+> +			   arm_smmu_runtime_resume, NULL)
+> +};
+>   
+>   static struct platform_driver arm_smmu_driver = {
+>   	.driver	= {
+> 
