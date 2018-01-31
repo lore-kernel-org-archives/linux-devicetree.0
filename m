@@ -1,217 +1,251 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: [PATCH v5 3/4] of: unittest: Add phandle remapping test
-Date: Tue, 30 Jan 2018 18:36:17 -0800
-Message-ID: <20180131023618.14292-4-stephen.boyd@linaro.org>
+From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 1/4] Document nexus nodes/specifier remapping
+Date: Tue, 30 Jan 2018 18:36:15 -0800
+Message-ID: <20180131023618.14292-2-stephen.boyd@linaro.org>
 References: <20180131023618.14292-1-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180131023618.14292-1-stephen.boyd@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, devicetree-spec@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180131023618.14292-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Test the functionality of of_parse_phandle_with_args_map().
+Document the generic nexus node properties. This can be used by
+any specifier that conforms to #<specifier>-cells where they
+want to support remapping phandle lists through nexus nodes. This
+is similar to interrupt remapping, but slightly different because
+we don't consider unit addresses when doing mappings. This is
+mostly a copy/paste of the interrupt specification, with the unit
+address parts removed and generalized to any specifier. There's
+also the addition of a pass through mechanism to make things more
+compact if desired in the mapping table.
 
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>
-Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/of/unittest-data/tests-phandle.dtsi |  25 ++++++
- drivers/of/unittest.c                       | 120 ++++++++++++++++++++++++++++
- 2 files changed, 145 insertions(+)
+ source/devicetree-basics.rst | 206 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 206 insertions(+)
 
-diff --git a/drivers/of/unittest-data/tests-phandle.dtsi b/drivers/of/unittest-data/tests-phandle.dtsi
-index 3c2f09e56b61..6b33be4c4416 100644
---- a/drivers/of/unittest-data/tests-phandle.dtsi
-+++ b/drivers/of/unittest-data/tests-phandle.dtsi
-@@ -26,6 +26,18 @@
- 				#phandle-cells = <3>;
- 			};
+diff --git a/source/devicetree-basics.rst b/source/devicetree-basics.rst
+index 1900cc881818..3aecd9ea22bc 100644
+--- a/source/devicetree-basics.rst
++++ b/source/devicetree-basics.rst
+@@ -1283,3 +1283,209 @@ performed:
+ *  That result is looked up in the *interrupt-map* table, which maps to
+    the parent interrupt specifier ``<4 1>``.
  
-+			provider4: provider4 {
-+				#phandle-cells = <2>;
-+				phandle-map = <0 1 &provider1 3>,
-+					      <4 0 &provider0>,
-+					      <16 5 &provider3 3 5 0>,
-+					      <200 8 &provider2 23 6>,
-+					      <19 0 &provider2 15 0>,
-+					      <2 3 &provider3 2 5 3>;
-+				phandle-map-mask = <0xff 0xf>;
-+				phandle-map-pass-thru = <0x0 0xf0>;
-+			};
++.. _sect-nexus:
 +
- 			consumer-a {
- 				phandle-list =	<&provider1 1>,
- 						<&provider2 2 0>,
-@@ -44,6 +56,19 @@
- 				unterminated-string = [40 41 42 43];
- 				unterminated-string-list = "first", "second", [40 41 42 43];
- 			};
++Nexus Nodes and Specifier Mapping
++---------------------------------
 +
-+			consumer-b {
-+				phandle-list =	<&provider1 1>,
-+						<&provider4 2 3>,
-+						<0>,
-+						<&provider4 4 0x100>,
-+						<&provider4 0 0x61>,
-+						<&provider0>,
-+						<&provider4 19 0x20>;
-+				phandle-list-bad-phandle = <12345678 0 0>;
-+				phandle-list-bad-args = <&provider2 1 0>,
-+							<&provider4 0>;
-+			};
- 		};
- 	};
- };
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 0f8052f1355c..de27f62a8e8d 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -452,6 +452,125 @@ static void __init of_unittest_parse_phandle_with_args(void)
- 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
- }
- 
-+static void __init of_unittest_parse_phandle_with_args_map(void)
-+{
-+	struct device_node *np, *p0, *p1, *p2, *p3;
-+	struct of_phandle_args args;
-+	int i, rc;
++Nexus Node Properties
++~~~~~~~~~~~~~~~~~~~~~
 +
-+	np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-b");
-+	if (!np) {
-+		pr_err("missing testcase data\n");
-+		return;
-+	}
++A nexus node shall have a *#<specifier>-cells* property, where <specifier> is
++some specifier space such as 'gpio', 'clock', 'reset', etc.
 +
-+	p0 = of_find_node_by_path("/testcase-data/phandle-tests/provider0");
-+	if (!p0) {
-+		pr_err("missing testcase data\n");
-+		return;
-+	}
++<specifier>-map
++^^^^^^^^^^^^^^^
 +
-+	p1 = of_find_node_by_path("/testcase-data/phandle-tests/provider1");
-+	if (!p1) {
-+		pr_err("missing testcase data\n");
-+		return;
-+	}
++Property: ``<specifier>-map``
 +
-+	p2 = of_find_node_by_path("/testcase-data/phandle-tests/provider2");
-+	if (!p2) {
-+		pr_err("missing testcase data\n");
-+		return;
-+	}
++Value type: ``<prop-encoded-array>`` encoded as an arbitrary number of
++specifier mapping entries.
 +
-+	p3 = of_find_node_by_path("/testcase-data/phandle-tests/provider3");
-+	if (!p3) {
-+		pr_err("missing testcase data\n");
-+		return;
-+	}
++Description:
 +
-+	rc = of_count_phandle_with_args(np, "phandle-list", "#phandle-cells");
-+	unittest(rc == 7, "of_count_phandle_with_args() returned %i, expected 7\n", rc);
++   A *<specifier>-map* is a property in a nexus node that bridges one
++   specifier domain with a set of parent specifier domains and describes
++   how specifiers in the child domain are mapped to their respective parent
++   domains.
 +
-+	for (i = 0; i < 8; i++) {
-+		bool passed = true;
++   The map is a table where each row is a mapping entry
++   consisting of three components: *child specifier*, *specifier parent*, and
++   *parent specifier*.
 +
-+		rc = of_parse_phandle_with_args_map(np, "phandle-list",
-+						    "phandle", i, &args);
++   child specifier
++       The specifier of the child node being mapped. The number
++       of 32-bit cells required to specify this component is described by
++       the *#<specifier>-cells* property of this node—the nexus node
++       containing the *<specifier>-map* property.
 +
-+		/* Test the values from tests-phandle.dtsi */
-+		switch (i) {
-+		case 0:
-+			passed &= !rc;
-+			passed &= (args.np == p1);
-+			passed &= (args.args_count == 1);
-+			passed &= (args.args[0] == 1);
-+			break;
-+		case 1:
-+			passed &= !rc;
-+			passed &= (args.np == p3);
-+			passed &= (args.args_count == 3);
-+			passed &= (args.args[0] == 2);
-+			passed &= (args.args[1] == 5);
-+			passed &= (args.args[2] == 3);
-+			break;
-+		case 2:
-+			passed &= (rc == -ENOENT);
-+			break;
-+		case 3:
-+			passed &= !rc;
-+			passed &= (args.np == p0);
-+			passed &= (args.args_count == 0);
-+			break;
-+		case 4:
-+			passed &= !rc;
-+			passed &= (args.np == p1);
-+			passed &= (args.args_count == 1);
-+			passed &= (args.args[0] == 3);
-+			break;
-+		case 5:
-+			passed &= !rc;
-+			passed &= (args.np == p0);
-+			passed &= (args.args_count == 0);
-+			break;
-+		case 6:
-+			passed &= !rc;
-+			passed &= (args.np == p2);
-+			passed &= (args.args_count == 2);
-+			passed &= (args.args[0] == 15);
-+			passed &= (args.args[1] == 0x20);
-+			break;
-+		case 7:
-+			passed &= (rc == -ENOENT);
-+			break;
-+		default:
-+			passed = false;
-+		}
++   specifier parent
++       A single *<phandle>* value that points to the specifier parent to
++       which the child domain is being mapped.
 +
-+		unittest(passed, "index %i - data error on node %s rc=%i\n",
-+			 i, args.np->full_name, rc);
-+	}
++   parent specifier
++       The specifier in the parent domain. The number of 32-bit
++       cells required to specify this component is described by the
++       *#<specifier>-cells* property of the specifier parent node.
 +
-+	/* Check for missing list property */
-+	rc = of_parse_phandle_with_args_map(np, "phandle-list-missing",
-+					    "phandle", 0, &args);
-+	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
++   Lookups are performed on the mapping table by matching a specifier against
++   the child specifier in the map. Because some fields in the specifier may
++   not be relevant or need to be modified, a mask is applied before the lookup
++   is done. This mask is defined in the *<specifier>-map-mask* property (see
++   section :ref:`sect-specifier-map-mask`).
 +
-+	/* Check for missing cells,map,mask property */
-+	rc = of_parse_phandle_with_args_map(np, "phandle-list",
-+					    "phandle-missing", 0, &args);
-+	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
++   Similarly, when the specifier is mapped, some fields in the unit specifier
++   may need to be kept unmodified and passed through from the child node to the
++   parent node. In this case, a *<specifier>-map-pass-thru* property (see
++   section :ref:`sect-specifier-map-pass-thru`) may be specified to apply
++   a mask to the child specifier and copy any bits that match to the parent
++   unit specifier.
 +
-+	/* Check for bad phandle in list */
-+	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-phandle",
-+					    "phandle", 0, &args);
-+	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
++.. _sect-specifier-map-mask:
 +
-+	/* Check for incorrectly formed argument list */
-+	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-args",
-+					    "phandle", 1, &args);
-+	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
-+}
++<specifier>-map-mask
++^^^^^^^^^^^^^^^^^^^^
 +
- static void __init of_unittest_property_string(void)
- {
- 	const char *strings[4];
-@@ -2354,6 +2473,7 @@ static int __init of_unittest(void)
- 	of_unittest_find_node_by_name();
- 	of_unittest_dynamic();
- 	of_unittest_parse_phandle_with_args();
-+	of_unittest_parse_phandle_with_args_map();
- 	of_unittest_printf();
- 	of_unittest_property_string();
- 	of_unittest_property_copy();
++Property: ``<specifier>-map-mask``
++
++Value type: ``<prop-encoded-array>`` encoded as a bit mask
++
++Description:
++
++   A *<specifier>-map-mask* property may be specified for a nexus node.
++   This property specifies a mask that is applied to the child unit
++   specifier being looked up in the table specified in the *<specifier>-map*
++   property. If this property is not specified, the mask is assumed to be
++   a mask with all bits set.
++
++.. _sect-specifier-map-pass-thru:
++
++<specifier>-map-pass-thru
++^^^^^^^^^^^^^^^^^^^^^^^^^
++
++Property: ``<specifier>-map-pass-thru``
++
++Value type: ``<prop-encoded-array>`` encoded as a bit mask
++
++Description:
++
++   A *<specifier>-map-pass-thru* property may be specified for a nexus node.
++   This property specifies a mask that is applied to the child unit
++   specifier being looked up in the table specified in the *<specifier>-map*
++   property. Any matching bits in the child unit specifier are copied over
++   to the parent specifier. If this property is not specified, the mask is
++   assumed to be a mask with no bits set.
++
++#<specifier>-cells
++^^^^^^^^^^^^^^^^^^
++
++Property: ``#<specifier>-cells``
++
++Value type: ``<u32>``
++
++Description:
++
++   The *#<specifier>-cells* property defines the number of cells required to
++   encode a specifier for a domain.
++
++Specifier Mapping Example
++~~~~~~~~~~~~~~~~~~~~~~~~~
++
++The following shows the representation of a fragment of a devicetree with
++two GPIO controllers and a sample specifier map for describing the
++GPIO routing of a few gpios on both of the controllers through a connector
++on a board to a device. The expansion device node is one one side of the
++connector node and the SoC with the two GPIO controllers is on the other
++side of the connector.
++
++.. _example-specifier-mapping:
++
++.. code-block:: dts
++
++        soc {
++                soc_gpio1: gpio-controller1 {
++                        #gpio-cells = <2>;
++                };
++
++                soc_gpio2: gpio-controller2 {
++                        #gpio-cells = <2>;
++                };
++        };
++
++        connector: connector {
++                #gpio-cells = <2>;
++                gpio-map = <0 0 &soc_gpio1 1 0>,
++                           <1 0 &soc_gpio2 4 0>,
++                           <2 0 &soc_gpio1 3 0>,
++                           <3 0 &soc_gpio2 2 0>;
++                gpio-map-mask = <0xf 0x0>;
++                gpio-map-pass-thru = <0x0 0x1>;
++        };
++
++        expansion_device {
++                reset-gpios = <&connector 2 GPIO_ACTIVE_LOW>;
++        };
++
++
++Each row in the gpio-map table consists of three parts: a child unit
++specifier, which is mapped to a *gpio-controller*
++node with a parent specifier.
++
++* For example, the first row of the specifier-map table specifies the
++  mapping for GPIO 0 of the connector. The components of that row are shown
++  here
++
++  | child specifier: ``0 0``
++  | specifier parent: ``&soc_gpio1``
++  | parent specifier: ``1 0``
++
++  * The child specifier is ``<0 0>``, which specifies GPIO 0 in the connector
++    with a *flags* field of ``0``. This takes two 32-bit cells as specified
++    by the *#gpio-cells* property of the connector node, which is the
++    child specifier domian.
++
++  * The specifier parent is specified by a phandle which points to the
++    specifier parent of the connector, the first GPIO controller in the SoC.
++
++  * The parent specifier is ``<1 0>``. The number of cells to
++    represent the gpio specifier (two cells) is determined by the
++    *#gpio-cells* property on the specifier parent, the soc_gpio1
++    node.
++
++    * The value ``<1 0>`` is a value specified by the device binding for
++      the GPIO controller. The value ``<1>`` specifies the
++      GPIO pin number on the GPIO controller to which GPIO 0 on the connector
++      is wired. The value ``<0>`` specifies the flags (active low,
++      active high, etc.).
++
++In this example, the *gpio-map-mask* property has a value of ``<0xf 0>``.
++This mask is applied to a child unit specifier before performing a lookup in
++the *gpio-map* table. Similarly, the *gpio-map-pass-thru* property has a value
++of ``<0x0 0x1>``. This mask is applied to a child unit specifier when mapping
++it to the parent unit specifier. Any bits set in this mask are cleared out of
++the parent unit specifier and copied over from the child unit specifier
++to the parent unit specifier.
++
++To perform a lookup of the connector's specifier source number for GPIO 2
++from the expansion device's reset-gpios property, the following steps would be
++performed:
++
++*  The child specifier forms the value ``<2 GPIO_ACTIVE_LOW>``.
++
++   *  The specifier is encoding GPIO 2 with active low flags per the GPIO
++      binding.
++
++*  The *gpio-map-mask* value ``<0xf 0x0>`` is ANDed with the child specifier,
++   giving a result of ``<0x2 0>``.
++
++*  The result is looked up in the *gpio-map* table, which maps to
++   the parent specifier ``<3 0>`` and &soc_gpio1 *phandle*.
++
++*  The *gpio-map-pass-thru* value ``<0x0 0x1>`` is inverted and ANDed with the
++   parent specifier found in the *gpio-map* table, resulting in ``<3 0>``.
++   The child specifier is ANDed with the *gpio-map-pass-thru* mask, forming
++   ``<0 GPIO_ACTIVE_LOW>`` which is then ORed with the cleared parent specifier
++   ``<3 0>`` resulting in ``<3 GPIO_ACTIVE_LOW>``.
++
++*  The specifier ``<3 GPIO_ACTIVE_LOW>`` is appended to the mapped *phandle*
++   &soc_gpio1 resulting in ``<&soc_gpio1 3 GPIO_ACTIVE_LOW>``.
 -- 
 2.14.GIT
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
