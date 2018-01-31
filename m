@@ -1,42 +1,55 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: Add GPIO driver for Spreadtrum SC9860 platform
-Date: Wed, 31 Jan 2018 10:01:59 +0800
-Message-ID: <CAMz4kuL9r+97_rDihgKD_TyNaDQ3aCk7go6e4mB24QOpovFYJg@mail.gmail.com>
-References: <2834309f69a1ec37b84a33f153a3d0b90336bcc6.1517313987.git.baolin.wang@linaro.org>
- <cccc1addb9c0cc541b676dbad005ec341d12d165.1517313987.git.baolin.wang@linaro.org>
- <CAHp75Vcig869pUQ5yK1b=GpXinhYkpw1q29OVKSs_7EqP4Hknw@mail.gmail.com>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: Re: [PATCH v3 0/5] ARM64: dts: meson-axg: UART DT updates
+Date: Wed, 31 Jan 2018 10:25:45 +0800
+Message-ID: <8990554d-e995-e432-8f50-3b247f71b0fd@amlogic.com>
+References: <20180111023401.125658-1-yixun.lan@amlogic.com>
+ <7hr2q6c2r4.fsf@baylibre.com>
+ <CAOi56cW4ufsegpy7heK1+pCxvZ2gz5Lf3dkUgxkZCgMq5oBzSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vcig869pUQ5yK1b=GpXinhYkpw1q29OVKSs_7EqP4Hknw@mail.gmail.com>
+In-Reply-To: <CAOi56cW4ufsegpy7heK1+pCxvZ2gz5Lf3dkUgxkZCgMq5oBzSA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: yixun.lan@amlogic.com, devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic <linux-amlogic@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
 
-On 31 January 2018 at 00:48, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Tue, Jan 30, 2018 at 2:07 PM, Baolin Wang <baolin.wang@linaro.org> wrote:
->> The Spreadtrum SC9860 platform GPIO controller contains 16 groups and
->> each group contains 16 GPIOs. Each GPIO can set input/output and has
->> the interrupt capability.
->
->> +config GPIO_SPRD
->
->> +       bool "Spreadtrum GPIO support"
->
-> Either you have to put tristate here, or remove all redundant
-> module_*() and MODULE_*() macros.
 
-I will remove module_*() and MODULE_*() macros in next version. Thanks
-for your comments.
+On 01/31/18 08:22, Kevin Hilman wrote:
+> On Tue, Jan 30, 2018 at 4:04 PM, Kevin Hilman <khilman@baylibre.com> wrote:
+>> Yixun Lan <yixun.lan@amlogic.com> writes:
+>>
+>>> HI Kevin
+>>>  These are the UART DT updates for the Meson-AXG platform.
+>>>
+>>>  The patch 1 is a general fix.
+>>> Other patches are about adding clock & pinctrl info, then using them.
+>>> Last patch enable UART_A which connect to a BT module on the S400 board.
+>>
+>> Applied to v4.16/dt64,
+> 
+> Oops, I meant v4.17.
+> 
 
->
-> Other than that looks fine to me, FWIW:
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
+Hi Kevin
+ I should warn you about the patch 3 [1], it actually depend on the gpio
+renaming patch [2]
 
--- 
-Baolin.wang
-Best Regards
+ I'm still waiting Linus to take patch [2], then update according
+(or you could help amend the patch? it's simply a
+'s/uart_ao_b_gpioz/uart_ao_b_z/g)
+
+Yixun
+
+
+
+[1] [PATCH v3 3/5] ARM64: dts: meson-axg: uart: Add the pinctrl info
+description
+
+http://lists.infradead.org/pipermail/linux-amlogic/2018-January/006096.html
+
+
+[2] [PATCH] pinctrl: meson-axg: adjust uart_ao_b pin group naming
+http://lists.infradead.org/pipermail/linux-amlogic/2018-January/006201.html
