@@ -1,168 +1,382 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/6] iommu/arm-smmu: Add pm_runtime/sleep ops
-Date: Wed, 31 Jan 2018 12:23:43 +0000
-Message-ID: <9942b74d-7437-21cc-cbd7-38f2844c5d1d@arm.com>
-References: <1516362223-22946-1-git-send-email-vivek.gautam@codeaurora.org>
-	<1516362223-22946-3-git-send-email-vivek.gautam@codeaurora.org>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v8 07/11] media: i2c: ov772x: Support frame interval
+ handling
+Date: Wed, 31 Jan 2018 13:47:59 +0100
+Message-ID: <20180131124759.GA30675@w540>
+References: <1517306302-27957-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1517306302-27957-8-git-send-email-jacopo+renesas@jmondi.org>
+ <34502970.Ll86D7ehED@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1516362223-22946-3-git-send-email-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <34502970.Ll86D7ehED@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/01/18 11:43, Vivek Gautam wrote:
-> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> 
-> The smmu needs to be functional only when the respective
-> master's using it are active. The device_link feature
-> helps to track such functional dependencies, so that the
-> iommu gets powered when the master device enables itself
-> using pm_runtime. So by adapting the smmu driver for
-> runtime pm, above said dependency can be addressed.
-> 
-> This patch adds the pm runtime/sleep callbacks to the
-> driver and also the functions to parse the smmu clocks
-> from DT and enable them in resume/suspend.
-> 
-> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> [vivek: Clock rework to request bulk of clocks]
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->   drivers/iommu/arm-smmu.c | 55 ++++++++++++++++++++++++++++++++++++++++++++++--
->   1 file changed, 53 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 78d4c6b8f1ba..21acffe91a1c 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -48,6 +48,7 @@
->   #include <linux/of_iommu.h>
->   #include <linux/pci.h>
->   #include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
->   #include <linux/slab.h>
->   #include <linux/spinlock.h>
->   
-> @@ -205,6 +206,9 @@ struct arm_smmu_device {
->   	u32				num_global_irqs;
->   	u32				num_context_irqs;
->   	unsigned int			*irqs;
-> +	struct clk_bulk_data		*clocks;
-> +	int				num_clks;
-> +	const char * const		*clk_names;
+Hi Laurent,
+    thanks for review
 
-This seems unnecessary, as we use it a grand total of of once, during 
-initialisation when we have the source data directly to hand. Just pass 
-data->clks into arm_smmu_init_clks() as an additional argument.
+Resuming here the brief conversation on #v4l with you and Hans...
 
-Otherwise, I think this looks reasonable; it's about as unobtrusive as 
-it's going to get.
+On Wed, Jan 31, 2018 at 12:34:59PM +0200, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Tuesday, 30 January 2018 11:58:18 EET Jacopo Mondi wrote:
+> > Add support to ov772x driver for frame intervals handling and enumeration.
+> > Tested with 10MHz and 24MHz input clock at VGA and QVGA resolutions for
+> > 10, 15 and 30 frame per second rates.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  drivers/media/i2c/ov772x.c | 210 ++++++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 193 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> > index 23106d7..28de254 100644
+> > --- a/drivers/media/i2c/ov772x.c
+> > +++ b/drivers/media/i2c/ov772x.c
+>
+> [snip]
+>
+> > @@ -373,6 +378,19 @@
+> >  #define VERSION(pid, ver) ((pid<<8)|(ver&0xFF))
+> >
+> >  /*
+> > + * Frame size (including blanking lines)
+> > + */
+> > +#define VGA_FRAME_SIZE		(510 * 748)
+> > +#define QVGA_FRAME_SIZE		(278 * 576)
+>
+> Those two macros are not used, you can drop them.
+>
+> > +/*
+> > + * Input clock frequencies
+> > + */
+> > +static const u8 ov772x_com4_vals[] = { PLL_BYPASS, PLL_4x, PLL_6x, PLL_8x
+> > };
+> > +static const unsigned int ov772x_pll_mult[] = { 1, 4, 6, 8 };
+> > +#define OV772X_PLL_N_MULT ARRAY_SIZE(ov772x_pll_mult)
+>
+> I think it would be clearer if you used ARRAY_SIZE(ov772x_pll_mult) directly
+> in the code.
+>
+> Maybe nitpicking a bit, but I wouldgroup the com4 values and multipliers in a
+> structure:
+>
+> static const struct {
+> 	unsigned int mult;
+> 	u8 com4;
+> } ov772x_pll_mult[] = {
+> 	{ 1, PLL_BYPASS },
+> 	{ 4, PLL_4x },
+> 	{ 6, PLL_6x },
+> 	{ 8, PLL_8x },
+> };
+>
+> That ensures that the two arrays stay in sync as there's only one array left.
+>
+> > +/*
+> >   * struct
+> >   */
+> >
+> > @@ -388,6 +406,7 @@ struct ov772x_color_format {
+> >  struct ov772x_win_size {
+> >  	char                     *name;
+> >  	unsigned char             com7_bit;
+> > +	unsigned int		  sizeimage;
+> >  	struct v4l2_rect	  rect;
+> >  };
+> >
+> > @@ -404,6 +423,7 @@ struct ov772x_priv {
+> >  	unsigned short                    flag_hflip:1;
+> >  	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
+> >  	unsigned short                    band_filter;
+> > +	unsigned int			  fps;
+> >  };
+> >
+> >  /*
+> > @@ -487,27 +507,35 @@ static const struct ov772x_color_format ov772x_cfmts[]
+> > = {
+> >
+> >  static const struct ov772x_win_size ov772x_win_sizes[] = {
+> >  	{
+> > -		.name     = "VGA",
+> > -		.com7_bit = SLCT_VGA,
+> > +		.name		= "VGA",
+> > +		.com7_bit	= SLCT_VGA,
+> > +		.sizeimage	= 381480,
+>
+> I'd write this 510 * 748.
+>
+> >  		.rect = {
+> > -			.left = 140,
+> > -			.top = 14,
+> > -			.width = VGA_WIDTH,
+> > -			.height = VGA_HEIGHT,
+> > +			.left	= 140,
+> > +			.top	= 14,
+> > +			.width	= VGA_WIDTH,
+> > +			.height	= VGA_HEIGHT,
+> >  		},
+> >  	}, {
+> > -		.name     = "QVGA",
+> > -		.com7_bit = SLCT_QVGA,
+> > +		.name		= "QVGA",
+> > +		.com7_bit	= SLCT_QVGA,
+> > +		.sizeimage	= 160128,
+>
+> And this 278 * 576. It makes the value less magic.
+>
+> >  		.rect = {
+> > -			.left = 252,
+> > -			.top = 6,
+> > -			.width = QVGA_WIDTH,
+> > -			.height = QVGA_HEIGHT,
+> > +			.left	= 252,
+> > +			.top	= 6,
+> > +			.width	= QVGA_WIDTH,
+> > +			.height	= QVGA_HEIGHT,
+> >  		},
+> >  	},
+> >  };
+> >
+> >  /*
+> > + * frame rate settings lists
+> > + */
+> > +unsigned int ov772x_frame_intervals[] = { 5, 10, 15, 20, 30, 60 };
+> > +#define OV772X_N_FRAME_INTERVALS ARRAY_SIZE(ov772x_frame_intervals)
+> > +
+> > +/*
+> >   * general function
+> >   */
+> >
+> > @@ -574,6 +602,124 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int
+> > enable) return 0;
+> >  }
+> >
+> > +static int ov772x_set_frame_rate(struct ov772x_priv *priv,
+> > +				 struct v4l2_fract *tpf,
+> > +				 const struct ov772x_color_format *cfmt,
+> > +				 const struct ov772x_win_size *win)
+> > +{
+> > +	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+> > +	unsigned int fps = tpf->denominator / tpf->numerator;
+>
+> tpf->numerator could be 0.
+>
+> > +	unsigned int fin = clk_get_rate(priv->clk);
+>
+> Clock rates are unsigned long.
+>
+> > +	unsigned int rate_prev;
+> > +	unsigned int fsize;
+> > +	unsigned int pclk;
+> > +	unsigned int rate;
+> > +	unsigned int idx;
+> > +	unsigned int i;
+> > +	u8 clkrc = 0;
+> > +	u8 com4 = 0;
+> > +	int ret;
+> > +
+> > +	/* Approximate to the closest supported frame interval. */
+> > +	rate_prev = ~0L;
+> > +	for (i = 0, idx = 0; i < OV772X_N_FRAME_INTERVALS; i++) {
+> > +		rate = abs(fps - ov772x_frame_intervals[i]);
+> > +		if (rate < rate_prev) {
+> > +			idx = i;
+> > +			rate_prev = rate;
+>
+> I'd call the rate_prev and rate variables best_diff and diff respectively.
+>
+> > +		}
+> > +	}
+> > +	fps = ov772x_frame_intervals[idx];
+> > +
+> > +	/* Use image size (with blankings) to calculate desired pixel clock. */
+> > +	if ((cfmt->com7 & OFMT_RGB) == OFMT_RGB ||
+> > +	    (cfmt->com7 & OFMT_YUV) == OFMT_YUV)
+> > +		fsize = win->sizeimage * 2;
+> > +	else if ((cfmt->com7 & OFMT_BRAW) == OFMT_BRAW)
+>
+> I think all these should test (cfmt->com7 & OFMT_MASK) == ...
+>
+> > +		fsize = win->sizeimage;
+> > +
+> > +	pclk = fps * fsize;
+> > +
+> > +	/*
+> > +	 * Pixel clock generation circuit is pretty simple:
+> > +	 *
+> > +	 * Fin -> [ / CLKRC_div] -> [ * PLL_mult] -> pclk
+> > +	 *
+> > +	 * Try to approximate the desired pixel clock testing all available
+> > +	 * PLL multipliers (1x, 4x, 6x, 8x) and calculate corresponding
+> > +	 * divisor with:
+> > +	 *
+> > +	 * div = PLL_mult * Fin / pclk
+> > +	 *
+> > +	 * and re-calculate the pixel clock using it:
+> > +	 *
+> > +	 * pclk = Fin * PLL_mult / CLKRC_div
+> > +	 *
+> > +	 * Choose the PLL_mult and CLKRC_div pair that gives a pixel clock
+> > +	 * closer to the desired one.
+> > +	 *
+> > +	 * The desired pixel clock is calculated using a known frame size
+> > +	 * (blanking included) and FPS.
+> > +	 */
+> > +	rate_prev = ~0L;
+> > +	for (i = 0; i < OV772X_PLL_N_MULT; i++) {
+> > +		unsigned int pll_mult = ov772x_pll_mult[i];
+> > +		unsigned int pll_out = pll_mult * fin;
+> > +		unsigned int t_pclk;
+> > +		unsigned int div;
+> > +
+> > +		if (pll_out < pclk)
+> > +			continue;
+> > +
+> > +		div = DIV_ROUND_CLOSEST(pll_out, pclk);
+> > +		t_pclk = DIV_ROUND_CLOSEST((fin * pll_mult), div);
+>
+> No need for the inner parentheses.
+>
+> > +		rate = abs(pclk - t_pclk);
+> > +		if (rate < rate_prev) {
+> > +			rate_prev = rate;
+> > +			clkrc = CLKRC_DIV(div);
+> > +			com4 = ov772x_com4_vals[i];
+> > +		}
+> > +	}
+> > +
+> > +	ret = ov772x_write(client, COM4, com4 | COM4_RESERVED);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	ret = ov772x_write(client, CLKRC, clkrc | CLKRC_RESERVED);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	tpf->numerator = 1;
+> > +	tpf->denominator = fps;
+> > +	priv->fps = tpf->denominator;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ov772x_g_frame_interval(struct v4l2_subdev *sd,
+> > +				   struct v4l2_subdev_frame_interval *ival)
+> > +{
+> > +	struct ov772x_priv *priv = to_ov772x(sd);
+> > +	struct v4l2_fract *tpf = &ival->interval;
+> > +
+> > +	memset(ival->reserved, 0, sizeof(ival->reserved));
+> > +	tpf->numerator = 1;
+> > +	tpf->denominator = priv->fps;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
+> > +				   struct v4l2_subdev_frame_interval *ival)
+> > +{
+> > +	struct ov772x_priv *priv = to_ov772x(sd);
+> > +	struct v4l2_fract *tpf = &ival->interval;
+> > +
+> > +	memset(ival->reserved, 0, sizeof(ival->reserved));
+> > +
+> > +	return ov772x_set_frame_rate(priv, tpf, priv->cfmt, priv->win);
+> > +}
+> > +
+> >  static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
+> >  {
+> >  	struct ov772x_priv *priv = container_of(ctrl->handler,
+> > @@ -757,6 +903,7 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+> >  			     const struct ov772x_win_size *win)
+> >  {
+> >  	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+> > +	struct v4l2_fract tpf;
+> >  	int ret;
+> >  	u8  val;
+> >
+> > @@ -885,6 +1032,13 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+> > if (ret < 0)
+> >  		goto ov772x_set_fmt_error;
+> >
+> > +	/* COM4, CLKRC: Set pixel clock and framerate. */
+> > +	tpf.numerator = 1;
+> > +	tpf.denominator = priv->fps;
+> > +	ret = ov772x_set_frame_rate(priv, &tpf, cfmt, win);
+> > +	if (ret < 0)
+> > +		goto ov772x_set_fmt_error;
+> > +
+> >  	/*
+> >  	 * set COM8
+> >  	 */
+> > @@ -1043,6 +1197,24 @@ static const struct v4l2_subdev_core_ops
+> > ov772x_subdev_core_ops = { .s_power	= ov772x_s_power,
+> >  };
+> >
+> > +static int ov772x_enum_frame_interval(struct v4l2_subdev *sd,
+> > +				      struct v4l2_subdev_pad_config *cfg,
+> > +				      struct v4l2_subdev_frame_interval_enum *fie)
+> > +{
+> > +	if (fie->pad || fie->index >= OV772X_N_FRAME_INTERVALS)
+> > +		return -EINVAL;
+> > +
+> > +	if (fie->width != VGA_WIDTH && fie->width != QVGA_WIDTH)
+> > +		return -EINVAL;
+> > +	if (fie->height != VGA_HEIGHT && fie->height != QVGA_HEIGHT)
+> > +		return -EINVAL;
+> > +
+> > +	fie->interval.numerator = 1;
+> > +	fie->interval.denominator = ov772x_frame_intervals[fie->index];
+> > +
+> > +	return 0;
+> > +}
+>
+> The more I think about it, the more I believe that the subdev frame interval
+> enumeration operation is nonsense. This particular sensor is not restricted to
+> a fixed list of frame intervals. Sensors should really expose the pixel clock
+> and blanking as controls, and higher level parameters such as frame intervals
+> should then be handled by the bridge driver.
 
-Robin.
+I thought the same while implementing this, exposing a limited set of
+discrete values is limiting when the hw and the driver actually
+support a continuous range of possible values.
 
->   	u32				cavium_id_base; /* Specific to Cavium */
->   
-> @@ -1685,6 +1689,25 @@ static int arm_smmu_id_size_to_bits(int size)
->   	}
->   }
->   
-> +static int arm_smmu_init_clocks(struct arm_smmu_device *smmu)
-> +{
-> +	int i;
-> +	int num = smmu->num_clks;
-> +
-> +	if (num < 1)
-> +		return 0;
-> +
-> +	smmu->clocks = devm_kcalloc(smmu->dev, num,
-> +				    sizeof(*smmu->clocks), GFP_KERNEL);
-> +	if (!smmu->clocks)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < num; i++)
-> +		smmu->clocks[i].id = smmu->clk_names[i];
-> +
-> +	return devm_clk_bulk_get(smmu->dev, num, smmu->clocks);
-> +}
-> +
->   static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
->   {
->   	unsigned long size;
-> @@ -1897,10 +1920,12 @@ static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
->   struct arm_smmu_match_data {
->   	enum arm_smmu_arch_version version;
->   	enum arm_smmu_implementation model;
-> +	const char * const *clks;
-> +	int num_clks;
->   };
->   
->   #define ARM_SMMU_MATCH_DATA(name, ver, imp)	\
-> -static struct arm_smmu_match_data name = { .version = ver, .model = imp }
-> +static const struct arm_smmu_match_data name = { .version = ver, .model = imp }
->   
->   ARM_SMMU_MATCH_DATA(smmu_generic_v1, ARM_SMMU_V1, GENERIC_SMMU);
->   ARM_SMMU_MATCH_DATA(smmu_generic_v2, ARM_SMMU_V2, GENERIC_SMMU);
-> @@ -2001,6 +2026,8 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev,
->   	data = of_device_get_match_data(dev);
->   	smmu->version = data->version;
->   	smmu->model = data->model;
-> +	smmu->clk_names = data->clks;
-> +	smmu->num_clks = data->num_clks;
->   
->   	parse_driver_options(smmu);
->   
-> @@ -2099,6 +2126,10 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->   		smmu->irqs[i] = irq;
->   	}
->   
-> +	err = arm_smmu_init_clocks(smmu);
-> +	if (err)
-> +		return err;
-> +
->   	err = arm_smmu_device_cfg_probe(smmu);
->   	if (err)
->   		return err;
-> @@ -2197,7 +2228,27 @@ static int __maybe_unused arm_smmu_pm_resume(struct device *dev)
->   	return 0;
->   }
->   
-> -static SIMPLE_DEV_PM_OPS(arm_smmu_pm_ops, NULL, arm_smmu_pm_resume);
-> +static int __maybe_unused arm_smmu_runtime_resume(struct device *dev)
-> +{
-> +	struct arm_smmu_device *smmu = dev_get_drvdata(dev);
-> +
-> +	return clk_bulk_prepare_enable(smmu->num_clks, smmu->clocks);
-> +}
-> +
-> +static int __maybe_unused arm_smmu_runtime_suspend(struct device *dev)
-> +{
-> +	struct arm_smmu_device *smmu = dev_get_drvdata(dev);
-> +
-> +	clk_bulk_disable_unprepare(smmu->num_clks, smmu->clocks);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops arm_smmu_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, arm_smmu_pm_resume)
-> +	SET_RUNTIME_PM_OPS(arm_smmu_runtime_suspend,
-> +			   arm_smmu_runtime_resume, NULL)
-> +};
->   
->   static struct platform_driver arm_smmu_driver = {
->   	.driver	= {
-> 
+But I agree with Hans (of course, it makes things easier for me :) that if
+that's what the API offers right now, we should not hold back this
+series waiting for a better one to be available.
+
+I'm happy to keep discussing this if I can help in some way, but I
+think it's outside the scope of this patch.
+
+>
+> I won't nack this patch due to this as I want to see this series merged, so
+> with the above small issues fixed you have my
+
+Thanks.
+
+I then would like to discuss the CEU driver behavior when no
+enum_frame_interval subdev operation is available, I will reply to my
+own patch on this.
+
+Thanks
+   j
+
+
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> but we're going in the wrong direction.
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
