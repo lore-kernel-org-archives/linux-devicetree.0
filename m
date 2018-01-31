@@ -1,453 +1,64 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] ASoC: codecs: Add support for AK5558 ADC
-	driver
-Date: Wed, 31 Jan 2018 18:12:15 +0200
-Message-ID: <CAHp75Vdd58U1y-LOQGg=rePOWf1LeQsZxn2ykzBhXL013ztW3Q@mail.gmail.com>
-References: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
+From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: [PATCH 3/5] arm64: dts: renesas: r8a77970: add DU instance
+Date: Wed, 31 Jan 2018 17:18:09 +0100
+Message-ID: <20180131161811.12699-4-niklas.soderlund@ragnatech.se>
+References: <20180131161811.12699-1-niklas.soderlund@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: devicetree <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, shengjiu.wang@nxp.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, wakasugi.jb@om.asahi-kasei.co.jp, Mihai Serban <mihai.serban@nxp.com>, Mark Brown <broonie@kernel.org>, linux-imx@nxp.com, cosmin.samoila@nxp.com, mihai.serban@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20180131161811.12699-1-niklas.soderlund@ragnatech.se>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 2:57 PM, Daniel Baluta <daniel.baluta@nxp.com> wrote:
-> AK5558 is a 32-bit, 768 kHZ sampling, differential input ADC
-> for digital audio systems.
->
-> Datasheet is available at:
->
-> https://www.akm.com/akm/en/file/datasheet/AK5558VN.pdf
->
-> Initial patch includes support for normal and TDM modes.
->
-> Signed-off-by: Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>
-> Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-
-4 authors of the code?!
-
-
-> +/*
-> + * ak5558.c  --  audio driver for AK5558 ADC
-> + *
-> + * Copyright (C) 2015 Asahi Kasei Microdevices Corporation
-> + * Copyright 2018 NXP
-
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-
-SPDX instead?
-
-> + */
-
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-
-It would be one of them, not both.
-
-> +#include <linux/i2c.h>
-> +#include <linux/delay.h>
-> +#include <linux/slab.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <sound/soc.h>
-> +#include <sound/soc-dapm.h>
-> +#include <sound/pcm.h>
-> +#include <sound/pcm_params.h>
-> +#include <sound/initval.h>
-> +#include <sound/tlv.h>
-
-> +#include <linux/of_gpio.h>
-
-It seems redundant. See below.
-
-> +#include <linux/regmap.h>
-> +#include <linux/pm_runtime.h>
-
-Better to keep list ordered.
-
-> +/* AK5558 Codec Private Data */
-> +struct ak5558_priv {
-> +       struct snd_soc_codec codec;
-> +       struct regmap *regmap;
-> +       struct i2c_client *i2c;
-> +       int fs;         /* Sampling Frequency */
-> +       int rclk;       /* Master Clock */
-
-> +       int pdn_gpio;   /* Power on / Reset GPIO */
-
-struct gpio_desc *power_gpio;
-
-> +       int slots;
-> +       int slot_width;
-> +};
-
-> +static int ak5558_set_mcki(struct snd_soc_codec *codec, int fs, int rclk)
-> +{
-> +       u8  mode;
-> +#ifndef AK5558_SLAVE_CKS_AUTO
-> +       int mcki_rate;
-> +#endif
-> +
-
-> +       dev_dbg(codec->dev, "%s fs=%d rclk=%d\n", __func__, fs, rclk);
-
-__func__ is useless with dev_dbg(). See the run time options of Dynamic Debug.
-
-> +
-> +       mode = snd_soc_read(codec, AK5558_02_CONTROL1);
-> +       mode &= ~AK5558_CKS;
-> +
-> +#ifdef AK5558_SLAVE_CKS_AUTO
-> +       mode |= AK5558_CKS_AUTO;
-> +#else
-
-> +       if (fs != 0 && rclk != 0) {
-
-if (fs && rclk) { ?
-
-> +               if (rclk % fs)
-> +                       return -EINVAL;
-> +               mcki_rate = rclk / fs;
-
-> +       }
-> +#endif
-> +       snd_soc_update_bits(codec, AK5558_02_CONTROL1, AK5558_CKS,  mode);
-> +
-> +       return 0;
-> +}
-> +
-
-> +static int ak5558_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
-> +                                unsigned int freq, int dir)
-> +{
-> +       struct snd_soc_codec *codec = dai->codec;
-> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
-> +
-
-> +       dev_dbg(dai->dev, "%s(%d)\n", __func__, __LINE__);
-
-Useless. Function tracer can do this for you.
-
-> +
-> +       ak5558->rclk = freq;
-> +       ak5558_set_mcki(codec, ak5558->fs, ak5558->rclk);
-> +
-> +       return 0;
-> +}
-> +
-> +static int ak5558_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-> +{
-> +       struct snd_soc_codec *codec = dai->codec;
-> +       u8 format;
-> +
-> +       dev_dbg(dai->dev, "%s(%d)\n", __func__, __LINE__);
-
-> +       default:
-> +               dev_err(codec->dev, "Clock mode unsupported");
-
-dai->dev vs. codec->dev?
-
-> +               return -EINVAL;
-> +       }
-
-> +}
-
-> +static int ak5558_set_dai_mute(struct snd_soc_dai *dai, int mute)
-> +{
-> +       struct snd_soc_codec *codec = dai->codec;
-> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
-> +       int ndt;
-> +
-> +       if (mute) {
-
-if (!mute)
- return 0;
-
-?
-
-> +               ndt = 0;
-> +               if (ak5558->fs != 0)
-> +                       ndt = 583000 / ak5558->fs;
-
-> +               if (ndt < 5)
-> +                       ndt = 5;
-> +               msleep(ndt);
-
-msleep(max(ndt, 5));
-
-> +}
-
-> +static int ak5558_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
-> +                              unsigned int rx_mask, int slots,
-> +                              int slot_width)
-> +{
-> +       struct snd_soc_codec *codec = dai->codec;
-> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
-
-> +       int tdm_mode = 0;
-
-Useless assignment.
-
-> +       int reg;
-> +
-> +       ak5558->slots = slots;
-> +       ak5558->slot_width = slot_width;
-> +
-> +       switch (slots * slot_width) {
-> +       case 128:
-> +               tdm_mode = AK5558_MODE_TDM128;
-> +               break;
-> +       case 256:
-> +               tdm_mode = AK5558_MODE_TDM256;
-> +               break;
-> +       case 512:
-> +               tdm_mode = AK5558_MODE_TDM512;
-> +               break;
-> +       default:
-> +               tdm_mode = AK5558_MODE_NORMAL;
-> +               break;
-> +       }
-
-> +       return 0;
-> +}
-
-> +static int ak5558_startup(struct snd_pcm_substream *substream,
-> +                         struct snd_soc_dai *dai)
-> +{
-> +       int ret;
-> +
-> +       ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
-> +                                        SNDRV_PCM_HW_PARAM_RATE,
-> +                                        &ak5558_rate_constraints);
-> +       return ret;
-
-return snd_pcm_hw_constraint_list(...); ?
-
-> +}
-
-> +static int ak5558_init_reg(struct snd_soc_codec *codec)
-> +{
-> +       int  ret;
-> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
-> +
-
-> +       dev_dbg(codec->dev, "%s(%d)\n", __func__, __LINE__);
-
-Useless.
-
-> +       usleep_range(10000, 11000);
-
-> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
-> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 0);
-> +               usleep_range(1000, 2000);
-> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 1);
-> +               usleep_range(1000, 2000);
-> +       }
-
-static void ak5558_power_off(...)
-{
- if (!ak5558->power_gpiod)
-    return;
-
-               gpiod_set_value_cansleep(ak5558->power_gpiod, 0);
-               usleep_range(1000, 2000);
-
-}
-
-static void ak5558_power_on(...)
-{
- if (!ak5558->power_gpiod)
-    return;
-
-               gpiod_set_value_cansleep(ak5558->power_gpiod, 1);
-               usleep_range(1000, 2000);
-}
-
-_power_off();
-_power_on();
-
-
-> +       return 0;
-> +}
-
-> +static int ak5558_remove(struct snd_soc_codec *codec)
-> +{
-> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
-> +
-> +       ak5558_set_bias_level(codec, SND_SOC_BIAS_OFF);
-> +
-
-> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
-> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 0);
-> +               usleep_range(1000, 2000);
-> +       }
-
-_power_off();
-
-> +
-> +       return 0;
-> +}
-> +
-
-> +#ifdef CONFIG_PM
-> +static int ak5558_runtime_suspend(struct device *dev)
-
-static int __maybe_unused ...
-
-> +{
-> +       struct ak5558_priv *ak5558 = dev_get_drvdata(dev);
-> +
-> +       regcache_cache_only(ak5558->regmap, true);
-
-> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
-> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 0);
-> +               usleep_range(1000, 2000);
-> +       }
-
-_power_off();
-
-> +
-> +       return 0;
-> +}
-> +
-
-> +static int ak5558_runtime_resume(struct device *dev)
-
-__maybe_unused
-
-> +{
-> +       struct ak5558_priv *ak5558 = dev_get_drvdata(dev);
-> +
-
-> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
-> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 0);
-> +               usleep_range(1000, 2000);
-
-Why power off again?
-
-> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 1);
-> +               usleep_range(1000, 2000);
-> +       }
-
-_power_off(); // why?
-_power_on();
-
-
-> +}
-
-> +#endif
-
-ugly #ifdef.
-
-> +static int ak5558_i2c_probe(struct i2c_client *i2c,
-> +                           const struct i2c_device_id *id)
-> +{
-> +       struct device_node *np = i2c->dev.of_node;
-> +       struct ak5558_priv *ak5558;
-> +       int ret = 0;
-> +
-> +       dev_err(&i2c->dev, "%s(%d)\n", __func__, __LINE__);
-> +
-> +       ak5558 = devm_kzalloc(&i2c->dev, sizeof(struct ak5558_priv),
-> +                             GFP_KERNEL);
-
-sizeof(*ak5558) ?
-
-> +       if (!ak5558)
-> +               return -ENOMEM;
-
-> +
-> +       ak5558->regmap = devm_regmap_init_i2c(i2c, &ak5558_regmap);
-> +       if (IS_ERR(ak5558->regmap))
-> +               return PTR_ERR(ak5558->regmap);
-> +
-> +       i2c_set_clientdata(i2c, ak5558);
-> +       ak5558->i2c = i2c;
-> +
-
-> +       ak5558->pdn_gpio = of_get_named_gpio(np, "ak5558,pdn-gpio", 0);
-> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
-> +               ret = devm_gpio_request_one(&i2c->dev, ak5558->pdn_gpio,
-> +                                           GPIOF_OUT_INIT_LOW, "ak5558,pdn");
-> +               if (ret) {
-> +                       dev_err(&i2c->dev, "unable to get pdn gpio\n");
-> +                       return ret;
-> +               }
-> +       }
-
-devm_gpiod_get_optional();
-
-> +}
-
-> +static const struct i2c_device_id ak5558_i2c_id[] = {
-> +       { "ak5558", 0 },
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, ak5558_i2c_id);
-
-Do you really need this? (->probe_new() callback doesn't require above
-to be present)
-
-> +MODULE_AUTHOR("Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>");
-> +MODULE_AUTHOR("Mihai Serban <mihai.serban@nxp.com>");
-
-4 SoBs, 2 Authors. Please, fix accordingly.
-
-> +MODULE_DESCRIPTION("ASoC AK5558 ADC driver");
-
-> +MODULE_LICENSE("GPL");
-
-It is not consistent with the header.
-
-
-> + * ak5558.h  --  audio driver for AK5558
-
-SPDX?
-
-No name of file in the file is a good practice as well.
-
-> + *
-> + * Copyright (C) 2016 Asahi Kasei Microdevices Corporation
-> + * Copyright 2018 NXP
-
-
-> +/* AK5558_02_CONTROL1 fields */
-> +#define AK5558_DIF                     0x02
-
-GENMASK() ?
-
-> +#define AK5558_BITS                    0x04
-
-Ditto.
-
-> +#define AK5558_CKS                     0x78
-
-Ditto.
-
-> +#define AK5558_MODE_BITS       0x60
-
-Ditto.
-
+From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+Add the DU device to r8a77970.dtsi in a disabled state.
+
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+---
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+index 8419576dab50f460..e1d8aa0fbc1e4f90 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+@@ -632,6 +632,33 @@
+ 			resets = <&cpg 603>;
+ 			iommus = <&ipmmu_vi0 8>;
+ 		};
++
++		du: display@feb00000 {
++			compatible = "renesas,du-r8a77970";
++			reg = <0 0xfeb00000 0 0x70000>;
++			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 724>;
++			clock-names = "du.0";
++			status = "disabled";
++
++			vsps = <&vspd0>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					du_out_rgb: endpoint {
++					};
++				};
++				port@1 {
++					reg = <1>;
++					du_out_lvds0: endpoint {
++					};
++				};
++			};
++		};
+ 	};
+ 
+ 	timer {
 -- 
-With Best Regards,
-Andy Shevchenko
+2.16.1
