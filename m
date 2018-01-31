@@ -1,29 +1,35 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Frank Rowand <frowand.list@gmail.com>
 Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
  of_find_node_by_phandle()
-Date: Wed, 31 Jan 2018 12:07:32 -0800
-Message-ID: <4d849dcd-5186-fe60-97dd-8481846aac4e@gmail.com>
-References: <1517428977-25653-1-git-send-email-frowand.list@gmail.com>
+Date: Wed, 31 Jan 2018 12:10:56 -0800
+Message-ID: <2c1eca16-42bb-5a00-8f2b-a4536712ab79@gmail.com>
+References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517428977-25653-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, cpandya@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Rob, Chintan,
 
-Please ignore this one.  My signed-off is below the first "---".
+This patch resolves one of the issues that Rob had raised.  The space for
+the phandle cache is freed after boot, instead of existing until shutdown.
+
+Chintan, can you please apply this patch and see how it impacts your
+boot time?  The portion of the patch that removes code from resolver.c
+will fail on 4.9 because that code does not exist yet -- you can just
+remove that portion of the patch.
 
 -Frank
 
 
-On 01/31/18 12:02, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+On 01/31/18 12:05, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 > 
 > Create a cache of the nodes that contain a phandle property.  Use this
 > cache to find the node for a given phandle value instead of scanning
@@ -35,6 +41,7 @@ On 01/31/18 12:02, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
 > 
 > The cache is freed via a late_initcall_sync().
 > 
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 > ---
 > 
 > Some of_find_by_phandle() calls may occur before the cache is
@@ -42,8 +49,7 @@ On 01/31/18 12:02, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
 > qcom-apq8074-dragonboard, 11 calls occur before the initialization
 > and 80 occur after the cache is freed (out of 516 total calls.)
 > 
-> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-> ---
+> 
 >  drivers/of/base.c       | 85 ++++++++++++++++++++++++++++++++++++++++++++++---
 >  drivers/of/of_private.h |  5 +++
 >  drivers/of/resolver.c   | 21 ------------
@@ -218,8 +224,3 @@ On 01/31/18 12:02, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
 >  		int phandle_delta)
 >  {
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
