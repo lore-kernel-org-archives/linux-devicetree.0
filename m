@@ -1,46 +1,81 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/5] clk: mediatek: modify MT7622 audsys to adapt MFD device
-Date: Wed, 31 Jan 2018 15:42:42 +0800
-Message-ID: <d6669277f5232446b4798a6b724074b18d5c21aa.1515639336.git.ryder.lee@mediatek.com>
-References: <cover.1515639336.git.ryder.lee@mediatek.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v5 08/13] iommu/rockchip: Control clocks needed to access
+ the IOMMU
+Date: Wed, 31 Jan 2018 16:52:44 +0900
+Message-ID: <CAAFQd5A383Ey3Ntg_hcsvzHj2DsSuW6RMQ+kP=LPAZ1YmqjHOg@mail.gmail.com>
+References: <20180124103516.2571-1-jeffy.chen@rock-chips.com>
+ <20180124103516.2571-9-jeffy.chen@rock-chips.com> <20180130170515.3g6wtadqgmehxh5b@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1515639336.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180130170515.3g6wtadqgmehxh5b@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, Ricky Liang <jcliang@chromium.org>, Robin Murphy <robin.murphy@arm.com>, simon xue <xxm@rock-chips.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, Mark Rutland <mark.rutland@arm.com>Joerg Roedel <joro@8bytes.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-As the new MFD parent is in place, switch probing method to adapt it.
+Hi Rob,
 
-Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/clk/mediatek/clk-mt7622-aud.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Wed, Jan 31, 2018 at 2:05 AM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jan 24, 2018 at 06:35:11PM +0800, Jeffy Chen wrote:
+>> From: Tomasz Figa <tfiga@chromium.org>
+>>
+>> Current code relies on master driver enabling necessary clocks before
+>> IOMMU is accessed, however there are cases when the IOMMU should be
+>> accessed while the master is not running yet, for example allocating
+>> V4L2 videobuf2 buffers, which is done by the VB2 framework using DMA
+>> mapping API and doesn't engage the master driver at all.
+>>
+>> This patch fixes the problem by letting clocks needed for IOMMU
+>> operation to be listed in Device Tree and making the driver enable them
+>> for the time of accessing the hardware.
+>>
+>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+>> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+>> ---
+>>
+>> Changes in v5:
+>> Use clk_bulk APIs.
+>>
+>> Changes in v4: None
+>> Changes in v3: None
+>> Changes in v2: None
+>>
+>>  .../devicetree/bindings/iommu/rockchip,iommu.txt   |  8 +++
+>
+> Please split binding patches to a separate patch.
+>
+>>  drivers/iommu/rockchip-iommu.c                     | 74 ++++++++++++++++++++--
+>>  2 files changed, 76 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+>> index 2098f7732264..33dd853359fa 100644
+>> --- a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+>> +++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+>> @@ -14,6 +14,13 @@ Required properties:
+>>                      "single-master" device, and needs no additional information
+>>                      to associate with its master device.  See:
+>>                      Documentation/devicetree/bindings/iommu/iommu.txt
+>> +Optional properties:
+>> +- clocks : A list of master clocks requires for the IOMMU to be accessible
+>> +           by the host CPU. The number of clocks depends on the master
+>> +           block and might as well be zero. See [1] for generic clock
+>> +           bindings description.
+>
+> Hardware blocks don't have a variable number of clock connections.
 
-diff --git a/drivers/clk/mediatek/clk-mt7622-aud.c b/drivers/clk/mediatek/clk-mt7622-aud.c
-index 13f752d..8c18536 100644
---- a/drivers/clk/mediatek/clk-mt7622-aud.c
-+++ b/drivers/clk/mediatek/clk-mt7622-aud.c
-@@ -142,11 +142,12 @@ static int clk_mt7622_audiosys_init(struct platform_device *pdev)
- {
- 	struct clk_onecell_data *clk_data;
- 	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *pnode = pdev->dev.parent->of_node;
- 	int r;
- 
- 	clk_data = mtk_alloc_clk_data(CLK_AUDIO_NR_CLK);
- 
--	mtk_clk_register_gates(node, audio_clks, ARRAY_SIZE(audio_clks),
-+	mtk_clk_register_gates(pnode, audio_clks, ARRAY_SIZE(audio_clks),
- 			       clk_data);
- 
- 	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
--- 
-1.9.1
+I think you underestimate the imagination of hardware designers. :)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For Rockchip IOMMU, there is a set of clocks, which all need to be
+enabled for IOMMU register access to succeed. The clocks are not
+directly fed to the IOMMU, but they are needed for the various buses
+and intermediate blocks on the way to the IOMMU to work.
+
+And the set varies based on next to which master block the IOMMU block
+is located, because the hierarchy of buses and intermediate blocks is
+different.
+
+Best regards,
+Tomasz
