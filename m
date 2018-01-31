@@ -1,85 +1,82 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: [PATCHv2] tlv320dac33: Add device tree bindings
-Date: Wed, 31 Jan 2018 20:01:12 +0100
-Message-ID: <20180131190112.GA31608@amd>
-References: <20180129230539.GA18280@amd>
+From: Karthik Ramasubramanian <kramasub@codeaurora.org>
+Subject: Re: [PATCH v2 3/7] soc: qcom: Add GENI based QUP Wrapper driver
+Date: Wed, 31 Jan 2018 12:02:51 -0700
+Message-ID: <1abb0679-1997-9b70-30bd-d3472cea7053@codeaurora.org>
+References: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org>
+ <1515805547-22816-4-git-send-email-kramasub@codeaurora.org>
+ <20180117062002.GA6620@minitux>
+ <29ed5b45-dd70-fb70-3aa4-4e1a0006d57e@codeaurora.org>
+ <20180118165745.GE6620@minitux>
+ <20180119225708.4mo6fiy5zyd6kscj@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180129230539.GA18280@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, bhumirks@gmail.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, sre@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, sakari.ailus@linux.intel.com, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180119225708.4mo6fiy5zyd6kscj@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-
-This adds device tree bindings for tlv320dac33.c.
-
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-
-diff --git a/Documentation/devicetree/bindings/sound/tlv320dac33.txt b/Docu=
-mentation/devicetree/bindings/sound/tlv320dac33.txt
-new file mode 100644
-index 0000000..7fdda95
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
-@@ -0,0 +1,32 @@
-+Texas Instruments - tlv320dac33 Codec module
-+
-+The tlv320dac33 serial control bus communicates through I2C protocols.
-+
-+Required properties:
-+
-+- compatible - "ti,tlv320dac33"
-+- reg - I2C slave address
-+
-+Optional properties:
-+
-+- reset-gpios - gpio pin to power the device, active low
-+
-+- interrupts       - The interrupt output from the device.
-+- interrupt-parent - The parent interrupt controller.
-+
-+- ti,keep-bclk 	- Keep the BCLK running in FIFO modes
-+- ti,burst-bclkdiv - BCLK divider value in burst mode
-+
-+Example:
-+
-+tlv320dac33: audio-codec@19 {
-+	compatible =3D "ti,tlv320dac33";
-+	reg =3D <0x19>;
-+
-+	interrupt-parent =3D <&gpio2>;
-+	interrupts =3D <21 1>; /* gpio_53, IRQF_TRIGGER_RISING */
-+	reset-gpios =3D <&gpio2 28 0>; /* gpio_60 */
-+
-+	ti,keep-bclk;
-+	ti,burst-bclkdiv =3D <3>;
-+};
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlpyEngACgkQMOfwapXb+vIoBgCglNyLOuWrgVOVKZJHl2KRTmFf
-5CQAnjW1sBvNqWmNwQh7HdTOwM6TgcJD
-=bMd9
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
+On 1/19/2018 3:57 PM, Rob Herring wrote:
+> On Thu, Jan 18, 2018 at 08:57:45AM -0800, Bjorn Andersson wrote:
+>> On Thu 18 Jan 01:13 PST 2018, Rajendra Nayak wrote:
+>>
+>>> []..
+>>>
+>>>>> diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+>>>>> new file mode 100644
+>>>>> index 0000000..3f43582
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/soc/qcom/qcom-geni-se.c
+>>>>> @@ -0,0 +1,1016 @@
+>>>>> +/*
+>>>>> + * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+>>>>> + *
+>>>>> + * This program is free software; you can redistribute it and/or modify
+>>>>> + * it under the terms of the GNU General Public License version 2 and
+>>>>> + * only version 2 as published by the Free Software Foundation.
+>>>>> + *
+>>>>> + * This program is distributed in the hope that it will be useful,
+>>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>>> + * GNU General Public License for more details.
+>>>>> + *
+>>>>> + */
+>>>>
+>>>> Please use SPDX style license header, i.e. this file should start with:
+>>>>
+>>>> // SPDX-License-Identifier: GPL-2.0
+>>>> /*
+>>>>   * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+>>>>   */
+>>>
+>>> Looks like Mark Brown commented elsewhere [1] that we should use the C++
+>>> commenting style even for the Linux Foundation copyright?
+>>>
+>>> [1] https://marc.info/?l=linux-clk&m=151497978626135&w=2
+>>>
+>>
+>> While I can agree with Mark on the ugliness of the mixed commenting
+>> style, this is the style that I found communicated and is what you find
+>> in other files.
+> 
+> Well, that's pretty new guidance. Moving target...
+> 
+> Given that Linus said '//' comments are the only thing C++ got right, I
+> expect to see more of them.
+I believe that in the source file I have to use C++ style comments(as 
+per this discussion) and in the header file I have to use C-style 
+comments (as per https://lwn.net/Articles/739183/ for reasons related to 
+tooling). Please correct me otherwise.
+> 
+> Rob
+> 
+Regards,
+Karthik.
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
