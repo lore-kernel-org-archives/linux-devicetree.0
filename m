@@ -1,88 +1,99 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [RFC PATCH v2 4/5] extcon: add possibility to get extcon device by
- OF node
-Date: Wed, 31 Jan 2018 14:44:34 +0100
-Message-ID: <20180131134435.12216-5-a.hajda@samsung.com>
-References: <20180131134435.12216-1-a.hajda@samsung.com>
- <CGME20180131134459eucas1p15c0dd76f5173816b949e72cde93c0a6c@eucas1p1.samsung.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 08/13] iommu/rockchip: Control clocks needed to access
+	the IOMMU
+Date: Wed, 31 Jan 2018 07:50:59 -0600
+Message-ID: <CAL_JsqKFW0USD_TgGCO-s4wMBw9O2psToMObjeSEwCNReq-3=w@mail.gmail.com>
+References: <20180124103516.2571-1-jeffy.chen@rock-chips.com>
+	<20180124103516.2571-9-jeffy.chen@rock-chips.com>
+	<20180130170515.3g6wtadqgmehxh5b@rob-hp-laptop>
+	<CAAFQd5A383Ey3Ntg_hcsvzHj2DsSuW6RMQ+kP=LPAZ1YmqjHOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20180131134435.12216-1-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "open list:OPEN FIRMWARE AND FLATTENED DEVICE
- TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAAFQd5A383Ey3Ntg_hcsvzHj2DsSuW6RMQ+kP=LPAZ1YmqjHOg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U2luY2UgZXh0Y29uIHByb3BlcnR5IGlzIG5vdCBhbGxvd2VkIGluIERULCBleHRjb24gc3Vic3lz
-dGVtIHJlcXVpcmVzCmFub3RoZXIgd2F5IHRvIGdldCBleHRjb24gZGV2aWNlLiBMZXRzIHRyeSB0
-aGUgc2ltcGxlc3QgYXBwcm9hY2ggLSBnZXQKZWRldiBieSBvZl9ub2RlLgoKU2lnbmVkLW9mZi1i
-eTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KQWNrZWQtYnk6IENoYW53b28g
-Q2hvaSA8Y3cwMC5jaG9pQHNhbXN1bmcuY29tPgotLS0KdjI6IGNoYW5nZWQgbGFiZWwgdG8gZm9s
-bG93IGxvY2FsIGNvbnZlbnRpb24gKENoYW53b28pCi0tLQogZHJpdmVycy9leHRjb24vZXh0Y29u
-LmMgfCA0NCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLQogaW5j
-bHVkZS9saW51eC9leHRjb24uaCAgfCAgNiArKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgNDAgaW5z
-ZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9leHRjb24v
-ZXh0Y29uLmMgYi9kcml2ZXJzL2V4dGNvbi9leHRjb24uYwppbmRleCBjYjM4YzI3NDc2ODQuLmM0
-OTcyYzRjYjNiZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9leHRjb24vZXh0Y29uLmMKKysrIGIvZHJp
-dmVycy9leHRjb24vZXh0Y29uLmMKQEAgLTEzMzYsNiArMTMzNiwyOCBAQCB2b2lkIGV4dGNvbl9k
-ZXZfdW5yZWdpc3RlcihzdHJ1Y3QgZXh0Y29uX2RldiAqZWRldikKIEVYUE9SVF9TWU1CT0xfR1BM
-KGV4dGNvbl9kZXZfdW5yZWdpc3Rlcik7CiAKICNpZmRlZiBDT05GSUdfT0YKKworLyoKKyAqIGV4
-dGNvbl9nZXRfZWRldl9ieV9vZl9ub2RlIC0gR2V0IHRoZSBleHRjb24gZGV2aWNlIGZyb20gZGV2
-aWNldHJlZS4KKyAqIEBub2RlCTogT0Ygbm9kZSBpZGVudHlmeWluZyBlZGV2CisgKgorICogUmV0
-dXJuIHRoZSBwb2ludGVyIG9mIGV4dGNvbiBkZXZpY2UgaWYgc3VjY2VzcyBvciBFUlJfUFRSKGVy
-cikgaWYgZmFpbC4KKyAqLworc3RydWN0IGV4dGNvbl9kZXYgKmV4dGNvbl9nZXRfZWRldl9ieV9v
-Zl9ub2RlKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKK3sKKwlzdHJ1Y3QgZXh0Y29uX2RldiAq
-ZWRldjsKKworCW11dGV4X2xvY2soJmV4dGNvbl9kZXZfbGlzdF9sb2NrKTsKKwlsaXN0X2Zvcl9l
-YWNoX2VudHJ5KGVkZXYsICZleHRjb25fZGV2X2xpc3QsIGVudHJ5KQorCQlpZiAoZWRldi0+ZGV2
-LnBhcmVudCAmJiBlZGV2LT5kZXYucGFyZW50LT5vZl9ub2RlID09IG5vZGUpCisJCQlnb3RvIG91
-dDsKKwllZGV2ID0gRVJSX1BUUigtRVBST0JFX0RFRkVSKTsKK291dDoKKwltdXRleF91bmxvY2so
-JmV4dGNvbl9kZXZfbGlzdF9sb2NrKTsKKworCXJldHVybiBlZGV2OworfQorCiAvKgogICogZXh0
-Y29uX2dldF9lZGV2X2J5X3BoYW5kbGUgLSBHZXQgdGhlIGV4dGNvbiBkZXZpY2UgZnJvbSBkZXZp
-Y2V0cmVlLgogICogQGRldgkJOiB0aGUgaW5zdGFuY2UgdG8gdGhlIGdpdmVuIGRldmljZQpAQCAt
-MTM2MywyNSArMTM4NSwyNyBAQCBzdHJ1Y3QgZXh0Y29uX2RldiAqZXh0Y29uX2dldF9lZGV2X2J5
-X3BoYW5kbGUoc3RydWN0IGRldmljZSAqZGV2LCBpbnQgaW5kZXgpCiAJCXJldHVybiBFUlJfUFRS
-KC1FTk9ERVYpOwogCX0KIAotCW11dGV4X2xvY2soJmV4dGNvbl9kZXZfbGlzdF9sb2NrKTsKLQls
-aXN0X2Zvcl9lYWNoX2VudHJ5KGVkZXYsICZleHRjb25fZGV2X2xpc3QsIGVudHJ5KSB7Ci0JCWlm
-IChlZGV2LT5kZXYucGFyZW50ICYmIGVkZXYtPmRldi5wYXJlbnQtPm9mX25vZGUgPT0gbm9kZSkg
-ewotCQkJbXV0ZXhfdW5sb2NrKCZleHRjb25fZGV2X2xpc3RfbG9jayk7Ci0JCQlvZl9ub2RlX3B1
-dChub2RlKTsKLQkJCXJldHVybiBlZGV2OwotCQl9Ci0JfQotCW11dGV4X3VubG9jaygmZXh0Y29u
-X2Rldl9saXN0X2xvY2spOworCWVkZXYgPSBleHRjb25fZ2V0X2VkZXZfYnlfb2Zfbm9kZShub2Rl
-KTsKIAlvZl9ub2RlX3B1dChub2RlKTsKIAotCXJldHVybiBFUlJfUFRSKC1FUFJPQkVfREVGRVIp
-OworCXJldHVybiBlZGV2OwogfQorCiAjZWxzZQorCitzdHJ1Y3QgZXh0Y29uX2RldiAqZXh0Y29u
-X2dldF9lZGV2X2J5X29mX25vZGUoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQoreworCXJldHVy
-biBFUlJfUFRSKC1FTk9TWVMpOworfQorCiBzdHJ1Y3QgZXh0Y29uX2RldiAqZXh0Y29uX2dldF9l
-ZGV2X2J5X3BoYW5kbGUoc3RydWN0IGRldmljZSAqZGV2LCBpbnQgaW5kZXgpCiB7CiAJcmV0dXJu
-IEVSUl9QVFIoLUVOT1NZUyk7CiB9CisKICNlbmRpZiAvKiBDT05GSUdfT0YgKi8KKworRVhQT1JU
-X1NZTUJPTF9HUEwoZXh0Y29uX2dldF9lZGV2X2J5X29mX25vZGUpOwogRVhQT1JUX1NZTUJPTF9H
-UEwoZXh0Y29uX2dldF9lZGV2X2J5X3BoYW5kbGUpOwogCiAvKioKZGlmZiAtLWdpdCBhL2luY2x1
-ZGUvbGludXgvZXh0Y29uLmggYi9pbmNsdWRlL2xpbnV4L2V4dGNvbi5oCmluZGV4IDZkOTRlODJj
-OGFkOS4uYjQ3ZTBjN2YwMWZlIDEwMDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L2V4dGNvbi5oCisr
-KyBiL2luY2x1ZGUvbGludXgvZXh0Y29uLmgKQEAgLTIzMCw2ICsyMzAsNyBAQCBleHRlcm4gdm9p
-ZCBkZXZtX2V4dGNvbl91bnJlZ2lzdGVyX25vdGlmaWVyX2FsbChzdHJ1Y3QgZGV2aWNlICpkZXYs
-CiAgKiBGb2xsb3dpbmcgQVBJcyBnZXQgdGhlIGV4dGNvbl9kZXYgZnJvbSBkZXZpY2V0cmVlIG9y
-IGJ5IHRocm91Z2ggZXh0Y29uIG5hbWUuCiAgKi8KIGV4dGVybiBzdHJ1Y3QgZXh0Y29uX2RldiAq
-ZXh0Y29uX2dldF9leHRjb25fZGV2KGNvbnN0IGNoYXIgKmV4dGNvbl9uYW1lKTsKK2V4dGVybiBz
-dHJ1Y3QgZXh0Y29uX2RldiAqZXh0Y29uX2dldF9lZGV2X2J5X29mX25vZGUoc3RydWN0IGRldmlj
-ZV9ub2RlICpub2RlKTsKIGV4dGVybiBzdHJ1Y3QgZXh0Y29uX2RldiAqZXh0Y29uX2dldF9lZGV2
-X2J5X3BoYW5kbGUoc3RydWN0IGRldmljZSAqZGV2LAogCQkJCQkJICAgICBpbnQgaW5kZXgpOwog
-CkBAIC0yODMsNiArMjg0LDExIEBAIHN0YXRpYyBpbmxpbmUgc3RydWN0IGV4dGNvbl9kZXYgKmV4
-dGNvbl9nZXRfZXh0Y29uX2Rldihjb25zdCBjaGFyICpleHRjb25fbmFtZSkKIAlyZXR1cm4gRVJS
-X1BUUigtRU5PREVWKTsKIH0KIAorc3RhdGljIGlubGluZSBzdHJ1Y3QgZXh0Y29uX2RldiAqZXh0
-Y29uX2dldF9lZGV2X2J5X29mX25vZGUoc3RydWN0IGRldmljZV9ub2RlICpub2RlKQoreworCXJl
-dHVybiBFUlJfUFRSKC1FTk9ERVYpOworfQorCiBzdGF0aWMgaW5saW5lIHN0cnVjdCBleHRjb25f
-ZGV2ICpleHRjb25fZ2V0X2VkZXZfYnlfcGhhbmRsZShzdHJ1Y3QgZGV2aWNlICpkZXYsCiAJCQkJ
-aW50IGluZGV4KQogewotLSAKMi4xNS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+On Wed, Jan 31, 2018 at 1:52 AM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On Wed, Jan 31, 2018 at 2:05 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Wed, Jan 24, 2018 at 06:35:11PM +0800, Jeffy Chen wrote:
+>>> From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>>
+>>> Current code relies on master driver enabling necessary clocks before
+>>> IOMMU is accessed, however there are cases when the IOMMU should be
+>>> accessed while the master is not running yet, for example allocating
+>>> V4L2 videobuf2 buffers, which is done by the VB2 framework using DMA
+>>> mapping API and doesn't engage the master driver at all.
+>>>
+>>> This patch fixes the problem by letting clocks needed for IOMMU
+>>> operation to be listed in Device Tree and making the driver enable them
+>>> for the time of accessing the hardware.
+>>>
+>>> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>> Signed-off-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>> ---
+>>>
+>>> Changes in v5:
+>>> Use clk_bulk APIs.
+>>>
+>>> Changes in v4: None
+>>> Changes in v3: None
+>>> Changes in v2: None
+>>>
+>>>  .../devicetree/bindings/iommu/rockchip,iommu.txt   |  8 +++
+>>
+>> Please split binding patches to a separate patch.
+>>
+>>>  drivers/iommu/rockchip-iommu.c                     | 74 ++++++++++++++++++++--
+>>>  2 files changed, 76 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+>>> index 2098f7732264..33dd853359fa 100644
+>>> --- a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+>>> +++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
+>>> @@ -14,6 +14,13 @@ Required properties:
+>>>                      "single-master" device, and needs no additional information
+>>>                      to associate with its master device.  See:
+>>>                      Documentation/devicetree/bindings/iommu/iommu.txt
+>>> +Optional properties:
+>>> +- clocks : A list of master clocks requires for the IOMMU to be accessible
+>>> +           by the host CPU. The number of clocks depends on the master
+>>> +           block and might as well be zero. See [1] for generic clock
+>>> +           bindings description.
+>>
+>> Hardware blocks don't have a variable number of clock connections.
+>
+> I think you underestimate the imagination of hardware designers. :)
+
+Learned long ago to never do that. If there are 2 ways to do
+something, they will find a 3rd way.
+
+> For Rockchip IOMMU, there is a set of clocks, which all need to be
+> enabled for IOMMU register access to succeed. The clocks are not
+> directly fed to the IOMMU, but they are needed for the various buses
+> and intermediate blocks on the way to the IOMMU to work.
+
+The binding should describe the clock connections, not what clocks a
+driver needs (currently). It sounds like a lack of managing bus clocks
+to me.
+
+In any case, the binding must be written so it can be verified. If you
+can have any number of clocks with any names, there's no point in
+documenting.
+
+Rob
