@@ -1,42 +1,35 @@
 From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v2 0/3] Add DTS for SDM845 SoC and MTP
-Date: Wed, 31 Jan 2018 21:49:38 +0530
-Message-ID: <20180131161941.29865-1-rnayak@codeaurora.org>
+Subject: [PATCH v2 1/3] Documentation: dt-bindings: arm: Document kryo385 cpu
+Date: Wed, 31 Jan 2018 21:49:39 +0530
+Message-ID: <20180131161941.29865-2-rnayak@codeaurora.org>
+References: <20180131161941.29865-1-rnayak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180131161941.29865-1-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: andy.gross@linaro.org
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sboyd@codeaurora.org, evgreen@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have serial[1], pinctrl[2] and clock[3]
-drivers for SDM845 SoC out on the lists, heres the
-basic dts files needed to boot a SDM845 based MTP
-board to a ramfs based serial console shell.
+Document the compatible string for the Kryo385 cpus found in qualcomm
+SoCs.
 
-[1] https://patchwork.ozlabs.org/cover/860251/
-[2] https://patchwork.kernel.org/patch/10157143/
-[3] https://lkml.org/lkml/2018/1/22/78
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-changes in v2:
-* dropped cpu-map
-* dropped GIC_CPU_MASK_SIMPLE()
-* Added new cpu compatible for kryo385
-* added ITS node, marked as disabled
-* other cosmetic fixes 
-
-Rajendra Nayak (3):
-  Documentation: dt-bindings: arm: Document kryo385 cpu
-  arm64: dts: sdm845: Add minimal dts/dtsi files for sdm845 SoC and MTP
-  arm64: dts: sdm845: Add serial console support
-
- Documentation/devicetree/bindings/arm/cpus.txt |   1 +
- arch/arm64/boot/dts/qcom/Makefile              |   1 +
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts        |  55 +++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi           | 298 +++++++++++++++++++++++++
- 4 files changed, 355 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
-
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index a0009b72e9be..19611ccb61d9 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -184,6 +184,7 @@ described below.
+ 			    "nvidia,tegra186-denver"
+ 			    "qcom,krait"
+ 			    "qcom,kryo"
++			    "qcom,kryo385"
+ 			    "qcom,scorpion"
+ 	- enable-method
+ 		Value type: <stringlist>
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
