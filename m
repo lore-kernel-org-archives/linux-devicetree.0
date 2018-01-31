@@ -1,74 +1,349 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [RFC v3 10/25] dt-bindings: watchdog: renesas-wdt: Add R-Car Gen2
- support
-Date: Wed, 31 Jan 2018 10:27:29 +0000
-Message-ID: <TY1PR06MB089525525DC23EEAEAE97795C0FB0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1517343778-27902-11-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdXkHF9R0XfcG++s0RRup+Mdtam5p=FXw26z86wAOJhZfQ@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v8 07/11] media: i2c: ov772x: Support frame interval handling
+Date: Wed, 31 Jan 2018 12:34:59 +0200
+Message-ID: <34502970.Ll86D7ehED@avalon>
+References: <1517306302-27957-1-git-send-email-jacopo+renesas@jmondi.org> <1517306302-27957-8-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdXkHF9R0XfcG++s0RRup+Mdtam5p=FXw26z86wAOJhZfQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Watchdog Mailing List <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1517306302-27957-8-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCj4gU3ViamVjdDogUmU6IFtSRkMgdjMgMTAvMjVdIGR0LWJpbmRpbmdzOiB3
-YXRjaGRvZzogcmVuZXNhcy13ZHQ6IEFkZCBSLUNhciBHZW4yIHN1cHBvcnQNCj4NCj4gSGkgRmFi
-cml6aW8sDQo+DQo+IE9uIFR1ZSwgSmFuIDMwLCAyMDE4IGF0IDk6MjIgUE0sIEZhYnJpemlvIENh
-c3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBUaGlz
-IGNvbW1pdCBkb2N1bWVudHMgdGhlIGNvbXBhdGliaWxpdHkgd2l0aCBSLUNhciBHZW4yIGFuZCBS
-Wi9HDQo+ID4gZGV2aWNlcyBieSBkZWZpbmluZyB0aGUgZ2VuZXJpYyBjb21wYXRpYmxlIHN0cmlu
-ZyAicmVuZXNhcyxyY2FyLWdlbjItd2R0Ii4NCj4gPiBBbHNvLCB0aGlzIHBhdGNoIGV4cGFuZHMg
-dGhlIGxpc3Qgb2YgU29DLXNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5ncyB0bw0KPiA+IGluY2x1
-ZGUgUlovRyBhbmQgUi1DYXIgR2VuMiBkZXZpY2VzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-RmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gU2ln
-bmVkLW9mZi1ieTogUmFtZXNoIFNoYW5tdWdhc3VuZGFyYW0gPHJhbWVzaC5zaGFubXVnYXN1bmRh
-cmFtQGJwLnJlbmVzYXMuY29tPg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQoNClRoYW5r
-cyBmb3IgeW91ciBmZWVkYmFjayENCg0KPg0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy93YXRjaGRvZy9yZW5lc2FzLXdkdC50eHQNCj4gPiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvcmVuZXNhcy13ZHQudHh0DQo+ID4g
-QEAgLTEsMTcgKzEsMjUgQEANCj4gPiAgUmVuZXNhcyBXYXRjaGRvZyBUaW1lciAoV0RUKSBDb250
-cm9sbGVyDQo+ID4NCj4gPiAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAtLSBjb21wYXRpYmxl
-IDogU2hvdWxkIGJlICJyZW5lc2FzLDxzb2N0eXBlPi13ZHQiLCBhbmQNCj4gPiAtICAgICAgICAg
-ICAgICAicmVuZXNhcyxyY2FyLWdlbjMtd2R0IiBvciAicmVuZXNhcyxyemEtd2R0IiBhcyBmYWxs
-YmFjay4NCj4gPiArIC0gY29tcGF0aWJsZSA6IE11c3QgYmUgInJlbmVzYXMsPHNvY3R5cGU+LXdk
-dCIsIGZvbGxvd2VkIGJ5IGEgZ2VuZXJpYw0KPiA+ICsgICAgICAgICAgICAgICBmYWxsYmFjayBj
-b21wYXRpYmxlIHN0cmluZyB3aGVuIGNvbXBhdGlibGUgd2l0aCB0aGUgZ2VuZXJpYw0KPiA+ICsg
-ICAgICAgICAgICAgICB2ZXJzaW9uLg0KPiA+ICAgICAgICAgICAgICAgIEV4YW1wbGVzIHdpdGgg
-c29jdHlwZXMgYXJlOg0KPiA+ICsgICAgICAgICAgICAgICAgLSAicmVuZXNhcyxyOGE3NzQzLXdk
-dCIgKFJaL0cxTSkNCj4gPiArICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc0NS13ZHQi
-IChSWi9HMUUpDQo+ID4gKyAgICAgICAgICAgICAgICAtICJyZW5lc2FzLHI4YTc3OTAtd2R0IiAo
-Ui1DYXIgSDIpDQo+ID4gKyAgICAgICAgICAgICAgICAtICJyZW5lc2FzLHI4YTc3OTEtd2R0IiAo
-Ui1DYXIgTTItVykNCj4gPiArICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc5Mi13ZHQi
-IChSLUNhciBWMkgpDQo+ID4gKyAgICAgICAgICAgICAgICAtICJyZW5lc2FzLHI4YTc3OTMtd2R0
-IiAoUi1DYXIgTTItTikNCj4gPiArICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc5NC13
-ZHQiIChSLUNhciBFMikNCj4gPiAgICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc5NS13
-ZHQiIChSLUNhciBIMykNCj4gPiAgICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc5Ni13
-ZHQiIChSLUNhciBNMy1XKQ0KPiA+ICAgICAgICAgICAgICAgICAgLSAicmVuZXNhcyxyOGE3Nzk5
-NS13ZHQiIChSLUNhciBEMykNCj4gPiAgICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjdzNzIx
-MDAtd2R0IiAoUlovQTEpDQo+ID4gKyAgICAgICAgICAgICAgIFRoZSBnZW5lcmljIGNvbXBhdGli
-bGUgc3RyaW5nIG11c3QgYmU6DQo+ID4gKyAgICAgICAgICAgICAgICAtICJyZW5lc2FzLHJjYXIt
-Z2VuMi13ZHQiIGZvciBSLUNhciBHZW4yIGFuZCBSWi9HDQo+ID4gKyAgICAgICAgICAgICAgICAt
-ICJyZW5lc2FzLHJjYXItZ2VuMy13ZHQiIGZvciBSLUNhciBHZW4zDQo+DQo+IFlvdSd2ZSBsb3N0
-IHRoZSBnZW5lcmljICJyZW5lc2FzLHJ6YS13ZHQiLg0KDQpPb29wcywgSSdsbCBmaXggdGhhdC4N
-Cg0KQ2hlZXJzLA0KRmFiDQoNCj4NCj4gV2l0aCB0aGF0IGZpeGVkOg0KPiBSZXZpZXdlZC1ieTog
-R2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCj4NCj4gR3J7b2V0
-amUsZWV0aW5nfXMsDQo+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0t
-DQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlh
-MzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9u
-cyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3
-aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9y
-IHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-LS0gTGludXMgVG9ydmFsZHMNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwg
-RHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJl
-LCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0
-ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Jacopo,
+
+Thank you for the patch.
+
+On Tuesday, 30 January 2018 11:58:18 EET Jacopo Mondi wrote:
+> Add support to ov772x driver for frame intervals handling and enumeration.
+> Tested with 10MHz and 24MHz input clock at VGA and QVGA resolutions for
+> 10, 15 and 30 frame per second rates.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/media/i2c/ov772x.c | 210 ++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 193 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> index 23106d7..28de254 100644
+> --- a/drivers/media/i2c/ov772x.c
+> +++ b/drivers/media/i2c/ov772x.c
+
+[snip]
+
+> @@ -373,6 +378,19 @@
+>  #define VERSION(pid, ver) ((pid<<8)|(ver&0xFF))
+> 
+>  /*
+> + * Frame size (including blanking lines)
+> + */
+> +#define VGA_FRAME_SIZE		(510 * 748)
+> +#define QVGA_FRAME_SIZE		(278 * 576)
+
+Those two macros are not used, you can drop them.
+
+> +/*
+> + * Input clock frequencies
+> + */
+> +static const u8 ov772x_com4_vals[] = { PLL_BYPASS, PLL_4x, PLL_6x, PLL_8x
+> };
+> +static const unsigned int ov772x_pll_mult[] = { 1, 4, 6, 8 };
+> +#define OV772X_PLL_N_MULT ARRAY_SIZE(ov772x_pll_mult)
+
+I think it would be clearer if you used ARRAY_SIZE(ov772x_pll_mult) directly 
+in the code.
+
+Maybe nitpicking a bit, but I wouldgroup the com4 values and multipliers in a 
+structure:
+
+static const struct {
+	unsigned int mult;
+	u8 com4;
+} ov772x_pll_mult[] = {
+	{ 1, PLL_BYPASS },
+	{ 4, PLL_4x },
+	{ 6, PLL_6x },
+	{ 8, PLL_8x },
+};
+
+That ensures that the two arrays stay in sync as there's only one array left.
+
+> +/*
+>   * struct
+>   */
+> 
+> @@ -388,6 +406,7 @@ struct ov772x_color_format {
+>  struct ov772x_win_size {
+>  	char                     *name;
+>  	unsigned char             com7_bit;
+> +	unsigned int		  sizeimage;
+>  	struct v4l2_rect	  rect;
+>  };
+> 
+> @@ -404,6 +423,7 @@ struct ov772x_priv {
+>  	unsigned short                    flag_hflip:1;
+>  	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
+>  	unsigned short                    band_filter;
+> +	unsigned int			  fps;
+>  };
+> 
+>  /*
+> @@ -487,27 +507,35 @@ static const struct ov772x_color_format ov772x_cfmts[]
+> = {
+> 
+>  static const struct ov772x_win_size ov772x_win_sizes[] = {
+>  	{
+> -		.name     = "VGA",
+> -		.com7_bit = SLCT_VGA,
+> +		.name		= "VGA",
+> +		.com7_bit	= SLCT_VGA,
+> +		.sizeimage	= 381480,
+
+I'd write this 510 * 748.
+
+>  		.rect = {
+> -			.left = 140,
+> -			.top = 14,
+> -			.width = VGA_WIDTH,
+> -			.height = VGA_HEIGHT,
+> +			.left	= 140,
+> +			.top	= 14,
+> +			.width	= VGA_WIDTH,
+> +			.height	= VGA_HEIGHT,
+>  		},
+>  	}, {
+> -		.name     = "QVGA",
+> -		.com7_bit = SLCT_QVGA,
+> +		.name		= "QVGA",
+> +		.com7_bit	= SLCT_QVGA,
+> +		.sizeimage	= 160128,
+
+And this 278 * 576. It makes the value less magic.
+
+>  		.rect = {
+> -			.left = 252,
+> -			.top = 6,
+> -			.width = QVGA_WIDTH,
+> -			.height = QVGA_HEIGHT,
+> +			.left	= 252,
+> +			.top	= 6,
+> +			.width	= QVGA_WIDTH,
+> +			.height	= QVGA_HEIGHT,
+>  		},
+>  	},
+>  };
+> 
+>  /*
+> + * frame rate settings lists
+> + */
+> +unsigned int ov772x_frame_intervals[] = { 5, 10, 15, 20, 30, 60 };
+> +#define OV772X_N_FRAME_INTERVALS ARRAY_SIZE(ov772x_frame_intervals)
+> +
+> +/*
+>   * general function
+>   */
+> 
+> @@ -574,6 +602,124 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int
+> enable) return 0;
+>  }
+> 
+> +static int ov772x_set_frame_rate(struct ov772x_priv *priv,
+> +				 struct v4l2_fract *tpf,
+> +				 const struct ov772x_color_format *cfmt,
+> +				 const struct ov772x_win_size *win)
+> +{
+> +	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+> +	unsigned int fps = tpf->denominator / tpf->numerator;
+
+tpf->numerator could be 0.
+
+> +	unsigned int fin = clk_get_rate(priv->clk);
+
+Clock rates are unsigned long.
+
+> +	unsigned int rate_prev;
+> +	unsigned int fsize;
+> +	unsigned int pclk;
+> +	unsigned int rate;
+> +	unsigned int idx;
+> +	unsigned int i;
+> +	u8 clkrc = 0;
+> +	u8 com4 = 0;
+> +	int ret;
+> +
+> +	/* Approximate to the closest supported frame interval. */
+> +	rate_prev = ~0L;
+> +	for (i = 0, idx = 0; i < OV772X_N_FRAME_INTERVALS; i++) {
+> +		rate = abs(fps - ov772x_frame_intervals[i]);
+> +		if (rate < rate_prev) {
+> +			idx = i;
+> +			rate_prev = rate;
+
+I'd call the rate_prev and rate variables best_diff and diff respectively.
+
+> +		}
+> +	}
+> +	fps = ov772x_frame_intervals[idx];
+> +
+> +	/* Use image size (with blankings) to calculate desired pixel clock. */
+> +	if ((cfmt->com7 & OFMT_RGB) == OFMT_RGB ||
+> +	    (cfmt->com7 & OFMT_YUV) == OFMT_YUV)
+> +		fsize = win->sizeimage * 2;
+> +	else if ((cfmt->com7 & OFMT_BRAW) == OFMT_BRAW)
+
+I think all these should test (cfmt->com7 & OFMT_MASK) == ...
+
+> +		fsize = win->sizeimage;
+> +
+> +	pclk = fps * fsize;
+> +
+> +	/*
+> +	 * Pixel clock generation circuit is pretty simple:
+> +	 *
+> +	 * Fin -> [ / CLKRC_div] -> [ * PLL_mult] -> pclk
+> +	 *
+> +	 * Try to approximate the desired pixel clock testing all available
+> +	 * PLL multipliers (1x, 4x, 6x, 8x) and calculate corresponding
+> +	 * divisor with:
+> +	 *
+> +	 * div = PLL_mult * Fin / pclk
+> +	 *
+> +	 * and re-calculate the pixel clock using it:
+> +	 *
+> +	 * pclk = Fin * PLL_mult / CLKRC_div
+> +	 *
+> +	 * Choose the PLL_mult and CLKRC_div pair that gives a pixel clock
+> +	 * closer to the desired one.
+> +	 *
+> +	 * The desired pixel clock is calculated using a known frame size
+> +	 * (blanking included) and FPS.
+> +	 */
+> +	rate_prev = ~0L;
+> +	for (i = 0; i < OV772X_PLL_N_MULT; i++) {
+> +		unsigned int pll_mult = ov772x_pll_mult[i];
+> +		unsigned int pll_out = pll_mult * fin;
+> +		unsigned int t_pclk;
+> +		unsigned int div;
+> +
+> +		if (pll_out < pclk)
+> +			continue;
+> +
+> +		div = DIV_ROUND_CLOSEST(pll_out, pclk);
+> +		t_pclk = DIV_ROUND_CLOSEST((fin * pll_mult), div);
+
+No need for the inner parentheses.
+
+> +		rate = abs(pclk - t_pclk);
+> +		if (rate < rate_prev) {
+> +			rate_prev = rate;
+> +			clkrc = CLKRC_DIV(div);
+> +			com4 = ov772x_com4_vals[i];
+> +		}
+> +	}
+> +
+> +	ret = ov772x_write(client, COM4, com4 | COM4_RESERVED);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = ov772x_write(client, CLKRC, clkrc | CLKRC_RESERVED);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	tpf->numerator = 1;
+> +	tpf->denominator = fps;
+> +	priv->fps = tpf->denominator;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ov772x_g_frame_interval(struct v4l2_subdev *sd,
+> +				   struct v4l2_subdev_frame_interval *ival)
+> +{
+> +	struct ov772x_priv *priv = to_ov772x(sd);
+> +	struct v4l2_fract *tpf = &ival->interval;
+> +
+> +	memset(ival->reserved, 0, sizeof(ival->reserved));
+> +	tpf->numerator = 1;
+> +	tpf->denominator = priv->fps;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
+> +				   struct v4l2_subdev_frame_interval *ival)
+> +{
+> +	struct ov772x_priv *priv = to_ov772x(sd);
+> +	struct v4l2_fract *tpf = &ival->interval;
+> +
+> +	memset(ival->reserved, 0, sizeof(ival->reserved));
+> +
+> +	return ov772x_set_frame_rate(priv, tpf, priv->cfmt, priv->win);
+> +}
+> +
+>  static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
+>  {
+>  	struct ov772x_priv *priv = container_of(ctrl->handler,
+> @@ -757,6 +903,7 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+>  			     const struct ov772x_win_size *win)
+>  {
+>  	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
+> +	struct v4l2_fract tpf;
+>  	int ret;
+>  	u8  val;
+> 
+> @@ -885,6 +1032,13 @@ static int ov772x_set_params(struct ov772x_priv *priv,
+> if (ret < 0)
+>  		goto ov772x_set_fmt_error;
+> 
+> +	/* COM4, CLKRC: Set pixel clock and framerate. */
+> +	tpf.numerator = 1;
+> +	tpf.denominator = priv->fps;
+> +	ret = ov772x_set_frame_rate(priv, &tpf, cfmt, win);
+> +	if (ret < 0)
+> +		goto ov772x_set_fmt_error;
+> +
+>  	/*
+>  	 * set COM8
+>  	 */
+> @@ -1043,6 +1197,24 @@ static const struct v4l2_subdev_core_ops
+> ov772x_subdev_core_ops = { .s_power	= ov772x_s_power,
+>  };
+> 
+> +static int ov772x_enum_frame_interval(struct v4l2_subdev *sd,
+> +				      struct v4l2_subdev_pad_config *cfg,
+> +				      struct v4l2_subdev_frame_interval_enum *fie)
+> +{
+> +	if (fie->pad || fie->index >= OV772X_N_FRAME_INTERVALS)
+> +		return -EINVAL;
+> +
+> +	if (fie->width != VGA_WIDTH && fie->width != QVGA_WIDTH)
+> +		return -EINVAL;
+> +	if (fie->height != VGA_HEIGHT && fie->height != QVGA_HEIGHT)
+> +		return -EINVAL;
+> +
+> +	fie->interval.numerator = 1;
+> +	fie->interval.denominator = ov772x_frame_intervals[fie->index];
+> +
+> +	return 0;
+> +}
+
+The more I think about it, the more I believe that the subdev frame interval 
+enumeration operation is nonsense. This particular sensor is not restricted to 
+a fixed list of frame intervals. Sensors should really expose the pixel clock 
+and blanking as controls, and higher level parameters such as frame intervals 
+should then be handled by the bridge driver.
+
+I won't nack this patch due to this as I want to see this series merged, so 
+with the above small issues fixed you have my
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+but we're going in the wrong direction. 
+
+-- 
+Regards,
+
+Laurent Pinchart
