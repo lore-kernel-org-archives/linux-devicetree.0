@@ -1,70 +1,74 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: h3/h5: Add DAI node for HDMI
-Date: Wed, 31 Jan 2018 10:54:29 +0100
-Message-ID: <CAEKpxBmVzeUN=1F=APVomu4s4h2s83R4JX3EG1=1Mu_ZBSF96g@mail.gmail.com>
-References: <20180129092223.12423-1-codekipper@gmail.com> <20180129102227.ejmbifzjqmba3yja@flea.lan>
- <27087126.4975652.1517222127863.JavaMail.zimbra@musers.siol.net> <20180131071616.jrkd465cq4mgyyvm@flea.lan>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [RFC v3 10/25] dt-bindings: watchdog: renesas-wdt: Add R-Car Gen2
+ support
+Date: Wed, 31 Jan 2018 10:27:29 +0000
+Message-ID: <TY1PR06MB089525525DC23EEAEAE97795C0FB0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1517343778-27902-11-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdXkHF9R0XfcG++s0RRup+Mdtam5p=FXw26z86wAOJhZfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBV5EY3JQKGQEBRJ226Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180131071616.jrkd465cq4mgyyvm-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXkHF9R0XfcG++s0RRup+Mdtam5p=FXw26z86wAOJhZfQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Watchdog Mailing List <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31 January 2018 at 08:16, maxime ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Jan 29, 2018 at 11:35:27AM +0100, Jernej =C5=A0krabec wrote:
->> Hi Maxime,
->>
->> (previously I respond only to linux-sunxi mailing list)
->>
->> >On Mon, Jan 29, 2018 at 10:22:23AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >>
->> >> Add the new DAI block for I2S2 which is used for HDMI audio.
->> >>
->> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >
->> >queued for 4.17, thanks!
->> >Maxime
->>
->> Please note that HDMI I2S has usable 4 I2S lanes, since HDMI
->> supports 8 channel audio. As Marcus said, other blocks probably
->> support them too, they are just not wired out on pins.
->
-> I've dropped those patches for now.
->
->> Should we change compatible for HDMI?
->
-> I guess, another way of doing things if they are strictly identical
-> but for the number of lanes they support would be to add a DT property
-> for that number of lanes.
->
-That's fine...I'll look into adding a dt property and how we would map
-channels to lanes.
-Do you know of any examples?,
-BR,
-CK
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+SGkgR2VlcnQsDQoNCj4gU3ViamVjdDogUmU6IFtSRkMgdjMgMTAvMjVdIGR0LWJpbmRpbmdzOiB3
+YXRjaGRvZzogcmVuZXNhcy13ZHQ6IEFkZCBSLUNhciBHZW4yIHN1cHBvcnQNCj4NCj4gSGkgRmFi
+cml6aW8sDQo+DQo+IE9uIFR1ZSwgSmFuIDMwLCAyMDE4IGF0IDk6MjIgUE0sIEZhYnJpemlvIENh
+c3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBUaGlz
+IGNvbW1pdCBkb2N1bWVudHMgdGhlIGNvbXBhdGliaWxpdHkgd2l0aCBSLUNhciBHZW4yIGFuZCBS
+Wi9HDQo+ID4gZGV2aWNlcyBieSBkZWZpbmluZyB0aGUgZ2VuZXJpYyBjb21wYXRpYmxlIHN0cmlu
+ZyAicmVuZXNhcyxyY2FyLWdlbjItd2R0Ii4NCj4gPiBBbHNvLCB0aGlzIHBhdGNoIGV4cGFuZHMg
+dGhlIGxpc3Qgb2YgU29DLXNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5ncyB0bw0KPiA+IGluY2x1
+ZGUgUlovRyBhbmQgUi1DYXIgR2VuMiBkZXZpY2VzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
+RmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gU2ln
+bmVkLW9mZi1ieTogUmFtZXNoIFNoYW5tdWdhc3VuZGFyYW0gPHJhbWVzaC5zaGFubXVnYXN1bmRh
+cmFtQGJwLnJlbmVzYXMuY29tPg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2ghDQoNClRoYW5r
+cyBmb3IgeW91ciBmZWVkYmFjayENCg0KPg0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy93YXRjaGRvZy9yZW5lc2FzLXdkdC50eHQNCj4gPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvcmVuZXNhcy13ZHQudHh0DQo+ID4g
+QEAgLTEsMTcgKzEsMjUgQEANCj4gPiAgUmVuZXNhcyBXYXRjaGRvZyBUaW1lciAoV0RUKSBDb250
+cm9sbGVyDQo+ID4NCj4gPiAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAtLSBjb21wYXRpYmxl
+IDogU2hvdWxkIGJlICJyZW5lc2FzLDxzb2N0eXBlPi13ZHQiLCBhbmQNCj4gPiAtICAgICAgICAg
+ICAgICAicmVuZXNhcyxyY2FyLWdlbjMtd2R0IiBvciAicmVuZXNhcyxyemEtd2R0IiBhcyBmYWxs
+YmFjay4NCj4gPiArIC0gY29tcGF0aWJsZSA6IE11c3QgYmUgInJlbmVzYXMsPHNvY3R5cGU+LXdk
+dCIsIGZvbGxvd2VkIGJ5IGEgZ2VuZXJpYw0KPiA+ICsgICAgICAgICAgICAgICBmYWxsYmFjayBj
+b21wYXRpYmxlIHN0cmluZyB3aGVuIGNvbXBhdGlibGUgd2l0aCB0aGUgZ2VuZXJpYw0KPiA+ICsg
+ICAgICAgICAgICAgICB2ZXJzaW9uLg0KPiA+ICAgICAgICAgICAgICAgIEV4YW1wbGVzIHdpdGgg
+c29jdHlwZXMgYXJlOg0KPiA+ICsgICAgICAgICAgICAgICAgLSAicmVuZXNhcyxyOGE3NzQzLXdk
+dCIgKFJaL0cxTSkNCj4gPiArICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc0NS13ZHQi
+IChSWi9HMUUpDQo+ID4gKyAgICAgICAgICAgICAgICAtICJyZW5lc2FzLHI4YTc3OTAtd2R0IiAo
+Ui1DYXIgSDIpDQo+ID4gKyAgICAgICAgICAgICAgICAtICJyZW5lc2FzLHI4YTc3OTEtd2R0IiAo
+Ui1DYXIgTTItVykNCj4gPiArICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc5Mi13ZHQi
+IChSLUNhciBWMkgpDQo+ID4gKyAgICAgICAgICAgICAgICAtICJyZW5lc2FzLHI4YTc3OTMtd2R0
+IiAoUi1DYXIgTTItTikNCj4gPiArICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc5NC13
+ZHQiIChSLUNhciBFMikNCj4gPiAgICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc5NS13
+ZHQiIChSLUNhciBIMykNCj4gPiAgICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc5Ni13
+ZHQiIChSLUNhciBNMy1XKQ0KPiA+ICAgICAgICAgICAgICAgICAgLSAicmVuZXNhcyxyOGE3Nzk5
+NS13ZHQiIChSLUNhciBEMykNCj4gPiAgICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjdzNzIx
+MDAtd2R0IiAoUlovQTEpDQo+ID4gKyAgICAgICAgICAgICAgIFRoZSBnZW5lcmljIGNvbXBhdGli
+bGUgc3RyaW5nIG11c3QgYmU6DQo+ID4gKyAgICAgICAgICAgICAgICAtICJyZW5lc2FzLHJjYXIt
+Z2VuMi13ZHQiIGZvciBSLUNhciBHZW4yIGFuZCBSWi9HDQo+ID4gKyAgICAgICAgICAgICAgICAt
+ICJyZW5lc2FzLHJjYXItZ2VuMy13ZHQiIGZvciBSLUNhciBHZW4zDQo+DQo+IFlvdSd2ZSBsb3N0
+IHRoZSBnZW5lcmljICJyZW5lc2FzLHJ6YS13ZHQiLg0KDQpPb29wcywgSSdsbCBmaXggdGhhdC4N
+Cg0KQ2hlZXJzLA0KRmFiDQoNCj4NCj4gV2l0aCB0aGF0IGZpeGVkOg0KPiBSZXZpZXdlZC1ieTog
+R2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT4NCj4NCj4gR3J7b2V0
+amUsZWV0aW5nfXMsDQo+DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0t
+DQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlh
+MzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9u
+cyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3
+aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9y
+IHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+LS0gTGludXMgVG9ydmFsZHMNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwg
+RHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJl
+LCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0
+ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
