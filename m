@@ -1,94 +1,45 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 4/4] rtc: isl1208: add support for isl1219 with hwmon for
- tamper detection
-Date: Wed, 31 Jan 2018 11:54:18 +0100
-Message-ID: <20180131105418.GP2809@piout.net>
-References: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
- <20180123121801.4214-5-m.grzeschik@pengutronix.de>
- <20180123182254.GA27379@roeck-us.net>
- <20180124090333.r5o2mzpm4q536w4r@pengutronix.de>
- <20180129215919.GA17988@roeck-us.net>
- <20180130102740.GD2809@piout.net>
- <1517312409.5307.22.camel@diehl.com>
- <d2b91530-90ae-2d4f-8940-9d88b68caf2c@roeck-us.net>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v6 5/6] iommu/arm-smmu: Add support for qcom,
+ smmu-v2 variant
+Date: Wed, 31 Jan 2018 17:30:34 +0530
+Message-ID: <794c2b00-4430-1f82-01d2-cecd6df7b223@codeaurora.org>
+References: <1516362223-22946-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1516362223-22946-6-git-send-email-vivek.gautam@codeaurora.org>
+ <20180129194251.3iypqdd4tz7zti6w@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d2b91530-90ae-2d4f-8940-9d88b68caf2c@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Denis OSTERLAND <denis.osterland@diehl.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "mgr@pengutronix.de" <mgr@pengutronix.de>, "jdelvare@suse.com" <jdelvare@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180129194251.3iypqdd4tz7zti6w@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/01/2018 at 06:15:18 -0800, Guenter Roeck wrote:
-> On 01/30/2018 03:40 AM, Denis OSTERLAND wrote:
-> > Am Dienstag, den 30.01.2018, 11:27 +0100 schrieb Alexandre Belloni:
-> > > On 29/01/2018 at 13:59:19 -0800, Guenter Roeck wrote:
-> > > > 
-> > > > On Wed, Jan 24, 2018 at 10:03:33AM +0100, Michael Grzeschik wrote:
-> > > > [ ... ]
-> > > > > 
-> > > > > > 
-> > > > > > > 
-> > > > > > > +
-> > > > > > > diff --git a/Documentation/hwmon/sysfs-interface b/Documentation/hwmon/sysfs-interface
-> > > > > > > index fc337c317c673..a12b3c2b2a18c 100644
-> > > > > > > --- a/Documentation/hwmon/sysfs-interface
-> > > > > > > +++ b/Documentation/hwmon/sysfs-interface
-> > > > > > > @@ -702,6 +702,13 @@ intrusion[0-*]_alarm
-> > > > > > >   		the user. This is done by writing 0 to the file. Writing
-> > > > > > >   		other values is unsupported.
-> > > > > > > +intrusion[0-*]_timestamp
-> > > > > > > +		Chassis intrusion detection
-> > > > > > > +		YYYY-MM-DD HH:MM:SS UTC (ts.sec): intrusion detected
-> > > > > > > +		RO
-> > > > > > > +		The corresponding timestamp on which the intrustion
-> > > > > > > +		was detected.
-> > > > > > > +
-> > > > > > Sneaky. Nack. You don't just add attributes to the ABI because you want it,
-> > > > > > without serious discussion, and much less so hidden in an RTC driver
-> > > > > > (and even less as unparseable attribute).
-> > > > > Right; but it was not meant to be sneaky. I should have stick to my first
-> > > > > thought and label this patch RFC. Sorry for that.
-> > > > > 
-> > > > > > 
-> > > > > > In addition to that, I consider the attribute unnecessary. The intrusion
-> > > > > > already generates an event which should be sufficient for all practical
-> > > > > > purposes.
-> > > > > Would it make sense in between the other sysfs attributes of this driver?
-> > > > > 
-> > > > I don't understand what you mean with that, sorry.
-> > > > 
-> > > >  From an ABI perspective, the attibute doesn't add value since it is
-> > > > highly device specific (or at least it is the only chip I am aware of
-> > > > which reports such a time stamp). Feel free to add the attribute to the
-> > > > driver and document it, but not as part of the hwmon ABI. In that
-> > > > case I would be inclined to accept it. However, keep in mind that
-> > > > your version, reporting a human readable date/time, would effectively
-> > > > preclude it from ever making it into the ABI.
-> > > > 
-> > > Actually, there are many RTCs that are able to register one or more
-> > > timestamps. My plan was to add support for that soon but I was not
-> > > planning to do so in the hwmon ABI as this may be used for something
-> > > that is not intrusion detection (interval timers for example).
-> > What would you suggest?
-> > I think about something like this:
-> > event[0-*]_timestamp: timestamp in seconds since epoch or empty if not triggered
-> > event[0-*]_alarm: 1 if event was triggered, else 0; write 0 to clear event
-> 
-> Sure, that makes sense if the events are not specifically related
-> to intrusion detection. Question is if there would ever be more than one
-> or if event_timestamp and event_alarm would be sufficient.
-> 
-
-My target is a PCF85363A which supports up to 3 timestamps. SO I'd go
-for timestamp[0-*]. This would be empty if it never triggered (or the
-timestamp is invalid) writing anything to that file resets the event. I
-don't think we need more than one file per timestamp.
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+CgpPbiAxLzMwLzIwMTggMToxMiBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gRnJpLCBKYW4g
+MTksIDIwMTggYXQgMDU6MTM6NDJQTSArMDUzMCwgVml2ZWsgR2F1dGFtIHdyb3RlOgo+PiBxY29t
+LHNtbXUtdjIgaXMgYW4gYXJtLHNtbXUtdjIgaW1wbGVtZW50YXRpb24gd2l0aCBzcGVjaWZpYwo+
+PiBjbG9jayBhbmQgcG93ZXIgcmVxdWlyZW1lbnRzLiBUaGlzIHNtbXUgY29yZSBpcyB1c2VkIHdp
+dGgKPj4gbXVsdGlwbGUgbWFzdGVycyBvbiBtc204OTk2LCB2aXouIG1kc3MsIHZpZGVvLCBldGMu
+Cj4+IEFkZCBiaW5kaW5ncyBmb3IgdGhlIHNhbWUuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IFZpdmVr
+IEdhdXRhbSA8dml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnPgo+PiAtLS0KPj4gICAuLi4vZGV2
+aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQgICAgICAgICB8IDQzICsrKysrKysr
+KysrKysrKysrKysrKysKPj4gICBkcml2ZXJzL2lvbW11L2FybS1zbW11LmMgICAgICAgICAgICAg
+ICAgICAgICAgICAgICB8IDEzICsrKysrKysKPj4gICAyIGZpbGVzIGNoYW5nZWQsIDU2IGluc2Vy
+dGlvbnMoKykKPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KClRo
+YW5rcyBSb2IuCgo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhl
+IGxpbmUgInVuc3Vic2NyaWJlIGxpbnV4LWFybS1tc20iIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNz
+YWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0
+ICBodHRwOi8vdmdlci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxp
+c3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
