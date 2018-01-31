@@ -1,106 +1,453 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] of_pci_irq: add a check to fallback to standard
- device tree parsing
-Date: Wed, 31 Jan 2018 10:02:43 -0600
-Message-ID: <CAL_JsqLZqrxxpuEnoWEGkT2WCuyjqn0bM1DP8PdAwnQsso8kOA@mail.gmail.com>
-References: <31c765c53e85e41bfc001d110d69e46c9967f4e7.1516961656.git.ryder.lee@mediatek.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] ASoC: codecs: Add support for AK5558 ADC
+	driver
+Date: Wed, 31 Jan 2018 18:12:15 +0200
+Message-ID: <CAHp75Vdd58U1y-LOQGg=rePOWf1LeQsZxn2ykzBhXL013ztW3Q@mail.gmail.com>
+References: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <31c765c53e85e41bfc001d110d69e46c9967f4e7.1516961656.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: devicetree <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, shengjiu.wang@nxp.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, wakasugi.jb@om.asahi-kasei.co.jp, Mihai Serban <mihai.serban@nxp.com>, Mark Brown <broonie@kernel.org>, linux-imx@nxp.com, cosmin.samoila@nxp.com, mihai.serban@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 1:41 AM, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> A root complex usually consist of a host bridge and multiple P2P bridges,
-> and someone may express that in the form of a root node with many subnodes
-> and list all four interrupts for each slot (child node) in the root node
-> like this:
+On Wed, Jan 31, 2018 at 2:57 PM, Daniel Baluta <daniel.baluta@nxp.com> wrote:
+> AK5558 is a 32-bit, 768 kHZ sampling, differential input ADC
+> for digital audio systems.
 >
->         pcie-controller {
->                 ...
->                 interrupt-map-mask = <0xf800 0 0 7>;
->                 interrupt-map = <0x0000 0 0 {INTx} &{interrupt parent} ...>
->                                  0x0800 0 0 {INTx} &{interrupt parent} ...>;
+> Datasheet is available at:
 >
->                 pcie@0,0 {
->                         reg = <0x0000 0 0 0 0>;
->                         ...
->                 };
+> https://www.akm.com/akm/en/file/datasheet/AK5558VN.pdf
 >
->                 pcie@1,0 {
->                         reg = <0x0800 0 0 0 0>;
->                         ...
->                 };
->         };
+> Initial patch includes support for normal and TDM modes.
 >
-> As shown above, we'd like to propagate IRQs from a root port to the devices
-> in the hierarchy below it in this way.  However, it seems that the current
-> parser couldn't handle such cases and will get something unexpected below:
->
->         pcieport 0000:00:01.0: assign IRQ: got 213
->         igb 0000:01:00.0: assign IRQ: got 212
->
-> There is a device which is connected to 2nd slot, but the port doesn't share
-> the same IRQ with its downstream devices.  The problem here is that, if the
-> loop found a P2P bridge, it wouldn't check whether the reg property exists
-> in ppnode or not but just pass the subordinate devfn to of_irq_parse_raw(),
-> thus the subsequent flow couldn't correctly resolve them.
->
-> Fix this by adding a check to fallback to standard device tree parsing.
->
-> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
-> Please refer to the previous discussion thread: https://patchwork.ozlabs.org/patch/829108/
-> ---
->  drivers/of/of_pci_irq.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
-> index 3a05568..e445866 100644
-> --- a/drivers/of/of_pci_irq.c
-> +++ b/drivers/of/of_pci_irq.c
-> @@ -86,8 +86,18 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
->         out_irq->np = ppnode;
->         out_irq->args_count = 1;
->         out_irq->args[0] = pin;
-> -       laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
-> -       laddr[1] = laddr[2] = cpu_to_be32(0);
+> Signed-off-by: Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>
+> Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+
+4 authors of the code?!
+
+
+> +/*
+> + * ak5558.c  --  audio driver for AK5558 ADC
+> + *
+> + * Copyright (C) 2015 Asahi Kasei Microdevices Corporation
+> + * Copyright 2018 NXP
+
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+
+SPDX instead?
+
+> + */
+
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+
+It would be one of them, not both.
+
+> +#include <linux/i2c.h>
+> +#include <linux/delay.h>
+> +#include <linux/slab.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <sound/soc.h>
+> +#include <sound/soc-dapm.h>
+> +#include <sound/pcm.h>
+> +#include <sound/pcm_params.h>
+> +#include <sound/initval.h>
+> +#include <sound/tlv.h>
+
+> +#include <linux/of_gpio.h>
+
+It seems redundant. See below.
+
+> +#include <linux/regmap.h>
+> +#include <linux/pm_runtime.h>
+
+Better to keep list ordered.
+
+> +/* AK5558 Codec Private Data */
+> +struct ak5558_priv {
+> +       struct snd_soc_codec codec;
+> +       struct regmap *regmap;
+> +       struct i2c_client *i2c;
+> +       int fs;         /* Sampling Frequency */
+> +       int rclk;       /* Master Clock */
+
+> +       int pdn_gpio;   /* Power on / Reset GPIO */
+
+struct gpio_desc *power_gpio;
+
+> +       int slots;
+> +       int slot_width;
+> +};
+
+> +static int ak5558_set_mcki(struct snd_soc_codec *codec, int fs, int rclk)
+> +{
+> +       u8  mode;
+> +#ifndef AK5558_SLAVE_CKS_AUTO
+> +       int mcki_rate;
+> +#endif
 > +
-> +       if (!dn && ppnode) {
 
-I would think whether you have a child device in DT or not is
-irrelevant. If it's the bridge address you need to look at for
-resolving interrupts, that would be true regardless.
+> +       dev_dbg(codec->dev, "%s fs=%d rclk=%d\n", __func__, fs, rclk);
 
-> +               const __be32 *addr;
+__func__ is useless with dev_dbg(). See the run time options of Dynamic Debug.
+
 > +
-> +               addr = of_get_property(ppnode, "reg", NULL);
-> +               if (addr)
-> +                       memcpy(laddr, addr, 3);
+> +       mode = snd_soc_read(codec, AK5558_02_CONTROL1);
+> +       mode &= ~AK5558_CKS;
+> +
+> +#ifdef AK5558_SLAVE_CKS_AUTO
+> +       mode |= AK5558_CKS_AUTO;
+> +#else
 
-Can't you just adjust pdev to be ppdev in this case and then use the
-existing code to set laddr?
+> +       if (fs != 0 && rclk != 0) {
 
-Please copy the powerpc list on this. I worry that touching this
-function will break something.
+if (fs && rclk) { ?
 
-BTW, this code is moving to drivers/pci/ in 4.16.
+> +               if (rclk % fs)
+> +                       return -EINVAL;
+> +               mcki_rate = rclk / fs;
 
-> +       } else {
-> +               laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
-> +               laddr[1] = laddr[2] = cpu_to_be32(0);
 > +       }
+> +#endif
+> +       snd_soc_update_bits(codec, AK5558_02_CONTROL1, AK5558_CKS,  mode);
 > +
->         rc = of_irq_parse_raw(laddr, out_irq);
->         if (rc)
->                 goto err;
-> --
-> 1.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +       return 0;
+> +}
+> +
+
+> +static int ak5558_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
+> +                                unsigned int freq, int dir)
+> +{
+> +       struct snd_soc_codec *codec = dai->codec;
+> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
+> +
+
+> +       dev_dbg(dai->dev, "%s(%d)\n", __func__, __LINE__);
+
+Useless. Function tracer can do this for you.
+
+> +
+> +       ak5558->rclk = freq;
+> +       ak5558_set_mcki(codec, ak5558->fs, ak5558->rclk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int ak5558_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+> +{
+> +       struct snd_soc_codec *codec = dai->codec;
+> +       u8 format;
+> +
+> +       dev_dbg(dai->dev, "%s(%d)\n", __func__, __LINE__);
+
+> +       default:
+> +               dev_err(codec->dev, "Clock mode unsupported");
+
+dai->dev vs. codec->dev?
+
+> +               return -EINVAL;
+> +       }
+
+> +}
+
+> +static int ak5558_set_dai_mute(struct snd_soc_dai *dai, int mute)
+> +{
+> +       struct snd_soc_codec *codec = dai->codec;
+> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
+> +       int ndt;
+> +
+> +       if (mute) {
+
+if (!mute)
+ return 0;
+
+?
+
+> +               ndt = 0;
+> +               if (ak5558->fs != 0)
+> +                       ndt = 583000 / ak5558->fs;
+
+> +               if (ndt < 5)
+> +                       ndt = 5;
+> +               msleep(ndt);
+
+msleep(max(ndt, 5));
+
+> +}
+
+> +static int ak5558_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
+> +                              unsigned int rx_mask, int slots,
+> +                              int slot_width)
+> +{
+> +       struct snd_soc_codec *codec = dai->codec;
+> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
+
+> +       int tdm_mode = 0;
+
+Useless assignment.
+
+> +       int reg;
+> +
+> +       ak5558->slots = slots;
+> +       ak5558->slot_width = slot_width;
+> +
+> +       switch (slots * slot_width) {
+> +       case 128:
+> +               tdm_mode = AK5558_MODE_TDM128;
+> +               break;
+> +       case 256:
+> +               tdm_mode = AK5558_MODE_TDM256;
+> +               break;
+> +       case 512:
+> +               tdm_mode = AK5558_MODE_TDM512;
+> +               break;
+> +       default:
+> +               tdm_mode = AK5558_MODE_NORMAL;
+> +               break;
+> +       }
+
+> +       return 0;
+> +}
+
+> +static int ak5558_startup(struct snd_pcm_substream *substream,
+> +                         struct snd_soc_dai *dai)
+> +{
+> +       int ret;
+> +
+> +       ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
+> +                                        SNDRV_PCM_HW_PARAM_RATE,
+> +                                        &ak5558_rate_constraints);
+> +       return ret;
+
+return snd_pcm_hw_constraint_list(...); ?
+
+> +}
+
+> +static int ak5558_init_reg(struct snd_soc_codec *codec)
+> +{
+> +       int  ret;
+> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
+> +
+
+> +       dev_dbg(codec->dev, "%s(%d)\n", __func__, __LINE__);
+
+Useless.
+
+> +       usleep_range(10000, 11000);
+
+> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
+> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 0);
+> +               usleep_range(1000, 2000);
+> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 1);
+> +               usleep_range(1000, 2000);
+> +       }
+
+static void ak5558_power_off(...)
+{
+ if (!ak5558->power_gpiod)
+    return;
+
+               gpiod_set_value_cansleep(ak5558->power_gpiod, 0);
+               usleep_range(1000, 2000);
+
+}
+
+static void ak5558_power_on(...)
+{
+ if (!ak5558->power_gpiod)
+    return;
+
+               gpiod_set_value_cansleep(ak5558->power_gpiod, 1);
+               usleep_range(1000, 2000);
+}
+
+_power_off();
+_power_on();
+
+
+> +       return 0;
+> +}
+
+> +static int ak5558_remove(struct snd_soc_codec *codec)
+> +{
+> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
+> +
+> +       ak5558_set_bias_level(codec, SND_SOC_BIAS_OFF);
+> +
+
+> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
+> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 0);
+> +               usleep_range(1000, 2000);
+> +       }
+
+_power_off();
+
+> +
+> +       return 0;
+> +}
+> +
+
+> +#ifdef CONFIG_PM
+> +static int ak5558_runtime_suspend(struct device *dev)
+
+static int __maybe_unused ...
+
+> +{
+> +       struct ak5558_priv *ak5558 = dev_get_drvdata(dev);
+> +
+> +       regcache_cache_only(ak5558->regmap, true);
+
+> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
+> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 0);
+> +               usleep_range(1000, 2000);
+> +       }
+
+_power_off();
+
+> +
+> +       return 0;
+> +}
+> +
+
+> +static int ak5558_runtime_resume(struct device *dev)
+
+__maybe_unused
+
+> +{
+> +       struct ak5558_priv *ak5558 = dev_get_drvdata(dev);
+> +
+
+> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
+> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 0);
+> +               usleep_range(1000, 2000);
+
+Why power off again?
+
+> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 1);
+> +               usleep_range(1000, 2000);
+> +       }
+
+_power_off(); // why?
+_power_on();
+
+
+> +}
+
+> +#endif
+
+ugly #ifdef.
+
+> +static int ak5558_i2c_probe(struct i2c_client *i2c,
+> +                           const struct i2c_device_id *id)
+> +{
+> +       struct device_node *np = i2c->dev.of_node;
+> +       struct ak5558_priv *ak5558;
+> +       int ret = 0;
+> +
+> +       dev_err(&i2c->dev, "%s(%d)\n", __func__, __LINE__);
+> +
+> +       ak5558 = devm_kzalloc(&i2c->dev, sizeof(struct ak5558_priv),
+> +                             GFP_KERNEL);
+
+sizeof(*ak5558) ?
+
+> +       if (!ak5558)
+> +               return -ENOMEM;
+
+> +
+> +       ak5558->regmap = devm_regmap_init_i2c(i2c, &ak5558_regmap);
+> +       if (IS_ERR(ak5558->regmap))
+> +               return PTR_ERR(ak5558->regmap);
+> +
+> +       i2c_set_clientdata(i2c, ak5558);
+> +       ak5558->i2c = i2c;
+> +
+
+> +       ak5558->pdn_gpio = of_get_named_gpio(np, "ak5558,pdn-gpio", 0);
+> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
+> +               ret = devm_gpio_request_one(&i2c->dev, ak5558->pdn_gpio,
+> +                                           GPIOF_OUT_INIT_LOW, "ak5558,pdn");
+> +               if (ret) {
+> +                       dev_err(&i2c->dev, "unable to get pdn gpio\n");
+> +                       return ret;
+> +               }
+> +       }
+
+devm_gpiod_get_optional();
+
+> +}
+
+> +static const struct i2c_device_id ak5558_i2c_id[] = {
+> +       { "ak5558", 0 },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ak5558_i2c_id);
+
+Do you really need this? (->probe_new() callback doesn't require above
+to be present)
+
+> +MODULE_AUTHOR("Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>");
+> +MODULE_AUTHOR("Mihai Serban <mihai.serban@nxp.com>");
+
+4 SoBs, 2 Authors. Please, fix accordingly.
+
+> +MODULE_DESCRIPTION("ASoC AK5558 ADC driver");
+
+> +MODULE_LICENSE("GPL");
+
+It is not consistent with the header.
+
+
+> + * ak5558.h  --  audio driver for AK5558
+
+SPDX?
+
+No name of file in the file is a good practice as well.
+
+> + *
+> + * Copyright (C) 2016 Asahi Kasei Microdevices Corporation
+> + * Copyright 2018 NXP
+
+
+> +/* AK5558_02_CONTROL1 fields */
+> +#define AK5558_DIF                     0x02
+
+GENMASK() ?
+
+> +#define AK5558_BITS                    0x04
+
+Ditto.
+
+> +#define AK5558_CKS                     0x78
+
+Ditto.
+
+> +#define AK5558_MODE_BITS       0x60
+
+Ditto.
+
+-- 
+With Best Regards,
+Andy Shevchenko
