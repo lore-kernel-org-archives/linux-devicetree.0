@@ -1,42 +1,95 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] gpio: Add GPIO driver for Spreadtrum SC9860 platform
-Date: Wed, 31 Jan 2018 16:23:35 +0200
-Message-ID: <CAHp75VcYQMYNmW9-MkOKA5TWV2JgNfqnUB22s1qB4Z0ZZbTG2g@mail.gmail.com>
-References: <2834309f69a1ec37b84a33f153a3d0b90336bcc6.1517313987.git.baolin.wang@linaro.org>
- <cccc1addb9c0cc541b676dbad005ec341d12d165.1517313987.git.baolin.wang@linaro.org>
- <CAHp75Vcig869pUQ5yK1b=GpXinhYkpw1q29OVKSs_7EqP4Hknw@mail.gmail.com> <CAMz4kuL9r+97_rDihgKD_TyNaDQ3aCk7go6e4mB24QOpovFYJg@mail.gmail.com>
+From: Aapo Vienamo <aapo-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>
+Subject: [RFC] ARM: dts: imx7d: cl-som-imx7: fix pinctrl_enet
+Date: Wed, 31 Jan 2018 14:34:07 +0000
+Message-ID: <20180131143407.8324-1-aapo@tuxera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMz4kuL9r+97_rDihgKD_TyNaDQ3aCk7go6e4mB24QOpovFYJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Aapo Vienamo <aapo-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 4:01 AM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 31 January 2018 at 00:48, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, Jan 30, 2018 at 2:07 PM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> The Spreadtrum SC9860 platform GPIO controller contains 16 groups and
->>> each group contains 16 GPIOs. Each GPIO can set input/output and has
->>> the interrupt capability.
->>
->>> +config GPIO_SPRD
->>
->>> +       bool "Spreadtrum GPIO support"
->>
->> Either you have to put tristate here, or remove all redundant
->> module_*() and MODULE_*() macros.
->
-> I will remove module_*() and MODULE_*() macros in next version. Thanks
-> for your comments.
+The missing last digit of the CONFIG values is added. Looks like a typo
+of some sort when comparing to the downstream dt. This fixes
+intermittent behavior behaviour of the ethernet controllers.
 
-In that case you need to explain why driver can't be module. (And
-don't forget to replace module.h with init.h).
+Signed-off-by: Aapo Vienamo <aapo-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/imx7d-cl-som-imx7.dts | 52 ++++++++++++++++-----------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
+diff --git a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+index ae45af1ad062..3cc1fb9ce441 100644
+--- a/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
++++ b/arch/arm/boot/dts/imx7d-cl-som-imx7.dts
+@@ -213,37 +213,37 @@
+ &iomuxc {
+ 	pinctrl_enet1: enet1grp {
+ 		fsl,pins = <
+-			MX7D_PAD_SD2_CD_B__ENET1_MDIO			0x3
+-			MX7D_PAD_SD2_WP__ENET1_MDC			0x3
+-			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC	0x1
+-			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0	0x1
+-			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1	0x1
+-			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2	0x1
+-			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3	0x1
+-			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL	0x1
+-			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC	0x1
+-			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0	0x1
+-			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1	0x1
+-			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2	0x1
+-			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3	0x1
+-			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x1
++			MX7D_PAD_SD2_CD_B__ENET1_MDIO			0x30
++			MX7D_PAD_SD2_WP__ENET1_MDC			0x30
++			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC	0x11
++			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0	0x11
++			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1	0x11
++			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2	0x11
++			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3	0x11
++			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL	0x11
++			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC	0x11
++			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0	0x11
++			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1	0x11
++			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2	0x11
++			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3	0x11
++			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x11
+ 		>;
+ 	};
+ 
+ 	pinctrl_enet2: enet2grp {
+ 		fsl,pins = <
+-			MX7D_PAD_EPDC_GDSP__ENET2_RGMII_TXC		0x1
+-			MX7D_PAD_EPDC_SDCE2__ENET2_RGMII_TD0		0x1
+-			MX7D_PAD_EPDC_SDCE3__ENET2_RGMII_TD1		0x1
+-			MX7D_PAD_EPDC_GDCLK__ENET2_RGMII_TD2		0x1
+-			MX7D_PAD_EPDC_GDOE__ENET2_RGMII_TD3		0x1
+-			MX7D_PAD_EPDC_GDRL__ENET2_RGMII_TX_CTL		0x1
+-			MX7D_PAD_EPDC_SDCE1__ENET2_RGMII_RXC		0x1
+-			MX7D_PAD_EPDC_SDCLK__ENET2_RGMII_RD0		0x1
+-			MX7D_PAD_EPDC_SDLE__ENET2_RGMII_RD1		0x1
+-			MX7D_PAD_EPDC_SDOE__ENET2_RGMII_RD2		0x1
+-			MX7D_PAD_EPDC_SDSHR__ENET2_RGMII_RD3		0x1
+-			MX7D_PAD_EPDC_SDCE0__ENET2_RGMII_RX_CTL		0x1
++			MX7D_PAD_EPDC_GDSP__ENET2_RGMII_TXC		0x11
++			MX7D_PAD_EPDC_SDCE2__ENET2_RGMII_TD0		0x11
++			MX7D_PAD_EPDC_SDCE3__ENET2_RGMII_TD1		0x11
++			MX7D_PAD_EPDC_GDCLK__ENET2_RGMII_TD2		0x11
++			MX7D_PAD_EPDC_GDOE__ENET2_RGMII_TD3		0x11
++			MX7D_PAD_EPDC_GDRL__ENET2_RGMII_TX_CTL		0x11
++			MX7D_PAD_EPDC_SDCE1__ENET2_RGMII_RXC		0x11
++			MX7D_PAD_EPDC_SDCLK__ENET2_RGMII_RD0		0x11
++			MX7D_PAD_EPDC_SDLE__ENET2_RGMII_RD1		0x11
++			MX7D_PAD_EPDC_SDOE__ENET2_RGMII_RD2		0x11
++			MX7D_PAD_EPDC_SDSHR__ENET2_RGMII_RD3		0x11
++			MX7D_PAD_EPDC_SDCE0__ENET2_RGMII_RX_CTL		0x11
+ 		>;
+ 	};
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
