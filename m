@@ -1,130 +1,202 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v3 2/4] drivers: firmware: xilinx: Add ZynqMP firmware
- driver
-Date: Wed, 31 Jan 2018 19:46:20 +0000
-Message-ID: <DM2PR0201MB07676D107FA004D43F1FC49AB8FB0@DM2PR0201MB0767.namprd02.prod.outlook.com>
+From: Jolly Shah <JOLLYS-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v3 4/4] drivers: firmware: xilinx: Add debugfs interface
+Date: Wed, 31 Jan 2018 19:48:00 +0000
+Message-ID: <DM2PR0201MB076787151BE9EE4EA1F32BD3B8FB0@DM2PR0201MB0767.namprd02.prod.outlook.com>
 References: <1516836074-4149-1-git-send-email-jollys@xilinx.com>
- <1516836074-4149-3-git-send-email-jollys@xilinx.com>
- <CAKfKVtGGf8AexOTEvyyi7cmQ_Xopa3Fszf-jOuNSfBJpE2EzCg@mail.gmail.com>
+ <1516836074-4149-5-git-send-email-jollys@xilinx.com>
+ <20180125093057.GA1936@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKfKVtGGf8AexOTEvyyi7cmQ_Xopa3Fszf-jOuNSfBJpE2EzCg@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180125093057.GA1936-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
-Cc: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org" <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, "sudeep.holla-5wv7dgnIgG8@public.gmane.org" <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rajan Vaja <RAJANV-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2h1YmhyYWp5b3RpLA0KVGhhbmtzIGZvciB0aGUgcmV2aWV3LA0KDQo+IC0tLS0tT3JpZ2lu
-YWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNodWJocmFqeW90aSBEYXR0YSBbbWFpbHRvOnNodWJo
-cmFqeW90aS5kYXR0YUBnbWFpbC5jb21dDQo+IFNlbnQ6IE1vbmRheSwgSmFudWFyeSAyOSwgMjAx
-OCA5OjA2IFBNDQo+IFRvOiBKb2xseSBTaGFoIDxKT0xMWVNAeGlsaW54LmNvbT4NCj4gQ2M6IGFy
-ZC5iaWVzaGV1dmVsQGxpbmFyby5vcmc7IG1pbmdvQGtlcm5lbC5vcmc7IEdyZWcgS3JvYWgtSGFy
-dG1hbg0KPiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc+OyBtYXR0QGNvZGVibHVlcHJpbnQu
-Y28udWs7DQo+IHN1ZGVlcC5ob2xsYUBhcm0uY29tOyBoa2FsbHdlaXQxQGdtYWlsLmNvbTsga2Vl
-c2Nvb2tAY2hyb21pdW0ub3JnOw0KPiBkbWl0cnkudG9yb2tob3ZAZ21haWwuY29tOyBNaWNoYWwg
-U2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPjsgUm9iDQo+IEhlcnJpbmcgPHJvYmgrZHRA
-a2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBsaW51eC0N
-Cj4gYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgSm9sbHkgU2hhaCA8Sk9MTFlT
-QHhpbGlueC5jb20+OyBSYWphbiBWYWphDQo+IDxSQUpBTlZAeGlsaW54LmNvbT4NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCB2MyAyLzRdIGRyaXZlcnM6IGZpcm13YXJlOiB4aWxpbng6IEFkZCBaeW5x
-TVAgZmlybXdhcmUNCj4gZHJpdmVyDQo+IA0KPiBIaSwNCj4gDQo+IFRoYW5rcyBmb3IgdGhlIHBh
-dGNoLg0KPiBBIGZldyBxdWVzdGlvbnMgYmVsb3cuDQo+IA0KPiANCj4gT24gVGh1LCBKYW4gMjUs
-IDIwMTggYXQgNDo1MSBBTSwgSm9sbHkgU2hhaCA8am9sbHkuc2hhaEB4aWxpbnguY29tPiB3cm90
-ZToNCj4gPiBUaGlzIHBhdGNoIGlzIGFkZGluZyBjb21tdW5pY2F0aW9uIGxheWVyIHdpdGggZmly
-bXdhcmUuDQo+ID4gRmlybXdhcmUgZHJpdmVyIHByb3ZpZGVzIGFuIGludGVyZmFjZSB0byBmaXJt
-d2FyZSBBUElzLg0KPiA+IEludGVyZmFjZSBBUElzIGNhbiBiZSB1c2VkIGJ5IGFueSBkcml2ZXIg
-dG8gY29tbXVuaWNhdGUgdG8NCj4gPiBQTVVGVyhQbGF0Zm9ybSBNYW5hZ2VtZW50IFVuaXQpLiBB
-bGwgcmVxdWVzdHMgZ28gdGhyb3VnaCBBVEYuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBKb2xs
-eSBTaGFoIDxqb2xseXNAeGlsaW54LmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBSYWphbiBWYWph
-IDxyYWphbnZAeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4gPHNuaXA+DQo+ID4NCj4gDQo+ID4gKy8q
-Kg0KPiA+ICsgKiB6eW5xbXBfcG1fY2xvY2tfZW5hYmxlIC0gRW5hYmxlIHRoZSBjbG9jayBmb3Ig
-Z2l2ZW4gaWQNCj4gPiArICogQGNsb2NrX2lkOiAgSUQgb2YgdGhlIGNsb2NrIHRvIGJlIGVuYWJs
-ZWQNCj4gDQo+IERvZXMgaXQgZW5hYmxlIGFsbCB0aGUgcGFyZW50cyBhbHNvIGlmIHRoZXkgYXJl
-IGRpc2FibGVkPw0KQ3VycmVudCBzb2x1dGlvbiBlbmFibGVzIHNwZWNpZmllZCBjbG9jayBvbmx5
-LiBXZSBhcmUgd29ya2luZyBvbiBlbmhhbmNpbmcgdGhlIHNvbHV0aW9uIHRvIHRha2UgY2FyZSBv
-ZiBvdGhlciBkZXBlbmRlbnQgY2xvY2tzLg0KDQo+IA0KPiA+ICsgKg0KPiA+ICsgKiBUaGlzIGZ1
-bmN0aW9uIGlzIHVzZWQgYnkgbWFzdGVyIHRvIGVuYWJsZSB0aGUgY2xvY2sNCj4gPiArICogaW5j
-bHVkaW5nIHBlcmlwaGVyYWxzIGFuZCBQTEwgY2xvY2tzLg0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1
-cm46ICAgICBSZXR1cm5zIHN0YXR1cywgZWl0aGVyIHN1Y2Nlc3Mgb3IgZXJyb3IrcmVhc29uLg0K
-PiA+ICsgKi8NCj4gPiArc3RhdGljIGludCB6eW5xbXBfcG1fY2xvY2tfZW5hYmxlKHUzMiBjbG9j
-a19pZCkgew0KPiA+ICsgICAgICAgcmV0dXJuIGludm9rZV9wbV9mbihQTV9DTE9DS19FTkFCTEUs
-IGNsb2NrX2lkLCAwLCAwLCAwLCBOVUxMKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArLyoqDQo+ID4g
-KyAqIHp5bnFtcF9wbV9jbG9ja19kaXNhYmxlIC0gRGlzYWJsZSB0aGUgY2xvY2sgZm9yIGdpdmVu
-IGlkDQo+ID4gKyAqIEBjbG9ja19pZDogIElEIG9mIHRoZSBjbG9jayB0byBiZSBkaXNhYmxlDQo+
-ID4gKyAqDQo+ID4gKyAqIFRoaXMgZnVuY3Rpb24gaXMgdXNlZCBieSBtYXN0ZXIgdG8gZGlzYWJs
-ZSB0aGUgY2xvY2sNCj4gPiArICogaW5jbHVkaW5nIHBlcmlwaGVyYWxzIGFuZCBQTEwgY2xvY2tz
-Lg0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1cm46ICAgICBSZXR1cm5zIHN0YXR1cywgZWl0aGVyIHN1
-Y2Nlc3Mgb3IgZXJyb3IrcmVhc29uLg0KPiA+ICsgKi8NCj4gPiArc3RhdGljIGludCB6eW5xbXBf
-cG1fY2xvY2tfZGlzYWJsZSh1MzIgY2xvY2tfaWQpIHsNCj4gPiArICAgICAgIHJldHVybiBpbnZv
-a2VfcG1fZm4oUE1fQ0xPQ0tfRElTQUJMRSwgY2xvY2tfaWQsIDAsIDAsIDAsDQo+ID4gK05VTEwp
-OyB9DQo+ID4gKw0KPiA+ICsvKioNCj4gPiArICogenlucW1wX3BtX2Nsb2NrX2dldHN0YXRlIC0g
-R2V0IHRoZSBjbG9jayBzdGF0ZSBmb3IgZ2l2ZW4gaWQNCj4gPiArICogQGNsb2NrX2lkOiAgSUQg
-b2YgdGhlIGNsb2NrIHRvIGJlIHF1ZXJpZWQNCj4gPiArICogQHN0YXRlOiAgICAgMS8wIChFbmFi
-bGVkL0Rpc2FibGVkKQ0KPiA+ICsgKg0KPiA+ICsgKiBUaGlzIGZ1bmN0aW9uIGlzIHVzZWQgYnkg
-bWFzdGVyIHRvIGdldCB0aGUgc3RhdGUgb2YgY2xvY2sNCj4gPiArICogaW5jbHVkaW5nIHBlcmlw
-aGVyYWxzIGFuZCBQTEwgY2xvY2tzLg0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1cm46ICAgICBSZXR1
-cm5zIHN0YXR1cywgZWl0aGVyIHN1Y2Nlc3Mgb3IgZXJyb3IrcmVhc29uLg0KPiA+ICsgKi8NCj4g
-PiArc3RhdGljIGludCB6eW5xbXBfcG1fY2xvY2tfZ2V0c3RhdGUodTMyIGNsb2NrX2lkLCB1MzIg
-KnN0YXRlKSB7DQo+ID4gKyAgICAgICB1MzIgcmV0X3BheWxvYWRbUEFZTE9BRF9BUkdfQ05UXTsN
-Cj4gPiArICAgICAgIGludCByZXQ7DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0ID0gaW52b2tlX3Bt
-X2ZuKFBNX0NMT0NLX0dFVFNUQVRFLCBjbG9ja19pZCwgMCwgMCwgMCwNCj4gcmV0X3BheWxvYWQp
-Ow0KPiA+ICsgICAgICAgKnN0YXRlID0gcmV0X3BheWxvYWRbMV07DQo+ID4gKw0KPiA+ICsgICAg
-ICAgcmV0dXJuIHJldDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArLyoqDQo+ID4gKyAqIHp5bnFtcF9w
-bV9jbG9ja19zZXRkaXZpZGVyIC0gU2V0IHRoZSBjbG9jayBkaXZpZGVyIGZvciBnaXZlbiBpZA0K
-PiA+ICsgKiBAY2xvY2tfaWQ6ICBJRCBvZiB0aGUgY2xvY2sNCj4gPiArICogQGRpdl90eXBlOiAg
-VFlQRV9ESVYxOiBkaXYxDQo+ID4gKyAqICAgICAgICAgICAgIFRZUEVfRElWMjogZGl2Mg0KPiBk
-aXYgdHlwZSBkaWRudCBzZWUgaW4gdGhlIHNpZ25hdHVyZS4NCg0KDQpXaWxsIGJlIGZpeGVkIGlu
-IG5leHQgdmVyc2lvbi4NCg0KPiANCj4gDQo+IA0KPiA+ICsgKiBAZGl2aWRlcjogICBkaXZpZGVy
-IHZhbHVlLg0KPiA+ICsgKg0KPiA+ICsgKiBUaGlzIGZ1bmN0aW9uIGlzIHVzZWQgYnkgbWFzdGVy
-IHRvIHNldCBkaXZpZGVyIGZvciBhbnkgY2xvY2sNCj4gPiArICogdG8gYWNoaWV2ZSBkZXNpcmVk
-IHJhdGUuDQo+ID4gKyAqDQo+ID4gKyAqIFJldHVybjogICAgIFJldHVybnMgc3RhdHVzLCBlaXRo
-ZXIgc3VjY2VzcyBvciBlcnJvcityZWFzb24uDQo+ID4gKyAqLw0KPiA+ICtzdGF0aWMgaW50IHp5
-bnFtcF9wbV9jbG9ja19zZXRkaXZpZGVyKHUzMiBjbG9ja19pZCwgdTMyIGRpdmlkZXIpIHsNCj4g
-PiArICAgICAgIHJldHVybiBpbnZva2VfcG1fZm4oUE1fQ0xPQ0tfU0VURElWSURFUiwgY2xvY2tf
-aWQsIGRpdmlkZXIsIDAsDQo+ID4gKzAsIE5VTEwpOyB9DQo+ID4gKw0KPiA+ICsvKioNCj4gPiAr
-ICogenlucW1wX3BtX2Nsb2NrX2dldGRpdmlkZXIgLSBHZXQgdGhlIGNsb2NrIGRpdmlkZXIgZm9y
-IGdpdmVuIGlkDQo+ID4gKyAqIEBjbG9ja19pZDogIElEIG9mIHRoZSBjbG9jaw0KPiA+ICsgKiBA
-ZGl2X3R5cGU6ICBUWVBFX0RJVjE6IGRpdjENCj4gPiArICogICAgICAgICAgICAgVFlQRV9ESVYy
-OiBkaXYyDQo+IGRpZG50IHNlZSB0aGlzICBiZWxvdy4NCldpbGwgYmUgZml4ZWQgaW4gbmV4dCB2
-ZXJzaW9uLg0KDQoNCj4gDQo+ID4gKyAqIEBkaXZpZGVyOiAgIGRpdmlkZXIgdmFsdWUuDQo+ID4g
-KyAqDQo+ID4gKyAqIFRoaXMgZnVuY3Rpb24gaXMgdXNlZCBieSBtYXN0ZXIgdG8gZ2V0IGRpdmlk
-ZXIgdmFsdWVzDQo+ID4gKyAqIGZvciBhbnkgY2xvY2suDQo+ID4gKyAqDQo+ID4gKyAqIFJldHVy
-bjogICAgIFJldHVybnMgc3RhdHVzLCBlaXRoZXIgc3VjY2VzcyBvciBlcnJvcityZWFzb24uDQo+
-ID4gKyAqLw0KPiA+ICtzdGF0aWMgaW50IHp5bnFtcF9wbV9jbG9ja19nZXRkaXZpZGVyKHUzMiBj
-bG9ja19pZCwgdTMyICpkaXZpZGVyKSB7DQo+ID4gKyAgICAgICB1MzIgcmV0X3BheWxvYWRbUEFZ
-TE9BRF9BUkdfQ05UXTsNCj4gPiArICAgICAgIGludCByZXQ7DQo+ID4gKw0KPiA+ICsgICAgICAg
-cmV0ID0gaW52b2tlX3BtX2ZuKFBNX0NMT0NLX0dFVERJVklERVIsIGNsb2NrX2lkLCAwLCAwLCAw
-LA0KPiByZXRfcGF5bG9hZCk7DQo+ID4gKyAgICAgICAqZGl2aWRlciA9IHJldF9wYXlsb2FkWzFd
-Ow0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiByZXQ7DQo+ID4gK30NCj4gPiArDQo+ID4gKy8q
-Kg0KPiA+ICsgKiB6eW5xbXBfcG1fY2xvY2tfc2V0cmF0ZSAtIFNldCB0aGUgY2xvY2sgcmF0ZSBm
-b3IgZ2l2ZW4gaWQNCj4gPiArICogQGNsb2NrX2lkOiAgSUQgb2YgdGhlIGNsb2NrDQo+ID4gKyAq
-IEByYXRlOiAgICAgIHJhdGUgdmFsdWUgaW4gaHoNCj4gPiArICoNCj4gPiArICogVGhpcyBmdW5j
-dGlvbiBpcyB1c2VkIGJ5IG1hc3RlciB0byBzZXQgcmF0ZSBmb3IgYW55IGNsb2NrLg0KPiA+ICsg
-Kg0KPiA+ICsgKiBSZXR1cm46ICAgICBSZXR1cm5zIHN0YXR1cywgZWl0aGVyIHN1Y2Nlc3Mgb3Ig
-ZXJyb3IrcmVhc29uLg0KPiA+ICsgKi8NCj4gU28gdGhpcyBjYW4gc2V0IHJhdGUgb25seSA0RyBt
-YXggPw0KTmVlZCB0byBmaXggdGhpcyB0byBoYXZlIHU2NCByYXRlLg0KDQo+IA0KPiA+ICtzdGF0
-aWMgaW50IHp5bnFtcF9wbV9jbG9ja19zZXRyYXRlKHUzMiBjbG9ja19pZCwgdTMyIHJhdGUpIHsN
-Cj4gPiArICAgICAgIHJldHVybiBpbnZva2VfcG1fZm4oUE1fQ0xPQ0tfU0VUUkFURSwgY2xvY2tf
-aWQsIHJhdGUsIDAsIDAsDQo+ID4gK05VTEwpOyB9DQo+ID4gKw0KPiA+ICsvKioNCj4gPiArICog
-enlucW1wX3BtX2Nsb2NrX2dldHJhdGUgLSBHZXQgdGhlIGNsb2NrIHJhdGUgZm9yIGdpdmVuIGlk
-DQo+ID4gKyAqIEBjbG9ja19pZDogIElEIG9mIHRoZSBjbG9jaw0KPiA+ICsgKiBAcmF0ZTogICAg
-ICByYXRlIHZhbHVlIGluIGh6DQo+ID4gKyAqDQo+ID4gKyAqIFRoaXMgZnVuY3Rpb24gaXMgdXNl
-ZCBieSBtYXN0ZXIgdG8gZ2V0IHJhdGUNCj4gPiArICogZm9yIGFueSBjbG9jay4NCj4gPiArICoN
-Cj4gPiArICogUmV0dXJuOiAgICAgUmV0dXJucyBzdGF0dXMsIGVpdGhlciBzdWNjZXNzIG9yIGVy
-cm9yK3JlYXNvbi4NCj4gPiArICovDQo+IFNhbWUgcXVlc3Rpb24gaGVyZT8NCk5lZWQgdG8gZml4
-IHRoaXMgdG8gaGF2ZSB1NjQgcmF0ZS4NCg0KPiANCj4gPiArc3RhdGljIGludCB6eW5xbXBfcG1f
-Y2xvY2tfZ2V0cmF0ZSh1MzIgY2xvY2tfaWQsIHUzMiAqcmF0ZSkgew0KPiA+ICsgICAgICAgdTMy
-IHJldF9wYXlsb2FkW1BBWUxPQURfQVJHX0NOVF07DQo+ID4gKyAgICAgICBpbnQgcmV0Ow0KPiA+
-ICsNCj4gPiArICAgICAgIHJldCA9IGludm9rZV9wbV9mbihQTV9DTE9DS19HRVRSQVRFLCBjbG9j
-a19pZCwgMCwgMCwgMCwgcmV0X3BheWxvYWQpOw0KPiA+ICsgICAgICAgKnJhdGUgPSByZXRfcGF5
-bG9hZFsxXTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICt9DQo+ID4gKw0K
-PiBBbHNvICB3aGF0IGlzIHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gc2V0IHJhdGUgYW5kIHNldCBk
-aXZpZGVyPw0KU2V0IHJhdGUgdGFrZXMgcmF0ZSBhcyBpbnB1dCBhbmQgZGl2aWRlcnMgYXJlIGNh
-bGN1bGF0ZWQgYnkgRlcuIA0KU2V0IGRpdmlkZXIgdGFrZXMgZGl2aWRlcnMgYXMgaW5wdXQgYW5k
-IHNldHMgdGhlbSBkaXJlY3RseS4NCldpdGggbGludXgsIGl0IGlzIHJlY29tbWVuZGVkIHRvIHVz
-ZSBzZXQgZGl2aWRlciBvbmx5LiBTZXQgcmF0ZSBBUEkgaXMgbWFpbmx5IGZvciBiYXJlbWV0YWwg
-Y2FzZS4NCg0KDQpUaGFua3MsDQpKb2xseSBTaGFoDQo=
+Hi Greg,
+Thanks for review comments. All will be taken care in next version patch.
+
+Thanks,
+Jolly Shah
+
+> -----Original Message-----
+> From: Greg KH [mailto:gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org]
+> Sent: Thursday, January 25, 2018 1:31 AM
+> To: Jolly Shah <JOLLYS-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org=
+;
+> sudeep.holla-5wv7dgnIgG8@public.gmane.org; hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org;
+> dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> mark.rutland-5wv7dgnIgG8@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Jolly Shah
+> <JOLLYS-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>; Rajan Vaja <RAJANV-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Subject: Re: [PATCH v3 4/4] drivers: firmware: xilinx: Add debugfs interf=
+ace
+>=20
+> On Wed, Jan 24, 2018 at 03:21:14PM -0800, Jolly Shah wrote:
+> > Firmware-debug provides debugfs interface to all APIs.
+>=20
+> I don't understand this changelog comment, care to make it more
+> informational?  At least describe the debugfs files you are adding so tha=
+t people
+> have a chance to understand what is going on here :)
+>=20
+> > diff --git a/drivers/firmware/xilinx/zynqmp/Kconfig
+> > b/drivers/firmware/xilinx/zynqmp/Kconfig
+> > index 8f7709d..bdd0188 100644
+> > --- a/drivers/firmware/xilinx/zynqmp/Kconfig
+> > +++ b/drivers/firmware/xilinx/zynqmp/Kconfig
+> > @@ -13,4 +13,11 @@ config ZYNQMP_FIRMWARE
+> >  	  Say yes to enable zynqmp firmware interface driver.
+> >  	  In doubt, say N
+> >
+> > +config ZYNQMP_FIRMWARE_DEBUG
+> > +	bool "Enable Xilinx Zynq MPSoC firmware debug APIs"
+> > +	default ARCH_ZYNQMP && ZYNQMP_FIRMWARE && DEBUG_FS
+> > +	help
+> > +	  Say yes to enable zynqmp firmware interface debug APIs.
+> > +	  In doubt, say N
+>=20
+> So your default is going to be Y if the driver is selected?  That's not g=
+ood, just
+> leave the default alone please.
+>=20
+> > +
+> >  endmenu
+> > diff --git a/drivers/firmware/xilinx/zynqmp/Makefile
+> > b/drivers/firmware/xilinx/zynqmp/Makefile
+> > index 6629781..02f0c9a 100644
+> > --- a/drivers/firmware/xilinx/zynqmp/Makefile
+> > +++ b/drivers/firmware/xilinx/zynqmp/Makefile
+> > @@ -2,3 +2,4 @@
+> >  # Makefile for Xilinx firmwares
+> >
+> >  obj-$(CONFIG_ZYNQMP_FIRMWARE) +=3D firmware.o firmware-ggs.o
+> > +obj-$(CONFIG_ZYNQMP_FIRMWARE_DEBUG) +=3D firmware-debug.o
+> > diff --git a/drivers/firmware/xilinx/zynqmp/firmware-debug.c
+> > b/drivers/firmware/xilinx/zynqmp/firmware-debug.c
+> > new file mode 100644
+> > index 0000000..daefc62
+> > --- /dev/null
+> > +++ b/drivers/firmware/xilinx/zynqmp/firmware-debug.c
+> > @@ -0,0 +1,511 @@
+> > +// SPDX-License-Identifier: GPL-2.0+
+> > +/*
+> > + * Xilinx Zynq MPSoC Firmware layer for debugfs APIs
+> > + *
+> > + *  Copyright (C) 2014-2018 Xilinx, Inc.
+> > + *
+> > + *  Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > + *  Davorin Mista <davorin.mista-XdEHnvbJQ9jQT0dZR+AlfA@public.gmane.org>
+> > + *  Jolly Shah <jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > + *  Rajan Vaja <rajanv-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > + */
+> > +
+> > +#include <linux/compiler.h>
+> > +#include <linux/module.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/debugfs.h>
+> > +#include <linux/uaccess.h>
+> > +#include <linux/firmware/xilinx/zynqmp/firmware.h>
+> > +#include <linux/firmware/xilinx/zynqmp/firmware-debug.h>
+> > +
+> > +#define DRIVER_NAME	"zynqmp-firmware"
+>=20
+> You define this in 2 places, but only use it in one, you don't need this =
+at all,
+> please remove all instances.
+>=20
+> > +static int process_api_request(u32 pm_id, u64 *pm_api_arg, u32
+> > +*pm_api_ret) {
+> > +	const struct zynqmp_eemi_ops *eemi_ops =3D get_eemi_ops();
+> > +	u32 pm_api_version;
+> > +	int ret;
+> > +
+> > +	if (!eemi_ops)
+> > +		return -ENXIO;
+> > +
+> > +	switch (pm_id) {
+> > +	case PM_GET_API_VERSION:
+> > +		eemi_ops->get_api_version(&pm_api_version);
+> > +		pr_info("%s PM-API Version =3D %d.%d\n", __func__,
+> > +			pm_api_version >> 16, pm_api_version & 0xffff);
+>=20
+> This is a _very_ noisy function, dumping a lot of stuff to the kernel log=
+.  Why?
+> Why not send it back to the caller of the debugfs file reader instead?
+>=20
+> > +	case PM_GET_NODE_STATUS:
+> > +		ret =3D eemi_ops->get_node_status(pm_api_arg[0],
+> > +						&pm_api_ret[0],
+> > +						&pm_api_ret[1],
+> > +						&pm_api_ret[2]);
+> > +		if (!ret)
+> > +			pr_info("GET_NODE_STATUS:\n\tNodeId:
+> %llu\n\tStatus: %u\n\tRequirements: %u\n\tUsage: %u\n",
+> > +				pm_api_arg[0], pm_api_ret[0],
+> > +				pm_api_ret[1], pm_api_ret[2]);
+>=20
+> Multi-line dmesg messages?  Not good, you just lost the logging level for=
+ the
+> multiple lines :(
+>=20
+> Again, don't do this at all, just put it in file output instead.  That wa=
+y tools/users
+> can actually use it, instead of having to dig through kernel log messages=
+.
+>=20
+> > +/**
+> > + * zynqmp_pm_api_debugfs_init - Initialize debugfs interface
+> > + *
+> > + * Return:      None
+> > + */
+> > +void zynqmp_pm_api_debugfs_init(void) {
+> > +	struct dentry *root_dir;
+> > +	struct dentry *d;
+> > +
+> > +	/* Initialize debugfs interface */
+> > +	root_dir =3D debugfs_create_dir(DRIVER_NAME, NULL);
+> > +	if (!root_dir) {
+> > +		pr_warn("debugfs_create_dir failed\n");
+>=20
+> Why warn?  What can a user do about this?  Just return and move on.
+>=20
+> > +		return;
+> > +	}
+> > +
+> > +	d =3D debugfs_create_file("pm", 0220, root_dir, NULL,
+> > +				&fops_zynqmp_pm_dbgfs);
+> > +	if (!d) {
+> > +		pr_warn("debugfs_create_file power failed\n");
+> > +		goto err_dbgfs;
+> > +	}
+> > +
+> > +	d =3D debugfs_create_file("api_version", 0444, root_dir,
+> > +				NULL, &fops_zynqmp_pm_dbgfs);
+> > +	if (!d) {
+> > +		pr_warn("debugfs_create_file api_version failed\n");
+> > +		goto err_dbgfs;
+>=20
+> Same for these files, who cares if they were not created or not at all?
+> No need to even check here at all, this whole function can be reduced to =
+just 3
+> lines:
+> 	debugfs_create_dir(...);
+> 	debugfs_create_file(...);
+> 	debugfs_create_file(...);
+>=20
+> There, nice and simple.  Remember, debugfs doesn't matter, and it should =
+be
+> _really_ easy to use.  Don't make it more complex than it has to be pleas=
+e.
+>=20
+> thanks,
+>=20
+> greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
