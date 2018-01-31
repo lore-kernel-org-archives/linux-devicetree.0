@@ -1,80 +1,100 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 04/16] iio: adc: sun4i-gpadc-iio: rework: sampling
- start/end code readout reg
-Date: Wed, 31 Jan 2018 19:35:55 +0100
-Message-ID: <025fc383-8a54-cc22-bdf3-0919b8ca2507@gmail.com>
-References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-5-embed3d@gmail.com>
- <20180131175106.agrvwioaruioavqk@qschulz>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v11 2/6] mailbox: qcom: Create APCS child device for clock
+ controller
+Date: Wed, 31 Jan 2018 20:40:07 +0200
+Message-ID: <549f02e5-19d7-8cec-674f-247dfb2d2467@linaro.org>
+References: <20171205154701.27730-1-georgi.djakov@linaro.org>
+ <20171205154701.27730-3-georgi.djakov@linaro.org>
+ <CABb+yY146ho0gtbUzDv-Z_xESkU2y=UYfBA6i+522+m58LkABQ@mail.gmail.com>
+ <20171224050625.GH12655@minitux>
+ <CABb+yY3e1YTnf4ZYvXVzXPhOT9-6PzusDfpWRBorwd9nB97SSQ@mail.gmail.com>
+ <f279f1ff-2117-c587-5018-3b3eeeedff8a@linaro.org>
+ <CABb+yY3UvNx71xpt+=j4tTiLEjPTFZTxps0qe2ePa6f4yV61kQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180131175106.agrvwioaruioavqk@qschulz>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CABb+yY3UvNx71xpt+=j4tTiLEjPTFZTxps0qe2ePa6f4yV61kQ@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jassi,
 
+On 01/27/2018 05:44 AM, Jassi Brar wrote:
+> On Thu, Jan 4, 2018 at 10:26 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>> Hi Jassi,
+>>
+>> On 12/29/2017 08:14 AM, Jassi Brar wrote:
+>>> Hi Bjorn,
+>>>
+>>> On Sun, Dec 24, 2017 at 10:36 AM, Bjorn Andersson
+>>> <bjorn.andersson@linaro.org> wrote:
+>>>> On Fri 22 Dec 20:57 PST 2017, Jassi Brar wrote:
+>>>>
+>>>>> On Tue, Dec 5, 2017 at 9:16 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>>>>>> There is a clock controller functionality provided by the APCS hardware
+>>>>>> block of msm8916 devices. The device-tree would represent an APCS node
+>>>>>> with both mailbox and clock provider properties.
+>>>>>>
+>>>>> The spec might depict a 'clock' box and 'mailbox' box inside the
+>>>>> bigger APCS box. However, from the code I see in this patchset, they
+>>>>> are orthogonal and can & should be represented as independent DT
+>>>>> nodes.
+>>>>
+>>>> The APCS consists of a number of different hardware blocks, one of them
+>>>> being the "APCS global" block, which is what this node and drivers
+>>>> relate to. On 8916 this contains both the IPC register and clock
+>>>> control. But it's still just one block according to the hardware
+>>>> specification.
+>>>>
+>>>> As such DT should describe the one hardware block by one node IMHO.
+>>>>
+>>> In my even humbler opinion, DT should describe a h/w functional unit
+>>> which _could_ be seen as a standalone component.
+>>
+>> The APCS is one separate register block related to the CPU cluster. I
+>> haven't seen any strict guidelines for such cases in the DT docs, and
+>> during the discussion got the impression that this is the preferred
+>> binding. Rob has also reviewed the binding, so we should be fine to move
+>> forward with this one.
+>>
+> Well, I can't overrule Rob. But I am really not happy with random
+> device spawning from mailbox drivers. I know there are such instances
+> already in the kernel but that doesn't make it legit... unless there
+> is some hard dependency. Is there?
 
-On 31.01.2018 18:51, Quentin Schulz wrote:
-> Hi Philipp,
-> 
-> On Mon, Jan 29, 2018 at 12:29:07AM +0100, Philipp Rossak wrote:
->> For adding newer sensor some basic rework of the code is necessary.
->>
->> This commit reworks the code and allows the sampling start/end code and
->> the position of value readout register to be altered. Later the start/end
->> functions will be used to configure the ths and start/stop the
->> sampling.
->>
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   drivers/iio/adc/sun4i-gpadc-iio.c | 44 ++++++++++++++++++++++++++++++++++-----
->>   1 file changed, 39 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
->> index 03804ff9c006..db57d9fffe48 100644
->> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
->> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
->> @@ -49,6 +49,15 @@ static unsigned int sun6i_gpadc_chan_select(unsigned int chan)
->>   	return SUN6I_GPADC_CTRL1_ADC_CHAN_SELECT(chan);
->>   }
->>   
->> +struct sun4i_gpadc_iio;
->> +
->> +/*
->> + * Prototypes for these functions, which enable these functions to be
->> + * referenced in gpadc_data structures.
->> + */
-> 
-> Comment not needed.
-> 
->> +static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info);
->> +static int sun4i_gpadc_sample_end(struct sun4i_gpadc_iio *info);
->> +
->>   struct gpadc_data {
->>   	int		temp_offset;
->>   	int		temp_scale;
->> @@ -56,6 +65,9 @@ struct gpadc_data {
->>   	unsigned int	tp_adc_select;
->>   	unsigned int	(*adc_chan_select)(unsigned int chan);
->>   	unsigned int	adc_chan_mask;
->> +	unsigned int	temp_data;
-> 
-> Does not really have anything to do with sample_start/end. I would have
-> made a different commit for it.
-> 
-> Otherwise,
-> Reviewed-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> 
-> Quentin
-> 
+The dependency is that on this SoC, these functionalities are combined
+into this "CPU subsystem" block.
 
-Ok I will split this.
+Initially APCS was a syscon and it was discussed it an year ago in this
+mail thread [1] and we are trying to move away from the syscon and come
+up with some bindings. During v8 and v9 of this patchset i have switched
+from multiple child nodes to a single node as this seem to be the
+preferred form.
+
+>>> For example, if this APCS had a mac controller, would we also populate
+>>> a netdev from mailbox driver? And what if next revision moves/drops
+>>> this clock controller out of APCS, keeping mailbox controller exactly
+>>> same?
+>>
+>> The clock controller may change in some next SoC architecture and that's
+>> why the SoC version is also part of the the compatible string.
+>>
+> So the mailbox driver will be updated to spawn yet another type of clock?
+> And again for next revision and so on... I know that is unlikely but
+> the point is why not have separate clock drivers for independent h/w
+> clocks?
+
+Each revision re-shuffles the APCS block, so at least the offsets would
+be different. I don't see anything bad with spawning a child device, but
+what are the other options? Should we go back on the bindings and
+suggest something new all over again? Or do you have any other idea?
+Could you please explain your point further?
 
 Thanks,
-Philipp
+Georgi
+
+[1] https://lkml.org/lkml/2017/3/20/991
