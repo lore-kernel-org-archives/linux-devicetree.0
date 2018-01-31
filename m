@@ -1,50 +1,122 @@
-From: <houlong.wei@mediatek.com>
-Subject: [PATCH v21 0/4] Mediatek MT8173 CMDQ support
-Date: Wed, 31 Jan 2018 15:28:09 +0800
-Message-ID: <1517383693-25591-1-git-send-email-houlong.wei@mediatek.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Wed, 31 Jan 2018 08:29:10 +0100
+Message-ID: <20180131072910.ajp3jc5dmetsjtf2@flea.lan>
+References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
+ <CACRpkdan52UB7HOyH1gnHWg4CDke_VQxAdq8cBgwUroibE59Ow@mail.gmail.com>
+ <20180129082533.6edmqgbauo6q5dgz@flea.lan>
+ <CACRpkdYAGwUjr2C-w5U+WuG48pZAOUcnxFjznLbdF6Lmy1uZuQ@mail.gmail.com>
+ <CAK8P3a2HmPOTHAzqBnmim388pcWOE=fG50mG5HJifT=vzKOaTg@mail.gmail.com>
+ <20180130075441.rqxzkwero6sdfak6@flea.lan>
+ <CAK8P3a0QxQE=GM=SGPtT82=UreiqsgY6uMThvQ_woA3rjK0zjA@mail.gmail.com>
+ <20180130095916.GA23047@ulmo>
+ <20180130100150.GB23047@ulmo>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.co>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="rfbwayh24geptepy"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUPAYXJQKGQEKRUITYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180130100150.GB23047@ulmo>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dave Martin <dave.martin-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
-to help write registers with critical time limitation, such as
-updating display configuration during the vblank. It controls Global
-Command Engine (GCE) hardware to achieve this requirement.
- 
-Changes since v20:
- -rebase to v4.15-rc1
- -move dma_map_single outside of spinlock
-Changes since v19:
- -rebase to v4.10-rc2
+--rfbwayh24geptepy
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-hs.liao@mediatek.com (4):
-  dt-bindings: soc: Add documentation for the MediaTek GCE unit
-  mailbox: mediatek: Add Mediatek CMDQ driver
-  arm64: dts: mt8173: Add GCE node
-  soc: mediatek: Add Mediatek CMDQ helper
+Hi Thierry,
 
- .../devicetree/bindings/mailbox/mtk-gce.txt        |   43 ++
- arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   10 +
- drivers/mailbox/Kconfig                            |   10 +
- drivers/mailbox/Makefile                           |    2 +
- drivers/mailbox/mtk-cmdq-mailbox.c                 |  594 ++++++++++++++++++++
- drivers/soc/mediatek/Kconfig                       |   12 +
- drivers/soc/mediatek/Makefile                      |    1 +
- drivers/soc/mediatek/mtk-cmdq-helper.c             |  322 +++++++++++
- include/linux/mailbox/mtk-cmdq-mailbox.h           |   77 +++
- include/linux/soc/mediatek/mtk-cmdq.h              |  174 ++++++
- 10 files changed, 1245 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
- create mode 100644 drivers/mailbox/mtk-cmdq-mailbox.c
- create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
- create mode 100644 include/linux/mailbox/mtk-cmdq-mailbox.h
- create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
+On Tue, Jan 30, 2018 at 11:01:50AM +0100, Thierry Reding wrote:
+> On Tue, Jan 30, 2018 at 10:59:16AM +0100, Thierry Reding wrote:
+> > On Tue, Jan 30, 2018 at 10:24:48AM +0100, Arnd Bergmann wrote:
+> > > On Tue, Jan 30, 2018 at 8:54 AM, Maxime Ripard
+> > > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > > > On Mon, Jan 29, 2018 at 03:34:02PM +0100, Arnd Bergmann wrote:
+> > > >> On Mon, Jan 29, 2018 at 10:25 AM, Linus Walleij
+> > > >> <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > > >> > On Mon, Jan 29, 2018 at 9:25 AM, Maxime Ripard
+> > > >> > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > > >> >> On Sat, Jan 27, 2018 at 05:14:26PM +0100, Linus Walleij wrote:
+> > > 
+> > > >>
+> > > >> At one point we had discussed adding a 'dma-masters' property that
+> > > >> lists all the buses on which a device can be a dma master, and
+> > > >> the respective properties of those masters (iommu, coherency,
+> > > >> offset, ...).
+> > > >>
+> > > >> IIRC at the time we decided that we could live without that complexity,
+> > > >> but perhaps we cannot.
+> > > >
+> > > > Are you talking about this ?
+> > > > https://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/dma/dma.txt#L41
+> > > >
+> > > > It doesn't seem to be related to that issue to me. And in our
+> > > > particular cases, all the devices are DMA masters, the RAM is just
+> > > > mapped to another address.
+> > > 
+> > > No, that's not the one I was thinking of. The idea at the time was much
+> > > more generic, and not limited to dma engines. I don't recall the details,
+> > > but I think that Thierry was either involved or made the proposal at the
+> > > time.
+> > 
+> > Yeah, I vaguely remember discussing something like this before. A quick
+> > search through my inbox yielded these two threads, mostly related to
+> > IOMMU but I think there were some mentions about dma-ranges and so on as
+> > well. I'll have to dig deeper into those threads to refresh my memories,
+> > but I won't get around to it until later today.
+> > 
+> > If someone wants to read up on this in the meantime, here are the links:
+> > 
+> > 	https://lkml.org/lkml/2014/4/27/346
+> > 	http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/257200.html
+> > 
+> > From a quick glance the issue of dma-ranges was something that we hand-
+> > waved at the time.
+> 
+> Also found this, which seems to be relevant as well:
+> 
+> 	http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/252715.html
+> 
+> Adding Dave.
+
+Thanks for the pointers, I started to read through it.
+
+I guess we have to come up with two solutions here: a short term one
+to address the users we already have in the kernel properly, and a
+long term one where we could use that discussion as a starting point.
+
+For the short term one, could we just set the device dma_pfn_offset to
+PHYS_OFFSET at probe time, and use our dma_addr_t directly later on,
+or would this also cause some issues?
+
+For the long term plan, from what I read from the discussion, it's
+mostly centered around IOMMU indeed, and we don't have that. What we
+would actually need is to break the assumption that the DMA "parent"
+bus is the DT node's parent bus.
+
+And I guess this could be done quite easily by adding a dma-parent
+property with a phandle to the bus controller, that would have a
+dma-ranges property of its own with the proper mapping described
+there. It should be simple enough to support, but is there anything
+that could prevent something like that to work properly (such as
+preventing further IOMMU-related developments that were described in
+those mail threads).
+
+Maxime
 
 -- 
-1.7.9.5 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--rfbwayh24geptepy--
