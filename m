@@ -1,70 +1,48 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RFC v3 10/25] dt-bindings: watchdog: renesas-wdt: Add R-Car Gen2 support
-Date: Wed, 31 Jan 2018 09:46:30 +0100
-Message-ID: <CAMuHMdXkHF9R0XfcG++s0RRup+Mdtam5p=FXw26z86wAOJhZfQ@mail.gmail.com>
-References: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com> <1517343778-27902-11-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] sound/tlv320dac33: Add device tree support
+Date: Wed, 31 Jan 2018 11:12:20 +0200
+Message-ID: <f3f23e16-2045-78bd-b77e-f236cab3b85d@ti.com>
+References: <20180129230539.GA18280@amd> <20180129232031.GA7695@lenoch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1517343778-27902-11-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>l
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180129232031.GA7695@lenoch>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Ladislav Michl <ladis@linux-mips.org>, Pavel Machek <pavel@ucw.cz>
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, tony@atomide.com, abcloriens@gmail.com, lgirdwood@gmail.com, martijn@brixit.nl, =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>, patrikbachan@gmail.com, ivo.g.dimitrov.75@gmail.com, khilman@kernel.org, tiwai@suse.com, serge@hallyn.com, devicetree@vger.kernel.org, broonie@kernel.org, sre@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, aaro.koskinen@iki.fi, linux-kernel@vger.kernel.org, robh+dt@kernel.org, clayton@craftyguy.net, sakari.ailus@linux.intel.com, pali.rohar@gmail.com, bhumirks@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
-
-On Tue, Jan 30, 2018 at 9:22 PM, Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> This commit documents the compatibility with R-Car Gen2 and RZ/G
-> devices by defining the generic compatible string "renesas,rcar-gen2-wdt".
-> Also, this patch expands the list of SoC-specific compatible strings to
-> include RZ/G and R-Car Gen2 devices.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> @@ -1,17 +1,25 @@
->  Renesas Watchdog Timer (WDT) Controller
->
->  Required properties:
-> -- compatible : Should be "renesas,<soctype>-wdt", and
-> -              "renesas,rcar-gen3-wdt" or "renesas,rza-wdt" as fallback.
-> + - compatible : Must be "renesas,<soctype>-wdt", followed by a generic
-> +               fallback compatible string when compatible with the generic
-> +               version.
->                Examples with soctypes are:
-> +                - "renesas,r8a7743-wdt" (RZ/G1M)
-> +                - "renesas,r8a7745-wdt" (RZ/G1E)
-> +                - "renesas,r8a7790-wdt" (R-Car H2)
-> +                - "renesas,r8a7791-wdt" (R-Car M2-W)
-> +                - "renesas,r8a7792-wdt" (R-Car V2H)
-> +                - "renesas,r8a7793-wdt" (R-Car M2-N)
-> +                - "renesas,r8a7794-wdt" (R-Car E2)
->                  - "renesas,r8a7795-wdt" (R-Car H3)
->                  - "renesas,r8a7796-wdt" (R-Car M3-W)
->                  - "renesas,r8a77995-wdt" (R-Car D3)
->                  - "renesas,r7s72100-wdt" (RZ/A1)
-> +               The generic compatible string must be:
-> +                - "renesas,rcar-gen2-wdt" for R-Car Gen2 and RZ/G
-> +                - "renesas,rcar-gen3-wdt" for R-Car Gen3
-
-You've lost the generic "renesas,rza-wdt".
-
-With that fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+CgpPbiAyMDE4LTAxLTMwIDAxOjIwLCBMYWRpc2xhdiBNaWNobCB3cm90ZToKPiBPbiBUdWUsIEph
+biAzMCwgMjAxOCBhdCAxMjowNTozOUFNICswMTAwLCBQYXZlbCBNYWNoZWsgd3JvdGU6Cj4+Cj4+
+IFRoaXMgYWRkcyBkZXZpY2UgdHJlZSBzdXBwb3J0IHRvIHRsdjMyMGRhYzMzLmMuCj4+Cj4+IFNp
+Z25lZC1vZmYtYnk6IFBhdmVsIE1hY2hlayA8cGF2ZWxAdWN3LmN6Pgo+Pgo+PiBkaWZmIC0tZ2l0
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3RsdjMyMGRhYzMzLnR4
+dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC90bHYzMjBkYWMzMy50
+eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uNmNiZDMxMQo+PiAt
+LS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b3VuZC90bHYzMjBkYWMzMy50eHQKPj4gQEAgLTAsMCArMSwzMiBAQAo+PiArVGV4YXMgSW5zdHJ1
+bWVudHMgLSB0bHYzMjBkYWMzMyBDb2RlYyBtb2R1bGUKPj4gKwo+PiArVGhlIHRsdjMyMGRhYzMz
+IHNlcmlhbCBjb250cm9sIGJ1cyBjb21tdW5pY2F0ZXMgdGhyb3VnaCBJMkMgcHJvdG9jb2xzLgo+
+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArCj4+ICstIGNvbXBhdGlibGUgLSAidGks
+dGx2MzIwZGFjMzMiCj4+ICstIHJlZyAtIEkyQyBzbGF2ZSBhZGRyZXNzCj4+ICsKPj4gK09wdGlv
+bmFsIHByb3BlcnRpZXM6Cj4+ICsKPj4gKy0gcG93ZXItZ3Bpb3MgLSBncGlvIHBpbiB0byBwb3dl
+ciB0aGUgZGV2aWNlLCBhY3RpdmUgaGlnaAo+IAo+IFdoaWxlIGRyaXZlciB1c2VkIGdwaW8gaW4g
+cGxhdGZvcm0gZGF0YSwgaXNuJ3QgaXQgbW9yZSBsaWtlbHkKPiByZWd1bGF0b3Igd2hpY2ggcG93
+ZXJzIGRldmljZT8KCkl0IGlzIEdQSU8sIGFuZCBhY2NvcmRpbmcgdG8gdGhlIG5vbiBwdWJsaWMg
+VFJNIGl0IGlzIGNvbm5lY3RlZCB0byB0aGUKcmVzZXQgcGluIG9mIHRoZSBjb2RlYy4KClNvIHRo
+ZSBjb3JyZWN0IG5hbWUgc2hvdWxkIGJlIHJlc2V0LWdwaW9zCgotIFDDqXRlcgoKVGV4YXMgSW5z
+dHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuClkt
+dHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNp
+bmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2Et
+ZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFp
+bG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
