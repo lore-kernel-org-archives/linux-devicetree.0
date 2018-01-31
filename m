@@ -1,212 +1,88 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 01/41] dt-bindings: clock: Add new bindings for TI
- Davinci PLL clocks
-Date: Wed, 31 Jan 2018 10:28:39 +0530
-Message-ID: <a31b79a0-cf09-8c59-5b14-33daf6c1dccb@ti.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-2-git-send-email-david@lechnology.com>
- <20180129195315.bjanym7pmeh7bhaa@rob-hp-laptop>
- <ffec7cac-22cd-f19b-8c1b-ce3223606d20@lechnology.com>
- <CAL_JsqK+c-C9VJnEOr0Em3Y-dtvE+CSbsc6m-0JoWJSZxKeR_g@mail.gmail.com>
- <7064a0d6-0969-81a0-00af-84cca339b813@lechnology.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 6/7] dt-bindings: display: msm/dsi: Add compatible for
+ 14nm DSI PHY
+Date: Wed, 31 Jan 2018 12:10:12 +0530
+Message-ID: <7b0254be-8dcf-f2cf-4911-64f0b5881759@codeaurora.org>
+References: <20180117093448.4102-1-architt@codeaurora.org>
+ <20180117093448.4102-7-architt@codeaurora.org>
+ <20180129171544.st53376xyjep2cfx@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <7064a0d6-0969-81a0-00af-84cca339b813@lechnology.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180129171544.st53376xyjep2cfx@rob-hp-laptop>
 Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, Rob Herring <robh@kernel.org>
-Cc: linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: robdclark@gmail.com, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, latkinso@codeaurora.org, sibis@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 31 January 2018 12:16 AM, David Lechner wrote:
-> On 01/30/2018 08:50 AM, Rob Herring wrote:
->> On Mon, Jan 29, 2018 at 3:14 PM, David Lechner <david@lechnology.com>
->> wrote:
->>> On 01/29/2018 01:53 PM, Rob Herring wrote:
->>>>
->>>> On Sat, Jan 20, 2018 at 11:13:40AM -0600, David Lechner wrote:
->>>>>
->>>>> This adds a new binding for the PLL IP blocks in the mach-davinci
->>>>> family of processors. Currently, only da850 has device tree support
->>>>> but these bindings can also work for other SoCs in this family just
->>>>> by adding new compatible strings.
->>>>>
->>>>> Note: Although these PLL controllers are very similar to the TI
->>>>> Keystone
->>>>> SoCs, we are not re-using those bindings. The Keystone bindings use a
->>>>> legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
->>>>> have a slightly different PLL register layout and a number of quirks
->>>>> that can't be handled by the existing bindings, so the keystone
->>>>> bindings
->>>>> could not be used as-is anyway.
->>>>>
->>>>> Signed-off-by: David Lechner <david@lechnology.com>
->>>>> ---
->>>>>
->>>>> v6 changes:
->>>>> - Added clock-names property
->>>>> - Added ti,clkmode-square-wave property
->>>>> - Added pllout child node
->>>>> - Added obsclk child node
->>>>> - Expanded examples
->>>>>
->>>>>    .../devicetree/bindings/clock/ti/davinci/pll.txt   | 96
->>>>> ++++++++++++++++++++++
->>>>>    1 file changed, 96 insertions(+)
->>>>>    create mode 100644
->>>>> Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>>>>
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>>>> b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>>>> new file mode 100644
->>>>> index 0000000..36998e1
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
->>>>> @@ -0,0 +1,96 @@
->>>>> +Binding for TI DaVinci PLL Controllers
->>>>> +
->>>>> +The PLL provides clocks to most of the components on the SoC. In
->>>>> addition
->>>>> +to the PLL itself, this controller also contains bypasses, gates,
->>>>> dividers,
->>>>> +an multiplexers for various clock signals.
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible: shall be one of:
->>>>> +       - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
->>>>> +       - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
->>>>> +- reg: physical base address and size of the controller's register
->>>>> area.
->>>>> +- clocks: phandles corresponding to the clock names
->>>>> +- clock-names: names of the clock sources - depends on compatible
->>>>> string
->>>>> +       - for "ti,da850-pll0", shall be "clksrc", "extclksrc"
->>>>> +       - for "ti,da850-pll1", shall be "clksrc"
->>>>> +
->>>>> +Optional properties:
->>>>> +- ti,clkmode-square-wave: Indicates that the the board is supplying a
->>>>> square
->>>>> +       wave input on the OSCIN pin instead of using a crystal
->>>>> oscillator.
->>>>> +       This property is only valid when compatible = "ti,da850-pll0".
->>>>> +
->>>>> +
->>>>> +Optional child nodes:
->>>>> +
->>>>> +pllout
->>>>> +       Describes the main PLL clock output (before POSTDIV). The node
->>>>> name must
->>>>> +       be "pllout".
->>>>> +
->>>>> +       Required properties:
->>>>> +       - #clock-cells: shall be 0
->>>>> +
->>>>> +sysclk
->>>>> +       Describes the PLLDIVn divider clocks that provide the SYSCLKn
->>>>> clock
->>>>> +       domains. The node name must be "sysclk". Consumers of this
->>>>> node
->>>>> should
->>>>> +       use "n" in "SYSCLKn" as the index parameter for the clock
->>>>> cell.
->>>>> +
->>>>> +       Required properties:
->>>>> +       - #clock-cells: shall be 1
->>>>> +
->>>>> +auxclk
->>>>> +       Describes the AUXCLK output of the PLL. The node name must be
->>>>> "auxclk".
->>>>> +       This child node is only valid when compatible =
->>>>> "ti,da850-pll0".
->>>>> +
->>>>> +       Required properties:
->>>>> +       - #clock-cells: shall be 0
->>>>> +
->>>>> +obsclk
->>>>> +       Describes the OBSCLK output of the PLL. The node name must be
->>>>> "obsclk".
->>>>> +
->>>>> +       Required properties:
->>>>> +       - #clock-cells: shall be 0
->>>>
->>>>
->>>> So why have all these child nodes vs. just defining a single number
->>>> space of clock ids?
->>>>
->>>> Rob
->>>>
->>>
->>> I think that it makes the bindings more self-documenting. Not all
->>> PLLs have
->>> all of possible types of output clocks, so the presence or absence of a
->>> child node indicates if a PLL actually has that output or not.
->>
->> Doesn't the compatible string do that?
-> 
-> Sure.
-> 
->>
->>> It is also complicated by the fact that one of the child nodes (sysclk)
->>> is  already an array of clocks.
->>>
->>> To do what you are suggesting might look something like this...
->>>
->>> ---
->>>
->>> Required properties:
->>> - compatible: shall be one of:
->>>          - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
->>>          - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
->>> - reg: physical base address and size of the controller's register area.
->>> - clocks: phandles corresponding to the clock names
->>> - clock-names: names of the clock sources - depends on compatible string
->>>          - for "ti,da850-pll0", shall be "clksrc", "extclksrc"
->>>          - for "ti,da850-pll1", shall be "clksrc"
->>> - #clock-cells: shall be set to <2>.
->>>
->>> Consumers:
->>>
->>> The clock cell values for consumers work as follows...
->>>
->>> The first index is one of the constants defined in ti-davinci-pll.h
->>>
->>> The second index is 0 unless the first index is TI_DAVINCI_SYSCLK. In
->>> the
->>> case
->>> of TI_DAVINCI_SYSCLK the second index the SYSCLK domain ID (n in
->>> SYSCLKn).
->>>
->>> For compatible = "ti,da850-pll0":
->>>          - <&pll0 TI_DAVINCI_PLLOUT 0> is the PLLOUT clock
->>>          - <&pll0 TI_DAVINCI_SYSCLK n> is one of the SYSCLKn clock
->>> domains
->>> where n is 1 to 7
->>>          - <&pll0 TI_DAVINCI_AUXCLK 0> is the AUXCLK clock domain
->>>          - <&pll0 TI_DAVINCI_OBSCLK 0> is the OBSCLK clock domain
->>>          - all other index combinations are invalid
->>>
->>> For compatible = "ti,da850-pll1":
->>>          - <&pll0 TI_DAVINCI_SYSCLK n> is one of the SYSCLKn clock
->>> domains
->>> where n is 1 to 3
->>>          - <&pll0 TI_DAVINCI_OBSCLK 0> is the OBSCLK clock domain
->>>          - all other index combinations are invalid
->>
->> You don't really need 2 cells here. I guess if you want to keep the
->> child nodes, that is fine.
-> 
-> OK, I can see how it could work with one cell.
-> 
-> Since this is already implemented and working, I'm inclined to leave it
-> as-is if it is "good enough". But, I am fine going either way if there
-> are other opinions on the matter.
 
-FWIW, I think the current binding is fine too. The clocks are of
-different kind (fixed clock, fixed divider, flexible divider etc). So,
-its slightly better to have child nodes, I guess.
+
+On 01/29/2018 10:45 PM, Rob Herring wrote:
+> On Wed, Jan 17, 2018 at 03:04:47PM +0530, Archit Taneja wrote:
+>> Add the compatible string for 14nm DSI PHY (used in MSM8996/APQ8096).
+>>  From 14nm PHY onwards, the "dsi_phy_regulator" reg-name is not required,
+>> but "dsi_phy_lane" reg-name is. Update the doc to specify the reg-names
+>> each PHY revision needs.
+>>
+>> Cc: Rob Herring <robh@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/display/msm/dsi.txt | 13 +++++++++++--
+>>   1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+>> index 9c3ad6bbb9f0..26a1796b7145 100644
+>> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+>> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+>> @@ -86,12 +86,19 @@ Required properties:
+>>     * "qcom,dsi-phy-28nm-lp"
+>>     * "qcom,dsi-phy-20nm"
+>>     * "qcom,dsi-phy-28nm-8960"
+>> -- reg: Physical base address and length of the registers of PLL, PHY and PHY
+>> -  regulator
+>> +  * "qcom,dsi-phy-14nm"
+>> +- reg: Physical base address and length of the registers of PLL, PHY. Some
+>> +  revisions require the PHY regulator base address, whereas others require the
+>> +  PHY lane base address. See below for each PHY revision.
+>>   - reg-names: The names of register regions. The following regions are required:
+>> +  For DSI 28nm HPM/LP/8960 PHYs and 20nm PHY:
+>>     * "dsi_pll"
+>>     * "dsi_phy"
+>>     * "dsi_phy_regulator"
+>> +  For DSI 14nm PHY:
+>> +  * "dsi_pll"
+>> +  * "dsi_phy"
+>> +  * "dsi_phy_lane"
+>>   - clock-cells: Must be 1. The DSI PHY block acts as a clock provider, creating
+>>     2 clocks: A byte clock (index 0), and a pixel clock (index 1).
+>>   - power-domains: Should be <&mmcc MDSS_GDSC>.
+>> @@ -102,6 +109,8 @@ Required properties:
+>>   - vddio-supply: phandle to vdd-io regulator device node
+>>     For 20nm PHY:
+>>   - vddio-supply: phandle to vdd-io regulator device node
+>> +- vcca-supply: phandle to vcca regulator device node
+> 
+> Did you mean to add this?
+
+Yes, I didn't intend it to be a part of this patch, but this supply is indeed needed for the
+20nm PHY. I'll move this to a separate patch.
 
 Thanks,
-Sekhar
+Archit
+
+> 
+>> +  For 14nm PHY:
+>>   - vcca-supply: phandle to vcca regulator device node
+>>   
+>>   Optional properties:
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> hosted by The Linux Foundation
+>>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
