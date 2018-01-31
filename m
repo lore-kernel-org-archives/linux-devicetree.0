@@ -1,71 +1,78 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] ARM: dts: imx25-pinfunc: Always set SION for
- eSDHC CMD
-Date: Wed, 31 Jan 2018 08:29:31 +0100
-Message-ID: <20180131072931.2hymk6xzerplfhcr@pengutronix.de>
-References: <20180131000514.5286-1-benoit.thebaudeau.dev@gmail.com>
- <20180131000514.5286-2-benoit.thebaudeau.dev@gmail.com>
+From: <houlong.wei@mediatek.com>
+Subject: [PATCH v21 1/4] dt-bindings: soc: Add documentation for the MediaTek GCE unit
+Date: Wed, 31 Jan 2018 15:28:10 +0800
+Message-ID: <1517383693-25591-2-git-send-email-houlong.wei@mediatek.com>
+References: <1517383693-25591-1-git-send-email-houlong.wei@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180131000514.5286-2-benoit.thebaudeau.dev@gmail.com>
+In-Reply-To: <1517383693-25591-1-git-send-email-houlong.wei@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Beno=EEt_Th=E9baudeau?= <benoit.thebaudeau.dev@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.co>
 List-Id: devicetree@vger.kernel.org
 
-Hello Benoît,
+From: "hs.liao@mediatek.com" <hs.liao@mediatek.com>
 
-On Wed, Jan 31, 2018 at 01:05:14AM +0100, Benoît Thébaudeau wrote:
-> The eSDHC does not work properly if the SION bit is not set for the
-> bidirectional CMD signal, whatever the eSDHC instance and the selected
-> pad. Therefore, setting SION is mandatory for all eSDHC CMD ports. Do
-> this for MX25_PAD_*__ESDHCn_CMD in imx25-pinfunc.h in order to enforce
-> this behavior for all boards.
-> 
-> This had already been done for eSDHC1, but not for eSDHC2. Also, define
-> MX25_PAD_FEC_MDC__ESDHC2_CMD so that all the possible cases are covered
-> from now on.
-> 
-> Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Benoît Thébaudeau <benoit.thebaudeau.dev@gmail.com>
-> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
-> ---
-> Changes v1 -> v2:
->  - Update eSDHC instance and port naming following the addition of "ARM:
->    dts: imx25-pinfunc: Use consistent naming for eSDHC".
->  - Reference the more verbose comment for MX25_PAD_SD1_CMD__ESDHC1_CMD
->    instead of copying the same less detailed comment everywhere
->    (suggested by Uwe).
-> ---
->  arch/arm/boot/dts/imx25-pinfunc.h | 18 +++++++++++-------
->  1 file changed, 11 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx25-pinfunc.h b/arch/arm/boot/dts/imx25-pinfunc.h
-> index 2915c65a13c9..71a61c4c984f 100644
-> --- a/arch/arm/boot/dts/imx25-pinfunc.h
-> +++ b/arch/arm/boot/dts/imx25-pinfunc.h
-> @@ -236,7 +236,8 @@
->  #define MX25_PAD_LD8__LD8			0x0e8 0x2e0 0x000 0x00 0x000
->  #define MX25_PAD_LD8__UART4_RXD			0x0e8 0x2e0 0x570 0x02 0x000
->  #define MX25_PAD_LD8__FEC_TX_ERR		0x0e8 0x2e0 0x000 0x05 0x000
-> -#define MX25_PAD_LD8__ESDHC2_CMD		0x0e8 0x2e0 0x4e0 0x06 0x000
-> +/* See the comment for MX25_PAD_SD1_CMD__ESDHC1_CMD. */
+This adds documentation for the MediaTek Global Command Engine (GCE) unit
+found in MT8173 SoCs.
 
-I'd write:
+Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
+Signed-off-by: HS Liao <hs.liao@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/mailbox/mtk-gce.txt        |   43 ++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
 
-	/* SION must be set, see the comment for MX25_PAD_SD1_CMD__ESDHC1_CMD. */
-
-to at least mention SION here.
-
-Other than that the commit looks fine.
-
-Thanks
-Uwe
-
+diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+new file mode 100644
+index 0000000..d2d3ccb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+@@ -0,0 +1,43 @@
++MediaTek GCE
++===============
++
++The Global Command Engine (GCE) is used to help read/write registers with
++critical time limitation, such as updating display configuration during the
++vblank. The GCE can be used to implement the Command Queue (CMDQ) driver.
++
++CMDQ driver uses mailbox framework for communication. Please refer to
++mailbox.txt for generic information about mailbox device-tree bindings.
++
++Required properties:
++- compatible: Must be "mediatek,mt8173-gce"
++- reg: Address range of the GCE unit
++- interrupts: The interrupt signal from the GCE block
++- clock: Clocks according to the common clock binding
++- clock-names: Must be "gce" to stand for GCE clock
++- #mbox-cells: Should be 2
++
++Required properties for a client device:
++- mboxes: client use mailbox to communicate with GCE, it should have this
++  property and list of phandle, mailbox channel specifiers, and atomic
++  execution flag.
++
++Example:
++
++	gce: gce@10212000 {
++		compatible = "mediatek,mt8173-gce";
++		reg = <0 0x10212000 0 0x1000>;
++		interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infracfg CLK_INFRA_GCE>;
++		clock-names = "gce";
++
++		#mbox-cells = <2>;
++	};
++
++Example for a client device:
++
++	mmsys: clock-controller@14000000 {
++		compatible = "mediatek,mt8173-mmsys";
++		mboxes = <&gce 0 1 /* main display with atomic execution */
++			  &gce 1 1>; /* sub display with atomic execution */
++		...
++	};
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+1.7.9.5
