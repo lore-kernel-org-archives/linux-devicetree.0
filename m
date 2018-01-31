@@ -1,115 +1,212 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH v6 4/6] media: i2c: Add TDA1997x HDMI receiver driver
-Date: Tue, 30 Jan 2018 20:51:07 -0800
-Message-ID: <CAJ+vNU1xnnmNZW5zmT8+0HfT3Xfg6zfdrbC8vFNH4wuah5AVTA@mail.gmail.com>
-References: <1514491789-8697-1-git-send-email-tharvey@gateworks.com>
- <1514491789-8697-5-git-send-email-tharvey@gateworks.com> <1e65ee61-f282-4b53-dd03-68a89a91da8e@xs4all.nl>
- <CAJ+vNU1ysHuzqOnL4sf3hFZrU5kyGnQ0dFkRObVjCa=NyLsJug@mail.gmail.com> <517f8b12-e10e-1e8d-6d98-26f5fefe62b8@xs4all.nl>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v6 01/41] dt-bindings: clock: Add new bindings for TI
+ Davinci PLL clocks
+Date: Wed, 31 Jan 2018 10:28:39 +0530
+Message-ID: <a31b79a0-cf09-8c59-5b14-33daf6c1dccb@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-2-git-send-email-david@lechnology.com>
+ <20180129195315.bjanym7pmeh7bhaa@rob-hp-laptop>
+ <ffec7cac-22cd-f19b-8c1b-ce3223606d20@lechnology.com>
+ <CAL_JsqK+c-C9VJnEOr0Em3Y-dtvE+CSbsc6m-0JoWJSZxKeR_g@mail.gmail.com>
+ <7064a0d6-0969-81a0-00af-84cca339b813@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <517f8b12-e10e-1e8d-6d98-26f5fefe62b8-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <7064a0d6-0969-81a0-00af-84cca339b813@lechnology.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, Rob Herring <robh@kernel.org>
+Cc: linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 29, 2018 at 4:00 AM, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
-> On 01/25/2018 05:15 PM, Tim Harvey wrote:
-<snip>
+On Wednesday 31 January 2018 12:16 AM, David Lechner wrote:
+> On 01/30/2018 08:50 AM, Rob Herring wrote:
+>> On Mon, Jan 29, 2018 at 3:14 PM, David Lechner <david@lechnology.com>
+>> wrote:
+>>> On 01/29/2018 01:53 PM, Rob Herring wrote:
+>>>>
+>>>> On Sat, Jan 20, 2018 at 11:13:40AM -0600, David Lechner wrote:
+>>>>>
+>>>>> This adds a new binding for the PLL IP blocks in the mach-davinci
+>>>>> family of processors. Currently, only da850 has device tree support
+>>>>> but these bindings can also work for other SoCs in this family just
+>>>>> by adding new compatible strings.
+>>>>>
+>>>>> Note: Although these PLL controllers are very similar to the TI
+>>>>> Keystone
+>>>>> SoCs, we are not re-using those bindings. The Keystone bindings use a
+>>>>> legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
+>>>>> have a slightly different PLL register layout and a number of quirks
+>>>>> that can't be handled by the existing bindings, so the keystone
+>>>>> bindings
+>>>>> could not be used as-is anyway.
+>>>>>
+>>>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>>>> ---
+>>>>>
+>>>>> v6 changes:
+>>>>> - Added clock-names property
+>>>>> - Added ti,clkmode-square-wave property
+>>>>> - Added pllout child node
+>>>>> - Added obsclk child node
+>>>>> - Expanded examples
+>>>>>
+>>>>>    .../devicetree/bindings/clock/ti/davinci/pll.txt   | 96
+>>>>> ++++++++++++++++++++++
+>>>>>    1 file changed, 96 insertions(+)
+>>>>>    create mode 100644
+>>>>> Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>>>>
+>>>>> diff --git
+>>>>> a/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>>>> b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..36998e1
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>>>>> @@ -0,0 +1,96 @@
+>>>>> +Binding for TI DaVinci PLL Controllers
+>>>>> +
+>>>>> +The PLL provides clocks to most of the components on the SoC. In
+>>>>> addition
+>>>>> +to the PLL itself, this controller also contains bypasses, gates,
+>>>>> dividers,
+>>>>> +an multiplexers for various clock signals.
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible: shall be one of:
+>>>>> +       - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
+>>>>> +       - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
+>>>>> +- reg: physical base address and size of the controller's register
+>>>>> area.
+>>>>> +- clocks: phandles corresponding to the clock names
+>>>>> +- clock-names: names of the clock sources - depends on compatible
+>>>>> string
+>>>>> +       - for "ti,da850-pll0", shall be "clksrc", "extclksrc"
+>>>>> +       - for "ti,da850-pll1", shall be "clksrc"
+>>>>> +
+>>>>> +Optional properties:
+>>>>> +- ti,clkmode-square-wave: Indicates that the the board is supplying a
+>>>>> square
+>>>>> +       wave input on the OSCIN pin instead of using a crystal
+>>>>> oscillator.
+>>>>> +       This property is only valid when compatible = "ti,da850-pll0".
+>>>>> +
+>>>>> +
+>>>>> +Optional child nodes:
+>>>>> +
+>>>>> +pllout
+>>>>> +       Describes the main PLL clock output (before POSTDIV). The node
+>>>>> name must
+>>>>> +       be "pllout".
+>>>>> +
+>>>>> +       Required properties:
+>>>>> +       - #clock-cells: shall be 0
+>>>>> +
+>>>>> +sysclk
+>>>>> +       Describes the PLLDIVn divider clocks that provide the SYSCLKn
+>>>>> clock
+>>>>> +       domains. The node name must be "sysclk". Consumers of this
+>>>>> node
+>>>>> should
+>>>>> +       use "n" in "SYSCLKn" as the index parameter for the clock
+>>>>> cell.
+>>>>> +
+>>>>> +       Required properties:
+>>>>> +       - #clock-cells: shall be 1
+>>>>> +
+>>>>> +auxclk
+>>>>> +       Describes the AUXCLK output of the PLL. The node name must be
+>>>>> "auxclk".
+>>>>> +       This child node is only valid when compatible =
+>>>>> "ti,da850-pll0".
+>>>>> +
+>>>>> +       Required properties:
+>>>>> +       - #clock-cells: shall be 0
+>>>>> +
+>>>>> +obsclk
+>>>>> +       Describes the OBSCLK output of the PLL. The node name must be
+>>>>> "obsclk".
+>>>>> +
+>>>>> +       Required properties:
+>>>>> +       - #clock-cells: shall be 0
+>>>>
+>>>>
+>>>> So why have all these child nodes vs. just defining a single number
+>>>> space of clock ids?
+>>>>
+>>>> Rob
+>>>>
 >>>
->>> Hmm. This receiver supports multiple output formats, but you advertise only one.
->>> That looks wrong. If nothing else, you should be able to switch between RGB and
->>> YUV 4:4:4 since they use the same port config.
->>>
->>> It's a common use-case that you want to switch between RGB and YUV depending on
->>> the source material (i.e. if you receive a desktop/graphics then RGB is best, if
->>> you receive video then YUV 4:2:2 or 4:2:0 is best).
->>>
->>> Hardcoding just one format won't do.
->>>
+>>> I think that it makes the bindings more self-documenting. Not all
+>>> PLLs have
+>>> all of possible types of output clocks, so the presence or absence of a
+>>> child node indicates if a PLL actually has that output or not.
 >>
->> I've been thinking about this a bit. I had hard-coded a single format
->> for now because I haven't had any good ideas on how to deal with the
->> fact that the port mappings would need to differ if you change from
->> the RGB888/YUV444 (I think these are referred to as 'planar' formats?)
->> to YUV422 (semi-planar) and BT656 formats. It is true though that the
->> 36bit (TDA19973) RGB888/YUV444 and 24bit (TDA19971/2) formats can both
->> be supported with the same port mappings / pinout.
->
-> Regarding terminology:
->
-> RGB and YUV are typically interleaved, i.e. the color components are
-> (for two pixels) either RGBRGB for RGB888, YUVYUV for YUV444 or YUYV
-> for YUV422.
->
-> Planar formats are in practice only seen for YUV and will first output
-> all Y samples, and then the UV samples. This requires that the hardware
-> buffers the frame and that's not normally done by HDMI receivers.
->
-> The DMA engine, however, is often able to split up the interleaved YUV
-> samples that it receives and DMA them to separate buffers, thus turning
-> an interleaved media bus format to a planar memory format.
->
-> BT656 doesn't refer to how the samples are transferred, instead it
-> refers to how the hsync and vsync are reported. The enum v4l2_mbus_type
-> has various options, one of them being BT656.
->
-> Which mbus type is used is board specific (and should come from the
-> device tree). Whether to transmit RGB888, YUV444 or YUV422 (or possibly
-> even YUV420) is dynamic and is up to userspace since it is use-case
-> dependent.
->
-> So you'll never switch between BT656 and CSI, but you can switch between
-> BT656+RGB and BT656+YUV, or between CSI+RGB and CSI+YUV.
->
+>> Doesn't the compatible string do that?
+> 
+> Sure.
+> 
 >>
->> For example the GW5400 has a TDA19971 mapped to IMX6 CSI_DATA[19:4]
->> (16bit) for YUV422. However if you want to use BT656 you have to shift
->> the TDA19971 port mappings to get the YCbCr pins mapped to
->> CSI_DATA[19:x] and those pin groups are at the bottom of the bus for
->> the RGB888/YUV444 format.
->
-> As mentioned above, you wouldn't switch between mbus types.
->
+>>> It is also complicated by the fact that one of the child nodes (sysclk)
+>>> is  already an array of clocks.
+>>>
+>>> To do what you are suggesting might look something like this...
+>>>
+>>> ---
+>>>
+>>> Required properties:
+>>> - compatible: shall be one of:
+>>>          - "ti,da850-pll0" for PLL0 on DA850/OMAP-L138/AM18XX
+>>>          - "ti,da850-pll1" for PLL1 on DA850/OMAP-L138/AM18XX
+>>> - reg: physical base address and size of the controller's register area.
+>>> - clocks: phandles corresponding to the clock names
+>>> - clock-names: names of the clock sources - depends on compatible string
+>>>          - for "ti,da850-pll0", shall be "clksrc", "extclksrc"
+>>>          - for "ti,da850-pll1", shall be "clksrc"
+>>> - #clock-cells: shall be set to <2>.
+>>>
+>>> Consumers:
+>>>
+>>> The clock cell values for consumers work as follows...
+>>>
+>>> The first index is one of the constants defined in ti-davinci-pll.h
+>>>
+>>> The second index is 0 unless the first index is TI_DAVINCI_SYSCLK. In
+>>> the
+>>> case
+>>> of TI_DAVINCI_SYSCLK the second index the SYSCLK domain ID (n in
+>>> SYSCLKn).
+>>>
+>>> For compatible = "ti,da850-pll0":
+>>>          - <&pll0 TI_DAVINCI_PLLOUT 0> is the PLLOUT clock
+>>>          - <&pll0 TI_DAVINCI_SYSCLK n> is one of the SYSCLKn clock
+>>> domains
+>>> where n is 1 to 7
+>>>          - <&pll0 TI_DAVINCI_AUXCLK 0> is the AUXCLK clock domain
+>>>          - <&pll0 TI_DAVINCI_OBSCLK 0> is the OBSCLK clock domain
+>>>          - all other index combinations are invalid
+>>>
+>>> For compatible = "ti,da850-pll1":
+>>>          - <&pll0 TI_DAVINCI_SYSCLK n> is one of the SYSCLKn clock
+>>> domains
+>>> where n is 1 to 3
+>>>          - <&pll0 TI_DAVINCI_OBSCLK 0> is the OBSCLK clock domain
+>>>          - all other index combinations are invalid
 >>
->> I suppose however that perhaps for the example above if I have a 16bit
->> width required to support YUV422 there would never be a useful case
->> for supporting 8-bit/10-bit/12-bit BT656 on the same board?
->
-> You wouldn't switch between mbus types, but if the device tree configures
-> BT.656 with a bus width of 24 bits, then the application might very well
-> want to dynamically switch between 8, 10 and 12 bits per color component.
->
+>> You don't really need 2 cells here. I guess if you want to keep the
+>> child nodes, that is fine.
+> 
+> OK, I can see how it could work with one cell.
+> 
+> Since this is already implemented and working, I'm inclined to leave it
+> as-is if it is "good enough". But, I am fine going either way if there
+> are other opinions on the matter.
 
-Hans,
+FWIW, I think the current binding is fine too. The clocks are of
+different kind (fixed clock, fixed divider, flexible divider etc). So,
+its slightly better to have child nodes, I guess.
 
-I just submitted a v7 with multiple format support. Your point about
-bus_type being specified by dt is exactly what I needed to help make
-sense of the formats.
-
-That said, I'm unsure how to properly test the enum_mbus_code() pad op
-function. How do you obtain a list of valid formats on a subdev?
-
-I tried the following:
-root@ventana:~# media-ctl -e 'tda19971 2-0048'
-/dev/v4l-subdev1
-root@ventana:~# media-ctl --get-v4l2 '"tda19971 2-0048":0'
-                [fmt:UYVY8_2X8/1280x720 field:none colorspace:srgb]
-^^^^ calls get_format and returns the 1 and only format available for
-my tda19971 with 16bit parallel bus
-root@ventana:~# v4l2-ctl -d /dev/v4l-subdev1 --get-fmt-video-out
-VIDIOC_G_FMT: failed: Inappropriate ioctl for device
-root@ventana:~# v4l2-ctl -d /dev/v4l-subdev1 --list-formats-out
-ioctl: VIDIOC_ENUM_FMT
-
-I'm thinking perhaps enumerating the list of possible formats is a
-missing feature in media-ctl?
-
-Regards,
-
-Tim
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
