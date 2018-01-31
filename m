@@ -1,104 +1,114 @@
-From: maxime ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: h3/h5: Add DAI node for HDMI
-Date: Wed, 31 Jan 2018 16:57:51 +0100
-Message-ID: <20180131155751.jlqf4wb74aoslkjs@flea.lan>
-References: <20180129092223.12423-1-codekipper@gmail.com>
- <20180129102227.ejmbifzjqmba3yja@flea.lan>
- <27087126.4975652.1517222127863.JavaMail.zimbra@musers.siol.net>
- <20180131071616.jrkd465cq4mgyyvm@flea.lan>
- <CAEKpxBmVzeUN=1F=APVomu4s4h2s83R4JX3EG1=1Mu_ZBSF96g@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="p3h4n2kqhclkhqgm"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCWPY7JQKGQE5QAHLMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAEKpxBmVzeUN=1F=APVomu4s4h2s83R4JX3EG1=1Mu_ZBSF96g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/2] USB: dwc3: get extcon device by OF graph bindings
+Date: Wed, 31 Jan 2018 16:57:17 +0100
+Message-ID: <20180131155718.5237-2-a.hajda@samsung.com>
+References: <20180131155718.5237-1-a.hajda@samsung.com>
+        <CGME20180131155734eucas1p2b55ad1aab1d5086566dad7a79b25ccf3@eucas1p2.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20180131155718.5237-1-a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+extcon device is used to detect host/device connection. Since extcon
+OF property is deprecated, alternative method should be added.
+This method uses OF graph bindings to locate extcon.
 
---p3h4n2kqhclkhqgm
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+Hi all,
 
-On Wed, Jan 31, 2018 at 10:54:29AM +0100, Code Kipper wrote:
-> On 31 January 2018 at 08:16, maxime ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Mon, Jan 29, 2018 at 11:35:27AM +0100, Jernej =C5=A0krabec wrote:
-> >> Hi Maxime,
-> >>
-> >> (previously I respond only to linux-sunxi mailing list)
-> >>
-> >> >On Mon, Jan 29, 2018 at 10:22:23AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> >> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> >>
-> >> >> Add the new DAI block for I2S2 which is used for HDMI audio.
-> >> >>
-> >> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> >
-> >> >queued for 4.17, thanks!
-> >> >Maxime
-> >>
-> >> Please note that HDMI I2S has usable 4 I2S lanes, since HDMI
-> >> supports 8 channel audio. As Marcus said, other blocks probably
-> >> support them too, they are just not wired out on pins.
-> >
-> > I've dropped those patches for now.
-> >
-> >> Should we change compatible for HDMI?
-> >
-> > I guess, another way of doing things if they are strictly identical
-> > but for the number of lanes they support would be to add a DT property
-> > for that number of lanes.
-> >
-> That's fine...I'll look into adding a dt property and how we would map
-> channels to lanes.
-> Do you know of any examples?,
+This patch implements alternative method to get extcon from DWC3.
+The code works but is hacky, as DWC3 must traverse different DT nodes
+to get extcon, in case of TM2 it is USB-PHY and MUIC, but other
+platforms can have different paths.
+I would be glad if it can be merged as is for now, but additional work
+must be done to make it generic.
+I guess on DT binding side it is OK. So the problem should be addressed
+in the code.
+My rough idea is to implement kind of extcon aliases/forwarder mechanism,
+ie. USB-PHY will expect on its output remote port extcon, and it should register
+extcon-forwarder pointing to this extcon. This way DWC3 can look for the extcon
+on its PHY phandle, and it will receive via forwarding mechanism extcon
+exposed by MUIC.
+As I said this is rough idea for discussion, other propositions are welcome.
 
-Grepping for of_property_read_u32 should give you plenty of examples :)
+Regards
+Andrzej
+---
+ drivers/usb/dwc3/drd.c | 41 ++++++++++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
 
-maxime
+diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
+index cc8ab9a8e9d2..eee2eca3d513 100644
+--- a/drivers/usb/dwc3/drd.c
++++ b/drivers/usb/dwc3/drd.c
+@@ -8,6 +8,7 @@
+  */
+ 
+ #include <linux/extcon.h>
++#include <linux/of_graph.h>
+ 
+ #include "debug.h"
+ #include "core.h"
+@@ -38,24 +39,38 @@ static int dwc3_drd_notifier(struct notifier_block *nb,
+ 	return NOTIFY_DONE;
+ }
+ 
++struct extcon_dev *dwc3_get_extcon(struct dwc3 *dwc)
++{
++	struct device *dev = dwc->dev;
++	struct device_node *np_phy, *np_conn;
++	struct extcon_dev *edev;
++
++	if (of_property_read_bool(dev->of_node, "extcon"))
++		return extcon_get_edev_by_phandle(dwc->dev, 0);
++
++	np_phy = of_parse_phandle(dev->of_node, "phys", 0);
++	np_conn = of_graph_get_remote_node(np_phy, -1, -1);
++	edev = extcon_get_edev_by_of_node(np_conn);
++	of_node_put(np_conn);
++	of_node_put(np_phy);
++
++	return edev;
++}
++
+ int dwc3_drd_init(struct dwc3 *dwc)
+ {
+ 	int ret;
+ 
+-	if (dwc->dev->of_node) {
+-		if (of_property_read_bool(dwc->dev->of_node, "extcon"))
+-			dwc->edev = extcon_get_edev_by_phandle(dwc->dev, 0);
+-
+-		if (IS_ERR(dwc->edev))
+-			return PTR_ERR(dwc->edev);
++	dwc->edev = dwc3_get_extcon(dwc);
++	if (IS_ERR(dwc->edev))
++		return PTR_ERR(dwc->edev);
+ 
+-		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
+-		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
+-					       &dwc->edev_nb);
+-		if (ret < 0) {
+-			dev_err(dwc->dev, "couldn't register cable notifier\n");
+-			return ret;
+-		}
++	dwc->edev_nb.notifier_call = dwc3_drd_notifier;
++	ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
++				       &dwc->edev_nb);
++	if (ret < 0) {
++		dev_err(dwc->dev, "couldn't register cable notifier\n");
++		return ret;
+ 	}
+ 
+ 	dwc3_drd_update(dwc);
+-- 
+2.15.1
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---p3h4n2kqhclkhqgm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpx534ACgkQ0rTAlCFN
-r3T3oQ//YW6hbC91xaXtNJejP3n3rhljB9jznptzIiMCnWYC4p3kFsowW2uEx0wq
-iXVupWHdB6neJq30iRcgR2JrOVu6MNFPPcToqRzd0rGJ7AQFANDytUU3/lc+w8XL
-yHPEMUx5C5nPunz/vnOBZ8dltXlpIhpg4ELEv2x+atkoVbtGIgmomUfs4mZdyKUf
-qYhxaCzKZizdfSYNmQQ9N2cLnxyS/2E+0uGIHXHiiaunWP9ePdjb7TUUzQ+dT9+I
-bXIZK6vXmXwEvmxT9uYf/2KMqK5RqcY8AH0OKrlY1yk7hwNfw5UUJQfEZgkSvMXN
-PxuBRYLayBoD6K0zqhEUOSOjYsfFEOP6FoyVM/2HaVPLE81UN1xxq+crRF6KABf2
-XcUW9jMFNAw8B7Qm3eeMYREWb2mPMi6sIzqgraxGH1R1rbAPQGS40ggC2CThSbxh
-p/lebL9wbkuVUM/NL06vdRLUxme+D0HNFmabeLUjB5uIo7d7Ip1TU7ZInITGvg1Z
-YCmO5hB7AqQjaiDM9IYHHIySrcV5Ww+uafoemLcUmLgv+LKcFll/swb+9zCv3upO
-lYINlEqzToOoMLk6TeM3DxPP+wpEAy7rPYzBawkzcd4NHQmb+sXGIQSG56OvlvFH
-xLSWM9PqitQeMOr7FZAhqSjDP9XICUFScO4eR2zJLHGb27XemDg=
-=EuuO
------END PGP SIGNATURE-----
-
---p3h4n2kqhclkhqgm--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
