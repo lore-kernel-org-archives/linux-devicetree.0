@@ -1,14 +1,14 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: frowand.list@gmail.com
 Subject: [PATCH] of: cache phandle nodes to decrease cost of of_find_node_by_phandle()
-Date: Wed, 31 Jan 2018 12:02:57 -0800
-Message-ID: <1517428977-25653-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Date: Wed, 31 Jan 2018 12:05:42 -0800
+Message-ID: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, cpandya@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+From: Frank Rowand <frank.rowand@sony.com>
 
 Create a cache of the nodes that contain a phandle property.  Use this
 cache to find the node for a given phandle value instead of scanning
@@ -20,6 +20,7 @@ The cache is initialized in of_core_init().
 
 The cache is freed via a late_initcall_sync().
 
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
 
 Some of_find_by_phandle() calls may occur before the cache is
@@ -27,8 +28,7 @@ initialized or after it is freed.  For example, for the qualcomm
 qcom-apq8074-dragonboard, 11 calls occur before the initialization
 and 80 occur after the cache is freed (out of 516 total calls.)
 
-Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
----
+
  drivers/of/base.c       | 85 ++++++++++++++++++++++++++++++++++++++++++++++---
  drivers/of/of_private.h |  5 +++
  drivers/of/resolver.c   | 21 ------------
@@ -203,9 +203,4 @@ index cfaeef5f6cb1..0384ce8fdc3b 100644
  		int phandle_delta)
  {
 -- 
-Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Frank Rowand <frank.rowand@sony.com>
