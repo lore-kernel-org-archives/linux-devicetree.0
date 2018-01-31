@@ -1,349 +1,207 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v8 07/11] media: i2c: ov772x: Support frame interval handling
-Date: Wed, 31 Jan 2018 12:34:59 +0200
-Message-ID: <34502970.Ll86D7ehED@avalon>
-References: <1517306302-27957-1-git-send-email-jacopo+renesas@jmondi.org> <1517306302-27957-8-git-send-email-jacopo+renesas@jmondi.org>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [RFC v3 11/25] watchdog: renesas_wdt: Add R-Car Gen2 support
+Date: Wed, 31 Jan 2018 10:47:30 +0000
+Message-ID: <TY1PR06MB0895ECB2936323F9D281C1EFC0FB0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1517343778-27902-12-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180130220504.GA16709@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1517306302-27957-8-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180130220504.GA16709-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+Hello Guenter,
 
-Thank you for the patch.
+thank you for your feedback.
 
-On Tuesday, 30 January 2018 11:58:18 EET Jacopo Mondi wrote:
-> Add support to ov772x driver for frame intervals handling and enumeration.
-> Tested with 10MHz and 24MHz input clock at VGA and QVGA resolutions for
-> 10, 15 and 30 frame per second rates.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  drivers/media/i2c/ov772x.c | 210 ++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 193 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> index 23106d7..28de254 100644
-> --- a/drivers/media/i2c/ov772x.c
-> +++ b/drivers/media/i2c/ov772x.c
+> Subject: Re: [RFC v3 11/25] watchdog: renesas_wdt: Add R-Car Gen2 support
+>
+> On Tue, Jan 30, 2018 at 08:22:44PM +0000, Fabrizio Castro wrote:
+> > On R-Car Gen2 and RZ/G1 the rwdt clock needs to be always ON, therefore
+> > when suspending to RAM we need to explicitly disable the counting by
+> > clearing TME from RWTCSRA.
+> > Also, on some systems RWDT is the only piece of HW that allows the SoC
+> > to be restarted, therefore this patch implements the restart callback.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> > Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-+3GIUL1IS+U@public.gmane.org=
+sas.com>
+> > ---
+> > Wolfram, was the restart callback implementation missing for a reason?
+> > Is its implementation going to break any Gen3 platform?
+> >
+>
+> The changes clearly are way more than claimed in the subject. Adding
+> restart handler and PM support may be prerequisites for Gen2, but the
+> changes apply to Gen3 as well. What happened to "one patch per logical
+> change" ?
 
-[snip]
+The PM implementation should be ok for Gen3 too, without this patch series =
+the kernel
+would disable the rwdt clock when suspending to RAM, this would "pause" the=
+ counting.
+This patch series declares the rwdt clock as critical for Gen2 and RZ/G1, w=
+hich means we
+need to explicitly disable the counting to keep the same behaviour in place=
+.
+With respect to the restart callback implementation, that may well have con=
+sequences on
+Gen3, hopefully Wolfram will give us a feedback on this.
+In particular I would like to know if we should be installing the restart c=
+allback only when
+we use "renesas,rcar-gen2-wdt" as compatible string, or it's ok to make it =
+available for
+Gen3 as well.
+The only way to reboot iWave's boards iwg20d and iwg22d is to use the inter=
+nal watchdog,
+that's why the restart implementation was merged into this patch.
+I can split this patch in two, one for PM support and one for restart suppo=
+rt for the next
+version, what do you think about this?
 
-> @@ -373,6 +378,19 @@
->  #define VERSION(pid, ver) ((pid<<8)|(ver&0xFF))
-> 
->  /*
-> + * Frame size (including blanking lines)
-> + */
-> +#define VGA_FRAME_SIZE		(510 * 748)
-> +#define QVGA_FRAME_SIZE		(278 * 576)
+>
+> > v1->v3:
+> > * unified Gen2 and Gen3 drivers.
+> >
+> >  drivers/watchdog/renesas_wdt.c | 61 ++++++++++++++++++++++++++++++++++=
+++++----
+> >  1 file changed, 56 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/watchdog/renesas_wdt.c b/drivers/watchdog/renesas_=
+wdt.c
+> > index 831ef83..eedb016 100644
+> > --- a/drivers/watchdog/renesas_wdt.c
+> > +++ b/drivers/watchdog/renesas_wdt.c
+> > @@ -107,6 +107,24 @@ static unsigned int rwdt_get_timeleft(struct watch=
+dog_device *wdev)
+> >  return DIV_BY_CLKS_PER_SEC(priv, 65536 - val);
+> >  }
+> >
+> > +static int rwdt_restart(struct watchdog_device *wdev, unsigned long ac=
+tion,
+> > +void *data)
+> > +{
+> > +struct rwdt_priv *priv =3D watchdog_get_drvdata(wdev);
+> > +
+> > +pm_runtime_get_sync(wdev->parent);
+> > +
+> > +rwdt_write(priv, 0x00, RWTCSRB);
+> > +rwdt_write(priv, 0x00, RWTCSRA);
+> > +rwdt_write(priv, 0xffff, RWTCNT);
+> > +
+> > +while (readb_relaxed(priv->base + RWTCSRA) & RWTCSRA_WRFLG)
+> > +cpu_relax();
+> > +
+> > +rwdt_write(priv, 0x80, RWTCSRA);
+> > +return 0;
+> > +}
+> > +
+> >  static const struct watchdog_info rwdt_ident =3D {
+> >  .options =3D WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT=
+,
+> >  .identity =3D "Renesas WDT Watchdog",
+> > @@ -118,6 +136,7 @@ static const struct watchdog_ops rwdt_ops =3D {
+> >  .stop =3D rwdt_stop,
+> >  .ping =3D rwdt_init_timeout,
+> >  .get_timeleft =3D rwdt_get_timeleft,
+> > +.restart =3D rwdt_restart,
+> >  };
+> >
+> >  static int rwdt_probe(struct platform_device *pdev)
+> > @@ -203,13 +222,42 @@ static int rwdt_remove(struct platform_device *pd=
+ev)
+> >  return 0;
+> >  }
+> >
+> > -/*
+> > - * This driver does also fit for R-Car Gen2 (r8a779[0-4]) WDT. However=
+, for SMP
+> > - * to work there, one also needs a RESET (RST) driver which does not e=
+xist yet
+> > - * due to HW issues. This needs to be solved before adding compatibles=
+ here.
+> > - */
+>
+> Have those issues been resolved ?
 
-Those two macros are not used, you can drop them.
+This patch series addresses precisely those issues. The first implementatio=
+n
+used a flag that the watchdog driver needed to explicitly set to make every=
+thing
+work as expected. This new version uses a different concept that doesn't re=
+quire
+such an hack, and that's why the proposal now is to merge Gen2 and Gen3 dri=
+vers.
 
-> +/*
-> + * Input clock frequencies
-> + */
-> +static const u8 ov772x_com4_vals[] = { PLL_BYPASS, PLL_4x, PLL_6x, PLL_8x
-> };
-> +static const unsigned int ov772x_pll_mult[] = { 1, 4, 6, 8 };
-> +#define OV772X_PLL_N_MULT ARRAY_SIZE(ov772x_pll_mult)
+Thanks,
+Fab
 
-I think it would be clearer if you used ARRAY_SIZE(ov772x_pll_mult) directly 
-in the code.
+>
+> > +#ifdef CONFIG_PM
+> > +static int rwdt_suspend(struct device *dev)
+> > +{
+> > +struct platform_device *pdev;
+> > +struct rwdt_priv *priv;
+> > +
+> > +pdev =3D to_platform_device(dev);
+> > +priv =3D platform_get_drvdata(pdev);
+> > +if (watchdog_active(&priv->wdev)) {
+> > +rwdt_write(priv, priv->cks, RWTCSRA);
+> > +}
+> > +return 0;
+> > +}
+> > +
+> > +static int rwdt_resume(struct device *dev)
+> > +{
+> > +struct platform_device *pdev;
+> > +struct rwdt_priv *priv;
+> > +
+> > +pdev =3D to_platform_device(dev);
+> > +priv =3D platform_get_drvdata(pdev);
+> > +if (watchdog_active(&priv->wdev)) {
+> > +rwdt_write(priv, priv->cks | RWTCSRA_TME, RWTCSRA);
+> > +}
+> > +return 0;
+> > +}
+> > +
+> > +static const struct dev_pm_ops rwdt_pm =3D {
+> > +.suspend =3D rwdt_suspend,
+> > +.resume =3D rwdt_resume,
+> > +};
+> > +#endif
+> > +
+> >  static const struct of_device_id rwdt_ids[] =3D {
+> >  { .compatible =3D "renesas,rcar-gen3-wdt", },
+> > +{ .compatible =3D "renesas,rcar-gen2-wdt", },
+> >  { /* sentinel */ }
+> >  };
+> >  MODULE_DEVICE_TABLE(of, rwdt_ids);
+> > @@ -218,6 +266,9 @@ static struct platform_driver rwdt_driver =3D {
+> >  .driver =3D {
+> >  .name =3D "renesas_wdt",
+> >  .of_match_table =3D rwdt_ids,
+> > +#ifdef CONFIG_PM
+> > +.pm =3D &rwdt_pm,
+> > +#endif
+> >  },
+> >  .probe =3D rwdt_probe,
+> >  .remove =3D rwdt_remove,
+> > --
+> > 2.7.4
+> >
 
-Maybe nitpicking a bit, but I wouldgroup the com4 values and multipliers in a 
-structure:
 
-static const struct {
-	unsigned int mult;
-	u8 com4;
-} ov772x_pll_mult[] = {
-	{ 1, PLL_BYPASS },
-	{ 4, PLL_4x },
-	{ 6, PLL_6x },
-	{ 8, PLL_8x },
-};
 
-That ensures that the two arrays stay in sync as there's only one array left.
-
-> +/*
->   * struct
->   */
-> 
-> @@ -388,6 +406,7 @@ struct ov772x_color_format {
->  struct ov772x_win_size {
->  	char                     *name;
->  	unsigned char             com7_bit;
-> +	unsigned int		  sizeimage;
->  	struct v4l2_rect	  rect;
->  };
-> 
-> @@ -404,6 +423,7 @@ struct ov772x_priv {
->  	unsigned short                    flag_hflip:1;
->  	/* band_filter = COM8[5] ? 256 - BDBASE : 0 */
->  	unsigned short                    band_filter;
-> +	unsigned int			  fps;
->  };
-> 
->  /*
-> @@ -487,27 +507,35 @@ static const struct ov772x_color_format ov772x_cfmts[]
-> = {
-> 
->  static const struct ov772x_win_size ov772x_win_sizes[] = {
->  	{
-> -		.name     = "VGA",
-> -		.com7_bit = SLCT_VGA,
-> +		.name		= "VGA",
-> +		.com7_bit	= SLCT_VGA,
-> +		.sizeimage	= 381480,
-
-I'd write this 510 * 748.
-
->  		.rect = {
-> -			.left = 140,
-> -			.top = 14,
-> -			.width = VGA_WIDTH,
-> -			.height = VGA_HEIGHT,
-> +			.left	= 140,
-> +			.top	= 14,
-> +			.width	= VGA_WIDTH,
-> +			.height	= VGA_HEIGHT,
->  		},
->  	}, {
-> -		.name     = "QVGA",
-> -		.com7_bit = SLCT_QVGA,
-> +		.name		= "QVGA",
-> +		.com7_bit	= SLCT_QVGA,
-> +		.sizeimage	= 160128,
-
-And this 278 * 576. It makes the value less magic.
-
->  		.rect = {
-> -			.left = 252,
-> -			.top = 6,
-> -			.width = QVGA_WIDTH,
-> -			.height = QVGA_HEIGHT,
-> +			.left	= 252,
-> +			.top	= 6,
-> +			.width	= QVGA_WIDTH,
-> +			.height	= QVGA_HEIGHT,
->  		},
->  	},
->  };
-> 
->  /*
-> + * frame rate settings lists
-> + */
-> +unsigned int ov772x_frame_intervals[] = { 5, 10, 15, 20, 30, 60 };
-> +#define OV772X_N_FRAME_INTERVALS ARRAY_SIZE(ov772x_frame_intervals)
-> +
-> +/*
->   * general function
->   */
-> 
-> @@ -574,6 +602,124 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int
-> enable) return 0;
->  }
-> 
-> +static int ov772x_set_frame_rate(struct ov772x_priv *priv,
-> +				 struct v4l2_fract *tpf,
-> +				 const struct ov772x_color_format *cfmt,
-> +				 const struct ov772x_win_size *win)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-> +	unsigned int fps = tpf->denominator / tpf->numerator;
-
-tpf->numerator could be 0.
-
-> +	unsigned int fin = clk_get_rate(priv->clk);
-
-Clock rates are unsigned long.
-
-> +	unsigned int rate_prev;
-> +	unsigned int fsize;
-> +	unsigned int pclk;
-> +	unsigned int rate;
-> +	unsigned int idx;
-> +	unsigned int i;
-> +	u8 clkrc = 0;
-> +	u8 com4 = 0;
-> +	int ret;
-> +
-> +	/* Approximate to the closest supported frame interval. */
-> +	rate_prev = ~0L;
-> +	for (i = 0, idx = 0; i < OV772X_N_FRAME_INTERVALS; i++) {
-> +		rate = abs(fps - ov772x_frame_intervals[i]);
-> +		if (rate < rate_prev) {
-> +			idx = i;
-> +			rate_prev = rate;
-
-I'd call the rate_prev and rate variables best_diff and diff respectively.
-
-> +		}
-> +	}
-> +	fps = ov772x_frame_intervals[idx];
-> +
-> +	/* Use image size (with blankings) to calculate desired pixel clock. */
-> +	if ((cfmt->com7 & OFMT_RGB) == OFMT_RGB ||
-> +	    (cfmt->com7 & OFMT_YUV) == OFMT_YUV)
-> +		fsize = win->sizeimage * 2;
-> +	else if ((cfmt->com7 & OFMT_BRAW) == OFMT_BRAW)
-
-I think all these should test (cfmt->com7 & OFMT_MASK) == ...
-
-> +		fsize = win->sizeimage;
-> +
-> +	pclk = fps * fsize;
-> +
-> +	/*
-> +	 * Pixel clock generation circuit is pretty simple:
-> +	 *
-> +	 * Fin -> [ / CLKRC_div] -> [ * PLL_mult] -> pclk
-> +	 *
-> +	 * Try to approximate the desired pixel clock testing all available
-> +	 * PLL multipliers (1x, 4x, 6x, 8x) and calculate corresponding
-> +	 * divisor with:
-> +	 *
-> +	 * div = PLL_mult * Fin / pclk
-> +	 *
-> +	 * and re-calculate the pixel clock using it:
-> +	 *
-> +	 * pclk = Fin * PLL_mult / CLKRC_div
-> +	 *
-> +	 * Choose the PLL_mult and CLKRC_div pair that gives a pixel clock
-> +	 * closer to the desired one.
-> +	 *
-> +	 * The desired pixel clock is calculated using a known frame size
-> +	 * (blanking included) and FPS.
-> +	 */
-> +	rate_prev = ~0L;
-> +	for (i = 0; i < OV772X_PLL_N_MULT; i++) {
-> +		unsigned int pll_mult = ov772x_pll_mult[i];
-> +		unsigned int pll_out = pll_mult * fin;
-> +		unsigned int t_pclk;
-> +		unsigned int div;
-> +
-> +		if (pll_out < pclk)
-> +			continue;
-> +
-> +		div = DIV_ROUND_CLOSEST(pll_out, pclk);
-> +		t_pclk = DIV_ROUND_CLOSEST((fin * pll_mult), div);
-
-No need for the inner parentheses.
-
-> +		rate = abs(pclk - t_pclk);
-> +		if (rate < rate_prev) {
-> +			rate_prev = rate;
-> +			clkrc = CLKRC_DIV(div);
-> +			com4 = ov772x_com4_vals[i];
-> +		}
-> +	}
-> +
-> +	ret = ov772x_write(client, COM4, com4 | COM4_RESERVED);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = ov772x_write(client, CLKRC, clkrc | CLKRC_RESERVED);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	tpf->numerator = 1;
-> +	tpf->denominator = fps;
-> +	priv->fps = tpf->denominator;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ov772x_g_frame_interval(struct v4l2_subdev *sd,
-> +				   struct v4l2_subdev_frame_interval *ival)
-> +{
-> +	struct ov772x_priv *priv = to_ov772x(sd);
-> +	struct v4l2_fract *tpf = &ival->interval;
-> +
-> +	memset(ival->reserved, 0, sizeof(ival->reserved));
-> +	tpf->numerator = 1;
-> +	tpf->denominator = priv->fps;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ov772x_s_frame_interval(struct v4l2_subdev *sd,
-> +				   struct v4l2_subdev_frame_interval *ival)
-> +{
-> +	struct ov772x_priv *priv = to_ov772x(sd);
-> +	struct v4l2_fract *tpf = &ival->interval;
-> +
-> +	memset(ival->reserved, 0, sizeof(ival->reserved));
-> +
-> +	return ov772x_set_frame_rate(priv, tpf, priv->cfmt, priv->win);
-> +}
-> +
->  static int ov772x_s_ctrl(struct v4l2_ctrl *ctrl)
->  {
->  	struct ov772x_priv *priv = container_of(ctrl->handler,
-> @@ -757,6 +903,7 @@ static int ov772x_set_params(struct ov772x_priv *priv,
->  			     const struct ov772x_win_size *win)
->  {
->  	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-> +	struct v4l2_fract tpf;
->  	int ret;
->  	u8  val;
-> 
-> @@ -885,6 +1032,13 @@ static int ov772x_set_params(struct ov772x_priv *priv,
-> if (ret < 0)
->  		goto ov772x_set_fmt_error;
-> 
-> +	/* COM4, CLKRC: Set pixel clock and framerate. */
-> +	tpf.numerator = 1;
-> +	tpf.denominator = priv->fps;
-> +	ret = ov772x_set_frame_rate(priv, &tpf, cfmt, win);
-> +	if (ret < 0)
-> +		goto ov772x_set_fmt_error;
-> +
->  	/*
->  	 * set COM8
->  	 */
-> @@ -1043,6 +1197,24 @@ static const struct v4l2_subdev_core_ops
-> ov772x_subdev_core_ops = { .s_power	= ov772x_s_power,
->  };
-> 
-> +static int ov772x_enum_frame_interval(struct v4l2_subdev *sd,
-> +				      struct v4l2_subdev_pad_config *cfg,
-> +				      struct v4l2_subdev_frame_interval_enum *fie)
-> +{
-> +	if (fie->pad || fie->index >= OV772X_N_FRAME_INTERVALS)
-> +		return -EINVAL;
-> +
-> +	if (fie->width != VGA_WIDTH && fie->width != QVGA_WIDTH)
-> +		return -EINVAL;
-> +	if (fie->height != VGA_HEIGHT && fie->height != QVGA_HEIGHT)
-> +		return -EINVAL;
-> +
-> +	fie->interval.numerator = 1;
-> +	fie->interval.denominator = ov772x_frame_intervals[fie->index];
-> +
-> +	return 0;
-> +}
-
-The more I think about it, the more I believe that the subdev frame interval 
-enumeration operation is nonsense. This particular sensor is not restricted to 
-a fixed list of frame intervals. Sensors should really expose the pixel clock 
-and blanking as controls, and higher level parameters such as frame intervals 
-should then be handled by the bridge driver.
-
-I won't nack this patch due to this as I want to see this series merged, so 
-with the above small issues fixed you have my
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-but we're going in the wrong direction. 
-
--- 
-Regards,
-
-Laurent Pinchart
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
