@@ -1,121 +1,44 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [linux-sunxi][PATCH] ARM: sun6i: a31: Enable HDMI support on the
- Mele I7
-Date: Wed, 31 Jan 2018 16:32:04 +0100
-Message-ID: <20180131153204.wm7sdwowvnjg2wd6@flea.lan>
-References: <20180130183327.20825-1-codekipper@gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: sunxi: Add Olimex
+ A20-SOM204-EVB-eMMC board
+Date: Wed, 31 Jan 2018 16:33:43 +0100
+Message-ID: <20180131153343.nwuii3pmybn4t7dk@flea.lan>
+References: <1517234202-1892-1-git-send-email-stefan@olimex.com>
+ <1517234202-1892-2-git-send-email-stefan@olimex.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5w2z4rsyebboym67"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="z66ymui2c44h2uaf"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWGDY7JQKGQEKYDD2SA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180130183327.20825-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1517234202-1892-2-git-send-email-stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---5w2z4rsyebboym67
-Content-Type: text/plain; charset=us-ascii
+--z66ymui2c44h2uaf
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 30, 2018 at 07:33:27PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
-> The Mele I7 has an HDMI connector wired to the HDMI pins
-> on the SoC. Enable the display pipeline and HDMI output.
->=20
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Mon, Jan 29, 2018 at 03:56:40PM +0200, Stefan Mavrodiev wrote:
+> A20-SOM204 board has option with onboard 16GB eMMC.
+> The chip is wired to MMC2 slot.
+> 
+> Signed-off-by: Stefan Mavrodiev <stefan-kyXcfZUBQGPQT0dZR+AlfA@public.gmane.org>
 
-Chen-Yu is missing from the recipients...
+Queued both in 4.17, thanks!
+Maxime
 
-> ---
->  arch/arm/boot/dts/sun6i-a31-i7.dts | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun6i-a31-i7.dts b/arch/arm/boot/dts/sun6i=
--a31-i7.dts
-> index 010a84c7c012..4f69be4988a5 100644
-> --- a/arch/arm/boot/dts/sun6i-a31-i7.dts
-> +++ b/arch/arm/boot/dts/sun6i-a31-i7.dts
-> @@ -58,6 +58,17 @@
->  		stdout-path =3D "serial0:115200n8";
->  	};
-> =20
-> +	hdmi-connector {
-> +		compatible =3D "hdmi-connector";
-> +		type =3D "a";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint =3D <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +
->  	leds {
->  		compatible =3D "gpio-leds";
->  		pinctrl-names =3D "default";
-> @@ -93,6 +104,10 @@
->  	status =3D "okay";
->  };
-> =20
-> +&de {
-> +	status =3D "okay";
-> +};
-> +
->  &ehci0 {
->  	status =3D "okay";
->  };
-> @@ -101,6 +116,16 @@
->  	status =3D "okay";
->  };
-> =20
-> +&hdmi {
-> +	status =3D "okay";
-> +};
-> +
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint =3D <&hdmi_con_in>;
-> +	};
-> +};
-> +
->  &gmac {
-
-And this is not ordered alphabetically.
-
-maxime
-
---=20
+-- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---5w2z4rsyebboym67
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpx4XMACgkQ0rTAlCFN
-r3TcHRAAjtdQB8CGQF8Oc8u/tAOf/fm0hAJM6suIPxFBSys7xSerAM3g+KdQlEKA
-P3ghke6OYSAJeMT2PHT1OE+e6R4ts6yrsmbgP7HsgLcgkULZdVw+DoVIY7F6Nrhn
-FTYM4I95Sh+9ozSEw8YBypD+992tyVyf2TxLVXjIF+2fFYwPWHMTRjVHAigMeRot
-Kr04NCgKCaqCcWpal4p86mqivMk/yP9wVtXYao3gO1g84I5PJ9tp7+QZSURn8Ojj
-s+5ELHwhkDI41yZfsjWqmIrhAdE1CaWSkVkRZyZANfRaeOARMrJn9qGrJg66wiKN
-2XVO0lTO9gEMacQvh7BI+1KPnsxKrkOsogATDe0JhvsXk38iW0x31sD7QDEqb/TJ
-8SfWBaMu/VzL0xrex78Y90zjqBy5LyLkYtQVtVu5rA5LHgUOROa1dzMk080q+EFj
-jOxXr8eUbrMTUGNmuUq62vPLpAnzaF5hJDwyhYpvS9xB0qJd5usMgDqKxB7DCsTp
-giiAej4DJES46eRw8kH2lNx8aiP2MWebBukYv1H8myzb1217Z7jJOcy+YdnRs0I1
-J3KNFTDHAKeX4izjrmm07L25/5vn3ze/u/fDDV+bY9fozCfVwDNOqXgEB4GKHc5a
-sIcT4qUsJ4v9+U6vUUWYKjOVOxwBrUd6W+9owWoA/8XOp0/WyfM=
-=D8VV
------END PGP SIGNATURE-----
-
---5w2z4rsyebboym67--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--z66ymui2c44h2uaf--
