@@ -1,55 +1,50 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] ARM: dts: imx25-pinfunc: Use consistent naming
- for eSDHC
-Date: Wed, 31 Jan 2018 08:26:44 +0100
-Message-ID: <20180131072644.nbr6t5rhx7yb4dhj@pengutronix.de>
-References: <20180131000514.5286-1-benoit.thebaudeau.dev@gmail.com>
+From: <houlong.wei@mediatek.com>
+Subject: [PATCH v21 0/4] Mediatek MT8173 CMDQ support
+Date: Wed, 31 Jan 2018 15:28:09 +0800
+Message-ID: <1517383693-25591-1-git-send-email-houlong.wei@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180131000514.5286-1-benoit.thebaudeau.dev@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Beno=EEt_Th=E9baudeau?= <benoit.thebaudeau.dev@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.co>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi,
 
-On Wed, Jan 31, 2018 at 01:05:13AM +0100, Benoît Thébaudeau wrote:
-> This file had several naming inconsistencies for eSDHC:
->  - the instances were named sometimes SDn, sometimes SDHCn, whereas they
->    are named ESDHCn in the reference manual, e.g.:
->      MX25_PAD_SD1_CMD__SD1_CMD
->      MX25_PAD_D15__SDHC1_DAT7
->  - the data ports were named sometimes DATAn, sometimes DATn like in the
->    reference manual, e.g.:
->      MX25_PAD_SD1_DATA0__SD1_DATA0
->      MX25_PAD_D15__SDHC1_DAT7
->  - in one case, the clock port was named DAT_CLK instead of CLK:
->      MX25_PAD_CSI_D7__SDHC2_DAT_CLK
-> 
-> This change:
->  - introduces new definitions using the naming from the reference
->    manual,
->  - keeps definitions using the legacy naming in order not to break
->    compatibility for out-of-tree users (they can be removed later),
->  - updates the in-tree files that were using the legacy naming.
-> 
-> Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Benoît Thébaudeau <benoit.thebaudeau.dev@gmail.com>
-> ---
-> Changes v1 -> v2:
->  - New patch (suggested by Uwe).
-That's why I like it:
+This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+to help write registers with critical time limitation, such as
+updating display configuration during the vblank. It controls Global
+Command Engine (GCE) hardware to achieve this requirement.
+ 
+Changes since v20:
+ -rebase to v4.15-rc1
+ -move dma_map_single outside of spinlock
+Changes since v19:
+ -rebase to v4.10-rc2
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+hs.liao@mediatek.com (4):
+  dt-bindings: soc: Add documentation for the MediaTek GCE unit
+  mailbox: mediatek: Add Mediatek CMDQ driver
+  arm64: dts: mt8173: Add GCE node
+  soc: mediatek: Add Mediatek CMDQ helper
 
-:-)
-Uwe
+ .../devicetree/bindings/mailbox/mtk-gce.txt        |   43 ++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |   10 +
+ drivers/mailbox/Kconfig                            |   10 +
+ drivers/mailbox/Makefile                           |    2 +
+ drivers/mailbox/mtk-cmdq-mailbox.c                 |  594 ++++++++++++++++++++
+ drivers/soc/mediatek/Kconfig                       |   12 +
+ drivers/soc/mediatek/Makefile                      |    1 +
+ drivers/soc/mediatek/mtk-cmdq-helper.c             |  322 +++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h           |   77 +++
+ include/linux/soc/mediatek/mtk-cmdq.h              |  174 ++++++
+ 10 files changed, 1245 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+ create mode 100644 drivers/mailbox/mtk-cmdq-mailbox.c
+ create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
+ create mode 100644 include/linux/mailbox/mtk-cmdq-mailbox.h
+ create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+1.7.9.5 
