@@ -1,84 +1,55 @@
-From: maxime ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [linux-sunxi][PATCH] ARM: dts: sunxi: h3/h5: Add DAI node for
- HDMI
-Date: Wed, 31 Jan 2018 08:16:16 +0100
-Message-ID: <20180131071616.jrkd465cq4mgyyvm@flea.lan>
-References: <20180129092223.12423-1-codekipper@gmail.com>
- <20180129102227.ejmbifzjqmba3yja@flea.lan>
- <27087126.4975652.1517222127863.JavaMail.zimbra@musers.siol.net>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] ARM: dts: imx25-pinfunc: Use consistent naming
+ for eSDHC
+Date: Wed, 31 Jan 2018 08:26:44 +0100
+Message-ID: <20180131072644.nbr6t5rhx7yb4dhj@pengutronix.de>
+References: <20180131000514.5286-1-benoit.thebaudeau.dev@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qjsu5dnb7uricuka"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <27087126.4975652.1517222127863.JavaMail.zimbra-uhf9zSJETnQdlpnTk8+5LA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180131000514.5286-1-benoit.thebaudeau.dev@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?iso-8859-1?Q?Beno=EEt_Th=E9baudeau?= <benoit.thebaudeau.dev@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---qjsu5dnb7uricuka
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jan 31, 2018 at 01:05:13AM +0100, Benoît Thébaudeau wrote:
+> This file had several naming inconsistencies for eSDHC:
+>  - the instances were named sometimes SDn, sometimes SDHCn, whereas they
+>    are named ESDHCn in the reference manual, e.g.:
+>      MX25_PAD_SD1_CMD__SD1_CMD
+>      MX25_PAD_D15__SDHC1_DAT7
+>  - the data ports were named sometimes DATAn, sometimes DATn like in the
+>    reference manual, e.g.:
+>      MX25_PAD_SD1_DATA0__SD1_DATA0
+>      MX25_PAD_D15__SDHC1_DAT7
+>  - in one case, the clock port was named DAT_CLK instead of CLK:
+>      MX25_PAD_CSI_D7__SDHC2_DAT_CLK
+> 
+> This change:
+>  - introduces new definitions using the naming from the reference
+>    manual,
+>  - keeps definitions using the legacy naming in order not to break
+>    compatibility for out-of-tree users (they can be removed later),
+>  - updates the in-tree files that were using the legacy naming.
+> 
+> Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Benoît Thébaudeau <benoit.thebaudeau.dev@gmail.com>
+> ---
+> Changes v1 -> v2:
+>  - New patch (suggested by Uwe).
+That's why I like it:
 
-On Mon, Jan 29, 2018 at 11:35:27AM +0100, Jernej =C5=A0krabec wrote:
-> Hi Maxime,
->=20
-> (previously I respond only to linux-sunxi mailing list)
->=20
-> >On Mon, Jan 29, 2018 at 10:22:23AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>=20
-> >> Add the new DAI block for I2S2 which is used for HDMI audio.
-> >>=20
-> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >
-> >queued for 4.17, thanks!
-> >Maxime
->=20
-> Please note that HDMI I2S has usable 4 I2S lanes, since HDMI
-> supports 8 channel audio. As Marcus said, other blocks probably
-> support them too, they are just not wired out on pins.
+Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-I've dropped those patches for now.
+:-)
+Uwe
 
-> Should we change compatible for HDMI?
-
-I guess, another way of doing things if they are strictly identical
-but for the number of lanes they support would be to add a DT property
-for that number of lanes.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---qjsu5dnb7uricuka
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpxbTAACgkQ0rTAlCFN
-r3SGAA/9E0dZ2M5IGRwiQPqbt1ilsKHYRw4d6C+4jfW4ZWW+OPYvZZebevx3aUri
-3G7LVNG43PBkNGcq8roM2GAC/Q72d4I6ZoWVbu7aKVVzhHZut22ggGIJdkAXW2h8
-R7GBPBJW4NDt1JwQGaPxPSyYHQcEjDfDhTLCaef7PbiQABOdGpeBeT1rTip7FjUo
-REWV6HZP6nYaER2ATPhVhca+hwno5fBBpY33hBLABhNMOOXhLV5r+hS9E/7unnGT
-aZO10jKP9ERK4WfLITzvR2e9f14y342gFE8rSleKPUDYhsoi7fm2fmlXdN9bbxaE
-sWhwzbjQhebZEUBJmEUz9hDz448T4M4xRsgW6B7aG2oBSzOdt7r1g5hq1Vf0h/k7
-qpwgRBP0EMxfIxdAPD9cS3bz2K2MbqrkyEDUAmVK4u7bzI4mFrX7ZBwp5IX7gB3m
-JLwy9W6a5iru05UhoEx+uUUGzTYJU09FX7qIi29vaSJ8DTMQjQaSjjt9Auy8SR0M
-LwA7laXrTDGBmOMcoQMZcgc3aBnpiFCYh8a3jCqV+whGNVOsRmKF+JD0jdmmY0zm
-2trTIyelZfGwdOA1vr5lM7aOpY3TJM+CHUverCJNcF6GunBI42oZOJNlVahRtfAm
-J6ySAaiZqtVgdvr256kcKn3rLwsgPuBY2IsOcjevSk260TiU1XU=
-=bAz4
------END PGP SIGNATURE-----
-
---qjsu5dnb7uricuka--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
