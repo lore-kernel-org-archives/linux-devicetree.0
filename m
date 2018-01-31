@@ -1,100 +1,40 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: sun6i: a31: Enable HDMI support on the
- Mele I7
-Date: Wed, 31 Jan 2018 17:44:55 +0100
-Message-ID: <CAEKpxBnGWRqRbdTDi+P0xQ+eRjzZPn+iT8W9z793x6cKsn03-w@mail.gmail.com>
-References: <20180130183327.20825-1-codekipper@gmail.com> <20180131153204.wm7sdwowvnjg2wd6@flea.lan>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] ASoC: codecs: Add support for AK5558 ADC
+	driver
+Date: Wed, 31 Jan 2018 18:56:43 +0200
+Message-ID: <CAHp75VfmP2zYycht01fo-RPh9o=tRSk4RS6UW02XBjsn7mKgFQ@mail.gmail.com>
+References: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
+ <CAOMZO5BToV0OKEc_f8M1=zSL-X=qSXnokFyEfEEX2tGTUO=a-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBCHFY7JQKGQEYMKD6YA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180131153204.wm7sdwowvnjg2wd6-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAOMZO5BToV0OKEc_f8M1=zSL-X=qSXnokFyEfEEX2tGTUO=a-A@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, shengjiu.wang@nxp.com, linux-kernel <linux-kernel@vger.kernel.org>, wakasugi.jb@om.asahi-kasei.co.jp, Mihai Serban <mihai.serban@nxp.com>, Mark Brown <broonie@kernel.org>, linux-imx@nxp.com, cosmin.samoila@nxp.com, Daniel Baluta <daniel.baluta@nxp.com>, mihai.serban@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 31 January 2018 at 16:32, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, Jan 30, 2018 at 07:33:27PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> The Mele I7 has an HDMI connector wired to the HDMI pins
->> on the SoC. Enable the display pipeline and HDMI output.
->>
->> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Wed, Jan 31, 2018 at 6:20 PM, Fabio Estevam <festevam@gmail.com> wrote:
+> Hi Daniel,
+
+Fabio, +1 to your review. It seems it repeats some of the points I made.
+
+
+>> +       ak5558->pdn_gpio = of_get_named_gpio(np, "ak5558,pdn-gpio", 0);
 >
-> Chen-Yu is missing from the recipients...
-ACK...I'll update my git config for this repo.
->
->> ---
->>  arch/arm/boot/dts/sun6i-a31-i7.dts | 29 +++++++++++++++++++++++++++++
->>  1 file changed, 29 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun6i-a31-i7.dts b/arch/arm/boot/dts/sun6i-a31-i7.dts
->> index 010a84c7c012..4f69be4988a5 100644
->> --- a/arch/arm/boot/dts/sun6i-a31-i7.dts
->> +++ b/arch/arm/boot/dts/sun6i-a31-i7.dts
->> @@ -58,6 +58,17 @@
->>               stdout-path = "serial0:115200n8";
->>       };
->>
->> +     hdmi-connector {
->> +             compatible = "hdmi-connector";
->> +             type = "a";
->> +
->> +             port {
->> +                     hdmi_con_in: endpoint {
->> +                             remote-endpoint = <&hdmi_out_con>;
->> +                     };
->> +             };
->> +     };
->> +
->>       leds {
->>               compatible = "gpio-leds";
->>               pinctrl-names = "default";
->> @@ -93,6 +104,10 @@
->>       status = "okay";
->>  };
->>
->> +&de {
->> +     status = "okay";
->> +};
->> +
->>  &ehci0 {
->>       status = "okay";
->>  };
->> @@ -101,6 +116,16 @@
->>       status = "okay";
->>  };
->>
->> +&hdmi {
->> +     status = "okay";
->> +};
->> +
->> +&hdmi_out {
->> +     hdmi_out_con: endpoint {
->> +             remote-endpoint = <&hdmi_con_in>;
->> +     };
->> +};
->> +
->>  &gmac {
->
-> And this is not ordered alphabetically.
-ACK....arrgghhh
-Will fix and repush soon.
-BR,
-CK
->
-> maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+> It does not match the property in the binding doc: asahi-kasei,pdn-gpios
+
+Btw, it must be simple "reset" as a widely used for the same purpose.
+
+-- 
+With Best Regards,
+Andy Shevchenko
