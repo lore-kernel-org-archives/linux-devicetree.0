@@ -1,101 +1,107 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 04/16] iio: adc: sun4i-gpadc-iio: rework: sampling
- start/end code readout reg
-Date: Wed, 31 Jan 2018 18:51:06 +0100
-Message-ID: <20180131175106.agrvwioaruioavqk@qschulz>
-References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-5-embed3d@gmail.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH v3 1/4] dt-bindings: firmware: Add bindings for ZynqMP
+ firmware
+Date: Wed, 31 Jan 2018 18:03:14 +0000
+Message-ID: <DM2PR0201MB07674CED433B7273AEFC50D2B8FB0@DM2PR0201MB0767.namprd02.prod.outlook.com>
+References: <1516836074-4149-1-git-send-email-jollys@xilinx.com>
+ <1516836074-4149-2-git-send-email-jollys@xilinx.com>
+ <20180130170818.tz4hoqvyekrl7uio@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cjyxari4p6sh2f7e"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180128232919.12639-5-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180130170818.tz4hoqvyekrl7uio@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "mingo@kernel.org" <mingo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
+Thanks for the review,
 
---cjyxari4p6sh2f7e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Tuesday, January 30, 2018 9:08 AM
+> To: Jolly Shah <JOLLYS@xilinx.com>
+> Cc: ard.biesheuvel@linaro.org; mingo@kernel.org;
+> gregkh@linuxfoundation.org; matt@codeblueprint.co.uk;
+> sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
+> dmitry.torokhov@gmail.com; michal.simek@xilinx.com;
+> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org; Jolly Shah
+> <JOLLYS@xilinx.com>; Rajan Vaja <RAJANV@xilinx.com>
+> Subject: Re: [PATCH v3 1/4] dt-bindings: firmware: Add bindings for ZynqMP
+> firmware
+> 
+> On Wed, Jan 24, 2018 at 03:21:11PM -0800, Jolly Shah wrote:
+> > Add documentation to describe Xilinx ZynqMP firmware driver bindings.
+> > Firmware driver provides an interface to firmware APIs. Interface APIs
+> > can be used by any driver to communicate to PMUFW (Platform Management
+> > Unit).
+> >
+> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> > Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+> > ---
+> >  .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt    | 16
+> ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware
+> > .txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmwa
+> > re.txt
+> > b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmwa
+> > re.txt
+> > new file mode 100644
+> > index 0000000..a7aaf56
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-fi
+> > +++ rmware.txt
+> > @@ -0,0 +1,16 @@
+> > +Xilinx Zynq MPSoC Firmware Device Tree Bindings
+> > +
+> > +The zynqmp-firmware node describes the interface to platform firmware.
+> 
+> Please define this a is child of /firmware.
+>
+I dint get you. It is already under firmware/xilinx.
 
-Hi Philipp,
+ 
+> Also, some brief summary of what functions the firmware provides would be
+> nice.
+> 
+Sure. Will add it in next version.
 
-On Mon, Jan 29, 2018 at 12:29:07AM +0100, Philipp Rossak wrote:
-> For adding newer sensor some basic rework of the code is necessary.
->=20
-> This commit reworks the code and allows the sampling start/end code and
-> the position of value readout register to be altered. Later the start/end
-> functions will be used to configure the ths and start/stop the
-> sampling.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/iio/adc/sun4i-gpadc-iio.c | 44 +++++++++++++++++++++++++++++++++=
-+-----
->  1 file changed, 39 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gp=
-adc-iio.c
-> index 03804ff9c006..db57d9fffe48 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -49,6 +49,15 @@ static unsigned int sun6i_gpadc_chan_select(unsigned i=
-nt chan)
->  	return SUN6I_GPADC_CTRL1_ADC_CHAN_SELECT(chan);
->  }
-> =20
-> +struct sun4i_gpadc_iio;
-> +
-> +/*
-> + * Prototypes for these functions, which enable these functions to be
-> + * referenced in gpadc_data structures.
-> + */
 
-Comment not needed.
+> > +
+> > +Required properties:
+> > + - compatible:	Must contain:  "xlnx,zynqmp-firmware"
+> > + - method:	The method of calling the PM-API firmware layer.
+> > +		Permitted values are:
+> > +		 - "smc" : To be used in configurations without a hypervisor
+> > +		 - "hvc" : To be used when hypervisor is present
+> 
+> Do you really need to support hvc?
+Yes we do support hvc and smc both.
 
-> +static int sun4i_gpadc_sample_start(struct sun4i_gpadc_iio *info);
-> +static int sun4i_gpadc_sample_end(struct sun4i_gpadc_iio *info);
-> +
->  struct gpadc_data {
->  	int		temp_offset;
->  	int		temp_scale;
-> @@ -56,6 +65,9 @@ struct gpadc_data {
->  	unsigned int	tp_adc_select;
->  	unsigned int	(*adc_chan_select)(unsigned int chan);
->  	unsigned int	adc_chan_mask;
-> +	unsigned int	temp_data;
-
-Does not really have anything to do with sample_start/end. I would have
-made a different commit for it.
-
-Otherwise,
-Reviewed-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-Quentin
-
---cjyxari4p6sh2f7e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCAAGBQJacgIHAAoJEIS4mnU+4PGjPToQAImlXWgWDfZ7cayr5+jvTa8K
-TF6aHRbAeVrYWFeuougtp3Tn9+JjevEWjNPk5u7rh1RvHqS2ElyGhbWmU2pGOUU+
-SL+off7E4dqyc+QkBbnEResZRlbqEa6LuP/3itxj73DANKhwM9sClh4lamFXh1BW
-COBuhVhRfchnytxrP+kbNeYaXk3sxs3mXAu2qjFTOhtT/c7lD35743oaa6wDOjI2
-K60F7NTSgn1UfeGtGS1GxNHE74+IEa1HuBkKvpnsoXYZxs8XVe16p76G6o0flax1
-e/shccmNP9c1Z8Uul5C70KGXOl6yTwdJcEbhwRuMyy/uUhedKc+2NXZewBvOVfmf
-eCG1Jt/o9wBeR2yDyInEwtAuee1629c3texMknhOZpGB/V7fBK0haUWvQll4hFgx
-/rWXtYYMwRilaP4nQ4UuQp8KdwV8qQmZp685CZVRWFhhIa5+d04G+SrM4lLpO9sy
-YdOCtc3EWZ3E1c/9omu+g06eH8lyO1AjgZsuYbmfDYTusPNnVT+Hwa1j82VRC60E
-pxx795vGyoyIDhjb16tNYsO4AqMrZleegTXirjM8imYihJmL/epscrIZPlOgGR8r
-JluW3NbTW+UyA/KUe8G8C9YpjMdSjczjJZdmH5Qoae7gSIppNOrm0qLGWDsOatex
-nlyBn9LhgFJCvoLT4jF8
-=CT+v
------END PGP SIGNATURE-----
-
---cjyxari4p6sh2f7e--
+> 
+> > +
+> > +Examples:
+> > +	zynqmp_firmware: zynqmp-firmware {
+> > +		compatible = "xlnx,zynqmp-firmware";
+> > +		method = "smc";
+> > +	};
+> > --
+> > 2.7.4
+> >
