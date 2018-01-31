@@ -1,26 +1,61 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RFC v3 08/25] ARM: dts: r8a7794: Adjust SMP routine size
-Date: Wed, 31 Jan 2018 09:44:02 +0100
-Message-ID: <CAMuHMdXPyOfAYPLNCCwjA8-O5Bu6Fuf0Op+Noc3O3ATGWGN8OQ@mail.gmail.com>
-References: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com> <1517343778-27902-9-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [RFC v3 10/25] dt-bindings: watchdog: renesas-wdt: Add R-Car Gen2 support
+Date: Wed, 31 Jan 2018 09:46:30 +0100
+Message-ID: <CAMuHMdXkHF9R0XfcG++s0RRup+Mdtam5p=FXw26z86wAOJhZfQ@mail.gmail.com>
+References: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com> <1517343778-27902-11-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1517343778-27902-9-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1517343778-27902-11-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-clk-owner@vger.kernel.org
 To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>l
 List-Id: devicetree@vger.kernel.org
 
+Hi Fabrizio,
+
 On Tue, Jan 30, 2018 at 9:22 PM, Fabrizio Castro
 <fabrizio.castro@bp.renesas.com> wrote:
-> This patch adjusts the definition of the SMP routine size according
-> to the latest changes made by commit:
-> "ARM: shmobile: Add watchdog support"
+> This commit documents the compatibility with R-Car Gen2 and RZ/G
+> devices by defining the generic compatible string "renesas,rcar-gen2-wdt".
+> Also, this patch expands the list of SoC-specific compatible strings to
+> include RZ/G and R-Car Gen2 devices.
 >
 > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 
+Thanks for your patch!
+
+> --- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> @@ -1,17 +1,25 @@
+>  Renesas Watchdog Timer (WDT) Controller
+>
+>  Required properties:
+> -- compatible : Should be "renesas,<soctype>-wdt", and
+> -              "renesas,rcar-gen3-wdt" or "renesas,rza-wdt" as fallback.
+> + - compatible : Must be "renesas,<soctype>-wdt", followed by a generic
+> +               fallback compatible string when compatible with the generic
+> +               version.
+>                Examples with soctypes are:
+> +                - "renesas,r8a7743-wdt" (RZ/G1M)
+> +                - "renesas,r8a7745-wdt" (RZ/G1E)
+> +                - "renesas,r8a7790-wdt" (R-Car H2)
+> +                - "renesas,r8a7791-wdt" (R-Car M2-W)
+> +                - "renesas,r8a7792-wdt" (R-Car V2H)
+> +                - "renesas,r8a7793-wdt" (R-Car M2-N)
+> +                - "renesas,r8a7794-wdt" (R-Car E2)
+>                  - "renesas,r8a7795-wdt" (R-Car H3)
+>                  - "renesas,r8a7796-wdt" (R-Car M3-W)
+>                  - "renesas,r8a77995-wdt" (R-Car D3)
+>                  - "renesas,r7s72100-wdt" (RZ/A1)
+> +               The generic compatible string must be:
+> +                - "renesas,rcar-gen2-wdt" for R-Car Gen2 and RZ/G
+> +                - "renesas,rcar-gen3-wdt" for R-Car Gen3
+
+You've lost the generic "renesas,rza-wdt".
+
+With that fixed:
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
