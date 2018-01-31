@@ -1,88 +1,84 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 6/7] dt-bindings: display: msm/dsi: Add compatible for
- 14nm DSI PHY
-Date: Wed, 31 Jan 2018 12:10:12 +0530
-Message-ID: <7b0254be-8dcf-f2cf-4911-64f0b5881759@codeaurora.org>
-References: <20180117093448.4102-1-architt@codeaurora.org>
- <20180117093448.4102-7-architt@codeaurora.org>
- <20180129171544.st53376xyjep2cfx@rob-hp-laptop>
+From: maxime ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [linux-sunxi][PATCH] ARM: dts: sunxi: h3/h5: Add DAI node for
+ HDMI
+Date: Wed, 31 Jan 2018 08:16:16 +0100
+Message-ID: <20180131071616.jrkd465cq4mgyyvm@flea.lan>
+References: <20180129092223.12423-1-codekipper@gmail.com>
+ <20180129102227.ejmbifzjqmba3yja@flea.lan>
+ <27087126.4975652.1517222127863.JavaMail.zimbra@musers.siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20180129171544.st53376xyjep2cfx@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: robdclark@gmail.com, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, latkinso@codeaurora.org, sibis@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qjsu5dnb7uricuka"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <27087126.4975652.1517222127863.JavaMail.zimbra-uhf9zSJETnQdlpnTk8+5LA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--qjsu5dnb7uricuka
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 01/29/2018 10:45 PM, Rob Herring wrote:
-> On Wed, Jan 17, 2018 at 03:04:47PM +0530, Archit Taneja wrote:
->> Add the compatible string for 14nm DSI PHY (used in MSM8996/APQ8096).
->>  From 14nm PHY onwards, the "dsi_phy_regulator" reg-name is not required,
->> but "dsi_phy_lane" reg-name is. Update the doc to specify the reg-names
->> each PHY revision needs.
->>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Archit Taneja <architt@codeaurora.org>
->> ---
->>   Documentation/devicetree/bindings/display/msm/dsi.txt | 13 +++++++++++--
->>   1 file changed, 11 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
->> index 9c3ad6bbb9f0..26a1796b7145 100644
->> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
->> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
->> @@ -86,12 +86,19 @@ Required properties:
->>     * "qcom,dsi-phy-28nm-lp"
->>     * "qcom,dsi-phy-20nm"
->>     * "qcom,dsi-phy-28nm-8960"
->> -- reg: Physical base address and length of the registers of PLL, PHY and PHY
->> -  regulator
->> +  * "qcom,dsi-phy-14nm"
->> +- reg: Physical base address and length of the registers of PLL, PHY. Some
->> +  revisions require the PHY regulator base address, whereas others require the
->> +  PHY lane base address. See below for each PHY revision.
->>   - reg-names: The names of register regions. The following regions are required:
->> +  For DSI 28nm HPM/LP/8960 PHYs and 20nm PHY:
->>     * "dsi_pll"
->>     * "dsi_phy"
->>     * "dsi_phy_regulator"
->> +  For DSI 14nm PHY:
->> +  * "dsi_pll"
->> +  * "dsi_phy"
->> +  * "dsi_phy_lane"
->>   - clock-cells: Must be 1. The DSI PHY block acts as a clock provider, creating
->>     2 clocks: A byte clock (index 0), and a pixel clock (index 1).
->>   - power-domains: Should be <&mmcc MDSS_GDSC>.
->> @@ -102,6 +109,8 @@ Required properties:
->>   - vddio-supply: phandle to vdd-io regulator device node
->>     For 20nm PHY:
->>   - vddio-supply: phandle to vdd-io regulator device node
->> +- vcca-supply: phandle to vcca regulator device node
-> 
-> Did you mean to add this?
+On Mon, Jan 29, 2018 at 11:35:27AM +0100, Jernej =C5=A0krabec wrote:
+> Hi Maxime,
+>=20
+> (previously I respond only to linux-sunxi mailing list)
+>=20
+> >On Mon, Jan 29, 2018 at 10:22:23AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> >> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>=20
+> >> Add the new DAI block for I2S2 which is used for HDMI audio.
+> >>=20
+> >> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >
+> >queued for 4.17, thanks!
+> >Maxime
+>=20
+> Please note that HDMI I2S has usable 4 I2S lanes, since HDMI
+> supports 8 channel audio. As Marcus said, other blocks probably
+> support them too, they are just not wired out on pins.
 
-Yes, I didn't intend it to be a part of this patch, but this supply is indeed needed for the
-20nm PHY. I'll move this to a separate patch.
+I've dropped those patches for now.
 
-Thanks,
-Archit
+> Should we change compatible for HDMI?
 
-> 
->> +  For 14nm PHY:
->>   - vcca-supply: phandle to vcca regulator device node
->>   
->>   Optional properties:
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> hosted by The Linux Foundation
->>
+I guess, another way of doing things if they are strictly identical
+but for the number of lanes they support would be to add a DT property
+for that number of lanes.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--qjsu5dnb7uricuka
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlpxbTAACgkQ0rTAlCFN
+r3SGAA/9E0dZ2M5IGRwiQPqbt1ilsKHYRw4d6C+4jfW4ZWW+OPYvZZebevx3aUri
+3G7LVNG43PBkNGcq8roM2GAC/Q72d4I6ZoWVbu7aKVVzhHZut22ggGIJdkAXW2h8
+R7GBPBJW4NDt1JwQGaPxPSyYHQcEjDfDhTLCaef7PbiQABOdGpeBeT1rTip7FjUo
+REWV6HZP6nYaER2ATPhVhca+hwno5fBBpY33hBLABhNMOOXhLV5r+hS9E/7unnGT
+aZO10jKP9ERK4WfLITzvR2e9f14y342gFE8rSleKPUDYhsoi7fm2fmlXdN9bbxaE
+sWhwzbjQhebZEUBJmEUz9hDz448T4M4xRsgW6B7aG2oBSzOdt7r1g5hq1Vf0h/k7
+qpwgRBP0EMxfIxdAPD9cS3bz2K2MbqrkyEDUAmVK4u7bzI4mFrX7ZBwp5IX7gB3m
+JLwy9W6a5iru05UhoEx+uUUGzTYJU09FX7qIi29vaSJ8DTMQjQaSjjt9Auy8SR0M
+LwA7laXrTDGBmOMcoQMZcgc3aBnpiFCYh8a3jCqV+whGNVOsRmKF+JD0jdmmY0zm
+2trTIyelZfGwdOA1vr5lM7aOpY3TJM+CHUverCJNcF6GunBI42oZOJNlVahRtfAm
+J6ySAaiZqtVgdvr256kcKn3rLwsgPuBY2IsOcjevSk260TiU1XU=
+=bAz4
+-----END PGP SIGNATURE-----
+
+--qjsu5dnb7uricuka--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
