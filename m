@@ -1,142 +1,39 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH v2 3/6] gpio: Add GPIO driver for Nintendo Wii
-Date: Wed, 31 Jan 2018 09:37:17 +0100
-Message-ID: <20180131083717.xhwaepwd6qxeqncv@latitude>
-References: <20180122050411.32460-1-j.neuschaefer@gmx.net>
- <20180122050411.32460-4-j.neuschaefer@gmx.net>
- <CAHp75VcWshngZFuUp4hzYdD43HF7TZ1sRE3Dh+HckB5do1=gGw@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [RFC v3 02/25] ARM: dts: r8a7743: Adjust SMP routine size
+Date: Wed, 31 Jan 2018 09:42:42 +0100
+Message-ID: <CAMuHMdUmmAu5QTG58D7yG+JXGFfcU+ROzOAHhb2O3+eCxD4=qQ@mail.gmail.com>
+References: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com> <1517343778-27902-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="4afc2a2wktuivren"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcWshngZFuUp4hzYdD43HF7TZ1sRE3Dh+HckB5do1=gGw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Albert Herranz <albert_herranz@yahoo.es>, Segher Boessenkool <segher@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1517343778-27902-3-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Watchdog Mailing List <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>l
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 30, 2018 at 9:22 PM, Fabrizio Castro
+<fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
+> This patch adjusts the definition of the SMP routine size according
+> to the latest changes made by commit:
+> "ARM: shmobile: Add watchdog support"
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 
---4afc2a2wktuivren
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Hi,
+Gr{oetje,eeting}s,
 
-On Sun, Jan 28, 2018 at 07:31:58PM +0200, Andy Shevchenko wrote:
-> On Mon, Jan 22, 2018 at 7:04 AM, Jonathan Neusch=C3=A4fer
-> <j.neuschaefer@gmx.net> wrote:
->=20
-> Style issues below.
->=20
-> > +#define HW_GPIO_OWNER          0x3c
-> > +
-> > +
-> > +struct hlwd_gpio {
->=20
-> No need extra empty line in between.
+                        Geert
 
-Ok.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-> > +       struct gpio_chip gpioc;
-> > +       void __iomem *regs;
-> > +       struct device *dev;
-> > +};
-> > +
-> > +static int hlwd_gpio_probe(struct platform_device *pdev)
-> > +{
-> > +       struct hlwd_gpio *hlwd;
-> > +       struct resource *regs_resource;
-> > +       u32 ngpios;
-> > +       int res;
-> > +
-> > +       hlwd =3D devm_kzalloc(&pdev->dev, sizeof(*hlwd), GFP_KERNEL);
-> > +       if (!hlwd)
-> > +               return -ENOMEM;
-> > +
->=20
-> > +       /* Save the struct device pointer so dev_info, etc. can be used=
-=2E */
->=20
-> Useless.
-
-Ok
-
-> > +       hlwd->dev =3D &pdev->dev;
-> > +
->=20
-> > +       regs_resource =3D platform_get_resource(pdev, IORESOURCE_MEM, 0=
-);
->=20
-> > +       if (IS_ERR(regs_resource))
-> > +               return PTR_ERR(regs_resource);
-> > +
->=20
-> This is redundant. Below does it for ya.
-
-devm_ioremap_resource does not check if the resource argument is a
-negative error (which is what I'm trying to catch in the above code).
-But it seems that platform_get_resource can't return a negative error,
-so you're right. Thanks.
-
->=20
-> > +       hlwd->regs =3D devm_ioremap_resource(&pdev->dev, regs_resource);
-> > +       if (IS_ERR(hlwd->regs))
-> > +               return PTR_ERR(hlwd->regs);
->=20
->=20
-> > +       res =3D bgpio_init(&hlwd->gpioc, &pdev->dev, 4,
-> > +                       hlwd->regs + HW_GPIOB_IN, hlwd->regs + HW_GPIOB=
-_OUT,
-> > +                       NULL, hlwd->regs + HW_GPIOB_DIR, NULL,
-> > +                       BGPIOF_BIG_ENDIAN_BYTE_ORDER);
->=20
-> > +
->=20
-> Remove this extra line.
-
-Ok.
-
->=20
-> > +       if (res < 0) {
-> > +               dev_warn(hlwd->dev, "bgpio_init failed: %d\n", res);
-> > +               return res;
-> > +       }
->=20
-> > +       if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios))
-> > +               ngpios =3D 32;
->=20
-> A nit: I would rather go with
-> res =3D of_property_read(...);
-> if (res)
->   ngpios =3D 32;
-
-Ok, I have no strong opinion on this, so I'll do what you suggest.
-
-
-Thanks,
-Jonathan Neusch=C3=A4fer
-
---4afc2a2wktuivren
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAABAgAGBQJacYAtAAoJEAgwRJqO81/bVJgQAL1/2rgESM4tkvX4NJOLl1yv
-g01sSRRpfTSazmyCfLillW1n+cYVx2PVG0RWtwWUIqFUjqhQvkLETQGAhL2OUaWW
-1K3UmpGnlJy2Yp/lqunk5VVKUt8N5CAxl3uABoiq9voryacDoA5qC7YoOwaGvpAl
-6xGdL9HtHsRgziuSJrSl+bszeZnI2Q1k740t9TSwl14xGwUre3xjSDiXERlRupOM
-yQq6WvS/RsWkpW+AaYqMGacSuozT0dR3zIVGOGTc/onCNkDKLSasbzyY2/qmyx79
-zWINWza/AJnqWTuIZcUJPiODvYzBy9pg3l9hFJxrYwTpknbSC1vwFF9s3lh2Q9LI
-isyl5u/UKu1nuuSetNF7FHBMKooVakWKPyS1fJ4LDSv3qgSxWkqTC6PbYKsdgy4B
-oR7wy59l2hZLoShrpuF0ftTYeZ20Y7iBHG4o/Zu9PYBrKCS/sSLPBASV5ClfTyyd
-WrRmw84ovfMMLuYjoyumAaLCUzBurpt5VHjkKtIpkrNtc8TEoZvMqW5mjLeRD8Rg
-LMWfXi9jY8CAPsGfMU87jrd2Pdf1+QEOsROiFWIC7XpGs5wASEWySCI1+nylJkBE
-GKg3NVdIbHU1XdPH6LKXAwjpr/yUtqYCHF8dmzDtHCenf6VXETaZ5qq7HpdAzyGT
-21yVh2djBZ2XNXaucN+I
-=K7YI
------END PGP SIGNATURE-----
-
---4afc2a2wktuivren--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
