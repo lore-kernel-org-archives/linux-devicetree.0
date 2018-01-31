@@ -1,207 +1,94 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [RFC v3 11/25] watchdog: renesas_wdt: Add R-Car Gen2 support
-Date: Wed, 31 Jan 2018 10:47:30 +0000
-Message-ID: <TY1PR06MB0895ECB2936323F9D281C1EFC0FB0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1517343778-27902-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1517343778-27902-12-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180130220504.GA16709@roeck-us.net>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 4/4] rtc: isl1208: add support for isl1219 with hwmon for
+ tamper detection
+Date: Wed, 31 Jan 2018 11:54:18 +0100
+Message-ID: <20180131105418.GP2809@piout.net>
+References: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
+ <20180123121801.4214-5-m.grzeschik@pengutronix.de>
+ <20180123182254.GA27379@roeck-us.net>
+ <20180124090333.r5o2mzpm4q536w4r@pengutronix.de>
+ <20180129215919.GA17988@roeck-us.net>
+ <20180130102740.GD2809@piout.net>
+ <1517312409.5307.22.camel@diehl.com>
+ <d2b91530-90ae-2d4f-8940-9d88b68caf2c@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180130220504.GA16709-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d2b91530-90ae-2d4f-8940-9d88b68caf2c@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Denis OSTERLAND <denis.osterland@diehl.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "mgr@pengutronix.de" <mgr@pengutronix.de>, "jdelvare@suse.com" <jdelvare@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Guenter,
+On 30/01/2018 at 06:15:18 -0800, Guenter Roeck wrote:
+> On 01/30/2018 03:40 AM, Denis OSTERLAND wrote:
+> > Am Dienstag, den 30.01.2018, 11:27 +0100 schrieb Alexandre Belloni:
+> > > On 29/01/2018 at 13:59:19 -0800, Guenter Roeck wrote:
+> > > > 
+> > > > On Wed, Jan 24, 2018 at 10:03:33AM +0100, Michael Grzeschik wrote:
+> > > > [ ... ]
+> > > > > 
+> > > > > > 
+> > > > > > > 
+> > > > > > > +
+> > > > > > > diff --git a/Documentation/hwmon/sysfs-interface b/Documentation/hwmon/sysfs-interface
+> > > > > > > index fc337c317c673..a12b3c2b2a18c 100644
+> > > > > > > --- a/Documentation/hwmon/sysfs-interface
+> > > > > > > +++ b/Documentation/hwmon/sysfs-interface
+> > > > > > > @@ -702,6 +702,13 @@ intrusion[0-*]_alarm
+> > > > > > >   		the user. This is done by writing 0 to the file. Writing
+> > > > > > >   		other values is unsupported.
+> > > > > > > +intrusion[0-*]_timestamp
+> > > > > > > +		Chassis intrusion detection
+> > > > > > > +		YYYY-MM-DD HH:MM:SS UTC (ts.sec): intrusion detected
+> > > > > > > +		RO
+> > > > > > > +		The corresponding timestamp on which the intrustion
+> > > > > > > +		was detected.
+> > > > > > > +
+> > > > > > Sneaky. Nack. You don't just add attributes to the ABI because you want it,
+> > > > > > without serious discussion, and much less so hidden in an RTC driver
+> > > > > > (and even less as unparseable attribute).
+> > > > > Right; but it was not meant to be sneaky. I should have stick to my first
+> > > > > thought and label this patch RFC. Sorry for that.
+> > > > > 
+> > > > > > 
+> > > > > > In addition to that, I consider the attribute unnecessary. The intrusion
+> > > > > > already generates an event which should be sufficient for all practical
+> > > > > > purposes.
+> > > > > Would it make sense in between the other sysfs attributes of this driver?
+> > > > > 
+> > > > I don't understand what you mean with that, sorry.
+> > > > 
+> > > >  From an ABI perspective, the attibute doesn't add value since it is
+> > > > highly device specific (or at least it is the only chip I am aware of
+> > > > which reports such a time stamp). Feel free to add the attribute to the
+> > > > driver and document it, but not as part of the hwmon ABI. In that
+> > > > case I would be inclined to accept it. However, keep in mind that
+> > > > your version, reporting a human readable date/time, would effectively
+> > > > preclude it from ever making it into the ABI.
+> > > > 
+> > > Actually, there are many RTCs that are able to register one or more
+> > > timestamps. My plan was to add support for that soon but I was not
+> > > planning to do so in the hwmon ABI as this may be used for something
+> > > that is not intrusion detection (interval timers for example).
+> > What would you suggest?
+> > I think about something like this:
+> > event[0-*]_timestamp: timestamp in seconds since epoch or empty if not triggered
+> > event[0-*]_alarm: 1 if event was triggered, else 0; write 0 to clear event
+> 
+> Sure, that makes sense if the events are not specifically related
+> to intrusion detection. Question is if there would ever be more than one
+> or if event_timestamp and event_alarm would be sufficient.
+> 
 
-thank you for your feedback.
+My target is a PCF85363A which supports up to 3 timestamps. SO I'd go
+for timestamp[0-*]. This would be empty if it never triggered (or the
+timestamp is invalid) writing anything to that file resets the event. I
+don't think we need more than one file per timestamp.
 
-> Subject: Re: [RFC v3 11/25] watchdog: renesas_wdt: Add R-Car Gen2 support
->
-> On Tue, Jan 30, 2018 at 08:22:44PM +0000, Fabrizio Castro wrote:
-> > On R-Car Gen2 and RZ/G1 the rwdt clock needs to be always ON, therefore
-> > when suspending to RAM we need to explicitly disable the counting by
-> > clearing TME from RWTCSRA.
-> > Also, on some systems RWDT is the only piece of HW that allows the SoC
-> > to be restarted, therefore this patch implements the restart callback.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-+3GIUL1IS+U@public.gmane.org=
-sas.com>
-> > ---
-> > Wolfram, was the restart callback implementation missing for a reason?
-> > Is its implementation going to break any Gen3 platform?
-> >
->
-> The changes clearly are way more than claimed in the subject. Adding
-> restart handler and PM support may be prerequisites for Gen2, but the
-> changes apply to Gen3 as well. What happened to "one patch per logical
-> change" ?
-
-The PM implementation should be ok for Gen3 too, without this patch series =
-the kernel
-would disable the rwdt clock when suspending to RAM, this would "pause" the=
- counting.
-This patch series declares the rwdt clock as critical for Gen2 and RZ/G1, w=
-hich means we
-need to explicitly disable the counting to keep the same behaviour in place=
-.
-With respect to the restart callback implementation, that may well have con=
-sequences on
-Gen3, hopefully Wolfram will give us a feedback on this.
-In particular I would like to know if we should be installing the restart c=
-allback only when
-we use "renesas,rcar-gen2-wdt" as compatible string, or it's ok to make it =
-available for
-Gen3 as well.
-The only way to reboot iWave's boards iwg20d and iwg22d is to use the inter=
-nal watchdog,
-that's why the restart implementation was merged into this patch.
-I can split this patch in two, one for PM support and one for restart suppo=
-rt for the next
-version, what do you think about this?
-
->
-> > v1->v3:
-> > * unified Gen2 and Gen3 drivers.
-> >
-> >  drivers/watchdog/renesas_wdt.c | 61 ++++++++++++++++++++++++++++++++++=
-++++----
-> >  1 file changed, 56 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/drivers/watchdog/renesas_wdt.c b/drivers/watchdog/renesas_=
-wdt.c
-> > index 831ef83..eedb016 100644
-> > --- a/drivers/watchdog/renesas_wdt.c
-> > +++ b/drivers/watchdog/renesas_wdt.c
-> > @@ -107,6 +107,24 @@ static unsigned int rwdt_get_timeleft(struct watch=
-dog_device *wdev)
-> >  return DIV_BY_CLKS_PER_SEC(priv, 65536 - val);
-> >  }
-> >
-> > +static int rwdt_restart(struct watchdog_device *wdev, unsigned long ac=
-tion,
-> > +void *data)
-> > +{
-> > +struct rwdt_priv *priv =3D watchdog_get_drvdata(wdev);
-> > +
-> > +pm_runtime_get_sync(wdev->parent);
-> > +
-> > +rwdt_write(priv, 0x00, RWTCSRB);
-> > +rwdt_write(priv, 0x00, RWTCSRA);
-> > +rwdt_write(priv, 0xffff, RWTCNT);
-> > +
-> > +while (readb_relaxed(priv->base + RWTCSRA) & RWTCSRA_WRFLG)
-> > +cpu_relax();
-> > +
-> > +rwdt_write(priv, 0x80, RWTCSRA);
-> > +return 0;
-> > +}
-> > +
-> >  static const struct watchdog_info rwdt_ident =3D {
-> >  .options =3D WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT=
-,
-> >  .identity =3D "Renesas WDT Watchdog",
-> > @@ -118,6 +136,7 @@ static const struct watchdog_ops rwdt_ops =3D {
-> >  .stop =3D rwdt_stop,
-> >  .ping =3D rwdt_init_timeout,
-> >  .get_timeleft =3D rwdt_get_timeleft,
-> > +.restart =3D rwdt_restart,
-> >  };
-> >
-> >  static int rwdt_probe(struct platform_device *pdev)
-> > @@ -203,13 +222,42 @@ static int rwdt_remove(struct platform_device *pd=
-ev)
-> >  return 0;
-> >  }
-> >
-> > -/*
-> > - * This driver does also fit for R-Car Gen2 (r8a779[0-4]) WDT. However=
-, for SMP
-> > - * to work there, one also needs a RESET (RST) driver which does not e=
-xist yet
-> > - * due to HW issues. This needs to be solved before adding compatibles=
- here.
-> > - */
->
-> Have those issues been resolved ?
-
-This patch series addresses precisely those issues. The first implementatio=
-n
-used a flag that the watchdog driver needed to explicitly set to make every=
-thing
-work as expected. This new version uses a different concept that doesn't re=
-quire
-such an hack, and that's why the proposal now is to merge Gen2 and Gen3 dri=
-vers.
-
-Thanks,
-Fab
-
->
-> > +#ifdef CONFIG_PM
-> > +static int rwdt_suspend(struct device *dev)
-> > +{
-> > +struct platform_device *pdev;
-> > +struct rwdt_priv *priv;
-> > +
-> > +pdev =3D to_platform_device(dev);
-> > +priv =3D platform_get_drvdata(pdev);
-> > +if (watchdog_active(&priv->wdev)) {
-> > +rwdt_write(priv, priv->cks, RWTCSRA);
-> > +}
-> > +return 0;
-> > +}
-> > +
-> > +static int rwdt_resume(struct device *dev)
-> > +{
-> > +struct platform_device *pdev;
-> > +struct rwdt_priv *priv;
-> > +
-> > +pdev =3D to_platform_device(dev);
-> > +priv =3D platform_get_drvdata(pdev);
-> > +if (watchdog_active(&priv->wdev)) {
-> > +rwdt_write(priv, priv->cks | RWTCSRA_TME, RWTCSRA);
-> > +}
-> > +return 0;
-> > +}
-> > +
-> > +static const struct dev_pm_ops rwdt_pm =3D {
-> > +.suspend =3D rwdt_suspend,
-> > +.resume =3D rwdt_resume,
-> > +};
-> > +#endif
-> > +
-> >  static const struct of_device_id rwdt_ids[] =3D {
-> >  { .compatible =3D "renesas,rcar-gen3-wdt", },
-> > +{ .compatible =3D "renesas,rcar-gen2-wdt", },
-> >  { /* sentinel */ }
-> >  };
-> >  MODULE_DEVICE_TABLE(of, rwdt_ids);
-> > @@ -218,6 +266,9 @@ static struct platform_driver rwdt_driver =3D {
-> >  .driver =3D {
-> >  .name =3D "renesas_wdt",
-> >  .of_match_table =3D rwdt_ids,
-> > +#ifdef CONFIG_PM
-> > +.pm =3D &rwdt_pm,
-> > +#endif
-> >  },
-> >  .probe =3D rwdt_probe,
-> >  .remove =3D rwdt_remove,
-> > --
-> > 2.7.4
-> >
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
