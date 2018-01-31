@@ -1,112 +1,213 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH 6/7] dt-bindings: display: msm/dsi: Add compatible for
- 14nm DSI PHY
-Date: Wed, 31 Jan 2018 11:20:04 -0500
-Message-ID: <CAF6AEGsLrXBUub9Y5r-bTY2OPDksRSDjYpJXYoKxYp3MvHCP2w@mail.gmail.com>
-References: <20180117093448.4102-1-architt@codeaurora.org> <20180117093448.4102-7-architt@codeaurora.org>
- <20180129171544.st53376xyjep2cfx@rob-hp-laptop> <7b0254be-8dcf-f2cf-4911-64f0b5881759@codeaurora.org>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ASoC: codecs: Add support for AK5558 ADC driver
+Date: Wed, 31 Jan 2018 14:20:31 -0200
+Message-ID: <CAOMZO5BToV0OKEc_f8M1=zSL-X=qSXnokFyEfEEX2tGTUO=a-A@mail.gmail.com>
+References: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <7b0254be-8dcf-f2cf-4911-64f0b5881759@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Lloyd Atkinson <latkinso@codeaurora.org>, sibis@codeaurora.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1517403459-6668-1-git-send-email-daniel.baluta-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Baluta <daniel.baluta-3arQi8VN3Tc@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wakasugi.jb-r6lgfPJHJciWyREYz5tgSuqrae++aQT8@public.gmane.org, shengjiu.wang-3arQi8VN3Tc@public.gmane.org, mihai.serban-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cosmin.samoila-3arQi8VN3Tc@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org, Mihai Serban <mihai.serban-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 1:40 AM, Archit Taneja <architt@codeaurora.org> wrote:
->
->
-> On 01/29/2018 10:45 PM, Rob Herring wrote:
->>
->> On Wed, Jan 17, 2018 at 03:04:47PM +0530, Archit Taneja wrote:
->>>
->>> Add the compatible string for 14nm DSI PHY (used in MSM8996/APQ8096).
->>>  From 14nm PHY onwards, the "dsi_phy_regulator" reg-name is not required,
->>> but "dsi_phy_lane" reg-name is. Update the doc to specify the reg-names
->>> each PHY revision needs.
->>>
->>> Cc: Rob Herring <robh@kernel.org>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Archit Taneja <architt@codeaurora.org>
->>> ---
->>>   Documentation/devicetree/bindings/display/msm/dsi.txt | 13
->>> +++++++++++--
->>>   1 file changed, 11 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt
->>> b/Documentation/devicetree/bindings/display/msm/dsi.txt
->>> index 9c3ad6bbb9f0..26a1796b7145 100644
->>> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
->>> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
->>> @@ -86,12 +86,19 @@ Required properties:
->>>     * "qcom,dsi-phy-28nm-lp"
->>>     * "qcom,dsi-phy-20nm"
->>>     * "qcom,dsi-phy-28nm-8960"
->>> -- reg: Physical base address and length of the registers of PLL, PHY and
->>> PHY
->>> -  regulator
->>> +  * "qcom,dsi-phy-14nm"
->>> +- reg: Physical base address and length of the registers of PLL, PHY.
->>> Some
->>> +  revisions require the PHY regulator base address, whereas others
->>> require the
->>> +  PHY lane base address. See below for each PHY revision.
->>>   - reg-names: The names of register regions. The following regions are
->>> required:
->>> +  For DSI 28nm HPM/LP/8960 PHYs and 20nm PHY:
->>>     * "dsi_pll"
->>>     * "dsi_phy"
->>>     * "dsi_phy_regulator"
->>> +  For DSI 14nm PHY:
->>> +  * "dsi_pll"
->>> +  * "dsi_phy"
->>> +  * "dsi_phy_lane"
->>>   - clock-cells: Must be 1. The DSI PHY block acts as a clock provider,
->>> creating
->>>     2 clocks: A byte clock (index 0), and a pixel clock (index 1).
->>>   - power-domains: Should be <&mmcc MDSS_GDSC>.
->>> @@ -102,6 +109,8 @@ Required properties:
->>>   - vddio-supply: phandle to vdd-io regulator device node
->>>     For 20nm PHY:
->>>   - vddio-supply: phandle to vdd-io regulator device node
->>> +- vcca-supply: phandle to vcca regulator device node
->>
->>
->> Did you mean to add this?
->
->
-> Yes, I didn't intend it to be a part of this patch, but this supply is
-> indeed needed for the
-> 20nm PHY. I'll move this to a separate patch.
+Hi Daniel,
 
-actually, this looks correct, just formatted counter-intuitively by
-git-format-patch..
-
-vcca-supply for 20nm was introduced by "dt-bindings: display: msm/dsi:
-Fix the PHY regulator supply props", but when 14nm phy is added in
-this patch, it shows the addition of same line beneath 14nm PHY as an
-addition above the line.
-
-So I don't think it needs to be split up.
-
-BR,
--R
-
-> Thanks,
-> Archit
+On Wed, Jan 31, 2018 at 10:57 AM, Daniel Baluta <daniel.baluta-3arQi8VN3Tc@public.gmane.org> wrote:
+> AK5558 is a 32-bit, 768 kHZ sampling, differential input ADC
+> for digital audio systems.
 >
+> Datasheet is available at:
 >
->>
->>> +  For 14nm PHY:
->>>   - vcca-supply: phandle to vcca regulator device node
->>>     Optional properties:
->>> --
->>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->>> Forum,
->>> hosted by The Linux Foundation
->>>
+> https://www.akm.com/akm/en/file/datasheet/AK5558VN.pdf
 >
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> Initial patch includes support for normal and TDM modes.
+>
+> Signed-off-by: Junichi Wakasugi <wakasugi.jb-r6lgfPJHJciWyREYz5tgSuqrae++aQT8@public.gmane.org>
+> Signed-off-by: Mihai Serban <mihai.serban-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Daniel Baluta <daniel.baluta-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/sound/ak5558.txt |  20 +
+>  sound/soc/codecs/Kconfig                           |   6 +
+>  sound/soc/codecs/Makefile                          |   2 +
+>  sound/soc/codecs/ak5558.c                          | 754 +++++++++++++++++++++
+>  sound/soc/codecs/ak5558.h                          |  60 ++
+>  5 files changed, 842 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/ak5558.txt
+
+Maybe you should split this is as a separate patch and send it to dt
+maintainer for review.
+
+>  create mode 100644 sound/soc/codecs/ak5558.c
+>  create mode 100644 sound/soc/codecs/ak5558.h
+>
+> diff --git a/Documentation/devicetree/bindings/sound/ak5558.txt b/Documentation/devicetree/bindings/sound/ak5558.txt
+> new file mode 100644
+> index 0000000..c6c71af
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/ak5558.txt
+> @@ -0,0 +1,20 @@
+> +AK5558 8 channel differential 32-bit delta-sigma ADC
+> +
+> +This device supports I2C mode only.
+> +
+> +Required properties:
+> +
+> +- compatible : "asahi-kasei,ak5558"
+> +- reg : The I2C address of the device for I2C.
+> +- asahi-kasei,pdn-gpios: A GPIO specifier for the GPIO controlling
+> +       the power down & reset pin.
+> +
+> +Example:
+> +
+> +&i2c {
+> +       ak5558: ak5558@10 {
+> +               compatible = "asahi-kasei,ak5558";
+> +               reg = <0x10>;
+> +               asahi-kasei,pdn-gpios = <&gpio1 10 GPIO_ACTIVE_HIGH>;
+
+Datasheet says it is active low.
+
+The driver seems to ignore the GPIO polarity, but device tree should
+represent the hardware correctly.
+
+Better switch the driver to use gpiod API.
+
+> --- /dev/null
+> +++ b/sound/soc/codecs/ak5558.c
+> @@ -0,0 +1,754 @@
+> +/*
+> + * ak5558.c  --  audio driver for AK5558 ADC
+> + *
+> + * Copyright (C) 2015 Asahi Kasei Microdevices Corporation
+> + * Copyright 2018 NXP
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+
+You could use SPDX identifier and get rid of the license text.
+
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/i2c.h>
+> +#include <linux/delay.h>
+> +#include <linux/slab.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <sound/soc.h>
+> +#include <sound/soc-dapm.h>
+> +#include <sound/pcm.h>
+> +#include <sound/pcm_params.h>
+> +#include <sound/initval.h>
+> +#include <sound/tlv.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/regmap.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#include "ak5558.h"
+> +
+> +#define AK5558_SLAVE_CKS_AUTO
+
+Why is this define needed?
+
+> +
+> +static int ak5558_set_mcki(struct snd_soc_codec *codec, int fs, int rclk)
+> +{
+> +       u8  mode;
+> +#ifndef AK5558_SLAVE_CKS_AUTO
+> +       int mcki_rate;
+> +#endif
+
+You could drop this variable as AK5558_SLAVE_CKS_AUTO seems to be
+always defined.
+
+Then maybe you could remove mcki_rate and AK5558_SLAVE_CKS_AUTO.
+
+> +static int ak5558_startup(struct snd_pcm_substream *substream,
+> +                         struct snd_soc_dai *dai)
+> +{
+> +       int ret;
+> +
+> +       ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
+> +                                        SNDRV_PCM_HW_PARAM_RATE,
+> +                                        &ak5558_rate_constraints);
+> +       return ret;
+
+You could simply return directly without using the variable 'ret'.
+
+> +static int ak5558_init_reg(struct snd_soc_codec *codec)
+> +{
+> +       int  ret;
+> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
+> +
+> +       dev_dbg(codec->dev, "%s(%d)\n", __func__, __LINE__);
+> +
+> +       usleep_range(10000, 11000);
+> +       if (gpio_is_valid(ak5558->pdn_gpio)) {
+> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 0);
+> +               usleep_range(1000, 2000);
+> +               gpio_set_value_cansleep(ak5558->pdn_gpio, 1);
+
+Here the GPIO polarity is hardcoded, which can cause issues in systems
+that has an inverter in this GPIO line.
+
+One more generic approach would be to use gpiod_set_value_cansleep()
+instead, which takes the GPIO polarity read from device tree.
+
+> +static int ak5558_probe(struct snd_soc_codec *codec)
+> +{
+> +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
+> +       int ret = 0;
+> +
+> +       dev_dbg(codec->dev, "%s(%d)\n", __func__, __LINE__);
+
+Better to remove such dev_dbg() lines.
+
+> +static int ak5558_i2c_probe(struct i2c_client *i2c,
+> +                           const struct i2c_device_id *id)
+> +{
+> +       struct device_node *np = i2c->dev.of_node;
+> +       struct ak5558_priv *ak5558;
+> +       int ret = 0;
+> +
+> +       dev_err(&i2c->dev, "%s(%d)\n", __func__, __LINE__);
+
+You certainly do not want an error message on every probe :-)
+
+> +       ak5558 = devm_kzalloc(&i2c->dev, sizeof(struct ak5558_priv),
+> +                             GFP_KERNEL);
+> +       if (!ak5558)
+> +               return -ENOMEM;
+> +
+> +       ak5558->regmap = devm_regmap_init_i2c(i2c, &ak5558_regmap);
+> +       if (IS_ERR(ak5558->regmap))
+> +               return PTR_ERR(ak5558->regmap);
+> +
+> +       i2c_set_clientdata(i2c, ak5558);
+> +       ak5558->i2c = i2c;
+> +
+> +       ak5558->pdn_gpio = of_get_named_gpio(np, "ak5558,pdn-gpio", 0);
+
+It does not match the property in the binding doc: asahi-kasei,pdn-gpios
+
+> +module_i2c_driver(ak5558_i2c_driver);
+> +
+> +MODULE_AUTHOR("Junichi Wakasugi <wakasugi.jb-r6lgfPJHJciWyREYz5tgSuqrae++aQT8@public.gmane.org>");
+> +MODULE_AUTHOR("Mihai Serban <mihai.serban-3arQi8VN3Tc@public.gmane.org>");
+> +MODULE_DESCRIPTION("ASoC AK5558 ADC driver");
+> +MODULE_LICENSE("GPL");
+
+Don't you mean MODULE_LICENSE("GPL v2") instead?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
