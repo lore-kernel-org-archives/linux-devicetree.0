@@ -1,91 +1,63 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] media: ov2685: add support for OV2685 sensor
-Date: Wed, 31 Jan 2018 22:44:15 +0200
-Message-ID: <20180131204415.62n7wvye5fqp6ml6@valkosipuli.retiisi.org.uk>
-References: <1514534905-21393-1-git-send-email-zhengsq@rock-chips.com>
- <1514534905-21393-3-git-send-email-zhengsq@rock-chips.com>
- <20180103114324.za6bmg2rxuygawi4@valkosipuli.retiisi.org.uk>
- <8f60a7f8-8471-85e8-70d3-520701edc092@rock-chips.com>
+From: Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 00/15] usb: dwc3: Add new updates for DWC_usb31
+Date: Wed, 31 Jan 2018 13:14:48 -0800
+Message-ID: <cover.1517428812.git.thinhn@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8f60a7f8-8471-85e8-70d3-520701edc092-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ddl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thinh Nguyen <Thinh.Nguyen-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Vamsi Krishna Samavedam <vskrishn-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Li Jun <jun.li-3arQi8VN3Tc@public.gmane.org>, "Gustavo A. R. Silva" <garsilva-L1vi/lXTdts+Va1GwOuvDg@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
+Cc: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shunqian,
+This patch series adds new updates and some fixes for DWC_usb31.
 
-On Fri, Jan 12, 2018 at 10:30:57AM +0800, Shunqian Zheng wrote:
-> Hi Sakari,
-> 
-> 
-> On 2018年01月03日 19:43, Sakari Ailus wrote:
-> > > +static int ov2685_s_stream(struct v4l2_subdev *sd, int on)
-> > > +{
-> > > +	struct ov2685 *ov2685 = to_ov2685(sd);
-> > > +	struct i2c_client *client = ov2685->client;
-> > > +	int ret = 0;
-> > > +
-> > > +	mutex_lock(&ov2685->mutex);
-> > > +
-> > > +	on = !!on;
-> > > +	if (on == ov2685->streaming)
-> > > +		goto unlock_and_return;
-> > > +
-> > > +	if (on) {
-> > > +		/* In case these controls are set before streaming */
-> > > +		ov2685_set_exposure(ov2685, ov2685->exposure->val);
-> > > +		ov2685_set_gain(ov2685, ov2685->anal_gain->val);
-> > > +		ov2685_set_vts(ov2685, ov2685->vblank->val);
-> > > +		ov2685_enable_test_pattern(ov2685, ov2685->test_pattern->val);
-> > You should use __v4l2_ctrl_handler_setup() here. Or put that to the
-> > driver's runtime_resume function. That actually might be better.
-> The v3 put __v4l2_ctrl_handler_setup() to the runtime_resume callback. But
-> ov2685_s_stream()
->    -> pm_runtime_get_sync()
->        -> ov2685_runtime_resume()
->             -> __v4l2_ctrl_handler_setup()
->                 -> pm_runtime_get_if_in_use(), always <= 0 because
-> dev->power.runtime_status != RPM_ACTIVE.
-> 
-> Seems like  __v4l2_ctrl_handler_setup() has to be in ov2685_s_stream().
+Changes in v4:
+ - Correctly refer "databook" as "programming guide"
+ - Document more detail about enabling of ESS periodic tx/rx threshold
 
-Right, indeed. Well spotted.
+Changes in v3:
+ - Add "usb: dwc3: Check controller type before setting speed" to series
 
-The smiapp driver uses a device specific variable for the purpose, thus I
-missed this. Other drivers apply the controls while streaming on.
+Changes in v2:
+ - Add another patch to the series to increase mass_storage max_speed
+ - Separate "usb: dwc3: ep0: Reset TRB counter for ep0 IN" from series
+ - Separate "usb: dwc3: gadget: Set maxpacket size for ep0 IN" from series
+ - Use msleep() instead of mdelay() for SoftReset PHY sync delay
+ - Rename new USB31 macros from DWC3_USB31_* to DWC31_*
+ - Rename device properties and replace '_' with '-'
+ - Minor fixes in the commit messages
 
-> 
-> Thanks
-> > > +
-> > > +		ret = ov2685_write_reg(client, REG_SC_CTRL_MODE,
-> > > +				OV2685_REG_VALUE_08BIT, SC_CTRL_MODE_STREAMING);
-> > > +		if (ret)
-> > > +			goto unlock_and_return;
-> > > +	} else {
-> > > +		ret = ov2685_write_reg(client, REG_SC_CTRL_MODE,
-> > > +				OV2685_REG_VALUE_08BIT, SC_CTRL_MODE_STANDBY);
-> > > +		if (ret)
-> > > +			goto unlock_and_return;
-> > > +	}
-> > > +
-> > > +	ov2685->streaming = on;
-> > > +
-> > > +unlock_and_return:
-> > > +	mutex_unlock(&ov2685->mutex);
-> > > +	return ret;
-> > > +}
-> 
+
+Thinh Nguyen (15):
+  usb: dwc3: Add SoftReset PHY synchonization delay
+  usb: core: urb: Check SSP isoc ep comp descriptor
+  usb: dwc3: Update DWC_usb31 GTXFIFOSIZ reg fields
+  usb: dwc3: Check IP revision for GTXFIFOSIZ
+  usb: dwc3: Add DWC_usb31 GRXTHRCFG bit fields
+  usb: dwc3: gadget: Check IP revision for GRXTHRCFG
+  usb: dwc3: Add DWC_usb31 GTXTHRCFG reg fields
+  usb: dwc3: Make TX/RX threshold configurable
+  usb: dwc3: Check for ESS TX/RX threshold config
+  usb: dwc3: Dump LSP and BMU debug info
+  usb: dwc3: Track DWC_usb31 VERSIONTYPE
+  usb: dwc3: Add disabling of start_transfer failure quirk
+  usb: dwc3: Add workaround for isoc start transfer failure
+  usb: dwc3: Check controller type before setting speed
+  usb: gadget: mass_storage: Set max_speed to SSP
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |  19 +++
+ drivers/usb/core/urb.c                         |   8 +
+ drivers/usb/dwc3/core.c                        |  72 ++++++++-
+ drivers/usb/dwc3/core.h                        |  53 +++++++
+ drivers/usb/dwc3/debugfs.c                     |   5 +
+ drivers/usb/dwc3/gadget.c                      | 205 ++++++++++++++++++++++++-
+ drivers/usb/gadget/legacy/mass_storage.c       |   2 +-
+ 7 files changed, 354 insertions(+), 10 deletions(-)
 
 -- 
-Kind regards,
+2.11.0
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
