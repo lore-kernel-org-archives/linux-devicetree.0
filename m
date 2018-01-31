@@ -1,116 +1,130 @@
-From: Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>
-Subject: Re: Re: [PATCH v6 2/2] media: V3s: Add support for
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v6 2/2] media: V3s: Add support for
  Allwinner CSI.
-Date: Wed, 31 Jan 2018 03:08:08 +0000
-Message-ID: <20180131030807.GA19945@bart.dudau.co.uk>
+Date: Wed, 31 Jan 2018 11:24:56 +0800
+Message-ID: <CAGb2v65T559qcBRnx-e-qbDRkp6TqKvV1JD+pd2r0oGdDYVwUg@mail.gmail.com>
 References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
  <201801260759.RyNhDZz4%fengguang.wu@intel.com>
  <20180126094658.aa70ed3f890464f6051e21e4@magewell.com>
  <20180126110041.f89848325b9ecfb07df387ca@magewell.com>
-Reply-To: liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org
+ <20180131030807.GA19945@bart.dudau.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDK653XKRACRBGXGYTJQKGQEIC3VTNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180126110041.f89848325b9ecfb07df387ca-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180131030807.GA19945@bart.dudau.co.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liviu Dudau <liviu@dudau.co.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>, Linus Walleij <linus.walleij@linaro.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Thierry Reding <thierry.reding@gmail.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, kbuild test robot <lkp@intel.com>, Rick Chang <rick.chang@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, Dave Martin <dave.martin@arm.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Yong <yong.deng@magewell.com>, Hugues Fruchet <hugues.fruchet@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundatio>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 26, 2018 at 11:00:41AM +0800, Yong wrote:
-> Hi Maxime,
-> 
-> On Fri, 26 Jan 2018 09:46:58 +0800
-> Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org> wrote:
-> 
-> > Hi Maxime,
-> > 
-> > Do you have any experience in solving this problem?
-> > It seems the PHYS_OFFSET maybe undeclared when the ARCH is not arm.
-> 
-> Got it.
-> Should I add 'depends on ARM' in Kconfig?
+On Wed, Jan 31, 2018 at 11:08 AM, Liviu Dudau <liviu@dudau.co.uk> wrote:
+> On Fri, Jan 26, 2018 at 11:00:41AM +0800, Yong wrote:
+>> Hi Maxime,
+>>
+>> On Fri, 26 Jan 2018 09:46:58 +0800
+>> Yong <yong.deng@magewell.com> wrote:
+>>
+>> > Hi Maxime,
+>> >
+>> > Do you have any experience in solving this problem?
+>> > It seems the PHYS_OFFSET maybe undeclared when the ARCH is not arm.
+>>
+>> Got it.
+>> Should I add 'depends on ARM' in Kconfig?
+>
+> No, I don't think you should do that, you should fix the code.
+>
+> The dma_addr_t addr that you've got is ideally coming from dma_alloc_coherent(),
+> in which case the addr is already "suitable" for use by the device (because the
+> bus where the device is attached to does all the address translations). If you
+> apply PHYS_OFFSET forcefully to it you might get unexpected results.
 
-No, I don't think you should do that, you should fix the code.
+As explained in the thread, the dma_addr_t address is based on the kernel
+and processor's viewpoint, which has DRAM at an offset. This particular
+peripheral (and some others, such as display and video decoder) on Allwinner
+platforms do DMA on the separate memory bus directly, which does _not_
+have that memory offset. This is specific to our hardware. And also mentioned
+is that there is no sensible representation in the device tree that would
+allow the DMA API to do proper address translation.
 
-The dma_addr_t addr that you've got is ideally coming from dma_alloc_coherent(),
-in which case the addr is already "suitable" for use by the device (because the
-bus where the device is attached to does all the address translations). If you
-apply PHYS_OFFSET forcefully to it you might get unexpected results.
+Just throwing it out there, maybe we could do a dummy IOMMU that does the
+simple translation of (addr - PHYS_OFFSET)? Still I'm not sure if the device
+tree representation would be sane.
 
-Best regards,
-Liviu
+ChenYu
 
-> 
-> > 
-> > On Fri, 26 Jan 2018 08:04:18 +0800
-> > kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> > 
-> > > Hi Yong,
-> > > 
-> > > I love your patch! Yet something to improve:
-> > > 
-> > > [auto build test ERROR on linuxtv-media/master]
-> > > [also build test ERROR on v4.15-rc9 next-20180119]
-> > > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> > > 
-> > > url:    https://github.com/0day-ci/linux/commits/Yong-Deng/dt-bindings-media-Add-Allwinner-V3s-Camera-Sensor-Interface-CSI/20180126-054511
-> > > base:   git://linuxtv.org/media_tree.git master
-> > > config: i386-allmodconfig (attached as .config)
-> > > compiler: gcc-7 (Debian 7.2.0-12) 7.2.1 20171025
-> > > reproduce:
-> > >         # save the attached .config to linux build tree
-> > >         make ARCH=i386 
-> > > 
-> > > All errors (new ones prefixed by >>):
-> > > 
-> > >    drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c: In function 'sun6i_csi_update_buf_addr':
-> > > >> drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c:567:31: error: 'PHYS_OFFSET' undeclared (first use in this function); did you mean 'PAGE_OFFSET'?
-> > >      dma_addr_t bus_addr = addr - PHYS_OFFSET;
-> > >                                   ^~~~~~~~~~~
-> > >                                   PAGE_OFFSET
-> > >    drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c:567:31: note: each undeclared identifier is reported only once for each function it appears in
-> > > 
-> > > vim +567 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > 
-> > >    562	
-> > >    563	void sun6i_csi_update_buf_addr(struct sun6i_csi *csi, dma_addr_t addr)
-> > >    564	{
-> > >    565		struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
-> > >    566		/* transform physical address to bus address */
-> > >  > 567		dma_addr_t bus_addr = addr - PHYS_OFFSET;
-> > >    568	
-> > >    569		regmap_write(sdev->regmap, CSI_CH_F0_BUFA_REG,
-> > >    570			     (bus_addr + sdev->planar_offset[0]) >> 2);
-> > >    571		if (sdev->planar_offset[1] != -1)
-> > >    572			regmap_write(sdev->regmap, CSI_CH_F1_BUFA_REG,
-> > >    573				     (bus_addr + sdev->planar_offset[1]) >> 2);
-> > >    574		if (sdev->planar_offset[2] != -1)
-> > >    575			regmap_write(sdev->regmap, CSI_CH_F2_BUFA_REG,
-> > >    576				     (bus_addr + sdev->planar_offset[2]) >> 2);
-> > >    577	}
-> > >    578	
-> > > 
-> > > ---
-> > > 0-DAY kernel test infrastructure                Open Source Technology Center
-> > > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> > 
-> > 
-> > Thanks,
-> > Yong
-> 
-> 
-> Thanks,
-> Yong
-> 
-> -- 
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+>>
+>> >
+>> > On Fri, 26 Jan 2018 08:04:18 +0800
+>> > kbuild test robot <lkp@intel.com> wrote:
+>> >
+>> > > Hi Yong,
+>> > >
+>> > > I love your patch! Yet something to improve:
+>> > >
+>> > > [auto build test ERROR on linuxtv-media/master]
+>> > > [also build test ERROR on v4.15-rc9 next-20180119]
+>> > > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>> > >
+>> > > url:    https://github.com/0day-ci/linux/commits/Yong-Deng/dt-bindings-media-Add-Allwinner-V3s-Camera-Sensor-Interface-CSI/20180126-054511
+>> > > base:   git://linuxtv.org/media_tree.git master
+>> > > config: i386-allmodconfig (attached as .config)
+>> > > compiler: gcc-7 (Debian 7.2.0-12) 7.2.1 20171025
+>> > > reproduce:
+>> > >         # save the attached .config to linux build tree
+>> > >         make ARCH=i386
+>> > >
+>> > > All errors (new ones prefixed by >>):
+>> > >
+>> > >    drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c: In function 'sun6i_csi_update_buf_addr':
+>> > > >> drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c:567:31: error: 'PHYS_OFFSET' undeclared (first use in this function); did you mean 'PAGE_OFFSET'?
+>> > >      dma_addr_t bus_addr = addr - PHYS_OFFSET;
+>> > >                                   ^~~~~~~~~~~
+>> > >                                   PAGE_OFFSET
+>> > >    drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c:567:31: note: each undeclared identifier is reported only once for each function it appears in
+>> > >
+>> > > vim +567 drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+>> > >
+>> > >    562
+>> > >    563    void sun6i_csi_update_buf_addr(struct sun6i_csi *csi, dma_addr_t addr)
+>> > >    564    {
+>> > >    565            struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
+>> > >    566            /* transform physical address to bus address */
+>> > >  > 567            dma_addr_t bus_addr = addr - PHYS_OFFSET;
+>> > >    568
+>> > >    569            regmap_write(sdev->regmap, CSI_CH_F0_BUFA_REG,
+>> > >    570                         (bus_addr + sdev->planar_offset[0]) >> 2);
+>> > >    571            if (sdev->planar_offset[1] != -1)
+>> > >    572                    regmap_write(sdev->regmap, CSI_CH_F1_BUFA_REG,
+>> > >    573                                 (bus_addr + sdev->planar_offset[1]) >> 2);
+>> > >    574            if (sdev->planar_offset[2] != -1)
+>> > >    575                    regmap_write(sdev->regmap, CSI_CH_F2_BUFA_REG,
+>> > >    576                                 (bus_addr + sdev->planar_offset[2]) >> 2);
+>> > >    577    }
+>> > >    578
+>> > >
+>> > > ---
+>> > > 0-DAY kernel test infrastructure                Open Source Technology Center
+>> > > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>> >
+>> >
+>> > Thanks,
+>> > Yong
+>>
+>>
+>> Thanks,
+>> Yong
+>>
+>> --
+>> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+>> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+>> For more options, visit https://groups.google.com/d/optout.
