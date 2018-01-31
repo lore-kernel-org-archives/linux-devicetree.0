@@ -1,57 +1,142 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v8 04/11] ARM: dts: r7s72100: Add Capture Engine Unit
- (CEU)
-Date: Wed, 31 Jan 2018 11:07:44 +0300
-Message-ID: <567f779c-591c-4798-a8d0-504d25c439de@cogentembedded.com>
-References: <1517306302-27957-1-git-send-email-jacopo+renesas@jmondi.org>
- <1517306302-27957-5-git-send-email-jacopo+renesas@jmondi.org>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH v2 3/6] gpio: Add GPIO driver for Nintendo Wii
+Date: Wed, 31 Jan 2018 09:37:17 +0100
+Message-ID: <20180131083717.xhwaepwd6qxeqncv@latitude>
+References: <20180122050411.32460-1-j.neuschaefer@gmx.net>
+ <20180122050411.32460-4-j.neuschaefer@gmx.net>
+ <CAHp75VcWshngZFuUp4hzYdD43HF7TZ1sRE3Dh+HckB5do1=gGw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1517306302-27957-5-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="4afc2a2wktuivren"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcWshngZFuUp4hzYdD43HF7TZ1sRE3Dh+HckB5do1=gGw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Albert Herranz <albert_herranz@yahoo.es>, Segher Boessenkool <segher@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
 
-On 1/30/2018 12:58 PM, Jacopo Mondi wrote:
+--4afc2a2wktuivren
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Add Capture Engine Unit (CEU) node to device tree.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> ---
->   arch/arm/boot/dts/r7s72100.dtsi | 15 ++++++++++++---
->   1 file changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-> index ab9645a..5fe62f9 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-[...]
-> @@ -667,4 +667,13 @@
->   		power-domains = <&cpg_clocks>;
->   		status = "disabled";
->   	};
-> +
-> +	ceu: ceu@e8210000 {
+Hi,
 
-    The DT spec dictates the generic node names should be used. For the R-Car 
-VIN we use "video@...", hence I suggest that use the same here.
+On Sun, Jan 28, 2018 at 07:31:58PM +0200, Andy Shevchenko wrote:
+> On Mon, Jan 22, 2018 at 7:04 AM, Jonathan Neusch=C3=A4fer
+> <j.neuschaefer@gmx.net> wrote:
+>=20
+> Style issues below.
+>=20
+> > +#define HW_GPIO_OWNER          0x3c
+> > +
+> > +
+> > +struct hlwd_gpio {
+>=20
+> No need extra empty line in between.
 
-> +		reg = <0xe8210000 0x3000>;
-> +		compatible = "renesas,r7s72100-ceu";
-> +		interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp6_clks R7S72100_CLK_CEU>;
-> +		power-domains = <&cpg_clocks>;
-> +		status = "disabled";
-> +	};
->   };
+Ok.
 
-MBR, Sergei
+> > +       struct gpio_chip gpioc;
+> > +       void __iomem *regs;
+> > +       struct device *dev;
+> > +};
+> > +
+> > +static int hlwd_gpio_probe(struct platform_device *pdev)
+> > +{
+> > +       struct hlwd_gpio *hlwd;
+> > +       struct resource *regs_resource;
+> > +       u32 ngpios;
+> > +       int res;
+> > +
+> > +       hlwd =3D devm_kzalloc(&pdev->dev, sizeof(*hlwd), GFP_KERNEL);
+> > +       if (!hlwd)
+> > +               return -ENOMEM;
+> > +
+>=20
+> > +       /* Save the struct device pointer so dev_info, etc. can be used=
+=2E */
+>=20
+> Useless.
+
+Ok
+
+> > +       hlwd->dev =3D &pdev->dev;
+> > +
+>=20
+> > +       regs_resource =3D platform_get_resource(pdev, IORESOURCE_MEM, 0=
+);
+>=20
+> > +       if (IS_ERR(regs_resource))
+> > +               return PTR_ERR(regs_resource);
+> > +
+>=20
+> This is redundant. Below does it for ya.
+
+devm_ioremap_resource does not check if the resource argument is a
+negative error (which is what I'm trying to catch in the above code).
+But it seems that platform_get_resource can't return a negative error,
+so you're right. Thanks.
+
+>=20
+> > +       hlwd->regs =3D devm_ioremap_resource(&pdev->dev, regs_resource);
+> > +       if (IS_ERR(hlwd->regs))
+> > +               return PTR_ERR(hlwd->regs);
+>=20
+>=20
+> > +       res =3D bgpio_init(&hlwd->gpioc, &pdev->dev, 4,
+> > +                       hlwd->regs + HW_GPIOB_IN, hlwd->regs + HW_GPIOB=
+_OUT,
+> > +                       NULL, hlwd->regs + HW_GPIOB_DIR, NULL,
+> > +                       BGPIOF_BIG_ENDIAN_BYTE_ORDER);
+>=20
+> > +
+>=20
+> Remove this extra line.
+
+Ok.
+
+>=20
+> > +       if (res < 0) {
+> > +               dev_warn(hlwd->dev, "bgpio_init failed: %d\n", res);
+> > +               return res;
+> > +       }
+>=20
+> > +       if (of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpios))
+> > +               ngpios =3D 32;
+>=20
+> A nit: I would rather go with
+> res =3D of_property_read(...);
+> if (res)
+>   ngpios =3D 32;
+
+Ok, I have no strong opinion on this, so I'll do what you suggest.
+
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--4afc2a2wktuivren
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJacYAtAAoJEAgwRJqO81/bVJgQAL1/2rgESM4tkvX4NJOLl1yv
+g01sSRRpfTSazmyCfLillW1n+cYVx2PVG0RWtwWUIqFUjqhQvkLETQGAhL2OUaWW
+1K3UmpGnlJy2Yp/lqunk5VVKUt8N5CAxl3uABoiq9voryacDoA5qC7YoOwaGvpAl
+6xGdL9HtHsRgziuSJrSl+bszeZnI2Q1k740t9TSwl14xGwUre3xjSDiXERlRupOM
+yQq6WvS/RsWkpW+AaYqMGacSuozT0dR3zIVGOGTc/onCNkDKLSasbzyY2/qmyx79
+zWINWza/AJnqWTuIZcUJPiODvYzBy9pg3l9hFJxrYwTpknbSC1vwFF9s3lh2Q9LI
+isyl5u/UKu1nuuSetNF7FHBMKooVakWKPyS1fJ4LDSv3qgSxWkqTC6PbYKsdgy4B
+oR7wy59l2hZLoShrpuF0ftTYeZ20Y7iBHG4o/Zu9PYBrKCS/sSLPBASV5ClfTyyd
+WrRmw84ovfMMLuYjoyumAaLCUzBurpt5VHjkKtIpkrNtc8TEoZvMqW5mjLeRD8Rg
+LMWfXi9jY8CAPsGfMU87jrd2Pdf1+QEOsROiFWIC7XpGs5wASEWySCI1+nylJkBE
+GKg3NVdIbHU1XdPH6LKXAwjpr/yUtqYCHF8dmzDtHCenf6VXETaZ5qq7HpdAzyGT
+21yVh2djBZ2XNXaucN+I
+=K7YI
+-----END PGP SIGNATURE-----
+
+--4afc2a2wktuivren--
