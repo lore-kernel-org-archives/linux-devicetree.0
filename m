@@ -1,7 +1,7 @@
 From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [RFC v4 11/26] dt-bindings: watchdog: renesas-wdt: Add R-Car Gen2 support
-Date: Wed, 31 Jan 2018 18:24:15 +0000
-Message-ID: <1517423070-24236-12-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [RFC v4 13/26] watchdog: renesas_wdt: Add restart handler
+Date: Wed, 31 Jan 2018 18:24:17 +0000
+Message-ID: <1517423070-24236-14-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1517423070-24236-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
@@ -10,57 +10,67 @@ To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring
 Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit documents the compatibility with R-Car Gen2 and RZ/G
-devices by defining the generic compatible string "renesas,rcar-gen2-wdt".
-Also, this patch expands the list of SoC-specific compatible strings to
-include RZ/G and R-Car Gen2 devices.
+On iWave's boards iwg20d and iwg22d the only way to reboot the system is
+by means of the watchdog.
+This patch adds a restart handler to rwdt_ops, and also makes sure we
+keep its priority to a medium level, in order to not override other more
+effective handlers.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
-v3->4:
-* Reinstated lost "renesas,rza-wdt" compatible string
+v3->v4:
+* New patch spawn out from patch 12/16. The restart handler on Gen3 is
+  controversial, hopefully this patch will help finalizing the discussion.
 
- .../devicetree/bindings/watchdog/renesas-wdt.txt      | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/watchdog/renesas_wdt.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-index bf6d1ca..4815128 100644
---- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-@@ -1,17 +1,26 @@
- Renesas Watchdog Timer (WDT) Controller
+diff --git a/drivers/watchdog/renesas_wdt.c b/drivers/watchdog/renesas_wdt.c
+index 0a1a402..6d1c4b9 100644
+--- a/drivers/watchdog/renesas_wdt.c
++++ b/drivers/watchdog/renesas_wdt.c
+@@ -107,6 +107,24 @@ static unsigned int rwdt_get_timeleft(struct watchdog_device *wdev)
+ 	return DIV_BY_CLKS_PER_SEC(priv, 65536 - val);
+ }
  
- Required properties:
--- compatible : Should be "renesas,<soctype>-wdt", and
--	       "renesas,rcar-gen3-wdt" or "renesas,rza-wdt" as fallback.
-+ - compatible : Must be "renesas,<soctype>-wdt", followed by a generic
-+		fallback compatible string when compatible with the generic
-+		version.
- 	       Examples with soctypes are:
-+		 - "renesas,r8a7743-wdt" (RZ/G1M)
-+		 - "renesas,r8a7745-wdt" (RZ/G1E)
-+	         - "renesas,r8a7790-wdt" (R-Car H2)
-+	         - "renesas,r8a7791-wdt" (R-Car M2-W)
-+	         - "renesas,r8a7792-wdt" (R-Car V2H)
-+	         - "renesas,r8a7793-wdt" (R-Car M2-N)
-+	         - "renesas,r8a7794-wdt" (R-Car E2)
- 	         - "renesas,r8a7795-wdt" (R-Car H3)
- 	         - "renesas,r8a7796-wdt" (R-Car M3-W)
- 	         - "renesas,r8a77995-wdt" (R-Car D3)
- 	         - "renesas,r7s72100-wdt" (RZ/A1)
-+		The generic compatible string must be:
-+		 - "renesas,rza-wdt" for RZ/A
-+		 - "renesas,rcar-gen2-wdt" for R-Car Gen2 and RZ/G
-+		 - "renesas,rcar-gen3-wdt" for R-Car Gen3
++static int rwdt_restart(struct watchdog_device *wdev, unsigned long action,
++			void *data)
++{
++	struct rwdt_priv *priv = watchdog_get_drvdata(wdev);
++
++	pm_runtime_get_sync(wdev->parent);
++
++	rwdt_write(priv, 0x00, RWTCSRB);
++	rwdt_write(priv, 0x00, RWTCSRA);
++	rwdt_write(priv, 0xffff, RWTCNT);
++
++	while (readb_relaxed(priv->base + RWTCSRA) & RWTCSRA_WRFLG)
++		cpu_relax();
++
++	rwdt_write(priv, 0x80, RWTCSRA);
++	return 0;
++}
++
+ static const struct watchdog_info rwdt_ident = {
+ 	.options = WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT,
+ 	.identity = "Renesas WDT Watchdog",
+@@ -118,6 +136,7 @@ static const struct watchdog_ops rwdt_ops = {
+ 	.stop = rwdt_stop,
+ 	.ping = rwdt_init_timeout,
+ 	.get_timeleft = rwdt_get_timeleft,
++	.restart = rwdt_restart,
+ };
  
--  When compatible with the generic version, nodes must list the SoC-specific
--  version corresponding to the platform first, followed by the generic
--  version.
+ static int rwdt_probe(struct platform_device *pdev)
+@@ -176,6 +195,7 @@ static int rwdt_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, priv);
+ 	watchdog_set_drvdata(&priv->wdev, priv);
+ 	watchdog_set_nowayout(&priv->wdev, nowayout);
++	watchdog_set_restart_priority(&priv->wdev, 128);
  
- - reg : Should contain WDT registers location and length
- - clocks : the clock feeding the watchdog timer.
+ 	/* This overrides the default timeout only if DT configuration was found */
+ 	ret = watchdog_init_timeout(&priv->wdev, 0, &pdev->dev);
 -- 
 2.7.4
 
