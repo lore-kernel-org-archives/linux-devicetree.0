@@ -1,47 +1,248 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
- of_find_node_by_phandle()
-Date: Thu, 1 Feb 2018 11:10:35 -0800
-Message-ID: <fd9f5f63-b08e-602e-1510-85a65889f550@gmail.com>
-References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
- <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
- <38cdcae5-ec0f-d1be-b024-1990d4387731@gmail.com>
- <9e23d32f-05a0-ce8a-41f8-9a1a3d66be37@codeaurora.org>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v6 04/41] clk: davinci: Add platform information for TI
+ DA850 PLL
+Date: Thu, 1 Feb 2018 13:22:18 -0600
+Message-ID: <7d7e0522-30d5-6232-853e-7ab32fadfe48@lechnology.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-5-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9e23d32f-05a0-ce8a-41f8-9a1a3d66be37-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1516468460-4908-5-git-send-email-david@lechnology.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/18 02:31, Chintan Pandya wrote:
+On 01/20/2018 11:13 AM, David Lechner wrote:
+> This adds platform-specific declarations for the PLL clocks on TI DA850/
+> OMAP-L138/AM18XX SoCs.
 > 
->>> Anyways, will fix this locally and share test results.
->>
->> Thanks, I look forward to the results.
->>
+> Signed-off-by: David Lechner <david@lechnology.com>
+> ---
 > 
-> Set up for this time was slightly different. So, taken all the numbers again.
+> v6 changes:
+> - Added da850_pll{0,1}_info with controller-specific information
+> - Added OBSCLK data
+> - Add empty lines between function calls
 > 
-> Boot to shell time (in ms): Experiment 2
-> [1] Base            : 14.843805 14.784842 14.842338
-> [2] 64 sized fixed cache    : 14.189292 14.200003 14.266711
-> [3] Dynamic freeable cache    : 14.112412 14.064772 14.036052
+>   drivers/clk/davinci/Makefile    |   1 +
+>   drivers/clk/davinci/pll-da850.c | 163 ++++++++++++++++++++++++++++++++++++++++
+>   include/linux/clk/davinci.h     |   1 +
+>   3 files changed, 165 insertions(+)
+>   create mode 100644 drivers/clk/davinci/pll-da850.c
 > 
-> So, [3] (this patch) looks to be improving 750ms (on avg from base build).
+> diff --git a/drivers/clk/davinci/Makefile b/drivers/clk/davinci/Makefile
+> index 9061e19..13049d4 100644
+> --- a/drivers/clk/davinci/Makefile
+> +++ b/drivers/clk/davinci/Makefile
+> @@ -3,4 +3,5 @@
+>   ifeq ($(CONFIG_COMMON_CLK), y)
+>   obj-y += pll.o
+>   obj-$(CONFIG_ARCH_DAVINCI_DA830)	+= pll-da830.o
+> +obj-$(CONFIG_ARCH_DAVINCI_DA850)	+= pll-da850.o
+>   endif
+> diff --git a/drivers/clk/davinci/pll-da850.c b/drivers/clk/davinci/pll-da850.c
+> new file mode 100644
+> index 0000000..a94e1a6
+> --- /dev/null
+> +++ b/drivers/clk/davinci/pll-da850.c
+> @@ -0,0 +1,163 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PLL clock descriptions for TI DA850/OMAP-L138/AM18XX
+> + *
+> + * Copyright (C) 2018 David Lechner <david@lechnology.com>
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mfd/da8xx-cfgchip.h>
+> +#include <linux/of.h>
+> +#include <linux/types.h>
+> +
+> +#include "pll.h"
+> +
+> +#define OCSEL_OCSRC_OSCIN		0x14
+> +#define OCSEL_OCSRC_PLL0_SYSCLK(n)	(0x16 + (n))
+> +#define OCSEL_OCSRC_PLL1_OBSCLK		0x1e
+> +#define OCSEL_OCSRC_PLL1_SYSCLK(n)	(0x16 + (n))
+> +
+> +static const struct davinci_pll_clk_info da850_pll0_info __initconst = {
+> +	.name = "pll0",
+> +	.unlock_reg = CFGCHIP(0),
+> +	.unlock_mask = CFGCHIP0_PLL_MASTER_LOCK,
+> +	.pllm_mask = GENMASK(4, 0),
+> +	.pllm_min = 4,
+> +	.pllm_max = 32,
+> +	.pllout_min_rate = 300000000,
+> +	.pllout_max_rate = 600000000,
+> +	.flags = PLL_HAS_OSCIN | PLL_HAS_PREDIV | PLL_HAS_POSTDIV |
+> +		 PLL_HAS_EXTCLKSRC,
+> +};
+> +
+> +/*
+> + * NB: Technically, the clocks flagged as SYSCLK_FIXED_DIV are "fixed ratio",
+> + * meaning that we could change the divider as long as we keep the correct
+> + * ratio between all of the clocks, but we don't support that because there is
+> + * currently not a need for it.
+> + */
+> +
+> +static const struct davinci_pll_sysclk_info da850_pll0_sysclk_info[] __initconst = {
+> +	SYSCLK(1, pll0_sysclk1, pll0_pllen, 5, SYSCLK_FIXED_DIV),
+> +	SYSCLK(2, pll0_sysclk2, pll0_pllen, 5, SYSCLK_FIXED_DIV),
+> +	SYSCLK(3, pll0_sysclk3, pll0_pllen, 5, 0),
+> +	SYSCLK(4, pll0_sysclk4, pll0_pllen, 5, SYSCLK_FIXED_DIV),
+> +	SYSCLK(5, pll0_sysclk5, pll0_pllen, 5, 0),
+> +	SYSCLK(6, pll0_sysclk6, pll0_pllen, 5, SYSCLK_ARM_RATE | SYSCLK_FIXED_DIV),
+> +	SYSCLK(7, pll0_sysclk7, pll0_pllen, 5, 0),
+> +	{ }
+> +};
+> +
+> +static const char * const da850_pll0_obsclk_parent_names[] __initconst = {
+> +	"oscin",
+> +	"pll0_sysclk1",
+> +	"pll0_sysclk2",
+> +	"pll0_sysclk3",
+> +	"pll0_sysclk4",
+> +	"pll0_sysclk5",
+> +	"pll0_sysclk6",
+> +	"pll0_sysclk7",
+> +	"pll1_obsclk",
+> +};
+> +
+> +static u32 da850_pll0_obsclk_table[] = {
+> +	OCSEL_OCSRC_OSCIN,
+> +	OCSEL_OCSRC_PLL0_SYSCLK(1),
+> +	OCSEL_OCSRC_PLL0_SYSCLK(2),
+> +	OCSEL_OCSRC_PLL0_SYSCLK(3),
+> +	OCSEL_OCSRC_PLL0_SYSCLK(4),
+> +	OCSEL_OCSRC_PLL0_SYSCLK(5),
+> +	OCSEL_OCSRC_PLL0_SYSCLK(6),
+> +	OCSEL_OCSRC_PLL0_SYSCLK(7),
+> +	OCSEL_OCSRC_PLL1_OBSCLK,
+> +};
+> +
+> +static const struct davinci_pll_obsclk_info da850_pll0_obsclk_info __initconst = {
+> +	.name = "pll0_obsclk",
+> +	.parent_names = da850_pll0_obsclk_parent_names,
+> +	.num_parents = ARRAY_SIZE(da850_pll0_obsclk_parent_names),
+> +	.table = da850_pll0_obsclk_table,
+> +	.ocsrc_mask = GENMASK(4, 0),
+> +};
+> +
+> +static const struct davinci_pll_clk_info da850_pll1_info __initconst = {
+> +	.name = "pll1",
+> +	.unlock_reg = CFGCHIP(3),
+> +	.unlock_mask = CFGCHIP3_PLL1_MASTER_LOCK,
+> +	.pllm_mask = GENMASK(4, 0),
+> +	.pllm_min = 4,
+> +	.pllm_max = 32,
+> +	.pllout_min_rate = 300000000,
+> +	.pllout_max_rate = 600000000,
+> +	.flags = PLL_HAS_POSTDIV,
+> +};
+> +
+> +static const struct davinci_pll_sysclk_info da850_pll1_sysclk_info[] __initconst = {
+> +	SYSCLK(1, pll1_sysclk1, pll1_pllen, 5, SYSCLK_ALWAYS_ENABLED),
+> +	SYSCLK(2, pll1_sysclk2, pll1_pllen, 5, 0),
+> +	SYSCLK(3, pll1_sysclk3, pll1_pllen, 5, 0),
+> +	{ }
+> +};
+> +
+> +static const char * const da850_pll1_obsclk_parent_names[] __initconst = {
+> +	"oscin",
+
+Re: the issue of "ref_clk" vs. "oscin"...
+
+This is one of the places where having the otherwise unnecessary "oscin" clock
+really helps out. The PLL driver doesn't control "ref_clk" - it comes from somewhere
+else. And in the case of DT, it may not even be named "ref_clk", so we really
+don't want to hard-code the name "ref_clk" here.
+
+If we have to allow a variable name here, it just makes more work in the driver
+shuffling names around.
+
+And the name "oscin" totally makes sense here because the TRM lists this input to the
+mux as "OSCIN".
+
+> +	"pll1_sysclk1",
+> +	"pll1_sysclk2",
+> +	"pll1_sysclk3",
+> +};
+> +
+> +static u32 da850_pll1_obsclk_table[] = {
+> +	OCSEL_OCSRC_OSCIN,
+> +	OCSEL_OCSRC_PLL1_SYSCLK(1),
+> +	OCSEL_OCSRC_PLL1_SYSCLK(2),
+> +	OCSEL_OCSRC_PLL1_SYSCLK(3),
+> +};
+> +
+> +static const struct davinci_pll_obsclk_info da850_pll1_obsclk_info __initconst = {
+> +	.name = "pll1_obsclk",
+> +	.parent_names = da850_pll1_obsclk_parent_names,
+> +	.num_parents = ARRAY_SIZE(da850_pll1_obsclk_parent_names),
+> +	.table = da850_pll1_obsclk_table,
+> +	.ocsrc_mask = GENMASK(4, 0),
+> +};
+> +
+> +void __init da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1)
+> +{
+> +	const struct davinci_pll_sysclk_info *info;
+> +
+> +	davinci_pll_clk_register(&da850_pll0_info, "ref_clk", pll0);
+
+And really, we probably shouldn't be hard-coding "ref_clk" here either.
+Basically, we are making the assumption that the board file has registered
+a clock named "ref_clk". It would probably be better to pass the name
+as a parameter.
+
+> +
+> +	davinci_pll_auxclk_register("pll0_auxclk", pll0);
+> +
+> +	for (info = da850_pll0_sysclk_info; info->name; info++)
+> +		davinci_pll_sysclk_register(info, pll0);
+> +
+> +	davinci_pll_obsclk_register(&da850_pll0_obsclk_info, pll0);
+> +
+> +	davinci_pll_clk_register(&da850_pll1_info, "oscin", pll1);
+> +
+> +	for (info = da850_pll1_sysclk_info; info->name; info++)
+> +		davinci_pll_sysclk_register(info, pll1);
+> +
+> +	davinci_pll_obsclk_register(&da850_pll1_obsclk_info, pll1);
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static void __init of_da850_pll0_auxclk_init(struct device_node *node)
+> +{
+> +	of_davinci_pll_init(node, &da850_pll0_info, &da850_pll0_obsclk_info,
+> +			    da850_pll0_sysclk_info, 7);
+> +}
+> +CLK_OF_DECLARE(da850_pll0_auxclk, "ti,da850-pll0", of_da850_pll0_auxclk_init);
+> +
+> +static void __init of_da850_pll1_auxclk_init(struct device_node *node)
+> +{
+> +	of_davinci_pll_init(node, &da850_pll1_info, &da850_pll1_obsclk_info,
+> +			    da850_pll1_sysclk_info, 3);
+> +}
+> +CLK_OF_DECLARE(da850_pll1_auxclk, "ti,da850-pll1", of_da850_pll1_auxclk_init);
+> +#endif
+> diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
+> index 4f4d60d..7b08fe0 100644
+> --- a/include/linux/clk/davinci.h
+> +++ b/include/linux/clk/davinci.h
+> @@ -10,5 +10,6 @@
+>   #include <linux/types.h>
+>   
+>   void da830_pll_clk_init(void __iomem *pll);
+> +void da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1);
+>   
+>   #endif /* __LINUX_CLK_DAVINCI_H__ */
 > 
 
-Is this with the many debug options enabled?  If so, can you repeat with
-a normal configuration?
-
-Thanks,
-
-Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
