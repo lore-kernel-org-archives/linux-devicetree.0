@@ -1,81 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [linux-sunxi] Re: [PATCH v6 2/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Thu, 1 Feb 2018 10:20:28 +0100
-Message-ID: <CAK8P3a01DqmVJKt6J2i_okVoeELJCUW0voW0r52EzBY7iF74xQ@mail.gmail.com>
-References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
- <201801260759.RyNhDZz4%fengguang.wu@intel.com> <20180126094658.aa70ed3f890464f6051e21e4@magewell.com>
- <20180126110041.f89848325b9ecfb07df387ca@magewell.com> <20180131030807.GA19945@bart.dudau.co.uk>
- <20180131074212.7hvb3nqkt22h2chg@flea.lan> <20180131144753.GB19945@bart.dudau.co.uk>
- <20180201083222.q6rqql4nngn2bhiy@flea.lan>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v6 06/41] clk: davinci: Add platform information for TI
+ DM365 PLL
+Date: Thu, 1 Feb 2018 14:58:01 +0530
+Message-ID: <c80a7a0b-4fc8-6255-ce9e-9849d3ab7ac0@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-7-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20180201083222.q6rqql4nngn2bhiy@flea.lan>
-Sender: linux-media-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Liviu Dudau <liviu@dudau.co.uk>, Yong <yong.deng@magewell.com>, kbuild test robot <lkp@intel.com>, kbuild-all@01.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hans.verkuil@cisco.com>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Sa
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1516468460-4908-7-git-send-email-david@lechnology.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 1, 2018 at 9:32 AM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Wed, Jan 31, 2018 at 02:47:53PM +0000, Liviu Dudau wrote:
->> On Wed, Jan 31, 2018 at 08:42:12AM +0100, Maxime Ripard wrote:
->> > On Wed, Jan 31, 2018 at 03:08:08AM +0000, Liviu Dudau wrote:
->> > > On Fri, Jan 26, 2018 at 11:00:41AM +0800, Yong wrote:
->>
->> Yeah, sorry, my threading of the discussion was broken and I've seen
->> the rest of the thread after I have replied. My bad!
->>
->> >
->> > In our case, the bus where the device is attached will not do the
->> > address translations, and shouldn't.
->>
->> In my view, the bus is already doing address translation at physical
->> level, AFAIU it remaps the memory to zero.
->
-> Not really. It uses a separate bus with a different mapping for the
-> DMA accesses (and only the DMA accesses). The AXI (or AHB, I'm not
-> sure, but, well, the "registers" bus) doesn't remap anything in
-> itself, and we only describe this one usually in our DTs.
+On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+> +
+> +void __init dm365_pll_clk_init(void __iomem *pll1, void __iomem *pll2)
+> +{
+> +	const struct davinci_pll_sysclk_info *info;
+> +
+> +	davinci_pll_clk_register(&dm365_pll1_info, "ref_clk", pll1);
+> +
+> +	davinci_pll_auxclk_register("pll1_auxclk", pll1);
+> +
+> +	davinci_pll_sysclkbp_clk_register("pll1_sysclkbp", pll1);
+> +
+> +	davinci_pll_obsclk_register(&dm365_pll1_obsclk_info, pll1);
+> +
+> +	for (info = dm365_pll1_sysclk_info; info->name; info++)
+> +		davinci_pll_sysclk_register(info, pll1);
+> +
+> +	davinci_pll_clk_register(&dm365_pll2_info, "oscin", pll2);
 
-Exactly, the DT model fundamentally assumes that each a device is
-connected to exactly one bus, so we make up a device *tree* rather
-than a non-directed mesh topology that you might see in modern
-SoCs.
+As pointed out in other patches, I think we can remove "oscin" here and
+also get rid of clk_register_fixed_factor() for oscin in
+davinci_pll_clk_register().
 
-The "dma-ranges" property was introduced when this first started
-falling apart and we got devices that had a different translation
-in DMA direction compared to control direction (i.e. the "ranges"
-property), but that still assumed that every device on a given bus
-had the same view of DMA space.
+Rest of the patch looks good to me.
 
-With just "dma-ranges", we could easy deal with a topology where
-each DMA master on an AXI bus sees main memory at address
-zero but the CPU sees the same memory at a high address while
-seeing the MMIO ranges at a low address.
-
-What we cannot represent is multiple masters on the same
-AXI bus that use a different translation. Making up arbitrary
-intermediate buses would get this to work, but would likely
-cause other problems in the future when we do something
-else that relies on having a correct representation of the
-hierarchy of all the AXI/AHB/APB buses in the system, such
-as doing per-bus bandwidth allocation for child devices or
-anything else that requires configuring the bus bridge itself.
-
->> What you (we?) need is a simple bus driver that registers the
->> correct virt_to_bus()/bus_to_virt() hooks for the device that do
->> this translation at the DMA API level as well.
->
-> Like I said, this only impact DMA transfers, and not the registers
-> accesses. We have other devices sitting on the same bus that do not
-> perform DMA accesses through that special memory bus and will not have
-> that mapping changed.
-
-virt_to_bus()/bus_to_virt() don't actually exist on modern platforms any
-more, but when they did, they were only about dma access, not
-mmio access, so they would correspond to what we do with
-'dma-ranges' rather than 'ranges'.
-
-        Arnd
+Thanks,
+Sekhar
