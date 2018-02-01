@@ -1,75 +1,38 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v6 04/41] clk: davinci: Add platform information for TI
- DA850 PLL
-Date: Thu, 1 Feb 2018 13:04:03 -0600
-Message-ID: <6f0146e4-72bc-7bc2-2135-44950949cd77@lechnology.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-5-git-send-email-david@lechnology.com>
- <834cb7ce-9406-a806-3ec1-a59766bd8a9d@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] DT: dma: renesas,rcar-dmac: document R8A77980 support
+Date: Thu, 1 Feb 2018 22:09:25 +0300
+Message-ID: <8302f1c8-3deb-584b-d6c8-b46240275e9e@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <834cb7ce-9406-a806-3ec1-a59766bd8a9d-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
+Content-Language: en-MW
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/2018 02:58 AM, Sekhar Nori wrote:
-> On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
->> This adds platform-specific declarations for the PLL clocks on TI DA850/
->> OMAP-L138/AM18XX SoCs.
->>
->> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> 
->> +static const struct davinci_pll_clk_info da850_pll1_info __initconst = {
->> +	.name = "pll1",
->> +	.unlock_reg = CFGCHIP(3),
->> +	.unlock_mask = CFGCHIP3_PLL1_MASTER_LOCK,
-> 
-> I guess this will change with the cfgchip handling discussion last week.
+Renesas  R-Car V3H SoC has the R-Car gen3 compatible DMA controllers.
+Document R-Car V3H (also known as R8A77980) SoC bindings.
 
-Actually no, there really weren't any changes to the clock drivers because
-of this change. Only a small change in mach-davinci.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-> 
->> +	.pllm_mask = GENMASK(4, 0),
->> +	.pllm_min = 4,
->> +	.pllm_max = 32,
->> +	.pllout_min_rate = 300000000,
->> +	.pllout_max_rate = 600000000,
->> +	.flags = PLL_HAS_POSTDIV,
->> +};
->> +
-> 
-> [...]
-> 
->> +void __init da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1)
->> +{
->> +	const struct davinci_pll_sysclk_info *info;
->> +
->> +	davinci_pll_clk_register(&da850_pll0_info, "ref_clk", pll0);
->> +
->> +	davinci_pll_auxclk_register("pll0_auxclk", pll0);
->> +
->> +	for (info = da850_pll0_sysclk_info; info->name; info++)
->> +		davinci_pll_sysclk_register(info, pll0);
->> +
->> +	davinci_pll_obsclk_register(&da850_pll0_obsclk_info, pll0);
->> +
->> +	davinci_pll_clk_register(&da850_pll1_info, "oscin", pll1);
-> 
-> Both PLL0 and PLL1 use the same reference clock. So this should be
-> "ref_clk". I dont think we ever need to register a clock called oscin
-> along with "ref_clk". There is only one reference clock. It can either
-> be obtained using internal oscillator or external oscillator.
-> 
+---
+ Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt |    1 +
+ 1 file changed, 1 insertion(+)
 
-As per my response to the previous path, this depends on which both
-which SoC and which diagram in the TRM for that SoC you are looking at.
-It works either way.
+Index: slave-dma/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+===================================================================
+--- slave-dma.orig/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
++++ slave-dma/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+@@ -26,6 +26,7 @@ Required Properties:
+ 		- "renesas,dmac-r8a7795" (R-Car H3)
+ 		- "renesas,dmac-r8a7796" (R-Car M3-W)
+ 		- "renesas,dmac-r8a77970" (R-Car V3M)
++		- "renesas,dmac-r8a77980" (R-Car V3H)
+ 
+ - reg: base address and length of the registers block for the DMAC
+ 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
