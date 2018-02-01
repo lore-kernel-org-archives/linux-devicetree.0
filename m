@@ -1,120 +1,371 @@
-From: JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v5 08/13] iommu/rockchip: Control clocks needed to access
-	the IOMMU
-Date: Thu, 01 Feb 2018 19:19:46 +0800
-Message-ID: <5A72F7D2.1050201@rock-chips.com>
-References: <20180124103516.2571-1-jeffy.chen@rock-chips.com>
-	<20180124103516.2571-9-jeffy.chen@rock-chips.com>
-	<20180130170515.3g6wtadqgmehxh5b@rob-hp-laptop>
-	<CAAFQd5A383Ey3Ntg_hcsvzHj2DsSuW6RMQ+kP=LPAZ1YmqjHOg@mail.gmail.com>
-	<CAL_JsqKFW0USD_TgGCO-s4wMBw9O2psToMObjeSEwCNReq-3=w@mail.gmail.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v12 7/9] ACPI: Translate the I/O range of non-MMIO devices
+ before scanning
+Date: Thu, 1 Feb 2018 11:32:50 +0000
+Message-ID: <0a30452f-34eb-d0b5-2001-ab6b866c53e2@huawei.com>
+References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
+ <1516725385-24535-8-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAL_JsqKFW0USD_TgGCO-s4wMBw9O2psToMObjeSEwCNReq-3=w@mail.gmail.com>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, list-Y9sIeH5OGRo@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, open-Y9sIeH5OGRo@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1516725385-24535-8-git-send-email-john.garry@huawei.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net
+Cc: robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, hanjun.guo@linaro.org, dann.frazier@canonical.com, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, linux-pci@vger.kernel.org, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for your reply.
-
-On 01/31/2018 09:50 PM, Rob Herring wrote:
-> On Wed, Jan 31, 2018 at 1:52 AM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> Hi Rob,
->>
->> On Wed, Jan 31, 2018 at 2:05 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Wed, Jan 24, 2018 at 06:35:11PM +0800, Jeffy Chen wrote:
->>>> From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>>
->>>> Current code relies on master driver enabling necessary clocks before
->>>> IOMMU is accessed, however there are cases when the IOMMU should be
->>>> accessed while the master is not running yet, for example allocating
->>>> V4L2 videobuf2 buffers, which is done by the VB2 framework using DMA
->>>> mapping API and doesn't engage the master driver at all.
->>>>
->>>> This patch fixes the problem by letting clocks needed for IOMMU
->>>> operation to be listed in Device Tree and making the driver enable them
->>>> for the time of accessing the hardware.
->>>>
->>>> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>> Signed-off-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>> ---
->>>>
->>>> Changes in v5:
->>>> Use clk_bulk APIs.
->>>>
->>>> Changes in v4: None
->>>> Changes in v3: None
->>>> Changes in v2: None
->>>>
->>>>   .../devicetree/bindings/iommu/rockchip,iommu.txt   |  8 +++
->>>
->>> Please split binding patches to a separate patch.
-right, i'll do that in the next version.
->>>
->>>>   drivers/iommu/rockchip-iommu.c                     | 74 ++++++++++++++++++++--
->>>>   2 files changed, 76 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
->>>> index 2098f7732264..33dd853359fa 100644
->>>> --- a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
->>>> +++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
->>>> @@ -14,6 +14,13 @@ Required properties:
->>>>                       "single-master" device, and needs no additional information
->>>>                       to associate with its master device.  See:
->>>>                       Documentation/devicetree/bindings/iommu/iommu.txt
->>>> +Optional properties:
->>>> +- clocks : A list of master clocks requires for the IOMMU to be accessible
->>>> +           by the host CPU. The number of clocks depends on the master
->>>> +           block and might as well be zero. See [1] for generic clock
->>>> +           bindings description.
->>>
->>> Hardware blocks don't have a variable number of clock connections.
->>
->> I think you underestimate the imagination of hardware designers. :)
+On 23/01/2018 16:36, John Garry wrote:
+> On some platforms(such as Hip06/Hip07), the legacy ISA/LPC devices access
+> I/O with some special host-local I/O ports known on x86. As their I/O space
+> are not memory mapped like PCI/PCIE MMIO host bridges, this patch is meant
+> to support a new class of I/O host controllers where the local IO ports of
+> the children devices are translated into the Indirect I/O address space.
 >
-> Learned long ago to never do that. If there are 2 ways to do
-> something, they will find a 3rd way.
+> Through the handler attach callback, all the I/O translations are done
+> before starting the enumeration on children devices and the translated
+> addresses are replaced in the children resources.
 >
->> For Rockchip IOMMU, there is a set of clocks, which all need to be
->> enabled for IOMMU register access to succeed. The clocks are not
->> directly fed to the IOMMU, but they are needed for the various buses
->> and intermediate blocks on the way to the IOMMU to work.
->
-> The binding should describe the clock connections, not what clocks a
-> driver needs (currently). It sounds like a lack of managing bus clocks
-> to me.
->
-> In any case, the binding must be written so it can be verified. If you
-> can have any number of clocks with any names, there's no point in
-> documenting.
 
-the rockchip IOMMU is part of the master block in hardware, so it needs 
-to control the master's power domain and some of the master's clocks 
-when access it's registers.
+Hi Lorenzo, Rafael, Mika,
 
-and the number of clocks needed here, might be different between each 
-IOMMUs(according to which master block it belongs), it's a little like 
-our power domain:
-https://elixir.free-electrons.com/linux/latest/source/arch/arm64/boot/dts/rockchip/rk3399.dtsi#L935
+I would really appreciate if you could have a look at this patch.
 
-i'm not sure how to describe this correctly, is it ok use something like 
-"the same as it's master block"?
+The current solution here is to scan the ACPI devices under these 
+indirectIO hosts and create MFDs for the children.
 
+I think another solution - which you may prefer - is to avoid adding 
+this scan handler (and all this other scan code) and add a check like 
+acpi_is_serial_bus_slave() [which checks the device parent versus a list 
+of known indirectIO hosts] to not enumerate these children, and do it 
+from the LLDD host probe instead (https://lkml.org/lkml/2017/6/16/250)
+
+John
+
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: Zhichang Yuan <yuanzhichang@hisilicon.com>
+> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> ---
+>  drivers/acpi/arm64/Makefile          |   1 +
+>  drivers/acpi/arm64/acpi_indirectio.c | 273 +++++++++++++++++++++++++++++++++++
+>  drivers/acpi/internal.h              |   5 +
+>  drivers/acpi/scan.c                  |   1 +
+>  4 files changed, 280 insertions(+)
+>  create mode 100644 drivers/acpi/arm64/acpi_indirectio.c
 >
-> Rob
+> diff --git a/drivers/acpi/arm64/Makefile b/drivers/acpi/arm64/Makefile
+> index 1017def..f4a7f46 100644
+> --- a/drivers/acpi/arm64/Makefile
+> +++ b/drivers/acpi/arm64/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-$(CONFIG_ACPI_IORT) 	+= iort.o
+>  obj-$(CONFIG_ACPI_GTDT) 	+= gtdt.o
+> +obj-$(CONFIG_INDIRECT_PIO)	+= acpi_indirectio.o
+> diff --git a/drivers/acpi/arm64/acpi_indirectio.c b/drivers/acpi/arm64/acpi_indirectio.c
+> new file mode 100644
+> index 0000000..2649f57
+> --- /dev/null
+> +++ b/drivers/acpi/arm64/acpi_indirectio.c
+> @@ -0,0 +1,273 @@
+> +/*
+> + * ACPI support for indirect-IO bus.
+> + *
+> + * Copyright (C) 2017 HiSilicon Limited, All Rights Reserved.
+> + * Author: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> + * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
+> + * Author: John Garry <john.garry@huawei.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/acpi.h>
+> +#include <linux/logic_pio.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/platform_device.h>
+> +
+> +ACPI_MODULE_NAME("indirect IO");
+> +
+> +#define ACPI_INDIRECTIO_NAME_LENGTH 255
+> +
+> +#define INDIRECT_IO_INFO(desc) ((unsigned long)&desc)
+> +
+> +struct acpi_indirectio_mfd_cell {
+> +	struct mfd_cell_acpi_match acpi_match;
+> +	char name[ACPI_INDIRECTIO_NAME_LENGTH];
+> +	char pnpid[ACPI_INDIRECTIO_NAME_LENGTH];
+> +};
+> +
+> +struct acpi_indirectio_host_data {
+> +	resource_size_t io_size;
+> +	resource_size_t io_start;
+> +};
+> +
+> +struct acpi_indirectio_device_desc {
+> +	struct acpi_indirectio_host_data pdata; /* device relevant info data */
+> +	int (*pre_setup)(struct acpi_device *adev,
+> +			 struct acpi_indirectio_host_data *pdata);
+> +};
+> +
+> +static int acpi_translate_logicio_res(struct acpi_device *adev,
+> +		struct acpi_device *host, struct resource *resource)
+> +{
+> +	unsigned long sys_port;
+> +	struct device *dev = &adev->dev;
+> +	resource_size_t length = resource->end - resource->start;
+> +
+> +	sys_port = logic_pio_trans_hwaddr(&host->fwnode, resource->start,
+> +					length);
+> +
+> +	if (sys_port == -1) {
+> +		dev_err(dev, "translate bus-addr(0x%llx) fail!\n",
+> +			resource->start);
+> +		return -EFAULT;
+> +	}
+> +
+> +	resource->start = sys_port;
+> +	resource->end = sys_port + length;
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * update/set the current I/O resource of the designated device node.
+> + * after this calling, the enumeration can be started as the I/O resource
+> + * had been translated to logicial I/O from bus-local I/O.
+> + *
+> + * @child: the device node to be updated the I/O resource;
+> + * @hostdev: the device node where 'adev' is attached, which can be not
+> + *  the parent of 'adev';
+> + * @res: double pointer to be set to the address of the updated resources
+> + * @num_res: address of the variable to contain the number of updated resources
+> + *
+> + * return 0 when successful, negative is for failure.
+> + */
+> +int acpi_indirectio_set_logicio_res(struct device *child,
+> +					 struct device *hostdev,
+> +					 const struct resource **res,
+> +					 int *num_res)
+> +{
+> +	struct acpi_device *adev;
+> +	struct acpi_device *host;
+> +	struct resource_entry *rentry;
+> +	LIST_HEAD(resource_list);
+> +	struct resource *resources = NULL;
+> +	int count;
+> +	int i;
+> +	int ret = -EIO;
+> +
+> +	if (!child || !hostdev)
+> +		return -EINVAL;
+> +
+> +	host = to_acpi_device(hostdev);
+> +	adev = to_acpi_device(child);
+> +
+> +	/* check the device state */
+> +	if (!adev->status.present) {
+> +		dev_info(child, "ACPI: device is not present!\n");
+> +		return 0;
+> +	}
+> +	/* whether the child had been enumerated? */
+> +	if (acpi_device_enumerated(adev)) {
+> +		dev_info(child, "ACPI: had been enumerated!\n");
+> +		return 0;
+> +	}
+> +
+> +	count = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
+> +	if (count <= 0) {
+> +		dev_err(&adev->dev, "failed to get ACPI resources\n");
+> +		return count ? count : -EIO;
+> +	}
+> +
+> +	resources = kcalloc(count, sizeof(struct resource), GFP_KERNEL);
+> +	if (!resources) {
+> +		acpi_dev_free_resource_list(&resource_list);
+> +		return -ENOMEM;
+> +	}
+> +	count = 0;
+> +	list_for_each_entry(rentry, &resource_list, node)
+> +		resources[count++] = *rentry->res;
+> +
+> +	acpi_dev_free_resource_list(&resource_list);
+> +
+> +	/* translate the I/O resources */
+> +	for (i = 0; i < count; i++) {
+> +		if (resources[i].flags & IORESOURCE_IO) {
+> +			ret = acpi_translate_logicio_res(adev, host,
+> +							&resources[i]);
+> +			if (ret) {
+> +				kfree(resources);
+> +				dev_err(child,
+> +					"Translate I/O range failed (%d)!\n",
+> +					ret);
+> +				return ret;
+> +			}
+> +		}
+> +	}
+> +	*res = resources;
+> +	*num_res = count;
+> +
+> +	return ret;
+> +}
+> +
+> +int
+> +acpi_indirectio_pre_setup(struct acpi_device *adev,
+> +			  struct acpi_indirectio_host_data *pdata)
+> +{
+> +	struct platform_device *pdev;
+> +	struct mfd_cell *mfd_cells;
+> +	struct logic_pio_hwaddr *range;
+> +	struct acpi_device *child;
+> +	struct acpi_indirectio_mfd_cell *acpi_indirectio_mfd_cells;
+> +	int size, ret, count = 0, cell_num = 0;
+> +
+> +	range = kzalloc(sizeof(*range), GFP_KERNEL);
+> +	if (!range)
+> +		return -ENOMEM;
+> +	range->fwnode = &adev->fwnode;
+> +	range->flags = PIO_INDIRECT;
+> +	range->size = pdata->io_size;
+> +	range->hw_start = pdata->io_start;
+> +
+> +	ret = logic_pio_register_range(range);
+> +	if (ret)
+> +		goto free_range;
+> +
+> +	list_for_each_entry(child, &adev->children, node)
+> +		cell_num++;
+> +
+> +	/* allocate the mfd cells */
+> +	size = sizeof(*mfd_cells) + sizeof(*acpi_indirectio_mfd_cells);
+> +	mfd_cells = kcalloc(cell_num, size, GFP_KERNEL);
+> +	if (!mfd_cells) {
+> +		ret = -ENOMEM;
+> +		goto free_range;
+> +	}
+> +
+> +	acpi_indirectio_mfd_cells = (struct acpi_indirectio_mfd_cell *)
+> +					&mfd_cells[cell_num];
+> +	/* Only consider the children of the host */
+> +	list_for_each_entry(child, &adev->children, node) {
+> +		struct mfd_cell *mfd_cell = &mfd_cells[count];
+> +		struct acpi_indirectio_mfd_cell *acpi_indirectio_mfd_cell =
+> +					&acpi_indirectio_mfd_cells[count];
+> +		const struct mfd_cell_acpi_match *acpi_match =
+> +					&acpi_indirectio_mfd_cell->acpi_match;
+> +		char *name = &acpi_indirectio_mfd_cell[count].name[0];
+> +		char *pnpid = &acpi_indirectio_mfd_cell[count].pnpid[0];
+> +		struct mfd_cell_acpi_match match = {
+> +				.pnpid = pnpid,
+> +		};
+> +
+> +		snprintf(name, ACPI_INDIRECTIO_NAME_LENGTH, "indirect-io-%s",
+> +			 acpi_device_hid(child));
+> +		snprintf(pnpid, ACPI_INDIRECTIO_NAME_LENGTH, "%s",
+> +			 acpi_device_hid(child));
+> +
+> +		memcpy((void *)acpi_match, (void *)&match, sizeof(*acpi_match));
+> +		mfd_cell->name = name;
+> +		mfd_cell->acpi_match = acpi_match;
+> +
+> +		ret =
+> +		acpi_indirectio_set_logicio_res(&child->dev,
+> +						&adev->dev,
+> +						&mfd_cell->resources,
+> +						&mfd_cell->num_resources);
+> +		if (ret) {
+> +			dev_err(&child->dev, "set resource failed (%d)\n", ret);
+> +			goto free_mfd_res;
+> +		}
+> +		count++;
+> +	}
+> +
+> +	pdev = acpi_create_platform_device(adev, NULL);
+> +	if (IS_ERR_OR_NULL(pdev)) {
+> +		dev_err(&adev->dev, "Create platform device for host failed!\n");
+> +		ret = PTR_ERR(pdev);
+> +		goto free_mfd_res;
+> +	}
+> +	acpi_device_set_enumerated(adev);
+> +
+> +	ret = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
+> +			mfd_cells, cell_num, NULL, 0, NULL);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to add mfd cells (%d)\n", ret);
+> +		goto free_mfd_res;
+> +	}
+> +
+> +	return ret;
+> +
+> +free_mfd_res:
+> +	while (cell_num--)
+> +		kfree(mfd_cells[cell_num].resources);
+> +	kfree(mfd_cells);
+> +free_range:
+> +	kfree(range);
+> +
+> +	return ret;
+> +}
+> +
+> +/* All the host devices which apply indirect-IO can be listed here. */
+> +static const struct acpi_device_id acpi_indirect_host_id[] = {
+> +	{""},
+> +};
+> +
+> +static int acpi_indirectio_attach(struct acpi_device *adev,
+> +				const struct acpi_device_id *id)
+> +{
+> +	struct acpi_indirectio_device_desc *hostdata;
+> +	int ret;
+> +
+> +	hostdata = (struct acpi_indirectio_device_desc *)id->driver_data;
+> +	if (!hostdata || !hostdata->pre_setup)
+> +		return -EINVAL;
+> +
+> +	ret = hostdata->pre_setup(adev, &hostdata->pdata);
+> +
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 1;
+> +}
+> +
+> +static struct acpi_scan_handler acpi_indirect_handler = {
+> +	.ids = acpi_indirect_host_id,
+> +	.attach = acpi_indirectio_attach,
+> +};
+> +
+> +void __init acpi_indirectio_scan_init(void)
+> +{
+> +	acpi_scan_add_handler(&acpi_indirect_handler);
+> +}
+> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+> index 1d0a501..d6b1a95 100644
+> --- a/drivers/acpi/internal.h
+> +++ b/drivers/acpi/internal.h
+> @@ -31,6 +31,11 @@
+>  void acpi_platform_init(void);
+>  void acpi_pnp_init(void);
+>  void acpi_int340x_thermal_init(void);
+> +#ifdef CONFIG_INDIRECT_PIO
+> +void acpi_indirectio_scan_init(void);
+> +#else
+> +static inline void acpi_indirectio_scan_init(void) {}
+> +#endif
+>  #ifdef CONFIG_ARM_AMBA
+>  void acpi_amba_init(void);
+>  #else
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index b0fe527..8ea6f69 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -2141,6 +2141,7 @@ int __init acpi_scan_init(void)
+>  	acpi_amba_init();
+>  	acpi_watchdog_init();
+>  	acpi_init_lpit();
+> +	acpi_indirectio_scan_init();
 >
+>  	acpi_scan_add_handler(&generic_device_handler);
 >
 >
