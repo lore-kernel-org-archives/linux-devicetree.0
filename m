@@ -1,138 +1,173 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 6/7] dt-bindings: display: msm/dsi: Add compatible for
- 14nm DSI PHY
-Date: Thu, 1 Feb 2018 10:59:56 +0530
-Message-ID: <5c51decc-4450-898a-1170-0258c06ce904@codeaurora.org>
-References: <20180117093448.4102-1-architt@codeaurora.org>
- <20180117093448.4102-7-architt@codeaurora.org>
- <20180129171544.st53376xyjep2cfx@rob-hp-laptop>
- <7b0254be-8dcf-f2cf-4911-64f0b5881759@codeaurora.org>
- <CAF6AEGsLrXBUub9Y5r-bTY2OPDksRSDjYpJXYoKxYp3MvHCP2w@mail.gmail.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v6 2/6] iommu/arm-smmu: Add pm_runtime/sleep ops
+Date: Thu, 1 Feb 2018 11:43:57 +0530
+Message-ID: <1bbaff1b-a3db-e9c4-5b32-2792ed6c4952@codeaurora.org>
+References: <1516362223-22946-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1516362223-22946-3-git-send-email-vivek.gautam@codeaurora.org>
+ <9942b74d-7437-21cc-cbd7-38f2844c5d1d@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAF6AEGsLrXBUub9Y5r-bTY2OPDksRSDjYpJXYoKxYp3MvHCP2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <9942b74d-7437-21cc-cbd7-38f2844c5d1d-5wv7dgnIgG8@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lloyd Atkinson <latkinso-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, sibis-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 01/31/2018 09:50 PM, Rob Clark wrote:
-> On Wed, Jan 31, 2018 at 1:40 AM, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+On 1/31/2018 5:53 PM, Robin Murphy wrote:
+> On 19/01/18 11:43, Vivek Gautam wrote:
+>> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 >>
+>> The smmu needs to be functional only when the respective
+>> master's using it are active. The device_link feature
+>> helps to track such functional dependencies, so that the
+>> iommu gets powered when the master device enables itself
+>> using pm_runtime. So by adapting the smmu driver for
+>> runtime pm, above said dependency can be addressed.
 >>
->> On 01/29/2018 10:45 PM, Rob Herring wrote:
->>>
->>> On Wed, Jan 17, 2018 at 03:04:47PM +0530, Archit Taneja wrote:
->>>>
->>>> Add the compatible string for 14nm DSI PHY (used in MSM8996/APQ8096).
->>>>   From 14nm PHY onwards, the "dsi_phy_regulator" reg-name is not required,
->>>> but "dsi_phy_lane" reg-name is. Update the doc to specify the reg-names
->>>> each PHY revision needs.
->>>>
->>>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>> ---
->>>>    Documentation/devicetree/bindings/display/msm/dsi.txt | 13
->>>> +++++++++++--
->>>>    1 file changed, 11 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt
->>>> b/Documentation/devicetree/bindings/display/msm/dsi.txt
->>>> index 9c3ad6bbb9f0..26a1796b7145 100644
->>>> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
->>>> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
->>>> @@ -86,12 +86,19 @@ Required properties:
->>>>      * "qcom,dsi-phy-28nm-lp"
->>>>      * "qcom,dsi-phy-20nm"
->>>>      * "qcom,dsi-phy-28nm-8960"
->>>> -- reg: Physical base address and length of the registers of PLL, PHY and
->>>> PHY
->>>> -  regulator
->>>> +  * "qcom,dsi-phy-14nm"
->>>> +- reg: Physical base address and length of the registers of PLL, PHY.
->>>> Some
->>>> +  revisions require the PHY regulator base address, whereas others
->>>> require the
->>>> +  PHY lane base address. See below for each PHY revision.
->>>>    - reg-names: The names of register regions. The following regions are
->>>> required:
->>>> +  For DSI 28nm HPM/LP/8960 PHYs and 20nm PHY:
->>>>      * "dsi_pll"
->>>>      * "dsi_phy"
->>>>      * "dsi_phy_regulator"
->>>> +  For DSI 14nm PHY:
->>>> +  * "dsi_pll"
->>>> +  * "dsi_phy"
->>>> +  * "dsi_phy_lane"
->>>>    - clock-cells: Must be 1. The DSI PHY block acts as a clock provider,
->>>> creating
->>>>      2 clocks: A byte clock (index 0), and a pixel clock (index 1).
->>>>    - power-domains: Should be <&mmcc MDSS_GDSC>.
->>>> @@ -102,6 +109,8 @@ Required properties:
->>>>    - vddio-supply: phandle to vdd-io regulator device node
->>>>      For 20nm PHY:
->>>>    - vddio-supply: phandle to vdd-io regulator device node
->>>> +- vcca-supply: phandle to vcca regulator device node
->>>
->>>
->>> Did you mean to add this?
+>> This patch adds the pm runtime/sleep callbacks to the
+>> driver and also the functions to parse the smmu clocks
+>> from DT and enable them in resume/suspend.
 >>
+>> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Signed-off-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> [vivek: Clock rework to request bulk of clocks]
+>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>   drivers/iommu/arm-smmu.c | 55 
+>> ++++++++++++++++++++++++++++++++++++++++++++++--
+>>   1 file changed, 53 insertions(+), 2 deletions(-)
 >>
->> Yes, I didn't intend it to be a part of this patch, but this supply is
->> indeed needed for the
->> 20nm PHY. I'll move this to a separate patch.
-> 
-> actually, this looks correct, just formatted counter-intuitively by
-> git-format-patch..
-> 
-> vcca-supply for 20nm was introduced by "dt-bindings: display: msm/dsi:
-> Fix the PHY regulator supply props", but when 14nm phy is added in
-> this patch, it shows the addition of same line beneath 14nm PHY as an
-> addition above the line.
-> 
-> So I don't think it needs to be split up.
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 78d4c6b8f1ba..21acffe91a1c 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -48,6 +48,7 @@
+>>   #include <linux/of_iommu.h>
+>>   #include <linux/pci.h>
+>>   #include <linux/platform_device.h>
+>> +#include <linux/pm_runtime.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/spinlock.h>
+>>   @@ -205,6 +206,9 @@ struct arm_smmu_device {
+>>       u32                num_global_irqs;
+>>       u32                num_context_irqs;
+>>       unsigned int            *irqs;
+>> +    struct clk_bulk_data        *clocks;
+>> +    int                num_clks;
+>> +    const char * const        *clk_names;
+>
+> This seems unnecessary, as we use it a grand total of of once, during 
+> initialisation when we have the source data directly to hand. Just 
+> pass data->clks into arm_smmu_init_clks() as an additional argument.
 
-Oh yeah, you're right. I guess this is okay as is, then.
+Sure, will do that.
+>
+> Otherwise, I think this looks reasonable; it's about as unobtrusive as 
+> it's going to get.
 
-Thanks,
-Archit
+Thanks for reviewing.
 
-> 
-> BR,
-> -R
-> 
->> Thanks,
->> Archit
->>
->>
->>>
->>>> +  For 14nm PHY:
->>>>    - vcca-supply: phandle to vcca regulator device node
->>>>      Optional properties:
->>>> --
->>>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
->>>> Forum,
->>>> hosted by The Linux Foundation
->>>>
->>
->> --
->> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
->> a Linux Foundation Collaborative Project
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+regards
+Vivek
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>
+> Robin.
+>
+>>       u32                cavium_id_base; /* Specific to Cavium */
+>>   @@ -1685,6 +1689,25 @@ static int arm_smmu_id_size_to_bits(int size)
+>>       }
+>>   }
+>>   +static int arm_smmu_init_clocks(struct arm_smmu_device *smmu)
+>> +{
+>> +    int i;
+>> +    int num = smmu->num_clks;
+>> +
+>> +    if (num < 1)
+>> +        return 0;
+>> +
+>> +    smmu->clocks = devm_kcalloc(smmu->dev, num,
+>> +                    sizeof(*smmu->clocks), GFP_KERNEL);
+>> +    if (!smmu->clocks)
+>> +        return -ENOMEM;
+>> +
+>> +    for (i = 0; i < num; i++)
+>> +        smmu->clocks[i].id = smmu->clk_names[i];
+>> +
+>> +    return devm_clk_bulk_get(smmu->dev, num, smmu->clocks);
+>> +}
+>> +
+>>   static int arm_smmu_device_cfg_probe(struct arm_smmu_device *smmu)
+>>   {
+>>       unsigned long size;
+>> @@ -1897,10 +1920,12 @@ static int arm_smmu_device_cfg_probe(struct 
+>> arm_smmu_device *smmu)
+>>   struct arm_smmu_match_data {
+>>       enum arm_smmu_arch_version version;
+>>       enum arm_smmu_implementation model;
+>> +    const char * const *clks;
+>> +    int num_clks;
+>>   };
+>>     #define ARM_SMMU_MATCH_DATA(name, ver, imp)    \
+>> -static struct arm_smmu_match_data name = { .version = ver, .model = 
+>> imp }
+>> +static const struct arm_smmu_match_data name = { .version = ver, 
+>> .model = imp }
+>>     ARM_SMMU_MATCH_DATA(smmu_generic_v1, ARM_SMMU_V1, GENERIC_SMMU);
+>>   ARM_SMMU_MATCH_DATA(smmu_generic_v2, ARM_SMMU_V2, GENERIC_SMMU);
+>> @@ -2001,6 +2026,8 @@ static int arm_smmu_device_dt_probe(struct 
+>> platform_device *pdev,
+>>       data = of_device_get_match_data(dev);
+>>       smmu->version = data->version;
+>>       smmu->model = data->model;
+>> +    smmu->clk_names = data->clks;
+>> +    smmu->num_clks = data->num_clks;
+>>         parse_driver_options(smmu);
+>>   @@ -2099,6 +2126,10 @@ static int arm_smmu_device_probe(struct 
+>> platform_device *pdev)
+>>           smmu->irqs[i] = irq;
+>>       }
+>>   +    err = arm_smmu_init_clocks(smmu);
+>> +    if (err)
+>> +        return err;
+>> +
+>>       err = arm_smmu_device_cfg_probe(smmu);
+>>       if (err)
+>>           return err;
+>> @@ -2197,7 +2228,27 @@ static int __maybe_unused 
+>> arm_smmu_pm_resume(struct device *dev)
+>>       return 0;
+>>   }
+>>   -static SIMPLE_DEV_PM_OPS(arm_smmu_pm_ops, NULL, arm_smmu_pm_resume);
+>> +static int __maybe_unused arm_smmu_runtime_resume(struct device *dev)
+>> +{
+>> +    struct arm_smmu_device *smmu = dev_get_drvdata(dev);
+>> +
+>> +    return clk_bulk_prepare_enable(smmu->num_clks, smmu->clocks);
+>> +}
+>> +
+>> +static int __maybe_unused arm_smmu_runtime_suspend(struct device *dev)
+>> +{
+>> +    struct arm_smmu_device *smmu = dev_get_drvdata(dev);
+>> +
+>> +    clk_bulk_disable_unprepare(smmu->num_clks, smmu->clocks);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct dev_pm_ops arm_smmu_pm_ops = {
+>> +    SET_SYSTEM_SLEEP_PM_OPS(NULL, arm_smmu_pm_resume)
+>> +    SET_RUNTIME_PM_OPS(arm_smmu_runtime_suspend,
+>> +               arm_smmu_runtime_resume, NULL)
+>> +};
+>>     static struct platform_driver arm_smmu_driver = {
+>>       .driver    = {
+>>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
