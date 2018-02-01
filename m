@@ -1,134 +1,116 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH v6 2/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Thu, 1 Feb 2018 16:54:32 +0100
-Message-ID: <20180201155432.odv6p6rals3sujhx@flea.lan>
-References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
- <201801260759.RyNhDZz4%fengguang.wu@intel.com>
- <20180126094658.aa70ed3f890464f6051e21e4@magewell.com>
- <20180126110041.f89848325b9ecfb07df387ca@magewell.com>
- <20180131030807.GA19945@bart.dudau.co.uk>
- <20180131074212.7hvb3nqkt22h2chg@flea.lan>
- <20180131144753.GB19945@bart.dudau.co.uk>
- <20180201083222.q6rqql4nngn2bhiy@flea.lan>
- <CAK8P3a01DqmVJKt6J2i_okVoeELJCUW0voW0r52EzBY7iF74xQ@mail.gmail.com>
- <20180201113442.GC19945@bart.dudau.co.uk>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH] fbdev: simplefb: add support for 'memory-region'
+ property on DT node
+Date: Thu, 01 Feb 2018 16:56:08 +0100
+Message-ID: <2359956.Z9lQWSAgHb@amdc3058>
+References: <CGME20180123113510epcas1p1fc8a6e3ad50127bb84fe350b156a8c07@epcas1p1.samsung.com>
+        <1516707296-23667-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="52oyo5npgo7v2l5n"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRHQZTJQKGQERPYXYFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180201113442.GC19945-hOhETlTuV5niMG9XS5x8Mg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linux Media Mailing List <linux-media@v>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1516707296-23667-1-git-send-email-hayashi.kunihiko@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---52oyo5npgo7v2l5n
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Hi,
 
-On Thu, Feb 01, 2018 at 11:34:43AM +0000, Liviu Dudau wrote:
-> On Thu, Feb 01, 2018 at 10:20:28AM +0100, Arnd Bergmann wrote:
-> > On Thu, Feb 1, 2018 at 9:32 AM, Maxime Ripard
-> > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > > On Wed, Jan 31, 2018 at 02:47:53PM +0000, Liviu Dudau wrote:
-> > >> On Wed, Jan 31, 2018 at 08:42:12AM +0100, Maxime Ripard wrote:
-> > >> > On Wed, Jan 31, 2018 at 03:08:08AM +0000, Liviu Dudau wrote:
-> > >> > > On Fri, Jan 26, 2018 at 11:00:41AM +0800, Yong wrote:
-> > >>
-> > >> Yeah, sorry, my threading of the discussion was broken and I've seen
-> > >> the rest of the thread after I have replied. My bad!
-> > >>
-> > >> >
-> > >> > In our case, the bus where the device is attached will not do the
-> > >> > address translations, and shouldn't.
-> > >>
-> > >> In my view, the bus is already doing address translation at physical
-> > >> level, AFAIU it remaps the memory to zero.
-> > >
-> > > Not really. It uses a separate bus with a different mapping for the
-> > > DMA accesses (and only the DMA accesses). The AXI (or AHB, I'm not
-> > > sure, but, well, the "registers" bus) doesn't remap anything in
-> > > itself, and we only describe this one usually in our DTs.
+On Tuesday, January 23, 2018 08:34:56 PM Kunihiko Hayashi wrote:
+> Enables 'memory-region' property referring to the memory description on
+> the reserved-memory node in case of devicetree use.
+> If there is no 'reg' property that specifies the address and size of
+> the framebuffer, the address and size written in the memory description
+> on the reserved-memory node can be used for the framebuffer.
 > 
-> I was actually thinking about the DMA bus (AXI bus, most likely), not the
-> "registers" bus (yes, usually APB or AHB). The DMA bus is the one that does
-> the implicit remapping for the addresses it uses, if I understood you correctly.
+> Furthermore, the reserved-memory node needs to have "no-map" attributes
+> because simplefb driver maps the region by ioremap_wc().
 > 
-> > Exactly, the DT model fundamentally assumes that each a device is
-> > connected to exactly one bus, so we make up a device *tree* rather
-> > than a non-directed mesh topology that you might see in modern
-> > SoCs.
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+
+This needs an ACK from Rob or Mark (DT bindings Maintainers).
+
+> ---
+>  .../bindings/display/simple-framebuffer.txt        |  3 ++
+>  drivers/video/fbdev/simplefb.c                     | 32 ++++++++++++++++++++++
+>  2 files changed, 35 insertions(+)
 > 
-> I think you are right, but we also have the registers property for a device node
-> and that can be used for describing the "registers" bus. Now, it is possible
-> that some driver code gets confused between accessing the device registers
-> (which in Arm world happens through an APB or AHB bus) and the device doing system
-> read/writes which usually happends through an AXI (or for very old systems, AHB) bus.
-> 
-> For the sake of making sure we are talking about the same thing and in hope
-> that Maxime or Yong can give a more detailed picture of this device
+> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.txt b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> index 5a9ce51..be5139f 100644
+> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> @@ -56,6 +56,9 @@ Optional properties:
+>    framebuffer remains active.
+>  
+>  - display : phandle pointing to the primary display hardware node
+> +- memory-region: phandle to a node describing memory region as framebuffer
+> +		 memory instead of reg property. The node should include
+> +		 'no-map'.
+>  
+>  Example:
+>  
+> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
+> index a3c44ec..aefc4b1 100644
+> --- a/drivers/video/fbdev/simplefb.c
+> +++ b/drivers/video/fbdev/simplefb.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/clk-provider.h>
+>  #include <linux/of.h>
+> +#include <linux/of_address.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/parser.h>
+>  #include <linux/regulator/consumer.h>
+> @@ -294,6 +295,35 @@ static void simplefb_clocks_enable(struct simplefb_par *par,
+>  static void simplefb_clocks_destroy(struct simplefb_par *par) { }
+>  #endif
+>  
+> +#if defined CONFIG_OF
+> +static struct resource *simplefb_parse_dt_reserved_mem(struct device *dev)
+> +{
+> +	static struct resource res;
+> +	struct device_node *np;
+> +	int ret;
+> +
+> +	np = of_parse_phandle(dev->of_node, "memory-region", 0);
+> +	if (!np)
+> +		return NULL;
+> +
+> +	ret = of_address_to_resource(np, 0, &res);
+> +	if (ret < 0)
+> +		return NULL;
+> +
+> +	if (!of_find_property(np, "no-map", NULL)) {
+> +		dev_err(dev, "Can't apply mapped reserved-memory\n");
+> +		return NULL;
+> +	}
+> +
+> +	return &res;
+> +}
+> +#else
+> +static struct resource *simplefb_parse_dt_reserved_mem(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  #if defined CONFIG_OF && defined CONFIG_REGULATOR
+>  
+>  #define SUPPLY_SUFFIX "-supply"
+> @@ -428,6 +458,8 @@ static int simplefb_probe(struct platform_device *pdev)
+>  		return ret;
+>  
+>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!mem)
+> +		mem = simplefb_parse_dt_reserved_mem(&pdev->dev);
+>  	if (!mem) {
+>  		dev_err(&pdev->dev, "No memory resource\n");
+>  		return -EINVAL;
 
-Keep in mind that this part is heavily under-documented to us, and
-this is mostly information collected through testing and reading
-through the various vendor trees.
-
-As far as I know, a few devices (Display Engine, hardware codec, the
-CSI driver that spawned this discussion) are connected to the memory
-through a proprietary bus that does the remapping. The registers part
-is connected to an AHB bus.
-
-> I'll re-iterate what a lot of devices in the Arm world look like
-> nowadays:
-> 
-> - they have a bus for accessing the "registers" of the device, for controlling
->   the behaviour of that device. Inside the SoC, that happens through the
->   APB bus and it has a separate clock. The CPU has a view of those registers
->   through some mapping in the address space that has been backed by the hardware
->   engineers at design time and in DT we express that through the "registers" property,
->   plus the "apb_clk" for most of the bindings. In DT world we express the mapping
->   vis-a-vis the parent bus by using the "ranges" property.
-
-We do have that.
-
-> - they have a high speed bus for doing data transfers. Inside the SoC that
->   happens through an AXI or more modern CCI interconnect bus. The CPU does not
->   have a direct view on those transfers, but by using IOMMUs, SMMUs or simple
->   bus mastering capabilities it can gain knowledge of the state of the transfers
->   and/or influence the target memory.
-
-Part of that bus controller allows to probe the bus bandwidth and / or
-set limits for the various controllers connected to it, so it seems to
-match that description.
-
->   In the DT world, we use the "dma-ranges" property like you say to
->   express the translations that happen on that bus.
-
-Right, except that the way dma-ranges is parsed at the moment is that
-it will look on the parent node for dma-ranges. In this case, the
-parent in the DT will be our AHB bus, and not all the devices
-connected on that AHB bus that do DMA go through that DMA bus with the
-different mapping. So setting it there isn't an option.
-
-> Maxime/Yong: does your device have more than one AXI bus for doing
-> transfers?
-
-Not as far as I know.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---52oyo5npgo7v2l5n--
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
