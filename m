@@ -1,64 +1,72 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v6 4/6] iommu/arm-smmu: Add the device_link
- between masters and smmu
-Date: Thu, 1 Feb 2018 14:23:11 +0530
-Message-ID: <b7887b45-774a-2515-4304-227037b9af1f@codeaurora.org>
-References: <1516362223-22946-1-git-send-email-vivek.gautam@codeaurora.org>
- <1516362223-22946-5-git-send-email-vivek.gautam@codeaurora.org>
- <6b930150-cb81-b0a5-601c-16cb576c4341@arm.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
+ of_find_node_by_phandle()
+Date: Thu, 1 Feb 2018 00:59:02 -0800
+Message-ID: <38cdcae5-ec0f-d1be-b024-1990d4387731@gmail.com>
+References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
+ <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <6b930150-cb81-b0a5-601c-16cb576c4341-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chintan Pandya <cpandya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgoKT24gMS8zMS8yMDE4IDY6MzkgUE0sIFJvYmluIE11cnBoeSB3cm90ZToKPiBPbiAxOS8w
-MS8xOCAxMTo0MywgVml2ZWsgR2F1dGFtIHdyb3RlOgo+PiBGcm9tOiBTcmljaGFyYW4gUiA8c3Jp
-Y2hhcmFuQGNvZGVhdXJvcmEub3JnPgo+Pgo+PiBGaW5hbGx5IGFkZCB0aGUgZGV2aWNlIGxpbmsg
-YmV0d2VlbiB0aGUgbWFzdGVyIGRldmljZSBhbmQKPj4gc21tdSwgc28gdGhhdCB0aGUgc21tdSBn
-ZXRzIHJ1bnRpbWUgZW5hYmxlZC9kaXNhYmxlZCBvbmx5IHdoZW4gdGhlCj4+IG1hc3RlciBuZWVk
-cyBpdC4gVGhpcyBpcyBkb25lIGZyb20gYWRkX2RldmljZSBjYWxsYmFjayB3aGljaCBnZXRzCj4+
-IGNhbGxlZCBvbmNlIHdoZW4gdGhlIG1hc3RlciBpcyBhZGRlZCB0byB0aGUgc21tdS4KPgo+IERv
-bid0IHdlIG5lZWQgdG8gYmFsYW5jZSB0aGlzIHdpdGggYSBkZXZpY2VfbGlua19kZWwoKSBpbiAK
-PiAucmVtb3ZlX2RldmljZSAobGlrZSBleHlub3MtaW9tbXUgZG9lcyk/CgpSaWdodC4gV2lsbCBh
-ZGQgZGV2aWNlX2xpbmtfZGVsKCkgY2FsbC4gVGhhbmtzIGZvciBwb2ludGluZyBvdXQuCgpyZWdh
-cmRzClZpdmVrCgo+Cj4gUm9iaW4uCj4KPj4gU2lnbmVkLW9mZi1ieTogU3JpY2hhcmFuIFIgPHNy
-aWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPj4gLS0tCj4+IMKgIGRyaXZlcnMvaW9tbXUvYXJtLXNt
-bXUuYyB8IDExICsrKysrKysrKysrCj4+IMKgIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25z
-KCspCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMgYi9kcml2ZXJz
-L2lvbW11L2FybS1zbW11LmMKPj4gaW5kZXggOTU0NzhiZmIxODJjLi4zM2JiY2ZlZGI4OTYgMTAw
-NjQ0Cj4+IC0tLSBhL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYwo+PiArKysgYi9kcml2ZXJzL2lv
-bW11L2FybS1zbW11LmMKPj4gQEAgLTEzNjcsNiArMTM2Nyw3IEBAIHN0YXRpYyBpbnQgYXJtX3Nt
-bXVfYWRkX2RldmljZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4+IMKgwqDCoMKgwqAgc3RydWN0IGFy
-bV9zbW11X2RldmljZSAqc21tdTsKPj4gwqDCoMKgwqDCoCBzdHJ1Y3QgYXJtX3NtbXVfbWFzdGVy
-X2NmZyAqY2ZnOwo+PiDCoMKgwqDCoMKgIHN0cnVjdCBpb21tdV9md3NwZWMgKmZ3c3BlYyA9IGRl
-di0+aW9tbXVfZndzcGVjOwo+PiArwqDCoMKgIHN0cnVjdCBkZXZpY2VfbGluayAqbGluazsKPj4g
-wqDCoMKgwqDCoCBpbnQgaSwgcmV0Owo+PiDCoCDCoMKgwqDCoMKgIGlmICh1c2luZ19sZWdhY3lf
-YmluZGluZykgewo+PiBAQCAtMTQyOCw2ICsxNDI5LDE2IEBAIHN0YXRpYyBpbnQgYXJtX3NtbXVf
-YWRkX2RldmljZShzdHJ1Y3QgZGV2aWNlIAo+PiAqZGV2KQo+PiDCoCDCoMKgwqDCoMKgIHBtX3J1
-bnRpbWVfcHV0X3N5bmMoc21tdS0+ZGV2KTsKPj4gwqAgK8KgwqDCoCAvKgo+PiArwqDCoMKgwqAg
-KiBFc3RhYmxpc2ggdGhlIGxpbmsgYmV0d2VlbiBzbW11IGFuZCBtYXN0ZXIsIHNvIHRoYXQgdGhl
-Cj4+ICvCoMKgwqDCoCAqIHNtbXUgZ2V0cyBydW50aW1lIGVuYWJsZWQvZGlzYWJsZWQgYXMgcGVy
-IHRoZSBtYXN0ZXIncwo+PiArwqDCoMKgwqAgKiBuZWVkcy4KPj4gK8KgwqDCoMKgICovCj4+ICvC
-oMKgwqAgbGluayA9IGRldmljZV9saW5rX2FkZChkZXYsIHNtbXUtPmRldiwgRExfRkxBR19QTV9S
-VU5USU1FKTsKPj4gK8KgwqDCoCBpZiAoIWxpbmspCj4+ICvCoMKgwqDCoMKgwqDCoCBkZXZfd2Fy
-bihzbW11LT5kZXYsICJVbmFibGUgdG8gY3JlYXRlIGRldmljZSBsaW5rIGJldHdlZW4gJXMgCj4+
-IGFuZCAlc1xuIiwKPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkZXZfbmFtZShzbW11LT5k
-ZXYpLCBkZXZfbmFtZShkZXYpKTsKPj4gKwo+PiDCoMKgwqDCoMKgIHJldHVybiAwOwo+PiDCoCDC
-oCBvdXRfY2ZnX2ZyZWU6Cj4+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9m
-cmVlZHJlbm8K
+On 01/31/18 22:45, Chintan Pandya wrote:
+> 
+> 
+> On 2/1/2018 1:35 AM, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+> 
+>> +
+>> +static void of_populate_phandle_cache(void)
+>> +{
+>> +    unsigned long flags;
+>> +    phandle max_phandle;
+>> +    u32 nodes = 0;
+>> +    struct device_node *np;
+>> +
+>> +    if (phandle_cache)
+>> +        return;
+>> +
+>> +    max_phandle = live_tree_max_phandle();
+>> +
+>> +    raw_spin_lock_irqsave(&devtree_lock, flags);
+>> +
+>> +    for_each_of_allnodes(np)
+>> +        nodes++;
+>> +
+>> +    /* sanity cap for malformed tree */
+>> +    if (max_phandle > nodes)
+>> +        max_phandle = nodes;
+> Shouldn't we speak up about this in kernel log ? May be WARN_ON() ?
+
+Probably not.  If we care enough about a hand coded phandle property
+value we should add a check to checkpatch and/or dtc instead of adding
+the warning here.
+
+
+>> +
+>> +    phandle_cache = kzalloc((max_phandle + 1) * sizeof(*phandle_cache),
+>> +                GFP_KERNEL);
+> kzalloc (might_sleep) in critical context will break.
+
+Yes, thanks.
+
+I also need to ensure memory ordering in of_free_phandle_cache()
+to ensure that max_phandle_cache is zero before the cache memory
+is freed.
+
+
+> Anyways, will fix this locally and share test results.
+
+Thanks, I look forward to the results.
+
+
+> Thanks,
+> Chintan
+> 
