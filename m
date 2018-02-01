@@ -1,70 +1,55 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] gpio: Add GPIO driver for Spreadtrum SC9860 platform
-Date: Thu, 1 Feb 2018 17:31:54 +0200
-Message-ID: <CAHp75VdYjz6f2wBXsTL1kf5z-jcM68sMhtmkdgJM+TiPZb=gww@mail.gmail.com>
-References: <2834309f69a1ec37b84a33f153a3d0b90336bcc6.1517453568.git.baolin.wang@linaro.org>
- <62ceed73b65399099ccd76fe6b7331bcd253b027.1517453569.git.baolin.wang@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 2/2] media: V3s: Add support for Allwinner CSI.
+Date: Thu, 1 Feb 2018 16:36:04 +0100
+Message-ID: <CAK8P3a2+wH_n6sKNOyzv7sGBuvYX++5ffahfz780WtKr3Bvj=A@mail.gmail.com>
+References: <CACRpkdan52UB7HOyH1gnHWg4CDke_VQxAdq8cBgwUroibE59Ow@mail.gmail.com>
+ <20180129082533.6edmqgbauo6q5dgz@flea.lan> <CACRpkdYAGwUjr2C-w5U+WuG48pZAOUcnxFjznLbdF6Lmy1uZuQ@mail.gmail.com>
+ <CAK8P3a2HmPOTHAzqBnmim388pcWOE=fG50mG5HJifT=vzKOaTg@mail.gmail.com>
+ <20180130075441.rqxzkwero6sdfak6@flea.lan> <CAK8P3a0QxQE=GM=SGPtT82=UreiqsgY6uMThvQ_woA3rjK0zjA@mail.gmail.com>
+ <20180130095916.GA23047@ulmo> <20180130100150.GB23047@ulmo>
+ <20180131072910.ajp3jc5dmetsjtf2@flea.lan> <CAK8P3a0X2bpLjKE6xKehG1junZoG1N_DjepOBQ+SZetKf6sgfA@mail.gmail.com>
+ <20180201152908.mdei742x5k4fye6p@flea.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <62ceed73b65399099ccd76fe6b7331bcd253b027.1517453569.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180201152908.mdei742x5k4fye6p@flea.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Dave Martin <dave.martin@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hans.verkuil@cisco.com>, Randy Dunlap <rdunlap@infradead.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 1, 2018 at 5:04 AM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> The Spreadtrum SC9860 platform GPIO controller contains 16 groups and
-> each group contains 16 GPIOs. Each GPIO can set input/output and has
-> the interrupt capability.
+On Thu, Feb 1, 2018 at 4:29 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Wed, Jan 31, 2018 at 10:37:37AM +0100, Arnd Bergmann wrote:
+>> On Wed, Jan 31, 2018 at 8:29 AM, Maxime Ripard
+>
+>> I can think of a couple of other problems that may or may not be
+>> relevant in the future that would require a more complex solution:
+>>
+>> - a device that is a bus master on more than one bus, e.g. a
+>>   DMA engine that can copy between the CPU address space and
+>>   another memory controller that is not visible to the CPU
+>>
+>> - a device that is connected to main memory both through an IOMMU
+>>   and directly through its parent bus, and the device itself is in
+>>   control over which of the two it uses (usually the IOMMU would
+>>   contol whether a device is bypassing translation)
+>>
+>> - a device that has a single DMA address space with some form
+>>   of non-linear mapping to one or more parent buses. Some of these
+>>   can be expressed using the parent's dma-ranges properties, but
+>>   our code currently only looks at the first entry in dma-ranges.
+>
+> As far as I know, we're in neither of these cases.
 
-Just noticed couple of more improvements you can do.
+The point here was more about the general question of where we are
+heading with the complexity of finding the right DMA settings. It's
+already too complicated for anyone to fully understand what is
+going on with DMA masks, offset, coherency etc when we look
+at the existing DT bindings. Adding more complexity makes it
+worse, so if anyone else is in need of a solution for the issues
+above, we should try to accommodate their needs at the same time
+to avoid adding more complexity now and again later on if we
+can come up with a way that works for everyone now.
 
-> +       case IRQ_TYPE_EDGE_RISING:
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
-> +               irq_set_handler_locked(data, handle_edge_irq);
-> +               break;
-> +       case IRQ_TYPE_EDGE_FALLING:
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
-> +               irq_set_handler_locked(data, handle_edge_irq);
-> +               break;
-> +       case IRQ_TYPE_EDGE_BOTH:
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
-> +               irq_set_handler_locked(data, handle_edge_irq);
-> +               break;
-> +       case IRQ_TYPE_LEVEL_HIGH:
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 1);
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
-> +               irq_set_handler_locked(data, handle_level_irq);
-> +               break;
-> +       case IRQ_TYPE_LEVEL_LOW:
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 1);
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
-> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
-> +               irq_set_handler_locked(data, handle_level_irq);
-> +               break;
-> +       default:
-> +               return -EINVAL;
-
-I guess you can use fallthrough and reduce some lines, but I have no
-strong opinion which will look better.
-
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       sprd_gpio->base = devm_ioremap_nocache(&pdev->dev, res->start,
-> +                                              resource_size(res));
-
-Didn't notice before, why not to simple call devm_ioremap_resource() ?
-
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+     Arnd
