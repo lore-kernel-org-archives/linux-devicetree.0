@@ -1,31 +1,26 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] DT: serial: renesas,sci-serial: document R8A77980
- bindings
-Date: Thu, 1 Feb 2018 22:43:52 +0300
-Message-ID: <6fbc3525-e601-6ad5-f734-7bf004edadfa@cogentembedded.com>
-References: <2182bb59-d16f-54f0-d992-65b49815ce1d@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] DT: dma: renesas,rcar-dmac: document R8A77980 support
+Date: Thu, 1 Feb 2018 22:44:58 +0300
+Message-ID: <b2a1c258-4904-7397-f771-82428a56b49d@cogentembedded.com>
+References: <8302f1c8-3deb-584b-d6c8-b46240275e9e@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2182bb59-d16f-54f0-d992-65b49815ce1d-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <8302f1c8-3deb-584b-d6c8-b46240275e9e@cogentembedded.com>
 Content-Language: en-MW
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: vinod.koul@intel.com, robh+dt@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/2018 10:36 PM, Sergei Shtylyov wrote:
+On 02/01/2018 10:09 PM, Sergei Shtylyov wrote:
 
-> R-Car V3H (R8A77980) SoC has the R-Car gen3 compatible SCIF and HSCIF ports,
-> so document the SoC specific bindings.
+> Renesas  R-Car V3H SoC has the R-Car gen3 compatible DMA controllers.
+> Document R-Car V3H (also known as R8A77980) SoC bindings.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-   Forgot to mention that this patch is against the 'tty-next' branch of GregKH's 'tty.git' repo...
+   Forgot to mention that this patch is against the 'next' branch of Vinod Koul's 'slave-dma.git' repo...
 
 MBR, Sergei
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
