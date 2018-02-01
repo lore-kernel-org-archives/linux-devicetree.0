@@ -1,116 +1,201 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] fbdev: simplefb: add support for 'memory-region'
- property on DT node
-Date: Thu, 01 Feb 2018 16:56:08 +0100
-Message-ID: <2359956.Z9lQWSAgHb@amdc3058>
-References: <CGME20180123113510epcas1p1fc8a6e3ad50127bb84fe350b156a8c07@epcas1p1.samsung.com>
-        <1516707296-23667-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] soc: mediatek: add SCPSYS power domain driver for
+ MediaTek MT7623A SoC
+Date: Fri, 2 Feb 2018 00:22:48 +0800
+Message-ID: <1517502168.15199.43.camel@mtkswgap22>
+References: <975fb80e1cdbe7f6d4a1d04fd3a2a21b619a193d.1517479588.git.sean.wang@mediatek.com>
+         <de07c071f968ae9da84543bb33cc5658ed184801.1517479588.git.sean.wang@mediatek.com>
+         <f0675124-c5c7-0f98-9762-c0778d7f5807@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1516707296-23667-1-git-send-email-hayashi.kunihiko@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f0675124-c5c7-0f98-9762-c0778d7f5807-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-
-On Tuesday, January 23, 2018 08:34:56 PM Kunihiko Hayashi wrote:
-> Enables 'memory-region' property referring to the memory description on
-> the reserved-memory node in case of devicetree use.
-> If there is no 'reg' property that specifies the address and size of
-> the framebuffer, the address and size written in the memory description
-> on the reserved-memory node can be used for the framebuffer.
+On Thu, 2018-02-01 at 16:19 +0100, Matthias Brugger wrote:
 > 
-> Furthermore, the reserved-memory node needs to have "no-map" attributes
-> because simplefb driver maps the region by ioremap_wc().
+> On 02/01/2018 11:12 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > Add SCPSYS power domain driver for MT7623A SoC. The MT7623A's power
+> > domains are the subset of MT7623 SoC's ones. As MT7623 SoC has full
+> > features whereas MT7623A is being designed just for router applications.
+> > Thus, MT7623A doesn't include those power domains multimedia function
+> > belongs to. In order to avoid certain errors undoubtedly happening at
+> > registering those power domains on MT7623A SoC using the existing MT7623
+> > SCPSYS driver, it's required to define another setup specifically for
+> > MT7623A SoC. Also, use a meaningful definition for bus_prot_mask instead
+> > of just hardcoded for it.
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-
-This needs an ACK from Rob or Mark (DT bindings Maintainers).
-
-> ---
->  .../bindings/display/simple-framebuffer.txt        |  3 ++
->  drivers/video/fbdev/simplefb.c                     | 32 ++++++++++++++++++++++
->  2 files changed, 35 insertions(+)
+> Also is nearly always a indicator to put it in a different patch. Could you
+> please do so?
 > 
-> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.txt b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
-> index 5a9ce51..be5139f 100644
-> --- a/Documentation/devicetree/bindings/display/simple-framebuffer.txt
-> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
-> @@ -56,6 +56,9 @@ Optional properties:
->    framebuffer remains active.
->  
->  - display : phandle pointing to the primary display hardware node
-> +- memory-region: phandle to a node describing memory region as framebuffer
-> +		 memory instead of reg property. The node should include
-> +		 'no-map'.
->  
->  Example:
->  
-> diff --git a/drivers/video/fbdev/simplefb.c b/drivers/video/fbdev/simplefb.c
-> index a3c44ec..aefc4b1 100644
-> --- a/drivers/video/fbdev/simplefb.c
-> +++ b/drivers/video/fbdev/simplefb.c
-> @@ -29,6 +29,7 @@
->  #include <linux/clk.h>
->  #include <linux/clk-provider.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/of_platform.h>
->  #include <linux/parser.h>
->  #include <linux/regulator/consumer.h>
-> @@ -294,6 +295,35 @@ static void simplefb_clocks_enable(struct simplefb_par *par,
->  static void simplefb_clocks_destroy(struct simplefb_par *par) { }
->  #endif
->  
-> +#if defined CONFIG_OF
-> +static struct resource *simplefb_parse_dt_reserved_mem(struct device *dev)
-> +{
-> +	static struct resource res;
-> +	struct device_node *np;
-> +	int ret;
-> +
-> +	np = of_parse_phandle(dev->of_node, "memory-region", 0);
-> +	if (!np)
-> +		return NULL;
-> +
-> +	ret = of_address_to_resource(np, 0, &res);
-> +	if (ret < 0)
-> +		return NULL;
-> +
-> +	if (!of_find_property(np, "no-map", NULL)) {
-> +		dev_err(dev, "Can't apply mapped reserved-memory\n");
-> +		return NULL;
-> +	}
-> +
-> +	return &res;
-> +}
-> +#else
-> +static struct resource *simplefb_parse_dt_reserved_mem(struct device *dev)
-> +{
-> +	return NULL;
-> +}
-> +#endif
-> +
->  #if defined CONFIG_OF && defined CONFIG_REGULATOR
->  
->  #define SUPPLY_SUFFIX "-supply"
-> @@ -428,6 +458,8 @@ static int simplefb_probe(struct platform_device *pdev)
->  		return ret;
->  
->  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!mem)
-> +		mem = simplefb_parse_dt_reserved_mem(&pdev->dev);
->  	if (!mem) {
->  		dev_err(&pdev->dev, "No memory resource\n");
->  		return -EINVAL;
 
-Best regards,
+Sure, I will do so in the next version.
+
+> Otherwise the series look good.
+> 
+
+Really thanks for you prompt feedback
+
+> Regards,
+> Matthias
+> 
+> > 
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/soc/mediatek/mtk-scpsys.c         | 60 +++++++++++++++++++++++++++++--
+> >  include/dt-bindings/power/mt7623a-power.h | 10 ++++++
+> >  include/linux/soc/mediatek/infracfg.h     |  4 +++
+> >  3 files changed, 72 insertions(+), 2 deletions(-)
+> >  create mode 100644 include/dt-bindings/power/mt7623a-power.h
+> > 
+> > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> > index 435ce5e..fc55faa 100644
+> > --- a/drivers/soc/mediatek/mtk-scpsys.c
+> > +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> > @@ -24,6 +24,7 @@
+> >  #include <dt-bindings/power/mt2712-power.h>
+> >  #include <dt-bindings/power/mt6797-power.h>
+> >  #include <dt-bindings/power/mt7622-power.h>
+> > +#include <dt-bindings/power/mt7623a-power.h>
+> >  #include <dt-bindings/power/mt8173-power.h>
+> >  
+> >  #define SPM_VDE_PWR_CON			0x0210
+> > @@ -518,7 +519,8 @@ static const struct scp_domain_data scp_domain_data_mt2701[] = {
+> >  		.name = "conn",
+> >  		.sta_mask = PWR_STATUS_CONN,
+> >  		.ctl_offs = SPM_CONN_PWR_CON,
+> > -		.bus_prot_mask = 0x0104,
+> > +		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_CONN_M |
+> > +				 MT2701_TOP_AXI_PROT_EN_CONN_S,
+> >  		.clk_id = {CLK_NONE},
+> >  		.active_wakeup = true,
+> >  	},
+> > @@ -528,7 +530,7 @@ static const struct scp_domain_data scp_domain_data_mt2701[] = {
+> >  		.ctl_offs = SPM_DIS_PWR_CON,
+> >  		.sram_pdn_bits = GENMASK(11, 8),
+> >  		.clk_id = {CLK_MM},
+> > -		.bus_prot_mask = 0x0002,
+> > +		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_MM_M0,
+> >  		.active_wakeup = true,
+> >  	},
+> >  	[MT2701_POWER_DOMAIN_MFG] = {
+> > @@ -794,6 +796,47 @@ static const struct scp_domain_data scp_domain_data_mt7622[] = {
+> >  };
+> >  
+> >  /*
+> > + * MT7623A power domain support
+> > + */
+> > +
+> > +static const struct scp_domain_data scp_domain_data_mt7623a[] = {
+> > +	[MT7623A_POWER_DOMAIN_CONN] = {
+> > +		.name = "conn",
+> > +		.sta_mask = PWR_STATUS_CONN,
+> > +		.ctl_offs = SPM_CONN_PWR_CON,
+> > +		.bus_prot_mask = MT2701_TOP_AXI_PROT_EN_CONN_M |
+> > +				 MT2701_TOP_AXI_PROT_EN_CONN_S,
+> > +		.clk_id = {CLK_NONE},
+> > +		.active_wakeup = true,
+> > +	},
+> > +	[MT7623A_POWER_DOMAIN_ETH] = {
+> > +		.name = "eth",
+> > +		.sta_mask = PWR_STATUS_ETH,
+> > +		.ctl_offs = SPM_ETH_PWR_CON,
+> > +		.sram_pdn_bits = GENMASK(11, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(15, 12),
+> > +		.clk_id = {CLK_ETHIF},
+> > +		.active_wakeup = true,
+> > +	},
+> > +	[MT7623A_POWER_DOMAIN_HIF] = {
+> > +		.name = "hif",
+> > +		.sta_mask = PWR_STATUS_HIF,
+> > +		.ctl_offs = SPM_HIF_PWR_CON,
+> > +		.sram_pdn_bits = GENMASK(11, 8),
+> > +		.sram_pdn_ack_bits = GENMASK(15, 12),
+> > +		.clk_id = {CLK_ETHIF},
+> > +		.active_wakeup = true,
+> > +	},
+> > +	[MT7623A_POWER_DOMAIN_IFR_MSC] = {
+> > +		.name = "ifr_msc",
+> > +		.sta_mask = PWR_STATUS_IFR_MSC,
+> > +		.ctl_offs = SPM_IFR_MSC_PWR_CON,
+> > +		.clk_id = {CLK_NONE},
+> > +		.active_wakeup = true,
+> > +	},
+> > +};
+> > +
+> > +/*
+> >   * MT8173 power domain support
+> >   */
+> >  
+> > @@ -934,6 +977,16 @@ static const struct scp_soc_data mt7622_data = {
+> >  	.bus_prot_reg_update = true,
+> >  };
+> >  
+> > +static const struct scp_soc_data mt7623a_data = {
+> > +	.domains = scp_domain_data_mt7623a,
+> > +	.num_domains = ARRAY_SIZE(scp_domain_data_mt7623a),
+> > +	.regs = {
+> > +		.pwr_sta_offs = SPM_PWR_STATUS,
+> > +		.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND
+> > +	},
+> > +	.bus_prot_reg_update = true,
+> > +};
+> > +
+> >  static const struct scp_soc_data mt8173_data = {
+> >  	.domains = scp_domain_data_mt8173,
+> >  	.num_domains = ARRAY_SIZE(scp_domain_data_mt8173),
+> > @@ -964,6 +1017,9 @@ static const struct of_device_id of_scpsys_match_tbl[] = {
+> >  		.compatible = "mediatek,mt7622-scpsys",
+> >  		.data = &mt7622_data,
+> >  	}, {
+> > +		.compatible = "mediatek,mt7623a-scpsys",
+> > +		.data = &mt7623a_data,
+> > +	}, {
+> >  		.compatible = "mediatek,mt8173-scpsys",
+> >  		.data = &mt8173_data,
+> >  	}, {
+> > diff --git a/include/dt-bindings/power/mt7623a-power.h b/include/dt-bindings/power/mt7623a-power.h
+> > new file mode 100644
+> > index 0000000..ac15b5d
+> > --- /dev/null
+> > +++ b/include/dt-bindings/power/mt7623a-power.h
+> > @@ -0,0 +1,10 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef _DT_BINDINGS_POWER_MT7623A_POWER_H
+> > +#define _DT_BINDINGS_POWER_MT7623A_POWER_H
+> > +
+> > +#define MT7623A_POWER_DOMAIN_CONN	0
+> > +#define MT7623A_POWER_DOMAIN_ETH	1
+> > +#define MT7623A_POWER_DOMAIN_HIF	2
+> > +#define MT7623A_POWER_DOMAIN_IFR_MSC	3
+> > +
+> > +#endif /* _DT_BINDINGS_POWER_MT2701_POWER_H */
+> > diff --git a/include/linux/soc/mediatek/infracfg.h b/include/linux/soc/mediatek/infracfg.h
+> > index b0a507d..fd25f01 100644
+> > --- a/include/linux/soc/mediatek/infracfg.h
+> > +++ b/include/linux/soc/mediatek/infracfg.h
+> > @@ -21,6 +21,10 @@
+> >  #define MT8173_TOP_AXI_PROT_EN_MFG_M1		BIT(22)
+> >  #define MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT	BIT(23)
+> >  
+> > +#define MT2701_TOP_AXI_PROT_EN_MM_M0		BIT(1)
+> > +#define MT2701_TOP_AXI_PROT_EN_CONN_M		BIT(2)
+> > +#define MT2701_TOP_AXI_PROT_EN_CONN_S		BIT(8)
+> > +
+> >  #define MT7622_TOP_AXI_PROT_EN_ETHSYS		(BIT(3) | BIT(17))
+> >  #define MT7622_TOP_AXI_PROT_EN_HIF0		(BIT(24) | BIT(25))
+> >  #define MT7622_TOP_AXI_PROT_EN_HIF1		(BIT(26) | BIT(27) | \
+> > 
+> 
+
+
 --
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
