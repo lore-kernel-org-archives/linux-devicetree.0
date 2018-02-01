@@ -1,72 +1,52 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 04/41] clk: davinci: Add platform information for TI
- DA850 PLL
-Date: Thu, 1 Feb 2018 14:28:57 +0530
-Message-ID: <834cb7ce-9406-a806-3ec1-a59766bd8a9d@ti.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-5-git-send-email-david@lechnology.com>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: Re: [PATCH] ASoC: codecs: Add support for AK5558 ADC
+	driver
+Date: Thu, 1 Feb 2018 09:05:55 +0000
+Message-ID: <1517475954.8615.18.camel@nxp.com>
+References: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
+ <CAHp75Vdd58U1y-LOQGg=rePOWf1LeQsZxn2ykzBhXL013ztW3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1516468460-4908-5-git-send-email-david@lechnology.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAHp75Vdd58U1y-LOQGg=rePOWf1LeQsZxn2ykzBhXL013ztW3Q@mail.gmail.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Content-ID: <DA9525180D80B24B8DCE8EB3B512EFEF@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wakasugi.jb@om.asahi-kasei.co.jp" <wakasugi.jb@om.asahi-kasei.co.jp>, "mihai.serban@nxp.com" <mihai.serban@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "mihai.serban@gmail.com" <mihai.serban@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
-> This adds platform-specific declarations for the PLL clocks on TI DA850/
-> OMAP-L138/AM18XX SoCs.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
-
-> +static const struct davinci_pll_clk_info da850_pll1_info __initconst = {
-> +	.name = "pll1",
-> +	.unlock_reg = CFGCHIP(3),
-> +	.unlock_mask = CFGCHIP3_PLL1_MASTER_LOCK,
-
-I guess this will change with the cfgchip handling discussion last week.
-
-> +	.pllm_mask = GENMASK(4, 0),
-> +	.pllm_min = 4,
-> +	.pllm_max = 32,
-> +	.pllout_min_rate = 300000000,
-> +	.pllout_max_rate = 600000000,
-> +	.flags = PLL_HAS_POSTDIV,
-> +};
-> +
-
-[...]
-
-> +void __init da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1)
-> +{
-> +	const struct davinci_pll_sysclk_info *info;
-> +
-> +	davinci_pll_clk_register(&da850_pll0_info, "ref_clk", pll0);
-> +
-> +	davinci_pll_auxclk_register("pll0_auxclk", pll0);
-> +
-> +	for (info = da850_pll0_sysclk_info; info->name; info++)
-> +		davinci_pll_sysclk_register(info, pll0);
-> +
-> +	davinci_pll_obsclk_register(&da850_pll0_obsclk_info, pll0);
-> +
-> +	davinci_pll_clk_register(&da850_pll1_info, "oscin", pll1);
-
-Both PLL0 and PLL1 use the same reference clock. So this should be
-"ref_clk". I dont think we ever need to register a clock called oscin
-along with "ref_clk". There is only one reference clock. It can either
-be obtained using internal oscillator or external oscillator.
-
-Thanks,
-Sekhar
+SGkgRmFiaW8sIEFuZHksDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cy4gSSB3aWxs
+IGFkZHJlc3MgdGhlbSBhbmQgc2VuZCB2Mi4NCg0KRmV3IGNvbW1lbnRzIGlubGluZS4NCg0KT24g
+TWksIDIwMTgtMDEtMzEgYXQgMTg6MTIgKzAyMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4g
+T24gV2VkLCBKYW4gMzEsIDIwMTggYXQgMjo1NyBQTSwgRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJh
+bHV0YUBueHAuY29tPiB3cm90ZToNCj4gPiANCj4gPiBBSzU1NTggaXMgYSAzMi1iaXQsIDc2OCBr
+SFogc2FtcGxpbmcsIGRpZmZlcmVudGlhbCBpbnB1dCBBREMNCj4gPiBmb3IgZGlnaXRhbCBhdWRp
+byBzeXN0ZW1zLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEp1bmljaGkgV2FrYXN1Z2kgPHdh
+a2FzdWdpLmpiQG9tLmFzYWhpLWthc2VpLmNvLmpwPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1paGFp
+IFNlcmJhbiA8bWloYWkuc2VyYmFuQG54cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogU2hlbmdq
+aXUgV2FuZyA8c2hlbmdqaXUud2FuZ0BueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IERhbmll
+bCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCj4gNCBhdXRob3JzIG9mIHRoZSBjb2Rl
+PyENCg0KVGhlIGNvZGUgaGFzIGEgdmVyeSBsb25nIGhpc3RvcnkuIEkgd2lsbCBhZGQgdW5kZXIg
+ZWFjaCBTb0IgdGhlIHNwZWNpZmljDQpjb250cmlidXRpb24uDQoNCk1paGFpIGdvdCB0aGUgY29k
+ZSBmcm9twqBKdW5pY2hpIGFuZCByZXdvcmtlZCBpdCBmb3IgNC45LiBUaGVuIFNoZW5naml1IGFu
+ZA0KbWUgYWRkZWQgdmFyaW91c8KgZmVhdHVyZXMgYW5kIGNsZWFudXBzLg0KDQpBY2NvcmRpbmcg
+dG8gRENPIFsxXSBhbGwgU29CIGFyZSB2YWxpZCBhbmQgcmVxdWlyZWQuDQoNCg0KPiA+ICtNT0RV
+TEVfQVVUSE9SKCJKdW5pY2hpIFdha2FzdWdpIDx3YWthc3VnaS5qYkBvbS5hc2FoaS1rYXNlaS5j
+by5qcD4iKTsNCj4gPiArTU9EVUxFX0FVVEhPUigiTWloYWkgU2VyYmFuIDxtaWhhaS5zZXJiYW5A
+bnhwLmNvbT4iKTsNCj4gNCBTb0JzLCAyIEF1dGhvcnMuIFBsZWFzZSwgZml4IGFjY29yZGluZ2x5
+Lg0KDQpIZXJlIEkgd291bGQgcHJlZmVyIHRvIGxpc3QgSnVuaWNoaSBhbmQgTWloYWkgYmVjYXVz
+ZSB0aGV5IHdlcmUgdGhlIG1haW4gY29udHJpYnV0b3JzLg0KQW55IG90aGVyIHN1Z2dlc3Rpb24/
+DQoNCnRoYW5rcywNCkRhbmllbC4NCg0KWzFdIFsxXcKgaHR0cHM6Ly9kZXZlbG9wZXJjZXJ0aWZp
+Y2F0ZS5vcmcvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRw
+Oi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
