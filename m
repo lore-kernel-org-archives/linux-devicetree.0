@@ -1,63 +1,73 @@
-From: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
- of_find_node_by_phandle()
-Date: Thu, 1 Feb 2018 12:15:39 +0530
-Message-ID: <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
-References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v11 2/6] mailbox: qcom: Create APCS child device for clock controller
+Date: Thu, 1 Feb 2018 12:27:23 +0530
+Message-ID: <CABb+yY3GSvSGFm54g3mt5-=AWrq+g2N2pb9Q-pBZgEzE4MXSJg@mail.gmail.com>
+References: <20171205154701.27730-1-georgi.djakov@linaro.org>
+ <20171205154701.27730-3-georgi.djakov@linaro.org> <CABb+yY146ho0gtbUzDv-Z_xESkU2y=UYfBA6i+522+m58LkABQ@mail.gmail.com>
+ <20171224050625.GH12655@minitux> <CABb+yY3e1YTnf4ZYvXVzXPhOT9-6PzusDfpWRBorwd9nB97SSQ@mail.gmail.com>
+ <f279f1ff-2117-c587-5018-3b3eeeedff8a@linaro.org> <CABb+yY3UvNx71xpt+=j4tTiLEjPTFZTxps0qe2ePa6f4yV61kQ@mail.gmail.com>
+ <549f02e5-19d7-8cec-674f-247dfb2d2467@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517429142-25727-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <549f02e5-19d7-8cec-674f-247dfb2d2467@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 1, 2018 at 12:10 AM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>
+> Hi Jassi,
+>
+> On 01/27/2018 05:44 AM, Jassi Brar wrote:
+> > On Thu, Jan 4, 2018 at 10:26 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+> >> Hi Jassi,
+> >>
+> >> On 12/29/2017 08:14 AM, Jassi Brar wrote:
+> >>> Hi Bjorn,
+> >>>
+> >>> On Sun, Dec 24, 2017 at 10:36 AM, Bjorn Andersson
+> >>> <bjorn.andersson@linaro.org> wrote:
+> >>>> On Fri 22 Dec 20:57 PST 2017, Jassi Brar wrote:
+> >>>>
+> >>>>> On Tue, Dec 5, 2017 at 9:16 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+> >>>>>> There is a clock controller functionality provided by the APCS hardware
+> >>>>>> block of msm8916 devices. The device-tree would represent an APCS node
+> >>>>>> with both mailbox and clock provider properties.
+> >>>>>>
+> >>>>> The spec might depict a 'clock' box and 'mailbox' box inside the
+> >>>>> bigger APCS box. However, from the code I see in this patchset, they
+> >>>>> are orthogonal and can & should be represented as independent DT
+> >>>>> nodes.
+> >>>>
+> >>>> The APCS consists of a number of different hardware blocks, one of them
+> >>>> being the "APCS global" block, which is what this node and drivers
+> >>>> relate to. On 8916 this contains both the IPC register and clock
+> >>>> control. But it's still just one block according to the hardware
+> >>>> specification.
+> >>>>
+> >>>> As such DT should describe the one hardware block by one node IMHO.
+> >>>>
+> >>> In my even humbler opinion, DT should describe a h/w functional unit
+> >>> which _could_ be seen as a standalone component.
+> >>
+> >> The APCS is one separate register block related to the CPU cluster. I
+> >> haven't seen any strict guidelines for such cases in the DT docs, and
+> >> during the discussion got the impression that this is the preferred
+> >> binding. Rob has also reviewed the binding, so we should be fine to move
+> >> forward with this one.
+> >>
+> > Well, I can't overrule Rob. But I am really not happy with random
+> > device spawning from mailbox drivers. I know there are such instances
+> > already in the kernel but that doesn't make it legit... unless there
+> > is some hard dependency. Is there?
+>
+> The dependency is that on this SoC, these functionalities are combined
+> into this "CPU subsystem" block.
+>
+I see the register space is shared between mailbox and the clock. So I
+guess, yes, simply creating a device here and passing the common
+regmap is tidier. Which patches are already picked up?
 
-
-On 2/1/2018 1:35 AM, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-
-> +
-> +static void of_populate_phandle_cache(void)
-> +{
-> +	unsigned long flags;
-> +	phandle max_phandle;
-> +	u32 nodes = 0;
-> +	struct device_node *np;
-> +
-> +	if (phandle_cache)
-> +		return;
-> +
-> +	max_phandle = live_tree_max_phandle();
-> +
-> +	raw_spin_lock_irqsave(&devtree_lock, flags);
-> +
-> +	for_each_of_allnodes(np)
-> +		nodes++;
-> +
-> +	/* sanity cap for malformed tree */
-> +	if (max_phandle > nodes)
-> +		max_phandle = nodes;
-Shouldn't we speak up about this in kernel log ? May be WARN_ON() ?
-
-> +
-> +	phandle_cache = kzalloc((max_phandle + 1) * sizeof(*phandle_cache),
-> +				GFP_KERNEL);
-kzalloc (might_sleep) in critical context will break.
-
-Anyways, will fix this locally and share test results.
-
-Thanks,
-Chintan
-
--- 
-Qualcom India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation
-Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers!
