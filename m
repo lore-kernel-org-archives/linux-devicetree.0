@@ -1,73 +1,39 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v11 2/6] mailbox: qcom: Create APCS child device for clock controller
-Date: Thu, 1 Feb 2018 12:27:23 +0530
-Message-ID: <CABb+yY3GSvSGFm54g3mt5-=AWrq+g2N2pb9Q-pBZgEzE4MXSJg@mail.gmail.com>
-References: <20171205154701.27730-1-georgi.djakov@linaro.org>
- <20171205154701.27730-3-georgi.djakov@linaro.org> <CABb+yY146ho0gtbUzDv-Z_xESkU2y=UYfBA6i+522+m58LkABQ@mail.gmail.com>
- <20171224050625.GH12655@minitux> <CABb+yY3e1YTnf4ZYvXVzXPhOT9-6PzusDfpWRBorwd9nB97SSQ@mail.gmail.com>
- <f279f1ff-2117-c587-5018-3b3eeeedff8a@linaro.org> <CABb+yY3UvNx71xpt+=j4tTiLEjPTFZTxps0qe2ePa6f4yV61kQ@mail.gmail.com>
- <549f02e5-19d7-8cec-674f-247dfb2d2467@linaro.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6 4/6] media: i2c: Add TDA1997x HDMI receiver driver
+Date: Thu, 1 Feb 2018 08:19:53 +0100
+Message-ID: <a2e873da-adf2-e4aa-71d6-d1c9c2671d41@xs4all.nl>
+References: <1514491789-8697-1-git-send-email-tharvey@gateworks.com>
+ <1514491789-8697-5-git-send-email-tharvey@gateworks.com>
+ <1e65ee61-f282-4b53-dd03-68a89a91da8e@xs4all.nl>
+ <CAJ+vNU1ysHuzqOnL4sf3hFZrU5kyGnQ0dFkRObVjCa=NyLsJug@mail.gmail.com>
+ <517f8b12-e10e-1e8d-6d98-26f5fefe62b8@xs4all.nl>
+ <CAJ+vNU1xnnmNZW5zmT8+0HfT3Xfg6zfdrbC8vFNH4wuah5AVTA@mail.gmail.com>
+ <fa8cc2d1-b7ea-343e-5b5a-ba5f60b9c5d9@xs4all.nl>
+ <83695d60-5052-14ba-4f7b-23f153a05a85@xs4all.nl>
+ <CAJ+vNU3DJ2xNEKoi1-div80hKkzsm+pFYtzJDUn+seXAVq8jCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <549f02e5-19d7-8cec-674f-247dfb2d2467@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CAJ+vNU3DJ2xNEKoi1-div80hKkzsm+pFYtzJDUn+seXAVq8jCQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: linux-media <linux-media@vger.kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 1, 2018 at 12:10 AM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
->
-> Hi Jassi,
->
-> On 01/27/2018 05:44 AM, Jassi Brar wrote:
-> > On Thu, Jan 4, 2018 at 10:26 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
-> >> Hi Jassi,
-> >>
-> >> On 12/29/2017 08:14 AM, Jassi Brar wrote:
-> >>> Hi Bjorn,
-> >>>
-> >>> On Sun, Dec 24, 2017 at 10:36 AM, Bjorn Andersson
-> >>> <bjorn.andersson@linaro.org> wrote:
-> >>>> On Fri 22 Dec 20:57 PST 2017, Jassi Brar wrote:
-> >>>>
-> >>>>> On Tue, Dec 5, 2017 at 9:16 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
-> >>>>>> There is a clock controller functionality provided by the APCS hardware
-> >>>>>> block of msm8916 devices. The device-tree would represent an APCS node
-> >>>>>> with both mailbox and clock provider properties.
-> >>>>>>
-> >>>>> The spec might depict a 'clock' box and 'mailbox' box inside the
-> >>>>> bigger APCS box. However, from the code I see in this patchset, they
-> >>>>> are orthogonal and can & should be represented as independent DT
-> >>>>> nodes.
-> >>>>
-> >>>> The APCS consists of a number of different hardware blocks, one of them
-> >>>> being the "APCS global" block, which is what this node and drivers
-> >>>> relate to. On 8916 this contains both the IPC register and clock
-> >>>> control. But it's still just one block according to the hardware
-> >>>> specification.
-> >>>>
-> >>>> As such DT should describe the one hardware block by one node IMHO.
-> >>>>
-> >>> In my even humbler opinion, DT should describe a h/w functional unit
-> >>> which _could_ be seen as a standalone component.
-> >>
-> >> The APCS is one separate register block related to the CPU cluster. I
-> >> haven't seen any strict guidelines for such cases in the DT docs, and
-> >> during the discussion got the impression that this is the preferred
-> >> binding. Rob has also reviewed the binding, so we should be fine to move
-> >> forward with this one.
-> >>
-> > Well, I can't overrule Rob. But I am really not happy with random
-> > device spawning from mailbox drivers. I know there are such instances
-> > already in the kernel but that doesn't make it legit... unless there
-> > is some hard dependency. Is there?
->
-> The dependency is that on this SoC, these functionalities are combined
-> into this "CPU subsystem" block.
->
-I see the register space is shared between mailbox and the clock. So I
-guess, yes, simply creating a device here and passing the common
-regmap is tidier. Which patches are already picked up?
+On 02/01/2018 05:47 AM, Tim Harvey wrote:
+> Hans,
+> 
+> You forgot to include v4l2-ctl-selection.cpp in your patch.
 
-Cheers!
+You mean v4l2-ctl-subdev.cpp :-)
+
+Anyway, I plan on committing this to v4l2-ctl soon. I'll let you know
+when that's done.
+
+I added support for almost all subdev ioctls to v4l2-ctl.
+
+Regards,
+
+	Hans
