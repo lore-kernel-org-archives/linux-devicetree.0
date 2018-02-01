@@ -1,83 +1,73 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH v2 2/3] pinctrl: imx: allow to configure SION with generic pinconf
-Date: Thu,  1 Feb 2018 18:49:22 +0100
-Message-ID: <20180201174923.7385-2-l.stach@pengutronix.de>
-References: <20180201174923.7385-1-l.stach@pengutronix.de>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180201174923.7385-1-l.stach@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, "A . s . Dong" <aisheng.dong@nxp.com>, linux-imx@nxp.com, kernel@pengutronix.de, patchwork-lst@pengutronix.de
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
+Date: Thu,  1 Feb 2018 18:49:21 +0100
+Message-ID: <20180201174923.7385-1-l.stach@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "A . s . Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, linux-imx-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The SION bit force enables the input buffer, overriding the configuration
-driven by the muxed module. It is not located in the pad config register,
-but in the mux register and thus needs special handling.
+This adds the binding for the i.MX8MQ pin controller, in the same
+fashion as earlier i.MX SoCs.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
-v2: new patch in v2
+v2: switch to generic pinconf properties
 ---
- drivers/pinctrl/freescale/pinctrl-imx.c | 19 +++++++------------
- drivers/pinctrl/freescale/pinctrl-imx.h |  4 ++++
- 2 files changed, 11 insertions(+), 12 deletions(-)
+ .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index 24aaddd760a0..c976ffe7d47b 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -31,10 +31,6 @@
- #include "../pinmux.h"
- #include "pinctrl-imx.h"
- 
--/* The bits in CONFIG cell defined in binding doc*/
--#define IMX_NO_PAD_CTL	0x80000000	/* no pin config need */
--#define IMX_PAD_SION 0x40000000		/* set SION */
--
- static inline const struct group_desc *imx_pinctrl_find_group_by_name(
- 				struct pinctrl_dev *pctldev,
- 				const char *name)
-@@ -509,18 +505,17 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
- 		pin->mux_mode = be32_to_cpu(*list++);
- 		pin->input_val = be32_to_cpu(*list++);
- 
--		if (info->generic_pinconf) {
-+		if (info->generic_pinconf)
- 			/* generic pin config decoded */
- 			pin->config = config;
--		} else {
-+		else
- 			/* legacy pin config read from devicetree */
--			config = be32_to_cpu(*list++);
-+			pin->config = be32_to_cpu(*list++);
- 
--			/* SION bit is in mux register */
--			if (config & IMX_PAD_SION)
--				pin->mux_mode |= IOMUXC_CONFIG_SION;
--			pin->config = config & ~IMX_PAD_SION;
--		}
-+		/* SION bit is in mux register */
-+		if (pin->config & IMX_PAD_SION)
-+			pin->mux_mode |= IOMUXC_CONFIG_SION;
-+		pin->config = pin->config & ~IMX_PAD_SION;
- 
- 		dev_dbg(ipctl->dev, "%s: 0x%x 0x%08lx", info->pins[pin_id].name,
- 				pin->mux_mode, pin->config);
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
-index 038e8c0e5b96..8e74ddc9cd8a 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.h
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.h
-@@ -18,6 +18,10 @@
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinmux.h>
- 
-+/* The bits in CONFIG cell defined in binding doc*/
-+#define IMX_NO_PAD_CTL	0x80000000	/* no pin config need */
-+#define IMX_PAD_SION 0x40000000		/* set SION */
+diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+new file mode 100644
+index 000000000000..5c5d2d835d05
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
+@@ -0,0 +1,39 @@
++* Freescale IMX8MQ IOMUX Controller
 +
- struct platform_device;
- 
- extern struct pinmux_ops imx_pmx_ops;
++Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
++for common binding part and usage.
++
++=== Pin Controller Node ===
++
++Required properties:
++- compatible: "fsl,imx8mq-iomuxc"
++- reg: Must contain the base physical address and size of the iomuxc registers.
++
++=== Pin Configuration Node ===
++Required properties:
++- pinmux: Array of integersy, representing a group of pins mux setting.
++	The format is pinmux = <PIN_FUNC_ID>, PIN_FUNC_ID is a pin working on
++	a specific function.
++
++	Refer to imx8mq-pinfunc.h in device tree source folder for all available
++	imx8mq PIN_FUNC_ID.
++
++Optional Properties:
++- drive-strength		Integer: controls Drive Strength
++					0: driver disabled
++					1: 255 Ohm
++					2: 105 Ohm
++					3:  75 Ohm
++					4:  85 Ohm
++					5:  65 Ohm
++					6:  45 Ohm
++					7:  40 Ohm
++- slew-rate:			Integer: controls Slew Rate
++					0: Slow
++					1: Medium
++					2: Fast
++					3: Maximum
++- drive-open-drain		Bool: enable Open-drian
++- bias-pull-up			Bool: enable Pull-up
++- input-schmitt-enable		Bool: enable schmitt-trigger
++- input-enable			Bool: enable input, overriding module settings
 -- 
 2.15.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
