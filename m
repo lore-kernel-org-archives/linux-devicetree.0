@@ -1,31 +1,41 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [linux-sunxi][PATCH v2] ARM: dts: sun7i: Enable HDMI support on the Olimex EVB
-Date: Thu,  1 Feb 2018 09:37:00 +0100
-Message-ID: <20180201083700.13021-1-codekipper@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH v2] ARM: sun6i: a31: Enable HDMI support on the
+ Mele I7
+Date: Thu,  1 Feb 2018 09:37:37 +0100
+Message-ID: <20180201083737.13211-1-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBVFDZPJQKGQE6T6BNWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Enable the display pipeline and HDMI output on the Olimex
-A20-SOM-EVB.
+The Mele I7 has an HDMI connector wired to the HDMI pins
+on the SoC. Enable the display pipeline and HDMI output.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
 v2 changes compared to v1 are:
-- corrected indentation.
+- Reordered nodes.
 ---
- arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm/boot/dts/sun6i-a31-i7.dts | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-index 64c8ef9a2756..44b9eefdbbf9 100644
---- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
-@@ -61,6 +61,17 @@
+diff --git a/arch/arm/boot/dts/sun6i-a31-i7.dts b/arch/arm/boot/dts/sun6i-a31-i7.dts
+index 010a84c7c012..a3b70173c527 100644
+--- a/arch/arm/boot/dts/sun6i-a31-i7.dts
++++ b/arch/arm/boot/dts/sun6i-a31-i7.dts
+@@ -58,6 +58,17 @@
  		stdout-path = "serial0:115200n8";
  	};
  
@@ -43,7 +53,7 @@ index 64c8ef9a2756..44b9eefdbbf9 100644
  	leds {
  		compatible = "gpio-leds";
  		pinctrl-names = "default";
-@@ -79,6 +90,10 @@
+@@ -93,6 +104,10 @@
  	status = "okay";
  };
  
@@ -54,7 +64,7 @@ index 64c8ef9a2756..44b9eefdbbf9 100644
  &ehci0 {
  	status = "okay";
  };
-@@ -107,6 +122,16 @@
+@@ -113,6 +128,16 @@
  	};
  };
  
@@ -68,13 +78,19 @@ index 64c8ef9a2756..44b9eefdbbf9 100644
 +	};
 +};
 +
- &i2c0 {
+ &ir {
  	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
+ 	pinctrl-0 = <&ir_pins_a>;
+@@ -161,6 +186,10 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
 -- 
 2.16.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
