@@ -1,65 +1,43 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 0/3] add support for Mediatek High-Speed DMA controller on MT7622 and MT7623 SoC
-Date: Thu, 1 Feb 2018 11:45:22 +0800
-Message-ID: <cover.1517454174.git.sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH] arm64: dts: msm8996: Fix wrong use of GIC_CPU_MASK_SIMPLE()
+Date: Thu,  1 Feb 2018 10:00:55 +0530
+Message-ID: <20180201043055.14088-1-rnayak@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: andy.gross@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+GICv3 does not have affinity bitmap in the binding for PPI
+interrupts. It can be specified using a 4th cell if needed
+as documented in the bindings. Clean up the wrong use of the
+affinity bitmap using the GIC_CPU_MASK_SIMPLE() macro
 
-Changes since v2:
-- remove extra tasklets and refactor driver for letting descriptors being processed ASAP.
-- add more comments stating the relevant logic
-- remove unused macro and variables
-- change to use the disclaimer with SPDX identifier
-- add mt7622 support
-- refine hardware initialization sequence
-- add tx_status support for DMA_RESIDUE_GRANULARITY_SEGMENT
-- refine remove handler with killing vc's tasklet
+Reported-by: Stephen Boyd <sboyd@codeaurora.org>
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Changes since v1:
-- fix typo in the commit message.
-- delete status shown in the dt-binding example.
-
-This patchset introduces support for MediaTek High-Speed DMA controller
-(MTK-HSDMA) Currently, the driver is already tested successfully with
-dmatest module on MT7622 and MT7623 SoC. 
-
-MTK-HSDMA on MT7622/23 SoC has a single ring which is dedicated for
-doing memory-to-memory transfer through ring-based descriptor management.
-Even though there is only a single ring available inside HSDMA, the
-driver is being extended to the support for multiple virtual channels
-processing simultaneously by means of DMA_VIRTUAL_CHANNELS.
-
-Sean Wang (3):
-  dt-bindings: dmaengine: Add MediaTek High-Speed DMA controller
-    bindings
-  dmaengine: mediatek: Add MediaTek High-Speed DMA controller for MT7622
-    and MT7623 SoC
-  dmaengine: mediatek: update MAINTAINERS entry with MediaTek DMA driver
-
- .../devicetree/bindings/dma/mtk-hsdma.txt          |   33 +
- MAINTAINERS                                        |    9 +
- drivers/dma/Kconfig                                |    2 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/mediatek/Kconfig                       |   13 +
- drivers/dma/mediatek/Makefile                      |    1 +
- drivers/dma/mediatek/mtk-hsdma.c                   | 1045 ++++++++++++++++++++
- 7 files changed, 1104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/mtk-hsdma.txt
- create mode 100644 drivers/dma/mediatek/Kconfig
- create mode 100644 drivers/dma/mediatek/Makefile
- create mode 100644 drivers/dma/mediatek/mtk-hsdma.c
-
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 4b2afcc4fdf4..07bd89978117 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -232,10 +232,10 @@
+ 
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+-		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+-			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+ 	};
+ 
+ 	clocks {
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
