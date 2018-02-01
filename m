@@ -1,47 +1,91 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of of_find_node_by_phandle()
-Date: Thu, 1 Feb 2018 08:34:35 -0600
-Message-ID: <CAL_Jsq+z7Z7nbXUS-6MxAzAq353OK02Uc6i3AH7WS2KmOrLnmA@mail.gmail.com>
-References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 6/7] dt-bindings: display: msm/dsi: Add compatible for
+ 14nm DSI PHY
+Date: Thu, 1 Feb 2018 08:41:21 -0600
+Message-ID: <CAL_JsqLXen71Y9gmmr8YrsguM=qcM4mSKH0AhVEb4U9_Z5kO5w@mail.gmail.com>
+References: <20180117093448.4102-1-architt@codeaurora.org>
+ <20180117093448.4102-7-architt@codeaurora.org>
+ <20180129171544.st53376xyjep2cfx@rob-hp-laptop>
+ <7b0254be-8dcf-f2cf-4911-64f0b5881759@codeaurora.org>
+ <CAF6AEGsLrXBUub9Y5r-bTY2OPDksRSDjYpJXYoKxYp3MvHCP2w@mail.gmail.com>
+ <5c51decc-4450-898a-1170-0258c06ce904@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517429142-25727-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5c51decc-4450-898a-1170-0258c06ce904@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Lloyd Atkinson <latkinso@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, sibis@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 2:05 PM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->
-> Create a cache of the nodes that contain a phandle property.  Use this
-> cache to find the node for a given phandle value instead of scanning
-> the devicetree to find the node.  If the phandle value is not found
-> in the cache, of_find_node_by_phandle() will fall back to the tree
-> scan algorithm.
->
-> The cache is initialized in of_core_init().
->
-> The cache is freed via a late_initcall_sync().
->
-> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-> ---
->
-> Some of_find_by_phandle() calls may occur before the cache is
-> initialized or after it is freed.  For example, for the qualcomm
-> qcom-apq8074-dragonboard, 11 calls occur before the initialization
-> and 80 occur after the cache is freed (out of 516 total calls.)
-
-We should be able to do this earlier. We already walk the tree twice
-in unflattening. We can get the max phandle (or number of phandles
-IMO) on the first pass, allocate with the early allocator and then
-populate the cache in the 2nd pass. AIUI, you can alloc with memblock
-and then free with kfree as the memblock allocations get transferred
-to the slab.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBKYW4gMzEsIDIwMTggYXQgMTE6MjkgUE0sIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRA
+Y29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4KPiBPbiAwMS8zMS8yMDE4IDA5OjUwIFBNLCBSb2Ig
+Q2xhcmsgd3JvdGU6Cj4+Cj4+IE9uIFdlZCwgSmFuIDMxLCAyMDE4IGF0IDE6NDAgQU0sIEFyY2hp
+dCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5vcmc+Cj4+IHdyb3RlOgo+Pj4KPj4+Cj4+Pgo+
+Pj4gT24gMDEvMjkvMjAxOCAxMDo0NSBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+Pj4KPj4+Pgo+
+Pj4+IE9uIFdlZCwgSmFuIDE3LCAyMDE4IGF0IDAzOjA0OjQ3UE0gKzA1MzAsIEFyY2hpdCBUYW5l
+amEgd3JvdGU6Cj4+Pj4+Cj4+Pj4+Cj4+Pj4+IEFkZCB0aGUgY29tcGF0aWJsZSBzdHJpbmcgZm9y
+IDE0bm0gRFNJIFBIWSAodXNlZCBpbiBNU004OTk2L0FQUTgwOTYpLgo+Pj4+PiAgIEZyb20gMTRu
+bSBQSFkgb253YXJkcywgdGhlICJkc2lfcGh5X3JlZ3VsYXRvciIgcmVnLW5hbWUgaXMgbm90Cj4+
+Pj4+IHJlcXVpcmVkLAo+Pj4+PiBidXQgImRzaV9waHlfbGFuZSIgcmVnLW5hbWUgaXMuIFVwZGF0
+ZSB0aGUgZG9jIHRvIHNwZWNpZnkgdGhlIHJlZy1uYW1lcwo+Pj4+PiBlYWNoIFBIWSByZXZpc2lv
+biBuZWVkcy4KPj4+Pj4KPj4+Pj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4+
+Pj4+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBB
+cmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+Pj4+PiAtLS0KPj4+Pj4gICAg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQgfCAx
+Mwo+Pj4+PiArKysrKysrKysrKy0tCj4+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRp
+b25zKCspLCAyIGRlbGV0aW9ucygtKQo+Pj4+Pgo+Pj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKPj4+Pj4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHNpLnR4dAo+Pj4+PiBp
+bmRleCA5YzNhZDZiYmI5ZjAuLjI2YTE3OTZiNzE0NSAxMDA2NDQKPj4+Pj4gLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQKPj4+Pj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RzaS50eHQK
+Pj4+Pj4gQEAgLTg2LDEyICs4NiwxOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+Pj4+PiAgICAg
+ICogInFjb20sZHNpLXBoeS0yOG5tLWxwIgo+Pj4+PiAgICAgICogInFjb20sZHNpLXBoeS0yMG5t
+Igo+Pj4+PiAgICAgICogInFjb20sZHNpLXBoeS0yOG5tLTg5NjAiCj4+Pj4+IC0tIHJlZzogUGh5
+c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVycyBvZiBQTEwsIFBI
+WQo+Pj4+PiBhbmQKPj4+Pj4gUEhZCj4+Pj4+IC0gIHJlZ3VsYXRvcgo+Pj4+PiArICAqICJxY29t
+LGRzaS1waHktMTRubSIKPj4+Pj4gKy0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxl
+bmd0aCBvZiB0aGUgcmVnaXN0ZXJzIG9mIFBMTCwgUEhZLgo+Pj4+PiBTb21lCj4+Pj4+ICsgIHJl
+dmlzaW9ucyByZXF1aXJlIHRoZSBQSFkgcmVndWxhdG9yIGJhc2UgYWRkcmVzcywgd2hlcmVhcyBv
+dGhlcnMKPj4+Pj4gcmVxdWlyZSB0aGUKPj4+Pj4gKyAgUEhZIGxhbmUgYmFzZSBhZGRyZXNzLiBT
+ZWUgYmVsb3cgZm9yIGVhY2ggUEhZIHJldmlzaW9uLgo+Pj4+PiAgICAtIHJlZy1uYW1lczogVGhl
+IG5hbWVzIG9mIHJlZ2lzdGVyIHJlZ2lvbnMuIFRoZSBmb2xsb3dpbmcgcmVnaW9ucwo+Pj4+PiBh
+cmUKPj4+Pj4gcmVxdWlyZWQ6Cj4+Pj4+ICsgIEZvciBEU0kgMjhubSBIUE0vTFAvODk2MCBQSFlz
+IGFuZCAyMG5tIFBIWToKPj4+Pj4gICAgICAqICJkc2lfcGxsIgo+Pj4+PiAgICAgICogImRzaV9w
+aHkiCj4+Pj4+ICAgICAgKiAiZHNpX3BoeV9yZWd1bGF0b3IiCj4+Pj4+ICsgIEZvciBEU0kgMTRu
+bSBQSFk6Cj4+Pj4+ICsgICogImRzaV9wbGwiCj4+Pj4+ICsgICogImRzaV9waHkiCj4+Pj4+ICsg
+ICogImRzaV9waHlfbGFuZSIKPj4+Pj4gICAgLSBjbG9jay1jZWxsczogTXVzdCBiZSAxLiBUaGUg
+RFNJIFBIWSBibG9jayBhY3RzIGFzIGEgY2xvY2sKPj4+Pj4gcHJvdmlkZXIsCj4+Pj4+IGNyZWF0
+aW5nCj4+Pj4+ICAgICAgMiBjbG9ja3M6IEEgYnl0ZSBjbG9jayAoaW5kZXggMCksIGFuZCBhIHBp
+eGVsIGNsb2NrIChpbmRleCAxKS4KPj4+Pj4gICAgLSBwb3dlci1kb21haW5zOiBTaG91bGQgYmUg
+PCZtbWNjIE1EU1NfR0RTQz4uCj4+Pj4+IEBAIC0xMDIsNiArMTA5LDggQEAgUmVxdWlyZWQgcHJv
+cGVydGllczoKPj4+Pj4gICAgLSB2ZGRpby1zdXBwbHk6IHBoYW5kbGUgdG8gdmRkLWlvIHJlZ3Vs
+YXRvciBkZXZpY2Ugbm9kZQo+Pj4+PiAgICAgIEZvciAyMG5tIFBIWToKPj4+Pj4gICAgLSB2ZGRp
+by1zdXBwbHk6IHBoYW5kbGUgdG8gdmRkLWlvIHJlZ3VsYXRvciBkZXZpY2Ugbm9kZQo+Pj4+PiAr
+LSB2Y2NhLXN1cHBseTogcGhhbmRsZSB0byB2Y2NhIHJlZ3VsYXRvciBkZXZpY2Ugbm9kZQo+Pj4+
+Cj4+Pj4KPj4+Pgo+Pj4+IERpZCB5b3UgbWVhbiB0byBhZGQgdGhpcz8KPj4+Cj4+Pgo+Pj4KPj4+
+IFllcywgSSBkaWRuJ3QgaW50ZW5kIGl0IHRvIGJlIGEgcGFydCBvZiB0aGlzIHBhdGNoLCBidXQg
+dGhpcyBzdXBwbHkgaXMKPj4+IGluZGVlZCBuZWVkZWQgZm9yIHRoZQo+Pj4gMjBubSBQSFkuIEkn
+bGwgbW92ZSB0aGlzIHRvIGEgc2VwYXJhdGUgcGF0Y2guCj4+Cj4+Cj4+IGFjdHVhbGx5LCB0aGlz
+IGxvb2tzIGNvcnJlY3QsIGp1c3QgZm9ybWF0dGVkIGNvdW50ZXItaW50dWl0aXZlbHkgYnkKPj4g
+Z2l0LWZvcm1hdC1wYXRjaC4uCj4+Cj4+IHZjY2Etc3VwcGx5IGZvciAyMG5tIHdhcyBpbnRyb2R1
+Y2VkIGJ5ICJkdC1iaW5kaW5nczogZGlzcGxheTogbXNtL2RzaToKPj4gRml4IHRoZSBQSFkgcmVn
+dWxhdG9yIHN1cHBseSBwcm9wcyIsIGJ1dCB3aGVuIDE0bm0gcGh5IGlzIGFkZGVkIGluCj4+IHRo
+aXMgcGF0Y2gsIGl0IHNob3dzIHRoZSBhZGRpdGlvbiBvZiBzYW1lIGxpbmUgYmVuZWF0aCAxNG5t
+IFBIWSBhcyBhbgo+PiBhZGRpdGlvbiBhYm92ZSB0aGUgbGluZS4KPj4KPj4gU28gSSBkb24ndCB0
+aGluayBpdCBuZWVkcyB0byBiZSBzcGxpdCB1cC4KPgo+Cj4gT2ggeWVhaCwgeW91J3JlIHJpZ2h0
+LiBJIGd1ZXNzIHRoaXMgaXMgb2theSBhcyBpcywgdGhlbi4KCkRvaCEKClJldmlld2VkLWJ5OiBS
+b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
