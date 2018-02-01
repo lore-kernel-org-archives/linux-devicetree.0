@@ -1,42 +1,42 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: firmware: Add bindings for ZynqMP
- firmware
-Date: Thu, 1 Feb 2018 10:27:30 +0000
-Message-ID: <20180201102730.33q4xrjw3vhrgk4i@lakrids.cambridge.arm.com>
-References: <1516836074-4149-1-git-send-email-jollys@xilinx.com>
- <1516836074-4149-2-git-send-email-jollys@xilinx.com>
- <20180131180354.mqf4gvvprdtycbn5@lakrids.cambridge.arm.com>
- <CY1PR0201MB076454E915A6E6947A39F04BB8FA0@CY1PR0201MB0764.namprd02.prod.outlook.com>
+From: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
+ of_find_node_by_phandle()
+Date: Thu, 1 Feb 2018 16:01:58 +0530
+Message-ID: <9e23d32f-05a0-ce8a-41f8-9a1a3d66be37@codeaurora.org>
+References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
+ <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
+ <38cdcae5-ec0f-d1be-b024-1990d4387731@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CY1PR0201MB076454E915A6E6947A39F04BB8FA0-w5HSbVcoX6AJQdFqRSmStRrHTHEw16jenBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <38cdcae5-ec0f-d1be-b024-1990d4387731-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jolly Shah <JOLLYS-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org" <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, "sudeep.holla-5wv7dgnIgG8@public.gmane.org" <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rajan Vaja <RAJANV-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 01, 2018 at 01:04:45AM +0000, Jolly Shah wrote:
-> > > +Xilinx Zynq MPSoC Firmware Device Tree Bindings
-> > > +
-> > > +The zynqmp-firmware node describes the interface to platform firmware.
-> > 
-> > Is there any documentation for this that can be referred to?
-> >
+
+>> Anyways, will fix this locally and share test results.
 > 
-> Will add more information about supported APIs in next version patch.
-> Below document describes interface APIs though it is not latest.   
-> https://www.xilinx.com/support/documentation/user_guides/ug1200-eemi-api.pdf
+> Thanks, I look forward to the results.
+> 
 
-Thanks for the link.
+Set up for this time was slightly different. So, taken all the numbers 
+again.
 
-It might be better for the compatible string to be "xlnx,zynqmp-eemi",
-to make it clear which firmware interfaces are being described, assuming
-that this being is only intended to cover EEMI.
+Boot to shell time (in ms): Experiment 2
+[1] Base			: 14.843805 14.784842 14.842338
+[2] 64 sized fixed cache	: 14.189292 14.200003 14.266711
+[3] Dynamic freeable cache	: 14.112412 14.064772 14.036052
 
-Thanks,
-Mark.
+So, [3] (this patch) looks to be improving 750ms (on avg from base build).
+
+-- 
+Qualcom India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum, a Linux Foundation
+Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
