@@ -1,62 +1,472 @@
 From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 1/4] arm64: add basic Kconfig symbols for i.MX8
-Date: Thu,  1 Feb 2018 19:31:23 +0100
-Message-ID: <20180201183126.32384-1-l.stach@pengutronix.de>
+Subject: [PATCH v2 3/4] arm64: add support for i.MX8M EVK board
+Date: Thu,  1 Feb 2018 19:31:25 +0100
+Message-ID: <20180201183126.32384-3-l.stach@pengutronix.de>
+References: <20180201183126.32384-1-l.stach@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180201183126.32384-1-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "A . s . Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add basic Kconfig symbols to make the MXC architecture available
-in the ARM64 world.
+This is the evaluation kit board for the i.MX8M. The current level of
+support yields a working console and is able to boot userspace from
+SD card or Network.
 
 Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org> (v1)
+Tested-by: Tested-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> (v1)
 ---
-v2: fix "enabled" typo.
+v2:
+- move to freescale folder
+- fix indentation
+- fix typo in Makefile
+- document compatible
+- switch to generic pinconf
 ---
- arch/arm64/Kconfig.platforms |  6 ++++++
- drivers/soc/imx/Kconfig      | 12 ++++++++++++
- 2 files changed, 18 insertions(+)
+ Documentation/devicetree/bindings/arm/fsl.txt |   4 +
+ arch/arm64/boot/dts/freescale/Makefile        |   2 +
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts  | 405 ++++++++++++++++++++++++++
+ 3 files changed, 411 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx8mq-evk.dts
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 2401373565ff..ae3be0d2cdb5 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -131,6 +131,12 @@ config ARCH_MVEBU
- 	   - Armada 7K SoC Family
- 	   - Armada 8K SoC Family
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index 85d1c9ec6fa3..fd167203ad5f 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -53,6 +53,10 @@ i.MX6 Quad SABRE Automotive Board
+ Required root node properties:
+     - compatible = "fsl,imx6q-sabreauto", "fsl,imx6q";
  
-+config ARCH_MXC
-+	bool "ARMv8 based NXP i.MX SoC family"
-+	help
-+	  This enables support for the ARMv8 based SoCs in the
-+	  NXP i.MX family.
++i.MX8MQ Evaluation Kit
++Required root node properties:
++    - compatible = "fsl,imx8mq-evk", "fsl,imx8mq";
 +
- config ARCH_QCOM
- 	bool "Qualcomm Platforms"
- 	select GPIOLIB
-diff --git a/drivers/soc/imx/Kconfig b/drivers/soc/imx/Kconfig
-index a5b86a28f343..8c9f04440896 100644
---- a/drivers/soc/imx/Kconfig
-+++ b/drivers/soc/imx/Kconfig
-@@ -8,3 +8,15 @@ config IMX7_PM_DOMAINS
- 	default y if SOC_IMX7D
+ Generic i.MX boards
+ -------------------
  
- endmenu
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 86e18adb695a..85f96ae127c2 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -13,3 +13,5 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
 +
-+if ARCH_MXC
++dtb-$(CONFIG_SOC_IMX8MQ) += imx8mq-evk.dtb
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+new file mode 100644
+index 000000000000..c0e5ee5d6243
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+@@ -0,0 +1,405 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright 2017 NXP
++ * Copyright (C) 2017 Pengutronix, Lucas Stach <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
++ */
 +
-+if ARM64
++/dts-v1/;
 +
-+config SOC_IMX8MQ
-+	bool "i.MX8MQ support"
-+	help
-+	  This enables support for the i.MX8MQ SoC.
-+endif
++#include "imx8mq.dtsi"
 +
-+endif
++/ {
++	model = "NXP i.MX8MQ EVK";
++	compatible = "fsl,imx8mq-evk", "fsl,imx8mq";
++
++	chosen {
++		stdout-path = &uart1;
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0x00000000 0x40000000 0 0xc0000000>;
++	};
++
++	reg_usdhc2_vmmc: regulator-vsd-3v3 {
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_reg_usdhc2>;
++		compatible = "regulator-fixed";
++		regulator-name = "VSD_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1_mdc>, <&pinctrl_fec1_mdio>,
++	            <&pinctrl_fec1_data_tx>, <&pinctrl_fec1_data_rx>,
++	            <&pinctrl_fec1_phy_reset>;
++	phy-mode = "rgmii-id";
++	status = "okay";
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	pmic@8 {
++		compatible = "fsl,pfuze100";
++		reg = <0x8>;
++
++		regulators {
++			sw1a_reg: sw1ab {
++				regulator-min-microvolt = <825000>;
++				regulator-max-microvolt = <1100000>;
++			};
++
++			sw1c_reg: sw1c {
++				regulator-min-microvolt = <825000>;
++				regulator-max-microvolt = <1100000>;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <1100000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3ab {
++				regulator-min-microvolt = <825000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++			};
++
++			sw4_reg: sw4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-always-on;
++			};
++
++			vgen1_reg: vgen1 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++			};
++
++			vgen2_reg: vgen2 {
++				regulator-min-microvolt = <850000>;
++				regulator-max-microvolt = <975000>;
++				regulator-always-on;
++			};
++
++			vgen3_reg: vgen3 {
++				regulator-min-microvolt = <1675000>;
++				regulator-max-microvolt = <1975000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: vgen4 {
++				regulator-min-microvolt = <1625000>;
++				regulator-max-microvolt = <1875000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vgen5 {
++				regulator-min-microvolt = <3075000>;
++				regulator-max-microvolt = <3625000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vgen6 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++			};
++		};
++	};
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc1_cd_reset>, <&pinctrl_usdhc1_clk_strobe>,
++	            <&pinctrl_usdhc1_data>;
++	pinctrl-1 = <&pinctrl_usdhc1_cd_reset>,
++	            <&pinctrl_usdhc1_clk_strobe_100mhz>,
++	            <&pinctrl_usdhc1_data_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc1_cd_reset>,
++	            <&pinctrl_usdhc1_clk_strobe_200mhz>,
++	            <&pinctrl_usdhc1_data_200mhz>;
++	vqmmc-supply = <&sw4_reg>;
++	bus-width = <8>;
++	non-removable;
++	no-sd;
++	no-sdio;
++	status = "okay";
++};
++
++&usdhc2 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc2_vselect>, <&pinctrl_usdhc2_clk>,
++	            <&pinctrl_usdhc2_data>;
++	pinctrl-1 = <&pinctrl_usdhc2_vselect>, <&pinctrl_usdhc2_clk_100mhz>,
++	            <&pinctrl_usdhc2_data_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc2_vselect>, <&pinctrl_usdhc2_clk_200mhz>,
++	            <&pinctrl_usdhc2_data_200mhz>;
++	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&reg_usdhc2_vmmc>;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_fec1_mdc: fec1mdcgrp {
++		pinmux = <MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC>;
++		drive-strength = <3>;
++		slew-rate = <0>;
++	};
++
++	pinctrl_fec1_mdio: fec1mdiogrp {
++		pinmux = <MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO>;
++		drive-strength = <3>;
++		slew-rate = <0>;
++		drive-open-drain;
++	};
++
++	pinctrl_fec1_phy_reset: fec1phyresetgrp {
++		pinmux = <MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9>;
++		drive-strength = <1>;
++		slew-rate = <0>;
++	};
++
++	pinctrl_fec1_data_tx: fec1datatxgrp {
++		pinmux = <
++			MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3
++			MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2
++			MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1
++			MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0
++			MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC
++			MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL
++		>;
++		drive-strength = <7>;
++		slew-rate = <3>;
++	};
++
++	pinctrl_fec1_data_rx: fec1datarxgrp {
++		pinmux = <
++			MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3
++			MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2
++			MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1
++			MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0
++			MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC
++			MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL
++		>;
++		drive-strength = <1>;
++		slew-rate = <2>;
++		input-schmitt-enable;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		pinmux = <
++			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL
++			MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA
++		>;
++		drive-strength = <7>;
++		slew-rate = <0>;
++		drive-open-drain;
++		input-enable;
++	};
++
++	pinctrl_reg_usdhc2: regusdhc2grpgpio {
++		pinmux = <MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19>;
++		drive-strength = <1>;
++		slew-rate = <0>;
++		bias-pull-up;
++	};
++
++	pinctrl_uart1: uart1grp {
++		pinmux = <
++			MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX
++			MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX
++		>;
++		drive-strength = <1>;
++		slew-rate = <0>;
++		bias-pull-up;
++	};
++
++	pinctrl_usdhc1_cd_reset: usdhc1cdgrp {
++		pinmux = <
++			MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12
++			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B
++			>;
++		drive-strength = <1>;
++		slew-rate = <0>;
++		bias-pull-up;
++	};
++
++	pinctrl_usdhc1_clk_strobe: usdhc1clkgrp {
++		pinmux = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK
++			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE
++			>;
++		drive-strength = <3>;
++		slew-rate = <0>;
++	};
++
++	pinctrl_usdhc1_data: usdhc1datagrp {
++		pinmux = <
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7
++			>;
++		drive-strength = <3>;
++		slew-rate = <0>;
++		bias-pull-up;
++		input-schmitt-enable;
++	};
++
++	pinctrl_usdhc1_clk_strobe_100mhz: usdhc1clk100grp {
++		pinmux = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK
++			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE
++			>;
++		drive-strength = <3>;
++		slew-rate = <0>;
++	};
++
++	pinctrl_usdhc1_data_100mhz: usdhc1data100grp {
++		pinmux = <
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7
++			>;
++		drive-strength = <5>;
++		slew-rate = <1>;
++		bias-pull-up;
++		input-schmitt-enable;
++	};
++
++	pinctrl_usdhc1_clk_strobe_200mhz: usdhc1clk200grp {
++		pinmux = <
++			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK
++			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE
++			>;
++		drive-strength = <7>;
++		slew-rate = <3>;
++	};
++
++	pinctrl_usdhc1_data_200mhz: usdhc1data200grp {
++		pinmux = <
++			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD
++			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0
++			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1
++			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2
++			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3
++			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4
++			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5
++			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6
++			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7
++			>;
++		drive-strength = <7>;
++		slew-rate = <3>;
++		bias-pull-up;
++		input-schmitt-enable;
++	};
++
++	pinctrl_usdhc2_vselect: usdhc2vselectgrp {
++		pinmux = <MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT>;
++		drive-strength = <1>;
++		slew-rate = <0>;
++		bias-pull-up;
++	};
++
++	pinctrl_usdhc2_clk: usdhc2clkgrp {
++		pinmux = <MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK>;
++		drive-strength = <3>;
++		slew-rate = <0>;
++	};
++
++	pinctrl_usdhc2_data: usdhc2datagrp {
++		pinmux = <
++			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD
++			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0
++			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1
++			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2
++			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3
++			>;
++		drive-strength = <3>;
++		slew-rate = <0>;
++		bias-pull-up;
++		input-schmitt-enable;
++	};
++
++	pinctrl_usdhc2_clk_100mhz: usdhc2clk100grp {
++		pinmux = <MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK>;
++		drive-strength = <5>;
++		slew-rate = <1>;
++	};
++
++	pinctrl_usdhc2_data_100mhz: usdhc2data100grp {
++		pinmux = <
++			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD
++			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0
++			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1
++			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2
++			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3
++			>;
++		drive-strength = <5>;
++		slew-rate = <1>;
++		bias-pull-up;
++		input-schmitt-enable;
++	};
++
++	pinctrl_usdhc2_clk_200mhz: usdhc2clk200grp {
++		pinmux = <MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK>;
++		drive-strength = <7>;
++		slew-rate = <3>;
++	};
++
++	pinctrl_usdhc2_data_200mhz: usdhc2data200grp {
++		pinmux = <
++			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD
++			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0
++			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1
++			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2
++			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3
++			>;
++		drive-strength = <7>;
++		slew-rate = <3>;
++		bias-pull-up;
++		input-schmitt-enable;
++	};
++};
 -- 
 2.15.1
 
