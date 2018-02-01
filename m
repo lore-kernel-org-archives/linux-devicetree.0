@@ -1,46 +1,85 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] ARM: dts: imx25-pinfunc: Always set SION for
- eSDHC CMD
-Date: Thu, 1 Feb 2018 08:57:20 +0100
-Message-ID: <20180201075720.3fj7ozvclpp6yovz@pengutronix.de>
-References: <20180131213544.4508-1-benoit.thebaudeau.dev@gmail.com>
- <20180131213544.4508-2-benoit.thebaudeau.dev@gmail.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v11 2/6] mailbox: qcom: Create APCS child device for clock
+ controller
+Date: Thu, 1 Feb 2018 10:01:44 +0200
+Message-ID: <384da443-a206-8db3-0a5f-90a68b7f42c2@linaro.org>
+References: <20171205154701.27730-1-georgi.djakov@linaro.org>
+ <20171205154701.27730-3-georgi.djakov@linaro.org>
+ <CABb+yY146ho0gtbUzDv-Z_xESkU2y=UYfBA6i+522+m58LkABQ@mail.gmail.com>
+ <20171224050625.GH12655@minitux>
+ <CABb+yY3e1YTnf4ZYvXVzXPhOT9-6PzusDfpWRBorwd9nB97SSQ@mail.gmail.com>
+ <f279f1ff-2117-c587-5018-3b3eeeedff8a@linaro.org>
+ <CABb+yY3UvNx71xpt+=j4tTiLEjPTFZTxps0qe2ePa6f4yV61kQ@mail.gmail.com>
+ <549f02e5-19d7-8cec-674f-247dfb2d2467@linaro.org>
+ <CABb+yY3GSvSGFm54g3mt5-=AWrq+g2N2pb9Q-pBZgEzE4MXSJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180131213544.4508-2-benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?Beno=EEt_Th=E9baudeau?= <benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Nazzareno Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CABb+yY3GSvSGFm54g3mt5-=AWrq+g2N2pb9Q-pBZgEzE4MXSJg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 10:35:44PM +0100, Benoît Thébaudeau wrote:
-> The eSDHC does not work properly if the SION bit is not set for the
-> bidirectional CMD signal, whatever the eSDHC instance and the selected
-> pad. Therefore, setting SION is mandatory for all eSDHC CMD ports. Do
-> this for MX25_PAD_*__ESDHCn_CMD in imx25-pinfunc.h in order to enforce
-> this behavior for all boards.
-> 
-> This had already been done for eSDHC1, but not for eSDHC2. Also, define
-> MX25_PAD_FEC_MDC__ESDHC2_CMD so that all the possible cases are covered
-> from now on.
-> 
-> Cc: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Benoît Thébaudeau <benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+On 02/01/2018 08:57 AM, Jassi Brar wrote:
+> On Thu, Feb 1, 2018 at 12:10 AM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>>
+>> Hi Jassi,
+>>
+>> On 01/27/2018 05:44 AM, Jassi Brar wrote:
+>>> On Thu, Jan 4, 2018 at 10:26 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>>>> Hi Jassi,
+>>>>
+>>>> On 12/29/2017 08:14 AM, Jassi Brar wrote:
+>>>>> Hi Bjorn,
+>>>>>
+>>>>> On Sun, Dec 24, 2017 at 10:36 AM, Bjorn Andersson
+>>>>> <bjorn.andersson@linaro.org> wrote:
+>>>>>> On Fri 22 Dec 20:57 PST 2017, Jassi Brar wrote:
+>>>>>>
+>>>>>>> On Tue, Dec 5, 2017 at 9:16 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>>>>>>>> There is a clock controller functionality provided by the APCS hardware
+>>>>>>>> block of msm8916 devices. The device-tree would represent an APCS node
+>>>>>>>> with both mailbox and clock provider properties.
+>>>>>>>>
+>>>>>>> The spec might depict a 'clock' box and 'mailbox' box inside the
+>>>>>>> bigger APCS box. However, from the code I see in this patchset, they
+>>>>>>> are orthogonal and can & should be represented as independent DT
+>>>>>>> nodes.
+>>>>>>
+>>>>>> The APCS consists of a number of different hardware blocks, one of them
+>>>>>> being the "APCS global" block, which is what this node and drivers
+>>>>>> relate to. On 8916 this contains both the IPC register and clock
+>>>>>> control. But it's still just one block according to the hardware
+>>>>>> specification.
+>>>>>>
+>>>>>> As such DT should describe the one hardware block by one node IMHO.
+>>>>>>
+>>>>> In my even humbler opinion, DT should describe a h/w functional unit
+>>>>> which _could_ be seen as a standalone component.
+>>>>
+>>>> The APCS is one separate register block related to the CPU cluster. I
+>>>> haven't seen any strict guidelines for such cases in the DT docs, and
+>>>> during the discussion got the impression that this is the preferred
+>>>> binding. Rob has also reviewed the binding, so we should be fine to move
+>>>> forward with this one.
+>>>>
+>>> Well, I can't overrule Rob. But I am really not happy with random
+>>> device spawning from mailbox drivers. I know there are such instances
+>>> already in the kernel but that doesn't make it legit... unless there
+>>> is some hard dependency. Is there?
+>>
+>> The dependency is that on this SoC, these functionalities are combined
+>> into this "CPU subsystem" block.
+>>
+> I see the register space is shared between mailbox and the clock. So I
+> guess, yes, simply creating a device here and passing the common
+> regmap is tidier. Which patches are already picked up?
 
-Acked-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Patches 3, 4 and 6 are already picked into the clk tree. Still pending
+are patches 1, 2 and 5.
 
-Thanks
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Georgi
