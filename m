@@ -1,76 +1,69 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of of_find_node_by_phandle()
-Date: Thu, 1 Feb 2018 08:26:57 -0600
-Message-ID: <CAL_Jsq+6i9+tMh+M1vNWXf+7OHUDN=9QitYoBVzAcJVWCt2xAQ@mail.gmail.com>
-References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
- <5dd35d8f-c430-237e-9863-2e73556f92ec@gmail.com> <CAL_JsqLV_bQ2pQ7hCRDP9_31kmKQjggWFDoCia-KmmO5CR3T5g@mail.gmail.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH V9 0/4] mtd: read partitions compatible prop for "ofpart"
+ type
+Date: Thu, 1 Feb 2018 15:32:45 +0100
+Message-ID: <cfcb0cd2-8c9e-5834-4191-a1e82dc6dbdf@axentia.se>
+References: <20180130201059.4424-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLV_bQ2pQ7hCRDP9_31kmKQjggWFDoCia-KmmO5CR3T5g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20180130201059.4424-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 1, 2018 at 8:24 AM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jan 31, 2018 at 3:43 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 01/31/18 12:05, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->>>
->>> Create a cache of the nodes that contain a phandle property.  Use this
->>> cache to find the node for a given phandle value instead of scanning
->>> the devicetree to find the node.  If the phandle value is not found
->>> in the cache, of_find_node_by_phandle() will fall back to the tree
->>> scan algorithm.
->>>
->>> The cache is initialized in of_core_init().
->>>
->>> The cache is freed via a late_initcall_sync().
->>>
->>> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->>> ---
->>>
->>> Some of_find_by_phandle() calls may occur before the cache is
->>> initialized or after it is freed.  For example, for the qualcomm
->>> qcom-apq8074-dragonboard, 11 calls occur before the initialization
->>> and 80 occur after the cache is freed (out of 516 total calls.)
->>>
->>>
->>>  drivers/of/base.c       | 85 ++++++++++++++++++++++++++++++++++++++++++++++---
->>>  drivers/of/of_private.h |  5 +++
->>>  drivers/of/resolver.c   | 21 ------------
->>>  3 files changed, 86 insertions(+), 25 deletions(-)
->>
->> Some observations....
->>
->> The size of the cache for a normal device tree would be a couple of
->> words of overhead for the cache, plus one pointer per devicetree node
->> that contains a phandle property.  This will be less space than
->> would be used by adding a hash field to each device node.  It is
->> also less space than was used by the older algorithm (long gone)
->> that added a linked list through the nodes that contained a
->> phandle property.
->>
->> This is assuming that the values of the phandle properties are
->> the default ones created by the dtc compiler.  In the case
->> where a very large phandle property value is hand-coded in
->> a devicetree source, the size of the cache is capped at one
->> entry per node.  In this case, a little bit of space will be
->> wasted -- but this is just a sanity fallback, it should not
->> be encountered, and can be fixed by fixing the devicetree
->> source.
->
-> I don't think we should rely on how dtc allocates phandles. dtc is not
-> the only source of DeviceTrees. If we could do that, then lets make
-> them have some known flag in the upper byte so we have some hint for
-> phandle values. 2^24 phandles should be enough for anyone.TM
->
-> Your cache size is also going to balloon if the dtb was built with
-> '-@'. Since you walk the tree for every phandle, it is conceivable
-> that you could make things slower.
+On 2018-01-30 21:10, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> 
+> This patchset provides a proper support for flash device DT node with
+> "partitions" subnode using "compatible" property. It's already
+> documented in the: Documentation/devicetree/bindings/mtd/partition.txt
+> 
+> We believed a previous version 8 was ready to go, but soon after landing
+> in the linux-next we got a regression report from Peter.
 
-Disregard the 2nd statement. Only 1 walk is not going to register.
+I retested these four patches on-top of 4.15, and results are good.
+
+With a faulty partition layout in the dtb, the old command-line layout
+wins and things keep working, and with a good partition layout in the
+dtb I can remove a bunch of command-line clutter.
+
+Tested-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+
+No testing of the individual patches though, just the end result...
+
+Cheers,
+peda
+
+> This version takes a safe path by:
+> 1) Respecting parsers order as specified in the default/driver-provided
+>    list.
+> 2) Looking at "compatible" property only when "ofpart" type gets
+>    speciied.
+> 
+> I double-checked the code and cannot think of any regression this could
+> cause. I also hope this design (roughly discussed with Boris) can be
+> acceptable for the mtd subsystem.
+> 
+> This is of course 4.17 material at best.
+> 
+> Brian Norris (1):
+>   mtd: partitions: add of_match_table parser matching
+> 
+> Rafał Miłecki (3):
+>   mtd: partitions: add special treating for the "ofpart" parser type
+>   mtd: rename "ofpart" parser to "fixed-partitions" as it fits it better
+>   mtd: ofpart: add of_match_table with "fixed-partitions"
+> 
+>  drivers/mtd/mtdpart.c          | 116 +++++++++++++++++++++++++++++++++++++----
+>  drivers/mtd/ofpart.c           |  18 +++++--
+>  include/linux/mtd/partitions.h |   1 +
+>  3 files changed, 121 insertions(+), 14 deletions(-)
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
