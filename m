@@ -1,51 +1,83 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 0/5] arm64: dts: renesas: r8a77970: enable HDMI output
-Date: Thu, 1 Feb 2018 11:16:25 +0300
-Message-ID: <5da7d5be-87ed-2515-b9f9-70cadd8a8819@cogentembedded.com>
-References: <20180131161811.12699-1-niklas.soderlund@ragnatech.se>
+From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: exynos: add OF graph between USB-PHY
+ and MUIC
+Date: Thu, 01 Feb 2018 09:19:39 +0100
+Message-ID: <6581962f-3552-2891-e6b3-b2f7c0018c93@samsung.com>
+References: <CGME20180131155734eucas1p1c7988ce46f3164329a39d2358d9fada9@eucas1p1.samsung.com>
+        <20180131155718.5237-1-a.hajda@samsung.com>
+        <20180131155718.5237-3-a.hajda@samsung.com>
+        <CAJKOXPewrA38bxiCKa=pjhVKXys2KRstV2w=+MP3TVi9kkN1kw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180131161811.12699-1-niklas.soderlund@ragnatech.se>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAJKOXPewrA38bxiCKa=pjhVKXys2KRstV2w=+MP3TVi9kkN1kw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/31/2018 7:18 PM, Niklas Söderlund wrote:
+On 01.02.2018 08:50, Krzysztof Kozlowski wrote:
+> On Wed, Jan 31, 2018 at 4:57 PM, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> OF graph describes USB data lanes between USB-PHY and respective MUIC.
+>> Since graph is present and DWC driver can use it to get extcon, obsolete
+>> extcon property can be removed.
+>>
+>> Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 18 +++++++++++++++++-
+>>  1 file changed, 17 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+>> index 427ff861b441..b20b42659206 100644
+>> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+>> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+>> @@ -828,6 +828,17 @@
+>>                                         };
+>>                                 };
+>>                         };
+>> +
+>> +                       ports {
+>> +                               #address-cells = <1>;
+>> +                               #size-cells = <0>;
+>> +
+>> +                               port@0 {
+>> +                                       reg = <0>;
+>> +                                       muic_to_usb: endpoint {
+>> +                                               remote-endpoint = <&usb_to_muic>;
+>> +                                       };
+>> +                               };
+>>                         };
+>>                 };
+>>
+>> @@ -1242,12 +1253,17 @@
+>>
+>>  &usbdrd_dwc3 {
+>>         dr_mode = "otg";
+>> -       extcon = <&muic>;
+> Look ok for me.
+>
+> Does this depend on #1 patch for DWC?
 
-> From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> 
-> Hi,
-> 
-> This series enables the HDMI out put on V3M. It is based on top of the
-> latest renesas-drivers release and depends on patches from both Laurent
-> and Sergei.
-> 
-> - [PATCH v2 00/12] R-Car DU: Convert LVDS code to bridge driver
-> - [PATCH v2 0/2] Add R-Car V3M (R8A77970) support to the DU driver
-> - [PATCH 0/3] Add R-Car V3M (R8A77970) support to the R-Car LVDS driver
-> 
-> It is tested on V3M by connecting the HDMI output to a monitor and
-> booting the board. To console shall eventually show up on the screen.
-> 
-> Niklas Söderlund (5):
->    arm64: dts: renesas: r8a77970: add FCPVD node
->    arm64: dts: renesas: r8a77970: Add VSPD instance
->    arm64: dts: renesas: r8a77970: add DU instance
->    arm64: dts: renesas: r8a77970: add the LVDS instance
+Yes, it depends. #1 adds code to find extcon using graph, without it
+dwc3 won't be able to work in dual-role mode.
+Alternatively, I could split this patch into two parts:
+2a. adding graph bindings.
+2b. removing extcon property.
+In such case only 2b depends on #1.
 
-    I have already posted such series, hadn't you seen it?
+Regards
+Andrzej
 
->    arm64: dts: renesas: eagle: add HDMI output using the ADV7511W
+>
+> Best regards,
+> Krzysztof
+>
+>
+>
 
-    Not posted this patch, however -- I was only doing it for the V3M Starter 
-Kit board.
-
->   arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 66 +++++++++++++++++++++++
->   arch/arm64/boot/dts/renesas/r8a77970.dtsi      | 72 ++++++++++++++++++++++++++
->   2 files changed, 138 insertions(+)
-
-MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
