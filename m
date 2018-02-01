@@ -1,28 +1,105 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 16/41] clk: davinci: Add platform information for TI
- DM646x PSC
-Date: Thu, 1 Feb 2018 17:47:09 +0530
-Message-ID: <f382c0fa-5a5f-c5bb-1f37-6d356e427dc1@ti.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-17-git-send-email-david@lechnology.com>
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: Re: [PATCH 2/2] gpio: Add GPIO driver for Spreadtrum SC9860 platform
+Date: Thu, 1 Feb 2018 13:22:30 +0100
+Message-ID: <20180201122230.GC690@gmail.com>
+References: <2834309f69a1ec37b84a33f153a3d0b90336bcc6.1517313987.git.baolin.wang@linaro.org>
+ <cccc1addb9c0cc541b676dbad005ec341d12d165.1517313987.git.baolin.wang@linaro.org>
+ <CAHp75Vcig869pUQ5yK1b=GpXinhYkpw1q29OVKSs_7EqP4Hknw@mail.gmail.com>
+ <CAMz4kuL9r+97_rDihgKD_TyNaDQ3aCk7go6e4mB24QOpovFYJg@mail.gmail.com>
+ <CAHp75VcYQMYNmW9-MkOKA5TWV2JgNfqnUB22s1qB4Z0ZZbTG2g@mail.gmail.com>
+ <CAMz4kuLO=zRqg72=7dC2fLHyVcEOcsU0PqiZM8XEYC3TGT1fYA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1516468460-4908-17-git-send-email-david@lechnology.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMz4kuLO=zRqg72=7dC2fLHyVcEOcsU0PqiZM8XEYC3TGT1fYA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
-> This adds platform-specific declarations for the PSC clocks on TI
-> DM646x based systems.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
 
-Reviewed-by: Sekhar Nori <nsekhar@ti.com>
+--xo44VMWPx7vlQ2+2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Sekhar
+On Thu, Feb 01, 2018 at 11:08:46AM +0800, Baolin Wang wrote:
+> On 31 January 2018 at 22:23, Andy Shevchenko <andy.shevchenko@gmail.com> =
+wrote:
+> > On Wed, Jan 31, 2018 at 4:01 AM, Baolin Wang <baolin.wang@linaro.org> w=
+rote:
+> >> On 31 January 2018 at 00:48, Andy Shevchenko <andy.shevchenko@gmail.co=
+m> wrote:
+> >>> On Tue, Jan 30, 2018 at 2:07 PM, Baolin Wang <baolin.wang@linaro.org>=
+ wrote:
+> >>>> The Spreadtrum SC9860 platform GPIO controller contains 16 groups and
+> >>>> each group contains 16 GPIOs. Each GPIO can set input/output and has
+> >>>> the interrupt capability.
+> >>>
+> >>>> +config GPIO_SPRD
+> >>>
+> >>>> +       bool "Spreadtrum GPIO support"
+> >>>
+> >>> Either you have to put tristate here, or remove all redundant
+> >>> module_*() and MODULE_*() macros.
+> >>
+> >> I will remove module_*() and MODULE_*() macros in next version. Thanks
+> >> for your comments.
+> >
+> > In that case you need to explain why driver can't be module. (And
+> > don't forget to replace module.h with init.h).
+>=20
+> After more investigation, I found most GPIO dependencies can be
+> deferred to probe. So I will change the GPIO driver to module level
+> and change bool to tristate in next version.
+
+Then you could replace
+
++static int __init sprd_gpio_init(void)
++{
++       return platform_driver_register(&sprd_gpio_driver);
++}
++subsys_initcall(sprd_gpio_init);
++
++static void __exit sprd_gpio_exit(void)
++{
++       platform_driver_unregister(&sprd_gpio_driver);
++}
++module_exit(sprd_gpio_exit);
+
+with
+
+module_platform_driver(sprd_gpio_driver);
+
+>=20
+> --=20
+> Baolin.wang
+> Best Regards
+
+
+Best regards
+Marcus Folkesson
+
+--xo44VMWPx7vlQ2+2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAlpzBoAACgkQiIBOb1ld
+UjLDLg//bbOVj4bi8CfryAT76NKZCO7XNQPOyt+ZgwrJKFJKCAMWvEj2cj54/Adp
+S7TdKbFRsXsD0mQXMJDpO4AbP+lkoLaEe88N0CkN4v6x+lxRAJUYXSeyLDjWY6pJ
+8L5GAufoNHp8PQunaxJzWetVbtrX6EaT7TTPU4Ogjy8oXM6DefxQj5wnCs5m2Xcw
+0VhjgMEi1lmrd3cN1cTPeQ3wMiwmms3UJmgt3vo3z4swSPfNLeBtYHeTKp3BwE3p
+JDHfPgVZ6sUNX2MD4XbmMiV0irG2t4l46mwc+77KfTmy+D3LSOQUi6JDMBw17WiB
+ywaqf7z0Fa8S/IVyaV6JZ/acM07barxax1a/g48xQdmGQ0LveiA+pr8Hq/TrRueM
+MAki2Ew68SGuOhC7/ZgsbfH1Q8wtwSNYO3HeSmxkdDjyspMjPp/pv0T/9EikKlI/
+s00SNyBfd2YsLqc5sAZy1ZQ11yEGmZ+ldCIvHhw83OQq6XAdiT+O08i8wICp6XcA
+c5esJCQj74STPRGqKcMJBs/duPyrKtKv7yycSPUY+RXQrcRztvAxB8FIgIpgi48B
+x8pN59yAjdazI1aPZdUA+3RAaENFR3ZmMH2X3LMkUvSy27tG3Qv/8pXNfsfMg3ic
+qjqOWpJAn9oaDKu46RTEsHRJzClPuPBXH30CXacJHxr4RIAaOdw=
+=6kpr
+-----END PGP SIGNATURE-----
+
+--xo44VMWPx7vlQ2+2--
