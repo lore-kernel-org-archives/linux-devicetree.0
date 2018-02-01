@@ -1,38 +1,46 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] DT: dma: renesas,rcar-dmac: document R8A77980 support
-Date: Thu, 1 Feb 2018 22:09:25 +0300
-Message-ID: <8302f1c8-3deb-584b-d6c8-b46240275e9e@cogentembedded.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
+ of_find_node_by_phandle()
+Date: Thu, 1 Feb 2018 11:10:35 -0800
+Message-ID: <fd9f5f63-b08e-602e-1510-85a65889f550@gmail.com>
+References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
+ <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
+ <38cdcae5-ec0f-d1be-b024-1990d4387731@gmail.com>
+ <9e23d32f-05a0-ce8a-41f8-9a1a3d66be37@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-MW
+In-Reply-To: <9e23d32f-05a0-ce8a-41f8-9a1a3d66be37-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Renesas  R-Car V3H SoC has the R-Car gen3 compatible DMA controllers.
-Document R-Car V3H (also known as R8A77980) SoC bindings.
+On 02/01/18 02:31, Chintan Pandya wrote:
+> 
+>>> Anyways, will fix this locally and share test results.
+>>
+>> Thanks, I look forward to the results.
+>>
+> 
+> Set up for this time was slightly different. So, taken all the numbers again.
+> 
+> Boot to shell time (in ms): Experiment 2
+> [1] Base            : 14.843805 14.784842 14.842338
+> [2] 64 sized fixed cache    : 14.189292 14.200003 14.266711
+> [3] Dynamic freeable cache    : 14.112412 14.064772 14.036052
+> 
+> So, [3] (this patch) looks to be improving 750ms (on avg from base build).
+> 
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Is this with the many debug options enabled?  If so, can you repeat with
+a normal configuration?
 
----
- Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt |    1 +
- 1 file changed, 1 insertion(+)
+Thanks,
 
-Index: slave-dma/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-===================================================================
---- slave-dma.orig/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-+++ slave-dma/Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
-@@ -26,6 +26,7 @@ Required Properties:
- 		- "renesas,dmac-r8a7795" (R-Car H3)
- 		- "renesas,dmac-r8a7796" (R-Car M3-W)
- 		- "renesas,dmac-r8a77970" (R-Car V3M)
-+		- "renesas,dmac-r8a77980" (R-Car V3H)
- 
- - reg: base address and length of the registers block for the DMAC
- 
+Frank
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
