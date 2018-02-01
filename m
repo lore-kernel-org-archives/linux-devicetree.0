@@ -1,55 +1,215 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] ARM64: dts: meson-axg: UART DT updates
-Date: Thu, 01 Feb 2018 14:36:58 -0800
-Message-ID: <7hinbg8hh1.fsf@baylibre.com>
-References: <20180111023401.125658-1-yixun.lan@amlogic.com>
-        <7hr2q6c2r4.fsf@baylibre.com>
-        <CAOi56cW4ufsegpy7heK1+pCxvZ2gz5Lf3dkUgxkZCgMq5oBzSA@mail.gmail.com>
-        <8990554d-e995-e432-8f50-3b247f71b0fd@amlogic.com>
+From: "dbasehore ." <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] irqchip/gic-v3-its: add ability to resend MAPC on resume
+Date: Thu, 1 Feb 2018 14:52:11 -0800
+Message-ID: <CAGAzgsrRSHsQ-rkSfVk_Jd9iVcFmP5phEy13E9RZTAYnJB-EsQ@mail.gmail.com>
+References: <20180130010007.256564-1-dbasehore@chromium.org> <20180130010007.256564-5-dbasehore@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8990554d-e995-e432-8f50-3b247f71b0fd-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> (Yixun Lan's
-        message of "Wed, 31 Jan 2018 10:25:45 +0800")
+In-Reply-To: <20180130010007.256564-5-dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-pm mailing list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Wysocki, Rafael J" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yixun,
-
-Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> writes:
-
-> On 01/31/18 08:22, Kevin Hilman wrote:
->> On Tue, Jan 30, 2018 at 4:04 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->>> Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> writes:
->>>
->>>> HI Kevin
->>>>  These are the UART DT updates for the Meson-AXG platform.
->>>>
->>>>  The patch 1 is a general fix.
->>>> Other patches are about adding clock & pinctrl info, then using them.
->>>> Last patch enable UART_A which connect to a BT module on the S400 board.
->>>
->>> Applied to v4.16/dt64,
->> 
->> Oops, I meant v4.17.
->> 
+On Mon, Jan 29, 2018 at 5:00 PM, Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> This adds functionality to resend the MAPC command to an ITS node on
+> resume. If the ITS is powered down during suspend and the collections
+> are not backed by memory, the ITS will lose that state. This just sets
+> up the known state for the collections after the ITS is restored.
 >
-> Hi Kevin
->  I should warn you about the patch 3 [1], it actually depend on the gpio
-> renaming patch [2]
+> This feature is enabled via Kconfig and a device tree entry.
 >
->  I'm still waiting Linus to take patch [2], then update according
-> (or you could help amend the patch? it's simply a
-> 's/uart_ao_b_gpioz/uart_ao_b_z/g)
+> Signed-off-by: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  arch/arm64/Kconfig               |  10 ++++
+>  drivers/irqchip/irq-gic-v3-its.c | 101 ++++++++++++++++++++++++---------------
+>  2 files changed, 73 insertions(+), 38 deletions(-)
+>
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 53612879fe56..f38f1a7b4266 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -571,6 +571,16 @@ config HISILICON_ERRATUM_161600802
+>
+>           If unsure, say Y.
+>
+> +config ARM_GIC500_COLLECTIONS_RESET
+> +       bool "GIC-500 Collections: Workaround for GIC-500 Collections on suspend reset"
+> +       default y
+> +       help
+> +         The GIC-500 can store Collections state internally for the ITS. If
+> +         the ITS is reset on suspend (ie from power getting disabled), the
+> +         collections need to be reconfigured on resume.
+> +
+> +         If unsure, say Y.
+> +
+>  config QCOM_FALKOR_ERRATUM_E1041
+>         bool "Falkor E1041: Speculative instruction fetches might cause errant memory access"
+>         default y
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 759ede7048ed..7fc533cf3bf7 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -48,6 +48,7 @@
+>  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375      (1ULL << 1)
+>  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144      (1ULL << 2)
+>  #define ITS_FLAGS_SAVE_SUSPEND_STATE           (1ULL << 3)
+> +#define ITS_FLAGS_WORKAROUND_GIC500_MAPC       (1ULL << 4)
+>
+>  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING    (1 << 0)
+>
+> @@ -1950,52 +1951,53 @@ static void its_cpu_init_lpis(void)
+>         dsb(sy);
+>  }
+>
+> -static void its_cpu_init_collection(void)
+> +static void its_cpu_init_collection(struct its_node *its)
+>  {
+> -       struct its_node *its;
+> -       int cpu;
+> -
+> -       spin_lock(&its_lock);
+> -       cpu = smp_processor_id();
+> -
+> -       list_for_each_entry(its, &its_nodes, entry) {
+> -               u64 target;
+> +       int cpu = smp_processor_id();
+> +       u64 target;
+>
+> -               /* avoid cross node collections and its mapping */
+> -               if (its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) {
+> -                       struct device_node *cpu_node;
+> +       /* avoid cross node collections and its mapping */
+> +       if (its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) {
+> +               struct device_node *cpu_node;
+>
+> -                       cpu_node = of_get_cpu_node(cpu, NULL);
+> -                       if (its->numa_node != NUMA_NO_NODE &&
+> -                               its->numa_node != of_node_to_nid(cpu_node))
+> -                               continue;
+> -               }
+> +               cpu_node = of_get_cpu_node(cpu, NULL);
+> +               if (its->numa_node != NUMA_NO_NODE &&
+> +                       its->numa_node != of_node_to_nid(cpu_node))
+> +                       return;
+> +       }
+>
+> +       /*
+> +        * We now have to bind each collection to its target
+> +        * redistributor.
+> +        */
+> +       if (gic_read_typer(its->base + GITS_TYPER) & GITS_TYPER_PTA) {
+>                 /*
+> -                * We now have to bind each collection to its target
+> +                * This ITS wants the physical address of the
+>                  * redistributor.
+>                  */
+> -               if (gic_read_typer(its->base + GITS_TYPER) & GITS_TYPER_PTA) {
+> -                       /*
+> -                        * This ITS wants the physical address of the
+> -                        * redistributor.
+> -                        */
+> -                       target = gic_data_rdist()->phys_base;
+> -               } else {
+> -                       /*
+> -                        * This ITS wants a linear CPU number.
+> -                        */
+> -                       target = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
+> -                       target = GICR_TYPER_CPU_NUMBER(target) << 16;
+> -               }
+> +               target = gic_data_rdist()->phys_base;
+> +       } else {
+> +               /* This ITS wants a linear CPU number. */
+> +               target = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
+> +               target = GICR_TYPER_CPU_NUMBER(target) << 16;
+> +       }
+>
+> -               /* Perform collection mapping */
+> -               its->collections[cpu].target_address = target;
+> -               its->collections[cpu].col_id = cpu;
+> +       /* Perform collection mapping */
+> +       its->collections[cpu].target_address = target;
+> +       its->collections[cpu].col_id = cpu;
+>
+> -               its_send_mapc(its, &its->collections[cpu], 1);
+> -               its_send_invall(its, &its->collections[cpu]);
+> -       }
+> +       its_send_mapc(its, &its->collections[cpu], 1);
+> +       its_send_invall(its, &its->collections[cpu]);
+> +}
+> +
+> +static void its_cpu_init_collections(void)
+> +{
+> +       struct its_node *its;
+> +
+> +       spin_lock(&its_lock);
+> +
+> +       list_for_each_entry(its, &its_nodes, entry)
+> +               its_cpu_init_collection(its);
+>
+>         spin_unlock(&its_lock);
+>  }
+> @@ -2997,6 +2999,18 @@ static bool __maybe_unused its_enable_quirk_hip07_161600802(void *data)
+>         return true;
+>  }
+>
+> +static bool __maybe_unused its_enable_quirk_gic500_collections(void *data)
+> +{
+> +       struct its_node *its = data;
+> +
+> +       if (fwnode_property_present(its->fwnode_handle,
+> +                                   "collections-reset-on-suspend")) {
+> +               its->flags |= ITS_FLAGS_WORKAROUND_GIC500_MAPC;
+> +               return true;
+> +       }
+> +       return false;
+> +}
+> +
+>  static const struct gic_quirk its_quirks[] = {
+>  #ifdef CONFIG_CAVIUM_ERRATUM_22375
+>         {
+> @@ -3042,6 +3056,14 @@ static const struct gic_quirk its_quirks[] = {
+>                 .mask   = 0xffffffff,
+>                 .init   = its_enable_quirk_hip07_161600802,
+>         },
+> +#endif
+> +#ifdef CONFIG_ARM_GIC500_COLLECTIONS_RESET
+> +       {
+> +               .desc   = "ITS: GIC-500 Collections Reset on Resume",
+> +               .iidr   = 0x00000000,
+> +               .mask   = 0xff000000,
+> +               .init   = its_enable_quirk_gic500_collections,
+> +       },
+>  #endif
+>         {
+>         }
+> @@ -3114,6 +3136,9 @@ static void its_restore_enable(void)
+>                         }
+>                         writel_relaxed(ctx->ctlr, base + GITS_CTLR);
+>                 }
 
-I've made that change in the version of the patch that I applied to the
-v4.17/dt64 branch.
+Can anyone from ARM indicate whether we need to wait for the ITS to
+exit its Quiescent state before sending commands to it?
 
-It's harmless without the pinctrl patch applied anyways.
-
-Kevin
+> +
+> +               if (its->flags & ITS_FLAGS_WORKAROUND_GIC500_MAPC)
+> +                       its_cpu_init_collection(its);
+>         }
+>         spin_unlock(&its_lock);
+>  }
+> @@ -3380,7 +3405,7 @@ int its_cpu_init(void)
+>                         return -ENXIO;
+>                 }
+>                 its_cpu_init_lpis();
+> -               its_cpu_init_collection();
+> +               its_cpu_init_collections();
+>         }
+>
+>         return 0;
+> --
+> 2.16.0.rc1.238.g530d649a79-goog
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
