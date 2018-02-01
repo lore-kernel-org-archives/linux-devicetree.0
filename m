@@ -1,39 +1,89 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v6 4/6] media: i2c: Add TDA1997x HDMI receiver driver
-Date: Thu, 1 Feb 2018 08:19:53 +0100
-Message-ID: <a2e873da-adf2-e4aa-71d6-d1c9c2671d41@xs4all.nl>
-References: <1514491789-8697-1-git-send-email-tharvey@gateworks.com>
- <1514491789-8697-5-git-send-email-tharvey@gateworks.com>
- <1e65ee61-f282-4b53-dd03-68a89a91da8e@xs4all.nl>
- <CAJ+vNU1ysHuzqOnL4sf3hFZrU5kyGnQ0dFkRObVjCa=NyLsJug@mail.gmail.com>
- <517f8b12-e10e-1e8d-6d98-26f5fefe62b8@xs4all.nl>
- <CAJ+vNU1xnnmNZW5zmT8+0HfT3Xfg6zfdrbC8vFNH4wuah5AVTA@mail.gmail.com>
- <fa8cc2d1-b7ea-343e-5b5a-ba5f60b9c5d9@xs4all.nl>
- <83695d60-5052-14ba-4f7b-23f153a05a85@xs4all.nl>
- <CAJ+vNU3DJ2xNEKoi1-div80hKkzsm+pFYtzJDUn+seXAVq8jCQ@mail.gmail.com>
+From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [linux-sunxi][PATCH] ARM: dts: sun7i: Enable HDMI support on the
+ Olimex EVB
+Date: Thu, 1 Feb 2018 08:25:37 +0100
+Message-ID: <CAEKpxBnv3K-56n2z2gbmc9zif9d3QLQ4DPtvLY-5rj0E7cpjMA@mail.gmail.com>
+References: <20180130075054.6256-1-codekipper@gmail.com> <20180131153431.ctpx2ea6wplw4anb@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAJ+vNU3DJ2xNEKoi1-div80hKkzsm+pFYtzJDUn+seXAVq8jCQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: linux-media <linux-media@vger.kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180131153431.ctpx2ea6wplw4anb-ZC1Zs529Oq4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/2018 05:47 AM, Tim Harvey wrote:
-> Hans,
-> 
-> You forgot to include v4l2-ctl-selection.cpp in your patch.
-
-You mean v4l2-ctl-subdev.cpp :-)
-
-Anyway, I plan on committing this to v4l2-ctl soon. I'll let you know
-when that's done.
-
-I added support for almost all subdev ioctls to v4l2-ctl.
-
-Regards,
-
-	Hans
+On 31 January 2018 at 16:34, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Tue, Jan 30, 2018 at 08:50:54AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Enable the display pipeline and HDMI output on the Olimex
+>> A20-SOM-EVB.
+>>
+>> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 25 +++++++++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+>> index 64c8ef9a2756..07906d4f8758 100644
+>> --- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+>> +++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
+>> @@ -61,6 +61,17 @@
+>>               stdout-path = "serial0:115200n8";
+>>       };
+>>
+>> +     hdmi-connector {
+>> +             compatible = "hdmi-connector";
+>> +             type = "a";
+>> +
+>> +             port {
+>> +                     hdmi_con_in: endpoint {
+>> +                             remote-endpoint = <&hdmi_out_con>;
+>> +                     };
+>> +             };
+>> +     };
+>> +
+>>       leds {
+>>               compatible = "gpio-leds";
+>>               pinctrl-names = "default";
+>> @@ -79,6 +90,10 @@
+>>       status = "okay";
+>>  };
+>>
+>> +&de {
+>> +     status = "okay";
+>> +};
+>> +
+>>  &ehci0 {
+>>       status = "okay";
+>>  };
+>> @@ -107,6 +122,16 @@
+>>       };
+>>  };
+>>
+>> +&hdmi {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&hdmi_out {
+>> +     hdmi_out_con: endpoint {
+>> +     remote-endpoint = <&hdmi_con_in>;
+>> +     };
+>> +};
+>> +
+>
+> The indentation is not correct here.
+ACK
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
