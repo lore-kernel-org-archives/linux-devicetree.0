@@ -1,72 +1,72 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
- of_find_node_by_phandle()
-Date: Thu, 1 Feb 2018 00:59:02 -0800
-Message-ID: <38cdcae5-ec0f-d1be-b024-1990d4387731@gmail.com>
-References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
- <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v6 04/41] clk: davinci: Add platform information for TI
+ DA850 PLL
+Date: Thu, 1 Feb 2018 14:28:57 +0530
+Message-ID: <834cb7ce-9406-a806-3ec1-a59766bd8a9d@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-5-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1516468460-4908-5-git-send-email-david@lechnology.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chintan Pandya <cpandya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/31/18 22:45, Chintan Pandya wrote:
+On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+> This adds platform-specific declarations for the PLL clocks on TI DA850/
+> OMAP-L138/AM18XX SoCs.
 > 
-> 
-> On 2/1/2018 1:35 AM, frowand.list@gmail.com wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
-> 
->> +
->> +static void of_populate_phandle_cache(void)
->> +{
->> +    unsigned long flags;
->> +    phandle max_phandle;
->> +    u32 nodes = 0;
->> +    struct device_node *np;
->> +
->> +    if (phandle_cache)
->> +        return;
->> +
->> +    max_phandle = live_tree_max_phandle();
->> +
->> +    raw_spin_lock_irqsave(&devtree_lock, flags);
->> +
->> +    for_each_of_allnodes(np)
->> +        nodes++;
->> +
->> +    /* sanity cap for malformed tree */
->> +    if (max_phandle > nodes)
->> +        max_phandle = nodes;
-> Shouldn't we speak up about this in kernel log ? May be WARN_ON() ?
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-Probably not.  If we care enough about a hand coded phandle property
-value we should add a check to checkpatch and/or dtc instead of adding
-the warning here.
+> +static const struct davinci_pll_clk_info da850_pll1_info __initconst = {
+> +	.name = "pll1",
+> +	.unlock_reg = CFGCHIP(3),
+> +	.unlock_mask = CFGCHIP3_PLL1_MASTER_LOCK,
 
+I guess this will change with the cfgchip handling discussion last week.
 
->> +
->> +    phandle_cache = kzalloc((max_phandle + 1) * sizeof(*phandle_cache),
->> +                GFP_KERNEL);
-> kzalloc (might_sleep) in critical context will break.
+> +	.pllm_mask = GENMASK(4, 0),
+> +	.pllm_min = 4,
+> +	.pllm_max = 32,
+> +	.pllout_min_rate = 300000000,
+> +	.pllout_max_rate = 600000000,
+> +	.flags = PLL_HAS_POSTDIV,
+> +};
+> +
 
-Yes, thanks.
+[...]
 
-I also need to ensure memory ordering in of_free_phandle_cache()
-to ensure that max_phandle_cache is zero before the cache memory
-is freed.
+> +void __init da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1)
+> +{
+> +	const struct davinci_pll_sysclk_info *info;
+> +
+> +	davinci_pll_clk_register(&da850_pll0_info, "ref_clk", pll0);
+> +
+> +	davinci_pll_auxclk_register("pll0_auxclk", pll0);
+> +
+> +	for (info = da850_pll0_sysclk_info; info->name; info++)
+> +		davinci_pll_sysclk_register(info, pll0);
+> +
+> +	davinci_pll_obsclk_register(&da850_pll0_obsclk_info, pll0);
+> +
+> +	davinci_pll_clk_register(&da850_pll1_info, "oscin", pll1);
 
+Both PLL0 and PLL1 use the same reference clock. So this should be
+"ref_clk". I dont think we ever need to register a clock called oscin
+along with "ref_clk". There is only one reference clock. It can either
+be obtained using internal oscillator or external oscillator.
 
-> Anyways, will fix this locally and share test results.
-
-Thanks, I look forward to the results.
-
-
-> Thanks,
-> Chintan
-> 
+Thanks,
+Sekhar
