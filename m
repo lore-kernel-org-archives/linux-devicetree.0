@@ -1,46 +1,76 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] fbdev: simplefb: add support for 'memory-region' property
- on DT node
-Date: Thu, 1 Feb 2018 21:03:30 +0200
-Message-ID: <CAHp75VfTrEELX9kKjZ7zmM8V=ZxbfAPbEDozG1i0A4P6gUjnEA@mail.gmail.com>
-References: <CGME20180123113510epcas1p1fc8a6e3ad50127bb84fe350b156a8c07@epcas1p1.samsung.com>
- <1516707296-23667-1-git-send-email-hayashi.kunihiko@socionext.com> <2359956.Z9lQWSAgHb@amdc3058>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v6 04/41] clk: davinci: Add platform information for TI
+ DA850 PLL
+Date: Thu, 1 Feb 2018 13:04:03 -0600
+Message-ID: <6f0146e4-72bc-7bc2-2135-44950949cd77@lechnology.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-5-git-send-email-david@lechnology.com>
+ <834cb7ce-9406-a806-3ec1-a59766bd8a9d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2359956.Z9lQWSAgHb@amdc3058>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Hans de Goede <hdegoede@redhat.com>, linux-fbdev@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <834cb7ce-9406-a806-3ec1-a59766bd8a9d-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 1, 2018 at 5:56 PM, Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
-> On Tuesday, January 23, 2018 08:34:56 PM Kunihiko Hayashi wrote:
->> Enables 'memory-region' property referring to the memory description on
->> the reserved-memory node in case of devicetree use.
->> If there is no 'reg' property that specifies the address and size of
->> the framebuffer, the address and size written in the memory description
->> on the reserved-memory node can be used for the framebuffer.
+On 02/01/2018 02:58 AM, Sekhar Nori wrote:
+> On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+>> This adds platform-specific declarations for the PLL clocks on TI DA850/
+>> OMAP-L138/AM18XX SoCs.
 >>
->> Furthermore, the reserved-memory node needs to have "no-map" attributes
->> because simplefb driver maps the region by ioremap_wc().
->>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> 
+>> +static const struct davinci_pll_clk_info da850_pll1_info __initconst = {
+>> +	.name = "pll1",
+>> +	.unlock_reg = CFGCHIP(3),
+>> +	.unlock_mask = CFGCHIP3_PLL1_MASTER_LOCK,
+> 
+> I guess this will change with the cfgchip handling discussion last week.
 
->> +- memory-region: phandle to a node describing memory region as framebuffer
->> +              memory instead of reg property. The node should include
->> +              'no-map'.
+Actually no, there really weren't any changes to the clock drivers because
+of this change. Only a small change in mach-davinci.
 
->>       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     if (!mem)
->> +             mem = simplefb_parse_dt_reserved_mem(&pdev->dev);
+> 
+>> +	.pllm_mask = GENMASK(4, 0),
+>> +	.pllm_min = 4,
+>> +	.pllm_max = 32,
+>> +	.pllout_min_rate = 300000000,
+>> +	.pllout_max_rate = 600000000,
+>> +	.flags = PLL_HAS_POSTDIV,
+>> +};
+>> +
+> 
+> [...]
+> 
+>> +void __init da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1)
+>> +{
+>> +	const struct davinci_pll_sysclk_info *info;
+>> +
+>> +	davinci_pll_clk_register(&da850_pll0_info, "ref_clk", pll0);
+>> +
+>> +	davinci_pll_auxclk_register("pll0_auxclk", pll0);
+>> +
+>> +	for (info = da850_pll0_sysclk_info; info->name; info++)
+>> +		davinci_pll_sysclk_register(info, pll0);
+>> +
+>> +	davinci_pll_obsclk_register(&da850_pll0_obsclk_info, pll0);
+>> +
+>> +	davinci_pll_clk_register(&da850_pll1_info, "oscin", pll1);
+> 
+> Both PLL0 and PLL1 use the same reference clock. So this should be
+> "ref_clk". I dont think we ever need to register a clock called oscin
+> along with "ref_clk". There is only one reference clock. It can either
+> be obtained using internal oscillator or external oscillator.
+> 
 
-I'm not sure I understood why you need this entire function?
-
-Put your memory resource ('reg' property) as part of reserved memory
-with necessary flags.
-
--- 
-With Best Regards,
-Andy Shevchenko
+As per my response to the previous path, this depends on which both
+which SoC and which diagram in the TRM for that SoC you are looking at.
+It works either way.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
