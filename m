@@ -1,33 +1,38 @@
 From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 13/41] clk: davinci: Add platform information for TI
- DM355 PSC
-Date: Thu, 1 Feb 2018 17:20:42 +0530
-Message-ID: <5fff33c5-68c3-4070-ddbd-4b8f91da8f4d@ti.com>
+Subject: Re: [PATCH v6 14/41] clk: davinci: Add platform information for TI
+ DM365 PSC
+Date: Thu, 1 Feb 2018 17:25:35 +0530
+Message-ID: <9da9db42-a43a-0627-6b9f-b63c6da187a1@ti.com>
 References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-14-git-send-email-david@lechnology.com>
+ <1516468460-4908-15-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516468460-4908-14-git-send-email-david@lechnology.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1516468460-4908-15-git-send-email-david@lechnology.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
-> +	LPSC(26, 0, gpio,        pll1_sysclk2, gpio_clkdev,        0),
-> +	LPSC(27, 0, timer0,      pll1_auxclk,  timer0_clkdev,      0),
-> +	LPSC(28, 0, timer1,      pll1_auxclk,  NULL,               0),
-> +	/* REVISIT: why can't this be disabled? */
-> +	LPSC(29, 0, timer2,      pll1_auxclk,  timer2_clkdev,
-> +	     LPSC_ALWAYS_ENABLED),
-> +	LPSC(31, 0, arm,         pll1_sysclk1, NULL,
-> +	     LPSC_ALWAYS_ENABLED),
+> This adds platform-specific declarations for the PSC clocks on TI
+> DM365 based systems.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-IMO, in this case the line break makes it more difficult to read so that
-checkpatch warning should be ignored.
+Apart from comment given on 13/41 that applies here:
 
-Thanks
+Reviewed-by: Sekhar Nori <nsekhar@ti.com>
+
+Thanks,
 Sekhar
