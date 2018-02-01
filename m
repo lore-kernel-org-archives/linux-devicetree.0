@@ -1,96 +1,73 @@
-From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v2] ARM: sun6i: a31: Enable HDMI support on the
- Mele I7
-Date: Thu,  1 Feb 2018 09:37:37 +0100
-Message-ID: <20180201083737.13211-1-codekipper@gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/2] arm64: dts: exynos: add OF graph between USB-PHY and MUIC
+Date: Thu, 1 Feb 2018 09:43:53 +0100
+Message-ID: <CAJKOXPfs7Es4S5EdOg_en+WPFV6hcNf-0rZO-+7uNiNS96DcVg@mail.gmail.com>
+References: <CGME20180131155734eucas1p1c7988ce46f3164329a39d2358d9fada9@eucas1p1.samsung.com>
+ <20180131155718.5237-1-a.hajda@samsung.com> <20180131155718.5237-3-a.hajda@samsung.com>
+ <CAJKOXPewrA38bxiCKa=pjhVKXys2KRstV2w=+MP3TVi9kkN1kw@mail.gmail.com> <6581962f-3552-2891-e6b3-b2f7c0018c93@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBVFDZPJQKGQE6T6BNWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <6581962f-3552-2891-e6b3-b2f7c0018c93@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: "open list:DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chanwoo Choi <cw00.choi@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Thu, Feb 1, 2018 at 9:19 AM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+> On 01.02.2018 08:50, Krzysztof Kozlowski wrote:
+>> On Wed, Jan 31, 2018 at 4:57 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+>>> OF graph describes USB data lanes between USB-PHY and respective MUIC.
+>>> Since graph is present and DWC driver can use it to get extcon, obsolete
+>>> extcon property can be removed.
+>>>
+>>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>>> ---
+>>>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 18 +++++++++++++++++-
+>>>  1 file changed, 17 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+>>> index 427ff861b441..b20b42659206 100644
+>>> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+>>> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+>>> @@ -828,6 +828,17 @@
+>>>                                         };
+>>>                                 };
+>>>                         };
+>>> +
+>>> +                       ports {
+>>> +                               #address-cells = <1>;
+>>> +                               #size-cells = <0>;
+>>> +
+>>> +                               port@0 {
+>>> +                                       reg = <0>;
+>>> +                                       muic_to_usb: endpoint {
+>>> +                                               remote-endpoint = <&usb_to_muic>;
+>>> +                                       };
+>>> +                               };
+>>>                         };
+>>>                 };
+>>>
+>>> @@ -1242,12 +1253,17 @@
+>>>
+>>>  &usbdrd_dwc3 {
+>>>         dr_mode = "otg";
+>>> -       extcon = <&muic>;
+>> Look ok for me.
+>>
+>> Does this depend on #1 patch for DWC?
+>
+> Yes, it depends. #1 adds code to find extcon using graph, without it
+> dwc3 won't be able to work in dual-role mode.
+> Alternatively, I could split this patch into two parts:
+> 2a. adding graph bindings.
+> 2b. removing extcon property.
+> In such case only 2b depends on #1.
 
-The Mele I7 has an HDMI connector wired to the HDMI pins
-on the SoC. Enable the display pipeline and HDMI output.
+Without splitting, this patch would have to wait till #1 gets into
+mainline (so probably till v4.17-rc1 because we are in merge window
+already). I am fine with this split-approach so only the cleanup patch
+would get postponed. Up to you.
 
-Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-v2 changes compared to v1 are:
-- Reordered nodes.
----
- arch/arm/boot/dts/sun6i-a31-i7.dts | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun6i-a31-i7.dts b/arch/arm/boot/dts/sun6i-a31-i7.dts
-index 010a84c7c012..a3b70173c527 100644
---- a/arch/arm/boot/dts/sun6i-a31-i7.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-i7.dts
-@@ -58,6 +58,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -93,6 +104,10 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -113,6 +128,16 @@
- 	};
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
-@@ -161,6 +186,10 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.16.1
+Best regards,
+Krzysztof
