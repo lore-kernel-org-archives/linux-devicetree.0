@@ -1,89 +1,85 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [linux-sunxi][PATCH] ARM: dts: sun7i: Enable HDMI support on the
- Olimex EVB
-Date: Thu, 1 Feb 2018 08:25:37 +0100
-Message-ID: <CAEKpxBnv3K-56n2z2gbmc9zif9d3QLQ4DPtvLY-5rj0E7cpjMA@mail.gmail.com>
-References: <20180130075054.6256-1-codekipper@gmail.com> <20180131153431.ctpx2ea6wplw4anb@flea.lan>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCHv2] tlv320dac33: Add device tree bindings
+Date: Thu, 1 Feb 2018 09:39:11 +0200
+Message-ID: <20b9ff40-a869-a165-07a2-2a103830efb3@ti.com>
+References: <20180129230539.GA18280@amd> <20180131190112.GA31608@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180131153431.ctpx2ea6wplw4anb-ZC1Zs529Oq4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180131190112.GA31608@amd>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Pavel Machek <pavel@ucw.cz>, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, bhumirks@gmail.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, sre@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, sakari.ailus@linux.intel.com, =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31 January 2018 at 16:34, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, Jan 30, 2018 at 08:50:54AM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> Enable the display pipeline and HDMI output on the Olimex
->> A20-SOM-EVB.
->>
->> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts | 25 +++++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
->> index 64c8ef9a2756..07906d4f8758 100644
->> --- a/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
->> +++ b/arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts
->> @@ -61,6 +61,17 @@
->>               stdout-path = "serial0:115200n8";
->>       };
->>
->> +     hdmi-connector {
->> +             compatible = "hdmi-connector";
->> +             type = "a";
->> +
->> +             port {
->> +                     hdmi_con_in: endpoint {
->> +                             remote-endpoint = <&hdmi_out_con>;
->> +                     };
->> +             };
->> +     };
->> +
->>       leds {
->>               compatible = "gpio-leds";
->>               pinctrl-names = "default";
->> @@ -79,6 +90,10 @@
->>       status = "okay";
->>  };
->>
->> +&de {
->> +     status = "okay";
->> +};
->> +
->>  &ehci0 {
->>       status = "okay";
->>  };
->> @@ -107,6 +122,16 @@
->>       };
->>  };
->>
->> +&hdmi {
->> +     status = "okay";
->> +};
->> +
->> +&hdmi_out {
->> +     hdmi_out_con: endpoint {
->> +     remote-endpoint = <&hdmi_con_in>;
->> +     };
->> +};
->> +
->
-> The indentation is not correct here.
-ACK
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+On 2018-01-31 21:01, Pavel Machek wrote:
+> =
+
+> This adds device tree bindings for tlv320dac33.c.
+
+Can you CC me for dac33 patches in the future, please?
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> =
+
+> diff --git a/Documentation/devicetree/bindings/sound/tlv320dac33.txt b/Do=
+cumentation/devicetree/bindings/sound/tlv320dac33.txt
+> new file mode 100644
+> index 0000000..7fdda95
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
+> @@ -0,0 +1,32 @@
+> +Texas Instruments - tlv320dac33 Codec module
+> +
+> +The tlv320dac33 serial control bus communicates through I2C protocols.
+> +
+> +Required properties:
+> +
+> +- compatible - "ti,tlv320dac33"
+> +- reg - I2C slave address
+> +
+> +Optional properties:
+> +
+> +- reset-gpios - gpio pin to power the device, active low
+> +
+> +- interrupts       - The interrupt output from the device.
+> +- interrupt-parent - The parent interrupt controller.
+> +
+> +- ti,keep-bclk 	- Keep the BCLK running in FIFO modes
+> +- ti,burst-bclkdiv - BCLK divider value in burst mode
+> +
+> +Example:
+> +
+> +tlv320dac33: audio-codec@19 {
+> +	compatible =3D "ti,tlv320dac33";
+> +	reg =3D <0x19>;
+> +
+> +	interrupt-parent =3D <&gpio2>;
+> +	interrupts =3D <21 1>; /* gpio_53, IRQF_TRIGGER_RISING */
+> +	reset-gpios =3D <&gpio2 28 0>; /* gpio_60 */
+> +
+> +	ti,keep-bclk;
+> +	ti,burst-bclkdiv =3D <3>;
+> +};
+> =
+
+> =
+
+
+- P=E9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
