@@ -1,37 +1,53 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] ASoC: codecs: Add support for AK5558 ADC driver
-Date: Thu, 1 Feb 2018 15:20:38 +0200
-Message-ID: <CAHp75Vf=Ap7UkMNOcOhzY+MjJmn-c-UphzEzAjmFtMh69kea4A@mail.gmail.com>
-References: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
- <CAHp75Vdd58U1y-LOQGg=rePOWf1LeQsZxn2ykzBhXL013ztW3Q@mail.gmail.com> <1517475954.8615.18.camel@nxp.com>
+From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 1/3] dt-bindings: pwm-stm32-lp: add #pwm-cells
+Date: Thu, 1 Feb 2018 14:44:36 +0100
+Message-ID: <1517492678-767-2-git-send-email-fabrice.gasnier@st.com>
+References: <1517492678-767-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1517475954.8615.18.camel@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wakasugi.jb@om.asahi-kasei.co.jp" <wakasugi.jb@om.asahi-kasei.co.jp>, "mihai.serban@gmail.com" <mihai.serban@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "mihai.serban@nxp.com" <mihai.serban@nxp.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1517492678-767-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 1, 2018 at 11:05 AM, Daniel Baluta <daniel.baluta@nxp.com> wrote:
+From: Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
 
->> > Signed-off-by: Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>
->> > Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
->> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
->> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
->> 4 authors of the code?!
->
-> The code has a very long history. I will add under each SoB the specific
-> contribution.
->
-> Mihai got the code from Junichi and reworked it for 4.9. Then Shengjiu and
-> me added various features and cleanups.
+STM32 Low-Power Timer supports generic 3 cells pwm to encode
+PWM number, period and polarity.
 
-> Any other suggestion?
+Signed-off-by: Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+---
+ Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Yes, please, put detailed credits in commit message to not shock
-people with so many SoB w/o explanation why.
-
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+index f8338d1..bd23302 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt
+@@ -7,6 +7,8 @@ See ../mfd/stm32-lptimer.txt for details about the parent node.
+ 
+ Required parameters:
+ - compatible:		Must be "st,stm32-pwm-lp".
++- #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
++			bindings defined in pwm.txt.
+ 
+ Optional properties:
+ - pinctrl-names: 	Set to "default".
+@@ -18,6 +20,7 @@ Example:
+ 		...
+ 		pwm {
+ 			compatible = "st,stm32-pwm-lp";
++			#pwm-cells = <3>;
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&lppwm1_pins>;
+ 		};
 -- 
-With Best Regards,
-Andy Shevchenko
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
