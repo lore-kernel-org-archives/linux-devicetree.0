@@ -1,85 +1,88 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v11 2/6] mailbox: qcom: Create APCS child device for clock
- controller
-Date: Thu, 1 Feb 2018 10:01:44 +0200
-Message-ID: <384da443-a206-8db3-0a5f-90a68b7f42c2@linaro.org>
-References: <20171205154701.27730-1-georgi.djakov@linaro.org>
- <20171205154701.27730-3-georgi.djakov@linaro.org>
- <CABb+yY146ho0gtbUzDv-Z_xESkU2y=UYfBA6i+522+m58LkABQ@mail.gmail.com>
- <20171224050625.GH12655@minitux>
- <CABb+yY3e1YTnf4ZYvXVzXPhOT9-6PzusDfpWRBorwd9nB97SSQ@mail.gmail.com>
- <f279f1ff-2117-c587-5018-3b3eeeedff8a@linaro.org>
- <CABb+yY3UvNx71xpt+=j4tTiLEjPTFZTxps0qe2ePa6f4yV61kQ@mail.gmail.com>
- <549f02e5-19d7-8cec-674f-247dfb2d2467@linaro.org>
- <CABb+yY3GSvSGFm54g3mt5-=AWrq+g2N2pb9Q-pBZgEzE4MXSJg@mail.gmail.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 02/41] clk: davinci: New driver for davinci PLL clocks
+Date: Thu, 1 Feb 2018 13:31:02 +0530
+Message-ID: <ff3a0549-2f76-9a8d-21bc-164649e8a6be@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-3-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY3GSvSGFm54g3mt5-=AWrq+g2N2pb9Q-pBZgEzE4MXSJg@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516468460-4908-3-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/2018 08:57 AM, Jassi Brar wrote:
-> On Thu, Feb 1, 2018 at 12:10 AM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
->>
->> Hi Jassi,
->>
->> On 01/27/2018 05:44 AM, Jassi Brar wrote:
->>> On Thu, Jan 4, 2018 at 10:26 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
->>>> Hi Jassi,
->>>>
->>>> On 12/29/2017 08:14 AM, Jassi Brar wrote:
->>>>> Hi Bjorn,
->>>>>
->>>>> On Sun, Dec 24, 2017 at 10:36 AM, Bjorn Andersson
->>>>> <bjorn.andersson@linaro.org> wrote:
->>>>>> On Fri 22 Dec 20:57 PST 2017, Jassi Brar wrote:
->>>>>>
->>>>>>> On Tue, Dec 5, 2017 at 9:16 PM, Georgi Djakov <georgi.djakov@linaro.org> wrote:
->>>>>>>> There is a clock controller functionality provided by the APCS hardware
->>>>>>>> block of msm8916 devices. The device-tree would represent an APCS node
->>>>>>>> with both mailbox and clock provider properties.
->>>>>>>>
->>>>>>> The spec might depict a 'clock' box and 'mailbox' box inside the
->>>>>>> bigger APCS box. However, from the code I see in this patchset, they
->>>>>>> are orthogonal and can & should be represented as independent DT
->>>>>>> nodes.
->>>>>>
->>>>>> The APCS consists of a number of different hardware blocks, one of them
->>>>>> being the "APCS global" block, which is what this node and drivers
->>>>>> relate to. On 8916 this contains both the IPC register and clock
->>>>>> control. But it's still just one block according to the hardware
->>>>>> specification.
->>>>>>
->>>>>> As such DT should describe the one hardware block by one node IMHO.
->>>>>>
->>>>> In my even humbler opinion, DT should describe a h/w functional unit
->>>>> which _could_ be seen as a standalone component.
->>>>
->>>> The APCS is one separate register block related to the CPU cluster. I
->>>> haven't seen any strict guidelines for such cases in the DT docs, and
->>>> during the discussion got the impression that this is the preferred
->>>> binding. Rob has also reviewed the binding, so we should be fine to move
->>>> forward with this one.
->>>>
->>> Well, I can't overrule Rob. But I am really not happy with random
->>> device spawning from mailbox drivers. I know there are such instances
->>> already in the kernel but that doesn't make it legit... unless there
->>> is some hard dependency. Is there?
->>
->> The dependency is that on this SoC, these functionalities are combined
->> into this "CPU subsystem" block.
->>
-> I see the register space is shared between mailbox and the clock. So I
-> guess, yes, simply creating a device here and passing the common
-> regmap is tidier. Which patches are already picked up?
+On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+> This adds a new driver for mach-davinci PLL clocks. This is porting the
+> code from arch/arm/mach-davinci/clock.c to the common clock framework.
+> Additionally, it adds device tree support for these clocks.
+> 
+> The ifeq ($(CONFIG_COMMON_CLK), y) in the Makefile is needed to prevent
+> compile errors until the clock code in arch/arm/mach-davinci is removed.
+> 
+> Note: although there are similar clocks for TI Keystone we are not able
+> to share the code for a few reasons. The keystone clocks are device tree
+> only and use legacy one-node-per-clock bindings. Also the register
+> layouts are a bit different, which would add even more if/else mess
+> to the keystone clocks. And the keystone PLL driver doesn't support
+> setting clock rates.
+> 
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 
-Patches 3, 4 and 6 are already picked into the clk tree. Still pending
-are patches 1, 2 and 5.
+Looks nice and clean to me. There is still some feedback though.
+
+One thing missing is DIV4.5 clock. It will be nice to add that too,
+mostly just because it will make the binding complete.
+
+> +void of_davinci_pll_init(struct device_node *node,
+> +			 const struct davinci_pll_clk_info *info,
+> +			 const struct davinci_pll_obsclk_info *obsclk_info,
+> +			 const struct davinci_pll_sysclk_info *div_info,
+> +			 u8 max_sysclk_id)
+> +{
+> +	struct device_node *child;
+> +	const char *parent_name;
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +
+> +	base = of_iomap(node, 0);
+> +	if (!base) {
+> +		pr_err("ioremap failed");
+> +		return;
+> +	}
+> +
+> +	if (info->flags & PLL_HAS_OSCIN)
+> +		parent_name = of_clk_get_parent_name(node, 0);
+> +	else
+> +		parent_name = OSCIN_CLK_NAME;
+
+I don't think the reference clock input handling is fully correct/flexible.
+
+There are two ways to provide input clock (ref_clk) to PLL. Either use
+the internal oscillator with a crystal connected between OSCIN and
+OSCOUT (CLKMODE = 0) or a clean clock input (CLKMODE = 1) connected to
+OSCIN (OSCOUT disconnected).
+
+This is a board specific decision. On the LogicPD EVM, the former option
+is used, on the LCDK board, the later.
+
+So, I think what we need is a DT property like
+"ti,davinci-use-internal-osc" for the PLL. Boards can set or ignore it
+and you can switch CLKMODE on or off based on that.
+
+Setting CLKMODE = 1 will switch off the internal oscillator (and
+presumably save power), but it does not act as a mux. This explains why
+not worrying about setting this correctly in current mainline still works.
+
+I am also not sure if we really need PLL_HAS_OSCIN since all DaVinci
+SoCs set it anyway.
 
 Thanks,
-Georgi
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
