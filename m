@@ -1,206 +1,598 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Thu, 1 Feb 2018 16:31:46 +0000
-Message-ID: <01c5498c-ac0a-7d2c-c804-3e8ea15839c4@arm.com>
-References: <1516695531-23349-1-git-send-email-yong.deng@magewell.com>
- <CACRpkdan52UB7HOyH1gnHWg4CDke_VQxAdq8cBgwUroibE59Ow@mail.gmail.com>
- <20180129082533.6edmqgbauo6q5dgz@flea.lan>
- <CACRpkdYAGwUjr2C-w5U+WuG48pZAOUcnxFjznLbdF6Lmy1uZuQ@mail.gmail.com>
- <CAK8P3a2HmPOTHAzqBnmim388pcWOE=fG50mG5HJifT=vzKOaTg@mail.gmail.com>
- <20180130075441.rqxzkwero6sdfak6@flea.lan>
- <CAK8P3a0QxQE=GM=SGPtT82=UreiqsgY6uMThvQ_woA3rjK0zjA@mail.gmail.com>
- <20180130095916.GA23047@ulmo> <20180130100150.GB23047@ulmo>
- <20180131072910.ajp3jc5dmetsjtf2@flea.lan>
- <CAK8P3a0X2bpLjKE6xKehG1junZoG1N_DjepOBQ+SZetKf6sgfA@mail.gmail.com>
-Reply-To: robin.murphy-5wv7dgnIgG8@public.gmane.org
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/7] arm64: zynqmp: Add support for Xilinx zcu100-revC
+Date: Thu, 1 Feb 2018 10:41:21 -0600
+Message-ID: <CAL_JsqKdEdyQP8maUmM39fvsAUcrvf6=_g21aRiaXqyv-ZogBw@mail.gmail.com>
+References: <cover.1516366474.git.michal.simek@xilinx.com> <7dd5614c878adb30e38caf4002921c0ca995329c.1516366474.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBCZOPTGF6YHRB6UBZXJQKGQEF7DC7MA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAK8P3a0X2bpLjKE6xKehG1junZoG1N_DjepOBQ+SZetKf6sgfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Dave Martin <dave.martin-5wv7dgnIgG8@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>G
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7dd5614c878adb30e38caf4002921c0ca995329c.1516366474.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31/01/18 09:37, Arnd Bergmann wrote:
-> On Wed, Jan 31, 2018 at 8:29 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> Hi Thierry,
->>
->> On Tue, Jan 30, 2018 at 11:01:50AM +0100, Thierry Reding wrote:
->>> On Tue, Jan 30, 2018 at 10:59:16AM +0100, Thierry Reding wrote:
->>>> On Tue, Jan 30, 2018 at 10:24:48AM +0100, Arnd Bergmann wrote:
->>>>> On Tue, Jan 30, 2018 at 8:54 AM, Maxime Ripard
->>>>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>>>> On Mon, Jan 29, 2018 at 03:34:02PM +0100, Arnd Bergmann wrote:
->>>>>>> On Mon, Jan 29, 2018 at 10:25 AM, Linus Walleij
->>>>>>> <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>>>> On Mon, Jan 29, 2018 at 9:25 AM, Maxime Ripard
->>>>>>>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>>>>>>> On Sat, Jan 27, 2018 at 05:14:26PM +0100, Linus Walleij wrote:
->>>>>
->>>>>>>
->>>>>>> At one point we had discussed adding a 'dma-masters' property that
->>>>>>> lists all the buses on which a device can be a dma master, and
->>>>>>> the respective properties of those masters (iommu, coherency,
->>>>>>> offset, ...).
->>>>>>>
->>>>>>> IIRC at the time we decided that we could live without that complexity,
->>>>>>> but perhaps we cannot.
->>>>>>
->>>>>> Are you talking about this ?
->>>>>> https://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/dma/dma.txt#L41
->>>>>>
->>>>>> It doesn't seem to be related to that issue to me. And in our
->>>>>> particular cases, all the devices are DMA masters, the RAM is just
->>>>>> mapped to another address.
->>>>>
->>>>> No, that's not the one I was thinking of. The idea at the time was much
->>>>> more generic, and not limited to dma engines. I don't recall the details,
->>>>> but I think that Thierry was either involved or made the proposal at the
->>>>> time.
->>>>
->>>> Yeah, I vaguely remember discussing something like this before. A quick
->>>> search through my inbox yielded these two threads, mostly related to
->>>> IOMMU but I think there were some mentions about dma-ranges and so on as
->>>> well. I'll have to dig deeper into those threads to refresh my memories,
->>>> but I won't get around to it until later today.
->>>>
->>>> If someone wants to read up on this in the meantime, here are the links:
->>>>
->>>>      https://lkml.org/lkml/2014/4/27/346
->>>>      http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/257200.html
->>>>
->>>>  From a quick glance the issue of dma-ranges was something that we hand-
->>>> waved at the time.
->>>
->>> Also found this, which seems to be relevant as well:
->>>
->>>        http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/252715.html
->>>
->>> Adding Dave.
->>
->> Thanks for the pointers, I started to read through it.
->>
->> I guess we have to come up with two solutions here: a short term one
->> to address the users we already have in the kernel properly, and a
->> long term one where we could use that discussion as a starting point.
->>
->> For the short term one, could we just set the device dma_pfn_offset to
->> PHYS_OFFSET at probe time, and use our dma_addr_t directly later on,
->> or would this also cause some issues?
-> 
-> That would certainly be an improvement over the current version,
-> it keeps the hack more localized. That's fine with me. Note that both
-> PHYS_OFFSET and dma_pfn_offset have architecture specific
-> meanings and they could in theory change, so ideally we'd do that
-> fixup somewhere in arch/arm/mach-sunxi/ at boot time before the
-> driver gets probed, but this wouldn't work on arm64 if we need it
-> there too.
+On Fri, Jan 19, 2018 at 6:55 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> This board has 2GB of memory, i2c, sd, wifi sdio, spis, uarts, display
+> port and usbs.
+> Board is using fixed clocks because clock driver hasn't been merged yet.
+>
+> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>
+>  arch/arm64/boot/dts/xilinx/Makefile               |   1 +
+>  arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi        | 213 ++++++++++++++++
+>  arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 298 ++++++++++++++++++++++
+>  3 files changed, 512 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
+>  create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+>
+> diff --git a/arch/arm64/boot/dts/xilinx/Makefile b/arch/arm64/boot/dts/xilinx/Makefile
+> index eba179b23b17..7266a6a9c0cd 100644
+> --- a/arch/arm64/boot/dts/xilinx/Makefile
+> +++ b/arch/arm64/boot/dts/xilinx/Makefile
+> @@ -1,2 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-ep108.dtb
+> +dtb-$(CONFIG_ARCH_ZYNQMP) += zynqmp-zcu100-revC.dtb
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
+> new file mode 100644
+> index 000000000000..9c09baca7dd7
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
+> @@ -0,0 +1,213 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Clock specification for Xilinx ZynqMP
+> + *
+> + * (C) Copyright 2015 - 2018, Xilinx, Inc.
+> + *
+> + * Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> + */
+> +
+> +/ {
+> +       clk100: clk100 {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <100000000>;
+> +       };
+> +
+> +       clk125: clk125 {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <125000000>;
+> +       };
+> +
+> +       clk200: clk200 {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <200000000>;
+> +       };
+> +
+> +       clk250: clk250 {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <250000000>;
+> +       };
+> +
+> +       clk300: clk300 {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <300000000>;
+> +       };
+> +
+> +       clk600: clk600 {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <600000000>;
+> +       };
+> +
+> +       dp_aclk: clock0 {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <100000000>;
+> +               clock-accuracy = <100>;
+> +       };
+> +
+> +       dp_aud_clk: clock1 {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <24576000>;
+> +               clock-accuracy = <100>;
+> +       };
+> +
+> +       dpdma_clk: dpdma_clk {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0x0>;
+> +               clock-frequency = <533000000>;
+> +       };
+> +
+> +       drm_clock: drm_clock {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0x0>;
+> +               clock-frequency = <262750000>;
+> +               clock-accuracy = <0x64>;
+> +       };
+> +};
+> +
+> +&can0 {
+> +       clocks = <&clk100 &clk100>;
+> +};
+> +
+> +&can1 {
+> +       clocks = <&clk100 &clk100>;
+> +};
+> +
+> +&fpd_dma_chan1 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&fpd_dma_chan2 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&fpd_dma_chan3 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&fpd_dma_chan4 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&fpd_dma_chan5 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&fpd_dma_chan6 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&fpd_dma_chan7 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&fpd_dma_chan8 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&lpd_dma_chan1 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&lpd_dma_chan2 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&lpd_dma_chan3 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&lpd_dma_chan4 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&lpd_dma_chan5 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&lpd_dma_chan6 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&lpd_dma_chan7 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&lpd_dma_chan8 {
+> +       clocks = <&clk600>, <&clk100>;
+> +};
+> +
+> +&gem0 {
+> +       clocks = <&clk125>, <&clk125>, <&clk125>;
+> +};
+> +
+> +&gem1 {
+> +       clocks = <&clk125>, <&clk125>, <&clk125>;
+> +};
+> +
+> +&gem2 {
+> +       clocks = <&clk125>, <&clk125>, <&clk125>;
+> +};
+> +
+> +&gem3 {
+> +       clocks = <&clk125>, <&clk125>, <&clk125>;
+> +};
+> +
+> +&gpio {
+> +       clocks = <&clk100>;
+> +};
+> +
+> +&i2c0 {
+> +       clocks = <&clk100>;
+> +};
+> +
+> +&i2c1 {
+> +       clocks = <&clk100>;
+> +};
+> +
+> +&sata {
+> +       clocks = <&clk250>;
+> +};
+> +
+> +&sdhci0 {
+> +       clocks = <&clk200 &clk200>;
+> +};
+> +
+> +&sdhci1 {
+> +       clocks = <&clk200 &clk200>;
+> +};
+> +
+> +&spi0 {
+> +       clocks = <&clk200 &clk200>;
+> +};
+> +
+> +&spi1 {
+> +       clocks = <&clk200 &clk200>;
+> +};
+> +
+> +&uart0 {
+> +       clocks = <&clk100 &clk100>;
+> +};
+> +
+> +&uart1 {
+> +       clocks = <&clk100 &clk100>;
+> +};
+> +
+> +&usb0 {
+> +       clocks = <&clk250>, <&clk250>;
+> +};
+> +
+> +&usb1 {
+> +       clocks = <&clk250>, <&clk250>;
+> +};
+> +
+> +&watchdog0 {
+> +       clocks = <&clk250>;
+> +};
+> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+> new file mode 100644
+> index 000000000000..01f5f95806d3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+> @@ -0,0 +1,298 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * dts file for Xilinx ZynqMP ZCU100 revC
+> + *
+> + * (C) Copyright 2016 - 2018, Xilinx, Inc.
+> + *
+> + * Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> + * Nathalie Chan King Choy <nathalie-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "zynqmp.dtsi"
+> +#include "zynqmp-clk.dtsi"
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +       model = "ZynqMP ZCU100 RevC";
+> +       compatible = "xlnx,zynqmp-zcu100-revC", "xlnx,zynqmp-zcu100", "xlnx,zynqmp";
 
-dma_pfn_offset certainly *shouldn't* be architecture-specific; it's just 
-historically not been used consistently everywhere. That should now be 
-addressed by Christoph's big dma_direct_ops cleanup (now merged) which 
-fills in the places it was being missed in generic code. From quickly 
-skimming this thread, it sounds like that is really should be sufficient 
-for this particular hardware - if all its DMA goes through an 
-interconnect which makes RAM appear at 0, then you give it "dma-ranges = 
-<0 PHYS_OFFSET size>;" and things should 'just work' provided the DMA 
-API is otherwise being used correctly.
+Documented?
 
-If different devices have differing DMA master address maps (such that 
-you can't just place a single dma-ranges on your "soc" node) then the 
-trick is to wrap them in intermediate "simple-bus" nodes with a 
-straight-though "ranges;" and the appropriate "dma-ranges = ...". Yes, 
-it's a bit of a bodge, but then pretending AXI/APB interconnects are 
-buses in the sense that DT assumes is already a bit of a bodge.
+> +
+> +       aliases {
+> +               gpio0 = &gpio;
 
->> For the long term plan, from what I read from the discussion, it's
->> mostly centered around IOMMU indeed, and we don't have that. What we
->> would actually need is to break the assumption that the DMA "parent"
->> bus is the DT node's parent bus.
->>
->> And I guess this could be done quite easily by adding a dma-parent
->> property with a phandle to the bus controller, that would have a
->> dma-ranges property of its own with the proper mapping described
->> there. It should be simple enough to support, but is there anything
->> that could prevent something like that to work properly (such as
->> preventing further IOMMU-related developments that were described in
->> those mail threads).
-> 
-> I've thought about it a little bit now. A dma-parent property would nicely
-> solve two problems:
-> 
-> - a device on a memory mapped control bus that is a bus master on
->    a different bus. This is the case we are talking about here AFAICT
-> 
-> - a device that is on a different kind of bus (i2c, spi, usb, ...) but also
->    happens to be a dma master on another bus. I suspect we have
->    some of these today and they work by accident because we set the
->    dma_mask and dma_map_ops quite liberally in the DT probe code,
->    but it really shouldn't work according to our bindings. We may also
->    have drivers that work around the issue by forcing the correct dma
->    mask and map_ops today, which makes them work but is rather
->    fragile.
+Drop this.
 
-Note that I recently started tightening this area up (see d89e2378a97f), 
-precisely because doing DMA configuration for things that shouldn't be 
-DMA masters turned out to be messing with legitimate devices in 
-conjunction with other unpleasant and fiddly circumstances elsewhere.
+> +               i2c0 = &i2c1;
+> +               rtc0 = &rtc;
 
-> I can think of a couple of other problems that may or may not be
-> relevant in the future that would require a more complex solution:
-> 
-> - a device that is a bus master on more than one bus, e.g. a
->    DMA engine that can copy between the CPU address space and
->    another memory controller that is not visible to the CPU
+Is there more than one?
 
-Those definitely exist - e.g. as best I understand it the crypto SRAMs 
-on Marvell Armada XP parts which we describe as "mmio-sram" are not 
-actually CPU-accessible, and only the CESA DMA engine can move data 
-between them and main memory.
+> +               serial0 = &uart1;
+> +               serial1 = &uart0;
+> +               serial2 = &dcc;
+> +               spi0 = &spi0;
+> +               spi1 = &spi1;
 
-> - a device that is connected to main memory both through an IOMMU
->    and directly through its parent bus, and the device itself is in
->    control over which of the two it uses (usually the IOMMU would
->    contol whether a device is bypassing translation)
+> +               usb0 = &usb0;
+> +               usb1 = &usb1;
 
-*shudder*
+Drop these.
 
-> - a device that has a single DMA address space with some form
->    of non-linear mapping to one or more parent buses. Some of these
->    can be expressed using the parent's dma-ranges properties, but
->    our code currently only looks at the first entry in dma-ranges.
+> +               mmc0 = &sdhci0;
+> +               mmc1 = &sdhci1;
+> +       };
+> +
+> +       chosen {
+> +               bootargs = "earlycon";
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +
+> +       memory@0 {
+> +               device_type = "memory";
+> +               reg = <0x0 0x0 0x0 0x80000000>;
+> +       };
+> +
+> +       gpio-keys {
+> +               compatible = "gpio-keys";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               autorepeat;
+> +               sw4 {
+> +                       label = "sw4";
+> +                       gpios = <&gpio 23 GPIO_ACTIVE_LOW>;
+> +                       linux,code = <KEY_POWER>;
+> +                       gpio-key,wakeup;
+> +                       autorepeat;
+> +               };
+> +       };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +               ds2 {
+> +                       label = "ds2";
+> +                       gpios = <&gpio 20 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "heartbeat";
+> +               };
+> +
+> +               ds3 {
+> +                       label = "ds3";
+> +                       gpios = <&gpio 19 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "phy0tx"; /* WLAN tx */
+> +                       default-state = "off";
+> +               };
+> +
+> +               ds4 {
+> +                       label = "ds4";
+> +                       gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "phy0rx"; /* WLAN rx */
+> +                       default-state = "off";
+> +               };
+> +
+> +               ds5 {
+> +                       label = "ds5";
+> +                       gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger = "bluetooth-power";
+> +               };
+> +
+> +               vbus_det { /* U5 USB5744 VBUS detection via MIO25 */
+> +                       label = "vbus_det";
+> +                       gpios = <&gpio 25 GPIO_ACTIVE_HIGH>;
+> +                       default-state = "on";
+> +               };
+> +
+> +               bt_power {
+> +                       label = "bt_power";
+> +                       gpios = <&gpio 8 GPIO_ACTIVE_HIGH>;
+> +                       default-state = "on";
+> +               };
+> +       };
+> +
+> +       wmmcsdio_fixed: fixedregulator-mmcsdio {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "wmmcsdio_fixed";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +               regulator-always-on;
+> +               regulator-boot-on;
+> +       };
+> +
+> +       sdio_pwrseq: sdio_pwrseq {
+> +               compatible = "mmc-pwrseq-simple";
+> +               reset-gpios = <&gpio 7 GPIO_ACTIVE_LOW>; /* WIFI_EN */
+> +       };
+> +};
+> +
+> +&dcc {
+> +       status = "okay";
+> +};
+> +
+> +&gpio {
+> +       status = "okay";
+> +       gpio-line-names = "UART1_TX", "UART1_RX", "UART0_RX", "UART0_TX", "I2C1_SCL",
+> +                         "I2C1_SDA", "SPI1_SCLK", "WLAN_EN", "BT_EN", "SPI1_CS",
+> +                         "SPI1_MISO", "SPI1_MOSI", "I2C_MUX_RESET", "SD0_DAT0", "SD0_DAT1",
+> +                         "SD0_DAT2", "SD0_DAT3", "PS_LED3", "PS_LED2", "PS_LED1",
+> +                         "PS_LED0", "SD0_CMD", "SD0_CLK", "GPIO_PB", "SD0_DETECT",
+> +                         "VBUS_DET", "POWER_INT", "DP_AUX", "DP_HPD", "DP_OE",
+> +                         "DP_AUX_IN", "INA226_ALERT", "PS_FP_PWR_EN", "PL_PWR_EN", "POWER_KILL",
+> +                         "", "GPIO-A", "GPIO-B", "SPI0_SCLK", "GPIO-C",
+> +                         "GPIO-D", "SPI0_CS", "SPI0_MISO", "SPI_MOSI", "GPIO-E",
+> +                         "GPIO-F", "SD1_D0", "SD1_D1", "SD1_D2", "SD1_D3",
+> +                         "SD1_CMD", "SD1_CLK", "USB0_CLK", "USB0_DIR", "USB0_DATA2",
+> +                         "USB0_NXT", "USB0_DATA0", "USB0_DATA1", "USB0_STP", "USB0_DATA3",
+> +                         "USB0_DATA4", "USB0_DATA5", "USB0_DATA6", "USB0_DATA7", "USB1_CLK",
+> +                         "USB1_DIR", "USB1_DATA2", "USB1_NXT", "USB1_DATA0", "USB1_DATA1",
+> +                         "USB1_STP", "USB1_DATA3", "USB1_DATA4", "USB1_DATA5", "USB1_DATA6",
+> +                         "USB_DATA7", "WLAN_IRQ", "PMIC_IRQ", /* MIO end and EMIO start */
+> +                         "", "",
+> +                         "", "", "", "", "", "", "", "", "", "",
+> +                         "", "", "", "", "", "", "", "", "", "",
+> +                         "", "", "", "", "", "", "", "", "", "",
+> +                         "", "", "", "", "", "", "", "", "", "",
+> +                         "", "", "", "", "", "", "", "", "", "",
+> +                         "", "", "", "", "", "", "", "", "", "",
+> +                         "", "", "", "", "", "", "", "", "", "",
+> +                         "", "", "", "", "", "", "", "", "", "",
+> +                         "", "", "", "", "", "", "", "", "", "",
+> +                         "", "", "", "";
+> +};
+> +
+> +&i2c1 {
+> +       status = "okay";
+> +       clock-frequency = <100000>;
+> +       i2cswitch@75 { /* u11 */
 
-That's definitely a thing, too. In fact the TI Keystone platform which 
-begat our current of_dma_get_range() implementation is like that; we 
-just only describe the offset upper half of the DMA address map where 
-dma-coherent RAM lives, not the bottom 2GB of peripherals which is the 
-same as the CPU view. See also the madness of the brcmstb PCIe patches 
-elsewhere on this list.
+i2c-mux@75
 
-> Another problem is the interaction with the dma-ranges and iommu
-> properties. I have not found any real problems here, but we certainly
-> need to be careful to define what happens in all combinations and
-> make sure that we document it well in the bindings and have those
-> reviewed by the affected parties, at least the ARM and PowerPC
-> architecture folks as well as the Nvidia and Renesas platform
-> maintainers, which in my experience have the most complex DMA
-> hardware.
-I hold out hope that we never see DMA offsets mixed with IOMMUs (because 
-thankfully it doesn't make much sense from a hardware perspective), but 
-we certainly do want the size aspect of dma-ranges to describe cases 
-where there are fewer than expected address bits wired between the 
-device master interface and IOMMU slave interface. There's a fairly 
-long-standing issue with that being a bit broken which is hurting at 
-least one platform I know about.
+> +               compatible = "nxp,pca9548";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               reg = <0x75>;
+> +               i2csw_0: i2c@0 { /* i2c mw 75 0 1 */
 
-Robin.
+Linux commands for comments aren't relevant to dts files.
+
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0>;
+> +                       /*
+> +                        * LSEXP_I2C0
+
+Is this a 96boards design? If so, using "label" and with defined names
+is somewhat standard for defining low speed connector ports (and for
+LEDs). That should also remove any need for using aliases for I2C and
+SPI. Look at hikey or db410c.
+
+> +                        */
+> +               };
+> +               i2csw_1: i2c@1 { /* i2c mw 75 0 2 */
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <1>;
+> +                       /*
+> +                        * LSEXP_I2C1
+> +                        */
+> +               };
+> +               i2csw_2: i2c@2 { /* i2c mw 75 0 4 */
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <2>;
+> +                       /*
+> +                        * HSEXP_I2C2
+> +                        */
+> +               };
+> +               i2csw_3: i2c@3 { /* i2c mw 75 0 8 */
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <3>;
+> +                       /*
+> +                        * HSEXP_I2C3
+> +                        */
+> +               };
+> +               i2csw_4: i2c@4 { /* i2c mw 75 0 10 */
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0x4>;
+> +
+> +                       pmic: tps65086x@5e { /* Custom TI PMIC u33 */
+
+pmic@5e
+
+> +                               compatible = "ti,tps65086";
+> +                               reg = <0x5e>;
+> +                               interrupt-parent = <&gpio>;
+> +                               interrupts = <77 GPIO_ACTIVE_LOW>;
+> +                               #gpio-cells = <2>;
+> +                               gpio-controller;
+> +                       };
+> +               };
+> +               i2csw_5: i2c@5 { /* i2c mw 75 0 20 */
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <5>;
+> +                       /* PS_PMBUS */
+> +                       ina226@40 { /* u35 */
+> +                               compatible = "ti,ina226";
+> +                               reg = <0x40>;
+> +                               shunt-resistor = <10000>;
+> +                               /* MIO31 is alert which should be routed to PMUFW */
+> +                       };
+> +               };
+> +               i2csw_6: i2c@6 { /* i2c mw 75 0 40 */
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <6>;
+> +                       /*
+> +                        * Not Connected
+> +                        */
+> +               };
+> +               i2csw_7: i2c@7 { /* i2c mw 75 0 80 */
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <7>;
+> +                       /*
+> +                        * usb5744 (DNP) - U5
+> +                        * 100kHz - this is default freq for us
+> +                        */
+> +               };
+> +       };
+> +};
+> +
+> +&rtc {
+> +       status = "okay";
+> +};
+> +
+> +/* SD0 only supports 3.3V, no level shifter */
+> +&sdhci0 {
+> +       status = "okay";
+> +       no-1-8-v;
+> +       broken-cd; /* CD has to be enabled by default */
+> +       disable-wp;
+> +};
+> +
+> +&sdhci1 {
+> +       status = "okay";
+> +       bus-width = <0x4>;
+> +       non-removable;
+> +       disable-wp;
+> +       cap-power-off-card;
+> +       mmc-pwrseq = <&sdio_pwrseq>;
+> +       vqmmc-supply = <&wmmcsdio_fixed>;
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +       wlcore: wlcore@2 {
+
+wifi@2
+
+> +               compatible = "ti,wl1831";
+> +               reg = <2>;
+> +               interrupt-parent = <&gpio>;
+> +               interrupts = <76 IRQ_TYPE_EDGE_RISING>; /* MIO76 WLAN_IRQ 1V8 */
+> +       };
+> +};
+> +
+> +&spi0 { /* Low Speed connector */
+> +       status = "okay";
+> +};
+> +
+> +&spi1 { /* High Speed connector */
+> +       status = "okay";
+> +};
+> +
+> +&uart0 {
+> +       status = "okay";
+> +};
+> +
+> +&uart1 {
+> +       status = "okay";
+> +
+> +};
+> +
+> +/* ULPI SMSC USB3320 */
+> +&usb0 {
+> +       status = "okay";
+> +};
+> +
+> +/* ULPI SMSC USB3320 */
+> +&usb1 {
+> +       status = "okay";
+> +};
+> +
+> +&watchdog0 {
+> +       status = "okay";
+> +};
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
