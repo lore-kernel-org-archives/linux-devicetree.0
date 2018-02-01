@@ -1,85 +1,109 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCHv2] tlv320dac33: Add device tree bindings
-Date: Thu, 1 Feb 2018 09:39:11 +0200
-Message-ID: <20b9ff40-a869-a165-07a2-2a103830efb3@ti.com>
-References: <20180129230539.GA18280@amd> <20180131190112.GA31608@amd>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: exynos-artik5: add support for wlan
+Date: Thu, 1 Feb 2018 08:47:47 +0100
+Message-ID: <CAJKOXPex=joAvYZem9ROft4aYi8z5Mb4oDce=US182waHtuXew@mail.gmail.com>
+References: <20180131074027.387-1-mlyle@lyle.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180131190112.GA31608@amd>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Pavel Machek <pavel@ucw.cz>, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, bhumirks@gmail.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pali.rohar@gmail.com, sre@kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-omap@vger.kernel.org, tony@atomide.com, khilman@kernel.org, aaro.koskinen@iki.fi, ivo.g.dimitrov.75@gmail.com, patrikbachan@gmail.com, serge@hallyn.com, abcloriens@gmail.com, clayton@craftyguy.net, martijn@brixit.nl, sakari.ailus@linux.intel.com, =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20180131074027.387-1-mlyle@lyle.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Michael Lyle <mlyle@lyle.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene@kernel.org, CHANHO PARK <chanho61.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jan 31, 2018 at 8:40 AM, Michael Lyle <mlyle@lyle.org> wrote:
+>
+> On the Artik520 module, there's a bcm4354 attached to mshc_1.  Enable
+> it, and turn on the regulator used for it, so that both wifi & bluetooth
+> work.
+>
+> Verified to work on the Artik 520 evaluation board.
+>
+> Signed-off-by: Michael Lyle <mlyle@lyle.org>
+> ---
 
+Changelog would be nice to check what you changed in v2.
 
-On 2018-01-31 21:01, Pavel Machek wrote:
-> =
+>  arch/arm/boot/dts/exynos3250-artik5.dtsi | 36 ++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos3250-artik5.dtsi b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+> index 0aa577fe9f95..b2d441b1a7e3 100644
+> --- a/arch/arm/boot/dts/exynos3250-artik5.dtsi
+> +++ b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+> @@ -245,6 +245,7 @@
+>                                 regulator-name = "VLDO23_1.8V";
+>                                 regulator-min-microvolt = <1800000>;
+>                                 regulator-max-microvolt = <1800000>;
+> +                               regulator-always-on;
+>                         };
+>
+>                         ldo24_reg: LDO24 {
+> @@ -316,6 +317,41 @@
+>         status = "okay";
+>  };
+>
+> +&pinctrl_1 {
 
-> This adds device tree bindings for tlv320dac33.c.
+Still not alphabetically sorted - this should go after &rtc. Sorting
+alphabetically helps to reduce conflicts (e.g. when adding nodes not
+everyone will be editing end of file at the same of time) and makes it
+slightly easier to look for nodes.
 
-Can you CC me for dac33 patches in the future, please?
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> =
-
-> diff --git a/Documentation/devicetree/bindings/sound/tlv320dac33.txt b/Do=
-cumentation/devicetree/bindings/sound/tlv320dac33.txt
-> new file mode 100644
-> index 0000000..7fdda95
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
-> @@ -0,0 +1,32 @@
-> +Texas Instruments - tlv320dac33 Codec module
-> +
-> +The tlv320dac33 serial control bus communicates through I2C protocols.
-> +
-> +Required properties:
-> +
-> +- compatible - "ti,tlv320dac33"
-> +- reg - I2C slave address
-> +
-> +Optional properties:
-> +
-> +- reset-gpios - gpio pin to power the device, active low
-> +
-> +- interrupts       - The interrupt output from the device.
-> +- interrupt-parent - The parent interrupt controller.
-> +
-> +- ti,keep-bclk 	- Keep the BCLK running in FIFO modes
-> +- ti,burst-bclkdiv - BCLK divider value in burst mode
-> +
-> +Example:
-> +
-> +tlv320dac33: audio-codec@19 {
-> +	compatible =3D "ti,tlv320dac33";
-> +	reg =3D <0x19>;
-> +
-> +	interrupt-parent =3D <&gpio2>;
-> +	interrupts =3D <21 1>; /* gpio_53, IRQF_TRIGGER_RISING */
-> +	reset-gpios =3D <&gpio2 28 0>; /* gpio_60 */
-> +
-> +	ti,keep-bclk;
-> +	ti,burst-bclkdiv =3D <3>;
+> +       wlanen: wlanen {
+> +               samsung,pins = "gpx2-3";
+> +               samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +               samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +               samsung,pin-drv = <EXYNOS4_PIN_DRV_LV3>;
+> +               samsung,pin-val = <1>;
+> +       };
 > +};
-> =
+> +
+> +&mshc_1 {
+> +       cap-sd-highspeed;
+> +       cap-sdio-irq;
+> +       disable-wp;
+> +       broken-cd;
 
-> =
+This really should not be broken-cd but non-removable. I understand
+that the SDIO wifi/br is not a card really - you cannot take it out.
 
+> +       bypass-smu;
 
-- P=E9ter
+I think there is no such property.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> +       keep-power-in-suspend;
+> +       fifo-depth = <0x40>;
+> +       vqmmc-supply = <&ldo11_reg>;
+> +       /* Voltage negotiation is broken for the SDIO periph so we
+
+Please use opening /* (like in kernel code).
+
+> +        * can't actually set the voltage here.
+> +        * vmmc-supply = <&ldo23_reg>;
+
+What did you find about the regulators?
+
+Best regards,
+Krzysztof
+
+> +        */
+> +       card-detect-delay = <500>;
+> +       clock-frequency = <100000000>;
+> +       max-frequency = <100000000>;
+> +       samsung,dw-mshc-ciu-div = <3>;
+> +       samsung,dw-mshc-sdr-timing = <0 1>;
+> +       samsung,dw-mshc-ddr-timing = <1 2>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&sd1_cmd &sd1_clk &sd1_bus1 &sd1_bus4 &wlanen>;
+> +       bus-width = <4>;
+> +       status = "okay";
+> +};
+> +
+>  &rtc {
+>         clocks = <&cmu CLK_RTC>, <&s2mps14_osc S2MPS11_CLK_AP>;
+>         clock-names = "rtc", "rtc_src";
+> --
+> 2.14.1
+>
