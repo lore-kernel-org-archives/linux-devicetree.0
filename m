@@ -1,81 +1,52 @@
-From: Michael Lyle <mlyle-dTEscH1tG2Q@public.gmane.org>
-Subject: [PATCH v3] ARM: dts: exynos-artik5: add support for wlan
-Date: Thu,  1 Feb 2018 13:16:56 -0800
-Message-ID: <20180201211656.11829-1-mlyle@lyle.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RESEND] arm64: dts: cavium: fix PCI bus dtc warnings
+Date: Thu,  1 Feb 2018 15:32:40 -0600
+Message-ID: <20180201213240.28862-1-robh@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, CHANHO PARK <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Lyle <mlyle-dTEscH1tG2Q@public.gmane.org>
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On the Artik520 module, there's a bcm4354 attached to mshc_1.  Enable
-it, and turn on the regulator used for it, so that both wifi & bluetooth
-work.
+dtc recently added PCI bus checks. Fix these warnings:
 
-Verified to work on the Artik 520 evaluation board.
+arch/arm64/boot/dts/cavium/thunder2-99xx.dtb: Warning (pci_bridge): Node /pci missing bus-range for PCI bridge
+arch/arm64/boot/dts/cavium/thunder2-99xx.dtb: Warning (unit_address_vs_reg): Node /pci has a reg or ranges property, but no unit name
 
-v2: accidentally sent out v1
-v3: non-removable instead of broken-cd, alphabetical order, formatting
-
-Signed-off-by: Michael Lyle <mlyle-dTEscH1tG2Q@public.gmane.org>
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/exynos3250-artik5.dtsi | 36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Arnd, Olof,
 
-diff --git a/arch/arm/boot/dts/exynos3250-artik5.dtsi b/arch/arm/boot/dts/exynos3250-artik5.dtsi
-index 0aa577fe9f95..620b50c19ead 100644
---- a/arch/arm/boot/dts/exynos3250-artik5.dtsi
-+++ b/arch/arm/boot/dts/exynos3250-artik5.dtsi
-@@ -245,6 +245,7 @@
- 				regulator-name = "VLDO23_1.8V";
- 				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
- 			};
+Going thru my backlog of patches and found this one never made it 
+upstream. Please apply.
+
+Rob
+
+ arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+index 4220fbdcb24a..ff5c4c47b22b 100644
+--- a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
++++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+@@ -98,7 +98,7 @@
+ 		clock-output-names = "clk125mhz";
+ 	};
  
- 			ldo24_reg: LDO24 {
-@@ -316,6 +317,41 @@
- 	status = "okay";
- };
- 
-+&mshc_1 {
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+	disable-wp;
-+	non-removable;
-+	keep-power-in-suspend;
-+	fifo-depth = <0x40>;
-+	vqmmc-supply = <&ldo11_reg>;
-+	/*
-+	 * Voltage negotiation is broken for the SDIO periph so we
-+	 * can't actually set the voltage here.
-+	 * vmmc-supply = <&ldo23_reg>;
-+	 */
-+	card-detect-delay = <500>;
-+	clock-frequency = <100000000>;
-+	max-frequency = <100000000>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 1>;
-+	samsung,dw-mshc-ddr-timing = <1 2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd1_cmd &sd1_clk &sd1_bus1 &sd1_bus4 &wlanen>;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&pinctrl_1 {
-+	wlanen: wlanen {
-+		samsung,pins = "gpx2-3";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV3>;
-+		samsung,pin-val = <1>;
-+	};
-+};
-+
- &rtc {
- 	clocks = <&cmu CLK_RTC>, <&s2mps14_osc S2MPS11_CLK_AP>;
- 	clock-names = "rtc", "rtc_src";
+-	pci {
++	pcie@30000000 {
+ 		compatible = "pci-host-ecam-generic";
+ 		device_type = "pci";
+ 		#interrupt-cells = <1>;
+@@ -118,6 +118,7 @@
+ 		ranges =
+ 		  <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
+ 		   0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
++		bus-range = <0 0xff>;
+ 		interrupt-map-mask = <0 0 0 7>;
+ 		interrupt-map =
+ 		      /* addr  pin  ic   icaddr  icintr */
 -- 
 2.14.1
 
