@@ -1,371 +1,167 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v12 7/9] ACPI: Translate the I/O range of non-MMIO devices
- before scanning
-Date: Thu, 1 Feb 2018 11:32:50 +0000
-Message-ID: <0a30452f-34eb-d0b5-2001-ab6b866c53e2@huawei.com>
-References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
- <1516725385-24535-8-git-send-email-john.garry@huawei.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v6 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
+ add/remove device
+Date: Thu, 1 Feb 2018 17:03:48 +0530
+Message-ID: <bb9c23ec-c6d8-80fe-a80f-c33c961ab657@codeaurora.org>
+References: <1516362223-22946-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1516362223-22946-4-git-send-email-vivek.gautam@codeaurora.org>
+ <5367e45a-8406-6dd2-1eb8-e1de9095af1a@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1516725385-24535-8-git-send-email-john.garry@huawei.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net
-Cc: robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, hanjun.guo@linaro.org, dann.frazier@canonical.com, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, linux-pci@vger.kernel.org, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <5367e45a-8406-6dd2-1eb8-e1de9095af1a@arm.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, alex.williamson@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, will.deacon@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, sboyd@codeaurora.org
+Cc: gregkh@linuxfoundation.org, m.szyprowski@samsung.com, architt@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/01/2018 16:36, John Garry wrote:
-> On some platforms(such as Hip06/Hip07), the legacy ISA/LPC devices access
-> I/O with some special host-local I/O ports known on x86. As their I/O space
-> are not memory mapped like PCI/PCIE MMIO host bridges, this patch is meant
-> to support a new class of I/O host controllers where the local IO ports of
-> the children devices are translated into the Indirect I/O address space.
->
-> Through the handler attach callback, all the I/O translations are done
-> before starting the enumeration on children devices and the translated
-> addresses are replaced in the children resources.
->
+Hi Robin,
 
-Hi Lorenzo, Rafael, Mika,
+On 1/31/2018 6:36 PM, Robin Murphy wrote:
+> On 19/01/18 11:43, Vivek Gautam wrote:
+>> From: Sricharan R <sricharan@codeaurora.org>
+>>
+>> The smmu device probe/remove and add/remove master device callbacks
+>> gets called when the smmu is not linked to its master, that is without
+>> the context of the master device. So calling runtime apis in those places
+>> separately.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> [vivek: Cleanup pm runtime calls]
+>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+>> ---
+>>   drivers/iommu/arm-smmu.c | 45 +++++++++++++++++++++++++++++++++++++++++----
+>>   1 file changed, 41 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 21acffe91a1c..95478bfb182c 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -914,11 +914,15 @@ static void arm_smmu_destroy_domain_context(struct iommu_domain *domain)
+>>       struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>>       struct arm_smmu_device *smmu = smmu_domain->smmu;
+>>       struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+>> -    int irq;
+>> +    int ret, irq;
+>>         if (!smmu || domain->type == IOMMU_DOMAIN_IDENTITY)
+>>           return;
+>>   +    ret = pm_runtime_get_sync(smmu->dev);
+>> +    if (ret)
+>> +        return;
+>> +
+>>       /*
+>>        * Disable the context bank and free the page tables before freeing
+>>        * it.
+>> @@ -933,6 +937,8 @@ static void arm_smmu_destroy_domain_context(struct iommu_domain *domain)
+>>         free_io_pgtable_ops(smmu_domain->pgtbl_ops);
+>>       __arm_smmu_free_bitmap(smmu->context_map, cfg->cbndx);
+>> +
+>> +    pm_runtime_put_sync(smmu->dev);
+>>   }
+>>     static struct iommu_domain *arm_smmu_domain_alloc(unsigned type)
+>> @@ -1408,12 +1414,20 @@ static int arm_smmu_add_device(struct device *dev)
+>>       while (i--)
+>>           cfg->smendx[i] = INVALID_SMENDX;
+>>   -    ret = arm_smmu_master_alloc_smes(dev);
+>> +    ret = pm_runtime_get_sync(smmu->dev);
+>>       if (ret)
+>>           goto out_cfg_free;
+>>   +    ret = arm_smmu_master_alloc_smes(dev);
+>> +    if (ret) {
+>> +        pm_runtime_put_sync(smmu->dev);
+>> +        goto out_cfg_free;
+> 
+> Please keep to the existing pattern and put this on the cleanup path with a new label, rather than inline.
 
-I would really appreciate if you could have a look at this patch.
+ ok.
 
-The current solution here is to scan the ACPI devices under these 
-indirectIO hosts and create MFDs for the children.
+> 
+>> +    }
+>> +
+>>       iommu_device_link(&smmu->iommu, dev);
+>>   +    pm_runtime_put_sync(smmu->dev);
+>> +
+>>       return 0;
+>>     out_cfg_free:
+>> @@ -1428,7 +1442,7 @@ static void arm_smmu_remove_device(struct device *dev)
+>>       struct iommu_fwspec *fwspec = dev->iommu_fwspec;
+>>       struct arm_smmu_master_cfg *cfg;
+>>       struct arm_smmu_device *smmu;
+>> -
+>> +    int ret;
+>>         if (!fwspec || fwspec->ops != &arm_smmu_ops)
+>>           return;
+>> @@ -1436,8 +1450,21 @@ static void arm_smmu_remove_device(struct device *dev)
+>>       cfg  = fwspec->iommu_priv;
+>>       smmu = cfg->smmu;
+>>   +    /*
+>> +     * The device link between the master device and
+>> +     * smmu is already purged at this point.
+>> +     * So enable the power to smmu explicitly.
+>> +     */
+> 
+> I don't understand this comment, especially since we don't even introduce device links until the following patch... :/
+> 
 
-I think another solution - which you may prefer - is to avoid adding 
-this scan handler (and all this other scan code) and add a check like 
-acpi_is_serial_bus_slave() [which checks the device parent versus a list 
-of known indirectIO hosts] to not enumerate these children, and do it 
-from the LLDD host probe instead (https://lkml.org/lkml/2017/6/16/250)
+ This is because the core device_del callback, does a device_links_purge for that device,
+ before calling the remove_device notifier. As a result, have to explicitly turn on the
+ power to iommu. Probably the comment should be removed, rest of the places we don't
+ explain why we are turning on explicitly.
 
-John
+>> +
+>> +    ret = pm_runtime_get_sync(smmu->dev);
+>> +    if (ret)
+>> +        return;
+>> +
+>>       iommu_device_unlink(&smmu->iommu, dev);
+>>       arm_smmu_master_free_smes(fwspec);
+>> +
+>> +    pm_runtime_put_sync(smmu->dev);
+>> +
+>>       iommu_group_remove_device(dev);
+>>       kfree(fwspec->iommu_priv);
+>>       iommu_fwspec_free(dev);
+>> @@ -2130,6 +2157,14 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>>       if (err)
+>>           return err;
+>>   +    platform_set_drvdata(pdev, smmu);
+>> +
+>> +    pm_runtime_enable(dev);
+>> +
+>> +    err = pm_runtime_get_sync(dev);
+>> +    if (err)
+>> +        return err;
+>> +
+>>       err = arm_smmu_device_cfg_probe(smmu);
+>>       if (err)
+>>           return err;
+>> @@ -2171,9 +2206,9 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>>           return err;
+>>       }
+>>   -    platform_set_drvdata(pdev, smmu);
+>>       arm_smmu_device_reset(smmu);
+>>       arm_smmu_test_smr_masks(smmu);
+>> +    pm_runtime_put_sync(dev);
+>>         /*
+>>        * For ACPI and generic DT bindings, an SMMU will be probed before
+>> @@ -2212,6 +2247,8 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
+>>         /* Turn the thing off */
+>>       writel(sCR0_CLIENTPD, ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+>> +    pm_runtime_force_suspend(smmu->dev);
+> 
+> Why do we need this? I guess it might be a Qualcomm-ism as I don't see anyone else calling it from .remove other than a couple of other qcom_* drivers. Given that we only get here during system shutdown (or the root user intentionally pissing about with driver unbinding), it doesn't seem like a point where power saving really matters all that much.
+> 
+> I'd also naively expect that anything this device was the last consumer off would get turned off by core code anyway once it's removed, but maybe things aren't that slick; I dunno :/
 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> Signed-off-by: Zhichang Yuan <yuanzhichang@hisilicon.com>
-> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> ---
->  drivers/acpi/arm64/Makefile          |   1 +
->  drivers/acpi/arm64/acpi_indirectio.c | 273 +++++++++++++++++++++++++++++++++++
->  drivers/acpi/internal.h              |   5 +
->  drivers/acpi/scan.c                  |   1 +
->  4 files changed, 280 insertions(+)
->  create mode 100644 drivers/acpi/arm64/acpi_indirectio.c
->
-> diff --git a/drivers/acpi/arm64/Makefile b/drivers/acpi/arm64/Makefile
-> index 1017def..f4a7f46 100644
-> --- a/drivers/acpi/arm64/Makefile
-> +++ b/drivers/acpi/arm64/Makefile
-> @@ -1,2 +1,3 @@
->  obj-$(CONFIG_ACPI_IORT) 	+= iort.o
->  obj-$(CONFIG_ACPI_GTDT) 	+= gtdt.o
-> +obj-$(CONFIG_INDIRECT_PIO)	+= acpi_indirectio.o
-> diff --git a/drivers/acpi/arm64/acpi_indirectio.c b/drivers/acpi/arm64/acpi_indirectio.c
-> new file mode 100644
-> index 0000000..2649f57
-> --- /dev/null
-> +++ b/drivers/acpi/arm64/acpi_indirectio.c
-> @@ -0,0 +1,273 @@
-> +/*
-> + * ACPI support for indirect-IO bus.
-> + *
-> + * Copyright (C) 2017 HiSilicon Limited, All Rights Reserved.
-> + * Author: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-> + * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
-> + * Author: John Garry <john.garry@huawei.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/logic_pio.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/platform_device.h>
-> +
-> +ACPI_MODULE_NAME("indirect IO");
-> +
-> +#define ACPI_INDIRECTIO_NAME_LENGTH 255
-> +
-> +#define INDIRECT_IO_INFO(desc) ((unsigned long)&desc)
-> +
-> +struct acpi_indirectio_mfd_cell {
-> +	struct mfd_cell_acpi_match acpi_match;
-> +	char name[ACPI_INDIRECTIO_NAME_LENGTH];
-> +	char pnpid[ACPI_INDIRECTIO_NAME_LENGTH];
-> +};
-> +
-> +struct acpi_indirectio_host_data {
-> +	resource_size_t io_size;
-> +	resource_size_t io_start;
-> +};
-> +
-> +struct acpi_indirectio_device_desc {
-> +	struct acpi_indirectio_host_data pdata; /* device relevant info data */
-> +	int (*pre_setup)(struct acpi_device *adev,
-> +			 struct acpi_indirectio_host_data *pdata);
-> +};
-> +
-> +static int acpi_translate_logicio_res(struct acpi_device *adev,
-> +		struct acpi_device *host, struct resource *resource)
-> +{
-> +	unsigned long sys_port;
-> +	struct device *dev = &adev->dev;
-> +	resource_size_t length = resource->end - resource->start;
-> +
-> +	sys_port = logic_pio_trans_hwaddr(&host->fwnode, resource->start,
-> +					length);
-> +
-> +	if (sys_port == -1) {
-> +		dev_err(dev, "translate bus-addr(0x%llx) fail!\n",
-> +			resource->start);
-> +		return -EFAULT;
-> +	}
-> +
-> +	resource->start = sys_port;
-> +	resource->end = sys_port + length;
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * update/set the current I/O resource of the designated device node.
-> + * after this calling, the enumeration can be started as the I/O resource
-> + * had been translated to logicial I/O from bus-local I/O.
-> + *
-> + * @child: the device node to be updated the I/O resource;
-> + * @hostdev: the device node where 'adev' is attached, which can be not
-> + *  the parent of 'adev';
-> + * @res: double pointer to be set to the address of the updated resources
-> + * @num_res: address of the variable to contain the number of updated resources
-> + *
-> + * return 0 when successful, negative is for failure.
-> + */
-> +int acpi_indirectio_set_logicio_res(struct device *child,
-> +					 struct device *hostdev,
-> +					 const struct resource **res,
-> +					 int *num_res)
-> +{
-> +	struct acpi_device *adev;
-> +	struct acpi_device *host;
-> +	struct resource_entry *rentry;
-> +	LIST_HEAD(resource_list);
-> +	struct resource *resources = NULL;
-> +	int count;
-> +	int i;
-> +	int ret = -EIO;
-> +
-> +	if (!child || !hostdev)
-> +		return -EINVAL;
-> +
-> +	host = to_acpi_device(hostdev);
-> +	adev = to_acpi_device(child);
-> +
-> +	/* check the device state */
-> +	if (!adev->status.present) {
-> +		dev_info(child, "ACPI: device is not present!\n");
-> +		return 0;
-> +	}
-> +	/* whether the child had been enumerated? */
-> +	if (acpi_device_enumerated(adev)) {
-> +		dev_info(child, "ACPI: had been enumerated!\n");
-> +		return 0;
-> +	}
-> +
-> +	count = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
-> +	if (count <= 0) {
-> +		dev_err(&adev->dev, "failed to get ACPI resources\n");
-> +		return count ? count : -EIO;
-> +	}
-> +
-> +	resources = kcalloc(count, sizeof(struct resource), GFP_KERNEL);
-> +	if (!resources) {
-> +		acpi_dev_free_resource_list(&resource_list);
-> +		return -ENOMEM;
-> +	}
-> +	count = 0;
-> +	list_for_each_entry(rentry, &resource_list, node)
-> +		resources[count++] = *rentry->res;
-> +
-> +	acpi_dev_free_resource_list(&resource_list);
-> +
-> +	/* translate the I/O resources */
-> +	for (i = 0; i < count; i++) {
-> +		if (resources[i].flags & IORESOURCE_IO) {
-> +			ret = acpi_translate_logicio_res(adev, host,
-> +							&resources[i]);
-> +			if (ret) {
-> +				kfree(resources);
-> +				dev_err(child,
-> +					"Translate I/O range failed (%d)!\n",
-> +					ret);
-> +				return ret;
-> +			}
-> +		}
-> +	}
-> +	*res = resources;
-> +	*num_res = count;
-> +
-> +	return ret;
-> +}
-> +
-> +int
-> +acpi_indirectio_pre_setup(struct acpi_device *adev,
-> +			  struct acpi_indirectio_host_data *pdata)
-> +{
-> +	struct platform_device *pdev;
-> +	struct mfd_cell *mfd_cells;
-> +	struct logic_pio_hwaddr *range;
-> +	struct acpi_device *child;
-> +	struct acpi_indirectio_mfd_cell *acpi_indirectio_mfd_cells;
-> +	int size, ret, count = 0, cell_num = 0;
-> +
-> +	range = kzalloc(sizeof(*range), GFP_KERNEL);
-> +	if (!range)
-> +		return -ENOMEM;
-> +	range->fwnode = &adev->fwnode;
-> +	range->flags = PIO_INDIRECT;
-> +	range->size = pdata->io_size;
-> +	range->hw_start = pdata->io_start;
-> +
-> +	ret = logic_pio_register_range(range);
-> +	if (ret)
-> +		goto free_range;
-> +
-> +	list_for_each_entry(child, &adev->children, node)
-> +		cell_num++;
-> +
-> +	/* allocate the mfd cells */
-> +	size = sizeof(*mfd_cells) + sizeof(*acpi_indirectio_mfd_cells);
-> +	mfd_cells = kcalloc(cell_num, size, GFP_KERNEL);
-> +	if (!mfd_cells) {
-> +		ret = -ENOMEM;
-> +		goto free_range;
-> +	}
-> +
-> +	acpi_indirectio_mfd_cells = (struct acpi_indirectio_mfd_cell *)
-> +					&mfd_cells[cell_num];
-> +	/* Only consider the children of the host */
-> +	list_for_each_entry(child, &adev->children, node) {
-> +		struct mfd_cell *mfd_cell = &mfd_cells[count];
-> +		struct acpi_indirectio_mfd_cell *acpi_indirectio_mfd_cell =
-> +					&acpi_indirectio_mfd_cells[count];
-> +		const struct mfd_cell_acpi_match *acpi_match =
-> +					&acpi_indirectio_mfd_cell->acpi_match;
-> +		char *name = &acpi_indirectio_mfd_cell[count].name[0];
-> +		char *pnpid = &acpi_indirectio_mfd_cell[count].pnpid[0];
-> +		struct mfd_cell_acpi_match match = {
-> +				.pnpid = pnpid,
-> +		};
-> +
-> +		snprintf(name, ACPI_INDIRECTIO_NAME_LENGTH, "indirect-io-%s",
-> +			 acpi_device_hid(child));
-> +		snprintf(pnpid, ACPI_INDIRECTIO_NAME_LENGTH, "%s",
-> +			 acpi_device_hid(child));
-> +
-> +		memcpy((void *)acpi_match, (void *)&match, sizeof(*acpi_match));
-> +		mfd_cell->name = name;
-> +		mfd_cell->acpi_match = acpi_match;
-> +
-> +		ret =
-> +		acpi_indirectio_set_logicio_res(&child->dev,
-> +						&adev->dev,
-> +						&mfd_cell->resources,
-> +						&mfd_cell->num_resources);
-> +		if (ret) {
-> +			dev_err(&child->dev, "set resource failed (%d)\n", ret);
-> +			goto free_mfd_res;
-> +		}
-> +		count++;
-> +	}
-> +
-> +	pdev = acpi_create_platform_device(adev, NULL);
-> +	if (IS_ERR_OR_NULL(pdev)) {
-> +		dev_err(&adev->dev, "Create platform device for host failed!\n");
-> +		ret = PTR_ERR(pdev);
-> +		goto free_mfd_res;
-> +	}
-> +	acpi_device_set_enumerated(adev);
-> +
-> +	ret = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
-> +			mfd_cells, cell_num, NULL, 0, NULL);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to add mfd cells (%d)\n", ret);
-> +		goto free_mfd_res;
-> +	}
-> +
-> +	return ret;
-> +
-> +free_mfd_res:
-> +	while (cell_num--)
-> +		kfree(mfd_cells[cell_num].resources);
-> +	kfree(mfd_cells);
-> +free_range:
-> +	kfree(range);
-> +
-> +	return ret;
-> +}
-> +
-> +/* All the host devices which apply indirect-IO can be listed here. */
-> +static const struct acpi_device_id acpi_indirect_host_id[] = {
-> +	{""},
-> +};
-> +
-> +static int acpi_indirectio_attach(struct acpi_device *adev,
-> +				const struct acpi_device_id *id)
-> +{
-> +	struct acpi_indirectio_device_desc *hostdata;
-> +	int ret;
-> +
-> +	hostdata = (struct acpi_indirectio_device_desc *)id->driver_data;
-> +	if (!hostdata || !hostdata->pre_setup)
-> +		return -EINVAL;
-> +
-> +	ret = hostdata->pre_setup(adev, &hostdata->pdata);
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 1;
-> +}
-> +
-> +static struct acpi_scan_handler acpi_indirect_handler = {
-> +	.ids = acpi_indirect_host_id,
-> +	.attach = acpi_indirectio_attach,
-> +};
-> +
-> +void __init acpi_indirectio_scan_init(void)
-> +{
-> +	acpi_scan_add_handler(&acpi_indirect_handler);
-> +}
-> diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
-> index 1d0a501..d6b1a95 100644
-> --- a/drivers/acpi/internal.h
-> +++ b/drivers/acpi/internal.h
-> @@ -31,6 +31,11 @@
->  void acpi_platform_init(void);
->  void acpi_pnp_init(void);
->  void acpi_int340x_thermal_init(void);
-> +#ifdef CONFIG_INDIRECT_PIO
-> +void acpi_indirectio_scan_init(void);
-> +#else
-> +static inline void acpi_indirectio_scan_init(void) {}
-> +#endif
->  #ifdef CONFIG_ARM_AMBA
->  void acpi_amba_init(void);
->  #else
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index b0fe527..8ea6f69 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -2141,6 +2141,7 @@ int __init acpi_scan_init(void)
->  	acpi_amba_init();
->  	acpi_watchdog_init();
->  	acpi_init_lpit();
-> +	acpi_indirectio_scan_init();
->
->  	acpi_scan_add_handler(&generic_device_handler);
->
->
+ hmm, that should not be needed. with turning of all consumers taken care by device_link code before
+ the supplier (iommu) remove gets called should ensure that. So the above force_suspend should
+ not be needed/can be removed. But one more thing is, we do touch the register in the above code.
+ So that should require a additional get/put sync around that writel.
+
+Regards,
+ Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
