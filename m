@@ -1,72 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: firmware: Add bindings for ZynqMP firmware
-Date: Thu, 1 Feb 2018 09:11:36 -0600
-Message-ID: <CAL_JsqJMfUyi06jMZOyQX956HjBvyHbKHEcBGt+GTZrj3Da5DA@mail.gmail.com>
-References: <1516836074-4149-1-git-send-email-jollys@xilinx.com>
- <1516836074-4149-2-git-send-email-jollys@xilinx.com> <20180130170818.tz4hoqvyekrl7uio@rob-hp-laptop>
- <DM2PR0201MB07674CED433B7273AEFC50D2B8FB0@DM2PR0201MB0767.namprd02.prod.outlook.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] gpio: Add GPIO driver for Spreadtrum SC9860 platform
+Date: Thu, 1 Feb 2018 17:12:50 +0200
+Message-ID: <CAHp75VdrSC6dePsebN36v4iigDa9o3996cm3Wu27CrAZBeSLgg@mail.gmail.com>
+References: <2834309f69a1ec37b84a33f153a3d0b90336bcc6.1517313987.git.baolin.wang@linaro.org>
+ <cccc1addb9c0cc541b676dbad005ec341d12d165.1517313987.git.baolin.wang@linaro.org>
+ <CAHp75Vcig869pUQ5yK1b=GpXinhYkpw1q29OVKSs_7EqP4Hknw@mail.gmail.com>
+ <CAMz4kuL9r+97_rDihgKD_TyNaDQ3aCk7go6e4mB24QOpovFYJg@mail.gmail.com>
+ <CAHp75VcYQMYNmW9-MkOKA5TWV2JgNfqnUB22s1qB4Z0ZZbTG2g@mail.gmail.com>
+ <CAMz4kuLO=zRqg72=7dC2fLHyVcEOcsU0PqiZM8XEYC3TGT1fYA@mail.gmail.com> <20180201122230.GC690@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DM2PR0201MB07674CED433B7273AEFC50D2B8FB0@DM2PR0201MB0767.namprd02.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <JOLLYS@xilinx.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "keescook@chromium.org" <keescook@chromium.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "mingo@kernel.org" <mingo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180201122230.GC690-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:GPIO SUBSYSTEM" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 12:03 PM, Jolly Shah <JOLLYS@xilinx.com> wrote:
-> Hi Rob,
-> Thanks for the review,
->
->> -----Original Message-----
->> From: Rob Herring [mailto:robh@kernel.org]
->> Sent: Tuesday, January 30, 2018 9:08 AM
->> To: Jolly Shah <JOLLYS@xilinx.com>
->> Cc: ard.biesheuvel@linaro.org; mingo@kernel.org;
->> gregkh@linuxfoundation.org; matt@codeblueprint.co.uk;
->> sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
->> dmitry.torokhov@gmail.com; michal.simek@xilinx.com;
->> mark.rutland@arm.com; linux-arm-kernel@lists.infradead.org; linux-
->> kernel@vger.kernel.org; devicetree@vger.kernel.org; Jolly Shah
->> <JOLLYS@xilinx.com>; Rajan Vaja <RAJANV@xilinx.com>
->> Subject: Re: [PATCH v3 1/4] dt-bindings: firmware: Add bindings for ZynqMP
->> firmware
->>
->> On Wed, Jan 24, 2018 at 03:21:11PM -0800, Jolly Shah wrote:
->> > Add documentation to describe Xilinx ZynqMP firmware driver bindings.
->> > Firmware driver provides an interface to firmware APIs. Interface APIs
->> > can be used by any driver to communicate to PMUFW (Platform Management
->> > Unit).
->> >
->> > Signed-off-by: Jolly Shah <jollys@xilinx.com>
->> > Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
->> > ---
->> >  .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt    | 16
->> ++++++++++++++++
->> >  1 file changed, 16 insertions(+)
->> >  create mode 100644
->> > Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware
->> > .txt
->> >
->> > diff --git
->> > a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmwa
->> > re.txt
->> > b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmwa
->> > re.txt
->> > new file mode 100644
->> > index 0000000..a7aaf56
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-fi
->> > +++ rmware.txt
->> > @@ -0,0 +1,16 @@
->> > +Xilinx Zynq MPSoC Firmware Device Tree Bindings
->> > +
->> > +The zynqmp-firmware node describes the interface to platform firmware.
->>
->> Please define this a is child of /firmware.
->>
-> I dint get you. It is already under firmware/xilinx.
+On Thu, Feb 1, 2018 at 2:22 PM, Marcus Folkesson
+<marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Feb 01, 2018 at 11:08:46AM +0800, Baolin Wang wrote:
 
-Put it under a "firmware" node in DT. See other firmware bindings for examples.
+> Then you could replace
 
-Rob
+> +subsys_initcall(sprd_gpio_init);
+
+> module_platform_driver(sprd_gpio_driver);
+
+It's not an equivalent when built-in
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
