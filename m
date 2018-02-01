@@ -1,73 +1,64 @@
-From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: stm32: update pwm-cells for LPTimer on stm32h743
-Date: Thu, 1 Feb 2018 14:44:38 +0100
-Message-ID: <1517492678-767-4-git-send-email-fabrice.gasnier@st.com>
-References: <1517492678-767-1-git-send-email-fabrice.gasnier@st.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: codecs: Add support for AK5558 ADC driver
+Date: Thu, 1 Feb 2018 13:48:40 +0000
+Message-ID: <20180201134840.GA10785@sirena.org.uk>
+References: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
+ <CAHp75Vdd58U1y-LOQGg=rePOWf1LeQsZxn2ykzBhXL013ztW3Q@mail.gmail.com>
+ <1517475954.8615.18.camel@nxp.com>
+ <CAHp75Vf=Ap7UkMNOcOhzY+MjJmn-c-UphzEzAjmFtMh69kea4A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517492678-767-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vf=Ap7UkMNOcOhzY+MjJmn-c-UphzEzAjmFtMh69kea4A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Daniel Baluta <daniel.baluta@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wakasugi.jb@om.asahi-kasei.co.jp" <wakasugi.jb@om.asahi-kasei.co.jp>, "mihai.serban@gmail.com" <mihai.serban@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "mihai.serban@nxp.com" <mihai.serban@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-LPTimer pwm cells should be updated to 3, to allow initialization of
-channel, period and polarity.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
----
- arch/arm/boot/dts/stm32h743.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+--fUYQa+Pmc3FrFX/N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
-index bbfcbac..40d7d76 100644
---- a/arch/arm/boot/dts/stm32h743.dtsi
-+++ b/arch/arm/boot/dts/stm32h743.dtsi
-@@ -85,6 +85,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm-lp";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -238,6 +239,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm-lp";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -264,6 +266,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm-lp";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -285,6 +288,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm-lp";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
-@@ -300,6 +304,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm-lp";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
--- 
-1.9.1
+On Thu, Feb 01, 2018 at 03:20:38PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 1, 2018 at 11:05 AM, Daniel Baluta <daniel.baluta@nxp.com> wrote:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >> > Signed-off-by: Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>
+> >> > Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
+> >> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> >> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+> >> 4 authors of the code?!
+
+> > The code has a very long history. I will add under each SoB the specific
+> > contribution.
+
+> > Mihai got the code from Junichi and reworked it for 4.9. Then Shengjiu and
+> > me added various features and cleanups.
+
+> > Any other suggestion?
+
+> Yes, please, put detailed credits in commit message to not shock
+> people with so many SoB w/o explanation why.
+
+Honestly the signoffs above are nothing unusual for a driver contributed
+by a vendor - things are often bouncing around internally for ages and
+it's good to keep credits for people.
+
+--fUYQa+Pmc3FrFX/N
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlpzGrUACgkQJNaLcl1U
+h9C3lQf/YZrAB58+vemPyqBByphuou28a9BvXQ/NrWpcN/wLzkAv22E1xRFE+W4/
+9B1LiXWVBqK1viKoVkNRjl1JLMmRZeeQTVaoxLIO9IMW2lx9dSLvC0nK65J0BoPY
+8cY4y8pnv64ZBKrI2L7+zRD79r7R3e/0HMfMVf5fYetrKMjAunEh+QtIqrZyFMFn
+rLyrfYWrfi3pffDVooNU8OBWn6paOSiRcWyqUb+ddOWVAfOozM8DAhtlZavip513
+XN+JDwHB7Sj+ZPxcDPILGwkxwX5yBqmOn82o8GtA8tlQ1XtLapXVKLyvXLkABkfv
+2q4zeuuhTEilCcbKBgRmFe7doXm0Bw==
+=x7m6
+-----END PGP SIGNATURE-----
+
+--fUYQa+Pmc3FrFX/N--
