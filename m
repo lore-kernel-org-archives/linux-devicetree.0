@@ -1,435 +1,270 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH v2 3/3] pinctrl: imx: add driver for i.MX8MQ
-Date: Thu,  1 Feb 2018 18:49:23 +0100
-Message-ID: <20180201174923.7385-3-l.stach@pengutronix.de>
-References: <20180201174923.7385-1-l.stach@pengutronix.de>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180201174923.7385-1-l.stach@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, "A . s . Dong" <aisheng.dong@nxp.com>, linux-imx@nxp.com, kernel@pengutronix.de, patchwork-lst@pengutronix.de
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH v5 4/5] media: ov5640: add support of DVP parallel
+ interface
+Date: Thu, 1 Feb 2018 17:53:18 +0000
+Message-ID: <TY1PR06MB089512437228BAFF910B133FC0FA0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
+ <1514973452-10464-5-git-send-email-hugues.fruchet@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1514973452-10464-5-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The i.MX8MQ pincontrol works in a similar way to the earlier i.MX SoCs.
-This driver builds on top of the generic pinconf handling introduced
-with the i.MX7ULP pinctrl driver.
+Hello Hugues,
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
----
-v2:
-- declare config structures as const
-- switch to generic pinconf
----
- drivers/pinctrl/freescale/Kconfig          |   7 +
- drivers/pinctrl/freescale/Makefile         |   1 +
- drivers/pinctrl/freescale/pinctrl-imx8mq.c | 368 +++++++++++++++++++++++++++++
- 3 files changed, 376 insertions(+)
- create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mq.c
+> Subject: [PATCH v5 4/5] media: ov5640: add support of DVP parallel interf=
+ace
+>
+> Add support of DVP parallel mode in addition of
+> existing MIPI CSI mode. The choice between two modes
+> and configuration is made through device tree.
+>
+> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+> ---
+>  drivers/media/i2c/ov5640.c | 148 +++++++++++++++++++++++++++++++++++++++=
+------
+>  1 file changed, 130 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> index 9f031f3..a44b680 100644
+> --- a/drivers/media/i2c/ov5640.c
+> +++ b/drivers/media/i2c/ov5640.c
+> @@ -34,13 +34,19 @@
+>
+>  #define OV5640_DEFAULT_SLAVE_ID 0x3c
+>
+> +#define OV5640_REG_SYS_CTRL00x3008
+>  #define OV5640_REG_CHIP_ID0x300a
+> +#define OV5640_REG_IO_MIPI_CTRL000x300e
+> +#define OV5640_REG_PAD_OUTPUT_ENABLE010x3017
+> +#define OV5640_REG_PAD_OUTPUT_ENABLE020x3018
+>  #define OV5640_REG_PAD_OUTPUT000x3019
+> +#define OV5640_REG_SYSTEM_CONTROL10x302e
+>  #define OV5640_REG_SC_PLL_CTRL00x3034
+>  #define OV5640_REG_SC_PLL_CTRL10x3035
+>  #define OV5640_REG_SC_PLL_CTRL20x3036
+>  #define OV5640_REG_SC_PLL_CTRL30x3037
+>  #define OV5640_REG_SLAVE_ID0x3100
+> +#define OV5640_REG_SCCB_SYS_CTRL10x3103
+>  #define OV5640_REG_SYS_ROOT_DIVIDER0x3108
+>  #define OV5640_REG_AWB_R_GAIN0x3400
+>  #define OV5640_REG_AWB_G_GAIN0x3402
+> @@ -70,6 +76,7 @@
+>  #define OV5640_REG_HZ5060_CTRL010x3c01
+>  #define OV5640_REG_SIGMADELTA_CTRL0C0x3c0c
+>  #define OV5640_REG_FRAME_CTRL010x4202
+> +#define OV5640_REG_POLARITY_CTRL000x4740
+>  #define OV5640_REG_MIPI_CTRL000x4800
+>  #define OV5640_REG_DEBUG_MODE0x4814
+>  #define OV5640_REG_PRE_ISP_TEST_SET10x503d
+> @@ -982,7 +989,111 @@ static int ov5640_get_gain(struct ov5640_dev *senso=
+r)
+>  return gain & 0x3ff;
+>  }
+>
+> -static int ov5640_set_stream(struct ov5640_dev *sensor, bool on)
+> +static int ov5640_set_stream_dvp(struct ov5640_dev *sensor, bool on)
+> +{
+> +int ret;
+> +unsigned int flags =3D sensor->ep.bus.parallel.flags;
+> +u8 pclk_pol =3D 0;
+> +u8 hsync_pol =3D 0;
+> +u8 vsync_pol =3D 0;
+> +
+> +/*
+> + * Note about parallel port configuration.
+> + *
+> + * When configured in parallel mode, the OV5640 will
+> + * output 10 bits data on DVP data lines [9:0].
+> + * If only 8 bits data are wanted, the 8 bits data lines
+> + * of the camera interface must be physically connected
+> + * on the DVP data lines [9:2].
+> + *
+> + * Control lines polarity can be configured through
+> + * devicetree endpoint control lines properties.
+> + * If no endpoint control lines properties are set,
+> + * polarity will be as below:
+> + * - VSYNC:active high
+> + * - HREF:active low
+> + * - PCLK:active low
+> + */
+> +
+> +if (on) {
+> +/*
+> + * reset MIPI PCLK/SERCLK divider
+> + *
+> + * SC PLL CONTRL1 0
+> + * - [3..0]:MIPI PCLK/SERCLK divider
+> + */
+> +ret =3D ov5640_mod_reg(sensor, OV5640_REG_SC_PLL_CTRL1, 0x0f, 0);
+> +if (ret)
+> +return ret;
+> +
+> +/*
+> + * configure parallel port control lines polarity
+> + *
+> + * POLARITY CTRL0
+> + * - [5]:PCLK polarity (0: active low, 1: active high)
+> + * - [1]:HREF polarity (0: active low, 1: active high)
+> + * - [0]:VSYNC polarity (mismatch here between
+> + *datasheet and hardware, 0 is active high
+> + *and 1 is active low...)
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 4dbc576ae27c..b0b62964e8ac 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -110,6 +110,13 @@ config PINCTRL_IMX7ULP
- 	help
- 	  Say Y here to enable the imx7ulp pinctrl driver
- 
-+config PINCTRL_IMX8MQ
-+	bool "IMX8MQ pinctrl driver"
-+	depends on SOC_IMX8MQ
-+	select PINCTRL_IMX
-+	help
-+	  Say Y here to enable the imx8mq pinctrl driver
-+
- config PINCTRL_VF610
- 	bool "Freescale Vybrid VF610 pinctrl driver"
- 	depends on SOC_VF610
-diff --git a/drivers/pinctrl/freescale/Makefile b/drivers/pinctrl/freescale/Makefile
-index 19bb9a55a567..2b2b89bb8454 100644
---- a/drivers/pinctrl/freescale/Makefile
-+++ b/drivers/pinctrl/freescale/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_PINCTRL_IMX6SX)	+= pinctrl-imx6sx.o
- obj-$(CONFIG_PINCTRL_IMX6UL)	+= pinctrl-imx6ul.o
- obj-$(CONFIG_PINCTRL_IMX7D)	+= pinctrl-imx7d.o
- obj-$(CONFIG_PINCTRL_IMX7ULP)	+= pinctrl-imx7ulp.o
-+obj-$(CONFIG_PINCTRL_IMX8MQ)	+= pinctrl-imx8mq.o
- obj-$(CONFIG_PINCTRL_VF610)	+= pinctrl-vf610.o
- obj-$(CONFIG_PINCTRL_MXS)	+= pinctrl-mxs.o
- obj-$(CONFIG_PINCTRL_IMX23)	+= pinctrl-imx23.o
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx8mq.c b/drivers/pinctrl/freescale/pinctrl-imx8mq.c
-new file mode 100644
-index 000000000000..e6af506dfb60
---- /dev/null
-+++ b/drivers/pinctrl/freescale/pinctrl-imx8mq.c
-@@ -0,0 +1,368 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017 NXP
-+ * Copyright (C) 2018 Pengutronix, Lucas Stach <kernel@pengutronix.de>
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+
-+#include "pinctrl-imx.h"
-+
-+enum imx8mq_pads {
-+	MX8MQ_PAD_RESERVE0 = 0,
-+	MX8MQ_PAD_RESERVE1 = 1,
-+	MX8MQ_PAD_RESERVE2 = 2,
-+	MX8MQ_PAD_RESERVE3 = 3,
-+	MX8MQ_PAD_RESERVE4 = 4,
-+	MX8MQ_IOMUXC_PMIC_STBY_REQ_CCMSRCGPCMIX = 5,
-+	MX8MQ_IOMUXC_PMIC_ON_REQ_SNVSMIX = 6,
-+	MX8MQ_IOMUXC_ONOFF_SNVSMIX = 7,
-+	MX8MQ_IOMUXC_POR_B_SNVSMIX = 8,
-+	MX8MQ_IOMUXC_RTC_RESET_B_SNVSMIX = 9,
-+	MX8MQ_IOMUXC_GPIO1_IO00 = 10,
-+	MX8MQ_IOMUXC_GPIO1_IO01 = 11,
-+	MX8MQ_IOMUXC_GPIO1_IO02 = 12,
-+	MX8MQ_IOMUXC_GPIO1_IO03 = 13,
-+	MX8MQ_IOMUXC_GPIO1_IO04 = 14,
-+	MX8MQ_IOMUXC_GPIO1_IO05 = 15,
-+	MX8MQ_IOMUXC_GPIO1_IO06 = 16,
-+	MX8MQ_IOMUXC_GPIO1_IO07 = 17,
-+	MX8MQ_IOMUXC_GPIO1_IO08 = 18,
-+	MX8MQ_IOMUXC_GPIO1_IO09 = 19,
-+	MX8MQ_IOMUXC_GPIO1_IO10 = 20,
-+	MX8MQ_IOMUXC_GPIO1_IO11 = 21,
-+	MX8MQ_IOMUXC_GPIO1_IO12 = 22,
-+	MX8MQ_IOMUXC_GPIO1_IO13 = 23,
-+	MX8MQ_IOMUXC_GPIO1_IO14 = 24,
-+	MX8MQ_IOMUXC_GPIO1_IO15 = 25,
-+	MX8MQ_IOMUXC_ENET_MDC = 26,
-+	MX8MQ_IOMUXC_ENET_MDIO = 27,
-+	MX8MQ_IOMUXC_ENET_TD3 = 28,
-+	MX8MQ_IOMUXC_ENET_TD2 = 29,
-+	MX8MQ_IOMUXC_ENET_TD1 = 30,
-+	MX8MQ_IOMUXC_ENET_TD0 = 31,
-+	MX8MQ_IOMUXC_ENET_TX_CTL = 32,
-+	MX8MQ_IOMUXC_ENET_TXC = 33,
-+	MX8MQ_IOMUXC_ENET_RX_CTL = 34,
-+	MX8MQ_IOMUXC_ENET_RXC = 35,
-+	MX8MQ_IOMUXC_ENET_RD0 = 36,
-+	MX8MQ_IOMUXC_ENET_RD1 = 37,
-+	MX8MQ_IOMUXC_ENET_RD2 = 38,
-+	MX8MQ_IOMUXC_ENET_RD3 = 39,
-+	MX8MQ_IOMUXC_SD1_CLK = 40,
-+	MX8MQ_IOMUXC_SD1_CMD = 41,
-+	MX8MQ_IOMUXC_SD1_DATA0 = 42,
-+	MX8MQ_IOMUXC_SD1_DATA1 = 43,
-+	MX8MQ_IOMUXC_SD1_DATA2 = 44,
-+	MX8MQ_IOMUXC_SD1_DATA3 = 45,
-+	MX8MQ_IOMUXC_SD1_DATA4 = 46,
-+	MX8MQ_IOMUXC_SD1_DATA5 = 47,
-+	MX8MQ_IOMUXC_SD1_DATA6 = 48,
-+	MX8MQ_IOMUXC_SD1_DATA7 = 49,
-+	MX8MQ_IOMUXC_SD1_RESET_B = 50,
-+	MX8MQ_IOMUXC_SD1_STROBE = 51,
-+	MX8MQ_IOMUXC_SD2_CD_B = 52,
-+	MX8MQ_IOMUXC_SD2_CLK = 53,
-+	MX8MQ_IOMUXC_SD2_CMD = 54,
-+	MX8MQ_IOMUXC_SD2_DATA0 = 55,
-+	MX8MQ_IOMUXC_SD2_DATA1 = 56,
-+	MX8MQ_IOMUXC_SD2_DATA2 = 57,
-+	MX8MQ_IOMUXC_SD2_DATA3 = 58,
-+	MX8MQ_IOMUXC_SD2_RESET_B = 59,
-+	MX8MQ_IOMUXC_SD2_WP = 60,
-+	MX8MQ_IOMUXC_NAND_ALE = 61,
-+	MX8MQ_IOMUXC_NAND_CE0_B = 62,
-+	MX8MQ_IOMUXC_NAND_CE1_B = 63,
-+	MX8MQ_IOMUXC_NAND_CE2_B = 64,
-+	MX8MQ_IOMUXC_NAND_CE3_B = 65,
-+	MX8MQ_IOMUXC_NAND_CLE = 66,
-+	MX8MQ_IOMUXC_NAND_DATA00 = 67,
-+	MX8MQ_IOMUXC_NAND_DATA01 = 68,
-+	MX8MQ_IOMUXC_NAND_DATA02 = 69,
-+	MX8MQ_IOMUXC_NAND_DATA03 = 70,
-+	MX8MQ_IOMUXC_NAND_DATA04 = 71,
-+	MX8MQ_IOMUXC_NAND_DATA05 = 72,
-+	MX8MQ_IOMUXC_NAND_DATA06 = 73,
-+	MX8MQ_IOMUXC_NAND_DATA07 = 74,
-+	MX8MQ_IOMUXC_NAND_DQS = 75,
-+	MX8MQ_IOMUXC_NAND_RE_B = 76,
-+	MX8MQ_IOMUXC_NAND_READY_B = 77,
-+	MX8MQ_IOMUXC_NAND_WE_B = 78,
-+	MX8MQ_IOMUXC_NAND_WP_B = 79,
-+	MX8MQ_IOMUXC_SAI5_RXFS = 80,
-+	MX8MQ_IOMUXC_SAI5_RXC = 81,
-+	MX8MQ_IOMUXC_SAI5_RXD0 = 82,
-+	MX8MQ_IOMUXC_SAI5_RXD1 = 83,
-+	MX8MQ_IOMUXC_SAI5_RXD2 = 84,
-+	MX8MQ_IOMUXC_SAI5_RXD3 = 85,
-+	MX8MQ_IOMUXC_SAI5_MCLK = 86,
-+	MX8MQ_IOMUXC_SAI1_RXFS = 87,
-+	MX8MQ_IOMUXC_SAI1_RXC = 88,
-+	MX8MQ_IOMUXC_SAI1_RXD0 = 89,
-+	MX8MQ_IOMUXC_SAI1_RXD1 = 90,
-+	MX8MQ_IOMUXC_SAI1_RXD2 = 91,
-+	MX8MQ_IOMUXC_SAI1_RXD3 = 92,
-+	MX8MQ_IOMUXC_SAI1_RXD4 = 93,
-+	MX8MQ_IOMUXC_SAI1_RXD5 = 94,
-+	MX8MQ_IOMUXC_SAI1_RXD6 = 95,
-+	MX8MQ_IOMUXC_SAI1_RXD7 = 96,
-+	MX8MQ_IOMUXC_SAI1_TXFS = 97,
-+	MX8MQ_IOMUXC_SAI1_TXC = 98,
-+	MX8MQ_IOMUXC_SAI1_TXD0 = 99,
-+	MX8MQ_IOMUXC_SAI1_TXD1 = 100,
-+	MX8MQ_IOMUXC_SAI1_TXD2 = 101,
-+	MX8MQ_IOMUXC_SAI1_TXD3 = 102,
-+	MX8MQ_IOMUXC_SAI1_TXD4 = 103,
-+	MX8MQ_IOMUXC_SAI1_TXD5 = 104,
-+	MX8MQ_IOMUXC_SAI1_TXD6 = 105,
-+	MX8MQ_IOMUXC_SAI1_TXD7 = 106,
-+	MX8MQ_IOMUXC_SAI1_MCLK = 107,
-+	MX8MQ_IOMUXC_SAI2_RXFS = 108,
-+	MX8MQ_IOMUXC_SAI2_RXC = 109,
-+	MX8MQ_IOMUXC_SAI2_RXD0 = 110,
-+	MX8MQ_IOMUXC_SAI2_TXFS = 111,
-+	MX8MQ_IOMUXC_SAI2_TXC = 112,
-+	MX8MQ_IOMUXC_SAI2_TXD0 = 113,
-+	MX8MQ_IOMUXC_SAI2_MCLK = 114,
-+	MX8MQ_IOMUXC_SAI3_RXFS = 115,
-+	MX8MQ_IOMUXC_SAI3_RXC = 116,
-+	MX8MQ_IOMUXC_SAI3_RXD = 117,
-+	MX8MQ_IOMUXC_SAI3_TXFS = 118,
-+	MX8MQ_IOMUXC_SAI3_TXC = 119,
-+	MX8MQ_IOMUXC_SAI3_TXD = 120,
-+	MX8MQ_IOMUXC_SAI3_MCLK = 121,
-+	MX8MQ_IOMUXC_SPDIF_TX = 122,
-+	MX8MQ_IOMUXC_SPDIF_RX = 123,
-+	MX8MQ_IOMUXC_SPDIF_EXT_CLK = 124,
-+	MX8MQ_IOMUXC_ECSPI1_SCLK = 125,
-+	MX8MQ_IOMUXC_ECSPI1_MOSI = 126,
-+	MX8MQ_IOMUXC_ECSPI1_MISO = 127,
-+	MX8MQ_IOMUXC_ECSPI1_SS0 = 128,
-+	MX8MQ_IOMUXC_ECSPI2_SCLK = 129,
-+	MX8MQ_IOMUXC_ECSPI2_MOSI = 130,
-+	MX8MQ_IOMUXC_ECSPI2_MISO = 131,
-+	MX8MQ_IOMUXC_ECSPI2_SS0 = 132,
-+	MX8MQ_IOMUXC_I2C1_SCL = 133,
-+	MX8MQ_IOMUXC_I2C1_SDA = 134,
-+	MX8MQ_IOMUXC_I2C2_SCL = 135,
-+	MX8MQ_IOMUXC_I2C2_SDA = 136,
-+	MX8MQ_IOMUXC_I2C3_SCL = 137,
-+	MX8MQ_IOMUXC_I2C3_SDA = 138,
-+	MX8MQ_IOMUXC_I2C4_SCL = 139,
-+	MX8MQ_IOMUXC_I2C4_SDA = 140,
-+	MX8MQ_IOMUXC_UART1_RXD = 141,
-+	MX8MQ_IOMUXC_UART1_TXD = 142,
-+	MX8MQ_IOMUXC_UART2_RXD = 143,
-+	MX8MQ_IOMUXC_UART2_TXD = 144,
-+	MX8MQ_IOMUXC_UART3_RXD = 145,
-+	MX8MQ_IOMUXC_UART3_TXD = 146,
-+	MX8MQ_IOMUXC_UART4_RXD = 147,
-+	MX8MQ_IOMUXC_UART4_TXD = 148,
-+};
-+
-+/* Pad names for the pinmux subsystem */
-+static const struct pinctrl_pin_desc imx8mq_pinctrl_pads[] = {
-+	IMX_PINCTRL_PIN(MX8MQ_PAD_RESERVE0),
-+	IMX_PINCTRL_PIN(MX8MQ_PAD_RESERVE1),
-+	IMX_PINCTRL_PIN(MX8MQ_PAD_RESERVE2),
-+	IMX_PINCTRL_PIN(MX8MQ_PAD_RESERVE3),
-+	IMX_PINCTRL_PIN(MX8MQ_PAD_RESERVE4),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_PMIC_STBY_REQ_CCMSRCGPCMIX),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_PMIC_ON_REQ_SNVSMIX),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ONOFF_SNVSMIX),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_POR_B_SNVSMIX),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_RTC_RESET_B_SNVSMIX),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO00),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO01),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO02),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO03),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO04),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO05),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO06),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO07),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO08),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO09),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO10),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO11),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO12),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO13),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO14),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_GPIO1_IO15),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_MDC),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_MDIO),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_TD3),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_TD2),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_TD1),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_TD0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_TX_CTL),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_TXC),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_RX_CTL),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_RXC),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_RD0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_RD1),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_RD2),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ENET_RD3),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_CLK),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_CMD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_DATA0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_DATA1),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_DATA2),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_DATA3),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_DATA4),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_DATA5),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_DATA6),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_DATA7),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_RESET_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD1_STROBE),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD2_CD_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD2_CLK),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD2_CMD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD2_DATA0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD2_DATA1),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD2_DATA2),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD2_DATA3),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD2_RESET_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SD2_WP),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_ALE),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_CE0_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_CE1_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_CE2_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_CE3_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_CLE),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_DATA00),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_DATA01),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_DATA02),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_DATA03),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_DATA04),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_DATA05),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_DATA06),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_DATA07),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_DQS),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_RE_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_READY_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_WE_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_NAND_WP_B),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI5_RXFS),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI5_RXC),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI5_RXD0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI5_RXD1),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI5_RXD2),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI5_RXD3),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI5_MCLK),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_RXFS),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_RXC),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_RXD0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_RXD1),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_RXD2),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_RXD3),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_RXD4),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_RXD5),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_RXD6),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_RXD7),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_TXFS),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_TXC),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_TXD0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_TXD1),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_TXD2),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_TXD3),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_TXD4),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_TXD5),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_TXD6),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_TXD7),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI1_MCLK),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI2_RXFS),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI2_RXC),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI2_RXD0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI2_TXFS),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI2_TXC),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI2_TXD0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI2_MCLK),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI3_RXFS),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI3_RXC),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI3_RXD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI3_TXFS),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI3_TXC),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI3_TXD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SAI3_MCLK),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SPDIF_TX),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SPDIF_RX),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_SPDIF_EXT_CLK),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ECSPI1_SCLK),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ECSPI1_MOSI),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ECSPI1_MISO),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ECSPI1_SS0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ECSPI2_SCLK),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ECSPI2_MOSI),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ECSPI2_MISO),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_ECSPI2_SS0),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_I2C1_SCL),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_I2C1_SDA),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_I2C2_SCL),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_I2C2_SDA),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_I2C3_SCL),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_I2C3_SDA),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_I2C4_SCL),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_I2C4_SDA),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_UART1_RXD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_UART1_TXD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_UART2_RXD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_UART2_TXD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_UART3_RXD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_UART3_TXD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_UART4_RXD),
-+	IMX_PINCTRL_PIN(MX8MQ_IOMUXC_UART4_TXD),
-+};
-+
-+static const struct imx_cfg_params_decode imx8mq_cfg_decodes[] = {
-+	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_DRIVE_STRENGTH,		0x07, 0),
-+	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_SLEW_RATE,			0x18, 3),
-+	IMX_CFG_PARAMS_DECODE_INVERT(PIN_CONFIG_DRIVE_OPEN_DRAIN,	0x20, 5),
-+	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_BIAS_PULL_UP,			0x40, 6),
-+	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_INPUT_SCHMITT_ENABLE,		0x80, 7),
-+	IMX_CFG_PARAMS_DECODE(PIN_CONFIG_INPUT_ENABLE,         IMX_PAD_SION, 30),
-+};
-+
-+static const struct imx_pinctrl_soc_info imx8mq_pinctrl_info = {
-+	.pins = imx8mq_pinctrl_pads,
-+	.npins = ARRAY_SIZE(imx8mq_pinctrl_pads),
-+	.gpr_compatible = "fsl,imx8mq-iomuxc-gpr",
-+	.generic_pinconf = true,
-+	.decodes = imx8mq_cfg_decodes,
-+	.num_decodes = ARRAY_SIZE(imx8mq_cfg_decodes),
-+};
-+
-+static const struct of_device_id imx8mq_pinctrl_of_match[] = {
-+	{ .compatible = "fsl,imx8mq-iomuxc", .data = &imx8mq_pinctrl_info, },
-+	{ /* sentinel */ }
-+};
-+
-+static int imx8mq_pinctrl_probe(struct platform_device *pdev)
-+{
-+	const struct imx_pinctrl_soc_info *pinctrl_info;
-+
-+	pinctrl_info = of_device_get_match_data(&pdev->dev);
-+	if (!pinctrl_info)
-+		return -ENODEV;
-+
-+	return imx_pinctrl_probe(pdev, pinctrl_info);
-+}
-+
-+static struct platform_driver imx8mq_pinctrl_driver = {
-+	.driver = {
-+		.name = "imx8mq-pinctrl",
-+		.of_match_table = of_match_ptr(imx8mq_pinctrl_of_match),
-+	},
-+	.probe = imx8mq_pinctrl_probe,
-+};
-+
-+static int __init imx8mq_pinctrl_init(void)
-+{
-+	return platform_driver_register(&imx8mq_pinctrl_driver);
-+}
-+arch_initcall(imx8mq_pinctrl_init);
--- 
-2.15.1
+I know that yourself and Maxime have both confirmed that VSYNC polarity is =
+inverted, but I am looking at HSYNC and VSYNC with a logic analyser and I a=
+m dumping the values written to OV5640_REG_POLARITY_CTRL00 and to me it loo=
+ks like that HSYNC is active HIGH when hsync_pol =3D=3D 0, and VSYNC is act=
+ive HIGH when vsync_pol =3D=3D 1.
+Between the SoC and the sensor I have a voltage translator, 2.8V input -> 3=
+.3V output, I am measuring the signals at the translator outputs.
+Register 0x302A (chip revision register) on my sensor contains 0xb0.
 
+Could you please double check this? How is it possible that this works diff=
+erently on my sensor?
+
+Thanks,
+Fabrizio
+
+> + */
+> +if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> +pclk_pol =3D 1;
+> +if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> +hsync_pol =3D 1;
+> +if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+> +vsync_pol =3D 1;
+> +
+> +ret =3D ov5640_write_reg(sensor,
+> +       OV5640_REG_POLARITY_CTRL00,
+> +       (pclk_pol << 5) |
+> +       (hsync_pol << 1) |
+> +       vsync_pol);
+> +
+> +if (ret)
+> +return ret;
+> +}
+> +
+> +/*
+> + * powerdown MIPI TX/RX PHY & disable MIPI
+> + *
+> + * MIPI CONTROL 00
+> + * 4: PWDN PHY TX
+> + * 3: PWDN PHY RX
+> + * 2: MIPI enable
+> + */
+> +ret =3D ov5640_write_reg(sensor,
+> +       OV5640_REG_IO_MIPI_CTRL00, on ? 0x18 : 0);
+> +if (ret)
+> +return ret;
+> +
+> +/*
+> + * enable VSYNC/HREF/PCLK DVP control lines
+> + * & D[9:6] DVP data lines
+> + *
+> + * PAD OUTPUT ENABLE 01
+> + * - 6:VSYNC output enable
+> + * - 5:HREF output enable
+> + * - 4:PCLK output enable
+> + * - [3:0]:D[9:6] output enable
+> + */
+> +ret =3D ov5640_write_reg(sensor,
+> +       OV5640_REG_PAD_OUTPUT_ENABLE01,
+> +       on ? 0x7f : 0);
+> +if (ret)
+> +return ret;
+> +
+> +/*
+> + * enable D[5:0] DVP data lines
+> + *
+> + * PAD OUTPUT ENABLE 02
+> + * - [7:2]:D[5:0] output enable
+> + */
+> +return ov5640_write_reg(sensor,
+> +OV5640_REG_PAD_OUTPUT_ENABLE02,
+> +on ? 0xfc : 0);
+> +}
+> +
+> +static int ov5640_set_stream_mipi(struct ov5640_dev *sensor, bool on)
+>  {
+>  int ret;
+>
+> @@ -1604,17 +1715,19 @@ static int ov5640_set_power(struct ov5640_dev *se=
+nsor, bool on)
+>  if (ret)
+>  goto power_off;
+>
+> -/*
+> - * start streaming briefly followed by stream off in
+> - * order to coax the clock lane into LP-11 state.
+> - */
+> -ret =3D ov5640_set_stream(sensor, true);
+> -if (ret)
+> -goto power_off;
+> -usleep_range(1000, 2000);
+> -ret =3D ov5640_set_stream(sensor, false);
+> -if (ret)
+> -goto power_off;
+> +if (sensor->ep.bus_type =3D=3D V4L2_MBUS_CSI2) {
+> +/*
+> + * start streaming briefly followed by stream off in
+> + * order to coax the clock lane into LP-11 state.
+> + */
+> +ret =3D ov5640_set_stream_mipi(sensor, true);
+> +if (ret)
+> +goto power_off;
+> +usleep_range(1000, 2000);
+> +ret =3D ov5640_set_stream_mipi(sensor, false);
+> +if (ret)
+> +goto power_off;
+> +}
+>
+>  return 0;
+>  }
+> @@ -2188,7 +2301,11 @@ static int ov5640_s_stream(struct v4l2_subdev *sd,=
+ int enable)
+>  goto out;
+>  }
+>
+> -ret =3D ov5640_set_stream(sensor, enable);
+> +if (sensor->ep.bus_type =3D=3D V4L2_MBUS_CSI2)
+> +ret =3D ov5640_set_stream_mipi(sensor, enable);
+> +else
+> +ret =3D ov5640_set_stream_dvp(sensor, enable);
+> +
+>  if (!ret)
+>  sensor->streaming =3D enable;
+>  }
+> @@ -2301,11 +2418,6 @@ static int ov5640_probe(struct i2c_client *client,
+>  return ret;
+>  }
+>
+> -if (sensor->ep.bus_type !=3D V4L2_MBUS_CSI2) {
+> -dev_err(dev, "invalid bus type, must be MIPI CSI2\n");
+> -return -EINVAL;
+> -}
+> -
+>  /* get system clock (xclk) */
+>  sensor->xclk =3D devm_clk_get(dev, "xclk");
+>  if (IS_ERR(sensor->xclk)) {
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
