@@ -1,52 +1,46 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH] ASoC: codecs: Add support for AK5558 ADC
-	driver
-Date: Thu, 1 Feb 2018 09:05:55 +0000
-Message-ID: <1517475954.8615.18.camel@nxp.com>
-References: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
- <CAHp75Vdd58U1y-LOQGg=rePOWf1LeQsZxn2ykzBhXL013ztW3Q@mail.gmail.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 05/41] clk: davinci: Add platform information for TI
+ DM355 PLL
+Date: Thu, 1 Feb 2018 14:47:31 +0530
+Message-ID: <53126e1f-cd75-ea19-ed72-8956adaa1547@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-6-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAHp75Vdd58U1y-LOQGg=rePOWf1LeQsZxn2ykzBhXL013ztW3Q@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516468460-4908-6-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Content-Language: en-US
-Content-ID: <DA9525180D80B24B8DCE8EB3B512EFEF@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wakasugi.jb@om.asahi-kasei.co.jp" <wakasugi.jb@om.asahi-kasei.co.jp>, "mihai.serban@nxp.com" <mihai.serban@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "mihai.serban@gmail.com" <mihai.serban@gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRmFiaW8sIEFuZHksDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cy4gSSB3aWxs
-IGFkZHJlc3MgdGhlbSBhbmQgc2VuZCB2Mi4NCg0KRmV3IGNvbW1lbnRzIGlubGluZS4NCg0KT24g
-TWksIDIwMTgtMDEtMzEgYXQgMTg6MTIgKzAyMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4g
-T24gV2VkLCBKYW4gMzEsIDIwMTggYXQgMjo1NyBQTSwgRGFuaWVsIEJhbHV0YSA8ZGFuaWVsLmJh
-bHV0YUBueHAuY29tPiB3cm90ZToNCj4gPiANCj4gPiBBSzU1NTggaXMgYSAzMi1iaXQsIDc2OCBr
-SFogc2FtcGxpbmcsIGRpZmZlcmVudGlhbCBpbnB1dCBBREMNCj4gPiBmb3IgZGlnaXRhbCBhdWRp
-byBzeXN0ZW1zLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEp1bmljaGkgV2FrYXN1Z2kgPHdh
-a2FzdWdpLmpiQG9tLmFzYWhpLWthc2VpLmNvLmpwPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1paGFp
-IFNlcmJhbiA8bWloYWkuc2VyYmFuQG54cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogU2hlbmdq
-aXUgV2FuZyA8c2hlbmdqaXUud2FuZ0BueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IERhbmll
-bCBCYWx1dGEgPGRhbmllbC5iYWx1dGFAbnhwLmNvbT4NCj4gNCBhdXRob3JzIG9mIHRoZSBjb2Rl
-PyENCg0KVGhlIGNvZGUgaGFzIGEgdmVyeSBsb25nIGhpc3RvcnkuIEkgd2lsbCBhZGQgdW5kZXIg
-ZWFjaCBTb0IgdGhlIHNwZWNpZmljDQpjb250cmlidXRpb24uDQoNCk1paGFpIGdvdCB0aGUgY29k
-ZSBmcm9twqBKdW5pY2hpIGFuZCByZXdvcmtlZCBpdCBmb3IgNC45LiBUaGVuIFNoZW5naml1IGFu
-ZA0KbWUgYWRkZWQgdmFyaW91c8KgZmVhdHVyZXMgYW5kIGNsZWFudXBzLg0KDQpBY2NvcmRpbmcg
-dG8gRENPIFsxXSBhbGwgU29CIGFyZSB2YWxpZCBhbmQgcmVxdWlyZWQuDQoNCg0KPiA+ICtNT0RV
-TEVfQVVUSE9SKCJKdW5pY2hpIFdha2FzdWdpIDx3YWthc3VnaS5qYkBvbS5hc2FoaS1rYXNlaS5j
-by5qcD4iKTsNCj4gPiArTU9EVUxFX0FVVEhPUigiTWloYWkgU2VyYmFuIDxtaWhhaS5zZXJiYW5A
-bnhwLmNvbT4iKTsNCj4gNCBTb0JzLCAyIEF1dGhvcnMuIFBsZWFzZSwgZml4IGFjY29yZGluZ2x5
-Lg0KDQpIZXJlIEkgd291bGQgcHJlZmVyIHRvIGxpc3QgSnVuaWNoaSBhbmQgTWloYWkgYmVjYXVz
-ZSB0aGV5IHdlcmUgdGhlIG1haW4gY29udHJpYnV0b3JzLg0KQW55IG90aGVyIHN1Z2dlc3Rpb24/
-DQoNCnRoYW5rcywNCkRhbmllbC4NCg0KWzFdIFsxXcKgaHR0cHM6Ly9kZXZlbG9wZXJjZXJ0aWZp
-Y2F0ZS5vcmcvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRw
-Oi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+> +void __init dm355_pll_clk_init(void __iomem *pll1, void __iomem *pll2)
+> +{
+> +	const struct davinci_pll_sysclk_info *info;
+> +
+> +	davinci_pll_clk_register(&dm355_pll1_info, "ref_clk", pll1);
+> +
+> +	for (info = dm355_pll1_sysclk_info; info->name; info++)
+> +		davinci_pll_sysclk_register(info, pll1);
+> +
+> +	davinci_pll_auxclk_register("pll1_auxclk", pll1);
+> +
+> +	davinci_pll_sysclkbp_clk_register("pll1_sysclkbp", pll1);
+> +
+> +	davinci_pll_clk_register(&dm355_pll2_info, "oscin", pll2);
+
+Even on DM355, both PLLs accept reference clock from the same input. So
+this can be "ref_clk" as well.
+
+Rest of it looks good to me (and thanks for looking up the data manual
+for accurate PLLM max and min settings).
+
+Regards,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
