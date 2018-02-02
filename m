@@ -1,76 +1,89 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 2/2] gpio: Add GPIO driver for Spreadtrum SC9860 platform
-Date: Fri, 2 Feb 2018 10:32:55 +0800
-Message-ID: <CAMz4ku+9dQ-d_E0Zf0iwjLgZ4hkEAunUhqGm_+jFQrZ6O4W0fQ@mail.gmail.com>
-References: <2834309f69a1ec37b84a33f153a3d0b90336bcc6.1517453568.git.baolin.wang@linaro.org>
- <62ceed73b65399099ccd76fe6b7331bcd253b027.1517453569.git.baolin.wang@linaro.org>
- <CAHp75VdYjz6f2wBXsTL1kf5z-jcM68sMhtmkdgJM+TiPZb=gww@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [RFC v4 12/26] watchdog: renesas_wdt: Add R-Car Gen2 support
+Date: Thu, 1 Feb 2018 18:56:16 -0800
+Message-ID: <2dd9f76d-b3e9-31f2-11eb-272d327f3b01@roeck-us.net>
+References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1517423070-24236-13-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdYjz6f2wBXsTL1kf5z-jcM68sMhtmkdgJM+TiPZb=gww@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1517423070-24236-13-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1 February 2018 at 23:31, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Thu, Feb 1, 2018 at 5:04 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
->> The Spreadtrum SC9860 platform GPIO controller contains 16 groups and
->> each group contains 16 GPIOs. Each GPIO can set input/output and has
->> the interrupt capability.
->
-> Just noticed couple of more improvements you can do.
->
->> +       case IRQ_TYPE_EDGE_RISING:
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
->> +               irq_set_handler_locked(data, handle_edge_irq);
->> +               break;
->> +       case IRQ_TYPE_EDGE_FALLING:
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
->> +               irq_set_handler_locked(data, handle_edge_irq);
->> +               break;
->> +       case IRQ_TYPE_EDGE_BOTH:
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 0);
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 1);
->> +               irq_set_handler_locked(data, handle_edge_irq);
->> +               break;
->> +       case IRQ_TYPE_LEVEL_HIGH:
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 1);
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 1);
->> +               irq_set_handler_locked(data, handle_level_irq);
->> +               break;
->> +       case IRQ_TYPE_LEVEL_LOW:
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IS, 1);
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IBE, 0);
->> +               sprd_gpio_update(chip, offset, SPRD_GPIO_IEV, 0);
->> +               irq_set_handler_locked(data, handle_level_irq);
->> +               break;
->> +       default:
->> +               return -EINVAL;
->
-> I guess you can use fallthrough and reduce some lines, but I have no
-> strong opinion which will look better.
+On 01/31/2018 10:24 AM, Fabrizio Castro wrote:
+> Due to commits:
+> * "ARM: shmobile: Add watchdog support",
+> * "ARM: shmobile: rcar-gen2: Add watchdog support", and
+> * "soc: renesas: rcar-rst: Enable watchdog as reset trigger for Gen2",
+> we now have everything we needed for the watchdog to work on Gen2 and
+> RZ/G1.
+> 
+> This commit adds "renesas,rcar-gen2-wdt" as compatible string for R-Car
+> Gen2 and RZ/G1, and since on those platforms the rwdt clock needs to be
+> always ON, when suspending to RAM we need to explicitly disable the
+> counting by clearing TME from RWTCSRA.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> ---
+> v3->4:
+> * in this new version the changes to the driver have been splitted into
+>    two commits, this patch takes care of the basic Gen2 support, patch 13/26
+>    takes care of the restart handler.
+> 
+>   drivers/watchdog/renesas_wdt.c | 42 +++++++++++++++++++++++++++++++++++++-----
+>   1 file changed, 37 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/watchdog/renesas_wdt.c b/drivers/watchdog/renesas_wdt.c
+> index 831ef83..0a1a402 100644
+> --- a/drivers/watchdog/renesas_wdt.c
+> +++ b/drivers/watchdog/renesas_wdt.c
+> @@ -203,13 +203,42 @@ static int rwdt_remove(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> -/*
+> - * This driver does also fit for R-Car Gen2 (r8a779[0-4]) WDT. However, for SMP
+> - * to work there, one also needs a RESET (RST) driver which does not exist yet
+> - * due to HW issues. This needs to be solved before adding compatibles here.
+> - */
+> +#ifdef CONFIG_PM
+> +static int rwdt_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev;
+> +	struct rwdt_priv *priv;
+> +
+> +	pdev = to_platform_device(dev);
+> +	priv = platform_get_drvdata(pdev);
+> +	if (watchdog_active(&priv->wdev)) {
+> +		rwdt_write(priv, priv->cks, RWTCSRA);
+> +	}
 
-Um, we need keep the sequence of updating registers and each irq type
-has different register updating. So I think current code can make
-things clear.
+Unnecessary { }
 
->
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       sprd_gpio->base = devm_ioremap_nocache(&pdev->dev, res->start,
->> +                                              resource_size(res));
->
-> Didn't notice before, why not to simple call devm_ioremap_resource() ?
+> +	return 0;
+> +}
+> +
+> +static int rwdt_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev;
+> +	struct rwdt_priv *priv;
+> +
+> +	pdev = to_platform_device(dev);
+> +	priv = platform_get_drvdata(pdev);
+> +	if (watchdog_active(&priv->wdev)) {
+> +		rwdt_write(priv, priv->cks | RWTCSRA_TME, RWTCSRA);
+> +	}
 
-Ah, you are correct, I missed devm_ioremap_resource(). Will change in
-next version. Thanks.
+Same here. FWIW, checkpatch does complain about that.
 
--- 
-Baolin.wang
-Best Regards
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
