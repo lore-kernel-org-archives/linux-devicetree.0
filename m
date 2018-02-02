@@ -1,23 +1,23 @@
 From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 22/41] ARM: dm355: add new clock init using common
+Subject: Re: [PATCH v6 23/41] ARM: dm365: add new clock init using common
  clock framework
-Date: Fri, 2 Feb 2018 20:06:22 +0530
-Message-ID: <9a0472ad-c76b-7868-e2f8-abbd41659d18@ti.com>
+Date: Fri, 2 Feb 2018 20:07:49 +0530
+Message-ID: <1550e88d-9f89-3185-7da4-0cf5ebb7475a@ti.com>
 References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-23-git-send-email-david@lechnology.com>
+ <1516468460-4908-24-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516468460-4908-23-git-send-email-david@lechnology.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1516468460-4908-24-git-send-email-david@lechnology.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Saturday 20 January 2018 10:44 PM, David Lechner wrote:
-> This adds the new board-specific clock init in mach-davinci/dm355.c
+> This adds the new board-specific clock init in mach-davinci/dm365.c
 > using the new common clock framework drivers.
 > 
 > The #ifdefs are needed to prevent compile errors until the entire
