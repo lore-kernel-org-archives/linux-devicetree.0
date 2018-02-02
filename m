@@ -1,50 +1,104 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v2 0/2] Add support for AK5558 ADC
-Date: Fri, 2 Feb 2018 18:20:04 +0200
-Message-ID: <1517588406-3295-1-git-send-email-daniel.baluta@nxp.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v6 04/41] clk: davinci: Add platform information for TI
+ DA850 PLL
+Date: Fri, 2 Feb 2018 11:45:45 -0600
+Message-ID: <4a1d3a2f-128a-b6ff-3675-2ff0bf290dcd@lechnology.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-5-git-send-email-david@lechnology.com>
+ <7d7e0522-30d5-6232-853e-7ab32fadfe48@lechnology.com>
+ <ceec9849-e3fb-0e9b-4000-aab3ca2f5a43@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, andy.shevchenko@gmail.com, fabio.estevam@nxp.com
-Cc: daniel.baluta@gmail.com, shengjiu.wang@nxp.com, linux-kernel@vger.kernel.org, wakasugi.jb@om.asahi-kasei.co.jp, linux-imx@nxp.com, cosmin.samoila@nxp.com, daniel.baluta@nxp.com, mihai.serban@gmail.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ceec9849-e3fb-0e9b-4000-aab3ca2f5a43-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-V2Ugc3VwcG9ydCBub3JtYWwgbW9kZSwgVERNIG1vZGUgYW5kIHBtLgoKQ2hhbmdlcyBzaW5jZSB2
-MTogW2FkZHJlc3NlZCBjb21tZW50cyBmcm9tIEFuZHkgYW5kIEZhYmlvXQogKiBmaXggR1BJTyBw
-b2xhcml0eSBmcm9tIGFjdGl2ZSBoaWdoIHRvIGFjdGl2ZSBsb3cgZm9yIGNvcnJlY3QgZG9jdW1l
-bnRhdGlvbgogKiBmaXggbGljZW5zZSBoZWFkZXIgYnkgdXNpbmcgU1BEWCBpZGVudGlmaWVyCiAq
-IHJlbW92ZSBkZWJ1ZyBwcmludHMgYXQgdGhlIGJlZ2lubmluZyBvZiBmdW5jdGlvbnMuCiAqIG9u
-bHkgc3VwcG9ydCBhdXRvIGNsb2NrIHN3aXRjaGluZyAobWFudWFsIHN3aXRjaGluZyB3YXMgZGVh
-ZCBjb2RlIGFueXdheSkgKGluIHRoZQogICBmdXR1cmUgd2UgY291bGQgYWRkIGEgRFQgcHJvcGVy
-dHkgdG8gY2hvb3NlIGJldHdlZW4gbWFudWFsIGFuZCBhdXRvKQogKiBVc2UgZ3Bpb2QgQVBJCiAq
-IHVzZSBHRU5NQVNLCiAqIGludHJvZHVjZSBwb3dlcl9vZmYvcG93ZXJfb24KCk9uZSBvcGVuIHF1
-ZXN0aW9uIGlzIHRoZSByZXN1bWUgc2VxdWVuY2Ugd2hpY2ggYXBwZWFycyB0byBuZWVkIHBvd2Vy
-X29mZi9wb3dlcl9vbi4KSnVzdCBwb3dlcl9vbiBhbG9uZSBpc24ndCBlbm91Z2guIFdpdGgganVz
-dCBwb3dlcl9vbiBhZnRlciByZXN1bWUgYXBsYXkgcGxheXMgYQpzb25nIGZvciAxIHNlY29uZHMg
-YW5kIHRoZW4gdGhlIHNvdW5kIHN0b3BzLgoKRGF0YXNoZWV0IHNheXMsIHBhZ2UgNTUiCgooMSkg
-VGhlIFBETiBwaW4gc2hvdWxkIGJlIGhlbGQgdG8g4oCcTOKAnSBmb3IgbW9yZSB0aGFuIDE1MCBu
-cyBhZnRlciBBVkREIGFuZCBUVkREIGFyZSBwb3dlcmVkIHVwLgoKRGFuaWVsIEJhbHV0YSAoMik6
-CiAgQVNvQzogY29kZWNzOiBBZGQgc3VwcG9ydCBmb3IgQUs1NTU4IEFEQyBkcml2ZXIKICBBU29D
-OiBhazU1NTg6IEFkZCBiaW5kaW5ncyBmb3IgQUs1NTU4IEFEQwoKIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9hazU1NTgudHh0IHwgIDIzICsKIHNvdW5kL3NvYy9jb2Rl
-Y3MvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICA2ICsKIHNvdW5kL3NvYy9j
-b2RlY3MvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIHNvdW5kL3Nv
-Yy9jb2RlY3MvYWs1NTU4LmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgNjI2ICsrKysrKysr
-KysrKysrKysrKysrKwogc291bmQvc29jL2NvZGVjcy9hazU1NTguaCAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfCAgNTIgKysKIDUgZmlsZXMgY2hhbmdlZCwgNzA5IGluc2VydGlvbnMoKykKIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQv
-YWs1NTU4LnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IHNvdW5kL3NvYy9jb2RlY3MvYWs1NTU4LmMK
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBzb3VuZC9zb2MvY29kZWNzL2FrNTU1OC5oCgotLSAKMi43LjQK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2
-ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1h
-bi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+On 02/02/2018 02:37 AM, Sekhar Nori wrote:
+> On Friday 02 February 2018 12:52 AM, David Lechner wrote:
+> 
+>>> +static const char * const da850_pll1_obsclk_parent_names[]
+>>> __initconst = {
+>>> +    "oscin",
+>>
+>> Re: the issue of "ref_clk" vs. "oscin"...
+>>
+>> This is one of the places where having the otherwise unnecessary "oscin"
+>> clock
+>> really helps out. The PLL driver doesn't control "ref_clk" - it comes
+>> from somewhere
+>> else. And in the case of DT, it may not even be named "ref_clk", so we
+>> really
+>> don't want to hard-code the name "ref_clk" here.
+> 
+> TBH, I don't really see what is wrong with mandating the name "ref_clk"
+> as the reference clock name to be provided. And for all board-files and
+> DTs to supply the same name.
+> 
+>> If we have to allow a variable name here, it just makes more work in the
+>> driver
+>> shuffling names around.
+>>
+>> And the name "oscin" totally makes sense here because the TRM lists this
+>> input to the
+>> mux as "OSCIN".
+> 
+> Fine with me if you feel it simplifies implementation for you (and also
+> because of the distinction you want to make between the external "before
+> CLKMODE" clock and internal "after CLKMODE" clock). What I do care about
+> though is:
+> 
+> a) In the DT case, ability for different boards to provide different
+>     ref_clk frequencies. We never really had this in the legacy board
+>     file way (except some rudimentary support on DM6467T). And its fine
+>     to continue with status quo for board files.
+
+You can do this now. You would just add something like this to the board's
+.dts file:
+
+	& ref_clk {
+		clock-frequency = <30000000>; /* 30 MHz */
+	};
+
+> 
+> b) In the DT case, ability for board to specify whether it uses the
+>     on-chip oscillator or has an external clean clock provider.
+
+Boards with an oscillator don't need to do anything since that is the
+default. Boards with clock will need to do this:
+
+	&pll0 {
+		ti,clkmode-square-wave;
+	};
+
+> 
+>>> +void __init da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1)
+>>> +{
+>>> +    const struct davinci_pll_sysclk_info *info;
+>>> +
+>>> +    davinci_pll_clk_register(&da850_pll0_info, "ref_clk", pll0);
+>>
+>> And really, we probably shouldn't be hard-coding "ref_clk" here either.
+>> Basically, we are making the assumption that the board file has registered
+>> a clock named "ref_clk". It would probably be better to pass the name
+>> as a parameter.
+> 
+> As I noted before, I am not sure if this level of naming flexibility is
+> needed. Every board needs to have one anyway. They might as well call it
+> by the same name.
+> 
+> That said, I wont oppose it either if you decide to have that flexibility.
+> 
+
+I'll sleep on it. Like you, I could go either way. I'm temped to just leave
+it as-is though (with some added comments for clarification, of course).
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
