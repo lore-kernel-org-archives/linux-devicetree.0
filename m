@@ -1,66 +1,36 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v3 1/4] dt-bindings: firmware: Add bindings for ZynqMP
- firmware
-Date: Fri, 2 Feb 2018 19:50:05 +0000
-Message-ID: <DM2PR0201MB0767C06A1B7A47DB79723C96B8F90@DM2PR0201MB0767.namprd02.prod.outlook.com>
-References: <1516836074-4149-1-git-send-email-jollys@xilinx.com>
- <1516836074-4149-2-git-send-email-jollys@xilinx.com>
- <20180131180354.mqf4gvvprdtycbn5@lakrids.cambridge.arm.com>
- <CY1PR0201MB076454E915A6E6947A39F04BB8FA0@CY1PR0201MB0764.namprd02.prod.outlook.com>
- <20180201102730.33q4xrjw3vhrgk4i@lakrids.cambridge.arm.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/4] Document nexus nodes/specifier remapping
+Date: Fri, 2 Feb 2018 14:10:10 -0600
+Message-ID: <CAL_JsqJuFOR7-tH5Z2-Dd0Mgo1iJFcpPstN6qHFYCr9NXjnuEw@mail.gmail.com>
+References: <20180131023618.14292-1-stephen.boyd@linaro.org> <20180131023618.14292-2-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180201102730.33q4xrjw3vhrgk4i@lakrids.cambridge.arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "mingo@kernel.org" <mingo@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, "keescook@chromium.org" <keescook@chromium.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180131023618.14292-2-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Tue, Jan 30, 2018 at 8:36 PM, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Document the generic nexus node properties. This can be used by
+> any specifier that conforms to #<specifier>-cells where they
+> want to support remapping phandle lists through nexus nodes. This
+> is similar to interrupt remapping, but slightly different because
+> we don't consider unit addresses when doing mappings. This is
+> mostly a copy/paste of the interrupt specification, with the unit
+> address parts removed and generalized to any specifier. There's
+> also the addition of a pass through mechanism to make things more
+> compact if desired in the mapping table.
+>
+> Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  source/devicetree-basics.rst | 206 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 206 insertions(+)
 
-> -----Original Message-----
-> From: Mark Rutland [mailto:mark.rutland@arm.com]
-> Sent: Thursday, February 01, 2018 2:28 AM
-> To: Jolly Shah <JOLLYS@xilinx.com>
-> Cc: ard.biesheuvel@linaro.org; mingo@kernel.org;
-> gregkh@linuxfoundation.org; matt@codeblueprint.co.uk;
-> sudeep.holla@arm.com; hkallweit1@gmail.com; keescook@chromium.org;
-> dmitry.torokhov@gmail.com; michal.simek@xilinx.com; robh+dt@kernel.org;
-> linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; Rajan Vaja <RAJANV@xilinx.com>
-> Subject: Re: [PATCH v3 1/4] dt-bindings: firmware: Add bindings for ZynqM=
-P
-> firmware
->=20
-> On Thu, Feb 01, 2018 at 01:04:45AM +0000, Jolly Shah wrote:
-> > > > +Xilinx Zynq MPSoC Firmware Device Tree Bindings
-> > > > +
-> > > > +The zynqmp-firmware node describes the interface to platform firmw=
-are.
-> > >
-> > > Is there any documentation for this that can be referred to?
-> > >
-> >
-> > Will add more information about supported APIs in next version patch.
-> > Below document describes interface APIs though it is not latest.
-> > https://www.xilinx.com/support/documentation/user_guides/ug1200-eemi-a
-> > pi.pdf
->=20
-> Thanks for the link.
->=20
-> It might be better for the compatible string to be "xlnx,zynqmp-eemi", to=
- make it
-> clear which firmware interfaces are being described, assuming that this b=
-eing is
-> only intended to cover EEMI.
->=20
-> Thanks,
-> Mark.
+I've applied this. I'm considering in pending until we do another
+release if anyone cares to chime in on this.
 
-It is interface to firmware be it ATF/PMU. EEMI is part of it.=20
+I'll queue the rest to the kernel for 4.17.
 
-Thanks,
-Jolly Shah
+Rob
