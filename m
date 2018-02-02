@@ -1,39 +1,40 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] ARM: imx: add timer stop flag to ARM power off
- state
-Date: Fri, 2 Feb 2018 14:16:41 +0800
-Message-ID: <20180202061605.GL20833@dragon>
-References: <20180110210453.19264-1-stefan@agner.ch>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v6 17/41] dt-bindings: clock: Add bindings for DA8XX
+ CFGCHIP clocks
+Date: Fri, 2 Feb 2018 11:50:58 +0530
+Message-ID: <572e31a2-ac18-512b-03bb-82fffcf4d228@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-18-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180110210453.19264-1-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1516468460-4908-18-git-send-email-david@lechnology.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 10, 2018 at 10:04:47PM +0100, Stefan Agner wrote:
-> When the CPU is in ARM power off state the ARM architected
-> timers are stopped. The flag is already present in the higher
-> power WAIT mode.
-> 
-> This allows to use the ARM generic timer on i.MX 6UL/6ULL SoC.
-> Without the flag the kernel freezes when the timer enters the
-> first time ARM power off mode.
-> 
-> Note: The default timer on i.MX6SX is the i.MX GPT timer which is
-> not disabled during CPU idle. However, the timer is not affected
-> by the CPUIDLE_FLAG_TIMER_STOP flag. The flag only affects CPU
-> local timers.
-> 
-> Cc: Anson Huang <anson.huang-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> Reviewed-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+> +EMIFA clock source (ASYNC1)
+> +---------------------------
+> +Required properties:
+> +- compatible: shall be "ti,da850-async1-clksrc".
+> +- #clock-cells: from common clock binding; shall be set to 0.
+> +- clocks: phandles to the parent clocks corresponding to clock-names
+> +- clock-names: shall be "pll0_sysclk3", "div4.5"
 
-Applied all, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Is this clock really referred to as aysnc1 in documentation? I don't get
+hits for async1 in OMAP-L138 TRM.
+
+Thanks,
+Sekhar
