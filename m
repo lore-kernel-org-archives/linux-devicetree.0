@@ -1,120 +1,63 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6q-bx50v3: Enable secure-reg-access
-Date: Fri, 2 Feb 2018 12:10:04 +0100
-Message-ID: <20180202111004.mnv3elblyjxkbyzz@earth.universe>
-References: <20180115160722.17206-1-sebastian.reichel@collabora.co.uk>
- <20180202071819.GE25699@dragon>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v6 4/6] iommu/arm-smmu: Add the device_link between
+ masters and smmu
+Date: Fri, 2 Feb 2018 11:31:58 +0000
+Message-ID: <f8932e2f-75bb-ce30-ae68-1870477fad5f@arm.com>
+References: <1516362223-22946-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1516362223-22946-5-git-send-email-vivek.gautam@codeaurora.org>
+ <6b930150-cb81-b0a5-601c-16cb576c4341@arm.com>
+ <b7887b45-774a-2515-4304-227037b9af1f@codeaurora.org>
+ <7cc4caec-4264-db9d-3afa-e3d20d3edfa7@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oqt2zu6s5rd7zxgq"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180202071819.GE25699@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Frank Li <Frank.li-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <7cc4caec-4264-db9d-3afa-e3d20d3edfa7@codeaurora.org>
+Content-Language: en-GB
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sricharan R <sricharan@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, alex.williamson@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, will.deacon@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, sboyd@codeaurora.org
+Cc: gregkh@linuxfoundation.org, m.szyprowski@samsung.com, architt@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 02/02/18 05:40, Sricharan R wrote:
+> Hi Robin/Vivek,
+> 
+> On 2/1/2018 2:23 PM, Vivek Gautam wrote:
+>> Hi,
+>>
+>>
+>> On 1/31/2018 6:39 PM, Robin Murphy wrote:
+>>> On 19/01/18 11:43, Vivek Gautam wrote:
+>>>> From: Sricharan R <sricharan@codeaurora.org>
+>>>>
+>>>> Finally add the device link between the master device and
+>>>> smmu, so that the smmu gets runtime enabled/disabled only when the
+>>>> master needs it. This is done from add_device callback which gets
+>>>> called once when the master is added to the smmu.
+>>>
+>>> Don't we need to balance this with a device_link_del() in .remove_device (like exynos-iommu does)?
+>>
+>> Right. Will add device_link_del() call. Thanks for pointing out.
+> 
+>   The reason for not adding device_link_del from .remove_device was, the core device_del
+>   which calls the .remove_device from notifier, calls device_links_purge before that.
+>   That does the same thing as device_link_del. So by the time .remove_device is called,
+>   device_links for that device is already cleaned up. Vivek, you may want to check once that
+>   calling device_link_del from .remove_device has no effect, just to confirm once more.
 
---oqt2zu6s5rd7zxgq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There is at least one path in which .remove_device is not called via the 
+notifier from device_del(), which is in the cleanup path of 
+iommu_bus_init(). AFAICS any links created by .add_device during that 
+process would be left dangling, because the device(s) would be live but 
+otherwise disassociated from the IOMMU afterwards.
 
-Hi,
+ From a maintenance perspective it's easier to have the call in its 
+logical place even if it does nothing 99% of the time; that way we 
+shouldn't have to keep an eye out for subtle changes in the power 
+management code or driver core that might invalidate the device_del() 
+reasoning above, and the power management guys shouldn't have to 
+comprehend the internals of the IOMMU API to make sense of the 
+unbalanced call if they ever want to change their API.
 
-On Fri, Feb 02, 2018 at 03:18:20PM +0800, Shawn Guo wrote:
-> + Frank
->=20
-> On Mon, Jan 15, 2018 at 05:07:22PM +0100, Sebastian Reichel wrote:
-> > From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> >=20
-> > Add secure-reg-access on device tree include file for Bx50 devices
-> > to enable PMU and hardware counters for perf.
-> >=20
-> > Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx6q-bx50v3.dtsi | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/im=
-x6q-bx50v3.dtsi
-> > index 86cfd4481e72..ccaaee83e2fa 100644
-> > --- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> > +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> > @@ -43,6 +43,13 @@
-> >  #include "imx6q-ba16.dtsi"
-> > =20
-> >  / {
-> > +	soc {
-> > +		pmu {
-> > +			compatible =3D "arm,cortex-a9-pmu";
-> > +			secure-reg-access;
->=20
-> I'm not sure this could be a board level configuration.  Shouldn't this
-> property just be added into pmu node in imx6qdl.dtsi?
-
-This cannot become part of imx6qdl.dtsi for two reasons:
-
-1. It's not safe to be enabled on imx6qdl in secure state, see
-   excerpt from DT binding documentation below
-2. We cannot enable it by default, since DTS format does not provide
-   a method to unset it in board files using a imx6qdl in secure
-   mode.
-
-Here is an extract from the DT documentation for the PMU node:
-
-- secure-reg-access : Indicates that the ARMv7 Secure Debug Enable Register
-		      (SDER) is accessible. This will cause the driver to do
-		      any setup required that is only possible in ARMv7 secure
-		      state. If not present the ARMv7 SDER will not be touched,
-		      which means the PMU may fail to operate unless external
-		      code (bootloader or security monitor) has performed the
-		      appropriate initialisation. Note that this property is
-		      not valid for non-ARMv7 CPUs or ARMv7 CPUs booting Linux
-		      in Non-secure state.
-
-For B450v3, B650v3 and B850v3 it's safe to enable the bit and it
-improves debugging capabilities a lot.
-
--- Sebastian
-
->=20
-> Shawn
->=20
-> > +		};
-> > +	};
-> > +
-> >  	clocks {
-> >  		mclk: clock@0 {
-> >  			compatible =3D "fixed-clock";
-> > --=20
-> > 2.15.1
-> >=20
-
---oqt2zu6s5rd7zxgq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlp0RwkACgkQ2O7X88g7
-+przbxAAj8IZq1fcC3bQYRSj88o8koPCdOL514egIq9don6K3J3ozFd4xzeXB72h
-YOCyqk63Ze2uDG1ZB4ilfgsr2afKcQIC46v/U4/9PqC/xd7JrO3KV5HVkNpASVE6
-XZGuV0ekMWEPRev6xlq3fIwMR+q2WGmn7Zr4Cj2s4ughbTqlrseqTXI4T78ZKGOf
-nighHWK0HkmlCTFf/S+//UV+3YkIztfLdjdKe51GwTujvbmmSKtZ76NMpZCONZqV
-PkkdK4FY2zR5+uXRwMrDE14SpuW04MWC94alSHShpSZGX03m69Z4rXtgJTcnV8Xa
-q/gMqJrh96i1mMZIkJQ2BTcQAMoPoB1NCrSj0304QVFhXd5TKO/yP5vpFZqI1nI5
-KDoY4H38mBI+kzdMJXCQvqw/WdDrNROr1oG775q6/d4fNNztNn5H+iWPc5KgdiGj
-NaljqhHxARsnkMN1s8sEnVeMIr1/PxBw/5krnTzt1aHmv3Nf0zsii65THZU0yJxW
-w1K7N5pfCriyhXmmFMgBF8sg935uYG9aUt6zS5JHT8FdWY3K65kminwAx6DiCVPP
-+UZIS265IGnSnWzZJJgq30mEGXfnvkAvJ3+asrKXOW+u2Psf3HTClJzUOqzfO7ej
-wJaReTnwlxKNj8+zmps4WHwavIQ4o4+5IJ1xc9VGB9hx7LVc7wc=
-=NP40
------END PGP SIGNATURE-----
-
---oqt2zu6s5rd7zxgq--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Robin.
