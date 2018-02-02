@@ -1,34 +1,35 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 19/41] clk: davinci: New driver for TI DA8XX USB PHY
- clocks
-Date: Fri, 2 Feb 2018 19:29:58 +0530
-Message-ID: <abb566ad-e5fd-a09c-e8b7-695ca7c126fa@ti.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-20-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1516468460-4908-20-git-send-email-david@lechnology.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 0/3] Allwinner V3s audio codec device tree changes
+Date: Fri,  2 Feb 2018 22:01:50 +0800
+Message-ID: <20180202140153.21549-1-icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
-> diff --git a/include/linux/clk/davinci.h b/include/linux/clk/davinci.h
-> index 54ea3ff..04b48b3 100644
-> --- a/include/linux/clk/davinci.h
-> +++ b/include/linux/clk/davinci.h
-> @@ -9,6 +9,9 @@
->  
->  #include <linux/types.h>
->  
-> +struct clk;
-> +struct regmap;
+Here's the Allwinner V3s audio codec device tree changes, which used to
+be blocked by the DMA engine code.
 
-Its probably better to include clk-provider.h and regmap.h?
+The first patch adds the DMA engine device tree node, and the second
+adds the codec nodes (digital and analog).
 
-Thanks,
-Sekhar
+The thrid patch is for Lichee Pi Zero with Dock board to enable the
+audio jack and on-board mic.
+
+Icenowy Zheng (3):
+  ARM: dts: sun8i: add DMA engine in V3s DTSI
+  ARM: dts: sun8i: add audio codec support into V3s DTSI
+  ARM: sun8i: v3s: enable audio on Lichee Pi Zero Dock board
+
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts |  9 +++++++
+ arch/arm/boot/dts/sun8i-v3s.dtsi                   | 28 ++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
+
+-- 
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
