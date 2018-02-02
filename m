@@ -1,69 +1,51 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH 13/14] clk: stm32mp1: add MCO clocks
-Date: Fri, 2 Feb 2018 15:03:41 +0100
-Message-ID: <1517580222-23301-14-git-send-email-gabriel.fernandez@st.com>
-References: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
+From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 00/14] Introduce STM32MP1 clock driver
+Date: Fri, 2 Feb 2018 15:03:28 +0100
+Message-ID: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, olivier.bideau@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 
-Two micro-controller clock output (MCO) pins are available: MCO1 and MCO2.
-For each output, it is possible to select a clock source.
-The selected clock can be divided thanks to configurable prescaler.
+This patch-set introduces clock driver for STM32MP157 based on Arm Cortex-A7.
+The driver patch is splitted in several patches (by kind of clock) to facilitate
+code reviewing.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
----
- drivers/clk/clk-stm32mp1.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Gabriel Fernandez (14):
+  dt-bindings: Document STM32MP1 Reset Clock Controller (RCC) bindings
+  dt-bindings: clock: add STM32MP1 clocks
+  clk: stm32mp1: Introduce STM32MP1 clock driver
+  clk: stm32mp1: add MP1 gate for osc hse/hsi/csi oscillators
+  clk: stm32mp1: add Source Clocks for PLLs
+  clk: stm32mp1: add PLL clocks
+  clk: stm32mp1: add Post-dividers for PLL
+  clk: stm32mp1: add Sub System clocks
+  clk: stm32mp1: add Kernel timers
+  clk: stm32mp1: add Peripheral clocks
+  clk: stm32mp1: add Kernel clocks
+  clk: stm32mp1: add RTC clock
+  clk: stm32mp1: add MCO clocks
+  clk: stm32mp1: add Debug clocks
 
-diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
-index 1cb06b0..0402a0e 100644
---- a/drivers/clk/clk-stm32mp1.c
-+++ b/drivers/clk/clk-stm32mp1.c
-@@ -1188,6 +1188,16 @@ static struct clk_hw *_clk_register_cktim(struct device *dev,
- 	_MUX(_mux_offset, _mux_bit, _mux_width, 0),\
- }
- 
-+#define _GATEMUXDIV(_gate_offset, _bit_idx,\
-+		    _mux_offset, _mux_bit, _mux_width,\
-+		    _div_offset, _div_bit, _div_width\
-+		)\
-+{\
-+	_DIV(_div_offset, _div_bit, _div_width, 0),\
-+	_GATE(_gate_offset, _bit_idx, 0),\
-+	_MUX(_mux_offset, _mux_bit, _mux_width, 0),\
-+}
-+
- #define _MP1_GATE(_gate_offset, _bit_idx, _flags)\
- 		  _GATE_OPS(_gate_offset, _bit_idx, _flags, &mp1_gate_clk_ops)
- 
-@@ -1543,6 +1553,19 @@ static struct clk_hw *_clk_register_cktim(struct device *dev,
- 	COMPOSITE(RTC, "ck_rtc", rtc_src, CLK_OPS_PARENT_ENABLE |
- 		  CLK_SET_RATE_PARENT,
- 		  _GATEMUX(RCC_BDCR, 20, RCC_BDCR, 16, 2)),
-+
-+	/* MCO clocks */
-+	COMPOSITE(CK_MCO1, "ck_mco1", mco1_src, CLK_OPS_PARENT_ENABLE |
-+		  CLK_SET_RATE_NO_REPARENT,
-+		  _GATEMUXDIV(RCC_MCO1CFGR, 12,
-+			      RCC_MCO1CFGR, 0, 3,
-+			      RCC_MCO1CFGR, 4, 4)),
-+
-+	COMPOSITE(CK_MCO2, "ck_mco2", mco2_src, CLK_OPS_PARENT_ENABLE |
-+		  CLK_SET_RATE_NO_REPARENT,
-+		  _GATEMUXDIV(RCC_MCO2CFGR, 12,
-+			      RCC_MCO2CFGR, 0, 3,
-+			      RCC_MCO2CFGR, 4, 4)),
- };
- 
- struct stm32_clock_match_data {
+ .../devicetree/bindings/mfd/st,stm32-rcc.txt       |   85 +
+ drivers/clk/Kconfig                                |    6 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk-stm32mp1.c                         | 1705 ++++++++++++++++++++
+ include/dt-bindings/clock/stm32mp1-clks.h          |  248 +++
+ 5 files changed, 2045 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-rcc.txt
+ create mode 100644 drivers/clk/clk-stm32mp1.c
+ create mode 100644 include/dt-bindings/clock/stm32mp1-clks.h
+
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
