@@ -1,63 +1,56 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V2 2/2] cpufreq: imx6q: add 696MHz operating point for
- i.mx6ul
-Date: Fri, 2 Feb 2018 08:47:15 +0800
-Message-ID: <20180202004713.GC20833@dragon>
-References: <1515235360-1628-1-git-send-email-Anson.Huang@nxp.com>
- <1515235360-1628-2-git-send-email-Anson.Huang@nxp.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6q-bx50v3: disable SD card
+Date: Fri, 2 Feb 2018 09:04:41 +0800
+Message-ID: <20180202010440.GD20833@dragon>
+References: <8de710254808e8d80295b75ff28ccd14afe2ad94.1515410930.git.ian.ray@ge.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1515235360-1628-2-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, rafael@kernel.org, viresh.kumar@linaro.org, linux-pm@vger.kernel.org, rjw@rjwysocki.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <8de710254808e8d80295b75ff28ccd14afe2ad94.1515410930.git.ian.ray-JJi787mZWgc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 06, 2018 at 06:42:40PM +0800, Anson Huang wrote:
-> Add 696MHz operating point for i.MX6UL, only for those
-> parts with speed grading fuse set to 2b'10 supports
-> 696MHz operating point, so, speed grading check is also
-> added for i.MX6UL in this patch, the clock tree for each
-> operating point are as below:
-> 
-> 696MHz:
->     pll1                       696000000
->        pll1_bypass             696000000
->           pll1_sys             696000000
->              pll1_sw           696000000
->                 arm            696000000
-> 528MHz:
->     pll2                       528000000
->        pll2_bypass             528000000
->           pll2_bus             528000000
->              ca7_secondary_sel 528000000
->                 step           528000000
->                    pll1_sw     528000000
->                       arm      528000000
-> 396MHz:
->     pll2_pfd2_396m             396000000
->        ca7_secondary_sel       396000000
->           step                 396000000
->              pll1_sw           396000000
->                 arm            396000000
-> 198MHz:
->     pll2_pfd2_396m             396000000
->        ca7_secondary_sel       396000000
->           step                 396000000
->              pll1_sw           396000000
->                 arm            198000000
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hi Ian,
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+On Mon, Jan 08, 2018 at 01:29:01PM +0200, Ian Ray wrote:
+> Default boot medium must be internal eMMC, we don't want the SDIO to be
+> used for these devices.  This commit disables the SD card interface for
+> GE Healthcare Bx50v3 devices.
+> 
+> Signed-off-by: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>
+> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+
+You are submitting a patch authored by yourself.  Why is Romain's SoB
+there?
+
+Shawn
+
+> ---
+>  arch/arm/boot/dts/imx6q-bx50v3.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> index b915837..a530169 100644
+> --- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> @@ -303,6 +303,10 @@
+>  	};
+>  };
+>  
+> +&usdhc2 {
+> +	status = "disabled";
+> +};
+> +
+>  &usdhc4 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_usdhc4>;
+> -- 
+> 2.10.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
