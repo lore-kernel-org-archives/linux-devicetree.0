@@ -1,107 +1,45 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 2/3] ARM: sun8i: v3s: add V3s EMAC device tree node
-Date: Sat,  3 Feb 2018 02:04:55 +0800
-Message-ID: <20180202180456.60378-3-icenowy@aosc.io>
-References: <20180202180456.60378-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v6 24/41] ARM: dm644x: add new clock init using common
+ clock framework
+Date: Fri, 2 Feb 2018 12:06:12 -0600
+Message-ID: <d8325090-e369-5a1a-b34a-8174123b01ff@lechnology.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-25-git-send-email-david@lechnology.com>
+ <28508a72-2fc7-1dc2-8a2c-997139d70831@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB7WQ2LJQKGQEQYIBDOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180202180456.60378-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <28508a72-2fc7-1dc2-8a2c-997139d70831@ti.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The V3/V3s EMAC is just similar to the one in H3 SoC, but as the package
-of V3s is pin-limited, the external MII/MDIO bus is not wired out.
+On 02/02/2018 08:39 AM, Sekhar Nori wrote:
+> On Saturday 20 January 2018 10:44 PM, David Lechner wrote:
+>> This adds the new board-specific clock init in mach-davinci/dm644x.c
+>> using the new common clock framework drivers.
+>>
+>> The #ifdefs are needed to prevent compile errors until the entire
+>> ARCH_DAVINCI is converted.
+>>
+>> Also clean up the #includes since we are adding some here.
+>>
+>> Signed-off-by: David Lechner <david@lechnology.com>
+> 
+> I did not notice this before, but the subject line for this and other
+> patches needs to be "ARM: davinci: "
 
-Add V3s EMAC device tree node. As V3s is only capable of using the
-internal PHY, it's hardcoded in the V3s DTSI file.
+so "davinci" == "dm644x" and not any other SoC?
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-v3s.dtsi | 55 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+> 
+> Apart from that:
+> 
+> Reviewed-by: Sekhar Nori <nsekhar@ti.com>
+> 
+> Thanks,
+> Sekhar
+> 
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
-index 443b083c6adc..4d49a8b22a1c 100644
---- a/arch/arm/boot/dts/sun8i-v3s.dtsi
-+++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
-@@ -141,6 +141,12 @@
- 			};
- 		};
- 
-+		syscon: syscon@1c00000 {
-+			compatible = "allwinner,sun8i-v3-system-controller",
-+				"syscon";
-+			reg = <0x01c00000 0x1000>;
-+		};
-+
- 		tcon0: lcd-controller@1c0c000 {
- 			compatible = "allwinner,sun8i-v3s-tcon";
- 			reg = <0x01c0c000 0x1000>;
-@@ -402,6 +408,55 @@
- 			#size-cells = <0>;
- 		};
- 
-+		emac: ethernet@1c30000 {
-+			compatible = "allwinner,sun8i-v3-emac";
-+			syscon = <&syscon>;
-+			reg = <0x01c30000 0x10000>;
-+			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			resets = <&ccu RST_BUS_EMAC>;
-+			reset-names = "stmmaceth";
-+			clocks = <&ccu CLK_BUS_EMAC>;
-+			clock-names = "stmmaceth";
-+			phy-handle = <&int_mii_phy>;
-+			phy-mode = "mii";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+
-+			mdio: mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "snps,dwmac-mdio";
-+			};
-+
-+			mdio-mux {
-+				compatible = "allwinner,sun8i-v3-mdio-mux",
-+					     "allwinner,sun8i-h3-mdio-mux";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				mdio-parent-bus = <&mdio>;
-+
-+				internal_mdio: mdio@1 {
-+					compatible = "allwinner,sun8i-v3-mdio-internal",
-+						     "allwinner,sun8i-h3-mdio-internal";
-+					reg = <1>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					int_mii_phy: ethernet-phy@1 {
-+						compatible = "ethernet-phy-ieee802.3-c22";
-+						reg = <1>;
-+						clocks = <&ccu CLK_BUS_EPHY>;
-+						resets = <&ccu RST_BUS_EPHY>;
-+					};
-+				};
-+
-+				/* V3s has no external MDIO bus, but V3 has it */
-+			};
-+		};
-+
- 		spi0: spi@1c68000 {
- 			compatible = "allwinner,sun8i-h3-spi";
- 			reg = <0x01c68000 0x1000>;
--- 
-2.15.1
