@@ -1,55 +1,40 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: imx6q-bx50v3: disable SD card
-Date: Fri, 2 Feb 2018 09:04:41 +0800
-Message-ID: <20180202010440.GD20833@dragon>
-References: <8de710254808e8d80295b75ff28ccd14afe2ad94.1515410930.git.ian.ray@ge.com>
+Subject: Re: [PATCH v4 0/6] ARM: dts: Add PHYTEC phyCORE-i.MX 6 and
+ phyBOARD-Mira carrier board support
+Date: Fri, 2 Feb 2018 09:26:36 +0800
+Message-ID: <20180202012634.GE20833@dragon>
+References: <1515421758-4240-1-git-send-email-s.riedmueller@phytec.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8de710254808e8d80295b75ff28ccd14afe2ad94.1515410930.git.ian.ray-JJi787mZWgc@public.gmane.org>
+In-Reply-To: <1515421758-4240-1-git-send-email-s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+To: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ian,
-
-On Mon, Jan 08, 2018 at 01:29:01PM +0200, Ian Ray wrote:
-> Default boot medium must be internal eMMC, we don't want the SDIO to be
-> used for these devices.  This commit disables the SD card interface for
-> GE Healthcare Bx50v3 devices.
+On Mon, Jan 08, 2018 at 03:29:12PM +0100, Stefan Riedmueller wrote:
+> Christian Hemp (2):
+>   ARM: dts: imx6: Add support for phyBOARD-Mira i.MX 6Quad/Dual RDK
+>   ARM: dts: imx6: Add support for phyBOARD-Mira i.MX 6 DualLight/Solo
+>     RDK
 > 
-> Signed-off-by: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>
-> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Enrico Scholz (1):
+>   ARM: dts: imx6: Add support for phyBOARD-Mira with i.MX 6QuadPlus
+> 
+> Stefan Riedmueller (3):
+>   ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM
+>   ARM: dts: imx6: Add initial support for phyBOARD-Mira
 
-You are submitting a patch authored by yourself.  Why is Romain's SoB
-there?
+Applied above 5 patches.
+
+>   ARM: imx_v6_v7_defconfig: Enable Dialog Semiconductor DA9062 driver
+
+This one doesn't apply to my imx/defconfig branch.  Can you please
+rebase?  Thanks.
 
 Shawn
-
-> ---
->  arch/arm/boot/dts/imx6q-bx50v3.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> index b915837..a530169 100644
-> --- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> @@ -303,6 +303,10 @@
->  	};
->  };
->  
-> +&usdhc2 {
-> +	status = "disabled";
-> +};
-> +
->  &usdhc4 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_usdhc4>;
-> -- 
-> 2.10.1
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
