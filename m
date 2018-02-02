@@ -1,147 +1,65 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 06/16] iio: adc: sun4i-gpadc-iio: rework: support
- multiple sensors
-Date: Fri, 2 Feb 2018 15:13:28 +0100
-Message-ID: <42632deb-077a-ad73-58e1-92d92dbd0963@gmail.com>
-References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-7-embed3d@gmail.com>
- <20180131184236.4yhp732l5kenhmp2@qschulz>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 20/41] ARM: da830: add new clock init using common
+ clock framework
+Date: Fri, 2 Feb 2018 19:42:42 +0530
+Message-ID: <4b2f45f5-7f0d-f0e6-6854-9992e19f45f2@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-21-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180131184236.4yhp732l5kenhmp2@qschulz>
+In-Reply-To: <1516468460-4908-21-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+>  void __init da830_init_time(void)
+>  {
+> +#ifdef CONFIG_COMMON_CLK
+> +	void __iomem *pll0, *psc0, *psc1;
+> +	struct clk *clk;
+> +
+> +	pll0 = ioremap(DA8XX_PLL0_BASE, SZ_4K);
+> +	psc0 = ioremap(DA8XX_PSC0_BASE, SZ_4K);
+> +	psc1 = ioremap(DA8XX_PSC1_BASE, SZ_4K);
+> +
+> +	da8xx_register_cfgchip();
+> +
+> +	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DA830_REF_FREQ);
+> +
+> +	da830_pll_clk_init(pll0);
+> +
+> +	da830_psc_clk_init(psc0, psc1);
+> +
 
+> +	clk = clk_register_fixed_factor(NULL, "i2c0", "pll0_aux_clk", 0, 1, 1);
+> +	clk_register_clkdev(clk, NULL, "i2c_davinci.1");
+> +
+> +	clk = clk_register_fixed_factor(NULL, "timer0", "pll0_aux_clk", 0, 1, 1);
+> +	clk_register_clkdev(clk, "timer0", NULL);
+> +
+> +	clk = clk_register_fixed_factor(NULL, "timer1", "pll0_aux_clk", 0, 1, 1);
+> +	clk_register_clkdev(clk, NULL, "davinci-wdt");
 
-On 31.01.2018 19:42, Quentin Schulz wrote:
-> Hi Philipp,
-> 
-> On Mon, Jan 29, 2018 at 12:29:09AM +0100, Philipp Rossak wrote:
->> For adding newer sensor some basic rework of the code is necessary.
->>
->> This patch reworks the driver to be able to handle more than one
->> thermal sensor. Newer SoC like the A80 have 4 thermal sensors.
->> Because of this the maximal sensor count value was set to 4.
->>
->> The sensor_id value is set during sensor registration and is for each
->> registered sensor indiviual. This makes it able to differntiate the
->> sensors when the value is read from the register.
->>
->> In function sun4i_gpadc_read_raw(), the sensor number of the ths sensor
->> was directly set to 0 (sun4i_gpadc_temp_read(x,x,0)). This selects
->> in the temp_read function automatically sensor 0. A check for the
->> sensor_id is here not required since the old sensors only have one
->> thermal sensor. In addition to that is the sun4i_gpadc_read_raw()
->> function only used by the "older" sensors (before A33) where the
->> thermal sensor was a cobination of an adc and a thermal sensor.
->>
->> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   drivers/iio/adc/sun4i-gpadc-iio.c | 36 +++++++++++++++++++++++-------------
->>   include/linux/mfd/sun4i-gpadc.h   |  3 +++
->>   2 files changed, 26 insertions(+), 13 deletions(-)
->>
->> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
->> index 51ec0104d678..ac9ad2f8232f 100644
->> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
->> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
->> @@ -67,12 +67,13 @@ struct gpadc_data {
->>   	unsigned int	tp_adc_select;
->>   	unsigned int	(*adc_chan_select)(unsigned int chan);
->>   	unsigned int	adc_chan_mask;
->> -	unsigned int	temp_data;
->> +	unsigned int	temp_data[MAX_SENSOR_COUNT];
->>   	int		(*sample_start)(struct sun4i_gpadc_iio *info);
->>   	int		(*sample_end)(struct sun4i_gpadc_iio *info);
->>   	bool		has_bus_clk;
->>   	bool		has_bus_rst;
->>   	bool		has_mod_clk;
->> +	int		sensor_count;
->>   };
->>   
-> 
-> I've noticed that for H3, A83T, A64 (at least), if DATA reg of sensor 0
-> is e.g. 0x80, DATA reg of sensor N is at 0x80 + 0x04 * N.
-> 
-> Is that verified for other SoCs? Does anyone have some input on this?
-> 
-> We could then just use temp_data as the DATA reg "base" and increment by
-> 0x4 depending on the sensor id instead of using a fixed-size array.
-> 
+Isn't this better done in da830_pll_clk_init() ? I think we can get rid
+of the dummy fixed factor clock too and directly use the pll0_auxclk.
+That reminds me, is "pll0_aux_clk" above correct, or should it be
+"pll0_auxclk" like in da830_pll_clk_init()?
 
-This sounds like a good idea! I will add this to the next version.
+> +
+> +	clk = clk_register_fixed_factor(NULL, "rmii", "pll0_sysclk7", 0, 1, 1);
+> +	clk_register_clkdev(clk, "rmii", NULL);
 
-I can verify this with a table, I created during development. I will 
-upload it during the weekend here: [1]
-
-
->>   static const struct gpadc_data sun4i_gpadc_data = {
->> @@ -82,9 +83,10 @@ static const struct gpadc_data sun4i_gpadc_data = {
->>   	.tp_adc_select = SUN4I_GPADC_CTRL1_TP_ADC_SELECT,
->>   	.adc_chan_select = &sun4i_gpadc_chan_select,
->>   	.adc_chan_mask = SUN4I_GPADC_CTRL1_ADC_CHAN_MASK,
->> -	.temp_data = SUN4I_GPADC_TEMP_DATA,
->> +	.temp_data = {SUN4I_GPADC_TEMP_DATA, 0, 0, 0},
->>   	.sample_start = sun4i_gpadc_sample_start,
->>   	.sample_end = sun4i_gpadc_sample_end,
->> +	.sensor_count = 1,
-> 
-> If the solution above is not desirable/possible, could we use something
-> like:
-> 
-> unsigned int sun4i_temp_data[] = {SUN4I_GPADC_TEMP_DATA,};
-> 
-> static const struct gpadc_data sun4i_gpadc_data = {
-> 	.temp_data = &sun4i_temp_data,
-> 	.sensor_count = ARRAY_SIZE(sun4i_temp_data),
-> };
-> 
-> That avoids 1) inconsistencies between the array size and the array
-> itself, 2) does not require to pad the array with zeroes.
-> 
-> [...]
-> 
->> @@ -745,9 +752,12 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->>   	pm_runtime_enable(&pdev->dev);
->>   
->>   	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
->> -		info->tzd = thermal_zone_of_sensor_register(info->sensor_device,
->> -							    0, info,
->> -							    &sun4i_ts_tz_ops);
->> +		for (i = 0; i < info->data->sensor_count; i++) {
->> +			info->sensor_id = i;
->> +			info->tzd = thermal_zone_of_sensor_register(
->> +					info->sensor_device,
->> +					i, info, &sun4i_ts_tz_ops);
->> +		}
-> 
-> As Maxime said, this does not work.
-> 
-> One way would be to have a new structure being:
-> struct sun4i_sensor_info {
-> 	struct sun4i_gpadc_iio	*info;
-> 	unsigned int		sensor_id;
-> };
-> 
-> Or since we only use the iio_dev within the sun4i_gpadc_iio in the
-> .get_temp function, we may replace info by struct iio_dev *indio_dev
-> above.
-> 
-> Quentin
-> 
-I will have a closer look on this next week, when I start to work on the 
-next version..
+I don't see any driver looking for this clock using con_id "rmii". I
+know this came from existing code. But its most likely a vestige and can
+be dropped.
 
 Thanks,
-Philipp
-
-[1]: http://linux-sunxi.org/Thermal_Sensor
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
