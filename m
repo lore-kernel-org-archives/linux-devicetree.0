@@ -1,43 +1,247 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 3/3] ARM: sun8i: v3s: enable audio on Lichee Pi Zero Dock board
-Date: Fri,  2 Feb 2018 22:01:53 +0800
-Message-ID: <20180202140153.21549-4-icenowy@aosc.io>
-References: <20180202140153.21549-1-icenowy@aosc.io>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180202140153.21549-1-icenowy@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH 09/14] clk: stm32mp1: add Kernel timers
+Date: Fri, 2 Feb 2018 15:03:37 +0100
+Message-ID: <1517580222-23301-10-git-send-email-gabriel.fernandez@st.com>
+References: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, olivier.bideau@st.com
 List-Id: devicetree@vger.kernel.org
 
-The Lichee Pi Zero Dock board has an audio jack and an onboard MIC.
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-Enable them.
+This patch adds Kernel timers.
+This patch adds timers kernel clock.
+Timers are gather into two groups corresponding to the APB bus
+they are attached to.
+Each group has its own prescaler, managed in this patch.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/clk/clk-stm32mp1.c | 185 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 185 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
-index d1311098ea45..80f477738668 100644
---- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
-+++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
-@@ -55,6 +55,15 @@
- 	};
- };
+diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
+index d85c619..13d74f3 100644
+--- a/drivers/clk/clk-stm32mp1.c
++++ b/drivers/clk/clk-stm32mp1.c
+@@ -854,6 +854,138 @@ static struct clk_hw *clk_register_pll(struct device *dev, const char *name,
+ 	return hw;
+ }
  
-+&codec {
-+	allwinner,audio-routing =
-+		"Headphone", "HP",
-+		"Headphone", "HPCOM",
-+		"MIC1", "Mic",
-+		"Mic",  "HBIAS";
-+	status = "okay";
++/* Kernel Timer */
++struct timer_cker {
++	/* lock the kernel output divider register */
++	spinlock_t *lock;
++	void __iomem *apbdiv;
++	void __iomem *timpre;
++	struct clk_hw hw;
 +};
 +
- &mmc1 {
- 	broken-cd;
- 	bus-width = <4>;
++#define to_timer_cker(_hw) container_of(_hw, struct timer_cker, hw)
++
++#define APB_DIV_MASK 0x07
++#define TIM_PRE_MASK 0x01
++
++static unsigned long __bestmult(struct clk_hw *hw, unsigned long rate,
++				unsigned long parent_rate)
++{
++	struct timer_cker *tim_ker = to_timer_cker(hw);
++	u32 prescaler;
++	unsigned int mult = 0;
++
++	prescaler = readl_relaxed(tim_ker->apbdiv) & APB_DIV_MASK;
++	if (prescaler < 2)
++		return 1;
++
++	mult = 2;
++
++	if (rate / parent_rate >= 4)
++		mult = 4;
++
++	return mult;
++}
++
++static long timer_ker_round_rate(struct clk_hw *hw, unsigned long rate,
++				 unsigned long *parent_rate)
++{
++	unsigned long factor = __bestmult(hw, rate, *parent_rate);
++
++	return *parent_rate * factor;
++}
++
++static int timer_ker_set_rate(struct clk_hw *hw, unsigned long rate,
++			      unsigned long parent_rate)
++{
++	struct timer_cker *tim_ker = to_timer_cker(hw);
++	unsigned long flags = 0;
++	unsigned long factor = __bestmult(hw, rate, parent_rate);
++	int ret = 0;
++
++	spin_lock_irqsave(tim_ker->lock, flags);
++
++	switch (factor) {
++	case 1:
++		break;
++	case 2:
++		writel_relaxed(0, tim_ker->timpre);
++		break;
++	case 4:
++		writel_relaxed(1, tim_ker->timpre);
++		break;
++	default:
++		ret = -EINVAL;
++	}
++	spin_unlock_irqrestore(tim_ker->lock, flags);
++
++	return ret;
++}
++
++static unsigned long timer_ker_recalc_rate(struct clk_hw *hw,
++					   unsigned long parent_rate)
++{
++	struct timer_cker *tim_ker = to_timer_cker(hw);
++	u32 prescaler, timpre;
++	u32 mul;
++
++	prescaler = readl_relaxed(tim_ker->apbdiv) & APB_DIV_MASK;
++
++	timpre = readl_relaxed(tim_ker->timpre) & TIM_PRE_MASK;
++
++	if (!prescaler)
++		return parent_rate;
++
++	mul = (timpre + 1) * 2;
++
++	return parent_rate * mul;
++}
++
++static const struct clk_ops timer_ker_ops = {
++	.recalc_rate	= timer_ker_recalc_rate,
++	.round_rate	= timer_ker_round_rate,
++	.set_rate	= timer_ker_set_rate,
++
++};
++
++static struct clk_hw *clk_register_cktim(struct device *dev, const char *name,
++					 const char *parent_name,
++					 unsigned long flags,
++					 void __iomem *apbdiv,
++					 void __iomem *timpre,
++					 spinlock_t *lock)
++{
++	struct timer_cker *tim_ker;
++	struct clk_init_data init;
++	struct clk_hw *hw;
++	int err;
++
++	tim_ker = kzalloc(sizeof(*tim_ker), GFP_KERNEL);
++	if (!tim_ker)
++		return ERR_PTR(-ENOMEM);
++
++	init.name = name;
++	init.ops = &timer_ker_ops;
++	init.flags = flags;
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++
++	tim_ker->hw.init = &init;
++	tim_ker->lock = lock;
++	tim_ker->apbdiv = apbdiv;
++	tim_ker->timpre = timpre;
++
++	hw = &tim_ker->hw;
++	err = clk_hw_register(dev, hw);
++
++	if (err) {
++		kfree(tim_ker);
++		return ERR_PTR(err);
++	}
++
++	return hw;
++}
++
+ static struct clk_hw *
+ _clk_register_mp1_gate(struct device *dev,
+ 		       struct clk_hw_onecell_data *clk_data,
+@@ -887,6 +1019,23 @@ struct clk_hw *_clk_register_pll(struct device *dev,
+ 				base + stm_pll_cfg->offset, cfg->flags, lock);
+ }
+ 
++struct stm32_cktim_cfg {
++	u32 offset_apbdiv;
++	u32 offset_timpre;
++};
++
++static struct clk_hw *_clk_register_cktim(struct device *dev,
++					  struct clk_hw_onecell_data *clk_data,
++					  void __iomem *base, spinlock_t *lock,
++					  const struct clock_config *cfg)
++{
++	struct stm32_cktim_cfg *cktim_cfg = cfg->cfg;
++
++	return clk_register_cktim(dev, cfg->name, cfg->parent_name, cfg->flags,
++				  cktim_cfg->offset_apbdiv + base,
++				  cktim_cfg->offset_timpre + base, lock);
++}
++
+ #define GATE(_id, _name, _parent, _flags, _offset, _bit_idx, _gate_flags)\
+ {\
+ 	.id		= _id,\
+@@ -1056,6 +1205,23 @@ struct clk_hw *_clk_register_pll(struct device *dev,
+ 	.func		= _clk_register_pll,\
+ }
+ 
++#define STM32_CKTIM(_name, _parent, _flags, _offset_apbdiv, _offset_timpre)\
++{\
++	.id		= NO_ID,\
++	.name		= _name,\
++	.parent_name	= _parent,\
++	.flags		= _flags,\
++	.cfg		=  &(struct stm32_cktim_cfg) {\
++		.offset_apbdiv = _offset_apbdiv,\
++		.offset_timpre = _offset_timpre,\
++	},\
++	.func		= _clk_register_cktim,\
++}
++
++#define STM32_TIM(_id, _name, _parent, _offset_set, _bit_idx)\
++		  MP1_GATE(_id, _name, _parent, CLK_SET_RATE_PARENT,\
++			   _offset_set, _bit_idx, 0)
++
+ static const struct clock_config stm32mp1_clock_cfg[] = {
+ 	/* Oscillator divider */
+ 	DIV(NO_ID, "clk-hsi-div", "clk-hsi", 0, RCC_HSICFGR, 0, 2,
+@@ -1152,6 +1318,25 @@ struct clk_hw *_clk_register_pll(struct device *dev,
+ 
+ 	DIV_TABLE(NO_ID, "pclk5", "ck_axi", CLK_IGNORE_UNUSED, RCC_APB5DIVR, 0,
+ 		  3, CLK_DIVIDER_READ_ONLY, apb_div_table),
++
++	/* Kernel Timers */
++	STM32_CKTIM("ck1_tim", "pclk1", 0, RCC_APB1DIVR, RCC_TIMG1PRER),
++	STM32_CKTIM("ck2_tim", "pclk2", 0, RCC_APB2DIVR, RCC_TIMG2PRER),
++
++	STM32_TIM(TIM2_K, "tim2_k", "ck1_tim", RCC_APB1ENSETR, 0),
++	STM32_TIM(TIM3_K, "tim3_k", "ck1_tim", RCC_APB1ENSETR, 1),
++	STM32_TIM(TIM4_K, "tim4_k", "ck1_tim", RCC_APB1ENSETR, 2),
++	STM32_TIM(TIM5_K, "tim5_k", "ck1_tim", RCC_APB1ENSETR, 3),
++	STM32_TIM(TIM6_K, "tim6_k", "ck1_tim", RCC_APB1ENSETR, 4),
++	STM32_TIM(TIM7_K, "tim7_k", "ck1_tim", RCC_APB1ENSETR, 5),
++	STM32_TIM(TIM12_K, "tim12_k", "ck1_tim", RCC_APB1ENSETR, 6),
++	STM32_TIM(TIM13_K, "tim13_k", "ck1_tim", RCC_APB1ENSETR, 7),
++	STM32_TIM(TIM14_K, "tim14_k", "ck1_tim", RCC_APB1ENSETR, 8),
++	STM32_TIM(TIM1_K, "tim1_k", "ck2_tim", RCC_APB2ENSETR, 0),
++	STM32_TIM(TIM8_K, "tim8_k", "ck2_tim", RCC_APB2ENSETR, 1),
++	STM32_TIM(TIM15_K, "tim15_k", "ck2_tim", RCC_APB2ENSETR, 2),
++	STM32_TIM(TIM16_K, "tim16_k", "ck2_tim", RCC_APB2ENSETR, 3),
++	STM32_TIM(TIM17_K, "tim17_k", "ck2_tim", RCC_APB2ENSETR, 4),
+ };
+ 
+ struct stm32_clock_match_data {
 -- 
-2.15.1
+1.9.1
+
