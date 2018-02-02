@@ -1,45 +1,99 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 00/11] Add R8A77980/Condor board support
-Date: Fri, 2 Feb 2018 21:18:33 +0300
-Message-ID: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH RFC v2 2/3] dt-bindings/interrupt-controller: pdc: descibe
+ PDC device binding
+Date: Fri, 2 Feb 2018 17:02:24 +0000
+Message-ID: <35ce761e-c9ac-6280-cc72-eccd1dded609@arm.com>
+References: <20180202142200.6229-1-ilina@codeaurora.org>
+ <20180202142200.6229-3-ilina@codeaurora.org>
+ <396cfc2f-7deb-0c93-7178-d9f5524f110e@arm.com>
+ <20180202164643.GC5319@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180202164643.GC5319@codeaurora.org>
+Content-Language: en-GB
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On 02/02/18 16:46, Lina Iyer wrote:
+> On Fri, Feb 02 2018 at 16:28 +0000, Marc Zyngier wrote:
+>> On 02/02/18 14:21, Lina Iyer wrote:
+>>> From: Archana Sathyakumar <asathyak@codeaurora.org>
+>>>
+>>> Add device binding documentation for the PDC Interrupt controller on
+>>> QCOM SoC's like the SDM845. The interrupt-controller can be used to
+>>> sense edge low interrupts and wakeup interrupts when the GIC is
+>>> non-operational.
+>>>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
+>>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>>> ---
+>>>  .../bindings/interrupt-controller/qcom,pdc.txt     | 78 ++++++++++++++++++++++
+>>>  1 file changed, 78 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>>> new file mode 100644
+>>> index 000000000000..7bf40cb6a4f8
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>>> @@ -0,0 +1,78 @@
+>>> +PDC interrupt controller
+>>> +
+>>> +Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
+>>> +Power Domain Controller (PDC) that is on always-on domain. In addition to
+>>> +providing power control for the power domains, the hardware also has an
+>>> +interrupt controller that can be used to help detect edge low interrupts as
+>>> +well detect interrupts when the GIC is non-operational.
+>>> +
+>>> +GIC is parent interrupt controller at the highest level. Platform interrupt
+>>> +controller PDC is next in hierarchy, followed by others. Drivers requiring
+>>> +wakeup capabilities of their device interrupts routed through the PDC, must
+>>> +specify PDC as their interrupt controller and request the PDC port associated
+>>> +with the GIC interrupt. See example below.
+>>> +
+>>> +Properties:
+>>> +
+>>> +- compatible:
+>>> +	Usage: required
+>>> +	Value type: <string>
+>>> +	Definition: Should contain "qcom,<soc>-pdc"
+>>> +		    - "qcom,sdm845-pdc": For SDM845
+>>> +
+>>> +- reg:
+>>> +	Usage: required
+>>> +	Value type: <prop-encoded-array>
+>>> +	Definition: Specifies the base physical address for PDC hardware.
+>>> +
+>>> +- interrupt-cells:
+>>> +	Usage: required
+>>> +	Value type: <u32>
+>>> +	Definition: Specifies the number of cells needed to encode an interrupt
+>>> +		    source.
+>>> +		    The value must match that of the parent interrupt
+>>> +		    controller defined in the DT.
+>>> +		    The encoding of these cells are same as described in [1].
+>>
+>> There shouldn't be such a requirement. These are two independent pieces
+>> of HW, and the first parameter doesn't mean anything for the PDC.
+>>
+> Wouldn't that be confusing - that we have different definitions for
+> interrupts in the same DT? I agree that they are different interrupt
+> controllers, but it just feels odd.
 
-Here's the set of 11 patches against Simon Horman's 'renesas.git' repo's
-'renesas-devel-20180202-v4.15' tag. I'm adding the device tree support for
-the R8A77980-based Condor board (note that NFS root would only work on the
-Condor boards [re]wired for booting from EtherAVB -- we haven't been able
-to get the 'sh_eth' driver working in either U-Boot or Linux so far).
-The necessary SYS-DMAC, [H]SCIF, and EtherAVB bindings updates have been
-posted yesterday, the clock driver was posted the day before...
+I think it feels more bizarre to have pointless fields in the interrupt
+specifier. And most DTs have some sort of secondary interrupt controller
+that only take two (or even one) parameters. I don't think we should
+treat this any differently.
 
-[01/11] soc: renesas: identify R-Car V3H
-[02/11] soc: renesas: rcar-rst: add R8A77980 support
-[03/11] dt-bindings: power: add R8A77980 SYSC power domain definitions
-[04/11] soc: renesas: rcar-sysc: add R8A77980 support
-[05/11] arm64: dts: renesas: initial R8A77980 SoC device tree
-[06/11] arm64: dts: renesas: r8a77980: add SYS-DMAC support
-[07/11] arm64: dts: renesas: r8a77980: add [H]SCIF support
-[08/11] arm64: dts: renesas: r8a77980: add EtherAVB support
-[09/11] DT: arm: shmobile: document Condor board bindings
-[10/11] arm64: dts: renesas: initial Condor board device tree
-[11/11] arm64: dts: renesas: condor: add EtherAVB support
+> I will change this to just take 2 cells.
 
-WBR, Sergei
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
