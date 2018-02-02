@@ -1,42 +1,195 @@
-From: "Ray, Ian (GE Healthcare)" <ian.ray-JJi787mZWgc@public.gmane.org>
-Subject: Re: EXT: Re: [PATCH 1/1] ARM: dts: imx6q-bx50v3: disable SD card
-Date: Fri, 2 Feb 2018 07:11:12 +0000
-Message-ID: <0089AFED-AB30-43E7-8C9C-9C4229967B82@ge.com>
-References: <8de710254808e8d80295b75ff28ccd14afe2ad94.1515410930.git.ian.ray@ge.com>
- <20180202010440.GD20833@dragon>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 02/41] clk: davinci: New driver for davinci PLL clocks
+Date: Fri, 2 Feb 2018 13:42:22 +0530
+Message-ID: <cbaee6d4-ff59-6684-4b3e-8b74b602c7ad@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-3-git-send-email-david@lechnology.com>
+ <ff3a0549-2f76-9a8d-21bc-164649e8a6be@ti.com>
+ <3ed91881-8753-a541-31aa-c835329141b3@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180202010440.GD20833@dragon>
+In-Reply-To: <3ed91881-8753-a541-31aa-c835329141b3-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Content-Language: en-US
-Content-ID: <D7059D6EC8102540B642C93F61124F56-04eVtxCKEr39SOyiPdwG7kEZadJ+ESx9@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQo+IE9uIDIgRmViIDIwMTgsIGF0IDMuMDQsIFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9y
-Zz4gd3JvdGU6DQo+IA0KPiBIaSBJYW4sDQo+IA0KPiBPbiBNb24sIEphbiAwOCwgMjAxOCBhdCAw
-MToyOTowMVBNICswMjAwLCBJYW4gUmF5IHdyb3RlOg0KPj4gRGVmYXVsdCBib290IG1lZGl1bSBt
-dXN0IGJlIGludGVybmFsIGVNTUMsIHdlIGRvbid0IHdhbnQgdGhlIFNESU8gdG8gYmUNCj4+IHVz
-ZWQgZm9yIHRoZXNlIGRldmljZXMuICBUaGlzIGNvbW1pdCBkaXNhYmxlcyB0aGUgU0QgY2FyZCBp
-bnRlcmZhY2UgZm9yDQo+PiBHRSBIZWFsdGhjYXJlIEJ4NTB2MyBkZXZpY2VzLg0KPj4gDQo+PiBT
-aWduZWQtb2ZmLWJ5OiBJYW4gUmF5IDxpYW4ucmF5QGdlLmNvbT4NCj4+IFNpZ25lZC1vZmYtYnk6
-IFJvbWFpbiBQZXJpZXIgPHJvbWFpbi5wZXJpZXJAY29sbGFib3JhLmNvbT4NCj4gDQo+IFlvdSBh
-cmUgc3VibWl0dGluZyBhIHBhdGNoIGF1dGhvcmVkIGJ5IHlvdXJzZWxmLiAgV2h5IGlzIFJvbWFp
-bidzIFNvQg0KPiB0aGVyZT8NCj4gDQoNClNvcnJ5IGZvciB0aGUgbWVzcyDigJQgUm9tYWluIHNl
-bnQgYSBWMSB3aGljaCB3YXMgTkFL4oCZZCBiZWNhdXNlIG9mDQpub24tYWxwaGFiZXRpY2FsIG9y
-ZGVyaW5nLg0KDQoNCj4gU2hhd24NCj4gDQo+PiAtLS0NCj4+IGFyY2gvYXJtL2Jvb3QvZHRzL2lt
-eDZxLWJ4NTB2My5kdHNpIHwgNCArKysrDQo+PiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25z
-KCspDQo+PiANCj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cS1ieDUwdjMu
-ZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWJ4NTB2My5kdHNpDQo+PiBpbmRleCBiOTE1
-ODM3Li5hNTMwMTY5IDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEtYng1
-MHYzLmR0c2kNCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxLWJ4NTB2My5kdHNpDQo+
-PiBAQCAtMzAzLDYgKzMwMywxMCBAQA0KPj4gCX07DQo+PiB9Ow0KPj4gDQo+PiArJnVzZGhjMiB7
-DQo+PiArCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+PiArfTsNCj4+ICsNCj4+ICZ1c2RoYzQgew0K
-Pj4gCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+PiAJcGluY3RybC0wID0gPCZwaW5jdHJs
-X3VzZGhjND47DQo+PiAtLSANCj4+IDIuMTAuMQ0KPj4gDQoNCg==
+On Friday 02 February 2018 12:27 AM, David Lechner wrote:
+> On 02/01/2018 02:01 AM, Sekhar Nori wrote:
+>> On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+>>> This adds a new driver for mach-davinci PLL clocks. This is porting the
+>>> code from arch/arm/mach-davinci/clock.c to the common clock framework.
+>>> Additionally, it adds device tree support for these clocks.
+>>>
+>>> The ifeq ($(CONFIG_COMMON_CLK), y) in the Makefile is needed to prevent
+>>> compile errors until the clock code in arch/arm/mach-davinci is removed.
+>>>
+>>> Note: although there are similar clocks for TI Keystone we are not able
+>>> to share the code for a few reasons. The keystone clocks are device tree
+>>> only and use legacy one-node-per-clock bindings. Also the register
+>>> layouts are a bit different, which would add even more if/else mess
+>>> to the keystone clocks. And the keystone PLL driver doesn't support
+>>> setting clock rates.
+>>>
+>>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>>
+>> Looks nice and clean to me. There is still some feedback though.
+>>
+>> One thing missing is DIV4.5 clock. It will be nice to add that too,
+>> mostly just because it will make the binding complete.
+>>
+>>> +void of_davinci_pll_init(struct device_node *node,
+>>> +             const struct davinci_pll_clk_info *info,
+>>> +             const struct davinci_pll_obsclk_info *obsclk_info,
+>>> +             const struct davinci_pll_sysclk_info *div_info,
+>>> +             u8 max_sysclk_id)
+>>> +{
+>>> +    struct device_node *child;
+>>> +    const char *parent_name;
+>>> +    void __iomem *base;
+>>> +    struct clk *clk;
+>>> +
+>>> +    base = of_iomap(node, 0);
+>>> +    if (!base) {
+>>> +        pr_err("ioremap failed");
+>>> +        return;
+>>> +    }
+>>> +
+>>> +    if (info->flags & PLL_HAS_OSCIN)
+>>> +        parent_name = of_clk_get_parent_name(node, 0);
+>>> +    else
+>>> +        parent_name = OSCIN_CLK_NAME;
+>>
+>> I don't think the reference clock input handling is fully
+>> correct/flexible.
+>>
+>> There are two ways to provide input clock (ref_clk) to PLL. Either use
+>> the internal oscillator with a crystal connected between OSCIN and
+>> OSCOUT (CLKMODE = 0) or a clean clock input (CLKMODE = 1) connected to
+>> OSCIN (OSCOUT disconnected).
+>>
+>> This is a board specific decision. On the LogicPD EVM, the former option
+>> is used, on the LCDK board, the later.
+>>
+>> So, I think what we need is a DT property like
+>> "ti,davinci-use-internal-osc" for the PLL. Boards can set or ignore it
+>> and you can switch CLKMODE on or off based on that.
+>>
+>> Setting CLKMODE = 1 will switch off the internal oscillator (and
+>> presumably save power), but it does not act as a mux. This explains why
+>> not worrying about setting this correctly in current mainline still
+>> works.
+>>
+>> I am also not sure if we really need PLL_HAS_OSCIN since all DaVinci
+>> SoCs set it anyway.
+> 
+> 
+> I realize this is a bit confusing. I think that part of this comes from
+> the fact that OSCIN is not used consistently in the TRMs. It is used as
+
+Thats right, I noticed that too. But all SoC datasheets I looked at
+supported both internal oscillator and external clock input. Also, no
+SoC had different reference clocks for its PLLs (DM355 has two crystal
+inputs, but one of them goes only to the video peripheral).
+
+So I still think there is benefit in standardizing on a single name in
+kernel/DT (I was hoping it can be "ref_clk").
+
+> the name of the actual pin on the SoC for connecting an external clock
+> signal or crystal. It is also used as an input to CLKMODE where it means
+> the output of the internal oscillator rather than the external pin (some
+> SoCs show CLKMODE as a mux with OSCIN and CLKIN, but I agree that it is
+> not really a mux since OSCIN and CLKIN are the same external pin on the
+> SoC - then other SoCs show OSCIN meaning only the external pin here).
+> Furthermore, OSCIN is listed as one of the inputs of EXTCLKSRC also as
+> one of the inputs of OBSCLK on da850-type SoCs.
+
+Right.
+
+> So, the option I went with here is that "ref_clk" is the external clock
+> connected to the OSCIN pin and that the "oscin" clock is the clock domain
+> _after_ CLKMODE. This matches the use of OSCIN in the TRMs where "OSCIN"
+> is used as an input for EXTCLKSRC and OBSCLK. Also the fact that the
+> external reference clock is sometimes called CLKSRC instead of OSCIN
+> influenced the decision go with "oscin" being the internal (to the PLL)
+> clock domain.
+
+Okay, I think we need some comments in code to make this distinction clear.
+
+I do not yet understand why we need to differentiate between the
+external-to-chip clock domain from internal "after CLKMODE" domain.
+OTOH, I don't see a big harm in doing it either (as long as the
+distinction is clear).
+
+> 
+> I think what I should have done, though, is named PLL_HAS_OSCIN as
+> PLL_HAS_CLKMODE instead. I think what you are missing here is that
+> PLL_HAS_OSCIN (or PLL_HAS_CLKMODE) only means that the PLL _has_
+> PLLCTL[CLKMODE]. It does _not_ mean that we set (or clear) PLLCTL[CLKMODE].
+> On SoCs with two PLLs, only one of them has the PLLCTL[CLKMODE] bit (and
+> therefore the PLL_HAS_OSCIN flag) and the output of this is shared by both
+> PLLs, e.g. Figure 7-1. PLLC Structure in the AM1808 TRM (spruh82c). So,
+> the clock tree in Linux ends up looking like this:
+
+I agree with renaming PLL_HAS_OSCIN with PLL_HAS_CLKMODE will be much
+clearer.
+
+> 
+> ref_clk - the external clock - aka CLKSRC
+> +-oscin - internal clock domain after CLKMODE - shared by both PLLs
+>   +-pll0_extclksrc
+>   +-pll0_prediv
+>   +-pll0_auxclk
+>   +-pll0_obsclk - via the OSCSRC mux
+>   +-pll1_pllen
+>   +-pll1_pllout
+>   +-pll1_obsclk - via the OSCSRC mux
+> 
+> Clocks beyond two levels deep are omitted for brevity.
+> 
+> It should be easy to see the correlation here Figure 7-1 with the
+> exception that in Figure 7-1 "OSCIN" has the meaning of "the physical
+> pin on the chip" (which Linux calls "ref_clk") and there is no clear
+> label in Figure 7-1 of what the clock domain after PLLCTL[CLKMODE] is
+> called (which Linux calls "oscin").
+
+Yeah, thats why I was not sure why need to make the distinction between
+these domains.
+
+> Sure, it would work just fine if we left "oscin" out of the picture,
+> but it simplifies the driver implementation by having a known "oscin"
+> clock that is fully controlled by the clock driver code instead of
+> having to pass the user-supplied "ref_clk" around a bunch of places.
+
+Okay.
+
+> And, we could try to call it something other than "oscin" to try
+> to avoid confusion, but then you will just cause confusion in other
+> places (which could be less total confusion, so I am open to change
+> here).
+
+Calling external clock as "ref_clk" and internal clock domain as "oscin"
+is fine. Its the best choice of names given the terminology
+inconsistency between TRMs of different devices.
+
+> ---
+> 
+> Switching topics to CLKMODE and DT...
+> 
+> There is a "ti,clkmode-square-wave" property in the proposed DT bindings
+> that does exactly what you have suggested, except the logic is
+> reversed. When omitted, it assumes the use of a crystal oscillator.
+> I believe this is the most common configuration, which is why I made
+> it the default instead of the other way around.
+
+This is fine and looks like I missed its existence while making my
+suggestion.
+
+Thanks,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
