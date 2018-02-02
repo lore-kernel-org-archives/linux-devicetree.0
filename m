@@ -1,82 +1,58 @@
-From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH] fbdev: simplefb: add support for 'memory-region' property on DT node
-Date: Fri, 02 Feb 2018 14:21:21 +0900
-Message-ID: <20180202142121.CEB8.4A936039@socionext.com>
-References: <2359956.Z9lQWSAgHb@amdc3058> <CAHp75VfTrEELX9kKjZ7zmM8V=ZxbfAPbEDozG1i0A4P6gUjnEA@mail.gmail.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 2/2] dt-bindings: fsl-quadspi: spi-rx/tx-bus-width usage
+ example
+Date: Fri, 2 Feb 2018 05:24:00 +0000
+Message-ID: <DB6PR0402MB28383FBE4912EC7E73908B7199F90@DB6PR0402MB2838.eurprd04.prod.outlook.com>
+References: <1517333637-17331-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1517333637-17331-3-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <CAL_JsqLBUDNEWkcrNcrOmuYcR=Gbf2ALD=z4s9AP4poOcBxNRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VfTrEELX9kKjZ7zmM8V=ZxbfAPbEDozG1i0A4P6gUjnEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAL_JsqLBUDNEWkcrNcrOmuYcR=Gbf2ALD=z4s9AP4poOcBxNRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, Suresh Gupta <suresh.gupta-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-On Thu, 1 Feb 2018 21:03:30 +0200 <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> On Thu, Feb 1, 2018 at 5:56 PM, Bartlomiej Zolnierkiewicz
-> <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Tuesday, January 23, 2018 08:34:56 PM Kunihiko Hayashi wrote:
-> >> Enables 'memory-region' property referring to the memory description on
-> >> the reserved-memory node in case of devicetree use.
-> >> If there is no 'reg' property that specifies the address and size of
-> >> the framebuffer, the address and size written in the memory description
-> >> on the reserved-memory node can be used for the framebuffer.
-> >>
-> >> Furthermore, the reserved-memory node needs to have "no-map" attributes
-> >> because simplefb driver maps the region by ioremap_wc().
-> >>
-> >> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> 
-> >> +- memory-region: phandle to a node describing memory region as framebuffer
-> >> +              memory instead of reg property. The node should include
-> >> +              'no-map'.
-> 
-> >>       mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >> +     if (!mem)
-> >> +             mem = simplefb_parse_dt_reserved_mem(&pdev->dev);
-> 
-> I'm not sure I understood why you need this entire function?
-> 
-> Put your memory resource ('reg' property) as part of reserved memory
-> with necessary flags.
-
-Surely we prepare a memory resource as a part of reserved memory,
-for example:
-
-	reserved-memory {
-		fb_area: memory@0xa0000000 {
-			reg = <0xa0000000 0x400000>;
-			no-map;
-		};
-	};
-
-And we need to specify the address and size as a reg property in
-the framebuffer node.
-
-	framebuffer {
-		compatible = "simple-framebuffer";
-		reg = <0xa0000000 0x400000>;
-	};
-
-This function allows us to specify the area with phandle to
-the reserved memory instead of same address and size.
-
-	framebuffer {
-		compatible = "simple-framebuffer";
-		memory-region = <&fb_area>;
-	};
-
-If both reg and memory-region properties are specified
-in the framebuffer node, the reg propery will be applied.
-
----
-Best Regards,
-Kunihiko Hayashi
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZGV2aWNldHJlZS1vd25l
+ckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpkZXZpY2V0cmVlLQ0KPiBvd25lckB2Z2VyLmtlcm5l
+bC5vcmddIE9uIEJlaGFsZiBPZiBSb2IgSGVycmluZw0KPiBTZW50OiBXZWRuZXNkYXksIEphbnVh
+cnkgMzEsIDIwMTggMTI6MjQgQU0NCj4gVG86IFlvZ2VzaCBOYXJheWFuIEdhdXIgPHlvZ2VzaG5h
+cmF5YW4uZ2F1ckBueHAuY29tPg0KPiBDYzogbGludXgtbXRkQGxpc3RzLmluZnJhZGVhZC5vcmc7
+IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVORUQNCj4gREVWSUNFIFRSRUUgQklO
+RElOR1MgPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJr
+LnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47IG1vZGVy
+YXRlZA0KPiBsaXN0OkFSTS9GUkVFU0NBTEUgSU1YIC8gTVhDIEFSTSBBUkNISVRFQ1RVUkUgPGxp
+bnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBCb3JpcyBCUkVaSUxMT04g
+PGJvcmlzLmJyZXppbGxvbkBmcmVlLQ0KPiBlbGVjdHJvbnMuY29tPjsgQ3lyaWxsZSBQaXRjaGVu
+IDxjeXJpbGxlLnBpdGNoZW5Ad2VkZXY0dS5mcj47IEJyaWFuIE5vcnJpcw0KPiA8Y29tcHV0ZXJz
+Zm9ycGVhY2VAZ21haWwuY29tPjsgSGFuIFh1IDxoYW4ueHVAbnhwLmNvbT47IEZhYmlvIEVzdGV2
+YW0NCj4gPGZlc3RldmFtQGdtYWlsLmNvbT47IFByYWJoYWthciBLdXNod2FoYQ0KPiA8cHJhYmhh
+a2FyLmt1c2h3YWhhQG54cC5jb20+OyBTdXJlc2ggR3VwdGEgPHN1cmVzaC5ndXB0YUBueHAuY29t
+Pg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gZHQtYmluZGluZ3M6IGZzbC1xdWFkc3BpOiBz
+cGktcngvdHgtYnVzLXdpZHRoIHVzYWdlDQo+IGV4YW1wbGUNCj4gDQo+IE9uIFR1ZSwgSmFuIDMw
+LCAyMDE4IGF0IDExOjMzIEFNLCBZb2dlc2ggR2F1cg0KPiA8eW9nZXNobmFyYXlhbi5nYXVyQG54
+cC5jb20+IHdyb3RlOg0KPiA+IEFkZGVkIHVzYWdlIGV4YW1wbGUgYnkgYWRkaW5nIHN1cHBvcnQg
+Zm9yIHNwaS1yeC1idXMtd2lkdGggYW5kDQo+ID4gc3BpLXR4LWJ1cy13aWR0aCBiaW5kaW5nLg0K
+PiANCj4gV2h5IG5vdCBqdXN0IGFkZCB0byBleGlzdGluZyBleGFtcGxlPyBJcyB0aGVyZSBzb21l
+dGhpbmcgdW5jbGVhciBhYm91dCBhZGRpbmcNCj4gdGhlc2UgcHJvcGVydGllcyB0byB3YXJyYW50
+IGFuIGV4YW1wbGU/IFdlIGRvbid0IG5lZWQgZXZlcnkgcG9zc2libGUgb3B0aW9uDQo+IGVudW1l
+cmF0ZWQuDQo+IA0KT2ssIHdvdWxkIGRyb3AgdGhpcyBwYXRjaCBhbmQgc2VuZCBhbm90aGVyIHBh
+dGNoIGhhdmluZyB1c2FnZSBvZiBwcm9wZXJ0aWVzIHNwaS1yeC1idXMtd2lkdGggYW5kIHNwaS10
+eC1idXMtd2lkdGggaW4gZXhpc3RpbmcgZXhhbXBsZSB1bmRlciBiaW5kaW5nIGZpbGUgJ3NwaS1i
+dXMudHh0Jy4NCg0KVGhhbmtzDQoNCj4gUm9iDQo+IC0tDQo+IFRvIHVuc3Vic2NyaWJlIGZyb20g
+dGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbiB0aGUg
+Ym9keQ0KPiBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIua2VybmVsLm9yZyBNb3JlIG1h
+am9yZG9tbyBpbmZvIGF0DQo+IGh0dHBzOi8vZW1lYTAxLnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91
+dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnZnZXIua2UNCj4gcm5lbC5vcmclMkZtYWpvcmRv
+bW8tDQo+IGluZm8uaHRtbCZkYXRhPTAyJTdDMDElN0N5b2dlc2huYXJheWFuLmdhdXIlNDBueHAu
+Y29tJTdDNzJhN2U5OWJkZA0KPiA2ZDRkM2I2NDVkMDhkNTY4MTJkMGIyJTdDNjg2ZWExZDNiYzJi
+NGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTdDDQo+IDAlN0M2MzY1MjkzNTIzODQ1MTk4Nzkmc2Rh
+dGE9bnV4OXhiZ3pTano3YkZBRlhPRkV6dCUyQnpFblVQVmg1ZjZBDQo+IG1rWEsxUHd5ayUzRCZy
+ZXNlcnZlZD0wDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
