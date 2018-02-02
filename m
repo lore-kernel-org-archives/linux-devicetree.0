@@ -1,63 +1,44 @@
-From: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
- of_find_node_by_phandle()
-Date: Fri, 2 Feb 2018 11:29:16 +0530
-Message-ID: <567731e8-8f89-bd6e-c3d4-e36400e69198@codeaurora.org>
-References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
- <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
- <38cdcae5-ec0f-d1be-b024-1990d4387731@gmail.com>
- <9e23d32f-05a0-ce8a-41f8-9a1a3d66be37@codeaurora.org>
- <fd9f5f63-b08e-602e-1510-85a65889f550@gmail.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] ARM: dts: Add PHYTEC phyCORE-i.MX 6 and
+ phyBOARD-Mira carrier board support
+Date: Fri, 2 Feb 2018 14:06:54 +0800
+Message-ID: <20180202060653.GK20833@dragon>
+References: <1515514200-9801-1-git-send-email-s.riedmueller@phytec.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fd9f5f63-b08e-602e-1510-85a65889f550-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1515514200-9801-1-git-send-email-s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Riedmueller <s.riedmueller-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2/2/2018 12:40 AM, Frank Rowand wrote:
-> On 02/01/18 02:31, Chintan Pandya wrote:
->>
->>>> Anyways, will fix this locally and share test results.
->>>
->>> Thanks, I look forward to the results.
->>>
->>
->> Set up for this time was slightly different. So, taken all the numbers again.
->>
->> Boot to shell time (in ms): Experiment 2
->> [1] Base            : 14.843805 14.784842 14.842338
->> [2] 64 sized fixed cache    : 14.189292 14.200003 14.266711
->> [3] Dynamic freeable cache    : 14.112412 14.064772 14.036052
->>
->> So, [3] (this patch) looks to be improving 750ms (on avg from base build).
->>
+On Tue, Jan 09, 2018 at 05:09:54PM +0100, Stefan Riedmueller wrote:
+> Changes since v4:
+> - Rearranged &m25p80 node in dts files to fit alphabetical order
+> - Fixed a parenthesis for uniformity in mira dtsi
 > 
-> Is this with the many debug options enabled?  If so, can you repeat with
-> a normal configuration?
-
-Could you share me the point of doing this experiment in perf mode ? I 
-don't have a set up for taking these numbers in perf mode. For that, I 
-need to ask some other team and round trip follow ups. In my set up, I 
-rely on serial console logging which gets disabled in perf mode.
-
+> Christian Hemp (2):
+>   ARM: dts: imx6: Add support for phyBOARD-Mira i.MX 6Quad/Dual RDK
+>   ARM: dts: imx6: Add support for phyBOARD-Mira i.MX 6 DualLight/Solo
+>     RDK
 > 
-> Thanks,
+> Enrico Scholz (1):
+>   ARM: dts: imx6: Add support for phyBOARD-Mira with i.MX 6QuadPlus
 > 
-> Frank
-> 
+> Stefan Riedmueller (3):
+>   ARM: dts: imx6: Add initial support for phyCORE-i.MX 6 SOM
+>   ARM: dts: imx6: Add initial support for phyBOARD-Mira
 
-Chintan
--- 
-Qualcom India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation
-Collaborative Project
+Okay, I replaced v4 with this v5.
+
+>   ARM: imx_v6_v7_defconfig: Enable Dialog Semiconductor DA9062 driver
+
+This one still doesn't apply to imx/defconfig.  Please rebase and
+resend.
+
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
