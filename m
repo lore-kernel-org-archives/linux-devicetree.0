@@ -1,64 +1,57 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v6 4/6] iommu/arm-smmu: Add the device_link between
- masters and smmu
-Date: Fri, 2 Feb 2018 18:44:00 +0530
-Message-ID: <8476fe51-e6f9-2028-82e0-353182e4032f@codeaurora.org>
-References: <1516362223-22946-1-git-send-email-vivek.gautam@codeaurora.org>
- <1516362223-22946-5-git-send-email-vivek.gautam@codeaurora.org>
- <6b930150-cb81-b0a5-601c-16cb576c4341@arm.com>
- <b7887b45-774a-2515-4304-227037b9af1f@codeaurora.org>
- <7cc4caec-4264-db9d-3afa-e3d20d3edfa7@codeaurora.org>
- <f8932e2f-75bb-ce30-ae68-1870477fad5f@arm.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 18/41] clk: davinci: New driver for TI DA8XX CFGCHIP
+ clocks
+Date: Fri, 2 Feb 2018 18:49:07 +0530
+Message-ID: <c2138795-edcd-bb7d-094d-47dc049c33df@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-19-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <f8932e2f-75bb-ce30-ae68-1870477fad5f@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516468460-4908-19-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, alex.williamson@redhat.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, will.deacon@arm.com, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, sboyd@codeaurora.org
-Cc: gregkh@linuxfoundation.org, m.szyprowski@samsung.com, architt@codeaurora.org, linux-arm-msm@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
+On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+> +static const struct clk_ops da8xx_cfgchip_div4p5_clk_ops = {
+> +	.enable		= da8xx_cfgchip_gate_clk_enable,
+> +	.disable	= da8xx_cfgchip_gate_clk_disable,
+> +	.is_enabled	= da8xx_cfgchip_gate_clk_is_enabled,
 
-On 2/2/2018 5:01 PM, Robin Murphy wrote:
-> On 02/02/18 05:40, Sricharan R wrote:
->> Hi Robin/Vivek,
->>
->> On 2/1/2018 2:23 PM, Vivek Gautam wrote:
->>> Hi,
->>>
->>>
->>> On 1/31/2018 6:39 PM, Robin Murphy wrote:
->>>> On 19/01/18 11:43, Vivek Gautam wrote:
->>>>> From: Sricharan R <sricharan@codeaurora.org>
->>>>>
->>>>> Finally add the device link between the master device and
->>>>> smmu, so that the smmu gets runtime enabled/disabled only when the
->>>>> master needs it. This is done from add_device callback which gets
->>>>> called once when the master is added to the smmu.
->>>>
->>>> Don't we need to balance this with a device_link_del() in .remove_device (like exynos-iommu does)?
->>>
->>> Right. Will add device_link_del() call. Thanks for pointing out.
->>
->>   The reason for not adding device_link_del from .remove_device was, the core device_del
->>   which calls the .remove_device from notifier, calls device_links_purge before that.
->>   That does the same thing as device_link_del. So by the time .remove_device is called,
->>   device_links for that device is already cleaned up. Vivek, you may want to check once that
->>   calling device_link_del from .remove_device has no effect, just to confirm once more.
-> 
-> There is at least one path in which .remove_device is not called via the notifier from device_del(), which is in the cleanup path of iommu_bus_init(). AFAICS any links created by .add_device during that process would be left dangling, because the device(s) would be live but otherwise disassociated from the IOMMU afterwards.
-> 
-> From a maintenance perspective it's easier to have the call in its logical place even if it does nothing 99% of the time; that way we shouldn't have to keep an eye out for subtle changes in the power management code or driver core that might invalidate the device_del() reasoning above, and the power management guys shouldn't have to comprehend the internals of the IOMMU API to make sense of the unbalanced call if they ever want to change their API.
+I assume the reason for not using clk-gate.c is lack of regmap support
+there?
 
- Ha, for a moment was thinking that with probe deferral add/remove_iommu_group in iommu_bus_init is dummy.
- But that may not be true for all Archs.
- Surely agree for the maintainability reason as well. Thanks.
+> +	.recalc_rate	= da8xx_cfgchip_div4p5_recalc_rate,
+> +};
+> +
+> +static struct clk * __init
+> +da8xx_cfgchip_gate_clk_register(const struct da8xx_cfgchip_gate_clk_info *info,
+> +				const char *parent_name,
+> +				struct regmap *regmap)
+> +{
+> +	struct da8xx_cfgchip_gate_clk *gate;
+> +	struct clk_init_data init;
+> +
+> +	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
+> +	if (!gate)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	init.name = info->name;
+> +	if (info->flags & DA8XX_GATE_CLOCK_IS_DIV4P5)
+> +		init.ops = &da8xx_cfgchip_div4p5_clk_ops;
+> +	else
+> +		init.ops = &da8xx_cfgchip_gate_clk_ops;
 
-Regards,
- Sricharan
+This will be easier to read using ternary operator, I think. But you
+will probably have line breaks.
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
