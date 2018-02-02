@@ -1,99 +1,64 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH RFC v2 2/3] dt-bindings/interrupt-controller: pdc: descibe
- PDC device binding
-Date: Fri, 2 Feb 2018 17:02:24 +0000
-Message-ID: <35ce761e-c9ac-6280-cc72-eccd1dded609@arm.com>
-References: <20180202142200.6229-1-ilina@codeaurora.org>
- <20180202142200.6229-3-ilina@codeaurora.org>
- <396cfc2f-7deb-0c93-7178-d9f5524f110e@arm.com>
- <20180202164643.GC5319@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 02/11] soc: renesas: rcar-rst: add R8A77980 support
+Date: Fri, 2 Feb 2018 21:27:01 +0300
+Message-ID: <76b4144e-423a-65fd-fe17-bfedbc0deb8e@cogentembedded.com>
+References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20180202164643.GC5319@codeaurora.org>
-Content-Language: en-GB
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
+Content-Language: en-MW
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 02/02/18 16:46, Lina Iyer wrote:
-> On Fri, Feb 02 2018 at 16:28 +0000, Marc Zyngier wrote:
->> On 02/02/18 14:21, Lina Iyer wrote:
->>> From: Archana Sathyakumar <asathyak@codeaurora.org>
->>>
->>> Add device binding documentation for the PDC Interrupt controller on
->>> QCOM SoC's like the SDM845. The interrupt-controller can be used to
->>> sense edge low interrupts and wakeup interrupts when the GIC is
->>> non-operational.
->>>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
->>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->>> ---
->>>  .../bindings/interrupt-controller/qcom,pdc.txt     | 78 ++++++++++++++++++++++
->>>  1 file changed, 78 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->>> new file mode 100644
->>> index 000000000000..7bf40cb6a4f8
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->>> @@ -0,0 +1,78 @@
->>> +PDC interrupt controller
->>> +
->>> +Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
->>> +Power Domain Controller (PDC) that is on always-on domain. In addition to
->>> +providing power control for the power domains, the hardware also has an
->>> +interrupt controller that can be used to help detect edge low interrupts as
->>> +well detect interrupts when the GIC is non-operational.
->>> +
->>> +GIC is parent interrupt controller at the highest level. Platform interrupt
->>> +controller PDC is next in hierarchy, followed by others. Drivers requiring
->>> +wakeup capabilities of their device interrupts routed through the PDC, must
->>> +specify PDC as their interrupt controller and request the PDC port associated
->>> +with the GIC interrupt. See example below.
->>> +
->>> +Properties:
->>> +
->>> +- compatible:
->>> +	Usage: required
->>> +	Value type: <string>
->>> +	Definition: Should contain "qcom,<soc>-pdc"
->>> +		    - "qcom,sdm845-pdc": For SDM845
->>> +
->>> +- reg:
->>> +	Usage: required
->>> +	Value type: <prop-encoded-array>
->>> +	Definition: Specifies the base physical address for PDC hardware.
->>> +
->>> +- interrupt-cells:
->>> +	Usage: required
->>> +	Value type: <u32>
->>> +	Definition: Specifies the number of cells needed to encode an interrupt
->>> +		    source.
->>> +		    The value must match that of the parent interrupt
->>> +		    controller defined in the DT.
->>> +		    The encoding of these cells are same as described in [1].
->>
->> There shouldn't be such a requirement. These are two independent pieces
->> of HW, and the first parameter doesn't mean anything for the PDC.
->>
-> Wouldn't that be confusing - that we have different definitions for
-> interrupts in the same DT? I agree that they are different interrupt
-> controllers, but it just feels odd.
+Add support for R-Car V3H (R8A77980) to the R-Car RST driver -- this driver
+is  needed  for the clock driver to work.
 
-I think it feels more bizarre to have pointless fields in the interrupt
-specifier. And most DTs have some sort of secondary interrupt controller
-that only take two (or even one) parameters. I don't think we should
-treat this any differently.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> I will change this to just take 2 cells.
+---
+ Documentation/devicetree/bindings/reset/renesas,rst.txt |    1 +
+ drivers/soc/renesas/Kconfig                             |    2 +-
+ drivers/soc/renesas/rcar-rst.c                          |    1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Index: renesas/Documentation/devicetree/bindings/reset/renesas,rst.txt
+===================================================================
+--- renesas.orig/Documentation/devicetree/bindings/reset/renesas,rst.txt
++++ renesas/Documentation/devicetree/bindings/reset/renesas,rst.txt
+@@ -27,6 +27,7 @@ Required properties:
+ 		  - "renesas,r8a7795-rst" (R-Car H3)
+ 		  - "renesas,r8a7796-rst" (R-Car M3-W)
+ 		  - "renesas,r8a77970-rst" (R-Car V3M)
++		  - "renesas,r8a77980-rst" (R-Car V3H)
+ 		  - "renesas,r8a77995-rst" (R-Car D3)
+   - reg: Address start and address range for the device.
+ 
+Index: renesas/drivers/soc/renesas/Kconfig
+===================================================================
+--- renesas.orig/drivers/soc/renesas/Kconfig
++++ renesas/drivers/soc/renesas/Kconfig
+@@ -4,7 +4,7 @@ config SOC_RENESAS
+ 	select SOC_BUS
+ 	select RST_RCAR if ARCH_RCAR_GEN1 || ARCH_RCAR_GEN2 || \
+ 			   ARCH_R8A7795 || ARCH_R8A7796 || ARCH_R8A77970 || \
+-			   ARCH_R8A77995
++			   ARCH_R8A77980 || ARCH_R8A77995
+ 	select SYSC_R8A7743 if ARCH_R8A7743
+ 	select SYSC_R8A7745 if ARCH_R8A7745
+ 	select SYSC_R8A7779 if ARCH_R8A7779
+Index: renesas/drivers/soc/renesas/rcar-rst.c
+===================================================================
+--- renesas.orig/drivers/soc/renesas/rcar-rst.c
++++ renesas/drivers/soc/renesas/rcar-rst.c
+@@ -42,6 +42,7 @@ static const struct of_device_id rcar_rs
+ 	{ .compatible = "renesas,r8a7795-rst", .data = &rcar_rst_gen2 },
+ 	{ .compatible = "renesas,r8a7796-rst", .data = &rcar_rst_gen2 },
+ 	{ .compatible = "renesas,r8a77970-rst", .data = &rcar_rst_gen2 },
++	{ .compatible = "renesas,r8a77980-rst", .data = &rcar_rst_gen2 },
+ 	{ .compatible = "renesas,r8a77995-rst", .data = &rcar_rst_gen2 },
+ 	{ /* sentinel */ }
+ };
