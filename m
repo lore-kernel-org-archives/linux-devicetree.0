@@ -1,71 +1,119 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 21/41] ARM: da850: add new clock init using common
- clock framework
-Date: Fri, 2 Feb 2018 19:50:39 +0530
-Message-ID: <73d2c30d-ee86-1269-dd4b-1ebfe88a3149@ti.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-22-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1516468460-4908-22-git-send-email-david@lechnology.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+From: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH RFC v2 2/3] dt-bindings/interrupt-controller: pdc: descibe PDC device binding
+Date: Fri,  2 Feb 2018 07:21:59 -0700
+Message-ID: <20180202142200.6229-3-ilina@codeaurora.org>
+References: <20180202142200.6229-1-ilina@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180202142200.6229-1-ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, asathyak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 20 January 2018 10:44 PM, David Lechner wrote:
->  void __init da850_init_time(void)
->  {
-> +#ifdef CONFIG_COMMON_CLK
-> +	void __iomem *pll0, *pll1, *psc0, *psc1;
-> +	struct regmap *cfgchip;
-> +	struct clk *clk;
-> +	struct clk_hw *parent;
-> +
-> +	pll0 = ioremap(DA8XX_PLL0_BASE, SZ_4K);
-> +	pll1 = ioremap(DA850_PLL1_BASE, SZ_4K);
-> +	psc0 = ioremap(DA8XX_PSC0_BASE, SZ_4K);
-> +	psc1 = ioremap(DA8XX_PSC1_BASE, SZ_4K);
-> +
-> +	cfgchip = da8xx_register_cfgchip();
-> +	if (WARN(IS_ERR(cfgchip), "failed to register CFGCHIP syscon"))
-> +		return;
-> +
-> +	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DA850_REF_FREQ);
-> +
-> +	da850_pll_clk_init(pll0, pll1);
-> +
-> +	da8xx_cfgchip_register_div4p5(cfgchip);
-> +
-> +	da8xx_cfgchip_register_async1(cfgchip);
-> +
-> +	clk = clk_register_fixed_factor(NULL, "async2", "pll0_auxclk", 0, 1, 1);
-> +	clk_register_clkdev(clk, NULL, "i2c_davinci.1");
-> +	clk_register_clkdev(clk, "timer0", NULL);
-> +	clk_register_clkdev(clk, NULL, "davinci-wdt");
+From: Archana Sathyakumar <asathyak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-I think its better to get these clkdevs registered in
-da850_pll_clk_init() itself.
+Add device binding documentation for the PDC Interrupt controller on
+QCOM SoC's like the SDM845. The interrupt-controller can be used to
+sense edge low interrupts and wakeup interrupts when the GIC is
+non-operational.
 
-> +
-> +	clk = da8xx_cfgchip_register_async3(cfgchip);
-> +
-> +	/* pll1_sysclk2 is not affected by CPU scaling, so use it for async3 */
-> +	parent = clk_hw_get_parent_by_index(__clk_get_hw(clk), 1);
-> +	if (parent)
-> +		clk_set_parent(clk, parent->clk);
-> +	else
-> +		pr_warn("%s: Failed to find async3 parent clock\n", __func__);
-> +
-> +	da850_psc_clk_init(psc0, psc1);
-> +
-> +	clk = clk_register_fixed_factor(NULL, "rmii", "pll0_sysclk7", 0, 1, 1);
-> +	clk_register_clkdev(clk, "rmii", NULL);
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Archana Sathyakumar <asathyak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ .../bindings/interrupt-controller/qcom,pdc.txt     | 78 ++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
 
-Like in da830, can drop this rmii clock, I think.
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+new file mode 100644
+index 000000000000..7bf40cb6a4f8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+@@ -0,0 +1,78 @@
++PDC interrupt controller
++
++Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
++Power Domain Controller (PDC) that is on always-on domain. In addition to
++providing power control for the power domains, the hardware also has an
++interrupt controller that can be used to help detect edge low interrupts as
++well detect interrupts when the GIC is non-operational.
++
++GIC is parent interrupt controller at the highest level. Platform interrupt
++controller PDC is next in hierarchy, followed by others. Drivers requiring
++wakeup capabilities of their device interrupts routed through the PDC, must
++specify PDC as their interrupt controller and request the PDC port associated
++with the GIC interrupt. See example below.
++
++Properties:
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should contain "qcom,<soc>-pdc"
++		    - "qcom,sdm845-pdc": For SDM845
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Specifies the base physical address for PDC hardware.
++
++- interrupt-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: Specifies the number of cells needed to encode an interrupt
++		    source.
++		    The value must match that of the parent interrupt
++		    controller defined in the DT.
++		    The encoding of these cells are same as described in [1].
++
++- interrupt-parent:
++	Usage: required
++	Value type: <phandle>
++	Definition: Specifies the interrupt parent necessary for hierarchical
++		    domain to operate.
++
++- interrupt-controller:
++	Usage: required
++	Value type: <bool>
++	Definition: Identifies the node as an interrupt controller.
++
++- qcom,pdc-range:
++	Usage: required
++	Value type: <u32 array>
++	Definition: Specifies the PDC pin offset and the number of PDC ports.
++		    The tuples indicates the valid mapping of valid PDC ports
++		    and their hwirq mapping.
++		    The first element of the tuple is the staring PDC port num.
++		    The second element is the hwirq number for the PDC port.
++		    The third element is the number of elements in sequence.
++
++Example:
++
++	pdc: interrupt-controller@b220000 {
++		compatible = "qcom,sdm845-pdc";
++		reg = <0xb220000 0x30000>;
++		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&intc>;
++		interrupt-controller;
++	};
++
++The DT binding of a device that wants to use the GIC SPI 514 as a wakeup
++interrupt, would look like this -
++
++	wake-device {
++		[...]
++		interrupt-parent = <&pdc>;
++		interrupt = <0 2 0>;
++	};
++
++[1]. Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-Thanks,
-Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
