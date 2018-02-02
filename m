@@ -1,56 +1,31 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [alsa-devel] [PATCH v2 2/2] ASoC: ak5558: Add bindings for AK5558 ADC
-Date: Fri, 2 Feb 2018 20:48:44 -0200
-Message-ID: <CAOMZO5BOq6XN8TMXLSW5QPtLYg7EghkkK0bP4uxMja2onnK7iw@mail.gmail.com>
-References: <1517588406-3295-1-git-send-email-daniel.baluta@nxp.com> <1517588406-3295-3-git-send-email-daniel.baluta@nxp.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH] ARM: dts: use 'atmel' as at24 manufacturer for sama5d34ek
+Date: Fri, 2 Feb 2018 23:51:53 +0100
+Message-ID: <20180202225153.GK3404@piout.net>
+References: <20180124212346.3823-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1517588406-3295-3-git-send-email-daniel.baluta@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20180124212346.3823-1-brgl@bgdev.pl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@nxp.com>
-Cc: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, daniel.baluta@gmail.com, shengjiu.wang@nxp.com, linux-kernel <linux-kernel@vger.kernel.org>, wakasugi.jb@om.asahi-kasei.co.jp, linux-imx@nxp.com, cosmin.samoila@nxp.com, Mihai Serban <mihai.serban@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Nicolas Ferre <nicolas.ferre@microchip.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
-
-You missed to add the dt maintainer, Rob Herring.
-
-On Fri, Feb 2, 2018 at 2:20 PM, Daniel Baluta <daniel.baluta@nxp.com> wrote:
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-
-Please add a commit log.
-
+On 24/01/2018 at 22:23:46 +0100, Bartosz Golaszewski wrote:
+> Using compatible strings without the <manufacturer> part for at24 is
+> now deprecated. Use a correct 'atmel,<model>' value.
+> 
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 > ---
->  Documentation/devicetree/bindings/sound/ak5558.txt | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/ak5558.txt
->
-> diff --git a/Documentation/devicetree/bindings/sound/ak5558.txt b/Documentation/devicetree/bindings/sound/ak5558.txt
-> new file mode 100644
-> index 0000000..61c85568
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/ak5558.txt
-> @@ -0,0 +1,23 @@
-> +AK5558 8 channel differential 32-bit delta-sigma ADC
-> +
-> +This device supports I2C mode only.
-> +
-> +Required properties:
-> +
-> +- compatible : "asahi-kasei,ak5558"
-> +- reg : The I2C address of the device for I2C.
+>  arch/arm/boot/dts/sama5d34ek.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-No need for repeating "I2C" in this phrase.
+I forgot to reply but I applied all of them for 4.17, thanks.
 
-"- reg : The I2C address of the device." would be better.
-
-> +Optional properties:
-> +
-> +- reset-gpios: A GPIO specifier for the GPIO controlling
-> +       the power down & reset pin.
-
-No need for repeating "GPIO" in this phrase.
-
-"- reset-gpios: A GPIO specifier for the the power down & reset pin."
-would be better.
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
