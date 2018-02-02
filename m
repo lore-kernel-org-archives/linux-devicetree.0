@@ -1,83 +1,22 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 04/41] clk: davinci: Add platform information for TI
- DA850 PLL
-Date: Fri, 2 Feb 2018 14:07:31 +0530
-Message-ID: <ceec9849-e3fb-0e9b-4000-aab3ca2f5a43@ti.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-5-git-send-email-david@lechnology.com>
- <7d7e0522-30d5-6232-853e-7ab32fadfe48@lechnology.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] DT: dma: renesas,rcar-dmac: document R8A77980 support
+Date: Fri, 2 Feb 2018 09:45:07 +0100
+Message-ID: <20180202084507.sz47whvmhek7qwgt@verge.net.au>
+References: <8302f1c8-3deb-584b-d6c8-b46240275e9e@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7d7e0522-30d5-6232-853e-7ab32fadfe48-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8302f1c8-3deb-584b-d6c8-b46240275e9e@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: vinod.koul@intel.com, robh+dt@kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 February 2018 12:52 AM, David Lechner wrote:
-
->> +static const char * const da850_pll1_obsclk_parent_names[]
->> __initconst = {
->> +    "oscin",
+On Thu, Feb 01, 2018 at 10:09:25PM +0300, Sergei Shtylyov wrote:
+> Renesas  R-Car V3H SoC has the R-Car gen3 compatible DMA controllers.
+> Document R-Car V3H (also known as R8A77980) SoC bindings.
 > 
-> Re: the issue of "ref_clk" vs. "oscin"...
-> 
-> This is one of the places where having the otherwise unnecessary "oscin"
-> clock
-> really helps out. The PLL driver doesn't control "ref_clk" - it comes
-> from somewhere
-> else. And in the case of DT, it may not even be named "ref_clk", so we
-> really
-> don't want to hard-code the name "ref_clk" here.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-TBH, I don't really see what is wrong with mandating the name "ref_clk"
-as the reference clock name to be provided. And for all board-files and
-DTs to supply the same name.
-
-> If we have to allow a variable name here, it just makes more work in the
-> driver
-> shuffling names around.
-> 
-> And the name "oscin" totally makes sense here because the TRM lists this
-> input to the
-> mux as "OSCIN".
-
-Fine with me if you feel it simplifies implementation for you (and also
-because of the distinction you want to make between the external "before
-CLKMODE" clock and internal "after CLKMODE" clock). What I do care about
-though is:
-
-a) In the DT case, ability for different boards to provide different
-   ref_clk frequencies. We never really had this in the legacy board
-   file way (except some rudimentary support on DM6467T). And its fine
-   to continue with status quo for board files.
-
-b) In the DT case, ability for board to specify whether it uses the
-   on-chip oscillator or has an external clean clock provider.
-
->> +void __init da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1)
->> +{
->> +    const struct davinci_pll_sysclk_info *info;
->> +
->> +    davinci_pll_clk_register(&da850_pll0_info, "ref_clk", pll0);
-> 
-> And really, we probably shouldn't be hard-coding "ref_clk" here either.
-> Basically, we are making the assumption that the board file has registered
-> a clock named "ref_clk". It would probably be better to pass the name
-> as a parameter.
-
-As I noted before, I am not sure if this level of naming flexibility is
-needed. Every board needs to have one anyway. They might as well call it
-by the same name.
-
-That said, I wont oppose it either if you decide to have that flexibility.
-
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
