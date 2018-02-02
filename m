@@ -1,36 +1,81 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 29/41] ARM: davinci_all_defconfig: remove
- CONFIG_DAVINCI_RESET_CLOCKS
-Date: Fri, 2 Feb 2018 20:34:22 +0530
-Message-ID: <72273614-3dd8-89fa-939d-6493384901e2@ti.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-30-git-send-email-david@lechnology.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: codecs: Add support for AK5558 ADC
+	driver
+Date: Fri, 2 Feb 2018 16:06:09 +0100
+Message-ID: <20180202150609.GB7101@sirena.org.uk>
+References: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
+ <CAHp75Vdd58U1y-LOQGg=rePOWf1LeQsZxn2ykzBhXL013ztW3Q@mail.gmail.com>
+ <1517475954.8615.18.camel@nxp.com>
+ <CAHp75Vf=Ap7UkMNOcOhzY+MjJmn-c-UphzEzAjmFtMh69kea4A@mail.gmail.com>
+ <20180201134840.GA10785@sirena.org.uk>
+ <CAHp75VfydH+9ABZRbV++Od3+wnvQdzXyyDFtfi-1FnOUYjOXQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1516468460-4908-30-git-send-email-david@lechnology.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Content-Type: multipart/mixed; boundary="===============0322290147507500983=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAHp75VfydH+9ABZRbV++Od3+wnvQdzXyyDFtfi-1FnOUYjOXQQ@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wakasugi.jb@om.asahi-kasei.co.jp" <wakasugi.jb@om.asahi-kasei.co.jp>, Cosmin Samoila <cosmin.samoila@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, "mihai.serban@nxp.com" <mihai.serban@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "mihai.serban@gmail.com" <mihai.serban@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 20 January 2018 10:44 PM, David Lechner wrote:
-> This removes CONFIG_DAVINCI_RESET_CLOCKS. The option has been removed from
-> the kernel.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
 
-Reviewed-by: Sekhar Nori <nsekhar@ti.com>
+--===============0322290147507500983==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xXmbgvnjoT4axfJE"
+Content-Disposition: inline
 
-Thanks,
-Sekhar
+
+--xXmbgvnjoT4axfJE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Feb 01, 2018 at 04:46:56PM +0200, Andy Shevchenko wrote:
+> On Thu, Feb 1, 2018 at 3:48 PM, Mark Brown <broonie@kernel.org> wrote:
+
+> >> >> > Signed-off-by: Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>
+> >> >> > Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
+> >> >> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> >> >> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+
+> > Honestly the signoffs above are nothing unusual for a driver contributed
+> > by a vendor - things are often bouncing around internally for ages and
+> > it's good to keep credits for people.
+
+> We have Co-developed-by: for the authors.
+
+Which doesn't really get miuch use and in this case where it looks like
+the code has flowed from AKM to NXP the DCO bit is pretty important.
+
+--xXmbgvnjoT4axfJE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlp0fmAACgkQJNaLcl1U
+h9C4RAf/RHdMOddvylREHgB3b0yMmn1+egkt9EVJ0piJ76T5txB8fSnwyVGLn7c5
+2vXcEmyuOoA4eSbfWeg8s4I7XTtUedb5v5eGkM9NZxGlCjhYUY5EGZ1t7e4pviMt
+uWcm6SfLlFtjdr1hGEiMY3QEHbqfyyJ6w9yxJbf+07TTgpcAjL5h0NEuHClMsuM8
++sqBvP/LmcjV30yfOeEfecJ91Rg24WZRqE+R2SiwRm8fyX0/ZTM1VpLi0BNtqGXZ
+bDGyseWDs4RQdR6i8aRMhAcHYzp5sNF30Msl87gc8dsiMF+0EqFWMy1F8/ILXW6y
+Bwv4GDuJz3jARvmUaJ038VayckVo/w==
+=mCOM
+-----END PGP SIGNATURE-----
+
+--xXmbgvnjoT4axfJE--
+
+--===============0322290147507500983==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0322290147507500983==--
