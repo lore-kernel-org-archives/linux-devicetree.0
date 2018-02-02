@@ -1,103 +1,120 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH 1/2] of_pci_irq: add a check to fallback to standard
- device tree parsing
-Date: Fri, 2 Feb 2018 17:32:50 +0800
-Message-ID: <1517563970.24622.9.camel@mtkswgap22>
-References: <31c765c53e85e41bfc001d110d69e46c9967f4e7.1516961656.git.ryder.lee@mediatek.com>
-         <CAL_JsqLZqrxxpuEnoWEGkT2WCuyjqn0bM1DP8PdAwnQsso8kOA@mail.gmail.com>
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6q-bx50v3: Enable secure-reg-access
+Date: Fri, 2 Feb 2018 12:10:04 +0100
+Message-ID: <20180202111004.mnv3elblyjxkbyzz@earth.universe>
+References: <20180115160722.17206-1-sebastian.reichel@collabora.co.uk>
+ <20180202071819.GE25699@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLZqrxxpuEnoWEGkT2WCuyjqn0bM1DP8PdAwnQsso8kOA@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oqt2zu6s5rd7zxgq"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180202071819.GE25699@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Frank Li <Frank.li-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-01-31 at 10:02 -0600, Rob Herring wrote:
-> On Wed, Jan 31, 2018 at 1:41 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> > A root complex usually consist of a host bridge and multiple P2P bridges,
-> > and someone may express that in the form of a root node with many subnodes
-> > and list all four interrupts for each slot (child node) in the root node
-> > like this:
-> >
-> >         pcie-controller {
-> >                 ...
-> >                 interrupt-map-mask = <0xf800 0 0 7>;
-> >                 interrupt-map = <0x0000 0 0 {INTx} &{interrupt parent} ...>
-> >                                  0x0800 0 0 {INTx} &{interrupt parent} ...>;
-> >
-> >                 pcie@0,0 {
-> >                         reg = <0x0000 0 0 0 0>;
-> >                         ...
-> >                 };
-> >
-> >                 pcie@1,0 {
-> >                         reg = <0x0800 0 0 0 0>;
-> >                         ...
-> >                 };
-> >         };
-> >
-> > As shown above, we'd like to propagate IRQs from a root port to the devices
-> > in the hierarchy below it in this way.  However, it seems that the current
-> > parser couldn't handle such cases and will get something unexpected below:
-> >
-> >         pcieport 0000:00:01.0: assign IRQ: got 213
-> >         igb 0000:01:00.0: assign IRQ: got 212
-> >
-> > There is a device which is connected to 2nd slot, but the port doesn't share
-> > the same IRQ with its downstream devices.  The problem here is that, if the
-> > loop found a P2P bridge, it wouldn't check whether the reg property exists
-> > in ppnode or not but just pass the subordinate devfn to of_irq_parse_raw(),
-> > thus the subsequent flow couldn't correctly resolve them.
-> >
-> > Fix this by adding a check to fallback to standard device tree parsing.
-> >
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+
+--oqt2zu6s5rd7zxgq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri, Feb 02, 2018 at 03:18:20PM +0800, Shawn Guo wrote:
+> + Frank
+>=20
+> On Mon, Jan 15, 2018 at 05:07:22PM +0100, Sebastian Reichel wrote:
+> > From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> >=20
+> > Add secure-reg-access on device tree include file for Bx50 devices
+> > to enable PMU and hardware counters for perf.
+> >=20
+> > Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 > > ---
-> > Please refer to the previous discussion thread: https://patchwork.ozlabs.org/patch/829108/
-> > ---
-> >  drivers/of/of_pci_irq.c | 14 ++++++++++++--
-> >  1 file changed, 12 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
-> > index 3a05568..e445866 100644
-> > --- a/drivers/of/of_pci_irq.c
-> > +++ b/drivers/of/of_pci_irq.c
-> > @@ -86,8 +86,18 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
-> >         out_irq->np = ppnode;
-> >         out_irq->args_count = 1;
-> >         out_irq->args[0] = pin;
-> > -       laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
-> > -       laddr[1] = laddr[2] = cpu_to_be32(0);
+> >  arch/arm/boot/dts/imx6q-bx50v3.dtsi | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/im=
+x6q-bx50v3.dtsi
+> > index 86cfd4481e72..ccaaee83e2fa 100644
+> > --- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> > +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> > @@ -43,6 +43,13 @@
+> >  #include "imx6q-ba16.dtsi"
+> > =20
+> >  / {
+> > +	soc {
+> > +		pmu {
+> > +			compatible =3D "arm,cortex-a9-pmu";
+> > +			secure-reg-access;
+>=20
+> I'm not sure this could be a board level configuration.  Shouldn't this
+> property just be added into pmu node in imx6qdl.dtsi?
+
+This cannot become part of imx6qdl.dtsi for two reasons:
+
+1. It's not safe to be enabled on imx6qdl in secure state, see
+   excerpt from DT binding documentation below
+2. We cannot enable it by default, since DTS format does not provide
+   a method to unset it in board files using a imx6qdl in secure
+   mode.
+
+Here is an extract from the DT documentation for the PMU node:
+
+- secure-reg-access : Indicates that the ARMv7 Secure Debug Enable Register
+		      (SDER) is accessible. This will cause the driver to do
+		      any setup required that is only possible in ARMv7 secure
+		      state. If not present the ARMv7 SDER will not be touched,
+		      which means the PMU may fail to operate unless external
+		      code (bootloader or security monitor) has performed the
+		      appropriate initialisation. Note that this property is
+		      not valid for non-ARMv7 CPUs or ARMv7 CPUs booting Linux
+		      in Non-secure state.
+
+For B450v3, B650v3 and B850v3 it's safe to enable the bit and it
+improves debugging capabilities a lot.
+
+-- Sebastian
+
+>=20
+> Shawn
+>=20
+> > +		};
+> > +	};
 > > +
-> > +       if (!dn && ppnode) {
-> 
-> I would think whether you have a child device in DT or not is
-> irrelevant. If it's the bridge address you need to look at for
-> resolving interrupts, that would be true regardless.
-> 
-> > +               const __be32 *addr;
-> > +
-> > +               addr = of_get_property(ppnode, "reg", NULL);
-> > +               if (addr)
-> > +                       memcpy(laddr, addr, 3);
-> 
-> Can't you just adjust pdev to be ppdev in this case and then use the
-> existing code to set laddr?
+> >  	clocks {
+> >  		mclk: clock@0 {
+> >  			compatible =3D "fixed-clock";
+> > --=20
+> > 2.15.1
+> >=20
 
-Okay, I will try it out and and see if the code gets better or worse.
- 
-> Please copy the powerpc list on this. I worry that touching this
-> function will break something.
-> BTW, this code is moving to drivers/pci/ in 4.16.
+--oqt2zu6s5rd7zxgq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Sure. I will loop more people in next version.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlp0RwkACgkQ2O7X88g7
++przbxAAj8IZq1fcC3bQYRSj88o8koPCdOL514egIq9don6K3J3ozFd4xzeXB72h
+YOCyqk63Ze2uDG1ZB4ilfgsr2afKcQIC46v/U4/9PqC/xd7JrO3KV5HVkNpASVE6
+XZGuV0ekMWEPRev6xlq3fIwMR+q2WGmn7Zr4Cj2s4ughbTqlrseqTXI4T78ZKGOf
+nighHWK0HkmlCTFf/S+//UV+3YkIztfLdjdKe51GwTujvbmmSKtZ76NMpZCONZqV
+PkkdK4FY2zR5+uXRwMrDE14SpuW04MWC94alSHShpSZGX03m69Z4rXtgJTcnV8Xa
+q/gMqJrh96i1mMZIkJQ2BTcQAMoPoB1NCrSj0304QVFhXd5TKO/yP5vpFZqI1nI5
+KDoY4H38mBI+kzdMJXCQvqw/WdDrNROr1oG775q6/d4fNNztNn5H+iWPc5KgdiGj
+NaljqhHxARsnkMN1s8sEnVeMIr1/PxBw/5krnTzt1aHmv3Nf0zsii65THZU0yJxW
+w1K7N5pfCriyhXmmFMgBF8sg935uYG9aUt6zS5JHT8FdWY3K65kminwAx6DiCVPP
++UZIS265IGnSnWzZJJgq30mEGXfnvkAvJ3+asrKXOW+u2Psf3HTClJzUOqzfO7ej
+wJaReTnwlxKNj8+zmps4WHwavIQ4o4+5IJ1xc9VGB9hx7LVc7wc=
+=NP40
+-----END PGP SIGNATURE-----
 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+--oqt2zu6s5rd7zxgq--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
