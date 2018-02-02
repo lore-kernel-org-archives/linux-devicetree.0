@@ -1,46 +1,41 @@
 From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v6 25/41] ARM: dm646x: add new clock init using common
- clock framework
-Date: Fri, 2 Feb 2018 20:25:56 +0530
-Message-ID: <d874e568-315d-0325-1b60-920ed35ca740@ti.com>
+Subject: Re: [PATCH v6 27/41] ARM: da8xx: add new sata_refclk init using
+ common clock framework
+Date: Fri, 2 Feb 2018 20:29:24 +0530
+Message-ID: <8bb4fff4-df9b-f940-0dbe-888942f55abf@ti.com>
 References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-26-git-send-email-david@lechnology.com>
+ <1516468460-4908-28-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1516468460-4908-26-git-send-email-david@lechnology.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1516468460-4908-28-git-send-email-david@lechnology.com>
 Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 On Saturday 20 January 2018 10:44 PM, David Lechner wrote:
->  void __init dm646x_init_time(unsigned long ref_clk_rate,
->  			     unsigned long aux_clkin_rate)
->  {
-> +#ifdef CONFIG_COMMON_CLK
-> +	void __iomem *pll1, *pll2, *psc;
-> +	struct clk *clk;
-> +
-> +	pll1 = ioremap(DAVINCI_PLL1_BASE, SZ_4K);
-> +	pll2 = ioremap(DAVINCI_PLL2_BASE, SZ_4K);
-> +	psc = ioremap(DAVINCI_PWR_SLEEP_CNTRL_BASE, SZ_4K);
-> +
-> +	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, ref_clk_rate);
-> +	clk_register_fixed_rate(NULL, "aux_clkin", NULL, 0, aux_clkin_rate);
-> +
-> +	dm646x_pll_clk_init(pll1, pll2);
-> +
-> +	dm646x_psc_clk_init(psc);
+> This adds the new SATA REFCLK clock init in mach-davinci/devices-da8xx.c
+> using the new common clock framework drivers.
+> 
+> The #ifdefs are needed to prevent compile errors until the entire
+> ARCH_DAVINCI is converted.
+> 
+> Also, the #includes are sorted since we are adding some here.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-> +	/* no LPSC, always enabled; c.f. spruep9a */
-> +	clk = clk_register_fixed_factor(NULL, "timer2", "pll1_sysclk3", 0, 1, 1);
-> +	clk_register_clkdev(clk, NULL, "davinci-wdt");
-
-Lets move this to dm646x_pll_clk_init() and directly register to clkdev
-to pll1_sysclk3?
+Reviewed-by: Sekhar Nori <nsekhar@ti.com>
 
 Thanks,
 Sekhar
