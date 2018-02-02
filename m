@@ -1,59 +1,132 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] ASoC: codecs: Add support for AK5558 ADC
-	driver
-Date: Fri, 2 Feb 2018 18:09:39 +0200
-Message-ID: <CAHp75VeiPrJc-G44BomwwSFs1AELWNis=aS-j=Pg85ttL78Jnw@mail.gmail.com>
-References: <1517403459-6668-1-git-send-email-daniel.baluta@nxp.com>
- <CAHp75Vdd58U1y-LOQGg=rePOWf1LeQsZxn2ykzBhXL013ztW3Q@mail.gmail.com>
- <1517475954.8615.18.camel@nxp.com>
- <CAHp75Vf=Ap7UkMNOcOhzY+MjJmn-c-UphzEzAjmFtMh69kea4A@mail.gmail.com>
- <20180201134840.GA10785@sirena.org.uk>
- <CAHp75VfydH+9ABZRbV++Od3+wnvQdzXyyDFtfi-1FnOUYjOXQQ@mail.gmail.com>
- <20180202150609.GB7101@sirena.org.uk>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH RFC v2 2/3] dt-bindings/interrupt-controller: pdc: descibe
+ PDC device binding
+Date: Fri, 2 Feb 2018 16:28:09 +0000
+Message-ID: <396cfc2f-7deb-0c93-7178-d9f5524f110e@arm.com>
+References: <20180202142200.6229-1-ilina@codeaurora.org>
+ <20180202142200.6229-3-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180202150609.GB7101@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wakasugi.jb@om.asahi-kasei.co.jp" <wakasugi.jb@om.asahi-kasei.co.jp>, Cosmin Samoila <cosmin.samoila@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, "mihai.serban@nxp.com" <mihai.serban@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "mihai.serban@gmail.com" <mihai.serban@gmail.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180202142200.6229-3-ilina@codeaurora.org>
+Content-Language: en-GB
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>, tglx@linutronix.de, jason@lakedaemon.net
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 2, 2018 at 5:06 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Feb 01, 2018 at 04:46:56PM +0200, Andy Shevchenko wrote:
->> On Thu, Feb 1, 2018 at 3:48 PM, Mark Brown <broonie@kernel.org> wrote:
->
->> >> >> > Signed-off-by: Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>
->> >> >> > Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
->> >> >> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
->> >> >> > Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
->
->> > Honestly the signoffs above are nothing unusual for a driver contributed
->> > by a vendor - things are often bouncing around internally for ages and
->> > it's good to keep credits for people.
->
->> We have Co-developed-by: for the authors.
->
-> Which doesn't really get much use
+On 02/02/18 14:21, Lina Iyer wrote:
+> From: Archana Sathyakumar <asathyak@codeaurora.org>
+> 
+> Add device binding documentation for the PDC Interrupt controller on
+> QCOM SoC's like the SDM845. The interrupt-controller can be used to
+> sense edge low interrupts and wakeup interrupts when the GIC is
+> non-operational.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  .../bindings/interrupt-controller/qcom,pdc.txt     | 78 ++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> new file mode 100644
+> index 000000000000..7bf40cb6a4f8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> @@ -0,0 +1,78 @@
+> +PDC interrupt controller
+> +
+> +Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
+> +Power Domain Controller (PDC) that is on always-on domain. In addition to
+> +providing power control for the power domains, the hardware also has an
+> +interrupt controller that can be used to help detect edge low interrupts as
+> +well detect interrupts when the GIC is non-operational.
+> +
+> +GIC is parent interrupt controller at the highest level. Platform interrupt
+> +controller PDC is next in hierarchy, followed by others. Drivers requiring
+> +wakeup capabilities of their device interrupts routed through the PDC, must
+> +specify PDC as their interrupt controller and request the PDC port associated
+> +with the GIC interrupt. See example below.
+> +
+> +Properties:
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: Should contain "qcom,<soc>-pdc"
+> +		    - "qcom,sdm845-pdc": For SDM845
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Specifies the base physical address for PDC hardware.
+> +
+> +- interrupt-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Specifies the number of cells needed to encode an interrupt
+> +		    source.
+> +		    The value must match that of the parent interrupt
+> +		    controller defined in the DT.
+> +		    The encoding of these cells are same as described in [1].
 
-True... (13 entries so far)
+There shouldn't be such a requirement. These are two independent pieces
+of HW, and the first parameter doesn't mean anything for the PDC.
 
->  and in this case where it looks like
-> the code has flowed from AKM to NXP the DCO bit is pretty important.
+> +
+> +- interrupt-parent:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: Specifies the interrupt parent necessary for hierarchical
+> +		    domain to operate.
+> +
+> +- interrupt-controller:
+> +	Usage: required
+> +	Value type: <bool>
+> +	Definition: Identifies the node as an interrupt controller.
+> +
+> +- qcom,pdc-range:
+> +	Usage: required
+> +	Value type: <u32 array>
+> +	Definition: Specifies the PDC pin offset and the number of PDC ports.
+> +		    The tuples indicates the valid mapping of valid PDC ports
+> +		    and their hwirq mapping.
+> +		    The first element of the tuple is the staring PDC port num.
+> +		    The second element is the hwirq number for the PDC port.
+> +		    The third element is the number of elements in sequence.
+> +
+> +Example:
+> +
+> +	pdc: interrupt-controller@b220000 {
+> +		compatible = "qcom,sdm845-pdc";
+> +		reg = <0xb220000 0x30000>;
+> +		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
+> +		#interrupt-cells = <3>;
+> +		interrupt-parent = <&intc>;
+> +		interrupt-controller;
+> +	};
+> +
+> +The DT binding of a device that wants to use the GIC SPI 514 as a wakeup
+> +interrupt, would look like this -
+> +
+> +	wake-device {
+> +		[...]
+> +		interrupt-parent = <&pdc>;
+> +		interrupt = <0 2 0>;
 
-...though it doesn't replace SoB, it adds a bit of information to it
-(points to the authors of the module).
+Again: 0 is not a valid trigger value.
 
+> +	};
+> +
+> +[1]. Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> 
 
+Thanks,
+
+	M.
 -- 
-With Best Regards,
-Andy Shevchenko
+Jazz is not dead. It just smells funny...
