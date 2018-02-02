@@ -1,251 +1,111 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH 04/14] clk: stm32mp1: add MP1 gate for osc hse/hsi/csi
- oscillators
-Date: Fri, 2 Feb 2018 15:03:32 +0100
-Message-ID: <1517580222-23301-5-git-send-email-gabriel.fernandez@st.com>
+From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 05/14] clk: stm32mp1: add Source Clocks for PLLs
+Date: Fri, 2 Feb 2018 15:03:33 +0100
+Message-ID: <1517580222-23301-6-git-send-email-gabriel.fernandez@st.com>
 References: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
-Cc: devicetree@vger.kernel.org, olivier.bideau@st.com, linux-kernel@vger.kernel.org, gabriel.fernandez.st@gmail.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1517580222-23301-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 
-MP1 Gate is a gate with a set and a clear register.
-This patch also introduces divider and fixed factor clocks.
+This patch adds source clocks for PLLs
+This patch also introduces MUX clock API.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/clk/clk-stm32mp1.c | 186 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 186 insertions(+)
+ drivers/clk/clk-stm32mp1.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
 diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
-index 6e39e85..be5a4e5 100644
+index be5a4e5..1c9a84a 100644
 --- a/drivers/clk/clk-stm32mp1.c
 +++ b/drivers/clk/clk-stm32mp1.c
-@@ -355,6 +355,19 @@ struct gate_cfg {
- 	u8 gate_flags;
+@@ -368,6 +368,14 @@ struct div_cfg {
+ 	const struct clk_div_table *table;
  };
  
-+struct fixed_factor_cfg {
-+	unsigned int mult;
-+	unsigned int div;
-+};
-+
-+struct div_cfg {
++struct mux_cfg {
 +	u32 reg_off;
 +	u8 shift;
 +	u8 width;
-+	u8 div_flags;
-+	const struct clk_div_table *table;
++	u8 mux_flags;
++	u32 *table;
 +};
 +
  static struct clk_hw *
  _clk_hw_register_gate(struct device *dev,
  		      struct clk_hw_onecell_data *clk_data,
-@@ -373,6 +386,122 @@ struct gate_cfg {
- 				    lock);
+@@ -419,6 +427,20 @@ struct div_cfg {
+ 					     lock);
  }
  
 +static struct clk_hw *
-+_clk_hw_register_fixed_factor(struct device *dev,
-+			      struct clk_hw_onecell_data *clk_data,
-+			      void __iomem *base, spinlock_t *lock,
-+			      const struct clock_config *cfg)
++_clk_hw_register_mux(struct device *dev,
++		     struct clk_hw_onecell_data *clk_data,
++		     void __iomem *base, spinlock_t *lock,
++		     const struct clock_config *cfg)
 +{
-+	struct fixed_factor_cfg *ff_cfg = cfg->cfg;
++	struct mux_cfg *mux_cfg = cfg->cfg;
 +
-+	return clk_hw_register_fixed_factor(dev, cfg->name, cfg->parent_name,
-+					    cfg->flags, ff_cfg->mult,
-+					    ff_cfg->div);
++	return clk_hw_register_mux(dev, cfg->name, cfg->parent_names,
++				   cfg->num_parents, cfg->flags,
++				   mux_cfg->reg_off + base, mux_cfg->shift,
++				   mux_cfg->width, mux_cfg->mux_flags, lock);
 +}
 +
-+static struct clk_hw *
-+_clk_hw_register_divider_table(struct device *dev,
-+			       struct clk_hw_onecell_data *clk_data,
-+			       void __iomem *base, spinlock_t *lock,
-+			       const struct clock_config *cfg)
-+{
-+	struct div_cfg *div_cfg = cfg->cfg;
-+
-+	return clk_hw_register_divider_table(dev,
-+					     cfg->name,
-+					     cfg->parent_name,
-+					     cfg->flags,
-+					     div_cfg->reg_off + base,
-+					     div_cfg->shift,
-+					     div_cfg->width,
-+					     div_cfg->div_flags,
-+					     div_cfg->table,
-+					     lock);
-+}
-+
-+/* MP1 Gate clock with set & clear registers */
-+
-+static int mp1_gate_clk_enable(struct clk_hw *hw)
-+{
-+	if (!clk_gate_ops.is_enabled(hw))
-+		clk_gate_ops.enable(hw);
-+
-+	return 0;
-+}
-+
-+static void mp1_gate_clk_disable(struct clk_hw *hw)
-+{
-+	struct clk_gate *gate = to_clk_gate(hw);
-+	unsigned long flags = 0;
-+
-+	if (clk_gate_ops.is_enabled(hw)) {
-+		spin_lock_irqsave(gate->lock, flags);
-+		writel_relaxed(BIT(gate->bit_idx), gate->reg + RCC_CLR);
-+		spin_unlock_irqrestore(gate->lock, flags);
-+	}
-+}
-+
-+const struct clk_ops mp1_gate_clk_ops = {
-+	.enable		= mp1_gate_clk_enable,
-+	.disable	= mp1_gate_clk_disable,
-+	.is_enabled	= clk_gate_is_enabled,
-+};
-+
-+static struct clk_hw *clk_register_mp1_gate(struct device *dev,
-+					    const char *name,
-+					    const char *parent_name,
-+					    unsigned long flags,
-+					    void __iomem *reg, u8 bit_idx,
-+					    u8 clk_gate_flags, spinlock_t *lock)
-+{
-+	struct clk_init_data init = { NULL };
-+	struct clk_gate *gate;
-+	int ret;
-+	struct clk_hw *hw;
-+
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &mp1_gate_clk_ops;
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+	init.flags = flags;
-+
-+	gate->reg = reg;
-+	gate->bit_idx = bit_idx;
-+	gate->lock = lock;
-+
-+	gate->hw.init = &init;
-+	hw = &gate->hw;
-+
-+	ret = clk_hw_register(dev, hw);
-+	if (ret) {
-+		kfree(gate);
-+		hw = ERR_PTR(ret);
-+	}
-+	return hw;
-+}
-+
-+static struct clk_hw *
-+_clk_register_mp1_gate(struct device *dev,
-+		       struct clk_hw_onecell_data *clk_data,
-+		       void __iomem *base, spinlock_t *lock,
-+		       const struct clock_config *cfg)
-+{
-+	struct gate_cfg *gate_cfg = cfg->cfg;
-+
-+	return clk_register_mp1_gate(dev,
-+				     cfg->name,
-+				     cfg->parent_name,
-+				     cfg->flags,
-+				     gate_cfg->reg_off + base,
-+				     gate_cfg->bit_idx,
-+				     gate_cfg->gate_flags,
-+				     lock);
-+}
-+
- #define GATE(_id, _name, _parent, _flags, _offset, _bit_idx, _gate_flags)\
- {\
- 	.id		= _id,\
-@@ -387,10 +516,67 @@ struct gate_cfg {
- 	.func		= _clk_hw_register_gate,\
- }
+ /* MP1 Gate clock with set & clear registers */
  
-+#define FIXED_FACTOR(_id, _name, _parent, _flags, _mult, _div)\
+ static int mp1_gate_clk_enable(struct clk_hw *hw)
+@@ -550,6 +572,22 @@ static struct clk_hw *clk_register_mp1_gate(struct device *dev,
+ 	DIV_TABLE(_id, _name, _parent, _flags, _offset, _shift, _width,\
+ 		  _div_flags, NULL)
+ 
++#define MUX(_id, _name, _parents, _flags, _offset, _shift, _width, _mux_flags)\
 +{\
 +	.id		= _id,\
 +	.name		= _name,\
-+	.parent_name	= _parent,\
++	.parent_names	= _parents,\
++	.num_parents	= ARRAY_SIZE(_parents),\
 +	.flags		= _flags,\
-+	.cfg		=  &(struct fixed_factor_cfg) {\
-+		.mult = _mult,\
-+		.div = _div,\
-+	},\
-+	.func		= _clk_hw_register_fixed_factor,\
-+}
-+
-+#define DIV_TABLE(_id, _name, _parent, _flags, _offset, _shift, _width,\
-+		  _div_flags, _div_table)\
-+{\
-+	.id		= _id,\
-+	.name		= _name,\
-+	.parent_name	= _parent,\
-+	.flags		= _flags,\
-+	.cfg		=  &(struct div_cfg) {\
++	.cfg		=  &(struct mux_cfg) {\
 +		.reg_off	= _offset,\
 +		.shift		= _shift,\
 +		.width		= _width,\
-+		.div_flags	= _div_flags,\
-+		.table		= _div_table,\
++		.mux_flags	= _mux_flags,\
 +	},\
-+	.func		= _clk_hw_register_divider_table,\
++	.func		= _clk_hw_register_mux,\
 +}
 +
-+#define DIV(_id, _name, _parent, _flags, _offset, _shift, _width, _div_flags)\
-+	DIV_TABLE(_id, _name, _parent, _flags, _offset, _shift, _width,\
-+		  _div_flags, NULL)
-+
-+#define MP1_GATE(_id, _name, _parent, _flags, _offset, _bit_idx, _gate_flags)\
-+{\
-+	.id		= _id,\
-+	.name		= _name,\
-+	.parent_name	= _parent,\
-+	.flags		= _flags,\
-+	.cfg		=  &(struct gate_cfg) {\
-+		.reg_off	= _offset,\
-+		.bit_idx	= _bit_idx,\
-+		.gate_flags	= _gate_flags,\
-+	},\
-+	.func		= _clk_register_mp1_gate,\
-+}
-+
- static const struct clock_config stm32mp1_clock_cfg[] = {
-+	/* Oscillator divider */
-+	DIV(NO_ID, "clk-hsi-div", "clk-hsi", 0, RCC_HSICFGR, 0, 2,
-+	    CLK_DIVIDER_READ_ONLY),
-+
- 	/*  External / Internal Oscillators */
-+	MP1_GATE(CK_HSE, "ck_hse", "clk-hse", 0, RCC_OCENSETR, 8, 0),
-+	MP1_GATE(CK_CSI, "ck_csi", "clk-csi", 0, RCC_OCENSETR, 4, 0),
-+	MP1_GATE(CK_HSI, "ck_hsi", "clk-hsi-div", 0, RCC_OCENSETR, 0, 0),
- 	GATE(CK_LSI, "ck_lsi", "clk-lsi", 0, RCC_RDLSICR, 0, 0),
+ #define MP1_GATE(_id, _name, _parent, _flags, _offset, _bit_idx, _gate_flags)\
+ {\
+ 	.id		= _id,\
+@@ -577,6 +615,16 @@ static struct clk_hw *clk_register_mp1_gate(struct device *dev,
  	GATE(CK_LSE, "ck_lse", "clk-lse", 0, RCC_BDCR, 0, 0),
+ 
+ 	FIXED_FACTOR(CK_HSE_DIV2, "clk-hse-div2", "ck_hse", 0, 1, 2),
 +
-+	FIXED_FACTOR(CK_HSE_DIV2, "clk-hse-div2", "ck_hse", 0, 1, 2),
++	/* ref clock pll */
++	MUX(NO_ID, "ref1", ref12_parents, CLK_OPS_PARENT_ENABLE, RCC_RCK12SELR,
++	    0, 2, CLK_MUX_READ_ONLY),
++
++	MUX(NO_ID, "ref3", ref3_parents, CLK_OPS_PARENT_ENABLE, RCC_RCK3SELR,
++	    0, 2, CLK_MUX_READ_ONLY),
++
++	MUX(NO_ID, "ref4", ref4_parents, CLK_OPS_PARENT_ENABLE, RCC_RCK4SELR,
++	    0, 2, CLK_MUX_READ_ONLY),
  };
  
  struct stm32_clock_match_data {
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
