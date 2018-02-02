@@ -1,335 +1,289 @@
-From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 07/14] clk: stm32mp1: add Post-dividers for PLL
-Date: Fri, 2 Feb 2018 15:03:35 +0100
-Message-ID: <1517580222-23301-8-git-send-email-gabriel.fernandez@st.com>
+From: <gabriel.fernandez@st.com>
+Subject: [PATCH 02/14] dt-bindings: clock: add STM32MP1 clocks
+Date: Fri, 2 Feb 2018 15:03:30 +0100
+Message-ID: <1517580222-23301-3-git-send-email-gabriel.fernandez@st.com>
 References: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517580222-23301-1-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
+Cc: devicetree@vger.kernel.org, olivier.bideau@st.com, linux-kernel@vger.kernel.org, gabriel.fernandez.st@gmail.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
 
-Each PLL has 3 outputs with post-dividers.
+This patch adds the clock binding entry for STM32MP1
 
-pll1_p is dedicated for Cortex-A7
-pll1_q is not connected
-pll1_r is not connected
-
-pll2_p is dedicated for AXI
-pll2_q is dedicated for GPU
-pll2_r is dedicated for DDR
-
-pll3_p is dedicated for mcu
-pll3_q is for Peripheral Kernel Clock
-pll3_r is for Peripheral Kernel Clock
-
-pll4_p is for Peripheral Kernel Clock
-pll4_q is for Peripheral Kernel Clock
-pll4_r is for Peripheral Kernel Clock
-
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- drivers/clk/clk-stm32mp1.c | 257 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 257 insertions(+)
+ include/dt-bindings/clock/stm32mp1-clks.h | 248 ++++++++++++++++++++++++++++++
+ 1 file changed, 248 insertions(+)
+ create mode 100644 include/dt-bindings/clock/stm32mp1-clks.h
 
-diff --git a/drivers/clk/clk-stm32mp1.c b/drivers/clk/clk-stm32mp1.c
-index 33f0d09..15cd488 100644
---- a/drivers/clk/clk-stm32mp1.c
-+++ b/drivers/clk/clk-stm32mp1.c
-@@ -377,6 +377,147 @@ struct mux_cfg {
- 	u32 *table;
- };
- 
-+/* STM32 Composite clock */
-+struct composite_cfg {
-+	struct gate_cfg	*gate;
-+	struct mux_cfg	*mux;
-+	struct div_cfg	*div;
-+	const struct clk_ops *mux_ops;
-+	const struct clk_ops *div_ops;
-+	const struct clk_ops *gate_ops;
-+};
+diff --git a/include/dt-bindings/clock/stm32mp1-clks.h b/include/dt-bindings/clock/stm32mp1-clks.h
+new file mode 100644
+index 0000000..11978f7
+--- /dev/null
++++ b/include/dt-bindings/clock/stm32mp1-clks.h
+@@ -0,0 +1,248 @@
++/* SPDX-License-Identifier: GPL-2.0 or BSD-3-Clause */
++/*
++ * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
++ * Author: Gabriel Fernandez <gabriel.fernandez@st.com> for STMicroelectronics.
++ */
 +
-+static struct clk_mux *_get_cmux(void __iomem *reg, u8 shift, u8 width,
-+				 u32 flags, u32 *table, spinlock_t *lock)
-+{
-+	struct clk_mux *mux;
++#ifndef _DT_BINDINGS_STM32MP1_CLKS_H_
++#define _DT_BINDINGS_STM32MP1_CLKS_H_
 +
-+	mux = kzalloc(sizeof(*mux), GFP_KERNEL);
-+	if (!mux)
-+		return ERR_PTR(-ENOMEM);
++/* OSCILLATOR clocks */
++#define CK_HSE		0
++#define CK_CSI		1
++#define CK_LSI		2
++#define CK_LSE		3
++#define CK_HSI		4
++#define CK_HSE_DIV2	5
 +
-+	mux->reg = reg;
-+	mux->shift = shift;
-+	mux->mask = (1 << width) - 1;
-+	mux->flags = flags;
-+	mux->lock = lock;
-+	mux->table = table;
++/* Bus clocks */
++#define TIM2		6
++#define TIM3		7
++#define TIM4		8
++#define TIM5		9
++#define TIM6		10
++#define TIM7		11
++#define TIM12		12
++#define TIM13		13
++#define TIM14		14
++#define LPTIM1		15
++#define SPI2		16
++#define SPI3		17
++#define USART2		18
++#define USART3		19
++#define UART4		20
++#define UART5		21
++#define UART7		22
++#define UART8		23
++#define I2C1		24
++#define I2C2		25
++#define I2C3		26
++#define I2C5		27
++#define SPDIF		28
++#define CEC		29
++#define DAC12		30
++#define MDIO		31
++#define TIM1		32
++#define TIM8		33
++#define TIM15		34
++#define TIM16		35
++#define TIM17		36
++#define SPI1		37
++#define SPI4		38
++#define SPI5		39
++#define USART6		40
++#define SAI1		41
++#define SAI2		42
++#define SAI3		43
++#define DFSDM		44
++#define FDCAN		45
++#define LPTIM2		46
++#define LPTIM3		47
++#define LPTIM4		48
++#define LPTIM5		49
++#define SAI4		50
++#define SYSCFG		51
++#define VREF		52
++#define TMPSENS		53
++#define PMBCTRL		54
++#define HDP		55
++#define LTDC		56
++#define DSI		57
++#define IWDG2		58
++#define USBPHY		59
++#define STGENRO		60
++#define SPI6		61
++#define I2C4		62
++#define I2C6		63
++#define USART1		64
++#define RTCAPB		65
++#define TZC		66
++#define TZPC		67
++#define IWDG1		68
++#define BSEC		69
++#define STGEN		70
++#define DMA1		71
++#define DMA2		72
++#define DMAMUX		73
++#define ADC12		74
++#define USBO		75
++#define SDMMC3		76
++#define DCMI		77
++#define CRYP2		78
++#define HASH2		79
++#define RNG2		80
++#define CRC2		81
++#define HSEM		82
++#define IPCC		83
++#define GPIOA		84
++#define GPIOB		85
++#define GPIOC		86
++#define GPIOD		87
++#define GPIOE		88
++#define GPIOF		89
++#define GPIOG		90
++#define GPIOH		91
++#define GPIOI		92
++#define GPIOJ		93
++#define GPIOK		94
++#define GPIOZ		95
++#define CRYP1		96
++#define HASH1		97
++#define RNG1		98
++#define BKPSRAM		99
++#define MDMA		100
++#define GPU		102
++#define ETHCK		103
++#define ETHTX		104
++#define ETHRX		105
++#define ETHMAC		106
++#define FMC		107
++#define QSPI		108
++#define SDMMC1		109
++#define SDMMC2		110
++#define CRC1		111
++#define USBH		112
++#define ETHSTP		113
 +
-+	return mux;
-+}
++/* Kernel clocks */
++#define SDMMC1_K	114
++#define SDMMC2_K	115
++#define SDMMC3_K	116
++#define FMC_K		117
++#define QSPI_K		118
++#define ETHMAC_K	119
++#define RNG1_K		120
++#define RNG2_K		121
++#define GPU_K		122
++#define USBPHY_K	123
++#define STGEN_K		124
++#define SPDIF_K		125
++#define SPI1_K		126
++#define SPI2_K		127
++#define SPI3_K		128
++#define SPI4_K		129
++#define SPI5_K		130
++#define SPI6_K		131
++#define CEC_K		132
++#define I2C1_K		133
++#define I2C2_K		134
++#define I2C3_K		135
++#define I2C4_K		136
++#define I2C5_K		137
++#define I2C6_K		138
++#define LPTIM1_K	139
++#define LPTIM2_K	140
++#define LPTIM3_K	141
++#define LPTIM4_K	142
++#define LPTIM5_K	143
++#define USART1_K	144
++#define USART2_K	145
++#define USART3_K	146
++#define UART4_K		147
++#define UART5_K		148
++#define USART6_K	149
++#define UART7_K		150
++#define UART8_K		151
++#define DFSDM_K		152
++#define FDCAN_K		153
++#define SAI1_K		154
++#define SAI2_K		155
++#define SAI3_K		156
++#define SAI4_K		157
++#define ADC12_K		158
++#define DSI_K		159
++#define ADFSDM_K	160
++#define USBO_K		161
++#define LTDC_K		162
 +
-+static struct clk_divider *_get_cdiv(void __iomem *reg, u8 shift, u8 width,
-+				     u32 flags,
-+				     const struct clk_div_table *table,
-+				     spinlock_t *lock)
-+{
-+	struct clk_divider *div;
++/* PLL */
++#define PLL1		163
++#define PLL2		164
++#define PLL3		165
++#define PLL4		166
 +
-+	div = kzalloc(sizeof(*div), GFP_KERNEL);
++/* ODF */
++#define PLL1_P		167
++#define PLL1_Q		168
++#define PLL1_R		169
++#define PLL2_P		170
++#define PLL2_Q		171
++#define PLL2_R		172
++#define PLL3_P		173
++#define PLL3_Q		174
++#define PLL3_R		175
++#define PLL4_P		176
++#define PLL4_Q		177
++#define PLL4_R		178
 +
-+	if (!div)
-+		return ERR_PTR(-ENOMEM);
++/* AUX */
++#define RTC		179
 +
-+	div->reg = reg;
-+	div->shift = shift;
-+	div->width = width;
-+	div->flags = flags;
-+	div->lock = lock;
-+	div->table = table;
++/* MCLK */
++#define CK_PER		180
++#define CK_MPU		181
++#define CK_AXI		182
++#define CK_MCU		183
 +
-+	return div;
-+}
++/* Time base */
++#define TIM2_K		184
++#define TIM3_K		185
++#define TIM4_K		186
++#define TIM5_K		187
++#define TIM6_K		188
++#define TIM7_K		189
++#define TIM12_K		190
++#define TIM13_K		191
++#define TIM14_K		192
++#define TIM1_K		193
++#define TIM8_K		194
++#define TIM15_K		195
++#define TIM16_K		196
++#define TIM17_K		197
 +
-+static struct clk_gate *_get_cgate(void __iomem *reg, u8 bit_idx, u32 flags,
-+				   spinlock_t *lock)
-+{
-+	struct  clk_gate *gate;
++/* MCO clocks */
++#define CK_MCO1		198
++#define CK_MCO2		199
 +
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate)
-+		return ERR_PTR(-ENOMEM);
++/* TRACE & DEBUG clocks */
++#define DBG		200
++#define CK_DBG		201
++#define CK_TRACE	202
 +
-+	gate->reg = reg;
-+	gate->bit_idx = bit_idx;
-+	gate->flags = flags;
-+	gate->lock = lock;
++/* DDR */
++#define DDRC1		203
++#define DDRC1LP		204
++#define DDRC2		205
++#define DDRC2LP		206
++#define DDRPHYC		207
++#define DDRPHYCLP	208
++#define DDRCAPB		209
++#define DDRCAPBLP	210
++#define AXIDCG		211
++#define DDRPHYCAPB	212
++#define DDRPHYCAPBLP	213
++#define DDRPERFM	214
 +
-+	return gate;
-+}
++#define STM32MP1_LAST_CLK 215
 +
-+static struct clk_hw *
-+clk_stm_register_composite(struct device *dev,
-+			   const char *name, const char * const *parent_names,
-+			   int num_parents, void __iomem *base,
-+			   const struct composite_cfg *cfg,
-+			   unsigned long flags, spinlock_t *lock)
-+{
-+	struct clk_mux *mux = NULL;
-+	struct clk_divider *div = NULL;
-+	struct clk_gate *gate = NULL;
-+	const struct clk_ops *mux_ops, *div_ops, *gate_ops;
-+	struct clk_hw *hw;
-+	struct clk_hw *mux_hw;
-+	struct clk_hw *div_hw;
-+	struct clk_hw *gate_hw;
-+
-+	mux_hw = NULL;
-+	div_hw = NULL;
-+	gate_hw = NULL;
-+	mux_ops = NULL;
-+	div_ops = NULL;
-+	gate_ops = NULL;
-+
-+	if (cfg->mux) {
-+		mux = _get_cmux(base + cfg->mux->reg_off,
-+				cfg->mux->shift,
-+				cfg->mux->width,
-+				cfg->mux->mux_flags,
-+				cfg->mux->table,
-+				lock);
-+
-+		if (!IS_ERR(mux)) {
-+			mux_hw = &mux->hw;
-+			mux_ops = cfg->mux_ops ?
-+				  cfg->mux_ops : &clk_mux_ops;
-+		}
-+	}
-+
-+	if (cfg->div) {
-+		div = _get_cdiv(base + cfg->div->reg_off,
-+				cfg->div->shift,
-+				cfg->div->width,
-+				cfg->div->div_flags,
-+				cfg->div->table,
-+				lock);
-+
-+		if (!IS_ERR(div)) {
-+			div_hw = &div->hw;
-+			div_ops = cfg->div_ops ?
-+				  cfg->div_ops : &clk_divider_ops;
-+		}
-+	}
-+
-+	if (cfg->gate) {
-+		gate = _get_cgate(base + cfg->gate->reg_off,
-+				  cfg->gate->bit_idx,
-+				  cfg->gate->gate_flags,
-+				  lock);
-+
-+		if (!IS_ERR(gate)) {
-+			gate_hw = &gate->hw;
-+			gate_ops = cfg->gate_ops ?
-+				   cfg->gate_ops : &clk_gate_ops;
-+		}
-+	}
-+
-+	hw = clk_hw_register_composite(dev, name, parent_names, num_parents,
-+				       mux_hw, mux_ops, div_hw, div_ops,
-+				       gate_hw, gate_ops, flags);
-+
-+	return hw;
-+}
-+
- static struct clk_hw *
- _clk_hw_register_gate(struct device *dev,
- 		      struct clk_hw_onecell_data *clk_data,
-@@ -442,6 +583,17 @@ struct mux_cfg {
- 				   mux_cfg->width, mux_cfg->mux_flags, lock);
- }
- 
-+static struct clk_hw *
-+_clk_stm_register_composite(struct device *dev,
-+			    struct clk_hw_onecell_data *clk_data,
-+			    void __iomem *base, spinlock_t *lock,
-+			    const struct clock_config *cfg)
-+{
-+	return clk_stm_register_composite(dev, cfg->name, cfg->parent_names,
-+					  cfg->num_parents, base, cfg->cfg,
-+					  cfg->flags, lock);
-+}
-+
- /* MP1 Gate clock with set & clear registers */
- 
- static int mp1_gate_clk_enable(struct clk_hw *hw)
-@@ -779,6 +931,76 @@ struct clk_hw *_clk_register_pll(struct device *dev,
- 	.func		= _clk_hw_register_mux,\
- }
- 
-+#define COMPOSITE(_id, _name, _parents, _flags, _cfg)\
-+{\
-+	.id		= _id,\
-+	.name		= _name,\
-+	.parent_names	= _parents,\
-+	.num_parents	= ARRAY_SIZE(_parents),\
-+	.flags		= _flags,\
-+	.cfg		= &(struct composite_cfg)_cfg,\
-+	.func		= _clk_stm_register_composite,\
-+}
-+
-+#define PARENT(_parent) ((const char *[]) { _parent})
-+
-+#define _NO_MUX .mux = NULL, .mux_ops = NULL
-+#define _NO_DIV .div = NULL, .div_ops = NULL
-+#define _NO_GATE .gate = NULL, .gate_ops = NULL
-+
-+#define _GATE_OPS(_offset, _bit_idx, _gate_flags, _gate_ops) \
-+		  .gate = &(struct gate_cfg) {\
-+			.reg_off	= _offset,\
-+			.bit_idx	= _bit_idx,\
-+		 },\
-+		 .gate_ops = _gate_ops
-+
-+#define _GATE(_offset, _bit_idx, _gate_flags)\
-+	_GATE_OPS(_offset, _bit_idx, _gate_flags, NULL)
-+
-+#define _DIV_TABLE_OPS(_offset, _shift, _width, _div_flags, _div_table,\
-+		       _div_ops)\
-+	.div = &(struct div_cfg) {\
-+		.reg_off	= _offset,\
-+		.shift		= _shift,\
-+		.width		= _width,\
-+		.div_flags	= _div_flags,\
-+		.table		= _div_table,\
-+	},\
-+	.div_ops = _div_ops
-+
-+#define _DIV_TABLE(_offset, _shift, _width, _div_flags, _div_table)\
-+		   _DIV_TABLE_OPS(_offset, _shift, _width, _div_flags,\
-+				  _div_table, NULL)
-+
-+#define _DIV_OPS(_offset, _shift, _width, _div_flags, _div_ops)\
-+	_DIV_TABLE_OPS(_offset, _shift, _width, _div_flags, NULL, _div_ops)
-+
-+#define _DIV(_offset, _shift, _width, _div_flags)\
-+	_DIV_OPS(_offset, _shift, _width, _div_flags, NULL)
-+
-+#define _MUX(_offset, _shift, _width, _mux_flags)\
-+	.mux = &(struct mux_cfg) {\
-+		.reg_off	= _offset,\
-+		.shift		= _shift,\
-+		.width		= _width,\
-+		.mux_flags	= _mux_flags,\
-+		.table		= NULL,\
-+	},\
-+	.mux_ops = NULL
-+
-+#define _GATEDIV(_gate_offset,\
-+		 _bit_idx,\
-+		 _div_offset,\
-+		 _div_shift,\
-+		 _div_width,\
-+		 _div_table)\
-+{\
-+	_DIV_TABLE(_div_offset, _div_shift, _div_width, 0, _div_table),\
-+	_GATE(_gate_offset, _bit_idx, 0),\
-+	_NO_MUX,\
-+}
-+
- #define MP1_GATE(_id, _name, _parent, _flags, _offset, _bit_idx, _gate_flags)\
- {\
- 	.id		= _id,\
-@@ -834,6 +1056,41 @@ struct clk_hw *_clk_register_pll(struct device *dev,
- 	PLL(PLL2, "pll2", "ref1", CLK_IGNORE_UNUSED, RCC_PLL2CR),
- 	PLL(PLL3, "pll3", "ref3", CLK_IGNORE_UNUSED, RCC_PLL3CR),
- 	PLL(PLL4, "pll4", "ref4", CLK_IGNORE_UNUSED, RCC_PLL4CR),
-+
-+	/* ODF */
-+	COMPOSITE(PLL1_P, "pll1_p", PARENT("pll1"), 0,
-+		  _GATEDIV(RCC_PLL1CR, 4,
-+			   RCC_PLL1CFGR2, 0, 7, NULL)),
-+
-+	COMPOSITE(PLL2_P, "pll2_p", PARENT("pll2"), 0,
-+		  _GATEDIV(RCC_PLL2CR, 4,
-+			   RCC_PLL2CFGR2, 0, 7, NULL)),
-+	COMPOSITE(PLL2_Q, "pll2_q", PARENT("pll2"), 0,
-+		  _GATEDIV(RCC_PLL2CR, 5,
-+			   RCC_PLL2CFGR2, 8, 7, NULL)),
-+	COMPOSITE(PLL2_R, "pll2_r", PARENT("pll2"), CLK_IS_CRITICAL,
-+		  _GATEDIV(RCC_PLL2CR, 6,
-+			   RCC_PLL2CFGR2, 16, 7, NULL)),
-+
-+	COMPOSITE(PLL3_P, "pll3_p", PARENT("pll3"), 0,
-+		  _GATEDIV(RCC_PLL3CR, 4,
-+			   RCC_PLL3CFGR2, 0, 7, NULL)),
-+	COMPOSITE(PLL3_Q, "pll3_q", PARENT("pll3"), 0,
-+		  _GATEDIV(RCC_PLL3CR, 5,
-+			   RCC_PLL3CFGR2, 8, 7, NULL)),
-+	COMPOSITE(PLL3_R, "pll3_r", PARENT("pll3"), 0,
-+		  _GATEDIV(RCC_PLL3CR, 6,
-+			   RCC_PLL3CFGR2, 16, 7, NULL)),
-+
-+	COMPOSITE(PLL4_P, "pll4_p", PARENT("pll4"), 0,
-+		  _GATEDIV(RCC_PLL4CR, 4,
-+			   RCC_PLL4CFGR2, 0, 7, NULL)),
-+	COMPOSITE(PLL4_Q, "pll4_q", PARENT("pll4"), 0,
-+		  _GATEDIV(RCC_PLL4CR, 5,
-+			   RCC_PLL4CFGR2, 8, 7, NULL)),
-+	COMPOSITE(PLL4_R, "pll4_r", PARENT("pll4"), 0,
-+		  _GATEDIV(RCC_PLL4CR, 6,
-+			   RCC_PLL4CFGR2, 16, 7, NULL)),
- };
- 
- struct stm32_clock_match_data {
++#endif /* _DT_BINDINGS_STM32MP1_CLKS_H_ */
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
