@@ -1,104 +1,45 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v6 04/41] clk: davinci: Add platform information for TI
- DA850 PLL
-Date: Fri, 2 Feb 2018 11:45:45 -0600
-Message-ID: <4a1d3a2f-128a-b6ff-3675-2ff0bf290dcd@lechnology.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v6 17/41] dt-bindings: clock: Add bindings for DA8XX
+ CFGCHIP clocks
+Date: Fri, 2 Feb 2018 11:50:23 -0600
+Message-ID: <26fd0f01-ed14-6544-7443-e88c69ca9acb@lechnology.com>
 References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-5-git-send-email-david@lechnology.com>
- <7d7e0522-30d5-6232-853e-7ab32fadfe48@lechnology.com>
- <ceec9849-e3fb-0e9b-4000-aab3ca2f5a43@ti.com>
+ <1516468460-4908-18-git-send-email-david@lechnology.com>
+ <572e31a2-ac18-512b-03bb-82fffcf4d228@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ceec9849-e3fb-0e9b-4000-aab3ca2f5a43-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <572e31a2-ac18-512b-03bb-82fffcf4d228@ti.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/02/2018 02:37 AM, Sekhar Nori wrote:
-> On Friday 02 February 2018 12:52 AM, David Lechner wrote:
+On 02/02/2018 12:20 AM, Sekhar Nori wrote:
+> On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+>> +EMIFA clock source (ASYNC1)
+>> +---------------------------
+>> +Required properties:
+>> +- compatible: shall be "ti,da850-async1-clksrc".
+>> +- #clock-cells: from common clock binding; shall be set to 0.
+>> +- clocks: phandles to the parent clocks corresponding to clock-names
+>> +- clock-names: shall be "pll0_sysclk3", "div4.5"
 > 
->>> +static const char * const da850_pll1_obsclk_parent_names[]
->>> __initconst = {
->>> +    "oscin",
->>
->> Re: the issue of "ref_clk" vs. "oscin"...
->>
->> This is one of the places where having the otherwise unnecessary "oscin"
->> clock
->> really helps out. The PLL driver doesn't control "ref_clk" - it comes
->> from somewhere
->> else. And in the case of DT, it may not even be named "ref_clk", so we
->> really
->> don't want to hard-code the name "ref_clk" here.
-> 
-> TBH, I don't really see what is wrong with mandating the name "ref_clk"
-> as the reference clock name to be provided. And for all board-files and
-> DTs to supply the same name.
-> 
->> If we have to allow a variable name here, it just makes more work in the
->> driver
->> shuffling names around.
->>
->> And the name "oscin" totally makes sense here because the TRM lists this
->> input to the
->> mux as "OSCIN".
-> 
-> Fine with me if you feel it simplifies implementation for you (and also
-> because of the distinction you want to make between the external "before
-> CLKMODE" clock and internal "after CLKMODE" clock). What I do care about
-> though is:
-> 
-> a) In the DT case, ability for different boards to provide different
->     ref_clk frequencies. We never really had this in the legacy board
->     file way (except some rudimentary support on DM6467T). And its fine
->     to continue with status quo for board files.
-
-You can do this now. You would just add something like this to the board's
-.dts file:
-
-	& ref_clk {
-		clock-frequency = <30000000>; /* 30 MHz */
-	};
-
-> 
-> b) In the DT case, ability for board to specify whether it uses the
->     on-chip oscillator or has an external clean clock provider.
-
-Boards with an oscillator don't need to do anything since that is the
-default. Boards with clock will need to do this:
-
-	&pll0 {
-		ti,clkmode-square-wave;
-	};
-
-> 
->>> +void __init da850_pll_clk_init(void __iomem *pll0, void __iomem *pll1)
->>> +{
->>> +    const struct davinci_pll_sysclk_info *info;
->>> +
->>> +    davinci_pll_clk_register(&da850_pll0_info, "ref_clk", pll0);
->>
->> And really, we probably shouldn't be hard-coding "ref_clk" here either.
->> Basically, we are making the assumption that the board file has registered
->> a clock named "ref_clk". It would probably be better to pass the name
->> as a parameter.
-> 
-> As I noted before, I am not sure if this level of naming flexibility is
-> needed. Every board needs to have one anyway. They might as well call it
-> by the same name.
-> 
-> That said, I wont oppose it either if you decide to have that flexibility.
+> Is this clock really referred to as aysnc1 in documentation? I don't get
+> hits for async1 in OMAP-L138 TRM.
 > 
 
-I'll sleep on it. Like you, I could go either way. I'm temped to just leave
-it as-is though (with some added comments for clarification, of course).
+It looks like it is only called ASYNC1 in the datasheet, not the TRM.
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Table 6-5. Maximum Internal Clock Frequencies at Each Voltage Operating
+Point
