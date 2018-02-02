@@ -1,79 +1,80 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 07/16] iio: adc: sun4i-gpadc-iio: rework: support nvmem
- calibration data
-Date: Fri, 2 Feb 2018 16:24:49 +0100
-Message-ID: <aacb720f-2337-a016-e4e2-d99bd8da420b@gmail.com>
-References: <20180128232919.12639-1-embed3d@gmail.com>
- <20180128232919.12639-8-embed3d@gmail.com>
- <20180129094045.sagz2dnzvdadd4yx@flea.lan>
- <e319fde5-9ede-8be0-03ae-f0a22d50250c@gmail.com>
- <20180130083642.cdpd7jnthkdrrk5r@flea.lan>
+From: Frank Li <frank.li-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH] ARM: dts: imx6q-bx50v3: Enable secure-reg-access
+Date: Fri, 2 Feb 2018 15:33:40 +0000
+Message-ID: <HE1PR04MB2091FB16A11EE4A02940EB6088F90@HE1PR04MB2091.eurprd04.prod.outlook.com>
+References: <20180115160722.17206-1-sebastian.reichel@collabora.co.uk>
+ <20180202071819.GE25699@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180130083642.cdpd7jnthkdrrk5r-ZC1Zs529Oq4@public.gmane.org>
+In-Reply-To: <20180202071819.GE25699@dragon>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, edu.molinas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, singhalsimran0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
->>
->>>>    	/* prevents concurrent reads of temperature and ADC */
->>>>    	struct mutex			mutex;
->>>>    	struct thermal_zone_device	*tzd;
->>>> @@ -561,6 +569,9 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
->>>>    	struct resource *mem;
->>>>    	void __iomem *base;
->>>>    	int ret;
->>>> +	struct nvmem_cell *cell;
->>>> +	ssize_t cell_size;
->>>> +	u64 *cell_data;
->>>>    	info->data = of_device_get_match_data(&pdev->dev);
->>>>    	if (!info->data)
->>>> @@ -575,6 +586,39 @@ static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
->>>>    	if (IS_ERR(base))
->>>>    		return PTR_ERR(base);
->>>> +	info->has_calibration_data[0] = false;
->>>> +	info->has_calibration_data[1] = false;
->>>> +
->>>> +	if (!info->data->supports_nvmem)
->>>> +		goto no_nvmem;
->>>> +
->>>> +	cell = nvmem_cell_get(&pdev->dev, "calibration");
->>>> +	if (IS_ERR(cell)) {
->>>> +		if (PTR_ERR(cell) == -EPROBE_DEFER)
->>>> +			return PTR_ERR(cell);
->>>> +		goto no_nvmem;
->>>
->>> goto considered evil ? :)
->>
->> this was a suggestion from Jonatan in version one, to make the code better
->> readable.
-> 
-> Isn't
-> 
-> if (info->data->supports_nvmem && IS_ERR(cell = nvmem_cell_get()))
-> 
-> pretty much the same thing?
-> 
-> Maxime
-> 
-I would say :
 
-if (info->data->supports_nvmem && !IS_ERR(cell = nvmem_cell_get())) is
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Friday, February 02, 2018 1:18 AM
+> To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>; Frank Li <frank.li-3arQi8VN3Tc@public.gmane.org>;
+> Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>; Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>; Rob
+> Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: Re: [PATCH] ARM: dts: imx6q-bx50v3: Enable secure-reg-access
+>=20
+> + Frank
+>=20
+> On Mon, Jan 15, 2018 at 05:07:22PM +0100, Sebastian Reichel wrote:
+> > From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> >
+> > Add secure-reg-access on device tree include file for Bx50 devices to
+> > enable PMU and hardware counters for perf.
+> >
+> > Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/imx6q-bx50v3.dtsi | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> > b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> > index 86cfd4481e72..ccaaee83e2fa 100644
+> > --- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> > +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> > @@ -43,6 +43,13 @@
+> >  #include "imx6q-ba16.dtsi"
+> >
+> >  / {
+> > +	soc {
+> > +		pmu {
+> > +			compatible =3D "arm,cortex-a9-pmu";
+> > +			secure-reg-access;
+>=20
+> I'm not sure this could be a board level configuration.  Shouldn't this p=
+roperty
+> just be added into pmu node in imx6qdl.dtsi?
 
-the same.
-This would require an else if statement like this:
+I agree. It should be in imx6qdl.dtsi
 
-else if (info->data->supports_nvmem && PTR_ERR(cell) == -EPROBE_DEFER)
-		return PTR_ERR(cell);
+Frank Li
 
-to avoid errors if the thermal sensor is probed before the sid driver.
-
-Philipp
+>=20
+> Shawn
+>=20
+> > +		};
+> > +	};
+> > +
+> >  	clocks {
+> >  		mclk: clock@0 {
+> >  			compatible =3D "fixed-clock";
+> > --
+> > 2.15.1
+> >
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
