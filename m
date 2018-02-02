@@ -1,86 +1,39 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v6 20/41] ARM: da830: add new clock init using common
- clock framework
-Date: Fri, 2 Feb 2018 12:03:36 -0600
-Message-ID: <e5eb68e8-eb53-331d-5941-95df7d295074@lechnology.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-21-git-send-email-david@lechnology.com>
- <4b2f45f5-7f0d-f0e6-6854-9992e19f45f2@ti.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 0/3] Allwinner V3s EMAC support
+Date: Sat,  3 Feb 2018 02:04:53 +0800
+Message-ID: <20180202180456.60378-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4b2f45f5-7f0d-f0e6-6854-9992e19f45f2@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB3WQ2LJQKGQENV47OLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/02/2018 08:12 AM, Sekhar Nori wrote:
-> On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
->>   void __init da830_init_time(void)
->>   {
->> +#ifdef CONFIG_COMMON_CLK
->> +	void __iomem *pll0, *psc0, *psc1;
->> +	struct clk *clk;
->> +
->> +	pll0 = ioremap(DA8XX_PLL0_BASE, SZ_4K);
->> +	psc0 = ioremap(DA8XX_PSC0_BASE, SZ_4K);
->> +	psc1 = ioremap(DA8XX_PSC1_BASE, SZ_4K);
->> +
->> +	da8xx_register_cfgchip();
->> +
->> +	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DA830_REF_FREQ);
->> +
->> +	da830_pll_clk_init(pll0);
->> +
->> +	da830_psc_clk_init(psc0, psc1);
->> +
-> 
->> +	clk = clk_register_fixed_factor(NULL, "i2c0", "pll0_aux_clk", 0, 1, 1);
->> +	clk_register_clkdev(clk, NULL, "i2c_davinci.1");
->> +
->> +	clk = clk_register_fixed_factor(NULL, "timer0", "pll0_aux_clk", 0, 1, 1);
->> +	clk_register_clkdev(clk, "timer0", NULL);
->> +
->> +	clk = clk_register_fixed_factor(NULL, "timer1", "pll0_aux_clk", 0, 1, 1);
->> +	clk_register_clkdev(clk, NULL, "davinci-wdt");
-> 
-> Isn't this better done in da830_pll_clk_init() ? I think we can get rid
-> of the dummy fixed factor clock too and directly use the pll0_auxclk.
+The Allwinner V3/V3s SoCs have EMAC similar to the one in H3, but on V3s
+the external MII is not exported due to packaging. (V3s is eLQFP128;
+the BGA-packaged V3 exported the external MII bus.)
 
+Add support for the EMAC on V3s. The external bus is not added yet, and
+will be added when adding support for V3.
 
-I considered it, but I kind of like keeping the fixed factor clocks for
-debugging purposes. If you just have "pll0_auxclk" the enable count is
-not helpful because you don't know which driver did the enabling.
+Icenowy Zheng (3):
+  net: stmmac: dwmac-sun8i: drop V3s compatible and add V3 one
+  ARM: sun8i: v3s: add V3s EMAC device tree node
+  ARM: sun8i: v3s: enable Ethernet port on the Lichee Pi Zero Dock
 
-On the other hand, once things are working, you don't really need to
-do any debugging.
+ .../devicetree/bindings/net/dwmac-sun8i.txt        | 10 ++--
+ arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts |  8 ++++
+ arch/arm/boot/dts/sun8i-v3s.dtsi                   | 55 ++++++++++++++++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  | 10 ++--
+ 4 files changed, 74 insertions(+), 9 deletions(-)
 
-
-> That reminds me, is "pll0_aux_clk" above correct, or should it be
-> "pll0_auxclk" like in da830_pll_clk_init()?
-
-Yes, it should be "pll0_auxclk".
-
-> 
->> +
->> +	clk = clk_register_fixed_factor(NULL, "rmii", "pll0_sysclk7", 0, 1, 1);
->> +	clk_register_clkdev(clk, "rmii", NULL);
-> 
-> I don't see any driver looking for this clock using con_id "rmii". I
-> know this came from existing code. But its most likely a vestige and can
-> be dropped.
-> 
-> Thanks,
-> Sekhar
-> 
+-- 
+2.15.1
