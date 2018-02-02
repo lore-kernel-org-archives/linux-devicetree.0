@@ -1,58 +1,64 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3] arm64: dts: rockchip: add roc-rk3328-cc board
-Date: Fri, 02 Feb 2018 22:47:23 +0100
-Message-ID: <3332426.dR0IG2DWyn@phil>
-References: <20180106094538.15568-1-djw@t-chip.com.cn> <20180123021017.24110-1-djw@t-chip.com.cn>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/3] net: stmmac: dwmac-sun8i: drop V3s compatible and
+ add V3 one
+Date: Fri, 2 Feb 2018 23:13:01 +0100
+Message-ID: <20180202221301.judzaafcu67h4c2v@flea.lan>
+References: <20180202180456.60378-1-icenowy@aosc.io>
+ <20180202180456.60378-2-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180123021017.24110-1-djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Levin Du <zslevin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="w3j3l6kd2tz7c6az"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180202180456.60378-2-icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Corentin Labbe <clabbe.montjoie@gmail.com>, "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Levin,
 
-Am Dienstag, 23. Januar 2018, 03:10:17 CET schrieb djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org:
-> From: Levin Du <djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org>
-> 
-> Hi all,
-> 
-> v3:
-> Use pmic@18 instead of rk805@18
-> Use macro definition RK_Pxx in gpio number
-> 
-> v2:
-> Use SPDX license tag
-> 
-> Thanks.
-> 
-> The roc-rk3328-cc is a credit card size single board computer using the
-> Rockchip RK3328 Quad-Core ARM Cortex A53 64-Bit Processor and supporting
-> up to 2GB 2133MHz LPDDR4 memory. It provides eMMC module socket, MicroSD
-> Card slot, USB 2.0/3.0, Gigabit Ethernet, HDMI/CVBS, Infrared Receiver,
-> SPDIF/I2S, and SPI/I2C/UART/PWM interfaces.
-> 
-> The devicetree currently supports basic peripherals.
-> 
-> Signed-off-by: Levin Du <djw-Efosm3t9Qi2Pt1CcHtbs0g@public.gmane.org>
+--w3j3l6kd2tz7c6az
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I've applied the patch for 4.17 with some changes:
-- dropped the version prose in the commit message as noted by Rob
-- dropped the usbdrd3 elements for the time being.
-  Definitly not your fault and I did pick up the core usb3 enablement
-  for the rk3328, but it looks like this needs a bit more time as the phy
-  has this issue of not recognizing device unpluggs, making the controller
-  not taking any plug events after that at all.
-  So I want to make that actually work, before I bind myself to the binding
-  using the dwc3-of-simple stuff.
-  We can readd the dwc3 nodes to the roc-3328-cc once that works correctly.
+On Sat, Feb 03, 2018 at 02:04:54AM +0800, Icenowy Zheng wrote:
+> The V3s is just a differently packaged version of the V3 chip, which has
+> a MAC with the same capability with H3. The V3s just doesn't wire out
+> the external MII/RMII/RGMII bus. (V3 wired out it).
+>=20
+> Drop the compatible string of V3s in the dwmac-sun8i driver, and add a
+> V3 compatible string, which has all capabilities.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 
-Heiko
+This breaks the DT ABI, so NAK.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
+
+--w3j3l6kd2tz7c6az
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlp04mwACgkQ0rTAlCFN
+r3R0fQ//ffoKAqEP0sFMB9nFlN99JfDugPC/YpywXyDNrTMvb5TV1Ir1d0YMLAWC
+jaT+EgL/eGA3Eo5488f2tD7Dl7hlOCJEliXJp3tyP5DGGDUN8tzEaej5j+R6GpMU
++b4nIZyZj/lw7fmTHCiynhG4MdyR0yT8QILUbhD4ts/+UeIy1OoEpJVjGAp4gFAP
+lY29KR1D8j+uK2CLPoSYnnqv+1Fr15NDE2gbxMPDvle5DgglCSphUXN+A23Dzk38
+EnrELnrHJj8V+E9QBX/kfCoIGWHQpknphDoMR1J5/1r1J7bo87S/PRvoH0MU7eqm
+aFu6Jc+Whe3MG02ItTg9py+L9WT8hW5Yq98xXqQmc2T1R0nBfIAROY54LLhXs1VX
+mRAgsn3k+5s4/hNPRdMEmxBlDOO/ecsYHMqRLVos7Bg6KUjjnJp7h4Ja3mta0fGa
+R4w0fBCfTEcVTHhR0LfXmGOYY0XIzH8cwJpGGB4hw5xM/nDEULJtt3u8Qf5rMqnx
+KutdC6QQ9QMMGMeADPgT/7hGt7Keabk48Urc4Ye6QXiq825QirfFfcNklY5UEgs8
+OZ69tG3JGK/xcphgJryF499Qy6WABb/XWvCEIyiW5UapI/hvhtMLBKs38+SeZgDP
+HZV8m+cvScrnRiD7sTHqzPRWPKxiHMnJWL4x4OlXIbP0+JFX5L4=
+=rMO6
+-----END PGP SIGNATURE-----
+
+--w3j3l6kd2tz7c6az--
