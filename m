@@ -1,119 +1,42 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
- of_find_node_by_phandle()
-Date: Fri, 2 Feb 2018 19:55:35 -0800
-Message-ID: <f38afa06-fedb-4fbc-6721-f3bae4260316@gmail.com>
-References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
- <5dd35d8f-c430-237e-9863-2e73556f92ec@gmail.com>
- <CAL_JsqLV_bQ2pQ7hCRDP9_31kmKQjggWFDoCia-KmmO5CR3T5g@mail.gmail.com>
- <4f2b3755-9ef1-4817-7436-9f5aafb38b60@gmail.com>
- <cae45760-558d-c0b7-93aa-a137f46b2836@codeaurora.org>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH 1/3] net: stmmac: dwmac-sun8i: drop V3s
+ compatible and add V3 one
+Date: Sat, 3 Feb 2018 17:00:33 +1100
+Message-ID: <CAGRGNgXy5ZUdCj34jG5kJ8yLZLbcZie5tkvYP08sFpMmAjwPNg@mail.gmail.com>
+References: <20180202180456.60378-1-icenowy@aosc.io> <20180202180456.60378-2-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cae45760-558d-c0b7-93aa-a137f46b2836@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chintan Pandya <cpandya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180202180456.60378-2-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/18 21:53, Chintan Pandya wrote:
-> 
-> 
-> On 2/2/2018 2:39 AM, Frank Rowand wrote:
->> On 02/01/18 06:24, Rob Herring wrote:
->>> And so
->>> far, no one has explained why a bigger cache got slower.
->>
->> Yes, I still find that surprising.
-> 
-> I thought a bit about this. And realized that increasing the cache size should help improve the performance only if there are too many misses with the smaller cache. So, from my experiments some time back, I looked up the logs and saw the access pattern. Seems like, there is *not_too_much* juggling during look up by phandles.
-> 
-> See the access pattern here: https://drive.google.com/file/d/1qfAD8OsswNJABgAwjJf6Gr_JZMeK7rLV/view?usp=sharing
+Hi Icenowy,
 
-Thanks!  Very interesting.
+On Sat, Feb 3, 2018 at 5:04 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> The V3s is just a differently packaged version of the V3 chip, which has
+> a MAC with the same capability with H3. The V3s just doesn't wire out
+> the external MII/RMII/RGMII bus. (V3 wired out it).
+>
+> Drop the compatible string of V3s in the dwmac-sun8i driver, and add a
+> V3 compatible string, which has all capabilities.
 
-I was somewhat limited at playing detective with this, because the phandle
-values are not consistent with the dts file you are currently working
-with (arch/arm64/boot/dts/qcom/sda670-mtp.dts).  For example, I could
-not determine what the target nodes for the hot phandle values.  That
-information _could_ possibly point at algorithms within the devicetree
-core code that could be improved.  Or maybe not.  Hard to tell until
-actually looking at the data.
+Aren't compatible strings technically API, so don't we need to support
+those that are out in the wild "forever"?
 
-Anyway, some observations were possible.
+Therefore shouldn't we leave the v3s variant around for compatibility
+with existing device trees?
 
-There are 485 unique phandle values searched for.
+Thanks,
 
-The ten phandle values most frequently referenced account for
-3932 / 6745 (or 58%) of all references.
+-- 
+Julian Calaby
 
-Without the corresponding devicetree I can not tell how many nodes
-need to be scanned to locate each of these ten values (using the
-existing algorithm).  Thus I can not determine how much scanning
-would be eliminated by caching just the nodes corresponding to
-these ten phandle values.
-
-There are 89 phandle values that were searched for 10 times
-or more, accounting for 86% of the searches.
-
-Only 164 phandle values were searched for just one time.
-
-303 phandle values were searched for just one or two times.
-
-Here is a more complete picture:
-
-  10 values each used 100 or more times; searches:  3932   58%
-  11 values each used  90 or more times; searches:  3994   59%
-  12 values each used  80 or more times; searches:  4045   60%
-  13 values each used  70 or more times; searches:  4093   61%
-  14 values each used  60 or more times; searches:  4136   61%
-  15 values each used  50 or more times; searches:  4178   62%
-  18 values each used  40 or more times; searches:  4300   64%
-  32 values each used  30 or more times; searches:  4774   71%
-  54 values each used  20 or more times; searches:  5293   78%
-  89 values each used  10 or more times; searches:  5791   86%
-  93 values each used   9 or more times; searches:  5827   86%
- 117 values each used   8 or more times; searches:  6019   89%
- 122 values each used   7 or more times; searches:  6054   90%
- 132 values each used   6 or more times; searches:  6114   91%
- 144 values each used   5 or more times; searches:  6174   92%
- 162 values each used   4 or more times; searches:  6246   93%
- 181 values each used   3 or more times; searches:  6303   93%
- 320 values each used   2 or more times; searches:  6581   98%
- 484 values each used   1 or more times; searches:  6746  100%
-
-A single system does not prove anything.  It is possible that
-other devicetrees would exhibit similarly long tailed behavior,
-but that is just wild speculation on my part.
-
-_If_ the long tail is representative of other systems, then
-identifying a few hot spots could be useful, but fixing them
-is not likely to significantly reduce the overhead of calls
-to of_find_node_by_phandle().  Some method of reducing the
-overhead of each call would be the answer for a system of
-this class.
-
-
-> Sample log is pasted below where number in the last is phandle value.
->     Line 8853: [   37.425405] OF: want to search this 262
->     Line 8854: [   37.425453] OF: want to search this 262
->     Line 8855: [   37.425499] OF: want to search this 262
->     Line 8856: [   37.425549] OF: want to search this 15
->     Line 8857: [   37.425599] OF: want to search this 5
->     Line 8858: [   37.429989] OF: want to search this 253
->     Line 8859: [   37.430058] OF: want to search this 253
->     Line 8860: [   37.430217] OF: want to search this 253
->     Line 8861: [   37.430278] OF: want to search this 253
->     Line 8862: [   37.430337] OF: want to search this 253
->     Line 8863: [   37.430399] OF: want to search this 254
->     Line 8864: [   37.430597] OF: want to search this 254
->     Line 8865: [   37.430656] OF: want to search this 254
-> 
-> 
-> Above explains why results with cache size 64 and 128 have almost similar results. Now, for cache size 256 we have degrading performance. I don't have a good theory here but I'm assuming that by making large SW cache, we miss the benefits of real HW cache which is typically smaller than our array size. Also, in my set up, I've set max_cpu=1 to reduce the variance. That again, should affect the cache holding pattern in HW and affect the perf numbers.
-> 
-> 
-> Chintan
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
