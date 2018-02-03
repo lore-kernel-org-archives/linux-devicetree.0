@@ -1,36 +1,38 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: imx: Add memory node unit name
-Date: Fri, 2 Feb 2018 22:03:07 -0200
-Message-ID: <CAOMZO5AfEon8mGLZyYQav_TjZ5h7KMVvE8ks4Ruw4xyj48wofA@mail.gmail.com>
-References: <1516800134-5018-1-git-send-email-marcofrk@gmail.com> <1516800134-5018-3-git-send-email-marcofrk@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516800134-5018-3-git-send-email-marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+From: Derek Basehore <dbasehore@chromium.org>
+Subject: [PATCH v4 0/5] GICv3 Save and Restore
+Date: Fri,  2 Feb 2018 17:24:45 -0800
+Message-ID: <20180203012450.18378-1-dbasehore@chromium.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Soby.Mathew@arm.com, sudeep.holla@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, tglx@linutronix.de, briannorris@chromium.org, marc.zyngier@arm.com, Derek Basehore <dbasehore@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 24, 2018 at 11:22 AM, Marco Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Fix the following warnings from dtc by adding the unit name to memory
-> nodes:
->
-> Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
->
-> Converted using the following command:
->
-> perl -p0777i -e 's/memory \{\n\t\treg = \<0x+([0-9a-f])/memory\@$1$\0000000 \{\n\t\treg = <0x$1/m' `find ./arch/arm/boot/dts -name "imx*"`
->
-> The files below were manually fixed:
-> -imx1-ads.dts
-> -imx1-apf9328.dts
-> -imx6q-pistachio.dts
->
-> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+A lot of changes in v2. The distributor and redistributor saving and
+restoring is left to the PSCI/firmware implementation after
+discussions with ARM. This reduces the line changes by a lot and
+removes now unneeded patches.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patches are verified on an RK3399 platform with pending patches in the
+ARM-Trusted-Firmware project.
+
+Just a couple minor changes in v3 to formatting.
+
+Fixed a false ITS wedged detection due to the cmd_write and creadr
+offsets not matching up on reset in v4. Also minor formatting changes.
+
+Derek Basehore (5):
+  cpu_pm: add syscore_suspend error handling
+  irqchip/gic-v3-its: add ability to save/restore ITS state
+  DT/arm,gic-v3-its: add reset-on-suspend property
+  irqchip/gic-v3-its: add ability to resend MAPC on resume
+  DT/arm,gic-v3: add collections-reset-on-suspend property
+
+ .../bindings/interrupt-controller/arm,gic-v3.txt   |   7 +
+ arch/arm64/Kconfig                                 |  10 +
+ drivers/irqchip/irq-gic-v3-its.c                   | 202 +++++++++++++++++----
+ kernel/cpu_pm.c                                    |   3 +
+ 4 files changed, 184 insertions(+), 38 deletions(-)
+
+-- 
+2.16.0.rc1.238.g530d649a79-goog
