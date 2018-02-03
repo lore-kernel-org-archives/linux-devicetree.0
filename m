@@ -1,65 +1,110 @@
-From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 06/15] ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
-Date: Sat, 03 Feb 2018 16:47:39 +0530
-Message-ID: <a32d3a776c7a3f5c88a9a26200bff915@codeaurora.org>
-References: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
- <1517202689-14212-7-git-send-email-sricharan@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517202689-14212-7-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH] Revert "ARM: dts: sunxi: Add regulators for Sinovoip BPI-M2"
+Date: Sat,  3 Feb 2018 19:23:53 +0800
+Message-ID: <20180203112353.13497-1-icenowy@aosc.io>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-01-29 10:41, Sricharan R wrote:
-> Add the common parts for the dk04 boards.
-> 
-> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi | 147
+This reverts commit 7daa213700758b5b08fc0daab09bb139dd334165.
 
-  <snip>
-> +
-> +			nand_pins: nand_pins {
-> +				pullups {
-> +					pins = "gpio52", "gpio53",
-> "gpio58",
-> +						"gpio59";
-> +					function = "qpic";
-> +					bias-pull-up;
-> +				};
-> +
-> +				pulldowns {
-> +					pins = "gpio54", "gpio55",
-> "gpio56",
-> +						"gpio57", "gpio60",
-> "gpio61",
-> +						"gpio62", "gpio63",
-> "gpio64",
-> +						"gpio65", "gpio66",
-> "gpio67",
-> +						"gpio68", "gpio69";
-> +					function = "qpic";
-> +					bias-pull-down;
-> +				};
-> +			};
+The original commit has several problems:
 
-  Can you please check once why do we need pull-up and
-  pull-down for NAND pins. The NAND chip will be mounted
-  over board itself so board design should take care of
-  required pull up and pull downs.
+- vdd-cpus and aldo3 (AVCC of the SoC) are not set to always-on, which
+leads to system hang when disabling unused regulators.
+- GMAC (which uses dldo1 and aldo2) and Wi-Fi (which uses aldo1) are not
+considered, and will fail to work after adding this commit.
 
-  Also, some of the above pins like gpio52 will be only used
-  for LCD so we can remove those pins. Later on, when LCD
-  support will be added, we can add those pins.
+This indicates that this patch should be not tested at all.
 
-  Thanks,
-  Abhishek
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts | 57 ------------------------
+ 1 file changed, 57 deletions(-)
+
+diff --git a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+index 51e6f1d21c32..a565316eb340 100644
+--- a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
++++ b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+@@ -86,10 +86,6 @@
+ 	};
+ };
+ 
+-&cpu0 {
+-	cpu-supply = <&reg_dcdc3>;
+-};
+-
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -155,17 +151,6 @@
+ 	status = "okay";
+ };
+ 
+-&p2wi {
+-	status = "okay";
+-
+-	axp22x: pmic@68 {
+-		compatible = "x-powers,axp221";
+-		reg = <0x68>;
+-		interrupt-parent = <&nmi_intc>;
+-		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+-	};
+-};
+-
+ &pio {
+ 	gmac_phy_reset_pin_bpi_m2: gmac_phy_reset_pin@0 {
+ 		pins = "PA21";
+@@ -191,48 +176,6 @@
+ 	};
+ };
+ 
+-#include "axp22x.dtsi"
+-
+-&reg_dc5ldo {
+-	regulator-min-microvolt = <700000>;
+-	regulator-max-microvolt = <1320000>;
+-	regulator-name = "vdd-cpus";
+-};
+-
+-&reg_dcdc1 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <3000000>;
+-	regulator-max-microvolt = <3000000>;
+-	regulator-name = "vdd-3v0";
+-};
+-
+-&reg_dcdc2 {
+-	regulator-min-microvolt = <700000>;
+-	regulator-max-microvolt = <1320000>;
+-	regulator-name = "vdd-gpu";
+-};
+-
+-&reg_dcdc3 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <700000>;
+-	regulator-max-microvolt = <1320000>;
+-	regulator-name = "vdd-cpu";
+-};
+-
+-&reg_dcdc4 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <700000>;
+-	regulator-max-microvolt = <1320000>;
+-	regulator-name = "vdd-sys-dll";
+-};
+-
+-&reg_dcdc5 {
+-	regulator-always-on;
+-	regulator-min-microvolt = <1500000>;
+-	regulator-max-microvolt = <1500000>;
+-	regulator-name = "vcc-dram";
+-};
+-
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+-- 
+2.15.1
