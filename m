@@ -1,64 +1,100 @@
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Subject: Re: [PATCH v2 1/2] ASoC: codecs: Add support for
-	AK5558 ADC driver
-Date: Sun, 4 Feb 2018 16:42:13 +0200
-Message-ID: <CAEnQRZAJ0RmCcG76nKjvVj_JGa+N5U2h4SCmFXDAGveE82ewfw@mail.gmail.com>
-References: <1517588406-3295-1-git-send-email-daniel.baluta@nxp.com>
- <1517588406-3295-2-git-send-email-daniel.baluta@nxp.com>
- <CAHp75VfyVfGdCfjV_iaXFcRcanbgwFSgJRfu8eojdbMONMUOaQ@mail.gmail.com>
- <20180202231102.GA2705@sirena.org.uk>
- <CAHp75Vdadii=judzHp_Wt-Yn7Ozyn2ybAKCtWAj=KtyHRsUucw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: exynos-artik5: add support for wlan
+Date: Sun, 4 Feb 2018 17:26:55 +0100
+Message-ID: <20180204162655.xjv2m6f6vo7bu2lq@kozik-lap>
+References: <20180201211656.11829-1-mlyle@lyle.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAHp75Vdadii=judzHp_Wt-Yn7Ozyn2ybAKCtWAj=KtyHRsUucw@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, wakasugi.jb@om.asahi-kasei.co.jp, Cosmin Samoila <cosmin.samoila@nxp.com>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Mihai Serban <mihai.serban@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Mihai Serban <mihai.serban@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180201211656.11829-1-mlyle-dTEscH1tG2Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Lyle <mlyle-dTEscH1tG2Q@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, CHANHO PARK <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 4, 2018 at 4:31 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sat, Feb 3, 2018 at 1:11 AM, Mark Brown <broonie@kernel.org> wrote:
->> On Fri, Feb 02, 2018 at 09:33:18PM +0200, Andy Shevchenko wrote:
->>> On Fri, Feb 2, 2018 at 6:20 PM, Daniel Baluta <daniel.baluta@nxp.com> wrote:
->>
->>> > +static int ak5558_set_dai_mute(struct snd_soc_dai *dai, int mute)
->>> > +{
->>> > +       struct snd_soc_codec *codec = dai->codec;
->>> > +       struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
->>>
->>> > +       int ndt = 0;
->>>
->>> It might be even
->>>
->>>       int ndt = max(ak5558->fs ? 583000 / ak5558->fs : 5, 5);
->>
->> Please don't encourage people to use the ternery operator like that, it
->> does nothing for legibility not to write out the conditionals.
->
-> Noted.
->
->>> > +static const struct i2c_device_id ak5558_i2c_id[] = {
->>> > +       { "ak5558", 0 },
->>> > +       { }
->>> > +};
->>> > +MODULE_DEVICE_TABLE(i2c, ak5558_i2c_id);
->>
->>> I dunno if it's really helpful to have. Though it's up to Mark and you.
->>
->> I don't care either way.
->
-> Since Mark is okay with either, I would rather switch to ->probe_new()
-> and remove above table.
+On Thu, Feb 01, 2018 at 01:16:56PM -0800, Michael Lyle wrote:
+> On the Artik520 module, there's a bcm4354 attached to mshc_1.  Enable
+> it, and turn on the regulator used for it, so that both wifi & bluetooth
+> work.
+> 
+> Verified to work on the Artik 520 evaluation board.
+> 
+> v2: accidentally sent out v1
+> v3: non-removable instead of broken-cd, alphabetical order, formatting
 
-Sure, will do. I forgot to put it in v1.
+Changelog should go after --- separator so it would not end in commit.
+
+I'll fix it during applying. Looks good to me. I'll take it after merge
+window.
+
+Best regards,
+Krzysztof
+
+> 
+> Signed-off-by: Michael Lyle <mlyle-dTEscH1tG2Q@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos3250-artik5.dtsi | 36 ++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos3250-artik5.dtsi b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+> index 0aa577fe9f95..620b50c19ead 100644
+> --- a/arch/arm/boot/dts/exynos3250-artik5.dtsi
+> +++ b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+> @@ -245,6 +245,7 @@
+>  				regulator-name = "VLDO23_1.8V";
+>  				regulator-min-microvolt = <1800000>;
+>  				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+>  			};
+>  
+>  			ldo24_reg: LDO24 {
+> @@ -316,6 +317,41 @@
+>  	status = "okay";
+>  };
+>  
+> +&mshc_1 {
+> +	cap-sd-highspeed;
+> +	cap-sdio-irq;
+> +	disable-wp;
+> +	non-removable;
+> +	keep-power-in-suspend;
+> +	fifo-depth = <0x40>;
+> +	vqmmc-supply = <&ldo11_reg>;
+> +	/*
+> +	 * Voltage negotiation is broken for the SDIO periph so we
+> +	 * can't actually set the voltage here.
+> +	 * vmmc-supply = <&ldo23_reg>;
+> +	 */
+> +	card-detect-delay = <500>;
+> +	clock-frequency = <100000000>;
+> +	max-frequency = <100000000>;
+> +	samsung,dw-mshc-ciu-div = <3>;
+> +	samsung,dw-mshc-sdr-timing = <0 1>;
+> +	samsung,dw-mshc-ddr-timing = <1 2>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sd1_cmd &sd1_clk &sd1_bus1 &sd1_bus4 &wlanen>;
+> +	bus-width = <4>;
+> +	status = "okay";
+> +};
+> +
+> +&pinctrl_1 {
+> +	wlanen: wlanen {
+> +		samsung,pins = "gpx2-3";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV3>;
+> +		samsung,pin-val = <1>;
+> +	};
+> +};
+> +
+>  &rtc {
+>  	clocks = <&cmu CLK_RTC>, <&s2mps14_osc S2MPS11_CLK_AP>;
+>  	clock-names = "rtc", "rtc_src";
+> -- 
+> 2.14.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
