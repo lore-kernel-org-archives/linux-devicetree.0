@@ -1,67 +1,72 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v13 2/3] dt-bindings: iio: temperature: add MLX90632
- device bindings
-Date: Sun, 4 Feb 2018 10:21:16 +0000
-Message-ID: <20180204102116.04838c24@archlinux>
-References: <20180111102010.27350-1-cmo@melexis.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: ad5272: Add bindings for Analog
+ Devices digital potentiometers
+Date: Sun, 4 Feb 2018 10:34:39 +0000
+Message-ID: <20180204103439.5c49fa26@archlinux>
+References: <1517231574-92777-1-git-send-email-preid@electromag.com.au>
+        <1517231574-92777-2-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180111102010.27350-1-cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1517231574-92777-2-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 11 Jan 2018 11:20:10 +0100
-Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org> wrote:
+On Mon, 29 Jan 2018 21:12:53 +0800
+Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
 
-> Add device tree bindings for MLX90632 IR temperature sensor.
+> Add binding documentation for Analog Devices AD5272 and AD5274 digital
+> potentiometer devices.
 > 
-> Signed-off-by: Crt Mori <cmo-fc6wVz46lShBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+This is simply enough that I doubt Rob or Mark is that bothered about 
+reviewing it.  Obviously any reviews are still welcome though as it
+will be in a rebaseable tree probably until after the merge window closes.
+
+Applied to the togreg branch of iio.git and pushed out as testing.
+
+Thanks,
 
 Jonathan
 
 > ---
->  .../bindings/iio/temperature/mlx90632.txt          | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+>  .../bindings/iio/potentiometer/ad5272.txt          | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
+> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
 > new file mode 100644
-> index 000000000000..0b05812001f8
+> index 0000000..11e804c
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/temperature/mlx90632.txt
-> @@ -0,0 +1,28 @@
-> +* Melexis MLX90632 contactless Infra Red temperature sensor
+> +++ b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+> @@ -0,0 +1,27 @@
+> +* Analog Devices AD5272 digital potentiometer driver
 > +
-> +Link to datasheet: https://www.melexis.com/en/documents/documentation/datasheets/datasheet-mlx90632
+> +The node for this driver must be a child node of a I2C controller, hence
+> +all mandatory properties for your controller must be specified. See directory:
 > +
-> +There are various applications for the Infra Red contactless temperature sensor
-> +and MLX90632 is most suitable for consumer applications where measured object
-> +temperature is in range between -20 to 200 degrees Celsius with relative error
-> +of measurement below 1 degree Celsius in object temperature range for
-> +industrial applications. Since it can operate and measure ambient temperature
-> +in range of -20 to 85 degrees Celsius it is suitable also for outdoor use.
+> +        Documentation/devicetree/bindings/i2c
 > +
-> +Be aware that electronics surrounding the sensor can increase ambient
-> +temperature. MLX90632 can be calibrated to reduce the housing effect via
-> +already existing EEPROM parameters.
-> +
-> +Since measured object emissivity effects Infra Red energy emitted, emissivity
-> +should be set before requesting the object temperature.
+> +for more details.
 > +
 > +Required properties:
-> +  - compatible: should be "melexis,mlx90632"
-> +  - reg: the I2C address of the sensor (default 0x3a)
+> +	- compatible:  	Must be one of the following, depending on the model:
+> +			adi,ad5272-020
+> +			adi,ad5272-050
+> +			adi,ad5272-100
+> +			adi,ad5274-020
+> +			adi,ad5274-100
+> +
+> +Optional properties:
+> + - reset-gpios: GPIO specification for the RESET input. This is an
+> +		active low signal to the PCA953x.
 > +
 > +Example:
-> +
-> +mlx90632@3a {
-> +	compatible = "melexis,mlx90632";
-> +	reg = <0x3a>;
+> +ad5272: ad5272@2f {
+> +	reg = <0x2F>;
+> +	compatible = "adi,ad5272-020";
+> +	reset-gpios = <&gpio3 6 GPIO_ACTIVE_HIGH>;
 > +};
