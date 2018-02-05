@@ -1,59 +1,107 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v12 7/9] ACPI: Translate the I/O range of non-MMIO devices
- before scanning
-Date: Mon, 5 Feb 2018 15:16:03 +0200
-Message-ID: <CAHp75VfXoAHNH2BnfNLbFfdCqUk3rxU_QWfxTx7ZyLgV0qxotQ@mail.gmail.com>
-References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
- <1516725385-24535-8-git-send-email-john.garry@huawei.com> <0a30452f-34eb-d0b5-2001-ab6b866c53e2@huawei.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 04/11] soc: renesas: rcar-sysc: add R8A77980 support
+Date: Mon, 5 Feb 2018 14:23:18 +0100
+Message-ID: <CAMuHMdUQuUhbiPnO1L7t5W5F8wJ72iYLM5VtT4gg0RuePcx7RA@mail.gmail.com>
+References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com> <0309d18d-d5d8-ab59-9c15-79b4093e0a51@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0a30452f-34eb-d0b5-2001-ab6b866c53e2-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <0309d18d-d5d8-ab59-9c15-79b4093e0a51-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Randy
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 1, 2018 at 1:32 PM, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+Hi Sergei,
 
+On Fri, Feb 2, 2018 at 7:31 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Add support for R-Car V3H (R8A77980) SoC power areas to the R-Car SYSC
+> driver.
+>
+> Based on the original (and large) patch by Vladimir Barinov.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-I'm not going through all patch, by one thing I would like you to pay
-attention on, i.e.
-printing resource_size_t and struct resource
+Thanks for your patch!
 
->> +               dev_err(dev, "translate bus-addr(0x%llx) fail!\n",
->> +                       resource->start);
+> --- /dev/null
+> +++ renesas/drivers/soc/renesas/r8a77980-sysc.c
+> @@ -0,0 +1,52 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Renesas R-Car V3H System Controller
+> + *
+> + * Copyright (C) 2018 Renesas Electronics Corp.
+> + * Copyright (C) 2018 Cogent Embedded, Inc.
+> + */
+> +
+> +#include <linux/bug.h>
+> +#include <linux/kernel.h>
+> +
+> +#include <dt-bindings/power/r8a77980-sysc.h>
+> +
+> +#include "rcar-sysc.h"
+> +
+> +static const struct rcar_sysc_area r8a77980_areas[] __initconst = {
+> +       { "always-on",      0, 0, R8A77980_PD_ALWAYS_ON, -1, PD_ALWAYS_ON },
+> +       { "ca53-scu",   0x140, 0, R8A77980_PD_CA53_SCU, R8A77980_PD_ALWAYS_ON,
+> +         PD_SCU },
+> +       { "ca53-cpu0",  0x200, 0, R8A77980_PD_CA53_CPU0, R8A77980_PD_CA53_SCU,
+> +         PD_CPU_NOCR },
+> +       { "ca53-cpu1",  0x200, 1, R8A77980_PD_CA53_CPU1, R8A77980_PD_CA53_SCU,
+> +         PD_CPU_NOCR },
+> +       { "ca53-cpu2",  0x200, 2, R8A77980_PD_CA53_CPU2, R8A77980_PD_CA53_SCU,
+> +         PD_CPU_NOCR },
+> +       { "ca53-cpu3",  0x200, 3, R8A77980_PD_CA53_CPU3, R8A77980_PD_CA53_SCU,
+> +         PD_CPU_NOCR },
+> +       { "cr7",        0x240, 0, R8A77980_PD_CR7,      R8A77980_PD_ALWAYS_ON },
+> +       { "a3ir",       0x180, 0, R8A77980_PD_A3IR,     R8A77980_PD_ALWAYS_ON },
 
-resource_size_t is dynamic width type, you will see a compiler
-warning. For this we have
-%pap specifier.
+> +       { "a2ir0",      0x400, 0, R8A77980_PD_A2IR0,    R8A77980_PD_ALWAYS_ON },
+> +       { "a2ir1",      0x400, 1, R8A77980_PD_A2IR1,    R8A77980_PD_A2IR0 },
+> +       { "a2ir2",      0x400, 2, R8A77980_PD_A2IR2,    R8A77980_PD_A2IR0 },
+> +       { "a2ir3",      0x400, 3, R8A77980_PD_A2IR3,    R8A77980_PD_A2IR0 },
+> +       { "a2ir4",      0x400, 4, R8A77980_PD_A2IR4,    R8A77980_PD_A2IR0 },
+> +       { "a2ir5",      0x400, 5, R8A77980_PD_A2IR5,    R8A77980_PD_A2IR0 },
 
-Moreover, in some cases it's useful to print struct resource via %pR or %pr.
+Shouldn't all a2irN domains have a3ir as their parent?
 
-Consider reading kernel documentation about these (printk-formats.rst).
+> +       { "a2sc0",      0x400, 6, R8A77980_PD_A2SC0,    R8A77980_PD_ALWAYS_ON },
+> +       { "a2sc1",      0x400, 7, R8A77980_PD_A2SC1,    R8A77980_PD_A2SC0 },
+> +       { "a2sc2",      0x400, 8, R8A77980_PD_A2SC2,    R8A77980_PD_A2SC0 },
+> +       { "a2sc3",      0x400, 9, R8A77980_PD_A2SC3,    R8A77980_PD_A2SC0 },
+> +       { "a2sc4",      0x400, 10, R8A77980_PD_A2SC4,   R8A77980_PD_A2SC0 },
 
->> +struct acpi_indirectio_host_data {
->> +       resource_size_t io_size;
->> +       resource_size_t io_start;
->> +};
+Shouldn't all a2scN domains have a3ir as their parent?
 
-Why not utilize struct resource?
+> +       { "a2pd0",      0x400, 11, R8A77980_PD_A2PD0,   R8A77980_PD_ALWAYS_ON },
+> +       { "a2pd1",      0x400, 12, R8A77980_PD_A2PD1,   R8A77980_PD_A2PD0 },
 
-If it's coming from platform / firmware it should *never* have types
-like size_t, unsigned long, resource_size_t, etc.
+Shouldn't all a2pdN domains have a3ir as their parent?
 
->> +/* All the host devices which apply indirect-IO can be listed here. */
->> +static const struct acpi_device_id acpi_indirect_host_id[] = {
->> +       {""},
->> +};
+> +       { "a2cn",       0x400, 13, R8A77980_PD_A2CN,    R8A77980_PD_ALWAYS_ON },
 
-The idea of terminator is to be such (remove comma there). And it's
-basically redundant to have an empty string there. Moreover, it's a
-waste of resources in ro section.
+Shouldn't the a2cn domain have a3ir as its parent?
 
--- 
-With Best Regards,
-Andy Shevchenko
+> +       { "a3vip",      0x2c0, 0, R8A77980_PD_A3VIP,    R8A77980_PD_ALWAYS_ON },
+> +       { "a3vip1",     0x300, 0, R8A77980_PD_A3VIP1,   R8A77980_PD_A3VIP },
+> +       { "a3vip2",     0x280, 0, R8A77980_PD_A3VIP2,   R8A77980_PD_A3VIP },
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
