@@ -1,52 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] ARM: dts: imx25-pinfunc: Use consistent naming
- for eSDHC
-Date: Mon, 5 Feb 2018 00:08:53 -0600
-Message-ID: <20180205060853.ebqs3sqakpxm22uk@rob-hp-laptop>
-References: <20180131213544.4508-1-benoit.thebaudeau.dev@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: add R8A77980 CPG core clock
+ definitions
+Date: Mon, 5 Feb 2018 00:08:43 -0600
+Message-ID: <20180205060843.pwkfh5ntu6bj3d25@rob-hp-laptop>
+References: <5b7895ac-11c1-ac2d-837b-56726bc6226a@cogentembedded.com>
+ <4281b305-ff0d-cf56-ce6b-dff4589c39f6@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180131213544.4508-1-benoit.thebaudeau.dev@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Beno=EEt_Th=E9baudeau?= <benoit.thebaudeau.dev@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+In-Reply-To: <4281b305-ff0d-cf56-ce6b-dff4589c39f6@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 10:35:43PM +0100, Benoît Thébaudeau wrote:
-> This file had several naming inconsistencies for eSDHC:
->  - the instances were named sometimes SDn, sometimes SDHCn, whereas they
->    are named ESDHCn in the reference manual, e.g.:
->      MX25_PAD_SD1_CMD__SD1_CMD
->      MX25_PAD_D15__SDHC1_DAT7
->  - the data ports were named sometimes DATAn, sometimes DATn like in the
->    reference manual, e.g.:
->      MX25_PAD_SD1_DATA0__SD1_DATA0
->      MX25_PAD_D15__SDHC1_DAT7
->  - in one case, the clock port was named DAT_CLK instead of CLK:
->      MX25_PAD_CSI_D7__SDHC2_DAT_CLK
+On Wed, Jan 31, 2018 at 11:27:47PM +0300, Sergei Shtylyov wrote:
+> Add macros usable by the device tree sources to reference the R8A77980
+> CPG core clocks by index. The data come from the table 8.2e of the R-Car
+> Series, 3rd Generation User's Manual: Hardware (Rev. 0.80, Oct, 2017),
+> however I had to add the Z2 clock which is somehow present only on the
+> figure 8.1e...
 > 
-> This change:
->  - introduces new definitions using the naming from the reference
->    manual,
->  - keeps definitions using the legacy naming in order not to break
->    compatibility for out-of-tree users (they can be removed later),
->  - updates the in-tree files that were using the legacy naming.
+> Based on the original (and large) patch by Vladimir Barinov.
 > 
-> Cc: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Benoît Thébaudeau <benoit.thebaudeau.dev@gmail.com>
-> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
 > ---
-> Changes v2 -> v3:
->  - None.
-> Changes v1 -> v2:
->  - New patch (suggested by Uwe).
-> ---
->  .../boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts  | 12 ++--
->  arch/arm/boot/dts/imx25-pdk.dts                    | 12 ++--
->  arch/arm/boot/dts/imx25-pinfunc.h                  | 72 ++++++++++++++--------
->  3 files changed, 60 insertions(+), 36 deletions(-)
+>  include/dt-bindings/clock/r8a77980-cpg-mssr.h |   51 ++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+> 
+> Index: renesas-drivers/include/dt-bindings/clock/r8a77980-cpg-mssr.h
+> ===================================================================
+> --- /dev/null
+> +++ renesas-drivers/include/dt-bindings/clock/r8a77980-cpg-mssr.h
+> @@ -0,0 +1,51 @@
+> +/* SPDX-License-Identifier: GPL-2.0+
+
+This should end with ' */' and be its own comment. Otherwise,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
