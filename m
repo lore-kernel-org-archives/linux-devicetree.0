@@ -1,36 +1,58 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 BUGFIX] ARM: dts: imx6ull: fix the imx6ull-14x14-evk
- configuration
-Date: Mon, 5 Feb 2018 15:56:22 +0800
-Message-ID: <20180205075620.GO31354@dragon>
-References: <1516955159-21626-1-git-send-email-LW@KARO-electronics.de>
- <1516956738-24673-1-git-send-email-LW@KARO-electronics.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1516956738-24673-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [PATCH v2 0/9] Exynos 4210, 4412 DTS cleanup
+Date: Mon, 05 Feb 2018 08:56:59 +0100
+Message-ID: <1517817428-7898-1-git-send-email-m.purski@samsung.com>
+References: <CGME20180205075723eucas1p1e14d59501a636903262aee195348d53c@eucas1p1.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, Maciej Purski <m.purski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 26, 2018 at 09:52:18AM +0100, Lothar Waﬂmann wrote:
-> imx6ull-14x14-evk.dts currently includes the imx6ul.dtsi file for an
-> i.MX6ULL SoC which is plain wrong.
-> 
-> Rename the current imx6ul-14x14-evk.dts to .dtsi and include it from
-> imx6ul-14x14-evk.dts and imx6ull-14x14-evk.dts, so that both can
-> include the appropriate SoC specific (imx6ul.dtsi/imx6ull.dtsi) file.
-> 
-> Signed-off-by: Lothar Waﬂmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Hi all,
 
-Which base is the patch generated against?  I cannot apply it to any
-branch in my tree.
+this patchset performs cleanup of exynos4 series DTS. The main goal
+is to prepare them to add "soc" node just like it is done in other
+exynos DTS. Basically those patches use labels wherever possible
+instead of redefining nodes, which have been defined in
+exynos4.dtsi, exynos4210.dtsi or exynos4412.dtsi.
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+
+Maciej Purski
+
+---
+
+Changes in v2:
+- squashed patch #3 and #4
+- move interrupts, reg and status properties to exynos4.dtsi
+- put nodes in alphabetical order in exynos4412-odroid common
+  and exynos4210-universal_c210
+
+Maciej Purski (9):
+  ARM: dts: exynos: Use pinctrl labels in exynos4210-pinctrl
+  ARM: dts: exynos: Use pinctrl labels in exynos4412-pinctrl
+  ARM: dts: exynos:  Use labels instead of full names in exynos4210
+  ARM: dts: exynos: Use fimc labels in exynos4210-trats
+  ARM: dts: exynos: Use labels instead of full names in
+    exynos4210-universal_c210
+  ARM: dts: exynos: Use camera label in exynos4412
+  ARM: dts: exynos: Use camera label in exynos4412-odroid-common
+  ARM: dts: exynos: Use labels instead of full names in
+    exynos4412-trats2
+  ARM: dts: exynos: Use camera label in exynos4412-itop-elite
+
+ arch/arm/boot/dts/exynos4.dtsi                  |    6 +-
+ arch/arm/boot/dts/exynos4210-pinctrl.dtsi       | 1680 ++++++++++----------
+ arch/arm/boot/dts/exynos4210-trats.dts          |   73 +-
+ arch/arm/boot/dts/exynos4210-universal_c210.dts |  115 +-
+ arch/arm/boot/dts/exynos4210.dtsi               |  101 +-
+ arch/arm/boot/dts/exynos4412-itop-elite.dts     |   16 +-
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi |   12 +-
+ arch/arm/boot/dts/exynos4412-pinctrl.dtsi       | 1914 +++++++++++------------
+ arch/arm/boot/dts/exynos4412-trats2.dts         |   73 +-
+ arch/arm/boot/dts/exynos4412.dtsi               |  237 +--
+ 10 files changed, 2114 insertions(+), 2113 deletions(-)
+
+-- 
+2.7.4
