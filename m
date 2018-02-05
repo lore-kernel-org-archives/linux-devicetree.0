@@ -1,43 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: add R8A77980 CPG core clock
- definitions
-Date: Mon, 5 Feb 2018 00:08:43 -0600
-Message-ID: <20180205060843.pwkfh5ntu6bj3d25@rob-hp-laptop>
-References: <5b7895ac-11c1-ac2d-837b-56726bc6226a@cogentembedded.com>
- <4281b305-ff0d-cf56-ce6b-dff4589c39f6@cogentembedded.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V2 1/2] ARM: dts: imx7s: add temperature monitor support
+Date: Mon, 5 Feb 2018 14:12:38 +0800
+Message-ID: <20180205061237.GE31354@dragon>
+References: <1516954180-26029-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <4281b305-ff0d-cf56-ce6b-dff4589c39f6@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <1516954180-26029-1-git-send-email-Anson.Huang@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, edubezval@gmail.com, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, rui.zhang@intel.com, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 11:27:47PM +0300, Sergei Shtylyov wrote:
-> Add macros usable by the device tree sources to reference the R8A77980
-> CPG core clocks by index. The data come from the table 8.2e of the R-Car
-> Series, 3rd Generation User's Manual: Hardware (Rev. 0.80, Oct, 2017),
-> however I had to add the Z2 clock which is somehow present only on the
-> figure 8.1e...
+On Fri, Jan 26, 2018 at 04:09:39PM +0800, Anson Huang wrote:
+> Add i.MX7 temperature monitor support.
 > 
-> Based on the original (and large) patch by Vladimir Barinov.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
 > ---
->  include/dt-bindings/clock/r8a77980-cpg-mssr.h |   51 ++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> Index: renesas-drivers/include/dt-bindings/clock/r8a77980-cpg-mssr.h
-> ===================================================================
-> --- /dev/null
-> +++ renesas-drivers/include/dt-bindings/clock/r8a77980-cpg-mssr.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0+
+> no changes since V1.
+>  .../devicetree/bindings/thermal/imx-thermal.txt      |  5 +++--
 
-This should end with ' */' and be its own comment. Otherwise,
+The bindings doc should be a separate patch or part of related
+imx-thermal driver patch ...
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+>  arch/arm/boot/dts/imx7s.dtsi                         | 20 ++++++++++++++++++++
+
+..., and shouldn't be mixed with dts changes.
+
+Shawn
