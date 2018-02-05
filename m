@@ -1,48 +1,62 @@
-From: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v1 1/2] dt-bindings/display/panel: otm8009a: Add optional power-supply property
-Date: Mon, 5 Feb 2018 10:45:31 +0100
-Message-ID: <20180205094532.23547-2-philippe.cornu@st.com>
+From: Philippe Cornu <philippe.cornu@st.com>
+Subject: [PATCH v1 2/2] drm/panel: otm8009a: Add support for the optional
+ power-supply
+Date: Mon, 5 Feb 2018 10:45:32 +0100
+Message-ID: <20180205094532.23547-3-philippe.cornu@st.com>
 References: <20180205094532.23547-1-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180205094532.23547-1-philippe.cornu-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180205094532.23547-1-philippe.cornu@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alexandre Torgue <alexandre.torgue@st.com>, Philippe Cornu <philippe.cornu@st.com>, Yannick Fertre <yannick.fertre@st.com>, Vincent Abriou <vincent.abriou@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Some boards use a dedicated voltage regulator for this panel.
-Add & document this related optional power-supply property.
-
-Signed-off-by: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
----
- Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
-index 6862028e7b2e..203b03eefb68 100644
---- a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
-+++ b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
-@@ -9,6 +9,7 @@ Required properties:
- 
- Optional properties:
-   - reset-gpios: a GPIO spec for the reset pin (active low).
-+  - power-supply: phandle of the regulator that provides the supply voltage.
- 
- Example:
- &dsi {
-@@ -17,5 +18,6 @@ Example:
- 		compatible = "orisetech,otm8009a";
- 		reg = <0>;
- 		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
-+		power-supply = <&v1v8>;
- 	};
- };
--- 
-2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIHN1cHBvcnQgZm9yIHRoZSBvcHRpb25hbCBwb3dlci1zdXBwbHkuCgpOb3RlOiBBICJkdW1t
+eSByZWd1bGF0b3IiIGlzIHJldHVybmVkIGJ5IGRldm1fcmVndWxhdG9yX2dldCgpCmlmIHRoZSBv
+cHRpb25hbCByZWd1bGF0b3IgaXMgbm90IHByZXNlbnQgaW4gdGhlIGRldmljZSB0cmVlLApzaW1w
+bGlmeWluZyB0aGUgc291cmNlIGNvZGUgd2hlbiBlbmFibGluZy9kaXNhYmxpbmcgdGhlIHJlZ3Vs
+YXRvci4KClNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBzdC5j
+b20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW9yaXNldGVjaC1vdG04MDA5YS5j
+IHwgMTcgKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCsp
+CgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW9yaXNldGVjaC1vdG04
+MDA5YS5jIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW9yaXNldGVjaC1vdG04MDA5YS5j
+CmluZGV4IDcyNTMwOTgzZDU1ZC4uOTBmMWFlNGFmOTNjIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vcGFuZWwvcGFuZWwtb3Jpc2V0ZWNoLW90bTgwMDlhLmMKKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL3BhbmVsL3BhbmVsLW9yaXNldGVjaC1vdG04MDA5YS5jCkBAIC0xMSw2ICsxMSw3IEBACiAj
+aW5jbHVkZSA8ZHJtL2RybV9wYW5lbC5oPgogI2luY2x1ZGUgPGxpbnV4L2JhY2tsaWdodC5oPgog
+I2luY2x1ZGUgPGxpbnV4L2dwaW8vY29uc3VtZXIuaD4KKyNpbmNsdWRlIDxsaW51eC9yZWd1bGF0
+b3IvY29uc3VtZXIuaD4KICNpbmNsdWRlIDx2aWRlby9taXBpX2Rpc3BsYXkuaD4KIAogI2RlZmlu
+ZSBEUlZfTkFNRSAib3Jpc2V0ZWNoX290bTgwMDlhIgpAQCAtNjIsNiArNjMsNyBAQCBzdHJ1Y3Qg
+b3RtODAwOWEgewogCXN0cnVjdCBkcm1fcGFuZWwgcGFuZWw7CiAJc3RydWN0IGJhY2tsaWdodF9k
+ZXZpY2UgKmJsX2RldjsKIAlzdHJ1Y3QgZ3Bpb19kZXNjICpyZXNldF9ncGlvOworCXN0cnVjdCBy
+ZWd1bGF0b3IgKnN1cHBseTsKIAlib29sIHByZXBhcmVkOwogCWJvb2wgZW5hYmxlZDsKIH07CkBA
+IC0yNzksNiArMjgxLDggQEAgc3RhdGljIGludCBvdG04MDA5YV91bnByZXBhcmUoc3RydWN0IGRy
+bV9wYW5lbCAqcGFuZWwpCiAJCW1zbGVlcCgyMCk7CiAJfQogCisJcmVndWxhdG9yX2Rpc2FibGUo
+Y3R4LT5zdXBwbHkpOworCiAJY3R4LT5wcmVwYXJlZCA9IGZhbHNlOwogCiAJcmV0dXJuIDA7CkBA
+IC0yOTIsNiArMjk2LDEyIEBAIHN0YXRpYyBpbnQgb3RtODAwOWFfcHJlcGFyZShzdHJ1Y3QgZHJt
+X3BhbmVsICpwYW5lbCkKIAlpZiAoY3R4LT5wcmVwYXJlZCkKIAkJcmV0dXJuIDA7CiAKKwlyZXQg
+PSByZWd1bGF0b3JfZW5hYmxlKGN0eC0+c3VwcGx5KTsKKwlpZiAocmV0IDwgMCkgeworCQlEUk1f
+RVJST1IoImZhaWxlZCB0byBlbmFibGUgc3VwcGx5OiAlZFxuIiwgcmV0KTsKKwkJcmV0dXJuIHJl
+dDsKKwl9CisKIAlpZiAoY3R4LT5yZXNldF9ncGlvKSB7CiAJCWdwaW9kX3NldF92YWx1ZV9jYW5z
+bGVlcChjdHgtPnJlc2V0X2dwaW8sIDApOwogCQlncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAoY3R4
+LT5yZXNldF9ncGlvLCAxKTsKQEAgLTQxNCw2ICs0MjQsMTMgQEAgc3RhdGljIGludCBvdG04MDA5
+YV9wcm9iZShzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkc2kpCiAJCXJldHVybiBQVFJfRVJSKGN0
+eC0+cmVzZXRfZ3Bpbyk7CiAJfQogCisJY3R4LT5zdXBwbHkgPSBkZXZtX3JlZ3VsYXRvcl9nZXQo
+ZGV2LCAicG93ZXIiKTsKKwlpZiAoSVNfRVJSKGN0eC0+c3VwcGx5KSkgeworCQlyZXQgPSBQVFJf
+RVJSKGN0eC0+c3VwcGx5KTsKKwkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gcmVxdWVzdCByZWd1
+bGF0b3I6ICVkXG4iLCByZXQpOworCQlyZXR1cm4gcmV0OworCX0KKwogCW1pcGlfZHNpX3NldF9k
+cnZkYXRhKGRzaSwgY3R4KTsKIAogCWN0eC0+ZGV2ID0gZGV2OwotLSAKMi4xNS4xCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
+ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
+ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
