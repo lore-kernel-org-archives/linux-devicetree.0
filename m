@@ -1,39 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] drm/panel: Device tree bindings for ARM Versatile
- panels
-Date: Mon, 5 Feb 2018 00:07:17 -0600
-Message-ID: <20180205060717.juqxpc4mvrkjzzoe@rob-hp-laptop>
-References: <20180126133336.21343-1-linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 3/8] dt-bindings: mfd: stm32-timers: add support for
+ dmas
+Date: Mon, 5 Feb 2018 00:07:20 -0600
+Message-ID: <20180205060720.v3sfw44orngsyltq@rob-hp-laptop>
+References: <1516979499-3665-1-git-send-email-fabrice.gasnier@st.com>
+ <1516979499-3665-4-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180126133336.21343-1-linus.walleij@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+In-Reply-To: <1516979499-3665-4-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: lee.jones@linaro.org, thierry.reding@gmail.com, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMjYsIDIwMTggYXQgMDI6MzM6MzVQTSArMDEwMCwgTGludXMgV2FsbGVpaiB3
-cm90ZToKPiBUaGlzIGFkZHMgYSBwcmV0dHkgc2ltcGxlIHNldCBvZiBkZXZpY2UgdHJlZSBiaW5k
-aW5ncyBmb3IKPiBBUk0gVmVyc2F0aWxlIHBhbmVscyBhcHBlYXJpbmcgYXMgY2hpbGQgbm9kZXMg
-b2YgYSBzeXN0ZW0KPiBjb250cm9sbGVyLgo+IAo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVs
-Lm9yZwo+IFNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJv
-Lm9yZz4KPiAtLS0KPiAgLi4uL2Rpc3BsYXkvcGFuZWwvYXJtLHZlcnNhdGlsZS10ZnQtcGFuZWwu
-dHh0ICAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAz
-MSBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hcm0sdmVyc2F0aWxlLXRmdC1wYW5lbC50eHQK
-CkkgZ3Vlc3MgYXQgdGhpcyBwb2ludCB3ZSBrbm93IHRoZXJlJ3Mgb25seSAxIFZlcnNhdGlsZSBU
-RlQgcGFuZWwuLi4KClJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Fri, Jan 26, 2018 at 04:11:34PM +0100, Fabrice Gasnier wrote:
+> Add support for DMAs to STM32 timers. STM32 Timers can support up to 7
+> dma requests: up to 4 channels, update, compare and trigger.
+> DMAs may be used to transfer data from pwm capture for instance.
+> DMA support is made optional, PWM capture support is also an option.
+> This is much more wise system-wide to avoid shortage on DMA request
+> lines as there's significant amount of timer instances that can
+> request up to 7 channels.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  .../devicetree/bindings/mfd/stm32-timers.txt         | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
