@@ -1,40 +1,59 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 02/11] soc: renesas: rcar-rst: add R8A77980 support
-Date: Mon, 5 Feb 2018 13:37:04 +0100
-Message-ID: <CAMuHMdVcKEH4FMf8UazacV86DFtJq8sdxfT+c7UX+67k5vXugA@mail.gmail.com>
-References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com> <76b4144e-423a-65fd-fe17-bfedbc0deb8e@cogentembedded.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v12 7/9] ACPI: Translate the I/O range of non-MMIO devices
+ before scanning
+Date: Mon, 5 Feb 2018 12:17:20 +0000
+Message-ID: <af37de60-a016-f8e3-9e17-d4e7d345f3fb@huawei.com>
+References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
+ <1516725385-24535-8-git-send-email-john.garry@huawei.com>
+ <CAJZ5v0ghc1sthrMBobSXfNrxoKrjbie9qnKYnLdxnpLfZPzs8w@mail.gmail.com>
+ <8beedbb3-9098-6440-9ddf-e64b2a8e5151@huawei.com>
+ <1517832650.7489.256.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <76b4144e-423a-65fd-fe17-bfedbc0deb8e-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1517832650.7489.256.camel@perches.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Hanjun Guo <hanjun.guo@linaro.org>, "dann.frazier@canonical.com" <dann.frazier@canonical.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Linux PCI <linux-pci@vger.kernel.org>, Corey Minyard <minyard@acm.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arch <linux-arch@>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 2, 2018 at 7:27 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Add support for R-Car V3H (R8A77980) to the R-Car RST driver -- this driver
-> is  needed  for the clock driver to work.
+On 05/02/2018 12:10, Joe Perches wrote:
+> On Mon, 2018-02-05 at 11:01 +0000, John Garry wrote:
+>> On 04/02/2018 07:45, Rafael J. Wysocki wrote:
+>>> +       /* translate the I/O resources */
+>>>> +       for (i = 0; i < count; i++) {
+>>>> +               if (resources[i].flags & IORESOURCE_IO) {
+>>>> +                       ret = acpi_translate_logicio_res(adev, host,
+>>>> +                                                       &resources[i]);
+>>>
+>>> You don't need to break this line as far as I'm concerned.
+>>
+>> This is just to keep checkpatch happy. I could move the complete
+>> function call to a single line. And also shortening some symbols will help.
+>
+> This could also use continue as well
+>
+> 	/* translate the I/O resources */
+> 	for (i = 0; i < count; i++) {
+> 		if (!(resources[i].flags & IORESOURCE_IO))
+> 			continue;
+> 		ret = acpi_translate_logicio_res(adev, host, &resources[i]);
+> 		if (ret) {
+> 			kfree(resources);
+> 			dev_err(child, "Translate I/O range failed (%d)!\n",
+> 				ret);
+> 			return ret;
+> 		}
+> 	}
 
-Please drop the extra spaces in between words that are part of the same
-sentence.
+Sure, that reduces the indentation as well.
 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+cheers
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+>
+>
+> .
+>
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
