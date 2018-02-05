@@ -1,110 +1,99 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] media: ov5640: add support of DVP parallel
- interface
-Date: Mon, 5 Feb 2018 14:56:38 +0100
-Message-ID: <20180205135638.vkuotmeks5k76iud@flea>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
- <1514973452-10464-5-git-send-email-hugues.fruchet@st.com>
- <TY1PR06MB089512437228BAFF910B133FC0FA0@TY1PR06MB0895.apcprd06.prod.outlook.com>
- <20180202185045.vvhmj5wtagalkucf@flea.lan>
- <TY1PR06MB08954787E362BF24C7FD41DBC0FE0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [RFC PATCH 2/3] crypto: hisilicon hacv1 driver
+Date: Mon, 5 Feb 2018 14:02:03 +0000
+Message-ID: <20180205140203.00007e46@huawei.com>
+References: <20180130152953.14068-1-jonathan.cameron@huawei.com>
+        <20180130152953.14068-3-jonathan.cameron@huawei.com>
+        <7706135.m10557lhAe@positron.chronox.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ilbt4aunkczvniud"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <TY1PR06MB08954787E362BF24C7FD41DBC0FE0-/PRLmSCtZ16EeHdvShrxA20DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <7706135.m10557lhAe@positron.chronox.de>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+Cc: linux-crypto@vger.kernel.org, linuxarm@huawei.com, xuzaibo@huawei.com, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Xiongfeng Wang <xiongfeng.wang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, 3 Feb 2018 12:16:18 +0100
+Stephan Müller <smueller@chronox.de> wrote:
 
---ilbt4aunkczvniud
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Am Dienstag, 30. Januar 2018, 16:29:52 CET schrieb Jonathan Cameron:
+> 
+> Hi Jonathan,
+> 
+> > +	/* Special path for single element SGLs with small packets. */
+> > +	if (sg_is_last(sgl) && sgl->length <= SEC_SMALL_PACKET_SIZE) {  
+> 
+> This looks strangely familiar. Is this code affected by a similar issue fixed 
+> in https://patchwork.kernel.org/patch/10173981?
 
-On Mon, Feb 05, 2018 at 11:42:11AM +0000, Fabrizio Castro wrote:
-> Hello Maxime,
->=20
-> thank you for your feedback.
->=20
-> > > > +/*
-> > > > + * configure parallel port control lines polarity
-> > > > + *
-> > > > + * POLARITY CTRL0
-> > > > + * - [5]:PCLK polarity (0: active low, 1: active high)
-> > > > + * - [1]:HREF polarity (0: active low, 1: active high)
-> > > > + * - [0]:VSYNC polarity (mismatch here between
-> > > > + *datasheet and hardware, 0 is active high
-> > > > + *and 1 is active low...)
-> > >
-> > > I know that yourself and Maxime have both confirmed that VSYNC
-> > > polarity is inverted, but I am looking at HSYNC and VSYNC with a
-> > > logic analyser and I am dumping the values written to
-> > > OV5640_REG_POLARITY_CTRL00 and to me it looks like that HSYNC is
-> > > active HIGH when hsync_pol =3D=3D 0, and VSYNC is active HIGH when
-> > > vsync_pol =3D=3D 1.
-> >
-> > Which mode are you testing this on?
->=20
-> My testing environment is made of the sensor connected to a SoC with
-> 8 data lines, vsync, hsync, and pclk, and of course I am specifying
-> hsync-active, vsync-active, and pclk-sample in the device tree on
-> both ends so that they configure themselves accordingly to work in
-> DVP mode (V4L2_MBUS_PARALLEL), with the correct polarities.
->
-> Between the sensor and the SoC there is a noninverting bus
-> transceiver (voltage translator), for my experiments I have plugged
-> myself onto the outputs of this transceiver only to be compliant
-> with the voltage level of my logic analyser.
+Not as far as I know - this section is about optimizing the setup of
+the IOMMU. It's purely a performance optimization.
 
-Sorry, my question was more about the resolution, refresh rate, etc.
+It is really costly to do the translation setup for lots of small regions.
+These small regions are often contiguous anyway making the cost even more
+ridiculous.  The use of a dma pool allows us to keep the iommu setup
+constant(ish). It is cheaper to copy into an element of this, already
+mapped, pool than it is to set up the iommu mappings for a new region.
 
-> > The non-active periods are insanely high in most modes (1896 for an
-> > active horizontal length of 640 in 640x480 for example), especially
-> > hsync, and it's really easy to invert the two.
->=20
-> I am looking at all the data lines, so that I don't confuse the
-> non-active periods with the active periods, and with my setup what I
-> reported is what I get. I wonder if this difference comes from the
-> sensor revision at all? Unfortunately I can only test the one camera
-> I have got.
+I could drop this for the initial submission and bring it in as an
+optimization with supporting numbers as a follow up patch.
 
-I don't really know then. I've had issues with the polarities on my
-side, but it was on the receiver side and the sensor part looked like
-what is documented.
+> 
+> > +static int sec_alg_skcipher_setkey(struct crypto_skcipher *tfm,
+> > +                                  const u8 *key, unsigned int keylen,
+> > +                                  enum sec_cipher_alg alg)
+> > +{
+> > +       struct sec_alg_skcipher_ctx *ctx = crypto_skcipher_ctx(tfm);
+> > +       struct device *dev;
+> > +
+> > +       spin_lock(&ctx->lock);
+> > +       if (ctx->enc_key) {
+> > +               /* rekeying */
+> > +               dev = SEC_Q_DEV(ctx->queue);
+> > +               memset(ctx->enc_key, 0, SEC_MAX_CIPHER_KEY);
+> > +               memset(ctx->dec_key, 0, SEC_MAX_CIPHER_KEY);
+> > +               memset(&ctx->enc_req, 0, sizeof(ctx->enc_req));
+> > +               memset(&ctx->dec_req, 0, sizeof(ctx->dec_req));
+> > +       } else {
+> > +               /* new key */
+> > +               dev = SEC_Q_DEV(ctx->queue);
+> > +               ctx->enc_key = dma_zalloc_coherent(dev, SEC_MAX_CIPHER_KEY,
+> > +                                                  &ctx->enc_pkey,
+> > GFP_ATOMIC); +               if (!ctx->enc_key) {
+> > +                       spin_unlock(&ctx->lock);
+> > +                       return -ENOMEM;
+> > +               }
+> > +               ctx->dec_key = dma_zalloc_coherent(dev, SEC_MAX_CIPHER_KEY,
+> > +                                                  &ctx->dec_pkey,
+> > GFP_ATOMIC); +               if (!ctx->dec_key) {
+> > +                       spin_unlock(&ctx->lock);
+> > +                       goto out_free_enc;
+> > +               }
+> > +       }
+> > +       spin_unlock(&ctx->lock);
+> > +       if (sec_alg_skcipher_init_context(tfm, key, keylen, alg))
+> > +               goto out_free_all;
+> > +
+> > +       return 0;
+> > +
+> > +out_free_all:
+> > +       memset(ctx->dec_key, 0, SEC_MAX_CIPHER_KEY);
+> > +       dma_free_coherent(dev, SEC_MAX_CIPHER_KEY,
+> > +                         ctx->dec_key, ctx->dec_pkey);
+> > +       ctx->dec_key = NULL;
+> > +out_free_enc:
+> > +       memset(ctx->enc_key, 0, SEC_MAX_CIPHER_KEY);
+> > +       dma_free_coherent(dev, SEC_MAX_CIPHER_KEY,
+> > +                         ctx->enc_key, ctx->enc_pkey);
+> > +       ctx->enc_key = NULL;  
+> 
+> Please use memzero_explicit.
 
-Maxime
+Will do - thanks!
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
-
---ilbt4aunkczvniud
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlp4YpUACgkQ0rTAlCFN
-r3TIWw//aGZ5MjQRoWi1F753l0C6BMtobEx8utifF5v9IRwekB3R/TIjllXdXwXO
-Ev4qj21YrO1SjanFk6UTccJ/tqa9v0/cLJ9LCOc1Og+psBJgSBOtDVUyV8U7lTrf
-8Ta9YtZmEBuLb8CHPcRKZozkBta3E23wO8xD3nGnLKN0In5knglZFmGgJTNbzAlM
-5vCmBOBXeflcYWY2CpqAAbR86cNGPaPDI5KZLGysPHEBOU66CdJ1ykUOSEGtJJhV
-Q2O4NqbbL2Xm80woP34EGgNvov7etZuorvQbdhVTbRWsP8cMPkcSWpSJLxjSNpf/
-qe5L1fQwjZqNmVGXq5ZIJKUDUumH3hGWHWgnQCvaImU17aXeR9UUG8djhNdxNP3v
-syxUNzszOrC63zjSqPXTDNx/UzDtTbXKakal9kKByW1ijFeaL1LVNj6M04BljA1J
-51Rl+7wGTxTSm4bD1qUcmmbi8rkaF2rxN6IInZ4urp9ACuuFTy1+P7F9TnEsM+70
-GOvxqvX9vL4ZZV3q6qi6GyfATiQLmD5gDLodwvpAfrI3xr3qctalThzg0NsaEKU6
-xCRlpDm/fm2W5ch4fqSUsXfbcmGSEM6JXXFTcBrdP72GcTwyAbH7xbjc4fXimoU3
-1XpdEMTCENFSX6XBANExQLmZlYlJsKB8RvOvm5WjXt4e+DP9yFM=
-=wUfz
------END PGP SIGNATURE-----
-
---ilbt4aunkczvniud--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> > +
+> > +       return -ENOMEM;
+> > +  
