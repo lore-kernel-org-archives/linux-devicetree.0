@@ -1,95 +1,45 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: Re: [PATCH 01/14] dt-bindings: Document STM32MP1 Reset Clock
- Controller (RCC) bindings
-Date: Mon, 5 Feb 2018 07:01:29 +0000
-Message-ID: <19273eb9-0c8c-cd2a-d100-f25f25e93234@st.com>
+Subject: Re: [PATCH 02/14] dt-bindings: clock: add STM32MP1 clocks
+Date: Mon, 5 Feb 2018 07:02:24 +0000
+Message-ID: <ec89b70e-1500-df15-639c-59165fb2014b@st.com>
 References: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
- <1517580222-23301-2-git-send-email-gabriel.fernandez@st.com>
- <20180205042238.64xjrrguls2drtrg@rob-hp-laptop>
+ <1517580222-23301-3-git-send-email-gabriel.fernandez@st.com>
+ <20180205042348.2f7ssmzkajeky5l7@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20180205042238.64xjrrguls2drtrg@rob-hp-laptop>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180205042348.2f7ssmzkajeky5l7@rob-hp-laptop>
 Content-Language: en-US
-Content-ID: <1343AFFC232B3B47A40BB9BA097D506F@st.com>
-Sender: linux-clk-owner@vger.kernel.org
+Content-ID: <2FE57713DFCCF143B32B19D42387C69F@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>, Olivier BIDEAU <olivier.bideau@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Olivier BIDEAU <olivier.bideau@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgZm9yIHJldmlld2luZy4NCg0KDQpPbiAwMi8wNS8yMDE4IDA3OjA5
-IEFNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gRnJpLCBGZWIgMDIsIDIwMTggYXQgMDM6MDM6
-MjlQTSArMDEwMCwgZ2FicmllbC5mZXJuYW5kZXpAc3QuY29tIHdyb3RlOg0KPj4gRnJvbTogR2Fi
-cmllbCBGZXJuYW5kZXogPGdhYnJpZWwuZmVybmFuZGV6QHN0LmNvbT4NCj4+DQo+PiBUaGUgUkND
-IGJsb2NrIGlzIHJlc3BvbnNpYmxlIG9mIHRoZSBtYW5hZ2VtZW50IG9mIHRoZSBjbG9jayBhbmQg
-cmVzZXQNCj4+IGdlbmVyYXRpb24gZm9yIHRoZSBjb21wbGV0ZSBjaXJjdWl0Lg0KPj4NCj4+IFNp
-Z25lZC1vZmYtYnk6IEdhYnJpZWwgRmVybmFuZGV6IDxnYWJyaWVsLmZlcm5hbmRlekBzdC5jb20+
-DQo+PiAtLS0NCj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0LHN0bTMyLXJjYy50
-eHQgICAgICAgfCA4NSArKysrKysrKysrKysrKysrKysrKysrDQo+PiAgIDEgZmlsZSBjaGFuZ2Vk
-LCA4NSBpbnNlcnRpb25zKCspDQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0LHN0bTMyLXJjYy50eHQNCj4+DQo+PiBkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zdCxzdG0zMi1yY2Mu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zdCxzdG0zMi1yY2Mu
-dHh0DQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMC4uMjgwMTdhMQ0K
-Pj4gLS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL21mZC9zdCxzdG0zMi1yY2MudHh0DQo+PiBAQCAtMCwwICsxLDg1IEBADQo+PiArU1RNaWNy
-b2VsZWN0cm9uaWNzIFNUTTMyIFBlcmlwaGVyYWwgUmVzZXQgQ2xvY2sgQ29udHJvbGxlcg0KPj4g
-Kz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT0NCj4+ICsNCj4+ICtUaGUgUkNDIElQIGlzIGJvdGggYSByZXNldCBhbmQgYSBjbG9jayBjb250
-cm9sbGVyLg0KPj4gKw0KPj4gK1BsZWFzZSBhbHNvIHJlZmVyIHRvIHJlc2V0LnR4dCBmb3IgY29t
-bW9uIHJlc2V0IGNvbnRyb2xsZXIgYmluZGluZyB1c2FnZS4NCj4+ICsNCj4+ICtQbGVhc2UgYWxz
-byByZWZlciB0byBjbG9jay1iaW5kaW5ncy50eHQgZm9yIGNvbW1vbiBjbG9jayBjb250cm9sbGVy
-DQo+PiArYmluZGluZyB1c2FnZS4NCj4+ICsNCj4+ICsNCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVz
-Og0KPj4gKy0gY29tcGF0aWJsZTogInNpbXBsZS1tZmQiLCAic3lzY29uIg0KPg0KPj4gKy0gcmVn
-OiBzaG91bGQgYmUgcmVnaXN0ZXIgYmFzZSBhbmQgbGVuZ3RoIGFzIGRvY3VtZW50ZWQgaW4gdGhl
-IGRhdGFzaGVldA0KPj4gKw0KPj4gKy0gU3ViLW5vZGVzOg0KPj4gKyAgLSBjb21wYXRpYmxlOiAi
-c3Qsc3RtMzJtcDEtcmNjLWNsayINCj4+ICsJLSAjY2xvY2stY2VsbHM6IDEsIGRldmljZSBub2Rl
-cyBzaG91bGQgc3BlY2lmeSB0aGUgY2xvY2sgaW4gdGhlaXINCj4+ICsJICAiY2xvY2tzIiBwcm9w
-ZXJ0eSwgY29udGFpbmluZyBhIHBoYW5kbGUgdG8gdGhlIGNsb2NrIGRldmljZSBub2RlLA0KPj4g
-KwkgIGFuIGluZGV4IHNwZWNpZnlpbmcgdGhlIGNsb2NrIHRvIHVzZS4NCj4+ICsNCj4+ICsgIC0g
-Y29tcGF0aWJsZTogInN0LHN0bTMybXAxLXJjYy1yc3QiDQo+PiArCS0gI3Jlc2V0LWNlbGxzOiBT
-aGFsbCBiZSAxDQo+PiArDQo+PiArRXhhbXBsZToNCj4+ICsJcmNjOiByY2NANTAwMDAwMDAgew0K
-Pj4gKwkJY29tcGF0aWJsZSA9ICJzeXNjb24iLCAic2ltcGxlLW1mZCI7DQo+PiArCQlyZWcgPSA8
-MHg1MDAwMDAwMCAweDEwMDA+Ow0KPj4gKw0KPj4gKwkJcmNjX2NsazogcmNjLWNsa0A1MDAwMDAw
-MCB7DQo+PiArCQkJI2Nsb2NrLWNlbGxzID0gPDE+Ow0KPj4gKwkJCWNvbXBhdGlibGUgPSAic3Qs
-c3RtMzJtcDEtcmNjLWNsayI7DQo+PiArCQl9Ow0KPj4gKw0KPj4gKwkJcmNjX3JzdDogcmNjLXJl
-c2V0QDUwMDAwMDAwIHsNCj4gWW91IHNob3VsZCBub3QgaGF2ZSB0aGUgc2FtZSB1bml0LWFkZHJl
-c3MgdHdpY2UuDQo+DQo+IElNTywgdGhpcyBzaG91bGQganVzdCBiZToNCj4NCj4gCXJjYzogcmNj
-QDUwMDAwMDAwIHsNCj4gCQljb21wYXRpYmxlID0gInN0LXN0bTMybXAxLXJjYyI7DQo+IAkJcmVn
-ID0gPDB4NTAwMDAwMDAgMHgxMDAwPjsNCj4gCQkjY2xvY2stY2VsbHMgPSA8MT47DQo+IAkJI3Jl
-c2V0LWNlbGxzID0gPDE+Ow0KPiAJfTsNCj4NCj4gVGhlcmUncyBubyByZWFzb24gYSBub2RlIGNh
-bid0IHByb3ZpZGUgbW9yZSB0aGFuIDEgZnVuY3Rpb24uDQpSQ0MgaXMgYW4gZGVkaWNhdGVkIElQ
-IGZvciBjbG9ja3MgYW5kIHJlc2V0cywgYnV0IGFsc28gZm9yIHBvd2VyIA0KbWFuYWdlbWVudCAo
-cGF0Y2hlcyB3aWxsIGJlIHNlbnQgbGF0ZXIpDQpUaGVuIGkgbmVlZCB0byBwcm9iZSAzIGRyaXZl
-cnMgd2l0aCBzYW1lIElQLg0KSXQncyBhbHNvIGEgd2F5IHRvIGF2b2lkIHVzZSBvZiAnQ0xLX09G
-X0RFQ0xBUkVfRFJJVkVSJyBhbmQgaSBuZWVkIGl0IHRvIA0KcHJvYmUgdGhlIDN0aCBkcml2ZXIu
-DQoNCkJSDQpHYWJyaWVsDQoNCj4NCj4NCj4+ICsJCQkjcmVzZXQtY2VsbHMgPSA8MT47DQo+PiAr
-CQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMm1wMS1yY2MtcnN0IjsNCj4+ICsJCX07DQo+PiArCX07
-DQo+PiArDQo+PiArU3BlY2lmeWluZyBjbG9ja3MNCj4+ICs9PT09PT09PT09PT09PT09PQ0KPj4g
-Kw0KPj4gK0FsbCBhdmFpbGFibGUgY2xvY2tzIGFyZSBkZWZpbmVkIGFzIHByZXByb2Nlc3NvciBt
-YWNyb3MgaW4NCj4+ICtkdC1iaW5kaW5ncy9jbG9jay9zdG0zMm1wMS1jbGtzLmggaGVhZGVyIGFu
-ZCBjYW4gYmUgdXNlZCBpbiBkZXZpY2UNCj4+ICt0cmVlIHNvdXJjZXMuDQo+PiArDQo+PiArRXhh
-bXBsZToNCj4+ICsNCj4+ICsJLyogQWNjZXNzaW5nIERNQTEgY2xvY2sgKi8NCj4+ICsJLi4uIHsN
-Cj4+ICsJCWNsb2NrcyA9IDwmcmNjX2NsayBETUExPg0KPj4gKwl9Ow0KPj4gKw0KPj4gKwkvKiBB
-Y2Nlc3NpbmcgU1BJNiBrZXJuZWwgY2xvY2sgKi8NCj4+ICsJLi4uIHsNCj4+ICsJCWNsb2NrcyA9
-IDwmcmNjX2NsayBTUEk2X0s+DQo+PiArCX07DQo+IE90aGVyIHRoYW4gdGhlIHBhdGggdG8gaGVh
-ZGVyLCB0aGUgY2xvY2sgYmluZGluZyBleHBsYWlucyBhbGwgdGhpcy4gTm8NCj4gbmVlZCB0byBk
-dXBsaWNhdGUgaGVyZS4NCm9rDQo+PiArDQo+PiArU3BlY2lmeWluZyBzb2Z0cmVzZXQgY29udHJv
-bCBvZiBkZXZpY2VzDQo+PiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-DQo+PiArDQo+PiArRGV2aWNlIG5vZGVzIHNob3VsZCBzcGVjaWZ5IHRoZSByZXNldCBjaGFubmVs
-IHJlcXVpcmVkIGluIHRoZWlyICJyZXNldHMiDQo+PiArcHJvcGVydHksIGNvbnRhaW5pbmcgYSBw
-aGFuZGxlIHRvIHRoZSByZXNldCBkZXZpY2Ugbm9kZSBhbmQgYW4gaW5kZXggc3BlY2lmeWluZw0K
-Pj4gK3doaWNoIGNoYW5uZWwgdG8gdXNlLg0KPj4gK1RoZSBpbmRleCBpcyB0aGUgYml0IG51bWJl
-ciB3aXRoaW4gdGhlIFJDQyByZWdpc3RlcnMgYmFuaywgc3RhcnRpbmcgZnJvbSBSQ0MNCj4+ICti
-YXNlIGFkZHJlc3MuDQo+PiArSXQgaXMgY2FsY3VsYXRlZCBhczogaW5kZXggPSByZWdpc3Rlcl9v
-ZmZzZXQgLyA0ICogMzIgKyBiaXRfb2Zmc2V0Lg0KPj4gK1doZXJlIGJpdF9vZmZzZXQgaXMgdGhl
-IGJpdCBvZmZzZXQgd2l0aGluIHRoZSByZWdpc3Rlci4NCj4+ICsNCj4+ICtGb3IgZXhhbXBsZSBv
-biBTVE0zMk1QMSwgZm9yIExUREMgcmVzZXQ6DQo+PiArIGx0ZGMgPSBBUEI0X1JTVFNFVFJfb2Zm
-c2V0IC8gNCAqIDMyICsgTFREQ19iaXRfb2Zmc2V0DQo+PiArICAgICAgPSAweDE4MCAvIDQgKiAz
-MiArIDAgPSAzMDcyDQo+PiArDQo+PiArVGhlIGxpc3Qgb2YgdmFsaWQgaW5kaWNlcyBmb3IgU1RN
-MzJNUDEgaXMgYXZhaWxhYmxlIGluOg0KPj4gK2luY2x1ZGUvZHQtYmluZGluZ3MvcmVzZXQtY29u
-dHJvbGxlci9zdG0zMm1wMS1yZXNldHMuaA0KPj4gKw0KPj4gK1RoaXMgZmlsZSBpbXBsZW1lbnRz
-IGRlZmluZXMgbGlrZToNCj4+ICsjZGVmaW5lIExURENfUgkzMDcyDQo+PiArDQo+PiArZXhhbXBs
-ZToNCj4+ICsNCj4+ICsJbHRkYyB7DQo+PiArCQlyZXNldHMgPSA8JnJjY19yc3QgTFREQ19SPjsN
-Cj4+ICsJfTsNCj4+IC0tIA0KPj4gMS45LjENCj4+DQo=
+
+
+On 02/05/2018 07:09 AM, Rob Herring wrote:
+> On Fri, Feb 02, 2018 at 03:03:30PM +0100, gabriel.fernandez@st.com wrote:
+>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>
+>> This patch adds the clock binding entry for STM32MP1
+>>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>> ---
+>>   include/dt-bindings/clock/stm32mp1-clks.h | 248 ++++++++++++++++++++++++++++++
+>>   1 file changed, 248 insertions(+)
+>>   create mode 100644 include/dt-bindings/clock/stm32mp1-clks.h
+> You can squash this into the previous patch.
+Ok Thanks!
+
+BR
+Gabriel
