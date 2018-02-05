@@ -1,55 +1,43 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: [PATCH v3 0/2] Add support for AK5558 ADC
-Date: Mon, 5 Feb 2018 19:01:53 +0200
-Message-ID: <1517850115-24340-1-git-send-email-daniel.baluta@nxp.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: RE: [PATCH] arc: dts: use 'atmel' as manufacturer for at24 in
+ axs10x_mb
+Date: Mon, 5 Feb 2018 18:38:51 +0000
+Message-ID: <4881796E12491D4BB15146FE0209CE646802914A@DE02WEMBXB.internal.synopsys.com>
+References: <20180124213955.4975-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: robh@kernel.org, shengjiu.wang@nxp.com, linux-kernel@vger.kernel.org, wakasugi.jb@om.asahi-kasei.co.jp, fabio.estevam@nxp.com, andy.shevchenko@gmail.com, linux-imx@nxp.com, cosmin.samoila@nxp.com, daniel.baluta@nxp.com, mihai.serban@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180124213955.4975-1-brgl@bgdev.pl>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-V2Ugc3VwcG9ydCBub3JtYWwgbW9kZSwgVERNIG1vZGUgYW5kIHBtLgoKQ2hhbmdlcyBzaW5jZSB2
-MjogW2FkZHJlc3NlZCBjb21tZW50cyBmcm9tIEFuZHksIEZhYmlvIGFuZCBSb2JdCiogc29ydCBp
-bmNsdWRlIGZpbGVzCiogdXNlIHByb2JlX25ldwoqIHJld29yZCB0aGUgYmluZGluZyBkb2N1bWVu
-dAoqIHVzZSBhZGNAMTAgaW5zdGVhZCBvZiBhazU1NThAMTAKKiByZW1vdmUgZmlsZSBuYW1lIGF0
-IHRoZSBiZWdpbm5pbmcgb2YgY29kZWMgc291cmNlIGNvZGUuCiogbWFrZSBpMmNfcHJvYmUgYW5k
-IGkyY19yZW1vdmUgcGFyYW1ldGVycyBuYW1pbmcgY29uc2lzdGVudC4KCkNoYW5nZXMgc2luY2Ug
-djE6IFthZGRyZXNzZWQgY29tbWVudHMgZnJvbSBBbmR5IGFuZCBGYWJpb10KICogZml4IEdQSU8g
-cG9sYXJpdHkgZnJvbSBhY3RpdmUgaGlnaCB0byBhY3RpdmUgbG93IGZvciBjb3JyZWN0IGRvY3Vt
-ZW50YXRpb24KICogZml4IGxpY2Vuc2UgaGVhZGVyIGJ5IHVzaW5nIFNQRFggaWRlbnRpZmllcgog
-KiByZW1vdmUgZGVidWcgcHJpbnRzIGF0IHRoZSBiZWdpbm5pbmcgb2YgZnVuY3Rpb25zLgogKiBv
-bmx5IHN1cHBvcnQgYXV0byBjbG9jayBzd2l0Y2hpbmcgKG1hbnVhbCBzd2l0Y2hpbmcgd2FzIGRl
-YWQgY29kZSBhbnl3YXkpIChpbiB0aGUKICAgZnV0dXJlIHdlIGNvdWxkIGFkZCBhIERUIHByb3Bl
-cnR5IHRvIGNob29zZSBiZXR3ZWVuIG1hbnVhbCBhbmQgYXV0bykKICogVXNlIGdwaW9kIEFQSQog
-KiB1c2UgR0VOTUFTSwogKiBpbnRyb2R1Y2UgcG93ZXJfb2ZmL3Bvd2VyX29uCgpPbmUgb3BlbiBx
-dWVzdGlvbiBpcyB0aGUgcmVzdW1lIHNlcXVlbmNlIHdoaWNoIGFwcGVhcnMgdG8gbmVlZCBwb3dl
-cl9vZmYvcG93ZXJfb24uCkp1c3QgcG93ZXJfb24gYWxvbmUgaXNuJ3QgZW5vdWdoLiBXaXRoIGp1
-c3QgcG93ZXJfb24gYWZ0ZXIgcmVzdW1lIGFwbGF5IHBsYXlzIGEKc29uZyBmb3IgMSBzZWNvbmRz
-IGFuZCB0aGVuIHRoZSBzb3VuZCBzdG9wcy4KCkRhdGFzaGVldCBzYXlzLCBwYWdlIDU1IgoKKDEp
-IFRoZSBQRE4gcGluIHNob3VsZCBiZSBoZWxkIHRvIOKAnEzigJ0gZm9yIG1vcmUgdGhhbiAxNTAg
-bnMgYWZ0ZXIgQVZERCBhbmQgVFZERCBhcmUgcG93ZXJlZCB1cC4KCkRhbmllbCBCYWx1dGEgKDIp
-OgogIEFTb0M6IGNvZGVjczogQWRkIHN1cHBvcnQgZm9yIEFLNTU1OCBBREMgZHJpdmVyCiAgQVNv
-QzogYWs1NTU4OiBBZGQgYmluZGluZ3MgZm9yIEFLNTU1OCBBREMKCiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3Mvc291bmQvYWs1NTU4LnR4dCB8ICAyMiArCiBzb3VuZC9zb2MvY29k
-ZWNzL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNiArCiBzb3VuZC9zb2Mv
-Y29kZWNzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCiBzb3VuZC9z
-b2MvY29kZWNzL2FrNTU1OC5jICAgICAgICAgICAgICAgICAgICAgICAgICB8IDYxOCArKysrKysr
-KysrKysrKysrKysrKysKIHNvdW5kL3NvYy9jb2RlY3MvYWs1NTU4LmggICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgIDUyICsrCiA1IGZpbGVzIGNoYW5nZWQsIDcwMCBpbnNlcnRpb25zKCspCiBj
-cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5k
-L2FrNTU1OC50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBzb3VuZC9zb2MvY29kZWNzL2FrNTU1OC5j
-CiBjcmVhdGUgbW9kZSAxMDA2NDQgc291bmQvc29jL2NvZGVjcy9hazU1NTguaAoKLS0gCjIuNy40
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRl
-dmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxt
-YW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
+Hi Bartosz, all,
+
+> -----Original Message-----
+> From: Bartosz Golaszewski [mailto:brgl@bgdev.pl]
+> Sent: Thursday, January 25, 2018 12:40 AM
+> To: Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Russell King <linux@armlinux.org.uk>; Alexey
+> Brodkin <Alexey.Brodkin@synopsys.com>; Vineet Gupta <Vineet.Gupta1@synopsys.com>
+> Cc: devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-snps-arc@lists.infradead.org; Bartosz Golaszewski
+> <brgl@bgdev.pl>
+> Subject: [PATCH] arc: dts: use 'atmel' as manufacturer for at24 in axs10x_mb
+> 
+> Using compatible strings without the <manufacturer> part for at24 is
+> now deprecated. Use a correct 'atmel,<model>' value.
+
+Even though I agree with this change itself I think it may worth
+mentioning an explicit commit that deprecated manufacturer'less parts.
+
+-Alexey
