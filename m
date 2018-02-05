@@ -1,48 +1,39 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 BUGFIX] ARM: dts: imx6ull: fix the imx6ull-14x14-evk
- configuration
-Date: Mon, 5 Feb 2018 18:37:20 +0800
-Message-ID: <20180205103716.GY31354@dragon>
-References: <1516955159-21626-1-git-send-email-LW@KARO-electronics.de>
- <1516956738-24673-1-git-send-email-LW@KARO-electronics.de>
- <20180205075620.GO31354@dragon>
- <20180205105543.1711274c@karo-electronics.de>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 0/7] ARM: dts: imx6q: engicam LVDS panel changes
+Date: Mon, 5 Feb 2018 18:58:39 +0800
+Message-ID: <20180205105838.GZ31354@dragon>
+References: <1517766571-409-1-git-send-email-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180205105543.1711274c-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1517766571-409-1-git-send-email-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagannadh.teki@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 05, 2018 at 10:55:43AM +0100, Lothar Waﬂmann wrote:
-> Hi,
+On Sun, Feb 04, 2018 at 11:19:24PM +0530, Jagan Teki wrote:
+> Series adda LVDS panel attributes on panel drivers instead of defining
+> them in dts nodes, and also added new icorem6 engicam boards.
 > 
-> On Mon, 5 Feb 2018 15:56:22 +0800 Shawn Guo wrote:
-> > On Fri, Jan 26, 2018 at 09:52:18AM +0100, Lothar Waﬂmann wrote:
-> > > imx6ull-14x14-evk.dts currently includes the imx6ul.dtsi file for an
-> > > i.MX6ULL SoC which is plain wrong.
-> > > 
-> > > Rename the current imx6ul-14x14-evk.dts to .dtsi and include it from
-> > > imx6ul-14x14-evk.dts and imx6ull-14x14-evk.dts, so that both can
-> > > include the appropriate SoC specific (imx6ul.dtsi/imx6ull.dtsi) file.
-> > > 
-> > > Signed-off-by: Lothar Waﬂmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-> > 
-> > Which base is the patch generated against?  I cannot apply it to any
-> > branch in my tree.
-> >
-> The patch was generated against next-20180118 but also applies to
-> next-20180205.
+> Jagan Teki (7):
+>   drm/panel: simple: add support for Ampire AM-800480AYTZQW-00H
+>   ARM: dts: imx6q-icore: Switch LVDS timings from panel-simple
+>   ARM: dts: imx6dl-icore: Add LVDS node
+>   drm/panel: simple: Add support for KEO TX31D200VM0BAA
+>   ARM: dts: imx6q-icore-ofcap12: Switch LVDS timings from panel-simple
+>   ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 7
+>     initial support
+>   ARM: dts: imx6q: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI starter kit
+>     support
+> 
+>  .../display/panel/ampire,am-800480aytzqw-00h.txt   | 25 +++++++++
+>  .../bindings/display/panel/koe,tx31d200vm0baa.txt  | 25 +++++++++
+...
+>  drivers/gpu/drm/panel/panel-simple.c               | 54 ++++++++++++++++++
 
-It looks like you would really want this go into 4.16 as a fix?  In that
-case, I will need to wait for v4.16-rc1 to apply it.
+The dts files should really be sent only after above bindings doc and
+driver changes get merged first.
 
 Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
