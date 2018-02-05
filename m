@@ -1,33 +1,27 @@
-From: Brandon Martin <martinbv-cvVvTOR6QHAqDJ6do+/SaQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: ad5272: Add bindings for Analog
- Devices digital potentiometers
-Date: Mon, 5 Feb 2018 03:34:38 -0500
-Message-ID: <d2aea91b-c5ce-4097-e9eb-c24fa361a386@mothictech.com>
-References: <1517231574-92777-1-git-send-email-preid@electromag.com.au>
- <1517231574-92777-2-git-send-email-preid@electromag.com.au>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] clk: renesas: cpg-mssr: add R8A77980 support
+Date: Mon, 5 Feb 2018 09:59:51 +0100
+Message-ID: <20180205085951.vcsoqcmuqjdcqhsa@verge.net.au>
+References: <5b7895ac-11c1-ac2d-837b-56726bc6226a@cogentembedded.com>
+ <9008a12c-e5c8-9289-c47b-50ea9e049c67@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517231574-92777-2-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9008a12c-e5c8-9289-c47b-50ea9e049c67@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2018 08:12 AM, Phil Reid wrote:
-> +Optional properties:
-> + - reset-gpios: GPIO specification for the RESET input. This is an
-> +		active low signal to the PCA953x.
+On Wed, Jan 31, 2018 at 11:31:05PM +0300, Sergei Shtylyov wrote:
+> Add R-Car V3H (R8A77980) Clock Pulse Generator / Module Standby and
+> Software Reset support,  using the CPG/MSSR driver core and the common
+> R-Car Gen3 code.
+> 
+> Based on the original (and large) patch by Vladimir Barinov.
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Copy/paste error?  Should maybe be "This is an active low signal to the 
-AD527x."?
--- 
-Brandon Martin
-Mothic Technologies
-317-565-1357 x7000
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
