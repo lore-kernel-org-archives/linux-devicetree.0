@@ -1,43 +1,39 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: RE: [PATCH] arc: dts: use 'atmel' as manufacturer for at24 in
- axs10x_mb
-Date: Mon, 5 Feb 2018 18:38:51 +0000
-Message-ID: <4881796E12491D4BB15146FE0209CE646802914A@DE02WEMBXB.internal.synopsys.com>
-References: <20180124213955.4975-1-brgl@bgdev.pl>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ASoC: samsung: Add the DT binding files
+	entry to MAINTAINERS
+Date: Mon, 5 Feb 2018 20:07:21 +0100
+Message-ID: <CAJKOXPep2iuCcoxZACoH3U=N2=tiXpZa=Ok3D+b8ZzprcTrtrg@mail.gmail.com>
+References: <CGME20180205170523epcas1p31ebef69e5d5db0a1ef2f1c3b5ac544ae@epcas1p3.samsung.com>
+ <20180205170500.8992-1-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180124213955.4975-1-brgl@bgdev.pl>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180205170500.8992-1-s.nawrocki@samsung.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, sbkim73@samsung.com, jcsing.lee@samsung.com, lgirdwood@gmail.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bartosz, all,
+On Mon, Feb 5, 2018 at 6:05 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> This patch adds missing DT binding files to the Samsung ASoC
+> drivers entry.
+>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 
-> -----Original Message-----
-> From: Bartosz Golaszewski [mailto:brgl@bgdev.pl]
-> Sent: Thursday, January 25, 2018 12:40 AM
-> To: Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Russell King <linux@armlinux.org.uk>; Alexey
-> Brodkin <Alexey.Brodkin@synopsys.com>; Vineet Gupta <Vineet.Gupta1@synopsys.com>
-> Cc: devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-snps-arc@lists.infradead.org; Bartosz Golaszewski
-> <brgl@bgdev.pl>
-> Subject: [PATCH] arc: dts: use 'atmel' as manufacturer for at24 in axs10x_mb
-> 
-> Using compatible strings without the <manufacturer> part for at24 is
-> now deprecated. Use a correct 'atmel,<model>' value.
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Even though I agree with this change itself I think it may worth
-mentioning an explicit commit that deprecated manufacturer'less parts.
-
--Alexey
+Best regards,
+Krzysztof
