@@ -1,37 +1,55 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/3] ARM: dts: exynos: Add soc node to exynos4
-Date: Mon, 5 Feb 2018 16:02:59 +0100
-Message-ID: <CAJKOXPec6=SiwgcRBixwt+DjhyKvoK+nPYOSpHuUGgWL8vDHbQ@mail.gmail.com>
-References: <CGME20180205112603eucas1p17d1b5ef274e9541b785320a59f855c2a@eucas1p1.samsung.com>
- <1517829936-26311-1-git-send-email-m.purski@samsung.com> <1517829936-26311-2-git-send-email-m.purski@samsung.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH v2 BUGFIX] ARM: dts: imx6ull: fix the imx6ull-14x14-evk
+ configuration
+Date: Mon, 5 Feb 2018 16:03:19 +0100
+Message-ID: <20180205160319.297a74f8@karo-electronics.de>
+References: <1516955159-21626-1-git-send-email-LW@KARO-electronics.de>
+        <1516956738-24673-1-git-send-email-LW@KARO-electronics.de>
+        <20180205075620.GO31354@dragon>
+        <20180205105543.1711274c@karo-electronics.de>
+        <20180205103716.GY31354@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1517829936-26311-2-git-send-email-m.purski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180205103716.GY31354@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 5, 2018 at 12:25 PM, Maciej Purski <m.purski@samsung.com> wrote:
-> Soc nodes are used in other exynos DTS. Exynos4 boards should use them
-> as well.
->
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4.dtsi | 1727 ++++++++++++++++++++--------------------
->  1 file changed, 872 insertions(+), 855 deletions(-)
->
+Hi,
 
-This brings some new DTC warnings:
-arch/arm/boot/dts/exynos4210-origen.dtb: Warning (simple_bus_reg):
-Node /soc/video-phy missing or empty reg/ranges property
-arch/arm/boot/dts/exynos4210-origen.dtb: Warning (simple_bus_reg):
-Node /soc/pmu missing or empty reg/ranges property
+On Mon, 5 Feb 2018 18:37:20 +0800 Shawn Guo wrote:
+> On Mon, Feb 05, 2018 at 10:55:43AM +0100, Lothar Waßmann wrote:
+> > Hi,
+> > 
+> > On Mon, 5 Feb 2018 15:56:22 +0800 Shawn Guo wrote:
+> > > On Fri, Jan 26, 2018 at 09:52:18AM +0100, Lothar Waßmann wrote:
+> > > > imx6ull-14x14-evk.dts currently includes the imx6ul.dtsi file for an
+> > > > i.MX6ULL SoC which is plain wrong.
+> > > > 
+> > > > Rename the current imx6ul-14x14-evk.dts to .dtsi and include it from
+> > > > imx6ul-14x14-evk.dts and imx6ull-14x14-evk.dts, so that both can
+> > > > include the appropriate SoC specific (imx6ul.dtsi/imx6ull.dtsi) file.
+> > > > 
+> > > > Signed-off-by: Lothar Waßmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+> > > 
+> > > Which base is the patch generated against?  I cannot apply it to any
+> > > branch in my tree.
+> > >
+> > The patch was generated against next-20180118 but also applies to
+> > next-20180205.
+> 
+> It looks like you would really want this go into 4.16 as a fix?  In that
+> case, I will need to wait for v4.16-rc1 to apply it.
+> 
+I don't care much when and how it will be applied.
+I'm not using those files myself.
 
-arch/arm/boot/dts/exynos4412-itop-elite.dtb: Warning
-(interrupts_property): interrupts size is (32), expected multiple of
-12 in /pmu
 
-Best regards,
-Krzysztof
+Lothar Waßmann
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
