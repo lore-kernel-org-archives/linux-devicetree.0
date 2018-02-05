@@ -1,50 +1,32 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] arm64: add basic DTS for i.MX8MQ
-Date: Mon, 5 Feb 2018 16:45:06 +0800
-Message-ID: <20180205084505.GV31354@dragon>
-References: <20180201183126.32384-1-l.stach@pengutronix.de>
- <20180201183126.32384-2-l.stach@pengutronix.de>
- <HE1PR04MB3113FF72B02D642392D625DF87F90@HE1PR04MB3113.eurprd04.prod.outlook.com>
+From: Brandon Martin <martinbv-cvVvTOR6QHAqDJ6do+/SaQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: ad5272: Add bindings for Analog
+ Devices digital potentiometers
+Date: Mon, 5 Feb 2018 03:34:38 -0500
+Message-ID: <d2aea91b-c5ce-4097-e9eb-c24fa361a386@mothictech.com>
+References: <1517231574-92777-1-git-send-email-preid@electromag.com.au>
+ <1517231574-92777-2-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <HE1PR04MB3113FF72B02D642392D625DF87F90-6LN7OEpIatW7Zxc5AHJ2m89NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+In-Reply-To: <1517231574-92777-2-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dl-linux-imx <linux-imx-3arQi8VN3Tc@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 02, 2018 at 08:13:56AM +0000, Jacky Bai wrote:
-> > Subject: [PATCH v2 2/4] arm64: add basic DTS for i.MX8MQ
-> > 
-> > This adds the basic DTS for the i.MX8MQ.
-> > For now only the following peripherals are supported:
-> > - IOMUXC (pin controller)
-> > - CCM (clock controller)
-> > - GPIO
-> > - UART
-> > - uSDHC (SD/eMMC controller)
-> > - FEC (ethernet controller)
-> > - i2c
-> > 
-> > This is enough to get a very basic board support up and running.
-> > 
-> > One known limitation is that the driver for the GPC interrupt
-> > controller is still missing, rendering the CPU sleep states unusable
-> > as there is nothing waking them up anymore. This will be fixed in
-> > due course.
-> > 
-> 
-> The cpu sleep states can NOT be supported in community kernel due to hardware limitation.
+On 01/29/2018 08:12 AM, Phil Reid wrote:
+> +Optional properties:
+> + - reset-gpios: GPIO specification for the RESET input. This is an
+> +		active low signal to the PCA953x.
 
-Jacky,
-
-Can you elaborate your comment a bit?  If it's a hardware limitation, I
-guess not only community but also vendor kernel has no way to support
-sleep states, right?
-
-Shawn
+Copy/paste error?  Should maybe be "This is an active low signal to the 
+AD527x."?
+-- 
+Brandon Martin
+Mothic Technologies
+317-565-1357 x7000
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
