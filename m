@@ -1,144 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/14] dt-bindings: Document STM32MP1 Reset Clock
- Controller (RCC) bindings
-Date: Mon, 5 Feb 2018 00:09:32 -0600
-Message-ID: <20180205042238.64xjrrguls2drtrg@rob-hp-laptop>
-References: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
- <1517580222-23301-2-git-send-email-gabriel.fernandez@st.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ASoC: ak5558: Add bindings for AK5558 ADC
+Date: Mon, 5 Feb 2018 00:09:38 -0600
+Message-ID: <20180205025914.jy4wdan3gibyyzxe@rob-hp-laptop>
+References: <1517588406-3295-1-git-send-email-daniel.baluta@nxp.com>
+ <1517588406-3295-3-git-send-email-daniel.baluta@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1517580222-23301-2-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: gabriel.fernandez@st.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez.st@gmail.com, olivier.bideau@st.com
+In-Reply-To: <1517588406-3295-3-git-send-email-daniel.baluta-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Baluta <daniel.baluta-3arQi8VN3Tc@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wakasugi.jb-r6lgfPJHJciWyREYz5tgSuqrae++aQT8@public.gmane.org, shengjiu.wang-3arQi8VN3Tc@public.gmane.org, mihai.serban-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cosmin.samoila-3arQi8VN3Tc@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 02, 2018 at 03:03:29PM +0100, gabriel.fernandez@st.com wrote:
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
-> 
-> The RCC block is responsible of the management of the clock and reset
-> generation for the complete circuit.
-> 
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+On Fri, Feb 02, 2018 at 06:20:06PM +0200, Daniel Baluta wrote:
+> Signed-off-by: Daniel Baluta <daniel.baluta-3arQi8VN3Tc@public.gmane.org>
 > ---
->  .../devicetree/bindings/mfd/st,stm32-rcc.txt       | 85 ++++++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-rcc.txt
+>  Documentation/devicetree/bindings/sound/ak5558.txt | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/ak5558.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-rcc.txt b/Documentation/devicetree/bindings/mfd/st,stm32-rcc.txt
+> diff --git a/Documentation/devicetree/bindings/sound/ak5558.txt b/Documentation/devicetree/bindings/sound/ak5558.txt
 > new file mode 100644
-> index 0000000..28017a1
+> index 0000000..61c85568
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/st,stm32-rcc.txt
-> @@ -0,0 +1,85 @@
-> +STMicroelectronics STM32 Peripheral Reset Clock Controller
-> +==========================================================
+> +++ b/Documentation/devicetree/bindings/sound/ak5558.txt
+> @@ -0,0 +1,23 @@
+> +AK5558 8 channel differential 32-bit delta-sigma ADC
 > +
-> +The RCC IP is both a reset and a clock controller.
-> +
-> +Please also refer to reset.txt for common reset controller binding usage.
-> +
-> +Please also refer to clock-bindings.txt for common clock controller
-> +binding usage.
-> +
+> +This device supports I2C mode only.
 > +
 > +Required properties:
-> +- compatible: "simple-mfd", "syscon"
-
-
-> +- reg: should be register base and length as documented in the datasheet
 > +
-> +- Sub-nodes:
-> +  - compatible: "st,stm32mp1-rcc-clk"
-> +	- #clock-cells: 1, device nodes should specify the clock in their
-> +	  "clocks" property, containing a phandle to the clock device node,
-> +	  an index specifying the clock to use.
+> +- compatible : "asahi-kasei,ak5558"
+> +- reg : The I2C address of the device for I2C.
 > +
-> +  - compatible: "st,stm32mp1-rcc-rst"
-> +	- #reset-cells: Shall be 1
+> +Optional properties:
 > +
-> +Example:
-> +	rcc: rcc@50000000 {
-> +		compatible = "syscon", "simple-mfd";
-> +		reg = <0x50000000 0x1000>;
-> +
-> +		rcc_clk: rcc-clk@50000000 {
-> +			#clock-cells = <1>;
-> +			compatible = "st,stm32mp1-rcc-clk";
-> +		};
-> +
-> +		rcc_rst: rcc-reset@50000000 {
-
-You should not have the same unit-address twice.
-
-IMO, this should just be:
-
-	rcc: rcc@50000000 {
-		compatible = "st-stm32mp1-rcc";
-		reg = <0x50000000 0x1000>;
-		#clock-cells = <1>;
-		#reset-cells = <1>;
-	};
-
-There's no reason a node can't provide more than 1 function.
-
-
-> +			#reset-cells = <1>;
-> +			compatible = "st,stm32mp1-rcc-rst";
-> +		};
-> +	};
-> +
-> +Specifying clocks
-> +=================
-> +
-> +All available clocks are defined as preprocessor macros in
-> +dt-bindings/clock/stm32mp1-clks.h header and can be used in device
-> +tree sources.
+> +- reset-gpios: A GPIO specifier for the GPIO controlling
+> +	the power down & reset pin.
 > +
 > +Example:
 > +
-> +	/* Accessing DMA1 clock */
-> +	... {
-> +		clocks = <&rcc_clk DMA1>
-> +	};
-> +
-> +	/* Accessing SPI6 kernel clock */
-> +	... {
-> +		clocks = <&rcc_clk SPI6_K>
-> +	};
+> +&i2c {
+> +	ak5558: ak5558@10 {
 
-Other than the path to header, the clock binding explains all this. No 
-need to duplicate here.
+adc@10
 
-> +
-> +Specifying softreset control of devices
-> +=======================================
-> +
-> +Device nodes should specify the reset channel required in their "resets"
-> +property, containing a phandle to the reset device node and an index specifying
-> +which channel to use.
-> +The index is the bit number within the RCC registers bank, starting from RCC
-> +base address.
-> +It is calculated as: index = register_offset / 4 * 32 + bit_offset.
-> +Where bit_offset is the bit offset within the register.
-> +
-> +For example on STM32MP1, for LTDC reset:
-> + ltdc = APB4_RSTSETR_offset / 4 * 32 + LTDC_bit_offset
-> +      = 0x180 / 4 * 32 + 0 = 3072
-> +
-> +The list of valid indices for STM32MP1 is available in:
-> +include/dt-bindings/reset-controller/stm32mp1-resets.h
-> +
-> +This file implements defines like:
-> +#define LTDC_R	3072
-> +
-> +example:
-> +
-> +	ltdc {
-> +		resets = <&rcc_rst LTDC_R>;
+> +		compatible = "asahi-kasei,ak5558";
+> +		reg = <0x10>;
+> +		reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
 > +	};
+> +};
 > -- 
-> 1.9.1
+> 2.7.4
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
