@@ -1,60 +1,87 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 05/11] arm64: dts: renesas: initial R8A77980 SoC device tree
-Date: Mon, 5 Feb 2018 14:32:18 +0100
-Message-ID: <CAMuHMdWad2OJ33Hu0KbYS3nLWhgmj81_wRbtwApw-N81q3+nsA@mail.gmail.com>
-References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com> <32142684-d5cf-035f-8401-86a36dcbafd6@cogentembedded.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/3] net: stmmac: dwmac-sun8i: drop V3s compatible and
+ add V3 one
+Date: Mon, 5 Feb 2018 14:39:45 +0100
+Message-ID: <20180205133945.ac3im2fu42evuxtb@flea>
+References: <20180202180456.60378-1-icenowy@aosc.io>
+ <20180202180456.60378-2-icenowy@aosc.io>
+ <20180202221301.judzaafcu67h4c2v@flea.lan>
+ <73B89FC1-9A58-4B08-80C0-971E1254CFD9@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <32142684-d5cf-035f-8401-86a36dcbafd6@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Simon Horman <horms@verge.net.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fbximhq3eqkurhe3"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <73B89FC1-9A58-4B08-80C0-971E1254CFD9@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Corentin Labbe <clabbe.montjoie@gmail.com>, "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
 
-On Fri, Feb 2, 2018 at 7:33 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> The initial R8A77980 SoC device tree including Cortex-A53 CPU, GIC, timer,
-> CPG, RST, and SYSC.
->
-> Based on the original (and large) patch by Vladimir Barinov.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+--fbximhq3eqkurhe3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your patch!
+Hi,
 
-> --- /dev/null
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-> @@ -0,0 +1,122 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the r8a77980 SoC
-> + *
-> + * Copyright (C) 2018 Renesas Electronics Corp.
-> + * Copyright (C) 2018 Cogent Embedded, Inc.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+On Sat, Feb 03, 2018 at 03:23:28PM +0800, Icenowy Zheng wrote:
+> =E4=BA=8E 2018=E5=B9=B42=E6=9C=883=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=886=
+:13:01, Maxime Ripard <maxime.ripard@bootlin.com> =E5=86=99=E5=88=B0:
+> >On Sat, Feb 03, 2018 at 02:04:54AM +0800, Icenowy Zheng wrote:
+> >> The V3s is just a differently packaged version of the V3 chip, which
+> >has
+> >> a MAC with the same capability with H3. The V3s just doesn't wire out
+> >> the external MII/RMII/RGMII bus. (V3 wired out it).
+> >>=20
+> >> Drop the compatible string of V3s in the dwmac-sun8i driver, and add
+> >a
+> >> V3 compatible string, which has all capabilities.
+> >>=20
+> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> >
+> >This breaks the DT ABI, so NAK.
+>=20
+> I have asked this at IRC.
 
-I think you want to leave out the above #include, as it will go upstream
-through a different path (you're already using hardcoded clock numbers,
-assuming the same).
+One more reason why no one should ask questions like this on IRC.
 
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> The V3s compatible string is never used in any mainline
+> kernel, even not in any RC version.
 
-Gr{oetje,eeting}s,
+$ git grep allwinner,sun8i-v3s-emac v4.15 | wc -l=20
+5
 
-                        Geert
+It is there already, and the fact that we have or don't have a DT in
+tree that use it doesn't matter. One could very well have written a DT
+for it and never submitted it.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Maxime
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
+
+--fbximhq3eqkurhe3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlp4XqEACgkQ0rTAlCFN
+r3QwBw//W5q/rro8AEMOTUSyT1Wa46DMFbR4Ga5CbFq90hggClkVaY5ws8LsBnjA
+2mU1KMimjIumsvsQbIM6IL8uPVNi4YyS1PzdUQH1N5Nuwrl55XOxyx7KCFbsJnwg
+7dbgVzwf6LGL6wkwoIXwgvdpkmGmm2A2oRY46T7q6Ny+n962tRF+2LoOYsy1oVbf
+Z2JGL1t0vE2cDE6KK7ttn4gfGISTH7QM3IUY7+fCBegZoG8KOacQY4KYkhnI5z/U
+kpRGMVodxSnu+TmZ1yXNxEQcg78NY+NKnhY5OGd5p7JRJ/Eq8XnEQcl9HJsKzdsu
+QQfGbgY95C1MBvXnSukUxbE3PfGvVZd9ZD02o1CK7+ztsRyDl0JTN0efeH/Xc/On
+OzOzqWOADkfZZUodAOG6tdQwaK5x5Bk98qxsXmXtP/e4W28Q345oXOZOp6qFkwYX
+2UTsxOXXDkLuSuhCKpDU9hlDXFBJzDc8hD2uwIHa1igrlm5CcYxqskcrkBQnbY2u
+hM1olJehFapuWILdxNpuWL+8p6/S9S1BHgyyMrq2IqOAGc1EFQflv63tVuSHvX7s
+xK70jIZKrHwfzfwydozxGYbWERxaHDoPtVWnQHmqvD8Q8pCIQEV7PLIzjSbbZL2T
+r/LVc/4Q5tTQV33si5Kle2VvZEW4A1fL1nrzKv6Hb7Y59c6pBh0=
+=bw+O
+-----END PGP SIGNATURE-----
+
+--fbximhq3eqkurhe3--
