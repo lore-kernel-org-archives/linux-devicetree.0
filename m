@@ -1,34 +1,48 @@
-From: Philippe Cornu <philippe.cornu@st.com>
-Subject: [PATCH v1 0/2] drm/panel: otm8009a: Add support for the optional
- power-supply
-Date: Mon, 5 Feb 2018 10:45:30 +0100
-Message-ID: <20180205094532.23547-1-philippe.cornu@st.com>
+From: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v1 1/2] dt-bindings/display/panel: otm8009a: Add optional power-supply property
+Date: Mon, 5 Feb 2018 10:45:31 +0100
+Message-ID: <20180205094532.23547-2-philippe.cornu@st.com>
+References: <20180205094532.23547-1-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Alexandre Torgue <alexandre.torgue@st.com>, Philippe Cornu <philippe.cornu@st.com>, Yannick Fertre <yannick.fertre@st.com>, Vincent Abriou <vincent.abriou@st.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180205094532.23547-1-philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U29tZSBib2FyZHMgdXNlIGEgZGVkaWNhdGVkIHZvbHRhZ2UgcmVndWxhdG9yIGZvciB0aGlzIHBh
-bmVsLgpBZGQgJiBEb2N1bWVudCB0aGlzIHJlbGF0ZWQgb3B0aW9uYWwgcG93ZXItc3VwcGx5IHBy
-b3BlcnR5IGFuZAphZGQgaXRzIHN1cHBvcnQgaW4gdGhlIGRyaXZlci4KClBoaWxpcHBlIENvcm51
-ICgyKToKICBkdC1iaW5kaW5ncy9kaXNwbGF5L3BhbmVsOiBvdG04MDA5YTogQWRkIG9wdGlvbmFs
-IHBvd2VyLXN1cHBseQogICAgcHJvcGVydHkKICBkcm0vcGFuZWw6IG90bTgwMDlhOiBBZGQgc3Vw
-cG9ydCBmb3IgdGhlIG9wdGlvbmFsIHBvd2VyLXN1cHBseQoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5
-L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQgICAgICAgfCAgMiArKwogZHJpdmVycy9ncHUv
-ZHJtL3BhbmVsL3BhbmVsLW9yaXNldGVjaC1vdG04MDA5YS5jICAgICAgICB8IDE3ICsrKysrKysr
-KysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykKCi0tIAoyLjE1LjEK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Some boards use a dedicated voltage regulator for this panel.
+Add & document this related optional power-supply property.
+
+Signed-off-by: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+---
+ Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
+index 6862028e7b2e..203b03eefb68 100644
+--- a/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
++++ b/Documentation/devicetree/bindings/display/panel/orisetech,otm8009a.txt
+@@ -9,6 +9,7 @@ Required properties:
+ 
+ Optional properties:
+   - reset-gpios: a GPIO spec for the reset pin (active low).
++  - power-supply: phandle of the regulator that provides the supply voltage.
+ 
+ Example:
+ &dsi {
+@@ -17,5 +18,6 @@ Example:
+ 		compatible = "orisetech,otm8009a";
+ 		reg = <0>;
+ 		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
++		power-supply = <&v1v8>;
+ 	};
+ };
+-- 
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
