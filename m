@@ -1,127 +1,114 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: ls1088a: Add qspi device node for
- ls1088a-rdb
-Date: Mon, 5 Feb 2018 16:17:23 +0800
-Message-ID: <20180205081722.GS31354@dragon>
-References: <1517334262-17969-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: [PATCHv3] tlv320dac33: Add device tree bindings
+Date: Mon, 5 Feb 2018 09:24:45 +0100
+Message-ID: <20180205082445.GA18274@amd>
+References: <20180129230539.GA18280@amd> <20180131190112.GA31608@amd>
+ <20b9ff40-a869-a165-07a2-2a103830efb3@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1517334262-17969-1-git-send-email-yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org, suresh.gupta-3arQi8VN3Tc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============3648637266720010841=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20b9ff40-a869-a165-07a2-2a103830efb3@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, tony@atomide.com, abcloriens@gmail.com, tiwai@suse.com, martijn@brixit.nl, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, patrikbachan@gmail.com, ivo.g.dimitrov.75@gmail.com, khilman@kernel.org, serge@hallyn.com, devicetree@vger.kernel.org, pali.rohar@gmail.com, robh+dt@kernel.org, perex@perex.cz, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, aaro.koskinen@iki.fi, linux-kernel@vger.kernel.org, broonie@kernel.org, clayton@craftyguy.net, sakari.ailus@linux.intel.com, sre@kernel.org, bhumirks@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 30, 2018 at 11:14:22PM +0530, Yogesh Gaur wrote:
-> Add nodes and properties for QSPI controller.
-> Add support for spansion flash, s25fs512s, as slave device for
-> QSPI controller.
-> 
-> Added entry of "fsl,ls1088a-qspi" in fsl-quadspi.txt binding file.
-> 
-> Signed-off-by: Suresh Gupta <suresh.gupta-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
-> ---
-> Depends on
->  https://patchwork.ozlabs.org/project/linux-mtd/list/?series=26084
 
-Send me dts patch only after driver and bindings doc get merged.
+--===============3648637266720010841==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
+Content-Disposition: inline
 
-> 
-> Changes for v2:
-> - Move property spi-rx-bus-width and spi-tx-bus-width from controller
->   to connected slave device node.
-> 
->  .../devicetree/bindings/mtd/fsl-quadspi.txt        |  1 +
 
-The bindings doc shouldn't be part of dts patch.
+--jRHKVT23PllUwdXP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shawn
 
->  arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts  | 23 ++++++++++++++++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     | 12 +++++++++++
->  3 files changed, 36 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> index 811da0e..956c23c 100644
-> --- a/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> +++ b/Documentation/devicetree/bindings/mtd/fsl-quadspi.txt
-> @@ -7,6 +7,7 @@ Required properties:
->  		 or
->  		 "fsl,ls2080a-qspi" followed by "fsl,ls1021a-qspi",
->  		 "fsl,ls1043a-qspi" followed by "fsl,ls1021a-qspi"
-> +		 "fsl,ls2080a-qspi" followed by "fsl,ls1088a-qspi",
->    - reg : the first contains the register location and length,
->            the second contains the memory mapping address and length
->    - reg-names: Should contain the reg names "QuadSPI" and "QuadSPI-memory"
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> index 0f6fcda..8afe536 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-> @@ -94,6 +94,29 @@
->  	};
->  };
->  
-> +&qspi {
-> +	status = "okay";
-> +	fsl,qspi-has-second-chip;
-> +	qflash0: s25fs512s@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		spi-max-frequency = <20000000>;
-> +		reg = <0>;
-> +		spi-rx-bus-width = <4>;
-> +		spi-tx-bus-width = <4>;
-> +	};
-> +
-> +	qflash1: s25fs512s@1 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		spi-max-frequency = <20000000>;
-> +		reg = <1>;
-> +		spi-rx-bus-width = <4>;
-> +		spi-tx-bus-width = <4>;
-> +	};
-> +
-> +};
-> +
->  &ifc {
->  	ranges = <0 0 0x5 0x30000000 0x00010000
->  		  2 0 0x5 0x20000000 0x00010000>;
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index bd80e9a..b45a522 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -394,6 +394,18 @@
->  			status = "disabled";
->  		};
->  
-> +		qspi: quadspi@20c0000 {
-> +			compatible = "fsl,ls2080a-qspi", "fsl,ls1088a-qspi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x0 0x20c0000 0x0 0x10000>,
-> +				<0x0 0x20000000 0x0 0x10000000>;
-> +			reg-names = "QuadSPI", "QuadSPI-memory";
-> +			interrupts = <0 25 0x4>; /* Level high type */
-> +			clocks = <&clockgen 4 3>, <&clockgen 4 3>;
-> +			clock-names = "qspi_en", "qspi";
-> +		};
-> +
->  		sata: sata@3200000 {
->  			compatible = "fsl,ls1088a-ahci";
->  			reg = <0x0 0x3200000 0x0 0x10000>,
-> -- 
-> 1.9.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This adds device tree bindings for tlv320dac33.c.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+diff --git a/Documentation/devicetree/bindings/sound/tlv320dac33.txt b/Docu=
+mentation/devicetree/bindings/sound/tlv320dac33.txt
+new file mode 100644
+index 0000000..aee0a87
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
+@@ -0,0 +1,32 @@
++Texas Instruments - tlv320dac33 Codec module
++
++The tlv320dac33 serial control bus communicates through I2C protocols.
++
++Required properties:
++
++- compatible - "ti,tlv320dac33"
++- reg - I2C slave address
++- ti,burst-bclkdiv - BCLK divider value in burst mode. Valid range is 1..2=
+55.
++
++Optional properties:
++
++- reset-gpios      - gpio pin to power the device, active high.
++
++- interrupts       - The interrupt output from the device.
++- interrupt-parent - The parent interrupt controller.
++
++- ti,keep-bclk     - Keep the BCLK running in FIFO modes.
++
++Example:
++
++tlv320dac33: audio-codec@19 {
++	compatible =3D "ti,tlv320dac33";
++	reg =3D <0x19>;
++
++	interrupt-parent =3D <&gpio2>;
++	interrupts =3D <21 1>; /* gpio_53, IRQF_TRIGGER_RISING */
++	reset-gpios =3D <&gpio2 28 0>; /* gpio_60 */
++
++	ti,keep-bclk;
++	ti,burst-bclkdiv =3D <3>;
++};
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--jRHKVT23PllUwdXP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlp4FM0ACgkQMOfwapXb+vJT6ACfZrAjoIfkKc9TKF1tlIzEA8Sk
+cKYAnAv9gqLDfOA72y09pHSPWQbczpjH
+=w2H9
+-----END PGP SIGNATURE-----
+
+--jRHKVT23PllUwdXP--
+
+
+--===============3648637266720010841==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3648637266720010841==--
