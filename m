@@ -1,35 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: usb: add support for dwc3 controller on
- Amlogic Meson GX
-Date: Mon, 5 Feb 2018 00:07:23 -0600
-Message-ID: <20180205060723.e6vyot775k66hhjh@rob-hp-laptop>
-References: <20180128200333.20093-1-martin.blumenstingl@googlemail.com>
- <20180128200333.20093-2-martin.blumenstingl@googlemail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/5] dt-bindings: at24: add bindings for Rohm BR24T01
+Date: Mon, 5 Feb 2018 00:07:32 -0600
+Message-ID: <20180205060732.ufy2w37uc4okclew@rob-hp-laptop>
+References: <1517240748-14780-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+ <1517240748-14780-6-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180128200333.20093-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1517240748-14780-6-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, kieran.bingham@ideasonboard.com, wsa@the-dreams.de, magnus.damm@gmail.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 28, 2018 at 09:03:31PM +0100, Martin Blumenstingl wrote:
-> Amlogic Meson GX SoCs (GXL and AXG) come with a (host-only) dwc3 USB
-> controller. This requires a clock to be enabled and a reset line to be
-> pulsed to get the hardware into a known state.
-> Add the documentation for this IP block, similar to "qcom,dwc3.txt".
+On Mon, Jan 29, 2018 at 04:45:48PM +0100, Ulrich Hecht wrote:
+> Both manufacturer and name variant.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 > ---
->  .../devicetree/bindings/usb/amlogic,dwc3.txt       | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/amlogic,dwc3.txt
+>  Documentation/devicetree/bindings/eeprom/at24.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
+> index 1812c84..dd29937 100644
+> --- a/Documentation/devicetree/bindings/eeprom/at24.txt
+> +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
+> @@ -40,6 +40,7 @@ Required properties:
+>                  "microchip",
+>                  "ramtron",
+>                  "renesas",
+> +                "rohm",
+
+This is going to comflict with a patch sorting these IIRC. So they 
+should go thru the same tree.
+
+>                  "nxp",
+>                  "st",
+>  
+> @@ -47,6 +48,7 @@ Required properties:
+>                  variants of the above. Known such exceptions are listed below:
+>  
+>                  "renesas,r1ex24002" - the fallback is "atmel,24c02"
+> +                "rohm,br24t01" - the fallback is "atmel,24c01"
+>  
+>    - reg: The I2C address of the EEPROM.
+>  
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
