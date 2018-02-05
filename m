@@ -1,64 +1,118 @@
-From: Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v2 2/4] arm64: add basic DTS for i.MX8MQ
-Date: Mon, 5 Feb 2018 09:07:24 +0000
-Message-ID: <HE1PR04MB31135BD7833FD443CD6BAD6B87FE0@HE1PR04MB3113.eurprd04.prod.outlook.com>
-References: <20180201183126.32384-1-l.stach@pengutronix.de>
- <20180201183126.32384-2-l.stach@pengutronix.de>
- <HE1PR04MB3113FF72B02D642392D625DF87F90@HE1PR04MB3113.eurprd04.prod.outlook.com>
- <20180205084505.GV31354@dragon>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v2 4/5] dt-bindings: clock: mediatek: update audsys
+ documentation to adapt MFD device
+Date: Mon, 5 Feb 2018 17:11:32 +0800
+Message-ID: <1517821892.12510.32.camel@mtkswgap22>
+References: <cover.1515639336.git.ryder.lee@mediatek.com>
+         <8651585c91ee40f6ab3e30b893bcfb90fe5c2c25.1515639336.git.ryder.lee@mediatek.com>
+         <20180205060833.p56dun5i4bvs3jye@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180205084505.GV31354@dragon>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dl-linux-imx <linux-imx-3arQi8VN3Tc@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20180205060833.p56dun5i4bvs3jye@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH v2 2/4] arm64: add basic DTS for i.MX8MQ
->=20
-> On Fri, Feb 02, 2018 at 08:13:56AM +0000, Jacky Bai wrote:
-> > > Subject: [PATCH v2 2/4] arm64: add basic DTS for i.MX8MQ
-> > >
-> > > This adds the basic DTS for the i.MX8MQ.
-> > > For now only the following peripherals are supported:
-> > > - IOMUXC (pin controller)
-> > > - CCM (clock controller)
-> > > - GPIO
-> > > - UART
-> > > - uSDHC (SD/eMMC controller)
-> > > - FEC (ethernet controller)
-> > > - i2c
-> > >
-> > > This is enough to get a very basic board support up and running.
-> > >
-> > > One known limitation is that the driver for the GPC interrupt
-> > > controller is still missing, rendering the CPU sleep states unusable
-> > > as there is nothing waking them up anymore. This will be fixed in
-> > > due course.
-> > >
-> >
-> > The cpu sleep states can NOT be supported in community kernel due to
-> hardware limitation.
->=20
-> Jacky,
->=20
-> Can you elaborate your comment a bit?  If it's a hardware limitation, I g=
-uess
-> not only community but also vendor kernel has no way to support sleep sta=
-tes,
-> right?
->=20
-> Shawn
+On Mon, 2018-02-05 at 00:08 -0600, Rob Herring wrote:
+> On Wed, Jan 31, 2018 at 03:42:44PM +0800, Ryder Lee wrote:
+> > As the MediaTek audio hardware block that expose functionalities that are
+> > handled by separate subsystems in the kernel, and there are registers that
+> > are shared between related drivers.
+> > 
+> > Switch the current device to an MFD device, add more descriptions about the
+> > subsystem and modify example accordingly.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> >  .../bindings/arm/mediatek/mediatek,audsys.txt      | 37 ++++++++++++++++++----
+> >  1 file changed, 30 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> > index 9b8f578..677af40 100644
+> > --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> > @@ -1,22 +1,45 @@
+> > -MediaTek AUDSYS controller
+> > +MediaTek Audio Subsystem
+> >  ============================
+> > +The audio subsystem is one of the multi-function blocks of MediaTek SoCs.
+> > +It contains a system controller, which provides a number registers giving
+> > +access to two features: AUDSYS clocks and Audio Front End (AFE) components.
+> >  
+> > +For the top level node:
+> > +- compatible: must be: "syscon", "simple-mfd";
+> 
+> This should have some SoC specific compatible.
 
-It need to add a workaround in GIC common code, maybe it can NOT be accepte=
-d by community.
+As we don't have a specific driver (compatible string) for it and if we
+need to add that I think the term '*-audsys' is very suitable here, but
+unfortunately, it has already picked for clock driver (see child node).
 
-BR
-Jacky bai
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I also took ../../marvell/*-system-controller.txt as examples for my
+case. Thus, I'm not sure should we still need a new one here?
+
+> > +- reg: register area of the Audio Subsystem
+> > +
+> > +Required sub-nodes:
+> > +
+> > +AUDSYS clocks:
+> > +-------
+> >  The MediaTek AUDSYS controller provides various clocks to the system.
+> >  
+> >  Required Properties:
+> >  
+> >  - compatible: Should be one of:
+> > -	- "mediatek,mt7622-audsys", "syscon"
+> > +	- "mediatek,mt2701-audsys";
+> > +	- "mediatek,mt7622-audsys";
+> >  - #clock-cells: Must be 1
+> >  
+> >  The AUDSYS controller uses the common clk binding from
+> >  Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >  The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> 
+> There's no register range associated with the clocks? If there is, add a 
+> reg property.
+
+No, we don't need reg property here, as the two sub-drivers will obtain
+the regmap  which is propagated from the parent.
+
+Thanks
+
+> >  
+> > +AFE components:
+> > +-------
+> > +For common binding part and usage, refer to
+> > +../sonud/mt2701-afe-pcm.txt.
+> > +
+> >  Example:
+> >  
+> > -audsys: audsys@11220000 {
+> > -	compatible = "mediatek,mt7622-audsys", "syscon";
+> > -	reg = <0 0x11220000 0 0x1000>;
+> > -	#clock-cells = <1>;
+> > -};
+> > +	audio-subsystem@11220000 {
+> > +		compatible = "syscon", "simple-mfd";
+> > +		reg = <0 0x11220000 0 0x2000>;
+> > +
+> > +		audsys: clock {
+> > +			compatible = "mediatek,mt2701-audsys";
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> > +		...
+> > +	};
+> > -- 
+> > 1.9.1
+> > 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+
+
