@@ -1,27 +1,35 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/2] clk: renesas: cpg-mssr: add R8A77980 support
-Date: Mon, 5 Feb 2018 09:59:51 +0100
-Message-ID: <20180205085951.vcsoqcmuqjdcqhsa@verge.net.au>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: add R8A77980 CPG core clock
+ definitions
+Date: Mon, 5 Feb 2018 10:00:26 +0100
+Message-ID: <20180205090025.bvdzdgh6ebebmaw3@verge.net.au>
 References: <5b7895ac-11c1-ac2d-837b-56726bc6226a@cogentembedded.com>
- <9008a12c-e5c8-9289-c47b-50ea9e049c67@cogentembedded.com>
+ <4281b305-ff0d-cf56-ce6b-dff4589c39f6@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <9008a12c-e5c8-9289-c47b-50ea9e049c67@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <4281b305-ff0d-cf56-ce6b-dff4589c39f6-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 11:31:05PM +0300, Sergei Shtylyov wrote:
-> Add R-Car V3H (R8A77980) Clock Pulse Generator / Module Standby and
-> Software Reset support,  using the CPG/MSSR driver core and the common
-> R-Car Gen3 code.
+On Wed, Jan 31, 2018 at 11:27:47PM +0300, Sergei Shtylyov wrote:
+> Add macros usable by the device tree sources to reference the R8A77980
+> CPG core clocks by index. The data come from the table 8.2e of the R-Car
+> Series, 3rd Generation User's Manual: Hardware (Rev. 0.80, Oct, 2017),
+> however I had to add the Z2 clock which is somehow present only on the
+> figure 8.1e...
 > 
 > Based on the original (and large) patch by Vladimir Barinov.
 > 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
