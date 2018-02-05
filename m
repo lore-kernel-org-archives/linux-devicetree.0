@@ -1,44 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH] mmc: sdhci-of-arasan: Add auto tuning support for
- ZynqMP Platform
-Date: Mon, 5 Feb 2018 00:07:40 -0600
-Message-ID: <20180205024420.iagez2mue2skrngq@rob-hp-laptop>
-References: <1517336073-18142-1-git-send-email-mnarani@xilinx.com>
+Subject: Re: [PATCH 01/15] firmware: qcom: scm: Add ipq4019 soc compatible
+Date: Mon, 5 Feb 2018 00:07:27 -0600
+Message-ID: <20180205022530.xf64gqeijicewdla@rob-hp-laptop>
+References: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
+ <1517202689-14212-2-git-send-email-sricharan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1517336073-18142-1-git-send-email-mnarani@xilinx.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: michal.simek@xilinx.com, adrian.hunter@intel.com, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, anirudh@xilinx.com, sgoud@xilinx.com, Manish Narani <mnarani@xilinx.com>
+In-Reply-To: <1517202689-14212-2-git-send-email-sricharan@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, bjorn.andersson@linaro.org, david.brown@linaro.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 30, 2018 at 11:44:33PM +0530, Manish Narani wrote:
-> This patch adds support of SD auto tuning for ZynqMP platform. Auto
-> tuning sequence sends tuning block to card when operating in UHS-1
-> modes. This resets the DLL and sends CMD19/CMD21 as a part of the auto
-> tuning process. Once the auto tuning process gets completed, reset the
-> DLL to load the newly obtained SDHC tuned tap value.
+On Mon, Jan 29, 2018 at 10:41:15AM +0530, Sricharan R wrote:
+> Add the compatible for ipq4019.
+> This does not need clocks to do scm calls.
 > 
-> Signed-off-by: Manish Narani <mnarani@xilinx.com>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 > ---
->  .../devicetree/bindings/mmc/arasan,sdhci.txt       |   1 +
->  drivers/mmc/host/sdhci-of-arasan.c                 | 219 ++++++++++++++++++++-
->  2 files changed, 219 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> index 60481bf..7d29751 100644
-> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> @@ -14,6 +14,7 @@ Required Properties:
->      - "arasan,sdhci-4.9a": generic Arasan SDHCI 4.9a PHY
->      - "arasan,sdhci-5.1": generic Arasan SDHCI 5.1 PHY
->      - "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1": rk3399 eMMC PHY
-> +    - "xlnx,zynqmp-8.9a": Xilinx ZynqMP 8.9a PHY
+>  Documentation/devicetree/bindings/firmware/qcom,scm.txt | 3 ++-
+>  drivers/firmware/qcom_scm.c                             | 3 +++
+>  2 files changed, 5 insertions(+), 1 deletion(-)
 
-This should be a separate patch.
-
->        For this device it is strongly suggested to include arasan,soc-ctl-syscon.
->    - reg: From mmc bindings: Register location and length.
->    - clocks: From clock bindings: Handles to clock inputs.
+Reviewed-by: Rob Herring <robh@kernel.org>
