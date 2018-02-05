@@ -1,86 +1,35 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v6 40/41] ARM: da8xx-dt: switch to device tree clocks
-Date: Mon, 5 Feb 2018 16:33:34 +0100
-Message-ID: <CAMRc=MdtgYB6Fa3ZeARncTDWfEXrZ4EYFXC0Lf=RHv0-ZSZf5A@mail.gmail.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-41-git-send-email-david@lechnology.com> <335d92c8-1af2-da64-e366-95d7513ad69d@lechnology.com>
- <CAMRc=McJsneYdh8zDmYcUsFLiAyOmSeyOKhKfim4or7LwyEH1w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=McJsneYdh8zDmYcUsFLiAyOmSeyOKhKfim4or7LwyEH1w@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH 0/8] ASoC: samsung: Add HDMI sound support for tm2 board
+Date: Mon, 05 Feb 2018 16:43:55 +0100
+Message-ID: <20180205154403.13520-1-s.nawrocki@samsung.com>
+References: <CGME20180205154421epcas2p16072f713ea81f72b3f8230f6a9d412cf@epcas2p1.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: lgirdwood@gmail.com, alsa-devel@alsa-project.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, krzk@kernel.org, jcsing.lee@samsung.com, sbkim73@samsung.com, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-02-05 15:04 GMT+01:00 Bartosz Golaszewski <brgl@bgdev.pl>:
-> 2018-01-24 4:26 GMT+01:00 David Lechner <david@lechnology.com>:
->> On 01/20/2018 11:14 AM, David Lechner wrote:
->>>
->>> This removes all of the clock init code from da8xx-dt.c. This includes
->>> all of the OF_DEV_AUXDATA that was just used for looking up clocks.
->>>
->>> Signed-off-by: David Lechner <david@lechnology.com>
->>> ---
->>>
->>> v6 changes:
->>> - removed misleading statement from commit message
->>>
->>>   arch/arm/mach-davinci/da8xx-dt.c | 61
->>> +---------------------------------------
->>>   1 file changed, 1 insertion(+), 60 deletions(-)
->>>
->>> diff --git a/arch/arm/mach-davinci/da8xx-dt.c
->>> b/arch/arm/mach-davinci/da8xx-dt.c
->>
->>
->>>   static void __init da850_init_machine(void)
->>>   {
->>> -       /* All existing boards use 100MHz SATA refclkpn */
->>> -       static const unsigned long sata_refclkpn = 100 * 1000 * 1000;
->>> -
->>> -       int ret;
->>> -
->>> -       ret = da8xx_register_usb20_phy_clk(false);
->>> -       if (ret)
->>> -               pr_warn("%s: registering USB 2.0 PHY clock failed: %d",
->>> -                       __func__, ret);
->>> -       ret = da8xx_register_usb11_phy_clk(false);
->>> -       if (ret)
->>> -               pr_warn("%s: registering USB 1.1 PHY clock failed: %d",
->>> -                       __func__, ret);
->>> -
->>> -       ret = da850_register_sata_refclk(sata_refclkpn);
->>> -       if (ret)
->>> -               pr_warn("%s: registering SATA REFCLK failed: %d",
->>> -                       __func__, ret);
->>> -
->>> -       of_platform_default_populate(NULL, da850_auxdata_lookup, NULL);
->>> +       of_platform_default_populate(NULL, NULL, NULL);
->>
->>
->> of_platform_default_populate() can actually be removed completely.
->> of_platform_default_populate_init() is called implicitly during
->> arch_initcall_sync
->>
->>>         davinci_pm_init();
->>>         pdata_quirks_init();
->>>   }
->
-> Hi David,
->
-> this patch breaks nand on da850-lcdk (and probably on da850-evm) since
-> the nand driver can no longer clk_get() the nand clock. We would need
-> to keep the dev_auxdata at least for aemif.
->
-> Thanks,
-> Bartosz
+This series adds support for HDMI audio on exynos5433 tm2 board, it
+includes a few fixes for the I2S driver and an extension of the existing
+card driver to support the I2S1<->HDMI transmitter path.
 
-Actually scratch that last e-mail, I missed the fact that the nand
-node is only there in the board dts files. I've just sent you a patch
-that enables nand on da850-lcdk. Please include it in your series.
-I'll do the same for evm shortly.
+Sylwester Nawrocki (8):
+  ASoC: samsung: i2s: Ensure the RCLK rate is properly determined
+  ASoC: samsung: i2s: Ensure names of supplied clocks are unique
+  ASoC: samsung: i2s: Prevent external abort on exynos5433 I2S1 access
+  ASoC: samsung: i2s: Define the parameters list for SAMSUNG_I2S_OPCLK
+  ASoC: samsung: Add support for HDMI audio on TM2 board
+  ASoC: samsung: i2s: Update clock-output-names property documentation
+  ASoC: samsung: Add missing #sound-dai-cells property documentation
+  ASoC: samsung,tm2-audio DT binding documentation update
 
-Thanks,
-Bartosz
+ .../bindings/sound/samsung,tm2-audio.txt           |  14 +-
+ .../devicetree/bindings/sound/samsung-i2s.txt      |  22 +--
+ sound/soc/samsung/i2s-regs.h                       |  11 +-
+ sound/soc/samsung/i2s.c                            |  50 ++++--
+ sound/soc/samsung/i2s.h                            |  11 +-
+ sound/soc/samsung/tm2_wm5110.c                     | 180 ++++++++++++++++++---
+ 6 files changed, 229 insertions(+), 59 deletions(-)
+
+--
+2.14.2
