@@ -1,35 +1,42 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: nvmem: imx-ocotp: update the binding to
- reflect data cells
-Date: Mon, 5 Feb 2018 00:06:45 -0600
-Message-ID: <20180205060546.qmifjvovungdomnr@rob-hp-laptop>
-References: <1516865849-26191-1-git-send-email-aisheng.dong@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/5] dt-bindings: display: xlnx: Add ZynqMP DP
+ subsystem bindings
+Date: Mon, 5 Feb 2018 00:07:10 -0600
+Message-ID: <20180205060710.pj6zfy75wbwig6vk@rob-hp-laptop>
+References: <1516930442-10285-1-git-send-email-hyun.kwon@xilinx.com>
+ <1516930442-10285-2-git-send-email-hyun.kwon@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1516865849-26191-1-git-send-email-aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1516930442-10285-2-git-send-email-hyun.kwon@xilinx.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hyun Kwon <hyun.kwon@xilinx.com>
+Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@xilinx.com>, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 25, 2018 at 03:37:28PM +0800, Dong Aisheng wrote:
-> imx-ocotp is implemented based on nvmem which can have data cells
-> as child node. Update the binding doc to reflect it to be more easily
-> understood by users.
-> 
-> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-> ---
->  .../devicetree/bindings/nvmem/imx-ocotp.txt        | 23 ++++++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBKYW4gMjUsIDIwMTggYXQgMDU6MzM6NTlQTSAtMDgwMCwgSHl1biBLd29uIHdyb3Rl
+Ogo+IFRoaXMgYWRkIGEgZHQgYmluZGluZyBmb3IgWnlucU1QIERQIHN1YnN5c3RlbS4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5dW4ua3dvbkB4aWxpbnguY29tPgo+IC0tLQo+IHY0
+Cj4gLSBTcGVjaWZ5IHBoeSByZWxhdGVkIGRlc2NyaXB0aW9ucwo+IC0gU3BlY2lmeSBkbWEgcmVs
+YXRlZCBkZXNjcmlwdGlvbnMKPiAtIFJlbW92ZSBwb3J0cwo+IC0gUmVtb3ZlIGNoaWxkIG5vZGVz
+IGZvciBsYXllcnMKPiAtIFVwZGF0ZSB0aGUgZXhhbXBsZSBhY2NvcmRpbmdseQo+IHYyCj4gLSBH
+cm91cCBtdWx0aXBsZSBwb3J0cyB1bmRlciAncG9ydHMnCj4gLSBSZXBsYWNlIGxpbnV4IHNwZWNp
+ZmljIHRlcm1zIHdpdGggZ2VuZXJpYyBoYXJkd2FyZSBkZXNjcmlwdGlvbnMKPiAtLS0KPiAtLS0K
+PiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94bG54LHp5bnFtcC1kcHN1Yi50eHQgICAgfCA2
+NyArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA2NyBpbnNlcnRpb25z
+KCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS94bG54L3hsbngsenlucW1wLWRwc3ViLnR4dAoKUmV2aWV3ZWQtYnk6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
