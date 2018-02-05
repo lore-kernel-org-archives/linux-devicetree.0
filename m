@@ -1,96 +1,33 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [RFC v4 12/26] watchdog: renesas_wdt: Add R-Car Gen2 support
-Date: Mon, 5 Feb 2018 11:16:40 +0000
-Message-ID: <TY1PR06MB0895229E9AB8B46256AFA8EDC0FE0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1517423070-24236-13-git-send-email-fabrizio.castro@bp.renesas.com>
- <2dd9f76d-b3e9-31f2-11eb-272d327f3b01@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2dd9f76d-b3e9-31f2-11eb-272d327f3b01-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [PATCH 0/3] Add soc nodes to exynos4 series DTS
+Date: Mon, 05 Feb 2018 12:25:33 +0100
+Message-ID: <1517829936-26311-1-git-send-email-m.purski@samsung.com>
+References: <CGME20180205112602eucas1p26be8f7ca95f7e14d5d62940cf29de7b4@eucas1p2.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, m.szyprowski@samsung.com, b.zolnierkie@samsung.com, Maciej Purski <m.purski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gR3VlbnRlciwNCg0KdGhhbmsgeW91IGZvciB5b3VyIGZlZWRiYWNrLg0KDQo+IC0tLS0t
-T3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGRldmljZXRyZWUtb3duZXJAdmdlci5rZXJu
-ZWwub3JnIFttYWlsdG86ZGV2aWNldHJlZS1vd25lckB2Z2VyLmtlcm5lbC5vcmddIE9uIEJlaGFs
-ZiBPZiBHdWVudGVyIFJvZWNrDQo+IFNlbnQ6IDAyIEZlYnJ1YXJ5IDIwMTggMDI6NTYNCj4gVG86
-IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPjsgUGhpbGlw
-cCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtl
-cm5lbC5vcmc+Ow0KPiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgV2ltIFZh
-biBTZWJyb2VjayA8d2ltQGlndWFuYS5iZT47IFJ1c3NlbGwgS2luZyA8bGludXhAYXJtbGludXgu
-b3JnLnVrPjsgQ2F0YWxpbg0KPiBNYXJpbmFzIDxjYXRhbGluLm1hcmluYXNAYXJtLmNvbT47IFdp
-bGwgRGVhY29uIDx3aWxsLmRlYWNvbkBhcm0uY29tPjsgTWljaGFlbCBUdXJxdWV0dGUgPG10dXJx
-dWV0dGVAYmF5bGlicmUuY29tPjsNCj4gU3RlcGhlbiBCb3lkIDxzYm95ZEBjb2RlYXVyb3JhLm9y
-Zz47IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1PjsgTWFnbnVzIERhbW0gPG1hZ251
-cy5kYW1tQGdtYWlsLmNvbT47DQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0Bn
-bGlkZXIuYmU+OyBXb2xmcmFtIFNhbmcgPHdzYStyZW5lc2FzQHNhbmctZW5naW5lZXJpbmcuY29t
-Pg0KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LXdhdGNoZG9nQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtcmVuZXNhcy1zb2NAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0t
-DQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1jbGtAdmdlci5rZXJuZWwub3Jn
-OyBDaHJpcyBQYXRlcnNvbiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVzYXMuY29tPjsgQmlqdSBEYXMN
-Cj4gPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPjsgUmFtZXNoIFNoYW5tdWdhc3VuZGFyYW0gPHJh
-bWVzaC5zaGFubXVnYXN1bmRhcmFtQGJwLnJlbmVzYXMuY29tPg0KPiBTdWJqZWN0OiBSZTogW1JG
-QyB2NCAxMi8yNl0gd2F0Y2hkb2c6IHJlbmVzYXNfd2R0OiBBZGQgUi1DYXIgR2VuMiBzdXBwb3J0
-DQo+DQo+IE9uIDAxLzMxLzIwMTggMTA6MjQgQU0sIEZhYnJpemlvIENhc3RybyB3cm90ZToNCj4g
-PiBEdWUgdG8gY29tbWl0czoNCj4gPiAqICJBUk06IHNobW9iaWxlOiBBZGQgd2F0Y2hkb2cgc3Vw
-cG9ydCIsDQo+ID4gKiAiQVJNOiBzaG1vYmlsZTogcmNhci1nZW4yOiBBZGQgd2F0Y2hkb2cgc3Vw
-cG9ydCIsIGFuZA0KPiA+ICogInNvYzogcmVuZXNhczogcmNhci1yc3Q6IEVuYWJsZSB3YXRjaGRv
-ZyBhcyByZXNldCB0cmlnZ2VyIGZvciBHZW4yIiwNCj4gPiB3ZSBub3cgaGF2ZSBldmVyeXRoaW5n
-IHdlIG5lZWRlZCBmb3IgdGhlIHdhdGNoZG9nIHRvIHdvcmsgb24gR2VuMiBhbmQNCj4gPiBSWi9H
-MS4NCj4gPg0KPiA+IFRoaXMgY29tbWl0IGFkZHMgInJlbmVzYXMscmNhci1nZW4yLXdkdCIgYXMg
-Y29tcGF0aWJsZSBzdHJpbmcgZm9yIFItQ2FyDQo+ID4gR2VuMiBhbmQgUlovRzEsIGFuZCBzaW5j
-ZSBvbiB0aG9zZSBwbGF0Zm9ybXMgdGhlIHJ3ZHQgY2xvY2sgbmVlZHMgdG8gYmUNCj4gPiBhbHdh
-eXMgT04sIHdoZW4gc3VzcGVuZGluZyB0byBSQU0gd2UgbmVlZCB0byBleHBsaWNpdGx5IGRpc2Fi
-bGUgdGhlDQo+ID4gY291bnRpbmcgYnkgY2xlYXJpbmcgVE1FIGZyb20gUldUQ1NSQS4NCj4gPg0K
-PiA+IFNpZ25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJl
-bmVzYXMuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFJhbWVzaCBTaGFubXVnYXN1bmRhcmFtIDxy
-YW1lc2guc2hhbm11Z2FzdW5kYXJhbUBicC5yZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4gPiB2My0+
-NDoNCj4gPiAqIGluIHRoaXMgbmV3IHZlcnNpb24gdGhlIGNoYW5nZXMgdG8gdGhlIGRyaXZlciBo
-YXZlIGJlZW4gc3BsaXR0ZWQgaW50bw0KPiA+ICAgIHR3byBjb21taXRzLCB0aGlzIHBhdGNoIHRh
-a2VzIGNhcmUgb2YgdGhlIGJhc2ljIEdlbjIgc3VwcG9ydCwgcGF0Y2ggMTMvMjYNCj4gPiAgICB0
-YWtlcyBjYXJlIG9mIHRoZSByZXN0YXJ0IGhhbmRsZXIuDQo+ID4NCj4gPiAgIGRyaXZlcnMvd2F0
-Y2hkb2cvcmVuZXNhc193ZHQuYyB8IDQyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKystLS0tLQ0KPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDM3IGluc2VydGlvbnMoKyksIDUgZGVs
-ZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy93YXRjaGRvZy9yZW5lc2Fz
-X3dkdC5jIGIvZHJpdmVycy93YXRjaGRvZy9yZW5lc2FzX3dkdC5jDQo+ID4gaW5kZXggODMxZWY4
-My4uMGExYTQwMiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3dhdGNoZG9nL3JlbmVzYXNfd2R0
-LmMNCj4gPiArKysgYi9kcml2ZXJzL3dhdGNoZG9nL3JlbmVzYXNfd2R0LmMNCj4gPiBAQCAtMjAz
-LDEzICsyMDMsNDIgQEAgc3RhdGljIGludCByd2R0X3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2KQ0KPiA+ICAgcmV0dXJuIDA7DQo+ID4gICB9DQo+ID4NCj4gPiAtLyoNCj4gPiAt
-ICogVGhpcyBkcml2ZXIgZG9lcyBhbHNvIGZpdCBmb3IgUi1DYXIgR2VuMiAocjhhNzc5WzAtNF0p
-IFdEVC4gSG93ZXZlciwgZm9yIFNNUA0KPiA+IC0gKiB0byB3b3JrIHRoZXJlLCBvbmUgYWxzbyBu
-ZWVkcyBhIFJFU0VUIChSU1QpIGRyaXZlciB3aGljaCBkb2VzIG5vdCBleGlzdCB5ZXQNCj4gPiAt
-ICogZHVlIHRvIEhXIGlzc3Vlcy4gVGhpcyBuZWVkcyB0byBiZSBzb2x2ZWQgYmVmb3JlIGFkZGlu
-ZyBjb21wYXRpYmxlcyBoZXJlLg0KPiA+IC0gKi8NCj4gPiArI2lmZGVmIENPTkZJR19QTQ0KPiA+
-ICtzdGF0aWMgaW50IHJ3ZHRfc3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+ID4gK3sNCj4g
-PiArc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldjsNCj4gPiArc3RydWN0IHJ3ZHRfcHJpdiAq
-cHJpdjsNCj4gPiArDQo+ID4gK3BkZXYgPSB0b19wbGF0Zm9ybV9kZXZpY2UoZGV2KTsNCj4gPiAr
-cHJpdiA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ICtpZiAod2F0Y2hkb2dfYWN0
-aXZlKCZwcml2LT53ZGV2KSkgew0KPiA+ICtyd2R0X3dyaXRlKHByaXYsIHByaXYtPmNrcywgUldU
-Q1NSQSk7DQo+ID4gK30NCj4NCj4gVW5uZWNlc3NhcnkgeyB9DQo+DQo+ID4gK3JldHVybiAwOw0K
-PiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHJ3ZHRfcmVzdW1lKHN0cnVjdCBkZXZpY2Ug
-KmRldikNCj4gPiArew0KPiA+ICtzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2Ow0KPiA+ICtz
-dHJ1Y3QgcndkdF9wcml2ICpwcml2Ow0KPiA+ICsNCj4gPiArcGRldiA9IHRvX3BsYXRmb3JtX2Rl
-dmljZShkZXYpOw0KPiA+ICtwcml2ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+ID4g
-K2lmICh3YXRjaGRvZ19hY3RpdmUoJnByaXYtPndkZXYpKSB7DQo+ID4gK3J3ZHRfd3JpdGUocHJp
-diwgcHJpdi0+Y2tzIHwgUldUQ1NSQV9UTUUsIFJXVENTUkEpOw0KPiA+ICt9DQo+DQo+IFNhbWUg
-aGVyZS4gRldJVywgY2hlY2twYXRjaCBkb2VzIGNvbXBsYWluIGFib3V0IHRoYXQuDQoNCkkgd2ls
-bCBjbGVhbiB0aGlzIHVwIGZvciB0aGUgbmV4dCAoYW5kIGhvcGVmdWxseSBsYXN0KSBpdGVyYXRp
-b24uDQoNClRoYW5rcywNCkZhYnJpemlvDQoNCj4NCj4gR3VlbnRlcg0KPiAtLQ0KPiBUbyB1bnN1
-YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUgZGV2aWNl
-dHJlZSIgaW4NCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5l
-bC5vcmcNCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9yZy9t
-YWpvcmRvbW8taW5mby5odG1sDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQs
-IER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGly
-ZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lz
-dGVyZWQgTm8uIDA0NTg2NzA5Lg0K
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi all,
+
+this patchset adds soc node to exynos4, exynos4210 and exynos4412
+DTS. The main goal for these changes is unification of all exynos
+DTS. Soc nodes are already present in for example exynos5 series.
+
+Best regards,
+
+Maciej Purski
+
+Maciej Purski (3):
+  ARM: dts: exynos: Add soc node to exynos4
+  ARM: dts: exynos: Add soc node to exynos4210
+  ARM: dts: exynos: Add soc node to exynos4412
+
+ arch/arm/boot/dts/exynos4.dtsi    | 1727 +++++++++++++++++++------------------
+ arch/arm/boot/dts/exynos4210.dtsi |  513 +++++------
+ arch/arm/boot/dts/exynos4412.dtsi |  954 ++++++++++----------
+ 3 files changed, 1609 insertions(+), 1585 deletions(-)
+
+-- 
+2.7.4
