@@ -1,87 +1,66 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/3] net: stmmac: dwmac-sun8i: drop V3s compatible and
- add V3 one
-Date: Mon, 5 Feb 2018 14:39:45 +0100
-Message-ID: <20180205133945.ac3im2fu42evuxtb@flea>
-References: <20180202180456.60378-1-icenowy@aosc.io>
- <20180202180456.60378-2-icenowy@aosc.io>
- <20180202221301.judzaafcu67h4c2v@flea.lan>
- <73B89FC1-9A58-4B08-80C0-971E1254CFD9@aosc.io>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 05/11] arm64: dts: renesas: initial R8A77980 SoC device
+ tree
+Date: Mon, 5 Feb 2018 16:48:17 +0300
+Message-ID: <ad83625d-c166-cacb-eae2-a6d64f7d2b26@cogentembedded.com>
+References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
+ <32142684-d5cf-035f-8401-86a36dcbafd6@cogentembedded.com>
+ <CAMuHMdWad2OJ33Hu0KbYS3nLWhgmj81_wRbtwApw-N81q3+nsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fbximhq3eqkurhe3"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <73B89FC1-9A58-4B08-80C0-971E1254CFD9@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: Chen-Yu Tsai <wens@csie.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Corentin Labbe <clabbe.montjoie@gmail.com>, "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWad2OJ33Hu0KbYS3nLWhgmj81_wRbtwApw-N81q3+nsA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2/5/2018 4:32 PM, Geert Uytterhoeven wrote:
 
---fbximhq3eqkurhe3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> The initial R8A77980 SoC device tree including Cortex-A53 CPU, GIC, timer,
+>> CPG, RST, and SYSC.
+>>
+>> Based on the original (and large) patch by Vladimir Barinov.
+>>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> Thanks for your patch!
+> 
+>> --- /dev/null
+>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+>> @@ -0,0 +1,122 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Device Tree Source for the r8a77980 SoC
+>> + *
+>> + * Copyright (C) 2018 Renesas Electronics Corp.
+>> + * Copyright (C) 2018 Cogent Embedded, Inc.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> 
+> I think you want to leave out the above #include, as it will go upstream
+> through a different path (you're already using hardcoded clock numbers,
+> assuming the same).
 
-Hi,
+    I still need CPG_{CORE|MOD}.
 
-On Sat, Feb 03, 2018 at 03:23:28PM +0800, Icenowy Zheng wrote:
-> =E4=BA=8E 2018=E5=B9=B42=E6=9C=883=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=886=
-:13:01, Maxime Ripard <maxime.ripard@bootlin.com> =E5=86=99=E5=88=B0:
-> >On Sat, Feb 03, 2018 at 02:04:54AM +0800, Icenowy Zheng wrote:
-> >> The V3s is just a differently packaged version of the V3 chip, which
-> >has
-> >> a MAC with the same capability with H3. The V3s just doesn't wire out
-> >> the external MII/RMII/RGMII bus. (V3 wired out it).
-> >>=20
-> >> Drop the compatible string of V3s in the dwmac-sun8i driver, and add
-> >a
-> >> V3 compatible string, which has all capabilities.
-> >>=20
-> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> >
-> >This breaks the DT ABI, so NAK.
->=20
-> I have asked this at IRC.
+> With the above fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-One more reason why no one should ask questions like this on IRC.
+    Sorry, I don't see anything worth fixing...
 
-> The V3s compatible string is never used in any mainline
-> kernel, even not in any RC version.
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
 
-$ git grep allwinner,sun8i-v3s-emac v4.15 | wc -l=20
-5
-
-It is there already, and the fact that we have or don't have a DT in
-tree that use it doesn't matter. One could very well have written a DT
-for it and never submitted it.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
-
---fbximhq3eqkurhe3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlp4XqEACgkQ0rTAlCFN
-r3QwBw//W5q/rro8AEMOTUSyT1Wa46DMFbR4Ga5CbFq90hggClkVaY5ws8LsBnjA
-2mU1KMimjIumsvsQbIM6IL8uPVNi4YyS1PzdUQH1N5Nuwrl55XOxyx7KCFbsJnwg
-7dbgVzwf6LGL6wkwoIXwgvdpkmGmm2A2oRY46T7q6Ny+n962tRF+2LoOYsy1oVbf
-Z2JGL1t0vE2cDE6KK7ttn4gfGISTH7QM3IUY7+fCBegZoG8KOacQY4KYkhnI5z/U
-kpRGMVodxSnu+TmZ1yXNxEQcg78NY+NKnhY5OGd5p7JRJ/Eq8XnEQcl9HJsKzdsu
-QQfGbgY95C1MBvXnSukUxbE3PfGvVZd9ZD02o1CK7+ztsRyDl0JTN0efeH/Xc/On
-OzOzqWOADkfZZUodAOG6tdQwaK5x5Bk98qxsXmXtP/e4W28Q345oXOZOp6qFkwYX
-2UTsxOXXDkLuSuhCKpDU9hlDXFBJzDc8hD2uwIHa1igrlm5CcYxqskcrkBQnbY2u
-hM1olJehFapuWILdxNpuWL+8p6/S9S1BHgyyMrq2IqOAGc1EFQflv63tVuSHvX7s
-xK70jIZKrHwfzfwydozxGYbWERxaHDoPtVWnQHmqvD8Q8pCIQEV7PLIzjSbbZL2T
-r/LVc/4Q5tTQV33si5Kle2VvZEW4A1fL1nrzKv6Hb7Y59c6pBh0=
-=bw+O
------END PGP SIGNATURE-----
-
---fbximhq3eqkurhe3--
+MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
