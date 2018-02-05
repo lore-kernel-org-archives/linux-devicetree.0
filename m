@@ -1,80 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2] tlv320dac33: Add device tree bindings
-Date: Mon, 5 Feb 2018 00:08:40 -0600
-Message-ID: <20180205060840.7yeld5sc67win2vd@rob-hp-laptop>
-References: <20180129230539.GA18280@amd>
- <20180131190112.GA31608@amd>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH 1/2] dt-bindings: fsi: Add optional property no-scan-on-init
+Date: Mon, 5 Feb 2018 16:38:50 +1030
+Message-ID: <CACPK8Xfrr+7Oh04_6+AX=Y_8wdvb4ALVGgepCQftvLwHn+J+XQ@mail.gmail.com>
+References: <20180130055116.17411-1-joel@jms.id.au> <20180130055116.17411-2-joel@jms.id.au>
+ <20180205023654.77yq7j22ovby2ql5@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20180131190112.GA31608@amd>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, tony@atomide.com, abcloriens@gmail.com, tiwai@suse.com, martijn@brixit.nl, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, patrikbachan@gmail.com, ivo.g.dimitrov.75@gmail.com, khilman@kernel.org, serge@hallyn.com, devicetree@vger.kernel.org, pali.rohar@gmail.com, broonie@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, aaro.koskinen@iki.fi, linux-kernel@vger.kernel.org, clayton@craftyguy.net, sakari.ailus@linux.intel.com, sre@kernel.org, bhumirks@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180205023654.77yq7j22ovby2ql5@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Christopher Bostic <cbostic@linux.vnet.ibm.com>, Jeremy Kerr <jk@ozlabs.org>, Eddie James <eajames@linux.vnet.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 08:01:12PM +0100, Pavel Machek wrote:
-> 
-> This adds device tree bindings for tlv320dac33.c.
-> 
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/tlv320dac33.txt b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
-> new file mode 100644
-> index 0000000..7fdda95
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/tlv320dac33.txt
-> @@ -0,0 +1,32 @@
-> +Texas Instruments - tlv320dac33 Codec module
-> +
-> +The tlv320dac33 serial control bus communicates through I2C protocols.
-> +
-> +Required properties:
-> +
-> +- compatible - "ti,tlv320dac33"
-> +- reg - I2C slave address
-> +
-> +Optional properties:
-> +
-> +- reset-gpios - gpio pin to power the device, active low
-> +
-> +- interrupts       - The interrupt output from the device.
-> +- interrupt-parent - The parent interrupt controller.
-> +
-> +- ti,keep-bclk 	- Keep the BCLK running in FIFO modes
+On Mon, Feb 5, 2018 at 4:37 PM, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Jan 30, 2018 at 04:21:15PM +1030, Joel Stanley wrote:
+>> From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+>>
+>> Add an optional FSI master property 'no-scan-on-init.  This
+>> can be specified to indicate that a master should not be
+>> automatically scanned at init time.  This is required in cases
+>> where a scan could interfere with another FSI master on the same
+>> bus.
+>>
+>> Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+>> Acked-by: Jeremy Kerr <jk@ozlabs.org>
+>> Signed-off-by: Joel Stanley <joel@jms.id.au>
+>> ---
+>>  Documentation/devicetree/bindings/fsi/fsi.txt | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/fsi/fsi.txt b/Documentation/devicetree/bindings/fsi/fsi.txt
+>> index 4eaf488d4015..ab516c673a4b 100644
+>> --- a/Documentation/devicetree/bindings/fsi/fsi.txt
+>> +++ b/Documentation/devicetree/bindings/fsi/fsi.txt
+>> @@ -56,6 +56,13 @@ addresses (link index and slave ID), and no size:
+>>      #address-cells = <2>;
+>>      #size-cells = <0>;
+>>
+>> +An optional boolean property can be added to indicate that a particular master
+>> +should not scan for connected devices at initialization time.  This is
+>> +necessary in cases where a scan could cause arbitration issues with other
+>> +masters that may be present on the bus.
+>> +
+>> +    no-scan-on-init;
+>> +
+>
+> The formatting here is a bit strange compared to most bindings, but no
+> point in reformatting the document to add one property.
 
-space before tab ^
+I'll keep that in mind next time we're working in this area.
 
-> +- ti,burst-bclkdiv - BCLK divider value in burst mode
+Thanks Rob.
 
-What are valid values? What's the default?
-
-> +
-> +Example:
-> +
-> +tlv320dac33: audio-codec@19 {
-> +	compatible = "ti,tlv320dac33";
-> +	reg = <0x19>;
-> +
-> +	interrupt-parent = <&gpio2>;
-> +	interrupts = <21 1>; /* gpio_53, IRQF_TRIGGER_RISING */
-> +	reset-gpios = <&gpio2 28 0>; /* gpio_60 */
-> +
-> +	ti,keep-bclk;
-> +	ti,burst-bclkdiv = <3>;
-> +};
-> 
-> 
-> -- 
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> Rob
