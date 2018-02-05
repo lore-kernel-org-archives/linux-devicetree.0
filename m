@@ -1,217 +1,190 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] irqchip/gic-v3-its: add ability to save/restore
- ITS state
-Date: Mon, 5 Feb 2018 15:56:07 +0000
-Message-ID: <a1b81cab-8e73-2c6f-13e6-612ffc668923@arm.com>
-References: <20180203012450.18378-1-dbasehore@chromium.org>
- <20180203012450.18378-3-dbasehore@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180203012450.18378-3-dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Soby.Mathew-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCHv3 2/3] arm64: dts: stratix10: use clock bindings for the Stratix10 platform
+Date: Mon,  5 Feb 2018 10:22:46 -0600
+Message-ID: <1517847767-16053-2-git-send-email-dinguyen@kernel.org>
+References: <1517847767-16053-1-git-send-email-dinguyen@kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1517847767-16053-1-git-send-email-dinguyen@kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: dinguyen@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/18 01:24, Derek Basehore wrote:
-> Some platforms power off GIC logic in suspend, so we need to
-> save/restore state. The distributor and redistributor registers need
-> to be handled in platform code due to access permissions on those
-> registers, but the ITS registers can be restored in the kernel.
-> 
-> Signed-off-by: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 101 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 101 insertions(+)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 06f025fd5726..e13515cdb68f 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -33,6 +33,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/percpu.h>
->  #include <linux/slab.h>
-> +#include <linux/syscore_ops.h>
->  
->  #include <linux/irqchip.h>
->  #include <linux/irqchip/arm-gic-v3.h>
-> @@ -46,6 +47,7 @@
->  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
->  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
->  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
-> +#define ITS_FLAGS_SAVE_SUSPEND_STATE		(1ULL << 3)
->  
->  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
->  
-> @@ -83,6 +85,15 @@ struct its_baser {
->  	u32		psz;
->  };
->  
-> +/*
-> + * Saved ITS state - this is where saved state for the ITS is stored
-> + * when it's disabled during system suspend.
-> + */
-> +struct its_ctx {
-> +	u64			cbaser;
-> +	u32			ctlr;
-> +};
+Use the clock bindings for the Stratix10 SoC. This includes changing the old
+binding of "intc,clk-s10-mgr" to "intel,stratix10-clkmgr". The reason that
+this can be done is that there are currently no clock driver for Stratix10,
+thus there are no consumers of the old binding. So changing the binding will
+not break any legacy code.
 
-Nit: This is pretty small for the ITS context. Given that its_node is
-the context, you can safely expand this in the its_node structure.
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+v3:
+- use the correct vendor prefix
+- explain the binding change
+v2:
+- use a single clock binding for the clock controller
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 50 +++++++++++++++++++++-
+ .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 10 +++++
+ 2 files changed, 58 insertions(+), 2 deletions(-)
 
-> +
->  struct its_device;
->  
->  /*
-> @@ -101,6 +112,7 @@ struct its_node {
->  	struct its_collection	*collections;
->  	struct fwnode_handle	*fwnode_handle;
->  	u64			(*get_msi_base)(struct its_device *its_dev);
-> +	struct its_ctx		its_ctx;
->  	struct list_head	its_device_list;
->  	u64			flags;
->  	unsigned long		list_nr;
-> @@ -3042,6 +3054,90 @@ static void its_enable_quirks(struct its_node *its)
->  	gic_enable_quirks(iidr, its_quirks, its);
->  }
->  
-> +static int its_save_disable(void)
-> +{
-> +	struct its_node *its;
-> +	int err = 0;
-> +
-> +	spin_lock(&its_lock);
-> +	list_for_each_entry(its, &its_nodes, entry) {
-> +		struct its_ctx *ctx;
-> +		void __iomem *base;
-> +
-> +		if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
-> +			continue;
-> +
-> +		ctx = &its->its_ctx;
-> +		base = its->base;
-> +		ctx->ctlr = readl_relaxed(base + GITS_CTLR);
-> +		err = its_force_quiescent(base);
-> +		if (err) {
-> +			pr_err("ITS failed to quiesce\n");
-> +			writel_relaxed(ctx->ctlr, base + GITS_CTLR);
-> +			goto err;
-> +		}
-> +
-> +		ctx->cbaser = gits_read_cbaser(base + GITS_CBASER);
-> +	}
-> +
-> +err:
-> +	if (err) {
-> +		list_for_each_entry_continue_reverse(its, &its_nodes, entry) {
-> +			if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
-> +				struct its_ctx *ctx = &its->its_ctx;
-> +				void __iomem *base = its->base;
-> +
-> +				writel_relaxed(ctx->ctlr, base + GITS_CTLR);
-> +			}
-> +		}
-> +	}
-> +
-> +	spin_unlock(&its_lock);
-> +
-> +	return err;
-> +}
-> +
-> +static void its_restore_enable(void)
-> +{
-> +	struct its_node *its;
-> +
-> +	spin_lock(&its_lock);
-> +	list_for_each_entry(its, &its_nodes, entry) {
-> +		if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
-> +			struct its_ctx *ctx = &its->its_ctx;
-> +			void __iomem *base = its->base;
-> +			/*
-> +			 * Only the lower 32 bits matter here since the upper 32
-> +			 * don't include any of the offset.
-> +			 */
-> +			u32 creader = readl_relaxed(base + GITS_CREADR);
-
-Accessor matching gits_write_cwriter and co?
-
-> +			int i;
-> +
-> +			/*
-> +			 * Reset the write location to where the ITS is
-> +			 * currently at.
-> +			 */
-> +			gits_write_cbaser(ctx->cbaser, base + GITS_CBASER);
-> +			gits_write_cwriter(creader, base + GITS_CWRITER);
-> +			its->cmd_write = &its->cmd_base[
-> +				creader / sizeof(struct its_cmd_block)];
-
-Nit: please do not split lines like this, this is unreadable. We both
-have screens that are wide enough for this to fit on a single line.
-
-More importantly: Why isn't it sufficient to reset both CREADR and
-CWRITER to zero? Is there any case where you can suspend whilst having
-anything in flight?
-
-> +			/* Restore GITS_BASER from the value cache. */
-> +			for (i = 0; i < GITS_BASER_NR_REGS; i++) {
-> +				struct its_baser *baser = &its->tables[i];
-> +
-> +				its_write_baser(its, baser, baser->val);
-
-You may want to first test that this BASER register is actually
-requiring something before writing to it. Yes, this is normally safe.
-But HW is also normally broken.
-
-> +			}
-> +			writel_relaxed(ctx->ctlr, base + GITS_CTLR);
-
-Before restoring all of this, shouldn't you first test that the ITS is
-actually in a disabled state?
-
-> +		}
-> +	}
-> +	spin_unlock(&its_lock);
-> +}
-> +
-> +static struct syscore_ops its_syscore_ops = {
-> +	.suspend = its_save_disable,
-> +	.resume = its_restore_enable,
-> +};
-> +
->  static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
->  {
->  	struct irq_domain *inner_domain;
-> @@ -3261,6 +3357,9 @@ static int __init its_probe_one(struct resource *res,
->  		ctlr |= GITS_CTLR_ImDe;
->  	writel_relaxed(ctlr, its->base + GITS_CTLR);
->  
-> +	if (fwnode_property_present(handle, "reset-on-suspend"))
-> +		its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
-> +
->  	err = its_init_domain(handle, its);
->  	if (err)
->  		goto out_free_tables;
-> @@ -3515,5 +3614,7 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
->  		}
->  	}
->  
-> +	register_syscore_ops(&its_syscore_ops);
-> +
->  	return 0;
->  }
-> 
-
-Thanks,
-
-	M.
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index c89d0c30..b472352 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -17,6 +17,7 @@
+ /dts-v1/;
+ #include <dt-bindings/reset/altr,rst-mgr-s10.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/clock/stratix10-clock.h>
+ 
+ / {
+ 	compatible = "altr,socfpga-stratix10";
+@@ -92,9 +93,35 @@
+ 		interrupt-parent = <&intc>;
+ 		ranges = <0 0 0 0xffffffff>;
+ 
+-		clkmgr@ffd1000 {
+-			compatible = "altr,clk-mgr";
++		clkmgr: clock-controller@ffd10000 {
++			compatible = "intel,stratix10-clkmgr";
+ 			reg = <0xffd10000 0x1000>;
++			#clock-cells = <1>;
++
++			clocks {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				cb_intosc_hs_div2_clk: cb_intosc_hs_div2_clk {
++					#clock-cells = <0>;
++					compatible = "fixed-clock";
++				};
++
++				cb_intosc_ls_clk: cb_intosc_ls_clk {
++					#clock-cells = <0>;
++					compatible = "fixed-clock";
++				};
++
++				f2s_free_clk: f2s_free_clk {
++					#clock-cells = <0>;
++					compatible = "fixed-clock";
++				};
++
++				osc1: osc1 {
++					#clock-cells = <0>;
++					compatible = "fixed-clock";
++				};
++			};
+ 		};
+ 
+ 		gmac0: ethernet@ff800000 {
+@@ -105,6 +132,8 @@
+ 			mac-address = [00 00 00 00 00 00];
+ 			resets = <&rst EMAC0_RESET>;
+ 			reset-names = "stmmaceth";
++			clocks = <&clkmgr STRATIX10_EMAC0_CLK>;
++			clock-names = "stmmaceth";
+ 			status = "disabled";
+ 		};
+ 
+@@ -116,6 +145,8 @@
+ 			mac-address = [00 00 00 00 00 00];
+ 			resets = <&rst EMAC1_RESET>;
+ 			reset-names = "stmmaceth";
++			clocks = <&clkmgr STRATIX10_EMAC1_CLK>;
++			clock-names = "stmmaceth";
+ 			status = "disabled";
+ 		};
+ 
+@@ -127,6 +158,8 @@
+ 			mac-address = [00 00 00 00 00 00];
+ 			resets = <&rst EMAC2_RESET>;
+ 			reset-names = "stmmaceth";
++			clocks = <&clkmgr STRATIX10_EMAC2_CLK>;
++			clock-names = "stmmaceth";
+ 			status = "disabled";
+ 		};
+ 
+@@ -229,6 +262,9 @@
+ 			fifo-depth = <0x400>;
+ 			resets = <&rst SDMMC_RESET>;
+ 			reset-names = "reset";
++			clocks = <&clkmgr STRATIX10_L4_MP_CLK>,
++				 <&clkmgr STRATIX10_SDMMC_CLK>;
++			clock-names = "biu", "ciu";
+ 			status = "disabled";
+ 		};
+ 
+@@ -288,24 +324,32 @@
+ 			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 113 4>;
+ 			reg = <0xffc03000 0x100>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
++			clock-names = "timer";
+ 		};
+ 
+ 		timer1: timer1@ffc03100 {
+ 			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 114 4>;
+ 			reg = <0xffc03100 0x100>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
++			clock-names = "timer";
+ 		};
+ 
+ 		timer2: timer2@ffd00000 {
+ 			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 115 4>;
+ 			reg = <0xffd00000 0x100>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
++			clock-names = "timer";
+ 		};
+ 
+ 		timer3: timer3@ffd00100 {
+ 			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 116 4>;
+ 			reg = <0xffd00100 0x100>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
++			clock-names = "timer";
+ 		};
+ 
+ 		uart0: serial0@ffc02000 {
+@@ -315,6 +359,7 @@
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+ 			resets = <&rst UART0_RESET>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -325,6 +370,7 @@
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+ 			resets = <&rst UART1_RESET>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index 0007564..4d2d471 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -50,6 +50,16 @@
+ 		/* We expect the bootloader to fill in the reg */
+ 		reg = <0 0 0 0>;
+ 	};
++
++	soc {
++		clkmgr@ffd10000 {
++			clocks {
++				osc1 {
++					clock-frequency = <25000000>;
++				};
++			};
++		};
++	};
+ };
+ 
+ &gpio1 {
 -- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
+
