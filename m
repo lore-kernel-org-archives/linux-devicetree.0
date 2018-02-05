@@ -1,41 +1,50 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V2 1/2] ARM: dts: imx7s: add temperature monitor support
-Date: Mon, 5 Feb 2018 14:12:38 +0800
-Message-ID: <20180205061237.GE31354@dragon>
-References: <1516954180-26029-1-git-send-email-Anson.Huang@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] DT: arm: shmobile: document R8A77980 SoC bindings
+Date: Mon, 5 Feb 2018 00:08:41 -0600
+Message-ID: <20180205060841.ogtnqtshd3fp62qp@rob-hp-laptop>
+References: <fbdd08a3-1ab3-8e70-20f1-d9c41493b11c@cogentembedded.com>
+ <d238e77a-e304-1fca-7ca6-bb99f6e55a68@cogentembedded.com>
+ <CAMuHMdUJtCjkSGFTWKhCgCmfDsA7hQ+T=-dZwaeLEZ2L1qvGJw@mail.gmail.com>
+ <20180202085100.ptwsx7esrfjlmgpk@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1516954180-26029-1-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, edubezval@gmail.com, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, rui.zhang@intel.com, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180202085100.ptwsx7esrfjlmgpk@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 26, 2018 at 04:09:39PM +0800, Anson Huang wrote:
-> Add i.MX7 temperature monitor support.
+On Fri, Feb 02, 2018 at 09:51:01AM +0100, Simon Horman wrote:
+> On Thu, Feb 01, 2018 at 09:01:54PM +0100, Geert Uytterhoeven wrote:
+> > On Wed, Jan 31, 2018 at 8:56 PM, Sergei Shtylyov
+> > <sergei.shtylyov@cogentembedded.com> wrote:
+> > > Document the R-Car V3H (R8A77980) SoC device tree bindings.
+> > >
+> > > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > 
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > 
+> > Some people may complain about the subject prefix, though.
+
+By "some people", Geert means me. :)
+
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
-> no changes since V1.
->  .../devicetree/bindings/thermal/imx-thermal.txt      |  5 +++--
+> I'm a bit unsure about what to do about prefixes for that file.
+> I've gone with the following which seems sensible to me.
 
-The bindings doc should be a separate patch or part of related
-imx-thermal driver patch ...
+This should make it somewhat clear:
 
->  arch/arm/boot/dts/imx7s.dtsi                         | 20 ++++++++++++++++++++
+git log --oneline -- Documentation/devicetree/bindings/arm/
 
-..., and shouldn't be mixed with dts changes.
+> 
+> arm64: renesas: document R8A77980 SoC bindings 
 
-Shawn
+"dt-bindings: arm: ..." or  "dt-bindings: shmobile: ".
+
+But then I don't make folks respin just for that, so
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+Rob
