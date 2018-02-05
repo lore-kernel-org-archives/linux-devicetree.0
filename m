@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 3/9] drm/bridge: dw-hdmi: allow overriding of phy-type reading
-Date: Mon,  5 Feb 2018 15:34:29 +0100
-Message-ID: <20180205143435.4723-4-heiko@sntech.de>
+Subject: [PATCH 1/9] dt-bindings: add binding for Rockchip hdmi phy using an Innosilicon IP
+Date: Mon,  5 Feb 2018 15:34:27 +0100
+Message-ID: <20180205143435.4723-2-heiko@sntech.de>
 References: <20180205143435.4723-1-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20180205143435.4723-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
@@ -10,46 +10,65 @@ To: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, algea.cao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In some IP implementations the reading of the phy-type may be broken.
-One example are the Rockchip rk3228 and rk3328 socs that use a separate
-phy from Innosilicon but still report the HDMI20_TX type.
+From: Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-So allow the glue driver to force a specific type, like the vendor-phy
-for these cases.
+The phy is used so far in two Rockchip socs the rk3228 and the rk3328.
 
+Signed-off-by: Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 4 +++-
- include/drm/bridge/dw_hdmi.h              | 1 +
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ .../bindings/phy/phy-rockchip-inno-hdmi.txt        | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-hdmi.txt
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index a38db40ce990..7255fafce089 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -2200,7 +2200,9 @@ static int dw_hdmi_detect_phy(struct dw_hdmi *hdmi)
- 	unsigned int i;
- 	u8 phy_type;
- 
--	phy_type = hdmi_readb(hdmi, HDMI_CONFIG2_ID);
-+	phy_type = (hdmi->plat_data->phy_force_type) ?
-+				hdmi->plat_data->phy_force_type :
-+				hdmi_readb(hdmi, HDMI_CONFIG2_ID);
- 
- 	if (phy_type == DW_HDMI_PHY_VENDOR_PHY) {
- 		/* Vendor PHYs require support from the glue layer. */
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index 182f83283e24..c5bc2804b29e 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -133,6 +133,7 @@ struct dw_hdmi_plat_data {
- 	const struct dw_hdmi_phy_ops *phy_ops;
- 	const char *phy_name;
- 	void *phy_data;
-+	u8 phy_force_type;
- 
- 	/* Synopsys PHY support */
- 	const struct dw_hdmi_mpll_config *mpll_cfg;
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-hdmi.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-hdmi.txt
+new file mode 100644
+index 000000000000..7d36fd8d5d94
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-hdmi.txt
+@@ -0,0 +1,42 @@
++ROCKCHIP HDMI PHY WITH INNO IP BLOCK
++
++Required properties:
++ - compatible : should be one of the listed compatibles:
++	* "rockchip,rk3228-hdmi-phy",
++	* "rockchip,rk3328-hdmi-phy";
++ - reg : Address and length of the hdmi phy control register set
++ - clocks : phandle + clock specifier for the phy clocks
++ - clock-names : string, clock name, must contain "sysclk" for system
++	  control and register configuration and "refclk" for reference
++	  crystal oscillator clock input to PLL
++ - #clock-cells: should be 0.
++ - clock-output-names : shall be the name for the output clock.
++ - interrupts : phandle + interrupt specified for the hdmiphy interrupt
++ - #phy-cells : must be 0. See ./phy-bindings.txt for details.
++
++Optional properties for rk3328-hdmi-phy:
++ - nvmem-cells = phandle + nvmem specifier for the cpu-version efuse
++ - nvmem-cell-names : "cpu-version" to read the chip version, required
++	  for adjustment to some frequency settings
++
++Example:
++	hdmi_phy: hdmi-phy@12030000 {
++		compatible = "rockchip,rk3228-hdmi-phy";
++		reg = <0x12030000 0x10000>;
++		#phy-cells = <0>;
++		clocks = <&cru PCLK_HDMI_PHY>, <&xin24m>;
++		clock-names = "sysclk", "refclk";
++		#clock-cells = <0>;
++		clock-output-names = "hdmi_phy";
++		status = "disabled";
++	};
++
++Then the PHY can be used in other nodes such as:
++
++	hdmi: hdmi@200a0000 {
++		compatible = "rockchip,rk3228-dw-hdmi";
++		...
++		phys = <&hdmi_phy>;
++		phy-names = "hdmi";
++		...
++	};
 -- 
 2.15.1
 
