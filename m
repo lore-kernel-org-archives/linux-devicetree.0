@@ -1,45 +1,73 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ARM: dts: imx25-pinfunc: Use consistent naming
- for eSDHC
-Date: Mon, 5 Feb 2018 16:28:11 +0800
-Message-ID: <20180205082809.GT31354@dragon>
-References: <20180131213544.4508-1-benoit.thebaudeau.dev@gmail.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] Exynos 4210, 4412 DTS cleanup
+Date: Mon, 5 Feb 2018 09:31:40 +0100
+Message-ID: <CAJKOXPcnsHsF0XJa9agvEH5dvkjp9rzz4v0UX-zSLYRUdmHP3A@mail.gmail.com>
+References: <CGME20180205075723eucas1p1e14d59501a636903262aee195348d53c@eucas1p1.samsung.com>
+ <1517817428-7898-1-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180131213544.4508-1-benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1517817428-7898-1-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?Beno=EEt_Th=E9baudeau?= <benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Nazzareno Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 10:35:43PM +0100, Benoît Thébaudeau wrote:
-> This file had several naming inconsistencies for eSDHC:
->  - the instances were named sometimes SDn, sometimes SDHCn, whereas they
->    are named ESDHCn in the reference manual, e.g.:
->      MX25_PAD_SD1_CMD__SD1_CMD
->      MX25_PAD_D15__SDHC1_DAT7
->  - the data ports were named sometimes DATAn, sometimes DATn like in the
->    reference manual, e.g.:
->      MX25_PAD_SD1_DATA0__SD1_DATA0
->      MX25_PAD_D15__SDHC1_DAT7
->  - in one case, the clock port was named DAT_CLK instead of CLK:
->      MX25_PAD_CSI_D7__SDHC2_DAT_CLK
-> 
-> This change:
->  - introduces new definitions using the naming from the reference
->    manual,
->  - keeps definitions using the legacy naming in order not to break
->    compatibility for out-of-tree users (they can be removed later),
->  - updates the in-tree files that were using the legacy naming.
-> 
-> Cc: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Benoît Thébaudeau <benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Mon, Feb 5, 2018 at 8:56 AM, Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi all,
+>
+> this patchset performs cleanup of exynos4 series DTS. The main goal
+> is to prepare them to add "soc" node just like it is done in other
+> exynos DTS. Basically those patches use labels wherever possible
+> instead of redefining nodes, which have been defined in
+> exynos4.dtsi, exynos4210.dtsi or exynos4412.dtsi.
+>
+> Best Regards,
+>
+> Maciej Purski
+>
+> ---
+>
+> Changes in v2:
+> - squashed patch #3 and #4
+> - move interrupts, reg and status properties to exynos4.dtsi
+> - put nodes in alphabetical order in exynos4412-odroid common
+>   and exynos4210-universal_c210
 
-Applied both, thanks.
+Thanks, all look good! I'll take them after merge window.
+
+Best regards,
+Krzysztof
+
+>
+> Maciej Purski (9):
+>   ARM: dts: exynos: Use pinctrl labels in exynos4210-pinctrl
+>   ARM: dts: exynos: Use pinctrl labels in exynos4412-pinctrl
+>   ARM: dts: exynos:  Use labels instead of full names in exynos4210
+>   ARM: dts: exynos: Use fimc labels in exynos4210-trats
+>   ARM: dts: exynos: Use labels instead of full names in
+>     exynos4210-universal_c210
+>   ARM: dts: exynos: Use camera label in exynos4412
+>   ARM: dts: exynos: Use camera label in exynos4412-odroid-common
+>   ARM: dts: exynos: Use labels instead of full names in
+>     exynos4412-trats2
+>   ARM: dts: exynos: Use camera label in exynos4412-itop-elite
+>
+>  arch/arm/boot/dts/exynos4.dtsi                  |    6 +-
+>  arch/arm/boot/dts/exynos4210-pinctrl.dtsi       | 1680 ++++++++++----------
+>  arch/arm/boot/dts/exynos4210-trats.dts          |   73 +-
+>  arch/arm/boot/dts/exynos4210-universal_c210.dts |  115 +-
+>  arch/arm/boot/dts/exynos4210.dtsi               |  101 +-
+>  arch/arm/boot/dts/exynos4412-itop-elite.dts     |   16 +-
+>  arch/arm/boot/dts/exynos4412-odroid-common.dtsi |   12 +-
+>  arch/arm/boot/dts/exynos4412-pinctrl.dtsi       | 1914 +++++++++++------------
+>  arch/arm/boot/dts/exynos4412-trats2.dts         |   73 +-
+>  arch/arm/boot/dts/exynos4412.dtsi               |  237 +--
+>  10 files changed, 2114 insertions(+), 2113 deletions(-)
+>
+> --
+> 2.7.4
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
