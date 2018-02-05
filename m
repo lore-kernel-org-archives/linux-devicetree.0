@@ -1,99 +1,80 @@
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [RFC PATCH 2/3] crypto: hisilicon hacv1 driver
-Date: Mon, 5 Feb 2018 14:02:03 +0000
-Message-ID: <20180205140203.00007e46@huawei.com>
-References: <20180130152953.14068-1-jonathan.cameron@huawei.com>
-        <20180130152953.14068-3-jonathan.cameron@huawei.com>
-        <7706135.m10557lhAe@positron.chronox.de>
+From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Subject: Re: [PATCH v6 40/41] ARM: da8xx-dt: switch to device tree clocks
+Date: Mon, 5 Feb 2018 15:04:00 +0100
+Message-ID: <CAMRc=McJsneYdh8zDmYcUsFLiAyOmSeyOKhKfim4or7LwyEH1w@mail.gmail.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-41-git-send-email-david@lechnology.com> <335d92c8-1af2-da64-e366-95d7513ad69d@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <7706135.m10557lhAe@positron.chronox.de>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-Cc: linux-crypto@vger.kernel.org, linuxarm@huawei.com, xuzaibo@huawei.com, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Xiongfeng Wang <xiongfeng.wang@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <335d92c8-1af2-da64-e366-95d7513ad69d-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 3 Feb 2018 12:16:18 +0100
-Stephan Müller <smueller@chronox.de> wrote:
+2018-01-24 4:26 GMT+01:00 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>:
+> On 01/20/2018 11:14 AM, David Lechner wrote:
+>>
+>> This removes all of the clock init code from da8xx-dt.c. This includes
+>> all of the OF_DEV_AUXDATA that was just used for looking up clocks.
+>>
+>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>> ---
+>>
+>> v6 changes:
+>> - removed misleading statement from commit message
+>>
+>>   arch/arm/mach-davinci/da8xx-dt.c | 61
+>> +---------------------------------------
+>>   1 file changed, 1 insertion(+), 60 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-davinci/da8xx-dt.c
+>> b/arch/arm/mach-davinci/da8xx-dt.c
+>
+>
+>>   static void __init da850_init_machine(void)
+>>   {
+>> -       /* All existing boards use 100MHz SATA refclkpn */
+>> -       static const unsigned long sata_refclkpn = 100 * 1000 * 1000;
+>> -
+>> -       int ret;
+>> -
+>> -       ret = da8xx_register_usb20_phy_clk(false);
+>> -       if (ret)
+>> -               pr_warn("%s: registering USB 2.0 PHY clock failed: %d",
+>> -                       __func__, ret);
+>> -       ret = da8xx_register_usb11_phy_clk(false);
+>> -       if (ret)
+>> -               pr_warn("%s: registering USB 1.1 PHY clock failed: %d",
+>> -                       __func__, ret);
+>> -
+>> -       ret = da850_register_sata_refclk(sata_refclkpn);
+>> -       if (ret)
+>> -               pr_warn("%s: registering SATA REFCLK failed: %d",
+>> -                       __func__, ret);
+>> -
+>> -       of_platform_default_populate(NULL, da850_auxdata_lookup, NULL);
+>> +       of_platform_default_populate(NULL, NULL, NULL);
+>
+>
+> of_platform_default_populate() can actually be removed completely.
+> of_platform_default_populate_init() is called implicitly during
+> arch_initcall_sync
+>
+>>         davinci_pm_init();
+>>         pdata_quirks_init();
+>>   }
 
-> Am Dienstag, 30. Januar 2018, 16:29:52 CET schrieb Jonathan Cameron:
-> 
-> Hi Jonathan,
-> 
-> > +	/* Special path for single element SGLs with small packets. */
-> > +	if (sg_is_last(sgl) && sgl->length <= SEC_SMALL_PACKET_SIZE) {  
-> 
-> This looks strangely familiar. Is this code affected by a similar issue fixed 
-> in https://patchwork.kernel.org/patch/10173981?
+Hi David,
 
-Not as far as I know - this section is about optimizing the setup of
-the IOMMU. It's purely a performance optimization.
+this patch breaks nand on da850-lcdk (and probably on da850-evm) since
+the nand driver can no longer clk_get() the nand clock. We would need
+to keep the dev_auxdata at least for aemif.
 
-It is really costly to do the translation setup for lots of small regions.
-These small regions are often contiguous anyway making the cost even more
-ridiculous.  The use of a dma pool allows us to keep the iommu setup
-constant(ish). It is cheaper to copy into an element of this, already
-mapped, pool than it is to set up the iommu mappings for a new region.
-
-I could drop this for the initial submission and bring it in as an
-optimization with supporting numbers as a follow up patch.
-
-> 
-> > +static int sec_alg_skcipher_setkey(struct crypto_skcipher *tfm,
-> > +                                  const u8 *key, unsigned int keylen,
-> > +                                  enum sec_cipher_alg alg)
-> > +{
-> > +       struct sec_alg_skcipher_ctx *ctx = crypto_skcipher_ctx(tfm);
-> > +       struct device *dev;
-> > +
-> > +       spin_lock(&ctx->lock);
-> > +       if (ctx->enc_key) {
-> > +               /* rekeying */
-> > +               dev = SEC_Q_DEV(ctx->queue);
-> > +               memset(ctx->enc_key, 0, SEC_MAX_CIPHER_KEY);
-> > +               memset(ctx->dec_key, 0, SEC_MAX_CIPHER_KEY);
-> > +               memset(&ctx->enc_req, 0, sizeof(ctx->enc_req));
-> > +               memset(&ctx->dec_req, 0, sizeof(ctx->dec_req));
-> > +       } else {
-> > +               /* new key */
-> > +               dev = SEC_Q_DEV(ctx->queue);
-> > +               ctx->enc_key = dma_zalloc_coherent(dev, SEC_MAX_CIPHER_KEY,
-> > +                                                  &ctx->enc_pkey,
-> > GFP_ATOMIC); +               if (!ctx->enc_key) {
-> > +                       spin_unlock(&ctx->lock);
-> > +                       return -ENOMEM;
-> > +               }
-> > +               ctx->dec_key = dma_zalloc_coherent(dev, SEC_MAX_CIPHER_KEY,
-> > +                                                  &ctx->dec_pkey,
-> > GFP_ATOMIC); +               if (!ctx->dec_key) {
-> > +                       spin_unlock(&ctx->lock);
-> > +                       goto out_free_enc;
-> > +               }
-> > +       }
-> > +       spin_unlock(&ctx->lock);
-> > +       if (sec_alg_skcipher_init_context(tfm, key, keylen, alg))
-> > +               goto out_free_all;
-> > +
-> > +       return 0;
-> > +
-> > +out_free_all:
-> > +       memset(ctx->dec_key, 0, SEC_MAX_CIPHER_KEY);
-> > +       dma_free_coherent(dev, SEC_MAX_CIPHER_KEY,
-> > +                         ctx->dec_key, ctx->dec_pkey);
-> > +       ctx->dec_key = NULL;
-> > +out_free_enc:
-> > +       memset(ctx->enc_key, 0, SEC_MAX_CIPHER_KEY);
-> > +       dma_free_coherent(dev, SEC_MAX_CIPHER_KEY,
-> > +                         ctx->enc_key, ctx->enc_pkey);
-> > +       ctx->enc_key = NULL;  
-> 
-> Please use memzero_explicit.
-
-Will do - thanks!
-
-Jonathan
-> > +
-> > +       return -ENOMEM;
-> > +  
+Thanks,
+Bartosz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
