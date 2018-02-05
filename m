@@ -1,47 +1,217 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH] ARM: dts: da850-evm: add clock properties to the nand node
-Date: Mon,  5 Feb 2018 16:52:22 +0100
-Message-ID: <20180205155222.22189-1-brgl@bgdev.pl>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] irqchip/gic-v3-its: add ability to save/restore
+ ITS state
+Date: Mon, 5 Feb 2018 15:56:07 +0000
+Message-ID: <a1b81cab-8e73-2c6f-13e6-612ffc668923@arm.com>
+References: <20180203012450.18378-1-dbasehore@chromium.org>
+ <20180203012450.18378-3-dbasehore@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180203012450.18378-3-dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Soby.Mathew-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 03/02/18 01:24, Derek Basehore wrote:
+> Some platforms power off GIC logic in suspend, so we need to
+> save/restore state. The distributor and redistributor registers need
+> to be handled in platform code due to access permissions on those
+> registers, but the ITS registers can be restored in the kernel.
+> 
+> Signed-off-by: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 101 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 101 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 06f025fd5726..e13515cdb68f 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/percpu.h>
+>  #include <linux/slab.h>
+> +#include <linux/syscore_ops.h>
+>  
+>  #include <linux/irqchip.h>
+>  #include <linux/irqchip/arm-gic-v3.h>
+> @@ -46,6 +47,7 @@
+>  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+>  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+>  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
+> +#define ITS_FLAGS_SAVE_SUSPEND_STATE		(1ULL << 3)
+>  
+>  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
+>  
+> @@ -83,6 +85,15 @@ struct its_baser {
+>  	u32		psz;
+>  };
+>  
+> +/*
+> + * Saved ITS state - this is where saved state for the ITS is stored
+> + * when it's disabled during system suspend.
+> + */
+> +struct its_ctx {
+> +	u64			cbaser;
+> +	u32			ctlr;
+> +};
 
-Make nand work with the common clock framework by specifying which
-clock should be used and what name to look up.
+Nit: This is pretty small for the ITS context. Given that its_node is
+the context, you can safely expand this in the its_node structure.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/boot/dts/da850-evm.dts | 3 +++
- 1 file changed, 3 insertions(+)
+> +
+>  struct its_device;
+>  
+>  /*
+> @@ -101,6 +112,7 @@ struct its_node {
+>  	struct its_collection	*collections;
+>  	struct fwnode_handle	*fwnode_handle;
+>  	u64			(*get_msi_base)(struct its_device *its_dev);
+> +	struct its_ctx		its_ctx;
+>  	struct list_head	its_device_list;
+>  	u64			flags;
+>  	unsigned long		list_nr;
+> @@ -3042,6 +3054,90 @@ static void its_enable_quirks(struct its_node *its)
+>  	gic_enable_quirks(iidr, its_quirks, its);
+>  }
+>  
+> +static int its_save_disable(void)
+> +{
+> +	struct its_node *its;
+> +	int err = 0;
+> +
+> +	spin_lock(&its_lock);
+> +	list_for_each_entry(its, &its_nodes, entry) {
+> +		struct its_ctx *ctx;
+> +		void __iomem *base;
+> +
+> +		if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
+> +			continue;
+> +
+> +		ctx = &its->its_ctx;
+> +		base = its->base;
+> +		ctx->ctlr = readl_relaxed(base + GITS_CTLR);
+> +		err = its_force_quiescent(base);
+> +		if (err) {
+> +			pr_err("ITS failed to quiesce\n");
+> +			writel_relaxed(ctx->ctlr, base + GITS_CTLR);
+> +			goto err;
+> +		}
+> +
+> +		ctx->cbaser = gits_read_cbaser(base + GITS_CBASER);
+> +	}
+> +
+> +err:
+> +	if (err) {
+> +		list_for_each_entry_continue_reverse(its, &its_nodes, entry) {
+> +			if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
+> +				struct its_ctx *ctx = &its->its_ctx;
+> +				void __iomem *base = its->base;
+> +
+> +				writel_relaxed(ctx->ctlr, base + GITS_CTLR);
+> +			}
+> +		}
+> +	}
+> +
+> +	spin_unlock(&its_lock);
+> +
+> +	return err;
+> +}
+> +
+> +static void its_restore_enable(void)
+> +{
+> +	struct its_node *its;
+> +
+> +	spin_lock(&its_lock);
+> +	list_for_each_entry(its, &its_nodes, entry) {
+> +		if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
+> +			struct its_ctx *ctx = &its->its_ctx;
+> +			void __iomem *base = its->base;
+> +			/*
+> +			 * Only the lower 32 bits matter here since the upper 32
+> +			 * don't include any of the offset.
+> +			 */
+> +			u32 creader = readl_relaxed(base + GITS_CREADR);
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index a86a8a1816f2..2602ad8e99ee 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -296,6 +296,9 @@
- 			reg = <0 0x02000000 0x02000000
- 			       1 0x00000000 0x00008000>;
- 
-+			clocks = <&psc0 3>;
-+			clock-names = "aemif";
-+
- 			ti,davinci-chipselect = <1>;
- 			ti,davinci-mask-ale = <0>;
- 			ti,davinci-mask-cle = <0>;
+Accessor matching gits_write_cwriter and co?
+
+> +			int i;
+> +
+> +			/*
+> +			 * Reset the write location to where the ITS is
+> +			 * currently at.
+> +			 */
+> +			gits_write_cbaser(ctx->cbaser, base + GITS_CBASER);
+> +			gits_write_cwriter(creader, base + GITS_CWRITER);
+> +			its->cmd_write = &its->cmd_base[
+> +				creader / sizeof(struct its_cmd_block)];
+
+Nit: please do not split lines like this, this is unreadable. We both
+have screens that are wide enough for this to fit on a single line.
+
+More importantly: Why isn't it sufficient to reset both CREADR and
+CWRITER to zero? Is there any case where you can suspend whilst having
+anything in flight?
+
+> +			/* Restore GITS_BASER from the value cache. */
+> +			for (i = 0; i < GITS_BASER_NR_REGS; i++) {
+> +				struct its_baser *baser = &its->tables[i];
+> +
+> +				its_write_baser(its, baser, baser->val);
+
+You may want to first test that this BASER register is actually
+requiring something before writing to it. Yes, this is normally safe.
+But HW is also normally broken.
+
+> +			}
+> +			writel_relaxed(ctx->ctlr, base + GITS_CTLR);
+
+Before restoring all of this, shouldn't you first test that the ITS is
+actually in a disabled state?
+
+> +		}
+> +	}
+> +	spin_unlock(&its_lock);
+> +}
+> +
+> +static struct syscore_ops its_syscore_ops = {
+> +	.suspend = its_save_disable,
+> +	.resume = its_restore_enable,
+> +};
+> +
+>  static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
+>  {
+>  	struct irq_domain *inner_domain;
+> @@ -3261,6 +3357,9 @@ static int __init its_probe_one(struct resource *res,
+>  		ctlr |= GITS_CTLR_ImDe;
+>  	writel_relaxed(ctlr, its->base + GITS_CTLR);
+>  
+> +	if (fwnode_property_present(handle, "reset-on-suspend"))
+> +		its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
+> +
+>  	err = its_init_domain(handle, its);
+>  	if (err)
+>  		goto out_free_tables;
+> @@ -3515,5 +3614,7 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
+>  		}
+>  	}
+>  
+> +	register_syscore_ops(&its_syscore_ops);
+> +
+>  	return 0;
+>  }
+> 
+
+Thanks,
+
+	M.
 -- 
-2.16.1
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
