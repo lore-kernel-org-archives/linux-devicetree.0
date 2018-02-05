@@ -1,68 +1,110 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 05/11] arm64: dts: renesas: initial R8A77980 SoC device tree
-Date: Mon, 5 Feb 2018 14:51:43 +0100
-Message-ID: <CAMuHMdVfuruK36OUVdOcHaJogoM8oee_+b+4UzjBfUBoMiEbOQ@mail.gmail.com>
-References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
- <32142684-d5cf-035f-8401-86a36dcbafd6@cogentembedded.com> <CAMuHMdWad2OJ33Hu0KbYS3nLWhgmj81_wRbtwApw-N81q3+nsA@mail.gmail.com>
- <ad83625d-c166-cacb-eae2-a6d64f7d2b26@cogentembedded.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] media: ov5640: add support of DVP parallel
+ interface
+Date: Mon, 5 Feb 2018 14:56:38 +0100
+Message-ID: <20180205135638.vkuotmeks5k76iud@flea>
+References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
+ <1514973452-10464-5-git-send-email-hugues.fruchet@st.com>
+ <TY1PR06MB089512437228BAFF910B133FC0FA0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+ <20180202185045.vvhmj5wtagalkucf@flea.lan>
+ <TY1PR06MB08954787E362BF24C7FD41DBC0FE0@TY1PR06MB0895.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <ad83625d-c166-cacb-eae2-a6d64f7d2b26@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Simon Horman <horms@verge.net.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ilbt4aunkczvniud"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <TY1PR06MB08954787E362BF24C7FD41DBC0FE0-/PRLmSCtZ16EeHdvShrxA20DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
 
-On Mon, Feb 5, 2018 at 2:48 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 2/5/2018 4:32 PM, Geert Uytterhoeven wrote:
->>> The initial R8A77980 SoC device tree including Cortex-A53 CPU, GIC,
->>> timer,
->>> CPG, RST, and SYSC.
->>>
->>> Based on the original (and large) patch by Vladimir Barinov.
->>>
->>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->>
->> Thanks for your patch!
->>
->>> --- /dev/null
->>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
->>> @@ -0,0 +1,122 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * Device Tree Source for the r8a77980 SoC
->>> + *
->>> + * Copyright (C) 2018 Renesas Electronics Corp.
->>> + * Copyright (C) 2018 Cogent Embedded, Inc.
->>> + */
->>> +
->>> +#include <dt-bindings/interrupt-controller/irq.h>
->>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
->>
->> I think you want to leave out the above #include, as it will go upstream
->> through a different path (you're already using hardcoded clock numbers,
->> assuming the same).
+--ilbt4aunkczvniud
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Feb 05, 2018 at 11:42:11AM +0000, Fabrizio Castro wrote:
+> Hello Maxime,
+>=20
+> thank you for your feedback.
+>=20
+> > > > +/*
+> > > > + * configure parallel port control lines polarity
+> > > > + *
+> > > > + * POLARITY CTRL0
+> > > > + * - [5]:PCLK polarity (0: active low, 1: active high)
+> > > > + * - [1]:HREF polarity (0: active low, 1: active high)
+> > > > + * - [0]:VSYNC polarity (mismatch here between
+> > > > + *datasheet and hardware, 0 is active high
+> > > > + *and 1 is active low...)
+> > >
+> > > I know that yourself and Maxime have both confirmed that VSYNC
+> > > polarity is inverted, but I am looking at HSYNC and VSYNC with a
+> > > logic analyser and I am dumping the values written to
+> > > OV5640_REG_POLARITY_CTRL00 and to me it looks like that HSYNC is
+> > > active HIGH when hsync_pol =3D=3D 0, and VSYNC is active HIGH when
+> > > vsync_pol =3D=3D 1.
+> >
+> > Which mode are you testing this on?
+>=20
+> My testing environment is made of the sensor connected to a SoC with
+> 8 data lines, vsync, hsync, and pclk, and of course I am specifying
+> hsync-active, vsync-active, and pclk-sample in the device tree on
+> both ends so that they configure themselves accordingly to work in
+> DVP mode (V4L2_MBUS_PARALLEL), with the correct polarities.
 >
->    I still need CPG_{CORE|MOD}.
+> Between the sensor and the SoC there is a noninverting bus
+> transceiver (voltage translator), for my experiments I have plugged
+> myself onto the outputs of this transceiver only to be compliant
+> with the voltage level of my logic analyser.
 
-You're right. Please ignore my comment.
+Sorry, my question was more about the resolution, refresh rate, etc.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > The non-active periods are insanely high in most modes (1896 for an
+> > active horizontal length of 640 in 640x480 for example), especially
+> > hsync, and it's really easy to invert the two.
+>=20
+> I am looking at all the data lines, so that I don't confuse the
+> non-active periods with the active periods, and with my setup what I
+> reported is what I get. I wonder if this difference comes from the
+> sensor revision at all? Unfortunately I can only test the one camera
+> I have got.
 
-Gr{oetje,eeting}s,
+I don't really know then. I've had issues with the polarities on my
+side, but it was on the receiver side and the sensor part looked like
+what is documented.
 
-                        Geert
+Maxime
 
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
+
+--ilbt4aunkczvniud
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlp4YpUACgkQ0rTAlCFN
+r3TIWw//aGZ5MjQRoWi1F753l0C6BMtobEx8utifF5v9IRwekB3R/TIjllXdXwXO
+Ev4qj21YrO1SjanFk6UTccJ/tqa9v0/cLJ9LCOc1Og+psBJgSBOtDVUyV8U7lTrf
+8Ta9YtZmEBuLb8CHPcRKZozkBta3E23wO8xD3nGnLKN0In5knglZFmGgJTNbzAlM
+5vCmBOBXeflcYWY2CpqAAbR86cNGPaPDI5KZLGysPHEBOU66CdJ1ykUOSEGtJJhV
+Q2O4NqbbL2Xm80woP34EGgNvov7etZuorvQbdhVTbRWsP8cMPkcSWpSJLxjSNpf/
+qe5L1fQwjZqNmVGXq5ZIJKUDUumH3hGWHWgnQCvaImU17aXeR9UUG8djhNdxNP3v
+syxUNzszOrC63zjSqPXTDNx/UzDtTbXKakal9kKByW1ijFeaL1LVNj6M04BljA1J
+51Rl+7wGTxTSm4bD1qUcmmbi8rkaF2rxN6IInZ4urp9ACuuFTy1+P7F9TnEsM+70
+GOvxqvX9vL4ZZV3q6qi6GyfATiQLmD5gDLodwvpAfrI3xr3qctalThzg0NsaEKU6
+xCRlpDm/fm2W5ch4fqSUsXfbcmGSEM6JXXFTcBrdP72GcTwyAbH7xbjc4fXimoU3
+1XpdEMTCENFSX6XBANExQLmZlYlJsKB8RvOvm5WjXt4e+DP9yFM=
+=wUfz
+-----END PGP SIGNATURE-----
+
+--ilbt4aunkczvniud--
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
