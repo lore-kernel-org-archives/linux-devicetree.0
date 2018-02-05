@@ -1,54 +1,34 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: Re: [PATCH v2 BUGFIX] ARM: dts: imx6ull: fix the imx6ull-14x14-evk
- configuration
-Date: Mon, 5 Feb 2018 16:03:19 +0100
-Message-ID: <20180205160319.297a74f8@karo-electronics.de>
-References: <1516955159-21626-1-git-send-email-LW@KARO-electronics.de>
-        <1516956738-24673-1-git-send-email-LW@KARO-electronics.de>
-        <20180205075620.GO31354@dragon>
-        <20180205105543.1711274c@karo-electronics.de>
-        <20180205103716.GY31354@dragon>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: exynos: Add soc node to exynos4210
+Date: Mon, 5 Feb 2018 16:07:18 +0100
+Message-ID: <CAJKOXPd1kPoR0RR8J0_GdRKTKXWJ+VCY6hFpAAwGsJjeN3TzvA@mail.gmail.com>
+References: <CGME20180205112603eucas1p2ffaaa41a8181a76aec96c2f8c6e37945@eucas1p2.samsung.com>
+ <1517829936-26311-1-git-send-email-m.purski@samsung.com> <1517829936-26311-3-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180205103716.GY31354@dragon>
+In-Reply-To: <1517829936-26311-3-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Feb 5, 2018 at 12:25 PM, Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Soc nodes are used in other exynos DTS. Exynos4 boards should use them
+> as well.
+>
+> Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
 
-On Mon, 5 Feb 2018 18:37:20 +0800 Shawn Guo wrote:
-> On Mon, Feb 05, 2018 at 10:55:43AM +0100, Lothar Waßmann wrote:
-> > Hi,
-> > 
-> > On Mon, 5 Feb 2018 15:56:22 +0800 Shawn Guo wrote:
-> > > On Fri, Jan 26, 2018 at 09:52:18AM +0100, Lothar Waßmann wrote:
-> > > > imx6ull-14x14-evk.dts currently includes the imx6ul.dtsi file for an
-> > > > i.MX6ULL SoC which is plain wrong.
-> > > > 
-> > > > Rename the current imx6ul-14x14-evk.dts to .dtsi and include it from
-> > > > imx6ul-14x14-evk.dts and imx6ull-14x14-evk.dts, so that both can
-> > > > include the appropriate SoC specific (imx6ul.dtsi/imx6ull.dtsi) file.
-> > > > 
-> > > > Signed-off-by: Lothar Waßmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-> > > 
-> > > Which base is the patch generated against?  I cannot apply it to any
-> > > branch in my tree.
-> > >
-> > The patch was generated against next-20180118 but also applies to
-> > next-20180205.
-> 
-> It looks like you would really want this go into 4.16 as a fix?  In that
-> case, I will need to wait for v4.16-rc1 to apply it.
-> 
-I don't care much when and how it will be applied.
-I'm not using those files myself.
+I agree with the idea of converting one DTS after another but did you
+check carefully that there are no overridden nodes in exynos4210?
+Otherwise after commit #1 two nodes would appear (one /soc/xxx and one
+/xxx).
 
+Also as in #1, please check for warnings (there should be no new warnings).
 
-Lothar Waßmann
+Best regards,
+Krzysztof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
