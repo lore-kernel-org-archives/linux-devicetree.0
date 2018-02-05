@@ -1,85 +1,47 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
-Date: Mon, 05 Feb 2018 11:09:11 +0100
-Message-ID: <1517825351.3175.3.camel@pengutronix.de>
-References: <20180201174923.7385-1-l.stach@pengutronix.de>
-         <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 BUGFIX] ARM: dts: imx6ull: fix the imx6ull-14x14-evk
+ configuration
+Date: Mon, 5 Feb 2018 18:37:20 +0800
+Message-ID: <20180205103716.GY31354@dragon>
+References: <1516955159-21626-1-git-send-email-LW@KARO-electronics.de>
+ <1516956738-24673-1-git-send-email-LW@KARO-electronics.de>
+ <20180205075620.GO31354@dragon>
+ <20180205105543.1711274c@karo-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20180205105543.1711274c-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "A . s . Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, linux-imx-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 05.02.2018, 00:09 -0600 schrieb Rob Herring:
-> On Thu, Feb 01, 2018 at 06:49:21PM +0100, Lucas Stach wrote:
-> > This adds the binding for the i.MX8MQ pin controller, in the same
-> > fashion as earlier i.MX SoCs.
-> > 
-> > > > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> > v2: switch to generic pinconf properties
-> > ---
-> >  .../bindings/pinctrl/fsl,imx8mq-pinctrl.txt        | 39 ++++++++++++++++++++++
-> >  1 file changed, 39 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-> > new file mode 100644
-> > index 000000000000..5c5d2d835d05
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.txt
-> > @@ -0,0 +1,39 @@
-> > +* Freescale IMX8MQ IOMUX Controller
-> > +
-> > +Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-> > +for common binding part and usage.
-> > +
-> > +=== Pin Controller Node ===
-> > +
-> > +Required properties:
-> > +- compatible: "fsl,imx8mq-iomuxc"
-> > +- reg: Must contain the base physical address and size of the iomuxc registers.
-> > +
-> > +=== Pin Configuration Node ===
-> > +Required properties:
-> > +- pinmux: Array of integersy, representing a group of pins mux setting.
-> > > > +	The format is pinmux = <PIN_FUNC_ID>, PIN_FUNC_ID is a pin working on
-> > > > +	a specific function.
-> > +
-> > > > +	Refer to imx8mq-pinfunc.h in device tree source folder for all available
-> > > > +	imx8mq PIN_FUNC_ID.
-> > +
-> > +Optional Properties:
-> > +- drive-strength		Integer: controls Drive Strength
+On Mon, Feb 05, 2018 at 10:55:43AM +0100, Lothar Wa�mann wrote:
+> Hi,
 > 
-> I thought drive-strength is supposed to be be in mA. We should not have 
-> differing units in common properties. 
-> 
-> There was an Atmel binding the other day that this came up.
+> On Mon, 5 Feb 2018 15:56:22 +0800 Shawn Guo wrote:
+> > On Fri, Jan 26, 2018 at 09:52:18AM +0100, Lothar Wa�mann wrote:
+> > > imx6ull-14x14-evk.dts currently includes the imx6ul.dtsi file for an
+> > > i.MX6ULL SoC which is plain wrong.
+> > > 
+> > > Rename the current imx6ul-14x14-evk.dts to .dtsi and include it from
+> > > imx6ul-14x14-evk.dts and imx6ull-14x14-evk.dts, so that both can
+> > > include the appropriate SoC specific (imx6ul.dtsi/imx6ull.dtsi) file.
+> > > 
+> > > Signed-off-by: Lothar Wa�mann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+> > 
+> > Which base is the patch generated against?  I cannot apply it to any
+> > branch in my tree.
+> >
+> The patch was generated against next-20180118 but also applies to
+> next-20180205.
 
-I know it's in the common binding, but it's going to be very hard to
-support. The drive-strength in mA really depends on external loading of
-the pin and the pin voltage, at least for the most widespread
-controllers that only switch between resistors, instead of driving the
-pin by a current regulator.
-So we would need much more information, which doesn't really seem
-practical.
+It looks like you would really want this go into 4.16 as a fix?  In that
+case, I will need to wait for v4.16-rc1 to apply it.
 
-I would much prefer if we just remove unit from the common binding and
-let the drivers define it in a way that fits their hardware
-description.
-
-It's the same thing with the slew-rate really, but the common binding
-didn't make the mistake to define a single unit there, with many
-pincontrollers being really vague about how fast the slew really is,
-but some may actually define it in uS or whatever else makes sense.
-
-Regards,
-Lucas
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
