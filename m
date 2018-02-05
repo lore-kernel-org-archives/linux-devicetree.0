@@ -1,68 +1,75 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
-Date: Tue, 6 Feb 2018 00:13:49 +0100
-Message-ID: <CACRpkdanb3XocUpmTaFTh-vsApucX0PzuqRg_fA2ORUFtrVGJA@mail.gmail.com>
-References: <20180201174923.7385-1-l.stach@pengutronix.de> <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
- <1517825351.3175.3.camel@pengutronix.de>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 3/7] soc: qcom: Add GENI based QUP Wrapper driver
+Date: Mon, 5 Feb 2018 15:50:53 -0800
+Message-ID: <20180205235053.GH9465@builder>
+References: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org>
+ <1515805547-22816-4-git-send-email-kramasub@codeaurora.org>
+ <20180117062002.GA6620@minitux>
+ <1faee481-8cb6-4dc6-ac0f-eb89445227e1@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517825351.3175.3.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "A . s . Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, linux-imx-3arQi8VN3Tc@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1faee481-8cb6-4dc6-ac0f-eb89445227e1@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Karthik Ramasubramanian <kramasub@codeaurora.org>
+Cc: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 5, 2018 at 11:09 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+On Wed 31 Jan 10:58 PST 2018, Karthik Ramasubramanian wrote:
+> On 1/16/2018 11:20 PM, Bjorn Andersson wrote:
+> > On Fri 12 Jan 17:05 PST 2018, Karthikeyan Ramasubramanian wrote:
+[..]
+> > I'm not aware of any non-serial-engine "geni" at Qualcomm, so can we
+> > drop the "se" throughout this driver?
+> Currently GENI is used to program just the serial engines. But it is not
+> restricted to that. It can be used to program other hardware cores. Hence
+> keeping "se" will help to clarify that this driver is meant for GENI based
+> serial engines only.
 
->> > +Optional Properties:
->> > +- drive-strength           Integer: controls Drive Strength
->>
->> I thought drive-strength is supposed to be be in mA. We should not have
->> differing units in common properties.
->>
->> There was an Atmel binding the other day that this came up.
->
-> I know it's in the common binding, but it's going to be very hard to
-> support. The drive-strength in mA really depends on external loading of
-> the pin and the pin voltage, at least for the most widespread
-> controllers that only switch between resistors, instead of driving the
-> pin by a current regulator.
+Okay, fair enough.
 
-How does this circuit really look? Can you sketch something so
-we understand what is going on electronically here?
+[..]
+> > > diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
+[..]
+> > > +	geni_cgc_ctrl = geni_read_reg(base, GENI_CGC_CTRL);
+> > > +	dma_general_cfg = geni_read_reg(base, SE_DMA_GENERAL_CFG);
+> > > +	geni_cgc_ctrl |= DEFAULT_CGC_EN;
+> > > +	dma_general_cfg |= (AHB_SEC_SLV_CLK_CGC_ON | DMA_AHB_SLV_CFG_ON |
+> > > +			DMA_TX_CLK_CGC_ON | DMA_RX_CLK_CGC_ON);
+> > 
+> > Drop the parenthesis and there's no harm in making multiple assignments
+> > in favour of splitting the line.
+> Ok.
+> > 
+> > > +	io_op_ctrl = DEFAULT_IO_OUTPUT_CTRL_MSK;
+> > > +	geni_write_reg(geni_cgc_ctrl, base, GENI_CGC_CTRL);
+> > > +	geni_write_reg(dma_general_cfg, base, SE_DMA_GENERAL_CFG);
+> > 
+> > Is there a reason why this chunk of code is a mix of 3 independent
+> > register updates?
+> I am not sure I understand the context of your question. This is how the
+> hardware programming manual is describing to program the registers as part
+> of initializing a serial engine. Please let me know if this is not the
+> information you are looking for.
 
-The way I imagine most drive strength out there works is by simply
-connection more MOS-totempoles after each other and each of them
-has a production-technology-related max output current like 4mA, so
-by putting two in a series yoy double that to 8 mA.
+Can you please double check with the hardware guys if it really is
+required that you do:
 
-Is that what you mean with "current regulator"?
+a = read(A)
+b = read(B)
 
-If you mean rather "output impedance", that is something else and
-something we need a new (generic) property for. I never saw that
-before, really.
+modify a
+modify b
+assign c
 
-> I would much prefer if we just remove unit from the common binding and
-> let the drivers define it in a way that fits their hardware
-> description.
+write(a)
+write(b)
+write(c)
 
-Yeah but is this really the same thing even ...
+And if that is the case, then try to make things as easy to read as
+possible - e.g. by inlining the value of "c" and adding an empty line
+between reads, modifications and writes as I did here.
 
-> It's the same thing with the slew-rate really, but the common binding
-> didn't make the mistake to define a single unit there, with many
-> pincontrollers being really vague about how fast the slew really is,
-> but some may actually define it in uS or whatever else makes sense.
-
-I agree with that. Also for skewrate and output time delays
-(skew delay).
-
-It's very unclear how cell libraries really implement this.
-But with drive strength I thought we knew it ...
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
