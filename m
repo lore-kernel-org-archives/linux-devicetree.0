@@ -1,62 +1,58 @@
-From: Chintan Pandya <cpandya@codeaurora.org>
-Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
- of_find_node_by_phandle()
-Date: Mon, 5 Feb 2018 17:53:06 +0530
-Message-ID: <0a178f4b-75fe-0564-7b0e-596f52fca1dc@codeaurora.org>
-References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
- <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
- <38cdcae5-ec0f-d1be-b024-1990d4387731@gmail.com>
- <9e23d32f-05a0-ce8a-41f8-9a1a3d66be37@codeaurora.org>
- <fd9f5f63-b08e-602e-1510-85a65889f550@gmail.com>
- <567731e8-8f89-bd6e-c3d4-e36400e69198@codeaurora.org>
- <0db129ef-ffd8-96fe-46a7-55fb575272e3@gmail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH 2/2] media: dt-bindings: Add bindings for Dongwoon DW9807
+ voice coil
+Date: Mon, 5 Feb 2018 14:24:01 +0200
+Message-ID: <20180205122401.o5od2vfgvqiqqwgs@paasikivi.fi.intel.com>
+References: <1517500092-12121-1-git-send-email-andy.yeh@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0db129ef-ffd8-96fe-46a7-55fb575272e3@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1517500092-12121-1-git-send-email-andy.yeh@intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Andy Yeh <andy.yeh@intel.com>
+Cc: linux-media@vger.kernel.org, tfiga@chromium.org, Alan Chiang <alanx.chiang@intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Andy,
 
+On Thu, Feb 01, 2018 at 11:48:12PM +0800, Andy Yeh wrote:
+> From: Alan Chiang <alanx.chiang@intel.com>
 > 
-> My question was trying to determine whether the numbers reported above
-> are for a debug configuration or a production configuration.
-My reported numbers are from debug configuration.
-
-> not a production configuration, I was requesting the numbers for a
-> production configuration.
-I'm working on it. But please expect some delay in my response for this. 
-As I mentioned earlier, I need to work with few teams to get these numbers.
-
-
-> show a significant boot time reduction from the patch then there is
-> less justification for adding complexity to the existing code.  I
-> prefer to use simpler data structures and algorithms __if__ extra
-> complexity does not provide any advantage.  The balance between
-> complexity and benefits is a core software engineering issue.
+> Dongwoon DW9807 is a voice coil lens driver.
 > 
-Ok
+> Also add a vendor prefix for Dongwoon for one did not exist previously.
 > 
->> I don't have a set up for taking these numbers in perf mode. For
->> that, I need to ask some other team and round trip follow ups. In my
->> set up, I rely on serial console logging which gets disabled in perf
->> mode.
->>
->>>
->>> Thanks,
->>>
->>> Frank
->>>
->>
->> Chintan
+> Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+
+Could you send DT binding patches to the devicetree list as well, please?
+
+I'm cc'ing the DT list this time.
+
+> ---
+>  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+> new file mode 100644
+> index 0000000..0a1a860
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+> @@ -0,0 +1,9 @@
+> +Dongwoon Anatech DW9807 voice coil lens driver
+> +
+> +DW9807 is a 10-bit DAC with current sink capability. It is intended for
+> +controlling voice coil lenses.
+> +
+> +Mandatory properties:
+> +
+> +- compatible: "dongwoon,dw9807"
+> +- reg: I2C slave address
+> -- 
+> 2.7.4
 > 
 
-Chintan
 -- 
-Qualcom India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation
-Collaborative Project
+Sakari Ailus
+sakari.ailus@linux.intel.com
