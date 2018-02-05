@@ -1,30 +1,63 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] DT: dma: renesas,rcar-dmac: document R8A77980 support
-Date: Mon, 5 Feb 2018 00:09:26 -0600
-Message-ID: <20180205041232.hzrwlrponxl2cjhg@rob-hp-laptop>
-References: <8302f1c8-3deb-584b-d6c8-b46240275e9e@cogentembedded.com>
+Subject: Re: [PATCH] fbdev: simplefb: add support for 'memory-region'
+ property on DT node
+Date: Mon, 5 Feb 2018 00:09:14 -0600
+Message-ID: <20180205060914.4wherneafj6dfnev@rob-hp-laptop>
+References: <CGME20180123113510epcas1p1fc8a6e3ad50127bb84fe350b156a8c07@epcas1p1.samsung.com>
+ <1516707296-23667-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <2359956.Z9lQWSAgHb@amdc3058>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8302f1c8-3deb-584b-d6c8-b46240275e9e-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <2359956.Z9lQWSAgHb@amdc3058>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 01, 2018 at 10:09:25PM +0300, Sergei Shtylyov wrote:
-> Renesas  R-Car V3H SoC has the R-Car gen3 compatible DMA controllers.
-> Document R-Car V3H (also known as R8A77980) SoC bindings.
+On Thu, Feb 01, 2018 at 04:56:08PM +0100, Bartlomiej Zolnierkiewicz wrote:
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Hi,
 > 
-> ---
->  Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt |    1 +
->  1 file changed, 1 insertion(+)
+> On Tuesday, January 23, 2018 08:34:56 PM Kunihiko Hayashi wrote:
+> > Enables 'memory-region' property referring to the memory description on
+> > the reserved-memory node in case of devicetree use.
+> > If there is no 'reg' property that specifies the address and size of
+> > the framebuffer, the address and size written in the memory description
+> > on the reserved-memory node can be used for the framebuffer.
+> > 
+> > Furthermore, the reserved-memory node needs to have "no-map" attributes
+> > because simplefb driver maps the region by ioremap_wc().
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> 
+> This needs an ACK from Rob or Mark (DT bindings Maintainers).
+> 
+> > ---
+> >  .../bindings/display/simple-framebuffer.txt        |  3 ++
+> >  drivers/video/fbdev/simplefb.c                     | 32 ++++++++++++++++++++++
+> >  2 files changed, 35 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.txt b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> > index 5a9ce51..be5139f 100644
+> > --- a/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> > +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> > @@ -56,6 +56,9 @@ Optional properties:
+> >    framebuffer remains active.
+> >  
+> >  - display : phandle pointing to the primary display hardware node
+> > +- memory-region: phandle to a node describing memory region as framebuffer
+> > +		 memory instead of reg property. The node should include
+> > +		 'no-map'.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This should also state when it's appropriate to use this instead of reg. 
+The memory would only be reclaimed if reg is used.
 
+Though I'm wondering what keeps the simple fb memory from getting used 
+by the OS if reserved memory is not always used.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
