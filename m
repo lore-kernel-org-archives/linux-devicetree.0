@@ -1,43 +1,37 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: add R8A77980 CPG core clock definitions
-Date: Mon, 5 Feb 2018 16:01:22 +0100
-Message-ID: <CAMuHMdXNoeG7r0knw8Rc=nA2hJpHJDi3JSx_eci=KoiHdBmQrQ@mail.gmail.com>
-References: <5b7895ac-11c1-ac2d-837b-56726bc6226a@cogentembedded.com> <4281b305-ff0d-cf56-ce6b-dff4589c39f6@cogentembedded.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/3] ARM: dts: exynos: Add soc node to exynos4
+Date: Mon, 5 Feb 2018 16:02:59 +0100
+Message-ID: <CAJKOXPec6=SiwgcRBixwt+DjhyKvoK+nPYOSpHuUGgWL8vDHbQ@mail.gmail.com>
+References: <CGME20180205112603eucas1p17d1b5ef274e9541b785320a59f855c2a@eucas1p1.samsung.com>
+ <1517829936-26311-1-git-send-email-m.purski@samsung.com> <1517829936-26311-2-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4281b305-ff0d-cf56-ce6b-dff4589c39f6-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1517829936-26311-2-git-send-email-m.purski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 9:27 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Add macros usable by the device tree sources to reference the R8A77980
-> CPG core clocks by index. The data come from the table 8.2e of the R-Car
-> Series, 3rd Generation User's Manual: Hardware (Rev. 0.80, Oct, 2017),
-> however I had to add the Z2 clock which is somehow present only on the
-> figure 8.1e...
+On Mon, Feb 5, 2018 at 12:25 PM, Maciej Purski <m.purski@samsung.com> wrote:
+> Soc nodes are used in other exynos DTS. Exynos4 boards should use them
+> as well.
 >
-> Based on the original (and large) patch by Vladimir Barinov.
+> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi | 1727 ++++++++++++++++++++--------------------
+>  1 file changed, 872 insertions(+), 855 deletions(-)
 >
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+This brings some new DTC warnings:
+arch/arm/boot/dts/exynos4210-origen.dtb: Warning (simple_bus_reg):
+Node /soc/video-phy missing or empty reg/ranges property
+arch/arm/boot/dts/exynos4210-origen.dtb: Warning (simple_bus_reg):
+Node /soc/pmu missing or empty reg/ranges property
 
-Gr{oetje,eeting}s,
+arch/arm/boot/dts/exynos4412-itop-elite.dtb: Warning
+(interrupts_property): interrupts size is (32), expected multiple of
+12 in /pmu
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
