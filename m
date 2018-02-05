@@ -1,58 +1,45 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] DT: arm: shmobile: document R8A77980 SoC bindings
-Date: Mon, 5 Feb 2018 09:24:50 +0100
-Message-ID: <20180205082450.wjd6gbmfna66jy5c@verge.net.au>
-References: <fbdd08a3-1ab3-8e70-20f1-d9c41493b11c@cogentembedded.com>
- <d238e77a-e304-1fca-7ca6-bb99f6e55a68@cogentembedded.com>
- <CAMuHMdUJtCjkSGFTWKhCgCmfDsA7hQ+T=-dZwaeLEZ2L1qvGJw@mail.gmail.com>
- <20180202085100.ptwsx7esrfjlmgpk@verge.net.au>
- <20180205060841.ogtnqtshd3fp62qp@rob-hp-laptop>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: dts: imx25-pinfunc: Use consistent naming
+ for eSDHC
+Date: Mon, 5 Feb 2018 16:28:11 +0800
+Message-ID: <20180205082809.GT31354@dragon>
+References: <20180131213544.4508-1-benoit.thebaudeau.dev@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180205060841.ogtnqtshd3fp62qp@rob-hp-laptop>
+In-Reply-To: <20180131213544.4508-1-benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: =?iso-8859-1?Q?Beno=EEt_Th=E9baudeau?= <benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Nazzareno Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 05, 2018 at 12:08:41AM -0600, Rob Herring wrote:
-> On Fri, Feb 02, 2018 at 09:51:01AM +0100, Simon Horman wrote:
-> > On Thu, Feb 01, 2018 at 09:01:54PM +0100, Geert Uytterhoeven wrote:
-> > > On Wed, Jan 31, 2018 at 8:56 PM, Sergei Shtylyov
-> > > <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> > > > Document the R-Car V3H (R8A77980) SoC device tree bindings.
-> > > >
-> > > > Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> > > 
-> > > Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> > > 
-> > > Some people may complain about the subject prefix, though.
+On Wed, Jan 31, 2018 at 10:35:43PM +0100, Benoît Thébaudeau wrote:
+> This file had several naming inconsistencies for eSDHC:
+>  - the instances were named sometimes SDn, sometimes SDHCn, whereas they
+>    are named ESDHCn in the reference manual, e.g.:
+>      MX25_PAD_SD1_CMD__SD1_CMD
+>      MX25_PAD_D15__SDHC1_DAT7
+>  - the data ports were named sometimes DATAn, sometimes DATn like in the
+>    reference manual, e.g.:
+>      MX25_PAD_SD1_DATA0__SD1_DATA0
+>      MX25_PAD_D15__SDHC1_DAT7
+>  - in one case, the clock port was named DAT_CLK instead of CLK:
+>      MX25_PAD_CSI_D7__SDHC2_DAT_CLK
 > 
-> By "some people", Geert means me. :)
+> This change:
+>  - introduces new definitions using the naming from the reference
+>    manual,
+>  - keeps definitions using the legacy naming in order not to break
+>    compatibility for out-of-tree users (they can be removed later),
+>  - updates the in-tree files that were using the legacy naming.
 > 
-> > 
-> > I'm a bit unsure about what to do about prefixes for that file.
-> > I've gone with the following which seems sensible to me.
-> 
-> This should make it somewhat clear:
-> 
-> git log --oneline -- Documentation/devicetree/bindings/arm/
-> 
-> > 
-> > arm64: renesas: document R8A77980 SoC bindings 
-> 
-> "dt-bindings: arm: ..." or  "dt-bindings: shmobile: ".
+> Cc: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Benoît Thébaudeau <benoit.thebaudeau.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Thanks, I've updated the subject to the following when adding
-your tag.
-
-dt-bindings: arm: document R8A77980 SoC bindings
-
-> But then I don't make folks respin just for that, so
-> 
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Applied both, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
