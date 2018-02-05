@@ -1,34 +1,60 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH] ASoC: samsung: Add the DT binding files entry to
- MAINTAINERS
-Date: Mon, 05 Feb 2018 18:05:00 +0100
-Message-ID: <20180205170500.8992-1-s.nawrocki@samsung.com>
-References: <CGME20180205170523epcas1p31ebef69e5d5db0a1ef2f1c3b5ac544ae@epcas1p3.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: lgirdwood@gmail.com, alsa-devel@alsa-project.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, krzk@kernel.org, jcsing.lee@samsung.com, sbkim73@samsung.com, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCHv2] ARM: dts: imx6q-bx50v3: Enable secure-reg-access
+Date: Mon,  5 Feb 2018 18:08:40 +0100
+Message-ID: <20180205170840.14045-1-sebastian.reichel@collabora.co.uk>
+References: <20180205052659.GA31354@dragon>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180205052659.GA31354@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds missing DT binding files to the Samsung ASoC
-drivers entry.
+From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Enable secure debug enable register access for Bx50v3 devices to enable
+PMU and hardware counters for perf.
+
+Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 ---
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Changes since PATCHv1:
+ * add property by adding a label to the pmu node in imx6qdl and
+   referencing it in bx50v3.dtsi.
+---
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 4 ++++
+ arch/arm/boot/dts/imx6qdl.dtsi      | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5046003ea162..da2df3194d72 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11921,6 +11921,7 @@ M:	Sylwester Nawrocki <s.nawrocki@samsung.com>
- L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
- S:	Supported
- F:	sound/soc/samsung/
-+F:	Documentation/devicetree/bindings/sound/samsung*
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index 916ea94d75ca..2baffc8b9094 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -388,3 +388,7 @@
+ 		#interrupt-cells = <1>;
+ 	};
+ };
++
++&pmu {
++	secure-reg-access;
++};
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 59ff86695a14..2b921de44c02 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -143,7 +143,7 @@
+ 		};
+ 	};
  
- SAMSUNG EXYNOS PSEUDO RANDOM NUMBER GENERATOR (RNG) DRIVER
- M:	Krzysztof Kozlowski <krzk@kernel.org>
+-	pmu {
++	pmu: pmu {
+ 		compatible = "arm,cortex-a9-pmu";
+ 		interrupt-parent = <&gpc>;
+ 		interrupts = <0 94 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-2.14.2
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
