@@ -1,58 +1,40 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH 2/2] media: dt-bindings: Add bindings for Dongwoon DW9807
- voice coil
-Date: Mon, 5 Feb 2018 14:24:01 +0200
-Message-ID: <20180205122401.o5od2vfgvqiqqwgs@paasikivi.fi.intel.com>
-References: <1517500092-12121-1-git-send-email-andy.yeh@intel.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 02/11] soc: renesas: rcar-rst: add R8A77980 support
+Date: Mon, 5 Feb 2018 13:37:04 +0100
+Message-ID: <CAMuHMdVcKEH4FMf8UazacV86DFtJq8sdxfT+c7UX+67k5vXugA@mail.gmail.com>
+References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com> <76b4144e-423a-65fd-fe17-bfedbc0deb8e@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1517500092-12121-1-git-send-email-andy.yeh@intel.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Andy Yeh <andy.yeh@intel.com>
-Cc: linux-media@vger.kernel.org, tfiga@chromium.org, Alan Chiang <alanx.chiang@intel.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <76b4144e-423a-65fd-fe17-bfedbc0deb8e-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+On Fri, Feb 2, 2018 at 7:27 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Add support for R-Car V3H (R8A77980) to the R-Car RST driver -- this driver
+> is  needed  for the clock driver to work.
 
-On Thu, Feb 01, 2018 at 11:48:12PM +0800, Andy Yeh wrote:
-> From: Alan Chiang <alanx.chiang@intel.com>
-> 
-> Dongwoon DW9807 is a voice coil lens driver.
-> 
-> Also add a vendor prefix for Dongwoon for one did not exist previously.
-> 
-> Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+Please drop the extra spaces in between words that are part of the same
+sentence.
 
-Could you send DT binding patches to the devicetree list as well, please?
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-I'm cc'ing the DT list this time.
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-> ---
->  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-> new file mode 100644
-> index 0000000..0a1a860
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
-> @@ -0,0 +1,9 @@
-> +Dongwoon Anatech DW9807 voice coil lens driver
-> +
-> +DW9807 is a 10-bit DAC with current sink capability. It is intended for
-> +controlling voice coil lenses.
-> +
-> +Mandatory properties:
-> +
-> +- compatible: "dongwoon,dw9807"
-> +- reg: I2C slave address
-> -- 
-> 2.7.4
-> 
+Gr{oetje,eeting}s,
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
