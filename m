@@ -1,46 +1,62 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v12 7/9] ACPI: Translate the I/O range of non-MMIO
- devices before scanning
-Date: Mon, 05 Feb 2018 04:10:50 -0800
-Message-ID: <1517832650.7489.256.camel@perches.com>
-References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
-         <1516725385-24535-8-git-send-email-john.garry@huawei.com>
-         <CAJZ5v0ghc1sthrMBobSXfNrxoKrjbie9qnKYnLdxnpLfZPzs8w@mail.gmail.com>
-         <8beedbb3-9098-6440-9ddf-e64b2a8e5151@huawei.com>
+From: Chintan Pandya <cpandya@codeaurora.org>
+Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
+ of_find_node_by_phandle()
+Date: Mon, 5 Feb 2018 17:53:06 +0530
+Message-ID: <0a178f4b-75fe-0564-7b0e-596f52fca1dc@codeaurora.org>
+References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
+ <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
+ <38cdcae5-ec0f-d1be-b024-1990d4387731@gmail.com>
+ <9e23d32f-05a0-ce8a-41f8-9a1a3d66be37@codeaurora.org>
+ <fd9f5f63-b08e-602e-1510-85a65889f550@gmail.com>
+ <567731e8-8f89-bd6e-c3d4-e36400e69198@codeaurora.org>
+ <0db129ef-ffd8-96fe-46a7-55fb575272e3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <8beedbb3-9098-6440-9ddf-e64b2a8e5151@huawei.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Hanjun Guo <hanjun.guo@linaro.org>, "dann.frazier@canonical.com" <dann.frazier@canonical.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Linux PCI <linux-pci@vger.kernel.org>, Corey Minyard <minyard@acm.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arch <linux-arch@vger.k>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0db129ef-ffd8-96fe-46a7-55fb575272e3@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-02-05 at 11:01 +0000, John Garry wrote:
-> On 04/02/2018 07:45, Rafael J. Wysocki wrote:
-> > +       /* translate the I/O resources */
-> > > +       for (i = 0; i < count; i++) {
-> > > +               if (resources[i].flags & IORESOURCE_IO) {
-> > > +                       ret = acpi_translate_logicio_res(adev, host,
-> > > +                                                       &resources[i]);
-> > 
-> > You don't need to break this line as far as I'm concerned.
+
 > 
-> This is just to keep checkpatch happy. I could move the complete 
-> function call to a single line. And also shortening some symbols will help.
+> My question was trying to determine whether the numbers reported above
+> are for a debug configuration or a production configuration.
+My reported numbers are from debug configuration.
 
-This could also use continue as well
+> not a production configuration, I was requesting the numbers for a
+> production configuration.
+I'm working on it. But please expect some delay in my response for this. 
+As I mentioned earlier, I need to work with few teams to get these numbers.
 
-	/* translate the I/O resources */
-	for (i = 0; i < count; i++) {
-		if (!(resources[i].flags & IORESOURCE_IO))
-			continue;
-		ret = acpi_translate_logicio_res(adev, host, &resources[i]);
-		if (ret) {
-			kfree(resources);
-			dev_err(child, "Translate I/O range failed (%d)!\n",
-				ret);
-			return ret;
-		}
-	}
+
+> show a significant boot time reduction from the patch then there is
+> less justification for adding complexity to the existing code.  I
+> prefer to use simpler data structures and algorithms __if__ extra
+> complexity does not provide any advantage.  The balance between
+> complexity and benefits is a core software engineering issue.
+> 
+Ok
+> 
+>> I don't have a set up for taking these numbers in perf mode. For
+>> that, I need to ask some other team and round trip follow ups. In my
+>> set up, I rely on serial console logging which gets disabled in perf
+>> mode.
+>>
+>>>
+>>> Thanks,
+>>>
+>>> Frank
+>>>
+>>
+>> Chintan
+> 
+
+Chintan
+-- 
+Qualcom India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum, a Linux Foundation
+Collaborative Project
