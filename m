@@ -1,56 +1,68 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Mon, 5 Feb 2018 14:11:13 -0800
-Message-ID: <20180205221113.GE9465@builder>
-References: <20180118220833.16616-3-ilina@codeaurora.org>
- <20180118222802.18161-1-ilina@codeaurora.org>
- <20180129190852.5ddcgdo3gkc2nw5r@rob-hp-laptop>
- <20180130161750.GA20815@codeaurora.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
+Date: Tue, 6 Feb 2018 00:13:49 +0100
+Message-ID: <CACRpkdanb3XocUpmTaFTh-vsApucX0PzuqRg_fA2ORUFtrVGJA@mail.gmail.com>
+References: <20180201174923.7385-1-l.stach@pengutronix.de> <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
+ <1517825351.3175.3.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180130161750.GA20815@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, andy.gross@linaro.org, david.brown@linaro.org, sboyd@codeaurora.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, msivasub@codeaurora.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1517825351.3175.3.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "A . s . Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, linux-imx-3arQi8VN3Tc@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 30 Jan 08:17 PST 2018, Lina Iyer wrote:
-> On Mon, Jan 29 2018 at 19:08 +0000, Rob Herring wrote:
-> > On Thu, Jan 18, 2018 at 03:28:02PM -0700, Lina Iyer wrote:
-[..]
-> > > diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-[..]
-> > > +Command DB is a database that provides a mapping between resource key and the
-> > > +resource address for a system resource managed by a remote processor. The data
-> > > +is stored in a shared memory region and is loaded by the remote processor.
-> > 
-> > Is said shared memory described in DT. If so, this should be a child
-> > node. Only 8 bytes seems kind of fine grained for putting in DT when it
-> > could be implied by the parent shared memory node.
-> > 
-> I dont believe this memory will be described in DT for this chipset.
-> Will ask internally.
-> 
+On Mon, Feb 5, 2018 at 11:09 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
 
-Well, these things goes two ways...
+>> > +Optional Properties:
+>> > +- drive-strength           Integer: controls Drive Strength
+>>
+>> I thought drive-strength is supposed to be be in mA. We should not have
+>> differing units in common properties.
+>>
+>> There was an Atmel binding the other day that this came up.
+>
+> I know it's in the common binding, but it's going to be very hard to
+> support. The drive-strength in mA really depends on external loading of
+> the pin and the pin voltage, at least for the most widespread
+> controllers that only switch between resistors, instead of driving the
+> pin by a current regulator.
 
-> > > +
-> > > +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
-> > > +controlling shared resources. Depending on the board configuration the shared
-> > > +resource properties may change. These properties are dynamically probed by the
-> > > +remote processor and made available in the shared memory.
-> > 
-> > The table may change, but does the presence of it or shared memory
-> > location (of the pointer) change?
-> > 
-> The location may change between different SoCs, but will be present in
-> all chipsets of this architecture.
-> 
+How does this circuit really look? Can you sketch something so
+we understand what is going on electronically here?
 
-Where is the actual DB located? System RAM or is it some special
-device-memory?
+The way I imagine most drive strength out there works is by simply
+connection more MOS-totempoles after each other and each of them
+has a production-technology-related max output current like 4mA, so
+by putting two in a series yoy double that to 8 mA.
 
-Regards,
-Bjorn
+Is that what you mean with "current regulator"?
+
+If you mean rather "output impedance", that is something else and
+something we need a new (generic) property for. I never saw that
+before, really.
+
+> I would much prefer if we just remove unit from the common binding and
+> let the drivers define it in a way that fits their hardware
+> description.
+
+Yeah but is this really the same thing even ...
+
+> It's the same thing with the slew-rate really, but the common binding
+> didn't make the mistake to define a single unit there, with many
+> pincontrollers being really vague about how fast the slew really is,
+> but some may actually define it in uS or whatever else makes sense.
+
+I agree with that. Also for skewrate and output time delays
+(skew delay).
+
+It's very unclear how cell libraries really implement this.
+But with drive strength I thought we knew it ...
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
