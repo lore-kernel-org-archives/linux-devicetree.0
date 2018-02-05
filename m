@@ -1,56 +1,78 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v2 2/5] clk: mediatek: modify MT7622 audsys to adapt MFD
- device
-Date: Mon, 5 Feb 2018 12:07:35 +0800
-Message-ID: <1517803655.1173.12.camel@mtkswgap22>
-References: <cover.1515639336.git.ryder.lee@mediatek.com>
-         <d6669277f5232446b4798a6b724074b18d5c21aa.1515639336.git.ryder.lee@mediatek.com>
-         <72058f8d-c83d-d0e6-dc07-83c9f5fc2710@gmail.com>
+From: Yung-Ching LIN <yungching0725@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx: Add support for Advantech DMS-BA16
+Date: Sun, 4 Feb 2018 20:23:16 -0800
+Message-ID: <CACGtqyyriQ7hdUWO8HLn=KC1+vkD=kPAMVZEixqByjdw0Dxf5g@mail.gmail.com>
+References: <20180204184514.2396-1-yungching0725@gmail.com> <20180204192246.GC24569@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <72058f8d-c83d-d0e6-dc07-83c9f5fc2710@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180204192246.GC24569@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: shawnguo@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2018-02-03 at 15:26 +0100, Matthias Brugger wrote:
-> 
-> On 01/31/2018 08:42 AM, Ryder Lee wrote:
-> > As the new MFD parent is in place, switch probing method to adapt it.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > ---
-> >  drivers/clk/mediatek/clk-mt7622-aud.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/clk/mediatek/clk-mt7622-aud.c b/drivers/clk/mediatek/clk-mt7622-aud.c
-> > index 13f752d..8c18536 100644
-> > --- a/drivers/clk/mediatek/clk-mt7622-aud.c
-> > +++ b/drivers/clk/mediatek/clk-mt7622-aud.c
-> > @@ -142,11 +142,12 @@ static int clk_mt7622_audiosys_init(struct platform_device *pdev)
-> >  {
-> >  	struct clk_onecell_data *clk_data;
-> >  	struct device_node *node = pdev->dev.of_node;
-> > +	struct device_node *pnode = pdev->dev.parent->of_node;
-> >  	int r;
-> >  
-> >  	clk_data = mtk_alloc_clk_data(CLK_AUDIO_NR_CLK);
-> >  
-> > -	mtk_clk_register_gates(node, audio_clks, ARRAY_SIZE(audio_clks),
-> > +	mtk_clk_register_gates(pnode, audio_clks, ARRAY_SIZE(audio_clks),
-> 
-> We will need a fallback here for older device tree bindings.
-> 
-> Regards,
-> Matthias
+Hi Andrew,
 
-Up to now, I didn't see both driver and bindings are used anywhere.
-Should I still care about that?
+Will provide the v2 for all the fixes.
+Thank you for the comments.
 
-Thanks.
+On Sun, Feb 4, 2018 at 11:22 AM, Andrew Lunn <andrew@lunn.ch> wrote:
+> On Mon, Feb 05, 2018 at 02:45:14AM +0800, Ken Lin wrote:
+>> Add support for Advantech DMS-BA16 board, which use
+>> the Advantech BA-16 module.
+>>
+>> Signed-off-by: Ken Lin <yungching0725@gmail.com>
+>> ---
+>>  arch/arm/boot/dts/Makefile           |   1 +
+>>  arch/arm/boot/dts/imx6q-dms-ba16.dts | 154 +++++++++++++++++++++++++++++++++++
+>>  2 files changed, 155 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/imx6q-dms-ba16.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index ade7a38543dc..d97511273f30 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -428,6 +428,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>>       imx6q-b450v3.dtb \
+>>       imx6q-b650v3.dtb \
+>>       imx6q-b850v3.dtb \
+>> +     imx6q-dms-ba16.dtb \
+>>       imx6q-cm-fx6.dtb \
+>>       imx6q-cubox-i.dtb \
+>>       imx6q-cubox-i-emmc-som-v15.dtb \
+>
+> Hi Ken
+>
+> I think the intention is to keep this list sorted. So dms puts it
+> later, after cubox.
+>
 
+Thanks. will fix the order issue in the v2.
 
+>> @@ -0,0 +1,154 @@
+>> +/*
+>> + * Copyright 2018 Advantech Corporation
+>> + *
+>> + * The code contained herein is licensed under the GNU General Public
+>> + * License. You may obtain a copy of the GNU General Public License
+>> + * Version 2 or later at the following locations:
+>> + *
+>> + * http://www.opensource.org/licenses/gpl-license.html
+>> + * http://www.gnu.org/copyleft/gpl.html
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include "imx6q-ba16.dtsi"
+>> +
+>> +/ {
+>> +     model = "Advantech DMS-BA16";
+>> +     compatible = "fsl,imx6q-dms-ba16", "fsl,imx6q";
+>
+> This looks wrong. I would expect "advantech,imx6q-dms-ba16".
+>
+>      Andrew
 
+Thanks. will fix the board comptability issue in the v2.
