@@ -1,34 +1,42 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: spi: updated usage example for
- spi-rx/tx-bus-width properties
-Date: Mon, 5 Feb 2018 00:09:30 -0600
-Message-ID: <20180205060930.ifyfya5fblr254ww@rob-hp-laptop>
-References: <1517549484-6024-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <1517549484-6024-3-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] soc: mediatek: add SCPSYS power domain driver for
+ MediaTek MT7623A SoC
+Date: Mon, 5 Feb 2018 00:09:13 -0600
+Message-ID: <20180205060913.ak62ammdposybdsf@rob-hp-laptop>
+References: <975fb80e1cdbe7f6d4a1d04fd3a2a21b619a193d.1517479588.git.sean.wang@mediatek.com>
+ <de07c071f968ae9da84543bb33cc5658ed184801.1517479588.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1517549484-6024-3-git-send-email-yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org, suresh.gupta-3arQi8VN3Tc@public.gmane.org
+In-Reply-To: <de07c071f968ae9da84543bb33cc5658ed184801.1517479588.git.sean.wang@mediatek.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: matthias.bgg@gmail.com, rjw@rjwysocki.net, khilman@baylibre.com, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 02, 2018 at 11:01:24AM +0530, Yogesh Gaur wrote:
-> Updated usage example by adding properties spi-rx-bus-width
-> and spi-tx-bus-width for slave node binding.
+On Thu, Feb 01, 2018 at 06:12:48PM +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
-> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
+> Add SCPSYS power domain driver for MT7623A SoC. The MT7623A's power
+> domains are the subset of MT7623 SoC's ones. As MT7623 SoC has full
+> features whereas MT7623A is being designed just for router applications.
+> Thus, MT7623A doesn't include those power domains multimedia function
+> belongs to. In order to avoid certain errors undoubtedly happening at
+> registering those power domains on MT7623A SoC using the existing MT7623
+> SCPSYS driver, it's required to define another setup specifically for
+> MT7623A SoC. Also, use a meaningful definition for bus_prot_mask instead
+> of just hardcoded for it.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 > ---
-> Changes for v2:
-> - None
-> 
->  Documentation/devicetree/bindings/spi/spi-bus.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/soc/mediatek/mtk-scpsys.c         | 60 +++++++++++++++++++++++++++++--
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  include/dt-bindings/power/mt7623a-power.h | 10 ++++++
+
+This belongs in the binding patch.
+
+>  include/linux/soc/mediatek/infracfg.h     |  4 +++
+>  3 files changed, 72 insertions(+), 2 deletions(-)
+>  create mode 100644 include/dt-bindings/power/mt7623a-power.h
+> 
