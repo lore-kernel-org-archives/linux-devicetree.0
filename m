@@ -1,79 +1,75 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v5 4/5] media: ov5640: add support of DVP parallel
- interface
-Date: Mon, 5 Feb 2018 11:42:11 +0000
-Message-ID: <TY1PR06MB08954787E362BF24C7FD41DBC0FE0@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1514973452-10464-1-git-send-email-hugues.fruchet@st.com>
- <1514973452-10464-5-git-send-email-hugues.fruchet@st.com>
- <TY1PR06MB089512437228BAFF910B133FC0FA0@TY1PR06MB0895.apcprd06.prod.outlook.com>
- <20180202185045.vvhmj5wtagalkucf@flea.lan>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH] fbdev: simplefb: add support for 'memory-region' property on DT node
+Date: Mon, 05 Feb 2018 21:03:35 +0900
+Message-ID: <20180205210334.32F0.4A936039@socionext.com>
+References: <2359956.Z9lQWSAgHb@amdc3058> <20180205060914.4wherneafj6dfnev@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20180202185045.vvhmj5wtagalkucf@flea.lan>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Hugues Fruchet <hugues.fruchet@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Chris Paterson <Chris.Paterson2@renesas.com>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@iki.fi>, Steve Longerbeam <slongerbeam@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180205060914.4wherneafj6dfnev@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Hans de Goede <hdegoede@redhat.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Maxime,
+Hi Rob,
 
-thank you for your feedback.
+On Mon, 5 Feb 2018 00:09:14 -0600 <robh@kernel.org> wrote:
 
-> > > +/*
-> > > + * configure parallel port control lines polarity
-> > > + *
-> > > + * POLARITY CTRL0
-> > > + * - [5]:PCLK polarity (0: active low, 1: active high)
-> > > + * - [1]:HREF polarity (0: active low, 1: active high)
-> > > + * - [0]:VSYNC polarity (mismatch here between
-> > > + *datasheet and hardware, 0 is active high
-> > > + *and 1 is active low...)
-> >
-> > I know that yourself and Maxime have both confirmed that VSYNC
-> > polarity is inverted, but I am looking at HSYNC and VSYNC with a
-> > logic analyser and I am dumping the values written to
-> > OV5640_REG_POLARITY_CTRL00 and to me it looks like that HSYNC is
-> > active HIGH when hsync_pol =3D=3D 0, and VSYNC is active HIGH when
-> > vsync_pol =3D=3D 1.
->
-> Which mode are you testing this on?
+> On Thu, Feb 01, 2018 at 04:56:08PM +0100, Bartlomiej Zolnierkiewicz wrote:
+> > 
+> > Hi,
+> > 
+> > On Tuesday, January 23, 2018 08:34:56 PM Kunihiko Hayashi wrote:
+> > > Enables 'memory-region' property referring to the memory description on
+> > > the reserved-memory node in case of devicetree use.
+> > > If there is no 'reg' property that specifies the address and size of
+> > > the framebuffer, the address and size written in the memory description
+> > > on the reserved-memory node can be used for the framebuffer.
+> > > 
+> > > Furthermore, the reserved-memory node needs to have "no-map" attributes
+> > > because simplefb driver maps the region by ioremap_wc().
+> > > 
+> > > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > 
+> > This needs an ACK from Rob or Mark (DT bindings Maintainers).
+> > 
+> > > ---
+> > >  .../bindings/display/simple-framebuffer.txt        |  3 ++
+> > >  drivers/video/fbdev/simplefb.c                     | 32 ++++++++++++++++++++++
+> > >  2 files changed, 35 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer.txt b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> > > index 5a9ce51..be5139f 100644
+> > > --- a/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> > > +++ b/Documentation/devicetree/bindings/display/simple-framebuffer.txt
+> > > @@ -56,6 +56,9 @@ Optional properties:
+> > >    framebuffer remains active.
+> > >  
+> > >  - display : phandle pointing to the primary display hardware node
+> > > +- memory-region: phandle to a node describing memory region as framebuffer
+> > > +		 memory instead of reg property. The node should include
+> > > +		 'no-map'.
+> 
+> This should also state when it's appropriate to use this instead of reg. 
+> The memory would only be reclaimed if reg is used.
+> 
+> Though I'm wondering what keeps the simple fb memory from getting used 
+> by the OS if reserved memory is not always used.
 
-My testing environment is made of the sensor connected to a SoC with 8 data=
- lines, vsync, hsync, and pclk, and of course I am specifying hsync-active,=
- vsync-active, and pclk-sample in the device tree on both ends so that they=
- configure themselves accordingly to work in DVP mode (V4L2_MBUS_PARALLEL),=
- with the correct polarities.
-Between the sensor and the SoC there is a noninverting bus transceiver (vol=
-tage translator), for my experiments I have plugged myself onto the outputs=
- of this transceiver only to be compliant with the voltage level of my logi=
-c analyser.
+Sorry that my understanding might not be correct.
 
->
-> The non-active periods are insanely high in most modes (1896 for an
-> active horizontal length of 640 in 640x480 for example), especially
-> hsync, and it's really easy to invert the two.
+Since a framebuffer defined by "reserved-memory" can't be reclaimed,
+I've assumed such the framebuffer was dedicated and had some restrictions
+by device or firmware.
 
-I am looking at all the data lines, so that I don't confuse the non-active =
-periods with the active periods, and with my setup what I reported is what =
-I get. I wonder if this difference comes from the sensor revision at all? U=
-nfortunately I can only test the one camera I have got.
+Even in that case, You mean that we describe only "reg" directly,
+not go through "reserved-memory". Is that correct?
 
-Thanks,
-Fab
+It might be better to define new driver handling the dedicated framebuffer
+rather than using simple-fb, though, I'm not sure.
 
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin (formerly Free Electrons)
-> Embedded Linux and Kernel engineering
-> http://bootlin.com
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+---
+Best Regards,
+Kunihiko Hayashi
