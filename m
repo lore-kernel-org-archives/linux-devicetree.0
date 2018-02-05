@@ -1,55 +1,47 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH 8/8] ASoC: samsung,tm2-audio DT binding documentation update
-Date: Mon, 05 Feb 2018 16:44:03 +0100
-Message-ID: <20180205154403.13520-9-s.nawrocki@samsung.com>
-References: <20180205154403.13520-1-s.nawrocki@samsung.com>
-        <CGME20180205154537epcas1p10a9a30a574e3f472358e7dacf3cb0489@epcas1p1.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180205154403.13520-1-s.nawrocki@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org
-Cc: lgirdwood@gmail.com, alsa-devel@alsa-project.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, krzk@kernel.org, jcsing.lee@samsung.com, sbkim73@samsung.com, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH] ARM: dts: da850-evm: add clock properties to the nand node
+Date: Mon,  5 Feb 2018 16:52:22 +0100
+Message-ID: <20180205155222.22189-1-brgl@bgdev.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents additional entries of the audio-codec and
-i2s-controller properties required for the HDMI audio support.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Make nand work with the common clock framework by specifying which
+clock should be used and what name to look up.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- .../devicetree/bindings/sound/samsung,tm2-audio.txt        | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/da850-evm.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
-index 94442e5673b3..f5ccc12ddc00 100644
---- a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
-+++ b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
-@@ -4,9 +4,13 @@ Required properties:
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index a86a8a1816f2..2602ad8e99ee 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -296,6 +296,9 @@
+ 			reg = <0 0x02000000 0x02000000
+ 			       1 0x00000000 0x00008000>;
  
-  - compatible		 : "samsung,tm2-audio"
-  - model		 : the user-visible name of this sound complex
-- - audio-codec		 : the phandle of the wm5110 audio codec node,
--			   as described in ../mfd/arizona.txt
-- - i2s-controller	 : the phandle of the I2S controller
-+ - audio-codec		 : the first entry should be phandle of the wm5110 audio
-+			   codec node, as described in ../mfd/arizona.txt;
-+			   the second entry should be phandle of the HDMI
-+			   transmitter node
-+ - i2s-controller	 : the list of phandle and argument tuples pointing to
-+			   I2S controllers, the first entry should be I2S0 and
-+			   the second one I2S1
-  - audio-amplifier	 : the phandle of the MAX98504 amplifier
-  - samsung,audio-routing : a list of the connections between audio components;
- 			   each entry is a pair of strings, the first being the
-@@ -22,8 +26,8 @@ Example:
- 
- sound {
- 	compatible = "samsung,tm2-audio";
--	audio-codec = <&wm5110>;
--	i2s-controller = <&i2s0>;
-+	audio-codec = <&wm5110>, <&hdmi>;
-+	i2s-controller = <&i2s0 0>, <&i2s1 0>;
- 	audio-amplifier = <&max98504>;
- 	mic-bias-gpios = <&gpr3 2 0>;
- 	model = "wm5110";
++			clocks = <&psc0 3>;
++			clock-names = "aemif";
++
+ 			ti,davinci-chipselect = <1>;
+ 			ti,davinci-mask-ale = <0>;
+ 			ti,davinci-mask-cle = <0>;
 -- 
-2.14.2
+2.16.1
