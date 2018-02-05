@@ -1,118 +1,33 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v2 4/5] dt-bindings: clock: mediatek: update audsys
- documentation to adapt MFD device
-Date: Mon, 5 Feb 2018 17:11:32 +0800
-Message-ID: <1517821892.12510.32.camel@mtkswgap22>
-References: <cover.1515639336.git.ryder.lee@mediatek.com>
-         <8651585c91ee40f6ab3e30b893bcfb90fe5c2c25.1515639336.git.ryder.lee@mediatek.com>
-         <20180205060833.p56dun5i4bvs3jye@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 0/2] clk: npcm: add NPCM7xx clock driver
+Date: Mon,  5 Feb 2018 10:22:53 +0200
+Message-ID: <1517818975-11427-1-git-send-email-tmaimon77@gmail.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20180205060833.p56dun5i4bvs3jye@rob-hp-laptop>
 Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, tali.perry1@gmail.com, avifishman70@gmail.com, brendanhiggins@google.com, joel@jms.id.au
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-02-05 at 00:08 -0600, Rob Herring wrote:
-> On Wed, Jan 31, 2018 at 03:42:44PM +0800, Ryder Lee wrote:
-> > As the MediaTek audio hardware block that expose functionalities that are
-> > handled by separate subsystems in the kernel, and there are registers that
-> > are shared between related drivers.
-> > 
-> > Switch the current device to an MFD device, add more descriptions about the
-> > subsystem and modify example accordingly.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > ---
-> >  .../bindings/arm/mediatek/mediatek,audsys.txt      | 37 ++++++++++++++++++----
-> >  1 file changed, 30 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
-> > index 9b8f578..677af40 100644
-> > --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
-> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
-> > @@ -1,22 +1,45 @@
-> > -MediaTek AUDSYS controller
-> > +MediaTek Audio Subsystem
-> >  ============================
-> > +The audio subsystem is one of the multi-function blocks of MediaTek SoCs.
-> > +It contains a system controller, which provides a number registers giving
-> > +access to two features: AUDSYS clocks and Audio Front End (AFE) components.
-> >  
-> > +For the top level node:
-> > +- compatible: must be: "syscon", "simple-mfd";
-> 
-> This should have some SoC specific compatible.
+This patch set adds clock support for the Nuvoton NPCM7xx Baseboard
+Management Controller (BMC).
 
-As we don't have a specific driver (compatible string) for it and if we
-need to add that I think the term '*-audsys' is very suitable here, but
-unfortunately, it has already picked for clock driver (see child node).
+The clock controller generates the clocks for the Graphics Core,
+Memory interface, CPU, AMBA buses and all the engine modules. 
+The NPCM7xx includes four PLL modules. 
+The clock source is selectable from either PLL or the external clock input. 
+Several clock signals have a configurable divide from the clock source
 
-I also took ../../marvell/*-system-controller.txt as examples for my
-case. Thus, I'm not sure should we still need a new one here?
+Tomer Maimon (2):
+  dt-binding: clock: document NPCM7xx clock DT bindings
+  clk: npcm: add NPCM7xx clock driver
 
-> > +- reg: register area of the Audio Subsystem
-> > +
-> > +Required sub-nodes:
-> > +
-> > +AUDSYS clocks:
-> > +-------
-> >  The MediaTek AUDSYS controller provides various clocks to the system.
-> >  
-> >  Required Properties:
-> >  
-> >  - compatible: Should be one of:
-> > -	- "mediatek,mt7622-audsys", "syscon"
-> > +	- "mediatek,mt2701-audsys";
-> > +	- "mediatek,mt7622-audsys";
-> >  - #clock-cells: Must be 1
-> >  
-> >  The AUDSYS controller uses the common clk binding from
-> >  Documentation/devicetree/bindings/clock/clock-bindings.txt
-> >  The available clocks are defined in dt-bindings/clock/mt*-clk.h.
-> 
-> There's no register range associated with the clocks? If there is, add a 
-> reg property.
+ .../bindings/clock/nuvoton,npcm7xx-clk.txt         |  84 +++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-npcm7xx.c                          | 751 +++++++++++++++++++++
+ 3 files changed, 836 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,npcm7xx-clk.txt
+ create mode 100644 drivers/clk/clk-npcm7xx.c
 
-No, we don't need reg property here, as the two sub-drivers will obtain
-the regmap  which is propagated from the parent.
-
-Thanks
-
-> >  
-> > +AFE components:
-> > +-------
-> > +For common binding part and usage, refer to
-> > +../sonud/mt2701-afe-pcm.txt.
-> > +
-> >  Example:
-> >  
-> > -audsys: audsys@11220000 {
-> > -	compatible = "mediatek,mt7622-audsys", "syscon";
-> > -	reg = <0 0x11220000 0 0x1000>;
-> > -	#clock-cells = <1>;
-> > -};
-> > +	audio-subsystem@11220000 {
-> > +		compatible = "syscon", "simple-mfd";
-> > +		reg = <0 0x11220000 0 0x2000>;
-> > +
-> > +		audsys: clock {
-> > +			compatible = "mediatek,mt2701-audsys";
-> > +			#clock-cells = <1>;
-> > +		};
-> > +
-> > +		...
-> > +	};
-> > -- 
-> > 1.9.1
-> > 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
-
+-- 
+2.14.1
 
