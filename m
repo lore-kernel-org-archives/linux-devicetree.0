@@ -1,59 +1,38 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 1/2] dt-bindings: fsi: Add optional property no-scan-on-init
-Date: Mon, 5 Feb 2018 16:38:50 +1030
-Message-ID: <CACPK8Xfrr+7Oh04_6+AX=Y_8wdvb4ALVGgepCQftvLwHn+J+XQ@mail.gmail.com>
-References: <20180130055116.17411-1-joel@jms.id.au> <20180130055116.17411-2-joel@jms.id.au>
- <20180205023654.77yq7j22ovby2ql5@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] Documentation: dt-bindings: arm: Document kryo385
+ cpu
+Date: Mon, 5 Feb 2018 00:08:37 -0600
+Message-ID: <20180205060837.m4wwnh3dhav75d5y@rob-hp-laptop>
+References: <20180131161941.29865-1-rnayak@codeaurora.org>
+ <20180131161941.29865-2-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180205023654.77yq7j22ovby2ql5@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Christopher Bostic <cbostic@linux.vnet.ibm.com>, Jeremy Kerr <jk@ozlabs.org>, Eddie James <eajames@linux.vnet.ibm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180131161941.29865-2-rnayak@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, andy.gross@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 5, 2018 at 4:37 PM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Jan 30, 2018 at 04:21:15PM +1030, Joel Stanley wrote:
->> From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
->>
->> Add an optional FSI master property 'no-scan-on-init.  This
->> can be specified to indicate that a master should not be
->> automatically scanned at init time.  This is required in cases
->> where a scan could interfere with another FSI master on the same
->> bus.
->>
->> Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
->> Acked-by: Jeremy Kerr <jk@ozlabs.org>
->> Signed-off-by: Joel Stanley <joel@jms.id.au>
->> ---
->>  Documentation/devicetree/bindings/fsi/fsi.txt | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/fsi/fsi.txt b/Documentation/devicetree/bindings/fsi/fsi.txt
->> index 4eaf488d4015..ab516c673a4b 100644
->> --- a/Documentation/devicetree/bindings/fsi/fsi.txt
->> +++ b/Documentation/devicetree/bindings/fsi/fsi.txt
->> @@ -56,6 +56,13 @@ addresses (link index and slave ID), and no size:
->>      #address-cells = <2>;
->>      #size-cells = <0>;
->>
->> +An optional boolean property can be added to indicate that a particular master
->> +should not scan for connected devices at initialization time.  This is
->> +necessary in cases where a scan could cause arbitration issues with other
->> +masters that may be present on the bus.
->> +
->> +    no-scan-on-init;
->> +
->
-> The formatting here is a bit strange compared to most bindings, but no
-> point in reformatting the document to add one property.
+On Wed, Jan 31, 2018 at 09:49:39PM +0530, Rajendra Nayak wrote:
+> Document the compatible string for the Kryo385 cpus found in qualcomm
+> SoCs.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-I'll keep that in mind next time we're working in this area.
+"dt-bindings: arm: " for the subject prefix. Otherwise,
 
-Thanks Rob.
-
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
->
-> Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
