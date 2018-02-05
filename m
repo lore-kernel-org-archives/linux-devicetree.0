@@ -1,29 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] DT: net: renesas,ravb: document R8A77980 bindings
-Date: Mon, 5 Feb 2018 00:09:29 -0600
-Message-ID: <20180205060929.bg2b25fhzi7olhzi@rob-hp-laptop>
-References: <1eb6b81c-500e-ef21-7c21-e8bc7a1ff227@cogentembedded.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pwm-stm32-lp: add #pwm-cells
+Date: Mon, 5 Feb 2018 00:09:16 -0600
+Message-ID: <20180205060916.4djyij3ximpwsfag@rob-hp-laptop>
+References: <1517492678-767-1-git-send-email-fabrice.gasnier@st.com>
+ <1517492678-767-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1eb6b81c-500e-ef21-7c21-e8bc7a1ff227@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <1517492678-767-2-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: thierry.reding@gmail.com, alexandre.torgue@st.com, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 01, 2018 at 11:13:45PM +0300, Sergei Shtylyov wrote:
-> Renesas R-Car V3H (R8A77980) SoC has the R-Car gen3 compatible EtherAVB
-> device, so document the SoC specific bindings.
+On Thu, Feb 01, 2018 at 02:44:36PM +0100, Fabrice Gasnier wrote:
+> From: Gerald Baeza <gerald.baeza@st.com>
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> STM32 Low-Power Timer supports generic 3 cells pwm to encode
+> PWM number, period and polarity.
 > 
+> Signed-off-by: Gerald Baeza <gerald.baeza@st.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
-> The patch is against DaveM's 'net-next.git' repo but I wouldn't mind if it's
-> applied to 'net.git' instead. :-)
-> 
->  Documentation/devicetree/bindings/net/renesas,ravb.txt |    1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/pwm/pwm-stm32-lp.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
