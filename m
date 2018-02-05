@@ -1,43 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v4 11/26] dt-bindings: watchdog: renesas-wdt: Add R-Car
- Gen2 support
-Date: Mon, 5 Feb 2018 00:08:38 -0600
-Message-ID: <20180205033433.zldw5xywxjz4jset@rob-hp-laptop>
-References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1517423070-24236-12-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH] DT: serial: renesas,sci-serial: document R8A77980
+ bindings
+Date: Mon, 5 Feb 2018 00:09:27 -0600
+Message-ID: <20180205041307.n3wo7kfshc6swd3x@rob-hp-laptop>
+References: <2182bb59-d16f-54f0-d992-65b49815ce1d@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1517423070-24236-12-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-watchdog@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Wim Van Sebroeck <wim@iguana.be>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, Philipp Zabel <p.zabel@pengutronix.de>, Biju Das <biju.das@bp.renesas.com>, Stephen Boyd <sboyd@codeaurora.org>, Guenter Roeck <linux@roeck-us.net>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+In-Reply-To: <2182bb59-d16f-54f0-d992-65b49815ce1d@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 06:24:15PM +0000, Fabrizio Castro wrote:
-> This commit documents the compatibility with R-Car Gen2 and RZ/G
-> devices by defining the generic compatible string "renesas,rcar-gen2-wdt".
-> Also, this patch expands the list of SoC-specific compatible strings to
-> include RZ/G and R-Car Gen2 devices.
+On Thu, Feb 01, 2018 at 10:36:20PM +0300, Sergei Shtylyov wrote:
+> R-Car V3H (R8A77980) SoC has the R-Car gen3 compatible SCIF and HSCIF ports,
+> so document the SoC specific bindings.
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
 > ---
-> v3->4:
-> * Reinstated lost "renesas,rza-wdt" compatible string
-> 
->  .../devicetree/bindings/watchdog/renesas-wdt.txt      | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
+>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt |    2 ++
+>  1 file changed, 2 insertions(+)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
