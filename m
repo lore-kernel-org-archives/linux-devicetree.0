@@ -1,66 +1,43 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ASoC: ak5558: Add bindings for AK5558 ADC
-Date: Mon, 5 Feb 2018 00:09:38 -0600
-Message-ID: <20180205025914.jy4wdan3gibyyzxe@rob-hp-laptop>
-References: <1517588406-3295-1-git-send-email-daniel.baluta@nxp.com>
- <1517588406-3295-3-git-send-email-daniel.baluta@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC v4 11/26] dt-bindings: watchdog: renesas-wdt: Add R-Car
+ Gen2 support
+Date: Mon, 5 Feb 2018 00:08:38 -0600
+Message-ID: <20180205033433.zldw5xywxjz4jset@rob-hp-laptop>
+References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1517423070-24236-12-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1517588406-3295-3-git-send-email-daniel.baluta-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Baluta <daniel.baluta-3arQi8VN3Tc@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wakasugi.jb-r6lgfPJHJciWyREYz5tgSuqrae++aQT8@public.gmane.org, shengjiu.wang-3arQi8VN3Tc@public.gmane.org, mihai.serban-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cosmin.samoila-3arQi8VN3Tc@public.gmane.org, linux-imx-3arQi8VN3Tc@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <1517423070-24236-12-git-send-email-fabrizio.castro@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-watchdog@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa+renesas@sang-engineering.com>, Wim Van Sebroeck <wim@iguana.be>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, Philipp Zabel <p.zabel@pengutronix.de>, Biju Das <biju.das@bp.renesas.com>, Stephen Boyd <sboyd@codeaurora.org>, Guenter Roeck <linux@roeck-us.net>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 02, 2018 at 06:20:06PM +0200, Daniel Baluta wrote:
-> Signed-off-by: Daniel Baluta <daniel.baluta-3arQi8VN3Tc@public.gmane.org>
+On Wed, Jan 31, 2018 at 06:24:15PM +0000, Fabrizio Castro wrote:
+> This commit documents the compatibility with R-Car Gen2 and RZ/G
+> devices by defining the generic compatible string "renesas,rcar-gen2-wdt".
+> Also, this patch expands the list of SoC-specific compatible strings to
+> include RZ/G and R-Car Gen2 devices.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  Documentation/devicetree/bindings/sound/ak5558.txt | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/ak5558.txt
+> v3->4:
+> * Reinstated lost "renesas,rza-wdt" compatible string
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/ak5558.txt b/Documentation/devicetree/bindings/sound/ak5558.txt
-> new file mode 100644
-> index 0000000..61c85568
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/ak5558.txt
-> @@ -0,0 +1,23 @@
-> +AK5558 8 channel differential 32-bit delta-sigma ADC
-> +
-> +This device supports I2C mode only.
-> +
-> +Required properties:
-> +
-> +- compatible : "asahi-kasei,ak5558"
-> +- reg : The I2C address of the device for I2C.
-> +
-> +Optional properties:
-> +
-> +- reset-gpios: A GPIO specifier for the GPIO controlling
-> +	the power down & reset pin.
-> +
-> +Example:
-> +
-> +&i2c {
-> +	ak5558: ak5558@10 {
+>  .../devicetree/bindings/watchdog/renesas-wdt.txt      | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
 
-adc@10
-
-> +		compatible = "asahi-kasei,ak5558";
-> +		reg = <0x10>;
-> +		reset-gpios = <&gpio1 10 GPIO_ACTIVE_LOW>;
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
