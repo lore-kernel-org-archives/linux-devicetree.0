@@ -1,40 +1,76 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 03/11] dt-bindings: power: add R8A77980 SYSC power domain definitions
-Date: Mon, 5 Feb 2018 13:43:19 +0100
-Message-ID: <CAMuHMdWUGbnF+vA6r4NCvNh3-TLhnWZCm3ixxfy2+s6+9giKiw@mail.gmail.com>
-References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com> <5177bec1-422f-688d-ea67-f15951505b1e@cogentembedded.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 03/16] mmc: sdhci-omap: Add custom set_uhs_signaling sdhci_host ops
+Date: Mon, 5 Feb 2018 18:20:16 +0530
+Message-ID: <20180205125029.21570-4-kishon@ti.com>
+References: <20180205125029.21570-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5177bec1-422f-688d-ea67-f15951505b1e-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180205125029.21570-1-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kishon Vijay Abraham I <kishon@ti.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 2, 2018 at 7:29 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Add macros usable by the device tree sources to reference R8A77980 SYSC
-> power domains by index.
->
-> Based on the original (and large) patch by Vladimir Barinov.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+UHS-1 DDR50 and MMC DDR52 mode require DDR bit to be
+set in the configuration register (MMCHS_CON). Add
+sdhci-omap specific set_uhs_signaling ops to set
+this bit. Also while setting the UHSMS bit, clock should be
+disabled.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ drivers/mmc/host/sdhci-omap.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+index df927f3faaf6..86b6cc0a5380 100644
+--- a/drivers/mmc/host/sdhci-omap.c
++++ b/drivers/mmc/host/sdhci-omap.c
+@@ -31,6 +31,7 @@
+ #define SDHCI_OMAP_CON		0x12c
+ #define CON_DW8			BIT(5)
+ #define CON_DMA_MASTER		BIT(20)
++#define CON_DDR			BIT(19)
+ #define CON_CLKEXTFREE		BIT(16)
+ #define CON_PADEN		BIT(15)
+ #define CON_INIT		BIT(1)
+@@ -461,6 +462,26 @@ static void sdhci_omap_init_74_clocks(struct sdhci_host *host, u8 power_mode)
+ 	enable_irq(host->irq);
+ }
+ 
++static void sdhci_omap_set_uhs_signaling(struct sdhci_host *host,
++					 unsigned int timing)
++{
++	u32 reg;
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
++
++	sdhci_omap_stop_clock(omap_host);
++
++	reg = sdhci_omap_readl(omap_host, SDHCI_OMAP_CON);
++	if (timing == MMC_TIMING_UHS_DDR50 || timing == MMC_TIMING_MMC_DDR52)
++		reg |= CON_DDR;
++	else
++		reg &= ~CON_DDR;
++	sdhci_omap_writel(omap_host, SDHCI_OMAP_CON, reg);
++
++	sdhci_set_uhs_signaling(host, timing);
++	sdhci_omap_start_clock(omap_host);
++}
++
+ static struct sdhci_ops sdhci_omap_ops = {
+ 	.set_clock = sdhci_omap_set_clock,
+ 	.set_power = sdhci_omap_set_power,
+@@ -470,7 +491,7 @@ static struct sdhci_ops sdhci_omap_ops = {
+ 	.set_bus_width = sdhci_omap_set_bus_width,
+ 	.platform_send_init_74_clocks = sdhci_omap_init_74_clocks,
+ 	.reset = sdhci_reset,
+-	.set_uhs_signaling = sdhci_set_uhs_signaling,
++	.set_uhs_signaling = sdhci_omap_set_uhs_signaling,
+ };
+ 
+ static int sdhci_omap_set_capabilities(struct sdhci_omap_host *omap_host)
+-- 
+2.11.0
