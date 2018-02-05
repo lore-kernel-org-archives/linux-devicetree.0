@@ -1,214 +1,46 @@
-From: Can Guo <cang@codeaurora.org>
-Subject: [PATCH] scsi: ufs-qcom: add number of lanes per direction
-Date: Mon,  5 Feb 2018 20:02:07 +0800
-Message-ID: <20180205121021.11012-1-cang@codeaurora.org>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com
-Cc: linux-scsi@vger.kernel.org, Gilad Broner <gbroner@codeaurora.org>, Can Guo <cang@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Noa Rubens <noag@codeaurora.org>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Maya Erez <merez@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v12 7/9] ACPI: Translate the I/O range of non-MMIO
+ devices before scanning
+Date: Mon, 05 Feb 2018 04:10:50 -0800
+Message-ID: <1517832650.7489.256.camel@perches.com>
+References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
+         <1516725385-24535-8-git-send-email-john.garry@huawei.com>
+         <CAJZ5v0ghc1sthrMBobSXfNrxoKrjbie9qnKYnLdxnpLfZPzs8w@mail.gmail.com>
+         <8beedbb3-9098-6440-9ddf-e64b2a8e5151@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <8beedbb3-9098-6440-9ddf-e64b2a8e5151@huawei.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Hanjun Guo <hanjun.guo@linaro.org>, "dann.frazier@canonical.com" <dann.frazier@canonical.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Linux PCI <linux-pci@vger.kernel.org>, Corey Minyard <minyard@acm.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arch <linux-arch@vger.k>
 List-Id: devicetree@vger.kernel.org
 
-From: Gilad Broner <gbroner@codeaurora.org>
+On Mon, 2018-02-05 at 11:01 +0000, John Garry wrote:
+> On 04/02/2018 07:45, Rafael J. Wysocki wrote:
+> > +       /* translate the I/O resources */
+> > > +       for (i = 0; i < count; i++) {
+> > > +               if (resources[i].flags & IORESOURCE_IO) {
+> > > +                       ret = acpi_translate_logicio_res(adev, host,
+> > > +                                                       &resources[i]);
+> > 
+> > You don't need to break this line as far as I'm concerned.
+> 
+> This is just to keep checkpatch happy. I could move the complete 
+> function call to a single line. And also shortening some symbols will help.
 
-Different platforms may have different number of lanes for the UFS link.
-Add parameter to device tree specifying how many lanes should be
-configured for the UFS link. And don't print err message for clocks
-that are optional, this leads to unnecessary confusion about failure.
+This could also use continue as well
 
-Signed-off-by: Gilad Broner <gbroner@codeaurora.org>
-Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-Signed-off-by: Can Guo <cang@codeaurora.org>
-
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index 5357919..4cee3f9 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -31,6 +31,9 @@ Optional properties:
- 			  defined or a value in the array is "0" then it is assumed
- 			  that the frequency is set by the parent clock or a
- 			  fixed rate clock source.
-+- lanes-per-direction:	number of lanes available per direction - either 1 or 2.
-+			Note that it is assume same number of lanes is used both directions at once.
-+			If not specified, default is 2 lanes per direction.
- 
- Note: If above properties are not defined it can be assumed that the supply
- regulators or clocks are always on.
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 4cdffa4..84d37e9 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -50,13 +50,10 @@ static int ufs_qcom_host_clk_get(struct device *dev,
- 	int err = 0;
- 
- 	clk = devm_clk_get(dev, name);
--	if (IS_ERR(clk)) {
-+	if (IS_ERR(clk))
- 		err = PTR_ERR(clk);
--		dev_err(dev, "%s: failed to get %s err %d",
--				__func__, name, err);
--	} else {
-+	else
- 		*clk_out = clk;
--	}
- 
- 	return err;
- }
-@@ -78,9 +75,11 @@ static void ufs_qcom_disable_lane_clks(struct ufs_qcom_host *host)
- 	if (!host->is_lane_clks_enabled)
- 		return;
- 
--	clk_disable_unprepare(host->tx_l1_sync_clk);
-+	if (host->tx_l1_sync_clk)
-+		clk_disable_unprepare(host->tx_l1_sync_clk);
- 	clk_disable_unprepare(host->tx_l0_sync_clk);
--	clk_disable_unprepare(host->rx_l1_sync_clk);
-+	if (host->rx_l1_sync_clk)
-+		clk_disable_unprepare(host->rx_l1_sync_clk);
- 	clk_disable_unprepare(host->rx_l0_sync_clk);
- 
- 	host->is_lane_clks_enabled = false;
-@@ -104,21 +103,21 @@ static int ufs_qcom_enable_lane_clks(struct ufs_qcom_host *host)
- 	if (err)
- 		goto disable_rx_l0;
- 
--	err = ufs_qcom_host_clk_enable(dev, "rx_lane1_sync_clk",
--		host->rx_l1_sync_clk);
--	if (err)
--		goto disable_tx_l0;
-+	if (host->hba->lanes_per_direction > 1) {
-+		err = ufs_qcom_host_clk_enable(dev, "rx_lane1_sync_clk",
-+			host->rx_l1_sync_clk);
-+		if (err)
-+			goto disable_tx_l0;
- 
--	err = ufs_qcom_host_clk_enable(dev, "tx_lane1_sync_clk",
--		host->tx_l1_sync_clk);
--	if (err)
--		goto disable_rx_l1;
-+		/* The tx lane1 clk could be muxed, hence keep this optional */
-+		if (host->tx_l1_sync_clk)
-+			ufs_qcom_host_clk_enable(dev, "tx_lane1_sync_clk",
-+						 host->tx_l1_sync_clk);
-+	}
- 
- 	host->is_lane_clks_enabled = true;
- 	goto out;
- 
--disable_rx_l1:
--	clk_disable_unprepare(host->rx_l1_sync_clk);
- disable_tx_l0:
- 	clk_disable_unprepare(host->tx_l0_sync_clk);
- disable_rx_l0:
-@@ -134,21 +133,34 @@ static int ufs_qcom_init_lane_clks(struct ufs_qcom_host *host)
- 
- 	err = ufs_qcom_host_clk_get(dev,
- 			"rx_lane0_sync_clk", &host->rx_l0_sync_clk);
--	if (err)
-+	if (err) {
-+		dev_err(dev, "%s: failed to get rx_lane0_sync_clk, err %d",
-+				__func__, err);
- 		goto out;
-+	}
- 
- 	err = ufs_qcom_host_clk_get(dev,
- 			"tx_lane0_sync_clk", &host->tx_l0_sync_clk);
--	if (err)
-+	if (err) {
-+		dev_err(dev, "%s: failed to get tx_lane0_sync_clk, err %d",
-+				__func__, err);
- 		goto out;
-+	}
- 
--	err = ufs_qcom_host_clk_get(dev, "rx_lane1_sync_clk",
--		&host->rx_l1_sync_clk);
--	if (err)
--		goto out;
-+	/* In case of single lane per direction, don't read lane1 clocks */
-+	if (host->hba->lanes_per_direction > 1) {
-+		err = ufs_qcom_host_clk_get(dev, "rx_lane1_sync_clk",
-+			&host->rx_l1_sync_clk);
-+		if (err) {
-+			dev_err(dev, "%s: failed to get rx_lane1_sync_clk, err %d",
-+					__func__, err);
-+			goto out;
-+		}
- 
--	err = ufs_qcom_host_clk_get(dev, "tx_lane1_sync_clk",
--		&host->tx_l1_sync_clk);
-+		/* The tx lane1 clk could be muxed, hence keep this optional */
-+		ufs_qcom_host_clk_get(dev, "tx_lane1_sync_clk",
-+					&host->tx_l1_sync_clk);
-+	}
- out:
- 	return err;
- }
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index b0ade73..b9e1ecd 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -39,6 +39,7 @@
- 
- #include <linux/async.h>
- #include <linux/devfreq.h>
-+#include <linux/of.h>
- 
- #include "ufshcd.h"
- #include "unipro.h"
-@@ -74,6 +75,8 @@
- /* Interrupt aggregation default timeout, unit: 40us */
- #define INT_AGGR_DEF_TO	0x02
- 
-+#define UFSHCD_DEFAULT_LANES_PER_DIRECTION		2
-+
- #define ufshcd_toggle_vreg(_dev, _vreg, _on)				\
- 	({                                                              \
- 		int _ret;                                               \
-@@ -5530,6 +5533,21 @@ static struct devfreq_dev_profile ufs_devfreq_profile = {
- 	.get_dev_status	= ufshcd_devfreq_get_dev_status,
- };
- 
-+static void ufshcd_init_lanes_per_dir(struct ufs_hba *hba)
-+{
-+	struct device *dev = hba->dev;
-+	int ret;
-+
-+	ret = of_property_read_u32(dev->of_node, "lanes-per-direction",
-+		&hba->lanes_per_direction);
-+	if (ret) {
-+		dev_dbg(hba->dev,
-+			"%s: failed to read lanes-per-direction, ret=%d\n",
-+			__func__, ret);
-+		hba->lanes_per_direction = UFSHCD_DEFAULT_LANES_PER_DIRECTION;
-+	}
-+}
-+
- /**
-  * ufshcd_init - Driver initialization routine
-  * @hba: per-adapter instance
-@@ -5553,6 +5571,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
- 	hba->mmio_base = mmio_base;
- 	hba->irq = irq;
- 
-+	ufshcd_init_lanes_per_dir(hba);
-+
- 	err = ufshcd_hba_init(hba);
- 	if (err)
- 		goto out_error;
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index c40a0e7..3d9bdc7 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -500,6 +500,9 @@ struct ufs_hba {
- 
- 	bool wlun_dev_clr_ua;
- 
-+	/* Number of lanes available (1 or 2) for Rx/Tx */
-+	u32 lanes_per_direction;
-+
- 	struct ufs_pa_layer_attr pwr_info;
- 	struct ufs_pwr_mode_info max_pwr_info;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+	/* translate the I/O resources */
+	for (i = 0; i < count; i++) {
+		if (!(resources[i].flags & IORESOURCE_IO))
+			continue;
+		ret = acpi_translate_logicio_res(adev, host, &resources[i]);
+		if (ret) {
+			kfree(resources);
+			dev_err(child, "Translate I/O range failed (%d)!\n",
+				ret);
+			return ret;
+		}
+	}
