@@ -1,44 +1,93 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] arm64: add support for i.MX8M EVK board
-Date: Mon, 5 Feb 2018 09:24:38 +0200
-Message-ID: <20180205072438.nxvhlqk54d7firbz@sapphire.tkos.co.il>
-References: <20180201183126.32384-1-l.stach@pengutronix.de>
- <20180201183126.32384-3-l.stach@pengutronix.de>
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: ad5272: Add bindings for Analog
+ Devices digital potentiometers
+Date: Mon, 5 Feb 2018 15:25:59 +0800
+Message-ID: <f1d2bf62-c4b7-9cd4-4962-3c07c22bdb5e@electromag.com.au>
+References: <1517231574-92777-1-git-send-email-preid@electromag.com.au>
+ <1517231574-92777-2-git-send-email-preid@electromag.com.au>
+ <20180205060729.ux62jvdsy4d37s4x@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180201183126.32384-3-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20180205060729.ux62jvdsy4d37s4x@rob-hp-laptop>
+Content-Language: en-AU
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "A . s . Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
-
-On Thu, Feb 01, 2018 at 07:31:25PM +0100, Lucas Stach wrote:
-> This is the evaluation kit board for the i.MX8M. The current level of
-> support yields a working console and is able to boot userspace from
-> SD card or Network.
+On 5/02/2018 14:07, Rob Herring wrote:
+> On Mon, Jan 29, 2018 at 09:12:53PM +0800, Phil Reid wrote:
+>> Add binding documentation for Analog Devices AD5272 and AD5274 digital
+>> potentiometer devices.
+>>
+>> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+>> ---
+>>   .../bindings/iio/potentiometer/ad5272.txt          | 27 ++++++++++++++++++++++
+>>   1 file changed, 27 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+>> new file mode 100644
+>> index 0000000..11e804c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+>> @@ -0,0 +1,27 @@
+>> +* Analog Devices AD5272 digital potentiometer driver
 > 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org> (v1)
-> Tested-by: Tested-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> (v1)
+> Bindings describe h/w not drivers.
+ok
 
-I only tested once.
+> 
+>> +
+>> +The node for this driver must be a child node of a I2C controller, hence
+>> +all mandatory properties for your controller must be specified. See directory:
+>> +
+>> +        Documentation/devicetree/bindings/i2c
+>> +
+>> +for more details.
+>> +
+>> +Required properties:
+>> +	- compatible:  	Must be one of the following, depending on the model:
+>> +			adi,ad5272-020
+>> +			adi,ad5272-050
+>> +			adi,ad5272-100
+>> +			adi,ad5274-020
+>> +			adi,ad5274-100
+>> +
+>> +Optional properties:
+>> + - reset-gpios: GPIO specification for the RESET input. This is an
+>> +		active low signal to the PCA953x.
+>> +
+>> +Example:
+>> +ad5272: ad5272@2f {
+> 
+> potentiometer@2f
+ok
 
-Tested v2 as well, on top of clk v2 and the pinctrl v2 patches.
+> 
+> Probably a node name we need to add to the spec.
+> 
+>> +	reg = <0x2F>;
+>> +	compatible = "adi,ad5272-020";
+>> +	reset-gpios = <&gpio3 6 GPIO_ACTIVE_HIGH>;
+>> +};
+>> -- 
+>> 1.8.3.1
+>>
+> 
+> 
+Jonathan,
 
-Tested-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+How would you like me to fix this as you've applied it to togreg already?
+A patch on top of this or a v5.
 
-Would have been nice to have all these series in a single branch somewhere.
-
-baruch
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
+Regards
+Phil Reid
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
