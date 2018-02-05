@@ -1,79 +1,71 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: change overlay apply input data from EDT to FDT
-Date: Mon, 5 Feb 2018 00:07:26 -0600
-Message-ID: <20180205060726.s5kvcvzlxat42wa2@rob-hp-laptop>
-References: <1517194414-19932-1-git-send-email-frowand.list@gmail.com>
- <1517194414-19932-2-git-send-email-frowand.list@gmail.com>
- <CABGGisyx_aXCxKO5x-5M5mEM7s=jMYZDaQZ9jdL6hapMCOyM=Q@mail.gmail.com>
- <d2ad9f6f-bf66-10bc-6156-cb006ab9447d@gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: ad5272: Add bindings for Analog
+ Devices digital potentiometers
+Date: Mon, 5 Feb 2018 00:07:29 -0600
+Message-ID: <20180205060729.ux62jvdsy4d37s4x@rob-hp-laptop>
+References: <1517231574-92777-1-git-send-email-preid@electromag.com.au>
+ <1517231574-92777-2-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <d2ad9f6f-bf66-10bc-6156-cb006ab9447d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+In-Reply-To: <1517231574-92777-2-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 29, 2018 at 04:01:38PM -0800, Frank Rowand wrote:
-> On 01/29/18 06:42, Rob Herring wrote:
-> > On Sun, Jan 28, 2018 at 8:53 PM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-> >>
-> >> Move duplicating and unflattening of an overlay flattened devicetree
-> >> (FDT) into the overlay application code.  To accomplish this,
-> >> of_overlay_apply() is replaced by of_overlay_fdt_apply().
-> >>
-> >> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
-> >> code, which is thus responsible for freeing the duplicate FDT.  The
-> >> caller of of_overlay_fdt_apply() remains responsible for freeing the
-> >> original FDT.
-> >>
-> >> The unflattened device tree (aka expanded device tree, EDT) now
-> > 
-> > Not really a fan of a new acronym.
-> > 
-> >> belongs to devicetree code, which is thus responsible for freeing
-> >> the EDT.
-> >>
-> >> These ownership changes prevent early freeing of the duplicated FDT
-> >> or the EDT, which could result in use after free errors.
-> >>
-> >> of_overlay_fdt_apply() is a private function for the anticipated
-> >> overlay loader.
-> >>
-> >> Update unittest.c to use of_overlay_fdt_apply() instead of
-> >> of_overlay_apply().
-> >>
-> >> Move overlay fragments from artificial locations in
-> >> drivers/of/unittest-data/tests-overlay.dtsi into one devicetree
-> >> source file per overlay.  This led to changes in
-> >> drivers/of/unitest-data/Makefile and drivers/of/unitest.c.
+On Mon, Jan 29, 2018 at 09:12:53PM +0800, Phil Reid wrote:
+> Add binding documentation for Analog Devices AD5272 and AD5274 digital
+> potentiometer devices.
 > 
-> I should have reversed the cause and effect in that sentence to
-> instead be:
+> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> ---
+>  .../bindings/iio/potentiometer/ad5272.txt          | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
 > 
->   The changes to drivers/of/unittest.c require the test overlays
->   to be in FDT form instead of unflattened devicetree form.  Move
->   overlay fragments from artificial locations in
->   drivers/of/unittest-data/tests-overlay.dtsi into one
->   devicetree source file per overlay and thus create
->   one FDT per overlay.
-> 
-> 
-> > Why the rearranging? That should be a separate patch.
-> Bisectability.
-> 
-> I can make the changes to the devicetree files in a second patch.
-> After the first patch, there will be 29 self test fails.
-> 
-> I will make the change unless you respond back to this saying not to.
+> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+> new file mode 100644
+> index 0000000..11e804c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+> @@ -0,0 +1,27 @@
+> +* Analog Devices AD5272 digital potentiometer driver
 
-One patch is fine for me. Unit test is special.
+Bindings describe h/w not drivers.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +The node for this driver must be a child node of a I2C controller, hence
+> +all mandatory properties for your controller must be specified. See directory:
+> +
+> +        Documentation/devicetree/bindings/i2c
+> +
+> +for more details.
+> +
+> +Required properties:
+> +	- compatible:  	Must be one of the following, depending on the model:
+> +			adi,ad5272-020
+> +			adi,ad5272-050
+> +			adi,ad5272-100
+> +			adi,ad5274-020
+> +			adi,ad5274-100
+> +
+> +Optional properties:
+> + - reset-gpios: GPIO specification for the RESET input. This is an
+> +		active low signal to the PCA953x.
+> +
+> +Example:
+> +ad5272: ad5272@2f {
+
+potentiometer@2f
+
+Probably a node name we need to add to the spec.
+
+> +	reg = <0x2F>;
+> +	compatible = "adi,ad5272-020";
+> +	reset-gpios = <&gpio3 6 GPIO_ACTIVE_HIGH>;
+> +};
+> -- 
+> 1.8.3.1
+> 
