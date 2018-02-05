@@ -1,71 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dt-bindings: ad5272: Add bindings for Analog
- Devices digital potentiometers
-Date: Mon, 5 Feb 2018 00:07:29 -0600
-Message-ID: <20180205060729.ux62jvdsy4d37s4x@rob-hp-laptop>
-References: <1517231574-92777-1-git-send-email-preid@electromag.com.au>
- <1517231574-92777-2-git-send-email-preid@electromag.com.au>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH] mmc: sdhci-of-arasan: Add auto tuning support for
+ ZynqMP Platform
+Date: Mon, 5 Feb 2018 00:07:40 -0600
+Message-ID: <20180205024420.iagez2mue2skrngq@rob-hp-laptop>
+References: <1517336073-18142-1-git-send-email-mnarani@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1517231574-92777-2-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1517336073-18142-1-git-send-email-mnarani@xilinx.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: michal.simek@xilinx.com, adrian.hunter@intel.com, ulf.hansson@linaro.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, anirudh@xilinx.com, sgoud@xilinx.com, Manish Narani <mnarani@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 29, 2018 at 09:12:53PM +0800, Phil Reid wrote:
-> Add binding documentation for Analog Devices AD5272 and AD5274 digital
-> potentiometer devices.
+On Tue, Jan 30, 2018 at 11:44:33PM +0530, Manish Narani wrote:
+> This patch adds support of SD auto tuning for ZynqMP platform. Auto
+> tuning sequence sends tuning block to card when operating in UHS-1
+> modes. This resets the DLL and sends CMD19/CMD21 as a part of the auto
+> tuning process. Once the auto tuning process gets completed, reset the
+> DLL to load the newly obtained SDHC tuned tap value.
 > 
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> Signed-off-by: Manish Narani <mnarani@xilinx.com>
 > ---
->  .../bindings/iio/potentiometer/ad5272.txt          | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt       |   1 +
+>  drivers/mmc/host/sdhci-of-arasan.c                 | 219 ++++++++++++++++++++-
+>  2 files changed, 219 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
-> new file mode 100644
-> index 0000000..11e804c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
-> @@ -0,0 +1,27 @@
-> +* Analog Devices AD5272 digital potentiometer driver
+> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> index 60481bf..7d29751 100644
+> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> @@ -14,6 +14,7 @@ Required Properties:
+>      - "arasan,sdhci-4.9a": generic Arasan SDHCI 4.9a PHY
+>      - "arasan,sdhci-5.1": generic Arasan SDHCI 5.1 PHY
+>      - "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1": rk3399 eMMC PHY
+> +    - "xlnx,zynqmp-8.9a": Xilinx ZynqMP 8.9a PHY
 
-Bindings describe h/w not drivers.
+This should be a separate patch.
 
-> +
-> +The node for this driver must be a child node of a I2C controller, hence
-> +all mandatory properties for your controller must be specified. See directory:
-> +
-> +        Documentation/devicetree/bindings/i2c
-> +
-> +for more details.
-> +
-> +Required properties:
-> +	- compatible:  	Must be one of the following, depending on the model:
-> +			adi,ad5272-020
-> +			adi,ad5272-050
-> +			adi,ad5272-100
-> +			adi,ad5274-020
-> +			adi,ad5274-100
-> +
-> +Optional properties:
-> + - reset-gpios: GPIO specification for the RESET input. This is an
-> +		active low signal to the PCA953x.
-> +
-> +Example:
-> +ad5272: ad5272@2f {
-
-potentiometer@2f
-
-Probably a node name we need to add to the spec.
-
-> +	reg = <0x2F>;
-> +	compatible = "adi,ad5272-020";
-> +	reset-gpios = <&gpio3 6 GPIO_ACTIVE_HIGH>;
-> +};
-> -- 
-> 1.8.3.1
-> 
+>        For this device it is strongly suggested to include arasan,soc-ctl-syscon.
+>    - reg: From mmc bindings: Register location and length.
+>    - clocks: From clock bindings: Handles to clock inputs.
