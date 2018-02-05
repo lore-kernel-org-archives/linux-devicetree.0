@@ -1,68 +1,35 @@
-From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] dt-bindings: at24: add bindings for Rohm BR24T01
-Date: Mon, 5 Feb 2018 08:56:34 +0100
-Message-ID: <CAMRc=Mf+g6HNnu1ARPg8Uk9oeLQ+JkJcZrw_H48LzKByp_CM_Q@mail.gmail.com>
-References: <1517240748-14780-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1517240748-14780-6-git-send-email-ulrich.hecht+renesas@gmail.com> <20180205060732.ufy2w37uc4okclew@rob-hp-laptop>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 BUGFIX] ARM: dts: imx6ull: fix the imx6ull-14x14-evk
+ configuration
+Date: Mon, 5 Feb 2018 15:56:22 +0800
+Message-ID: <20180205075620.GO31354@dragon>
+References: <1516955159-21626-1-git-send-email-LW@KARO-electronics.de>
+ <1516956738-24673-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180205060732.ufy2w37uc4okclew@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <1516956738-24673-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-02-05 7:07 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Mon, Jan 29, 2018 at 04:45:48PM +0100, Ulrich Hecht wrote:
->> Both manufacturer and name variant.
->>
->> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/eeprom/at24.txt | 2 ++
->>  1 file changed, 2 insertions(+)
->
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
->>
->> diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
->> index 1812c84..dd29937 100644
->> --- a/Documentation/devicetree/bindings/eeprom/at24.txt
->> +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
->> @@ -40,6 +40,7 @@ Required properties:
->>                  "microchip",
->>                  "ramtron",
->>                  "renesas",
->> +                "rohm",
->
-> This is going to comflict with a patch sorting these IIRC. So they
-> should go thru the same tree.
->
->>                  "nxp",
->>                  "st",
->>
->> @@ -47,6 +48,7 @@ Required properties:
->>                  variants of the above. Known such exceptions are listed below:
->>
->>                  "renesas,r1ex24002" - the fallback is "atmel,24c02"
->> +                "rohm,br24t01" - the fallback is "atmel,24c01"
->>
->>    - reg: The I2C address of the EEPROM.
->>
->> --
->> 2.7.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Jan 26, 2018 at 09:52:18AM +0100, Lothar Waﬂmann wrote:
+> imx6ull-14x14-evk.dts currently includes the imx6ul.dtsi file for an
+> i.MX6ULL SoC which is plain wrong.
+> 
+> Rename the current imx6ul-14x14-evk.dts to .dtsi and include it from
+> imx6ul-14x14-evk.dts and imx6ull-14x14-evk.dts, so that both can
+> include the appropriate SoC specific (imx6ul.dtsi/imx6ull.dtsi) file.
+> 
+> Signed-off-by: Lothar Waﬂmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 
-AT24 patches go through Wolfram's tree, but since he already sent his
-PR for 4.16, I can pick them up for 4.17 (except for Peter's sorting
-patch which should go in after 4.16-rc1).
+Which base is the patch generated against?  I cannot apply it to any
+branch in my tree.
 
-Thanks,
-Bartosz
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
