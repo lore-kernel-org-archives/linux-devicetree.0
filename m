@@ -1,58 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/5] dt-bindings: at24: add bindings for Rohm BR24T01
-Date: Mon, 5 Feb 2018 00:07:32 -0600
-Message-ID: <20180205060732.ufy2w37uc4okclew@rob-hp-laptop>
-References: <1517240748-14780-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1517240748-14780-6-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6sx: add pu power domain support
+Date: Mon, 5 Feb 2018 14:27:55 +0800
+Message-ID: <20180205062753.GH31354@dragon>
+References: <1516720343-21933-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1517240748-14780-6-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, kieran.bingham@ideasonboard.com, wsa@the-dreams.de, magnus.damm@gmail.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1516720343-21933-1-git-send-email-Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Linux-imx-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 29, 2018 at 04:45:48PM +0100, Ulrich Hecht wrote:
-> Both manufacturer and name variant.
+On Tue, Jan 23, 2018 at 11:12:23PM +0800, Anson Huang wrote:
+> Add PU power domain support, GPU is the only
+> module inside PU power domain, and PU power
+> is supplied by LDO_SOC.
 > 
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> ---
->  Documentation/devicetree/bindings/eeprom/at24.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> Signed-off-by: Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
-> index 1812c84..dd29937 100644
-> --- a/Documentation/devicetree/bindings/eeprom/at24.txt
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
-> @@ -40,6 +40,7 @@ Required properties:
->                  "microchip",
->                  "ramtron",
->                  "renesas",
-> +                "rohm",
-
-This is going to comflict with a patch sorting these IIRC. So they 
-should go thru the same tree.
-
->                  "nxp",
->                  "st",
->  
-> @@ -47,6 +48,7 @@ Required properties:
->                  variants of the above. Known such exceptions are listed below:
->  
->                  "renesas,r1ex24002" - the fallback is "atmel,24c02"
-> +                "rohm,br24t01" - the fallback is "atmel,24c01"
->  
->    - reg: The I2C address of the EEPROM.
->  
-> -- 
-> 2.7.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
