@@ -1,23 +1,44 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 02/11] soc: renesas: rcar-rst: add R8A77980 support
-Date: Mon, 5 Feb 2018 10:19:38 +0100
-Message-ID: <20180205091937.vljhrt6by3mj7adk@verge.net.au>
-References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
- <76b4144e-423a-65fd-fe17-bfedbc0deb8e@cogentembedded.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v6 17/41] dt-bindings: clock: Add bindings for DA8XX
+ CFGCHIP clocks
+Date: Mon, 5 Feb 2018 15:12:35 +0530
+Message-ID: <f57cae4e-560a-0ea4-16dd-bdf8696d4f7b@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-18-git-send-email-david@lechnology.com>
+ <572e31a2-ac18-512b-03bb-82fffcf4d228@ti.com>
+ <26fd0f01-ed14-6544-7443-e88c69ca9acb@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <76b4144e-423a-65fd-fe17-bfedbc0deb8e@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <26fd0f01-ed14-6544-7443-e88c69ca9acb@lechnology.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 02, 2018 at 09:27:01PM +0300, Sergei Shtylyov wrote:
-> Add support for R-Car V3H (R8A77980) to the R-Car RST driver -- this driver
-> is  needed  for the clock driver to work.
+On Friday 02 February 2018 11:20 PM, David Lechner wrote:
+> On 02/02/2018 12:20 AM, Sekhar Nori wrote:
+>> On Saturday 20 January 2018 10:43 PM, David Lechner wrote:
+>>> +EMIFA clock source (ASYNC1)
+>>> +---------------------------
+>>> +Required properties:
+>>> +- compatible: shall be "ti,da850-async1-clksrc".
+>>> +- #clock-cells: from common clock binding; shall be set to 0.
+>>> +- clocks: phandles to the parent clocks corresponding to clock-names
+>>> +- clock-names: shall be "pll0_sysclk3", "div4.5"
+>>
+>> Is this clock really referred to as aysnc1 in documentation? I don't get
+>> hits for async1 in OMAP-L138 TRM.
+>>
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> It looks like it is only called ASYNC1 in the datasheet, not the TRM.
+> 
+> Table 6-5. Maximum Internal Clock Frequencies at Each Voltage Operating
+> Point
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+I see it now. Its fine to use async1 then.
+
+Thanks,
+Sekhar
