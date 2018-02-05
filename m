@@ -1,53 +1,59 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 7/9] drm/rockchip: dw_hdmi: allow including external phys
-Date: Mon,  5 Feb 2018 15:34:33 +0100
-Message-ID: <20180205143435.4723-8-heiko@sntech.de>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 8/9] drm/rockchip: dw_hdmi: store rockchip_hdmi reference in phy_data object
+Date: Mon,  5 Feb 2018 15:34:34 +0100
+Message-ID: <20180205143435.4723-9-heiko@sntech.de>
 References: <20180205143435.4723-1-heiko@sntech.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180205143435.4723-1-heiko@sntech.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: hjc@rock-chips.com, architt@codeaurora.org, a.hajda@samsung.com, kishon@ti.com
-Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180205143435.4723-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, algea.cao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U29tZSB2YXJpYW50cyBvZiB0aGUgZHctaGRtaSBvbiBSb2NrY2hpcCBzb2NzIHVzZSBhIHNlcGFy
-YXRlIHBoeSBibG9jawphY2Nlc3NlZCB2aWEgdGhlIGdlbmVyaWMgcGh5IGZyYW1ld29yaywgc28g
-YWxsb3cgdGhlbSB0byBiZSBpbmNsdWRlZAppZiBzdWNoIGEgcGh5IHJlZmVyZW5jZSBpcyBmb3Vu
-ZC4KClNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Ci0tLQog
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyB8IDEwICsrKysrKysr
-KysKIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9y
-b2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMKaW5kZXggMzA0ZjYxYmQyZWVjLi41MTJmODU1NmU3
-YzAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlw
-LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYwpAQCAt
-MTEsNiArMTEsNyBAQAogI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4KICNpbmNsdWRlIDxs
-aW51eC9tb2R1bGUuaD4KICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KKyNpbmNs
-dWRlIDxsaW51eC9waHkvcGh5Lmg+CiAjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+CiAKICNpbmNs
-dWRlIDxkcm0vZHJtX29mLmg+CkBAIC00OCw2ICs0OSw3IEBAIHN0cnVjdCByb2NrY2hpcF9oZG1p
-IHsKIAljb25zdCBzdHJ1Y3Qgcm9ja2NoaXBfaGRtaV9jaGlwX2RhdGEgKmNoaXBfZGF0YTsKIAlz
-dHJ1Y3QgY2xrICp2cGxsX2NsazsKIAlzdHJ1Y3QgY2xrICpncmZfY2xrOworCXN0cnVjdCBwaHkg
-KnBoeTsKIH07CiAKICNkZWZpbmUgdG9fcm9ja2NoaXBfaGRtaSh4KQljb250YWluZXJfb2YoeCwg
-c3RydWN0IHJvY2tjaGlwX2hkbWksIHgpCkBAIC0zNzYsNiArMzc4LDE0IEBAIHN0YXRpYyBpbnQg
-ZHdfaGRtaV9yb2NrY2hpcF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAq
-bWFzdGVyLAogCQlyZXR1cm4gcmV0OwogCX0KIAorCWhkbWktPnBoeSA9IGRldm1fcGh5X29wdGlv
-bmFsX2dldChkZXYsICJoZG1pIik7CisJaWYgKElTX0VSUihoZG1pLT5waHkpKSB7CisJCXJldCA9
-IFBUUl9FUlIoaGRtaS0+cGh5KTsKKwkJaWYgKHJldCAhPSAtRVBST0JFX0RFRkVSKQorCQkJRFJN
-X0RFVl9FUlJPUihoZG1pLT5kZXYsICJmYWlsZWQgdG8gZ2V0IHBoeVxuIik7CisJCXJldHVybiBy
-ZXQ7CisJfQorCiAJZHJtX2VuY29kZXJfaGVscGVyX2FkZChlbmNvZGVyLCAmZHdfaGRtaV9yb2Nr
-Y2hpcF9lbmNvZGVyX2hlbHBlcl9mdW5jcyk7CiAJZHJtX2VuY29kZXJfaW5pdChkcm0sIGVuY29k
-ZXIsICZkd19oZG1pX3JvY2tjaGlwX2VuY29kZXJfZnVuY3MsCiAJCQkgRFJNX01PREVfRU5DT0RF
-Ul9UTURTLCBOVUxMKTsKLS0gCjIuMTUuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+When using special phy handling operations we'll often need access to
+the rockchip_hdmi struct. As the chip-data that occupies the phy_data
+pointer initially gets assigned to the rockchip_hdmi struct we can not
+re-use this phy_data pointer to hold the reference to the rockchip_hdmi
+struct, similar to how meson-hdmi does it for example.
+
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+index 512f8556e7c0..5a62328887d5 100644
+--- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+@@ -342,7 +342,7 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
+ 				 void *data)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+-	const struct dw_hdmi_plat_data *plat_data;
++	struct dw_hdmi_plat_data *plat_data;
+ 	const struct of_device_id *match;
+ 	struct drm_device *drm = data;
+ 	struct drm_encoder *encoder;
+@@ -357,9 +357,14 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
+ 		return -ENOMEM;
+ 
+ 	match = of_match_node(dw_hdmi_rockchip_dt_ids, pdev->dev.of_node);
+-	plat_data = match->data;
++	plat_data = devm_kmemdup(&pdev->dev, match->data,
++					     sizeof(*plat_data), GFP_KERNEL);
++	if (!plat_data)
++		return -ENOMEM;
++
+ 	hdmi->dev = &pdev->dev;
+ 	hdmi->chip_data = plat_data->phy_data;
++	plat_data->phy_data = hdmi;
+ 	encoder = &hdmi->encoder;
+ 
+ 	encoder->possible_crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
+-- 
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
