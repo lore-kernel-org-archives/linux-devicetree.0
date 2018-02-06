@@ -1,64 +1,46 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 12/15] ARM: dts: dra71-evm: Select pull down for mmc1_clk line in default mode
-Date: Tue, 6 Feb 2018 18:28:03 +0530
-Message-ID: <20180206125806.19350-13-kishon@ti.com>
-References: <20180206125806.19350-1-kishon@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 6/8] ASoC: samsung: i2s: Update
+ clock-output-names property documentation
+Date: Tue, 6 Feb 2018 13:59:47 +0100
+Message-ID: <CAJKOXPcXLwiB_bxQtBp-1PhM7yrA5fGM7t6kZtASXdFCgEHC=g@mail.gmail.com>
+References: <CGME20180205154529epcas2p3478546ef61294ac06cd9d8ed3d7e12c9@epcas2p3.samsung.com>
+ <20180205154403.13520-1-s.nawrocki@samsung.com>
+ <20180205154403.13520-7-s.nawrocki@samsung.com>
+ <CAJKOXPcT-C8t-1i0n5JE23udfKfdURRbyvaCbA1KGKxdZ1+Y=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180206125806.19350-1-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAJKOXPcT-C8t-1i0n5JE23udfKfdURRbyvaCbA1KGKxdZ1+Y=A@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, sbkim73@samsung.com, jcsing.lee@samsung.com, lgirdwood@gmail.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-During a short period when the bus voltage is switched from 3.3v to 1.8v,
-(to enumerate UHS mode), the mmc module is disabled and the mmc IO lines
-are kept in a state according to the programmed pad mux pull type.
+On Tue, Feb 6, 2018 at 1:59 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On Mon, Feb 5, 2018 at 4:44 PM, Sylwester Nawrocki
+> <s.nawrocki@samsung.com> wrote:
+>> The clock-output-names property is marked as deprecated. While at it,
+>> #clock-cells property's value is corrected in the example snippet
+>> and few typos are fixed.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> ---
+>>  .../devicetree/bindings/sound/samsung-i2s.txt          | 18 +++++++++---------
+>>  1 file changed, 9 insertions(+), 9 deletions(-)
+>
+> As with all bindings, this should go before changing the driver.
 
-According to 4.2.4.2 Timing to Switch Signal Voltage in "SD Specifications
-Part 1 Physical Layer Specification Version 5.00 February 22, 2016", the
-host should hold CLK low for at least 5ms.
+Ah, too fast in pressing return. I missed:
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-In order to keep the card line low during voltage switch, the pad mux of
-mmc1_clk line should be configured to pull down.
-
-This is specific only to dra71-evm (and not all dra72 based boards) since
-mmc1_clk line in dra71-evm is not connected to an external pullup.
-
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra71-evm.dts | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dra71-evm.dts b/arch/arm/boot/dts/dra71-evm.dts
-index 64363f75c01a..ebc4bbae981e 100644
---- a/arch/arm/boot/dts/dra71-evm.dts
-+++ b/arch/arm/boot/dts/dra71-evm.dts
-@@ -50,6 +50,19 @@
- 	};
- };
- 
-+&dra7_pmx_core {
-+	mmc1_pins_default: mmc1_pins_default {
-+		pinctrl-single,pins = <
-+			DRA7XX_CORE_IOPAD(0x3754, PIN_INPUT_PULLDOWN | MUX_MODE0) /* mmc1_clk.clk */
-+			DRA7XX_CORE_IOPAD(0x3758, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_cmd.cmd */
-+			DRA7XX_CORE_IOPAD(0x375c, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat0.dat0 */
-+			DRA7XX_CORE_IOPAD(0x3760, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat1.dat1 */
-+			DRA7XX_CORE_IOPAD(0x3764, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat2.dat2 */
-+			DRA7XX_CORE_IOPAD(0x3768, PIN_INPUT_PULLUP | MUX_MODE0) /* mmc1_dat3.dat3 */
-+		>;
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
- 	clock-frequency = <400000>;
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
