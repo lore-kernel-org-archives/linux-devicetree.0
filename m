@@ -1,51 +1,52 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 19/36] nds32: VDSO support
-Date: Tue, 6 Feb 2018 09:48:17 +0100
-Message-ID: <CAK8P3a2R02bNZF-BYW6mbC9jCT+zx-HUtw1y1HS5EifOuOting@mail.gmail.com>
-References: <cover.1515766253.git.green.hu@gmail.com> <4a602db0a58cc858515c3c669d5ac34c567b061c.1515766253.git.green.hu@gmail.com>
- <CAK8P3a0GQDrj+7kc4YB1_ZC1vCWmMtSiYeKsNir_27FvY50Kmg@mail.gmail.com> <CAJsyPhwHmMrXmN2-NW3ZyvRvTWR0vio_bQO+GDBf30DVp=5LTw@mail.gmail.com>
+From: Yannick FERTRE <yannick.fertre@st.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings/display/panel: otm8009a: Add optional
+ power-supply property
+Date: Tue, 6 Feb 2018 09:05:21 +0000
+Message-ID: <97b99cc2-c02c-8006-e0bf-f6b71ff00322@st.com>
+References: <20180205094532.23547-1-philippe.cornu@st.com>
+ <20180205094532.23547-2-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJsyPhwHmMrXmN2-NW3ZyvRvTWR0vio_bQO+GDBf30DVp=5LTw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vincent Chen <deanbo422@gmail.com>
-Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180205094532.23547-2-philippe.cornu@st.com>
+Content-Language: en-US
+Content-ID: <D46DFA83A443BF4AA794BB5F2929CEA5@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe CORNU <philippe.cornu@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Vincent ABRIOU <vincent.abriou@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 6, 2018 at 8:41 AM, Vincent Chen <deanbo422@gmail.com> wrote:
-> 2018-01-18 18:28 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
->>> From: Greentime Hu <greentime@andestech.com>
->>>
->>> This patch adds VDSO support. The VDSO code is currently used for
->>> sys_rt_sigreturn() and optimised gettimeofday() (using the SoC timer counter).
->>>
->>> Signed-off-by: Vincent Chen <vincentc@andestech.com>
->>> Signed-off-by: Greentime Hu <greentime@andestech.com>
->>
->> Acked-by: Arnd Bergmann <arnd@arndb.de>
->
-> Dear Arnd Bergmann:
->
-> We find a small bug here which make LTP 20170929 clock_getres01
-> fail. The bug is in __vdso_clock_getres() function. When argument res
-> is NULL, -EFAULT error code is returned now. But, the returned
-> value is 0 for SyS_clock_getres under the same conditions.
-> Therefore, testcase thinks it is a bug.
->
-> I will modify the code as below and add it in the next version patch
-> if you think it is OK.
->
-> @@ -209,7 +209,7 @@ static notrace int clock_getres_fallback( ...
->  {
->          if (res == NULL)
-> -                return -EFAULT;
-> +                return 0;
->
-
-Ok. I don't know why that is the expected behavior (clock_getres
-with a NULL argument makes little sense), but I can see that it
-matches the regular syscall implementation.
-
-      Arnd
+UmV2aWV3ZWQtYnk6IFlhbm5pY2sgRmVydHLDqSA8eWFubmljay5mZXJ0cmVAc3QuY29tPg0KDQoN
+Ck9uIDAyLzA1LzIwMTggMTA6NDUgQU0sIFBoaWxpcHBlIENvcm51IHdyb3RlOg0KPiBTb21lIGJv
+YXJkcyB1c2UgYSBkZWRpY2F0ZWQgdm9sdGFnZSByZWd1bGF0b3IgZm9yIHRoaXMgcGFuZWwuDQo+
+IEFkZCAmIGRvY3VtZW50IHRoaXMgcmVsYXRlZCBvcHRpb25hbCBwb3dlci1zdXBwbHkgcHJvcGVy
+dHkuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3JudUBz
+dC5jb20+DQo+IC0tLQ0KPiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQgfCAyICsrDQo+ICAgMSBmaWxlIGNoYW5n
+ZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90bTgwMDlhLnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29yaXNldGVjaCxv
+dG04MDA5YS50eHQNCj4gaW5kZXggNjg2MjAyOGU3YjJlLi4yMDNiMDNlZWZiNjggMTAwNjQ0DQo+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29y
+aXNldGVjaCxvdG04MDA5YS50eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90bTgwMDlhLnR4dA0KPiBAQCAtOSw2ICs5
+LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gICANCj4gICBPcHRpb25hbCBwcm9wZXJ0aWVz
+Og0KPiAgICAgLSByZXNldC1ncGlvczogYSBHUElPIHNwZWMgZm9yIHRoZSByZXNldCBwaW4gKGFj
+dGl2ZSBsb3cpLg0KPiArICAtIHBvd2VyLXN1cHBseTogcGhhbmRsZSBvZiB0aGUgcmVndWxhdG9y
+IHRoYXQgcHJvdmlkZXMgdGhlIHN1cHBseSB2b2x0YWdlLg0KPiAgIA0KPiAgIEV4YW1wbGU6DQo+
+ICAgJmRzaSB7DQo+IEBAIC0xNyw1ICsxOCw2IEBAIEV4YW1wbGU6DQo+ICAgCQljb21wYXRpYmxl
+ID0gIm9yaXNldGVjaCxvdG04MDA5YSI7DQo+ICAgCQlyZWcgPSA8MD47DQo+ICAgCQlyZXNldC1n
+cGlvcyA9IDwmZ3Bpb2ggNyBHUElPX0FDVElWRV9MT1c+Ow0KPiArCQlwb3dlci1zdXBwbHkgPSA8
+JnYxdjg+Ow0KPiAgIAl9Ow0KPiAgIH07DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
