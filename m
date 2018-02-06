@@ -1,102 +1,276 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] drm/panel: simple: Add ability to override typical timing
-Date: Tue, 6 Feb 2018 14:19:34 -0600
-Message-ID: <CAL_JsqJer8ZrLyPHz=hBo9smSv7aXhtP3hOJzQojt7ofUiHo=w@mail.gmail.com>
-References: <20180206165626.37692-1-seanpaul@chromium.org> <20180206165626.37692-2-seanpaul@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] arm64: dts: sdm845: Add minimal dts/dtsi files for
+ sdm845 SoC and MTP
+Date: Tue, 6 Feb 2018 14:26:13 -0600
+Message-ID: <CAL_JsqJ1xjQ5ZP-KXeZQ0s=ib8GTfvfYjFqyy+Zcub-akCs7Bw@mail.gmail.com>
+References: <20180125163216.29018-1-rnayak@codeaurora.org> <20180125163216.29018-2-rnayak@codeaurora.org>
+ <20180126221501.GD28313@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180206165626.37692-2-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180126221501.GD28313@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 6, 2018 at 10:56 AM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> This patch adds the ability to override the typical display timing for a
-> given panel. This is useful for devices which have timing constraints
-> that do not apply across the entire display driver (eg: to avoid
-> crosstalk between panel and digitizer on certain laptops). The rules are
-> as follows:
+On Fri, Jan 26, 2018 at 4:15 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 01/25, Rajendra Nayak wrote:
+>>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+>>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dtsi
 >
-> - panel must not specify fixed mode (since the override mode will
->   either be the same as the fixed mode, or we'll be unable to
->   check the bounds of the overried)
-> - panel must specify at least one display_timing range which will be
->   used to ensure the override mode fits within its bounds
+> Do we really need two files? Maybe collapse the two?
 >
-> Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Stéphane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  .../bindings/display/panel/simple-panel.txt        | 20 +++++++
-
-The binding should be a separate patch.
-
->  drivers/gpu/drm/panel/panel-simple.c               | 69 +++++++++++++++++++++-
->  2 files changed, 88 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> new file mode 100644
+>> index 000000000000..a21f4912b3e2
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -0,0 +1,308 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +
+>> +/ {
+>> +     model = "Qualcomm Technologies, Inc. SDM845";
+>> +
+>> +     interrupt-parent = <&intc>;
+>> +
+>> +     #address-cells = <2>;
+>> +     #size-cells = <2>;
+>> +
+>> +     chosen { };
+>> +
+>> +     memory {
+>> +             device_type = "memory";
+>> +             /* We expect the bootloader to fill in the reg */
+>> +             reg = <0 0 0 0>;
+>> +     };
+>> +
+>> +     cpus {
+>> +             #address-cells = <2>;
+>> +             #size-cells = <0>;
+>> +
+>> +             CPU0: cpu@0 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "qcom,kryo";
+>> +                     reg = <0x0 0x0>;
+>> +                     enable-method = "psci";
+>> +                     next-level-cache = <&L2_0>;
+>> +                     L2_0: l2-cache {
+>> +                             compatible = "cache";
+>> +                             next-level-cache = <&L3_0>;
+>> +                             L3_0: l3-cache {
+>> +                                   compatible = "cache";
+>> +                             };
+>> +                     };
+>> +             };
+>> +
+>> +             CPU1: cpu@100 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "qcom,kryo";
+>> +                     reg = <0x0 0x100>;
+>> +                     enable-method = "psci";
+>> +                     next-level-cache = <&L2_100>;
+>> +                     L2_100: l2-cache {
+>> +                             compatible = "cache";
+>> +                             next-level-cache = <&L3_0>;
+>> +                     };
+>> +             };
+>> +
+>> +             CPU2: cpu@200 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "qcom,kryo";
+>> +                     reg = <0x0 0x200>;
+>> +                     enable-method = "psci";
+>> +                     next-level-cache = <&L2_200>;
+>> +                     L2_200: l2-cache {
+>> +                             compatible = "cache";
+>> +                             next-level-cache = <&L3_0>;
+>> +                     };
+>> +             };
+>> +
+>> +             CPU3: cpu@300 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "qcom,kryo";
+>> +                     reg = <0x0 0x300>;
+>> +                     enable-method = "psci";
+>> +                     next-level-cache = <&L2_300>;
+>> +                     L2_300: l2-cache {
+>> +                             compatible = "cache";
+>> +                             next-level-cache = <&L3_0>;
+>> +                     };
+>> +             };
+>> +
+>> +             CPU4: cpu@400 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "qcom,kryo";
+>> +                     reg = <0x0 0x400>;
+>> +                     enable-method = "psci";
+>> +                     next-level-cache = <&L2_400>;
+>> +                     L2_400: l2-cache {
+>> +                             compatible = "cache";
+>> +                             next-level-cache = <&L3_0>;
+>> +                     };
+>> +             };
+>> +
+>> +             CPU5: cpu@500 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "qcom,kryo";
+>> +                     reg = <0x0 0x500>;
+>> +                     enable-method = "psci";
+>> +                     next-level-cache = <&L2_500>;
+>> +                     L2_500: l2-cache {
+>> +                             compatible = "cache";
+>> +                             next-level-cache = <&L3_0>;
+>> +                     };
+>> +             };
+>> +
+>> +             CPU6: cpu@600 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "qcom,kryo";
+>> +                     reg = <0x0 0x600>;
+>> +                     enable-method = "psci";
+>> +                     next-level-cache = <&L2_600>;
+>> +                     L2_600: l2-cache {
+>> +                             compatible = "cache";
+>> +                             next-level-cache = <&L3_0>;
+>> +                     };
+>> +             };
+>> +
+>> +             CPU7: cpu@700 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "qcom,kryo";
+>> +                     reg = <0x0 0x700>;
+>> +                     enable-method = "psci";
+>> +                     next-level-cache = <&L2_700>;
+>> +                     L2_700: l2-cache {
+>> +                             compatible = "cache";
+>> +                             next-level-cache = <&L3_0>;
+>> +                     };
+>> +             };
+>> +
+>> +             cpu-map {
+>> +                     cluster0 {
+>> +                             core0 {
+>> +                                     cpu = <&CPU0>;
+>> +                             };
+>> +
+>> +                             core1 {
+>> +                                     cpu = <&CPU1>;
+>> +                             };
+>> +
+>> +                             core2 {
+>> +                                     cpu = <&CPU2>;
+>> +                             };
+>> +
+>> +                             core3 {
+>> +                                     cpu = <&CPU3>;
+>> +                             };
+>> +                     };
+>> +
+>> +                     cluster1 {
+>> +                             core0 {
+>> +                                     cpu = <&CPU4>;
+>> +                             };
+>> +
+>> +                             core1 {
+>> +                                     cpu = <&CPU5>;
+>> +                             };
+>> +
+>> +                             core2 {
+>> +                                     cpu = <&CPU6>;
+>> +                             };
+>> +
+>> +                             core3 {
+>> +                                     cpu = <&CPU7>;
+>> +                             };
+>> +                     };
+>> +             };
 >
-> diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> index 16d8ff088b7d..590bbff6fc90 100644
-> --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> @@ -7,6 +7,14 @@ Optional properties:
->  - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
->  - enable-gpios: GPIO pin to enable or disable the panel
->  - backlight: phandle of the backlight device attached to the panel
-> +- override-mode: For devices which require a mode which differs from the
-
-This is not a property, but a node so it needs its own section.
-
-Also, it's not real clear from display-timing.txt, but the modes
-should be grouped under a display-timings node. Looks like we haven't
-been good at enforcing that as "panel-timing" is also common when
-there's a single mode. I'd rather not have another way. With a
-standard node name, we can validate the node more easily.
-
-We'd lose the fact that this is explicitly an override, but I'd doubt
-Thierry is going to start letting in panels with no timings.
-
-Finally, since this is an override, is it valid to only override the
-parameters that need overriding? I don't really have an opinion either
-way. It just needs to be explicitly documented.
-
-> +                display_timing's "typical" mode, and whose restrictions cannot
-> +                be applied across the entire platform. The mode must fall
-> +                within the bounds of the panel's specified display_timing, and
-> +                cannot be used if the panel already specifies a single fixed
-> +                mode. The format is specified under "timing subnode" in
-> +                display-timing.txt
-> +
+> From what I recall, this layout causes the kernel to spew
+> warnings? I mean to say this is the power/performance view, but
+> not the architectural view.
 >
->  Example:
+>> +     };
+>> +
+>> +     timer {
+>> +             compatible = "arm,armv8-timer";
+>> +             interrupts = <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
 >
-> @@ -18,4 +26,16 @@ Example:
->                 enable-gpios = <&gpio 90 0>;
+> Are we supposed to use the GIC_CPU_MASK_SIMPLE macros still?
 >
->                 backlight = <&backlight>;
-> +
-> +               override-mode {
-> +                       clock-frequency = <266604720>;
-> +                       hactive = <2400>;
-> +                       hfront-porch = <48>;
-> +                       hback-porch = <84>;
-> +                       hsync-len = <32>;
-> +                       vactive = <1600>;
-> +                       vfront-porch = <3>;
-> +                       vback-porch = <120>;
-> +                       vsync-len = <10>;
-> +               }
->         };
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +                          <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+>> +                          <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+>> +                          <GIC_PPI 0 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+>> +     };
+>> +
+>> +     clocks {
+>> +             xo_board: xo_board {
+>> +                     compatible = "fixed-clock";
+>> +                     #clock-cells = <0>;
+>> +                     clock-frequency = <19200000>;
+>> +                     clock-output-names = "xo_board";
+>
+> We can drop clock-output-names on these.
+>
+>> +             };
+>> +
+>> +             sleep_clk: sleep_clk {
+>> +                     compatible = "fixed-clock";
+>> +                     #clock-cells = <0>;
+>> +                     clock-frequency = <32764>;
+>> +                     clock-output-names = "sleep_clk";
+>> +             };
+>> +     };
+>> +
+>> +     psci {
+>> +             compatible = "arm,psci-1.0";
+>> +             method = "smc";
+>> +     };
+>> +
+>> +     soc: soc {
+>
+> Will anyone use this phandle?
+>
+>> +             #address-cells = <1>;
+>> +             #size-cells = <1>;
+>> +             ranges = <0 0 0 0xffffffff>;
+>> +             compatible = "simple-bus";
+>> +
+>> +             intc: interrupt-controller@17a00000 {
+>> +                     compatible = "arm,gic-v3";
+>> +                     #interrupt-cells = <3>;
+>> +                     interrupt-controller;
+>> +                     #redistributor-regions = <1>;
+>> +                     redistributor-stride = <0x0 0x20000>;
+>> +                     reg = <0x17a00000 0x10000>,     /* GICD */
+>> +                           <0x17a60000 0x100000>;    /* GICR * 8 */
+>> +                     interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+>
+> Can you also add the ITS node please and mark it as disabled?
+> I'll send a patch to the list to skip status = "disabled" ones.
+> We may want to support ITS on these SoCs if the firmware is
+> different.
+>
+>> +             };
+>> +
+>> +             gcc: clock-controller@100000 {
+>> +                     compatible = "qcom,gcc-sdm845";
+>> +                     reg = <0x100000 0x1f0000>;
+>> +                     #clock-cells = <1>;
+>> +                     #reset-cells = <1>;
+>> +             };
+>> +
+>> +             tlmm: pinctrl@03400000 {
+>
+> Drop leading zeroes please.
+
+Build dtbs with W=2 and fix the warnings so reviewers don't have to
+waste their time on these issues.
+
+Rob
