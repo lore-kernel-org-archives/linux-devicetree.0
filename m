@@ -1,80 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv3] tlv320dac33: Add device tree bindings
-Date: Tue, 6 Feb 2018 15:27:22 +0000
-Message-ID: <20180206152722.GH5681@sirena.org.uk>
-References: <20180129230539.GA18280@amd> <20180131190112.GA31608@amd>
- <20b9ff40-a869-a165-07a2-2a103830efb3@ti.com>
- <20180205082445.GA18274@amd> <20180206121122.GG5681@sirena.org.uk>
- <20180206134906.GA7842@amd>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC v4 00/26] Fix watchdog on Renesas R-Car Gen2 and RZ/G1
+Date: Tue, 6 Feb 2018 16:44:28 +0100
+Message-ID: <CAMuHMdX0EBhc20G1eaN-LXyMpamyjW1otja3YV10kR1PNEprXg@mail.gmail.com>
+References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3367925317468300697=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180206134906.GA7842@amd>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, tony@atomide.com, abcloriens@gmail.com, tiwai@suse.com, Peter Ujfalusi <peter.ujfalusi@ti.com>, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, patrikbachan@gmail.com, ivo.g.dimitrov.75@gmail.com, khilman@kernel.org, serge@hallyn.com, devicetree@vger.kernel.org, pali.rohar@gmail.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, martijn@brixit.nl, aaro.koskinen@iki.fi, linux-kernel@vger.kernel.org, clayton@craftyguy.net, sakari.ailus@linux.intel.com, sre@kernel.org, bhumirks@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>l
 List-Id: devicetree@vger.kernel.org
 
+Hi Fabrizio,
 
---===============3367925317468300697==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rCwQ2Y43eQY6RBgR"
-Content-Disposition: inline
+On Wed, Jan 31, 2018 at 7:24 PM, Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> the forth version of this series aims at consolidating the watchdog fix.
+> There is a discussion still in progress about the changes to the
+> watchdog driver, please see the following for more information:
+> https://patchwork.kernel.org/patch/10192435/
+>
+> It doesn't look like leaving the restart handler in for Gen3 is going
+> to do any harm (but it may be unwelcome), perhaps esplicitly setting
+> its priority to a medium level (128) will help its adoption on Gen3
+> as well? This is what this particular version is proposing.
+>
+> Also, although the latest implmentation of the reset vector hasn't
+> raised any problem so far, it hasn't received any feedback either.
+> Please do look into it to espose problems and weaknesses (if any).
+>
+> Finally, it would be great if someone could test this patch set on his
+> Gen2/Gen3/RZ/G1 board, and it would be awesome if that board was a
+> Lager with all of the cores enabled and working at the same time ;-)
 
+I applied your series, made the following change:
 
---rCwQ2Y43eQY6RBgR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--- a/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -499,6 +499,11 @@
+        status = "okay";
+ };
 
-On Tue, Feb 06, 2018 at 02:49:06PM +0100, Pavel Machek wrote:
-> On Tue 2018-02-06 12:11:22, Mark Brown wrote:
++&rwdt {
++       timeout-sec = <5>;
++       status = "okay";
++};
++
+ &sata0 {
+        status = "okay";
+ };
 
-> > Please submit patches using subject lines reflecting the style for the
-> > subsystem.  This makes it easier for people to identify relevant
-> > patches.  Look at what existing commits in the area you're changing are
-> > doing and make sure your subject lines visually resemble what they're
-> > doing.
+and tried it on koelsch. Unfortunately it hangs:
 
-> AFAICT this goes to Documentation, not sound.
+    # cat > /dev/watchdog
+    [wait 5s]
+    [hang]
 
-Even if that were the case you're not following the commonly accepted
-practice there either.
+However, it does work when booted with maxcpus=1, or when built with
+CONFIG_SMP=n.
 
-> If you have any comments on V1 of this patch, that would be nice, I'd
-> like to get that merged once we are finished with the bindings.
+It also works when offlining CPU1 first:
 
-It is the middle of the merge window, please be a bit more patient.
+    # echo 0 > /sys/devices/system/cpu/cpu1/online
+    #cat > /dev/watchdog
+    [wait 5s]
+    [reboot]
 
---rCwQ2Y43eQY6RBgR
-Content-Type: application/pgp-signature; name="signature.asc"
+It does not work when offlining CPU0 first.
 
------BEGIN PGP SIGNATURE-----
+This is on r8a7791 ES1.0.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlp5yVkACgkQJNaLcl1U
-h9BLYQf/bR1HqHRo34NPI/6nvu/IfE0LC+RqQRa+t8pQG820McZnSDrQVwdVvrFS
-zSz9nAig8CJ0ciiYC59e3ywzjlquDKaB1a5bKytCy+j6d9zbP1NdIzpQLPBo8JDx
-i+8oDhTmIfrL8pohU4DdoFPjofIL5pfhI05UoKkQj9+zEaAkb3dFK/yXPgGh4vA6
-/8uRdQ3oIRyT/rd2KbEAAffz+X029BhIuNIXDUFPemcfeDRbGKdmCnO57UA1XyXc
-z1EFHUTssoi0jtsJ8/P7MyouPXhm3QVeNtU0NefBz/dinI98CtEeCrnm9uyp7dnQ
-4PjzGfFdDOzmUnIkyd9IZoHqryOsjw==
-=UDk0
------END PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
---rCwQ2Y43eQY6RBgR--
+                        Geert
 
---===============3367925317468300697==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
---===============3367925317468300697==--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
