@@ -1,53 +1,123 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH 4/7] arm64: dts: Add timer node for Spreadtrum SC9860
-Date: Tue,  6 Feb 2018 17:28:23 +0800
-Message-ID: <46052ca3b42066deeb0f90d13592bb0cc53902c1.1517908478.git.baolin.wang@linaro.org>
-References: <410b2f2d3f3f019c96ec31213647c41cd7f1174d.1517908478.git.baolin.wang@linaro.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/7] drm/panel: simple: add support for Ampire
+ AM-800480AYTZQW-00H
+Date: Tue, 06 Feb 2018 10:35:28 +0100
+Message-ID: <1517909728.3346.2.camel@pengutronix.de>
+References: <1517766571-409-1-git-send-email-jagan@amarulasolutions.com>
+         <1517766571-409-2-git-send-email-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <410b2f2d3f3f019c96ec31213647c41cd7f1174d.1517908478.git.baolin.wang@linaro.org>
-In-Reply-To: <410b2f2d3f3f019c96ec31213647c41cd7f1174d.1517908478.git.baolin.wang@linaro.org>
-References: <410b2f2d3f3f019c96ec31213647c41cd7f1174d.1517908478.git.baolin.wang@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, orson.zhai@spreadtrum.com, mathieu.poirier@linaro.org, baolin.wang@linaro.org, linux-kernel@vger.kernel.org, broonie@kernel.org, chunyan.zhang@spreadtrum.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1517766571-409-2-git-send-email-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We will use one always-on timer to be the broadcast device, thus add
-the timer device node for Spreadtrum SC9860 platform.
+Hi Jagan,
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- arch/arm64/boot/dts/sprd/whale2.dtsi |    7 +++++++
- 1 file changed, 7 insertions(+)
+On Sun, 2018-02-04 at 23:19 +0530, Jagan Teki wrote:
+> This adds support for the Ampire AM-800480AYTZQW-00H 7.0" WGA LCD,
+> which can be supported by the simple panel driver.
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> Changes for v3:
+> - collect Rob reiew tag 
+> Changes for v2:
+> - Updated binding info about optional properties, node and example
+> 
+>  .../display/panel/ampire,am-800480aytzqw-00h.txt   | 25 ++++++++++++++++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++++++
+>  2 files changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt b/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
+> new file mode 100644
+> index 0000000..abb5eee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/ampire,am-800480aytzqw-00h.txt
+> @@ -0,0 +1,25 @@
+> +Ampire AM-800480AYTZQW-00H 7.0" WVGA TFT LCD panel
+> +
+> +This binding is compatible with the simple-panel binding, which is specified
+> +in simple-panel.txt in this directory.
+> +
+> +Required properties:
+> +- compatible: should be "ampire,am-800480aytzqw-00h"
+> +
+> +Optional properties:
+> +- backlight: phandle of the backlight device attached to the panel
+> +
+> +Optional nodes:
+> +- Video port for LVDS panel input.
+> +
+> +Example:
+> +	panel {
+> +		compatible = "ampire,am-800480aytzqw-00h";
+> +		backlight = <&backlight_lvds>;
+> +
+> +		port {
+> +			panel_in: endpoint {
+> +				remote-endpoint = <&lvds0_out>;
+> +			};
+> +		};
+> +	};
+> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+> index 5591984..2ecc14b 100644
+> --- a/drivers/gpu/drm/panel/panel-simple.c
+> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> @@ -412,6 +412,30 @@ static const struct panel_desc ampire_am_480272h3tmqw_t01h = {
+>  	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+>  };
+>  
+> +static const struct display_timing ampire_am_800480aytzqw_00h_timing = {
+> +	.pixelclock = { 27700000, 29200000, 39600000 },
+> +	.hactive = { 800, 800, 800 },
+> +	.hfront_porch = { 12, 40, 212 },
+> +	.hback_porch = { 88, 88, 88 },
+> +	.hsync_len = { 1, 2, 40 },
+> +	.vactive = { 480, 480, 480 },
+> +	.vfront_porch = { 1, 13, 88 },
+> +	.vback_porch = { 32, 32, 32 },
+> +	.vsync_len = { 1, 2, 3 },
+> +	.flags = DISPLAY_FLAGS_DE_HIGH,
+> +};
+> +
+> +static const struct panel_desc ampire_am_800480aytzqw_00h = {
+> +	.timings = &ampire_am_800480aytzqw_00h_timing,
+> +	.num_timings = 1,
+> +	.bpc = 6,
+> +	.size = {
+> +		.width = 154,
+> +		.height = 86,
+> +	},
 
-diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
-index 23cedbd..3dc6389 100644
---- a/arch/arm64/boot/dts/sprd/whale2.dtsi
-+++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
-@@ -122,6 +122,13 @@
- 				#size-cells = <0>;
- 			};
- 
-+			timer@40050000 {
-+				compatible = "sprd,sc9860-timer";
-+				reg = <0 0x40050000 0 0x20>;
-+				interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&ext_32k>;
-+			};
-+
- 			hwlock: hwspinlock@40500000 {
- 				compatible = "sprd,hwspinlock-r3p0";
- 				reg = <0 0x40500000 0 0x1000>;
--- 
-1.7.9.5
+If the panel datasheet specifies minimal prepare, enable, disable, and
+unprepare delays, it would be good to add them to the panel descriptor.
+
+> +	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+> +};
+> +
+>  static const struct drm_display_mode ampire_am800480r3tmqwa1h_mode = {
+>  	.clock = 33333,
+>  	.hdisplay = 800,
+> @@ -2028,6 +2052,9 @@ static const struct of_device_id platform_of_match[] = {
+>  		.compatible = "ampire,am-480272h3tmqw-t01h",
+>  		.data = &ampire_am_480272h3tmqw_t01h,
+>  	}, {
+> +		.compatible = "ampire,am-800480aytzqw-00h",
+> +		.data = &ampire_am_800480aytzqw_00h,
+> +	}, {
+>  		.compatible = "ampire,am800480r3tmqwa1h",
+>  		.data = &ampire_am800480r3tmqwa1h,
+>  	}, {
+
+regards
+Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
