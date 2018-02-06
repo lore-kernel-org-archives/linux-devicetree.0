@@ -1,87 +1,101 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Tue, 6 Feb 2018 12:15:34 -0800
-Message-ID: <20180206201534.GN9465@builder>
-References: <20180118220833.16616-3-ilina@codeaurora.org>
- <20180118222802.18161-1-ilina@codeaurora.org>
- <20180129190852.5ddcgdo3gkc2nw5r@rob-hp-laptop>
- <20180130161750.GA20815@codeaurora.org>
- <20180205221113.GE9465@builder>
- <20180206200507.GA13360@codeaurora.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] drm/panel: simple: Add ability to override typical timing
+Date: Tue, 6 Feb 2018 14:19:34 -0600
+Message-ID: <CAL_JsqJer8ZrLyPHz=hBo9smSv7aXhtP3hOJzQojt7ofUiHo=w@mail.gmail.com>
+References: <20180206165626.37692-1-seanpaul@chromium.org> <20180206165626.37692-2-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180206200507.GA13360-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20180206165626.37692-2-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 06 Feb 12:05 PST 2018, Lina Iyer wrote:
+On Tue, Feb 6, 2018 at 10:56 AM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> This patch adds the ability to override the typical display timing for a
+> given panel. This is useful for devices which have timing constraints
+> that do not apply across the entire display driver (eg: to avoid
+> crosstalk between panel and digitizer on certain laptops). The rules are
+> as follows:
+>
+> - panel must not specify fixed mode (since the override mode will
+>   either be the same as the fixed mode, or we'll be unable to
+>   check the bounds of the overried)
+> - panel must specify at least one display_timing range which will be
+>   used to ensure the override mode fits within its bounds
+>
+> Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Stéphane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  .../bindings/display/panel/simple-panel.txt        | 20 +++++++
 
-> On Mon, Feb 05 2018 at 22:11 +0000, Bjorn Andersson wrote:
-> > On Tue 30 Jan 08:17 PST 2018, Lina Iyer wrote:
-> > > On Mon, Jan 29 2018 at 19:08 +0000, Rob Herring wrote:
-> > > > On Thu, Jan 18, 2018 at 03:28:02PM -0700, Lina Iyer wrote:
-> > [..]
-> > > > > diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-> > [..]
-> > > > > +Command DB is a database that provides a mapping between resource key and the
-> > > > > +resource address for a system resource managed by a remote processor. The data
-> > > > > +is stored in a shared memory region and is loaded by the remote processor.
-> > > >
-> > > > Is said shared memory described in DT. If so, this should be a child
-> > > > node. Only 8 bytes seems kind of fine grained for putting in DT when it
-> > > > could be implied by the parent shared memory node.
-> > > >
-> > > I dont believe this memory will be described in DT for this chipset.
-> > > Will ask internally.
-> > > 
-> > 
-> > Well, these things goes two ways...
-> > 
-> > > > > +
-> > > > > +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
-> > > > > +controlling shared resources. Depending on the board configuration the shared
-> > > > > +resource properties may change. These properties are dynamically probed by the
-> > > > > +remote processor and made available in the shared memory.
-> > > >
-> > > > The table may change, but does the presence of it or shared memory
-> > > > location (of the pointer) change?
-> > > >
-> > > The location may change between different SoCs, but will be present in
-> > > all chipsets of this architecture.
-> > > 
-> > 
-> > Where is the actual DB located? System RAM or is it some special
-> > device-memory?
-> > 
-> It's carved out of system memory and is access protected. Not a device
-> memory.
-> 
+The binding should be a separate patch.
 
-It sounds like this mimics the model we have for SMEM then, a chunk of
-System RAM with an address and size described in IMEM (iirc). The system
-integrator can move or resize SMEM by just modifying the reference in
-IMEM and all systems in the SoC will adapt.
+>  drivers/gpu/drm/panel/panel-simple.c               | 69 +++++++++++++++++++++-
+>  2 files changed, 88 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> index 16d8ff088b7d..590bbff6fc90 100644
+> --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> @@ -7,6 +7,14 @@ Optional properties:
+>  - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+>  - enable-gpios: GPIO pin to enable or disable the panel
+>  - backlight: phandle of the backlight device attached to the panel
+> +- override-mode: For devices which require a mode which differs from the
 
-Except for the fact that once we reach the point in Linux where we read
-out the references Linux has already started using the part of System
-RAM that's associated with SMEM - so we must also describe it in a
-reserved-memory node; making the indirection useless for Linux.
+This is not a property, but a node so it needs its own section.
 
-Note that the boot loader could still read the indirection and adjust
-the reserved-memory node accordingly - so it's useful from a systems
-perspective.
+Also, it's not real clear from display-timing.txt, but the modes
+should be grouped under a display-timings node. Looks like we haven't
+been good at enforcing that as "panel-timing" is also common when
+there's a single mode. I'd rather not have another way. With a
+standard node name, we can validate the node more easily.
 
+We'd lose the fact that this is explicitly an override, but I'd doubt
+Thierry is going to start letting in panels with no timings.
 
-If this is the case for Command DB then I suggest that we describe it as
-an explicit reserved-memory directly and just use that region, rather
-than the indirection.
+Finally, since this is an override, is it valid to only override the
+parameters that need overriding? I don't really have an opinion either
+way. It just needs to be explicitly documented.
 
-Regards,
-Bjorn
+> +                display_timing's "typical" mode, and whose restrictions cannot
+> +                be applied across the entire platform. The mode must fall
+> +                within the bounds of the panel's specified display_timing, and
+> +                cannot be used if the panel already specifies a single fixed
+> +                mode. The format is specified under "timing subnode" in
+> +                display-timing.txt
+> +
+>
+>  Example:
+>
+> @@ -18,4 +26,16 @@ Example:
+>                 enable-gpios = <&gpio 90 0>;
+>
+>                 backlight = <&backlight>;
+> +
+> +               override-mode {
+> +                       clock-frequency = <266604720>;
+> +                       hactive = <2400>;
+> +                       hfront-porch = <48>;
+> +                       hback-porch = <84>;
+> +                       hsync-len = <32>;
+> +                       vactive = <1600>;
+> +                       vfront-porch = <3>;
+> +                       vback-porch = <120>;
+> +                       vsync-len = <10>;
+> +               }
+>         };
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
