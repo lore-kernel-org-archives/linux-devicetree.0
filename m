@@ -1,29 +1,37 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
 Subject: Re: [PATCH v5 04/16] media: rkisp1: add Rockchip MIPI Synopsys DPHY
  driver
-Date: Tue, 6 Feb 2018 14:19:42 +0100
-Message-ID: <82b45a09-c29b-d0ce-d38f-50d30a344b5d@xs4all.nl>
+Date: Tue, 6 Feb 2018 14:21:12 +0100
+Message-ID: <13ff39e5-242d-2307-d429-60cd0a0a18e5@xs4all.nl>
 References: <1514533978-20408-1-git-send-email-zhengsq@rock-chips.com>
  <1514533978-20408-5-git-send-email-zhengsq@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514533978-20408-5-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1514533978-20408-5-git-send-email-zhengsq@rock-chips.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, allon.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shunqian Zheng <zhengsq@rock-chips.com>, linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org
+Cc: Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, Joao.Pinto@synopsys.com, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, Luis.Oliveira@synopsys.com, robh+dt@kernel.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, allon.huang@rock-chips.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 On 12/29/17 08:52, Shunqian Zheng wrote:
-> From: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> From: Jacob Chen <jacob2.chen@rock-chips.com>
 > 
 > This commit adds a subdev driver for Rockchip MIPI Synopsys DPHY driver
 > 
-> Signed-off-by: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
+> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
 > ---
 >  .../media/platform/rockchip/isp1/mipi_dphy_sy.c    | 787 +++++++++++++++++++++
 >  1 file changed, 787 insertions(+)
@@ -67,10 +75,6 @@ On 12/29/17 08:52, Shunqian Zheng wrote:
 > + * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 > + * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 > + * SOFTWARE.
-
-If possible, please use the new SPDX license tags. Hmm, you used it elsewhere,
-so why not here?
-
 > + */
 > +
 > +#include <linux/clk.h>
@@ -422,7 +426,7 @@ so why not here?
 > +	if (!priv->is_streaming)
 > +		return 0;
 
-You can drop this if. The end result is always the same :-)
+'if' can be dropped.
 
 > +
 > +	priv->is_streaming = false;
@@ -450,9 +454,8 @@ You can drop this if. The end result is always the same :-)
 > +	return 0;
 > +}
 
-Please drop this. g_mbus_config is deprecated and should not be used
-in new drivers. It dates from a pre-device-tree era and these days we
-use the device tree instead.
+As with the previous patch: please remove g_mbus_config, it shouldn't
+be used in new drivers.
 
 > +
 > +static int mipidphy_s_power(struct v4l2_subdev *sd, int on)
@@ -839,7 +842,3 @@ use the device tree instead.
 Regards,
 
 	Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
