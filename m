@@ -1,71 +1,136 @@
-From: Yannick FERTRE <yannick.fertre@st.com>
-Subject: Re: [PATCH v1 2/2] drm/panel: otm8009a: Add support for the optional
- power-supply
-Date: Tue, 6 Feb 2018 09:06:35 +0000
-Message-ID: <77c5fd49-6a72-d720-f754-63c975447400@st.com>
-References: <20180205094532.23547-1-philippe.cornu@st.com>
- <20180205094532.23547-3-philippe.cornu@st.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 05/10] ARM: sun8i: h3: add operating-points-v2 table
+ for CPU
+Date: Tue, 6 Feb 2018 10:06:56 +0100
+Message-ID: <20180206090656.r52hs7sk7w5iynrk@flea>
+References: <20180206044905.30508-1-icenowy@aosc.io>
+ <20180206044905.30508-6-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180205094532.23547-3-philippe.cornu@st.com>
-Content-Language: en-US
-Content-ID: <8F6463EDF592E24FBBC111F9B4B7A0F3@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Vincent ABRIOU <vincent.abriou@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lm7thvhrmh5kkjhy"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180206044905.30508-6-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-UmV2aWV3ZWQtYnk6IFlhbm5pY2sgRmVydHLDqSA8eWFubmljay5mZXJ0cmVAc3QuY29tPg0KDQoN
-Ck9uIDAyLzA1LzIwMTggMTA6NDUgQU0sIFBoaWxpcHBlIENvcm51IHdyb3RlOg0KPiBBZGQgc3Vw
-cG9ydCBmb3IgdGhlIG9wdGlvbmFsIHBvd2VyLXN1cHBseS4NCj4NCj4gTm90ZTogQSAiZHVtbXkg
-cmVndWxhdG9yIiBpcyByZXR1cm5lZCBieSBkZXZtX3JlZ3VsYXRvcl9nZXQoKQ0KPiBpZiB0aGUg
-b3B0aW9uYWwgcmVndWxhdG9yIGlzIG5vdCBwcmVzZW50IGluIHRoZSBkZXZpY2UgdHJlZSwNCj4g
-c2ltcGxpZnlpbmcgdGhlIHNvdXJjZSBjb2RlIHdoZW4gZW5hYmxpbmcvZGlzYWJsaW5nIHRoZSBy
-ZWd1bGF0b3IuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5j
-b3JudUBzdC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1vcmlz
-ZXRlY2gtb3RtODAwOWEuYyB8IDE3ICsrKysrKysrKysrKysrKysrDQo+ICAgMSBmaWxlIGNoYW5n
-ZWQsIDE3IGluc2VydGlvbnMoKykNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9w
-YW5lbC9wYW5lbC1vcmlzZXRlY2gtb3RtODAwOWEuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
-YW5lbC1vcmlzZXRlY2gtb3RtODAwOWEuYw0KPiBpbmRleCA3MjUzMDk4M2Q1NWQuLjkwZjFhZTRh
-ZjkzYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW9yaXNldGVj
-aC1vdG04MDA5YS5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1vcmlzZXRl
-Y2gtb3RtODAwOWEuYw0KPiBAQCAtMTEsNiArMTEsNyBAQA0KPiAgICNpbmNsdWRlIDxkcm0vZHJt
-X3BhbmVsLmg+DQo+ICAgI2luY2x1ZGUgPGxpbnV4L2JhY2tsaWdodC5oPg0KPiAgICNpbmNsdWRl
-IDxsaW51eC9ncGlvL2NvbnN1bWVyLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2Nv
-bnN1bWVyLmg+DQo+ICAgI2luY2x1ZGUgPHZpZGVvL21pcGlfZGlzcGxheS5oPg0KPiAgIA0KPiAg
-ICNkZWZpbmUgRFJWX05BTUUgIm9yaXNldGVjaF9vdG04MDA5YSINCj4gQEAgLTYyLDYgKzYzLDcg
-QEAgc3RydWN0IG90bTgwMDlhIHsNCj4gICAJc3RydWN0IGRybV9wYW5lbCBwYW5lbDsNCj4gICAJ
-c3RydWN0IGJhY2tsaWdodF9kZXZpY2UgKmJsX2RldjsNCj4gICAJc3RydWN0IGdwaW9fZGVzYyAq
-cmVzZXRfZ3BpbzsNCj4gKwlzdHJ1Y3QgcmVndWxhdG9yICpzdXBwbHk7DQo+ICAgCWJvb2wgcHJl
-cGFyZWQ7DQo+ICAgCWJvb2wgZW5hYmxlZDsNCj4gICB9Ow0KPiBAQCAtMjc5LDYgKzI4MSw4IEBA
-IHN0YXRpYyBpbnQgb3RtODAwOWFfdW5wcmVwYXJlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQ0K
-PiAgIAkJbXNsZWVwKDIwKTsNCj4gICAJfQ0KPiAgIA0KPiArCXJlZ3VsYXRvcl9kaXNhYmxlKGN0
-eC0+c3VwcGx5KTsNCj4gKw0KPiAgIAljdHgtPnByZXBhcmVkID0gZmFsc2U7DQo+ICAgDQo+ICAg
-CXJldHVybiAwOw0KPiBAQCAtMjkyLDYgKzI5NiwxMiBAQCBzdGF0aWMgaW50IG90bTgwMDlhX3By
-ZXBhcmUoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpDQo+ICAgCWlmIChjdHgtPnByZXBhcmVkKQ0K
-PiAgIAkJcmV0dXJuIDA7DQo+ICAgDQo+ICsJcmV0ID0gcmVndWxhdG9yX2VuYWJsZShjdHgtPnN1
-cHBseSk7DQo+ICsJaWYgKHJldCA8IDApIHsNCj4gKwkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gZW5h
-YmxlIHN1cHBseTogJWRcbiIsIHJldCk7DQo+ICsJCXJldHVybiByZXQ7DQo+ICsJfQ0KPiArDQo+
-ICAgCWlmIChjdHgtPnJlc2V0X2dwaW8pIHsNCj4gICAJCWdwaW9kX3NldF92YWx1ZV9jYW5zbGVl
-cChjdHgtPnJlc2V0X2dwaW8sIDApOw0KPiAgIAkJZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKGN0
-eC0+cmVzZXRfZ3BpbywgMSk7DQo+IEBAIC00MTQsNiArNDI0LDEzIEBAIHN0YXRpYyBpbnQgb3Rt
-ODAwOWFfcHJvYmUoc3RydWN0IG1pcGlfZHNpX2RldmljZSAqZHNpKQ0KPiAgIAkJcmV0dXJuIFBU
-Ul9FUlIoY3R4LT5yZXNldF9ncGlvKTsNCj4gICAJfQ0KPiAgIA0KPiArCWN0eC0+c3VwcGx5ID0g
-ZGV2bV9yZWd1bGF0b3JfZ2V0KGRldiwgInBvd2VyIik7DQo+ICsJaWYgKElTX0VSUihjdHgtPnN1
-cHBseSkpIHsNCj4gKwkJcmV0ID0gUFRSX0VSUihjdHgtPnN1cHBseSk7DQo+ICsJCWRldl9lcnIo
-ZGV2LCAiZmFpbGVkIHRvIHJlcXVlc3QgcmVndWxhdG9yOiAlZFxuIiwgcmV0KTsNCj4gKwkJcmV0
-dXJuIHJldDsNCj4gKwl9DQo+ICsNCj4gICAJbWlwaV9kc2lfc2V0X2RydmRhdGEoZHNpLCBjdHgp
-Ow0KPiAgIA0KPiAgIAljdHgtPmRldiA9IGRldjsNCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--lm7thvhrmh5kkjhy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 06, 2018 at 12:49:00PM +0800, Icenowy Zheng wrote:
+> The CPU on Allwinner H3 can do dynamic frequency scaling.
+>=20
+> Add a DVFS table based on the one shipped with Allwinner's H3 SDK. The
+> voltage-frequency relationship seems to be conservative, and Armbian has
+> another DVFS table which uses lower voltage at a certain frequency.
+> However, the official one is chosen for safety.
+>=20
+> Frequencies higher than 1008MHz are temporarily dropped in the table, as
+> they may lead to over voltage on boards without proper regulator
+> settings or over temperature on boards with proper regulator settings.
+> They will be added back once regulator settings are ready and thermal
+> sensor driver is merged.
+>=20
+> In order to satisfy all different regulators (SY8106A which is 50mV per
+> level, SY8113B which have two states: 1.1V and 1.3V, and some board with
+> non-tweakable regulators), all the OPPs are defined with a range which has
+> the target value as the minimum allowed value, and 1.3V (the highest
+> VDD-CPUX voltage suggested by the datasheet) as the maximum allowed value.
+> It's proven to work well with a board with SY8113B.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+> Changes in v2:
+> - Switch to BSP OPP table, which is more conservative.
+>=20
+>  arch/arm/boot/dts/sun8i-h3.dtsi | 32 +++++++++++++++++++++++++++++++-
+>  1 file changed, 31 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3=
+=2Edtsi
+> index 8495deecedad..36608c03f02b 100644
+> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+> @@ -43,32 +43,62 @@
+>  #include "sunxi-h3-h5.dtsi"
+> =20
+>  / {
+> +	cpu0_opp_table: opp_table0 {
+> +		compatible =3D "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp@648000000 {
+> +			opp-hz =3D /bits/ 64 <648000000>;
+> +			opp-microvolt =3D <1040000 1040000 1300000>;
+> +			clock-latency-ns =3D <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@816000000 {
+> +			opp-hz =3D /bits/ 64 <816000000>;
+> +			opp-microvolt =3D <1100000 1100000 1300000>;
+> +			clock-latency-ns =3D <244144>; /* 8 32k periods */
+> +		};
+> +
+> +		opp@1008000000 {
+> +			opp-hz =3D /bits/ 64 <1008000000>;
+> +			opp-microvolt =3D <1200000 1200000 1300000>;
+> +			clock-latency-ns =3D <244144>; /* 8 32k periods */
+> +		};
+> +	};
+> +
+>  	cpus {
+>  		#address-cells =3D <1>;
+>  		#size-cells =3D <0>;
+> =20
+> -		cpu@0 {
+> +		cpu0: cpu@0 {
+>  			compatible =3D "arm,cortex-a7";
+>  			device_type =3D "cpu";
+>  			reg =3D <0>;
+> +			clocks =3D <&ccu CLK_CPUX>;
+> +			clock-names =3D "cpu";
+> +			operating-points-v2 =3D <&cpu0_opp_table>;
+> +			#cooling-cells =3D <0x2>;
+
+So, that would be 2?
+
+There's this pattern on pretty much all the other patches following
+this one as well, you should address them too.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
+
+--lm7thvhrmh5kkjhy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlp5cC8ACgkQ0rTAlCFN
+r3TOGw/9GnFM1ShIioIb0M8acn9gVHSUJYIbN4sEJ3+TTpkm4BNLPg8GVBLMUw5n
+S6EjRhDXf9rO/jP7G0o1YGk8V8qzzwIqgqnLhJca12/82c8Cs9M/tnJFBJkFgAat
+7evGuMbqdL97WF/vTOKB4rqNIVyLqWfvW2dbS/fqfA2uaNhdvnCuoA0LrsQZuXxl
+sEJo0FUQFw2LYg6FMZ9t+BrerDbxsp+xu/C7uBsmFqM7WzHr5MJOQbm7KUF1ANaR
++VQP403FpJCzQftAe74uzcTKbPYw/BT3Lh7qSo/3EqRUyBKIOykv1MLzMa3mIlOD
+U3ofGV1xhrk/QsFqgQs8QDFcf7EVfRAUp3VTYtHmYAICl2QzOGwqWQT61qV0jK5a
+BkASNUjuIY9GTpD98E9xgngPtkUKycYNdh1WlaYwvjPw9/5iag1cWS2pH5n7TgBu
+cotIzw/YQT21Cfw8bA9HWamkWbJp+ivOdA/GkdvIzVcjvSk83RZLsp4IeC8Rrd32
+xS451eXDUyuGVOHwbEktmDs2eovKcTPMx9jvxe09ZDAdPclwNW/gs1YhPm/reAfh
+uNhHDDV3ynqB4LyYjwZ+7v13ekoax718+Jr0zxkMFG9PUs5jali+Hrn+NMDLIEPI
+9vhBs1s+msO7tXtwmex236TqaltAhy7aq6n0j6Kybq9Jabpr22Q=
+=mDjU
+-----END PGP SIGNATURE-----
+
+--lm7thvhrmh5kkjhy--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
