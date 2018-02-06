@@ -1,176 +1,54 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 3/3] arm64: dts: sdm845: Add serial console support
-Date: Tue, 6 Feb 2018 11:35:32 -0800
-Message-ID: <CAD=FV=VwTZo2YOxw0W7JbuF_Dic8YHmQZ6_FAxiZG3BXiS_VEw@mail.gmail.com>
-References: <20180131161941.29865-1-rnayak@codeaurora.org> <20180131161941.29865-4-rnayak@codeaurora.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v12 7/9] ACPI: Translate the I/O range of non-MMIO devices
+ before scanning
+Date: Tue, 6 Feb 2018 21:44:35 +0200
+Message-ID: <CAHp75VdTKCq5Vxox2OPvr+BvVSduhaxs_sa7B9wskzjv8ZJLqw@mail.gmail.com>
+References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
+ <1516725385-24535-8-git-send-email-john.garry@huawei.com> <0a30452f-34eb-d0b5-2001-ab6b866c53e2@huawei.com>
+ <CAHp75VfXoAHNH2BnfNLbFfdCqUk3rxU_QWfxTx7ZyLgV0qxotQ@mail.gmail.com> <62634aa6-ad3c-93c2-e6fa-9e163d4004ca@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20180131161941.29865-4-rnayak@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, evgreen@chromium.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <62634aa6-ad3c-93c2-e6fa-9e163d4004ca@huawei.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Hanjun Guo <hanjun.guo@linaro.org>, Dann Frazier <dann.frazier@canonical.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, linux-pci@vger.kernel.org, Corey Minyard <minyard@acm.org>, devicetree <devicetree@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Feb 5, 2018 at 4:25 PM, John Garry <john.garry@huawei.com> wrote:
+> On 05/02/2018 13:16, Andy Shevchenko wrote:
+>> On Thu, Feb 1, 2018 at 1:32 PM, John Garry <john.garry@huawei.com> wrote:
 
-On Wed, Jan 31, 2018 at 8:19 AM, Rajendra Nayak <rnayak@codeaurora.org> wrote:
-> Add the qup uart node and geni se instance needed to
-> support the serial console on the MTP.
+>> resource_size_t is dynamic width type, you will see a compiler
+>> warning. For this we have
+>> %pap specifier.
+>>
+>> Moreover, in some cases it's useful to print struct resource via %pR or
+>> %pr.
+
+> I have already fixed this up in my rework.
+
+Good!
+
+>>>> +/* All the host devices which apply indirect-IO can be listed here. */
+>>>> +static const struct acpi_device_id acpi_indirect_host_id[] = {
+>>>> +       {""},
+>>>> +};
+>>
+>>
+>> The idea of terminator is to be such (remove comma there). And it's
+>> basically redundant to have an empty string there. Moreover, it's a
+>> waste of resources in ro section.
 >
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 42 +++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 21 +++++++++++++++++
->  2 files changed, 63 insertions(+)
 >
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index 617c7bb25fb1..42fbf2ab9a2d 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -10,4 +10,46 @@
->  / {
->         model = "Qualcomm Technologies, Inc. SDM845 MTP";
->         compatible = "qcom,sdm845-mtp";
-> +
-> +       aliases {
-> +               serial0 = &qup_uart2;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = "serial0";
-> +       };
-> +
-> +       soc {
+> OK, the comma should be removed. So what is the preferred acpi device id
+> array sentinel? I see {}, {"", 0}, and {""} used.
 
-I don't know if there's an official position, but in general I'm seen
-people use the actual "soc" alias here.  AKA at the top level of this
-dts, just do:
+The rule of thumb --- whatever has more entries in the kernel.
+In case of similarity I would prefer simple {} because it suits for
+termination slightly better (for my opinion, some cases might
+potentially have {"", non_null_vakue}).
 
-&soc {
-  ...
-};
-
-Normally doing stuff like that is useful so you don't need to
-replicate the whole hierarchy.  In this case that's not a huge
-savings, but it can be nice to be consistent.  In the very least it
-saves you a level of indentation.
-
-
-> +               serial@a84000 {
-> +                       status = "okay";
-> +               };
-
-Similarly here you can use the alias from the sdm845.dtsi file to
-avoid replicating the hierarchy.  AKA at the top level do:
-
-&qup_uart2 {
-  status = "okay";
-};
-
-In this case it saves you 2 levels of indentation.
-
-> +
-> +               pinctrl@3400000 {
-> +                       qup_uart2_default: qup_uart2_default {
-
-I'm not sure how persnickety I should be, but according to
-<https://elinux.org/Device_Tree_Linux>:
-
-  node names use dash "-" instead of underscore "_"
-
-...but, of course, labels can't use dashes (and the same page says to
-use underscore for labels).  This is why, in rk3288 for instance, you
-see:
-
-i2c2_xfer: i2c2-xfer {
-  rockchip,pins = <6 9 RK_FUNC_1 &pcfg_pull_none>,
-  <6 10 RK_FUNC_1 &pcfg_pull_none>;
-};
-
-AKA the label and the node name are the same but the label uses "_"
-and the node names use "-".
-
-
-> +                               pinmux {
-> +                                       function = "qup9";
-> +                                       pins = "gpio4", "gpio5";
-> +                               };
-> +
-> +                               pinconf {
-> +                                       pins = "gpio4", "gpio5";
-> +                                       drive-strength = <2>;
-> +                                       bias-disable;
-> +                               };
-> +                       };
-> +
-> +                       qup_uart2_sleep: qup_uart2_sleep {
-> +                               pinmux {
-> +                                       function = "gpio";
-> +                                       pins = "gpio4", "gpio5";
-> +                               };
-> +
-> +                               pinconf {
-> +                                       pins = "gpio4", "gpio5";
-> +                                       drive-strength = <2>;
-> +                                       bias-disable;
-> +                               };
-> +                       };
-> +               };
-
-As per my (admittedly tardy) response to v1, these shouldn't be in the
-board file because every board that happens to need uart2 will need to
-duplicate these definitions.
-
-
-> +       };
->  };
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 02520f19e4ca..c4ce70840acf 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -4,6 +4,7 @@
->   */
->
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/qcom,gcc-sdm845.h>
->
->  / {
->         model = "Qualcomm Technologies, Inc. SDM845";
-> @@ -273,5 +274,25 @@
->                         cell-index = <0>;
->                 };
->
-> +               qup_1: qcom,geni_se@ac0000 {
-> +                       compatible = "qcom,geni-se-qup";
-> +                       reg = <0xac0000 0x6000>;
-
-I think you may have mentioned this in another context, but this
-doesn't match the current bindings.  Some clocks should be here.
-...and it looks like the uart should be a subnode.
-
-
-> +               };
-> +
-> +               qup_uart2: serial@a84000 {
-> +                       compatible = "qcom,geni-console", "qcom,geni-uart";
-> +                       reg = <0xa84000 0x4000>;
-> +                       reg-names = "se_phys";
-> +                       clock-names = "se-clk", "m-ahb", "s-ahb";
-> +                       clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>,
-> +                                <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
-> +                                <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
-> +                       pinctrl-names = "default", "sleep";
-> +                       pinctrl-0 = <&qup_uart2_default>;
-> +                       pinctrl-1 = <&qup_uart2_sleep>;
-
-In general the "SoC" dtsi file shouldn't be relying on definitions
-that are made in the board "dts" file.
-
-...if everyone disagrees with me and we really decide to duplicate all
-the pinctrl in all board files, we'll need to move the
-"pinctrl-names", "pinctrl-0", and "pinctrl-1" to the board files too.
-;)
-
-
--Doug
+-- 
+With Best Regards,
+Andy Shevchenko
