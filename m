@@ -1,45 +1,48 @@
-From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 5/7] dt-bindings: tegra: Add documentation for nvidia,tegra194-pmc
-Date: Tue, 6 Feb 2018 09:22:35 +0200
-Message-ID: <1517901757-15353-6-git-send-email-mperttunen@nvidia.com>
-References: <1517901757-15353-1-git-send-email-mperttunen@nvidia.com>
+From: Vincent Chen <deanbo422@gmail.com>
+Subject: Re: [PATCH v6 19/36] nds32: VDSO support
+Date: Tue, 6 Feb 2018 15:41:16 +0800
+Message-ID: <CAJsyPhwHmMrXmN2-NW3ZyvRvTWR0vio_bQO+GDBf30DVp=5LTw@mail.gmail.com>
+References: <cover.1515766253.git.green.hu@gmail.com> <4a602db0a58cc858515c3c669d5ac34c567b061c.1515766253.git.green.hu@gmail.com>
+ <CAK8P3a0GQDrj+7kc4YB1_ZC1vCWmMtSiYeKsNir_27FvY50Kmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517901757-15353-1-git-send-email-mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0GQDrj+7kc4YB1_ZC1vCWmMtSiYeKsNir_27FvY50Kmg@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-The Tegra194 power management controller has one additional register
-aperture to be specified in the device tree node.
+2018-01-18 18:28 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
+>> From: Greentime Hu <greentime@andestech.com>
+>>
+>> This patch adds VDSO support. The VDSO code is currently used for
+>> sys_rt_sigreturn() and optimised gettimeofday() (using the SoC timer counter).
+>>
+>> Signed-off-by: Vincent Chen <vincentc@andestech.com>
+>> Signed-off-by: Greentime Hu <greentime@andestech.com>
+>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Dear Arnd Bergmann:
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
-index 078a58b0302f..5a3bf7c5a7a0 100644
---- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-pmc.txt
-@@ -3,6 +3,7 @@ NVIDIA Tegra Power Management Controller (PMC)
- Required properties:
- - compatible: Should contain one of the following:
-   - "nvidia,tegra186-pmc": for Tegra186
-+  - "nvidia,tegra194-pmc": for Tegra194
- - reg: Must contain an (offset, length) pair of the register set for each
-   entry in reg-names.
- - reg-names: Must include the following entries:
-@@ -10,6 +11,7 @@ Required properties:
-   - "wake"
-   - "aotag"
-   - "scratch"
-+  - "misc" (Only for Tegra194)
- 
- Optional properties:
- - nvidia,invert-interrupt: If present, inverts the PMU interrupt signal.
--- 
-2.1.4
+We find a small bug here which make LTP 20170929 clock_getres01
+fail. The bug is in __vdso_clock_getres() function. When argument res
+is NULL, -EFAULT error code is returned now. But, the returned
+value is 0 for SyS_clock_getres under the same conditions.
+Therefore, testcase thinks it is a bug.
+
+I will modify the code as below and add it in the next version patch
+if you think it is OK.
+
+@@ -209,7 +209,7 @@ static notrace int clock_getres_fallback( ...
+ {
+         if (res == NULL)
+-                return -EFAULT;
++                return 0;
+
+
+Thanks
+
+Vincnet
