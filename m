@@ -1,91 +1,102 @@
 From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Subject: Re: [PATCH] ARM: dts: da850-evm: add clock properties to the nand
  node
-Date: Tue, 6 Feb 2018 12:16:48 -0600
-Message-ID: <794024f3-f87a-58ed-2722-a4a2d09df3ce@lechnology.com>
+Date: Tue, 6 Feb 2018 12:25:26 -0600
+Message-ID: <4aa2ab13-7890-6904-86b3-e2dbcb6d6daa@lechnology.com>
 References: <20180205155222.22189-1-brgl@bgdev.pl>
  <3f171f6a-bcea-65ec-d56d-f6ae24660f34@ti.com>
  <CAMpxmJUDbwkcJt_kx9GX+qY10xiGAp-j3+kXM-q3WP1VGwr0UQ@mail.gmail.com>
  <54dbdb98-e0e4-c8c9-fec4-2f050745d9be@ti.com>
+ <794024f3-f87a-58ed-2722-a4a2d09df3ce@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54dbdb98-e0e4-c8c9-fec4-2f050745d9be-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <794024f3-f87a-58ed-2722-a4a2d09df3ce-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Cc: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2018 07:51 AM, Sekhar Nori wrote:
-> On Tuesday 06 February 2018 06:38 PM, Bartosz Golaszewski wrote:
->> 2018-02-06 12:07 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
->>> On Monday 05 February 2018 09:22 PM, Bartosz Golaszewski wrote:
->>>> From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On 02/06/2018 12:16 PM, David Lechner wrote:
+> On 02/06/2018 07:51 AM, Sekhar Nori wrote:
+>> On Tuesday 06 February 2018 06:38 PM, Bartosz Golaszewski wrote:
+>>> 2018-02-06 12:07 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
+>>>> On Monday 05 February 2018 09:22 PM, Bartosz Golaszewski wrote:
+>>>>> From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>>>
+>>>>> Make nand work with the common clock framework by specifying which
+>>>>> clock should be used and what name to look up.
+>>>>>
+>>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>>> ---
+>>>>>   arch/arm/boot/dts/da850-evm.dts | 3 +++
+>>>>>   1 file changed, 3 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+>>>>> index a86a8a1816f2..2602ad8e99ee 100644
+>>>>> --- a/arch/arm/boot/dts/da850-evm.dts
+>>>>> +++ b/arch/arm/boot/dts/da850-evm.dts
+>>>>> @@ -296,6 +296,9 @@
+>>>>>                        reg = <0 0x02000000 0x02000000
+>>>>>                               1 0x00000000 0x00008000>;
+>>>>>
+>>>>> +                     clocks = <&psc0 3>;
+>>>>> +                     clock-names = "aemif";
 >>>>
->>>> Make nand work with the common clock framework by specifying which
->>>> clock should be used and what name to look up.
+>>>> Looks like this is being added only to satisfy the devm_clk_get() call
+>>>> in nand_davinci_probe() which I think is superfluous since we also
+>>>> enable the same clock in aemif_probe().
 >>>>
->>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>> ---
->>>>   arch/arm/boot/dts/da850-evm.dts | 3 +++
->>>>   1 file changed, 3 insertions(+)
+>>>> Perhaps the better solution is to drip the clk code in
+>>>> drivers/mtd/nand/davinci_nand.c and shift legacy code to start using
+>>>> drivers/memory/aemif.c as well? This way we can also drop
+>>>> arch/arm/mach-davinci/aemif.c
 >>>>
->>>> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
->>>> index a86a8a1816f2..2602ad8e99ee 100644
->>>> --- a/arch/arm/boot/dts/da850-evm.dts
->>>> +++ b/arch/arm/boot/dts/da850-evm.dts
->>>> @@ -296,6 +296,9 @@
->>>>                        reg = <0 0x02000000 0x02000000
->>>>                               1 0x00000000 0x00008000>;
->>>>
->>>> +                     clocks = <&psc0 3>;
->>>> +                     clock-names = "aemif";
+>>>> Thanks,
+>>>> Sekhar
 >>>
->>> Looks like this is being added only to satisfy the devm_clk_get() call
->>> in nand_davinci_probe() which I think is superfluous since we also
->>> enable the same clock in aemif_probe().
->>>
->>> Perhaps the better solution is to drip the clk code in
->>> drivers/mtd/nand/davinci_nand.c and shift legacy code to start using
->>> drivers/memory/aemif.c as well? This way we can also drop
->>> arch/arm/mach-davinci/aemif.c
->>>
->>> Thanks,
->>> Sekhar
+>>> Yes, this sounds good, but I think we should leave it for later as an
+>>> additional improvement, once everything else is in place. I think
+>>> these patches should be applied together with David's series in order
+>>> to not break the support on davinci boards and the aemif work would go
+>>> in later as a follow-up. How about that?
 >>
->> Yes, this sounds good, but I think we should leave it for later as an
->> additional improvement, once everything else is in place. I think
->> these patches should be applied together with David's series in order
->> to not break the support on davinci boards and the aemif work would go
->> in later as a follow-up. How about that?
-> 
-> No, I dont think we should add temporary hacks to DT to work around
-> driver issues (I do think its a hack since the clock belongs to aemif
-> module not NAND flash).
-> 
-> An easier driver hack might be to not treat devm_clk_get() failure in
-> davinci_nand.c as catastrophic. It will safely fail in DT case and we
-> should get the clock in legacy boot case.
-> 
-> I think we are looking at a driver update dependency anyway.
-
-It looks like keystone.dtsi is using the clock-ranges property in the
-aemif node to pass the clock to child nodes. Could we not do the same
-in da850.dtsi?
-
-> 
+>> No, I dont think we should add temporary hacks to DT to work around
+>> driver issues (I do think its a hack since the clock belongs to aemif
+>> module not NAND flash).
 >>
->> Also: I don't have any keystone board to test whether such changes
->> don't break the nand support there. Would you be able to test this?
+>> An easier driver hack might be to not treat devm_clk_get() failure in
+>> davinci_nand.c as catastrophic. It will safely fail in DT case and we
+>> should get the clock in legacy boot case.
+>>
+>> I think we are looking at a driver update dependency anyway.
 > 
-> Yes, I have access to those boards.
-> 
-> Thanks,
-> Sekhar
-> 
+> It looks like keystone.dtsi is using the clock-ranges property in the
+> aemif node to pass the clock to child nodes. Could we not do the same
+> in da850.dtsi?
 
+Bartosz, please try this instead of your patch.
+
+FYI, this is just following the existing memory-controllers/ti-aemif.txt
+device tree bindings, so not a "hack".
+
+---
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 3a1f2ce..ff9d807 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -796,6 +796,8 @@
+  		ranges = <0 0 0x60000000 0x08000000
+  			  1 0 0x68000000 0x00008000>;
+  		clocks = <&psc0 3>;
++		clock-names = "aemif";
++		clock-ranges;
+  		status = "disabled";
+  	};
+  	memctrl: memory-controller@b0000000 {
+---
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
