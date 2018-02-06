@@ -1,101 +1,111 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv2 1/3] drivers/perf: arm_pmu: Add platform hardware setup hooks.
-Date: Tue,  6 Feb 2018 15:26:27 +0100
-Message-ID: <20180206142629.534-2-sebastian.reichel@collabora.co.uk>
-References: <20180206142629.534-1-sebastian.reichel@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180206142629.534-1-sebastian.reichel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>, Ian Ray <ian.ray@ge.com>, Nandor Han <nandor.han@ge.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v5 02/16] media: doc: add document for rkisp1 meta buffer
+ format
+Date: Tue, 6 Feb 2018 15:27:10 +0100
+Message-ID: <917c22c0-773e-5fe5-5625-86678f7c8521@xs4all.nl>
+References: <1514533978-20408-1-git-send-email-zhengsq@rock-chips.com>
+ <1514533978-20408-3-git-send-email-zhengsq@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1514533978-20408-3-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, allon.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jacob Chen <jacob-chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow platform specific code to be called when enabling or
-disabling the hardware.
+On 12/29/17 08:52, Shunqian Zheng wrote:
+> From: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> This commit add docuemnt for rkisp1 meta buffer format
+> 
+> Signed-off-by: Jacob Chen <jacob-chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  Documentation/media/uapi/v4l/meta-formats.rst          |  2 ++
+>  .../media/uapi/v4l/pixfmt-meta-rkisp1-params.rst       | 17 +++++++++++++++++
+>  .../media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst         | 18 ++++++++++++++++++
+>  3 files changed, 37 insertions(+)
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+>  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> 
+> diff --git a/Documentation/media/uapi/v4l/meta-formats.rst b/Documentation/media/uapi/v4l/meta-formats.rst
+> index 01e24e3..1b82814 100644
+> --- a/Documentation/media/uapi/v4l/meta-formats.rst
+> +++ b/Documentation/media/uapi/v4l/meta-formats.rst
+> @@ -14,3 +14,5 @@ These formats are used for the :ref:`metadata` interface only.
+>  
+>      pixfmt-meta-vsp1-hgo
+>      pixfmt-meta-vsp1-hgt
+> +    pixfmt-meta-rkisp1-params
+> +    pixfmt-meta-rkisp1-stat
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> new file mode 100644
+> index 0000000..ed344d4
+> --- /dev/null
+> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+> @@ -0,0 +1,17 @@
+> +.. -*- coding: utf-8; mode: rst -*-
+> +
+> +.. _v4l2-meta-fmt-rkisp1-params:
+> +
+> +*******************************
+> +V4L2_META_FMT_RK_ISP1_PARAMS
+> +*******************************
+> +
+> +Rockchip ISP1 Parameters Data
+> +
+> +Description
+> +===========
+> +
+> +This format describes input parameters for the Rockchip ISP1.
+> +
+> +The data use c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
+> +the ``linux/rkisp1-config.h`` header file, See it for details.
 
-Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
-Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
-[rebased to v4.12]
-Signed-off-by: Nandor Han <nandor.han@ge.com>
-[Simplify and cleanup for upstreaming]
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
----
- drivers/perf/arm_pmu.c       | 12 ++++++++++++
- include/linux/perf/arm_pmu.h |  5 +++++
- 2 files changed, 17 insertions(+)
+One more question: does the ISP produce a reasonable picture if it doesn't
+receive these params? If not (i.e. you always need to provide params), then
+I think you should provide a default rkisp1_isp_params_cfg struct that
+can be used as a template for application writers.
 
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 7bc5eee96b31..9c282914ee67 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -452,8 +452,10 @@ static int armpmu_event_init(struct perf_event *event)
- static void armpmu_enable(struct pmu *pmu)
- {
- 	struct arm_pmu *armpmu = to_arm_pmu(pmu);
-+	struct arm_pmu_platdata *platdata = armpmu_get_platdata(armpmu);
- 	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
- 	int enabled = bitmap_weight(hw_events->used_mask, armpmu->num_events);
-+	int err;
- 
- 	/* For task-bound events we may be called on other CPUs */
- 	if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
-@@ -461,17 +463,27 @@ static void armpmu_enable(struct pmu *pmu)
- 
- 	if (enabled)
- 		armpmu->start(armpmu);
-+
-+	if (platdata && platdata->reserve_hardware) {
-+		err = platdata->reserve_hardware(armpmu);
-+		if (err)
-+			dev_warn(&armpmu->plat_device->dev, "Could not reserve PMU hardware!\n");
-+	}
- }
- 
- static void armpmu_disable(struct pmu *pmu)
- {
- 	struct arm_pmu *armpmu = to_arm_pmu(pmu);
-+	struct arm_pmu_platdata *platdata = armpmu_get_platdata(armpmu);
- 
- 	/* For task-bound events we may be called on other CPUs */
- 	if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
- 		return;
- 
- 	armpmu->stop(armpmu);
-+
-+	if (platdata && platdata->release_hardware)
-+		platdata->release_hardware(armpmu);
- }
- 
- /*
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index af0f44effd44..942ae9bfe971 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -17,6 +17,8 @@
- #include <linux/sysfs.h>
- #include <asm/cputype.h>
- 
-+struct arm_pmu;
-+
- /*
-  * struct arm_pmu_platdata - ARM PMU platform data
-  *
-@@ -31,6 +33,8 @@
- struct arm_pmu_platdata {
- 	irqreturn_t (*handle_irq)(int irq, void *dev,
- 				  irq_handler_t pmu_handler);
-+	int (*reserve_hardware)(struct arm_pmu *arm_pmu);
-+	void (*release_hardware)(struct arm_pmu *arm_pmu);
- 	unsigned long irq_flags;
- };
- 
-@@ -112,6 +116,7 @@ struct arm_pmu {
- 	int		(*map_event)(struct perf_event *event);
- 	int		num_events;
- 	u64		max_period;
-+	bool		reserved_hardware;
- 	bool		secure_access; /* 32-bit ARM only */
- #define ARMV8_PMUV3_MAX_COMMON_EVENTS 0x40
- 	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
--- 
-2.15.1
+Perhaps it can be part of the driver as the initial params config.
+
+I think even if the ISP does work without params it is still worthwhile
+doing this. The params are complex and having an example on how to initialize
+it would be helpful.
+
+Regards,
+
+	Hans
+
+> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> new file mode 100644
+> index 0000000..5ecc403
+> --- /dev/null
+> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+> @@ -0,0 +1,18 @@
+> +.. -*- coding: utf-8; mode: rst -*-
+> +
+> +.. _v4l2-meta-fmt-rkisp1-stat:
+> +
+> +*******************************
+> +V4L2_META_FMT_RK_ISP1_STAT_3A
+> +*******************************
+> +
+> +Rockchip ISP1 Statistics Data
+> +
+> +Description
+> +===========
+> +
+> +This format describes image color statistics information generated by the Rockchip
+> +ISP1.
+> +
+> +The data use c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
+> +the ``linux/cifisp_stat.h`` header file, See it for details.
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
