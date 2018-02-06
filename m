@@ -1,33 +1,77 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2] arc: dts: use 'atmel' as manufacturer for at24 in
- axs10x_mb
-Date: Tue, 6 Feb 2018 14:39:23 -0800
-Message-ID: <eb5f2a0a-72a4-683a-dfa4-0ff2ac45fbdb@synopsys.com>
-References: <20180206110810.9093-1-brgl@bgdev.pl>
- <1517919923.6726.13.camel@synopsys.com>
- <CAMRc=MfgLA2KDMFLM_GrbSb6MfQeAdHfVJXbnx-ss+S4xm72uw@mail.gmail.com>
- <4881796E12491D4BB15146FE0209CE646802AACB@DE02WEMBXB.internal.synopsys.com>
+From: Jolly Shah <jolly.shah-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 0/4] drivers: firmware: xilinx: Add firmware driver support
+Date: Tue, 6 Feb 2018 14:54:19 -0800
+Message-ID: <1517957663-16668-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4881796E12491D4BB15146FE0209CE646802AACB-okAzG6w2b9vBRDCkatnZjvufCSb+aD3WLzEdoUbNIic@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jolly Shah <jollys-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2018 01:04 PM, Alexey Brodkin wrote:
->> Feel free to drop this patch if you plan to submit the fix soon -
->> otherwise, apply it if it may take some time.
-> No I think it worth applying especially in the light of your comment about NXP EEPROM.
->
-> Vineet, could you please take this one?
+Introduce firmware driver for ZynqMP core.
+This patchset is adding communication layer with firmware.
+Firmware driver provides an interface to firmware APIs.
+Interface APIs can be used by any driver to communicate to
+PMUFW(Platform Management Unit). All requests go through ATF.
 
-I've added your Acked-by to patch and pushed to for-curr !
+v4:
+ - Changed clock setrate/getrate API prototype to support 64 bit rate
+ - Defined macros for get_node_status return values
+ - Moved DT node as a child of firmware
+ - Changed debugfs APIs to return data to debugfs buffer instead of dumping to kernel log
+ - Minor changes to incorporate other review comments from v3 patch series
 
--Vineet
+v3:
+ - added some fixes to firmware-ggs.c
+ - updated pinmux get/set function argument names to specify function id instead of node id
+ - added new pinctrl query macros
+ - incorporated review comments from v2 patch series
+
+v2:
+ - change SPDX-License-Identifier license text style
+ - split patch into multiple patches
+ - Updated copyrights
+ - Added ABI documentation
+ - incorporated logical review comments from previuos patch. Discussed below:
+	https://patchwork.kernel.org/patch/10150665/
+
+Jolly Shah (4):
+  dt-bindings: firmware: Add bindings for ZynqMP firmware
+  drivers: firmware: xilinx: Add ZynqMP firmware driver
+  drivers: firmware: xilinx: Add sysfs interface
+  drivers: firmware: xilinx: Add debugfs interface
+
+ Documentation/ABI/stable/sysfs-firmware-zynqmp     |   50 +
+ .../firmware/xilinx/xlnx,zynqmp-firmware.txt       |   24 +
+ arch/arm64/Kconfig.platforms                       |    1 +
+ drivers/firmware/Kconfig                           |    1 +
+ drivers/firmware/Makefile                          |    1 +
+ drivers/firmware/xilinx/Kconfig                    |    4 +
+ drivers/firmware/xilinx/Makefile                   |    4 +
+ drivers/firmware/xilinx/zynqmp/Kconfig             |   23 +
+ drivers/firmware/xilinx/zynqmp/Makefile            |    5 +
+ drivers/firmware/xilinx/zynqmp/firmware-debug.c    |  482 +++++++++
+ drivers/firmware/xilinx/zynqmp/firmware-ggs.c      |  297 ++++++
+ drivers/firmware/xilinx/zynqmp/firmware.c          | 1025 ++++++++++++++++++++
+ .../linux/firmware/xilinx/zynqmp/firmware-debug.h  |   31 +
+ include/linux/firmware/xilinx/zynqmp/firmware.h    |  585 +++++++++++
+ 14 files changed, 2533 insertions(+)
+ create mode 100644 Documentation/ABI/stable/sysfs-firmware-zynqmp
+ create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+ create mode 100644 drivers/firmware/xilinx/Kconfig
+ create mode 100644 drivers/firmware/xilinx/Makefile
+ create mode 100644 drivers/firmware/xilinx/zynqmp/Kconfig
+ create mode 100644 drivers/firmware/xilinx/zynqmp/Makefile
+ create mode 100644 drivers/firmware/xilinx/zynqmp/firmware-debug.c
+ create mode 100644 drivers/firmware/xilinx/zynqmp/firmware-ggs.c
+ create mode 100644 drivers/firmware/xilinx/zynqmp/firmware.c
+ create mode 100644 include/linux/firmware/xilinx/zynqmp/firmware-debug.h
+ create mode 100644 include/linux/firmware/xilinx/zynqmp/firmware.h
+
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
