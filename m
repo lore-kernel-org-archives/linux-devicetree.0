@@ -1,109 +1,55 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 07/10] ARM: sun8i: h3: add SY8113B regulator used by
- Orange Pi One board
-Date: Tue, 6 Feb 2018 10:10:57 +0100
-Message-ID: <20180206091057.6uy4fdcfztgmjjlz@flea>
-References: <20180206044905.30508-1-icenowy@aosc.io>
- <20180206044905.30508-8-icenowy@aosc.io>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3890602317096065191=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180206044905.30508-8-icenowy@aosc.io>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH 1/7] arm64: dts: Add hwspinlock node for Spreadtrum SC9860
+Date: Tue,  6 Feb 2018 17:28:20 +0800
+Message-ID: <410b2f2d3f3f019c96ec31213647c41cd7f1174d.1517908478.git.baolin.wang@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de
+Cc: chunyan.zhang@spreadtrum.com, orson.zhai@spreadtrum.com, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+The Spreadtrum SC9860 platform only has one hardware spinlock device,
+which is located on AON system of Spreadtrum SC9860 platform.
 
---===============3890602317096065191==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dn475h2o6sub6pou"
-Content-Disposition: inline
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ arch/arm64/boot/dts/sprd/whale2.dtsi |   17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-
---dn475h2o6sub6pou
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Feb 06, 2018 at 12:49:02PM +0800, Icenowy Zheng wrote:
-> Orange Pi One board has a SY8113B regulator, which is controlled via
-> GPIO and capable of outputing 1.1V when the PL6 GPIO is set to output 0
-> or 1.3V when the PL6 GPIO is set to input or output 1, and the output is
-> the power supply of the ARM cores in H3 SoC.
->=20
-> Add the device tree node of this regulator and set the cpu's cpu-supply
-> property to it.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
-> New patch in v2.
->=20
->  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/=
-dts/sun8i-h3-orangepi-one.dts
-> index 82e5d28cd698..d8250aacfda1 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-> @@ -88,6 +88,27 @@
->  			gpios =3D <&r_pio 0 3 GPIO_ACTIVE_LOW>;
->  		};
->  	};
-> +
-> +	reg_sy8113b: gpio-regulator {
-
-There's multiple of them on those boards, so the name and label should
-avoid conflicting names (this also applies to your other patches).
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
-
---dn475h2o6sub6pou
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlp5cSAACgkQ0rTAlCFN
-r3SOUg//fnVRDjyAwTPYoxoIrsLciXHBYENYcxay4PQOlVCeN4J1bKr3CxhcBWn7
-hy4fGJbdwebtLFbNhyWZ3KY5+BLiSXVPXmb6IK7huIbbs5bIM66eFhXUF3z7TaJV
-R69MT0vPU3DT8J5w4qj7u5G11bEzPotVBDF/elU0+DAXICKG9JEb6BGxcc7Qu2QA
-9uOISxvD5HPYs3QJSpLMjZPqrjkPmw6+eEgorRBSAddGxBZ6vS85u6B1WfQ5nynK
-ep4KQpHdLXJlUSY/67Zo9PkjD2XdY8LT1O7ZC98D2SF4IE2dRf/IxLIXcxhI9GIu
-/a6LfXumelOzeqR2qHgx3rvJSx7XDnYMTniXwRZWknq5hLb18WX5YnnlyfbZPgLy
-x6matRubkp0RGOrjoJsJ3oPHVnrYxcCB8T3Lpj2ICnoZ5MzJomD5caqvXXQoFuuw
-pulyqT7FKVtGX7DIGAbo7vrA7JZiQLwihua02D94UOOtbbhk4DjnVn+lyXxkEnPZ
-xsRD2rcrizr9r3Oy8tm6G7VDBgBgi/oAl135jiwzkNOblxOS8aKunm3xme40Hvrj
-s2s4Ik22uaPCLs3fgXS10sz+sAnROuUMoOBJ+rZHw+uvUz8ZoVOXnBHM6nFMTVA4
-AQ6punpHhpQ2s8bmHow4OteRZd8SgGjJRXJ8VxMfOvF3ruiD0iY=
-=1FM/
------END PGP SIGNATURE-----
-
---dn475h2o6sub6pou--
-
-
---===============3890602317096065191==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3890602317096065191==--
+diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
+index 328009c..b9cc0fb 100644
+--- a/arch/arm64/boot/dts/sprd/whale2.dtsi
++++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
+@@ -6,6 +6,8 @@
+  * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
+ 
++#include <dt-bindings/clock/sprd,sc9860-clk.h>
++
+ / {
+ 	interrupt-parent = <&gic>;
+ 	#address-cells = <2>;
+@@ -104,6 +106,21 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		aon {
++			compatible = "simple-bus";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			hwlock: hwspinlock@40500000 {
++				compatible = "sprd,hwspinlock-r3p0";
++				reg = <0 0x40500000 0 0x1000>;
++				#hwlock-cells = <1>;
++				clock-names = "enable";
++				clocks = <&aon_gate CLK_SPLK_EB>;
++			};
++		};
+ 	};
+ 
+ 	ext_32k: ext_32k {
+-- 
+1.7.9.5
