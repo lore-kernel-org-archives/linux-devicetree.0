@@ -1,43 +1,61 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Add serial console support
-Date: Tue, 6 Feb 2018 14:36:10 -0600
-Message-ID: <CAL_JsqKEgYLMEbSj37rNV-Zu+vd7pEPQJm4pD3zP8atZBR03aw@mail.gmail.com>
-References: <20180125163216.29018-1-rnayak@codeaurora.org> <20180125163216.29018-3-rnayak@codeaurora.org>
- <20180126221808.GE28313@codeaurora.org>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v8 5/7] media: i2c: Add TDA1997x HDMI receiver driver
+Date: Tue, 6 Feb 2018 21:38:24 +0100
+Message-ID: <3630ba30-eb18-0829-7b0c-f0a786232969@xs4all.nl>
+References: <1517948874-21681-1-git-send-email-tharvey@gateworks.com>
+ <1517948874-21681-6-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180126221808.GE28313-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1517948874-21681-6-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 26, 2018 at 4:18 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 01/25, Rajendra Nayak wrote:
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi b/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi
->> new file mode 100644
->> index 000000000000..b97f99e6f4b4
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi
->> @@ -0,0 +1,32 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +&tlmm {
->
-> I'm not the maintainer, but I find this approach to the pins
-> really annoying. I have to flip to another file to figure out how
-> a board has configured the pins. And we may bring in a bunch of
-> settings that we don't ever use on some board too. Why can't we
-> put the settings in the board file directly?
+On 02/06/2018 09:27 PM, Tim Harvey wrote:
+> Add support for the TDA1997x HDMI receivers.
+> 
+> Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> ---
 
-FYI, there's a pending dtc change to allow deleting unreferenced nodes
-which can solve the bloat problem.
+<snip>
 
-Rob
+> +static int tda1997x_get_dv_timings_cap(struct v4l2_subdev *sd,
+> +				       struct v4l2_dv_timings_cap *cap)
+> +{
+> +	if (cap->pad != TDA1997X_PAD_SOURCE)
+> +		return -EINVAL;
+> +
+> +	*cap = tda1997x_dv_timings_cap;
+> +	return 0;
+> +}
+> +
+> +static int tda1997x_enum_dv_timings(struct v4l2_subdev *sd,
+> +				    struct v4l2_enum_dv_timings *timings)
+> +{
+> +	if (timings->pad != TDA1997X_PAD_SOURCE)
+> +		return -EINVAL;
+> +
+> +	return v4l2_enum_dv_timings_cap(timings, &tda1997x_dv_timings_cap,
+> +					NULL, NULL);
+> +}
+
+You shouldn't need this pad test: it's done in the v4l2-subdev.c core code
+already. But please double-check :-)
+
+Can you post the output of the v4l2-compliance test? I'm curious to see it.
+
+Can you also try to run v4l2-compliance -m /dev/mediaX? That also tests
+whether the right entity types are set (note: testing for that should
+also happen in the subdev compliance test, but I haven't done that yet).
+
+Regards,
+
+	Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
