@@ -1,64 +1,117 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850-evm: add clock properties to the nand node
-Date: Tue, 6 Feb 2018 14:08:58 +0100
-Message-ID: <CAMpxmJUDbwkcJt_kx9GX+qY10xiGAp-j3+kXM-q3WP1VGwr0UQ@mail.gmail.com>
-References: <20180205155222.22189-1-brgl@bgdev.pl> <3f171f6a-bcea-65ec-d56d-f6ae24660f34@ti.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Add support for HDMI audio on exynos5433-tm2
+Date: Tue, 6 Feb 2018 14:14:45 +0100
+Message-ID: <CAJKOXPef+8UvinoK-9j6tPMgNavMw1K1BhLuibD5FomjRC9Sbg@mail.gmail.com>
+References: <CGME20180205172216epcas2p3be603e84df81b28ee4c04c9b1c1c551f@epcas2p3.samsung.com>
+ <20180205172110.9897-1-s.nawrocki@samsung.com> <20180205172110.9897-2-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3f171f6a-bcea-65ec-d56d-f6ae24660f34-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20180205172110.9897-2-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: kgene@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jcsing.lee@samsung.com, linux-arm-kernel@lists.infradead.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-02-06 12:07 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
-> On Monday 05 February 2018 09:22 PM, Bartosz Golaszewski wrote:
->> From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>
->> Make nand work with the common clock framework by specifying which
->> clock should be used and what name to look up.
->>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/da850-evm.dts | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
->> index a86a8a1816f2..2602ad8e99ee 100644
->> --- a/arch/arm/boot/dts/da850-evm.dts
->> +++ b/arch/arm/boot/dts/da850-evm.dts
->> @@ -296,6 +296,9 @@
->>                       reg = <0 0x02000000 0x02000000
->>                              1 0x00000000 0x00008000>;
->>
->> +                     clocks = <&psc0 3>;
->> +                     clock-names = "aemif";
+On Mon, Feb 5, 2018 at 6:21 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> This patch updates the sound node of the exynos5433-tm2 board
+> and adds clock tree configuration in order to support HDMI sound.
 >
-> Looks like this is being added only to satisfy the devm_clk_get() call
-> in nand_davinci_probe() which I think is superfluous since we also
-> enable the same clock in aemif_probe().
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 67 ++++++++++++++++++++--
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi         |  1 +
+>  2 files changed, 64 insertions(+), 4 deletions(-)
 >
-> Perhaps the better solution is to drip the clk code in
-> drivers/mtd/nand/davinci_nand.c and shift legacy code to start using
-> drivers/memory/aemif.c as well? This way we can also drop
-> arch/arm/mach-davinci/aemif.c
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> index a77462da4a36..37fb477a2d23 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> @@ -14,6 +14,7 @@
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/input/input.h>
+>  #include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/sound/samsung-i2s.h>
 >
-> Thanks,
-> Sekhar
+>  / {
+>         aliases {
+> @@ -112,8 +113,8 @@
+>
+>         sound {
+>                 compatible = "samsung,tm2-audio";
+> -               audio-codec = <&wm5110>;
+> -               i2s-controller = <&i2s0>;
+> +               audio-codec = <&wm5110>, <&hdmi>;
+> +               i2s-controller = <&i2s0 0>, <&i2s1 0>;
+>                 audio-amplifier = <&max98504>;
+>                 mic-bias-gpios = <&gpr3 2 GPIO_ACTIVE_HIGH>;
+>                 model = "wm5110";
+> @@ -216,9 +217,63 @@
+>         status = "okay";
+>  };
+>
+> +&cmu_top {
+> +       assigned-clocks = <&cmu_top CLK_FOUT_AUD_PLL>;
+> +       assigned-clock-rates = <(196608009 + 1)>;
+> +};
+> +
+>  &cmu_aud {
+> -       assigned-clocks = <&cmu_aud CLK_MOUT_AUD_PLL_USER>;
+> -       assigned-clock-parents = <&cmu_top CLK_FOUT_AUD_PLL>;
+> +       assigned-clocks = <&cmu_aud CLK_MOUT_AUD_PLL_USER>,
+> +                         <&cmu_aud CLK_MOUT_SCLK_AUD_I2S>,
+> +                         <&cmu_aud CLK_MOUT_SCLK_AUD_PCM>,
+> +                         <&cmu_top CLK_MOUT_AUD_PLL>,
+> +
+> +                         <&cmu_top CLK_MOUT_AUD_PLL_USER_T>,
+> +                         <&cmu_top CLK_MOUT_SCLK_AUDIO0>,
+> +                         <&cmu_top CLK_MOUT_SCLK_AUDIO1>,
+> +                         <&cmu_top CLK_MOUT_SCLK_SPDIF>,
+> +
+> +                         <&cmu_aud CLK_DIV_AUD_CA5>,
+> +                         <&cmu_aud CLK_DIV_ACLK_AUD>,
+> +                         <&cmu_aud CLK_DIV_PCLK_DBG_AUD>,
+> +                         <&cmu_aud CLK_DIV_SCLK_AUD_I2S>,
+> +                         <&cmu_aud CLK_DIV_SCLK_AUD_PCM>,
+> +                         <&cmu_aud CLK_DIV_SCLK_AUD_SLIMBUS>,
+> +                         <&cmu_aud CLK_DIV_SCLK_AUD_UART>,
+> +
+> +                         <&cmu_top CLK_DIV_SCLK_AUDIO0>,
+> +                         <&cmu_top CLK_DIV_SCLK_AUDIO1>,
+> +                         <&cmu_top CLK_DIV_SCLK_PCM1>,
+> +                         <&cmu_top CLK_DIV_SCLK_I2S1>;
+> +
+> +       assigned-clock-parents = <&cmu_top CLK_FOUT_AUD_PLL>,
+> +                               <&cmu_aud CLK_MOUT_AUD_PLL_USER>,
+> +                               <&cmu_aud CLK_MOUT_AUD_PLL_USER>,
+> +                               <&cmu_top CLK_FOUT_AUD_PLL>,
+> +
+> +                               <&cmu_top CLK_MOUT_AUD_PLL>,
+> +                               <&cmu_top CLK_MOUT_AUD_PLL_USER_T>,
+> +                               <&cmu_top CLK_MOUT_AUD_PLL_USER_T>,
+> +                               <&cmu_top CLK_SCLK_AUDIO0>;
+> +
+> +       assigned-clock-rates = <0>, <0>, <0>, <0>, <0>, <0>, <0>, <0>,
+> +                               <(196608009 + 1)>,
+> +                               <((196608009 / 3) + 1)>,
+> +                               <((196608009 / 6) + 1)>,
+> +                               <((196608009 / 4) + 1)>,
+> +                               <((196608009 / 96) + 1)>,
+> +                               <((196608009 / 8) + 1)>,
+> +                               <(196608010 + 1)>,
+> +
+> +                               <((196608009 / 8) + 1)>,
+> +                               <((196608009 / 2) + 1)>,
+> +                               <((196608009 / 96) + 1)>,
+> +                               <((196608009 / 4) + 1)>;
+> +};
+> +
+> +&i2s1 {
 
-Yes, this sounds good, but I think we should leave it for later as an
-additional improvement, once everything else is in place. I think
-these patches should be applied together with David's series in order
-to not break the support on davinci boards and the aemif work would go
-in later as a follow-up. How about that?
+Please move it further to i2s1 so all the nodes/labels will be ordered
+alphabetically. As with #1 I understand that there is no explicit
+dependency so please correct me if I am wrong.
 
-Also: I don't have any keystone board to test whether such changes
-don't break the nand support there. Would you be able to test this?
-
-Thanks,
-Bartosz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
