@@ -1,121 +1,60 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v8 5/7] media: i2c: Add TDA1997x HDMI
-	receiver driver
-Date: Tue, 6 Feb 2018 13:03:29 -0800
-Message-ID: <CAJ+vNU1SWma59YwvRO7jDAu2=ndgSU6CgYtKs0792+oqDAEtrQ@mail.gmail.com>
-References: <1517948874-21681-1-git-send-email-tharvey@gateworks.com>
- <1517948874-21681-6-git-send-email-tharvey@gateworks.com>
- <3630ba30-eb18-0829-7b0c-f0a786232969@xs4all.nl>
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH v2] arc: dts: use 'atmel' as manufacturer for at24 in
+ axs10x_mb
+Date: Tue, 6 Feb 2018 21:04:47 +0000
+Message-ID: <4881796E12491D4BB15146FE0209CE646802AACB@DE02WEMBXB.internal.synopsys.com>
+References: <20180206110810.9093-1-brgl@bgdev.pl>
+ <1517919923.6726.13.camel@synopsys.com>
+ <CAMRc=MfgLA2KDMFLM_GrbSb6MfQeAdHfVJXbnx-ss+S4xm72uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <3630ba30-eb18-0829-7b0c-f0a786232969@xs4all.nl>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMRc=MfgLA2KDMFLM_GrbSb6MfQeAdHfVJXbnx-ss+S4xm72uw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 6, 2018 at 12:38 PM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> On 02/06/2018 09:27 PM, Tim Harvey wrote:
->> Add support for the TDA1997x HDMI receivers.
->>
->> Cc: Hans Verkuil <hverkuil@xs4all.nl>
->> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
->> ---
->
-> <snip>
->
->> +static int tda1997x_get_dv_timings_cap(struct v4l2_subdev *sd,
->> +                                    struct v4l2_dv_timings_cap *cap)
->> +{
->> +     if (cap->pad != TDA1997X_PAD_SOURCE)
->> +             return -EINVAL;
->> +
->> +     *cap = tda1997x_dv_timings_cap;
->> +     return 0;
->> +}
->> +
->> +static int tda1997x_enum_dv_timings(struct v4l2_subdev *sd,
->> +                                 struct v4l2_enum_dv_timings *timings)
->> +{
->> +     if (timings->pad != TDA1997X_PAD_SOURCE)
->> +             return -EINVAL;
->> +
->> +     return v4l2_enum_dv_timings_cap(timings, &tda1997x_dv_timings_cap,
->> +                                     NULL, NULL);
->> +}
->
-> You shouldn't need this pad test: it's done in the v4l2-subdev.c core code
-> already. But please double-check :-)
->
-
-oh right - forgot to check that. Yes, v4l2-subdev.c has pad bounds
-checking on all ops I use so I can remove them.
-
-> Can you post the output of the v4l2-compliance test? I'm curious to see it.
-
-it's in the cover letter (should I move it to the driver patch for
-subsequent submittals?)
-
->
-> Can you also try to run v4l2-compliance -m /dev/mediaX? That also tests
-> whether the right entity types are set (note: testing for that should
-> also happen in the subdev compliance test, but I haven't done that yet).
->
-
-root@ventana:~# v4l2-compliance -m0
-v4l2-compliance SHA   : b2f8f9049056eb6f9e028927dacb2c715a062df8
-Media Driver Info:
-        Driver name      : imx-media
-        Model            : imx-media
-        Serial           :
-        Bus info         :
-        Media version    : 4.15.0
-        Hardware revision: 0x00000000 (0)
-        Driver version   : 4.15.0
-
-Compliance test for device /dev/media0:
-
-Required ioctls:
-        test MEDIA_IOC_DEVICE_INFO: OK
-
-Allow for multiple opens:
-        test second /dev/media0 open: OK
-        test MEDIA_IOC_DEVICE_INFO: OK
-        test for unlimited opens: OK
-
-Media Controller ioctls:
-                fail: v4l2-test-media.cpp(141): ent.function ==
-MEDIA_ENT_F_V4L2_SUBDEV_UNKNOWN
-        test MEDIA_IOC_G_TOPOLOGY: FAIL
-                fail: v4l2-test-media.cpp(256):
-v2_entities_set.find(ent.id) == v2_entities_set.end()
-        test MEDIA_IOC_ENUM_ENTITIES/LINKS: FAIL
-        test MEDIA_IOC_SETUP_LINK: OK
-
-Total: 7, Succeeded: 5, Failed: 2, Warnings: 0
-
-foiled again!
-
-Is something missing after v4l2_i2c_subdev_init() or is this perhaps
-something missing in the imx media drivers?
-
-        v4l2_i2c_subdev_init(sd, client, &tda1997x_subdev_ops);
-        snprintf(sd->name, sizeof(sd->name), "%s %d-%04x",
-                 id->name, i2c_adapter_id(client->adapter),
-                 client->addr);
-        sd->flags = V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_HAS_EVENTS;
-        sd->entity.ops = &tda1997x_media_ops;
-
-Regards,
-
-Tim
+SGkgQmFydG9zeiwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCYXJ0
+b3N6IEdvbGFzemV3c2tpIFttYWlsdG86YnJnbEBiZ2Rldi5wbF0NCj4gU2VudDogVHVlc2RheSwg
+RmVicnVhcnkgNiwgMjAxOCA3OjAyIFBNDQo+IFRvOiBBbGV4ZXkgQnJvZGtpbiA8QWxleGV5LkJy
+b2RraW5Ac3lub3BzeXMuY29tPg0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
+bWFyay5ydXRsYW5kQGFybS5jb207IFZpbmVldC5HdXB0YTFAc3lub3BzeXMuY29tOyByb2JoK2R0
+QGtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1zbnBzLWFy
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIGFyYzogZHRz
+OiB1c2UgJ2F0bWVsJyBhcyBtYW51ZmFjdHVyZXIgZm9yIGF0MjQgaW4gYXhzMTB4X21iDQo+IA0K
+PiAyMDE4LTAyLTA2IDEzOjI1IEdNVCswMTowMCBBbGV4ZXkgQnJvZGtpbiA8QWxleGV5LkJyb2Rr
+aW5Ac3lub3BzeXMuY29tPjoNCj4gPiBIaSBCYXJ0b3N6LA0KPiA+DQo+ID4gT24gVHVlLCAyMDE4
+LTAyLTA2IGF0IDEyOjA4ICswMTAwLCBCYXJ0b3N6IEdvbGFzemV3c2tpIHdyb3RlOg0KPiA+PiBV
+c2luZyBjb21wYXRpYmxlIHN0cmluZ3Mgd2l0aG91dCB0aGUgPG1hbnVmYWN0dXJlcj4gcGFydCBm
+b3IgYXQyNCBpcw0KPiA+PiBkZXByZWNhdGVkIHNpbmNlIGNvbW1pdCA2ZGEyOGFjZjc0NWYgKCJk
+dC1iaW5kaW5nczogYXQyNDogY29uc2lzdGVudGx5DQo+ID4+IGRvY3VtZW50IHRoZSBjb21wYXRp
+YmxlIHByb3BlcnR5IikuIFVzZSBhIGNvcnJlY3QgJ2F0bWVsLDxtb2RlbD4nDQo+ID4+IHZhbHVl
+Lg0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBCYXJ0b3N6IEdvbGFzemV3c2tpIDxicmdsQGJn
+ZGV2LnBsPg0KPiA+DQo+ID4gU28gbXkgZnVydGhlciBpbnB1dCBtaWdodCBiZSBhIGJpdCB1bmV4
+cGVjdGVkIDopDQo+ID4NCj4gPiBJIHRvb2sgYSBsb29rIGF0IHRoZSByZWFsIGJvYXJkIGFuZCB1
+bmRlcnN0b29kIHRoYXQgd2Ugc3BlY2lmaWVkIGluIC5kdHMNCj4gPiB3cm9uZyBJQ3MuIFRob3Nl
+IEF0bWVsIHBhcnRzIGFyZSBub3QgY29ubmVjdGVkIHRvIHRoZSBDUFUgYXQgYWxsICh1c2VkIGJ5
+IHNvbWUNCj4gPiBleHRlcm5hbCBkZXZpY2UpIGFuZCBpbnN0ZWFkIEkyQyBFRVBST00gd2UgcmVh
+bGx5IGhhdmUgY29ubmVjdGVkIChidXQgbm90IHlldA0KPiA+IG9idmlvdXNseSB1c2VkIGluIHRo
+ZSBMaW51eCBrZXJuZWwpIGlzIE5YUCdzIFBDRjg1OTRDLTIuDQo+ID4NCj4gPiBUaGF0IHNhaWQg
+d2UgbWF5IGFjY2VwdCB5b3VyIGNoYW5nZSBiZWNhdXNlIGl0IGRvZXNuJ3QgYnJlYWsgYW55dGhp
+bmcNCj4gPiBhbmQgdGhlbiBJJ2xsIHNlbmQgYW4gdXBkYXRlIHRvIGF4czEweF9tYi5kdHMgd2l0
+aCByZXBsYWNlbWVudCBvZiBFRVBST00gbm9kZXMuDQo+ID4gT3Igd2UgbWF5IGRyb3AgeW91ciBj
+aGFuZ2UgYXQgYWxsIHNpbmNlIEknbSBnb2luZyB0byByZXBsYWNlIGNvcnJlc3BvbmRpbmcgbm9k
+ZXMuDQo+ID4NCj4gPiAtQWxleGV5DQo+IA0KPiBMb29rcyBsaWtlIFBDRjg1OTRDLTIgaXMgY29t
+cGF0aWJsZSB3aXRoIGF0bWVsLDI0YzA0IC0gd2hlbiB5b3UnbGwgYmUNCj4gc3VibWl0dGluZyB0
+aGlzIHBhdGNoLCBwbGVhc2UgZXh0ZW5kIHRoZSBhdDI0IERUIGJpbmRpbmdzIHdpdGggYSBuZXcN
+Cj4gbmFtaW5nIGV4Y2VwdGlvbiAoanVzdCBsaWtlIHRoZSBvbmUgZm9yIHJlbmVzYXMpLg0KDQpU
+aGFua3MgZm9yIGNoZWNraW5nIHRoaXMuDQoNCj4gRmVlbCBmcmVlIHRvIGRyb3AgdGhpcyBwYXRj
+aCBpZiB5b3UgcGxhbiB0byBzdWJtaXQgdGhlIGZpeCBzb29uIC0NCj4gb3RoZXJ3aXNlLCBhcHBs
+eSBpdCBpZiBpdCBtYXkgdGFrZSBzb21lIHRpbWUuDQoNCk5vIEkgdGhpbmsgaXQgd29ydGggYXBw
+bHlpbmcgZXNwZWNpYWxseSBpbiB0aGUgbGlnaHQgb2YgeW91ciBjb21tZW50IGFib3V0IE5YUCBF
+RVBST00uDQoNClZpbmVldCwgY291bGQgeW91IHBsZWFzZSB0YWtlIHRoaXMgb25lPw0KDQotQWxl
+eGV5DQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
