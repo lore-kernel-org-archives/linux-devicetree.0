@@ -1,111 +1,207 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v5 02/16] media: doc: add document for rkisp1 meta buffer
- format
-Date: Tue, 6 Feb 2018 15:27:10 +0100
-Message-ID: <917c22c0-773e-5fe5-5625-86678f7c8521@xs4all.nl>
-References: <1514533978-20408-1-git-send-email-zhengsq@rock-chips.com>
- <1514533978-20408-3-git-send-email-zhengsq@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
+Date: Tue, 6 Feb 2018 15:32:43 +0100
+Message-ID: <CACRpkdbuGOrm=y=yPpsrkckk8+uKGxv6J9WGw9y=yiGcmbqn+w@mail.gmail.com>
+References: <20180201174923.7385-1-l.stach@pengutronix.de> <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
+ <1517825351.3175.3.camel@pengutronix.de> <CACRpkdanb3XocUpmTaFTh-vsApucX0PzuqRg_fA2ORUFtrVGJA@mail.gmail.com>
+ <1517914394.3175.21.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1514533978-20408-3-git-send-email-zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zyc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, allon.huang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jacob Chen <jacob-chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1517914394.3175.21.camel@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "A . s . Dong" <aisheng.dong@nxp.com>, linux-imx@nxp.com, Sascha Hauer <kernel@pengutronix.de>, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 12/29/17 08:52, Shunqian Zheng wrote:
-> From: Jacob Chen <jacob2.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> This commit add docuemnt for rkisp1 meta buffer format
-> 
-> Signed-off-by: Jacob Chen <jacob-chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  Documentation/media/uapi/v4l/meta-formats.rst          |  2 ++
->  .../media/uapi/v4l/pixfmt-meta-rkisp1-params.rst       | 17 +++++++++++++++++
->  .../media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst         | 18 ++++++++++++++++++
->  3 files changed, 37 insertions(+)
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
->  create mode 100644 Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-> 
-> diff --git a/Documentation/media/uapi/v4l/meta-formats.rst b/Documentation/media/uapi/v4l/meta-formats.rst
-> index 01e24e3..1b82814 100644
-> --- a/Documentation/media/uapi/v4l/meta-formats.rst
-> +++ b/Documentation/media/uapi/v4l/meta-formats.rst
-> @@ -14,3 +14,5 @@ These formats are used for the :ref:`metadata` interface only.
->  
->      pixfmt-meta-vsp1-hgo
->      pixfmt-meta-vsp1-hgt
-> +    pixfmt-meta-rkisp1-params
-> +    pixfmt-meta-rkisp1-stat
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-> new file mode 100644
-> index 0000000..ed344d4
-> --- /dev/null
-> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
-> @@ -0,0 +1,17 @@
-> +.. -*- coding: utf-8; mode: rst -*-
-> +
-> +.. _v4l2-meta-fmt-rkisp1-params:
-> +
-> +*******************************
-> +V4L2_META_FMT_RK_ISP1_PARAMS
-> +*******************************
-> +
-> +Rockchip ISP1 Parameters Data
-> +
-> +Description
-> +===========
-> +
-> +This format describes input parameters for the Rockchip ISP1.
-> +
-> +The data use c-struct :c:type:`rkisp1_isp_params_cfg`, which is defined in
-> +the ``linux/rkisp1-config.h`` header file, See it for details.
+On Tue, Feb 6, 2018 at 11:53 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
 
-One more question: does the ISP produce a reasonable picture if it doesn't
-receive these params? If not (i.e. you always need to provide params), then
-I think you should provide a default rkisp1_isp_params_cfg struct that
-can be used as a template for application writers.
+Hi Lucas,
 
-Perhaps it can be part of the driver as the initial params config.
+your reply seems a bit annoyed.
 
-I think even if the ISP does work without params it is still worthwhile
-doing this. The params are complex and having an example on how to initialize
-it would be helpful.
+Are you annoyed with me?
 
-Regards,
+In that case please take it down a bit, I understand it can
+be stressful as developer, but I need to maintain the stuff
+we're pushing in for years to come and it's my job to
+ask the tricksy questions.
 
-	Hans
+> Am Dienstag, den 06.02.2018, 00:13 +0100 schrieb Linus Walleij:
+>> > On Mon, Feb 5, 2018 at 11:09 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
+>>
+>> > > > +Optional Properties:
+>> > > > +- drive-strength           Integer: controls Drive Strength
+>> > >
+>> > > I thought drive-strength is supposed to be be in mA. We should not have
+>> > > differing units in common properties.
+>> > >
+>> > > There was an Atmel binding the other day that this came up.
+>> >
+>> > I know it's in the common binding, but it's going to be very hard to
+>> > support. The drive-strength in mA really depends on external loading of
+>> > the pin and the pin voltage, at least for the most widespread
+>> > controllers that only switch between resistors, instead of driving the
+>> > pin by a current regulator.
+>>
+>> How does this circuit really look? Can you sketch something so
+>> we understand what is going on electronically here?
+>
+> There is no description of how the circuit really looks like and I
+> would very much prefer this not being a prerequisite to get some
+> software support in place.
 
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-> new file mode 100644
-> index 0000000..5ecc403
-> --- /dev/null
-> +++ b/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
-> @@ -0,0 +1,18 @@
-> +.. -*- coding: utf-8; mode: rst -*-
-> +
-> +.. _v4l2-meta-fmt-rkisp1-stat:
-> +
-> +*******************************
-> +V4L2_META_FMT_RK_ISP1_STAT_3A
-> +*******************************
-> +
-> +Rockchip ISP1 Statistics Data
-> +
-> +Description
-> +===========
-> +
-> +This format describes image color statistics information generated by the Rockchip
-> +ISP1.
-> +
-> +The data use c-struct :c:type:`rkisp1_stat_buffer`, which is defined in
-> +the ``linux/cifisp_stat.h`` header file, See it for details.
-> 
+That depends. If you're a hobbyist with limited access to
+documentation I agree. In that case let's go for something
+that floats your project, I'm fine with that. I have a weak spot
+for people with a good project and limited resources, so I
+am here to help. I'd say then let's go for some "nxp,foo" property.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If you are working for NXP directly or under contract, what you say
+is that the left hand does not know what the right hand is doing and that
+is never a good sign. Such as the hardware and software departments
+do not talk to each other, do not have each other mail addresses
+and practice what is called "throw over the wall-engineering".
+Or throw it all the way over to Pengutronix, maybe, a separate
+legal entity they don't even prioritize to inform. What do I know.
+
+In this latter case it is more or less my responsibility as subsystem
+maintainer to push back at NXP as a legal body, it has nothing to
+do with the people involved. Especially not you personally. In this
+case I am adressing your organization, not you.
+
+So which one is it?
+
+> The best description we have is from NXP AN5078:
+> "The drive strength enable (DSE) can be explained as series resistance
+> between an ideal driver's output and its load. To achieve maximal
+> transferred power, the impedance of the driver has to match the load
+> impedance."
+>
+> Which means the control bits don't really vary the output impedance,
+> but the description models it like that. If we _assume_ the simple MOS
+> totempole setup then adding more totempoles will bring down the output
+> impedance.
+
++- drive-strength               Integer: controls Drive Strength
++                                       0: driver disabled
++                                       1: 255 Ohm
++                                       2: 105 Ohm
++                                       3:  75 Ohm
++                                       4:  85 Ohm
++                                       5:  65 Ohm
++                                       6:  45 Ohm
++                                       7:  40 Ohm
+
+As for equal resistances R = Rx/N assuming it is
+really 255 Ohms internal resistance per totempole:
+
+1: 255
+2: 127,5
+3: 85
+4: 63,75
+5: 51
+6: 42,5
+7: 36,4
+
+I don't know. Something is not right. Maybe this is how
+CMOS work under load?
+
+>> The way I imagine most drive strength out there works is by simply
+>> connection more MOS-totempoles after each other and each of them
+>> has a production-technology-related max output current like 4mA, so
+>> by putting two in a series yoy double that to 8 mA.
+>
+> So with this description in mind the drive-strength property doesn't
+> describe an actual real world drive-strength, but some maximum current
+> output under ideal load matching?
+
+I guess that is what other datasheets have been listing.
+I have personally seen a few of those.
+
+I don't know if it is as simple as a totem-pole, I guess
+IIRC under ideal circumstances the internal resistance of an
+operational amplifier is zero. E.g. on a popular TTL part uA 741
+it is 5.5 milliohms. What is Rout for a normal CMOS totem-pole?
+Some googling suggests ~400 Ohm so 255 Ohm may not be
+so far off.
+
+Does anyone else know?
+
+This is pretty interesting stuff :D
+
+> That's pretty confusing actually, as in a real-world setup increasing
+> the drive-strength property value might negatively affect the load
+> matching, leading to _decreasing_ the actual drive-strength.
+
+This sounds like a perfect argument to create a new
+property "output-impedance" and use that in my ears.
+It makes more sense to a designer, because what they
+really want to do, electrically, is to match impedances.
+
+I am thinking some designer writing this device tree.
+What they want to control is the output impedance, not
+drive strength. So that name makes more sense.
+
+>> Is that what you mean with "current regulator"?
+>>
+>> If you mean rather "output impedance", that is something else and
+>> something we need a new (generic) property for. I never saw that
+>> before, really.
+>
+> So, just because the description of the drive-strength value uses some
+> (idealized) output impedance, we are now going to introduce yet another
+> property for the same thing?
+
+Yes it seems like a good idea, if (by your own line of reasoning)
+it is the physical principle underlying these resistance settings.
+Then we are likely to see it again.
+
+> This is confusing to people reading the
+> reference manual, which never speaks about output-impedance, but always
+> about drive-strength.
+
+Since we are already (obviously) confused, we have to choose
+the lesser evil here.
+
+Apparently what (board- system-) designers want to do is match
+output resistance to load, I would argue that it is more confusing
+to call that "drive strength", i.e. what is misleading is not what I am
+discussing here, but the manual you are referring to. Just a bad
+piece of technical writing.
+
+> Hardware people (the ones responsible to come up with the padctrl
+> settings) are much more likely to read the reference manual than any
+> idealized dt-binding.
+
+Can we talk to them about this?
+
+I don't like to think about them as some foreign people in a far
+away dimension we can never understand or communicate
+with, how do they really do what they do?
+
+> I want to make it as easy as possible for them to
+> match up the hardware and reference manual with the DT description.
+
+I was hoping we could dig in a bit and figure out what we
+are going to do and why and how these people think.
+
+I want to avoid poking magic values we don't really understand
+into registers and using the manual as alchemic magic or
+spellbook, essentially. (As so often happens...)
+
+> So, can we please just keep the drive-strength property and deal with
+> it being described in different units in different hardware manuals?
+
+If you want something to match the specific hardware
+manual from NXP and you don't want it to be translated
+into the units of the DT binding, then I think it is better
+to use something prefixed "nxp,*".
+
+That clearly indicates that this is some NXP oddity that
+we don't really understand.
+
+I was just hoping not to introduce too many of these.
+
+Yours,
+Linus Walleij
