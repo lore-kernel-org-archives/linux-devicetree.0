@@ -1,101 +1,69 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 10/16] arm64: dts: mt7622: add ethernet device nodes
-Date: Tue, 6 Feb 2018 17:52:59 +0800
-Message-ID: <04aff866db96fd7ae4e1d85166f8a722f4b79b77.1517910489.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 07/16] arm64: dts: mt7622: turn uart0 clock to real ones
+Date: Tue, 6 Feb 2018 17:52:56 +0800
+Message-ID: <e0646e211fa947a34d1cfff1cc98f00efd42f2a0.1517910489.git.sean.wang@mediatek.com>
 References: <cover.1517910489.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1517910489.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <cover.1517910489.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-add ethernet device nodes which enable GMAC1 with SGMII interface
+This patch also cleans up two oscillators that provide clocks for MT7623.
+Switch the uart clocks to the real ones while at it.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 22 ++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 31 ++++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index 59a9c36..b80e8c7 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -249,6 +249,28 @@
- 	status = "okay";
- };
- 
-+&eth {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eth_pins>;
-+	status = "okay";
-+
-+	gmac1: mac@1 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <1>;
-+		phy-handle = <&phy5>;
-+	};
-+
-+	mdio-bus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		phy5: ethernet-phy@5 {
-+			reg = <5>;
-+			phy-mode = "sgmii";
-+		};
-+	};
-+};
-+
- &i2c1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index 9e11baf..a3a409b 100644
+index 65eb417..845fc11 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -477,6 +477,37 @@
- 		#reset-cells = <1>;
+@@ -88,18 +88,6 @@
+ 		};
  	};
  
-+	eth: ethernet@1b100000 {
-+		compatible = "mediatek,mt7622-eth",
-+			     "mediatek,mt2701-eth",
-+			     "syscon";
-+		reg = <0 0x1b100000 0 0x20000>;
-+		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 224 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 225 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&topckgen CLK_TOP_ETH_SEL>,
-+			 <&ethsys CLK_ETH_ESW_EN>,
-+			 <&ethsys CLK_ETH_GP0_EN>,
-+			 <&ethsys CLK_ETH_GP1_EN>,
-+			 <&ethsys CLK_ETH_GP2_EN>,
-+			 <&sgmiisys CLK_SGMII_TX250M_EN>,
-+			 <&sgmiisys CLK_SGMII_RX250M_EN>,
-+			 <&sgmiisys CLK_SGMII_CDR_REF>,
-+			 <&sgmiisys CLK_SGMII_CDR_FB>,
-+			 <&topckgen CLK_TOP_SGMIIPLL>,
-+			 <&apmixedsys CLK_APMIXED_ETH2PLL>;
-+		clock-names = "ethif", "esw", "gp0", "gp1", "gp2",
-+			      "sgmii_tx250m", "sgmii_rx250m",
-+			      "sgmii_cdr_ref", "sgmii_cdr_fb", "sgmii_ck",
-+			      "eth2pll";
-+		power-domains = <&scpsys MT7622_POWER_DOMAIN_ETHSYS>;
-+		mediatek,ethsys = <&ethsys>;
-+		mediatek,sgmiisys = <&sgmiisys>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	sgmiisys: sgmiisys@1b128000 {
- 		compatible = "mediatek,mt7622-sgmiisys",
- 			     "syscon";
+-	uart_clk: dummy25m {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <25000000>;
+-	};
+-
+-	bus_clk: dummy280m {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <280000000>;
+-	};
+-
+ 	pwrap_clk: dummy40m {
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <40000000>;
+@@ -231,7 +219,8 @@
+ 			     "mediatek,mt6577-uart";
+ 		reg = <0 0x11002000 0 0x400>;
+ 		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+-		clocks = <&uart_clk>, <&bus_clk>;
++		clocks = <&topckgen CLK_TOP_UART_SEL>,
++			 <&pericfg CLK_PERI_UART1_PD>;
+ 		clock-names = "baud", "bus";
+ 		status = "disabled";
+ 	};
 -- 
 2.7.4
