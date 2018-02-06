@@ -1,42 +1,90 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 3/3] arm64: dts: renesas: r8a77995: Remove non-existing STBE region
-Date: Tue,  6 Feb 2018 14:05:54 +0100
-Message-ID: <1517922354-28421-4-git-send-email-geert+renesas@glider.be>
-References: <1517922354-28421-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517922354-28421-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: exynos: Add I2S1 device node to exynos5433.dtsi
+Date: Tue, 6 Feb 2018 14:07:24 +0100
+Message-ID: <CAJKOXPdxND9Rf4p6stkdhBNY0AzdMqfDtopiBfYttex77+tjnA@mail.gmail.com>
+References: <CGME20180205172146epcas1p1cd7a5027e673fc17fb64d8841c47175a@epcas1p1.samsung.com>
+ <20180205172110.9897-1-s.nawrocki@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20180205172110.9897-1-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: kgene@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jcsing.lee@samsung.com, linux-arm-kernel@lists.infradead.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-R-Car D3 does not have the Stream Buffer for EtherAVB-IF (STBE).
+On Mon, Feb 5, 2018 at 6:21 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> Add DT node for the second I2S controller available on Exynos 5433
+> SoC. While at it the i2s0 node name is changed to a more generic
+> "i2s" and missing properties are added to that node.
 
-Note that the RAVB driver does not use this region.
+Please split it - one patch for adding new I2S and second minor
+cleanup in i2s0 and adding of required properties.
 
-Fixes: f9ba0c4cfe6169b7 ("arm64: dts: renesas: r8a77995: Add EthernetAVB device node")
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I think there are no dependencies on driver code changes... but let me
+know if I am wrong.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index 23f763beab46c633..12d137900efe133c 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -476,7 +476,7 @@
- 		avb: ethernet@e6800000 {
- 			compatible = "renesas,etheravb-r8a77995",
- 				     "renesas,etheravb-rcar-gen3";
--			reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
-+			reg = <0 0xe6800000 0 0x800>;
- 			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
--- 
-2.7.4
+Best regards,
+Krzysztof
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> index 62f276970174..2b73bd86bc56 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+> @@ -1311,6 +1311,25 @@
+>                         status = "disabled";
+>                 };
+>
+> +               i2s1: i2s@14d60000 {
+> +                       compatible = "samsung,exynos7-i2s";
+> +                       reg = <0x14d60000 0x100>;
+> +                       dmas = <&pdma0 31 &pdma0 30>;
+> +                       dma-names = "tx", "rx";
+> +                       interrupts = <GIC_SPI 435 IRQ_TYPE_NONE>;
+> +                       clocks = <&cmu_peric CLK_PCLK_I2S1>,
+> +                                <&cmu_peric CLK_PCLK_I2S1>,
+> +                                <&cmu_peric CLK_SCLK_I2S1>;
+> +                       clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+> +                       #clock-cells = <1>;
+> +                       samsung,supports-6ch;
+> +                       samsung,supports-rstclr;
+> +                       samsung,supports-tdm;
+> +                       samsung,supports-low-rfs;
+> +                       #sound-dai-cells = <1>;
+> +                       status = "disabled";
+> +               };
+> +
+>                 pwm: pwm@14dd0000 {
+>                         compatible = "samsung,exynos4210-pwm";
+>                         reg = <0x14dd0000 0x100>;
+> @@ -1639,7 +1658,7 @@
+>                                 power-domains = <&pd_aud>;
+>                         };
+>
+> -                       i2s0: i2s0@11440000 {
+> +                       i2s0: i2s@11440000 {
+>                                 compatible = "samsung,exynos7-i2s";
+>                                 reg = <0x11440000 0x100>;
+>                                 dmas = <&adma 0 &adma 2>;
+> @@ -1651,9 +1670,11 @@
+>                                         <&cmu_aud CLK_SCLK_AUD_I2S>,
+>                                         <&cmu_aud CLK_SCLK_I2S_BCLK>;
+>                                 clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+> +                               #clock-cells = <1>;
+>                                 pinctrl-names = "default";
+>                                 pinctrl-0 = <&i2s0_bus>;
+>                                 power-domains = <&pd_aud>;
+> +                               #sound-dai-cells = <1>;
+>                                 status = "disabled";
+>                         };
+>
+> --
+> 2.14.2
+>
