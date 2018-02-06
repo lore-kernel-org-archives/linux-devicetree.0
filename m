@@ -1,127 +1,65 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH 1/2] of_pci_irq: add a check to fallback to standard
- device tree parsing
-Date: Tue, 6 Feb 2018 13:42:12 +0800
-Message-ID: <1517895732.23319.21.camel@mtkswgap22>
-References: <31c765c53e85e41bfc001d110d69e46c9967f4e7.1516961656.git.ryder.lee@mediatek.com>
-         <CAL_JsqLZqrxxpuEnoWEGkT2WCuyjqn0bM1DP8PdAwnQsso8kOA@mail.gmail.com>
-         <1517563970.24622.9.camel@mtkswgap22>
-         <1517866584.2312.140.camel@kernel.crashing.org>
-         <1517884738.16010.27.camel@mtkswgap22>
-         <1517889903.2312.151.camel@kernel.crashing.org>
-         <1517891471.20869.6.camel@mtkswgap22>
-         <1517892624.2312.167.camel@kernel.crashing.org>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH 05/15] ARM: dts: ipq4019: Add ipq4019-ap-dk01-c2 board file
+Date: Tue, 6 Feb 2018 11:25:43 +0530
+Message-ID: <508a5777-a009-15d9-6d5a-bed1b1bfa1e7@codeaurora.org>
+References: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
+ <1517202689-14212-6-git-send-email-sricharan@codeaurora.org>
+ <9afb20e560a7ebbcefcb801e7447a983@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1517892624.2312.167.camel@kernel.crashing.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <9afb20e560a7ebbcefcb801e7447a983@codeaurora.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Abhishek Sahu <absahu@codeaurora.org>
+Cc: mark.rutland@arm.com, robh@kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, bjorn.andersson@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-02-06 at 15:50 +1100, Benjamin Herrenschmidt wrote:
-> On Tue, 2018-02-06 at 12:31 +0800, Ryder Lee wrote:
-> > On Tue, 2018-02-06 at 15:05 +1100, Benjamin Herrenschmidt wrote:
-> > > On Tue, 2018-02-06 at 10:38 +0800, Ryder Lee wrote:
-> > > > 
-> > > > I think the code should look at the bridge address <0x0800 ...> we list
-> > > > in bindings for resolving interrupts in this case, but it seems like it
-> > > > use the 'pdev->defvn << 8' which is not really we want and will lead to
-> > > > mismatch.
-> > > > 
-> > > > 		interrupt-map-mask = <0xf800 0 0 7>;
-> > > > 		interrupt-map = <0x0000 0 0 1 ...>,
-> > > > 				<0x0000 0 0 2 ...>,
-> > > > 				<0x0000 0 0 3 ...>,
-> > > > 				<0x0000 0 0 4 ...>,
-> > > > 
-> > > > 				 0x0800 0 0 1 ...>,
-> > > > 				 0x0800 0 0 2 ...>,
-> > > > 				 0x0800 0 0 3 ...>,
-> > > > 				 0x0800 0 0 4 ...>;
-> > > > 		...
-> > > > 		pcie@1,0 {
-> > > > 			reg = <0x0800 0 0 0 0>;
-> > > > 			...
-> > > > 		};
-> > > > 
-> > > > 
-> > > > Or, alternatively, we could add a interrupt-map property in both child
-> > > > and root node to solve this. The below example is my original version as
-> > > > I don't want to change that function either.
-> > > 
-> > > The code looks at devfn because it's meant to work for PCI including
-> > > when the devices dont have a device node in the DT.
-> > > 
-> > > What I'm trying to figure out is what is it that your parent and
-> > > children are representing here. Which is/are the root complex ?
-> > 
-> > This is a single root complex with 2 root port (children in DT).
-> > 
-> > > What is the actual topology as visible on the PCIe bus (is lspci output
-> > > basically) and how does that map to your representation ?
-> > 
-> > # lspci
-> > 00:00.0 Class 0604: 14c3:0801 //1st slot - pcie@0,0
-> > 00:01.0 Class 0604: 14c3:0801 //2nd slot - pcie@1,0
-> > 
-> > 01:00.0 Class 0280: 14c3:7603 //A device which is connected to 1st slot
-> > 02:00.0 Class 0200: 8086:1521 //A 4 func device which is connected to
-> > 2nd slot
-> > 02:00.1 Class 0200: 8086:1521
-> > 02:00.2 Class 0200: 8086:1521
-> > 02:00.3 Class 0200: 8086:1521
-> 
-> Ok so that's a rather standard setup. The "devfn << 8" of your root
-> ports should be the exact same thing as their first reg property entry,
-> I'm not sure why you have a mismatch here.
-
-I've added some log after 'for loop':
-
-pr_err("busn=0x%x, devfn=0x%x, reg=0x%x\n", pdev->bus->number, pdev->devfn, of_pci_get_devfn(ppnode));
-
-and got these:
-
-[    5.651836] busn=0x0, devfn=0x0, reg=0x0
-[    5.651936] pcieport 0000:00:00.0: assign IRQ: got 213
-...
-[    5.652398] busn=0x0, devfn=0x8, reg=0x0
-[    5.652487] pcieport 0000:00:01.0: assign IRQ: got 214
-
-...
-[    5.653025] busn=0x2, devfn=0x0, reg=0x8
-[    5.653058] igb 0000:02:00.0: assign IRQ: got 213
-
-[    5.724582] busn=0x2, devfn=0x1, reg=0x8
-[    5.724634] igb 0000:02:00.1: assign IRQ: got 213
-
-> However, that map only represents the INTA..D lines going to the root
-> ports, not how these get mapped to children of the root ports.
-> 
-> of_irq_parse_pci() will implement standard swizzling if you don't have
-> nodes for your devices at all. If you do, however, the code assumes
-> you have a correct and complete interrupt tree in the device-tree.
-> 
-> That means that you need in each "p2p bridge", including your root
-> ports, an interrupt-map that will map the children INTA...D of that
-> bridge to the parent INTA...D of that bridge.
-> 
-> Alternatively, you can make the maps in the root ports point directly
-> to the parent PIC. If you chose to do that, then the interrupt-map in
-> your root complex becomes only useful to represent the root ports own
-> interrutps (hotplug, AER,...) and could be replaced by just having
-> interrupt-parent & interrupts in those root port nodes.
-> 
-
-Thanks for explanation.
-
-So I guess the better way to achieve my aim - one IRQ per slot that is
-connected to all INTx and get propagated through the bridges (and for
-those root ports own interrupts (PME ..)} is to add interrupt-map
-properties in both parent and root port nodes.
-
-Something like this: https://patchwork.kernel.org/patch/9970923/ ,right?
-
-Ryder
+SGkgQWJoaXNoZWssCgpPbiAyLzMvMjAxOCA0OjI1IFBNLCBBYmhpc2hlayBTYWh1IHdyb3RlOgo+
+IE9uIDIwMTgtMDEtMjkgMTA6NDEsIFNyaWNoYXJhbiBSIHdyb3RlOgo+PiBUaGUgYm9hcmQgaGFz
+IGEgc3BpLW5hbmQgaW50ZXJmYWNlIG9uIHNwaTAgYnVzIGNoaXBzZWxlY3QxLgo+Pgo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBTcmljaGFyYW4gUiA8c3JpY2hhcmFuQGNvZGVhdXJvcmEub3JnPgo+PiAtLS0K
+Pj4gwqBhcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCB8wqAgMSArCj4+IMKgYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1pcHE0
+MDE5LWFwLmRrMDEuMS1jMi5kdHMgfCAyNQo+PiArKysrKysrKysrKysrKysrKysrKysrKysrCj4+
+IMKgMiBmaWxlcyBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspCj4+IMKgY3JlYXRlIG1vZGUgMTAw
+NjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAxOS1hcC5kazAxLjEtYzIuZHRzCj4+Cj4+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL01ha2VmaWxlCj4+IGluZGV4IGQwMzgxZTkuLjIxZWQ1NmQgMTAwNjQ0Cj4+IC0tLSBhL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2Vm
+aWxlCj4+IEBAIC03MjQsNiArNzI0LDcgQEAgZHRiLSQoQ09ORklHX0FSQ0hfUUNPTSkgKz0gXAo+
+PiDCoMKgwqDCoCBxY29tLWFwcTgwODQtaWZjNjU0MC5kdGIgXAo+PiDCoMKgwqDCoCBxY29tLWFw
+cTgwODQtbXRwLmR0YiBcCj4+IMKgwqDCoMKgIHFjb20taXBxNDAxOS1hcC5kazAxLjEtYzEuZHRi
+IFwKPj4gK8KgwqDCoCBxY29tLWlwcTQwMTktYXAuZGswMS4xLWMyLmR0YiBcCj4+IMKgwqDCoMKg
+IHFjb20taXBxODA2NC1hcDE0OC5kdGIgXAo+PiDCoMKgwqDCoCBxY29tLW1zbTg2NjAtc3VyZi5k
+dGIgXAo+PiDCoMKgwqDCoCBxY29tLW1zbTg5NjAtY2RwLmR0YiBcCj4+IGRpZmYgLS1naXQgYS9h
+cmNoL2FybS9ib290L2R0cy9xY29tLWlwcTQwMTktYXAuZGswMS4xLWMyLmR0cwo+PiBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAxOS1hcC5kazAxLjEtYzIuZHRzCj4+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLmUzNDQyZGEKPj4gLS0tIC9kZXYvbnVsbAo+PiAr
+KysgYi9hcmNoL2FybS9ib290L2R0cy9xY29tLWlwcTQwMTktYXAuZGswMS4xLWMyLmR0cwo+PiBA
+QCAtMCwwICsxLDI1IEBACj4+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+
+PiArLy8gQ29weXJpZ2h0IChjKSAyMDE3LCBUaGUgTGludXggRm91bmRhdGlvbi4gQWxsIHJpZ2h0
+cyByZXNlcnZlZC4KPj4gKwo+PiArI2luY2x1ZGUgInFjb20taXBxNDAxOS1hcC5kazAxLjEuZHRz
+aSIKPj4gKwo+PiArLyB7Cj4+ICvCoMKgwqAgbW9kZWwgPSAiUXVhbGNvbW0gVGVjaG5vbG9naWVz
+LCBJbmMuIElQUTQweHgvQVAtREswMS4xLUMyIjsKPiAKPiDCoHMvSVBRNDB4eC9JUFE0MDE5Cj4g
+CiBvawoKPj4gKwo+PiArwqDCoMKgIHNvYyB7Cj4+ICvCoMKgwqDCoMKgwqDCoCBzcGlfMDogc3Bp
+QDc4YjUwMDAgeyAvKiBCTFNQMSBRVVAxICovCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0
+YXR1cyA9ICJvayI7Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNzLWdwaW9zID0gPCZ0bG1t
+IDU0IDA+LCA8JnRsbW0gNTkgMD47Cj4gCj4gwqB0aGUgYmFzZSBkazAxIGZpbGUgaGFzIHBpbm11
+eCBmb3IgNTQgb25seS4KPiDCoGZvciA1OSBwaW4sIHdlIG5lZWQgdG8gYWRkIHBpbm11eCBlbnRy
+eSBhbHNvLgo+IAoKIG9rLiBidHcsIGluZmFjdCB0aGluayB0aGF0IDU5IHNob3VsZCBiZSByZW1v
+dmVkLgoKUmVnYXJkcywKIFNyaWNoYXJhbgoKLS0gCiJRVUFMQ09NTSBJTkRJQSwgb24gYmVoYWxm
+IG9mIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUg
+QXVyb3JhIEZvcnVtLCBob3N0ZWQgYnkgVGhlIExpbnV4IEZvdW5kYXRpb24KCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
