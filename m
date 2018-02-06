@@ -1,172 +1,84 @@
 From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Add serial console support
-Date: Tue, 6 Feb 2018 12:05:27 -0800
-Message-ID: <20180206200527.GM9465@builder>
-References: <20180125163216.29018-1-rnayak@codeaurora.org>
- <20180125163216.29018-3-rnayak@codeaurora.org>
- <20180126221808.GE28313@codeaurora.org>
- <CAD=FV=WcCnQJc25=sKWtOi=ZWi=ium6DVsexuQnsLDL=aJE6-Q@mail.gmail.com>
- <20180206190614.GL9465@builder>
- <CAD=FV=Whxf1VRJ6qx9mioEEkTeS+uJfJKPbOMcGy-Wigh_NORw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Tue, 6 Feb 2018 12:15:34 -0800
+Message-ID: <20180206201534.GN9465@builder>
+References: <20180118220833.16616-3-ilina@codeaurora.org>
+ <20180118222802.18161-1-ilina@codeaurora.org>
+ <20180129190852.5ddcgdo3gkc2nw5r@rob-hp-laptop>
+ <20180130161750.GA20815@codeaurora.org>
+ <20180205221113.GE9465@builder>
+ <20180206200507.GA13360@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=Whxf1VRJ6qx9mioEEkTeS+uJfJKPbOMcGy-Wigh_NORw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20180206200507.GA13360-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 06 Feb 11:49 PST 2018, Doug Anderson wrote:
+On Tue 06 Feb 12:05 PST 2018, Lina Iyer wrote:
 
-> Hi,
+> On Mon, Feb 05 2018 at 22:11 +0000, Bjorn Andersson wrote:
+> > On Tue 30 Jan 08:17 PST 2018, Lina Iyer wrote:
+> > > On Mon, Jan 29 2018 at 19:08 +0000, Rob Herring wrote:
+> > > > On Thu, Jan 18, 2018 at 03:28:02PM -0700, Lina Iyer wrote:
+> > [..]
+> > > > > diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> > [..]
+> > > > > +Command DB is a database that provides a mapping between resource key and the
+> > > > > +resource address for a system resource managed by a remote processor. The data
+> > > > > +is stored in a shared memory region and is loaded by the remote processor.
+> > > >
+> > > > Is said shared memory described in DT. If so, this should be a child
+> > > > node. Only 8 bytes seems kind of fine grained for putting in DT when it
+> > > > could be implied by the parent shared memory node.
+> > > >
+> > > I dont believe this memory will be described in DT for this chipset.
+> > > Will ask internally.
+> > > 
+> > 
+> > Well, these things goes two ways...
+> > 
+> > > > > +
+> > > > > +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
+> > > > > +controlling shared resources. Depending on the board configuration the shared
+> > > > > +resource properties may change. These properties are dynamically probed by the
+> > > > > +remote processor and made available in the shared memory.
+> > > >
+> > > > The table may change, but does the presence of it or shared memory
+> > > > location (of the pointer) change?
+> > > >
+> > > The location may change between different SoCs, but will be present in
+> > > all chipsets of this architecture.
+> > > 
+> > 
+> > Where is the actual DB located? System RAM or is it some special
+> > device-memory?
+> > 
+> It's carved out of system memory and is access protected. Not a device
+> memory.
 > 
-> On Tue, Feb 6, 2018 at 11:06 AM, Bjorn Andersson
-> <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Tue 06 Feb 10:37 PST 2018, Doug Anderson wrote:
-> >
-> >> Hi,
-> >>
-> >> On Fri, Jan 26, 2018 at 2:18 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> >> > On 01/25, Rajendra Nayak wrote:
-> >> >> diff --git a/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi b/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi
-> >> >> new file mode 100644
-> >> >> index 000000000000..b97f99e6f4b4
-> >> >> --- /dev/null
-> >> >> +++ b/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi
-> >> >> @@ -0,0 +1,32 @@
-> >> >> +// SPDX-License-Identifier: GPL-2.0
-> >> >> +/*
-> >> >> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> >> >> + */
-> >> >> +
-> >> >> +&tlmm {
-> >> >
-> >> > I'm not the maintainer, but I find this approach to the pins
-> >> > really annoying. I have to flip to another file to figure out how
-> >> > a board has configured the pins. And we may bring in a bunch of
-> >> > settings that we don't ever use on some board too. Why can't we
-> >> > put the settings in the board file directly?
-> >>
-> >> I'm not so familiar with how things work with Qualcomm, but in general
-> >> I think putting this in the "board" file is a bad idea.  I'd be OK
-> >> with putting this directly in the SoC file (though it might get
-> >> unwieldy?), but not moving things to the board file as was done with
-> >> v2 of this patch.
-> >>
-> >> Said another way: nearly board that uses SDM845 that uses UART2 will
-> >> have the same definitions for these pins so we shouldn't be
-> >> duplicating it across every board, right?
-> >>
-> >
-> > We've run into several cases where different boards uses the same
-> > function but requires board specific electrical configuration.
-> >
-> > So what we decided was to keep the pinmux in the soc-file (where e.g.
-> > the uart definition is) and then extend it with the board specific
-> > electrical properties (the pinconf), in the board files.
-> >
-> > This does come with the complexity of having the pinctrl nodes split in
-> > two places, but the responsibilities of the two parts is clear and we
-> > remove the need for all board files to ensure the appropriate pinmux is
-> > in place.
-> >
-> >
-> > NB. We did discuss adding "sane defaults" for the pinconf in the soc
-> > dtsi, but we end up spending considerable time debugging issues stemming
-> > from not having the right pinconf; so better make this explicit and say
-> > that the board has to specify it's config.
-> 
-> Whoops, saw your responses _after_ I sent my response to v2.  In any
-> case this makes sense to me then!  On Rockchip boards I've been
-> involved in we often added "sane defaults", but I can see how that
-> could be confusing in different ways.  I'm happy with your choice and
-> it seems like a happy medium.  The sdm845.dtsi file can have the main
-> definition of the nodes and can thus refer to the nodes.  Then you
-> just add the extra bit in the board file.
-> 
-> What you propose is not what happened in v2 of the series
-> <https://patchwork.kernel.org/patch/10194201/> though.  In v2 _both_
-> the pinconf and the pinmux moved to the board file.  That's wrong.
-> 
-> 
-> To make it concrete, you'd have something like this (this has the
-> wrong bindings from the UART, but folks get the picture hopefully):
-> 
-> 
-> In sdm845.dtsi:
-> 
->     qup_uart2: serial@a84000 {
->       compatible = "qcom,geni-console", "qcom,geni-uart";
->       reg = <0xa84000 0x4000>;
->       reg-names = "se_phys";
->       clock-names = "se-clk", "m-ahb", "s-ahb";
->       clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>,
->          <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
->          <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
->       pinctrl-names = "default", "sleep";
->       pinctrl-0 = <&qup_uart2_default>;
->       pinctrl-1 = <&qup_uart2_sleep>;
->       interrupts = <GIC_SPI 354 IRQ_TYPE_NONE>;
->       qcom,wrapper-core = <&qup_1>;
->       status = "disabled";
->     };
-> 
->     tlmm: pinctrl@3400000 {
->       compatible = "qcom,sdm845-pinctrl";
->       reg = <0x03400000 0xc00000>;
->       interrupts = <GIC_SPI 208 IRQ_TYPE_NONE>;
->       gpio-controller;
->       #gpio-cells = <2>;
->       interrupt-controller;
->       #interrupt-cells = <2>;
-> 
->       qup_uart2_default: qup_uart2_default {
->         pinmux {
->           function = "qup9";
->           pins = "gpio4", "gpio5";
->         };
->       };
-> 
->       qup_uart2_sleep: qup_uart2_sleep {
->         pinmux {
->           function = "gpio";
->           pins = "gpio4", "gpio5";
->         };
->       };
->     };
-> 
-> In sdm845-mtp.dts:
-> 
-> &qup_uart2_default {
->   pinconf {
->     pins = "gpio4", "gpio5";
->     drive-strength = <2>;
->     bias-disable;
->   };
-> };
-> 
-> &qup_uart2_sleep {
->   pinconf {
->     pins = "gpio4", "gpio5";
->     drive-strength = <2>;
->     bias-disable;
->   };
-> };
 
-Correct.
+It sounds like this mimics the model we have for SMEM then, a chunk of
+System RAM with an address and size described in IMEM (iirc). The system
+integrator can move or resize SMEM by just modifying the reference in
+IMEM and all systems in the SoC will adapt.
+
+Except for the fact that once we reach the point in Linux where we read
+out the references Linux has already started using the part of System
+RAM that's associated with SMEM - so we must also describe it in a
+reserved-memory node; making the indirection useless for Linux.
+
+Note that the boot loader could still read the indirection and adjust
+the reserved-memory node accordingly - so it's useful from a systems
+perspective.
 
 
-This example does however show another thing that I really do not like;
-When you have a lot of nodes I find it very useful to maintain some sort
-of grouping, to know that I can find a node describing properties
-related to some block close to related blocks - e.g. nodes describing
-a pmic block is close to other nodes for that pmic.
-
-Today we seem to have a mixture of bus-based grouping, arbitrary
-grouping and no grouping at all in our upstream dtsi files, so I think
-we should set some guidelines here as well.
+If this is the case for Command DB then I suggest that we describe it as
+an explicit reserved-memory directly and just use that region, rather
+than the indirection.
 
 Regards,
 Bjorn
