@@ -1,119 +1,90 @@
-From: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3 2/2] dt-bindings/interrupt-controller: pdc: descibe PDC device binding
-Date: Tue,  6 Feb 2018 11:09:05 -0700
-Message-ID: <20180206180905.29047-3-ilina@codeaurora.org>
-References: <20180206180905.29047-1-ilina@codeaurora.org>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850-evm: add clock properties to the nand
+ node
+Date: Tue, 6 Feb 2018 12:16:48 -0600
+Message-ID: <794024f3-f87a-58ed-2722-a4a2d09df3ce@lechnology.com>
+References: <20180205155222.22189-1-brgl@bgdev.pl>
+ <3f171f6a-bcea-65ec-d56d-f6ae24660f34@ti.com>
+ <CAMpxmJUDbwkcJt_kx9GX+qY10xiGAp-j3+kXM-q3WP1VGwr0UQ@mail.gmail.com>
+ <54dbdb98-e0e4-c8c9-fec4-2f050745d9be@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180206180905.29047-1-ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <54dbdb98-e0e4-c8c9-fec4-2f050745d9be-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, asathyak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Archana Sathyakumar <asathyak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+On 02/06/2018 07:51 AM, Sekhar Nori wrote:
+> On Tuesday 06 February 2018 06:38 PM, Bartosz Golaszewski wrote:
+>> 2018-02-06 12:07 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
+>>> On Monday 05 February 2018 09:22 PM, Bartosz Golaszewski wrote:
+>>>> From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>>
+>>>> Make nand work with the common clock framework by specifying which
+>>>> clock should be used and what name to look up.
+>>>>
+>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>> ---
+>>>>   arch/arm/boot/dts/da850-evm.dts | 3 +++
+>>>>   1 file changed, 3 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+>>>> index a86a8a1816f2..2602ad8e99ee 100644
+>>>> --- a/arch/arm/boot/dts/da850-evm.dts
+>>>> +++ b/arch/arm/boot/dts/da850-evm.dts
+>>>> @@ -296,6 +296,9 @@
+>>>>                        reg = <0 0x02000000 0x02000000
+>>>>                               1 0x00000000 0x00008000>;
+>>>>
+>>>> +                     clocks = <&psc0 3>;
+>>>> +                     clock-names = "aemif";
+>>>
+>>> Looks like this is being added only to satisfy the devm_clk_get() call
+>>> in nand_davinci_probe() which I think is superfluous since we also
+>>> enable the same clock in aemif_probe().
+>>>
+>>> Perhaps the better solution is to drip the clk code in
+>>> drivers/mtd/nand/davinci_nand.c and shift legacy code to start using
+>>> drivers/memory/aemif.c as well? This way we can also drop
+>>> arch/arm/mach-davinci/aemif.c
+>>>
+>>> Thanks,
+>>> Sekhar
+>>
+>> Yes, this sounds good, but I think we should leave it for later as an
+>> additional improvement, once everything else is in place. I think
+>> these patches should be applied together with David's series in order
+>> to not break the support on davinci boards and the aemif work would go
+>> in later as a follow-up. How about that?
+> 
+> No, I dont think we should add temporary hacks to DT to work around
+> driver issues (I do think its a hack since the clock belongs to aemif
+> module not NAND flash).
+> 
+> An easier driver hack might be to not treat devm_clk_get() failure in
+> davinci_nand.c as catastrophic. It will safely fail in DT case and we
+> should get the clock in legacy boot case.
+> 
+> I think we are looking at a driver update dependency anyway.
 
-Add device binding documentation for the PDC Interrupt controller on
-QCOM SoC's like the SDM845. The interrupt-controller can be used to
-sense edge low interrupts and wakeup interrupts when the GIC is
-non-operational.
+It looks like keystone.dtsi is using the clock-ranges property in the
+aemif node to pass the clock to child nodes. Could we not do the same
+in da850.dtsi?
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Archana Sathyakumar <asathyak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- .../bindings/interrupt-controller/qcom,pdc.txt     | 80 ++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-new file mode 100644
-index 000000000000..1f26e4853e7f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-@@ -0,0 +1,80 @@
-+PDC interrupt controller
-+
-+Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
-+Power Domain Controller (PDC) that is on always-on domain. In addition to
-+providing power control for the power domains, the hardware also has an
-+interrupt controller that can be used to help detect edge low interrupts as
-+well detect interrupts when the GIC is non-operational.
-+
-+GIC is parent interrupt controller at the highest level. Platform interrupt
-+controller PDC is next in hierarchy, followed by others. Drivers requiring
-+wakeup capabilities of their device interrupts routed through the PDC, must
-+specify PDC as their interrupt controller and request the PDC port associated
-+with the GIC interrupt. See example below.
-+
-+Properties:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should contain "qcom,<soc>-pdc"
-+		    - "qcom,sdm845-pdc": For SDM845
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Specifies the base physical address for PDC hardware.
-+
-+- interrupt-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Specifies the number of cells needed to encode an interrupt
-+		    source.
-+		    Must be 2.
-+		    The first element of the tuple is the PDC pin for the
-+		    interrupt.
-+		    The second element is the trigger type.
-+
-+- interrupt-parent:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: Specifies the interrupt parent necessary for hierarchical
-+		    domain to operate.
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <bool>
-+	Definition: Identifies the node as an interrupt controller.
-+
-+- qcom,pdc-ranges:
-+	Usage: required
-+	Value type: <u32 array>
-+	Definition: Specifies the PDC pin offset and the number of PDC ports.
-+		    The tuples indicates the valid mapping of valid PDC ports
-+		    and their hwirq mapping.
-+		    The first element of the tuple is the staring PDC port num.
-+		    The second element is the hwirq number for the PDC port.
-+		    The third element is the number of interrupts in sequence.
-+
-+Example:
-+
-+	pdc: interrupt-controller@b220000 {
-+		compatible = "qcom,sdm845-pdc";
-+		reg = <0xb220000 0x30000>;
-+		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
-+		#interrupt-cells = <2>;
-+		interrupt-parent = <&intc>;
-+		interrupt-controller;
-+	};
-+
-+DT binding of a device that wants to use the GIC SPI 514 as a wakeup
-+interrupt, must do -
-+
-+	wake-device {
-+		[...]
-+		interrupt-controller = <&pdc>;
-+		interrupt = <2 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+In this case interrupt 514 would be mapped to port 2 on the PDC as defined by
-+the qcom,pdc-ranges property.
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> 
+>>
+>> Also: I don't have any keystone board to test whether such changes
+>> don't break the nand support there. Would you be able to test this?
+> 
+> Yes, I have access to those boards.
+> 
+> Thanks,
+> Sekhar
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
