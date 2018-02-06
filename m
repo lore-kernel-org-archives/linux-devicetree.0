@@ -1,60 +1,58 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/3] dt-bindings: net: renesas-ravb: Make stream buffer optional
-Date: Tue, 6 Feb 2018 16:12:23 +0100
-Message-ID: <CAMuHMdWCvNq2zhK+Qwsv_3oDVVGJk3mV3d4PR=-g7ajgD6uakg@mail.gmail.com>
-References: <1517922354-28421-1-git-send-email-geert+renesas@glider.be>
- <1517922354-28421-2-git-send-email-geert+renesas@glider.be> <d0ef917e-7663-daad-660e-af07838d3806@cogentembedded.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 08/11] arm64: dts: renesas: r8a77980: add EtherAVB support
+Date: Tue, 6 Feb 2018 18:19:34 +0300
+Message-ID: <bdc34fdf-26af-0e2d-2d7f-44ab52a7c245@cogentembedded.com>
+References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
+ <99e9e3a5-a626-282a-3e8b-9c74945d55bc@cogentembedded.com>
+ <CAMuHMdU1Xfc3u90TLQc0g6COuRa+hf5fukr+XAkSxgjSBV6vhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <d0ef917e-7663-daad-660e-af07838d3806@cogentembedded.com>
+In-Reply-To: <CAMuHMdU1Xfc3u90TLQc0g6COuRa+hf5fukr+XAkSxgjSBV6vhg@mail.gmail.com>
+Content-Language: en-MW
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "David S . Miller" <davem@davemloft.net>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, netdev <netdev@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Simon Horman <horms@verge.net.au>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On 02/06/2018 03:04 PM, Geert Uytterhoeven wrote:
 
-On Tue, Feb 6, 2018 at 3:56 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 02/06/2018 04:05 PM, Geert Uytterhoeven wrote:
->> The Stream Buffer for EtherAVB-IF (STBE) is an optional component, and
->> is not present on all SoCs.
+>> Define the generic R8A77980 part of the EtherAVB device node.
 >>
->> Document this in the DT bindings, including a list of SoCs that do have
->> it.
+>> Based on the original (and large) patch by Vladimir Barinov.
 >>
->> Fixes: 785ec87483d1e24a ("ravb: document R8A77970 bindings")
->> Fixes: f231c4178a655b09 ("dt-bindings: net: renesas-ravb: Add support for R8A77995 RAVB")
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Acked-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-Thanks!
-
->> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
->> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
->> @@ -26,7 +26,10 @@ Required properties:
->>       SoC-specific version corresponding to the platform first followed by
->>       the generic version.
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> Thanks for your patch!
+> 
+>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
+>> @@ -164,6 +164,50 @@
+>>                         status = "disabled";
+>>                 };
 >>
->> -- reg: offset and length of (1) the register block and (2) the stream buffer.
->> +- reg: Offset and length of (1) the register block and (2) the stream buffer.
->> +       The region for the register block is mandatory.
->> +       The region for the stream buffer is optional, as it is only present on
->> +       R-Car Gen2, RZ/G1, and R-Car H3 and M3-W.
->
->    Did you deliberately omit M3-N for now?
+>> +               avb: ethernet@e6800000 {
+>> +                       compatible = "renesas,etheravb-r8a77980",
+>> +                                    "renesas,etheravb-rcar-gen3";
+>> +                       reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
+> 
+> According to the Hardware User Manual 0.80, V3H does not have the Stream
+> Buffer (second region).
 
-Of course. It's not yet upstream.
+   Indeed, I forgot to check the manual. TY for noticing!
 
-Gr{oetje,eeting}s,
+>> +                       phy-mode = "rgmii-id";
+> 
+> This is different from H3, M3-W, and D3. Care to elaborate for the layman
+> in me?
 
-                        Geert
+   See Documentation/devicetree/bindings/net/ethernet.txt, I don't know anything beyond that anyway. :-)
+   Based on the manual, I'd think we should use "rgmii" here and override it in the board DT if needed...
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+MBR, Sergei
