@@ -1,217 +1,138 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 16/16] arm64: dts: mt7622: add mmc related device nodes
-Date: Tue, 6 Feb 2018 17:53:05 +0800
-Message-ID: <abc7373b08150326faecc984b4e1a16c7589502a.1517910489.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 11/16] arm64: dts: mt7622: add PCIe device nodes
+Date: Tue, 6 Feb 2018 17:53:00 +0800
+Message-ID: <ec39a952833c759f98ffdae9560b3c5ad2ad88f6.1517910489.git.sean.wang@mediatek.com>
 References: <cover.1517910489.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1517910489.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Jimin Wang <jimin.wang@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1517910489.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-add mmc device nodes and proper setup for used pins
+This patch adds PCIe support fot MT7622.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: Jimin Wang <jimin.wang@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 106 +++++++++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi     |  20 +++++
- 2 files changed, 126 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 10 ++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 74 ++++++++++++++++++++++++++++
+ 2 files changed, 84 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index 5746cb3..b858df6 100644
+index b80e8c7..1007932 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
 +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -8,6 +8,7 @@
- 
- /dts-v1/;
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- #include "mt7622.dtsi"
- #include "mt6380.dtsi"
-@@ -53,6 +54,14 @@
- 		reg = <0 0x40000000 0 0x3F000000>;
+@@ -54,6 +54,16 @@
  	};
- 
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-1.8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "fixed-3.3V";
-@@ -89,6 +98,23 @@
- 			function = "emmc", "emmc_rst";
- 			groups = "emmc";
- 		};
-+
-+		/* "NDL0","NDL1","NDL2","NDL3","NDL4","NDL5","NDL6","NDL7",
-+		 * "NRB","NCLE" pins are used as DAT0,DAT1,DAT2,DAT3,DAT4,
-+		 * DAT5,DAT6,DAT7,CMD,CLK for eMMC respectively
-+		 */
-+		conf-cmd-dat {
-+			pins = "NDL0", "NDL1", "NDL2",
-+			       "NDL3", "NDL4", "NDL5",
-+			       "NDL6", "NDL7", "NRB";
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		conf-clk {
-+			pins = "NCLE";
-+			bias-pull-down;
-+		};
- 	};
- 
- 	emmc_pins_uhs: emmc-pins-uhs {
-@@ -96,6 +122,21 @@
- 			function = "emmc";
- 			groups = "emmc";
- 		};
-+
-+		conf-cmd-dat {
-+			pins = "NDL0", "NDL1", "NDL2",
-+			       "NDL3", "NDL4", "NDL5",
-+			       "NDL6", "NDL7", "NRB";
-+			input-enable;
-+			drive-strength = <4>;
-+			bias-pull-up;
-+		};
-+
-+		conf-clk {
-+			pins = "NCLE";
-+			drive-strength = <4>;
-+			bias-pull-down;
-+		};
- 	};
- 
- 	eth_pins: eth-pins {
-@@ -194,6 +235,27 @@
- 			function = "sd";
- 			groups = "sd_0";
- 		};
-+
-+		/* "I2S2_OUT, "I2S4_IN"", "I2S3_IN", "I2S2_IN",
-+		 *  "I2S4_OUT", "I2S3_OUT" are used as DAT0, DAT1,
-+		 *  DAT2, DAT3, CMD, CLK for SD respectively.
-+		 */
-+		conf-cmd-data {
-+			pins = "I2S2_OUT", "I2S4_IN", "I2S3_IN",
-+			       "I2S2_IN","I2S4_OUT";
-+			input-enable;
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+		conf-clk {
-+			pins = "I2S3_OUT";
-+			drive-strength = <12>;
-+			bias-pull-down;
-+		};
-+		conf-cd {
-+			pins = "TXD3";
-+			bias-pull-up;
-+		};
- 	};
- 
- 	sd0_pins_uhs: sd0-pins-uhs {
-@@ -201,6 +263,18 @@
- 			function = "sd";
- 			groups = "sd_0";
- 		};
-+
-+		conf-cmd-data {
-+			pins = "I2S2_OUT", "I2S4_IN", "I2S3_IN",
-+			       "I2S2_IN","I2S4_OUT";
-+			input-enable;
-+			bias-pull-up;
-+		};
-+
-+		conf-clk {
-+			pins = "I2S3_OUT";
-+			bias-pull-down;
-+		};
- 	};
- 
- 	/* Serial NAND is shared pin with SPI-NOR */
-@@ -311,6 +385,38 @@
- 	status = "okay";
  };
  
-+&mmc0 {
-+	pinctrl-names = "default", "state_uhs";
-+	pinctrl-0 = <&emmc_pins_default>;
-+	pinctrl-1 = <&emmc_pins_uhs>;
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_pins>;
 +	status = "okay";
-+	bus-width = <8>;
-+	max-frequency = <50000000>;
-+	cap-mmc-highspeed;
-+	mmc-hs200-1_8v;
-+	vmmc-supply = <&reg_3p3v>;
-+	vqmmc-supply = <&reg_1p8v>;
-+	assigned-clocks = <&topckgen CLK_TOP_MSDC30_0_SEL>;
-+	assigned-clock-parents = <&topckgen CLK_TOP_UNIV48M>;
-+	non-removable;
++
++	pcie@0,0 {
++		status = "okay";
++	};
 +};
 +
-+&mmc1 {
-+	pinctrl-names = "default", "state_uhs";
-+	pinctrl-0 = <&sd0_pins_default>;
-+	pinctrl-1 = <&sd0_pins_uhs>;
-+	status = "okay";
-+	bus-width = <4>;
-+	max-frequency = <50000000>;
-+	cap-sd-highspeed;
-+	r_smpl = <1>;
-+	cd-gpios = <&pio 81 GPIO_ACTIVE_LOW>;
-+	vmmc-supply = <&reg_3p3v>;
-+	vqmmc-supply = <&reg_3p3v>;
-+	assigned-clocks = <&topckgen CLK_TOP_MSDC30_1_SEL>;
-+	assigned-clock-parents = <&topckgen CLK_TOP_UNIV48M>;
-+};
-+
- &nandc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&parallel_nand_pins>;
+ &pio {
+ 	/* eMMC is shared pin with parallel NAND */
+ 	emmc_pins_default: emmc-pins-default {
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index ed7ee78..177a651 100644
+index a3a409b..f0f18b3 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -524,6 +524,26 @@
- 		status = "disabled";
+@@ -469,6 +469,80 @@
+ 		#reset-cells = <1>;
  	};
  
-+	mmc0: mmc@11230000 {
-+		compatible = "mediatek,mt7622-mmc";
-+		reg = <0 0x11230000 0 0x1000>;
-+		interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_MSDC30_0_PD>,
-+			 <&topckgen CLK_TOP_MSDC50_0_SEL>;
-+		clock-names = "source", "hclk";
++	pcie: pcie@1a140000 {
++		compatible = "mediatek,mt7622-pcie";
++		device_type = "pci";
++		reg = <0 0x1a140000 0 0x1000>,
++		      <0 0x1a143000 0 0x1000>,
++		      <0 0x1a145000 0 0x1000>;
++		reg-names = "subsys", "port0", "port1";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pciesys CLK_PCIE_P0_MAC_EN>,
++			 <&pciesys CLK_PCIE_P1_MAC_EN>,
++			 <&pciesys CLK_PCIE_P0_AHB_EN>,
++			 <&pciesys CLK_PCIE_P0_AHB_EN>,
++			 <&pciesys CLK_PCIE_P0_AUX_EN>,
++			 <&pciesys CLK_PCIE_P1_AUX_EN>,
++			 <&pciesys CLK_PCIE_P0_AXI_EN>,
++			 <&pciesys CLK_PCIE_P1_AXI_EN>,
++			 <&pciesys CLK_PCIE_P0_OBFF_EN>,
++			 <&pciesys CLK_PCIE_P1_OBFF_EN>,
++			 <&pciesys CLK_PCIE_P0_PIPE_EN>,
++			 <&pciesys CLK_PCIE_P1_PIPE_EN>;
++		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1",
++			      "aux_ck0", "aux_ck1", "axi_ck0", "axi_ck1",
++			      "obff_ck0", "obff_ck1", "pipe_ck0", "pipe_ck1";
++		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
++		bus-range = <0x00 0xff>;
++		ranges = <0x82000000 0 0x20000000 0x0 0x20000000 0 0x10000000>;
 +		status = "disabled";
++
++		pcie0: pcie@0,0 {
++			reg = <0x0000 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			ranges;
++			status = "disabled";
++
++			num-lanes = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
++					<0 0 0 2 &pcie_intc0 1>,
++					<0 0 0 3 &pcie_intc0 2>,
++					<0 0 0 4 &pcie_intc0 3>;
++			pcie_intc0: interrupt-controller {
++				interrupt-controller;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++			};
++		};
++
++		pcie1: pcie@1,0 {
++			reg = <0x0800 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			ranges;
++			status = "disabled";
++
++			num-lanes = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
++					<0 0 0 2 &pcie_intc1 1>,
++					<0 0 0 3 &pcie_intc1 2>,
++					<0 0 0 4 &pcie_intc1 3>;
++			pcie_intc1: interrupt-controller {
++				interrupt-controller;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++			};
++		};
 +	};
 +
-+	mmc1: mmc@11240000 {
-+		compatible = "mediatek,mt7622-mmc";
-+		reg = <0 0x11240000 0 0x1000>;
-+		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_MSDC30_1_PD>,
-+			 <&topckgen CLK_TOP_AXI_SEL>;
-+		clock-names = "source", "hclk";
-+		status = "disabled";
-+	};
-+
- 	ssusbsys: ssusbsys@1a000000 {
- 		compatible = "mediatek,mt7622-ssusbsys",
+ 	ethsys: syscon@1b000000 {
+ 		compatible = "mediatek,mt7622-ethsys",
  			     "syscon";
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
