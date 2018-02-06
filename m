@@ -1,97 +1,51 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 1/2] of_pci_irq: add a check to fallback to standard
- device tree parsing
-Date: Tue, 06 Feb 2018 15:50:24 +1100
-Message-ID: <1517892624.2312.167.camel@kernel.crashing.org>
-References: <31c765c53e85e41bfc001d110d69e46c9967f4e7.1516961656.git.ryder.lee@mediatek.com>
-         <CAL_JsqLZqrxxpuEnoWEGkT2WCuyjqn0bM1DP8PdAwnQsso8kOA@mail.gmail.com>
-         <1517563970.24622.9.camel@mtkswgap22>
-         <1517866584.2312.140.camel@kernel.crashing.org>
-         <1517884738.16010.27.camel@mtkswgap22>
-         <1517889903.2312.151.camel@kernel.crashing.org>
-         <1517891471.20869.6.camel@mtkswgap22>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v2 10/10] ARM: sun8i: h3: set the cpu-supply to
+ VDD-CPUX on ALL-H3-CC H3 ver
+Date: Tue,  6 Feb 2018 12:49:05 +0800
+Message-ID: <20180206044905.30508-11-icenowy@aosc.io>
+References: <20180206044905.30508-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1517891471.20869.6.camel@mtkswgap22>
-Sender: linux-pci-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBX7I4TJQKGQEQOX2NUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180206044905.30508-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-02-06 at 12:31 +0800, Ryder Lee wrote:
-> On Tue, 2018-02-06 at 15:05 +1100, Benjamin Herrenschmidt wrote:
-> > On Tue, 2018-02-06 at 10:38 +0800, Ryder Lee wrote:
-> > > 
-> > > I think the code should look at the bridge address <0x0800 ...> we list
-> > > in bindings for resolving interrupts in this case, but it seems like it
-> > > use the 'pdev->defvn << 8' which is not really we want and will lead to
-> > > mismatch.
-> > > 
-> > > 		interrupt-map-mask = <0xf800 0 0 7>;
-> > > 		interrupt-map = <0x0000 0 0 1 ...>,
-> > > 				<0x0000 0 0 2 ...>,
-> > > 				<0x0000 0 0 3 ...>,
-> > > 				<0x0000 0 0 4 ...>,
-> > > 
-> > > 				 0x0800 0 0 1 ...>,
-> > > 				 0x0800 0 0 2 ...>,
-> > > 				 0x0800 0 0 3 ...>,
-> > > 				 0x0800 0 0 4 ...>;
-> > > 		...
-> > > 		pcie@1,0 {
-> > > 			reg = <0x0800 0 0 0 0>;
-> > > 			...
-> > > 		};
-> > > 
-> > > 
-> > > Or, alternatively, we could add a interrupt-map property in both child
-> > > and root node to solve this. The below example is my original version as
-> > > I don't want to change that function either.
-> > 
-> > The code looks at devfn because it's meant to work for PCI including
-> > when the devices dont have a device node in the DT.
-> > 
-> > What I'm trying to figure out is what is it that your parent and
-> > children are representing here. Which is/are the root complex ?
-> 
-> This is a single root complex with 2 root port (children in DT).
-> 
-> > What is the actual topology as visible on the PCIe bus (is lspci output
-> > basically) and how does that map to your representation ?
-> 
-> # lspci
-> 00:00.0 Class 0604: 14c3:0801 //1st slot - pcie@0,0
-> 00:01.0 Class 0604: 14c3:0801 //2nd slot - pcie@1,0
-> 
-> 01:00.0 Class 0280: 14c3:7603 //A device which is connected to 1st slot
-> 02:00.0 Class 0200: 8086:1521 //A 4 func device which is connected to
-> 2nd slot
-> 02:00.1 Class 0200: 8086:1521
-> 02:00.2 Class 0200: 8086:1521
-> 02:00.3 Class 0200: 8086:1521
+The ALL-H3-CC has a fixed VDD-CPUX voltage at 1.2V, which is supplied
+by a regulator.
 
-Ok so that's a rather standard setup. The "devfn << 8" of your root
-ports should be the exact same thing as their first reg property entry,
-I'm not sure why you have a mismatch here.
+Set the CPU's cpu-supply property to the VDD-CPUX regulator.
 
-However, that map only represents the INTA..D lines going to the root
-ports, not how these get mapped to children of the root ports.
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+New patch in v2.
 
-of_irq_parse_pci() will implement standard swizzling if you don't have
-nodes for your devices at all. If you do, however, the code assumes
-you have a correct and complete interrupt tree in the device-tree.
+ arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-That means that you need in each "p2p bridge", including your root
-ports, an interrupt-map that will map the children INTA...D of that
-bridge to the parent INTA...D of that bridge.
-
-Alternatively, you can make the maps in the root ports point directly
-to the parent PIC. If you chose to do that, then the interrupt-map in
-your root complex becomes only useful to represent the root ports own
-interrutps (hotplug, AER,...) and could be replaced by just having
-interrupt-parent & interrupts in those root port nodes.
-
-Cheers,
-Ben.
+diff --git a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+index ca974d872357..02eb50b91a8f 100644
+--- a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
++++ b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
+@@ -112,6 +112,10 @@
+ 	};
+ };
+ 
++&cpu0 {
++	cpu-supply = <&reg_vdd_cpux>;
++};
++
+ &codec {
+ 	allwinner,audio-routing =
+ 		"Line Out", "LINEOUT",
+-- 
+2.15.1
