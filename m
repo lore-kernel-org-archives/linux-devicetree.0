@@ -1,53 +1,57 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: da850-evm: add clock properties to the nand
- node
-Date: Tue, 6 Feb 2018 16:37:19 +0530
-Message-ID: <3f171f6a-bcea-65ec-d56d-f6ae24660f34@ti.com>
-References: <20180205155222.22189-1-brgl@bgdev.pl>
+From: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: exynos: Add soc node to exynos4
+Date: Tue, 06 Feb 2018 12:24:24 +0100
+Message-ID: <17e8871f-71c9-7cd5-e57d-efb8fbc21f1f@samsung.com>
+References: <CGME20180205112603eucas1p17d1b5ef274e9541b785320a59f855c2a@eucas1p1.samsung.com>
+        <1517829936-26311-1-git-send-email-m.purski@samsung.com>
+        <1517829936-26311-2-git-send-email-m.purski@samsung.com>
+        <CAJKOXPec6=SiwgcRBixwt+DjhyKvoK+nPYOSpHuUGgWL8vDHbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180205155222.22189-1-brgl-ARrdPY/1zhM@public.gmane.org>
-Content-Language: en-US
+In-reply-to: <CAJKOXPec6=SiwgcRBixwt+DjhyKvoK+nPYOSpHuUGgWL8vDHbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 05 February 2018 09:22 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> 
-> Make nand work with the common clock framework by specifying which
-> clock should be used and what name to look up.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/da850-evm.dts | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index a86a8a1816f2..2602ad8e99ee 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -296,6 +296,9 @@
->  			reg = <0 0x02000000 0x02000000
->  			       1 0x00000000 0x00008000>;
->  
-> +			clocks = <&psc0 3>;
-> +			clock-names = "aemif";
 
-Looks like this is being added only to satisfy the devm_clk_get() call
-in nand_davinci_probe() which I think is superfluous since we also
-enable the same clock in aemif_probe().
 
-Perhaps the better solution is to drip the clk code in
-drivers/mtd/nand/davinci_nand.c and shift legacy code to start using
-drivers/memory/aemif.c as well? This way we can also drop
-arch/arm/mach-davinci/aemif.c
+On 02/05/2018 04:02 PM, Krzysztof Kozlowski wrote:
+> On Mon, Feb 5, 2018 at 12:25 PM, Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> Soc nodes are used in other exynos DTS. Exynos4 boards should use them
+>> as well.
+>>
+>> Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/exynos4.dtsi | 1727 ++++++++++++++++++++--------------------
+>>   1 file changed, 872 insertions(+), 855 deletions(-)
+>>
+> 
+> This brings some new DTC warnings:
+> arch/arm/boot/dts/exynos4210-origen.dtb: Warning (simple_bus_reg):
+> Node /soc/video-phy missing or empty reg/ranges property
+> arch/arm/boot/dts/exynos4210-origen.dtb: Warning (simple_bus_reg):
+> Node /soc/pmu missing or empty reg/ranges property
+> 
 
-Thanks,
-Sekhar
+The above warnings seem to be old. We just don't have "reg" property in video-phy.
+
+> arch/arm/boot/dts/exynos4412-itop-elite.dtb: Warning
+> (interrupts_property): interrupts size is (32), expected multiple of
+> 12 in /pmu
+>
+
+These warnings occured, because "pmu" node was redefined in exynos4412.dtsi. I 
+have missed it in the previous patchset. I'll fix this in a new patch.
+
+> Best regards,
+> Krzysztof
+> 
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
