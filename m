@@ -1,42 +1,43 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v2 09/10] ARM: sun8i: h3: fix ALL-H3-CC H3 ver VDD-CPUX voltage
-Date: Tue,  6 Feb 2018 12:49:04 +0800
-Message-ID: <20180206044905.30508-10-icenowy@aosc.io>
-References: <20180206044905.30508-1-icenowy@aosc.io>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180206044905.30508-1-icenowy@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] ARM: dts: imx6q: engicam LVDS panel changes
+Date: Tue, 6 Feb 2018 10:55:20 +0530
+Message-ID: <CAD6G_RSp_8xWWRfvu_58rdvkE-V16otnE9ifxQkiNry76-TMXQ@mail.gmail.com>
+References: <1517766571-409-1-git-send-email-jagan@amarulasolutions.com> <20180205105838.GZ31354@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180205105838.GZ31354@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The VDD-CPUX voltage of ALL-H3-CC H3 ver should be 1.2V, not the 3.3V
-currently defined in the device tree.
+On Mon, Feb 5, 2018 at 4:28 PM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, Feb 04, 2018 at 11:19:24PM +0530, Jagan Teki wrote:
+>> Series adda LVDS panel attributes on panel drivers instead of defining
+>> them in dts nodes, and also added new icorem6 engicam boards.
+>>
+>> Jagan Teki (7):
+>>   drm/panel: simple: add support for Ampire AM-800480AYTZQW-00H
+>>   ARM: dts: imx6q-icore: Switch LVDS timings from panel-simple
+>>   ARM: dts: imx6dl-icore: Add LVDS node
+>>   drm/panel: simple: Add support for KEO TX31D200VM0BAA
+>>   ARM: dts: imx6q-icore-ofcap12: Switch LVDS timings from panel-simple
+>>   ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 7
+>>     initial support
+>>   ARM: dts: imx6q: Add Engicam i.CoreM6 1.5 Quad/Dual MIPI starter kit
+>>     support
+>>
+>>  .../display/panel/ampire,am-800480aytzqw-00h.txt   | 25 +++++++++
+>>  .../bindings/display/panel/koe,tx31d200vm0baa.txt  | 25 +++++++++
+> ...
+>>  drivers/gpu/drm/panel/panel-simple.c               | 54 ++++++++++++++++++
+>
+> The dts files should really be sent only after above bindings doc and
+> driver changes get merged first.
 
-Fix the voltage in the device tree.
-
-Fixes: 6ca358645d4d ("ARM: dts: sun8i: h3: Add dts file for Libre Computer Board ALL-H3-CC H3 ver.")
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
-New patch in v2.
-
- arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
-index d406571a0dd6..ca974d872357 100644
---- a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
-@@ -102,8 +102,8 @@
- 	reg_vdd_cpux: vdd-cpux {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vdd-cpux";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <1200000>;
-+		regulator-max-microvolt = <1200000>;
- 		regulator-always-on;
- 		regulator-boot-on;
- 		vin-supply = <&reg_vcc5v0>;
--- 
-2.15.1
+OK, I will send drm/panel changes first.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
