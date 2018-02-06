@@ -1,7 +1,7 @@
 From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 11/16] arm64: dts: mt7622: add PCIe device nodes
-Date: Tue, 6 Feb 2018 17:53:00 +0800
-Message-ID: <ec39a952833c759f98ffdae9560b3c5ad2ad88f6.1517910489.git.sean.wang@mediatek.com>
+Subject: [PATCH v2 12/16] arm64: dts: mt7622: add SATA device nodes
+Date: Tue, 6 Feb 2018 17:53:01 +0800
+Message-ID: <3d66224f4423d8bf9d3c5dc12763c489fea05c41.1517910489.git.sean.wang@mediatek.com>
 References: <cover.1517910489.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,115 +14,86 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-This patch adds PCIe support fot MT7622.
+This patch adds SATA support fot MT7622.
 
 Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 10 ++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 74 ++++++++++++++++++++++++++++
- 2 files changed, 84 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts |  8 ++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 40 ++++++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index b80e8c7..1007932 100644
+index 1007932..87b6080 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
 +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -54,6 +54,16 @@
- 	};
+@@ -323,6 +323,14 @@
+ 	status = "okay";
  };
  
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_pins>;
++&sata {
 +	status = "okay";
-+
-+	pcie@0,0 {
-+		status = "okay";
-+	};
 +};
 +
- &pio {
- 	/* eMMC is shared pin with parallel NAND */
- 	emmc_pins_default: emmc-pins-default {
++&sata_phy {
++	status = "okay";
++};
++
+ &spi0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&spic0_pins>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index a3a409b..f0f18b3 100644
+index f0f18b3..d5ca0a8 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -469,6 +469,80 @@
- 		#reset-cells = <1>;
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/mt7622-clk.h>
++#include <dt-bindings/phy/phy.h>
+ #include <dt-bindings/power/mt7622-power.h>
+ #include <dt-bindings/reset/mt7622-reset.h>
+ 
+@@ -543,6 +544,45 @@
+ 		};
  	};
  
-+	pcie: pcie@1a140000 {
-+		compatible = "mediatek,mt7622-pcie";
-+		device_type = "pci";
-+		reg = <0 0x1a140000 0 0x1000>,
-+		      <0 0x1a143000 0 0x1000>,
-+		      <0 0x1a145000 0 0x1000>;
-+		reg-names = "subsys", "port0", "port1";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pciesys CLK_PCIE_P0_MAC_EN>,
-+			 <&pciesys CLK_PCIE_P1_MAC_EN>,
-+			 <&pciesys CLK_PCIE_P0_AHB_EN>,
-+			 <&pciesys CLK_PCIE_P0_AHB_EN>,
-+			 <&pciesys CLK_PCIE_P0_AUX_EN>,
-+			 <&pciesys CLK_PCIE_P1_AUX_EN>,
-+			 <&pciesys CLK_PCIE_P0_AXI_EN>,
-+			 <&pciesys CLK_PCIE_P1_AXI_EN>,
-+			 <&pciesys CLK_PCIE_P0_OBFF_EN>,
-+			 <&pciesys CLK_PCIE_P1_OBFF_EN>,
-+			 <&pciesys CLK_PCIE_P0_PIPE_EN>,
-+			 <&pciesys CLK_PCIE_P1_PIPE_EN>;
-+		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1",
-+			      "aux_ck0", "aux_ck1", "axi_ck0", "axi_ck1",
-+			      "obff_ck0", "obff_ck1", "pipe_ck0", "pipe_ck1";
++	sata: sata@1a200000 {
++		compatible = "mediatek,mt7622-ahci",
++			     "mediatek,mtk-ahci";
++		reg = <0 0x1a200000 0 0x1100>;
++		interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "hostc";
++		clocks = <&pciesys CLK_SATA_AHB_EN>,
++			 <&pciesys CLK_SATA_AXI_EN>,
++			 <&pciesys CLK_SATA_ASIC_EN>,
++			 <&pciesys CLK_SATA_RBC_EN>,
++			 <&pciesys CLK_SATA_PM_EN>;
++		clock-names = "ahb", "axi", "asic", "rbc", "pm";
++		phys = <&sata_port PHY_TYPE_SATA>;
++		phy-names = "sata-phy";
++		ports-implemented = <0x1>;
 +		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
-+		bus-range = <0x00 0xff>;
-+		ranges = <0x82000000 0 0x20000000 0x0 0x20000000 0 0x10000000>;
++		resets = <&pciesys MT7622_SATA_AXI_BUS_RST>,
++			 <&pciesys MT7622_SATA_PHY_SW_RST>,
++			 <&pciesys MT7622_SATA_PHY_REG_RST>;
++		reset-names = "axi", "sw", "reg";
++		mediatek,phy-mode = <&pciesys>;
++		status = "disabled";
++	};
++
++	sata_phy: sata-phy@1a243000 {
++		compatible = "mediatek,generic-tphy-v1";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +		status = "disabled";
 +
-+		pcie0: pcie@0,0 {
-+			reg = <0x0000 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges;
-+			status = "disabled";
-+
-+			num-lanes = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
-+					<0 0 0 2 &pcie_intc0 1>,
-+					<0 0 0 3 &pcie_intc0 2>,
-+					<0 0 0 4 &pcie_intc0 3>;
-+			pcie_intc0: interrupt-controller {
-+				interrupt-controller;
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+			};
-+		};
-+
-+		pcie1: pcie@1,0 {
-+			reg = <0x0800 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges;
-+			status = "disabled";
-+
-+			num-lanes = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
-+					<0 0 0 2 &pcie_intc1 1>,
-+					<0 0 0 3 &pcie_intc1 2>,
-+					<0 0 0 4 &pcie_intc1 3>;
-+			pcie_intc1: interrupt-controller {
-+				interrupt-controller;
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+			};
++		sata_port: sata-phy@1a243000 {
++			reg = <0 0x1a243000 0 0x0100>;
++			clocks = <&topckgen CLK_TOP_ETH_500M>;
++			clock-names = "ref";
++			#phy-cells = <1>;
 +		};
 +	};
 +
