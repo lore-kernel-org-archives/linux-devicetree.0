@@ -1,132 +1,63 @@
-From: Vincent Chen <deanbo422@gmail.com>
-Subject: Re: [PATCH v6 20/36] nds32: Signal handling support
-Date: Tue, 6 Feb 2018 14:39:38 +0800
-Message-ID: <CAJsyPhxmZx_S=imSxDyW3POhRcHd66q1p0kkX0B4f-W2APxJkA@mail.gmail.com>
-References: <cover.1515766253.git.green.hu@gmail.com> <e145c39b3c50b3aee05bc60ad0117f1ec7cc5153.1515766253.git.green.hu@gmail.com>
- <CAK8P3a2HR6be9Fm+o1Oq-V5p51xEiuhbyqkgVWprD5BxuU29xQ@mail.gmail.com>
- <CAJsyPhyGpJVQegd7ns9oZOjM=XsGVixCQaH9nT_jOQsSpyRs+g@mail.gmail.com> <CAK8P3a0eeJKAOZjJ-XVQwLOCuVzSqdUtCaS4F90zZ=WvRQ8sBQ@mail.gmail.com>
+From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/7] Initial support for NVIDIA Tegra194
+Date: Tue, 6 Feb 2018 09:22:30 +0200
+Message-ID: <1517901757-15353-1-git-send-email-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a0eeJKAOZjJ-XVQwLOCuVzSqdUtCaS4F90zZ=WvRQ8sBQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Greentime Hu <green.hu@gmail.com>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.com>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks, I got it.
+Hello everyone,
 
-After referring to arm64 and risc-v, we try to refine our code, such as
-removing unneeded checking and refining syscall restart flow. We
-hope these modifications can enhance the reliability and readability.
-However, the following 2 files which you had acked are included in
-this modification.
-1. arch/nds32/include/asm/nds32.h
-    (patch: Assembly macros and definitions)
-     The definition of  macro tbl and why are removed.
-       - Now, we use pt_reg->syscallno instead of 'why' to determine
-         whether entering kernel is via syscall or not. Therefore, macro
-         'why' is unneeded.
+this series adds initial support for the NVIDIA Tegra194 "Xavier"
+system-on-chip. Initially UART, I2C, SDMMC, as well as the PMIC
+are supported, allowing booting to a console.
 
---- a/arch/nds32/include/asm/nds32.h
-+++ b/arch/nds32/include/asm/nds32.h
-@@ -66,10 +66,6 @@ static inline unsigned long CACHE_LINE_SIZE
+The changes consist almost completely of the new device trees,
+however some fixes are required in the BPMP driver to support the
+new channel layout in Tegra194.
 
- #endif /* __ASSEMBLY__ */
+The series has been tested on Tegra186 (Jetson TX2) and Tegra194
+(P2972).
 
--/* tbl and why is used in ex-scall.S and ex-exit.S */
--#define tbl $r8
--#define why $r8
--
- #define IVB_BASE               PHYS_OFFSET
+Cheers,
+Mikko
 
+Mikko Perttunen (7):
+  firmware: tegra: Simplify channel management
+  soc/tegra: Add Tegra194 SoC configuration option
+  soc/tegra: pmc: Add Tegra194 compatibility string
+  dt-bindings: tegra: Add missing chips and NVIDIA boards
+  dt-bindings: tegra: Add documentation for nvidia,tegra194-pmc
+  arm64: tegra: Add Tegra194 chip device tree
+  arm64: tegra: Add device tree for the Tegra194 P2972-0000 board
 
-2. arch/nds32/kernel/ex-scall.S    (patch: System calls handling)
-    a. Define macro tbl
-        - The marco tbl is used only in this file. So, I move its definition
-          from arch/nds32/include/asm/nds32.h to here.
-    b. Remove 'set why = 0'  when issuing syscall number is invalid
-    c. Adjust input arguments of syscall_trace_enter
+ Documentation/devicetree/bindings/arm/tegra.txt    |  16 +
+ .../bindings/arm/tegra/nvidia,tegra186-pmc.txt     |   2 +
+ arch/arm64/boot/dts/nvidia/Makefile                |   1 +
+ arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi     | 248 ++++++++
+ arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts |  16 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 342 +++++++++++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/firmware/tegra/bpmp.c                      | 142 ++---
+ drivers/soc/tegra/Kconfig                          |  10 +
+ drivers/soc/tegra/pmc.c                            |   1 +
+ include/dt-bindings/clock/tegra194-clock.h         | 664 +++++++++++++++++++++
+ include/dt-bindings/gpio/tegra194-gpio.h           |  59 ++
+ include/dt-bindings/power/tegra194-powergate.h     |  49 ++
+ include/dt-bindings/reset/tegra194-reset.h         | 166 ++++++
+ include/soc/tegra/bpmp.h                           |   4 +-
+ 15 files changed, 1641 insertions(+), 80 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
+ create mode 100644 arch/arm64/boot/dts/nvidia/tegra194.dtsi
+ create mode 100644 include/dt-bindings/clock/tegra194-clock.h
+ create mode 100644 include/dt-bindings/gpio/tegra194-gpio.h
+ create mode 100644 include/dt-bindings/power/tegra194-powergate.h
+ create mode 100644 include/dt-bindings/reset/tegra194-reset.h
 
---- a/arch/nds32/kernel/ex-scall.S
-+++ b/arch/nds32/kernel/ex-scall.S
-...
-+#define tbl $r8
-
- /*
-  * $r7 will be writen as syscall nr
-- * by retrieving from $ITYPE 'SWID' bitfiled
-  */
-        .macro  get_scno
-        lwi     $r7, [$sp + R15_OFFSET]
-@@ -54,7 +49,6 @@ ENTRY(eh_syscall)
-        get_scno
-        gie_enable
-
--ENTRY(eh_syscall_phase_2)
-        lwi     $p0, [tsk+#TSK_TI_FLAGS]
-
-        andi    $p1, $p0, #_TIF_WORK_SYSCALL_ENTRY
-@@ -71,7 +65,6 @@ jmp_systbl:
-        jr      $p1                             ! no return
-
- _SCNO_EXCEED:
--       movi    why, 0
-        ori     $r0, $r7, #0
-        ori    $r1, $sp, #0
-        b       bad_syscall
-@@ -81,8 +74,7 @@ _SCNO_EXCEED:
-  * context switches, and waiting for our parent to respond.
-  */
- __sys_trace:
--       move    $r1, $sp
--       move    $r0, $r7                        ! trace entry [IP = 0]
-+       move    $r0, $sp
-        bal     syscall_trace_enter
-        move    $r7, $r0
-        la      $lp, __sys_trace_return         ! return address
-
-
-If you think these modifications in acked files are not permitted,
-we will recover it.
-
-We verify all modifications by LTP 2017 related cases and glibc
-2.26 testsuite. We plan to add it in the next version patch and
-hope you can give us some comments as before.
-
-Thanks
-
-Vincent
-
-
-
-2018-01-24 19:13 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
-> On Wed, Jan 24, 2018 at 1:56 AM, Vincent Chen <deanbo422@gmail.com> wrote:
->> 2018-01-18 18:30 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
->>> On Mon, Jan 15, 2018 at 6:53 AM, Greentime Hu <green.hu@gmail.com> wrote:
->>>> From: Greentime Hu <greentime@andestech.com>
->>>>
->>>> This patch adds support for signal handling.
->>>>
->>>> Signed-off-by: Vincent Chen <vincentc@andestech.com>
->>>> Signed-off-by: Greentime Hu <greentime@andestech.com>
->>>
->>> I never feel qualified enough to properly review signal handling code, so
->>> no Ack from me for this code even though I don't see anything wrong with it.
->>> Hopefully someone else can give an Ack after looking more closely.
->>>
->>
->> Dear Arnd:
->>
->> We'd be glad to improve signal handling code to meet your requirement.
->> Could you
->> tell us which part we need to refine or which implementation is good
->> for us to refer?
->
-> No, as I said, the problem is on my side, I just don't understand enough of it.
-> I would assume that the arm64 and risc-v implementations are the most
-> thoroughly reviewed, but haven't looked at those in enough detail either.
-> If your code does something that risc-v doesn't do, try to understand whether
-> there should be a difference or not.
->
->       Arnd
+-- 
+2.1.4
