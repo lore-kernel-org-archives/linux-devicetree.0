@@ -1,130 +1,130 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v8 0/7] TDA1997x HDMI video reciver
-Date: Tue, 6 Feb 2018 22:21:17 +0100
-Message-ID: <c7771c44-a9ff-0207-38f6-28bcc06ccdee@xs4all.nl>
-References: <1517948874-21681-1-git-send-email-tharvey@gateworks.com>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/3] drm/panel: simple: Add ability to override typical
+ timing
+Date: Tue, 6 Feb 2018 16:48:12 -0500
+Message-ID: <20180206214812.fzh3tr3zflzunw6n@art_vandelay>
+References: <20180206165626.37692-1-seanpaul@chromium.org>
+ <20180206165626.37692-2-seanpaul@chromium.org>
+ <CAL_JsqJer8ZrLyPHz=hBo9smSv7aXhtP3hOJzQojt7ofUiHo=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1517948874-21681-1-git-send-email-tharvey@gateworks.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tim Harvey <tharvey@gateworks.com>, linux-media@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, shawnguo@kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJer8ZrLyPHz=hBo9smSv7aXhtP3hOJzQojt7ofUiHo=w@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2018 09:27 PM, Tim Harvey wrote:
-
-<snip>
-
-> v4l2-compliance test results:
->  - with the following kernel patches:
->    v4l2-subdev: clear reserved fields
->  . v4l2-subdev: without controls return -ENOTTY
+On Tue, Feb 06, 2018 at 02:19:34PM -0600, Rob Herring wrote:
+> On Tue, Feb 6, 2018 at 10:56 AM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> > This patch adds the ability to override the typical display timing for a
+> > given panel. This is useful for devices which have timing constraints
+> > that do not apply across the entire display driver (eg: to avoid
+> > crosstalk between panel and digitizer on certain laptops). The rules are
+> > as follows:
+> >
+> > - panel must not specify fixed mode (since the override mode will
+> >   either be the same as the fixed mode, or we'll be unable to
+> >   check the bounds of the overried)
+> > - panel must specify at least one display_timing range which will be
+> >   used to ensure the override mode fits within its bounds
+> >
+> > Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> > Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: Stéphane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> > Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > ---
+> >  .../bindings/display/panel/simple-panel.txt        | 20 +++++++
 > 
-> v4l2-compliance SHA   : b2f8f9049056eb6f9e028927dacb2c715a062df8
-> Media Driver Info:
-> 	Driver name      : imx-media
-> 	Model            : imx-media
-> 	Serial           : 
-> 	Bus info         : 
-> 	Media version    : 4.15.0
-> 	Hardware revision: 0x00000000 (0)
-> 	Driver version   : 4.15.0
-> Interface Info:
-> 	ID               : 0x0300008f
-> 	Type             : V4L Sub-Device
-> Entity Info:
-> 	ID               : 0x00000003 (3)
-> 	Name             : tda19971 2-0048
-> 	Function         : Unknown
-
-This is missing. It should be one of these:
-
-https://hverkuil.home.xs4all.nl/spec/uapi/mediactl/media-types.html#media-entity-type
-
-However, we don't have a proper function defined.
-
-I would suggest adding a new MEDIA_ENT_F_DTV_DECODER analogous to MEDIA_ENT_F_ATV_DECODER.
-
-It would be a new patch adding this + documentation.
-
-> 	Pad 0x01000004   : Source
-> 	  Link 0x0200006f: to remote pad 0x1000063 of entity 'ipu1_csi0_mux': Data
+> The binding should be a separate patch.
 > 
-> Compliance test for device /dev/v4l-subdev1:
-> 
-> Allow for multiple opens:
-> 	test second /dev/v4l-subdev1 open: OK
-> 	test for unlimited opens: OK
-> 
-> Debug ioctls:
-> 	test VIDIOC_LOG_STATUS: OK
-> 
-> Input ioctls:
-> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
-> 
-> Output ioctls:
-> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
-> 
-> Input/Output configuration ioctls:
-> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
-> 	test VIDIOC_DV_TIMINGS_CAP: OK
-> 	test VIDIOC_G/S_EDID: OK
 
-Nice!
+Ack, will split.
+
+
+> >  drivers/gpu/drm/panel/panel-simple.c               | 69 +++++++++++++++++++++-
+> >  2 files changed, 88 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> > index 16d8ff088b7d..590bbff6fc90 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> > +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> > @@ -7,6 +7,14 @@ Optional properties:
+> >  - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+> >  - enable-gpios: GPIO pin to enable or disable the panel
+> >  - backlight: phandle of the backlight device attached to the panel
+> > +- override-mode: For devices which require a mode which differs from the
+> 
+> This is not a property, but a node so it needs its own section.
+> 
+> Also, it's not real clear from display-timing.txt, but the modes
+> should be grouped under a display-timings node. Looks like we haven't
+> been good at enforcing that as "panel-timing" is also common when
+> there's a single mode. I'd rather not have another way. With a
+> standard node name, we can validate the node more easily.
+> 
+> We'd lose the fact that this is explicitly an override, but I'd doubt
+> Thierry is going to start letting in panels with no timings.
+> 
+
+Yeah, I noticed that the timing subnode was specified as nestled in
+display-timings. I figured since there can only be one override mode, and the
+of_get_display_timing function was exported, it would be Ok to just reuse the
+format of the subnode. I'll respin with the full thing.
+
+
+> Finally, since this is an override, is it valid to only override the
+> parameters that need overriding? I don't really have an opinion either
+> way. It just needs to be explicitly documented.
+
+I'll pimp the documentation. My gut reaction is to specify everything, since
+this should be a very conscious decision, and having to fully specify the mode
+seems like the right thing to do.
+
+Thanks for your review!
+
+Sean
 
 > 
-> Sub-Device ioctls (Source Pad 0):
-> 	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-> 	test Try VIDIOC_SUBDEV_G/S_FMT: OK
-> 	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-> 	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-> 	test Active VIDIOC_SUBDEV_G/S_FMT: OK
-> 	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
-> 	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-> 
-> Control ioctls:
-> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
-> 	test VIDIOC_QUERYCTRL: OK (Not Supported)
-> 	test VIDIOC_G/S_CTRL: OK (Not Supported)
-> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
-> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
-> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-> 	Standard Controls: 0 Private Controls: 0
+> > +                display_timing's "typical" mode, and whose restrictions cannot
+> > +                be applied across the entire platform. The mode must fall
+> > +                within the bounds of the panel's specified display_timing, and
+> > +                cannot be used if the panel already specifies a single fixed
+> > +                mode. The format is specified under "timing subnode" in
+> > +                display-timing.txt
+> > +
+> >
+> >  Example:
+> >
+> > @@ -18,4 +26,16 @@ Example:
+> >                 enable-gpios = <&gpio 90 0>;
+> >
+> >                 backlight = <&backlight>;
+> > +
+> > +               override-mode {
+> > +                       clock-frequency = <266604720>;
+> > +                       hactive = <2400>;
+> > +                       hfront-porch = <48>;
+> > +                       hback-porch = <84>;
+> > +                       hsync-len = <32>;
+> > +                       vactive = <1600>;
+> > +                       vfront-porch = <3>;
+> > +                       vback-porch = <120>;
+> > +                       vsync-len = <10>;
+> > +               }
+> >         };
 
-Why doesn't this show anything? You have at least one control, so this should
-reflect that. Does 'v4l2-ctl -d /dev/v4l-subdev1 -l' show any controls?
-
-I think sd->ctrl_handler is never set to the v4l2_ctrl_handler pointer.
-
-Have you ever tested the controls?
-
-Looking closer I also notice that the control handler is never freed. Or
-checked for errors when it is created in the probe function. Hmm, I should
-have caught that earlier.
-
-Regards,
-
-	Hans
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
