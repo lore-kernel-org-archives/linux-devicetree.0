@@ -1,65 +1,74 @@
 From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH 05/15] ARM: dts: ipq4019: Add ipq4019-ap-dk01-c2 board file
-Date: Tue, 6 Feb 2018 11:25:43 +0530
-Message-ID: <508a5777-a009-15d9-6d5a-bed1b1bfa1e7@codeaurora.org>
+Subject: Re: [PATCH 06/15] ARM: dts: ipq4019: Add ipq4019-ap.dk04.dtsi
+Date: Tue, 6 Feb 2018 11:31:10 +0530
+Message-ID: <65ec9aef-c712-b8de-8da0-c1211ea0fbb3@codeaurora.org>
 References: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
- <1517202689-14212-6-git-send-email-sricharan@codeaurora.org>
- <9afb20e560a7ebbcefcb801e7447a983@codeaurora.org>
+ <1517202689-14212-7-git-send-email-sricharan@codeaurora.org>
+ <a32d3a776c7a3f5c88a9a26200bff915@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9afb20e560a7ebbcefcb801e7447a983@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <a32d3a776c7a3f5c88a9a26200bff915@codeaurora.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Abhishek Sahu <absahu@codeaurora.org>
-Cc: mark.rutland@arm.com, robh@kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, bjorn.andersson@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, robh@kernel.org, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, bjorn.andersson@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-arm-msm-owner@vger.kernel.org, linux-soc@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWJoaXNoZWssCgpPbiAyLzMvMjAxOCA0OjI1IFBNLCBBYmhpc2hlayBTYWh1IHdyb3RlOgo+
-IE9uIDIwMTgtMDEtMjkgMTA6NDEsIFNyaWNoYXJhbiBSIHdyb3RlOgo+PiBUaGUgYm9hcmQgaGFz
-IGEgc3BpLW5hbmQgaW50ZXJmYWNlIG9uIHNwaTAgYnVzIGNoaXBzZWxlY3QxLgo+Pgo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBTcmljaGFyYW4gUiA8c3JpY2hhcmFuQGNvZGVhdXJvcmEub3JnPgo+PiAtLS0K
-Pj4gwqBhcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCB8wqAgMSArCj4+IMKgYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1pcHE0
-MDE5LWFwLmRrMDEuMS1jMi5kdHMgfCAyNQo+PiArKysrKysrKysrKysrKysrKysrKysrKysrCj4+
-IMKgMiBmaWxlcyBjaGFuZ2VkLCAyNiBpbnNlcnRpb25zKCspCj4+IMKgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAxOS1hcC5kazAxLjEtYzIuZHRzCj4+Cj4+
-IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL01ha2VmaWxlCj4+IGluZGV4IGQwMzgxZTkuLjIxZWQ1NmQgMTAwNjQ0Cj4+IC0tLSBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2Vm
-aWxlCj4+IEBAIC03MjQsNiArNzI0LDcgQEAgZHRiLSQoQ09ORklHX0FSQ0hfUUNPTSkgKz0gXAo+
-PiDCoMKgwqDCoCBxY29tLWFwcTgwODQtaWZjNjU0MC5kdGIgXAo+PiDCoMKgwqDCoCBxY29tLWFw
-cTgwODQtbXRwLmR0YiBcCj4+IMKgwqDCoMKgIHFjb20taXBxNDAxOS1hcC5kazAxLjEtYzEuZHRi
-IFwKPj4gK8KgwqDCoCBxY29tLWlwcTQwMTktYXAuZGswMS4xLWMyLmR0YiBcCj4+IMKgwqDCoMKg
-IHFjb20taXBxODA2NC1hcDE0OC5kdGIgXAo+PiDCoMKgwqDCoCBxY29tLW1zbTg2NjAtc3VyZi5k
-dGIgXAo+PiDCoMKgwqDCoCBxY29tLW1zbTg5NjAtY2RwLmR0YiBcCj4+IGRpZmYgLS1naXQgYS9h
-cmNoL2FybS9ib290L2R0cy9xY29tLWlwcTQwMTktYXAuZGswMS4xLWMyLmR0cwo+PiBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL3Fjb20taXBxNDAxOS1hcC5kazAxLjEtYzIuZHRzCj4+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLmUzNDQyZGEKPj4gLS0tIC9kZXYvbnVsbAo+PiAr
-KysgYi9hcmNoL2FybS9ib290L2R0cy9xY29tLWlwcTQwMTktYXAuZGswMS4xLWMyLmR0cwo+PiBA
-QCAtMCwwICsxLDI1IEBACj4+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMAo+
-PiArLy8gQ29weXJpZ2h0IChjKSAyMDE3LCBUaGUgTGludXggRm91bmRhdGlvbi4gQWxsIHJpZ2h0
-cyByZXNlcnZlZC4KPj4gKwo+PiArI2luY2x1ZGUgInFjb20taXBxNDAxOS1hcC5kazAxLjEuZHRz
-aSIKPj4gKwo+PiArLyB7Cj4+ICvCoMKgwqAgbW9kZWwgPSAiUXVhbGNvbW0gVGVjaG5vbG9naWVz
-LCBJbmMuIElQUTQweHgvQVAtREswMS4xLUMyIjsKPiAKPiDCoHMvSVBRNDB4eC9JUFE0MDE5Cj4g
-CiBvawoKPj4gKwo+PiArwqDCoMKgIHNvYyB7Cj4+ICvCoMKgwqDCoMKgwqDCoCBzcGlfMDogc3Bp
-QDc4YjUwMDAgeyAvKiBCTFNQMSBRVVAxICovCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0
-YXR1cyA9ICJvayI7Cj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNzLWdwaW9zID0gPCZ0bG1t
-IDU0IDA+LCA8JnRsbW0gNTkgMD47Cj4gCj4gwqB0aGUgYmFzZSBkazAxIGZpbGUgaGFzIHBpbm11
-eCBmb3IgNTQgb25seS4KPiDCoGZvciA1OSBwaW4sIHdlIG5lZWQgdG8gYWRkIHBpbm11eCBlbnRy
-eSBhbHNvLgo+IAoKIG9rLiBidHcsIGluZmFjdCB0aGluayB0aGF0IDU5IHNob3VsZCBiZSByZW1v
-dmVkLgoKUmVnYXJkcywKIFNyaWNoYXJhbgoKLS0gCiJRVUFMQ09NTSBJTkRJQSwgb24gYmVoYWxm
-IG9mIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUg
-QXVyb3JhIEZvcnVtLCBob3N0ZWQgYnkgVGhlIExpbnV4IEZvdW5kYXRpb24KCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Abhishek,
+
+On 2/3/2018 4:47 PM, Abhishek Sahu wrote:
+> On 2018-01-29 10:41, Sricharan R wrote:
+>> Add the common parts for the dk04 boards.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> ---
+>>  arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi | 147
+> 
+>  <snip>
+>> +
+>> +            nand_pins: nand_pins {
+>> +                pullups {
+>> +                    pins = "gpio52", "gpio53",
+>> "gpio58",
+>> +                        "gpio59";
+>> +                    function = "qpic";
+>> +                    bias-pull-up;
+>> +                };
+>> +
+>> +                pulldowns {
+>> +                    pins = "gpio54", "gpio55",
+>> "gpio56",
+>> +                        "gpio57", "gpio60",
+>> "gpio61",
+>> +                        "gpio62", "gpio63",
+>> "gpio64",
+>> +                        "gpio65", "gpio66",
+>> "gpio67",
+>> +                        "gpio68", "gpio69";
+>> +                    function = "qpic";
+>> +                    bias-pull-down;
+>> +                };
+>> +            };
+> 
+>  Can you please check once why do we need pull-up and
+>  pull-down for NAND pins. The NAND chip will be mounted
+>  over board itself so board design should take care of
+>  required pull up and pull downs.
+> 
+
+  Mostly because, these are always **weak** pull up/down as defaults
+  and should be overridden by the ones in the board (if there).
+
+
+>  Also, some of the above pins like gpio52 will be only used
+>  for LCD so we can remove those pins. Later on, when LCD
+>  support will be added, we can add those pins.
+ ok
+
+Regards,
+ Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
