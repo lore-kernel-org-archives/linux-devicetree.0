@@ -1,40 +1,66 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH 01/15] firmware: qcom: scm: Add ipq4019 soc compatible
-Date: Tue, 6 Feb 2018 10:16:44 +0530
-Message-ID: <23641ff4-59c9-cf14-8fef-12614e265512@codeaurora.org>
-References: <1517202689-14212-1-git-send-email-sricharan@codeaurora.org>
- <1517202689-14212-2-git-send-email-sricharan@codeaurora.org>
- <20180205022530.xf64gqeijicewdla@rob-hp-laptop>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v2 00/10] Allwinner H3 DVFS support
+Date: Tue,  6 Feb 2018 12:48:55 +0800
+Message-ID: <20180206044905.30508-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20180205022530.xf64gqeijicewdla@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB37H4TJQKGQELROXSDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This patchset tries to add DVFS support for Allwinner H3 SoC,
+considering two kinds of adjustable regulators used on H3 boards:
+SY8106A I2C-controlled regulator and SY8113B regulator (controllable
+by GPIO with some special designs on the board), and also taking the
+uncontrollable boards into consider.
 
-On 2/5/2018 11:37 AM, Rob Herring wrote:
-> On Mon, Jan 29, 2018 at 10:41:15AM +0530, Sricharan R wrote:
->> Add the compatible for ipq4019.
->> This does not need clocks to do scm calls.
->>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/firmware/qcom,scm.txt | 3 ++-
->>  drivers/firmware/qcom_scm.c                             | 3 +++
->>  2 files changed, 5 insertions(+), 1 deletion(-)
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+PATCH 1 and PATCH 2 are for the SY8106A regulator, then PATCH 3 and
+PATCH 4 are for the r_i2c bus, which is used by boards with SY8106A
+to communicate with the regulator.
 
- Thanks !!
+PATCH 5 adds the operating points v2 table to the H3 SoC, but with
+OPPs higher than 1008MHz temporarily dropped.
 
-Regards,
- Sricharan
+Then there's patches for several tested boards: Orange Pi PC (with
+SY8106A), Orange Pi One/Zero (with GPIO-adjustable SY8113B) and
+ALL-H3-CC (unadjustable).
+
+Icenowy Zheng (5):
+  ARM: sun8i: h3: add operating-points-v2 table for CPU
+  ARM: sun8i: h2+: add SY8113B regulator used by Orange Pi Zero board
+  ARM: sun8i: h3: add SY8113B regulator used by Orange Pi One board
+  ARM: sun8i: h3: fix ALL-H3-CC H3 ver VDD-CPUX voltage
+  ARM: sun8i: h3: set the cpu-supply to VDD-CPUX on ALL-H3-CC H3 ver
+
+Ondrej Jirman (5):
+  dt-bindings: add binding for the SY8106A voltage regulator
+  regulator: add support for SY8106A regulator
+  ARM: sunxi: h3/h5: Add r_i2c pinmux node
+  ARM: sunxi: h3/h5: Add r_i2c I2C controller
+  ARM: sun8i: h3: Add SY8106A regulator to Orange Pi PC
+
+ .../bindings/regulator/sy8106a-regulator.txt       |  20 +++
+ arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts  |  21 +++
+ arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts |   8 +-
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |  21 +++
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |  27 ++++
+ arch/arm/boot/dts/sun8i-h3.dtsi                    |  32 +++-
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  18 +++
+ drivers/regulator/Kconfig                          |   8 +-
+ drivers/regulator/Makefile                         |   2 +-
+ drivers/regulator/sy8106a-regulator.c              | 168 +++++++++++++++++++++
+ 10 files changed, 320 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/sy8106a-regulator.txt
+ create mode 100644 drivers/regulator/sy8106a-regulator.c
 
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.15.1
