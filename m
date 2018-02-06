@@ -1,207 +1,122 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
-Date: Tue, 6 Feb 2018 15:32:43 +0100
-Message-ID: <CACRpkdbuGOrm=y=yPpsrkckk8+uKGxv6J9WGw9y=yiGcmbqn+w@mail.gmail.com>
-References: <20180201174923.7385-1-l.stach@pengutronix.de> <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
- <1517825351.3175.3.camel@pengutronix.de> <CACRpkdanb3XocUpmTaFTh-vsApucX0PzuqRg_fA2ORUFtrVGJA@mail.gmail.com>
- <1517914394.3175.21.camel@pengutronix.de>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] drivers/perf: arm_pmu: Add platform hardware setup
+ hooks.
+Date: Tue, 6 Feb 2018 14:53:16 +0000
+Message-ID: <7920f8f4-8f25-4633-7a17-bdda5351a9e9@arm.com>
+References: <20180206142629.534-1-sebastian.reichel@collabora.co.uk>
+ <20180206142629.534-2-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1517914394.3175.21.camel@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "A . s . Dong" <aisheng.dong@nxp.com>, linux-imx@nxp.com, Sascha Hauer <kernel@pengutronix.de>, patchwork-lst@pengutronix.de
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180206142629.534-2-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Content-Language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 6, 2018 at 11:53 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
+Hi Sebastian,
 
-Hi Lucas,
+On 06/02/18 14:26, Sebastian Reichel wrote:
+> Allow platform specific code to be called when enabling or
+> disabling the hardware.
 
-your reply seems a bit annoyed.
+Since arm_pmu_platdata wants to go away[1], does i.MX53 actually need 
+all this machinery, or would it suffice to set DBG_EN from platform code 
+at boot time and simply leave it that way?
 
-Are you annoyed with me?
+Robin.
 
-In that case please take it down a bit, I understand it can
-be stressful as developer, but I need to maintain the stuff
-we're pushing in for years to come and it's my job to
-ask the tricksy questions.
+[1] 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2018-February/557838.html
 
-> Am Dienstag, den 06.02.2018, 00:13 +0100 schrieb Linus Walleij:
->> > On Mon, Feb 5, 2018 at 11:09 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
->>
->> > > > +Optional Properties:
->> > > > +- drive-strength           Integer: controls Drive Strength
->> > >
->> > > I thought drive-strength is supposed to be be in mA. We should not have
->> > > differing units in common properties.
->> > >
->> > > There was an Atmel binding the other day that this came up.
->> >
->> > I know it's in the common binding, but it's going to be very hard to
->> > support. The drive-strength in mA really depends on external loading of
->> > the pin and the pin voltage, at least for the most widespread
->> > controllers that only switch between resistors, instead of driving the
->> > pin by a current regulator.
->>
->> How does this circuit really look? Can you sketch something so
->> we understand what is going on electronically here?
->
-> There is no description of how the circuit really looks like and I
-> would very much prefer this not being a prerequisite to get some
-> software support in place.
-
-That depends. If you're a hobbyist with limited access to
-documentation I agree. In that case let's go for something
-that floats your project, I'm fine with that. I have a weak spot
-for people with a good project and limited resources, so I
-am here to help. I'd say then let's go for some "nxp,foo" property.
-
-If you are working for NXP directly or under contract, what you say
-is that the left hand does not know what the right hand is doing and that
-is never a good sign. Such as the hardware and software departments
-do not talk to each other, do not have each other mail addresses
-and practice what is called "throw over the wall-engineering".
-Or throw it all the way over to Pengutronix, maybe, a separate
-legal entity they don't even prioritize to inform. What do I know.
-
-In this latter case it is more or less my responsibility as subsystem
-maintainer to push back at NXP as a legal body, it has nothing to
-do with the people involved. Especially not you personally. In this
-case I am adressing your organization, not you.
-
-So which one is it?
-
-> The best description we have is from NXP AN5078:
-> "The drive strength enable (DSE) can be explained as series resistance
-> between an ideal driver's output and its load. To achieve maximal
-> transferred power, the impedance of the driver has to match the load
-> impedance."
->
-> Which means the control bits don't really vary the output impedance,
-> but the description models it like that. If we _assume_ the simple MOS
-> totempole setup then adding more totempoles will bring down the output
-> impedance.
-
-+- drive-strength               Integer: controls Drive Strength
-+                                       0: driver disabled
-+                                       1: 255 Ohm
-+                                       2: 105 Ohm
-+                                       3:  75 Ohm
-+                                       4:  85 Ohm
-+                                       5:  65 Ohm
-+                                       6:  45 Ohm
-+                                       7:  40 Ohm
-
-As for equal resistances R = Rx/N assuming it is
-really 255 Ohms internal resistance per totempole:
-
-1: 255
-2: 127,5
-3: 85
-4: 63,75
-5: 51
-6: 42,5
-7: 36,4
-
-I don't know. Something is not right. Maybe this is how
-CMOS work under load?
-
->> The way I imagine most drive strength out there works is by simply
->> connection more MOS-totempoles after each other and each of them
->> has a production-technology-related max output current like 4mA, so
->> by putting two in a series yoy double that to 8 mA.
->
-> So with this description in mind the drive-strength property doesn't
-> describe an actual real world drive-strength, but some maximum current
-> output under ideal load matching?
-
-I guess that is what other datasheets have been listing.
-I have personally seen a few of those.
-
-I don't know if it is as simple as a totem-pole, I guess
-IIRC under ideal circumstances the internal resistance of an
-operational amplifier is zero. E.g. on a popular TTL part uA 741
-it is 5.5 milliohms. What is Rout for a normal CMOS totem-pole?
-Some googling suggests ~400 Ohm so 255 Ohm may not be
-so far off.
-
-Does anyone else know?
-
-This is pretty interesting stuff :D
-
-> That's pretty confusing actually, as in a real-world setup increasing
-> the drive-strength property value might negatively affect the load
-> matching, leading to _decreasing_ the actual drive-strength.
-
-This sounds like a perfect argument to create a new
-property "output-impedance" and use that in my ears.
-It makes more sense to a designer, because what they
-really want to do, electrically, is to match impedances.
-
-I am thinking some designer writing this device tree.
-What they want to control is the output impedance, not
-drive strength. So that name makes more sense.
-
->> Is that what you mean with "current regulator"?
->>
->> If you mean rather "output impedance", that is something else and
->> something we need a new (generic) property for. I never saw that
->> before, really.
->
-> So, just because the description of the drive-strength value uses some
-> (idealized) output impedance, we are now going to introduce yet another
-> property for the same thing?
-
-Yes it seems like a good idea, if (by your own line of reasoning)
-it is the physical principle underlying these resistance settings.
-Then we are likely to see it again.
-
-> This is confusing to people reading the
-> reference manual, which never speaks about output-impedance, but always
-> about drive-strength.
-
-Since we are already (obviously) confused, we have to choose
-the lesser evil here.
-
-Apparently what (board- system-) designers want to do is match
-output resistance to load, I would argue that it is more confusing
-to call that "drive strength", i.e. what is misleading is not what I am
-discussing here, but the manual you are referring to. Just a bad
-piece of technical writing.
-
-> Hardware people (the ones responsible to come up with the padctrl
-> settings) are much more likely to read the reference manual than any
-> idealized dt-binding.
-
-Can we talk to them about this?
-
-I don't like to think about them as some foreign people in a far
-away dimension we can never understand or communicate
-with, how do they really do what they do?
-
-> I want to make it as easy as possible for them to
-> match up the hardware and reference manual with the DT description.
-
-I was hoping we could dig in a bit and figure out what we
-are going to do and why and how these people think.
-
-I want to avoid poking magic values we don't really understand
-into registers and using the manual as alchemic magic or
-spellbook, essentially. (As so often happens...)
-
-> So, can we please just keep the drive-strength property and deal with
-> it being described in different units in different hardware manuals?
-
-If you want something to match the specific hardware
-manual from NXP and you don't want it to be translated
-into the units of the DT binding, then I think it is better
-to use something prefixed "nxp,*".
-
-That clearly indicates that this is some NXP oddity that
-we don't really understand.
-
-I was just hoping not to introduce too many of these.
-
-Yours,
-Linus Walleij
+> Signed-off-by: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> [rebased to v4.12]
+> Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
+> [Simplify and cleanup for upstreaming]
+> Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> ---
+>   drivers/perf/arm_pmu.c       | 12 ++++++++++++
+>   include/linux/perf/arm_pmu.h |  5 +++++
+>   2 files changed, 17 insertions(+)
+> 
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 7bc5eee96b31..9c282914ee67 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -452,8 +452,10 @@ static int armpmu_event_init(struct perf_event *event)
+>   static void armpmu_enable(struct pmu *pmu)
+>   {
+>   	struct arm_pmu *armpmu = to_arm_pmu(pmu);
+> +	struct arm_pmu_platdata *platdata = armpmu_get_platdata(armpmu);
+>   	struct pmu_hw_events *hw_events = this_cpu_ptr(armpmu->hw_events);
+>   	int enabled = bitmap_weight(hw_events->used_mask, armpmu->num_events);
+> +	int err;
+>   
+>   	/* For task-bound events we may be called on other CPUs */
+>   	if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+> @@ -461,17 +463,27 @@ static void armpmu_enable(struct pmu *pmu)
+>   
+>   	if (enabled)
+>   		armpmu->start(armpmu);
+> +
+> +	if (platdata && platdata->reserve_hardware) {
+> +		err = platdata->reserve_hardware(armpmu);
+> +		if (err)
+> +			dev_warn(&armpmu->plat_device->dev, "Could not reserve PMU hardware!\n");
+> +	}
+>   }
+>   
+>   static void armpmu_disable(struct pmu *pmu)
+>   {
+>   	struct arm_pmu *armpmu = to_arm_pmu(pmu);
+> +	struct arm_pmu_platdata *platdata = armpmu_get_platdata(armpmu);
+>   
+>   	/* For task-bound events we may be called on other CPUs */
+>   	if (!cpumask_test_cpu(smp_processor_id(), &armpmu->supported_cpus))
+>   		return;
+>   
+>   	armpmu->stop(armpmu);
+> +
+> +	if (platdata && platdata->release_hardware)
+> +		platdata->release_hardware(armpmu);
+>   }
+>   
+>   /*
+> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+> index af0f44effd44..942ae9bfe971 100644
+> --- a/include/linux/perf/arm_pmu.h
+> +++ b/include/linux/perf/arm_pmu.h
+> @@ -17,6 +17,8 @@
+>   #include <linux/sysfs.h>
+>   #include <asm/cputype.h>
+>   
+> +struct arm_pmu;
+> +
+>   /*
+>    * struct arm_pmu_platdata - ARM PMU platform data
+>    *
+> @@ -31,6 +33,8 @@
+>   struct arm_pmu_platdata {
+>   	irqreturn_t (*handle_irq)(int irq, void *dev,
+>   				  irq_handler_t pmu_handler);
+> +	int (*reserve_hardware)(struct arm_pmu *arm_pmu);
+> +	void (*release_hardware)(struct arm_pmu *arm_pmu);
+>   	unsigned long irq_flags;
+>   };
+>   
+> @@ -112,6 +116,7 @@ struct arm_pmu {
+>   	int		(*map_event)(struct perf_event *event);
+>   	int		num_events;
+>   	u64		max_period;
+> +	bool		reserved_hardware;
+>   	bool		secure_access; /* 32-bit ARM only */
+>   #define ARMV8_PMUV3_MAX_COMMON_EVENTS 0x40
+>   	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
