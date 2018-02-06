@@ -1,49 +1,71 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 00/11] PCI: Add support to the Cadence PCIe controller
-Date: Tue, 6 Feb 2018 09:39:39 +0000
-Message-ID: <20180206093939.GA2579@e107981-ln.cambridge.arm.com>
-References: <cover.1517170521.git.cyrille.pitchen@free-electrons.com>
- <20180128214741.GA232763@bhelgaas-glaptop.roam.corp.google.com>
- <20180130114155.GA12009@e107981-ln.cambridge.arm.com>
- <8cec81b2-85c4-d7bf-4171-9e94a745eab0@free-electrons.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 00/16] add dts nodes to MT7622 SoC
+Date: Tue, 6 Feb 2018 17:52:49 +0800
+Message-ID: <cover.1517910489.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8cec81b2-85c4-d7bf-4171-9e94a745eab0-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, stelford-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, dgary-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, kgopi-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, eandrews-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sureshp-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 30, 2018 at 10:12:36PM +0100, Cyrille Pitchen wrote:
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-[...]
+Changes since v1:
+- add usb, thermal, HSDMA, mmc related nodes
+- fix Warning (unit_address_vs_reg): Node /oscillator@0 has
+  a unit name, but no reg property in patch 2
+- fix Warning (pci_bridge): Node /pcie@1a140000/pcie@0,0 missing
+  bus-range for PCI bridge
+- fix Warning (pci_bridge): Node /pcie@1a140000/pcie@1,0 missing
+  bus-range for PCI bridge
+- fix Warning (unit_address_format): Failed prerequisite 'pci_bridge'
+- fix Warning (pci_device_reg): Failed prerequisite 'pci_bridge'
+- fix Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
+- enhance commit log in patch 4
+- use - instead of _ in DT node name in patch 4 and 6
+- use SPDX-License-Identifier for newly added files in patch 5
+- use proper #size-cells for spi nor nodes in patch 9
+- remove currently no needed #address-cells and #size-cells in
+children nodes of spi nor in patch 9.
 
-> >>> v4 -> v5:
-> >>> - rebase on today's (20180128) linux-pci/next
-> >>
-> >> Don't bother rebasing onto linux-pci/next.
-> >>
-> >> If your patches actually *depend* on something that has already been
-> >> merged onto a PCI topic branch, you should mention that and say which
-> >> branch.
-> > 
-> > Yes - Cyrille please advise which branch(es) this series depends on,
-> > it does not apply cleanly to -rc4.
-> > 
-> > Merge window is open and I do not know what we can do with this series
-> > for v4.16 but please let me know.
-> >
-> 
-> I've just sent v6. No change from v5 except that the series has been
-> rebased onto linux-pci/master (v4.15-rc4) and tested on the Palladium.
-> I've cherry-picked one Kishon's patch from linux-pci/next to test the
-> endpoint mode.
+add dts nodes to MT7622 SoC and related rfb1 board
 
-We have applied v6 that should get into v4.16, thank you !
+Chunfeng Yun (1):
+  arm64: dts: mt7622: add usb device nodes
 
-Lorenzo
+Ryder Lee (2):
+  arm64: dts: mt7622: add PCIe device nodes
+  arm64: dts: mt7622: add SATA device nodes
+
+Sean Wang (13):
+  dt-bindings: clock: mediatek: add missing required #reset-cells
+  arm64: dts: mt7622: add clock controller device nodes
+  arm64: dts: mt7622: add power domain controller device nodes
+  arm64: dts: mt7622: add pinctrl related device nodes
+  arm64: dts: mt7622: add PMIC MT6380 related nodes
+  arm64: dts: mt7622: add cpufreq related device nodes
+  arm64: dts: mt7622: turn uart0 clock to real ones
+  arm64: dts: mt7622: add SoC and peripheral related device nodes
+  arm64: dts: mt7622: add flash related device nodes
+  arm64: dts: mt7622: add ethernet device nodes
+  arm64: dts: mt7622: add thermal and related nodes
+  arm64: dts: mt7622: add High-Speed DMA device nodes
+  arm64: dts: mt7622: add mmc related device nodes
+
+ .../bindings/arm/mediatek/mediatek,ethsys.txt      |   2 +
+ .../bindings/arm/mediatek/mediatek,pciesys.txt     |   2 +
+ .../bindings/arm/mediatek/mediatek,ssusbsys.txt    |   2 +
+ arch/arm64/boot/dts/mediatek/mt6380.dtsi           |  86 +++
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts       | 469 ++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi           | 682 ++++++++++++++++++++-
+ 6 files changed, 1238 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6380.dtsi
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
