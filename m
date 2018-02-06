@@ -1,29 +1,191 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] dt-bindings: net: renesas-ravb: Make stream buffer
- optional
-Date: Tue, 6 Feb 2018 14:17:13 +0100
-Message-ID: <20180206131712.yzobmc7utxt7n77i@verge.net.au>
-References: <1517922354-28421-1-git-send-email-geert+renesas@glider.be>
- <1517922354-28421-2-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1517922354-28421-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "David S . Miller" <davem@davemloft.net>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v4] ARM: sun8i: h2+: add support for Banana Pi M2 Zero board
+Date: Tue,  6 Feb 2018 21:16:47 +0800
+Message-ID: <20180206131647.41700-1-icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 06, 2018 at 02:05:52PM +0100, Geert Uytterhoeven wrote:
-> The Stream Buffer for EtherAVB-IF (STBE) is an optional component, and
-> is not present on all SoCs.
-> 
-> Document this in the DT bindings, including a list of SoCs that do have
-> it.
-> 
-> Fixes: 785ec87483d1e24a ("ravb: document R8A77970 bindings")
-> Fixes: f231c4178a655b09 ("dt-bindings: net: renesas-ravb: Add support for R8A77995 RAVB")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Banana Pi M2 Zero board is a H2+-based board by Sinovoip, with a form
+factor and GPIO holes similar to Raspberry Pi Zero.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+It features:
+- Allwinner H2+ SoC
+- Single-chip (16-bit) 512MiB DDR3 DRAM
+- Ampak AP6212 Wi-Fi/Bluetooth module
+- MicroSD slot
+- Two MicroUSB Type-B ports (one can only be used to power the board and
+  the other features OTG functionality)
+- Two keys, a reset and a GPIO-connected key.
+- HDMI Type-C (miniHDMI) connector connected to the HDMI part of H2+.
+- CSI connector to connect the camera sensor provided by Sinovoip.
+
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+Changes in v4:
+- Use SPDX license identifier.
+
+Changes in v3:
+- Add comments about Vbus problem in &usbphy node.
+
+Changes in v2:
+- Use high active SD card detect on the production batch.
+
+ arch/arm/boot/dts/Makefile                         |   1 +
+ .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 126 +++++++++++++++++++++
+ 2 files changed, 127 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ade7a38543dc..d5a17e6e8b0f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -974,6 +974,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a83t-cubietruck-plus.dtb \
+ 	sun8i-a83t-tbs-a711.dtb \
+ 	sun8i-h2-plus-orangepi-r1.dtb \
++	sun8i-h2-plus-bananapi-m2-zero.dtb \
+ 	sun8i-h2-plus-orangepi-zero.dtb \
+ 	sun8i-h3-bananapi-m2-plus.dtb \
+ 	sun8i-h3-beelink-x2.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+new file mode 100644
+index 000000000000..e2ee65a5bf92
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+@@ -0,0 +1,126 @@
++/*
++ * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
++ *
++ * Based on sun8i-h3-bananapi-m2-plus.dts, which is:
++ *   Copyright (C) 2016 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "Banana Pi BPI-M2-Zero";
++	compatible = "sinovoip,bpi-m2-zero", "allwinner,sun8i-h2-plus";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++
++		pwr_led {
++			label = "bananapi-m2-zero:red:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
++			default-state = "on";
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++
++		sw4 {
++			label = "power";
++			linux,code = <BTN_0>;
++			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		pinctrl-names = "default";
++		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
++	};
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	/*
++	 * On the production batch of this board the card detect GPIO is
++	 * high active (card inserted), although on the early samples it's
++	 * low active.
++	 */
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	status = "okay";
++};
++
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins_a>;
++	vmmc-supply = <&reg_vcc3v3>;
++	vqmmc-supply = <&reg_vcc3v3>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++		interrupt-parent = <&pio>;
++		interrupts = <6 10 IRQ_TYPE_LEVEL_LOW>; /* PG10 / EINT10 */
++		interrupt-names = "host-wake";
++	};
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usbphy {
++	usb0_id_det-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
++	/*
++	 * There're two micro-USB connectors, one is power-only and another is
++	 * OTG. The Vbus of these two connectors are connected together, so
++	 * the external USB device will be powered just by the power input
++	 * from the power-only USB port.
++	 */
++	status = "okay";
++};
+-- 
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
