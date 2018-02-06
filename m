@@ -1,23 +1,26 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Add serial console support
-Date: Tue, 6 Feb 2018 11:00:34 -0800
-Message-ID: <20180206190034.GK9465@builder>
+Date: Tue, 6 Feb 2018 11:06:14 -0800
+Message-ID: <20180206190614.GL9465@builder>
 References: <20180125163216.29018-1-rnayak@codeaurora.org>
  <20180125163216.29018-3-rnayak@codeaurora.org>
  <20180126221808.GE28313@codeaurora.org>
- <086251c4-b012-236c-33e2-9cab551a4594@codeaurora.org>
+ <CAD=FV=WcCnQJc25=sKWtOi=ZWi=ium6DVsexuQnsLDL=aJE6-Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <086251c4-b012-236c-33e2-9cab551a4594@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, andy.gross@linaro.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <CAD=FV=WcCnQJc25=sKWtOi=ZWi=ium6DVsexuQnsLDL=aJE6-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 29 Jan 00:18 PST 2018, Rajendra Nayak wrote:
-> On 01/27/2018 03:48 AM, Stephen Boyd wrote:
+On Tue 06 Feb 10:37 PST 2018, Doug Anderson wrote:
+
+> Hi,
+> 
+> On Fri, Jan 26, 2018 at 2:18 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 > > On 01/25, Rajendra Nayak wrote:
 > >> diff --git a/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi b/arch/arm64/boot/dts/qcom/sdm845-pins.dtsi
 > >> new file mode 100644
@@ -31,28 +34,45 @@ On Mon 29 Jan 00:18 PST 2018, Rajendra Nayak wrote:
 > >> + */
 > >> +
 > >> +&tlmm {
-> > 
+> >
 > > I'm not the maintainer, but I find this approach to the pins
 > > really annoying. I have to flip to another file to figure out how
 > > a board has configured the pins. And we may bring in a bunch of
 > > settings that we don't ever use on some board too. Why can't we
 > > put the settings in the board file directly?
 > 
-> I was just keeping it consistent with how things are for other
-> qualcomm platforms. I can move this to the board dts if no one else
-> sees any issues.
+> I'm not so familiar with how things work with Qualcomm, but in general
+> I think putting this in the "board" file is a bad idea.  I'd be OK
+> with putting this directly in the SoC file (though it might get
+> unwieldy?), but not moving things to the board file as was done with
+> v2 of this patch.
+> 
+> Said another way: nearly board that uses SDM845 that uses UART2 will
+> have the same definitions for these pins so we shouldn't be
+> duplicating it across every board, right?
 > 
 
-What we decided recently for 8916 (at least) was that we define the
-functional properties in the soc dtsi and add the electrical properties
-in the board dts(i).
+We've run into several cases where different boards uses the same
+function but requires board specific electrical configuration.
 
-I fully agree with Stephen on this one, but as you say we're keeping the
-pinconf in separate files for the other platforms/boards.
+So what we decided was to keep the pinmux in the soc-file (where e.g.
+the uart definition is) and then extend it with the board specific
+electrical properties (the pinconf), in the board files.
+
+This does come with the complexity of having the pinctrl nodes split in
+two places, but the responsibilities of the two parts is clear and we
+remove the need for all board files to ensure the appropriate pinmux is
+in place.
 
 
-I'll prepare and bring some new guidelines to our Thursday meeting and
-we can decide what to do based on that.
+NB. We did discuss adding "sane defaults" for the pinconf in the soc
+dtsi, but we end up spending considerable time debugging issues stemming
+from not having the right pinconf; so better make this explicit and say
+that the board has to specify it's config.
 
 Regards,
 Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
