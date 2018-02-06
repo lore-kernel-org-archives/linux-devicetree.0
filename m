@@ -1,96 +1,217 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 01/16] dt-bindings: clock: mediatek: add missing required
- #reset-cells
-Date: Tue, 6 Feb 2018 17:52:50 +0800
-Message-ID: <d58fcf36319254d6de4c7fe100cbdca1bbec27a5.1517910489.git.sean.wang@mediatek.com>
+Subject: [PATCH v2 16/16] arm64: dts: mt7622: add mmc related device nodes
+Date: Tue, 6 Feb 2018 17:53:05 +0800
+Message-ID: <abc7373b08150326faecc984b4e1a16c7589502a.1517910489.git.sean.wang@mediatek.com>
 References: <cover.1517910489.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1517910489.git.sean.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: Rob Herring <robh@kernel.org>, Sean Wang <sean.wang@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Jimin Wang <jimin.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-All ethsys, pciesys and ssusbsys internally include reset controller, so
-explicitly add back these missing cell definitions to related bindings
-and examples.
+add mmc device nodes and proper setup for used pins
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jimin Wang <jimin.wang@mediatek.com>
 ---
- Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt   | 2 ++
- Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt  | 2 ++
- Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt | 2 ++
- 3 files changed, 6 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 106 +++++++++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi     |  20 +++++
+ 2 files changed, 126 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
-index 7aa3fa1..8f5335b 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
-@@ -9,6 +9,7 @@ Required Properties:
- 	- "mediatek,mt2701-ethsys", "syscon"
- 	- "mediatek,mt7622-ethsys", "syscon"
- - #clock-cells: Must be 1
-+- #reset-cells: Must be 1
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index 5746cb3..b858df6 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -8,6 +8,7 @@
  
- The ethsys controller uses the common clk binding from
- Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -20,4 +21,5 @@ ethsys: clock-controller@1b000000 {
- 	compatible = "mediatek,mt2701-ethsys", "syscon";
- 	reg = <0 0x1b000000 0 0x1000>;
- 	#clock-cells = <1>;
-+	#reset-cells = <1>;
- };
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
-index d5d5f12..7fe5dc6 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt
-@@ -8,6 +8,7 @@ Required Properties:
- - compatible: Should be:
- 	- "mediatek,mt7622-pciesys", "syscon"
- - #clock-cells: Must be 1
-+- #reset-cells: Must be 1
+ /dts-v1/;
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
  
- The PCIESYS controller uses the common clk binding from
- Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -19,4 +20,5 @@ pciesys: pciesys@1a100800 {
- 	compatible = "mediatek,mt7622-pciesys", "syscon";
- 	reg = <0 0x1a100800 0 0x1000>;
- 	#clock-cells = <1>;
-+	#reset-cells = <1>;
- };
-diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
-index 00760019..b8184da 100644
---- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt
-@@ -8,6 +8,7 @@ Required Properties:
- - compatible: Should be:
- 	- "mediatek,mt7622-ssusbsys", "syscon"
- - #clock-cells: Must be 1
-+- #reset-cells: Must be 1
+ #include "mt7622.dtsi"
+ #include "mt6380.dtsi"
+@@ -53,6 +54,14 @@
+ 		reg = <0 0x40000000 0 0x3F000000>;
+ 	};
  
- The SSUSBSYS controller uses the common clk binding from
- Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -19,4 +20,5 @@ ssusbsys: ssusbsys@1a000000 {
- 	compatible = "mediatek,mt7622-ssusbsys", "syscon";
- 	reg = <0 0x1a000000 0 0x1000>;
- 	#clock-cells = <1>;
-+	#reset-cells = <1>;
++	reg_1p8v: regulator-1p8v {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-1.8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++	};
++
+ 	reg_3p3v: regulator-3p3v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "fixed-3.3V";
+@@ -89,6 +98,23 @@
+ 			function = "emmc", "emmc_rst";
+ 			groups = "emmc";
+ 		};
++
++		/* "NDL0","NDL1","NDL2","NDL3","NDL4","NDL5","NDL6","NDL7",
++		 * "NRB","NCLE" pins are used as DAT0,DAT1,DAT2,DAT3,DAT4,
++		 * DAT5,DAT6,DAT7,CMD,CLK for eMMC respectively
++		 */
++		conf-cmd-dat {
++			pins = "NDL0", "NDL1", "NDL2",
++			       "NDL3", "NDL4", "NDL5",
++			       "NDL6", "NDL7", "NRB";
++			input-enable;
++			bias-pull-up;
++		};
++
++		conf-clk {
++			pins = "NCLE";
++			bias-pull-down;
++		};
+ 	};
+ 
+ 	emmc_pins_uhs: emmc-pins-uhs {
+@@ -96,6 +122,21 @@
+ 			function = "emmc";
+ 			groups = "emmc";
+ 		};
++
++		conf-cmd-dat {
++			pins = "NDL0", "NDL1", "NDL2",
++			       "NDL3", "NDL4", "NDL5",
++			       "NDL6", "NDL7", "NRB";
++			input-enable;
++			drive-strength = <4>;
++			bias-pull-up;
++		};
++
++		conf-clk {
++			pins = "NCLE";
++			drive-strength = <4>;
++			bias-pull-down;
++		};
+ 	};
+ 
+ 	eth_pins: eth-pins {
+@@ -194,6 +235,27 @@
+ 			function = "sd";
+ 			groups = "sd_0";
+ 		};
++
++		/* "I2S2_OUT, "I2S4_IN"", "I2S3_IN", "I2S2_IN",
++		 *  "I2S4_OUT", "I2S3_OUT" are used as DAT0, DAT1,
++		 *  DAT2, DAT3, CMD, CLK for SD respectively.
++		 */
++		conf-cmd-data {
++			pins = "I2S2_OUT", "I2S4_IN", "I2S3_IN",
++			       "I2S2_IN","I2S4_OUT";
++			input-enable;
++			drive-strength = <8>;
++			bias-pull-up;
++		};
++		conf-clk {
++			pins = "I2S3_OUT";
++			drive-strength = <12>;
++			bias-pull-down;
++		};
++		conf-cd {
++			pins = "TXD3";
++			bias-pull-up;
++		};
+ 	};
+ 
+ 	sd0_pins_uhs: sd0-pins-uhs {
+@@ -201,6 +263,18 @@
+ 			function = "sd";
+ 			groups = "sd_0";
+ 		};
++
++		conf-cmd-data {
++			pins = "I2S2_OUT", "I2S4_IN", "I2S3_IN",
++			       "I2S2_IN","I2S4_OUT";
++			input-enable;
++			bias-pull-up;
++		};
++
++		conf-clk {
++			pins = "I2S3_OUT";
++			bias-pull-down;
++		};
+ 	};
+ 
+ 	/* Serial NAND is shared pin with SPI-NOR */
+@@ -311,6 +385,38 @@
+ 	status = "okay";
  };
+ 
++&mmc0 {
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&emmc_pins_default>;
++	pinctrl-1 = <&emmc_pins_uhs>;
++	status = "okay";
++	bus-width = <8>;
++	max-frequency = <50000000>;
++	cap-mmc-highspeed;
++	mmc-hs200-1_8v;
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_1p8v>;
++	assigned-clocks = <&topckgen CLK_TOP_MSDC30_0_SEL>;
++	assigned-clock-parents = <&topckgen CLK_TOP_UNIV48M>;
++	non-removable;
++};
++
++&mmc1 {
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&sd0_pins_default>;
++	pinctrl-1 = <&sd0_pins_uhs>;
++	status = "okay";
++	bus-width = <4>;
++	max-frequency = <50000000>;
++	cap-sd-highspeed;
++	r_smpl = <1>;
++	cd-gpios = <&pio 81 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&reg_3p3v>;
++	vqmmc-supply = <&reg_3p3v>;
++	assigned-clocks = <&topckgen CLK_TOP_MSDC30_1_SEL>;
++	assigned-clock-parents = <&topckgen CLK_TOP_UNIV48M>;
++};
++
+ &nandc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&parallel_nand_pins>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index ed7ee78..177a651 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -524,6 +524,26 @@
+ 		status = "disabled";
+ 	};
+ 
++	mmc0: mmc@11230000 {
++		compatible = "mediatek,mt7622-mmc";
++		reg = <0 0x11230000 0 0x1000>;
++		interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_MSDC30_0_PD>,
++			 <&topckgen CLK_TOP_MSDC50_0_SEL>;
++		clock-names = "source", "hclk";
++		status = "disabled";
++	};
++
++	mmc1: mmc@11240000 {
++		compatible = "mediatek,mt7622-mmc";
++		reg = <0 0x11240000 0 0x1000>;
++		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_MSDC30_1_PD>,
++			 <&topckgen CLK_TOP_AXI_SEL>;
++		clock-names = "source", "hclk";
++		status = "disabled";
++	};
++
+ 	ssusbsys: ssusbsys@1a000000 {
+ 		compatible = "mediatek,mt7622-ssusbsys",
+ 			     "syscon";
 -- 
 2.7.4
