@@ -1,212 +1,57 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] irqchip/gic-v3-its: add ability to save/restore
- ITS state
-Date: Tue, 6 Feb 2018 16:23:03 +0000
-Message-ID: <f6a643dd-b835-adbf-6a06-ea3843fa8f12@arm.com>
-References: <20180203012450.18378-1-dbasehore@chromium.org>
- <20180203012450.18378-3-dbasehore@chromium.org>
- <a1b81cab-8e73-2c6f-13e6-612ffc668923@arm.com>
- <CAGAzgsp8M-t7k+pj4G9Lo_+NkeXQ9DeqH_r=-JcErO_+HuoJqA@mail.gmail.com>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] gpio: driver for the RPi3 GPIO expander
+Date: Tue, 6 Feb 2018 18:27:59 +0200
+Message-ID: <20180206162759.awghecpv4ihaatz7@tarshish>
+References: <cover.1516105893.git.baruch@tkos.co.il>
+ <CACRpkdZAtVfAU-k9EUihH6peY2d1Ntn3jboVMBn9adReNLupow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGAzgsp8M-t7k+pj4G9Lo_+NkeXQ9DeqH_r=-JcErO_+HuoJqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZAtVfAU-k9EUihH6peY2d1Ntn3jboVMBn9adReNLupow-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "dbasehore ." <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-pm mailing list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Wysocki, Rafael J" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>, linux-rpi-kernel <linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/18 21:33, dbasehore . wrote:
-> On Mon, Feb 5, 2018 at 7:56 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
->> On 03/02/18 01:24, Derek Basehore wrote:
->>> Some platforms power off GIC logic in suspend, so we need to
->>> save/restore state. The distributor and redistributor registers need
->>> to be handled in platform code due to access permissions on those
->>> registers, but the ITS registers can be restored in the kernel.
->>>
->>> Signed-off-by: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> ---
->>>  drivers/irqchip/irq-gic-v3-its.c | 101 +++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 101 insertions(+)
->>>
->>> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
->>> index 06f025fd5726..e13515cdb68f 100644
->>> --- a/drivers/irqchip/irq-gic-v3-its.c
->>> +++ b/drivers/irqchip/irq-gic-v3-its.c
->>> @@ -33,6 +33,7 @@
->>>  #include <linux/of_platform.h>
->>>  #include <linux/percpu.h>
->>>  #include <linux/slab.h>
->>> +#include <linux/syscore_ops.h>
->>>
->>>  #include <linux/irqchip.h>
->>>  #include <linux/irqchip/arm-gic-v3.h>
->>> @@ -46,6 +47,7 @@
->>>  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING                (1ULL << 0)
->>>  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375    (1ULL << 1)
->>>  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144    (1ULL << 2)
->>> +#define ITS_FLAGS_SAVE_SUSPEND_STATE         (1ULL << 3)
->>>
->>>  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING  (1 << 0)
->>>
->>> @@ -83,6 +85,15 @@ struct its_baser {
->>>       u32             psz;
->>>  };
->>>
->>> +/*
->>> + * Saved ITS state - this is where saved state for the ITS is stored
->>> + * when it's disabled during system suspend.
->>> + */
->>> +struct its_ctx {
->>> +     u64                     cbaser;
->>> +     u32                     ctlr;
->>> +};
->>
->> Nit: This is pretty small for the ITS context. Given that its_node is
->> the context, you can safely expand this in the its_node structure.
-> 
-> Sounds reasonable. I think I just have it this way because I used to
-> have more in here.
-> 
->>
->>> +
->>>  struct its_device;
->>>
->>>  /*
->>> @@ -101,6 +112,7 @@ struct its_node {
->>>       struct its_collection   *collections;
->>>       struct fwnode_handle    *fwnode_handle;
->>>       u64                     (*get_msi_base)(struct its_device *its_dev);
->>> +     struct its_ctx          its_ctx;
->>>       struct list_head        its_device_list;
->>>       u64                     flags;
->>>       unsigned long           list_nr;
->>> @@ -3042,6 +3054,90 @@ static void its_enable_quirks(struct its_node *its)
->>>       gic_enable_quirks(iidr, its_quirks, its);
->>>  }
->>>
->>> +static int its_save_disable(void)
->>> +{
->>> +     struct its_node *its;
->>> +     int err = 0;
->>> +
->>> +     spin_lock(&its_lock);
->>> +     list_for_each_entry(its, &its_nodes, entry) {
->>> +             struct its_ctx *ctx;
->>> +             void __iomem *base;
->>> +
->>> +             if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
->>> +                     continue;
->>> +
->>> +             ctx = &its->its_ctx;
->>> +             base = its->base;
->>> +             ctx->ctlr = readl_relaxed(base + GITS_CTLR);
->>> +             err = its_force_quiescent(base);
->>> +             if (err) {
->>> +                     pr_err("ITS failed to quiesce\n");
->>> +                     writel_relaxed(ctx->ctlr, base + GITS_CTLR);
->>> +                     goto err;
->>> +             }
->>> +
->>> +             ctx->cbaser = gits_read_cbaser(base + GITS_CBASER);
->>> +     }
->>> +
->>> +err:
->>> +     if (err) {
->>> +             list_for_each_entry_continue_reverse(its, &its_nodes, entry) {
->>> +                     if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
->>> +                             struct its_ctx *ctx = &its->its_ctx;
->>> +                             void __iomem *base = its->base;
->>> +
->>> +                             writel_relaxed(ctx->ctlr, base + GITS_CTLR);
->>> +                     }
->>> +             }
->>> +     }
->>> +
->>> +     spin_unlock(&its_lock);
->>> +
->>> +     return err;
->>> +}
->>> +
->>> +static void its_restore_enable(void)
->>> +{
->>> +     struct its_node *its;
->>> +
->>> +     spin_lock(&its_lock);
->>> +     list_for_each_entry(its, &its_nodes, entry) {
->>> +             if (its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE) {
->>> +                     struct its_ctx *ctx = &its->its_ctx;
->>> +                     void __iomem *base = its->base;
->>> +                     /*
->>> +                      * Only the lower 32 bits matter here since the upper 32
->>> +                      * don't include any of the offset.
->>> +                      */
->>> +                     u32 creader = readl_relaxed(base + GITS_CREADR);
->>
->> Accessor matching gits_write_cwriter and co?
->>
->>> +                     int i;
->>> +
->>> +                     /*
->>> +                      * Reset the write location to where the ITS is
->>> +                      * currently at.
->>> +                      */
->>> +                     gits_write_cbaser(ctx->cbaser, base + GITS_CBASER);
->>> +                     gits_write_cwriter(creader, base + GITS_CWRITER);
->>> +                     its->cmd_write = &its->cmd_base[
->>> +                             creader / sizeof(struct its_cmd_block)];
->>
->> Nit: please do not split lines like this, this is unreadable. We both
->> have screens that are wide enough for this to fit on a single line.
->>
->> More importantly: Why isn't it sufficient to reset both CREADR and
->> CWRITER to zero? Is there any case where you can suspend whilst having
->> anything in flight?
-> 
-> CREADR is RO and we need to handle the non-zero case. I was planning
-> on getting rid of the write to CWRITER since it shouldn't be needed.
-> Either CREADR and CWRITER have the prior values, or both are reset to
-> 0.
+Hi Linus,
 
-You're writing GITS_CBASER, which has for consequence: "When this
-register is successfully written, the value of GITS_CREADR is set to
-zero.". Ergo, none of that is necessary and you *must* set CWRITER to 0.
-
+On Tue, Feb 06, 2018 at 02:42:48PM +0100, Linus Walleij wrote:
+> On Tue, Jan 16, 2018 at 1:45 PM, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
 > 
->>
->>> +                     /* Restore GITS_BASER from the value cache. */
->>> +                     for (i = 0; i < GITS_BASER_NR_REGS; i++) {
->>> +                             struct its_baser *baser = &its->tables[i];
->>> +
->>> +                             its_write_baser(its, baser, baser->val);
->>
->> You may want to first test that this BASER register is actually
->> requiring something before writing to it. Yes, this is normally safe.
->> But HW is also normally broken.
->>
->>> +                     }
->>> +                     writel_relaxed(ctx->ctlr, base + GITS_CTLR);
->>
->> Before restoring all of this, shouldn't you first test that the ITS is
->> actually in a disabled state?
+> > The Raspberry Pi 3 has a GPIO expander that controls, among others, the
+> > activity LED, and the camera connector GPIOs. The GPIO expander on an I2C bus
+> > that is not directly controlled from the ARM core. The VC4 firmware controls
+> > the I2C bus, and allows the ARM core to set/get GPIO settings over its mailbox
+> > interface.
+> >
+> > This series adds support for the RPi3 expander.
+> >
+> > The driver is ported from the downstream kernel at
+> > https://github.com/raspberrypi/linux/, branch rpi-4.9.y.
+> >
+> > Changes in v3:
+> >
+> >   * Kconfig tweaks
+> >   * Check rpi_exp_gpio_get_polarity() return value
+> >   * Redundant header removal
+> >   * Redundant platform_set_drvdata() call removal
+> >   * Small coding style changes
 > 
-> The save_disable code put it in a disabled state. The reset state is> also disabled. I don't expect PSCI to change the GITS_CTLR register at
-> all. Are you expecting something on the other side of the PSCI layer
-> to poke this register? We'd probably want to force disable at the
-> start of restore_enable if so.
+> All is looking pretty good. I see Rob had some last minute comments,
+> but please rebase and repost post v4.16-rc1 so we can get this merged,
+> we need to get this upstream.
 
-I expect firmware to do its worse, because even if mainline ATF is close
-to perfection, it will be hacked to death by platform people who usually
-do not have a clue (that's definitely my experience). So I expect this
-code to be written defensively.
+I was about to send v4 when I saw your email. I based v4 on current LinusT's 
+tree as of e237f98a9c. I guess that affected files will not change before 
+v4.16-rc1, but I can wait a few more days for -rc1.
 
-Thanks,
+baruch
 
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
