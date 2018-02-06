@@ -1,69 +1,122 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 07/16] arm64: dts: mt7622: turn uart0 clock to real ones
-Date: Tue, 6 Feb 2018 17:52:56 +0800
-Message-ID: <e0646e211fa947a34d1cfff1cc98f00efd42f2a0.1517910489.git.sean.wang@mediatek.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 09/16] arm64: dts: mt7622: add flash related device nodes
+Date: Tue, 6 Feb 2018 17:52:58 +0800
+Message-ID: <c2e9935388a785f70ad1e0dbc2fe1525bd921ef4.1517910489.git.sean.wang@mediatek.com>
 References: <cover.1517910489.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cover.1517910489.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1517910489.git.sean.wang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: Guochun Mao <guochun.mao@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, RogerCC Lin <rogercc.lin@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-This patch also cleans up two oscillators that provide clocks for MT7623.
-Switch the uart clocks to the real ones while at it.
+add nodes for NOR flash, parallel Nand flash with error correction code
+support.
 
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Cc: RogerCC Lin <rogercc.lin@mediatek.com>
+Cc: Guochun Mao <guochun.mao@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt7622.dtsi | 15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 21 +++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 34 ++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index 2a2247b..59a9c36 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -235,6 +235,10 @@
+ 	};
+ };
+ 
++&bch {
++	status = "disabled";
++};
++
+ &btif {
+ 	status = "okay";
+ };
+@@ -257,6 +261,23 @@
+ 	status = "okay";
+ };
+ 
++&nandc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&parallel_nand_pins>;
++	status = "disabled";
++};
++
++&nor_flash {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi_nor_pins>;
++	status = "disabled";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++	};
++};
++
+ &pwm {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pwm7_pins>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index 65eb417..845fc11 100644
+index 2330ddc..9e11baf 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -88,18 +88,6 @@
- 		};
- 	};
- 
--	uart_clk: dummy25m {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <25000000>;
--	};
--
--	bus_clk: dummy280m {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <280000000>;
--	};
--
- 	pwrap_clk: dummy40m {
- 		compatible = "fixed-clock";
- 		clock-frequency = <40000000>;
-@@ -231,7 +219,8 @@
- 			     "mediatek,mt6577-uart";
- 		reg = <0 0x11002000 0 0x400>;
- 		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&uart_clk>, <&bus_clk>;
-+		clocks = <&topckgen CLK_TOP_UART_SEL>,
-+			 <&pericfg CLK_PERI_UART1_PD>;
- 		clock-names = "baud", "bus";
+@@ -395,6 +395,40 @@
  		status = "disabled";
  	};
+ 
++	nandc: nfi@1100d000 {
++		compatible = "mediatek,mt7622-nfc";
++		reg = <0 0x1100D000 0 0x1000>;
++		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_NFI_PD>,
++			 <&pericfg CLK_PERI_SNFI_PD>;
++		clock-names = "nfi_clk", "pad_clk";
++		ecc-engine = <&bch>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
++	bch: ecc@1100e000 {
++		compatible = "mediatek,mt7622-ecc";
++		reg = <0 0x1100e000 0 0x1000>;
++		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_NFIECC_PD>;
++		clock-names = "nfiecc_clk";
++		status = "disabled";
++	};
++
++	nor_flash: spi@11014000 {
++		compatible = "mediatek,mt7622-nor",
++			     "mediatek,mt8173-nor";
++		reg = <0 0x11014000 0 0xe0>;
++		clocks = <&pericfg CLK_PERI_FLASH_PD>,
++			 <&topckgen CLK_TOP_FLASH_SEL>;
++		clock-names = "spi", "sf";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
+ 	spi1: spi@11016000 {
+ 		compatible = "mediatek,mt7622-spi";
+ 		reg = <0 0x11016000 0 0x100>;
 -- 
 2.7.4
