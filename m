@@ -1,45 +1,54 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2] arc: dts: use 'atmel' as manufacturer for at24 in axs10x_mb
-Date: Tue,  6 Feb 2018 12:08:10 +0100
-Message-ID: <20180206110810.9093-1-brgl@bgdev.pl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Brodkin <abrodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vineet Gupta <vgupta@synopsys.com>
-Cc: devicetree@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: da850-evm: add clock properties to the nand
+ node
+Date: Tue, 6 Feb 2018 16:37:19 +0530
+Message-ID: <3f171f6a-bcea-65ec-d56d-f6ae24660f34@ti.com>
+References: <20180205155222.22189-1-brgl@bgdev.pl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180205155222.22189-1-brgl-ARrdPY/1zhM@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Using compatible strings without the <manufacturer> part for at24 is
-deprecated since commit 6da28acf745f ("dt-bindings: at24: consistently
-document the compatible property"). Use a correct 'atmel,<model>'
-value.
+On Monday 05 February 2018 09:22 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> 
+> Make nand work with the common clock framework by specifying which
+> clock should be used and what name to look up.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/da850-evm.dts | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> index a86a8a1816f2..2602ad8e99ee 100644
+> --- a/arch/arm/boot/dts/da850-evm.dts
+> +++ b/arch/arm/boot/dts/da850-evm.dts
+> @@ -296,6 +296,9 @@
+>  			reg = <0 0x02000000 0x02000000
+>  			       1 0x00000000 0x00008000>;
+>  
+> +			clocks = <&psc0 3>;
+> +			clock-names = "aemif";
 
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
----
-- explicitly mention the commit in which we deprecated compatible
-  fallbacks other than "atmel,<manufacturer>"
+Looks like this is being added only to satisfy the devm_clk_get() call
+in nand_davinci_probe() which I think is superfluous since we also
+enable the same clock in aemif_probe().
 
- arch/arc/boot/dts/axs10x_mb.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Perhaps the better solution is to drip the clk code in
+drivers/mtd/nand/davinci_nand.c and shift legacy code to start using
+drivers/memory/aemif.c as well? This way we can also drop
+arch/arm/mach-davinci/aemif.c
 
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index 74d070cd3c13..47b74fbc403c 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -214,13 +214,13 @@
- 			};
- 
- 			eeprom@0x54{
--				compatible = "24c01";
-+				compatible = "atmel,24c01";
- 				reg = <0x54>;
- 				pagesize = <0x8>;
- 			};
- 
- 			eeprom@0x57{
--				compatible = "24c04";
-+				compatible = "atmel,24c04";
- 				reg = <0x57>;
- 				pagesize = <0x8>;
- 			};
--- 
-2.16.1
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
