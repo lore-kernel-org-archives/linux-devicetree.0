@@ -1,107 +1,80 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH 1/2] of_pci_irq: add a check to fallback to standard
- device tree parsing
-Date: Tue, 6 Feb 2018 10:38:58 +0800
-Message-ID: <1517884738.16010.27.camel@mtkswgap22>
-References: <31c765c53e85e41bfc001d110d69e46c9967f4e7.1516961656.git.ryder.lee@mediatek.com>
-         <CAL_JsqLZqrxxpuEnoWEGkT2WCuyjqn0bM1DP8PdAwnQsso8kOA@mail.gmail.com>
-         <1517563970.24622.9.camel@mtkswgap22>
-         <1517866584.2312.140.camel@kernel.crashing.org>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: sun8i: add audio codec
+ support into V3s DTSI
+Date: Tue, 06 Feb 2018 10:43:48 +0800
+Message-ID: <8F4EA09E-F5DC-4F7A-951B-25DA36848FD1@aosc.io>
+References: <20180202140153.21549-1-icenowy@aosc.io> <20180202140153.21549-3-icenowy@aosc.io> <20180202194935.vdqkgch6mowqi2px@flea.lan>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1517866584.2312.140.camel@kernel.crashing.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB6FM4TJQKGQECB4NZYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180202194935.vdqkgch6mowqi2px-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-02-06 at 08:36 +1100, Benjamin Herrenschmidt wrote:
-> On Fri, 2018-02-02 at 17:32 +0800, Ryder Lee wrote:
-> > On Wed, 2018-01-31 at 10:02 -0600, Rob Herring wrote:
-> > > On Wed, Jan 31, 2018 at 1:41 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> > > > A root complex usually consist of a host bridge and multiple P2P bridges,
-> > > > and someone may express that in the form of a root node with many subnodes
-> > > > and list all four interrupts for each slot (child node) in the root node
-> > > > like this:
-> > > > 
-> > > >          pcie-controller {
-> > > >                  ...
-> > > >                  interrupt-map-mask = <0xf800 0 0 7>;
-> > > >                  interrupt-map = <0x0000 0 0 {INTx} &{interrupt parent} ...>
-> > > >                                   0x0800 0 0 {INTx} &{interrupt parent} ...>;
-> > > > 
-> > > >                  pcie@0,0 {
-> > > >                          reg = <0x0000 0 0 0 0>;
-> > > >                          ...
-> > > >                  };
-> > > > 
-> > > >                  pcie@1,0 {
-> > > >                          reg = <0x0800 0 0 0 0>;
-> > > >                          ...
-> > > >                  };
-> > > >          };
-> > > > 
-> > > > As shown above, we'd like to propagate IRQs from a root port to the devices
-> > > > in the hierarchy below it in this way.  However, it seems that the current
-> > > > parser couldn't handle such cases and will get something unexpected below:
-> > > > 
-> > > >          pcieport 0000:00:01.0: assign IRQ: got 213
-> > > >          igb 0000:01:00.0: assign IRQ: got 212
-> > > > 
-> > > > There is a device which is connected to 2nd slot, but the port doesn't share
-> > > > the same IRQ with its downstream devices.  The problem here is that, if the
-> > > > loop found a P2P bridge, it wouldn't check whether the reg property exists
-> > > > in ppnode or not but just pass the subordinate devfn to of_irq_parse_raw(),
-> > > > thus the subsequent flow couldn't correctly resolve them.
-> 
-> I don't really understand the problem explanation here. Something
-> doesn't look right as you shouldn't have to change that function, but I
-> just don't get what you a
-> 
-> Cheers,
-> Ben.
-> 
-
-I think the code should look at the bridge address <0x0800 ...> we list
-in bindings for resolving interrupts in this case, but it seems like it
-use the 'pdev->defvn << 8' which is not really we want and will lead to
-mismatch.
-
-		interrupt-map-mask = <0xf800 0 0 7>;
-		interrupt-map = <0x0000 0 0 1 ...>,
-				<0x0000 0 0 2 ...>,
-				<0x0000 0 0 3 ...>,
-				<0x0000 0 0 4 ...>,
-
-				 0x0800 0 0 1 ...>,
-				 0x0800 0 0 2 ...>,
-				 0x0800 0 0 3 ...>,
-				 0x0800 0 0 4 ...>;
-		...
-		pcie@1,0 {
-			reg = <0x0800 0 0 0 0>;
-			...
-		};
 
 
-Or, alternatively, we could add a interrupt-map property in both child
-and root node to solve this. The below example is my original version as
-I don't want to change that function either.
+=E4=BA=8E 2018=E5=B9=B42=E6=9C=883=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=883:4=
+9:35, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Fri, Feb 02, 2018 at 10:01:52PM +0800, Icenowy Zheng wrote:
+>> Allwinner V3s SoC features an internal audio codec like the one in
+>H3,
+>> and a analog codec like the one in H3/A23 (but much simpler).
+>>=20
+>> Add them in the DTSI file.
+>>=20
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun8i-v3s.dtsi | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>=20
+>> diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi
+>b/arch/arm/boot/dts/sun8i-v3s.dtsi
+>> index 20edebd983f0..f6c534efaef9 100644
+>> --- a/arch/arm/boot/dts/sun8i-v3s.dtsi
+>> +++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
+>> @@ -354,6 +354,25 @@
+>>  			status =3D "disabled";
+>>  		};
+>> =20
+>> +		codec: codec@01c22c00 {
+>> +			#sound-dai-cells =3D <0>;
+>> +			compatible =3D "allwinner,sun8i-v3s-codec";
+>> +			reg =3D <0x01c22c00 0x400>;
+>> +			interrupts =3D <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks =3D <&ccu CLK_BUS_CODEC>, <&ccu CLK_AC_DIG>;
+>> +			clock-names =3D "apb", "codec";
+>> +			resets =3D <&ccu RST_BUS_CODEC>;
+>> +			dmas =3D <&dma 15>, <&dma 15>;
+>> +			dma-names =3D "rx", "tx";
+>> +			allwinner,codec-analog-controls =3D <&codec_analog>;
+>> +			status =3D "disabled";
+>> +		};
+>> +
+>> +		codec_analog: codec-analog@01c23000 {
+>> +			compatible =3D "allwinner,sun8i-v3s-codec-analog";
+>> +			reg =3D <0x01c23000 0x4>;
+>
+>This should be the whole size of the memory region.
 
-		interrupt-map-mask = <0xf800 0 0 0>;
-		interrupt-map = <0x0000 0 0 0 ...>,
-				 0x0800 0 0 0 ...>;
-		...
-		pcie@1,0 {
-			reg = <0x0800 0 0 0 0>;
-			#interrupt-cells = <1>;
-			interrupt-map-mask = <0 0 0 0>;
-			interrupt-map = <0 0 0 0 ...>;
-			...
-		};
+OK. (Although on the datasheet digital part and analog
+part is listed as one region.)
 
-However, I can't find any other similar case in documentation.
+>
+>Maxime
 
-Thanks.
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
