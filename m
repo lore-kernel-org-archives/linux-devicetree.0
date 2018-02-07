@@ -1,132 +1,144 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: dts: da850-evm: add clock properties to the nand node
-Date: Wed, 7 Feb 2018 18:36:30 +0530
-Message-ID: <37e034fe-5951-9a58-8698-d34226e8279e@ti.com>
-References: <20180205155222.22189-1-brgl@bgdev.pl>
- <3f171f6a-bcea-65ec-d56d-f6ae24660f34@ti.com>
- <CAMpxmJUDbwkcJt_kx9GX+qY10xiGAp-j3+kXM-q3WP1VGwr0UQ@mail.gmail.com>
- <54dbdb98-e0e4-c8c9-fec4-2f050745d9be@ti.com>
- <794024f3-f87a-58ed-2722-a4a2d09df3ce@lechnology.com>
- <4aa2ab13-7890-6904-86b3-e2dbcb6d6daa@lechnology.com>
- <CAMRc=Mcf0aEQvieNaZ3cMHJTE23Gf1jUNf0=vuO9-PA=9ObDvQ@mail.gmail.com>
+From: "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
+Date: Wed, 7 Feb 2018 13:21:44 +0000
+Message-ID: <AM3PR04MB306B7EE043B75EFF5A7CE5280FC0@AM3PR04MB306.eurprd04.prod.outlook.com>
+References: <20180201174923.7385-1-l.stach@pengutronix.de>
+ <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
+ <1517825351.3175.3.camel@pengutronix.de>
+ <CACRpkdanb3XocUpmTaFTh-vsApucX0PzuqRg_fA2ORUFtrVGJA@mail.gmail.com>
+ <1517914394.3175.21.camel@pengutronix.de>
+ <CACRpkdbuGOrm=y=yPpsrkckk8+uKGxv6J9WGw9y=yiGcmbqn+w@mail.gmail.com>
+ <1517932068.3175.27.camel@pengutronix.de>
+ <CACRpkdYy43E5H=tRAf+YDvAY1RDTJ34nHSmqCXEn9xaknbLKZQ@mail.gmail.com>
+ <20180207111156.a7cevrz3dbk2f4fb@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMRc=Mcf0aEQvieNaZ3cMHJTE23Gf1jUNf0=vuO9-PA=9ObDvQ@mail.gmail.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180207111156.a7cevrz3dbk2f4fb-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dl-linux-imx <linux-imx-3arQi8VN3Tc@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 February 2018 12:15 AM, Bartosz Golaszewski wrote:
-> 2018-02-06 19:25 GMT+01:00 David Lechner <david@lechnology.com>:
->> On 02/06/2018 12:16 PM, David Lechner wrote:
->>>
->>> On 02/06/2018 07:51 AM, Sekhar Nori wrote:
->>>>
->>>> On Tuesday 06 February 2018 06:38 PM, Bartosz Golaszewski wrote:
->>>>>
->>>>> 2018-02-06 12:07 GMT+01:00 Sekhar Nori <nsekhar@ti.com>:
->>>>>>
->>>>>> On Monday 05 February 2018 09:22 PM, Bartosz Golaszewski wrote:
->>>>>>>
->>>>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>>>>
->>>>>>> Make nand work with the common clock framework by specifying which
->>>>>>> clock should be used and what name to look up.
->>>>>>>
->>>>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>>>> ---
->>>>>>>   arch/arm/boot/dts/da850-evm.dts | 3 +++
->>>>>>>   1 file changed, 3 insertions(+)
->>>>>>>
->>>>>>> diff --git a/arch/arm/boot/dts/da850-evm.dts
->>>>>>> b/arch/arm/boot/dts/da850-evm.dts
->>>>>>> index a86a8a1816f2..2602ad8e99ee 100644
->>>>>>> --- a/arch/arm/boot/dts/da850-evm.dts
->>>>>>> +++ b/arch/arm/boot/dts/da850-evm.dts
->>>>>>> @@ -296,6 +296,9 @@
->>>>>>>                        reg = <0 0x02000000 0x02000000
->>>>>>>                               1 0x00000000 0x00008000>;
->>>>>>>
->>>>>>> +                     clocks = <&psc0 3>;
->>>>>>> +                     clock-names = "aemif";
->>>>>>
->>>>>>
->>>>>> Looks like this is being added only to satisfy the devm_clk_get() call
->>>>>> in nand_davinci_probe() which I think is superfluous since we also
->>>>>> enable the same clock in aemif_probe().
->>>>>>
->>>>>> Perhaps the better solution is to drip the clk code in
->>>>>> drivers/mtd/nand/davinci_nand.c and shift legacy code to start using
->>>>>> drivers/memory/aemif.c as well? This way we can also drop
->>>>>> arch/arm/mach-davinci/aemif.c
->>>>>>
->>>>>> Thanks,
->>>>>> Sekhar
->>>>>
->>>>>
->>>>> Yes, this sounds good, but I think we should leave it for later as an
->>>>> additional improvement, once everything else is in place. I think
->>>>> these patches should be applied together with David's series in order
->>>>> to not break the support on davinci boards and the aemif work would go
->>>>> in later as a follow-up. How about that?
->>>>
->>>>
->>>> No, I dont think we should add temporary hacks to DT to work around
->>>> driver issues (I do think its a hack since the clock belongs to aemif
->>>> module not NAND flash).
->>>>
->>>> An easier driver hack might be to not treat devm_clk_get() failure in
->>>> davinci_nand.c as catastrophic. It will safely fail in DT case and we
->>>> should get the clock in legacy boot case.
->>>>
->>>> I think we are looking at a driver update dependency anyway.
->>>
->>>
->>> It looks like keystone.dtsi is using the clock-ranges property in the
->>> aemif node to pass the clock to child nodes. Could we not do the same
->>> in da850.dtsi?
->>
->>
->> Bartosz, please try this instead of your patch.
->>
->> FYI, this is just following the existing memory-controllers/ti-aemif.txt
->> device tree bindings, so not a "hack".
->>
->> ---
->> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->> index 3a1f2ce..ff9d807 100644
->> --- a/arch/arm/boot/dts/da850.dtsi
->> +++ b/arch/arm/boot/dts/da850.dtsi
->> @@ -796,6 +796,8 @@
->>                 ranges = <0 0 0x60000000 0x08000000
->>                           1 0 0x68000000 0x00008000>;
->>                 clocks = <&psc0 3>;
->> +               clock-names = "aemif";
->> +               clock-ranges;
->>                 status = "disabled";
->>         };
->>         memctrl: memory-controller@b0000000 {
->> ---
-> 
-> Yes, this works. Sekhar: can we include it in David's series, while
-> still keeping the plan to move legacy boards to using the aemif
-> driver?
-
-Okay. Fine with me. Actually the chipselect node already has
-clock-ranges defined, but that doesn't have any meaning unless its also
-included in aemif node.
-
-Thanks,
-Sekhar
+SGkgU2FzY2hhLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNhc2No
+YSBIYXVlciBbbWFpbHRvOnMuaGF1ZXJAcGVuZ3V0cm9uaXguZGVdDQo+IFNlbnQ6IDIwMTjE6jLU
+wjfI1SAxOToxMg0KPiBUbzogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3Jn
+Pg0KPiBDYzogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+OyBBLnMuIERvbmcN
+Cj4gPGFpc2hlbmcuZG9uZ0BueHAuY29tPjsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNv
+bT47IEdhcnkgQmlzc29uDQo+IDxnYXJ5LmJpc3NvbkBib3VuZGFyeWRldmljZXMuY29tPjsgVmxh
+ZGltaXIgWmFwb2xza2l5DQo+IDx2bGFkaW1pcl96YXBvbHNraXlAbWVudG9yLmNvbT47IFNhc2No
+YSBIYXVlciA8a2VybmVsQHBlbmd1dHJvbml4LmRlPjsNCj4gTWFyayBSdXRsYW5kIDxtYXJrLnJ1
+dGxhbmRAYXJtLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ow0KPiBvcGVuIGxp
+c3Q6T1BFTiBGSVJNV0FSRSBBTkQgRkxBVFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTDQo+IDxk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IHBhdGNod29yay1sc3RAcGVuZ3V0cm9uaXguZGU7
+DQo+IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIg
+MS8zXSBkdC1iaW5kaW5nczogYWRkIGJpbmRpbmcgZm9yIGkuTVg4TVEgSU9NVVhDDQo+IA0KPiBP
+biBXZWQsIEZlYiAwNywgMjAxOCBhdCAxMDowOToyMEFNICswMTAwLCBMaW51cyBXYWxsZWlqIHdy
+b3RlOg0KPiA+IE9uIFR1ZSwgRmViIDYsIDIwMTggYXQgNDo0NyBQTSwgTHVjYXMgU3RhY2ggPGwu
+c3RhY2hAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOg0KPiA+DQo+ID4gPiBUbyBiZSBmdWxseSBob25l
+c3QgSSdtIGEgYml0IGFubm95ZWQgd2l0aCB0aGUgcGluY3RybCBmcmFtZXdvcmsNCj4gPiA+IG1h
+a2luZyB0aGluZ3MgKElNSE8pIHVubmVjZXNzYXJpbHkgY29tcGxleCwgZm9yIHdoYXQgaXMgYmFz
+aWNhbGx5IGENCj4gPiA+IHByZXR0eSBlYXN5IHRhc2suDQo+ID4NCj4gPiBNeSBhbWJpdGlvbiBp
+cyB0byBtYWtlIHRoaW5ncyByZWFkYWJsZSwgdW5kZXJzdGFuZGFibGUgYW5kDQo+ID4gbWFpbnRh
+aW5hYmxlLiBJbiBnZW5lcmljIHRlcm1zLCBpbmNvcnBvcmF0aW5nIGEgYnVuY2ggb2Yga25vd2xl
+ZGdlIG9mDQo+ID4gdGhlIGVsZWN0cm9uaWNzIHRoYXQgcmVhbGx5IGhhcHBlbiBpbnRvIHRoZSBz
+dHVmZiB3ZSBlbmNvZGUgaW4gdGhlDQo+ID4ga2VybmVsLg0KPiA+DQo+ID4gSSBndWVzcyBpdCB2
+YXJpZXMgYSBiaXQgb24gd2hhdCBnb2FsIG9uZSBoYXMuDQo+ID4NCj4gPiBJZiB0aGUgZ29hbCBp
+cyAic2hpcCBwcm9kdWN0IHdpdGggdXBzdHJlYW0ga2VybmVsIHJlYWxseSBmYXN0IG5vdyINCj4g
+PiB0aGVuIHRoaW5ncyBsaWtlIHBpbmN0cmwtc2luZ2xlLmMgd2hlcmUgd2UganVzdCBoYW1tZXIg
+bWFnaWMgdmFsdWVzDQo+ID4gaW50byByZWdpc3RlcnMsIG1ha2Ugc2Vuc2UuIE9NQVAgZGV2ZWxv
+cGVycyBoYWQgbm8gaWRlYSB3aGF0c29ldmVyDQo+ID4gd2hhdCB0aGVpciBBU0lDIHBlb3BsZSBv
+ciBjZWxsIGxpYnJhcnkgYXV0aG9ycyB3ZXJlIGRvaW5nIHNvIHRoZXkganVzdA0KPiA+IHRocmV3
+IGluIHRoZSB0b3dlbC4gSGlTaWxpY29uIGFsc28gdXNlIHRoaXMuIEludGVscyBhbWJpdGlvbiB3
+YXMgdG8NCj4gPiB1c2UgQUNQSSBCSU9TIHRvIGhhbmRsZSBhbGwgcGluIGNvbnRyb2wgYW5kIHJv
+dXRlIGFyb3VuZCB0aGUga2VybmVsDQo+ID4gYWx0b2dldGhlciwgYnV0IHRoYXQgaXMgbm90IHdv
+cmtpbmcgb3V0IHNvIHdlbGwgZm9yIHRoZW0gSSB0aGluay4NCj4gPg0KPiA+IEFsbCBvZiB0aGVt
+IGFyZSBhcHByb2FjaGVzIHRvIGF2b2lkIHB1dHRpbmcgdGhlIGhhaXJ5IGRldGFpbHMgaW50byB0
+aGUNCj4gPiBrZXJuZWwsIGp1c3QgcG9rZSBzb21lIG1hZ2ljIHZhbHVlcyBpbnRvIHNvbWUgbWFn
+aWMgcmVnaXN0ZXJzIGFuZCBiZQ0KPiA+IGhhcHB5Lg0KPiA+DQo+ID4gU28gaS5NWCBjb3VsZCBo
+YXZlIGJlZW4gbGlrZSB0aGF0LCBidXQgdGhlbiBJIGd1ZXNzIHlvdSBuZWVkIHRvIHRha2UNCj4g
+PiBsZWdhY3kgaW50byBhY2NvdW50IGFuZCBkaXNjdXNzIHdpdGggdGhlIG90aGVyIGkuTVggZHJp
+dmVyIGF1dGhvcnMNCj4gPiBhYm91dCBob3cgdGhleSByZWFsbHkgd2FudGVkIGFuZCB3YW50IHRv
+IGRvIHRoaW5ncy4NCj4gPg0KPiA+IFRoZWlyIGN1cnJlbnQgc2lsZW5jZSB3cnQgdGhpcyBtYWls
+Y2hhaW4gaXMgYWN0dWFsbHkgYmVjb21pbmcgYQ0KPiA+IHByb2JsZW0sIGFuZCB0aGUgcHJvYmxl
+bSBpcyB0aGF0IGRpc2N1c3Npbmcgd2l0aCB5b3UgZmFsbHMgdXB3YXJkcyB0bw0KPiA+IG1lIGFz
+IHN1YnN5c3RlbSBtYWludGFpbmVyLiBXaGljaCBzdWNrcy4gSSBwcmVmZXIgdGhhdCBwZW9wbGUg
+d2hvIGtub3cNCj4gPiB0aGlzIGhhcmR3YXJlIGRpc2N1c3MgYW1vbmdzdCB0aGVtc2VsdmVzIGhv
+dyB0aGV5IHdhbnQgdGhpbmdzIHRvIHdvcmsuDQo+ID4NCj4gPiBTdXJlbHkgU2FzY2hhIG11c3Qg
+aGF2ZSBhbiBvcGluaW9uPyBJdCBtZWFucyBtdWNoIHRvIG1lIHdoYXQgaGUgd2FudHMNCj4gPiB0
+byBkby4gSSB0YWtlIGl0IHlvdSBndXlzIGFyZSBjb2xsZWFndWVzPw0KPiANCj4gTXkgb3Bpbmlv
+biBpcyB0aGF0IGFsbCB0aGF0IGlzIGdlbmVyaWMgYWJvdXQgcGFkY3RybCBpcyBhIGRldmljZSBk
+cml2ZXIgc2F5aW5nICJQdXQNCj4gbXkgcGlucyBpbnRvIGEgc3VpdGFibGUgbW9kZSIuIFRoYXQg
+aXMgd2hhdCBwYWRjdHJsIGlzIGdvb2QgZm9yIGFuZCB3ZSBhcmUgdGhlcmUNCj4gZm9yIHllYXJz
+IG5vdy4gSSBoYXZlIGFsd2F5cyBiZWVuIGhhcHB5IHdpdGggdGhlIHBsYWluIHJlZ2lzdGVyIHZh
+bHVlcyBpbiB0aGUNCj4gZGV2aWNlIHRyZWUuIEJlZm9yZSBkZXZpY2UgdHJlZSB3ZSBoYWQgZXhh
+Y3RseSB0aGVzZSB2YWx1ZXMgaW4gdGhlIGJvYXJkIGZpbGVzDQo+IGFuZCBJIG5ldmVyIGhlYXJk
+IGFueW9uZSBjb21wbGFpbmluZyBhYm91dCBpdC4gVGhlcmUgd2VyZSBkZWZpbmVzIGZvciB0aGUg
+Yml0cw0KPiBpbiB0aGUgcmVnaXN0ZXIgd2hpY2ggeW91IGNvdWxkIHVzZSB3aGVuIHlvdSB3ZXJl
+IHVuaGFwcHkgd2l0aCBwbGFpbiByZWdpc3Rlcg0KPiB2YWx1ZXMuDQo+IA0KPiBJdCdzIHJlYWxs
+eSB0cml2aWFsIHRvIGxvb2sgaW4gdGhlIHJlZmVyZW5jZSBtYW51YWwgdG8gbWFrZSB1cCB0aGUg
+bmVlZGVkIHJlZ2lzdGVyDQo+IHZhbHVlcy4gSXQncyBhbHNvIHRyaXZpYWwgdG8gdGFrZSBhIHJl
+Z2lzdGVyIHZhbHVlIGFuZCBsb29rIGludG8gdGhlIHJlZmVyZW5jZQ0KPiBtYW51YWwgd2hhdCB0
+aGlzIHZhbHVlIGRvZXMuIEV2ZXJ5IHRyYW5zbGF0aW9uIGxheWVyLCBjYWxsIGl0IGdlbmVyaWMg
+cHJvcGVydGllcywNCj4ganVzdCBtYWtlcyB0aGluZ3MgbW9yZSBjb21wbGljYXRlZC4gT2Z0ZW4g
+ZW5vdWdoIG91ciBpbnB1dCBpcyByZWdpc3RlciB2YWx1ZQ0KPiB0YWJsZXMgZnJvbSBlaXRoZXIg
+b3VyIGN1c3RvbWVycyBvdXIgZnJvbSBzcHJlYWRzaGVldHMgZnJvbSBGU0wvTlhQLiBFdmVyeQ0K
+PiB0cmFuc2xhdGlvbiBsYXllciBpbiB0aGUgd2F5IGp1c3QgbWVhbnMgd2UgaGF2ZSB0byB0cmFu
+c2xhdGUgdGhlIGFscmVhZHkgZXhpc3RpbmcNCj4gcmVnaXN0ZXIgdmFsdWVzIGludG8gc29tZXRo
+aW5nIGhvcGluZyB0aGF0IHRoaXMgY29ycmVjdGx5IHRyYW5zbGF0ZXMgYmFjayBpbnRvIHRoZQ0K
+PiByZWdpc3RlciB2YWx1ZXMuDQo+IA0KPiBJdCdzIG5vdCB0aGF0IHNvbWUgYm9hcmQgZGVzaWdu
+ZXIgY29tZXMgdXAgd2l0aCAiSSBuZWVkIGEgZHJpdmUgc3RyZW5ndGggb2YNCj4gMTUwbUEiIGFu
+ZCB3YW50cyB0byBwdXQgdGhhdCB2YWx1ZSBpbnRvIHRoZSBkZXZpY2UgdHJlZS4gSW5zdGVhZCB0
+aGV5IHN0YXJ0DQo+IHdpdGggdGhlIHJlZmVyZW5jZSBtYW51YWwsIHNlZSB3aGljaCB2YWx1ZXMg
+dGhleSBjYW4gKG11c3QpIGFkanVzdCBhbmQgdGhlbg0KPiBhZGp1c3QgdGhlIHZhbHVlcyB1bnRp
+bCB0aGV5IGFyZSBoYXBweS4gTm8gb25lIHdhbnRzIHRvIGFzayBxdWVzdGlvbnMgbGlrZSAiSG93
+DQo+IGRvIEkgaGF2ZSB0byBtYW5pcHVsYXRlIHRoYXQgZGV2aWNlIHRyZWUgdG8gY2hhbmdlIHRo
+YXQgcGFydGljdWxhciBiaXQ/Ig0KPiANCj4gQXMgc2FpZCwgSSBhbSBoYXBweSB3aXRoIHBsYWlu
+IHJlZ2lzdGVyIHZhbHVlcyBpbiB0aGUgZGV2aWNlIHRyZWUgYW5kIEkgY29uc2lkZXINCj4gZXZl
+cnl0aGluZyBlbHNlIG92ZXJlbmdpbmVlcmVkLg0KPiBGU0wvTlhQIFJlZmVyZW5jZSBNYW51YWxz
+IGFyZSBmcmVlbHkgYXZhaWxhYmxlIGFuZCBvZiBoaWdoIHF1YWxpdHkgc28gZXZlcnlib2R5DQo+
+IGNhbiB1bmRlcnN0YW5kIHRoZSByZWdpc3RlciB2YWx1ZXMuIFRoZXJlJ3Mgbm90aGluZyBtYWdp
+YyB0byB0aGVtLiBUaGF0IG1pZ2h0DQo+IGNoYW5nZSBzbGlnaHRseSB3aGVuIHRoZSBNYW51YWxz
+IGFyZSBub3QgYXZhaWxhYmxlLCBidXQgZXZlbiB0aGVuIEkgdGhpbmsgdGhhdA0KPiBub3QgdGhl
+IGRldmljZSB0cmVlIEFCSSBpcyB0aGUgcmlnaHQgcGxhY2UgdG8gYWRkIHRoYXQgbWlzc2luZyBk
+b2N1bWVudGF0aW9uLg0KPiANCg0KUHJvYmFibHkgYXMgSSBmaXJzdCBpbXBsZW1lbnRlZCBnZW5l
+cmljIHBpbmNvbmZpZyBzdXBwb3J0IGZvciBpLk1YLCBwZXJzb25hbGx5DQpJJ20gdGVuZCB0byBp
+dCBhIGJpdCwgbWFpbmx5IGJlY2F1c2UgYmVsb3cgcmVhc29ucyB3ZSBmaW5kIGluIHJlYWwgc2l0
+dWF0aW9uczoNCg0KRmlyc3QgYW5kIG1vc3QgaW1wb3J0YW50LCBwbGFpbiByZWdpc3RlciB2YWx1
+ZSBpcyBhIGJpdCBlcnJvciBwcm9uZS4NCihBY3R1YWxseSB3ZSBtZWV0IG1hbnkgdGltZXMgb2Yg
+aXNzdWVzIGR1cmluZyBpbnRlcm5hbCBkZXZlbG9wbWVudCkuDQpVc2VyIGhhcyB0byBjb21wb3Nl
+IGl0IG1hbnVhbGx5IGJ5IHJlZmVyIHRvIHJlZmVyZW5jZSBtYW51YWwNCndoaWNoIG1pZ2h0IGJl
+IG1vcmUgZWFzeSB0byBtaXN0YWtlIHRoYW4gdXNpbmcgc3RhbmRhcmQgYmluZGluZyBwcm9wZXJ0
+eS4NCg0KQW5kIG5vdCBldmVyeW9uZSB3b3VsZCBsaWtlIHRvIGNvbXBvc2UgdGhlIHJlZ2lzdGVy
+IHZhbHVlIG1hbnVhbGx5DQp3aGVuIHdyaXRpbmcgdGhlaXIgZGV2aWNlIHRyZWUsIHRoZXkgbWF5
+IHNpbXBseSBkbyBjb3B5ICYgcGFzdGUgb2YgYW4gZXhpc3Qgb25lDQphbmQgcXVpY2tseSB0ZXN0
+LCBpZiBpdCB3b3JrcywgZXZlcnl0aGluZyBpcyBkb25lLiBUaGV5IGRvbid0IGtub3cgd2hpY2gg
+c2V0dGluZyBpcyBhY3R1YWxseQ0KdXNlZCBhcyB0aGV5IGNhbiBzZWUgbm90aGluZyBmcm9tIHRo
+ZSBwbGFpbiByZWdpc3RlciB2YWx1ZS4gVW50aWxsIHRoZSBkZXZpY2UgYmVjb21lcw0KdW53b3Jr
+IGluIHNvbWUgc3BlY2lhbCBjaXJjdW1zdGFuY2VzLCB0aGVuIHRoZXkgaGF2ZSB0byB3YXN0ZSBh
+IGxvdCB0aW1lIHRvIGZpbmQgb3V0DQp0aGUgcGFkIHNldHRpbmcgaXNzdWUuIFRoaXMgaGFwcGVu
+cyBlc3BlY2lhbGx5IG1vcmUgb2Z0ZW4gd2hlbiBzd2l0Y2ggdG8NCmEgbmV3IFNvQyB3aGlsZSB0
+aGUgcGFkIGNvbmZpZyByZWdpc3RlciBsYXlvdXQgY2hhbmdlZCBhIGJpdC4NCldlIGNlcnRhaW5s
+eSB3b3VsZCBsaWtlIHRvIGF2b2lkIGl0IQ0KDQpTZWNvbmRseSwgcGxhaW4gcmVnaXN0ZXIgdmFs
+dWUgaXMgYWxzbyB1bnJlYWRhYmxlIGFuZCB1bm1haW50YWluYWJsZSwNCmFsc28gbm90IHF1aXRl
+IGZyaWVuZGx5IGluIHJldmlld2luZyBvdGhlciBvbmUncyBwYXRjaGVzLg0KDQpMYXN0LCBpdCBt
+aWdodCBiZSB0cml2aWFsLCBwZW9wbGUgZG9uJ3Qgd2FudCB0byByZWZlciB0byByZWZlcmVuY2Ug
+bWFudWFsDQphZ2FpbiBhbmQgYWdhaW4gb25jZSBiZWluZyBhc2tlZCB3aGljaCBkcml2ZXIgc3Ry
+ZW5ndGggb3Igc29tZXRoaW5nIGVsc2UNCklzIHVzZWQuDQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVu
+Zw0KDQo+IFNhc2NoYQ0KPiANCj4gLS0NCj4gUGVuZ3V0cm9uaXggZS5LLiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwNCj4gfA0KPiBJbmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAg
+ICAgICAgICAgfA0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29r
+LmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZ3d3cucA0KPiBlbmd1dHJvbml4LmRlJTJGJmRhdGE9MDIl
+N0MwMSU3Q2Fpc2hlbmcuZG9uZyU0MG54cC5jb20lN0MyNjQ0ZDg3MQ0KPiAyZTIzNGE2YzJlN2Ew
+OGQ1NmUxYjliMjklN0NiZDhhMmEyMjA3MjI0ZWM3YjM1ZjFjNGYwNDk3ZTM0MSU3QzAlDQo+IDdD
+MCU3QzYzNjUzNTk4NzIxMTI2OTc0NCZzZGF0YT12SW11V3h0VDdZYTB1eEVIcm5ST1VZWiUyQmlD
+V0xzOA0KPiBMbXhXQjVvTlBjZ2prJTNEJnJlc2VydmVkPTAgIHwNCj4gUGVpbmVyIFN0ci4gNi04
+LCAzMTEzNyBIaWxkZXNoZWltLCBHZXJtYW55IHwgUGhvbmU6ICs0OS01MTIxLTIwNjkxNy0wICAg
+IHwNCj4gQW10c2dlcmljaHQgSGlsZGVzaGVpbSwgSFJBIDI2ODYgICAgICAgICAgIHwgRmF4Og0K
+PiArNDktNTEyMS0yMDY5MTctNTU1NSB8DQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
