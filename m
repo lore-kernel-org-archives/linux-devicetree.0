@@ -1,37 +1,55 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 7/7] ARM: davinci_all_defconfig: select the DaVinci genpd driver in DT mode
-Date: Wed,  7 Feb 2018 14:45:53 +0100
-Message-ID: <20180207134553.13510-8-brgl@bgdev.pl>
+Subject: [PATCH 1/7] dt-bindings: soc: new driver for DaVinci genpd
+Date: Wed,  7 Feb 2018 14:45:47 +0100
+Message-ID: <20180207134553.13510-2-brgl@bgdev.pl>
 References: <20180207134553.13510-1-brgl@bgdev.pl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180207134553.13510-1-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-We can now use the generic power domains driver in DT mode. Reflect
-that in the defconfig.
+Add a simple document for the DaVinci genpd driver. We use clock pm
+exclusively hence no reg property.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/configs/davinci_all_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/soc/ti,davinci-pm-domains.txt       | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/ti,davinci-pm-domains.txt
 
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index a5d9fcd9dd9c..3bff3b78b0c3 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -211,6 +211,8 @@ CONFIG_RTC_CLASS=y
- CONFIG_RTC_DRV_OMAP=m
- CONFIG_DMADEVICES=y
- CONFIG_TI_EDMA=y
-+CONFIG_SOC_DAVINCI=y
-+CONFIG_DAVINCI_PM_DOMAINS=y
- CONFIG_MEMORY=y
- CONFIG_TI_AEMIF=m
- CONFIG_DA8XX_DDRCTL=y
+diff --git a/Documentation/devicetree/bindings/soc/ti,davinci-pm-domains.txt b/Documentation/devicetree/bindings/soc/ti,davinci-pm-domains.txt
+new file mode 100644
+index 000000000000..935d063c7b35
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/ti,davinci-pm-domains.txt
+@@ -0,0 +1,13 @@
++Device tree bindings for the genpd driver for Texas Instruments DaVinci SoCs
++
++Required properties:
++
++- compatible:           must be "ti,davinci-pm-domains"
++- #power-domain-cells:  must be 0
++
++Example:
++
++pwc1: power-controller@227000 {
++	compatible = "ti,davinci-pm-domains";
++	#power-domain-cells = <0>;
++};
 -- 
 2.16.1
