@@ -1,281 +1,120 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 04/16] arm64: dts: mt7622: add pinctrl related device
- nodes
-Date: Wed, 7 Feb 2018 12:31:40 +0100
-Message-ID: <7f7d3d94-7d4e-9b66-048a-e100a45a2137@gmail.com>
-References: <cover.1517910489.git.sean.wang@mediatek.com>
- <98781a6d32fcc8d42e4646a183246e70d5139154.1517910489.git.sean.wang@mediatek.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [RESEND PATCH v2 11/15] ASoC: qcom: qdsp6: Add
+ support to q6afe dai driver
+Date: Wed, 7 Feb 2018 17:04:06 +0530
+Message-ID: <33dbc1d9-ec33-b779-9258-4d1b13e17aaa@codeaurora.org>
+References: <20171214173402.19074-1-srinivas.kandagatla@linaro.org>
+ <20171214173402.19074-12-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <98781a6d32fcc8d42e4646a183246e70d5139154.1517910489.git.sean.wang@mediatek.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20171214173402.19074-12-srinivas.kandagatla@linaro.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org, Andy Gross <andy.gross@linaro.org>, Mark Brown <broonie@kernel.org>, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Banajit Goswami <bgoswami@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Patrick Lai <plai@codeaurora.org>, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 02/06/2018 10:52 AM, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> add pinctrl device nodes and rfb1 board, additionally include all pin
-> groups possible being used on rfb1 board and available gpio keys.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+On 12/14/2017 11:03 PM, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>
+> This patch adds support to q6afe backend dais driver.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
->  arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 200 +++++++++++++++++++++++++++
->  arch/arm64/boot/dts/mediatek/mt7622.dtsi     |   7 +
->  2 files changed, 207 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> index c08309d..bd1093a 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-> @@ -7,6 +7,8 @@
->   */
->  
->  /dts-v1/;
-> +#include <dt-bindings/input/input.h>
+>   sound/soc/qcom/Kconfig           |   5 +
+>   sound/soc/qcom/qdsp6/Makefile    |   1 +
+>   sound/soc/qcom/qdsp6/q6afe-dai.c | 241 +++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 247 insertions(+)
+>   create mode 100644 sound/soc/qcom/qdsp6/q6afe-dai.c
+>
+> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+> index dd8fb0cde614..003ce182691c 100644
+> --- a/sound/soc/qcom/Kconfig
+> +++ b/sound/soc/qcom/Kconfig
+> @@ -64,6 +64,10 @@ config SND_SOC_QDSP6_ROUTING
+>   	tristate
+>   	default n
+>   
+> +config SND_SOC_QDSP6_AFE_DAI
+> +	tristate
+> +	default n
 > +
->  #include "mt7622.dtsi"
->  
->  / {
-> @@ -17,11 +19,209 @@
->  		bootargs = "console=ttyS0,115200n1";
->  	};
->  
-> +	gpio-keys {
-> +		compatible = "gpio-keys-polled";
-> +		poll-interval = <100>;
+>   config SND_SOC_QDSP6
+>   	tristate "SoC ALSA audio driver for QDSP6"
+>   	select SND_SOC_QDSP6_AFE
+> @@ -71,6 +75,7 @@ config SND_SOC_QDSP6
+>   	select SND_SOC_QDSP6_ASM
+>   	select SND_SOC_QDSP6_CORE
+>   	select SND_SOC_QDSP6_ROUTING
+> +	select SND_SOC_QDSP6_AFE_DAI
+>   	help
+>   	 To add support for MSM QDSP6 Soc Audio.
+>   	 This will enable sound soc platform specific
+> diff --git a/sound/soc/qcom/qdsp6/Makefile b/sound/soc/qcom/qdsp6/Makefile
+> index c1ad060a2341..bd8bd02bf09e 100644
+> --- a/sound/soc/qcom/qdsp6/Makefile
+> +++ b/sound/soc/qcom/qdsp6/Makefile
+> @@ -3,3 +3,4 @@ obj-$(CONFIG_SND_SOC_QDSP6_ADM) += q6adm.o
+>   obj-$(CONFIG_SND_SOC_QDSP6_ASM) += q6asm.o
+>   obj-$(CONFIG_SND_SOC_QDSP6_CORE) += q6core.o
+>   obj-$(CONFIG_SND_SOC_QDSP6_ROUTING) += q6routing.o
+> +obj-$(CONFIG_SND_SOC_QDSP6_AFE_DAI) += q6afe-dai.o
+> diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
+> new file mode 100644
+> index 000000000000..e9865c684bcb
+> --- /dev/null
+> +++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
+> @@ -0,0 +1,241 @@
+> +/* SPDX-License-Identifier: GPL-2.0
+> +* Copyright (c) 2011-2016, The Linux Foundation
+> +* Copyright (c) 2017, Linaro Limited
+> +*/
+> +#include <linux/err.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <sound/pcm.h>
+> +#include <sound/soc.h>
+> +#include <sound/pcm_params.h>
+> +#include "q6afe.h"
 > +
-> +		factory {
-> +			label = "factory";
-> +			linux,code = <BTN_0>;
-> +			gpios = <&pio 0 0>;
-> +		};
-> +
-> +		wps {
-> +			label = "wps";
-> +			linux,code = <KEY_WPS_BUTTON>;
-> +			gpios = <&pio 102 0>;
-> +		};
-> +	};
-> +
->  	memory {
->  		reg = <0 0x40000000 0 0x3F000000>;
->  	};
->  };
->  
-> +&pio {
-> +	/* eMMC is shared pin with parallel NAND */
-> +	emmc_pins_default: emmc-pins-default {
-> +		mux {
-> +			function = "emmc", "emmc_rst";
-> +			groups = "emmc";
-> +		};
-> +	};
-> +
-> +	emmc_pins_uhs: emmc-pins-uhs {
-> +		mux {
-> +			function = "emmc";
-> +			groups = "emmc";
-> +		};
-> +	};
-> +
-> +	eth_pins: eth-pins {
-> +		mux {
-> +			function = "eth";
-> +			groups = "mdc_mdio", "rgmii_via_gmac2";
-> +		};
-> +	};
-> +
-> +	i2c1_pins: i2c1-pins {
-> +		mux {
-> +			function = "i2c";
-> +			groups =  "i2c1_0";
-> +		};
-> +	};
-> +
-> +	i2c2_pins: i2c2-pins {
-> +		mux {
-> +			function = "i2c";
-> +			groups =  "i2c2_0";
-> +		};
-> +	};
-> +
-> +	i2s1_pins: i2s1-pins {
-> +		mux {
-> +			function = "i2s";
-> +			groups =  "i2s_out_bclk_ws_mclk",
-> +				  "i2s1_in_data",
-> +				  "i2s1_out_data";
-> +		};
-> +	};
-> +
-> +	irrx_pins: irrx-pins {
-> +		mux {
-> +			function = "ir";
-> +			groups =  "ir_1_rx";
-> +		};
-> +	};
-> +
-> +	irtx_pins: irtx-pins {
-> +		mux {
-> +			function = "ir";
-> +			groups =  "ir_1_tx";
-> +		};
-> +	};
-> +
-> +	/* Parallel nand is shared pin with eMMC */
-> +	parallel_nand_pins: parallel-nand-pins {
-> +		mux {
-> +			function = "flash";
-> +			groups = "par_nand";
-> +		};
-> +	};
-> +
-> +	pcie0_pins: pcie0-pins {
-> +		mux {
-> +			groups = "pcie0_pad_perst",
-> +				 "pcie0_1_waken",
-> +				 "pcie0_1_clkreq";
-> +			function = "pcie";
-> +		};
-> +	};
-> +
-> +	pcie1_pins: pcie1-pins {
-> +		mux {
-> +			groups = "pcie1_pad_perst",
-> +				 "pcie1_0_waken",
-> +				 "pcie1_0_clkreq";
-> +			function = "pcie";
-> +		};
-> +	};
-> +
-> +	pmic_bus_pins: pmic-bus-pins {
-> +		mux {
-> +			groups = "pmic_bus";
-> +			function = "pmic";
-> +		};
-> +	};
-
-Some bikeshedding here. Can you please add function before groups, so that it is
-uniform through out the file?
-
-Thanks,
-Matthias
-
-> +
-> +	pwm7_pins: pwm1-2-pins {
-> +		mux {
-> +			function = "pwm";
-> +			groups = "pwm_ch7_2";
-> +		};
-> +	};
-> +
-> +	wled_pins: wled-pins {
-> +		mux {
-> +			function = "led";
-> +			groups = "wled";
-> +		};
-> +	};
-> +
-> +	sd0_pins_default: sd0-pins-default {
-> +		mux {
-> +			function = "sd";
-> +			groups = "sd_0";
-> +		};
-> +	};
-> +
-> +	sd0_pins_uhs: sd0-pins-uhs {
-> +		mux {
-> +			function = "sd";
-> +			groups = "sd_0";
-> +		};
-> +	};
-> +
-> +	/* Serial NAND is shared pin with SPI-NOR */
-> +	serial_nand_pins: serial-nand-pins {
-> +		mux {
-> +			function = "flash";
-> +			groups = "snfi";
-> +		};
-> +	};
-> +
-> +	spic0_pins: spic0-pins {
-> +		mux {
-> +			function = "spi";
-> +			groups = "spic0_0";
-> +		};
-> +	};
-> +
-> +	spic1_pins: spic1-pins {
-> +		mux {
-> +			function = "spi";
-> +			groups = "spic1_0";
-> +		};
-> +	};
-> +
-> +	/* SPI-NOR is shared pin with serial NAND */
-> +	spi_nor_pins: spi-nor-pins {
-> +		mux {
-> +			function = "flash";
-> +			groups = "spi_nor";
-> +		};
-> +	};
-> +
-> +	/* serial NAND is shared pin with SPI-NOR */
-> +	serial_nand_pins: serial-nand-pins {
-> +		mux {
-> +			function = "flash";
-> +			groups = "snfi";
-> +		};
-> +	};
-> +
-> +	uart0_pins: uart0-pins {
-> +		mux {
-> +			function = "uart";
-> +			groups = "uart0_0_tx_rx" ;
-> +		};
-> +	};
-> +
-> +	uart2_pins: uart2-pins {
-> +		mux {
-> +			function = "uart";
-> +			groups = "uart2_1_tx_rx" ;
-> +		};
-> +	};
-> +
-> +	watchdog_pins: watchdog-pins {
-> +		mux {
-> +			function = "watchdog";
-> +			groups = "watchdog";
-> +		};
-> +	};
+> +struct q6hdmi_dai_data {
+> +	struct q6afe_port *port;
+> +	struct q6afe_hdmi_cfg port_config;
+> +	bool is_port_started;
 > +};
 > +
->  &uart0 {
->  	status = "okay";
->  };
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> index 81207e6..8211bf7 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> @@ -147,6 +147,13 @@
->  		#clock-cells = <1>;
->  	};
->  
-> +	pio: pinctrl@10211000 {
-> +		compatible = "mediatek,mt7622-pinctrl";
-> +		reg = <0 0x10211000 0 0x1000>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +	};
+> +static int q6hdmi_format_put(struct snd_kcontrol *kcontrol,
+> +				struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct q6hdmi_dai_data *dai_data = kcontrol->private_data;
+> +	int value = ucontrol->value.integer.value[0];
 > +
->  	gic: interrupt-controller@10300000 {
->  		compatible = "arm,gic-400";
->  		interrupt-controller;
-> 
+> +	dai_data->port_config.datatype = value;
+....
+> +
+> +static struct platform_driver q6afe_dai_driver = {
+> +	.probe  = q6afe_dai_dev_probe,
+> +	.remove = q6afe_dai_dev_remove,
+> +	.driver = {
+> +		.name = "q6afe_dai",
+> +		.owner = THIS_MODULE,
+> +	},
+> +};
+> +
+> +module_platform_driver(q6afe_dai_driver);
+MODULE_LICENSE missing.
