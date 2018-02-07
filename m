@@ -1,64 +1,46 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] arm64: tegra: Add Tegra194 chip device tree
-Date: Wed, 7 Feb 2018 10:21:41 +0000
-Message-ID: <458ba9f9-d703-9edf-8e7b-bc9d0f0ef0cc@arm.com>
-References: <1517901757-15353-1-git-send-email-mperttunen@nvidia.com>
- <1517901757-15353-7-git-send-email-mperttunen@nvidia.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 2/4] dt-bindings: soc: add header files required for MT7623A SCPSYS dt-binding
+Date: Wed, 7 Feb 2018 18:22:48 +0800
+Message-ID: <9955178588f8bde01782d0645b25a7b24cceb87b.1517998367.git.sean.wang@mediatek.com>
+References: <ecfc548fc3d22aa335b50e552ad2ad88427a0bb2.1517998367.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1517901757-15353-7-git-send-email-mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-GB
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <ecfc548fc3d22aa335b50e552ad2ad88427a0bb2.1517998367.git.sean.wang@mediatek.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, rjw@rjwysocki.net, khilman@baylibre.com
+Cc: ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mikko,
+From: Sean Wang <sean.wang@mediatek.com>
 
-On 06/02/18 07:22, Mikko Perttunen wrote:
-> Add the chip-level device tree, including binding headers, for the
-> NVIDIA Tegra194 "Xavier" system-on-chip. Only a small subset of devices
-> are initially available, enough to boot to UART console.
-> 
-> Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi       | 342 +++++++++++++
->  include/dt-bindings/clock/tegra194-clock.h     | 664 +++++++++++++++++++++++++
->  include/dt-bindings/gpio/tegra194-gpio.h       |  59 +++
->  include/dt-bindings/power/tegra194-powergate.h |  49 ++
->  include/dt-bindings/reset/tegra194-reset.h     | 166 +++++++
->  5 files changed, 1280 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/nvidia/tegra194.dtsi
->  create mode 100644 include/dt-bindings/clock/tegra194-clock.h
->  create mode 100644 include/dt-bindings/gpio/tegra194-gpio.h
->  create mode 100644 include/dt-bindings/power/tegra194-powergate.h
->  create mode 100644 include/dt-bindings/reset/tegra194-reset.h
-> 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> new file mode 100644
-> index 000000000000..dda28d758cab
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+Add relevant header files required for dt-bindings of SCPSYS power domain
+control for subsystems found on MT7623A SoC.
 
-[...]
+v1 -> v2: fix typos and treat the patch as a dt-binding patch
 
-> +		gic: interrupt-controller@3881000 {
-> +			compatible = "arm,gic-400";
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			reg = <0x03881000 0x1000>,
-> +			      <0x03882000 0x2000>;
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Cc: Rob Herring <robh@kernel.org>
+---
+ include/dt-bindings/power/mt7623a-power.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 include/dt-bindings/power/mt7623a-power.h
 
-You're missing the GICH and GICV regions here.
-
-> +			interrupts = <GIC_PPI 9
-> +				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +			interrupt-parent = <&gic>;
-> +		};
-Thanks,
-
-	M.
+diff --git a/include/dt-bindings/power/mt7623a-power.h b/include/dt-bindings/power/mt7623a-power.h
+new file mode 100644
+index 0000000..2544822
+--- /dev/null
++++ b/include/dt-bindings/power/mt7623a-power.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _DT_BINDINGS_POWER_MT7623A_POWER_H
++#define _DT_BINDINGS_POWER_MT7623A_POWER_H
++
++#define MT7623A_POWER_DOMAIN_CONN	0
++#define MT7623A_POWER_DOMAIN_ETH	1
++#define MT7623A_POWER_DOMAIN_HIF	2
++#define MT7623A_POWER_DOMAIN_IFR_MSC	3
++
++#endif /* _DT_BINDINGS_POWER_MT7623A_POWER_H */
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
