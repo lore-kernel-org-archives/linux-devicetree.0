@@ -1,79 +1,51 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 15/15] ARM: dts: dra7: Add high speed modes capability
- to MMC1/MMC2 dt node
-Date: Wed, 7 Feb 2018 14:41:48 +0530
-Message-ID: <210939ed-67fc-fa37-b4f2-c1faefcc4642@ti.com>
-References: <20180206125806.19350-1-kishon@ti.com>
- <20180206125806.19350-16-kishon@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 0/4] gpio: driver for the RPi3 GPIO expander
+Date: Wed, 7 Feb 2018 10:13:10 +0100
+Message-ID: <CACRpkdYGYtF5iw=ZDF9O5LdwfvktEfDORjYXZDmFNihVSP+c3w@mail.gmail.com>
+References: <cover.1516105893.git.baruch@tkos.co.il> <CACRpkdZAtVfAU-k9EUihH6peY2d1Ntn3jboVMBn9adReNLupow@mail.gmail.com>
+ <20180206162759.awghecpv4ihaatz7@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180206125806.19350-16-kishon-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20180206162759.awghecpv4ihaatz7@tarshish>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-gpio@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Kishon,
+On Tue, Feb 6, 2018 at 5:27 PM, Baruch Siach <baruch@tkos.co.il> wrote:
+> On Tue, Feb 06, 2018 at 02:42:48PM +0100, Linus Walleij wrote:
+>> On Tue, Jan 16, 2018 at 1:45 PM, Baruch Siach <baruch@tkos.co.il> wrote:
+>>
+>> > The Raspberry Pi 3 has a GPIO expander that controls, among others, the
+>> > activity LED, and the camera connector GPIOs. The GPIO expander on an I2C bus
+>> > that is not directly controlled from the ARM core. The VC4 firmware controls
+>> > the I2C bus, and allows the ARM core to set/get GPIO settings over its mailbox
+>> > interface.
+>> >
+>> > This series adds support for the RPi3 expander.
+>> >
+>> > The driver is ported from the downstream kernel at
+>> > https://github.com/raspberrypi/linux/, branch rpi-4.9.y.
+>> >
+>> > Changes in v3:
+>> >
+>> >   * Kconfig tweaks
+>> >   * Check rpi_exp_gpio_get_polarity() return value
+>> >   * Redundant header removal
+>> >   * Redundant platform_set_drvdata() call removal
+>> >   * Small coding style changes
+>>
+>> All is looking pretty good. I see Rob had some last minute comments,
+>> but please rebase and repost post v4.16-rc1 so we can get this merged,
+>> we need to get this upstream.
+>
+> I was about to send v4 when I saw your email. I based v4 on current LinusT's
+> tree as of e237f98a9c. I guess that affected files will not change before
+> v4.16-rc1, but I can wait a few more days for -rc1.
 
-On Tuesday 06 February 2018 06:28 PM, Kishon Vijay Abraham I wrote:
-> Add UHS/HS200/DDR speed mode capability to MMC1 and MMC2 dt nodes.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+It's fine to send if you feel it is ready. I am already queueing
+stuff for v4.17.
 
-Along with this, dont we need to have
-
-	/delete-property/ mmc-hs200-1_8v;
-
-for eMMC on Beagle x15 which does not support HS200?
-
-Or are you planning to depend on lack of pinctrl entries for HS200 to
-take care of that?
-
-Thanks,
-Sekhar
-
-
-> ---
->  arch/arm/boot/dts/dra7.dtsi | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index 7bf33d522b14..feb496e7c5ef 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -1073,7 +1073,13 @@
->  			status = "disabled";
->  			pbias-supply = <&pbias_mmc_reg>;
->  			max-frequency = <192000000>;
-> +			sd-uhs-sdr104;
-> +			sd-uhs-sdr50;
-> +			sd-uhs-ddr50;
-> +			sd-uhs-sdr25;
-> +			sd-uhs-sdr12;
->  			cap-sd-highspeed;
-> +			mmc-ddr-1_8v;
->  			cap-mmc-highspeed;
->  		};
->  
-> @@ -1092,6 +1098,10 @@
->  			status = "disabled";
->  			max-frequency = <192000000>;
->  			cap-sd-highspeed;
-> +			sd-uhs-sdr25;
-> +			sd-uhs-sdr12;
-> +			mmc-hs200-1_8v;
-> +			mmc-ddr-1_8v;
->  			cap-mmc-highspeed;
->  		};
->  
-> -- 
-> 2.11.0
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
