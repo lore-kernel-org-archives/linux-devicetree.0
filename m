@@ -1,73 +1,194 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] regulator: core: add API to get voltage
- constraints
-Date: Wed, 7 Feb 2018 15:01:55 +0000
-Message-ID: <20180207150155.GD6003@sirena.org.uk>
-References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
- <1517934852-23255-2-git-send-email-pdeschrijver@nvidia.com>
- <20180206163544.GI5681@sirena.org.uk>
- <20180207084744.GG7031@tbergstrom-lnx.Nvidia.com>
- <20180207104351.GA6003@sirena.org.uk>
- <20180207123750.GA5850@tbergstrom-lnx.Nvidia.com>
- <20180207141846.GC6003@sirena.org.uk>
- <20180207143213.GB5850@tbergstrom-lnx.Nvidia.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v2 1/4] backlight: pwm_bl: linear interpolation between
+ brightness-levels
+Date: Wed, 7 Feb 2018 15:07:22 +0000
+Message-ID: <20180207150722.zblz6dnfcmrvlxa4@oak.lan>
+References: <20180207141337.22247-1-enric.balletbo@collabora.com>
+ <20180207141337.22247-2-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1sNVjLsmu1MXqwQ/"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180207143213.GB5850-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20180207141337.22247-2-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 07, 2018 at 03:13:34PM +0100, Enric Balletbo i Serra wrote:
+> Setting num-interpolated-steps in the dts will allow you to have linear
+> interpolation between values of brightness-levels. This way a high
+> resolution pwm duty cycle can be used without having to list out every
+> possible value in the dts. This system also allows for gamma corrected
+> values.
+> 
+> The most simple example is interpolate between two brightness values a
+> number of steps, this can be done setting the following in the dts:
+> 
+>   brightness-levels = <0 65535>;
+>   num-interpolated-steps = <1024>;
+>   default-brightness-level = <512>;
+> 
+> This will create a brightness-level table with the following values:
+> 
+>   <0 63 126 189 252 315 378 441 ... 64260 64323 64386 64449 65535>
+> 
+> Another use case can be describe a gamma corrected curve, as we have
+> better sensitivity at low luminance than high luminance we probably
+> want have smaller steps for low brightness levels values and bigger
+> steps for high brightness levels values. This can be achieved with
+> the following in the dts:
+> 
+>   brightness-levels = <0 4096 65535>;
+>   num-interpolated-steps = <1024>;
+>   default-brightness-level = <512>;
+> 
+> This will create a brightness-levels table with the following values:
+> 
+>   <0 4 8 12 16 20 ... 4096 4156 4216 4276 ... 65535>
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
---1sNVjLsmu1MXqwQ/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'd really like to ack this one (especially so given I'm extremely late 
+with a review) but unfortunately...
 
-On Wed, Feb 07, 2018 at 04:32:13PM +0200, Peter De Schrijver wrote:
-> On Wed, Feb 07, 2018 at 02:18:46PM +0000, Mark Brown wrote:
 
-> > You're going to have to provide a much better explanation of what this
-> > is doing - right now it seems like an abuse of constraints.  Client
-> > drivers can already determine if a particular voltage they want to set
-> > is available via regulator_list_voltage() and so on, that's what
-> > constraints are there to set.  It sounds like you're trying to use them
-> > for something else but you're really not explaining your use case
-> > clearly.
+> ---
+> Changes since v1:
+> - None.
+> 
+>  drivers/video/backlight/pwm_bl.c | 86 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index 8e3f1245f5c5..9dbf0b3e806f 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -147,7 +147,11 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  				  struct platform_pwm_backlight_data *data)
+>  {
+>  	struct device_node *node = dev->of_node;
+> +	unsigned int num_levels = 0;
+> +	unsigned int levels_count;
+> +	unsigned int num_steps;
+>  	struct property *prop;
+> +	unsigned int *table;
+>  	int length;
+>  	u32 value;
+>  	int ret;
+> @@ -167,6 +171,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  	/* read brightness levels from DT property */
+>  	if (data->max_brightness > 0) {
+>  		size_t size = sizeof(*data->levels) * data->max_brightness;
+> +		unsigned int i, j, n = 0;
+>  
+>  		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
+>  		if (!data->levels)
+> @@ -184,6 +189,87 @@ static int pwm_backlight_parse_dt(struct device *dev,
+>  			return ret;
+>  
+>  		data->dft_brightness = value;
+> +
+> +		/*
+> +		 * This property is optional, if is set enables linear
+> +		 * interpolation between each of the values of brightness levels
+> +		 * and creates a new pre-computed table.
+> +		 */
+> +		of_property_read_u32(node, "num-interpolated-steps",
+> +				     &num_steps);
+> +
+> +		/*
+> +		 * Make sure that there is at least two entries in the
+> +		 * brightness-levels table, otherwise we can't interpolate
+> +		 * between two points.
+> +		 */
+> +		if (num_steps) {
+> +			if (data->max_brightness < 2) {
+> +				dev_err(dev, "can't interpolate\n");
+> +				return -EINVAL;
+> +			}
+> +
+> +			/*
+> +			 * Recalculate the number of brightness levels, now
+> +			 * taking in consideration the number of interpolated
+> +			 * steps between two levels.
+> +			 */
+> +			for (i = 0; i < data->max_brightness - 1; i++) {
+> +				if ((data->levels[i + 1] - data->levels[i]) /
+> +				   num_steps)
+> +					num_levels += num_steps;
+> +				else
+> +					num_levels++;
+> +			}
+> +			num_levels++;
+> +			dev_dbg(dev, "new number of brightness levels: %d\n",
+> +				num_levels);
+> +
+> +			/*
+> +			 * Create a new table of brightness levels with all the
+> +			 * interpolated steps.
+> +			 */
+> +			table = kcalloc(num_levels, sizeof(*table), GFP_KERNEL);
+> +			if (!table)
+> +				return -ENOMEM;
+> +
+> +			/* Fill the interpolated table. */
+> +			levels_count = 0;
+> +			for (i = 0; i < data->max_brightness - 1; i++) {
+> +				value = data->levels[i];
+> +				n = (data->levels[i + 1] - value) / num_steps;
+> +				if (n > 0) {
+> +					for (j = 0; j < num_steps; j++) {
+> +						table[levels_count] = value;
+> +						value += n;
+> +						levels_count++;
+> +					}
+> +				} else {
+> +					table[levels_count] = data->levels[i];
+> +					levels_count++;
+> +				}
+> +			}
+> +			table[levels_count] = data->levels[i];
+> +
+> +			/*
+> +			 * As we use interpolation lets remove current
+> +			 * brightness levels table for the new interpolated
+> +			 * table.
+> +			 */
+> +			devm_kfree(dev, data->levels);
+> +			data->levels = devm_kcalloc(dev, num_levels,
+> +						    sizeof(*data->levels),
+> +						    GFP_KERNEL);
+> +			memcpy(data->levels, table,
+> +			       num_levels * sizeof(*table));
 
-> There is no way to query what voltage I will actually get for a given input
+... this looks a bit too odd.
 
-I looked at patch 2.  It looked like an abuse of what constraints do,
-and had zero explanation of why it was doing what it was doing.  In any
-case we need the regulator code and changelog to be clear about what the
-interface is for and why it should be used, that's not happening here.
+I think I can live we a pre-calculated table (not my preference... but I
+can live with it). However the way table is allocated, then allocated 
+again and copied without a NULL check isn't OK.
 
-> voltage. If you read drivers/clk/tegra/cvb. (you did do that right?), you
-> will see that there is a minimum and maximum voltage defined by
-> charaterization which needs to be capped to the regulator generated voltages
-> for those points.
+Can't we just switch the first allocation over to a devres alloc and
+then just swap pointers here?
 
-I can't really tell what you're saying here.  If the driver needs to
-know if it can set the a given voltage there's already an API for doing
-that as I said.  If you're trying to convey this minimum and maximum
-voltage via the constraints that sounds like an abuse of the constraints.
+And a minor nit: do we need calloc?  The loop should initialize every 
+element anyway.
 
---1sNVjLsmu1MXqwQ/
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Daniel.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlp7FOIACgkQJNaLcl1U
-h9Aspgf+MssimMSW7Qbj2UivzOJ4IsFXPul0dhXEZnBgvN+DwYbMkV8MG7g1bWdr
-M7Z0LE3RLyd/oVzJihAA99ROWs1lFlwFVzKphlqMcMHU9x2ZzYfjJwhnlwNP9AjL
-SSGfYCyaD6BqfCF8aEWmpe0XXu107XivI7BYlYU5TBjbCh8NWMBDBXZjdC68PON+
-/bKFnhujKGW6kV+fksmorZQ4u3Tz0LXFJRQc3shsU8Aw4q+Jh2kirmXYP8Iu8Cp3
-0xRE49lwrhw//uwg61C7PY9VHzns/vFwH7goskLWhGVjbmmscz1qmnz0dQ9xrIjE
-TMZiVXKZonoqEXuJfWyDlTV6fCZhHg==
-=2qiR
------END PGP SIGNATURE-----
 
---1sNVjLsmu1MXqwQ/--
+> +			kfree(table);
+> +			/*
+> +			 * Reassign max_brightness value to the new total number
+> +			 * of brightness levels.
+> +			 */
+> +			data->max_brightness = num_levels;
+> +		}
+> +
+>  		data->max_brightness--;
+>  	}
+>  
+> -- 
+> 2.15.1
+> 
