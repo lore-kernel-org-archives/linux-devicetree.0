@@ -1,78 +1,175 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 06/16] arm64: dts: mt7622: add cpufreq related device
- nodes
-Date: Wed, 7 Feb 2018 16:34:58 +0800
-Message-ID: <1517992498.9025.8.camel@mtkswgap22>
-References: <cover.1517910489.git.sean.wang@mediatek.com>
-         <fc5bdf53b92bd7a96e94b714d8d13deebca95c28.1517910489.git.sean.wang@mediatek.com>
-         <20180207033331.GK28462@vireshk-i7> <1517984178.9025.2.camel@mtkswgap22>
-         <20180207061837.GM28462@vireshk-i7>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v5 4/4] irqchip/gic-v3-its: add ability to resend MAPC on
+ resume
+Date: Wed, 7 Feb 2018 08:46:42 +0000
+Message-ID: <8276f426-e4a0-c400-9f87-31be3d6b1733@arm.com>
+References: <20180207014117.62611-1-dbasehore@chromium.org>
+ <20180207014117.62611-5-dbasehore@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180207061837.GM28462@vireshk-i7>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180207014117.62611-5-dbasehore@chromium.org>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Derek Basehore <dbasehore@chromium.org>, linux-kernel@vger.kernel.org
+Cc: Soby.Mathew@arm.com, sudeep.holla@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, tglx@linutronix.de, briannorris@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-02-07 at 11:48 +0530, Viresh Kumar wrote:
-> On 07-02-18, 14:16, Sean Wang wrote:
-> > On Wed, 2018-02-07 at 09:03 +0530, Viresh Kumar wrote:
-> > > On 06-02-18, 17:52, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > > >  	cpus {
-> > > >  		#address-cells = <2>;
-> > > >  		#size-cells = <0>;
-> > > > @@ -26,6 +70,10 @@
-> > > >  			device_type = "cpu";
-> > > >  			compatible = "arm,cortex-a53", "arm,armv8";
-> > > >  			reg = <0x0 0x0>;
-> > > > +			clocks = <&infracfg CLK_INFRA_MUX1_SEL>,
-> > > > +				 <&apmixedsys CLK_APMIXED_MAIN_CORE_EN>;
-> > > > +			clock-names = "cpu", "intermediate";
-> > > > +			operating-points-v2 = <&cpu_opp_table>;
-> > > >  			enable-method = "psci";
-> > > >  			clock-frequency = <1300000000>;
-> > > >  		};
-> > > > @@ -34,6 +82,7 @@
-> > > >  			device_type = "cpu";
-> > > >  			compatible = "arm,cortex-a53", "arm,armv8";
-> > > >  			reg = <0x0 0x1>;
-> > > > +			operating-points-v2 = <&cpu_opp_table>;
-> > > >  			enable-method = "psci";
-> > > >  			clock-frequency = <1300000000>;
-> > > >  		};
-> > > 
-> > > Sorry for not picking this earlier, but you should probably add the same clock
-> > > related properties for both cpu nodes here. Things will break if CPU1 is used by
-> > > the cpufreq core to bring the cpufreq policy online.
-> > > 
-> > > This can happen if cpufreq driver is a module, CPU0 is hotplugged out and then
-> > > the cpufreq driver is inserted.
-> > > 
-> > 
-> > mt7622 cpu0 does not support hotplug. do I still need to add same clock
-> > related properties for both cpu nodes here?
+On 07/02/18 01:41, Derek Basehore wrote:
+> This adds functionality to resend the MAPC command to an ITS node on
+> resume. If the ITS is powered down during suspend and the collections
+> are not backed by memory, the ITS will lose that state. This just sets
+> up the known state for the collections after the ITS is restored.
 > 
-> Normally we should always add these properties to all the CPUs, as that's the
-> real scenario hardware configuration wise.
+> This is enabled via the reset-on-suspend flag in the DTS for an ITS
+> that has a non-zero number of collections stored in it.
+> 
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c   | 80 ++++++++++++++++++++------------------
+>  include/linux/irqchip/arm-gic-v3.h |  1 +
+>  2 files changed, 43 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 5e63635e2a7b..dd6cd6e68ed0 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -1942,52 +1942,53 @@ static void its_cpu_init_lpis(void)
+>  	dsb(sy);
+>  }
+>  
+> -static void its_cpu_init_collection(void)
+> +static void its_cpu_init_collection(struct its_node *its)
+>  {
+> -	struct its_node *its;
+> -	int cpu;
+> -
+> -	spin_lock(&its_lock);
+> -	cpu = smp_processor_id();
+> -
+> -	list_for_each_entry(its, &its_nodes, entry) {
+> -		u64 target;
+> +	int cpu = smp_processor_id();
+> +	u64 target;
+>  
+> -		/* avoid cross node collections and its mapping */
+> -		if (its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) {
+> -			struct device_node *cpu_node;
+> +	/* avoid cross node collections and its mapping */
+> +	if (its->flags & ITS_FLAGS_WORKAROUND_CAVIUM_23144) {
+> +		struct device_node *cpu_node;
+>  
+> -			cpu_node = of_get_cpu_node(cpu, NULL);
+> -			if (its->numa_node != NUMA_NO_NODE &&
+> -				its->numa_node != of_node_to_nid(cpu_node))
+> -				continue;
+> -		}
+> +		cpu_node = of_get_cpu_node(cpu, NULL);
+> +		if (its->numa_node != NUMA_NO_NODE &&
+> +			its->numa_node != of_node_to_nid(cpu_node))
+> +			return;
+> +	}
+>  
+> +	/*
+> +	 * We now have to bind each collection to its target
+> +	 * redistributor.
+> +	 */
+> +	if (gic_read_typer(its->base + GITS_TYPER) & GITS_TYPER_PTA) {
+>  		/*
+> -		 * We now have to bind each collection to its target
+> +		 * This ITS wants the physical address of the
+>  		 * redistributor.
+>  		 */
+> -		if (gic_read_typer(its->base + GITS_TYPER) & GITS_TYPER_PTA) {
+> -			/*
+> -			 * This ITS wants the physical address of the
+> -			 * redistributor.
+> -			 */
+> -			target = gic_data_rdist()->phys_base;
+> -		} else {
+> -			/*
+> -			 * This ITS wants a linear CPU number.
+> -			 */
+> -			target = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
+> -			target = GICR_TYPER_CPU_NUMBER(target) << 16;
+> -		}
+> +		target = gic_data_rdist()->phys_base;
+> +	} else {
+> +		/* This ITS wants a linear CPU number. */
+> +		target = gic_read_typer(gic_data_rdist_rd_base() + GICR_TYPER);
+> +		target = GICR_TYPER_CPU_NUMBER(target) << 16;
+> +	}
+>  
+> -		/* Perform collection mapping */
+> -		its->collections[cpu].target_address = target;
+> -		its->collections[cpu].col_id = cpu;
+> +	/* Perform collection mapping */
+> +	its->collections[cpu].target_address = target;
+> +	its->collections[cpu].col_id = cpu;
+>  
+> -		its_send_mapc(its, &its->collections[cpu], 1);
+> -		its_send_invall(its, &its->collections[cpu]);
+> -	}
+> +	its_send_mapc(its, &its->collections[cpu], 1);
+> +	its_send_invall(its, &its->collections[cpu]);
+> +}
+> +
+> +static void its_cpu_init_collections(void)
+> +{
+> +	struct its_node *its;
+> +
+> +	spin_lock(&its_lock);
+> +
+> +	list_for_each_entry(its, &its_nodes, entry)
+> +		its_cpu_init_collection(its);
+>  
+>  	spin_unlock(&its_lock);
+>  }
+> @@ -3127,6 +3128,9 @@ static void its_restore_enable(void)
+>  			its_write_baser(its, baser, baser->val);
+>  		}
+>  		writel_relaxed(its->ctlr_save, base + GITS_CTLR);
+> +
+> +		if (GITS_TYPER_HWCOLLCNT(gic_read_typer(base + GITS_TYPER)) > 0)
+> +			its_cpu_init_collection(its);
+
+This isn't correct. Think of a system where half the collections are in
+HW, and the other half memory based (nothing in the spec forbids this).
+You must evaluate the CID of each collection and replay the MAPC *only*
+if it falls into the range [0..HCC-1]. The memory-based collections are
+already mapped, and remapping an already mapped collection requires
+extra care (see MAPC and the UNPREDICTABLE behaviour when V=1), so don't
+go there.
+
+>  	}
+>  	spin_unlock(&its_lock);
+>  }
+> @@ -3393,7 +3397,7 @@ int its_cpu_init(void)
+>  			return -ENXIO;
+>  		}
+>  		its_cpu_init_lpis();
+> -		its_cpu_init_collection();
+> +		its_cpu_init_collections();
+>  	}
+>  
+>  	return 0;
+> diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+> index c00c4c33e432..c9c33b91a1f1 100644
+> --- a/include/linux/irqchip/arm-gic-v3.h
+> +++ b/include/linux/irqchip/arm-gic-v3.h
+> @@ -313,6 +313,7 @@
+>  #define GITS_TYPER_DEVBITS(r)		((((r) >> GITS_TYPER_DEVBITS_SHIFT) & 0x1f) + 1)
+>  #define GITS_TYPER_PTA			(1UL << 19)
+>  #define GITS_TYPER_HWCOLLCNT_SHIFT	24
+> +#define GITS_TYPER_HWCOLLCNT(r)		(((r) >> GITS_TYPER_HWCOLLCNT_SHIFT) & 0xff)
+>  #define GITS_TYPER_VMOVP		(1ULL << 37)
+>  
+>  #define GITS_IIDR_REV_SHIFT		12
 > 
 
-Agree on, I will add these missing clock properties also into the cpu1
-node to reflect the hardware actually should have. 
+Thanks,
 
-That also is devicetree wants us to do to describe the device more
-closely.
-
-> But I am not sure if something else will break if you don't provide clocks in
-> CPU1.
-> 
-> @Rob @Mark: What do you suggest ?
-> 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	M.
+-- 
+Jazz is not dead. It just smells funny...
