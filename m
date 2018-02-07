@@ -1,40 +1,52 @@
-From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Subject: [PATCH 6/7] ARM: davinci: select generic power domains for DaVinci in DT mode
-Date: Wed,  7 Feb 2018 14:45:52 +0100
-Message-ID: <20180207134553.13510-7-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 3/7] ARM: davinci: don't setup pm_clk if we're using genpd
+Date: Wed,  7 Feb 2018 14:45:49 +0100
+Message-ID: <20180207134553.13510-4-brgl@bgdev.pl>
 References: <20180207134553.13510-1-brgl@bgdev.pl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180207134553.13510-1-brgl-ARrdPY/1zhM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180207134553.13510-1-brgl@bgdev.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Automatically select the genpd framework in DT mode.
+As the first step in switching to using the genpd driver in DT mode,
+check if a relevant genpd node exists and don't setup the clock pm in
+this case.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-davinci/pm_domain.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index da8a039d65f9..cb5dd239e375 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -60,6 +60,7 @@ config MACH_DA8XX_DT
- 	depends on ARCH_DAVINCI_DA850
- 	select PINCTRL
- 	select TIMER_OF
-+	select PM_GENERIC_DOMAINS if PM
- 	help
- 	  Say y here to include support for TI DaVinci DA850 based using
- 	  Flattened Device Tree. More information at Documentation/devicetree
+diff --git a/arch/arm/mach-davinci/pm_domain.c b/arch/arm/mach-davinci/pm_domain.c
+index 78eac2c0c146..98a4f3fcba50 100644
+--- a/arch/arm/mach-davinci/pm_domain.c
++++ b/arch/arm/mach-davinci/pm_domain.c
+@@ -13,6 +13,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/pm_clock.h>
+ #include <linux/platform_device.h>
++#include <linux/of.h>
+ 
+ static struct dev_pm_domain davinci_pm_domain = {
+ 	.ops = {
+@@ -28,7 +29,13 @@ static struct pm_clk_notifier_block platform_bus_notifier = {
+ 
+ static int __init davinci_pm_runtime_init(void)
+ {
+-	pm_clk_add_notifier(&platform_bus_type, &platform_bus_notifier);
++	struct device_node *np;
++
++	/* Use pm_clk as fallback if we're not using genpd. */
++	np = of_find_compatible_node(NULL, NULL, "ti,davinci-pm-domains");
++	if (!np)
++		pm_clk_add_notifier(&platform_bus_type,
++				    &platform_bus_notifier);
+ 
+ 	return 0;
+ }
 -- 
 2.16.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
