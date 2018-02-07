@@ -1,69 +1,126 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
-Date: Wed, 7 Feb 2018 09:41:22 -0200
-Message-ID: <CAOMZO5DVoh67DZuwEtKpDaEkU2x1=qz92fiYmf9SQtidTbnhXg@mail.gmail.com>
-References: <20180201174923.7385-1-l.stach@pengutronix.de> <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
- <1517825351.3175.3.camel@pengutronix.de> <CACRpkdanb3XocUpmTaFTh-vsApucX0PzuqRg_fA2ORUFtrVGJA@mail.gmail.com>
- <1517914394.3175.21.camel@pengutronix.de> <CACRpkdbuGOrm=y=yPpsrkckk8+uKGxv6J9WGw9y=yiGcmbqn+w@mail.gmail.com>
- <1517932068.3175.27.camel@pengutronix.de> <CACRpkdYy43E5H=tRAf+YDvAY1RDTJ34nHSmqCXEn9xaknbLKZQ@mail.gmail.com>
- <20180207111156.a7cevrz3dbk2f4fb@pengutronix.de>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 14/16] arm64: dts: mt7622: add thermal and related
+ nodes
+Date: Wed, 7 Feb 2018 12:43:56 +0100
+Message-ID: <4db5c81b-0e55-3676-d7c8-d1b6aefb99c4@gmail.com>
+References: <cover.1517910489.git.sean.wang@mediatek.com>
+ <687a7c43e3e3260ebdf004a96d2cde143f563250.1517910489.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180207111156.a7cevrz3dbk2f4fb-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <687a7c43e3e3260ebdf004a96d2cde143f563250.1517910489.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "A . s . Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[Adding Shawn on Cc]
 
-On Wed, Feb 7, 2018 at 9:11 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
 
-> My opinion is that all that is generic about padctrl is a device driver
-> saying "Put my pins into a suitable mode". That is what padctrl is good
-> for and we are there for years now. I have always been happy with the
-> plain register values in the device tree. Before device tree we had
-> exactly these values in the board files and I never heard anyone
-> complaining about it. There were defines for the bits in the register
-> which you could use when you were unhappy with plain register values.
->
-> It's really trivial to look in the reference manual to make up the
-> needed register values. It's also trivial to take a register value
-> and look into the reference manual what this value does. Every
-> translation layer, call it generic properties, just makes things more
-> complicated. Often enough our input is register value tables
-> from either our customers our from spreadsheets from FSL/NXP. Every
-> translation layer in the way just means we have to translate the already
-> existing register values into something hoping that this correctly
-> translates back into the register values.
->
-> It's not that some board designer comes up with "I need a drive strength
-> of 150mA" and wants to put that value into the device tree. Instead they
-> start with the reference manual, see which values they can (must) adjust
-> and then adjust the values until they are happy. No one wants to ask
-> questions like "How do I have to manipulate that device tree to change
-> that particular bit?"
->
-> As said, I am happy with plain register values in the device tree and
-> I consider everything else overengineered.
-> FSL/NXP Reference Manuals are freely available and of high quality so
-> everybody can understand the register values. There's nothing magic to
-> them. That might change slightly when the Manuals are not available, but
-> even then I think that not the device tree ABI is the right place to
-> add that missing documentation.
+On 02/06/2018 10:53 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> add nodes for the thermal controller and associated thermal zone using
+> CPU as the cooling device for each trip point. In addition, add a fixup
+> for thermal_calibration on nvmem should be 12 bytes as the minimal
+> requirement.
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 72 +++++++++++++++++++++++++++++++-
+>  1 file changed, 71 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> index e6dd4f6..6cf67dd 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -12,6 +12,7 @@
+>  #include <dt-bindings/phy/phy.h>
+>  #include <dt-bindings/power/mt7622-power.h>
+>  #include <dt-bindings/reset/mt7622-reset.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	compatible = "mediatek,mt7622";
+> @@ -75,6 +76,7 @@
+>  				 <&apmixedsys CLK_APMIXED_MAIN_CORE_EN>;
+>  			clock-names = "cpu", "intermediate";
+>  			operating-points-v2 = <&cpu_opp_table>;
+> +			#cooling-cells = <2>;
+>  			enable-method = "psci";
+>  			clock-frequency = <1300000000>;
+>  		};
+> @@ -119,6 +121,58 @@
+>  		};
+>  	};
+>  
+> +	thermal-zones {
+> +		cpu_thermal: cpu-thermal {
+> +			polling-delay-passive = <1000>;
+> +			polling-delay = <1000>;
+> +
+> +			thermal-sensors = <&thermal 0>;
+> +
+> +			trips {
+> +				cpu_passive: cpu-passive {
+> +					temperature = <47000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				cpu_active: cpu-active {
+> +					temperature = <67000>;
+> +					hysteresis = <2000>;
+> +					type = "active";
+> +				};
+> +
+> +				cpu_hot: cpu-hot {
+> +					temperature = <87000>;
+> +					hysteresis = <2000>;
+> +					type = "hot";
+> +				};
+> +
+> +				cpu-crit {
+> +					temperature = <107000>;
+> +					hysteresis = <2000>;
+> +					type = "critical";
+> +				};
+> +			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_passive>;
+> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +
+> +				map1 {
+> +					trip = <&cpu_active>;
+> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +
+> +				map2 {
+> +					trip = <&cpu_hot>;
+> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	timer {
+>  		compatible = "arm,armv8-timer";
+>  		interrupt-parent = <&gic>;
+> @@ -201,7 +255,7 @@
+>  		#size-cells = <1>;
+>  
+>  		thermal_calibration: calib@198 {
+> -			reg = <0x198 0x8>;
+> +			reg = <0x198 0xc>;
 
-I agree 100% with Sascha.
+Any reason why this is not part of patch 8/16?
 
-I am also happy with the current plain register values in device tree.
-
-Having two methods (plain register values on most of i.MX SoCs and the
-new generic one for imx7ulp, imx8mq) is confusing for the end users.
-
-I would prefer to use the plain register values in device tree for all
-i.MX SoCs instead.
-
-Thanks
+Regards,
+Matthias
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
