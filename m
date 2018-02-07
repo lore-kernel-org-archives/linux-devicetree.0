@@ -1,69 +1,72 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: [PATCH v2 4/5] drm/panel: simple: Use display_timing for lq123p1jx31
-Date: Wed,  7 Feb 2018 12:23:58 -0500
-Message-ID: <20180207172404.107358-5-seanpaul@chromium.org>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 5/5] arm64: dts: rockchip: Specify override mode for kevin panel
+Date: Wed,  7 Feb 2018 12:23:59 -0500
+Message-ID: <20180207172404.107358-6-seanpaul@chromium.org>
 References: <20180207172404.107358-1-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180207172404.107358-1-seanpaul@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180207172404.107358-1-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Emil Renner Berthing <kernel-sKpHZLTYfq0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Q29udmVydCB0aGUgc2hhcnAgbHExMjNwMWp4MzEgZnJvbSB1c2luZyBhIGZpeGVkIG1vZGUgdG8g
-c3BlY2lmeWluZyBhCmRpc3BsYXkgdGltaW5nIHdpdGggbWluL3R5cC9tYXggdmFsdWVzLiBUaGlz
-IGFsbG93cyB1cyB0byBjYXB0dXJlIHRoZQp0aW1pbmdzIHNldCBmb3J0aCBpbiB0aGUgZGF0YXNo
-ZWV0IGFzIHdlbGwgYXMgdGhlIGFkZGl0aW9uYWwgdmFsdWVzIHRoYXQKd2UndmUgY2xlYXJlZCB3
-aXRoIHRoZSBkaXNwbGF5IHZlbmRvciB0byBhdm9pZCBpbnRlcmZlcmVuY2Ugd2l0aCB0aGUKZGln
-aXRpemVyIG9uIHRoZSBTYW1zdW5nIENocm9tZWJvb2sgUGx1cyAoa2V2aW4pLgoKQSBmb2xsb3ct
-b24gcGF0Y2ggd2lsbCBzcGVjaWZ5IHRoZSBvdmVycmlkZSBtb2RlIGZvciBrZXZpbiBkZXZpY2Vz
-LgoKQ2hhbmdlcyBpbiB2MjoKIC0gTm9uZQoKQ2M6IERvdWcgQW5kZXJzb24gPGRpYW5kZXJzQGNo
-cm9taXVtLm9yZz4KQ2M6IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+CkNjOiBIZWlrbyBT
-dHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgpDYzogSmVmZnkgQ2hlbiA8amVmZnkuY2hlbkByb2Nr
-LWNoaXBzLmNvbT4KQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+CkNjOiBTdMOp
-cGhhbmUgTWFyY2hlc2luIDxtYXJjaGV1QGNocm9taXVtLm9yZz4KQ2M6IFRoaWVycnkgUmVkaW5n
-IDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+CkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZwpDYzogZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpDYzogbGludXgtcm9ja2NoaXBA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpTaWduZWQtb2ZmLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNo
-cm9taXVtLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgfCAy
-NyArKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRp
-b25zKCspLCAxNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFu
-ZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMK
-aW5kZXggYzE2MzViMzVmOTdlLi4wZGUxNzZhNmEwNDEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1
-L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFu
-ZWwtc2ltcGxlLmMKQEAgLTE4MTYsMjMgKzE4MTYsMjIgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBw
-YW5lbF9kZXNjIHNoYXJwX2xxMTAxazFseTA0ID0gewogCS5idXNfZm9ybWF0ID0gTUVESUFfQlVT
-X0ZNVF9SR0I4ODhfMVg3WDRfSkVJREEsCiB9OwogCi1zdGF0aWMgY29uc3Qgc3RydWN0IGRybV9k
-aXNwbGF5X21vZGUgc2hhcnBfbHExMjNwMWp4MzFfbW9kZSA9IHsKLQkuY2xvY2sgPSAyNTI3NTAs
-Ci0JLmhkaXNwbGF5ID0gMjQwMCwKLQkuaHN5bmNfc3RhcnQgPSAyNDAwICsgNDgsCi0JLmhzeW5j
-X2VuZCA9IDI0MDAgKyA0OCArIDMyLAotCS5odG90YWwgPSAyNDAwICsgNDggKyAzMiArIDgwLAot
-CS52ZGlzcGxheSA9IDE2MDAsCi0JLnZzeW5jX3N0YXJ0ID0gMTYwMCArIDMsCi0JLnZzeW5jX2Vu
-ZCA9IDE2MDAgKyAzICsgMTAsCi0JLnZ0b3RhbCA9IDE2MDAgKyAzICsgMTAgKyAzMywKLQkudnJl
-ZnJlc2ggPSA2MCwKLQkuZmxhZ3MgPSBEUk1fTU9ERV9GTEFHX05WU1lOQyB8IERSTV9NT0RFX0ZM
-QUdfTkhTWU5DLAorc3RhdGljIGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBzaGFycF9scTEy
-M3AxangzMV90aW1pbmcgPSB7CisJLnBpeGVsY2xvY2sgPSB7IDI1Mjc1MDAwMCwgMjUyNzUwMDAw
-LCAyNjY2MDQ3MjAgfSwKKwkuaGFjdGl2ZSA9IHsgMjQwMCwgMjQwMCwgMjQwMCB9LAorCS5oZnJv
-bnRfcG9yY2ggPSB7IDQ4LCA0OCwgNDggfSwKKwkuaGJhY2tfcG9yY2ggPSB7IDgwLCA4MCwgODQg
-fSwKKwkuaHN5bmNfbGVuID0geyAzMiwgMzIsIDMyIH0sCisJLnZhY3RpdmUgPSB7IDE2MDAsIDE2
-MDAsIDE2MDAgfSwKKwkudmZyb250X3BvcmNoID0geyAzLCAzLCAzIH0sCisJLnZiYWNrX3BvcmNo
-ID0geyAzMywgMzMsIDEyMCB9LAorCS52c3luY19sZW4gPSB7IDEwLCAxMCwgMTAgfSwKKwkuZmxh
-Z3MgPSBESVNQTEFZX0ZMQUdTX1ZTWU5DX0xPVyB8IERJU1BMQVlfRkxBR1NfSFNZTkNfTE9XLAog
-fTsKIAogc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIHNoYXJwX2xxMTIzcDFqeDMxID0g
-ewotCS5tb2RlcyA9ICZzaGFycF9scTEyM3AxangzMV9tb2RlLAotCS5udW1fbW9kZXMgPSAxLAor
-CS50aW1pbmdzID0gJnNoYXJwX2xxMTIzcDFqeDMxX3RpbWluZywKKwkubnVtX3RpbWluZ3MgPSAx
-LAogCS5icGMgPSA4LAogCS5zaXplID0gewogCQkud2lkdGggPSAyNTksCi0tIAoyLjE2LjAucmMx
-LjIzOC5nNTMwZDY0OWE3OS1nb29nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+This patch adds an override mode for kevin devices. The mode increases
+both back porches to allow a pixel clock of 26666kHz as opposed to the
+'typical' value of 252750kHz. This is needed to avoid interference with
+the touch digitizer on these laptops.
+
+Changes in v2:
+ - Wrap the timing in display-timings node to match binding (Rob/Thierry)
+
+Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stéphane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+index 191a6bcb1704..800eabd39076 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+@@ -98,6 +98,22 @@
+ 		backlight = <&backlight>;
+ 		power-supply = <&pp3300_disp>;
+ 
++		display-timings {
++			timing0: override {
++				clock-frequency = <266604720>;
++				hactive = <2400>;
++				hfront-porch = <48>;
++				hback-porch = <84>;
++				hsync-len = <32>;
++				hsync-active = <0>;
++				vactive = <1600>;
++				vfront-porch = <3>;
++				vback-porch = <120>;
++				vsync-len = <10>;
++				vsync-active = <0>;
++			};
++		};
++
+ 		ports {
+ 			panel_in_edp: endpoint {
+ 				remote-endpoint = <&edp_out_panel>;
+-- 
+2.16.0.rc1.238.g530d649a79-goog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
