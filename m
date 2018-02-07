@@ -1,82 +1,85 @@
-From: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
- of_find_node_by_phandle()
-Date: Wed, 7 Feb 2018 18:14:23 +0530
-Message-ID: <1768c791-7456-c1fe-578b-f6245e79746f@codeaurora.org>
-References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
- <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
- <38cdcae5-ec0f-d1be-b024-1990d4387731@gmail.com>
- <9e23d32f-05a0-ce8a-41f8-9a1a3d66be37@codeaurora.org>
- <fd9f5f63-b08e-602e-1510-85a65889f550@gmail.com>
- <567731e8-8f89-bd6e-c3d4-e36400e69198@codeaurora.org>
- <0db129ef-ffd8-96fe-46a7-55fb575272e3@gmail.com>
- <0a178f4b-75fe-0564-7b0e-596f52fca1dc@codeaurora.org>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH v2 3/6] gpio: Add GPIO driver for Nintendo Wii
+Date: Wed, 7 Feb 2018 13:54:34 +0100
+Message-ID: <20180207125434.d7wogzlkfthzob5t@latitude>
+References: <20180122050411.32460-1-j.neuschaefer@gmx.net>
+ <20180122050411.32460-4-j.neuschaefer@gmx.net>
+ <CACRpkdZLiw=e-XiS9cbQuJGJ2tJVV86qKaLCy2yG==FSENhAHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0a178f4b-75fe-0564-7b0e-596f52fca1dc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="k64rgg4kcmxdkt7v"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZLiw=e-XiS9cbQuJGJ2tJVV86qKaLCy2yG==FSENhAHw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Albert Herranz <albert_herranz@yahoo.es>, Segher Boessenkool <segher@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--k64rgg4kcmxdkt7v
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2/5/2018 5:53 PM, Chintan Pandya wrote:
-> 
->>
->> My question was trying to determine whether the numbers reported above
->> are for a debug configuration or a production configuration.
-> My reported numbers are from debug configuration.
-> 
->> not a production configuration, I was requesting the numbers for a
->> production configuration.
-> I'm working on it. But please expect some delay in my response for this. 
-> As I mentioned earlier, I need to work with few teams to get these numbers.
-> 
-> 
->> show a significant boot time reduction from the patch then there is
->> less justification for adding complexity to the existing code.  I
->> prefer to use simpler data structures and algorithms __if__ extra
->> complexity does not provide any advantage.  The balance between
->> complexity and benefits is a core software engineering issue.
->>
-> Ok
+On Wed, Feb 07, 2018 at 01:29:45PM +0100, Linus Walleij wrote:
+> On Mon, Jan 22, 2018 at 6:04 AM, Jonathan Neusch=C3=A4fer
+> <j.neuschaefer@gmx.net> wrote:
+>=20
+> > The Nintendo Wii's chipset (called "Hollywood") has a GPIO controller
+> > that supports a configurable number of pins (up to 32), interrupts, and
+> > some special mechanisms to share the controller between the system's
+> > security processor (an ARM926) and the PowerPC CPU. Pin multiplexing is
+> > not supported.
+> >
+> > This patch adds a basic driver for this GPIO controller. Interrupt
+> > support will come in a later patch.
+> >
+> > This patch is based on code developed by Albert Herranz and the GameCube
+> > Linux Team, file arch/powerpc/platforms/embedded6xx/hlwd-gpio.c,
+> > available at https://github.com/DeltaResero/GC-Wii-Linux-Kernels, but
+> > has grown quite dissimilar.
+> >
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> > Cc: Albert Herranz <albert_herranz@yahoo.es>
+> > Cc: Segher Boessenkool <segher@kernel.crashing.org>
+> > ---
+> >
+> > v2:
+>=20
+> All looks very good to me, Andy had some additional comments,
+> once addressed in v3 I will apply this.
+>=20
+> You only need to resend this patch as I already applied the DT
+> bindings.
 
-Avg Kernel boot time comparison in production set up:
-
-[0] Base: 4519ms
-[1] 4115ms (~400ms improvement)
-[2] 4115ms (~400ms improvement)
-[3] 4177ms (~340ms improvement)
-
-Full data:
-[1] 1024 sized pre-populated cache
-ITR-1	ITR-2	ITR-3	ITR-4	Avg
-4115	4123	4124	4107	4115
-
-[2] Dynamic sized cache allocation/free
-ITR-1	ITR-2	ITR-3	ITR-4	Avg
-4122	4131	4106	4118	4115
-
-[3] Fixed 64 sized cache
-ITR-1	ITR-2	ITR-3	ITR-4	Avg
-4153	4186	4198	4181	4177
+This driver can't be used until the resource mapping problem on PPC32
+(see patch 1/6 and the related discussion) is solved or worked around
+with out-of-tree patches (such as patch 1/6). Should I send v3 anyway?
 
 
-[1] is my experimental patch and dirty enough to not get merged 
-anywhere. So, I will not push it.
+Thanks,
+Jonathan Neusch=C3=A4fer
 
+--k64rgg4kcmxdkt7v
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Chintan
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation
-Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAABAgAGBQJaevcCAAoJEAgwRJqO81/b+8AP/1ktieY5QgM4XqJ854jjrcr1
+os/BTiYn6I9sxipwbqGwy48eqAoDJKoFrJBYklkSkRtS0141RLozcU0ImtLRvx8k
+feGqYgHG6SINHXrUObmlVNbt3InwHXtl455m2bHAovrwdWrKh4fucVf7Yg7VwO2w
+THVQIXwzGuoFxzbnLLHl+DRnUTbAOtwwSQN2pQ8QzFXVkbtwm0U80ZRkm8+2HmBe
+mfrA6Av3H1/9HTtbp6Plx9SVsC4ZFUnzXsIiUlO9zAfhe/vfGJy4DkUgovEY2YGX
+pWHmN9V1fQgzSYfgvqRwQx6Uis7JYDgEnT3hiZd98bddNWUG3vAGMGPjomgYSSIw
+XPVQDNbOU8rP5VcOdLlQS+LQybl3nUL9It1Pei2GvC1oLCshXg2TNbpLcK6alf0v
+19kwP7IAW9F4JH9QEnH2yQVdJZTHV8XSw9IYxALyOuzvnmrgd6dAhplx2EL4TbPT
+2L+oY0qYtl5zOluKZ6sLmYD2ZLK0WiehVTRqjvu25TrKXu352fJyOPrmFCnfTCDt
+K6nTS+JBVgVLTNbopdj/1bRLdRym5bljmpVQjbnjcHhY8RiVHntImsDKZIt0tq7W
+qgaCGoNGRFt21Kb28quNuhhdzVxhz70kzPUHsEBbopAFh0LeKdrNloB9jfgxANG0
+ccu2K8aRsheyqEjnkP/K
+=OU8F
+-----END PGP SIGNATURE-----
+
+--k64rgg4kcmxdkt7v--
