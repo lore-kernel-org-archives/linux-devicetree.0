@@ -1,88 +1,100 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] drm/panel: simple: Add ability to override typical timing
-Date: Wed, 7 Feb 2018 11:41:49 -0600
-Message-ID: <CAL_JsqJDvPN3CtKtj980egDRuC-ZjiKOAWe5ECYVBSv4hVOnYw@mail.gmail.com>
-References: <20180206165626.37692-1-seanpaul@chromium.org> <20180206165626.37692-2-seanpaul@chromium.org>
- <CAL_JsqJer8ZrLyPHz=hBo9smSv7aXhtP3hOJzQojt7ofUiHo=w@mail.gmail.com> <20180206214812.fzh3tr3zflzunw6n@art_vandelay>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH] media: stm32-dcmi: add g/s_parm framerate support
+Date: Wed, 7 Feb 2018 18:43:09 +0100
+Message-ID: <1518025389-3677-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180206214812.fzh3tr3zflzunw6n@art_vandelay>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 6, 2018 at 3:48 PM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> On Tue, Feb 06, 2018 at 02:19:34PM -0600, Rob Herring wrote:
->> On Tue, Feb 6, 2018 at 10:56 AM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> > This patch adds the ability to override the typical display timing for a
->> > given panel. This is useful for devices which have timing constraints
->> > that do not apply across the entire display driver (eg: to avoid
->> > crosstalk between panel and digitizer on certain laptops). The rules are
->> > as follows:
->> >
->> > - panel must not specify fixed mode (since the override mode will
->> >   either be the same as the fixed mode, or we'll be unable to
->> >   check the bounds of the overried)
->> > - panel must specify at least one display_timing range which will be
->> >   used to ensure the override mode fits within its bounds
->> >
->> > Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> > Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->> > Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> > Cc: Stéphane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> > Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> > Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
->> > Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> > Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> > ---
->> >  .../bindings/display/panel/simple-panel.txt        | 20 +++++++
->>
->> The binding should be a separate patch.
->>
->
-> Ack, will split.
->
->
->> >  drivers/gpu/drm/panel/panel-simple.c               | 69 +++++++++++++++++++++-
->> >  2 files changed, 88 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
->> > index 16d8ff088b7d..590bbff6fc90 100644
->> > --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
->> > +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
->> > @@ -7,6 +7,14 @@ Optional properties:
->> >  - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
->> >  - enable-gpios: GPIO pin to enable or disable the panel
->> >  - backlight: phandle of the backlight device attached to the panel
->> > +- override-mode: For devices which require a mode which differs from the
->>
->> This is not a property, but a node so it needs its own section.
->>
->> Also, it's not real clear from display-timing.txt, but the modes
->> should be grouped under a display-timings node. Looks like we haven't
->> been good at enforcing that as "panel-timing" is also common when
->> there's a single mode. I'd rather not have another way. With a
->> standard node name, we can validate the node more easily.
->>
->> We'd lose the fact that this is explicitly an override, but I'd doubt
->> Thierry is going to start letting in panels with no timings.
->>
->
-> Yeah, I noticed that the timing subnode was specified as nestled in
-> display-timings. I figured since there can only be one override mode, and the
-> of_get_display_timing function was exported, it would be Ok to just reuse the
-> format of the subnode. I'll respin with the full thing.
+Add g/s_parm framerate support by calling subdev
+g/s_frame_interval ops.
+This allows user to control sensor framerate by
+calling ioctl G/S_PARM.
 
-TBC, I'm fine if you use panel-timing as that's already established
-for cases were only 1 mode exists.
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+---
+ drivers/media/platform/stm32/stm32-dcmi.c | 49 +++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index ab555d4..8197554 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -1151,6 +1151,52 @@ static int dcmi_enum_framesizes(struct file *file, void *fh,
+ 	return 0;
+ }
+ 
++static int dcmi_g_parm(struct file *file, void *priv,
++		       struct v4l2_streamparm *p)
++{
++	struct stm32_dcmi *dcmi = video_drvdata(file);
++	struct v4l2_subdev_frame_interval ival = { 0 };
++	int ret;
++
++	if (p->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
++		return -EINVAL;
++
++	p->parm.capture.capability = V4L2_CAP_TIMEPERFRAME;
++	ret = v4l2_subdev_call(dcmi->entity.subdev, video,
++			       g_frame_interval, &ival);
++	if (ret)
++		return ret;
++
++	p->parm.capture.timeperframe = ival.interval;
++
++	return ret;
++}
++
++static int dcmi_s_parm(struct file *file, void *priv,
++		       struct v4l2_streamparm *p)
++{
++	struct stm32_dcmi *dcmi = video_drvdata(file);
++	struct v4l2_subdev_frame_interval ival = {
++		0,
++		p->parm.capture.timeperframe
++	};
++	int ret;
++
++	if (p->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
++		return -EINVAL;
++
++	memset(&p->parm, 0, sizeof(p->parm));
++	p->parm.capture.capability = V4L2_CAP_TIMEPERFRAME;
++	ret = v4l2_subdev_call(dcmi->entity.subdev, video,
++			       s_frame_interval, &ival);
++	if (ret)
++		return ret;
++
++	p->parm.capture.timeperframe = ival.interval;
++
++	return ret;
++}
++
+ static int dcmi_enum_frameintervals(struct file *file, void *fh,
+ 				    struct v4l2_frmivalenum *fival)
+ {
+@@ -1253,6 +1299,9 @@ static int dcmi_release(struct file *file)
+ 	.vidioc_g_input			= dcmi_g_input,
+ 	.vidioc_s_input			= dcmi_s_input,
+ 
++	.vidioc_g_parm			= dcmi_g_parm,
++	.vidioc_s_parm			= dcmi_s_parm,
++
+ 	.vidioc_enum_framesizes		= dcmi_enum_framesizes,
+ 	.vidioc_enum_frameintervals	= dcmi_enum_frameintervals,
+ 
+-- 
+1.9.1
