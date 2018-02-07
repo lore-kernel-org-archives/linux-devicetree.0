@@ -1,36 +1,73 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 0/7] ARM: davinci: add genpd support
-Date: Wed, 7 Feb 2018 16:43:50 -0600
-Message-ID: <4dbc57ec-3506-eb1d-e00d-adfe75c3b39b@lechnology.com>
-References: <20180207134553.13510-1-brgl@bgdev.pl>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v9 3/8] media: add digital video decoder entity
+	function
+Date: Wed,  7 Feb 2018 14:42:42 -0800
+Message-ID: <1518043367-11531-4-git-send-email-tharvey@gateworks.com>
+References: <1518043367-11531-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180207134553.13510-1-brgl@bgdev.pl>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1518043367-11531-1-git-send-email-tharvey@gateworks.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-media@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/2018 07:45 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Hi Sekhar et al,
-> 
-> please take a look at the following patches. They add a simple genpd
-> driver and use it in DT mode on da850 boards.
-> 
-> I was trying to use genpd in legacy mode too, but couldn't find neither
-> any interfaces nor users that would do that. For now I added a check in
-> arch/arm/mach-davinci/pm_domain.c that disables the clock pm setup if
-> we're using genpd.
-> 
-> This series applies on top of and has been tested with David Lechner's
-> for-bartosz branch. It fixes the clock look-up issues we faced with
-> lcdc and emac.
+Add a new media entity function definition for digital TV decoders:
+MEDIA_ENT_F_DTV_DECODER
 
-I'm starting to think that it makes more sense to just make the PSC driver
-a power-domain and reset provider rather than a clock provider. It is
-unfortunate that genpd is DT only.
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+---
+ Documentation/media/uapi/mediactl/media-types.rst | 11 +++++++++++
+ include/uapi/linux/media.h                        |  5 +++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/Documentation/media/uapi/mediactl/media-types.rst b/Documentation/media/uapi/mediactl/media-types.rst
+index 8d64b0c..195400e 100644
+--- a/Documentation/media/uapi/mediactl/media-types.rst
++++ b/Documentation/media/uapi/mediactl/media-types.rst
+@@ -321,6 +321,17 @@ Types and flags used to represent the media graph elements
+          MIPI CSI-2, ...), and outputs them on its source pad to an output
+          video bus of another type (eDP, MIPI CSI-2, parallel, ...).
+ 
++    -  ..  row 31
++
++       ..  _MEDIA-ENT-F-DTV-DECODER:
++
++       -  ``MEDIA_ENT_F_DTV_DECODER``
++
++       -  Digital video decoder. The basic function of the video decoder is
++	  to accept digital video from a wide variety of sources
++	  and output it in some digital video standard, with appropriate
++	  timing signals.
++
+ ..  tabularcolumns:: |p{5.5cm}|p{12.0cm}|
+ 
+ .. _media-entity-flag:
+diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
+index b9b9446..2f12328 100644
+--- a/include/uapi/linux/media.h
++++ b/include/uapi/linux/media.h
+@@ -110,6 +110,11 @@ struct media_device_info {
+ #define MEDIA_ENT_F_VID_IF_BRIDGE		(MEDIA_ENT_F_BASE + 0x5002)
+ 
+ /*
++ * Digital video decoder entities
++ */
++#define MEDIA_ENT_F_DTV_DECODER			(MEDIA_ENT_F_BASE + 0x6001)
++
++/*
+  * Connectors
+  */
+ /* It is a responsibility of the entity drivers to add connectors and links */
+-- 
+2.7.4
