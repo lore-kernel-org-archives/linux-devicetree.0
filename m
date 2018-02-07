@@ -1,69 +1,63 @@
-From: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 1/2] media: adv7604: Add support for
- i2c_new_secondary_device
-Date: Wed, 7 Feb 2018 15:54:20 +0000
-Message-ID: <4ff04149-9726-716c-306c-819130897c98@ideasonboard.com>
-References: <1516625389-6362-1-git-send-email-kieran.bingham@ideasonboard.com>
- <1516625389-6362-2-git-send-email-kieran.bingham@ideasonboard.com>
- <20180129200813.ifaz2bkkxshiodga@rob-hp-laptop>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [RFC v4 13/26] watchdog: renesas_wdt: Add restart handler
+Date: Wed, 7 Feb 2018 15:55:24 +0000
+Message-ID: <TY1PR06MB0895BDC61E7C226E29AC6D11C0FC0@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1517423070-24236-14-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdVZi0Vyz9+Z6TFeX3yh=rzRHBuNbgy1Nt4LhoLU8qK5KQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180129200813.ifaz2bkkxshiodga@rob-hp-laptop>
-Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVZi0Vyz9+Z6TFeX3yh=rzRHBuNbgy1Nt4LhoLU8qK5KQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 29/01/18 20:08, Rob Herring wrote:
-> On Mon, Jan 22, 2018 at 12:49:56PM +0000, Kieran Bingham wrote:
->> From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
->>
->> The ADV7604 has thirteen 256-byte maps that can be accessed via the main
->> I²C ports. Each map has it own I²C address and acts as a standard slave
->> device on the I²C bus.
->>
->> Allow a device tree node to override the default addresses so that
->> address conflicts with other devices on the same bus may be resolved at
->> the board description level.
->>
->> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
->> [Kieran: Re-adapted for mainline]
->> Signed-off-by: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->> ---
->> Based upon the original posting :
->>   https://lkml.org/lkml/2014/10/22/469
->> ---
->>  .../devicetree/bindings/media/i2c/adv7604.txt      | 18 ++++++-
-> 
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-Thank you.
-
-> In the future, please split bindings to separate patch.
-
-Yes, of course - sorry - I should probably have known better here.
-
-I was clearly being lazy as the original patch had bindings in with the driver.
-Although I don't think I've got an excuse for the second patch in the series :D
-
-I've split them out for the v2.
-
---
-Kieran
-
->>  drivers/media/i2c/adv7604.c                        | 60 ++++++++++++++--------
->>  2 files changed, 55 insertions(+), 23 deletions(-)
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gR2VlcnQsDQoNCj4gU3ViamVjdDogUmU6IFtSRkMgdjQgMTMvMjZdIHdhdGNoZG9nOiBy
+ZW5lc2FzX3dkdDogQWRkIHJlc3RhcnQgaGFuZGxlcg0KPg0KPiBIaSBGYWJyaXppbywNCg0KVGhh
+bmsgeW91IGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+DQo+IE9uIFdlZCwgSmFuIDMxLCAyMDE4IGF0
+IDc6MjQgUE0sIEZhYnJpemlvIENhc3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMu
+Y29tPiB3cm90ZToNCj4gPiBPbiBpV2F2ZSdzIGJvYXJkcyBpd2cyMGQgYW5kIGl3ZzIyZCB0aGUg
+b25seSB3YXkgdG8gcmVib290IHRoZSBzeXN0ZW0gaXMNCj4gPiBieSBtZWFucyBvZiB0aGUgd2F0
+Y2hkb2cuDQo+ID4gVGhpcyBwYXRjaCBhZGRzIGEgcmVzdGFydCBoYW5kbGVyIHRvIHJ3ZHRfb3Bz
+LCBhbmQgYWxzbyBtYWtlcyBzdXJlIHdlDQo+ID4ga2VlcCBpdHMgcHJpb3JpdHkgdG8gYSBtZWRp
+dW0gbGV2ZWwsIGluIG9yZGVyIHRvIG5vdCBvdmVycmlkZSBvdGhlciBtb3JlDQo+ID4gZWZmZWN0
+aXZlIGhhbmRsZXJzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxm
+YWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogUmFtZXNo
+IFNoYW5tdWdhc3VuZGFyYW0gPHJhbWVzaC5zaGFubXVnYXN1bmRhcmFtQGJwLnJlbmVzYXMuY29t
+Pg0KPg0KPiA+IC0tLSBhL2RyaXZlcnMvd2F0Y2hkb2cvcmVuZXNhc193ZHQuYw0KPiA+ICsrKyBi
+L2RyaXZlcnMvd2F0Y2hkb2cvcmVuZXNhc193ZHQuYw0KPiA+IEBAIC0xMTgsNiArMTM2LDcgQEAg
+c3RhdGljIGNvbnN0IHN0cnVjdCB3YXRjaGRvZ19vcHMgcndkdF9vcHMgPSB7DQo+ID4gICAgICAg
+ICAuc3RvcCA9IHJ3ZHRfc3RvcCwNCj4gPiAgICAgICAgIC5waW5nID0gcndkdF9pbml0X3RpbWVv
+dXQsDQo+ID4gICAgICAgICAuZ2V0X3RpbWVsZWZ0ID0gcndkdF9nZXRfdGltZWxlZnQsDQo+ID4g
+KyAgICAgICAucmVzdGFydCA9IHJ3ZHRfcmVzdGFydCwNCj4gPiAgfTsNCj4gPg0KPiA+ICBzdGF0
+aWMgaW50IHJ3ZHRfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiBAQCAt
+MTc2LDYgKzE5NSw3IEBAIHN0YXRpYyBpbnQgcndkdF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlICpwZGV2KQ0KPiA+ICAgICAgICAgcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgcHJpdik7
+DQo+ID4gICAgICAgICB3YXRjaGRvZ19zZXRfZHJ2ZGF0YSgmcHJpdi0+d2RldiwgcHJpdik7DQo+
+ID4gICAgICAgICB3YXRjaGRvZ19zZXRfbm93YXlvdXQoJnByaXYtPndkZXYsIG5vd2F5b3V0KTsN
+Cj4gPiArICAgICAgIHdhdGNoZG9nX3NldF9yZXN0YXJ0X3ByaW9yaXR5KCZwcml2LT53ZGV2LCAx
+MjgpOw0KPg0KPiBHaXZlbiB3ZSB3YW50IHRvIHJlYm9vdCBSLUNhciBHZW4yIGJvYXJkcyBlcXVp
+cHBlZCB3aXRoIGEgc3VpdGFibGUgUE1JQw0KPiAoZS5nLiBEQTkwNjMpIHVzaW5nIHRoYXQgUE1J
+QywgSSB0aGluayB0aGUgcHJpb3JpdHkgc2hvdWxkIGJlIGxvd2VyICgwPyksDQo+IGNmci4NCg0K
+WWVzLCBjYW4gZG8sIEkgaGF2ZSBubyBzdHJvbmcgb3BpbmlvbiBhYm91dCB0aGlzLg0KSSdsbCB1
+c2UgcHJpb3JpdHkgMCBmb3IgdGhlIG5leHQgc3VibWlzc2lvbi4NCg0KVGhhbmtzLA0KRmFiDQoN
+Cj4NCj4gICogICAwOiAgIHVzZSB3YXRjaGRvZydzIHJlc3RhcnQgZnVuY3Rpb24gYXMgbGFzdCBy
+ZXNvcnQsIGhhcyBsaW1pdGVkIHJlc3RhcnQNCj4gICogICAgICAgIGNhcGFiaWxpZXMNCj4gICog
+ICAxMjg6IGRlZmF1bHQgcmVzdGFydCBoYW5kbGVyLCB1c2UgaWYgbm8gb3RoZXIgaGFuZGxlciBp
+cyBleHBlY3RlZCB0byBiZQ0KPiAgKiAgICAgICAgYXZhaWxhYmxlIGFuZC9vciBpZiByZXN0YXJ0
+IGlzIHN1ZmZpY2llbnQgdG8gcmVzdGFydCB0aGUgZW50aXJlIHN5c3RlbQ0KPiAgKiAgIDI1NTog
+cHJlZW1wdCBhbGwgb3RoZXIgaGFuZGxlcnMNCj4NCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+DQo+
+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhv
+ZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgt
+bTY4ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBw
+ZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRv
+IGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRo
+YXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMN
+Cg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxs
+Ym9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVn
+aXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDku
+DQo=
