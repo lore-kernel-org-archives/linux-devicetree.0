@@ -1,100 +1,113 @@
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH] media: stm32-dcmi: add g/s_parm framerate support
-Date: Wed, 7 Feb 2018 18:43:09 +0100
-Message-ID: <1518025389-3677-1-git-send-email-hugues.fruchet@st.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH] media: stm32-dcmi: add g/s_parm framerate support
+Date: Wed, 7 Feb 2018 18:52:20 +0100
+Message-ID: <727ee222-20f1-23d3-fdff-4b985e24593d@xs4all.nl>
+References: <1518025389-3677-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518025389-3677-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add g/s_parm framerate support by calling subdev
-g/s_frame_interval ops.
-This allows user to control sensor framerate by
-calling ioctl G/S_PARM.
+On 02/07/2018 06:43 PM, Hugues Fruchet wrote:
+> Add g/s_parm framerate support by calling subdev
+> g/s_frame_interval ops.
+> This allows user to control sensor framerate by
+> calling ioctl G/S_PARM.
+> 
+> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+> ---
+>  drivers/media/platform/stm32/stm32-dcmi.c | 49 +++++++++++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
+> 
+> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+> index ab555d4..8197554 100644
+> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+> @@ -1151,6 +1151,52 @@ static int dcmi_enum_framesizes(struct file *file, void *fh,
+>  	return 0;
+>  }
+>  
+> +static int dcmi_g_parm(struct file *file, void *priv,
+> +		       struct v4l2_streamparm *p)
+> +{
+> +	struct stm32_dcmi *dcmi = video_drvdata(file);
+> +	struct v4l2_subdev_frame_interval ival = { 0 };
+> +	int ret;
+> +
+> +	if (p->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+> +		return -EINVAL;
+> +
+> +	p->parm.capture.capability = V4L2_CAP_TIMEPERFRAME;
+> +	ret = v4l2_subdev_call(dcmi->entity.subdev, video,
+> +			       g_frame_interval, &ival);
+> +	if (ret)
+> +		return ret;
+> +
+> +	p->parm.capture.timeperframe = ival.interval;
+> +
+> +	return ret;
+> +}
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- drivers/media/platform/stm32/stm32-dcmi.c | 49 +++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+This function and the next can be simplified by using the help functions
+introduced here:
 
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index ab555d4..8197554 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -1151,6 +1151,52 @@ static int dcmi_enum_framesizes(struct file *file, void *fh,
- 	return 0;
- }
- 
-+static int dcmi_g_parm(struct file *file, void *priv,
-+		       struct v4l2_streamparm *p)
-+{
-+	struct stm32_dcmi *dcmi = video_drvdata(file);
-+	struct v4l2_subdev_frame_interval ival = { 0 };
-+	int ret;
-+
-+	if (p->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
-+
-+	p->parm.capture.capability = V4L2_CAP_TIMEPERFRAME;
-+	ret = v4l2_subdev_call(dcmi->entity.subdev, video,
-+			       g_frame_interval, &ival);
-+	if (ret)
-+		return ret;
-+
-+	p->parm.capture.timeperframe = ival.interval;
-+
-+	return ret;
-+}
-+
-+static int dcmi_s_parm(struct file *file, void *priv,
-+		       struct v4l2_streamparm *p)
-+{
-+	struct stm32_dcmi *dcmi = video_drvdata(file);
-+	struct v4l2_subdev_frame_interval ival = {
-+		0,
-+		p->parm.capture.timeperframe
-+	};
-+	int ret;
-+
-+	if (p->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
-+
-+	memset(&p->parm, 0, sizeof(p->parm));
-+	p->parm.capture.capability = V4L2_CAP_TIMEPERFRAME;
-+	ret = v4l2_subdev_call(dcmi->entity.subdev, video,
-+			       s_frame_interval, &ival);
-+	if (ret)
-+		return ret;
-+
-+	p->parm.capture.timeperframe = ival.interval;
-+
-+	return ret;
-+}
-+
- static int dcmi_enum_frameintervals(struct file *file, void *fh,
- 				    struct v4l2_frmivalenum *fival)
- {
-@@ -1253,6 +1299,9 @@ static int dcmi_release(struct file *file)
- 	.vidioc_g_input			= dcmi_g_input,
- 	.vidioc_s_input			= dcmi_s_input,
- 
-+	.vidioc_g_parm			= dcmi_g_parm,
-+	.vidioc_s_parm			= dcmi_s_parm,
-+
- 	.vidioc_enum_framesizes		= dcmi_enum_framesizes,
- 	.vidioc_enum_frameintervals	= dcmi_enum_frameintervals,
- 
--- 
-1.9.1
+https://git.linuxtv.org/hverkuil/media_tree.git/log/?h=parm
+
+I'll make a pull request for this later this week, so it's probably a good
+idea to base your code on this as well.
+
+Regards,
+
+	Hans
+
+> +
+> +static int dcmi_s_parm(struct file *file, void *priv,
+> +		       struct v4l2_streamparm *p)
+> +{
+> +	struct stm32_dcmi *dcmi = video_drvdata(file);
+> +	struct v4l2_subdev_frame_interval ival = {
+> +		0,
+> +		p->parm.capture.timeperframe
+> +	};
+> +	int ret;
+> +
+> +	if (p->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+> +		return -EINVAL;
+> +
+> +	memset(&p->parm, 0, sizeof(p->parm));
+> +	p->parm.capture.capability = V4L2_CAP_TIMEPERFRAME;
+> +	ret = v4l2_subdev_call(dcmi->entity.subdev, video,
+> +			       s_frame_interval, &ival);
+> +	if (ret)
+> +		return ret;
+> +
+> +	p->parm.capture.timeperframe = ival.interval;
+> +
+> +	return ret;
+> +}
+> +
+>  static int dcmi_enum_frameintervals(struct file *file, void *fh,
+>  				    struct v4l2_frmivalenum *fival)
+>  {
+> @@ -1253,6 +1299,9 @@ static int dcmi_release(struct file *file)
+>  	.vidioc_g_input			= dcmi_g_input,
+>  	.vidioc_s_input			= dcmi_s_input,
+>  
+> +	.vidioc_g_parm			= dcmi_g_parm,
+> +	.vidioc_s_parm			= dcmi_s_parm,
+> +
+>  	.vidioc_enum_framesizes		= dcmi_enum_framesizes,
+>  	.vidioc_enum_frameintervals	= dcmi_enum_frameintervals,
+>  
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
