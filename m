@@ -1,30 +1,62 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 38/41] ARM: davinci: remove legacy clocks
-Date: Wed, 7 Feb 2018 20:54:57 +0530
-Message-ID: <aab67882-1fa2-4e7f-6580-3913ecfe42de@ti.com>
-References: <1516468460-4908-1-git-send-email-david@lechnology.com>
- <1516468460-4908-39-git-send-email-david@lechnology.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH 0/3] drm/panel: simple: Add mode support to devicetree
+Date: Wed, 7 Feb 2018 10:27:53 -0500
+Message-ID: <20180207152753.f273we6pzjlnxw5a@art_vandelay>
+References: <20180206165626.37692-1-seanpaul@chromium.org>
+ <87d11hb1nd.fsf@anholt.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1516468460-4908-39-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <87d11hb1nd.fsf@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, Doug Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 20 January 2018 10:44 PM, David Lechner wrote:
-> This removes the unused legacy clock code from arch/arm/mach-davinci/.
-> 
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-
-Reviewed-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBGZWIgMDcsIDIwMTggYXQgMDk6MTY6MjJBTSArMDAwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gU2VhbiBQYXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+IHdyaXRlczoKPiAKPiA+IEhl
+eSBhbGwsCj4gPiBIZXJlJ3MgYSBzZXQgd2hpY2ggYWxsb3dzIHVzIHRvIGFkZCBhbiAib3ZlcnJp
+ZGUiIG1vZGUgdG8gdGhlIHNpbXBsZQo+ID4gcGFuZWwgZHQgbm9kZS4gVGhlIG92ZXJyaWRlIG1v
+ZGUgY2FuIGJlIHVzZWQgZm9yIGRldmljZXMgZm9yIHdoaWNoIHRoZQo+ID4gdHlwaWNhbCBkaXNw
+bGF5IHRpbWluZyBpcyBub3Qgc3VmZmljaWVudCwgeWV0IHRoZSBvdmVycmlkaW5nIG1vZGUgc2hv
+dWxkCj4gPiBub3QgYmUgYXBwbGllZCBhY3Jvc3MgdGhlIGVudGlyZSBwbGF0Zm9ybS4gCj4gPgo+
+ID4gQW4gZXhhbXBsZSBvZiB0aGlzIChhbmQgdGhlIG1vdGl2YXRpb24pIGlzIHRoZSBDaHJvbWVi
+b29rIFBsdXMgKGtldmluKS4KPiA+IElmIHRoZSBzaGFycCBwYW5lbCBvbiB0aGlzIGxhcHRvcCBp
+cyBydW4gYXQgdGhlIG1vZGUgYWR2ZXJ0aXNlZCBpbiB0aGUKPiA+IGRhdGFzaGVldCAoYW5kIHdo
+YXQgaXMgY3VycmVudGx5IGluIG1haW5saW5lKSwgaXQgY3JlYXRlcyBpbnRlcmZlcmVuY2UKPiA+
+IHdpdGggdGhlIHRvdWNoIGRpZ2l0aXplci4gVG8gZml4IHRoaXMsIHdlIG5lZWQgdG8gcnVuIHRo
+ZSBwaXhlbCBjbG9jayBhdAo+ID4gYSBzbGlnaHRseSBoaWdoZXIgcmF0ZSAod2hpY2ggd2UgY2Fu
+IGRvIGJ5IGluY3JlYXNpbmcgdGhlIGJhY2sgcG9yY2hlcykuCj4gPiBUaGlzICJmaXgiIHNob3Vs
+ZCBub3QgYmUgdXNlZCBvbiBvdGhlciByb2NrY2hpcCBkZXZpY2VzIHVzaW5nIHRoaXMgcGFuZWwK
+PiA+IHNpbmNlIHRoZXkgbWlnaHQgbm90IGVuY291bnRlciB0aGUgc2FtZSBpbnRlcmZlcmVuY2Uu
+Cj4gPgo+ID4gSWYgYW4gb3ZlcnJpZGUgbW9kZSBpcyBwcmVzZW50LCBpdCB3aWxsIGJlIGNoZWNr
+ZWQgYWdhaW5zdCB0aGUgcGFuZWwncwo+ID4gZGlzcGxheV90aW1pbmcgcmFuZ2UuIFdoZW4gdmFs
+aWRhdGVkLCBpdCB3aWxsIGJlIGV4cG9zZWQgYXMgdGhlCj4gPiBwcmVmZXJyZWQgbW9kZSBhbG9u
+ZyB3aXRoIHRoZSAndHlwaWNhbCcgbW9kZXMgZ2VuZXJhdGVkIGZyb20gdGhlIHBhbmVsJ3MKPiA+
+IGRpc3BsYXlfdGltaW5nLgo+ID4KPiA+IFRoaXMgc2V0IGlzIGJhc2VkIG9uIExpbnVzJyBtYXN0
+ZXIgdG8gcGljayB1cCB0aGUgZWRwIHN1cHBvcnQgaW4KPiA+IHJrMzM5OS1ncnUta2V2aW4uZHRz
+Lgo+IAo+IENvdWxkbid0IHlvdSBqdXN0IGFkZCBhIGRpZmZlcmVudCBjb21wYXRpYmxlIHN0cmlu
+ZyBmb3IgdGhlIHBhbmVsCj4gZHJpdmVyLCBhbmQgdXNlIHRoYXQgdG8gaGF2ZSBhIGRpZmZlcmVu
+dCBtb2RlIGV4cG9zZWQgZnJvbSB0aGUgcGFuZWw/CgpZZXAsIHRoZXJlJ3MgYSBjb3VwbGUgd2F5
+cyB0byBza2luIHRoaXMgY2F0LiBXZSBjb3VsZCBqdXN0IGNoYW5nZSB0aGUgbW9kZSB0bwp3aGF0
+IHRoZSBrZXZpbiBkZXZpY2UgbmVlZHMgc2luY2UgaXQncyB0aGUgb25seSBvbmUgdGhhdCB1c2Vz
+IHRoaXMgcGFuZWwgYXRtCih0aGF0J3Mgd2hhdCB0aGUgb3JpZ2luYWwgcGF0Y2ggaW4gdGhlIGNv
+bnRleHQgbGluayBkb2VzKS4gV2UgY291bGQgYWxzbyBleHBvc2UKbXVsdGlwbGUgbW9kZXMgZm9y
+IHRoZSBwYW5lbCBhbmQgbGV0IHVzZXJzcGFjZSBzb3J0IGl0IG91dC4KClRoYXQgc2FpZCwgd2Ug
+YWxyZWFkeSBoYXZlIHRpbWluZyByYW5nZXMgaW4gcGFuZWwtc2ltcGxlIGFuZCB0aGUgZ29hbCBp
+cyB0bwpsZXZlcmFnZSB0aG9zZSBzdWNoIHRoYXQgd2UgZG9uJ3QgbmVlZCBhZGRpdGlvbmFsIGNv
+bXBhdGlibGUgcGFuZWxzL2V4dHJhIG1vZGVzLgoKU2VhbgoKLS0gClNlYW4gUGF1bCwgU29mdHdh
+cmUgRW5naW5lZXIsIEdvb2dsZSAvIENocm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
