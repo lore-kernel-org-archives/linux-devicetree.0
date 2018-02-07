@@ -1,86 +1,70 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
- properties ?
-Date: Wed, 7 Feb 2018 11:04:45 +0100
-Message-ID: <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
-References: <20180207065959.GN28462@vireshk-i7>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v3 0/4] gpio: driver for the RPi3 GPIO expander
+Date: Wed, 7 Feb 2018 11:20:23 +0100
+Message-ID: <d2a62d1c-a0b7-1b43-98d6-935fea073b3a@i2se.com>
+References: <cover.1516105893.git.baruch@tkos.co.il>
+ <CACRpkdZAtVfAU-k9EUihH6peY2d1Ntn3jboVMBn9adReNLupow@mail.gmail.com>
+ <20180206162759.awghecpv4ihaatz7@tarshish>
+ <a3e4ba9a-60bf-5038-7385-8cb3d2667ed2@i2se.com>
+ <20180207093807.5au4tlmuoa3iof35@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180207065959.GN28462@vireshk-i7>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180207093807.5au4tlmuoa3iof35@sapphire.tkos.co.il>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punit.Agrawal-5wv7dgnIgG8@public.gmane.org, ionela.voinescu-5wv7dgnIgG8@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Eric Anholt <eric@anholt.net>, Michael Zoran <mzoran@crowfest.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, Dave Stevenson <dave.stevenson@raspberrypi.org>, Frank Rowand <frowand.list@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/2018 07:59, Viresh Kumar wrote:
-> Looks like I am missing the obvious and sorry for the noise in advance.
-> 
-> But I couldn't find any code that parses the "cooling-{min|max}-level" DT
-> bindings in the kernel. Yeah, almost every ARM platform have these properties
-> set for their CPU nodes in DT, but I don't see how these are getting used.
-> 
-> I even tried to remove them for my hikey platform and everything worked as if
-> nothing has changed (which I was expecting anyway). The deal is that the
-> ->get_max_state() callback of the cooling drivers are getting called to get the
-> range at runtime and none of them refers to these bindings.
-> 
-> Removing code is always fun and I would be happy to post a series to clean
-> things up if everyone agrees. Please let me know if my understanding is correct
-> and if it would be fine to remove these bindings completely.
+Am 07.02.2018 um 10:38 schrieb Baruch Siach:
+> Hi Stefan,
+>
+> On Wed, Feb 07, 2018 at 10:33:24AM +0100, Stefan Wahren wrote:
+>> Am 06.02.2018 um 17:27 schrieb Baruch Siach:
+>>> On Tue, Feb 06, 2018 at 02:42:48PM +0100, Linus Walleij wrote:
+>>>> On Tue, Jan 16, 2018 at 1:45 PM, Baruch Siach <baruch@tkos.co.il> wrote:
+>>>>
+>>>>> The Raspberry Pi 3 has a GPIO expander that controls, among others, the
+>>>>> activity LED, and the camera connector GPIOs. The GPIO expander on an I2C bus
+>>>>> that is not directly controlled from the ARM core. The VC4 firmware controls
+>>>>> the I2C bus, and allows the ARM core to set/get GPIO settings over its mailbox
+>>>>> interface.
+>>>>>
+>>>>> This series adds support for the RPi3 expander.
+>>>>>
+>>>>> The driver is ported from the downstream kernel at
+>>>>> https://github.com/raspberrypi/linux/, branch rpi-4.9.y.
+>>>>>
+>>>>> Changes in v3:
+>>>>>
+>>>>>    * Kconfig tweaks
+>>>>>    * Check rpi_exp_gpio_get_polarity() return value
+>>>>>    * Redundant header removal
+>>>>>    * Redundant platform_set_drvdata() call removal
+>>>>>    * Small coding style changes
+>>>> All is looking pretty good. I see Rob had some last minute comments,
+>>>> but please rebase and repost post v4.16-rc1 so we can get this merged,
+>>>> we need to get this upstream.
+>>> I was about to send v4 when I saw your email. I based v4 on current LinusT's
+>>> tree as of e237f98a9c. I guess that affected files will not change before
+>>> v4.16-rc1, but I can wait a few more days for -rc1.
+>> please also address the owner issue in the driver, which was reported by
+>> kbuild test robot.
+> I removed the .owner platform_driver field set from v4. The owner field in
+> gpio_chip is still set.
 
-Yeah, this is a bit fuzzy. There are still cooling-{min|max}-*state*
-definitions in the DTs
+perfect
 
-Documentation/devicetree/bindings/hwmon/pwm-fan.txt:
-cooling-min-state = <0>;
-arch/arm/boot/dts/exynos4412-odroidu3.dts:
-cooling-min-state = <0>;
-arch/arm/boot/dts/exynos5410-odroidxu.dts:
-cooling-min-state = <0>;
-arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi:
-cooling-min-state = <0>;
-arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi:
-cooling-min-state = <0>;
-
-
-IIUC, the cooling-device in the mapping defines the min and max states
-which are the values used in the thermal zone binding.
-
-And the cooling-[min|max]-level are the hardware limits:
-
-cooling-min-level <= cooling-device min|max state <= cooling-max-level
-
-For example on the hikey6220:
-
-The DT specifies for CPU0:
-
-	operating-points-v2 = <&cpu_opp_table>;
-	cooling-min-level = <4>;
-	cooling-max-level = <0>;
-	#cooling-cells = <2>; /* min followed by max */
-
-and for the cooling device for map0
-
-	cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-
-So if my understanding is correct, the optional property
-cooling-[min|max]-level is used to make sure the cooling device min
-state and max state are in the hardware boundaries. And the thermal
-framework misses to do the consistency check at init.
-
-I'm not sure how useful are cooling-{min|max}-*state* bindings.
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> baruch
+>
