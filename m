@@ -1,71 +1,58 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: pwm-backlight: add a
- num-interpolation-steps property.
-Date: Wed, 7 Feb 2018 16:11:40 +0000
-Message-ID: <20180207161140.irxnsv6dwwmuwczu@oak.lan>
-References: <20180207141337.22247-1-enric.balletbo@collabora.com>
- <20180207141337.22247-3-enric.balletbo@collabora.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 4/8] ASoC: samsung: i2s: Define the parameters list for
+ SAMSUNG_I2S_OPCLK
+Date: Wed, 07 Feb 2018 17:23:54 +0100
+Message-ID: <7f86ec02-2235-7622-9298-f6edd367edb2@samsung.com>
+References: <CGME20180205154520epcas1p4132421a187a4d767a2f75badfef5eec4@epcas1p4.samsung.com>
+        <20180205154403.13520-1-s.nawrocki@samsung.com>
+        <20180205154403.13520-5-s.nawrocki@samsung.com>
+        <CAJKOXPf-6wFDSPttdDbc34Y2hiuc=TG2j5bb+2uQeScxGuxjZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180207141337.22247-3-enric.balletbo@collabora.com>
+In-reply-to: <CAJKOXPf-6wFDSPttdDbc34Y2hiuc=TG2j5bb+2uQeScxGuxjZg@mail.gmail.com>
+Content-language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jcsing.lee@samsung.com, sbkim73@samsung.com, linux-kernel@vger.kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 07, 2018 at 03:13:35PM +0100, Enric Balletbo i Serra wrote:
-> The num-interpolated-steps property specifies the number of
-> interpolated steps between each value of brightness-level table. This is
-> useful for high resolution PWMs to not have to list out every possible
-> value in the brightness-level array.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+On 02/06/2018 01:26 PM, Krzysztof Kozlowski wrote:
+> On Mon, Feb 5, 2018 at 4:43 PM, Sylwester Nawrocki
+> <s.nawrocki@samsung.com> wrote:
 
-Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
-> Changes since v1:
-> - Add an example with a small but realistic curve. Suggested by Rob and
->   Daniel
+>> diff --git a/sound/soc/samsung/i2s.h b/sound/soc/samsung/i2s.h
+>> index 79781de2f247..a9832a9555cb 100644
+>> --- a/sound/soc/samsung/i2s.h
+>> +++ b/sound/soc/samsung/i2s.h
+>> @@ -16,11 +16,16 @@
+>>  #define SAMSUNG_I2S_DAI        "samsung-i2s"
+>>  #define SAMSUNG_I2S_DAI_SEC    "samsung-i2s-sec"
+>>
+>> -#define SAMSUNG_I2S_DIV_BCLK   1
+>> +#define SAMSUNG_I2S_DIV_BCLK           1
+>>
+>> -#define SAMSUNG_I2S_RCLKSRC_0  0
+>> -#define SAMSUNG_I2S_RCLKSRC_1  1
+>> +#define SAMSUNG_I2S_RCLKSRC_0          0
+>> +#define SAMSUNG_I2S_RCLKSRC_1          1
+>>  #define SAMSUNG_I2S_CDCLK              2
+>> +/* Operation clock for IIS logic */
+>>  #define SAMSUNG_I2S_OPCLK              3
+>> +#define  SAMSUNG_I2S_OPCLK_CDCLK_OUT   0       /* CODEC clock out */
+>> +#define  SAMSUNG_I2S_OPCLK_CDCLK_IN    1       /* CODEC clock in */
+>> +#define  SAMSUNG_I2S_OPCLK_BCLK_OUT    2       /* Bit clock out */
+>> +#define  SAMSUNG_I2S_OPCLK_PCLK                3       /* Audio bus clock */
+>>
+>>  #endif /* __SND_SOC_SAMSUNG_I2S_H */
 > 
->  .../bindings/leds/backlight/pwm-backlight.txt         | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> index 310810906613..ce9b5746b774 100644
-> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-> @@ -21,6 +21,11 @@ Optional properties:
->                            and enabling the backlight using GPIO.
->    - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
->                        and setting PWM value to 0.
-> +  - num-interpolated-steps: Number of interpolated steps between each value
-> +                            of brightness-levels table. This way a high
-> +                            resolution pwm duty cycle can be used without
-> +                            having to list out every possible value in the
-> +                            brightness-level array.
->  
->  [0]: Documentation/devicetree/bindings/pwm/pwm.txt
->  [1]: Documentation/devicetree/bindings/gpio/gpio.txt
-> @@ -39,3 +44,17 @@ Example:
->  		post-pwm-on-delay-ms = <10>;
->  		pwm-off-delay-ms = <10>;
->  	};
-> +
-> +Example using num-interpolation-steps:
-> +
-> +	backlight {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&pwm 0 5000000>;
-> +
-> +		brightness-levels = <0 2048 4096 8192 16384 65535>;
-> +		num-interpolated-steps = <2048>;
-> +		default-brightness-level = <4096>;
-> +
-> +		power-supply = <&vdd_bl_reg>;
-> +		enable-gpios = <&gpio 58 0>;
-> +	};
-> -- 
-> 2.15.1
-> 
+> This part of patch seems to be unrelated (and it includes some cleanups).
+
+This is actually the main part of the patch, an API exported to other
+drivers.  The whitespace changes are for keeping the alignment uniform,
+I could just drop them.
+
+-- 
+Regards,
+Sylwester
