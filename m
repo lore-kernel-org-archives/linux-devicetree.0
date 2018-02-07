@@ -1,42 +1,34 @@
 From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Subject: Re: [PATCH 1/2] arm64: dts: sdm845: Add minimal dts/dtsi files for
  sdm845 SoC and MTP
-Date: Wed, 7 Feb 2018 09:44:28 +0530
-Message-ID: <cf69e160-4f03-f13c-aa39-bd12ed3d9d15@codeaurora.org>
+Date: Wed, 7 Feb 2018 09:45:29 +0530
+Message-ID: <53642249-89c1-3fc0-8ad8-7a954b138bb2@codeaurora.org>
 References: <20180125163216.29018-1-rnayak@codeaurora.org>
  <20180125163216.29018-2-rnayak@codeaurora.org>
- <20180126221501.GD28313@codeaurora.org>
- <CAL_JsqJ1xjQ5ZP-KXeZQ0s=ib8GTfvfYjFqyy+Zcub-akCs7Bw@mail.gmail.com>
+ <20180206185440.GJ9465@builder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJ1xjQ5ZP-KXeZQ0s=ib8GTfvfYjFqyy+Zcub-akCs7Bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20180206185440.GJ9465@builder>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[]..
 
->>> +             };
->>> +
->>> +             gcc: clock-controller@100000 {
->>> +                     compatible = "qcom,gcc-sdm845";
->>> +                     reg = <0x100000 0x1f0000>;
->>> +                     #clock-cells = <1>;
->>> +                     #reset-cells = <1>;
->>> +             };
->>> +
->>> +             tlmm: pinctrl@03400000 {
->>
->> Drop leading zeroes please.
+
+On 02/07/2018 12:24 AM, Bjorn Andersson wrote:
+> On Thu 25 Jan 08:32 PST 2018, Rajendra Nayak wrote:
+>> +		spmi_bus: qcom,spmi@c440000 {
+> [..]
+>> +		};
+>> +
 > 
-> Build dtbs with W=2 and fix the warnings so reviewers don't have to
-> waste their time on these issues.
+> While we have the chance, please remove this empty line.
 
-Noted. Thanks Rob.
+Will do. Thanks for the review.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
