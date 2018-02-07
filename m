@@ -1,82 +1,66 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
- properties ?
-Date: Wed, 7 Feb 2018 11:45:31 +0100
-Message-ID: <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
-References: <20180207065959.GN28462@vireshk-i7>
- <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
- <20180207102446.GS28462@vireshk-i7>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 01/16] dt-bindings: clock: mediatek: add missing
+ required #reset-cells
+Date: Wed, 7 Feb 2018 11:45:38 +0100
+Message-ID: <391278e5-9b72-1142-0262-5d286fe17d8d@gmail.com>
+References: <cover.1517910489.git.sean.wang@mediatek.com>
+ <d58fcf36319254d6de4c7fe100cbdca1bbec27a5.1517910489.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20180207102446.GS28462@vireshk-i7>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d58fcf36319254d6de4c7fe100cbdca1bbec27a5.1517910489.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Punit.Agrawal@arm.com, ionela.voinescu@arm.com
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/2018 11:24, Viresh Kumar wrote:
-> On 07-02-18, 11:04, Daniel Lezcano wrote:
->> Yeah, this is a bit fuzzy. There are still cooling-{min|max}-*state*
->> definitions in the DTs
->>
->> Documentation/devicetree/bindings/hwmon/pwm-fan.txt:
->> cooling-min-state = <0>;
->> arch/arm/boot/dts/exynos4412-odroidu3.dts:
->> cooling-min-state = <0>;
->> arch/arm/boot/dts/exynos5410-odroidxu.dts:
->> cooling-min-state = <0>;
->> arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi:
->> cooling-min-state = <0>;
->> arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi:
->> cooling-min-state = <0>;
->>
->>
->> IIUC, the cooling-device in the mapping defines the min and max states
->> which are the values used in the thermal zone binding.
->>
->> And the cooling-[min|max]-level are the hardware limits:
->>
->> cooling-min-level <= cooling-device min|max state <= cooling-max-level
->>
->> For example on the hikey6220:
->>
->> The DT specifies for CPU0:
->>
->> 	operating-points-v2 = <&cpu_opp_table>;
->> 	cooling-min-level = <4>;
->> 	cooling-max-level = <0>;
->> 	#cooling-cells = <2>; /* min followed by max */
->>
->> and for the cooling device for map0
->>
->> 	cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->>
->> So if my understanding is correct, the optional property
->> cooling-[min|max]-level is used to make sure the cooling device min
->> state and max state are in the hardware boundaries. And the thermal
->> framework misses to do the consistency check at init.
->>
->> I'm not sure how useful are cooling-{min|max}-*state* bindings.
-
-I meant here cooling-{min|max}-*level*
-
-> Okay, but we aren't validating it this way in code. Isn't it ?
-
-Yes, that is my understanding. cooling-min-level and cooling-max-level
-are not used in the thermal framework code today.
-
-So if they are defined, we should check the cooling-device max and min
-are in the boundaries (if they are different from no-limit).
-
-That needs confirmation from the maintainers, I'm not 100% sure.
 
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+On 02/06/2018 10:52 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> All ethsys, pciesys and ssusbsys internally include reset controller, so
+> explicitly add back these missing cell definitions to related bindings
+> and examples.
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt   | 2 ++
+>  Documentation/devicetree/bindings/arm/mediatek/mediatek,pciesys.txt  | 2 ++
+>  Documentation/devicetree/bindings/arm/mediatek/mediatek,ssusbsys.txt | 2 ++
+>  3 files changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+> index 7aa3fa1..8f5335b 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,ethsys.txt
+> @@ -9,6 +9,7 @@ Required Properties:
+>  	- "mediatek,mt2701-ethsys", "syscon"
+>  	- "mediatek,mt7622-ethsys", "syscon"
+>  - #clock-cells: Must be 1
+> +- #reset-cells: Must be 1
+>  
+>  The ethsys controller uses the common clk binding from
+>  Documentation/devicetree/bindings/clock/clock-bindings.txt
+> @@ -20,4 +21,5 @@ ethsys: clock-controller@1b000000 {
+>  	compatible = "mediatek,mt2701-ethsys", "syscon";
+>  	reg = <0 0x1b000000 0 0x1000>;
+>  	#clock-cells = <1>;
+> +	#reset-cells = <1>;
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+The example is already fixed upstream, but I forgot the binding description,
+please rebase this patch.
+
+And please don't forget to add all clock maintainers.
+
+Regards,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
