@@ -1,65 +1,104 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH 0/6] Add endpoint driver for Rockchip PCIe controller
-Date: Wed,  7 Feb 2018 10:47:24 +0800
-Message-ID: <1517971650-61555-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: dts: imx: Add basic dtsi file for imx6sll
+Date: Wed, 7 Feb 2018 00:52:35 -0200
+Message-ID: <CAOMZO5A0-X4XC=023vABSZ26dr9oSU4RCJTKhD5r8=O7CpR8iA@mail.gmail.com>
+References: <1517969481-13411-1-git-send-email-ping.bai@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1517969481-13411-1-git-send-email-ping.bai-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>, jacky.baip-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 7, 2018 at 12:11 AM, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org> wrote:
+> Add dtsi file for imx6sll.
+>
+> Signed-off-by: Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6sll.dtsi | 811 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 811 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6sll.dtsi
+>
+> diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
+> new file mode 100644
+> index 0000000..b87ee2b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6sll.dtsi
+> @@ -0,0 +1,811 @@
+> +/*
+> + * Copyright 2016 Freescale Semiconductor, Inc.
+> + * Copyright 2017-2018 NXP.
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
 
-Patch 1 firstly moves the whole Rockchip PCIe host driver from
-drivers/pci/host to a new folder, driver/pci/rockchip/, and renames
-pcie-rockchip.c to pcie-rockchip-host.c. It also updates the
-Kconfig/Makefile etc, to repect this change.
+SPDX line should be the first one and it should start with //
 
-Then patch 2 and patch 3 are trying to spilt out some common code in
-preparation for adding endponit controller driver support.
+> + */
+> +
+> +#include <dt-bindings/clock/imx6sll-clock.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include "imx6sll-pinfunc.h"
+> +#include "skeleton.dtsi"
 
-Patch 4 rename rockchip-pcie.txt to rockchip-pcie-host.txt and update
-the compatible of_device_id. To keep the backward compatibility for
-old dtb, we add new "rockchip,rk3399-pcie-host". That means DT uses
-"rockchip,rk3399-pcie" would be bound to host controller driver by
-default.
-
-Patch 5 adds endpoint controller driver support as well as the new
-documentation, rockchip-pcie-ep.txt, introduced by patch 6.
+Please avoid including "skeleton.dtsi". We do not include it anyomre
+in imx6 dtsi files.
 
 
+> +       intc: interrupt-controller@00a01000 {
 
-Shawn Lin (6):
-  PCI: rockchip: Create individual folder for rockchip drivers
-  PCI: rockchip: Split out common function to parse DT
-  PCI: rockchip: Spilt out common function to init controller
-  PCI: rockchip: Add rockchip,rk3399-pcie-host compatible
-  PCI: rockchip: Add Endpoint controller driver for Rockchip PCIe
-    controller
-  dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe endpoint
-    controller
+No leading zeros, please.
 
- .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |  60 ++
- .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |   3 +-
- MAINTAINERS                                        |   4 +-
- drivers/pci/Kconfig                                |   1 +
- drivers/pci/Makefile                               |   2 +
- drivers/pci/host/Kconfig                           |  11 -
- drivers/pci/host/Makefile                          |   1 -
- drivers/pci/rockchip/Kconfig                       |  32 ++
- drivers/pci/rockchip/Makefile                      |   4 +
- drivers/pci/rockchip/pcie-rockchip-ep.c            | 629 +++++++++++++++++++++
- .../pcie-rockchip-host.c}                          | 595 +------------------
- drivers/pci/rockchip/pcie-rockchip.c               | 418 ++++++++++++++
- drivers/pci/rockchip/pcie-rockchip.h               | 343 +++++++++++
- 13 files changed, 1507 insertions(+), 596 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
- rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (98%)
- create mode 100644 drivers/pci/rockchip/Kconfig
- create mode 100644 drivers/pci/rockchip/Makefile
- create mode 100644 drivers/pci/rockchip/pcie-rockchip-ep.c
- rename drivers/pci/{host/pcie-rockchip.c => rockchip/pcie-rockchip-host.c} (61%)
- create mode 100644 drivers/pci/rockchip/pcie-rockchip.c
- create mode 100644 drivers/pci/rockchip/pcie-rockchip.h
+Building it with W=1 would warn you about this.
 
--- 
-1.9.1
+Make sure the next version does not generate warnings with W=1.
+> +                       mmdc: mmdc@021b0000 {
+> +                               compatible = "fsl,imx6sll-mmdc", "fsl,imx6q-mmdc";
+> +                               reg = <0x021b0000 0x4000>;
+> +                       };
+> +
+> +                       rngb: rngb@021b4000 {
+> +                               compatible = "fsl,imx6sl-rng", "fsl,imx-rng", "imx-rng";
+
+These compatible strings are not documented.
+
+> +                               reg = <0x021b4000 0x4000>;
+> +                               interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> +                               clocks =  <&clks IMX6SLL_CLK_DUMMY>;
+> +                       };
+> +
+> +                       ocotp: ocotp-ctrl@021bc000 {
+> +                               compatible = "fsl,imx6sll-ocotp", "syscon";
+> +                               reg = <0x021bc000 0x4000>;
+> +                               clocks = <&clks IMX6SLL_CLK_OCOTP>;
+> +                       };
+> +
+> +                       csu: csu@021c0000 {
+> +                               compatible = "fsl,imx6sll-csu";
+
+This compatible strings is not documented.
+
+
+> +                               reg = <0x021c0000 0x4000>;
+> +                               interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
+> +                               status = "disabled";
+> +                       };
+> +
+> +                       snvs_gpr: snvs-gpr@0x021c4000 {
+> +                               compatible = "fsl, imx6sll-snvs-gpr";
+
+Ditto.
+
+> +                               reg = <0x021c4000 0x10000>;
+> +                       };
+> +
+> +                       iomuxc_snvs: iomuxc-snvs@021c8000 {
+> +                               compatible = "fsl,imx6sll-iomuxc-snvs";
+
+Ditto.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
