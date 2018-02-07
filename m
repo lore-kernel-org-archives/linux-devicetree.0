@@ -1,60 +1,56 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [RFC v4 24/26] ARM: dts: r8a7794: Add watchdog support to SoC
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC v4 23/26] ARM: dts: r8a7791: Add watchdog support to SoC
  dtsi
-Date: Thu, 8 Feb 2018 00:20:47 +0100
-Message-ID: <20180207232047.xsn47jioh6fhdc2y@katana>
+Date: Thu, 8 Feb 2018 00:20:41 +0100
+Message-ID: <20180207232041.vgo2i7cmkljwvluy@katana>
 References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1517423070-24236-25-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1517423070-24236-24-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zugzwndemsnf6qmm"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="5lywdttzvhqp5tef"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1517423070-24236-25-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju
+In-Reply-To: <1517423070-24236-24-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju
 List-Id: devicetree@vger.kernel.org
 
 
---zugzwndemsnf6qmm
+--5lywdttzvhqp5tef
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 31, 2018 at 06:24:28PM +0000, Fabrizio Castro wrote:
-> This commit adds watchdog support to the r8a7794 dtsi.
+On Wed, Jan 31, 2018 at 06:24:27PM +0000, Fabrizio Castro wrote:
+> This commit adds watchdog support to the r8a7791 dtsi.
 >=20
-> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRj3fQ9qLvQP4Q@public.gmane.org=
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesa=
 s.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Acked-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 
---zugzwndemsnf6qmm
+--5lywdttzvhqp5tef
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlp7ic8ACgkQFA3kzBSg
-KbZPbg//Q6sS8M3/6jUFnHYSLIjgsm7lYNLYoz1mCGUHZZj6Kit8KaCcj3pP1RY9
-wfXA0hB8SKs1Jo8dG4jT8VmVtwgwLT2j4LNGjLjZnjCGrtoCFr93RraFClQTchHL
-/KvNRYJn/CPhcAKXjYbVO7y53y917fm5D4LRp+EASzjq3BBX4r3wzCXf5pCge828
-OGdSPEiF8SYGIElEdq1LGDGl6jU6+luFHwQF77ZksRmAoQFk7mgZITFxnGMFN6hX
-9fd6Qw8VWrU4bxPUhbA8Cua3F3SF3w8x4hlV1OUsBJ0u50c7proavRpxMKF96OXv
-1i5jQdaUTs/q/iwWPGqBm4/+6T2tHtb+fkObuKKFm9JpXav4DmGd3upP/M2hChes
-zLOz2gQIFCBwJSbgoPmH5CNuFsOKTQctk8x4P/FewWm9Z2XdV2DYXg26UbFjGxT+
-e6e2/3T7cetlRMeuzKdFu4CAbufRS+xm6Wz84akmZHtCigXCCNXm3scKADJLEW/6
-0Ixnxk59OW1IJ1+ySyG1A3osKcVBHsKnk34IToBGV8EcMHABc+lz2Zjq545nFqrK
-NQA+/0Mo9b+gxTu4wV+fDZzLmkXt0XQU0Y213Q9AQNlNiWXwdjFUVjmWUFKfxK+W
-FwOJGxuAY+xSoq7OGL/UrlvfrL6Wd58VPvzVEkMaSYSRB2tqenI=
-=19gc
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlp7ickACgkQFA3kzBSg
+KbbmUA/9GVhdEFtaR7aTq7KbbW4Vcee6HlK7E9Bnhcxwqvc9pXckaReLWp+NcsBo
+O4KMkEfPFuylGXnAGTADDBgZnb0+mgQw03NsBN6Gclo/E3O0QwLv9DVCBimjjPs5
+ePQw2FDC1hXxrr6hE5BZ4RNycamyEj5l5N++KtmPc/IXgiuRX0iOphAUrEpCO0gD
+CKCom0bM0Uh3J3kS3CreGu0xH1JIdF80DzTqH4JJ+R1WzOM+th/TKN1aJh4ClOx1
+V74+rTG6dc1JNIhgNUiDwgMe75TzMoD+K/gYDdYNHPdBZGo67vzM5ers+EwEy3Li
+PldfJIcK8dmF/y8aj3/hEXKxghg+qEBWhlhRubk3PcXgqAmtwm30YdjYBpI07Zpf
+oruYV5nE5zlaY/SI4OzPENIyT1A4LCz93qSxFCdYzFmV1y5ESsgJIv2M14ZOb7cK
+0ZdvJvbfwsuiDPoWjNiX37KVl+2aA7AhyZLbI04SuHdqUplHLomqekeSgA8nTXwN
+oiD1fw91jmxClBKlc94lhAYJgMg7mJadqaSmy7Ee20O92nVjVy9t1UT4Ljm8C9kz
+jz1t+lDRm4SBvXWDn0TMbFpAdrnnNJsZvfckM+FiQUtvsd01vs8buv7c/3ZBl81t
+YdSfuUyA/MKPXtgk0bpDJTBQGfzcZo1cMCSczyOnGWFF3X3I0Yo=
+=OeS1
 -----END PGP SIGNATURE-----
 
---zugzwndemsnf6qmm--
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--5lywdttzvhqp5tef--
