@@ -1,85 +1,65 @@
-From: Jacky Bai <ping.bai-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v3 2/2] ARM: dts: imx: Add basic dts support for imx6sll
- EVK board
-Date: Wed, 7 Feb 2018 02:52:04 +0000
-Message-ID: <HE1PR04MB311326FAAFF052B72E9A2EED87FC0@HE1PR04MB3113.eurprd04.prod.outlook.com>
-References: <1517969481-13411-1-git-send-email-ping.bai@nxp.com>
- <1517969481-13411-2-git-send-email-ping.bai@nxp.com>
- <CAOMZO5DEvVsGbbG_w116OX625DJos0GHsmjUUBkgwVk7NLONMw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5DEvVsGbbG_w116OX625DJos0GHsmjUUBkgwVk7NLONMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dl-linux-imx <linux-imx-3arQi8VN3Tc@public.gmane.org>, "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "jacky.baip-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jacky.baip-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 0/6] Add endpoint driver for Rockchip PCIe controller
+Date: Wed,  7 Feb 2018 10:47:24 +0800
+Message-ID: <1517971650-61555-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDIvMl0gQVJNOiBkdHM6IGlteDogQWRkIGJhc2ljIGR0
-cyBzdXBwb3J0IGZvciBpbXg2c2xsIEVWSw0KPiBib2FyZA0KPiANCj4gT24gV2VkLCBGZWIgNywg
-MjAxOCBhdCAxMjoxMSBBTSwgQmFpIFBpbmcgPHBpbmcuYmFpQG54cC5jb20+IHdyb3RlOg0KPiAN
-Cj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnNsbC1l
-dmsuZHRzDQo+ID4gQEAgLTAsMCArMSwzNzQgQEANCj4gPiArLyoNCj4gPiArICogQ29weXJpZ2h0
-IDIwMTYgRnJlZXNjYWxlIFNlbWljb25kdWN0b3IsIEluYy4NCj4gPiArICogQ29weXJpZ2h0IDIw
-MTctMjAxOCBOWFAuDQo+ID4gKyAqDQo+ID4gKyAqIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAo
-R1BMLTIuMCBPUiBNSVQpDQo+IA0KPiBUaGUgU1BEWCBsaW5lIHNob3VsZCBiZSB0aGUgZmlyc3Qg
-b25lIGFuZCBpdCBzaG91bGQgc3RhcnQgd2l0aCAvLw0KPiANCj4gPiArICovDQo+ID4gKw0KPiA+
-ICsvZHRzLXYxLzsNCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxkdC1iaW5kaW5ncy9ncGlvL2dwaW8u
-aD4NCj4gPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2lucHV0L2lucHV0Lmg+DQo+ID4gKyNpbmNs
-dWRlICJpbXg2c2xsLmR0c2kiDQo+ID4gKw0KPiA+ICsvIHsNCj4gPiArICAgICAgIG1vZGVsID0g
-IkZyZWVzY2FsZSBpLk1YNlNMTCBFVksgQm9hcmQiOw0KPiA+ICsgICAgICAgY29tcGF0aWJsZSA9
-ICJmc2wsaW14NnNsbC1ldmsiLCAiZnNsLGlteDZzbGwiOw0KPiA+ICsNCj4gPiArICAgICAgIG1l
-bW9yeSB7DQo+IA0KPiBtZW1vcnlAODAwMDAwMDANCj4gDQo+ID4gKyAgICAgICAgICAgICAgIHJl
-ZyA9IDwweDgwMDAwMDAwIDB4ODAwMDAwMDA+Ow0KPiANCj4gPiArICAgICAgIHJlZ19hdWQ0djog
-cmVnLWF1ZDR2IHsNCj4gPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJyZWd1bGF0b3It
-Zml4ZWQiOw0KPiA+ICsgICAgICAgICAgICAgICByZWd1bGF0b3ItbmFtZSA9ICJ3bTg5NjItc3Vw
-cGx5LTR2MiI7DQo+ID4gKyAgICAgICAgICAgICAgIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0g
-PDQzMjUwMDA+Ow0KPiA+ICsgICAgICAgICAgICAgICByZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9
-IDw0MzI1MDAwPjsNCj4gPiArICAgICAgICAgICAgICAgcmVndWxhdG9yLWJvb3Qtb247DQo+ID4g
-KyAgICAgICB9Ow0KPiA+ICsNCj4gPiArICAgICAgIHJlZ19sY2Q6IHJlZy1sY2Qgew0KPiA+ICsg
-ICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7DQo+ID4gKyAgICAg
-ICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gImxjZC1wd3IiOw0KPiA+ICsgICAgICAgICAgICAg
-ICBncGlvID0gPCZncGlvNCA4IDA+Ow0KPiANCj4gUGxlYXNlIHVzZSBHUElPX0FDVElWRV9ISUdI
-IGhlcmUuDQo+IA0KPiANCj4gPiArJmkyYzEgew0KPiA+ICsgICAgICAgY2xvY2stZnJlcXVlbmN5
-ID0gPDEwMDAwMD47DQo+ID4gKyAgICAgICBwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+
-ICsgICAgICAgcGluY3RybC0wID0gPCZwaW5jdHJsX2kyYzE+Ow0KPiA+ICsgICAgICAgc3RhdHVz
-ID0gIm9rYXkiOw0KPiA+ICsNCj4gPiArICAgICAgIHBtaWM6IHBmdXplMTAwQDA4IHsNCj4gDQo+
-IFBsZWFzZSByZW1vdmUgdGhlIGxlYWRpbmcgMCwgc28gdGhpcyBzaG91bGQgYmUgQDguDQo+IA0K
-PiBQbGVhc2UgYnVpbGQgaXQgd2l0aCBXPTEgYW5kIG1ha2Ugc3VyZSBpdCBnZW5lcmF0ZXMgbm8g
-d2FybmluZ3MuDQo+IA0KPiA+ICsmaW9tdXhjIHsNCj4gPiArICAgICAgIHBpbmN0cmwtbmFtZXMg
-PSAiZGVmYXVsdCI7DQo+ID4gKyAgICAgICBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfaG9nMD4sIDwm
-cGluY3RybF9ob2cxPjsNCj4gPiArDQo+ID4gKyAgICAgICBwaW5jdHJsX2hvZzA6IGhvZzBncnAg
-ew0KPiA+ICsgICAgICAgICAgICAgICBwaW5tdXggPSA8DQo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgTVg2U0xMX1BBRF9LRVlfUk9XN19fR1BJTzRfSU8wNw0KPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIE1YNlNMTF9QQURfR1BJTzRfSU8yMl9fR1BJTzRfSU8yMg0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIE1YNlNMTF9QQURfS0VZX0NPTDNfX0dQSU8zX0lPMzANCj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICBNWDZTTExfUEFEX0tFWV9DT0w0X19HUElPNF9JTzAwDQo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgTVg2U0xMX1BBRF9SRUZfQ0xLXzMyS19fR1BJTzNfSU8y
-MiAvKg0KPiBTRDMgQ0QNCj4gPiArICovDQo+IA0KPiBJIHNlZSBubyBTRDMgcGluY3RybCBlbnRy
-eS4gSWYgdGhpcyBpcyByZWxhdGVkIHRvIFNEMyBjYXJkIGRldGVjdGlvbiwgdGhlbiBpdCBzaG91
-bGQNCj4gYmUgcGFydCBvZiBTRDMgcGluY3RybCBpbnN0ZWFkIG9mIGhvZy4NCj4gDQo+IA0KPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIE1YNlNMTF9QQURfS0VZX0NPTDZfX0dQSU80X0lPMDQg
-LypTRDMNCj4gUkVTRVQgKi8NCj4gDQo+IFNhbWUgaGVyZS4NCj4gDQo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgTVg2U0xMX1BBRF9LRVlfQ09MNV9fR1BJTzRfSU8wMg0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIE1YNlNMTF9QQURfR1BJTzRfSU8yNF9fR1BJTzRfSU8yNCAvKiBIUA0K
-PiBERVRFQ1QNCj4gPiArICovDQo+IA0KPiBEb2VzIEhQIG1lYW4gaGVhZCBwaG9uZT8gSWYgc28s
-IHRoaXMgc2hvdWxkIGJlIHBhcnQgb2YgYXVkaW8gcGluY3RybCBpbnN0ZWFkIG9mDQo+IGhvZy4N
-Cj4gDQo+IA0KPiA+ICsmdXNkaGMxIHsNCj4gPiArICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVm
-YXVsdCIsICJzdGF0ZV8xMDBtaHoiLCAic3RhdGVfMjAwbWh6IjsNCj4gPiArICAgICAgIHBpbmN0
-cmwtMCA9IDwmcGluY3RybF91c2RoYzFfZGF0YT4sIDwmcGluY3RybF91c2RoYzFfY2xrPjsNCj4g
-PiArICAgICAgIHBpbmN0cmwtMSA9IDwmcGluY3RybF91c2RoYzFfZGF0YV8xMDBtaHo+LA0KPiA8
-JnBpbmN0cmxfdXNkaGMxX2Nsa18xMDBtaHo+Ow0KPiA+ICsgICAgICAgcGluY3RybC0yID0gPCZw
-aW5jdHJsX3VzZGhjMV9kYXRhXzIwMG1oej4sDQo+IDwmcGluY3RybF91c2RoYzFfY2xrXzIwMG1o
-ej47DQo+ID4gKyAgICAgICBjZC1ncGlvcyA9IDwmZ3BpbzQgNyBHUElPX0FDVElWRV9MT1c+Ow0K
-PiA+ICsgICAgICAgd3AtZ3Bpb3MgPSA8JmdwaW80IDIyIEdQSU9fQUNUSVZFX0hJR0g+Ow0KPiA+
-ICsgICAgICAga2VlcC1wb3dlci1pbi1zdXNwZW5kOw0KPiA+ICsgICAgICAgZW5hYmxlLXNkaW8t
-d2FrZXVwOw0KPiANCj4gVGhpcyBwcm9wZXJ0eSBpcyBkZXByZWNhdGVkIGFzIGRlc2NyaWJlZCBp
-bg0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL21tYy50eHQuDQo+IA0K
-PiBQbGVhc2UgdXNlICd3YWtldXAtc291cmNlJyBpbnN0ZWFkLg0KDQpUaGFua3MgZm9yIHJldmll
-dywgd2lsbCBmaXggYWxsLg0KDQpCUg0KSmFja3kgQmFpDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Patch 1 firstly moves the whole Rockchip PCIe host driver from
+drivers/pci/host to a new folder, driver/pci/rockchip/, and renames
+pcie-rockchip.c to pcie-rockchip-host.c. It also updates the
+Kconfig/Makefile etc, to repect this change.
+
+Then patch 2 and patch 3 are trying to spilt out some common code in
+preparation for adding endponit controller driver support.
+
+Patch 4 rename rockchip-pcie.txt to rockchip-pcie-host.txt and update
+the compatible of_device_id. To keep the backward compatibility for
+old dtb, we add new "rockchip,rk3399-pcie-host". That means DT uses
+"rockchip,rk3399-pcie" would be bound to host controller driver by
+default.
+
+Patch 5 adds endpoint controller driver support as well as the new
+documentation, rockchip-pcie-ep.txt, introduced by patch 6.
+
+
+
+Shawn Lin (6):
+  PCI: rockchip: Create individual folder for rockchip drivers
+  PCI: rockchip: Split out common function to parse DT
+  PCI: rockchip: Spilt out common function to init controller
+  PCI: rockchip: Add rockchip,rk3399-pcie-host compatible
+  PCI: rockchip: Add Endpoint controller driver for Rockchip PCIe
+    controller
+  dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe endpoint
+    controller
+
+ .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |  60 ++
+ .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |   3 +-
+ MAINTAINERS                                        |   4 +-
+ drivers/pci/Kconfig                                |   1 +
+ drivers/pci/Makefile                               |   2 +
+ drivers/pci/host/Kconfig                           |  11 -
+ drivers/pci/host/Makefile                          |   1 -
+ drivers/pci/rockchip/Kconfig                       |  32 ++
+ drivers/pci/rockchip/Makefile                      |   4 +
+ drivers/pci/rockchip/pcie-rockchip-ep.c            | 629 +++++++++++++++++++++
+ .../pcie-rockchip-host.c}                          | 595 +------------------
+ drivers/pci/rockchip/pcie-rockchip.c               | 418 ++++++++++++++
+ drivers/pci/rockchip/pcie-rockchip.h               | 343 +++++++++++
+ 13 files changed, 1507 insertions(+), 596 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
+ rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (98%)
+ create mode 100644 drivers/pci/rockchip/Kconfig
+ create mode 100644 drivers/pci/rockchip/Makefile
+ create mode 100644 drivers/pci/rockchip/pcie-rockchip-ep.c
+ rename drivers/pci/{host/pcie-rockchip.c => rockchip/pcie-rockchip-host.c} (61%)
+ create mode 100644 drivers/pci/rockchip/pcie-rockchip.c
+ create mode 100644 drivers/pci/rockchip/pcie-rockchip.h
+
+-- 
+1.9.1
