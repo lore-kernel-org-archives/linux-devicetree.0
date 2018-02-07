@@ -1,153 +1,86 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/3] drm/panel: simple: Add ability to override typical
- timing
-Date: Wed, 7 Feb 2018 10:51:16 +0100
-Message-ID: <20180207095116.GB2130@ulmo>
-References: <20180206165626.37692-1-seanpaul@chromium.org>
- <20180206165626.37692-2-seanpaul@chromium.org>
- <CAL_JsqJer8ZrLyPHz=hBo9smSv7aXhtP3hOJzQojt7ofUiHo=w@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
+ properties ?
+Date: Wed, 7 Feb 2018 11:04:45 +0100
+Message-ID: <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
+References: <20180207065959.GN28462@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2127276256=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJer8ZrLyPHz=hBo9smSv7aXhtP3hOJzQojt7ofUiHo=w@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Doug Anderson <dianders@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180207065959.GN28462@vireshk-i7>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punit.Agrawal-5wv7dgnIgG8@public.gmane.org, ionela.voinescu-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 07/02/2018 07:59, Viresh Kumar wrote:
+> Looks like I am missing the obvious and sorry for the noise in advance.
+> 
+> But I couldn't find any code that parses the "cooling-{min|max}-level" DT
+> bindings in the kernel. Yeah, almost every ARM platform have these properties
+> set for their CPU nodes in DT, but I don't see how these are getting used.
+> 
+> I even tried to remove them for my hikey platform and everything worked as if
+> nothing has changed (which I was expecting anyway). The deal is that the
+> ->get_max_state() callback of the cooling drivers are getting called to get the
+> range at runtime and none of them refers to these bindings.
+> 
+> Removing code is always fun and I would be happy to post a series to clean
+> things up if everyone agrees. Please let me know if my understanding is correct
+> and if it would be fine to remove these bindings completely.
 
---===============2127276256==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kXdP64Ggrk/fb43R"
-Content-Disposition: inline
+Yeah, this is a bit fuzzy. There are still cooling-{min|max}-*state*
+definitions in the DTs
+
+Documentation/devicetree/bindings/hwmon/pwm-fan.txt:
+cooling-min-state = <0>;
+arch/arm/boot/dts/exynos4412-odroidu3.dts:
+cooling-min-state = <0>;
+arch/arm/boot/dts/exynos5410-odroidxu.dts:
+cooling-min-state = <0>;
+arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi:
+cooling-min-state = <0>;
+arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi:
+cooling-min-state = <0>;
 
 
---kXdP64Ggrk/fb43R
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+IIUC, the cooling-device in the mapping defines the min and max states
+which are the values used in the thermal zone binding.
 
-On Tue, Feb 06, 2018 at 02:19:34PM -0600, Rob Herring wrote:
-> On Tue, Feb 6, 2018 at 10:56 AM, Sean Paul <seanpaul@chromium.org> wrote:
-> > This patch adds the ability to override the typical display timing for a
-> > given panel. This is useful for devices which have timing constraints
-> > that do not apply across the entire display driver (eg: to avoid
-> > crosstalk between panel and digitizer on certain laptops). The rules are
-> > as follows:
-> >
-> > - panel must not specify fixed mode (since the override mode will
-> >   either be the same as the fixed mode, or we'll be unable to
-> >   check the bounds of the overried)
-> > - panel must specify at least one display_timing range which will be
-> >   used to ensure the override mode fits within its bounds
-> >
-> > Cc: Doug Anderson <dianders@chromium.org>
-> > Cc: Heiko Stuebner <heiko@sntech.de>
-> > Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: dri-devel@lists.freedesktop.org
-> > Cc: linux-rockchip@lists.infradead.org
-> > Signed-off-by: Sean Paul <seanpaul@chromium.org>
-> > ---
-> >  .../bindings/display/panel/simple-panel.txt        | 20 +++++++
->=20
-> The binding should be a separate patch.
->=20
-> >  drivers/gpu/drm/panel/panel-simple.c               | 69 ++++++++++++++=
-+++++++-
-> >  2 files changed, 88 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/panel/simple-pan=
-el.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> > index 16d8ff088b7d..590bbff6fc90 100644
-> > --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> > +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> > @@ -7,6 +7,14 @@ Optional properties:
-> >  - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-> >  - enable-gpios: GPIO pin to enable or disable the panel
-> >  - backlight: phandle of the backlight device attached to the panel
-> > +- override-mode: For devices which require a mode which differs from t=
-he
->=20
-> This is not a property, but a node so it needs its own section.
->=20
-> Also, it's not real clear from display-timing.txt, but the modes
-> should be grouped under a display-timings node. Looks like we haven't
-> been good at enforcing that as "panel-timing" is also common when
-> there's a single mode. I'd rather not have another way. With a
-> standard node name, we can validate the node more easily.
->=20
-> We'd lose the fact that this is explicitly an override, but I'd doubt
-> Thierry is going to start letting in panels with no timings.
+And the cooling-[min|max]-level are the hardware limits:
 
-I was actually going to suggest the same change. I don't mind if the
-name isn't explicit about this being an override. The important thing is
-that we document this as being an override.
+cooling-min-level <= cooling-device min|max state <= cooling-max-level
 
-> Finally, since this is an override, is it valid to only override the
-> parameters that need overriding? I don't really have an opinion either
-> way. It just needs to be explicitly documented.
+For example on the hikey6220:
 
-I've thought about that, but I think that'd be putting too much of a
-burden on the panel drivers and/or display drivers. In the simplest case
-it may be sufficient to restrict the pixel clock, in which case it would
-be fairly easy for the driver to adjust the other parameters.
+The DT specifies for CPU0:
 
-But what if you also need to restrict the porches. At some point it'll
-become very difficult for the driver to automatically determine which of
-the other parameters to adjust and how. Chances are that whoever needs
-to deal with the restrictions already knows how to adjust the parameters
-to fixup the mode.
+	operating-points-v2 = <&cpu_opp_table>;
+	cooling-min-level = <4>;
+	cooling-max-level = <0>;
+	#cooling-cells = <2>; /* min followed by max */
 
-I think this gives us a nice balance of simplicity when people don't
-care (they'd just use the typical timings) and flexibility when they do
-(adjust the mode to take into account display driver restrictions and
-completely specify the mode if the restrictions are too complicated for
-code to realistically apply them).
+and for the cooling device for map0
 
-Thierry
+	cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
 
---kXdP64Ggrk/fb43R
-Content-Type: application/pgp-signature; name="signature.asc"
+So if my understanding is correct, the optional property
+cooling-[min|max]-level is used to make sure the cooling device min
+state and max state are in the hardware boundaries. And the thermal
+framework misses to do the consistency check at init.
 
------BEGIN PGP SIGNATURE-----
+I'm not sure how useful are cooling-{min|max}-*state* bindings.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlp6zBQACgkQ3SOs138+
-s6GDzw/+IN2Y3B9a4B4B3+RXHCHbO00/NWcncgFNij7PUP0YB73Yu/uS7sFMVtDz
-UPcXHahdfeOI40bUTmcS8ON5XNFxuSHtz9TQz7xfUXRrFDdt3G/2bK3jK6khXjYM
-E1WShZJWj6lj1KzoVgyjTy7Jmg/XSn7SF3+TstJ/4oYbyQPCQW3KvPnXZVZrrHFk
-mAnD22+77LwB6uQ/Rc1cIxtA0Fq80XzMHQLEiyGglFJGINe+k7N0ehaxxq9upr4D
-+SBRqowDQLVK3IgGHJE4zbuAqBRQjLWt3ZasgSm1rQ/ZaBTQbN+dnAz439adDVGh
-tTEvAknl6KKfUdC3aip0MIUwhai0/DNqayFwiAeTnc/fmVKYKzrgo8+F8S3gzMJY
-26h6OUiRw1oOGeHDV5nJ32BDYVks1i0eDBEaSpGZS1qCucTRuHjSJYxqRdxy/4Fk
-SuL/6JoPG2L7pULhaX4yiiV1nemIvT8wzu+cRa58X4ZsjeyKGQcdVVFGHysJOIm8
-vU7sFCg7BaiwYJOgDoi4+sprcMgfIQG9335+GMUoAZq3rHxO7H8hY6U+mDosVsVX
-jtSa/4CQpAcPimemjkSjwW9sHt6M2wFCa5d89lV9IzQ7N3ldbQo9MJzRCVFzoU+a
-MUEpS2Z8VCRjxzCn1AnDKPuTAb7Y6ZQbPoSc5EyJyFDTJSsUxaE=
-=5rRd
------END PGP SIGNATURE-----
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
---kXdP64Ggrk/fb43R--
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
---===============2127276256==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============2127276256==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
