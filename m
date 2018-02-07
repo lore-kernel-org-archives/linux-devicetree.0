@@ -1,35 +1,39 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v5 03/16] media: rkisp1: Add user space ABI definitions
-Date: Wed, 7 Feb 2018 12:38:50 +0000
-Message-ID: <d29bc615-2359-86c6-db5a-27cc111bc275@arm.com>
-References: <1514533978-20408-1-git-send-email-zhengsq@rock-chips.com>
- <1514533978-20408-4-git-send-email-zhengsq@rock-chips.com>
- <5b29d890-8c6b-18ff-ade1-1923c25143a0@xs4all.nl>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH 2/2] dt-bindings: PCI: MediaTek: Correct the
+ interrupt-map properties
+Date: Wed, 7 Feb 2018 20:43:06 +0800
+Message-ID: <1518007386.23115.6.camel@mtkswgap22>
+References: <31c765c53e85e41bfc001d110d69e46c9967f4e7.1516961656.git.ryder.lee@mediatek.com>
+         <9d247a4fba54ba90d07df32fd89a8bb2c8bdb0f9.1516961656.git.ryder.lee@mediatek.com>
+         <20180205060830.svkrwnn6wzuig7ns@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5b29d890-8c6b-18ff-ade1-1923c25143a0@xs4all.nl>
-Content-Language: en-GB
+In-Reply-To: <20180205060830.svkrwnn6wzuig7ns@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Shunqian Zheng <zhengsq@rock-chips.com>, linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org
-Cc: Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, Joao.Pinto@synopsys.com, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, Luis.Oliveira@synopsys.com, robh+dt@kernel.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, allon.huang@rock-chips.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/18 13:14, Hans Verkuil wrote:
-[...]
-> The one thing that I worry about is if these structs are the same for
-> 32 and 64 bit arm.
+Hi Bjorn,
 
-I see some enums and bools in there - in general the storage size of 
-those isn't even guaranteed to be consistent between different compiler 
-implementations on the same platform, let alone across multiple 
-platforms (especially WRT things like GCC's -fshort-enums).
+On Mon, 2018-02-05 at 00:08 -0600, Rob Herring wrote:
+> On Wed, Jan 31, 2018 at 03:41:50PM +0800, Ryder Lee wrote:
+> > Move the interrupt-map properties from the child nodes to the root node
+> > and update each entry accordingly.
+> > 
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/pci/mediatek-pcie.txt      | 28 ++++++++++++----------
+> >  1 file changed, 15 insertions(+), 13 deletions(-)
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-In practice, under the standard ABIs for 32-bit and 64-bit Arm[1], I'd 
-expect basic types other than longs and pointers to be pretty much the 
-same; it's the imp-def C stuff I'd be a lot less confident about.
+Please ignore this patch as we think the original version is better than
+this.  Sorry for the inconvenience.
 
-Robin.
-
-[1]:http://infocenter.arm.com/help/topic/com.arm.doc.subset.swdev.abi/index.html
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
