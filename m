@@ -1,63 +1,116 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RFC v4 13/26] watchdog: renesas_wdt: Add restart handler
-Date: Wed, 7 Feb 2018 16:46:57 +0100
-Message-ID: <CAMuHMdVZi0Vyz9+Z6TFeX3yh=rzRHBuNbgy1Nt4LhoLU8qK5KQ@mail.gmail.com>
-References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com> <1517423070-24236-14-git-send-email-fabrizio.castro@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1517423070-24236-14-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>l
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v4 2/2] dt-bindings/interrupt-controller: pdc: descibe PDC device binding
+Date: Wed,  7 Feb 2018 08:49:58 -0700
+Message-ID: <20180207154958.13421-3-ilina@codeaurora.org>
+References: <20180207154958.13421-1-ilina@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180207154958.13421-1-ilina@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, asathyak@codeaurora.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+From: Archana Sathyakumar <asathyak@codeaurora.org>
 
-On Wed, Jan 31, 2018 at 7:24 PM, Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> On iWave's boards iwg20d and iwg22d the only way to reboot the system is
-> by means of the watchdog.
-> This patch adds a restart handler to rwdt_ops, and also makes sure we
-> keep its priority to a medium level, in order to not override other more
-> effective handlers.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Add device binding documentation for the PDC Interrupt controller on
+QCOM SoC's like the SDM845. The interrupt-controller can be used to
+sense edge low interrupts and wakeup interrupts when the GIC is
+non-operational.
 
-> --- a/drivers/watchdog/renesas_wdt.c
-> +++ b/drivers/watchdog/renesas_wdt.c
-> @@ -118,6 +136,7 @@ static const struct watchdog_ops rwdt_ops = {
->         .stop = rwdt_stop,
->         .ping = rwdt_init_timeout,
->         .get_timeleft = rwdt_get_timeleft,
-> +       .restart = rwdt_restart,
->  };
->
->  static int rwdt_probe(struct platform_device *pdev)
-> @@ -176,6 +195,7 @@ static int rwdt_probe(struct platform_device *pdev)
->         platform_set_drvdata(pdev, priv);
->         watchdog_set_drvdata(&priv->wdev, priv);
->         watchdog_set_nowayout(&priv->wdev, nowayout);
-> +       watchdog_set_restart_priority(&priv->wdev, 128);
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ .../bindings/interrupt-controller/qcom,pdc.txt     | 80 ++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
 
-Given we want to reboot R-Car Gen2 boards equipped with a suitable PMIC
-(e.g. DA9063) using that PMIC, I think the priority should be lower (0?),
-cfr.
-
- *   0:   use watchdog's restart function as last resort, has limited restart
- *        capabilies
- *   128: default restart handler, use if no other handler is expected to be
- *        available and/or if restart is sufficient to restart the entire system
- *   255: preempt all other handlers
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+new file mode 100644
+index 000000000000..21c4f2fbcd0b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+@@ -0,0 +1,80 @@
++PDC interrupt controller
++
++Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
++Power Domain Controller (PDC) that is on always-on domain. In addition to
++providing power control for the power domains, the hardware also has an
++interrupt controller that can be used to help detect edge low interrupts as
++well detect interrupts when the GIC is non-operational.
++
++GIC is parent interrupt controller at the highest level. Platform interrupt
++controller PDC is next in hierarchy, followed by others. Drivers requiring
++wakeup capabilities of their device interrupts routed through the PDC, must
++specify PDC as their interrupt controller and request the PDC port associated
++with the GIC interrupt. See example below.
++
++Properties:
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should contain "qcom,<soc>-pdc"
++		    - "qcom,sdm845-pdc": For SDM845
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Specifies the base physical address for PDC hardware.
++
++- interrupt-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: Specifies the number of cells needed to encode an interrupt
++		    source.
++		    Must be 2.
++		    The first element of the tuple is the PDC pin for the
++		    interrupt.
++		    The second element is the trigger type.
++
++- interrupt-parent:
++	Usage: required
++	Value type: <phandle>
++	Definition: Specifies the interrupt parent necessary for hierarchical
++		    domain to operate.
++
++- interrupt-controller:
++	Usage: required
++	Value type: <bool>
++	Definition: Identifies the node as an interrupt controller.
++
++- qcom,pdc-ranges:
++	Usage: required
++	Value type: <u32 array>
++	Definition: Specifies the PDC pin offset and the number of PDC ports.
++		    The tuples indicates the valid mapping of valid PDC ports
++		    and their hwirq mapping.
++		    The first element of the tuple is the starting PDC port.
++		    The second element is the GIC hwirq number for the PDC port.
++		    The third element is the number of interrupts in sequence.
++
++Example:
++
++	pdc: interrupt-controller@b220000 {
++		compatible = "qcom,sdm845-pdc";
++		reg = <0xb220000 0x30000>;
++		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&intc>;
++		interrupt-controller;
++	};
++
++DT binding of a device that wants to use the GIC SPI 514 as a wakeup
++interrupt, must do -
++
++	wake-device {
++		[...]
++		interrupt-controller = <&pdc>;
++		interrupt = <2 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++In this case interrupt 514 would be mapped to port 2 on the PDC as defined by
++the qcom,pdc-ranges property.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
