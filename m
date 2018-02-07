@@ -1,103 +1,65 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/3] drm/panel: simple: Add ability to override typical
- timing
-Date: Wed, 7 Feb 2018 14:27:13 -0500
-Message-ID: <20180207192713.mdelg7j6dsbcnpsm@art_vandelay>
-References: <20180206165626.37692-1-seanpaul@chromium.org>
- <20180206165626.37692-2-seanpaul@chromium.org>
- <CAL_JsqJer8ZrLyPHz=hBo9smSv7aXhtP3hOJzQojt7ofUiHo=w@mail.gmail.com>
- <20180206214812.fzh3tr3zflzunw6n@art_vandelay>
- <CAL_JsqJDvPN3CtKtj980egDRuC-ZjiKOAWe5ECYVBSv4hVOnYw@mail.gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3 11/16] mmc: tmio: deprecate
+ "toshiba,mmc-wrprotect-disable" DT property
+Date: Wed, 7 Feb 2018 20:32:27 +0100
+Message-ID: <20180207193227.hu6cyh2e27dmrqwt@ninjato>
+References: <1516206496-16612-1-git-send-email-yamada.masahiro@socionext.com>
+ <1516206496-16612-12-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNAQUJw-fjuJO68Kvskn8BRYW3rZj4YMtbo-Oxfv7c=6Ggg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="n64esxgg2ls3up2p"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJDvPN3CtKtj980egDRuC-ZjiKOAWe5ECYVBSv4hVOnYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAK7LNAQUJw-fjuJO68Kvskn8BRYW3rZj4YMtbo-Oxfv7c=6Ggg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Ulf Magnusson <ulfalizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 07, 2018 at 11:41:49AM -0600, Rob Herring wrote:
-> On Tue, Feb 6, 2018 at 3:48 PM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> > On Tue, Feb 06, 2018 at 02:19:34PM -0600, Rob Herring wrote:
-> >> On Tue, Feb 6, 2018 at 10:56 AM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> >> > This patch adds the ability to override the typical display timing for a
-> >> > given panel. This is useful for devices which have timing constraints
-> >> > that do not apply across the entire display driver (eg: to avoid
-> >> > crosstalk between panel and digitizer on certain laptops). The rules are
-> >> > as follows:
-> >> >
-> >> > - panel must not specify fixed mode (since the override mode will
-> >> >   either be the same as the fixed mode, or we'll be unable to
-> >> >   check the bounds of the overried)
-> >> > - panel must specify at least one display_timing range which will be
-> >> >   used to ensure the override mode fits within its bounds
-> >> >
-> >> > Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >> > Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> >> > Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> > Cc: Stéphane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >> > Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> > Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> >> > Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> >> > Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >> > ---
-> >> >  .../bindings/display/panel/simple-panel.txt        | 20 +++++++
-> >>
-> >> The binding should be a separate patch.
-> >>
-> >
-> > Ack, will split.
-> >
-> >
-> >> >  drivers/gpu/drm/panel/panel-simple.c               | 69 +++++++++++++++++++++-
-> >> >  2 files changed, 88 insertions(+), 1 deletion(-)
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> >> > index 16d8ff088b7d..590bbff6fc90 100644
-> >> > --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> >> > +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
-> >> > @@ -7,6 +7,14 @@ Optional properties:
-> >> >  - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-> >> >  - enable-gpios: GPIO pin to enable or disable the panel
-> >> >  - backlight: phandle of the backlight device attached to the panel
-> >> > +- override-mode: For devices which require a mode which differs from the
-> >>
-> >> This is not a property, but a node so it needs its own section.
-> >>
-> >> Also, it's not real clear from display-timing.txt, but the modes
-> >> should be grouped under a display-timings node. Looks like we haven't
-> >> been good at enforcing that as "panel-timing" is also common when
-> >> there's a single mode. I'd rather not have another way. With a
-> >> standard node name, we can validate the node more easily.
-> >>
-> >> We'd lose the fact that this is explicitly an override, but I'd doubt
-> >> Thierry is going to start letting in panels with no timings.
-> >>
-> >
-> > Yeah, I noticed that the timing subnode was specified as nestled in
-> > display-timings. I figured since there can only be one override mode, and the
-> > of_get_display_timing function was exported, it would be Ok to just reuse the
-> > format of the subnode. I'll respin with the full thing.
-> 
-> TBC, I'm fine if you use panel-timing as that's already established
-> for cases were only 1 mode exists.
 
-Ah! So the dt change you were asking for was just s/override-mode/panel-timing/.
-I'll respin a v3 with the improved documentation and reinstate the "panel-timing"
-subnode.
+--n64esxgg2ls3up2p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sean
+On Thu, Jan 18, 2018 at 10:58:36AM +0900, Masahiro Yamada wrote:
+> 2018-01-18 1:28 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> > This property is equivalent to "disable-wp" defined in
+> > Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+>=20
+> This is mistake.
+>=20
+> "disable-wp" is defined in
+>=20
+> Documentation/devicetree/bindings/mmc/mmc.txt
 
-> 
-> Rob
+With that fixed:
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Reviewed-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+
+
+--n64esxgg2ls3up2p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlp7VEoACgkQFA3kzBSg
+KbZ2MQ//cTK2L1RNvVTODkTz7P/XIz7dtmszlYSZXMagmYtqh1rW19FRPo40yo89
+XL0DNLiXTgN0yEWv6178HBPe4QGASdxxpjIJBH5CT5/uQT2nX8C2VG0d+w82WESO
+zwTshuqKfRDYWWFIII6FPu4YZZQT+Nk9pSBvAUR0l9MPrI7uSkrVdOCK/DpK60Jf
+bkuXqvo3QmCI76Cz6cBAiF9lAM9d0mIFst247fH3Cvf0IE/elXkWej3elZiOgZVt
+orqcdGZDBbCmGFx0OCUItl5o+Zb2wIefAG/lfk3ULPoajNAiHHgvjTKfoxWD7s3d
+b1P/WT3Yx3VttVTOvIaUWOV6NXoOehFIVxiuufrzyUIuiM11s2VTHTa1PeyJf/L/
+QTrnG67yvOhyKLtrQ4egaxF+NMKySbd3Wl7apAB3yMvz72t2gnrFm86W+WUHy5kY
+2VuBxP4iDToRaQ+dqVLq+csnbOG83jf7O2jk3h6M0eIuULhRp+XcyqBfsMkhmaP1
+OddjI5LBdU2oIMkVzXxo36JaNKgyWjJgHq1ztJ/nZGfL4KNckHTj0VRJgvftmiwa
+vbr4FJ2/jy9H3pva0qLEcTuynk11jA0onZ+4uK2YBIvs3zJbai2YQyBUvVBDfCOJ
+gKA5cI3mmZ/Is3zx8pL1L4egtK39eGmGo57oJ/KJpsK3FrgKavI=
+=mKCt
+-----END PGP SIGNATURE-----
+
+--n64esxgg2ls3up2p--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
