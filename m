@@ -1,41 +1,35 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] regulator: core: add API to get voltage
- constraints
-Date: Wed, 7 Feb 2018 14:37:51 +0200
-Message-ID: <20180207123750.GA5850@tbergstrom-lnx.Nvidia.com>
-References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
- <1517934852-23255-2-git-send-email-pdeschrijver@nvidia.com>
- <20180206163544.GI5681@sirena.org.uk>
- <20180207084744.GG7031@tbergstrom-lnx.Nvidia.com>
- <20180207104351.GA6003@sirena.org.uk>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v5 03/16] media: rkisp1: Add user space ABI definitions
+Date: Wed, 7 Feb 2018 12:38:50 +0000
+Message-ID: <d29bc615-2359-86c6-db5a-27cc111bc275@arm.com>
+References: <1514533978-20408-1-git-send-email-zhengsq@rock-chips.com>
+ <1514533978-20408-4-git-send-email-zhengsq@rock-chips.com>
+ <5b29d890-8c6b-18ff-ade1-1923c25143a0@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180207104351.GA6003-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5b29d890-8c6b-18ff-ade1-1923c25143a0@xs4all.nl>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, Shunqian Zheng <zhengsq@rock-chips.com>, linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org
+Cc: Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, eddie.cai.linux@gmail.com, Joao.Pinto@synopsys.com, heiko@sntech.de, jacob2.chen@rock-chips.com, jeffy.chen@rock-chips.com, zyc@rock-chips.com, linux-kernel@vger.kernel.org, tfiga@chromium.org, Luis.Oliveira@synopsys.com, robh+dt@kernel.org, hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, allon.huang@rock-chips.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 07, 2018 at 10:43:51AM +0000, Mark Brown wrote:
-> On Wed, Feb 07, 2018 at 10:47:44AM +0200, Peter De Schrijver wrote:
-> > On Tue, Feb 06, 2018 at 04:35:44PM +0000, Mark Brown wrote:
-> > > On Tue, Feb 06, 2018 at 06:34:02PM +0200, Peter De Schrijver wrote:
-> 
-> > > > Add API to get min/max rail voltage configured from platform for
-> > > > given rails.
-> 
-> > > because...
-> 
-> > of the next patch where this is used to retrieve the minimum rail voltage.
-> 
-> And that in turn is needed for...?
+On 06/02/18 13:14, Hans Verkuil wrote:
+[...]
+> The one thing that I worry about is if these structs are the same for
+> 32 and 64 bit arm.
 
-To calculate the required voltage for each frequency.
+I see some enums and bools in there - in general the storage size of 
+those isn't even guaranteed to be consistent between different compiler 
+implementations on the same platform, let alone across multiple 
+platforms (especially WRT things like GCC's -fshort-enums).
 
-Peter.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In practice, under the standard ABIs for 32-bit and 64-bit Arm[1], I'd 
+expect basic types other than longs and pointers to be pretty much the 
+same; it's the imp-def C stuff I'd be a lot less confident about.
+
+Robin.
+
+[1]:http://infocenter.arm.com/help/topic/com.arm.doc.subset.swdev.abi/index.html
