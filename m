@@ -1,105 +1,281 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
-Date: Wed, 7 Feb 2018 12:11:56 +0100
-Message-ID: <20180207111156.a7cevrz3dbk2f4fb@pengutronix.de>
-References: <20180201174923.7385-1-l.stach@pengutronix.de>
- <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
- <1517825351.3175.3.camel@pengutronix.de>
- <CACRpkdanb3XocUpmTaFTh-vsApucX0PzuqRg_fA2ORUFtrVGJA@mail.gmail.com>
- <1517914394.3175.21.camel@pengutronix.de>
- <CACRpkdbuGOrm=y=yPpsrkckk8+uKGxv6J9WGw9y=yiGcmbqn+w@mail.gmail.com>
- <1517932068.3175.27.camel@pengutronix.de>
- <CACRpkdYy43E5H=tRAf+YDvAY1RDTJ34nHSmqCXEn9xaknbLKZQ@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 04/16] arm64: dts: mt7622: add pinctrl related device
+ nodes
+Date: Wed, 7 Feb 2018 12:31:40 +0100
+Message-ID: <7f7d3d94-7d4e-9b66-048a-e100a45a2137@gmail.com>
+References: <cover.1517910489.git.sean.wang@mediatek.com>
+ <98781a6d32fcc8d42e4646a183246e70d5139154.1517910489.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYy43E5H=tRAf+YDvAY1RDTJ34nHSmqCXEn9xaknbLKZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "A . s . Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, linux-imx-3arQi8VN3Tc@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <98781a6d32fcc8d42e4646a183246e70d5139154.1517910489.git.sean.wang@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 07, 2018 at 10:09:20AM +0100, Linus Walleij wrote:
-> On Tue, Feb 6, 2018 at 4:47 PM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> 
-> > To be fully honest I'm a bit annoyed with the pinctrl framework making
-> > things (IMHO) unnecessarily complex, for what is basically a pretty
-> > easy task.
-> 
-> My ambition is to make things readable, understandable and
-> maintainable. In generic terms, incorporating a bunch of knowledge
-> of the electronics that really happen into the stuff we encode in
-> the kernel.
-> 
-> I guess it varies a bit on what goal one has.
-> 
-> If the goal is "ship product with upstream kernel really fast now"
-> then things like pinctrl-single.c where we just hammer magic values
-> into registers, make sense. OMAP developers had no idea whatsoever
-> what their ASIC people or cell library authors were doing so they
-> just threw in the towel. HiSilicon also use this. Intels ambition was
-> to use ACPI BIOS to handle all pin control and route around the kernel
-> altogether, but that is not working out so well for them I think.
-> 
-> All of them are approaches to avoid putting the hairy details into the
-> kernel, just poke some magic values into some magic registers
-> and be happy.
-> 
-> So i.MX could have been like that, but then I guess you need to take
-> legacy into account and discuss with the other i.MX driver authors
-> about how they really wanted and want to do things.
-> 
-> Their current silence wrt this mailchain is actually becoming a
-> problem, and the problem is that discussing with you falls upwards
-> to me as subsystem maintainer. Which sucks. I prefer that people
-> who know this hardware discuss amongst themselves how they
-> want things to work.
-> 
-> Surely Sascha must have an opinion? It means much to me
-> what he wants to do. I take it you guys are colleagues?
 
-My opinion is that all that is generic about padctrl is a device driver
-saying "Put my pins into a suitable mode". That is what padctrl is good
-for and we are there for years now. I have always been happy with the
-plain register values in the device tree. Before device tree we had
-exactly these values in the board files and I never heard anyone
-complaining about it. There were defines for the bits in the register
-which you could use when you were unhappy with plain register values.
 
-It's really trivial to look in the reference manual to make up the
-needed register values. It's also trivial to take a register value
-and look into the reference manual what this value does. Every
-translation layer, call it generic properties, just makes things more
-complicated. Often enough our input is register value tables
-from either our customers our from spreadsheets from FSL/NXP. Every
-translation layer in the way just means we have to translate the already
-existing register values into something hoping that this correctly
-translates back into the register values.
+On 02/06/2018 10:52 AM, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> add pinctrl device nodes and rfb1 board, additionally include all pin
+> groups possible being used on rfb1 board and available gpio keys.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+>  arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 200 +++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi     |   7 +
+>  2 files changed, 207 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+> index c08309d..bd1093a 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+> @@ -7,6 +7,8 @@
+>   */
+>  
+>  /dts-v1/;
+> +#include <dt-bindings/input/input.h>
+> +
+>  #include "mt7622.dtsi"
+>  
+>  / {
+> @@ -17,11 +19,209 @@
+>  		bootargs = "console=ttyS0,115200n1";
+>  	};
+>  
+> +	gpio-keys {
+> +		compatible = "gpio-keys-polled";
+> +		poll-interval = <100>;
+> +
+> +		factory {
+> +			label = "factory";
+> +			linux,code = <BTN_0>;
+> +			gpios = <&pio 0 0>;
+> +		};
+> +
+> +		wps {
+> +			label = "wps";
+> +			linux,code = <KEY_WPS_BUTTON>;
+> +			gpios = <&pio 102 0>;
+> +		};
+> +	};
+> +
+>  	memory {
+>  		reg = <0 0x40000000 0 0x3F000000>;
+>  	};
+>  };
+>  
+> +&pio {
+> +	/* eMMC is shared pin with parallel NAND */
+> +	emmc_pins_default: emmc-pins-default {
+> +		mux {
+> +			function = "emmc", "emmc_rst";
+> +			groups = "emmc";
+> +		};
+> +	};
+> +
+> +	emmc_pins_uhs: emmc-pins-uhs {
+> +		mux {
+> +			function = "emmc";
+> +			groups = "emmc";
+> +		};
+> +	};
+> +
+> +	eth_pins: eth-pins {
+> +		mux {
+> +			function = "eth";
+> +			groups = "mdc_mdio", "rgmii_via_gmac2";
+> +		};
+> +	};
+> +
+> +	i2c1_pins: i2c1-pins {
+> +		mux {
+> +			function = "i2c";
+> +			groups =  "i2c1_0";
+> +		};
+> +	};
+> +
+> +	i2c2_pins: i2c2-pins {
+> +		mux {
+> +			function = "i2c";
+> +			groups =  "i2c2_0";
+> +		};
+> +	};
+> +
+> +	i2s1_pins: i2s1-pins {
+> +		mux {
+> +			function = "i2s";
+> +			groups =  "i2s_out_bclk_ws_mclk",
+> +				  "i2s1_in_data",
+> +				  "i2s1_out_data";
+> +		};
+> +	};
+> +
+> +	irrx_pins: irrx-pins {
+> +		mux {
+> +			function = "ir";
+> +			groups =  "ir_1_rx";
+> +		};
+> +	};
+> +
+> +	irtx_pins: irtx-pins {
+> +		mux {
+> +			function = "ir";
+> +			groups =  "ir_1_tx";
+> +		};
+> +	};
+> +
+> +	/* Parallel nand is shared pin with eMMC */
+> +	parallel_nand_pins: parallel-nand-pins {
+> +		mux {
+> +			function = "flash";
+> +			groups = "par_nand";
+> +		};
+> +	};
+> +
+> +	pcie0_pins: pcie0-pins {
+> +		mux {
+> +			groups = "pcie0_pad_perst",
+> +				 "pcie0_1_waken",
+> +				 "pcie0_1_clkreq";
+> +			function = "pcie";
+> +		};
+> +	};
+> +
+> +	pcie1_pins: pcie1-pins {
+> +		mux {
+> +			groups = "pcie1_pad_perst",
+> +				 "pcie1_0_waken",
+> +				 "pcie1_0_clkreq";
+> +			function = "pcie";
+> +		};
+> +	};
+> +
+> +	pmic_bus_pins: pmic-bus-pins {
+> +		mux {
+> +			groups = "pmic_bus";
+> +			function = "pmic";
+> +		};
+> +	};
 
-It's not that some board designer comes up with "I need a drive strength
-of 150mA" and wants to put that value into the device tree. Instead they
-start with the reference manual, see which values they can (must) adjust
-and then adjust the values until they are happy. No one wants to ask
-questions like "How do I have to manipulate that device tree to change
-that particular bit?"
+Some bikeshedding here. Can you please add function before groups, so that it is
+uniform through out the file?
 
-As said, I am happy with plain register values in the device tree and
-I consider everything else overengineered.
-FSL/NXP Reference Manuals are freely available and of high quality so
-everybody can understand the register values. There's nothing magic to
-them. That might change slightly when the Manuals are not available, but
-even then I think that not the device tree ABI is the right place to
-add that missing documentation.
+Thanks,
+Matthias
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +	pwm7_pins: pwm1-2-pins {
+> +		mux {
+> +			function = "pwm";
+> +			groups = "pwm_ch7_2";
+> +		};
+> +	};
+> +
+> +	wled_pins: wled-pins {
+> +		mux {
+> +			function = "led";
+> +			groups = "wled";
+> +		};
+> +	};
+> +
+> +	sd0_pins_default: sd0-pins-default {
+> +		mux {
+> +			function = "sd";
+> +			groups = "sd_0";
+> +		};
+> +	};
+> +
+> +	sd0_pins_uhs: sd0-pins-uhs {
+> +		mux {
+> +			function = "sd";
+> +			groups = "sd_0";
+> +		};
+> +	};
+> +
+> +	/* Serial NAND is shared pin with SPI-NOR */
+> +	serial_nand_pins: serial-nand-pins {
+> +		mux {
+> +			function = "flash";
+> +			groups = "snfi";
+> +		};
+> +	};
+> +
+> +	spic0_pins: spic0-pins {
+> +		mux {
+> +			function = "spi";
+> +			groups = "spic0_0";
+> +		};
+> +	};
+> +
+> +	spic1_pins: spic1-pins {
+> +		mux {
+> +			function = "spi";
+> +			groups = "spic1_0";
+> +		};
+> +	};
+> +
+> +	/* SPI-NOR is shared pin with serial NAND */
+> +	spi_nor_pins: spi-nor-pins {
+> +		mux {
+> +			function = "flash";
+> +			groups = "spi_nor";
+> +		};
+> +	};
+> +
+> +	/* serial NAND is shared pin with SPI-NOR */
+> +	serial_nand_pins: serial-nand-pins {
+> +		mux {
+> +			function = "flash";
+> +			groups = "snfi";
+> +		};
+> +	};
+> +
+> +	uart0_pins: uart0-pins {
+> +		mux {
+> +			function = "uart";
+> +			groups = "uart0_0_tx_rx" ;
+> +		};
+> +	};
+> +
+> +	uart2_pins: uart2-pins {
+> +		mux {
+> +			function = "uart";
+> +			groups = "uart2_1_tx_rx" ;
+> +		};
+> +	};
+> +
+> +	watchdog_pins: watchdog-pins {
+> +		mux {
+> +			function = "watchdog";
+> +			groups = "watchdog";
+> +		};
+> +	};
+> +};
+> +
+>  &uart0 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> index 81207e6..8211bf7 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -147,6 +147,13 @@
+>  		#clock-cells = <1>;
+>  	};
+>  
+> +	pio: pinctrl@10211000 {
+> +		compatible = "mediatek,mt7622-pinctrl";
+> +		reg = <0 0x10211000 0 0x1000>;
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +	};
+> +
+>  	gic: interrupt-controller@10300000 {
+>  		compatible = "arm,gic-400";
+>  		interrupt-controller;
+> 
