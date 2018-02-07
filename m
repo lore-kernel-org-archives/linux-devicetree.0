@@ -1,35 +1,46 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: exynos: Add support for HDMI audio on
- exynos5433-tm2
-Date: Wed, 07 Feb 2018 17:48:19 +0100
-Message-ID: <24c7afa6-5497-2182-7e4c-cd19dd891230@samsung.com>
-References: <CGME20180205172216epcas2p3be603e84df81b28ee4c04c9b1c1c551f@epcas2p3.samsung.com>
-        <20180205172110.9897-1-s.nawrocki@samsung.com>
-        <20180205172110.9897-2-s.nawrocki@samsung.com>
-        <CAJKOXPef+8UvinoK-9j6tPMgNavMw1K1BhLuibD5FomjRC9Sbg@mail.gmail.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings/interrupt-controller: pdc: descibe
+ PDC device binding
+Date: Wed, 7 Feb 2018 16:50:05 +0000
+Message-ID: <20180207165005.GB16153@codeaurora.org>
+References: <20180207154958.13421-1-ilina@codeaurora.org>
+ <20180207154958.13421-3-ilina@codeaurora.org>
+ <20180207164324.GP9465@builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAJKOXPef+8UvinoK-9j6tPMgNavMw1K1BhLuibD5FomjRC9Sbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180207164324.GP9465@builder>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2018 02:14 PM, Krzysztof Kozlowski wrote:
-> Please move it further to i2s1 so all the nodes/labels will be ordered
-> alphabetically. As with #1 I understand that there is no explicit
-> dependency so please correct me if I am wrong.
+On Wed, Feb 07 2018 at 16:43 +0000, Bjorn Andersson wrote:
+>On Wed 07 Feb 07:49 PST 2018, Lina Iyer wrote:
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+>[..]
+>> +Example:
+>[..]
+>> +	wake-device {
+>> +		[...]
+>> +		interrupt-controller = <&pdc>;
+>
+>Sorry for not seeing this earlier, but this should be:
+>
+>		interrupt-parent = <&pdc>;
+>
+Thats right. Thanks for pointing out.
 
-Yes, there is no dependency, the only side effect will that the newly introduced 
-ALSA PCM device for the HDMI port will not work until this patch is applied.
+>Or as it's not unlikely that clients might use a mix of pdc and non-pdc
+>interrupts the example could use the form:
+>
+>		interrupts-extended = <&pdc 2 IRQ_TYPE_LEVEL_HIGH>;
+>
+OK. Will add it as another example.
 
--- 
-Regards,
-Sylwester
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +		interrupt = <2 IRQ_TYPE_LEVEL_HIGH>;
+>> +	};
+>
+Thanks,
+Lina
