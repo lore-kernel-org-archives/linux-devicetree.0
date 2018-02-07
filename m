@@ -1,74 +1,88 @@
-From: Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: [PATCH v4 01/12] clk: sunxi-ng: Mask nkmp factors when setting register
-Date: Wed,  7 Feb 2018 22:17:02 +0100
-Message-ID: <20180207211713.3638-2-jernej.skrabec@siol.net>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH v4 02/12] clk: sunxi-ng: Use u64 for calculation
+ of nkmp rate
+Date: Wed,  7 Feb 2018 22:17:03 +0100
+Message-ID: <20180207211713.3638-3-jernej.skrabec@siol.net>
 References: <20180207211713.3638-1-jernej.skrabec@siol.net>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20180207211713.3638-1-jernej.skrabec@siol.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: maxime.ripard@free-electrons.com, wens@csie.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, narmstrong@baylibre.com, Jose.Abreu@synopsys.com
-Cc: jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB2WZ5XJQKGQEOD3CGVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180207211713.3638-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, if one of the factors isn't present, bit 0 gets always set to
-1. For example, A83T has NMP PLLs modelled as NKMP PLL without K. Since
-K is not specified, it's offset, width and shift is 0. Driver assumes
-that lowest value possible is 1, otherwise we would get division by 0.
-That situation causes that bit 0 is always set, which may change wanted
-clock rate.
+When parent rate is 24MHz and multiplier N >= 180, intermediate clock
+rate doesn't fit in 32 bit variable anymore.
 
-Fix that by masking every factor according to it's specified width.
-Factors with width set to 0 won't have any influence to final register
-value.
+Because of that, introduce function for calculating clock rate which
+uses 64 bit variable for intermediate result.
 
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu_nkmp.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/clk/sunxi-ng/ccu_nkmp.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c b/drivers/clk/sunxi-ng/ccu_nkmp.c
-index e58c95787f94..a99068a08315 100644
+index a99068a08315..c3f6fe7be565 100644
 --- a/drivers/clk/sunxi-ng/ccu_nkmp.c
 +++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
-@@ -134,6 +134,7 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
- 			   unsigned long parent_rate)
+@@ -20,6 +20,18 @@ struct _ccu_nkmp {
+ 	unsigned long	p, min_p, max_p;
+ };
+ 
++static unsigned long ccu_nkmp_calc_rate(unsigned long parent,
++					unsigned long n, unsigned long k,
++					unsigned long m, unsigned long p)
++{
++	u64 rate = parent;
++
++	rate *= n * k;
++	do_div(rate, m * p);
++
++	return rate;
++}
++
+ static void ccu_nkmp_find_best(unsigned long parent, unsigned long rate,
+ 			       struct _ccu_nkmp *nkmp)
  {
- 	struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
-+	u32 n_mask, k_mask, m_mask, p_mask;
- 	struct _ccu_nkmp _nkmp;
- 	unsigned long flags;
- 	u32 reg;
-@@ -149,18 +150,20 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
+@@ -33,7 +45,9 @@ static void ccu_nkmp_find_best(unsigned long parent, unsigned long rate,
+ 				for (_p = nkmp->min_p; _p <= nkmp->max_p; _p <<= 1) {
+ 					unsigned long tmp_rate;
  
- 	ccu_nkmp_find_best(parent_rate, rate, &_nkmp);
+-					tmp_rate = parent * _n * _k / (_m * _p);
++					tmp_rate = ccu_nkmp_calc_rate(parent,
++								      _n, _k,
++								      _m, _p);
  
-+	n_mask = GENMASK(nkmp->n.width + nkmp->n.shift - 1, nkmp->n.shift);
-+	k_mask = GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
-+	m_mask = GENMASK(nkmp->m.width + nkmp->m.shift - 1, nkmp->m.shift);
-+	p_mask = GENMASK(nkmp->p.width + nkmp->p.shift - 1, nkmp->p.shift);
-+
- 	spin_lock_irqsave(nkmp->common.lock, flags);
+ 					if (tmp_rate > rate)
+ 						continue;
+@@ -107,7 +121,7 @@ static unsigned long ccu_nkmp_recalc_rate(struct clk_hw *hw,
+ 	p = reg >> nkmp->p.shift;
+ 	p &= (1 << nkmp->p.width) - 1;
  
- 	reg = readl(nkmp->common.base + nkmp->common.reg);
--	reg &= ~GENMASK(nkmp->n.width + nkmp->n.shift - 1, nkmp->n.shift);
--	reg &= ~GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
--	reg &= ~GENMASK(nkmp->m.width + nkmp->m.shift - 1, nkmp->m.shift);
--	reg &= ~GENMASK(nkmp->p.width + nkmp->p.shift - 1, nkmp->p.shift);
--
--	reg |= (_nkmp.n - nkmp->n.offset) << nkmp->n.shift;
--	reg |= (_nkmp.k - nkmp->k.offset) << nkmp->k.shift;
--	reg |= (_nkmp.m - nkmp->m.offset) << nkmp->m.shift;
--	reg |= ilog2(_nkmp.p) << nkmp->p.shift;
-+	reg &= ~(n_mask | k_mask | m_mask | p_mask);
-+
-+	reg |= ((_nkmp.n - nkmp->n.offset) << nkmp->n.shift) & n_mask;
-+	reg |= ((_nkmp.k - nkmp->k.offset) << nkmp->k.shift) & k_mask;
-+	reg |= ((_nkmp.m - nkmp->m.offset) << nkmp->m.shift) & m_mask;
-+	reg |= (ilog2(_nkmp.p) << nkmp->p.shift) & p_mask;
+-	return (parent_rate * n * k >> p) / m;
++	return ccu_nkmp_calc_rate(parent_rate, n, k, m, 1 << p);
+ }
  
- 	writel(reg, nkmp->common.base + nkmp->common.reg);
+ static long ccu_nkmp_round_rate(struct clk_hw *hw, unsigned long rate,
+@@ -127,7 +141,8 @@ static long ccu_nkmp_round_rate(struct clk_hw *hw, unsigned long rate,
  
+ 	ccu_nkmp_find_best(*parent_rate, rate, &_nkmp);
+ 
+-	return *parent_rate * _nkmp.n * _nkmp.k / (_nkmp.m * _nkmp.p);
++	return ccu_nkmp_calc_rate(*parent_rate, _nkmp.n, _nkmp.k,
++				  _nkmp.m, _nkmp.p);
+ }
+ 
+ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
 -- 
 2.16.1
-
