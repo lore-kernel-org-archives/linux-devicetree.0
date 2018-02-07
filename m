@@ -1,116 +1,69 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v4 2/2] dt-bindings/interrupt-controller: pdc: descibe PDC device binding
-Date: Wed,  7 Feb 2018 08:49:58 -0700
-Message-ID: <20180207154958.13421-3-ilina@codeaurora.org>
-References: <20180207154958.13421-1-ilina@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180207154958.13421-1-ilina@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, asathyak@codeaurora.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+From: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 1/2] media: adv7604: Add support for
+ i2c_new_secondary_device
+Date: Wed, 7 Feb 2018 15:54:20 +0000
+Message-ID: <4ff04149-9726-716c-306c-819130897c98@ideasonboard.com>
+References: <1516625389-6362-1-git-send-email-kieran.bingham@ideasonboard.com>
+ <1516625389-6362-2-git-send-email-kieran.bingham@ideasonboard.com>
+ <20180129200813.ifaz2bkkxshiodga@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180129200813.ifaz2bkkxshiodga@rob-hp-laptop>
+Content-Language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Archana Sathyakumar <asathyak@codeaurora.org>
+Hi Rob,
 
-Add device binding documentation for the PDC Interrupt controller on
-QCOM SoC's like the SDM845. The interrupt-controller can be used to
-sense edge low interrupts and wakeup interrupts when the GIC is
-non-operational.
+On 29/01/18 20:08, Rob Herring wrote:
+> On Mon, Jan 22, 2018 at 12:49:56PM +0000, Kieran Bingham wrote:
+>> From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+>>
+>> The ADV7604 has thirteen 256-byte maps that can be accessed via the main
+>> I²C ports. Each map has it own I²C address and acts as a standard slave
+>> device on the I²C bus.
+>>
+>> Allow a device tree node to override the default addresses so that
+>> address conflicts with other devices on the same bus may be resolved at
+>> the board description level.
+>>
+>> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
+>> [Kieran: Re-adapted for mainline]
+>> Signed-off-by: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>> ---
+>> Based upon the original posting :
+>>   https://lkml.org/lkml/2014/10/22/469
+>> ---
+>>  .../devicetree/bindings/media/i2c/adv7604.txt      | 18 ++++++-
+> 
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- .../bindings/interrupt-controller/qcom,pdc.txt     | 80 ++++++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+Thank you.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-new file mode 100644
-index 000000000000..21c4f2fbcd0b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-@@ -0,0 +1,80 @@
-+PDC interrupt controller
-+
-+Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
-+Power Domain Controller (PDC) that is on always-on domain. In addition to
-+providing power control for the power domains, the hardware also has an
-+interrupt controller that can be used to help detect edge low interrupts as
-+well detect interrupts when the GIC is non-operational.
-+
-+GIC is parent interrupt controller at the highest level. Platform interrupt
-+controller PDC is next in hierarchy, followed by others. Drivers requiring
-+wakeup capabilities of their device interrupts routed through the PDC, must
-+specify PDC as their interrupt controller and request the PDC port associated
-+with the GIC interrupt. See example below.
-+
-+Properties:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should contain "qcom,<soc>-pdc"
-+		    - "qcom,sdm845-pdc": For SDM845
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Specifies the base physical address for PDC hardware.
-+
-+- interrupt-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Specifies the number of cells needed to encode an interrupt
-+		    source.
-+		    Must be 2.
-+		    The first element of the tuple is the PDC pin for the
-+		    interrupt.
-+		    The second element is the trigger type.
-+
-+- interrupt-parent:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: Specifies the interrupt parent necessary for hierarchical
-+		    domain to operate.
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <bool>
-+	Definition: Identifies the node as an interrupt controller.
-+
-+- qcom,pdc-ranges:
-+	Usage: required
-+	Value type: <u32 array>
-+	Definition: Specifies the PDC pin offset and the number of PDC ports.
-+		    The tuples indicates the valid mapping of valid PDC ports
-+		    and their hwirq mapping.
-+		    The first element of the tuple is the starting PDC port.
-+		    The second element is the GIC hwirq number for the PDC port.
-+		    The third element is the number of interrupts in sequence.
-+
-+Example:
-+
-+	pdc: interrupt-controller@b220000 {
-+		compatible = "qcom,sdm845-pdc";
-+		reg = <0xb220000 0x30000>;
-+		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
-+		#interrupt-cells = <2>;
-+		interrupt-parent = <&intc>;
-+		interrupt-controller;
-+	};
-+
-+DT binding of a device that wants to use the GIC SPI 514 as a wakeup
-+interrupt, must do -
-+
-+	wake-device {
-+		[...]
-+		interrupt-controller = <&pdc>;
-+		interrupt = <2 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+In this case interrupt 514 would be mapped to port 2 on the PDC as defined by
-+the qcom,pdc-ranges property.
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> In the future, please split bindings to separate patch.
+
+Yes, of course - sorry - I should probably have known better here.
+
+I was clearly being lazy as the original patch had bindings in with the driver.
+Although I don't think I've got an excuse for the second patch in the series :D
+
+I've split them out for the v2.
+
+--
+Kieran
+
+>>  drivers/media/i2c/adv7604.c                        | 60 ++++++++++++++--------
+>>  2 files changed, 55 insertions(+), 23 deletions(-)
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
