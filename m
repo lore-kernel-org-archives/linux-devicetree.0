@@ -1,54 +1,82 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 01/11] regulator: core: add API to get voltage
- constraints
-Date: Wed, 7 Feb 2018 10:43:51 +0000
-Message-ID: <20180207104351.GA6003@sirena.org.uk>
-References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
- <1517934852-23255-2-git-send-email-pdeschrijver@nvidia.com>
- <20180206163544.GI5681@sirena.org.uk>
- <20180207084744.GG7031@tbergstrom-lnx.Nvidia.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
+ properties ?
+Date: Wed, 7 Feb 2018 11:45:31 +0100
+Message-ID: <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
+References: <20180207065959.GN28462@vireshk-i7>
+ <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
+ <20180207102446.GS28462@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180207084744.GG7031@tbergstrom-lnx.Nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20180207102446.GS28462@vireshk-i7>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Punit.Agrawal@arm.com, ionela.voinescu@arm.com
 List-Id: devicetree@vger.kernel.org
 
+On 07/02/2018 11:24, Viresh Kumar wrote:
+> On 07-02-18, 11:04, Daniel Lezcano wrote:
+>> Yeah, this is a bit fuzzy. There are still cooling-{min|max}-*state*
+>> definitions in the DTs
+>>
+>> Documentation/devicetree/bindings/hwmon/pwm-fan.txt:
+>> cooling-min-state = <0>;
+>> arch/arm/boot/dts/exynos4412-odroidu3.dts:
+>> cooling-min-state = <0>;
+>> arch/arm/boot/dts/exynos5410-odroidxu.dts:
+>> cooling-min-state = <0>;
+>> arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi:
+>> cooling-min-state = <0>;
+>> arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi:
+>> cooling-min-state = <0>;
+>>
+>>
+>> IIUC, the cooling-device in the mapping defines the min and max states
+>> which are the values used in the thermal zone binding.
+>>
+>> And the cooling-[min|max]-level are the hardware limits:
+>>
+>> cooling-min-level <= cooling-device min|max state <= cooling-max-level
+>>
+>> For example on the hikey6220:
+>>
+>> The DT specifies for CPU0:
+>>
+>> 	operating-points-v2 = <&cpu_opp_table>;
+>> 	cooling-min-level = <4>;
+>> 	cooling-max-level = <0>;
+>> 	#cooling-cells = <2>; /* min followed by max */
+>>
+>> and for the cooling device for map0
+>>
+>> 	cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>>
+>> So if my understanding is correct, the optional property
+>> cooling-[min|max]-level is used to make sure the cooling device min
+>> state and max state are in the hardware boundaries. And the thermal
+>> framework misses to do the consistency check at init.
+>>
+>> I'm not sure how useful are cooling-{min|max}-*state* bindings.
 
---opJtzjQTFsWo+cga
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I meant here cooling-{min|max}-*level*
 
-On Wed, Feb 07, 2018 at 10:47:44AM +0200, Peter De Schrijver wrote:
-> On Tue, Feb 06, 2018 at 04:35:44PM +0000, Mark Brown wrote:
-> > On Tue, Feb 06, 2018 at 06:34:02PM +0200, Peter De Schrijver wrote:
+> Okay, but we aren't validating it this way in code. Isn't it ?
 
-> > > Add API to get min/max rail voltage configured from platform for
-> > > given rails.
+Yes, that is my understanding. cooling-min-level and cooling-max-level
+are not used in the thermal framework code today.
 
-> > because...
+So if they are defined, we should check the cooling-device max and min
+are in the boundaries (if they are different from no-limit).
 
-> of the next patch where this is used to retrieve the minimum rail voltage.
+That needs confirmation from the maintainers, I'm not 100% sure.
 
-And that in turn is needed for...?
 
---opJtzjQTFsWo+cga
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlp62GMACgkQJNaLcl1U
-h9De2Qf8Dt/zu2J33AfI0h1suzCF1HhbH+w3PJ8nawVjffM8YdSvTvA5VlnFUn5W
-DtgVxrpbY19UyvuKvpHBETIJeLoScwf7ElfZ8pI+CN8iLvA/RL5LC5erBxKwmiQz
-kBFBxMeJwoxwpK+eAMIpdX40P1C1SGbrHgZO97Mm+beoClF4b6VECMiZpyAo1Nwp
-TNq8SszkK5v1V8R+60uH+uavRQAFaOo8JzsyXwxndOC6tzfDXHx7j7NnvtopxESQ
-S2TKe4ArDE8uSSYFiIOY0/SJdpEkMb8VpYaeVrA9D8OooO33P/2DwGcjsxs4VqMC
-6tDB6m39ieB87fv5GpNFrNw4EvdUxg==
-=8SK2
------END PGP SIGNATURE-----
-
---opJtzjQTFsWo+cga--
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
