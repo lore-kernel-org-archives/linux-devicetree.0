@@ -1,67 +1,77 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
- properties ?
-Date: Wed, 7 Feb 2018 15:54:46 +0530
-Message-ID: <20180207102446.GS28462@vireshk-i7>
-References: <20180207065959.GN28462@vireshk-i7>
- <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 04/11] soc: renesas: rcar-sysc: add R8A77980 support
+Date: Wed, 7 Feb 2018 11:29:42 +0100
+Message-ID: <20180207102942.jmggcp5isiwdzwqt@verge.net.au>
+References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
+ <0309d18d-d5d8-ab59-9c15-79b4093e0a51@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <0309d18d-d5d8-ab59-9c15-79b4093e0a51-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punit.Agrawal-5wv7dgnIgG8@public.gmane.org, ionela.voinescu-5wv7dgnIgG8@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07-02-18, 11:04, Daniel Lezcano wrote:
-> Yeah, this is a bit fuzzy. There are still cooling-{min|max}-*state*
-> definitions in the DTs
+On Fri, Feb 02, 2018 at 09:31:47PM +0300, Sergei Shtylyov wrote:
+> Add support for R-Car V3H (R8A77980) SoC power areas to the R-Car SYSC
+> driver.
 > 
-> Documentation/devicetree/bindings/hwmon/pwm-fan.txt:
-> cooling-min-state = <0>;
-> arch/arm/boot/dts/exynos4412-odroidu3.dts:
-> cooling-min-state = <0>;
-> arch/arm/boot/dts/exynos5410-odroidxu.dts:
-> cooling-min-state = <0>;
-> arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi:
-> cooling-min-state = <0>;
-> arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi:
-> cooling-min-state = <0>;
+> Based on the original (and large) patch by Vladimir Barinov.
 > 
-> 
-> IIUC, the cooling-device in the mapping defines the min and max states
-> which are the values used in the thermal zone binding.
-> 
-> And the cooling-[min|max]-level are the hardware limits:
-> 
-> cooling-min-level <= cooling-device min|max state <= cooling-max-level
-> 
-> For example on the hikey6220:
-> 
-> The DT specifies for CPU0:
-> 
-> 	operating-points-v2 = <&cpu_opp_table>;
-> 	cooling-min-level = <4>;
-> 	cooling-max-level = <0>;
-> 	#cooling-cells = <2>; /* min followed by max */
-> 
-> and for the cooling device for map0
-> 
-> 	cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> 
-> So if my understanding is correct, the optional property
-> cooling-[min|max]-level is used to make sure the cooling device min
-> state and max state are in the hardware boundaries. And the thermal
-> framework misses to do the consistency check at init.
-> 
-> I'm not sure how useful are cooling-{min|max}-*state* bindings.
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Okay, but we aren't validating it this way in code. Isn't it ?
+For the record, this matches my reading of the documentation:
 
--- 
-viresh
+Reviewed-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+
+...
+
+> Index: renesas/drivers/soc/renesas/r8a77980-sysc.c
+> ===================================================================
+> --- /dev/null
+> +++ renesas/drivers/soc/renesas/r8a77980-sysc.c
+> @@ -0,0 +1,52 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Renesas R-Car V3H System Controller
+> + *
+> + * Copyright (C) 2018 Renesas Electronics Corp.
+> + * Copyright (C) 2018 Cogent Embedded, Inc.
+> + */
+> +
+> +#include <linux/bug.h>
+> +#include <linux/kernel.h>
+> +
+> +#include <dt-bindings/power/r8a77980-sysc.h>
+> +
+> +#include "rcar-sysc.h"
+> +
+> +static const struct rcar_sysc_area r8a77980_areas[] __initconst = {
+> +	{ "always-on",	    0, 0, R8A77980_PD_ALWAYS_ON, -1, PD_ALWAYS_ON },
+> +	{ "ca53-scu",	0x140, 0, R8A77980_PD_CA53_SCU,	R8A77980_PD_ALWAYS_ON,
+> +	  PD_SCU },
+> +	{ "ca53-cpu0",	0x200, 0, R8A77980_PD_CA53_CPU0, R8A77980_PD_CA53_SCU,
+> +	  PD_CPU_NOCR },
+
+...
+
+The above seems consistent with existing usage of struct rcar_sysc_area,
+however, I am wondering if any consideration has been given to using
+symbolic names for the register offsets that are the 2nd field of the
+structure. Something like this for the values used in this patch:
+
+#define RCAR_GEN3_SYSCSR  0
+#define RCAR_GEN3_PWRSR3  0x140
+#define RCAR_GEN3_PWRSR4  0x180
+#define RCAR_GEN3_PWRSR6  0x200
+#define RCAR_GEN3_PWRSR7  0x240
+#define RCAR_GEN3_PWRSR11 0x400
+#define RCAR_GEN3_PWRSR12 0x2c0
+#define RCAR_GEN3_PWRSR13 0x300
+#define RCAR_GEN3_PWRSR14 0x280
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
