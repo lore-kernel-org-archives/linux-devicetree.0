@@ -1,328 +1,559 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 5/7] ARM: dts: da850: add power-domains properties to
- device nodes
-Date: Wed, 7 Feb 2018 16:21:58 -0600
-Message-ID: <25c285d4-4348-8bca-ba12-26464e13ed30@lechnology.com>
-References: <20180207134553.13510-1-brgl@bgdev.pl>
- <20180207134553.13510-6-brgl@bgdev.pl>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: [PATCH v9 0/8] TDA1997x HDMI video reciver
+Date: Wed,  7 Feb 2018 14:42:39 -0800
+Message-ID: <1518043367-11531-1-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180207134553.13510-6-brgl@bgdev.pl>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linux-media@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/2018 07:45 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Make all devices managed by PSCs use the genpd driver.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->   arch/arm/boot/dts/da850.dtsi | 33 +++++++++++++++++++++++++++++++++
->   1 file changed, 33 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index ac2eef4e6b7c..a2a1a3b7de3c 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -83,6 +83,7 @@
->   			ti,intc-size = <101>;
->   			reg = <0xfffee000 0x2000>;
->   			clocks = <&psc0 6>;
-> +			power-domains = <&pwc0>;
+This is a v4l2 subdev driver supporting the TDA1997x HDMI video receiver.
 
-If we are making this a power domain consumer, we can probably drop the
-clock property.
+I've tested this on a Gateworks GW54xx/GW551x with an IMX6Q/IMX6DL which
+uses the TDA19971 with 16bits connected to the IMX6 CSI and single-lane
+I2S audio providing 2-channel audio.
 
->   		};
->   	};
->   	clocks: clocks {
-> @@ -125,6 +126,7 @@
->   		interrupt-parent = <&intc>;
->   		interrupts = <28>;
->   		clocks = <&psc0 15>;
-> +		power-domains = <&pwc0>;
->   		status = "disabled";
->   	};
->   	soc@1c00000 {
-> @@ -400,12 +402,14 @@
->   				clocks = <&psc1 1>, <&usb_refclkin>,
->   					 <&pll0_auxclk>;
->   				clock-names = "fck", "usb_refclkin", "auxclk";
-> +				power-domains = <&pwc1>;
+For this configuration I've tested both 16bit YUV422 and 8bit
+BT656 parallel video bus modes.
 
-If we are going to use a power domain here, this driver will need to be re-written.
+While the driver should support the TDA1993 I do not have one for testing.
 
->   			};
->   			ehrpwm_tbclk: ehrpwm_tbclk {
->   				compatible = "ti,da830-tbclksync";
->   				#clock-cells = <0>;
->   				clocks = <&psc1 17>;
->   				clock-names = "fck";
-> +				power-domains = <&pwc1>;
+Further potential development efforts include:
+ - CEC support
+ - HDCP support
+ - TDA19972 support (2 inputs)
 
-This is a clock node, not a (platform) device node, so I am not sure having
-a power domain here makes sense.
+Media graphs can be found at http://dev.gateworks.com/docs/linux/media
 
->   			};
->   			div4p5_clk: div4.5 {
->   				compatible = "ti,da830-div4p5ena";
-> @@ -439,6 +443,7 @@
->   
->   			ti,tptcs = <&edma0_tptc0 7>, <&edma0_tptc1 0>;
->   			clocks = <&psc0 0>;
-> +			power-domains = <&pwc0>;
+History:
+v9:
+ - add digital video decoder video interface entity function
 
-We really just need power-domains here, not clocks. Same applies to
-the rest of the edma* nodes below.
+v8:
+ - fix clearing pad for VIDIOC_DV_TIMIGNS_CAP
+ - support full range of input modes based on timings_cap
+ - add patch to fix clearing pad for VIDIOC_DV_TIMIGINGS
+ - fix available formats for tda19971 bt656 bus width >12
+ - fix set_format (compliance)
+ - fixed get/set edid (compliance)
+ - add init_cfg to setup default pad config (compliance)
+ - added missing pad checks to get_dv_timings_cap/enum_dv_timings (compliance)
+ - fix alignment of if statement and whitespace in comment (Hans)
+ - move regs to tda1997x_regs.h to clean up (Hans)
+ - add define and sanity check for num of mbus_codes (Hans)
 
->   		};
->   		edma0_tptc0: tptc@8000 {
->   			compatible = "ti,edma3-tptc";
-> @@ -446,6 +451,7 @@
->   			interrupts = <13>;
->   			interrupt-names = "edm3_tcerrint";
->   			clocks = <&psc0 1>;
-> +			power-domains = <&pwc0>;
->   		};
->   		edma0_tptc1: tptc@8400 {
->   			compatible = "ti,edma3-tptc";
-> @@ -453,6 +459,7 @@
->   			interrupts = <32>;
->   			interrupt-names = "edm3_tcerrint";
->   			clocks = <&psc0 2>;
-> +			power-domains = <&pwc0>;
->   		};
->   		edma1: edma@230000 {
->   			compatible = "ti,edma3-tpcc";
-> @@ -465,6 +472,7 @@
->   
->   			ti,tptcs = <&edma1_tptc0 7>;
->   			clocks = <&psc1 0>;
-> +			power-domains = <&pwc1>;
->   		};
->   		edma1_tptc0: tptc@238000 {
->   			compatible = "ti,edma3-tptc";
-> @@ -472,6 +480,7 @@
->   			interrupts = <95>;
->   			interrupt-names = "edm3_tcerrint";
->   			clocks = <&psc1 21>;
-> +			power-domains = <&pwc1>;
->   		};
->   		serial0: serial@42000 {
->   			compatible = "ti,da830-uart", "ns16550a";
-> @@ -480,6 +489,7 @@
->   			reg-shift = <2>;
->   			interrupts = <25>;
->   			clocks = <&psc0 9>;
-> +			power-domains = <&pwc0>;
->   			status = "disabled";
->   		};
->   		serial1: serial@10c000 {
-> @@ -489,6 +499,7 @@
->   			reg-shift = <2>;
->   			interrupts = <53>;
->   			clocks = <&psc1 12>;
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   		};
->   		serial2: serial@10d000 {
-> @@ -498,6 +509,7 @@
->   			reg-shift = <2>;
->   			interrupts = <61>;
->   			clocks = <&psc1 13>;
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   		};
->   		rtc0: rtc@23000 {
-> @@ -523,6 +535,7 @@
->   			#address-cells = <1>;
->   			#size-cells = <0>;
->   			clocks = <&psc1 11>;
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   		};
->   		clocksource: timer@20000 {
-> @@ -545,6 +558,7 @@
->   			dmas = <&edma0 16 0>, <&edma0 17 0>;
->   			dma-names = "rx", "tx";
->   			clocks = <&psc0 5>;
-> +			power-domains = <&pwc0>;
->   			status = "disabled";
->   		};
->   		vpif: video@217000 {
-> @@ -552,6 +566,7 @@
->   			reg = <0x217000 0x1000>;
->   			interrupts = <92>;
->   			clocks = <&psc1 9>;
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   
->   			/* VPIF capture port */
-> @@ -575,6 +590,7 @@
->   			dmas = <&edma1 28 0>, <&edma1 29 0>;
->   			dma-names = "rx", "tx";
->   			clocks = <&psc1 18>;
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   		};
->   		ehrpwm0: pwm@300000 {
-> @@ -585,6 +601,7 @@
->   			clocks = <&psc1 17>, <&ehrpwm_tbclk>;
->   			clock-names = "fck", "tbclk";
->   			status = "disabled";
-> +			power-domains = <&pwc1>;
+v7:
+ - fix interlaced mode
+ - support no AVI infoframe (ie DVI) (Hans)
+ - add support for multiple output formats (Hans)
 
-nit picking: it would be nice to have power-domains before status just
-to be consistent in the order.
+v6:
+ - tda1997x: fix return on regulator enablei in tda1997x_set_power() (Fabio)
+ - tda1997x: fix colorspace handling (Hans)
+ - bindings: added Robs's ack (Rob)
+ - replace copyright with SPDX tag (Philippe)
 
->   		};
->   		ehrpwm1: pwm@302000 {
->   			compatible = "ti,da850-ehrpwm", "ti,am3352-ehrpwm",
-> @@ -592,6 +609,7 @@
->   			#pwm-cells = <3>;
->   			reg = <0x302000 0x2000>;
->   			clocks = <&psc1 17>, <&ehrpwm_tbclk>;
-> +			power-domains = <&pwc1>;
->   			clock-names = "fck", "tbclk";
+v5:
+ - added v4l2_hdmi_colorimetry() patch from Hans to series
+ - bindings: added Sakari's ack
+ - tda1997x: uppercase string constants
+ - tda1997x: use v4l2_hdmi_rx_coloriemtry to fill format
+ - tda1997x: fix V4L2_CID_DV_RX_RGB_RANGE
+ - tda1997x: fix interlaced mode format
+ - dts: remove leading 0 from unit address
+ - dts: add newline between property list and child node
+ - dts: added missing audmux in GW551x dts
 
-nit picking: it would be nice to keep clocks and clock-names next to each
-other. Also several places below.
+v4:
+ - move include/dt-bindings/media/tda1997x.h to bindings patch
+ - clarify port node details in bindings
+ - fix typos
+ - fix default quant range for VGA
+ - fix quant range handling and conv matrix
+ - add additional standards and capabilities to timings_cap
 
->   			status = "disabled";
->   		};
-> @@ -601,6 +619,7 @@
->   			#pwm-cells = <3>;
->   			reg = <0x306000 0x80>;
->   			clocks = <&psc1 20>;
-> +			power-domains = <&pwc1>;
->   			clock-names = "fck";
->   			status = "disabled";
->   		};
-> @@ -610,6 +629,7 @@
->   			#pwm-cells = <3>;
->   			reg = <0x307000 0x80>;
->   			clocks = <&psc1 20>;
-> +			power-domains = <&pwc1>;
->   			clock-names = "fck";
->   			status = "disabled";
->   		};
-> @@ -619,6 +639,7 @@
->   			#pwm-cells = <3>;
->   			reg = <0x308000 0x80>;
->   			clocks = <&psc1 20>;
-> +			power-domains = <&pwc1>;
->   			clock-names = "fck";
->   			status = "disabled";
->   		};
-> @@ -633,6 +654,7 @@
->   			dmas = <&edma0 14 0>, <&edma0 15 0>;
->   			dma-names = "rx", "tx";
->   			clocks = <&psc0 4>;
-> +			power-domains = <&pwc0>;
->   			status = "disabled";
->   		};
->   		spi1: spi@30e000 {
-> @@ -646,6 +668,7 @@
->   			dmas = <&edma0 18 0>, <&edma0 19 0>;
->   			dma-names = "rx", "tx";
->   			clocks = <&psc1 10>;
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   		};
->   		usb0: usb@200000 {
-> @@ -658,6 +681,7 @@
->   			phys = <&usb_phy 0>;
->   			phy-names = "usb-phy";
->   			clocks = <&psc1 1>;
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   
->   			#address-cells = <1>;
-> @@ -682,6 +706,7 @@
->   				#dma-cells = <2>;
->   				#dma-channels = <4>;
->   				clocks = <&psc1 1>;
-> +				power-domains = <&pwc1>;
+v3:
+ - fix typo in dt bindings
+ - added dt bindings for GW551x
+ - use V4L2_DV_BT_FRAME_WIDTH/HEIGHT macros
+ - fixed missing break
+ - use only hdmi_infoframe_log for infoframe logging
+ - simplify tda1997x_s_stream error handling
+ - add delayed work proc to handle hotplug enable/disable
+ - fix set_edid (disable HPD before writing, enable after)
+ - remove enabling edid by default
+ - initialize timings
+ - take quant range into account in colorspace conversion
+ - remove vendor/product tracking (we provide this in log_status via
+   infoframes)
+ - add v4l_controls
+ - add more detail to log_status
+ - calculate vhref generator timings
+ - timing detection fixes (rounding errors, hswidth errors)
+ - rename configure_input/configure_conv functions
 
-This node should not have clocks or power-domains since it is
-a child node. Instead, the parent node should have clock-ranges.
-I have already fixed this in my v7 branch.
+v2:
+ - encorporate feedback into dt bindings
+ - change audio dt bindings
+ - implement dv timings enum/cap
+ - remove deprecated g_mbus_config op
+ - fix dv_query_timings
+ - add EDID get/set handling
+ - remove max-pixel-rate support
+ - add audio codec DAI support
+ - added media-ctl and v4l2-compliance details
 
->   				status = "okay";
->   			};
->   		};
-> @@ -690,6 +715,7 @@
->   			reg = <0x218000 0x2000>, <0x22c018 0x4>;
->   			interrupts = <67>;
->   			clocks = <&psc1 8>, <&sata_refclk>;
-> +			power-domains = <&pwc1>;
->   			clock-names = "fck", "refclk";
->   			status = "disabled";
->   		};
-> @@ -713,6 +739,7 @@
->   			reg = <0x224000 0x1000>;
->   			clocks = <&psc1 5>;
->   			clock-names = "fck";
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   		};
->   		eth0: ethernet@220000 {
-> @@ -729,6 +756,7 @@
->   					36
->   					>;
->   			clocks = <&psc1 5>;
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   		};
->   		usb1: usb@225000 {
-> @@ -738,6 +766,7 @@
->   			phys = <&usb_phy 1>;
->   			phy-names = "usb-phy";
->   			clocks = <&psc1 2>;
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   		};
->   		gpio: gpio@226000 {
-> @@ -756,6 +785,7 @@
->   			interrupt-controller;
->   			#interrupt-cells = <2>;
->   			clocks = <&psc1 3>;
-> +			power-domains = <&pwc1>;
->   			clock-names = "gpio";
->   		};
->   		psc1: clock-controller@227000 {
-> @@ -788,6 +818,7 @@
->   				<&edma0 0 1>;
->   			dma-names = "tx", "rx";
->   			clocks = <&psc1 7>;
-> +			power-domains = <&pwc1>;
->   		};
->   
->   		lcdc: display@213000 {
-> @@ -797,6 +828,7 @@
->   			max-pixelclock = <37500>;
->   			clocks = <&psc1 16>;
->   			clock-names = "fck";
-> +			power-domains = <&pwc1>;
->   			status = "disabled";
->   		};
->   	};
-> @@ -809,6 +841,7 @@
->   		ranges = <0 0 0x60000000 0x08000000
->   			  1 0 0x68000000 0x00008000>;
->   		clocks = <&psc0 3>;
-> +		power-domains = <&pwc0>;
->   		status = "disabled";
->   	};
->   	memctrl: memory-controller@b0000000 {
-> 
+v1:
+ - initial RFC
 
-Bigger picture question: what is the benefit of adding
-power-domain nodes to all of these devices if they are
-already working?
+# media-ctl -d /dev/media0 -p
+Media controller API version 4.15.0
+
+Media device information
+------------------------
+driver          imx-media
+model           imx-media
+serial          
+bus info        
+hw revision     0x0
+driver version  4.15.0
+
+Device topology
+- entity 1: adv7180 2-0020 (1 pad, 1 link)
+            type V4L2 subdev subtype Unknown flags 20004
+            device node name /dev/v4l-subdev0
+	pad0: Source
+		[fmt:UYVY8_2X8/720x480 field:interlaced colorspace:smpte170m]
+		-> "ipu2_csi1_mux":1 []
+
+- entity 3: tda19971 2-0048 (1 pad, 1 link)
+            type V4L2 subdev subtype Unknown flags 0
+            device node name /dev/v4l-subdev1
+	pad0: Source
+		[fmt:UYVY8_2X8/1280x720 field:none colorspace:srgb]
+		[dv.caps:BT.656/1120 min:640x350@13000000 max:1920x1200@165000000 stds:CEA-861,DMT,CVT,GTF caps:interlaced,progressive,reduced-blanking,custom]
+		[dv.detect:BT.656/1120 1280x720p60 (1650x750) stds:CEA-861 flags:can-reduce-fps,CE-video,has-cea861-vic]
+		[dv.current:BT.656/1120 1280x720p60 (1650x750) stds:CEA-861 flags:can-reduce-fps,CE-video,has-cea861-vic]
+		-> "ipu1_csi0_mux":1 [ENABLED]
+
+- entity 5: ipu1_vdic (3 pads, 3 links)
+            type V4L2 subdev subtype Unknown flags 0
+            device node name /dev/v4l-subdev2
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu1_csi0":1 []
+		<- "ipu1_csi1":1 []
+	pad1: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/60 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prp":0 []
+
+- entity 9: ipu2_vdic (3 pads, 3 links)
+            type V4L2 subdev subtype Unknown flags 0
+            device node name /dev/v4l-subdev3
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu2_csi0":1 []
+		<- "ipu2_csi1":1 []
+	pad1: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/60 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prp":0 []
+
+- entity 13: ipu1_ic_prp (3 pads, 5 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev4
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu1_vdic":2 []
+		<- "ipu1_csi0":1 []
+		<- "ipu1_csi1":1 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prpenc":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prpvf":0 []
+
+- entity 17: ipu1_ic_prpenc (2 pads, 2 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev5
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu1_ic_prp":1 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prpenc capture":0 []
+
+- entity 20: ipu1_ic_prpenc capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video0
+	pad0: Sink
+		<- "ipu1_ic_prpenc":1 []
+
+- entity 26: ipu1_ic_prpvf (2 pads, 2 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev6
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu1_ic_prp":2 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prpvf capture":0 []
+
+- entity 29: ipu1_ic_prpvf capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video1
+	pad0: Sink
+		<- "ipu1_ic_prpvf":1 []
+
+- entity 35: ipu2_ic_prp (3 pads, 5 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev7
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu2_vdic":2 []
+		<- "ipu2_csi0":1 []
+		<- "ipu2_csi1":1 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prpenc":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prpvf":0 []
+
+- entity 39: ipu2_ic_prpenc (2 pads, 2 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev8
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu2_ic_prp":1 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prpenc capture":0 []
+
+- entity 42: ipu2_ic_prpenc capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video2
+	pad0: Sink
+		<- "ipu2_ic_prpenc":1 []
+
+- entity 48: ipu2_ic_prpvf (2 pads, 2 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev9
+	pad0: Sink
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		<- "ipu2_ic_prp":2 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prpvf capture":0 []
+
+- entity 51: ipu2_ic_prpvf capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video3
+	pad0: Sink
+		<- "ipu2_ic_prpvf":1 []
+
+- entity 57: ipu1_csi0 (3 pads, 4 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev10
+	pad0: Sink
+		[fmt:UYVY8_2X8/1280x720@1/30 field:none colorspace:srgb xfer:srgb ycbcr:601 quantization:lim-range
+		 crop.bounds:(0,0)/1280x720
+		 crop:(0,0)/1280x720
+		 compose.bounds:(0,0)/1280x720
+		 compose:(0,0)/1280x720]
+		<- "ipu1_csi0_mux":2 [ENABLED]
+	pad1: Source
+		[fmt:AYUV8_1X32/1280x720@1/30 field:none colorspace:srgb xfer:srgb ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prp":0 []
+		-> "ipu1_vdic":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/1280x720@1/30 field:none colorspace:srgb xfer:srgb ycbcr:601 quantization:lim-range]
+		-> "ipu1_csi0 capture":0 [ENABLED]
+
+- entity 61: ipu1_csi0 capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video4
+	pad0: Sink
+		<- "ipu1_csi0":2 [ENABLED]
+
+- entity 67: ipu1_csi1 (3 pads, 3 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev11
+	pad0: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range
+		 crop.bounds:(0,0)/640x480
+		 crop:(0,0)/640x480
+		 compose.bounds:(0,0)/640x480
+		 compose:(0,0)/640x480]
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_ic_prp":0 []
+		-> "ipu1_vdic":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu1_csi1 capture":0 []
+
+- entity 71: ipu1_csi1 capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video5
+	pad0: Sink
+		<- "ipu1_csi1":2 []
+
+- entity 77: ipu2_csi0 (3 pads, 3 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev12
+	pad0: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range
+		 crop.bounds:(0,0)/640x480
+		 crop:(0,0)/640x480
+		 compose.bounds:(0,0)/640x480
+		 compose:(0,0)/640x480]
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prp":0 []
+		-> "ipu2_vdic":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_csi0 capture":0 []
+
+- entity 81: ipu2_csi0 capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video6
+	pad0: Sink
+		<- "ipu2_csi0":2 []
+
+- entity 87: ipu2_csi1 (3 pads, 4 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev13
+	pad0: Sink
+		[fmt:UYVY8_2X8/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range
+		 crop.bounds:(0,0)/640x480
+		 crop:(0,0)/640x480
+		 compose.bounds:(0,0)/640x480
+		 compose:(0,0)/640x480]
+		<- "ipu2_csi1_mux":2 []
+	pad1: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_ic_prp":0 []
+		-> "ipu2_vdic":0 []
+	pad2: Source
+		[fmt:AYUV8_1X32/640x480@1/30 field:none colorspace:smpte170m xfer:709 ycbcr:601 quantization:lim-range]
+		-> "ipu2_csi1 capture":0 []
+
+- entity 91: ipu2_csi1 capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video7
+	pad0: Sink
+		<- "ipu2_csi1":2 []
+
+- entity 97: ipu1_csi0_mux (3 pads, 2 links)
+             type V4L2 subdev subtype Unknown flags 0
+             device node name /dev/v4l-subdev14
+	pad0: Sink
+		[fmt:unknown/0x0]
+	pad1: Sink
+		[fmt:UYVY8_2X8/1280x720 field:none colorspace:srgb]
+		<- "tda19971 2-0048":0 [ENABLED]
+	pad2: Source
+		[fmt:UYVY8_2X8/1280x720 field:none colorspace:srgb]
+		-> "ipu1_csi0":0 [ENABLED]
+
+- entity 101: ipu2_csi1_mux (3 pads, 2 links)
+              type V4L2 subdev subtype Unknown flags 0
+              device node name /dev/v4l-subdev15
+	pad0: Sink
+		[fmt:unknown/0x0]
+	pad1: Sink
+		[fmt:unknown/0x0]
+		<- "adv7180 2-0020":0 []
+	pad2: Source
+		[fmt:unknown/0x0]
+		-> "ipu2_csi1":0 []
+
+v4l2-compliance test results:
+ - with the following kernel patches:
+   v4l2-subdev: clear reserved fields
+   v4l2-subdev: without controls return -ENOTTY
+
+# v4l2-compliance -u1
+v4l2-compliance SHA   : b2f8f9049056eb6f9e028927dacb2c715a062df8
+Media Driver Info:
+	Driver name      : imx-media
+	Model            : imx-media
+	Serial           : 
+	Bus info         : 
+	Media version    : 4.15.0
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.15.0
+Interface Info:
+	ID               : 0x0300008f
+	Type             : V4L Sub-Device
+Entity Info:
+	ID               : 0x00000003 (3)
+	Name             : tda19971 2-0048
+	Function         : FAIL: Unknown Function (00006001)
+	Pad 0x01000004   : Source
+	  Link 0x0200006f: to remote pad 0x1000063 of entity 'ipu1_csi0_mux': Data, Enabled
+
+Compliance test for device /dev/v4l-subdev1:
+
+Required ioctls:
+	test MC information: FAIL
+
+Allow for multiple opens:
+	test second /dev/v4l-subdev1 open: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_LOG_STATUS: OK
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
+	test VIDIOC_DV_TIMINGS_CAP: OK
+	test VIDIOC_G/S_EDID: OK
+
+Sub-Device ioctls (Source Pad 0):
+	test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
+	test Try VIDIOC_SUBDEV_G/S_FMT: OK
+	test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
+	test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
+	test Active VIDIOC_SUBDEV_G/S_FMT: OK
+	test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK (Not Supported)
+	test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 4 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK (Not Supported)
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK (Not Supported)
+	test VIDIOC_TRY_FMT: OK (Not Supported)
+	test VIDIOC_S_FMT: OK (Not Supported)
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls:
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
+	test VIDIOC_EXPBUF: OK (Not Supported)
+
+Total: 47, Succeeded: 46, Failed: 1, Warnings: 0
+
+# v4l2-compliance -m0 -M
+v4l2-compliance SHA   : b2f8f9049056eb6f9e028927dacb2c715a062df8
+Media Driver Info:
+	Driver name      : imx-media
+	Model            : imx-media
+	Serial           : 
+	Bus info         : 
+	Media version    : 4.15.0
+	Hardware revision: 0x00000000 (0)
+	Driver version   : 4.15.0
+
+Compliance test for device /dev/media0:
+
+Required ioctls:
+	test MEDIA_IOC_DEVICE_INFO: OK
+
+Allow for multiple opens:
+	test second /dev/media0 open: OK
+	test MEDIA_IOC_DEVICE_INFO: OK
+	test for unlimited opens: OK
+
+Media Controller ioctls:
+		fail: v4l2-test-media.cpp(94): function == MEDIA_ENT_F_V4L2_SUBDEV_UNKNOWN
+		fail: v4l2-test-media.cpp(156): checkFunction(ent.function, true)
+	test MEDIA_IOC_G_TOPOLOGY: FAIL
+		fail: v4l2-test-media.cpp(275): num_data_links != num_links
+	test MEDIA_IOC_ENUM_ENTITIES/LINKS: FAIL
+	test MEDIA_IOC_SETUP_LINK: OK
+
+Total: 7, Succeeded: 5, Failed: 2, Warnings: 0
+^^^^ above failures are due to imx/adv7180 not setting a valid entity function
+
+
+Hans Verkuil (1):
+  v4l2-dv-timings: add v4l2_hdmi_colorimetry()
+
+Tim Harvey (7):
+  media: v4l-ioctl: fix clearing pad for VIDIOC_DV_TIMIGNS_CAP
+  media: add digital video decoder video interface entity functions
+  MAINTAINERS: add entry for NXP TDA1997x driver
+  media: dt-bindings: Add bindings for TDA1997X
+  media: i2c: Add TDA1997x HDMI receiver driver
+  ARM: dts: imx: Add TDA19971 HDMI Receiver to GW54xx
+  ARM: dts: imx: Add TDA19971 HDMI Receiver to GW551x
+
+ .../devicetree/bindings/media/i2c/tda1997x.txt     |  179 ++
+ Documentation/media/uapi/mediactl/media-types.rst  |   11 +
+ MAINTAINERS                                        |    8 +
+ arch/arm/boot/dts/imx6q-gw54xx.dts                 |  105 +
+ arch/arm/boot/dts/imx6qdl-gw54xx.dtsi              |   29 +-
+ arch/arm/boot/dts/imx6qdl-gw551x.dtsi              |  138 +
+ drivers/media/i2c/Kconfig                          |    9 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/tda1997x.c                       | 2848 ++++++++++++++++++++
+ drivers/media/i2c/tda1997x_regs.h                  |  641 +++++
+ drivers/media/v4l2-core/v4l2-dv-timings.c          |  141 +
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    2 +-
+ include/dt-bindings/media/tda1997x.h               |   74 +
+ include/media/i2c/tda1997x.h                       |   42 +
+ include/media/v4l2-dv-timings.h                    |   21 +
+ include/uapi/linux/media.h                         |    5 +
+ 16 files changed, 4250 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/tda1997x.txt
+ create mode 100644 drivers/media/i2c/tda1997x.c
+ create mode 100644 drivers/media/i2c/tda1997x_regs.h
+ create mode 100644 include/dt-bindings/media/tda1997x.h
+ create mode 100644 include/media/i2c/tda1997x.h
+
+-- 
+2.7.4
