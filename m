@@ -1,183 +1,74 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 3/5] drm/panel: simple: Add ability to override typical timing
-Date: Wed,  7 Feb 2018 12:23:57 -0500
-Message-ID: <20180207172404.107358-4-seanpaul@chromium.org>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: [PATCH v2 2/5] dt-bindings: Add display-timing subnode to simple-panel
+Date: Wed,  7 Feb 2018 12:23:56 -0500
+Message-ID: <20180207172404.107358-3-seanpaul@chromium.org>
 References: <20180207172404.107358-1-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180207172404.107358-1-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180207172404.107358-1-seanpaul@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the ability to override the typical display timing for a
-given panel. This is useful for devices which have timing constraints
-that do not apply across the entire display driver (eg: to avoid
-crosstalk between panel and digitizer on certain laptops). The rules are
-as follows:
-
-- panel must not specify fixed mode (since the override mode will
-  either be the same as the fixed mode, or we'll be unable to
-  check the bounds of the overried)
-- panel must specify at least one display_timing range which will be
-  used to ensure the override mode fits within its bounds
-
-Changes in v2:
- - Parse the full display-timings node (using the native-mode) (Rob)
-
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stéphane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/gpu/drm/panel/panel-simple.c | 77 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5591984a392b..c1635b35f97e 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -34,6 +34,7 @@
- #include <drm/drm_panel.h>
- 
- #include <video/display_timing.h>
-+#include <video/of_display_timing.h>
- #include <video/videomode.h>
- 
- struct panel_desc {
-@@ -87,6 +88,8 @@ struct panel_simple {
- 	struct i2c_adapter *ddc;
- 
- 	struct gpio_desc *enable_gpio;
-+
-+	struct drm_display_mode override_mode;
- };
- 
- static inline struct panel_simple *to_panel_simple(struct drm_panel *panel)
-@@ -99,11 +102,22 @@ static int panel_simple_get_fixed_modes(struct panel_simple *panel)
- 	struct drm_connector *connector = panel->base.connector;
- 	struct drm_device *drm = panel->base.drm;
- 	struct drm_display_mode *mode;
-+	bool has_override = panel->override_mode.type;
- 	unsigned int i, num = 0;
- 
- 	if (!panel->desc)
- 		return 0;
- 
-+	if (has_override) {
-+		mode = drm_mode_duplicate(drm, &panel->override_mode);
-+		if (mode) {
-+			drm_mode_probed_add(connector, mode);
-+			num++;
-+		} else {
-+			dev_err(drm->dev, "failed to add override mode\n");
-+		}
-+	}
-+
- 	for (i = 0; i < panel->desc->num_timings; i++) {
- 		const struct display_timing *dt = &panel->desc->timings[i];
- 		struct videomode vm;
-@@ -120,7 +134,7 @@ static int panel_simple_get_fixed_modes(struct panel_simple *panel)
- 
- 		mode->type |= DRM_MODE_TYPE_DRIVER;
- 
--		if (panel->desc->num_timings == 1)
-+		if (panel->desc->num_timings == 1 && !has_override)
- 			mode->type |= DRM_MODE_TYPE_PREFERRED;
- 
- 		drm_mode_probed_add(connector, mode);
-@@ -291,10 +305,58 @@ static const struct drm_panel_funcs panel_simple_funcs = {
- 	.get_timings = panel_simple_get_timings,
- };
- 
-+#define PANEL_SIMPLE_BOUNDS_CHECK(to_check, bounds, field) \
-+	(to_check->field.typ >= bounds->field.min && \
-+	 to_check->field.typ <= bounds->field.max)
-+static void panel_simple_add_override_mode(struct device *dev,
-+					   struct panel_simple *panel,
-+					   const struct display_timing *ot)
-+{
-+	const struct panel_desc *desc = panel->desc;
-+	struct videomode vm;
-+	int i;
-+
-+	if (desc->num_modes) {
-+		dev_err(dev, "Reject override mode: panel has a fixed mode\n");
-+		return;
-+	}
-+	if (!desc->num_timings) {
-+		dev_err(dev, "Reject override mode: no timings specified\n");
-+		return;
-+	}
-+
-+	for (i = 0; i < panel->desc->num_timings; i++) {
-+		const struct display_timing *dt = &panel->desc->timings[i];
-+
-+		if (!PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, hactive) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, hfront_porch) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, hback_porch) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, hsync_len) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vactive) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vfront_porch) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vback_porch) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vsync_len))
-+			continue;
-+
-+		if (ot->flags != dt->flags)
-+			continue;
-+
-+		videomode_from_timing(ot, &vm);
-+		drm_display_mode_from_videomode(&vm, &panel->override_mode);
-+		panel->override_mode.type |= DRM_MODE_TYPE_DRIVER |
-+					     DRM_MODE_TYPE_PREFERRED;
-+		return;
-+	}
-+
-+	dev_err(dev, "Reject override mode: No display_timing found\n");
-+	return;
-+}
-+
- static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
- {
- 	struct device_node *backlight, *ddc;
- 	struct panel_simple *panel;
-+	struct display_timings *dt;
- 	int err;
- 
- 	panel = devm_kzalloc(dev, sizeof(*panel), GFP_KERNEL);
-@@ -338,6 +400,19 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
- 		}
- 	}
- 
-+	dt = of_get_display_timings(dev->of_node);
-+	if (dt && dt->num_timings) {
-+		/*
-+		 * Only attempt adding the native mode from the provided display
-+		 * timings. It doesn't really make sense to try multiple modes
-+		 * since the override is meant to be tailored to the
-+		 * device/panel.
-+		 */
-+		panel_simple_add_override_mode(dev, panel,
-+					       dt->timings[dt->native_mode]);
-+		display_timings_release(dt);
-+	}
-+
- 	drm_panel_init(&panel->base);
- 	panel->base.dev = dev;
- 	panel->base.funcs = &panel_simple_funcs;
--- 
-2.16.0.rc1.238.g530d649a79-goog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBwYXRjaCBhZGRzIGEgbmV3IHN1Ym5vZGUgdG8gc2ltcGxlLXBhbmVsIGFsbG93aW5nIHVz
+IHRvIG92ZXJyaWRlCnRoZSB0eXBpY2FsIHRpbWluZyBleHByZXNzZWQgaW4gdGhlIHBhbmVsJ3Mg
+ZGlzcGxheV90aW1pbmcuCgpDaGFuZ2VzIGluIHYyOgogLSBTcGxpdCBvdXQgdGhlIGJpbmRpbmcg
+aW50byBhIG5ldyBwYXRjaCAoUm9iKQogLSBkaXNwbGF5LXRpbWluZ3MgaXMgYSBuZXcgc2VjdGlv
+biAoUm9iKQogLSBVc2UgdGhlIGZ1bGwgZGlzcGxheS10aW1pbmdzIHN1Ym5vZGUgaW5zdGVhZCBv
+ZiBwaWNraW5nIHRoZSB0aW1pbmcKICAgb3V0IChSb2IvVGhpZXJyeSkKCkNjOiBEb3VnIEFuZGVy
+c29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+CkNjOiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQu
+bmV0PgpDYzogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KQ2M6IEplZmZ5IENoZW4g
+PGplZmZ5LmNoZW5Acm9jay1jaGlwcy5jb20+CkNjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJu
+ZWwub3JnPgpDYzogU3TDqXBoYW5lIE1hcmNoZXNpbiA8bWFyY2hldUBjaHJvbWl1bS5vcmc+CkNj
+OiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgpDYzogZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmcKQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKQ2M6
+IGxpbnV4LXJvY2tjaGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKU2lnbmVkLW9mZi1ieTogU2VhbiBQ
+YXVsIDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvc2ltcGxlLXBhbmVsLnR4dCAgICAgICAgfCAzMiArKysrKysrKysrKysrKysrKysrKysrCiAx
+IGZpbGUgY2hhbmdlZCwgMzIgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFu
+ZWwudHh0CmluZGV4IDQ1YTQ1N2FkMzhmMC4uOTcxN2I5Yjc5ZDk4IDEwMDY0NAotLS0gYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwu
+dHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVs
+L3NpbXBsZS1wYW5lbC50eHQKQEAgLTEyLDYgKzEyLDI0IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6
+CiAtIGVuYWJsZS1ncGlvczogR1BJTyBwaW4gdG8gZW5hYmxlIG9yIGRpc2FibGUgdGhlIHBhbmVs
+CiAtIGJhY2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0
+byB0aGUgcGFuZWwKIAorZGlzcGxheS10aW1pbmdzIHN1Ym5vZGUKKy0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tCisKK1RoaXMgb3B0aW9uYWwgc3Vibm9kZSBpcyBmb3IgZGV2aWNlcyB3aGljaCByZXF1
+aXJlIGEgbW9kZSBkaWZmZXJpbmcgZnJvbSB0aGUKK3BhbmVsJ3MgInR5cGljYWwiIGRpc3BsYXkg
+dGltaW5nIGFzIHByb2dyYW1tZWQgaW4gdGhlIHNpbXBsZS1wYW5lbCBkcml2ZXIuCitPdmVycmlk
+aW5nIHRoZSBkcml2ZXIgbW9kZSBtdXN0IG9ubHkgYmUgZG9uZSBpbiB0aGUgZm9sbG93aW5nIHNj
+ZW5hcmlvOgorIC0gVGhlIHJlc3RyaWN0aW9ucyBtb3RpdmF0aW5nIHRoZSBvdmVycmlkZSBjYW5u
+b3QgYmUgYXBwbGllZCB0byB0aGUgcGxhdGZvcm0ncworICAgZGlzcGxheSBkcml2ZXIgKGllOiBp
+dCBtdXN0IGJlIHNwZWNpZmljIHRvIHRoZSBkZXZpY2Ugbm90IHRoZSBwbGF0Zm9ybSkKKyAtIFRo
+ZSBwYW5lbCBtdXN0IG5vdCBoYXZlIGEgZml4ZWQgbW9kZSBhdHRyaWJ1dGVkIHRvIGl0IGluIHRo
+ZSBkcml2ZXIKKyAtIFRoZSBwYW5lbCBtdXN0IHByb3ZpZGUgYXQgbGlzdCBvbmUgZGlzcGxheV90
+aW1pbmcgcmFuZ2UgYnkgd2hpY2ggdGhlIG92ZXJyaWRlCisgICBtb2RlIGNhbiBiZSB2YWxpZGF0
+ZWQgYWdhaW5zdAorIC0gVGhlIG92ZXJyaWRlIG1vZGUgd2lsbCB1c2UgdGhlICd0eXAnIHZhbHVl
+cyBmcm9tIHRoZSBkaXNwbGF5LXRpbWluZ3Mgc3Vibm9kZQorIC0gWW91IG11c3QgcHJvdmlkZSBh
+bGwgcmVxdWlyZWQgcHJvcGVydGllcyBmb3IgdGhlIGRpc3BsYXktdGltaW5ncyBzdWJub2RlCisK
+K0Zvcm1hdCBpbmZvcm1hdGlvbiBvbiB0aGUgZGlzcGxheS10aW1pbmdzIHN1Ym5vZGUgY2FuIGJl
+IGZvdW5kIGluCitkaXNwbGF5LXRpbWluZy50eHQuCisKKwogRXhhbXBsZToKIAogCXBhbmVsOiBw
+YW5lbCB7CkBAIC0yMiw0ICs0MCwxOCBAQCBFeGFtcGxlOgogCQllbmFibGUtZ3Bpb3MgPSA8Jmdw
+aW8gOTAgMD47CiAKIAkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+OworCisJCWRpc3BsYXktdGlt
+aW5ncyB7CisJCQl0aW1pbmcwOiBvdmVycmlkZSB7CisJCQkJY2xvY2stZnJlcXVlbmN5ID0gPDI2
+NjYwNDcyMD47CisJCQkJaGFjdGl2ZSA9IDwyNDAwPjsKKwkJCQloZnJvbnQtcG9yY2ggPSA8NDg+
+OworCQkJCWhiYWNrLXBvcmNoID0gPDg0PjsKKwkJCQloc3luYy1sZW4gPSA8MzI+OworCQkJCXZh
+Y3RpdmUgPSA8MTYwMD47CisJCQkJdmZyb250LXBvcmNoID0gPDM+OworCQkJCXZiYWNrLXBvcmNo
+ID0gPDEyMD47CisJCQkJdnN5bmMtbGVuID0gPDEwPjsKKwkJCX07CisJCX07CiAJfTsKLS0gCjIu
+MTYuMC5yYzEuMjM4Lmc1MzBkNjQ5YTc5LWdvb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
