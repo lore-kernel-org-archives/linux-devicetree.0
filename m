@@ -1,7 +1,7 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
-Date: Wed, 7 Feb 2018 11:02:39 +0000
-Message-ID: <AM3PR04MB306CAB722808288C56A08BA80FC0@AM3PR04MB306.eurprd04.prod.outlook.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
+Date: Wed, 7 Feb 2018 12:11:56 +0100
+Message-ID: <20180207111156.a7cevrz3dbk2f4fb@pengutronix.de>
 References: <20180201174923.7385-1-l.stach@pengutronix.de>
  <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
  <1517825351.3175.3.camel@pengutronix.de>
@@ -11,160 +11,95 @@ References: <20180201174923.7385-1-l.stach@pengutronix.de>
  <1517932068.3175.27.camel@pengutronix.de>
  <CACRpkdYy43E5H=tRAf+YDvAY1RDTJ34nHSmqCXEn9xaknbLKZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYy43E5H=tRAf+YDvAY1RDTJ34nHSmqCXEn9xaknbLKZQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Gary Bisson <gary.bisson@boundarydevices.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYy43E5H=tRAf+YDvAY1RDTJ34nHSmqCXEn9xaknbLKZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "A . s . Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, linux-imx-3arQi8VN3Tc@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGludXMsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGludXMg
-V2FsbGVpaiBbbWFpbHRvOmxpbnVzLndhbGxlaWpAbGluYXJvLm9yZ10NCj4gU2VudDogMjAxOOW5
-tDLmnIg35pelIDE3OjA5DQo+IFRvOiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5k
-ZT47IEEucy4gRG9uZw0KPiA8YWlzaGVuZy5kb25nQG54cC5jb20+OyBkbC1saW51eC1pbXggPGxp
-bnV4LWlteEBueHAuY29tPjsgR2FyeSBCaXNzb24NCj4gPGdhcnkuYmlzc29uQGJvdW5kYXJ5ZGV2
-aWNlcy5jb20+OyBWbGFkaW1pciBaYXBvbHNraXkNCj4gPHZsYWRpbWlyX3phcG9sc2tpeUBtZW50
-b3IuY29tPjsgU2FzY2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+DQo+IENjOiBSb2Ig
-SGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJt
-LmNvbT47DQo+IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnOyBvcGVuIGxpc3Q6T1BFTiBGSVJN
-V0FSRSBBTkQgRkxBVFRFTkVEDQo+IERFVklDRSBUUkVFIEJJTkRJTkdTIDxkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZz47DQo+IHBhdGNod29yay1sc3RAcGVuZ3V0cm9uaXguZGUNCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCB2MiAxLzNdIGR0LWJpbmRpbmdzOiBhZGQgYmluZGluZyBmb3IgaS5NWDhN
-USBJT01VWEMNCj4gDQo+IE9uIFR1ZSwgRmViIDYsIDIwMTggYXQgNDo0NyBQTSwgTHVjYXMgU3Rh
-Y2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOg0KPiANCj4gPiBUbyBiZSBmdWxseSBo
-b25lc3QgSSdtIGEgYml0IGFubm95ZWQgd2l0aCB0aGUgcGluY3RybCBmcmFtZXdvcmsgbWFraW5n
-DQo+ID4gdGhpbmdzIChJTUhPKSB1bm5lY2Vzc2FyaWx5IGNvbXBsZXgsIGZvciB3aGF0IGlzIGJh
-c2ljYWxseSBhIHByZXR0eQ0KPiA+IGVhc3kgdGFzay4NCj4gDQo+IE15IGFtYml0aW9uIGlzIHRv
-IG1ha2UgdGhpbmdzIHJlYWRhYmxlLCB1bmRlcnN0YW5kYWJsZSBhbmQgbWFpbnRhaW5hYmxlLiBJ
-bg0KPiBnZW5lcmljIHRlcm1zLCBpbmNvcnBvcmF0aW5nIGEgYnVuY2ggb2Yga25vd2xlZGdlIG9m
-IHRoZSBlbGVjdHJvbmljcyB0aGF0IHJlYWxseQ0KPiBoYXBwZW4gaW50byB0aGUgc3R1ZmYgd2Ug
-ZW5jb2RlIGluIHRoZSBrZXJuZWwuDQo+IA0KPiBJIGd1ZXNzIGl0IHZhcmllcyBhIGJpdCBvbiB3
-aGF0IGdvYWwgb25lIGhhcy4NCj4gDQo+IElmIHRoZSBnb2FsIGlzICJzaGlwIHByb2R1Y3Qgd2l0
-aCB1cHN0cmVhbSBrZXJuZWwgcmVhbGx5IGZhc3Qgbm93Ig0KPiB0aGVuIHRoaW5ncyBsaWtlIHBp
-bmN0cmwtc2luZ2xlLmMgd2hlcmUgd2UganVzdCBoYW1tZXIgbWFnaWMgdmFsdWVzIGludG8NCj4g
-cmVnaXN0ZXJzLCBtYWtlIHNlbnNlLiBPTUFQIGRldmVsb3BlcnMgaGFkIG5vIGlkZWEgd2hhdHNv
-ZXZlciB3aGF0IHRoZWlyDQo+IEFTSUMgcGVvcGxlIG9yIGNlbGwgbGlicmFyeSBhdXRob3JzIHdl
-cmUgZG9pbmcgc28gdGhleSBqdXN0IHRocmV3IGluIHRoZSB0b3dlbC4NCj4gSGlTaWxpY29uIGFs
-c28gdXNlIHRoaXMuIEludGVscyBhbWJpdGlvbiB3YXMgdG8gdXNlIEFDUEkgQklPUyB0byBoYW5k
-bGUgYWxsIHBpbg0KPiBjb250cm9sIGFuZCByb3V0ZSBhcm91bmQgdGhlIGtlcm5lbCBhbHRvZ2V0
-aGVyLCBidXQgdGhhdCBpcyBub3Qgd29ya2luZyBvdXQgc28NCj4gd2VsbCBmb3IgdGhlbSBJIHRo
-aW5rLg0KPiANCj4gQWxsIG9mIHRoZW0gYXJlIGFwcHJvYWNoZXMgdG8gYXZvaWQgcHV0dGluZyB0
-aGUgaGFpcnkgZGV0YWlscyBpbnRvIHRoZSBrZXJuZWwsIGp1c3QNCj4gcG9rZSBzb21lIG1hZ2lj
-IHZhbHVlcyBpbnRvIHNvbWUgbWFnaWMgcmVnaXN0ZXJzIGFuZCBiZSBoYXBweS4NCj4gDQo+IFNv
-IGkuTVggY291bGQgaGF2ZSBiZWVuIGxpa2UgdGhhdCwgYnV0IHRoZW4gSSBndWVzcyB5b3UgbmVl
-ZCB0byB0YWtlIGxlZ2FjeSBpbnRvDQo+IGFjY291bnQgYW5kIGRpc2N1c3Mgd2l0aCB0aGUgb3Ro
-ZXIgaS5NWCBkcml2ZXIgYXV0aG9ycyBhYm91dCBob3cgdGhleSByZWFsbHkNCj4gd2FudGVkIGFu
-ZCB3YW50IHRvIGRvIHRoaW5ncy4NCj4gDQo+IFRoZWlyIGN1cnJlbnQgc2lsZW5jZSB3cnQgdGhp
-cyBtYWlsY2hhaW4gaXMgYWN0dWFsbHkgYmVjb21pbmcgYSBwcm9ibGVtLCBhbmQgdGhlDQo+IHBy
-b2JsZW0gaXMgdGhhdCBkaXNjdXNzaW5nIHdpdGggeW91IGZhbGxzIHVwd2FyZHMgdG8gbWUgYXMg
-c3Vic3lzdGVtIG1haW50YWluZXIuDQo+IFdoaWNoIHN1Y2tzLiBJIHByZWZlciB0aGF0IHBlb3Bs
-ZSB3aG8ga25vdyB0aGlzIGhhcmR3YXJlIGRpc2N1c3MgYW1vbmdzdA0KPiB0aGVtc2VsdmVzIGhv
-dyB0aGV5IHdhbnQgdGhpbmdzIHRvIHdvcmsuDQo+IA0KPiBTdXJlbHkgU2FzY2hhIG11c3QgaGF2
-ZSBhbiBvcGluaW9uPyBJdCBtZWFucyBtdWNoIHRvIG1lIHdoYXQgaGUgd2FudHMgdG8gZG8uDQo+
-IEkgdGFrZSBpdCB5b3UgZ3V5cyBhcmUgY29sbGVhZ3Vlcz8NCj4gDQo+ID4gUGVuZ3V0cm9uaXgg
-aXMgbW9zdGx5IGNvbnRyYWN0ZWQgYnkgY3VzdG9tZXJzIG9mIE5YUCB0byBlbmFibGUgc3R1ZmYN
-Cj4gPiBpbiBtYWlubGluZS4gU28gSSdtIG5vdCB3b3JraW5nIG9uIHRoaXMgaW4gbXkgc3BhcmUg
-dGltZSwgYnV0IEkgc3RpbGwNCj4gPiBoYXZlIHRvIGRlYWwgd2l0aCB0aGUgZmFjdCB0aGF0IEkg
-Y2FuIG9ubHkgZ2V0IHRoZSBpbmZvcm1hdGlvbiBmcm9tDQo+ID4gdGhlIHJlZmVyZW5jZSBtYW51
-YWwsIE5YUCBkb3duc3RyZWFtIEJTUHMgYW5kIHRoZSBvY2Nhc2lvbmFsIGhlbHBmdWwNCj4gPiBO
-WFAgZW1wbG95ZWUuDQo+IA0KPiBIbSBJIHNlZSwgdGhpcyBzZWVtcyBsaWtlIGEgYml0IG9mIGNy
-YXBweSBwb3NpdGlvbiB0byBiZSBpbiB3aGVuIHlvdSBqdXN0IHdhbnQgdG8NCj4gYXNrIHNvbWVv
-bmUgaW4gaGFyZHdhcmUgaG93IHRoaW5ncyByZWFsbHkgd29yay4NCj4gDQo+IEJ1dCB3ZSBoYXZl
-IEZyZWVzY2FsZSBpLk1YIG1haW50YWluZXJzIG9uIHRoZSBpbnNpZGUgb2YgdGhlIGNvbXBhbnkg
-bm93IE5YUA0KPiAoc29vbiBRdWFsY29tbT8gc29vbiBCcm9hZGNvbT8pLg0KPiANCj4gSGVsbCB0
-aGlzIG1haWwgaXMgZXZlbiBnb2luZyB0byBsaW51eC1pbXhAbnhwLmNvbSwgd2hhdCBkbyB0aGV5
-IGRvIHdpdGggaXQ/IFB1dA0KPiBpdCBpbiBhIG1haWxib3ggYW5kIG5ldmVyIHJlYWQgaXQ/DQo+
-IA0KPiBTdXJlbHkgc29tZW9uZSBvbiB0aGUgaW5zaWRlIG11c3QgYmUgYWJsZSB0byBwcm92aWRl
-IHNvbWUgZGV0YWlscy4NCj4gDQoNCkkgZmVlbCB0ZXJyaWJseSBzb3JyeSB0aGF0IGRpZCBub3Qg
-Y29tZSB1cCBpbiB0aGUgZmlyc3QgdGltZSB0aGVzZSB0d28gZGF5cyBhcyBJIHdhcw0KYnVzeSB3
-aXRoIHNvbWUgb3RoZXIgdXJnZW50IHRoaW5ncyByZXF1ZXN0ZWQgYnkgbXkgYm9zcy4NCkl0IHNo
-b3VsZCBiZSBteSByZXNwb25zaWJpbGl0eSBhcyBJIHByb21pc2VkIHRvIHRha2UgdGhhdCBvd25l
-cnNoaXAgYmVmb3JlLg0KDQpJIHF1aWNrbHkgd2VudCB0aHJvdWdoIHRoZSBlbWFpbCBhbmQgSSBm
-dWxseSB1bmRlcnN0YW5kIHlvdXIgY29uY2Vybi4NCkFzIEknbSBub3QgYSBzcGVjaWFsaXN0IG9u
-IHRoZSBIVyBpbnRlcm5hbHMgb2YgSU9NVVggZGVzaWduLCBpIGFscmVhZHkgZm9yd2FyZGVkIHRo
-ZQ0KSXNzdWUgdG8gb3VyIElQIG93bmVyLiANCg0KRHVlIHRvIGl0J3MgYWxyZWFkeSBvZmYgd29y
-ayB0aW1lIGF0IG15IHNpZGUsIEkgd2lsbCBkaXNjdXNzIHdpdGggaGltIHRvbW9ycm93DQpNb3Ju
-aW5nIGFuZCBnZXQgYmFjayB0byB5b3UgbGF0ZXIuDQoNCkFuZCBpIHdpbGwgY2FyZWZ1bGx5IHJl
-dmlldyB0aGUgcmVmZXJlbmNlIG1hbnVhbCBhbmQgZG9jIG9uIG15IGhhbmRzLg0KSG9wZWZ1bGx5
-IEkgY2FuIGdpdmUgeW91IHNvbWUgaW5mb3JtYXRpb24gbGF0ZXIgeW91IHdhbnQuDQoNClJlZ2Fy
-ZHMNCkRvbmcgQWlzaGVuZw0KDQo+ID4gQWxzbyBldmVuIGlmIHdlIHdlcmUgaW5zaWRlIG9mIE5Y
-UCwgcGFkIGNlbGxzIGFyZSB1c3VhbGx5IHNvbWV0aGluZw0KPiA+IHRoYXQgY2hpcCBtYWtlcnMg
-YnV5IG9yIGdldCBmcm9tIHRoZSBGYWIgZGVzaWduIGxpYnJhcnkuIFNvIHByb2JhYmx5DQo+ID4g
-ZXZlbiB0aGV5IGRvbid0IGtub3cgd2hhdCdzIGluc2lkZSBleGFjdGx5Lg0KPiANCj4gWWVhaCB0
-aGF0IGlzIHdoYXQgSSBjYWxsICJ0aHJvdyBvdmVyIHRoZSB3YWxsIGVuZ2luZWVyaW5nIi4NCj4g
-SXQncyBub3QgZ29vZCwgaWYgTlhQIHdvcmtzIHdpdGggaW5mb3JtYXRpb24gYnJpY2sgd2FsbHMg
-bGlrZSB0aGF0IGl0IGlzIG5vdCBhbnkgZ29vZA0KPiBmb3IgdGhlbSwgYmVjYXVzZSBpdCBpcyBu
-b3QgYW55IGdvb2QgZm9yIHRoZWlyIGN1c3RvbWVycy4NCj4gDQo+IE5vdCBzb21ldGhpbmcgeW91
-IG9yIEkgY2FuIGZpeCB0aG91Z2guLi4NCj4gDQo+ID4gV2hhdCB1c3VhbGx5IGhhcHBlbnMgaXMg
-dGhhdCBoYXJkd2FyZSAoSSdtIHRhbGtpbmcgYWJvdXQgYm9hcmQvc3lzdGVtDQo+ID4gaGVyZSkg
-ZGVzaWduZXJzIHN0YXJ0IGJ5IHJlYWRpbmcgdGhlIHJlZmVyZW5jZSBtYW51YWwgYW5kIGhhcmR3
-YXJlDQo+ID4gZGVzaWduIGd1aWRlIGFuZCB3b3JrIHdpdGggdGhhdC4gVGhleSBjb21lIHVwIHdp
-dGggYWxsIHRoZSBuZWNlc3NhcnkNCj4gPiBjb25maWd1cmF0aW9uIGluIHRoZSB0ZXJtcyBvZiB0
-aGUgbWFudWFsLg0KPiANCj4gU29tZXRpbWVzIGhhbGYtZ3Vlc3NpbmcgYW5kIGEgYml0IG9mIHRy
-aWFsLWFuZC1lcnJvciByaWdodD8NCj4gDQo+ID4gQWZ0ZXIgdGhhdCB0aGV5IG9yIHNvbWVvbmUg
-ZWxzZSBoYXMgdG8gdHJhbnNsYXRlIHRoaXMgaW50byBEVC4gVGhpbmdzDQo+ID4gZ2V0IGNvbmZ1
-c2luZyB3aGVuIHRoZSByZWZlcmVuY2UgbWFudWFsIGFuZCB0aGUgRFQgYmluZGluZyBkaXNhZ3Jl
-ZQ0KPiA+IGFib3V0IHRoZSB1c2VkIHRlcm1zLg0KPiANCj4gSSBzZWUuDQo+IA0KPiA+PiBJZiB5
-b3Ugd2FudCBzb21ldGhpbmcgdG8gbWF0Y2ggdGhlIHNwZWNpZmljIGhhcmR3YXJlIG1hbnVhbCBm
-cm9tIE5YUA0KPiA+PiBhbmQgeW91IGRvbid0IHdhbnQgaXQgdG8gYmUgdHJhbnNsYXRlZCBpbnRv
-IHRoZSB1bml0cyBvZiB0aGUgRFQNCj4gPj4gYmluZGluZywgdGhlbiBJIHRoaW5rIGl0IGlzIGJl
-dHRlciB0byB1c2Ugc29tZXRoaW5nIHByZWZpeGVkICJueHAsKiIuDQo+ID4NCj4gPj4gVGhhdCBj
-bGVhcmx5IGluZGljYXRlcyB0aGF0IHRoaXMgaXMgc29tZSBOWFAgb2RkaXR5IHRoYXQgd2UgZG9u
-J3QNCj4gPj4gcmVhbGx5IHVuZGVyc3RhbmQuDQo+ID4NCj4gPiBJJ20gbm90IGtlZW4gb24gdXNp
-bmcgdGhlIGNvbW1vbiBwYWRjdHJsIHN0dWZmLCB3aGljaCBhbHJlYWR5IGJsb2F0cw0KPiA+IHRo
-ZSBEVCBkZXNjcmlwdGlvbiBjb21wYXJlZCB0byBpLk1YNiwNCj4gDQo+IFRoaXMgeW91IG5lZWQg
-dG8gZGlzY3VzcyB3aXRoIHRoZSBnZW5lcmljIGkuTVggZHJpdmVyIG1haW50YWluZXJzLg0KPiBU
-aGV5IGFyZSB0aGUgbWFpbnRhaW5lcnMgb2YgZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS8qIGFm
-dGVyIGFsbC4NCj4gDQo+IFRoZXkgbmV2ZXIgcHV0IGFuIGVudHJ5IGluIE1BSU5UQUlORVJTIHRo
-b3VnaCwgYnV0IEkgYWx3YXlzIHJlZ2FyZGVkIHRoZXNlIGFzDQo+IHRoZSBwaW5jdHJsIG1haW50
-YWluZXJzIGZvciBpLk1YOg0KPiANCj4gQVJNL0ZSRUVTQ0FMRSBJTVggLyBNWEMgQVJNIEFSQ0hJ
-VEVDVFVSRQ0KPiBNOiAgICAgIFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gTTog
-ICAgICBTYXNjaGEgSGF1ZXIgPGtlcm5lbEBwZW5ndXRyb25peC5kZT4NCj4gUjogICAgICBGYWJp
-byBFc3RldmFtIDxmYWJpby5lc3RldmFtQG54cC5jb20+DQo+IA0KPiBPbiB0b3Agb2YgdGhpcywg
-RG9uZyBBaXNoZW5nLCBHYXJ5IEJpc3NvbiBhbmQgVmxhZGltaXIgWmFwb2xza2l5IGhhcyBtYWRl
-IG1ham9yDQo+IGNvbnRyaWJ1dGlvbnMuDQo+IA0KPiBJdCdzIGEgbGl0dGxlIGVjb3N5c3RlbSBv
-biBpdHMgb3duLCBub3QgcmVhbGx5IHRvIGJlIGRpc2N1c3NlZCBieSBqdXN0IHlvdSBhbmQgbWUu
-IEkNCj4gd29uZGVyIHdoZXJlIHRoZSByZXN0IG9mIHRoZSB2b2ljZXMgYXJlLCBJIGhvcGUgbm90
-IHNpbGVuY2VkIGJ5IG9yZ2FuaXphdGlvbmFsDQo+IHN0cmVzcyBhZnRlciB0aGUgTlhQIG1lcmdl
-ci4uLg0KPiANCj4gPiBhbmQgdGhlbiBhZ2FpbiBuZWVkIHRvIGludHJvZHVjZQ0KPiA+IGN1c3Rv
-bSBwcm9wZXJ0aWVzLiBUaGF0J3MganVzdCB3b3JzdCBvZiBib3RoIHdvcmxkcywgdmVyYm9zZSBE
-VCB0byB1c2UNCj4gPiB0aGUgY29tbW9uIHN0dWZmLCBtaXhlZCB3aXRoIHNwZWNpYWwgcHJvcGVy
-dGllcywgb25seSB2YWxpZCBvbiB0aGlzDQo+ID4gc2luZ2xlIGNvbnRyb2xsZXIuDQo+IA0KPiBO
-byBtYXR0ZXIgaG93IG11Y2ggeW91IGRpc2xpa2UgaXQsIGl0IGlzIHdoYXQgZS5nLiBRdWFsY29t
-bSBpcyBkb2luZy4gKFdobw0KPiBtaWdodCBzb29uIGJlIG9uZSBhbmQgdGhlIHNhbWUgYXMgTlhQ
-IEkgaGVhci4pDQo+IA0KPiA+IElmIHlvdSBpbnNpc3QgSSBndWVzcyBJJ20gZmluZSB3aXRoIGNv
-bXByb21pc2luZyBvbiBhbiAib3V0cHV0LQ0KPiA+IGltcGVkYW5jZSIgY29tbW9uIHByb3BlcnR5
-LCBidXQgdGhlbiB0aGlzIGp1c3QgbWFrZXMgdGhpbmdzIGhhcmRlciBmb3INCj4gPiBldmVyeW9u
-ZSBpbnZvbHZlZCwgYXMgdGhlIGltcGVkYW5jZSBldmVuIHNlZW1zIHRvIHZhcnkgc2xpZ2h0bHkg
-d2l0aA0KPiA+IHRoZSB1c2VkIHBhZCB2b2x0YWdlLiBTbyB0byBub3QgZ2V0IGludG8gYSBjb21i
-aW5hdG9yaWFsIGV4cGxvc2lvbiwgd2UNCj4gPiB3b3VsZCBuZWVkIHRvIGRlc2NyaWJlIHRoaXMg
-cHJvcGVydHkgYXMgc29tZXRoaW5ncyBsaWtlICJvdXRwdXQNCj4gPiBpbXBlZGFuY2UgYXQgMy4z
-dikiLCBhdCBsZWFzdCBvbiB0aGlzIHNwZWNpZmljIGhhcmR3YXJlLg0KPiANCj4gSG0sIHNob3Vs
-ZCBpdCBtZSAibnhwLGRyaXZlLXN0cmVuZ3RoIiB0aGVuLCBhcyBpdCBpcyBqdXN0IHNvbWUgbWFn
-aWMgdmFsdWU/IEkNCj4gZ3Vlc3MgIm54cCxtYWdpYy1kcml2ZS1zdHJlbmd0aCIgaXMgbm90IGdv
-aW5nIHRvIGN1dCBpdCA6RA0KPiANCj4gQWxzbyBtYXliZSB3ZSBzaG91bGQgdXNlIHRoZSBvbGQg
-ImZyZWVzY2FsZSwqIiBub3RhdGlvbiBmb3IgbGVnYWN5IHJlYXNvbnMuLi4gSQ0KPiBkb24ndCBr
-bm93LiBUaGlzIFZlbmRvciBwcmVmaXggc2VlbXMgbGVzcyBzdGFibGUgdGhhbiB0aGUgY2hpcHNl
-dHMuDQo+IA0KPiA+IE9yIHdlIGNvdWxkIGFncmVlIHRoYXQgZHJpdmUtc3RyZW5ndGggcHJvcGVy
-dHkgY291bGQgYmUgZGVzY3JpYmVkIGluDQo+ID4gc29tZSB1bml0IHRoYXQgbWFrZXMgc2Vuc2Ug
-b24gZWFjaCBjb250cm9sbGVyLiBtQSBmb3IgaGFyZHdhcmUNCj4gPiBkZXNjcmliZWQgd2l0aCBz
-b21lIGZhYmxlZCBpZGVhbCBsb2FkIG1hdGNoaW5nLCBPaG1zIGZvciBoYXJkd2FyZSB0aGF0DQo+
-ID4gbW9kZWxzIGl0IHRoaXMgd2F5IHdpdGggbWF4aW11bSBkcml2ZSBzdHJlbmd0aCBhdCB0aGUg
-cG9pbnQgb2YgYmVzdA0KPiA+IGxvYWQgbWF0Y2hpbmcuDQo+IA0KPiBJIGFtIG5vdCBsaWtlIHN0
-dWJib3JubHkgYWdhaW5zdC4gSSBqdXN0IHdhbnQgc29tZSBkaXNjdXNzaW9uIGhlcmUsIGl0IHdv
-dWxkIGJlDQo+IG5pY2UgdG8ga25vdyB0aGUgb3BpbmlvbiBvZiB0aGUgaS5NWCBtYWludGFpbmVy
-cy4NCj4gDQo+ID4gSW4gdGhlIGVuZCB0aGlzIGlzIGFib3V0IG1hcHBpbmcgMyBoYXJkd2FyZSBi
-aXRzIHRvIGEgRFQgZGVzY3JpcHRpb24uLi4NCj4gDQo+IFBsZWFzIGRvbid0IHRoaW5rIGFib3V0
-IGl0IGxpa2UgImNhbid0IHdlIGp1c3QgZG8gdGhpcyByZWFsIHNpbXBsZSB0aGluZyBub3csIGp1
-c3QNCj4gbWVyZ2UgdGhpcyBhbmQgc3RvcCBiZWluZyBhbiBhc3MiLg0KPiANCj4gVGhpbmdzIGp1
-c3QgcG9raW5nIHRocmVlIGJpdHMgY2FuIGxvb2sgdmVyeSBzaW1wbGUsIGxpa2UgaW4gc28gbWFu
-eSBCU1BzOg0KPiANCj4gdm9sYXRpbGUgdW5zaWduZWQgbG9uZyAqZm9vOw0KPiANCj4gZm9vID0g
-KHVuc2lnbmVkIGxvbmcgKikgMHhmZWMwYmUwMDsNCj4gKmZvbyAmPSB+MHg3MDA7DQo+ICpmb28g
-fD0gMHgyMDA7IC8qIGRvIHRoZSBtYWdpYyAqLw0KPiANCj4gQnV0IHRoaXMgaXMgbm90IGhlbHBm
-dWwgZm9yIGRldmVsb3BlcnMgb3IgbWFpbnRhaW5lcnMuIFRoYXQgaXMgSU1ITyB3aHkgd2UgaGF2
-ZQ0KPiB0aGUgZnJhbWV3b3JrcyBhbmQgYWxsIHRoZSBEVCBzdGFuZGFyZGl6YXRpb24gaW4gdGhl
-IGZpcnN0IHBsYWNlLCBleGFjdGx5IHNvIHdlDQo+IHVuZGVyc3RhbmQgd2hhdCB3ZSBhcmUgZG9p
-bmcuDQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0K
+On Wed, Feb 07, 2018 at 10:09:20AM +0100, Linus Walleij wrote:
+> On Tue, Feb 6, 2018 at 4:47 PM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> 
+> > To be fully honest I'm a bit annoyed with the pinctrl framework making
+> > things (IMHO) unnecessarily complex, for what is basically a pretty
+> > easy task.
+> 
+> My ambition is to make things readable, understandable and
+> maintainable. In generic terms, incorporating a bunch of knowledge
+> of the electronics that really happen into the stuff we encode in
+> the kernel.
+> 
+> I guess it varies a bit on what goal one has.
+> 
+> If the goal is "ship product with upstream kernel really fast now"
+> then things like pinctrl-single.c where we just hammer magic values
+> into registers, make sense. OMAP developers had no idea whatsoever
+> what their ASIC people or cell library authors were doing so they
+> just threw in the towel. HiSilicon also use this. Intels ambition was
+> to use ACPI BIOS to handle all pin control and route around the kernel
+> altogether, but that is not working out so well for them I think.
+> 
+> All of them are approaches to avoid putting the hairy details into the
+> kernel, just poke some magic values into some magic registers
+> and be happy.
+> 
+> So i.MX could have been like that, but then I guess you need to take
+> legacy into account and discuss with the other i.MX driver authors
+> about how they really wanted and want to do things.
+> 
+> Their current silence wrt this mailchain is actually becoming a
+> problem, and the problem is that discussing with you falls upwards
+> to me as subsystem maintainer. Which sucks. I prefer that people
+> who know this hardware discuss amongst themselves how they
+> want things to work.
+> 
+> Surely Sascha must have an opinion? It means much to me
+> what he wants to do. I take it you guys are colleagues?
+
+My opinion is that all that is generic about padctrl is a device driver
+saying "Put my pins into a suitable mode". That is what padctrl is good
+for and we are there for years now. I have always been happy with the
+plain register values in the device tree. Before device tree we had
+exactly these values in the board files and I never heard anyone
+complaining about it. There were defines for the bits in the register
+which you could use when you were unhappy with plain register values.
+
+It's really trivial to look in the reference manual to make up the
+needed register values. It's also trivial to take a register value
+and look into the reference manual what this value does. Every
+translation layer, call it generic properties, just makes things more
+complicated. Often enough our input is register value tables
+from either our customers our from spreadsheets from FSL/NXP. Every
+translation layer in the way just means we have to translate the already
+existing register values into something hoping that this correctly
+translates back into the register values.
+
+It's not that some board designer comes up with "I need a drive strength
+of 150mA" and wants to put that value into the device tree. Instead they
+start with the reference manual, see which values they can (must) adjust
+and then adjust the values until they are happy. No one wants to ask
+questions like "How do I have to manipulate that device tree to change
+that particular bit?"
+
+As said, I am happy with plain register values in the device tree and
+I consider everything else overengineered.
+FSL/NXP Reference Manuals are freely available and of high quality so
+everybody can understand the register values. There's nothing magic to
+them. That might change slightly when the Manuals are not available, but
+even then I think that not the device tree ABI is the right place to
+add that missing documentation.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
