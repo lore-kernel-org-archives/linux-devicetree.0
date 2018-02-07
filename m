@@ -1,62 +1,31 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 4/7] ARM: dts: da850: add power controller nodes
-Date: Wed,  7 Feb 2018 14:45:50 +0100
-Message-ID: <20180207134553.13510-5-brgl@bgdev.pl>
-References: <20180207134553.13510-1-brgl@bgdev.pl>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180207134553.13510-1-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 35/41] ARM: dm644x: Remove legacy clock init
+Date: Wed, 7 Feb 2018 19:16:56 +0530
+Message-ID: <1a9c5888-9e4f-53e3-dfc3-ffa4cf6f3ad5@ti.com>
+References: <1516468460-4908-1-git-send-email-david@lechnology.com>
+ <1516468460-4908-36-git-send-email-david@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1516468460-4908-36-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Adam Ford <aford173-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Saturday 20 January 2018 10:44 PM, David Lechner wrote:
+> This removes the unused legacy clock init code from
+> arch/arm/mach-davinci/dm644x.c.
+> 
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 
-Add two power controller nodes corresponding with the two PSC modules
-present on the da850 SoC.
+Reviewed-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/boot/dts/da850.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 3a1f2ced05ca..ac2eef4e6b7c 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -24,6 +24,11 @@
- 		};
- 	};
- 
-+	aliases {
-+		pwc0 = &pwc0;
-+		pwc1 = &pwc1;
-+	};
-+
- 	opp_table: opp-table {
- 		compatible = "operating-points-v2";
- 
-@@ -141,6 +146,10 @@
- 				      "pll0_sysclk4", "pll0_sysclk6",
- 				      "async1";
- 		};
-+		pwc0: power-controller@10000 {
-+			compatible = "ti,davinci-pm-domains";
-+			#power-domain-cells = <0>;
-+		};
- 		pll0: clock-controller@11000 {
- 			compatible = "ti,da850-pll0";
- 			reg = <0x11000 0x1000>;
-@@ -757,6 +766,10 @@
- 				 <&async3_clk>;
- 			clock-names = "pll0_sysclk2", "pll0_sysclk4", "async3";
- 		};
-+		pwc1: power-controller@227000 {
-+			compatible = "ti,davinci-pm-domains";
-+			#power-domain-cells = <0>;
-+		};
- 		pinconf: pin-controller@22c00c {
- 			compatible = "ti,da850-pupd";
- 			reg = <0x22c00c 0x8>;
--- 
-2.16.1
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
