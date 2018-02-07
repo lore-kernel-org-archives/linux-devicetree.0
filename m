@@ -1,51 +1,191 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 0/4] gpio: driver for the RPi3 GPIO expander
-Date: Wed, 7 Feb 2018 10:13:10 +0100
-Message-ID: <CACRpkdYGYtF5iw=ZDF9O5LdwfvktEfDORjYXZDmFNihVSP+c3w@mail.gmail.com>
-References: <cover.1516105893.git.baruch@tkos.co.il> <CACRpkdZAtVfAU-k9EUihH6peY2d1Ntn3jboVMBn9adReNLupow@mail.gmail.com>
- <20180206162759.awghecpv4ihaatz7@tarshish>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v5 2/4] irqchip/gic-v3-its: add ability to save/restore
+ ITS state
+Date: Wed, 7 Feb 2018 09:18:09 +0000
+Message-ID: <8cad6e62-3577-5229-1147-5949599cae5a@arm.com>
+References: <20180207014117.62611-1-dbasehore@chromium.org>
+ <20180207014117.62611-3-dbasehore@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20180206162759.awghecpv4ihaatz7@tarshish>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-gpio@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>, linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20180207014117.62611-3-dbasehore@chromium.org>
+Content-Language: en-GB
+Sender: linux-pm-owner@vger.kernel.org
+To: Derek Basehore <dbasehore@chromium.org>, linux-kernel@vger.kernel.org
+Cc: Soby.Mathew@arm.com, sudeep.holla@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, tglx@linutronix.de, briannorris@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 6, 2018 at 5:27 PM, Baruch Siach <baruch@tkos.co.il> wrote:
-> On Tue, Feb 06, 2018 at 02:42:48PM +0100, Linus Walleij wrote:
->> On Tue, Jan 16, 2018 at 1:45 PM, Baruch Siach <baruch@tkos.co.il> wrote:
->>
->> > The Raspberry Pi 3 has a GPIO expander that controls, among others, the
->> > activity LED, and the camera connector GPIOs. The GPIO expander on an I2C bus
->> > that is not directly controlled from the ARM core. The VC4 firmware controls
->> > the I2C bus, and allows the ARM core to set/get GPIO settings over its mailbox
->> > interface.
->> >
->> > This series adds support for the RPi3 expander.
->> >
->> > The driver is ported from the downstream kernel at
->> > https://github.com/raspberrypi/linux/, branch rpi-4.9.y.
->> >
->> > Changes in v3:
->> >
->> >   * Kconfig tweaks
->> >   * Check rpi_exp_gpio_get_polarity() return value
->> >   * Redundant header removal
->> >   * Redundant platform_set_drvdata() call removal
->> >   * Small coding style changes
->>
->> All is looking pretty good. I see Rob had some last minute comments,
->> but please rebase and repost post v4.16-rc1 so we can get this merged,
->> we need to get this upstream.
->
-> I was about to send v4 when I saw your email. I based v4 on current LinusT's
-> tree as of e237f98a9c. I guess that affected files will not change before
-> v4.16-rc1, but I can wait a few more days for -rc1.
+On 07/02/18 01:41, Derek Basehore wrote:
+> Some platforms power off GIC logic in suspend, so we need to
+> save/restore state. The distributor and redistributor registers need
+> to be handled in platform code due to access permissions on those
+> registers, but the ITS registers can be restored in the kernel.
+> 
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> ---
+>  drivers/irqchip/irq-gic-v3-its.c | 99 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 06f025fd5726..5e63635e2a7b 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/percpu.h>
+>  #include <linux/slab.h>
+> +#include <linux/syscore_ops.h>
+>  
+>  #include <linux/irqchip.h>
+>  #include <linux/irqchip/arm-gic-v3.h>
+> @@ -46,6 +47,7 @@
+>  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+>  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+>  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
+> +#define ITS_FLAGS_SAVE_SUSPEND_STATE		(1ULL << 3)
+>  
+>  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
+>  
+> @@ -101,6 +103,8 @@ struct its_node {
+>  	struct its_collection	*collections;
+>  	struct fwnode_handle	*fwnode_handle;
+>  	u64			(*get_msi_base)(struct its_device *its_dev);
+> +	u64			cbaser_save;
+> +	u32			ctlr_save;
+>  	struct list_head	its_device_list;
+>  	u64			flags;
+>  	unsigned long		list_nr;
+> @@ -3042,6 +3046,96 @@ static void its_enable_quirks(struct its_node *its)
+>  	gic_enable_quirks(iidr, its_quirks, its);
+>  }
+>  
+> +static int its_save_disable(void)
+> +{
+> +	struct its_node *its;
+> +	int err = 0;
+> +
+> +	spin_lock(&its_lock);
+> +	list_for_each_entry(its, &its_nodes, entry) {
+> +		void __iomem *base;
+> +
+> +		if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
+> +			continue;
+> +
+> +		base = its->base;
+> +		its->ctlr_save = readl_relaxed(base + GITS_CTLR);
+> +		err = its_force_quiescent(base);
+> +		if (err) {
+> +			pr_err("ITS failed to quiesce\n");
+> +			writel_relaxed(its->ctlr_save, base + GITS_CTLR);
+> +			goto err;
+> +		}
+> +
+> +		its->cbaser_save = gits_read_cbaser(base + GITS_CBASER);
+> +	}
+> +
+> +err:
+> +	if (err) {
+> +		list_for_each_entry_continue_reverse(its, &its_nodes, entry) {
+> +			void __iomem *base;
+> +
+> +			if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
+> +				continue;
+> +
+> +			base = its->base;
+> +			writel_relaxed(its->ctlr_save, base + GITS_CTLR);
+> +		}
+> +	}
+> +	spin_unlock(&its_lock);
+> +
+> +	return err;
+> +}
+> +
+> +static void its_restore_enable(void)
+> +{
+> +	struct its_node *its;
+> +
+> +	spin_lock(&its_lock);
+> +	list_for_each_entry(its, &its_nodes, entry) {
+> +		void __iomem *base;
+> +		int i;
+> +
+> +		if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
+> +			continue;
+> +
+> +		base = its->base;
+> +
+> +		/*
+> +		 * Make sure that the ITS is disabled. There's not much we can
+> +		 * do if this fails.
+> +		 */
+> +		if (its_force_quiescent(base))
+> +			pr_err("ITS failed to quiesce on resume\n");
 
-It's fine to send if you feel it is ready. I am already queueing
-stuff for v4.17.
+One thing we can do though is to abort the resume of this ITS, because
+"When GITS_CTLR.Enabled == 1 or GITS_CTLR.Quiescent == 0, writing this
+register is UNPREDICTABLE." (where "this register" is any of the
+GITS_BASER<n>).
 
-Yours,
-Linus Walleij
+Printing the physical base address of the failing ITS can also help
+people to debug their HW (my toy platform has 8 of them...).
+
+> +
+> +		gits_write_cbaser(its->cbaser_save, base + GITS_CBASER);
+> +
+> +		/*
+> +		 * Writing CBASER resets CREADR to 0, so make CWRITER and
+> +		 * cmd_write line up with it.
+> +		 */
+> +		its->cmd_write = its->cmd_base;
+> +		gits_write_cwriter(0, base + GITS_CWRITER);
+> +
+> +		/* Restore GITS_BASER from the value cache. */
+> +		for (i = 0; i < GITS_BASER_NR_REGS; i++) {
+> +			struct its_baser *baser = &its->tables[i];
+> +
+> +			if (!(baser->val & GITS_BASER_VALID))
+> +				continue;
+> +
+> +			its_write_baser(its, baser, baser->val);
+> +		}
+> +		writel_relaxed(its->ctlr_save, base + GITS_CTLR);
+> +	}
+> +	spin_unlock(&its_lock);
+> +}
+> +
+> +static struct syscore_ops its_syscore_ops = {
+> +	.suspend = its_save_disable,
+> +	.resume = its_restore_enable,
+> +};
+> +
+>  static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
+>  {
+>  	struct irq_domain *inner_domain;
+> @@ -3261,6 +3355,9 @@ static int __init its_probe_one(struct resource *res,
+>  		ctlr |= GITS_CTLR_ImDe;
+>  	writel_relaxed(ctlr, its->base + GITS_CTLR);
+>  
+> +	if (fwnode_property_present(handle, "reset-on-suspend"))
+> +		its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
+> +
+>  	err = its_init_domain(handle, its);
+>  	if (err)
+>  		goto out_free_tables;
+> @@ -3515,5 +3612,7 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
+>  		}
+>  	}
+>  
+> +	register_syscore_ops(&its_syscore_ops);
+> +
+>  	return 0;
+>  }
+> 
+
+Otherwise starting to look OK.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
