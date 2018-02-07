@@ -1,92 +1,88 @@
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH] media: stm32-dcmi: rework overrun/error case
-Date: Wed, 7 Feb 2018 18:41:46 +0100
-Message-ID: <1518025306-3386-1-git-send-email-hugues.fruchet@st.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] drm/panel: simple: Add ability to override typical timing
+Date: Wed, 7 Feb 2018 11:41:49 -0600
+Message-ID: <CAL_JsqJDvPN3CtKtj980egDRuC-ZjiKOAWe5ECYVBSv4hVOnYw@mail.gmail.com>
+References: <20180206165626.37692-1-seanpaul@chromium.org> <20180206165626.37692-2-seanpaul@chromium.org>
+ <CAL_JsqJer8ZrLyPHz=hBo9smSv7aXhtP3hOJzQojt7ofUiHo=w@mail.gmail.com> <20180206214812.fzh3tr3zflzunw6n@art_vandelay>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180206214812.fzh3tr3zflzunw6n@art_vandelay>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Do not stop/restart dma on overrun or errors.
-Dma will be restarted on current frame transfer
-completion. Frame transfer completion is ensured
-even if overrun or error occurs by DCMI continuous
-capture mode which restarts data transfer at next
-frame sync.
-Do no warn on overrun while in irq thread, this slows down
-system and lead to more overrun errors. Use a counter
-instead and log errors at stop streaming.
+On Tue, Feb 6, 2018 at 3:48 PM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> On Tue, Feb 06, 2018 at 02:19:34PM -0600, Rob Herring wrote:
+>> On Tue, Feb 6, 2018 at 10:56 AM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> > This patch adds the ability to override the typical display timing for a
+>> > given panel. This is useful for devices which have timing constraints
+>> > that do not apply across the entire display driver (eg: to avoid
+>> > crosstalk between panel and digitizer on certain laptops). The rules are
+>> > as follows:
+>> >
+>> > - panel must not specify fixed mode (since the override mode will
+>> >   either be the same as the fixed mode, or we'll be unable to
+>> >   check the bounds of the overried)
+>> > - panel must specify at least one display_timing range which will be
+>> >   used to ensure the override mode fits within its bounds
+>> >
+>> > Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> > Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+>> > Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> > Cc: Stéphane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> > Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> > Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+>> > Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> > Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> > ---
+>> >  .../bindings/display/panel/simple-panel.txt        | 20 +++++++
+>>
+>> The binding should be a separate patch.
+>>
+>
+> Ack, will split.
+>
+>
+>> >  drivers/gpu/drm/panel/panel-simple.c               | 69 +++++++++++++++++++++-
+>> >  2 files changed, 88 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel.txt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+>> > index 16d8ff088b7d..590bbff6fc90 100644
+>> > --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+>> > +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+>> > @@ -7,6 +7,14 @@ Optional properties:
+>> >  - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
+>> >  - enable-gpios: GPIO pin to enable or disable the panel
+>> >  - backlight: phandle of the backlight device attached to the panel
+>> > +- override-mode: For devices which require a mode which differs from the
+>>
+>> This is not a property, but a node so it needs its own section.
+>>
+>> Also, it's not real clear from display-timing.txt, but the modes
+>> should be grouped under a display-timings node. Looks like we haven't
+>> been good at enforcing that as "panel-timing" is also common when
+>> there's a single mode. I'd rather not have another way. With a
+>> standard node name, we can validate the node more easily.
+>>
+>> We'd lose the fact that this is explicitly an override, but I'd doubt
+>> Thierry is going to start letting in panels with no timings.
+>>
+>
+> Yeah, I noticed that the timing subnode was specified as nestled in
+> display-timings. I figured since there can only be one override mode, and the
+> of_get_display_timing function was exported, it would be Ok to just reuse the
+> format of the subnode. I'll respin with the full thing.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- drivers/media/platform/stm32/stm32-dcmi.c | 30 ++++++++++++------------------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+TBC, I'm fine if you use panel-timing as that's already established
+for cases were only 1 mode exists.
 
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index 4a75756..ab555d4 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -160,6 +160,7 @@ struct stm32_dcmi {
- 	dma_cookie_t			dma_cookie;
- 	u32				misr;
- 	int				errors_count;
-+	int				overrun_count;
- 	int				buffers_count;
- };
- 
-@@ -373,23 +374,9 @@ static irqreturn_t dcmi_irq_thread(int irq, void *arg)
- 	}
- 
- 	if ((dcmi->misr & IT_OVR) || (dcmi->misr & IT_ERR)) {
--		/*
--		 * An overflow or an error has been detected,
--		 * stop current DMA transfert & restart it
--		 */
--		dev_warn(dcmi->dev, "%s: Overflow or error detected\n",
--			 __func__);
--
- 		dcmi->errors_count++;
--		dev_dbg(dcmi->dev, "Restarting capture after DCMI error\n");
--
--		spin_unlock_irq(&dcmi->irqlock);
--		dmaengine_terminate_all(dcmi->dma_chan);
--
--		if (dcmi_start_capture(dcmi))
--			dev_err(dcmi->dev, "%s: Cannot restart capture on overflow or error\n",
--				__func__);
--		return IRQ_HANDLED;
-+		if (dcmi->misr & IT_OVR)
-+			dcmi->overrun_count++;
- 	}
- 
- 	spin_unlock_irq(&dcmi->irqlock);
-@@ -574,6 +561,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
- 
- 	dcmi->sequence = 0;
- 	dcmi->errors_count = 0;
-+	dcmi->overrun_count = 0;
- 	dcmi->buffers_count = 0;
- 	dcmi->active = NULL;
- 
-@@ -684,8 +672,14 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
- 
- 	clk_disable(dcmi->mclk);
- 
--	dev_dbg(dcmi->dev, "Stop streaming, errors=%d buffers=%d\n",
--		dcmi->errors_count, dcmi->buffers_count);
-+	if (dcmi->errors_count)
-+		dev_warn(dcmi->dev, "Some errors found while streaming: errors=%d (overrun=%d), buffers=%d\n",
-+			 dcmi->errors_count, dcmi->overrun_count,
-+			 dcmi->buffers_count);
-+	dev_dbg(dcmi->dev, "Stop streaming, errors=%d (overrun=%d), buffers=%d\n",
-+		dcmi->errors_count, dcmi->overrun_count,
-+		dcmi->buffers_count);
-+
- }
- 
- static const struct vb2_ops dcmi_video_qops = {
--- 
-1.9.1
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
