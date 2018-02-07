@@ -1,126 +1,75 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] arm: dts: mt7623: enable all four available UARTs on
- bananapi-r2
-Date: Wed, 7 Feb 2018 17:01:01 +0100
-Message-ID: <cd1df7f9-89f4-06d5-5384-9f3b9f7ade48@gmail.com>
-References: <b4e84a68da76c1ca538150a730777ff530c1db5a.1513922513.git.sean.wang@mediatek.com>
- <dc3c28c7-03c3-f1c6-39c1-b8df8be4fac3@gmail.com>
- <1514043318.30687.10.camel@mtkswgap22> <1516697505.12197.30.camel@mtkswgap22>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v2 4/4] dt-bindings: pwm-backlight: move
+ brightness-levels to optional.
+Date: Wed, 7 Feb 2018 16:10:57 +0000
+Message-ID: <20180207161057.fkgrspfkdtnp5ymk@oak.lan>
+References: <20180207141337.22247-1-enric.balletbo@collabora.com>
+ <20180207141337.22247-5-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516697505.12197.30.camel@mtkswgap22>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180207141337.22247-5-enric.balletbo@collabora.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/23/2018 09:51 AM, Sean Wang wrote:
-> On Sat, 2017-12-23 at 23:35 +0800, Sean Wang wrote:
->> On Sat, 2017-12-23 at 08:52 +0100, Matthias Brugger wrote:
->>>
->>> On 12/22/2017 07:06 AM, sean.wang@mediatek.com wrote:
->>>> From: Sean Wang <sean.wang@mediatek.com>
->>>>
->>>> On bpi-r2 board, totally there're four uarts which we usually called
->>>> uart[0-3] helpful to extend slow I/O devices. Among those ones, uart2 has
->>>> dedicated pin slot which is used to conolse log. uart[0-1] appear at the
->>>> 40-pins connector and uart3 has no pinout, but just has test points (TP47
->>>> for TX and TP48 for RX, respectively) nearby uart2. Also, some missing
->>>> pinctrl is being complemented for those devices.
->>>>
->>>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
->>>> ---
->>>>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 26 ++++++++++++++++++++++++--
->>>>  1 file changed, 24 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
->>>> index 7bf5aa2..64bf5db 100644
->>>> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
->>>> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
->>>> @@ -409,6 +409,20 @@
->>>>  				 <MT7623_PIN_82_UTXD1_FUNC_UTXD1>;
->>>>  		};do you like it or quite want me to remove the uart3 node?
->>>>  	};
->>>> +
->>>> +	uart2_pins_a: uart@2 {
->>>> +		pins_dat {
->>>> +			pinmux = <MT7623_PIN_14_GPIO14_FUNC_URXD2>,
->>>> +				 <MT7623_PIN_15_GPIO15_FUNC_UTXD2>;
->>>> +		};
->>>> +	};
->>>> +
->>>> +	uart3_pins_a: uart@3 {
->>>> +		pins_dat {
->>>> +			pinmux = <MT7623_PIN_242_URTS2_FUNC_URTS2>,
->>>> +				 <MT7623_PIN_243_UCTS2_FUNC_UTXD3>;
->>>> +		};
->>>> +	};
->>>>  };
->>>>  
->>>>  &pwm {
->>>> @@ -454,16 +468,24 @@
->>>>  &uart0 {
->>>>  	pinctrl-names = "default";
->>>>  	pinctrl-0 = <&uart0_pins_a>;
->>>> -	status = "disabled";
->>>> +	status = "okay";
->>>>  };
->>>>  
->>>>  &uart1 {
->>>>  	pinctrl-names = "default";
->>>>  	pinctrl-0 = <&uart1_pins_a>;
->>>> -	status = "disabled";
->>>> +	status = "okay";
->>>>  };
->>>>  
->>>>  &uart2 {
->>>> +	pinctrl-names = "default";
->>>> +	pinctrl-0 = <&uart2_pins_a>;
->>>> +	status = "okay";
->>>> +};
->>>> +
->>>> +&uart3 {
->>>> +	pinctrl-names = "default";
->>>> +	pinctrl-0 = <&uart3_pins_a>;
->>>>  	status = "okay";
->>>>  };
->>>>  
->>>
->>> Why do we want to enable uart3 when there are only test points?
->>> It is not very useful, or do I oversee something?
->>>
+On Wed, Feb 07, 2018 at 03:13:37PM +0100, Enric Balletbo i Serra wrote:
+> The patch 'backlight: pwm_bl: compute brightness of LED linearly to
+> human eye' introduced a default brightness-levels table that is used
+> when brightness-levels is not available in the dts. So move
+> brightness-levels and default-brightness-level to be optional.
 > 
->> I have been listening to the sound from potential users of bpi-r2 to
->> understand what assistance I have to provide to them. Something could
->> be seen through [1] in the forum to know they had been trying hard to
->> explore all available UARTs from the SoC in the last weeks. The patch
->> should be really useful for these people and for the extra soldering
->> it shouldn't become a problem for these makers.
->>
->> [1] http://forum.banana-pi.org/t/gpio-uart-not-the-debug-port/3748
->>
->> 	Sean 
->>
-> 
-> Hi, Matthias
-> 
-> do you like it or quite want me to remove the uart3 node?
-> 
-> I can take it into account along with other pending dts changes in my
-> queue.
-> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Sorry for the late answer.
-Do I understand correctly that uart3 is routed to TP47 and TP48, and these test
-points are accessible through the SATA connector? Doesn't they break SATA then?
+Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
 
-I think as they are only available through a non-documented test point, we
-shouldn't enable it.
-
-Regards,
-Matthias
+> ---
+> Changes since v1:
+> - Fix a couple of typos as requested by Rob.
+>   - s/availablel/available/
+>   - s/move move/move/
+>   - "so move..." should be a new sentence.
+> - Add Reviewed-by: Rob Herring <robh@kernel.org>
+>  
+>  .../devicetree/bindings/leds/backlight/pwm-backlight.txt  | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> index ce9b5746b774..64fa2fbd98c9 100644
+> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> @@ -3,13 +3,6 @@ pwm-backlight bindings
+>  Required properties:
+>    - compatible: "pwm-backlight"
+>    - pwms: OF device-tree PWM specification (see PWM binding[0])
+> -  - brightness-levels: Array of distinct brightness levels. Typically these
+> -      are in the range from 0 to 255, but any range starting at 0 will do.
+> -      The actual brightness level (PWM duty cycle) will be interpolated
+> -      from these values. 0 means a 0% duty cycle (darkest/off), while the
+> -      last value in the array represents a 100% duty cycle (brightest).
+> -  - default-brightness-level: the default brightness level (index into the
+> -      array defined by the "brightness-levels" property)
+>    - power-supply: regulator for supply voltage
+>  
+>  Optional properties:
+> @@ -21,6 +14,14 @@ Optional properties:
+>                            and enabling the backlight using GPIO.
+>    - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
+>                        and setting PWM value to 0.
+> +  - brightness-levels: Array of distinct brightness levels. Typically these
+> +                       are in the range from 0 to 255, but any range starting at
+> +                       0 will do. The actual brightness level (PWM duty cycle)
+> +                       will be interpolated from these values. 0 means a 0% duty
+> +                       cycle (darkest/off), while the last value in the array
+> +                       represents a 100% duty cycle (brightest).
+> +  - default-brightness-level: The default brightness level (index into the
+> +                              array defined by the "brightness-levels" property).
+>    - num-interpolated-steps: Number of interpolated steps between each value
+>                              of brightness-levels table. This way a high
+>                              resolution pwm duty cycle can be used without
+> -- 
+> 2.15.1
+> 
