@@ -1,62 +1,68 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v2 2/4] dt-bindings: pwm-backlight: add a num-interpolation-steps property.
-Date: Wed,  7 Feb 2018 15:13:35 +0100
-Message-ID: <20180207141337.22247-3-enric.balletbo@collabora.com>
-References: <20180207141337.22247-1-enric.balletbo@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180207141337.22247-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>, Doug Anderson <dianders@google.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Brian Norris <briannorris@google.com>, Guenter Roeck <groeck@google.com>, Lee Jones <lee.jones@linaro.org>, Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 01/11] regulator: core: add API to get voltage
+ constraints
+Date: Wed, 7 Feb 2018 14:18:46 +0000
+Message-ID: <20180207141846.GC6003@sirena.org.uk>
+References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
+ <1517934852-23255-2-git-send-email-pdeschrijver@nvidia.com>
+ <20180206163544.GI5681@sirena.org.uk>
+ <20180207084744.GG7031@tbergstrom-lnx.Nvidia.com>
+ <20180207104351.GA6003@sirena.org.uk>
+ <20180207123750.GA5850@tbergstrom-lnx.Nvidia.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2JFBq9zoW8cOFH7v"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180207123750.GA5850-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The num-interpolated-steps property specifies the number of
-interpolated steps between each value of brightness-level table. This is
-useful for high resolution PWMs to not have to list out every possible
-value in the brightness-level array.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-Changes since v1:
-- Add an example with a small but realistic curve. Suggested by Rob and
-  Daniel
+--2JFBq9zoW8cOFH7v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- .../bindings/leds/backlight/pwm-backlight.txt         | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+On Wed, Feb 07, 2018 at 02:37:51PM +0200, Peter De Schrijver wrote:
+> On Wed, Feb 07, 2018 at 10:43:51AM +0000, Mark Brown wrote:
+> > On Wed, Feb 07, 2018 at 10:47:44AM +0200, Peter De Schrijver wrote:
+> > > On Tue, Feb 06, 2018 at 04:35:44PM +0000, Mark Brown wrote:
+> > > > On Tue, Feb 06, 2018 at 06:34:02PM +0200, Peter De Schrijver wrote:
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-index 310810906613..ce9b5746b774 100644
---- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-+++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
-@@ -21,6 +21,11 @@ Optional properties:
-                           and enabling the backlight using GPIO.
-   - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
-                       and setting PWM value to 0.
-+  - num-interpolated-steps: Number of interpolated steps between each value
-+                            of brightness-levels table. This way a high
-+                            resolution pwm duty cycle can be used without
-+                            having to list out every possible value in the
-+                            brightness-level array.
- 
- [0]: Documentation/devicetree/bindings/pwm/pwm.txt
- [1]: Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -39,3 +44,17 @@ Example:
- 		post-pwm-on-delay-ms = <10>;
- 		pwm-off-delay-ms = <10>;
- 	};
-+
-+Example using num-interpolation-steps:
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 5000000>;
-+
-+		brightness-levels = <0 2048 4096 8192 16384 65535>;
-+		num-interpolated-steps = <2048>;
-+		default-brightness-level = <4096>;
-+
-+		power-supply = <&vdd_bl_reg>;
-+		enable-gpios = <&gpio 58 0>;
-+	};
--- 
-2.15.1
+> > > > > Add API to get min/max rail voltage configured from platform for
+> > > > > given rails.
+
+> > > > because...
+
+> > > of the next patch where this is used to retrieve the minimum rail voltage.
+
+> > And that in turn is needed for...?
+
+> To calculate the required voltage for each frequency.
+
+You're going to have to provide a much better explanation of what this
+is doing - right now it seems like an abuse of constraints.  Client
+drivers can already determine if a particular voltage they want to set
+is available via regulator_list_voltage() and so on, that's what
+constraints are there to set.  It sounds like you're trying to use them
+for something else but you're really not explaining your use case
+clearly.
+
+--2JFBq9zoW8cOFH7v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlp7CsUACgkQJNaLcl1U
+h9D8NQf9HArPCGOGdxVM2WXctuVLm1L69UeQZ4U5agoguZ9RA64DKMLKWWMWP9sm
+XmnSvULmxvpwoRJG0lhRGlQKnd9PpsBiKCIcIixPgWRqdjEdfV8eFd1rKlpqUgss
+ahAPnok+UzhsRJTXum2ibaZOyiQb6MDwyxvXvAXJrZ3fKQ68WpxMIvNLgTdx9YK0
+/oEEbp4T/jSTLLm1Cf7+1OYJ64muqNh25QcxJR1S9UnlNw5qdEjUXaoQvL9XXxro
+Su1vPDfnb0E+W0DEIBW8wWyJLGU8nmAOFX+mbPSukmq+VwQjBMzp66khYbpgGjVQ
+p/CdoTHiJ+CI0E3ymlqYhkE6pkcXnQ==
+=IooP
+-----END PGP SIGNATURE-----
+
+--2JFBq9zoW8cOFH7v--
