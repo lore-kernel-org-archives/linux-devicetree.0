@@ -1,55 +1,80 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC v4 26/26] ARM: dts: iwg22m: Add watchdog support to SoM dtsi
-Date: Thu, 8 Feb 2018 00:21:08 +0100
-Message-ID: <20180207232108.j2kei6djpxdzpflh@katana>
-References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1517423070-24236-27-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v5 4/4] irqchip/gic-v3-its: add ability to resend MAPC on
+ resume
+Date: Wed, 7 Feb 2018 15:22:02 -0800
+Message-ID: <20180207232201.GB106856@ban.mtv.corp.google.com>
+References: <20180207014117.62611-1-dbasehore@chromium.org>
+ <20180207014117.62611-5-dbasehore@chromium.org>
+ <8276f426-e4a0-c400-9f87-31be3d6b1733@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="osvn6dhlwkouweck"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1517423070-24236-27-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju
+In-Reply-To: <8276f426-e4a0-c400-9f87-31be3d6b1733@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Derek Basehore <dbasehore@chromium.org>, linux-kernel@vger.kernel.org, Soby.Mathew@arm.com, sudeep.holla@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
+Hi Marc,
 
---osvn6dhlwkouweck
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm really not an expert on this, so take my observations with a large
+grain of salt:
 
-On Wed, Jan 31, 2018 at 06:24:30PM +0000, Fabrizio Castro wrote:
-> This patch enables the watchdog from within the iwg20m SoM dtsi.
->=20
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesa=
-s.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Wed, Feb 07, 2018 at 08:46:42AM +0000, Marc Zyngier wrote:
+> On 07/02/18 01:41, Derek Basehore wrote:
+> > This adds functionality to resend the MAPC command to an ITS node on
+> > resume. If the ITS is powered down during suspend and the collections
+> > are not backed by memory, the ITS will lose that state. This just sets
+> > up the known state for the collections after the ITS is restored.
+> > 
+> > This is enabled via the reset-on-suspend flag in the DTS for an ITS
+> > that has a non-zero number of collections stored in it.
+> > 
+> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> > ---
+> >  drivers/irqchip/irq-gic-v3-its.c   | 80 ++++++++++++++++++++------------------
+> >  include/linux/irqchip/arm-gic-v3.h |  1 +
+> >  2 files changed, 43 insertions(+), 38 deletions(-)
+> > 
+> > diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> > index 5e63635e2a7b..dd6cd6e68ed0 100644
+> > --- a/drivers/irqchip/irq-gic-v3-its.c
+> > +++ b/drivers/irqchip/irq-gic-v3-its.c
+> > @@ -1942,52 +1942,53 @@ static void its_cpu_init_lpis(void)
+> >  	dsb(sy);
+> >  }
+> >  
+> > -static void its_cpu_init_collection(void)
+> > +static void its_cpu_init_collection(struct its_node *its)
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+...
 
+> > @@ -3127,6 +3128,9 @@ static void its_restore_enable(void)
+> >  			its_write_baser(its, baser, baser->val);
+> >  		}
+> >  		writel_relaxed(its->ctlr_save, base + GITS_CTLR);
+> > +
+> > +		if (GITS_TYPER_HWCOLLCNT(gic_read_typer(base + GITS_TYPER)) > 0)
+> > +			its_cpu_init_collection(its);
+> 
+> This isn't correct. Think of a system where half the collections are in
+> HW, and the other half memory based (nothing in the spec forbids this).
+> You must evaluate the CID of each collection and replay the MAPC *only*
+> if it falls into the range [0..HCC-1]. The memory-based collections are
+> already mapped, and remapping an already mapped collection requires
+> extra care (see MAPC and the UNPREDICTABLE behaviour when V=1), so don't
+> go there.
 
---osvn6dhlwkouweck
-Content-Type: application/pgp-signature; name="signature.asc"
+IIUC, this is only run on CPU0 (it's in syscore resume), so implicitly,
+CID is 0. Thus, the current condition is already doing what you ask:
 
------BEGIN PGP SIGNATURE-----
+	HCC > 0 == CID
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlp7ieQACgkQFA3kzBSg
-KbbDKg/+Lu6pn0FAn5PH4KYmlG5IurP0F7ID4CGz3wn+qkxF+VKykyZEVoizWcGF
-BRwnEEgzEa9lNj9IPGHXc8HzSnYBrpOyFL4CoUJwvimqHsVCH+DSoFuKdDTiAi+M
-pnoyMjaQKs96DxFAzWKDf4bpsjDSjtIEKcWqkK0bLE84E2F0DPEo2NsWl8elUOOw
-aI1hSOsga8U48xABThbLyfxFE4T72xPC1fV2hONbYmOwp/5b/HN7EZ/dgclxuvDG
-PzJuulPzO9uol9WzJ5zrH0BHSokLX5eJ34+VwYfnGPbH+tQ3r1CFLDiKsVmX2s9X
-HcEmIT+1NdyCrnTCiWrIVSG61sT1yryt4qfsUIX9ZIanZ2uqbC5/IsZTOn7ZGoou
-qkCdvHt9IoJRnc6Qi8UYYBNcbfXezc3I0X/+RyfyTivJhuVybOqfylMmWCFbI9JW
-HfVw7/6gIZ8f9TJWqY2bJUGpBgjPRnLnw42T2jYLCusTZkKJ0FPcuRGLN/HTTMLM
-Bn8KtxoblDcEEAyzaqR/MI99REekraW7JeDpJxa6SLIXQH4ukM++LsuQRZDgsYYt
-egs9nGEYxs/nnUao9mEQ8o9rr4Y5ukhGxU8wB4XiOPVteu+5zVIRMMvapdq29dSy
-rkDzt2/35utCKpUrDP1Rs35iXHO/SJ/eg0vZVbi/Macdc9te5oE=
-=qzOw
------END PGP SIGNATURE-----
+which is equivalent to:
 
---osvn6dhlwkouweck--
+	HCC - 1 >= CID
+
+Or should we really double check what CPU we're running on?
+
+Brian
