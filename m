@@ -1,47 +1,94 @@
 From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v1 1/3] media: stm32-dcmi: remove redundant capture enable
-Date: Wed, 7 Feb 2018 18:35:34 +0100
-Message-ID: <1518024936-2455-2-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH v1 3/3] media: stm32-dcmi: improve error trace points
+Date: Wed, 7 Feb 2018 18:35:36 +0100
+Message-ID: <1518024936-2455-4-git-send-email-hugues.fruchet@st.com>
 References: <1518024936-2455-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1518024936-2455-1-git-send-email-hugues.fruchet@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove redundant capture enable already done
-in dcmi_start_capture().
+Fix some missing "\n".
+Trace error returned by subdev streamon/streamoff.
+Remove extra "0x" unneeded with %pad formatter.
 
 Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- drivers/media/platform/stm32/stm32-dcmi.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/media/platform/stm32/stm32-dcmi.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index 9460b30..abc79d8 100644
+index dfab867..2fd8bed 100644
 --- a/drivers/media/platform/stm32/stm32-dcmi.c
 +++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -255,9 +255,6 @@ static void dcmi_dma_callback(void *param)
- 				spin_unlock(&dcmi->irqlock);
- 				return;
- 			}
--
--			/* Enable capture */
--			reg_set(dcmi->regs, DCMI_CR, CR_CAPTURE);
- 		}
+@@ -234,7 +234,7 @@ static void dcmi_dma_callback(void *param)
+ 		/* Restart a new DMA transfer with next buffer */
+ 		if (dcmi->state == RUNNING) {
+ 			if (list_empty(&dcmi->buffers)) {
+-				dev_err(dcmi->dev, "%s: No more buffer queued, cannot capture buffer",
++				dev_err(dcmi->dev, "%s: No more buffer queued, cannot capture buffer\n",
+ 					__func__);
+ 				dcmi->errors_count++;
+ 				dcmi->active = NULL;
+@@ -249,7 +249,7 @@ static void dcmi_dma_callback(void *param)
+ 			list_del_init(&dcmi->active->list);
  
- 		break;
+ 			if (dcmi_start_capture(dcmi)) {
+-				dev_err(dcmi->dev, "%s: Cannot restart capture on DMA complete",
++				dev_err(dcmi->dev, "%s: Cannot restart capture on DMA complete\n",
+ 					__func__);
+ 
+ 				spin_unlock(&dcmi->irqlock);
+@@ -478,7 +478,7 @@ static int dcmi_buf_prepare(struct vb2_buffer *vb)
+ 
+ 		vb2_set_plane_payload(&buf->vb.vb2_buf, 0, buf->size);
+ 
+-		dev_dbg(dcmi->dev, "buffer[%d] phy=0x%pad size=%zu\n",
++		dev_dbg(dcmi->dev, "buffer[%d] phy=%pad size=%zu\n",
+ 			vb->index, &buf->paddr, buf->size);
+ 	}
+ 
+@@ -524,7 +524,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 
+ 	ret = clk_enable(dcmi->mclk);
+ 	if (ret) {
+-		dev_err(dcmi->dev, "%s: Failed to start streaming, cannot enable clock",
++		dev_err(dcmi->dev, "%s: Failed to start streaming, cannot enable clock\n",
+ 			__func__);
+ 		goto err_release_buffers;
+ 	}
+@@ -600,7 +600,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 
+ 	ret = dcmi_start_capture(dcmi);
+ 	if (ret) {
+-		dev_err(dcmi->dev, "%s: Start streaming failed, cannot start capture",
++		dev_err(dcmi->dev, "%s: Start streaming failed, cannot start capture\n",
+ 			__func__);
+ 
+ 		spin_unlock_irq(&dcmi->irqlock);
+@@ -651,7 +651,8 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
+ 	/* Disable stream on the sub device */
+ 	ret = v4l2_subdev_call(dcmi->entity.subdev, video, s_stream, 0);
+ 	if (ret && ret != -ENOIOCTLCMD)
+-		dev_err(dcmi->dev, "stream off failed in subdev\n");
++		dev_err(dcmi->dev, "%s: Failed to stop streaming, subdev streamoff error (%d)\n",
++			__func__, ret);
+ 
+ 	dcmi->state = STOPPING;
+ 
+@@ -667,7 +668,8 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
+ 	reg_clear(dcmi->regs, DCMI_CR, CR_ENABLE);
+ 
+ 	if (!timeout) {
+-		dev_err(dcmi->dev, "Timeout during stop streaming\n");
++		dev_err(dcmi->dev, "%s: Timeout during stop streaming\n",
++			__func__);
+ 		dcmi->state = STOPPED;
+ 	}
+ 
 -- 
 1.9.1
