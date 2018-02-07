@@ -1,38 +1,40 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 7/8] ASoC: samsung: Add missing #sound-dai-cells
- property documentation
-Date: Wed, 07 Feb 2018 17:37:33 +0100
-Message-ID: <5d525a1a-b7a7-8b90-97f9-a59c9e361509@samsung.com>
-References: <CGME20180205154533epcas2p2d0ed58188cf7f29751c08cd804f6fb0d@epcas2p2.samsung.com>
-        <20180205154403.13520-1-s.nawrocki@samsung.com>
-        <20180205154403.13520-8-s.nawrocki@samsung.com>
-        <CAJKOXPc_NUa2worczHpm4VoTY9Do1-Gq4-711kLz7W0qowTeGQ@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/2] dt-bindings/interrupt-controller: pdc: descibe
+ PDC device binding
+Date: Wed, 7 Feb 2018 08:43:24 -0800
+Message-ID: <20180207164324.GP9465@builder>
+References: <20180207154958.13421-1-ilina@codeaurora.org>
+ <20180207154958.13421-3-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAJKOXPc_NUa2worczHpm4VoTY9Do1-Gq4-711kLz7W0qowTeGQ@mail.gmail.com>
-Content-language: en-GB
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jcsing.lee@samsung.com, sbkim73@samsung.com, linux-kernel@vger.kernel.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180207154958.13421-3-ilina@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2018 02:02 PM, Krzysztof Kozlowski wrote:
-> On Mon, Feb 5, 2018 at 4:44 PM, Sylwester Nawrocki
-> <s.nawrocki@samsung.com> wrote:
->> The #sound-dai-cells property might be helpful in selecting primary
->> or secondary CPU DAI and it's already present in i2s nodes for some
->> exynos SoCs so let's add it to the DT binding documentation.
->
-> The description above looks like you are documenting existing optional
-> property but you added it as a required property.
+On Wed 07 Feb 07:49 PST 2018, Lina Iyer wrote:
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+[..]
+> +Example:
+[..]
+> +	wake-device {
+> +		[...]
+> +		interrupt-controller = <&pdc>;
 
-Actually, it would be better to have it as a required property, but
-that could be done with any new device bindings. For the exisitng ones 
-I will move this property to the "Optional SoC Specific Properties"
-paragraph.
+Sorry for not seeing this earlier, but this should be:
 
--- 
+		interrupt-parent = <&pdc>;
+
+Or as it's not unlikely that clients might use a mix of pdc and non-pdc
+interrupts the example could use the form:
+
+		interrupts-extended = <&pdc 2 IRQ_TYPE_LEVEL_HIGH>;
+
+> +		interrupt = <2 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+
 Regards,
-Sylwester
+Bjorn
