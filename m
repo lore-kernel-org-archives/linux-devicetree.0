@@ -1,84 +1,65 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: cache phandle nodes to decrease cost of
- of_find_node_by_phandle()
-Date: Wed, 7 Feb 2018 12:09:26 -0800
-Message-ID: <2e95e5f3-0f50-fb06-354e-918b48a55732@gmail.com>
-References: <1517429142-25727-1-git-send-email-frowand.list@gmail.com>
- <5b84a166-c71b-3a41-9e7f-a7624a8441f6@codeaurora.org>
- <38cdcae5-ec0f-d1be-b024-1990d4387731@gmail.com>
- <9e23d32f-05a0-ce8a-41f8-9a1a3d66be37@codeaurora.org>
- <fd9f5f63-b08e-602e-1510-85a65889f550@gmail.com>
- <567731e8-8f89-bd6e-c3d4-e36400e69198@codeaurora.org>
- <0db129ef-ffd8-96fe-46a7-55fb575272e3@gmail.com>
- <0a178f4b-75fe-0564-7b0e-596f52fca1dc@codeaurora.org>
- <1768c791-7456-c1fe-578b-f6245e79746f@codeaurora.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: soc: add SCPSYS binding for MT7623
+ and MT7623A SoC
+Date: Wed, 7 Feb 2018 21:19:51 +0100
+Message-ID: <CAPDyKFpYLm2vVVsAkE2r5HVF4uzgHS404dUzPcEsxJiawEf7Aw@mail.gmail.com>
+References: <ecfc548fc3d22aa335b50e552ad2ad88427a0bb2.1517998367.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1768c791-7456-c1fe-578b-f6245e79746f-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ecfc548fc3d22aa335b50e552ad2ad88427a0bb2.1517998367.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, Linux PM <linux-pm@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/18 04:44, Chintan Pandya wrote:
-> 
-> 
-> On 2/5/2018 5:53 PM, Chintan Pandya wrote:
->>
->>>
->>> My question was trying to determine whether the numbers reported above
->>> are for a debug configuration or a production configuration.
->> My reported numbers are from debug configuration.
->>
->>> not a production configuration, I was requesting the numbers for a
->>> production configuration.
->> I'm working on it. But please expect some delay in my response for this. As I mentioned earlier, I need to work with few teams to get these numbers.
->>
->>
->>> show a significant boot time reduction from the patch then there is
->>> less justification for adding complexity to the existing code.  I
->>> prefer to use simpler data structures and algorithms __if__ extra
->>> complexity does not provide any advantage.  The balance between
->>> complexity and benefits is a core software engineering issue.
->>>
->> Ok
-> 
-> Avg Kernel boot time comparison in production set up:
-> 
-> [0] Base: 4519ms
-> [1] 4115ms (~400ms improvement)
-> [2] 4115ms (~400ms improvement)
-> [3] 4177ms (~340ms improvement)
-> 
-> Full data:
-> [1] 1024 sized pre-populated cache
-> ITR-1    ITR-2    ITR-3    ITR-4    Avg
-> 4115    4123    4124    4107    4115
-> 
-> [2] Dynamic sized cache allocation/free
-> ITR-1    ITR-2    ITR-3    ITR-4    Avg
-> 4122    4131    4106    4118    4115
-> 
-> [3] Fixed 64 sized cache
-> ITR-1    ITR-2    ITR-3    ITR-4    Avg
-> 4153    4186    4198    4181    4177
-> 
-> 
-> [1] is my experimental patch and dirty enough to not get merged anywhere. So, I will not push it.
-> 
-> 
-> 
-> Chintan
+On 7 February 2018 at 11:22,  <sean.wang@mediatek.com> wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+>
+> document the binding for enabling SCPSYS on MediaTek MT7623 and MT7623A
+> SoC. Where MT7623 SoC has the same definition about power domains with
+> MT2701, so it's fine to using MT2701 ones as MT7623's fallback.
+>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thank you very much.  This looks like a real improvement to me.
+For the series:
 
-I'll rebase my patches, updated to address the comments, on 4.16-rc1.
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
--Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
+
+> ---
+>  Documentation/devicetree/bindings/soc/mediatek/scpsys.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> index 76bf45b..d6fe16f 100644
+> --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
+> @@ -21,6 +21,8 @@ Required properties:
+>         - "mediatek,mt2712-scpsys"
+>         - "mediatek,mt6797-scpsys"
+>         - "mediatek,mt7622-scpsys"
+> +       - "mediatek,mt7623-scpsys", "mediatek,mt2701-scpsys": For MT7623 SoC
+> +       - "mediatek,mt7623a-scpsys": For MT7623A SoC
+>         - "mediatek,mt8173-scpsys"
+>  - #power-domain-cells: Must be 1
+>  - reg: Address range of the SCPSYS unit
+> @@ -28,10 +30,11 @@ Required properties:
+>  - clock, clock-names: clocks according to the common clock binding.
+>                        These are clocks which hardware needs to be
+>                        enabled before enabling certain power domains.
+> -       Required clocks for MT2701: "mm", "mfg", "ethif"
+> +       Required clocks for MT2701 or MT7623: "mm", "mfg", "ethif"
+>         Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
+>         Required clocks for MT6797: "mm", "mfg", "vdec"
+>         Required clocks for MT7622: "hif_sel"
+> +       Required clocks for MT7622A: "ethif"
+>         Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
+>
+>  Optional properties:
+> --
+> 2.7.4
+>
