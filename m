@@ -1,65 +1,71 @@
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v2] media: stm32-dcmi: add g/s_parm framerate support
-Date: Thu, 8 Feb 2018 12:00:45 +0100
-Message-ID: <1518087645-1394-1-git-send-email-hugues.fruchet@st.com>
+From: Hugues FRUCHET <hugues.fruchet@st.com>
+Subject: Re: [PATCH] media: stm32-dcmi: add g/s_parm framerate support
+Date: Thu, 8 Feb 2018 11:02:50 +0000
+Message-ID: <60670590-0517-7fad-eed3-dac8fbf98403@st.com>
+References: <1518025389-3677-1-git-send-email-hugues.fruchet@st.com>
+ <727ee222-20f1-23d3-fdff-4b985e24593d@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <727ee222-20f1-23d3-fdff-4b985e24593d@xs4all.nl>
+Content-Language: en-US
+Content-ID: <4A5928DCBF0D1A4186AA5EB14A42D28E@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add g/s_parm framerate support by calling subdev
-g/s_frame_interval ops.
-This allows user to control sensor framerate by
-calling ioctl G/S_PARM.
-
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
-version 2:
-  - Rebase on Hans branch to use new helpers:
-    See https://www.mail-archive.com/linux-media@vger.kernel.org/msg125769.html
-
- drivers/media/platform/stm32/stm32-dcmi.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index 9460b30..60dd24c 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -1167,6 +1167,22 @@ static int dcmi_enum_framesizes(struct file *file, void *fh,
- 	return 0;
- }
- 
-+static int dcmi_g_parm(struct file *file, void *priv,
-+		       struct v4l2_streamparm *p)
-+{
-+	struct stm32_dcmi *dcmi = video_drvdata(file);
-+
-+	return v4l2_g_parm_cap(video_devdata(file), dcmi->entity.subdev, p);
-+}
-+
-+static int dcmi_s_parm(struct file *file, void *priv,
-+		       struct v4l2_streamparm *p)
-+{
-+	struct stm32_dcmi *dcmi = video_drvdata(file);
-+
-+	return v4l2_s_parm_cap(video_devdata(file), dcmi->entity.subdev, p);
-+}
-+
- static int dcmi_enum_frameintervals(struct file *file, void *fh,
- 				    struct v4l2_frmivalenum *fival)
- {
-@@ -1269,6 +1285,9 @@ static int dcmi_release(struct file *file)
- 	.vidioc_g_input			= dcmi_g_input,
- 	.vidioc_s_input			= dcmi_s_input,
- 
-+	.vidioc_g_parm			= dcmi_g_parm,
-+	.vidioc_s_parm			= dcmi_s_parm,
-+
- 	.vidioc_enum_framesizes		= dcmi_enum_framesizes,
- 	.vidioc_enum_frameintervals	= dcmi_enum_frameintervals,
- 
--- 
-1.9.1
+VGhhbmtzIEhhbnMsDQp2MiBzZW50LCByZWJhc2VkIG9uIHlvdXIgaGVscGVycyAhDQpCZXN0IHJl
+Z2FyZHMsDQpIdWd1ZXMuDQoNCk9uIDAyLzA3LzIwMTggMDY6NTIgUE0sIEhhbnMgVmVya3VpbCB3
+cm90ZToNCj4gT24gMDIvMDcvMjAxOCAwNjo0MyBQTSwgSHVndWVzIEZydWNoZXQgd3JvdGU6DQo+
+PiBBZGQgZy9zX3Bhcm0gZnJhbWVyYXRlIHN1cHBvcnQgYnkgY2FsbGluZyBzdWJkZXYNCj4+IGcv
+c19mcmFtZV9pbnRlcnZhbCBvcHMuDQo+PiBUaGlzIGFsbG93cyB1c2VyIHRvIGNvbnRyb2wgc2Vu
+c29yIGZyYW1lcmF0ZSBieQ0KPj4gY2FsbGluZyBpb2N0bCBHL1NfUEFSTS4NCj4+DQo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBIdWd1ZXMgRnJ1Y2hldCA8aHVndWVzLmZydWNoZXRAc3QuY29tPg0KPj4gLS0t
+DQo+PiAgIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIvc3RtMzItZGNtaS5jIHwgNDkgKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgNDkgaW5z
+ZXJ0aW9ucygrKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0
+bTMyL3N0bTMyLWRjbWkuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIvc3RtMzItZGNt
+aS5jDQo+PiBpbmRleCBhYjU1NWQ0Li44MTk3NTU0IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9t
+ZWRpYS9wbGF0Zm9ybS9zdG0zMi9zdG0zMi1kY21pLmMNCj4+ICsrKyBiL2RyaXZlcnMvbWVkaWEv
+cGxhdGZvcm0vc3RtMzIvc3RtMzItZGNtaS5jDQo+PiBAQCAtMTE1MSw2ICsxMTUxLDUyIEBAIHN0
+YXRpYyBpbnQgZGNtaV9lbnVtX2ZyYW1lc2l6ZXMoc3RydWN0IGZpbGUgKmZpbGUsIHZvaWQgKmZo
+LA0KPj4gICAJcmV0dXJuIDA7DQo+PiAgIH0NCj4+ICAgDQo+PiArc3RhdGljIGludCBkY21pX2df
+cGFybShzdHJ1Y3QgZmlsZSAqZmlsZSwgdm9pZCAqcHJpdiwNCj4+ICsJCSAgICAgICBzdHJ1Y3Qg
+djRsMl9zdHJlYW1wYXJtICpwKQ0KPj4gK3sNCj4+ICsJc3RydWN0IHN0bTMyX2RjbWkgKmRjbWkg
+PSB2aWRlb19kcnZkYXRhKGZpbGUpOw0KPj4gKwlzdHJ1Y3QgdjRsMl9zdWJkZXZfZnJhbWVfaW50
+ZXJ2YWwgaXZhbCA9IHsgMCB9Ow0KPj4gKwlpbnQgcmV0Ow0KPj4gKw0KPj4gKwlpZiAocC0+dHlw
+ZSAhPSBWNEwyX0JVRl9UWVBFX1ZJREVPX0NBUFRVUkUpDQo+PiArCQlyZXR1cm4gLUVJTlZBTDsN
+Cj4+ICsNCj4+ICsJcC0+cGFybS5jYXB0dXJlLmNhcGFiaWxpdHkgPSBWNEwyX0NBUF9USU1FUEVS
+RlJBTUU7DQo+PiArCXJldCA9IHY0bDJfc3ViZGV2X2NhbGwoZGNtaS0+ZW50aXR5LnN1YmRldiwg
+dmlkZW8sDQo+PiArCQkJICAgICAgIGdfZnJhbWVfaW50ZXJ2YWwsICZpdmFsKTsNCj4+ICsJaWYg
+KHJldCkNCj4+ICsJCXJldHVybiByZXQ7DQo+PiArDQo+PiArCXAtPnBhcm0uY2FwdHVyZS50aW1l
+cGVyZnJhbWUgPSBpdmFsLmludGVydmFsOw0KPj4gKw0KPj4gKwlyZXR1cm4gcmV0Ow0KPj4gK30N
+Cj4gDQo+IFRoaXMgZnVuY3Rpb24gYW5kIHRoZSBuZXh0IGNhbiBiZSBzaW1wbGlmaWVkIGJ5IHVz
+aW5nIHRoZSBoZWxwIGZ1bmN0aW9ucw0KPiBpbnRyb2R1Y2VkIGhlcmU6DQo+IA0KPiBodHRwczov
+L2dpdC5saW51eHR2Lm9yZy9odmVya3VpbC9tZWRpYV90cmVlLmdpdC9sb2cvP2g9cGFybQ0KPiAN
+Cj4gSSdsbCBtYWtlIGEgcHVsbCByZXF1ZXN0IGZvciB0aGlzIGxhdGVyIHRoaXMgd2Vlaywgc28g
+aXQncyBwcm9iYWJseSBhIGdvb2QNCj4gaWRlYSB0byBiYXNlIHlvdXIgY29kZSBvbiB0aGlzIGFz
+IHdlbGwuDQo+IA0KPiBSZWdhcmRzLA0KPiANCj4gCUhhbnMNCj4gDQo+PiArDQo+PiArc3RhdGlj
+IGludCBkY21pX3NfcGFybShzdHJ1Y3QgZmlsZSAqZmlsZSwgdm9pZCAqcHJpdiwNCj4+ICsJCSAg
+ICAgICBzdHJ1Y3QgdjRsMl9zdHJlYW1wYXJtICpwKQ0KPj4gK3sNCj4+ICsJc3RydWN0IHN0bTMy
+X2RjbWkgKmRjbWkgPSB2aWRlb19kcnZkYXRhKGZpbGUpOw0KPj4gKwlzdHJ1Y3QgdjRsMl9zdWJk
+ZXZfZnJhbWVfaW50ZXJ2YWwgaXZhbCA9IHsNCj4+ICsJCTAsDQo+PiArCQlwLT5wYXJtLmNhcHR1
+cmUudGltZXBlcmZyYW1lDQo+PiArCX07DQo+PiArCWludCByZXQ7DQo+PiArDQo+PiArCWlmIChw
+LT50eXBlICE9IFY0TDJfQlVGX1RZUEVfVklERU9fQ0FQVFVSRSkNCj4+ICsJCXJldHVybiAtRUlO
+VkFMOw0KPj4gKw0KPj4gKwltZW1zZXQoJnAtPnBhcm0sIDAsIHNpemVvZihwLT5wYXJtKSk7DQo+
+PiArCXAtPnBhcm0uY2FwdHVyZS5jYXBhYmlsaXR5ID0gVjRMMl9DQVBfVElNRVBFUkZSQU1FOw0K
+Pj4gKwlyZXQgPSB2NGwyX3N1YmRldl9jYWxsKGRjbWktPmVudGl0eS5zdWJkZXYsIHZpZGVvLA0K
+Pj4gKwkJCSAgICAgICBzX2ZyYW1lX2ludGVydmFsLCAmaXZhbCk7DQo+PiArCWlmIChyZXQpDQo+
+PiArCQlyZXR1cm4gcmV0Ow0KPj4gKw0KPj4gKwlwLT5wYXJtLmNhcHR1cmUudGltZXBlcmZyYW1l
+ID0gaXZhbC5pbnRlcnZhbDsNCj4+ICsNCj4+ICsJcmV0dXJuIHJldDsNCj4+ICt9DQo+PiArDQo+
+PiAgIHN0YXRpYyBpbnQgZGNtaV9lbnVtX2ZyYW1laW50ZXJ2YWxzKHN0cnVjdCBmaWxlICpmaWxl
+LCB2b2lkICpmaCwNCj4+ICAgCQkJCSAgICBzdHJ1Y3QgdjRsMl9mcm1pdmFsZW51bSAqZml2YWwp
+DQo+PiAgIHsNCj4+IEBAIC0xMjUzLDYgKzEyOTksOSBAQCBzdGF0aWMgaW50IGRjbWlfcmVsZWFz
+ZShzdHJ1Y3QgZmlsZSAqZmlsZSkNCj4+ICAgCS52aWRpb2NfZ19pbnB1dAkJCT0gZGNtaV9nX2lu
+cHV0LA0KPj4gICAJLnZpZGlvY19zX2lucHV0CQkJPSBkY21pX3NfaW5wdXQsDQo+PiAgIA0KPj4g
+KwkudmlkaW9jX2dfcGFybQkJCT0gZGNtaV9nX3Bhcm0sDQo+PiArCS52aWRpb2Nfc19wYXJtCQkJ
+PSBkY21pX3NfcGFybSwNCj4+ICsNCj4+ICAgCS52aWRpb2NfZW51bV9mcmFtZXNpemVzCQk9IGRj
+bWlfZW51bV9mcmFtZXNpemVzLA0KPj4gICAJLnZpZGlvY19lbnVtX2ZyYW1laW50ZXJ2YWxzCT0g
+ZGNtaV9lbnVtX2ZyYW1laW50ZXJ2YWxzLA0KPj4gICANCj4+DQo+IA==
