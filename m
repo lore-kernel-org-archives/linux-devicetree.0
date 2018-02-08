@@ -1,66 +1,40 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v2 2/5] clk: mediatek: modify MT7622 audsys to adapt MFD
- device
-Date: Thu, 8 Feb 2018 13:57:27 +0800
-Message-ID: <1518069447.28878.4.camel@mtkswgap22>
-References: <cover.1515639336.git.ryder.lee@mediatek.com>
-         <d6669277f5232446b4798a6b724074b18d5c21aa.1515639336.git.ryder.lee@mediatek.com>
-         <72058f8d-c83d-d0e6-dc07-83c9f5fc2710@gmail.com>
-         <1517803655.1173.12.camel@mtkswgap22>
-         <0e0e703c-0ac9-06ad-91c5-abdf16de1ee9@gmail.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: Add Spreadtrum GPIO controller documentation
+Date: Thu, 8 Feb 2018 14:07:56 +0800
+Message-ID: <CAMz4ku+5ojNr8y_zKBgKtLxon9++M6xCZ=7NzjeStesZ0Y8oGg@mail.gmail.com>
+References: <2834309f69a1ec37b84a33f153a3d0b90336bcc6.1517795460.git.baolin.wang@linaro.org>
+ <20180207211918.whcxq2not7elokae@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <0e0e703c-0ac9-06ad-91c5-abdf16de1ee9@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180207211918.whcxq2not7elokae@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-02-07 at 16:18 +0100, Matthias Brugger wrote:
-> 
-> On 02/05/2018 05:07 AM, Ryder Lee wrote:
-> > On Sat, 2018-02-03 at 15:26 +0100, Matthias Brugger wrote:
-> >>
-> >> On 01/31/2018 08:42 AM, Ryder Lee wrote:
-> >>> As the new MFD parent is in place, switch probing method to adapt it.
-> >>>
-> >>> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> >>> ---
-> >>>  drivers/clk/mediatek/clk-mt7622-aud.c | 3 ++-
-> >>>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/clk/mediatek/clk-mt7622-aud.c b/drivers/clk/mediatek/clk-mt7622-aud.c
-> >>> index 13f752d..8c18536 100644
-> >>> --- a/drivers/clk/mediatek/clk-mt7622-aud.c
-> >>> +++ b/drivers/clk/mediatek/clk-mt7622-aud.c
-> >>> @@ -142,11 +142,12 @@ static int clk_mt7622_audiosys_init(struct platform_device *pdev)
-> >>>  {
-> >>>  	struct clk_onecell_data *clk_data;
-> >>>  	struct device_node *node = pdev->dev.of_node;
-> >>> +	struct device_node *pnode = pdev->dev.parent->of_node;
-> >>>  	int r;
-> >>>  
-> >>>  	clk_data = mtk_alloc_clk_data(CLK_AUDIO_NR_CLK);
-> >>>  
-> >>> -	mtk_clk_register_gates(node, audio_clks, ARRAY_SIZE(audio_clks),
-> >>> +	mtk_clk_register_gates(pnode, audio_clks, ARRAY_SIZE(audio_clks),
-> >>
-> >> We will need a fallback here for older device tree bindings.
-> >>
-> >> Regards,
-> >> Matthias
-> > 
-> > Up to now, I didn't see both driver and bindings are used anywhere.
-> > Should I still care about that?
-> > 
-> 
-> Yes please, we have to ensure that newer kernel work with older bindings and
-> vice-versa.
+Hi Rob,
 
-OKay. An unrelated question - is it possible to change the compatible
-string (*-audsys-clk) without breaking backward compatible?
+On 8 February 2018 at 05:19, Rob Herring <robh@kernel.org> wrote:
+> On Mon, Feb 05, 2018 at 09:55:10AM +0800, Baolin Wang wrote:
+>> This patch adds the device tree bindings for the Spreadtrum
+>> GPIO controller. The gpios will be supported by the GPIO
+>> generic library.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>> Changes since v1:
+>>  - No updates.
+>> ---
+>>  .../devicetree/bindings/gpio/gpio-sprd.txt         |   28 ++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sprd.txt
+>
+> Please add acks/reviews when posting new versions.
 
+Yes, I always do that. But you acked my V2 after I already send out
+the V3. Anyway thanks for your reviewed-tag.
 
-
+-- 
+Baolin.wang
+Best Regards
