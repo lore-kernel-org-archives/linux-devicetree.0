@@ -1,111 +1,91 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v8 0/7] TDA1997x HDMI video reciver
-Date: Thu, 08 Feb 2018 11:46:56 +0100
-Message-ID: <1518086816.4359.4.camel@pengutronix.de>
-References: <1517948874-21681-1-git-send-email-tharvey@gateworks.com>
- <c7771c44-a9ff-0207-38f6-28bcc06ccdee@xs4all.nl>
- <CAJ+vNU1oiM0Y0rO-DHi57nVOqnw60A7pn_1=h5b46-BrY7_p2Q@mail.gmail.com>
- <605fd4a8-43ab-c566-57b6-abb1c9f8f0f8@xs4all.nl>
- <7cf38465-7a79-5d81-a995-9acfbacf5023@xs4all.nl>
- <CAJ+vNU014FJZsb44YnidE3fFiqeB6o8A7kvGinJWu7=yq3_dhA@mail.gmail.com>
- <d188a172-fc00-eb46-c6f5-833a86475390@xs4all.nl>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH] Documentation: DT: arm: Add topology property to
+ define package boundaries
+Date: Thu, 8 Feb 2018 10:57:02 +0000
+Message-ID: <20180208105702.GA1179@e107981-ln.cambridge.arm.com>
+References: <20180122171534.7681-1-lorenzo.pieralisi@arm.com>
+ <b58b99e8-dfa3-40d6-aba2-bc1f96170fd6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <d188a172-fc00-eb46-c6f5-833a86475390@xs4all.nl>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Tim Harvey <tharvey@gateworks.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Steve Longerbeam <slongerbeam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, linux-media <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <b58b99e8-dfa3-40d6-aba2-bc1f96170fd6@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE4LTAyLTA3IGF0IDIzOjE5ICswMTAwLCBIYW5zIFZlcmt1aWwgd3JvdGU6Cj4g
-T24gMDIvMDcvMjAxOCAxMTowNSBQTSwgVGltIEhhcnZleSB3cm90ZToKPiA+IE9uIFdlZCwgRmVi
-IDcsIDIwMTggYXQgMTowOSBBTSwgSGFucyBWZXJrdWlsIDxodmVya3VpbEB4czRhbGwubmw+IHdy
-b3RlOgo+ID4gPiBPbiAwMi8wNy8xOCAwOToyMiwgSGFucyBWZXJrdWlsIHdyb3RlOgo+ID4gPiA+
-IE9uIDAyLzA3LzIwMTggMTI6MjkgQU0sIFRpbSBIYXJ2ZXkgd3JvdGU6Cj4gPiA+ID4gPiBNZWRp
-YSBDb250cm9sbGVyIGlvY3RsczoKPiA+ID4gPiA+ICAgICAgICAgICAgICAgICBmYWlsOiB2NGwy
-LXRlc3QtbWVkaWEuY3BwKDE0MSk6IGVudC5mdW5jdGlvbiA9PQo+ID4gPiA+ID4gTUVESUFfRU5U
-X0ZfVjRMMl9TVUJERVZfVU5LTk9XTgo+ID4gPiA+IAo+ID4gPiA+IFdlaXJkLCB0aGlzIHNob3Vs
-ZG4ndCBoYXBwZW4uIEknbGwgbG9vayBpbnRvIHRoaXMgYSBiaXQgbW9yZS4KPiA+ID4gCj4gPiA+
-IENhbiB5b3UgcnVuICdtY19uZXh0Z2VuX3Rlc3QgLWUgLWknIGFuZCBwb3N0IHRoZSBvdXRwdXQ/
-Cj4gPiA+IAo+ID4gPiBJdCdzIGZvdW5kIGluIGNvbnRyaWIvdGVzdC4KPiA+ID4gCj4gPiAKPiA+
-IHJvb3RAdmVudGFuYTp+IyAuL3Y0bC11dGlscy9jb250cmliL3Rlc3QvbWNfbmV4dGdlbl90ZXN0
-IC1lIC1pCj4gPiBEZXZpY2U6IGlteC1tZWRpYSAoZHJpdmVyIGlteC1tZWRpYSkKPiA+IEJ1czoK
-PiA+IHZlcnNpb246IDAKPiA+IG51bWJlciBvZiBlbnRpdGllczogMjQKPiA+IG51bWJlciBvZiBp
-bnRlcmZhY2VzOiAyNAo+ID4gbnVtYmVyIG9mIHBhZHM6IDQ4Cj4gPiBudW1iZXIgb2YgbGlua3M6
-IDUwCj4gPiBlbnRpdHkgZW50aXR5IzE6ICd1bmtub3duIGVudGl0eSB0eXBlJyBhZHY3MTgwIDIt
-MDAyMCwgMSBwYWQocyksIDEgc291cmNlKHMpCj4gPiBlbnRpdHkgZW50aXR5IzM6ICd1bmtub3du
-IGVudGl0eSB0eXBlJyB0ZGExOTk3MSAyLTAwNDgsIDEgcGFkKHMpLCAxIHNvdXJjZShzKQo+ID4g
-ZW50aXR5IGVudGl0eSM1OiAndW5rbm93biBlbnRpdHkgdHlwZScgaXB1MV92ZGljLCAzIHBhZChz
-KSwgMiBzaW5rKHMpLAo+ID4gMSBzb3VyY2UocykKPiA+IGVudGl0eSBlbnRpdHkjOTogJ3Vua25v
-d24gZW50aXR5IHR5cGUnIGlwdTJfdmRpYywgMyBwYWQocyksIDIgc2luayhzKSwKPiA+IDEgc291
-cmNlKHMpCj4gPiBlbnRpdHkgZW50aXR5IzEzOiAndW5rbm93biBlbnRpdHkgdHlwZScgaXB1MV9p
-Y19wcnAsIDMgcGFkKHMpLCAxCj4gPiBzaW5rKHMpLCAyIHNvdXJjZShzKQo+ID4gZW50aXR5IGVu
-dGl0eSMxNzogJ3Vua25vd24gZW50aXR5IHR5cGUnIGlwdTFfaWNfcHJwZW5jLCAyIHBhZChzKSwg
-MQo+ID4gc2luayhzKSwgMSBzb3VyY2UocykKPiA+IGVudGl0eSBlbnRpdHkjMjA6ICdWNEwgSS9P
-JyBpcHUxX2ljX3BycGVuYyBjYXB0dXJlLCAxIHBhZChzKSwgMSBzaW5rKHMpCj4gPiBlbnRpdHkg
-ZW50aXR5IzI2OiAndW5rbm93biBlbnRpdHkgdHlwZScgaXB1MV9pY19wcnB2ZiwgMiBwYWQocyks
-IDEKPiA+IHNpbmsocyksIDEgc291cmNlKHMpCj4gPiBlbnRpdHkgZW50aXR5IzI5OiAnVjRMIEkv
-TycgaXB1MV9pY19wcnB2ZiBjYXB0dXJlLCAxIHBhZChzKSwgMSBzaW5rKHMpCj4gPiBlbnRpdHkg
-ZW50aXR5IzM1OiAndW5rbm93biBlbnRpdHkgdHlwZScgaXB1Ml9pY19wcnAsIDMgcGFkKHMpLCAx
-Cj4gPiBzaW5rKHMpLCAyIHNvdXJjZShzKQo+ID4gZW50aXR5IGVudGl0eSMzOTogJ3Vua25vd24g
-ZW50aXR5IHR5cGUnIGlwdTJfaWNfcHJwZW5jLCAyIHBhZChzKSwgMQo+ID4gc2luayhzKSwgMSBz
-b3VyY2UocykKPiA+IGVudGl0eSBlbnRpdHkjNDI6ICdWNEwgSS9PJyBpcHUyX2ljX3BycGVuYyBj
-YXB0dXJlLCAxIHBhZChzKSwgMSBzaW5rKHMpCj4gPiBlbnRpdHkgZW50aXR5IzQ4OiAndW5rbm93
-biBlbnRpdHkgdHlwZScgaXB1Ml9pY19wcnB2ZiwgMiBwYWQocyksIDEKPiA+IHNpbmsocyksIDEg
-c291cmNlKHMpCj4gPiBlbnRpdHkgZW50aXR5IzUxOiAnVjRMIEkvTycgaXB1Ml9pY19wcnB2ZiBj
-YXB0dXJlLCAxIHBhZChzKSwgMSBzaW5rKHMpCj4gPiBlbnRpdHkgZW50aXR5IzU3OiAndW5rbm93
-biBlbnRpdHkgdHlwZScgaXB1MV9jc2kwLCAzIHBhZChzKSwgMQo+ID4gc2luayhzKSwgMiBzb3Vy
-Y2UocykKPiA+IGVudGl0eSBlbnRpdHkjNjE6ICdWNEwgSS9PJyBpcHUxX2NzaTAgY2FwdHVyZSwg
-MSBwYWQocyksIDEgc2luayhzKQo+ID4gZW50aXR5IGVudGl0eSM2NzogJ3Vua25vd24gZW50aXR5
-IHR5cGUnIGlwdTFfY3NpMSwgMyBwYWQocyksIDEKPiA+IHNpbmsocyksIDIgc291cmNlKHMpCj4g
-PiBlbnRpdHkgZW50aXR5IzcxOiAnVjRMIEkvTycgaXB1MV9jc2kxIGNhcHR1cmUsIDEgcGFkKHMp
-LCAxIHNpbmsocykKPiA+IGVudGl0eSBlbnRpdHkjNzc6ICd1bmtub3duIGVudGl0eSB0eXBlJyBp
-cHUyX2NzaTAsIDMgcGFkKHMpLCAxCj4gPiBzaW5rKHMpLCAyIHNvdXJjZShzKQo+ID4gZW50aXR5
-IGVudGl0eSM4MTogJ1Y0TCBJL08nIGlwdTJfY3NpMCBjYXB0dXJlLCAxIHBhZChzKSwgMSBzaW5r
-KHMpCj4gPiBlbnRpdHkgZW50aXR5Izg3OiAndW5rbm93biBlbnRpdHkgdHlwZScgaXB1Ml9jc2kx
-LCAzIHBhZChzKSwgMQo+ID4gc2luayhzKSwgMiBzb3VyY2UocykKPiA+IGVudGl0eSBlbnRpdHkj
-OTE6ICdWNEwgSS9PJyBpcHUyX2NzaTEgY2FwdHVyZSwgMSBwYWQocyksIDEgc2luayhzKQo+ID4g
-ZW50aXR5IGVudGl0eSM5NzogJ3Vua25vd24gZW50aXR5IHR5cGUnIGlwdTFfY3NpMF9tdXgsIDMg
-cGFkKHMpLCAyCj4gPiBzaW5rKHMpLCAxIHNvdXJjZShzKQo+ID4gZW50aXR5IGVudGl0eSMxMDE6
-ICd1bmtub3duIGVudGl0eSB0eXBlJyBpcHUyX2NzaTFfbXV4LCAzIHBhZChzKSwgMgo+ID4gc2lu
-ayhzKSwgMSBzb3VyY2UocykKPiAKPiBZdWNrLiBTbyBub2JvZHkgaW4gaW14IChhbmQgYWR2NzE4
-MCEpIGlzIHNldHRpbmcgYSB2YWxpZCBmdW5jdGlvbi4KPiBBbmQgSSBzZWUgdGhlIG1jX25leHRn
-ZW5fdGVzdC5jIGRvZXNuJ3Qga25vdyBhbGwgdGhlIGxhdGVzdCBmdW5jdGlvbnMKPiBhbnl3YXku
-CgpUaGF0J3MgcHJvYmFibHkgYmVjYXVzZSBmb3IgbW9zdCBvZiB0aGUgZW50aXRpZXMgaXQncyBh
-IGJpdCB1bmNsZWFyCndoaWNoIGZ1bmN0aW9uIHNob3VsZCBiZSBhc3NpZ25lZC4KCmlwdVsxMl1f
-Y3NpWzAxXV9tdXggYXJlIHZpZGVvIG11bHRpcGxleGVycywgc28gTUVESUFfRU5UX0ZfVklEX01V
-WC4gSQp0aG91Z2h0IHRob3NlIHNob3VsZCBhbHJlYWR5IGJlIHNldCBjb3JyZWN0bHkgaW4gdGhl
-IHZpZGVvLW11eCBkcml2ZXIuCgppcHVbMTJdX2NzaVswMV0gYXJlIHRoZSBpbnRlcmZhY2VzIHRv
-IHRoZSBvdXRzaWRlIHBhcmFsbGVsIGJ1c3NlcywgYnV0CnRoZXkgY2FuIGFsc28gJ2Rvd25zY2Fs
-ZScgYnkgc2tpcHBpbmcsIHNraXAgZnJhbWVzIGFuZCBwYWNrIG9yIGV4cGFuZApwaXhlbHMgZnJv
-bSB0aGUgYnVzIGludG8gdGhlIGludGVybmFsIEZJRk9zIHRoYXQgbGVhZCB0byB0aGUgbmV4dApl
-bGVtZW50LiBUaGVzZSBhcmUgbm90IE1FRElBX0VOVF9GX1ZJRF9JRl9CUklER0UsIGFyZSB0aGV5
-PwoKaXB1WzEyXV92ZGljIGFyZSBtYWlubHkgZGVpbnRlcmxhY2Vycywgc28gYSBuZXcgZnVuY3Rp
-b24KTUVESUFfRU5UX0ZfUFJPQ19WSURFT19ERUlOVEVSTEFDRVIgPyBUaGVzZSBlbnRpdGllcyBj
-b3VsZCBhbHNvIGJlIHVzZWQKYXMgY29tcG9zZXJzIGluIGEgbWVtMm1lbSBzY2VuYXJpbyAoTUVE
-SUFfRU5UX0ZfUFJPQ19WSURFT19DT01QT1NFUiA/KSwKYnV0IHRoaXMgaXMgY3VycmVudGx5IG5v
-dCBzdXBwb3J0ZWQuCgppcHVbMTJdX2ljX3BycCBpcyBqdXN0IGEgdGVlIGVsZW1lbnTCoHRoYXQg
-ZmVlZHMgYm90aCBpcHVbMTJdX2ljX3BycGVuYwphbmQgaXB1WzEyXV9pY19wcnB2Zi4gVGhlc2Ug
-YXJlIGJvdGggc2NhbGVycyBhbmQgY29sb3JzcGFjZSBjb252ZXJ0ZXJzLgpNRURJQV9FTlRfRl9Q
-Uk9DX1ZJREVPX1NDQUxFUiA/Ck1FRElBX0VOVF9GX1BST0NfVklERU9fUElYRUxfRU5DX0NPTlYg
-PwoKImlwdVsxMl1fY3NpWzAxXSBjYXB0dXJlIiBhcmUgdGhlIERNQSBlbGVtZW50cyB3cml0aW5n
-IHRvIG1lbW9yeSwgc28KTUVESUFfRU5UX0ZfUFJPQ19WSURFT19QSVhFTF9GT1JNQVRURVIgPwoK
-PiBUaGF0J3Mgd2hhdCBoYXBwZW5zIHdoZW4geW91IGRvbid0IGhhdmUgY29tcGxpYW5jZSB0ZXN0
-cywgbm9ib2R5IGJvdGhlcnMKPiB0byBmaWxsIHN0dWZmIGxpa2UgdGhhdCBpbi4gQW55d2F5LCB0
-aGF0IGV4cGxhaW5zIHRoZSB2NGwyLWNvbXBsaWFuY2UgZXJyb3IKPiB5b3UgZ290IChhbHRob3Vn
-aCBJIHNob3VsZCBpbXByb3ZlIHRoZSBlcnJvciB0byBhbHNvIG1lbnRpb25lZCB0aGUgZW50aXR5
-Cj4gaW4gcXVlc3Rpb24pLiBJbiBvdGhlciB3b3JkcywgaXQncyBub3QgeW91LCBpdCdzIHRoZW0g
-Oi0pCgpyZWdhcmRzClBoaWxpcHAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2pl
-Y3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9h
-bHNhLWRldmVsCg==
+On Mon, Jan 22, 2018 at 08:45:26PM -0800, Frank Rowand wrote:
+> On 01/22/18 09:15, Lorenzo Pieralisi wrote:
+> > The current ARM DT topology description provides the operating system
+> > with a topological view of the system that is based on leaf nodes
+> > representing either cores or threads (in an SMT system) and a
+> > hierarchical set of cluster nodes that creates a hierarchical topology
+> > view of how those cores and threads are grouped.
+> > 
+> > As opposed to the ACPI topology description ([1], PPTT table), this
+> > hierarchical representation of clusters does not allow to describe what
+> > topology level actually represents the physical package boundary, which
+> > is a key piece of information to be used by an operating system to
+> > optimize resource allocation and scheduling.
+> > 
+> > Define an optional, backward compatible boolean property for cluster
+> > nodes that, by reusing the ACPI nomenclature, add to the ARM DT
+> > topological description a binding to define what cluster level
+> > represents a physical package boundary.
+> > 
+> > [1] http://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Sudeep Holla <sudeep.holla@arm.com>
+> > Cc: Jeremy Linton <jeremy.linton@arm.com>
+> > Cc: Morten Rasmussen <morten.rasmussen@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/topology.txt | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
+> > index de9eb0486630..8e78d76b0671 100644
+> > --- a/Documentation/devicetree/bindings/arm/topology.txt
+> > +++ b/Documentation/devicetree/bindings/arm/topology.txt
+> > @@ -109,6 +109,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
+> >  	The cluster node name must be "clusterN" as described in 2.1 above.
+> >  	A cluster node can not be a leaf node.
+> >  
+> > +	Properties for cluster nodes:
+> > +
+> > +	- physical-package
+> > +		Usage: optional
+> > +		Value type: <empty>
+> > +		Definition: if present the cluster node represents the
+> > +			    boundary of a physical package, whether socketed
+> > +			    or surface mounted.
+> 
+> I don't know how to interpret this.  Is the node with this property inside
+> or outside the boundary?  If I had to guess, I would guess inside.  A few
+> extra words to clarify this please.
+
+The node is neither inside nor outside, it _is_ the boundary. Every node
+defines a topology level - the property is there to define which one
+corresponds to a package, please let me know if it makes things clearer.
+
+Thanks,
+Lorenzo
+
+> > +
+> >  	A cluster node's child nodes must be:
+> >  
+> >  	- one or more cluster nodes; or
+> > 
+> 
