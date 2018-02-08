@@ -1,126 +1,46 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v4] ARM: sun8i: h2+: add support for
- Banana Pi M2 Zero board
-Date: Thu, 8 Feb 2018 17:41:06 +0800
-Message-ID: <CAGb2v66bpo8V-e+br2aKcYXSjhte5sobizr_7QqnJWeY_58UOw@mail.gmail.com>
-References: <20180206131647.41700-1-icenowy@aosc.io> <20180208090042.364is5ctofhuao4i@flea>
- <9e77487f83b226ad7700715251178ce8@aosc.io> <1836483.rFXKcXDauj@jernej-laptop>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH 2/7] soc: davinci: new genpd driver
+Date: Thu, 8 Feb 2018 10:54:49 +0100
+Message-ID: <CAMRc=Mf+S3k_wfhUWEx2-39AZx1szkgy-u-bsZQUMiaY06UKww@mail.gmail.com>
+References: <20180207134553.13510-1-brgl@bgdev.pl> <20180207134553.13510-3-brgl@bgdev.pl>
+ <65f2690c-c605-3c66-9d8a-9a882aaf446d@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1836483.rFXKcXDauj@jernej-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <65f2690c-c605-3c66-9d8a-9a882aaf446d@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 8, 2018 at 5:28 PM, Jernej Škrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> Dne četrtek, 08. februar 2018 ob 10:15:35 CET je Icenowy Zheng napisal(a):
->> 在 2018-02-08 17:00，Maxime Ripard 写道：
->>
->> > On Tue, Feb 06, 2018 at 09:16:47PM +0800, Icenowy Zheng wrote:
->> >> Banana Pi M2 Zero board is a H2+-based board by Sinovoip, with a form
->> >> factor and GPIO holes similar to Raspberry Pi Zero.
->> >>
->> >> It features:
->> >> - Allwinner H2+ SoC
->> >> - Single-chip (16-bit) 512MiB DDR3 DRAM
->> >> - Ampak AP6212 Wi-Fi/Bluetooth module
->> >> - MicroSD slot
->> >> - Two MicroUSB Type-B ports (one can only be used to power the board
->> >> and
->> >>
->> >>   the other features OTG functionality)
->> >>
->> >> - Two keys, a reset and a GPIO-connected key.
->> >> - HDMI Type-C (miniHDMI) connector connected to the HDMI part of H2+.
->> >> - CSI connector to connect the camera sensor provided by Sinovoip.
->> >>
->> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> >> ---
->> >> Changes in v4:
->> >> - Use SPDX license identifier.
->> >>
->> >> Changes in v3:
->> >> - Add comments about Vbus problem in &usbphy node.
->> >>
->> >> Changes in v2:
->> >> - Use high active SD card detect on the production batch.
->> >>
->> >>  arch/arm/boot/dts/Makefile                         |   1 +
->> >>  .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 126
->> >>
->> >> +++++++++++++++++++++
->> >>
->> >>  2 files changed, 127 insertions(+)
->> >>  create mode 100644
->> >>
->> >> arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> >>
->> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> >> index ade7a38543dc..d5a17e6e8b0f 100644
->> >> --- a/arch/arm/boot/dts/Makefile
->> >> +++ b/arch/arm/boot/dts/Makefile
->> >> @@ -974,6 +974,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->> >>
->> >>    sun8i-a83t-cubietruck-plus.dtb \
->> >>    sun8i-a83t-tbs-a711.dtb \
->> >>    sun8i-h2-plus-orangepi-r1.dtb \
->> >>
->> >> +  sun8i-h2-plus-bananapi-m2-zero.dtb \
->> >>
->> >>    sun8i-h2-plus-orangepi-zero.dtb \
->> >>    sun8i-h3-bananapi-m2-plus.dtb \
->> >>    sun8i-h3-beelink-x2.dtb \
->> >>
->> >> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> >> b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> >> new file mode 100644
->> >> index 000000000000..e2ee65a5bf92
->> >> --- /dev/null
->> >> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
->> >> @@ -0,0 +1,126 @@
->> >> +/*
->> >> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> >> + *
->> >> + * Based on sun8i-h3-bananapi-m2-plus.dts, which is:
->> >> + *   Copyright (C) 2016 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> >> + *
->> >> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> >
->> > Sorry to be a bit picky about this, but this should be your very first
->> > line, see arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts for
->> > example.
->>
->> I think it's also OK here, see
->> arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts.
+2018-02-08 10:30 GMT+01:00 Sekhar Nori <nsekhar@ti.com>:
+> On Wednesday 07 February 2018 07:15 PM, Bartosz Golaszewski wrote:
+>> +     /*
+>> +      * DaVinci always uses a single clock for power-management. We assume
+>> +      * it's the first one in the clocks property.
+>> +      */
+>> +     clk = of_clk_get(dev->of_node, 0);
+>> +     if (IS_ERR(clk))
+>> +             return PTR_ERR(clk);
 >
-> Lincesing rules [1] says it should be in first possible line which can contain
-> comment.
+> We already get this today with drivers/base/power/clock_ops.c once
+> .con_ids list is dropped from pm_clk_notifier_block (which I think it
+> should).
 >
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/
-> Documentation/process/license-rules.rst#n57
+> If there is no reason to introduce thus functionality at this stage,
+> perhaps we should wait till such a time when its clearly needed?
+>
+> Thanks,
+> Sekhar
 
-I confess I only read the license line rule some time after I posted that
-patch.
+If I understand correctly: once we drop the con_ids list, we end up
+calling clk_get(dev, NULL) from pm_clk_acquire(), which matches
+against the clock with NULL con_id, which may not necessarily be the
+first clock in the list.
 
-ChenYu
+I'm working on extending the psc driver with the power-domain code (as
+suggested by David), which should be much smaller and simplier - how
+about that?
 
->>
->> > Thanks!
->> > Maxime
->>
->> --
->> You received this message because you are subscribed to the Google Groups
->> "linux-sunxi" group. To unsubscribe from this group and stop receiving
->> emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->> For more options, visit https://groups.google.com/d/optout.
->
->
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Bartosz
