@@ -1,71 +1,488 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] regulator: core: add API to get voltage
- constraints
-Date: Thu, 8 Feb 2018 14:58:34 +0000
-Message-ID: <20180208145834.GA27520@sirena.org.uk>
-References: <20180206163544.GI5681@sirena.org.uk>
- <20180207084744.GG7031@tbergstrom-lnx.Nvidia.com>
- <20180207104351.GA6003@sirena.org.uk>
- <20180207123750.GA5850@tbergstrom-lnx.Nvidia.com>
- <20180207141846.GC6003@sirena.org.uk>
- <20180207143213.GB5850@tbergstrom-lnx.Nvidia.com>
- <20180207150155.GD6003@sirena.org.uk>
- <20180207152045.GC5850@tbergstrom-lnx.Nvidia.com>
- <20180207153711.GE6003@sirena.org.uk>
- <86cd40ac-d255-f4b9-87cb-0cd34efba7d8@nvidia.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v9 6/8] media: i2c: Add TDA1997x HDMI receiver driver
+Date: Thu, 8 Feb 2018 16:06:21 +0100
+Message-ID: <f19fd00d-66fb-a4a2-295b-d4bfae3b4e51@xs4all.nl>
+References: <1518043367-11531-1-git-send-email-tharvey@gateworks.com>
+ <1518043367-11531-7-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <86cd40ac-d255-f4b9-87cb-0cd34efba7d8-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518043367-11531-7-git-send-email-tharvey@gateworks.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tim Harvey <tharvey@gateworks.com>, linux-media@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Tim,
 
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I was so hoping I could make a pull request for this, but I still found
+problems with g/s/query_dv_timings.
 
-On Thu, Feb 08, 2018 at 03:34:56PM +0530, Laxman Dewangan wrote:
+I strongly suspect that v4l2-compliance would fail if you boot up the system
+*without* a source connected.
 
-> I added this API in downstream for the purpose of finding whether rail
-> output can be changed or not(fixed) based on constraints.
-> If min and max is same then it can not change. I used this information to
-> set the pad voltage of SOC automatically.
+And I discovered that I was missing additional checks in the timings tests
+for v4l2-compliance that would have found the same issue if run with a source
+connected. I've fixed and committed those tests now. I'll also try to test
+that a S_DV_TIMINGS calls updates the format.
 
-That's a reasonable thing to want to know.  The way the API wants you to
-ask that question at the minute is to check if you can set the voltages
-you might want to set and then if there's only one possible voltage you
-can conclude that change is not possible.  I appreciate that that's a
-bit of a long way round to do it, the thinking was to try to keep the
-client drivers more robust in cases you can change the voltage but not
-to all the values the driver wants.  I'd consider relaxing that and
-having a direct API to ask about variability (just as a boolean) since
-it does occur to me that this can be a useful speedup during init but I
-need to think.
+Details below:
 
-> I dont know other usage when I added this API. May be Peter is needed here.
+On 02/07/18 23:42, Tim Harvey wrote:
+> +struct tda1997x_state {
 
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
+...
 
------BEGIN PGP SIGNATURE-----
+> +	struct v4l2_dv_timings timings;
+> +	const struct v4l2_dv_timings *detected_timings;
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlp8ZZcACgkQJNaLcl1U
-h9DXJwf8CqkMIWic5ktqMvXm7+Fipc3AtSZRxkBTPVWCWwoulvW+g8VEg+WApNPy
-yPyv8tJocgRVEXT9MezcPxXPYlaR9O8rWetE+0y1Az4hXY2Q4O7nZagBlA4MEADb
-uKFDwr8yFLbByfCVtQrNZrgVL+FxMWubfdL08IgyK1/fNqc4E3DJdX10pkaqn/hL
-5ku7ONEk1Y6zRir9cU1Elp9WN9l4Myy+kYZluzoYWUHyqdo3j/IRFPVNMQt2niKQ
-N8d3UXjDos5l498im3zDbfas0NYf4pwKu/jrR1OTyx4vMIzjSVloXe8sN38dibFp
-Hs4wXK5N508UNu4YnuiiWB77MB1S5w==
-=Jk69
------END PGP SIGNATURE-----
+...
 
---jRHKVT23PllUwdXP--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +/* Configure frame detection window and VHREF timing generator */
+> +static int
+> +tda1997x_configure_vhref(struct v4l2_subdev *sd)
+> +{
+> +	struct tda1997x_state *state = to_state(sd);
+> +	const struct v4l2_bt_timings *bt;
+> +	int width, lines;
+> +	u16 href_start, href_end;
+> +	u16 vref_f1_start, vref_f2_start;
+> +	u8 vref_f1_width, vref_f2_width;
+> +	u8 field_polarity;
+> +	u16 fieldref_f1_start, fieldref_f2_start;
+> +	u8 reg;
+> +
+> +	if (!state->detected_timings)
+> +		return -EINVAL;
+
+Why this test? Who cares if there are no detected timings? It's certainly
+not a failure. S_DV_TIMINGS should succeed regardless of whether there is
+a signal or not and regardless of the current detected timings.
+
+> +	bt = &state->detected_timings->bt;
+
+Ouch. The timings passed in with S_DV_TIMINGS should be used.
+
+Just use state->timings here, not detected_timings.
+
+> +	href_start = bt->hbackporch + bt->hsync + 1;
+> +	href_end = href_start + bt->width;
+> +	vref_f1_start = bt->height + bt->vbackporch + bt->vsync +
+> +			bt->il_vbackporch + bt->il_vsync +
+> +			bt->il_vfrontporch;
+> +	vref_f1_width = bt->vbackporch + bt->vsync + bt->vfrontporch;
+> +	vref_f2_start = 0;
+> +	vref_f2_width = 0;
+> +	fieldref_f1_start = 0;
+> +	fieldref_f2_start = 0;
+> +	if (bt->interlaced) {
+> +		vref_f2_start = (bt->height / 2) +
+> +				(bt->il_vbackporch + bt->il_vsync - 1);
+> +		vref_f2_width = bt->il_vbackporch + bt->il_vsync +
+> +				bt->il_vfrontporch;
+> +		fieldref_f2_start = vref_f2_start + bt->il_vfrontporch +
+> +				    fieldref_f1_start;
+> +	}
+> +	field_polarity = 0;
+> +
+> +	width = V4L2_DV_BT_FRAME_WIDTH(bt);
+> +	lines = V4L2_DV_BT_FRAME_HEIGHT(bt);
+> +
+> +	/*
+> +	 * Configure Frame Detection Window:
+> +	 *  horiz area where the VHREF module consider a VSYNC a new frame
+> +	 */
+> +	io_write16(sd, REG_FDW_S, 0x2ef); /* start position */
+> +	io_write16(sd, REG_FDW_E, 0x141); /* end position */
+> +
+> +	/* Set Pixel And Line Counters */
+> +	if (state->chip_revision == 0)
+> +		io_write16(sd, REG_PXCNT_PR, 4);
+> +	else
+> +		io_write16(sd, REG_PXCNT_PR, 1);
+> +	io_write16(sd, REG_PXCNT_NPIX, width & MASK_VHREF);
+> +	io_write16(sd, REG_LCNT_PR, 1);
+> +	io_write16(sd, REG_LCNT_NLIN, lines & MASK_VHREF);
+> +
+> +	/*
+> +	 * Configure the VHRef timing generator responsible for rebuilding all
+> +	 * horiz and vert synch and ref signals from its input allowing auto
+> +	 * detection algorithms and forcing predefined modes (480i & 576i)
+> +	 */
+> +	reg = VHREF_STD_DET_OFF << VHREF_STD_DET_SHIFT;
+> +	io_write(sd, REG_VHREF_CTRL, reg);
+> +
+> +	/*
+> +	 * Configure the VHRef timing values. In case the VHREF generator has
+> +	 * been configured in manual mode, this will allow to manually set all
+> +	 * horiz and vert ref values (non-active pixel areas) of the generator
+> +	 * and allows setting the frame reference params.
+> +	 */
+> +	/* horizontal reference start/end */
+> +	io_write16(sd, REG_HREF_S, href_start & MASK_VHREF);
+> +	io_write16(sd, REG_HREF_E, href_end & MASK_VHREF);
+> +	/* vertical reference f1 start/end */
+> +	io_write16(sd, REG_VREF_F1_S, vref_f1_start & MASK_VHREF);
+> +	io_write(sd, REG_VREF_F1_WIDTH, vref_f1_width);
+> +	/* vertical reference f2 start/end */
+> +	io_write16(sd, REG_VREF_F2_S, vref_f2_start & MASK_VHREF);
+> +	io_write(sd, REG_VREF_F2_WIDTH, vref_f2_width);
+> +
+> +	/* F1/F2 FREF, field polarity */
+> +	reg = fieldref_f1_start & MASK_VHREF;
+> +	reg |= field_polarity << 8;
+> +	io_write16(sd, REG_FREF_F1_S, reg);
+> +	reg = fieldref_f2_start & MASK_VHREF;
+> +	io_write16(sd, REG_FREF_F2_S, reg);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static int
+> +tda1997x_detect_std(struct tda1997x_state *state)
+> +{
+> +	struct v4l2_subdev *sd = &state->sd;
+> +	u32 vper;
+> +	u16 hper;
+> +	u16 hsper;
+> +	int i;
+> +
+> +	/*
+> +	 * Read the FMT registers
+> +	 *   REG_V_PER: Period of a frame (or two fields) in MCLK(27MHz) cycles
+> +	 *   REG_H_PER: Period of a line in MCLK(27MHz) cycles
+> +	 *   REG_HS_WIDTH: Period of horiz sync pulse in MCLK(27MHz) cycles
+> +	 */
+> +	vper = io_read24(sd, REG_V_PER) & MASK_VPER;
+> +	hper = io_read16(sd, REG_H_PER) & MASK_HPER;
+> +	hsper = io_read16(sd, REG_HS_WIDTH) & MASK_HSWIDTH;
+> +	if (!vper || !hper || !hsper)
+> +		return -ENOLINK;
+> +	v4l2_dbg(1, debug, sd, "Signal Timings: %u/%u/%u\n", vper, hper, hsper);
+> +
+> +	for (i = 0; v4l2_dv_timings_presets[i].bt.width; i++) {
+> +		const struct v4l2_bt_timings *bt;
+> +		u32 lines, width, _hper, _hsper;
+> +		u32 vmin, vmax, hmin, hmax, hsmin, hsmax;
+> +		bool vmatch, hmatch, hsmatch;
+> +
+> +		bt = &v4l2_dv_timings_presets[i].bt;
+> +		width = V4L2_DV_BT_FRAME_WIDTH(bt);
+> +		lines = V4L2_DV_BT_FRAME_HEIGHT(bt);
+> +		_hper = (u32)bt->pixelclock / width;
+> +		if (bt->interlaced)
+> +			lines /= 2;
+> +		/* vper +/- 0.7% */
+> +		vmin = ((27000000 / 1000) * 993) / _hper * lines;
+> +		vmax = ((27000000 / 1000) * 1007) / _hper * lines;
+> +		/* hper +/- 1.0% */
+> +		hmin = ((27000000 / 100) * 99) / _hper;
+> +		hmax = ((27000000 / 100) * 101) / _hper;
+> +		/* hsper +/- 2 (take care to avoid 32bit overflow) */
+> +		_hsper = 27000 * bt->hsync / ((u32)bt->pixelclock/1000);
+> +		hsmin = _hsper - 2;
+> +		hsmax = _hsper + 2;
+> +
+> +		/* vmatch matches the framerate */
+> +		vmatch = ((vper <= vmax) && (vper >= vmin)) ? 1 : 0;
+> +		/* hmatch matches the width */
+> +		hmatch = ((hper <= hmax) && (hper >= hmin)) ? 1 : 0;
+> +		/* hsmatch matches the hswidth */
+> +		hsmatch = ((hsper <= hsmax) && (hsper >= hsmin)) ? 1 : 0;
+> +		if (hmatch && vmatch && hsmatch) {
+> +			state->detected_timings = &v4l2_dv_timings_presets[i];
+> +			v4l2_print_dv_timings(sd->name, "Detected format: ",
+> +					      state->detected_timings, false);
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	v4l_err(state->client, "no resolution match for timings: %d/%d/%d\n",
+> +		vper, hper, hsper);
+> +	return -EINVAL;
+> +}
+
+...
+
+> +static void tda1997x_irq_sus(struct tda1997x_state *state, u8 *flags)
+> +{
+> +	struct v4l2_subdev *sd = &state->sd;
+> +	u8 reg, source;
+> +
+> +	source = io_read(sd, REG_INT_FLG_CLR_SUS);
+> +	io_write(sd, REG_INT_FLG_CLR_SUS, source);
+> +
+> +	if (source & MASK_MPT) {
+> +		/* reset MTP in use flag if set */
+> +		if (state->mptrw_in_progress)
+> +			state->mptrw_in_progress = 0;
+> +	}
+> +
+> +	if (source & MASK_SUS_END) {
+> +		/* reset audio FIFO */
+> +		reg = io_read(sd, REG_HDMI_INFO_RST);
+> +		reg |= MASK_SR_FIFO_FIFO_CTRL;
+> +		io_write(sd, REG_HDMI_INFO_RST, reg);
+> +		reg &= ~MASK_SR_FIFO_FIFO_CTRL;
+> +		io_write(sd, REG_HDMI_INFO_RST, reg);
+> +
+> +		/* reset HDMI flags */
+> +		state->hdmi_status = 0;
+> +	}
+> +
+> +	/* filter FMT interrupt based on SUS state */
+> +	reg = io_read(sd, REG_SUS_STATUS);
+> +	if (((reg & MASK_SUS_STATUS) != LAST_STATE_REACHED)
+> +	   || (source & MASK_MPT)) {
+> +		source &= ~MASK_FMT;
+> +	}
+> +
+> +	if (source & (MASK_FMT | MASK_SUS_END)) {
+> +		reg = io_read(sd, REG_SUS_STATUS);
+> +		if ((reg & MASK_SUS_STATUS) != LAST_STATE_REACHED) {
+> +			v4l_err(state->client, "BAD SUS STATUS\n");
+> +			return;
+> +		}
+> +
+> +		/* There is new activity, the status for HDCP repeater state */
+> +		state->state_c5_reached = 0;
+> +
+> +		/* Detect the new resolution */
+> +		if (!tda1997x_detect_std(state))
+> +			v4l2_subdev_notify_event(&state->sd, &tda1997x_ev_fmt);
+
+Why detect a new resolution here? That only need to be done when the user
+calls query_dv_timings. Just send the event unconditionally to tell userspace
+that the resolution changed.
+
+> +	}
+> +}
+
+...
+
+> +/* -----------------------------------------------------------------------------
+> + * v4l2_subdev_video_ops
+> + */
+> +
+> +static int
+> +tda1997x_g_input_status(struct v4l2_subdev *sd, u32 *status)
+> +{
+> +	struct tda1997x_state *state = to_state(sd);
+> +
+> +	mutex_lock(&state->lock);
+> +	if (state->detected_timings)
+
+What this actually tests if the driver was able to detect a valid signal
+and lock to it.
+
+In practice you have three possible outcomes:
+
+- There is no HDMI signal at all: return V4L2_IN_ST_NO_SIGNAL
+- There is a signal, but the receiver could not lock to it: return V4L2_IN_ST_NO_SYNC
+- There is a signal, and the receiver could lock: return 0.
+
+Just because this returns 0, doesn't mean that QUERY_DV_TIMINGS will succeed.
+There may be other constraints (e.g. the driver doesn't support certain formats
+such as interlaced) that can cause QUERY_DV_TIMINGS to return an error, even
+though the receiver could sync.
+
+Usually the hardware has some bits that tell whether there is a signal
+(usually the TMDS clock) and whether it could sync or not (H and V syncs).
+
+That's really all you need to test here.
+
+> +		*status = 0;
+> +	else
+> +		*status |= V4L2_IN_ST_NO_SIGNAL;
+> +	mutex_unlock(&state->lock);
+> +
+> +	return 0;
+> +};
+> +
+> +static int tda1997x_s_dv_timings(struct v4l2_subdev *sd,
+> +				struct v4l2_dv_timings *timings)
+> +{
+> +	struct tda1997x_state *state = to_state(sd);
+> +	int ret;
+> +
+> +	v4l_dbg(1, debug, state->client, "%s\n", __func__);
+> +	if (!timings)
+> +		return -EINVAL;
+
+These 'if (!timings)' tests are not needed and can be dropped here and
+elsewhere.
+
+> +
+> +	if (v4l2_match_dv_timings(&state->timings, timings, 0, false))
+> +		return 0; /* no changes */
+> +
+> +	if (!v4l2_valid_dv_timings(timings, &tda1997x_dv_timings_cap,
+> +				   NULL, NULL))
+> +		return -ERANGE;
+> +
+> +	mutex_lock(&state->lock);
+> +	state->timings = *timings;
+> +	/* setup frame detection window and VHREF timing generator */
+> +	ret = tda1997x_configure_vhref(sd);
+> +	if (ret)
+> +		goto error;
+> +	/* configure colorspace conversion */
+> +	ret = tda1997x_configure_csc(sd);
+> +	if (ret)
+> +		goto error;
+> +	mutex_unlock(&state->lock);
+> +
+> +	return 0;
+> +
+> +error:
+> +	mutex_unlock(&state->lock);
+> +	return ret;
+> +}
+> +
+> +static int tda1997x_g_dv_timings(struct v4l2_subdev *sd,
+> +				 struct v4l2_dv_timings *timings)
+> +{
+> +	struct tda1997x_state *state = to_state(sd);
+> +
+> +	v4l_dbg(1, debug, state->client, "%s\n", __func__);
+> +	if (!timings)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&state->lock);
+> +	*timings = state->timings;
+> +	mutex_unlock(&state->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tda1997x_query_dv_timings(struct v4l2_subdev *sd,
+> +				     struct v4l2_dv_timings *timings)
+> +{
+> +	struct tda1997x_state *state = to_state(sd);
+> +	int ret;
+> +
+> +	v4l_dbg(1, debug, state->client, "%s\n", __func__);
+> +	if (!timings)
+> +		return -EINVAL;
+> +
+> +	memset(timings, 0, sizeof(struct v4l2_dv_timings));
+> +	mutex_lock(&state->lock);
+> +	ret = tda1997x_detect_std(state);
+> +	if (!ret)
+> +		*timings = *state->detected_timings;
+
+I think you can just drop the 'detected_timings' field and just
+do tda1997x_detect_std(state, timings); here. That way you are not
+tempted to use 'detected_timings' in places where you shouldn't :-)
+
+> +	mutex_unlock(&state->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int tda1997x_s_stream(struct v4l2_subdev *sd, int enable)
+> +{
+> +	struct tda1997x_state *state = to_state(sd);
+> +
+> +	v4l_dbg(1, debug, state->client, "%s %d\n", __func__, enable);
+> +	mutex_lock(&state->lock);
+> +	if (!state->detected_timings)
+> +		v4l_dbg(1, debug, state->client, "Invalid HDMI signal\n");
+> +	mutex_unlock(&state->lock);
+> +
+> +	return 0;
+> +}
+
+I'd drop this. It isn't helpful.
+
+> +
+> +static const struct v4l2_subdev_video_ops tda1997x_video_ops = {
+> +	.g_input_status = tda1997x_g_input_status,
+> +	.s_dv_timings = tda1997x_s_dv_timings,
+> +	.g_dv_timings = tda1997x_g_dv_timings,
+> +	.query_dv_timings = tda1997x_query_dv_timings,
+> +	.s_stream = tda1997x_s_stream,
+> +};
+> +
+> +
+> +/* -----------------------------------------------------------------------------
+> + * v4l2_subdev_pad_ops
+> + */
+> +
+> +static int tda1997x_init_cfg(struct v4l2_subdev *sd,
+> +			     struct v4l2_subdev_pad_config *cfg)
+> +{
+> +	struct tda1997x_state *state = to_state(sd);
+> +	struct v4l2_mbus_framefmt *mf;
+> +
+> +	mf = v4l2_subdev_get_try_format(sd, cfg, 0);
+> +	mf->code = state->mbus_codes[0];
+> +
+> +	return 0;
+> +}
+> +
+> +static int tda1997x_enum_mbus_code(struct v4l2_subdev *sd,
+> +				  struct v4l2_subdev_pad_config *cfg,
+> +				  struct v4l2_subdev_mbus_code_enum *code)
+> +{
+> +	struct tda1997x_state *state = to_state(sd);
+> +
+> +	v4l_dbg(1, debug, state->client, "%s %d/%d\n", __func__,
+> +		code->index, ARRAY_SIZE(state->mbus_codes));
+> +	if (code->index >= ARRAY_SIZE(state->mbus_codes))
+> +		return -EINVAL;
+> +
+> +	if (!state->mbus_codes[code->index])
+> +		return -EINVAL;
+> +
+> +	code->code = state->mbus_codes[code->index];
+> +
+> +	return 0;
+> +}
+> +
+> +static int tda1997x_fill_format(struct tda1997x_state *state,
+> +				struct v4l2_mbus_framefmt *format)
+> +{
+> +	const struct v4l2_bt_timings *bt;
+> +
+> +	v4l_dbg(1, debug, state->client, "%s\n", __func__);
+> +
+> +	if (!state->detected_timings)
+> +		return -EINVAL;
+
+Ouch. Just drop this.
+
+> +
+> +	memset(format, 0, sizeof(*format));
+> +	bt = &state->detected_timings->bt;
+
+and use &state->timings.bt here. That is how the receiver is configured.
+
+> +	format->width = bt->width;
+> +	format->height = bt->height;
+> +	format->colorspace = state->colorimetry.colorspace;
+> +	format->field = (bt->interlaced) ?
+> +		V4L2_FIELD_SEQ_TB : V4L2_FIELD_NONE;
+> +
+> +	return 0;
+> +}
+
+The *only* time you need to care about the actual detected timings is when
+userspace calls QUERY_DV_TIMINGS. Never anywhere else.
+
+s_input_status is used to test some basics (do I have a signal, can I lock)
+but doesn't go 'in-depth'.
+
+If the interrupt routine detects a resolution change or it loses a stable
+signal, then it sends an event to userspace, but nothing else should change.
+
+Look at adv7604.c: the only time it attempts to detect the timings with
+read_stdi() is when called from query_dv_timings (and log_status for debugging).
+
+Regards,
+
+	Hans
