@@ -1,35 +1,32 @@
-From: "Kohli, Gaurav" <gkohli-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Query: Regarding overwriting and deleting nodes in overlay files
-Date: Thu, 8 Feb 2018 12:38:27 +0530
-Message-ID: <a0cef8e5-2d41-d187-97a1-c995f76eec2f@codeaurora.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 BUGFIX] ARM: dts: imx6ull: fix the imx6ull-14x14-evk
+ configuration
+Date: Thu, 8 Feb 2018 15:09:48 +0800
+Message-ID: <20180208070946.GC31910@dragon>
+References: <1516955159-21626-1-git-send-email-LW@KARO-electronics.de>
+ <1516956738-24673-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1516956738-24673-1-git-send-email-LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+On Fri, Jan 26, 2018 at 09:52:18AM +0100, Lothar Waﬂmann wrote:
+> imx6ull-14x14-evk.dts currently includes the imx6ul.dtsi file for an
+> i.MX6ULL SoC which is plain wrong.
+> 
+> Rename the current imx6ul-14x14-evk.dts to .dtsi and include it from
+> imx6ul-14x14-evk.dts and imx6ull-14x14-evk.dts, so that both can
+> include the appropriate SoC specific (imx6ul.dtsi/imx6ull.dtsi) file.
+> 
+> Signed-off-by: Lothar Waﬂmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
 
-Can some one please clarify , is it feasible to delete property or 
-delete node and redefine the same in overlay file
-
-whose definitions are defined in base file. Some times i have seen this 
-is failing, if we try to delete-property of node and update in
-
-overlay for the entries present on base file.
-
-
-Regards
-
-Gaurav
-
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
-
+Applied, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
