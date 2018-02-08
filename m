@@ -1,46 +1,73 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-        <niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH v2 0/5] arm64: dts: renesas: r8a77970: enable HDMI output
-Date: Thu,  8 Feb 2018 16:47:15 +0100
-Message-ID: <20180208154720.5766-1-niklas.soderlund+renesas@ragnatech.se>
+        <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Subject: [PATCH v2 4/5] arm64: dts: renesas: r8a77970: add the LVDS instance
+Date: Thu,  8 Feb 2018 16:47:19 +0100
+Message-ID: <20180208154720.5766-5-niklas.soderlund+renesas@ragnatech.se>
+References: <20180208154720.5766-1-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180208154720.5766-1-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add the LVDS device to r8a77970.dtsi in a disabled state. Also connect
+the it to the LVDS output of the DU. While at it align the endpoint name
+of the du to du_out_lvds0 which is used in other Renesas DTS files to
+describe this link.
 
-This series enables the HDMI out put on V3M. It is based on top of the
-latest renesas-drivers release and depends on patches from both Laurent
-and Sergei.
+Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+---
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi | 29 ++++++++++++++++++++++++++++-
+ 1 file changed, 28 insertions(+), 1 deletion(-)
 
-- [PATCH v2 00/12] R-Car DU: Convert LVDS code to bridge driver
-- [PATCH v2 0/2] Add R-Car V3M (R8A77970) support to the DU driver
-- [PATCH 0/3] Add R-Car V3M (R8A77970) support to the R-Car LVDS driver
-
-It is tested on V3M by connecting the HDMI output to a monitor and
-booting the board. To console will eventually show up on the screen.
-
-* Changes since v1.
-- Replace patches 1-3 by patches posted by Sergei which I had missed.
-- Fixed comment on 4/5 by adding reset and power-domain properties.
-
-Niklas Söderlund (2):
-  arm64: dts: renesas: r8a77970: add the LVDS instance
-  arm64: dts: renesas: eagle: add HDMI output using the ADV7511W
-
-Sergei Shtylyov (3):
-  arm64: dts: renesass: r8a77970: add FCPVD support
-  arm64: dts: renesass: r8a77970: add VSPD support
-  arm64: dts: renesas: r8a77970: add DU support
-
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts | 66 +++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a77970.dtsi      | 73 ++++++++++++++++++++++++++
- 2 files changed, 139 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+index c6056635bd372ce3..9c65884cc384952d 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+@@ -653,7 +653,34 @@
+ 
+ 				port@1 {
+ 					reg = <1>;
+-					du_out_lvds: endpoint {
++					du_out_lvds0: endpoint {
++						remote-endpoint = <&lvds0_in>;
++					};
++				};
++			};
++		};
++
++		lvds0: lvds@feb90000 {
++			compatible = "renesas,r8a77970-lvds";
++			reg = <0 0xfeb90000 0 0x14>;
++			clocks = <&cpg CPG_MOD 727>;
++			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
++			resets = <&cpg 727>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					lvds0_in: endpoint {
++						remote-endpoint = <&du_out_lvds0>;
++					};
++				};
++				port@1 {
++					reg = <1>;
++					lvds0_out: endpoint {
+ 					};
+ 				};
+ 			};
 -- 
 2.16.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
