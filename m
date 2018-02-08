@@ -1,91 +1,65 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH] Documentation: DT: arm: Add topology property to
- define package boundaries
-Date: Thu, 8 Feb 2018 10:57:02 +0000
-Message-ID: <20180208105702.GA1179@e107981-ln.cambridge.arm.com>
-References: <20180122171534.7681-1-lorenzo.pieralisi@arm.com>
- <b58b99e8-dfa3-40d6-aba2-bc1f96170fd6@gmail.com>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH v2] media: stm32-dcmi: add g/s_parm framerate support
+Date: Thu, 8 Feb 2018 12:00:45 +0100
+Message-ID: <1518087645-1394-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <b58b99e8-dfa3-40d6-aba2-bc1f96170fd6@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 22, 2018 at 08:45:26PM -0800, Frank Rowand wrote:
-> On 01/22/18 09:15, Lorenzo Pieralisi wrote:
-> > The current ARM DT topology description provides the operating system
-> > with a topological view of the system that is based on leaf nodes
-> > representing either cores or threads (in an SMT system) and a
-> > hierarchical set of cluster nodes that creates a hierarchical topology
-> > view of how those cores and threads are grouped.
-> > 
-> > As opposed to the ACPI topology description ([1], PPTT table), this
-> > hierarchical representation of clusters does not allow to describe what
-> > topology level actually represents the physical package boundary, which
-> > is a key piece of information to be used by an operating system to
-> > optimize resource allocation and scheduling.
-> > 
-> > Define an optional, backward compatible boolean property for cluster
-> > nodes that, by reusing the ACPI nomenclature, add to the ARM DT
-> > topological description a binding to define what cluster level
-> > represents a physical package boundary.
-> > 
-> > [1] http://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > Cc: Jeremy Linton <jeremy.linton@arm.com>
-> > Cc: Morten Rasmussen <morten.rasmussen@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/topology.txt | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-> > index de9eb0486630..8e78d76b0671 100644
-> > --- a/Documentation/devicetree/bindings/arm/topology.txt
-> > +++ b/Documentation/devicetree/bindings/arm/topology.txt
-> > @@ -109,6 +109,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
-> >  	The cluster node name must be "clusterN" as described in 2.1 above.
-> >  	A cluster node can not be a leaf node.
-> >  
-> > +	Properties for cluster nodes:
-> > +
-> > +	- physical-package
-> > +		Usage: optional
-> > +		Value type: <empty>
-> > +		Definition: if present the cluster node represents the
-> > +			    boundary of a physical package, whether socketed
-> > +			    or surface mounted.
-> 
-> I don't know how to interpret this.  Is the node with this property inside
-> or outside the boundary?  If I had to guess, I would guess inside.  A few
-> extra words to clarify this please.
+Add g/s_parm framerate support by calling subdev
+g/s_frame_interval ops.
+This allows user to control sensor framerate by
+calling ioctl G/S_PARM.
 
-The node is neither inside nor outside, it _is_ the boundary. Every node
-defines a topology level - the property is there to define which one
-corresponds to a package, please let me know if it makes things clearer.
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+---
+version 2:
+  - Rebase on Hans branch to use new helpers:
+    See https://www.mail-archive.com/linux-media@vger.kernel.org/msg125769.html
 
-Thanks,
-Lorenzo
+ drivers/media/platform/stm32/stm32-dcmi.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-> > +
-> >  	A cluster node's child nodes must be:
-> >  
-> >  	- one or more cluster nodes; or
-> > 
-> 
+diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+index 9460b30..60dd24c 100644
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -1167,6 +1167,22 @@ static int dcmi_enum_framesizes(struct file *file, void *fh,
+ 	return 0;
+ }
+ 
++static int dcmi_g_parm(struct file *file, void *priv,
++		       struct v4l2_streamparm *p)
++{
++	struct stm32_dcmi *dcmi = video_drvdata(file);
++
++	return v4l2_g_parm_cap(video_devdata(file), dcmi->entity.subdev, p);
++}
++
++static int dcmi_s_parm(struct file *file, void *priv,
++		       struct v4l2_streamparm *p)
++{
++	struct stm32_dcmi *dcmi = video_drvdata(file);
++
++	return v4l2_s_parm_cap(video_devdata(file), dcmi->entity.subdev, p);
++}
++
+ static int dcmi_enum_frameintervals(struct file *file, void *fh,
+ 				    struct v4l2_frmivalenum *fival)
+ {
+@@ -1269,6 +1285,9 @@ static int dcmi_release(struct file *file)
+ 	.vidioc_g_input			= dcmi_g_input,
+ 	.vidioc_s_input			= dcmi_s_input,
+ 
++	.vidioc_g_parm			= dcmi_g_parm,
++	.vidioc_s_parm			= dcmi_s_parm,
++
+ 	.vidioc_enum_framesizes		= dcmi_enum_framesizes,
+ 	.vidioc_enum_frameintervals	= dcmi_enum_frameintervals,
+ 
+-- 
+1.9.1
