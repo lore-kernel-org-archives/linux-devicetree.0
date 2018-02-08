@@ -1,114 +1,64 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v5 2/2] dt-bindings/interrupt-controller: pdc: descibe PDC device binding
-Date: Thu,  8 Feb 2018 14:20:31 -0700
-Message-ID: <20180208212031.20192-3-ilina@codeaurora.org>
-References: <20180208212031.20192-1-ilina@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20180208212031.20192-1-ilina@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, asathyak@codeaurora.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] Documentation: bindings: add usb3-host-disable and
+ usb3-host-port for Rockchip USB Type-C PHY
+Date: Thu, 8 Feb 2018 22:23:33 +0100
+Message-ID: <CAFqH_53-iN9m=U+WdQh6_rKyxE5c9RUQO9qD1QaY0QePM_pOZA@mail.gmail.com>
+References: <20180208152028.9997-1-enric.balletbo@collabora.com>
+ <20180208152028.9997-2-enric.balletbo@collabora.com> <CABGGisyaqV5HtTUL5LdjH3ZcU3_RTPmzMvEAhv5wZjCD_XCujg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABGGisyaqV5HtTUL5LdjH3ZcU3_RTPmzMvEAhv5wZjCD_XCujg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Archana Sathyakumar <asathyak@codeaurora.org>
+Hi Rob,
 
-Add device binding documentation for the PDC Interrupt controller on
-QCOM SoC's like the SDM845. The interrupt-controller can be used to
-sense edge low interrupts and wakeup interrupts when the GIC is
-non-operational.
+2018-02-08 18:52 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Thu, Feb 8, 2018 at 9:20 AM, Enric Balletbo i Serra
+> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>> From: William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> rockchip,usb3-host-disable is the register of type-c phy disable usb3 host
+>> rockchip,usb3-host-port is the register of type-c phy usb3 port number
+>>
+>> Signed-off-by: William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>> index c3be83be9615..9085d95d0079 100644
+>> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>> @@ -36,6 +36,12 @@ offset, enable bit, write mask bit.
+>>   - rockchip,uphy-dp-sel : the register of type-c phy enable DP function
+>>     for type-c phy0, it must be <0x6268 19 19>;
+>>     for type-c phy1, it must be <0x6268 3 19>;
+>> + - rockchip,usb3-host-disable : the register of type-c phy disable usb3 host
+>> +   for type-c phy0, it must be <0x2434 0 16>;
+>> +   for type-c phy1, it must be <0x2444 0 16>;
+>> + - rockchip,usb3-host-port : the register of type-c phy usb3 port number
+>> +   for type-c phy0, it must be <0x2434 12 28>;
+>> +   for type-c phy1, it must be <0x2444 12 28>;
+>
+> When does this list stop? Adding properties for various register
+> fields doesn't scale. This information should be in the driver and
+> based on the compatible string if necessary.
+>
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- .../bindings/interrupt-controller/qcom,pdc.txt     | 78 ++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+I see, seams reasonable to me, is this applicable to the new ones only
+or I should get rid of all the proprieties like this from the DT
+(including the old ones)?
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-new file mode 100644
-index 000000000000..0b2c97ddb520
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-@@ -0,0 +1,78 @@
-+PDC interrupt controller
-+
-+Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
-+Power Domain Controller (PDC) that is on always-on domain. In addition to
-+providing power control for the power domains, the hardware also has an
-+interrupt controller that can be used to help detect edge low interrupts as
-+well detect interrupts when the GIC is non-operational.
-+
-+GIC is parent interrupt controller at the highest level. Platform interrupt
-+controller PDC is next in hierarchy, followed by others. Drivers requiring
-+wakeup capabilities of their device interrupts routed through the PDC, must
-+specify PDC as their interrupt controller and request the PDC port associated
-+with the GIC interrupt. See example below.
-+
-+Properties:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should contain "qcom,<soc>-pdc"
-+		    - "qcom,sdm845-pdc": For SDM845
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Specifies the base physical address for PDC hardware.
-+
-+- interrupt-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Specifies the number of cells needed to encode an interrupt
-+		    source.
-+		    Must be 2.
-+		    The first element of the tuple is the PDC pin for the
-+		    interrupt.
-+		    The second element is the trigger type.
-+
-+- interrupt-parent:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: Specifies the interrupt parent necessary for hierarchical
-+		    domain to operate.
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <bool>
-+	Definition: Identifies the node as an interrupt controller.
-+
-+- qcom,pdc-ranges:
-+	Usage: required
-+	Value type: <u32 array>
-+	Definition: Specifies the PDC pin offset and the number of PDC ports.
-+		    The tuples indicates the valid mapping of valid PDC ports
-+		    and their hwirq mapping.
-+		    The first element of the tuple is the starting PDC port.
-+		    The second element is the GIC hwirq number for the PDC port.
-+		    The third element is the number of interrupts in sequence.
-+
-+Example:
-+
-+	pdc: interrupt-controller@b220000 {
-+		compatible = "qcom,sdm845-pdc";
-+		reg = <0xb220000 0x30000>;
-+		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
-+		#interrupt-cells = <2>;
-+		interrupt-parent = <&intc>;
-+		interrupt-controller;
-+	};
-+
-+DT binding of a device that wants to use the GIC SPI 514 as a wakeup
-+interrupt, must do -
-+
-+	wake-device {
-+		interrupts-extended = <&pdc 2 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+In this case interrupt 514 would be mapped to port 2 on the PDC as defined by
-+the qcom,pdc-ranges property.
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks,
+  Enric
+
+> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
