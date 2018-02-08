@@ -1,82 +1,39 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] watchdog: imx2_wdt: allow setting timeout in devicetree
-Date: Thu, 8 Feb 2018 06:15:59 -0800
-Message-ID: <e70ce3b6-1fb6-5d18-25bd-4fe7bf15b296@roeck-us.net>
-References: <20180208131108.3048-1-marcus.folkesson@gmail.com>
+From: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: ls1021a: add quadspi node
+Date: Thu, 8 Feb 2018 15:24:40 +0100
+Message-ID: <43c533e2-2b93-9672-3905-5f4ba8d6db19@prevas.dk>
+References: <20180126142014.13819-1-rasmus.villemoes@prevas.dk>
+ <20180205080323.GP31354@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180208131108.3048-1-marcus.folkesson@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180205080323.GP31354@dragon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcus Folkesson <marcus.folkesson@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2018 05:11 AM, Marcus Folkesson wrote:
-> By following best practice described in
-> Documentation/watchdog/watchdog-kernel-api.txt, it also let us to set
-> timout-sec property in devicetree.
+On 2018-02-05 09:03, Shawn Guo wrote:
+> On Fri, Jan 26, 2018 at 03:20:14PM +0100, Rasmus Villemoes wrote:
+>> Add a node to device tree repesenting the QuadSPI controller present on
+>> LS1021a. Driver support has been present since e8c034b2fbe5 (mtd:
+>> spi-nor: fsl-quadspi: add support for ls1021a).
+>>
+>> Signed-off-by: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
 > 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> Applied, thanks.
+> 
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Sorry, I didn't know you already had a similar patch queued for 4.16
+(85f8ee78ab ARM: dts: ls1021a: Add support for QSPI with ls1021a SoC),
+so I have to ask you to unapply (or do you want me to send a revert?) -
+the ls1021a.dtsi in your imx/dt branch now has two almost-identical
+qspi: nodes.
 
-> ---
->   Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt | 2 ++
->   drivers/watchdog/imx2_wdt.c                                | 8 ++------
->   2 files changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> index 107280ef0025..adc6b76fcb3a 100644
-> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
-> @@ -11,6 +11,7 @@ Optional properties:
->     detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
->   - fsl,ext-reset-output: If present the watchdog device is configured to
->     assert its external reset (WDOG_B) instead of issuing a software reset.
-> +- timeout-sec : Contains the watchdog timeout in seconds
->   
->   Examples:
->   
-> @@ -19,4 +20,5 @@ wdt@73f98000 {
->   	reg = <0x73f98000 0x4000>;
->   	interrupts = <58>;
->   	big-endian;
-> +	timeout-sec = <20>;
->   };
-> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-> index 4874b0f18650..b8674c5c2d9f 100644
-> --- a/drivers/watchdog/imx2_wdt.c
-> +++ b/drivers/watchdog/imx2_wdt.c
-> @@ -76,7 +76,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
->   				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
->   
->   
-> -static unsigned timeout = IMX2_WDT_DEFAULT_TIME;
-> +static unsigned timeout;
->   module_param(timeout, uint, 0);
->   MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
->   				__MODULE_STRING(IMX2_WDT_DEFAULT_TIME) ")");
-> @@ -275,6 +275,7 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
->   	wdog->info		= &imx2_wdt_info;
->   	wdog->ops		= &imx2_wdt_ops;
->   	wdog->min_timeout	= 1;
-> +	wdog->timeout		= IMX2_WDT_DEFAULT_TIME;
->   	wdog->max_hw_heartbeat_ms = IMX2_WDT_MAX_TIME * 1000;
->   	wdog->parent		= &pdev->dev;
->   
-> @@ -293,11 +294,6 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
->   
->   	wdev->ext_reset = of_property_read_bool(pdev->dev.of_node,
->   						"fsl,ext-reset-output");
-> -	wdog->timeout = clamp_t(unsigned, timeout, 1, IMX2_WDT_MAX_TIME);
-> -	if (wdog->timeout != timeout)
-> -		dev_warn(&pdev->dev, "Initial timeout out of range! Clamped from %u to %u\n",
-> -			 timeout, wdog->timeout);
-> -
->   	platform_set_drvdata(pdev, wdog);
->   	watchdog_set_drvdata(wdog, wdev);
->   	watchdog_set_nowayout(wdog, nowayout);
-> 
+Rasmus
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
