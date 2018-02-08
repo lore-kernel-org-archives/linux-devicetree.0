@@ -1,87 +1,66 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v8 3/3] ARM: dts: rockchip: enable sfc for rv1108 evb
-Date: Thu,  8 Feb 2018 20:20:33 +0800
-Message-ID: <1518092433-3893-1-git-send-email-andy.yan@rock-chips.com>
-References: <1518091958-3672-1-git-send-email-andy.yan@rock-chips.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/7] soc: davinci: new genpd driver
+Date: Thu, 8 Feb 2018 18:26:20 +0530
+Message-ID: <34d3980b-2c94-1540-94f0-dc0c86743475@ti.com>
+References: <20180207134553.13510-1-brgl@bgdev.pl>
+ <20180207134553.13510-3-brgl@bgdev.pl>
+ <65f2690c-c605-3c66-9d8a-9a882aaf446d@ti.com>
+ <CAMRc=Mf+S3k_wfhUWEx2-39AZx1szkgy-u-bsZQUMiaY06UKww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518091958-3672-1-git-send-email-andy.yan@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, shawn.lin@rock-chips.com, heiko@sntech.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMRc=Mf+S3k_wfhUWEx2-39AZx1szkgy-u-bsZQUMiaY06UKww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the sfc support for rv1108 evaluation board.
+On Thursday 08 February 2018 03:24 PM, Bartosz Golaszewski wrote:
+> 2018-02-08 10:30 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
+>> On Wednesday 07 February 2018 07:15 PM, Bartosz Golaszewski wrote:
+>>> +     /*
+>>> +      * DaVinci always uses a single clock for power-management. We assume
+>>> +      * it's the first one in the clocks property.
+>>> +      */
+>>> +     clk = of_clk_get(dev->of_node, 0);
+>>> +     if (IS_ERR(clk))
+>>> +             return PTR_ERR(clk);
+>>
+>> We already get this today with drivers/base/power/clock_ops.c once
+>> .con_ids list is dropped from pm_clk_notifier_block (which I think it
+>> should).
+>>
+>> If there is no reason to introduce thus functionality at this stage,
+>> perhaps we should wait till such a time when its clearly needed?
+>>
+>> Thanks,
+>> Sekhar
+> 
+> If I understand correctly: once we drop the con_ids list, we end up
+> calling clk_get(dev, NULL) from pm_clk_acquire(), which matches
+> against the clock with NULL con_id, which may not necessarily be the
+> first clock in the list.
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
+Hmm, not sure of this. In __of_clk_get_by_name() called by clk_get():
 
-Changes in v8: None
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+int index = 0;
 
- arch/arm/boot/dts/rv1108-evb.dts | 10 ++++++++++
- arch/arm/boot/dts/rv1108.dtsi    | 13 +++++++++++++
- 2 files changed, 23 insertions(+)
+/*
+ * For named clocks, first look up the name in the
+ * "clock-names" property.  If it cannot be found, then
+ * index will be an error code, and of_clk_get() will fail.
+ */
+if (name)
+	index = of_property_match_string(np, "clock-names", name);
 
-diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-index ac27e11..5d0ebe3 100644
---- a/arch/arm/boot/dts/rv1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -239,6 +239,16 @@
- 	};
- };
- 
-+&sfc {
-+	status = "okay";
-+	spi-nor@0 {
-+		compatible = "jedec,spi-nor";
-+		spi-max-frequency = <100000000>;
-+		m25p,fast-read;
-+		reg = <0>;
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index 76ea246..30435fc 100644
---- a/arch/arm/boot/dts/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -554,6 +554,19 @@
- 		status = "disabled";
- 	};
- 
-+	sfc: sfc@301c0000 {
-+		compatible = "rockchip,rv1108-sfc", "rockchip,sfc";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&cru SCLK_SFC>, <&cru HCLK_SFC>;
-+		clock-names = "sfc", "hsfc";
-+		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0x301c0000 0x1000>;
-+		/* If you want to use PIO mode, activate this */
-+		/*rockchip,sfc-no-dma;*/
-+		status = "disabled";
-+	};
-+
- 	gic: interrupt-controller@32010000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
--- 
-2.7.4
+So, if no con_id is provided (name == NULL), then index is set to 0
+which will always get the first clock in clocks = list.
+
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
