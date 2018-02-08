@@ -1,32 +1,49 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 09/11] DT: arm: shmobile: document Condor board bindings
-Date: Thu, 8 Feb 2018 14:13:06 -0600
-Message-ID: <20180208201306.peirumr6hvu22uyt@rob-hp-laptop>
-References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
- <30a4e575-a2c9-e0d3-f41f-4e9b15543365@cogentembedded.com>
+Subject: Re: [PATCH v2 2/6] pinctrl: sunxi: add support for the Allwinner H6
+ main pin controller
+Date: Thu, 8 Feb 2018 14:16:43 -0600
+Message-ID: <20180208201643.vqj7o5v5rzlwsoch@rob-hp-laptop>
+References: <20180203154942.63566-1-icenowy@aosc.io>
+ <20180203154942.63566-3-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <30a4e575-a2c9-e0d3-f41f-4e9b15543365-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20180203154942.63566-3-icenowy-h8G6r0blFSE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 02, 2018 at 09:45:08PM +0300, Sergei Shtylyov wrote:
-> Document the Condor device tree bindings, listing it as a supported board.
+On Sat, Feb 03, 2018 at 11:49:38PM +0800, Icenowy Zheng wrote:
+> The Allwinner H6 SoC has two pin controllers, one main controller
+> (called CPUX-PORT in user manual) and one controller in CPUs power
+> domain (called CPUS-PORT in user manual).
 > 
-> This allows to use checkpatch.pl to validate .dts files referring to the
-> Condor board.
+> This commit introduces support for the main pin controller on H6.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> The pin bank A and B are not wired out and hidden from the SoC's
+> documents, however it's shown that the "ATE" (an AC200 chip
+> co-packaged with the H6 die) is connected to the main SoC die via these
+> pin banks. The information about these banks is just copied from the BSP
+> pinctrl driver, but re-formatted to fit the mainline pinctrl driver
+> format.
 > 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
->  1 file changed, 2 insertions(+)
+> Changes in v2:
+> - Dropped without_bus_gate description.
+> - Switched to SPDX license identifier.
+> 
+>  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/pinctrl/sunxi/Kconfig                      |   4 +
+>  drivers/pinctrl/sunxi/Makefile                     |   1 +
+>  drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c          | 676 +++++++++++++++++++++
+>  4 files changed, 682 insertions(+)
+>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
