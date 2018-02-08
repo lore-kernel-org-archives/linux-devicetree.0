@@ -1,488 +1,562 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v9 6/8] media: i2c: Add TDA1997x HDMI receiver driver
-Date: Thu, 8 Feb 2018 16:06:21 +0100
-Message-ID: <f19fd00d-66fb-a4a2-295b-d4bfae3b4e51@xs4all.nl>
-References: <1518043367-11531-1-git-send-email-tharvey@gateworks.com>
- <1518043367-11531-7-git-send-email-tharvey@gateworks.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518043367-11531-7-git-send-email-tharvey@gateworks.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>, linux-media@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v7 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+Date: Thu,  8 Feb 2018 16:08:30 +0100
+Message-ID: <20180208150830.9219-3-maxime.ripard@bootlin.com>
+References: <20180208150830.9219-1-maxime.ripard@bootlin.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20180208150830.9219-1-maxime.ripard@bootlin.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tim,
+The Cadence CSI-2 RX Controller is an hardware block meant to be used as a
+bridge between a CSI-2 bus and pixel grabbers.
 
-I was so hoping I could make a pull request for this, but I still found
-problems with g/s/query_dv_timings.
+It supports operating with internal or external D-PHY, with up to 4 lanes,
+or without any D-PHY. The current code only supports the former case.
 
-I strongly suspect that v4l2-compliance would fail if you boot up the system
-*without* a source connected.
+It also support dynamic mapping of the CSI-2 virtual channels to the
+associated pixel grabbers, but that isn't allowed at the moment either.
 
-And I discovered that I was missing additional checks in the timings tests
-for v4l2-compliance that would have found the same issue if run with a source
-connected. I've fixed and committed those tests now. I'll also try to test
-that a S_DV_TIMINGS calls updates the format.
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ drivers/media/platform/Kconfig               |   1 +
+ drivers/media/platform/Makefile              |   2 +
+ drivers/media/platform/cadence/Kconfig       |  17 +
+ drivers/media/platform/cadence/Makefile      |   1 +
+ drivers/media/platform/cadence/cdns-csi2rx.c | 465 +++++++++++++++++++++++++++
+ 5 files changed, 486 insertions(+)
+ create mode 100644 drivers/media/platform/cadence/Kconfig
+ create mode 100644 drivers/media/platform/cadence/Makefile
+ create mode 100644 drivers/media/platform/cadence/cdns-csi2rx.c
 
-Details below:
-
-On 02/07/18 23:42, Tim Harvey wrote:
-> +struct tda1997x_state {
-
-...
-
-> +	struct v4l2_dv_timings timings;
-> +	const struct v4l2_dv_timings *detected_timings;
-
-...
-
-> +/* Configure frame detection window and VHREF timing generator */
-> +static int
-> +tda1997x_configure_vhref(struct v4l2_subdev *sd)
-> +{
-> +	struct tda1997x_state *state = to_state(sd);
-> +	const struct v4l2_bt_timings *bt;
-> +	int width, lines;
-> +	u16 href_start, href_end;
-> +	u16 vref_f1_start, vref_f2_start;
-> +	u8 vref_f1_width, vref_f2_width;
-> +	u8 field_polarity;
-> +	u16 fieldref_f1_start, fieldref_f2_start;
-> +	u8 reg;
-> +
-> +	if (!state->detected_timings)
-> +		return -EINVAL;
-
-Why this test? Who cares if there are no detected timings? It's certainly
-not a failure. S_DV_TIMINGS should succeed regardless of whether there is
-a signal or not and regardless of the current detected timings.
-
-> +	bt = &state->detected_timings->bt;
-
-Ouch. The timings passed in with S_DV_TIMINGS should be used.
-
-Just use state->timings here, not detected_timings.
-
-> +	href_start = bt->hbackporch + bt->hsync + 1;
-> +	href_end = href_start + bt->width;
-> +	vref_f1_start = bt->height + bt->vbackporch + bt->vsync +
-> +			bt->il_vbackporch + bt->il_vsync +
-> +			bt->il_vfrontporch;
-> +	vref_f1_width = bt->vbackporch + bt->vsync + bt->vfrontporch;
-> +	vref_f2_start = 0;
-> +	vref_f2_width = 0;
-> +	fieldref_f1_start = 0;
-> +	fieldref_f2_start = 0;
-> +	if (bt->interlaced) {
-> +		vref_f2_start = (bt->height / 2) +
-> +				(bt->il_vbackporch + bt->il_vsync - 1);
-> +		vref_f2_width = bt->il_vbackporch + bt->il_vsync +
-> +				bt->il_vfrontporch;
-> +		fieldref_f2_start = vref_f2_start + bt->il_vfrontporch +
-> +				    fieldref_f1_start;
-> +	}
-> +	field_polarity = 0;
-> +
-> +	width = V4L2_DV_BT_FRAME_WIDTH(bt);
-> +	lines = V4L2_DV_BT_FRAME_HEIGHT(bt);
-> +
-> +	/*
-> +	 * Configure Frame Detection Window:
-> +	 *  horiz area where the VHREF module consider a VSYNC a new frame
-> +	 */
-> +	io_write16(sd, REG_FDW_S, 0x2ef); /* start position */
-> +	io_write16(sd, REG_FDW_E, 0x141); /* end position */
-> +
-> +	/* Set Pixel And Line Counters */
-> +	if (state->chip_revision == 0)
-> +		io_write16(sd, REG_PXCNT_PR, 4);
-> +	else
-> +		io_write16(sd, REG_PXCNT_PR, 1);
-> +	io_write16(sd, REG_PXCNT_NPIX, width & MASK_VHREF);
-> +	io_write16(sd, REG_LCNT_PR, 1);
-> +	io_write16(sd, REG_LCNT_NLIN, lines & MASK_VHREF);
-> +
-> +	/*
-> +	 * Configure the VHRef timing generator responsible for rebuilding all
-> +	 * horiz and vert synch and ref signals from its input allowing auto
-> +	 * detection algorithms and forcing predefined modes (480i & 576i)
-> +	 */
-> +	reg = VHREF_STD_DET_OFF << VHREF_STD_DET_SHIFT;
-> +	io_write(sd, REG_VHREF_CTRL, reg);
-> +
-> +	/*
-> +	 * Configure the VHRef timing values. In case the VHREF generator has
-> +	 * been configured in manual mode, this will allow to manually set all
-> +	 * horiz and vert ref values (non-active pixel areas) of the generator
-> +	 * and allows setting the frame reference params.
-> +	 */
-> +	/* horizontal reference start/end */
-> +	io_write16(sd, REG_HREF_S, href_start & MASK_VHREF);
-> +	io_write16(sd, REG_HREF_E, href_end & MASK_VHREF);
-> +	/* vertical reference f1 start/end */
-> +	io_write16(sd, REG_VREF_F1_S, vref_f1_start & MASK_VHREF);
-> +	io_write(sd, REG_VREF_F1_WIDTH, vref_f1_width);
-> +	/* vertical reference f2 start/end */
-> +	io_write16(sd, REG_VREF_F2_S, vref_f2_start & MASK_VHREF);
-> +	io_write(sd, REG_VREF_F2_WIDTH, vref_f2_width);
-> +
-> +	/* F1/F2 FREF, field polarity */
-> +	reg = fieldref_f1_start & MASK_VHREF;
-> +	reg |= field_polarity << 8;
-> +	io_write16(sd, REG_FREF_F1_S, reg);
-> +	reg = fieldref_f2_start & MASK_VHREF;
-> +	io_write16(sd, REG_FREF_F2_S, reg);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int
-> +tda1997x_detect_std(struct tda1997x_state *state)
-> +{
-> +	struct v4l2_subdev *sd = &state->sd;
-> +	u32 vper;
-> +	u16 hper;
-> +	u16 hsper;
-> +	int i;
-> +
-> +	/*
-> +	 * Read the FMT registers
-> +	 *   REG_V_PER: Period of a frame (or two fields) in MCLK(27MHz) cycles
-> +	 *   REG_H_PER: Period of a line in MCLK(27MHz) cycles
-> +	 *   REG_HS_WIDTH: Period of horiz sync pulse in MCLK(27MHz) cycles
-> +	 */
-> +	vper = io_read24(sd, REG_V_PER) & MASK_VPER;
-> +	hper = io_read16(sd, REG_H_PER) & MASK_HPER;
-> +	hsper = io_read16(sd, REG_HS_WIDTH) & MASK_HSWIDTH;
-> +	if (!vper || !hper || !hsper)
-> +		return -ENOLINK;
-> +	v4l2_dbg(1, debug, sd, "Signal Timings: %u/%u/%u\n", vper, hper, hsper);
-> +
-> +	for (i = 0; v4l2_dv_timings_presets[i].bt.width; i++) {
-> +		const struct v4l2_bt_timings *bt;
-> +		u32 lines, width, _hper, _hsper;
-> +		u32 vmin, vmax, hmin, hmax, hsmin, hsmax;
-> +		bool vmatch, hmatch, hsmatch;
-> +
-> +		bt = &v4l2_dv_timings_presets[i].bt;
-> +		width = V4L2_DV_BT_FRAME_WIDTH(bt);
-> +		lines = V4L2_DV_BT_FRAME_HEIGHT(bt);
-> +		_hper = (u32)bt->pixelclock / width;
-> +		if (bt->interlaced)
-> +			lines /= 2;
-> +		/* vper +/- 0.7% */
-> +		vmin = ((27000000 / 1000) * 993) / _hper * lines;
-> +		vmax = ((27000000 / 1000) * 1007) / _hper * lines;
-> +		/* hper +/- 1.0% */
-> +		hmin = ((27000000 / 100) * 99) / _hper;
-> +		hmax = ((27000000 / 100) * 101) / _hper;
-> +		/* hsper +/- 2 (take care to avoid 32bit overflow) */
-> +		_hsper = 27000 * bt->hsync / ((u32)bt->pixelclock/1000);
-> +		hsmin = _hsper - 2;
-> +		hsmax = _hsper + 2;
-> +
-> +		/* vmatch matches the framerate */
-> +		vmatch = ((vper <= vmax) && (vper >= vmin)) ? 1 : 0;
-> +		/* hmatch matches the width */
-> +		hmatch = ((hper <= hmax) && (hper >= hmin)) ? 1 : 0;
-> +		/* hsmatch matches the hswidth */
-> +		hsmatch = ((hsper <= hsmax) && (hsper >= hsmin)) ? 1 : 0;
-> +		if (hmatch && vmatch && hsmatch) {
-> +			state->detected_timings = &v4l2_dv_timings_presets[i];
-> +			v4l2_print_dv_timings(sd->name, "Detected format: ",
-> +					      state->detected_timings, false);
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	v4l_err(state->client, "no resolution match for timings: %d/%d/%d\n",
-> +		vper, hper, hsper);
-> +	return -EINVAL;
-> +}
-
-...
-
-> +static void tda1997x_irq_sus(struct tda1997x_state *state, u8 *flags)
-> +{
-> +	struct v4l2_subdev *sd = &state->sd;
-> +	u8 reg, source;
-> +
-> +	source = io_read(sd, REG_INT_FLG_CLR_SUS);
-> +	io_write(sd, REG_INT_FLG_CLR_SUS, source);
-> +
-> +	if (source & MASK_MPT) {
-> +		/* reset MTP in use flag if set */
-> +		if (state->mptrw_in_progress)
-> +			state->mptrw_in_progress = 0;
-> +	}
-> +
-> +	if (source & MASK_SUS_END) {
-> +		/* reset audio FIFO */
-> +		reg = io_read(sd, REG_HDMI_INFO_RST);
-> +		reg |= MASK_SR_FIFO_FIFO_CTRL;
-> +		io_write(sd, REG_HDMI_INFO_RST, reg);
-> +		reg &= ~MASK_SR_FIFO_FIFO_CTRL;
-> +		io_write(sd, REG_HDMI_INFO_RST, reg);
-> +
-> +		/* reset HDMI flags */
-> +		state->hdmi_status = 0;
-> +	}
-> +
-> +	/* filter FMT interrupt based on SUS state */
-> +	reg = io_read(sd, REG_SUS_STATUS);
-> +	if (((reg & MASK_SUS_STATUS) != LAST_STATE_REACHED)
-> +	   || (source & MASK_MPT)) {
-> +		source &= ~MASK_FMT;
-> +	}
-> +
-> +	if (source & (MASK_FMT | MASK_SUS_END)) {
-> +		reg = io_read(sd, REG_SUS_STATUS);
-> +		if ((reg & MASK_SUS_STATUS) != LAST_STATE_REACHED) {
-> +			v4l_err(state->client, "BAD SUS STATUS\n");
-> +			return;
-> +		}
-> +
-> +		/* There is new activity, the status for HDCP repeater state */
-> +		state->state_c5_reached = 0;
-> +
-> +		/* Detect the new resolution */
-> +		if (!tda1997x_detect_std(state))
-> +			v4l2_subdev_notify_event(&state->sd, &tda1997x_ev_fmt);
-
-Why detect a new resolution here? That only need to be done when the user
-calls query_dv_timings. Just send the event unconditionally to tell userspace
-that the resolution changed.
-
-> +	}
-> +}
-
-...
-
-> +/* -----------------------------------------------------------------------------
-> + * v4l2_subdev_video_ops
-> + */
-> +
-> +static int
-> +tda1997x_g_input_status(struct v4l2_subdev *sd, u32 *status)
-> +{
-> +	struct tda1997x_state *state = to_state(sd);
-> +
-> +	mutex_lock(&state->lock);
-> +	if (state->detected_timings)
-
-What this actually tests if the driver was able to detect a valid signal
-and lock to it.
-
-In practice you have three possible outcomes:
-
-- There is no HDMI signal at all: return V4L2_IN_ST_NO_SIGNAL
-- There is a signal, but the receiver could not lock to it: return V4L2_IN_ST_NO_SYNC
-- There is a signal, and the receiver could lock: return 0.
-
-Just because this returns 0, doesn't mean that QUERY_DV_TIMINGS will succeed.
-There may be other constraints (e.g. the driver doesn't support certain formats
-such as interlaced) that can cause QUERY_DV_TIMINGS to return an error, even
-though the receiver could sync.
-
-Usually the hardware has some bits that tell whether there is a signal
-(usually the TMDS clock) and whether it could sync or not (H and V syncs).
-
-That's really all you need to test here.
-
-> +		*status = 0;
-> +	else
-> +		*status |= V4L2_IN_ST_NO_SIGNAL;
-> +	mutex_unlock(&state->lock);
-> +
-> +	return 0;
-> +};
-> +
-> +static int tda1997x_s_dv_timings(struct v4l2_subdev *sd,
-> +				struct v4l2_dv_timings *timings)
-> +{
-> +	struct tda1997x_state *state = to_state(sd);
-> +	int ret;
-> +
-> +	v4l_dbg(1, debug, state->client, "%s\n", __func__);
-> +	if (!timings)
-> +		return -EINVAL;
-
-These 'if (!timings)' tests are not needed and can be dropped here and
-elsewhere.
-
-> +
-> +	if (v4l2_match_dv_timings(&state->timings, timings, 0, false))
-> +		return 0; /* no changes */
-> +
-> +	if (!v4l2_valid_dv_timings(timings, &tda1997x_dv_timings_cap,
-> +				   NULL, NULL))
-> +		return -ERANGE;
-> +
-> +	mutex_lock(&state->lock);
-> +	state->timings = *timings;
-> +	/* setup frame detection window and VHREF timing generator */
-> +	ret = tda1997x_configure_vhref(sd);
-> +	if (ret)
-> +		goto error;
-> +	/* configure colorspace conversion */
-> +	ret = tda1997x_configure_csc(sd);
-> +	if (ret)
-> +		goto error;
-> +	mutex_unlock(&state->lock);
-> +
-> +	return 0;
-> +
-> +error:
-> +	mutex_unlock(&state->lock);
-> +	return ret;
-> +}
-> +
-> +static int tda1997x_g_dv_timings(struct v4l2_subdev *sd,
-> +				 struct v4l2_dv_timings *timings)
-> +{
-> +	struct tda1997x_state *state = to_state(sd);
-> +
-> +	v4l_dbg(1, debug, state->client, "%s\n", __func__);
-> +	if (!timings)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&state->lock);
-> +	*timings = state->timings;
-> +	mutex_unlock(&state->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tda1997x_query_dv_timings(struct v4l2_subdev *sd,
-> +				     struct v4l2_dv_timings *timings)
-> +{
-> +	struct tda1997x_state *state = to_state(sd);
-> +	int ret;
-> +
-> +	v4l_dbg(1, debug, state->client, "%s\n", __func__);
-> +	if (!timings)
-> +		return -EINVAL;
-> +
-> +	memset(timings, 0, sizeof(struct v4l2_dv_timings));
-> +	mutex_lock(&state->lock);
-> +	ret = tda1997x_detect_std(state);
-> +	if (!ret)
-> +		*timings = *state->detected_timings;
-
-I think you can just drop the 'detected_timings' field and just
-do tda1997x_detect_std(state, timings); here. That way you are not
-tempted to use 'detected_timings' in places where you shouldn't :-)
-
-> +	mutex_unlock(&state->lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static int tda1997x_s_stream(struct v4l2_subdev *sd, int enable)
-> +{
-> +	struct tda1997x_state *state = to_state(sd);
-> +
-> +	v4l_dbg(1, debug, state->client, "%s %d\n", __func__, enable);
-> +	mutex_lock(&state->lock);
-> +	if (!state->detected_timings)
-> +		v4l_dbg(1, debug, state->client, "Invalid HDMI signal\n");
-> +	mutex_unlock(&state->lock);
-> +
-> +	return 0;
-> +}
-
-I'd drop this. It isn't helpful.
-
-> +
-> +static const struct v4l2_subdev_video_ops tda1997x_video_ops = {
-> +	.g_input_status = tda1997x_g_input_status,
-> +	.s_dv_timings = tda1997x_s_dv_timings,
-> +	.g_dv_timings = tda1997x_g_dv_timings,
-> +	.query_dv_timings = tda1997x_query_dv_timings,
-> +	.s_stream = tda1997x_s_stream,
-> +};
-> +
-> +
-> +/* -----------------------------------------------------------------------------
-> + * v4l2_subdev_pad_ops
-> + */
-> +
-> +static int tda1997x_init_cfg(struct v4l2_subdev *sd,
-> +			     struct v4l2_subdev_pad_config *cfg)
-> +{
-> +	struct tda1997x_state *state = to_state(sd);
-> +	struct v4l2_mbus_framefmt *mf;
-> +
-> +	mf = v4l2_subdev_get_try_format(sd, cfg, 0);
-> +	mf->code = state->mbus_codes[0];
-> +
-> +	return 0;
-> +}
-> +
-> +static int tda1997x_enum_mbus_code(struct v4l2_subdev *sd,
-> +				  struct v4l2_subdev_pad_config *cfg,
-> +				  struct v4l2_subdev_mbus_code_enum *code)
-> +{
-> +	struct tda1997x_state *state = to_state(sd);
-> +
-> +	v4l_dbg(1, debug, state->client, "%s %d/%d\n", __func__,
-> +		code->index, ARRAY_SIZE(state->mbus_codes));
-> +	if (code->index >= ARRAY_SIZE(state->mbus_codes))
-> +		return -EINVAL;
-> +
-> +	if (!state->mbus_codes[code->index])
-> +		return -EINVAL;
-> +
-> +	code->code = state->mbus_codes[code->index];
-> +
-> +	return 0;
-> +}
-> +
-> +static int tda1997x_fill_format(struct tda1997x_state *state,
-> +				struct v4l2_mbus_framefmt *format)
-> +{
-> +	const struct v4l2_bt_timings *bt;
-> +
-> +	v4l_dbg(1, debug, state->client, "%s\n", __func__);
-> +
-> +	if (!state->detected_timings)
-> +		return -EINVAL;
-
-Ouch. Just drop this.
-
-> +
-> +	memset(format, 0, sizeof(*format));
-> +	bt = &state->detected_timings->bt;
-
-and use &state->timings.bt here. That is how the receiver is configured.
-
-> +	format->width = bt->width;
-> +	format->height = bt->height;
-> +	format->colorspace = state->colorimetry.colorspace;
-> +	format->field = (bt->interlaced) ?
-> +		V4L2_FIELD_SEQ_TB : V4L2_FIELD_NONE;
-> +
-> +	return 0;
-> +}
-
-The *only* time you need to care about the actual detected timings is when
-userspace calls QUERY_DV_TIMINGS. Never anywhere else.
-
-s_input_status is used to test some basics (do I have a signal, can I lock)
-but doesn't go 'in-depth'.
-
-If the interrupt routine detects a resolution change or it loses a stable
-signal, then it sends an event to userspace, but nothing else should change.
-
-Look at adv7604.c: the only time it attempts to detect the timings with
-read_stdi() is when called from query_dv_timings (and log_status for debugging).
-
-Regards,
-
-	Hans
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index fd0c99859d6f..6e790a317fbc 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -26,6 +26,7 @@ config VIDEO_VIA_CAMERA
+ #
+ # Platform multimedia device configuration
+ #
++source "drivers/media/platform/cadence/Kconfig"
+ 
+ source "drivers/media/platform/davinci/Kconfig"
+ 
+diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+index 003b0bb2cddf..1cd2984c55d1 100644
+--- a/drivers/media/platform/Makefile
++++ b/drivers/media/platform/Makefile
+@@ -3,6 +3,8 @@
+ # Makefile for the video capture/playback device drivers.
+ #
+ 
++obj-$(CONFIG_VIDEO_CADENCE)		+= cadence/
++
+ obj-$(CONFIG_VIDEO_M32R_AR_M64278) += arv.o
+ 
+ obj-$(CONFIG_VIDEO_VIA_CAMERA) += via-camera.o
+diff --git a/drivers/media/platform/cadence/Kconfig b/drivers/media/platform/cadence/Kconfig
+new file mode 100644
+index 000000000000..18f061e5cbd1
+--- /dev/null
++++ b/drivers/media/platform/cadence/Kconfig
+@@ -0,0 +1,17 @@
++config VIDEO_CADENCE
++	bool "Cadence Video Devices"
++
++if VIDEO_CADENCE
++
++config VIDEO_CADENCE_CSI2RX
++	tristate "Cadence MIPI-CSI2 RX Controller"
++	depends on MEDIA_CONTROLLER
++	depends on VIDEO_V4L2_SUBDEV_API
++	select V4L2_FWNODE
++	help
++	  Support for the Cadence MIPI CSI2 Receiver controller.
++
++	  To compile this driver as a module, choose M here: the module will be
++	  called cdns-csi2rx.
++
++endif
+diff --git a/drivers/media/platform/cadence/Makefile b/drivers/media/platform/cadence/Makefile
+new file mode 100644
+index 000000000000..99a4086b7448
+--- /dev/null
++++ b/drivers/media/platform/cadence/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_VIDEO_CADENCE_CSI2RX)	+= cdns-csi2rx.o
+diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
+new file mode 100644
+index 000000000000..353a9b10197b
+--- /dev/null
++++ b/drivers/media/platform/cadence/cdns-csi2rx.c
+@@ -0,0 +1,465 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Driver for Cadence MIPI-CSI2 RX Controller v1.3
++ *
++ * Copyright (C) 2017 Cadence Design Systems Inc.
++ */
++
++#include <linux/atomic.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_graph.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++
++#include <media/v4l2-ctrls.h>
++#include <media/v4l2-device.h>
++#include <media/v4l2-fwnode.h>
++#include <media/v4l2-subdev.h>
++
++#define CSI2RX_DEVICE_CFG_REG			0x000
++
++#define CSI2RX_SOFT_RESET_REG			0x004
++#define CSI2RX_SOFT_RESET_PROTOCOL			BIT(1)
++#define CSI2RX_SOFT_RESET_FRONT				BIT(0)
++
++#define CSI2RX_STATIC_CFG_REG			0x008
++#define CSI2RX_STATIC_CFG_DLANE_MAP(llane, plane)	((plane) << (16 + (llane) * 4))
++#define CSI2RX_STATIC_CFG_LANES_MASK			GENMASK(11, 8)
++
++#define CSI2RX_STREAM_BASE(n)		(((n) + 1) * 0x100)
++
++#define CSI2RX_STREAM_CTRL_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x000)
++#define CSI2RX_STREAM_CTRL_START			BIT(0)
++
++#define CSI2RX_STREAM_DATA_CFG_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x008)
++#define CSI2RX_STREAM_DATA_CFG_EN_VC_SELECT		BIT(31)
++#define CSI2RX_STREAM_DATA_CFG_VC_SELECT(n)		BIT((n) + 16)
++
++#define CSI2RX_STREAM_CFG_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x00c)
++#define CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF		(1 << 8)
++
++#define CSI2RX_LANES_MAX	4
++#define CSI2RX_STREAMS_MAX	4
++
++enum csi2rx_pads {
++	CSI2RX_PAD_SINK,
++	CSI2RX_PAD_SOURCE_STREAM0,
++	CSI2RX_PAD_SOURCE_STREAM1,
++	CSI2RX_PAD_SOURCE_STREAM2,
++	CSI2RX_PAD_SOURCE_STREAM3,
++	CSI2RX_PAD_MAX,
++};
++
++struct csi2rx_priv {
++	struct device			*dev;
++	atomic_t			count;
++
++	void __iomem			*base;
++	struct clk			*sys_clk;
++	struct clk			*p_clk;
++	struct clk			*pixel_clk[CSI2RX_STREAMS_MAX];
++	struct phy			*dphy;
++
++	u8				lanes[CSI2RX_LANES_MAX];
++	u8				num_lanes;
++	u8				max_lanes;
++	u8				max_streams;
++	bool				has_internal_dphy;
++
++	struct v4l2_subdev		subdev;
++	struct v4l2_async_notifier	notifier;
++	struct media_pad		pads[CSI2RX_PAD_MAX];
++
++	/* Remote source */
++	struct v4l2_async_subdev	asd;
++	struct v4l2_subdev		*source_subdev;
++	int				source_pad;
++};
++
++static inline
++struct csi2rx_priv *v4l2_subdev_to_csi2rx(struct v4l2_subdev *subdev)
++{
++	return container_of(subdev, struct csi2rx_priv, subdev);
++}
++
++static void csi2rx_reset(struct csi2rx_priv *csi2rx)
++{
++	writel(CSI2RX_SOFT_RESET_PROTOCOL | CSI2RX_SOFT_RESET_FRONT,
++	       csi2rx->base + CSI2RX_SOFT_RESET_REG);
++
++	usleep_range(10, 20);
++
++	writel(0, csi2rx->base + CSI2RX_SOFT_RESET_REG);
++}
++
++static int csi2rx_start(struct csi2rx_priv *csi2rx)
++{
++	unsigned int i;
++	unsigned long lanes_used = 0;
++	u32 reg;
++	int ret;
++
++	/*
++	 * We're not the first users, there's no need to enable the
++	 * whole controller.
++	 */
++	if (atomic_inc_return(&csi2rx->count) > 1)
++		return 0;
++
++	clk_prepare_enable(csi2rx->p_clk);
++
++	csi2rx_reset(csi2rx);
++
++	reg = csi2rx->num_lanes << 8;
++	for (i = 0; i < csi2rx->num_lanes; i++) {
++		reg |= CSI2RX_STATIC_CFG_DLANE_MAP(i, csi2rx->lanes[i]);
++		set_bit(csi2rx->lanes[i], &lanes_used);
++	}
++
++	/*
++	 * Even the unused lanes need to be mapped. In order to avoid
++	 * to map twice to the same physical lane, keep the lanes used
++	 * in the previous loop, and only map unused physical lanes to
++	 * the rest of our logical lanes.
++	 */
++	for (i = csi2rx->num_lanes; i < csi2rx->max_lanes; i++) {
++		unsigned int idx = find_first_zero_bit(&lanes_used,
++						       sizeof(lanes_used));
++		set_bit(idx, &lanes_used);
++		reg |= CSI2RX_STATIC_CFG_DLANE_MAP(i, i + 1);
++	}
++
++	writel(reg, csi2rx->base + CSI2RX_STATIC_CFG_REG);
++
++	ret = v4l2_subdev_call(csi2rx->source_subdev, video, s_stream, true);
++	if (ret)
++		return ret;
++
++	/*
++	 * Create a static mapping between the CSI virtual channels
++	 * and the output stream.
++	 *
++	 * This should be enhanced, but v4l2 lacks the support for
++	 * changing that mapping dynamically.
++	 *
++	 * We also cannot enable and disable independant streams here,
++	 * hence the reference counting.
++	 */
++	for (i = 0; i < csi2rx->max_streams; i++) {
++		clk_prepare_enable(csi2rx->pixel_clk[i]);
++
++		writel(CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF,
++		       csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
++
++		writel(CSI2RX_STREAM_DATA_CFG_EN_VC_SELECT |
++		       CSI2RX_STREAM_DATA_CFG_VC_SELECT(i),
++		       csi2rx->base + CSI2RX_STREAM_DATA_CFG_REG(i));
++
++		writel(CSI2RX_STREAM_CTRL_START,
++		       csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
++	}
++
++	clk_prepare_enable(csi2rx->sys_clk);
++
++	clk_disable_unprepare(csi2rx->p_clk);
++
++	return 0;
++}
++
++static int csi2rx_stop(struct csi2rx_priv *csi2rx)
++{
++	unsigned int i;
++
++	/*
++	 * Let the last user turn off the lights
++	 */
++	if (!atomic_dec_and_test(&csi2rx->count))
++		return 0;
++
++	clk_prepare_enable(csi2rx->p_clk);
++
++	for (i = 0; i < csi2rx->max_streams; i++) {
++		writel(0, csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
++
++		clk_disable_unprepare(csi2rx->pixel_clk[i]);
++	}
++
++	clk_disable_unprepare(csi2rx->p_clk);
++
++	return v4l2_subdev_call(csi2rx->source_subdev, video, s_stream, false);
++}
++
++static int csi2rx_s_stream(struct v4l2_subdev *sd, int enable)
++{
++	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(sd);
++	int ret;
++
++	if (enable)
++		ret = csi2rx_start(csi2rx);
++	else
++		ret = csi2rx_stop(csi2rx);
++
++	return ret;
++}
++
++static const struct v4l2_subdev_video_ops csi2rx_video_ops = {
++	.s_stream	= csi2rx_s_stream,
++};
++
++static const struct v4l2_subdev_ops csi2rx_subdev_ops = {
++	.video		= &csi2rx_video_ops,
++};
++
++static int csi2rx_async_bound(struct v4l2_async_notifier *notifier,
++			      struct v4l2_subdev *s_subdev,
++			      struct v4l2_async_subdev *asd)
++{
++	struct v4l2_subdev *subdev = notifier->sd;
++	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
++
++	csi2rx->source_pad = media_entity_get_fwnode_pad(&s_subdev->entity,
++							 s_subdev->fwnode,
++							 MEDIA_PAD_FL_SOURCE);
++	if (csi2rx->source_pad < 0) {
++		dev_err(csi2rx->dev, "Couldn't find output pad for subdev %s\n",
++			s_subdev->name);
++		return csi2rx->source_pad;
++	}
++
++	csi2rx->source_subdev = s_subdev;
++
++	dev_dbg(csi2rx->dev, "Bound %s pad: %d\n", s_subdev->name,
++		csi2rx->source_pad);
++
++	return media_create_pad_link(&csi2rx->source_subdev->entity,
++				     csi2rx->source_pad,
++				     &csi2rx->subdev.entity, 0,
++				     MEDIA_LNK_FL_ENABLED |
++				     MEDIA_LNK_FL_IMMUTABLE);
++}
++
++static const struct v4l2_async_notifier_operations csi2rx_notifier_ops = {
++	.bound		= csi2rx_async_bound,
++};
++
++static int csi2rx_get_resources(struct csi2rx_priv *csi2rx,
++				struct platform_device *pdev)
++{
++	struct resource *res;
++	unsigned char i;
++	u32 reg;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	csi2rx->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(csi2rx->base))
++		return PTR_ERR(csi2rx->base);
++
++	csi2rx->sys_clk = devm_clk_get(&pdev->dev, "sys_clk");
++	if (IS_ERR(csi2rx->sys_clk)) {
++		dev_err(&pdev->dev, "Couldn't get sys clock\n");
++		return PTR_ERR(csi2rx->sys_clk);
++	}
++
++	csi2rx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
++	if (IS_ERR(csi2rx->p_clk)) {
++		dev_err(&pdev->dev, "Couldn't get P clock\n");
++		return PTR_ERR(csi2rx->p_clk);
++	}
++
++	csi2rx->dphy = devm_phy_optional_get(&pdev->dev, "dphy");
++	if (IS_ERR(csi2rx->dphy)) {
++		dev_err(&pdev->dev, "Couldn't get external D-PHY\n");
++		return PTR_ERR(csi2rx->dphy);
++	}
++
++	/*
++	 * FIXME: Once we'll have external D-PHY support, the check
++	 * will need to be removed.
++	 */
++	if (csi2rx->dphy) {
++		dev_err(&pdev->dev, "External D-PHY not supported yet\n");
++		return -EINVAL;
++	}
++
++	clk_prepare_enable(csi2rx->p_clk);
++	reg = readl(csi2rx->base + CSI2RX_DEVICE_CFG_REG);
++	clk_disable_unprepare(csi2rx->p_clk);
++
++	csi2rx->max_lanes = (reg & 7);
++	if (csi2rx->max_lanes > CSI2RX_LANES_MAX) {
++		dev_err(&pdev->dev, "Invalid number of lanes: %u\n",
++			csi2rx->max_lanes);
++		return -EINVAL;
++	}
++
++	csi2rx->max_streams = ((reg >> 4) & 7);
++	if (csi2rx->max_streams > CSI2RX_STREAMS_MAX) {
++		dev_err(&pdev->dev, "Invalid number of streams: %u\n",
++			csi2rx->max_streams);
++		return -EINVAL;
++	}
++
++	csi2rx->has_internal_dphy = (reg & BIT(3)) ? true : false;
++
++	/*
++	 * FIXME: Once we'll have internal D-PHY support, the check
++	 * will need to be removed.
++	 */
++	if (csi2rx->has_internal_dphy) {
++		dev_err(&pdev->dev, "Internal D-PHY not supported yet\n");
++		return -EINVAL;
++	}
++
++	for (i = 0; i < csi2rx->max_streams; i++) {
++		char clk_name[16];
++
++		snprintf(clk_name, sizeof(clk_name), "pixel_if%u_clk", i);
++		csi2rx->pixel_clk[i] = devm_clk_get(&pdev->dev, clk_name);
++		if (IS_ERR(csi2rx->pixel_clk[i])) {
++			dev_err(&pdev->dev, "Couldn't get clock %s\n", clk_name);
++			return PTR_ERR(csi2rx->pixel_clk[i]);
++		}
++	}
++
++	return 0;
++}
++
++static int csi2rx_parse_dt(struct csi2rx_priv *csi2rx)
++{
++	struct v4l2_fwnode_endpoint v4l2_ep;
++	struct fwnode_handle *fwh;
++	struct device_node *ep;
++	int ret;
++
++	ep = of_graph_get_endpoint_by_regs(csi2rx->dev->of_node, 0, 0);
++	if (!ep)
++		return -EINVAL;
++
++	fwh = of_fwnode_handle(ep);
++	ret = v4l2_fwnode_endpoint_parse(fwh, &v4l2_ep);
++	if (ret) {
++		dev_err(csi2rx->dev, "Could not parse v4l2 endpoint\n");
++		of_node_put(ep);
++		return ret;
++	}
++
++	if (v4l2_ep.bus_type != V4L2_MBUS_CSI2) {
++		dev_err(csi2rx->dev, "Unsupported media bus type: 0x%x\n",
++			v4l2_ep.bus_type);
++		of_node_put(ep);
++		return -EINVAL;
++	}
++
++	memcpy(csi2rx->lanes, v4l2_ep.bus.mipi_csi2.data_lanes,
++	       sizeof(csi2rx->lanes));
++	csi2rx->num_lanes = v4l2_ep.bus.mipi_csi2.num_data_lanes;
++	if (csi2rx->num_lanes > csi2rx->max_lanes) {
++		dev_err(csi2rx->dev, "Unsupported number of data-lanes: %d\n",
++			csi2rx->num_lanes);
++		of_node_put(ep);
++		return -EINVAL;
++	}
++
++	csi2rx->asd.match.fwnode.fwnode = fwnode_graph_get_remote_port_parent(fwh);
++	csi2rx->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
++	of_node_put(ep);
++
++	csi2rx->notifier.subdevs = devm_kzalloc(csi2rx->dev,
++						sizeof(*csi2rx->notifier.subdevs),
++						GFP_KERNEL);
++	if (!csi2rx->notifier.subdevs)
++		return -ENOMEM;
++
++	csi2rx->notifier.subdevs[0] = &csi2rx->asd;
++	csi2rx->notifier.num_subdevs = 1;
++	csi2rx->notifier.ops = &csi2rx_notifier_ops;
++
++	return v4l2_async_subdev_notifier_register(&csi2rx->subdev,
++						   &csi2rx->notifier);
++}
++
++static int csi2rx_probe(struct platform_device *pdev)
++{
++	struct csi2rx_priv *csi2rx;
++	unsigned int i;
++	int ret;
++
++	csi2rx = kzalloc(sizeof(*csi2rx), GFP_KERNEL);
++	if (!csi2rx)
++		return -ENOMEM;
++	platform_set_drvdata(pdev, csi2rx);
++	csi2rx->dev = &pdev->dev;
++
++	ret = csi2rx_get_resources(csi2rx, pdev);
++	if (ret)
++		goto err_free_priv;
++
++	ret = csi2rx_parse_dt(csi2rx);
++	if (ret)
++		goto err_free_priv;
++
++	csi2rx->subdev.owner = THIS_MODULE;
++	csi2rx->subdev.dev = &pdev->dev;
++	v4l2_subdev_init(&csi2rx->subdev, &csi2rx_subdev_ops);
++	v4l2_set_subdevdata(&csi2rx->subdev, &pdev->dev);
++	snprintf(csi2rx->subdev.name, V4L2_SUBDEV_NAME_SIZE, "%s.%s",
++		 KBUILD_MODNAME, dev_name(&pdev->dev));
++
++	/* Create our media pads */
++	csi2rx->subdev.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
++	csi2rx->pads[CSI2RX_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
++	for (i = CSI2RX_PAD_SOURCE_STREAM0; i < CSI2RX_PAD_MAX; i++)
++		csi2rx->pads[i].flags = MEDIA_PAD_FL_SOURCE;
++
++	ret = media_entity_pads_init(&csi2rx->subdev.entity, CSI2RX_PAD_MAX,
++				     csi2rx->pads);
++	if (ret)
++		goto err_free_priv;
++
++	ret = v4l2_async_register_subdev(&csi2rx->subdev);
++	if (ret < 0)
++		goto err_free_priv;
++
++	dev_info(&pdev->dev,
++		 "Probed CSI2RX with %u/%u lanes, %u streams, %s D-PHY\n",
++		 csi2rx->num_lanes, csi2rx->max_lanes, csi2rx->max_streams,
++		 csi2rx->has_internal_dphy ? "internal" : "no");
++
++	return 0;
++
++err_free_priv:
++	kfree(csi2rx);
++	return ret;
++}
++
++static int csi2rx_remove(struct platform_device *pdev)
++{
++	struct csi2rx_priv *csi2rx = platform_get_drvdata(pdev);
++
++	v4l2_async_unregister_subdev(&csi2rx->subdev);
++	kfree(csi2rx);
++
++	return 0;
++}
++
++static const struct of_device_id csi2rx_of_table[] = {
++	{ .compatible = "cdns,csi2rx" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, csi2rx_of_table);
++
++static struct platform_driver csi2rx_driver = {
++	.probe	= csi2rx_probe,
++	.remove	= csi2rx_remove,
++
++	.driver	= {
++		.name		= "cdns-csi2rx",
++		.of_match_table	= csi2rx_of_table,
++	},
++};
++module_platform_driver(csi2rx_driver);
+-- 
+2.14.3
