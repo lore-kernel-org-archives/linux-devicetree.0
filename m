@@ -1,214 +1,145 @@
-From: "A.s. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
-Date: Thu, 8 Feb 2018 11:54:06 +0000
-Message-ID: <AM3PR04MB306EA28023A2C9EC72DB2A680F30@AM3PR04MB306.eurprd04.prod.outlook.com>
-References: <20180201174923.7385-1-l.stach@pengutronix.de>
- <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
- <1517825351.3175.3.camel@pengutronix.de>
- <CACRpkdanb3XocUpmTaFTh-vsApucX0PzuqRg_fA2ORUFtrVGJA@mail.gmail.com>
- <1517914394.3175.21.camel@pengutronix.de>
- <CACRpkdbuGOrm=y=yPpsrkckk8+uKGxv6J9WGw9y=yiGcmbqn+w@mail.gmail.com>
- <1517932068.3175.27.camel@pengutronix.de>
- <CACRpkdYy43E5H=tRAf+YDvAY1RDTJ34nHSmqCXEn9xaknbLKZQ@mail.gmail.com>
- <AM3PR04MB306CAB722808288C56A08BA80FC0@AM3PR04MB306.eurprd04.prod.outlook.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v8 0/7] TDA1997x HDMI video reciver
+Date: Thu, 8 Feb 2018 12:56:25 +0100
+Message-ID: <3b95357c-e44f-eed9-efd3-e2b0e4ff9eb2@xs4all.nl>
+References: <1517948874-21681-1-git-send-email-tharvey@gateworks.com>
+ <c7771c44-a9ff-0207-38f6-28bcc06ccdee@xs4all.nl>
+ <CAJ+vNU1oiM0Y0rO-DHi57nVOqnw60A7pn_1=h5b46-BrY7_p2Q@mail.gmail.com>
+ <605fd4a8-43ab-c566-57b6-abb1c9f8f0f8@xs4all.nl>
+ <7cf38465-7a79-5d81-a995-9acfbacf5023@xs4all.nl>
+ <CAJ+vNU014FJZsb44YnidE3fFiqeB6o8A7kvGinJWu7=yq3_dhA@mail.gmail.com>
+ <d188a172-fc00-eb46-c6f5-833a86475390@xs4all.nl>
+ <1518086816.4359.4.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AM3PR04MB306CAB722808288C56A08BA80FC0-f56W/S9L6NSIzFHTN1kKrAfhPeD8jYilXA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1518086816.4359.4.camel@pengutronix.de>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dl-linux-imx <linux-imx-3arQi8VN3Tc@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Tim Harvey <tharvey@gateworks.com>
+Cc: linux-media <linux-media@vger.kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBLnMuIERvbmcNCj4gU2VudDog
-MjAxOOW5tDLmnIg35pelIDE5OjAzDQo+IFRvOiAnTGludXMgV2FsbGVpaicgPGxpbnVzLndhbGxl
-aWpAbGluYXJvLm9yZz47IEx1Y2FzIFN0YWNoDQo+IDxsLnN0YWNoQHBlbmd1dHJvbml4LmRlPjsg
-ZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT47IEdhcnkgQmlzc29uDQo+IDxnYXJ5LmJp
-c3NvbkBib3VuZGFyeWRldmljZXMuY29tPjsgVmxhZGltaXIgWmFwb2xza2l5DQo+IDx2bGFkaW1p
-cl96YXBvbHNraXlAbWVudG9yLmNvbT47IFNhc2NoYSBIYXVlciA8a2VybmVsQHBlbmd1dHJvbml4
-LmRlPg0KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8
-bWFyay5ydXRsYW5kQGFybS5jb20+Ow0KPiBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsgb3Bl
-biBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRA0KPiBERVZJQ0UgVFJFRSBCSU5ESU5H
-UyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBwYXRjaHdvcmstbHN0QHBlbmd1dHJv
-bml4LmRlDQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggdjIgMS8zXSBkdC1iaW5kaW5nczogYWRkIGJp
-bmRpbmcgZm9yIGkuTVg4TVEgSU9NVVhDDQo+IA0KPiBIaSBMaW51cywNCj4gDQo+ID4gLS0tLS1P
-cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBMaW51cyBXYWxsZWlqIFttYWlsdG86bGlu
-dXMud2FsbGVpakBsaW5hcm8ub3JnXQ0KPiA+IFNlbnQ6IDIwMTjlubQy5pyIN+aXpSAxNzowOQ0K
-PiA+IFRvOiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT47IEEucy4gRG9uZw0K
-PiA+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5j
-b20+OyBHYXJ5IEJpc3Nvbg0KPiA+IDxnYXJ5LmJpc3NvbkBib3VuZGFyeWRldmljZXMuY29tPjsg
-VmxhZGltaXIgWmFwb2xza2l5DQo+ID4gPHZsYWRpbWlyX3phcG9sc2tpeUBtZW50b3IuY29tPjsg
-U2FzY2hhIEhhdWVyIDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+DQo+ID4gQ2M6IFJvYiBIZXJyaW5n
-IDxyb2JoQGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPiA8bWFyay5ydXRsYW5kQGFybS5j
-b20+OyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsgb3BlbiBsaXN0Ok9QRU4NCj4gPiBGSVJN
-V0FSRSBBTkQgRkxBVFRFTkVEIERFVklDRSBUUkVFIEJJTkRJTkdTDQo+ID4gPGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnPjsgcGF0Y2h3b3JrLWxzdEBwZW5ndXRyb25peC5kZQ0KPiA+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjIgMS8zXSBkdC1iaW5kaW5nczogYWRkIGJpbmRpbmcgZm9yIGkuTVg4
-TVENCj4gPiBJT01VWEMNCj4gPg0KPiA+IE9uIFR1ZSwgRmViIDYsIDIwMTggYXQgNDo0NyBQTSwg
-THVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOg0KPiA+DQo+ID4gPiBU
-byBiZSBmdWxseSBob25lc3QgSSdtIGEgYml0IGFubm95ZWQgd2l0aCB0aGUgcGluY3RybCBmcmFt
-ZXdvcmsNCj4gPiA+IG1ha2luZyB0aGluZ3MgKElNSE8pIHVubmVjZXNzYXJpbHkgY29tcGxleCwg
-Zm9yIHdoYXQgaXMgYmFzaWNhbGx5IGENCj4gPiA+IHByZXR0eSBlYXN5IHRhc2suDQo+ID4NCj4g
-PiBNeSBhbWJpdGlvbiBpcyB0byBtYWtlIHRoaW5ncyByZWFkYWJsZSwgdW5kZXJzdGFuZGFibGUg
-YW5kDQo+ID4gbWFpbnRhaW5hYmxlLiBJbiBnZW5lcmljIHRlcm1zLCBpbmNvcnBvcmF0aW5nIGEg
-YnVuY2ggb2Yga25vd2xlZGdlIG9mDQo+ID4gdGhlIGVsZWN0cm9uaWNzIHRoYXQgcmVhbGx5IGhh
-cHBlbiBpbnRvIHRoZSBzdHVmZiB3ZSBlbmNvZGUgaW4gdGhlIGtlcm5lbC4NCj4gPg0KPiA+IEkg
-Z3Vlc3MgaXQgdmFyaWVzIGEgYml0IG9uIHdoYXQgZ29hbCBvbmUgaGFzLg0KPiA+DQo+ID4gSWYg
-dGhlIGdvYWwgaXMgInNoaXAgcHJvZHVjdCB3aXRoIHVwc3RyZWFtIGtlcm5lbCByZWFsbHkgZmFz
-dCBub3ciDQo+ID4gdGhlbiB0aGluZ3MgbGlrZSBwaW5jdHJsLXNpbmdsZS5jIHdoZXJlIHdlIGp1
-c3QgaGFtbWVyIG1hZ2ljIHZhbHVlcw0KPiA+IGludG8gcmVnaXN0ZXJzLCBtYWtlIHNlbnNlLiBP
-TUFQIGRldmVsb3BlcnMgaGFkIG5vIGlkZWEgd2hhdHNvZXZlcg0KPiA+IHdoYXQgdGhlaXIgQVNJ
-QyBwZW9wbGUgb3IgY2VsbCBsaWJyYXJ5IGF1dGhvcnMgd2VyZSBkb2luZyBzbyB0aGV5IGp1c3Qg
-dGhyZXcgaW4NCj4gdGhlIHRvd2VsLg0KPiA+IEhpU2lsaWNvbiBhbHNvIHVzZSB0aGlzLiBJbnRl
-bHMgYW1iaXRpb24gd2FzIHRvIHVzZSBBQ1BJIEJJT1MgdG8NCj4gPiBoYW5kbGUgYWxsIHBpbiBj
-b250cm9sIGFuZCByb3V0ZSBhcm91bmQgdGhlIGtlcm5lbCBhbHRvZ2V0aGVyLCBidXQNCj4gPiB0
-aGF0IGlzIG5vdCB3b3JraW5nIG91dCBzbyB3ZWxsIGZvciB0aGVtIEkgdGhpbmsuDQo+ID4NCj4g
-PiBBbGwgb2YgdGhlbSBhcmUgYXBwcm9hY2hlcyB0byBhdm9pZCBwdXR0aW5nIHRoZSBoYWlyeSBk
-ZXRhaWxzIGludG8gdGhlDQo+ID4ga2VybmVsLCBqdXN0IHBva2Ugc29tZSBtYWdpYyB2YWx1ZXMg
-aW50byBzb21lIG1hZ2ljIHJlZ2lzdGVycyBhbmQgYmUgaGFwcHkuDQo+ID4NCj4gPiBTbyBpLk1Y
-IGNvdWxkIGhhdmUgYmVlbiBsaWtlIHRoYXQsIGJ1dCB0aGVuIEkgZ3Vlc3MgeW91IG5lZWQgdG8g
-dGFrZQ0KPiA+IGxlZ2FjeSBpbnRvIGFjY291bnQgYW5kIGRpc2N1c3Mgd2l0aCB0aGUgb3RoZXIg
-aS5NWCBkcml2ZXIgYXV0aG9ycw0KPiA+IGFib3V0IGhvdyB0aGV5IHJlYWxseSB3YW50ZWQgYW5k
-IHdhbnQgdG8gZG8gdGhpbmdzLg0KPiA+DQo+ID4gVGhlaXIgY3VycmVudCBzaWxlbmNlIHdydCB0
-aGlzIG1haWxjaGFpbiBpcyBhY3R1YWxseSBiZWNvbWluZyBhDQo+ID4gcHJvYmxlbSwgYW5kIHRo
-ZSBwcm9ibGVtIGlzIHRoYXQgZGlzY3Vzc2luZyB3aXRoIHlvdSBmYWxscyB1cHdhcmRzIHRvIG1l
-IGFzDQo+IHN1YnN5c3RlbSBtYWludGFpbmVyLg0KPiA+IFdoaWNoIHN1Y2tzLiBJIHByZWZlciB0
-aGF0IHBlb3BsZSB3aG8ga25vdyB0aGlzIGhhcmR3YXJlIGRpc2N1c3MNCj4gPiBhbW9uZ3N0IHRo
-ZW1zZWx2ZXMgaG93IHRoZXkgd2FudCB0aGluZ3MgdG8gd29yay4NCj4gPg0KPiA+IFN1cmVseSBT
-YXNjaGEgbXVzdCBoYXZlIGFuIG9waW5pb24/IEl0IG1lYW5zIG11Y2ggdG8gbWUgd2hhdCBoZSB3
-YW50cyB0bw0KPiBkby4NCj4gPiBJIHRha2UgaXQgeW91IGd1eXMgYXJlIGNvbGxlYWd1ZXM/DQo+
-ID4NCj4gPiA+IFBlbmd1dHJvbml4IGlzIG1vc3RseSBjb250cmFjdGVkIGJ5IGN1c3RvbWVycyBv
-ZiBOWFAgdG8gZW5hYmxlIHN0dWZmDQo+ID4gPiBpbiBtYWlubGluZS4gU28gSSdtIG5vdCB3b3Jr
-aW5nIG9uIHRoaXMgaW4gbXkgc3BhcmUgdGltZSwgYnV0IEkNCj4gPiA+IHN0aWxsIGhhdmUgdG8g
-ZGVhbCB3aXRoIHRoZSBmYWN0IHRoYXQgSSBjYW4gb25seSBnZXQgdGhlIGluZm9ybWF0aW9uDQo+
-ID4gPiBmcm9tIHRoZSByZWZlcmVuY2UgbWFudWFsLCBOWFAgZG93bnN0cmVhbSBCU1BzIGFuZCB0
-aGUgb2NjYXNpb25hbA0KPiA+ID4gaGVscGZ1bCBOWFAgZW1wbG95ZWUuDQo+ID4NCj4gPiBIbSBJ
-IHNlZSwgdGhpcyBzZWVtcyBsaWtlIGEgYml0IG9mIGNyYXBweSBwb3NpdGlvbiB0byBiZSBpbiB3
-aGVuIHlvdQ0KPiA+IGp1c3Qgd2FudCB0byBhc2sgc29tZW9uZSBpbiBoYXJkd2FyZSBob3cgdGhp
-bmdzIHJlYWxseSB3b3JrLg0KPiA+DQo+ID4gQnV0IHdlIGhhdmUgRnJlZXNjYWxlIGkuTVggbWFp
-bnRhaW5lcnMgb24gdGhlIGluc2lkZSBvZiB0aGUgY29tcGFueQ0KPiA+IG5vdyBOWFAgKHNvb24g
-UXVhbGNvbW0/IHNvb24gQnJvYWRjb20/KS4NCj4gPg0KPiA+IEhlbGwgdGhpcyBtYWlsIGlzIGV2
-ZW4gZ29pbmcgdG8gbGludXgtaW14QG54cC5jb20sIHdoYXQgZG8gdGhleSBkbw0KPiA+IHdpdGgg
-aXQ/IFB1dCBpdCBpbiBhIG1haWxib3ggYW5kIG5ldmVyIHJlYWQgaXQ/DQo+ID4NCj4gPiBTdXJl
-bHkgc29tZW9uZSBvbiB0aGUgaW5zaWRlIG11c3QgYmUgYWJsZSB0byBwcm92aWRlIHNvbWUgZGV0
-YWlscy4NCj4gPg0KPiANCj4gSSBmZWVsIHRlcnJpYmx5IHNvcnJ5IHRoYXQgZGlkIG5vdCBjb21l
-IHVwIGluIHRoZSBmaXJzdCB0aW1lIHRoZXNlIHR3byBkYXlzIGFzIEkgd2FzDQo+IGJ1c3kgd2l0
-aCBzb21lIG90aGVyIHVyZ2VudCB0aGluZ3MgcmVxdWVzdGVkIGJ5IG15IGJvc3MuDQo+IEl0IHNo
-b3VsZCBiZSBteSByZXNwb25zaWJpbGl0eSBhcyBJIHByb21pc2VkIHRvIHRha2UgdGhhdCBvd25l
-cnNoaXAgYmVmb3JlLg0KPiANCj4gSSBxdWlja2x5IHdlbnQgdGhyb3VnaCB0aGUgZW1haWwgYW5k
-IEkgZnVsbHkgdW5kZXJzdGFuZCB5b3VyIGNvbmNlcm4uDQo+IEFzIEknbSBub3QgYSBzcGVjaWFs
-aXN0IG9uIHRoZSBIVyBpbnRlcm5hbHMgb2YgSU9NVVggZGVzaWduLCBpIGFscmVhZHkgZm9yd2Fy
-ZGVkDQo+IHRoZSBJc3N1ZSB0byBvdXIgSVAgb3duZXIuDQo+IA0KPiBEdWUgdG8gaXQncyBhbHJl
-YWR5IG9mZiB3b3JrIHRpbWUgYXQgbXkgc2lkZSwgSSB3aWxsIGRpc2N1c3Mgd2l0aCBoaW0gdG9t
-b3Jyb3cNCj4gTW9ybmluZyBhbmQgZ2V0IGJhY2sgdG8geW91IGxhdGVyLg0KPiANCj4gQW5kIGkg
-d2lsbCBjYXJlZnVsbHkgcmV2aWV3IHRoZSByZWZlcmVuY2UgbWFudWFsIGFuZCBkb2Mgb24gbXkg
-aGFuZHMuDQo+IEhvcGVmdWxseSBJIGNhbiBnaXZlIHlvdSBzb21lIGluZm9ybWF0aW9uIGxhdGVy
-IHlvdSB3YW50Lg0KPiANCg0KSGVyZSBpcyBzb21lIGluZm9ybWF0aW9uIGZyb20gb3VyIElQIGRl
-c2lnbmVyLg0KSXQgcHJvYmFibHkgZXhwbGFpbnMgd2h5IGkuTVggdXNlcyBPaG0gdG8gcmVwcmVz
-ZW50cyBkcml2ZXIgc3RyZW5ndGguDQoNCiJFbGVjdHJpY2FsIHNwZWMgZm9yIGRpZmZlcmVudCBp
-bnRlcmZhY2VzIHR5cGljYWxseSBkZWZpbmUgb3V0cHV0IGRyaXZlciBpbiBPaG0uDQpTbyB3ZSBm
-b2xsb3cgdGhlIHNhbWUgd2F5IHRvIGNvbXBseSB3aXRoIHNwZWMgcmVxdWlyZW1lbnQuIEFsc28s
-IGZvciB0aGUNCmJvYXJkIGRlc2lnbmVyIGl0IGlzIGltcG9ydGFudCB0byBrbm93IHRoZSBkcml2
-ZXIgaW1wZWRhbmNlIHRvIG1hdGNoIHRoZQ0KZHJpdmVyIGFuZCBQQ0IgdHJhY2UgcmVzaXN0YW5j
-ZS4gRGVmaW5pbmcgdGhlIGRyaXZlciBpbiBPaG0gYWxsb3dzIHRvDQpjYWxjdWxhdGUgSVIgZHJv
-cCwgYXMgd2VsbCBhcyBvdXRwdXQgc2xldyByYXRlLCB3aGljaCBhcmUgaW1wb3J0YW50IHRvIGtu
-b3cuIg0KDQpBbiBleGFtcGxlIGZyb20gZU1NQyA1LjEgc3BlYzoNCg0KVGFibGUgMjA2IC0gSS9P
-IGRyaXZlciBzdHJlbmd0aCB0eXBlcw0KMHgwCQk1MM6pCQl4MQ0KMHgxCQkzM86pCQl4MS41DQow
-eDIJCTY2zqkJCXgwLjc1DQoweDMJCTEwMM6pCXgwLjUNCjB4NAkJNDDOqQkJeDEuMg0KDQpBbmQg
-Zm9yIG9uZSBxdWVzdGlvbiB5b3UgYXNrZWQgaW4gYW5vdGhlciBlbWFpbC4NCi0gSXMgdGhlIGlu
-dGVuZGVkIHVzYWdlIGZvciBpbXBlZGFuY2UgbWF0Y2hpbmc/DQpGb3IgbG93IGZyZXF1ZW5jeSBp
-bnRlcmZhY2UsIGZvciBleGFtcGxlLCBJMkMvR1BJTywgaXTigJlzIG5vdCBuZWNlc3NhcnkuwqAN
-CkZvciBoaWdoIGZyZXF1ZW5jeSBpbnRlcmZhY2UsIGZvciBleGFtcGxlLCBERFIvSFMyMDAvSFM0
-MDAvUmF3bmFuZA0KZGlmZmVyZW50aWFsIDIwME0sIGluIHRoZW9yeSwgd2Ugc2hvdWxkIGNvbnNp
-ZGVyIGltcGVkYW5jZSBtYXRjaGluZyBmb3INCmJldHRlciBzaWduYWwgcXVhbGl0eS4gQW55d2F5
-LCB3ZSBjYW4gY2hlY2sgdGhhdCBieSBib2FyZCBsZXZlbCBzaW11bGF0aW9uDQp3aXRoIHNwaWNl
-IG1vZGVsLg0KDQpBbmQgSUMgZ3V5cyB0aG91Z2h0IE9obSBwcm9iYWJseSBpcyBtb3JlIHN1aXRh
-YmxlIGZvciBoaWdoIHNwZWVkDQpJTyBwYWRzLg0KDQpIb3BlIGl0IGhlbHBzLg0KDQpSZWdhcmRz
-DQpEb25nIEFpc2hlbmcNCg0KPiBSZWdhcmRzDQo+IERvbmcgQWlzaGVuZw0KPiANCj4gPiA+IEFs
-c28gZXZlbiBpZiB3ZSB3ZXJlIGluc2lkZSBvZiBOWFAsIHBhZCBjZWxscyBhcmUgdXN1YWxseSBz
-b21ldGhpbmcNCj4gPiA+IHRoYXQgY2hpcCBtYWtlcnMgYnV5IG9yIGdldCBmcm9tIHRoZSBGYWIg
-ZGVzaWduIGxpYnJhcnkuIFNvIHByb2JhYmx5DQo+ID4gPiBldmVuIHRoZXkgZG9uJ3Qga25vdyB3
-aGF0J3MgaW5zaWRlIGV4YWN0bHkuDQo+ID4NCj4gPiBZZWFoIHRoYXQgaXMgd2hhdCBJIGNhbGwg
-InRocm93IG92ZXIgdGhlIHdhbGwgZW5naW5lZXJpbmciLg0KPiA+IEl0J3Mgbm90IGdvb2QsIGlm
-IE5YUCB3b3JrcyB3aXRoIGluZm9ybWF0aW9uIGJyaWNrIHdhbGxzIGxpa2UgdGhhdCBpdA0KPiA+
-IGlzIG5vdCBhbnkgZ29vZCBmb3IgdGhlbSwgYmVjYXVzZSBpdCBpcyBub3QgYW55IGdvb2QgZm9y
-IHRoZWlyIGN1c3RvbWVycy4NCj4gPg0KPiA+IE5vdCBzb21ldGhpbmcgeW91IG9yIEkgY2FuIGZp
-eCB0aG91Z2guLi4NCj4gPg0KPiA+ID4gV2hhdCB1c3VhbGx5IGhhcHBlbnMgaXMgdGhhdCBoYXJk
-d2FyZSAoSSdtIHRhbGtpbmcgYWJvdXQNCj4gPiA+IGJvYXJkL3N5c3RlbQ0KPiA+ID4gaGVyZSkg
-ZGVzaWduZXJzIHN0YXJ0IGJ5IHJlYWRpbmcgdGhlIHJlZmVyZW5jZSBtYW51YWwgYW5kIGhhcmR3
-YXJlDQo+ID4gPiBkZXNpZ24gZ3VpZGUgYW5kIHdvcmsgd2l0aCB0aGF0LiBUaGV5IGNvbWUgdXAg
-d2l0aCBhbGwgdGhlIG5lY2Vzc2FyeQ0KPiA+ID4gY29uZmlndXJhdGlvbiBpbiB0aGUgdGVybXMg
-b2YgdGhlIG1hbnVhbC4NCj4gPg0KPiA+IFNvbWV0aW1lcyBoYWxmLWd1ZXNzaW5nIGFuZCBhIGJp
-dCBvZiB0cmlhbC1hbmQtZXJyb3IgcmlnaHQ/DQo+ID4NCj4gPiA+IEFmdGVyIHRoYXQgdGhleSBv
-ciBzb21lb25lIGVsc2UgaGFzIHRvIHRyYW5zbGF0ZSB0aGlzIGludG8gRFQuDQo+ID4gPiBUaGlu
-Z3MgZ2V0IGNvbmZ1c2luZyB3aGVuIHRoZSByZWZlcmVuY2UgbWFudWFsIGFuZCB0aGUgRFQgYmlu
-ZGluZw0KPiA+ID4gZGlzYWdyZWUgYWJvdXQgdGhlIHVzZWQgdGVybXMuDQo+ID4NCj4gPiBJIHNl
-ZS4NCj4gPg0KPiA+ID4+IElmIHlvdSB3YW50IHNvbWV0aGluZyB0byBtYXRjaCB0aGUgc3BlY2lm
-aWMgaGFyZHdhcmUgbWFudWFsIGZyb20NCj4gPiA+PiBOWFAgYW5kIHlvdSBkb24ndCB3YW50IGl0
-IHRvIGJlIHRyYW5zbGF0ZWQgaW50byB0aGUgdW5pdHMgb2YgdGhlIERUDQo+ID4gPj4gYmluZGlu
-ZywgdGhlbiBJIHRoaW5rIGl0IGlzIGJldHRlciB0byB1c2Ugc29tZXRoaW5nIHByZWZpeGVkICJu
-eHAsKiIuDQo+ID4gPg0KPiA+ID4+IFRoYXQgY2xlYXJseSBpbmRpY2F0ZXMgdGhhdCB0aGlzIGlz
-IHNvbWUgTlhQIG9kZGl0eSB0aGF0IHdlIGRvbid0DQo+ID4gPj4gcmVhbGx5IHVuZGVyc3RhbmQu
-DQo+ID4gPg0KPiA+ID4gSSdtIG5vdCBrZWVuIG9uIHVzaW5nIHRoZSBjb21tb24gcGFkY3RybCBz
-dHVmZiwgd2hpY2ggYWxyZWFkeSBibG9hdHMNCj4gPiA+IHRoZSBEVCBkZXNjcmlwdGlvbiBjb21w
-YXJlZCB0byBpLk1YNiwNCj4gPg0KPiA+IFRoaXMgeW91IG5lZWQgdG8gZGlzY3VzcyB3aXRoIHRo
-ZSBnZW5lcmljIGkuTVggZHJpdmVyIG1haW50YWluZXJzLg0KPiA+IFRoZXkgYXJlIHRoZSBtYWlu
-dGFpbmVycyBvZiBkcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlLyogYWZ0ZXIgYWxsLg0KPiA+DQo+
-ID4gVGhleSBuZXZlciBwdXQgYW4gZW50cnkgaW4gTUFJTlRBSU5FUlMgdGhvdWdoLCBidXQgSSBh
-bHdheXMgcmVnYXJkZWQNCj4gPiB0aGVzZSBhcyB0aGUgcGluY3RybCBtYWludGFpbmVycyBmb3Ig
-aS5NWDoNCj4gPg0KPiA+IEFSTS9GUkVFU0NBTEUgSU1YIC8gTVhDIEFSTSBBUkNISVRFQ1RVUkUN
-Cj4gPiBNOiAgICAgIFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gPiBNOiAgICAg
-IFNhc2NoYSBIYXVlciA8a2VybmVsQHBlbmd1dHJvbml4LmRlPg0KPiA+IFI6ICAgICAgRmFiaW8g
-RXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPg0KPiA+DQo+ID4gT24gdG9wIG9mIHRoaXMs
-IERvbmcgQWlzaGVuZywgR2FyeSBCaXNzb24gYW5kIFZsYWRpbWlyIFphcG9sc2tpeSBoYXMNCj4g
-PiBtYWRlIG1ham9yIGNvbnRyaWJ1dGlvbnMuDQo+ID4NCj4gPiBJdCdzIGEgbGl0dGxlIGVjb3N5
-c3RlbSBvbiBpdHMgb3duLCBub3QgcmVhbGx5IHRvIGJlIGRpc2N1c3NlZCBieSBqdXN0DQo+ID4g
-eW91IGFuZCBtZS4gSSB3b25kZXIgd2hlcmUgdGhlIHJlc3Qgb2YgdGhlIHZvaWNlcyBhcmUsIEkg
-aG9wZSBub3QNCj4gPiBzaWxlbmNlZCBieSBvcmdhbml6YXRpb25hbCBzdHJlc3MgYWZ0ZXIgdGhl
-IE5YUCBtZXJnZXIuLi4NCj4gPg0KPiA+ID4gYW5kIHRoZW4gYWdhaW4gbmVlZCB0byBpbnRyb2R1
-Y2UNCj4gPiA+IGN1c3RvbSBwcm9wZXJ0aWVzLiBUaGF0J3MganVzdCB3b3JzdCBvZiBib3RoIHdv
-cmxkcywgdmVyYm9zZSBEVCB0bw0KPiA+ID4gdXNlIHRoZSBjb21tb24gc3R1ZmYsIG1peGVkIHdp
-dGggc3BlY2lhbCBwcm9wZXJ0aWVzLCBvbmx5IHZhbGlkIG9uDQo+ID4gPiB0aGlzIHNpbmdsZSBj
-b250cm9sbGVyLg0KPiA+DQo+ID4gTm8gbWF0dGVyIGhvdyBtdWNoIHlvdSBkaXNsaWtlIGl0LCBp
-dCBpcyB3aGF0IGUuZy4gUXVhbGNvbW0gaXMgZG9pbmcuDQo+ID4gKFdobyBtaWdodCBzb29uIGJl
-IG9uZSBhbmQgdGhlIHNhbWUgYXMgTlhQIEkgaGVhci4pDQo+ID4NCj4gPiA+IElmIHlvdSBpbnNp
-c3QgSSBndWVzcyBJJ20gZmluZSB3aXRoIGNvbXByb21pc2luZyBvbiBhbiAib3V0cHV0LQ0KPiA+
-ID4gaW1wZWRhbmNlIiBjb21tb24gcHJvcGVydHksIGJ1dCB0aGVuIHRoaXMganVzdCBtYWtlcyB0
-aGluZ3MgaGFyZGVyDQo+ID4gPiBmb3IgZXZlcnlvbmUgaW52b2x2ZWQsIGFzIHRoZSBpbXBlZGFu
-Y2UgZXZlbiBzZWVtcyB0byB2YXJ5IHNsaWdodGx5DQo+ID4gPiB3aXRoIHRoZSB1c2VkIHBhZCB2
-b2x0YWdlLiBTbyB0byBub3QgZ2V0IGludG8gYSBjb21iaW5hdG9yaWFsDQo+ID4gPiBleHBsb3Np
-b24sIHdlIHdvdWxkIG5lZWQgdG8gZGVzY3JpYmUgdGhpcyBwcm9wZXJ0eSBhcyBzb21ldGhpbmdz
-DQo+ID4gPiBsaWtlICJvdXRwdXQgaW1wZWRhbmNlIGF0IDMuM3YpIiwgYXQgbGVhc3Qgb24gdGhp
-cyBzcGVjaWZpYyBoYXJkd2FyZS4NCj4gPg0KPiA+IEhtLCBzaG91bGQgaXQgbWUgIm54cCxkcml2
-ZS1zdHJlbmd0aCIgdGhlbiwgYXMgaXQgaXMganVzdCBzb21lIG1hZ2ljDQo+ID4gdmFsdWU/IEkg
-Z3Vlc3MgIm54cCxtYWdpYy1kcml2ZS1zdHJlbmd0aCIgaXMgbm90IGdvaW5nIHRvIGN1dCBpdCA6
-RA0KPiA+DQo+ID4gQWxzbyBtYXliZSB3ZSBzaG91bGQgdXNlIHRoZSBvbGQgImZyZWVzY2FsZSwq
-IiBub3RhdGlvbiBmb3IgbGVnYWN5DQo+ID4gcmVhc29ucy4uLiBJIGRvbid0IGtub3cuIFRoaXMg
-VmVuZG9yIHByZWZpeCBzZWVtcyBsZXNzIHN0YWJsZSB0aGFuIHRoZSBjaGlwc2V0cy4NCj4gPg0K
-PiA+ID4gT3Igd2UgY291bGQgYWdyZWUgdGhhdCBkcml2ZS1zdHJlbmd0aCBwcm9wZXJ0eSBjb3Vs
-ZCBiZSBkZXNjcmliZWQgaW4NCj4gPiA+IHNvbWUgdW5pdCB0aGF0IG1ha2VzIHNlbnNlIG9uIGVh
-Y2ggY29udHJvbGxlci4gbUEgZm9yIGhhcmR3YXJlDQo+ID4gPiBkZXNjcmliZWQgd2l0aCBzb21l
-IGZhYmxlZCBpZGVhbCBsb2FkIG1hdGNoaW5nLCBPaG1zIGZvciBoYXJkd2FyZQ0KPiA+ID4gdGhh
-dCBtb2RlbHMgaXQgdGhpcyB3YXkgd2l0aCBtYXhpbXVtIGRyaXZlIHN0cmVuZ3RoIGF0IHRoZSBw
-b2ludCBvZg0KPiA+ID4gYmVzdCBsb2FkIG1hdGNoaW5nLg0KPiA+DQo+ID4gSSBhbSBub3QgbGlr
-ZSBzdHViYm9ybmx5IGFnYWluc3QuIEkganVzdCB3YW50IHNvbWUgZGlzY3Vzc2lvbiBoZXJlLCBp
-dA0KPiA+IHdvdWxkIGJlIG5pY2UgdG8ga25vdyB0aGUgb3BpbmlvbiBvZiB0aGUgaS5NWCBtYWlu
-dGFpbmVycy4NCj4gPg0KPiA+ID4gSW4gdGhlIGVuZCB0aGlzIGlzIGFib3V0IG1hcHBpbmcgMyBo
-YXJkd2FyZSBiaXRzIHRvIGEgRFQgZGVzY3JpcHRpb24uLi4NCj4gPg0KPiA+IFBsZWFzIGRvbid0
-IHRoaW5rIGFib3V0IGl0IGxpa2UgImNhbid0IHdlIGp1c3QgZG8gdGhpcyByZWFsIHNpbXBsZQ0K
-PiA+IHRoaW5nIG5vdywganVzdCBtZXJnZSB0aGlzIGFuZCBzdG9wIGJlaW5nIGFuIGFzcyIuDQo+
-ID4NCj4gPiBUaGluZ3MganVzdCBwb2tpbmcgdGhyZWUgYml0cyBjYW4gbG9vayB2ZXJ5IHNpbXBs
-ZSwgbGlrZSBpbiBzbyBtYW55IEJTUHM6DQo+ID4NCj4gPiB2b2xhdGlsZSB1bnNpZ25lZCBsb25n
-ICpmb287DQo+ID4NCj4gPiBmb28gPSAodW5zaWduZWQgbG9uZyAqKSAweGZlYzBiZTAwOw0KPiA+
-ICpmb28gJj0gfjB4NzAwOw0KPiA+ICpmb28gfD0gMHgyMDA7IC8qIGRvIHRoZSBtYWdpYyAqLw0K
-PiA+DQo+ID4gQnV0IHRoaXMgaXMgbm90IGhlbHBmdWwgZm9yIGRldmVsb3BlcnMgb3IgbWFpbnRh
-aW5lcnMuIFRoYXQgaXMgSU1ITw0KPiA+IHdoeSB3ZSBoYXZlIHRoZSBmcmFtZXdvcmtzIGFuZCBh
-bGwgdGhlIERUIHN0YW5kYXJkaXphdGlvbiBpbiB0aGUgZmlyc3QNCj4gPiBwbGFjZSwgZXhhY3Rs
-eSBzbyB3ZSB1bmRlcnN0YW5kIHdoYXQgd2UgYXJlIGRvaW5nLg0KPiA+DQo+ID4gWW91cnMsDQo+
-ID4gTGludXMgV2FsbGVpag0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 02/08/18 11:46, Philipp Zabel wrote:
+> On Wed, 2018-02-07 at 23:19 +0100, Hans Verkuil wrote:
+>> On 02/07/2018 11:05 PM, Tim Harvey wrote:
+>>> On Wed, Feb 7, 2018 at 1:09 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>>>> On 02/07/18 09:22, Hans Verkuil wrote:
+>>>>> On 02/07/2018 12:29 AM, Tim Harvey wrote:
+>>>>>> Media Controller ioctls:
+>>>>>>                 fail: v4l2-test-media.cpp(141): ent.function ==
+>>>>>> MEDIA_ENT_F_V4L2_SUBDEV_UNKNOWN
+>>>>>
+>>>>> Weird, this shouldn't happen. I'll look into this a bit more.
+>>>>
+>>>> Can you run 'mc_nextgen_test -e -i' and post the output?
+>>>>
+>>>> It's found in contrib/test.
+>>>>
+>>>
+>>> root@ventana:~# ./v4l-utils/contrib/test/mc_nextgen_test -e -i
+>>> Device: imx-media (driver imx-media)
+>>> Bus:
+>>> version: 0
+>>> number of entities: 24
+>>> number of interfaces: 24
+>>> number of pads: 48
+>>> number of links: 50
+>>> entity entity#1: 'unknown entity type' adv7180 2-0020, 1 pad(s), 1 source(s)
+>>> entity entity#3: 'unknown entity type' tda19971 2-0048, 1 pad(s), 1 source(s)
+>>> entity entity#5: 'unknown entity type' ipu1_vdic, 3 pad(s), 2 sink(s),
+>>> 1 source(s)
+>>> entity entity#9: 'unknown entity type' ipu2_vdic, 3 pad(s), 2 sink(s),
+>>> 1 source(s)
+>>> entity entity#13: 'unknown entity type' ipu1_ic_prp, 3 pad(s), 1
+>>> sink(s), 2 source(s)
+>>> entity entity#17: 'unknown entity type' ipu1_ic_prpenc, 2 pad(s), 1
+>>> sink(s), 1 source(s)
+>>> entity entity#20: 'V4L I/O' ipu1_ic_prpenc capture, 1 pad(s), 1 sink(s)
+>>> entity entity#26: 'unknown entity type' ipu1_ic_prpvf, 2 pad(s), 1
+>>> sink(s), 1 source(s)
+>>> entity entity#29: 'V4L I/O' ipu1_ic_prpvf capture, 1 pad(s), 1 sink(s)
+>>> entity entity#35: 'unknown entity type' ipu2_ic_prp, 3 pad(s), 1
+>>> sink(s), 2 source(s)
+>>> entity entity#39: 'unknown entity type' ipu2_ic_prpenc, 2 pad(s), 1
+>>> sink(s), 1 source(s)
+>>> entity entity#42: 'V4L I/O' ipu2_ic_prpenc capture, 1 pad(s), 1 sink(s)
+>>> entity entity#48: 'unknown entity type' ipu2_ic_prpvf, 2 pad(s), 1
+>>> sink(s), 1 source(s)
+>>> entity entity#51: 'V4L I/O' ipu2_ic_prpvf capture, 1 pad(s), 1 sink(s)
+>>> entity entity#57: 'unknown entity type' ipu1_csi0, 3 pad(s), 1
+>>> sink(s), 2 source(s)
+>>> entity entity#61: 'V4L I/O' ipu1_csi0 capture, 1 pad(s), 1 sink(s)
+>>> entity entity#67: 'unknown entity type' ipu1_csi1, 3 pad(s), 1
+>>> sink(s), 2 source(s)
+>>> entity entity#71: 'V4L I/O' ipu1_csi1 capture, 1 pad(s), 1 sink(s)
+>>> entity entity#77: 'unknown entity type' ipu2_csi0, 3 pad(s), 1
+>>> sink(s), 2 source(s)
+>>> entity entity#81: 'V4L I/O' ipu2_csi0 capture, 1 pad(s), 1 sink(s)
+>>> entity entity#87: 'unknown entity type' ipu2_csi1, 3 pad(s), 1
+>>> sink(s), 2 source(s)
+>>> entity entity#91: 'V4L I/O' ipu2_csi1 capture, 1 pad(s), 1 sink(s)
+>>> entity entity#97: 'unknown entity type' ipu1_csi0_mux, 3 pad(s), 2
+>>> sink(s), 1 source(s)
+>>> entity entity#101: 'unknown entity type' ipu2_csi1_mux, 3 pad(s), 2
+>>> sink(s), 1 source(s)
+>>
+>> Yuck. So nobody in imx (and adv7180!) is setting a valid function.
+>> And I see the mc_nextgen_test.c doesn't know all the latest functions
+>> anyway.
+> 
+> That's probably because for most of the entities it's a bit unclear
+> which function should be assigned.
+
+Well, that's one reason. The other is that there never was a utility
+to test this :-)
+
+> ipu[12]_csi[01]_mux are video multiplexers, so MEDIA_ENT_F_VID_MUX. I
+> thought those should already be set correctly in the video-mux driver.
+
+They are. The mc_nextgen_test, media-ctl and now v4l2-ctl/v4l2-compliance
+all have their own list of functions that they know about and it's all
+different. It's one of the things I want to fix.
+
+> ipu[12]_csi[01] are the interfaces to the outside parallel busses, but
+> they can also 'downscale' by skipping, skip frames and pack or expand
+> pixels from the bus into the internal FIFOs that lead to the next
+> element. These are not MEDIA_ENT_F_VID_IF_BRIDGE, are they?
+
+Yes, they are. One limitation of the current API is that you cannot
+represent correctly devices with multiple functions. This is planned for
+a long time now, but nobody actually did the work. So for now just fill
+in the primary function with a comment that in the future other functions
+should be set as well.
+
+> ipu[12]_vdic are mainly deinterlacers, so a new function
+> MEDIA_ENT_F_PROC_VIDEO_DEINTERLACER ? These entities could also be used
+> as composers in a mem2mem scenario (MEDIA_ENT_F_PROC_VIDEO_COMPOSER ?),
+> but this is currently not supported.
+
+Yes, we need a PROC_VIDEO_DEINTERLACER function.
+
+> 
+> ipu[12]_ic_prp is just a tee element that feeds both ipu[12]_ic_prpenc
+> and ipu[12]_ic_prpvf. These are both scalers and colorspace converters.
+> MEDIA_ENT_F_PROC_VIDEO_SCALER ?
+> MEDIA_ENT_F_PROC_VIDEO_PIXEL_ENC_CONV ?
+
+The tee element would be a new PROC_VIDEO_SPLITTER function.
+
+The other two would be scalers, but should add the VIDEO_PIXEL_ENC_CONV
+function once it is possible to do so.
+
+> 
+> "ipu[12]_csi[01] capture" are the DMA elements writing to memory, so
+> MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER ?
+
+These are likely to be filled correctly already. I've just added a commit
+to v4l2-compliance to make it easier to see what function is used:
+
+	v4l2-compliance -m0 -v
+
+Regards,
+
+	Hans
