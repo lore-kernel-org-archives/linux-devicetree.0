@@ -1,94 +1,216 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/5] dt-bindings: clock: mediatek: update audsys
- documentation to adapt MFD device
-Date: Wed, 7 Feb 2018 18:49:34 -0600
-Message-ID: <CAL_Jsq+kM19=+cMzfgvE3j01L9ahbf6PNh2eJJOkwd096RcFhg@mail.gmail.com>
-References: <cover.1515639336.git.ryder.lee@mediatek.com> <8651585c91ee40f6ab3e30b893bcfb90fe5c2c25.1515639336.git.ryder.lee@mediatek.com>
- <20180205060833.p56dun5i4bvs3jye@rob-hp-laptop> <1517821892.12510.32.camel@mtkswgap22>
+From: dann frazier <dann.frazier@canonical.com>
+Subject: Re: [PATCH v12 0/9] LPC: legacy ISA I/O support
+Date: Wed, 7 Feb 2018 18:02:33 -0700
+Message-ID: <CALdTtnsKovpBVOW4nSpCGfeyBa+zUr6a_Mi2+wC-H6CuifGDXA@mail.gmail.com>
+References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1517821892.12510.32.camel@mtkswgap22>
-Sender: linux-clk-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: devicetree@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: mika.westerberg@linux.intel.com, Rafael Wysocki <rafael@kernel.org>, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, olof@lixom.net, Hanjun Guo <hanjun.guo@linaro.org>, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, linux-pci@vger.kernel.org, Corey Minyard <minyard@acm.org>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 5, 2018 at 3:11 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> On Mon, 2018-02-05 at 00:08 -0600, Rob Herring wrote:
->> On Wed, Jan 31, 2018 at 03:42:44PM +0800, Ryder Lee wrote:
->> > As the MediaTek audio hardware block that expose functionalities that are
->> > handled by separate subsystems in the kernel, and there are registers that
->> > are shared between related drivers.
->> >
->> > Switch the current device to an MFD device, add more descriptions about the
->> > subsystem and modify example accordingly.
->> >
->> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
->> > ---
->> >  .../bindings/arm/mediatek/mediatek,audsys.txt      | 37 ++++++++++++++++++----
->> >  1 file changed, 30 insertions(+), 7 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
->> > index 9b8f578..677af40 100644
->> > --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
->> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
->> > @@ -1,22 +1,45 @@
->> > -MediaTek AUDSYS controller
->> > +MediaTek Audio Subsystem
->> >  ============================
->> > +The audio subsystem is one of the multi-function blocks of MediaTek SoCs.
->> > +It contains a system controller, which provides a number registers giving
->> > +access to two features: AUDSYS clocks and Audio Front End (AFE) components.
->> >
->> > +For the top level node:
->> > +- compatible: must be: "syscon", "simple-mfd";
->>
->> This should have some SoC specific compatible.
+On Tue, Jan 23, 2018 at 9:36 AM, John Garry <john.garry@huawei.com> wrote:
+> This patchset supports the IPMI-bt device attached to the Low-Pin-Count
+> interface implemented on Hisilicon Hip06/Hip07 SoC.
+>                         -----------
+>                         | LPC host|
+>                         |         |
+>                         -----------
+>                              |
+>                 _____________V_______________LPC
+>                   |                       |
+>                   V                       V
+>                                      ------------
+>                                      |  BT(ipmi)|
+>                                      ------------
 >
-> As we don't have a specific driver (compatible string) for it and if we
-> need to add that I think the term '*-audsys' is very suitable here, but
-> unfortunately, it has already picked for clock driver (see child node).
-
-Perhaps the clocks block should have "-clk" on the end or something.
-
-Why do you really need to change this in the first place? You don't
-have to have DT child nodes to create child (struct) devices and child
-drivers.
-
+> When master accesses those peripherals beneath the Hip06/Hip07 LPC, a specific
+> LPC driver is needed to make LPC host generate the standard LPC I/O cycles with
+> the target peripherals'I/O port addresses. But on curent arm64 world, there is
+> no real I/O accesses. All the I/O operations through in/out accessors are based
+> on MMIO ranges; on Hip06/Hip07 LPC the I/O accesses are performed through driver
+> specific accessors rather than MMIO.
+> To solve this issue and keep the relevant existing peripherals' drivers untouched,
+> this patchset:
+>    - introduces a generic I/O space management framework, LIBIO, to support I/O
+>      operations on host controllers operating either on MMIO buses or on buses
+>      requiring specific driver I/O accessors;
+>    - redefines the in/out accessors to provide a unified interface for both MMIO
+>      and driver specific I/O operations. Using LIBIO, th call of in/out() from
+>      the host children drivers, such as ipmi-si, will be redirected to the
+>      corresponding device-specific I/O hooks to perform the I/O accesses.
 >
-> I also took ../../marvell/*-system-controller.txt as examples for my
-> case. Thus, I'm not sure should we still need a new one here?
+> Based on this patch-set, all the I/O accesses to Hip06/Hip07 LPC peripherals can
+> be supported without any changes on the existing ipmi-si driver.
 >
->> > +- reg: register area of the Audio Subsystem
->> > +
->> > +Required sub-nodes:
->> > +
->> > +AUDSYS clocks:
->> > +-------
->> >  The MediaTek AUDSYS controller provides various clocks to the system.
->> >
->> >  Required Properties:
->> >
->> >  - compatible: Should be one of:
->> > -   - "mediatek,mt7622-audsys", "syscon"
->> > +   - "mediatek,mt2701-audsys";
->> > +   - "mediatek,mt7622-audsys";
->> >  - #clock-cells: Must be 1
->> >
->> >  The AUDSYS controller uses the common clk binding from
->> >  Documentation/devicetree/bindings/clock/clock-bindings.txt
->> >  The available clocks are defined in dt-bindings/clock/mt*-clk.h.
->>
->> There's no register range associated with the clocks? If there is, add a
->> reg property.
+> The whole patchset has been tested on Hip07 D05 board both using DTB and ACPI.
+
+fyi, tested successfully here as well on a D05:
+
+Tested-by: dann frazier <dann.frazier@canonical.com>
+
+ -dann
+
+> Differences to v11:
+>     - fixed build errors for i386, m68k, and tile
+>     - added a comment in LPC driver commit log why we set
+>        the kernel config as bool
+>     - some tidying logic_pio code
 >
-> No, we don't need reg property here, as the two sub-drivers will obtain
-> the regmap  which is propagated from the parent.
-
-I know regmap doesn't need it. That's not what I asked. If you have a
-range of registers for the clocks, then define that in reg. Only if
-the clock control bits are mixed up with other functions within the
-same registers, then you can omit it.
-
-Rob
+> Differences to v10:
+>     - dropped CONFIG_LOGIC_PIO. Reason is that CONFIG_PCI
+>       depends on this, and CONFIG_PCI is a per-arch CONFIG.
+>       So we would require all arch's kconfig to select this.
+>     - Addressed Dann Frazier's comments on LPC driver, and
+>       sopme other cleanup
+>     - Moved logic_pio.h to be included in generic asm io.h
+>     - Fixed ACPI indirect IO host setup to handle >1 child
+>     - Relocated ACPI indirect IO host setup code to
+>       drivers/acpi
+>     - Rebased to linux next-20180118
+>
+> Changes from v9:
+>   - patch 2 has been split into 3 patches according to Bjorn comments on
+>     v9 thread
+>   - patch 1 has been reworked accordign to Bjorn comments on v9
+>   - now logic_pio_trans_hwaddr() has a sanity check to make sure the resource
+>     size fits into the assigned range
+>   - in patch 5 the MFD framework has been used to probe the LPC children
+>     according to the suggestion from Mika Westerberg
+>   - Maintaner has changed to Huawei Linuxarm mailing list
+>
+> Changes from v8:
+>   - Simplified LIB IO framewrok
+>   - Moved INDIRECT PIO ACPI framework under acpi/arm64
+>   - Renamed occurrences of "lib io" and "indirect io" to "lib pio" and
+>     "indirect pio" to keep the patchset nomenclature consistent
+>   - Removed Alignment reuqirements
+>   - Moved LPC specific code out of ACPI common framework
+>   - Now PIO indirect HW ranges can overlap
+>   - Changed HiSilicon LPC driver maintainer (Gabriele Paoloni now) and split
+>     maintaner file modifications in a separate commit
+>   - Removed the commit with the DT nodes support for hip06 and hip07 (to be
+>     pushed separately)
+>   - Added a checking on ioport_map() not to break that function as Arnd points
+>     out in V7 review thread;
+>   - fixed the compile issues on alpha, m68k;
+>
+> Changes from V7:
+>   - Based on Arnd's comment, rename the LIBIO as LOGIC_PIO;
+>   - Improved the mapping process in LOGIC_PIO to gain better efficiency when
+>     redirecting the I/O accesses to right device driver;
+>   - To reduce the impact on PCI MMIO to a minimum, add a new
+>     CONFIG_INDIRECT_PIO for indirect-IO hosts/devices;
+>   - Added a new ACPI handler for indirect-IO hosts/devices;
+>   - Fixed the compile issues on V6;
+>
+> Changes from V6:
+>   - According to the comments from Bjorn and Alex, merge PCI IO and indirect-IO
+>     into a generic I/O space management, LIBIO;
+>   - Adopted the '_DEP' to replace the platform bus notifier. In this way, we can
+>     ensure the LPC peripherals' I/O resources had been translated to logical IO
+>     before the LPC peripheral enumeration;
+>   - Replaced the rwlock with rcu list based on Alex's suggestion;
+>   - Applied relaxed write/read to LPC driver;
+>   - Some bugs fixing and some optimazations based on the comments of V6;
+>
+> Changes from V5:
+>   - Made the extio driver more generic and locate in lib/;
+>   - Supported multiple indirect-IO bus instances;
+>   - Extended the pci_register_io_range() to support indirect-IO, then dropped
+>   the I/O reservation used in previous patchset;
+>   - Reimplemented the ACPI LPC support;
+>   - Fixed some bugs, including the compile error on other archs, the module
+>   building failure found by Ming Lei, etc;
+>
+> Changes from V4:
+>   - Some revises based on the comments from Bjorn, Rob on V4;
+>   - Fixed the compile error on some platforms, such as openrisc;
+>
+> Changes from V3:
+>   - UART support deferred to a separate patchset; This patchset only support
+>   ipmi device under LPC;
+>   - LPC bus I/O range is fixed to 0 ~ (PCIBIOS_MIN_IO - 1), which is separeted
+>   from PCI/PCIE PIO space;
+>   - Based on Arnd's remarks, removed the ranges property from Hip06 lpc dts and
+>   added a new fixup function, of_isa_indirect_io(), to get the I/O address
+>   directly from LPC dts configurations;
+>   - Support in(w,l)/out(w,l) for Hip06 lpc I/O;
+>   - Decouple the header file dependency on the gerenic io.h by defining in/out
+>   as normal functions in c file;
+>   - removed unused macro definitions in the LPC driver;
+>
+> Changes from V2:
+>   - Support the PIO retrieval from the linux PIO generated by
+>   pci_address_to_pio. This method replace the 4K PIO reservation in V2;
+>   - Support the flat-tree earlycon;
+>   - Some revises based on Arnd's remarks;
+>   - Make sure the linux PIO range allocated to Hip06 LPC peripherals starts
+>   from non-ZERO;
+>
+> Changes from V1:
+>   - Support the ACPI LPC device;
+>   - Optimize the dts LPC driver in ISA compatible mode;
+>   - Reserve the IO range below 4K in avoid the possible conflict with PCI host
+>   IO ranges;
+>   - Support the LPC uart and relevant earlycon;
+>
+> V11 thread here: https://lkml.org/lkml/2018/1/21/38
+> V10 thread here: https://lkml.org/lkml/2017/10/27/465
+> V9 thread here: https://lkml.org/lkml/2017/5/25/263
+> V8 thread here: https://lkml.org/lkml/2017/3/30/619
+> V7 thread here: https://lkml.org/lkml/2017/3/12/279
+> v6 thread here: https://lkml.org/lkml/2017/1/24/25
+> v5 thread here: https://lkml.org/lkml/2016/11/7/955
+> v4 thread here: https://lkml.org/lkml/2016/10/20/149
+> v3 thread here: https://lkml.org/lkml/2016/9/14/326
+> v2 thread here: https://lkml.org/lkml/2016/9/7/356
+> v1 thread here: https://lkml.org/lkml/2015/12/29/154
+>
+>
+> Gabriele Paoloni (2):
+>   PCI: Remove unused __weak attribute in pci_register_io_range()
+>   PCI: Add fwnode handler as input param of pci_register_io_range()
+>
+> John Garry (3):
+>   ACPI: Translate the I/O range of non-MMIO devices before scanning
+>   LPC, ACPI: Add the HISI LPC ACPI support
+>   MAINTAINERS: Add maintainer for HiSilicon LPC driver
+>
+> Zhichang Yuan (4):
+>   LIB: Introduce a generic PIO mapping method
+>   PCI: Apply the new generic I/O management on PCI IO hosts
+>   OF: Add missing I/O range exception for indirect-IO devices
+>   LPC: Support the LPC host on Hip06/Hip07 with DT bindings
+>
+>  .../arm/hisilicon/hisilicon-low-pin-count.txt      |  33 ++
+>  MAINTAINERS                                        |   7 +
+>  drivers/acpi/arm64/Makefile                        |   1 +
+>  drivers/acpi/arm64/acpi_indirectio.c               | 282 +++++++++++
+>  drivers/acpi/internal.h                            |   5 +
+>  drivers/acpi/pci_root.c                            |   8 +-
+>  drivers/acpi/scan.c                                |   1 +
+>  drivers/bus/Kconfig                                |   8 +
+>  drivers/bus/Makefile                               |   1 +
+>  drivers/bus/hisi_lpc.c                             | 541 +++++++++++++++++++++
+>  drivers/of/address.c                               |  96 +++-
+>  drivers/pci/pci.c                                  |  98 +---
+>  include/asm-generic/io.h                           |   4 +-
+>  include/linux/logic_pio.h                          | 141 ++++++
+>  include/linux/pci.h                                |   3 +-
+>  lib/Kconfig                                        |  15 +
+>  lib/Makefile                                       |   2 +
+>  lib/logic_pio.c                                    | 282 +++++++++++
+>  18 files changed, 1427 insertions(+), 101 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
+>  create mode 100644 drivers/acpi/arm64/acpi_indirectio.c
+>  create mode 100644 drivers/bus/hisi_lpc.c
+>  create mode 100644 include/linux/logic_pio.h
+>  create mode 100644 lib/logic_pio.c
+>
+> --
+> 1.9.1
+>
