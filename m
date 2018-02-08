@@ -1,75 +1,48 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 3/6] dt-bindings: Add panel-timing subnode to simple-panel
-Date: Thu,  8 Feb 2018 12:48:50 -0500
-Message-ID: <20180208174855.55620-4-seanpaul@chromium.org>
-References: <20180208174855.55620-1-seanpaul@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] Documentation: bindings: add usb3-host-disable and
+ usb3-host-port for Rockchip USB Type-C PHY
+Date: Thu, 8 Feb 2018 11:52:52 -0600
+Message-ID: <CABGGisyaqV5HtTUL5LdjH3ZcU3_RTPmzMvEAhv5wZjCD_XCujg@mail.gmail.com>
+References: <20180208152028.9997-1-enric.balletbo@collabora.com> <20180208152028.9997-2-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180208174855.55620-1-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180208152028.9997-2-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Brian Norris <briannorris@chromium.org>, Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org, Chris Zhong <zyw@rock-chips.com>, William wu <wulf@rock-chips.com>, hl@rock-chips.com, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCBhZGRzIGEgbmV3IHN1Ym5vZGUgdG8gc2ltcGxlLXBhbmVsIGFsbG93aW5nIHVz
-IHRvIG92ZXJyaWRlCnRoZSB0eXBpY2FsIHRpbWluZyBleHByZXNzZWQgaW4gdGhlIHBhbmVsJ3Mg
-ZGlzcGxheV90aW1pbmcuCgpDaGFuZ2VzIGluIHYyOgogLSBTcGxpdCBvdXQgdGhlIGJpbmRpbmcg
-aW50byBhIG5ldyBwYXRjaCAoUm9iKQogLSBkaXNwbGF5LXRpbWluZ3MgaXMgYSBuZXcgc2VjdGlv
-biAoUm9iKQogLSBVc2UgdGhlIGZ1bGwgZGlzcGxheS10aW1pbmdzIHN1Ym5vZGUgaW5zdGVhZCBv
-ZiBwaWNraW5nIHRoZSB0aW1pbmcKICAgb3V0IChSb2IvVGhpZXJyeSkKQ2hhbmdlcyBpbiB2MzoK
-IC0gR28gYmFjayB0byB1c2luZyB0aGUgdGltaW5nIHN1Ym5vZGUgZGlyZWN0bHksIGJ1dCByZW5h
-bWUgdG8KICAgcGFuZWwtdGltaW5nIChSb2IpCgpDYzogRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNA
-Y2hyb21pdW0ub3JnPgpDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KQ2M6IEhlaWtv
-IFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+CkNjOiBKZWZmeSBDaGVuIDxqZWZmeS5jaGVuQHJv
-Y2stY2hpcHMuY29tPgpDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4KQ2M6IFN0
-w6lwaGFuZSBNYXJjaGVzaW4gPG1hcmNoZXVAY2hyb21pdW0ub3JnPgpDYzogVGhpZXJyeSBSZWRp
-bmcgPHRoaWVycnkucmVkaW5nQGdtYWlsLmNvbT4KQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
-b3JnCkNjOiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCkNjOiBsaW51eC1yb2NrY2hp
-cEBsaXN0cy5pbmZyYWRlYWQub3JnClNpZ25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxA
-Y2hyb21pdW0ub3JnPgotLS0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5l
-bC50eHQgICAgICAgIHwgMzAgKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQs
-IDMwIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dAppbmRleCA0
-NWE0NTdhZDM4ZjAuLjc3ODhiOWNlMTYwYiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dAorKysgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwu
-dHh0CkBAIC0xMiw2ICsxMiwyNCBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBlbmFibGUtZ3Bp
-b3M6IEdQSU8gcGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAogLSBiYWNrbGlnaHQ6
-IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsCiAK
-K3BhbmVsLXRpbWluZyBzdWJub2RlCistLS0tLS0tLS0tLS0tLS0tLS0tLQorCitUaGlzIG9wdGlv
-bmFsIHN1Ym5vZGUgaXMgZm9yIGRldmljZXMgd2hpY2ggcmVxdWlyZSBhIG1vZGUgZGlmZmVyaW5n
-IGZyb20gdGhlCitwYW5lbCdzICJ0eXBpY2FsIiBkaXNwbGF5IHRpbWluZyBhcyBwcm9ncmFtbWVk
-IGluIHRoZSBzaW1wbGUtcGFuZWwgZHJpdmVyLgorT3ZlcnJpZGluZyB0aGUgZHJpdmVyIG1vZGUg
-bXVzdCBvbmx5IGJlIGRvbmUgaW4gdGhlIGZvbGxvd2luZyBzY2VuYXJpbzoKKyAtIFRoZSByZXN0
-cmljdGlvbnMgbW90aXZhdGluZyB0aGUgb3ZlcnJpZGUgY2Fubm90IGJlIGFwcGxpZWQgdG8gdGhl
-IHBsYXRmb3JtJ3MKKyAgIGRpc3BsYXkgZHJpdmVyIChpZTogaXQgbXVzdCBiZSBzcGVjaWZpYyB0
-byB0aGUgZGV2aWNlIG5vdCB0aGUgcGxhdGZvcm0pCisgLSBUaGUgcGFuZWwgbXVzdCBub3QgaGF2
-ZSBhIGZpeGVkIG1vZGUgYXR0cmlidXRlZCB0byBpdCBpbiB0aGUgZHJpdmVyCisgLSBUaGUgcGFu
-ZWwgbXVzdCBwcm92aWRlIGF0IGxpc3Qgb25lIGRpc3BsYXlfdGltaW5nIHJhbmdlIGJ5IHdoaWNo
-IHRoZSBvdmVycmlkZQorICAgbW9kZSBjYW4gYmUgdmFsaWRhdGVkIGFnYWluc3QKKyAtIFRoZSBv
-dmVycmlkZSBtb2RlIHdpbGwgdXNlIHRoZSAndHlwJyB2YWx1ZXMgZnJvbSB0aGUgcGFuZWwtdGlt
-aW5ncyBzdWJub2RlCisgLSBZb3UgbXVzdCBwcm92aWRlIGFsbCByZXF1aXJlZCBwcm9wZXJ0aWVz
-IGZvciB0aGUgcGFuZWwtdGltaW5nIHN1Ym5vZGUKKworRm9ybWF0IGluZm9ybWF0aW9uIG9uIHRo
-ZSBwYW5lbC10aW1pbmcgc3Vibm9kZSBjYW4gYmUgZm91bmQgaW4KK2Rpc3BsYXktdGltaW5nLnR4
-dC4KKworCiBFeGFtcGxlOgogCiAJcGFuZWw6IHBhbmVsIHsKQEAgLTIyLDQgKzQwLDE2IEBAIEV4
-YW1wbGU6CiAJCWVuYWJsZS1ncGlvcyA9IDwmZ3BpbyA5MCAwPjsKIAogCQliYWNrbGlnaHQgPSA8
-JmJhY2tsaWdodD47CisKKwkJcGFuZWwtdGltaW5nIHsKKwkJCWNsb2NrLWZyZXF1ZW5jeSA9IDwy
-NjY2MDQ3MjA+OworCQkJaGFjdGl2ZSA9IDwyNDAwPjsKKwkJCWhmcm9udC1wb3JjaCA9IDw0OD47
-CisJCQloYmFjay1wb3JjaCA9IDw4ND47CisJCQloc3luYy1sZW4gPSA8MzI+OworCQkJdmFjdGl2
-ZSA9IDwxNjAwPjsKKwkJCXZmcm9udC1wb3JjaCA9IDwzPjsKKwkJCXZiYWNrLXBvcmNoID0gPDEy
-MD47CisJCQl2c3luYy1sZW4gPSA8MTA+OworCQl9OwogCX07Ci0tIAoyLjE2LjAucmMxLjIzOC5n
-NTMwZDY0OWE3OS1nb29nCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KTGludXgtcm9ja2NoaXAgbWFpbGluZyBsaXN0CkxpbnV4LXJvY2tjaGlwQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1yb2NrY2hpcAo=
+On Thu, Feb 8, 2018 at 9:20 AM, Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+> From: William wu <wulf@rock-chips.com>
+>
+> rockchip,usb3-host-disable is the register of type-c phy disable usb3 host
+> rockchip,usb3-host-port is the register of type-c phy usb3 port number
+>
+> Signed-off-by: William wu <wulf@rock-chips.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+>  Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> index c3be83be9615..9085d95d0079 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> @@ -36,6 +36,12 @@ offset, enable bit, write mask bit.
+>   - rockchip,uphy-dp-sel : the register of type-c phy enable DP function
+>     for type-c phy0, it must be <0x6268 19 19>;
+>     for type-c phy1, it must be <0x6268 3 19>;
+> + - rockchip,usb3-host-disable : the register of type-c phy disable usb3 host
+> +   for type-c phy0, it must be <0x2434 0 16>;
+> +   for type-c phy1, it must be <0x2444 0 16>;
+> + - rockchip,usb3-host-port : the register of type-c phy usb3 port number
+> +   for type-c phy0, it must be <0x2434 12 28>;
+> +   for type-c phy1, it must be <0x2444 12 28>;
+
+When does this list stop? Adding properties for various register
+fields doesn't scale. This information should be in the driver and
+based on the compatible string if necessary.
+
+Rob
