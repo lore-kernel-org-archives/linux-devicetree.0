@@ -1,76 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 4/5] arm64: dts: renesas: r8a77970: add the LVDS
- instance
-Date: Thu, 8 Feb 2018 19:05:53 +0300
-Message-ID: <af85dc17-e97d-bd40-6b46-376ae90123d7@cogentembedded.com>
-References: <20180208154720.5766-1-niklas.soderlund+renesas@ragnatech.se>
- <20180208154720.5766-5-niklas.soderlund+renesas@ragnatech.se>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 0/6] drm/panel: simple: Add mode support to devicetree
+Date: Thu,  8 Feb 2018 12:48:47 -0500
+Message-ID: <20180208174855.55620-1-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180208154720.5766-5-niklas.soderlund+renesas@ragnatech.se>
-Content-Language: en-MW
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hello!
 
-On 02/08/2018 06:47 PM, Niklas Söderlund wrote:
+Here's v3 of the set. I've reintroduced the single display timing node
+in the dt binding from v1, and left the improved docs and patch split
+from v2. I've also added a patch to clarify that a single display timing
+node should always be named panel-timing, which was feedback from v1.
 
-> Add the LVDS device to r8a77970.dtsi in a disabled state. Also connect
-> the it to the LVDS output of the DU. While at it align the endpoint name
-> of the du to du_out_lvds0 which is used in other Renesas DTS files to
-> describe this link.
-> 
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-> ---
->  arch/arm64/boot/dts/renesas/r8a77970.dtsi | 29 ++++++++++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> index c6056635bd372ce3..9c65884cc384952d 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> @@ -653,7 +653,34 @@
->  
->  				port@1 {
->  					reg = <1>;
-> -					du_out_lvds: endpoint {
-> +					du_out_lvds0: endpoint {
-> +						remote-endpoint = <&lvds0_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		lvds0: lvds@feb90000 {
-> +			compatible = "renesas,r8a77970-lvds";
-> +			reg = <0 0xfeb90000 0 0x14>;
-> +			clocks = <&cpg CPG_MOD 727>;
-> +			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-> +			resets = <&cpg 727>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					lvds0_in: endpoint {
-> +						remote-endpoint = <&du_out_lvds0>;
-> +					};
-> +				};
-> +				port@1 {
-> +					reg = <1>;
-> +					lvds0_out: endpoint {
->  					};
->  				};
->  			};
+Cover letter from v1 (was the same in v2) is here:
+https://lists.freedesktop.org/archives/dri-devel/2018-February/164886.html
+
+Thanks for the reviews so far,
+
+Sean
 
 
-   That's basically my patch modulo the added "power-domains" and "resets" props, and the node/endpoint rename (of a dubious value, if you ask me ;-)).
+Sean Paul (6):
+  dt-bindings: Clarify timing subnode use as panel-timing
+  dt-bindings: Add headings to simple-panel bindings
+  dt-bindings: Add panel-timing subnode to simple-panel
+  drm/panel: simple: Add ability to override typical timing
+  drm/panel: simple: Use display_timing for lq123p1jx31
+  arm64: dts: rockchip: Specify override mode for kevin panel
 
-MBSR, Sergei
+ .../bindings/display/panel/display-timing.txt      |  5 ++
+ .../bindings/display/panel/simple-panel.txt        | 34 ++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts  | 14 ++++
+ drivers/gpu/drm/panel/panel-simple.c               | 94 ++++++++++++++++++----
+ 4 files changed, 132 insertions(+), 15 deletions(-)
+
+-- 
+2.16.0.rc1.238.g530d649a79-goog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
