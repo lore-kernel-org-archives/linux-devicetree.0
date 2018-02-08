@@ -1,49 +1,82 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v6 2/3] DT/arm,gic-v3-its: add reset-on-suspend property
-Date: Thu, 8 Feb 2018 13:46:50 +0000
-Message-ID: <20180208134650.maf72ikwexdsxz2v@lakrids.cambridge.arm.com>
-References: <20180208023648.89124-1-dbasehore@chromium.org>
- <20180208023648.89124-3-dbasehore@chromium.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] watchdog: imx2_wdt: allow setting timeout in devicetree
+Date: Thu, 8 Feb 2018 06:15:59 -0800
+Message-ID: <e70ce3b6-1fb6-5d18-25bd-4fe7bf15b296@roeck-us.net>
+References: <20180208131108.3048-1-marcus.folkesson@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180208023648.89124-3-dbasehore@chromium.org>
+In-Reply-To: <20180208131108.3048-1-marcus.folkesson@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Derek Basehore <dbasehore@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Soby.Mathew@arm.com, sudeep.holla@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, tglx@linutronix.de, briannorris@chromium.org, marc.zyngier@arm.com
+To: Marcus Folkesson <marcus.folkesson@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 07, 2018 at 06:36:47PM -0800, Derek Basehore wrote:
-> This adds documentation for the new reset-on-suspend property. This
-> property enables saving and restoring the ITS for when it loses state
-> in system suspend.
+On 02/08/2018 05:11 AM, Marcus Folkesson wrote:
+> By following best practice described in
+> Documentation/watchdog/watchdog-kernel-api.txt, it also let us to set
+> timout-sec property in devicetree.
 > 
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
 > ---
->  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>   Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt | 2 ++
+>   drivers/watchdog/imx2_wdt.c                                | 8 ++------
+>   2 files changed, 4 insertions(+), 6 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> index 0a57f2f4167d..a470147d4f14 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-> @@ -78,6 +78,9 @@ These nodes must have the following properties:
->  Optional:
->  - socionext,synquacer-pre-its: (u32, u32) tuple describing the untranslated
->    address and size of the pre-ITS window.
-> +- reset-on-suspend: Boolean property. Indicates that the ITS state is
-> +  reset on suspend. The state is then saved on suspend and restored on
-> +  resume.
-
-The latter sentence reads like a description of SW policy, rather than a
-description of what the HW does. I don't think that should be here
-(though it might be worth noting the FW will not restore state).
-
-Which state is lost? Is "ITS state" a well-defined term?
-
-By suspend do you mean a PSCI_SYSTEM_SUSPEND, or potentially other
-cases?
-
-Thanks,
-Mark.
+> diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> index 107280ef0025..adc6b76fcb3a 100644
+> --- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+> @@ -11,6 +11,7 @@ Optional properties:
+>     detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
+>   - fsl,ext-reset-output: If present the watchdog device is configured to
+>     assert its external reset (WDOG_B) instead of issuing a software reset.
+> +- timeout-sec : Contains the watchdog timeout in seconds
+>   
+>   Examples:
+>   
+> @@ -19,4 +20,5 @@ wdt@73f98000 {
+>   	reg = <0x73f98000 0x4000>;
+>   	interrupts = <58>;
+>   	big-endian;
+> +	timeout-sec = <20>;
+>   };
+> diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+> index 4874b0f18650..b8674c5c2d9f 100644
+> --- a/drivers/watchdog/imx2_wdt.c
+> +++ b/drivers/watchdog/imx2_wdt.c
+> @@ -76,7 +76,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+>   				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+>   
+>   
+> -static unsigned timeout = IMX2_WDT_DEFAULT_TIME;
+> +static unsigned timeout;
+>   module_param(timeout, uint, 0);
+>   MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
+>   				__MODULE_STRING(IMX2_WDT_DEFAULT_TIME) ")");
+> @@ -275,6 +275,7 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
+>   	wdog->info		= &imx2_wdt_info;
+>   	wdog->ops		= &imx2_wdt_ops;
+>   	wdog->min_timeout	= 1;
+> +	wdog->timeout		= IMX2_WDT_DEFAULT_TIME;
+>   	wdog->max_hw_heartbeat_ms = IMX2_WDT_MAX_TIME * 1000;
+>   	wdog->parent		= &pdev->dev;
+>   
+> @@ -293,11 +294,6 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
+>   
+>   	wdev->ext_reset = of_property_read_bool(pdev->dev.of_node,
+>   						"fsl,ext-reset-output");
+> -	wdog->timeout = clamp_t(unsigned, timeout, 1, IMX2_WDT_MAX_TIME);
+> -	if (wdog->timeout != timeout)
+> -		dev_warn(&pdev->dev, "Initial timeout out of range! Clamped from %u to %u\n",
+> -			 timeout, wdog->timeout);
+> -
+>   	platform_set_drvdata(pdev, wdog);
+>   	watchdog_set_drvdata(wdog, wdev);
+>   	watchdog_set_nowayout(wdog, nowayout);
+> 
