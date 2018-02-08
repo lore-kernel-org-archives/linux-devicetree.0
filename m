@@ -1,65 +1,77 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/7] soc: davinci: new genpd driver
-Date: Thu, 8 Feb 2018 18:26:20 +0530
-Message-ID: <34d3980b-2c94-1540-94f0-dc0c86743475@ti.com>
-References: <20180207134553.13510-1-brgl@bgdev.pl>
- <20180207134553.13510-3-brgl@bgdev.pl>
- <65f2690c-c605-3c66-9d8a-9a882aaf446d@ti.com>
- <CAMRc=Mf+S3k_wfhUWEx2-39AZx1szkgy-u-bsZQUMiaY06UKww@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] watchdog: imx2_wdt: allow setting timeout in devicetree
+Date: Thu,  8 Feb 2018 14:11:08 +0100
+Message-ID: <20180208131108.3048-1-marcus.folkesson@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMRc=Mf+S3k_wfhUWEx2-39AZx1szkgy-u-bsZQUMiaY06UKww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 08 February 2018 03:24 PM, Bartosz Golaszewski wrote:
-> 2018-02-08 10:30 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
->> On Wednesday 07 February 2018 07:15 PM, Bartosz Golaszewski wrote:
->>> +     /*
->>> +      * DaVinci always uses a single clock for power-management. We assume
->>> +      * it's the first one in the clocks property.
->>> +      */
->>> +     clk = of_clk_get(dev->of_node, 0);
->>> +     if (IS_ERR(clk))
->>> +             return PTR_ERR(clk);
->>
->> We already get this today with drivers/base/power/clock_ops.c once
->> .con_ids list is dropped from pm_clk_notifier_block (which I think it
->> should).
->>
->> If there is no reason to introduce thus functionality at this stage,
->> perhaps we should wait till such a time when its clearly needed?
->>
->> Thanks,
->> Sekhar
-> 
-> If I understand correctly: once we drop the con_ids list, we end up
-> calling clk_get(dev, NULL) from pm_clk_acquire(), which matches
-> against the clock with NULL con_id, which may not necessarily be the
-> first clock in the list.
+By following best practice described in
+Documentation/watchdog/watchdog-kernel-api.txt, it also let us to set
+timout-sec property in devicetree.
 
-Hmm, not sure of this. In __of_clk_get_by_name() called by clk_get():
+Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt | 2 ++
+ drivers/watchdog/imx2_wdt.c                                | 8 ++------
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-int index = 0;
+diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+index 107280ef0025..adc6b76fcb3a 100644
+--- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt
+@@ -11,6 +11,7 @@ Optional properties:
+   detail please see: Documentation/devicetree/bindings/regmap/regmap.txt.
+ - fsl,ext-reset-output: If present the watchdog device is configured to
+   assert its external reset (WDOG_B) instead of issuing a software reset.
++- timeout-sec : Contains the watchdog timeout in seconds
+ 
+ Examples:
+ 
+@@ -19,4 +20,5 @@ wdt@73f98000 {
+ 	reg = <0x73f98000 0x4000>;
+ 	interrupts = <58>;
+ 	big-endian;
++	timeout-sec = <20>;
+ };
+diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
+index 4874b0f18650..b8674c5c2d9f 100644
+--- a/drivers/watchdog/imx2_wdt.c
++++ b/drivers/watchdog/imx2_wdt.c
+@@ -76,7 +76,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+ 				__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
+ 
+ 
+-static unsigned timeout = IMX2_WDT_DEFAULT_TIME;
++static unsigned timeout;
+ module_param(timeout, uint, 0);
+ MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
+ 				__MODULE_STRING(IMX2_WDT_DEFAULT_TIME) ")");
+@@ -275,6 +275,7 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
+ 	wdog->info		= &imx2_wdt_info;
+ 	wdog->ops		= &imx2_wdt_ops;
+ 	wdog->min_timeout	= 1;
++	wdog->timeout		= IMX2_WDT_DEFAULT_TIME;
+ 	wdog->max_hw_heartbeat_ms = IMX2_WDT_MAX_TIME * 1000;
+ 	wdog->parent		= &pdev->dev;
+ 
+@@ -293,11 +294,6 @@ static int __init imx2_wdt_probe(struct platform_device *pdev)
+ 
+ 	wdev->ext_reset = of_property_read_bool(pdev->dev.of_node,
+ 						"fsl,ext-reset-output");
+-	wdog->timeout = clamp_t(unsigned, timeout, 1, IMX2_WDT_MAX_TIME);
+-	if (wdog->timeout != timeout)
+-		dev_warn(&pdev->dev, "Initial timeout out of range! Clamped from %u to %u\n",
+-			 timeout, wdog->timeout);
+-
+ 	platform_set_drvdata(pdev, wdog);
+ 	watchdog_set_drvdata(wdog, wdev);
+ 	watchdog_set_nowayout(wdog, nowayout);
+-- 
+2.15.1
 
-/*
- * For named clocks, first look up the name in the
- * "clock-names" property.  If it cannot be found, then
- * index will be an error code, and of_clk_get() will fail.
- */
-if (name)
-	index = of_property_match_string(np, "clock-names", name);
-
-So, if no con_id is provided (name == NULL), then index is set to 0
-which will always get the first clock in clocks = list.
-
-Thanks,
-Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
