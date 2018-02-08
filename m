@@ -1,62 +1,93 @@
-From: "dbasehore ." <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 3/4] DT/arm,gic-v3-its: add reset-on-suspend property
-Date: Wed, 7 Feb 2018 18:59:38 -0800
-Message-ID: <CAGAzgso=NqNmJtRHWxzxjtiXRtT7aBYcwGHMxGmEirMY5DkhJw@mail.gmail.com>
-References: <20180207014117.62611-1-dbasehore@chromium.org>
- <20180207014117.62611-4-dbasehore@chromium.org> <b4c7bc62-6861-3851-513e-be8d7a440c91@arm.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v2 4/5] dt-bindings: clock: mediatek: update audsys
+ documentation to adapt MFD device
+Date: Thu, 8 Feb 2018 13:51:05 +0800
+Message-ID: <1518069065.24094.48.camel@mtkswgap22>
+References: <cover.1515639336.git.ryder.lee@mediatek.com>
+         <8651585c91ee40f6ab3e30b893bcfb90fe5c2c25.1515639336.git.ryder.lee@mediatek.com>
+         <20180205060833.p56dun5i4bvs3jye@rob-hp-laptop>
+         <1517821892.12510.32.camel@mtkswgap22>
+         <CAL_Jsq+kM19=+cMzfgvE3j01L9ahbf6PNh2eJJOkwd096RcFhg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b4c7bc62-6861-3851-513e-be8d7a440c91-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-pm mailing list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Wysocki, Rafael J" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+kM19=+cMzfgvE3j01L9ahbf6PNh2eJJOkwd096RcFhg@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 7, 2018 at 1:21 AM, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
-> On 07/02/18 01:41, Derek Basehore wrote:
->> This adds documentation for the new reset-on-suspend property. This
->> property enables saving and restoring the ITS for when it loses state
->> in system suspend.
->>
->> Signed-off-by: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->> index 0a57f2f4167d..a470147d4f14 100644
->> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
->> @@ -78,6 +78,9 @@ These nodes must have the following properties:
->>  Optional:
->>  - socionext,synquacer-pre-its: (u32, u32) tuple describing the untranslated
->>    address and size of the pre-ITS window.
->> +- reset-on-suspend: Boolean property. Indicates that the ITS state is
->> +  reset on suspend. The state is then saved on suspend and restored on
->> +  resume.
->
-> By whom? It is important to be clear about the respective
-> responsibilities, as this forms a binding contract between firmware and OS.
->
-> Mark: Can you have a look at how to formulate this? I'm not sure we have
-> other instances of a non-architected behaviour involving FW
-> participation, aside from PSCI.
+On Wed, 2018-02-07 at 18:49 -0600, Rob Herring wrote:
+> >> > diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> >> > index 9b8f578..677af40 100644
+> >> > --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> >> > +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,audsys.txt
+> >> > @@ -1,22 +1,45 @@
+> >> > -MediaTek AUDSYS controller
+> >> > +MediaTek Audio Subsystem
+> >> >  ============================
+> >> > +The audio subsystem is one of the multi-function blocks of MediaTek SoCs.
+> >> > +It contains a system controller, which provides a number registers giving
+> >> > +access to two features: AUDSYS clocks and Audio Front End (AFE) components.
+> >> >
+> >> > +For the top level node:
+> >> > +- compatible: must be: "syscon", "simple-mfd";
+> >>
+> >> This should have some SoC specific compatible.
+> >
+> > As we don't have a specific driver (compatible string) for it and if we
+> > need to add that I think the term '*-audsys' is very suitable here, but
+> > unfortunately, it has already picked for clock driver (see child node).
+> 
+> Perhaps the clocks block should have "-clk" on the end or something.
+> 
+> Why do you really need to change this in the first place? You don't
+> have to have DT child nodes to create child (struct) devices and child
+> drivers.
+> 
 
-I'll wait for Mark's reply to reword this.
+I'm not sure I get your point. Did you mean that we could have a parent
+(which represents clock and its compatible is something like
+"*-audsys","syscon","simple-mfd") with a subnode for audio function?
 
->
->>
->>  The main GIC node must contain the appropriate #address-cells,
->>  #size-cells and ranges properties for the reg property of all ITS
->>
->
-> Thanks,
->
->         M.
-> --
-> Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If so, there's no special reason. I just think it more specifically to
+let people know we have an MFD (top node) and it has two sub-functions
+(children) share the same region.
+
+> >> > +Required sub-nodes:
+> >> > +
+> >> > +AUDSYS clocks:
+> >> > +-------
+> >> >  The MediaTek AUDSYS controller provides various clocks to the system.
+> >> >
+> >> >  Required Properties:
+> >> >
+> >> >  - compatible: Should be one of:
+> >> > -   - "mediatek,mt7622-audsys", "syscon"
+> >> > +   - "mediatek,mt2701-audsys";
+> >> > +   - "mediatek,mt7622-audsys";
+> >> >  - #clock-cells: Must be 1
+> >> >
+> >> >  The AUDSYS controller uses the common clk binding from
+> >> >  Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >> >  The available clocks are defined in dt-bindings/clock/mt*-clk.h.
+> >>
+> >> There's no register range associated with the clocks? If there is, add a
+> >> reg property.
+> >
+> > No, we don't need reg property here, as the two sub-drivers will obtain
+> > the regmap  which is propagated from the parent.
+> 
+> I know regmap doesn't need it. That's not what I asked. If you have a
+> range of registers for the clocks, then define that in reg. Only if
+> the clock control bits are mixed up with other functions within the
+> same registers, then you can omit it.
+> 
+
+Oh okay, I didn't read the mail well.  We have four or five registers
+for the clocks, but one of them (offset:0x634) is mixed up with the
+audio function (bit 17-19), so I omit it.
+
+Ryder.
+
