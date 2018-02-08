@@ -1,43 +1,50 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/7] soc: davinci: new genpd driver
-Date: Thu, 8 Feb 2018 15:00:47 +0530
-Message-ID: <65f2690c-c605-3c66-9d8a-9a882aaf446d@ti.com>
-References: <20180207134553.13510-1-brgl@bgdev.pl>
- <20180207134553.13510-3-brgl@bgdev.pl>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH] powerpc/fsl/dts: fix the i2c-mux compatible for t104xqds
+Date: Thu, 8 Feb 2018 10:32:12 +0100
+Message-ID: <da15288b-f656-8126-7bc9-eb2fd58adccb@axentia.se>
+References: <20170803125934.14960-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180207134553.13510-3-brgl@bgdev.pl>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170803125934.14960-1-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 February 2018 07:15 PM, Bartosz Golaszewski wrote:
-> +	/*
-> +	 * DaVinci always uses a single clock for power-management. We assume
-> +	 * it's the first one in the clocks property.
-> +	 */
-> +	clk = of_clk_get(dev->of_node, 0);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
+[Adding some people whom seem relevant but did not get fingered by
+get_maintainer.pl]
 
-We already get this today with drivers/base/power/clock_ops.c once
-.con_ids list is dropped from pm_clk_notifier_block (which I think it
-should).
+On 2017-08-03 14:59, Peter Rosin wrote:
+> The sanctioned compatible is "nxp,pca9547".
+Ping.
 
-If there is no reason to introduce thus functionality at this stage,
-perhaps we should wait till such a time when its clearly needed?
+Cheers,
+Peter
 
-Thanks,
-Sekhar
+> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> ---
+>  arch/powerpc/boot/dts/fsl/t104xqds.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+> index 2fd4cbe7098f..615479732252 100644
+> --- a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+> @@ -269,7 +269,7 @@
+>  
+>  		i2c@118000 {
+>  			pca9547@77 {
+> -				compatible = "philips,pca9547";
+> +				compatible = "nxp,pca9547";
+>  				reg = <0x77>;
+>  			};
+>  			rtc@68 {
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
