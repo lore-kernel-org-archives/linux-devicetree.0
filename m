@@ -1,90 +1,81 @@
-From: "dbasehore ." <dbasehore@chromium.org>
-Subject: Re: [PATCH v5 4/4] irqchip/gic-v3-its: add ability to resend MAPC on resume
-Date: Wed, 7 Feb 2018 16:00:53 -0800
-Message-ID: <CAGAzgsprocoZRtccPrbArUqyBTYiQm=vr6qjrK-5rAMSeusZ-Q@mail.gmail.com>
-References: <20180207014117.62611-1-dbasehore@chromium.org>
- <20180207014117.62611-5-dbasehore@chromium.org> <8276f426-e4a0-c400-9f87-31be3d6b1733@arm.com>
- <20180207232201.GB106856@ban.mtv.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20180207232201.GB106856@ban.mtv.corp.google.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, linux-kernel <linux-kernel@vger.kernel.org>, Soby Mathew <Soby.Mathew@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Linux-pm mailing list <linux-pm@vger.kernel.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, Thomas Gleixner <tglx@linutronix.de>
+From: Simon Shields <simon@lineageos.org>
+Subject: [PATCH v5 0/4] Add Exynos4412-based midas boards support
+Date: Thu,  8 Feb 2018 11:01:33 +1100
+Message-ID: <20180208000137.11264-1-simon@lineageos.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?q?Bart=C5=82omiej=20=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 7, 2018 at 3:22 PM, Brian Norris <briannorris@chromium.org> wrote:
-> Hi Marc,
->
-> I'm really not an expert on this, so take my observations with a large
-> grain of salt:
->
-> On Wed, Feb 07, 2018 at 08:46:42AM +0000, Marc Zyngier wrote:
->> On 07/02/18 01:41, Derek Basehore wrote:
->> > This adds functionality to resend the MAPC command to an ITS node on
->> > resume. If the ITS is powered down during suspend and the collections
->> > are not backed by memory, the ITS will lose that state. This just sets
->> > up the known state for the collections after the ITS is restored.
->> >
->> > This is enabled via the reset-on-suspend flag in the DTS for an ITS
->> > that has a non-zero number of collections stored in it.
->> >
->> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
->> > ---
->> >  drivers/irqchip/irq-gic-v3-its.c   | 80 ++++++++++++++++++++------------------
->> >  include/linux/irqchip/arm-gic-v3.h |  1 +
->> >  2 files changed, 43 insertions(+), 38 deletions(-)
->> >
->> > diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
->> > index 5e63635e2a7b..dd6cd6e68ed0 100644
->> > --- a/drivers/irqchip/irq-gic-v3-its.c
->> > +++ b/drivers/irqchip/irq-gic-v3-its.c
->> > @@ -1942,52 +1942,53 @@ static void its_cpu_init_lpis(void)
->> >     dsb(sy);
->> >  }
->> >
->> > -static void its_cpu_init_collection(void)
->> > +static void its_cpu_init_collection(struct its_node *its)
->
-> ...
->
->> > @@ -3127,6 +3128,9 @@ static void its_restore_enable(void)
->> >                     its_write_baser(its, baser, baser->val);
->> >             }
->> >             writel_relaxed(its->ctlr_save, base + GITS_CTLR);
->> > +
->> > +           if (GITS_TYPER_HWCOLLCNT(gic_read_typer(base + GITS_TYPER)) > 0)
->> > +                   its_cpu_init_collection(its);
->>
->> This isn't correct. Think of a system where half the collections are in
->> HW, and the other half memory based (nothing in the spec forbids this).
->> You must evaluate the CID of each collection and replay the MAPC *only*
->> if it falls into the range [0..HCC-1]. The memory-based collections are
->> already mapped, and remapping an already mapped collection requires
->> extra care (see MAPC and the UNPREDICTABLE behaviour when V=1), so don't
->> go there.
->
-> IIUC, this is only run on CPU0 (it's in syscore resume), so implicitly,
-> CID is 0. Thus, the current condition is already doing what you ask:
->
->         HCC > 0 == CID
->
-> which is equivalent to:
->
->         HCC - 1 >= CID
->
-> Or should we really double check what CPU we're running on?
+Hi,
 
-There seems to be the edge case where you hotplug CPU 0 before
-suspending. In that case, I believe you're on the lowest number CPU
-left?
+This patch series adds support for a new set of boards, codenamed
+"midas". These are the Galaxy S3 (GT-I9300/GT-I9305)
+and the Galaxy Note 2 (GT-N7100/GT-N7105).
 
-It seems that all of the CPUs that are disabled have the ITS
-reinitialized from scratch via enable_nonboot_cpus(). This code runs
-on only the CPU that firmware resumes with. If that CPU isn't CPU 0
-for whatever reason, we need to make sure that it's processor ID is
-less than HCC.
+These boards are closely related to trats2 - i9300 is a trats2 but with a
+bootloader geared towards booting Android rather than a traditional Linux
+distribution - and because of this, the dts files are largely based off
+what is already in-place for trats2. Trats2 is modified to use
+the dts files added by this series.
 
->
-> Brian
+Patch #1 adds documentation for the bindings used by the boards.
+Patch #2 splits the existing trats2 DTS into the common midas,
+i9300/i9305/trats2-specific, and trats2-specific parts.
+Patch #3 adds the device-tree files for the other boards.
+Patch #4 enables cpuidle support for all added boards.
+
+Changes since v1:
+* Include trats2 in inheritance
+* Add the new dtbs to the makefile
+* Cleanup style per Krzysztof's comments
+
+Changes since v2:
+* Rebase on linux-next 20171218 (adds some fixes yet to land in mainline)
+* Leave any changes to the DTS out of patch #2
+* Minimise diff of exynos4412-midas.dtsi, using format-patch -B30%
+  (thanks for the suggestion, Krzysztof)
+* Leave original trats2 copyrights on midas and galaxy-s3 DTS files
+* Preserve ABI for the cpuidle compatibility check
+* Explain the m0/m3/t0 -> GT-I9300/GT-I9305/GT-N7100/GT-N7105 relationship
+ in the DT binding docs.
+
+Changes since v3:
+* Abandon the m0/m3/t0 terminology in favour of model numbers (m0 =>
+ i9300, m3 => i9305, t0 => n710x)
+* Use SPDX on all files, and keep Samsung copyrights where needed
+* Clean up unnecessary disables of devicetree nodes
+* Correct s5c73m3 vdda regulator for n710x
+
+Changes since v4:
+* Remove unneeded status = "okay" lines in regulator definitions
+
+Cheers,
+Simon
+
+Simon Shields (4):
+  dt-bindings: samsung: document bindings for Midas family boards
+  ARM: dts: split trats2 DTS in preparation for midas boards
+  ARM: dts: add Samsung's exynos4412-based midas boards
+  ARM: exynos: extend cpuidle support to midas boards
+
+ .../bindings/arm/samsung/samsung-boards.txt        |    4 +
+ arch/arm/boot/dts/Makefile                         |    3 +
+ arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi        |  140 ++
+ arch/arm/boot/dts/exynos4412-i9300.dts             |   22 +
+ arch/arm/boot/dts/exynos4412-i9305.dts             |   20 +
+ ...exynos4412-trats2.dts => exynos4412-midas.dtsi} |  119 +-
+ arch/arm/boot/dts/exynos4412-n710x.dts             |   57 +
+ arch/arm/boot/dts/exynos4412-trats2.dts            | 1441 +-------------------
+ arch/arm/mach-exynos/exynos.c                      |    3 +-
+ 9 files changed, 281 insertions(+), 1528 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi
+ create mode 100644 arch/arm/boot/dts/exynos4412-i9300.dts
+ create mode 100644 arch/arm/boot/dts/exynos4412-i9305.dts
+ copy arch/arm/boot/dts/{exynos4412-trats2.dts => exynos4412-midas.dtsi} (91%)
+ create mode 100644 arch/arm/boot/dts/exynos4412-n710x.dts
+ rewrite arch/arm/boot/dts/exynos4412-trats2.dts (98%)
+
+-- 
+2.16.0
