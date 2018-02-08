@@ -1,111 +1,68 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add binding for i.MX8MQ IOMUXC
-Date: Thu, 08 Feb 2018 16:28:53 +0100
-Message-ID: <1518103733.31735.6.camel@pengutronix.de>
-References: <20180201174923.7385-1-l.stach@pengutronix.de>
-         <20180205060918.vm3q6ludepvqcuxm@rob-hp-laptop>
-         <1517825351.3175.3.camel@pengutronix.de>
-         <CACRpkdanb3XocUpmTaFTh-vsApucX0PzuqRg_fA2ORUFtrVGJA@mail.gmail.com>
-         <1517914394.3175.21.camel@pengutronix.de>
-         <CACRpkdbuGOrm=y=yPpsrkckk8+uKGxv6J9WGw9y=yiGcmbqn+w@mail.gmail.com>
-         <1517932068.3175.27.camel@pengutronix.de>
-         <CACRpkdYy43E5H=tRAf+YDvAY1RDTJ34nHSmqCXEn9xaknbLKZQ@mail.gmail.com>
-         <20180207111156.a7cevrz3dbk2f4fb@pengutronix.de>
-         <CAOMZO5DVoh67DZuwEtKpDaEkU2x1=qz92fiYmf9SQtidTbnhXg@mail.gmail.com>
-         <20180208085605.GG31910@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180208085605.GG31910@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "A . s . Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, NXP Linux Team <linux-imx-3arQi8VN3Tc@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: samsung: Add the DT binding files entry to MAINTAINERS" to the asoc tree
+Date: Thu, 08 Feb 2018 15:41:33 +0000
+Message-ID: <E1ejoKL-0008Sx-2L@debutante>
+References: <20180205170500.8992-1-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20180205170500.8992-1-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Mark Brown <broonie@kernel.org>broonie@kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sbkim73@samsung.com, jcsing.lee@samsung.com, lgirdwood@gmail.comkrzk@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, m.szyprowski@samsung.comalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 08.02.2018, 16:56 +0800 schrieb Shawn Guo:
-> On Wed, Feb 07, 2018 at 09:41:22AM -0200, Fabio Estevam wrote:
-> > [Adding Shawn on Cc]
-> 
-> Thanks Fabio.
-> 
-> > On Wed, Feb 7, 2018 at 9:11 AM, Sascha Hauer <s.hauer@pengutronix.d
-> > e> wrote:
-> > 
-> > > My opinion is that all that is generic about padctrl is a device
-> > > driver
-> > > saying "Put my pins into a suitable mode". That is what padctrl
-> > > is good
-> > > for and we are there for years now. I have always been happy with
-> > > the
-> > > plain register values in the device tree. Before device tree we
-> > > had
-> > > exactly these values in the board files and I never heard anyone
-> > > complaining about it. There were defines for the bits in the
-> > > register
-> > > which you could use when you were unhappy with plain register
-> > > values.
-> > > 
-> > > It's really trivial to look in the reference manual to make up
-> > > the
-> > > needed register values. It's also trivial to take a register
-> > > value
-> > > and look into the reference manual what this value does. Every
-> > > translation layer, call it generic properties, just makes things
-> > > more
-> > > complicated. Often enough our input is register value tables
-> > > from either our customers our from spreadsheets from FSL/NXP.
-> > > Every
-> > > translation layer in the way just means we have to translate the
-> > > already
-> > > existing register values into something hoping that this
-> > > correctly
-> > > translates back into the register values.
-> > > 
-> > > It's not that some board designer comes up with "I need a drive
-> > > strength
-> > > of 150mA" and wants to put that value into the device tree.
-> > > Instead they
-> > > start with the reference manual, see which values they can (must)
-> > > adjust
-> > > and then adjust the values until they are happy. No one wants to
-> > > ask
-> > > questions like "How do I have to manipulate that device tree to
-> > > change
-> > > that particular bit?"
-> > > 
-> > > As said, I am happy with plain register values in the device tree
-> > > and
-> > > I consider everything else overengineered.
-> > > FSL/NXP Reference Manuals are freely available and of high
-> > > quality so
-> > > everybody can understand the register values. There's nothing
-> > > magic to
-> > > them. That might change slightly when the Manuals are not
-> > > available, but
-> > > even then I think that not the device tree ABI is the right place
-> > > to
-> > > add that missing documentation.
-> > 
-> > I agree 100% with Sascha.
-> 
-> I would vote for not going generic pinconf either, as the controversy
-> here starts from something, that indicates the generic stuff doesn't
-> work for i.MX.
+The patch
 
-So it seems with that we are at a point where the majority vote of
-users/maintainers are in favor of keeping the binding that has served
-us well on MX5/6. Which is right where we started with v1 of the MX8
-patches.
+   ASoC: samsung: Add the DT binding files entry to MAINTAINERS
 
-How do we proceed? I would like to send out a respin of those series
-next week. Can we all agree to roll back the pinctrl binding to the
-MX5/6 one? Or are there still major reservations against it? I would
-like to avoid introducing any unnecessary churn.
+has been applied to the asoc tree at
 
-Regards,
-Lucas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 4b20f44e41b421be608756c395ccf4fcb1305824 Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Date: Mon, 5 Feb 2018 18:05:00 +0100
+Subject: [PATCH] ASoC: samsung: Add the DT binding files entry to MAINTAINERS
+
+This patch adds missing DT binding files to the Samsung ASoC
+drivers entry.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 87a5120d5d47..930fd1e32f12 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11923,6 +11923,7 @@ M:	Sylwester Nawrocki <s.nawrocki@samsung.com>
+ L:	alsa-devel@alsa-project.org (moderated for non-subscribers)
+ S:	Supported
+ F:	sound/soc/samsung/
++F:	Documentation/devicetree/bindings/sound/samsung*
+ 
+ SAMSUNG EXYNOS PSEUDO RANDOM NUMBER GENERATOR (RNG) DRIVER
+ M:	Krzysztof Kozlowski <krzk@kernel.org>
+-- 
+2.15.1
