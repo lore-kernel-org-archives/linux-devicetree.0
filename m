@@ -1,133 +1,43 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: Re: [PATCH v4] ARM: sun8i: h2+: add support for
- Banana Pi M2 Zero board
-Date: Thu, 08 Feb 2018 10:28:32 +0100
-Message-ID: <1836483.rFXKcXDauj@jernej-laptop>
-References: <20180206131647.41700-1-icenowy@aosc.io> <20180208090042.364is5ctofhuao4i@flea> <9e77487f83b226ad7700715251178ce8@aosc.io>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 2/7] soc: davinci: new genpd driver
+Date: Thu, 8 Feb 2018 15:00:47 +0530
+Message-ID: <65f2690c-c605-3c66-9d8a-9a882aaf446d@ti.com>
+References: <20180207134553.13510-1-brgl@bgdev.pl>
+ <20180207134553.13510-3-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBRFQ6DJQKGQEOM7C7CA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <9e77487f83b226ad7700715251178ce8-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180207134553.13510-3-brgl@bgdev.pl>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Dne =C4=8Detrtek, 08. februar 2018 ob 10:15:35 CET je Icenowy Zheng napisal=
-(a):
-> =E5=9C=A8 2018-02-08 17:00=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
->=20
-> > On Tue, Feb 06, 2018 at 09:16:47PM +0800, Icenowy Zheng wrote:
-> >> Banana Pi M2 Zero board is a H2+-based board by Sinovoip, with a form
-> >> factor and GPIO holes similar to Raspberry Pi Zero.
-> >>=20
-> >> It features:
-> >> - Allwinner H2+ SoC
-> >> - Single-chip (16-bit) 512MiB DDR3 DRAM
-> >> - Ampak AP6212 Wi-Fi/Bluetooth module
-> >> - MicroSD slot
-> >> - Two MicroUSB Type-B ports (one can only be used to power the board
-> >> and
-> >>=20
-> >>   the other features OTG functionality)
-> >>=20
-> >> - Two keys, a reset and a GPIO-connected key.
-> >> - HDMI Type-C (miniHDMI) connector connected to the HDMI part of H2+.
-> >> - CSI connector to connect the camera sensor provided by Sinovoip.
-> >>=20
-> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> >> ---
-> >> Changes in v4:
-> >> - Use SPDX license identifier.
-> >>=20
-> >> Changes in v3:
-> >> - Add comments about Vbus problem in &usbphy node.
-> >>=20
-> >> Changes in v2:
-> >> - Use high active SD card detect on the production batch.
-> >>=20
-> >>  arch/arm/boot/dts/Makefile                         |   1 +
-> >>  .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 126
-> >>=20
-> >> +++++++++++++++++++++
-> >>=20
-> >>  2 files changed, 127 insertions(+)
-> >>  create mode 100644
-> >>=20
-> >> arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >>=20
-> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> >> index ade7a38543dc..d5a17e6e8b0f 100644
-> >> --- a/arch/arm/boot/dts/Makefile
-> >> +++ b/arch/arm/boot/dts/Makefile
-> >> @@ -974,6 +974,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
-> >>=20
-> >>  	sun8i-a83t-cubietruck-plus.dtb \
-> >>  	sun8i-a83t-tbs-a711.dtb \
-> >>  	sun8i-h2-plus-orangepi-r1.dtb \
-> >>=20
-> >> +	sun8i-h2-plus-bananapi-m2-zero.dtb \
-> >>=20
-> >>  	sun8i-h2-plus-orangepi-zero.dtb \
-> >>  	sun8i-h3-bananapi-m2-plus.dtb \
-> >>  	sun8i-h3-beelink-x2.dtb \
-> >>=20
-> >> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> new file mode 100644
-> >> index 000000000000..e2ee65a5bf92
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
-> >> @@ -0,0 +1,126 @@
-> >> +/*
-> >> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> >> + *
-> >> + * Based on sun8i-h3-bananapi-m2-plus.dts, which is:
-> >> + *   Copyright (C) 2016 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >> + *
-> >> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >=20
-> > Sorry to be a bit picky about this, but this should be your very first
-> > line, see arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts for
-> > example.
->=20
-> I think it's also OK here, see
-> arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts.
+On Wednesday 07 February 2018 07:15 PM, Bartosz Golaszewski wrote:
+> +	/*
+> +	 * DaVinci always uses a single clock for power-management. We assume
+> +	 * it's the first one in the clocks property.
+> +	 */
+> +	clk = of_clk_get(dev->of_node, 0);
+> +	if (IS_ERR(clk))
+> +		return PTR_ERR(clk);
 
-Lincesing rules [1] says it should be in first possible line which can cont=
-ain=20
-comment.
+We already get this today with drivers/base/power/clock_ops.c once
+.con_ids list is dropped from pm_clk_notifier_block (which I think it
+should).
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tre=
-e/
-Documentation/process/license-rules.rst#n57
+If there is no reason to introduce thus functionality at this stage,
+perhaps we should wait till such a time when its clearly needed?
 
->=20
-> > Thanks!
-> > Maxime
->=20
-> --
-> You received this message because you are subscribed to the Google Groups
-> "linux-sunxi" group. To unsubscribe from this group and stop receiving
-> emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org=
-.
-> For more options, visit https://groups.google.com/d/optout.
-
-
-
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Sekhar
