@@ -1,40 +1,56 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v4 4/5] dmaengine: mediatek: mtk_hsdma_find_active_desc() can be static
-Date: Fri, 9 Feb 2018 01:58:50 +0800
-Message-ID: <d06926cb465f98c212ab3a6e14fc858ec49e48bf.1518110810.git.sean.wang@mediatek.com>
+Subject: [PATCH v4 3/5] dmaengine: mediatek: update MAINTAINERS entry with
+ MediaTek DMA driver
+Date: Fri, 9 Feb 2018 01:58:49 +0800
+Message-ID: <b2551734d0d6aefb9c6201884c470b9d643e10f1.1518110810.git.sean.wang@mediatek.com>
 References: <cover.1518110810.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.1518110810.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: vinod.koul@intel.com, dan.j.williams@intel.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kbuild test robot <lkp@intel.com>, Fengguang Wu <fengguang.wu@intel.com>
+Cc: devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: kbuild test robot <lkp@intel.com>
+From: Sean Wang <sean.wang@mediatek.com>
 
-Fixes: c8e4b2e4ca21 ("dmaengine: mediatek: Add MediaTek High-Speed DMA controller for MT7622 and MT7623 SoC")
-Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
-Acked-by: Sean Wang <sean.wang@mediatek.com>
+I work for MediaTek and maintain SoC targeting to home gateway and
+also will keep extending and testing the function.
+
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- drivers/dma/mediatek/mtk-hsdma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/dma/mediatek/mtk-hsdma.c b/drivers/dma/mediatek/mtk-hsdma.c
-index d394fc6..42b5b23 100644
---- a/drivers/dma/mediatek/mtk-hsdma.c
-+++ b/drivers/dma/mediatek/mtk-hsdma.c
-@@ -644,8 +644,8 @@ static irqreturn_t mtk_hsdma_irq(int irq, void *devid)
- 	return IRQ_HANDLED;
- }
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c90687e..48f85f4 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8786,6 +8786,15 @@ M:	Sean Wang <sean.wang@mediatek.com>
+ S:	Maintained
+ F:	drivers/media/rc/mtk-cir.c
  
--struct virt_dma_desc *mtk_hsdma_find_active_desc(struct dma_chan *c,
--						 dma_cookie_t cookie)
-+static struct virt_dma_desc *mtk_hsdma_find_active_desc(struct dma_chan *c,
-+							dma_cookie_t cookie)
- {
- 	struct mtk_hsdma_vchan *hvc = to_hsdma_vchan(c);
- 	struct virt_dma_desc *vd;
++MEDIATEK DMA DRIVER
++M:	Sean Wang <sean.wang@mediatek.com>
++L:	dmaengine@vger.kernel.org
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/dma/mtk-*
++F:	drivers/dma/mediatek/
++
+ MEDIATEK PMIC LED DRIVER
+ M:	Sean Wang <sean.wang@mediatek.com>
+ S:	Maintained
 -- 
 2.7.4
