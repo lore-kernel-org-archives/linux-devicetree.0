@@ -1,77 +1,66 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH] Documentation: DT: arm: Add topology property to
- define package boundaries
-Date: Thu, 8 Feb 2018 11:05:41 +0000
-Message-ID: <20180208110541.GB1179@e107981-ln.cambridge.arm.com>
-References: <20180122171534.7681-1-lorenzo.pieralisi@arm.com>
- <c9ab384b-1408-eccb-b417-af9a8a22119c@arm.com>
+From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH] ARM: dts: phycore-imx6: set buck regulator modes explicitly
+Date: Thu, 08 Feb 2018 12:13:41 +0100
+Message-ID: <1518088421.2347.9.camel@googlemail.com>
+Reply-To: chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c9ab384b-1408-eccb-b417-af9a8a22119c-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>, Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 22, 2018 at 05:29:20PM +0000, Sudeep Holla wrote:
-> 
-> 
-> On 22/01/18 17:15, Lorenzo Pieralisi wrote:
-> > The current ARM DT topology description provides the operating system
-> > with a topological view of the system that is based on leaf nodes
-> > representing either cores or threads (in an SMT system) and a
-> > hierarchical set of cluster nodes that creates a hierarchical topology
-> > view of how those cores and threads are grouped.
-> > 
-> > As opposed to the ACPI topology description ([1], PPTT table), this
-> > hierarchical representation of clusters does not allow to describe what
-> > topology level actually represents the physical package boundary, which
-> > is a key piece of information to be used by an operating system to
-> > optimize resource allocation and scheduling.
-> > 
-> > Define an optional, backward compatible boolean property for cluster
-> > nodes that, by reusing the ACPI nomenclature, add to the ARM DT
-> > topological description a binding to define what cluster level
-> > represents a physical package boundary.
-> > 
-> > [1] http://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/topology.txt | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-> > index de9eb0486630..8e78d76b0671 100644
-> > --- a/Documentation/devicetree/bindings/arm/topology.txt
-> > +++ b/Documentation/devicetree/bindings/arm/topology.txt
-> > @@ -109,6 +109,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
-> >  	The cluster node name must be "clusterN" as described in 2.1 above.
-> >  	A cluster node can not be a leaf node.
-> >  
-> > +	Properties for cluster nodes:
-> > +
-> > +	- physical-package
-> > +		Usage: optional
-> > +		Value type: <empty>
-> 
-> IIUC, value type must be specified as boolean in this case.
+This patch sets initial buck regulator modes explicitly to a state
+this hardware needs.  So a wrong initial mode set by bootloader or
+pmic itself does not interfere anymore.
 
-That's what I thought too but according to DT specs v0.2, table 2.3 the
-property value type is <empty>.
+Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Signed-off-by: Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I do not mind changing it - whatever DT maintainers think is more
-appropriate.
+diff --git a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+index 53e4337..2ad1336 100644
+--- a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
+@@ -109,6 +109,7 @@
+ 				regulator-name = "vdd_arm";
+ 				regulator-min-microvolt = <730000>;
+ 				regulator-max-microvolt = <1380000>;
++				regulator-initial-mode = <2>; /* SYNC */
+ 				regulator-always-on;
+ 			};
+ 
+@@ -116,6 +117,7 @@
+ 				regulator-name = "vdd_soc";
+ 				regulator-min-microvolt = <730000>;
+ 				regulator-max-microvolt = <1380000>;
++				regulator-initial-mode = <2>; /* SYNC */
+ 				regulator-always-on;
+ 			};
+ 
+@@ -123,6 +125,7 @@
+ 				regulator-name = "vdd_ddr3";
+ 				regulator-min-microvolt = <1500000>;
+ 				regulator-max-microvolt = <1500000>;
++				regulator-initial-mode = <2>; /* SYNC */
+ 				regulator-always-on;
+ 			};
+ 
+@@ -130,6 +133,7 @@
+ 				regulator-name = "vdd_eth";
+ 				regulator-min-microvolt = <1200000>;
+ 				regulator-max-microvolt = <1200000>;
++				regulator-initial-mode = <2>; /* SYNC */
+ 				regulator-always-on;
+ 			};
+ 
+-- 
+2.1.4
 
-Thanks,
-Lorenzo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
