@@ -1,162 +1,94 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH] Documentation: DT: arm: Add topology property to
- define package boundaries
-Date: Thu, 8 Feb 2018 14:22:00 -0800
-Message-ID: <d4ef76c3-fb4a-f879-44a8-7322ebde36ac@gmail.com>
-References: <20180122171534.7681-1-lorenzo.pieralisi@arm.com>
- <b58b99e8-dfa3-40d6-aba2-bc1f96170fd6@gmail.com>
- <20180208105702.GA1179@e107981-ln.cambridge.arm.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v3 2/8] dt-bindings: power: reset: Document ocelot-reset
+ binding
+Date: Thu, 8 Feb 2018 23:32:36 +0100
+Message-ID: <20180208223236.47g2gzi4mb6blxgi@earth.universe>
+References: <20180116101240.5393-1-alexandre.belloni@free-electrons.com>
+ <20180116101240.5393-3-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180208105702.GA1179-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>, Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wpl5yojfuctp43sn"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180116101240.5393-3-alexandre.belloni@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/18 02:57, Lorenzo Pieralisi wrote:
-> On Mon, Jan 22, 2018 at 08:45:26PM -0800, Frank Rowand wrote:
->> On 01/22/18 09:15, Lorenzo Pieralisi wrote:
->>> The current ARM DT topology description provides the operating system
->>> with a topological view of the system that is based on leaf nodes
->>> representing either cores or threads (in an SMT system) and a
->>> hierarchical set of cluster nodes that creates a hierarchical topology
->>> view of how those cores and threads are grouped.
->>>
->>> As opposed to the ACPI topology description ([1], PPTT table), this
->>> hierarchical representation of clusters does not allow to describe what
->>> topology level actually represents the physical package boundary, which
->>> is a key piece of information to be used by an operating system to
->>> optimize resource allocation and scheduling.
->>>
->>> Define an optional, backward compatible boolean property for cluster
->>> nodes that, by reusing the ACPI nomenclature, add to the ARM DT
->>> topological description a binding to define what cluster level
->>> represents a physical package boundary.
->>>
->>> [1] http://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
->>>
->>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
->>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->>> Cc: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>
->>> Cc: Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>
->>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/arm/topology.txt | 9 +++++++++
->>>  1 file changed, 9 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
->>> index de9eb0486630..8e78d76b0671 100644
->>> --- a/Documentation/devicetree/bindings/arm/topology.txt
->>> +++ b/Documentation/devicetree/bindings/arm/topology.txt
->>> @@ -109,6 +109,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
->>>  	The cluster node name must be "clusterN" as described in 2.1 above.
->>>  	A cluster node can not be a leaf node.
->>>  
->>> +	Properties for cluster nodes:
->>> +
->>> +	- physical-package
->>> +		Usage: optional
->>> +		Value type: <empty>
->>> +		Definition: if present the cluster node represents the
->>> +			    boundary of a physical package, whether socketed
->>> +			    or surface mounted.
->>
->> I don't know how to interpret this.  Is the node with this property inside
->> or outside the boundary?  If I had to guess, I would guess inside.  A few
->> extra words to clarify this please.
-> 
-> The node is neither inside nor outside, it _is_ the boundary. Every node
-> defines a topology level - the property is there to define which one
-> corresponds to a package, please let me know if it makes things clearer.
 
-Not at all clear.
+--wpl5yojfuctp43sn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Using Example 1, from section "4 - Example dts" of topology.txt:
+Hi,
 
+On Tue, Jan 16, 2018 at 11:12:34AM +0100, Alexandre Belloni wrote:
+> Add binding documentation for the Microsemi Ocelot reset block.
+>=20
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> ---
 
-       cpu-map {
-                cluster0 {
-                        cluster0 {
-                                core0 {
-                                        thread0 {
-                                                cpu = <&CPU0>;
-                                        };
-                                        thread1 {
-                                                cpu = <&CPU1>;
-                                        };
-                                };
+Thanks, queued. My public for-next branch is waiting for 4.16-rc1
+tag, though.
 
-                                core1 {
-                                        thread0 {
-                                                cpu = <&CPU2>;
-                                        };
-                                        thread1 {
-                                                cpu = <&CPU3>;
-                                        };
-                                };
-                        };
+-- Sebastian
 
-                        cluster1 {
-                                core0 {
-                                        thread0 {
-                                                cpu = <&CPU4>;
-                                        };
-                                        thread1 {
-                                                cpu = <&CPU5>;
-                                        };
-                                };
+>  .../devicetree/bindings/power/reset/ocelot-reset.txt       | 14 ++++++++=
+++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/ocelot-=
+reset.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-reset.t=
+xt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+> new file mode 100644
+> index 000000000000..1b4213eb3473
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+> @@ -0,0 +1,14 @@
+> +Microsemi Ocelot reset controller
+> +
+> +The DEVCPU_GCB:CHIP_REGS have a SOFT_RST register that can be used to re=
+set the
+> +SoC MIPS core.
+> +
+> +Required Properties:
+> + - compatible: "mscc,ocelot-chip-reset"
+> +
+> +Example:
+> +	reset@1070008 {
+> +		compatible =3D "mscc,ocelot-chip-reset";
+> +		reg =3D <0x1070008 0x4>;
+> +	};
+> +
+> --=20
+> 2.15.1
+>=20
 
-                                core1 {
-                                        thread0 {
-                                                cpu = <&CPU6>;
-                                        };
-                                        thread1 {
-                                                cpu = <&CPU7>;
-                                        };
-                                };
-                        };
-                };
+--wpl5yojfuctp43sn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Pretend that cpu-map/cluster0/cluster0 is a physical package that
-contains two cores, and cpu-map/cluster0/cluster1 is another
-physical package that contains two cores.  My guess as to how
-to use the property "physical-package" would be to place it
-in nodes cpu-map/cluster0/cluster0 and cpu-map/cluster0/cluster1.
-In that case, those two nodes are on the "inside" of two different
-packages.
+-----BEGIN PGP SIGNATURE-----
 
-The alternate way to use the property "physical-package" would be
-to place it in node cpu-map/cluster0.  In this case, the node is
-"outside" of the packages.
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlp8z/4ACgkQ2O7X88g7
++pqtghAAgiEC59PSz82T7Q3MqiphoBzYiWxy1CoAtoheS2dFaM7E/EMJUSXJdD/z
+JSGXtbkL4PsJ7Xxn5kcl3mg/fEQT/AjhnSA8K09CnfYrflySatb+aggMbSYjuvV2
++QlAyTPHwQl6WdhYbhurrl/OsR2tuU8D9iD1Jy9On8XbwGRrZ9Lmgq2bVko9RAYV
+SIMnssSBeigwkcLGzFS7CJVOYByKrNjhY9daqUzIoG9SShqV6dz47owLVSgpGojn
+e4DnkoIAD+GxLvMQx+vfTmmOzj25geJtyAGZOKQtd/JJJ0IpDK5BCQlL1nnR+nbD
+opoKWErAaBr5gLxABnIrBfvfZak39tQ7dPPlK1iUMPCrdANjBdgTCyizZilim3/u
+0lNd6GlA1Xz1AoQiUhjSyAT2Kqqx9b5DHgF9opcUZ1Tu7S/m12NkZSTcfpw1YCEI
+vu/fLCVQD9qiplZZ6yrM6BlKKx1bnPOFBaQHOVWQkn2zZ3VM+6wHMzHKToH3c0lb
+zJs00jQ96NrG/lJwz+iDUhzuhHV/7qaWEUFfRrLy1Js/gHOIC/uS7pZ5jvNSgPUx
+9Winvj3lMCCQnujmNplG5DsHe3+rWRWgfHEETM5r89/ncN2bnIJ9eh2vTokaK5dh
+d4UEv1ig4U7t27o+cOJy4FhUatzGLezI3or/pGmA4fst2HUzhDs=
+=Ubpn
+-----END PGP SIGNATURE-----
 
-Again, I suspect that the intended use is the first of my two
-examples, but the proposed binding wording does not make that
-clear to me.  My use of "inside" and "outside" may not be the
-proper words or concept, but the binding somehow needs to
-say which of my two above example locations is the correct place
-to use the "physical-package" property.
-
--Frank
-
-> 
-> Thanks,
-> Lorenzo
-> 
->>> +
->>>  	A cluster node's child nodes must be:
->>>  
->>>  	- one or more cluster nodes; or
->>>
->>
-> .
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--wpl5yojfuctp43sn--
