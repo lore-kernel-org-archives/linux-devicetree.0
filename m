@@ -1,87 +1,61 @@
-From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 1/6] dt-bindings: mfd: Add ST Multi-Function eXpander driver
-Date: Thu, 8 Feb 2018 15:27:32 +0100
-Message-ID: <1518100057-23234-2-git-send-email-amelie.delaunay@st.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH 4/6] ARM: dts: stm32: add MFX support on I2C1 on stm32746g-eval
+Date: Thu, 8 Feb 2018 15:27:35 +0100
+Message-ID: <1518100057-23234-5-git-send-email-amelie.delaunay@st.com>
 References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518100057-23234-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre
+ Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation of device tree bindings for the
-STMicroelectronics Multi-Function eXpander (MFX).
+MFX is used as gpio expander on stm32746g-eval.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- Documentation/devicetree/bindings/mfd/st-mfx.txt | 51 ++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/st-mfx.txt
+ arch/arm/boot/dts/stm32746g-eval.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/st-mfx.txt b/Documentation/devicetree/bindings/mfd/st-mfx.txt
-new file mode 100644
-index 0000000..423d800
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/st-mfx.txt
-@@ -0,0 +1,51 @@
-+STMicroelectronics Multi-Function eXpander
-+
-+ST Multi-Function eXpander (MFX) is a slave controller using I2C for
-+communication with the main MCU. Its main features are gpio expansion, main
-+MCU IDD measurement (IDD is the amount of current that flows through VDD)
-+and resistive touchscreen controller.
-+
-+Required properties:
-+- compatible: must be "st,mfx"
-+- reg: I2C address of the device
-+- interrupts: interrupt triggered by MFX_IRQ_OUT signal
-+- interrupt-parent: interrupt controller MFX is connected to
-+- interrupt-controller: marks the device as an interrupt controller
-+- #interrupt-cells: should be <1>, index of the interrupt within the
-+  controller, in accordance with the "one cell" variant of
-+  <devicetree/bindings/interrupt-controller/interrupt.txt>
-+
-+Optional nodes:
-+
-+* GPIO eXpander
-+MFX provides 16 programmable GPIOs, and it is also possible to recover 8
-+alternate GPIOs if the main functions are not used (touchscreen controller and
-+IDD measurement not enabled).
-+
-+Required properties:
-+- compatible : must be "st,mfx-gpio"
-+- interrupt-parent : must be <&mfx>
-+- interrupts = must be <0>
-+- gpio-controller: marks the device node as a GPIO controller
-+- #gpio-cells: should be <2>, the first cell is the GPIO offset on this GPIO
-+  controller, the second cell is the gpio flags in accordance with
-+  <dt-bindings/gpio/st-mfx-gpio.h>.
-+
-+Example:
+diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
+index e74ae59..99739f7 100644
+--- a/arch/arm/boot/dts/stm32746g-eval.dts
++++ b/arch/arm/boot/dts/stm32746g-eval.dts
+@@ -128,6 +128,23 @@
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
+ 	status = "okay";
 +
 +	mfx: mfx@42 {
 +		compatible = "st,mfx";
 +		reg = <0x42>;
-+		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
++		interrupts = <8 1>;
 +		interrupt-parent = <&gpioi>;
 +		interrupt-controller;
 +		#interrupt-cells = <1>;
 +
 +		mfxgpio: mfx_gpio {
 +			compatible = "st,mfx-gpio";
-+			interrupt-parent = <&mfx>;
 +			interrupts = <0>;
++			interrupt-parent = <&mfx>;
 +			gpio-controller;
 +			#gpio-cells = <2>;
 +		};
 +	};
+ };
+ 
+ &mac {
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
