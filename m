@@ -1,79 +1,73 @@
-From: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Subject: Re: [PATCH 2/7] soc: davinci: new genpd driver
-Date: Thu, 8 Feb 2018 14:27:42 +0100
-Message-ID: <CAMRc=MeQUdzWfAgUCX5k5iwmyyVeCvjhw0CKauSY_1F0+SBPBQ@mail.gmail.com>
-References: <20180207134553.13510-1-brgl@bgdev.pl> <20180207134553.13510-3-brgl@bgdev.pl>
- <65f2690c-c605-3c66-9d8a-9a882aaf446d@ti.com> <CAMRc=Mf+S3k_wfhUWEx2-39AZx1szkgy-u-bsZQUMiaY06UKww@mail.gmail.com>
- <34d3980b-2c94-1540-94f0-dc0c86743475@ti.com>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] ARM/arm64: exynos: Fix missing missing reg
+ warning for syscon restart nodes
+Date: Thu, 08 Feb 2018 14:46:32 +0100
+Message-ID: <4642d2d0-61c9-33b6-0289-76f487aa45ab@samsung.com>
+References: <CGME20180130211855epcas1p25cce42a195d8b407f4267309f9b5ccb9@epcas1p2.samsung.com>
+        <20180130211819.17139-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <34d3980b-2c94-1540-94f0-dc0c86743475-l0cyMroinI0@public.gmane.org>
+In-reply-to: <20180130211819.17139-1-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-02-08 13:56 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
-> On Thursday 08 February 2018 03:24 PM, Bartosz Golaszewski wrote:
->> 2018-02-08 10:30 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
->>> On Wednesday 07 February 2018 07:15 PM, Bartosz Golaszewski wrote:
->>>> +     /*
->>>> +      * DaVinci always uses a single clock for power-management. We assume
->>>> +      * it's the first one in the clocks property.
->>>> +      */
->>>> +     clk = of_clk_get(dev->of_node, 0);
->>>> +     if (IS_ERR(clk))
->>>> +             return PTR_ERR(clk);
->>>
->>> We already get this today with drivers/base/power/clock_ops.c once
->>> .con_ids list is dropped from pm_clk_notifier_block (which I think it
->>> should).
->>>
->>> If there is no reason to introduce thus functionality at this stage,
->>> perhaps we should wait till such a time when its clearly needed?
->>>
->>> Thanks,
->>> Sekhar
->>
->> If I understand correctly: once we drop the con_ids list, we end up
->> calling clk_get(dev, NULL) from pm_clk_acquire(), which matches
->> against the clock with NULL con_id, which may not necessarily be the
->> first clock in the list.
+Hi Krzysztof,
+
+On 2018-01-30 22:18, Krzysztof Kozlowski wrote:
+> Hi,
 >
-> Hmm, not sure of this. In __of_clk_get_by_name() called by clk_get():
+> Changes since v1:
+> 1. New patch (1/4) calling devm_of_platform_populate() in PMU driver,
+>     following Rob's advice.
+> 2. The DTS patches moving reboot/poweroff nodes (3/4 and 4/4) now depend
+>     on this.
+
+Tested-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+Tested following boards and reboot works fine:
+Exynos3250 (artik5-eval)
+Exynos4412 (trats2)
+Exynos5410 (odroid xu)
+Exynos5422 (odroid xu3/xu4)
+Exynos5433 (tm2)
+
+> Best regards,
+> Krzysztof
 >
-> int index = 0;
 >
-> /*
->  * For named clocks, first look up the name in the
->  * "clock-names" property.  If it cannot be found, then
->  * index will be an error code, and of_clk_get() will fail.
->  */
-> if (name)
->         index = of_property_match_string(np, "clock-names", name);
+> Krzysztof Kozlowski (4):
+>    soc: samsung: pmu: Populate children syscon nodes
+>    ARM: dts: exynos: Remove duplicated inclusion of syscon restart nodes
+>      on Exynos5410
+>    ARM: dts: exynos: Fix missing missing reg warning for syscon restart
+>      nodes
+>    arm64: dts: exynos: Fix missing missing reg warning for syscon restart
+>      nodes
 >
-> So, if no con_id is provided (name == NULL), then index is set to 0
-> which will always get the first clock in clocks = list.
+>   .../devicetree/bindings/arm/samsung/pmu.txt        |  6 +++++
+>   arch/arm/boot/dts/exynos-syscon-restart.dtsi       | 28 ++++++++++------------
+>   arch/arm/boot/dts/exynos3250.dtsi                  |  2 +-
+>   arch/arm/boot/dts/exynos4.dtsi                     |  3 ++-
+>   arch/arm/boot/dts/exynos5.dtsi                     |  1 -
+>   arch/arm/boot/dts/exynos5250.dtsi                  |  1 +
+>   arch/arm/boot/dts/exynos5410.dtsi                  |  2 +-
+>   arch/arm/boot/dts/exynos5420.dtsi                  |  1 +
+>   arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 14 +++++------
+>   arch/arm64/boot/dts/exynos/exynos7.dtsi            | 12 +++++-----
+>   drivers/soc/samsung/exynos-pmu.c                   |  3 +++
+>   11 files changed, 40 insertions(+), 33 deletions(-)
 >
 
-But we're talking here about device tree mode. In legacy mode the
-device_node pointer will be NULL, __of_clk_get_by_name() will return
--ENOENT and we'll end up calling clk_get_sys() -> clk_find(). We'll
-then iterate over the clock entries and check the following:
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-(...)
-152                 if (p->con_id) {
-153                         if (!con_id || strcmp(p->con_id, con_id))
-154                                 continue;
-155                         match += 1;
-156                 }
-(...)
-
-So we'll skip the first clock if it has a con_id and we passed an
-empty con_id to clk_get().
-
-Bartosz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
