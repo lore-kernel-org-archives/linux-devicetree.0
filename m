@@ -1,198 +1,75 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v6 1/3] irqchip/gic-v3-its: add ability to save/restore
- ITS state
-Date: Thu, 8 Feb 2018 09:55:12 -0800
-Message-ID: <20180208175511.GC106856@ban.mtv.corp.google.com>
-References: <20180208023648.89124-1-dbasehore@chromium.org>
- <20180208023648.89124-2-dbasehore@chromium.org>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/5] add support for Mediatek High-Speed DMA controller on MT7622 and MT7623 SoC
+Date: Fri, 9 Feb 2018 01:58:46 +0800
+Message-ID: <cover.1518110810.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180208023648.89124-2-dbasehore@chromium.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Derek Basehore <dbasehore@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Soby.Mathew@arm.com, sudeep.holla@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, tglx@linutronix.de, marc.zyngier@arm.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Derek,
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-On Wed, Feb 07, 2018 at 06:36:46PM -0800, Derek Basehore wrote:
-> Some platforms power off GIC logic in suspend, so we need to
-> save/restore state. The distributor and redistributor registers need
-> to be handled in platform code due to access permissions on those
-> registers, but the ITS registers can be restored in the kernel.
-> 
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> ---
->  drivers/irqchip/irq-gic-v3-its.c | 103 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 103 insertions(+)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 06f025fd5726..35ad48f51dfa 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -33,6 +33,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/percpu.h>
->  #include <linux/slab.h>
-> +#include <linux/syscore_ops.h>
->  
->  #include <linux/irqchip.h>
->  #include <linux/irqchip/arm-gic-v3.h>
-> @@ -46,6 +47,7 @@
->  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
->  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
->  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
-> +#define ITS_FLAGS_SAVE_SUSPEND_STATE		(1ULL << 3)
->  
->  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
->  
-> @@ -101,6 +103,8 @@ struct its_node {
->  	struct its_collection	*collections;
->  	struct fwnode_handle	*fwnode_handle;
->  	u64			(*get_msi_base)(struct its_device *its_dev);
-> +	u64			cbaser_save;
-> +	u32			ctlr_save;
->  	struct list_head	its_device_list;
->  	u64			flags;
->  	unsigned long		list_nr;
-> @@ -3042,6 +3046,100 @@ static void its_enable_quirks(struct its_node *its)
->  	gic_enable_quirks(iidr, its_quirks, its);
->  }
->  
-> +static int its_save_disable(void)
-> +{
-> +	struct its_node *its;
-> +	int err = 0;
-> +
-> +	spin_lock(&its_lock);
-> +	list_for_each_entry(its, &its_nodes, entry) {
-> +		void __iomem *base;
-> +
-> +		if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
-> +			continue;
-> +
-> +		base = its->base;
-> +		its->ctlr_save = readl_relaxed(base + GITS_CTLR);
-> +		err = its_force_quiescent(base);
-> +		if (err) {
-> +			pr_err("ITS failed to quiesce\n");
+Changes since v3:
+- enhance dt-binding documents based on Rob's comments
+- make consistent among all comments
+- perfer ordering declarations longest to shortest
+- fix warning reported from kbuild test robot
+- add patch 4 and 5 to keep Fengguang and Julia's effort
 
-Isn't this a case where it was suggested to print the PA? Also, printing
-the error code never hurts. Like:
+Changes since v2:
+- remove extra tasklets and refactor driver for letting descriptors being processed ASAP.
+- add more comments stating the relevant logic
+- remove unused macro and variables
+- change to use the disclaimer with SPDX identifier
+- add mt7622 support
+- refine hardware initialization sequence
+- add tx_status support for DMA_RESIDUE_GRANULARITY_SEGMENT
+- refine remove handler with killing vc's tasklet
 
-			pr_err("ITS@%pa: failed to quiesce: %d\n",
-			       &its->phys_base, err);
+Changes since v1:
+- fix typo in the commit message.
+- delete status shown in the dt-binding example.
 
-> +			writel_relaxed(its->ctlr_save, base + GITS_CTLR);
-> +			goto err;
-> +		}
-> +
-> +		its->cbaser_save = gits_read_cbaser(base + GITS_CBASER);
-> +	}
-> +
-> +err:
-> +	if (err) {
-> +		list_for_each_entry_continue_reverse(its, &its_nodes, entry) {
-> +			void __iomem *base;
-> +
-> +			if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
-> +				continue;
-> +
-> +			base = its->base;
-> +			writel_relaxed(its->ctlr_save, base + GITS_CTLR);
-> +		}
-> +	}
-> +	spin_unlock(&its_lock);
-> +
-> +	return err;
-> +}
-> +
-> +static void its_restore_enable(void)
-> +{
-> +	struct its_node *its;
-> +
-> +	spin_lock(&its_lock);
-> +	list_for_each_entry(its, &its_nodes, entry) {
-> +		void __iomem *base;
-> +		int i;
-> +
-> +		if (!(its->flags & ITS_FLAGS_SAVE_SUSPEND_STATE))
-> +			continue;
-> +
-> +		base = its->base;
-> +
-> +		/*
-> +		 * Make sure that the ITS is disabled. If it fails to quiesce,
-> +		 * don't restore it since writing to CBASER or BASER<n>
-> +		 * registers is undefined according to the GIC v3 ITS
-> +		 * Specification.
-> +		 */
-> +		if (its_force_quiescent(base)) {
-> +			pr_err("ITS(%p): failed to quiesce on resume\n", base);
+This patchset introduces support for MediaTek High-Speed DMA controller
+(MTK-HSDMA) Currently, the driver is already tested successfully with
+dmatest module on MT7622 and MT7623 SoC. 
 
-I think Marc was requesting the PA, not the VA. The VA isn't really very
-useful. Also, might as well log with similar style to the existing logs
-(ITS@xxx), and log the error code:
+MTK-HSDMA on MT7622/23 SoC has a single ring which is dedicated for
+doing memory-to-memory transfer through ring-based descriptor management.
+Even though there is only a single ring available inside HSDMA, the
+driver is being extended to the support for multiple virtual channels
+processing simultaneously by means of DMA_VIRTUAL_CHANNELS.
 
-			pr_err("ITS@%pa: failed to quiesce on resume: %d\n",
-			       &its->phys_base, ret);
+Sean Wang (3):
+  dt-bindings: dmaengine: Add MediaTek High-Speed DMA controller
+    bindings
+  dmaengine: mediatek: Add MediaTek High-Speed DMA controller for MT7622
+    and MT7623 SoC
+  dmaengine: mediatek: update MAINTAINERS entry with MediaTek DMA driver
 
-Brian
+kbuild test robot (1):
+  dmaengine: mediatek: mtk_hsdma_find_active_desc() can be static
 
-> +			continue;
-> +		}
-> +
-> +		gits_write_cbaser(its->cbaser_save, base + GITS_CBASER);
-> +
-> +		/*
-> +		 * Writing CBASER resets CREADR to 0, so make CWRITER and
-> +		 * cmd_write line up with it.
-> +		 */
-> +		its->cmd_write = its->cmd_base;
-> +		gits_write_cwriter(0, base + GITS_CWRITER);
-> +
-> +		/* Restore GITS_BASER from the value cache. */
-> +		for (i = 0; i < GITS_BASER_NR_REGS; i++) {
-> +			struct its_baser *baser = &its->tables[i];
-> +
-> +			if (!(baser->val & GITS_BASER_VALID))
-> +				continue;
-> +
-> +			its_write_baser(its, baser, baser->val);
-> +		}
-> +		writel_relaxed(its->ctlr_save, base + GITS_CTLR);
-> +	}
-> +	spin_unlock(&its_lock);
-> +}
-> +
-> +static struct syscore_ops its_syscore_ops = {
-> +	.suspend = its_save_disable,
-> +	.resume = its_restore_enable,
-> +};
-> +
->  static int its_init_domain(struct fwnode_handle *handle, struct its_node *its)
->  {
->  	struct irq_domain *inner_domain;
-> @@ -3261,6 +3359,9 @@ static int __init its_probe_one(struct resource *res,
->  		ctlr |= GITS_CTLR_ImDe;
->  	writel_relaxed(ctlr, its->base + GITS_CTLR);
->  
-> +	if (fwnode_property_present(handle, "reset-on-suspend"))
-> +		its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
-> +
->  	err = its_init_domain(handle, its);
->  	if (err)
->  		goto out_free_tables;
-> @@ -3515,5 +3616,7 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
->  		}
->  	}
->  
-> +	register_syscore_ops(&its_syscore_ops);
-> +
->  	return 0;
->  }
-> -- 
-> 2.16.0.rc1.238.g530d649a79-goog
-> 
+ .../devicetree/bindings/dma/mtk-hsdma.txt          |   33 +
+ MAINTAINERS                                        |    9 +
+ drivers/dma/Kconfig                                |    2 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/mediatek/Kconfig                       |   13 +
+ drivers/dma/mediatek/Makefile                      |    1 +
+ drivers/dma/mediatek/mtk-hsdma.c                   | 1044 ++++++++++++++++++++
+ 7 files changed, 1103 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/mtk-hsdma.txt
+ create mode 100644 drivers/dma/mediatek/Kconfig
+ create mode 100644 drivers/dma/mediatek/Makefile
+ create mode 100644 drivers/dma/mediatek/mtk-hsdma.c
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
