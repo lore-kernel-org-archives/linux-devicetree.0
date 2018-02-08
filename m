@@ -1,56 +1,69 @@
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: Re: [PATCH v4 2/2] dt/bindings: Add bindings for Layerscape external
- irqs
-Date: Thu, 8 Feb 2018 16:08:01 +0100
-Message-ID: <15ac0da3-e85b-c6be-366a-368934752018@prevas.dk>
-References: <20180122092133.23177-1-rasmus.villemoes@prevas.dk>
- <20180125150230.7234-1-rasmus.villemoes@prevas.dk>
- <20180125150230.7234-2-rasmus.villemoes@prevas.dk>
- <20180205060705.cg3qywtqs65w74ee@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v5] ARM: sun8i: h2+: add support for Banana Pi M2 Zero
+ board
+Date: Thu, 8 Feb 2018 16:11:55 +0100
+Message-ID: <20180208151155.ncmsoeofjjj6nrid@flea>
+References: <20180208100613.4761-1-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="24hj64woalvrjqff"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180205060705.cg3qywtqs65w74ee@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180208100613.4761-1-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Andy Tang <andy.tang@nxp.com>, Alexander Stein <alexander.stein@systec-electronic.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 2018-02-05 07:07, Rob Herring wrote:
->> +Example:
->> +	scfg: scfg@1570000 {
->> +		compatible = "fsl,ls1021a-scfg", "syscon";
->> +		...
->> +		extirq: interrupt-controller {
->> +			compatible = "fsl,ls1021a-extirq";
->> +			#interrupt-cells = <3>;
->> +			interrupt-controller;
->> +			interrupt-parent = <&gic>;
->> +			offset = <0x1ac>;
-> 
-> Use reg here instead (with a length).
 
-Hm, ok, but what does the length buy us? Should the driver just ignore
-it, or should it check that it is 4 and bail out if not?
+--24hj64woalvrjqff
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +			interrupts = <163 164 165 167 168 169>;
-> 
-> These don't look like GIC interrupt cells. Building this with current 
-> dtc will have errors.
+On Thu, Feb 08, 2018 at 06:06:13PM +0800, Icenowy Zheng wrote:
+> Banana Pi M2 Zero board is a H2+-based board by Sinovoip, with a form
+> factor and GPIO holes similar to Raspberry Pi Zero.
+>=20
+> It features:
+> - Allwinner H2+ SoC
+> - Single-chip (16-bit) 512MiB DDR3 DRAM
+> - Ampak AP6212 Wi-Fi/Bluetooth module
+> - MicroSD slot
+> - Two MicroUSB Type-B ports (one can only be used to power the board and
+>   the other features OTG functionality)
+> - Two keys, a reset and a GPIO-connected key.
+> - HDMI Type-C (miniHDMI) connector connected to the HDMI part of H2+.
+> - CSI connector to connect the camera sensor provided by Sinovoip.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 
-Indeed, they are not. They simply record which interrupt lines on the
-GIC the external interrupt lines IRQ0...IRQ5 map to (the arm64 socs
-apparently have 12 such lines, but I don't know what they map to). I
-originally had that mapping in the driver, but I was asked to move it to
-DT. Is the problem the use of the name "interrupts" for this property?
-I'm happy to use something else (parent-interrupts, interrupt-mapping,
-...) I find it very hard to figure out which property names have
-magic/reserved meanings.
+Applied, thanks!
+Maxime
 
-I don't see any warnings/errors from dtc in the 4.14 tree I'm working
-on. Does it require an even newer dtc than that?
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
 
-Thanks,
-Rasmus
+--24hj64woalvrjqff
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlp8aLoACgkQ0rTAlCFN
+r3T8MQ/9GeHsZVivf8XAtlFfiWTDM4IJqr/9cV1/oZLmRR4prVWAfKLpgDAWG5N9
+ipSp68Djxx+3klSdJ/A/yPUekr9FKzkQ8krAGlOabnHRRMywGtMa0Ej6P8EO8W1+
+sUFOwB2xKfOZxuZnlCmjIpnEtvpXKDlJqFmf7JkNrm4Fz5OcQ6EysWibbKE/aL6F
+Tr4gxYt5F4LL4S4U4HAnVPGDgXwql4tk5GdKwl6OS7lnZUs1VWHyv/hty+lxgsbu
+XqXG8/58PdROp17HbekUt0x5ReIFj2e+5A5iqgq1Wur4zvmC1ZmNN2W72H0nvOxt
+GaOHX6Q9DUgal5Rz91ehKbd61mDjhRUH2VFvuGI8O7YKkQF8xR1O5UkzBi3wgImH
+oAXaPaVA9IOFOdgF4ggIXkKyeN59UEe++ZVipT+CcjI2SVAplsYpSnANZBZ5rVIg
+f5wxfCcEHESnZBX3Tpw9+9aqXPmMeVJKX3O/mSAoBTGcxuJjs0EKYP7Ke6rUZZYO
+kdIdom6KhEBnJPsbc2ke828KPOYtO+0+qLYUMw42mEqgyA9W6oR+CygN4usiUDNb
+BGwCmYYaOyNZnaOPn+FbkrVctxFt/oB0owWABAvfdm3LEdE0HIn1sY5qGunlVL+f
+iUs9Ab0m9yeghSKUFO5O75VxsJb/4w7hHmYouZxSTae+MuaNcaw=
+=E2px
+-----END PGP SIGNATURE-----
+
+--24hj64woalvrjqff--
