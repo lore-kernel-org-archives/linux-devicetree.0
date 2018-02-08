@@ -1,50 +1,83 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH] powerpc/fsl/dts: fix the i2c-mux compatible for t104xqds
-Date: Thu, 8 Feb 2018 10:32:12 +0100
-Message-ID: <da15288b-f656-8126-7bc9-eb2fd58adccb@axentia.se>
-References: <20170803125934.14960-1-peda@axentia.se>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH 2/3] arm64: dts: ls1043a: add cpu idle support
+Date: Thu, 8 Feb 2018 15:54:35 +0800
+Message-ID: <20180208075436.38443-2-ran.wang_1@nxp.com>
+References: <20180208075436.38443-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170803125934.14960-1-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Prabhakar Kushwaha <prabhakar-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180208075436.38443-1-ran.wang_1@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Leo Li <leoyang.li@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-[Adding some people whom seem relevant but did not get fingered by
-get_maintainer.pl]
+From: Yuantian Tang <andy.tang@nxp.com>
 
-On 2017-08-03 14:59, Peter Rosin wrote:
-> The sanctioned compatible is "nxp,pca9547".
-Ping.
+Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |   21 +++++++++++++++++++++
+ 1 files changed, 21 insertions(+), 0 deletions(-)
 
-Cheers,
-Peter
-
-> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-> ---
->  arch/powerpc/boot/dts/fsl/t104xqds.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
-> index 2fd4cbe7098f..615479732252 100644
-> --- a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
-> @@ -269,7 +269,7 @@
->  
->  		i2c@118000 {
->  			pca9547@77 {
-> -				compatible = "philips,pca9547";
-> +				compatible = "nxp,pca9547";
->  				reg = <0x77>;
->  			};
->  			rtc@68 {
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 380e7c7..18828b9 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -81,6 +81,7 @@
+ 			clocks = <&clockgen 1 0>;
+ 			next-level-cache = <&l2>;
+ 			#cooling-cells = <2>;
++			cpu-idle-states = <&CPU_PH20>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+@@ -89,6 +90,7 @@
+ 			reg = <0x1>;
+ 			clocks = <&clockgen 1 0>;
+ 			next-level-cache = <&l2>;
++			cpu-idle-states = <&CPU_PH20>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -97,6 +99,7 @@
+ 			reg = <0x2>;
+ 			clocks = <&clockgen 1 0>;
+ 			next-level-cache = <&l2>;
++			cpu-idle-states = <&CPU_PH20>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -105,6 +108,7 @@
+ 			reg = <0x3>;
+ 			clocks = <&clockgen 1 0>;
+ 			next-level-cache = <&l2>;
++			cpu-idle-states = <&CPU_PH20>;
+ 		};
+ 
+ 		l2: l2-cache {
+@@ -112,6 +116,23 @@
+ 		};
+ 	};
+ 
++	idle-states {
++		/*
++		 * PSCI node is not added default, U-boot will add missing
++		 * parts if it determines to use PSCI.
++		 */
++		entry-method = "arm,psci";
++
++		CPU_PH20: cpu-ph20 {
++			compatible = "arm,idle-state";
++			idle-state-name = "PH20";
++			arm,psci-suspend-param = <0x00010000>;
++			entry-latency-us = <1000>;
++			exit-latency-us = <1000>;
++			min-residency-us = <3000>;
++		};
++	};
++
+ 	memory@80000000 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000 0 0x80000000>;
+-- 
+1.7.1
