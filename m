@@ -1,187 +1,133 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH v2 1/5] dt-bindings: add bindings for USB physical
- connector
-Date: Thu, 08 Feb 2018 10:27:54 +0100
-Message-ID: <0810d6fc-dd82-dda8-8c35-d37e8a346599@samsung.com>
-References: <20180131134435.12216-1-a.hajda@samsung.com>
-        <CGME20180131134457eucas1p128394aef86e0d76cfc6ccb72ee22d4b1@eucas1p1.samsung.com>
-        <20180131134435.12216-2-a.hajda@samsung.com>
-        <20180205060836.pybxzt5e2kdu2wew@rob-hp-laptop>
-        <a9745020-602b-8274-e2d6-63295f5b3caa@samsung.com>
-        <20180207214338.7n2somaul2msgf2a@rob-hp-laptop>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: Re: [PATCH v4] ARM: sun8i: h2+: add support for
+ Banana Pi M2 Zero board
+Date: Thu, 08 Feb 2018 10:28:32 +0100
+Message-ID: <1836483.rFXKcXDauj@jernej-laptop>
+References: <20180206131647.41700-1-icenowy@aosc.io> <20180208090042.364is5ctofhuao4i@flea> <9e77487f83b226ad7700715251178ce8@aosc.io>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20180207214338.7n2somaul2msgf2a@rob-hp-laptop>
-Content-language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBRFQ6DJQKGQEOM7C7CA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <9e77487f83b226ad7700715251178ce8-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07.02.2018 22:43, Rob Herring wrote:
-> On Mon, Feb 05, 2018 at 10:06:35AM +0100, Andrzej Hajda wrote:
->> On 05.02.2018 07:08, Rob Herring wrote:
->>> On Wed, Jan 31, 2018 at 02:44:31PM +0100, Andrzej Hajda wrote:
->>>> These bindings allow to describe most known standard USB connectors
->>>> and it should be possible to extend it if necessary.
->>>> USB connectors, beside USB can be used to route other protocols,
->>>> for example UART, Audio, MHL. In such case every device passing data
->>>> through the connector should have appropriate graph bindings.
->>>>
->>>> Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> ---
->>>> v2:
->>>> - moved connector type(A,B,C) to compatible string (Rob),
->>>> - renamed size property to type (Rob),
->>>> - changed type description to be less confusing (Laurent),
->>>> - removed vendor specific compatibles (implied by graph port number),
->>> How so? More below...
->>>
->>>> - added requirement of connector being a child of IC (Rob),
->>>> - removed max-mode (subtly suggested by Rob, it should be detected anyway
->>>>   by USB Controller in runtime, downside is that device is not able to
->>>>   report its real capabilities, maybe better would be to make it optional(?)),
->>>> - assigned port numbers to data buses (Rob).
->>>>
->>>> Regards
->>>> Andrzej
->>>>
->>>> Signed-off-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> ---
->>>>  .../bindings/connector/usb-connector.txt           | 48 ++++++++++++++++++++++
->>>>  1 file changed, 48 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/connector/usb-connector.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
->>>> new file mode 100644
->>>> index 000000000000..02020f5d760a
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
->>>> @@ -0,0 +1,48 @@
->>>> +USB Connector
->>>> +=============
->>>> +
->>>> +USB connector node represents physical USB connector. It should be
->>>> +a child of USB interface controller.
->>>> +
->>>> +Required properties:
->>>> +- compatible: describes type of the connector, must be one of:
->>>> +    "usb-a-connector", "usb-b-connector", "usb-c-connector",
->>> Nit: one per line.
->>>
->>>> +
->>>> +Optional properties:
->>>> +- label: symbolic name for the connector
->>>> +- type: size of the connector, should be specified in case of USB-A, USB-B
->>>> +  non-standard (large) connector sizes: "mini", "micro"
->>>> +
->>>> +Required nodes:
->>>> +- any data bus to the connector should be modeled using the OF graph bindings
->>>> +  specified in bindings/graph.txt, unless the bus is between parent node and
->>>> +  the connector. Since single connector can have multpile data buses every bus
->>>> +  has assigned OF graph port number as follows:
->>>> +    0: High Speed (HS), present in all connectors,
->>>> +    1: Super Speed (SS), present in SS capable connectors,
->>>> +    2: Sideband use (SBU), present in USB-C,
->>>> +    3: Mobile High-Definition Link (MHL), present in 11-pin Samsung micro-USB
->>> This is un-muxed unlike Type-C where the signals are muxed with USB SS. 
->>> That makes me think the Samsung connector should have its own compatible 
->>> string.
->> Do you mean, sth like:
->>     connector {
->>             compatible = "samsung,usb-connector-11pin";
->>             label = "micro-USB";
->>             ports {
->>                     #address-cells = <1>;
->>                     #size-cells = <0>;
->>
->>                     port@3 {
->>                             reg = <3>;
->>                             musb_con_mhl_in: endpoint {
->>                                     remote-endpoint = <&mhl_out>;
->>                             };
->>                     };
->>     };
-> Yes, basically.
->
->> Or should I add "usb-b-connector" extra compatible and "type" property?
-> type would be micro? I think type and "usb-b-connector" are fine if this 
-> is a superset like a USB3 SS micro connector.
->
->> I slightly prefer my approach(less different bindings), but I am also OK
->> with the above.
-> How do you know it is a Samsung connector then? Just because you have 
-> port 3? I think it is better to be explicit.
+Dne =C4=8Detrtek, 08. februar 2018 ob 10:15:35 CET je Icenowy Zheng napisal=
+(a):
+> =E5=9C=A8 2018-02-08 17:00=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+>=20
+> > On Tue, Feb 06, 2018 at 09:16:47PM +0800, Icenowy Zheng wrote:
+> >> Banana Pi M2 Zero board is a H2+-based board by Sinovoip, with a form
+> >> factor and GPIO holes similar to Raspberry Pi Zero.
+> >>=20
+> >> It features:
+> >> - Allwinner H2+ SoC
+> >> - Single-chip (16-bit) 512MiB DDR3 DRAM
+> >> - Ampak AP6212 Wi-Fi/Bluetooth module
+> >> - MicroSD slot
+> >> - Two MicroUSB Type-B ports (one can only be used to power the board
+> >> and
+> >>=20
+> >>   the other features OTG functionality)
+> >>=20
+> >> - Two keys, a reset and a GPIO-connected key.
+> >> - HDMI Type-C (miniHDMI) connector connected to the HDMI part of H2+.
+> >> - CSI connector to connect the camera sensor provided by Sinovoip.
+> >>=20
+> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >> ---
+> >> Changes in v4:
+> >> - Use SPDX license identifier.
+> >>=20
+> >> Changes in v3:
+> >> - Add comments about Vbus problem in &usbphy node.
+> >>=20
+> >> Changes in v2:
+> >> - Use high active SD card detect on the production batch.
+> >>=20
+> >>  arch/arm/boot/dts/Makefile                         |   1 +
+> >>  .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 126
+> >>=20
+> >> +++++++++++++++++++++
+> >>=20
+> >>  2 files changed, 127 insertions(+)
+> >>  create mode 100644
+> >>=20
+> >> arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >>=20
+> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> >> index ade7a38543dc..d5a17e6e8b0f 100644
+> >> --- a/arch/arm/boot/dts/Makefile
+> >> +++ b/arch/arm/boot/dts/Makefile
+> >> @@ -974,6 +974,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
+> >>=20
+> >>  	sun8i-a83t-cubietruck-plus.dtb \
+> >>  	sun8i-a83t-tbs-a711.dtb \
+> >>  	sun8i-h2-plus-orangepi-r1.dtb \
+> >>=20
+> >> +	sun8i-h2-plus-bananapi-m2-zero.dtb \
+> >>=20
+> >>  	sun8i-h2-plus-orangepi-zero.dtb \
+> >>  	sun8i-h3-bananapi-m2-plus.dtb \
+> >>  	sun8i-h3-beelink-x2.dtb \
+> >>=20
+> >> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> new file mode 100644
+> >> index 000000000000..e2ee65a5bf92
+> >> --- /dev/null
+> >> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+> >> @@ -0,0 +1,126 @@
+> >> +/*
+> >> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> >> + *
+> >> + * Based on sun8i-h3-bananapi-m2-plus.dts, which is:
+> >> + *   Copyright (C) 2016 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> + *
+> >> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> >=20
+> > Sorry to be a bit picky about this, but this should be your very first
+> > line, see arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts for
+> > example.
+>=20
+> I think it's also OK here, see
+> arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts.
 
-OK.
+Lincesing rules [1] says it should be in first possible line which can cont=
+ain=20
+comment.
 
->
->>> Can we go ahead and define the video modes of Type-C? Normally, if 2 
->>> data streams are mutually exclusive, then they are a single port with 2 
->>> endpoints. So we'd either have 2 endpoints on port 1 or we stick with 
->>> port 3 is always video. We can still know what is mutually exclusive 
->>> based on the compatible. 
->> I am sorry, I do not understand what you mean. Port 3 is present only in
->> 11-pin Samsung micro-USB, USB Type-C has only ports 0, 1, 2.
-> So video on Type C would be on port 1 (SS), endpoint ? ? That's not 
-> defined in the binding and I want to define it.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tre=
+e/
+Documentation/process/license-rules.rst#n57
 
-USB type C does not have dedicated video lines, it has only: HS, SS, SBU
-(and optionally CC) data lines[1] and in my RFC I have modeled data
-lines as graph ports. If USB-C interface controller supports alternate
-mode (currently there are specs for DisplayPort, HDMI, MHL alternate
-modes, but there can be more), SS lines can be used to transmit video
-data (or any other type of data defined by alternate mode), but it means
-there will be SS mux somewhere before connector, for muxing USB-SS and
-alternate lines. So yes, video will be at port 1, but this is still port
-for SS lines:
-
-USB3 --> MUX --> CONNECTOR
-DP -------^
-
-I do not see why we would need separate video port.
-
-[1]: https://en.wikipedia.org/wiki/USB-C#Cable_wiring
-
-Regards
-Andrzej
-
->> Here is list of possible ports depending on connector type:
->> - USB 2.0: HS
->> - 11-pin Samsung micro-USB: HS,MHL
->> - USB 3.x type A,B: HS,SS
->> - USB-C: HS,SS,SBU
->>
->> All ports have separate lines, so they can work simultaneously.
->>
->> And regarding MHL on standard micro-USB connector. MHL and MUIC will
->> share HS port, but there will be mux somewhere before connector:
-> That's another case I hadn't considered. I was mainly thinking just how 
-> to handle Type C.
->
->> - in MUIC, in this case MUIC will be the parent of the connector, and
->> there will be graph from MHL to MUIC to describe MHL link,
->> - in MHL, in this case MHL will be the parent of the connector, and
->> graph between MUIC and MHL to describe HS link,
->> - dedicated mux to MUIC and MHL, controlled by gpio pin, it could be
->> handled by MUIC's external-mux gpio property for example, or (probably)
->> less hacky by separate node for mux,
->> or as additional property in the connector (who should be the parent of
->> the connector then? Probably MUIC?).
->>
->> Regards
->> Andrzej
+>=20
+> > Thanks!
+> > Maxime
+>=20
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
->
+> You received this message because you are subscribed to the Google Groups
+> "linux-sunxi" group. To unsubscribe from this group and stop receiving
+> emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org=
+.
+> For more options, visit https://groups.google.com/d/optout.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
