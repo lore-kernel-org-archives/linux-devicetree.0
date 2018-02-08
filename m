@@ -1,107 +1,104 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] irqchip/gic-v3-its: add ability to resend MAPC on
- resume
-Date: Thu, 8 Feb 2018 09:08:26 +0000
-Message-ID: <56a5719f-a1ab-71c4-904a-a35e5e11a629@arm.com>
-References: <20180207014117.62611-1-dbasehore@chromium.org>
- <20180207014117.62611-5-dbasehore@chromium.org>
- <8276f426-e4a0-c400-9f87-31be3d6b1733@arm.com>
- <20180207232201.GB106856@ban.mtv.corp.google.com>
- <CAGAzgsprocoZRtccPrbArUqyBTYiQm=vr6qjrK-5rAMSeusZ-Q@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v4] ARM: sun8i: h2+: add support for Banana
+ Pi M2 Zero board
+Date: Thu, 08 Feb 2018 17:15:35 +0800
+Message-ID: <9e77487f83b226ad7700715251178ce8@aosc.io>
+References: <20180206131647.41700-1-icenowy@aosc.io>
+ <20180208090042.364is5ctofhuao4i@flea>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGAzgsprocoZRtccPrbArUqyBTYiQm=vr6qjrK-5rAMSeusZ-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "dbasehore ." <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Soby Mathew <Soby.Mathew-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux-pm mailing list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Wysocki, Rafael J" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBO5K6DJQKGQERIY4ANA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180208090042.364is5ctofhuao4i@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/02/18 00:00, dbasehore . wrote:
-> On Wed, Feb 7, 2018 at 3:22 PM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> Hi Marc,
->>
->> I'm really not an expert on this, so take my observations with a large
->> grain of salt:
->>
->> On Wed, Feb 07, 2018 at 08:46:42AM +0000, Marc Zyngier wrote:
->>> On 07/02/18 01:41, Derek Basehore wrote:
->>>> This adds functionality to resend the MAPC command to an ITS node on
->>>> resume. If the ITS is powered down during suspend and the collections
->>>> are not backed by memory, the ITS will lose that state. This just sets
->>>> up the known state for the collections after the ITS is restored.
->>>>
->>>> This is enabled via the reset-on-suspend flag in the DTS for an ITS
->>>> that has a non-zero number of collections stored in it.
->>>>
->>>> Signed-off-by: Derek Basehore <dbasehore-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>> ---
->>>>  drivers/irqchip/irq-gic-v3-its.c   | 80 ++++++++++++++++++++------------------
->>>>  include/linux/irqchip/arm-gic-v3.h |  1 +
->>>>  2 files changed, 43 insertions(+), 38 deletions(-)
->>>>
->>>> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
->>>> index 5e63635e2a7b..dd6cd6e68ed0 100644
->>>> --- a/drivers/irqchip/irq-gic-v3-its.c
->>>> +++ b/drivers/irqchip/irq-gic-v3-its.c
->>>> @@ -1942,52 +1942,53 @@ static void its_cpu_init_lpis(void)
->>>>     dsb(sy);
->>>>  }
->>>>
->>>> -static void its_cpu_init_collection(void)
->>>> +static void its_cpu_init_collection(struct its_node *its)
->>
->> ...
->>
->>>> @@ -3127,6 +3128,9 @@ static void its_restore_enable(void)
->>>>                     its_write_baser(its, baser, baser->val);
->>>>             }
->>>>             writel_relaxed(its->ctlr_save, base + GITS_CTLR);
->>>> +
->>>> +           if (GITS_TYPER_HWCOLLCNT(gic_read_typer(base + GITS_TYPER)) > 0)
->>>> +                   its_cpu_init_collection(its);
->>>
->>> This isn't correct. Think of a system where half the collections are in
->>> HW, and the other half memory based (nothing in the spec forbids this).
->>> You must evaluate the CID of each collection and replay the MAPC *only*
->>> if it falls into the range [0..HCC-1]. The memory-based collections are
->>> already mapped, and remapping an already mapped collection requires
->>> extra care (see MAPC and the UNPREDICTABLE behaviour when V=1), so don't
->>> go there.
->>
->> IIUC, this is only run on CPU0 (it's in syscore resume), so implicitly,
->> CID is 0. Thus, the current condition is already doing what you ask:
->>
->>         HCC > 0 == CID
->>
->> which is equivalent to:
->>
->>         HCC - 1 >= CID
->>
->> Or should we really double check what CPU we're running on?
-> 
-> There seems to be the edge case where you hotplug CPU 0 before
-> suspending. In that case, I believe you're on the lowest number CPU
-> left?
+=E5=9C=A8 2018-02-08 17:00=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> On Tue, Feb 06, 2018 at 09:16:47PM +0800, Icenowy Zheng wrote:
+>> Banana Pi M2 Zero board is a H2+-based board by Sinovoip, with a form
+>> factor and GPIO holes similar to Raspberry Pi Zero.
+>>=20
+>> It features:
+>> - Allwinner H2+ SoC
+>> - Single-chip (16-bit) 512MiB DDR3 DRAM
+>> - Ampak AP6212 Wi-Fi/Bluetooth module
+>> - MicroSD slot
+>> - Two MicroUSB Type-B ports (one can only be used to power the board=20
+>> and
+>>   the other features OTG functionality)
+>> - Two keys, a reset and a GPIO-connected key.
+>> - HDMI Type-C (miniHDMI) connector connected to the HDMI part of H2+.
+>> - CSI connector to connect the camera sensor provided by Sinovoip.
+>>=20
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> ---
+>> Changes in v4:
+>> - Use SPDX license identifier.
+>>=20
+>> Changes in v3:
+>> - Add comments about Vbus problem in &usbphy node.
+>>=20
+>> Changes in v2:
+>> - Use high active SD card detect on the production batch.
+>>=20
+>>  arch/arm/boot/dts/Makefile                         |   1 +
+>>  .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 126=20
+>> +++++++++++++++++++++
+>>  2 files changed, 127 insertions(+)
+>>  create mode 100644=20
+>> arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+>>=20
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index ade7a38543dc..d5a17e6e8b0f 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -974,6 +974,7 @@ dtb-$(CONFIG_MACH_SUN8I) +=3D \
+>>  	sun8i-a83t-cubietruck-plus.dtb \
+>>  	sun8i-a83t-tbs-a711.dtb \
+>>  	sun8i-h2-plus-orangepi-r1.dtb \
+>> +	sun8i-h2-plus-bananapi-m2-zero.dtb \
+>>  	sun8i-h2-plus-orangepi-zero.dtb \
+>>  	sun8i-h3-bananapi-m2-plus.dtb \
+>>  	sun8i-h3-beelink-x2.dtb \
+>> diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts=20
+>> b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+>> new file mode 100644
+>> index 000000000000..e2ee65a5bf92
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+>> @@ -0,0 +1,126 @@
+>> +/*
+>> + * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> + *
+>> + * Based on sun8i-h3-bananapi-m2-plus.dts, which is:
+>> + *   Copyright (C) 2016 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> + *
+>> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>=20
+> Sorry to be a bit picky about this, but this should be your very first
+> line, see arch/arm/boot/dts/sun7i-a20-olimex-som204-evb.dts for=20
+> example.
 
-I don't think the core code makes any guarantee in that respect. This is
-probably what happens in practice, but I wouldn't bet anything on this
-being set in stone.
+I think it's also OK here, see=20
+arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts.
 
-> It seems that all of the CPUs that are disabled have the ITS
-> reinitialized from scratch via enable_nonboot_cpus(). This code runs
-> on only the CPU that firmware resumes with. If that CPU isn't CPU 0
-> for whatever reason, we need to make sure that it's processor ID is
-> less than HCC.
+>=20
+> Thanks!
+> Maxime
 
-Exactly, thanks for putting it better than I initially did.
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
