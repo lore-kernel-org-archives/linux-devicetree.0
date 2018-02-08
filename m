@@ -1,53 +1,193 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 01/11] regulator: core: add API to get voltage
- constraints
-Date: Thu, 8 Feb 2018 15:34:56 +0530
-Message-ID: <86cd40ac-d255-f4b9-87cb-0cd34efba7d8@nvidia.com>
-References: <1517934852-23255-1-git-send-email-pdeschrijver@nvidia.com>
- <1517934852-23255-2-git-send-email-pdeschrijver@nvidia.com>
- <20180206163544.GI5681@sirena.org.uk>
- <20180207084744.GG7031@tbergstrom-lnx.Nvidia.com>
- <20180207104351.GA6003@sirena.org.uk>
- <20180207123750.GA5850@tbergstrom-lnx.Nvidia.com>
- <20180207141846.GC6003@sirena.org.uk>
- <20180207143213.GB5850@tbergstrom-lnx.Nvidia.com>
- <20180207150155.GD6003@sirena.org.uk>
- <20180207152045.GC5850@tbergstrom-lnx.Nvidia.com>
- <20180207153711.GE6003@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180207153711.GE6003-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v5] ARM: sun8i: h2+: add support for Banana Pi M2 Zero board
+Date: Thu,  8 Feb 2018 18:06:13 +0800
+Message-ID: <20180208100613.4761-1-icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Banana Pi M2 Zero board is a H2+-based board by Sinovoip, with a form
+factor and GPIO holes similar to Raspberry Pi Zero.
 
+It features:
+- Allwinner H2+ SoC
+- Single-chip (16-bit) 512MiB DDR3 DRAM
+- Ampak AP6212 Wi-Fi/Bluetooth module
+- MicroSD slot
+- Two MicroUSB Type-B ports (one can only be used to power the board and
+  the other features OTG functionality)
+- Two keys, a reset and a GPIO-connected key.
+- HDMI Type-C (miniHDMI) connector connected to the HDMI part of H2+.
+- CSI connector to connect the camera sensor provided by Sinovoip.
 
-On Wednesday 07 February 2018 09:07 PM, Mark Brown wrote:
-> On Wed, Feb 07, 2018 at 05:20:45PM +0200, Peter De Schrijver wrote:
->> On Wed, Feb 07, 2018 at 03:01:55PM +0000, Mark Brown wrote:
->>> I can't really tell what you're saying here.  If the driver needs to
->>> know if it can set the a given voltage there's already an API for doing
->>> that as I said.  If you're trying to convey this minimum and maximum
->>> voltage via the constraints that sounds like an abuse of the constraints.
->> No, what I want is the voltage which the regulator will output for a given
->> regulator_set_voltage request taking constraints, regulator step etc into
->> account.
-> Knowing the range of the constaints is going to tell you nothing useful
-> about that, it has zero information on steps or anything.  The way to
-> find out what voltages can be set is to enumerate the voltages that can
-> be set through the existing API and then if you want to set a specific
-> voltage that you've confirmed is available you can set exactly that
-> voltage via the normal voltage setting interface, no need to provide a
-> range.
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+Changes in v5:
+- Fix SPDX license identifier position.
 
-Hi,
-I added this API in downstream for the purpose of finding whether rail 
-output can be changed or not(fixed) based on constraints.
-If min and max is same then it can not change. I used this information 
-to set the pad voltage of SOC automatically.
+Changes in v4:
+- Use SPDX license identifier.
 
-I dont know other usage when I added this API. May be Peter is needed here.
+Changes in v3:
+- Add comments about Vbus problem in &usbphy node.
+
+Changes in v2:
+- Use high active SD card detect on the production batch.
+
+ arch/arm/boot/dts/Makefile                         |   1 +
+ .../boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts    | 125 +++++++++++++++++++++
+ 2 files changed, 126 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ade7a38543dc..d5a17e6e8b0f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -974,6 +974,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a83t-cubietruck-plus.dtb \
+ 	sun8i-a83t-tbs-a711.dtb \
+ 	sun8i-h2-plus-orangepi-r1.dtb \
++	sun8i-h2-plus-bananapi-m2-zero.dtb \
+ 	sun8i-h2-plus-orangepi-zero.dtb \
+ 	sun8i-h3-bananapi-m2-plus.dtb \
+ 	sun8i-h3-beelink-x2.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+new file mode 100644
+index 000000000000..1cdbd9a3ef57
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h2-plus-bananapi-m2-zero.dts
+@@ -0,0 +1,125 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (C) 2017 Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
++ *
++ * Based on sun8i-h3-bananapi-m2-plus.dts, which is:
++ *   Copyright (C) 2016 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "Banana Pi BPI-M2-Zero";
++	compatible = "sinovoip,bpi-m2-zero", "allwinner,sun8i-h2-plus";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++
++		pwr_led {
++			label = "bananapi-m2-zero:red:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
++			default-state = "on";
++		};
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++
++		sw4 {
++			label = "power";
++			linux,code = <BTN_0>;
++			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		pinctrl-names = "default";
++		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
++	};
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	/*
++	 * On the production batch of this board the card detect GPIO is
++	 * high active (card inserted), although on the early samples it's
++	 * low active.
++	 */
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	status = "okay";
++};
++
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins_a>;
++	vmmc-supply = <&reg_vcc3v3>;
++	vqmmc-supply = <&reg_vcc3v3>;
++	mmc-pwrseq = <&wifi_pwrseq>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++		interrupt-parent = <&pio>;
++		interrupts = <6 10 IRQ_TYPE_LEVEL_LOW>; /* PG10 / EINT10 */
++		interrupt-names = "host-wake";
++	};
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usbphy {
++	usb0_id_det-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
++	/*
++	 * There're two micro-USB connectors, one is power-only and another is
++	 * OTG. The Vbus of these two connectors are connected together, so
++	 * the external USB device will be powered just by the power input
++	 * from the power-only USB port.
++	 */
++	status = "okay";
++};
+-- 
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
