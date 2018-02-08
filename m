@@ -1,74 +1,49 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] ARM/arm64: exynos: Fix missing missing reg
- warning for syscon restart nodes
-Date: Thu, 08 Feb 2018 14:46:32 +0100
-Message-ID: <4642d2d0-61c9-33b6-0289-76f487aa45ab@samsung.com>
-References: <CGME20180130211855epcas1p25cce42a195d8b407f4267309f9b5ccb9@epcas1p2.samsung.com>
-        <20180130211819.17139-1-krzk@kernel.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v6 2/3] DT/arm,gic-v3-its: add reset-on-suspend property
+Date: Thu, 8 Feb 2018 13:46:50 +0000
+Message-ID: <20180208134650.maf72ikwexdsxz2v@lakrids.cambridge.arm.com>
+References: <20180208023648.89124-1-dbasehore@chromium.org>
+ <20180208023648.89124-3-dbasehore@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20180130211819.17139-1-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180208023648.89124-3-dbasehore@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Derek Basehore <dbasehore@chromium.org>
+Cc: linux-kernel@vger.kernel.org, Soby.Mathew@arm.com, sudeep.holla@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, tglx@linutronix.de, briannorris@chromium.org, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+On Wed, Feb 07, 2018 at 06:36:47PM -0800, Derek Basehore wrote:
+> This adds documentation for the new reset-on-suspend property. This
+> property enables saving and restoring the ITS for when it loses state
+> in system suspend.
+> 
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> ---
+>  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> index 0a57f2f4167d..a470147d4f14 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> @@ -78,6 +78,9 @@ These nodes must have the following properties:
+>  Optional:
+>  - socionext,synquacer-pre-its: (u32, u32) tuple describing the untranslated
+>    address and size of the pre-ITS window.
+> +- reset-on-suspend: Boolean property. Indicates that the ITS state is
+> +  reset on suspend. The state is then saved on suspend and restored on
+> +  resume.
 
-On 2018-01-30 22:18, Krzysztof Kozlowski wrote:
-> Hi,
->
-> Changes since v1:
-> 1. New patch (1/4) calling devm_of_platform_populate() in PMU driver,
->     following Rob's advice.
-> 2. The DTS patches moving reboot/poweroff nodes (3/4 and 4/4) now depend
->     on this.
+The latter sentence reads like a description of SW policy, rather than a
+description of what the HW does. I don't think that should be here
+(though it might be worth noting the FW will not restore state).
 
-Tested-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Which state is lost? Is "ITS state" a well-defined term?
 
-Tested following boards and reboot works fine:
-Exynos3250 (artik5-eval)
-Exynos4412 (trats2)
-Exynos5410 (odroid xu)
-Exynos5422 (odroid xu3/xu4)
-Exynos5433 (tm2)
+By suspend do you mean a PSCI_SYSTEM_SUSPEND, or potentially other
+cases?
 
-> Best regards,
-> Krzysztof
->
->
-> Krzysztof Kozlowski (4):
->    soc: samsung: pmu: Populate children syscon nodes
->    ARM: dts: exynos: Remove duplicated inclusion of syscon restart nodes
->      on Exynos5410
->    ARM: dts: exynos: Fix missing missing reg warning for syscon restart
->      nodes
->    arm64: dts: exynos: Fix missing missing reg warning for syscon restart
->      nodes
->
->   .../devicetree/bindings/arm/samsung/pmu.txt        |  6 +++++
->   arch/arm/boot/dts/exynos-syscon-restart.dtsi       | 28 ++++++++++------------
->   arch/arm/boot/dts/exynos3250.dtsi                  |  2 +-
->   arch/arm/boot/dts/exynos4.dtsi                     |  3 ++-
->   arch/arm/boot/dts/exynos5.dtsi                     |  1 -
->   arch/arm/boot/dts/exynos5250.dtsi                  |  1 +
->   arch/arm/boot/dts/exynos5410.dtsi                  |  2 +-
->   arch/arm/boot/dts/exynos5420.dtsi                  |  1 +
->   arch/arm64/boot/dts/exynos/exynos5433.dtsi         | 14 +++++------
->   arch/arm64/boot/dts/exynos/exynos7.dtsi            | 12 +++++-----
->   drivers/soc/samsung/exynos-pmu.c                   |  3 +++
->   11 files changed, 40 insertions(+), 33 deletions(-)
->
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
