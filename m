@@ -1,175 +1,58 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 4/6] drm/panel: simple: Add ability to override typical timing
-Date: Thu,  8 Feb 2018 12:48:51 -0500
-Message-ID: <20180208174855.55620-5-seanpaul@chromium.org>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for kevin
+ panel
+Date: Thu,  8 Feb 2018 12:48:53 -0500
+Message-ID: <20180208174855.55620-7-seanpaul@chromium.org>
 References: <20180208174855.55620-1-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180208174855.55620-1-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180208174855.55620-1-seanpaul@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <briannorris@chromium.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, linux-arm-kernel@lists.infradead.org, Emil Renner Berthing <kernel@esmil.dk>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the ability to override the typical display timing for a
-given panel. This is useful for devices which have timing constraints
-that do not apply across the entire display driver (eg: to avoid
-crosstalk between panel and digitizer on certain laptops). The rules are
-as follows:
-
-- panel must not specify fixed mode (since the override mode will
-  either be the same as the fixed mode, or we'll be unable to
-  check the bounds of the overried)
-- panel must specify at least one display_timing range which will be
-  used to ensure the override mode fits within its bounds
-
-Changes in v2:
- - Parse the full display-timings node (using the native-mode) (Rob)
-Changes in v3:
- - No longer parse display-timings subnode, use panel-timing (Rob)
-
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stéphane Marchesin <marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/gpu/drm/panel/panel-simple.c | 67 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 66 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 5591984a392b..87488392bca1 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -34,6 +34,7 @@
- #include <drm/drm_panel.h>
- 
- #include <video/display_timing.h>
-+#include <video/of_display_timing.h>
- #include <video/videomode.h>
- 
- struct panel_desc {
-@@ -87,6 +88,8 @@ struct panel_simple {
- 	struct i2c_adapter *ddc;
- 
- 	struct gpio_desc *enable_gpio;
-+
-+	struct drm_display_mode override_mode;
- };
- 
- static inline struct panel_simple *to_panel_simple(struct drm_panel *panel)
-@@ -99,11 +102,22 @@ static int panel_simple_get_fixed_modes(struct panel_simple *panel)
- 	struct drm_connector *connector = panel->base.connector;
- 	struct drm_device *drm = panel->base.drm;
- 	struct drm_display_mode *mode;
-+	bool has_override = panel->override_mode.type;
- 	unsigned int i, num = 0;
- 
- 	if (!panel->desc)
- 		return 0;
- 
-+	if (has_override) {
-+		mode = drm_mode_duplicate(drm, &panel->override_mode);
-+		if (mode) {
-+			drm_mode_probed_add(connector, mode);
-+			num++;
-+		} else {
-+			dev_err(drm->dev, "failed to add override mode\n");
-+		}
-+	}
-+
- 	for (i = 0; i < panel->desc->num_timings; i++) {
- 		const struct display_timing *dt = &panel->desc->timings[i];
- 		struct videomode vm;
-@@ -120,7 +134,7 @@ static int panel_simple_get_fixed_modes(struct panel_simple *panel)
- 
- 		mode->type |= DRM_MODE_TYPE_DRIVER;
- 
--		if (panel->desc->num_timings == 1)
-+		if (panel->desc->num_timings == 1 && !has_override)
- 			mode->type |= DRM_MODE_TYPE_PREFERRED;
- 
- 		drm_mode_probed_add(connector, mode);
-@@ -291,10 +305,58 @@ static const struct drm_panel_funcs panel_simple_funcs = {
- 	.get_timings = panel_simple_get_timings,
- };
- 
-+#define PANEL_SIMPLE_BOUNDS_CHECK(to_check, bounds, field) \
-+	(to_check->field.typ >= bounds->field.min && \
-+	 to_check->field.typ <= bounds->field.max)
-+static void panel_simple_add_override_mode(struct device *dev,
-+					   struct panel_simple *panel,
-+					   const struct display_timing *ot)
-+{
-+	const struct panel_desc *desc = panel->desc;
-+	struct videomode vm;
-+	int i;
-+
-+	if (desc->num_modes) {
-+		dev_err(dev, "Reject override mode: panel has a fixed mode\n");
-+		return;
-+	}
-+	if (!desc->num_timings) {
-+		dev_err(dev, "Reject override mode: no timings specified\n");
-+		return;
-+	}
-+
-+	for (i = 0; i < panel->desc->num_timings; i++) {
-+		const struct display_timing *dt = &panel->desc->timings[i];
-+
-+		if (!PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, hactive) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, hfront_porch) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, hback_porch) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, hsync_len) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vactive) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vfront_porch) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vback_porch) ||
-+		    !PANEL_SIMPLE_BOUNDS_CHECK(ot, dt, vsync_len))
-+			continue;
-+
-+		if (ot->flags != dt->flags)
-+			continue;
-+
-+		videomode_from_timing(ot, &vm);
-+		drm_display_mode_from_videomode(&vm, &panel->override_mode);
-+		panel->override_mode.type |= DRM_MODE_TYPE_DRIVER |
-+					     DRM_MODE_TYPE_PREFERRED;
-+		return;
-+	}
-+
-+	dev_err(dev, "Reject override mode: No display_timing found\n");
-+	return;
-+}
-+
- static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
- {
- 	struct device_node *backlight, *ddc;
- 	struct panel_simple *panel;
-+	struct display_timing dt;
- 	int err;
- 
- 	panel = devm_kzalloc(dev, sizeof(*panel), GFP_KERNEL);
-@@ -338,6 +400,9 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
- 		}
- 	}
- 
-+	if (!of_get_display_timing(dev->of_node, "panel-timing", &dt))
-+		panel_simple_add_override_mode(dev, panel, &dt);
-+
- 	drm_panel_init(&panel->base);
- 	panel->base.dev = dev;
- 	panel->base.funcs = &panel_simple_funcs;
--- 
-2.16.0.rc1.238.g530d649a79-goog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBwYXRjaCBhZGRzIGFuIG92ZXJyaWRlIG1vZGUgZm9yIGtldmluIGRldmljZXMuIFRoZSBt
+b2RlIGluY3JlYXNlcwpib3RoIGJhY2sgcG9yY2hlcyB0byBhbGxvdyBhIHBpeGVsIGNsb2NrIG9m
+IDI2NjY2a0h6IGFzIG9wcG9zZWQgdG8gdGhlCid0eXBpY2FsJyB2YWx1ZSBvZiAyNTI3NTBrSHou
+IFRoaXMgaXMgbmVlZGVkIHRvIGF2b2lkIGludGVyZmVyZW5jZSB3aXRoCnRoZSB0b3VjaCBkaWdp
+dGl6ZXIgb24gdGhlc2UgbGFwdG9wcy4KCkNoYW5nZXMgaW4gdjI6CiAtIFdyYXAgdGhlIHRpbWlu
+ZyBpbiBkaXNwbGF5LXRpbWluZ3Mgbm9kZSB0byBtYXRjaCBiaW5kaW5nIChSb2IvVGhpZXJyeSkK
+Q2hhbmdlcyBpbiB2MzoKIC0gVW53cmFwIHRoZSB0aW1pbmcgZnJvbSBkaXNwbGF5LXRpbWluZ3Mg
+YW5kIHJlbmFtZSBwYW5lbC10aW1pbmcgKFJvYikKCkNjOiBEb3VnIEFuZGVyc29uIDxkaWFuZGVy
+c0BjaHJvbWl1bS5vcmc+CkNjOiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0PgpDYzogSGVp
+a28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KQ2M6IEplZmZ5IENoZW4gPGplZmZ5LmNoZW5A
+cm9jay1jaGlwcy5jb20+CkNjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPgpDYzog
+U3TDqXBoYW5lIE1hcmNoZXNpbiA8bWFyY2hldUBjaHJvbWl1bS5vcmc+CkNjOiBUaGllcnJ5IFJl
+ZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmcKQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKQ2M6IGxpbnV4LXJvY2tj
+aGlwQGxpc3RzLmluZnJhZGVhZC5vcmcKU2lnbmVkLW9mZi1ieTogU2VhbiBQYXVsIDxzZWFucGF1
+bEBjaHJvbWl1bS5vcmc+Ci0tLQogYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkt
+Z3J1LWtldmluLmR0cyB8IDE0ICsrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTQgaW5z
+ZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmsz
+Mzk5LWdydS1rZXZpbi5kdHMgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1n
+cnUta2V2aW4uZHRzCmluZGV4IDE5MWE2YmNiMTcwNC4uNjU4NDExY2UzN2VhIDEwMDY0NAotLS0g
+YS9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1ncnUta2V2aW4uZHRzCisrKyBi
+L2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdydS1rZXZpbi5kdHMKQEAgLTk4
+LDYgKzk4LDIwIEBACiAJCWJhY2tsaWdodCA9IDwmYmFja2xpZ2h0PjsKIAkJcG93ZXItc3VwcGx5
+ID0gPCZwcDMzMDBfZGlzcD47CiAKKwkJcGFuZWwtdGltaW5nIHsKKwkJCWNsb2NrLWZyZXF1ZW5j
+eSA9IDwyNjY2MDQ3MjA+OworCQkJaGFjdGl2ZSA9IDwyNDAwPjsKKwkJCWhmcm9udC1wb3JjaCA9
+IDw0OD47CisJCQloYmFjay1wb3JjaCA9IDw4ND47CisJCQloc3luYy1sZW4gPSA8MzI+OworCQkJ
+aHN5bmMtYWN0aXZlID0gPDA+OworCQkJdmFjdGl2ZSA9IDwxNjAwPjsKKwkJCXZmcm9udC1wb3Jj
+aCA9IDwzPjsKKwkJCXZiYWNrLXBvcmNoID0gPDEyMD47CisJCQl2c3luYy1sZW4gPSA8MTA+Owor
+CQkJdnN5bmMtYWN0aXZlID0gPDA+OworCQl9OworCiAJCXBvcnRzIHsKIAkJCXBhbmVsX2luX2Vk
+cDogZW5kcG9pbnQgewogCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZWRwX291dF9wYW5lbD47Ci0t
+IAoyLjE2LjAucmMxLjIzOC5nNTMwZDY0OWE3OS1nb29nCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
