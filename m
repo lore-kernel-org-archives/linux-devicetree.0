@@ -1,73 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/7] dt-bindings: tegra: Add missing chips and NVIDIA
- boards
-Date: Fri, 9 Feb 2018 16:49:22 -0600
-Message-ID: <20180209224922.4fxlpl77kwibzfui@rob-hp-laptop>
-References: <1517901757-15353-1-git-send-email-mperttunen@nvidia.com>
- <1517901757-15353-5-git-send-email-mperttunen@nvidia.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 7/7] watchdog: coh901327: make use of timeout-secs
+ provided in devicetree
+Date: Fri, 9 Feb 2018 14:52:00 -0800
+Message-ID: <20180209225200.GI19627@roeck-us.net>
+References: <marcus.folkesson@gmail.com>
+ <20180209192724.1227-1-marcus.folkesson@gmail.com>
+ <20180209192724.1227-8-marcus.folkesson@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1517901757-15353-5-git-send-email-mperttunen@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20180209192724.1227-8-marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 06, 2018 at 09:22:34AM +0200, Mikko Perttunen wrote:
-> Add compatibility strings for supported but undocumented Tegra chips
-> (Tegra114/124/132/210/186/194) and reference boards.
+On Fri, Feb 09, 2018 at 08:27:24PM +0100, Marcus Folkesson wrote:
+> watchdog_init_timeout() will allways pick timeout_param since it
+> defaults to a valid timeout.
 > 
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+> Following best practice described in
+> Documentation/watchdog/watchdog-kernel-api.txt to make use of
+> the parameter logic.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
+>  drivers/watchdog/coh901327_wdt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Notes:
->     v2:
->     - add patch
-> 
->  Documentation/devicetree/bindings/arm/tegra.txt | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
-> index 7f1411bbabf7..32f62bb7006d 100644
-> --- a/Documentation/devicetree/bindings/arm/tegra.txt
-> +++ b/Documentation/devicetree/bindings/arm/tegra.txt
-> @@ -9,6 +9,12 @@ following compatible values:
+> diff --git a/drivers/watchdog/coh901327_wdt.c b/drivers/watchdog/coh901327_wdt.c
+> index 4410337f4f7f..437f865e5c6b 100644
+> --- a/drivers/watchdog/coh901327_wdt.c
+> +++ b/drivers/watchdog/coh901327_wdt.c
+> @@ -67,7 +67,7 @@
+>  #define U300_WDOG_IFR_WILL_BARK_IRQ_FORCE_ENABLE			0x0001U
 >  
->    nvidia,tegra20
->    nvidia,tegra30
-> +  nvidia,tegra114
-> +  nvidia,tegra124
-> +  nvidia,tegra132
-> +  nvidia,tegra210
+>  /* Default timeout in seconds = 1 minute */
+> -static unsigned int margin = 60;
+> +static unsigned int margin;
+>  static int irq;
+>  static void __iomem *virtbase;
+>  static struct device *parent;
 
-Some reason why this is not in numerical order?
+I would suggest to initialize .timeout in 'static struct watchdog_device
+coh901327_wdt', and drop the error check when calling watchdog_init_timeout().
 
-> +  nvidia,tegra186
-> +  nvidia,tegra194
->  
->  Boards
->  -------------------------------------------
-> @@ -26,8 +32,18 @@ board-specific compatible values:
->    nvidia,cardhu
->    nvidia,cardhu-a02
->    nvidia,cardhu-a04
-> +  nvidia,dalmore
->    nvidia,harmony
-> +  nvidia,jetson-tk1
-> +  nvidia,norrin
-> +  nvidia,p2371-0000
-> +  nvidia,p2371-2180
-> +  nvidia,p2571
-> +  nvidia,p2771-0000
-> +  nvidia,p2972-0000
-> +  nvidia,roth
->    nvidia,seaboard
-> +  nvidia,tn7
->    nvidia,ventana
->    toradex,apalis_t30
->    toradex,apalis_t30-eval
-> -- 
-> 2.1.4
-> 
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
