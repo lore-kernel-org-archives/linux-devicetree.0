@@ -1,140 +1,251 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] arm: dts: mt7623: enable all four available UARTs on
- bananapi-r2
-Date: Fri, 9 Feb 2018 11:55:46 +0800
-Message-ID: <1518148546.9025.20.camel@mtkswgap22>
-References: <b4e84a68da76c1ca538150a730777ff530c1db5a.1513922513.git.sean.wang@mediatek.com>
-         <dc3c28c7-03c3-f1c6-39c1-b8df8be4fac3@gmail.com>
-         <1514043318.30687.10.camel@mtkswgap22>
-         <1516697505.12197.30.camel@mtkswgap22>
-         <cd1df7f9-89f4-06d5-5384-9f3b9f7ade48@gmail.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v6 15/15] dt-bindings: cpufreq: Document
+ operating-points-v2-krait-cpu
+Date: Fri, 9 Feb 2018 11:01:47 +0530
+Message-ID: <b81953c3-3bbd-2a06-90d3-a3cdd2a86418@codeaurora.org>
+References: <1517890108-8140-1-git-send-email-sricharan@codeaurora.org>
+ <1517890108-8140-16-git-send-email-sricharan@codeaurora.org>
+ <20180209025449.qvbirdvflijxo62j@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cd1df7f9-89f4-06d5-5384-9f3b9f7ade48-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20180209025449.qvbirdvflijxo62j@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-02-07 at 17:01 +0100, Matthias Brugger wrote:
-> 
-> On 01/23/2018 09:51 AM, Sean Wang wrote:
-> > On Sat, 2017-12-23 at 23:35 +0800, Sean Wang wrote:
-> >> On Sat, 2017-12-23 at 08:52 +0100, Matthias Brugger wrote:
-> >>>
-> >>> On 12/22/2017 07:06 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> >>>> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>>
-> >>>> On bpi-r2 board, totally there're four uarts which we usually called
-> >>>> uart[0-3] helpful to extend slow I/O devices. Among those ones, uart2 has
-> >>>> dedicated pin slot which is used to conolse log. uart[0-1] appear at the
-> >>>> 40-pins connector and uart3 has no pinout, but just has test points (TP47
-> >>>> for TX and TP48 for RX, respectively) nearby uart2. Also, some missing
-> >>>> pinctrl is being complemented for those devices.
-> >>>>
-> >>>> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>> ---
-> >>>>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 26 ++++++++++++++++++++++++--
-> >>>>  1 file changed, 24 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> >>>> index 7bf5aa2..64bf5db 100644
-> >>>> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> >>>> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> >>>> @@ -409,6 +409,20 @@
-> >>>>  				 <MT7623_PIN_82_UTXD1_FUNC_UTXD1>;
-> >>>>  		};do you like it or quite want me to remove the uart3 node?
-> >>>>  	};
-> >>>> +
-> >>>> +	uart2_pins_a: uart@2 {
-> >>>> +		pins_dat {
-> >>>> +			pinmux = <MT7623_PIN_14_GPIO14_FUNC_URXD2>,
-> >>>> +				 <MT7623_PIN_15_GPIO15_FUNC_UTXD2>;
-> >>>> +		};
-> >>>> +	};
-> >>>> +
-> >>>> +	uart3_pins_a: uart@3 {
-> >>>> +		pins_dat {
-> >>>> +			pinmux = <MT7623_PIN_242_URTS2_FUNC_URTS2>,
-> >>>> +				 <MT7623_PIN_243_UCTS2_FUNC_UTXD3>;
-> >>>> +		};
-> >>>> +	};
-> >>>>  };
-> >>>>  
-> >>>>  &pwm {
-> >>>> @@ -454,16 +468,24 @@
-> >>>>  &uart0 {
-> >>>>  	pinctrl-names = "default";
-> >>>>  	pinctrl-0 = <&uart0_pins_a>;
-> >>>> -	status = "disabled";
-> >>>> +	status = "okay";
-> >>>>  };
-> >>>>  
-> >>>>  &uart1 {
-> >>>>  	pinctrl-names = "default";
-> >>>>  	pinctrl-0 = <&uart1_pins_a>;
-> >>>> -	status = "disabled";
-> >>>> +	status = "okay";
-> >>>>  };
-> >>>>  
-> >>>>  &uart2 {
-> >>>> +	pinctrl-names = "default";
-> >>>> +	pinctrl-0 = <&uart2_pins_a>;
-> >>>> +	status = "okay";
-> >>>> +};
-> >>>> +
-> >>>> +&uart3 {
-> >>>> +	pinctrl-names = "default";
-> >>>> +	pinctrl-0 = <&uart3_pins_a>;
-> >>>>  	status = "okay";
-> >>>>  };
-> >>>>  
-> >>>
-> >>> Why do we want to enable uart3 when there are only test points?
-> >>> It is not very useful, or do I oversee something?
-> >>>
-> > 
-> >> I have been listening to the sound from potential users of bpi-r2 to
-> >> understand what assistance I have to provide to them. Something could
-> >> be seen through [1] in the forum to know they had been trying hard to
-> >> explore all available UARTs from the SoC in the last weeks. The patch
-> >> should be really useful for these people and for the extra soldering
-> >> it shouldn't become a problem for these makers.
-> >>
-> >> [1] http://forum.banana-pi.org/t/gpio-uart-not-the-debug-port/3748
-> >>
-> >> 	Sean 
-> >>
-> > 
-> > Hi, Matthias
-> > 
-> > do you like it or quite want me to remove the uart3 node?
-> > 
-> > I can take it into account along with other pending dts changes in my
-> > queue.
-> > 
-> 
-> Sorry for the late answer.
-> Do I understand correctly that uart3 is routed to TP47 and TP48, and these test
-> points are accessible through the SATA connector? Doesn't they break SATA then?
-> 
+Hi Rob,
 
-TP47 and TP48 are directly pins out from SoC, not through the SATA
-connector.
-
-> I think as they are only available through a non-documented test point, we
-> shouldn't enable it.
+On 2/9/2018 8:24 AM, Rob Herring wrote:
+> On Tue, Feb 06, 2018 at 09:38:28AM +0530, Sricharan R wrote:
+>> In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
+>> that has KRAIT processors the voltage/current value of each OPP
+>> varies based on the silicon variant in use.
+>> operating-points-v2-krait-cpu specifies the phandle to nvmem efuse cells
+>> and the operating-points-v2 table for each opp. The qcom-cpufreq driver
+>> reads the efuse value from the SoC to provide the required information
+>> that is used to determine the voltage and current value for each OPP of
+>> operating-points-v2 table when it is parsed by the OPP framework.
+>>
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/cpufreq/krait-cpufreq.txt  | 363 +++++++++++++++++++++
+>>  1 file changed, 363 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-cpufreq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/krait-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/krait-cpufreq.txt
+>> new file mode 100644
+>> index 0000000..e7351f7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/cpufreq/krait-cpufreq.txt
+>> @@ -0,0 +1,363 @@
+>> +QCOM KRAIT CPUFreq and OPP bindings
+>> +===================================
+>> +
+>> +In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
+>> +that has KRAIT processors the voltage value of each OPP varies
+>> +based on the silicon variant in use. Qualcomm Process Voltage Scaling Tables
+>> +defines the voltage and current value based on the speed/pvs/version
+>> +combination blown in the efuse. The qcom-cpufreq driver reads the efuse
+>> +value from the SoC to provide the OPP framework with required information.
+>> +This is used to determine the voltage and current value for each OPP of
+>> +operating-points-v2 table when it is parsed by the OPP framework.
+>> +
+>> +Required properties:
+>> +--------------------
+>> +In 'cpus' nodes:
+>> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+>> +
+>> +In 'operating-points-v2' table:
+>> +- compatible: Should be
+>> +	- 'operating-points-v2-krait-cpu' for ipq8064, apq8064, msm8960,
+>> +					      msm8974.
+>> +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
+>> +		efuse registers that has information about the
+>> +		speedbin/pvs/version that is used to select the right
+>> +		voltage/current value pair. Note that the length field of the
+>> +		nvmem-cell is used to differentiate between format 'A' or 'B'
+>> +		efuse settings. len of '4' bytes is for format 'A' and '8'
+>> +		bytes for format 'B'. Please refer the for nvmem-cells
+>> +		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
+>> +		and also examples below for both the cases.
+>> +Example 1:
+>> +---------
+>> +
+>> +/* For arch/arm/boot/dts/apq8064.dtsi --> format 'A' */
+>> +cpus {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +
+>> +	CPU0: cpu@0 {
+>> +		compatible = "qcom,krait";
+>> +		enable-method = "qcom,kpss-acc-v1";
+>> +		device_type = "cpu";
+>> +		reg = <0>;
+>> +		next-level-cache = <&L2>;
+>> +		qcom,acc = <&acc0>;
+>> +		qcom,saw = <&saw0>;
+>> +		cpu-idle-states = <&CPU_SPC>;
+>> +		operating-points-v2 = <&cpu_opp_table>;
+>> +	};
+>> +};
+>> +
+>> +qfprom: qfprom@700000 {
+>> +	  compatible      = "qcom,qfprom";
+>> +	  reg	      = <0x00700000 0x1000>;
+>> +	  #address-cells  = <1>;
+>> +	  #size-cells     = <1>;
+>> +	  ranges;
+>> +	  pvs_efuse: pvs {
+>> +		reg = <0xc0 0x4>;
+>> +	};
+>> +};
+>> +
+>> +cpu_opp_table: opp-table {
+>> +	compatible = "operating-points-v2-krait-cpu";
+>> +	nvmem-cells = <&pvs_efuse>;
+>> +
+>> +		/*
+>> +		 * Missing opp-shared property means CPUs switch DVFS states
+>> +		 * independently.
+>> +		 */
+>> +
+>> +	       opp-918000000 {
+>> +			opp-hz = /bits/ 64 <918000000>;
+>> +			opp-microvolt-speed0-pvs0-v0 = <1100000>;
+> 
+> Where is this property defined? I'm not that happy with it, but don't 
+> have a better suggestion. Maybe make pvsN be an array of values with 0 
+> for any skipped indexes? The '-v0' seems pointless. 
 > 
 
-Okay, let's drop uart 3 setting here.
+ 'opp-microvolt' is the property that comes from OPP-V2 bindings and rest
+  of the string "speed%s-pvs%s-v%s" gets concatenated to the string
+  by the cpufreq driver using dev_pm_opp_set_prop_name api. So all
+  the three speed,pvs,v (version) come from efuse and can vary.
+  Just that in the data so far, v is always '0'.
 
-> Regards,
-> Matthias
+>> +			opp-microvolt-speed0-pvs1-v0 = <1050000>;
+>> +			opp-microvolt-speed0-pvs3-v0 = <1000000>;
+>> +			opp-microvolt-speed0-pvs4-v0 = <975000>;
+>> +			opp-microvolt-speed1-pvs0-v0 = <1025000>;
+>> +			opp-microvolt-speed1-pvs1-v0 = <1000000>;
+>> +			opp-microvolt-speed1-pvs2-v0 = <950000>;
+>> +			opp-microvolt-speed1-pvs3-v0 = <925000>;
+>> +			opp-microvolt-speed1-pvs4-v0 = <900000>;
+>> +			opp-microvolt-speed1-pvs5-v0 = <900000>;
+>> +			opp-microvolt-speed1-pvs6-v0 = <900000>;
+>> +			opp-microvolt-speed2-pvs0-v0 = <975000>;
+>> +			opp-microvolt-speed2-pvs1-v0 = <950000>;
+>> +			opp-microvolt-speed2-pvs2-v0 = <925000>;
+>> +			opp-microvolt-speed2-pvs3-v0 = <912500>;
+>> +			opp-microvolt-speed2-pvs4-v0 = <900000>;
+>> +			opp-microvolt-speed2-pvs5-v0 = <900000>;
+>> +			opp-microvolt-speed2-pvs6-v0 = <900000>;
+>> +			opp-microvolt-speed14-pvs0-v0 = <1025000>;
+>> +			opp-microvolt-speed14-pvs1-v0 = <1000000>;
+>> +			opp-microvolt-speed14-pvs2-v0 = <950000>;
+>> +			opp-microvolt-speed14-pvs3-v0 = <925000>;
+>> +			opp-microvolt-speed14-pvs4-v0 = <900000>;
+>> +			opp-microvolt-speed14-pvs5-v0 = <900000>;
+>> +			opp-microvolt-speed14-pvs6-v0 = <900000>;
+>> +		};
+>> +
+>> +		opp-810000000 {
+>> +			opp-hz = /bits/ 64 <810000000>;
+>> +			opp-microvolt-speed0-pvs0-v0 =  < 1075000>;
+>> +			opp-microvolt-speed0-pvs1-v0 = 	< 1025000>;
+>> +			opp-microvolt-speed0-pvs3-v0 = 	< 975000>;
+>> +			opp-microvolt-speed0-pvs3-v0 = 	< 962500>;
+>> +			opp-microvolt-speed1-pvs0-v0 = 	< 1000000>;
+>> +			opp-microvolt-speed1-pvs1-v0 = 	< 975000>;
+>> +			opp-microvolt-speed1-pvs2-v0 = 	< 937500>;
+>> +			opp-microvolt-speed1-pvs3-v0 = 	< 900000>;
+>> +			opp-microvolt-speed1-pvs4-v0 = 	< 887500>;
+>> +			opp-microvolt-speed1-pvs5-v0 = 	< 887500>;
+>> +			opp-microvolt-speed1-pvs6-v0 = 	< 887500>;
+>> +			opp-microvolt-speed2-pvs0-v0 = 	< 962500>;
+>> +			opp-microvolt-speed2-pvs1-v0 = 	< 937500>;
+>> +			opp-microvolt-speed2-pvs2-v0 = 	< 912500>;
+>> +			opp-microvolt-speed2-pvs3-v0 = 	< 900000>;
+>> +			opp-microvolt-speed2-pvs4-v0 = 	< 887500>;
+>> +			opp-microvolt-speed2-pvs5-v0 = 	< 887500>;
+>> +			opp-microvolt-speed2-pvs6-v0 = 	< 887500>;
+> 
+> Some space then tab issues on the above. Also, drop the space after the 
+> '<'.
 
+ ok, will fix it.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> +			opp-microvolt-speed14-pvs0-v0 =	< 1000000>;
+>> +			opp-microvolt-speed14-pvs1-v0 =	< 975000>;
+>> +			opp-microvolt-speed14-pvs2-v0 =	< 937500>;
+>> +			opp-microvolt-speed14-pvs3-v0 =	< 900000>;
+>> +			opp-microvolt-speed14-pvs4-v0 =	< 887500>;
+>> +			opp-microvolt-speed14-pvs5-v0 =	< 887500>;
+>> +			opp-microvolt-speed14-pvs6-v0 =	< 887500>;
+>> +		};
+>> +
+>> +		opp-702000000 {
+>> +			 opp-hz = /bits/ 64 <702000000>;
+>> +			 opp-microvolt-speed0-pvs0-v0 =  <1025000>;
+>> +			 opp-microvolt-speed0-pvs1-v0 =  <975000>;
+>> +			 opp-microvolt-speed0-pvs3-v0 =  <925000>;
+>> +			 opp-microvolt-speed0-pvs3-v0 =  <925000>;
+>> +			 opp-microvolt-speed1-pvs0-v0 =  <962500>;
+>> +			 opp-microvolt-speed1-pvs1-v0 =  <962500>;
+>> +			 opp-microvolt-speed1-pvs2-v0 =  <925000>;
+>> +			 opp-microvolt-speed1-pvs3-v0 =  <900000>;
+>> +			 opp-microvolt-speed1-pvs4-v0 =  <875000>;
+>> +			 opp-microvolt-speed1-pvs5-v0 =  <875000>;
+>> +			 opp-microvolt-speed1-pvs6-v0 =  <875000>;
+>> +			 opp-microvolt-speed2-pvs0-v0 =  <950000>;
+>> +			 opp-microvolt-speed2-pvs1-v0 =  <925000>;
+>> +			 opp-microvolt-speed2-pvs2-v0 =  <900000>;
+>> +			 opp-microvolt-speed2-pvs3-v0 =  <900000>;
+>> +			 opp-microvolt-speed2-pvs4-v0 =  <875000>;
+>> +			 opp-microvolt-speed2-pvs5-v0 =  <875000>;
+>> +			 opp-microvolt-speed2-pvs6-v0 =  <875000>;
+>> +			 opp-microvolt-speed14-pvs0-v0 = <962500>;
+>> +			 opp-microvolt-speed14-pvs1-v0 = <962500>;
+>> +			 opp-microvolt-speed14-pvs2-v0 = <925000>;
+>> +			 opp-microvolt-speed14-pvs3-v0 = <900000>;
+>> +			 opp-microvolt-speed14-pvs4-v0 = <875000>;
+>> +			 opp-microvolt-speed14-pvs5-v0 = <875000>;
+>> +			 opp-microvolt-speed14-pvs6-v0 = <875000>;
+>> +		};
+>> +
+>> +		opp-594000000 {
+>> +			opp-hz = /bits/ 64 <594000000>;
+>> +			opp-microvolt-speed0-pvs0-v0 =  <1000000>;
+>> +			opp-microvolt-speed0-pvs1-v0 = 	<950000>;
+>> +			opp-microvolt-speed0-pvs3-v0 = 	<900000>;
+>> +			opp-microvolt-speed0-pvs3-v0 = 	<900000>;
+>> +			opp-microvolt-speed1-pvs0-v0 = 	<950000>;
+>> +			opp-microvolt-speed1-pvs1-v0 = 	<950000>;
+>> +			opp-microvolt-speed1-pvs2-v0 = 	<925000>;
+>> +			opp-microvolt-speed1-pvs3-v0 = 	<900000>;
+>> +			opp-microvolt-speed1-pvs4-v0 = 	<875000>;
+>> +			opp-microvolt-speed1-pvs5-v0 = 	<875000>;
+>> +			opp-microvolt-speed1-pvs6-v0 = 	<875000>;
+>> +			opp-microvolt-speed2-pvs0-v0 = 	<950000>;
+>> +			opp-microvolt-speed2-pvs1-v0 = 	<925000>;
+>> +			opp-microvolt-speed2-pvs2-v0 = 	<900000>;
+>> +			opp-microvolt-speed2-pvs3-v0 = 	<900000>;
+>> +			opp-microvolt-speed2-pvs4-v0 = 	<875000>;
+>> +			opp-microvolt-speed2-pvs5-v0 = 	<875000>;
+>> +			opp-microvolt-speed2-pvs6-v0 = 	<875000>;
+> 
+> More space then tab issues after the '='.
+> 
+ ok, will fix.
+
+Regards,
+ Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
