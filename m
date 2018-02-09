@@ -1,55 +1,153 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: [PATCH v5 0/2] iio: ad5272: Add support for Analog Devices digital potentiometers
-Date: Fri,  9 Feb 2018 08:57:25 +0800
-Message-ID: <1518137847-63381-1-git-send-email-preid@electromag.com.au>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martinbv-cvVvTOR6QHAqDJ6do+/SaQ@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] dt-binding: clock: document NPCM7xx clock DT
+ bindings
+Date: Thu, 8 Feb 2018 20:22:38 -0600
+Message-ID: <20180209022238.v52rw5filxcig6mg@rob-hp-laptop>
+References: <1517818975-11427-1-git-send-email-tmaimon77@gmail.com>
+ <1517818975-11427-2-git-send-email-tmaimon77@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1517818975-11427-2-git-send-email-tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation and driver for the Analog Devices 5272.
+On Mon, Feb 05, 2018 at 10:22:54AM +0200, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton NPCM7xx clocks.
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../bindings/clock/nuvoton,npcm7xx-clk.txt         | 84 ++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,npcm7xx-clk.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/nuvoton,npcm7xx-clk.txt b/Documentation/devicetree/bindings/clock/nuvoton,npcm7xx-clk.txt
+> new file mode 100644
+> index 000000000000..1ba1945d3616
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/nuvoton,npcm7xx-clk.txt
+> @@ -0,0 +1,84 @@
+> +* Nuvoton NPCM7XX Clock Controller
+> +
+> +Nuvoton Poleg BMC NPCM7XX contain integrated clock
 
-Driver currently doesn't support programing the RDAC position to 
-non-volatile memory. 
+s/contain/contains/
 
-Changes from v4:
-- Remove references to drie in bindings
-- Fix C&P error in binding doc for reset input. 
-- fix typo in comment of driver.
+And your line break is strange.
 
-Changes from v3:
-- move SPDX-License-Identifier to line 1
-- add AD5274 to Kconfig description
-- Add missing empty line before return
+> +controller, which generates and supplies clock to all modules within the BMC.
 
-Changes from v2:
-- docs: Fix polarity of reset-gpio example to match driver
-- Use a cached aligned buffer for i2c
-- remove old invalid comment from c&p
+s/clock/clocks/
 
-Changes from v1:
-- Use spdx license id
-- Use sizeof for i2c buffer lens
-- Condense code a little when setting up i2c buf
-- check val2 in raw write
-- Add reset function. Perform a software reset if
-  gpio reset pin is not defined
-- remove THIS_MODULE assignment
-- change of data to use index as per i2c device table
+> +
+> +Required Properties:
+> +
+> +- compatible: should be one of following:
+> +	- "nuvoton,npcm750-clk" : for clock controller of Nuvoton
+> +	  Poleg BMC NPCM750
+> +
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +
+> +
+> +- #clock-cells: should be 1.
+> +
+> +All available clocks are defined as preprocessor macros in
+> +dt-bindings/clock/nuvoton,npcm7xx-clock.h header and can beused in device tree
 
+This file should be part of this patch.
 
-Phil Reid (2):
-  dt-bindings: ad5272: Add bindings for Analog Devices digital
-    potentiometers
-  iio: ad5272: Add support for Analog Devices digital potentiometers
+> +sources.
+> +
+> +External clocks:
+> +
+> +There are several clocks that are generated outside the BMC. All clocks are of
+> +a known fixed value that cannot be chagned. Therefor these values are hard coded
 
- .../bindings/iio/potentiometer/ad5272.txt          |  27 +++
- drivers/iio/potentiometer/Kconfig                  |  10 +
- drivers/iio/potentiometer/Makefile                 |   1 +
- drivers/iio/potentiometer/ad5272.c                 | 227 +++++++++++++++++++++
- 4 files changed, 265 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
- create mode 100644 drivers/iio/potentiometer/ad5272.c
+s/chagned/changed/
 
--- 
-1.8.3.1
+s/Therefor/Therefore/
+
+> +inside the driver and registered on init.
+> +
+> +The clock modules contains 4 PLL, 20 dividers and 11 muxes. All these settings
+> +are set before Linux boot and are not to be altered by the Linux. This driver is
+> +used only to read the values clocks, not to set them.
+> +
+> +In addition to the clock driver, there are 3 external clocks suppling the
+
+The binding describes h/w, not a driver.
+
+> +network, which are of fixed values, set on on the device tree, but not used by
+> + the clock module. Example can be found below.
+   ^
+extra space
+
+All this description belongs at the top of this doc.
+
+> +
+> +Example: Clock controller node:
+> +
+> +	clk: clock-controller@f0801000 {
+> +		compatible = "nuvoton,npcm750-clk";
+> +		#clock-cells = <1>;
+> +		clock-controller;
+> +		reg = <0xf0801000 0x1000>;
+> +		status = "okay";
+> +	};
+> +
+> +Example: Required external clocks for network:
+> +
+> +		/* external clock signal rg1refck, supplied by the phy */
+> +		clk_rg1refck: clk_rg1refck {
+
+Use '-' rather than '_' in node names.
+
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <125000000>;
+> +			clock-output-names = "clk_rg1refck";
+> +		};
+> +
+> +		/* external clock signal rg2refck, supplied by the phy */
+> +		clk_rg2refck: clk_rg2refck {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <125000000>;
+> +			clock-output-names = "clk_rg2refck";
+> +		};
+> +
+> +		clk_xin: clk_xin {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <50000000>;
+> +			clock-output-names = "clk_xin";
+> +		};
+> +
+> +Example: UART controller node that consumes the clock generated by the clock
+> +  controller (refer to the standard clock bindings for information about
+> +  "clocks" and "clock-names" properties):
+> +
+> +	uart0: serial@e2900000 {
+> +		compatible = "Nuvoton,s5pv210-uart";
+
+s/Nuvoton/nuvoton/
+
+> +		reg = <0xe2900000 0x400>;
+> +		interrupt-parent = <&vic1>;
+> +		interrupts = <10>;
+> +		clock-names = "uart", "clk_uart_baud0",
+> +				"clk_uart_baud1";
+> +		clocks = <&clocks UART0>, <&clocks UART0>,
+> +				<&clocks SCLK_UART0>;
+> +	};
+> -- 
+> 2.14.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
