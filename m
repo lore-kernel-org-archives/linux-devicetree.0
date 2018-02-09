@@ -1,70 +1,54 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] dt/bindings: Add bindings for Layerscape external
- irqs
-Date: Fri, 9 Feb 2018 09:47:00 +0000
-Message-ID: <6186117d-ff4f-a64f-9b5e-c3b3fac8bb88@arm.com>
-References: <20180122092133.23177-1-rasmus.villemoes@prevas.dk>
- <20180125150230.7234-1-rasmus.villemoes@prevas.dk>
- <20180125150230.7234-2-rasmus.villemoes@prevas.dk>
- <20180205060705.cg3qywtqs65w74ee@rob-hp-laptop>
- <15ac0da3-e85b-c6be-366a-368934752018@prevas.dk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <15ac0da3-e85b-c6be-366a-368934752018-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: clocks: add APB RTC gate for SC9860
+Date: Fri,  9 Feb 2018 17:48:10 +0800
+Message-ID: <1518169691-14870-1-git-send-email-zhang.lyra@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08/02/18 15:08, Rasmus Villemoes wrote:
-> On 2018-02-05 07:07, Rob Herring wrote:
->>> +Example:
->>> +	scfg: scfg@1570000 {
->>> +		compatible = "fsl,ls1021a-scfg", "syscon";
->>> +		...
->>> +		extirq: interrupt-controller {
->>> +			compatible = "fsl,ls1021a-extirq";
->>> +			#interrupt-cells = <3>;
->>> +			interrupt-controller;
->>> +			interrupt-parent = <&gic>;
->>> +			offset = <0x1ac>;
->>
->> Use reg here instead (with a length).
-> 
-> Hm, ok, but what does the length buy us? Should the driver just ignore
-> it, or should it check that it is 4 and bail out if not?
-> 
->>> +			interrupts = <163 164 165 167 168 169>;
->>
->> These don't look like GIC interrupt cells. Building this with current 
->> dtc will have errors.
-> 
-> Indeed, they are not. They simply record which interrupt lines on the
-> GIC the external interrupt lines IRQ0...IRQ5 map to (the arm64 socs
-> apparently have 12 such lines, but I don't know what they map to). I
-> originally had that mapping in the driver, but I was asked to move it to
-> DT. Is the problem the use of the name "interrupts" for this property?
-> I'm happy to use something else (parent-interrupts, interrupt-mapping,
-> ...) I find it very hard to figure out which property names have
-> magic/reserved meanings.
-> 
-> I don't see any warnings/errors from dtc in the 4.14 tree I'm working
-> on. Does it require an even newer dtc than that?
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 
-Most interrupt controllers use a private property, potentially with a
-range (see the recent example of the Qualcomm PDC [1]).
+Added index of RTC gate clocks which are used by some devices on aon
+area of SC9860, for example the Watchdog timer.
 
-Thanks,
+Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+---
+ include/dt-bindings/clock/sprd,sc9860-clk.h | 21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-	M.
-
-[1] https://patchwork.kernel.org/patch/10208037/
+diff --git a/include/dt-bindings/clock/sprd,sc9860-clk.h b/include/dt-bindings/clock/sprd,sc9860-clk.h
+index 4cb202f..f2ab463 100644
+--- a/include/dt-bindings/clock/sprd,sc9860-clk.h
++++ b/include/dt-bindings/clock/sprd,sc9860-clk.h
+@@ -229,7 +229,26 @@
+ #define	CLK_SDIO1_2X_EN		65
+ #define	CLK_SDIO2_2X_EN		66
+ #define	CLK_EMMC_2X_EN		67
+-#define CLK_AON_GATE_NUM	(CLK_EMMC_2X_EN + 1)
++#define	CLK_ARCH_RTC_EB		68
++#define	CLK_KPB_RTC_EB		69
++#define	CLK_AON_SYST_RTC_EB	70
++#define	CLK_AP_SYST_RTC_EB	71
++#define	CLK_AON_TMR_RTC_EB	72
++#define	CLK_AP_TMR0_RTC_EB	73
++#define	CLK_EIC_RTC_EB		74
++#define	CLK_EIC_RTCDV5_EB	75
++#define	CLK_AP_WDG_RTC_EB	76
++#define	CLK_AP_TMR1_RTC_EB	77
++#define	CLK_AP_TMR2_RTC_EB	78
++#define	CLK_DCXO_TMR_RTC_EB	79
++#define	CLK_BB_CAL_RTC_EB	80
++#define	CLK_AVS_BIG_RTC_EB	81
++#define	CLK_AVS_LIT_RTC_EB	82
++#define	CLK_AVS_GPU0_RTC_EB	83
++#define	CLK_AVS_GPU1_RTC_EB	84
++#define	CLK_GPU_TS_EB		85
++#define	CLK_RTCDV10_EB		86
++#define	CLK_AON_GATE_NUM	(CLK_RTCDV10_EB + 1)
+ 
+ #define	CLK_LIT_MCU		0
+ #define	CLK_BIG_MCU		1
 -- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
