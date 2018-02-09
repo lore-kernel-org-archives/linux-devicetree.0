@@ -1,61 +1,49 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [2/9] phy: add Rockchip Innosilicon hdmi phy
-Date: Fri, 09 Feb 2018 11:10:49 +0100
-Message-ID: <1776656.PJyHqu906x@phil>
-References: <20180205143435.4723-3-heiko@sntech.de> <2860925.eKDKvHpOYg@phil>
- <313a1fb7-9ecf-ff94-d9b8-6ec63e80b058@samsung.com>
+From: Cosmin Samoila <cosmin.samoila-3arQi8VN3Tc@public.gmane.org>
+Subject: Re: [PATCH] ASoC: codecs: Add support for AK4458 DAC driver
+Date: Fri, 9 Feb 2018 10:22:16 +0000
+Message-ID: <1518171736.19973.7.camel@nxp.com>
+References: <1517404809-25250-1-git-send-email-cosmin.samoila@nxp.com>
+         <20180131170330.GB7763@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <313a1fb7-9ecf-ff94-d9b8-6ec63e80b058@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, kishon@ti.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, Martin Cerveny <M.Cerveny@computer.org>, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180131170330.GB7763-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
+Content-ID: <E42495FC0835B74085021FA379D47FFD-jdb/QiT5osKcE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: dl-linux-imx <linux-imx-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "wakasugi.jb-r6lgfPJHJciWyREYz5tgSuqrae++aQT8@public.gmane.org" <wakasugi.jb-r6lgfPJHJciWyREYz5tgSuqrae++aQT8@public.gmane.org>, "mihai.serban-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mihai.serban-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "S.j. Wang" <shengjiu.wang-3arQi8VN3Tc@public.gmane.org>, Daniel Baluta <daniel.baluta-3arQi8VN3Tc@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "mihai.serban-3arQi8VN3Tc@public.gmane.org" <mihai.serban-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRnJlaXRhZywgOS4gRmVicnVhciAyMDE4LCAxMTowNjo0OSBDRVQgc2NocmllYiBBbmRyemVq
-IEhhamRhOgo+IE9uIDA5LjAyLjIwMTggMTA6MjQsIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+ID4g
-SGkgTWFydGluLAo+ID4KPiA+IEFtIE1vbnRhZywgNS4gRmVicnVhciAyMDE4LCAyMjozMjowOCBD
-RVQgc2NocmllYiBNYXJ0aW4gQ2VydmVueToKPiA+PiBPbiBNb24sIDUgRmViIDIwMTgsIEhlaWtv
-IFN0dWVibmVyIHdyb3RlOgo+ID4+PiBGcm9tOiBaaGVuZyBZYW5nIDx6aGVuZ3lhbmdAcm9jay1j
-aGlwcy5jb20+Cj4gPj4+Cj4gPj4+IEFkZCBhIGRyaXZlciBmb3IgdGhlIElubm9zaWxpY29uIGhk
-bWkgcGh5IHVzZWQgb24gcmszMjI4L3JrMzIyOQo+ID4+PiBhbmQgcmszMzI4IHNvY3MgZnJvbSBS
-b2NrY2hpcC4KPiA+Pj4KPiA+Pj4gU2lnbmVkLW9mZi1ieTogWmhlbmcgWWFuZyA8emhlbmd5YW5n
-QHJvY2stY2hpcHMuY29tPgo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVp
-a29Ac250ZWNoLmRlPgo+ID4+PiAtLS0KPiA+Pj4gKysrIGIvZHJpdmVycy9waHkvcm9ja2NoaXAv
-cGh5LXJvY2tjaGlwLWlubm8taGRtaS5jCj4gPj4+ICtzdGF0aWMgdTMyIGlubm9faGRtaV9waHlf
-Z2V0X3RtZHNjbGsoc3RydWN0IGlubm9faGRtaV9waHkgKmlubm8sIGludCByYXRlKQo+ID4+PiAr
-ewo+ID4+PiArCWludCBidXNfd2lkdGggPSBwaHlfZ2V0X2J1c193aWR0aChpbm5vLT5waHkpOwo+
-ID4+PiArCXUzMiB0bWRzY2xrOwo+ID4+PiArCj4gPj4+ICsJc3dpdGNoIChidXNfd2lkdGgpIHsK
-PiA+Pj4gKwljYXNlIDQ6Cj4gPj4+ICsJCXRtZHNjbGsgPSByYXRlIC8gMjsKPiA+Pj4gKwkJYnJl
-YWs7Cj4gPj4+ICsJY2FzZSA1Ogo+ID4+PiArCQl0bWRzY2xrID0gcmF0ZSAqIDUgLyA4Owo+ID4+
-PiArCQlicmVhazsKPiA+Pj4gKwljYXNlIDY6Cj4gPj4+ICsJCXRtZHNjbGsgPSByYXRlICogMyAv
-IDQ7Cj4gPj4+ICsJCWJyZWFrOwo+ID4+PiArCWNhc2UgMTA6Cj4gPj4+ICsJCXRtZHNjbGsgPSBy
-YXRlICogNSAvIDQ7Cj4gPj4+ICsJCWJyZWFrOwo+ID4+PiArCWNhc2UgMTI6Cj4gPj4+ICsJCXRt
-ZHNjbGsgPSByYXRlICogMyAvIDI7Cj4gPj4+ICsJCWJyZWFrOwo+ID4+PiArCWNhc2UgMTY6Cj4g
-Pj4+ICsJCXRtZHNjbGsgPSByYXRlICogMjsKPiA+Pj4gKwkJYnJlYWs7Cj4gPj4+ICsJZGVmYXVs
-dDoKPiA+Pj4gKwkJdG1kc2NsayA9IHJhdGU7Cj4gPj4+ICsJfQo+ID4+PiArCj4gPj4+ICsJcmV0
-dXJuIHRtZHNjbGs7Cj4gPj4+ICt9Cj4gPj4gUGxlYXNlIGNvcnJlY3RzIGludGVnZXIgb3ZlcmZs
-b3cgCj4gPj4gbGlrZSBodHRwczovL2dpdGh1Yi5jb20vbWNlcnZlbnkvcm9ja2NoaXAtbGludXgv
-Y29tbWl0L2I0YmM3MDNmMmRjYTRlNTExNWIyMjE1NTkyMGQyMjc3NjcxYTlmMDAKPiA+IHRoYW5r
-cyBmb3IgZmluZGluZyB0aGF0IHBvc3NpYmxlIGlzc3VlLiBJJ3ZlIGFkYXB0ZWQgdGhlIHBoeSBk
-cml2ZXIKPiA+IGluIGEgc2ltaWxhciB3YXkgKHVzaW5nIHU2NCB0aG91Z2gpIGFuZCB3aWxsIGlu
-Y2x1ZGUgdGhhdCBjaGFuZ2UgaW4gdGhlCj4gPiBuZXh0IHZlcnNpb24uCj4gCj4gQnR3LCB3b3Vs
-ZG4ndCBiZSBzaW1wbGVyIHRvIGp1c3QgdXNlOgo+IHN3aXRjaCAoYnVzX3dpZHRoKSB7Cj4gY2Fz
-ZSA0Ogo+IGNhc2UgNToKPiBjYXNlIDY6Cj4gY2FzZSAxMDoKPiBjYXNlIDEyOgo+IGNhc2UgMTY6
-Cj4gICAgIHJldHVybiAodTY0KXJhdGUgKiBidXNfd2lkdGggLyA4Owo+IGRlZmF1bHQ6Cj4gICAg
-IHJldHVybiByYXRlOwo+IH0KCnlvdSdyZSBhIGdlbml1cyA7LSkgLgpJIG11c3QgYmUgbG9va2lu
-ZyBhdCB0aGlzIGNvZGUgZm9yIHdheSB0byBsb25nIHRvIG5vdCBzZWUgdGhpcyByZWxhdGlvbi4K
-CgpUaGFua3MKSGVpa28KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+SGkgTWFyaywNCg0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHNvY19lbnVtIGFrNDQ1OF9kYWNf
+ZW51bVtdID0gew0KPiA+ICsvKjAqLwlTT0NfRU5VTV9TSU5HTEUoQUs0NDU4XzAxX0NPTlRST0wy
+LCAxLA0KPiA+ICsJCQlBUlJBWV9TSVpFKGFrNDQ1OF9kZW1fc2VsZWN0X3RleHRzKSwNCj4gPiAr
+CQkJYWs0NDU4X2RlbV9zZWxlY3RfdGV4dHMpLA0KPiA+ICsvKjEqLwlTT0NfRU5VTV9TSU5HTEUo
+QUs0NDU4XzBBX0NPTlRST0w2LCAwLA0KPiBUaGUgZmFjdCB0aGF0IHlvdSBuZWVkIHRoZXNlIGNv
+bW1lbnRzIGlzIHdoeSB0aGVzZSBhcnJheXMgYXJlIGEgYmFkDQo+IGlkZWENCj4gLSBqdXN0IHVz
+ZSBpbmRpdmlkdWFsbHkgbmFtZWQgdmFyaWFibGVzIGFzIG90aGVyIGRyaXZlcnMgZG8uDQo+IA0K
+PiA+IA0KPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9rY29udHJvbF9uZXcgYWs0NDU4X3Nu
+ZF9jb250cm9sc1tdID0gew0KPiA+ICsJU09DX1NJTkdMRV9UTFYoIkFLNDQ1OCBMMWNoIERpZ2l0
+YWwgVm9sdW1lIiwNCj4gPiArCQnCoMKgwqDCoMKgwqDCoEFLNDQ1OF8wM19MQ0hBVFQsIDAvKnNo
+aWZ0Ki8sIDB4RkYvKm1heA0KPiA+IHZhbHVlKi8sDQo+ID4gKwkJwqDCoMKgwqDCoMKgwqAwLypp
+bnZlcnQqLywgbGF0dF90bHYpLA0KPiA+ICsJU09DX1NJTkdMRV9UTFYoIkFLNDQ1OCBSMWNoIERp
+Z2l0YWwgVm9sdW1lIiwNCj4gPiArCQnCoMKgwqDCoMKgwqDCoEFLNDQ1OF8wNF9SQ0hBVFQsIDAs
+IDB4RkYsIDAsIHJhdHRfdGx2KSwNCj4gSXQnZCBiZSBtb3JlIGlkaW9tYXRpYyB0byBjb21iaW5l
+IHRoZXNlIGludG8gc3RlcmVvIHBhaXJzIHRoYW4gaGF2ZQ0KPiB0aGVtDQo+IGFzIHNpbmdsZSBj
+aGFubmVsIGNvbnRyb2xzLg0KPiANCj4gPiANCj4gPiArc3RhdGljIGNvbnN0IGNoYXIgKiBjb25z
+dCBhazQ0NThfZGFjX3NlbGVjdF90ZXh0c1tdID0geyAiT0ZGIiwNCj4gPiAiT04iIH07DQo+IFRo
+aXMgbG9va3MgbGlrZSB0aGUgdXNlcnMgc2hvdWxkIGJlIHN3aXRjaCBjb250cm9scyAtIHdoYXQn
+cyB0aGUgZ29hbA0KPiBoZXJlPw0KPiANCj4gPiANCg0KSSB0aGluayB0aGlzIGlzIHRvIGFsbG93
+IHVzZXJzIHRvIHN3aXRjaCBvZmYgc291bmQgZm9yIGFsbCBjaGFubmVscyBidXQNCml0IHNlZW1z
+IHNpbGx5IHRvIGhhdmUgNCBjb250cm9scyBkb2luZyB0aGUgc2FtZSB0aGluZy4NCldlIG5vdyBo
+YXZlIHR3byBvcHRpb25zOg0KLSBvbmUgY29udHJvbCB0byBzd2l0Y2ggb2ZmIHNvdW5kIGZvciBh
+bGwgY2hhbm5lbHMNCi0gb25lIGNvbnRyb2xsIHBlciBEQUMNCg0KV2hhdCBkbyB5b3UgbWVhbiBi
+eSAidXNlcnMgc2hvdWxkIGJlIHN3aXRjaCBjb250cm9scyIgPw0KU2hvdWxkIHdlIHVzZSBTTkRf
+U09DX0RBUE1fU1dJVENIIGluc3RlYWQgb2YgU05EX1NPQ19EQVBNX01VWD8NCg0KV2UgYXJlIHN0
+aWxsIGxlYXJpbmcgdGhlIGlubmVyIGRldGFpbHMgb2YgQVNvQy4NClRoYW5rIHlvdSBmb3IgeW91
+ciBoZWxwLg0KDQpDb3NtaW4=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
