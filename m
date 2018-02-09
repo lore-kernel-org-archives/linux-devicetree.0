@@ -1,109 +1,46 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH v3 2/4] gpio: Add GPIO driver for Nintendo Wii
-Date: Fri, 9 Feb 2018 17:58:58 +0100
-Message-ID: <20180209165858.ebm7ed7f4b5uakju@latitude>
-References: <20180209120732.17863-1-j.neuschaefer@gmx.net>
- <20180209120732.17863-3-j.neuschaefer@gmx.net>
- <CAHp75Vf=Z7DTMvbacLN+E-hScBD3ZNpnf6Ch+5xm=JNbX2cbVg@mail.gmail.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 2/3] arm: dts: sun6i: a31s: bpi-m2: improve pmic properties
+Date: Fri,  9 Feb 2018 18:52:35 +0100
+Message-ID: <20180209175236.21215-3-embed3d@gmail.com>
+References: <20180209175236.21215-1-embed3d@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="i7quqgrx7stws5lv"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vf=Z7DTMvbacLN+E-hScBD3ZNpnf6Ch+5xm=JNbX2cbVg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Albert Herranz <albert_herranz@yahoo.es>, Segher Boessenkool <segher@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD257DPK24NRB2N767JQKGQEV7AU6CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180209175236.21215-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The eldoin is supplied from the dcdc1 regulator. The N_VBUSEN pin is
+connected to an external power regulator (SY6280AAC).
+With this commit we update the pmic binding properties to support
+those features.
 
---i7quqgrx7stws5lv
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-On Fri, Feb 09, 2018 at 05:30:55PM +0200, Andy Shevchenko wrote:
-> On Fri, Feb 9, 2018 at 2:07 PM, Jonathan Neusch=C3=A4fer
-> <j.neuschaefer@gmx.net> wrote:
-> > The Nintendo Wii's chipset (called "Hollywood") has a GPIO controller
-> > that supports a configurable number of pins (up to 32), interrupts, and
-> > some special mechanisms to share the controller between the system's
-> > security processor (an ARM926) and the PowerPC CPU. Pin multiplexing is
-> > not supported.
-> >
-> > This patch adds a basic driver for this GPIO controller. Interrupt
-> > support will come in a later patch.
-> >
-> > This patch is based on code developed by Albert Herranz and the GameCube
-> > Linux Team, file arch/powerpc/platforms/embedded6xx/hlwd-gpio.c,
-> > available at https://github.com/DeltaResero/GC-Wii-Linux-Kernels, but
-> > has grown quite dissimilar.
-> >
->=20
-> Fine to me, though one comment below.
-> In any case,
->=20
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Thank you.
-
-
-[...]
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index d6a8e851ad13..47606dfe06cc 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -229,6 +229,15 @@ config GPIO_GRGPIO
-> >           Select this to support Aeroflex Gaisler GRGPIO cores from the=
- GRLIB
-> >           VHDL IP core library.
-> >
-> > +config GPIO_HLWD
-> > +       tristate "Nintendo Wii (Hollywood) GPIO"
->=20
-> > +       depends on OF_GPIO
->=20
-> You may get rid of it if...
-
-[ Even if this driver isn't switched to the unified device property API,
-  I think "depends on OF" would be enough here, because it doesn't use
-  the code that's guarded by CONFIG_OF_GPIO (gpiolib-of.c), but this
-  applies to other drivers (e.g. gpio-aspeed, gpio-bcm-kona) as well, so
-  this would ideally be a bigger cleanup patch. ]
-
-
-> > +       res =3D of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpi=
-os);
->=20
-> ...if you switch to unified device property API.
-
-I don't think this change is worth making, unless/until the of_property
-API is deprecated. I'm rather sure this GPIO controller won't appear in
-an ACPI-based system.
-
-
-Thanks,
-Jonathan Neusch=C3=A4fer
-
---i7quqgrx7stws5lv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAABAgAGBQJafdNLAAoJEAgwRJqO81/bixcQAIr1riJeusqVnVSqFoRF5AnI
-E5rzLIjuyrWdakM/xRDFvHhKJs2CVNVWyzxsPefEfdYZjPx7jxy9g2ZC0fOR8MRd
-F26NvxC6+x5piXsGXixyWdveWSe5ePsp041xQylW/6J8c9rWN6/H2K0PFaig/oEC
-eRuzu3Ow4G4m6PHYDeiorz7CHZGKYF9bCqPxSXhJRL1GWv2eahlB6MHe+fnSxI/3
-YogJGou88lMQryAG2zLy2JUuXMFR2wcixjso8Np9VwqQiTIWTr+ONqhMDx/P7rfB
-IU1PW027x/571T7dC40jDrtGERe7IPtGtqx86qnO71cczBJFla6Hu8Tjdirs+haZ
-+0AeTpshCXNEG2Hnb1FML9LzO5bMwTqMWFsF8loek4XtJR9/ZJ/xmLk6ieE1ShWD
-+yjjgPpMoqeGFaCZkwzITFZ9XbUV51nuElSLWbwFjagUAzWx48G5/2iml6coFlCA
-a4Z17JNZw9ue68es/nakJiwPiUpA7/73Ck8JzIq4AIXdW+Aiz8H72rnudqCX6qZ5
-ccBbhW2VgAtSE7RYQqK6i6q09Y1RzheUqTwhcDIQ+kGAhWeGCG02mzOHcyUYPUGG
-tsBoqPTeqibSkmo4ZMYTKDacXFq5MYdTZ5M/rxz+sXxLKVYFzNJwHbzvogCXom2G
-6YvcnxSVm0mft+2eLQqs
-=SLYv
------END PGP SIGNATURE-----
-
---i7quqgrx7stws5lv--
+diff --git a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+index a8d86211c8f3..556528386858 100644
+--- a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
++++ b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+@@ -162,6 +162,8 @@
+ 		reg = <0x68>;
+ 		interrupt-parent = <&nmi_intc>;
+ 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		eldoin-supply = <&reg_dcdc1>;
++		x-powers,drive-vbus-en;
+ 	};
+ };
+ 
+-- 
+2.11.0
