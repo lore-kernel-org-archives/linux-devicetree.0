@@ -1,106 +1,53 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
- properties ?
-Date: Fri, 9 Feb 2018 13:14:45 +0100
-Message-ID: <5722441d-c8be-4d29-fab7-28b4e5716961@linaro.org>
-References: <20180207065959.GN28462@vireshk-i7>
- <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
- <20180207102446.GS28462@vireshk-i7>
- <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
- <20180209064211.GY28462@vireshk-i7>
- <539699c7-9509-dea2-2b31-c5f6749c99c4@linaro.org>
- <20180209092421.GL28462@vireshk-i7>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/7] ARM: davinci: add genpd support
+Date: Fri, 9 Feb 2018 18:12:00 +0530
+Message-ID: <a736d727-5805-94ea-3e40-34fc4a6267ef@ti.com>
+References: <20180207134553.13510-1-brgl@bgdev.pl>
+ <4dbc57ec-3506-eb1d-e00d-adfe75c3b39b@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20180209092421.GL28462@vireshk-i7>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4dbc57ec-3506-eb1d-e00d-adfe75c3b39b-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Punit.Agrawal@arm.com, ionela.voinescu@arm.com
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2018 10:24, Viresh Kumar wrote:
-> On 09-02-18, 10:15, Daniel Lezcano wrote:
->> On 09/02/2018 07:42, Viresh Kumar wrote:
->>> On 07-02-18, 11:45, Daniel Lezcano wrote:
->>>> Yes, that is my understanding. cooling-min-level and cooling-max-level
->>>> are not used in the thermal framework code today.
->>>
->>> Right.
->>>
->>>> So if they are defined, we should check the cooling-device max and min
->>>> are in the boundaries (if they are different from no-limit).
->>>
->>> Hmm, I am not sure. We do compare those values (from maps) with the
->>> max reported by the cooling driver, so there is some boundary check
->>> happening. And I don't think it is worth comparing the min/max values
->>> from DT cooling device's nodes. Why not just leave those for the
->>> driver to return (which is already happening btw).
->>>
->>> I don't think it would be correct for the thermal core to go and look
->>> at the min/max properties of the cooling device directly, as those are
->>> more for the thermal driver's help. The thermal core should just call
->>> the get_max_state() callback and that's it.
->>>
->>> Anyway, we can take decision on the binding itself after some time but
->>> I will send some patches to get rid of this property from CPU nodes
->>> for now. It doesn't make sense to have it there (anyway it is
->>> optional), as the cpu cooling devices are kind of virtual cooling
->>> devices which rely on OPP or freq-table currently. Maybe I will begin
->>> by just updating one platform and once that is merged, update
->>> everything else as well.
+Hi David,
+
+On Thursday 08 February 2018 04:13 AM, David Lechner wrote:
+> On 02/07/2018 07:45 AM, Bartosz Golaszewski wrote:
+>> From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>
+>> Hi Sekhar et al,
+>>
+>> please take a look at the following patches. They add a simple genpd
+>> driver and use it in DT mode on da850 boards.
+>>
+>> I was trying to use genpd in legacy mode too, but couldn't find neither
+>> any interfaces nor users that would do that. For now I added a check in
+>> arch/arm/mach-davinci/pm_domain.c that disables the clock pm setup if
+>> we're using genpd.
+>>
+>> This series applies on top of and has been tested with David Lechner's
+>> for-bartosz branch. It fixes the clock look-up issues we faced with
+>> lcdc and emac.
 > 
-> So I eventually updated everything as very small number of platforms
-> were actually using it.
-> 
-> https://lkml.kernel.org/r/cover.1518166039.git.viresh.kumar@linaro.org
+> I'm starting to think that it makes more sense to just make the PSC driver
+> a power-domain and reset provider rather than a clock provider. It is
+> unfortunate that genpd is DT only.
 
-Yep, saw them.
+This will mean that the only way to enable clocks on DaVinci is to use
+pm_runtime() calls. We do still have drivers which depend on clk api for
+enabling clocks, so I am not sure its feasible just yet.
 
->> What about the "cooling-cells" ? Its usage is unclear in the code and
->> I'm not sure it is really needed.
-> 
-> As I can see, it is actually used (sometimes a bit indirectly).
+I think a question like this can arise for any gate clock.
 
-(yeah, that was the meaning of 'unclear')
-
-> - This field is used to check if a device is a cooling device or not.
->   For example, the cpu-cooling device wouldn't be registered by the
->   cpufreq drivers unless this property is present in the CPU node. So
->   this is actually used.
->
-> - This field (and its value) also comes into picture while parsing the
->   "cooling-maps". The "cooling-device" property in the map needs to
->   have "cooing-cells" + 1 fields. The first one is the cooling-device
->   phandle, followed by min/max states.
-
-Right. The semantic is unclear. The expected cooling-cells value is
-always 2 (the code ignore values greater than two and yell if it is less
-than 2). And the cooling-device binding tells there are two states.
-
-So the question is why do we need a cooling-cells as the information is
-pointless here (always 2) ?
-
-I see this field is artificially used to tell the cpufreq driver "please
-register me as a cooling device". This is inconsistent from my pov.
-
-Furthermore, the thermal-zone with the cooling device binds with the CPU
-phandle, not the cooling-cells.
-
-Putting apart the device binding changes discussion for the moment. Why
-not register the cpufreq driver in all the cases and then drop
-cooling-cells ? So when the opps are present, its registers in the
-cpufreq->ready callback.
-
-
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
