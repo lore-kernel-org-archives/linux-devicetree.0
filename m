@@ -1,7 +1,7 @@
 From: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/7] watchdog: sunxi: allow setting timeout in devicetree
-Date: Fri,  9 Feb 2018 20:27:19 +0100
-Message-ID: <20180209192724.1227-3-marcus.folkesson@gmail.com>
+Subject: [PATCH 4/7] watchdog: pnx4008: make use of timeout-secs provided in devicetree
+Date: Fri,  9 Feb 2018 20:27:21 +0100
+Message-ID: <20180209192724.1227-5-marcus.folkesson@gmail.com>
 References: <marcus.folkesson@gmail.com>
  <20180209192724.1227-1-marcus.folkesson@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -14,47 +14,28 @@ List-Id: devicetree@vger.kernel.org
 watchdog_init_timeout() will allways pick timeout_param since it
 defaults to a valid timeout.
 
-By following best practice described in
-Documentation/watchdog/watchdog-kernel-api.txt, it also
-let us to set timout-sec property in devicetree.
+Following best practice described in
+Documentation/watchdog/watchdog-kernel-api.txt to make use of
+the parameter logic.
 
 Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 4 ++++
- drivers/watchdog/sunxi_wdt.c                             | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/watchdog/pnx4008_wdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-index 62dd5baad70e..49900e72f6b1 100644
---- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-@@ -6,9 +6,13 @@ Required properties:
-                "allwinner,sun6i-a31-wdt"
- - reg : Specifies base physical address and size of the registers.
- 
-+Optional properties:
-+- timeout-sec : Contains the watchdog timeout in seconds
-+
- Example:
- 
- wdt: watchdog@1c20c90 {
- 	compatible = "allwinner,sun4i-a10-wdt";
- 	reg = <0x01c20c90 0x10>;
-+	timeout-sec = <10>;
- };
-diff --git a/drivers/watchdog/sunxi_wdt.c b/drivers/watchdog/sunxi_wdt.c
-index 9728fa32c357..55f166bec0ca 100644
---- a/drivers/watchdog/sunxi_wdt.c
-+++ b/drivers/watchdog/sunxi_wdt.c
-@@ -39,7 +39,7 @@
- #define DRV_VERSION		"1.0"
+diff --git a/drivers/watchdog/pnx4008_wdt.c b/drivers/watchdog/pnx4008_wdt.c
+index 0529aed158a4..8e261799c84e 100644
+--- a/drivers/watchdog/pnx4008_wdt.c
++++ b/drivers/watchdog/pnx4008_wdt.c
+@@ -78,7 +78,7 @@
+ #define WDOG_COUNTER_RATE 13000000	/*the counter clock is 13 MHz fixed */
  
  static bool nowayout = WATCHDOG_NOWAYOUT;
--static unsigned int timeout = WDT_MAX_TIMEOUT;
-+static unsigned int timeout;
+-static unsigned int heartbeat = DEFAULT_HEARTBEAT;
++static unsigned int heartbeat;
  
- /*
-  * This structure stores the register offsets for different variants
+ static DEFINE_SPINLOCK(io_lock);
+ static void __iomem	*wdt_base;
 -- 
 2.15.1
 
