@@ -1,176 +1,222 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: zynq: Add support for Xilinx zc770 xm013 dc4
- board
-Date: Fri, 9 Feb 2018 09:51:27 +0100
-Message-ID: <6f40dd95-f6bf-aac8-33ac-9fef54447ec3@monstr.eu>
-References: <cover.1516200065.git.michal.simek@xilinx.com>
- <3be3cd00b710827da46817693748eb6bcee00f82.1516200065.git.michal.simek@xilinx.com>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="5my7p98b9AF2yURmqZd8tsqLc0maeMY2Z"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3be3cd00b710827da46817693748eb6bcee00f82.1516200065.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 01/10] ARM: dts: exynos: Remove "cooling-{min|max}-level" for CPU nodes
+Date: Fri,  9 Feb 2018 14:28:01 +0530
+Message-ID: <f808613a9c7a4f23d3a0c64b6f3d4df1b905b16b.1518166039.git.viresh.kumar@linaro.org>
+References: <cover.1518166039.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <cover.1518166039.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1518166039.git.viresh.kumar@linaro.org>
+References: <cover.1518166039.git.viresh.kumar@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---5my7p98b9AF2yURmqZd8tsqLc0maeMY2Z
-Content-Type: multipart/mixed; boundary="q897L7kDGoBoYlN1n41AM4Rz1SluKSpYl";
- protected-headers="v1"
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>,
- Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Message-ID: <6f40dd95-f6bf-aac8-33ac-9fef54447ec3-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: zynq: Add support for Xilinx zc770 xm013 dc4
- board
-References: <cover.1516200065.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
- <3be3cd00b710827da46817693748eb6bcee00f82.1516200065.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-In-Reply-To: <3be3cd00b710827da46817693748eb6bcee00f82.1516200065.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+The "cooling-min-level" and "cooling-max-level" properties are not
+parsed by any part of the kernel currently and the max cooling state of
+a CPU cooling device is found by referring to the cpufreq table instead.
 
---q897L7kDGoBoYlN1n41AM4Rz1SluKSpYl
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Remove the unused properties from the CPU nodes.
 
-On 17.1.2018 15:41, Michal Simek wrote:
-> zc770 is based board which is extended by FMC/DC cards for SoC
-> validation. FMCs/DCs are supposed to cover all SoC configurations.
-> FMC/DC contains can, ethernet, i2c, qspi, spi and uart.
->=20
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
->=20
->  arch/arm/boot/dts/Makefile             |  1 +
->  arch/arm/boot/dts/zynq-zc770-xm013.dts | 78 ++++++++++++++++++++++++++=
-++++++++
->  2 files changed, 79 insertions(+)
->  create mode 100644 arch/arm/boot/dts/zynq-zc770-xm013.dts
->=20
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 6bd4b9a29511..44be37afa544 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1044,6 +1044,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) +=3D \
->  	zynq-zc770-xm010.dtb \
->  	zynq-zc770-xm011.dtb \
->  	zynq-zc770-xm012.dtb \
-> +	zynq-zc770-xm013.dtb \
->  	zynq-zed.dtb \
->  	zynq-zybo.dtb
->  dtb-$(CONFIG_MACH_ARMADA_370) +=3D \
-> diff --git a/arch/arm/boot/dts/zynq-zc770-xm013.dts b/arch/arm/boot/dts=
-/zynq-zc770-xm013.dts
-> new file mode 100644
-> index 000000000000..ad3e1d108a9b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/zynq-zc770-xm013.dts
-> @@ -0,0 +1,78 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Xilinx ZC770 XM013 board DTS
-> + *
-> + * Copyright (C) 2013 Xilinx, Inc.
-> + */
-> +/dts-v1/;
-> +#include "zynq-7000.dtsi"
-> +
-> +/ {
-> +	compatible =3D "xlnx,zynq-zc770-xm013", "xlnx,zynq-7000";
-> +	model =3D "Xilinx Zynq";
-> +
-> +	aliases {
-> +		ethernet0 =3D &gem1;
-> +		i2c0 =3D &i2c1;
-> +		serial0 =3D &uart0;
-> +		spi1 =3D &spi0;
-> +	};
-> +
-> +	chosen {
-> +		bootargs =3D "";
-> +		stdout-path =3D "serial0:115200n8";
-> +	};
-> +
-> +	memory@0 {
-> +		device_type =3D "memory";
-> +		reg =3D <0x0 0x40000000>;
-> +	};
-> +};
-> +
-> +&can1 {
-> +	status =3D "okay";
-> +};
-> +
-> +&gem1 {
-> +	status =3D "okay";
-> +	phy-mode =3D "rgmii-id";
-> +	phy-handle =3D <&ethernet_phy>;
-> +
-> +	ethernet_phy: ethernet-phy@7 {
-> +		reg =3D <7>;
-> +		device_type =3D "ethernet-phy";
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	status =3D "okay";
-> +	clock-frequency =3D <400000>;
-> +
-> +	si570: clock-generator@55 {
-> +		#clock-cells =3D <0>;
-> +		compatible =3D "silabs,si570";
-> +		temperature-stability =3D <50>;
-> +		reg =3D <0x55>;
-> +		factory-fout =3D <156250000>;
-> +		clock-frequency =3D <148500000>;
-> +	};
-> +};
-> +
-> +&spi0 {
-> +	status =3D "okay";
-> +	num-cs =3D <4>;
-> +	is-decoded-cs =3D <0>;
-> +	eeprom: at25@0 {
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ arch/arm/boot/dts/exynos4210.dtsi      |  2 --
+ arch/arm/boot/dts/exynos4412.dtsi      |  2 --
+ arch/arm/boot/dts/exynos5250.dtsi      |  2 --
+ arch/arm/boot/dts/exynos5420-cpus.dtsi | 16 ----------------
+ arch/arm/boot/dts/exynos5422-cpus.dtsi | 16 ----------------
+ 5 files changed, 38 deletions(-)
 
-This should be probably eeprom: eeprom@25.
-
-Rob: Do you see any other issue with this series? Or can I apply?
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
-
-
-
---q897L7kDGoBoYlN1n41AM4Rz1SluKSpYl--
-
---5my7p98b9AF2yURmqZd8tsqLc0maeMY2Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEARECAAYFAlp9YRMACgkQykllyylKDCHuKwCfVwcFWuSHE0zJRuPZddNY11gf
-ylYAn2Olmoo0JgPJN6JXGszdHhFnSUHt
-=v/W0
------END PGP SIGNATURE-----
-
---5my7p98b9AF2yURmqZd8tsqLc0maeMY2Z--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+index cc978cf28267..58ab34a233da 100644
+--- a/arch/arm/boot/dts/exynos4210.dtsi
++++ b/arch/arm/boot/dts/exynos4210.dtsi
+@@ -49,8 +49,6 @@
+ 				400000	975000
+ 				200000	950000
+ 			>;
+-			cooling-min-level = <4>;
+-			cooling-max-level = <2>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index e4ad2fc0329e..5f5cc12f2075 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -42,8 +42,6 @@
+ 			clocks = <&clock CLK_ARM_CLK>;
+ 			clock-names = "cpu";
+ 			operating-points-v2 = <&cpu0_opp_table>;
+-			cooling-min-level = <13>;
+-			cooling-max-level = <7>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 56626d1a4235..bb4180ef7885 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -77,8 +77,6 @@
+ 				 300000  937500
+ 				 200000  925000
+ 			>;
+-			cooling-min-level = <15>;
+-			cooling-max-level = <9>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 		};
+ 		cpu@1 {
+diff --git a/arch/arm/boot/dts/exynos5420-cpus.dtsi b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+index 123f0cef658d..a8e449471304 100644
+--- a/arch/arm/boot/dts/exynos5420-cpus.dtsi
++++ b/arch/arm/boot/dts/exynos5420-cpus.dtsi
+@@ -30,8 +30,6 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <11>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <1024>;
+ 		};
+@@ -43,8 +41,6 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <11>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <1024>;
+ 		};
+@@ -56,8 +52,6 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <11>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <1024>;
+ 		};
+@@ -69,8 +63,6 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <11>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <1024>;
+ 		};
+@@ -83,8 +75,6 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <7>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <539>;
+ 		};
+@@ -96,8 +86,6 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <7>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <539>;
+ 		};
+@@ -109,8 +97,6 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <7>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <539>;
+ 		};
+@@ -122,8 +108,6 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <7>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <539>;
+ 		};
+diff --git a/arch/arm/boot/dts/exynos5422-cpus.dtsi b/arch/arm/boot/dts/exynos5422-cpus.dtsi
+index c593809c7f08..7c130a00d1a8 100644
+--- a/arch/arm/boot/dts/exynos5422-cpus.dtsi
++++ b/arch/arm/boot/dts/exynos5422-cpus.dtsi
+@@ -29,8 +29,6 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <11>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <539>;
+ 		};
+@@ -42,8 +40,6 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <11>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <539>;
+ 		};
+@@ -55,8 +51,6 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <11>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <539>;
+ 		};
+@@ -68,8 +62,6 @@
+ 			clock-frequency = <1000000000>;
+ 			cci-control-port = <&cci_control0>;
+ 			operating-points-v2 = <&cluster_a7_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <11>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <539>;
+ 		};
+@@ -82,8 +74,6 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <15>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <1024>;
+ 		};
+@@ -95,8 +85,6 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <15>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <1024>;
+ 		};
+@@ -108,8 +96,6 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <15>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <1024>;
+ 		};
+@@ -121,8 +107,6 @@
+ 			clock-frequency = <1800000000>;
+ 			cci-control-port = <&cci_control1>;
+ 			operating-points-v2 = <&cluster_a15_opp_table>;
+-			cooling-min-level = <0>;
+-			cooling-max-level = <15>;
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			capacity-dmips-mhz = <1024>;
+ 		};
+-- 
+2.15.0.194.g9af6a3dea062
