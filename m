@@ -1,153 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] dt-binding: clock: document NPCM7xx clock DT
- bindings
-Date: Thu, 8 Feb 2018 20:22:38 -0600
-Message-ID: <20180209022238.v52rw5filxcig6mg@rob-hp-laptop>
-References: <1517818975-11427-1-git-send-email-tmaimon77@gmail.com>
- <1517818975-11427-2-git-send-email-tmaimon77@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv3] tlv320dac33: Add device tree bindings
+Date: Thu, 8 Feb 2018 20:25:14 -0600
+Message-ID: <20180209022514.ue6nxxwvv3g4nmva@rob-hp-laptop>
+References: <20180129230539.GA18280@amd> <20180131190112.GA31608@amd>
+ <20b9ff40-a869-a165-07a2-2a103830efb3@ti.com>
+ <20180205082445.GA18274@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1517818975-11427-2-git-send-email-tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <20180205082445.GA18274@amd>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, tony@atomide.com, abcloriens@gmail.com, tiwai@suse.com, Peter Ujfalusi <peter.ujfalusi@ti.com>, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz@gmail.com>, patrikbachan@gmail.com, ivo.g.dimitrov.75@gmail.com, khilman@kernel.org, serge@hallyn.com, devicetree@vger.kernel.org, pali.rohar@gmail.com, broonie@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, martijn@brixit.nl, aaro.koskinen@iki.fi, linux-kernel@vger.kernel.org, clayton@craftyguy.net, sakari.ailus@linux.intel.com, sre@kernel.org, bhumirks@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 05, 2018 at 10:22:54AM +0200, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton NPCM7xx clocks.
+On Mon, Feb 05, 2018 at 09:24:45AM +0100, Pavel Machek wrote:
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../bindings/clock/nuvoton,npcm7xx-clk.txt         | 84 ++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,npcm7xx-clk.txt
+> This adds device tree bindings for tlv320dac33.c.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/nuvoton,npcm7xx-clk.txt b/Documentation/devicetree/bindings/clock/nuvoton,npcm7xx-clk.txt
-> new file mode 100644
-> index 000000000000..1ba1945d3616
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/nuvoton,npcm7xx-clk.txt
-> @@ -0,0 +1,84 @@
-> +* Nuvoton NPCM7XX Clock Controller
-> +
-> +Nuvoton Poleg BMC NPCM7XX contain integrated clock
+> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
-s/contain/contains/
-
-And your line break is strange.
-
-> +controller, which generates and supplies clock to all modules within the BMC.
-
-s/clock/clocks/
-
-> +
-> +Required Properties:
-> +
-> +- compatible: should be one of following:
-> +	- "nuvoton,npcm750-clk" : for clock controller of Nuvoton
-> +	  Poleg BMC NPCM750
-> +
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +
-> +
-> +- #clock-cells: should be 1.
-> +
-> +All available clocks are defined as preprocessor macros in
-> +dt-bindings/clock/nuvoton,npcm7xx-clock.h header and can beused in device tree
-
-This file should be part of this patch.
-
-> +sources.
-> +
-> +External clocks:
-> +
-> +There are several clocks that are generated outside the BMC. All clocks are of
-> +a known fixed value that cannot be chagned. Therefor these values are hard coded
-
-s/chagned/changed/
-
-s/Therefor/Therefore/
-
-> +inside the driver and registered on init.
-> +
-> +The clock modules contains 4 PLL, 20 dividers and 11 muxes. All these settings
-> +are set before Linux boot and are not to be altered by the Linux. This driver is
-> +used only to read the values clocks, not to set them.
-> +
-> +In addition to the clock driver, there are 3 external clocks suppling the
-
-The binding describes h/w, not a driver.
-
-> +network, which are of fixed values, set on on the device tree, but not used by
-> + the clock module. Example can be found below.
-   ^
-extra space
-
-All this description belongs at the top of this doc.
-
-> +
-> +Example: Clock controller node:
-> +
-> +	clk: clock-controller@f0801000 {
-> +		compatible = "nuvoton,npcm750-clk";
-> +		#clock-cells = <1>;
-> +		clock-controller;
-> +		reg = <0xf0801000 0x1000>;
-> +		status = "okay";
-> +	};
-> +
-> +Example: Required external clocks for network:
-> +
-> +		/* external clock signal rg1refck, supplied by the phy */
-> +		clk_rg1refck: clk_rg1refck {
-
-Use '-' rather than '_' in node names.
-
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <125000000>;
-> +			clock-output-names = "clk_rg1refck";
-> +		};
-> +
-> +		/* external clock signal rg2refck, supplied by the phy */
-> +		clk_rg2refck: clk_rg2refck {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <125000000>;
-> +			clock-output-names = "clk_rg2refck";
-> +		};
-> +
-> +		clk_xin: clk_xin {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <50000000>;
-> +			clock-output-names = "clk_xin";
-> +		};
-> +
-> +Example: UART controller node that consumes the clock generated by the clock
-> +  controller (refer to the standard clock bindings for information about
-> +  "clocks" and "clock-names" properties):
-> +
-> +	uart0: serial@e2900000 {
-> +		compatible = "Nuvoton,s5pv210-uart";
-
-s/Nuvoton/nuvoton/
-
-> +		reg = <0xe2900000 0x400>;
-> +		interrupt-parent = <&vic1>;
-> +		interrupts = <10>;
-> +		clock-names = "uart", "clk_uart_baud0",
-> +				"clk_uart_baud1";
-> +		clocks = <&clocks UART0>, <&clocks UART0>,
-> +				<&clocks SCLK_UART0>;
-> +	};
-> -- 
-> 2.14.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
