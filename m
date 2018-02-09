@@ -1,63 +1,95 @@
-From: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: phycore-imx6: set buck regulator modes explicitly
-Date: Fri,  9 Feb 2018 11:05:21 +0100
-Message-ID: <1518170721-28198-4-git-send-email-chf.fritz@googlemail.com>
-References: <1518170721-28198-1-git-send-email-chf.fritz@googlemail.com>
+From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [2/9] phy: add Rockchip Innosilicon hdmi phy
+Date: Fri, 09 Feb 2018 11:06:49 +0100
+Message-ID: <313a1fb7-9ecf-ff94-d9b8-6ec63e80b058@samsung.com>
+References: <20180205143435.4723-3-heiko@sntech.de>
+        <alpine.GSO.2.00.1802052159530.23549@dmz.c-home.cz>
+        <CGME20180209092427epcas3p2f7e08f595f0326c25484c6943237a0e6@epcas3p2.samsung.com>
+        <2860925.eKDKvHpOYg@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518170721-28198-1-git-send-email-chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-reply-to: <2860925.eKDKvHpOYg@phil>
+Content-language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Martin Cerveny <M.Cerveny-bdq14YP6qtRg9hUCZPvPmw@public.gmane.org>
+Cc: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, algea.cao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch sets initial buck regulator modes explicitly to a state
-this hardware needs.  So a wrong initial mode set by bootloader or
-pmic itself does not interfere anymore.
+On 09.02.2018 10:24, Heiko Stuebner wrote:
+> Hi Martin,
+>
+> Am Montag, 5. Februar 2018, 22:32:08 CET schrieb Martin Cerveny:
+>> On Mon, 5 Feb 2018, Heiko Stuebner wrote:
+>>> From: Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>
+>>> Add a driver for the Innosilicon hdmi phy used on rk3228/rk3229
+>>> and rk3328 socs from Rockchip.
+>>>
+>>> Signed-off-by: Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+>>> ---
+>>> +++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+>>> +static u32 inno_hdmi_phy_get_tmdsclk(struct inno_hdmi_phy *inno, int rate)
+>>> +{
+>>> +	int bus_width = phy_get_bus_width(inno->phy);
+>>> +	u32 tmdsclk;
+>>> +
+>>> +	switch (bus_width) {
+>>> +	case 4:
+>>> +		tmdsclk = rate / 2;
+>>> +		break;
+>>> +	case 5:
+>>> +		tmdsclk = rate * 5 / 8;
+>>> +		break;
+>>> +	case 6:
+>>> +		tmdsclk = rate * 3 / 4;
+>>> +		break;
+>>> +	case 10:
+>>> +		tmdsclk = rate * 5 / 4;
+>>> +		break;
+>>> +	case 12:
+>>> +		tmdsclk = rate * 3 / 2;
+>>> +		break;
+>>> +	case 16:
+>>> +		tmdsclk = rate * 2;
+>>> +		break;
+>>> +	default:
+>>> +		tmdsclk = rate;
+>>> +	}
+>>> +
+>>> +	return tmdsclk;
+>>> +}
+>> Please corrects integer overflow 
+>> like https://github.com/mcerveny/rockchip-linux/commit/b4bc703f2dca4e5115b22155920d2277671a9f00
+> thanks for finding that possible issue. I've adapted the phy driver
+> in a similar way (using u64 though) and will include that change in the
+> next version.
 
-Signed-off-by: Christoph Fritz <chf.fritz-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Signed-off-by: Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Btw, wouldn't be simpler to just use:
+switch (bus_width) {
+case 4:
+case 5:
+case 6:
+case 10:
+case 12:
+case 16:
+    return (u64)rate * bus_width / 8;
+default:
+    return rate;
+}
 
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
-index 53e4337..2ad1336 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi
-@@ -109,6 +109,7 @@
- 				regulator-name = "vdd_arm";
- 				regulator-min-microvolt = <730000>;
- 				regulator-max-microvolt = <1380000>;
-+				regulator-initial-mode = <2>; /* SYNC */
- 				regulator-always-on;
- 			};
- 
-@@ -116,6 +117,7 @@
- 				regulator-name = "vdd_soc";
- 				regulator-min-microvolt = <730000>;
- 				regulator-max-microvolt = <1380000>;
-+				regulator-initial-mode = <2>; /* SYNC */
- 				regulator-always-on;
- 			};
- 
-@@ -123,6 +125,7 @@
- 				regulator-name = "vdd_ddr3";
- 				regulator-min-microvolt = <1500000>;
- 				regulator-max-microvolt = <1500000>;
-+				regulator-initial-mode = <2>; /* SYNC */
- 				regulator-always-on;
- 			};
- 
-@@ -130,6 +133,7 @@
- 				regulator-name = "vdd_eth";
- 				regulator-min-microvolt = <1200000>;
- 				regulator-max-microvolt = <1200000>;
-+				regulator-initial-mode = <2>; /* SYNC */
- 				regulator-always-on;
- 			};
- 
--- 
-2.1.4
+Regards
+Andrzej
+
+>
+>
+> Thanks
+> Heiko
+>
+>
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
