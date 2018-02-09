@@ -1,52 +1,77 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [2/9] phy: add Rockchip Innosilicon hdmi phy
-Date: Fri, 09 Feb 2018 10:24:01 +0100
-Message-ID: <2860925.eKDKvHpOYg@phil>
-References: <20180205143435.4723-3-heiko@sntech.de>
- <alpine.GSO.2.00.1802052159530.23549@dmz.c-home.cz>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
+ properties ?
+Date: Fri, 9 Feb 2018 14:54:21 +0530
+Message-ID: <20180209092421.GL28462@vireshk-i7>
+References: <20180207065959.GN28462@vireshk-i7>
+ <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
+ <20180207102446.GS28462@vireshk-i7>
+ <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
+ <20180209064211.GY28462@vireshk-i7>
+ <539699c7-9509-dea2-2b31-c5f6749c99c4@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <alpine.GSO.2.00.1802052159530.23549@dmz.c-home.cz>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Martin Cerveny <M.Cerveny@computer.org>
-Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, kishon@ti.com, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <539699c7-9509-dea2-2b31-c5f6749c99c4-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punit.Agrawal-5wv7dgnIgG8@public.gmane.org, ionela.voinescu-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFydGluLAoKQW0gTW9udGFnLCA1LiBGZWJydWFyIDIwMTgsIDIyOjMyOjA4IENFVCBzY2hy
-aWViIE1hcnRpbiBDZXJ2ZW55Ogo+IE9uIE1vbiwgNSBGZWIgMjAxOCwgSGVpa28gU3R1ZWJuZXIg
-d3JvdGU6Cj4gPiBGcm9tOiBaaGVuZyBZYW5nIDx6aGVuZ3lhbmdAcm9jay1jaGlwcy5jb20+Cj4g
-Pgo+ID4gQWRkIGEgZHJpdmVyIGZvciB0aGUgSW5ub3NpbGljb24gaGRtaSBwaHkgdXNlZCBvbiBy
-azMyMjgvcmszMjI5Cj4gPiBhbmQgcmszMzI4IHNvY3MgZnJvbSBSb2NrY2hpcC4KPiA+Cj4gPiBT
-aWduZWQtb2ZmLWJ5OiBaaGVuZyBZYW5nIDx6aGVuZ3lhbmdAcm9jay1jaGlwcy5jb20+Cj4gPiBT
-aWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+ID4gLS0tCj4g
-PiArKysgYi9kcml2ZXJzL3BoeS9yb2NrY2hpcC9waHktcm9ja2NoaXAtaW5uby1oZG1pLmMKPiA+
-ICtzdGF0aWMgdTMyIGlubm9faGRtaV9waHlfZ2V0X3RtZHNjbGsoc3RydWN0IGlubm9faGRtaV9w
-aHkgKmlubm8sIGludCByYXRlKQo+ID4gK3sKPiA+ICsJaW50IGJ1c193aWR0aCA9IHBoeV9nZXRf
-YnVzX3dpZHRoKGlubm8tPnBoeSk7Cj4gPiArCXUzMiB0bWRzY2xrOwo+ID4gKwo+ID4gKwlzd2l0
-Y2ggKGJ1c193aWR0aCkgewo+ID4gKwljYXNlIDQ6Cj4gPiArCQl0bWRzY2xrID0gcmF0ZSAvIDI7
-Cj4gPiArCQlicmVhazsKPiA+ICsJY2FzZSA1Ogo+ID4gKwkJdG1kc2NsayA9IHJhdGUgKiA1IC8g
-ODsKPiA+ICsJCWJyZWFrOwo+ID4gKwljYXNlIDY6Cj4gPiArCQl0bWRzY2xrID0gcmF0ZSAqIDMg
-LyA0Owo+ID4gKwkJYnJlYWs7Cj4gPiArCWNhc2UgMTA6Cj4gPiArCQl0bWRzY2xrID0gcmF0ZSAq
-IDUgLyA0Owo+ID4gKwkJYnJlYWs7Cj4gPiArCWNhc2UgMTI6Cj4gPiArCQl0bWRzY2xrID0gcmF0
-ZSAqIDMgLyAyOwo+ID4gKwkJYnJlYWs7Cj4gPiArCWNhc2UgMTY6Cj4gPiArCQl0bWRzY2xrID0g
-cmF0ZSAqIDI7Cj4gPiArCQlicmVhazsKPiA+ICsJZGVmYXVsdDoKPiA+ICsJCXRtZHNjbGsgPSBy
-YXRlOwo+ID4gKwl9Cj4gPiArCj4gPiArCXJldHVybiB0bWRzY2xrOwo+ID4gK30KPiAKPiBQbGVh
-c2UgY29ycmVjdHMgaW50ZWdlciBvdmVyZmxvdyAKPiBsaWtlIGh0dHBzOi8vZ2l0aHViLmNvbS9t
-Y2VydmVueS9yb2NrY2hpcC1saW51eC9jb21taXQvYjRiYzcwM2YyZGNhNGU1MTE1YjIyMTU1OTIw
-ZDIyNzc2NzFhOWYwMAoKdGhhbmtzIGZvciBmaW5kaW5nIHRoYXQgcG9zc2libGUgaXNzdWUuIEkn
-dmUgYWRhcHRlZCB0aGUgcGh5IGRyaXZlcgppbiBhIHNpbWlsYXIgd2F5ICh1c2luZyB1NjQgdGhv
-dWdoKSBhbmQgd2lsbCBpbmNsdWRlIHRoYXQgY2hhbmdlIGluIHRoZQpuZXh0IHZlcnNpb24uCgoK
-VGhhbmtzCkhlaWtvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+On 09-02-18, 10:15, Daniel Lezcano wrote:
+> On 09/02/2018 07:42, Viresh Kumar wrote:
+> > On 07-02-18, 11:45, Daniel Lezcano wrote:
+> >> Yes, that is my understanding. cooling-min-level and cooling-max-level
+> >> are not used in the thermal framework code today.
+> > 
+> > Right.
+> > 
+> >> So if they are defined, we should check the cooling-device max and min
+> >> are in the boundaries (if they are different from no-limit).
+> > 
+> > Hmm, I am not sure. We do compare those values (from maps) with the
+> > max reported by the cooling driver, so there is some boundary check
+> > happening. And I don't think it is worth comparing the min/max values
+> > from DT cooling device's nodes. Why not just leave those for the
+> > driver to return (which is already happening btw).
+> > 
+> > I don't think it would be correct for the thermal core to go and look
+> > at the min/max properties of the cooling device directly, as those are
+> > more for the thermal driver's help. The thermal core should just call
+> > the get_max_state() callback and that's it.
+> > 
+> > Anyway, we can take decision on the binding itself after some time but
+> > I will send some patches to get rid of this property from CPU nodes
+> > for now. It doesn't make sense to have it there (anyway it is
+> > optional), as the cpu cooling devices are kind of virtual cooling
+> > devices which rely on OPP or freq-table currently. Maybe I will begin
+> > by just updating one platform and once that is merged, update
+> > everything else as well.
+
+So I eventually updated everything as very small number of platforms
+were actually using it.
+
+https://lkml.kernel.org/r/cover.1518166039.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+
+> What about the "cooling-cells" ? Its usage is unclear in the code and
+> I'm not sure it is really needed.
+
+As I can see, it is actually used (sometimes a bit indirectly).
+
+- This field is used to check if a device is a cooling device or not.
+  For example, the cpu-cooling device wouldn't be registered by the
+  cpufreq drivers unless this property is present in the CPU node. So
+  this is actually used.
+
+- This field (and its value) also comes into picture while parsing the
+  "cooling-maps". The "cooling-device" property in the map needs to
+  have "cooing-cells" + 1 fields. The first one is the cooling-device
+  phandle, followed by min/max states.
+
+-- 
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
