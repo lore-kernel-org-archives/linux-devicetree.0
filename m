@@ -1,71 +1,43 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH v3 2/4] gpio: Add GPIO driver for Nintendo Wii
-Date: Fri, 9 Feb 2018 16:48:08 +0100
-Message-ID: <20180209154807.xkfarpxzpieznfsh@latitude>
-References: <20180209120732.17863-1-j.neuschaefer@gmx.net>
- <20180209120732.17863-3-j.neuschaefer@gmx.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="blzswmp6chmlj3mw"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180209120732.17863-3-j.neuschaefer@gmx.net>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Cc: linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>, linuxppc-dev@lists.ozlabs.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Albert Herranz <albert_herranz@yahoo.es>, Segher Boessenkool <segher@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: am437x-idk: Configure uart0 padconf wakeirq
+Date: Fri,  9 Feb 2018 08:19:13 -0800
+Message-ID: <20180209161913.19542-1-tony@atomide.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+We can use CTRL_CONF_UART0_RXD pad as the wakeirq and then
+the serial console will work with wake up events.
 
---blzswmp6chmlj3mw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Note that the uart still needs to be configured for idle
+timeouts for PM runtime for the wakeirq to get activated.
+That can be done via sysfs to set autosuspend_delay_ms to
+3000, wakeup enabled and and control auto.
 
-On Fri, Feb 09, 2018 at 01:07:29PM +0100, Jonathan Neusch=C3=A4fer wrote:
-> The Nintendo Wii's chipset (called "Hollywood") has a GPIO controller
-> that supports a configurable number of pins (up to 32), interrupts, and
-> some special mechanisms to share the controller between the system's
-> security processor (an ARM926) and the PowerPC CPU. Pin multiplexing is
-> not supported.
->=20
-> This patch adds a basic driver for this GPIO controller. Interrupt
-> support will come in a later patch.
->=20
-> This patch is based on code developed by Albert Herranz and the GameCube
-> Linux Team, file arch/powerpc/platforms/embedded6xx/hlwd-gpio.c,
-> available at https://github.com/DeltaResero/GC-Wii-Linux-Kernels, but
-> has grown quite dissimilar.
->=20
-> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> Cc: Albert Herranz <albert_herranz@yahoo.es>
-> Cc: Segher Boessenkool <segher@kernel.crashing.org>
-> <---
+Cc: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/am437x-idk-evm.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Ooops, I just noticed that I broke the separator here. This should be a
-normal --- line, obviously.
-
-
-Jonathan Neusch=C3=A4fer
-
---blzswmp6chmlj3mw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAABAgAGBQJafcKwAAoJEAgwRJqO81/bYKIQALAd9vMfeRv6ofuyS2/g+wEE
-ZSTvxxfogE+fHJuTxz1eFHlfisMX74qVW7kmjtB01oHhugVkElI4f22vCB+q83+D
-J5dCcxB+QtwoDNURRN3VD2S7dr9oaCmKz2cFSEXBUiM1Kzol1B2W/rmPOPGk6hOv
-Sz8zIfgkGFL/CUqXA7OIqlhccl3vpmg3xTDeVFbMz9L0/m35UzkwHyp3BZ5KhIcJ
-R2EN9+n2ApKmkYgc0ZiiM65TgvKlkXMd3HQQFml86v9naRzaVPgR0Ft+h9s4uDjE
-XhBx96TSi7Zjg4R6a7UfNyoH/watS2L8oiGPt5z+tgqK8zoV3rbwRL/xmoEIWha6
-vVg1ALrb0Ww5d9/XHHWeebG5s8R5dAtA6HGiO6I8mPCGo5Toc+8kvOjQ28/Se6p3
-L9thxpC62pem4aPzlkUPUPn/GV5QHdBz/Lfu9lkjOa9Vx2wgvxkz3WLM4cAVJIna
-h+pfccA/qYHu/BdrU8E5GXJiC3PV+QAbfII18FF9sJSi+PS8wjvb+5pq59eXWxsC
-ENQ9MmxNYstjahGgC4YgeK44zix/i90CGOUkZGTKIN1w/iRF9aKlDAPMbbg/5ptT
-jDka6KhlH/UCPkHT2JPgL/E0i3sGodOJkXOS5GV8yE8WWrCmN0n6tDfLW0E0CuAC
-DVcUna8tarsDfOLtlByd
-=EsLr
------END PGP SIGNATURE-----
-
---blzswmp6chmlj3mw--
+diff --git a/arch/arm/boot/dts/am437x-idk-evm.dts b/arch/arm/boot/dts/am437x-idk-evm.dts
+--- a/arch/arm/boot/dts/am437x-idk-evm.dts
++++ b/arch/arm/boot/dts/am437x-idk-evm.dts
+@@ -533,3 +533,9 @@
+ 		opp-suspend;
+ 	};
+ };
++
++&uart0 {
++	/* UART0 interrupt and CTRL_CONF_UART0_RXD pad as wakeirq */
++	interrupts-extended = <&gic GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
++			      <&am43xx_pinmux 0x170>;
++};
+-- 
+2.16.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
