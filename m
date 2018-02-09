@@ -1,114 +1,109 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v6 2/2] dt-bindings/interrupt-controller: pdc: descibe PDC device binding
-Date: Fri,  9 Feb 2018 09:57:35 -0700
-Message-ID: <20180209165735.19151-3-ilina@codeaurora.org>
-References: <20180209165735.19151-1-ilina@codeaurora.org>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH v3 2/4] gpio: Add GPIO driver for Nintendo Wii
+Date: Fri, 9 Feb 2018 17:58:58 +0100
+Message-ID: <20180209165858.ebm7ed7f4b5uakju@latitude>
+References: <20180209120732.17863-1-j.neuschaefer@gmx.net>
+ <20180209120732.17863-3-j.neuschaefer@gmx.net>
+ <CAHp75Vf=Z7DTMvbacLN+E-hScBD3ZNpnf6Ch+5xm=JNbX2cbVg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="i7quqgrx7stws5lv"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180209165735.19151-1-ilina@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vf=Z7DTMvbacLN+E-hScBD3ZNpnf6Ch+5xm=JNbX2cbVg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, asathyak@codeaurora.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Joel Stanley <joel@jms.id.au>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Albert Herranz <albert_herranz@yahoo.es>, Segher Boessenkool <segher@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Archana Sathyakumar <asathyak@codeaurora.org>
 
-Add device binding documentation for the PDC Interrupt controller on
-QCOM SoC's like the SDM845. The interrupt-controller can be used to
-sense edge low interrupts and wakeup interrupts when the GIC is
-non-operational.
+--i7quqgrx7stws5lv
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- .../bindings/interrupt-controller/qcom,pdc.txt     | 78 ++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+On Fri, Feb 09, 2018 at 05:30:55PM +0200, Andy Shevchenko wrote:
+> On Fri, Feb 9, 2018 at 2:07 PM, Jonathan Neusch=C3=A4fer
+> <j.neuschaefer@gmx.net> wrote:
+> > The Nintendo Wii's chipset (called "Hollywood") has a GPIO controller
+> > that supports a configurable number of pins (up to 32), interrupts, and
+> > some special mechanisms to share the controller between the system's
+> > security processor (an ARM926) and the PowerPC CPU. Pin multiplexing is
+> > not supported.
+> >
+> > This patch adds a basic driver for this GPIO controller. Interrupt
+> > support will come in a later patch.
+> >
+> > This patch is based on code developed by Albert Herranz and the GameCube
+> > Linux Team, file arch/powerpc/platforms/embedded6xx/hlwd-gpio.c,
+> > available at https://github.com/DeltaResero/GC-Wii-Linux-Kernels, but
+> > has grown quite dissimilar.
+> >
+>=20
+> Fine to me, though one comment below.
+> In any case,
+>=20
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-new file mode 100644
-index 000000000000..0b2c97ddb520
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-@@ -0,0 +1,78 @@
-+PDC interrupt controller
-+
-+Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
-+Power Domain Controller (PDC) that is on always-on domain. In addition to
-+providing power control for the power domains, the hardware also has an
-+interrupt controller that can be used to help detect edge low interrupts as
-+well detect interrupts when the GIC is non-operational.
-+
-+GIC is parent interrupt controller at the highest level. Platform interrupt
-+controller PDC is next in hierarchy, followed by others. Drivers requiring
-+wakeup capabilities of their device interrupts routed through the PDC, must
-+specify PDC as their interrupt controller and request the PDC port associated
-+with the GIC interrupt. See example below.
-+
-+Properties:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should contain "qcom,<soc>-pdc"
-+		    - "qcom,sdm845-pdc": For SDM845
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Specifies the base physical address for PDC hardware.
-+
-+- interrupt-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Specifies the number of cells needed to encode an interrupt
-+		    source.
-+		    Must be 2.
-+		    The first element of the tuple is the PDC pin for the
-+		    interrupt.
-+		    The second element is the trigger type.
-+
-+- interrupt-parent:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: Specifies the interrupt parent necessary for hierarchical
-+		    domain to operate.
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <bool>
-+	Definition: Identifies the node as an interrupt controller.
-+
-+- qcom,pdc-ranges:
-+	Usage: required
-+	Value type: <u32 array>
-+	Definition: Specifies the PDC pin offset and the number of PDC ports.
-+		    The tuples indicates the valid mapping of valid PDC ports
-+		    and their hwirq mapping.
-+		    The first element of the tuple is the starting PDC port.
-+		    The second element is the GIC hwirq number for the PDC port.
-+		    The third element is the number of interrupts in sequence.
-+
-+Example:
-+
-+	pdc: interrupt-controller@b220000 {
-+		compatible = "qcom,sdm845-pdc";
-+		reg = <0xb220000 0x30000>;
-+		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
-+		#interrupt-cells = <2>;
-+		interrupt-parent = <&intc>;
-+		interrupt-controller;
-+	};
-+
-+DT binding of a device that wants to use the GIC SPI 514 as a wakeup
-+interrupt, must do -
-+
-+	wake-device {
-+		interrupts-extended = <&pdc 2 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+In this case interrupt 514 would be mapped to port 2 on the PDC as defined by
-+the qcom,pdc-ranges property.
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thank you.
+
+
+[...]
+> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> > index d6a8e851ad13..47606dfe06cc 100644
+> > --- a/drivers/gpio/Kconfig
+> > +++ b/drivers/gpio/Kconfig
+> > @@ -229,6 +229,15 @@ config GPIO_GRGPIO
+> >           Select this to support Aeroflex Gaisler GRGPIO cores from the=
+ GRLIB
+> >           VHDL IP core library.
+> >
+> > +config GPIO_HLWD
+> > +       tristate "Nintendo Wii (Hollywood) GPIO"
+>=20
+> > +       depends on OF_GPIO
+>=20
+> You may get rid of it if...
+
+[ Even if this driver isn't switched to the unified device property API,
+  I think "depends on OF" would be enough here, because it doesn't use
+  the code that's guarded by CONFIG_OF_GPIO (gpiolib-of.c), but this
+  applies to other drivers (e.g. gpio-aspeed, gpio-bcm-kona) as well, so
+  this would ideally be a bigger cleanup patch. ]
+
+
+> > +       res =3D of_property_read_u32(pdev->dev.of_node, "ngpios", &ngpi=
+os);
+>=20
+> ...if you switch to unified device property API.
+
+I don't think this change is worth making, unless/until the of_property
+API is deprecated. I'm rather sure this GPIO controller won't appear in
+an ACPI-based system.
+
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--i7quqgrx7stws5lv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJafdNLAAoJEAgwRJqO81/bixcQAIr1riJeusqVnVSqFoRF5AnI
+E5rzLIjuyrWdakM/xRDFvHhKJs2CVNVWyzxsPefEfdYZjPx7jxy9g2ZC0fOR8MRd
+F26NvxC6+x5piXsGXixyWdveWSe5ePsp041xQylW/6J8c9rWN6/H2K0PFaig/oEC
+eRuzu3Ow4G4m6PHYDeiorz7CHZGKYF9bCqPxSXhJRL1GWv2eahlB6MHe+fnSxI/3
+YogJGou88lMQryAG2zLy2JUuXMFR2wcixjso8Np9VwqQiTIWTr+ONqhMDx/P7rfB
+IU1PW027x/571T7dC40jDrtGERe7IPtGtqx86qnO71cczBJFla6Hu8Tjdirs+haZ
++0AeTpshCXNEG2Hnb1FML9LzO5bMwTqMWFsF8loek4XtJR9/ZJ/xmLk6ieE1ShWD
++yjjgPpMoqeGFaCZkwzITFZ9XbUV51nuElSLWbwFjagUAzWx48G5/2iml6coFlCA
+a4Z17JNZw9ue68es/nakJiwPiUpA7/73Ck8JzIq4AIXdW+Aiz8H72rnudqCX6qZ5
+ccBbhW2VgAtSE7RYQqK6i6q09Y1RzheUqTwhcDIQ+kGAhWeGCG02mzOHcyUYPUGG
+tsBoqPTeqibSkmo4ZMYTKDacXFq5MYdTZ5M/rxz+sXxLKVYFzNJwHbzvogCXom2G
+6YvcnxSVm0mft+2eLQqs
+=SLYv
+-----END PGP SIGNATURE-----
+
+--i7quqgrx7stws5lv--
