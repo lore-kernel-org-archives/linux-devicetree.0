@@ -1,29 +1,49 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Input: gpio_keys: Add level trigger support for GPIO keys
-Date: Thu, 8 Feb 2018 22:39:00 -0800
-Message-ID: <CAKdAkRQ6+9=GUJfoMT_gtwS8DqWKeH9FAqPG2BFzL9GPbPNB4w@mail.gmail.com>
-References: <6c53b9ccfd4a56fc1b00e243bb9e7cae9e124932.1518155780.git.baolin.wang@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
+ properties ?
+Date: Fri, 9 Feb 2018 12:12:11 +0530
+Message-ID: <20180209064211.GY28462@vireshk-i7>
+References: <20180207065959.GN28462@vireshk-i7>
+ <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
+ <20180207102446.GS28462@vireshk-i7>
+ <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6c53b9ccfd4a56fc1b00e243bb9e7cae9e124932.1518155780.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stephen lu <lumotuwe-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kate Stewart <kstewart-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Punit.Agrawal@arm.com, ionela.voinescu@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 8, 2018 at 10:08 PM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On some platforms (such as Spreadtrum platform), the GPIO keys can only
-> be triggered by level type.
+On 07-02-18, 11:45, Daniel Lezcano wrote:
+> Yes, that is my understanding. cooling-min-level and cooling-max-level
+> are not used in the thermal framework code today.
 
-How do you stop the interrupt from re-triggering as long as the key
-stays pressed?
+Right.
 
-Thanks.
+> So if they are defined, we should check the cooling-device max and min
+> are in the boundaries (if they are different from no-limit).
+
+Hmm, I am not sure. We do compare those values (from maps) with the
+max reported by the cooling driver, so there is some boundary check
+happening. And I don't think it is worth comparing the min/max values
+from DT cooling device's nodes. Why not just leave those for the
+driver to return (which is already happening btw).
+
+I don't think it would be correct for the thermal core to go and look
+at the min/max properties of the cooling device directly, as those are
+more for the thermal driver's help. The thermal core should just call
+the get_max_state() callback and that's it.
+
+Anyway, we can take decision on the binding itself after some time but
+I will send some patches to get rid of this property from CPU nodes
+for now. It doesn't make sense to have it there (anyway it is
+optional), as the cpu cooling devices are kind of virtual cooling
+devices which rely on OPP or freq-table currently. Maybe I will begin
+by just updating one platform and once that is merged, update
+everything else as well.
 
 -- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+viresh
