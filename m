@@ -1,97 +1,61 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Heiko Stuebner <heiko@sntech.de>
 Subject: Re: [2/9] phy: add Rockchip Innosilicon hdmi phy
-Date: Fri, 09 Feb 2018 11:06:49 +0100
-Message-ID: <313a1fb7-9ecf-ff94-d9b8-6ec63e80b058@samsung.com>
-References: <20180205143435.4723-3-heiko@sntech.de>
-        <alpine.GSO.2.00.1802052159530.23549@dmz.c-home.cz>
-        <CGME20180209092427epcas3p2f7e08f595f0326c25484c6943237a0e6@epcas3p2.samsung.com>
-        <2860925.eKDKvHpOYg@phil>
+Date: Fri, 09 Feb 2018 11:10:49 +0100
+Message-ID: <1776656.PJyHqu906x@phil>
+References: <20180205143435.4723-3-heiko@sntech.de> <2860925.eKDKvHpOYg@phil>
+ <313a1fb7-9ecf-ff94-d9b8-6ec63e80b058@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <2860925.eKDKvHpOYg@phil>
-Content-language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Martin Cerveny <M.Cerveny-bdq14YP6qtRg9hUCZPvPmw@public.gmane.org>
-Cc: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, algea.cao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <313a1fb7-9ecf-ff94-d9b8-6ec63e80b058@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, kishon@ti.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, Martin Cerveny <M.Cerveny@computer.org>, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 09.02.2018 10:24, Heiko Stuebner wrote:
-> Hi Martin,
->
-> Am Montag, 5. Februar 2018, 22:32:08 CET schrieb Martin Cerveny:
->> On Mon, 5 Feb 2018, Heiko Stuebner wrote:
->>> From: Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>>
->>> Add a driver for the Innosilicon hdmi phy used on rk3228/rk3229
->>> and rk3328 socs from Rockchip.
->>>
->>> Signed-off-by: Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->>> ---
->>> +++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
->>> +static u32 inno_hdmi_phy_get_tmdsclk(struct inno_hdmi_phy *inno, int rate)
->>> +{
->>> +	int bus_width = phy_get_bus_width(inno->phy);
->>> +	u32 tmdsclk;
->>> +
->>> +	switch (bus_width) {
->>> +	case 4:
->>> +		tmdsclk = rate / 2;
->>> +		break;
->>> +	case 5:
->>> +		tmdsclk = rate * 5 / 8;
->>> +		break;
->>> +	case 6:
->>> +		tmdsclk = rate * 3 / 4;
->>> +		break;
->>> +	case 10:
->>> +		tmdsclk = rate * 5 / 4;
->>> +		break;
->>> +	case 12:
->>> +		tmdsclk = rate * 3 / 2;
->>> +		break;
->>> +	case 16:
->>> +		tmdsclk = rate * 2;
->>> +		break;
->>> +	default:
->>> +		tmdsclk = rate;
->>> +	}
->>> +
->>> +	return tmdsclk;
->>> +}
->> Please corrects integer overflow 
->> like https://github.com/mcerveny/rockchip-linux/commit/b4bc703f2dca4e5115b22155920d2277671a9f00
-> thanks for finding that possible issue. I've adapted the phy driver
-> in a similar way (using u64 though) and will include that change in the
-> next version.
-
-Btw, wouldn't be simpler to just use:
-switch (bus_width) {
-case 4:
-case 5:
-case 6:
-case 10:
-case 12:
-case 16:
-    return (u64)rate * bus_width / 8;
-default:
-    return rate;
-}
-
-Regards
-Andrzej
-
->
->
-> Thanks
-> Heiko
->
->
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QW0gRnJlaXRhZywgOS4gRmVicnVhciAyMDE4LCAxMTowNjo0OSBDRVQgc2NocmllYiBBbmRyemVq
+IEhhamRhOgo+IE9uIDA5LjAyLjIwMTggMTA6MjQsIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+ID4g
+SGkgTWFydGluLAo+ID4KPiA+IEFtIE1vbnRhZywgNS4gRmVicnVhciAyMDE4LCAyMjozMjowOCBD
+RVQgc2NocmllYiBNYXJ0aW4gQ2VydmVueToKPiA+PiBPbiBNb24sIDUgRmViIDIwMTgsIEhlaWtv
+IFN0dWVibmVyIHdyb3RlOgo+ID4+PiBGcm9tOiBaaGVuZyBZYW5nIDx6aGVuZ3lhbmdAcm9jay1j
+aGlwcy5jb20+Cj4gPj4+Cj4gPj4+IEFkZCBhIGRyaXZlciBmb3IgdGhlIElubm9zaWxpY29uIGhk
+bWkgcGh5IHVzZWQgb24gcmszMjI4L3JrMzIyOQo+ID4+PiBhbmQgcmszMzI4IHNvY3MgZnJvbSBS
+b2NrY2hpcC4KPiA+Pj4KPiA+Pj4gU2lnbmVkLW9mZi1ieTogWmhlbmcgWWFuZyA8emhlbmd5YW5n
+QHJvY2stY2hpcHMuY29tPgo+ID4+PiBTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVp
+a29Ac250ZWNoLmRlPgo+ID4+PiAtLS0KPiA+Pj4gKysrIGIvZHJpdmVycy9waHkvcm9ja2NoaXAv
+cGh5LXJvY2tjaGlwLWlubm8taGRtaS5jCj4gPj4+ICtzdGF0aWMgdTMyIGlubm9faGRtaV9waHlf
+Z2V0X3RtZHNjbGsoc3RydWN0IGlubm9faGRtaV9waHkgKmlubm8sIGludCByYXRlKQo+ID4+PiAr
+ewo+ID4+PiArCWludCBidXNfd2lkdGggPSBwaHlfZ2V0X2J1c193aWR0aChpbm5vLT5waHkpOwo+
+ID4+PiArCXUzMiB0bWRzY2xrOwo+ID4+PiArCj4gPj4+ICsJc3dpdGNoIChidXNfd2lkdGgpIHsK
+PiA+Pj4gKwljYXNlIDQ6Cj4gPj4+ICsJCXRtZHNjbGsgPSByYXRlIC8gMjsKPiA+Pj4gKwkJYnJl
+YWs7Cj4gPj4+ICsJY2FzZSA1Ogo+ID4+PiArCQl0bWRzY2xrID0gcmF0ZSAqIDUgLyA4Owo+ID4+
+PiArCQlicmVhazsKPiA+Pj4gKwljYXNlIDY6Cj4gPj4+ICsJCXRtZHNjbGsgPSByYXRlICogMyAv
+IDQ7Cj4gPj4+ICsJCWJyZWFrOwo+ID4+PiArCWNhc2UgMTA6Cj4gPj4+ICsJCXRtZHNjbGsgPSBy
+YXRlICogNSAvIDQ7Cj4gPj4+ICsJCWJyZWFrOwo+ID4+PiArCWNhc2UgMTI6Cj4gPj4+ICsJCXRt
+ZHNjbGsgPSByYXRlICogMyAvIDI7Cj4gPj4+ICsJCWJyZWFrOwo+ID4+PiArCWNhc2UgMTY6Cj4g
+Pj4+ICsJCXRtZHNjbGsgPSByYXRlICogMjsKPiA+Pj4gKwkJYnJlYWs7Cj4gPj4+ICsJZGVmYXVs
+dDoKPiA+Pj4gKwkJdG1kc2NsayA9IHJhdGU7Cj4gPj4+ICsJfQo+ID4+PiArCj4gPj4+ICsJcmV0
+dXJuIHRtZHNjbGs7Cj4gPj4+ICt9Cj4gPj4gUGxlYXNlIGNvcnJlY3RzIGludGVnZXIgb3ZlcmZs
+b3cgCj4gPj4gbGlrZSBodHRwczovL2dpdGh1Yi5jb20vbWNlcnZlbnkvcm9ja2NoaXAtbGludXgv
+Y29tbWl0L2I0YmM3MDNmMmRjYTRlNTExNWIyMjE1NTkyMGQyMjc3NjcxYTlmMDAKPiA+IHRoYW5r
+cyBmb3IgZmluZGluZyB0aGF0IHBvc3NpYmxlIGlzc3VlLiBJJ3ZlIGFkYXB0ZWQgdGhlIHBoeSBk
+cml2ZXIKPiA+IGluIGEgc2ltaWxhciB3YXkgKHVzaW5nIHU2NCB0aG91Z2gpIGFuZCB3aWxsIGlu
+Y2x1ZGUgdGhhdCBjaGFuZ2UgaW4gdGhlCj4gPiBuZXh0IHZlcnNpb24uCj4gCj4gQnR3LCB3b3Vs
+ZG4ndCBiZSBzaW1wbGVyIHRvIGp1c3QgdXNlOgo+IHN3aXRjaCAoYnVzX3dpZHRoKSB7Cj4gY2Fz
+ZSA0Ogo+IGNhc2UgNToKPiBjYXNlIDY6Cj4gY2FzZSAxMDoKPiBjYXNlIDEyOgo+IGNhc2UgMTY6
+Cj4gICAgIHJldHVybiAodTY0KXJhdGUgKiBidXNfd2lkdGggLyA4Owo+IGRlZmF1bHQ6Cj4gICAg
+IHJldHVybiByYXRlOwo+IH0KCnlvdSdyZSBhIGdlbml1cyA7LSkgLgpJIG11c3QgYmUgbG9va2lu
+ZyBhdCB0aGlzIGNvZGUgZm9yIHdheSB0byBsb25nIHRvIG5vdCBzZWUgdGhpcyByZWxhdGlvbi4K
+CgpUaGFua3MKSGVpa28KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
