@@ -1,70 +1,49 @@
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Subject: [PATCH 5/7] watchdog: mtk: allow setting timeout in devicetree
-Date: Fri,  9 Feb 2018 20:27:22 +0100
-Message-ID: <20180209192724.1227-6-marcus.folkesson@gmail.com>
+From: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] watchdog: sama5d4: make use of timeout-secs provided
+ in devicetree
+Date: Fri, 9 Feb 2018 20:32:25 +0100
+Message-ID: <20180209193225.GA1932@gmail.com>
 References: <marcus.folkesson@gmail.com>
  <20180209192724.1227-1-marcus.folkesson@gmail.com>
+ <20180209192724.1227-2-marcus.folkesson@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180209192724.1227-1-marcus.folkesson@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Barry Song <baohua@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Marcus Folkesson <marcus.folkesson@gmail.com>, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180209192724.1227-2-marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-watchdog_init_timeout() will allways pick timeout_param since it
-defaults to a valid timeout.
+The summary email did not make it for some reason.
 
-By following best practice described in
-Documentation/watchdog/watchdog-kernel-api.txt, it also
-let us to set timout-sec property in devicetree.
+However.
+All these drivers is using watchdog_init_timeout() to set timeout.
+If the timeout-parameter is set to an valid value, it will allways pick
+that and not even consider if timeout-secs is set in devicetree.
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
----
- Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 4 ++++
- drivers/watchdog/mtk_wdt.c                             | 2 +-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Most of the patches will just remove the initial value for
+timeout-parameter.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-index 5b38a30e608c..859dee167b91 100644
---- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-@@ -11,9 +11,13 @@ Required properties:
- 
- - reg : Specifies base physical address and size of the registers.
- 
-+Optional properties:
-+- timeout-sec: contains the watchdog timeout in seconds.
-+
- Example:
- 
- wdt: watchdog@10000000 {
- 	compatible = "mediatek,mt6589-wdt";
- 	reg = <0x10000000 0x18>;
-+	timeout-sec = <10>;
- };
-diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
-index 7ed417a765c7..fcdc10ec28a3 100644
---- a/drivers/watchdog/mtk_wdt.c
-+++ b/drivers/watchdog/mtk_wdt.c
-@@ -57,7 +57,7 @@
- #define DRV_VERSION		"1.0"
- 
- static bool nowayout = WATCHDOG_NOWAYOUT;
--static unsigned int timeout = WDT_MAX_TIMEOUT;
-+static unsigned int timeout;
- 
- struct mtk_wdt_dev {
- 	struct watchdog_device wdt_dev;
--- 
-2.15.1
+Some of the drivers allready has documented device-tree-bindings for
+timeout-secs (but will not work), add property for those which not.
+
+I wrote a similiar (tested) patch for imx2 and simply did the same to these drivers.
+These patches is *NOT* tested, so please review extra carefully.
+
+
+Taken from Documentation/watchdog/watchdog-kernel-api.txt:
+	The watchdog_init_timeout function allows you to initialize the timeout field
+	using the module timeout parameter or by retrieving the timeout-sec property from
+	the device tree (if the module timeout parameter is invalid). Best practice is
+	to set the default timeout value as timeout value in the watchdog_device and
+	then use this function to set the user "preferred" timeout value.
+
+
+Best regards
+Marcus Folkesson
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
