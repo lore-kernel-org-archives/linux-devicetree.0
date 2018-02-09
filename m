@@ -1,34 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] dt-bindings: add binding for Rockchip hdmi phy using
- an Innosilicon IP
-Date: Thu, 8 Feb 2018 20:34:33 -0600
-Message-ID: <20180209023433.fgumy7ic6ol45x45@rob-hp-laptop>
-References: <20180205143435.4723-1-heiko@sntech.de>
- <20180205143435.4723-2-heiko@sntech.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 6/8] ASoC: samsung: i2s: Update clock-output-names
+ property documentation
+Date: Thu, 8 Feb 2018 20:36:17 -0600
+Message-ID: <20180209023617.ifjdibfe4xgdj27w@rob-hp-laptop>
+References: <20180205154403.13520-1-s.nawrocki@samsung.com>
+ <CGME20180205154529epcas2p3478546ef61294ac06cd9d8ed3d7e12c9@epcas2p3.samsung.com>
+ <20180205154403.13520-7-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180205143435.4723-2-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, algea.cao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20180205154403.13520-7-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, krzk@kernel.org, jcsing.lee@samsung.com, sbkim73@samsung.com, linux-kernel@vger.kernel.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 05, 2018 at 03:34:27PM +0100, Heiko Stuebner wrote:
-> From: Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Mon, Feb 05, 2018 at 04:44:01PM +0100, Sylwester Nawrocki wrote:
+> The clock-output-names property is marked as deprecated. While at it,
+> #clock-cells property's value is corrected in the example snippet
+> and few typos are fixed.
 > 
-> The phy is used so far in two Rockchip socs the rk3228 and the rk3328.
-> 
-> Signed-off-by: Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 > ---
->  .../bindings/phy/phy-rockchip-inno-hdmi.txt        | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-hdmi.txt
+>  .../devicetree/bindings/sound/samsung-i2s.txt          | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Rob Herring <robh@kernel.org>
