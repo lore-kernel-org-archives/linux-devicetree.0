@@ -1,114 +1,184 @@
-From: Emmanuel Vadot <manu@bidouilliste.com>
-Subject: Re: [PATCH] Revert "ARM: dts: sunxi: Add regulators for Sinovoip
- BPI-M2"
-Date: Fri, 09 Feb 2018 22:20:57 +0100
-Message-ID: <c59ee4bd3246172ec62705967bb8f751@megadrive.org>
-References: <20180203112353.13497-1-icenowy@aosc.io>
- <20180205095558.2e713c24cdb7c3232943db52@bidouilliste.com>
- <207CD143-6535-42C9-BEF3-9D2614336482@aosc.io>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <207CD143-6535-42C9-BEF3-9D2614336482@aosc.io>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org
+From: Ken Lin <yungching0725-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [v4] ARM: dts: imx: Add support for Advantech DMS-BA16
+Date: Sat, 10 Feb 2018 05:53:52 +0800
+Message-ID: <20180209215352.31015-1-yungching0725@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0wMi0wNSAxMDowNSwgSWNlbm93eSBaaGVuZyB3cm90ZToKPiDkuo4gMjAxOOW5tDLm
-nIg15pelIEdNVCswODowMCDkuIvljYg0OjU1OjU4LCBFbW1hbnVlbCBWYWRvdCA8bWFudUBiaWRv
-dWlsbGlzdGUuY29tPiAKPiDlhpnliLA6Cj4+IAo+PiBIZWxsbywKPj4gCj4+IE9uIFNhdCwgIDMg
-RmViIDIwMTggMTk6MjM6NTMgKzA4MDAKPj4gSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLmlv
-PiB3cm90ZToKPj4gCj4+PiBUaGlzIHJldmVydHMgY29tbWl0IDdkYWEyMTM3MDA3NThiNWIwOGZj
-MGRhYWIwOWJiMTM5ZGQzMzQxNjUuCj4+PiAKPj4+IFRoZSBvcmlnaW5hbCBjb21taXQgaGFzIHNl
-dmVyYWwgcHJvYmxlbXM6Cj4+PiAKPj4+IC0gdmRkLWNwdXMgYW5kIGFsZG8zIChBVkNDIG9mIHRo
-ZSBTb0MpIGFyZSBub3Qgc2V0IHRvIGFsd2F5cy1vbiwKPj4gd2hpY2gKPj4+IGxlYWRzIHRvIHN5
-c3RlbSBoYW5nIHdoZW4gZGlzYWJsaW5nIHVudXNlZCByZWd1bGF0b3JzLgo+PiAKPj4gSW5kZWVk
-IEkgc2hvdWxkIGhhdmUgbWFrZSB0aG9zZSBhbHdheXMtb24uCj4+IAo+Pj4gLSBHTUFDICh3aGlj
-aCB1c2VzIGRsZG8xIGFuZCBhbGRvMikgYW5kIFdpLUZpICh3aGljaCB1c2VzIGFsZG8xKSBhcmUK
-Pj4gbm90Cj4+PiBjb25zaWRlcmVkLCBhbmQgd2lsbCBmYWlsIHRvIHdvcmsgYWZ0ZXIgYWRkaW5n
-IHRoaXMgY29tbWl0Lgo+PiAKPj4gV2hpbGUgSSB1bmRlcnN0YW5kIHRoZSBwcm9ibGVtIHdpdGgg
-dmRkLWNwdXMgYW5kIGFsZG8zIEkgZG9uJ3Qgc2VlIHdoeQo+PiB3aGVuIHlvdSBkb24ndCBkZWNs
-YXJlIHJlZ3VsYXRvciB0aGUgY29kZSBzaG91bGQgZG8gc29tZXRoaW5nIHdpdGggaXQuCj4+IERU
-IGlzIHN1cHBvc2VkIHRvIGRlc2NyaWJlIHRoZSBoYXJkd2FyZSBhbmQgdGhlIGNvZGUgc2hvdWxk
-IG5vdCB1c2UKPj4gaGFyZHdhcmUgbm90IGRlc2NyaWJlZCByaWdodCA/Cj4+IFRoZSBnbWFjIG5v
-ZGUgZG9lc24ndCBkZWNsYXJlIGFueSByZWd1bGF0b3JzIGFuZCB0aGUgbW1jMiB1c2VzCj4+IHJl
-Z192Y2MzdjAgKGhhdmVuJ3QgY2hlY2tlZCBvbiB0aGUgc2NoZW1hdGljcyB5ZXQgaWYgaXQgaXMg
-Y29ycmVjdCkuCj4gCj4gSXQncyBiZWNhdXNlIHRoZSByZWd1bGF0b3Igc3VwcG9ydCBpc24ndCBw
-cmVzZW50IGJlZm9yZQo+IHRoaXMgY29tbWl0LiBIb3dldmVyIHRoZXNlIHBhcnRzIHJlYWxseSBu
-ZWVkIHNwZWNpYWwKPiByZWd1bGF0b3JzLiBJIGRvbid0IGhhdmUgTTIgc2NoZW1hdGljcyBhdCBo
-YW5kLCBzbyB5b3UnZAo+IGNoZWNrIGl0IGJ5IHlvdXJzZWxmLgoKICBZZXMgYnV0IHdoeSBkb2Vz
-IHRoZSBQTUlDIHNob3VsZCBkaXNhYmxlIHJlZ3VsYXRvcnMgbm90IGRlZmluZWQgaW4gdGhlIApE
-VFMgPyBUaGF0IHRoZSBwYXJ0IEkgZG9uJ3QgdW5kZXJzdGFuZCBhbmQgd2FudCB0byBrbm93IHdo
-ZXJlIGl0IGlzIApkZXNjcmliZWQvZG9jdW1lbnRlZC4KCj4gUC5TLiBhIHByb3BlciBkZXZpY2Ug
-dHJlZSB3aXRoIEFYUCBzaG91bGRuJ3QgdXNlCj4gcmVnX3ZjYzN2MC8zdjMvMXY4L2V0Yy4gVGhl
-eSdyZSBkdW1teQo+IHJlZ3VsYXRvciBub2RlcyBmb3IKPiBub3QgaW1wbGVtZW50ZWQgb3Igbm90
-IGNvbnRyb2xsYWJsZSByZWd1bGF0b3JzLgo+IAo+PiAKPj4+IFRoaXMgaW5kaWNhdGVzIHRoYXQg
-dGhpcyBwYXRjaCBzaG91bGQgYmUgbm90IHRlc3RlZCBhdCBhbGwuCj4+IAo+PiBUaGlzIGhhdmUg
-aW5kZWVkIG5vdCBiZWVuIHRlc3RlZCB3aXRoIGxpbnV4Lgo+PiBJIHRoaW5rIHRoYXQgdGhpcyBj
-b21taXQgc2hvdWxkIG5vdCBiZSByZXZlcnRlZCwgSSdsbCBzZW5kIGEgcHJvcGVyCj4+IHBhdGNo
-IHRvbmlnaHQgb3IgdG9tb3JvdyBuaWdodCBtYXguCj4gCj4gUGxlYXNlIHRlc3QgcGF0Y2hlcyBz
-ZW50IHRvIExpbnV4IG9uIExpbnV4IDotKQoKICBJZiBteSBwYXRjaGVzIGFkaGVyZSB0byB0aGUg
-YmluZGluZ3MgSSBkb24ndCBzZWUgd2h5LgoKPj4gCj4+IFAuUy46IEFsc28gYXMgSSdtIHRoZSBv
-cmlnaW5hbCBzZW5kZXIgSSB0aGluayBJIHNob3VsZCBoYXZlIGJlZW4gaW4gQ0MKPj4gbm8gPwo+
-IAo+IGdldF9tYWludGFpbmVyLnBsIGRpZG4ndCBtZW50aW9uIHlvdSBhbmQgSSBmb3Jnb3QuLi4g
-c29ycnkuCj4gCj4+IAo+PiBDaGVlcnMsCj4+IAo+Pj4gU2lnbmVkLW9mZi1ieTogSWNlbm93eSBa
-aGVuZyA8aWNlbm93eUBhb3NjLmlvPgo+Pj4gLS0tCj4+PiAgYXJjaC9hcm0vYm9vdC9kdHMvc3Vu
-NmktYTMxcy1zaW5vdm9pcC1icGktbTIuZHRzIHwgNTcKPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDU3IGRlbGV0aW9ucygtKQo+Pj4gCj4+PiBkaWZmIC0t
-Z2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuNmktYTMxcy1zaW5vdm9pcC1icGktbTIuZHRzCj4+
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuNmktYTMxcy1zaW5vdm9pcC1icGktbTIuZHRzCj4+PiBp
-bmRleCA1MWU2ZjFkMjFjMzIuLmE1NjUzMTZlYjM0MCAxMDA2NDQKPj4+IC0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL3N1bjZpLWEzMXMtc2lub3ZvaXAtYnBpLW0yLmR0cwo+Pj4gKysrIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvc3VuNmktYTMxcy1zaW5vdm9pcC1icGktbTIuZHRzCj4+PiBAQCAtODYsMTAg
-Kzg2LDYgQEAKPj4+ICAJfTsKPj4+ICB9Owo+Pj4gCj4+PiAtJmNwdTAgewo+Pj4gLQljcHUtc3Vw
-cGx5ID0gPCZyZWdfZGNkYzM+Owo+Pj4gLX07Cj4+PiAtCj4+PiAgJmVoY2kwIHsKPj4+ICAJc3Rh
-dHVzID0gIm9rYXkiOwo+Pj4gIH07Cj4+PiBAQCAtMTU1LDE3ICsxNTEsNiBAQAo+Pj4gIAlzdGF0
-dXMgPSAib2theSI7Cj4+PiAgfTsKPj4+IAo+Pj4gLSZwMndpIHsKPj4+IC0Jc3RhdHVzID0gIm9r
-YXkiOwo+Pj4gLQo+Pj4gLQlheHAyMng6IHBtaWNANjggewo+Pj4gLQkJY29tcGF0aWJsZSA9ICJ4
-LXBvd2VycyxheHAyMjEiOwo+Pj4gLQkJcmVnID0gPDB4Njg+Owo+Pj4gLQkJaW50ZXJydXB0LXBh
-cmVudCA9IDwmbm1pX2ludGM+Owo+Pj4gLQkJaW50ZXJydXB0cyA9IDwwIElSUV9UWVBFX0xFVkVM
-X0xPVz47Cj4+PiAtCX07Cj4+PiAtfTsKPj4+IC0KPj4+ICAmcGlvIHsKPj4+ICAJZ21hY19waHlf
-cmVzZXRfcGluX2JwaV9tMjogZ21hY19waHlfcmVzZXRfcGluQDAgewo+Pj4gIAkJcGlucyA9ICJQ
-QTIxIjsKPj4+IEBAIC0xOTEsNDggKzE3Niw2IEBACj4+PiAgCX07Cj4+PiAgfTsKPj4+IAo+Pj4g
-LSNpbmNsdWRlICJheHAyMnguZHRzaSIKPj4+IC0KPj4+IC0mcmVnX2RjNWxkbyB7Cj4+PiAtCXJl
-Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDcwMDAwMD47Cj4+PiAtCXJlZ3VsYXRvci1tYXgtbWlj
-cm92b2x0ID0gPDEzMjAwMDA+Owo+Pj4gLQlyZWd1bGF0b3ItbmFtZSA9ICJ2ZGQtY3B1cyI7Cj4+
-PiAtfTsKPj4+IC0KPj4+IC0mcmVnX2RjZGMxIHsKPj4+IC0JcmVndWxhdG9yLWFsd2F5cy1vbjsK
-Pj4+IC0JcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzAwMDAwMD47Cj4+PiAtCXJlZ3VsYXRv
-ci1tYXgtbWljcm92b2x0ID0gPDMwMDAwMDA+Owo+Pj4gLQlyZWd1bGF0b3ItbmFtZSA9ICJ2ZGQt
-M3YwIjsKPj4+IC19Owo+Pj4gLQo+Pj4gLSZyZWdfZGNkYzIgewo+Pj4gLQlyZWd1bGF0b3ItbWlu
-LW1pY3Jvdm9sdCA9IDw3MDAwMDA+Owo+Pj4gLQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwx
-MzIwMDAwPjsKPj4+IC0JcmVndWxhdG9yLW5hbWUgPSAidmRkLWdwdSI7Cj4+PiAtfTsKPj4+IC0K
-Pj4+IC0mcmVnX2RjZGMzIHsKPj4+IC0JcmVndWxhdG9yLWFsd2F5cy1vbjsKPj4+IC0JcmVndWxh
-dG9yLW1pbi1taWNyb3ZvbHQgPSA8NzAwMDAwPjsKPj4+IC0JcmVndWxhdG9yLW1heC1taWNyb3Zv
-bHQgPSA8MTMyMDAwMD47Cj4+PiAtCXJlZ3VsYXRvci1uYW1lID0gInZkZC1jcHUiOwo+Pj4gLX07
-Cj4+PiAtCj4+PiAtJnJlZ19kY2RjNCB7Cj4+PiAtCXJlZ3VsYXRvci1hbHdheXMtb247Cj4+PiAt
-CXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDcwMDAwMD47Cj4+PiAtCXJlZ3VsYXRvci1tYXgt
-bWljcm92b2x0ID0gPDEzMjAwMDA+Owo+Pj4gLQlyZWd1bGF0b3ItbmFtZSA9ICJ2ZGQtc3lzLWRs
-bCI7Cj4+PiAtfTsKPj4+IC0KPj4+IC0mcmVnX2RjZGM1IHsKPj4+IC0JcmVndWxhdG9yLWFsd2F5
-cy1vbjsKPj4+IC0JcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTUwMDAwMD47Cj4+PiAtCXJl
-Z3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE1MDAwMDA+Owo+Pj4gLQlyZWd1bGF0b3ItbmFtZSA9
-ICJ2Y2MtZHJhbSI7Cj4+PiAtfTsKPj4+IC0KPj4+ICAmdWFydDAgewo+Pj4gIAlwaW5jdHJsLW5h
-bWVzID0gImRlZmF1bHQiOwo+Pj4gIAlwaW5jdHJsLTAgPSA8JnVhcnQwX3BpbnNfYT47Cj4+PiAt
-LQo+Pj4gMi4xNS4xCj4+PiAKPj4+IAo+Pj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KPj4+IGxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cj4+PiBs
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4+IGh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo+IAo+IF9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
-ZWwKCi0tIApFbW1hbnVlbCBWYWRvdCA8bWFudUBiaWRvdWlsbGlzdGUuY29tPiA8bWFudUBmcmVl
-YnNkLm9yZz4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LWFybS1rZXJuZWwK
+Add support for Advantech DMS-BA16 board, which uses
+the Advantech BA-16 module.
+
+Signed-off-by: Ken Lin <yungching0725-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile           |   1 +
+ arch/arm/boot/dts/imx6q-dms-ba16.dts | 139 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 140 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-dms-ba16.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ade7a38543dc..585c3da4a47a 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -435,6 +435,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-dfi-fs700-m60.dtb \
+ 	imx6q-display5-tianma-tm070-1280x768.dtb \
+ 	imx6q-dmo-edmqmx6.dtb \
++	imx6q-dms-ba16.dtb \
+ 	imx6q-evi.dtb \
+ 	imx6q-gk802.dtb \
+ 	imx6q-gw51xx.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-dms-ba16.dts b/arch/arm/boot/dts/imx6q-dms-ba16.dts
+new file mode 100644
+index 000000000000..57761f3172fa
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-dms-ba16.dts
+@@ -0,0 +1,139 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include "imx6q-ba16.dtsi"
++
++/ {
++	model = "Advantech DMS-BA16";
++	compatible = "advantech,imx6q-dms-ba16", "advantech,imx6q-ba16", "fsl,imx6q";
++
++	reg_usb_otg_vbus: regulator-usbotgvbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_usbotgvbus>;
++		gpio = <&gpio4 15 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	sys_mclk: clock-sys-mclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <22000000>;
++	};
++
++	sound {
++		compatible = "fsl,imx6q-ba16-sgtl5000",
++			     "fsl,imx-audio-sgtl5000";
++		model = "imx6q-ba16-sgtl5000";
++		ssi-controller = <&ssi1>;
++		audio-codec = <&sgtl5000>;
++		audio-routing =
++			"MIC_IN", "Mic Jack",
++			"Mic Jack", "Mic Bias",
++			"Headphone Jack", "HP_OUT";
++		mux-int-port = <1>;
++		mux-ext-port = <4>;
++	};
++};
++
++&ecspi5 {
++	cs-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ecspi5>;
++	status = "okay";
++
++	m25_eeprom: m25p80@0 {
++		compatible = "atmel,at25256B", "atmel,at25";
++		spi-max-frequency = <20000000>;
++		size = <0x8000>;
++		pagesize = <64>;
++		reg = <0>;
++		address-width = <16>;
++	};
++};
++
++&iomuxc {
++	pinctrl_i2c1_gpio: i2c1gpiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26        0x1b0b0
++			MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27        0x1b0b0
++		>;
++	};
++
++	pinctrl_i2c2_gpio: i2c2gpiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL3__GPIO4_IO12 0x1b0b0
++			MX6QDL_PAD_KEY_ROW3__GPIO4_IO13 0x1b0b0
++		>;
++	};
++
++	pinctrl_i2c3_gpio: i2c3gpiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_3__GPIO1_IO03   0x1b0b0
++			MX6QDL_PAD_GPIO_6__GPIO1_IO06   0x1b0b0
++		>;
++	};
++
++	pinctrl_usbotgvbus: usbotgvbusgrp {
++		fsl,pins = <
++			MX6QDL_PAD_ENET_RX_ER__USB_OTG_ID 0x17059
++			MX6QDL_PAD_KEY_ROW4__GPIO4_IO15 0x000b0
++		>;
++	};
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	sgtl5000: codec@a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++		clocks = <&sys_mclk>;
++		lrclk-strength = <0x3>;
++		VDDA-supply = <&reg_1p8v>;
++		VDDIO-supply = <&reg_3p3v>;
++	};
++};
++
++&pwm2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm2>;
++	status = "okay";
++};
++
++&sata {
++	fsl,no-spread-spectrum;
++	fsl,transmit-atten-16ths = <12>;
++	fsl,transmit-boost-mdB = <3330>;
++	fsl,transmit-level-mV = <1133>;
++	fsl,receive-dpll-mode = <1>;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	dr_mode = "otg";
++	disable-over-current;
++	status = "okay";
++};
++
++&usdhc4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc4>;
++	bus-width = <8>;
++	cd-gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
++	no-1-8-v;
++	keep-power-in-suspend;
++	wakeup-source;
++	status = "okay";
++};
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
