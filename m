@@ -1,21 +1,22 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 2/7] watchdog: sunxi: allow setting timeout in devicetree
-Date: Fri, 9 Feb 2018 14:39:04 -0800
-Message-ID: <20180209223904.GC19627@roeck-us.net>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 3/7] watchdog: sirfsoc: allow setting timeout in
+ devicetree
+Date: Fri, 9 Feb 2018 14:40:25 -0800
+Message-ID: <20180209224025.GD19627@roeck-us.net>
 References: <marcus.folkesson@gmail.com>
  <20180209192724.1227-1-marcus.folkesson@gmail.com>
- <20180209192724.1227-3-marcus.folkesson@gmail.com>
+ <20180209192724.1227-4-marcus.folkesson@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180209192724.1227-3-marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20180209192724.1227-4-marcus.folkesson@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Barry Song <baohua@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 09, 2018 at 08:27:19PM +0100, Marcus Folkesson wrote:
+On Fri, Feb 09, 2018 at 08:27:20PM +0100, Marcus Folkesson wrote:
 > watchdog_init_timeout() will allways pick timeout_param since it
 > defaults to a valid timeout.
 > 
@@ -23,50 +24,47 @@ On Fri, Feb 09, 2018 at 08:27:19PM +0100, Marcus Folkesson wrote:
 > Documentation/watchdog/watchdog-kernel-api.txt, it also
 > let us to set timout-sec property in devicetree.
 > 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
 > ---
->  Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 4 ++++
->  drivers/watchdog/sunxi_wdt.c                             | 2 +-
+>  Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt | 4 ++++
+>  drivers/watchdog/sirfsoc_wdt.c                             | 2 +-
 >  2 files changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> index 62dd5baad70e..49900e72f6b1 100644
-> --- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-> @@ -6,9 +6,13 @@ Required properties:
->                 "allwinner,sun6i-a31-wdt"
->  - reg : Specifies base physical address and size of the registers.
+> diff --git a/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt b/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
+> index 9cbc76c89b2b..0dce5e3100b4 100644
+> --- a/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
+> @@ -5,10 +5,14 @@ Required properties:
+>  - reg: Address range of tick timer/WDT register set
+>  - interrupts: interrupt number to the cpu
 >  
 > +Optional properties:
 > +- timeout-sec : Contains the watchdog timeout in seconds
 > +
 >  Example:
 >  
->  wdt: watchdog@1c20c90 {
->  	compatible = "allwinner,sun4i-a10-wdt";
->  	reg = <0x01c20c90 0x10>;
-> +	timeout-sec = <10>;
+>  timer@b0020000 {
+>  	compatible = "sirf,prima2-tick";
+>  	reg = <0xb0020000 0x1000>;
+>  	interrupts = <0>;
+> +	timeout-sec = <30>;
 >  };
-> diff --git a/drivers/watchdog/sunxi_wdt.c b/drivers/watchdog/sunxi_wdt.c
-> index 9728fa32c357..55f166bec0ca 100644
-> --- a/drivers/watchdog/sunxi_wdt.c
-> +++ b/drivers/watchdog/sunxi_wdt.c
-> @@ -39,7 +39,7 @@
->  #define DRV_VERSION		"1.0"
+> diff --git a/drivers/watchdog/sirfsoc_wdt.c b/drivers/watchdog/sirfsoc_wdt.c
+> index 4eea351e09b0..ac0c9d2c4aee 100644
+> --- a/drivers/watchdog/sirfsoc_wdt.c
+> +++ b/drivers/watchdog/sirfsoc_wdt.c
+> @@ -29,7 +29,7 @@
+>  #define SIRFSOC_WDT_MAX_TIMEOUT		(10 * 60)	/* 10 mins */
+>  #define SIRFSOC_WDT_DEFAULT_TIMEOUT	30		/* 30 secs */
 >  
->  static bool nowayout = WATCHDOG_NOWAYOUT;
-> -static unsigned int timeout = WDT_MAX_TIMEOUT;
+> -static unsigned int timeout = SIRFSOC_WDT_DEFAULT_TIMEOUT;
 > +static unsigned int timeout;
+>  static bool nowayout = WATCHDOG_NOWAYOUT;
 >  
->  /*
->   * This structure stores the register offsets for different variants
+>  module_param(timeout, uint, 0);
 > -- 
 > 2.15.1
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
