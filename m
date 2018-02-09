@@ -1,75 +1,81 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/6] PCI: rockchip: Add rockchip,rk3399-pcie-host
- compatible
-Date: Fri, 9 Feb 2018 17:38:57 -0600
-Message-ID: <20180209233857.osoyfvst3waa54b3@rob-hp-laptop>
-References: <1517971650-61555-1-git-send-email-shawn.lin@rock-chips.com>
- <1517971650-61555-5-git-send-email-shawn.lin@rock-chips.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 2/3] Input: gpio-keys - allow setting wakeup interrupt
+ trigger type in DT
+Date: Fri, 9 Feb 2018 15:42:47 -0800
+Message-ID: <20180209234246.GA252335@ban.mtv.corp.google.com>
+References: <20180209115510.11868-1-jeffy.chen@rock-chips.com>
+ <20180209115510.11868-3-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1517971650-61555-5-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20180209115510.11868-3-jeffy.chen@rock-chips.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, briannorris@google.com, dtor@google.com, dianders@google.com, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 07, 2018 at 10:47:28AM +0800, Shawn Lin wrote:
-> To avoid confusion when folks use this controller as endponint
+Hi Jeffy,
 
-s/endponint/endpoint/
-
-> mode, we add rockchip,rk3399-pcie-host to clearly state that
-> it's driver for host here. And rename/update the document to
-> reflect this fact.
+On Fri, Feb 09, 2018 at 07:55:09PM +0800, Jeffy Chen wrote:
+> Allow specifying a different interrupt trigger type for wakeup when
+> using the gpio-keys input device as a wakeup source.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 > ---
 > 
->  .../bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt}         | 3 ++-
->  drivers/pci/rockchip/pcie-rockchip-host.c                              | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (98%)
+>  Documentation/devicetree/bindings/input/gpio-keys.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
-> similarity index 98%
-> rename from Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> rename to Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
-> index af34c65..f2f3091 100644
-> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
-> @@ -5,7 +5,8 @@ Required properties:
->  - #size-cells: Size representation for root ports, set to <2>
->  - #interrupt-cells: specifies the number of cells needed to encode an
->  		interrupt source. The value must be 1.
-> -- compatible: Should contain "rockchip,rk3399-pcie"
-> +- compatible: Should contain "rockchip,rk3399-pcie" or
-> +	"rockchip,rk3399-pcie-host"
+> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
+> index a94940481e55..61926cef708f 100644
+> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
+> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
+> @@ -26,6 +26,15 @@ Optional subnode-properties:
+>  	  If not specified defaults to 5.
+>  	- wakeup-source: Boolean, button can wake-up the system.
+>  			 (Legacy property supported: "gpio-key,wakeup")
+> +	- wakeup-trigger-type: Specifies the interrupt trigger type for wakeup.
+> +		 The value is defined in <dt-bindings/interrupt-controller/irq.h>
 
-I don't think this is necessary. Endpoint is generally the exception and 
-having "endpoint" or "ep" in the endpoint compatible should be enough.
+Do you really want to codify interrupt triggers here? It seems like most
+of the information about edge vs. level is already codified elsewhere,
+so this becomes a little redundant. And in fact, some bindings may be
+specifying a "gpio", not technically an interrupt (at least not
+directly), so it feels weird to apply IRQ_* flags to them right here.
+Anyway, I think he only piece you really want to describe here is, do we
+wake on "event asserted", "event deasserted", or both. (The "none" case
+would just mean you shouldn't have the "wakeup-source" property.)
 
->  - reg: Two register ranges as listed in the reg-names property
->  - reg-names: Must include the following names
->  	- "axi-base"
-> diff --git a/drivers/pci/rockchip/pcie-rockchip-host.c b/drivers/pci/rockchip/pcie-rockchip-host.c
-> index f5b0492..efb740d 100644
-> --- a/drivers/pci/rockchip/pcie-rockchip-host.c
-> +++ b/drivers/pci/rockchip/pcie-rockchip-host.c
-> @@ -1120,6 +1120,7 @@ static int rockchip_pcie_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id rockchip_pcie_of_match[] = {
->  	{ .compatible = "rockchip,rk3399-pcie", },
-> +	{ .compatible = "rockchip,rk3399-pcie-host", },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, rockchip_pcie_of_match);
+So maybe:
+
+	wakeup-trigger-type: Specifies whether the key should wake the
+	system when asserted, when deasserted, or both. This property is
+	only valid for keys that wake up the system (e.g., when the
+	"wakeup-source" property is also provided). Supported values
+	are:
+	  1: asserted
+	  2: deasserted
+	  3: both asserted and deasserted
+
+? We could still make macros out of those, if we want
+(input/linux-event-codes.h?). And then leave it up to the driver to
+determine how to translate that into the appropriate edge or level
+triggers.
+
+Brian
+
+> +		 Only the following flags are supported:
+> +			IRQ_TYPE_NONE
+> +			IRQ_TYPE_EDGE_RISING
+> +			IRQ_TYPE_EDGE_FALLING
+> +			IRQ_TYPE_EDGE_BOTH
+> +			IRQ_TYPE_LEVEL_HIGH
+> +			IRQ_TYPE_LEVEL_LOW
+>  	- linux,can-disable: Boolean, indicates that button is connected
+>  	  to dedicated (not shared) interrupt which can be disabled to
+>  	  suppress events from the button.
 > -- 
-> 1.9.1
+> 2.11.0
 > 
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
