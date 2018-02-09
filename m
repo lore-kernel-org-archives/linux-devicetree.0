@@ -1,49 +1,96 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
- properties ?
-Date: Fri, 9 Feb 2018 12:12:11 +0530
-Message-ID: <20180209064211.GY28462@vireshk-i7>
-References: <20180207065959.GN28462@vireshk-i7>
- <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
- <20180207102446.GS28462@vireshk-i7>
- <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
+From: Yixun Lan <yixun.lan@amlogic.com>
+Subject: [PATCH 1/2] dt-bindings: clock: reset: Add AXG AO Clock and Reset
+ Bindings
+Date: Fri, 9 Feb 2018 15:00:25 +0800
+Message-ID: <20180209070026.193879-2-yixun.lan@amlogic.com>
+References: <20180209070026.193879-1-yixun.lan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Punit.Agrawal@arm.com, ionela.voinescu@arm.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180209070026.193879-1-yixun.lan@amlogic.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: Yixun Lan <yixun.lan@amlogic.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Philipp Zabel <p.zabel@pengutronix.de>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07-02-18, 11:45, Daniel Lezcano wrote:
-> Yes, that is my understanding. cooling-min-level and cooling-max-level
-> are not used in the thermal framework code today.
+Add dt-bindings headers for the Meson-AXG's AO clock and
+reset controller.
 
-Right.
+CC: <devicetree@vger.kernel.org>
+Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+---
+ include/dt-bindings/clock/axg-aoclkc.h | 26 ++++++++++++++++++++++++++
+ include/dt-bindings/reset/axg-aoclkc.h | 20 ++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 include/dt-bindings/clock/axg-aoclkc.h
+ create mode 100644 include/dt-bindings/reset/axg-aoclkc.h
 
-> So if they are defined, we should check the cooling-device max and min
-> are in the boundaries (if they are different from no-limit).
-
-Hmm, I am not sure. We do compare those values (from maps) with the
-max reported by the cooling driver, so there is some boundary check
-happening. And I don't think it is worth comparing the min/max values
-from DT cooling device's nodes. Why not just leave those for the
-driver to return (which is already happening btw).
-
-I don't think it would be correct for the thermal core to go and look
-at the min/max properties of the cooling device directly, as those are
-more for the thermal driver's help. The thermal core should just call
-the get_max_state() callback and that's it.
-
-Anyway, we can take decision on the binding itself after some time but
-I will send some patches to get rid of this property from CPU nodes
-for now. It doesn't make sense to have it there (anyway it is
-optional), as the cpu cooling devices are kind of virtual cooling
-devices which rely on OPP or freq-table currently. Maybe I will begin
-by just updating one platform and once that is merged, update
-everything else as well.
-
+diff --git a/include/dt-bindings/clock/axg-aoclkc.h b/include/dt-bindings/clock/axg-aoclkc.h
+new file mode 100644
+index 000000000000..78683abb4247
+--- /dev/null
++++ b/include/dt-bindings/clock/axg-aoclkc.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD) */
++/*
++ * Copyright (c) 2016 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * Copyright (c) 2018 Amlogic, inc.
++ * Author: Qiufang Dai <qiufang.dai@amlogic.com>
++ */
++
++#ifndef DT_BINDINGS_CLOCK_AMLOGIC_MESON_AXG_AOCLK
++#define DT_BINDINGS_CLOCK_AMLOGIC_MESON_AXG_AOCLK
++
++#define CLKID_AO_REMOTE		0
++#define CLKID_AO_I2C_MASTER	1
++#define CLKID_AO_I2C_SLAVE	2
++#define CLKID_AO_UART1		3
++#define CLKID_AO_UART2		4
++#define CLKID_AO_IR_BLASTER	5
++#define CLKID_AO_SAR_ADC	6
++#define CLKID_AO_CLK81		7
++#define CLKID_AO_SAR_ADC_SEL	8
++#define CLKID_AO_SAR_ADC_DIV	9
++#define CLKID_AO_SAR_ADC_CLK	10
++#define CLKID_AO_ALT_XTAL	11
++
++#endif
+diff --git a/include/dt-bindings/reset/axg-aoclkc.h b/include/dt-bindings/reset/axg-aoclkc.h
+new file mode 100644
+index 000000000000..307f58161bbb
+--- /dev/null
++++ b/include/dt-bindings/reset/axg-aoclkc.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD) */
++/*
++ * Copyright (c) 2016 BayLibre, SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * Copyright (c) 2018 Amlogic, inc.
++ * Author: Qiufang Dai <qiufang.dai@amlogic.com>
++ */
++
++#ifndef DT_BINDINGS_RESET_AMLOGIC_MESON_AXG_AOCLK
++#define DT_BINDINGS_RESET_AMLOGIC_MESON_AXG_AOCLK
++
++#define RESET_AO_REMOTE		0
++#define RESET_AO_I2C_MASTER	1
++#define RESET_AO_I2C_SLAVE	2
++#define RESET_AO_UART1		3
++#define RESET_AO_UART2		4
++#define RESET_AO_IR_BLASTER	5
++
++#endif
 -- 
-viresh
+2.15.1
