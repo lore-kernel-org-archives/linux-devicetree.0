@@ -1,152 +1,41 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH] Documentation: DT: arm: Add topology property to
- define package boundaries
-Date: Fri, 9 Feb 2018 09:43:43 +0000
-Message-ID: <20180209094343.GA18656@red-moon>
-References: <20180122171534.7681-1-lorenzo.pieralisi@arm.com>
- <b58b99e8-dfa3-40d6-aba2-bc1f96170fd6@gmail.com>
- <20180208105702.GA1179@e107981-ln.cambridge.arm.com>
- <d4ef76c3-fb4a-f879-44a8-7322ebde36ac@gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: introduce pclk_vio_grf in eDP device node
+Date: Fri, 09 Feb 2018 10:45:03 +0100
+Message-ID: <2524920.mM517gbyb6@phil>
+References: <20180207163150.16332-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <d4ef76c3-fb4a-f879-44a8-7322ebde36ac-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20180207163150.16332-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>, Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 08, 2018 at 02:22:00PM -0800, Frank Rowand wrote:
-> On 02/08/18 02:57, Lorenzo Pieralisi wrote:
-> > On Mon, Jan 22, 2018 at 08:45:26PM -0800, Frank Rowand wrote:
-> >> On 01/22/18 09:15, Lorenzo Pieralisi wrote:
-> >>> The current ARM DT topology description provides the operating system
-> >>> with a topological view of the system that is based on leaf nodes
-> >>> representing either cores or threads (in an SMT system) and a
-> >>> hierarchical set of cluster nodes that creates a hierarchical topology
-> >>> view of how those cores and threads are grouped.
-> >>>
-> >>> As opposed to the ACPI topology description ([1], PPTT table), this
-> >>> hierarchical representation of clusters does not allow to describe what
-> >>> topology level actually represents the physical package boundary, which
-> >>> is a key piece of information to be used by an operating system to
-> >>> optimize resource allocation and scheduling.
-> >>>
-> >>> Define an optional, backward compatible boolean property for cluster
-> >>> nodes that, by reusing the ACPI nomenclature, add to the ARM DT
-> >>> topological description a binding to define what cluster level
-> >>> represents a physical package boundary.
-> >>>
-> >>> [1] http://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
-> >>>
-> >>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> >>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> >>> Cc: Jeremy Linton <jeremy.linton-5wv7dgnIgG8@public.gmane.org>
-> >>> Cc: Morten Rasmussen <morten.rasmussen-5wv7dgnIgG8@public.gmane.org>
-> >>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/arm/topology.txt | 9 +++++++++
-> >>>  1 file changed, 9 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-> >>> index de9eb0486630..8e78d76b0671 100644
-> >>> --- a/Documentation/devicetree/bindings/arm/topology.txt
-> >>> +++ b/Documentation/devicetree/bindings/arm/topology.txt
-> >>> @@ -109,6 +109,15 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
-> >>>  	The cluster node name must be "clusterN" as described in 2.1 above.
-> >>>  	A cluster node can not be a leaf node.
-> >>>  
-> >>> +	Properties for cluster nodes:
-> >>> +
-> >>> +	- physical-package
-> >>> +		Usage: optional
-> >>> +		Value type: <empty>
-> >>> +		Definition: if present the cluster node represents the
-> >>> +			    boundary of a physical package, whether socketed
-> >>> +			    or surface mounted.
-> >>
-> >> I don't know how to interpret this.  Is the node with this property inside
-> >> or outside the boundary?  If I had to guess, I would guess inside.  A few
-> >> extra words to clarify this please.
-> > 
-> > The node is neither inside nor outside, it _is_ the boundary. Every node
-> > defines a topology level - the property is there to define which one
-> > corresponds to a package, please let me know if it makes things clearer.
+Am Mittwoch, 7. Februar 2018, 17:31:48 CET schrieb Enric Balletbo i Serra:
+> From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> Not at all clear.
+> The pclk_vio_grf supply power for VIO GRF IOs, if it is disabled,
+> driver would failed to operate the VIO GRF registers.
 > 
-> Using Example 1, from section "4 - Example dts" of topology.txt:
+> The clock is optional but one of the side effects of don't have this clk
+> is that the Samsung Chromebook Plus fails to recover display after a
+> suspend/resume with following errors:
 > 
+>     rockchip-dp ff970000.edp: Input stream clock not detected.
+>     rockchip-dp ff970000.edp: Timeout of video streamclk ok
+>     rockchip-dp ff970000.edp: unable to config video
 > 
->        cpu-map {
->                 cluster0 {
->                         cluster0 {
->                                 core0 {
->                                         thread0 {
->                                                 cpu = <&CPU0>;
->                                         };
->                                         thread1 {
->                                                 cpu = <&CPU1>;
->                                         };
->                                 };
-> 
->                                 core1 {
->                                         thread0 {
->                                                 cpu = <&CPU2>;
->                                         };
->                                         thread1 {
->                                                 cpu = <&CPU3>;
->                                         };
->                                 };
->                         };
-> 
->                         cluster1 {
->                                 core0 {
->                                         thread0 {
->                                                 cpu = <&CPU4>;
->                                         };
->                                         thread1 {
->                                                 cpu = <&CPU5>;
->                                         };
->                                 };
-> 
->                                 core1 {
->                                         thread0 {
->                                                 cpu = <&CPU6>;
->                                         };
->                                         thread1 {
->                                                 cpu = <&CPU7>;
->                                         };
->                                 };
->                         };
->                 };
-> 
-> Pretend that cpu-map/cluster0/cluster0 is a physical package that
-> contains two cores, and cpu-map/cluster0/cluster1 is another
-> physical package that contains two cores.  My guess as to how
-> to use the property "physical-package" would be to place it
-> in nodes cpu-map/cluster0/cluster0 and cpu-map/cluster0/cluster1.
-> In that case, those two nodes are on the "inside" of two different
-> packages.
-> 
-> The alternate way to use the property "physical-package" would be
-> to place it in node cpu-map/cluster0.  In this case, the node is
-> "outside" of the packages.
-> 
-> Again, I suspect that the intended use is the first of my two
-> examples, but the proposed binding wording does not make that
-> clear to me.  My use of "inside" and "outside" may not be the
-> proper words or concept, but the binding somehow needs to
-> say which of my two above example locations is the correct place
-> to use the "physical-package" property.
+> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 
-Ok, I see, I will update the description accordingly to make it
-clearer.
+as you said in IRC that his should also fix the failures when rockchip-drm
+is build as module, I've applied this patch as fix for 4.16
 
-Thank you,
-Lorenzo
+
+Thanks
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
