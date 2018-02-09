@@ -1,11 +1,11 @@
 From: Chunyan Zhang <zhang.lyra@gmail.com>
 Subject: [PATCH 2/2] clk: sprd: add RTC gate for SC9860
-Date: Fri,  9 Feb 2018 17:48:11 +0800
-Message-ID: <1518169691-14870-2-git-send-email-zhang.lyra@gmail.com>
-References: <1518169691-14870-1-git-send-email-zhang.lyra@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518169691-14870-1-git-send-email-zhang.lyra@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Date: Fri,  9 Feb 2018 17:55:09 +0800
+Message-ID: <1518170109-15216-1-git-send-email-zhang.lyra@gmail.com>
+References: <1518169691-14870-2-git-send-email-zhang.lyra@gmail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1518169691-14870-2-git-send-email-zhang.lyra@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Chunyan Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
@@ -14,6 +14,9 @@ From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 
 Add a few gate clocks which are used for gating RTC for some
 devices on AON area of SC9860.
+
+This patch has been tested on SC9860, with this patch and proper DT
+configurations, the watchdog can be initialized and work well.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 ---
@@ -123,3 +126,4 @@ index ed5c027..9980ab5 100644
  };
 -- 
 2.7.4
+
