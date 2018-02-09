@@ -1,251 +1,457 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v6 15/15] dt-bindings: cpufreq: Document
- operating-points-v2-krait-cpu
-Date: Fri, 9 Feb 2018 11:01:47 +0530
-Message-ID: <b81953c3-3bbd-2a06-90d3-a3cdd2a86418@codeaurora.org>
-References: <1517890108-8140-1-git-send-email-sricharan@codeaurora.org>
- <1517890108-8140-16-git-send-email-sricharan@codeaurora.org>
- <20180209025449.qvbirdvflijxo62j@rob-hp-laptop>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH v9 6/8] media: i2c: Add TDA1997x HDMI receiver driver
+Date: Thu, 8 Feb 2018 22:01:25 -0800
+Message-ID: <CAJ+vNU1CTUQ9EFiV09XeihSHeAMw3C=0JYFL+NPM=DOTTrAP4w@mail.gmail.com>
+References: <1518043367-11531-1-git-send-email-tharvey@gateworks.com>
+ <1518043367-11531-7-git-send-email-tharvey@gateworks.com> <f19fd00d-66fb-a4a2-295b-d4bfae3b4e51@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20180209025449.qvbirdvflijxo62j@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: viresh.kumar@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <f19fd00d-66fb-a4a2-295b-d4bfae3b4e51@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media <linux-media@vger.kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Feb 8, 2018 at 7:06 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> Hi Tim,
+>
+> I was so hoping I could make a pull request for this, but I still found
+> problems with g/s/query_dv_timings.
+>
+> I strongly suspect that v4l2-compliance would fail if you boot up the system
+> *without* a source connected.
+>
+> And I discovered that I was missing additional checks in the timings tests
+> for v4l2-compliance that would have found the same issue if run with a source
+> connected. I've fixed and committed those tests now. I'll also try to test
+> that a S_DV_TIMINGS calls updates the format.
+>
+> Details below:
+>
+> On 02/07/18 23:42, Tim Harvey wrote:
+>> +struct tda1997x_state {
+>
+> ...
+>
+>> +     struct v4l2_dv_timings timings;
+>> +     const struct v4l2_dv_timings *detected_timings;
+>
+> ...
+>
+>> +/* Configure frame detection window and VHREF timing generator */
+>> +static int
+>> +tda1997x_configure_vhref(struct v4l2_subdev *sd)
+>> +{
+>> +     struct tda1997x_state *state = to_state(sd);
+>> +     const struct v4l2_bt_timings *bt;
+>> +     int width, lines;
+>> +     u16 href_start, href_end;
+>> +     u16 vref_f1_start, vref_f2_start;
+>> +     u8 vref_f1_width, vref_f2_width;
+>> +     u8 field_polarity;
+>> +     u16 fieldref_f1_start, fieldref_f2_start;
+>> +     u8 reg;
+>> +
+>> +     if (!state->detected_timings)
+>> +             return -EINVAL;
+>
+> Why this test? Who cares if there are no detected timings? It's certainly
+> not a failure. S_DV_TIMINGS should succeed regardless of whether there is
+> a signal or not and regardless of the current detected timings.
+>
 
-On 2/9/2018 8:24 AM, Rob Herring wrote:
-> On Tue, Feb 06, 2018 at 09:38:28AM +0530, Sricharan R wrote:
->> In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
->> that has KRAIT processors the voltage/current value of each OPP
->> varies based on the silicon variant in use.
->> operating-points-v2-krait-cpu specifies the phandle to nvmem efuse cells
->> and the operating-points-v2 table for each opp. The qcom-cpufreq driver
->> reads the efuse value from the SoC to provide the required information
->> that is used to determine the voltage and current value for each OPP of
->> operating-points-v2 table when it is parsed by the OPP framework.
->>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>  .../devicetree/bindings/cpufreq/krait-cpufreq.txt  | 363 +++++++++++++++++++++
->>  1 file changed, 363 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/cpufreq/krait-cpufreq.txt
->>
->> diff --git a/Documentation/devicetree/bindings/cpufreq/krait-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/krait-cpufreq.txt
->> new file mode 100644
->> index 0000000..e7351f7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/cpufreq/krait-cpufreq.txt
->> @@ -0,0 +1,363 @@
->> +QCOM KRAIT CPUFreq and OPP bindings
->> +===================================
+good point. Both tda1997x_configure_vhref() and
+tda1997x_configure_csc() should never return an error - I'll change
+that.
+
+>> +     bt = &state->detected_timings->bt;
+>
+> Ouch. The timings passed in with S_DV_TIMINGS should be used.
+>
+> Just use state->timings here, not detected_timings.
+
+Ok. I was thinking the VHREF generator responsible for output timings
+to the SoC should always match the input source but changing it async
+like that could mess with userspace buffers and the like so even
+though the output will be 'wrong' after a resolution change I get that
+I need to wait for userspace to come along and query then set the new
+resolution.
+
+>
+>> +     href_start = bt->hbackporch + bt->hsync + 1;
+>> +     href_end = href_start + bt->width;
+>> +     vref_f1_start = bt->height + bt->vbackporch + bt->vsync +
+>> +                     bt->il_vbackporch + bt->il_vsync +
+>> +                     bt->il_vfrontporch;
+>> +     vref_f1_width = bt->vbackporch + bt->vsync + bt->vfrontporch;
+>> +     vref_f2_start = 0;
+>> +     vref_f2_width = 0;
+>> +     fieldref_f1_start = 0;
+>> +     fieldref_f2_start = 0;
+>> +     if (bt->interlaced) {
+>> +             vref_f2_start = (bt->height / 2) +
+>> +                             (bt->il_vbackporch + bt->il_vsync - 1);
+>> +             vref_f2_width = bt->il_vbackporch + bt->il_vsync +
+>> +                             bt->il_vfrontporch;
+>> +             fieldref_f2_start = vref_f2_start + bt->il_vfrontporch +
+>> +                                 fieldref_f1_start;
+>> +     }
+>> +     field_polarity = 0;
 >> +
->> +In Certain QCOM SoCs like ipq8064, apq8064, msm8960, msm8974
->> +that has KRAIT processors the voltage value of each OPP varies
->> +based on the silicon variant in use. Qualcomm Process Voltage Scaling Tables
->> +defines the voltage and current value based on the speed/pvs/version
->> +combination blown in the efuse. The qcom-cpufreq driver reads the efuse
->> +value from the SoC to provide the OPP framework with required information.
->> +This is used to determine the voltage and current value for each OPP of
->> +operating-points-v2 table when it is parsed by the OPP framework.
+>> +     width = V4L2_DV_BT_FRAME_WIDTH(bt);
+>> +     lines = V4L2_DV_BT_FRAME_HEIGHT(bt);
 >> +
->> +Required properties:
->> +--------------------
->> +In 'cpus' nodes:
->> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
+>> +     /*
+>> +      * Configure Frame Detection Window:
+>> +      *  horiz area where the VHREF module consider a VSYNC a new frame
+>> +      */
+>> +     io_write16(sd, REG_FDW_S, 0x2ef); /* start position */
+>> +     io_write16(sd, REG_FDW_E, 0x141); /* end position */
 >> +
->> +In 'operating-points-v2' table:
->> +- compatible: Should be
->> +	- 'operating-points-v2-krait-cpu' for ipq8064, apq8064, msm8960,
->> +					      msm8974.
->> +- nvmem-cells: A phandle pointing to a nvmem-cells node representing the
->> +		efuse registers that has information about the
->> +		speedbin/pvs/version that is used to select the right
->> +		voltage/current value pair. Note that the length field of the
->> +		nvmem-cell is used to differentiate between format 'A' or 'B'
->> +		efuse settings. len of '4' bytes is for format 'A' and '8'
->> +		bytes for format 'B'. Please refer the for nvmem-cells
->> +		bindings Documentation/devicetree/bindings/nvmem/nvmem.txt
->> +		and also examples below for both the cases.
->> +Example 1:
->> +---------
+>> +     /* Set Pixel And Line Counters */
+>> +     if (state->chip_revision == 0)
+>> +             io_write16(sd, REG_PXCNT_PR, 4);
+>> +     else
+>> +             io_write16(sd, REG_PXCNT_PR, 1);
+>> +     io_write16(sd, REG_PXCNT_NPIX, width & MASK_VHREF);
+>> +     io_write16(sd, REG_LCNT_PR, 1);
+>> +     io_write16(sd, REG_LCNT_NLIN, lines & MASK_VHREF);
 >> +
->> +/* For arch/arm/boot/dts/apq8064.dtsi --> format 'A' */
->> +cpus {
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
+>> +     /*
+>> +      * Configure the VHRef timing generator responsible for rebuilding all
+>> +      * horiz and vert synch and ref signals from its input allowing auto
+>> +      * detection algorithms and forcing predefined modes (480i & 576i)
+>> +      */
+>> +     reg = VHREF_STD_DET_OFF << VHREF_STD_DET_SHIFT;
+>> +     io_write(sd, REG_VHREF_CTRL, reg);
 >> +
->> +	CPU0: cpu@0 {
->> +		compatible = "qcom,krait";
->> +		enable-method = "qcom,kpss-acc-v1";
->> +		device_type = "cpu";
->> +		reg = <0>;
->> +		next-level-cache = <&L2>;
->> +		qcom,acc = <&acc0>;
->> +		qcom,saw = <&saw0>;
->> +		cpu-idle-states = <&CPU_SPC>;
->> +		operating-points-v2 = <&cpu_opp_table>;
->> +	};
+>> +     /*
+>> +      * Configure the VHRef timing values. In case the VHREF generator has
+>> +      * been configured in manual mode, this will allow to manually set all
+>> +      * horiz and vert ref values (non-active pixel areas) of the generator
+>> +      * and allows setting the frame reference params.
+>> +      */
+>> +     /* horizontal reference start/end */
+>> +     io_write16(sd, REG_HREF_S, href_start & MASK_VHREF);
+>> +     io_write16(sd, REG_HREF_E, href_end & MASK_VHREF);
+>> +     /* vertical reference f1 start/end */
+>> +     io_write16(sd, REG_VREF_F1_S, vref_f1_start & MASK_VHREF);
+>> +     io_write(sd, REG_VREF_F1_WIDTH, vref_f1_width);
+>> +     /* vertical reference f2 start/end */
+>> +     io_write16(sd, REG_VREF_F2_S, vref_f2_start & MASK_VHREF);
+>> +     io_write(sd, REG_VREF_F2_WIDTH, vref_f2_width);
+>> +
+>> +     /* F1/F2 FREF, field polarity */
+>> +     reg = fieldref_f1_start & MASK_VHREF;
+>> +     reg |= field_polarity << 8;
+>> +     io_write16(sd, REG_FREF_F1_S, reg);
+>> +     reg = fieldref_f2_start & MASK_VHREF;
+>> +     io_write16(sd, REG_FREF_F2_S, reg);
+>> +
+>> +     return 0;
+>> +}
+<snip>
+>> +static void tda1997x_irq_sus(struct tda1997x_state *state, u8 *flags)
+>> +{
+>> +     struct v4l2_subdev *sd = &state->sd;
+>> +     u8 reg, source;
+>> +
+>> +     source = io_read(sd, REG_INT_FLG_CLR_SUS);
+>> +     io_write(sd, REG_INT_FLG_CLR_SUS, source);
+>> +
+>> +     if (source & MASK_MPT) {
+>> +             /* reset MTP in use flag if set */
+>> +             if (state->mptrw_in_progress)
+>> +                     state->mptrw_in_progress = 0;
+>> +     }
+>> +
+>> +     if (source & MASK_SUS_END) {
+>> +             /* reset audio FIFO */
+>> +             reg = io_read(sd, REG_HDMI_INFO_RST);
+>> +             reg |= MASK_SR_FIFO_FIFO_CTRL;
+>> +             io_write(sd, REG_HDMI_INFO_RST, reg);
+>> +             reg &= ~MASK_SR_FIFO_FIFO_CTRL;
+>> +             io_write(sd, REG_HDMI_INFO_RST, reg);
+>> +
+>> +             /* reset HDMI flags */
+>> +             state->hdmi_status = 0;
+>> +     }
+>> +
+>> +     /* filter FMT interrupt based on SUS state */
+>> +     reg = io_read(sd, REG_SUS_STATUS);
+>> +     if (((reg & MASK_SUS_STATUS) != LAST_STATE_REACHED)
+>> +        || (source & MASK_MPT)) {
+>> +             source &= ~MASK_FMT;
+>> +     }
+>> +
+>> +     if (source & (MASK_FMT | MASK_SUS_END)) {
+>> +             reg = io_read(sd, REG_SUS_STATUS);
+>> +             if ((reg & MASK_SUS_STATUS) != LAST_STATE_REACHED) {
+>> +                     v4l_err(state->client, "BAD SUS STATUS\n");
+>> +                     return;
+>> +             }
+>> +
+>> +             /* There is new activity, the status for HDCP repeater state */
+>> +             state->state_c5_reached = 0;
+>> +
+>> +             /* Detect the new resolution */
+>> +             if (!tda1997x_detect_std(state))
+>> +                     v4l2_subdev_notify_event(&state->sd, &tda1997x_ev_fmt);
+>
+> Why detect a new resolution here? That only need to be done when the user
+> calls query_dv_timings. Just send the event unconditionally to tell userspace
+> that the resolution changed.
+>
+
+Right - don't need to do 'anything' with the new detected timings
+until the user asks about them. I get it now.
+
+>> +     }
+>> +}
+>
+> ...
+>
+>> +/* -----------------------------------------------------------------------------
+>> + * v4l2_subdev_video_ops
+>> + */
+>> +
+>> +static int
+>> +tda1997x_g_input_status(struct v4l2_subdev *sd, u32 *status)
+>> +{
+>> +     struct tda1997x_state *state = to_state(sd);
+>> +
+>> +     mutex_lock(&state->lock);
+>> +     if (state->detected_timings)
+>
+> What this actually tests if the driver was able to detect a valid signal
+> and lock to it.
+>
+> In practice you have three possible outcomes:
+>
+> - There is no HDMI signal at all: return V4L2_IN_ST_NO_SIGNAL
+> - There is a signal, but the receiver could not lock to it: return V4L2_IN_ST_NO_SYNC
+> - There is a signal, and the receiver could lock: return 0.
+>
+> Just because this returns 0, doesn't mean that QUERY_DV_TIMINGS will succeed.
+> There may be other constraints (e.g. the driver doesn't support certain formats
+> such as interlaced) that can cause QUERY_DV_TIMINGS to return an error, even
+> though the receiver could sync.
+>
+> Usually the hardware has some bits that tell whether there is a signal
+> (usually the TMDS clock) and whether it could sync or not (H and V syncs).
+>
+> That's really all you need to test here.
+
+makes sense. I don't have any decent documentation on the TMDS regs
+used in tda1997x_read_activity_status but I can use the some other
+things to determine this.
+
+I don't see v4l2-subdev.c (or anything) ever calling g_input_status.
+How do I test this?
+
+>
+>> +             *status = 0;
+>> +     else
+>> +             *status |= V4L2_IN_ST_NO_SIGNAL;
+>> +     mutex_unlock(&state->lock);
+>> +
+>> +     return 0;
 >> +};
 >> +
->> +qfprom: qfprom@700000 {
->> +	  compatible      = "qcom,qfprom";
->> +	  reg	      = <0x00700000 0x1000>;
->> +	  #address-cells  = <1>;
->> +	  #size-cells     = <1>;
->> +	  ranges;
->> +	  pvs_efuse: pvs {
->> +		reg = <0xc0 0x4>;
->> +	};
+>> +static int tda1997x_s_dv_timings(struct v4l2_subdev *sd,
+>> +                             struct v4l2_dv_timings *timings)
+>> +{
+>> +     struct tda1997x_state *state = to_state(sd);
+>> +     int ret;
+>> +
+>> +     v4l_dbg(1, debug, state->client, "%s\n", __func__);
+>> +     if (!timings)
+>> +             return -EINVAL;
+>
+> These 'if (!timings)' tests are not needed and can be dropped here and
+> elsewhere.
+
+ok
+
+>
+>> +
+>> +     if (v4l2_match_dv_timings(&state->timings, timings, 0, false))
+>> +             return 0; /* no changes */
+>> +
+>> +     if (!v4l2_valid_dv_timings(timings, &tda1997x_dv_timings_cap,
+>> +                                NULL, NULL))
+>> +             return -ERANGE;
+>> +
+>> +     mutex_lock(&state->lock);
+>> +     state->timings = *timings;
+>> +     /* setup frame detection window and VHREF timing generator */
+>> +     ret = tda1997x_configure_vhref(sd);
+>> +     if (ret)
+>> +             goto error;
+>> +     /* configure colorspace conversion */
+>> +     ret = tda1997x_configure_csc(sd);
+>> +     if (ret)
+>> +             goto error;
+>> +     mutex_unlock(&state->lock);
+>> +
+>> +     return 0;
+>> +
+>> +error:
+>> +     mutex_unlock(&state->lock);
+>> +     return ret;
+>> +}
+>> +
+>> +static int tda1997x_g_dv_timings(struct v4l2_subdev *sd,
+>> +                              struct v4l2_dv_timings *timings)
+>> +{
+>> +     struct tda1997x_state *state = to_state(sd);
+>> +
+>> +     v4l_dbg(1, debug, state->client, "%s\n", __func__);
+>> +     if (!timings)
+>> +             return -EINVAL;
+>> +
+>> +     mutex_lock(&state->lock);
+>> +     *timings = state->timings;
+>> +     mutex_unlock(&state->lock);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int tda1997x_query_dv_timings(struct v4l2_subdev *sd,
+>> +                                  struct v4l2_dv_timings *timings)
+>> +{
+>> +     struct tda1997x_state *state = to_state(sd);
+>> +     int ret;
+>> +
+>> +     v4l_dbg(1, debug, state->client, "%s\n", __func__);
+>> +     if (!timings)
+>> +             return -EINVAL;
+>> +
+>> +     memset(timings, 0, sizeof(struct v4l2_dv_timings));
+>> +     mutex_lock(&state->lock);
+>> +     ret = tda1997x_detect_std(state);
+>> +     if (!ret)
+>> +             *timings = *state->detected_timings;
+>
+> I think you can just drop the 'detected_timings' field and just
+> do tda1997x_detect_std(state, timings); here. That way you are not
+> tempted to use 'detected_timings' in places where you shouldn't :-)
+
+done
+
+>
+>> +     mutex_unlock(&state->lock);
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static int tda1997x_s_stream(struct v4l2_subdev *sd, int enable)
+>> +{
+>> +     struct tda1997x_state *state = to_state(sd);
+>> +
+>> +     v4l_dbg(1, debug, state->client, "%s %d\n", __func__, enable);
+>> +     mutex_lock(&state->lock);
+>> +     if (!state->detected_timings)
+>> +             v4l_dbg(1, debug, state->client, "Invalid HDMI signal\n");
+>> +     mutex_unlock(&state->lock);
+>> +
+>> +     return 0;
+>> +}
+>
+> I'd drop this. It isn't helpful.
+
+done
+
+>
+>> +
+>> +static const struct v4l2_subdev_video_ops tda1997x_video_ops = {
+>> +     .g_input_status = tda1997x_g_input_status,
+>> +     .s_dv_timings = tda1997x_s_dv_timings,
+>> +     .g_dv_timings = tda1997x_g_dv_timings,
+>> +     .query_dv_timings = tda1997x_query_dv_timings,
+>> +     .s_stream = tda1997x_s_stream,
 >> +};
 >> +
->> +cpu_opp_table: opp-table {
->> +	compatible = "operating-points-v2-krait-cpu";
->> +	nvmem-cells = <&pvs_efuse>;
 >> +
->> +		/*
->> +		 * Missing opp-shared property means CPUs switch DVFS states
->> +		 * independently.
->> +		 */
+>> +/* -----------------------------------------------------------------------------
+>> + * v4l2_subdev_pad_ops
+>> + */
 >> +
->> +	       opp-918000000 {
->> +			opp-hz = /bits/ 64 <918000000>;
->> +			opp-microvolt-speed0-pvs0-v0 = <1100000>;
-> 
-> Where is this property defined? I'm not that happy with it, but don't 
-> have a better suggestion. Maybe make pvsN be an array of values with 0 
-> for any skipped indexes? The '-v0' seems pointless. 
-> 
+>> +static int tda1997x_init_cfg(struct v4l2_subdev *sd,
+>> +                          struct v4l2_subdev_pad_config *cfg)
+>> +{
+>> +     struct tda1997x_state *state = to_state(sd);
+>> +     struct v4l2_mbus_framefmt *mf;
+>> +
+>> +     mf = v4l2_subdev_get_try_format(sd, cfg, 0);
+>> +     mf->code = state->mbus_codes[0];
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int tda1997x_enum_mbus_code(struct v4l2_subdev *sd,
+>> +                               struct v4l2_subdev_pad_config *cfg,
+>> +                               struct v4l2_subdev_mbus_code_enum *code)
+>> +{
+>> +     struct tda1997x_state *state = to_state(sd);
+>> +
+>> +     v4l_dbg(1, debug, state->client, "%s %d/%d\n", __func__,
+>> +             code->index, ARRAY_SIZE(state->mbus_codes));
+>> +     if (code->index >= ARRAY_SIZE(state->mbus_codes))
+>> +             return -EINVAL;
+>> +
+>> +     if (!state->mbus_codes[code->index])
+>> +             return -EINVAL;
+>> +
+>> +     code->code = state->mbus_codes[code->index];
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int tda1997x_fill_format(struct tda1997x_state *state,
+>> +                             struct v4l2_mbus_framefmt *format)
+>> +{
+>> +     const struct v4l2_bt_timings *bt;
+>> +
+>> +     v4l_dbg(1, debug, state->client, "%s\n", __func__);
+>> +
+>> +     if (!state->detected_timings)
+>> +             return -EINVAL;
+>
+> Ouch. Just drop this.
+>
+>> +
+>> +     memset(format, 0, sizeof(*format));
+>> +     bt = &state->detected_timings->bt;
+>
+> and use &state->timings.bt here. That is how the receiver is configured.
+>
+>> +     format->width = bt->width;
+>> +     format->height = bt->height;
+>> +     format->colorspace = state->colorimetry.colorspace;
+>> +     format->field = (bt->interlaced) ?
+>> +             V4L2_FIELD_SEQ_TB : V4L2_FIELD_NONE;
+>> +
+>> +     return 0;
+>> +}
+>
+> The *only* time you need to care about the actual detected timings is when
+> userspace calls QUERY_DV_TIMINGS. Never anywhere else.
+>
+> s_input_status is used to test some basics (do I have a signal, can I lock)
+> but doesn't go 'in-depth'.
+>
+> If the interrupt routine detects a resolution change or it loses a stable
+> signal, then it sends an event to userspace, but nothing else should change.
+>
+> Look at adv7604.c: the only time it attempts to detect the timings with
+> read_stdi() is when called from query_dv_timings (and log_status for debugging).
 
- 'opp-microvolt' is the property that comes from OPP-V2 bindings and rest
-  of the string "speed%s-pvs%s-v%s" gets concatenated to the string
-  by the cpufreq driver using dev_pm_opp_set_prop_name api. So all
-  the three speed,pvs,v (version) come from efuse and can vary.
-  Just that in the data so far, v is always '0'.
+ok - I get it. Finally sinking in I think!
 
->> +			opp-microvolt-speed0-pvs1-v0 = <1050000>;
->> +			opp-microvolt-speed0-pvs3-v0 = <1000000>;
->> +			opp-microvolt-speed0-pvs4-v0 = <975000>;
->> +			opp-microvolt-speed1-pvs0-v0 = <1025000>;
->> +			opp-microvolt-speed1-pvs1-v0 = <1000000>;
->> +			opp-microvolt-speed1-pvs2-v0 = <950000>;
->> +			opp-microvolt-speed1-pvs3-v0 = <925000>;
->> +			opp-microvolt-speed1-pvs4-v0 = <900000>;
->> +			opp-microvolt-speed1-pvs5-v0 = <900000>;
->> +			opp-microvolt-speed1-pvs6-v0 = <900000>;
->> +			opp-microvolt-speed2-pvs0-v0 = <975000>;
->> +			opp-microvolt-speed2-pvs1-v0 = <950000>;
->> +			opp-microvolt-speed2-pvs2-v0 = <925000>;
->> +			opp-microvolt-speed2-pvs3-v0 = <912500>;
->> +			opp-microvolt-speed2-pvs4-v0 = <900000>;
->> +			opp-microvolt-speed2-pvs5-v0 = <900000>;
->> +			opp-microvolt-speed2-pvs6-v0 = <900000>;
->> +			opp-microvolt-speed14-pvs0-v0 = <1025000>;
->> +			opp-microvolt-speed14-pvs1-v0 = <1000000>;
->> +			opp-microvolt-speed14-pvs2-v0 = <950000>;
->> +			opp-microvolt-speed14-pvs3-v0 = <925000>;
->> +			opp-microvolt-speed14-pvs4-v0 = <900000>;
->> +			opp-microvolt-speed14-pvs5-v0 = <900000>;
->> +			opp-microvolt-speed14-pvs6-v0 = <900000>;
->> +		};
->> +
->> +		opp-810000000 {
->> +			opp-hz = /bits/ 64 <810000000>;
->> +			opp-microvolt-speed0-pvs0-v0 =  < 1075000>;
->> +			opp-microvolt-speed0-pvs1-v0 = 	< 1025000>;
->> +			opp-microvolt-speed0-pvs3-v0 = 	< 975000>;
->> +			opp-microvolt-speed0-pvs3-v0 = 	< 962500>;
->> +			opp-microvolt-speed1-pvs0-v0 = 	< 1000000>;
->> +			opp-microvolt-speed1-pvs1-v0 = 	< 975000>;
->> +			opp-microvolt-speed1-pvs2-v0 = 	< 937500>;
->> +			opp-microvolt-speed1-pvs3-v0 = 	< 900000>;
->> +			opp-microvolt-speed1-pvs4-v0 = 	< 887500>;
->> +			opp-microvolt-speed1-pvs5-v0 = 	< 887500>;
->> +			opp-microvolt-speed1-pvs6-v0 = 	< 887500>;
->> +			opp-microvolt-speed2-pvs0-v0 = 	< 962500>;
->> +			opp-microvolt-speed2-pvs1-v0 = 	< 937500>;
->> +			opp-microvolt-speed2-pvs2-v0 = 	< 912500>;
->> +			opp-microvolt-speed2-pvs3-v0 = 	< 900000>;
->> +			opp-microvolt-speed2-pvs4-v0 = 	< 887500>;
->> +			opp-microvolt-speed2-pvs5-v0 = 	< 887500>;
->> +			opp-microvolt-speed2-pvs6-v0 = 	< 887500>;
-> 
-> Some space then tab issues on the above. Also, drop the space after the 
-> '<'.
-
- ok, will fix it.
-
-> 
->> +			opp-microvolt-speed14-pvs0-v0 =	< 1000000>;
->> +			opp-microvolt-speed14-pvs1-v0 =	< 975000>;
->> +			opp-microvolt-speed14-pvs2-v0 =	< 937500>;
->> +			opp-microvolt-speed14-pvs3-v0 =	< 900000>;
->> +			opp-microvolt-speed14-pvs4-v0 =	< 887500>;
->> +			opp-microvolt-speed14-pvs5-v0 =	< 887500>;
->> +			opp-microvolt-speed14-pvs6-v0 =	< 887500>;
->> +		};
->> +
->> +		opp-702000000 {
->> +			 opp-hz = /bits/ 64 <702000000>;
->> +			 opp-microvolt-speed0-pvs0-v0 =  <1025000>;
->> +			 opp-microvolt-speed0-pvs1-v0 =  <975000>;
->> +			 opp-microvolt-speed0-pvs3-v0 =  <925000>;
->> +			 opp-microvolt-speed0-pvs3-v0 =  <925000>;
->> +			 opp-microvolt-speed1-pvs0-v0 =  <962500>;
->> +			 opp-microvolt-speed1-pvs1-v0 =  <962500>;
->> +			 opp-microvolt-speed1-pvs2-v0 =  <925000>;
->> +			 opp-microvolt-speed1-pvs3-v0 =  <900000>;
->> +			 opp-microvolt-speed1-pvs4-v0 =  <875000>;
->> +			 opp-microvolt-speed1-pvs5-v0 =  <875000>;
->> +			 opp-microvolt-speed1-pvs6-v0 =  <875000>;
->> +			 opp-microvolt-speed2-pvs0-v0 =  <950000>;
->> +			 opp-microvolt-speed2-pvs1-v0 =  <925000>;
->> +			 opp-microvolt-speed2-pvs2-v0 =  <900000>;
->> +			 opp-microvolt-speed2-pvs3-v0 =  <900000>;
->> +			 opp-microvolt-speed2-pvs4-v0 =  <875000>;
->> +			 opp-microvolt-speed2-pvs5-v0 =  <875000>;
->> +			 opp-microvolt-speed2-pvs6-v0 =  <875000>;
->> +			 opp-microvolt-speed14-pvs0-v0 = <962500>;
->> +			 opp-microvolt-speed14-pvs1-v0 = <962500>;
->> +			 opp-microvolt-speed14-pvs2-v0 = <925000>;
->> +			 opp-microvolt-speed14-pvs3-v0 = <900000>;
->> +			 opp-microvolt-speed14-pvs4-v0 = <875000>;
->> +			 opp-microvolt-speed14-pvs5-v0 = <875000>;
->> +			 opp-microvolt-speed14-pvs6-v0 = <875000>;
->> +		};
->> +
->> +		opp-594000000 {
->> +			opp-hz = /bits/ 64 <594000000>;
->> +			opp-microvolt-speed0-pvs0-v0 =  <1000000>;
->> +			opp-microvolt-speed0-pvs1-v0 = 	<950000>;
->> +			opp-microvolt-speed0-pvs3-v0 = 	<900000>;
->> +			opp-microvolt-speed0-pvs3-v0 = 	<900000>;
->> +			opp-microvolt-speed1-pvs0-v0 = 	<950000>;
->> +			opp-microvolt-speed1-pvs1-v0 = 	<950000>;
->> +			opp-microvolt-speed1-pvs2-v0 = 	<925000>;
->> +			opp-microvolt-speed1-pvs3-v0 = 	<900000>;
->> +			opp-microvolt-speed1-pvs4-v0 = 	<875000>;
->> +			opp-microvolt-speed1-pvs5-v0 = 	<875000>;
->> +			opp-microvolt-speed1-pvs6-v0 = 	<875000>;
->> +			opp-microvolt-speed2-pvs0-v0 = 	<950000>;
->> +			opp-microvolt-speed2-pvs1-v0 = 	<925000>;
->> +			opp-microvolt-speed2-pvs2-v0 = 	<900000>;
->> +			opp-microvolt-speed2-pvs3-v0 = 	<900000>;
->> +			opp-microvolt-speed2-pvs4-v0 = 	<875000>;
->> +			opp-microvolt-speed2-pvs5-v0 = 	<875000>;
->> +			opp-microvolt-speed2-pvs6-v0 = 	<875000>;
-> 
-> More space then tab issues after the '='.
-> 
- ok, will fix.
+v10 on the way.
 
 Regards,
- Sricharan
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Tim
