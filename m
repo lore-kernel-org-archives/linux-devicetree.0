@@ -1,81 +1,159 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 10/11] arm64: dts: renesas: initial Condor board device tree
-Date: Fri, 9 Feb 2018 08:42:10 +0100
-Message-ID: <CAMuHMdWeRBYK5f4VpfY-YCDASk8RqVy2VCQm51cyR8VUXSxfeQ@mail.gmail.com>
-References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com> <c35dca71-fc63-7628-d483-ad690bea7ced@cogentembedded.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v10 6/8] media: i2c: Add TDA1997x HDMI receiver driver
+Date: Fri, 9 Feb 2018 09:08:34 +0100
+Message-ID: <cf5c51f4-ca86-e468-ba16-d47d224a2428@xs4all.nl>
+References: <1518157956-14220-1-git-send-email-tharvey@gateworks.com>
+ <1518157956-14220-7-git-send-email-tharvey@gateworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c35dca71-fc63-7628-d483-ad690bea7ced-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1518157956-14220-7-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi Tim,
 
-On Fri, Feb 2, 2018 at 7:46 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Add the initial device  tree for  the R8A77980 SoC based Condor board.
-> The board has 1 debug serial port (SCIF0); include support for it, so
-> that the serial console can work.
->
-> Based on the original (and large) patch by Vladimir Barinov.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+We're almost there. Two more comments:
 
-Thanks for your patch!
-
-> --- /dev/null
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
-> @@ -0,0 +1,46 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Device Tree Source for the Condor board
-> + *
-> + * Copyright (C) 2018 Renesas Electronics Corp.
-> + * Copyright (C) 2018 Cogent Embedded, Inc.
-> + */
+On 02/09/2018 07:32 AM, Tim Harvey wrote:
+> +static int
+> +tda1997x_detect_std(struct tda1997x_state *state,
+> +		    struct v4l2_dv_timings *timings)
+> +{
+> +	struct v4l2_subdev *sd = &state->sd;
+> +	u32 vper;
+> +	u16 hper;
+> +	u16 hsper;
+> +	int i;
 > +
-> +/dts-v1/;
-> +#include "r8a77980.dtsi"
+> +	/*
+> +	 * Read the FMT registers
+> +	 *   REG_V_PER: Period of a frame (or two fields) in MCLK(27MHz) cycles
+> +	 *   REG_H_PER: Period of a line in MCLK(27MHz) cycles
+> +	 *   REG_HS_WIDTH: Period of horiz sync pulse in MCLK(27MHz) cycles
+> +	 */
+> +	vper = io_read24(sd, REG_V_PER) & MASK_VPER;
+> +	hper = io_read16(sd, REG_H_PER) & MASK_HPER;
+> +	hsper = io_read16(sd, REG_HS_WIDTH) & MASK_HSWIDTH;
+> +	if (!vper || !hper || !hsper)
+> +		return -ENOLINK;
+
+See my comment for g_input_status below. This condition looks more like a
+ENOLCK.
+
+Or perhaps it should be:
+
+	if (!vper && !hper && !hsper)
+		return -ENOLINK;
+	if (!vper || !hper || !hsper)
+		return -ENOLCK;
+
+I would recommend that you test a bit with no signal and a bad signal (perhaps
+one that uses a pixelclock that is too high for this device?).
+
+> +	v4l2_dbg(1, debug, sd, "Signal Timings: %u/%u/%u\n", vper, hper, hsper);
 > +
-> +/ {
-> +       model = "Renesas Condor board based on r8a77980";
-> +       compatible = "renesas,condor", "renesas,r8a77980";
+> +	for (i = 0; v4l2_dv_timings_presets[i].bt.width; i++) {
+> +		const struct v4l2_bt_timings *bt;
+> +		u32 lines, width, _hper, _hsper;
+> +		u32 vmin, vmax, hmin, hmax, hsmin, hsmax;
+> +		bool vmatch, hmatch, hsmatch;
 > +
-> +       aliases {
-> +               serial0 = &scif0;
-> +       };
+> +		bt = &v4l2_dv_timings_presets[i].bt;
+> +		width = V4L2_DV_BT_FRAME_WIDTH(bt);
+> +		lines = V4L2_DV_BT_FRAME_HEIGHT(bt);
+> +		_hper = (u32)bt->pixelclock / width;
+> +		if (bt->interlaced)
+> +			lines /= 2;
+> +		/* vper +/- 0.7% */
+> +		vmin = ((27000000 / 1000) * 993) / _hper * lines;
+> +		vmax = ((27000000 / 1000) * 1007) / _hper * lines;
+> +		/* hper +/- 1.0% */
+> +		hmin = ((27000000 / 100) * 99) / _hper;
+> +		hmax = ((27000000 / 100) * 101) / _hper;
+> +		/* hsper +/- 2 (take care to avoid 32bit overflow) */
+> +		_hsper = 27000 * bt->hsync / ((u32)bt->pixelclock/1000);
+> +		hsmin = _hsper - 2;
+> +		hsmax = _hsper + 2;
 > +
-> +       chosen {
-> +               stdout-path = "serial0:115200n8";
-> +       };
+> +		/* vmatch matches the framerate */
+> +		vmatch = ((vper <= vmax) && (vper >= vmin)) ? 1 : 0;
+> +		/* hmatch matches the width */
+> +		hmatch = ((hper <= hmax) && (hper >= hmin)) ? 1 : 0;
+> +		/* hsmatch matches the hswidth */
+> +		hsmatch = ((hsper <= hsmax) && (hsper >= hsmin)) ? 1 : 0;
+> +		if (hmatch && vmatch && hsmatch) {
+> +			*timings = v4l2_dv_timings_presets[i];
+> +			v4l2_print_dv_timings(sd->name, "Detected format: ",
+> +					      timings, false);
+> +			return 0;
+> +		}
+> +	}
 > +
-> +       memory@48000000 {
-> +               device_type = "memory";
-> +               /* first 128MB is reserved for secure area. */
-> +               reg = <0x0 0x48000000 0x0 0x38000000>;
+> +	v4l_err(state->client, "no resolution match for timings: %d/%d/%d\n",
+> +		vper, hper, hsper);
+> +	return -EINVAL;
+> +}
 
-According to the Samsung website, the LPDDR is a 16 Gib part, i.e. 2 GiB.
-Is there any specific reason you're limiting memory to 1 GiB?
+-EINVAL isn't the correct error code here. I would go for -ERANGE. It's not
+perfect, but close enough.
 
-> +       };
+-EINVAL indicates that the user filled in wrong values, but that's not the
+case here.
 
-With the above resolved:
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> +static int
+> +tda1997x_g_input_status(struct v4l2_subdev *sd, u32 *status)
+> +{
+> +	struct tda1997x_state *state = to_state(sd);
+> +	u32 vper;
+> +	u16 hper;
+> +	u16 hsper;
+> +
+> +	mutex_lock(&state->lock);
+> +	v4l2_dbg(1, debug, sd, "inputs:%d/%d\n",
+> +		 state->input_detect[0], state->input_detect[1]);
+> +	if (state->input_detect[0] || state->input_detect[1])
 
-Gr{oetje,eeting}s,
+I'm confused. This device has two HDMI inputs?
 
-                        Geert
+Does 'detecting input' equate to 'I see a signal and I am locked'?
+I gather from the irq function that sets these values that it is closer
+to 'I see a signal' and that 'I am locked' is something you would test
+by looking at the vper/hper/hsper.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+> +		*status = 0;
+> +	else {
+> +		vper = io_read24(sd, REG_V_PER) & MASK_VPER;
+> +		hper = io_read16(sd, REG_H_PER) & MASK_HPER;
+> +		hsper = io_read16(sd, REG_HS_WIDTH) & MASK_HSWIDTH;
+> +		v4l2_dbg(1, debug, sd, "timings:%d/%d/%d\n", vper, hper, hsper);
+> +		if (!vper || !hper || !hsper)
+> +			*status |= V4L2_IN_ST_NO_SYNC;
+> +		else
+> +			*status |= V4L2_IN_ST_NO_SIGNAL;
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+So if we have valid vper, hper and hsper, then there is no signal? That doesn't
+make sense.
+
+I'd expect to see something like this:
+
+	if (!input_detect[0] && !input_detect[1])
+		// no signal
+	else if (!vper || !hper || !vsper)
+		// no sync
+	else
+		// have signal and sync
+
+I'm not sure about the precise meaning of input_detect, so I might be wrong about
+that bit.
+
+Regards,
+
+	Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
