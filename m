@@ -1,73 +1,175 @@
-From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/5] improvements and fixes for the phy-meson-gxl-usb2
- driver
-Date: Fri, 9 Feb 2018 16:27:43 +0800
-Message-ID: <9b5295ea-74a2-7bb1-744e-6e8eb76f2673@amlogic.com>
-References: <20180128202245.25021-1-martin.blumenstingl@googlemail.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: zynq: Add support for Xilinx zc770 xm013 dc4
+ board
+Date: Fri, 9 Feb 2018 09:51:27 +0100
+Message-ID: <6f40dd95-f6bf-aac8-33ac-9fef54447ec3@monstr.eu>
+References: <cover.1516200065.git.michal.simek@xilinx.com>
+ <3be3cd00b710827da46817693748eb6bcee00f82.1516200065.git.michal.simek@xilinx.com>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="5my7p98b9AF2yURmqZd8tsqLc0maeMY2Z"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180128202245.25021-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <3be3cd00b710827da46817693748eb6bcee00f82.1516200065.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--5my7p98b9AF2yURmqZd8tsqLc0maeMY2Z
+Content-Type: multipart/mixed; boundary="q897L7kDGoBoYlN1n41AM4Rz1SluKSpYl";
+ protected-headers="v1"
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>,
+ Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Message-ID: <6f40dd95-f6bf-aac8-33ac-9fef54447ec3-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: zynq: Add support for Xilinx zc770 xm013 dc4
+ board
+References: <cover.1516200065.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+ <3be3cd00b710827da46817693748eb6bcee00f82.1516200065.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <3be3cd00b710827da46817693748eb6bcee00f82.1516200065.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+
+--q897L7kDGoBoYlN1n41AM4Rz1SluKSpYl
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 17.1.2018 15:41, Michal Simek wrote:
+> zc770 is based board which is extended by FMC/DC cards for SoC
+> validation. FMCs/DCs are supposed to cover all SoC configurations.
+> FMC/DC contains can, ethernet, i2c, qspi, spi and uart.
+>=20
+> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+>=20
+>  arch/arm/boot/dts/Makefile             |  1 +
+>  arch/arm/boot/dts/zynq-zc770-xm013.dts | 78 ++++++++++++++++++++++++++=
+++++++++
+>  2 files changed, 79 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/zynq-zc770-xm013.dts
+>=20
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 6bd4b9a29511..44be37afa544 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1044,6 +1044,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) +=3D \
+>  	zynq-zc770-xm010.dtb \
+>  	zynq-zc770-xm011.dtb \
+>  	zynq-zc770-xm012.dtb \
+> +	zynq-zc770-xm013.dtb \
+>  	zynq-zed.dtb \
+>  	zynq-zybo.dtb
+>  dtb-$(CONFIG_MACH_ARMADA_370) +=3D \
+> diff --git a/arch/arm/boot/dts/zynq-zc770-xm013.dts b/arch/arm/boot/dts=
+/zynq-zc770-xm013.dts
+> new file mode 100644
+> index 000000000000..ad3e1d108a9b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/zynq-zc770-xm013.dts
+> @@ -0,0 +1,78 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Xilinx ZC770 XM013 board DTS
+> + *
+> + * Copyright (C) 2013 Xilinx, Inc.
+> + */
+> +/dts-v1/;
+> +#include "zynq-7000.dtsi"
+> +
+> +/ {
+> +	compatible =3D "xlnx,zynq-zc770-xm013", "xlnx,zynq-7000";
+> +	model =3D "Xilinx Zynq";
+> +
+> +	aliases {
+> +		ethernet0 =3D &gem1;
+> +		i2c0 =3D &i2c1;
+> +		serial0 =3D &uart0;
+> +		spi1 =3D &spi0;
+> +	};
+> +
+> +	chosen {
+> +		bootargs =3D "";
+> +		stdout-path =3D "serial0:115200n8";
+> +	};
+> +
+> +	memory@0 {
+> +		device_type =3D "memory";
+> +		reg =3D <0x0 0x40000000>;
+> +	};
+> +};
+> +
+> +&can1 {
+> +	status =3D "okay";
+> +};
+> +
+> +&gem1 {
+> +	status =3D "okay";
+> +	phy-mode =3D "rgmii-id";
+> +	phy-handle =3D <&ethernet_phy>;
+> +
+> +	ethernet_phy: ethernet-phy@7 {
+> +		reg =3D <7>;
+> +		device_type =3D "ethernet-phy";
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	status =3D "okay";
+> +	clock-frequency =3D <400000>;
+> +
+> +	si570: clock-generator@55 {
+> +		#clock-cells =3D <0>;
+> +		compatible =3D "silabs,si570";
+> +		temperature-stability =3D <50>;
+> +		reg =3D <0x55>;
+> +		factory-fout =3D <156250000>;
+> +		clock-frequency =3D <148500000>;
+> +	};
+> +};
+> +
+> +&spi0 {
+> +	status =3D "okay";
+> +	num-cs =3D <4>;
+> +	is-decoded-cs =3D <0>;
+> +	eeprom: at25@0 {
+
+This should be probably eeprom: eeprom@25.
+
+Rob: Do you see any other issue with this series? Or can I apply?
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
 
 
-On 01/29/18 04:22, Martin Blumenstingl wrote:
-> This contains two fixes and two (minor) fixes for the phy-meson-gxl-usb2
-> driver:
-> - a clock and reset line is used for the PHYs. this was not clear from
->   the Amlogic GPL kernel sources since the clock is enabled very early
->   in the boot process (either because the hardware defaults to "on",
->   the bootrom enables it or a bootloader before BL3-3/u-boot enables it)
-> - we don't read the controller's dr_mode anymore because the USB2 PHY
->   can only be switched into host mode if the USB3 PHY knows about it.
->   Thus auto-detecting the mode doesn't work for this PHY so it's removed
->   in patch #3
-> - do not log an error message when the phy-supply is not ready yet and
->   we have to return -EPROBE_DEFER
-> - improve the naming of some U2P_R2 test mode registers
-> 
-> 
-> Martin Blumenstingl (5):
->   dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and clock
->   phy: amlogic: phy-meson-gxl-usb2: support the clock and reset line
->   phy: amlogic: phy-meson-gxl-usb2: default to host mode
->   phy: amlogic: phy-meson-gxl-usb2: don't log an error on -EPROBE_DEFER
->   phy: amlogic: phy-meson-gxl-usb2: rename some of the U2P_R2 registers
-> 
->  .../devicetree/bindings/phy/meson-gxl-usb2-phy.txt |  4 ++
->  drivers/phy/amlogic/Kconfig                        |  1 -
->  drivers/phy/amlogic/phy-meson-gxl-usb2.c           | 78 ++++++++++++++++------
->  3 files changed, 61 insertions(+), 22 deletions(-)
-> 
 
-Hi Martin
+--q897L7kDGoBoYlN1n41AM4Rz1SluKSpYl--
 
-  thanks for your great work for pushing the USB driver upstream.
+--5my7p98b9AF2yURmqZd8tsqLc0maeMY2Z
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-  I've test your whole series[1] on AXG S400 board and it works fine here.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-Yixun
+iEYEARECAAYFAlp9YRMACgkQykllyylKDCHuKwCfVwcFWuSHE0zJRuPZddNY11gf
+ylYAn2Olmoo0JgPJN6JXGszdHhFnSUHt
+=v/W0
+-----END PGP SIGNATURE-----
 
-
-[1] the whole patch series include
-
-[RFC usb-next v8 0/3] initialize (multiple) PHYs for a HCD
-https://lkml.kernel.org/r/20180125000053.9387-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-
-[PATCH 0/3] DWC3 support for Amlogic Meson AXG and GXL SoCs
-https://lkml.kernel.org/r/20180128200333.20093-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-
-[PATCH v2 0/2] Meson GXL USB3 PHY driver
-https://lkml.kernel.org/r/20180128201554.23889-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-
-[PATCH 1/5] dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and
-clock
-https://lkml.kernel.org/r/20180128202245.25021-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+--5my7p98b9AF2yURmqZd8tsqLc0maeMY2Z--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
