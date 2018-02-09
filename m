@@ -1,79 +1,55 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/7] dt-bindings: soc: new driver for DaVinci genpd
-Date: Thu, 08 Feb 2018 16:40:54 -0800
-Message-ID: <7hshab9eqx.fsf@baylibre.com>
-References: <20180207134553.13510-1-brgl@bgdev.pl>
-        <20180207134553.13510-2-brgl@bgdev.pl>
-        <36aebdca-2a7d-07a3-8632-95992d74cae6@lechnology.com>
-        <CAMRc=Me5Qckp=_KpbPYprKb23Ujz1C9Um6FrHK59wY=XA2Jcvg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMRc=Me5Qckp=_KpbPYprKb23Ujz1C9Um6FrHK59wY=XA2Jcvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-        (Bartosz Golaszewski's message of "Thu, 8 Feb 2018 09:56:00 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: [PATCH v5 1/2] dt-bindings: ad5272: Add bindings for Analog Devices digital potentiometers
+Date: Fri,  9 Feb 2018 08:57:26 +0800
+Message-ID: <1518137847-63381-2-git-send-email-preid@electromag.com.au>
+References: <1518137847-63381-1-git-send-email-preid@electromag.com.au>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518137847-63381-1-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martinbv-cvVvTOR6QHAqDJ6do+/SaQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org> writes:
+Add binding documentation for Analog Devices AD5272 and AD5274 digital
+potentiometer devices.
 
-> 2018-02-07 22:47 GMT+01:00 David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>:
->> On 02/07/2018 07:45 AM, Bartosz Golaszewski wrote:
->>>
->>> From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>
->>> Add a simple document for the DaVinci genpd driver. We use clock pm
->>> exclusively hence no reg property.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>> ---
->>>   .../devicetree/bindings/soc/ti,davinci-pm-domains.txt       | 13
->>> +++++++++++++
->>>   1 file changed, 13 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/soc/ti,davinci-pm-domains.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/soc/ti,davinci-pm-domains.txt
->>> b/Documentation/devicetree/bindings/soc/ti,davinci-pm-domains.txt
->>> new file mode 100644
->>> index 000000000000..935d063c7b35
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/soc/ti,davinci-pm-domains.txt
->>> @@ -0,0 +1,13 @@
->>> +Device tree bindings for the genpd driver for Texas Instruments DaVinci
->>> SoCs
->>> +
->>> +Required properties:
->>> +
->>> +- compatible:           must be "ti,davinci-pm-domains"
->>> +- #power-domain-cells:  must be 0
->>> +
->>> +Example:
->>> +
->>> +pwc1: power-controller@227000 {
->>> +       compatible = "ti,davinci-pm-domains";
->>> +       #power-domain-cells = <0>;
->>> +};
->>>
->>
->>
->> We already have the PSC @227000. Why not just add
->> #power-domain-cells = <0>; to that node instead of creating
->> a new "device" when this is really the same device?
->
-> I thought about it too, but then noticed that most architectures do
-> use a separate genpd driver even if it only calls routines placed in
-> their respective clock driver.
->
-> Let me prepare a v2 with this approach though.
+Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+---
+ .../bindings/iio/potentiometer/ad5272.txt          | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
 
-Yes, I agree with David.  Just making the PSC be a power-controller is a
-good approach.
-
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+new file mode 100644
+index 0000000..f9b2eef
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+@@ -0,0 +1,27 @@
++* Analog Devices AD5272 digital potentiometer
++
++The node for this device must be a child node of a I2C controller, hence
++all mandatory properties for your controller must be specified. See directory:
++
++        Documentation/devicetree/bindings/i2c
++
++for more details.
++
++Required properties:
++	- compatible:  	Must be one of the following, depending on the model:
++			adi,ad5272-020
++			adi,ad5272-050
++			adi,ad5272-100
++			adi,ad5274-020
++			adi,ad5274-100
++
++Optional properties:
++ - reset-gpios: GPIO specification for the RESET input. This is an
++		active low signal to the AD5272.
++
++Example:
++ad5272: potentiometer@2f {
++	reg = <0x2F>;
++	compatible = "adi,ad5272-020";
++	reset-gpios = <&gpio3 6 GPIO_ACTIVE_HIGH>;
++};
+-- 
+1.8.3.1
