@@ -1,48 +1,44 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Input: gpio_keys: Add level trigger support for GPIO keys
-Date: Fri, 9 Feb 2018 17:03:54 +0200
-Message-ID: <CAHp75VcJdYh8fKpqkRXxegRkESaN2Cgxybyei1NVwf_1C7rhwQ@mail.gmail.com>
-References: <6c53b9ccfd4a56fc1b00e243bb9e7cae9e124932.1518155780.git.baolin.wang@linaro.org>
- <CAKdAkRQ6+9=GUJfoMT_gtwS8DqWKeH9FAqPG2BFzL9GPbPNB4w@mail.gmail.com> <CAMz4kuKb8g5dAu5WQ847CODtVgJQBa_svbeQGGDsYpCjipBp_g@mail.gmail.com>
+From: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] gpio: Add GPIO driver for Nintendo Wii
+Date: Fri, 9 Feb 2018 09:11:16 -0600
+Message-ID: <20180209151116.GQ21977@gate.crashing.org>
+References: <20180209120732.17863-1-j.neuschaefer@gmx.net> <20180209120732.17863-3-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMz4kuKb8g5dAu5WQ847CODtVgJQBa_svbeQGGDsYpCjipBp_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180209120732.17863-3-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, stephen lu <lumotuwe-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kate Stewart <kstewart-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 9, 2018 at 11:23 AM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 9 February 2018 at 14:39, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Thu, Feb 8, 2018 at 10:08 PM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On some platforms (such as Spreadtrum platform), the GPIO keys can only
->>> be triggered by level type.
->>
->> How do you stop the interrupt from re-triggering as long as the key
->> stays pressed?
->
-> We will set the level type irq handler as handle_level_irq(), in this
-> function, it will mask and ack the irq firstly.
+On Fri, Feb 09, 2018 at 01:07:29PM +0100, Jonathan Neuschäfer wrote:
+> The Nintendo Wii's chipset (called "Hollywood") has a GPIO controller
+> that supports a configurable number of pins (up to 32), interrupts, and
+> some special mechanisms to share the controller between the system's
+> security processor (an ARM926) and the PowerPC CPU. Pin multiplexing is
+> not supported.
+> 
+> This patch adds a basic driver for this GPIO controller. Interrupt
+> support will come in a later patch.
+> 
+> This patch is based on code developed by Albert Herranz and the GameCube
+> Linux Team, file arch/powerpc/platforms/embedded6xx/hlwd-gpio.c,
+> available at https://github.com/DeltaResero/GC-Wii-Linux-Kernels, but
+> has grown quite dissimilar.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+> Cc: Albert Herranz <albert_herranz-mRCrAkd8dF0@public.gmane.org>
+> Cc: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
-Wouldn't be ambiguous?
+Reviewed-by: Segher Boessenkool <segher-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 
-1. User presses the key ->
-  a) we got edge followed by level signaling;
-  b) IRQ core masks line, calls handler, ACKs, unmasks;
-  c) somewhere here Press Event is sent;
-  d) we still have level... We get IRQ fired again? But see 1. It
-obviously not the case.
-2. User releases the key ->
-  ...
+Looks just fine to me :-)
 
-So, the main question if I understood Dmitry correctly is the period
-in time where IRQ line should be masked on one hand, and on the other
-it will guarantee that user didn't release-press cylcle.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Segher
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
