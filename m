@@ -1,45 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] scsi: ufs-qcom: add number of lanes per direction
-Date: Thu, 8 Feb 2018 20:29:15 -0600
-Message-ID: <20180209022915.2kki7avsia2k7tjp@rob-hp-laptop>
-References: <20180205121021.11012-1-cang@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/9] dt-bindings: add binding for Rockchip hdmi phy using
+ an Innosilicon IP
+Date: Thu, 8 Feb 2018 20:34:33 -0600
+Message-ID: <20180209023433.fgumy7ic6ol45x45@rob-hp-laptop>
+References: <20180205143435.4723-1-heiko@sntech.de>
+ <20180205143435.4723-2-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180205121021.11012-1-cang@codeaurora.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Can Guo <cang@codeaurora.org>
-Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, Gilad Broner <gbroner@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Noa Rubens <noag@codeaurora.org>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Maya Erez <merez@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20180205143435.4723-2-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, algea.cao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 05, 2018 at 08:02:07PM +0800, Can Guo wrote:
-> From: Gilad Broner <gbroner@codeaurora.org>
+On Mon, Feb 05, 2018 at 03:34:27PM +0100, Heiko Stuebner wrote:
+> From: Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> Different platforms may have different number of lanes for the UFS link.
-> Add parameter to device tree specifying how many lanes should be
-> configured for the UFS link. And don't print err message for clocks
-> that are optional, this leads to unnecessary confusion about failure.
+> The phy is used so far in two Rockchip socs the rk3228 and the rk3328.
 > 
-> Signed-off-by: Gilad Broner <gbroner@codeaurora.org>
-> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
-> Signed-off-by: Can Guo <cang@codeaurora.org>
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index 5357919..4cee3f9 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -31,6 +31,9 @@ Optional properties:
->  			  defined or a value in the array is "0" then it is assumed
->  			  that the frequency is set by the parent clock or a
->  			  fixed rate clock source.
-> +- lanes-per-direction:	number of lanes available per direction - either 1 or 2.
-> +			Note that it is assume same number of lanes is used both directions at once.
+> Signed-off-by: Zheng Yang <zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  .../bindings/phy/phy-rockchip-inno-hdmi.txt        | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-hdmi.txt
 
-Seems reasonable until someone does not make things symmetrical. We 
-should design for that case.
-
-> +			If not specified, default is 2 lanes per direction.
->  
->  Note: If above properties are not defined it can be assumed that the supply
->  regulators or clocks are always on.
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
