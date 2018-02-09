@@ -1,72 +1,73 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 6/7] watchdog: meson: allow setting timeout in devicetree
-Date: Fri, 9 Feb 2018 14:48:49 -0800
-Message-ID: <20180209224849.GH19627@roeck-us.net>
-References: <marcus.folkesson@gmail.com>
- <20180209192724.1227-1-marcus.folkesson@gmail.com>
- <20180209192724.1227-7-marcus.folkesson@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/7] dt-bindings: tegra: Add missing chips and NVIDIA
+ boards
+Date: Fri, 9 Feb 2018 16:49:22 -0600
+Message-ID: <20180209224922.4fxlpl77kwibzfui@rob-hp-laptop>
+References: <1517901757-15353-1-git-send-email-mperttunen@nvidia.com>
+ <1517901757-15353-5-git-send-email-mperttunen@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180209192724.1227-7-marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1517901757-15353-5-git-send-email-mperttunen@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mikko Perttunen <mperttunen@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 09, 2018 at 08:27:23PM +0100, Marcus Folkesson wrote:
-> watchdog_init_timeout() will allways pick timeout_param since it
-> defaults to a valid timeout.
+On Tue, Feb 06, 2018 at 09:22:34AM +0200, Mikko Perttunen wrote:
+> Add compatibility strings for supported but undocumented Tegra chips
+> (Tegra114/124/132/210/186/194) and reference boards.
 > 
-> By following best practice described in
-> Documentation/watchdog/watchdog-kernel-api.txt, it also
-> let us to set timout-sec property in devicetree.
-> 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Reviewed-by: Guenetr Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
 > ---
->  Documentation/devicetree/bindings/watchdog/meson-wdt.txt | 4 ++++
->  drivers/watchdog/meson_wdt.c                             | 2 +-
->  2 files changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/meson-wdt.txt b/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
-> index 8a6d84cb36c9..7588cc3971bf 100644
-> --- a/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
-> @@ -9,9 +9,13 @@ Required properties:
->  	"amlogic,meson8m2-wdt" and "amlogic,meson8b-wdt" on Meson8m2 SoCs
->  - reg : Specifies base physical address and size of the registers.
+> Notes:
+>     v2:
+>     - add patch
+> 
+>  Documentation/devicetree/bindings/arm/tegra.txt | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+> index 7f1411bbabf7..32f62bb7006d 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra.txt
+> @@ -9,6 +9,12 @@ following compatible values:
 >  
-> +Optional properties:
-> +- timeout-sec: contains the watchdog timeout in seconds.
-> +
->  Example:
+>    nvidia,tegra20
+>    nvidia,tegra30
+> +  nvidia,tegra114
+> +  nvidia,tegra124
+> +  nvidia,tegra132
+> +  nvidia,tegra210
+
+Some reason why this is not in numerical order?
+
+> +  nvidia,tegra186
+> +  nvidia,tegra194
 >  
->  wdt: watchdog@c1109900 {
->  	compatible = "amlogic,meson6-wdt";
->  	reg = <0xc1109900 0x8>;
-> +	timeout-sec = <10>;
->  };
-> diff --git a/drivers/watchdog/meson_wdt.c b/drivers/watchdog/meson_wdt.c
-> index 304274c67735..cd0275a6cdac 100644
-> --- a/drivers/watchdog/meson_wdt.c
-> +++ b/drivers/watchdog/meson_wdt.c
-> @@ -36,7 +36,7 @@
->  #define MESON_SEC_TO_TC(s, c)	((s) * (c))
->  
->  static bool nowayout = WATCHDOG_NOWAYOUT;
-> -static unsigned int timeout = MESON_WDT_TIMEOUT;
-> +static unsigned int timeout;
->  
->  struct meson_wdt_data {
->  	unsigned int enable;
+>  Boards
+>  -------------------------------------------
+> @@ -26,8 +32,18 @@ board-specific compatible values:
+>    nvidia,cardhu
+>    nvidia,cardhu-a02
+>    nvidia,cardhu-a04
+> +  nvidia,dalmore
+>    nvidia,harmony
+> +  nvidia,jetson-tk1
+> +  nvidia,norrin
+> +  nvidia,p2371-0000
+> +  nvidia,p2371-2180
+> +  nvidia,p2571
+> +  nvidia,p2771-0000
+> +  nvidia,p2972-0000
+> +  nvidia,roth
+>    nvidia,seaboard
+> +  nvidia,tn7
+>    nvidia,ventana
+>    toradex,apalis_t30
+>    toradex,apalis_t30-eval
 > -- 
-> 2.15.1
+> 2.1.4
 > 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
