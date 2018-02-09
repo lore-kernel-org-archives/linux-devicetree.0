@@ -1,60 +1,48 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
- properties ?
-Date: Fri, 9 Feb 2018 10:15:38 +0100
-Message-ID: <539699c7-9509-dea2-2b31-c5f6749c99c4@linaro.org>
-References: <20180207065959.GN28462@vireshk-i7>
- <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
- <20180207102446.GS28462@vireshk-i7>
- <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
- <20180209064211.GY28462@vireshk-i7>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 09/11] DT: arm: shmobile: document Condor board bindings
+Date: Fri, 9 Feb 2018 10:18:46 +0100
+Message-ID: <20180209091846.cj62onabse2ag47s@verge.net.au>
+References: <CAMuHMdV+36Jff6ui1B_90GvPhTb7Xu7+_CaX44EcXxiLi3c=aQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20180209064211.GY28462@vireshk-i7>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Punit.Agrawal@arm.com, ionela.voinescu@arm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV+36Jff6ui1B_90GvPhTb7Xu7+_CaX44EcXxiLi3c=aQ@mail.gmail.com>
+ <20180208201306.peirumr6hvu22uyt@rob-hp-laptop>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/02/2018 07:42, Viresh Kumar wrote:
-> On 07-02-18, 11:45, Daniel Lezcano wrote:
->> Yes, that is my understanding. cooling-min-level and cooling-max-level
->> are not used in the thermal framework code today.
+On Thu, Feb 08, 2018 at 02:13:06PM -0600, Rob Herring wrote:
+> On Fri, Feb 02, 2018 at 09:45:08PM +0300, Sergei Shtylyov wrote:
+> > Document the Condor device tree bindings, listing it as a supported board.
+> > 
+> > This allows to use checkpatch.pl to validate .dts files referring to the
+> > Condor board.
+> > 
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > 
+> > ---
+> >  Documentation/devicetree/bindings/arm/shmobile.txt |    2 ++
+> >  1 file changed, 2 insertions(+)
 > 
-> Right.
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > 
->> So if they are defined, we should check the cooling-device max and min
->> are in the boundaries (if they are different from no-limit).
-> 
-> Hmm, I am not sure. We do compare those values (from maps) with the
-> max reported by the cooling driver, so there is some boundary check
-> happening. And I don't think it is worth comparing the min/max values
-> from DT cooling device's nodes. Why not just leave those for the
-> driver to return (which is already happening btw).
-> 
-> I don't think it would be correct for the thermal core to go and look
-> at the min/max properties of the cooling device directly, as those are
-> more for the thermal driver's help. The thermal core should just call
-> the get_max_state() callback and that's it.
-> 
-> Anyway, we can take decision on the binding itself after some time but
-> I will send some patches to get rid of this property from CPU nodes
-> for now. It doesn't make sense to have it there (anyway it is
-> optional), as the cpu cooling devices are kind of virtual cooling
-> devices which rely on OPP or freq-table currently. Maybe I will begin
-> by just updating one platform and once that is merged, update
-> everything else as well.
 
-What about the "cooling-cells" ? Its usage is unclear in the code and
-I'm not sure it is really needed.
+On Fri, Feb 09, 2018 at 08:27:34AM +0100, Geert Uytterhoeven wrote:
+> On Fri, Feb 2, 2018 at 7:45 PM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+> > Document the Condor device tree bindings, listing it as a supported board.
+> >
+> > This allows to use checkpatch.pl to validate .dts files referring to the
+> > Condor board.
+> >
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Thanks, applied with the following subject:
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+dt-bindings: arm: document Condor board bindings
