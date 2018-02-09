@@ -1,159 +1,73 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v10 6/8] media: i2c: Add TDA1997x HDMI receiver driver
-Date: Fri, 9 Feb 2018 09:08:34 +0100
-Message-ID: <cf5c51f4-ca86-e468-ba16-d47d224a2428@xs4all.nl>
-References: <1518157956-14220-1-git-send-email-tharvey@gateworks.com>
- <1518157956-14220-7-git-send-email-tharvey@gateworks.com>
+From: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/5] improvements and fixes for the phy-meson-gxl-usb2
+ driver
+Date: Fri, 9 Feb 2018 16:27:43 +0800
+Message-ID: <9b5295ea-74a2-7bb1-744e-6e8eb76f2673@amlogic.com>
+References: <20180128202245.25021-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518157956-14220-7-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20180128202245.25021-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tim,
 
-We're almost there. Two more comments:
 
-On 02/09/2018 07:32 AM, Tim Harvey wrote:
-> +static int
-> +tda1997x_detect_std(struct tda1997x_state *state,
-> +		    struct v4l2_dv_timings *timings)
-> +{
-> +	struct v4l2_subdev *sd = &state->sd;
-> +	u32 vper;
-> +	u16 hper;
-> +	u16 hsper;
-> +	int i;
-> +
-> +	/*
-> +	 * Read the FMT registers
-> +	 *   REG_V_PER: Period of a frame (or two fields) in MCLK(27MHz) cycles
-> +	 *   REG_H_PER: Period of a line in MCLK(27MHz) cycles
-> +	 *   REG_HS_WIDTH: Period of horiz sync pulse in MCLK(27MHz) cycles
-> +	 */
-> +	vper = io_read24(sd, REG_V_PER) & MASK_VPER;
-> +	hper = io_read16(sd, REG_H_PER) & MASK_HPER;
-> +	hsper = io_read16(sd, REG_HS_WIDTH) & MASK_HSWIDTH;
-> +	if (!vper || !hper || !hsper)
-> +		return -ENOLINK;
+On 01/29/18 04:22, Martin Blumenstingl wrote:
+> This contains two fixes and two (minor) fixes for the phy-meson-gxl-usb2
+> driver:
+> - a clock and reset line is used for the PHYs. this was not clear from
+>   the Amlogic GPL kernel sources since the clock is enabled very early
+>   in the boot process (either because the hardware defaults to "on",
+>   the bootrom enables it or a bootloader before BL3-3/u-boot enables it)
+> - we don't read the controller's dr_mode anymore because the USB2 PHY
+>   can only be switched into host mode if the USB3 PHY knows about it.
+>   Thus auto-detecting the mode doesn't work for this PHY so it's removed
+>   in patch #3
+> - do not log an error message when the phy-supply is not ready yet and
+>   we have to return -EPROBE_DEFER
+> - improve the naming of some U2P_R2 test mode registers
+> 
+> 
+> Martin Blumenstingl (5):
+>   dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and clock
+>   phy: amlogic: phy-meson-gxl-usb2: support the clock and reset line
+>   phy: amlogic: phy-meson-gxl-usb2: default to host mode
+>   phy: amlogic: phy-meson-gxl-usb2: don't log an error on -EPROBE_DEFER
+>   phy: amlogic: phy-meson-gxl-usb2: rename some of the U2P_R2 registers
+> 
+>  .../devicetree/bindings/phy/meson-gxl-usb2-phy.txt |  4 ++
+>  drivers/phy/amlogic/Kconfig                        |  1 -
+>  drivers/phy/amlogic/phy-meson-gxl-usb2.c           | 78 ++++++++++++++++------
+>  3 files changed, 61 insertions(+), 22 deletions(-)
+> 
 
-See my comment for g_input_status below. This condition looks more like a
-ENOLCK.
+Hi Martin
 
-Or perhaps it should be:
+  thanks for your great work for pushing the USB driver upstream.
 
-	if (!vper && !hper && !hsper)
-		return -ENOLINK;
-	if (!vper || !hper || !hsper)
-		return -ENOLCK;
+  I've test your whole series[1] on AXG S400 board and it works fine here.
 
-I would recommend that you test a bit with no signal and a bad signal (perhaps
-one that uses a pixelclock that is too high for this device?).
+Yixun
 
-> +	v4l2_dbg(1, debug, sd, "Signal Timings: %u/%u/%u\n", vper, hper, hsper);
-> +
-> +	for (i = 0; v4l2_dv_timings_presets[i].bt.width; i++) {
-> +		const struct v4l2_bt_timings *bt;
-> +		u32 lines, width, _hper, _hsper;
-> +		u32 vmin, vmax, hmin, hmax, hsmin, hsmax;
-> +		bool vmatch, hmatch, hsmatch;
-> +
-> +		bt = &v4l2_dv_timings_presets[i].bt;
-> +		width = V4L2_DV_BT_FRAME_WIDTH(bt);
-> +		lines = V4L2_DV_BT_FRAME_HEIGHT(bt);
-> +		_hper = (u32)bt->pixelclock / width;
-> +		if (bt->interlaced)
-> +			lines /= 2;
-> +		/* vper +/- 0.7% */
-> +		vmin = ((27000000 / 1000) * 993) / _hper * lines;
-> +		vmax = ((27000000 / 1000) * 1007) / _hper * lines;
-> +		/* hper +/- 1.0% */
-> +		hmin = ((27000000 / 100) * 99) / _hper;
-> +		hmax = ((27000000 / 100) * 101) / _hper;
-> +		/* hsper +/- 2 (take care to avoid 32bit overflow) */
-> +		_hsper = 27000 * bt->hsync / ((u32)bt->pixelclock/1000);
-> +		hsmin = _hsper - 2;
-> +		hsmax = _hsper + 2;
-> +
-> +		/* vmatch matches the framerate */
-> +		vmatch = ((vper <= vmax) && (vper >= vmin)) ? 1 : 0;
-> +		/* hmatch matches the width */
-> +		hmatch = ((hper <= hmax) && (hper >= hmin)) ? 1 : 0;
-> +		/* hsmatch matches the hswidth */
-> +		hsmatch = ((hsper <= hsmax) && (hsper >= hsmin)) ? 1 : 0;
-> +		if (hmatch && vmatch && hsmatch) {
-> +			*timings = v4l2_dv_timings_presets[i];
-> +			v4l2_print_dv_timings(sd->name, "Detected format: ",
-> +					      timings, false);
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	v4l_err(state->client, "no resolution match for timings: %d/%d/%d\n",
-> +		vper, hper, hsper);
-> +	return -EINVAL;
-> +}
 
--EINVAL isn't the correct error code here. I would go for -ERANGE. It's not
-perfect, but close enough.
+[1] the whole patch series include
 
--EINVAL indicates that the user filled in wrong values, but that's not the
-case here.
+[RFC usb-next v8 0/3] initialize (multiple) PHYs for a HCD
+https://lkml.kernel.org/r/20180125000053.9387-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 
-> +static int
-> +tda1997x_g_input_status(struct v4l2_subdev *sd, u32 *status)
-> +{
-> +	struct tda1997x_state *state = to_state(sd);
-> +	u32 vper;
-> +	u16 hper;
-> +	u16 hsper;
-> +
-> +	mutex_lock(&state->lock);
-> +	v4l2_dbg(1, debug, sd, "inputs:%d/%d\n",
-> +		 state->input_detect[0], state->input_detect[1]);
-> +	if (state->input_detect[0] || state->input_detect[1])
+[PATCH 0/3] DWC3 support for Amlogic Meson AXG and GXL SoCs
+https://lkml.kernel.org/r/20180128200333.20093-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 
-I'm confused. This device has two HDMI inputs?
+[PATCH v2 0/2] Meson GXL USB3 PHY driver
+https://lkml.kernel.org/r/20180128201554.23889-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 
-Does 'detecting input' equate to 'I see a signal and I am locked'?
-I gather from the irq function that sets these values that it is closer
-to 'I see a signal' and that 'I am locked' is something you would test
-by looking at the vper/hper/hsper.
-
-> +		*status = 0;
-> +	else {
-> +		vper = io_read24(sd, REG_V_PER) & MASK_VPER;
-> +		hper = io_read16(sd, REG_H_PER) & MASK_HPER;
-> +		hsper = io_read16(sd, REG_HS_WIDTH) & MASK_HSWIDTH;
-> +		v4l2_dbg(1, debug, sd, "timings:%d/%d/%d\n", vper, hper, hsper);
-> +		if (!vper || !hper || !hsper)
-> +			*status |= V4L2_IN_ST_NO_SYNC;
-> +		else
-> +			*status |= V4L2_IN_ST_NO_SIGNAL;
-
-So if we have valid vper, hper and hsper, then there is no signal? That doesn't
-make sense.
-
-I'd expect to see something like this:
-
-	if (!input_detect[0] && !input_detect[1])
-		// no signal
-	else if (!vper || !hper || !vsper)
-		// no sync
-	else
-		// have signal and sync
-
-I'm not sure about the precise meaning of input_detect, so I might be wrong about
-that bit.
-
-Regards,
-
-	Hans
+[PATCH 1/5] dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and
+clock
+https://lkml.kernel.org/r/20180128202245.25021-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
