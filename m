@@ -1,29 +1,72 @@
-From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Subject: Re: [PATCH 5/6] ARM: dts: tegra: apalis-tk1: copyright period,
- spurious newlines
-Date: Sat, 10 Feb 2018 15:48:22 +0100
-Message-ID: <CAOFm3uGyspJshw7h=fhobEpCS971k+kfF_RN0ppXc8Uc_teJ7g@mail.gmail.com>
-References: <20180210013806.28496-1-marcel@ziswiler.com> <20180210013806.28496-6-marcel@ziswiler.com>
- <CAOFm3uH+aasUA9MrV+uXvHUT=fzS63PvC2fDfNo3q687dUQ_dw@mail.gmail.com> <C651C677-D157-41A3-B206-CB02B986AD19@ziswiler.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: ad5272: Add bindings for Analog
+ Devices digital potentiometers
+Date: Sat, 10 Feb 2018 15:48:26 +0000
+Message-ID: <20180210154826.060cbec0@archlinux>
+References: <1518137847-63381-1-git-send-email-preid@electromag.com.au>
+        <1518137847-63381-2-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <C651C677-D157-41A3-B206-CB02B986AD19-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518137847-63381-2-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Michael.Hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martinbv-cvVvTOR6QHAqDJ6do+/SaQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 10, 2018 at 9:40 AM, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org> wrote:
+On Fri,  9 Feb 2018 08:57:26 +0800
+Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org> wrote:
 
-> Yes, I'm already in the process of preparing a separate patch set fixing this
-> across all Toradex files. However I'm running this through our legal as well
-> first to make absolutely sure it's all proper.
+> Add binding documentation for Analog Devices AD5272 and AD5274 digital
+> potentiometer devices.
+> 
+> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Applied
 
-That's the way to go and thank you for this.
-Do not hesitate to ping here or privately if there is any legal
-concern that comes up.
+Thanks,
 
--- 
-Cordially
-Philippe Ombredanne
+Jonathan
+> ---
+>  .../bindings/iio/potentiometer/ad5272.txt          | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+> new file mode 100644
+> index 0000000..f9b2eef
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/potentiometer/ad5272.txt
+> @@ -0,0 +1,27 @@
+> +* Analog Devices AD5272 digital potentiometer
+> +
+> +The node for this device must be a child node of a I2C controller, hence
+> +all mandatory properties for your controller must be specified. See directory:
+> +
+> +        Documentation/devicetree/bindings/i2c
+> +
+> +for more details.
+> +
+> +Required properties:
+> +	- compatible:  	Must be one of the following, depending on the model:
+> +			adi,ad5272-020
+> +			adi,ad5272-050
+> +			adi,ad5272-100
+> +			adi,ad5274-020
+> +			adi,ad5274-100
+> +
+> +Optional properties:
+> + - reset-gpios: GPIO specification for the RESET input. This is an
+> +		active low signal to the AD5272.
+> +
+> +Example:
+> +ad5272: potentiometer@2f {
+> +	reg = <0x2F>;
+> +	compatible = "adi,ad5272-020";
+> +	reset-gpios = <&gpio3 6 GPIO_ACTIVE_HIGH>;
+> +};
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
