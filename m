@@ -1,160 +1,57 @@
-From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Subject: Re: [PATCH v2 5/7] watchdog: mtk: allow setting timeout in devicetree
-Date: Sat, 10 Feb 2018 21:12:07 +0100
-Message-ID: <20180210201207.GC744@gmail.com>
-References: <20180210091911.3644-1-marcus.folkesson@gmail.com>
- <20180210091911.3644-5-marcus.folkesson@gmail.com>
- <1518261002.9025.36.camel@mtkswgap22>
- <20180210124328.GB744@gmail.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] Fix broken bananapi m2 devicetree/regulators
+Date: Sat, 10 Feb 2018 22:01:30 +0100
+Message-ID: <d3fcc9d2-f2e6-189c-529f-890f2afdd837@gmail.com>
+References: <20180209175236.21215-1-embed3d@gmail.com>
+ <160b60e2-6e50-0d63-e6ac-b67e10317e12@orpaltech.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="w7PDEPdKQumQfZlR"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180210124328.GB744@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Matthias Brugger <matthias.bgg@gmail.com>, Barry Song <baohua@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.orgli
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <160b60e2-6e50-0d63-e6ac-b67e10317e12-RHPENKW2UW+1Z/+hSey0Gg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergey Suloev <ssuloev-RHPENKW2UW+1Z/+hSey0Gg@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hey Sergey,
 
---w7PDEPdKQumQfZlR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for mentioning, but I think the problem has nothing to do with 
+those patches. I tested them with the v4.15.0 Kernel since this is the 
+last stable release and we are right now in the merging window.
 
-Hello Sean,
+I tested the latest mainline, without those patches and the kernel is 
+not booting (I can't see any uart output).
 
-On Sat, Feb 10, 2018 at 01:43:28PM +0100, Marcus Folkesson wrote:
-> Hello Sean,
->=20
-> On Sat, Feb 10, 2018 at 07:10:02PM +0800, Sean Wang wrote:
-> >=20
-> > Hi, Marcus
-> >=20
-> > The changes you made for dt-bindings and driver should be put into
-> > separate patches.
->=20
-> I actually thought about it but chose to have it in the same patch becaus=
-e I
-> did not see any direct advantage to separating them.
->=20
-> But I can do that.
-> I will come up with a v3 with this change if no one thinks differently.
->=20
+Thanks,
+Philipp
 
-When looking at the git log, I'm not that convinced it should be
-separate patches.
-
-For example, I found a4f741e3e157c3a5c8aea5f2ea62b692fbf17338 that is
-doing the exact same thing as this patch.
-
-There is plenty of patches that mixes the code change and dt bindings
-updates.
-Could it not be useful to overview both the implementation and
-dt-mapping change in one view?
-
-If you or anyone else still think it should be separated, please let me kno=
-w and I will
-come up with a v3.
-
-
-> >=20
-> > And the property timeout-sec seems to be generic enough to all devices,
-> > so why not add a common document to describe it and allow those devices
-> > to refer to, like other dt-bindings for other kinds of devices usually
-> > did.
->=20
-> It should be, but it requires that the driver is using
-> watchdog_init_timeout() to set timeout, most of the drivers does not.
-> Most drivers does not even use the watchdog API but register itself as
-> misc devices.
->=20
-> When we have all wdt drivers using the watchdog API, we should probably
-> move the dt-binding to a common document.
->=20
-> >=20
-> > 	Sean
-> >=20
->=20
-> Thanks,
->=20
-> Best regards
-> Marcus Folkesson
->=20
-> > On Sat, 2018-02-10 at 10:19 +0100, Marcus Folkesson wrote:
-> > > watchdog_init_timeout() will allways pick timeout_param since it
-> > > defaults to a valid timeout.
-> > >=20
-> > > By following best practice described in
-> > > Documentation/watchdog/watchdog-kernel-api.txt, it also
-> > > let us to set timout-sec property in devicetree.
-> > >=20
-> > > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> > > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> > > ---
-> > >  Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 4 ++++
-> > >  drivers/watchdog/mtk_wdt.c                             | 2 +-
-> > >  2 files changed, 5 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b=
-/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> > > index 5b38a30e608c..859dee167b91 100644
-> > > --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> > > +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-> > > @@ -11,9 +11,13 @@ Required properties:
-> > > =20
-> > >  - reg : Specifies base physical address and size of the registers.
-> > > =20
-> > > +Optional properties:
-> > > +- timeout-sec: contains the watchdog timeout in seconds.
-> > > +
-> > >  Example:
-> > > =20
-> > >  wdt: watchdog@10000000 {
-> > >  	compatible =3D "mediatek,mt6589-wdt";
-> > >  	reg =3D <0x10000000 0x18>;
-> > > +	timeout-sec =3D <10>;
-> > >  };
-> > > diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
-> > > index 7ed417a765c7..fcdc10ec28a3 100644
-> > > --- a/drivers/watchdog/mtk_wdt.c
-> > > +++ b/drivers/watchdog/mtk_wdt.c
-> > > @@ -57,7 +57,7 @@
-> > >  #define DRV_VERSION		"1.0"
-> > > =20
-> > >  static bool nowayout =3D WATCHDOG_NOWAYOUT;
-> > > -static unsigned int timeout =3D WDT_MAX_TIMEOUT;
-> > > +static unsigned int timeout;
-> > > =20
-> > >  struct mtk_wdt_dev {
-> > >  	struct watchdog_device wdt_dev;
-> >=20
-> >=20
-
-Best regards
-Marcus Folkesson
-
-
-
---w7PDEPdKQumQfZlR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEBVGi6LZstU1kwSxliIBOb1ldUjIFAlp/UhIACgkQiIBOb1ld
-UjLTSg//Y1Wdm+EzphVBNcQEOVuer5HfbnXLStbtYpcKsmz4gwjdx7vMhdmebUZg
-//6LIc3NBl/EowXi1zqR7/Eo57Xxd1iw5WxoRDHOqGeZtZ6BqdD3Rte240QhKnZX
-gFBNfeUgSjnCrzbdAOrKz2g6M4W9Bqb6C5XwTrO3KXp7eUPxffIQYCSkwt2FKlKy
-5MMEonSISxDhgUXvB7p29BnZqCtAlrnwo/wgkug7kmON4059RaFBoRmAiJxO0GuE
-Z9ksVOFiOaUlM0zZpoCGoQAseFFv169s7JkVC9nphx3qu53i6/NqadyYdKqS6Dpz
-L8gCOZKSt93rILxYANfaUnec07oxQNOxrOLF8BfKaJJiKlkI+k/w5c3DijvEngbj
-8KxtttCgVMxrwc7IQg3Mw5zlG7Z2go08JbSBrxyHWt0DE2k2VpBLDPaXFKPIMufg
-AyVsKPMfzms53w9sRtm8UMALc9fv7C4UIOKL9HHWIiicj6AHeUYU/0rpzyIJVPWU
-whIoLZWasSkke3vxVQkR61MX7/6S07L52sKGQAGI6I65oSeAsfT4lAA0PyydU5y6
-Iuoqc2MvGw4jm8n0xVsrwBC/NVHweMejksZYhOgpPlRzY05qxce8KlVPX/s58w7E
-CxtbaDQNUTFCYa2B63fPqJqWR3jUR6y03caL3laEwEX4ZOvGd08=
-=6wc6
------END PGP SIGNATURE-----
-
---w7PDEPdKQumQfZlR--
+On 10.02.2018 14:56, Sergey Suloev wrote:
+> On 02/09/2018 08:52 PM, Philipp Rossak wrote:
+>> This patchseries fixes the bananapi m1 devicetree, to be able to boot 
+>> again.
+>> The first two patches update/improve the devicetree and the last patch 
+>> adds
+>> all missing regulators.
+>>
+>> Regards,
+>> Philipp
+>>
+>> Philipp Rossak (3):
+>>    arm: dts: sun6i: a31s: bpi-m2: update mmc supply nodes
+>>    arm: dts: sun6i: a31s: bpi-m2: improve pmic properties
+>>    arm: dts: sun6i: a31s: fix: bpi-m2: add missing regulators
+>>
+>>   arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts | 70 
+>> +++++++++++++++++++++++-
+>>   1 file changed, 67 insertions(+), 3 deletions(-)
+>>
+> patches are not working
+> 
+> Thanks
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
