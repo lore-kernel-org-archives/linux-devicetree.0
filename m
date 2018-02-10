@@ -1,7 +1,7 @@
 From: Marcus Folkesson <marcus.folkesson@gmail.com>
-Subject: [PATCH v2 4/7] watchdog: pnx4008: make use of timeout-secs provided in devicetree
-Date: Sat, 10 Feb 2018 10:19:08 +0100
-Message-ID: <20180210091911.3644-4-marcus.folkesson@gmail.com>
+Subject: [PATCH v2 6/7] watchdog: meson: allow setting timeout in devicetree
+Date: Sat, 10 Feb 2018 10:19:10 +0100
+Message-ID: <20180210091911.3644-6-marcus.folkesson@gmail.com>
 References: <20180210091911.3644-1-marcus.folkesson@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180210091911.3644-1-marcus.folkesson@gmail.com>
@@ -13,28 +13,47 @@ List-Id: devicetree@vger.kernel.org
 watchdog_init_timeout() will allways pick timeout_param since it
 defaults to a valid timeout.
 
-Following best practice described in
-Documentation/watchdog/watchdog-kernel-api.txt to make use of
-the parameter logic.
+By following best practice described in
+Documentation/watchdog/watchdog-kernel-api.txt, it also
+let us to set timout-sec property in devicetree.
 
 Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/watchdog/pnx4008_wdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/watchdog/meson-wdt.txt | 4 ++++
+ drivers/watchdog/meson_wdt.c                             | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/watchdog/pnx4008_wdt.c b/drivers/watchdog/pnx4008_wdt.c
-index 0529aed158a4..8e261799c84e 100644
---- a/drivers/watchdog/pnx4008_wdt.c
-+++ b/drivers/watchdog/pnx4008_wdt.c
-@@ -78,7 +78,7 @@
- #define WDOG_COUNTER_RATE 13000000	/*the counter clock is 13 MHz fixed */
+diff --git a/Documentation/devicetree/bindings/watchdog/meson-wdt.txt b/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
+index 8a6d84cb36c9..7588cc3971bf 100644
+--- a/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
+@@ -9,9 +9,13 @@ Required properties:
+ 	"amlogic,meson8m2-wdt" and "amlogic,meson8b-wdt" on Meson8m2 SoCs
+ - reg : Specifies base physical address and size of the registers.
+ 
++Optional properties:
++- timeout-sec: contains the watchdog timeout in seconds.
++
+ Example:
+ 
+ wdt: watchdog@c1109900 {
+ 	compatible = "amlogic,meson6-wdt";
+ 	reg = <0xc1109900 0x8>;
++	timeout-sec = <10>;
+ };
+diff --git a/drivers/watchdog/meson_wdt.c b/drivers/watchdog/meson_wdt.c
+index 304274c67735..cd0275a6cdac 100644
+--- a/drivers/watchdog/meson_wdt.c
++++ b/drivers/watchdog/meson_wdt.c
+@@ -36,7 +36,7 @@
+ #define MESON_SEC_TO_TC(s, c)	((s) * (c))
  
  static bool nowayout = WATCHDOG_NOWAYOUT;
--static unsigned int heartbeat = DEFAULT_HEARTBEAT;
-+static unsigned int heartbeat;
+-static unsigned int timeout = MESON_WDT_TIMEOUT;
++static unsigned int timeout;
  
- static DEFINE_SPINLOCK(io_lock);
- static void __iomem	*wdt_base;
+ struct meson_wdt_data {
+ 	unsigned int enable;
 -- 
 2.15.1
