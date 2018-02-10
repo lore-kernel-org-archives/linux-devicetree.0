@@ -1,7 +1,7 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 08/11] clk: actions: Add factor clock support
-Date: Sat, 10 Feb 2018 08:11:17 +0530
-Message-ID: <20180210024120.27503-9-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 10/11] clk: actions: Add pll clock support
+Date: Sat, 10 Feb 2018 08:11:19 +0530
+Message-ID: <20180210024120.27503-11-manivannan.sadhasivam@linaro.org>
 References: <20180210024120.27503-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180210024120.27503-1-manivannan.sadhasivam@linaro.org>
@@ -10,36 +10,35 @@ To: mturquette@baylibre.com, sboyd@codeaurora.org, afaerber@suse.de, robh+dt@ker
 Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, viresh.kumar@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Actions Semi factor clock together with
-helper functions to be used in composite clock.
+Add support for Actions Semi PLL clock
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/clk/actions/Makefile     |   1 +
- drivers/clk/actions/owl-factor.c | 222 +++++++++++++++++++++++++++++++++++++++
- drivers/clk/actions/owl-factor.h |  83 +++++++++++++++
- 3 files changed, 306 insertions(+)
- create mode 100644 drivers/clk/actions/owl-factor.c
- create mode 100644 drivers/clk/actions/owl-factor.h
+ drivers/clk/actions/Makefile  |   1 +
+ drivers/clk/actions/owl-pll.c | 194 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/actions/owl-pll.h |  92 ++++++++++++++++++++
+ 3 files changed, 287 insertions(+)
+ create mode 100644 drivers/clk/actions/owl-pll.c
+ create mode 100644 drivers/clk/actions/owl-pll.h
 
 diff --git a/drivers/clk/actions/Makefile b/drivers/clk/actions/Makefile
-index 5ce75df57e1a..994357fa560b 100644
+index 53431aef6e9c..31b68eab9309 100644
 --- a/drivers/clk/actions/Makefile
 +++ b/drivers/clk/actions/Makefile
-@@ -4,3 +4,4 @@ clk-owl-y			+= owl-common.o
- clk-owl-y			+= owl-gate.o
- clk-owl-y			+= owl-mux.o
+@@ -6,3 +6,4 @@ clk-owl-y			+= owl-mux.o
  clk-owl-y			+= owl-divider.o
-+clk-owl-y			+= owl-factor.o
-diff --git a/drivers/clk/actions/owl-factor.c b/drivers/clk/actions/owl-factor.c
+ clk-owl-y			+= owl-factor.o
+ clk-owl-y			+= owl-composite.o
++clk-owl-y			+= owl-pll.o
+diff --git a/drivers/clk/actions/owl-pll.c b/drivers/clk/actions/owl-pll.c
 new file mode 100644
-index 000000000000..c48a2c8b479e
+index 000000000000..3560c7324f9c
 --- /dev/null
-+++ b/drivers/clk/actions/owl-factor.c
-@@ -0,0 +1,222 @@
++++ b/drivers/clk/actions/owl-pll.c
+@@ -0,0 +1,194 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +//
-+// OWL factor clock driver
++// OWL pll clock driver
 +//
 +// Copyright (c) 2014 Actions Semi Inc.
 +// Author: David Liu <liuwei@actions-semi.com>
@@ -48,226 +47,198 @@ index 000000000000..c48a2c8b479e
 +// Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 +
 +#include <linux/clk-provider.h>
-+#include <linux/regmap.h>
 +#include <linux/slab.h>
++#include <linux/io.h>
++#include <linux/delay.h>
 +
-+#include "owl-factor.h"
++#include "owl-pll.h"
 +
-+static unsigned int _get_table_maxval(const struct clk_factor_table *table)
++static u32 owl_pll_calculate_mul(struct owl_pll_hw *pll_hw, unsigned long rate)
 +{
-+	unsigned int maxval = 0;
-+	const struct clk_factor_table *clkt;
++	u32 mul;
 +
-+	for (clkt = table; clkt->div; clkt++)
-+		if (clkt->val > maxval)
-+			maxval = clkt->val;
-+	return maxval;
++	mul = DIV_ROUND_CLOSEST(rate, pll_hw->bfreq);
++	if (mul < pll_hw->min_mul)
++		mul = pll_hw->min_mul;
++	else if (mul > pll_hw->max_mul)
++		mul = pll_hw->max_mul;
++
++	return mul &= mul_mask(pll_hw);
 +}
 +
-+static int _get_table_div_mul(const struct clk_factor_table *table,
-+			unsigned int val, unsigned int *mul, unsigned int *div)
++static unsigned int _get_table_rate(const struct clk_pll_table *table,
++		unsigned int val)
 +{
-+	const struct clk_factor_table *clkt;
++	const struct clk_pll_table *clkt;
 +
-+	for (clkt = table; clkt->div; clkt++) {
-+		if (clkt->val == val) {
-+			*mul = clkt->mul;
-+			*div = clkt->div;
-+			return 1;
-+		}
-+	}
++	for (clkt = table; clkt->rate; clkt++)
++		if (clkt->val == val)
++			return clkt->rate;
 +
 +	return 0;
 +}
 +
-+static unsigned int _get_table_val(const struct clk_factor_table *table,
-+			unsigned long rate, unsigned long parent_rate)
++static const struct clk_pll_table *_get_pll_table(
++		const struct clk_pll_table *table, unsigned long rate)
 +{
-+	const struct clk_factor_table *clkt;
-+	int val = -1;
-+	u64 calc_rate;
++	const struct clk_pll_table *clkt;
 +
-+	for (clkt = table; clkt->div; clkt++) {
-+		calc_rate = parent_rate * clkt->mul;
-+		do_div(calc_rate, clkt->div);
-+
-+		if ((unsigned long)calc_rate <= rate) {
-+			val = clkt->val;
++	for (clkt = table; clkt->rate; clkt++) {
++		if (clkt->rate == rate) {
++			table = clkt;
 +			break;
-+		}
++		} else if (clkt->rate < rate)
++			table = clkt;
 +	}
 +
-+	if (val == -1)
-+		val = _get_table_maxval(table);
-+
-+	return val;
++	return table;
 +}
 +
-+static int clk_val_best(struct clk_hw *hw, unsigned long rate,
-+			unsigned long *best_parent_rate)
++static long owl_pll_round_rate(struct clk_hw *hw, unsigned long rate,
++		unsigned long *parent_rate)
 +{
-+	struct owl_factor *factor = hw_to_owl_factor(hw);
-+	struct owl_factor_hw *factor_hw = &factor->factor_hw;
-+	const struct clk_factor_table *clkt = factor_hw->table;
-+	unsigned long parent_rate, try_parent_rate, best = 0, cur_rate;
-+	unsigned long parent_rate_saved = *best_parent_rate;
-+	int bestval = 0;
++	struct owl_pll *pll = hw_to_owl_pll(hw);
++	struct owl_pll_hw *pll_hw = &pll->pll_hw;
++	const struct clk_pll_table *clkt;
++	u32 mul;
 +
-+	if (!rate)
-+		rate = 1;
-+
-+	if (!(clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT)) {
-+		parent_rate = *best_parent_rate;
-+		bestval = _get_table_val(clkt, rate, parent_rate);
-+		return bestval;
++	if (pll_hw->table) {
++		clkt = _get_pll_table(pll_hw->table, rate);
++		return clkt->rate;
 +	}
 +
-+	for (clkt = factor_hw->table; clkt->div; clkt++) {
-+		try_parent_rate = rate * clkt->div / clkt->mul;
++	/* fixed frequency */
++	if (pll_hw->width == 0)
++		return pll_hw->bfreq;
 +
-+		if (try_parent_rate == parent_rate_saved) {
-+			pr_debug("%s: [%d %d %d] found try_parent_rate %ld\n",
-+				__func__, clkt->val, clkt->mul, clkt->div,
-+				try_parent_rate);
-+			/*
-+			 * It's the most ideal case if the requested rate can be
-+			 * divided from parent clock without any need to change
-+			 * parent rate, so return the divider immediately.
-+			 */
-+			*best_parent_rate = parent_rate_saved;
-+			return clkt->val;
-+		}
++	mul = owl_pll_calculate_mul(pll_hw, rate);
 +
-+		parent_rate = clk_hw_round_rate(clk_hw_get_parent(hw),
-+				try_parent_rate);
-+		cur_rate = DIV_ROUND_UP(parent_rate, clkt->div) * clkt->mul;
-+		if (cur_rate <= rate && cur_rate > best) {
-+			bestval = clkt->val;
-+			best = cur_rate;
-+			*best_parent_rate = parent_rate;
-+		}
++	return pll_hw->bfreq * mul;
++}
++
++static unsigned long owl_pll_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	struct owl_pll *pll = hw_to_owl_pll(hw);
++	struct owl_pll_hw *pll_hw = &pll->pll_hw;
++	const struct owl_clk_common *common = &pll->common;
++	u32 val;
++
++	if (pll_hw->table) {
++		regmap_read(common->regmap, pll_hw->reg, &val);
++
++		val = val >> pll_hw->shift;
++		val &= mul_mask(pll_hw);
++
++		return _get_table_rate(pll_hw->table, val);
 +	}
 +
-+	if (!bestval) {
-+		bestval = _get_table_maxval(clkt);
-+		*best_parent_rate = clk_hw_round_rate(
-+				clk_hw_get_parent(hw), 1);
-+	}
++	/* fixed frequency */
++	if (pll_hw->width == 0)
++		return pll_hw->bfreq;
 +
-+	return bestval;
++	regmap_read(common->regmap, pll_hw->reg, &val);
++
++	val = val >> pll_hw->shift;
++	val &= mul_mask(pll_hw);
++
++	return pll_hw->bfreq * val;
 +}
 +
-+long owl_factor_helper_round_rate(struct owl_clk_common *common,
-+				const struct owl_factor_hw *factor_hw,
-+				unsigned long rate,
-+				unsigned long *parent_rate)
++static int owl_pll_is_enabled(struct clk_hw *hw)
 +{
-+	const struct clk_factor_table *clkt = factor_hw->table;
-+	unsigned int val, mul = 0, div = 1;
++	struct owl_pll *pll = hw_to_owl_pll(hw);
++	struct owl_pll_hw *pll_hw = &pll->pll_hw;
++	const struct owl_clk_common *common = &pll->common;
++	u32 reg;
 +
-+	val = clk_val_best(&common->hw, rate, parent_rate);
-+	_get_table_div_mul(clkt, val, &mul, &div);
++	regmap_read(common->regmap, pll_hw->reg, &reg);
 +
-+	return *parent_rate * mul / div;
++	return !!(reg & BIT(pll_hw->bit_idx));
 +}
 +
-+static long owl_factor_round_rate(struct clk_hw *hw, unsigned long rate,
-+			unsigned long *parent_rate)
++static void owl_pll_set(const struct owl_clk_common *common,
++		       const struct owl_pll_hw *pll_hw, bool enable)
 +{
-+	struct owl_factor *factor = hw_to_owl_factor(hw);
-+	struct owl_factor_hw *factor_hw = &factor->factor_hw;
++	u32 reg;
 +
-+	return owl_factor_helper_round_rate(&factor->common, factor_hw,
-+					rate, parent_rate);
++	regmap_read(common->regmap, pll_hw->reg, &reg);
++
++	if (enable)
++		reg |= BIT(pll_hw->bit_idx);
++	else
++		reg &= ~BIT(pll_hw->bit_idx);
++
++	regmap_write(common->regmap, pll_hw->reg, reg);
 +}
 +
-+unsigned long owl_factor_helper_recalc_rate(struct owl_clk_common *common,
-+					 const struct owl_factor_hw *factor_hw,
-+					 unsigned long parent_rate)
++static int owl_pll_enable(struct clk_hw *hw)
 +{
-+	const struct clk_factor_table *clkt = factor_hw->table;
-+	unsigned long rate;
-+	u32 reg, val, mul, div;
++	struct owl_pll *pll = hw_to_owl_pll(hw);
++	const struct owl_clk_common *common = &pll->common;
 +
-+	div = 0;
-+	mul = 0;
++	owl_pll_set(common, &pll->pll_hw, true);
 +
-+	regmap_read(common->regmap, factor_hw->reg, &reg);
-+
-+	val = reg >> factor_hw->shift;
-+	val &= div_mask(factor_hw);
-+
-+	_get_table_div_mul(clkt, val, &mul, &div);
-+	if (!div) {
-+		WARN(!(factor_hw->fct_flags & CLK_DIVIDER_ALLOW_ZERO),
-+			"%s: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set\n",
-+			__clk_get_name(common->hw.clk));
-+		return parent_rate;
-+	}
-+
-+	rate = parent_rate * mul;
-+	do_div(rate, div);
-+
-+	return rate;
++	return 0;
 +}
 +
-+static unsigned long owl_factor_recalc_rate(struct clk_hw *hw,
-+			unsigned long parent_rate)
++static void owl_pll_disable(struct clk_hw *hw)
 +{
-+	struct owl_factor *factor = hw_to_owl_factor(hw);
-+	struct owl_factor_hw *factor_hw = &factor->factor_hw;
-+	struct owl_clk_common *common = &factor->common;
++	struct owl_pll *pll = hw_to_owl_pll(hw);
++	const struct owl_clk_common *common = &pll->common;
 +
-+	return owl_factor_helper_recalc_rate(common, factor_hw, parent_rate);
++	owl_pll_set(common, &pll->pll_hw, false);
 +}
 +
-+int owl_factor_helper_set_rate(const struct owl_clk_common *common,
-+				const struct owl_factor_hw *factor_hw,
-+				unsigned long rate,
-+				unsigned long parent_rate)
++static int owl_pll_set_rate(struct clk_hw *hw, unsigned long rate,
++		unsigned long parent_rate)
 +{
++	struct owl_pll *pll = hw_to_owl_pll(hw);
++	struct owl_pll_hw *pll_hw = &pll->pll_hw;
++	const struct owl_clk_common *common = &pll->common;
++	const struct clk_pll_table *clkt;
 +	u32 val, reg;
 +
-+	val = _get_table_val(factor_hw->table, rate, parent_rate);
++	/* fixed frequency */
++	if (pll_hw->width == 0)
++		return 0;
 +
-+	if (val > div_mask(factor_hw))
-+		val = div_mask(factor_hw);
++	if (pll_hw->table) {
++		clkt = _get_pll_table(pll_hw->table, rate);
++		val = clkt->val;
++	} else {
++		val = owl_pll_calculate_mul(pll_hw, rate);
++	}
 +
-+	regmap_read(common->regmap, factor_hw->reg, &reg);
++	regmap_read(common->regmap, pll_hw->reg, &reg);
 +
-+	reg &= ~(div_mask(factor_hw) << factor_hw->shift);
-+	reg |= val << factor_hw->shift;
++	reg &= ~mul_mask(pll_hw);
++	reg |= val << pll_hw->shift;
 +
-+	regmap_write(common->regmap, factor_hw->reg, reg);
++	regmap_write(common->regmap, pll_hw->reg, reg);
++
++	udelay(PLL_STABILITY_WAIT_US);
 +
 +	return 0;
 +}
 +
-+static int owl_factor_set_rate(struct clk_hw *hw, unsigned long rate,
-+			       unsigned long parent_rate)
-+{
-+	struct owl_factor *factor = hw_to_owl_factor(hw);
-+	struct owl_factor_hw *factor_hw = &factor->factor_hw;
-+	struct owl_clk_common *common = &factor->common;
-+
-+	return owl_factor_helper_set_rate(common, factor_hw,
-+					rate, parent_rate);
-+}
-+
-+const struct clk_ops owl_factor_ops = {
-+	.round_rate	= owl_factor_round_rate,
-+	.recalc_rate	= owl_factor_recalc_rate,
-+	.set_rate	= owl_factor_set_rate,
++const struct clk_ops owl_pll_ops = {
++	.enable = owl_pll_enable,
++	.disable = owl_pll_disable,
++	.is_enabled = owl_pll_is_enabled,
++	.round_rate = owl_pll_round_rate,
++	.recalc_rate = owl_pll_recalc_rate,
++	.set_rate = owl_pll_set_rate,
 +};
-diff --git a/drivers/clk/actions/owl-factor.h b/drivers/clk/actions/owl-factor.h
+diff --git a/drivers/clk/actions/owl-pll.h b/drivers/clk/actions/owl-pll.h
 new file mode 100644
-index 000000000000..f1a7ffe896e1
+index 000000000000..0aae30abd5dc
 --- /dev/null
-+++ b/drivers/clk/actions/owl-factor.h
-@@ -0,0 +1,83 @@
++++ b/drivers/clk/actions/owl-pll.h
+@@ -0,0 +1,92 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +//
-+// OWL factor clock driver
++// OWL pll clock driver
 +//
 +// Copyright (c) 2014 Actions Semi Inc.
 +// Author: David Liu <liuwei@actions-semi.com>
@@ -275,78 +246,87 @@ index 000000000000..f1a7ffe896e1
 +// Copyright (c) 2018 Linaro Ltd.
 +// Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 +
-+#ifndef _OWL_FACTOR_H_
-+#define _OWL_FACTOR_H_
++#ifndef _OWL_PLL_H_
++#define _OWL_PLL_H_
 +
 +#include "owl-common.h"
 +
-+struct clk_factor_table {
++/* last entry should have rate = 0 */
++struct clk_pll_table {
 +	unsigned int		val;
-+	unsigned int		mul;
-+	unsigned int		div;
++	unsigned long		rate;
 +};
 +
-+struct owl_factor_hw {
++struct owl_pll_hw {
 +	u32			reg;
++	u32			bfreq;
++	u8			bit_idx;
 +	u8			shift;
 +	u8			width;
-+	u8			fct_flags;
-+	struct clk_factor_table	*table;
++	u8			min_mul;
++	u8			max_mul;
++	const struct clk_pll_table *table;
 +};
 +
-+struct owl_factor {
-+	struct owl_factor_hw	factor_hw;
++struct owl_pll {
++	struct owl_pll_hw	pll_hw;
 +	struct owl_clk_common	common;
 +};
 +
-+#define OWL_FACTOR_HW(_reg, _shift, _width, _fct_flags, _table)		\
++#define OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,			\
++		   _width, _min_mul, _max_mul, _table)			\
 +	{								\
 +		.reg		= _reg,					\
++		.bfreq		= _bfreq,				\
++		.bit_idx	= _bit_idx,				\
 +		.shift		= _shift,				\
 +		.width		= _width,				\
-+		.fct_flags	= _fct_flags,				\
++		.min_mul	= _min_mul,				\
++		.max_mul	= _max_mul,				\
 +		.table		= _table,				\
 +	}
 +
-+#define OWL_FACTOR(_struct, _name, _parent, _reg,			\
-+		   _shift, _width, _table, _fct_flags, _flags)		\
-+	struct owl_factor _struct = {					\
-+		.factor_hw = OWL_FACTOR_HW(_reg, _shift,		\
-+					   _width, _fct_flags, _table),	\
++#define OWL_PLL(_struct, _name, _parent, _reg, _bfreq, _bit_idx,	\
++		_shift, _width, _min_mul, _max_mul, _table, _flags)	\
++	struct owl_pll _struct = {					\
++		.pll_hw	= OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,	\
++				     _width, _min_mul,			\
++				     _max_mul, _table),			\
 +		.common = {						\
-+			.regmap		= NULL,				\
-+			.hw.init	= CLK_HW_INIT(_name,		\
-+						      _parent,		\
-+						      &owl_factor_ops,	\
-+						      _flags),		\
++			.regmap = NULL,					\
++			.hw.init = CLK_HW_INIT(_name,			\
++					       _parent,			\
++					       &owl_pll_ops,		\
++					       _flags),			\
 +		},							\
 +	}
 +
-+#define div_mask(d) ((1 << ((d)->width)) - 1)
++#define OWL_PLL_NO_PARENT(_struct, _name, _reg, _bfreq, _bit_idx,	\
++		_shift, _width, _min_mul, _max_mul, _table, _flags)	\
++	struct owl_pll _struct = {					\
++		.pll_hw	= OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,	\
++				     _width, _min_mul,			\
++				     _max_mul, _table),			\
++		.common = {						\
++			.regmap = NULL,					\
++			.hw.init = CLK_HW_INIT_NO_PARENT(_name,		\
++					       &owl_pll_ops,		\
++					       _flags),			\
++		},							\
++	}
 +
-+static inline struct owl_factor *hw_to_owl_factor(const struct clk_hw *hw)
++#define mul_mask(m)		((1 << ((m)->width)) - 1)
++#define PLL_STABILITY_WAIT_US	(50)
++
++static inline struct owl_pll *hw_to_owl_pll(const struct clk_hw *hw)
 +{
 +	struct owl_clk_common *common = hw_to_owl_clk_common(hw);
 +
-+	return container_of(common, struct owl_factor, common);
++	return container_of(common, struct owl_pll, common);
 +}
 +
-+long owl_factor_helper_round_rate(struct owl_clk_common *common,
-+				const struct owl_factor_hw *factor_hw,
-+				unsigned long rate,
-+				unsigned long *parent_rate);
++extern const struct clk_ops owl_pll_ops;
 +
-+unsigned long owl_factor_helper_recalc_rate(struct owl_clk_common *common,
-+					 const struct owl_factor_hw *factor_hw,
-+					 unsigned long parent_rate);
-+
-+int owl_factor_helper_set_rate(const struct owl_clk_common *common,
-+				const struct owl_factor_hw *factor_hw,
-+				unsigned long rate,
-+				unsigned long parent_rate);
-+
-+extern const struct clk_ops owl_factor_ops;
-+
-+#endif /* _OWL_FACTOR_H_ */
++#endif /* _OWL_PLL_H_ */
 -- 
 2.14.1
