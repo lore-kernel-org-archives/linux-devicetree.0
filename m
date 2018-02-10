@@ -1,90 +1,66 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 4/6] PCI: rockchip: Add rockchip,rk3399-pcie-host
- compatible
-Date: Sat, 10 Feb 2018 16:10:28 +0800
-Message-ID: <37408ad8-f962-a411-3987-ee86c55b7c25@rock-chips.com>
-References: <1517971650-61555-1-git-send-email-shawn.lin@rock-chips.com>
- <1517971650-61555-5-git-send-email-shawn.lin@rock-chips.com>
- <20180209233857.osoyfvst3waa54b3@rob-hp-laptop>
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: Re: [PATCH 5/6] ARM: dts: tegra: apalis-tk1: copyright period, spurious newlines
+Date: Sat, 10 Feb 2018 09:40:30 +0100
+Message-ID: <C651C677-D157-41A3-B206-CB02B986AD19@ziswiler.com>
+References: <20180210013806.28496-1-marcel@ziswiler.com> <20180210013806.28496-6-marcel@ziswiler.com> <CAOFm3uH+aasUA9MrV+uXvHUT=fzS63PvC2fDfNo3q687dUQ_dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180209233857.osoyfvst3waa54b3@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOFm3uH+aasUA9MrV+uXvHUT=fzS63PvC2fDfNo3q687dUQ_dw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Ombredanne <pombredanne@nexb.com>
+Cc: linux-tegra@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On 2018/2/10 7:38, Rob Herring wrote:
-> On Wed, Feb 07, 2018 at 10:47:28AM +0800, Shawn Lin wrote:
->> To avoid confusion when folks use this controller as endponint
-> 
-> s/endponint/endpoint/
-> 
->> mode, we add rockchip,rk3399-pcie-host to clearly state that
->> it's driver for host here. And rename/update the document to
->> reflect this fact.
+
+On February 10, 2018 8:07:58 AM GMT+01:00, Philippe Ombredanne <pombredanne@nexb.com> wrote:
+>Marcel,
+>
+>On Sat, Feb 10, 2018 at 2:38 AM, Marcel Ziswiler <marcel@ziswiler.com>
+>wrote:
+>> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 >>
->> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> Update the copyright period and get rid of some spurious newlines.
+>>
+>> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+>>
 >> ---
 >>
->>   .../bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt}         | 3 ++-
->>   drivers/pci/rockchip/pcie-rockchip-host.c                              | 1 +
->>   2 files changed, 3 insertions(+), 1 deletion(-)
->>   rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (98%)
+>>  arch/arm/boot/dts/tegra124-apalis-eval.dts |  6 ++----
+>>  arch/arm/boot/dts/tegra124-apalis.dtsi     | 11 +----------
+>>  2 files changed, 3 insertions(+), 14 deletions(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
->> similarity index 98%
->> rename from Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> rename to Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
->> index af34c65..f2f3091 100644
->> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie-host.txt
->> @@ -5,7 +5,8 @@ Required properties:
->>   - #size-cells: Size representation for root ports, set to <2>
->>   - #interrupt-cells: specifies the number of cells needed to encode an
->>   		interrupt source. The value must be 1.
->> -- compatible: Should contain "rockchip,rk3399-pcie"
->> +- compatible: Should contain "rockchip,rk3399-pcie" or
->> +	"rockchip,rk3399-pcie-host"
-> 
-> I don't think this is necessary. Endpoint is generally the exception and
-> having "endpoint" or "ep" in the endpoint compatible should be enough.
-> 
+>> diff --git a/arch/arm/boot/dts/tegra124-apalis-eval.dts
+>b/arch/arm/boot/dts/tegra124-apalis-eval.dts
+>> index f1010cefb993..a6ad759dddb4 100644
+>> --- a/arch/arm/boot/dts/tegra124-apalis-eval.dts
+>> +++ b/arch/arm/boot/dts/tegra124-apalis-eval.dts
+>> @@ -1,5 +1,5 @@
+>>  /*
+>> - * Copyright 2016 Toradex AG
+>> + * Copyright 2016-2018 Toradex AG
+>>   *
+>>   * This file is dual-licensed: you can use it either under the terms
+>>   * of the GPL or the X11 license, at your option. Note that this
+>dual
+>
+>Since you are fixing copyrights, would you consider also fixing the
+>license to use a proper SPDX Id instead?
+>
+>It would be super gentle of you!
+>
+>And you will get extra good karma point if you feel like doing the
+>same for every Toradex-copyrighted files ;)
+>
+>The (still new and fresh) license documentation contributed by tglx
+>--the only real-time docu-mentalist-- is in:
+>Documentation/process/license-rules.rst
+>
+>Thanks!
 
-I was following the convention of other controllers that support
-both of RC mode and EP mode, for instance, pcie-cadence-{host, ep}.txt
+Yes, I'm already in the process of preparing a separate patch set fixing this across all Toradex files. However I'm running this through our legal as well first to make absolutely sure it's all proper.
 
-Sure, I agree that endpoint is generally the exception, so will drop
-this in v2.
-
->>   - reg: Two register ranges as listed in the reg-names property
->>   - reg-names: Must include the following names
->>   	- "axi-base"
->> diff --git a/drivers/pci/rockchip/pcie-rockchip-host.c b/drivers/pci/rockchip/pcie-rockchip-host.c
->> index f5b0492..efb740d 100644
->> --- a/drivers/pci/rockchip/pcie-rockchip-host.c
->> +++ b/drivers/pci/rockchip/pcie-rockchip-host.c
->> @@ -1120,6 +1120,7 @@ static int rockchip_pcie_remove(struct platform_device *pdev)
->>   
->>   static const struct of_device_id rockchip_pcie_of_match[] = {
->>   	{ .compatible = "rockchip,rk3399-pcie", },
->> +	{ .compatible = "rockchip,rk3399-pcie-host", },
->>   	{}
->>   };
->>   MODULE_DEVICE_TABLE(of, rockchip_pcie_of_match);
->> -- 
->> 1.9.1
->>
->>
-> 
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
