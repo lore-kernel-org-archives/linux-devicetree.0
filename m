@@ -1,34 +1,83 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH v2 0/3] gpio-keys: Add support for specifying wakeup event action
-Date: Sat, 10 Feb 2018 19:09:04 +0800
-Message-ID: <20180210110907.5504-1-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: briannorris@google.com, dtor@google.com, dianders@google.com, Jeffy Chen <jeffy.chen@rock-chips.com>, Arnd Bergmann <arnd@arndb.de>, Joseph Lo <josephl@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Emil Renner Berthing <kernel@esmil.dk>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, linux-rockchip@lists.infradead.org, Kate Stewart <kstewart@linuxfoundation.org>, linux-input@vger.kernel.org, Will Deacon <will.deacon@arm.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, stephen lu <lumotuwe@gmail.com>, Greg Kroah-Hartman <gregkh@lin>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 5/7] watchdog: mtk: allow setting timeout in devicetree
+Date: Sat, 10 Feb 2018 19:10:02 +0800
+Message-ID: <1518261002.9025.36.camel@mtkswgap22>
+References: <20180210091911.3644-1-marcus.folkesson@gmail.com>
+ <20180210091911.3644-5-marcus.folkesson@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180210091911.3644-5-marcus.folkesson@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Vladimir Zapolskiy <vz@mleia.com>, Matthias Brugger <matthias.bgg@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sylvain Lemieux <slemieux.tyco@gmail.com>, Carlo Caione <carlo@caione.org>, linux-mediatek@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Guenter Roeck <linux@roeck-us.net>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
-On chromebook kevin, we are using gpio-keys for pen insert event. But
-we only want it to wakeup the system when ejecting the pen.
+Hi, Marcus
 
-So we may need to change the interrupt trigger type during suspending.
+The changes you made for dt-bindings and driver should be put into
+separate patches.
 
-Changes in v2:
-Specify wakeup event action instead of irq trigger type as Brian
-suggested.
+And the property timeout-sec seems to be generic enough to all devices,
+so why not add a common document to describe it and allow those devices
+to refer to, like other dt-bindings for other kinds of devices usually
+did.
 
-Jeffy Chen (3):
-  Input: gpio-keys - add support for wakeup event action
-  Input: gpio-keys - allow setting wakeup event action in DT
-  arm64: dts: rockchip: Avoid wakeup when inserting the pen
+	Sean
 
- .../devicetree/bindings/input/gpio-keys.txt        |  8 +++++++
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts  |  2 ++
- drivers/input/keyboard/gpio_keys.c                 | 27 ++++++++++++++++++++++
- include/linux/gpio_keys.h                          |  2 ++
- include/uapi/linux/input-event-codes.h             |  9 ++++++++
- 5 files changed, 48 insertions(+)
-
--- 
-2.11.0
+On Sat, 2018-02-10 at 10:19 +0100, Marcus Folkesson wrote:
+> watchdog_init_timeout() will allways pick timeout_param since it
+> defaults to a valid timeout.
+> 
+> By following best practice described in
+> Documentation/watchdog/watchdog-kernel-api.txt, it also
+> let us to set timout-sec property in devicetree.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 4 ++++
+>  drivers/watchdog/mtk_wdt.c                             | 2 +-
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> index 5b38a30e608c..859dee167b91 100644
+> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> @@ -11,9 +11,13 @@ Required properties:
+>  
+>  - reg : Specifies base physical address and size of the registers.
+>  
+> +Optional properties:
+> +- timeout-sec: contains the watchdog timeout in seconds.
+> +
+>  Example:
+>  
+>  wdt: watchdog@10000000 {
+>  	compatible = "mediatek,mt6589-wdt";
+>  	reg = <0x10000000 0x18>;
+> +	timeout-sec = <10>;
+>  };
+> diff --git a/drivers/watchdog/mtk_wdt.c b/drivers/watchdog/mtk_wdt.c
+> index 7ed417a765c7..fcdc10ec28a3 100644
+> --- a/drivers/watchdog/mtk_wdt.c
+> +++ b/drivers/watchdog/mtk_wdt.c
+> @@ -57,7 +57,7 @@
+>  #define DRV_VERSION		"1.0"
+>  
+>  static bool nowayout = WATCHDOG_NOWAYOUT;
+> -static unsigned int timeout = WDT_MAX_TIMEOUT;
+> +static unsigned int timeout;
+>  
+>  struct mtk_wdt_dev {
+>  	struct watchdog_device wdt_dev;
