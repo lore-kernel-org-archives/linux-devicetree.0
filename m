@@ -1,199 +1,90 @@
-From: Yossi Mansharoff <yossim-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [RFC 2/3] usb: chipidea: Hook into mux framework to toggle usb switch
-Date: Sun, 11 Feb 2018 14:15:40 +0200
-Message-ID: <1518351341-6740-2-git-send-email-yossim@codeaurora.org>
-References: <1518351341-6740-1-git-send-email-yossim@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518351341-6740-1-git-send-email-yossim-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: rfried-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: Yossi Mansharoff <yossim-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [v2, 7/7] watchdog: coh901327: make use of timeout-secs provided
+ in devicetree
+Date: Sun, 11 Feb 2018 09:33:56 -0800
+Message-ID: <20180211173356.GA18292@roeck-us.net>
+References: <20180210091911.3644-7-marcus.folkesson@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180210091911.3644-7-marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On the db410c 96boards platform we have a TC7USB40MU on the board
-to mux the D+/D- lines coming from the controller between a micro
-usb "device" port and a USB hub for "host" roles[1]. During a
-role switch, we need to toggle this mux to forward the D+/D-
-lines to either the port or the hub. Add the necessary code to do
-the role switch in chipidea core via the generic mux framework.
-Board configurations like on db410c are expected to change roles
-via the sysfs API described in
-Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
+On Sat, Feb 10, 2018 at 10:19:11AM +0100, Marcus Folkesson wrote:
+> watchdog_init_timeout() will allways pick timeout_param since it
+> defaults to a valid timeout.
+> 
+> Following best practice described in
+> Documentation/watchdog/watchdog-kernel-api.txt to make use of
+> the parameter logic.
+> 
+> Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+> v2:
+> 	- Set .timeout in coh901327_wdt structure declaration.
+> 	- Set .min_timeout to 1 instead of 0. I could not find a datasheet
+> 	  for coh901327, so I'm not sure if 0 is valid. However, 0 seems
+> 		  wrong to me and most driver has 1 as min value. If it should
+> 		  be 0, please let me know and I have to set another initial
+> 		  value for margin.
 
-[1] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+Makes sense to me.
 
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+>  drivers/watchdog/coh901327_wdt.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/watchdog/coh901327_wdt.c b/drivers/watchdog/coh901327_wdt.c
+> index 4410337f4f7f..5d8eb9a30879 100644
+> --- a/drivers/watchdog/coh901327_wdt.c
+> +++ b/drivers/watchdog/coh901327_wdt.c
+> @@ -67,7 +67,9 @@
+>  #define U300_WDOG_IFR_WILL_BARK_IRQ_FORCE_ENABLE			0x0001U
+>  
+>  /* Default timeout in seconds = 1 minute */
+> -static unsigned int margin = 60;
+> +#define U300_WDOG_DEFAULT_TIMEOUT					60
+> +
+> +static unsigned int margin;
 
-Signed-off-by: Yossi Mansharoff <yossim-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt |  6 ++++++
- drivers/usb/chipidea/Kconfig                           |  2 ++
- drivers/usb/chipidea/core.c                            |  6 ++++++
- drivers/usb/chipidea/host.c                            |  7 +++++++
- drivers/usb/chipidea/udc.c                             | 13 ++++++++++++-
- include/linux/usb/chipidea.h                           |  2 ++
- 6 files changed, 35 insertions(+), 1 deletion(-)
+I just realized that 'margin' instead of the actual timeout is used
+at the end of the probe function to display the selected timeout.
+This will have to change as well (and I'll have to go back to the
+other patches to make sure that this doesn't happen there as well).
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-index 0e03344..2e93181 100644
---- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-@@ -76,6 +76,10 @@ Optional properties:
-   needs to make sure it does not send more than 90%
-   maximum_periodic_data_per_frame. The use case is multiple transactions, but
-   less frame rate.
-+- mux-controls: The mux control for toggling host/device output of this
-+  controller. It's expected that a mux state of 0 indicates device mode and a
-+  mux state of 1 indicates host mode.
-+- mux-control-names: Shall be "usb_switch" if mux-controls is specified.
- 
- i.mx specific properties
- - fsl,usbmisc: phandler of non-core register device, with one
-@@ -102,4 +106,6 @@ Example:
- 		rx-burst-size-dword = <0x10>;
- 		extcon = <0>, <&usb_id>;
- 		phy-clkgate-delay-us = <400>;
-+		mux-controls = <&usb_switch>;
-+		mux-control-names = "usb_switch";
- 	};
-diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
-index 785f0ed..6a8e635 100644
---- a/drivers/usb/chipidea/Kconfig
-+++ b/drivers/usb/chipidea/Kconfig
-@@ -3,6 +3,8 @@ config USB_CHIPIDEA
- 	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
- 	select EXTCON
- 	select RESET_CONTROLLER
-+	select MULTIPLEXER
-+	select MUX_GPIO
- 	help
- 	  Say Y here if your system has a dual role high speed USB
- 	  controller based on ChipIdea silicon IP. It supports:
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index dd2dd93..4a9e139 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -61,6 +61,7 @@
- #include <linux/of.h>
- #include <linux/regulator/consumer.h>
- #include <linux/usb/ehci_def.h>
-+#include <linux/mux/consumer.h>
- 
- #include "ci.h"
- #include "udc.h"
-@@ -687,6 +688,11 @@ static int ci_get_platdata(struct device *dev,
- 	if (of_find_property(dev->of_node, "non-zero-ttctrl-ttha", NULL))
- 		platdata->flags |= CI_HDRC_SET_NON_ZERO_TTHA;
- 
-+	platdata->usb_switch = devm_mux_control_get_optional(dev, "usb_switch");
-+	if (IS_ERR(platdata->usb_switch)){
-+		return PTR_ERR(platdata->usb_switch);
-+	}
-+
- 	ext_id = ERR_PTR(-ENODEV);
- 	ext_vbus = ERR_PTR(-ENODEV);
- 	if (of_property_read_bool(dev->of_node, "extcon")) {
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index 19d60ed..7bd630e 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -13,6 +13,7 @@
- #include <linux/usb/hcd.h>
- #include <linux/usb/chipidea.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/mux/consumer.h>
- 
- #include "../host/ehci.h"
- 
-@@ -163,6 +164,10 @@ static int host_start(struct ci_hdrc *ci)
- 		if (ci_otg_is_fsm_mode(ci)) {
- 			otg->host = &hcd->self;
- 			hcd->self.otg_port = 1;
-+		} else {
-+			ret = mux_control_select(ci->platdata->usb_switch, 1);
-+			if (ret)
-+				goto disable_reg;
- 		}
- 	}
- 
-@@ -183,6 +188,8 @@ static void host_stop(struct ci_hdrc *ci)
- 	struct usb_hcd *hcd = ci->hcd;
- 
- 	if (hcd) {
-+		if (!ci_otg_is_fsm_mode(ci))
-+			mux_control_deselect(ci->platdata->usb_switch);
- 		if (ci->platdata->notify_event)
- 			ci->platdata->notify_event(ci,
- 				CI_HDRC_CONTROLLER_STOPPED_EVENT);
-diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-index 9852ec5..209d3f6 100644
---- a/drivers/usb/chipidea/udc.c
-+++ b/drivers/usb/chipidea/udc.c
-@@ -19,6 +19,7 @@
- #include <linux/usb/gadget.h>
- #include <linux/usb/otg-fsm.h>
- #include <linux/usb/chipidea.h>
-+#include <linux/mux/consumer.h>
- 
- #include "ci.h"
- #include "udc.h"
-@@ -1965,16 +1966,26 @@ void ci_hdrc_gadget_destroy(struct ci_hdrc *ci)
- 
- static int udc_id_switch_for_device(struct ci_hdrc *ci)
- {
-+	int ret = 0;
-+
- 	if (ci->is_otg)
- 		/* Clear and enable BSV irq */
- 		hw_write_otgsc(ci, OTGSC_BSVIS | OTGSC_BSVIE,
- 					OTGSC_BSVIS | OTGSC_BSVIE);
- 
--	return 0;
-+	if (!ci_otg_is_fsm_mode(ci))
-+		ret = mux_control_select(ci->platdata->usb_switch, 0);
-+
-+	if (ci->is_otg && ret)
-+		hw_write_otgsc(ci, OTGSC_BSVIE | OTGSC_BSVIS, OTGSC_BSVIS);
-+
-+	return ret;
- }
- 
- static void udc_id_switch_for_host(struct ci_hdrc *ci)
- {
-+	mux_control_deselect(ci->platdata->usb_switch);
-+
- 	/*
- 	 * host doesn't care B_SESSION_VALID event
- 	 * so clear and disbale BSV irq
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 07f9936..9ea55a1 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -10,6 +10,7 @@
- #include <linux/usb/otg.h>
- 
- struct ci_hdrc;
-+struct mux_control;
- 
- /**
-  * struct ci_hdrc_cable - structure for external connector cable state tracking
-@@ -76,6 +77,7 @@ struct ci_hdrc_platform_data {
- 	/* VBUS and ID signal state tracking, using extcon framework */
- 	struct ci_hdrc_cable		vbus_extcon;
- 	struct ci_hdrc_cable		id_extcon;
-+	struct mux_control		*usb_switch;
- 	u32			phy_clkgate_delay_us;
- };
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Guenter
 
+>  static int irq;
+>  static void __iomem *virtbase;
+>  static struct device *parent;
+> @@ -235,8 +237,9 @@ static struct watchdog_device coh901327_wdt = {
+>  	 * timeout register is max
+>  	 * 0x7FFF = 327670ms ~= 327s.
+>  	 */
+> -	.min_timeout = 0,
+> +	.min_timeout = 1,
+>  	.max_timeout = 327,
+> +	.timeout = U300_WDOG_DEFAULT_TIMEOUT,
+>  };
+>  
+>  static int __exit coh901327_remove(struct platform_device *pdev)
+> @@ -315,9 +318,7 @@ static int __init coh901327_probe(struct platform_device *pdev)
+>  		goto out_no_irq;
+>  	}
+>  
+> -	ret = watchdog_init_timeout(&coh901327_wdt, margin, dev);
+> -	if (ret < 0)
+> -		coh901327_wdt.timeout = 60;
+> +	watchdog_init_timeout(&coh901327_wdt, margin, dev);
+>  
+>  	coh901327_wdt.parent = dev;
+>  	ret = watchdog_register_device(&coh901327_wdt);
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
