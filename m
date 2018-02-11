@@ -1,89 +1,77 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 0/5] improvements and fixes for the phy-meson-gxl-usb2 driver
-Date: Sun, 11 Feb 2018 22:18:09 +0100
-Message-ID: <CAFBinCCZ+eYp0Y7qdvxiHtCxF+AAdxubpUATbzMptFsvRiRvmA@mail.gmail.com>
-References: <20180128202245.25021-1-martin.blumenstingl@googlemail.com> <9b5295ea-74a2-7bb1-744e-6e8eb76f2673@amlogic.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: dts: sun6i: a31s: bpi-m2: update
+ mmc supply nodes
+Date: Sun, 11 Feb 2018 23:15:02 +0100
+Message-ID: <1518387302.1342.3.camel@gmail.com>
+References: <20180209175236.21215-1-embed3d@gmail.com>
+	 <20180209175236.21215-2-embed3d@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9b5295ea-74a2-7bb1-744e-6e8eb76f2673-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD257DPK24NRB2MAQPKAKGQETWNZJNQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180209175236.21215-2-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yixun,
+Am Freitag, den 09.02.2018, 18:52 +0100 schrieb Philipp Rossak:
+> This patch updates the vmmc-supply properties on the mmc0 and mmc2
+> node to use the allready existent regulators.
+> We can now remove the sunxi-common-regulators.dtsi include since we
+> don't need it anymore.
+>=20
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> =C2=A0arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts | 5 ++---
+> =C2=A01 file changed, 2 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+> b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+> index 51e6f1d21c32..a8d86211c8f3 100644
+> --- a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+> +++ b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
+> @@ -42,7 +42,6 @@
+> =C2=A0
+> =C2=A0/dts-v1/;
+> =C2=A0#include "sun6i-a31s.dtsi"
+> -#include "sunxi-common-regulators.dtsi"
+> =C2=A0#include <dt-bindings/gpio/gpio.h>
+> =C2=A0
+> =C2=A0/ {
+> @@ -118,7 +117,7 @@
+> =C2=A0&mmc0 {
+> =C2=A0	pinctrl-names =3D "default";
+> =C2=A0	pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin_bpi_m2>;
+> -	vmmc-supply =3D <&reg_vcc3v0>;
+> +	vmmc-supply =3D <&reg_dcdc1>;
+> =C2=A0	bus-width =3D <4>;
+> =C2=A0	cd-gpios =3D <&pio 0 4 GPIO_ACTIVE_HIGH>; /* PA4 */
+> =C2=A0	cd-inverted;
+> @@ -132,7 +131,7 @@
+> =C2=A0&mmc2 {
+> =C2=A0	pinctrl-names =3D "default";
+> =C2=A0	pinctrl-0 =3D <&mmc2_pins_a>;
+> -	vmmc-supply =3D <&reg_vcc3v0>;
+> +	vmmc-supply =3D <&reg_dcdc1>;
+			^^
+		this here is wrong! this should be &reg_aldo1
+> =C2=A0	mmc-pwrseq =3D <&mmc2_pwrseq>;
+> =C2=A0	bus-width =3D <4>;
+> =C2=A0	non-removable;
 
-On Fri, Feb 9, 2018 at 9:27 AM, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> wrote:
->
->
-> On 01/29/18 04:22, Martin Blumenstingl wrote:
->> This contains two fixes and two (minor) fixes for the phy-meson-gxl-usb2
->> driver:
->> - a clock and reset line is used for the PHYs. this was not clear from
->>   the Amlogic GPL kernel sources since the clock is enabled very early
->>   in the boot process (either because the hardware defaults to "on",
->>   the bootrom enables it or a bootloader before BL3-3/u-boot enables it)
->> - we don't read the controller's dr_mode anymore because the USB2 PHY
->>   can only be switched into host mode if the USB3 PHY knows about it.
->>   Thus auto-detecting the mode doesn't work for this PHY so it's removed
->>   in patch #3
->> - do not log an error message when the phy-supply is not ready yet and
->>   we have to return -EPROBE_DEFER
->> - improve the naming of some U2P_R2 test mode registers
->>
->>
->> Martin Blumenstingl (5):
->>   dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and clock
->>   phy: amlogic: phy-meson-gxl-usb2: support the clock and reset line
->>   phy: amlogic: phy-meson-gxl-usb2: default to host mode
->>   phy: amlogic: phy-meson-gxl-usb2: don't log an error on -EPROBE_DEFER
->>   phy: amlogic: phy-meson-gxl-usb2: rename some of the U2P_R2 registers
->>
->>  .../devicetree/bindings/phy/meson-gxl-usb2-phy.txt |  4 ++
->>  drivers/phy/amlogic/Kconfig                        |  1 -
->>  drivers/phy/amlogic/phy-meson-gxl-usb2.c           | 78 ++++++++++++++++------
->>  3 files changed, 61 insertions(+), 22 deletions(-)
->>
->
-> Hi Martin
->
->   thanks for your great work for pushing the USB driver upstream.
-you're welcome - I hope that most problems are sorted out in the latest version
+Philipp
 
->   I've test your whole series[1] on AXG S400 board and it works fine here.
-many thanks!
-I just re-sent v9 of "initialize (multiple) PHYs for a HCD" and v2
-"DWC3 support for Amlogic Meson AXG and GXL SoCs" which both include
-fixes based on the feedback I got. I added your "Tested-by" to all
-applicable patches, which I hope is fine for you!
-
-I will re-send the USB2 and USB3 PHY patches once -rc1 is out if
-Kishon wants me to re-send those with all Reviewed-by/Tested-by's
-collected.
-
-> Yixun
->
->
-> [1] the whole patch series include
->
-> [RFC usb-next v8 0/3] initialize (multiple) PHYs for a HCD
-> https://lkml.kernel.org/r/20180125000053.9387-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
->
-> [PATCH 0/3] DWC3 support for Amlogic Meson AXG and GXL SoCs
-> https://lkml.kernel.org/r/20180128200333.20093-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
->
-> [PATCH v2 0/2] Meson GXL USB3 PHY driver
-> https://lkml.kernel.org/r/20180128201554.23889-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
->
-> [PATCH 1/5] dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and
-> clock
-> https://lkml.kernel.org/r/20180128202245.25021-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-
-
-Regards
-Martin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
