@@ -1,112 +1,82 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] Input: gpio_keys: Add level trigger support for GPIO keys
-Date: Sun, 11 Feb 2018 14:55:04 +0800
-Message-ID: <7fc26df245d56fd2014532b56e67630e76e2c513.1518316248.git.baolin.wang@linaro.org>
+From: Sergey Suloev <ssuloev-RHPENKW2UW+1Z/+hSey0Gg@public.gmane.org>
+Subject: Re: [PATCH 0/3] Fix broken bananapi m2 devicetree/regulators
+Date: Sun, 11 Feb 2018 10:29:28 +0300
+Message-ID: <cfdd543b-9a50-002e-34af-d611aca4d1a6@orpaltech.com>
+References: <20180209175236.21215-1-embed3d@gmail.com>
+ <160b60e2-6e50-0d63-e6ac-b67e10317e12@orpaltech.com>
+ <d3fcc9d2-f2e6-189c-529f-890f2afdd837@gmail.com>
+ <40887d4b-0fb0-239e-e5a9-1a87f82946c2@orpaltech.com>
+ <da8909da-4eea-0fdf-e104-4442f7986455@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <da8909da-4eea-0fdf-e104-4442f7986455-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, lumotuwe-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kstewart-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On some platforms (such as Spreadtrum platform), the GPIO keys can only
-be triggered by level type. So this patch introduces one property to
-indicate if the GPIO trigger type is level trigger or edge trigger.
+On 02/11/2018 01:07 AM, Philipp Rossak wrote:
+>
+>
+> On 10.02.2018 22:08, Sergey Suloev wrote:
+>> On 02/11/2018 12:01 AM, Philipp Rossak wrote:
+>>> Hey Sergey,
+>>>
+>>> Thanks for mentioning, but I think the problem has nothing to do 
+>>> with those patches. I tested them with the v4.15.0 Kernel since this 
+>>> is the last stable release and we are right now in the merging window.
+>>>
+>>> I tested the latest mainline, without those patches and the kernel 
+>>> is not booting (I can't see any uart output).
+>>>
+>>> Thanks,
+>>> Philipp
+>>>
+>>> On 10.02.2018 14:56, Sergey Suloev wrote:
+>>>> On 02/09/2018 08:52 PM, Philipp Rossak wrote:
+>>>>> This patchseries fixes the bananapi m1 devicetree, to be able to 
+>>>>> boot again.
+>>>>> The first two patches update/improve the devicetree and the last 
+>>>>> patch adds
+>>>>> all missing regulators.
+>>>>>
+>>>>> Regards,
+>>>>> Philipp
+>>>>>
+>>>>> Philipp Rossak (3):
+>>>>>    arm: dts: sun6i: a31s: bpi-m2: update mmc supply nodes
+>>>>>    arm: dts: sun6i: a31s: bpi-m2: improve pmic properties
+>>>>>    arm: dts: sun6i: a31s: fix: bpi-m2: add missing regulators
+>>>>>
+>>>>>   arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts | 70 
+>>>>> +++++++++++++++++++++++-
+>>>>>   1 file changed, 67 insertions(+), 3 deletions(-)
+>>>>>
+>>>> patches are not working
+>>>>
+>>>> Thanks
+>>>>
+>> same problem, but after applying the patches my device is till hanging.
+>>
+>>
+> Can you please share a bootlog? Here is mine [1]. As you can see I'm 
+> able to boot.
+> I build it with this branch [2]. For testing you should replace the 
+> dtb and the uImage/zImage
+>
+> Philipp
+>
+>
+> [1]: https://pastebin.com/mVjv3LDf
+> [2]: 
+> https://github.com/embed-3d/linux/tree/testing/bpi-m2-regulator-test-2
 
-Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-Changes since v1:
- - Diable the GPIO irq until reversing the GPIO level type.
----
- .../devicetree/bindings/input/gpio-keys.txt        |    2 ++
- drivers/input/keyboard/gpio_keys.c                 |   26 +++++++++++++++++++-
- include/linux/gpio_keys.h                          |    1 +
- 3 files changed, 28 insertions(+), 1 deletion(-)
+I am going to test it and come back with outcome
 
-diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
-index a949404..e3104bd 100644
---- a/Documentation/devicetree/bindings/input/gpio-keys.txt
-+++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-@@ -29,6 +29,8 @@ Optional subnode-properties:
- 	- linux,can-disable: Boolean, indicates that button is connected
- 	  to dedicated (not shared) interrupt which can be disabled to
- 	  suppress events from the button.
-+	- gpio-key,level-trigger: Boolean, indicates that button's interrupt
-+	  type is level trigger. Otherwise it is edge trigger as default.
- 
- Example nodes:
- 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 87e613d..218698a 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -385,6 +385,20 @@ static void gpio_keys_gpio_work_func(struct work_struct *work)
- 	struct gpio_button_data *bdata =
- 		container_of(work, struct gpio_button_data, work.work);
- 
-+	if (bdata->button->level_trigger) {
-+		unsigned int trigger =
-+			irq_get_trigger_type(bdata->irq) & ~IRQF_TRIGGER_MASK;
-+		int state = gpiod_get_raw_value_cansleep(bdata->gpiod);
-+
-+		if (state)
-+			trigger |= IRQF_TRIGGER_LOW;
-+		else
-+			trigger |= IRQF_TRIGGER_HIGH;
-+
-+		irq_set_irq_type(bdata->irq, trigger);
-+		enable_irq(bdata->irq);
-+	}
-+
- 	gpio_keys_gpio_report_event(bdata);
- 
- 	if (bdata->button->wakeup)
-@@ -397,6 +411,9 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
- 
- 	BUG_ON(irq != bdata->irq);
- 
-+	if (bdata->button->level_trigger)
-+		disable_irq_nosync(bdata->irq);
-+
- 	if (bdata->button->wakeup) {
- 		const struct gpio_keys_button *button = bdata->button;
- 
-@@ -566,7 +583,11 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
- 		INIT_DELAYED_WORK(&bdata->work, gpio_keys_gpio_work_func);
- 
- 		isr = gpio_keys_gpio_isr;
--		irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING;
-+		if (button->level_trigger)
-+			irqflags = gpiod_is_active_low(bdata->gpiod) ?
-+				IRQF_TRIGGER_LOW : IRQF_TRIGGER_HIGH;
-+		else
-+			irqflags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING;
- 
- 	} else {
- 		if (!button->irq) {
-@@ -721,6 +742,9 @@ static void gpio_keys_close(struct input_dev *input)
- 		button->can_disable =
- 			fwnode_property_read_bool(child, "linux,can-disable");
- 
-+		button->level_trigger =
-+			fwnode_property_read_bool(child, "gpio-key,level-trigger");
-+
- 		if (fwnode_property_read_u32(child, "debounce-interval",
- 					 &button->debounce_interval))
- 			button->debounce_interval = 5;
-diff --git a/include/linux/gpio_keys.h b/include/linux/gpio_keys.h
-index d06bf77..5095645 100644
---- a/include/linux/gpio_keys.h
-+++ b/include/linux/gpio_keys.h
-@@ -28,6 +28,7 @@ struct gpio_keys_button {
- 	int wakeup;
- 	int debounce_interval;
- 	bool can_disable;
-+	bool level_trigger;
- 	int value;
- 	unsigned int irq;
- };
--- 
-1.7.9.5
+Thanks
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
