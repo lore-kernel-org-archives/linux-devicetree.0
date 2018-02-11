@@ -1,102 +1,88 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH usb-next v2 2/3] usb: dwc3: of-simple: add support for shared and pulsed reset lines
-Date: Sun, 11 Feb 2018 22:15:16 +0100
-Message-ID: <20180211211517.5846-3-martin.blumenstingl@googlemail.com>
-References: <20180211211517.5846-1-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 0/5] improvements and fixes for the phy-meson-gxl-usb2 driver
+Date: Sun, 11 Feb 2018 22:18:09 +0100
+Message-ID: <CAFBinCCZ+eYp0Y7qdvxiHtCxF+AAdxubpUATbzMptFsvRiRvmA@mail.gmail.com>
+References: <20180128202245.25021-1-martin.blumenstingl@googlemail.com> <9b5295ea-74a2-7bb1-744e-6e8eb76f2673@amlogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180211211517.5846-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <9b5295ea-74a2-7bb1-744e-6e8eb76f2673-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some SoCs (such as Amlogic Meson GXL for example) share the reset line
-with other components (in case of the Meson GXL example there's a shared
-reset line between the USB2 PHYs, USB3 PHYs and the dwc3 controller).
-Additionally SoC implementations may prefer a reset pulse over level
-resets.
+Hi Yixun,
 
-For now this falls back to the old defaults, which are:
-- reset lines are exclusive
-- level resets are being used
+On Fri, Feb 9, 2018 at 9:27 AM, Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+>
+> On 01/29/18 04:22, Martin Blumenstingl wrote:
+>> This contains two fixes and two (minor) fixes for the phy-meson-gxl-usb2
+>> driver:
+>> - a clock and reset line is used for the PHYs. this was not clear from
+>>   the Amlogic GPL kernel sources since the clock is enabled very early
+>>   in the boot process (either because the hardware defaults to "on",
+>>   the bootrom enables it or a bootloader before BL3-3/u-boot enables it)
+>> - we don't read the controller's dr_mode anymore because the USB2 PHY
+>>   can only be switched into host mode if the USB3 PHY knows about it.
+>>   Thus auto-detecting the mode doesn't work for this PHY so it's removed
+>>   in patch #3
+>> - do not log an error message when the phy-supply is not ready yet and
+>>   we have to return -EPROBE_DEFER
+>> - improve the naming of some U2P_R2 test mode registers
+>>
+>>
+>> Martin Blumenstingl (5):
+>>   dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and clock
+>>   phy: amlogic: phy-meson-gxl-usb2: support the clock and reset line
+>>   phy: amlogic: phy-meson-gxl-usb2: default to host mode
+>>   phy: amlogic: phy-meson-gxl-usb2: don't log an error on -EPROBE_DEFER
+>>   phy: amlogic: phy-meson-gxl-usb2: rename some of the U2P_R2 registers
+>>
+>>  .../devicetree/bindings/phy/meson-gxl-usb2-phy.txt |  4 ++
+>>  drivers/phy/amlogic/Kconfig                        |  1 -
+>>  drivers/phy/amlogic/phy-meson-gxl-usb2.c           | 78 ++++++++++++++++------
+>>  3 files changed, 61 insertions(+), 22 deletions(-)
+>>
+>
+> Hi Martin
+>
+>   thanks for your great work for pushing the USB driver upstream.
+you're welcome - I hope that most problems are sorted out in the latest version
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Tested-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
----
- drivers/usb/dwc3/dwc3-of-simple.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+>   I've test your whole series[1] on AXG S400 board and it works fine here.
+many thanks!
+I just re-sent v9 of "initialize (multiple) PHYs for a HCD" and v2
+"DWC3 support for Amlogic Meson AXG and GXL SoCs" which both include
+fixes based on the feedback I got. I added your "Tested-by" to all
+applicable patches, which I hope is fine for you!
 
-diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
-index 7ae0eefc7cc7..d2e4928c8d62 100644
---- a/drivers/usb/dwc3/dwc3-of-simple.c
-+++ b/drivers/usb/dwc3/dwc3-of-simple.c
-@@ -27,6 +27,7 @@ struct dwc3_of_simple {
- 	struct clk		**clks;
- 	int			num_clocks;
- 	struct reset_control	*resets;
-+	bool			pulse_resets;
- };
- 
- static int dwc3_of_simple_clk_init(struct dwc3_of_simple *simple, int count)
-@@ -83,6 +84,7 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
- 
- 	int			ret;
- 	int			i;
-+	bool			shared_resets = false;
- 
- 	simple = devm_kzalloc(dev, sizeof(*simple), GFP_KERNEL);
- 	if (!simple)
-@@ -91,16 +93,22 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, simple);
- 	simple->dev = dev;
- 
--	simple->resets = of_reset_control_array_get_optional_exclusive(np);
-+	simple->resets = of_reset_control_array_get(np, shared_resets, true);
- 	if (IS_ERR(simple->resets)) {
- 		ret = PTR_ERR(simple->resets);
- 		dev_err(dev, "failed to get device resets, err=%d\n", ret);
- 		return ret;
- 	}
- 
--	ret = reset_control_deassert(simple->resets);
--	if (ret)
--		goto err_resetc_put;
-+	if (simple->pulse_resets) {
-+		ret = reset_control_reset(simple->resets);
-+		if (ret)
-+			goto err_resetc_put;
-+	} else {
-+		ret = reset_control_deassert(simple->resets);
-+		if (ret)
-+			goto err_resetc_put;
-+	}
- 
- 	ret = dwc3_of_simple_clk_init(simple, of_count_phandle_with_args(np,
- 						"clocks", "#clock-cells"));
-@@ -124,7 +132,8 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_resetc_assert:
--	reset_control_assert(simple->resets);
-+	if (!simple->pulse_resets)
-+		reset_control_assert(simple->resets);
- 
- err_resetc_put:
- 	reset_control_put(simple->resets);
-@@ -144,7 +153,9 @@ static int dwc3_of_simple_remove(struct platform_device *pdev)
- 		clk_put(simple->clks[i]);
- 	}
- 
--	reset_control_assert(simple->resets);
-+	if (!simple->pulse_resets)
-+		reset_control_assert(simple->resets);
-+
- 	reset_control_put(simple->resets);
- 
- 	pm_runtime_put_sync(dev);
--- 
-2.16.1
+I will re-send the USB2 and USB3 PHY patches once -rc1 is out if
+Kishon wants me to re-send those with all Reviewed-by/Tested-by's
+collected.
 
+> Yixun
+>
+>
+> [1] the whole patch series include
+>
+> [RFC usb-next v8 0/3] initialize (multiple) PHYs for a HCD
+> https://lkml.kernel.org/r/20180125000053.9387-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+>
+> [PATCH 0/3] DWC3 support for Amlogic Meson AXG and GXL SoCs
+> https://lkml.kernel.org/r/20180128200333.20093-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+>
+> [PATCH v2 0/2] Meson GXL USB3 PHY driver
+> https://lkml.kernel.org/r/20180128201554.23889-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+>
+> [PATCH 1/5] dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and
+> clock
+> https://lkml.kernel.org/r/20180128202245.25021-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+
+
+Regards
+Martin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
