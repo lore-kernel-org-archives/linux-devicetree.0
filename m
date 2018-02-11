@@ -1,88 +1,69 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] Fix broken bananapi m2 devicetree/regulators
-Date: Sat, 10 Feb 2018 23:07:01 +0100
-Message-ID: <da8909da-4eea-0fdf-e104-4442f7986455@gmail.com>
-References: <20180209175236.21215-1-embed3d@gmail.com>
- <160b60e2-6e50-0d63-e6ac-b67e10317e12@orpaltech.com>
- <d3fcc9d2-f2e6-189c-529f-890f2afdd837@gmail.com>
- <40887d4b-0fb0-239e-e5a9-1a87f82946c2@orpaltech.com>
-Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 5/7] watchdog: mtk: allow setting timeout in devicetree
+Date: Sat, 10 Feb 2018 17:52:49 -0800
+Message-ID: <5449674d-2812-c9b5-9c06-af2fbfa72737@roeck-us.net>
+References: <20180210091911.3644-1-marcus.folkesson@gmail.com>
+ <20180210091911.3644-5-marcus.folkesson@gmail.com>
+ <1518261002.9025.36.camel@mtkswgap22> <20180210124328.GB744@gmail.com>
+ <20180210201207.GC744@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD257DPK24NRBCG27XJQKGQEXUWHEFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <40887d4b-0fb0-239e-e5a9-1a87f82946c2-RHPENKW2UW+1Z/+hSey0Gg@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180210201207.GC744-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Sergey Suloev <ssuloev-RHPENKW2UW+1Z/+hSey0Gg@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10.02.2018 22:08, Sergey Suloev wrote:
-> On 02/11/2018 12:01 AM, Philipp Rossak wrote:
->> Hey Sergey,
+On 02/10/2018 12:12 PM, Marcus Folkesson wrote:
+> Hello Sean,
+> 
+> On Sat, Feb 10, 2018 at 01:43:28PM +0100, Marcus Folkesson wrote:
+>> Hello Sean,
 >>
->> Thanks for mentioning, but I think the problem has nothing to do with=20
->> those patches. I tested them with the v4.15.0 Kernel since this is the=
-=20
->> last stable release and we are right now in the merging window.
->>
->> I tested the latest mainline, without those patches and the kernel is=20
->> not booting (I can't see any uart output).
->>
->> Thanks,
->> Philipp
->>
->> On 10.02.2018 14:56, Sergey Suloev wrote:
->>> On 02/09/2018 08:52 PM, Philipp Rossak wrote:
->>>> This patchseries fixes the bananapi m1 devicetree, to be able to=20
->>>> boot again.
->>>> The first two patches update/improve the devicetree and the last=20
->>>> patch adds
->>>> all missing regulators.
->>>>
->>>> Regards,
->>>> Philipp
->>>>
->>>> Philipp Rossak (3):
->>>> =C2=A0=C2=A0 arm: dts: sun6i: a31s: bpi-m2: update mmc supply nodes
->>>> =C2=A0=C2=A0 arm: dts: sun6i: a31s: bpi-m2: improve pmic properties
->>>> =C2=A0=C2=A0 arm: dts: sun6i: a31s: fix: bpi-m2: add missing regulator=
-s
->>>>
->>>> =C2=A0 arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts | 70=20
->>>> +++++++++++++++++++++++-
->>>> =C2=A0 1 file changed, 67 insertions(+), 3 deletions(-)
->>>>
->>> patches are not working
+>> On Sat, Feb 10, 2018 at 07:10:02PM +0800, Sean Wang wrote:
 >>>
->>> Thanks
+>>> Hi, Marcus
 >>>
-> same problem, but after applying the patches my device is till hanging.
->=20
->=20
-Can you please share a bootlog? Here is mine [1]. As you can see I'm=20
-able to boot.
-I build it with this branch [2]. For testing you should replace the dtb=20
-and the uImage/zImage
+>>> The changes you made for dt-bindings and driver should be put into
+>>> separate patches.
+>>
+>> I actually thought about it but chose to have it in the same patch because I
+>> did not see any direct advantage to separating them.
+>>
+>> But I can do that.
+>> I will come up with a v3 with this change if no one thinks differently.
+>>
+> 
+> When looking at the git log, I'm not that convinced it should be
+> separate patches.
+> 
+> For example, I found a4f741e3e157c3a5c8aea5f2ea62b692fbf17338 that is
+> doing the exact same thing as this patch.
+> 
+> There is plenty of patches that mixes the code change and dt bindings
+> updates.
+> Could it not be useful to overview both the implementation and
+> dt-mapping change in one view?
+> 
+> If you or anyone else still think it should be separated, please let me know and I will
+> come up with a v3.
+> 
 
-Philipp
+If we were talking about something new, specifically new and unapproved DT bindings,
+it should be separate patches. However, that is not the case here. The DT bindings
+are well established. Sure, we could be pedantic and request a split into two
+patches. However, the only benefit of that would be more work for the maintainers,
+ie Wim and myself (including me having to send this e-mail). I don't really see
+the point of that.
 
+I have already sent my Reviewed-by:, and I don't intend to withdraw it.
 
-[1]: https://pastebin.com/mVjv3LDf
-[2]: https://github.com/embed-3d/linux/tree/testing/bpi-m2-regulator-test-2
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Thanks,
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
