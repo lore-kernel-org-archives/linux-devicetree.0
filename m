@@ -1,409 +1,188 @@
-Return-Path: <SRS0=Qujd=FN=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v9 06/11] media: i2c: ov772x: Remove soc_camera dependencies
-Date: Mon, 19 Feb 2018 17:59:39 +0100
-Message-Id: <1519059584-30844-7-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519059584-30844-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519059584-30844-1-git-send-email-jacopo+renesas@jmondi.org>
-To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=KmYq=FF=mediatek.com=argus.lin@kernel.org>
+Message-ID: <1518339333.27225.2.camel@mtkswgap22>
+Subject: Re: [PATCH v2 2/5] arm64: dts: mt6797: add pwrap support for mt6797
+From: Argus Lin <argus.lin@mediatek.com>
+Date: Sun, 11 Feb 2018 16:55:33 +0800
+In-Reply-To: <dcb5d00a-2239-b214-70a2-cef2e66570fa@gmail.com>
+References: <20180129090944.28687-1-argus.lin@mediatek.com>
+	 <20180129090944.28687-2-argus.lin@mediatek.com>
+	 <dcb5d00a-2239-b214-70a2-cef2e66570fa@gmail.com>
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_001_1195419652.372859611"
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-Remove soc_camera framework dependencies from ov772x sensor driver.
-- Handle clock and gpios
-- Register async subdevice
-- Remove soc_camera specific g/s_mbus_config operations
-- Change image format colorspace from JPEG to SRGB as the two use the
-  same colorspace information but JPEG makes assumptions on color
-  components quantization that do not apply to the sensor
-- Remove sizes crop from get_selection as driver can't scale
-- Add kernel doc to driver interface header file
-- Adjust build system
+--__=_Part_Boundary_001_1195419652.372859611
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_002_1394403556.971410882"
 
-This commit does not remove the original soc_camera based driver as long
-as other platforms depends on soc_camera-based CEU driver.
+--__=_Part_Boundary_002_1394403556.971410882
+Content-Type: text/html
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/media/i2c/Kconfig  |  11 +++
- drivers/media/i2c/Makefile |   1 +
- drivers/media/i2c/ov772x.c | 172 ++++++++++++++++++++++++++++++---------------
- include/media/i2c/ov772x.h |   6 +-
- 4 files changed, 133 insertions(+), 57 deletions(-)
+PHByZT4NCk9uJiMzMjtUdWUsJiMzMjsyMDE4LTAxLTMwJiMzMjthdCYjMzI7MTM6NTcmIzMyOysw
+MTAwLCYjMzI7TWF0dGhpYXMmIzMyO0JydWdnZXImIzMyO3dyb3RlOg0KJmd0OyYjMzI7DQomZ3Q7
+JiMzMjtPbiYjMzI7MDEvMjkvMjAxOCYjMzI7MTA6MDkmIzMyO0FNLCYjMzI7YXJndXMubGluQG1l
+ZGlhdGVrLmNvbSYjMzI7d3JvdGU6DQomZ3Q7JiMzMjsmZ3Q7JiMzMjtGcm9tOiYjMzI7QXJndXMm
+IzMyO0xpbiYjMzI7Jmx0O2FyZ3VzLmxpbkBtZWRpYXRlay5jb20mZ3Q7DQomZ3Q7JiMzMjsmZ3Q7
+JiMzMjsNCiZndDsmIzMyOyZndDsmIzMyO210Njc5NyYjMzI7aXMmIzMyO2EmIzMyO2hpZ2hseSYj
+MzI7aW50ZWdyYXRlZCYjMzI7U29DcywmIzMyO2FuZCYjMzI7aXQmIzMyO3VzZXMNCiZndDsmIzMy
+OyZndDsmIzMyO210NjM1MSYjMzI7YXMmIzMyO1Bvd2VyJiMzMjtNYW5hZ2VtZW50JiMzMjtJQy4N
+CiZndDsmIzMyOyZndDsmIzMyO1dlJiMzMjtuZWVkJiMzMjt0byYjMzI7YWRkJiMzMjtwd3JhcCYj
+MzI7ZGV2aWNlJiMzMjt0byYjMzI7Y29tbXVuaWNhdGUmIzMyO3dpdGgNCiZndDsmIzMyOyZndDsm
+IzMyO210NjM1MSYjMzI7YnkmIzMyO1NQSS4NCiZndDsmIzMyOyZndDsmIzMyO1RoZSYjMzI7YmFz
+ZSYjMzI7YWRkcmVzcyYjMzI7b2YmIzMyO3B3cmFwJiMzMjtpcyYjMzI7MHgxMDAwZDAwMCwmIzMy
+O2FuZCYjMzI7SVJRDQomZ3Q7JiMzMjsmZ3Q7JiMzMjtudW1iZXImIzMyO2lzJiMzMjsxNzguJiMz
+MjtJdCYjMzI7YWxzbyYjMzI7dXNpbmcmIzMyO2ZpeGVkJiMzMjsyNk1oeiYjMzI7Y2xvY2sNCiZn
+dDsmIzMyOyZndDsmIzMyO2FzJiMzMjtTUEkmIzMyO0NMSy4NCiZndDsmIzMyOyZndDsmIzMyOw0K
+Jmd0OyYjMzI7Jmd0OyYjMzI7U2lnbmVkLW9mZi1ieTomIzMyO0FyZ3VzJiMzMjtMaW4mIzMyOyZs
+dDthcmd1cy5saW5AbWVkaWF0ZWsuY29tJmd0Ow0KJmd0OyYjMzI7Jmd0OyYjMzI7LS0tDQomZ3Q7
+JiMzMjsNCiZndDsmIzMyO0ZvciYjMzI7dGhlJiMzMjtuZXh0JiMzMjtyb3VuZCwmIzMyO2NhbiYj
+MzI7eW91JiMzMjtwdXQmIzMyO3RoZSYjMzI7ZHRzJiMzMjtwYXRjaCYjMzI7YXQmIzMyO3RoZSYj
+MzI7ZW5kJiMzMjtvZiYjMzI7dGhlJiMzMjtzZXJpZXMuJiMzMjtCaW5kaW5nDQomZ3Q7JiMzMjtk
+ZXNjcmlwdGlvbiYjMzI7c2hvdWxkJiMzMjtiZSYjMzI7dGhlJiMzMjtmaXJzdCYjMzI7cGF0Y2gs
+JiMzMjtidXQmIzMyO2FjdHVhbCYjMzI7ZHRzKGkpJiMzMjtpbmNsdXNpb24mIzMyO3Nob3VsZCYj
+MzI7YmUmIzMyO3RoZQ0KJmd0OyYjMzI7bGFzdCYjMzI7b25lLiYjMzI7SXQmIzM5O3MmIzMyO2Jp
+a2UmIzMyO3NoZWRkaW5nJiMzMjtJJiMzMjtrbm93LCYjMzI7YnV0JiMzMjthcyYjMzI7eW91JiMz
+MjtuZWVkJiMzMjthJiMzMjtuZXcmIzMyO3NlcmllcyYjMzI7YW55d2F5Lg0KJmd0OyYjMzI7DQom
+Z3Q7JiMzMjtUaGFua3MuDQoNCkRlYXImIzMyO01hdHRoaWFzOg0KU3VyZSwmIzMyO0kmIzMyO3dp
+bGwmIzMyO2FycmFuZ2UmIzMyO2luJiMzMjt0aGUmIzMyO25leHQmIzMyO29yZGVyLg0KJmd0OyYj
+MzI7DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMyO2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsv
+bXQ2Nzk3LmR0c2kmIzMyO3wmIzMyOzE0JiMzMjsrKysrKysrKysrKysrKw0KJmd0OyYjMzI7Jmd0
+OyYjMzI7JiMzMjsxJiMzMjtmaWxlJiMzMjtjaGFuZ2VkLCYjMzI7MTQmIzMyO2luc2VydGlvbnMo
+KykNCiZndDsmIzMyOyZndDsmIzMyOw0KJmd0OyYjMzI7Jmd0OyYjMzI7ZGlmZiYjMzI7LS1naXQm
+IzMyO2EvYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcuZHRzaSYjMzI7Yi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpDQomZ3Q7JiMzMjsmZ3Q7JiMzMjtp
+bmRleCYjMzI7NGJlYWE3MTEwN2Q3Li40ODU1NDZlZmM5YmYmIzMyOzEwMDY0NA0KJmd0OyYjMzI7
+Jmd0OyYjMzI7LS0tJiMzMjthL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzk3LmR0
+c2kNCiZndDsmIzMyOyZndDsmIzMyOysrKyYjMzI7Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlh
+dGVrL210Njc5Ny5kdHNpDQomZ3Q7JiMzMjsmZ3Q7JiMzMjtAQCYjMzI7LTE2MSw2JiMzMjsrMTYx
+LDIwJiMzMjtAQA0KJmd0OyYjMzI7Jmd0OyYjMzI7JiMzMjsmIzMyOyYjMzI7JiMzMjsmIzMyOyYj
+MzI7JiMzMjsmbHQ7MCYjMzI7MHgxMDIyMDY5MCYjMzI7MCYjMzI7MHgxMCZndDs7DQomZ3Q7JiMz
+MjsmZ3Q7JiMzMjsmIzMyO307DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMyOw0KJmd0OyYjMzI7Jmd0
+OyYjMzI7K3B3cmFwOiYjMzI7cHdyYXBAMTAwMGQwMDAmIzMyO3sNCiZndDsmIzMyOyZndDsmIzMy
+Oytjb21wYXRpYmxlJiMzMjs9JiMzMjsmcXVvdDttZWRpYXRlayxtdDY3OTctcHdyYXAmcXVvdDs7
+DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsrcmVnJiMzMjs9JiMzMjsmbHQ7MCYjMzI7MHgxMDAwZDAwMCYj
+MzI7MCYjMzI7MHgxMDAwJmd0OzsNCiZndDsmIzMyOyZndDsmIzMyOytyZWctbmFtZXMmIzMyOz0m
+IzMyOyZxdW90O3B3cmFwJnF1b3Q7Ow0KJmd0OyYjMzI7Jmd0OyYjMzI7K2ludGVycnVwdHMmIzMy
+Oz0mIzMyOyZsdDtHSUNfU1BJJiMzMjsxNzgmIzMyO0lSUV9UWVBFX0xFVkVMX0hJR0gmZ3Q7Ow0K
+Jmd0OyYjMzI7Jmd0OyYjMzI7K2Nsb2NrcyYjMzI7PSYjMzI7Jmx0OyZhbXA7Y2xrMjZtJmd0Oywm
+IzMyOyZsdDsmYW1wO2NsazI2bSZndDs7DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsrY2xvY2stbmFtZXMm
+IzMyOz0mIzMyOyZxdW90O3NwaSZxdW90OywmIzMyOyZxdW90O3dyYXAmcXVvdDs7DQomZ3Q7JiMz
+MjsmZ3Q7JiMzMjsrDQomZ3Q7JiMzMjsmZ3Q7JiMzMjsrcG1pYzomIzMyO210NjM1MSYjMzI7ew0K
+Jmd0OyYjMzI7Jmd0OyYjMzI7K2NvbXBhdGlibGUmIzMyOz0mIzMyOyZxdW90O21lZGlhdGVrLG10
+NjM1MSZxdW90OzsNCiZndDsmIzMyOyZndDsmIzMyOytpbnRlcnJ1cHQtY29udHJvbGxlcjsNCiZn
+dDsmIzMyOyZndDsmIzMyOyt9Ow0KJmd0OyYjMzI7Jmd0OyYjMzI7K307DQomZ3Q7JiMzMjsmZ3Q7
+JiMzMjsrDQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMyO3VhcnQwOiYjMzI7c2VyaWFsQDExMDAyMDAw
+JiMzMjt7DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMyO2NvbXBhdGlibGUmIzMyOz0mIzMyOyZxdW90
+O21lZGlhdGVrLG10Njc5Ny11YXJ0JnF1b3Q7LA0KJmd0OyYjMzI7Jmd0OyYjMzI7JiMzMjsmIzMy
+OyYjMzI7JiMzMjsmIzMyOyYjMzI7JnF1b3Q7bWVkaWF0ZWssbXQ2NTc3LXVhcnQmcXVvdDs7DQom
+Z3Q7JiMzMjsmZ3Q7JiMzMjstLSYjMzI7DQomZ3Q7JiMzMjsmZ3Q7JiMzMjsyLjEyLjUNCiZndDsm
+IzMyOyZndDsmIzMyOw0KJmd0OyYjMzI7Jmd0OyYjMzI7KioqKioqKioqKioqKiYjMzI7RW1haWwm
+IzMyO0NvbmZpZGVudGlhbGl0eSYjMzI7Tm90aWNlDQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMyOyoq
+KioqKioqKioqKioqKioqKioqDQomZ3Q7JiMzMjsmZ3Q7JiMzMjtUaGUmIzMyO2luZm9ybWF0aW9u
+JiMzMjtjb250YWluZWQmIzMyO2luJiMzMjt0aGlzJiMzMjtlLW1haWwmIzMyO21lc3NhZ2UmIzMy
+OyhpbmNsdWRpbmcmIzMyO2FueSYjMzI7DQomZ3Q7JiMzMjsmZ3Q7JiMzMjthdHRhY2htZW50cykm
+IzMyO21heSYjMzI7YmUmIzMyO2NvbmZpZGVudGlhbCwmIzMyO3Byb3ByaWV0YXJ5LCYjMzI7cHJp
+dmlsZWdlZCwmIzMyO29yJiMzMjtvdGhlcndpc2UNCiZndDsmIzMyOyZndDsmIzMyO2V4ZW1wdCYj
+MzI7ZnJvbSYjMzI7ZGlzY2xvc3VyZSYjMzI7dW5kZXImIzMyO2FwcGxpY2FibGUmIzMyO2xhd3Mu
+JiMzMjtJdCYjMzI7aXMmIzMyO2ludGVuZGVkJiMzMjt0byYjMzI7YmUmIzMyOw0KJmd0OyYjMzI7
+Jmd0OyYjMzI7Y29udmV5ZWQmIzMyO29ubHkmIzMyO3RvJiMzMjt0aGUmIzMyO2Rlc2lnbmF0ZWQm
+IzMyO3JlY2lwaWVudChzKS4mIzMyO0FueSYjMzI7dXNlLCYjMzI7ZGlzc2VtaW5hdGlvbiwmIzMy
+Ow0KJmd0OyYjMzI7Jmd0OyYjMzI7ZGlzdHJpYnV0aW9uLCYjMzI7cHJpbnRpbmcsJiMzMjtyZXRh
+aW5pbmcmIzMyO29yJiMzMjtjb3B5aW5nJiMzMjtvZiYjMzI7dGhpcyYjMzI7ZS1tYWlsJiMzMjso
+aW5jbHVkaW5nJiMzMjtpdHMmIzMyOw0KJmd0OyYjMzI7Jmd0OyYjMzI7YXR0YWNobWVudHMpJiMz
+MjtieSYjMzI7dW5pbnRlbmRlZCYjMzI7cmVjaXBpZW50KHMpJiMzMjtpcyYjMzI7c3RyaWN0bHkm
+IzMyO3Byb2hpYml0ZWQmIzMyO2FuZCYjMzI7bWF5JiMzMjsNCiZndDsmIzMyOyZndDsmIzMyO2Jl
+JiMzMjt1bmxhd2Z1bC4mIzMyO0lmJiMzMjt5b3UmIzMyO2FyZSYjMzI7bm90JiMzMjthbiYjMzI7
+aW50ZW5kZWQmIzMyO3JlY2lwaWVudCYjMzI7b2YmIzMyO3RoaXMmIzMyO2UtbWFpbCwmIzMyO29y
+JiMzMjtiZWxpZXZlDQomZ3Q7JiMzMjsmZ3Q7JiMzMjsmIzMyOw0KJmd0OyYjMzI7Jmd0OyYjMzI7
+dGhhdCYjMzI7eW91JiMzMjtoYXZlJiMzMjtyZWNlaXZlZCYjMzI7dGhpcyYjMzI7ZS1tYWlsJiMz
+MjtpbiYjMzI7ZXJyb3IsJiMzMjtwbGVhc2UmIzMyO25vdGlmeSYjMzI7dGhlJiMzMjtzZW5kZXIm
+IzMyOw0KJmd0OyYjMzI7Jmd0OyYjMzI7aW1tZWRpYXRlbHkmIzMyOyhieSYjMzI7cmVwbHlpbmcm
+IzMyO3RvJiMzMjt0aGlzJiMzMjtlLW1haWwpLCYjMzI7ZGVsZXRlJiMzMjthbnkmIzMyO2FuZCYj
+MzI7YWxsJiMzMjtjb3BpZXMmIzMyO29mJiMzMjsNCiZndDsmIzMyOyZndDsmIzMyO3RoaXMmIzMy
+O2UtbWFpbCYjMzI7KGluY2x1ZGluZyYjMzI7YW55JiMzMjthdHRhY2htZW50cykmIzMyO2Zyb20m
+IzMyO3lvdXImIzMyO3N5c3RlbSwmIzMyO2FuZCYjMzI7ZG8mIzMyO25vdA0KJmd0OyYjMzI7Jmd0
+OyYjMzI7ZGlzY2xvc2UmIzMyO3RoZSYjMzI7Y29udGVudCYjMzI7b2YmIzMyO3RoaXMmIzMyO2Ut
+bWFpbCYjMzI7dG8mIzMyO2FueSYjMzI7b3RoZXImIzMyO3BlcnNvbi4mIzMyO1RoYW5rDQomZ3Q7
+JiMzMjsmZ3Q7JiMzMjsmIzMyO3lvdSENCiZndDsmIzMyOyZndDsmIzMyOw0KJmd0OyYjMzI7DQoN
+Cg0KPC9wcmU+PCEtLXR5cGU6dGV4dC0tPjwhLS17LS0+PHByZT4qKioqKioqKioqKioqIEVtYWls
+IENvbmZpZGVudGlhbGl0eSBOb3RpY2UgKioqKioqKioqKioqKioqKioqKioNClRoZSBpbmZvcm1h
+dGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSANCmF0
+dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlkZW50aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwg
+b3Igb3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3
+cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVk
+IHJlY2lwaWVudChzKS4gQW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgDQpkaXN0cmlidXRpb24sIHBy
+aW50aW5nLCByZXRhaW5pbmcgb3IgY29weWluZyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0
+cyANCmF0dGFjaG1lbnRzKSBieSB1bmludGVuZGVkIHJlY2lwaWVudChzKSBpcyBzdHJpY3RseSBw
+cm9oaWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5k
+ZWQgcmVjaXBpZW50IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlIA0KdGhhdCB5b3UgaGF2ZSBy
+ZWNlaXZlZCB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0K
+aW1tZWRpYXRlbHkgKGJ5IHJlcGx5aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQg
+YWxsIGNvcGllcyBvZiANCnRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBm
+cm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8gbm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlz
+IGUtbWFpbCB0byBhbnkgb3RoZXIgcGVyc29uLiBUaGFuayB5b3UhPC9wcmU+PCEtLX0tLT4=
 
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index 9f18cd2..e71e968 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -645,6 +645,17 @@ config VIDEO_OV5670
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ov5670.
- 
-+config VIDEO_OV772X
-+	tristate "OmniVision OV772x sensor support"
-+	depends on I2C && VIDEO_V4L2
-+	depends on MEDIA_CAMERA_SUPPORT
-+	---help---
-+	  This is a Video4Linux2 sensor-level driver for the OmniVision
-+	  OV772x camera.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ov772x.
-+
- config VIDEO_OV7640
- 	tristate "OmniVision OV7640 sensor support"
- 	depends on I2C && VIDEO_V4L2
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index c0f94cd..b0489a1 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -68,6 +68,7 @@ obj-$(CONFIG_VIDEO_OV5670) += ov5670.o
- obj-$(CONFIG_VIDEO_OV6650) += ov6650.o
- obj-$(CONFIG_VIDEO_OV7640) += ov7640.o
- obj-$(CONFIG_VIDEO_OV7670) += ov7670.o
-+obj-$(CONFIG_VIDEO_OV772X) += ov772x.o
- obj-$(CONFIG_VIDEO_OV7740) += ov7740.o
- obj-$(CONFIG_VIDEO_OV9650) += ov9650.o
- obj-$(CONFIG_VIDEO_OV13858) += ov13858.o
-diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-index 8063835..23106d7 100644
---- a/drivers/media/i2c/ov772x.c
-+++ b/drivers/media/i2c/ov772x.c
-@@ -1,6 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * ov772x Camera Driver
-  *
-+ * Copyright (C) 2017 Jacopo Mondi <jacopo+renesas@jmondi.org>
-+ *
-  * Copyright (C) 2008 Renesas Solutions Corp.
-  * Kuninori Morimoto <morimoto.kuninori@renesas.com>
-  *
-@@ -9,27 +12,25 @@
-  * Copyright 2006-7 Jonathan Corbet <corbet@lwn.net>
-  * Copyright (C) 2008 Magnus Damm
-  * Copyright (C) 2008, Guennadi Liakhovetski <kernel@pengutronix.de>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- 
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
--#include <linux/i2c.h>
- #include <linux/slab.h>
--#include <linux/delay.h>
- #include <linux/v4l2-mediabus.h>
- #include <linux/videodev2.h>
- 
- #include <media/i2c/ov772x.h>
--#include <media/soc_camera.h>
--#include <media/v4l2-clk.h>
-+
- #include <media/v4l2-ctrls.h>
--#include <media/v4l2-subdev.h>
-+#include <media/v4l2-device.h>
- #include <media/v4l2-image-sizes.h>
-+#include <media/v4l2-subdev.h>
- 
- /*
-  * register offset
-@@ -393,8 +394,10 @@ struct ov772x_win_size {
- struct ov772x_priv {
- 	struct v4l2_subdev                subdev;
- 	struct v4l2_ctrl_handler	  hdl;
--	struct v4l2_clk			 *clk;
-+	struct clk			 *clk;
- 	struct ov772x_camera_info        *info;
-+	struct gpio_desc		 *pwdn_gpio;
-+	struct gpio_desc		 *rstb_gpio;
- 	const struct ov772x_color_format *cfmt;
- 	const struct ov772x_win_size     *win;
- 	unsigned short                    flag_vflip:1;
-@@ -409,7 +412,7 @@ struct ov772x_priv {
- static const struct ov772x_color_format ov772x_cfmts[] = {
- 	{
- 		.code		= MEDIA_BUS_FMT_YUYV8_2X8,
--		.colorspace	= V4L2_COLORSPACE_JPEG,
-+		.colorspace	= V4L2_COLORSPACE_SRGB,
- 		.dsp3		= 0x0,
- 		.dsp4		= DSP_OFMT_YUV,
- 		.com3		= SWAP_YUV,
-@@ -417,7 +420,7 @@ static const struct ov772x_color_format ov772x_cfmts[] = {
- 	},
- 	{
- 		.code		= MEDIA_BUS_FMT_YVYU8_2X8,
--		.colorspace	= V4L2_COLORSPACE_JPEG,
-+		.colorspace	= V4L2_COLORSPACE_SRGB,
- 		.dsp3		= UV_ON,
- 		.dsp4		= DSP_OFMT_YUV,
- 		.com3		= SWAP_YUV,
-@@ -425,7 +428,7 @@ static const struct ov772x_color_format ov772x_cfmts[] = {
- 	},
- 	{
- 		.code		= MEDIA_BUS_FMT_UYVY8_2X8,
--		.colorspace	= V4L2_COLORSPACE_JPEG,
-+		.colorspace	= V4L2_COLORSPACE_SRGB,
- 		.dsp3		= 0x0,
- 		.dsp4		= DSP_OFMT_YUV,
- 		.com3		= 0x0,
-@@ -550,7 +553,7 @@ static int ov772x_reset(struct i2c_client *client)
- }
- 
- /*
-- * soc_camera_ops function
-+ * subdev ops
-  */
- 
- static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
-@@ -650,13 +653,65 @@ static int ov772x_s_register(struct v4l2_subdev *sd,
- }
- #endif
- 
-+static int ov772x_power_on(struct ov772x_priv *priv)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
-+	int ret;
-+
-+	if (priv->clk) {
-+		ret = clk_prepare_enable(priv->clk);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (priv->pwdn_gpio) {
-+		gpiod_set_value(priv->pwdn_gpio, 1);
-+		usleep_range(500, 1000);
-+	}
-+
-+	/*
-+	 * FIXME: The reset signal is connected to a shared GPIO on some
-+	 * platforms (namely the SuperH Migo-R). Until a framework becomes
-+	 * available to handle this cleanly, request the GPIO temporarily
-+	 * to avoid conflicts.
-+	 */
-+	priv->rstb_gpio = gpiod_get_optional(&client->dev, "rstb",
-+					     GPIOD_OUT_LOW);
-+	if (IS_ERR(priv->rstb_gpio)) {
-+		dev_info(&client->dev, "Unable to get GPIO \"rstb\"");
-+		return PTR_ERR(priv->rstb_gpio);
-+	}
-+
-+	if (priv->rstb_gpio) {
-+		gpiod_set_value(priv->rstb_gpio, 1);
-+		usleep_range(500, 1000);
-+		gpiod_set_value(priv->rstb_gpio, 0);
-+		usleep_range(500, 1000);
-+
-+		gpiod_put(priv->rstb_gpio);
-+	}
-+
-+	return 0;
-+}
-+
-+static int ov772x_power_off(struct ov772x_priv *priv)
-+{
-+	clk_disable_unprepare(priv->clk);
-+
-+	if (priv->pwdn_gpio) {
-+		gpiod_set_value(priv->pwdn_gpio, 0);
-+		usleep_range(500, 1000);
-+	}
-+
-+	return 0;
-+}
-+
- static int ov772x_s_power(struct v4l2_subdev *sd, int on)
- {
--	struct i2c_client *client = v4l2_get_subdevdata(sd);
--	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
- 	struct ov772x_priv *priv = to_ov772x(sd);
- 
--	return soc_camera_set_power(&client->dev, ssdd, priv->clk, on);
-+	return on ? ov772x_power_on(priv) :
-+		    ov772x_power_off(priv);
- }
- 
- static const struct ov772x_win_size *ov772x_select_win(u32 width, u32 height)
-@@ -855,6 +910,8 @@ static int ov772x_get_selection(struct v4l2_subdev *sd,
- 		struct v4l2_subdev_pad_config *cfg,
- 		struct v4l2_subdev_selection *sel)
- {
-+	struct ov772x_priv *priv = to_ov772x(sd);
-+
- 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE)
- 		return -EINVAL;
- 
-@@ -863,12 +920,9 @@ static int ov772x_get_selection(struct v4l2_subdev *sd,
- 	switch (sel->target) {
- 	case V4L2_SEL_TGT_CROP_BOUNDS:
- 	case V4L2_SEL_TGT_CROP_DEFAULT:
--		sel->r.width = OV772X_MAX_WIDTH;
--		sel->r.height = OV772X_MAX_HEIGHT;
--		return 0;
- 	case V4L2_SEL_TGT_CROP:
--		sel->r.width = VGA_WIDTH;
--		sel->r.height = VGA_HEIGHT;
-+		sel->r.width = priv->win->rect.width;
-+		sel->r.height = priv->win->rect.height;
- 		return 0;
- 	default:
- 		return -EINVAL;
-@@ -914,6 +968,9 @@ static int ov772x_set_fmt(struct v4l2_subdev *sd,
- 	mf->height = win->rect.height;
- 	mf->field = V4L2_FIELD_NONE;
- 	mf->colorspace = cfmt->colorspace;
-+	mf->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-+	mf->quantization = V4L2_QUANTIZATION_DEFAULT;
-+	mf->xfer_func = V4L2_XFER_FUNC_DEFAULT;
- 
- 	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
- 		cfg->try_fmt = *mf;
-@@ -997,24 +1054,8 @@ static int ov772x_enum_mbus_code(struct v4l2_subdev *sd,
- 	return 0;
- }
- 
--static int ov772x_g_mbus_config(struct v4l2_subdev *sd,
--				struct v4l2_mbus_config *cfg)
--{
--	struct i2c_client *client = v4l2_get_subdevdata(sd);
--	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
--
--	cfg->flags = V4L2_MBUS_PCLK_SAMPLE_RISING | V4L2_MBUS_MASTER |
--		V4L2_MBUS_VSYNC_ACTIVE_HIGH | V4L2_MBUS_HSYNC_ACTIVE_HIGH |
--		V4L2_MBUS_DATA_ACTIVE_HIGH;
--	cfg->type = V4L2_MBUS_PARALLEL;
--	cfg->flags = soc_camera_apply_board_flags(ssdd, cfg);
--
--	return 0;
--}
--
- static const struct v4l2_subdev_video_ops ov772x_subdev_video_ops = {
- 	.s_stream	= ov772x_s_stream,
--	.g_mbus_config	= ov772x_g_mbus_config,
- };
- 
- static const struct v4l2_subdev_pad_ops ov772x_subdev_pad_ops = {
-@@ -1038,12 +1079,11 @@ static int ov772x_probe(struct i2c_client *client,
- 			const struct i2c_device_id *did)
- {
- 	struct ov772x_priv	*priv;
--	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
--	struct i2c_adapter	*adapter = to_i2c_adapter(client->dev.parent);
-+	struct i2c_adapter	*adapter = client->adapter;
- 	int			ret;
- 
--	if (!ssdd || !ssdd->drv_priv) {
--		dev_err(&client->dev, "OV772X: missing platform data!\n");
-+	if (!client->dev.platform_data) {
-+		dev_err(&client->dev, "Missing ov772x platform data\n");
- 		return -EINVAL;
- 	}
- 
-@@ -1059,7 +1099,7 @@ static int ov772x_probe(struct i2c_client *client,
- 	if (!priv)
- 		return -ENOMEM;
- 
--	priv->info = ssdd->drv_priv;
-+	priv->info = client->dev.platform_data;
- 
- 	v4l2_i2c_subdev_init(&priv->subdev, client, &ov772x_subdev_ops);
- 	v4l2_ctrl_handler_init(&priv->hdl, 3);
-@@ -1073,22 +1113,42 @@ static int ov772x_probe(struct i2c_client *client,
- 	if (priv->hdl.error)
- 		return priv->hdl.error;
- 
--	priv->clk = v4l2_clk_get(&client->dev, "mclk");
-+	priv->clk = clk_get(&client->dev, "xclk");
- 	if (IS_ERR(priv->clk)) {
-+		dev_err(&client->dev, "Unable to get xclk clock\n");
- 		ret = PTR_ERR(priv->clk);
--		goto eclkget;
-+		goto error_ctrl_free;
- 	}
- 
--	ret = ov772x_video_probe(priv);
--	if (ret < 0) {
--		v4l2_clk_put(priv->clk);
--eclkget:
--		v4l2_ctrl_handler_free(&priv->hdl);
--	} else {
--		priv->cfmt = &ov772x_cfmts[0];
--		priv->win = &ov772x_win_sizes[0];
-+	priv->pwdn_gpio = gpiod_get_optional(&client->dev, "pwdn",
-+					     GPIOD_OUT_LOW);
-+	if (IS_ERR(priv->pwdn_gpio)) {
-+		dev_info(&client->dev, "Unable to get GPIO \"pwdn\"");
-+		ret = PTR_ERR(priv->pwdn_gpio);
-+		goto error_clk_put;
- 	}
- 
-+	ret = ov772x_video_probe(priv);
-+	if (ret < 0)
-+		goto error_gpio_put;
-+
-+	priv->cfmt = &ov772x_cfmts[0];
-+	priv->win = &ov772x_win_sizes[0];
-+
-+	ret = v4l2_async_register_subdev(&priv->subdev);
-+	if (ret)
-+		goto error_gpio_put;
-+
-+	return 0;
-+
-+error_gpio_put:
-+	if (priv->pwdn_gpio)
-+		gpiod_put(priv->pwdn_gpio);
-+error_clk_put:
-+	clk_put(priv->clk);
-+error_ctrl_free:
-+	v4l2_ctrl_handler_free(&priv->hdl);
-+
- 	return ret;
- }
- 
-@@ -1096,7 +1156,9 @@ static int ov772x_remove(struct i2c_client *client)
- {
- 	struct ov772x_priv *priv = to_ov772x(i2c_get_clientdata(client));
- 
--	v4l2_clk_put(priv->clk);
-+	clk_put(priv->clk);
-+	if (priv->pwdn_gpio)
-+		gpiod_put(priv->pwdn_gpio);
- 	v4l2_device_unregister_subdev(&priv->subdev);
- 	v4l2_ctrl_handler_free(&priv->hdl);
- 	return 0;
-@@ -1119,6 +1181,6 @@ static struct i2c_driver ov772x_i2c_driver = {
- 
- module_i2c_driver(ov772x_i2c_driver);
- 
--MODULE_DESCRIPTION("SoC Camera driver for ov772x");
-+MODULE_DESCRIPTION("V4L2 driver for OV772x image sensor");
- MODULE_AUTHOR("Kuninori Morimoto");
- MODULE_LICENSE("GPL v2");
-diff --git a/include/media/i2c/ov772x.h b/include/media/i2c/ov772x.h
-index 00dbb7c..27d087b 100644
---- a/include/media/i2c/ov772x.h
-+++ b/include/media/i2c/ov772x.h
-@@ -48,8 +48,10 @@ struct ov772x_edge_ctrl {
- 	.threshold = (t & OV772X_EDGE_THRESHOLD_MASK),	\
- }
- 
--/*
-- * ov772x camera info
-+/**
-+ * ov772x_camera_info -	ov772x driver interface structure
-+ * @flags:		Sensor configuration flags
-+ * @edgectrl:		Sensor edge control
-  */
- struct ov772x_camera_info {
- 	unsigned long		flags;
--- 
-2.7.4
+--__=_Part_Boundary_002_1394403556.971410882
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+T24gVHVlLCAyMDE4LTAxLTMwIGF0IDEzOjU3ICswMTAwLCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3Rl
+Og0KPiANCj4gT24gMDEvMjkvMjAxOCAxMDowOSBBTSwgYXJndXMubGluQG1lZGlhdGVrLmNvbSB3
+cm90ZToNCj4gPiBGcm9tOiBBcmd1cyBMaW4gPGFyZ3VzLmxpbkBtZWRpYXRlay5jb20+DQo+ID4g
+DQo+ID4gbXQ2Nzk3IGlzIGEgaGlnaGx5IGludGVncmF0ZWQgU29DcywgYW5kIGl0IHVzZXMNCj4g
+PiBtdDYzNTEgYXMgUG93ZXIgTWFuYWdlbWVudCBJQy4NCj4gPiBXZSBuZWVkIHRvIGFkZCBwd3Jh
+cCBkZXZpY2UgdG8gY29tbXVuaWNhdGUgd2l0aA0KPiA+IG10NjM1MSBieSBTUEkuDQo+ID4gVGhl
+IGJhc2UgYWRkcmVzcyBvZiBwd3JhcCBpcyAweDEwMDBkMDAwLCBhbmQgSVJRDQo+ID4gbnVtYmVy
+IGlzIDE3OC4gSXQgYWxzbyB1c2luZyBmaXhlZCAyNk1oeiBjbG9jaw0KPiA+IGFzIFNQSSBDTEsu
+DQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQXJndXMgTGluIDxhcmd1cy5saW5AbWVkaWF0ZWsu
+Y29tPg0KPiA+IC0tLQ0KPiANCj4gRm9yIHRoZSBuZXh0IHJvdW5kLCBjYW4geW91IHB1dCB0aGUg
+ZHRzIHBhdGNoIGF0IHRoZSBlbmQgb2YgdGhlIHNlcmllcy4gQmluZGluZw0KPiBkZXNjcmlwdGlv
+biBzaG91bGQgYmUgdGhlIGZpcnN0IHBhdGNoLCBidXQgYWN0dWFsIGR0cyhpKSBpbmNsdXNpb24g
+c2hvdWxkIGJlIHRoZQ0KPiBsYXN0IG9uZS4gSXQncyBiaWtlIHNoZWRkaW5nIEkga25vdywgYnV0
+IGFzIHlvdSBuZWVkIGEgbmV3IHNlcmllcyBhbnl3YXkuDQo+IA0KPiBUaGFua3MuDQoNCkRlYXIg
+TWF0dGhpYXM6DQpTdXJlLCBJIHdpbGwgYXJyYW5nZSBpbiB0aGUgbmV4dCBvcmRlci4NCj4gDQo+
+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ2Nzk3LmR0c2kgfCAxNCArKysrKysr
+KysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210Njc5Ny5kdHNpIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDY3OTcuZHRzaQ0KPiA+IGluZGV4IDRiZWFh
+NzExMDdkNy4uNDg1NTQ2ZWZjOWJmIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvbWVkaWF0ZWsvbXQ2Nzk3LmR0c2kNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21l
+ZGlhdGVrL210Njc5Ny5kdHNpDQo+ID4gQEAgLTE2MSw2ICsxNjEsMjAgQEANCj4gPiAgCQkgICAg
+ICA8MCAweDEwMjIwNjkwIDAgMHgxMD47DQo+ID4gIAl9Ow0KPiA+ICANCj4gPiArCXB3cmFwOiBw
+d3JhcEAxMDAwZDAwMCB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY3OTctcHdy
+YXAiOw0KPiA+ICsJCXJlZyA9IDwwIDB4MTAwMGQwMDAgMCAweDEwMDA+Ow0KPiA+ICsJCXJlZy1u
+YW1lcyA9ICJwd3JhcCI7DQo+ID4gKwkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDE3OCBJUlFfVFlQ
+RV9MRVZFTF9ISUdIPjsNCj4gPiArCQljbG9ja3MgPSA8JmNsazI2bT4sIDwmY2xrMjZtPjsNCj4g
+PiArCQljbG9jay1uYW1lcyA9ICJzcGkiLCAid3JhcCI7DQo+ID4gKw0KPiA+ICsJCXBtaWM6IG10
+NjM1MSB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2MzUxIjsNCj4gPiArCQkJ
+aW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+ID4gKwkJfTsNCj4gPiArCX07DQo+ID4gKw0KPiA+ICAJ
+dWFydDA6IHNlcmlhbEAxMTAwMjAwMCB7DQo+ID4gIAkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxt
+dDY3OTctdWFydCIsDQo+ID4gIAkJCSAgICAgIm1lZGlhdGVrLG10NjU3Ny11YXJ0IjsNCj4gPiAt
+LSANCj4gPiAyLjEyLjUNCj4gPiANCj4gPiAqKioqKioqKioqKioqIEVtYWlsIENvbmZpZGVudGlh
+bGl0eSBOb3RpY2UNCj4gPiAgKioqKioqKioqKioqKioqKioqKioNCj4gPiBUaGUgaW5mb3JtYXRp
+b24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQo+ID4g
+YXR0YWNobWVudHMpIG1heSBiZSBjb25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2aWxlZ2Vk
+LCBvciBvdGhlcndpc2UNCj4gPiBleGVtcHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFwcGxpY2Fi
+bGUgbGF3cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQo+ID4gY29udmV5ZWQgb25seSB0byB0aGUg
+ZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0KPiA+IGRp
+c3RyaWJ1dGlvbiwgcHJpbnRpbmcsIHJldGFpbmluZyBvciBjb3B5aW5nIG9mIHRoaXMgZS1tYWls
+IChpbmNsdWRpbmcgaXRzIA0KPiA+IGF0dGFjaG1lbnRzKSBieSB1bmludGVuZGVkIHJlY2lwaWVu
+dChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBtYXkgDQo+ID4gYmUgdW5sYXdmdWwuIElm
+IHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVs
+aWV2ZQ0KPiA+ICANCj4gPiB0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVy
+cm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQo+ID4gaW1tZWRpYXRlbHkgKGJ5IHJlcGx5
+aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCj4gPiB0
+aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2htZW50cykgZnJvbSB5b3VyIHN5c3RlbSwg
+YW5kIGRvIG5vdA0KPiA+IGRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFu
+eSBvdGhlciBwZXJzb24uIFRoYW5rDQo+ID4gIHlvdSENCj4gPiANCj4gDQoNCg==
+
+--__=_Part_Boundary_002_1394403556.971410882--
+
+--__=_Part_Boundary_001_1195419652.372859611--
