@@ -1,127 +1,197 @@
-From: Sergey Suloev <ssuloev-RHPENKW2UW+1Z/+hSey0Gg@public.gmane.org>
-Subject: Re: [PATCH 0/3] Fix broken bananapi m2 devicetree/regulators
-Date: Sun, 11 Feb 2018 14:44:33 +0300
-Message-ID: <d90584ac-ae76-39fc-c0e1-ba2ff2151c30@orpaltech.com>
-References: <20180209175236.21215-1-embed3d@gmail.com>
- <160b60e2-6e50-0d63-e6ac-b67e10317e12@orpaltech.com>
- <d3fcc9d2-f2e6-189c-529f-890f2afdd837@gmail.com>
- <40887d4b-0fb0-239e-e5a9-1a87f82946c2@orpaltech.com>
- <da8909da-4eea-0fdf-e104-4442f7986455@gmail.com>
- <45fb86c9-2218-d00d-1952-6b79f9101049@orpaltech.com>
- <1518348631.1342.1.camel@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Yossi Mansharoff <yossim-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [RFC 2/3] usb: chipidea: Hook into mux framework to toggle usb switch
+Date: Sun, 11 Feb 2018 14:15:40 +0200
+Message-ID: <1518351341-6740-2-git-send-email-yossim@codeaurora.org>
+References: <1518351341-6740-1-git-send-email-yossim@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518348631.1342.1.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1518351341-6740-1-git-send-email-yossim-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: rfried-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Yossi Mansharoff <yossim-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/2018 02:30 PM, Philipp Rossak wrote:
-> Am Sonntag, den 11.02.2018, 10:55 +0300 schrieb Sergey Suloev:
->> On 02/11/2018 01:07 AM, Philipp Rossak wrote:
->>>
->>> On 10.02.2018 22:08, Sergey Suloev wrote:
->>>> On 02/11/2018 12:01 AM, Philipp Rossak wrote:
->>>>> Hey Sergey,
->>>>>
->>>>> Thanks for mentioning, but I think the problem has nothing to
->>>>> do
->>>>> with those patches. I tested them with the v4.15.0 Kernel since
->>>>> this
->>>>> is the last stable release and we are right now in the merging
->>>>> window.
->>>>>
->>>>> I tested the latest mainline, without those patches and the
->>>>> kernel
->>>>> is not booting (I can't see any uart output).
->>>>>
->>>>> Thanks,
->>>>> Philipp
->>>>>
->>>>> On 10.02.2018 14:56, Sergey Suloev wrote:
->>>>>> On 02/09/2018 08:52 PM, Philipp Rossak wrote:
->>>>>>> This patchseries fixes the bananapi m1 devicetree, to be
->>>>>>> able to
->>>>>>> boot again.
->>>>>>> The first two patches update/improve the devicetree and the
->>>>>>> last
->>>>>>> patch adds
->>>>>>> all missing regulators.
->>>>>>>
->>>>>>> Regards,
->>>>>>> Philipp
->>>>>>>
->>>>>>> Philipp Rossak (3):
->>>>>>>     arm: dts: sun6i: a31s: bpi-m2: update mmc supply nodes
->>>>>>>     arm: dts: sun6i: a31s: bpi-m2: improve pmic properties
->>>>>>>     arm: dts: sun6i: a31s: fix: bpi-m2: add missing
->>>>>>> regulators
->>>>>>>
->>>>>>>    arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts | 70
->>>>>>> +++++++++++++++++++++++-
->>>>>>>    1 file changed, 67 insertions(+), 3 deletions(-)
->>>>>>>
->>>>>> patches are not working
->>>>>>
->>>>>> Thanks
->>>>>>
->>>> same problem, but after applying the patches my device is till
->>>> hanging.
->>>>
->>>>
->>> Can you please share a bootlog? Here is mine [1]. As you can see
->>> I'm
->>> able to boot.
->>> I build it with this branch [2]. For testing you should replace
->>> the
->>> dtb and the uImage/zImage
->>>
->>> Philipp
->>>
->>>
->>> [1]: https://pastebin.com/mVjv3LDf
->>> [2]:
->>> https://github.com/embed-3d/linux/tree/testing/bpi-m2-regulator-tes
->>> t-2
->> My dmesg is very similar to yours unless it hangs on the last line
->> [1].
->> For this test I used kernel from tag v4.15 with no additional
->> patching.
->>
->> [1] https://pastebin.com/3a6bk5Dk
->>
->>
-> For me it looks like you have a different kernel and also an different
-> dtb that you patch! And you are applying also a fixup script.
-> These patches should be applied on top of linux mainline.
->
-> fixup script:
-> Applying kernel provided DT fixup script (sun6i-a31s-fixup.scr)
->
->
-> Linux versions:
-> 4.15.0-00003-g1bbe5edde691   vs   4.15.0-sunxi-dirty
->
-> In addition to that you are also booting into fb/hdmi.
->
-> If you use my branch (uImage and dtb) and replace the current boot.cmd
-> with this (to get the boot.scr you need to use mkimage) it should work:
->
-> setenv bootargs console=ttyS0,115200 root=/dev/mmcblk0p2 rw rootwait
-> panic=10
-> load mmc 0:1 0x43000000 ${fdtfile} || load mmc 0:1 0x43000000
-> boot/${fdtfile}
-> load mmc 0:1 0x42000000 uImage || load mmc 0:1 0x42000000 boot/uImage
-> bootm 0x42000000 - 0x43000000
->
-ok, I confirm that your patches are not related to the issue. It is the 
-problem with sun4i drm / hdmi which is not working on bpi m2.
+On the db410c 96boards platform we have a TC7USB40MU on the board
+to mux the D+/D- lines coming from the controller between a micro
+usb "device" port and a USB hub for "host" roles[1]. During a
+role switch, we need to toggle this mux to forward the D+/D-
+lines to either the port or the hub. Add the necessary code to do
+the role switch in chipidea core via the generic mux framework.
+Board configurations like on db410c are expected to change roles
+via the sysfs API described in
+Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
 
-Thanks
+[1] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Signed-off-by: Yossi Mansharoff <yossim-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt |  6 ++++++
+ drivers/usb/chipidea/Kconfig                           |  2 ++
+ drivers/usb/chipidea/core.c                            |  6 ++++++
+ drivers/usb/chipidea/host.c                            |  7 +++++++
+ drivers/usb/chipidea/udc.c                             | 13 ++++++++++++-
+ include/linux/usb/chipidea.h                           |  2 ++
+ 6 files changed, 35 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index 0e03344..2e93181 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -76,6 +76,10 @@ Optional properties:
+   needs to make sure it does not send more than 90%
+   maximum_periodic_data_per_frame. The use case is multiple transactions, but
+   less frame rate.
++- mux-controls: The mux control for toggling host/device output of this
++  controller. It's expected that a mux state of 0 indicates device mode and a
++  mux state of 1 indicates host mode.
++- mux-control-names: Shall be "usb_switch" if mux-controls is specified.
+ 
+ i.mx specific properties
+ - fsl,usbmisc: phandler of non-core register device, with one
+@@ -102,4 +106,6 @@ Example:
+ 		rx-burst-size-dword = <0x10>;
+ 		extcon = <0>, <&usb_id>;
+ 		phy-clkgate-delay-us = <400>;
++		mux-controls = <&usb_switch>;
++		mux-control-names = "usb_switch";
+ 	};
+diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
+index 785f0ed..6a8e635 100644
+--- a/drivers/usb/chipidea/Kconfig
++++ b/drivers/usb/chipidea/Kconfig
+@@ -3,6 +3,8 @@ config USB_CHIPIDEA
+ 	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
+ 	select EXTCON
+ 	select RESET_CONTROLLER
++	select MULTIPLEXER
++	select MUX_GPIO
+ 	help
+ 	  Say Y here if your system has a dual role high speed USB
+ 	  controller based on ChipIdea silicon IP. It supports:
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index dd2dd93..4a9e139 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -61,6 +61,7 @@
+ #include <linux/of.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/usb/ehci_def.h>
++#include <linux/mux/consumer.h>
+ 
+ #include "ci.h"
+ #include "udc.h"
+@@ -687,6 +688,11 @@ static int ci_get_platdata(struct device *dev,
+ 	if (of_find_property(dev->of_node, "non-zero-ttctrl-ttha", NULL))
+ 		platdata->flags |= CI_HDRC_SET_NON_ZERO_TTHA;
+ 
++	platdata->usb_switch = devm_mux_control_get_optional(dev, "usb_switch");
++	if (IS_ERR(platdata->usb_switch)){
++		return PTR_ERR(platdata->usb_switch);
++	}
++
+ 	ext_id = ERR_PTR(-ENODEV);
+ 	ext_vbus = ERR_PTR(-ENODEV);
+ 	if (of_property_read_bool(dev->of_node, "extcon")) {
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index 19d60ed..7bd630e 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -13,6 +13,7 @@
+ #include <linux/usb/hcd.h>
+ #include <linux/usb/chipidea.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/mux/consumer.h>
+ 
+ #include "../host/ehci.h"
+ 
+@@ -163,6 +164,10 @@ static int host_start(struct ci_hdrc *ci)
+ 		if (ci_otg_is_fsm_mode(ci)) {
+ 			otg->host = &hcd->self;
+ 			hcd->self.otg_port = 1;
++		} else {
++			ret = mux_control_select(ci->platdata->usb_switch, 1);
++			if (ret)
++				goto disable_reg;
+ 		}
+ 	}
+ 
+@@ -183,6 +188,8 @@ static void host_stop(struct ci_hdrc *ci)
+ 	struct usb_hcd *hcd = ci->hcd;
+ 
+ 	if (hcd) {
++		if (!ci_otg_is_fsm_mode(ci))
++			mux_control_deselect(ci->platdata->usb_switch);
+ 		if (ci->platdata->notify_event)
+ 			ci->platdata->notify_event(ci,
+ 				CI_HDRC_CONTROLLER_STOPPED_EVENT);
+diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+index 9852ec5..209d3f6 100644
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -19,6 +19,7 @@
+ #include <linux/usb/gadget.h>
+ #include <linux/usb/otg-fsm.h>
+ #include <linux/usb/chipidea.h>
++#include <linux/mux/consumer.h>
+ 
+ #include "ci.h"
+ #include "udc.h"
+@@ -1965,16 +1966,26 @@ void ci_hdrc_gadget_destroy(struct ci_hdrc *ci)
+ 
+ static int udc_id_switch_for_device(struct ci_hdrc *ci)
+ {
++	int ret = 0;
++
+ 	if (ci->is_otg)
+ 		/* Clear and enable BSV irq */
+ 		hw_write_otgsc(ci, OTGSC_BSVIS | OTGSC_BSVIE,
+ 					OTGSC_BSVIS | OTGSC_BSVIE);
+ 
+-	return 0;
++	if (!ci_otg_is_fsm_mode(ci))
++		ret = mux_control_select(ci->platdata->usb_switch, 0);
++
++	if (ci->is_otg && ret)
++		hw_write_otgsc(ci, OTGSC_BSVIE | OTGSC_BSVIS, OTGSC_BSVIS);
++
++	return ret;
+ }
+ 
+ static void udc_id_switch_for_host(struct ci_hdrc *ci)
+ {
++	mux_control_deselect(ci->platdata->usb_switch);
++
+ 	/*
+ 	 * host doesn't care B_SESSION_VALID event
+ 	 * so clear and disbale BSV irq
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index 07f9936..9ea55a1 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -10,6 +10,7 @@
+ #include <linux/usb/otg.h>
+ 
+ struct ci_hdrc;
++struct mux_control;
+ 
+ /**
+  * struct ci_hdrc_cable - structure for external connector cable state tracking
+@@ -76,6 +77,7 @@ struct ci_hdrc_platform_data {
+ 	/* VBUS and ID signal state tracking, using extcon framework */
+ 	struct ci_hdrc_cable		vbus_extcon;
+ 	struct ci_hdrc_cable		id_extcon;
++	struct mux_control		*usb_switch;
+ 	u32			phy_clkgate_delay_us;
+ };
+ 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
