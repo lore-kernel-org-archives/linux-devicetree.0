@@ -1,7 +1,7 @@
-From: Sergey Suloev <ssuloev@orpaltech.com>
+From: Sergey Suloev <ssuloev-RHPENKW2UW+1Z/+hSey0Gg@public.gmane.org>
 Subject: Re: [PATCH 0/3] Fix broken bananapi m2 devicetree/regulators
-Date: Sun, 11 Feb 2018 14:36:44 +0300
-Message-ID: <a7cb36ab-7b0c-08de-4fe3-798c8b3d0465@orpaltech.com>
+Date: Sun, 11 Feb 2018 14:44:33 +0300
+Message-ID: <d90584ac-ae76-39fc-c0e1-ba2ff2151c30@orpaltech.com>
 References: <20180209175236.21215-1-embed3d@gmail.com>
  <160b60e2-6e50-0d63-e6ac-b67e10317e12@orpaltech.com>
  <d3fcc9d2-f2e6-189c-529f-890f2afdd837@gmail.com>
@@ -12,12 +12,12 @@ References: <20180209175236.21215-1-embed3d@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518348631.1342.1.camel@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518348631.1342.1.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Rossak <embed3d@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
-Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 02/11/2018 02:30 PM, Philipp Rossak wrote:
@@ -118,10 +118,12 @@ On 02/11/2018 02:30 PM, Philipp Rossak wrote:
 > load mmc 0:1 0x42000000 uImage || load mmc 0:1 0x42000000 boot/uImage
 > bootm 0x42000000 - 0x43000000
 >
-the script is doing nothing, it is empty. The problem is related to hdmi.
+ok, I confirm that your patches are not related to the issue. It is the 
+problem with sun4i drm / hdmi which is not working on bpi m2.
 
-The following dts code makes it happen:
+Thanks
 
-&hdmi {
-         status = "okay";
-};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
