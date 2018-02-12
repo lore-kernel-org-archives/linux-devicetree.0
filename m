@@ -1,119 +1,40 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v5 10/20] firmware: arm_scmi: probe and initialise all the
- supported protocols
-Date: Mon, 12 Feb 2018 18:45:14 +0000
-Message-ID: <1518461124-17371-11-git-send-email-sudeep.holla@arm.com>
-References: <1518461124-17371-1-git-send-email-sudeep.holla@arm.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: exynos-artik5: add support for wlan
+Date: Mon, 12 Feb 2018 19:49:47 +0100
+Message-ID: <20180212184947.zeloekwy4o4yih7u@kozik-lap>
+References: <20180201211656.11829-1-mlyle@lyle.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518461124-17371-1-git-send-email-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexey Klimov <klimov.linux@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180201211656.11829-1-mlyle-dTEscH1tG2Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Lyle <mlyle-dTEscH1tG2Q@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, CHANHO PARK <chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have basic support for all the protocols in the
-specification, let's probe them individually and initialise them.
+On Thu, Feb 01, 2018 at 01:16:56PM -0800, Michael Lyle wrote:
+> On the Artik520 module, there's a bcm4354 attached to mshc_1.  Enable
+> it, and turn on the regulator used for it, so that both wifi & bluetooth
+> work.
+> 
+> Verified to work on the Artik 520 evaluation board.
+> 
+> v2: accidentally sent out v1
+> v3: non-removable instead of broken-cd, alphabetical order, formatting
+> 
+> Signed-off-by: Michael Lyle <mlyle-dTEscH1tG2Q@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos3250-artik5.dtsi | 36 ++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/firmware/arm_scmi/driver.c | 51 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+Thanks, applied.
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 0ceff82f6f59..939ef626bfdd 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -477,6 +477,21 @@ void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
- 	info->protocols_imp = prot_imp;
- }
- 
-+static bool
-+scmi_is_protocol_implemented(const struct scmi_handle *handle, u8 prot_id)
-+{
-+	int i;
-+	struct scmi_info *info = handle_to_scmi_info(handle);
-+
-+	if (!info->protocols_imp)
-+		return false;
-+
-+	for (i = 0; i < MAX_PROTOCOLS_IMP; i++)
-+		if (info->protocols_imp[i] == prot_id)
-+			return true;
-+	return false;
-+}
-+
- /**
-  * scmi_handle_get() - Get the  SCMI handle for a device
-  *
-@@ -672,6 +687,23 @@ static inline int scmi_mbox_chan_setup(struct scmi_info *info)
- 	return 0;
- }
- 
-+static inline void
-+scmi_create_protocol_device(struct device_node *np, struct scmi_info *info,
-+			    int prot_id)
-+{
-+	struct scmi_device *sdev;
-+
-+	sdev = scmi_device_create(np, info->dev, prot_id);
-+	if (!sdev) {
-+		dev_err(info->dev, "failed to create %d protocol device\n",
-+			prot_id);
-+		return;
-+	}
-+
-+	/* setup handle now as the transport is ready */
-+	scmi_set_handle(sdev);
-+}
-+
- static int scmi_probe(struct platform_device *pdev)
- {
- 	int ret;
-@@ -679,7 +711,7 @@ static int scmi_probe(struct platform_device *pdev)
- 	const struct scmi_desc *desc;
- 	struct scmi_info *info;
- 	struct device *dev = &pdev->dev;
--	struct device_node *np = dev->of_node;
-+	struct device_node *child, *np = dev->of_node;
- 
- 	/* Only mailbox method supported, check for the presence of one */
- 	if (scmi_mailbox_check(np)) {
-@@ -722,6 +754,23 @@ static int scmi_probe(struct platform_device *pdev)
- 	list_add_tail(&info->node, &scmi_list);
- 	mutex_unlock(&scmi_list_mutex);
- 
-+	for_each_available_child_of_node(np, child) {
-+		u32 prot_id;
-+
-+		if (of_property_read_u32(child, "reg", &prot_id))
-+			continue;
-+
-+		prot_id &= MSG_PROTOCOL_ID_MASK;
-+
-+		if (!scmi_is_protocol_implemented(handle, prot_id)) {
-+			dev_err(dev, "SCMI protocol %d not implemented\n",
-+				prot_id);
-+			continue;
-+		}
-+
-+		scmi_create_protocol_device(child, info, prot_id);
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.7.4
+Best regards,
+Krzysztof
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
