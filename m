@@ -1,47 +1,51 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2 1/5] dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and clock
-Date: Mon, 12 Feb 2018 23:39:24 +0100
-Message-ID: <20180212223928.22993-2-martin.blumenstingl@googlemail.com>
-References: <20180212223928.22993-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180212223928.22993-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: RFC: build config via DT names
+Date: Mon, 12 Feb 2018 15:13:21 -0800
+Message-ID: <d55f95cc-228b-e65f-b46c-2f314f4fa582@gmail.com>
+References: <63f25fea-f163-f9cc-b5b2-f6f291d7f8d2@gmx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <63f25fea-f163-f9cc-b5b2-f6f291d7f8d2@gmx.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Enrico Weigelt, metux IT consult" <metux@gmx.de>
+Cc: linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The OTG capable USB2 PHY has a reset line (which is shared with other
-components, such as the USB3 PHY for example) and a clock (which are
-both part of different registers). Add the properties
-for the reset line and clocks as optional ones since not all PHYs have
-them (currently only the OTG capable PHY is known to use these).
++ devicetree mail list
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Tested-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/phy/meson-gxl-usb2-phy.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/phy/meson-gxl-usb2-phy.txt b/Documentation/devicetree/bindings/phy/meson-gxl-usb2-phy.txt
-index a105494a0fc9..b84a02ebffdf 100644
---- a/Documentation/devicetree/bindings/phy/meson-gxl-usb2-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/meson-gxl-usb2-phy.txt
-@@ -6,6 +6,10 @@ Required properties:
- - #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
- 
- Optional properties:
-+- clocks:	a phandle to the clock of this PHY
-+- clock-names:	must be "phy"
-+- resets:	a phandle to the reset line of this PHY
-+- reset-names:	must be "phy"
- - phy-supply:	see phy-bindings.txt in this directory
- 
- 
--- 
-2.16.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 02/10/18 07:52, Enrico Weigelt, metux IT consult wrote:
+> Hi folks,
+> 
+> I've regularily have the task of configuring a kernel for a given DT.
+> To make this a little bit easier, I'd like to do this automatically.
+> 
+> The tuff task here is getting a mapping between dt compatible strings
+> and corresponding CONFIG_* flags. Automatically extracting it from the
+> source code seems pretty tricky, especially w/ corner cases (eg. some
+> drivers support groups of devices, depending on config options) - IMHO
+> it will need some code changes anyways.
+> 
+> Therefore I propose a simple approach using the existing Kconfig system:
+> 
+> Add an extra (toplevel) menu and config flag naming scheme which
+> directly map DT compatible strings to config flags. For example:
+> 
+>> fsl,mpc5200-gpio <=> CONFIG_DTDEV_FSL_MPC5200_GPIO
+> 
+>> config CONFIG_DTDEV_FSL_MPC5200_GPIO
+>>    tristate "fsl,mpc5200-gpio"
+>>    select GPIO_MPC5200
+> 
+> Note that these flags are separate from the actual drivers - they just
+> enable them automatically. Of course they'll have to be maintained by
+> the driver maintainers.
+> 
+> 
+> What do you think about this idea ?
+> 
+> 
+> --mtx
+> 
