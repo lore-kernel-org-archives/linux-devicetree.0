@@ -1,76 +1,83 @@
 From: Kieran Bingham <kbingham@kernel.org>
-Subject: [PATCH v2 1/5] dt-bindings: media: adv7604: Add support for
- i2c_new_secondary_device
-Date: Mon, 12 Feb 2018 18:11:53 +0000
-Message-ID: <1518459117-16733-2-git-send-email-kbingham@kernel.org>
+Subject: [PATCH v2 2/5] dt-bindings: adv7511: Add support for i2c_new_secondary_device
+Date: Mon, 12 Feb 2018 18:11:54 +0000
+Message-ID: <1518459117-16733-3-git-send-email-kbingham@kernel.org>
 References: <1518459117-16733-1-git-send-email-kbingham@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1518459117-16733-1-git-send-email-kbingham@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hans.verkuil@cisco.com>, John Stultz <john.stultz@linaro.org>, Mark Brown <broonie@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSmVhbi1NaWNoZWwgSGF1dGJvaXMgPGplYW4tbWljaGVsLmhhdXRib2lzQHZvZGFseXMu
-Y29tPgoKVGhlIEFEVjc2MDQgaGFzIHRoaXJ0ZWVuIDI1Ni1ieXRlIG1hcHMgdGhhdCBjYW4gYmUg
-YWNjZXNzZWQgdmlhIHRoZSBtYWluCknCskMgcG9ydHMuIEVhY2ggbWFwIGhhcyBpdCBvd24gScKy
-QyBhZGRyZXNzIGFuZCBhY3RzIGFzIGEgc3RhbmRhcmQgc2xhdmUKZGV2aWNlIG9uIHRoZSBJwrJD
-IGJ1cy4KCkV4dGVuZCB0aGUgZGV2aWNlIHRyZWUgbm9kZSBiaW5kaW5ncyB0byBiZSBhYmxlIHRv
-IG92ZXJyaWRlIHRoZSBkZWZhdWx0CmFkZHJlc3NlcyBzbyB0aGF0IGFkZHJlc3MgY29uZmxpY3Rz
-IHdpdGggb3RoZXIgZGV2aWNlcyBvbiB0aGUgc2FtZSBidXMKbWF5IGJlIHJlc29sdmVkIGF0IHRo
-ZSBib2FyZCBkZXNjcmlwdGlvbiBsZXZlbC4KClNpZ25lZC1vZmYtYnk6IEplYW4tTWljaGVsIEhh
-dXRib2lzIDxqZWFuLW1pY2hlbC5oYXV0Ym9pc0B2b2RhbHlzLmNvbT4KW0tpZXJhbjogUmUtYWRh
-cHRlZCBmb3IgbWFpbmxpbmVdClNpZ25lZC1vZmYtYnk6IEtpZXJhbiBCaW5naGFtIDxraWVyYW4u
-YmluZ2hhbStyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+ClJldmlld2VkLWJ5OiBSb2IgSGVycmlu
-ZyA8cm9iaEBrZXJuZWwub3JnPgoKLS0tCkJhc2VkIHVwb24gdGhlIG9yaWdpbmFsIHBvc3Rpbmcg
-OgogIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0LzEwLzIyLzQ2OQoKdjI6CiAtIERUIEJpbmRp
-bmcgdXBkYXRlIHNlcGFyYXRlZCBmcm9tIGNvZGUgY2hhbmdlCiAtIE1pbm9yIHJld29yZCB0byBj
-b21taXQgbWVzc2FnZSB0byBhY2NvdW50IGZvciBEVCBvbmx5IGNoYW5nZS4KIC0gQ29sbGVjdGVk
-IFJvYidzIFJCIHRhZy4KCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvYWR2NzYw
-NC50eHQgICAgICAgICAgfCAxOCArKysrKysrKysrKysrKysrLS0KIDEgZmlsZSBjaGFuZ2VkLCAx
-NiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvYWR2NzYwNC50eHQgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Fkdjc2MDQudHh0CmluZGV4IDljYmQ5
-MmViNWQwNS4uYjY0ZTMxM2RjYzY2IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Fkdjc2MDQudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvYWR2NzYwNC50eHQKQEAgLTEzLDcgKzEzLDExIEBA
-IFJlcXVpcmVkIFByb3BlcnRpZXM6CiAgICAgLSAiYWRpLGFkdjc2MTEiIGZvciB0aGUgQURWNzYx
-MQogICAgIC0gImFkaSxhZHY3NjEyIiBmb3IgdGhlIEFEVjc2MTIKIAotICAtIHJlZzogSTJDIHNs
-YXZlIGFkZHJlc3MKKyAgLSByZWc6IEkyQyBzbGF2ZSBhZGRyZXNzZXMKKyAgICBUaGUgQURWNzZ4
-eCBoYXMgdXAgdG8gdGhpcnRlZW4gMjU2LWJ5dGUgbWFwcyB0aGF0IGNhbiBiZSBhY2Nlc3NlZCB2
-aWEgdGhlCisgICAgbWFpbiBJwrJDIHBvcnRzLiBFYWNoIG1hcCBoYXMgaXQgb3duIEnCskMgYWRk
-cmVzcyBhbmQgYWN0cyBhcyBhIHN0YW5kYXJkCisgICAgc2xhdmUgZGV2aWNlIG9uIHRoZSBJwrJD
-IGJ1cy4gVGhlIG1haW4gYWRkcmVzcyBpcyBtYW5kYXRvcnksIG90aGVycyBhcmUKKyAgICBvcHRp
-b25hbCBhbmQgcmV2ZXJ0IHRvIGRlZmF1bHRzIGlmIG5vdCBzcGVjaWZpZWQuCiAKICAgLSBocGQt
-Z3Bpb3M6IFJlZmVyZW5jZXMgdG8gdGhlIEdQSU9zIHRoYXQgY29udHJvbCB0aGUgSERNSSBob3Qt
-cGx1ZwogICAgIGRldGVjdGlvbiBwaW5zLCBvbmUgcGVyIEhETUkgaW5wdXQuIFRoZSBhY3RpdmUg
-ZmxhZyBpbmRpY2F0ZXMgdGhlIEdQSU8KQEAgLTM1LDYgKzM5LDExIEBAIE9wdGlvbmFsIFByb3Bl
-cnRpZXM6CiAKICAgLSByZXNldC1ncGlvczogUmVmZXJlbmNlIHRvIHRoZSBHUElPIGNvbm5lY3Rl
-ZCB0byB0aGUgZGV2aWNlJ3MgcmVzZXQgcGluLgogICAtIGRlZmF1bHQtaW5wdXQ6IFNlbGVjdCB3
-aGljaCBpbnB1dCBpcyBzZWxlY3RlZCBhZnRlciByZXNldC4KKyAgLSByZWctbmFtZXMgOiBOYW1l
-cyBvZiBtYXBzIHdpdGggcHJvZ3JhbW1hYmxlIGFkZHJlc3Nlcy4KKwkJSXQgY2FuIGNvbnRhaW4g
-YW55IG1hcCBuZWVkaW5nIGEgbm9uLWRlZmF1bHQgYWRkcmVzcy4KKwkJUG9zc2libGUgbWFwcyBu
-YW1lcyBhcmUgOgorCQkgICJtYWluIiwgImF2bGluayIsICJjZWMiLCAiaW5mb2ZyYW1lIiwgImVz
-ZHAiLCAiZHBwIiwgImFmZSIsCisJCSAgInJlcCIsICJlZGlkIiwgImhkbWkiLCAidGVzdCIsICJj
-cCIsICJ2ZHAiCiAKIE9wdGlvbmFsIEVuZHBvaW50IFByb3BlcnRpZXM6CiAKQEAgLTUyLDcgKzYx
-LDEyIEBAIEV4YW1wbGU6CiAKIAloZG1pX3JlY2VpdmVyQDRjIHsKIAkJY29tcGF0aWJsZSA9ICJh
-ZGksYWR2NzYxMSI7Ci0JCXJlZyA9IDwweDRjPjsKKwkJLyoKKwkJICogVGhlIGVkaWQgcGFnZSB3
-aWxsIGJlIGFjY2Vzc2libGUgQCAweDY2IG9uIHRoZSBpMmMgYnVzLiBBbGwKKwkJICogb3RoZXIg
-bWFwcyB3aWxsIHJldGFpbiB0aGVpciBkZWZhdWx0IGFkZHJlc3Nlcy4KKwkJICovCisJCXJlZyA9
-IDwweDRjIDB4NjY+OworCQlyZWctbmFtZXMgIm1haW4iLCAiZWRpZCI7CiAKIAkJcmVzZXQtZ3Bp
-b3MgPSA8JmlvZXhwIDAgR1BJT19BQ1RJVkVfTE9XPjsKIAkJaHBkLWdwaW9zID0gPCZpb2V4cCAy
-IEdQSU9fQUNUSVZFX0hJR0g+OwotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+The ADV7511 has four 256-byte maps that can be accessed via the main I²C
+ports. Each map has it own I²C address and acts as a standard slave
+device on the I²C bus.
+
+Extend the device tree node bindings to be able to override the default
+addresses so that address conflicts with other devices on the same bus
+may be resolved at the board description level.
+
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v2:
+ - Fixed up reg: property description to account for multiple optional
+   addresses.
+ - Minor reword to commit message to account for DT only change
+ - Collected Robs RB tag
+
+ .../devicetree/bindings/display/bridge/adi,adv7511.txt | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+index 0047b1394c70..f1b5466b1ca7 100644
+--- a/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
++++ b/Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt
+@@ -14,7 +14,13 @@ Required properties:
+ 		"adi,adv7513"
+ 		"adi,adv7533"
+ 
+-- reg: I2C slave address
++- reg: I2C slave addresses
++  The ADV7511 internal registers are split into four pages exposed through
++  different I2C addresses, creating four register maps. Each map has it own
++  I2C address and acts as a standard slave device on the I²C bus. The main
++  address is mandatory, others are optional and revert to defaults if not
++  specified.
++
+ 
+ The ADV7511 supports a large number of input data formats that differ by their
+ color depth, color format, clock mode, bit justification and random
+@@ -70,6 +76,9 @@ Optional properties:
+   rather than generate its own timings for HDMI output.
+ - clocks: from common clock binding: reference to the CEC clock.
+ - clock-names: from common clock binding: must be "cec".
++- reg-names : Names of maps with programmable addresses.
++	It can contain any map needing a non-default address.
++	Possible maps names are : "main", "edid", "cec", "packet"
+ 
+ Required nodes:
+ 
+@@ -88,7 +97,12 @@ Example
+ 
+ 	adv7511w: hdmi@39 {
+ 		compatible = "adi,adv7511w";
+-		reg = <39>;
++		/*
++		 * The EDID page will be accessible on address 0x66 on the i2c
++		 * bus. All other maps continue to use their default addresses.
++		 */
++		reg = <0x39 0x66>;
++		reg-names = "main", "edid";
+ 		interrupt-parent = <&gpio3>;
+ 		interrupts = <29 IRQ_TYPE_EDGE_FALLING>;
+ 		clocks = <&cec_clock>;
+-- 
+2.7.4
