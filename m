@@ -1,59 +1,69 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5 13/26] watchdog: renesas_wdt: Add restart handler
-Date: Mon, 12 Feb 2018 21:59:39 +0100
-Message-ID: <20180212205939.75pszm5ih6ndw32h@katana>
-References: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1518457475-4480-14-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/3] Documentation: bindings: add usb3-host-disable and
+ usb3-host-port for Rockchip USB Type-C PHY
+Date: Mon, 12 Feb 2018 13:26:44 -0800
+Message-ID: <20180212212643.GA37044@ban.mtv.corp.google.com>
+References: <20180208152028.9997-1-enric.balletbo@collabora.com>
+ <20180208152028.9997-2-enric.balletbo@collabora.com>
+ <CABGGisyaqV5HtTUL5LdjH3ZcU3_RTPmzMvEAhv5wZjCD_XCujg@mail.gmail.com>
+ <CAFqH_53-iN9m=U+WdQh6_rKyxE5c9RUQO9qD1QaY0QePM_pOZA@mail.gmail.com>
+ <CAL_JsqLvkPEm1mZaEfEVFEYMoGvOsbSQb8c35UvjmRTCwrCF8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="smjbq6gp6e7bfkkm"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1518457475-4480-14-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju
+In-Reply-To: <CAL_JsqLvkPEm1mZaEfEVFEYMoGvOsbSQb8c35UvjmRTCwrCF8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---smjbq6gp6e7bfkkm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Feb 12, 2018 at 10:43:41AM -0600, Rob Herring wrote:
+> On Thu, Feb 8, 2018 at 3:23 PM, Enric Balletbo Serra
+> <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > 2018-02-08 18:52 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> >> On Thu, Feb 8, 2018 at 9:20 AM, Enric Balletbo i Serra
+> >> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> >>> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> >>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> >>> @@ -36,6 +36,12 @@ offset, enable bit, write mask bit.
+> >>>   - rockchip,uphy-dp-sel : the register of type-c phy enable DP function
+> >>>     for type-c phy0, it must be <0x6268 19 19>;
+> >>>     for type-c phy1, it must be <0x6268 3 19>;
+> >>> + - rockchip,usb3-host-disable : the register of type-c phy disable usb3 host
+> >>> +   for type-c phy0, it must be <0x2434 0 16>;
+> >>> +   for type-c phy1, it must be <0x2444 0 16>;
+> >>> + - rockchip,usb3-host-port : the register of type-c phy usb3 port number
+> >>> +   for type-c phy0, it must be <0x2434 12 28>;
+> >>> +   for type-c phy1, it must be <0x2444 12 28>;
+> >>
+> >> When does this list stop? Adding properties for various register
+> >> fields doesn't scale. This information should be in the driver and
+> >> based on the compatible string if necessary.
+> >>
+> >
+> > I see, seams reasonable to me, is this applicable to the new ones only
+> > or I should get rid of all the proprieties like this from the DT
+> > (including the old ones)?
+> 
+> We're already kind of stuck with the existing ones. So it depends if
+> people want to phase them out or not.
 
-On Mon, Feb 12, 2018 at 05:44:22PM +0000, Fabrizio Castro wrote:
-> On iWave's boards iwg20d and iwg22d the only way to reboot the system is
-> by means of the watchdog.
-> This patch adds a restart handler to rwdt_ops, and also makes sure we
-> keep its priority to a medium level, in order to not override other more
-> effective handlers.
->=20
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesa=
-s.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+FWIW, any Chrome{device} using these sort of bindings is perfectly
+capable of handling changed bindings (we ship DTBs with the kernel). But
+that's not typically how mainline covers binding deprecation.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+If we're going to start recommending not putting these offsets in the
+DT, I'd vote for deprecating them, for consistency. (Otherwise, we'll
+keep running into this same question.) We only documented the RK3399
+("rockchip,rk3399-typec-phy") binding, so all users should have the same
+offsets. I dunno if/how we pick a time for eventually removing the
+bindings entirely.
 
-
---smjbq6gp6e7bfkkm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqCADsACgkQFA3kzBSg
-KbYw3xAAqmVQNhipNdgNc9uvqAS594wbi0zVXZ8vFS4xAklaG28qdwhqnh67w6ev
-CnQdwxtU0XUPgSUvUcx/TWSpTqWF/pGyGiKpKAFZjEYntgDTMPA3LwItRBsAVrhW
-z8v8Hoeq1UBUga0P7o++LNC5N/4IWiDJ/2rjomW6GsR9ubcvh+bLKXxtMQoNInNU
-hU1eRMCAnnZhkTzUQs/1ckcbClub5q6eCDm+P5PqQhhDMLlAOgKlPjkUrjqrRxFK
-glrx+nFDNN9gKyb2DsO2fp4ngIXFWz9j5ajasBIqiTwy8Bto1hCv/eP8p2NgQ3xm
-tszMJrv1JCsxwNqwAAaRfejZmWaE1mA+kRdKoooE51bwqrpmRd216IWIGjhJSXTX
-JiYO0LoGTTrw+uB0AziFbXLZsBKO3EHsx1acOHyPBaSjz7rOQDfgSbAMa7Im6vBW
-tcj8SQ93x3jdoTnqN/6/xqPTqyR7WF2GeJ0u5t+wHuvc+5sT6lJkXL10095qR4is
-C6Ux2JHjizJoJMLD5B+OiVjNWewB+J1b5vuYa5gQs0cBFeEmbUE8H08H8QIRreJM
-efQmbShjMgohs44YjU5EHp6ofBA1D9bH7X3Q8ciK43zvdQrSCxd/WDXUFucIbMen
-lDmnEeZmw1bf7p108qI9Y2d6zQ06pKh+obuAAwSm3EpaDmiBLr0=
-=diQv
------END PGP SIGNATURE-----
-
---smjbq6gp6e7bfkkm--
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
