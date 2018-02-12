@@ -1,71 +1,107 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v5 01/20] dt-bindings: mailbox: add support for mailbox client shared memory
-Date: Mon, 12 Feb 2018 18:45:05 +0000
-Message-ID: <1518461124-17371-2-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v5 11/20] firmware: arm_scmi: add support for polling based SCMI transfers
+Date: Mon, 12 Feb 2018 18:45:15 +0000
+Message-ID: <1518461124-17371-12-git-send-email-sudeep.holla@arm.com>
 References: <1518461124-17371-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1518461124-17371-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Alexey Klimov <klimov.linux@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Alexey Klimov <klimov.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Many users of the mailbox controllers depend on the shared memory
-between the two end points to exchange the main data while using simple
-doorbell mechanism to alert the end points of the presence of a message.
+It would be useful to have options to perform some SCMI transfers
+atomically by polling for the completion flag instead of interrupt
+driven. The SCMI specification has option to disable the interrupt and
+poll for the completion flag in the shared memory.
 
-This patch defines device tree bindings to represent such shared memory
-in a generic way.
+This patch adds support for polling based SCMI transfers using that
+option. This might be used for uninterrupted/atomic DVFS operations
+from the scheduler context.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- .../devicetree/bindings/mailbox/mailbox.txt        | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/firmware/arm_scmi/driver.c | 49 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 41 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mailbox.txt b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-index be05b9746c69..af8ecee2ac68 100644
---- a/Documentation/devicetree/bindings/mailbox/mailbox.txt
-+++ b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-@@ -23,6 +23,11 @@ assign appropriate mailbox channel to client drivers.
+diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+index 939ef626bfdd..0108bb39d0f6 100644
+--- a/drivers/firmware/arm_scmi/driver.c
++++ b/drivers/firmware/arm_scmi/driver.c
+@@ -26,9 +26,11 @@
+  */
  
- Optional property:
- - mbox-names: List of identifier strings for each mailbox channel.
-+- shmem : List of phandle pointing to the shared memory(SHM) area between the
-+	  users of these mailboxes for IPC, one for each mailbox. This shared
-+	  memory can be part of any memory reserved for the purpose of this
-+	  communication between the mailbox client and the remote.
-+
+ #include <linux/bitmap.h>
++#include <linux/delay.h>
+ #include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/ktime.h>
+ #include <linux/mailbox_client.h>
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+@@ -346,6 +348,21 @@ void scmi_one_xfer_put(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 	spin_unlock_irqrestore(&minfo->xfer_lock, flags);
+ }
  
- Example:
- 	pwr_cntrl: power {
-@@ -30,3 +35,26 @@ assign appropriate mailbox channel to client drivers.
- 		mbox-names = "pwr-ctrl", "rpc";
- 		mboxes = <&mailbox 0 &mailbox 1>;
- 	};
++static bool
++scmi_xfer_poll_done(const struct scmi_info *info, struct scmi_xfer *xfer)
++{
++	struct scmi_shared_mem *mem = info->tx_payload;
++	u16 xfer_id = MSG_XTRACT_TOKEN(le32_to_cpu(mem->msg_header));
 +
-+Example with shared memory(shmem):
++	if (xfer->hdr.seq != xfer_id)
++		return false;
 +
-+	sram: sram@50000000 {
-+		compatible = "mmio-sram";
-+		reg = <0x50000000 0x10000>;
++	return le32_to_cpu(mem->channel_status) &
++		(SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR |
++		SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE);
++}
 +
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x50000000 0x10000>;
++#define SCMI_MAX_POLLING_TIMEOUT_NS	(100 * NSEC_PER_USEC)
+ /**
+  * scmi_do_xfer() - Do one transfer
+  *
+@@ -372,14 +389,30 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
+ 	/* mbox_send_message returns non-negative value on success, so reset */
+ 	ret = 0;
+ 
+-	/* And we wait for the response. */
+-	timeout = msecs_to_jiffies(info->desc->max_rx_timeout_ms);
+-	if (!wait_for_completion_timeout(&xfer->done, timeout)) {
+-		dev_err(dev, "mbox timed out in resp(caller: %pF)\n",
+-			(void *)_RET_IP_);
+-		ret = -ETIMEDOUT;
+-	} else if (xfer->hdr.status) {
+-		ret = scmi_to_linux_errno(xfer->hdr.status);
++	if (xfer->hdr.poll_completion) {
++		ktime_t stop, cur;
 +
-+		cl_shmem: shmem@0 {
-+			compatible = "client-shmem";
-+			reg = <0x0 0x200>;
-+		};
-+	};
++		stop = ktime_add_ns(ktime_get(), SCMI_MAX_POLLING_TIMEOUT_NS);
++		do {
++			udelay(5);
++			cur = ktime_get();
++		} while (!scmi_xfer_poll_done(info, xfer) &&
++			 ktime_before(cur, stop));
 +
-+	client@2e000000 {
-+		...
-+		mboxes = <&mailbox 0>;
-+		shmem = <&cl_shmem>;
-+		..
-+	};
++		if (ktime_before(cur, stop))
++			scmi_fetch_response(xfer, info->tx_payload);
++		else
++			ret = -ETIMEDOUT;
++	} else {
++		/* And we wait for the response. */
++		timeout = msecs_to_jiffies(info->desc->max_rx_timeout_ms);
++		if (!wait_for_completion_timeout(&xfer->done, timeout)) {
++			dev_err(dev, "mbox timed out in resp(caller: %pF)\n",
++				(void *)_RET_IP_);
++			ret = -ETIMEDOUT;
++		} else if (xfer->hdr.status) {
++			ret = scmi_to_linux_errno(xfer->hdr.status);
++		}
+ 	}
+ 	/*
+ 	 * NOTE: we might prefer not to need the mailbox ticker to manage the
 -- 
 2.7.4
