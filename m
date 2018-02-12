@@ -1,63 +1,94 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC v4 13/26] watchdog: renesas_wdt: Add restart handler
-Date: Mon, 12 Feb 2018 11:54:56 +0100
-Message-ID: <20180212105456.3zejp3j7hfuzyc3c@ninjato>
-References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1517423070-24236-14-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180207230309.goxig2irkpxrw5el@katana>
- <TY1PR06MB089578618AA33335D90D16CEC0F70@TY1PR06MB0895.apcprd06.prod.outlook.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] IR support for A83T
+Date: Mon, 12 Feb 2018 12:00:02 +0100
+Message-ID: <a1ce4422-33d7-1214-6527-0d299e97fe8b@gmail.com>
+References: <20180130174656.10657-1-embed3d@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="f3tafwofa62vw2id"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <TY1PR06MB089578618AA33335D90D16CEC0F70@TY1PR06MB0895.apcprd06.prod.outlook.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>linux
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBD257DPK24NRBNXHQXKAKGQETN6IWJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180130174656.10657-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---f3tafwofa62vw2id
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 30.01.2018 18:46, Philipp Rossak wrote:
+> This patch series adds support for the sunxi A83T ir module and enhances
+> the sunxi-ir driver. Right now the base clock frequency for the ir driver
+> is a hard coded define and is set to 8 MHz.
+> This works for the most common ir receivers. On the Sinovoip Bananapi M3
+> the ir receiver needs, a 3 MHz base clock frequency to work without
+> problems with this driver.
+> 
+> This patch series adds support for an optinal property that makes it able
+> to override the default base clock frequency and enables the ir interface
+> on the a83t and the Bananapi M3.
+> 
+> changes since v4:
+> * rename cir pin from cir_pins to r_cir_pin
+> * drop unit-adress from r_cir_pin
+> * add a83t compatible to the cir node
+> * move muxing options to dtsi
+> * rename cir label and reorder it in the bananpim3.dts file
+> 
+> changes since v3:
+> * collecting all acks & reviewd by
+> * fixed typos
+> 
+> changes since v2:
+> * reorder cir pin (alphabetical)
+> * fix typo in documentation
+> 
+> changes since v1:
+> * fix typos, reword Documentation
+> * initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
+> * change dev_info() to dev_dbg()
+> * change naming to cir* in dts/dtsi
+> * Added acked Ackedi-by to related patch
+> * use whole memory block instead of registers needed + fix for h3/h5
+> 
+> changes since rfc:
+> * The property is now optinal. If the property is not available in
+>    the dtb the driver uses the default base clock frequency.
+> * the driver prints out the the selected base clock frequency.
+> * changed devicetree property from base-clk-frequency to clock-frequency
+> 
+> Regards,
+> Philipp
+> 
+> Philipp Rossak (6):
+>    media: rc: update sunxi-ir driver to get base clock frequency from
+>      devicetree
+>    media: dt: bindings: Update binding documentation for sunxi IR
+>      controller
+>    arm: dts: sun8i: a83t: Add the cir pin for the A83T
+>    arm: dts: sun8i: a83t: Add support for the cir interface
+>    arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
+>    arm: dts: sun8i: h3-h5: ir register size should be the whole memory
+>      block
+> 
+>   Documentation/devicetree/bindings/media/sunxi-ir.txt |  3 +++
+>   arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  5 +++++
+>   arch/arm/boot/dts/sun8i-a83t.dtsi                    | 18 ++++++++++++++++++
+>   arch/arm/boot/dts/sunxi-h3-h5.dtsi                   |  2 +-
+>   drivers/media/rc/sunxi-cir.c                         | 19 +++++++++++--------
+>   5 files changed, 38 insertions(+), 9 deletions(-)
+> 
 
+Hey,
 
-> > I used to have this simpler version (back then for the UP case):
-> >
-> > +rwdt_start(wdev);
-> > +rwdt_write(priv, 0xffff, RWTCNT);
-> > +return 0;
-> >
-> > It should still work probably...
->=20
-> It should still work, but it would be slower, I would stick with the
-> version I have submitted if you don't mind.
+RC1 is now out, thus I would like to ask you to have a look at this 
+patch series again. Some patches still miss an acked-by. It would be 
+nice if we could schedule this for v4.17.
 
-Actually, I do mind. Because of code duplication reasons. We have a fix
-in the works for rwdt_start() and it would be too easy to overlook the
-same fix will be needed for a restart.
-
-
---f3tafwofa62vw2id
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqBcnwACgkQFA3kzBSg
-KbYEIRAAmOdgWp0j0/mBjoenLahP/pw4rrf3wp/UyGmPh8RA/4JfoCsiAl2yP5Ub
-xync2FvlM2HaScGRdSAhn6UlufChmQMXRw5X+5O5y/Td7Yl/pB/O2VNtCqbsMWUN
-vpbe6vIqLwlTbeYX+zbhOhE/L8bx/DSDeDPO90x3jRVwk7t/kjA/LjJSgGXjm0WK
-bJwpDWinVEuxctTSn5v9AbQtzHtpGzf2G0JN9vz/ceCSYz5dTfqxngpG7DE5PpyL
-ZP9D2wNqqBzoVo60E1ikjrgXyDhIaKI3i+3vwMf6pvnL5gtjLG+x/5TOC2GI0muN
-5Dez0IYPFgqmcOWD8/pXw9btArlb00Rns8FxUnzGxRRd/IZUihzHZ98lO3fVBGDX
-x46YY5hMBAJiwvzlpTgSNsf4PQs6KGh6TuU28uoTKJnaUL+KWi9mH34LUZeZCirJ
-RRoaU3S1d+hRph/0ZMye0CIr2I9cxMCUFYeYrHK5+YVtzI5JsYuD9T2s2GHi16al
-K4OGIY3LQJ0c15uZFVPanPiMb5M2HEKB7W4bWzrppDyp4aahI6ZQpVVyMWk20Fgp
-smnla6hBdux8C+nIkTITFHoM5E/PO0yqaY1T4TfGx0l4ULCHwtQz5ieoICMloa85
-8esy3pSGmpTsW6xzn3Kaz2KPTmAjhZZnWOvjmK6x58+SwXUUS4s=
-=o399
------END PGP SIGNATURE-----
-
---f3tafwofa62vw2id--
+Thanks,
+Philipp
