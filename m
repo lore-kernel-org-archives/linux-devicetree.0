@@ -1,37 +1,39 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: sh-pfc: Correct SoC family name for R8A7778
-Date: Mon, 12 Feb 2018 15:20:17 +0100
-Message-ID: <CAMuHMdVe7-xDwEAQU4y66u_Hzm_sY6K5_+LAZQ6bzKzEgt8oLQ@mail.gmail.com>
-References: <1513699496-27931-1-git-send-email-geert+renesas@glider.be> <20171220081238.xcwacfxfxjxoowt6@verge.net.au>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 09/10] dt-bindings: fsi: Add optional property
+ no-scan-on-init
+Date: Mon, 12 Feb 2018 08:36:54 -0600
+Message-ID: <20180212143654.xh3vrhvvj62mdtog@rob-hp-laptop>
+References: <20180212051549.8575-1-joel@jms.id.au>
+ <20180212051549.8575-10-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171220081238.xcwacfxfxjxoowt6-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180212051549.8575-10-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Brad Bishop <bradleyb-r5pk2Da7Bxt8sGd51Jp2sdBPR1lH4CV8@public.gmane.org>, Edward James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 20, 2017 at 9:12 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> On Tue, Dec 19, 2017 at 05:04:56PM +0100, Geert Uytterhoeven wrote:
->> R8A7778 is R-Car (not R-Mobile) M1.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->
-> Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+On Mon, Feb 12, 2018 at 03:45:48PM +1030, Joel Stanley wrote:
+> From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> 
+> Add an optional FSI master property 'no-scan-on-init.  This
+> can be specified to indicate that a master should not be
+> automatically scanned at init time.  This is required in cases
+> where a scan could interfere with another FSI master on the same
+> bus.
+> 
+> Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> Acked-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/fsi/fsi.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-Thanks, queued in sh-pfc-for-v4.17.
+Please add acks/reviews when posting new versions.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
