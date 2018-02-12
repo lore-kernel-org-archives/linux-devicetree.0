@@ -1,64 +1,44 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 4/8] ASoC: samsung: i2s: Define the parameters list for SAMSUNG_I2S_OPCLK
-Date: Mon, 12 Feb 2018 11:00:50 +0100
-Message-ID: <CAJKOXPeHDHbt8e+aVd6RCv3M+AW7qPVep=Cb7nBJeZn3k+u5Bg@mail.gmail.com>
-References: <CGME20180205154520epcas1p4132421a187a4d767a2f75badfef5eec4@epcas1p4.samsung.com>
- <20180205154403.13520-1-s.nawrocki@samsung.com> <20180205154403.13520-5-s.nawrocki@samsung.com>
- <CAJKOXPf-6wFDSPttdDbc34Y2hiuc=TG2j5bb+2uQeScxGuxjZg@mail.gmail.com> <7f86ec02-2235-7622-9298-f6edd367edb2@samsung.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
+ properties ?
+Date: Mon, 12 Feb 2018 15:47:46 +0530
+Message-ID: <20180212101746.GT28462@vireshk-i7>
+References: <20180207102446.GS28462@vireshk-i7>
+ <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
+ <20180209064211.GY28462@vireshk-i7>
+ <539699c7-9509-dea2-2b31-c5f6749c99c4@linaro.org>
+ <20180209092421.GL28462@vireshk-i7>
+ <5722441d-c8be-4d29-fab7-28b4e5716961@linaro.org>
+ <20180212061015.GO28462@vireshk-i7>
+ <0b73e1aa-a88f-fe4b-b33a-0f589000e148@linaro.org>
+ <20180212085242.GQ28462@vireshk-i7>
+ <f361b9a0-08ac-9d19-76b2-83e67a6a2406@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <7f86ec02-2235-7622-9298-f6edd367edb2@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jcsing.lee@samsung.com, sbkim73@samsung.com, linux-kernel@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f361b9a0-08ac-9d19-76b2-83e67a6a2406@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Punit.Agrawal@arm.com, ionela.voinescu@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 7, 2018 at 5:23 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> On 02/06/2018 01:26 PM, Krzysztof Kozlowski wrote:
->> On Mon, Feb 5, 2018 at 4:43 PM, Sylwester Nawrocki
->> <s.nawrocki@samsung.com> wrote:
->
->>> diff --git a/sound/soc/samsung/i2s.h b/sound/soc/samsung/i2s.h
->>> index 79781de2f247..a9832a9555cb 100644
->>> --- a/sound/soc/samsung/i2s.h
->>> +++ b/sound/soc/samsung/i2s.h
->>> @@ -16,11 +16,16 @@
->>>  #define SAMSUNG_I2S_DAI        "samsung-i2s"
->>>  #define SAMSUNG_I2S_DAI_SEC    "samsung-i2s-sec"
->>>
->>> -#define SAMSUNG_I2S_DIV_BCLK   1
->>> +#define SAMSUNG_I2S_DIV_BCLK           1
->>>
->>> -#define SAMSUNG_I2S_RCLKSRC_0  0
->>> -#define SAMSUNG_I2S_RCLKSRC_1  1
->>> +#define SAMSUNG_I2S_RCLKSRC_0          0
->>> +#define SAMSUNG_I2S_RCLKSRC_1          1
->>>  #define SAMSUNG_I2S_CDCLK              2
->>> +/* Operation clock for IIS logic */
->>>  #define SAMSUNG_I2S_OPCLK              3
->>> +#define  SAMSUNG_I2S_OPCLK_CDCLK_OUT   0       /* CODEC clock out */
->>> +#define  SAMSUNG_I2S_OPCLK_CDCLK_IN    1       /* CODEC clock in */
->>> +#define  SAMSUNG_I2S_OPCLK_BCLK_OUT    2       /* Bit clock out */
->>> +#define  SAMSUNG_I2S_OPCLK_PCLK                3       /* Audio bus clock */
->>>
->>>  #endif /* __SND_SOC_SAMSUNG_I2S_H */
->>
->> This part of patch seems to be unrelated (and it includes some cleanups).
->
-> This is actually the main part of the patch, an API exported to other
-> drivers.
+On 12-02-18, 10:52, Daniel Lezcano wrote:
+> Just to clarify my comment above, I understood you were asking how to
+> not use the cpu as a cooling device. As the binding between the cooling
+> device and the thermal zone happens when the DT nodes are the same, when
+> registering the cpufreq driver as a cooling device and when the
+> cooling-device registers itself at the cooling-map parsing time, if we
+> remove the cooling-device in the cooling-map, the binding never happens
+> thus the cpu is never used as a cooling device.
 
-You are right, I looked at it without the context of 5/8 and I assumed
-you are changing existing user of the defines...
+Ahh, understood your comment now.
 
-> The whitespace changes are for keeping the alignment uniform,
-> I could just drop them.
+> However, these are all
+> required fields, so the only way to do that is to remove the entire
+> thermal zone node, not sure it is what we want :)
 
-Let it be then.
+Yeah, so thing stay as is for now :)
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Best regards,
-Krzysztof
+-- 
+viresh
