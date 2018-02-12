@@ -1,96 +1,33 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] of: cache phandle nodes to reduce cost of
- of_find_node_by_phandle()
-Date: Sun, 11 Feb 2018 22:58:57 -0800
-Message-ID: <dc3c66d5-b848-d1cc-48f4-cabeccc2e383@gmail.com>
-References: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Subject: [PATCH 0/3] misc: aspeed-lpc-ctrl fixes
+Date: Mon, 12 Feb 2018 17:38:44 +1030
+Message-ID: <20180212070847.32387-1-joel@jms.id.au>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518416868-8804-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/18 22:27, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-> 
-> Create a cache of the nodes that contain a phandle property.  Use this
-> cache to find the node for a given phandle value instead of scanning
-> the devicetree to find the node.  If the phandle value is not found
-> in the cache, of_find_node_by_phandle() will fall back to the tree
-> scan algorithm.
-> 
-> The cache is initialized in of_core_init().
-> 
-> The cache is freed via a late_initcall_sync() if modules are not
-> enabled.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-> ---
-> 
-> Changes since v1:
->   - change short description from
->     of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
->   - rebase on v4.16-rc1
->   - reorder new functions in base.c to avoid forward declaration
->   - add locking around kfree(phandle_cache) for memory ordering
->   - add explicit check for non-null of phandle_cache in
->     of_find_node_by_phandle().  There is already a check for !handle,
->     which prevents accessing a null phandle_cache, but that dependency
->     is not obvious, so this check makes it more apparent.
->   - do not free phandle_cache if modules are enabled, so that
->     cached phandles will be available when modules are loaded
-> 
->  drivers/of/base.c       | 93 ++++++++++++++++++++++++++++++++++++++++++++++---
->  drivers/of/of_private.h |  5 +++
->  drivers/of/resolver.c   | 21 -----------
->  3 files changed, 94 insertions(+), 25 deletions(-)
-> 
+These patches were developed when testing upstream Linux with OpenBMC on
+Romulus. We need to ensure the LPC clock is enabled, now that the clock
+driver turns off any unused clocks. We also need to enable the LPC
+firmware cycles bit as we do not intend to upstream any mach-aspeed
+hacks.
 
-< snip >
+There was no existing binding document for the LPC host interface
+controller, so I wrote one that includes the required clock description.
 
-Hi Chintan,
+Joel Stanley (3):
+  dt-bindings: aspeed-lpc: Document LPC Host Interface Controller
+  misc: aspeed-lpc: Request and enable LPC clock
+  misc: aspeed-lpc-ctrl: Enable FWH and A2H bridge cycles
 
-Just as in the previous version, this part of the patch will not apply
-on older kernel versions, and can just be deleted:
+ .../devicetree/bindings/mfd/aspeed-lpc.txt         | 40 ++++++++++++++++++++
+ drivers/misc/aspeed-lpc-ctrl.c                     | 44 +++++++++++++++++++---
+ 2 files changed, 79 insertions(+), 5 deletions(-)
 
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> index 740d19bde601..a7580c24737a 100644
-> --- a/drivers/of/resolver.c
-> +++ b/drivers/of/resolver.c
-> @@ -19,27 +19,6 @@
->  
->  #include "of_private.h"
->  
-> -/* illegal phandle value (set when unresolved) */
-> -#define OF_PHANDLE_ILLEGAL	0xdeadbeef
-> -
-> -static phandle live_tree_max_phandle(void)
-> -{
-> -	struct device_node *node;
-> -	phandle phandle;
-> -	unsigned long flags;
-> -
-> -	raw_spin_lock_irqsave(&devtree_lock, flags);
-> -	phandle = 0;
-> -	for_each_of_allnodes(node) {
-> -		if (node->phandle != OF_PHANDLE_ILLEGAL &&
-> -				node->phandle > phandle)
-> -			phandle = node->phandle;
-> -	}
-> -	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> -
-> -	return phandle;
-> -}
-> -
->  static void adjust_overlay_phandles(struct device_node *overlay,
->  		int phandle_delta)
->  {
-> 
+-- 
+2.15.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
