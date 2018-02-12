@@ -1,37 +1,137 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: exynos: Add support for HDMI audio on
- exynos5433-tm2
-Date: Mon, 12 Feb 2018 12:47:45 +0100
-Message-ID: <c40f9d95-cf7d-c505-ab56-55b475efe136@samsung.com>
-References: <CGME20180208184446epcas2p2a5a59112f29b97dad9deb820699eb741@epcas2p2.samsung.com>
-        <20180208184408.24185-1-s.nawrocki@samsung.com>
-        <20180208184408.24185-3-s.nawrocki@samsung.com>
-        <CAJKOXPfXR3pRcTy_y2jwg7R8Pkg15+VJyOvCaXvQa8ZHS=HeBA@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 14/16] arm64: dts: mt7622: add thermal and related
+ nodes
+Date: Mon, 12 Feb 2018 12:55:44 +0100
+Message-ID: <b7d74cbb-9ad8-23cb-aa3c-e9704aafa107@gmail.com>
+References: <cover.1517910489.git.sean.wang@mediatek.com>
+ <687a7c43e3e3260ebdf004a96d2cde143f563250.1517910489.git.sean.wang@mediatek.com>
+ <4db5c81b-0e55-3676-d7c8-d1b6aefb99c4@gmail.com>
+ <1518148312.9025.17.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAJKOXPfXR3pRcTy_y2jwg7R8Pkg15+VJyOvCaXvQa8ZHS=HeBA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518148312.9025.17.camel@mtkswgap22>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/2018 10:28 AM, Krzysztof Kozlowski wrote:
->> +&i2s1 {
->> +       assigned-clocks = <&i2s1 CLK_I2S_RCLK_SRC>;
->> +       assigned-clock-parents = <&cmu_peric CLK_SCLK_I2S1>;
->
-> Reorder alphabetically the node (and then you'll see you already add
-> one for i2s1).
 
-Oops, my fault, let me correct this again and resend.
 
--- 
-Regards,
-Sylwester
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 02/09/2018 04:51 AM, Sean Wang wrote:
+> On Wed, 2018-02-07 at 12:43 +0100, Matthias Brugger wrote:
+>>
+>> On 02/06/2018 10:53 AM, sean.wang@mediatek.com wrote:
+>>> From: Sean Wang <sean.wang@mediatek.com>
+>>>
+>>> add nodes for the thermal controller and associated thermal zone using
+>>> CPU as the cooling device for each trip point. In addition, add a fixup
+>>> for thermal_calibration on nvmem should be 12 bytes as the minimal
+>>> requirement.
+>>>
+>>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+>>> ---
+>>>  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 72 +++++++++++++++++++++++++++++++-
+>>>  1 file changed, 71 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+>>> index e6dd4f6..6cf67dd 100644
+>>> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+>>> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+>>> @@ -12,6 +12,7 @@
+>>>  #include <dt-bindings/phy/phy.h>
+>>>  #include <dt-bindings/power/mt7622-power.h>
+>>>  #include <dt-bindings/reset/mt7622-reset.h>
+>>> +#include <dt-bindings/thermal/thermal.h>
+>>>  
+>>>  / {
+>>>  	compatible = "mediatek,mt7622";
+>>> @@ -75,6 +76,7 @@
+>>>  				 <&apmixedsys CLK_APMIXED_MAIN_CORE_EN>;
+>>>  			clock-names = "cpu", "intermediate";
+>>>  			operating-points-v2 = <&cpu_opp_table>;
+>>> +			#cooling-cells = <2>;
+>>>  			enable-method = "psci";
+>>>  			clock-frequency = <1300000000>;
+>>>  		};
+>>> @@ -119,6 +121,58 @@
+>>>  		};
+>>>  	};
+>>>  
+>>> +	thermal-zones {
+>>> +		cpu_thermal: cpu-thermal {
+>>> +			polling-delay-passive = <1000>;
+>>> +			polling-delay = <1000>;
+>>> +
+>>> +			thermal-sensors = <&thermal 0>;
+>>> +
+>>> +			trips {
+>>> +				cpu_passive: cpu-passive {
+>>> +					temperature = <47000>;
+>>> +					hysteresis = <2000>;
+>>> +					type = "passive";
+>>> +				};
+>>> +
+>>> +				cpu_active: cpu-active {
+>>> +					temperature = <67000>;
+>>> +					hysteresis = <2000>;
+>>> +					type = "active";
+>>> +				};
+>>> +
+>>> +				cpu_hot: cpu-hot {
+>>> +					temperature = <87000>;
+>>> +					hysteresis = <2000>;
+>>> +					type = "hot";
+>>> +				};
+>>> +
+>>> +				cpu-crit {
+>>> +					temperature = <107000>;
+>>> +					hysteresis = <2000>;
+>>> +					type = "critical";
+>>> +				};
+>>> +			};
+>>> +
+>>> +			cooling-maps {
+>>> +				map0 {
+>>> +					trip = <&cpu_passive>;
+>>> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>>> +				};
+>>> +
+>>> +				map1 {
+>>> +					trip = <&cpu_active>;
+>>> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>>> +				};
+>>> +
+>>> +				map2 {
+>>> +					trip = <&cpu_hot>;
+>>> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>>> +				};
+>>> +			};
+>>> +		};
+>>> +	};
+>>> +
+>>>  	timer {
+>>>  		compatible = "arm,armv8-timer";
+>>>  		interrupt-parent = <&gic>;
+>>> @@ -201,7 +255,7 @@
+>>>  		#size-cells = <1>;
+>>>  
+>>>  		thermal_calibration: calib@198 {
+>>> -			reg = <0x198 0x8>;
+>>> +			reg = <0x198 0xc>;
+>>
+>> Any reason why this is not part of patch 8/16?
+>>
+> 
+> There's no strong reason wanting me to do that. patch 8 has contained a
+> lot of nodes and patch 16 is present just in v2. So, I felt it should be
+> a little bit easy that people reviews those patches if they are put into
+> separate patches. But, It's still fine to make them into one in the next
+> version.
+> 
+
+Please add it to 8/16 as this is where you define the node in the first place.
+
+Thanks!
