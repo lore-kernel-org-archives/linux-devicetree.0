@@ -1,306 +1,211 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v5 18/20] hwmon: add support for sensors exported via ARM SCMI
-Date: Mon, 12 Feb 2018 18:45:22 +0000
-Message-ID: <1518461124-17371-19-git-send-email-sudeep.holla@arm.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v5 15/20] firmware: arm_scmi: add device power domain support using genpd
+Date: Mon, 12 Feb 2018 18:45:19 +0000
+Message-ID: <1518461124-17371-16-git-send-email-sudeep.holla@arm.com>
 References: <1518461124-17371-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518461124-17371-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Alexey Klimov <klimov.linux@gmail.com>, linux-hwmon@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518461124-17371-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Create a driver to add support for SoC sensors exported by the System
-Control Processor (SCP) via the System Control and Management Interface
-(SCMI). The supported sensor types is one of voltage, temperature,
-current, and power.
+This patch hooks up the support for device power domain provided by
+SCMI using the Linux generic power domain infrastructure.
 
-The sensor labels and values provided by the SCP are exported via the
-hwmon sysfs interface.
-
-Cc: linux-hwmon@vger.kernel.org
-Acked-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 ---
- drivers/hwmon/Kconfig      |  12 +++
- drivers/hwmon/Makefile     |   1 +
- drivers/hwmon/scmi-hwmon.c | 233 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 246 insertions(+)
- create mode 100644 drivers/hwmon/scmi-hwmon.c
+ drivers/firmware/Kconfig                   |  13 +++
+ drivers/firmware/arm_scmi/Makefile         |   1 +
+ drivers/firmware/arm_scmi/scmi_pm_domain.c | 140 +++++++++++++++++++++++++++++
+ 3 files changed, 154 insertions(+)
+ create mode 100644 drivers/firmware/arm_scmi/scmi_pm_domain.c
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index ef23553ff5cb..033e57366d56 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -317,6 +317,18 @@ config SENSORS_APPLESMC
- 	  Say Y here if you have an applicable laptop and want to experience
- 	  the awesome power of applesmc.
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 704961e0473a..6e83880046d7 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -40,6 +40,19 @@ config ARM_SCMI_PROTOCOL
+ 	  This protocol library provides interface for all the client drivers
+ 	  making use of the features offered by the SCMI.
  
-+config SENSORS_ARM_SCMI
-+	tristate "ARM SCMI Sensors"
-+	depends on ARM_SCMI_PROTOCOL
-+	depends on THERMAL || !THERMAL_OF
++config ARM_SCMI_POWER_DOMAIN
++	tristate "SCMI power domain driver"
++	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
++	default y
++	select PM_GENERIC_DOMAINS if PM
 +	help
-+	  This driver provides support for temperature, voltage, current
-+	  and power sensors available on SCMI based platforms. The actual
-+	  number and type of sensors exported depend on the platform.
++	  This enables support for the SCMI power domains which can be
++	  enabled or disabled via the SCP firmware
 +
 +	  This driver can also be built as a module.  If so, the module
-+	  will be called scmi-hwmon.
++	  will be called scmi_pm_domain. Note this may needed early in boot
++	  before rootfs may be available.
 +
- config SENSORS_ARM_SCPI
- 	tristate "ARM SCPI Sensors"
- 	depends on ARM_SCPI_PROTOCOL
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index f814b4ace138..e7d52a36e6c4 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_SENSORS_ADT7462)	+= adt7462.o
- obj-$(CONFIG_SENSORS_ADT7470)	+= adt7470.o
- obj-$(CONFIG_SENSORS_ADT7475)	+= adt7475.o
- obj-$(CONFIG_SENSORS_APPLESMC)	+= applesmc.o
-+obj-$(CONFIG_SENSORS_ARM_SCMI)	+= scmi-hwmon.o
- obj-$(CONFIG_SENSORS_ARM_SCPI)	+= scpi-hwmon.o
- obj-$(CONFIG_SENSORS_ASC7621)	+= asc7621.o
- obj-$(CONFIG_SENSORS_ASPEED)	+= aspeed-pwm-tacho.o
-diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+ config ARM_SCPI_PROTOCOL
+ 	tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
+ 	depends on ARM || ARM64 || COMPILE_TEST
+diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+index 3236890905b9..99e36c580fbc 100644
+--- a/drivers/firmware/arm_scmi/Makefile
++++ b/drivers/firmware/arm_scmi/Makefile
+@@ -2,3 +2,4 @@ obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o
+ scmi-bus-y = bus.o
+ scmi-driver-y = driver.o
+ scmi-protocols-y = base.o clock.o perf.o power.o sensors.o
++obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
 new file mode 100644
-index 000000000000..7a0ab768d4b5
+index 000000000000..c03c06d3840a
 --- /dev/null
-+++ b/drivers/hwmon/scmi-hwmon.c
-@@ -0,0 +1,233 @@
++++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+@@ -0,0 +1,140 @@
 +/*
-+ * System Control and Management Interface(SCMI) based hwmon sensor driver
++ * SCMI Generic power domain support.
 + *
 + * Copyright (C) 2017 ARM Ltd.
-+ * Sudeep Holla <sudeep.holla@arm.com>
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
 + *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program. If not, see <http://www.gnu.org/licenses/>.
 + */
 +
-+#include <linux/hwmon.h>
++#include <linux/err.h>
++#include <linux/io.h>
 +#include <linux/module.h>
++#include <linux/pm_domain.h>
 +#include <linux/scmi_protocol.h>
-+#include <linux/slab.h>
-+#include <linux/sysfs.h>
-+#include <linux/thermal.h>
 +
-+struct scmi_sensors {
++struct scmi_pm_domain {
++	struct generic_pm_domain genpd;
 +	const struct scmi_handle *handle;
-+	const struct scmi_sensor_info **info[hwmon_max];
++	const char *name;
++	u32 domain;
 +};
 +
-+static int scmi_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			   u32 attr, int channel, long *val)
++#define to_scmi_pd(gpd) container_of(gpd, struct scmi_pm_domain, genpd)
++
++static int scmi_pd_power(struct generic_pm_domain *domain, bool power_on)
 +{
 +	int ret;
-+	u64 value;
-+	const struct scmi_sensor_info *sensor;
-+	struct scmi_sensors *scmi_sensors = dev_get_drvdata(dev);
-+	const struct scmi_handle *h = scmi_sensors->handle;
++	u32 state, ret_state;
++	struct scmi_pm_domain *pd = to_scmi_pd(domain);
++	const struct scmi_power_ops *ops = pd->handle->power_ops;
 +
-+	sensor = *(scmi_sensors->info[type] + channel);
-+	ret = h->sensor_ops->reading_get(h, sensor->id, false, &value);
++	if (power_on)
++		state = SCMI_POWER_STATE_GENERIC_ON;
++	else
++		state = SCMI_POWER_STATE_GENERIC_OFF;
++
++	ret = ops->state_set(pd->handle, pd->domain, state);
 +	if (!ret)
-+		*val = value;
++		ret = ops->state_get(pd->handle, pd->domain, &ret_state);
++	if (!ret && state != ret_state)
++		return -EIO;
 +
 +	return ret;
 +}
 +
-+static int
-+scmi_hwmon_read_string(struct device *dev, enum hwmon_sensor_types type,
-+		       u32 attr, int channel, const char **str)
++static int scmi_pd_power_on(struct generic_pm_domain *domain)
 +{
-+	const struct scmi_sensor_info *sensor;
-+	struct scmi_sensors *scmi_sensors = dev_get_drvdata(dev);
-+
-+	sensor = *(scmi_sensors->info[type] + channel);
-+	*str = sensor->name;
-+
-+	return 0;
++	return scmi_pd_power(domain, true);
 +}
 +
-+static umode_t
-+scmi_hwmon_is_visible(const void *drvdata, enum hwmon_sensor_types type,
-+		      u32 attr, int channel)
++static int scmi_pd_power_off(struct generic_pm_domain *domain)
 +{
-+	const struct scmi_sensor_info *sensor;
-+	const struct scmi_sensors *scmi_sensors = drvdata;
-+
-+	sensor = *(scmi_sensors->info[type] + channel);
-+	if (sensor && sensor->name)
-+		return S_IRUGO;
-+
-+	return 0;
++	return scmi_pd_power(domain, false);
 +}
 +
-+static const struct hwmon_ops scmi_hwmon_ops = {
-+	.is_visible = scmi_hwmon_is_visible,
-+	.read = scmi_hwmon_read,
-+	.read_string = scmi_hwmon_read_string,
-+};
-+
-+static struct hwmon_chip_info scmi_chip_info = {
-+	.ops = &scmi_hwmon_ops,
-+	.info = NULL,
-+};
-+
-+static int scmi_hwmon_add_chan_info(struct hwmon_channel_info *scmi_hwmon_chan,
-+				    struct device *dev, int num,
-+				    enum hwmon_sensor_types type, u32 config)
++static int scmi_pm_domain_probe(struct scmi_device *sdev)
 +{
-+	int i;
-+	u32 *cfg = devm_kcalloc(dev, num + 1, sizeof(*cfg), GFP_KERNEL);
-+
-+	if (!cfg)
-+		return -ENOMEM;
-+
-+	scmi_hwmon_chan->type = type;
-+	scmi_hwmon_chan->config = cfg;
-+	for (i = 0; i < num; i++, cfg++)
-+		*cfg = config;
-+
-+	return 0;
-+}
-+
-+static enum hwmon_sensor_types scmi_types[] = {
-+	[TEMPERATURE_C] = hwmon_temp,
-+	[VOLTAGE] = hwmon_in,
-+	[CURRENT] = hwmon_curr,
-+	[POWER] = hwmon_power,
-+	[ENERGY] = hwmon_energy,
-+};
-+
-+static u32 hwmon_attributes[] = {
-+	[hwmon_chip] = HWMON_C_REGISTER_TZ,
-+	[hwmon_temp] = HWMON_T_INPUT | HWMON_T_LABEL,
-+	[hwmon_in] = HWMON_I_INPUT | HWMON_I_LABEL,
-+	[hwmon_curr] = HWMON_C_INPUT | HWMON_C_LABEL,
-+	[hwmon_power] = HWMON_P_INPUT | HWMON_P_LABEL,
-+	[hwmon_energy] = HWMON_E_INPUT | HWMON_E_LABEL,
-+};
-+
-+static int scmi_hwmon_probe(struct scmi_device *sdev)
-+{
-+	int i, idx;
-+	u16 nr_sensors;
-+	enum hwmon_sensor_types type;
-+	struct scmi_sensors *scmi_sensors;
-+	const struct scmi_sensor_info *sensor;
-+	int nr_count[hwmon_max] = {0}, nr_types = 0;
-+	const struct hwmon_chip_info *chip_info;
-+	struct device *hwdev, *dev = &sdev->dev;
-+	struct hwmon_channel_info *scmi_hwmon_chan;
-+	const struct hwmon_channel_info **ptr_scmi_ci;
++	int num_domains, i;
++	struct device *dev = &sdev->dev;
++	struct device_node *np = dev->of_node;
++	struct scmi_pm_domain *scmi_pd;
++	struct genpd_onecell_data *scmi_pd_data;
++	struct generic_pm_domain **domains;
 +	const struct scmi_handle *handle = sdev->handle;
 +
-+	if (!handle || !handle->sensor_ops)
++	if (!handle || !handle->power_ops)
 +		return -ENODEV;
 +
-+	nr_sensors = handle->sensor_ops->count_get(handle);
-+	if (!nr_sensors)
-+		return -EIO;
-+
-+	scmi_sensors = devm_kzalloc(dev, sizeof(*scmi_sensors), GFP_KERNEL);
-+	if (!scmi_sensors)
-+		return -ENOMEM;
-+
-+	scmi_sensors->handle = handle;
-+
-+	for (i = 0; i < nr_sensors; i++) {
-+		sensor = handle->sensor_ops->info_get(handle, i);
-+		if (!sensor)
-+			return PTR_ERR(sensor);
-+
-+		switch (sensor->type) {
-+		case TEMPERATURE_C:
-+		case VOLTAGE:
-+		case CURRENT:
-+		case POWER:
-+		case ENERGY:
-+			type = scmi_types[sensor->type];
-+			if (!nr_count[type])
-+				nr_types++;
-+			nr_count[type]++;
-+			break;
-+		}
++	num_domains = handle->power_ops->num_domains_get(handle);
++	if (num_domains < 0) {
++		dev_err(dev, "number of domains not found\n");
++		return num_domains;
 +	}
 +
-+	if (nr_count[hwmon_temp])
-+		nr_count[hwmon_chip]++, nr_types++;
-+
-+	scmi_hwmon_chan = devm_kcalloc(dev, nr_types, sizeof(*scmi_hwmon_chan),
-+				       GFP_KERNEL);
-+	if (!scmi_hwmon_chan)
++	scmi_pd = devm_kcalloc(dev, num_domains, sizeof(*scmi_pd), GFP_KERNEL);
++	if (!scmi_pd)
 +		return -ENOMEM;
 +
-+	ptr_scmi_ci = devm_kcalloc(dev, nr_types + 1, sizeof(*ptr_scmi_ci),
-+				   GFP_KERNEL);
-+	if (!ptr_scmi_ci)
++	scmi_pd_data = devm_kzalloc(dev, sizeof(*scmi_pd_data), GFP_KERNEL);
++	if (!scmi_pd_data)
 +		return -ENOMEM;
 +
-+	scmi_chip_info.info = ptr_scmi_ci;
-+	chip_info = &scmi_chip_info;
++	domains = devm_kcalloc(dev, num_domains, sizeof(*domains), GFP_KERNEL);
++	if (!domains)
++		return -ENOMEM;
 +
-+	for (type = 0; type < hwmon_max && nr_count[type]; type++) {
-+		scmi_hwmon_add_chan_info(scmi_hwmon_chan, dev, nr_count[type],
-+					 type, hwmon_attributes[type]);
-+		*ptr_scmi_ci++ = scmi_hwmon_chan++;
++	for (i = 0; i < num_domains; i++, scmi_pd++) {
++		u32 state;
 +
-+		scmi_sensors->info[type] =
-+			devm_kcalloc(dev, nr_count[type],
-+				     sizeof(*scmi_sensors->info), GFP_KERNEL);
-+		if (!scmi_sensors->info[type])
-+			return -ENOMEM;
-+	}
++		domains[i] = &scmi_pd->genpd;
 +
-+	for (i = nr_sensors - 1; i >= 0 ; i--) {
-+		sensor = handle->sensor_ops->info_get(handle, i);
-+		if (!sensor)
++		scmi_pd->domain = i;
++		scmi_pd->handle = handle;
++		scmi_pd->name = handle->power_ops->name_get(handle, i);
++		scmi_pd->genpd.name = scmi_pd->name;
++		scmi_pd->genpd.power_off = scmi_pd_power_off;
++		scmi_pd->genpd.power_on = scmi_pd_power_on;
++
++		if (handle->power_ops->state_get(handle, i, &state)) {
++			dev_warn(dev, "failed to get state for domain %d\n", i);
 +			continue;
-+
-+		switch (sensor->type) {
-+		case TEMPERATURE_C:
-+		case VOLTAGE:
-+		case CURRENT:
-+		case POWER:
-+		case ENERGY:
-+			type = scmi_types[sensor->type];
-+			idx = --nr_count[type];
-+			*(scmi_sensors->info[type] + idx) = sensor;
-+			break;
 +		}
++
++		pm_genpd_init(&scmi_pd->genpd, NULL,
++			      state == SCMI_POWER_STATE_GENERIC_OFF);
 +	}
 +
-+	hwdev = devm_hwmon_device_register_with_info(dev, "scmi_sensors",
-+						     scmi_sensors, chip_info,
-+						     NULL);
++	scmi_pd_data->domains = domains;
++	scmi_pd_data->num_domains = num_domains;
 +
-+	return PTR_ERR_OR_ZERO(hwdev);
++	of_genpd_add_provider_onecell(np, scmi_pd_data);
++
++	return 0;
 +}
 +
 +static const struct scmi_device_id scmi_id_table[] = {
-+	{ SCMI_PROTOCOL_SENSOR },
++	{ SCMI_PROTOCOL_POWER },
 +	{ },
 +};
 +MODULE_DEVICE_TABLE(scmi, scmi_id_table);
 +
-+static struct scmi_driver scmi_hwmon_drv = {
-+	.name		= "scmi-hwmon",
-+	.probe		= scmi_hwmon_probe,
-+	.id_table	= scmi_id_table,
++static struct scmi_driver scmi_power_domain_driver = {
++	.name = "scmi-power-domain",
++	.probe = scmi_pm_domain_probe,
++	.id_table = scmi_id_table,
 +};
-+module_scmi_driver(scmi_hwmon_drv);
++module_scmi_driver(scmi_power_domain_driver);
 +
-+MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
-+MODULE_DESCRIPTION("ARM SCMI HWMON interface driver");
++MODULE_AUTHOR("Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>");
++MODULE_DESCRIPTION("ARM SCMI power domain driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
