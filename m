@@ -1,53 +1,36 @@
-From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [RFC v4 13/26] watchdog: renesas_wdt: Add restart handler
-Date: Mon, 12 Feb 2018 11:38:41 +0000
-Message-ID: <TY1PR06MB08958A4A75A0F3BB2BF1D086C0F70@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1517423070-24236-14-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180207230309.goxig2irkpxrw5el@katana>
- <TY1PR06MB089578618AA33335D90D16CEC0F70@TY1PR06MB0895.apcprd06.prod.outlook.com>
- <20180212105456.3zejp3j7hfuzyc3c@ninjato>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: exynos: Add support for HDMI audio on
+ exynos5433-tm2
+Date: Mon, 12 Feb 2018 12:47:45 +0100
+Message-ID: <c40f9d95-cf7d-c505-ab56-55b475efe136@samsung.com>
+References: <CGME20180208184446epcas2p2a5a59112f29b97dad9deb820699eb741@epcas2p2.samsung.com>
+        <20180208184408.24185-1-s.nawrocki@samsung.com>
+        <20180208184408.24185-3-s.nawrocki@samsung.com>
+        <CAJKOXPfXR3pRcTy_y2jwg7R8Pkg15+VJyOvCaXvQa8ZHS=HeBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180212105456.3zejp3j7hfuzyc3c@ninjato>
-Content-Language: en-US
+In-reply-to: <CAJKOXPfXR3pRcTy_y2jwg7R8Pkg15+VJyOvCaXvQa8ZHS=HeBA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>l
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > I used to have this simpler version (back then for the UP case):
-> > >
-> > > +rwdt_start(wdev);
-> > > +rwdt_write(priv, 0xffff, RWTCNT);
-> > > +return 0;
-> > >
-> > > It should still work probably...
-> >
-> > It should still work, but it would be slower, I would stick with the
-> > version I have submitted if you don't mind.
+On 02/12/2018 10:28 AM, Krzysztof Kozlowski wrote:
+>> +&i2s1 {
+>> +       assigned-clocks = <&i2s1 CLK_I2S_RCLK_SRC>;
+>> +       assigned-clock-parents = <&cmu_peric CLK_SCLK_I2S1>;
 >
-> Actually, I do mind. Because of code duplication reasons. We have a fix
-> in the works for rwdt_start() and it would be too easy to overlook the
-> same fix will be needed for a restart.
+> Reorder alphabetically the node (and then you'll see you already add
+> one for i2s1).
 
-The code is very similar indeed, but not exactly duplicated as it sets the =
-registers in order to reset
-the system as quickly as possible.
-But since you have strong feelings about this I'll reuse this other version=
- for the next submission.
+Oops, my fault, let me correct this again and resend.
 
-Thanks,
-Fabrizio
-
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+-- 
+Regards,
+Sylwester
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
