@@ -1,409 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: uniphier: add support for UniPhier AIO DMA driver" to the asoc tree
-Date: Mon, 12 Feb 2018 12:54:27 +0000
-Message-ID: <E1elDcp-0007Bq-OG@debutante>
-References: <20180119092536.22501-4-suzuki.katsuhiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180119092536.22501-4-suzuki.katsuhiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, linux-arm-kernel@lists.infradead.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, linux-kernel@vger.kernel.orgalsa-devel@alsa-project.org
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: Re: [PATCH v2 1/5] arm64: dts: renesass: r8a77970: add FCPVD support
+Date: Mon, 12 Feb 2018 12:56:29 +0000
+Message-ID: <87f29b6e-4e06-69bd-e09a-376af842f28a@ideasonboard.com>
+References: <20180208154720.5766-1-niklas.soderlund+renesas@ragnatech.se>
+ <20180208154720.5766-2-niklas.soderlund+renesas@ragnatech.se>
+Reply-To: kieran.bingham@ideasonboard.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20180208154720.5766-2-niklas.soderlund+renesas@ragnatech.se>
+Content-Language: en-GB
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi Niklas, and Sergei,
 
-   ASoC: uniphier: add support for UniPhier AIO DMA driver
+On 08/02/18 15:47, Niklas Söderlund wrote:
+> From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> Describe FCPVD0 in the R8A77970 device tree; it will be used by VSPD0 in
+> the next patch...
+> 
+> Based on the original (and large) patch by Daisuke Matsushita
+> <daisuke.matsushita.ns@hitachi.com>.
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 
-has been applied to the asoc tree at
+Register address and CPG verified:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From caa3e443aef6308abfe0710e8d8f602a75bed0ed Mon Sep 17 00:00:00 2001
-From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-Date: Fri, 19 Jan 2018 18:25:30 +0900
-Subject: [PATCH] ASoC: uniphier: add support for UniPhier AIO DMA driver
-
-This patch adds supports for UniPhier AIO DMA.
-
-This module shared register area with all sound devices for
-I2S, S/PDIF and so on. Since the AIO has mixed register map
-for those I/Os, it is hard to split register areas for each
-sound devices.
-
-Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/uniphier/Makefile  |   2 +-
- sound/soc/uniphier/aio-dma.c | 317 +++++++++++++++++++++++++++++++++++++++++++
- sound/soc/uniphier/aio.h     |   2 +
- 3 files changed, 320 insertions(+), 1 deletion(-)
- create mode 100644 sound/soc/uniphier/aio-dma.c
-
-diff --git a/sound/soc/uniphier/Makefile b/sound/soc/uniphier/Makefile
-index f3b36aba4879..9efe0feffdc2 100644
---- a/sound/soc/uniphier/Makefile
-+++ b/sound/soc/uniphier/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--snd-soc-uniphier-aio-cpu-objs := aio-core.o
-+snd-soc-uniphier-aio-cpu-objs := aio-core.o aio-dma.o
- 
- obj-$(CONFIG_SND_SOC_UNIPHIER_AIO) += snd-soc-uniphier-aio-cpu.o
- 
-diff --git a/sound/soc/uniphier/aio-dma.c b/sound/soc/uniphier/aio-dma.c
-new file mode 100644
-index 000000000000..6d0ca6dde913
---- /dev/null
-+++ b/sound/soc/uniphier/aio-dma.c
-@@ -0,0 +1,317 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Socionext UniPhier AIO DMA driver.
-+//
-+// Copyright (c) 2016-2018 Socionext Inc.
-+//
-+// This program is free software; you can redistribute it and/or
-+// modify it under the terms of the GNU General Public License
-+// as published by the Free Software Foundation; version 2
-+// of the License.
-+//
-+// This program is distributed in the hope that it will be useful,
-+// but WITHOUT ANY WARRANTY; without even the implied warranty of
-+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+// GNU General Public License for more details.
-+//
-+// You should have received a copy of the GNU General Public License
-+// along with this program; if not, see <http://www.gnu.org/licenses/>.
-+
-+#include <linux/dma-mapping.h>
-+#include <linux/errno.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <sound/core.h>
-+#include <sound/pcm.h>
-+#include <sound/soc.h>
-+
-+#include "aio.h"
-+
-+static struct snd_pcm_hardware uniphier_aiodma_hw = {
-+	.info = SNDRV_PCM_INFO_MMAP |
-+		SNDRV_PCM_INFO_MMAP_VALID |
-+		SNDRV_PCM_INFO_INTERLEAVED,
-+	.period_bytes_min = 256,
-+	.period_bytes_max = 4096,
-+	.periods_min      = 4,
-+	.periods_max      = 1024,
-+	.buffer_bytes_max = 128 * 1024,
-+};
-+
-+static void aiodma_pcm_irq(struct uniphier_aio_sub *sub)
-+{
-+	struct snd_pcm_runtime *runtime = sub->substream->runtime;
-+	int bytes = runtime->period_size *
-+		runtime->channels * samples_to_bytes(runtime, 1);
-+	int ret;
-+
-+	spin_lock(&sub->lock);
-+	ret = aiodma_rb_set_threshold(sub, runtime->dma_bytes,
-+				      sub->threshold + bytes);
-+	if (!ret)
-+		sub->threshold += bytes;
-+
-+	aiodma_rb_sync(sub, runtime->dma_addr, runtime->dma_bytes, bytes);
-+	aiodma_rb_clear_irq(sub);
-+	spin_unlock(&sub->lock);
-+
-+	snd_pcm_period_elapsed(sub->substream);
-+}
-+
-+static void aiodma_compr_irq(struct uniphier_aio_sub *sub)
-+{
-+	struct snd_compr_runtime *runtime = sub->cstream->runtime;
-+	int bytes = runtime->fragment_size;
-+	int ret;
-+
-+	spin_lock(&sub->lock);
-+	ret = aiodma_rb_set_threshold(sub, sub->compr_bytes,
-+				      sub->threshold + bytes);
-+	if (!ret)
-+		sub->threshold += bytes;
-+
-+	aiodma_rb_sync(sub, sub->compr_addr, sub->compr_bytes, bytes);
-+	aiodma_rb_clear_irq(sub);
-+	spin_unlock(&sub->lock);
-+
-+	snd_compr_fragment_elapsed(sub->cstream);
-+}
-+
-+static irqreturn_t aiodma_irq(int irq, void *p)
-+{
-+	struct platform_device *pdev = p;
-+	struct uniphier_aio_chip *chip = platform_get_drvdata(pdev);
-+	irqreturn_t ret = IRQ_NONE;
-+	int i, j;
-+
-+	for (i = 0; i < chip->num_aios; i++) {
-+		struct uniphier_aio *aio = &chip->aios[i];
-+
-+		for (j = 0; j < ARRAY_SIZE(aio->sub); j++) {
-+			struct uniphier_aio_sub *sub = &aio->sub[j];
-+
-+			/* Skip channel that does not trigger */
-+			if (!sub->running || !aiodma_rb_is_irq(sub))
-+				continue;
-+
-+			if (sub->substream)
-+				aiodma_pcm_irq(sub);
-+			if (sub->cstream)
-+				aiodma_compr_irq(sub);
-+
-+			ret = IRQ_HANDLED;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static int uniphier_aiodma_open(struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+
-+	snd_soc_set_runtime_hwparams(substream, &uniphier_aiodma_hw);
-+
-+	return snd_pcm_hw_constraint_step(runtime, 0,
-+		SNDRV_PCM_HW_PARAM_BUFFER_BYTES, 256);
-+}
-+
-+static int uniphier_aiodma_hw_params(struct snd_pcm_substream *substream,
-+				     struct snd_pcm_hw_params *params)
-+{
-+	snd_pcm_set_runtime_buffer(substream, &substream->dma_buffer);
-+	substream->runtime->dma_bytes = params_buffer_bytes(params);
-+
-+	return 0;
-+}
-+
-+static int uniphier_aiodma_hw_free(struct snd_pcm_substream *substream)
-+{
-+	snd_pcm_set_runtime_buffer(substream, NULL);
-+	substream->runtime->dma_bytes = 0;
-+
-+	return 0;
-+}
-+
-+static int uniphier_aiodma_prepare(struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
-+	struct uniphier_aio *aio = uniphier_priv(rtd->cpu_dai);
-+	struct uniphier_aio_sub *sub = &aio->sub[substream->stream];
-+	int bytes = runtime->period_size *
-+		runtime->channels * samples_to_bytes(runtime, 1);
-+	unsigned long flags;
-+	int ret;
-+
-+	ret = aiodma_ch_set_param(sub);
-+	if (ret)
-+		return ret;
-+
-+	spin_lock_irqsave(&sub->lock, flags);
-+	ret = aiodma_rb_set_buffer(sub, runtime->dma_addr,
-+				   runtime->dma_addr + runtime->dma_bytes,
-+				   bytes);
-+	spin_unlock_irqrestore(&sub->lock, flags);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int uniphier_aiodma_trigger(struct snd_pcm_substream *substream, int cmd)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
-+	struct uniphier_aio *aio = uniphier_priv(rtd->cpu_dai);
-+	struct uniphier_aio_sub *sub = &aio->sub[substream->stream];
-+	struct device *dev = &aio->chip->pdev->dev;
-+	int bytes = runtime->period_size *
-+		runtime->channels * samples_to_bytes(runtime, 1);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&sub->lock, flags);
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_START:
-+		aiodma_rb_sync(sub, runtime->dma_addr, runtime->dma_bytes,
-+			       bytes);
-+		aiodma_ch_set_enable(sub, 1);
-+		sub->running = 1;
-+
-+		break;
-+	case SNDRV_PCM_TRIGGER_STOP:
-+		sub->running = 0;
-+		aiodma_ch_set_enable(sub, 0);
-+
-+		break;
-+	default:
-+		dev_warn(dev, "Unknown trigger(%d) ignored\n", cmd);
-+		break;
-+	}
-+	spin_unlock_irqrestore(&sub->lock, flags);
-+
-+	return 0;
-+}
-+
-+static snd_pcm_uframes_t uniphier_aiodma_pointer(
-+					struct snd_pcm_substream *substream)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct snd_soc_pcm_runtime *rtd = snd_pcm_substream_chip(substream);
-+	struct uniphier_aio *aio = uniphier_priv(rtd->cpu_dai);
-+	struct uniphier_aio_sub *sub = &aio->sub[substream->stream];
-+	int bytes = runtime->period_size *
-+		runtime->channels * samples_to_bytes(runtime, 1);
-+	unsigned long flags;
-+	snd_pcm_uframes_t pos;
-+
-+	spin_lock_irqsave(&sub->lock, flags);
-+	aiodma_rb_sync(sub, runtime->dma_addr, runtime->dma_bytes, bytes);
-+
-+	if (sub->swm->dir == PORT_DIR_OUTPUT)
-+		pos = bytes_to_frames(runtime, sub->rd_offs);
-+	else
-+		pos = bytes_to_frames(runtime, sub->wr_offs);
-+	spin_unlock_irqrestore(&sub->lock, flags);
-+
-+	return pos;
-+}
-+
-+static int uniphier_aiodma_mmap(struct snd_pcm_substream *substream,
-+				struct vm_area_struct *vma)
-+{
-+	vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
-+
-+	return remap_pfn_range(vma, vma->vm_start,
-+			       substream->dma_buffer.addr >> PAGE_SHIFT,
-+			       vma->vm_end - vma->vm_start, vma->vm_page_prot);
-+}
-+
-+static const struct snd_pcm_ops uniphier_aiodma_ops = {
-+	.open      = uniphier_aiodma_open,
-+	.ioctl     = snd_pcm_lib_ioctl,
-+	.hw_params = uniphier_aiodma_hw_params,
-+	.hw_free   = uniphier_aiodma_hw_free,
-+	.prepare   = uniphier_aiodma_prepare,
-+	.trigger   = uniphier_aiodma_trigger,
-+	.pointer   = uniphier_aiodma_pointer,
-+	.mmap      = uniphier_aiodma_mmap,
-+};
-+
-+static int uniphier_aiodma_new(struct snd_soc_pcm_runtime *rtd)
-+{
-+	struct device *dev = rtd->card->snd_card->dev;
-+	struct snd_pcm *pcm = rtd->pcm;
-+	int ret;
-+
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(33));
-+	if (ret)
-+		return ret;
-+
-+	return snd_pcm_lib_preallocate_pages_for_all(pcm,
-+		SNDRV_DMA_TYPE_DEV, dev,
-+		uniphier_aiodma_hw.buffer_bytes_max,
-+		uniphier_aiodma_hw.buffer_bytes_max);
-+}
-+
-+static void uniphier_aiodma_free(struct snd_pcm *pcm)
-+{
-+	snd_pcm_lib_preallocate_free_for_all(pcm);
-+}
-+
-+static const struct snd_soc_platform_driver uniphier_soc_platform = {
-+	.pcm_new   = uniphier_aiodma_new,
-+	.pcm_free  = uniphier_aiodma_free,
-+	.ops       = &uniphier_aiodma_ops,
-+};
-+
-+static const struct regmap_config aiodma_regmap_config = {
-+	.reg_bits      = 32,
-+	.reg_stride    = 4,
-+	.val_bits      = 32,
-+	.max_register  = 0x7fffc,
-+	.cache_type    = REGCACHE_NONE,
-+};
-+
-+/**
-+ * uniphier_aiodma_soc_register_platform - register the AIO DMA
-+ * @pdev: the platform device
-+ *
-+ * Register and setup the DMA of AIO to transfer the sound data to device.
-+ * This function need to call once at driver startup and need NOT to call
-+ * unregister function.
-+ *
-+ * Return: Zero if successful, otherwise a negative value on error.
-+ */
-+int uniphier_aiodma_soc_register_platform(struct platform_device *pdev)
-+{
-+	struct uniphier_aio_chip *chip = platform_get_drvdata(pdev);
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	void __iomem *preg;
-+	int irq, ret;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	preg = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(preg))
-+		return PTR_ERR(preg);
-+
-+	chip->regmap = devm_regmap_init_mmio(dev, preg,
-+					     &aiodma_regmap_config);
-+	if (IS_ERR(chip->regmap))
-+		return PTR_ERR(chip->regmap);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(dev, "Could not get irq.\n");
-+		return irq;
-+	}
-+
-+	ret = devm_request_irq(dev, irq, aiodma_irq,
-+			       IRQF_SHARED, dev_name(dev), pdev);
-+	if (ret)
-+		return ret;
-+
-+	return devm_snd_soc_register_platform(dev, &uniphier_soc_platform);
-+}
-+EXPORT_SYMBOL_GPL(uniphier_aiodma_soc_register_platform);
-diff --git a/sound/soc/uniphier/aio.h b/sound/soc/uniphier/aio.h
-index 774abae28028..3687f6ff30b1 100644
---- a/sound/soc/uniphier/aio.h
-+++ b/sound/soc/uniphier/aio.h
-@@ -304,6 +304,8 @@ static inline struct uniphier_aio *uniphier_priv(struct snd_soc_dai *dai)
- 	return &chip->aios[dai->id];
- }
- 
-+int uniphier_aiodma_soc_register_platform(struct platform_device *pdev);
-+
- u64 aio_rb_cnt(struct uniphier_aio_sub *sub);
- u64 aio_rbt_cnt_to_end(struct uniphier_aio_sub *sub);
- u64 aio_rb_space(struct uniphier_aio_sub *sub);
--- 
-2.16.1
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77970.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> index 13c88414cb432b1a..2567e68fe0c6cf7b 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> @@ -612,6 +612,14 @@
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  		};
+> +
+> +		fcpvd0: fcp@fea27000 {
+> +			compatible = "renesas,fcpv";
+> +			reg = <0 0xfea27000 0 0x200>;
+> +			clocks = <&cpg CPG_MOD 603>;
+> +			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
+> +			resets = <&cpg 603>;
+> +		};
+>  	};
+>  
+>  	timer {
+> 
