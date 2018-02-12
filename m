@@ -1,71 +1,289 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/3] dt-bindings: mfd: axp20x: Document backup battery
- charging property
-Date: Mon, 12 Feb 2018 21:10:10 +0100
-Message-ID: <20180212201010.GB25608@amd>
-References: <20171230152330.28946-1-contact@paulk.fr>
- <20171230152330.28946-2-contact@paulk.fr>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2] of: cache phandle nodes to reduce cost of
+ of_find_node_by_phandle()
+Date: Mon, 12 Feb 2018 12:33:07 -0800
+Message-ID: <45b0ebfd-3588-082d-fc16-0ae2e2460162@gmail.com>
+References: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
+ <6f83f4ef-0e90-d3c1-722b-f5342b9366b6@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="CdrF4e02JqNVZeln"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20171230152330.28946-2-contact@paulk.fr>
+In-Reply-To: <6f83f4ef-0e90-d3c1-722b-f5342b9366b6@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <contact@paulk.fr>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>
+To: Chintan Pandya <cpandya@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 02/12/18 02:51, Chintan Pandya wrote:
+> 
+> 
+> On 2/12/2018 11:57 AM, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Create a cache of the nodes that contain a phandle property.  Use this
+>> cache to find the node for a given phandle value instead of scanning
+>> the devicetree to find the node.  If the phandle value is not found
+>> in the cache, of_find_node_by_phandle() will fall back to the tree
+>> scan algorithm.
+>>
+>> The cache is initialized in of_core_init().
+>>
+>> The cache is freed via a late_initcall_sync() if modules are not
+>> enabled.
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>>
+>> Changes since v1:
+>>    - change short description from
+>>      of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
+>>    - rebase on v4.16-rc1
+>>    - reorder new functions in base.c to avoid forward declaration
+>>    - add locking around kfree(phandle_cache) for memory ordering
+>>    - add explicit check for non-null of phandle_cache in
+>>      of_find_node_by_phandle().  There is already a check for !handle,
+>>      which prevents accessing a null phandle_cache, but that dependency
+>>      is not obvious, so this check makes it more apparent.
+>>    - do not free phandle_cache if modules are enabled, so that
+>>      cached phandles will be available when modules are loaded
+> 
+> Most of the gain from this cache will already be achieved for kernel
+> init calls. As the discussion started with boot_time_gain vs
+> mem_overhead, we seem to be loosing here as mem_overhead will be for
+> eternal for small savings. We can live without this, IMO.
 
---CdrF4e02JqNVZeln
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please line wrap your emails so I don't have to.
 
-Hi!
+I was addressing the other maintainer's concern.  This was an attempt
+to free the memory if modules are not a factor, otherwise provide the
+reduced overhead for drivers that are loaded as modules.
 
-> This adds documentation for the "backup" property of the axp20x driver,
-> that controls the charging mechanism for the backup battery on axp20x.
->=20
-> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documenta=
-tion/devicetree/bindings/mfd/axp20x.txt
-> index 9455503b0299..382776b29932 100644
-> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> @@ -58,6 +58,11 @@ Optional properties:
->  	      See Documentation/devicetree/bindings/regulator/regulator.txt
->  	      for more information on standard regulator bindings.
-> =20
-> +- backup: An array of two integers for backup battery charging (axp20x-o=
-nly),
-> +	  describing the charging voltage in mV first and the charging current
-> +	  in uA second. Backup battery charging is only enabled when these two
-> +	  fields are filled.
+I won't bike shed over this.
 
-Well...
+The memory cost is quite small relative to the boot time reduction gain
+For systems with little boot time speedup, the memory used is especially
+small. For systems with larger boot time speedup, the memory used is still
+not large, though it is "forever" if modules are configured on.  If modules
+are configured on, then the system designer has already decided that they
+are willing to use more memory to gain the module functionality.
 
-We do want to charge batteries other than your backup
-battery. Probably this should get separate "backup battery" node with
-properties explaining how it is charged?
-									Pavel
+If modules are not configured on, then the cache is freed as late as
+possible using the init functions.  There are some calls to
+of_find_node_by_phandle() after this point (on the system that I tested
+on), but those are in asynchronous threads that are not preventing
+the boot from completing (and thus not an issue for those who are
+tuning for minimal boot time).
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+So the question for when modules are configured on comes down to:  which
+is more important, the reduced phandle lookup overhead provided by the
+cache or the additional memory used by the cache?  My preference is to
+just free the memory instead of providing the phandle access overhead
+reduction for a theoretical case of lots of modular drivers (though the
+patch implements the opposite).  If a system with lots of modular drivers
+demonstrates a phandle lookup overhead issue then the implementation can
+be revisited.
 
---CdrF4e02JqNVZeln
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Whichever way Rob wants to answer this question is fine with me, I
+consider it a theoretical non-issue at the moment.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlqB9KIACgkQMOfwapXb+vLuXgCguLT57URur6PyA8WAC2+0/cl2
-IG0Anjz1c68nRjbpeNtFUob5O4VALkNX
-=BL7q
------END PGP SIGNATURE-----
+>>
+>>   drivers/of/base.c       | 93 ++++++++++++++++++++++++++++++++++++++++++++++---
+>>   drivers/of/of_private.h |  5 +++
+>>   drivers/of/resolver.c   | 21 -----------
+>>   3 files changed, 94 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index ad28de96e13f..b3597c250837 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -91,10 +91,88 @@ int __weak of_node_to_nid(struct device_node *np)
+>>   }
+>>   #endif
+>>   +static struct device_node **phandle_cache;
+>> +static u32 max_phandle_cache;
+>> +
+>> +phandle live_tree_max_phandle(void)
+>> +{
+>> +    struct device_node *node;
+>> +    phandle max_phandle;
+>> +    unsigned long flags;
+>> +
+>> +    raw_spin_lock_irqsave(&devtree_lock, flags);
+>> +
+>> +    max_phandle = 0;
+>> +    for_each_of_allnodes(node) {
+>> +        if (node->phandle != OF_PHANDLE_ILLEGAL &&
+>> +            node->phandle > max_phandle)
+>> +            max_phandle = node->phandle;
+>> +        }
+> 
+> This closing curly bracket needs proper indentation.
 
---CdrF4e02JqNVZeln--
+Thanks, will fix.
+
+
+>> +
+>> +    raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>> +
+>> +    return max_phandle;
+>> +}
+>> +
+>> +static void of_populate_phandle_cache(void)
+>> +{
+>> +    unsigned long flags;
+>> +    phandle max_phandle;
+>> +    u32 nodes = 0;
+>> +    struct device_node *np;
+>> +
+>> +    if (phandle_cache)
+>> +        return;
+>> +
+>> +    max_phandle = live_tree_max_phandle();
+>> +
+>> +    raw_spin_lock_irqsave(&devtree_lock, flags);
+>> +
+>> +    for_each_of_allnodes(np)
+> 
+> This is 1ms call.
+> 
+>> +        nodes++;
+> 
+> We can calculate total nodes in live_tree_max_phandle to save 1ms.> 
+>> +
+>> +    /* sanity cap for malformed tree */
+>> +    if (max_phandle > nodes)
+>> +        max_phandle = nodes;
+> 
+> Or rather, we can take this entire thing to live_tree_max_phandle().
+
+See my answer to Rasmus' review comments to see why I'll consider this
+in the future, but not for this patch series.
+
+
+>> +
+>> +    phandle_cache = kzalloc((max_phandle + 1) * sizeof(*phandle_cache),
+>> +                GFP_ATOMIC);
+>> +
+>> +    for_each_of_allnodes(np)
+>> +        if (np->phandle != OF_PHANDLE_ILLEGAL  &&
+>> +            np->phandle <= max_phandle &&
+>> +            np->phandle)
+>> +            phandle_cache[np->phandle] = np;
+>> +
+>> +    max_phandle_cache = max_phandle;
+>> +
+>> +    raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>> +}
+>> +
+>> +#ifndef CONFIG_MODULES
+>> +static int __init of_free_phandle_cache(void)
+>> +{
+>> +    unsigned long flags;
+>> +
+>> +    raw_spin_lock_irqsave(&devtree_lock, flags);
+>> +
+>> +    max_phandle_cache = 0;
+>> +    kfree(phandle_cache);
+>> +    phandle_cache = NULL;
+>> +
+>> +    raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>> +
+>> +    return 0;
+>> +}
+>> +late_initcall_sync(of_free_phandle_cache);
+>> +#endif
+>> +
+>>   void __init of_core_init(void)
+>>   {
+>>       struct device_node *np;
+>>   +    of_populate_phandle_cache();
+>> +
+>>       /* Create the kset, and register existing nodes */
+>>       mutex_lock(&of_mutex);
+>>       of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
+>> @@ -1021,16 +1099,23 @@ int of_modalias_node(struct device_node *node, char *modalias, int len)
+>>    */
+>>   struct device_node *of_find_node_by_phandle(phandle handle)
+>>   {
+>> -    struct device_node *np;
+>> +    struct device_node *np = NULL;
+>>       unsigned long flags;
+>>         if (!handle)
+>>           return NULL;
+>>         raw_spin_lock_irqsave(&devtree_lock, flags);
+>> -    for_each_of_allnodes(np)
+>> -        if (np->phandle == handle)
+>> -            break;
+>> +
+>> +    if (phandle_cache && handle <= max_phandle_cache)
+>> +        np = phandle_cache[handle];
+>> +
+>> +    if (!np || np->phandle != handle) {
+>> +        for_each_of_allnodes(np)
+>> +            if (np->phandle == handle)
+>> +                break;
+>> +    }
+>> +
+>>       of_node_get(np);
+>>       raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>>       return np;
+>> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+>> index 0c609e7d0334..18e03c9d4b55 100644
+>> --- a/drivers/of/of_private.h
+>> +++ b/drivers/of/of_private.h
+>> @@ -131,6 +131,11 @@ extern void __of_update_property_sysfs(struct device_node *np,
+>>   extern void __of_sysfs_remove_bin_file(struct device_node *np,
+>>                          struct property *prop);
+>>   +/* illegal phandle value (set when unresolved) */
+>> +#define OF_PHANDLE_ILLEGAL    0xdeadbeef
+>> +
+>> +extern phandle live_tree_max_phandle(void);
+> 
+> Why do we need this to be public API ? It was not previously and no
+> good use-case for this now.
+
+It is not public.  It is private ("of_private.h") to the devicetree
+code.  It is used by the overlay code (look at top of tree, not
+an old kernel).
+
+
+>> +
+>>   /* iterators for transactions, used for overlays */
+>>   /* forward iterator */
+>>   #define for_each_transaction_entry(_oft, _te) \
+>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+>> index 740d19bde601..a7580c24737a 100644
+>> --- a/drivers/of/resolver.c
+>> +++ b/drivers/of/resolver.c
+>> @@ -19,27 +19,6 @@
+>>     #include "of_private.h"
+>>   -/* illegal phandle value (set when unresolved) */
+>> -#define OF_PHANDLE_ILLEGAL    0xdeadbeef
+>> -
+>> -static phandle live_tree_max_phandle(void)
+>> -{
+>> -    struct device_node *node;
+>> -    phandle phandle;
+>> -    unsigned long flags;
+>> -
+>> -    raw_spin_lock_irqsave(&devtree_lock, flags);
+>> -    phandle = 0;
+>> -    for_each_of_allnodes(node) {
+>> -        if (node->phandle != OF_PHANDLE_ILLEGAL &&
+>> -                node->phandle > phandle)
+>> -            phandle = node->phandle;
+>> -    }
+>> -    raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>> -
+>> -    return phandle;
+>> -}
+>> -
+>>   static void adjust_overlay_phandles(struct device_node *overlay,
+>>           int phandle_delta)
+>>   {
+>>
+> 
+> Chintan
