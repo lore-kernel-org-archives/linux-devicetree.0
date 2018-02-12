@@ -1,55 +1,85 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v3 1/3] ARM: dts: exynos: Add I2S1 device node to
- exynos5433.dtsi
-Date: Mon, 12 Feb 2018 17:31:45 +0100
-Message-ID: <20180212163147.11561-1-s.nawrocki@samsung.com>
-References: <CGME20180212163202epcas2p3acceac29dd61f37d80f50cf2640d4686@epcas2p3.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: krzk@kernel.org
-Cc: kgene@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jcsing.lee@samsung.com, linux-arm-kernel@lists.infradead.org, b.zolnierkie@samsung.com, m.szyprowski@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: wlf <wulf@rock-chips.com>
+Subject: Re: [PATCH 1/3] dt-bindings: phy: phy-rockchip-typec: add usb3 otg
+ reset
+Date: Tue, 13 Feb 2018 00:40:31 +0800
+Message-ID: <7996ee24-1376-a7ec-91dc-26798c9159c7@rock-chips.com>
+References: <1515751704-13213-1-git-send-email-william.wu@rock-chips.com>
+ <20180119214916.fegrzgcmbbdiesyz@rob-hp-laptop>
+ <d05fb977-cd6c-4875-25be-9212e75b7e39@rock-chips.com>
+ <1907466.pgqOKPpIkg@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1907466.pgqOKPpIkg@phil>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: huangtao@rock-chips.com, Rob Herring <robh@kernel.org>, Guenter Roeck <groeck@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo Serra <eballetbo@gmail.com>, Brian Norris <briannorris@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Kishon Vijay Abraham I <kishon@ti.com>, lin.huang@rock-chips.com, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Frank Wang <frank.wang@rock-chips.com>, William Wu <william.wu@rock-chips.com>, John.Youn@synopsys.com, Doug Anderson <dianders@google.com>, daniel.meng@rock-chips.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT node for the second I2S controller available
-on Exynos 5433 SoC.
-
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Changes since v2:
- - none.
----
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index 62f276970174..3845a8de7a42 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -1311,6 +1311,25 @@
- 			status = "disabled";
- 		};
- 
-+		i2s1: i2s@14d60000 {
-+			compatible = "samsung,exynos7-i2s";
-+			reg = <0x14d60000 0x100>;
-+			dmas = <&pdma0 31 &pdma0 30>;
-+			dma-names = "tx", "rx";
-+			interrupts = <GIC_SPI 435 IRQ_TYPE_NONE>;
-+			clocks = <&cmu_peric CLK_PCLK_I2S1>,
-+				 <&cmu_peric CLK_PCLK_I2S1>,
-+				 <&cmu_peric CLK_SCLK_I2S1>;
-+			clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
-+			#clock-cells = <1>;
-+			samsung,supports-6ch;
-+			samsung,supports-rstclr;
-+			samsung,supports-tdm;
-+			samsung,supports-low-rfs;
-+			#sound-dai-cells = <1>;
-+			status = "disabled";
-+		};
-+
- 		pwm: pwm@14dd0000 {
- 			compatible = "samsung,exynos4210-pwm";
- 			reg = <0x14dd0000 0x100>;
--- 
-2.14.2
+RGVhciBIZWlrbywKCuWcqCAyMDE45bm0MDLmnIgxMeaXpSAwMzo1NSwgSGVpa28gU3R1ZWJuZXIg
+5YaZ6YGTOgo+IEhpIFd1bGYsCj4KPiBBbSBNb250YWcsIDIyLiBKYW51YXIgMjAxOCwgMTI6MzM6
+MDUgQ0VUIHNjaHJpZWIgd2xmOgo+PiDlnKggMjAxOOW5tDAx5pyIMjDml6UgMDU6NDksIFJvYiBI
+ZXJyaW5nIOWGmemBkzoKPj4+IE9uIFRodSwgSmFuIDE4LCAyMDE4IGF0IDA5OjQ3OjUwQU0gLTA4
+MDAsIEJyaWFuIE5vcnJpcyB3cm90ZToKPj4+PiBPbiBUaHUsIEphbiAxOCwgMjAxOCBhdCAwNjoy
+MDowOVBNICswMTAwLCBFbnJpYyBCYWxsZXRibyBTZXJyYSB3cm90ZToKPj4+Pj4gQXMgQnJpYW4g
+c2FpZCBjb21taXQgMDZjNDdlNjI4NmQ1ICd1c2I6IGR3YzM6IG9mLXNpbXBsZTogQWRkIHN1cHBv
+cnQKPj4+Pj4gdG8gZ2V0IHJlc2V0cyBmb3IgdGhlIGRldmljZScgaW50cm9kdWNlZCB0aGUgc3Vw
+cG9ydCB0byBnZXQgdGhlIHJlc2V0cwo+Pj4+PiBmcm9tIGR3YzMtb2Ytc2ltcGxlIGFuZCB0aGUg
+cXVldWVkIGNvbW1pdCAnYjdlNjNkOTVjMTRkIGFybTY0OiBkdHM6Cj4+Pj4+IHJvY2tjaGlwOiBh
+ZGQgcmVzZXQgcHJvcGVydHkgZm9yIGR3YzMgY29udHJvbGxlcnMgb24gcmszMzk5JyBzdGFydGVk
+Cj4+Pj4+IHVzaW5nIGl0LiBXaXRob3V0IHRoZSBsYXRlc3QgSSBnZXQgZXJyb3JzIGxpa2UgdGhp
+cyBkb2luZyBiaW5kL3VuYmluZAo+Pj4+PiB0ZXN0cy4KPj4+Pj4KPj4+Pj4gICAgICBkd2MzOiBw
+cm9iZSBvZiBmZTkwMDAwMC5kd2MzIGZhaWxlZCB3aXRoIGVycm9yIC0xMTAKPj4+Pj4KPj4+Pj4g
+SSBqdXN0IHRlc3RlZCB0aGVzZSBzZXJpZXMgb24gdG9wIG9mIG1haW5saW5lLCBJIHJldmVydGVk
+IG15IHBhdGNoCj4+Pj4+IGJlY2F1c2Ugb3RoZXJ3aXNlIHR3byBkcml2ZXJzIGFyZSByZXF1ZXN0
+aW5nIHRoZSBzYW1lIHJlc2V0IGFuZCBmYWlscywKPj4+Pj4gYW5kIEkgZGlkIHNvbWUgb2YgdGhl
+IGJpbmQvdW5iaW5kIHRlc3QuIFRoZXkganVzdCB3b3JrZWQgZmluZSwgYW5kCj4+Pj4+IHNlZW1z
+IHRoYXQgdGhpcyBpcyByaWdodCB3YXksIHNvIHRoaXMgbWFrZXMgbWUgdGhpbmsgc29tZSBxdWVz
+dGlvbnMuCj4+Pj4gQWN0dWFsbHksIHRoaXMgd2FzIGludGVuZGVkIHRvIGNvZXhpc3Qgd2l0aCBE
+V0MzIG9wdGlvbmFsbHkgY29udHJvbGxpbmcKPj4+PiB0aGUgc2FtZSByZXNldC4gSXQgd2FzIHdy
+aXR0ZW4gYmVmb3JlIHRoZSByZXNldCBmcmFtZXdvcmsgd2FzIHJld3JpdHRlbgo+Pj4+IHRvIGhh
+dmUgc2hhcmVkIGFuZCBleGNsdXNpdmUgcmVzZXRzLiBTaG91bGQgdGhpcyBiZSByZXdyaXR0ZW4g
+dG8gdXNlCj4+Pj4gc2hhcmVkIHJlc2V0cz8gV2UnZCBoYXZlIHRvIG1vZGlmeSBib3RoIGR3YzMg
+Y29yZSBhbmQgdGhlIFBIWSBkcml2ZXIuCj4+PiBTZWVtcyBsaWtlIGFidXNlIG9mIERUIHRvIG1l
+LiBJZiB5b3UgbmVlZCB0byBjb250cm9sIHRoZSBjb250cm9sbGVyJ3MKPj4+IHJlc2V0IGZyb20g
+dGhlIHBoeSBkcml2ZXIsIHRoZW4gZ2V0IHRoZSByZXNldCBvdXQgb2YgdGhlIGNvbnRyb2xsZXIK
+Pj4+IG5vZGUuIFRoZSBwaHkgbm9kZSBzaG91bGQgZGVzY3JpYmUgdGhlIGNvbm5lY3Rpb25zIHRv
+IHRoZSBwaHkuCj4+IEkgdHJ5IHRvIGdldCB0aGUgcmVzZXQgb3V0IG9mIHRoZSBjb250cm9sbGVy
+LCBidXQgSSBkb24ndCBmaW5kIGEgZ29vZAo+PiB3YXkgdG8gZ2V0IHRoZSByZXNldCBvZnRoZSBj
+b250cm9sbGVyIGFzc29jaWF0ZWQgd2l0aCB0aGUgZ2l2ZW4gcGh5Cj4+IGRldmljZSBub2RlLiAg
+SXMgdGhlcmUgYW4gQVBJIGxpa2UgdGhlb2ZfdXNiX2dldF9kcl9tb2RlX2J5X3BoeSgpIHRvCj4+
+IGdldCAnZHJfbW9kZScgb2YgdGhlIGNvbnRyb2xsZXI/Cj4gSSBndWVzcyB0aGUgZWFzaWVzdCB3
+YXkgd291bGQgYmUgdGFraW5nIHRoZSBvZl91c2JfZ2V0X2RyX21vZGVfYnlfcGh5KCkKPiBmdW5j
+dGlvbiBtb3ZlIHRoZSBwYXJ0IGFib3ZlIHRoZSAiZmluaXNoIiBsYWJlbCBpbnRvIGEgc2VwYXJh
+dGUgZnVuY3Rpb24KPiBsaWtlIG9mX3VzYl9nZXRfbm9kZV9ieV9waHkgKG9yIHBvc3NpYmx5IG1v
+dmUgdGhhdCB0byBhbiBldmVuIG1vcmUgZ2VuZXJhbAo+IHBsYWNlIGFzIGl0IGlzIG5vdCB1c2It
+cmVsYXRlZCBhdCBhbGwpIGFuZCB1c2UgdGhhdCBmdW5jdGlvbiBpbgo+IG9mX3VzYl9nZXRfZHJf
+bW9kZV9ieV9waHkoKSBhbmQgYWxzbyB1c2UgaXQgdG8gZ2V0IHRoZSByZXNldCB5b3Ugd2FudCB2
+aWEKPiBzb21ldGhpbmcgbGlrZToKPgo+IG5vZGUgPSBvZl91c2JfZ2V0X25vZGVfYnlfcGh5KC4u
+Lik7Cj4gcnN0ID0gb2ZfcmVzZXRfY29udHJvbF9nZXQobm9kZSwgLi4uKTsKVGhhbmtzIGZvciB5
+b3VyIGdvb2Qgc3VnZ2VzdGlvbi4gSSB0aGluayBpdCdzIGEgZ29vZCB3YXkgdG8gZ2V0IHRoZSAK
+cmVzZXQgb2YgdGhlCmNvbnRyb2xsZXIgYnkgcGh5Lgo+PiBBbmQgd2UncmUgdHJ5aW5nIHRvIGZp
+bmQgYW5vdGhlciBtZXRob2QgdG8gZml4IHRoZSBSSzMzOTkgdGNwaHkgcG93ZXIKPj4gb24gZmFp
+bCBpc3N1ZS5JZiB3ZSBnZXQgYW5vdGhlciBwcm9wZXIgbWV0aG9kLCB3ZSBtYXkgbm90IG5lZWQg
+dGhlc2UKPj4gcGh5IHBhdGNoIHNlcmllcy4KPiBEaWQgeW91IGZpbmQgYW55IGRpZmZlcmVudCBz
+b2x1dGlvbiBmb3IgdGhhdCB5ZXQ/Cj4KPiBIZWlrbwpZZXMsIGZpbmFsbHksIHdlIGhhdmUgZm91
+bmQgYW5vdGhlciB3YXkgdG8gZml4IHRoZcKgIFJLMzM5OSB0Y3BoeSB1c2IgcG93ZXIKb24gZmFp
+bCBpc3N1ZS4gQW5kIEVucmljIEJhbGxldGJvIGkgU2VycmEgPEVucmljIEJhbGxldGJvIGkgU2Vy
+cmE+IGhhcyAKc3VibWl0dGVkCm5ldyBwYXRjaCBzZXJpZXMsIHJlZmVyIHRvIHRoZSBmb2xsb3dp
+bmcgcGF0Y2hlczoKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDIwNzI2MS8K
+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDIwNzI2Ny8KaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDIwNzI2My8KClNvIG15IHBhdGNoZXMgY2FuIGJlIGFi
+YW5kb25lZC4KPgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
