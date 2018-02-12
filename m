@@ -1,85 +1,98 @@
-From: wlf <wulf@rock-chips.com>
-Subject: Re: [PATCH 1/3] dt-bindings: phy: phy-rockchip-typec: add usb3 otg
- reset
-Date: Tue, 13 Feb 2018 00:40:31 +0800
-Message-ID: <7996ee24-1376-a7ec-91dc-26798c9159c7@rock-chips.com>
-References: <1515751704-13213-1-git-send-email-william.wu@rock-chips.com>
- <20180119214916.fegrzgcmbbdiesyz@rob-hp-laptop>
- <d05fb977-cd6c-4875-25be-9212e75b7e39@rock-chips.com>
- <1907466.pgqOKPpIkg@phil>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv3 1/3] dt-bindings: documentation: add clock bindings
+ information for Stratix10
+Date: Mon, 12 Feb 2018 10:41:22 -0600
+Message-ID: <CAL_JsqJhYvB7haMpx7gBxpmS7ZVStvEwe5VDsrcN+z+0UxHASw@mail.gmail.com>
+References: <1517847767-16053-1-git-send-email-dinguyen@kernel.org>
+ <20180209024340.f7sijb7h5egdn675@rob-hp-laptop> <9b8ae02b-67d5-8d0a-2e35-cab85f89470d@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1907466.pgqOKPpIkg@phil>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: huangtao@rock-chips.com, Rob Herring <robh@kernel.org>, Guenter Roeck <groeck@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Enric Balletbo Serra <eballetbo@gmail.com>, Brian Norris <briannorris@chromium.org>, linux-kernel <linux-kernel@vger.kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Kishon Vijay Abraham I <kishon@ti.com>, lin.huang@rock-chips.com, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Frank Wang <frank.wang@rock-chips.com>, William Wu <william.wu@rock-chips.com>, John.Youn@synopsys.com, Doug Anderson <dianders@google.com>, daniel.meng@rock-chips.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9b8ae02b-67d5-8d0a-2e35-cab85f89470d-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBIZWlrbywKCuWcqCAyMDE45bm0MDLmnIgxMeaXpSAwMzo1NSwgSGVpa28gU3R1ZWJuZXIg
-5YaZ6YGTOgo+IEhpIFd1bGYsCj4KPiBBbSBNb250YWcsIDIyLiBKYW51YXIgMjAxOCwgMTI6MzM6
-MDUgQ0VUIHNjaHJpZWIgd2xmOgo+PiDlnKggMjAxOOW5tDAx5pyIMjDml6UgMDU6NDksIFJvYiBI
-ZXJyaW5nIOWGmemBkzoKPj4+IE9uIFRodSwgSmFuIDE4LCAyMDE4IGF0IDA5OjQ3OjUwQU0gLTA4
-MDAsIEJyaWFuIE5vcnJpcyB3cm90ZToKPj4+PiBPbiBUaHUsIEphbiAxOCwgMjAxOCBhdCAwNjoy
-MDowOVBNICswMTAwLCBFbnJpYyBCYWxsZXRibyBTZXJyYSB3cm90ZToKPj4+Pj4gQXMgQnJpYW4g
-c2FpZCBjb21taXQgMDZjNDdlNjI4NmQ1ICd1c2I6IGR3YzM6IG9mLXNpbXBsZTogQWRkIHN1cHBv
-cnQKPj4+Pj4gdG8gZ2V0IHJlc2V0cyBmb3IgdGhlIGRldmljZScgaW50cm9kdWNlZCB0aGUgc3Vw
-cG9ydCB0byBnZXQgdGhlIHJlc2V0cwo+Pj4+PiBmcm9tIGR3YzMtb2Ytc2ltcGxlIGFuZCB0aGUg
-cXVldWVkIGNvbW1pdCAnYjdlNjNkOTVjMTRkIGFybTY0OiBkdHM6Cj4+Pj4+IHJvY2tjaGlwOiBh
-ZGQgcmVzZXQgcHJvcGVydHkgZm9yIGR3YzMgY29udHJvbGxlcnMgb24gcmszMzk5JyBzdGFydGVk
-Cj4+Pj4+IHVzaW5nIGl0LiBXaXRob3V0IHRoZSBsYXRlc3QgSSBnZXQgZXJyb3JzIGxpa2UgdGhp
-cyBkb2luZyBiaW5kL3VuYmluZAo+Pj4+PiB0ZXN0cy4KPj4+Pj4KPj4+Pj4gICAgICBkd2MzOiBw
-cm9iZSBvZiBmZTkwMDAwMC5kd2MzIGZhaWxlZCB3aXRoIGVycm9yIC0xMTAKPj4+Pj4KPj4+Pj4g
-SSBqdXN0IHRlc3RlZCB0aGVzZSBzZXJpZXMgb24gdG9wIG9mIG1haW5saW5lLCBJIHJldmVydGVk
-IG15IHBhdGNoCj4+Pj4+IGJlY2F1c2Ugb3RoZXJ3aXNlIHR3byBkcml2ZXJzIGFyZSByZXF1ZXN0
-aW5nIHRoZSBzYW1lIHJlc2V0IGFuZCBmYWlscywKPj4+Pj4gYW5kIEkgZGlkIHNvbWUgb2YgdGhl
-IGJpbmQvdW5iaW5kIHRlc3QuIFRoZXkganVzdCB3b3JrZWQgZmluZSwgYW5kCj4+Pj4+IHNlZW1z
-IHRoYXQgdGhpcyBpcyByaWdodCB3YXksIHNvIHRoaXMgbWFrZXMgbWUgdGhpbmsgc29tZSBxdWVz
-dGlvbnMuCj4+Pj4gQWN0dWFsbHksIHRoaXMgd2FzIGludGVuZGVkIHRvIGNvZXhpc3Qgd2l0aCBE
-V0MzIG9wdGlvbmFsbHkgY29udHJvbGxpbmcKPj4+PiB0aGUgc2FtZSByZXNldC4gSXQgd2FzIHdy
-aXR0ZW4gYmVmb3JlIHRoZSByZXNldCBmcmFtZXdvcmsgd2FzIHJld3JpdHRlbgo+Pj4+IHRvIGhh
-dmUgc2hhcmVkIGFuZCBleGNsdXNpdmUgcmVzZXRzLiBTaG91bGQgdGhpcyBiZSByZXdyaXR0ZW4g
-dG8gdXNlCj4+Pj4gc2hhcmVkIHJlc2V0cz8gV2UnZCBoYXZlIHRvIG1vZGlmeSBib3RoIGR3YzMg
-Y29yZSBhbmQgdGhlIFBIWSBkcml2ZXIuCj4+PiBTZWVtcyBsaWtlIGFidXNlIG9mIERUIHRvIG1l
-LiBJZiB5b3UgbmVlZCB0byBjb250cm9sIHRoZSBjb250cm9sbGVyJ3MKPj4+IHJlc2V0IGZyb20g
-dGhlIHBoeSBkcml2ZXIsIHRoZW4gZ2V0IHRoZSByZXNldCBvdXQgb2YgdGhlIGNvbnRyb2xsZXIK
-Pj4+IG5vZGUuIFRoZSBwaHkgbm9kZSBzaG91bGQgZGVzY3JpYmUgdGhlIGNvbm5lY3Rpb25zIHRv
-IHRoZSBwaHkuCj4+IEkgdHJ5IHRvIGdldCB0aGUgcmVzZXQgb3V0IG9mIHRoZSBjb250cm9sbGVy
-LCBidXQgSSBkb24ndCBmaW5kIGEgZ29vZAo+PiB3YXkgdG8gZ2V0IHRoZSByZXNldCBvZnRoZSBj
-b250cm9sbGVyIGFzc29jaWF0ZWQgd2l0aCB0aGUgZ2l2ZW4gcGh5Cj4+IGRldmljZSBub2RlLiAg
-SXMgdGhlcmUgYW4gQVBJIGxpa2UgdGhlb2ZfdXNiX2dldF9kcl9tb2RlX2J5X3BoeSgpIHRvCj4+
-IGdldCAnZHJfbW9kZScgb2YgdGhlIGNvbnRyb2xsZXI/Cj4gSSBndWVzcyB0aGUgZWFzaWVzdCB3
-YXkgd291bGQgYmUgdGFraW5nIHRoZSBvZl91c2JfZ2V0X2RyX21vZGVfYnlfcGh5KCkKPiBmdW5j
-dGlvbiBtb3ZlIHRoZSBwYXJ0IGFib3ZlIHRoZSAiZmluaXNoIiBsYWJlbCBpbnRvIGEgc2VwYXJh
-dGUgZnVuY3Rpb24KPiBsaWtlIG9mX3VzYl9nZXRfbm9kZV9ieV9waHkgKG9yIHBvc3NpYmx5IG1v
-dmUgdGhhdCB0byBhbiBldmVuIG1vcmUgZ2VuZXJhbAo+IHBsYWNlIGFzIGl0IGlzIG5vdCB1c2It
-cmVsYXRlZCBhdCBhbGwpIGFuZCB1c2UgdGhhdCBmdW5jdGlvbiBpbgo+IG9mX3VzYl9nZXRfZHJf
-bW9kZV9ieV9waHkoKSBhbmQgYWxzbyB1c2UgaXQgdG8gZ2V0IHRoZSByZXNldCB5b3Ugd2FudCB2
-aWEKPiBzb21ldGhpbmcgbGlrZToKPgo+IG5vZGUgPSBvZl91c2JfZ2V0X25vZGVfYnlfcGh5KC4u
-Lik7Cj4gcnN0ID0gb2ZfcmVzZXRfY29udHJvbF9nZXQobm9kZSwgLi4uKTsKVGhhbmtzIGZvciB5
-b3VyIGdvb2Qgc3VnZ2VzdGlvbi4gSSB0aGluayBpdCdzIGEgZ29vZCB3YXkgdG8gZ2V0IHRoZSAK
-cmVzZXQgb2YgdGhlCmNvbnRyb2xsZXIgYnkgcGh5Lgo+PiBBbmQgd2UncmUgdHJ5aW5nIHRvIGZp
-bmQgYW5vdGhlciBtZXRob2QgdG8gZml4IHRoZSBSSzMzOTkgdGNwaHkgcG93ZXIKPj4gb24gZmFp
-bCBpc3N1ZS5JZiB3ZSBnZXQgYW5vdGhlciBwcm9wZXIgbWV0aG9kLCB3ZSBtYXkgbm90IG5lZWQg
-dGhlc2UKPj4gcGh5IHBhdGNoIHNlcmllcy4KPiBEaWQgeW91IGZpbmQgYW55IGRpZmZlcmVudCBz
-b2x1dGlvbiBmb3IgdGhhdCB5ZXQ/Cj4KPiBIZWlrbwpZZXMsIGZpbmFsbHksIHdlIGhhdmUgZm91
-bmQgYW5vdGhlciB3YXkgdG8gZml4IHRoZcKgIFJLMzM5OSB0Y3BoeSB1c2IgcG93ZXIKb24gZmFp
-bCBpc3N1ZS4gQW5kIEVucmljIEJhbGxldGJvIGkgU2VycmEgPEVucmljIEJhbGxldGJvIGkgU2Vy
-cmE+IGhhcyAKc3VibWl0dGVkCm5ldyBwYXRjaCBzZXJpZXMsIHJlZmVyIHRvIHRoZSBmb2xsb3dp
-bmcgcGF0Y2hlczoKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDIwNzI2MS8K
-aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDIwNzI2Ny8KaHR0cHM6Ly9wYXRj
-aHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDIwNzI2My8KClNvIG15IHBhdGNoZXMgY2FuIGJlIGFi
-YW5kb25lZC4KPgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+On Fri, Feb 9, 2018 at 12:19 PM, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Hi Rob,
+>
+>
+> On 02/08/2018 08:43 PM, Rob Herring wrote:
+>> On Mon, Feb 05, 2018 at 10:22:45AM -0600, Dinh Nguyen wrote:
+>>> Document that Stratix10 clock bindings, and add the clock header file. The
+>>> clock header is an enumeration of all the different clocks on the Stratix10
+>>> platform.
+>>>
+>>> Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> ---
+>>> v3:
+>>> - s/intc/intel for correct vendor prefix
+>>> - fixup node name to "intel,stratix10-clkmgr"
+>>> - document the required fixed-clock for oscillators
+>>> v2:
+>>> - use a single binding for the clock controller
+>>> ---
+>>>  .../devicetree/bindings/clock/intc_stratix10.txt   | 47 ++++++++++++
+>>>  include/dt-bindings/clock/stratix10-clock.h        | 85 ++++++++++++++++++++++
+>>>  2 files changed, 132 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/clock/intc_stratix10.txt
+>>>  create mode 100644 include/dt-bindings/clock/stratix10-clock.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/intc_stratix10.txt b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
+>>> new file mode 100644
+>>> index 0000000..8d218f4
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
+>>> @@ -0,0 +1,47 @@
+>>> +Device Tree Clock bindings for Intel's SoCFPGA Stratix10 platform
+>>> +
+>>> +This binding uses the common clock binding[1].
+>>> +
+>>> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>> +
+>>> +Required properties:
+>>> +- compatible : shall be
+>>> +    "intel,stratix10-clkmgr"
+>>> +
+>>> +- reg : shall be the control register offset from CLOCK_MANAGER's base for the clock.
+>>> +
+>>> +- #clock-cells : from common clock binding, shall be set to 1.
+>>> +
+>>> +- clocks : Should contain fixed-clock sources, such as oscillators.
+>>> +
+>>> +Example:
+>>> +    clkmgr: clock-controller@ffd10000 {
+>>> +            compatible = "intel,stratix10-clkmgr";
+>>> +            reg = <0xffd10000 0x1000>;
+>>> +            #clock-cells = <1>;
+>>> +
+>>> +            clocks {
+>>> +                    #address-cells = <1>;
+>>> +                    #size-cells = <0>;
+>>> +
+>>> +                    cb_intosc_hs_div2_clk: cb_intosc_hs_div2_clk {
+>>
+>> Don't use '_' in node names.
+>>
+>
+> Ok..
+>
+>>> +                            #clock-cells = <0>;
+>>> +                            compatible = "fixed-clock";
+>>
+>> fixed clock with no frequency?
+>
+> The frequency gets populated in the board's dts file. This provides for
+> the scenario where different boards might use different oscillator
+> frequencies.
+
+That is irrelevant for examples. The SoC vs. board file split is
+outside the scope of the binding (i.e. not part of the ABI). Well, at
+least until it is done with overlays.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
