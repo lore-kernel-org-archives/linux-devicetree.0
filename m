@@ -1,100 +1,49 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 09/12] ARM: dts: STi: Add fake reg property for sound
- related nodes
-Date: Mon, 12 Feb 2018 09:40:44 -0600
-Message-ID: <CABGGiszvx=Nyeq+KTt9uHGwSabxsJuEfvG01H4NyrBtB40atoA@mail.gmail.com>
-References: <1518446590-16800-1-git-send-email-patrice.chotard@st.com> <1518446590-16800-10-git-send-email-patrice.chotard@st.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v2 0/7] ASoC: samsung: Add HDMI sound support
+	for tm2 board
+Date: Mon, 12 Feb 2018 17:15:31 +0100
+Message-ID: <20180212161538.22669-1-s.nawrocki@samsung.com>
+References: <CGME20180212161554epcas2p26c19860d14006b0e1501699dc50d3f2f@epcas2p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518446590-16800-10-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: patrice.chotard-qxv4g6HH51o@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, sbkim73@samsung.com, jcsing.lee@samsung.com, lgirdwood@gmail.com, krzk@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 12, 2018 at 8:43 AM,  <patrice.chotard-qxv4g6HH51o@public.gmane.org> wrote:
-> From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
->
-> Add fake reg property to sound, simple-audio-card, dai-link and
-> sti_sasg_codec nodes, this allows to fix the following warning
-> when compiling dtb with W=1 option:
->
-> arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
-> Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
-> arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
-> Node /soc/sound/simple-audio-card,dai-link@1 has a unit name, but no reg property
-> arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
-> Node /soc/sound/simple-audio-card,dai-link@2 has a unit name, but no reg property
-> arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-> Node /soc/sti-sasg-codec missing or empty reg/ranges property
->
-> arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
-> Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
-> arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
-> Node /soc/sound/simple-audio-card,dai-link@1 has a unit name, but no reg property
-> arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
-> Node /soc/sound/simple-audio-card,dai-link@2 has a unit name, but no reg property
-> arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-> Node /soc/sound missing or empty reg/ranges property
-> arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-> Node /soc/sti-sasg-codec missing or empty reg/ranges property
->
-> arch/arm/boot/dts/stih410-b2260.dtb: Warning (unit_address_vs_reg):
-> Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
-> arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-> Node /soc/sti-sasg-codec missing or empty reg/ranges property
-> arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-> Node /soc/sound missing or empty reg/ranges property
->
-> arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-> Node /soc/sti-sasg-codec missing or empty reg/ranges property
->
-> Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-> ---
->
-> v2: _ add a fake reg property to node without reg property.
->
->  arch/arm/boot/dts/stih407-family.dtsi |  3 ++-
->  arch/arm/boot/dts/stih410-b2260.dts   |  5 +++--
->  arch/arm/boot/dts/stihxxx-b2120.dtsi  | 11 ++++++-----
->  3 files changed, 11 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-> index 5df827b00eb6..df1a3f1dc5a7 100644
-> --- a/arch/arm/boot/dts/stih407-family.dtsi
-> +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> @@ -894,8 +894,9 @@
->                         status = "disabled";
->                 };
->
-> -               sti_sasg_codec: sti-sasg-codec {
-> +               sti_sasg_codec: sti-sasg-codec@0 {
->                         compatible = "st,stih407-sas-codec";
-> +                       reg = <0 0>;
->                         #sound-dai-cells = <1>;
->                         status = "disabled";
->                         st,syscfg = <&syscfg_core>;
+This series adds support for HDMI audio on exynos5433 tm2 board, it
+includes a few fixes for the I2S driver and an extension of the existing
+card driver to support the I2S1<->HDMI transmitter path.
 
-This should probably be a child of syscfg to fix this. And if this
-block has a dedicated set of registers, then use reg to define those
-(even though regmap/syscon doesn't need it).
+In v2 only support for 48k/96k/192k samples rate is left, as adjusting
+the AUD PLL output frequency might cause regressions.
 
-> diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-> index 8bcd58118dba..03d05a98b7fc 100644
-> --- a/arch/arm/boot/dts/stih410-b2260.dts
-> +++ b/arch/arm/boot/dts/stih410-b2260.dts
-> @@ -181,12 +181,13 @@
->                         status = "okay";
->                 };
->
-> -               sound {
-> +               sound: sound@0 {
+Sylwester Nawrocki (7):
+  ASoC: samsung: i2s: Update clock-output-names property documentation
+  ASoC: samsung: i2s: Ensure names of supplied clocks are unique
+  ASoC: samsung: i2s: Prevent external abort on exynos5433 I2S1 access
+  ASoC: samsung: i2s: Define the parameters list for SAMSUNG_I2S_OPCLK
+  ASoC: samsung,tm2-audio DT binding documentation update
+  ASoC: samsung: Add support for HDMI audio on TM2 board
+  ASoC: samsung: Add missing #sound-dai-cells property documentation
 
-I'd move this up to top level.
+ .../bindings/sound/samsung,tm2-audio.txt           |  14 +-
+ .../devicetree/bindings/sound/samsung-i2s.txt      |  22 +--
+ sound/soc/samsung/i2s-regs.h                       |  11 +-
+ sound/soc/samsung/i2s.c                            |  39 ++++--
+ sound/soc/samsung/i2s.h                            |  11 +-
+ sound/soc/samsung/tm2_wm5110.c                     | 152 +++++++++++++++++----
+ 6 files changed, 191 insertions(+), 58 deletions(-)
 
-Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.14.2
