@@ -1,59 +1,45 @@
 From: Kieran Bingham <kbingham@kernel.org>
-Subject: [PATCH v3 3/5] [RFT] ARM: dts: wheat: Fix ADV7513 address usage
-Date: Mon, 12 Feb 2018 22:07:51 +0000
-Message-ID: <1518473273-6333-4-git-send-email-kbingham@kernel.org>
-References: <1518473273-6333-1-git-send-email-kbingham@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1518473273-6333-1-git-send-email-kbingham@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Simon Horman <horms@verge.net.au>, Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH 1/4] arm64: dts: renesas: r8a77995: add FCPVB node
+Date: Mon, 12 Feb 2018 22:25:26 +0000
+Message-ID: <1518474330-8713-2-git-send-email-kbingham@kernel.org>
+References: <1518474330-8713-1-git-send-email-kbingham@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518474330-8713-1-git-send-email-kbingham@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
+        AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRlYXNvbmJvYXJk
-LmNvbT4KClRoZSByOGE3NzkyIFdoZWF0IGJvYXJkIGhhcyB0d28gQURWNzUxMyBkZXZpY2VzIHNo
-YXJpbmcgYSBzaW5nbGUgaTJjCmJ1cywgaG93ZXZlciBpbiBsb3cgcG93ZXIgbW9kZSB0aGUgQURW
-NzUxMyB3aWxsIHJlc2V0IGl0J3Mgc2xhdmUgbWFwcyB0bwp1c2UgdGhlIGhhcmR3YXJlIGRlZmlu
-ZWQgZGVmYXVsdCBhZGRyZXNzZXMuCgpUaGUgQURWNzUxMSBkcml2ZXIgd2FzIGFkYXB0ZWQgdG8g
-YWxsb3cgdGhlIHR3byBkZXZpY2VzIHRvIGJlIHJlZ2lzdGVyZWQKY29ycmVjdGx5IC0gYnV0IGl0
-IGRpZCBub3QgdGFrZSBpbnRvIGFjY291bnQgdGhlIGZhdWx0IHdoZXJlYnkgdGhlCmRldmljZXMg
-cmVzZXQgdGhlIGFkZHJlc3Nlcy4KClRoaXMgcmVzdWx0cyBpbiBhbiBhZGRyZXNzIGNvbmZsaWN0
-IGJldHdlZW4gdGhlIGRldmljZSB1c2luZyB0aGUgZGVmYXVsdAphZGRyZXNzZXMsIGFuZCB0aGUg
-b3RoZXIgZGV2aWNlIGlmIGl0IGlzIGluIGxvdy1wb3dlci1tb2RlLgoKUmVwYWlyIHRoaXMgaXNz
-dWUgYnkgbW92aW5nIGJvdGggZGV2aWNlcyBhd2F5IGZyb20gdGhlIGRlZmF1bHQgYWRkcmVzcwpk
-ZWZpbml0aW9ucy4KClNpZ25lZC1vZmYtYnk6IEtpZXJhbiBCaW5naGFtIDxraWVyYW4uYmluZ2hh
-bStyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+CgotLS0KdjI6CiAtIEFkZGl0aW9uIHRvIHNlcmll
-cwoKdjM6CiAtIFNwbGl0IG1hcCByZWdpc3RlciBhZGRyZXNzZXMgaW50byBpbmRpdmlkdWFsIGRl
-Y2xhcmF0aW9ucy4KCiBhcmNoL2FybS9ib290L2R0cy9yOGE3NzkyLXdoZWF0LmR0cyB8IDEyICsr
-KysrKysrKystLQogMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25z
-KC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5Mi13aGVhdC5kdHMgYi9h
-cmNoL2FybS9ib290L2R0cy9yOGE3NzkyLXdoZWF0LmR0cwppbmRleCBiOTQ3MWI2N2I3MjguLjQy
-ZmZmODgzN2VhYiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5Mi13aGVhdC5k
-dHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5Mi13aGVhdC5kdHMKQEAgLTI0MCw5ICsy
-NDAsMTYgQEAKIAlzdGF0dXMgPSAib2theSI7CiAJY2xvY2stZnJlcXVlbmN5ID0gPDQwMDAwMD47
-CiAKKwkvKgorCSAqIFRoZSBhZHY3NXh4IHJlc2V0cyBpdHMgYWRkcmVzc2VzIHRvIGRlZmF1bHRz
-IGR1cmluZyBsb3cgcG93ZXIgcG93ZXIKKwkgKiBtb2RlLiBCZWNhdXNlIHdlIGhhdmUgdHdvIEFE
-Vjc1MTMgZGV2aWNlcyBvbiB0aGUgc2FtZSBidXMsIHdlIG11c3QKKwkgKiBjaGFuZ2UgYm90aCBv
-ZiB0aGVtIGF3YXkgZnJvbSB0aGUgZGVmYXVsdHMgc28gdGhhdCB0aGV5IGRvIG5vdAorCSAqIGNv
-bmZsaWN0LgorCSAqLwogCWhkbWlAM2QgewogCQljb21wYXRpYmxlID0gImFkaSxhZHY3NTEzIjsK
-LQkJcmVnID0gPDB4M2Q+OworCQlyZWcgPSA8MHgzZD4sIDwweDJkPiwgPDB4NGQ+LCA8MHg1ZD47
-CisJCXJlZy1uYW1lcyA9ICJtYWluIiwgImNlYyIsICJlZGlkIiwgInBhY2tldCI7CiAKIAkJYWRp
-LGlucHV0LWRlcHRoID0gPDg+OwogCQlhZGksaW5wdXQtY29sb3JzcGFjZSA9ICJyZ2IiOwpAQCAt
-MjcyLDcgKzI3OSw4IEBACiAKIAloZG1pQDM5IHsKIAkJY29tcGF0aWJsZSA9ICJhZGksYWR2NzUx
-MyI7Ci0JCXJlZyA9IDwweDM5PjsKKwkJcmVnID0gPDB4Mzk+LCA8MHgyOT4sIDwweDQ5PiwgPDB4
-NTk+OworCQlyZWctbmFtZXMgPSAibWFpbiIsICJjZWMiLCAiZWRpZCIsICJwYWNrZXQiOwogCiAJ
-CWFkaSxpbnB1dC1kZXB0aCA9IDw4PjsKIAkJYWRpLGlucHV0LWNvbG9yc3BhY2UgPSAicmdiIjsK
-LS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+The FCPVB handles the interface between the VSPB and memory.
+
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+---
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+index cd3c6a30fc47..6cf935d307d9 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+@@ -691,6 +691,15 @@
+ 			#phy-cells = <0>;
+ 			status = "disabled";
+ 		};
++
++		fcpvb0: fcp@fe96f000 {
++			compatible = "renesas,fcpv";
++			reg = <0 0xfe96f000 0 0x200>;
++			clocks = <&cpg CPG_MOD 607>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 607>;
++			iommus = <&ipmmu_vp0 5>;
++		};
+ 	};
+ 
+ 	timer {
+-- 
+2.7.4
