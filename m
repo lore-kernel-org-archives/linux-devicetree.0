@@ -1,58 +1,60 @@
-From: Kieran Bingham <kbingham@kernel.org>
-Subject: [PATCH v2 3/5] [RFT] ARM: dts: wheat: Fix ADV7513 address usage
-Date: Mon, 12 Feb 2018 18:11:55 +0000
-Message-ID: <1518459117-16733-4-git-send-email-kbingham@kernel.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] [RFT] ARM: dts: wheat: Fix ADV7513 address usage
+Date: Mon, 12 Feb 2018 19:24:22 +0100
+Message-ID: <bc0dfd28-652a-80e7-a08b-6909b0e34883@metafoo.de>
 References: <1518459117-16733-1-git-send-email-kbingham@kernel.org>
+ <1518459117-16733-4-git-send-email-kbingham@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1518459117-16733-1-git-send-email-kbingham@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Simon Horman <horms@verge.net.au>, Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518459117-16733-4-git-send-email-kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRlYXNvbmJvYXJk
-LmNvbT4KClRoZSByOGE3NzkyIFdoZWF0IGJvYXJkIGhhcyB0d28gQURWNzUxMyBkZXZpY2VzIHNo
-YXJpbmcgYSBzaW5nbGUgaTJjCmJ1cywgaG93ZXZlciBpbiBsb3cgcG93ZXIgbW9kZSB0aGUgQURW
-NzUxMyB3aWxsIHJlc2V0IGl0J3Mgc2xhdmUgbWFwcyB0bwp1c2UgdGhlIGhhcmR3YXJlIGRlZmlu
-ZWQgZGVmYXVsdCBhZGRyZXNzZXMuCgpUaGUgQURWNzUxMSBkcml2ZXIgd2FzIGFkYXB0ZWQgdG8g
-YWxsb3cgdGhlIHR3byBkZXZpY2VzIHRvIGJlIHJlZ2lzdGVyZWQKY29ycmVjdGx5IC0gYnV0IGl0
-IGRpZCBub3QgdGFrZSBpbnRvIGFjY291bnQgdGhlIGZhdWx0IHdoZXJlYnkgdGhlCmRldmljZXMg
-cmVzZXQgdGhlIGFkZHJlc3Nlcy4KClRoaXMgcmVzdWx0cyBpbiBhbiBhZGRyZXNzIGNvbmZsaWN0
-IGJldHdlZW4gdGhlIGRldmljZSB1c2luZyB0aGUgZGVmYXVsdAphZGRyZXNzZXMsIGFuZCB0aGUg
-b3RoZXIgZGV2aWNlIGlmIGl0IGlzIGluIGxvdy1wb3dlci1tb2RlLgoKUmVwYWlyIHRoaXMgaXNz
-dWUgYnkgbW92aW5nIGJvdGggZGV2aWNlcyBhd2F5IGZyb20gdGhlIGRlZmF1bHQgYWRkcmVzcwpk
-ZWZpbml0aW9ucy4KClNpZ25lZC1vZmYtYnk6IEtpZXJhbiBCaW5naGFtIDxraWVyYW4uYmluZ2hh
-bStyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5
-Mi13aGVhdC5kdHMgfCAxMiArKysrKysrKysrLS0KIDEgZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRp
-b25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4
-YTc3OTItd2hlYXQuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5Mi13aGVhdC5kdHMKaW5k
-ZXggYjk0NzFiNjdiNzI4Li5jOTRmMzMwMzkyZWUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL3I4YTc3OTItd2hlYXQuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTItd2hl
-YXQuZHRzCkBAIC0yNDAsOSArMjQwLDE2IEBACiAJc3RhdHVzID0gIm9rYXkiOwogCWNsb2NrLWZy
-ZXF1ZW5jeSA9IDw0MDAwMDA+OwogCisJLyoKKwkgKiBUaGUgYWR2NzV4eCByZXNldHMgaXRzIGFk
-ZHJlc3NlcyB0byBkZWZhdWx0cyBkdXJpbmcgbG93IHBvd2VyIHBvd2VyCisJICogbW9kZS4gQmVj
-YXVzZSB3ZSBoYXZlIHR3byBBRFY3NTEzIGRldmljZXMgb24gdGhlIHNhbWUgYnVzLCB3ZSBtdXN0
-CisJICogY2hhbmdlIGJvdGggb2YgdGhlbSBhd2F5IGZyb20gdGhlIGRlZmF1bHRzIHNvIHRoYXQg
-dGhleSBkbyBub3QKKwkgKiBjb25mbGljdC4KKwkgKi8KIAloZG1pQDNkIHsKIAkJY29tcGF0aWJs
-ZSA9ICJhZGksYWR2NzUxMyI7Ci0JCXJlZyA9IDwweDNkPjsKKwkJcmVnID0gPDB4M2QgMHgyZCAw
-eDRkLCAweDVkPjsKKwkJcmVnLW5hbWVzID0gIm1haW4iLCAiY2VjIiwgImVkaWQiLCAicGFja2V0
-IjsKIAogCQlhZGksaW5wdXQtZGVwdGggPSA8OD47CiAJCWFkaSxpbnB1dC1jb2xvcnNwYWNlID0g
-InJnYiI7CkBAIC0yNzIsNyArMjc5LDggQEAKIAogCWhkbWlAMzkgewogCQljb21wYXRpYmxlID0g
-ImFkaSxhZHY3NTEzIjsKLQkJcmVnID0gPDB4Mzk+OworCQlyZWcgPSA8MHgzOSAweDI5IDB4NDks
-IDB4NTk+OworCQlyZWctbmFtZXMgPSAibWFpbiIsICJjZWMiLCAiZWRpZCIsICJwYWNrZXQiOwog
-CiAJCWFkaSxpbnB1dC1kZXB0aCA9IDw4PjsKIAkJYWRpLGlucHV0LWNvbG9yc3BhY2UgPSAicmdi
-IjsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+On 02/12/2018 07:11 PM, Kieran Bingham wrote:
+[...]
+> +	/*
+> +	 * The adv75xx resets its addresses to defaults during low power power
+> +	 * mode. Because we have two ADV7513 devices on the same bus, we must
+> +	 * change both of them away from the defaults so that they do not
+> +	 * conflict.
+> +	 */
+>  	hdmi@3d {
+>  		compatible = "adi,adv7513";
+> -		reg = <0x3d>;
+> +		reg = <0x3d 0x2d 0x4d, 0x5d>;
+
+To have the correct semantics this should be:
+		reg = <0x3d>, <0x2d>, <0x4d>, <0x5d>;
+
+It is a set of 4 single cell addresses. The other thing is a single 4 cell
+address. It will get compiled to the same bytes, but the DT tools should
+complain about it, because it doesn't match #address-cells.
+
+> +		reg-names = "main", "cec", "edid", "packet";
+>  
+>  		adi,input-depth = <8>;
+>  		adi,input-colorspace = "rgb";
+> @@ -272,7 +279,8 @@
+>  
+>  	hdmi@39 {
+>  		compatible = "adi,adv7513";
+> -		reg = <0x39>;
+> +		reg = <0x39 0x29 0x49, 0x59>;
+
+Same here.
+
+> +		reg-names = "main", "cec", "edid", "packet";
+>  
+>  		adi,input-depth = <8>;
+>  		adi,input-colorspace = "rgb";
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
