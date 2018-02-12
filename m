@@ -1,72 +1,87 @@
 From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH v5 11/26] dt-bindings: watchdog: renesas-wdt: Add R-Car Gen2 support
-Date: Mon, 12 Feb 2018 17:44:20 +0000
-Message-ID: <1518457475-4480-12-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v5 12/26] watchdog: renesas_wdt: Add R-Car Gen2 support
+Date: Mon, 12 Feb 2018 17:44:21 +0000
+Message-ID: <1518457475-4480-13-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1518457475-4480-1-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit documents the compatibility with R-Car Gen2 and RZ/G
-devices by defining the generic compatible string "renesas,rcar-gen2-wdt".
-Also, this patch expands the list of SoC-specific compatible strings to
-include RZ/G and R-Car Gen2 devices.
+Due to commits:
+* "ARM: shmobile: Add watchdog support",
+* "ARM: shmobile: rcar-gen2: Add watchdog support", and
+* "soc: renesas: rcar-rst: Enable watchdog as reset trigger for Gen2",
+we now have everything we needed for the watchdog to work on Gen2 and
+RZ/G1.
+
+This commit adds "renesas,rcar-gen2-wdt" as compatible string for R-Car
+Gen2 and RZ/G1, and since on those platforms the rwdt clock needs to be
+always ON, when suspending to RAM we need to explicitly disable the
+counting by clearing TME from RWTCSRA.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 ---
 v4->v5:
-* no change
+* various improvements suggested by Wolfram
 
- .../devicetree/bindings/watchdog/renesas-wdt.txt      | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/watchdog/renesas_wdt.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-index bf6d1ca..4815128 100644
---- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-@@ -1,17 +1,26 @@
- Renesas Watchdog Timer (WDT) Controller
+diff --git a/drivers/watchdog/renesas_wdt.c b/drivers/watchdog/renesas_wdt.c
+index 831ef83..e972b7b 100644
+--- a/drivers/watchdog/renesas_wdt.c
++++ b/drivers/watchdog/renesas_wdt.c
+@@ -203,13 +203,29 @@ static int rwdt_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
- Required properties:
--- compatible : Should be "renesas,<soctype>-wdt", and
--	       "renesas,rcar-gen3-wdt" or "renesas,rza-wdt" as fallback.
-+ - compatible : Must be "renesas,<soctype>-wdt", followed by a generic
-+		fallback compatible string when compatible with the generic
-+		version.
- 	       Examples with soctypes are:
-+		 - "renesas,r8a7743-wdt" (RZ/G1M)
-+		 - "renesas,r8a7745-wdt" (RZ/G1E)
-+	         - "renesas,r8a7790-wdt" (R-Car H2)
-+	         - "renesas,r8a7791-wdt" (R-Car M2-W)
-+	         - "renesas,r8a7792-wdt" (R-Car V2H)
-+	         - "renesas,r8a7793-wdt" (R-Car M2-N)
-+	         - "renesas,r8a7794-wdt" (R-Car E2)
- 	         - "renesas,r8a7795-wdt" (R-Car H3)
- 	         - "renesas,r8a7796-wdt" (R-Car M3-W)
- 	         - "renesas,r8a77995-wdt" (R-Car D3)
- 	         - "renesas,r7s72100-wdt" (RZ/A1)
-+		The generic compatible string must be:
-+		 - "renesas,rza-wdt" for RZ/A
-+		 - "renesas,rcar-gen2-wdt" for R-Car Gen2 and RZ/G
-+		 - "renesas,rcar-gen3-wdt" for R-Car Gen3
- 
--  When compatible with the generic version, nodes must list the SoC-specific
--  version corresponding to the platform first, followed by the generic
--  version.
- 
- - reg : Should contain WDT registers location and length
- - clocks : the clock feeding the watchdog timer.
+-/*
+- * This driver does also fit for R-Car Gen2 (r8a779[0-4]) WDT. However, for SMP
+- * to work there, one also needs a RESET (RST) driver which does not exist yet
+- * due to HW issues. This needs to be solved before adding compatibles here.
+- */
++static int __maybe_unused rwdt_suspend(struct device *dev)
++{
++	struct rwdt_priv *priv = dev_get_drvdata(dev);
++
++	if (watchdog_active(&priv->wdev))
++		rwdt_write(priv, priv->cks, RWTCSRA);
++	return 0;
++}
++
++static int __maybe_unused rwdt_resume(struct device *dev)
++{
++	struct rwdt_priv *priv = dev_get_drvdata(dev);
++
++	if (watchdog_active(&priv->wdev))
++		rwdt_write(priv, priv->cks | RWTCSRA_TME, RWTCSRA);
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(rwdt_pm_ops, rwdt_suspend, rwdt_resume);
++
+ static const struct of_device_id rwdt_ids[] = {
+ 	{ .compatible = "renesas,rcar-gen3-wdt", },
++	{ .compatible = "renesas,rcar-gen2-wdt", },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, rwdt_ids);
+@@ -218,6 +234,7 @@ static struct platform_driver rwdt_driver = {
+ 	.driver = {
+ 		.name = "renesas_wdt",
+ 		.of_match_table = rwdt_ids,
++		.pm = &rwdt_pm_ops,
+ 	},
+ 	.probe = rwdt_probe,
+ 	.remove = rwdt_remove,
 -- 
 2.7.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
