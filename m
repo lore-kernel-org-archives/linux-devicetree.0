@@ -1,82 +1,80 @@
-From: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] watchdog: sama5d4: make use of timeout-secs
- provided in devicetree
-Date: Mon, 12 Feb 2018 09:59:00 +0100
-Message-ID: <c925c4cb-1367-d57e-49eb-f88a6d2a1e70@microchip.com>
-References: <20180211200847.25000-1-marcus.folkesson@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 4/4] of: improve reporting invalid overlay target path
+Date: Mon, 12 Feb 2018 10:00:37 +0100
+Message-ID: <CAMuHMdUnkdtHnbSVM7p4756OQzq24N8=g8==s-6yKLAgki+LyA@mail.gmail.com>
+References: <1518425496-12159-1-git-send-email-frowand.list@gmail.com> <1518425496-12159-5-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180211200847.25000-1-marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518425496-12159-5-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/02/2018 at 21:08, Marcus Folkesson wrote:
-> watchdog_init_timeout() will allways pick timeout_param since it
-> defaults to a valid timeout.
-> 
-> Following best practice described in
-> Documentation/watchdog/watchdog-kernel-api.txt to make use of
-> the parameter logic.
-> 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi Frank,
 
-Acked-by: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+On Mon, Feb 12, 2018 at 9:51 AM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> Errors while developing the patch to create of_overlay_fdt_apply()
+> exposed inadequate error messages to debug problems when overlay
+> devicetree fragment nodes contain an invalid target path.  Improve
+> the messages in find_target_node() to remedy this.
+>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 
-Thanks, best regards,
-  Nicolas
+Thanks for your patch!
 
-> ---
-> 
-> Notes:
->     v3:
->     	- Use wdd->timeout instead of wdt_timeout when print out
->     	  timout in probe function.
-> 
->  drivers/watchdog/sama5d4_wdt.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/watchdog/sama5d4_wdt.c b/drivers/watchdog/sama5d4_wdt.c
-> index 0ae947c3d7bc..255169916dbb 100644
-> --- a/drivers/watchdog/sama5d4_wdt.c
-> +++ b/drivers/watchdog/sama5d4_wdt.c
-> @@ -33,7 +33,7 @@ struct sama5d4_wdt {
->  	unsigned long		last_ping;
->  };
->  
-> -static int wdt_timeout = WDT_DEFAULT_TIMEOUT;
-> +static int wdt_timeout;
->  static bool nowayout = WATCHDOG_NOWAYOUT;
->  
->  module_param(wdt_timeout, int, 0);
-> @@ -212,7 +212,7 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	wdd = &wdt->wdd;
-> -	wdd->timeout = wdt_timeout;
-> +	wdd->timeout = WDT_DEFAULT_TIMEOUT;
->  	wdd->info = &sama5d4_wdt_info;
->  	wdd->ops = &sama5d4_wdt_ops;
->  	wdd->min_timeout = MIN_WDT_TIMEOUT;
-> @@ -273,7 +273,7 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
->  	platform_set_drvdata(pdev, wdt);
->  
->  	dev_info(&pdev->dev, "initialized (timeout = %d sec, nowayout = %d)\n",
-> -		 wdt_timeout, nowayout);
-> +		 wdd->timeout, nowayout);
->  
->  	return 0;
->  }
-> 
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -488,17 +488,26 @@ static int build_changeset(struct overlay_changeset *ovcs)
+>   */
+>  static struct device_node *find_target_node(struct device_node *info_node)
+>  {
+> +       struct device_node *node;
+>         const char *path;
+>         u32 val;
+>         int ret;
+>
+>         ret = of_property_read_u32(info_node, "target", &val);
+> -       if (!ret)
+> -               return of_find_node_by_phandle(val);
+> +       if (!ret) {
+> +               node = of_find_node_by_phandle(val);
+> +               if (!node)
+> +                       pr_err("target node find by phandle failed\n");
 
+Do you want to print the actual node, cfr. below?
 
--- 
-Nicolas Ferre
+> +               return node;
+> +       }
+>
+>         ret = of_property_read_string(info_node, "target-path", &path);
+> -       if (!ret)
+> -               return of_find_node_by_path(path);
+> +       if (!ret) {
+> +               node =  of_find_node_by_path(path);
+> +               if (!node)
+> +                       pr_err("target node find by path failed\n");
+
+Likewise.
+
+> +               return node;
+> +       }
+>
+>         pr_err("Failed to find target for node %p (%s)\n",
+>                 info_node, info_node->name);
+
+This one prints more info.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
