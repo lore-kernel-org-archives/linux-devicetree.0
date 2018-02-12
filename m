@@ -1,37 +1,60 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1] auxdisplay: Move arm-charlcd binding to correct folder
-Date: Mon, 12 Feb 2018 08:41:53 -0600
-Message-ID: <20180212144153.duvhxyg2ej3jx4bd@rob-hp-laptop>
-References: <20180131140255.50268-1-andriy.shevchenko@linux.intel.com>
+From: <patrice.chotard@st.com>
+Subject: [PATCH v2 00/12] ARM: dts: STi: Fix DT dtc warnings
+Date: Mon, 12 Feb 2018 15:41:20 +0100
+Message-ID: <1518446480-16713-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180131140255.50268-1-andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: patrice.chotard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 31, 2018 at 04:02:55PM +0200, Andy Shevchenko wrote:
-> This is a follow up to the commit
-> 
->   00846a4425d3 ("auxdisplay: Move arm-charlcd.c to drivers/auxdisplay folder")
-> 
-> for Device Tree binding.
-> 
-> No functional change.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/{misc => auxdisplay}/arm-charlcd.txt | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/{misc => auxdisplay}/arm-charlcd.txt (100%)
+From: Patrice Chotard <patrice.chotard@st.com>
 
-Applied, thanks.
+This series fixes all dtc warnings related to STi platforms dt files.
+It has been reported by Rob Herring [1]
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+For most of implicated node, the addition of a fake reg property
+fixes these warnings.
+
+[1] https://www.spinics.net/lists/devicetree/msg206209.html
+
+v2: _ add a fake reg property to node without reg property, instead 
+      of moving them outside soc node.
+
+Patrice Chotard (7):
+  ARM: dts: STi: fix bindings notation
+  ARM: dts: STi: Add gpio polarity for "hdmi,hpd-gpio" property
+  ARM: dts: STi: Move clocks without reg outside soc
+  ARM: dts: STi: Move leds node outside soc node
+  ARM: dts: STi: Add fake reg property for sti-display-subsystem
+  ARM: dts: STi: Add fake reg property for miphy28lp_phy
+  ARM: dts: STi: Add fake reg property for irq-syscfg
+  ARM: dts: STi: Add fake reg property for remote processors
+  ARM: dts: STi: Add fake reg for restart, powerdown and
+    picophy/softreset
+  ARM: dts: STi: Add fake reg property for usb2_picophyX nodes
+  ARM: dts: STi: Add fake reg property for sound related nodes
+  ARM: dts: STi: Add fake reg property for clocks
+  ARM: dts: STi: Move clk_sysin clock ouside soc node
+  ARM: dts: STi: Remove unused clk_ext2f_a9 clock
+
+ arch/arm/boot/dts/stih407-b2120.dts    |  2 +-
+ arch/arm/boot/dts/stih407-clock.dtsi   | 40 +++++++++-------------
+ arch/arm/boot/dts/stih407-family.dtsi  | 31 +++++++++++------
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 10 +++---
+ arch/arm/boot/dts/stih407.dtsi         |  4 +--
+ arch/arm/boot/dts/stih410-b2120.dts    |  8 ++---
+ arch/arm/boot/dts/stih410-b2260.dts    | 62 +++++++++++++++++-----------------
+ arch/arm/boot/dts/stih410-clock.dtsi   | 42 ++++++++++-------------
+ arch/arm/boot/dts/stih410-pinctrl.dtsi |  2 +-
+ arch/arm/boot/dts/stih410.dtsi         | 13 ++++---
+ arch/arm/boot/dts/stih418-b2199.dts    | 30 ++++++++--------
+ arch/arm/boot/dts/stih418-clock.dtsi   | 42 ++++++++++-------------
+ arch/arm/boot/dts/stih418.dtsi         |  6 ++--
+ arch/arm/boot/dts/stihxxx-b2120.dtsi   | 41 +++++++++++-----------
+ 14 files changed, 163 insertions(+), 170 deletions(-)
+
+-- 
+1.9.1
