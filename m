@@ -1,136 +1,71 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] of: cache phandle nodes to reduce cost of
- of_find_node_by_phandle()
-Date: Mon, 12 Feb 2018 12:06:01 -0800
-Message-ID: <e1265e8e-348c-1672-c5e5-27a6820f330a@gmail.com>
-References: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
- <5ca5194d-8b87-bcb6-73ca-a671075e4704@prevas.dk>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/3] dt-bindings: mfd: axp20x: Document backup battery
+ charging property
+Date: Mon, 12 Feb 2018 21:10:10 +0100
+Message-ID: <20180212201010.GB25608@amd>
+References: <20171230152330.28946-1-contact@paulk.fr>
+ <20171230152330.28946-2-contact@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5ca5194d-8b87-bcb6-73ca-a671075e4704-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="CdrF4e02JqNVZeln"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171230152330.28946-2-contact@paulk.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Kocialkowski <contact@paulk.fr>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/18 00:58, Rasmus Villemoes wrote:
-> On 2018-02-12 07:27, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->>
->> Create a cache of the nodes that contain a phandle property.  Use this
->> cache to find the node for a given phandle value instead of scanning
->> the devicetree to find the node.  If the phandle value is not found
->> in the cache, of_find_node_by_phandle() will fall back to the tree
->> scan algorithm.
->>
->> The cache is initialized in of_core_init().
->>
->> The cache is freed via a late_initcall_sync() if modules are not
->> enabled.
-> 
-> Maybe a few words about the memory consumption of this solution versus
-> the other proposed ones.
 
-The patch comment is about this patch, not the other proposals.
+--CdrF4e02JqNVZeln
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please do not take that as a snippy response.  There were several
-emails in the previous thread that discussed memory.  In that
-thread I responded as to how I would address the concerns.  If
-anyone wants to raise concerns about memory usage as a result of
-this version of the patch they should do so in this current thread.
+Hi!
 
+> This adds documentation for the "backup" property of the axp20x driver,
+> that controls the charging mechanism for the backup battery on axp20x.
+>=20
+> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documenta=
+tion/devicetree/bindings/mfd/axp20x.txt
+> index 9455503b0299..382776b29932 100644
+> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> @@ -58,6 +58,11 @@ Optional properties:
+>  	      See Documentation/devicetree/bindings/regulator/regulator.txt
+>  	      for more information on standard regulator bindings.
+> =20
+> +- backup: An array of two integers for backup battery charging (axp20x-o=
+nly),
+> +	  describing the charging voltage in mV first and the charging current
+> +	  in uA second. Backup battery charging is only enabled when these two
+> +	  fields are filled.
 
-> Other nits below.
-> 
->> +static void of_populate_phandle_cache(void)
->> +{
->> +	unsigned long flags;
->> +	phandle max_phandle;
->> +	u32 nodes = 0;
->> +	struct device_node *np;
->> +
->> +	if (phandle_cache)
->> +		return;
-> 
-> What's the point of that check? 
+Well...
 
-Sanity check to make sure a memory leak of a previous cache
-does not occur.  I'll change it to free the cache if it
-exists.
+We do want to charge batteries other than your backup
+battery. Probably this should get separate "backup battery" node with
+properties explaining how it is charged?
+									Pavel
 
-There is only one instance of of_populate_cache() being called,
-so this is a theoretical issue.  I intend to add another caller
-in the devicetree overlay code in the future, but do not want
-to do that now, to avoid a conflict with the overlay patch
-series that has been in parallel development, and for which
-I submitted v2 shortly after this set of patches.
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--CdrF4e02JqNVZeln
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> And shouldn't it be done inside the
-> spinlock if at all?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Not an issue yet, but I'll keep my eye on the possibility of races
-when I add a call to of_populate_cache() from the overlay code.
+iEYEARECAAYFAlqB9KIACgkQMOfwapXb+vLuXgCguLT57URur6PyA8WAC2+0/cl2
+IG0Anjz1c68nRjbpeNtFUob5O4VALkNX
+=BL7q
+-----END PGP SIGNATURE-----
 
-
->> +	max_phandle = live_tree_max_phandle();
->> +
->> +	raw_spin_lock_irqsave(&devtree_lock, flags);
->> +
->> +	for_each_of_allnodes(np)
->> +		nodes++;
-> 
-> Why not save a walk over all nodes and a spin_lock/unlock pair by
-> combining the node count with the max_phandle computation? But you've
-> just moved the existing live_tree_max_phandle, so probably better as a
-> followup patch.
-
-I'll consider adding the node counting into live_tree_max_phandle() later.
-The other user of live_tree_max_phandle() is being modified in my overlay
-patch series (see mention above).  I don't want to create a conflict between
-the two series.
-
-
->> +	/* sanity cap for malformed tree */
->> +	if (max_phandle > nodes)
->> +		max_phandle = nodes;
->> +
->> +	phandle_cache = kzalloc((max_phandle + 1) * sizeof(*phandle_cache),
->> +				GFP_ATOMIC);
-> 
-> Maybe kcalloc. Sure, you've capped max_phandle so there's no real risk
-> of overflow.
-
-OK, will do.
-
-
->> +	for_each_of_allnodes(np)
->> +		if (np->phandle != OF_PHANDLE_ILLEGAL  &&
->> +		    np->phandle <= max_phandle &&
->> +		    np->phandle)
-> 
-> I'd reverse the order of these conditions so that for all the nodes with
-> no phandle we only do the np->phandle check. Also, extra whitespace
-> before &&.
-
-Will do.
-
-
->> +			phandle_cache[np->phandle] = np;
->> +
->> +	max_phandle_cache = max_phandle;
->> +
->> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->> +}
->> +
-> 
-> Rasmus
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--CdrF4e02JqNVZeln--
