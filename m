@@ -1,66 +1,85 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 3/3] misc: aspeed-lpc-ctrl: Enable FWH and A2H bridge cycles
-Date: Mon, 12 Feb 2018 17:38:47 +1030
-Message-ID: <20180212070847.32387-4-joel@jms.id.au>
-References: <20180212070847.32387-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180212070847.32387-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Cyril Bur <cyrilbur@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Lei YU <mine260309@gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
+ properties ?
+Date: Mon, 12 Feb 2018 09:39:34 +0100
+Message-ID: <0b73e1aa-a88f-fe4b-b33a-0f589000e148@linaro.org>
+References: <20180207065959.GN28462@vireshk-i7>
+ <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
+ <20180207102446.GS28462@vireshk-i7>
+ <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
+ <20180209064211.GY28462@vireshk-i7>
+ <539699c7-9509-dea2-2b31-c5f6749c99c4@linaro.org>
+ <20180209092421.GL28462@vireshk-i7>
+ <5722441d-c8be-4d29-fab7-28b4e5716961@linaro.org>
+ <20180212061015.GO28462@vireshk-i7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20180212061015.GO28462@vireshk-i7>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Punit.Agrawal@arm.com, ionela.voinescu@arm.com
 List-Id: devicetree@vger.kernel.org
 
-To date this driver has relied on prevous state from out of tree hacks
-and vendor u-boot trees in order to have the host be able to access
-data over the LPC bus.
+On 12/02/2018 07:10, Viresh Kumar wrote:
+> On 09-02-18, 13:14, Daniel Lezcano wrote:
+>> Right. The semantic is unclear. The expected cooling-cells value is
+>> always 2 (the code ignore values greater than two and yell if it is less
+>> than 2). And the cooling-device binding tells there are two states.
+> 
+> They are fixed to 2 as we don't need to use it differently for now.
+> But that's more about how Linux is using this stuff. The binding still
+> needs to provide a way to have more cells than just 2.
+> 
+>> So the question is why do we need a cooling-cells as the information is
+>> pointless here (always 2) ?
+> 
+> To show that the device is a "cooling-device" and I see that
+> consistent with everything else in DT, for example: interrupt-cells,
+> gpio-cells, clock-cells, reset-cells, dma-cells. The "*-cells"
+> properties is used widely to tell what the device can behave as, i.e.
+> a cooling-device in our case.
 
-Now we explicitly enable the AHB to LPC bridge and FWH cycles from when
-the user first configures the address to map. We chose to do this then,
-as before that time there is no way for the kernel to know where it is
-safe to point the LPC window.
+Ah, yes. That's right.
 
-Tested-by: Lei YU <mine260309@gmail.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- drivers/misc/aspeed-lpc-ctrl.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+Well I don't know. If that is the way the other drivers are doing, I
+suppose we should keep it as it is.
 
-diff --git a/drivers/misc/aspeed-lpc-ctrl.c b/drivers/misc/aspeed-lpc-ctrl.c
-index 1827b7aa6674..a024f8042259 100644
---- a/drivers/misc/aspeed-lpc-ctrl.c
-+++ b/drivers/misc/aspeed-lpc-ctrl.c
-@@ -21,6 +21,10 @@
- 
- #define DEVICE_NAME	"aspeed-lpc-ctrl"
- 
-+#define HICR5 0x0
-+#define HICR5_ENL2H	BIT(8)
-+#define HICR5_ENFWH	BIT(10)
-+
- #define HICR7 0x8
- #define HICR8 0xc
- 
-@@ -155,8 +159,18 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
- 		if (rc)
- 			return rc;
- 
--		return regmap_write(lpc_ctrl->regmap, HICR8,
--			(~(map.size - 1)) | ((map.size >> 16) - 1));
-+		rc = regmap_write(lpc_ctrl->regmap, HICR8,
-+				(~(map.size - 1)) | ((map.size >> 16) - 1));
-+		if (rc)
-+			return rc;
-+
-+		/*
-+		 * Enable LPC FHW cycles. This is required for the host to
-+		 * access the regions specified.
-+		 */
-+		return regmap_update_bits(lpc_ctrl->regmap, HICR5,
-+				HICR5_ENFWH | HICR5_ENL2H,
-+				HICR5_ENFWH | HICR5_ENL2H);
- 	}
- 
- 	return -EINVAL;
+> Now we always use 2 parameters exactly is a different thing all
+> together :)
+> 
+>> I see this field is artificially used to tell the cpufreq driver "please
+>> register me as a cooling device". This is inconsistent from my pov.
+> 
+> But that's how its used for every other controller, what's different
+> here ?
+> 
+>> Furthermore, the thermal-zone with the cooling device binds with the CPU
+>> phandle, not the cooling-cells.
+> 
+> Yeah, because that's the device really.
+> 
+>> Putting apart the device binding changes discussion for the moment. Why
+>> not register the cpufreq driver in all the cases and then drop
+> 
+> s/cpufreq driver/cpufreq cooling driver/ ??
+
+yes.
+
+>> cooling-cells ? So when the opps are present, its registers in the
+>> cpufreq->ready callback.
+> 
+> How will someone tell if they don't need the cooling infrastructure ?
+> Specially for multiplatform thing.
+
+They don't define a cooling device in the DT ?
+
+
 -- 
-2.15.1
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
