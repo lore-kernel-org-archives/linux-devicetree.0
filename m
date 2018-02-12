@@ -1,104 +1,147 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH v2 07/12] ARM: dts: STi: Add fake reg for restart, powerdown and picophy/softreset
-Date: Mon, 12 Feb 2018 15:43:05 +0100
-Message-ID: <1518446590-16800-8-git-send-email-patrice.chotard@st.com>
+From: <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v2 09/12] ARM: dts: STi: Add fake reg property for sound related nodes
+Date: Mon, 12 Feb 2018 15:43:07 +0100
+Message-ID: <1518446590-16800-10-git-send-email-patrice.chotard@st.com>
 References: <1518446590-16800-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518446590-16800-1-git-send-email-patrice.chotard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: patrice.chotard@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518446590-16800-1-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: patrice.chotard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
 
-Add fake reg property for restart, powerdown, picophyreset
-and softreset.
-This allows to fix the following warning when compiling
-dtb with W=1 option:
+Add fake reg property to sound, simple-audio-card, dai-link and
+sti_sasg_codec nodes, this allows to fix the following warning
+when compiling dtb with W=1 option:
 
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/restart missing or empty reg/ranges property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/powerdown-controller missing or empty reg/ranges property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/softreset-controller missing or empty reg/ranges property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/picophyreset-controller missing or empty reg/ranges property
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
+Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
+Node /soc/sound/simple-audio-card,dai-link@1 has a unit name, but no reg property
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
+Node /soc/sound/simple-audio-card,dai-link@2 has a unit name, but no reg property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/sti-sasg-codec missing or empty reg/ranges property
 
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
+Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
+Node /soc/sound/simple-audio-card,dai-link@1 has a unit name, but no reg property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
+Node /soc/sound/simple-audio-card,dai-link@2 has a unit name, but no reg property
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/sound missing or empty reg/ranges property
 arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/restart missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/powerdown-controller missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/softreset-controller missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/picophyreset-controller missing or empty reg/ranges property
+Node /soc/sti-sasg-codec missing or empty reg/ranges property
 
+arch/arm/boot/dts/stih410-b2260.dtb: Warning (unit_address_vs_reg):
+Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
 arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/restart missing or empty reg/ranges property
+Node /soc/sti-sasg-codec missing or empty reg/ranges property
 arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/powerdown-controller missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/softreset-controller missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/picophyreset-controller missing or empty reg/ranges property
+Node /soc/sound missing or empty reg/ranges property
 
 arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/restart missing or empty reg/ranges property
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/powerdown-controller missing or empty reg/ranges property
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/softreset-controller missing or empty reg/ranges property
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/picophyreset-controller missing or empty reg/ranges property
+Node /soc/sti-sasg-codec missing or empty reg/ranges property
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
 ---
 
-v2: _ add a fake reg property to node without reg property
+v2: _ add a fake reg property to node without reg property.
 
- arch/arm/boot/dts/stih407-family.dtsi | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/stih407-family.dtsi |  3 ++-
+ arch/arm/boot/dts/stih410-b2260.dts   |  5 +++--
+ arch/arm/boot/dts/stihxxx-b2120.dtsi  | 11 ++++++-----
+ 3 files changed, 11 insertions(+), 8 deletions(-)
 
 diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 5a0bad07da9e..00a3838236d1 100644
+index 5df827b00eb6..df1a3f1dc5a7 100644
 --- a/arch/arm/boot/dts/stih407-family.dtsi
 +++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -125,24 +125,28 @@
- 		ranges;
- 		compatible = "simple-bus";
+@@ -894,8 +894,9 @@
+ 			status = "disabled";
+ 		};
  
--		restart {
-+		restart: restart-controller@0 {
- 			compatible = "st,stih407-restart";
+-		sti_sasg_codec: sti-sasg-codec {
++		sti_sasg_codec: sti-sasg-codec@0 {
+ 			compatible = "st,stih407-sas-codec";
 +			reg = <0 0>;
- 			st,syscfg = <&syscfg_sbc_reg>;
+ 			#sound-dai-cells = <1>;
+ 			status = "disabled";
+ 			st,syscfg = <&syscfg_core>;
+diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
+index 8bcd58118dba..03d05a98b7fc 100644
+--- a/arch/arm/boot/dts/stih410-b2260.dts
++++ b/arch/arm/boot/dts/stih410-b2260.dts
+@@ -181,12 +181,13 @@
  			status = "okay";
  		};
  
--		powerdown: powerdown-controller {
-+		powerdown: powerdown-controller@0 {
- 			compatible = "st,stih407-powerdown";
+-		sound {
++		sound: sound@0 {
+ 			compatible = "simple-audio-card";
 +			reg = <0 0>;
- 			#reset-cells = <1>;
+ 			simple-audio-card,name = "STI-B2260";
+ 			status = "okay";
+ 
+-			simple-audio-card,dai-link@0 {
++			simple-audio-card,dai-link0 {
+ 				/* DAC */
+ 				format = "i2s";
+ 				mclk-fs = <128>;
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 66c1c6a5eb76..eeae161fc69b 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -147,18 +147,19 @@
+ 			status = "okay";
  		};
  
--		softreset: softreset-controller {
-+		softreset: softreset-controller@0 {
- 			compatible = "st,stih407-softreset";
-+			reg = <0 0>;
- 			#reset-cells = <1>;
+-		sti_sasg_codec: sti-sasg-codec {
++		sti_sasg_codec: sti-sasg-codec@0 {
+ 			status = "okay";
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_spdif_out>;
  		};
  
--		picophyreset: picophyreset-controller {
-+		picophyreset: picophyreset-controller@0 {
- 			compatible = "st,stih407-picophyreset";
+-		sound {
++		sound: sound@0 {
+ 			compatible = "simple-audio-card";
 +			reg = <0 0>;
- 			#reset-cells = <1>;
- 		};
+ 			simple-audio-card,name = "STI-B2120";
+ 			status = "okay";
  
+-			simple-audio-card,dai-link@0 {
++			simple-audio-card,dai-link0 {
+ 				/* HDMI */
+ 				format = "i2s";
+ 				mclk-fs = <128>;
+@@ -170,7 +171,7 @@
+ 					sound-dai = <&sti_hdmi>;
+ 				};
+ 			};
+-			simple-audio-card,dai-link@1 {
++			simple-audio-card,dai-link1 {
+ 				/* DAC */
+ 				format = "i2s";
+ 				mclk-fs = <256>;
+@@ -183,7 +184,7 @@
+ 					sound-dai = <&sti_sasg_codec 1>;
+ 				};
+ 			};
+-			simple-audio-card,dai-link@2 {
++			simple-audio-card,dai-link2 {
+ 				/* SPDIF */
+ 				format = "left_j";
+ 				mclk-fs = <128>;
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
