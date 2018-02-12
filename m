@@ -1,74 +1,48 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2 3/5] phy: amlogic: phy-meson-gxl-usb2: default to host mode
-Date: Mon, 12 Feb 2018 23:39:26 +0100
-Message-ID: <20180212223928.22993-4-martin.blumenstingl@googlemail.com>
-References: <20180212223928.22993-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/5] improvements and fixes for the phy-meson-gxl-usb2 driver
+Date: Mon, 12 Feb 2018 23:39:23 +0100
+Message-ID: <20180212223928.22993-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180212223928.22993-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: kishon-l0cyMroinI0@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The USB2 PHY can switch between PHY_MODE_USB_HOST and
-PHY_MODE_USB_DEVICE. However, it cannot do it on it's own since it
-requires re-routing of the corresponding USB pins from dwc3 (which is
-used for host-mode) to dwc2 (which is used for device-mode).
-Thus we don't need to auto-detect the mode based on the USB controller,
-which simplifies the driver code.
+This contains two fixes and two (minor) fixes for the phy-meson-gxl-usb2
+driver:
+- a clock and reset line is used for the PHYs. this was not clear from
+  the Amlogic GPL kernel sources since the clock is enabled very early
+  in the boot process (either because the hardware defaults to "on",
+  the bootrom enables it or a bootloader before BL3-3/u-boot enables it)
+- we don't read the controller's dr_mode anymore because the USB2 PHY
+  can only be switched into host mode if the USB3 PHY knows about it.
+  Thus auto-detecting the mode doesn't work for this PHY so it's removed
+  in patch #3
+- do not log an error message when the phy-supply is not ready yet and
+  we have to return -EPROBE_DEFER
+- improve the naming of some U2P_R2 test mode registers
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Tested-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
----
- drivers/phy/amlogic/Kconfig              |  1 -
- drivers/phy/amlogic/phy-meson-gxl-usb2.c | 15 ++-------------
- 2 files changed, 2 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-index 2f690d24203a..23fe1cda2f70 100644
---- a/drivers/phy/amlogic/Kconfig
-+++ b/drivers/phy/amlogic/Kconfig
-@@ -18,7 +18,6 @@ config PHY_MESON_GXL_USB2
- 	default ARCH_MESON
- 	depends on OF && (ARCH_MESON || COMPILE_TEST)
- 	depends on USB_SUPPORT
--	select USB_COMMON
- 	select GENERIC_PHY
- 	select REGMAP_MMIO
- 	help
-diff --git a/drivers/phy/amlogic/phy-meson-gxl-usb2.c b/drivers/phy/amlogic/phy-meson-gxl-usb2.c
-index 303b2b46af3c..ee3c2c0c8572 100644
---- a/drivers/phy/amlogic/phy-meson-gxl-usb2.c
-+++ b/drivers/phy/amlogic/phy-meson-gxl-usb2.c
-@@ -20,7 +20,6 @@
- #include <linux/reset.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
--#include <linux/usb/of.h>
- 
- /* bits [31:27] are read-only */
- #define U2P_R0							0x0
-@@ -253,18 +252,8 @@ static int phy_meson_gxl_usb2_probe(struct platform_device *pdev)
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
- 
--	switch (of_usb_get_dr_mode_by_phy(dev->of_node, -1)) {
--	case USB_DR_MODE_PERIPHERAL:
--		priv->mode = PHY_MODE_USB_DEVICE;
--		break;
--	case USB_DR_MODE_OTG:
--		priv->mode = PHY_MODE_USB_OTG;
--		break;
--	case USB_DR_MODE_HOST:
--	default:
--		priv->mode = PHY_MODE_USB_HOST;
--		break;
--	}
-+	/* start in host mode */
-+	priv->mode = PHY_MODE_USB_HOST;
- 
- 	priv->regmap = devm_regmap_init_mmio(dev, base,
- 					     &phy_meson_gxl_usb2_regmap_conf);
+changes since v1 at [0]:
+- collected Rob's Reviewed-by on patch #1 and Yixun's Tested-by
+- rebased on top of v4.16-rc1
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2018-January/006293.html
+
+
+Martin Blumenstingl (5):
+  dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and clock
+  phy: amlogic: phy-meson-gxl-usb2: support the clock and reset line
+  phy: amlogic: phy-meson-gxl-usb2: default to host mode
+  phy: amlogic: phy-meson-gxl-usb2: don't log an error on -EPROBE_DEFER
+  phy: amlogic: phy-meson-gxl-usb2: rename some of the U2P_R2 registers
+
+ .../devicetree/bindings/phy/meson-gxl-usb2-phy.txt |  4 ++
+ drivers/phy/amlogic/Kconfig                        |  1 -
+ drivers/phy/amlogic/phy-meson-gxl-usb2.c           | 78 ++++++++++++++++------
+ 3 files changed, 61 insertions(+), 22 deletions(-)
+
 -- 
 2.16.1
 
