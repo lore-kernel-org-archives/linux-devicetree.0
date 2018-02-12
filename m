@@ -1,69 +1,77 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/3] Documentation: bindings: add usb3-host-disable and
- usb3-host-port for Rockchip USB Type-C PHY
-Date: Mon, 12 Feb 2018 13:26:44 -0800
-Message-ID: <20180212212643.GA37044@ban.mtv.corp.google.com>
-References: <20180208152028.9997-1-enric.balletbo@collabora.com>
- <20180208152028.9997-2-enric.balletbo@collabora.com>
- <CABGGisyaqV5HtTUL5LdjH3ZcU3_RTPmzMvEAhv5wZjCD_XCujg@mail.gmail.com>
- <CAFqH_53-iN9m=U+WdQh6_rKyxE5c9RUQO9qD1QaY0QePM_pOZA@mail.gmail.com>
- <CAL_JsqLvkPEm1mZaEfEVFEYMoGvOsbSQb8c35UvjmRTCwrCF8Q@mail.gmail.com>
+From: Kieran Bingham <kbingham@kernel.org>
+Subject: [PATCH v3 1/5] dt-bindings: media: adv7604: Add support for
+ i2c_new_secondary_device
+Date: Mon, 12 Feb 2018 22:07:49 +0000
+Message-ID: <1518473273-6333-2-git-send-email-kbingham@kernel.org>
+References: <1518473273-6333-1-git-send-email-kbingham@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLvkPEm1mZaEfEVFEYMoGvOsbSQb8c35UvjmRTCwrCF8Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1518473273-6333-1-git-send-email-kbingham@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Feb 12, 2018 at 10:43:41AM -0600, Rob Herring wrote:
-> On Thu, Feb 8, 2018 at 3:23 PM, Enric Balletbo Serra
-> <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > 2018-02-08 18:52 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> >> On Thu, Feb 8, 2018 at 9:20 AM, Enric Balletbo i Serra
-> >> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
-> >>> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> >>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> >>> @@ -36,6 +36,12 @@ offset, enable bit, write mask bit.
-> >>>   - rockchip,uphy-dp-sel : the register of type-c phy enable DP function
-> >>>     for type-c phy0, it must be <0x6268 19 19>;
-> >>>     for type-c phy1, it must be <0x6268 3 19>;
-> >>> + - rockchip,usb3-host-disable : the register of type-c phy disable usb3 host
-> >>> +   for type-c phy0, it must be <0x2434 0 16>;
-> >>> +   for type-c phy1, it must be <0x2444 0 16>;
-> >>> + - rockchip,usb3-host-port : the register of type-c phy usb3 port number
-> >>> +   for type-c phy0, it must be <0x2434 12 28>;
-> >>> +   for type-c phy1, it must be <0x2444 12 28>;
-> >>
-> >> When does this list stop? Adding properties for various register
-> >> fields doesn't scale. This information should be in the driver and
-> >> based on the compatible string if necessary.
-> >>
-> >
-> > I see, seams reasonable to me, is this applicable to the new ones only
-> > or I should get rid of all the proprieties like this from the DT
-> > (including the old ones)?
-> 
-> We're already kind of stuck with the existing ones. So it depends if
-> people want to phase them out or not.
-
-FWIW, any Chrome{device} using these sort of bindings is perfectly
-capable of handling changed bindings (we ship DTBs with the kernel). But
-that's not typically how mainline covers binding deprecation.
-
-If we're going to start recommending not putting these offsets in the
-DT, I'd vote for deprecating them, for consistency. (Otherwise, we'll
-keep running into this same question.) We only documented the RK3399
-("rockchip,rk3399-typec-phy") binding, so all users should have the same
-offsets. I dunno if/how we pick a time for eventually removing the
-bindings entirely.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogSmVhbi1NaWNoZWwgSGF1dGJvaXMgPGplYW4tbWljaGVsLmhhdXRib2lzQHZvZGFseXMu
+Y29tPgoKVGhlIEFEVjc2MDQgaGFzIHRoaXJ0ZWVuIDI1Ni1ieXRlIG1hcHMgdGhhdCBjYW4gYmUg
+YWNjZXNzZWQgdmlhIHRoZSBtYWluCknCskMgcG9ydHMuIEVhY2ggbWFwIGhhcyBpdCBvd24gScKy
+QyBhZGRyZXNzIGFuZCBhY3RzIGFzIGEgc3RhbmRhcmQgc2xhdmUKZGV2aWNlIG9uIHRoZSBJwrJD
+IGJ1cy4KCkV4dGVuZCB0aGUgZGV2aWNlIHRyZWUgbm9kZSBiaW5kaW5ncyB0byBiZSBhYmxlIHRv
+IG92ZXJyaWRlIHRoZSBkZWZhdWx0CmFkZHJlc3NlcyBzbyB0aGF0IGFkZHJlc3MgY29uZmxpY3Rz
+IHdpdGggb3RoZXIgZGV2aWNlcyBvbiB0aGUgc2FtZSBidXMKbWF5IGJlIHJlc29sdmVkIGF0IHRo
+ZSBib2FyZCBkZXNjcmlwdGlvbiBsZXZlbC4KClNpZ25lZC1vZmYtYnk6IEplYW4tTWljaGVsIEhh
+dXRib2lzIDxqZWFuLW1pY2hlbC5oYXV0Ym9pc0B2b2RhbHlzLmNvbT4KW0tpZXJhbjogUmUtYWRh
+cHRlZCBmb3IgbWFpbmxpbmVdClNpZ25lZC1vZmYtYnk6IEtpZXJhbiBCaW5naGFtIDxraWVyYW4u
+YmluZ2hhbStyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+ClJldmlld2VkLWJ5OiBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPgoKLS0tCkJhc2VkIHVwb24gdGhlIG9yaWdpbmFsIHBvc3Rpbmcg
+OgogIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0LzEwLzIyLzQ2OQoKdjI6CiAtIERUIEJpbmRp
+bmcgdXBkYXRlIHNlcGFyYXRlZCBmcm9tIGNvZGUgY2hhbmdlCiAtIE1pbm9yIHJld29yZCB0byBj
+b21taXQgbWVzc2FnZSB0byBhY2NvdW50IGZvciBEVCBvbmx5IGNoYW5nZS4KIC0gQ29sbGVjdGVk
+IFJvYidzIFJCIHRhZy4KCnYzOgogLSBTcGxpdCBtYXAgcmVnaXN0ZXIgYWRkcmVzc2VzIGludG8g
+aW5kaXZpZHVhbCBkZWNsYXJhdGlvbnMuCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEv
+aTJjL2Fkdjc2MDQudHh0ICAgICAgICAgIHwgMTggKysrKysrKysrKysrKysrKy0tCiAxIGZpbGUg
+Y2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Fkdjc2MDQudHh0IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9hZHY3NjA0LnR4dApp
+bmRleCA5Y2JkOTJlYjVkMDUuLmViYjVmMDcwYzA1YiAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9hZHY3NjA0LnR4dAorKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Fkdjc2MDQudHh0CkBAIC0xMyw3
+ICsxMywxMSBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgogICAgIC0gImFkaSxhZHY3NjExIiBmb3Ig
+dGhlIEFEVjc2MTEKICAgICAtICJhZGksYWR2NzYxMiIgZm9yIHRoZSBBRFY3NjEyCiAKLSAgLSBy
+ZWc6IEkyQyBzbGF2ZSBhZGRyZXNzCisgIC0gcmVnOiBJMkMgc2xhdmUgYWRkcmVzc2VzCisgICAg
+VGhlIEFEVjc2eHggaGFzIHVwIHRvIHRoaXJ0ZWVuIDI1Ni1ieXRlIG1hcHMgdGhhdCBjYW4gYmUg
+YWNjZXNzZWQgdmlhIHRoZQorICAgIG1haW4gScKyQyBwb3J0cy4gRWFjaCBtYXAgaGFzIGl0IG93
+biBJwrJDIGFkZHJlc3MgYW5kIGFjdHMgYXMgYSBzdGFuZGFyZAorICAgIHNsYXZlIGRldmljZSBv
+biB0aGUgScKyQyBidXMuIFRoZSBtYWluIGFkZHJlc3MgaXMgbWFuZGF0b3J5LCBvdGhlcnMgYXJl
+CisgICAgb3B0aW9uYWwgYW5kIHJldmVydCB0byBkZWZhdWx0cyBpZiBub3Qgc3BlY2lmaWVkLgog
+CiAgIC0gaHBkLWdwaW9zOiBSZWZlcmVuY2VzIHRvIHRoZSBHUElPcyB0aGF0IGNvbnRyb2wgdGhl
+IEhETUkgaG90LXBsdWcKICAgICBkZXRlY3Rpb24gcGlucywgb25lIHBlciBIRE1JIGlucHV0LiBU
+aGUgYWN0aXZlIGZsYWcgaW5kaWNhdGVzIHRoZSBHUElPCkBAIC0zNSw2ICszOSwxMSBAQCBPcHRp
+b25hbCBQcm9wZXJ0aWVzOgogCiAgIC0gcmVzZXQtZ3Bpb3M6IFJlZmVyZW5jZSB0byB0aGUgR1BJ
+TyBjb25uZWN0ZWQgdG8gdGhlIGRldmljZSdzIHJlc2V0IHBpbi4KICAgLSBkZWZhdWx0LWlucHV0
+OiBTZWxlY3Qgd2hpY2ggaW5wdXQgaXMgc2VsZWN0ZWQgYWZ0ZXIgcmVzZXQuCisgIC0gcmVnLW5h
+bWVzIDogTmFtZXMgb2YgbWFwcyB3aXRoIHByb2dyYW1tYWJsZSBhZGRyZXNzZXMuCisJCUl0IGNh
+biBjb250YWluIGFueSBtYXAgbmVlZGluZyBhIG5vbi1kZWZhdWx0IGFkZHJlc3MuCisJCVBvc3Np
+YmxlIG1hcHMgbmFtZXMgYXJlIDoKKwkJICAibWFpbiIsICJhdmxpbmsiLCAiY2VjIiwgImluZm9m
+cmFtZSIsICJlc2RwIiwgImRwcCIsICJhZmUiLAorCQkgICJyZXAiLCAiZWRpZCIsICJoZG1pIiwg
+InRlc3QiLCAiY3AiLCAidmRwIgogCiBPcHRpb25hbCBFbmRwb2ludCBQcm9wZXJ0aWVzOgogCkBA
+IC01Miw3ICs2MSwxMiBAQCBFeGFtcGxlOgogCiAJaGRtaV9yZWNlaXZlckA0YyB7CiAJCWNvbXBh
+dGlibGUgPSAiYWRpLGFkdjc2MTEiOwotCQlyZWcgPSA8MHg0Yz47CisJCS8qCisJCSAqIFRoZSBl
+ZGlkIHBhZ2Ugd2lsbCBiZSBhY2Nlc3NpYmxlIEAgMHg2NiBvbiB0aGUgaTJjIGJ1cy4gQWxsCisJ
+CSAqIG90aGVyIG1hcHMgd2lsbCByZXRhaW4gdGhlaXIgZGVmYXVsdCBhZGRyZXNzZXMuCisJCSAq
+LworCQlyZWcgPSA8MHg0Yz4sIDwweDY2PjsKKwkJcmVnLW5hbWVzICJtYWluIiwgImVkaWQiOwog
+CiAJCXJlc2V0LWdwaW9zID0gPCZpb2V4cCAwIEdQSU9fQUNUSVZFX0xPVz47CiAJCWhwZC1ncGlv
+cyA9IDwmaW9leHAgMiBHUElPX0FDVElWRV9ISUdIPjsKLS0gCjIuNy40CgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
