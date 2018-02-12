@@ -1,73 +1,69 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v3 0/2] Meson GXL USB3 PHY driver
-Date: Mon, 12 Feb 2018 23:33:48 +0100
-Message-ID: <20180212223350.21036-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 1/2] dt-bindings: phy: Add support for the USB3 PHY on Amlogic Meson GXL SoCs
+Date: Mon, 12 Feb 2018 23:33:49 +0100
+Message-ID: <20180212223350.21036-2-martin.blumenstingl@googlemail.com>
+References: <20180212223350.21036-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180212223350.21036-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: kishon-l0cyMroinI0@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Amlogic Meson GXL SoCs use a dwc3 controller with two USB2 ports,
-Meson GXM SoCs use the same dwc3 controller but with three USB3
-ports enabled. Neither of these SoCs has any USB3 port enabled in
-the dwc3 registers.
-The second USB2 port on both SoCs supports host and peripheral
-(also called "device") mode.
-
-The dwc3 controller supports host mode only. Peripheral mode is
-implemented through an additional dwc2 controller (which only enables
-device mode). The USB3 PHY has register bits which allow a driver to
-detect the current mode - however this is currently not implemented
-as the dwc2 controller seems to hang during reset (and I do not have
-a use-case where I need peripheral/device mode).
-
+Amlogic Meson GXL SoCs use a dwc3 controller with two (GXM - a variant
+for GXL, has three) USB2 ports. The first USB2 port supports host and
+peripheral (also called "device") mode.
 While the dwc3 controller has no USB3 port enabled we still need the
-USB3 PHY to be initialized, otherwise some boards (probably those where
-the bootloader does not initialize the USB3 PHY) show errors with
-high-speed USB devices connected to any of the USB2 ports. Configuring
-the USB_R1_U3H_FLADJ_30MHZ_REG_MASK register as it's done by Amlogic's
-vendor GPL kernel sources makes these error go away.
+USB3 PHY to be initialized. Otherwise high-speed USB transfers (for
+example with a USB flash drive) may time out (most often seen on boards
+with mainline u-boot, where the bootloader does not initialize the USB3
+PHY registers).
 
-Thanks to Jerome Brunet for reporting the errors and Neil Armstrong
-for discovering that initializing the USB3 PHY fixes these USB errors!
-
-
-changes since v2 at [1]:
-- collected Rob's Reviewed-by on patch #1 and Yixun's Tested-by
-- rebased on top of v4.16-rc1 (no changes were required though)
-
-changes since v1 at [0]:
-- document the interrupt in the dt-bindings patch (we don't use it in
-  the driver yet, but this interrupt is there so it should be
-  documented)
-- added the clock and reset lines, thank to Yixun Lan who gave me the
-  hints that these are needed (it's not clear when reading the Amlogic
-  GPL kernel sources, because the clock for example is always enabled
-  by hardware default, bootrom, etc..)
-- implemented the .set_mode callback
-- NOTE: I chose *NOT* to add Jerome's and Neil's Tested-by's as well as
-  Rob's Acked-by on the dt-bindings patch since I made changes that I
-  want to have reviewed again
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-September/004780.html
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2018-January/006290.html
-
-
-Martin Blumenstingl (2):
-  dt-bindings: phy: Add support for the USB3 PHY on Amlogic Meson GXL
-    SoCs
-  phy: amlogic: add USB3 PHY support for Meson GXL and GXM
-
- .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt |  31 +++
- drivers/phy/amlogic/Kconfig                        |  12 +
- drivers/phy/amlogic/Makefile                       |   1 +
- drivers/phy/amlogic/phy-meson-gxl-usb3.c           | 288 +++++++++++++++++++++
- 4 files changed, 332 insertions(+)
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Tested-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
+---
+ .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
- create mode 100644 drivers/phy/amlogic/phy-meson-gxl-usb3.c
 
+diff --git a/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+new file mode 100644
+index 000000000000..114947e1de3d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+@@ -0,0 +1,31 @@
++* Amlogic Meson GXL and GXM USB3 PHY and OTG detection binding
++
++Required properties:
++- compatible:	Should be "amlogic,meson-gxl-usb3-phy"
++- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
++- reg:		The base address and length of the registers
++- interrupts:	the interrupt specifier for the OTG detection
++- clocks:	phandles to the clocks for
++		- the USB3 PHY
++		- and peripheral mode/OTG detection
++- clock-names:	must contain "phy" and "peripheral"
++- resets:	phandle to the reset lines for:
++		- the USB3 PHY and
++		- peripheral mode/OTG detection
++- reset-names:	must contain "phy" and "peripheral"
++
++Optional properties:
++- phy-supply:	see phy-bindings.txt in this directory
++
++
++Example:
++	usb3_phy0: phy@78080 {
++		compatible = "amlogic,meson-gxl-usb3-phy";
++		#phy-cells = <0>;
++		reg = <0x0 0x78080 0x0 0x20>;
++		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clkc CLKID_USB_OTG>, <&clkc_AO CLKID_AO_CEC_32K>;
++		clock-names = "phy", "peripheral";
++		resets = <&reset RESET_USB_OTG>, <&reset RESET_USB_OTG>;
++		reset-names = "phy", "peripheral";
++	};
 -- 
 2.16.1
 
