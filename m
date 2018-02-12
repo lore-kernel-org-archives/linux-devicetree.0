@@ -1,194 +1,53 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] arm: dts: mt7623: add PCIe related nodes
-Date: Mon, 12 Feb 2018 19:32:37 +0800
-Message-ID: <3b3a4d73d7b33a9318b8db1033d2f7e4c32b0136.1518400130.git.ryder.lee@mediatek.com>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [RFC v4 13/26] watchdog: renesas_wdt: Add restart handler
+Date: Mon, 12 Feb 2018 11:38:41 +0000
+Message-ID: <TY1PR06MB08958A4A75A0F3BB2BF1D086C0F70@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1517423070-24236-14-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180207230309.goxig2irkpxrw5el@katana>
+ <TY1PR06MB089578618AA33335D90D16CEC0F70@TY1PR06MB0895.apcprd06.prod.outlook.com>
+ <20180212105456.3zejp3j7hfuzyc3c@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180212105456.3zejp3j7hfuzyc3c@ninjato>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>l
 List-Id: devicetree@vger.kernel.org
 
-This patch adds some device nodes for the PCIe function block and updates
-related pinmux.
+> > > I used to have this simpler version (back then for the UP case):
+> > >
+> > > +rwdt_start(wdev);
+> > > +rwdt_write(priv, 0xffff, RWTCNT);
+> > > +return 0;
+> > >
+> > > It should still work probably...
+> >
+> > It should still work, but it would be slower, I would stick with the
+> > version I have submitted if you don't mind.
+>
+> Actually, I do mind. Because of code duplication reasons. We have a fix
+> in the works for rwdt_start() and it would be too easy to overlook the
+> same fix will be needed for a restart.
 
-Moreover, we add interrupt-map properties in both parent and children as
-the chip only has one IRQ per slot that is connected to all INTx and get
-propagated through the bridges and it also represents the root ports own
-interrupts.
+The code is very similar indeed, but not exactly duplicated as it sets the =
+registers in order to reset
+the system as quickly as possible.
+But since you have strong feelings about this I'll reuse this other version=
+ for the next submission.
 
-Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
-Please refer to the previous discussion:
-https://patchwork.ozlabs.org/patch/829108/
-https://patchwork.kernel.org/patch/10193391/
----
- arch/arm/boot/dts/mt7623.dtsi                 | 105 ++++++++++++++++++++++++++
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  22 ++++++
- 2 files changed, 127 insertions(+)
+Thanks,
+Fabrizio
 
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index b750da5..c2541a0 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -670,6 +670,111 @@
- 		#reset-cells = <1>;
- 	};
- 
-+	pcie: pcie-controller@1a140000 {
-+		compatible = "mediatek,mt7623-pcie";
-+		device_type = "pci";
-+		reg = <0 0x1a140000 0 0x1000>, /* PCIe shared registers */
-+		      <0 0x1a142000 0 0x1000>, /* Port0 registers */
-+		      <0 0x1a143000 0 0x1000>, /* Port1 registers */
-+		      <0 0x1a144000 0 0x1000>; /* Port2 registers */
-+		reg-names = "subsys", "port0", "port1", "port2";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0xf800 0 0 0>;
-+		interrupt-map = <0x0000 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>,
-+				<0x0800 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>,
-+				<0x1000 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-+			 <&hifsys CLK_HIFSYS_PCIE0>,
-+			 <&hifsys CLK_HIFSYS_PCIE1>,
-+			 <&hifsys CLK_HIFSYS_PCIE2>;
-+		clock-names = "free_ck", "sys_ck0", "sys_ck1", "sys_ck2";
-+		resets = <&hifsys MT2701_HIFSYS_PCIE0_RST>,
-+			 <&hifsys MT2701_HIFSYS_PCIE1_RST>,
-+			 <&hifsys MT2701_HIFSYS_PCIE2_RST>;
-+		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
-+		phys = <&pcie0_port PHY_TYPE_PCIE>,
-+		       <&pcie1_port PHY_TYPE_PCIE>,
-+		       <&u3port1 PHY_TYPE_PCIE>;
-+		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
-+		bus-range = <0x00 0xff>;
-+		status = "disabled";
-+		ranges = <0x81000000 0 0x1a160000 0 0x1a160000 0 0x00010000
-+			  0x83000000 0 0x60000000 0 0x60000000 0 0x10000000>;
-+
-+		pcie@0,0 {
-+			reg = <0x0000 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>;
-+			ranges;
-+			num-lanes = <1>;
-+			status = "disabled";
-+		};
-+
-+		pcie@1,0 {
-+			reg = <0x0800 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
-+			ranges;
-+			num-lanes = <1>;
-+			status = "disabled";
-+		};
-+
-+		pcie@2,0 {
-+			reg = <0x1000 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
-+			ranges;
-+			num-lanes = <1>;
-+			status = "disabled";
-+		};
-+	};
-+
-+	pcie0_phy: pcie-phy@1a149000 {
-+		compatible = "mediatek,generic-tphy-v1";
-+		reg = <0 0x1a149000 0 0x0700>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+
-+		pcie0_port: pcie-phy@1a149900 {
-+			reg = <0 0x1a149900 0 0x0700>;
-+			clocks = <&clk26m>;
-+			clock-names = "ref";
-+			#phy-cells = <1>;
-+			status = "okay";
-+		};
-+	};
-+
-+	pcie1_phy: pcie-phy@1a14a000 {
-+		compatible = "mediatek,generic-tphy-v1";
-+		reg = <0 0x1a14a000 0 0x0700>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+
-+		pcie1_port: pcie-phy@1a14a900 {
-+			reg = <0 0x1a14a900 0 0x0700>;
-+			clocks = <&clk26m>;
-+			clock-names = "ref";
-+			#phy-cells = <1>;
-+			status = "okay";
-+		};
-+	};
-+
- 	usb1: usb@1a1c0000 {
- 		compatible = "mediatek,mt7623-xhci",
- 			     "mediatek,mt8173-xhci";
-diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-index 7bf5aa2..b077808 100644
---- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-+++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-@@ -209,6 +209,20 @@
- 	vqmmc-supply = <&mt6323_vio18_reg>;
- };
- 
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie_default>;
-+	status = "okay";
-+
-+	pcie@0,0 {
-+		status = "okay";
-+	};
-+
-+	pcie@1,0 {
-+		status = "okay";
-+	};
-+};
-+
- &pio {
- 	cir_pins_a:cir@0 {
- 		pins_cir {
-@@ -376,6 +390,14 @@
- 		};
- 	};
- 
-+	pcie_default: pcie_pin_default {
-+		pins_cmd_dat {
-+			pinmux = <MT7623_PIN_208_AUD_EXT_CK1_FUNC_PCIE0_PERST_N>,
-+				 <MT7623_PIN_209_AUD_EXT_CK2_FUNC_PCIE1_PERST_N>;
-+			bias-disable;
-+		};
-+	};
-+
- 	pwm_pins_a: pwm@0 {
- 		pins_pwm {
- 			pinmux = <MT7623_PIN_203_PWM0_FUNC_PWM0>,
--- 
-1.9.1
 
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
