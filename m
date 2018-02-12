@@ -1,7 +1,7 @@
 From: <patrice.chotard@st.com>
-Subject: [PATCH v2 10/12] ARM: dts: STi: Add fake reg property for clocks
-Date: Mon, 12 Feb 2018 15:43:08 +0100
-Message-ID: <1518446590-16800-11-git-send-email-patrice.chotard@st.com>
+Subject: [PATCH v2 04/12] ARM: dts: STi: Add fake reg property for miphy28lp_phy
+Date: Mon, 12 Feb 2018 15:43:02 +0100
+Message-ID: <1518446590-16800-5-git-send-email-patrice.chotard@st.com>
 References: <1518446590-16800-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,160 +14,90 @@ List-Id: devicetree@vger.kernel.org
 
 From: Patrice Chotard <patrice.chotard@st.com>
 
-For all clock's element inside SoC, add a fake reg property,
-this allows to fix the following warnings when compiling
-dtb with W=1 option :
+Add fake reg property to miphy28lp_phy.
+This allows to fix the following warning when compiling
+dtb with W=1 option:
+
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/miphy28lp missing or empty reg/ranges property
 
 arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /clocks/clk-m-a9-periphs missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /clocks/clk-m-a9-ext2f-div2s missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /clocks/clk-tmdsout-hdmi missing or empty reg/ranges property
+Node /soc/miphy28lp missing or empty reg/ranges property
 
 arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /clocks/clk-m-a9-periphs missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /clocks/clk-m-a9-ext2f-div2s missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /clocks/clk-tmdsout-hdmi missing or empty reg/ranges property
+Node /soc/miphy28lp missing or empty reg/ranges property
 
 arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /clocks/clk-m-a9-periphs missing or empty reg/ranges property
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /clocks/clk-m-a9-ext2f-div2s missing or empty reg/ranges property
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /clocks/clk-tmdsout-hdmi missing or empty reg/ranges property
+Node /soc/miphy28lp missing or empty reg/ranges property
 
 Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 ---
 
-v2: _ add a fake reg property to node without reg property.
+v2: _ add a fake reg property to node without reg property
 
- arch/arm/boot/dts/stih407-clock.dtsi | 9 ++++++---
- arch/arm/boot/dts/stih410-clock.dtsi | 9 ++++++---
- arch/arm/boot/dts/stih418-clock.dtsi | 9 ++++++---
- 3 files changed, 18 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/stih407-family.dtsi | 3 ++-
+ arch/arm/boot/dts/stih410-b2260.dts   | 2 +-
+ arch/arm/boot/dts/stih418-b2199.dts   | 2 +-
+ arch/arm/boot/dts/stihxxx-b2120.dtsi  | 2 +-
+ 4 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
-index b882dcf3a649..1bba47e06ebe 100644
---- a/arch/arm/boot/dts/stih407-clock.dtsi
-+++ b/arch/arm/boot/dts/stih407-clock.dtsi
-@@ -24,9 +24,10 @@
- 		/*
- 		 * ARM Peripheral clock for timers
- 		 */
--		arm_periph_clk: clk-m-a9-periphs {
-+		arm_periph_clk: clk-m-a9-periphs@0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-factor-clock";
-+			reg = <0 0>;
- 
- 			clocks = <&clk_m_a9>;
- 			clock-div = <2>;
-@@ -67,9 +68,10 @@
- 		/*
- 		 * ARM Peripheral clock for timers
- 		 */
--		clk_m_a9_ext2f_div2: clk-m-a9-ext2f-div2s {
-+		clk_m_a9_ext2f_div2: clk-m-a9-ext2f-div2s@0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-factor-clock";
-+			reg = <0 0>;
- 
- 			clocks = <&clk_s_c0_flexgen 13>;
- 
-@@ -254,9 +256,10 @@
- 					     "clk-s-d2-fs0-ch3";
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 1608c70f05a9..e279cd07ba67 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -389,12 +389,13 @@
+ 			reset-names = "global", "port";
  		};
  
--		clk_tmdsout_hdmi: clk-tmdsout-hdmi {
-+		clk_tmdsout_hdmi: clk-tmdsout-hdmi@0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
+-		miphy28lp_phy: miphy28lp {
++		miphy28lp_phy: miphy28lp@0 {
+ 			compatible = "st,miphy28lp-phy";
+ 			st,syscfg = <&syscfg_core>;
+ 			#address-cells	= <1>;
+ 			#size-cells	= <1>;
+ 			ranges;
 +			reg = <0 0>;
- 			clock-frequency = <0>;
+ 
+ 			phy_port0: port@9b22000 {
+ 				reg = <0x9b22000 0xff>,
+diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
+index 69c2abcaeda8..cea5c840ca9f 100644
+--- a/arch/arm/boot/dts/stih410-b2260.dts
++++ b/arch/arm/boot/dts/stih410-b2260.dts
+@@ -200,7 +200,7 @@
+ 			};
  		};
  
-diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
-index 4df1b2187aa2..41fb1a910d49 100644
---- a/arch/arm/boot/dts/stih410-clock.dtsi
-+++ b/arch/arm/boot/dts/stih410-clock.dtsi
-@@ -27,9 +27,10 @@
- 		/*
- 		 * ARM Peripheral clock for timers
- 		 */
--		arm_periph_clk: clk-m-a9-periphs {
-+		arm_periph_clk: clk-m-a9-periphs@0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-factor-clock";
-+			reg = <0 0>;
- 			clocks = <&clk_m_a9>;
- 			clock-div = <2>;
- 			clock-mult = <1>;
-@@ -69,9 +70,10 @@
- 		/*
- 		 * ARM Peripheral clock for timers
- 		 */
--		clk_m_a9_ext2f_div2: clk-m-a9-ext2f-div2s {
-+		clk_m_a9_ext2f_div2: clk-m-a9-ext2f-div2s@0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-factor-clock";
-+			reg = <0 0>;
+-		miphy28lp_phy: miphy28lp {
++		miphy28lp_phy: miphy28lp@0 {
  
- 			clocks = <&clk_s_c0_flexgen 13>;
- 
-@@ -266,9 +268,10 @@
- 					     "clk-s-d2-fs0-ch3";
+ 			phy_port1: port@9b2a000 {
+ 				st,osc-force-ext;
+diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
+index 1ce38ce79952..be0bbb05c5ec 100644
+--- a/arch/arm/boot/dts/stih418-b2199.dts
++++ b/arch/arm/boot/dts/stih418-b2199.dts
+@@ -88,7 +88,7 @@
+ 			non-removable;
  		};
  
--		clk_tmdsout_hdmi: clk-tmdsout-hdmi {
-+		clk_tmdsout_hdmi: clk-tmdsout-hdmi@0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
-+			reg = <0 0>;
- 			clock-frequency = <0>;
+-		miphy28lp_phy: miphy28lp {
++		miphy28lp_phy: miphy28lp@0 {
+ 
+ 			phy_port0: port@9b22000 {
+ 				st,osc-rdy;
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 1fd3a2b5b938..66c1c6a5eb76 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -80,7 +80,7 @@
+ 			st,i2c-min-sda-pulse-width-us = <5>;
  		};
  
-diff --git a/arch/arm/boot/dts/stih418-clock.dtsi b/arch/arm/boot/dts/stih418-clock.dtsi
-index e68bf28bd038..50413eabe73a 100644
---- a/arch/arm/boot/dts/stih418-clock.dtsi
-+++ b/arch/arm/boot/dts/stih418-clock.dtsi
-@@ -27,9 +27,10 @@
- 		/*
- 		 * ARM Peripheral clock for timers
- 		 */
--		arm_periph_clk: clk-m-a9-periphs {
-+		arm_periph_clk: clk-m-a9-periphs@0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-factor-clock";
-+			reg = <0 0>;
- 			clocks = <&clk_m_a9>;
- 			clock-div = <2>;
- 			clock-mult = <1>;
-@@ -69,9 +70,10 @@
- 		/*
- 		 * ARM Peripheral clock for timers
- 		 */
--		clk_m_a9_ext2f_div2: clk-m-a9-ext2f-div2s {
-+		clk_m_a9_ext2f_div2: clk-m-a9-ext2f-div2s@0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-factor-clock";
-+			reg = <0 0>;
+-		miphy28lp_phy: miphy28lp {
++		miphy28lp_phy: miphy28lp@0 {
  
- 			clocks = <&clk_s_c0_flexgen 13>;
- 
-@@ -259,9 +261,10 @@
- 					     "clk-s-d2-fs0-ch3";
- 		};
- 
--		clk_tmdsout_hdmi: clk-tmdsout-hdmi {
-+		clk_tmdsout_hdmi: clk-tmdsout-hdmi@0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
-+			reg = <0 0>;
- 			clock-frequency = <0>;
- 		};
- 
+ 			phy_port0: port@9b22000 {
+ 				st,osc-rdy;
 -- 
 1.9.1
