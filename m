@@ -1,71 +1,219 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
- properties ?
-Date: Mon, 12 Feb 2018 11:40:15 +0530
-Message-ID: <20180212061015.GO28462@vireshk-i7>
-References: <20180207065959.GN28462@vireshk-i7>
- <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
- <20180207102446.GS28462@vireshk-i7>
- <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
- <20180209064211.GY28462@vireshk-i7>
- <539699c7-9509-dea2-2b31-c5f6749c99c4@linaro.org>
- <20180209092421.GL28462@vireshk-i7>
- <5722441d-c8be-4d29-fab7-28b4e5716961@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v2] of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
+Date: Sun, 11 Feb 2018 22:27:48 -0800
+Message-ID: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5722441d-c8be-4d29-fab7-28b4e5716961-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punit.Agrawal-5wv7dgnIgG8@public.gmane.org, ionela.voinescu-5wv7dgnIgG8@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09-02-18, 13:14, Daniel Lezcano wrote:
-> Right. The semantic is unclear. The expected cooling-cells value is
-> always 2 (the code ignore values greater than two and yell if it is less
-> than 2). And the cooling-device binding tells there are two states.
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-They are fixed to 2 as we don't need to use it differently for now.
-But that's more about how Linux is using this stuff. The binding still
-needs to provide a way to have more cells than just 2.
+Create a cache of the nodes that contain a phandle property.  Use this
+cache to find the node for a given phandle value instead of scanning
+the devicetree to find the node.  If the phandle value is not found
+in the cache, of_find_node_by_phandle() will fall back to the tree
+scan algorithm.
 
-> So the question is why do we need a cooling-cells as the information is
-> pointless here (always 2) ?
+The cache is initialized in of_core_init().
 
-To show that the device is a "cooling-device" and I see that
-consistent with everything else in DT, for example: interrupt-cells,
-gpio-cells, clock-cells, reset-cells, dma-cells. The "*-cells"
-properties is used widely to tell what the device can behave as, i.e.
-a cooling-device in our case.
+The cache is freed via a late_initcall_sync() if modules are not
+enabled.
 
-Now we always use 2 parameters exactly is a different thing all
-together :)
+Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+---
 
-> I see this field is artificially used to tell the cpufreq driver "please
-> register me as a cooling device". This is inconsistent from my pov.
+Changes since v1:
+  - change short description from
+    of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
+  - rebase on v4.16-rc1
+  - reorder new functions in base.c to avoid forward declaration
+  - add locking around kfree(phandle_cache) for memory ordering
+  - add explicit check for non-null of phandle_cache in
+    of_find_node_by_phandle().  There is already a check for !handle,
+    which prevents accessing a null phandle_cache, but that dependency
+    is not obvious, so this check makes it more apparent.
+  - do not free phandle_cache if modules are enabled, so that
+    cached phandles will be available when modules are loaded
 
-But that's how its used for every other controller, what's different
-here ?
+ drivers/of/base.c       | 93 ++++++++++++++++++++++++++++++++++++++++++++++---
+ drivers/of/of_private.h |  5 +++
+ drivers/of/resolver.c   | 21 -----------
+ 3 files changed, 94 insertions(+), 25 deletions(-)
 
-> Furthermore, the thermal-zone with the cooling device binds with the CPU
-> phandle, not the cooling-cells.
-
-Yeah, because that's the device really.
-
-> Putting apart the device binding changes discussion for the moment. Why
-> not register the cpufreq driver in all the cases and then drop
-
-s/cpufreq driver/cpufreq cooling driver/ ??
-
-> cooling-cells ? So when the opps are present, its registers in the
-> cpufreq->ready callback.
-
-How will someone tell if they don't need the cooling infrastructure ?
-Specially for multiplatform thing.
-
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index ad28de96e13f..b3597c250837 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -91,10 +91,88 @@ int __weak of_node_to_nid(struct device_node *np)
+ }
+ #endif
+ 
++static struct device_node **phandle_cache;
++static u32 max_phandle_cache;
++
++phandle live_tree_max_phandle(void)
++{
++	struct device_node *node;
++	phandle max_phandle;
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&devtree_lock, flags);
++
++	max_phandle = 0;
++	for_each_of_allnodes(node) {
++		if (node->phandle != OF_PHANDLE_ILLEGAL &&
++		    node->phandle > max_phandle)
++			max_phandle = node->phandle;
++		}
++
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++
++	return max_phandle;
++}
++
++static void of_populate_phandle_cache(void)
++{
++	unsigned long flags;
++	phandle max_phandle;
++	u32 nodes = 0;
++	struct device_node *np;
++
++	if (phandle_cache)
++		return;
++
++	max_phandle = live_tree_max_phandle();
++
++	raw_spin_lock_irqsave(&devtree_lock, flags);
++
++	for_each_of_allnodes(np)
++		nodes++;
++
++	/* sanity cap for malformed tree */
++	if (max_phandle > nodes)
++		max_phandle = nodes;
++
++	phandle_cache = kzalloc((max_phandle + 1) * sizeof(*phandle_cache),
++				GFP_ATOMIC);
++
++	for_each_of_allnodes(np)
++		if (np->phandle != OF_PHANDLE_ILLEGAL  &&
++		    np->phandle <= max_phandle &&
++		    np->phandle)
++			phandle_cache[np->phandle] = np;
++
++	max_phandle_cache = max_phandle;
++
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++}
++
++#ifndef CONFIG_MODULES
++static int __init of_free_phandle_cache(void)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&devtree_lock, flags);
++
++	max_phandle_cache = 0;
++	kfree(phandle_cache);
++	phandle_cache = NULL;
++
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++
++	return 0;
++}
++late_initcall_sync(of_free_phandle_cache);
++#endif
++
+ void __init of_core_init(void)
+ {
+ 	struct device_node *np;
+ 
++	of_populate_phandle_cache();
++
+ 	/* Create the kset, and register existing nodes */
+ 	mutex_lock(&of_mutex);
+ 	of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
+@@ -1021,16 +1099,23 @@ int of_modalias_node(struct device_node *node, char *modalias, int len)
+  */
+ struct device_node *of_find_node_by_phandle(phandle handle)
+ {
+-	struct device_node *np;
++	struct device_node *np = NULL;
+ 	unsigned long flags;
+ 
+ 	if (!handle)
+ 		return NULL;
+ 
+ 	raw_spin_lock_irqsave(&devtree_lock, flags);
+-	for_each_of_allnodes(np)
+-		if (np->phandle == handle)
+-			break;
++
++	if (phandle_cache && handle <= max_phandle_cache)
++		np = phandle_cache[handle];
++
++	if (!np || np->phandle != handle) {
++		for_each_of_allnodes(np)
++			if (np->phandle == handle)
++				break;
++	}
++
+ 	of_node_get(np);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 0c609e7d0334..18e03c9d4b55 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -131,6 +131,11 @@ extern void __of_update_property_sysfs(struct device_node *np,
+ extern void __of_sysfs_remove_bin_file(struct device_node *np,
+ 				       struct property *prop);
+ 
++/* illegal phandle value (set when unresolved) */
++#define OF_PHANDLE_ILLEGAL	0xdeadbeef
++
++extern phandle live_tree_max_phandle(void);
++
+ /* iterators for transactions, used for overlays */
+ /* forward iterator */
+ #define for_each_transaction_entry(_oft, _te) \
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+index 740d19bde601..a7580c24737a 100644
+--- a/drivers/of/resolver.c
++++ b/drivers/of/resolver.c
+@@ -19,27 +19,6 @@
+ 
+ #include "of_private.h"
+ 
+-/* illegal phandle value (set when unresolved) */
+-#define OF_PHANDLE_ILLEGAL	0xdeadbeef
+-
+-static phandle live_tree_max_phandle(void)
+-{
+-	struct device_node *node;
+-	phandle phandle;
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&devtree_lock, flags);
+-	phandle = 0;
+-	for_each_of_allnodes(node) {
+-		if (node->phandle != OF_PHANDLE_ILLEGAL &&
+-				node->phandle > phandle)
+-			phandle = node->phandle;
+-	}
+-	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+-
+-	return phandle;
+-}
+-
+ static void adjust_overlay_phandles(struct device_node *overlay,
+ 		int phandle_delta)
+ {
 -- 
-viresh
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
