@@ -1,24 +1,22 @@
-From: Frank Rowand <frowand.list@gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v2] of: cache phandle nodes to reduce cost of
  of_find_node_by_phandle()
-Date: Sun, 11 Feb 2018 22:56:42 -0800
-Message-ID: <6e967dd4-0fae-a912-88cd-b60f40ec0727@gmail.com>
+Date: Sun, 11 Feb 2018 22:58:57 -0800
+Message-ID: <dc3c66d5-b848-d1cc-48f4-cabeccc2e383@gmail.com>
 References: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518416868-8804-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, cpandya@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 02/11/18 22:27, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+On 02/11/18 22:27, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 > 
 > Create a cache of the nodes that contain a phandle property.  Use this
 > cache to find the node for a given phandle value instead of scanning
@@ -31,7 +29,7 @@ On 02/11/18 22:27, frowand.list@gmail.com wrote:
 > The cache is freed via a late_initcall_sync() if modules are not
 > enabled.
 > 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 > ---
 > 
 > Changes since v1:
@@ -46,43 +44,55 @@ On 02/11/18 22:27, frowand.list@gmail.com wrote:
 >     is not obvious, so this check makes it more apparent.
 >   - do not free phandle_cache if modules are enabled, so that
 >     cached phandles will be available when modules are loaded
+> 
+>  drivers/of/base.c       | 93 ++++++++++++++++++++++++++++++++++++++++++++++---
+>  drivers/of/of_private.h |  5 +++
+>  drivers/of/resolver.c   | 21 -----------
+>  3 files changed, 94 insertions(+), 25 deletions(-)
+> 
 
 < snip >
 
+Hi Chintan,
 
+Just as in the previous version, this part of the patch will not apply
+on older kernel versions, and can just be deleted:
 
-In a previous thread, you said:
+> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> index 740d19bde601..a7580c24737a 100644
+> --- a/drivers/of/resolver.c
+> +++ b/drivers/of/resolver.c
+> @@ -19,27 +19,6 @@
+>  
+>  #include "of_private.h"
+>  
+> -/* illegal phandle value (set when unresolved) */
+> -#define OF_PHANDLE_ILLEGAL	0xdeadbeef
+> -
+> -static phandle live_tree_max_phandle(void)
+> -{
+> -	struct device_node *node;
+> -	phandle phandle;
+> -	unsigned long flags;
+> -
+> -	raw_spin_lock_irqsave(&devtree_lock, flags);
+> -	phandle = 0;
+> -	for_each_of_allnodes(node) {
+> -		if (node->phandle != OF_PHANDLE_ILLEGAL &&
+> -				node->phandle > phandle)
+> -			phandle = node->phandle;
+> -	}
+> -	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> -
+> -	return phandle;
+> -}
+> -
+>  static void adjust_overlay_phandles(struct device_node *overlay,
+>  		int phandle_delta)
+>  {
+> 
 
-> We should be able to do this earlier. We already walk the tree twice
-> in unflattening. We can get the max phandle (or number of phandles
-> IMO) on the first pass, allocate with the early allocator and then
-> populate the cache in the 2nd pass. AIUI, you can alloc with memblock
-> and then free with kfree as the memblock allocations get transferred
-> to the slab.
-
-And I replied:
-
-   Thanks for pointing out that kfree() can be used for memory alloced
-   with memblock.  I'll change to populate the cache earlier.
-
-
-I started to make this change when I moved forward to v4.16-rc1.  There
-are two obvious ways to do this.
-
-The first is to create and populate
-the phandle cache during the two phases of unflattening.  To do this
-would require counting the number of nodes to be unflattened and find
-the largest phandle value during phase 1, then allocate the cache before
-phase 2, then populate the cache during phase 2.  This is not difficult,
-but it is intrusive.
-
-The second obvious way is to modify of_populate_phandle_cache() to
-use the early allocator if called early in the boot and call this
-immediately after unflattening.  Then if of_populate_phandle_cache()
-is called later (eg for applying overlays) it would have to change
-to using kzalloc().  It did not seem like the larger overhead of the
-very few calls of of_find_node_by_phandle() before the slightly later
-phandle cache population justify adding the extra complexity in
-of_populate_phandle_cache().
-
--Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
