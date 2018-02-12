@@ -1,72 +1,60 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [linux-sunxi] [PATCH v2 5/6] arm64: allwinner: h6: add the
- basical Allwinner H6 DTSI file
-Date: Mon, 12 Feb 2018 10:16:03 +0100
-Message-ID: <CAOFm3uHoQcZ3TZg_uTs2aBgU-p0r2ffJ2VLK+E4V19fmLW10WA@mail.gmail.com>
-References: <20180203154942.63566-1-icenowy@aosc.io> <20180203154942.63566-6-icenowy@aosc.io>
- <a4299cac-84c1-6468-c38a-f232d0dbfb8a@arm.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 8/8] ASoC: samsung,tm2-audio DT binding documentation update
+Date: Mon, 12 Feb 2018 10:19:27 +0100
+Message-ID: <CAJKOXPezeWHCaHz1PY03_nTFxb0qOCsgPtNjfMC4id0DsrFLqA@mail.gmail.com>
+References: <CGME20180205154537epcas1p10a9a30a574e3f472358e7dacf3cb0489@epcas1p1.samsung.com>
+ <20180205154403.13520-1-s.nawrocki@samsung.com> <20180205154403.13520-9-s.nawrocki@samsung.com>
+ <CAJKOXPeRFgJQpUTeJeYYo+qqAxkT1iZczSJQzRzn3O3bXmvOZA@mail.gmail.com> <67a9f473-0eba-b3d0-ae92-5602658b6958@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <a4299cac-84c1-6468-c38a-f232d0dbfb8a@arm.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
-Cc: Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-clk@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <67a9f473-0eba-b3d0-ae92-5602658b6958-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Icenowy,
-
-On Mon, Feb 12, 2018 at 12:26 AM, Andr=C3=A9 Przywara <andre.przywara@arm.c=
-om> wrote:
-> Hi,
->
-> On 03/02/18 15:49, Icenowy Zheng wrote:
->> Allwinner H6 is a new SoC with Cortex-A53 cores from Allwinner, with its
->> memory map fully reworked and some high-speed peripherals (PCIe, USB
->> 3.0) introduced.
+On Wed, Feb 7, 2018 at 5:31 PM, Sylwester Nawrocki
+<s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 02/06/2018 02:05 PM, Krzysztof Kozlowski wrote:
+>> On Mon, Feb 5, 2018 at 4:44 PM, Sylwester Nawrocki
+>> <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>> This patch documents additional entries of the audio-codec and
+>>> i2s-controller properties required for the HDMI audio support.
+>>>
+>>> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/sound/samsung,tm2-audio.txt        | 14 +++++++++-----
+>>>  1 file changed, 9 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+>>> index 94442e5673b3..f5ccc12ddc00 100644
+>>> --- a/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+>>> +++ b/Documentation/devicetree/bindings/sound/samsung,tm2-audio.txt
+>>> @@ -4,9 +4,13 @@ Required properties:
+>>>
+>>>   - compatible           : "samsung,tm2-audio"
+>>>   - model                : the user-visible name of this sound complex
+>>> - - audio-codec          : the phandle of the wm5110 audio codec node,
+>>> -                          as described in ../mfd/arizona.txt
+>>> - - i2s-controller       : the phandle of the I2S controller
+>>> + - audio-codec          : the first entry should be phandle of the wm5110 audio
+>>> +                          codec node, as described in ../mfd/arizona.txt;
+>>> +                          the second entry should be phandle of the HDMI
 >>
->> This commit adds the basical DTSI file of it, including the clock
->> support and UART support.
+>> AFAIU, this property is still optional so the wording should be
+>> different. Maybe just add "optional properties" paragraph?
 >
-> Checked the MMIO addresses and the interrupt numbers against the manual.
->
->> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->
-> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
->
-> Thanks!
-> Andre.
->
->> ---
->> Changes in v2:
->> - Add APB1 clock as PIO's APB clock.
->> - Switched to SPDX license identifier.
->>
->>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 178 ++++++++++++++++++++=
-+++++++
->>  1 file changed, 178 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/b=
-oot/dts/allwinner/sun50i-h6.dtsi
->> new file mode 100644
->> index 000000000000..d4697bb42496
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
->> @@ -0,0 +1,178 @@
->> +/*
->> + * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
->> + *
->> + * SPDX-License-Identifier: (GPL-2.0+ or MIT)
->> + */
+> I'd like to keep the second entries required in the documentation,
+> and the driver would still be handling the case with just single
+> entries.
 
-Thank you for using SPDX ids: this needs to be on the first line
-though! [1] and eventually some special comments style.
+I understand.
+Acked-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/Documentation/process/license-rules.rst
-
---=20
-Cordially
-Philippe Ombredanne
+Best regards,
+Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
