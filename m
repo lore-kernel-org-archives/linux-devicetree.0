@@ -1,85 +1,94 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
- properties ?
-Date: Mon, 12 Feb 2018 09:39:34 +0100
-Message-ID: <0b73e1aa-a88f-fe4b-b33a-0f589000e148@linaro.org>
-References: <20180207065959.GN28462@vireshk-i7>
- <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
- <20180207102446.GS28462@vireshk-i7>
- <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
- <20180209064211.GY28462@vireshk-i7>
- <539699c7-9509-dea2-2b31-c5f6749c99c4@linaro.org>
- <20180209092421.GL28462@vireshk-i7>
- <5722441d-c8be-4d29-fab7-28b4e5716961@linaro.org>
- <20180212061015.GO28462@vireshk-i7>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20180212061015.GO28462@vireshk-i7>
-Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Punit.Agrawal@arm.com, ionela.voinescu@arm.com
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v2 0/4] of: change overlay apply input data from unflattened
+Date: Mon, 12 Feb 2018 00:51:32 -0800
+Message-ID: <1518425496-12159-1-git-send-email-frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/02/2018 07:10, Viresh Kumar wrote:
-> On 09-02-18, 13:14, Daniel Lezcano wrote:
->> Right. The semantic is unclear. The expected cooling-cells value is
->> always 2 (the code ignore values greater than two and yell if it is less
->> than 2). And the cooling-device binding tells there are two states.
-> 
-> They are fixed to 2 as we don't need to use it differently for now.
-> But that's more about how Linux is using this stuff. The binding still
-> needs to provide a way to have more cells than just 2.
-> 
->> So the question is why do we need a cooling-cells as the information is
->> pointless here (always 2) ?
-> 
-> To show that the device is a "cooling-device" and I see that
-> consistent with everything else in DT, for example: interrupt-cells,
-> gpio-cells, clock-cells, reset-cells, dma-cells. The "*-cells"
-> properties is used widely to tell what the device can behave as, i.e.
-> a cooling-device in our case.
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-Ah, yes. That's right.
+Move duplicating and unflattening of an overlay flattened devicetree
+(FDT) into the overlay application code.  To accomplish this,
+of_overlay_apply() is replaced by of_overlay_fdt_apply().
 
-Well I don't know. If that is the way the other drivers are doing, I
-suppose we should keep it as it is.
+The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
+code, which is thus responsible for freeing the duplicate FDT.  The
+caller of of_overlay_fdt_apply() remains responsible for freeing the
+original FDT.
 
-> Now we always use 2 parameters exactly is a different thing all
-> together :)
-> 
->> I see this field is artificially used to tell the cpufreq driver "please
->> register me as a cooling device". This is inconsistent from my pov.
-> 
-> But that's how its used for every other controller, what's different
-> here ?
-> 
->> Furthermore, the thermal-zone with the cooling device binds with the CPU
->> phandle, not the cooling-cells.
-> 
-> Yeah, because that's the device really.
-> 
->> Putting apart the device binding changes discussion for the moment. Why
->> not register the cpufreq driver in all the cases and then drop
-> 
-> s/cpufreq driver/cpufreq cooling driver/ ??
+The unflattened devicetree now belongs to devicetree code, which is
+thus responsible for freeing the unflattened devicetree.
 
-yes.
+These ownership changes prevent early freeing of the duplicated FDT
+or the unflattened devicetree, which could result in use after free
+errors.
 
->> cooling-cells ? So when the opps are present, its registers in the
->> cpufreq->ready callback.
-> 
-> How will someone tell if they don't need the cooling infrastructure ?
-> Specially for multiplatform thing.
+These changes led to migrating some unittest overlay data into
+their own devicetree source files, and then converting most of
+them to use sugar syntax instead of hand coding fragments.
 
-They don't define a cooling device in the DT ?
+Changes from v1:
+  - rebase on v4.16-rc1
+  - update documentation
+  - split out error message to a separate patch
 
+Frank Rowand (4):
+  of: change overlay apply input data from unflattened to FDT
+  of: Documentation: of_overlay_apply() replaced by
+    of_overlay_fdt_apply()
+  of: convert unittest overlay devicetree source to sugar syntax
+  of: improve reporting invalid overlay target path
+
+ Documentation/devicetree/overlay-notes.txt       |   4 +-
+ drivers/of/of_private.h                          |   1 +
+ drivers/of/overlay.c                             | 124 +++++++++-
+ drivers/of/resolver.c                            |   6 -
+ drivers/of/unittest-data/Makefile                |  28 ++-
+ drivers/of/unittest-data/overlay.dts             | 101 ++++----
+ drivers/of/unittest-data/overlay_0.dts           |  14 ++
+ drivers/of/unittest-data/overlay_1.dts           |  14 ++
+ drivers/of/unittest-data/overlay_10.dts          |  27 +++
+ drivers/of/unittest-data/overlay_11.dts          |  28 +++
+ drivers/of/unittest-data/overlay_12.dts          |  14 ++
+ drivers/of/unittest-data/overlay_13.dts          |  14 ++
+ drivers/of/unittest-data/overlay_15.dts          |  30 +++
+ drivers/of/unittest-data/overlay_2.dts           |   9 +
+ drivers/of/unittest-data/overlay_3.dts           |   9 +
+ drivers/of/unittest-data/overlay_4.dts           |  18 ++
+ drivers/of/unittest-data/overlay_5.dts           |   9 +
+ drivers/of/unittest-data/overlay_6.dts           |  10 +
+ drivers/of/unittest-data/overlay_7.dts           |  10 +
+ drivers/of/unittest-data/overlay_8.dts           |  10 +
+ drivers/of/unittest-data/overlay_9.dts           |  10 +
+ drivers/of/unittest-data/overlay_bad_phandle.dts |  23 +-
+ drivers/of/unittest-data/overlay_bad_symbol.dts  |  25 +-
+ drivers/of/unittest-data/tests-overlay.dtsi      | 217 +----------------
+ drivers/of/unittest.c                            | 294 +++++++++++------------
+ include/linux/of.h                               |   7 -
+ 26 files changed, 571 insertions(+), 485 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_0.dts
+ create mode 100644 drivers/of/unittest-data/overlay_1.dts
+ create mode 100644 drivers/of/unittest-data/overlay_10.dts
+ create mode 100644 drivers/of/unittest-data/overlay_11.dts
+ create mode 100644 drivers/of/unittest-data/overlay_12.dts
+ create mode 100644 drivers/of/unittest-data/overlay_13.dts
+ create mode 100644 drivers/of/unittest-data/overlay_15.dts
+ create mode 100644 drivers/of/unittest-data/overlay_2.dts
+ create mode 100644 drivers/of/unittest-data/overlay_3.dts
+ create mode 100644 drivers/of/unittest-data/overlay_4.dts
+ create mode 100644 drivers/of/unittest-data/overlay_5.dts
+ create mode 100644 drivers/of/unittest-data/overlay_6.dts
+ create mode 100644 drivers/of/unittest-data/overlay_7.dts
+ create mode 100644 drivers/of/unittest-data/overlay_8.dts
+ create mode 100644 drivers/of/unittest-data/overlay_9.dts
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
