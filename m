@@ -1,63 +1,50 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH usb-next v9 2/8] usb: add a flag to skip PHY initialization
- to struct usb_hcd
-Date: Mon, 12 Feb 2018 10:15:40 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1802121013360.1411-100000@iolanthe.rowland.org>
-References: <20180211210651.2046-3-martin.blumenstingl@googlemail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 01/12] ARM: dts: STi: Fix bindings notation
+Date: Mon, 12 Feb 2018 09:19:35 -0600
+Message-ID: <CABGGiswMN1-CQi-guB5y5YFNLhKH3z58b_skxb_q+ZMm7+n1Nw@mail.gmail.com>
+References: <1518446590-16800-1-git-send-email-patrice.chotard@st.com> <1518446590-16800-2-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180211210651.2046-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1518446590-16800-2-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, Peter.Chen-3arQi8VN3Tc@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org
+To: patrice.chotard-qxv4g6HH51o@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 11 Feb 2018, Martin Blumenstingl wrote:
-
-> The USB HCD core driver parses the device-tree node for "phys" and
-> "usb-phys" properties. It also manages the power state of these PHYs
-> automatically.
-> However, drivers may opt-out of this behavior by setting "phy" or
-> "usb_phy" in struct usb_hcd to a non-null value. An example where this
-> is required is the "Qualcomm USB2 controller", implemented by the
-> chipidea driver. The hardware requires that the PHY is only powered on
-> after the "reset completed" event from the controller is received.
-> 
-> A follow-up patch will allow the USB HCD core driver to manage more than
-> one PHY. Add a new "bool skip_phy_initialization" field to struct
-> usb_hcd so drivers can opt-out of any PHY management provided by the USB
-> HCD core driver. The new field will be used in that patch as well.
-> 
-> This also updates the existing drivers so they use the new flag if they
-> want to opt out of the PHY management provided by the USB HCD core
-> driver. This means that for these drivers the new "multiple PHY"
-> handling (which will be added in a follow-up patch) will be disabled as
-> well.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+On Mon, Feb 12, 2018 at 8:42 AM,  <patrice.chotard-qxv4g6HH51o@public.gmane.org> wrote:
+> From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+>
+> Remove leading 0x and 0s from bindings notation
+> Add missing unit-address and remove some which are useless.
+>
+> This allows to fix several warnings like :
+>
+> Warning (unit_address_vs_reg): Node XXXX has a reg or ranges property, but no unit name
+> Warning (simple_bus_reg): Node XXXX simple-bus unit address format error, expected "123456"
+> Warning (unit_address_vs_reg): Node XXXX has a unit name, but no reg property
+>
+> Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
 > ---
 
-> --- a/include/linux/usb/hcd.h
-> +++ b/include/linux/usb/hcd.h
-> @@ -98,6 +98,12 @@ struct usb_hcd {
->  	 */
->  	const struct hc_driver	*driver;	/* hw-specific hooks */
->  
-> +	/*
-> +	 * do not manage the PHY state in the HCD core, instead let the driver
-> +	 * handle this (for example if the PHY can only be turned on after a
-> +	 * specific event)
-> +	 */
-> +	bool skip_phy_initialization;
+[...]
 
-Instead of declaring this as a bool at some random location in the
-structure, it would be better to make this a bitflag along with the
-other ones that get set at registration.  For example, it could come
-right after the remove_phy flag.
+> diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+> index a29090077fdf..53c6888d1fc0 100644
+> --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+> @@ -45,7 +45,7 @@
+>         };
+>
+>         soc {
+> -               pin-controller-sbc {
+> +               pin-controller-sbc@961f080 {
 
-Alan Stern
+While you're here changing the node name, these all should be "pinctrl@..."
 
+With that,
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
