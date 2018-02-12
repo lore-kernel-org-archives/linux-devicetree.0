@@ -1,335 +1,88 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v3 2/3] arm64: dts: sdm845: Add minimal dts files for sdm845 SoC/MTP
-Date: Mon, 12 Feb 2018 11:58:31 +0530
-Message-ID: <20180212062832.2791-3-rnayak@codeaurora.org>
-References: <20180212062832.2791-1-rnayak@codeaurora.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2] of: cache phandle nodes to reduce cost of
+ of_find_node_by_phandle()
+Date: Sun, 11 Feb 2018 22:56:42 -0800
+Message-ID: <6e967dd4-0fae-a912-88cd-b60f40ec0727@gmail.com>
+References: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180212062832.2791-1-rnayak@codeaurora.org>
+In-Reply-To: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, evgreen@chromium.org, bjorn.andersson@linaro.org, dianders@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+To: Rob Herring <robh+dt@kernel.org>, cpandya@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a skeletal sdm845 SoC dtsi and MTP board dts/dtsi files
+Hi Rob,
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/Makefile       |   1 +
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  13 ++
- arch/arm64/boot/dts/qcom/sdm845.dtsi    | 275 ++++++++++++++++++++++++++++++++
- 3 files changed, 289 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
- create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
+On 02/11/18 22:27, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> Create a cache of the nodes that contain a phandle property.  Use this
+> cache to find the node for a given phandle value instead of scanning
+> the devicetree to find the node.  If the phandle value is not found
+> in the cache, of_find_node_by_phandle() will fall back to the tree
+> scan algorithm.
+> 
+> The cache is initialized in of_core_init().
+> 
+> The cache is freed via a late_initcall_sync() if modules are not
+> enabled.
+> 
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+> 
+> Changes since v1:
+>   - change short description from
+>     of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
+>   - rebase on v4.16-rc1
+>   - reorder new functions in base.c to avoid forward declaration
+>   - add locking around kfree(phandle_cache) for memory ordering
+>   - add explicit check for non-null of phandle_cache in
+>     of_find_node_by_phandle().  There is already a check for !handle,
+>     which prevents accessing a null phandle_cache, but that dependency
+>     is not obvious, so this check makes it more apparent.
+>   - do not free phandle_cache if modules are enabled, so that
+>     cached phandles will be available when modules are loaded
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 55ec5ee7f7e8..9319e74b8906 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -6,3 +6,4 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-new file mode 100644
-index 000000000000..617c7bb25fb1
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sdm845.dtsi"
-+
-+/ {
-+	model = "Qualcomm Technologies, Inc. SDM845 MTP";
-+	compatible = "qcom,sdm845-mtp";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-new file mode 100644
-index 000000000000..55a7e0b454e1
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -0,0 +1,275 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	interrupt-parent = <&intc>;
-+
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	chosen { };
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		/* We expect the bootloader to fill in the size */
-+		reg = <0 0x80000000 0 0>;
-+	};
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		CPU0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo385";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_0>;
-+			L2_0: l2-cache {
-+				compatible = "cache";
-+				next-level-cache = <&L3_0>;
-+				L3_0: l3-cache {
-+				      compatible = "cache";
-+				};
-+			};
-+		};
-+
-+		CPU1: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo385";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_100>;
-+			L2_100: l2-cache {
-+				compatible = "cache";
-+				next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU2: cpu@200 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo385";
-+			reg = <0x0 0x200>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_200>;
-+			L2_200: l2-cache {
-+				compatible = "cache";
-+				next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU3: cpu@300 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo385";
-+			reg = <0x0 0x300>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_300>;
-+			L2_300: l2-cache {
-+				compatible = "cache";
-+				next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU4: cpu@400 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo385";
-+			reg = <0x0 0x400>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_400>;
-+			L2_400: l2-cache {
-+				compatible = "cache";
-+				next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU5: cpu@500 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo385";
-+			reg = <0x0 0x500>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_500>;
-+			L2_500: l2-cache {
-+				compatible = "cache";
-+				next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU6: cpu@600 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo385";
-+			reg = <0x0 0x600>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_600>;
-+			L2_600: l2-cache {
-+				compatible = "cache";
-+				next-level-cache = <&L3_0>;
-+			};
-+		};
-+
-+		CPU7: cpu@700 {
-+			device_type = "cpu";
-+			compatible = "qcom,kryo385";
-+			reg = <0x0 0x700>;
-+			enable-method = "psci";
-+			next-level-cache = <&L2_700>;
-+			L2_700: l2-cache {
-+				compatible = "cache";
-+				next-level-cache = <&L3_0>;
-+			};
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
-+	clocks {
-+		xo_board: xo-board {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <19200000>;
-+		};
-+
-+		sleep_clk: sleep-clk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <32764>;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	soc: soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0 0xffffffff>;
-+		compatible = "simple-bus";
-+
-+		intc: interrupt-controller@17a00000 {
-+			compatible = "arm,gic-v3";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			#redistributor-regions = <1>;
-+			redistributor-stride = <0x0 0x20000>;
-+			reg = <0x17a00000 0x10000>,     /* GICD */
-+			      <0x17a60000 0x100000>;    /* GICR * 8 */
-+			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			gic-its@17a40000 {
-+				compatible = "arm,gic-v3-its";
-+				msi-controller;
-+				#msi-cells = <1>;
-+				reg = <0x17a40000 0x20000>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		gcc: clock-controller@100000 {
-+			compatible = "qcom,gcc-sdm845";
-+			reg = <0x100000 0x1f0000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
-+		tlmm: pinctrl@3400000 {
-+			compatible = "qcom,sdm845-pinctrl";
-+			reg = <0x03400000 0xc00000>;
-+			interrupts = <GIC_SPI 208 IRQ_TYPE_NONE>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		timer@17c90000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			compatible = "arm,armv7-timer-mem";
-+			reg = <0x17c90000 0x1000>;
-+
-+			frame@17ca0000 {
-+				frame-number = <0>;
-+				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x17ca0000 0x1000>,
-+				      <0x17cb0000 0x1000>;
-+			};
-+
-+			frame@17cc0000 {
-+				frame-number = <1>;
-+				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x17cc0000 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@17cd0000 {
-+				frame-number = <2>;
-+				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x17cd0000 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@17ce0000 {
-+				frame-number = <3>;
-+				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x17ce0000 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@17cf0000 {
-+				frame-number = <4>;
-+				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x17cf0000 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@17d00000 {
-+				frame-number = <5>;
-+				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x17d00000 0x1000>;
-+				status = "disabled";
-+			};
-+
-+			frame@17d10000 {
-+				frame-number = <6>;
-+				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+				reg = <0x17d10000 0x1000>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		spmi_bus: spmi@c440000 {
-+			compatible = "qcom,spmi-pmic-arb";
-+			reg = <0xc440000 0x1100>,
-+			      <0xc600000 0x2000000>,
-+			      <0xe600000 0x100000>,
-+			      <0xe700000 0xa0000>,
-+			      <0xc40a000 0x26000>;
-+			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
-+			interrupt-names = "periph_irq";
-+			interrupts = <GIC_SPI 481 IRQ_TYPE_NONE>;
-+			qcom,ee = <0>;
-+			qcom,channel = <0>;
-+			#address-cells = <2>;
-+			#size-cells = <0>;
-+			interrupt-controller;
-+			#interrupt-cells = <4>;
-+			cell-index = <0>;
-+		};
-+	};
-+};
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+< snip >
+
+
+
+In a previous thread, you said:
+
+> We should be able to do this earlier. We already walk the tree twice
+> in unflattening. We can get the max phandle (or number of phandles
+> IMO) on the first pass, allocate with the early allocator and then
+> populate the cache in the 2nd pass. AIUI, you can alloc with memblock
+> and then free with kfree as the memblock allocations get transferred
+> to the slab.
+
+And I replied:
+
+   Thanks for pointing out that kfree() can be used for memory alloced
+   with memblock.  I'll change to populate the cache earlier.
+
+
+I started to make this change when I moved forward to v4.16-rc1.  There
+are two obvious ways to do this.
+
+The first is to create and populate
+the phandle cache during the two phases of unflattening.  To do this
+would require counting the number of nodes to be unflattened and find
+the largest phandle value during phase 1, then allocate the cache before
+phase 2, then populate the cache during phase 2.  This is not difficult,
+but it is intrusive.
+
+The second obvious way is to modify of_populate_phandle_cache() to
+use the early allocator if called early in the boot and call this
+immediately after unflattening.  Then if of_populate_phandle_cache()
+is called later (eg for applying overlays) it would have to change
+to using kzalloc().  It did not seem like the larger overhead of the
+very few calls of of_find_node_by_phandle() before the slightly later
+phandle cache population justify adding the extra complexity in
+of_populate_phandle_cache().
+
+-Frank
