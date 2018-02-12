@@ -1,7 +1,7 @@
 From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 1/3] dt-bindings: aspeed-lpc: Document LPC Host Interface Controller
-Date: Mon, 12 Feb 2018 17:38:45 +1030
-Message-ID: <20180212070847.32387-2-joel@jms.id.au>
+Subject: [PATCH 2/3] misc: aspeed-lpc: Request and enable LPC clock
+Date: Mon, 12 Feb 2018 17:38:46 +1030
+Message-ID: <20180212070847.32387-3-joel@jms.id.au>
 References: <20180212070847.32387-1-joel@jms.id.au>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180212070847.32387-1-joel@jms.id.au>
@@ -10,64 +10,83 @@ To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rut
 Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Cyril Bur <cyrilbur@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Lei YU <mine260309@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The LPC Host Interface Controller is part of a BMC SoC that is used for
-communication with the host.
+The LPC device needs to ensure it's clock is enabled before it can do
+anything.
 
+In the past the clock was enabled and left running by u-boot, however
+Linux now has an upstream clock driver that disables unused clocks.
+
+Tested-by: Lei YU <mine260309@gmail.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- .../devicetree/bindings/mfd/aspeed-lpc.txt         | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/misc/aspeed-lpc-ctrl.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-index 514d82ced95b..94a31de109c4 100644
---- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-+++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-@@ -109,6 +109,46 @@ lpc: lpc@1e789000 {
- 	};
- };
+diff --git a/drivers/misc/aspeed-lpc-ctrl.c b/drivers/misc/aspeed-lpc-ctrl.c
+index b5439643f54b..1827b7aa6674 100644
+--- a/drivers/misc/aspeed-lpc-ctrl.c
++++ b/drivers/misc/aspeed-lpc-ctrl.c
+@@ -7,6 +7,7 @@
+  * 2 of the License, or (at your option) any later version.
+  */
  
-+BMC Node Children
-+==================
-+
-+LPC Host Interface Controller
-+-------------------
-+
-+The LPC Host Interface Controller manages functions exposed to the host such as
-+LPC firmware hub cycles, configuration of the LPC-to-AHB mapping, UART
-+management and bus snoop configuration.
-+
-+Required properties:
-+
-+- compatible:	One of:
-+		"aspeed,ast2400-lpc-ctrl";
-+		"aspeed,ast2500-lpc-ctrl";
-+
-+- reg:		contains offset/length values of the host interface controller
-+		memory regions
-+
-+- clocks:	contains a phandle to the syscon node describing the clocks.
-+		There should then be one cell representing the clock to use
-+
-+- memory-region: A phandle to a reserved_memory region to be used for the LPC
-+		to AHB mapping
-+
-+- flash:	A phandle to the SPI flash controller containing the flash to
-+		be exposed over the LPC to AHB mapping
-+
-+Example:
-+
-+lpc-host@80 {
-+	lpc_ctrl: lpc-ctrl@0 {
-+		compatible = "aspeed,ast2500-lpc-ctrl";
-+		reg = <0x0 0x80>;
-+		clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
-+		memory-region = <&flash_memory>;
-+		flash = <&spi>;
-+	};
-+};
-+
- Host Node Children
- ==================
++#include <linux/clk.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/miscdevice.h>
+ #include <linux/mm.h>
+@@ -26,6 +27,7 @@
+ struct aspeed_lpc_ctrl {
+ 	struct miscdevice	miscdev;
+ 	struct regmap		*regmap;
++	struct clk		*clk;
+ 	phys_addr_t		mem_base;
+ 	resource_size_t		mem_size;
+ 	u32		pnor_size;
+@@ -221,16 +223,33 @@ static int aspeed_lpc_ctrl_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
  
++	lpc_ctrl->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(lpc_ctrl->clk)) {
++		dev_err(dev, "couldn't get clock\n");
++		return PTR_ERR(lpc_ctrl->clk);
++	}
++	rc = clk_prepare_enable(lpc_ctrl->clk);
++	if (rc) {
++		dev_err(dev, "couldn't enable clock\n");
++		return rc;
++	}
++
+ 	lpc_ctrl->miscdev.minor = MISC_DYNAMIC_MINOR;
+ 	lpc_ctrl->miscdev.name = DEVICE_NAME;
+ 	lpc_ctrl->miscdev.fops = &aspeed_lpc_ctrl_fops;
+ 	lpc_ctrl->miscdev.parent = dev;
+ 	rc = misc_register(&lpc_ctrl->miscdev);
+-	if (rc)
++	if (rc) {
+ 		dev_err(dev, "Unable to register device\n");
+-	else
+-		dev_info(dev, "Loaded at %pr\n", &resm);
++		goto err;
++	}
++
++	dev_info(dev, "Loaded at %pr\n", &resm);
++
++	return 0;
+ 
++err:
++	clk_disable_unprepare(lpc_ctrl->clk);
+ 	return rc;
+ }
+ 
+@@ -239,6 +258,7 @@ static int aspeed_lpc_ctrl_remove(struct platform_device *pdev)
+ 	struct aspeed_lpc_ctrl *lpc_ctrl = dev_get_drvdata(&pdev->dev);
+ 
+ 	misc_deregister(&lpc_ctrl->miscdev);
++	clk_disable_unprepare(lpc_ctrl->clk);
+ 
+ 	return 0;
+ }
 -- 
 2.15.1
