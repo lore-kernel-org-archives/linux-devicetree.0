@@ -1,76 +1,39 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH] rtc: isl12026: Add driver.
-Date: Mon, 12 Feb 2018 11:03:30 -0800
-Message-ID: <d2337554-c3df-f915-72c7-5decd571f12f@caviumnetworks.com>
-References: <20180212185915.25041-1-david.daney@cavium.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] ARM: dts: exynos: Use pinctrl labels in
+ exynos4210-pinctrl
+Date: Mon, 12 Feb 2018 20:15:57 +0100
+Message-ID: <20180212191557.xsypxb5s35jbavk2@kozik-lap>
+References: <1517817428-7898-1-git-send-email-m.purski@samsung.com>
+ <CGME20180205075727eucas1p16ae3372cf985aaabb3899f0e030eb972@eucas1p1.samsung.com>
+ <1517817428-7898-2-git-send-email-m.purski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180212185915.25041-1-david.daney@cavium.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1517817428-7898-2-git-send-email-m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/2018 10:59 AM, David Daney wrote:
-> The ISL12026 is a combination RTC and EEPROM device with I2C
-> interface.  The standard RTC driver interface is provided.  The EEPROM
-> is accessed via the NVMEM interface via the "eeprom0" directory in the
-> sysfs entry for the device.
+On Mon, Feb 05, 2018 at 08:57:00AM +0100, Maciej Purski wrote:
+> Labels for pinctrl's are defined in exynos4210.dtsi. Use them in
+> exynos4210-pinctrl instead of full names, as it is done in other exynos
+> DTS.
 > 
-> Signed-off-by: David Daney <david.daney@cavium.com>
+> Signed-off-by: Maciej Purski <m.purski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->   .../devicetree/bindings/rtc/isil,isl12026.txt      |  27 +
->   drivers/rtc/Kconfig                                |   9 +
->   drivers/rtc/Makefile                               |   1 +
->   drivers/rtc/rtc-isl12026.c                         | 550 +++++++++++++++++++++
->   4 files changed, 587 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/rtc/isil,isl12026.txt
->   create mode 100644 drivers/rtc/rtc-isl12026.c
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/isil,isl12026.txt b/Documentation/devicetree/bindings/rtc/isil,isl12026.txt
-> new file mode 100644
-> index 000000000000..4b6c7177a95a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/isil,isl12026.txt
-> @@ -0,0 +1,27 @@
-> +ISL12026 I2C RTC/EEPROM
-> +
-> +ISL12026 is an I2C RTC/EEPROM combination device.  The RTC and control
-> +registers respond at bus address 0x6f, and the EEPROM array responds
-> +at bus address 0x57.  The canonical "reg" value will be for the RTC portion.
-> +
-> +Required properties supported by the device:
-> +
-> + - "compatible": must be "isil,isl12026"
-> + - "reg": I2C bus address of the device (always 0x6f)
-> +
-> +Optional properties:
-> +
-> + - "isil,pwr-bsw": If present PWR.BSW bit must be set to the specified
-> +                   value for proper operation.
-> +
-> + - "isil,pwr-sbib": If present PWR.SBIB bit must be set to the specified
-> +                    value for proper operation.
-> +
-> +
-> +Example:
-> +
-> +	rtc@6f {
-
-Two seconds after sending, I see that the compatible went missing.
-
-I will wait several days for feedback and resubmit with the proper 
-compatible
-
-Sorry for the snafu,
-David Daney
-
-
-> +		reg = <0x6f>;
-> +		isil,pwr-bsw = <0>;
-> +		isil,pwr-sbib = <1>;
-> +	}
+>  arch/arm/boot/dts/exynos4210-pinctrl.dtsi | 1680 ++++++++++++++---------------
+>  arch/arm/boot/dts/exynos4210.dtsi         |    3 +-
+>  2 files changed, 841 insertions(+), 842 deletions(-)
 >
+
+Applied 1-5 so far. I'll go with the rest soon.
+
+Best regards,
+Krzysztof
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
