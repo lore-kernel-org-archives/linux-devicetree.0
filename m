@@ -1,97 +1,72 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 08/10] fsi: master: Clarify master lifetimes & fix use-after-free in hub master
-Date: Mon, 12 Feb 2018 15:45:47 +1030
-Message-ID: <20180212051549.8575-9-joel@jms.id.au>
-References: <20180212051549.8575-1-joel@jms.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180212051549.8575-1-joel@jms.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Jeremy Kerr <jk@ozlabs.org>, Christopher Bostic <cbostic@linux.vnet.ibm.com>, Brad Bishop <bradleyb@fuzziesquirrel.com>, Edward James <eajames@us.ibm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [Query] thermal: Who is using "cooling-{min|max}-level}"
+ properties ?
+Date: Mon, 12 Feb 2018 11:40:15 +0530
+Message-ID: <20180212061015.GO28462@vireshk-i7>
+References: <20180207065959.GN28462@vireshk-i7>
+ <c7bd6ed5-b93e-3a07-b4a2-4c3b1eef5fac@linaro.org>
+ <20180207102446.GS28462@vireshk-i7>
+ <11fbba25-7029-8a13-476e-ea2f2de6fbf9@linaro.org>
+ <20180209064211.GY28462@vireshk-i7>
+ <539699c7-9509-dea2-2b31-c5f6749c99c4@linaro.org>
+ <20180209092421.GL28462@vireshk-i7>
+ <5722441d-c8be-4d29-fab7-28b4e5716961@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5722441d-c8be-4d29-fab7-28b4e5716961-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punit.Agrawal-5wv7dgnIgG8@public.gmane.org, ionela.voinescu-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+On 09-02-18, 13:14, Daniel Lezcano wrote:
+> Right. The semantic is unclear. The expected cooling-cells value is
+> always 2 (the code ignore values greater than two and yell if it is less
+> than 2). And the cooling-device binding tells there are two states.
 
-Once we call fsi_master_unregister, the core will put_device,
-potentially freeing the hub master. This change adds a comment
-explaining the lifetime of an allocated fsi_master.
+They are fixed to 2 as we don't need to use it differently for now.
+But that's more about how Linux is using this stuff. The binding still
+needs to provide a way to have more cells than just 2.
 
-We then add a reference from the driver to the hub master, so it stays
-around until we've finished ->remove().
+> So the question is why do we need a cooling-cells as the information is
+> pointless here (always 2) ?
 
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Tested-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- drivers/fsi/fsi-master-hub.c | 21 ++++++++++++++++++---
- drivers/fsi/fsi-master.h     | 15 +++++++++++++++
- 2 files changed, 33 insertions(+), 3 deletions(-)
+To show that the device is a "cooling-device" and I see that
+consistent with everything else in DT, for example: interrupt-cells,
+gpio-cells, clock-cells, reset-cells, dma-cells. The "*-cells"
+properties is used widely to tell what the device can behave as, i.e.
+a cooling-device in our case.
 
-diff --git a/drivers/fsi/fsi-master-hub.c b/drivers/fsi/fsi-master-hub.c
-index 5e4cd3134bc0..5885fc4a1ef0 100644
---- a/drivers/fsi/fsi-master-hub.c
-+++ b/drivers/fsi/fsi-master-hub.c
-@@ -288,10 +288,19 @@ static int hub_master_probe(struct device *dev)
- 	hub_master_init(hub);
- 
- 	rc = fsi_master_register(&hub->master);
--	if (!rc)
--		return 0;
-+	if (rc)
-+		goto err_release;
-+
-+	/* At this point, fsi_master_register performs the device_initialize(),
-+	 * and holds the sole reference on master.dev. This means the device
-+	 * will be freed (via ->release) during any subsequent call to
-+	 * fsi_master_unregister.  We add our own reference to it here, so we
-+	 * can perform cleanup (in _remove()) without it being freed before
-+	 * we're ready.
-+	 */
-+	get_device(&hub->master.dev);
-+	return 0;
- 
--	kfree(hub);
- err_release:
- 	fsi_slave_release_range(fsi_dev->slave, FSI_HUB_LINK_OFFSET,
- 			FSI_HUB_LINK_SIZE * links);
-@@ -306,6 +315,12 @@ static int hub_master_remove(struct device *dev)
- 	fsi_slave_release_range(hub->upstream->slave, hub->addr, hub->size);
- 	of_node_put(hub->master.dev.of_node);
- 
-+	/*
-+	 * master.dev will likely be ->release()ed after this, which free()s
-+	 * the hub
-+	 */
-+	put_device(&hub->master.dev);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
-index 18bd4ad79356..ee0b46086026 100644
---- a/drivers/fsi/fsi-master.h
-+++ b/drivers/fsi/fsi-master.h
-@@ -37,6 +37,21 @@ struct fsi_master {
- 
- #define dev_to_fsi_master(d) container_of(d, struct fsi_master, dev)
- 
-+/**
-+ * fsi_master registration & lifetime: the fsi_master_register() and
-+ * fsi_master_unregister() functions will take ownership of the master, and
-+ * ->dev in particular. The registration path performs a get_device(), which
-+ * takes the first reference on the device. Similarly, the unregistration path
-+ * performs a put_device(), which may well drop the last reference.
-+ *
-+ * This means that master implementations *may* need to hold their own
-+ * reference (via get_device()) on master->dev. In particular, if the device's
-+ * ->release callback frees the fsi_master, then fsi_master_unregister will
-+ * invoke this free if no other reference is held.
-+ *
-+ * The same applies for the error path of fsi_master_register; if the call
-+ * fails, dev->release will have been invoked.
-+ */
- extern int fsi_master_register(struct fsi_master *master);
- extern void fsi_master_unregister(struct fsi_master *master);
- 
+Now we always use 2 parameters exactly is a different thing all
+together :)
+
+> I see this field is artificially used to tell the cpufreq driver "please
+> register me as a cooling device". This is inconsistent from my pov.
+
+But that's how its used for every other controller, what's different
+here ?
+
+> Furthermore, the thermal-zone with the cooling device binds with the CPU
+> phandle, not the cooling-cells.
+
+Yeah, because that's the device really.
+
+> Putting apart the device binding changes discussion for the moment. Why
+> not register the cpufreq driver in all the cases and then drop
+
+s/cpufreq driver/cpufreq cooling driver/ ??
+
+> cooling-cells ? So when the opps are present, its registers in the
+> cpufreq->ready callback.
+
+How will someone tell if they don't need the cooling infrastructure ?
+Specially for multiplatform thing.
+
 -- 
-2.15.1
+viresh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
