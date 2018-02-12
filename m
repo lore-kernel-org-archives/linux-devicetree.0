@@ -1,34 +1,74 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 0/7] clk: rockchip: rk3328 fixes in preparation of graphics support
-Date: Mon, 12 Feb 2018 15:02:29 +0100
-Message-ID: <4164196.RnrTvLKjBY@phil>
-References: <20180122141530.12398-1-heiko@sntech.de>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH 2/6] mfd: Add ST Multi-Function eXpander core driver
+Date: Mon, 12 Feb 2018 15:15:39 +0100
+Message-ID: <CAOFm3uH+DLcOqiSV0z0N6JnmSk+JfTF3bfkC0_2kdFT-eDMr8A@mail.gmail.com>
+References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
+ <1518100057-23234-3-git-send-email-amelie.delaunay@st.com> <20180212120600.5cghrzz4jqvvkgz6@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180122141530.12398-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20180212120600.5cghrzz4jqvvkgz6@dell>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yang.zheng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 22. Januar 2018, 15:15:23 CET schrieb Heiko Stuebner:
-> Fix some clock issues on rk3328 to make way for the upcoming graphics
-> support on rk3328.
-> 
-> Heiko Stuebner (6):
->   clk: rockchip: fix hclk_vio_niu on rk3328
->   clk: rockchip: remove HCLK_VIO from rk3328 dt header
->   clk: rockchip: export sclk_hdmi_sfc on rk3328
->   clk: rockchip: protect all remaining rk3328 interconnect clocks
->   clk: rockchip: remove ignore_unused flag from rk3328 vio_h2p clocks
->   clk: rockchip: document hdmi_phy external input for rk3328
-> 
-> Zheng Yang (1):
->   clk: rockchip: add flags for rk3328 dclk_lcdc
+Amelie,
 
-applied for 4.17
+On Mon, Feb 12, 2018 at 1:06 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, 08 Feb 2018, Amelie Delaunay wrote:
+>
+>> ST Multi-Function eXpander (MFX) is a slave controller using I2C
+>> for communication with the main MCU. Main features are:
+>> - 16 fast GPIOs individually configurable in input/output
+>> - 8 alternate GPIOs individually configurable in input/output
+>> - Main MCU IDD measurement
+>> - Resistive touchscreen controller
+>>
+>> Only GPIO expander (16 fast GPIOs + 8 alternate) feature is
+>> supported for the moment.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+
+<snip>
+
+>> --- /dev/null
+>> +++ b/drivers/mfd/st-mfx.c
+>> @@ -0,0 +1,526 @@
+>> +/*
+>> + * STMicroelectronics Multi-Function eXpander (ST-MFX) Core Driver
+>> + *
+>> + * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
+>> + * Author(s): Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
+>
+> You don't need to put "for STMicroelectronics".  This was something we
+> made up when submitting from a different (!st.com) email address.
+>
+>> + * License terms: GPL V2.0.
+>> + *
+>> + * st-mfx Core Driver is free software; you can redistribute it and/or modify it
+>> + * under the terms of the GNU General Public License version 2 as published by
+>> + * the Free Software Foundation.
+>> + *
+>> + * st-mfx Core Driver is distributed in the hope that it will be useful, but
+>> + * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+>> + * details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * st-mfx Core Driver. If not, see <http://www.gnu.org/licenses/>.
+>
+> You should be able to use the short version of the licensing
+> agreement.  Also, please grep for "SPDX".
+
+You can check the doc for the (fairly new) way to remove legalese
+boilerplate at Documentation/process/license-rules.rst or [1]
+It helps keep the focus on the code and less on licensing!
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/license-rules.rst
+-- 
+Cordially
+Philippe Ombredanne
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
