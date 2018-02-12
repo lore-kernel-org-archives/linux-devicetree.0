@@ -1,80 +1,72 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 4/4] of: improve reporting invalid overlay target path
-Date: Mon, 12 Feb 2018 10:00:37 +0100
-Message-ID: <CAMuHMdUnkdtHnbSVM7p4756OQzq24N8=g8==s-6yKLAgki+LyA@mail.gmail.com>
-References: <1518425496-12159-1-git-send-email-frowand.list@gmail.com> <1518425496-12159-5-git-send-email-frowand.list@gmail.com>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [linux-sunxi] [PATCH v2 5/6] arm64: allwinner: h6: add the
+ basical Allwinner H6 DTSI file
+Date: Mon, 12 Feb 2018 10:16:03 +0100
+Message-ID: <CAOFm3uHoQcZ3TZg_uTs2aBgU-p0r2ffJ2VLK+E4V19fmLW10WA@mail.gmail.com>
+References: <20180203154942.63566-1-icenowy@aosc.io> <20180203154942.63566-6-icenowy@aosc.io>
+ <a4299cac-84c1-6468-c38a-f232d0dbfb8a@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518425496-12159-5-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <a4299cac-84c1-6468-c38a-f232d0dbfb8a@arm.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
+Cc: Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-clk@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+Icenowy,
 
-On Mon, Feb 12, 2018 at 9:51 AM,  <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
+On Mon, Feb 12, 2018 at 12:26 AM, Andr=C3=A9 Przywara <andre.przywara@arm.c=
+om> wrote:
+> Hi,
 >
-> Errors while developing the patch to create of_overlay_fdt_apply()
-> exposed inadequate error messages to debug problems when overlay
-> devicetree fragment nodes contain an invalid target path.  Improve
-> the messages in find_target_node() to remedy this.
+> On 03/02/18 15:49, Icenowy Zheng wrote:
+>> Allwinner H6 is a new SoC with Cortex-A53 cores from Allwinner, with its
+>> memory map fully reworked and some high-speed peripherals (PCIe, USB
+>> 3.0) introduced.
+>>
+>> This commit adds the basical DTSI file of it, including the clock
+>> support and UART support.
 >
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-
-Thanks for your patch!
-
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -488,17 +488,26 @@ static int build_changeset(struct overlay_changeset *ovcs)
->   */
->  static struct device_node *find_target_node(struct device_node *info_node)
->  {
-> +       struct device_node *node;
->         const char *path;
->         u32 val;
->         int ret;
+> Checked the MMIO addresses and the interrupt numbers against the manual.
 >
->         ret = of_property_read_u32(info_node, "target", &val);
-> -       if (!ret)
-> -               return of_find_node_by_phandle(val);
-> +       if (!ret) {
-> +               node = of_find_node_by_phandle(val);
-> +               if (!node)
-> +                       pr_err("target node find by phandle failed\n");
-
-Do you want to print the actual node, cfr. below?
-
-> +               return node;
-> +       }
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 >
->         ret = of_property_read_string(info_node, "target-path", &path);
-> -       if (!ret)
-> -               return of_find_node_by_path(path);
-> +       if (!ret) {
-> +               node =  of_find_node_by_path(path);
-> +               if (!node)
-> +                       pr_err("target node find by path failed\n");
-
-Likewise.
-
-> +               return node;
-> +       }
+> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 >
->         pr_err("Failed to find target for node %p (%s)\n",
->                 info_node, info_node->name);
+> Thanks!
+> Andre.
+>
+>> ---
+>> Changes in v2:
+>> - Add APB1 clock as PIO's APB clock.
+>> - Switched to SPDX license identifier.
+>>
+>>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 178 ++++++++++++++++++++=
++++++++
+>>  1 file changed, 178 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/b=
+oot/dts/allwinner/sun50i-h6.dtsi
+>> new file mode 100644
+>> index 000000000000..d4697bb42496
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+>> @@ -0,0 +1,178 @@
+>> +/*
+>> + * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+>> + *
+>> + * SPDX-License-Identifier: (GPL-2.0+ or MIT)
+>> + */
 
-This one prints more info.
+Thank you for using SPDX ids: this needs to be on the first line
+though! [1] and eventually some special comments style.
 
-Gr{oetje,eeting}s,
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/Documentation/process/license-rules.rst
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+Cordially
+Philippe Ombredanne
