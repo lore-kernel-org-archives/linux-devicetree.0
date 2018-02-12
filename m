@@ -1,33 +1,152 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: soc: add header files required for
- MT7623A SCPSYS dt-binding
-Date: Mon, 12 Feb 2018 08:44:01 -0600
-Message-ID: <20180212144401.yzrecztdveua3zix@rob-hp-laptop>
-References: <ecfc548fc3d22aa335b50e552ad2ad88427a0bb2.1517998367.git.sean.wang@mediatek.com>
- <9955178588f8bde01782d0645b25a7b24cceb87b.1517998367.git.sean.wang@mediatek.com>
+From: <patrice.chotard@st.com>
+Subject: [PATCH v2 08/12] ARM: dts: STi: Add fake reg property for usb2_picophyX nodes
+Date: Mon, 12 Feb 2018 15:43:06 +0100
+Message-ID: <1518446590-16800-9-git-send-email-patrice.chotard@st.com>
+References: <1518446590-16800-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9955178588f8bde01782d0645b25a7b24cceb87b.1517998367.git.sean.wang@mediatek.com>
+In-Reply-To: <1518446590-16800-1-git-send-email-patrice.chotard@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: matthias.bgg@gmail.com, rjw@rjwysocki.net, khilman@baylibre.com, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: patrice.chotard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 07, 2018 at 06:22:48PM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Add relevant header files required for dt-bindings of SCPSYS power domain
-> control for subsystems found on MT7623A SoC.
-> 
-> v1 -> v2: fix typos and treat the patch as a dt-binding patch
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Cc: Rob Herring <robh@kernel.org>
-> ---
->  include/dt-bindings/power/mt7623a-power.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->  create mode 100644 include/dt-bindings/power/mt7623a-power.h
+From: Patrice Chotard <patrice.chotard@st.com>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Add fake reg property for usb2_picophy nodes.
+This allows to fix the following warning when compiling dtb
+with W=1 option :
+
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/phy2 missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/phy3 missing or empty reg/ranges property
+
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/phy2 missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/phy3 missing or empty reg/ranges property
+
+arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
+Node /soc/phy2 missing or empty reg/ranges property
+arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
+Node /soc/phy3 missing or empty reg/ranges property
+
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+---
+
+v2: _ add a fake reg property to node without reg property.
+
+ arch/arm/boot/dts/stih407-family.dtsi | 3 ++-
+ arch/arm/boot/dts/stih410-b2120.dts   | 4 ++--
+ arch/arm/boot/dts/stih410-b2260.dts   | 4 ++--
+ arch/arm/boot/dts/stih410.dtsi        | 6 ++++--
+ arch/arm/boot/dts/stih418.dtsi        | 6 ++++--
+ 5 files changed, 14 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index 00a3838236d1..5df827b00eb6 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -385,8 +385,9 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usb2_picophy0: phy1 {
++		usb2_picophy0: phy1@0 {
+ 			compatible = "st,stih407-usb2-phy";
++			reg = <0 0>;
+ 			#phy-cells = <0>;
+ 			st,syscfg = <&syscfg_core 0x100 0xf4>;
+ 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
+index 23199b1b0991..d1d908b9e34c 100644
+--- a/arch/arm/boot/dts/stih410-b2120.dts
++++ b/arch/arm/boot/dts/stih410-b2120.dts
+@@ -37,11 +37,11 @@
+ 			sd-uhs-ddr50;
+ 		};
+ 
+-		usb2_picophy1: phy2 {
++		usb2_picophy1: phy2@0 {
+ 			status = "okay";
+ 		};
+ 
+-		usb2_picophy2: phy3 {
++		usb2_picophy2: phy3@0 {
+ 			status = "okay";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
+index cea5c840ca9f..8bcd58118dba 100644
+--- a/arch/arm/boot/dts/stih410-b2260.dts
++++ b/arch/arm/boot/dts/stih410-b2260.dts
+@@ -127,11 +127,11 @@
+ 			status = "okay";
+ 		};
+ 
+-		usb2_picophy1: phy2 {
++		usb2_picophy1: phy2@0 {
+ 			status = "okay";
+ 		};
+ 
+-		usb2_picophy2: phy3 {
++		usb2_picophy2: phy3@0 {
+ 			status = "okay";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index 815df2f7c103..bfbc73743b29 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -16,8 +16,9 @@
+ 	};
+ 
+ 	soc {
+-		usb2_picophy1: phy2 {
++		usb2_picophy1: phy2@0 {
+ 			compatible = "st,stih407-usb2-phy";
++			reg = <0 0>;
+ 			#phy-cells = <0>;
+ 			st,syscfg = <&syscfg_core 0xf8 0xf4>;
+ 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+@@ -27,8 +28,9 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usb2_picophy2: phy3 {
++		usb2_picophy2: phy3@0 {
+ 			compatible = "st,stih407-usb2-phy";
++			reg = <0 0>;
+ 			#phy-cells = <0>;
+ 			st,syscfg = <&syscfg_core 0xfc 0xf4>;
+ 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+diff --git a/arch/arm/boot/dts/stih418.dtsi b/arch/arm/boot/dts/stih418.dtsi
+index e6525ab4d9bb..0efb3cd6a86e 100644
+--- a/arch/arm/boot/dts/stih418.dtsi
++++ b/arch/arm/boot/dts/stih418.dtsi
+@@ -30,8 +30,9 @@
+ 	};
+ 
+ 	soc {
+-		usb2_picophy1: phy2 {
++		usb2_picophy1: phy2@0 {
+ 			compatible = "st,stih407-usb2-phy";
++			reg = <0 0>;
+ 			#phy-cells = <0>;
+ 			st,syscfg = <&syscfg_core 0xf8 0xf4>;
+ 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+@@ -39,8 +40,9 @@
+ 			reset-names = "global", "port";
+ 		};
+ 
+-		usb2_picophy2: phy3 {
++		usb2_picophy2: phy3@0 {
+ 			compatible = "st,stih407-usb2-phy";
++			reg = <0 0>;
+ 			#phy-cells = <0>;
+ 			st,syscfg = <&syscfg_core 0xfc 0xf4>;
+ 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
+-- 
+1.9.1
