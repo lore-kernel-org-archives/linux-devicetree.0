@@ -1,7 +1,7 @@
 From: <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v2 09/12] ARM: dts: STi: Add fake reg property for sound related nodes
-Date: Mon, 12 Feb 2018 15:43:07 +0100
-Message-ID: <1518446590-16800-10-git-send-email-patrice.chotard@st.com>
+Subject: [PATCH v2 12/12] ARM: dts: STi: Remove unused clk_ext2f_a9 clock
+Date: Mon, 12 Feb 2018 15:43:10 +0100
+Message-ID: <1518446590-16800-13-git-send-email-patrice.chotard@st.com>
 References: <1518446590-16800-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,130 +14,96 @@ List-Id: devicetree@vger.kernel.org
 
 From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
 
-Add fake reg property to sound, simple-audio-card, dai-link and
-sti_sasg_codec nodes, this allows to fix the following warning
-when compiling dtb with W=1 option:
+This clock node is unused, remove it.
+This allows to fix the following warnings when compiling
+dtb with W=1 option :
 
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@1 has a unit name, but no reg property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@2 has a unit name, but no reg property
 arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/sti-sasg-codec missing or empty reg/ranges property
+Node /clocks/clockgen-c0 missing or empty reg/ranges property
 
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@1 has a unit name, but no reg property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@2 has a unit name, but no reg property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/sound missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/sti-sasg-codec missing or empty reg/ranges property
-
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
 arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/sti-sasg-codec missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/sound missing or empty reg/ranges property
+Node /clocks/clockgen-c0 missing or empty reg/ranges property
 
 arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/sti-sasg-codec missing or empty reg/ranges property
+Node /clocks/clockgen-c0 missing or empty reg/ranges property
 
 Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
 ---
 
-v2: _ add a fake reg property to node without reg property.
+v2: _ remove clk_ext2f_a9 node
 
- arch/arm/boot/dts/stih407-family.dtsi |  3 ++-
- arch/arm/boot/dts/stih410-b2260.dts   |  5 +++--
- arch/arm/boot/dts/stihxxx-b2120.dtsi  | 11 ++++++-----
- 3 files changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 5df827b00eb6..df1a3f1dc5a7 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -894,8 +894,9 @@
- 			status = "disabled";
+ arch/arm/boot/dts/stih407-clock.dtsi | 11 -----------
+ arch/arm/boot/dts/stih410-clock.dtsi | 11 -----------
+ arch/arm/boot/dts/stih418-clock.dtsi | 11 -----------
+ 3 files changed, 33 deletions(-)
+
+diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
+index f4e21e2234c9..d63d5e83e1ce 100644
+--- a/arch/arm/boot/dts/stih407-clock.dtsi
++++ b/arch/arm/boot/dts/stih407-clock.dtsi
+@@ -81,17 +81,6 @@
+ 			clock-mult = <1>;
  		};
  
--		sti_sasg_codec: sti-sasg-codec {
-+		sti_sasg_codec: sti-sasg-codec@0 {
- 			compatible = "st,stih407-sas-codec";
-+			reg = <0 0>;
- 			#sound-dai-cells = <1>;
- 			status = "disabled";
- 			st,syscfg = <&syscfg_core>;
-diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-index 8bcd58118dba..03d05a98b7fc 100644
---- a/arch/arm/boot/dts/stih410-b2260.dts
-+++ b/arch/arm/boot/dts/stih410-b2260.dts
-@@ -181,12 +181,13 @@
- 			status = "okay";
+-		/*
+-		 * Bootloader initialized system infrastructure clock for
+-		 * serial devices.
+-		 */
+-		clk_ext2f_a9: clockgen-c0 {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <200000000>;
+-			clock-output-names = "clk-s-icn-reg-0";
+-		};
+-
+ 		clockgen-a@90ff000 {
+ 			compatible = "st,clkgen-c32";
+ 			reg = <0x90ff000 0x1000>;
+diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
+index 9481f8769e8a..c061b67e09d2 100644
+--- a/arch/arm/boot/dts/stih410-clock.dtsi
++++ b/arch/arm/boot/dts/stih410-clock.dtsi
+@@ -83,17 +83,6 @@
+ 			clock-mult = <1>;
  		};
  
--		sound {
-+		sound: sound@0 {
- 			compatible = "simple-audio-card";
-+			reg = <0 0>;
- 			simple-audio-card,name = "STI-B2260";
- 			status = "okay";
- 
--			simple-audio-card,dai-link@0 {
-+			simple-audio-card,dai-link0 {
- 				/* DAC */
- 				format = "i2s";
- 				mclk-fs = <128>;
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index 66c1c6a5eb76..eeae161fc69b 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -147,18 +147,19 @@
- 			status = "okay";
+-		/*
+-		 * Bootloader initialized system infrastructure clock for
+-		 * serial devices.
+-		 */
+-		clk_ext2f_a9: clockgen-c0 {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <200000000>;
+-			clock-output-names = "clk-s-icn-reg-0";
+-		};
+-
+ 		clockgen-a@90ff000 {
+ 			compatible = "st,clkgen-c32";
+ 			reg = <0x90ff000 0x1000>;
+diff --git a/arch/arm/boot/dts/stih418-clock.dtsi b/arch/arm/boot/dts/stih418-clock.dtsi
+index 9e3790198f51..14cdeb5d1599 100644
+--- a/arch/arm/boot/dts/stih418-clock.dtsi
++++ b/arch/arm/boot/dts/stih418-clock.dtsi
+@@ -83,17 +83,6 @@
+ 			clock-mult = <1>;
  		};
  
--		sti_sasg_codec: sti-sasg-codec {
-+		sti_sasg_codec: sti-sasg-codec@0 {
- 			status = "okay";
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_spdif_out>;
- 		};
- 
--		sound {
-+		sound: sound@0 {
- 			compatible = "simple-audio-card";
-+			reg = <0 0>;
- 			simple-audio-card,name = "STI-B2120";
- 			status = "okay";
- 
--			simple-audio-card,dai-link@0 {
-+			simple-audio-card,dai-link0 {
- 				/* HDMI */
- 				format = "i2s";
- 				mclk-fs = <128>;
-@@ -170,7 +171,7 @@
- 					sound-dai = <&sti_hdmi>;
- 				};
- 			};
--			simple-audio-card,dai-link@1 {
-+			simple-audio-card,dai-link1 {
- 				/* DAC */
- 				format = "i2s";
- 				mclk-fs = <256>;
-@@ -183,7 +184,7 @@
- 					sound-dai = <&sti_sasg_codec 1>;
- 				};
- 			};
--			simple-audio-card,dai-link@2 {
-+			simple-audio-card,dai-link2 {
- 				/* SPDIF */
- 				format = "left_j";
- 				mclk-fs = <128>;
+-		/*
+-		 * Bootloader initialized system infrastructure clock for
+-		 * serial devices.
+-		 */
+-		clk_ext2f_a9: clockgen-c0 {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <200000000>;
+-			clock-output-names = "clk-s-icn-reg-0";
+-		};
+-
+ 		clockgen-a@90ff000 {
+ 			compatible = "st,clkgen-c32";
+ 			reg = <0x90ff000 0x1000>;
 -- 
 1.9.1
 
