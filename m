@@ -1,137 +1,129 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 14/16] arm64: dts: mt7622: add thermal and related
- nodes
-Date: Mon, 12 Feb 2018 12:55:44 +0100
-Message-ID: <b7d74cbb-9ad8-23cb-aa3c-e9704aafa107@gmail.com>
-References: <cover.1517910489.git.sean.wang@mediatek.com>
- <687a7c43e3e3260ebdf004a96d2cde143f563250.1517910489.git.sean.wang@mediatek.com>
- <4db5c81b-0e55-3676-d7c8-d1b6aefb99c4@gmail.com>
- <1518148312.9025.17.camel@mtkswgap22>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/2] ASoC: codecs: Add support for AK5558 ADC driver
+Date: Mon, 12 Feb 2018 12:02:13 +0000
+Message-ID: <20180212120213.GB12976@sirena.org.uk>
+References: <1517850115-24340-1-git-send-email-daniel.baluta@nxp.com>
+ <1517850115-24340-2-git-send-email-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QKdGvSO+nmPlgiQ/"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518148312.9025.17.camel@mtkswgap22>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1517850115-24340-2-git-send-email-daniel.baluta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Daniel Baluta <daniel.baluta@nxp.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wakasugi.jb@om.asahi-kasei.co.jp, shengjiu.wang@nxp.com, mihai.serban@gmail.com, cosmin.samoila@nxp.com, linux-imx@nxp.com, fabio.estevam@nxp.com, robh@kernel.org, andy.shevchenko@gmail.com, Mihai Serban <mihai.serban@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 
+--QKdGvSO+nmPlgiQ/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 02/09/2018 04:51 AM, Sean Wang wrote:
-> On Wed, 2018-02-07 at 12:43 +0100, Matthias Brugger wrote:
->>
->> On 02/06/2018 10:53 AM, sean.wang@mediatek.com wrote:
->>> From: Sean Wang <sean.wang@mediatek.com>
->>>
->>> add nodes for the thermal controller and associated thermal zone using
->>> CPU as the cooling device for each trip point. In addition, add a fixup
->>> for thermal_calibration on nvmem should be 12 bytes as the minimal
->>> requirement.
->>>
->>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
->>> ---
->>>  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 72 +++++++++++++++++++++++++++++++-
->>>  1 file changed, 71 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
->>> index e6dd4f6..6cf67dd 100644
->>> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
->>> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
->>> @@ -12,6 +12,7 @@
->>>  #include <dt-bindings/phy/phy.h>
->>>  #include <dt-bindings/power/mt7622-power.h>
->>>  #include <dt-bindings/reset/mt7622-reset.h>
->>> +#include <dt-bindings/thermal/thermal.h>
->>>  
->>>  / {
->>>  	compatible = "mediatek,mt7622";
->>> @@ -75,6 +76,7 @@
->>>  				 <&apmixedsys CLK_APMIXED_MAIN_CORE_EN>;
->>>  			clock-names = "cpu", "intermediate";
->>>  			operating-points-v2 = <&cpu_opp_table>;
->>> +			#cooling-cells = <2>;
->>>  			enable-method = "psci";
->>>  			clock-frequency = <1300000000>;
->>>  		};
->>> @@ -119,6 +121,58 @@
->>>  		};
->>>  	};
->>>  
->>> +	thermal-zones {
->>> +		cpu_thermal: cpu-thermal {
->>> +			polling-delay-passive = <1000>;
->>> +			polling-delay = <1000>;
->>> +
->>> +			thermal-sensors = <&thermal 0>;
->>> +
->>> +			trips {
->>> +				cpu_passive: cpu-passive {
->>> +					temperature = <47000>;
->>> +					hysteresis = <2000>;
->>> +					type = "passive";
->>> +				};
->>> +
->>> +				cpu_active: cpu-active {
->>> +					temperature = <67000>;
->>> +					hysteresis = <2000>;
->>> +					type = "active";
->>> +				};
->>> +
->>> +				cpu_hot: cpu-hot {
->>> +					temperature = <87000>;
->>> +					hysteresis = <2000>;
->>> +					type = "hot";
->>> +				};
->>> +
->>> +				cpu-crit {
->>> +					temperature = <107000>;
->>> +					hysteresis = <2000>;
->>> +					type = "critical";
->>> +				};
->>> +			};
->>> +
->>> +			cooling-maps {
->>> +				map0 {
->>> +					trip = <&cpu_passive>;
->>> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->>> +				};
->>> +
->>> +				map1 {
->>> +					trip = <&cpu_active>;
->>> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->>> +				};
->>> +
->>> +				map2 {
->>> +					trip = <&cpu_hot>;
->>> +					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->>> +				};
->>> +			};
->>> +		};
->>> +	};
->>> +
->>>  	timer {
->>>  		compatible = "arm,armv8-timer";
->>>  		interrupt-parent = <&gic>;
->>> @@ -201,7 +255,7 @@
->>>  		#size-cells = <1>;
->>>  
->>>  		thermal_calibration: calib@198 {
->>> -			reg = <0x198 0x8>;
->>> +			reg = <0x198 0xc>;
->>
->> Any reason why this is not part of patch 8/16?
->>
-> 
-> There's no strong reason wanting me to do that. patch 8 has contained a
-> lot of nodes and patch 16 is present just in v2. So, I felt it should be
-> a little bit easy that people reviews those patches if they are put into
-> separate patches. But, It's still fine to make them into one in the next
-> version.
-> 
+On Mon, Feb 05, 2018 at 07:01:54PM +0200, Daniel Baluta wrote:
+> AK5558 is a 32-bit, 768 kHZ sampling, differential input ADC
+> for digital audio systems.
 
-Please add it to 8/16 as this is where you define the node in the first place.
+> --- /dev/null
+> +++ b/sound/soc/codecs/ak5558.c
+> @@ -0,0 +1,618 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Audio driver for AK5558 ADC
 
-Thanks!
+Please don't mix C++ and C style comments - just make the entire comment
+C++.
+
+> +static const char * const tdm_texts[] = {
+> +	"Off", "TDM128",  "TDM256", "TDM512",
+> +};
+
+This looks like it should be a set_tdm_slot() operation, and indeed
+set_tdm_slot() appears to be implemented and duplicate this.
+
+> +static const char * const dsdon_texts[] = {
+> +	"PCM", "DSD",
+> +};
+
+This looks like it's setting the DAI format?
+
+> +	SND_SOC_DAPM_MUX("AK5558 Ch1 Enable", SND_SOC_NOPM, 0, 0,
+> +			 &ak5558_channel1_mux_control),
+
+On/off controls should be switches not muxes, though if this is just
+selecting which channels are active (rather than a mute) I'd not expect
+it to be a control at all - the board can say if inputs are disabled.
+
+> +static int ak5558_set_mcki(struct snd_soc_codec *codec, int fs, int rclk)
+> +{
+> +	u8  mode;
+> +
+> +	mode = snd_soc_read(codec, AK5558_02_CONTROL1);
+> +	mode &= ~AK5558_CKS;
+> +	mode |= AK5558_CKS_AUTO;
+> +
+> +	snd_soc_update_bits(codec, AK5558_02_CONTROL1, AK5558_CKS, mode);
+> +
+> +	return 0;
+> +}
+
+This appears to just ignore the parameters?
+
+> +static int ak5558_set_dai_mute(struct snd_soc_dai *dai, int mute)
+> +{
+> +	struct snd_soc_codec *codec = dai->codec;
+> +	struct ak5558_priv *ak5558 = snd_soc_codec_get_drvdata(codec);
+> +	int ndt = 0;
+> +
+> +	if (!mute)
+> +		return 0;
+> +
+> +	if (ak5558->fs != 0)
+> +		ndt = 583000 / ak5558->fs;
+> +
+> +	msleep(max(ndt, 5));
+> +
+> +	return 0;
+> +}
+
+This doesn't appear to interact with the device at all.
+
+> +static int ak5558_set_bias_level(struct snd_soc_codec *codec,
+> +				 enum snd_soc_bias_level level)
+> +{
+> +	switch (level) {
+> +	case SND_SOC_BIAS_ON:
+> +	case SND_SOC_BIAS_PREPARE:
+> +	case SND_SOC_BIAS_STANDBY:
+> +		break;
+> +	case SND_SOC_BIAS_OFF:
+> +		snd_soc_write(codec, AK5558_00_POWER_MANAGEMENT1, 0x00);
+> +		break;
+> +	}
+
+I'd expect there to be symmetry here - if we disable things when
+transitioning to _OFF we should enable them when transitioning out.
+
+> +	reg = snd_soc_read(codec, AK5558_03_CONTROL2);
+> +	reg &= ~AK5558_MODE_BITS;
+> +	reg |= tdm_mode;
+> +	snd_soc_write(codec, AK5558_03_CONTROL2, reg);
+
+snd_soc_update_bits().
+
+--QKdGvSO+nmPlgiQ/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqBgkQACgkQJNaLcl1U
+h9C/uQf/a43OXnyCy8+wJ5aqImprGmRz2MeNF77ZGVOiyn9jGn26dOPv7cUcKvr8
+I2gvJmXqA9zZSYBXq2DW2Oglj4Rdte1ur6DaDY+GxymiFWmfapnzRdFg0hwwRJK0
+nYmiq+trR/Mci6YqERoj/SYHvxyck/YzW17z2Z7pM/GQZq2OoA2wajD/EGskTWxC
+5/hM4o90LTAHh1iVymfHWaWFqSXY2Pc6k0/U86uRMnXr8neFqvC+3mu5CF80HmaL
+NmGbe7hE2BoqQAMjr/jIR1kE0szTIdTLwK+xgkmtEe8e5twyM5OpYJV6v0fPizrj
+0YShetJaeOnH5vPZ+LFUMfQb/jF9sQ==
+=qOOt
+-----END PGP SIGNATURE-----
+
+--QKdGvSO+nmPlgiQ/--
