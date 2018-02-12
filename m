@@ -1,69 +1,58 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v3 1/2] dt-bindings: phy: Add support for the USB3 PHY on Amlogic Meson GXL SoCs
-Date: Mon, 12 Feb 2018 23:33:49 +0100
-Message-ID: <20180212223350.21036-2-martin.blumenstingl@googlemail.com>
-References: <20180212223350.21036-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 5/5] phy: amlogic: phy-meson-gxl-usb2: rename some of the U2P_R2 registers
+Date: Mon, 12 Feb 2018 23:39:28 +0100
+Message-ID: <20180212223928.22993-6-martin.blumenstingl@googlemail.com>
+References: <20180212223928.22993-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180212223350.21036-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20180212223928.22993-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: kishon-l0cyMroinI0@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Amlogic Meson GXL SoCs use a dwc3 controller with two (GXM - a variant
-for GXL, has three) USB2 ports. The first USB2 port supports host and
-peripheral (also called "device") mode.
-While the dwc3 controller has no USB3 port enabled we still need the
-USB3 PHY to be initialized. Otherwise high-speed USB transfers (for
-example with a USB flash drive) may time out (most often seen on boards
-with mainline u-boot, where the bootloader does not initialize the USB3
-PHY registers).
+The U2P_R2 register provides "test mode" functionality for bits 17:0.
+These are only used during SoC development and should be left untouched
+on production SoC versions.
+Rename these register definitions to indicate that these are for "test
+mode" only.
 
+While here, also merge the definitions for U2P_R2_DATA_IN_MASK and
+U2P_R2_DATA_IN_EN_MASK (bits 0:7) because Amlogic's internal
+documentation suggests that these bits belong together. The old
+definition was not taken from the documentation but rather from a struct
+definition in the Amlogic GPL kernel sources.
+
+No functional changes.
+
+Suggested-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Tested-by: Yixun Lan <yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org>
 ---
- .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+ drivers/phy/amlogic/phy-meson-gxl-usb2.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
-new file mode 100644
-index 000000000000..114947e1de3d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
-@@ -0,0 +1,31 @@
-+* Amlogic Meson GXL and GXM USB3 PHY and OTG detection binding
-+
-+Required properties:
-+- compatible:	Should be "amlogic,meson-gxl-usb3-phy"
-+- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
-+- reg:		The base address and length of the registers
-+- interrupts:	the interrupt specifier for the OTG detection
-+- clocks:	phandles to the clocks for
-+		- the USB3 PHY
-+		- and peripheral mode/OTG detection
-+- clock-names:	must contain "phy" and "peripheral"
-+- resets:	phandle to the reset lines for:
-+		- the USB3 PHY and
-+		- peripheral mode/OTG detection
-+- reset-names:	must contain "phy" and "peripheral"
-+
-+Optional properties:
-+- phy-supply:	see phy-bindings.txt in this directory
-+
-+
-+Example:
-+	usb3_phy0: phy@78080 {
-+		compatible = "amlogic,meson-gxl-usb3-phy";
-+		#phy-cells = <0>;
-+		reg = <0x0 0x78080 0x0 0x20>;
-+		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clkc CLKID_USB_OTG>, <&clkc_AO CLKID_AO_CEC_32K>;
-+		clock-names = "phy", "peripheral";
-+		resets = <&reset RESET_USB_OTG>, <&reset RESET_USB_OTG>;
-+		reset-names = "phy", "peripheral";
-+	};
+diff --git a/drivers/phy/amlogic/phy-meson-gxl-usb2.c b/drivers/phy/amlogic/phy-meson-gxl-usb2.c
+index f062fc7f0a3a..9f9b5414b97a 100644
+--- a/drivers/phy/amlogic/phy-meson-gxl-usb2.c
++++ b/drivers/phy/amlogic/phy-meson-gxl-usb2.c
+@@ -71,12 +71,11 @@
+ 
+ /* bits [31:14] are read-only */
+ #define U2P_R2							0x8
+-	#define U2P_R2_DATA_IN_MASK				GENMASK(3, 0)
+-	#define U2P_R2_DATA_IN_EN_MASK				GENMASK(7, 4)
+-	#define U2P_R2_ADDR_MASK				GENMASK(11, 8)
+-	#define U2P_R2_DATA_OUT_SEL				BIT(12)
+-	#define U2P_R2_CLK					BIT(13)
+-	#define U2P_R2_DATA_OUT_MASK				GENMASK(17, 14)
++	#define U2P_R2_TESTDATA_IN_MASK				GENMASK(7, 0)
++	#define U2P_R2_TESTADDR_MASK				GENMASK(11, 8)
++	#define U2P_R2_TESTDATA_OUT_SEL				BIT(12)
++	#define U2P_R2_TESTCLK					BIT(13)
++	#define U2P_R2_TESTDATA_OUT_MASK			GENMASK(17, 14)
+ 	#define U2P_R2_ACA_PIN_RANGE_C				BIT(18)
+ 	#define U2P_R2_ACA_PIN_RANGE_B				BIT(19)
+ 	#define U2P_R2_ACA_PIN_RANGE_A				BIT(20)
 -- 
 2.16.1
 
