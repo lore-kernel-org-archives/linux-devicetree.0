@@ -1,375 +1,239 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v5 05/20] firmware: arm_scmi: add scmi protocol bus to enumerate protocol devices
-Date: Mon, 12 Feb 2018 18:45:09 +0000
-Message-ID: <1518461124-17371-6-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v5 02/20] dt-bindings: arm: add support for ARM System Control and Management Interface(SCMI) protocol
+Date: Mon, 12 Feb 2018 18:45:06 +0000
+Message-ID: <1518461124-17371-3-git-send-email-sudeep.holla@arm.com>
 References: <1518461124-17371-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1518461124-17371-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Alexey Klimov <klimov.linux@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Alexey Klimov <klimov.linux@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The SCMI specification encompasses various protocols. However, not every
-protocol has to be present on a given platform/implementation as not
-every protocol is relevant for it.
+This patch adds devicetree binding for System Control and Management
+Interface (SCMI) Message Protocol used between the Application Cores(AP)
+and the System Control Processor(SCP). The MHU peripheral provides a
+mechanism for inter-processor communication between SCP's M3 processor
+and AP.
 
-Furthermore, the platform chooses which protocols it exposes to a given
-agent. The only protocol that must be implemented is the base protocol.
-The base protocol is used by an agent to discover which protocols are
-available to it.
+SCP offers control and management of the core/cluster power states,
+various power domain DVFS including the core/cluster, certain system
+clocks configuration, thermal sensors and many others.
 
-In order to enumerate the discovered implemented protocols, this patch
-adds support for a separate scmi protocol bus. It also adds mechanism to
-register support for different protocols.
+SCMI protocol is developed as better replacement to the existing SCPI
+which is not flexible and easily extensible.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/Makefile |   3 +-
- drivers/firmware/arm_scmi/bus.c    | 232 +++++++++++++++++++++++++++++++++++++
- drivers/firmware/arm_scmi/common.h |   1 +
- include/linux/scmi_protocol.h      |  62 ++++++++++
- 4 files changed, 297 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/arm_scmi/bus.c
+ Documentation/devicetree/bindings/arm/arm,scmi.txt | 179 +++++++++++++++++++++
+ MAINTAINERS                                        |   4 +-
+ 2 files changed, 181 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,scmi.txt
 
-diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index 5d9c7ef35f0f..5f4ec2613db6 100644
---- a/drivers/firmware/arm_scmi/Makefile
-+++ b/drivers/firmware/arm_scmi/Makefile
-@@ -1,3 +1,4 @@
--obj-y	= scmi-driver.o scmi-protocols.o
-+obj-y	= scmi-bus.o scmi-driver.o scmi-protocols.o
-+scmi-bus-y = bus.o
- scmi-driver-y = driver.o
- scmi-protocols-y = base.o
-diff --git a/drivers/firmware/arm_scmi/bus.c b/drivers/firmware/arm_scmi/bus.c
+diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
 new file mode 100644
-index 000000000000..cf1c2464cb0f
+index 000000000000..5f3719ab7075
 --- /dev/null
-+++ b/drivers/firmware/arm_scmi/bus.c
-@@ -0,0 +1,232 @@
-+/*
-+ * System Control and Management Interface (SCMI) Message Protocol bus layer
-+ *
-+ * Copyright (C) 2017 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along
-+ * with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
++++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+@@ -0,0 +1,179 @@
++System Control and Management Interface (SCMI) Message Protocol
++----------------------------------------------------------
 +
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++The SCMI is intended to allow agents such as OSPM to manage various functions
++that are provided by the hardware platform it is running on, including power
++and performance functions.
 +
-+#include <linux/types.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/device.h>
++This binding is intended to define the interface the firmware implementing
++the SCMI as described in ARM document number ARM DUI 0922B ("ARM System Control
++and Management Interface Platform Design Document")[0] provide for OSPM in
++the device tree.
 +
-+#include "common.h"
++Required properties:
 +
-+static DEFINE_IDA(scmi_bus_id);
-+static DEFINE_IDR(scmi_protocols);
-+static DEFINE_SPINLOCK(protocol_lock);
++The scmi node with the following properties shall be under the /firmware/ node.
 +
-+static const struct scmi_device_id *
-+scmi_dev_match_id(struct scmi_device *scmi_dev, struct scmi_driver *scmi_drv)
-+{
-+	const struct scmi_device_id *id = scmi_drv->id_table;
++- compatible : shall be "arm,scmi"
++- mboxes: List of phandle and mailbox channel specifiers. It should contain
++	  exactly one or two mailboxes, one for transmitting messages("tx")
++	  and another optional for receiving the notifications("rx") if
++	  supported.
++- shmem : List of phandle pointing to the shared memory(SHM) area as per
++	  generic mailbox client binding.
++- #address-cells : should be '1' if the device has sub-nodes, maps to
++	  protocol identifier for a given sub-node.
++- #size-cells : should be '0' as 'reg' property doesn't have any size
++	  associated with it.
 +
-+	if (!id)
-+		return NULL;
++Optional properties:
 +
-+	for (; id->protocol_id; id++)
-+		if (id->protocol_id == scmi_dev->protocol_id)
-+			return id;
++- mbox-names: shall be "tx" or "rx" depending on mboxes entries.
 +
-+	return NULL;
-+}
++See Documentation/devicetree/bindings/mailbox/mailbox.txt for more details
++about the generic mailbox controller and client driver bindings.
 +
-+static int scmi_dev_match(struct device *dev, struct device_driver *drv)
-+{
-+	struct scmi_driver *scmi_drv = to_scmi_driver(drv);
-+	struct scmi_device *scmi_dev = to_scmi_dev(dev);
-+	const struct scmi_device_id *id;
++The mailbox is the only permitted method of calling the SCMI firmware.
++Mailbox doorbell is used as a mechanism to alert the presence of a
++messages and/or notification.
 +
-+	id = scmi_dev_match_id(scmi_dev, scmi_drv);
-+	if (id)
-+		return 1;
++Each protocol supported shall have a sub-node with corresponding compatible
++as described in the following sections. If the platform supports dedicated
++communication channel for a particular protocol, the 3 properties namely:
++mboxes, mbox-names and shmem shall be present in the sub-node corresponding
++to that protocol.
 +
-+	return 0;
-+}
++Clock/Performance bindings for the clocks/OPPs based on SCMI Message Protocol
++------------------------------------------------------------
 +
-+static int scmi_protocol_init(int protocol_id, struct scmi_handle *handle)
-+{
-+	scmi_prot_init_fn_t fn = idr_find(&scmi_protocols, protocol_id);
++This binding uses the common clock binding[1].
 +
-+	if (unlikely(!fn))
-+		return -EINVAL;
-+	return fn(handle);
-+}
++Required properties:
++- #clock-cells : Should be 1. Contains the Clock ID value used by SCMI commands.
 +
-+static int scmi_dev_probe(struct device *dev)
-+{
-+	struct scmi_driver *scmi_drv = to_scmi_driver(dev->driver);
-+	struct scmi_device *scmi_dev = to_scmi_dev(dev);
-+	const struct scmi_device_id *id;
-+	int ret;
++Power domain bindings for the power domains based on SCMI Message Protocol
++------------------------------------------------------------
 +
-+	id = scmi_dev_match_id(scmi_dev, scmi_drv);
-+	if (!id)
-+		return -ENODEV;
++This binding for the SCMI power domain providers uses the generic power
++domain binding[2].
 +
-+	if (!scmi_dev->handle)
-+		return -EPROBE_DEFER;
++Required properties:
++ - #power-domain-cells : Should be 1. Contains the device or the power
++			 domain ID value used by SCMI commands.
 +
-+	ret = scmi_protocol_init(scmi_dev->protocol_id, scmi_dev->handle);
-+	if (ret)
-+		return ret;
++Sensor bindings for the sensors based on SCMI Message Protocol
++--------------------------------------------------------------
++SCMI provides an API to access the various sensors on the SoC.
 +
-+	return scmi_drv->probe(scmi_dev);
-+}
++Required properties:
++- #thermal-sensor-cells: should be set to 1. This property follows the
++			 thermal device tree bindings[3].
 +
-+static int scmi_dev_remove(struct device *dev)
-+{
-+	struct scmi_driver *scmi_drv = to_scmi_driver(dev->driver);
-+	struct scmi_device *scmi_dev = to_scmi_dev(dev);
++			 Valid cell values are raw identifiers (Sensor ID)
++			 as used by the firmware. Refer to  platform details
++			 for your implementation for the IDs to use.
 +
-+	if (scmi_drv->remove)
-+		scmi_drv->remove(scmi_dev);
++SRAM and Shared Memory for SCMI
++-------------------------------
 +
-+	return 0;
-+}
++A small area of SRAM is reserved for SCMI communication between application
++processors and SCP.
 +
-+static struct bus_type scmi_bus_type = {
-+	.name =	"scmi_protocol",
-+	.match = scmi_dev_match,
-+	.probe = scmi_dev_probe,
-+	.remove = scmi_dev_remove,
++The properties should follow the generic mmio-sram description found in [4]
++
++Each sub-node represents the reserved area for SCMI.
++
++Required sub-node properties:
++- reg : The base offset and size of the reserved area with the SRAM
++- compatible : should be "arm,scmi-shmem" for Non-secure SRAM based
++	       shared memory
++
++[0] http://infocenter.arm.com/help/topic/com.arm.doc.den0056a/index.html
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/power/power_domain.txt
++[3] Documentation/devicetree/bindings/thermal/thermal.txt
++[4] Documentation/devicetree/bindings/sram/sram.txt
++
++Example:
++
++sram@50000000 {
++	compatible = "mmio-sram";
++	reg = <0x0 0x50000000 0x0 0x10000>;
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges = <0 0x0 0x50000000 0x10000>;
++
++	cpu_scp_lpri: scp-shmem@0 {
++		compatible = "arm,scmi-shmem";
++		reg = <0x0 0x200>;
++	};
++
++	cpu_scp_hpri: scp-shmem@200 {
++		compatible = "arm,scmi-shmem";
++		reg = <0x200 0x200>;
++	};
 +};
 +
-+int scmi_driver_register(struct scmi_driver *driver, struct module *owner,
-+			 const char *mod_name)
-+{
-+	int retval;
++mailbox@40000000 {
++	....
++	#mbox-cells = <1>;
++	reg = <0x0 0x40000000 0x0 0x10000>;
++};
 +
-+	driver->driver.bus = &scmi_bus_type;
-+	driver->driver.name = driver->name;
-+	driver->driver.owner = owner;
-+	driver->driver.mod_name = mod_name;
++firmware {
 +
-+	retval = driver_register(&driver->driver);
-+	if (!retval)
-+		pr_debug("registered new scmi driver %s\n", driver->name);
++	...
 +
-+	return retval;
-+}
-+EXPORT_SYMBOL_GPL(scmi_driver_register);
++	scmi {
++		compatible = "arm,scmi";
++		mboxes = <&mailbox 0 &mailbox 1>;
++		mbox-names = "tx", "rx";
++		shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+void scmi_driver_unregister(struct scmi_driver *driver)
-+{
-+	driver_unregister(&driver->driver);
-+}
-+EXPORT_SYMBOL_GPL(scmi_driver_unregister);
++		scmi_devpd: protocol@11 {
++			reg = <0x11>;
++			#power-domain-cells = <1>;
++		};
 +
-+struct scmi_device *
-+scmi_device_create(struct device_node *np, struct device *parent, int protocol)
-+{
-+	int id, retval;
-+	struct scmi_device *scmi_dev;
++		scmi_dvfs: protocol@13 {
++			reg = <0x13>;
++			#clock-cells = <1>;
++		};
 +
-+	id = ida_simple_get(&scmi_bus_id, 1, 0, GFP_KERNEL);
-+	if (id < 0)
-+		return NULL;
++		scmi_clk: protocol@14 {
++			reg = <0x14>;
++			#clock-cells = <1>;
++		};
 +
-+	scmi_dev = kzalloc(sizeof(*scmi_dev), GFP_KERNEL);
-+	if (!scmi_dev)
-+		goto no_mem;
++		scmi_sensors0: protocol@15 {
++			reg = <0x15>;
++			#thermal-sensor-cells = <1>;
++		};
++	};
++};
 +
-+	scmi_dev->id = id;
-+	scmi_dev->protocol_id = protocol;
-+	scmi_dev->dev.parent = parent;
-+	scmi_dev->dev.of_node = np;
-+	scmi_dev->dev.bus = &scmi_bus_type;
-+	dev_set_name(&scmi_dev->dev, "scmi_dev.%d", id);
++cpu@0 {
++	...
++	reg = <0 0>;
++	clocks = <&scmi_dvfs 0>;
++};
 +
-+	retval = device_register(&scmi_dev->dev);
-+	if (!retval)
-+		return scmi_dev;
++hdlcd@7ff60000 {
++	...
++	reg = <0 0x7ff60000 0 0x1000>;
++	clocks = <&scmi_clk 4>;
++	power-domains = <&scmi_devpd 1>;
++};
 +
-+	put_device(&scmi_dev->dev);
-+	kfree(scmi_dev);
-+no_mem:
-+	ida_simple_remove(&scmi_bus_id, id);
-+	return NULL;
-+}
-+
-+void scmi_device_destroy(struct scmi_device *scmi_dev)
-+{
-+	scmi_handle_put(scmi_dev->handle);
-+	device_unregister(&scmi_dev->dev);
-+	ida_simple_remove(&scmi_bus_id, scmi_dev->id);
-+	kfree(scmi_dev);
-+}
-+
-+void scmi_set_handle(struct scmi_device *scmi_dev)
-+{
-+	scmi_dev->handle = scmi_handle_get(&scmi_dev->dev);
-+}
-+
-+int scmi_protocol_register(int protocol_id, scmi_prot_init_fn_t fn)
-+{
-+	int ret;
-+
-+	spin_lock(&protocol_lock);
-+	ret = idr_alloc(&scmi_protocols, fn, protocol_id, protocol_id + 1,
-+			GFP_KERNEL);
-+	if (ret != protocol_id)
-+		pr_err("unable to allocate SCMI idr slot, err %d\n", ret);
-+	spin_unlock(&protocol_lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(scmi_protocol_register);
-+
-+void scmi_protocol_unregister(int protocol_id)
-+{
-+	spin_lock(&protocol_lock);
-+	idr_remove(&scmi_protocols, protocol_id);
-+	spin_unlock(&protocol_lock);
-+}
-+EXPORT_SYMBOL_GPL(scmi_protocol_unregister);
-+
-+static int __scmi_devices_unregister(struct device *dev, void *data)
-+{
-+	struct scmi_device *scmi_dev = to_scmi_dev(dev);
-+
-+	scmi_device_destroy(scmi_dev);
-+	return 0;
-+}
-+
-+static void scmi_devices_unregister(void)
-+{
-+	bus_for_each_dev(&scmi_bus_type, NULL, NULL, __scmi_devices_unregister);
-+}
-+
-+static int __init scmi_bus_init(void)
-+{
-+	int retval;
-+
-+	retval = bus_register(&scmi_bus_type);
-+	if (retval)
-+		pr_err("scmi protocol bus register failed (%d)\n", retval);
-+
-+	return retval;
-+}
-+subsys_initcall(scmi_bus_init);
-+
-+static void __exit scmi_bus_exit(void)
-+{
-+	scmi_devices_unregister();
-+	bus_unregister(&scmi_bus_type);
-+	ida_destroy(&scmi_bus_id);
-+}
-+module_exit(scmi_bus_exit);
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index bc767f4997e0..f1eeacaef57b 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -107,6 +107,7 @@ int scmi_one_xfer_init(const struct scmi_handle *h, u8 msg_id, u8 prot_id,
- 		       size_t tx_size, size_t rx_size, struct scmi_xfer **p);
- int scmi_handle_put(const struct scmi_handle *handle);
- struct scmi_handle *scmi_handle_get(struct device *dev);
-+void scmi_set_handle(struct scmi_device *scmi_dev);
- int scmi_version_get(const struct scmi_handle *h, u8 protocol, u32 *version);
- void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
- 				     u8 *prot_imp);
-diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 664da3d763f2..7b72c75cb560 100644
---- a/include/linux/scmi_protocol.h
-+++ b/include/linux/scmi_protocol.h
-@@ -15,6 +15,7 @@
-  * You should have received a copy of the GNU General Public License along with
-  * this program. If not, see <http://www.gnu.org/licenses/>.
-  */
-+#include <linux/device.h>
- #include <linux/types.h>
++thermal-zones {
++	soc_thermal {
++		polling-delay-passive = <100>;
++		polling-delay = <1000>;
++					/* sensor ID */
++		thermal-sensors = <&scmi_sensors0 3>;
++		...
++	};
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3bdc260e36b7..5c8c55ba22a3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13379,11 +13379,11 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git
+ S:	Supported
+ F:	drivers/mfd/syscon.c
  
- #define SCMI_MAX_STR_SIZE	16
-@@ -62,3 +63,64 @@ enum scmi_std_protocol {
- 	SCMI_PROTOCOL_CLOCK = 0x14,
- 	SCMI_PROTOCOL_SENSOR = 0x15,
- };
-+
-+struct scmi_device {
-+	u32 id;
-+	u8 protocol_id;
-+	struct device dev;
-+	struct scmi_handle *handle;
-+};
-+
-+#define to_scmi_dev(d) container_of(d, struct scmi_device, dev)
-+
-+struct scmi_device *
-+scmi_device_create(struct device_node *np, struct device *parent, int protocol);
-+void scmi_device_destroy(struct scmi_device *scmi_dev);
-+
-+struct scmi_device_id {
-+	u8 protocol_id;
-+};
-+
-+struct scmi_driver {
-+	const char *name;
-+	int (*probe)(struct scmi_device *);
-+	void (*remove)(struct scmi_device *);
-+	const struct scmi_device_id *id_table;
-+
-+	struct device_driver driver;
-+};
-+
-+#define to_scmi_driver(d) container_of(d, struct scmi_driver, driver)
-+
-+#ifdef CONFIG_ARM_SCMI_PROTOCOL
-+int scmi_driver_register(struct scmi_driver *driver,
-+			 struct module *owner, const char *mod_name);
-+void scmi_driver_unregister(struct scmi_driver *driver);
-+#else
-+static int scmi_driver_register(struct scmi_driver *driver,
-+				struct module *owner, const char *mod_name)
-+{
-+	return -EINVAL;
-+}
-+static void scmi_driver_unregister(struct scmi_driver *driver) {}
-+#endif /* CONFIG_ARM_SCMI_PROTOCOL */
-+
-+#define scmi_register(driver) \
-+	scmi_driver_register(driver, THIS_MODULE, KBUILD_MODNAME)
-+#define scmi_unregister(driver) \
-+	scmi_driver_unregister(driver)
-+
-+/**
-+ * module_scmi_driver() - Helper macro for registering a scmi driver
-+ * @__scmi_driver: scmi_driver structure
-+ *
-+ * Helper macro for scmi drivers to set up proper module init / exit
-+ * functions.  Replaces module_init() and module_exit() and keeps people from
-+ * printing pointless things to the kernel log when their driver is loaded.
-+ */
-+#define module_scmi_driver(__scmi_driver)	\
-+	module_driver(__scmi_driver, scmi_register, scmi_unregister)
-+
-+typedef int (*scmi_prot_init_fn_t)(struct scmi_handle *);
-+int scmi_protocol_register(int protocol_id, scmi_prot_init_fn_t fn);
-+void scmi_protocol_unregister(int protocol_id);
+-SYSTEM CONTROL & POWER INTERFACE (SCPI) Message Protocol drivers
++SYSTEM CONTROL & POWER/MANAGEMENT INTERFACE (SCPI/SCMI) Message Protocol drivers
+ M:	Sudeep Holla <sudeep.holla@arm.com>
+ L:	linux-arm-kernel@lists.infradead.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/arm/arm,scpi.txt
++F:	Documentation/devicetree/bindings/arm/arm,sc[mp]i.txt
+ F:	drivers/clk/clk-scpi.c
+ F:	drivers/cpufreq/scpi-cpufreq.c
+ F:	drivers/firmware/arm_scpi.c
 -- 
 2.7.4
