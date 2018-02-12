@@ -1,74 +1,33 @@
-From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
-Subject: Re: [PATCH 2/6] mfd: Add ST Multi-Function eXpander core driver
-Date: Mon, 12 Feb 2018 15:15:39 +0100
-Message-ID: <CAOFm3uH+DLcOqiSV0z0N6JnmSk+JfTF3bfkC0_2kdFT-eDMr8A@mail.gmail.com>
-References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
- <1518100057-23234-3-git-send-email-amelie.delaunay@st.com> <20180212120600.5cghrzz4jqvvkgz6@dell>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/6] dt-bindings: PCI: rockchip: Add DT bindings for
+ Rockchip PCIe endpoint controller
+Date: Mon, 12 Feb 2018 08:17:42 -0600
+Message-ID: <20180212141742.ism3xnohyonp6pi3@rob-hp-laptop>
+References: <1517971650-61555-1-git-send-email-shawn.lin@rock-chips.com>
+ <1517971826-65350-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180212120600.5cghrzz4jqvvkgz6@dell>
+Content-Disposition: inline
+In-Reply-To: <1517971826-65350-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Amelie,
+On Wed, Feb 07, 2018 at 10:50:26AM +0800, Shawn Lin wrote:
+> This patch documents the DT bindings for the Rockchip PCIe controller
+> when configured in endpoint mode.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> ---
+> 
+>  .../devicetree/bindings/pci/rockchip-pcie-ep.txt   | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
 
-On Mon, Feb 12, 2018 at 1:06 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, 08 Feb 2018, Amelie Delaunay wrote:
->
->> ST Multi-Function eXpander (MFX) is a slave controller using I2C
->> for communication with the main MCU. Main features are:
->> - 16 fast GPIOs individually configurable in input/output
->> - 8 alternate GPIOs individually configurable in input/output
->> - Main MCU IDD measurement
->> - Resistive touchscreen controller
->>
->> Only GPIO expander (16 fast GPIOs + 8 alternate) feature is
->> supported for the moment.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-
-<snip>
-
->> --- /dev/null
->> +++ b/drivers/mfd/st-mfx.c
->> @@ -0,0 +1,526 @@
->> +/*
->> + * STMicroelectronics Multi-Function eXpander (ST-MFX) Core Driver
->> + *
->> + * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
->> + * Author(s): Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org> for STMicroelectronics.
->
-> You don't need to put "for STMicroelectronics".  This was something we
-> made up when submitting from a different (!st.com) email address.
->
->> + * License terms: GPL V2.0.
->> + *
->> + * st-mfx Core Driver is free software; you can redistribute it and/or modify it
->> + * under the terms of the GNU General Public License version 2 as published by
->> + * the Free Software Foundation.
->> + *
->> + * st-mfx Core Driver is distributed in the hope that it will be useful, but
->> + * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
->> + * details.
->> + *
->> + * You should have received a copy of the GNU General Public License along with
->> + * st-mfx Core Driver. If not, see <http://www.gnu.org/licenses/>.
->
-> You should be able to use the short version of the licensing
-> agreement.  Also, please grep for "SPDX".
-
-You can check the doc for the (fairly new) way to remove legalese
-boilerplate at Documentation/process/license-rules.rst or [1]
-It helps keep the focus on the code and less on licensing!
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/license-rules.rst
--- 
-Cordially
-Philippe Ombredanne
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
