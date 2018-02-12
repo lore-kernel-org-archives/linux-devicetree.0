@@ -1,54 +1,195 @@
 From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 2/5] clk: mediatek: modify MT7622 audsys to adapt MFD device
-Date: Mon, 12 Feb 2018 19:28:48 +0800
-Message-ID: <f8e87179bd7700130e294393592719fac8590c59.1518424204.git.ryder.lee@mediatek.com>
-References: <cover.1518424204.git.ryder.lee@mediatek.com>
+Subject: [PATCH] arm: dts: mt7623: add PCIe related nodes
+Date: Mon, 12 Feb 2018 19:32:37 +0800
+Message-ID: <3b3a4d73d7b33a9318b8db1033d2f7e4c32b0136.1518400130.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cover.1518424204.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-As the new MFD device is in place, switch probing method to adapt it.
+This patch adds some device nodes for the PCIe function block and updates
+related pinmux.
+
+Moreover, we add interrupt-map properties in both parent and children as
+the chip only has one IRQ per slot that is connected to all INTx and get
+propagated through the bridges and it also represents the root ports own
+interrupts.
 
 Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 ---
- drivers/clk/mediatek/clk-mt7622-aud.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Please refer to the previous discussion:
+https://patchwork.ozlabs.org/patch/829108/
+https://patchwork.kernel.org/patch/10193391/
+---
+ arch/arm/boot/dts/mt7623.dtsi                 | 105 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  22 ++++++
+ 2 files changed, 127 insertions(+)
 
-diff --git a/drivers/clk/mediatek/clk-mt7622-aud.c b/drivers/clk/mediatek/clk-mt7622-aud.c
-index 13f752d..68c52a9 100644
---- a/drivers/clk/mediatek/clk-mt7622-aud.c
-+++ b/drivers/clk/mediatek/clk-mt7622-aud.c
-@@ -142,11 +142,16 @@ static int clk_mt7622_audiosys_init(struct platform_device *pdev)
- {
- 	struct clk_onecell_data *clk_data;
- 	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *pnode = pdev->dev.parent->of_node;
- 	int r;
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index b750da5..c2541a0 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -670,6 +670,111 @@
+ 		#reset-cells = <1>;
+ 	};
  
- 	clk_data = mtk_alloc_clk_data(CLK_AUDIO_NR_CLK);
- 
--	mtk_clk_register_gates(node, audio_clks, ARRAY_SIZE(audio_clks),
-+	/* Check if called from MFD */
-+	if (!pnode)
-+		pnode = node;
++	pcie: pcie-controller@1a140000 {
++		compatible = "mediatek,mt7623-pcie";
++		device_type = "pci";
++		reg = <0 0x1a140000 0 0x1000>, /* PCIe shared registers */
++		      <0 0x1a142000 0 0x1000>, /* Port0 registers */
++		      <0 0x1a143000 0 0x1000>, /* Port1 registers */
++		      <0 0x1a144000 0 0x1000>; /* Port2 registers */
++		reg-names = "subsys", "port0", "port1", "port2";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0xf800 0 0 0>;
++		interrupt-map = <0x0000 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>,
++				<0x0800 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>,
++				<0x1000 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
++			 <&hifsys CLK_HIFSYS_PCIE0>,
++			 <&hifsys CLK_HIFSYS_PCIE1>,
++			 <&hifsys CLK_HIFSYS_PCIE2>;
++		clock-names = "free_ck", "sys_ck0", "sys_ck1", "sys_ck2";
++		resets = <&hifsys MT2701_HIFSYS_PCIE0_RST>,
++			 <&hifsys MT2701_HIFSYS_PCIE1_RST>,
++			 <&hifsys MT2701_HIFSYS_PCIE2_RST>;
++		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
++		phys = <&pcie0_port PHY_TYPE_PCIE>,
++		       <&pcie1_port PHY_TYPE_PCIE>,
++		       <&u3port1 PHY_TYPE_PCIE>;
++		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
++		bus-range = <0x00 0xff>;
++		status = "disabled";
++		ranges = <0x81000000 0 0x1a160000 0 0x1a160000 0 0x00010000
++			  0x83000000 0 0x60000000 0 0x60000000 0 0x10000000>;
 +
-+	mtk_clk_register_gates(pnode, audio_clks, ARRAY_SIZE(audio_clks),
- 			       clk_data);
++		pcie@0,0 {
++			reg = <0x0000 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0>;
++			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 193 IRQ_TYPE_LEVEL_LOW>;
++			ranges;
++			num-lanes = <1>;
++			status = "disabled";
++		};
++
++		pcie@1,0 {
++			reg = <0x0800 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0>;
++			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
++			ranges;
++			num-lanes = <1>;
++			status = "disabled";
++		};
++
++		pcie@2,0 {
++			reg = <0x1000 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0>;
++			interrupt-map = <0 0 0 0 &sysirq GIC_SPI 195 IRQ_TYPE_LEVEL_LOW>;
++			ranges;
++			num-lanes = <1>;
++			status = "disabled";
++		};
++	};
++
++	pcie0_phy: pcie-phy@1a149000 {
++		compatible = "mediatek,generic-tphy-v1";
++		reg = <0 0x1a149000 0 0x0700>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		status = "disabled";
++
++		pcie0_port: pcie-phy@1a149900 {
++			reg = <0 0x1a149900 0 0x0700>;
++			clocks = <&clk26m>;
++			clock-names = "ref";
++			#phy-cells = <1>;
++			status = "okay";
++		};
++	};
++
++	pcie1_phy: pcie-phy@1a14a000 {
++		compatible = "mediatek,generic-tphy-v1";
++		reg = <0 0x1a14a000 0 0x0700>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		status = "disabled";
++
++		pcie1_port: pcie-phy@1a14a900 {
++			reg = <0 0x1a14a900 0 0x0700>;
++			clocks = <&clk26m>;
++			clock-names = "ref";
++			#phy-cells = <1>;
++			status = "okay";
++		};
++	};
++
+ 	usb1: usb@1a1c0000 {
+ 		compatible = "mediatek,mt7623-xhci",
+ 			     "mediatek,mt8173-xhci";
+diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+index 7bf5aa2..b077808 100644
+--- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
++++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+@@ -209,6 +209,20 @@
+ 	vqmmc-supply = <&mt6323_vio18_reg>;
+ };
  
- 	r = of_clk_add_provider(node, of_clk_src_onecell_get, clk_data);
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie_default>;
++	status = "okay";
++
++	pcie@0,0 {
++		status = "okay";
++	};
++
++	pcie@1,0 {
++		status = "okay";
++	};
++};
++
+ &pio {
+ 	cir_pins_a:cir@0 {
+ 		pins_cir {
+@@ -376,6 +390,14 @@
+ 		};
+ 	};
+ 
++	pcie_default: pcie_pin_default {
++		pins_cmd_dat {
++			pinmux = <MT7623_PIN_208_AUD_EXT_CK1_FUNC_PCIE0_PERST_N>,
++				 <MT7623_PIN_209_AUD_EXT_CK2_FUNC_PCIE1_PERST_N>;
++			bias-disable;
++		};
++	};
++
+ 	pwm_pins_a: pwm@0 {
+ 		pins_pwm {
+ 			pinmux = <MT7623_PIN_203_PWM0_FUNC_PWM0>,
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
