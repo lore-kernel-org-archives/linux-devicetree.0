@@ -1,94 +1,56 @@
-From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/6] IR support for A83T
-Date: Mon, 12 Feb 2018 12:00:02 +0100
-Message-ID: <a1ce4422-33d7-1214-6527-0d299e97fe8b@gmail.com>
-References: <20180130174656.10657-1-embed3d@gmail.com>
-Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 1/5] clk: mediatek: update missing clock data for MT7622 audsys
+Date: Mon, 12 Feb 2018 19:28:47 +0800
+Message-ID: <ee93f496edb238935940233d88f5548940b53b6a.1518424204.git.ryder.lee@mediatek.com>
+References: <cover.1518424204.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Return-path: <linux-sunxi+bncBD257DPK24NRBNXHQXKAKGQETN6IWJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180130174656.10657-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1518424204.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add missing clock data 'CLK_AUDIO_AFE_CONN' for MT7622 audsys.
 
-On 30.01.2018 18:46, Philipp Rossak wrote:
-> This patch series adds support for the sunxi A83T ir module and enhances
-> the sunxi-ir driver. Right now the base clock frequency for the ir driver
-> is a hard coded define and is set to 8 MHz.
-> This works for the most common ir receivers. On the Sinovoip Bananapi M3
-> the ir receiver needs, a 3 MHz base clock frequency to work without
-> problems with this driver.
-> 
-> This patch series adds support for an optinal property that makes it able
-> to override the default base clock frequency and enables the ir interface
-> on the a83t and the Bananapi M3.
-> 
-> changes since v4:
-> * rename cir pin from cir_pins to r_cir_pin
-> * drop unit-adress from r_cir_pin
-> * add a83t compatible to the cir node
-> * move muxing options to dtsi
-> * rename cir label and reorder it in the bananpim3.dts file
-> 
-> changes since v3:
-> * collecting all acks & reviewd by
-> * fixed typos
-> 
-> changes since v2:
-> * reorder cir pin (alphabetical)
-> * fix typo in documentation
-> 
-> changes since v1:
-> * fix typos, reword Documentation
-> * initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
-> * change dev_info() to dev_dbg()
-> * change naming to cir* in dts/dtsi
-> * Added acked Ackedi-by to related patch
-> * use whole memory block instead of registers needed + fix for h3/h5
-> 
-> changes since rfc:
-> * The property is now optinal. If the property is not available in
->    the dtb the driver uses the default base clock frequency.
-> * the driver prints out the the selected base clock frequency.
-> * changed devicetree property from base-clk-frequency to clock-frequency
-> 
-> Regards,
-> Philipp
-> 
-> Philipp Rossak (6):
->    media: rc: update sunxi-ir driver to get base clock frequency from
->      devicetree
->    media: dt: bindings: Update binding documentation for sunxi IR
->      controller
->    arm: dts: sun8i: a83t: Add the cir pin for the A83T
->    arm: dts: sun8i: a83t: Add support for the cir interface
->    arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
->    arm: dts: sun8i: h3-h5: ir register size should be the whole memory
->      block
-> 
->   Documentation/devicetree/bindings/media/sunxi-ir.txt |  3 +++
->   arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  5 +++++
->   arch/arm/boot/dts/sun8i-a83t.dtsi                    | 18 ++++++++++++++++++
->   arch/arm/boot/dts/sunxi-h3-h5.dtsi                   |  2 +-
->   drivers/media/rc/sunxi-cir.c                         | 19 +++++++++++--------
->   5 files changed, 38 insertions(+), 9 deletions(-)
-> 
+Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ drivers/clk/mediatek/clk-mt7622-aud.c  | 1 +
+ include/dt-bindings/clock/mt7622-clk.h | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Hey,
+diff --git a/drivers/clk/mediatek/clk-mt7622-aud.c b/drivers/clk/mediatek/clk-mt7622-aud.c
+index fad7d9f..13f752d 100644
+--- a/drivers/clk/mediatek/clk-mt7622-aud.c
++++ b/drivers/clk/mediatek/clk-mt7622-aud.c
+@@ -106,6 +106,7 @@
+ 	GATE_AUDIO1(CLK_AUDIO_INTDIR, "audio_intdir", "intdir_sel", 20),
+ 	GATE_AUDIO1(CLK_AUDIO_A1SYS, "audio_a1sys", "a1sys_hp_sel", 21),
+ 	GATE_AUDIO1(CLK_AUDIO_A2SYS, "audio_a2sys", "a2sys_hp_sel", 22),
++	GATE_AUDIO1(CLK_AUDIO_AFE_CONN, "audio_afe_conn", "a1sys_hp_sel", 23),
+ 	/* AUDIO2 */
+ 	GATE_AUDIO2(CLK_AUDIO_UL1, "audio_ul1", "a1sys_hp_sel", 0),
+ 	GATE_AUDIO2(CLK_AUDIO_UL2, "audio_ul2", "a1sys_hp_sel", 1),
+diff --git a/include/dt-bindings/clock/mt7622-clk.h b/include/dt-bindings/clock/mt7622-clk.h
+index 3e514ed..e9d77f0 100644
+--- a/include/dt-bindings/clock/mt7622-clk.h
++++ b/include/dt-bindings/clock/mt7622-clk.h
+@@ -235,7 +235,8 @@
+ #define CLK_AUDIO_MEM_ASRC3		43
+ #define CLK_AUDIO_MEM_ASRC4		44
+ #define CLK_AUDIO_MEM_ASRC5		45
+-#define CLK_AUDIO_NR_CLK		46
++#define CLK_AUDIO_AFE_CONN		46
++#define CLK_AUDIO_NR_CLK		47
+ 
+ /* SSUSBSYS */
+ 
+-- 
+1.9.1
 
-RC1 is now out, thus I would like to ask you to have a look at this 
-patch series again. Some patches still miss an acked-by. It would be 
-nice if we could schedule this for v4.17.
-
-Thanks,
-Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
