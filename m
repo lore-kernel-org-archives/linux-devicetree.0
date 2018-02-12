@@ -1,53 +1,42 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v3 2/3] arm64: dts: sdm845: Add minimal dts files for
- sdm845 SoC/MTP
-Date: Mon, 12 Feb 2018 10:39:29 +0100
-Message-ID: <CAOFm3uH7gVG_h-uh+ZgN3_YzHQMBGV+2neUEcyETdppouZF4Sg@mail.gmail.com>
-References: <20180212062832.2791-1-rnayak@codeaurora.org> <20180212062832.2791-3-rnayak@codeaurora.org>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 04/24] dt-bindings: display: add HPD gpio to DVI connector
+Date: Mon, 12 Feb 2018 11:44:34 +0200
+Message-ID: <1518428694-18018-5-git-send-email-tomi.valkeinen@ti.com>
+References: <1518428694-18018-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180212062832.2791-3-rnayak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, evgreen@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Douglas Anderson <dianders@chromium.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518428694-18018-1-git-send-email-tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 12, 2018 at 7:28 AM, Rajendra Nayak <rnayak@codeaurora.org> wrote:
-> Add a skeletal sdm845 SoC dtsi and MTP board dts/dtsi files
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile       |   1 +
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  13 ++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 275 ++++++++++++++++++++++++++++++++
->  3 files changed, 289 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
->
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 55ec5ee7f7e8..9319e74b8906 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -6,3 +6,4 @@ dtb-$(CONFIG_ARCH_QCOM) += msm8916-mtp.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += msm8992-bullhead-rev-101.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += msm8994-angler-rev-101.dtb
->  dtb-$(CONFIG_ARCH_QCOM)        += msm8996-mtp.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)        += sdm845-mtp.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> new file mode 100644
-> index 000000000000..617c7bb25fb1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -0,0 +1,13 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
+Add hpd-gpios property to dvi-connector.txt.
 
-This is more cosmetic, but since there is only a single line of
-copyright statement and no other comments, it would make sense to use
-C++ style // for that line too IMHO (and other similar cases)
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ Documentation/devicetree/bindings/display/connector/dvi-connector.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt b/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
+index fc53f7c60bc6..207e42e9eba0 100644
+--- a/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
++++ b/Documentation/devicetree/bindings/display/connector/dvi-connector.txt
+@@ -10,6 +10,7 @@ Optional properties:
+ - analog: the connector has DVI analog pins
+ - digital: the connector has DVI digital pins
+ - dual-link: the connector has pins for DVI dual-link
++- hpd-gpios: HPD GPIO number
+ 
+ Required nodes:
+ - Video port for DVI input
 -- 
-Cordially
-Philippe Ombredanne
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
