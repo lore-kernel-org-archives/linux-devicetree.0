@@ -1,252 +1,63 @@
-From: Chintan Pandya <cpandya@codeaurora.org>
-Subject: Re: [PATCH v2] of: cache phandle nodes to reduce cost of
- of_find_node_by_phandle()
-Date: Mon, 12 Feb 2018 16:21:36 +0530
-Message-ID: <6f83f4ef-0e90-d3c1-722b-f5342b9366b6@codeaurora.org>
-References: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC v4 13/26] watchdog: renesas_wdt: Add restart handler
+Date: Mon, 12 Feb 2018 11:54:56 +0100
+Message-ID: <20180212105456.3zejp3j7hfuzyc3c@ninjato>
+References: <1517423070-24236-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1517423070-24236-14-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180207230309.goxig2irkpxrw5el@katana>
+ <TY1PR06MB089578618AA33335D90D16CEC0F70@TY1PR06MB0895.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f3tafwofa62vw2id"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <TY1PR06MB089578618AA33335D90D16CEC0F70@TY1PR06MB0895.apcprd06.prod.outlook.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>linux
 List-Id: devicetree@vger.kernel.org
 
 
+--f3tafwofa62vw2id
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2/12/2018 11:57 AM, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> Create a cache of the nodes that contain a phandle property.  Use this
-> cache to find the node for a given phandle value instead of scanning
-> the devicetree to find the node.  If the phandle value is not found
-> in the cache, of_find_node_by_phandle() will fall back to the tree
-> scan algorithm.
-> 
-> The cache is initialized in of_core_init().
-> 
-> The cache is freed via a late_initcall_sync() if modules are not
-> enabled.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
-> 
-> Changes since v1:
->    - change short description from
->      of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
->    - rebase on v4.16-rc1
->    - reorder new functions in base.c to avoid forward declaration
->    - add locking around kfree(phandle_cache) for memory ordering
->    - add explicit check for non-null of phandle_cache in
->      of_find_node_by_phandle().  There is already a check for !handle,
->      which prevents accessing a null phandle_cache, but that dependency
->      is not obvious, so this check makes it more apparent.
->    - do not free phandle_cache if modules are enabled, so that
->      cached phandles will be available when modules are loaded
 
-Most of the gain from this cache will already be achieved for kernel 
-init calls. As the discussion started with boot_time_gain vs 
-mem_overhead, we seem to be loosing here as mem_overhead will be for 
-eternal for small savings. We can live without this, IMO.
+> > I used to have this simpler version (back then for the UP case):
+> >
+> > +rwdt_start(wdev);
+> > +rwdt_write(priv, 0xffff, RWTCNT);
+> > +return 0;
+> >
+> > It should still work probably...
+>=20
+> It should still work, but it would be slower, I would stick with the
+> version I have submitted if you don't mind.
 
-> 
->   drivers/of/base.c       | 93 ++++++++++++++++++++++++++++++++++++++++++++++---
->   drivers/of/of_private.h |  5 +++
->   drivers/of/resolver.c   | 21 -----------
->   3 files changed, 94 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index ad28de96e13f..b3597c250837 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -91,10 +91,88 @@ int __weak of_node_to_nid(struct device_node *np)
->   }
->   #endif
->   
-> +static struct device_node **phandle_cache;
-> +static u32 max_phandle_cache;
-> +
-> +phandle live_tree_max_phandle(void)
-> +{
-> +	struct device_node *node;
-> +	phandle max_phandle;
-> +	unsigned long flags;
-> +
-> +	raw_spin_lock_irqsave(&devtree_lock, flags);
-> +
-> +	max_phandle = 0;
-> +	for_each_of_allnodes(node) {
-> +		if (node->phandle != OF_PHANDLE_ILLEGAL &&
-> +		    node->phandle > max_phandle)
-> +			max_phandle = node->phandle;
-> +		}
+Actually, I do mind. Because of code duplication reasons. We have a fix
+in the works for rwdt_start() and it would be too easy to overlook the
+same fix will be needed for a restart.
 
-This closing curly bracket needs proper indentation.
 
-> +
-> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +
-> +	return max_phandle;
-> +}
-> +
-> +static void of_populate_phandle_cache(void)
-> +{
-> +	unsigned long flags;
-> +	phandle max_phandle;
-> +	u32 nodes = 0;
-> +	struct device_node *np;
-> +
-> +	if (phandle_cache)
-> +		return;
-> +
-> +	max_phandle = live_tree_max_phandle();
-> +
-> +	raw_spin_lock_irqsave(&devtree_lock, flags);
-> +
-> +	for_each_of_allnodes(np)
+--f3tafwofa62vw2id
+Content-Type: application/pgp-signature; name="signature.asc"
 
-This is 1ms call.
+-----BEGIN PGP SIGNATURE-----
 
-> +		nodes++;
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqBcnwACgkQFA3kzBSg
+KbYEIRAAmOdgWp0j0/mBjoenLahP/pw4rrf3wp/UyGmPh8RA/4JfoCsiAl2yP5Ub
+xync2FvlM2HaScGRdSAhn6UlufChmQMXRw5X+5O5y/Td7Yl/pB/O2VNtCqbsMWUN
+vpbe6vIqLwlTbeYX+zbhOhE/L8bx/DSDeDPO90x3jRVwk7t/kjA/LjJSgGXjm0WK
+bJwpDWinVEuxctTSn5v9AbQtzHtpGzf2G0JN9vz/ceCSYz5dTfqxngpG7DE5PpyL
+ZP9D2wNqqBzoVo60E1ikjrgXyDhIaKI3i+3vwMf6pvnL5gtjLG+x/5TOC2GI0muN
+5Dez0IYPFgqmcOWD8/pXw9btArlb00Rns8FxUnzGxRRd/IZUihzHZ98lO3fVBGDX
+x46YY5hMBAJiwvzlpTgSNsf4PQs6KGh6TuU28uoTKJnaUL+KWi9mH34LUZeZCirJ
+RRoaU3S1d+hRph/0ZMye0CIr2I9cxMCUFYeYrHK5+YVtzI5JsYuD9T2s2GHi16al
+K4OGIY3LQJ0c15uZFVPanPiMb5M2HEKB7W4bWzrppDyp4aahI6ZQpVVyMWk20Fgp
+smnla6hBdux8C+nIkTITFHoM5E/PO0yqaY1T4TfGx0l4ULCHwtQz5ieoICMloa85
+8esy3pSGmpTsW6xzn3Kaz2KPTmAjhZZnWOvjmK6x58+SwXUUS4s=
+=o399
+-----END PGP SIGNATURE-----
 
-We can calculate total nodes in live_tree_max_phandle to save 1ms.
-
-> +
-> +	/* sanity cap for malformed tree */
-> +	if (max_phandle > nodes)
-> +		max_phandle = nodes;
-
-Or rather, we can take this entire thing to live_tree_max_phandle().
-
-> +
-> +	phandle_cache = kzalloc((max_phandle + 1) * sizeof(*phandle_cache),
-> +				GFP_ATOMIC);
-> +
-> +	for_each_of_allnodes(np)
-> +		if (np->phandle != OF_PHANDLE_ILLEGAL  &&
-> +		    np->phandle <= max_phandle &&
-> +		    np->phandle)
-> +			phandle_cache[np->phandle] = np;
-> +
-> +	max_phandle_cache = max_phandle;
-> +
-> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +}
-> +
-> +#ifndef CONFIG_MODULES
-> +static int __init of_free_phandle_cache(void)
-> +{
-> +	unsigned long flags;
-> +
-> +	raw_spin_lock_irqsave(&devtree_lock, flags);
-> +
-> +	max_phandle_cache = 0;
-> +	kfree(phandle_cache);
-> +	phandle_cache = NULL;
-> +
-> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +
-> +	return 0;
-> +}
-> +late_initcall_sync(of_free_phandle_cache);
-> +#endif
-> +
->   void __init of_core_init(void)
->   {
->   	struct device_node *np;
->   
-> +	of_populate_phandle_cache();
-> +
->   	/* Create the kset, and register existing nodes */
->   	mutex_lock(&of_mutex);
->   	of_kset = kset_create_and_add("devicetree", NULL, firmware_kobj);
-> @@ -1021,16 +1099,23 @@ int of_modalias_node(struct device_node *node, char *modalias, int len)
->    */
->   struct device_node *of_find_node_by_phandle(phandle handle)
->   {
-> -	struct device_node *np;
-> +	struct device_node *np = NULL;
->   	unsigned long flags;
->   
->   	if (!handle)
->   		return NULL;
->   
->   	raw_spin_lock_irqsave(&devtree_lock, flags);
-> -	for_each_of_allnodes(np)
-> -		if (np->phandle == handle)
-> -			break;
-> +
-> +	if (phandle_cache && handle <= max_phandle_cache)
-> +		np = phandle_cache[handle];
-> +
-> +	if (!np || np->phandle != handle) {
-> +		for_each_of_allnodes(np)
-> +			if (np->phandle == handle)
-> +				break;
-> +	}
-> +
->   	of_node_get(np);
->   	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->   	return np;
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> index 0c609e7d0334..18e03c9d4b55 100644
-> --- a/drivers/of/of_private.h
-> +++ b/drivers/of/of_private.h
-> @@ -131,6 +131,11 @@ extern void __of_update_property_sysfs(struct device_node *np,
->   extern void __of_sysfs_remove_bin_file(struct device_node *np,
->   				       struct property *prop);
->   
-> +/* illegal phandle value (set when unresolved) */
-> +#define OF_PHANDLE_ILLEGAL	0xdeadbeef
-> +
-> +extern phandle live_tree_max_phandle(void);
-
-Why do we need this to be public API ? It was not previously and no good 
-use-case for this now.
-
-> +
->   /* iterators for transactions, used for overlays */
->   /* forward iterator */
->   #define for_each_transaction_entry(_oft, _te) \
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> index 740d19bde601..a7580c24737a 100644
-> --- a/drivers/of/resolver.c
-> +++ b/drivers/of/resolver.c
-> @@ -19,27 +19,6 @@
->   
->   #include "of_private.h"
->   
-> -/* illegal phandle value (set when unresolved) */
-> -#define OF_PHANDLE_ILLEGAL	0xdeadbeef
-> -
-> -static phandle live_tree_max_phandle(void)
-> -{
-> -	struct device_node *node;
-> -	phandle phandle;
-> -	unsigned long flags;
-> -
-> -	raw_spin_lock_irqsave(&devtree_lock, flags);
-> -	phandle = 0;
-> -	for_each_of_allnodes(node) {
-> -		if (node->phandle != OF_PHANDLE_ILLEGAL &&
-> -				node->phandle > phandle)
-> -			phandle = node->phandle;
-> -	}
-> -	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> -
-> -	return phandle;
-> -}
-> -
->   static void adjust_overlay_phandles(struct device_node *overlay,
->   		int phandle_delta)
->   {
-> 
-
-Chintan
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation
-Collaborative Project
+--f3tafwofa62vw2id--
