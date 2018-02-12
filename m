@@ -1,48 +1,76 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 0/3] Add R8A77970/Eagle PFC support
-Date: Mon, 12 Feb 2018 21:04:06 +0300
-Message-ID: <19d23fa2-1205-89a0-786f-f301ca7a0f7b@cogentembedded.com>
-References: <20171110200218.747996672@cogentembedded.com>
- <20171113075303.zmkmq6bt3lfuttwu@verge.net.au>
- <049b0a0a-b1c2-73e6-c471-ca8342bba6ab@ideasonboard.com>
+From: Kieran Bingham <kbingham@kernel.org>
+Subject: [PATCH v2 1/5] dt-bindings: media: adv7604: Add support for
+ i2c_new_secondary_device
+Date: Mon, 12 Feb 2018 18:11:53 +0000
+Message-ID: <1518459117-16733-2-git-send-email-kbingham@kernel.org>
+References: <1518459117-16733-1-git-send-email-kbingham@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <049b0a0a-b1c2-73e6-c471-ca8342bba6ab@ideasonboard.com>
-Content-Language: en-MW
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>, Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1518459117-16733-1-git-send-email-kbingham@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Jean-Michel Hautbois <jean-michel.hautbois@vodalys.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/2018 01:48 PM, Kieran Bingham wrote:
-
->>> Here's the set of 3 patches against Simon Horman's 'renesas.git' repo's
->>> 'renesas-devel-20171110-v4.14-rc8' tag.  We're adding the R8A77970 PFC node
->>> and then describing the pins for SCIF0 and EtherAVB devices declared earlier.
->>> These patches depend on the R8A77970 PFC suport in order to work properly.
->>>
->>> [1/3] arm64: dts: renesas: r8a77970: add PFC support
->>> [2/3] arm64: dts: renesas: eagle: add SCIF0 pins
->>> [3/3] arm64: dts: renesas: eagle: add EtherAVB pins
->>
->> Hi Sergei,
->>
->> I have marked these patches as deferred pending acceptance of the PFC
->> driver. Please repost or otherwise ping me once that dependency has been
->> accepted.
-> 
-> Has the dependency blocking this series been resolved yet ?
-
-   Now it is, except for the 3rd patch... Simon, do I need to repost the first two?
-The 1st one did apply to 4.16-rc1 here with a fuzz...
-
-> (I have patches for the Eagle-V3M which are blocked waiting for the PFC support)
-> 
-> --
-> Regards
-> 
-> Kieran
-
-MBR, Sergei
+RnJvbTogSmVhbi1NaWNoZWwgSGF1dGJvaXMgPGplYW4tbWljaGVsLmhhdXRib2lzQHZvZGFseXMu
+Y29tPgoKVGhlIEFEVjc2MDQgaGFzIHRoaXJ0ZWVuIDI1Ni1ieXRlIG1hcHMgdGhhdCBjYW4gYmUg
+YWNjZXNzZWQgdmlhIHRoZSBtYWluCknCskMgcG9ydHMuIEVhY2ggbWFwIGhhcyBpdCBvd24gScKy
+QyBhZGRyZXNzIGFuZCBhY3RzIGFzIGEgc3RhbmRhcmQgc2xhdmUKZGV2aWNlIG9uIHRoZSBJwrJD
+IGJ1cy4KCkV4dGVuZCB0aGUgZGV2aWNlIHRyZWUgbm9kZSBiaW5kaW5ncyB0byBiZSBhYmxlIHRv
+IG92ZXJyaWRlIHRoZSBkZWZhdWx0CmFkZHJlc3NlcyBzbyB0aGF0IGFkZHJlc3MgY29uZmxpY3Rz
+IHdpdGggb3RoZXIgZGV2aWNlcyBvbiB0aGUgc2FtZSBidXMKbWF5IGJlIHJlc29sdmVkIGF0IHRo
+ZSBib2FyZCBkZXNjcmlwdGlvbiBsZXZlbC4KClNpZ25lZC1vZmYtYnk6IEplYW4tTWljaGVsIEhh
+dXRib2lzIDxqZWFuLW1pY2hlbC5oYXV0Ym9pc0B2b2RhbHlzLmNvbT4KW0tpZXJhbjogUmUtYWRh
+cHRlZCBmb3IgbWFpbmxpbmVdClNpZ25lZC1vZmYtYnk6IEtpZXJhbiBCaW5naGFtIDxraWVyYW4u
+YmluZ2hhbStyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+ClJldmlld2VkLWJ5OiBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPgoKLS0tCkJhc2VkIHVwb24gdGhlIG9yaWdpbmFsIHBvc3Rpbmcg
+OgogIGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0LzEwLzIyLzQ2OQoKdjI6CiAtIERUIEJpbmRp
+bmcgdXBkYXRlIHNlcGFyYXRlZCBmcm9tIGNvZGUgY2hhbmdlCiAtIE1pbm9yIHJld29yZCB0byBj
+b21taXQgbWVzc2FnZSB0byBhY2NvdW50IGZvciBEVCBvbmx5IGNoYW5nZS4KIC0gQ29sbGVjdGVk
+IFJvYidzIFJCIHRhZy4KCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvYWR2NzYw
+NC50eHQgICAgICAgICAgfCAxOCArKysrKysrKysrKysrKysrLS0KIDEgZmlsZSBjaGFuZ2VkLCAx
+NiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvYWR2NzYwNC50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Fkdjc2MDQudHh0CmluZGV4IDljYmQ5
+MmViNWQwNS4uYjY0ZTMxM2RjYzY2IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbWVkaWEvaTJjL2Fkdjc2MDQudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvYWR2NzYwNC50eHQKQEAgLTEzLDcgKzEzLDExIEBA
+IFJlcXVpcmVkIFByb3BlcnRpZXM6CiAgICAgLSAiYWRpLGFkdjc2MTEiIGZvciB0aGUgQURWNzYx
+MQogICAgIC0gImFkaSxhZHY3NjEyIiBmb3IgdGhlIEFEVjc2MTIKIAotICAtIHJlZzogSTJDIHNs
+YXZlIGFkZHJlc3MKKyAgLSByZWc6IEkyQyBzbGF2ZSBhZGRyZXNzZXMKKyAgICBUaGUgQURWNzZ4
+eCBoYXMgdXAgdG8gdGhpcnRlZW4gMjU2LWJ5dGUgbWFwcyB0aGF0IGNhbiBiZSBhY2Nlc3NlZCB2
+aWEgdGhlCisgICAgbWFpbiBJwrJDIHBvcnRzLiBFYWNoIG1hcCBoYXMgaXQgb3duIEnCskMgYWRk
+cmVzcyBhbmQgYWN0cyBhcyBhIHN0YW5kYXJkCisgICAgc2xhdmUgZGV2aWNlIG9uIHRoZSBJwrJD
+IGJ1cy4gVGhlIG1haW4gYWRkcmVzcyBpcyBtYW5kYXRvcnksIG90aGVycyBhcmUKKyAgICBvcHRp
+b25hbCBhbmQgcmV2ZXJ0IHRvIGRlZmF1bHRzIGlmIG5vdCBzcGVjaWZpZWQuCiAKICAgLSBocGQt
+Z3Bpb3M6IFJlZmVyZW5jZXMgdG8gdGhlIEdQSU9zIHRoYXQgY29udHJvbCB0aGUgSERNSSBob3Qt
+cGx1ZwogICAgIGRldGVjdGlvbiBwaW5zLCBvbmUgcGVyIEhETUkgaW5wdXQuIFRoZSBhY3RpdmUg
+ZmxhZyBpbmRpY2F0ZXMgdGhlIEdQSU8KQEAgLTM1LDYgKzM5LDExIEBAIE9wdGlvbmFsIFByb3Bl
+cnRpZXM6CiAKICAgLSByZXNldC1ncGlvczogUmVmZXJlbmNlIHRvIHRoZSBHUElPIGNvbm5lY3Rl
+ZCB0byB0aGUgZGV2aWNlJ3MgcmVzZXQgcGluLgogICAtIGRlZmF1bHQtaW5wdXQ6IFNlbGVjdCB3
+aGljaCBpbnB1dCBpcyBzZWxlY3RlZCBhZnRlciByZXNldC4KKyAgLSByZWctbmFtZXMgOiBOYW1l
+cyBvZiBtYXBzIHdpdGggcHJvZ3JhbW1hYmxlIGFkZHJlc3Nlcy4KKwkJSXQgY2FuIGNvbnRhaW4g
+YW55IG1hcCBuZWVkaW5nIGEgbm9uLWRlZmF1bHQgYWRkcmVzcy4KKwkJUG9zc2libGUgbWFwcyBu
+YW1lcyBhcmUgOgorCQkgICJtYWluIiwgImF2bGluayIsICJjZWMiLCAiaW5mb2ZyYW1lIiwgImVz
+ZHAiLCAiZHBwIiwgImFmZSIsCisJCSAgInJlcCIsICJlZGlkIiwgImhkbWkiLCAidGVzdCIsICJj
+cCIsICJ2ZHAiCiAKIE9wdGlvbmFsIEVuZHBvaW50IFByb3BlcnRpZXM6CiAKQEAgLTUyLDcgKzYx
+LDEyIEBAIEV4YW1wbGU6CiAKIAloZG1pX3JlY2VpdmVyQDRjIHsKIAkJY29tcGF0aWJsZSA9ICJh
+ZGksYWR2NzYxMSI7Ci0JCXJlZyA9IDwweDRjPjsKKwkJLyoKKwkJICogVGhlIGVkaWQgcGFnZSB3
+aWxsIGJlIGFjY2Vzc2libGUgQCAweDY2IG9uIHRoZSBpMmMgYnVzLiBBbGwKKwkJICogb3RoZXIg
+bWFwcyB3aWxsIHJldGFpbiB0aGVpciBkZWZhdWx0IGFkZHJlc3Nlcy4KKwkJICovCisJCXJlZyA9
+IDwweDRjIDB4NjY+OworCQlyZWctbmFtZXMgIm1haW4iLCAiZWRpZCI7CiAKIAkJcmVzZXQtZ3Bp
+b3MgPSA8JmlvZXhwIDAgR1BJT19BQ1RJVkVfTE9XPjsKIAkJaHBkLWdwaW9zID0gPCZpb2V4cCAy
+IEdQSU9fQUNUSVZFX0hJR0g+OwotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
