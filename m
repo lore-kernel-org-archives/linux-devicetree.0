@@ -1,74 +1,136 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH usb-next v9 2/8] usb: add a flag to skip PHY initialization
- to struct usb_hcd
-Date: Mon, 12 Feb 2018 14:42:29 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1802121441030.1411-100000@iolanthe.rowland.org>
-References: <CAFBinCBnea-Nt73Lz6K+hKub++Upxa6ot8o857rG3GeuLugZYw@mail.gmail.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] of: cache phandle nodes to reduce cost of
+ of_find_node_by_phandle()
+Date: Mon, 12 Feb 2018 12:06:01 -0800
+Message-ID: <e1265e8e-348c-1672-c5e5-27a6820f330a@gmail.com>
+References: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
+ <5ca5194d-8b87-bcb6-73ca-a671075e4704@prevas.dk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCBnea-Nt73Lz6K+hKub++Upxa6ot8o857rG3GeuLugZYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, Peter.Chen-3arQi8VN3Tc@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5ca5194d-8b87-bcb6-73ca-a671075e4704-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rasmus Villemoes <rasmus.villemoes-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Feb 2018, Martin Blumenstingl wrote:
-
-> Hi Alan,
+On 02/12/18 00:58, Rasmus Villemoes wrote:
+> On 2018-02-12 07:27, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>>
+>> Create a cache of the nodes that contain a phandle property.  Use this
+>> cache to find the node for a given phandle value instead of scanning
+>> the devicetree to find the node.  If the phandle value is not found
+>> in the cache, of_find_node_by_phandle() will fall back to the tree
+>> scan algorithm.
+>>
+>> The cache is initialized in of_core_init().
+>>
+>> The cache is freed via a late_initcall_sync() if modules are not
+>> enabled.
 > 
-> On Mon, Feb 12, 2018 at 4:15 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
-> > On Sun, 11 Feb 2018, Martin Blumenstingl wrote:
-> >
-> >> The USB HCD core driver parses the device-tree node for "phys" and
-> >> "usb-phys" properties. It also manages the power state of these PHYs
-> >> automatically.
-> >> However, drivers may opt-out of this behavior by setting "phy" or
-> >> "usb_phy" in struct usb_hcd to a non-null value. An example where this
-> >> is required is the "Qualcomm USB2 controller", implemented by the
-> >> chipidea driver. The hardware requires that the PHY is only powered on
-> >> after the "reset completed" event from the controller is received.
-> >>
-> >> A follow-up patch will allow the USB HCD core driver to manage more than
-> >> one PHY. Add a new "bool skip_phy_initialization" field to struct
-> >> usb_hcd so drivers can opt-out of any PHY management provided by the USB
-> >> HCD core driver. The new field will be used in that patch as well.
-> >>
-> >> This also updates the existing drivers so they use the new flag if they
-> >> want to opt out of the PHY management provided by the USB HCD core
-> >> driver. This means that for these drivers the new "multiple PHY"
-> >> handling (which will be added in a follow-up patch) will be disabled as
-> >> well.
-> >>
-> >> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> >> ---
-> >
-> >> --- a/include/linux/usb/hcd.h
-> >> +++ b/include/linux/usb/hcd.h
-> >> @@ -98,6 +98,12 @@ struct usb_hcd {
-> >>        */
-> >>       const struct hc_driver  *driver;        /* hw-specific hooks */
-> >>
-> >> +     /*
-> >> +      * do not manage the PHY state in the HCD core, instead let the driver
-> >> +      * handle this (for example if the PHY can only be turned on after a
-> >> +      * specific event)
-> >> +      */
-> >> +     bool skip_phy_initialization;
-> >
-> > Instead of declaring this as a bool at some random location in the
-> > structure, it would be better to make this a bitflag along with the
-> > other ones that get set at registration.  For example, it could come
-> > right after the remove_phy flag.
-> I'll move it to the other bitflags as suggested - thanks for pointing this out!
+> Maybe a few words about the memory consumption of this solution versus
+> the other proposed ones.
+
+The patch comment is about this patch, not the other proposals.
+
+Please do not take that as a snippy response.  There were several
+emails in the previous thread that discussed memory.  In that
+thread I responded as to how I would address the concerns.  If
+anyone wants to raise concerns about memory usage as a result of
+this version of the patch they should do so in this current thread.
+
+
+> Other nits below.
 > 
-> just to save you from reviewing this over and over again:
-> - I'll move the skip_phy_initialization field below remove_phy
-> - it's new definition will be "unsigned skip_phy_initialization:1"
-> - do you see any issues with the rest of the patch (the "concept" of
-> using a flag to skip all kinds of PHY initialization)?
+>> +static void of_populate_phandle_cache(void)
+>> +{
+>> +	unsigned long flags;
+>> +	phandle max_phandle;
+>> +	u32 nodes = 0;
+>> +	struct device_node *np;
+>> +
+>> +	if (phandle_cache)
+>> +		return;
+> 
+> What's the point of that check? 
 
-It's okay as far as I can tell.  But I haven't done any PHY
-programming, so I'm not a good judge.
+Sanity check to make sure a memory leak of a previous cache
+does not occur.  I'll change it to free the cache if it
+exists.
 
-Alan Stern
+There is only one instance of of_populate_cache() being called,
+so this is a theoretical issue.  I intend to add another caller
+in the devicetree overlay code in the future, but do not want
+to do that now, to avoid a conflict with the overlay patch
+series that has been in parallel development, and for which
+I submitted v2 shortly after this set of patches.
+
+
+> And shouldn't it be done inside the
+> spinlock if at all?
+
+Not an issue yet, but I'll keep my eye on the possibility of races
+when I add a call to of_populate_cache() from the overlay code.
+
+
+>> +	max_phandle = live_tree_max_phandle();
+>> +
+>> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>> +
+>> +	for_each_of_allnodes(np)
+>> +		nodes++;
+> 
+> Why not save a walk over all nodes and a spin_lock/unlock pair by
+> combining the node count with the max_phandle computation? But you've
+> just moved the existing live_tree_max_phandle, so probably better as a
+> followup patch.
+
+I'll consider adding the node counting into live_tree_max_phandle() later.
+The other user of live_tree_max_phandle() is being modified in my overlay
+patch series (see mention above).  I don't want to create a conflict between
+the two series.
+
+
+>> +	/* sanity cap for malformed tree */
+>> +	if (max_phandle > nodes)
+>> +		max_phandle = nodes;
+>> +
+>> +	phandle_cache = kzalloc((max_phandle + 1) * sizeof(*phandle_cache),
+>> +				GFP_ATOMIC);
+> 
+> Maybe kcalloc. Sure, you've capped max_phandle so there's no real risk
+> of overflow.
+
+OK, will do.
+
+
+>> +	for_each_of_allnodes(np)
+>> +		if (np->phandle != OF_PHANDLE_ILLEGAL  &&
+>> +		    np->phandle <= max_phandle &&
+>> +		    np->phandle)
+> 
+> I'd reverse the order of these conditions so that for all the nodes with
+> no phandle we only do the np->phandle check. Also, extra whitespace
+> before &&.
+
+Will do.
+
+
+>> +			phandle_cache[np->phandle] = np;
+>> +
+>> +	max_phandle_cache = max_phandle;
+>> +
+>> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>> +}
+>> +
+> 
+> Rasmus
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
