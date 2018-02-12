@@ -1,96 +1,72 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2 4/4] of: improve reporting invalid overlay target path
-Date: Mon, 12 Feb 2018 12:51:05 -0800
-Message-ID: <a97ad5c3-eb7e-4f94-d17a-6a1a5404fb56@gmail.com>
-References: <1518425496-12159-1-git-send-email-frowand.list@gmail.com>
- <1518425496-12159-5-git-send-email-frowand.list@gmail.com>
- <CAMuHMdUnkdtHnbSVM7p4756OQzq24N8=g8==s-6yKLAgki+LyA@mail.gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v5 12/26] watchdog: renesas_wdt: Add R-Car Gen2 support
+Date: Mon, 12 Feb 2018 21:58:58 +0100
+Message-ID: <20180212205857.54nmli2jnv4fxrwm@katana>
+References: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1518457475-4480-13-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUnkdtHnbSVM7p4756OQzq24N8=g8==s-6yKLAgki+LyA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fwmxrfzpbjqoxo45"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1518457475-4480-13-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/18 01:00, Geert Uytterhoeven wrote:
-> Hi Frank,
-> 
-> On Mon, Feb 12, 2018 at 9:51 AM,  <frowand.list@gmail.com> wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> Errors while developing the patch to create of_overlay_fdt_apply()
->> exposed inadequate error messages to debug problems when overlay
->> devicetree fragment nodes contain an invalid target path.  Improve
->> the messages in find_target_node() to remedy this.
->>
->> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> 
-> Thanks for your patch!
-> 
->> --- a/drivers/of/overlay.c
->> +++ b/drivers/of/overlay.c
->> @@ -488,17 +488,26 @@ static int build_changeset(struct overlay_changeset *ovcs)
->>   */
->>  static struct device_node *find_target_node(struct device_node *info_node)
->>  {
->> +       struct device_node *node;
->>         const char *path;
->>         u32 val;
->>         int ret;
->>
->>         ret = of_property_read_u32(info_node, "target", &val);
->> -       if (!ret)
->> -               return of_find_node_by_phandle(val);
->> +       if (!ret) {
->> +               node = of_find_node_by_phandle(val);
->> +               if (!node)
->> +                       pr_err("target node find by phandle failed\n");
-> 
-> Do you want to print the actual node, cfr. below?
 
-That seems like a good idea.  The name printed below is the (short) node
-name of the fragment, which seems useful.
+--fwmxrfzpbjqoxo45
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will do, but will remove the pointer to the node, which is more of an
-internal debugging detail.
+On Mon, Feb 12, 2018 at 05:44:21PM +0000, Fabrizio Castro wrote:
+> Due to commits:
+> * "ARM: shmobile: Add watchdog support",
+> * "ARM: shmobile: rcar-gen2: Add watchdog support", and
+> * "soc: renesas: rcar-rst: Enable watchdog as reset trigger for Gen2",
+> we now have everything we needed for the watchdog to work on Gen2 and
+> RZ/G1.
+>=20
+> This commit adds "renesas,rcar-gen2-wdt" as compatible string for R-Car
+> Gen2 and RZ/G1, and since on those platforms the rwdt clock needs to be
+> always ON, when suspending to RAM we need to explicitly disable the
+> counting by clearing TME from RWTCSRA.
+>=20
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRj3fQ9qLvQP4Q@public.gmane.org=
+s.com>
+> ---
+> v4->v5:
+> * various improvements suggested by Wolfram
+>=20
+
+Reviewed-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 
 
->> +               return node;
->> +       }
->>
->>         ret = of_property_read_string(info_node, "target-path", &path);
->> -       if (!ret)
->> -               return of_find_node_by_path(path);
->> +       if (!ret) {
->> +               node =  of_find_node_by_path(path);
->> +               if (!node)
->> +                       pr_err("target node find by path failed\n");
-> 
-> Likewise.
+--fwmxrfzpbjqoxo45
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Will do.
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqCAA0ACgkQFA3kzBSg
+KbbZ+w/9FyTriWtGeRWOvopVj5eil9PSeM1rjVIwx399i7/OiqC+180H214SwvrP
+U6knmbhPDT5hK42DPyY9OXRcMAInFbkxdNNnCyOysYW95ukf5xWSG0A0s3NoUE0e
+ALbzhebzjVNfvIPANTswz+Eykih+NEv0xlOCjbHos2aESJIfUcarrPQgcJXgubOt
+06cX+fAV7f20g2dg/g1sqE9np0N8CPIrDTCHUVi4bsAd7iwpYvOKy6pDEWgnk09z
+Q4bjFRY/xXbzjThl93n+RsuOQBEQtsfcGTeG7b2hMtQLyQ02QRmwsGT2BK829u3k
+aIHtxmrm8O6uJLTCF/qaWIu3ZheVOvRuF4gbjdKTgDpv0hLV7OLLKp4lWpqAfJ+7
+pVKxKdRPi5O+t3L36SngaYRXob751s1f+51ut89Nf1iCfLr7MfY0Yl/7gUTgP+ys
+1kDAH7oWqstKspSRQkOw4MAyoUpWMMIjVLfzsG3i1zbn4T9iWlpKJb+teTd9pdfb
+UnS7EjAa9ciggTwSadK5kfj/3l15lmmqRBJRHHC5P0c107NjjjPWdOYRYstTFlxF
+20V+74xmZ8y1BJkvAox4gR6p6Ialldi99xduDMDfJ0YxhSV5WR8DGjWPOF+U80hw
+NCcDCaxkFdvjmHJO4M4KyZqQS6vc+HW9kxh9WahzW/yZrzJamZY=
+=YcjP
+-----END PGP SIGNATURE-----
 
->> +               return node;
->> +       }
->>
->>         pr_err("Failed to find target for node %p (%s)\n",
->>                 info_node, info_node->name);
-> 
-> This one prints more info.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+--fwmxrfzpbjqoxo45--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
