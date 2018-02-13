@@ -1,91 +1,325 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH v2 09/12] ARM: dts: STi: Add fake reg property for sound
- related nodes
-Date: Tue, 13 Feb 2018 12:54:56 +0000
-Message-ID: <99afc3f9-d0b4-b13c-ac97-4347f25aa000@st.com>
-References: <1518446590-16800-1-git-send-email-patrice.chotard@st.com>
- <1518446590-16800-10-git-send-email-patrice.chotard@st.com>
- <CABGGiszvx=Nyeq+KTt9uHGwSabxsJuEfvG01H4NyrBtB40atoA@mail.gmail.com>
+From: <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v3 01/11] ARM: dts: STi: Fix bindings notation
+Date: Tue, 13 Feb 2018 13:53:27 +0100
+Message-ID: <1518526417-11919-2-git-send-email-patrice.chotard@st.com>
+References: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABGGiszvx=Nyeq+KTt9uHGwSabxsJuEfvG01H4NyrBtB40atoA@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <E2D3A8AB06DC3247A5FAF39EC2F6E673@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518526417-11919-1-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: patrice.chotard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iDQoNCk9uIDAyLzEyLzIwMTggMDQ6NDAgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
-biBNb24sIEZlYiAxMiwgMjAxOCBhdCA4OjQzIEFNLCAgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+
-IHdyb3RlOg0KPj4gRnJvbTogUGF0cmljZSBDaG90YXJkIDxwYXRyaWNlLmNob3RhcmRAc3QuY29t
-Pg0KPj4NCj4+IEFkZCBmYWtlIHJlZyBwcm9wZXJ0eSB0byBzb3VuZCwgc2ltcGxlLWF1ZGlvLWNh
-cmQsIGRhaS1saW5rIGFuZA0KPj4gc3RpX3Nhc2dfY29kZWMgbm9kZXMsIHRoaXMgYWxsb3dzIHRv
-IGZpeCB0aGUgZm9sbG93aW5nIHdhcm5pbmcNCj4+IHdoZW4gY29tcGlsaW5nIGR0YiB3aXRoIFc9
-MSBvcHRpb246DQo+Pg0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1iMjEyMC5kdGI6IFdh
-cm5pbmcgKHVuaXRfYWRkcmVzc192c19yZWcpOg0KPj4gTm9kZSAvc29jL3NvdW5kL3NpbXBsZS1h
-dWRpby1jYXJkLGRhaS1saW5rQDAgaGFzIGEgdW5pdCBuYW1lLCBidXQgbm8gcmVnIHByb3BlcnR5
-DQo+PiBhcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWIyMTIwLmR0YjogV2FybmluZyAodW5pdF9h
-ZGRyZXNzX3ZzX3JlZyk6DQo+PiBOb2RlIC9zb2Mvc291bmQvc2ltcGxlLWF1ZGlvLWNhcmQsZGFp
-LWxpbmtAMSBoYXMgYSB1bml0IG5hbWUsIGJ1dCBubyByZWcgcHJvcGVydHkNCj4+IGFyY2gvYXJt
-L2Jvb3QvZHRzL3N0aWg0MDctYjIxMjAuZHRiOiBXYXJuaW5nICh1bml0X2FkZHJlc3NfdnNfcmVn
-KToNCj4+IE5vZGUgL3NvYy9zb3VuZC9zaW1wbGUtYXVkaW8tY2FyZCxkYWktbGlua0AyIGhhcyBh
-IHVuaXQgbmFtZSwgYnV0IG5vIHJlZyBwcm9wZXJ0eQ0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3Rp
-aDQxMC1iMjEyMC5kdGI6IFdhcm5pbmcgKHNpbXBsZV9idXNfcmVnKToNCj4+IE5vZGUgL3NvYy9z
-dGktc2FzZy1jb2RlYyBtaXNzaW5nIG9yIGVtcHR5IHJlZy9yYW5nZXMgcHJvcGVydHkNCj4+DQo+
-PiBhcmNoL2FybS9ib290L2R0cy9zdGloNDEwLWIyMTIwLmR0YjogV2FybmluZyAodW5pdF9hZGRy
-ZXNzX3ZzX3JlZyk6DQo+PiBOb2RlIC9zb2Mvc291bmQvc2ltcGxlLWF1ZGlvLWNhcmQsZGFpLWxp
-bmtAMCBoYXMgYSB1bml0IG5hbWUsIGJ1dCBubyByZWcgcHJvcGVydHkNCj4+IGFyY2gvYXJtL2Jv
-b3QvZHRzL3N0aWg0MTAtYjIxMjAuZHRiOiBXYXJuaW5nICh1bml0X2FkZHJlc3NfdnNfcmVnKToN
-Cj4+IE5vZGUgL3NvYy9zb3VuZC9zaW1wbGUtYXVkaW8tY2FyZCxkYWktbGlua0AxIGhhcyBhIHVu
-aXQgbmFtZSwgYnV0IG5vIHJlZyBwcm9wZXJ0eQ0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQx
-MC1iMjEyMC5kdGI6IFdhcm5pbmcgKHVuaXRfYWRkcmVzc192c19yZWcpOg0KPj4gTm9kZSAvc29j
-L3NvdW5kL3NpbXBsZS1hdWRpby1jYXJkLGRhaS1saW5rQDIgaGFzIGEgdW5pdCBuYW1lLCBidXQg
-bm8gcmVnIHByb3BlcnR5DQo+PiBhcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWIyMTIwLmR0Yjog
-V2FybmluZyAoc2ltcGxlX2J1c19yZWcpOg0KPj4gTm9kZSAvc29jL3NvdW5kIG1pc3Npbmcgb3Ig
-ZW1wdHkgcmVnL3JhbmdlcyBwcm9wZXJ0eQ0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC1i
-MjEyMC5kdGI6IFdhcm5pbmcgKHNpbXBsZV9idXNfcmVnKToNCj4+IE5vZGUgL3NvYy9zdGktc2Fz
-Zy1jb2RlYyBtaXNzaW5nIG9yIGVtcHR5IHJlZy9yYW5nZXMgcHJvcGVydHkNCj4+DQo+PiBhcmNo
-L2FybS9ib290L2R0cy9zdGloNDEwLWIyMjYwLmR0YjogV2FybmluZyAodW5pdF9hZGRyZXNzX3Zz
-X3JlZyk6DQo+PiBOb2RlIC9zb2Mvc291bmQvc2ltcGxlLWF1ZGlvLWNhcmQsZGFpLWxpbmtAMCBo
-YXMgYSB1bml0IG5hbWUsIGJ1dCBubyByZWcgcHJvcGVydHkNCj4+IGFyY2gvYXJtL2Jvb3QvZHRz
-L3N0aWg0MTAtYjIyNjAuZHRiOiBXYXJuaW5nIChzaW1wbGVfYnVzX3JlZyk6DQo+PiBOb2RlIC9z
-b2Mvc3RpLXNhc2ctY29kZWMgbWlzc2luZyBvciBlbXB0eSByZWcvcmFuZ2VzIHByb3BlcnR5DQo+
-PiBhcmNoL2FybS9ib290L2R0cy9zdGloNDEwLWIyMjYwLmR0YjogV2FybmluZyAoc2ltcGxlX2J1
-c19yZWcpOg0KPj4gTm9kZSAvc29jL3NvdW5kIG1pc3Npbmcgb3IgZW1wdHkgcmVnL3JhbmdlcyBw
-cm9wZXJ0eQ0KPj4NCj4+IGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTgtYjIxOTkuZHRiOiBXYXJu
-aW5nIChzaW1wbGVfYnVzX3JlZyk6DQo+PiBOb2RlIC9zb2Mvc3RpLXNhc2ctY29kZWMgbWlzc2lu
-ZyBvciBlbXB0eSByZWcvcmFuZ2VzIHByb3BlcnR5DQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogUGF0
-cmljZSBDaG90YXJkIDxwYXRyaWNlLmNob3RhcmRAc3QuY29tPg0KPj4gLS0tDQo+Pg0KPj4gdjI6
-IF8gYWRkIGEgZmFrZSByZWcgcHJvcGVydHkgdG8gbm9kZSB3aXRob3V0IHJlZyBwcm9wZXJ0eS4N
-Cj4+DQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kgfCAgMyArKy0N
-Cj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC1iMjI2MC5kdHMgICB8ICA1ICsrKy0tDQo+
-PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWh4eHgtYjIxMjAuZHRzaSAgfCAxMSArKysrKystLS0t
-LQ0KPj4gICAzIGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0p
-DQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0
-c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpDQo+PiBpbmRleCA1ZGY4
-MjdiMDBlYjYuLmRmMWEzZjFkYzVhNyAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L3N0aWg0MDctZmFtaWx5LmR0c2kNCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDct
-ZmFtaWx5LmR0c2kNCj4+IEBAIC04OTQsOCArODk0LDkgQEANCj4+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPj4gICAgICAgICAgICAgICAgICB9Ow0KPj4N
-Cj4+IC0gICAgICAgICAgICAgICBzdGlfc2FzZ19jb2RlYzogc3RpLXNhc2ctY29kZWMgew0KPj4g
-KyAgICAgICAgICAgICAgIHN0aV9zYXNnX2NvZGVjOiBzdGktc2FzZy1jb2RlY0AwIHsNCj4+ICAg
-ICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInN0LHN0aWg0MDctc2FzLWNvZGVj
-IjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwIDA+Ow0KPj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICNzb3VuZC1kYWktY2VsbHMgPSA8MT47DQo+PiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICBzdCxzeXNjZmcgPSA8JnN5c2NmZ19jb3JlPjsNCj4gDQo+IFRoaXMgc2hvdWxkIHByb2Jh
-Ymx5IGJlIGEgY2hpbGQgb2Ygc3lzY2ZnIHRvIGZpeCB0aGlzLiBBbmQgaWYgdGhpcw0KPiBibG9j
-ayBoYXMgYSBkZWRpY2F0ZWQgc2V0IG9mIHJlZ2lzdGVycywgdGhlbiB1c2UgcmVnIHRvIGRlZmlu
-ZSB0aG9zZQ0KPiAoZXZlbiB0aG91Z2ggcmVnbWFwL3N5c2NvbiBkb2Vzbid0IG5lZWQgaXQpLg0K
-DQpPaywgaSB3aWxsIG1vZGUgdGhpcyBub2RlDQoNCj4gDQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9h
-cm0vYm9vdC9kdHMvc3RpaDQxMC1iMjI2MC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDEw
-LWIyMjYwLmR0cw0KPj4gaW5kZXggOGJjZDU4MTE4ZGJhLi4wM2QwNWE5OGI3ZmMgMTAwNjQ0DQo+
-PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDEwLWIyMjYwLmR0cw0KPj4gKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvc3RpaDQxMC1iMjI2MC5kdHMNCj4+IEBAIC0xODEsMTIgKzE4MSwxMyBA
-QA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4+ICAgICAg
-ICAgICAgICAgICAgfTsNCj4+DQo+PiAtICAgICAgICAgICAgICAgc291bmQgew0KPj4gKyAgICAg
-ICAgICAgICAgIHNvdW5kOiBzb3VuZEAwIHsNCj4gDQo+IEknZCBtb3ZlIHRoaXMgdXAgdG8gdG9w
-IGxldmVsLg0KDQpPaw0KDQpUaGFua3MNCg0KUGF0cmljZQ0KDQoNCg0KPiANCj4gUm9iDQo+IA==
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+
+Remove leading 0x and 0s from bindings notation
+Add missing unit-address and remove some which are useless.
+
+This allows to fix several warnings like :
+
+Warning (unit_address_vs_reg): Node XXXX has a reg or ranges property, but no unit name
+Warning (simple_bus_reg): Node XXXX simple-bus unit address format error, expected "123456"
+Warning (unit_address_vs_reg): Node XXXX has a unit name, but no reg property
+
+Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+v3: _ Add Reviewed-by
+v2: _ none
+
+ arch/arm/boot/dts/stih407-b2120.dts    |  2 +-
+ arch/arm/boot/dts/stih407-clock.dtsi   |  4 ++--
+ arch/arm/boot/dts/stih407-family.dtsi  |  8 ++++----
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 10 +++++-----
+ arch/arm/boot/dts/stih410-b2120.dts    |  2 +-
+ arch/arm/boot/dts/stih410-b2260.dts    |  4 ++--
+ arch/arm/boot/dts/stih410-clock.dtsi   |  4 ++--
+ arch/arm/boot/dts/stih410-pinctrl.dtsi |  2 +-
+ arch/arm/boot/dts/stih410.dtsi         |  2 +-
+ arch/arm/boot/dts/stih418-b2199.dts    |  4 ++--
+ arch/arm/boot/dts/stih418-clock.dtsi   |  4 ++--
+ arch/arm/boot/dts/stihxxx-b2120.dtsi   |  4 ++--
+ 12 files changed, 25 insertions(+), 25 deletions(-)
+
+diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
+index c8ad905d0309..cf8bc8a8b947 100644
+--- a/arch/arm/boot/dts/stih407-b2120.dts
++++ b/arch/arm/boot/dts/stih407-b2120.dts
+@@ -18,7 +18,7 @@
+ 		linux,stdout-path = &sbc_serial0;
+ 	};
+ 
+-	memory {
++	memory@40000000 {
+ 		device_type = "memory";
+ 		reg = <0x40000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
+index d0a24d9e517a..b882dcf3a649 100644
+--- a/arch/arm/boot/dts/stih407-clock.dtsi
++++ b/arch/arm/boot/dts/stih407-clock.dtsi
+@@ -83,7 +83,7 @@
+ 		 * Bootloader initialized system infrastructure clock for
+ 		 * serial devices.
+ 		 */
+-		clk_ext2f_a9: clockgen-c0@13 {
++		clk_ext2f_a9: clockgen-c0 {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <200000000>;
+@@ -260,7 +260,7 @@
+ 			clock-frequency = <0>;
+ 		};
+ 
+-		clockgen-d2@x9106000 {
++		clockgen-d2@9106000 {
+ 			compatible = "st,clkgen-c32";
+ 			reg = <0x9106000 0x1000>;
+ 
+diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+index cf3756976c39..1608c70f05a9 100644
+--- a/arch/arm/boot/dts/stih407-family.dtsi
++++ b/arch/arm/boot/dts/stih407-family.dtsi
+@@ -92,7 +92,7 @@
+ 		clocks = <&arm_periph_clk>;
+ 	};
+ 
+-	l2: cache-controller {
++	l2: cache-controller@8762000 {
+ 		compatible = "arm,pl310-cache";
+ 		reg = <0x08762000 0x1000>;
+ 		arm,data-latency = <3 3 3>;
+@@ -389,7 +389,7 @@
+ 			reset-names = "global", "port";
+ 		};
+ 
+-		miphy28lp_phy: miphy28lp@9b22000 {
++		miphy28lp_phy: miphy28lp {
+ 			compatible = "st,miphy28lp-phy";
+ 			st,syscfg = <&syscfg_core>;
+ 			#address-cells	= <1>;
+@@ -803,7 +803,7 @@
+ 			status		= "okay";
+ 		};
+ 
+-		st231_gp0: st231-gp0@0 {
++		st231_gp0: st231-gp0 {
+ 			compatible	= "st,st231-rproc";
+ 			memory-region	= <&gp0_reserved>;
+ 			resets		= <&softreset STIH407_ST231_GP0_SOFTRESET>;
+@@ -816,7 +816,7 @@
+ 			mboxes = <&mailbox0 0 2>, <&mailbox2 0 1>, <&mailbox0 0 3>, <&mailbox2 0 0>;
+ 		};
+ 
+-		st231_delta: st231-delta@0 {
++		st231_delta: st231-delta {
+ 			compatible	= "st,st231-rproc";
+ 			memory-region	= <&delta_reserved>;
+ 			resets		= <&softreset STIH407_ST231_DMU_SOFTRESET>;
+diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+index a29090077fdf..53c6888d1fc0 100644
+--- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+@@ -45,7 +45,7 @@
+ 	};
+ 
+ 	soc {
+-		pin-controller-sbc {
++		pin-controller-sbc@961f080 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			compatible = "st,stih407-sbc-pinctrl";
+@@ -369,7 +369,7 @@
+ 			};
+ 		};
+ 
+-		pin-controller-front0 {
++		pin-controller-front0@920f080 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			compatible = "st,stih407-front-pinctrl";
+@@ -929,7 +929,7 @@
+ 			};
+ 		};
+ 
+-		pin-controller-front1 {
++		pin-controller-front1@921f080 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			compatible = "st,stih407-front-pinctrl";
+@@ -962,7 +962,7 @@
+ 			};
+ 		};
+ 
+-		pin-controller-rear {
++		pin-controller-rear@922f080 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			compatible = "st,stih407-rear-pinctrl";
+@@ -1157,7 +1157,7 @@
+ 			};
+ 		};
+ 
+-		pin-controller-flash {
++		pin-controller-flash@923f080 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			compatible = "st,stih407-flash-pinctrl";
+diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
+index 9830be577433..37a42afa0dd1 100644
+--- a/arch/arm/boot/dts/stih410-b2120.dts
++++ b/arch/arm/boot/dts/stih410-b2120.dts
+@@ -18,7 +18,7 @@
+ 		linux,stdout-path = &sbc_serial0;
+ 	};
+ 
+-	memory {
++	memory@40000000 {
+ 		device_type = "memory";
+ 		reg = <0x40000000 0x80000000>;
+ 	};
+diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
+index c663b70c43a7..faafc7b12951 100644
+--- a/arch/arm/boot/dts/stih410-b2260.dts
++++ b/arch/arm/boot/dts/stih410-b2260.dts
+@@ -19,7 +19,7 @@
+ 		linux,stdout-path = &uart1;
+ 	};
+ 
+-	memory {
++	memory@40000000 {
+ 		device_type = "memory";
+ 		reg = <0x40000000 0x40000000>;
+ 	};
+@@ -201,7 +201,7 @@
+ 			};
+ 		};
+ 
+-		miphy28lp_phy: miphy28lp@9b22000 {
++		miphy28lp_phy: miphy28lp {
+ 
+ 			phy_port1: port@9b2a000 {
+ 				st,osc-force-ext;
+diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
+index fde5df17f575..4df1b2187aa2 100644
+--- a/arch/arm/boot/dts/stih410-clock.dtsi
++++ b/arch/arm/boot/dts/stih410-clock.dtsi
+@@ -85,7 +85,7 @@
+ 		 * Bootloader initialized system infrastructure clock for
+ 		 * serial devices.
+ 		 */
+-		clk_ext2f_a9: clockgen-c0@13 {
++		clk_ext2f_a9: clockgen-c0 {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <200000000>;
+@@ -272,7 +272,7 @@
+ 			clock-frequency = <0>;
+ 		};
+ 
+-		clockgen-d2@x9106000 {
++		clockgen-d2@9106000 {
+ 			compatible = "st,clkgen-c32";
+ 			reg = <0x9106000 0x1000>;
+ 
+diff --git a/arch/arm/boot/dts/stih410-pinctrl.dtsi b/arch/arm/boot/dts/stih410-pinctrl.dtsi
+index b3e9dfc81c07..5ae1fd66c0b8 100644
+--- a/arch/arm/boot/dts/stih410-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih410-pinctrl.dtsi
+@@ -10,7 +10,7 @@
+ / {
+ 
+ 	soc {
+-		pin-controller-rear {
++		pin-controller-rear@922f080 {
+ 
+ 			usb0 {
+ 				pinctrl_usb0: usb2-0 {
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index 68b5ff91d6a7..e4b7e3ddc9ee 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -235,7 +235,7 @@
+ 					 <&clk_s_d2_quadfs 1>;
+ 			};
+ 
+-			sti-hqvdp@9c000000 {
++			sti-hqvdp@9c00000 {
+ 				compatible = "st,stih407-hqvdp";
+ 				reg = <0x9C00000 0x100000>;
+ 				clock-names = "hqvdp", "pix_main";
+diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
+index 4e6d915c85ff..5418a0ece659 100644
+--- a/arch/arm/boot/dts/stih418-b2199.dts
++++ b/arch/arm/boot/dts/stih418-b2199.dts
+@@ -18,7 +18,7 @@
+ 		linux,stdout-path = &sbc_serial0;
+ 	};
+ 
+-	memory {
++	memory@40000000 {
+ 		device_type = "memory";
+ 		reg = <0x40000000 0xc0000000>;
+ 	};
+@@ -88,7 +88,7 @@
+ 			non-removable;
+ 		};
+ 
+-		miphy28lp_phy: miphy28lp@9b22000 {
++		miphy28lp_phy: miphy28lp {
+ 
+ 			phy_port0: port@9b22000 {
+ 				st,osc-rdy;
+diff --git a/arch/arm/boot/dts/stih418-clock.dtsi b/arch/arm/boot/dts/stih418-clock.dtsi
+index 9a157c1a99b1..e68bf28bd038 100644
+--- a/arch/arm/boot/dts/stih418-clock.dtsi
++++ b/arch/arm/boot/dts/stih418-clock.dtsi
+@@ -85,7 +85,7 @@
+ 		 * Bootloader initialized system infrastructure clock for
+ 		 * serial devices.
+ 		 */
+-		clk_ext2f_a9: clockgen-c0@13 {
++		clk_ext2f_a9: clockgen-c0 {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+ 			clock-frequency = <200000000>;
+@@ -265,7 +265,7 @@
+ 			clock-frequency = <0>;
+ 		};
+ 
+-		clockgen-d2@x9106000 {
++		clockgen-d2@9106000 {
+ 			compatible = "st,clkgen-c32";
+ 			reg = <0x9106000 0x1000>;
+ 
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 7f80c2c414c8..68783e8223b8 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -80,7 +80,7 @@
+ 			st,i2c-min-sda-pulse-width-us = <5>;
+ 		};
+ 
+-		miphy28lp_phy: miphy28lp@9b22000 {
++		miphy28lp_phy: miphy28lp {
+ 
+ 			phy_port0: port@9b22000 {
+ 				st,osc-rdy;
+@@ -126,7 +126,7 @@
+ 			clock-names	= "c8sectpfe";
+ 
+ 			/* tsin0 is TSA on NIMA */
+-			tsin0: port@0 {
++			tsin0: port {
+ 				tsin-num	= <0>;
+ 				serial-not-parallel;
+ 				i2c-bus		= <&ssc2>;
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
