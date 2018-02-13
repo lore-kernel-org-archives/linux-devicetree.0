@@ -1,325 +1,116 @@
-From: <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 01/11] ARM: dts: STi: Fix bindings notation
-Date: Tue, 13 Feb 2018 13:53:27 +0100
-Message-ID: <1518526417-11919-2-git-send-email-patrice.chotard@st.com>
+From: <patrice.chotard@st.com>
+Subject: [PATCH v3 07/11] ARM: dts: STi: Add fake reg for restart,
+ powerdown and picophy/softreset
+Date: Tue, 13 Feb 2018 13:53:33 +0100
+Message-ID: <1518526417-11919-8-git-send-email-patrice.chotard@st.com>
 References: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518526417-11919-1-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: patrice.chotard-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: patrice.chotard@st.com
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+From: Patrice Chotard <patrice.chotard@st.com>
 
-Remove leading 0x and 0s from bindings notation
-Add missing unit-address and remove some which are useless.
+Add fake reg property for restart, powerdown, picophyreset
+and softreset.
+This allows to fix the following warning when compiling
+dtb with W=1 option:
 
-This allows to fix several warnings like :
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/restart missing or empty reg/ranges property
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/powerdown-controller missing or empty reg/ranges property
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/softreset-controller missing or empty reg/ranges property
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/picophyreset-controller missing or empty reg/ranges property
 
-Warning (unit_address_vs_reg): Node XXXX has a reg or ranges property, but no unit name
-Warning (simple_bus_reg): Node XXXX simple-bus unit address format error, expected "123456"
-Warning (unit_address_vs_reg): Node XXXX has a unit name, but no reg property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/restart missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/powerdown-controller missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/softreset-controller missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/picophyreset-controller missing or empty reg/ranges property
 
-Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
+Node /soc/restart missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
+Node /soc/powerdown-controller missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
+Node /soc/softreset-controller missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
+Node /soc/picophyreset-controller missing or empty reg/ranges property
+
+arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
+Node /soc/restart missing or empty reg/ranges property
+arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
+Node /soc/powerdown-controller missing or empty reg/ranges property
+arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
+Node /soc/softreset-controller missing or empty reg/ranges property
+arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
+Node /soc/picophyreset-controller missing or empty reg/ranges property
+
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 ---
-v3: _ Add Reviewed-by
-v2: _ none
 
- arch/arm/boot/dts/stih407-b2120.dts    |  2 +-
- arch/arm/boot/dts/stih407-clock.dtsi   |  4 ++--
- arch/arm/boot/dts/stih407-family.dtsi  |  8 ++++----
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 10 +++++-----
- arch/arm/boot/dts/stih410-b2120.dts    |  2 +-
- arch/arm/boot/dts/stih410-b2260.dts    |  4 ++--
- arch/arm/boot/dts/stih410-clock.dtsi   |  4 ++--
- arch/arm/boot/dts/stih410-pinctrl.dtsi |  2 +-
- arch/arm/boot/dts/stih410.dtsi         |  2 +-
- arch/arm/boot/dts/stih418-b2199.dts    |  4 ++--
- arch/arm/boot/dts/stih418-clock.dtsi   |  4 ++--
- arch/arm/boot/dts/stihxxx-b2120.dtsi   |  4 ++--
- 12 files changed, 25 insertions(+), 25 deletions(-)
+v3: _ none
+v2: _ add a fake reg property to node without reg property
 
-diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
-index c8ad905d0309..cf8bc8a8b947 100644
---- a/arch/arm/boot/dts/stih407-b2120.dts
-+++ b/arch/arm/boot/dts/stih407-b2120.dts
-@@ -18,7 +18,7 @@
- 		linux,stdout-path = &sbc_serial0;
- 	};
- 
--	memory {
-+	memory@40000000 {
- 		device_type = "memory";
- 		reg = <0x40000000 0x80000000>;
- 	};
-diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
-index d0a24d9e517a..b882dcf3a649 100644
---- a/arch/arm/boot/dts/stih407-clock.dtsi
-+++ b/arch/arm/boot/dts/stih407-clock.dtsi
-@@ -83,7 +83,7 @@
- 		 * Bootloader initialized system infrastructure clock for
- 		 * serial devices.
- 		 */
--		clk_ext2f_a9: clockgen-c0@13 {
-+		clk_ext2f_a9: clockgen-c0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <200000000>;
-@@ -260,7 +260,7 @@
- 			clock-frequency = <0>;
- 		};
- 
--		clockgen-d2@x9106000 {
-+		clockgen-d2@9106000 {
- 			compatible = "st,clkgen-c32";
- 			reg = <0x9106000 0x1000>;
- 
+
+ arch/arm/boot/dts/stih407-family.dtsi | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
 diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index cf3756976c39..1608c70f05a9 100644
+index 5a0bad07da9e..00a3838236d1 100644
 --- a/arch/arm/boot/dts/stih407-family.dtsi
 +++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -92,7 +92,7 @@
- 		clocks = <&arm_periph_clk>;
- 	};
+@@ -125,24 +125,28 @@
+ 		ranges;
+ 		compatible = "simple-bus";
  
--	l2: cache-controller {
-+	l2: cache-controller@8762000 {
- 		compatible = "arm,pl310-cache";
- 		reg = <0x08762000 0x1000>;
- 		arm,data-latency = <3 3 3>;
-@@ -389,7 +389,7 @@
- 			reset-names = "global", "port";
+-		restart {
++		restart: restart-controller@0 {
+ 			compatible = "st,stih407-restart";
++			reg = <0 0>;
+ 			st,syscfg = <&syscfg_sbc_reg>;
+ 			status = "okay";
  		};
  
--		miphy28lp_phy: miphy28lp@9b22000 {
-+		miphy28lp_phy: miphy28lp {
- 			compatible = "st,miphy28lp-phy";
- 			st,syscfg = <&syscfg_core>;
- 			#address-cells	= <1>;
-@@ -803,7 +803,7 @@
- 			status		= "okay";
+-		powerdown: powerdown-controller {
++		powerdown: powerdown-controller@0 {
+ 			compatible = "st,stih407-powerdown";
++			reg = <0 0>;
+ 			#reset-cells = <1>;
  		};
  
--		st231_gp0: st231-gp0@0 {
-+		st231_gp0: st231-gp0 {
- 			compatible	= "st,st231-rproc";
- 			memory-region	= <&gp0_reserved>;
- 			resets		= <&softreset STIH407_ST231_GP0_SOFTRESET>;
-@@ -816,7 +816,7 @@
- 			mboxes = <&mailbox0 0 2>, <&mailbox2 0 1>, <&mailbox0 0 3>, <&mailbox2 0 0>;
+-		softreset: softreset-controller {
++		softreset: softreset-controller@0 {
+ 			compatible = "st,stih407-softreset";
++			reg = <0 0>;
+ 			#reset-cells = <1>;
  		};
  
--		st231_delta: st231-delta@0 {
-+		st231_delta: st231-delta {
- 			compatible	= "st,st231-rproc";
- 			memory-region	= <&delta_reserved>;
- 			resets		= <&softreset STIH407_ST231_DMU_SOFTRESET>;
-diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-index a29090077fdf..53c6888d1fc0 100644
---- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
-@@ -45,7 +45,7 @@
- 	};
- 
- 	soc {
--		pin-controller-sbc {
-+		pin-controller-sbc@961f080 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "st,stih407-sbc-pinctrl";
-@@ -369,7 +369,7 @@
- 			};
+-		picophyreset: picophyreset-controller {
++		picophyreset: picophyreset-controller@0 {
+ 			compatible = "st,stih407-picophyreset";
++			reg = <0 0>;
+ 			#reset-cells = <1>;
  		};
  
--		pin-controller-front0 {
-+		pin-controller-front0@920f080 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "st,stih407-front-pinctrl";
-@@ -929,7 +929,7 @@
- 			};
- 		};
- 
--		pin-controller-front1 {
-+		pin-controller-front1@921f080 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "st,stih407-front-pinctrl";
-@@ -962,7 +962,7 @@
- 			};
- 		};
- 
--		pin-controller-rear {
-+		pin-controller-rear@922f080 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "st,stih407-rear-pinctrl";
-@@ -1157,7 +1157,7 @@
- 			};
- 		};
- 
--		pin-controller-flash {
-+		pin-controller-flash@923f080 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			compatible = "st,stih407-flash-pinctrl";
-diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
-index 9830be577433..37a42afa0dd1 100644
---- a/arch/arm/boot/dts/stih410-b2120.dts
-+++ b/arch/arm/boot/dts/stih410-b2120.dts
-@@ -18,7 +18,7 @@
- 		linux,stdout-path = &sbc_serial0;
- 	};
- 
--	memory {
-+	memory@40000000 {
- 		device_type = "memory";
- 		reg = <0x40000000 0x80000000>;
- 	};
-diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-index c663b70c43a7..faafc7b12951 100644
---- a/arch/arm/boot/dts/stih410-b2260.dts
-+++ b/arch/arm/boot/dts/stih410-b2260.dts
-@@ -19,7 +19,7 @@
- 		linux,stdout-path = &uart1;
- 	};
- 
--	memory {
-+	memory@40000000 {
- 		device_type = "memory";
- 		reg = <0x40000000 0x40000000>;
- 	};
-@@ -201,7 +201,7 @@
- 			};
- 		};
- 
--		miphy28lp_phy: miphy28lp@9b22000 {
-+		miphy28lp_phy: miphy28lp {
- 
- 			phy_port1: port@9b2a000 {
- 				st,osc-force-ext;
-diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
-index fde5df17f575..4df1b2187aa2 100644
---- a/arch/arm/boot/dts/stih410-clock.dtsi
-+++ b/arch/arm/boot/dts/stih410-clock.dtsi
-@@ -85,7 +85,7 @@
- 		 * Bootloader initialized system infrastructure clock for
- 		 * serial devices.
- 		 */
--		clk_ext2f_a9: clockgen-c0@13 {
-+		clk_ext2f_a9: clockgen-c0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <200000000>;
-@@ -272,7 +272,7 @@
- 			clock-frequency = <0>;
- 		};
- 
--		clockgen-d2@x9106000 {
-+		clockgen-d2@9106000 {
- 			compatible = "st,clkgen-c32";
- 			reg = <0x9106000 0x1000>;
- 
-diff --git a/arch/arm/boot/dts/stih410-pinctrl.dtsi b/arch/arm/boot/dts/stih410-pinctrl.dtsi
-index b3e9dfc81c07..5ae1fd66c0b8 100644
---- a/arch/arm/boot/dts/stih410-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih410-pinctrl.dtsi
-@@ -10,7 +10,7 @@
- / {
- 
- 	soc {
--		pin-controller-rear {
-+		pin-controller-rear@922f080 {
- 
- 			usb0 {
- 				pinctrl_usb0: usb2-0 {
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index 68b5ff91d6a7..e4b7e3ddc9ee 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -235,7 +235,7 @@
- 					 <&clk_s_d2_quadfs 1>;
- 			};
- 
--			sti-hqvdp@9c000000 {
-+			sti-hqvdp@9c00000 {
- 				compatible = "st,stih407-hqvdp";
- 				reg = <0x9C00000 0x100000>;
- 				clock-names = "hqvdp", "pix_main";
-diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
-index 4e6d915c85ff..5418a0ece659 100644
---- a/arch/arm/boot/dts/stih418-b2199.dts
-+++ b/arch/arm/boot/dts/stih418-b2199.dts
-@@ -18,7 +18,7 @@
- 		linux,stdout-path = &sbc_serial0;
- 	};
- 
--	memory {
-+	memory@40000000 {
- 		device_type = "memory";
- 		reg = <0x40000000 0xc0000000>;
- 	};
-@@ -88,7 +88,7 @@
- 			non-removable;
- 		};
- 
--		miphy28lp_phy: miphy28lp@9b22000 {
-+		miphy28lp_phy: miphy28lp {
- 
- 			phy_port0: port@9b22000 {
- 				st,osc-rdy;
-diff --git a/arch/arm/boot/dts/stih418-clock.dtsi b/arch/arm/boot/dts/stih418-clock.dtsi
-index 9a157c1a99b1..e68bf28bd038 100644
---- a/arch/arm/boot/dts/stih418-clock.dtsi
-+++ b/arch/arm/boot/dts/stih418-clock.dtsi
-@@ -85,7 +85,7 @@
- 		 * Bootloader initialized system infrastructure clock for
- 		 * serial devices.
- 		 */
--		clk_ext2f_a9: clockgen-c0@13 {
-+		clk_ext2f_a9: clockgen-c0 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <200000000>;
-@@ -265,7 +265,7 @@
- 			clock-frequency = <0>;
- 		};
- 
--		clockgen-d2@x9106000 {
-+		clockgen-d2@9106000 {
- 			compatible = "st,clkgen-c32";
- 			reg = <0x9106000 0x1000>;
- 
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index 7f80c2c414c8..68783e8223b8 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -80,7 +80,7 @@
- 			st,i2c-min-sda-pulse-width-us = <5>;
- 		};
- 
--		miphy28lp_phy: miphy28lp@9b22000 {
-+		miphy28lp_phy: miphy28lp {
- 
- 			phy_port0: port@9b22000 {
- 				st,osc-rdy;
-@@ -126,7 +126,7 @@
- 			clock-names	= "c8sectpfe";
- 
- 			/* tsin0 is TSA on NIMA */
--			tsin0: port@0 {
-+			tsin0: port {
- 				tsin-num	= <0>;
- 				serial-not-parallel;
- 				i2c-bus		= <&ssc2>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
