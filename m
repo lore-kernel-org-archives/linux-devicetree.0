@@ -1,418 +1,128 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: stout: Initial r8a7790 Stout board support
-Date: Wed, 14 Feb 2018 00:29:48 +0100
-Message-ID: <20180213232948.31521-1-marek.vasut+renesas@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+From: "Tian, Kevin" <kevin.tian@intel.com>
+Subject: RE: [PATCH 02/37] iommu/sva: Bind process address spaces to devices
+Date: Tue, 13 Feb 2018 23:34:56 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D191003AD6@SHSMSX101.ccr.corp.intel.com>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+ <20180212183352.22730-3-jean-philippe.brucker@arm.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D191002897@SHSMSX101.ccr.corp.intel.com>
+ <b9eacb30-817f-9027-bc0a-1f01cf9f13f9@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <b9eacb30-817f-9027-bc0a-1f01cf9f13f9@arm.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tn@semihalf.com" <tn@semihalf.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, xuzaibo@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Stout base board support making use of 1 GiB of memory,
-the Renesas H2 r8a7790 SoC with the SCIFA0 serial port
-and CA15 with ARM architected timer.
+> From: Jean-Philippe Brucker
+> Sent: Tuesday, February 13, 2018 8:57 PM
+> 
+> On 13/02/18 07:54, Tian, Kevin wrote:
+> >> From: Jean-Philippe Brucker
+> >> Sent: Tuesday, February 13, 2018 2:33 AM
+> >>
+> >> Add bind() and unbind() operations to the IOMMU API. Device drivers
+> can
+> >> use them to share process page tables with their devices. bind_group()
+> >> is provided for VFIO's convenience, as it needs to provide a coherent
+> >> interface on containers. Other device drivers will most likely want to
+> >> use bind_device(), which binds a single device in the group.
+> >
+> > I saw your bind_group implementation tries to bind the address space
+> > for all devices within a group, which IMO has some problem. Based on
+> PCIe
+> > spec, packet routing on the bus doesn't take PASID into consideration.
+> > since devices within same group cannot be isolated based on requestor-
+> ID
+> > i.e. traffic not guaranteed going to IOMMU, enabling SVA on multiple
+> devices
+> > could cause undesired p2p.
+> But so does enabling "classic" DMA... If two devices are not protected by
+> ACS for example, they are put in the same IOMMU group, and one device
+> might be able to snoop the other's DMA. VFIO allows userspace to create a
+> container for them and use MAP/UNMAP, but makes it explicit to the user
+> that for DMA, these devices are not isolated and must be considered as a
+> single device (you can't pass them to different VMs or put them in
+> different containers). So I tried to keep the same idea as MAP/UNMAP for
+> SVA, performing BIND/UNBIND operations on the VFIO container instead of
+> the device.
 
-Furthermore, this device tree contains entries for:
-  - 4x LEDs
-  - SDHI SD/MMC controller
-  - Display unit with HDMI output
-  - SH fast ethernet controller
-  - QSPI controller with S25FL512S attached to it
-  - I2C controller with DA9210 and DA 9063 PMICs
+there is a small difference. for classic DMA we can reserve PCI BARs 
+when allocating IOVA, thus multiple devices in the same group can 
+still work correctly applied with same translation, if isolation is not
+cared in between. However for SVA it's CPU virtual addresses 
+managed by kernel mm thus difficult to introduce similar address 
+reservation. Then it's possible for a VA falling into other device's 
+BAR in the same group and cause undesired p2p traffic. In such 
+regard, SVA is actually functionally-broken.
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
----
- arch/arm/boot/dts/Makefile          |   1 +
- arch/arm/boot/dts/r8a7790-stout.dts | 360 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 361 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7790-stout.dts
+> 
+> I kept the analogy simple though, because I don't think there will be many
+> SVA-capable systems that require IOMMU groups. They will likely
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f7b73c825231..6d1999467f2e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -790,6 +790,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
- 	r8a7778-bockw.dtb \
- 	r8a7779-marzen.dtb \
- 	r8a7790-lager.dtb \
-+	r8a7790-stout.dtb \
- 	r8a7791-koelsch.dtb \
- 	r8a7791-porter.dtb \
- 	r8a7792-blanche.dtb \
-diff --git a/arch/arm/boot/dts/r8a7790-stout.dts b/arch/arm/boot/dts/r8a7790-stout.dts
-new file mode 100644
-index 000000000000..9bc892eacc97
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7790-stout.dts
-@@ -0,0 +1,360 @@
-+/*
-+ * Device Tree Source for the Stout board
-+ *
-+ * Copyright (C) 2018 Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+#include "r8a7790.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	model = "Stout";
-+	compatible = "renesas,stout", "renesas,r8a7790";
-+
-+	aliases {
-+		serial0 = &scifa0;
-+	};
-+
-+	chosen {
-+		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
-+		stdout-path = "serial0:38400n8";
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0 0x40000000 0 0x40000000>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		led1 {
-+			gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-+		};
-+		led2 {
-+			gpios = <&gpio4 23 GPIO_ACTIVE_HIGH>;
-+		};
-+		led3 {
-+			gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
-+		};
-+		led5 {
-+			gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	fixedregulator3v3: regulator-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vcc_sdhi0: regulator-vcc-sdhi0 {
-+		compatible = "regulator-fixed";
-+
-+		regulator-name = "SDHI0 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpio = <&gpio5 24 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_out: endpoint {
-+				remote-endpoint = <&adv7511_out>;
-+			};
-+		};
-+	};
-+
-+	x2_clk: x2-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <148500000>;
-+	};
-+
-+	x13_clk: x13-clock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <148500000>;
-+	};
-+};
-+
-+&du {
-+	pinctrl-0 = <&du_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	clocks = <&cpg CPG_MOD 724>, <&cpg CPG_MOD 723>, <&cpg CPG_MOD 722>,
-+		 <&cpg CPG_MOD 726>, <&cpg CPG_MOD 725>,
-+		 <&x13_clk>, <&x2_clk>;
-+	clock-names = "du.0", "du.1", "du.2", "lvds.0", "lvds.1",
-+		      "dclkin.0", "dclkin.1";
-+
-+	ports {
-+		port@0 {
-+			endpoint {
-+				remote-endpoint = <&adv7511_in>;
-+			};
-+		};
-+		port@1 {
-+			lvds_connector0: endpoint {
-+			};
-+		};
-+		port@2 {
-+			lvds_connector1: endpoint {
-+			};
-+		};
-+	};
-+};
-+
-+&extal_clk {
-+	clock-frequency = <20000000>;
-+};
-+
-+&pfc {
-+
-+	pinctrl-0 = <&scif_clk_pins>;
-+	pinctrl-names = "default";
-+
-+	du_pins: du {
-+		groups = "du_rgb888", "du_sync_1", "du_clk_out_0";
-+		function = "du";
-+	};
-+
-+	scifa0_pins: scifa0 {
-+		groups = "scifa0_data_b";
-+		function = "scifa0";
-+	};
-+
-+	scif_clk_pins: scif_clk {
-+		groups = "scif_clk";
-+		function = "scif_clk";
-+	};
-+
-+	ether_pins: ether {
-+		groups = "eth_link", "eth_mdio", "eth_rmii";
-+		function = "eth";
-+	};
-+
-+	phy1_pins: phy1 {
-+		groups = "intc_irq1";
-+		function = "intc";
-+	};
-+
-+	sdhi0_pins: sd0 {
-+		groups = "sdhi0_data4", "sdhi0_ctrl";
-+		function = "sdhi0";
-+		power-source = <3300>;
-+	};
-+
-+	qspi_pins: qspi {
-+		groups = "qspi_ctrl", "qspi_data4";
-+		function = "qspi";
-+	};
-+
-+	iic2_pins: iic2 {
-+		groups = "iic2_b";
-+		function = "iic2";
-+	};
-+
-+	iic3_pins: iic3 {
-+		groups = "iic3";
-+		function = "iic3";
-+	};
-+
-+	usb0_pins: usb0 {
-+		groups = "usb0";
-+		function = "usb0";
-+	};
-+};
-+
-+&ether {
-+	pinctrl-0 = <&ether_pins &phy1_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&phy1>;
-+	renesas,ether-link-active-low;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		interrupt-parent = <&irqc0>;
-+		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
-+		micrel,led-mode = <1>;
-+	};
-+};
-+
-+&cmt0 {
-+	status = "okay";
-+};
-+
-+&qspi {
-+	pinctrl-0 = <&qspi_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	flash: flash@0 {
-+		compatible = "spansion,s25fl512s", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <30000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+		spi-cpha;
-+		spi-cpol;
-+		m25p,fast-read;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "loader";
-+				reg = <0x00000000 0x00040000>;
-+				read-only;
-+			};
-+			partition@40000 {
-+				label = "user";
-+				reg = <0x00040000 0x00400000>;
-+				read-only;
-+			};
-+			partition@440000 {
-+				label = "flash";
-+				reg = <0x00440000 0x03bc0000>;
-+			};
-+		};
-+	};
-+};
-+
-+&scifa0 {
-+	pinctrl-0 = <&scifa0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
-+
-+&scif_clk {
-+	clock-frequency = <14745600>;
-+};
-+
-+&sdhi0 {
-+	pinctrl-0 = <&sdhi0_pins>;
-+	pinctrl-names = "default";
-+
-+	vmmc-supply = <&vcc_sdhi0>;
-+	cd-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu0-supply = <&vdd_dvfs>;
-+};
-+
-+&iic2	{
-+	status = "okay";
-+	pinctrl-0 = <&iic2_pins>;
-+	pinctrl-names = "default";
-+
-+	clock-frequency = <100000>;
-+
-+	hdmi@39 {
-+		compatible = "adi,adv7511w";
-+		reg = <0x39>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
-+
-+		adi,input-depth = <8>;
-+		adi,input-colorspace = "rgb";
-+		adi,input-clock = "1x";
-+		adi,input-style = <1>;
-+		adi,input-justification = "evenly";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				adv7511_in: endpoint {
-+					remote-endpoint = <&du_out_rgb>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				adv7511_out: endpoint {
-+					remote-endpoint = <&hdmi_con_out>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&iic3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&iic3_pins>;
-+	status = "okay";
-+
-+	pmic@58 {
-+		compatible = "dlg,da9063";
-+		reg = <0x58>;
-+		interrupt-parent = <&irqc0>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+
-+		rtc {
-+			compatible = "dlg,da9063-rtc";
-+		};
-+
-+		wdt {
-+			compatible = "dlg,da9063-watchdog";
-+		};
-+	};
-+
-+	vdd_dvfs: regulator@68 {
-+		compatible = "dlg,da9210";
-+		reg = <0x68>;
-+		interrupt-parent = <&irqc0>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	vdd: regulator@70 {
-+		compatible = "dlg,da9210";
-+		reg = <0x70>;
-+		interrupt-parent = <&irqc0>;
-+		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+};
-+
-+&pci0 {
-+	status = "okay";
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&usbphy {
-+	status = "okay";
-+};
--- 
-2.15.1
+I agree that multiple SVA-capable devices in same IOMMU group is not
+a typical configuration, especially it's usually observed on new devices.
+Then based on above limitation, I think we could just explicitly avoid
+enabling SVA in such case. :-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> implement
+> proper device isolation. Unlike iommu_attach_device(), bind_device()
+> doesn't call bind_group(), because keeping bonds consistent in groups is
+> complicated, not worth implementing (drivers can explicitly bind() all
+> devices that need it) and probably wouldn't ever be used. I also can't
+> test it. But maybe we could implement the following for now:
+> 
+> * bind_device() fails if the device's group has more than one device,
+> otherwise calls __bind_device(). This prevents device drivers that are
+> oblivious to IOMMU groups from opening a backdoor.
+> 
+> * bind_group() calls __bind_device() for all devices in group. This way
+> users that are aware of IOMMU groups can still use them safely. Note that
+> at the moment bind_group() fails as soon as it finds a device that doesn't
+> support SVA. Having all devices support SVA in a given group is
+> unrealistic and this behavior ought to be improved.
+> 
+> * hotplugging a device into a group still succeeds even if the group
+> already has mm bonds. Same happens for classic DMA, a hotplugged
+> device
+> will have access to all mappings already present in the domain.
+> 
+> > If my understanding of PCIe spec is correct, probably we should fail
+> > calling bind_group()/bind_device() when there are multiple devices within
+> > the given group. If only one device then bind_group is essentially a
+> wrapper
+> > to bind_device.>>
+> >> Regardless of the IOMMU group or domain a device is in, device drivers
+> >> should call bind() for each device that will use the PASID.
+> >>
+> [...]
+> >> +/**
+> >> + * iommu_sva_bind_device() - Bind a process address space to a device
+> >> + * @dev: the device
+> >> + * @mm: the mm to bind, caller must hold a reference to it
+> >> + * @pasid: valid address where the PASID will be stored
+> >> + * @flags: bond properties (IOMMU_SVA_FEAT_*)
+> >> + * @drvdata: private data passed to the mm exit handler
+> >> + *
+> >> + * Create a bond between device and task, allowing the device to access
+> >> the mm
+> >> + * using the returned PASID. A subsequent bind() for the same device
+> and
+> >> mm will
+> >> + * reuse the bond (and return the same PASID), but users will have to
+> call
+> >> + * unbind() twice.
+> >
+> > what's the point of requiring unbind twice?
+> 
+> Mmh, that was necessary when we kept bond information as domain<-
+> >mm, but
+> since it's now device<->mm, we can probably remove the bond refcount. I
+> consider that a bind() between a given device and mm will always be issued
+> by the same driver.
+> 
+> Thanks,
+> Jean
