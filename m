@@ -1,53 +1,38 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v10 3/3] MAINTAINERS: Add entry for the Nuvoton NPCM architecture
-Date: Tue, 13 Feb 2018 12:09:59 -0800
-Message-ID: <20180213200959.160157-4-brendanhiggins@google.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v10 0/3] arm: npcm: add basic support for Nuvoton BMCs
+Date: Tue, 13 Feb 2018 12:18:05 -0800
+Message-ID: <b33b48ba-35ef-d98e-fa52-f70ed0953dcc@gmail.com>
 References: <20180213200959.160157-1-brendanhiggins@google.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180213200959.160157-1-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, julien.thierry-5wv7dgnIgG8@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180213200959.160157-1-brendanhiggins@google.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>, robh+dt@kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, tmaimon77@gmail.com, avifishman70@gmail.com, julien.thierry@arm.com, pombredanne@nexb.com, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add maintainers and reviewers for the Nuvoton NPCM architecture.
+On 02/13/2018 12:09 PM, Brendan Higgins wrote:
+> Addressed comments from:
+>  - Joel: https://www.spinics.net/lists/arm-kernel/msg634074.html
+>  - Arnd: https://www.spinics.net/lists/arm-kernel/msg634091.html
+> 
+> Summary of changes since previous update:
+>  - Replaced "nuvoton,npcm7xx-smp" compatibility string with
+>    "nuvoton,npcm750-smp".
+>  - Fixed some whitespace issues.
+>  - Added EVB DTS to Makefile.
+> 
+> All changes tested on Nuvoton NPCM750 EVB.
+> 
 
-Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Reviewed-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Thanks for keeping me CC, FWIW: Reviewed-by: Florian Fainelli
+<f.fainelli@gmail.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 44cb004c765d..2fa95aba0f7f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1598,6 +1598,20 @@ F:	drivers/pinctrl/nomadik/
- F:	drivers/i2c/busses/i2c-nomadik.c
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-nomadik.git
- 
-+ARM/NUVOTON NPCM ARCHITECTURE
-+M:	Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+M:	Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+R:	Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-+R:	Nancy Yuen <yuenn-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-+R:	Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-+L:	openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org (moderated for non-subscribers)
-+S:	Supported
-+F:	arch/arm/mach-npcm/
-+F:	arch/arm/boot/dts/nuvoton-npcm*
-+F:	include/dt-bindings/clock/nuvoton,npcm7xx-clks.h
-+F:	drivers/*/*npcm*
-+F:	Documentation/*/*npcm*
-+
- ARM/NUVOTON W90X900 ARM ARCHITECTURE
- M:	Wan ZongShun <mcuos.com-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+FWIW, I don't have a vested interest in BMCs in general, just happened
+to do a drive by review of your SMP code, no need to CC me on future
+submissions (e.g: boards, drivers etc.). Cheers
 -- 
-2.16.0.rc1.238.g530d649a79-goog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
