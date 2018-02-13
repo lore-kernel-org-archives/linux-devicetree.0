@@ -1,42 +1,64 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 2/2] arm64: dts: renesas: eagle: specify EtherAVB PHY IRQ
-Date: Tue, 13 Feb 2018 14:24:14 +0300
-Message-ID: <0ccd631e-691a-2b15-7680-6e0c847a6ca2@cogentembedded.com>
-References: <038a791d-aa57-9c3d-eaea-09c5704ecb54@cogentembedded.com>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: rockchip: add cdn-dp node for rk3399.
+Date: Tue, 13 Feb 2018 12:36:47 +0100
+Message-ID: <CAFqH_52NtRib_nLrGnacdGK=cHOeh8Lfaa=38X1OA8gnu1r=hQ@mail.gmail.com>
+References: <20180207163150.16332-1-enric.balletbo@collabora.com>
+ <20180207163150.16332-2-enric.balletbo@collabora.com> <6229682.fDmaELEjz4@phil>
+ <d8ec2613-b773-9bab-cb4c-1f58eb1c1356@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <038a791d-aa57-9c3d-eaea-09c5704ecb54-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-MW
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d8ec2613-b773-9bab-cb4c-1f58eb1c1356@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Brian Norris <briannorris@chromium.org>, Guenter Roeck <groeck@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Specify  EtherAVB PHY IRQ  in the Eagle board's device tree, now that we
-have the GPIO support (previously phylib had to resort to polling).
+2018-02-13 11:42 GMT+01:00 Enric Balletbo i Serra
+<enric.balletbo@collabora.com>:
+> Hi Heiko,
+>
+> On 10/02/18 17:16, Heiko Stuebner wrote:
+>> Hi Enric,
+>>
+>> Am Mittwoch, 7. Februar 2018, 17:31:49 CET schrieb Enric Balletbo i Serra:
+>>> From: Chris Zhong <zyw@rock-chips.com>
+>>>
+>>> Add a node for the cdn DP controller which is embedded in the rk3399
+>>> SoC.
+>>>
+>>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>> ---
+>>>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 50 ++++++++++++++++++++++++++++++++
+>>
+>> It looks like there is no binding document at all for cdn-dp? At least
+>> I couldn't find one and the original series also didn't seem to include one.
+>>
+>> And while I don't see anything problematic right with the used properties
+>> right now, I'd think we should really have a binding and give dt-maintainers
+>> a chance to complain, before adding devicetree nodes based on it.
+>>
+>> I'd guess a mostly usable binding doc should already sit in the chromeos
+>> tree, which you could base a v2 of this series on?
+>>
+>>
+>
+> Sure, I'll send a v2 for this series. Thanks.
+>
+>   Enric
+>
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+So seems that the binding was already discussed and accepted here [1]
+but for some reason never landed. So I think that I'll send v2 just
+including the binding patch so all can land together. Sounds good?
 
----
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts |    2 ++
- 1 file changed, 2 insertions(+)
+[1] https://patchwork.kernel.org/patch/9278077/
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-@@ -44,6 +44,8 @@
- 	phy0: ethernet-phy@0 {
- 		rxc-skew-ps = <1500>;
- 		reg = <0>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
- 	};
- };
- 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+ Enric
+
+
+>> Thanks
+>> Heiko
+>>
