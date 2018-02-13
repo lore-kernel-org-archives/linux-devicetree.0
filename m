@@ -1,70 +1,54 @@
-From: Gregory CLEMENT <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 6/9] ARM: dts: kirkwood: Fix "debounce-interval" property misspelling
-Date: Tue, 13 Feb 2018 17:17:42 +0100
-Message-ID: <87d118q2xl.fsf@bootlin.com>
-References: <1518531335-5170-1-git-send-email-geert+renesas@glider.be>
-        <1518531335-5170-7-git-send-email-geert+renesas@glider.be>
+From: Enrico Weigelt <lkml-EcKl7qYKIbxeoWH0uzbU5w@public.gmane.org>
+Subject: Re: RFC: build config via DT names
+Date: Tue, 13 Feb 2018 16:21:52 +0000
+Message-ID: <fcaefa19-defc-f09d-fa55-06384e2a545d@metux.net>
+References: <63f25fea-f163-f9cc-b5b2-f6f291d7f8d2@gmx.de>
+ <d55f95cc-228b-e65f-b46c-2f314f4fa582@gmail.com>
+ <CAL_JsqJXJA+Z7b6SoUx=MVK_C=vcMRAibapriOi+Wss6L1ahsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518531335-5170-7-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> (Geert
-        Uytterhoeven's message of "Tue, 13 Feb 2018 15:15:32 +0100")
+In-Reply-To: <CAL_JsqJXJA+Z7b6SoUx=MVK_C=vcMRAibapriOi+Wss6L1ahsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "Enrico Weigelt, metux IT consult" <metux-Mmb7MZpHnFY@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
- 
- On mar., févr. 13 2018, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+On 13.02.2018 15:19, Rob Herring wrote:
 
-> "debounce_interval" was never supported.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Doubling the number of driver config options is not going to fly. 
 
-Applied on mvebu/fixes with the Reviewed-by flag from Andrew Lunn
+These options would be in their own submenu (which could be disabled
+completely) and use their own prefix. IMHO, even if they grow into big
+numbers, the impact should be minimal.
 
-Thanks,
+> How would you handle multiple compatible strings per driver? 
 
-Gregory
+Multiple entries in the submenu, each selecting the same driver.
 
-> ---
-> Please apply to your tree when appropriate.
->
->  arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts b/arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts
-> index 5ce220ac9611fa78..5aa4669ae2548a8c 100644
-> --- a/arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts
-> +++ b/arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts
-> @@ -35,7 +35,7 @@
->  		pinctrl-names = "default";
->  
->  		eject {
-> -			debounce_interval = <50>;
-> +			debounce-interval = <50>;
->  			wakeup-source;
->  			linux,code = <KEY_EJECTCD>;
->  			label = "Eject Button";
-> -- 
-> 2.7.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> We have all the data, so we should be able to generate this which
+> dt_to_config tries to do. 
+
+I guess there're lots of corner cases that would need special magic.
+
+> I think part of the problem is dt_to_config
+> works at the source level for everything. Really we need a more robust
+> way to map source files to config options and extracting match tables
+> from drivers. Perhaps doing the latter with coccinelle which can match
+> struct types, using the object files instead, or using module aliases
+> (though that doesn't work for built-in drivers).
+
+Configure by already compiled binaries ?
+
+
+--mtx
 
 -- 
-Gregory Clement, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info-EcKl7qYKIbxeoWH0uzbU5w@public.gmane.org -- +49-151-27565287
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
