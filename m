@@ -1,349 +1,177 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [PATCH v3 14/25] ASoC: qcom: qdsp6: Add support to
-	q6afe dai driver
-Date: Tue, 13 Feb 2018 16:58:26 +0000
-Message-ID: <20180213165837.1620-15-srinivas.kandagatla@linaro.org>
-References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
+Date: Tue, 13 Feb 2018 18:05:43 +0100
+Message-ID: <20180213170543.cj4n2deyn2rqbixh@flea.lan>
+References: <20180207142643.15746-1-maxime.ripard@bootlin.com>
+ <20180207142643.15746-3-maxime.ripard@bootlin.com>
+ <5149915.u4chh53YoO@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-kernel@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, robh+dt@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, spatakok@qti.qualcomm.com, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kwq3qdy3pmt5hjhl"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5149915.u4chh53YoO@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-This patch adds support to q6afe backend dais driver.
+--kwq3qdy3pmt5hjhl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- sound/soc/qcom/qdsp6/Makefile    |   2 +-
- sound/soc/qcom/qdsp6/q6afe-dai.c | 280 +++++++++++++++++++++++++++++++++++++++
- sound/soc/qcom/qdsp6/q6afe.h     |   3 +
- 3 files changed, 284 insertions(+), 1 deletion(-)
- create mode 100644 sound/soc/qcom/qdsp6/q6afe-dai.c
+Hi Laurent,
 
-diff --git a/sound/soc/qcom/qdsp6/Makefile b/sound/soc/qcom/qdsp6/Makefile
-index 660afcab98fd..c7833842b878 100644
---- a/sound/soc/qcom/qdsp6/Makefile
-+++ b/sound/soc/qcom/qdsp6/Makefile
-@@ -1,5 +1,5 @@
- obj-$(CONFIG_SND_SOC_QDSP6_COMMON) += q6dsp-common.o
--obj-$(CONFIG_SND_SOC_QDSP6_AFE) += q6afe.o
-+obj-$(CONFIG_SND_SOC_QDSP6_AFE) += q6afe.o q6afe-dai.o
- obj-$(CONFIG_SND_SOC_QDSP6_ADM) += q6adm.o q6routing.o
- obj-$(CONFIG_SND_SOC_QDSP6_ASM) += q6asm.o
- obj-$(CONFIG_SND_SOC_QDSP6_CORE) += q6core.o
-diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
-new file mode 100644
-index 000000000000..f6a618e9db9e
---- /dev/null
-+++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
-@@ -0,0 +1,280 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2011-2016, The Linux Foundation
-+ * Copyright (c) 2018, Linaro Limited
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <sound/pcm.h>
-+#include <sound/soc.h>
-+#include <sound/pcm_params.h>
-+#include "q6afe.h"
-+
-+struct q6afe_dai_data {
-+	struct q6afe_port *port[AFE_PORT_MAX];
-+	struct q6afe_port_config port_config[AFE_PORT_MAX];
-+	bool is_port_started[AFE_PORT_MAX];
-+};
-+
-+static int q6hdmi_format_put(struct snd_kcontrol *kcontrol,
-+				struct snd_ctl_elem_value *ucontrol)
-+{
-+	struct q6afe_dai_data *dai_data = kcontrol->private_data;
-+	int value = ucontrol->value.integer.value[0];
-+
-+	dai_data->port_config[AFE_PORT_HDMI_RX].hdmi.datatype = value;
-+
-+	return 0;
-+}
-+
-+static int q6hdmi_format_get(struct snd_kcontrol *kcontrol,
-+				struct snd_ctl_elem_value *ucontrol)
-+{
-+
-+	struct q6afe_dai_data *dai_data = kcontrol->private_data;
-+
-+	ucontrol->value.integer.value[0] =
-+		dai_data->port_config[AFE_PORT_HDMI_RX].hdmi.datatype;
-+
-+	return 0;
-+}
-+
-+static const char * const hdmi_format[] = {
-+	"LPCM",
-+	"Compr"
-+};
-+
-+static const struct soc_enum hdmi_config_enum[] = {
-+	SOC_ENUM_SINGLE_EXT(2, hdmi_format),
-+};
-+
-+static const struct snd_kcontrol_new q6afe_config_controls[] = {
-+	SOC_ENUM_EXT("HDMI RX Format", hdmi_config_enum[0],
-+				 q6hdmi_format_get,
-+				 q6hdmi_format_put),
-+};
-+
-+static int q6hdmi_hw_params(struct snd_pcm_substream *substream,
-+				struct snd_pcm_hw_params *params,
-+				struct snd_soc_dai *dai)
-+{
-+	struct q6afe_dai_data *dai_data = q6afe_get_dai_data(dai->dev);
-+	int channels = params_channels(params);
-+	struct q6afe_hdmi_cfg *hdmi = &dai_data->port_config[dai->id].hdmi;
-+
-+	hdmi->sample_rate = params_rate(params);
-+	switch (params_format(params)) {
-+	case SNDRV_PCM_FORMAT_S16_LE:
-+		hdmi->bit_width = 16;
-+		break;
-+	case SNDRV_PCM_FORMAT_S24_LE:
-+		hdmi->bit_width = 24;
-+		break;
-+	}
-+
-+	/*refer to HDMI spec CEA-861-E: Table 28 Audio InfoFrame Data Byte 4*/
-+	switch (channels) {
-+	case 2:
-+		hdmi->channel_allocation = 0;
-+		break;
-+	case 3:
-+		hdmi->channel_allocation = 0x02;
-+		break;
-+	case 4:
-+		hdmi->channel_allocation = 0x06;
-+		break;
-+	case 5:
-+		hdmi->channel_allocation = 0x0A;
-+		break;
-+	case 6:
-+		hdmi->channel_allocation = 0x0B;
-+		break;
-+	case 7:
-+		hdmi->channel_allocation = 0x12;
-+		break;
-+	case 8:
-+		hdmi->channel_allocation = 0x13;
-+		break;
-+	default:
-+		dev_err(dai->dev, "invalid Channels = %u\n", channels);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int q6afe_dai_startup(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct q6afe_dai_data *dai_data = q6afe_get_dai_data(dai->dev);
-+
-+	dai_data->is_port_started[dai->id] = false;
-+
-+	return 0;
-+}
-+
-+static void q6afe_dai_shutdown(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct q6afe_dai_data *dai_data = q6afe_get_dai_data(dai->dev);
-+	int rc;
-+
-+	rc = q6afe_port_stop(dai_data->port[dai->id]);
-+	if (rc < 0)
-+		dev_err(dai->dev, "fail to close AFE port\n");
-+
-+	dai_data->is_port_started[dai->id] = false;
-+
-+}
-+
-+static int q6afe_dai_prepare(struct snd_pcm_substream *substream,
-+		struct snd_soc_dai *dai)
-+{
-+	struct q6afe_dai_data *dai_data = q6afe_get_dai_data(dai->dev);
-+	int rc;
-+
-+	if (dai_data->is_port_started[dai->id]) {
-+		/* stop the port and restart with new port config */
-+		rc = q6afe_port_stop(dai_data->port[dai->id]);
-+		if (rc < 0) {
-+			dev_err(dai->dev, "fail to close AFE port\n");
-+			return rc;
-+		}
-+	}
-+
-+	if (dai->id == AFE_PORT_HDMI_RX)
-+		q6afe_hdmi_port_prepare(dai_data->port[dai->id],
-+					&dai_data->port_config[dai->id].hdmi);
-+
-+	rc = q6afe_port_start(dai_data->port[dai->id]);
-+	if (rc < 0) {
-+		dev_err(dai->dev, "fail to start AFE port %x\n", dai->id);
-+		return rc;
-+	}
-+	dai_data->is_port_started[dai->id] = true;
-+
-+	return 0;
-+}
-+
-+static const struct snd_soc_dapm_route q6afe_dapm_routes[] = {
-+	{"HDMI Playback", NULL, "HDMI_RX"},
-+};
-+
-+static struct snd_soc_dai_ops q6hdmi_ops = {
-+	.prepare	= q6afe_dai_prepare,
-+	.hw_params	= q6hdmi_hw_params,
-+	.shutdown	= q6afe_dai_shutdown,
-+	.startup	= q6afe_dai_startup,
-+};
-+
-+static int msm_dai_q6_dai_probe(struct snd_soc_dai *dai)
-+{
-+	struct q6afe_dai_data *dai_data = q6afe_get_dai_data(dai->dev);
-+	struct snd_soc_dapm_context *dapm;
-+	struct q6afe_port *port;
-+
-+	dapm = snd_soc_component_get_dapm(dai->component);
-+
-+	port = q6afe_port_get_from_id(dai->dev, dai->id);
-+	if (IS_ERR(port)) {
-+		dev_err(dai->dev, "Unable to get afe port\n");
-+		return -EINVAL;
-+	}
-+	dai_data->port[dai->id] = port;
-+
-+	return 0;
-+}
-+
-+static int msm_dai_q6_dai_remove(struct snd_soc_dai *dai)
-+{
-+	struct q6afe_dai_data *dai_data = q6afe_get_dai_data(dai->dev);
-+
-+	q6afe_port_put(dai_data->port[dai->id]);
-+
-+	return 0;
-+}
-+
-+static struct snd_soc_dai_driver q6afe_dais[] = {
-+	{
-+		.playback = {
-+			.stream_name = "HDMI Playback",
-+			.rates = SNDRV_PCM_RATE_48000 |
-+				 SNDRV_PCM_RATE_96000 |
-+			 SNDRV_PCM_RATE_192000,
-+			.formats = SNDRV_PCM_FMTBIT_S16_LE |
-+				   SNDRV_PCM_FMTBIT_S24_LE,
-+			.channels_min = 2,
-+			.channels_max = 8,
-+			.rate_max =     192000,
-+			.rate_min =	48000,
-+		},
-+		.ops = &q6hdmi_ops,
-+		.id = AFE_PORT_HDMI_RX,
-+		.name = "HDMI",
-+		.probe = msm_dai_q6_dai_probe,
-+		.remove = msm_dai_q6_dai_remove,
-+	},
-+};
-+
-+static int q6afe_of_xlate_dai_name(struct snd_soc_component *component,
-+				   struct of_phandle_args *args,
-+				   const char **dai_name)
-+{
-+	int id = args->args[0];
-+	int i, ret = -EINVAL;
-+
-+	for (i = 0; i  < ARRAY_SIZE(q6afe_dais); i++) {
-+		if (q6afe_dais[i].id == id) {
-+			*dai_name = q6afe_dais[i].name;
-+			ret = 0;
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct snd_soc_dapm_widget q6afe_dai_widgets[] = {
-+	SND_SOC_DAPM_AIF_OUT("HDMI_RX", "HDMI Playback", 0, 0, 0, 0),
-+};
-+
-+static const struct snd_soc_component_driver q6afe_dai_component = {
-+	.name		= "q6afe-dai-component",
-+	.dapm_widgets = q6afe_dai_widgets,
-+	.num_dapm_widgets = ARRAY_SIZE(q6afe_dai_widgets),
-+	.controls = q6afe_config_controls,
-+	.num_controls = ARRAY_SIZE(q6afe_config_controls),
-+	.dapm_routes = q6afe_dapm_routes,
-+	.num_dapm_routes = ARRAY_SIZE(q6afe_dapm_routes),
-+	.of_xlate_dai_name = q6afe_of_xlate_dai_name,
-+
-+};
-+
-+int q6afe_dai_dev_probe(struct device *dev)
-+{
-+	int rc = 0;
-+	struct q6afe_dai_data *dai_data;
-+
-+	dai_data = devm_kzalloc(dev, sizeof(*dai_data), GFP_KERNEL);
-+	if (!dai_data)
-+		rc = -ENOMEM;
-+
-+	q6afe_set_dai_data(dev, dai_data);
-+
-+	return  devm_snd_soc_register_component(dev, &q6afe_dai_component,
-+					  q6afe_dais, ARRAY_SIZE(q6afe_dais));
-+}
-+EXPORT_SYMBOL_GPL(q6afe_dai_dev_probe);
-+
-+int q6afe_dai_dev_remove(struct device *dev)
-+{
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(q6afe_dai_dev_remove);
-+MODULE_DESCRIPTION("Q6 Audio Fronend dai driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/sound/soc/qcom/qdsp6/q6afe.h b/sound/soc/qcom/qdsp6/q6afe.h
-index 43df524f01bb..647ed2d15545 100644
---- a/sound/soc/qcom/qdsp6/q6afe.h
-+++ b/sound/soc/qcom/qdsp6/q6afe.h
-@@ -26,6 +26,9 @@ struct q6afe_port;
- void q6afe_set_dai_data(struct device *dev, void *data);
- void *q6afe_get_dai_data(struct device *dev);
- 
-+int q6afe_dai_dev_probe(struct device *dev);
-+int q6afe_dai_dev_remove(struct device *dev);
-+
- struct q6afe_port *q6afe_port_get_from_id(struct device *dev, int id);
- int q6afe_port_start(struct q6afe_port *port);
- int q6afe_port_stop(struct q6afe_port *port);
--- 
-2.15.1
+On Thu, Feb 08, 2018 at 10:05:05PM +0200, Laurent Pinchart wrote:
+> On Wednesday, 7 February 2018 16:26:43 EET Maxime Ripard wrote:
+> > The Cadence MIPI-CSI2 TX controller is an hardware block meant to be us=
+ed
+> > as a bridge between pixel interfaces and a CSI-2 bus.
+> >=20
+> > It supports operating with an internal or external D-PHY, with up to 4
+> > lanes, or without any D-PHY. The current code only supports the former
+> > case.
+> >=20
+> > While the virtual channel input on the pixel interface can be directly
+> > mapped to CSI2, the datatype input is actually a selection signal (3-bi=
+ts)
+> > mapping to a table of up to 8 preconfigured datatypes/formats (programm=
+ed
+> > at start-up)
+> >=20
+> > The block supports up to 8 input datatypes.
+>=20
+> The DT bindings document four input streams. Does this mean that, to use =
+more=20
+> than 4 data types, a system would need to transmit multiplexed streams on=
+ a=20
+> single input stream with the 3 selection bits qualifying each sample ? Th=
+at=20
+> would be an interesting setup.
+
+My understanding is that each input stream has an additional signal
+that defines a data type encoded on 3 bits. So yeah, I guess that
+would be possible if the upstream device is able to synchronize its
+stream generation and the datatype sent.
+
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  drivers/media/platform/cadence/Kconfig       |   6 +
+> >  drivers/media/platform/cadence/Makefile      |   1 +
+> >  drivers/media/platform/cadence/cdns-csi2tx.c | 582 +++++++++++++++++++=
++++++
+> >  3 files changed, 589 insertions(+)
+> >  create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
+> >=20
+> > diff --git a/drivers/media/platform/cadence/Kconfig
+> > b/drivers/media/platform/cadence/Kconfig index d1b6bbb6a0eb..db49328ee8=
+b2
+> > 100644
+> > --- a/drivers/media/platform/cadence/Kconfig
+> > +++ b/drivers/media/platform/cadence/Kconfig
+> > @@ -9,4 +9,10 @@ config VIDEO_CADENCE_CSI2RX
+> >  	depends on VIDEO_V4L2_SUBDEV_API
+> >  	select V4L2_FWNODE
+> >=20
+> > +config VIDEO_CADENCE_CSI2TX
+> > +	tristate "Cadence MIPI-CSI2 TX Controller"
+> > +	depends on MEDIA_CONTROLLER
+> > +	depends on VIDEO_V4L2_SUBDEV_API
+> > +	select V4L2_FWNODE
+>=20
+> A bit of documentation maybe ?
+
+Yeah, it was already queued for the next iteration :)
+
+> > +static const struct v4l2_mbus_framefmt fmt_default =3D {
+> > +	.width		=3D 320,
+> > +	.height		=3D 180,
+>=20
+> That's a pretty small default resolution. Is there any reason for not usi=
+ng a=20
+> more common format ?
+
+What would be your suggestion?
+
+> > +static int csi2tx_init_cfg(struct v4l2_subdev *subdev,
+> > +			   struct v4l2_subdev_pad_config *cfg)
+> > +{
+> > +	struct csi2tx_priv *csi2tx =3D v4l2_subdev_to_csi2tx(subdev);
+> > +	unsigned int i;
+> > +
+> > +	for (i =3D 0; i < subdev->entity.num_pads; i++)
+> > +		csi2tx->pad_fmts[i] =3D fmt_default;
+>=20
+> .init_cfg() should initialize the formats stored in the cfg structure. Th=
+e=20
+> active formats stored in your driver-specific structure should be initial=
+ized=20
+> at probe time.
+
+Ok, I'll change it.
+
+> > +static int csi2tx_set_pad_format(struct v4l2_subdev *subdev,
+> > +				 struct v4l2_subdev_pad_config *cfg,
+> > +				 struct v4l2_subdev_format *fmt)
+> > +{
+> > +	struct csi2tx_priv *csi2tx =3D v4l2_subdev_to_csi2tx(subdev);
+> > +
+> > +	csi2tx->pad_fmts[fmt->pad] =3D fmt->format;
+>=20
+> Doesn't the IP have frame width or height limitations ? Or format
+> limitations ?
+
+In its current state, not really. There's also no clear limitations
+=66rom the registers on the formats / resolution used, since it's not
+configured at all in the device.
+
+The only constraint is that there's no buffer in the IP, so the input
+data rate and the output data rate should match. However, the way to
+do that is currently uncertain, so I guess we can address that later
+on.
+
+> > +static void csi2tx_reset(struct csi2tx_priv *csi2tx)
+> > +{
+> > +	writel(CSI2TX_CONFIG_SRST_REQ, csi2tx->base + CSI2TX_CONFIG_REG);
+> > +
+> > +	usleep_range(10, 20);
+>=20
+> As for the RX driver, udelay() might be better. Same comment for the othe=
+r=20
+> small delays below.
+
+I was asked by Benoit to change it to usleep_range in an earlier
+iteration, which one should I use?
+
+I'll change the driver according to your other comments.
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
+
+--kwq3qdy3pmt5hjhl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqDGuIACgkQ0rTAlCFN
+r3SRBA/+Jw6l94Ppm+jCLXSr+yctG7JdlY0Of24MCh871CYGD+eSw9zX7Ku5DA8n
+p8cYkTO5zL+gbOVocqPs1uVKb0dr/kLiHsroulg4auGcY/eNUAu2dQ5k5fMzugo1
+cxsyr8qFnthEfF9dkpcwwoEtEpX27egU+4YqvDU0yGhQ836HEw4c9QQU1Vl5K+Em
+Bx1vpxpvUDE1pk/yvmplIAT52V3kMg6AQdcz40wnhMtW2+zGfOWZHC3eEnNK72pc
+q5RQo74i2oDMRVZvvQuxolh3Wz+CLxIDd6Ti8YOz40hfc6fMKF/EPMU5FST//JEn
+0HfVtekGrUjMn6qfXGPNhgFh48jXlECRC01T04Im7a4KWpdZ8kk2l3BpUHTqGQaG
+W2qEGsN9CWxFjzrQ6wV88r8EhXnTIUFlafrO0IlXQrdro1xRqjWAPL02fsZ0FE7c
+gigN+mJaySSYOsCbME22004B+QEsBS2SGhvDjwAC28yxGYEo0LOv5okar3+47zhb
+KpPPIo1GmS/bt0PB1eFcsggtjzbdcAyeAK6lQOqMPsGLAlpSW/N0RgWvvgmQSOYQ
+t9Ndre2g90ZVChZ1u3sEz5RJiA+LgyH0Fv1ISfam1Q2ObBqRrvgdw0q/3F8r7QRf
+15XwWNSo+V59Gt3HoUjKF5L2Z379ja+lJtNgAI1zRv9byGPV2Q0=
+=FFYx
+-----END PGP SIGNATURE-----
+
+--kwq3qdy3pmt5hjhl--
