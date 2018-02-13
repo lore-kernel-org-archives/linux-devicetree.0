@@ -1,56 +1,57 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v7 31/37] MAINTAINERS: Add nds32
-Date: Tue, 13 Feb 2018 08:02:48 -0800
-Message-ID: <1518537768.22190.42.camel@perches.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-         <f7758221d49fd24fdff7c900aa5951a6c1c6a3cd.1518505384.git.greentime@andestech.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] add UniPhier audio nodes
+Date: Wed, 14 Feb 2018 01:06:49 +0900
+Message-ID: <CAK7LNARaJB-ymtj3b0XQn0P7yo7se0CXgCCO6pb5oKEhCxf4CQ@mail.gmail.com>
+References: <20180213130156.27827-1-suzuki.katsuhiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f7758221d49fd24fdff7c900aa5951a6c1c6a3cd.1518505384.git.greentime@andestech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>, greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180213130156.27827-1-suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-02-13 at 17:09 +0800, Greentime Hu wrote:
-> Add a maintainer information for the nds32(Andes) architecture.
-[]
-> diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> @@ -868,6 +868,17 @@ X:	drivers/iio/*/adjd*
->  F:	drivers/staging/iio/*/ad*
->  F:	drivers/staging/iio/trigger/iio-trig-bfin-timer.c
->  
-> +ANDES ARCHITECTURE
-> +M:	Greentime Hu <green.hu@gmail.com>
-> +M:	Vincent Chen <deanbo422@gmail.com>
-> +T:	git https://github.com/andestech/linux.git
-> +S:	Supported
-> +F:	arch/nds32
+2018-02-13 22:01 GMT+09:00 Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> This series adds device-tree nodes for Socionext audio system
+> for UniPhier LD11/LD20 SoCs. This one enables I2S output for
+> Line-In, Line-Out, S/PDIF output and compress audio output.
+>
+> Katsuhiro Suzuki (3):
+>   arm64: dts: uniphier: add sound node for UniPhier
+>   arm64: dts: uniphier: add speaker out for UniPhier LD11/LD20 boards
+>   arm64: dts: uniphier: add compress audio out for UniPhier LD11/LD20
 
-This should have a trailing /
 
-F:	arch/nds32/
+Series, applied to linux-uniphier.  Thanks!
 
-> +F:	Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
-> +F:	Documentation/devicetree/bindings/nds32
-> +K:	nds32
+Note, I locally fixed trivial things:
+ - Use #include <...> instead of #include "..." to include dt-binding header
+ - Fix DTC warnings (Character '_' not recommended in node)
+ - Remove unused labels such as 'audio', 'evea'
 
-Perhaps this should be
 
-K:	\bnds32
 
-as there are some existing uses of nds32 in the current tree.
+>  .../boot/dts/socionext/uniphier-ld11-global.dts    | 62 ++++++++++++++
+>  arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   | 92 +++++++++++++++++++++
+>  .../boot/dts/socionext/uniphier-ld20-global.dts    | 62 ++++++++++++++
+>  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   | 96 ++++++++++++++++++++++
+>  4 files changed, 312 insertions(+)
+>
+> --
+> 2.15.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-or maybe case insensitive like
 
-K:	(?i:\bnds32)
-or
-K:	(?:\bnds32|\bNDS32)
 
-> +N:	nds32
-> +
->  ANDROID CONFIG FRAGMENTS
->  M:	Rob Herring <robh@kernel.org>
->  S:	Supported
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
