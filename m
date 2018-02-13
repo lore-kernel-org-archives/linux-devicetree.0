@@ -1,153 +1,65 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH v3 08/11] ARM: dts: STi: Add fake reg property for usb2_picophyX nodes
-Date: Tue, 13 Feb 2018 13:53:34 +0100
-Message-ID: <1518526417-11919-9-git-send-email-patrice.chotard@st.com>
-References: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v7 1/6] base: power: runtime: Export
+ pm_runtime_get/put_suppliers
+Date: Tue, 13 Feb 2018 21:54:26 +0900
+Message-ID: <CAAFQd5DNzGYnTRuc2hDr1osQ2=6ruM0wQqV8svP=a10hxTVOGQ@mail.gmail.com>
+References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1517999482-17317-2-git-send-email-vivek.gautam@codeaurora.org>
+ <CAAFQd5BmroRf-C8dQkvTKHWK1psGnNi1t7g-q=Xce6KjrGTsdw@mail.gmail.com>
+ <65d707c0-76cc-d59e-ff18-1fdd89306900@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: patrice.chotard@st.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <65d707c0-76cc-d59e-ff18-1fdd89306900@arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel@vger.kernel.org, "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, freedreno@lists.freedesktop.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
-
-Add fake reg property for usb2_picophy nodes.
-This allows to fix the following warning when compiling dtb
-with W=1 option :
-
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/phy2 missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/phy3 missing or empty reg/ranges property
-
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/phy2 missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/phy3 missing or empty reg/ranges property
-
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/phy2 missing or empty reg/ranges property
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/phy3 missing or empty reg/ranges property
-
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
-v3: _ none
-v2: _ add a fake reg property to node without reg property.
-
-
- arch/arm/boot/dts/stih407-family.dtsi | 3 ++-
- arch/arm/boot/dts/stih410-b2120.dts   | 4 ++--
- arch/arm/boot/dts/stih410-b2260.dts   | 4 ++--
- arch/arm/boot/dts/stih410.dtsi        | 6 ++++--
- arch/arm/boot/dts/stih418.dtsi        | 6 ++++--
- 5 files changed, 14 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 00a3838236d1..5df827b00eb6 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -385,8 +385,9 @@
- 			status = "disabled";
- 		};
- 
--		usb2_picophy0: phy1 {
-+		usb2_picophy0: phy1@0 {
- 			compatible = "st,stih407-usb2-phy";
-+			reg = <0 0>;
- 			#phy-cells = <0>;
- 			st,syscfg = <&syscfg_core 0x100 0xf4>;
- 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-diff --git a/arch/arm/boot/dts/stih410-b2120.dts b/arch/arm/boot/dts/stih410-b2120.dts
-index 23199b1b0991..d1d908b9e34c 100644
---- a/arch/arm/boot/dts/stih410-b2120.dts
-+++ b/arch/arm/boot/dts/stih410-b2120.dts
-@@ -37,11 +37,11 @@
- 			sd-uhs-ddr50;
- 		};
- 
--		usb2_picophy1: phy2 {
-+		usb2_picophy1: phy2@0 {
- 			status = "okay";
- 		};
- 
--		usb2_picophy2: phy3 {
-+		usb2_picophy2: phy3@0 {
- 			status = "okay";
- 		};
- 
-diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-index cea5c840ca9f..8bcd58118dba 100644
---- a/arch/arm/boot/dts/stih410-b2260.dts
-+++ b/arch/arm/boot/dts/stih410-b2260.dts
-@@ -127,11 +127,11 @@
- 			status = "okay";
- 		};
- 
--		usb2_picophy1: phy2 {
-+		usb2_picophy1: phy2@0 {
- 			status = "okay";
- 		};
- 
--		usb2_picophy2: phy3 {
-+		usb2_picophy2: phy3@0 {
- 			status = "okay";
- 		};
- 
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index 815df2f7c103..bfbc73743b29 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -16,8 +16,9 @@
- 	};
- 
- 	soc {
--		usb2_picophy1: phy2 {
-+		usb2_picophy1: phy2@0 {
- 			compatible = "st,stih407-usb2-phy";
-+			reg = <0 0>;
- 			#phy-cells = <0>;
- 			st,syscfg = <&syscfg_core 0xf8 0xf4>;
- 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-@@ -27,8 +28,9 @@
- 			status = "disabled";
- 		};
- 
--		usb2_picophy2: phy3 {
-+		usb2_picophy2: phy3@0 {
- 			compatible = "st,stih407-usb2-phy";
-+			reg = <0 0>;
- 			#phy-cells = <0>;
- 			st,syscfg = <&syscfg_core 0xfc 0xf4>;
- 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-diff --git a/arch/arm/boot/dts/stih418.dtsi b/arch/arm/boot/dts/stih418.dtsi
-index e6525ab4d9bb..0efb3cd6a86e 100644
---- a/arch/arm/boot/dts/stih418.dtsi
-+++ b/arch/arm/boot/dts/stih418.dtsi
-@@ -30,8 +30,9 @@
- 	};
- 
- 	soc {
--		usb2_picophy1: phy2 {
-+		usb2_picophy1: phy2@0 {
- 			compatible = "st,stih407-usb2-phy";
-+			reg = <0 0>;
- 			#phy-cells = <0>;
- 			st,syscfg = <&syscfg_core 0xf8 0xf4>;
- 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
-@@ -39,8 +40,9 @@
- 			reset-names = "global", "port";
- 		};
- 
--		usb2_picophy2: phy3 {
-+		usb2_picophy2: phy3@0 {
- 			compatible = "st,stih407-usb2-phy";
-+			reg = <0 0>;
- 			#phy-cells = <0>;
- 			st,syscfg = <&syscfg_core 0xfc 0xf4>;
- 			resets = <&softreset STIH407_PICOPHY_SOFTRESET>,
--- 
-1.9.1
+T24gVHVlLCBGZWIgMTMsIDIwMTggYXQgOTowMCBQTSwgUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJw
+aHlAYXJtLmNvbT4gd3JvdGU6Cj4gT24gMTMvMDIvMTggMDc6NDQsIFRvbWFzeiBGaWdhIHdyb3Rl
+Ogo+Pgo+PiBIaSBWaXZlaywKPj4KPj4gT24gV2VkLCBGZWIgNywgMjAxOCBhdCA3OjMxIFBNLCBW
+aXZlayBHYXV0YW0KPj4gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4+Pgo+
+Pj4gVGhlIGRldmljZSBsaW5rIGFsbG93cyB0aGUgcG0gZnJhbWV3b3JrIHRvIHRpZSB0aGUgc3Vw
+cGxpZXIgYW5kCj4+PiBjb25zdW1lci4gU28sIHdoZW5ldmVyIHRoZSBjb25zdW1lciBpcyBwb3dl
+cmVkLW9uIHRoZSBzdXBwbGllcgo+Pj4gaXMgcG93ZXJlZC1vbiBmaXJzdC4KPj4+Cj4+PiBUaGVy
+ZSBhcmUgaG93ZXZlciBjYXNlcyBpbiB3aGljaCB0aGUgY29uc3VtZXIgd2FudHMgdG8gcG93ZXIt
+b24KPj4+IHRoZSBzdXBwbGllciwgYnV0IG5vdCBpdHNlbGYuCj4+PiBFLmcuLCBBIEdyYXBoaWNz
+IG9yIG11bHRpbWVkaWEgZHJpdmVyIHdhbnRzIHRvIHBvd2VyLW9uIHRoZSBTTU1VCj4+PiB0byB1
+bm1hcCBhIGJ1ZmZlciBhbmQgZmluaXNoIHRoZSBUTEIgb3BlcmF0aW9ucyB3aXRob3V0IHBvd2Vy
+aW5nCj4+PiBvbiBpdHNlbGYuCj4+Cj4+Cj4+IFRoaXMgc291bmRzIHN0cmFuZ2UgdG8gbWUuIElm
+IHRoZSBTTU1VIGlzIHBvd2VyZWQgZG93biwgd291bGRuJ3QgdGhlCj4+IFRMQiBsb3NlIGl0cyBj
+b250ZW50cyBhcyB3ZWxsIChhbmQgc28gbm8gZmx1c2hpbmcgbmVlZGVkKT8KPgo+Cj4gRGVwZW5k
+cyBvbiBpbXBsZW1lbnRhdGlvbiBkZXRhaWxzIC0gaWYgcnVudGltZSBQTSBpcyBhY3R1YWxseSBp
+bXBsZW1lbnRlZAo+IHZpYSBleHRlcm5hbCBjbG9jayBnYXRpbmcgKGluIHRoZSBhYnNlbmNlIG9m
+IGZpbmUtZ3JhaW5lZCBwb3dlciBkb21haW5zKSwKPiB0aGVuICJzdXNwZW5kZWQiIFRMQnMgbWln
+aHQgYm90aCByZXRhaW4gc3RhdGUgYW5kIG5vdCByZWNlaXZlIGludmFsaWRhdGlvbgo+IHJlcXVl
+c3RzLCB3aGljaCBpcyByZWFsbHkgdGhlIHdvcnN0IGNhc2UuCgpBZ3JlZWQuIFRoYXQncyB3aHkg
+aW4gIltQQVRDSCB2NyAzLzZdIGlvbW11L2FybS1zbW11OiBJbnZva2UKcG1fcnVudGltZSBkdXJp
+bmcgcHJvYmUsIGFkZC9yZW1vdmUgZGV2aWNlIiBJIGFjdHVhbGx5IHN1Z2dlc3RlZAptYW5hZ2lu
+ZyBjbG9ja3Mgc2VwYXJhdGVseSBmcm9tIHJ1bnRpbWUgUE0uIEF0IGxlYXN0IHVudGlsIHJ1bnRp
+bWUgUE0KZnJhbWV3b3JrIGFycml2ZXMgYXQgYSBzdGF0ZSwgd2hlcmUgbXVsdGlwbGUgcG93ZXIg
+c3RhdGVzIGNhbiBiZQptYW5hZ2VkLCBpLmUuIGZ1bGwgcG93ZXIgc3RhdGUsIGNsb2NrLWdhdGVk
+IHN0YXRlLCBkb21haW4tb2ZmIHN0YXRlLgooSSB0aGluayBJIG1pZ2h0IGhhdmUgc2VlbiBzb21l
+IG9uZ29pbmcgd29yayBvbiB0aGlzIG9uIExXTiB0aG91Z2guLi4pCgo+Cj4+IE90aGVyIHRoYW4g
+dGhhdCwgd2hhdCBraW5kIG9mIGhhcmR3YXJlIG9wZXJhdGlvbnMgd291bGQgYmUgbmVlZGVkCj4+
+IGJlc2lkZXMganVzdCB1cGRhdGluZyB0aGUgcGFnZSB0YWJsZXMgZnJvbSB0aGUgQ1BVPwo+Cj4K
+PiBEb21haW4gYXR0YWNoL2RldGFjaCBhbHNvIHJlcXVpcmUgdXBkYXRpbmcgU01NVSBoYXJkd2Fy
+ZSBzdGF0ZSAoYW5kIHBvc3NpYmx5Cj4gVExCIG1haW50ZW5hbmNlKSwgYnV0IGRvbid0IGxvZ2lj
+YWxseSByZXF1aXJlIHRoZSBtYXN0ZXIgZGV2aWNlIGl0c2VsZiB0byBiZQo+IGFjdGl2ZSBhdCB0
+aGUgdGltZS4KCldvdWxkbid0IHRoaXMgaGFyZHdhcmUgc3RhdGUgbmVlZCB0byBiZSByZWluaXRp
+YWxpemVkIGFueXdheSBhZnRlcgpyZXNwZWN0aXZlIHBvd2VyIGRvbWFpbiBwb3dlciBjeWNsZXM/
+IChJbiBvdGhlciB3b3JkcywgaGFyZHdhcmUgd291bGQKb25seSBuZWVkIHByb2dyYW1taW5nIGlm
+IGl0J3MgcG93ZXJlZCBvbiBhdCB0aGUgbW9tZW50LikKCkJlc3QgcmVnYXJkcywKVG9tYXN6Cl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
