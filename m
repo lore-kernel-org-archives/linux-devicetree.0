@@ -1,95 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: media: Binding document for OV7251
- camera sensor
-Date: Tue, 13 Feb 2018 17:42:46 -0600
-Message-ID: <20180213234246.vmiwrxlxuprlak4z@rob-hp-laptop>
-References: <1518080018-10403-1-git-send-email-todor.tomov@linaro.org>
+From: "Tian, Kevin" <kevin.tian@intel.com>
+Subject: RE: [PATCH 01/37] iommu: Introduce Shared Virtual Addressing API
+Date: Tue, 13 Feb 2018 23:43:08 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D191003B1B@SHSMSX101.ccr.corp.intel.com>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+ <20180212183352.22730-2-jean-philippe.brucker@arm.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D191002823@SHSMSX101.ccr.corp.intel.com>
+ <b3c190e7-1a33-971e-b86c-a9725118ba05@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1518080018-10403-1-git-send-email-todor.tomov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Todor Tomov <todor.tomov@linaro.org>
-Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <b3c190e7-1a33-971e-b86c-a9725118ba05@arm.com>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "Raj, Ashok" <ashok.raj@intel.com>, "bharatku@xilinx.com" <bharatku@xilinx.com>, "rfranz@cavium.com" <rfranz@cavium.com>, "lenb@kernel.org" <lenb@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "shunyong.yang@hxt-semitech.com" <shunyong.yang@hxt-semitech.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Sudeep Holla <Sudeep.Holla@arm.com>, "christian.koenig@amd.com" <christian.koenig@amd.com>, Jo
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 08, 2018 at 10:53:37AM +0200, Todor Tomov wrote:
-> Add the document for ov7251 device tree binding.
+> From: Jean-Philippe Brucker
+> Sent: Tuesday, February 13, 2018 8:40 PM
 > 
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: devicetree@vger.kernel.org
-> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-> ---
->  .../devicetree/bindings/media/i2c/ov7251.txt       | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7251.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7251.txt b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
-> new file mode 100644
-> index 0000000..c807646
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
-> @@ -0,0 +1,51 @@
-> +* Omnivision 1/7.5-Inch B&W VGA CMOS Digital Image Sensor
-> +
-> +The Omnivision OV7251 is a 1/7.5-Inch CMOS active pixel digital image sensor with
-> +an active array size of 640H x 480V. It is programmable through a serial I2C
-> +interface.
-> +
-> +Required Properties:
-> +- compatible: Value should be "ovti,ov7251".
-> +- clocks: Reference to the xclk clock.
-> +- clock-names: Should be "xclk".
-> +- clock-frequency: Frequency of the xclk clock.
-> +- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> +  to the hardware pin XSHUTDOWN which is physically active low.
-> +- vdddo-supply: Chip digital IO regulator.
-> +- vdda-supply: Chip analog regulator.
-> +- vddd-supply: Chip digital core regulator.
-> +
-> +The device node must contain one 'port' child node for its digital output
-> +video port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	&i2c1 {
-> +		...
-> +
-> +		ov7251: ov7251@60 {
-
-camera-sensor@60
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +			compatible = "ovti,ov7251";
-> +			reg = <0x60>;
-> +
-> +			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&camera_bw_default>;
-> +
-> +			clocks = <&clks 200>;
-> +			clock-names = "xclk";
-> +			clock-frequency = <24000000>;
-> +
-> +			vdddo-supply = <&camera_dovdd_1v8>;
-> +			vdda-supply = <&camera_avdd_2v8>;
-> +			vddd-supply = <&camera_dvdd_1v2>;
-> +
-> +			port {
-> +				ov7251_ep: endpoint {
-> +					clock-lanes = <1>;
-> +					data-lanes = <0>;
-> +					remote-endpoint = <&csi0_ep>;
-> +				};
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.7.4
+> [...]
+> >> +
+> >> +/**
+> >> + * iommu_sva_device_init() - Initialize Shared Virtual Addressing for a
+> >> device
+> >> + * @dev: the device
+> >> + * @features: bitmask of features that need to be initialized
+> >> + * @max_pasid: max PASID value supported by the device
+> >> + *
+> >> + * Users of the bind()/unbind() API must call this function to initialize all
+> >> + * features required for SVA.
+> >> + *
+> >> + * - If the device should support multiple address spaces (e.g. PCI
+> PASID),
+> >> + *   IOMMU_SVA_FEAT_PASID must be requested.
+> >
+> > I think it is by default assumed when using this API, based on definition of
+> > SVA. Can you elaborate the situation where this flag can be cleared?
 > 
+> When passing a device to userspace, you could also share its non-pasid
+> address space with the process. It requires a new domain type so is left
+> as a TODO in patch 2/37. I did get requests for this feature, though I
+> think it was mostly for prototyping. I guess I could remove the flag, and
+> reintroduce it as IOMMU_SVA_FEAT_NO_PASID later on.
+
+sorry I still didn't get the definition of non-pasid address space. 
+Did you mean the GPA/IOVA address space and no_pasid implies
+actually some default PASID associated?
+
+> 
+> [...]
+> >> +	ret = domain->ops->sva_device_init(dev, features, &min_pasid,
+> >> +					   &max_pasid);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	/* FIXME: racy. Next version should have a mutex (same as fault
+> >> handler) */
+> >> +	dev_param->sva_features = features;
+> >> +	dev_param->min_pasid = min_pasid;
+> >> +	dev_param->max_pasid = max_pasid;
+> >
+> > what's the point of min_pasid here?
+> 
+> Arm SMMUv3 uses entry 0 of the PASID table for the default (non-pasid)
+> context, so it needs to set min_pasid to 1. AMD IOMMU recently added a
+> similar feature (GIoSup), if I understood correctly.
+> 
+
+just for such purpose maybe we should just define a reserved_pasid
+otherwise there will be some waste if an implementation allows it
+non-zero.
+
+Thanks
+Kevin
+ 
