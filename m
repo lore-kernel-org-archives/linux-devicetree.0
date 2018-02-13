@@ -1,46 +1,69 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v5 09/26] soc: renesas: rcar-rst: Enable watchdog as reset
- trigger for Gen2
-Date: Tue, 13 Feb 2018 12:57:56 +0000
-Message-ID: <TY1PR06MB08958CD1E38DBA3F321977EDC0F60@TY1PR06MB0895.apcprd06.prod.outlook.com>
-References: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1518457475-4480-10-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180213081910.x5llcsmwza44u4ow@verge.net.au>
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: Re: [PATCH v2 10/12] ARM: dts: STi: Add fake reg property for clocks
+Date: Tue, 13 Feb 2018 12:58:52 +0000
+Message-ID: <ce036283-586b-0603-2c85-a502ed656e72@st.com>
+References: <1518446590-16800-1-git-send-email-patrice.chotard@st.com>
+ <1518446590-16800-11-git-send-email-patrice.chotard@st.com>
+ <CABGGisxgejFHj0xQq-aBQETt9CX3OzLc3ER_Y9nyrw7FeLdt6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180213081910.x5llcsmwza44u4ow@verge.net.au>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABGGisxgejFHj0xQq-aBQETt9CX3OzLc3ER_Y9nyrw7FeLdt6g@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-ID: <8B25772FB022A346B0B37143D353A66F@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <rob.herring@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
-
-> Subject: Re: [PATCH v5 09/26] soc: renesas: rcar-rst: Enable watchdog as =
-reset trigger for Gen2
->
-> On Mon, Feb 12, 2018 at 05:44:18PM +0000, Fabrizio Castro wrote:
-> > This patch allows for platform specific quirks as some of the SoC need
-> > further customization for the watchdog to work properly, like for R-Car
-> > Gen2 and for RZ/G.
-> >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.rene=
-sas.com>
->
-> I am fine with this patch but please rebase it on top of
-> renesas-devel-20180212-v4.16-rc1 (or later).
-
-sure, I will.
-
-Thanks,
-Fab
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+SGkgUm9iDQoNCk9uIDAyLzEyLzIwMTggMDQ6MjIgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
+biBNb24sIEZlYiAxMiwgMjAxOCBhdCA4OjQzIEFNLCAgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+
+IHdyb3RlOg0KPj4gRnJvbTogUGF0cmljZSBDaG90YXJkIDxwYXRyaWNlLmNob3RhcmRAc3QuY29t
+Pg0KPj4NCj4+IEZvciBhbGwgY2xvY2sncyBlbGVtZW50IGluc2lkZSBTb0MsIGFkZCBhIGZha2Ug
+cmVnIHByb3BlcnR5LA0KPj4gdGhpcyBhbGxvd3MgdG8gZml4IHRoZSBmb2xsb3dpbmcgd2Fybmlu
+Z3Mgd2hlbiBjb21waWxpbmcNCj4+IGR0YiB3aXRoIFc9MSBvcHRpb24gOg0KPj4NCj4+IGFyY2gv
+YXJtL2Jvb3QvZHRzL3N0aWg0MTAtYjIxMjAuZHRiOiBXYXJuaW5nIChzaW1wbGVfYnVzX3JlZyk6
+DQo+PiBOb2RlIC9jbG9ja3MvY2xrLW0tYTktcGVyaXBocyBtaXNzaW5nIG9yIGVtcHR5IHJlZy9y
+YW5nZXMgcHJvcGVydHkNCj4+IGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAtYjIxMjAuZHRiOiBX
+YXJuaW5nIChzaW1wbGVfYnVzX3JlZyk6DQo+PiBOb2RlIC9jbG9ja3MvY2xrLW0tYTktZXh0MmYt
+ZGl2MnMgbWlzc2luZyBvciBlbXB0eSByZWcvcmFuZ2VzIHByb3BlcnR5DQo+PiBhcmNoL2FybS9i
+b290L2R0cy9zdGloNDEwLWIyMTIwLmR0YjogV2FybmluZyAoc2ltcGxlX2J1c19yZWcpOg0KPj4g
+Tm9kZSAvY2xvY2tzL2Nsay10bWRzb3V0LWhkbWkgbWlzc2luZyBvciBlbXB0eSByZWcvcmFuZ2Vz
+IHByb3BlcnR5DQo+Pg0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC1iMjI2MC5kdGI6IFdh
+cm5pbmcgKHNpbXBsZV9idXNfcmVnKToNCj4+IE5vZGUgL2Nsb2Nrcy9jbGstbS1hOS1wZXJpcGhz
+IG1pc3Npbmcgb3IgZW1wdHkgcmVnL3JhbmdlcyBwcm9wZXJ0eQ0KPj4gYXJjaC9hcm0vYm9vdC9k
+dHMvc3RpaDQxMC1iMjI2MC5kdGI6IFdhcm5pbmcgKHNpbXBsZV9idXNfcmVnKToNCj4+IE5vZGUg
+L2Nsb2Nrcy9jbGstbS1hOS1leHQyZi1kaXYycyBtaXNzaW5nIG9yIGVtcHR5IHJlZy9yYW5nZXMg
+cHJvcGVydHkNCj4+IGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAtYjIyNjAuZHRiOiBXYXJuaW5n
+IChzaW1wbGVfYnVzX3JlZyk6DQo+PiBOb2RlIC9jbG9ja3MvY2xrLXRtZHNvdXQtaGRtaSBtaXNz
+aW5nIG9yIGVtcHR5IHJlZy9yYW5nZXMgcHJvcGVydHkNCj4+DQo+PiBhcmNoL2FybS9ib290L2R0
+cy9zdGloNDE4LWIyMTk5LmR0YjogV2FybmluZyAoc2ltcGxlX2J1c19yZWcpOg0KPj4gTm9kZSAv
+Y2xvY2tzL2Nsay1tLWE5LXBlcmlwaHMgbWlzc2luZyBvciBlbXB0eSByZWcvcmFuZ2VzIHByb3Bl
+cnR5DQo+PiBhcmNoL2FybS9ib290L2R0cy9zdGloNDE4LWIyMTk5LmR0YjogV2FybmluZyAoc2lt
+cGxlX2J1c19yZWcpOg0KPj4gTm9kZSAvY2xvY2tzL2Nsay1tLWE5LWV4dDJmLWRpdjJzIG1pc3Np
+bmcgb3IgZW1wdHkgcmVnL3JhbmdlcyBwcm9wZXJ0eQ0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3Rp
+aDQxOC1iMjE5OS5kdGI6IFdhcm5pbmcgKHNpbXBsZV9idXNfcmVnKToNCj4+IE5vZGUgL2Nsb2Nr
+cy9jbGstdG1kc291dC1oZG1pIG1pc3Npbmcgb3IgZW1wdHkgcmVnL3JhbmdlcyBwcm9wZXJ0eQ0K
+Pj4NCj4+IFNpZ25lZC1vZmYtYnk6IFBhdHJpY2UgQ2hvdGFyZCA8cGF0cmljZS5jaG90YXJkQHN0
+LmNvbT4NCj4+IC0tLQ0KPj4NCj4+IHYyOiBfIGFkZCBhIGZha2UgcmVnIHByb3BlcnR5IHRvIG5v
+ZGUgd2l0aG91dCByZWcgcHJvcGVydHkuDQo+Pg0KPj4gICBhcmNoL2FybS9ib290L2R0cy9zdGlo
+NDA3LWNsb2NrLmR0c2kgfCA5ICsrKysrKy0tLQ0KPj4gICBhcmNoL2FybS9ib290L2R0cy9zdGlo
+NDEwLWNsb2NrLmR0c2kgfCA5ICsrKysrKy0tLQ0KPj4gICBhcmNoL2FybS9ib290L2R0cy9zdGlo
+NDE4LWNsb2NrLmR0c2kgfCA5ICsrKysrKy0tLQ0KPj4gICAzIGZpbGVzIGNoYW5nZWQsIDE4IGlu
+c2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL3N0aWg0MDctY2xvY2suZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDct
+Y2xvY2suZHRzaQ0KPj4gaW5kZXggYjg4MmRjZjNhNjQ5Li4xYmJhNDdlMDZlYmUgMTAwNjQ0DQo+
+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWNsb2NrLmR0c2kNCj4+ICsrKyBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctY2xvY2suZHRzaQ0KPj4gQEAgLTI0LDkgKzI0LDEwIEBA
+DQo+PiAgICAgICAgICAgICAgICAgIC8qDQo+PiAgICAgICAgICAgICAgICAgICAqIEFSTSBQZXJp
+cGhlcmFsIGNsb2NrIGZvciB0aW1lcnMNCj4+ICAgICAgICAgICAgICAgICAgICovDQo+PiAtICAg
+ICAgICAgICAgICAgYXJtX3BlcmlwaF9jbGs6IGNsay1tLWE5LXBlcmlwaHMgew0KPj4gKyAgICAg
+ICAgICAgICAgIGFybV9wZXJpcGhfY2xrOiBjbGstbS1hOS1wZXJpcGhzQDAgew0KPj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICNjbG9jay1jZWxscyA9IDwwPjsNCj4+ICAgICAgICAgICAgICAg
+ICAgICAgICAgICBjb21wYXRpYmxlID0gImZpeGVkLWZhY3Rvci1jbG9jayI7DQo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICByZWcgPSA8MCAwPjsNCj4gDQo+IERvbid0IGRvIHRoaXMuIFRoZSBj
+b3JyZWN0IGZpeCBpcyBjaGFuZ2UgdGhlIGxvY2F0aW9uIG9mIHRoZXNlIG5vZGVzDQo+IHRvIGJl
+IHVuZGVyIHdoYXRldmVyIGNvbnRyb2xzIHRoZW0uDQo+IA0KT2sgaSB3aWxsIHB1dCB0aGlzIG5v
+ZGUgYXMgYSBjaGlsZCBvZiBjbG9ja2dlbi1hOUA5MmIwMDAwDQoNClRoYW5rcw0KDQpQYXRyaWNl
+DQoNCj4gUm9iDQo+IA==
