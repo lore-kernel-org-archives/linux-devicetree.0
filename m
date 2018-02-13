@@ -1,151 +1,67 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: [PATCH v7 36/37] irqchip: Andestech Internal Vector Interrupt Controller driver
-Date: Tue, 13 Feb 2018 17:09:40 +0800
-Message-ID: <0ed65d44279ff34d91f3aa198309d1a04df3b911.1518505384.git.greentime@andestech.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
-In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-Sender: netdev-owner@vger.kernel.org
-To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
-Cc: green.hu@gmail.com, Rick Chen <rick@andestech.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v3 1/5] clk: mediatek: update missing clock data for
+ MT7622 audsys
+Date: Tue, 13 Feb 2018 10:13:33 +0100
+Message-ID: <8af9dd65-13da-299d-fb38-fe2da4685e1a@gmail.com>
+References: <cover.1518424204.git.ryder.lee@mediatek.com>
+ <ee93f496edb238935940233d88f5548940b53b6a.1518424204.git.ryder.lee@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <ee93f496edb238935940233d88f5548940b53b6a.1518424204.git.ryder.lee@mediatek.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ryder Lee <ryder.lee@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the Andestech Internal Vector Interrupt Controller
-driver. You can find the spec here. Ch4.9 of AndeStar SPA V3 Manual.
-http://www.andestech.com/product.php?cls=9
 
-Signed-off-by: Rick Chen <rick@andestech.com>
-Signed-off-by: Greentime Hu <greentime@andestech.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
----
- drivers/irqchip/Makefile       |   1 +
- drivers/irqchip/irq-ativic32.c | 107 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+)
- create mode 100644 drivers/irqchip/irq-ativic32.c
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index d27e3e3619e0..de7cf483e1b7 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -85,3 +85,4 @@ obj-$(CONFIG_IRQ_UNIPHIER_AIDET)	+= irq-uniphier-aidet.o
- obj-$(CONFIG_ARCH_SYNQUACER)		+= irq-sni-exiu.o
- obj-$(CONFIG_MESON_IRQ_GPIO)		+= irq-meson-gpio.o
- obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
-+obj-$(CONFIG_NDS32)			+= irq-ativic32.o
-diff --git a/drivers/irqchip/irq-ativic32.c b/drivers/irqchip/irq-ativic32.c
-new file mode 100644
-index 000000000000..f69a8588521c
---- /dev/null
-+++ b/drivers/irqchip/irq-ativic32.c
-@@ -0,0 +1,107 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2005-2017 Andes Technology Corporation
-+
-+#include <linux/irq.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/interrupt.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip.h>
-+#include <nds32_intrinsic.h>
-+
-+static void ativic32_ack_irq(struct irq_data *data)
-+{
-+	__nds32__mtsr_dsb(BIT(data->hwirq), NDS32_SR_INT_PEND2);
-+}
-+
-+static void ativic32_mask_irq(struct irq_data *data)
-+{
-+	unsigned long int_mask2 = __nds32__mfsr(NDS32_SR_INT_MASK2);
-+	__nds32__mtsr_dsb(int_mask2 & (~(BIT(data->hwirq))), NDS32_SR_INT_MASK2);
-+}
-+
-+static void ativic32_unmask_irq(struct irq_data *data)
-+{
-+	unsigned long int_mask2 = __nds32__mfsr(NDS32_SR_INT_MASK2);
-+	__nds32__mtsr_dsb(int_mask2 | (BIT(data->hwirq)), NDS32_SR_INT_MASK2);
-+}
-+
-+static struct irq_chip ativic32_chip = {
-+	.name = "ativic32",
-+	.irq_ack = ativic32_ack_irq,
-+	.irq_mask = ativic32_mask_irq,
-+	.irq_unmask = ativic32_unmask_irq,
-+};
-+
-+static unsigned int __initdata nivic_map[6] = { 6, 2, 10, 16, 24, 32 };
-+
-+static struct irq_domain *root_domain;
-+static int ativic32_irq_domain_map(struct irq_domain *id, unsigned int virq,
-+				  irq_hw_number_t hw)
-+{
-+
-+	unsigned long int_trigger_type;
-+	u32 type;
-+	struct irq_data *irq_data;
-+	int_trigger_type = __nds32__mfsr(NDS32_SR_INT_TRIGGER);
-+	irq_data = irq_get_irq_data(virq);
-+	if (!irq_data)
-+		return -EINVAL;
-+
-+	if (int_trigger_type & (BIT(hw))) {
-+		irq_set_chip_and_handler(virq, &ativic32_chip, handle_edge_irq);
-+		type = IRQ_TYPE_EDGE_RISING;
-+	} else {
-+		irq_set_chip_and_handler(virq, &ativic32_chip, handle_level_irq);
-+		type = IRQ_TYPE_LEVEL_HIGH;
-+	}
-+
-+	irqd_set_trigger_type(irq_data, type);
-+	return 0;
-+}
-+
-+static struct irq_domain_ops ativic32_ops = {
-+	.map = ativic32_irq_domain_map,
-+	.xlate = irq_domain_xlate_onecell
-+};
-+
-+static irq_hw_number_t get_intr_src(void)
-+{
-+	return ((__nds32__mfsr(NDS32_SR_ITYPE) & ITYPE_mskVECTOR) >> ITYPE_offVECTOR)
-+		- NDS32_VECTOR_offINTERRUPT;
-+}
-+
-+asmlinkage void asm_do_IRQ(struct pt_regs *regs)
-+{
-+	irq_hw_number_t hwirq = get_intr_src();
-+	handle_domain_irq(root_domain, hwirq, regs);
-+}
-+
-+int __init ativic32_init_irq(struct device_node *node, struct device_node *parent)
-+{
-+	unsigned long int_vec_base, nivic, nr_ints;
-+
-+	if (WARN(parent, "non-root ativic32 are not supported"))
-+		return -EINVAL;
-+
-+	int_vec_base = __nds32__mfsr(NDS32_SR_IVB);
-+
-+	if (((int_vec_base & IVB_mskIVIC_VER) >> IVB_offIVIC_VER) == 0)
-+		panic("Unable to use atcivic32 for this cpu.\n");
-+
-+	nivic = (int_vec_base & IVB_mskNIVIC) >> IVB_offNIVIC;
-+	if (nivic >= ARRAY_SIZE(nivic_map))
-+		panic("The number of input for ativic32 is not supported.\n");
-+
-+	nr_ints = nivic_map[nivic];
-+
-+	root_domain = irq_domain_add_linear(node, nr_ints,
-+			&ativic32_ops, NULL);
-+
-+	if (!root_domain)
-+		panic("%s: unable to create IRQ domain\n", node->full_name);
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(ativic32, "andestech,ativic32", ativic32_init_irq);
--- 
-2.16.1
+On 02/12/2018 12:28 PM, Ryder Lee wrote:
+> Add missing clock data 'CLK_AUDIO_AFE_CONN' for MT7622 audsys.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/clk/mediatek/clk-mt7622-aud.c  | 1 +
+>  include/dt-bindings/clock/mt7622-clk.h | 3 ++-
+>  2 files changed, 3 insertions(+), 1 deletion(-)>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> diff --git a/drivers/clk/mediatek/clk-mt7622-aud.c b/drivers/clk/mediatek/clk-mt7622-aud.c
+> index fad7d9f..13f752d 100644
+> --- a/drivers/clk/mediatek/clk-mt7622-aud.c
+> +++ b/drivers/clk/mediatek/clk-mt7622-aud.c
+> @@ -106,6 +106,7 @@
+>  	GATE_AUDIO1(CLK_AUDIO_INTDIR, "audio_intdir", "intdir_sel", 20),
+>  	GATE_AUDIO1(CLK_AUDIO_A1SYS, "audio_a1sys", "a1sys_hp_sel", 21),
+>  	GATE_AUDIO1(CLK_AUDIO_A2SYS, "audio_a2sys", "a2sys_hp_sel", 22),
+> +	GATE_AUDIO1(CLK_AUDIO_AFE_CONN, "audio_afe_conn", "a1sys_hp_sel", 23),
+>  	/* AUDIO2 */
+>  	GATE_AUDIO2(CLK_AUDIO_UL1, "audio_ul1", "a1sys_hp_sel", 0),
+>  	GATE_AUDIO2(CLK_AUDIO_UL2, "audio_ul2", "a1sys_hp_sel", 1),
+> diff --git a/include/dt-bindings/clock/mt7622-clk.h b/include/dt-bindings/clock/mt7622-clk.h
+> index 3e514ed..e9d77f0 100644
+> --- a/include/dt-bindings/clock/mt7622-clk.h
+> +++ b/include/dt-bindings/clock/mt7622-clk.h
+> @@ -235,7 +235,8 @@
+>  #define CLK_AUDIO_MEM_ASRC3		43
+>  #define CLK_AUDIO_MEM_ASRC4		44
+>  #define CLK_AUDIO_MEM_ASRC5		45
+> -#define CLK_AUDIO_NR_CLK		46
+> +#define CLK_AUDIO_AFE_CONN		46
+> +#define CLK_AUDIO_NR_CLK		47
+>  
+>  /* SSUSBSYS */
+>  
+> 
