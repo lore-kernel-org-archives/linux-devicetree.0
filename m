@@ -1,268 +1,91 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH v3 09/11] ARM: dts: STi: Update sound related nodes location
-Date: Tue, 13 Feb 2018 13:53:35 +0100
-Message-ID: <1518526417-11919-10-git-send-email-patrice.chotard@st.com>
-References: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: Re: [PATCH v2 09/12] ARM: dts: STi: Add fake reg property for sound
+ related nodes
+Date: Tue, 13 Feb 2018 12:54:56 +0000
+Message-ID: <99afc3f9-d0b4-b13c-ac97-4347f25aa000@st.com>
+References: <1518446590-16800-1-git-send-email-patrice.chotard@st.com>
+ <1518446590-16800-10-git-send-email-patrice.chotard@st.com>
+ <CABGGiszvx=Nyeq+KTt9uHGwSabxsJuEfvG01H4NyrBtB40atoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
+In-Reply-To: <CABGGiszvx=Nyeq+KTt9uHGwSabxsJuEfvG01H4NyrBtB40atoA@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <E2D3A8AB06DC3247A5FAF39EC2F6E673@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: patrice.chotard@st.com
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
-
-Move sound node outside soc node and sti_sasg_codec node
-as child of syscfg_core node.
-This allows to fix the following warning when compiling
-dtb with W=1 option:
-
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@1 has a unit name, but no reg property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@2 has a unit name, but no reg property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/sti-sasg-codec missing or empty reg/ranges property
-
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@1 has a unit name, but no reg property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@2 has a unit name, but no reg property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/sound missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/sti-sasg-codec missing or empty reg/ranges property
-
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (unit_address_vs_reg):
-Node /soc/sound/simple-audio-card,dai-link@0 has a unit name, but no reg property
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/sti-sasg-codec missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/sound missing or empty reg/ranges property
-
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/sti-sasg-codec missing or empty reg/ranges property
-
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
-
-v3: _ update location of sound related node and remove the fake reg property
-v2: _ add a fake reg property to node without reg property.
-
- arch/arm/boot/dts/stih407-family.dtsi | 14 ++---
- arch/arm/boot/dts/stih410-b2260.dts   | 38 +++++++-------
- arch/arm/boot/dts/stihxxx-b2120.dtsi  | 98 ++++++++++++++++++-----------------
- 3 files changed, 77 insertions(+), 73 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 5df827b00eb6..f7362c31de29 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -178,6 +178,13 @@
- 		syscfg_core: core-syscfg@92b0000 {
- 			compatible = "st,stih407-core-syscfg", "syscon";
- 			reg = <0x92b0000 0x1000>;
-+
-+			sti_sasg_codec: sti-sasg-codec {
-+				compatible = "st,stih407-sas-codec";
-+				#sound-dai-cells = <1>;
-+				status = "disabled";
-+				st,syscfg = <&syscfg_core>;
-+			};
- 		};
- 
- 		syscfg_lpm: lpm-syscfg@94b5100 {
-@@ -894,13 +901,6 @@
- 			status = "disabled";
- 		};
- 
--		sti_sasg_codec: sti-sasg-codec {
--			compatible = "st,stih407-sas-codec";
--			#sound-dai-cells = <1>;
--			status = "disabled";
--			st,syscfg = <&syscfg_core>;
--		};
--
- 		sti_uni_player0: sti-uni-player@8d80000 {
- 			compatible = "st,stih407-uni-player-hdmi";
- 			#sound-dai-cells = <0>;
-diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-index 8bcd58118dba..5ccc6bb050df 100644
---- a/arch/arm/boot/dts/stih410-b2260.dts
-+++ b/arch/arm/boot/dts/stih410-b2260.dts
-@@ -57,6 +57,25 @@
- 		};
- 	};
- 
-+	sound: sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "STI-B2260";
-+		status = "okay";
-+
-+		simple-audio-card,dai-link0 {
-+			/* DAC */
-+			format = "i2s";
-+			mclk-fs = <128>;
-+			cpu {
-+				sound-dai = <&sti_uni_player0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&sti_hdmi>;
-+			};
-+		};
-+	};
-+
- 	soc {
- 		/* Low speed expansion connector */
- 		uart0: serial@9830000 {
-@@ -181,25 +200,6 @@
- 			status = "okay";
- 		};
- 
--		sound {
--			compatible = "simple-audio-card";
--			simple-audio-card,name = "STI-B2260";
--			status = "okay";
--
--			simple-audio-card,dai-link@0 {
--				/* DAC */
--				format = "i2s";
--				mclk-fs = <128>;
--				cpu {
--					sound-dai = <&sti_uni_player0>;
--				};
--
--				codec {
--					sound-dai = <&sti_hdmi>;
--				};
--			};
--		};
--
- 		miphy28lp_phy: miphy28lp@0 {
- 
- 			phy_port1: port@9b2a000 {
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index 66c1c6a5eb76..c67edb1a8121 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -23,6 +23,52 @@
- 		};
- 	};
- 
-+	sound: sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "STI-B2120";
-+		status = "okay";
-+
-+		simple-audio-card,dai-link0 {
-+			/* HDMI */
-+			format = "i2s";
-+			mclk-fs = <128>;
-+			cpu {
-+				sound-dai = <&sti_uni_player0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&sti_hdmi>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link1 {
-+			/* DAC */
-+			format = "i2s";
-+			mclk-fs = <256>;
-+			frame-inversion = <1>;
-+			cpu {
-+				sound-dai = <&sti_uni_player2>;
-+			};
-+
-+			codec {
-+				sound-dai = <&sti_sasg_codec 1>;
-+			};
-+		};
-+
-+		simple-audio-card,dai-link2 {
-+			/* SPDIF */
-+			format = "left_j";
-+			mclk-fs = <128>;
-+			cpu {
-+				sound-dai = <&sti_uni_player3>;
-+			};
-+
-+			codec {
-+				sound-dai = <&sti_sasg_codec 0>;
-+			};
-+		};
-+	};
-+
- 	soc {
- 		sbc_serial0: serial@9530000 {
- 			status = "okay";
-@@ -147,53 +193,11 @@
- 			status = "okay";
- 		};
- 
--		sti_sasg_codec: sti-sasg-codec {
--			status = "okay";
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_spdif_out>;
--		};
--
--		sound {
--			compatible = "simple-audio-card";
--			simple-audio-card,name = "STI-B2120";
--			status = "okay";
--
--			simple-audio-card,dai-link@0 {
--				/* HDMI */
--				format = "i2s";
--				mclk-fs = <128>;
--				cpu {
--					sound-dai = <&sti_uni_player0>;
--				};
--
--				codec {
--					sound-dai = <&sti_hdmi>;
--				};
--			};
--			simple-audio-card,dai-link@1 {
--				/* DAC */
--				format = "i2s";
--				mclk-fs = <256>;
--				frame-inversion = <1>;
--				cpu {
--					sound-dai = <&sti_uni_player2>;
--				};
--
--				codec {
--					sound-dai = <&sti_sasg_codec 1>;
--				};
--			};
--			simple-audio-card,dai-link@2 {
--				/* SPDIF */
--				format = "left_j";
--				mclk-fs = <128>;
--				cpu {
--					sound-dai = <&sti_uni_player3>;
--				};
--
--				codec {
--					sound-dai = <&sti_sasg_codec 0>;
--				};
-+		syscfg_core: core-syscfg@92b0000 {
-+			sti_sasg_codec: sti-sasg-codec {
-+				status = "okay";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_spdif_out>;
- 			};
- 		};
- 	};
--- 
-1.9.1
+SGkgUm9iDQoNCk9uIDAyLzEyLzIwMTggMDQ6NDAgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
+biBNb24sIEZlYiAxMiwgMjAxOCBhdCA4OjQzIEFNLCAgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+
+IHdyb3RlOg0KPj4gRnJvbTogUGF0cmljZSBDaG90YXJkIDxwYXRyaWNlLmNob3RhcmRAc3QuY29t
+Pg0KPj4NCj4+IEFkZCBmYWtlIHJlZyBwcm9wZXJ0eSB0byBzb3VuZCwgc2ltcGxlLWF1ZGlvLWNh
+cmQsIGRhaS1saW5rIGFuZA0KPj4gc3RpX3Nhc2dfY29kZWMgbm9kZXMsIHRoaXMgYWxsb3dzIHRv
+IGZpeCB0aGUgZm9sbG93aW5nIHdhcm5pbmcNCj4+IHdoZW4gY29tcGlsaW5nIGR0YiB3aXRoIFc9
+MSBvcHRpb246DQo+Pg0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1iMjEyMC5kdGI6IFdh
+cm5pbmcgKHVuaXRfYWRkcmVzc192c19yZWcpOg0KPj4gTm9kZSAvc29jL3NvdW5kL3NpbXBsZS1h
+dWRpby1jYXJkLGRhaS1saW5rQDAgaGFzIGEgdW5pdCBuYW1lLCBidXQgbm8gcmVnIHByb3BlcnR5
+DQo+PiBhcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWIyMTIwLmR0YjogV2FybmluZyAodW5pdF9h
+ZGRyZXNzX3ZzX3JlZyk6DQo+PiBOb2RlIC9zb2Mvc291bmQvc2ltcGxlLWF1ZGlvLWNhcmQsZGFp
+LWxpbmtAMSBoYXMgYSB1bml0IG5hbWUsIGJ1dCBubyByZWcgcHJvcGVydHkNCj4+IGFyY2gvYXJt
+L2Jvb3QvZHRzL3N0aWg0MDctYjIxMjAuZHRiOiBXYXJuaW5nICh1bml0X2FkZHJlc3NfdnNfcmVn
+KToNCj4+IE5vZGUgL3NvYy9zb3VuZC9zaW1wbGUtYXVkaW8tY2FyZCxkYWktbGlua0AyIGhhcyBh
+IHVuaXQgbmFtZSwgYnV0IG5vIHJlZyBwcm9wZXJ0eQ0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3Rp
+aDQxMC1iMjEyMC5kdGI6IFdhcm5pbmcgKHNpbXBsZV9idXNfcmVnKToNCj4+IE5vZGUgL3NvYy9z
+dGktc2FzZy1jb2RlYyBtaXNzaW5nIG9yIGVtcHR5IHJlZy9yYW5nZXMgcHJvcGVydHkNCj4+DQo+
+PiBhcmNoL2FybS9ib290L2R0cy9zdGloNDEwLWIyMTIwLmR0YjogV2FybmluZyAodW5pdF9hZGRy
+ZXNzX3ZzX3JlZyk6DQo+PiBOb2RlIC9zb2Mvc291bmQvc2ltcGxlLWF1ZGlvLWNhcmQsZGFpLWxp
+bmtAMCBoYXMgYSB1bml0IG5hbWUsIGJ1dCBubyByZWcgcHJvcGVydHkNCj4+IGFyY2gvYXJtL2Jv
+b3QvZHRzL3N0aWg0MTAtYjIxMjAuZHRiOiBXYXJuaW5nICh1bml0X2FkZHJlc3NfdnNfcmVnKToN
+Cj4+IE5vZGUgL3NvYy9zb3VuZC9zaW1wbGUtYXVkaW8tY2FyZCxkYWktbGlua0AxIGhhcyBhIHVu
+aXQgbmFtZSwgYnV0IG5vIHJlZyBwcm9wZXJ0eQ0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQx
+MC1iMjEyMC5kdGI6IFdhcm5pbmcgKHVuaXRfYWRkcmVzc192c19yZWcpOg0KPj4gTm9kZSAvc29j
+L3NvdW5kL3NpbXBsZS1hdWRpby1jYXJkLGRhaS1saW5rQDIgaGFzIGEgdW5pdCBuYW1lLCBidXQg
+bm8gcmVnIHByb3BlcnR5DQo+PiBhcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWIyMTIwLmR0Yjog
+V2FybmluZyAoc2ltcGxlX2J1c19yZWcpOg0KPj4gTm9kZSAvc29jL3NvdW5kIG1pc3Npbmcgb3Ig
+ZW1wdHkgcmVnL3JhbmdlcyBwcm9wZXJ0eQ0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC1i
+MjEyMC5kdGI6IFdhcm5pbmcgKHNpbXBsZV9idXNfcmVnKToNCj4+IE5vZGUgL3NvYy9zdGktc2Fz
+Zy1jb2RlYyBtaXNzaW5nIG9yIGVtcHR5IHJlZy9yYW5nZXMgcHJvcGVydHkNCj4+DQo+PiBhcmNo
+L2FybS9ib290L2R0cy9zdGloNDEwLWIyMjYwLmR0YjogV2FybmluZyAodW5pdF9hZGRyZXNzX3Zz
+X3JlZyk6DQo+PiBOb2RlIC9zb2Mvc291bmQvc2ltcGxlLWF1ZGlvLWNhcmQsZGFpLWxpbmtAMCBo
+YXMgYSB1bml0IG5hbWUsIGJ1dCBubyByZWcgcHJvcGVydHkNCj4+IGFyY2gvYXJtL2Jvb3QvZHRz
+L3N0aWg0MTAtYjIyNjAuZHRiOiBXYXJuaW5nIChzaW1wbGVfYnVzX3JlZyk6DQo+PiBOb2RlIC9z
+b2Mvc3RpLXNhc2ctY29kZWMgbWlzc2luZyBvciBlbXB0eSByZWcvcmFuZ2VzIHByb3BlcnR5DQo+
+PiBhcmNoL2FybS9ib290L2R0cy9zdGloNDEwLWIyMjYwLmR0YjogV2FybmluZyAoc2ltcGxlX2J1
+c19yZWcpOg0KPj4gTm9kZSAvc29jL3NvdW5kIG1pc3Npbmcgb3IgZW1wdHkgcmVnL3JhbmdlcyBw
+cm9wZXJ0eQ0KPj4NCj4+IGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTgtYjIxOTkuZHRiOiBXYXJu
+aW5nIChzaW1wbGVfYnVzX3JlZyk6DQo+PiBOb2RlIC9zb2Mvc3RpLXNhc2ctY29kZWMgbWlzc2lu
+ZyBvciBlbXB0eSByZWcvcmFuZ2VzIHByb3BlcnR5DQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogUGF0
+cmljZSBDaG90YXJkIDxwYXRyaWNlLmNob3RhcmRAc3QuY29tPg0KPj4gLS0tDQo+Pg0KPj4gdjI6
+IF8gYWRkIGEgZmFrZSByZWcgcHJvcGVydHkgdG8gbm9kZSB3aXRob3V0IHJlZyBwcm9wZXJ0eS4N
+Cj4+DQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0c2kgfCAgMyArKy0N
+Cj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC1iMjI2MC5kdHMgICB8ICA1ICsrKy0tDQo+
+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWh4eHgtYjIxMjAuZHRzaSAgfCAxMSArKysrKystLS0t
+LQ0KPj4gICAzIGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0p
+DQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFtaWx5LmR0
+c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpDQo+PiBpbmRleCA1ZGY4
+MjdiMDBlYjYuLmRmMWEzZjFkYzVhNyAxMDA2NDQNCj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L3N0aWg0MDctZmFtaWx5LmR0c2kNCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDct
+ZmFtaWx5LmR0c2kNCj4+IEBAIC04OTQsOCArODk0LDkgQEANCj4+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPj4gICAgICAgICAgICAgICAgICB9Ow0KPj4N
+Cj4+IC0gICAgICAgICAgICAgICBzdGlfc2FzZ19jb2RlYzogc3RpLXNhc2ctY29kZWMgew0KPj4g
+KyAgICAgICAgICAgICAgIHN0aV9zYXNnX2NvZGVjOiBzdGktc2FzZy1jb2RlY0AwIHsNCj4+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInN0LHN0aWg0MDctc2FzLWNvZGVj
+IjsNCj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwIDA+Ow0KPj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgICNzb3VuZC1kYWktY2VsbHMgPSA8MT47DQo+PiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsNCj4+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICBzdCxzeXNjZmcgPSA8JnN5c2NmZ19jb3JlPjsNCj4gDQo+IFRoaXMgc2hvdWxkIHByb2Jh
+Ymx5IGJlIGEgY2hpbGQgb2Ygc3lzY2ZnIHRvIGZpeCB0aGlzLiBBbmQgaWYgdGhpcw0KPiBibG9j
+ayBoYXMgYSBkZWRpY2F0ZWQgc2V0IG9mIHJlZ2lzdGVycywgdGhlbiB1c2UgcmVnIHRvIGRlZmlu
+ZSB0aG9zZQ0KPiAoZXZlbiB0aG91Z2ggcmVnbWFwL3N5c2NvbiBkb2Vzbid0IG5lZWQgaXQpLg0K
+DQpPaywgaSB3aWxsIG1vZGUgdGhpcyBub2RlDQoNCj4gDQo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9h
+cm0vYm9vdC9kdHMvc3RpaDQxMC1iMjI2MC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9zdGloNDEw
+LWIyMjYwLmR0cw0KPj4gaW5kZXggOGJjZDU4MTE4ZGJhLi4wM2QwNWE5OGI3ZmMgMTAwNjQ0DQo+
+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDEwLWIyMjYwLmR0cw0KPj4gKysrIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvc3RpaDQxMC1iMjI2MC5kdHMNCj4+IEBAIC0xODEsMTIgKzE4MSwxMyBA
+QA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsNCj4+ICAgICAg
+ICAgICAgICAgICAgfTsNCj4+DQo+PiAtICAgICAgICAgICAgICAgc291bmQgew0KPj4gKyAgICAg
+ICAgICAgICAgIHNvdW5kOiBzb3VuZEAwIHsNCj4gDQo+IEknZCBtb3ZlIHRoaXMgdXAgdG8gdG9w
+IGxldmVsLg0KDQpPaw0KDQpUaGFua3MNCg0KUGF0cmljZQ0KDQoNCg0KPiANCj4gUm9iDQo+IA==
