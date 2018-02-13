@@ -1,56 +1,70 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] add UniPhier audio nodes
-Date: Wed, 14 Feb 2018 01:06:49 +0900
-Message-ID: <CAK7LNARaJB-ymtj3b0XQn0P7yo7se0CXgCCO6pb5oKEhCxf4CQ@mail.gmail.com>
-References: <20180213130156.27827-1-suzuki.katsuhiro@socionext.com>
+From: Gregory CLEMENT <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 6/9] ARM: dts: kirkwood: Fix "debounce-interval" property misspelling
+Date: Tue, 13 Feb 2018 17:17:42 +0100
+Message-ID: <87d118q2xl.fsf@bootlin.com>
+References: <1518531335-5170-1-git-send-email-geert+renesas@glider.be>
+        <1518531335-5170-7-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180213130156.27827-1-suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <1518531335-5170-7-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> (Geert
+        Uytterhoeven's message of "Tue, 13 Feb 2018 15:15:32 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-02-13 22:01 GMT+09:00 Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> This series adds device-tree nodes for Socionext audio system
-> for UniPhier LD11/LD20 SoCs. This one enables I2S output for
-> Line-In, Line-Out, S/PDIF output and compress audio output.
+Hi Geert,
+ 
+ On mar., févr. 13 2018, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
+
+> "debounce_interval" was never supported.
 >
-> Katsuhiro Suzuki (3):
->   arm64: dts: uniphier: add sound node for UniPhier
->   arm64: dts: uniphier: add speaker out for UniPhier LD11/LD20 boards
->   arm64: dts: uniphier: add compress audio out for UniPhier LD11/LD20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
+Applied on mvebu/fixes with the Reviewed-by flag from Andrew Lunn
 
-Series, applied to linux-uniphier.  Thanks!
+Thanks,
 
-Note, I locally fixed trivial things:
- - Use #include <...> instead of #include "..." to include dt-binding header
- - Fix DTC warnings (Character '_' not recommended in node)
- - Remove unused labels such as 'audio', 'evea'
+Gregory
 
-
-
->  .../boot/dts/socionext/uniphier-ld11-global.dts    | 62 ++++++++++++++
->  arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   | 92 +++++++++++++++++++++
->  .../boot/dts/socionext/uniphier-ld20-global.dts    | 62 ++++++++++++++
->  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   | 96 ++++++++++++++++++++++
->  4 files changed, 312 insertions(+)
+> ---
+> Please apply to your tree when appropriate.
 >
-> --
-> 2.15.1
+>  arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
+> diff --git a/arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts b/arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts
+> index 5ce220ac9611fa78..5aa4669ae2548a8c 100644
+> --- a/arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts
+> +++ b/arch/arm/boot/dts/kirkwood-pogoplug-series-4.dts
+> @@ -35,7 +35,7 @@
+>  		pinctrl-names = "default";
+>  
+>  		eject {
+> -			debounce_interval = <50>;
+> +			debounce-interval = <50>;
+>  			wakeup-source;
+>  			linux,code = <KEY_EJECTCD>;
+>  			label = "Eject Button";
+> -- 
+> 2.7.4
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
-Best Regards
-Masahiro Yamada
+Gregory Clement, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
