@@ -1,63 +1,117 @@
-From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH,RESEND2] regulator: fixed, gpio: dt: regulator-name is required property
-Date: Tue, 13 Feb 2018 14:43:08 +0000
-Message-ID: <1518532988-10990-1-git-send-email-harald@ccbib.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
+Date: Tue, 13 Feb 2018 08:49:40 -0600
+Message-ID: <CAL_JsqKrp_vL2ZnYEnabonRdHvPT17Gf8fk102g=j4VUH1HSSA@mail.gmail.com>
+References: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518416868-8804-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These two drivers fail to probe if no name is provided. For details see:
-https://www.spinics.net/lists/kernel/msg2457515.html
+On Mon, Feb 12, 2018 at 12:27 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>
+> Create a cache of the nodes that contain a phandle property.  Use this
+> cache to find the node for a given phandle value instead of scanning
+> the devicetree to find the node.  If the phandle value is not found
+> in the cache, of_find_node_by_phandle() will fall back to the tree
+> scan algorithm.
 
-Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-This is already the second resend for this trivial device probing bug
-fix. It was written to your specification, got an ACK from devicetree
-and has no unaddressed review comments, so I can't see what might be
-holding it back. If there is still anything wrong with it, I'd appreciate
-actual feedback instead of a canned response or silence.
+Please add some data here as to what speed up we see.
 
-BTW, it took me a bit to figure out that by "content free ping" you are
-refering to the quoting of the patch. Maybe you can reword your canned
-response to make it easier to understand.
+> The cache is initialized in of_core_init().
+>
+> The cache is freed via a late_initcall_sync() if modules are not
+> enabled.
+>
+> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+> ---
+>
+> Changes since v1:
+>   - change short description from
+>     of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
+>   - rebase on v4.16-rc1
+>   - reorder new functions in base.c to avoid forward declaration
+>   - add locking around kfree(phandle_cache) for memory ordering
+>   - add explicit check for non-null of phandle_cache in
+>     of_find_node_by_phandle().  There is already a check for !handle,
+>     which prevents accessing a null phandle_cache, but that dependency
+>     is not obvious, so this check makes it more apparent.
+>   - do not free phandle_cache if modules are enabled, so that
+>     cached phandles will be available when modules are loaded
+>
+>  drivers/of/base.c       | 93 ++++++++++++++++++++++++++++++++++++++++++++++---
+>  drivers/of/of_private.h |  5 +++
+>  drivers/of/resolver.c   | 21 -----------
+>  3 files changed, 94 insertions(+), 25 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index ad28de96e13f..b3597c250837 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -91,10 +91,88 @@ int __weak of_node_to_nid(struct device_node *np)
+>  }
+>  #endif
+>
+> +static struct device_node **phandle_cache;
+> +static u32 max_phandle_cache;
+> +
+> +phandle live_tree_max_phandle(void)
+> +{
+> +       struct device_node *node;
+> +       phandle max_phandle;
+> +       unsigned long flags;
+> +
+> +       raw_spin_lock_irqsave(&devtree_lock, flags);
+> +
+> +       max_phandle = 0;
+> +       for_each_of_allnodes(node) {
+> +               if (node->phandle != OF_PHANDLE_ILLEGAL &&
+> +                   node->phandle > max_phandle)
+> +                       max_phandle = node->phandle;
+> +               }
+> +
+> +       raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +
+> +       return max_phandle;
+> +}
+> +
+> +static void of_populate_phandle_cache(void)
+> +{
+> +       unsigned long flags;
+> +       phandle max_phandle;
+> +       u32 nodes = 0;
+> +       struct device_node *np;
+> +
+> +       if (phandle_cache)
+> +               return;
+> +
+> +       max_phandle = live_tree_max_phandle();
+> +
+> +       raw_spin_lock_irqsave(&devtree_lock, flags);
+> +
+> +       for_each_of_allnodes(np)
+> +               nodes++;
+> +
+> +       /* sanity cap for malformed tree */
 
-The ACK was added in the (first) resend.
+Or any tree that doesn't match your assumptions.
 
- Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 1 +
- Documentation/devicetree/bindings/regulator/gpio-regulator.txt  | 2 ++
- 2 files changed, 3 insertions(+)
+> +       if (max_phandle > nodes)
+> +               max_phandle = nodes;
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 4fae41d..0c2a6c8 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -2,6 +2,7 @@ Fixed Voltage regulators
- 
- Required properties:
- - compatible: Must be "regulator-fixed";
-+- regulator-name: Defined in regulator.txt as optional, but required here.
- 
- Optional properties:
- - gpio: gpio to use for enable control
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-index dd1ed78..1f49615 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -2,6 +2,8 @@ GPIO controlled regulators
- 
- Required properties:
- - compatible		: Must be "regulator-gpio".
-+- regulator-name	: Defined in regulator.txt as optional, but required
-+			  here.
- - states		: Selection of available voltages and GPIO configs.
-                           if there are no states, then use a fixed regulator
- 
--- 
-2.1.4
+I fail to see how setting max_phandle to number of nodes helps you
+here. Either just bail out or mask the phandle values so this works
+with any contiguous range.
 
+Please capture somewhere what the assumptions are for the cache to
+work (i.e. phandles were allocated contiguously from 0).
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
