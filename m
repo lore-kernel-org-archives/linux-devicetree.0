@@ -1,314 +1,417 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 06/12] dt-bindings: display: sun4i-drm: Add A83T HDMI
- pipeline
-Date: Tue, 13 Feb 2018 17:29:35 -0600
-Message-ID: <20180213232935.jfzc7lkoppvwyecz@rob-hp-laptop>
-References: <20180207211713.3638-1-jernej.skrabec@siol.net>
- <20180207211713.3638-7-jernej.skrabec@siol.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: stout: Initial r8a7790 Stout board support
+Date: Wed, 14 Feb 2018 00:29:48 +0100
+Message-ID: <20180213232948.31521-1-marek.vasut+renesas@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180207211713.3638-7-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 07, 2018 at 10:17:07PM +0100, Jernej Skrabec wrote:
-> This commit adds all necessary compatibles and descriptions needed to
-> implement A83T HDMI pipeline.
-> 
-> Mixer is already properly described, so only compatible is added.
-> 
-> However, A83T TV TCON, which is connected to HDMI, doesn't have channel 0,
-> contrary to all TCONs currently described. Because of that, TCON
-> documentation is extended.
-> 
-> A83T features Synopsys DW HDMI controller with a custom PHY which looks
-> like Synopsys Gen2 PHY with few additions. Since there is no
-> documentation, needed properties were found out through experimentation
-> and reading BSP code.
-> 
-> At the end, example is added for newer SoCs, which feature DE2 and DW
-> HDMI.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> ---
->  .../bindings/display/sunxi/sun4i-drm.txt           | 195 ++++++++++++++++++++-
->  1 file changed, 188 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> index cd626ee1147a..db3d3adb1059 100644
-> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> @@ -64,6 +64,52 @@ Required properties:
->      first port should be the input endpoint. The second should be the
->      output, usually to an HDMI connector.
->  
-> +DWC HDMI TX Encoder
-> +-------------------
-> +
-> +The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
-> +with Allwinner's own PHY IP. It supports audio and video outputs and CEC.
-> +
-> +These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
-> +Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
-> +following device-specific properties.
-> +
-> +Required properties:
-> +
-> +  - compatible: value must be one of:
-> +    * "allwinner,sun8i-a83t-dw-hdmi"
-> +  - reg: base address and size of memory-mapped region
-> +  - reg-io-width: See dw_hdmi.txt. Shall be 1.
-> +  - interrupts: HDMI interrupt number
-> +  - clocks: phandles to the clocks feeding the HDMI encoder
-> +    * iahb: the HDMI bus clock
-> +    * isfr: the HDMI register clock
-> +    * tmds: TMDS clock
-> +  - clock-names: the clock names mentioned above
-> +  - resets: phandle to the reset controller
-> +  - reset-names: must be "ctrl"
-> +  - phys: phandle to the DWC HDMI PHY
-> +  - phy-names: must be "phy"
-> +
-> +  - ports: A ports node with endpoint definitions as defined in
-> +    Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> +    first port should be the input endpoint. The second should be the
-> +    output, usually to an HDMI connector.
-> +
-> +DWC HDMI PHY
-> +------------
-> +
-> +Required properties:
-> +  - compatible: value must be one of:
-> +    * allwinner,sun8i-a83t-hdmi-phy
-> +  - reg: base address and size of memory-mapped region
-> +  - clocks: phandles to the clocks feeding the HDMI PHY
-> +    * bus: the HDMI PHY interface clock
-> +    * mod: the HDMI PHY module clock
-> +  - clock-names: the clock names mentioned above
-> +  - resets: phandle to the reset controller driving the PHY
-> +  - reset-names: must be "phy"
-> +
->  TV Encoder
->  ----------
->  
-> @@ -94,24 +140,26 @@ Required properties:
->     * allwinner,sun7i-a20-tcon
->     * allwinner,sun8i-a33-tcon
->     * allwinner,sun8i-a83t-tcon-lcd
-> +   * allwinner,sun8i-a83t-tcon-tv
->     * allwinner,sun8i-v3s-tcon
->   - reg: base address and size of memory-mapped region
->   - interrupts: interrupt associated to this IP
-> - - clocks: phandles to the clocks feeding the TCON. Three are needed:
-> + - clocks: phandles to the clocks feeding the TCON.
->     - 'ahb': the interface clocks
-> -   - 'tcon-ch0': The clock driving the TCON channel 0
-> +   - 'tcon-ch0': The clock driving the TCON channel 0, except for A83T TV TCON
->   - resets: phandles to the reset controllers driving the encoder
->     - "lcd": the reset line for the TCON channel 0
->  
->   - clock-names: the clock names mentioned above
->   - reset-names: the reset names mentioned above
-> - - clock-output-names: Name of the pixel clock created
-> + - clock-output-names: Name of the pixel clock created, if TCON supports
-> +   channel 0.
->  
->  - ports: A ports node with endpoint definitions as defined in
->    Documentation/devicetree/bindings/media/video-interfaces.txt. The
->    first port should be the input endpoint, the second one the output
->  
-> -  The output may have multiple endpoints. The TCON has two channels,
-> +  The output may have multiple endpoints. TCON can have 1 or 2 channels,
->    usually with the first channel being used for the panels interfaces
->    (RGB, LVDS, etc.), and the second being used for the outputs that
->    require another controller (TV Encoder, HDMI, etc.). The endpoints
-> @@ -122,8 +170,8 @@ Required properties:
->  On SoCs other than the A33 and V3s, there is one more clock required:
->     - 'tcon-ch1': The clock driving the TCON channel 1
->  
-> -On SoCs that support LVDS (all SoCs but the A13, H3, H5 and V3s), you
-> -need one more reset line:
-> +When TCON support LVDS (all TCONs except TV TCON on A83T and those found
-> +in A13, H3, H5 and V3s SoCs), you need one more reset line:
->     - 'lvds': The reset line driving the LVDS logic
->  
->  And on the A23, A31, A31s and A33, you need one more clock line:
-> @@ -226,6 +274,7 @@ supported.
->  Required properties:
->    - compatible: value must be one of:
->      * allwinner,sun8i-a83t-de2-mixer-0
-> +    * allwinner,sun8i-a83t-de2-mixer-1
->      * allwinner,sun8i-v3s-de2-mixer
->    - reg: base address and size of the memory-mapped region.
->    - clocks: phandles to the clocks feeding the mixer
-> @@ -261,7 +310,7 @@ Required properties:
->    - allwinner,pipelines: list of phandle to the display engine
->      frontends (DE 1.0) or mixers (DE 2.0) available.
->  
-> -Example:
-> +Example 1:
->  
->  panel: panel {
->  	compatible = "olimex,lcd-olinuxino-43-ts";
-> @@ -460,3 +509,135 @@ display-engine {
->  	compatible = "allwinner,sun5i-a13-display-engine";
->  	allwinner,pipelines = <&fe0>;
->  };
-> +
-> +Example 2:
+Stout base board support making use of 1 GiB of memory,
+the Renesas H2 r8a7790 SoC with the SCIFA0 serial port
+and CA15 with ARM architected timer.
 
-Does this really warrant another example. One can go read dts files if 
-they want every possible combination.
+Furthermore, this device tree contains entries for:
+  - 4x LEDs
+  - SDHI SD/MMC controller
+  - Display unit with HDMI output
+  - SH fast ethernet controller
+  - QSPI controller with S25FL512S attached to it
+  - I2C controller with DA9210 and DA 9063 PMICs
 
-> +
-> +connector {
-> +	compatible = "hdmi-connector";
-> +	type = "a";
-> +
-> +	port {
-> +		hdmi_con_in: endpoint {
-> +			remote-endpoint = <&hdmi_out_con>;
-> +		};
-> +	};
-> +};
-> +
-> +de: display-engine {
-> +	compatible = "allwinner,sun8i-a83t-display-engine";
-> +	allwinner,pipelines = <&mixer1>;
-> +};
-> +
-> +mixer1: mixer@1200000 {
-> +	compatible = "allwinner,sun8i-a83t-de2-mixer-1";
-> +	reg = <0x01200000 0x100000>;
-> +	clocks = <&display_clocks CLK_BUS_MIXER1>,
-> +		 <&display_clocks CLK_MIXER1>;
-> +	clock-names = "bus",
-> +		      "mod";
-> +	resets = <&display_clocks RST_WB>;
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		mixer1_out: port@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +
-> +			mixer1_out_tcon1: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&tcon1_in_mixer1>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +tcon1: lcd-controller@1c0d000 {
-> +	compatible = "allwinner,sun8i-a83t-tcon-tv";
-> +	reg = <0x01c0d000 0x1000>;
-> +	interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&ccu CLK_BUS_TCON1>, <&ccu CLK_TCON1>;
-> +	clock-names = "ahb", "tcon-ch1";
-> +	resets = <&ccu RST_BUS_TCON1>;
-> +	reset-names = "lcd";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		tcon1_in: port@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile          |   1 +
+ arch/arm/boot/dts/r8a7790-stout.dts | 360 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 361 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7790-stout.dts
 
-Don't need this with a single child.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f7b73c825231..6d1999467f2e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -790,6 +790,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
+ 	r8a7778-bockw.dtb \
+ 	r8a7779-marzen.dtb \
+ 	r8a7790-lager.dtb \
++	r8a7790-stout.dtb \
+ 	r8a7791-koelsch.dtb \
+ 	r8a7791-porter.dtb \
+ 	r8a7792-blanche.dtb \
+diff --git a/arch/arm/boot/dts/r8a7790-stout.dts b/arch/arm/boot/dts/r8a7790-stout.dts
+new file mode 100644
+index 000000000000..9bc892eacc97
+--- /dev/null
++++ b/arch/arm/boot/dts/r8a7790-stout.dts
+@@ -0,0 +1,360 @@
++/*
++ * Device Tree Source for the Stout board
++ *
++ * Copyright (C) 2018 Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++/dts-v1/;
++#include "r8a7790.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++
++/ {
++	model = "Stout";
++	compatible = "renesas,stout", "renesas,r8a7790";
++
++	aliases {
++		serial0 = &scifa0;
++	};
++
++	chosen {
++		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
++		stdout-path = "serial0:38400n8";
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x40000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		led1 {
++			gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
++		};
++		led2 {
++			gpios = <&gpio4 23 GPIO_ACTIVE_HIGH>;
++		};
++		led3 {
++			gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
++		};
++		led5 {
++			gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	fixedregulator3v3: regulator-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vcc_sdhi0: regulator-vcc-sdhi0 {
++		compatible = "regulator-fixed";
++
++		regulator-name = "SDHI0 Vcc";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpio = <&gpio5 24 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	hdmi-out {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_out: endpoint {
++				remote-endpoint = <&adv7511_out>;
++			};
++		};
++	};
++
++	x2_clk: x2-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <148500000>;
++	};
++
++	x13_clk: x13-clock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <148500000>;
++	};
++};
++
++&du {
++	pinctrl-0 = <&du_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	clocks = <&cpg CPG_MOD 724>, <&cpg CPG_MOD 723>, <&cpg CPG_MOD 722>,
++		 <&cpg CPG_MOD 726>, <&cpg CPG_MOD 725>,
++		 <&x13_clk>, <&x2_clk>;
++	clock-names = "du.0", "du.1", "du.2", "lvds.0", "lvds.1",
++		      "dclkin.0", "dclkin.1";
++
++	ports {
++		port@0 {
++			endpoint {
++				remote-endpoint = <&adv7511_in>;
++			};
++		};
++		port@1 {
++			lvds_connector0: endpoint {
++			};
++		};
++		port@2 {
++			lvds_connector1: endpoint {
++			};
++		};
++	};
++};
++
++&extal_clk {
++	clock-frequency = <20000000>;
++};
++
++&pfc {
++
++	pinctrl-0 = <&scif_clk_pins>;
++	pinctrl-names = "default";
++
++	du_pins: du {
++		groups = "du_rgb888", "du_sync_1", "du_clk_out_0";
++		function = "du";
++	};
++
++	scifa0_pins: scifa0 {
++		groups = "scifa0_data_b";
++		function = "scifa0";
++	};
++
++	scif_clk_pins: scif_clk {
++		groups = "scif_clk";
++		function = "scif_clk";
++	};
++
++	ether_pins: ether {
++		groups = "eth_link", "eth_mdio", "eth_rmii";
++		function = "eth";
++	};
++
++	phy1_pins: phy1 {
++		groups = "intc_irq1";
++		function = "intc";
++	};
++
++	sdhi0_pins: sd0 {
++		groups = "sdhi0_data4", "sdhi0_ctrl";
++		function = "sdhi0";
++		power-source = <3300>;
++	};
++
++	qspi_pins: qspi {
++		groups = "qspi_ctrl", "qspi_data4";
++		function = "qspi";
++	};
++
++	iic2_pins: iic2 {
++		groups = "iic2_b";
++		function = "iic2";
++	};
++
++	iic3_pins: iic3 {
++		groups = "iic3";
++		function = "iic3";
++	};
++
++	usb0_pins: usb0 {
++		groups = "usb0";
++		function = "usb0";
++	};
++};
++
++&ether {
++	pinctrl-0 = <&ether_pins &phy1_pins>;
++	pinctrl-names = "default";
++
++	phy-handle = <&phy1>;
++	renesas,ether-link-active-low;
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++		interrupt-parent = <&irqc0>;
++		interrupts = <1 IRQ_TYPE_LEVEL_LOW>;
++		micrel,led-mode = <1>;
++	};
++};
++
++&cmt0 {
++	status = "okay";
++};
++
++&qspi {
++	pinctrl-0 = <&qspi_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++
++	flash: flash@0 {
++		compatible = "spansion,s25fl512s", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <30000000>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
++		spi-cpha;
++		spi-cpol;
++		m25p,fast-read;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "loader";
++				reg = <0x00000000 0x00040000>;
++				read-only;
++			};
++			partition@40000 {
++				label = "user";
++				reg = <0x00040000 0x00400000>;
++				read-only;
++			};
++			partition@440000 {
++				label = "flash";
++				reg = <0x00440000 0x03bc0000>;
++			};
++		};
++	};
++};
++
++&scifa0 {
++	pinctrl-0 = <&scifa0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
++
++&scif_clk {
++	clock-frequency = <14745600>;
++};
++
++&sdhi0 {
++	pinctrl-0 = <&sdhi0_pins>;
++	pinctrl-names = "default";
++
++	vmmc-supply = <&vcc_sdhi0>;
++	cd-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&cpu0 {
++	cpu0-supply = <&vdd_dvfs>;
++};
++
++&iic2	{
++	status = "okay";
++	pinctrl-0 = <&iic2_pins>;
++	pinctrl-names = "default";
++
++	clock-frequency = <100000>;
++
++	hdmi@39 {
++		compatible = "adi,adv7511w";
++		reg = <0x39>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
++
++		adi,input-depth = <8>;
++		adi,input-colorspace = "rgb";
++		adi,input-clock = "1x";
++		adi,input-style = <1>;
++		adi,input-justification = "evenly";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7511_in: endpoint {
++					remote-endpoint = <&du_out_rgb>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				adv7511_out: endpoint {
++					remote-endpoint = <&hdmi_con_out>;
++				};
++			};
++		};
++	};
++};
++
++&iic3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&iic3_pins>;
++	status = "okay";
++
++	pmic@58 {
++		compatible = "dlg,da9063";
++		reg = <0x58>;
++		interrupt-parent = <&irqc0>;
++		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-controller;
++
++		rtc {
++			compatible = "dlg,da9063-rtc";
++		};
++
++		wdt {
++			compatible = "dlg,da9063-watchdog";
++		};
++	};
++
++	vdd_dvfs: regulator@68 {
++		compatible = "dlg,da9210";
++		reg = <0x68>;
++		interrupt-parent = <&irqc0>;
++		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++
++		regulator-min-microvolt = <1000000>;
++		regulator-max-microvolt = <1000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	vdd: regulator@70 {
++		compatible = "dlg,da9210";
++		reg = <0x70>;
++		interrupt-parent = <&irqc0>;
++		interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++
++		regulator-min-microvolt = <1000000>;
++		regulator-max-microvolt = <1000000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++};
++
++&pci0 {
++	status = "okay";
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++};
++
++&usbphy {
++	status = "okay";
++};
+-- 
+2.15.1
 
-> +			reg = <0>;
-> +
-> +			tcon1_in_mixer1: endpoint@0 {
-> +				reg = <0>;
-
-Nor this and the unit address.
-
-> +				remote-endpoint = <&mixer1_out_tcon1>;
-> +			};
-> +		};
-> +
-> +		tcon1_out: port@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +
-> +			tcon1_out_hdmi: endpoint@1 {
-> +				reg = <1>;
-> +				remote-endpoint = <&hdmi_in_tcon1>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +hdmi: hdmi@1ee0000 {
-> +	compatible = "allwinner,sun8i-a83t-dw-hdmi";
-> +	reg = <0x01ee0000 0x10000>;
-> +	reg-io-width = <1>;
-> +	interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_SLOW>,
-> +		 <&ccu CLK_HDMI>;
-> +	clock-names = "iahb", "isfr", "tmds";
-> +	resets = <&ccu RST_BUS_HDMI1>;
-> +	reset-names = "ctrl";
-> +	phys = <&hdmi_phy>;
-> +	phy-names = "hdmi-phy";
-> +	status = "disabled";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		hdmi_in: port@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-
-Same here. 
-
-> +			reg = <0>;
-> +
-> +			hdmi_in_tcon1: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&tcon1_out_hdmi>;
-> +			};
-> +		};
-> +
-> +		hdmi_out: port@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-
-Same here.
-
-> +			reg = <1>;
-> +
-> +			hdmi_out_con: endpoint {
-> +				remote-endpoint = <&hdmi_con_in>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +hdmi_phy: hdmi-phy@1ef0000 {
-> +	compatible = "allwinner,sun8i-a83t-hdmi-phy";
-> +	reg = <0x01ef0000 0x10000>;
-> +	clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_SLOW>;
-> +	clock-names = "bus", "mod";
-> +	resets = <&ccu RST_BUS_HDMI0>;
-> +	reset-names = "phy";
-> +	#phy-cells = <0>;
-> +};
-> -- 
-> 2.16.1
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
