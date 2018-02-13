@@ -1,58 +1,93 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: [PATCH v7 37/37] net: faraday add nds32 support.
-Date: Tue, 13 Feb 2018 17:09:41 +0800
-Message-ID: <7375613a6c84c31d2dd5c6c1feb3294c2716eb93.1518505384.git.greentime@andestech.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
-In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-Sender: netdev-owner@vger.kernel.org
-To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
-Cc: green.hu@gmail.com
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon
+	161010801 erratum(reserve HW MSI)
+Date: Tue, 13 Feb 2018 09:18:28 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA83864614F@FRAEML521-MBX.china.huawei.com>
+References: <20171214160957.13716-1-shameerali.kolothum.thodi@huawei.com>
+	<20180129153939.GC24972@arm.com>
+	<5FC3163CFD30C246ABAA99954A238FA83863FC88@FRAEML521-MBX.china.huawei.com>
+	<20180129162109.GA25266@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180129162109.GA25266-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "xuwei (O)" <xuwei5-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "Guohanjun (Hanjun
+	Guo)" <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch is used to support nds32 architecture to use these faraday
-mac IP.
+Hi Will,
 
-Signed-off-by: Greentime Hu <greentime@andestech.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/faraday/Kconfig | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+> -----Original Message-----
+> From: Will Deacon [mailto:will.deacon-5wv7dgnIgG8@public.gmane.org]
+> Sent: Monday, January 29, 2018 4:21 PM
+> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; robin.murphy-5wv7dgnIgG8@public.gmane.org;
+> marc.zyngier-5wv7dgnIgG8@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; John Garry
+> <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; xuwei (O) <xuwei5-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; Guohanjun
+> (Hanjun Guo) <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org;
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Subject: Re: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon
+> 161010801 erratum(reserve HW MSI)
+> 
+> On Mon, Jan 29, 2018 at 04:16:33PM +0000, Shameerali Kolothum Thodi wrote:
+> > > -----Original Message-----
+> > > From: Will Deacon [mailto:will.deacon-5wv7dgnIgG8@public.gmane.org]
+> > > Sent: Monday, January 29, 2018 3:40 PM
+> > > To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > > Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; robin.murphy-5wv7dgnIgG8@public.gmane.org;
+> > > marc.zyngier-5wv7dgnIgG8@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; John Garry
+> > > <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; xuwei (O) <xuwei5-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; Guohanjun
+> > > (Hanjun Guo) <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
+> foundation.org;
+> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > > Subject: Re: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon
+> > > 161010801 erratum(reserve HW MSI)
+> > > On Thu, Dec 14, 2017 at 04:09:54PM +0000, Shameer Kolothum wrote:
+> > > > On certain HiSilicon platforms (hip06/hip07) the GIC ITS and PCIe RC
+> > > > deviates from the standard implementation and this breaks PCIe MSI
+> > > > functionality when SMMU is enabled.
+> > > >
+[...]
 
-diff --git a/drivers/net/ethernet/faraday/Kconfig b/drivers/net/ethernet/faraday/Kconfig
-index 040c7f163325..0fb8df656677 100644
---- a/drivers/net/ethernet/faraday/Kconfig
-+++ b/drivers/net/ethernet/faraday/Kconfig
-@@ -5,7 +5,7 @@
- config NET_VENDOR_FARADAY
- 	bool "Faraday devices"
- 	default y
--	depends on ARM
-+	depends on ARM || NDS32 || COMPILE_TEST
- 	---help---
- 	  If you have a network (Ethernet) card belonging to this class, say Y.
- 
-@@ -18,7 +18,8 @@ if NET_VENDOR_FARADAY
- 
- config FTMAC100
- 	tristate "Faraday FTMAC100 10/100 Ethernet support"
--	depends on ARM
-+	depends on ARM || NDS32 || COMPILE_TEST
-+	depends on !64BIT || BROKEN
- 	select MII
- 	---help---
- 	  This driver supports the FTMAC100 10/100 Ethernet controller
-@@ -27,7 +28,8 @@ config FTMAC100
- 
- config FTGMAC100
- 	tristate "Faraday FTGMAC100 Gigabit Ethernet support"
--	depends on ARM
-+	depends on ARM || NDS32 || COMPILE_TEST
-+	depends on !64BIT || BROKEN
- 	select PHYLIB
- 	---help---
- 	  This driver supports the FTGMAC100 Gigabit Ethernet controller
--- 
-2.16.1
+> > > It occurred to me this morning that this series probably isn't queued
+> anywhere
+> > > because it's not obvious which tree is supposed to take it and I can't see it in
+> -
+> > > next.
+> > >
+> > > Is this one for arm64, IOMMU, irqchip or something else? It's probably
+> missed
+> > > the boat for 4.16 now...
+> > >
+> >
+> > I have been trying to ping you guys on this[1]. My expectation was that it will
+> be
+> > through IOMMU. Anyway missed the boat now, I will re-spin for 4.17.
+> 
+> The problem with "ping" emails is that they don't really mean anything. In
+> this case, everybody probably assumed somebody else was picking it up so you
+> didn't get a reply.
+> 
+> Joerg may be ok pulling this, but it's odd to have dts changes going via his
+> tree. You might want to split those out, at least. Talk to him.
+
+As this series missed out from the PULL request, I am preparing to send this again.
+Please let me know, you are ok with the dts changes being part of this or would like
+to split it.
+
+Thanks,
+Shameer
