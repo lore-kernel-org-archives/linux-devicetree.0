@@ -1,118 +1,55 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv4 1/3] dt-bindings: documentation: add clock bindings
- information for Stratix10
-Date: Tue, 13 Feb 2018 09:44:49 -0600
-Message-ID: <CAL_JsqJNbMQOXxxDbHc=sVJFOmBWMjR25vHR-Jsqde_GnBsF0w@mail.gmail.com>
-References: <1518516286-14428-1-git-send-email-dinguyen@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH,RESEND2] regulator: fixed, gpio: dt: regulator-name is
+ required property
+Date: Tue, 13 Feb 2018 15:45:30 +0000
+Message-ID: <20180213154530.GF5988@sirena.org.uk>
+References: <1518532988-10990-1-git-send-email-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518516286-14428-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Pql/uPZNXIm1JCle"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1518532988-10990-1-git-send-email-harald@ccbib.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Harald Geyer <harald@ccbib.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 4:04 AM, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Document that Stratix10 clock bindings, and add the clock header file. The
-> clock header is an enumeration of all the different clocks on the Stratix10
-> platform.
->
-> Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> v4:
-> - remove '_' in node names
-> - remove stray tab
-> - add clock-frequency property for fixed-clocks
-> - put SPDX license as the very top line
-> v3:
-> - s/intc/intel for correct vendor prefix
-> - fixup node name to "intel,stratix10-clkmgr"
-> - document the required fixed-clock for oscillators
-> v2:
-> - use a single binding for the clock controller
-> ---
->  .../devicetree/bindings/clock/intc_stratix10.txt   | 51 +++++++++++++
->  include/dt-bindings/clock/stratix10-clock.h        | 84 ++++++++++++++++++++++
->  2 files changed, 135 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/intc_stratix10.txt
->  create mode 100644 include/dt-bindings/clock/stratix10-clock.h
->
-> diff --git a/Documentation/devicetree/bindings/clock/intc_stratix10.txt b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
-> new file mode 100644
-> index 0000000..0652ff1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
-> @@ -0,0 +1,51 @@
-> +Device Tree Clock bindings for Intel's SoCFPGA Stratix10 platform
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible : shall be
-> +       "intel,stratix10-clkmgr"
-> +
-> +- reg : shall be the control register offset from CLOCK_MANAGER's base for the clock.
-> +
-> +- #clock-cells : from common clock binding, shall be set to 1.
-> +
-> +- clocks : Should contain fixed-clock sources, such as oscillators.
-> +
-> +Example:
-> +       clkmgr: clock-controller@ffd10000 {
-> +               compatible = "intel,stratix10-clkmgr";
-> +               reg = <0xffd10000 0x1000>;
-> +               #clock-cells = <1>;
-> +
-> +               clocks {
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +
-> +                       cb_intosc_hs_div2_clk: cb-intosc-hs-div2-clk {
-> +                               #clock-cells = <0>;
-> +                               compatible = "fixed-clock";
-> +                               clock-frequency = <25000000>;
-> +                       };
-> +
-> +                       cb_intosc_ls_clk: cb-intosc-ls-clk {
-> +                               #clock-cells = <0>;
-> +                               compatible = "fixed-clock";
-> +                               clock-frequency = <25000000>;
-> +                       };
-> +
-> +                       f2s_free_clk: f2s-free-clk {
-> +                               #clock-cells = <0>;
-> +                               compatible = "fixed-clock";
-> +                               clock-frequency = <25000000>;
-> +                       };
-> +
-> +                       osc1: osc1 {
-> +                               #clock-cells = <0>;
-> +                               compatible = "fixed-clock";
-> +                               clock-frequency = <25000000>;
-> +                       };
-> +               };
-> +       };
-> diff --git a/include/dt-bindings/clock/stratix10-clock.h b/include/dt-bindings/clock/stratix10-clock.h
-> new file mode 100644
-> index 0000000..5be885d
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/stratix10-clock.h
-> @@ -0,0 +1,84 @@
-> +/* SPDX-License-Identifier:    GPL-2.0
 
-Sigh. Should be a single line comment and a single space:
+--Pql/uPZNXIm1JCle
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-/* SPDX-License-Identifier: GPL-2.0 */
+On Tue, Feb 13, 2018 at 02:43:08PM +0000, Harald Geyer wrote:
 
-With that,
+> BTW, it took me a bit to figure out that by "content free ping" you are
+> refering to the quoting of the patch. Maybe you can reword your canned
+> response to make it easier to understand.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+No, a content free ping is when you just send a reply saying something
+to the effect of "hey, what's going on with this?".  As I said in my
+reply best case the answer is going to be "I have no idea, you need to
+resend since I'll need the patch to do anything with it" and worst case
+it just won't get seen at all if the thing really did get buried
+somehow.  This is unfortunately something that happens upstream, things
+fall through the cracks sometimes for various reasons (eg, if a new
+patch gets sent in the middle of a thread sometimes it'll get deleted
+along with the reset of the thread). =20
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Pql/uPZNXIm1JCle
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqDCBoACgkQJNaLcl1U
+h9BlvQf/eMwr0k0vC5oTHJFv3eGkyYG79i/2tUztyYo6BM8icOr15zmxTEyijZJp
+AhyGMsaJLjrYXv0KTjmCXNAAk2i4jUzPgfV0YHrEr8HNIVWUF3aGqIhXwDtV1PqI
+SYGM9AP+r3Dq6qThCaEBJdvl6BS49IzDGDQ9iauJzPn1VKxWSKa+KLdwd9bOETpZ
+JKZDG/XnAzIJ2pyCZy/Zw0IgRGwCp0UMPtkWXXzqz6qFr43p+YDHmcMjf63Q1pdP
+yDuzmBH4DY5Roq64vYwrGR/R34mqhZKVVQTuMISb5QajjlaMlYdJ/iPz3CG04LdP
+0ENNKcDB0qn2EB7lN4p9gEfoQEOoiA==
+=7HBL
+-----END PGP SIGNATURE-----
+
+--Pql/uPZNXIm1JCle--
