@@ -1,58 +1,57 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Remove leading 0x and 0s from bindings notation
-Date: Tue, 13 Feb 2018 09:32:55 -0600
-Message-ID: <CAL_JsqLyv5io+iXWnzmUhZ1r=PBnA=MdZet8idJDmL8XphxThA@mail.gmail.com>
-References: <20171214165352.27902-1-malat@debian.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 16/25] arm: zx: dts: Remove leading 0x and 0s from
+ bindings notation
+Date: Tue, 13 Feb 2018 09:37:12 -0600
+Message-ID: <CAL_JsqL02_v46mxqF2cFerC82fNPQAEpm0vfjr2F_78i3fVM7Q@mail.gmail.com>
+References: <20171215124649.30692-1-malat@debian.org> <20171226080312.GE23070@X250>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20171214165352.27902-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171226080312.GE23070@X250>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mathieu Malaterre <malat@debian.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jun Nie <jun.nie@linaro.org>, Baoyou Xie <baoyou.xie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 14, 2017 at 10:53 AM, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
-> Improve the DTS files by removing all the leading "0x" and zeros to fix the
-> following dtc warnings:
+On Tue, Dec 26, 2017 at 2:03 AM, Shawn Guo <shawnguo@kernel.org> wrote:
+> On Fri, Dec 15, 2017 at 01:46:48PM +0100, Mathieu Malaterre wrote:
+>> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+>> following dtc warnings:
+>>
+>> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+>>
+>> and
+>>
+>> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+>>
+>> Converted using the following command:
+>>
+>> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
+>>
+>> For simplicity, two sed expressions were used to solve each warnings separately.
+>>
+>> To make the regex expression more robust a few other issues were resolved,
+>> namely setting unit-address to lower case, and adding a whitespace before the
+>> the opening curly brace:
+>>
+>> https://elinux.org/Device_Tree_Linux#Linux_conventions
+>>
+>> This will solve as a side effect warning:
+>>
+>> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+>>
+>> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+>>
+>> Reported-by: David Daney <ddaney@caviumnetworks.com>
+>> Suggested-by: Rob Herring <robh@kernel.org>
+>> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 >
-> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+> Hi Arnd, Olof,
 >
-> and
->
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
->
-> Converted using the following command:
->
-> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -E -i -e "s/@0x([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" -e "s/@0+([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" {} +
->
-> For simplicity, two sed expressions were used to solve each warnings separately.
->
-> To make the regex expression more robust a few other issues were resolved,
-> namely setting unit-address to lower case, and adding a whitespace before the
-> the opening curly brace:
->
-> https://elinux.org/Device_Tree_Linux#Linux_conventions
->
-> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
->
-> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 2 +-
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi       | 2 +-
->  arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi   | 6 +++---
->  arch/arm64/boot/dts/qcom/msm8996.dtsi          | 6 +++---
->  4 files changed, 8 insertions(+), 8 deletions(-)
+> I do not have any other ZTE ZX platform patches to send you.  Is it okay
+> to send this one using IMX branch, or can you apply it to arm-soc
+> directly?
 
-Arnd, Olof, Looks like this got missed. Can you pick up for 4.16.
-
-There's some arm32 ones too, but most of them need to be respun to
-mention upper to lower case fixes.
+Ping. This one didn't make it into 4.16.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
