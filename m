@@ -1,119 +1,95 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX
- Device Tree bindings
-Date: Wed, 14 Feb 2018 01:40:33 +0200
-Message-ID: <20180213234032.jkjrqueewxdoh6fc@valkosipuli.retiisi.org.uk>
-References: <20180207142643.15746-1-maxime.ripard@bootlin.com>
- <20180207142643.15746-2-maxime.ripard@bootlin.com>
- <2476247.yR0nrT2UBg@avalon>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: media: Binding document for OV7251
+ camera sensor
+Date: Tue, 13 Feb 2018 17:42:46 -0600
+Message-ID: <20180213234246.vmiwrxlxuprlak4z@rob-hp-laptop>
+References: <1518080018-10403-1-git-send-email-todor.tomov@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2476247.yR0nrT2UBg@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
+In-Reply-To: <1518080018-10403-1-git-send-email-todor.tomov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Todor Tomov <todor.tomov@linaro.org>
+Cc: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Thu, Feb 08, 2018 at 10:53:37AM +0200, Todor Tomov wrote:
+> Add the document for ov7251 device tree binding.
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: devicetree@vger.kernel.org
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> ---
+>  .../devicetree/bindings/media/i2c/ov7251.txt       | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7251.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7251.txt b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+> new file mode 100644
+> index 0000000..c807646
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov7251.txt
+> @@ -0,0 +1,51 @@
+> +* Omnivision 1/7.5-Inch B&W VGA CMOS Digital Image Sensor
+> +
+> +The Omnivision OV7251 is a 1/7.5-Inch CMOS active pixel digital image sensor with
+> +an active array size of 640H x 480V. It is programmable through a serial I2C
+> +interface.
+> +
+> +Required Properties:
+> +- compatible: Value should be "ovti,ov7251".
+> +- clocks: Reference to the xclk clock.
+> +- clock-names: Should be "xclk".
+> +- clock-frequency: Frequency of the xclk clock.
+> +- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
+> +  to the hardware pin XSHUTDOWN which is physically active low.
+> +- vdddo-supply: Chip digital IO regulator.
+> +- vdda-supply: Chip analog regulator.
+> +- vddd-supply: Chip digital core regulator.
+> +
+> +The device node must contain one 'port' child node for its digital output
+> +video port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +	&i2c1 {
+> +		...
+> +
+> +		ov7251: ov7251@60 {
 
-On Thu, Feb 08, 2018 at 09:00:19PM +0200, Laurent Pinchart wrote:
-> Hi Maxime,
-> 
-> Thank you for the patch.
-> 
-> On Wednesday, 7 February 2018 16:26:42 EET Maxime Ripard wrote:
-> > The Cadence MIPI-CSI2 TX controller is a CSI2 bridge that supports up to 4
-> > video streams and can output on up to 4 CSI-2 lanes, depending on the
-> > hardware implementation.
-> > 
-> > It can operate with an external D-PHY, an internal one or no D-PHY at all
-> > in some configurations.
-> > 
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > ---
-> >  .../devicetree/bindings/media/cdns,csi2tx.txt      | 98 +++++++++++++++++++
-> >  1 file changed, 98 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-> > b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt new file mode
-> > 100644
-> > index 000000000000..acbbd625a75f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
-> > @@ -0,0 +1,98 @@
-> > +Cadence MIPI-CSI2 TX controller
-> > +===============================
-> > +
-> > +The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
-> > +4 CSI lanes in output, and up to 4 different pixel streams in input.
-> > +
-> > +Required properties:
-> > +  - compatible: must be set to "cdns,csi2tx"
-> > +  - reg: base address and size of the memory mapped region
-> > +  - clocks: phandles to the clocks driving the controller
-> > +  - clock-names: must contain:
-> > +    * esc_clk: escape mode clock
-> > +    * p_clk: register bank clock
-> > +    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
-> > +                         implemented in hardware, between 0 and 3
-> > +
-> > +Optional properties
-> > +  - phys: phandle to the D-PHY. If it is set, phy-names need to be set
-> > +  - phy-names: must contain dphy
-> 
-> Nitpicking, I'd write "dphy" with double quotes.
-> 
-> > +Required subnodes:
-> > +  - ports: A ports node with one port child node per device input and
-> > output
-> > +           port, in accordance with the video interface bindings defined in
-> > +           Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > The
-> > +           port nodes numbered as follows.
-> 
-> s/numbered/are numbered/
-> 
-> > +
-> > +           Port Description
-> > +           -----------------------------
-> > +           0    CSI-2 output
-> > +           1    Stream 0 input
-> > +           2    Stream 1 input
-> > +           3    Stream 2 input
-> > +           4    Stream 3 input
-> > +
-> > +           The stream input port nodes are optional if they are not
-> > +           connected to anything at the hardware level or implemented
-> > +           in the design.
-> 
-> Are they optional (and thus valid if present), or should they be forbidden in 
-> case they're not implemented in the hardware ? I'd go for the latter and write
-> 
-> "One stream input port node is required per implemented hardware input, and no 
-> stream input port node can be present for unimplemented inputs."
-> 
-> > Since there is only one endpoint per port,
-> > +           the endpoints are not numbered.
-> 
-> I think it would be valid to number endpoints even if not required. I think 
-> that what you should document is that at most one endpoint is supported per 
-> port.
+camera-sensor@60
 
-If you allow them to be numbered, then the driver must be able to use any
-endpoint number. This provides no additional information on the hardware
-while it is more difficult to parse.
+With that,
 
-That would require reg property in endpoints --- which is not defined here.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-I think all new drivers pretty much define it in a similar way (while the
-old definitions did not specify it explicitly).
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+> +			compatible = "ovti,ov7251";
+> +			reg = <0x60>;
+> +
+> +			enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&camera_bw_default>;
+> +
+> +			clocks = <&clks 200>;
+> +			clock-names = "xclk";
+> +			clock-frequency = <24000000>;
+> +
+> +			vdddo-supply = <&camera_dovdd_1v8>;
+> +			vdda-supply = <&camera_avdd_2v8>;
+> +			vddd-supply = <&camera_dvdd_1v2>;
+> +
+> +			port {
+> +				ov7251_ep: endpoint {
+> +					clock-lanes = <1>;
+> +					data-lanes = <0>;
+> +					remote-endpoint = <&csi0_ep>;
+> +				};
+> +			};
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
