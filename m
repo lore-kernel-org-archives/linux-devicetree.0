@@ -1,66 +1,56 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 2/3] arm64: dts: rockchip: add cdn-dp node for rk3399.
-Date: Tue, 13 Feb 2018 12:52:06 +0100
-Message-ID: <1953673.4ODsl89y1u@diego>
-References: <20180207163150.16332-1-enric.balletbo@collabora.com> <d8ec2613-b773-9bab-cb4c-1f58eb1c1356@collabora.com> <CAFqH_52NtRib_nLrGnacdGK=cHOeh8Lfaa=38X1OA8gnu1r=hQ@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: codecs: Add support for AK4458 DAC driver
+Date: Tue, 13 Feb 2018 11:55:37 +0000
+Message-ID: <20180213115537.GB5988@sirena.org.uk>
+References: <1517404809-25250-1-git-send-email-cosmin.samoila@nxp.com>
+ <20180131170330.GB7763@sirena.org.uk>
+ <1518513744.25655.8.camel@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FkmkrVfFsRoUs1wW"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFqH_52NtRib_nLrGnacdGK=cHOeh8Lfaa=38X1OA8gnu1r=hQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1518513744.25655.8.camel@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Brian Norris <briannorris@chromium.org>, Guenter Roeck <groeck@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chris Zhong <zyw@rock-chips.com>
+To: Cosmin Samoila <cosmin.samoila@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wakasugi.jb@om.asahi-kasei.co.jp" <wakasugi.jb@om.asahi-kasei.co.jp>, "mihai.serban@gmail.com" <mihai.serban@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "mihai.serban@nxp.com" <mihai.serban@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
 
-Am Dienstag, 13. Februar 2018, 12:36:47 CET schrieb Enric Balletbo Serra:
-> 2018-02-13 11:42 GMT+01:00 Enric Balletbo i Serra
-> 
-> <enric.balletbo@collabora.com>:
-> > Hi Heiko,
-> > 
-> > On 10/02/18 17:16, Heiko Stuebner wrote:
-> >> Hi Enric,
-> >> 
-> >> Am Mittwoch, 7. Februar 2018, 17:31:49 CET schrieb Enric Balletbo i 
-Serra:
-> >>> From: Chris Zhong <zyw@rock-chips.com>
-> >>> 
-> >>> Add a node for the cdn DP controller which is embedded in the rk3399
-> >>> SoC.
-> >>> 
-> >>> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
-> >>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> >>> ---
-> >>> 
-> >>>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 50
-> >>>  ++++++++++++++++++++++++++++++++>> 
-> >> It looks like there is no binding document at all for cdn-dp? At least
-> >> I couldn't find one and the original series also didn't seem to include
-> >> one.
-> >> 
-> >> And while I don't see anything problematic right with the used properties
-> >> right now, I'd think we should really have a binding and give
-> >> dt-maintainers a chance to complain, before adding devicetree nodes
-> >> based on it.
-> >> 
-> >> I'd guess a mostly usable binding doc should already sit in the chromeos
-> >> tree, which you could base a v2 of this series on?
-> > 
-> > Sure, I'll send a v2 for this series. Thanks.
-> > 
-> >   Enric
-> 
-> So seems that the binding was already discussed and accepted here [1]
-> but for some reason never landed. So I think that I'll send v2 just
-> including the binding patch so all can land together. Sounds good?
-> 
-> [1] https://patchwork.kernel.org/patch/9278077/
+--FkmkrVfFsRoUs1wW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Nice find and yep, just resending binding + your patches 2+3
-is enough then :-)
+On Tue, Feb 13, 2018 at 09:22:24AM +0000, Cosmin Samoila wrote:
 
+> This is used to set the codec in Manual Setting Mode, meaning that
+> the default sampling speed is set based on DFS0 and DFS1 bits. In
+> Auto Setting Mode, the MCLK frequency is detected automatically and
+> DFS bits are ignored.
 
-Heiko
+But why is it a compile time option?
+
+> This compile time option is used to know when to set the ACKS bit in
+> init_reg function that switches between modes.
+> At this moment we are only using Auto Mode and I can remove it if
+> you think is not necessary.
+
+Yes, just remove it - if there needs to be some control it should
+probably be done by the machine driver, or through DT.
+
+--FkmkrVfFsRoUs1wW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqC0jgACgkQJNaLcl1U
+h9CQjQf+M5k3oleXSIIJLz+kivFTuF85SmVDYszett34gGRAIn9hVAemj93eEcZ2
+zyIHAowZSNsXtjiVOARzZwori0NhDi7QYYLP58gREpR93g7A/4uxScHOWXNAFmfB
+rQGcfgOJzvIH5m72Uq8EP+B+0H1FYr657FpIadcueX1kMqV2APZggtpAQ2u3Lqaq
+yp4fWuXKTeEd6xzoH6QOb9MGthvi/BS+iJiFeEPJCT35fBKQXlwr1qY0UaXQmdg8
+GgPTx2Vt9RKG/Xcba2TX3XlFzpVkgUhBC1vlWotVJVNpwA9+bfq2IixkmRfjG6UG
+g7SuOgqXZRxuAIxKck4lntRsi5utBw==
+=kmAm
+-----END PGP SIGNATURE-----
+
+--FkmkrVfFsRoUs1wW--
