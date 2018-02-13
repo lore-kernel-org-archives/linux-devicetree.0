@@ -1,494 +1,929 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: [PATCH v7 10/37] nds32: MMU initialization
-Date: Tue, 13 Feb 2018 17:09:14 +0800
-Message-ID: <01d8873d47a7979c94cf732ebf72d6d09da5bfee.1518505384.git.greentime@andestech.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
-In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
-Cc: green.hu@gmail.com, Vincent Chen <vincentc@andestech.com>
+From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv4 3/3] clk: socfpga: stratix10: add clock driver for Stratix10 platform
+Date: Tue, 13 Feb 2018 04:04:46 -0600
+Message-ID: <1518516286-14428-3-git-send-email-dinguyen@kernel.org>
+References: <1518516286-14428-1-git-send-email-dinguyen@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518516286-14428-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch includes memory initializations and highmem supporting.
+Add a clock driver for the Stratix10 SoC. The driver is similar to the
+Cyclone5/Arria10 platforms, with the exception that this driver only uses
+one single clock binding.
 
-Signed-off-by: Vincent Chen <vincentc@andestech.com>
-Signed-off-by: Greentime Hu <greentime@andestech.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/nds32/mm/highmem.c  |  79 ++++++++++++++
- arch/nds32/mm/init.c     | 277 +++++++++++++++++++++++++++++++++++++++++++++++
- arch/nds32/mm/mm-nds32.c |  90 +++++++++++++++
- 3 files changed, 446 insertions(+)
- create mode 100644 arch/nds32/mm/highmem.c
- create mode 100644 arch/nds32/mm/init.c
- create mode 100644 arch/nds32/mm/mm-nds32.c
+v4:
+- move SPDX license first line of all files
+v3:
+- use fixed binding "intel,stratix10-clkmgr"
+- Fix up SPDX license header
+v2:
+- Use a single clock binding
+---
+ drivers/clk/Makefile                 |   1 +
+ drivers/clk/socfpga/Makefile         |   5 +
+ drivers/clk/socfpga/clk-gate-s10.c   | 103 +++++++++++
+ drivers/clk/socfpga/clk-periph-s10.c | 148 ++++++++++++++++
+ drivers/clk/socfpga/clk-pll-s10.c    | 140 +++++++++++++++
+ drivers/clk/socfpga/clk-s10.c        | 319 +++++++++++++++++++++++++++++++++++
+ drivers/clk/socfpga/clk.h            |   4 +
+ drivers/clk/socfpga/stratix10-clk.h  |  86 ++++++++++
+ 8 files changed, 806 insertions(+)
+ create mode 100644 drivers/clk/socfpga/clk-gate-s10.c
+ create mode 100644 drivers/clk/socfpga/clk-periph-s10.c
+ create mode 100644 drivers/clk/socfpga/clk-pll-s10.c
+ create mode 100644 drivers/clk/socfpga/clk-s10.c
+ create mode 100644 drivers/clk/socfpga/stratix10-clk.h
 
-diff --git a/arch/nds32/mm/highmem.c b/arch/nds32/mm/highmem.c
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 71ec41e..80ab422 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -88,6 +88,7 @@ obj-$(CONFIG_ARCH_SOCFPGA)		+= socfpga/
+ obj-$(CONFIG_PLAT_SPEAR)		+= spear/
+ obj-$(CONFIG_ARCH_SPRD)			+= sprd/
+ obj-$(CONFIG_ARCH_STI)			+= st/
++obj-$(CONFIG_ARCH_STRATIX10)		+= socfpga/
+ obj-$(CONFIG_ARCH_SUNXI)		+= sunxi/
+ obj-$(CONFIG_ARCH_SUNXI)		+= sunxi-ng/
+ obj-$(CONFIG_ARCH_TEGRA)		+= tegra/
+diff --git a/drivers/clk/socfpga/Makefile b/drivers/clk/socfpga/Makefile
+index 9146c20..87ef977 100644
+--- a/drivers/clk/socfpga/Makefile
++++ b/drivers/clk/socfpga/Makefile
+@@ -1,6 +1,11 @@
+ # SPDX-License-Identifier: GPL-2.0
++ifeq ($(CONFIG_ARCH_SOCFPGA),y)
+ obj-y += clk.o
+ obj-y += clk-gate.o
+ obj-y += clk-pll.o
+ obj-y += clk-periph.o
+ obj-y += clk-pll-a10.o clk-periph-a10.o clk-gate-a10.o
++else
++obj-y += clk-s10.o
++obj-y += clk-pll-s10.o clk-periph-s10.o clk-gate-s10.o
++endif
+diff --git a/drivers/clk/socfpga/clk-gate-s10.c b/drivers/clk/socfpga/clk-gate-s10.c
 new file mode 100644
-index 000000000000..e17cb8a69315
+index 0000000..f307a3a
 --- /dev/null
-+++ b/arch/nds32/mm/highmem.c
-@@ -0,0 +1,79 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2005-2017 Andes Technology Corporation
-+
-+#include <linux/export.h>
-+#include <linux/highmem.h>
-+#include <linux/sched.h>
-+#include <linux/smp.h>
-+#include <linux/interrupt.h>
-+#include <linux/bootmem.h>
-+#include <asm/fixmap.h>
-+#include <asm/tlbflush.h>
-+
-+void *kmap(struct page *page)
-+{
-+	unsigned long vaddr;
-+	might_sleep();
-+	if (!PageHighMem(page))
-+		return page_address(page);
-+	vaddr = (unsigned long)kmap_high(page);
-+	return (void *)vaddr;
-+}
-+
-+EXPORT_SYMBOL(kmap);
-+
-+void kunmap(struct page *page)
-+{
-+	BUG_ON(in_interrupt());
-+	if (!PageHighMem(page))
-+		return;
-+	kunmap_high(page);
-+}
-+
-+EXPORT_SYMBOL(kunmap);
-+
-+void *kmap_atomic(struct page *page)
-+{
-+	unsigned int idx;
-+	unsigned long vaddr, pte;
-+	int type;
-+	pte_t *ptep;
-+
-+	preempt_disable();
-+	pagefault_disable();
-+	if (!PageHighMem(page))
-+		return page_address(page);
-+
-+	type = kmap_atomic_idx_push();
-+
-+	idx = type + KM_TYPE_NR * smp_processor_id();
-+	vaddr = __fix_to_virt(FIX_KMAP_BEGIN + idx);
-+	pte = (page_to_pfn(page) << PAGE_SHIFT) | (PAGE_KERNEL);
-+	ptep = pte_offset_kernel(pmd_off_k(vaddr), vaddr);
-+	set_pte(ptep, pte);
-+
-+	__nds32__tlbop_inv(vaddr);
-+	__nds32__mtsr_dsb(vaddr, NDS32_SR_TLB_VPN);
-+	__nds32__tlbop_rwr(pte);
-+	__nds32__isb();
-+	return (void *)vaddr;
-+}
-+
-+EXPORT_SYMBOL(kmap_atomic);
-+
-+void __kunmap_atomic(void *kvaddr)
-+{
-+	if (kvaddr >= (void *)FIXADDR_START) {
-+		unsigned long vaddr = (unsigned long)kvaddr;
-+		pte_t *ptep;
-+		kmap_atomic_idx_pop();
-+		__nds32__tlbop_inv(vaddr);
-+		__nds32__isb();
-+		ptep = pte_offset_kernel(pmd_off_k(vaddr), vaddr);
-+		set_pte(ptep, 0);
-+	}
-+	pagefault_enable();
-+	preempt_enable();
-+}
-+
-+EXPORT_SYMBOL(__kunmap_atomic);
-diff --git a/arch/nds32/mm/init.c b/arch/nds32/mm/init.c
-new file mode 100644
-index 000000000000..93ee0160720b
---- /dev/null
-+++ b/arch/nds32/mm/init.c
-@@ -0,0 +1,277 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 1995-2005 Russell King
-+// Copyright (C) 2012 ARM Ltd.
-+// Copyright (C) 2013-2017 Andes Technology Corporation
-+
-+#include <linux/kernel.h>
-+#include <linux/errno.h>
-+#include <linux/swap.h>
-+#include <linux/init.h>
-+#include <linux/bootmem.h>
-+#include <linux/mman.h>
-+#include <linux/nodemask.h>
-+#include <linux/initrd.h>
-+#include <linux/highmem.h>
-+#include <linux/memblock.h>
-+
-+#include <asm/sections.h>
-+#include <asm/setup.h>
-+#include <asm/tlb.h>
-+#include <asm/page.h>
-+
-+DEFINE_PER_CPU(struct mmu_gather, mmu_gathers);
-+DEFINE_SPINLOCK(anon_alias_lock);
-+extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
-+extern unsigned long phys_initrd_start;
-+extern unsigned long phys_initrd_size;
-+
-+/*
-+ * empty_zero_page is a special page that is used for
-+ * zero-initialized data and COW.
-+ */
-+struct page *empty_zero_page;
-+
-+static void __init zone_sizes_init(void)
-+{
-+	unsigned long zones_size[MAX_NR_ZONES];
-+
-+	/* Clear the zone sizes */
-+	memset(zones_size, 0, sizeof(zones_size));
-+
-+	zones_size[ZONE_NORMAL] = max_low_pfn;
-+#ifdef CONFIG_HIGHMEM
-+	zones_size[ZONE_HIGHMEM] = max_pfn;
-+#endif
-+	free_area_init(zones_size);
-+
-+}
-+
-+/*
-+ * Map all physical memory under high_memory into kernel's address space.
++++ b/drivers/clk/socfpga/clk-gate-s10.c
+@@ -0,0 +1,103 @@
++/* SPDX-License-Identifier:	GPL-2.0
 + *
-+ * This is explicitly coded for two-level page tables, so if you need
-+ * something else then this needs to change.
++ * Copyright (C) 2017, Intel Corporation
 + */
-+static void __init map_ram(void)
++#include <linux/clk-provider.h>
++#include <linux/slab.h>
++#include "clk.h"
++
++#define SOCFPGA_CS_PDBG_CLK	"cs_pdbg_clk"
++#define to_socfpga_gate_clk(p) container_of(p, struct socfpga_gate_clk, hw.hw)
++
++static unsigned long socfpga_gate_clk_recalc_rate(struct clk_hw *hwclk,
++						  unsigned long parent_rate)
 +{
-+	unsigned long v, p, e;
-+	pgd_t *pge;
-+	pud_t *pue;
-+	pmd_t *pme;
-+	pte_t *pte;
-+	/* These mark extents of read-only kernel pages...
-+	 * ...from vmlinux.lds.S
-+	 */
++	struct socfpga_gate_clk *socfpgaclk = to_socfpga_gate_clk(hwclk);
++	u32 div = 1, val;
 +
-+	p = (u32) memblock_start_of_DRAM() & PAGE_MASK;
-+	e = min((u32) memblock_end_of_DRAM(), (u32) __pa(high_memory));
-+
-+	v = (u32) __va(p);
-+	pge = pgd_offset_k(v);
-+
-+	while (p < e) {
-+		int j;
-+		pue = pud_offset(pge, v);
-+		pme = pmd_offset(pue, v);
-+
-+		if ((u32) pue != (u32) pge || (u32) pme != (u32) pge) {
-+			panic("%s: Kernel hardcoded for "
-+			      "two-level page tables", __func__);
-+		}
-+
-+		/* Alloc one page for holding PTE's... */
-+		pte = (pte_t *) __va(memblock_alloc(PAGE_SIZE, PAGE_SIZE));
-+		memset(pte, 0, PAGE_SIZE);
-+		set_pmd(pme, __pmd(__pa(pte) + _PAGE_KERNEL_TABLE));
-+
-+		/* Fill the newly allocated page with PTE'S */
-+		for (j = 0; p < e && j < PTRS_PER_PTE;
-+		     v += PAGE_SIZE, p += PAGE_SIZE, j++, pte++) {
-+			/* Create mapping between p and v. */
-+			/* TODO: more fine grant for page access permission */
-+			set_pte(pte, __pte(p + pgprot_val(PAGE_KERNEL)));
-+		}
-+
-+		pge++;
++	if (socfpgaclk->fixed_div) {
++		div = socfpgaclk->fixed_div;
++	} else if (socfpgaclk->div_reg) {
++		val = readl(socfpgaclk->div_reg) >> socfpgaclk->shift;
++		val &= GENMASK(socfpgaclk->width - 1, 0);
++		div = (1 << val);
++		if (streq(hwclk->init->name, SOCFPGA_CS_PDBG_CLK))
++			div = div ? 4 : 1;
 +	}
-+}
-+static pmd_t *fixmap_pmd_p;
-+static void __init fixedrange_init(void)
-+{
-+	unsigned long vaddr;
-+	pgd_t *pgd;
-+	pud_t *pud;
-+	pmd_t *pmd;
-+#ifdef CONFIG_HIGHMEM
-+	pte_t *pte;
-+#endif /* CONFIG_HIGHMEM */
-+
-+	/*
-+	 * Fixed mappings:
-+	 */
-+	vaddr = __fix_to_virt(__end_of_fixed_addresses - 1);
-+	pgd = swapper_pg_dir + pgd_index(vaddr);
-+	pud = pud_offset(pgd, vaddr);
-+	pmd = pmd_offset(pud, vaddr);
-+	fixmap_pmd_p = (pmd_t *) __va(memblock_alloc(PAGE_SIZE, PAGE_SIZE));
-+	memset(fixmap_pmd_p, 0, PAGE_SIZE);
-+	set_pmd(pmd, __pmd(__pa(fixmap_pmd_p) + _PAGE_KERNEL_TABLE));
-+
-+#ifdef CONFIG_HIGHMEM
-+	/*
-+	 * Permanent kmaps:
-+	 */
-+	vaddr = PKMAP_BASE;
-+
-+	pgd = swapper_pg_dir + pgd_index(vaddr);
-+	pud = pud_offset(pgd, vaddr);
-+	pmd = pmd_offset(pud, vaddr);
-+	pte = (pte_t *) __va(memblock_alloc(PAGE_SIZE, PAGE_SIZE));
-+	memset(pte, 0, PAGE_SIZE);
-+	set_pmd(pmd, __pmd(__pa(pte) + _PAGE_KERNEL_TABLE));
-+	pkmap_page_table = pte;
-+#endif /* CONFIG_HIGHMEM */
++	return parent_rate / div;
 +}
 +
-+/*
-+ * paging_init() sets up the page tables, initialises the zone memory
-+ * maps, and sets up the zero page, bad page and bad page tables.
-+ */
-+void __init paging_init(void)
++static u8 socfpga_gate_get_parent(struct clk_hw *hwclk)
 +{
-+	int i;
-+	void *zero_page;
++	struct socfpga_gate_clk *socfpgaclk = to_socfpga_gate_clk(hwclk);
++	u32 mask;
++	u8 parent = 0;
 +
-+	pr_info("Setting up paging and PTEs.\n");
-+	/* clear out the init_mm.pgd that will contain the kernel's mappings */
-+	for (i = 0; i < PTRS_PER_PGD; i++)
-+		swapper_pg_dir[i] = __pgd(1);
-+
-+	map_ram();
-+
-+	fixedrange_init();
-+
-+	/* allocate space for empty_zero_page */
-+	zero_page = __va(memblock_alloc(PAGE_SIZE, PAGE_SIZE));
-+	memset(zero_page, 0, PAGE_SIZE);
-+	zone_sizes_init();
-+
-+	empty_zero_page = virt_to_page(zero_page);
-+	flush_dcache_page(empty_zero_page);
-+}
-+
-+static inline void __init free_highmem(void)
-+{
-+#ifdef CONFIG_HIGHMEM
-+	unsigned long pfn;
-+	for (pfn = PFN_UP(__pa(high_memory)); pfn < max_pfn; pfn++) {
-+		phys_addr_t paddr = (phys_addr_t) pfn << PAGE_SHIFT;
-+		if (!memblock_is_reserved(paddr))
-+			free_highmem_page(pfn_to_page(pfn));
++	if (socfpgaclk->bypass_reg) {
++		mask = (0x1 << socfpgaclk->bypass_shift);
++		parent = ((readl(socfpgaclk->bypass_reg) & mask) >>
++			  socfpgaclk->bypass_shift);
 +	}
-+#endif
++	return parent;
 +}
 +
-+static void __init set_max_mapnr_init(void)
++static struct clk_ops gateclk_ops = {
++	.recalc_rate = socfpga_gate_clk_recalc_rate,
++	.get_parent = socfpga_gate_get_parent,
++};
++
++struct clk *s10_register_gate(char *name, const char *parent_name,
++			      const char * const *parent_names,
++			      u8 num_parents, unsigned long flags,
++			      void __iomem *regbase, unsigned long gate_reg,
++			      unsigned long gate_idx, unsigned long div_reg,
++			      unsigned long div_offset, u8 div_width,
++			      unsigned long bypass_reg, u8 bypass_shift,
++			      u8 fixed_div)
 +{
-+	max_mapnr = max_pfn;
-+}
++	struct clk *clk;
++	struct socfpga_gate_clk *socfpga_clk;
++	struct clk_init_data init;
 +
-+/*
-+ * mem_init() marks the free areas in the mem_map and tells us how much
-+ * memory is free.  This is done after various parts of the system have
-+ * claimed their memory after the kernel image.
-+ */
-+void __init mem_init(void)
-+{
-+	phys_addr_t memory_start = memblock_start_of_DRAM();
-+	BUG_ON(!mem_map);
-+	set_max_mapnr_init();
-+
-+	free_highmem();
-+
-+	/* this will put all low memory onto the freelists */
-+	free_all_bootmem();
-+	mem_init_print_info(NULL);
-+
-+	pr_info("virtual kernel memory layout:\n"
-+		"    fixmap  : 0x%08lx - 0x%08lx   (%4ld kB)\n"
-+#ifdef CONFIG_HIGHMEM
-+		"    pkmap   : 0x%08lx - 0x%08lx   (%4ld kB)\n"
-+#endif
-+		"    consist : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-+		"    vmalloc : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-+		"    lowmem  : 0x%08lx - 0x%08lx   (%4ld MB)\n"
-+		"      .init : 0x%08lx - 0x%08lx   (%4ld kB)\n"
-+		"      .data : 0x%08lx - 0x%08lx   (%4ld kB)\n"
-+		"      .text : 0x%08lx - 0x%08lx   (%4ld kB)\n",
-+		FIXADDR_START, FIXADDR_TOP, (FIXADDR_TOP - FIXADDR_START) >> 10,
-+#ifdef CONFIG_HIGHMEM
-+		PKMAP_BASE, PKMAP_BASE + LAST_PKMAP * PAGE_SIZE,
-+		(LAST_PKMAP * PAGE_SIZE) >> 10,
-+#endif
-+		CONSISTENT_BASE, CONSISTENT_END,
-+		((CONSISTENT_END) - (CONSISTENT_BASE)) >> 20, VMALLOC_START,
-+		(unsigned long)VMALLOC_END, (VMALLOC_END - VMALLOC_START) >> 20,
-+		(unsigned long)__va(memory_start), (unsigned long)high_memory,
-+		((unsigned long)high_memory -
-+		 (unsigned long)__va(memory_start)) >> 20,
-+		(unsigned long)&__init_begin, (unsigned long)&__init_end,
-+		((unsigned long)&__init_end -
-+		 (unsigned long)&__init_begin) >> 10, (unsigned long)&_etext,
-+		(unsigned long)&_edata,
-+		((unsigned long)&_edata - (unsigned long)&_etext) >> 10,
-+		(unsigned long)&_text, (unsigned long)&_etext,
-+		((unsigned long)&_etext - (unsigned long)&_text) >> 10);
-+
-+	/*
-+	 * Check boundaries twice: Some fundamental inconsistencies can
-+	 * be detected at build time already.
-+	 */
-+#ifdef CONFIG_HIGHMEM
-+	BUILD_BUG_ON(PKMAP_BASE + LAST_PKMAP * PAGE_SIZE > FIXADDR_START);
-+	BUILD_BUG_ON((CONSISTENT_END) > PKMAP_BASE);
-+#endif
-+	BUILD_BUG_ON(VMALLOC_END > CONSISTENT_BASE);
-+	BUILD_BUG_ON(VMALLOC_START >= VMALLOC_END);
-+
-+#ifdef CONFIG_HIGHMEM
-+	BUG_ON(PKMAP_BASE + LAST_PKMAP * PAGE_SIZE > FIXADDR_START);
-+	BUG_ON(CONSISTENT_END > PKMAP_BASE);
-+#endif
-+	BUG_ON(VMALLOC_END > CONSISTENT_BASE);
-+	BUG_ON(VMALLOC_START >= VMALLOC_END);
-+	BUG_ON((unsigned long)high_memory > VMALLOC_START);
-+
-+	return;
-+}
-+
-+void free_initmem(void)
-+{
-+	free_initmem_default(-1);
-+}
-+
-+#ifdef CONFIG_BLK_DEV_INITRD
-+void free_initrd_mem(unsigned long start, unsigned long end)
-+{
-+	free_reserved_area((void *)start, (void *)end, -1, "initrd");
-+}
-+#endif
-+
-+void __set_fixmap(enum fixed_addresses idx,
-+			       phys_addr_t phys, pgprot_t flags)
-+{
-+	unsigned long addr = __fix_to_virt(idx);
-+	pte_t *pte;
-+
-+	BUG_ON(idx <= FIX_HOLE || idx >= __end_of_fixed_addresses);
-+
-+	pte = (pte_t *)&fixmap_pmd_p[pte_index(addr)];;
-+
-+	if (pgprot_val(flags)) {
-+		set_pte(pte, pfn_pte(phys >> PAGE_SHIFT, flags));
-+	} else {
-+		pte_clear(&init_mm, addr, pte);
-+		flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
-+	}
-+}
-diff --git a/arch/nds32/mm/mm-nds32.c b/arch/nds32/mm/mm-nds32.c
-new file mode 100644
-index 000000000000..3b43798d754f
---- /dev/null
-+++ b/arch/nds32/mm/mm-nds32.c
-@@ -0,0 +1,90 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2005-2017 Andes Technology Corporation
-+
-+#include <linux/init_task.h>
-+#include <asm/pgalloc.h>
-+
-+#define FIRST_KERNEL_PGD_NR	(USER_PTRS_PER_PGD)
-+
-+/*
-+ * need to get a page for level 1
-+ */
-+
-+pgd_t *pgd_alloc(struct mm_struct *mm)
-+{
-+	pgd_t *new_pgd, *init_pgd;
-+	int i;
-+
-+	new_pgd = (pgd_t *) __get_free_pages(GFP_KERNEL, 0);
-+	if (!new_pgd)
++	socfpga_clk = kzalloc(sizeof(*socfpga_clk), GFP_KERNEL);
++	if (WARN_ON(!socfpga_clk))
 +		return NULL;
-+	for (i = 0; i < PTRS_PER_PGD; i++) {
-+		(*new_pgd) = 1;
-+		new_pgd++;
++
++	socfpga_clk->hw.reg = regbase + gate_reg;
++	socfpga_clk->hw.bit_idx = gate_idx;
++
++	gateclk_ops.enable = clk_gate_ops.enable;
++	gateclk_ops.disable = clk_gate_ops.disable;
++
++	socfpga_clk->fixed_div = fixed_div;
++
++	if (div_reg)
++		socfpga_clk->div_reg = regbase + div_reg;
++	else
++		socfpga_clk->div_reg = NULL;
++
++	socfpga_clk->width = div_width;
++	socfpga_clk->shift = div_offset;
++
++	if (bypass_reg)
++		socfpga_clk->bypass_reg = regbase + bypass_reg;
++	else
++		socfpga_clk->bypass_reg = NULL;
++	socfpga_clk->bypass_shift = bypass_shift;
++
++	init.name = name;
++	init.ops = &gateclk_ops;
++	init.flags = flags;
++
++	init.num_parents = num_parents;
++	init.parent_names = parent_names ? parent_names : &parent_name;
++	socfpga_clk->hw.hw.init = &init;
++
++	clk = clk_register(NULL, &socfpga_clk->hw.hw);
++	if (WARN_ON(IS_ERR(clk))) {
++		kfree(socfpga_clk);
++		return NULL;
 +	}
-+	new_pgd -= PTRS_PER_PGD;
 +
-+	init_pgd = pgd_offset_k(0);
++	return clk;
++}
+diff --git a/drivers/clk/socfpga/clk-periph-s10.c b/drivers/clk/socfpga/clk-periph-s10.c
+new file mode 100644
+index 0000000..3480a50
+--- /dev/null
++++ b/drivers/clk/socfpga/clk-periph-s10.c
+@@ -0,0 +1,148 @@
++/* SPDX-License-Identifier:	GPL-2.0
++ *
++ * Copyright (C) 2017, Intel Corporation
++ */
++#include <linux/slab.h>
++#include <linux/clk-provider.h>
 +
-+	memcpy(new_pgd + FIRST_KERNEL_PGD_NR, init_pgd + FIRST_KERNEL_PGD_NR,
-+	       (PTRS_PER_PGD - FIRST_KERNEL_PGD_NR) * sizeof(pgd_t));
++#include "clk.h"
 +
-+	cpu_dcache_wb_range((unsigned long)new_pgd,
-+			    (unsigned long)new_pgd +
-+			    PTRS_PER_PGD * sizeof(pgd_t));
-+	inc_zone_page_state(virt_to_page((unsigned long *)new_pgd),
-+			    NR_PAGETABLE);
++#define CLK_MGR_FREE_SHIFT		16
++#define CLK_MGR_FREE_MASK		0x7
++#define SWCTRLBTCLKSEN_SHIFT		8
 +
-+	return new_pgd;
++#define to_periph_clk(p) container_of(p, struct socfpga_periph_clk, hw.hw)
++
++static unsigned long clk_peri_c_clk_recalc_rate(struct clk_hw *hwclk,
++					     unsigned long parent_rate)
++{
++	struct socfpga_periph_clk *socfpgaclk = to_periph_clk(hwclk);
++	unsigned long div = 1;
++	u32 val;
++
++	val = readl(socfpgaclk->hw.reg);
++	val &= GENMASK(SWCTRLBTCLKSEN_SHIFT - 1, 0);
++	parent_rate /= val;
++
++	return parent_rate / div;
 +}
 +
-+void pgd_free(struct mm_struct *mm, pgd_t * pgd)
++static unsigned long clk_peri_cnt_clk_recalc_rate(struct clk_hw *hwclk,
++					     unsigned long parent_rate)
 +{
-+	pmd_t *pmd;
-+	struct page *pte;
++	struct socfpga_periph_clk *socfpgaclk = to_periph_clk(hwclk);
++	unsigned long div = 1;
 +
-+	if (!pgd)
++	if (socfpgaclk->fixed_div) {
++		div = socfpgaclk->fixed_div;
++	} else {
++		if (!socfpgaclk->bypass_reg)
++			div = ((readl(socfpgaclk->hw.reg) & 0x7ff) + 1);
++	}
++
++	return parent_rate / div;
++}
++
++static u8 clk_periclk_get_parent(struct clk_hw *hwclk)
++{
++	struct socfpga_periph_clk *socfpgaclk = to_periph_clk(hwclk);
++	u32 clk_src, mask;
++	u8 parent;
++
++	if (socfpgaclk->bypass_reg) {
++		mask = (0x1 << socfpgaclk->bypass_shift);
++		parent = ((readl(socfpgaclk->bypass_reg) & mask) >>
++			   socfpgaclk->bypass_shift);
++	} else {
++		clk_src = readl(socfpgaclk->hw.reg);
++		parent = (clk_src >> CLK_MGR_FREE_SHIFT) &
++			CLK_MGR_FREE_MASK;
++	}
++	return parent;
++}
++
++static const struct clk_ops peri_c_clk_ops = {
++	.recalc_rate = clk_peri_c_clk_recalc_rate,
++	.get_parent = clk_periclk_get_parent,
++};
++
++static const struct clk_ops peri_cnt_clk_ops = {
++	.recalc_rate = clk_peri_cnt_clk_recalc_rate,
++	.get_parent = clk_periclk_get_parent,
++};
++
++struct clk *s10_register_periph(char *name, const char *parent_name,
++				const char * const *parent_names,
++				u8 num_parents, unsigned long flags,
++				void __iomem *reg, unsigned long offset)
++{
++	struct clk *clk;
++	struct socfpga_periph_clk *periph_clk;
++	struct clk_init_data init;
++
++	periph_clk = kzalloc(sizeof(*periph_clk), GFP_KERNEL);
++	if (WARN_ON(!periph_clk))
++		return NULL;
++
++	periph_clk->hw.reg = reg + offset;
++
++	init.name = name;
++	init.ops = &peri_c_clk_ops;
++	init.flags = flags;
++
++	init.num_parents = num_parents;
++	init.parent_names = parent_names ? parent_names : &parent_name;
++
++	periph_clk->hw.hw.init = &init;
++
++	clk = clk_register(NULL, &periph_clk->hw.hw);
++	if (WARN_ON(IS_ERR(clk))) {
++		kfree(periph_clk);
++		return NULL;
++	}
++	return clk;
++}
++
++struct clk *s10_register_cnt_periph(char *name, const char *parent_name,
++				    const char * const *parent_names,
++				    u8 num_parents, unsigned long flags,
++				    void __iomem *regbase, unsigned long offset,
++				    u8 fixed_divider, unsigned long bypass_reg,
++				    unsigned long bypass_shift)
++{
++	struct clk *clk;
++	struct socfpga_periph_clk *periph_clk;
++	struct clk_init_data init;
++
++	periph_clk = kzalloc(sizeof(*periph_clk), GFP_KERNEL);
++	if (WARN_ON(!periph_clk))
++		return NULL;
++
++	if (offset)
++		periph_clk->hw.reg = regbase + offset;
++	else
++		periph_clk->hw.reg = NULL;
++
++	if (bypass_reg)
++		periph_clk->bypass_reg = regbase + bypass_reg;
++	else
++		periph_clk->bypass_reg = NULL;
++	periph_clk->bypass_shift = bypass_shift;
++	periph_clk->fixed_div = fixed_divider;
++
++	init.name = name;
++	init.ops = &peri_cnt_clk_ops;
++	init.flags = flags;
++
++	init.num_parents = num_parents;
++	init.parent_names = parent_names ? parent_names : &parent_name;
++
++	periph_clk->hw.hw.init = &init;
++
++	clk = clk_register(NULL, &periph_clk->hw.hw);
++	if (WARN_ON(IS_ERR(clk))) {
++		kfree(periph_clk);
++		return NULL;
++	}
++	return clk;
++}
+diff --git a/drivers/clk/socfpga/clk-pll-s10.c b/drivers/clk/socfpga/clk-pll-s10.c
+new file mode 100644
+index 0000000..b78b616
+--- /dev/null
++++ b/drivers/clk/socfpga/clk-pll-s10.c
+@@ -0,0 +1,140 @@
++/* SPDX-License-Identifier:	GPL-2.0
++ *
++ * Copyright (C) 2017, Intel Corporation
++ */
++#include <linux/slab.h>
++#include <linux/clk-provider.h>
++
++#include "clk.h"
++
++/* Clock Manager offsets */
++#define CLK_MGR_PLL_CLK_SRC_SHIFT	16
++#define CLK_MGR_PLL_CLK_SRC_MASK	0x3
++
++/* PLL Clock enable bits */
++#define SOCFPGA_PLL_POWER		0
++#define SOCFPGA_PLL_RESET_MASK		0x2
++#define SOCFPGA_PLL_REFDIV_MASK		0x00003F00
++#define SOCFPGA_PLL_REFDIV_SHIFT	8
++#define SOCFPGA_PLL_MDIV_MASK		0xFF000000
++#define SOCFPGA_PLL_MDIV_SHIFT		24
++#define SWCTRLBTCLKSEL_MASK		0x200
++#define SWCTRLBTCLKSEL_SHIFT		9
++
++#define SOCFPGA_BOOT_CLK		"boot_clk"
++
++#define to_socfpga_clk(p) container_of(p, struct socfpga_pll, hw.hw)
++
++static unsigned long clk_pll_recalc_rate(struct clk_hw *hwclk,
++					 unsigned long parent_rate)
++{
++	struct socfpga_pll *socfpgaclk = to_socfpga_clk(hwclk);
++	unsigned long mdiv;
++	unsigned long refdiv;
++	unsigned long reg;
++	unsigned long long vco_freq;
++
++	/* read VCO1 reg for numerator and denominator */
++	reg = readl(socfpgaclk->hw.reg);
++	refdiv = (reg & SOCFPGA_PLL_REFDIV_MASK) >> SOCFPGA_PLL_REFDIV_SHIFT;
++	vco_freq = (unsigned long long)parent_rate / refdiv;
++
++	/* Read mdiv and fdiv from the fdbck register */
++	reg = readl(socfpgaclk->hw.reg + 0x4);
++	mdiv = (reg & SOCFPGA_PLL_MDIV_MASK) >> SOCFPGA_PLL_MDIV_SHIFT;
++	vco_freq = (unsigned long long)parent_rate * (mdiv + 6);
++
++	return (unsigned long)vco_freq;
++}
++
++static unsigned long clk_boot_clk_recalc_rate(struct clk_hw *hwclk,
++					 unsigned long parent_rate)
++{
++	struct socfpga_pll *socfpgaclk = to_socfpga_clk(hwclk);
++	u32 div = 1;
++
++	div = ((readl(socfpgaclk->hw.reg) &
++		SWCTRLBTCLKSEL_MASK) >>
++		SWCTRLBTCLKSEL_SHIFT);
++	div += 1;
++	return parent_rate /= div;
++}
++
++
++static u8 clk_pll_get_parent(struct clk_hw *hwclk)
++{
++	struct socfpga_pll *socfpgaclk = to_socfpga_clk(hwclk);
++	u32 pll_src;
++
++	pll_src = readl(socfpgaclk->hw.reg);
++	if (streq(hwclk->init->name, SOCFPGA_BOOT_CLK)) {
++		return (pll_src >> SWCTRLBTCLKSEL_SHIFT) &
++			SWCTRLBTCLKSEL_MASK;
++	} else {
++		return (pll_src >> CLK_MGR_PLL_CLK_SRC_SHIFT) &
++			CLK_MGR_PLL_CLK_SRC_MASK;
++	}
++}
++
++static int clk_pll_prepare(struct clk_hw *hwclk)
++{
++	struct socfpga_pll *socfpgaclk = to_socfpga_clk(hwclk);
++	u32 reg;
++
++	/* Bring PLL out of reset */
++	reg = readl(socfpgaclk->hw.reg);
++	reg |= SOCFPGA_PLL_RESET_MASK;
++	writel(reg, socfpgaclk->hw.reg);
++
++	return 0;
++}
++
++static struct clk_ops clk_pll_ops = {
++	.recalc_rate = clk_pll_recalc_rate,
++	.get_parent = clk_pll_get_parent,
++	.prepare = clk_pll_prepare,
++};
++
++static struct clk_ops clk_boot_ops = {
++	.recalc_rate = clk_boot_clk_recalc_rate,
++	.get_parent = clk_pll_get_parent,
++	.prepare = clk_pll_prepare,
++};
++
++struct clk *s10_register_pll(const char *name, const char * const *parent_names,
++				    u8 num_parents, unsigned long flags,
++				    void __iomem *reg, unsigned long offset)
++{
++	struct clk *clk;
++	struct socfpga_pll *pll_clk;
++	struct clk_init_data init;
++
++	pll_clk = kzalloc(sizeof(*pll_clk), GFP_KERNEL);
++	if (WARN_ON(!pll_clk))
++		return NULL;
++
++	pll_clk->hw.reg = reg + offset;
++
++	if (streq(name, SOCFPGA_BOOT_CLK))
++		init.ops = &clk_boot_ops;
++	else
++		init.ops = &clk_pll_ops;
++
++	init.name = name;
++	init.flags = flags;
++
++	init.num_parents = num_parents;
++	init.parent_names = parent_names;
++	pll_clk->hw.hw.init = &init;
++
++	pll_clk->hw.bit_idx = SOCFPGA_PLL_POWER;
++	clk_pll_ops.enable = clk_gate_ops.enable;
++	clk_pll_ops.disable = clk_gate_ops.disable;
++
++	clk = clk_register(NULL, &pll_clk->hw.hw);
++	if (WARN_ON(IS_ERR(clk))) {
++		kfree(pll_clk);
++		return NULL;
++	}
++	return clk;
++}
+diff --git a/drivers/clk/socfpga/clk-s10.c b/drivers/clk/socfpga/clk-s10.c
+new file mode 100644
+index 0000000..07f057e
+--- /dev/null
++++ b/drivers/clk/socfpga/clk-s10.c
+@@ -0,0 +1,319 @@
++/* SPDX-License-Identifier:	GPL-2.0
++ *
++ * Copyright (C) 2017, Intel Corporation
++ */
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++
++#include <dt-bindings/clock/stratix10-clock.h>
++
++#include "stratix10-clk.h"
++
++static const char * const pll_mux[] = { "osc1", "cb_intosc_hs_div2_clk",
++					"f2s_free_clk",};
++static const char * const cntr_mux[] = { "main_pll", "periph_pll",
++					 "osc1", "cb_intosc_hs_div2_clk",
++					 "f2s_free_clk"};
++static const char * const boot_mux[] = { "osc1", "cb_intosc_hs_div2_clk",};
++
++static const char * const noc_free_mux[] = {"main_noc_base_clk",
++					    "peri_noc_base_clk",
++					    "osc1", "cb_intosc_hs_div2_clk",
++					    "f2s_free_clk"};
++
++static const char * const emaca_free_mux[] = {"peri_emaca_clk", "boot_clk"};
++static const char * const emacb_free_mux[] = {"peri_emacb_clk", "boot_clk"};
++static const char * const emac_ptp_free_mux[] = {"peri_emac_ptp_clk", "boot_clk"};
++static const char * const gpio_db_free_mux[] = {"peri_gpio_db_clk", "boot_clk"};
++static const char * const sdmmc_free_mux[] = {"peri_sdmmc_clk", "boot_clk"};
++static const char * const s2f_usr1_free_mux[] = {"peri_s2f_usr1_clk", "boot_clk"};
++static const char * const psi_ref_free_mux[] = {"peri_psi_ref_clk", "boot_clk"};
++static const char * const mpu_mux[] = { "mpu_free_clk", "boot_clk",};
++
++static const char * const s2f_usr0_mux[] = {"f2s_free_clk", "boot_clk"};
++static const char * const emac_mux[] = {"emaca_free_clk", "emacb_free_clk"};
++static const char * const noc_mux[] = {"noc_free_clk", "boot_clk"};
++
++/* clocks in AO (always on) controller */
++static const struct stratix10_pll_clock s10_pll_clks[] = {
++	{ STRATIX10_BOOT_CLK, "boot_clk", boot_mux, ARRAY_SIZE(boot_mux), 0,
++	  0x0},
++	{ STRATIX10_MAIN_PLL_CLK, "main_pll", pll_mux, ARRAY_SIZE(pll_mux),
++	  0, 0x74},
++	{ STRATIX10_PERIPH_PLL_CLK, "periph_pll", pll_mux, ARRAY_SIZE(pll_mux),
++	  0, 0xe4},
++};
++
++static const struct stratix10_perip_c_clock s10_main_perip_c_clks[] = {
++	{ STRATIX10_MAIN_MPU_BASE_CLK, "main_mpu_base_clk", "main_pll", 0, 1, 0, 0x84},
++	{ STRATIX10_MAIN_NOC_BASE_CLK, "main_noc_base_clk", "main_pll", 0, 1, 0, 0x88},
++	{ STRATIX10_PERI_MPU_BASE_CLK, "peri_mpu_base_clk", "periph_pll", 0, 1, 0,
++	  0xF4},
++	{ STRATIX10_PERI_NOC_BASE_CLK, "peri_noc_base_clk", "periph_pll", 0, 1, 0,
++	  0xF8},
++};
++
++static const struct stratix10_perip_cnt_clock s10_main_perip_cnt_clks[] = {
++	{ STRATIX10_MPU_FREE_CLK, "mpu_free_clk", NULL, cntr_mux, ARRAY_SIZE(cntr_mux),
++	   0, 0x48, 0, 0, 0},
++	{ STRATIX10_NOC_FREE_CLK, "noc_free_clk", NULL, noc_free_mux, ARRAY_SIZE(noc_free_mux),
++	  0, 0x4C, 0, 0, 0},
++	{ STRATIX10_MAIN_EMACA_CLK, "main_emaca_clk", "main_noc_base_clk", NULL, 1, 0,
++	  0x50, 0, 0, 0},
++	{ STRATIX10_MAIN_EMACB_CLK, "main_emacb_clk", "main_noc_base_clk", NULL, 1, 0,
++	  0x54, 0, 0, 0},
++	{ STRATIX10_MAIN_EMAC_PTP_CLK, "main_emac_ptp_clk", "main_noc_base_clk", NULL, 1, 0,
++	  0x58, 0, 0, 0},
++	{ STRATIX10_MAIN_GPIO_DB_CLK, "main_gpio_db_clk", "main_noc_base_clk", NULL, 1, 0,
++	  0x5C, 0, 0, 0},
++	{ STRATIX10_MAIN_SDMMC_CLK, "main_sdmmc_clk", "main_noc_base_clk", NULL, 1, 0,
++	  0x60, 0, 0, 0},
++	{ STRATIX10_MAIN_S2F_USR0_CLK, "main_s2f_usr0_clk", NULL, cntr_mux, ARRAY_SIZE(cntr_mux),
++	  0, 0x64, 0, 0, 0},
++	{ STRATIX10_MAIN_S2F_USR1_CLK, "main_s2f_usr1_clk", "main_noc_base_clk", NULL, 1, 0,
++	  0x68, 0, 0, 0},
++	{ STRATIX10_MAIN_PSI_REF_CLK, "main_psi_ref_clk", "main_noc_base_clk", NULL, 1, 0,
++	  0x6C, 0, 0, 0},
++	{ STRATIX10_PERI_EMACA_CLK, "peri_emaca_clk", NULL, cntr_mux, ARRAY_SIZE(cntr_mux),
++	  0, 0xBC, 0, 0, 0},
++	{ STRATIX10_PERI_EMACB_CLK, "peri_emacb_clk", NULL, cntr_mux, ARRAY_SIZE(cntr_mux),
++	  0, 0xC0, 0, 0, 0},
++	{ STRATIX10_PERI_EMAC_PTP_CLK, "peri_emac_ptp_clk", NULL, cntr_mux, ARRAY_SIZE(cntr_mux),
++	  0, 0xC4, 0, 0, 0},
++	{ STRATIX10_PERI_GPIO_DB_CLK, "peri_gpio_db_clk", NULL, cntr_mux, ARRAY_SIZE(cntr_mux),
++	  0, 0xC8, 0, 0, 0},
++	{ STRATIX10_PERI_SDMMC_CLK, "peri_sdmmc_clk", NULL, cntr_mux, ARRAY_SIZE(cntr_mux),
++	  0, 0xCC, 0, 0, 0},
++	{ STRATIX10_PERI_S2F_USR0_CLK, "peri_s2f_usr0_clk", "peri_noc_base_clk", NULL, 1, 0,
++	  0xD0, 0, 0, 0},
++	{ STRATIX10_PERI_S2F_USR1_CLK, "peri_s2f_usr1_clk", NULL, cntr_mux, ARRAY_SIZE(cntr_mux),
++	  0, 0xD4, 0, 0, 0},
++	{ STRATIX10_PERI_PSI_REF_CLK, "peri_psi_ref_clk", "peri_noc_base_clk", NULL, 1, 0,
++	  0xD8, 0, 0, 0},
++	{ STRATIX10_L4_SYS_FREE_CLK, "l4_sys_free_clk", "noc_free_clk", NULL, 1, 0,
++	  0, 4, 0, 0},
++	{ STRATIX10_NOC_CLK, "noc_clk", NULL, noc_mux, ARRAY_SIZE(noc_mux),
++	  0, 0, 0, 0x3C, 1},
++	{ STRATIX10_EMAC_A_FREE_CLK, "emaca_free_clk", NULL, emaca_free_mux, ARRAY_SIZE(emaca_free_mux),
++	  0, 0, 4, 0xB0, 0},
++	{ STRATIX10_EMAC_B_FREE_CLK, "emacb_free_clk", NULL, emacb_free_mux, ARRAY_SIZE(emacb_free_mux),
++	  0, 0, 4, 0xB0, 1},
++	{ STRATIX10_EMAC_PTP_FREE_CLK, "emac_ptp_free_clk", NULL, emac_ptp_free_mux,
++	  ARRAY_SIZE(emac_ptp_free_mux), 0, 0, 4, 0xB0, 2},
++	{ STRATIX10_GPIO_DB_FREE_CLK, "gpio_db_free_clk", NULL, gpio_db_free_mux,
++	  ARRAY_SIZE(gpio_db_free_mux), 0, 0, 0, 0xB0, 3},
++	{ STRATIX10_SDMMC_FREE_CLK, "sdmmc_free_clk", NULL, sdmmc_free_mux,
++	  ARRAY_SIZE(sdmmc_free_mux), 0, 0, 0, 0xB0, 4},
++	{ STRATIX10_S2F_USER1_FREE_CLK, "s2f_user1_free_clk", NULL, s2f_usr1_free_mux,
++	  ARRAY_SIZE(s2f_usr1_free_mux), 0, 0, 0, 0xB0, 5},
++	{ STRATIX10_PSI_REF_FREE_CLK, "psi_ref_free_clk", NULL, psi_ref_free_mux,
++	  ARRAY_SIZE(psi_ref_free_mux), 0, 0, 0, 0xB0, 6},
++};
++
++static const struct stratix10_gate_clock s10_gate_clks[] = {
++	{ STRATIX10_MPU_CLK, "mpu_clk", NULL, mpu_mux, ARRAY_SIZE(mpu_mux), 0, 0x30,
++	  0, 0, 0, 0, 0x3C, 0, 0},
++	{ STRATIX10_MPU_PERIPH_CLK, "mpu_periph_clk", "mpu_clk", NULL, 1, 0, 0x30,
++	  0, 0, 0, 0, 0, 0, 4},
++	{ STRATIX10_MPU_L2RAM_CLK, "mpu_l2ram_clk", "mpu_clk", NULL, 1, 0, 0x30,
++	  0, 0, 0, 0, 0, 0, 2},
++	{ STRATIX10_L4_MAIN_CLK, "l4_main_clk", "noc_clk", NULL, 1, 0, 0x30,
++	  1, 0x70, 0, 2, 0, 0, 0},
++	{ STRATIX10_L4_MP_CLK, "l4_mp_clk", "noc_clk", NULL, 1, 0, 0x30,
++	  2, 0x70, 8, 2, 0, 0, 0},
++	{ STRATIX10_L4_SP_CLK, "l4_sp_clk", "noc_clk", NULL, 1, CLK_IS_CRITICAL, 0x30,
++	  3, 0x70, 16, 2, 0, 0, 0},
++	{ STRATIX10_CS_AT_CLK, "cs_at_clk", "noc_clk", NULL, 1, 0, 0x30,
++	  4, 0x70, 24, 2, 0, 0, 0},
++	{ STRATIX10_CS_TRACE_CLK, "cs_trace_clk", "noc_clk", NULL, 1, 0, 0x30,
++	  4, 0x70, 26, 2, 0, 0, 0},
++	{ STRATIX10_CS_PDBG_CLK, "cs_pdbg_clk", "cs_at_clk", NULL, 1, 0, 0x30,
++	  4, 0x70, 28, 1, 0, 0, 0},
++	{ STRATIX10_CS_TIMER_CLK, "cs_timer_clk", "noc_clk", NULL, 1, 0, 0x30,
++	  5, 0, 0, 0, 0, 0, 0},
++	{ STRATIX10_S2F_USER0_CLK, "s2f_user0_clk", NULL, s2f_usr0_mux, ARRAY_SIZE(s2f_usr0_mux), 0, 0x30,
++	  6, 0, 0, 0, 0, 0, 0},
++	{ STRATIX10_EMAC0_CLK, "emac0_clk", NULL, emac_mux, ARRAY_SIZE(emac_mux), 0, 0xA4,
++	  0, 0, 0, 0, 0xDC, 26, 0},
++	{ STRATIX10_EMAC1_CLK, "emac1_clk", NULL, emac_mux, ARRAY_SIZE(emac_mux), 0, 0xA4,
++	  1, 0, 0, 0, 0xDC, 27, 0},
++	{ STRATIX10_EMAC2_CLK, "emac2_clk", NULL, emac_mux, ARRAY_SIZE(emac_mux), 0, 0xA4,
++	  2, 0, 0, 0, 0xDC, 28, 0},
++	{ STRATIX10_EMAC_PTP_CLK, "emac_ptp_clk", "emac_ptp_free_clk", NULL, 1, 0, 0xA4,
++	  3, 0, 0, 0, 0, 0, 0},
++	{ STRATIX10_GPIO_DB_CLK, "gpio_db_clk", "gpio_db_free_clk", NULL, 1, 0, 0xA4,
++	  4, 0xE0, 0, 16, 0, 0, 0},
++	{ STRATIX10_SDMMC_CLK, "sdmmc_clk", "sdmmc_free_clk", NULL, 1, 0, 0xA4,
++	  5, 0, 0, 0, 0, 0, 4},
++	{ STRATIX10_S2F_USER1_CLK, "s2f_user1_clk", "s2f_user1_free_clk", NULL, 1, 0, 0xA4,
++	  6, 0, 0, 0, 0, 0, 0},
++	{ STRATIX10_PSI_REF_CLK, "psi_ref_clk", "psi_ref_free_clk", NULL, 1, 0, 0xA4,
++	  7, 0, 0, 0, 0, 0, 0},
++	{ STRATIX10_USB_CLK, "usb_clk", "l4_mp_clk", NULL, 1, 0, 0xA4,
++	  8, 0, 0, 0, 0, 0, 0},
++	{ STRATIX10_SPI_M_CLK, "spi_m_clk", "l4_mp_clk", NULL, 1, 0, 0xA4,
++	  9, 0, 0, 0, 0, 0, 0},
++	{ STRATIX10_NAND_CLK, "nand_clk", "l4_main_clk", NULL, 1, 0, 0xA4,
++	  10, 0, 0, 0, 0, 0, 0},
++};
++
++static int s10_clk_register_c_perip(const struct stratix10_perip_c_clock *clks,
++				    int nums, struct stratix10_clock_data *data)
++{
++	struct clk *clk;
++	void __iomem *base = data->base;
++	int i;
++
++	for (i = 0; i < nums; i++) {
++		clk = s10_register_periph(clks[i].name, clks[i].parent_name,
++					  clks[i].parent_names, clks[i].num_parents,
++					  clks[i].flags, base, clks[i].offset);
++		if (IS_ERR(clk)) {
++			pr_err("%s: failed to register clock %s\n",
++			       __func__, clks[i].name);
++			continue;
++		}
++		data->clk_data.clks[clks[i].id] = clk;
++	}
++	return 0;
++}
++
++static int s10_clk_register_cnt_perip(const struct stratix10_perip_cnt_clock *clks,
++				      int nums, struct stratix10_clock_data *data)
++{
++	struct clk *clk;
++	void __iomem *base = data->base;
++	int i;
++
++	for (i = 0; i < nums; i++) {
++		clk = s10_register_cnt_periph(clks[i].name, clks[i].parent_name,
++					      clks[i].parent_names,
++					      clks[i].num_parents,
++					      clks[i].flags, base,
++					      clks[i].offset,
++					      clks[i].fixed_divider,
++					      clks[i].bypass_reg,
++					      clks[i].bypass_shift);
++		if (IS_ERR(clk)) {
++			pr_err("%s: failed to register clock %s\n",
++			       __func__, clks[i].name);
++			continue;
++		}
++		data->clk_data.clks[clks[i].id] = clk;
++	}
++
++	return 0;
++}
++
++static int s10_clk_register_gate(const struct stratix10_gate_clock *clks,
++				 int nums, struct stratix10_clock_data *data)
++{
++	struct clk *clk;
++	void __iomem *base = data->base;
++	int i;
++
++	for (i = 0; i < nums; i++) {
++		clk = s10_register_gate(clks[i].name, clks[i].parent_name,
++					clks[i].parent_names,
++					clks[i].num_parents,
++					clks[i].flags, base,
++					clks[i].gate_reg,
++					clks[i].gate_idx, clks[i].div_reg,
++					clks[i].div_offset, clks[i].div_width,
++					clks[i].bypass_reg,
++					clks[i].bypass_shift,
++					clks[i].fixed_div);
++		if (IS_ERR(clk)) {
++			pr_err("%s: failed to register clock %s\n",
++			       __func__, clks[i].name);
++			continue;
++		}
++		data->clk_data.clks[clks[i].id] = clk;
++	}
++
++	return 0;
++}
++
++static int s10_clk_register_pll(const struct stratix10_pll_clock *clks,
++				 int nums, struct stratix10_clock_data *data)
++{
++	struct clk *clk;
++	void __iomem *base = data->base;
++	int i;
++
++	for (i = 0; i < nums; i++) {
++		clk = s10_register_pll(clks[i].name, clks[i].parent_names,
++				    clks[i].num_parents,
++				    clks[i].flags, base,
++				    clks[i].offset);
++		if (IS_ERR(clk)) {
++			pr_err("%s: failed to register clock %s\n",
++			       __func__, clks[i].name);
++			continue;
++		}
++		data->clk_data.clks[clks[i].id] = clk;
++	}
++
++	return 0;
++}
++
++struct stratix10_clock_data *__socfpga_s10_clk_init(struct device_node *np,
++						    int nr_clks)
++{
++	struct stratix10_clock_data *clk_data;
++	struct clk **clk_table;
++	void __iomem *base;
++
++	base = of_iomap(np, 0);
++	if (!base) {
++		pr_err("%s: failed to map clock registers\n", __func__);
++		goto err;
++	}
++
++	clk_data = kzalloc(sizeof(*clk_data), GFP_KERNEL);
++	if (!clk_data)
++		goto err;
++
++	clk_data->base = base;
++	clk_table = kcalloc(nr_clks, sizeof(*clk_table), GFP_KERNEL);
++	if (!clk_table)
++		goto err_data;
++
++	clk_data->clk_data.clks = clk_table;
++	clk_data->clk_data.clk_num = nr_clks;
++	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data->clk_data);
++	return clk_data;
++
++err_data:
++	kfree(clk_data);
++err:
++	return NULL;
++}
++
++
++void __init socfpga_s10_init(struct device_node *node)
++{
++	struct stratix10_clock_data *clk_data;
++
++	clk_data = __socfpga_s10_clk_init(node, STRATIX10_NUM_CLKS);
++	if (!clk_data)
 +		return;
 +
-+	pmd = (pmd_t *) pgd;
-+	if (pmd_none(*pmd))
-+		goto free;
-+	if (pmd_bad(*pmd)) {
-+		pmd_ERROR(*pmd);
-+		pmd_clear(pmd);
-+		goto free;
-+	}
++	s10_clk_register_pll(s10_pll_clks, ARRAY_SIZE(s10_pll_clks), clk_data);
 +
-+	pte = pmd_page(*pmd);
-+	pmd_clear(pmd);
-+	dec_zone_page_state(virt_to_page((unsigned long *)pgd), NR_PAGETABLE);
-+	pte_free(mm, pte);
-+	mm_dec_nr_ptes(mm);
-+	pmd_free(mm, pmd);
-+free:
-+	free_pages((unsigned long)pgd, 0);
++	s10_clk_register_c_perip(s10_main_perip_c_clks,
++				 ARRAY_SIZE(s10_main_perip_c_clks), clk_data);
++
++	s10_clk_register_cnt_perip(s10_main_perip_cnt_clks,
++				   ARRAY_SIZE(s10_main_perip_cnt_clks),
++				   clk_data);
++
++	s10_clk_register_gate(s10_gate_clks, ARRAY_SIZE(s10_gate_clks),
++			      clk_data);
 +}
 +
-+/*
-+ * In order to soft-boot, we need to insert a 1:1 mapping in place of
-+ * the user-mode pages.  This will then ensure that we have predictable
-+ * results when turning the mmu off
++CLK_OF_DECLARE(stratix10_clock, "intel,stratix10-clkmgr", socfpga_s10_init);
+diff --git a/drivers/clk/socfpga/clk.h b/drivers/clk/socfpga/clk.h
+index 9cf1230..26c3a26 100644
+--- a/drivers/clk/socfpga/clk.h
++++ b/drivers/clk/socfpga/clk.h
+@@ -54,9 +54,11 @@ struct socfpga_gate_clk {
+ 	char *parent_name;
+ 	u32 fixed_div;
+ 	void __iomem *div_reg;
++	void __iomem *bypass_reg;
+ 	struct regmap *sys_mgr_base_addr;
+ 	u32 width;	/* only valid if div_reg != 0 */
+ 	u32 shift;	/* only valid if div_reg != 0 */
++	u32 bypass_shift;      /* only valid if bypass_reg != 0 */
+ 	u32 clk_phase[2];
+ };
+ 
+@@ -65,8 +67,10 @@ struct socfpga_periph_clk {
+ 	char *parent_name;
+ 	u32 fixed_div;
+ 	void __iomem *div_reg;
++	void __iomem *bypass_reg;
+ 	u32 width;      /* only valid if div_reg != 0 */
+ 	u32 shift;      /* only valid if div_reg != 0 */
++	u32 bypass_shift;      /* only valid if bypass_reg != 0 */
+ };
+ 
+ #endif /* SOCFPGA_CLK_H */
+diff --git a/drivers/clk/socfpga/stratix10-clk.h b/drivers/clk/socfpga/stratix10-clk.h
+new file mode 100644
+index 0000000..df52f5a
+--- /dev/null
++++ b/drivers/clk/socfpga/stratix10-clk.h
+@@ -0,0 +1,86 @@
++/* SPDX-License-Identifier:    GPL-2.0
++ *
++ * Copyright (C) 2017, Intel Corporation
 + */
-+void setup_mm_for_reboot(char mode)
-+{
-+	unsigned long pmdval;
-+	pgd_t *pgd;
-+	pmd_t *pmd;
-+	int i;
 +
-+	if (current->mm && current->mm->pgd)
-+		pgd = current->mm->pgd;
-+	else
-+		pgd = init_mm.pgd;
++#ifndef	__STRATIX10_CLK_H
++#define	__STRATIX10_CLK_H
 +
-+	for (i = 0; i < USER_PTRS_PER_PGD; i++) {
-+		pmdval = (i << PGDIR_SHIFT);
-+		pmd = pmd_offset(pgd + i, i << PGDIR_SHIFT);
-+		set_pmd(pmd, __pmd(pmdval));
-+	}
-+}
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/spinlock.h>
++
++struct platform_device;
++
++struct stratix10_clock_data {
++	struct clk_onecell_data	clk_data;
++	void __iomem		*base;
++};
++
++struct stratix10_pll_clock {
++	unsigned int		id;
++	const char		*name;
++	const char		*const *parent_names;
++	u8			num_parents;
++	unsigned long		flags;
++	unsigned long		offset;
++};
++
++struct stratix10_perip_c_clock {
++	unsigned int		id;
++	const char		*name;
++	const char		*parent_name;
++	const char		*const *parent_names;
++	u8			num_parents;
++	unsigned long		flags;
++	unsigned long		offset;
++};
++
++struct stratix10_perip_cnt_clock {
++	unsigned int		id;
++	const char		*name;
++	const char		*parent_name;
++	const char		*const *parent_names;
++	u8			num_parents;
++	unsigned long		flags;
++	unsigned long		offset;
++	u8			fixed_divider;
++	unsigned long		bypass_reg;
++	unsigned long		bypass_shift;
++};
++
++struct stratix10_gate_clock {
++	unsigned int		id;
++	const char		*name;
++	const char		*parent_name;
++	const char		*const *parent_names;
++	u8			num_parents;
++	unsigned long		flags;
++	unsigned long		gate_reg;
++	u8			gate_idx;
++	unsigned long		div_reg;
++	u8			div_offset;
++	u8			div_width;
++	unsigned long		bypass_reg;
++	u8			bypass_shift;
++	u8			fixed_div;
++};
++
++struct clk *s10_register_pll(const char *, const char *const *, u8,
++			     unsigned long, void __iomem *, unsigned long);
++
++struct clk *s10_register_periph(const char *, const char *,
++				const char * const *, u8, unsigned long,
++				void __iomem *, unsigned long);
++struct clk *s10_register_cnt_periph(const char *, const char *,
++				    const char * const *, u8,
++				    unsigned long, void __iomem *,
++				    unsigned long, u8, unsigned long,
++				    unsigned long);
++struct clk *s10_register_gate(const char *, const char *,
++			      const char * const *, u8,
++			      unsigned long, void __iomem *,
++			      unsigned long, unsigned long,
++			      unsigned long, unsigned long, u8,
++			      unsigned long, unsigned long, u8);
++#endif	/* __STRATIX10_CLK_H */
 -- 
-2.16.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
