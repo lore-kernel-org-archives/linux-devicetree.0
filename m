@@ -1,118 +1,191 @@
 From: <patrice.chotard@st.com>
-Subject: [PATCH v3 11/11] ARM: dts: STi: Remove unused clk_ext2f_a9 clock
-Date: Tue, 13 Feb 2018 13:53:37 +0100
-Message-ID: <1518526417-11919-12-git-send-email-patrice.chotard@st.com>
+Subject: [PATCH v3 02/11] ARM: dts: STi: Move leds node outside soc node
+Date: Tue, 13 Feb 2018 13:53:28 +0100
+Message-ID: <1518526417-11919-3-git-send-email-patrice.chotard@st.com>
 References: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 Cc: patrice.chotard@st.com
 List-Id: devicetree@vger.kernel.org
 
 From: Patrice Chotard <patrice.chotard@st.com>
 
-This clock node is unused, remove it.
+Leds are not part of soc, so nove them outside soc node.
 This allows to fix the following warnings when compiling
 dtb with W=1 option :
 
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /clocks/clockgen-c0 missing or empty reg/ranges property
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/leds missing or empty reg/ranges property
 
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /clocks/clockgen-c0 missing or empty reg/ranges property
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
+Node /soc/leds missing or empty reg/ranges property
 
 arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /clocks/clockgen-c0 missing or empty reg/ranges property
+Node /soc/leds missing or empty reg/ranges property
 
 Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 ---
 
 v3: _ none
-v2: _ remove clk_ext2f_a9 node
+v2: _ none
 
+ arch/arm/boot/dts/stih410-b2260.dts  | 49 ++++++++++++++++++------------------
+ arch/arm/boot/dts/stih418-b2199.dts  | 26 +++++++++----------
+ arch/arm/boot/dts/stihxxx-b2120.dtsi | 26 +++++++++----------
+ 3 files changed, 50 insertions(+), 51 deletions(-)
 
- arch/arm/boot/dts/stih407-clock.dtsi | 11 -----------
- arch/arm/boot/dts/stih410-clock.dtsi | 11 -----------
- arch/arm/boot/dts/stih418-clock.dtsi | 11 -----------
- 3 files changed, 33 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
-index 084c02926f33..ea7833489832 100644
---- a/arch/arm/boot/dts/stih407-clock.dtsi
-+++ b/arch/arm/boot/dts/stih407-clock.dtsi
-@@ -71,17 +71,6 @@
- 			};
+diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
+index faafc7b12951..69c2abcaeda8 100644
+--- a/arch/arm/boot/dts/stih410-b2260.dts
++++ b/arch/arm/boot/dts/stih410-b2260.dts
+@@ -29,36 +29,35 @@
+ 		ethernet0 = &ethernet0;
+ 	};
+ 
+-	soc {
+-
+-		leds {
+-			compatible = "gpio-leds";
+-			user_green_1 {
+-				label = "User_green_1";
+-				gpios = <&pio1 3 GPIO_ACTIVE_LOW>;
+-				linux,default-trigger = "heartbeat";
+-				default-state = "off";
+-			};
++	leds {
++		compatible = "gpio-leds";
++		user_green_1 {
++			label = "User_green_1";
++			gpios = <&pio1 3 GPIO_ACTIVE_LOW>;
++			linux,default-trigger = "heartbeat";
++			default-state = "off";
++		};
+ 
+-			user_green_2 {
+-				label = "User_green_2";
+-				gpios = <&pio4 1 GPIO_ACTIVE_LOW>;
+-				default-state = "off";
+-			};
++		user_green_2 {
++			label = "User_green_2";
++			gpios = <&pio4 1 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
+ 
+-			user_green_3 {
+-				label = "User_green_3";
+-				gpios = <&pio2 1 GPIO_ACTIVE_LOW>;
+-				default-state = "off";
+-			};
++		user_green_3 {
++			label = "User_green_3";
++			gpios = <&pio2 1 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
+ 
+-			user_green_4 {
+-				label = "User_green_4";
+-				gpios = <&pio2 5 GPIO_ACTIVE_LOW>;
+-				default-state = "off";
+-			};
++		user_green_4 {
++			label = "User_green_4";
++			gpios = <&pio2 5 GPIO_ACTIVE_LOW>;
++			default-state = "off";
+ 		};
++	};
+ 
++	soc {
+ 		/* Low speed expansion connector */
+ 		uart0: serial@9830000 {
+ 			label = "LS-UART0";
+diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
+index 5418a0ece659..1ce38ce79952 100644
+--- a/arch/arm/boot/dts/stih418-b2199.dts
++++ b/arch/arm/boot/dts/stih418-b2199.dts
+@@ -28,24 +28,24 @@
+ 		ethernet0 = &ethernet0;
+ 	};
+ 
++	leds {
++		compatible = "gpio-leds";
++		red {
++			label = "Front Panel LED";
++			gpios = <&pio4 1 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++		green {
++			gpios = <&pio1 3 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++	};
++
+ 	soc {
+ 		sbc_serial0: serial@9530000 {
+ 			status = "okay";
  		};
  
--		/*
--		 * Bootloader initialized system infrastructure clock for
--		 * serial devices.
--		 */
--		clk_ext2f_a9: clockgen-c0 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <200000000>;
--			clock-output-names = "clk-s-icn-reg-0";
+-		leds {
+-			compatible = "gpio-leds";
+-			red {
+-				label = "Front Panel LED";
+-				gpios = <&pio4 1 GPIO_ACTIVE_HIGH>;
+-				linux,default-trigger = "heartbeat";
+-			};
+-			green {
+-				gpios = <&pio1 3 GPIO_ACTIVE_HIGH>;
+-				default-state = "off";
+-			};
 -		};
 -
- 		clockgen-a@90ff000 {
- 			compatible = "st,clkgen-c32";
- 			reg = <0x90ff000 0x1000>;
-diff --git a/arch/arm/boot/dts/stih410-clock.dtsi b/arch/arm/boot/dts/stih410-clock.dtsi
-index b2c814f1261a..5f11d09cb030 100644
---- a/arch/arm/boot/dts/stih410-clock.dtsi
-+++ b/arch/arm/boot/dts/stih410-clock.dtsi
-@@ -71,17 +71,6 @@
- 			};
+ 		i2c@9842000 {
+ 			status = "okay";
+ 		};
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 68783e8223b8..1fd3a2b5b938 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -10,24 +10,24 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/media/c8sectpfe.h>
+ / {
++	leds {
++		compatible = "gpio-leds";
++		red {
++			label = "Front Panel LED";
++			gpios = <&pio4 1 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++		green {
++			gpios = <&pio1 3 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++	};
++
+ 	soc {
+ 		sbc_serial0: serial@9530000 {
+ 			status = "okay";
  		};
  
--		/*
--		 * Bootloader initialized system infrastructure clock for
--		 * serial devices.
--		 */
--		clk_ext2f_a9: clockgen-c0 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <200000000>;
--			clock-output-names = "clk-s-icn-reg-0";
+-		leds {
+-			compatible = "gpio-leds";
+-			red {
+-				label = "Front Panel LED";
+-				gpios = <&pio4 1 GPIO_ACTIVE_HIGH>;
+-				linux,default-trigger = "heartbeat";
+-			};
+-			green {
+-				gpios = <&pio1 3 GPIO_ACTIVE_HIGH>;
+-				default-state = "off";
+-			};
 -		};
 -
- 		clockgen-a@90ff000 {
- 			compatible = "st,clkgen-c32";
- 			reg = <0x90ff000 0x1000>;
-diff --git a/arch/arm/boot/dts/stih418-clock.dtsi b/arch/arm/boot/dts/stih418-clock.dtsi
-index a192608ff689..13fb8db52fc1 100644
---- a/arch/arm/boot/dts/stih418-clock.dtsi
-+++ b/arch/arm/boot/dts/stih418-clock.dtsi
-@@ -72,17 +72,6 @@
- 			};
+ 		pwm0: pwm@9810000 {
+ 			status = "okay";
  		};
- 
--		/*
--		 * Bootloader initialized system infrastructure clock for
--		 * serial devices.
--		 */
--		clk_ext2f_a9: clockgen-c0 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <200000000>;
--			clock-output-names = "clk-s-icn-reg-0";
--		};
--
- 		clockgen-a@90ff000 {
- 			compatible = "st,clkgen-c32";
- 			reg = <0x90ff000 0x1000>;
 -- 
 1.9.1
