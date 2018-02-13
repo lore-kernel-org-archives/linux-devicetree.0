@@ -1,53 +1,48 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: [PATCH v7 35/37] dt-bindings: interrupt-controller: Andestech Internal Vector Interrupt Controller
-Date: Tue, 13 Feb 2018 17:09:39 +0800
-Message-ID: <3fd9703061e1093ed5f678a98ad6caf17c2930eb.1518505384.git.greentime@andestech.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
-In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
-Cc: green.hu@gmail.com, Rick Chen <rick@andestech.com>
+From: Cosmin Samoila <cosmin.samoila@nxp.com>
+Subject: Re: [PATCH] ASoC: codecs: Add support for AK4458 DAC
+	driver
+Date: Tue, 13 Feb 2018 09:22:24 +0000
+Message-ID: <1518513744.25655.8.camel@nxp.com>
+References: <1517404809-25250-1-git-send-email-cosmin.samoila@nxp.com>
+ <20180131170330.GB7763@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180131170330.GB7763@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <EEEC3802193D804DA3A698232AF5AA61@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "broonie@kernel.org" <broonie@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wakasugi.jb@om.asahi-kasei.co.jp" <wakasugi.jb@om.asahi-kasei.co.jp>, dl-linux-imx <linux-imx@nxp.com>, "mihai.serban@nxp.com" <mihai.serban@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "mihai.serban@gmail.com" <mihai.serban@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds an irqchip driver document for the Andestech Internal Vector
-Interrupt Controller.
-
-Signed-off-by: Rick Chen <rick@andestech.com>
-Signed-off-by: Greentime Hu <greentime@andestech.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
----
- .../interrupt-controller/andestech,ativic32.txt       | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt b/Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
-new file mode 100644
-index 000000000000..f4b4193d830e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
-@@ -0,0 +1,19 @@
-+* Andestech Internal Vector Interrupt Controller
-+
-+The Internal Vector Interrupt Controller (IVIC) is a basic interrupt controller
-+suitable for a simpler SoC platform not requiring a more sophisticated and
-+bigger External Vector Interrupt Controller.
-+
-+
-+Main node required properties:
-+
-+- compatible : should at least contain  "andestech,ativic32".
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells: 1 cells and refer to interrupt-controller/interrupts
-+
-+Examples:
-+	intc: interrupt-controller {
-+		compatible = "andestech,ativic32";
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+	};
--- 
-2.16.1
+SGkgTWFyaywNCg0KPiA+IA0KPiA+ICtzdGF0aWMgaW50IGFrNDQ1OF9od19wYXJhbXMoc3RydWN0
+IHNuZF9wY21fc3Vic3RyZWFtICpzdWJzdHJlYW0sDQo+ID4gKwkJCcKgwqDCoMKgc3RydWN0IHNu
+ZF9wY21faHdfcGFyYW1zICpwYXJhbXMsDQo+ID4gKwkJCcKgwqDCoMKgc3RydWN0IHNuZF9zb2Nf
+ZGFpICpkYWkpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBzbmRfc29jX2NvZGVjICpjb2RlYyA9IGRh
+aS0+Y29kZWM7DQo+ID4gKwlzdHJ1Y3QgYWs0NDU4X3ByaXYgKmFrNDQ1OCA9DQo+ID4gc25kX3Nv
+Y19jb2RlY19nZXRfZHJ2ZGF0YShjb2RlYyk7DQo+ID4gKwl1OCBmb3JtYXQ7DQo+ID4gKwlpbnQg
+cGNtX3dpZHRoID0gbWF4KHBhcmFtc19waHlzaWNhbF93aWR0aChwYXJhbXMpLCBhazQ0NTgtDQo+
+ID4gPnNsb3Rfd2lkdGgpOw0KPiA+ICsNCj4gPiArI2lmZGVmIEFLNDQ1OF9BQ0tTX1VTRV9NQU5V
+QUxfTU9ERQ0KPiA+ICsJdTggZGZzMSwgZGZzMjsNCj4gPiArI2VuZGlmDQo+IFdoYXQncyB0aGlz
+IGFuZCB3aHkgaXMgaXQgYSBjb21waWxlIHRpbWUgb3B0aW9uPw0KDQpUaGlzIGlzIHVzZWQgdG8g
+c2V0IHRoZSBjb2RlYyBpbiBNYW51YWwgU2V0dGluZyBNb2RlLCBtZWFuaW5nIHRoYXQNCnRoZSBk
+ZWZhdWx0IHNhbXBsaW5nIHNwZWVkIGlzIHNldCBiYXNlZCBvbiBERlMwIGFuZCBERlMxIGJpdHMu
+IEluDQpBdXRvIFNldHRpbmcgTW9kZSwgdGhlIE1DTEsgZnJlcXVlbmN5IGlzIGRldGVjdGVkIGF1
+dG9tYXRpY2FsbHkgYW5kDQpERlMgYml0cyBhcmUgaWdub3JlZC4NClRoaXMgY29tcGlsZSB0aW1l
+IG9wdGlvbiBpcyB1c2VkIHRvIGtub3cgd2hlbiB0byBzZXQgdGhlIEFDS1MgYml0IGluDQppbml0
+X3JlZyBmdW5jdGlvbiB0aGF0IHN3aXRjaGVzIGJldHdlZW4gbW9kZXMuDQpBdCB0aGlzIG1vbWVu
+dCB3ZSBhcmUgb25seSB1c2luZyBBdXRvIE1vZGUgYW5kIEkgY2FuIHJlbW92ZSBpdCBpZg0KeW91
+IHRoaW5rIGlzIG5vdCBuZWNlc3NhcnkuDQoNClRoYW5rIHlvdSwNCkNvc21pbgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcg
+bGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9q
+ZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
