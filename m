@@ -1,62 +1,51 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 04/10] ARM: dts: sun[4-7]i: Remove
- "cooling-{min|max}-level" for CPU nodes
-Date: Tue, 13 Feb 2018 10:13:34 +0100
-Message-ID: <20180213091333.rq4rtvvkwppn5ypu@flea.lan>
-References: <cover.1518166039.git.viresh.kumar@linaro.org>
- <4d489d040ec1fc3821d8e4bf31ffcc2eebfa41e1.1518166039.git.viresh.kumar@linaro.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4d4boujzcki57u7y"
+From: Greentime Hu <green.hu@gmail.com>
+Subject: [PATCH v7 0/3] clocksource/drivers/atcpit100: Add andestech atcpit100 timer
+Date: Tue, 13 Feb 2018 17:13:16 +0800
+Message-ID: <cover.1518505425.git.greentime@andestech.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4d489d040ec1fc3821d8e4bf31ffcc2eebfa41e1.1518166039.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rafael Wysocki <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org
+To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
+Cc: green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Hi, all:
 
---4d4boujzcki57u7y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ATCPIT100 is often used on the Andes architecture,
+This timer provide 4 PIT channels. Each PIT channel is a
+multi-function timer, can be configured as 32,16,8 bit timers
+or PWM as well.
 
-On Fri, Feb 09, 2018 at 02:28:04PM +0530, Viresh Kumar wrote:
-> The "cooling-min-level" and "cooling-max-level" properties are not
-> parsed by any part of the kernel currently and the max cooling state of
-> a CPU cooling device is found by referring to the cpufreq table instead.
->=20
-> Remove the unused properties from the CPU nodes.
->=20
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+For system timer it will set channel 1 32-bit timer0 as clock
+source and count downwards until underflow and restart again.
 
-Applied, thanks!
-Maxime
+It also set channel 0 32-bit timer0 as clock event and count
+downwards until condition match. It will generate an interrupt
+for handling periodically.
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Changes in v7:
+ - Fix atcpit100_clkevt_next_event(), before set reload register,
+   clock source timer shall disable. And re-enable it after the setting.
+   Without this modification, the test case 'clock_nanosleep02' of ltp_20170929
+   will fail.
 
---4d4boujzcki57u7y
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v6:
+ - To select TIMER_OF in drivers/clocksource/Kconfig instead of arch/nds32/Kconfig
+ - Refine Kconfig
+ - Update license format to SPDX-License-Identifier
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqCrD0ACgkQ0rTAlCFN
-r3Smyg//QoNE7NIhBDcwyZ4ZhLCECasqLnAoCYZItq4CRCJ/FQ3imxHApe2RmK/W
-MKAcMtsAiIfQlenLAocUVkG/KZ2al6p5vqjMp1xz+vV6WLOeBOOfhVnEpYEhWuYz
-lJ/wlyULmzl1NQvCS+RB9y/VIbC8ppbjrzFpChBd0+4u6rA9bgS/0D41Z0bB7JNA
-uyGT1vAX3y3gR7jxUAQz6YiDFOSi6E46M6j/QOSKzG+LLYtvLc5NaBv/GyyJUOPe
-GCZkNyO+OMIZmRX7871wKlUwzkbsN5AIKd8V4GhmR3qmwzmK0JM2oSCkE/AoJVhq
-ajOM4yKT8SnVuowSBPzvP4dtj7uthg0CiFlXqVvpVjgoTz+Q81p6HIjJvnqSiv38
-8sem21Dii6M3sQgek4aV8s8gYMwODzyha2zP+oeq0SqeWfEKNXXNLsIJd9gYKyA3
-3FpUPOxoSDusTa+aCfww8TRj1s9ALWFJVBpbleirxIqDOr40u/k40Nwlzp4rEAOY
-DkrDbNpglmJ/HU/E10xFB7vAmUxggXT6RwBPdI5luZWnmpaWobATAs2RJ2WGdVWm
-AHF5kiFec8BO7BSTqudHUeU9bXJiwm9/MzDOFt51B0DUyW7T/vs3HlhykrfsbfJa
-p5ViZTApOwKXrj+bbm4EiRxiaoE4Y9wMbOGS2762azw2zzNTABw=
-=T13h
------END PGP SIGNATURE-----
+Rick Chen (3):
+  clocksource/drivers/atcpit100: Add andestech atcpit100 timer
+  clocksource/drivers/atcpit100: VDSO support
+  dt-bindings: timer: Add andestech atcpit100 timer binding doc
 
---4d4boujzcki57u7y--
+ .../bindings/timer/andestech,atcpit100-timer.txt   |  33 +++
+ drivers/clocksource/Kconfig                        |   9 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/timer-atcpit100.c              | 266 +++++++++++++++++++++
+ 4 files changed, 309 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/andestech,atcpit100-timer.txt
+ create mode 100644 drivers/clocksource/timer-atcpit100.c
+
+-- 
+2.16.1
