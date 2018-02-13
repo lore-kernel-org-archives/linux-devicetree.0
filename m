@@ -1,102 +1,140 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v7 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
- add/remove device
-Date: Tue, 13 Feb 2018 17:24:53 +0900
-Message-ID: <CAAFQd5DxYhkK61VDAesby6bT+FtG2nqsbHQRvxkhrsSS0KWtog@mail.gmail.com>
-References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org> <1517999482-17317-4-git-send-email-vivek.gautam@codeaurora.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: Add Spreadtrum EIC controller documentation
+Date: Tue, 13 Feb 2018 09:28:17 +0100
+Message-ID: <CACRpkdY1WDOr=BO-h4Us8k9n2d4cXHgBOAHTbUO5ggAoS3-dfA@mail.gmail.com>
+References: <e89b91042abbbcf04cb39a3350af000cc411eee1.1518076643.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1517999482-17317-4-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>"list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Greg KH <gregkh@linuxfoundation.org>, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e89b91042abbbcf04cb39a3350af000cc411eee1.1518076643.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
+Hi Baolin!
 
-Thanks for the patch. Please see my comments inline.
+Thank you for your patch.
 
-On Wed, Feb 7, 2018 at 7:31 PM, Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
-> From: Sricharan R <sricharan@codeaurora.org>
+On Thu, Feb 8, 2018 at 9:01 AM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+
+> This patch adds the device tree bindings for the Spreadtrum EIC
+> controller. The EIC can be recognized as one special type of GPIO,
+
+s/recognized as one/seen as a/g
+
+> which can only be used as input.
 >
-> The smmu device probe/remove and add/remove master device callbacks
-> gets called when the smmu is not linked to its master, that is without
-> the context of the master device. So calling runtime apis in those places
-> separately.
->
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> [vivek: Cleanup pm runtime calls]
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> ---
->  drivers/iommu/arm-smmu.c | 42 ++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 38 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 9e2f917e16c2..c024f69c1682 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -913,11 +913,15 @@ static void arm_smmu_destroy_domain_context(struct iommu_domain *domain)
->         struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->         struct arm_smmu_device *smmu = smmu_domain->smmu;
->         struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
-> -       int irq;
-> +       int ret, irq;
->
->         if (!smmu || domain->type == IOMMU_DOMAIN_IDENTITY)
->                 return;
->
-> +       ret = pm_runtime_get_sync(smmu->dev);
-> +       if (ret)
-> +               return;
+> Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-pm_runtime_get_sync() will return 0 if the device was powered off, 1
-if it was already/still powered on or runtime PM is not compiled in,
-or a negative value on error, so shouldn't the test be (ret < 0)?
+> +The EIC is the abbreviation of external interrupt controller, which
+> +is only can be used as input mode. The EIC controller includes 4
 
-Moreover, I'm actually wondering if it makes any sense to power up the
-hardware just to program it and power it down again. In a system where
-the IOMMU is located within a power domain, it would cause the IOMMU
-block to lose its state anyway.
+can be used only in input mode.
 
-Actually, reflecting back on "[PATCH v7 2/6] iommu/arm-smmu: Add
-pm_runtime/sleep ops", perhaps it would make more sense to just
-control the clocks independently of runtime PM? Then, runtime PM could
-be used for real power management, e.g. really powering the block up
-and down, for further power saving.
+> +sub-modules: EIC-Debounce, EIC-Latch, EIC-Async, EIC-Sync.
 
-+Generally similar comments for other places in this patch.
+Are they four sub-modules that are always synthesized into the
+silicon at the same time, or do you mean that when producing the
+hardware, the designer will choose one of these four types (it looks
+like that from the example).
 
 > +
->         /*
->          * Disable the context bank and free the page tables before freeing
->          * it.
-> @@ -932,6 +936,8 @@ static void arm_smmu_destroy_domain_context(struct iommu_domain *domain)
->
->         free_io_pgtable_ops(smmu_domain->pgtbl_ops);
->         __arm_smmu_free_bitmap(smmu->context_map, cfg->cbndx);
-> +
-> +       pm_runtime_put_sync(smmu->dev);
+> +The EIC-debounce sub-module provides up to 8 source input signal
+> +connection.
 
-Is there any point in the put being sync here?
+connections.
 
-[snip]
+> A debounce machanism is used to
 
-> @@ -2131,6 +2152,14 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->         if (err)
->                 return err;
->
-> +       platform_set_drvdata(pdev, smmu);
-> +
-> +       pm_runtime_enable(dev);
+mechanism
 
-I suspect this may be a disaster for systems where IOMMUs are located
-inside power domains, because the driver doesn't take care of the
-IOMMU block losing its state on physical power down, as I mentioned in
-my comments above.
+> capture input signal's
 
-Best regards,
-Tomasz
+capture the input signals'
+
+(note plural signals genitive)
+
+> +stable status (ms grade)
+
+is that millisecond resolution you mean?
+
+> and a single-trigger mechanism is introduced
+> +into this sub-module to enhance the input event detection reliability.
+> +In addition, this sub-module's clock can be shut-off automatically to
+
+no dash in "shut off"
+
+> +reduce power dissipation. The debounce range is from 1ms to 4s with
+> +the step of 1ms.
+
+a step size of
+
+> If the input signal is shorter than 1ms, it will be
+> +omitted as this sub-module.
+
+I don't understand the last part, do you mean the signal will be ignored
+if it is asserted for less than 1 ms?
+
+> +The EIC-latch sub-module is used to latch some special input signal
+
+signals (plural)
+
+What is special about them?
+
+> +and send interrupts to MCU core, and it can provide up to 8 latch
+> +source input signal connection.
+
+connections (plural)
+
+> +The EIC-async sub-module uses 32k clock
+
+a 32kHz clock
+
+> to capture short signal
+
+to capture the short signal
+
+> +(us grade)
+
+Do you mean "microsecond granularity"?
+
+> to generate interrupt to MCU by level or edge trigger.
+
+What is MCU? I think you can just omit it, it could be integrated
+elsewhere.
+
+> +The EIC-sync is similar with GPIO's input function.
+
+Do you mean that the EIC-sync module is a synchronized signal input
+register? Please write that.
+
+> +Required properties:
+> +- compatible: Should be one of the following:
+> +  "sprd,sc9860-eic-debounce",
+> +  "sprd,sc9860-eic-latch",
+> +  "sprd,sc9860-eic-async",
+> +  "sprd,sc9860-eic-sync",
+> +  "sprd,sc27xx-eic-debounce".
+
+So it looks like there is one at the time, so in the SC9860
+all four modules exist, but at different addresses?
+
+(...)
+> +Example:
+> +       eic_debounce: eic@40210000 {
+> +               compatible = "sprd,sc9860-eic-debounce";
+> +               reg = <0 0x40210000 0 0x80>;
+
+So does this mean that this is a debounced-only EIC?
+
+There are latch, async and sync versions somewhere else in
+memory? Or there could be? And they are never say debounce
+and latch at the same time? Etc?
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
