@@ -1,342 +1,98 @@
-From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-Subject: [PATCH v3 1/3] arm64: dts: uniphier: add sound node for UniPhier
-Date: Tue, 13 Feb 2018 22:01:54 +0900
-Message-ID: <20180213130156.27827-2-suzuki.katsuhiro@socionext.com>
-References: <20180213130156.27827-1-suzuki.katsuhiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180213130156.27827-1-suzuki.katsuhiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v6 09/26] soc: renesas: rcar-rst: Enable watchdog as reset trigger for Gen2
+Date: Tue, 13 Feb 2018 13:02:44 +0000
+Message-ID: <1518526964-7400-1-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <20180213081910.x5llcsmwza44u4ow@verge.net.au>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20180213081910.x5llcsmwza44u4ow@verge.net.au>
+Sender: linux-clk-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizi
 List-Id: devicetree@vger.kernel.org
 
-This patch adds audio controller, codec and simple card node of
-UniPhier AIO sound system for LD11/20 SoCs.
+This patch allows for platform specific quirks as some of the SoC need
+further customization for the watchdog to work properly, like for R-Car
+Gen2 and for RZ/G.
 
-Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 ---
+v5->v6:
+* rebased on top of renesas-devel-20180213-v4.16-rc1
 
-Changes in v3:
-  - Move sound and spdif-out nodes to root from soc node
-  - Use phandle of endpoint directly instead of port node
-  - Describe connections between AIO and EVEA in *.dtsi
-    because these cores are in inside of SoC
----
- .../boot/dts/socionext/uniphier-ld11-global.dts    | 25 ++++++
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   | 92 +++++++++++++++++++++
- .../boot/dts/socionext/uniphier-ld20-global.dts    | 25 ++++++
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   | 96 ++++++++++++++++++++++
- 4 files changed, 238 insertions(+)
+ drivers/soc/renesas/rcar-rst.c | 37 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts b/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
-index 2452b2243f42..fb6bf435dc96 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
-@@ -37,6 +37,27 @@
- 		device_type = "memory";
- 		reg = <0 0x80000000 0 0x40000000>;
- 	};
+diff --git a/drivers/soc/renesas/rcar-rst.c b/drivers/soc/renesas/rcar-rst.c
+index e2340eb..3413666 100644
+--- a/drivers/soc/renesas/rcar-rst.c
++++ b/drivers/soc/renesas/rcar-rst.c
+@@ -13,8 +13,18 @@
+ #include <linux/of_address.h>
+ #include <linux/soc/renesas/rcar-rst.h>
+ 
++#define WDTRSTCR_RESET		0xA55A0002
++#define WDTRSTCR		0x0054
 +
-+	sound {
-+		compatible = "audio-graph-card";
-+		label = "UniPhier LD11";
-+		widgets = "Headphone", "Headphone Jack";
++static int rcar_rst_enable_wdt_reset(void __iomem *base)
++{
++	iowrite32(WDTRSTCR_RESET, base + WDTRSTCR);
++	return 0;
++}
 +
-+		dais = <&i2s_port2
-+			&i2s_port4
-+			&spdif_port0>;
-+	};
-+
-+	spdif-out {
-+		compatible = "linux,spdif-dit";
-+		#sound-dai-cells = <0>;
-+
-+		port@0 {
-+			spdif_tx: endpoint {
-+				remote-endpoint = <&spdif_hiecout1>;
-+			};
-+		};
-+	};
+ struct rst_config {
+-	unsigned int modemr;	/* Mode Monitoring Register Offset */
++	unsigned int modemr;		/* Mode Monitoring Register Offset */
++	int (*configure)(void *base);	/* Platform specific configuration */
  };
  
- &serial0 {
-@@ -72,3 +93,7 @@
- &nand {
- 	status = "okay";
- };
-+
-+&spdif_hiecout1 {
-+	remote-endpoint = <&spdif_tx>;
+ static const struct rst_config rcar_rst_gen1 __initconst = {
+@@ -23,6 +33,11 @@ static const struct rst_config rcar_rst_gen1 __initconst = {
+ 
+ static const struct rst_config rcar_rst_gen2 __initconst = {
+ 	.modemr = 0x60,
++	.configure = rcar_rst_enable_wdt_reset,
 +};
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index cd7c2d0a1f64..f4eb1c6353a5 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -187,6 +187,90 @@
- 						     <21 217 3>;
- 		};
- 
-+		audio: audio@56000000 {
-+			compatible = "socionext,uniphier-ld11-aio";
-+			reg = <0x56000000 0x80000>;
-+			interrupts = <0 144 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_aout>;
-+			clock-names = "aio";
-+			clocks = <&sys_clk 40>;
-+			reset-names = "aio";
-+			resets = <&sys_rst 40>;
-+			#sound-dai-cells = <1>;
 +
-+			i2s_port0: port@0 {
-+				i2s_hdmi: endpoint {
-+				};
-+			};
-+
-+			i2s_port1: port@1 {
-+				i2s_pcmin2: endpoint {
-+				};
-+			};
-+
-+			i2s_port2: port@2 {
-+				i2s_line: endpoint {
-+					dai-format = "i2s";
-+					remote-endpoint = <&evea_line>;
-+				};
-+			};
-+
-+			i2s_port3: port@3 {
-+				i2s_hpcmout1: endpoint {
-+				};
-+			};
-+
-+			i2s_port4: port@4 {
-+				i2s_hp: endpoint {
-+					dai-format = "i2s";
-+					remote-endpoint = <&evea_hp>;
-+				};
-+			};
-+
-+			spdif_port0: port@5 {
-+				spdif_hiecout1: endpoint {
-+				};
-+			};
-+
-+			src_port0: port@6 {
-+				i2s_epcmout2: endpoint {
-+				};
-+			};
-+
-+			src_port1: port@7 {
-+				i2s_epcmout3: endpoint {
-+				};
-+			};
-+
-+			comp_spdif_port0: port@8 {
-+				comp_spdif_hiecout1: endpoint {
-+				};
-+			};
-+		};
-+
-+		evea: codec@57900000 {
-+			compatible = "socionext,uniphier-evea";
-+			reg = <0x57900000 0x1000>;
-+			clock-names = "evea", "exiv";
-+			clocks = <&sys_clk 41>, <&sys_clk 42>;
-+			reset-names = "evea", "exiv", "adamv";
-+			resets = <&sys_rst 41>, <&sys_rst 42>, <&adamv_rst 0>;
-+			#sound-dai-cells = <1>;
-+
-+			evea_line_port: port@0 {
-+				evea_line: endpoint {
-+					remote-endpoint = <&i2s_line>;
-+				};
-+			};
-+
-+			evea_hp_port: port@1 {
-+				evea_hp: endpoint {
-+					remote-endpoint = <&i2s_hp>;
-+				};
-+			};
-+		};
-+
- 		adamv@57920000 {
- 			compatible = "socionext,uniphier-ld11-adamv",
- 				     "simple-mfd", "syscon";
-@@ -475,3 +559,11 @@
++static const struct rst_config rcar_rst_gen3 __initconst = {
++	.modemr = 0x60,
  };
  
- #include "uniphier-pinctrl.dtsi"
-+
-+&pinctrl_aout {
-+	drive-strength = <4>;	/* default: 4mA */
-+	group_1 {
-+		pins = "AO1ARC";
-+		drive-strength = <8>;	/* 8mA */
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-index fc2bc9d75d35..2d49163cfde4 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
-@@ -37,6 +37,27 @@
- 		device_type = "memory";
- 		reg = <0 0x80000000 0 0xc0000000>;
- 	};
-+
-+	sound {
-+		compatible = "audio-graph-card";
-+		label = "UniPhier LD20";
-+		widgets = "Headphone", "Headphone Jack";
-+
-+		dais = <&i2s_port2
-+			&i2s_port4
-+			&spdif_port0>;
-+	};
-+
-+	spdif-out {
-+		compatible = "linux,spdif-dit";
-+		#sound-dai-cells = <0>;
-+
-+		port@0 {
-+			spdif_tx: endpoint {
-+				remote-endpoint = <&spdif_hiecout1>;
-+			};
-+		};
-+	};
+ static const struct of_device_id rcar_rst_matches[] __initconst = {
+@@ -38,12 +53,12 @@ static const struct of_device_id rcar_rst_matches[] __initconst = {
+ 	{ .compatible = "renesas,r8a7792-rst", .data = &rcar_rst_gen2 },
+ 	{ .compatible = "renesas,r8a7793-rst", .data = &rcar_rst_gen2 },
+ 	{ .compatible = "renesas,r8a7794-rst", .data = &rcar_rst_gen2 },
+-	/* R-Car Gen3 is handled like R-Car Gen2 */
+-	{ .compatible = "renesas,r8a7795-rst", .data = &rcar_rst_gen2 },
+-	{ .compatible = "renesas,r8a7796-rst", .data = &rcar_rst_gen2 },
+-	{ .compatible = "renesas,r8a77970-rst", .data = &rcar_rst_gen2 },
+-	{ .compatible = "renesas,r8a77980-rst", .data = &rcar_rst_gen2 },
+-	{ .compatible = "renesas,r8a77995-rst", .data = &rcar_rst_gen2 },
++	/* R-Car Gen3 */
++	{ .compatible = "renesas,r8a7795-rst", .data = &rcar_rst_gen3 },
++	{ .compatible = "renesas,r8a7796-rst", .data = &rcar_rst_gen3 },
++	{ .compatible = "renesas,r8a77970-rst", .data = &rcar_rst_gen3 },
++	{ .compatible = "renesas,r8a77980-rst", .data = &rcar_rst_gen3 },
++	{ .compatible = "renesas,r8a77995-rst", .data = &rcar_rst_gen3 },
+ 	{ /* sentinel */ }
  };
  
- &serial0 {
-@@ -54,3 +75,7 @@
- &nand {
- 	status = "okay";
- };
-+
-+&spdif_hiecout1 {
-+	remote-endpoint = <&spdif_tx>;
-+};
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index 8a3276ba2da1..9d0f23f100df 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -287,6 +287,90 @@
- 						     <21 217 3>;
- 		};
+@@ -72,6 +87,14 @@ static int __init rcar_rst_init(void)
+ 	rcar_rst_base = base;
+ 	cfg = match->data;
+ 	saved_mode = ioread32(base + cfg->modemr);
++	if (cfg->configure) {
++		error = cfg->configure(base);
++		if (error) {
++			pr_warn("%pOF: Cannot run SoC specific configuration\n",
++				np);
++			goto out_put;
++		}
++	}
  
-+		audio: audio@56000000 {
-+			compatible = "socionext,uniphier-ld20-aio";
-+			reg = <0x56000000 0x80000>;
-+			interrupts = <0 144 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_aout>;
-+			clock-names = "aio";
-+			clocks = <&sys_clk 40>;
-+			reset-names = "aio";
-+			resets = <&sys_rst 40>;
-+			#sound-dai-cells = <1>;
-+
-+			i2s_port0: port@0 {
-+				i2s_hdmi: endpoint {
-+				};
-+			};
-+
-+			i2s_port1: port@1 {
-+				i2s_pcmin2: endpoint {
-+				};
-+			};
-+
-+			i2s_port2: port@2 {
-+				i2s_line: endpoint {
-+					dai-format = "i2s";
-+					remote-endpoint = <&evea_line>;
-+				};
-+			};
-+
-+			i2s_port3: port@3 {
-+				i2s_hpcmout1: endpoint {
-+				};
-+			};
-+
-+			i2s_port4: port@4 {
-+				i2s_hp: endpoint {
-+					dai-format = "i2s";
-+					remote-endpoint = <&evea_hp>;
-+				};
-+			};
-+
-+			spdif_port0: port@5 {
-+				spdif_hiecout1: endpoint {
-+				};
-+			};
-+
-+			src_port0: port@6 {
-+				i2s_epcmout2: endpoint {
-+				};
-+			};
-+
-+			src_port1: port@7 {
-+				i2s_epcmout3: endpoint {
-+				};
-+			};
-+
-+			comp_spdif_port0: port@8 {
-+				comp_spdif_hiecout1: endpoint {
-+				};
-+			};
-+		};
-+
-+		evea: codec@57900000 {
-+			compatible = "socionext,uniphier-evea";
-+			reg = <0x57900000 0x1000>;
-+			clock-names = "evea", "exiv";
-+			clocks = <&sys_clk 41>, <&sys_clk 42>;
-+			reset-names = "evea", "exiv", "adamv";
-+			resets = <&sys_rst 41>, <&sys_rst 42>, <&adamv_rst 0>;
-+			#sound-dai-cells = <1>;
-+
-+			evea_line_port: port@0 {
-+				evea_line: endpoint {
-+					remote-endpoint = <&i2s_line>;
-+				};
-+			};
-+
-+			evea_hp_port: port@1 {
-+				evea_hp: endpoint {
-+					remote-endpoint = <&i2s_hp>;
-+				};
-+			};
-+		};
-+
- 		adamv@57920000 {
- 			compatible = "socionext,uniphier-ld20-adamv",
- 				     "simple-mfd", "syscon";
-@@ -528,3 +612,15 @@
- };
+ 	pr_debug("%pOF: MODE = 0x%08x\n", np, saved_mode);
  
- #include "uniphier-pinctrl.dtsi"
-+
-+&pinctrl_aout {
-+	drive-strength = <4>;	/* default: 3.5mA */
-+	group_1 {
-+		pins = "AO1DACCK";
-+		drive-strength = <5>;	/* 5mA */
-+	};
-+	group_2 {
-+		pins = "AO1ARC";
-+		drive-strength = <11>;	/* 11mA */
-+	};
-+};
 -- 
-2.15.1
+2.7.4
+
