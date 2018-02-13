@@ -1,69 +1,32 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH v2 10/12] ARM: dts: STi: Add fake reg property for clocks
-Date: Tue, 13 Feb 2018 12:58:52 +0000
-Message-ID: <ce036283-586b-0603-2c85-a502ed656e72@st.com>
-References: <1518446590-16800-1-git-send-email-patrice.chotard@st.com>
- <1518446590-16800-11-git-send-email-patrice.chotard@st.com>
- <CABGGisxgejFHj0xQq-aBQETt9CX3OzLc3ER_Y9nyrw7FeLdt6g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABGGisxgejFHj0xQq-aBQETt9CX3OzLc3ER_Y9nyrw7FeLdt6g@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <8B25772FB022A346B0B37143D353A66F@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <rob.herring@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH v3 0/3] add UniPhier audio nodes
+Date: Tue, 13 Feb 2018 22:01:53 +0900
+Message-ID: <20180213130156.27827-1-suzuki.katsuhiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Katsuhiro Suzuki <suzuki.katsuhiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iDQoNCk9uIDAyLzEyLzIwMTggMDQ6MjIgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBP
-biBNb24sIEZlYiAxMiwgMjAxOCBhdCA4OjQzIEFNLCAgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+
-IHdyb3RlOg0KPj4gRnJvbTogUGF0cmljZSBDaG90YXJkIDxwYXRyaWNlLmNob3RhcmRAc3QuY29t
-Pg0KPj4NCj4+IEZvciBhbGwgY2xvY2sncyBlbGVtZW50IGluc2lkZSBTb0MsIGFkZCBhIGZha2Ug
-cmVnIHByb3BlcnR5LA0KPj4gdGhpcyBhbGxvd3MgdG8gZml4IHRoZSBmb2xsb3dpbmcgd2Fybmlu
-Z3Mgd2hlbiBjb21waWxpbmcNCj4+IGR0YiB3aXRoIFc9MSBvcHRpb24gOg0KPj4NCj4+IGFyY2gv
-YXJtL2Jvb3QvZHRzL3N0aWg0MTAtYjIxMjAuZHRiOiBXYXJuaW5nIChzaW1wbGVfYnVzX3JlZyk6
-DQo+PiBOb2RlIC9jbG9ja3MvY2xrLW0tYTktcGVyaXBocyBtaXNzaW5nIG9yIGVtcHR5IHJlZy9y
-YW5nZXMgcHJvcGVydHkNCj4+IGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAtYjIxMjAuZHRiOiBX
-YXJuaW5nIChzaW1wbGVfYnVzX3JlZyk6DQo+PiBOb2RlIC9jbG9ja3MvY2xrLW0tYTktZXh0MmYt
-ZGl2MnMgbWlzc2luZyBvciBlbXB0eSByZWcvcmFuZ2VzIHByb3BlcnR5DQo+PiBhcmNoL2FybS9i
-b290L2R0cy9zdGloNDEwLWIyMTIwLmR0YjogV2FybmluZyAoc2ltcGxlX2J1c19yZWcpOg0KPj4g
-Tm9kZSAvY2xvY2tzL2Nsay10bWRzb3V0LWhkbWkgbWlzc2luZyBvciBlbXB0eSByZWcvcmFuZ2Vz
-IHByb3BlcnR5DQo+Pg0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxMC1iMjI2MC5kdGI6IFdh
-cm5pbmcgKHNpbXBsZV9idXNfcmVnKToNCj4+IE5vZGUgL2Nsb2Nrcy9jbGstbS1hOS1wZXJpcGhz
-IG1pc3Npbmcgb3IgZW1wdHkgcmVnL3JhbmdlcyBwcm9wZXJ0eQ0KPj4gYXJjaC9hcm0vYm9vdC9k
-dHMvc3RpaDQxMC1iMjI2MC5kdGI6IFdhcm5pbmcgKHNpbXBsZV9idXNfcmVnKToNCj4+IE5vZGUg
-L2Nsb2Nrcy9jbGstbS1hOS1leHQyZi1kaXYycyBtaXNzaW5nIG9yIGVtcHR5IHJlZy9yYW5nZXMg
-cHJvcGVydHkNCj4+IGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTAtYjIyNjAuZHRiOiBXYXJuaW5n
-IChzaW1wbGVfYnVzX3JlZyk6DQo+PiBOb2RlIC9jbG9ja3MvY2xrLXRtZHNvdXQtaGRtaSBtaXNz
-aW5nIG9yIGVtcHR5IHJlZy9yYW5nZXMgcHJvcGVydHkNCj4+DQo+PiBhcmNoL2FybS9ib290L2R0
-cy9zdGloNDE4LWIyMTk5LmR0YjogV2FybmluZyAoc2ltcGxlX2J1c19yZWcpOg0KPj4gTm9kZSAv
-Y2xvY2tzL2Nsay1tLWE5LXBlcmlwaHMgbWlzc2luZyBvciBlbXB0eSByZWcvcmFuZ2VzIHByb3Bl
-cnR5DQo+PiBhcmNoL2FybS9ib290L2R0cy9zdGloNDE4LWIyMTk5LmR0YjogV2FybmluZyAoc2lt
-cGxlX2J1c19yZWcpOg0KPj4gTm9kZSAvY2xvY2tzL2Nsay1tLWE5LWV4dDJmLWRpdjJzIG1pc3Np
-bmcgb3IgZW1wdHkgcmVnL3JhbmdlcyBwcm9wZXJ0eQ0KPj4gYXJjaC9hcm0vYm9vdC9kdHMvc3Rp
-aDQxOC1iMjE5OS5kdGI6IFdhcm5pbmcgKHNpbXBsZV9idXNfcmVnKToNCj4+IE5vZGUgL2Nsb2Nr
-cy9jbGstdG1kc291dC1oZG1pIG1pc3Npbmcgb3IgZW1wdHkgcmVnL3JhbmdlcyBwcm9wZXJ0eQ0K
-Pj4NCj4+IFNpZ25lZC1vZmYtYnk6IFBhdHJpY2UgQ2hvdGFyZCA8cGF0cmljZS5jaG90YXJkQHN0
-LmNvbT4NCj4+IC0tLQ0KPj4NCj4+IHYyOiBfIGFkZCBhIGZha2UgcmVnIHByb3BlcnR5IHRvIG5v
-ZGUgd2l0aG91dCByZWcgcHJvcGVydHkuDQo+Pg0KPj4gICBhcmNoL2FybS9ib290L2R0cy9zdGlo
-NDA3LWNsb2NrLmR0c2kgfCA5ICsrKysrKy0tLQ0KPj4gICBhcmNoL2FybS9ib290L2R0cy9zdGlo
-NDEwLWNsb2NrLmR0c2kgfCA5ICsrKysrKy0tLQ0KPj4gICBhcmNoL2FybS9ib290L2R0cy9zdGlo
-NDE4LWNsb2NrLmR0c2kgfCA5ICsrKysrKy0tLQ0KPj4gICAzIGZpbGVzIGNoYW5nZWQsIDE4IGlu
-c2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL3N0aWg0MDctY2xvY2suZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDct
-Y2xvY2suZHRzaQ0KPj4gaW5kZXggYjg4MmRjZjNhNjQ5Li4xYmJhNDdlMDZlYmUgMTAwNjQ0DQo+
-PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWNsb2NrLmR0c2kNCj4+ICsrKyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctY2xvY2suZHRzaQ0KPj4gQEAgLTI0LDkgKzI0LDEwIEBA
-DQo+PiAgICAgICAgICAgICAgICAgIC8qDQo+PiAgICAgICAgICAgICAgICAgICAqIEFSTSBQZXJp
-cGhlcmFsIGNsb2NrIGZvciB0aW1lcnMNCj4+ICAgICAgICAgICAgICAgICAgICovDQo+PiAtICAg
-ICAgICAgICAgICAgYXJtX3BlcmlwaF9jbGs6IGNsay1tLWE5LXBlcmlwaHMgew0KPj4gKyAgICAg
-ICAgICAgICAgIGFybV9wZXJpcGhfY2xrOiBjbGstbS1hOS1wZXJpcGhzQDAgew0KPj4gICAgICAg
-ICAgICAgICAgICAgICAgICAgICNjbG9jay1jZWxscyA9IDwwPjsNCj4+ICAgICAgICAgICAgICAg
-ICAgICAgICAgICBjb21wYXRpYmxlID0gImZpeGVkLWZhY3Rvci1jbG9jayI7DQo+PiArICAgICAg
-ICAgICAgICAgICAgICAgICByZWcgPSA8MCAwPjsNCj4gDQo+IERvbid0IGRvIHRoaXMuIFRoZSBj
-b3JyZWN0IGZpeCBpcyBjaGFuZ2UgdGhlIGxvY2F0aW9uIG9mIHRoZXNlIG5vZGVzDQo+IHRvIGJl
-IHVuZGVyIHdoYXRldmVyIGNvbnRyb2xzIHRoZW0uDQo+IA0KT2sgaSB3aWxsIHB1dCB0aGlzIG5v
-ZGUgYXMgYSBjaGlsZCBvZiBjbG9ja2dlbi1hOUA5MmIwMDAwDQoNClRoYW5rcw0KDQpQYXRyaWNl
-DQoNCj4gUm9iDQo+IA==
+This series adds device-tree nodes for Socionext audio system
+for UniPhier LD11/LD20 SoCs. This one enables I2S output for
+Line-In, Line-Out, S/PDIF output and compress audio output.
+
+Katsuhiro Suzuki (3):
+  arm64: dts: uniphier: add sound node for UniPhier
+  arm64: dts: uniphier: add speaker out for UniPhier LD11/LD20 boards
+  arm64: dts: uniphier: add compress audio out for UniPhier LD11/LD20
+
+ .../boot/dts/socionext/uniphier-ld11-global.dts    | 62 ++++++++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   | 92 +++++++++++++++++++++
+ .../boot/dts/socionext/uniphier-ld20-global.dts    | 62 ++++++++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   | 96 ++++++++++++++++++++++
+ 4 files changed, 312 insertions(+)
+
+-- 
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
