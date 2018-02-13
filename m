@@ -1,93 +1,94 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon
-	161010801 erratum(reserve HW MSI)
-Date: Tue, 13 Feb 2018 09:18:28 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA83864614F@FRAEML521-MBX.china.huawei.com>
-References: <20171214160957.13716-1-shameerali.kolothum.thodi@huawei.com>
-	<20180129153939.GC24972@arm.com>
-	<5FC3163CFD30C246ABAA99954A238FA83863FC88@FRAEML521-MBX.china.huawei.com>
-	<20180129162109.GA25266@arm.com>
+From: Emil Renner Berthing <emil.renner.berthing-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] Documentation: bindings: add usb3-host-disable and
+ usb3-host-port for Rockchip USB Type-C PHY
+Date: Tue, 13 Feb 2018 10:18:35 +0100
+Message-ID: <CANBLGcykb99SntD=C67_-iUoZZLeFfMw8jZWdF9fmFss3u24iA@mail.gmail.com>
+References: <20180208152028.9997-1-enric.balletbo@collabora.com>
+ <20180208152028.9997-2-enric.balletbo@collabora.com>
+ <CABGGisyaqV5HtTUL5LdjH3ZcU3_RTPmzMvEAhv5wZjCD_XCujg@mail.gmail.com>
+ <CAFqH_53-iN9m=U+WdQh6_rKyxE5c9RUQO9qD1QaY0QePM_pOZA@mail.gmail.com>
+ <CAL_JsqLvkPEm1mZaEfEVFEYMoGvOsbSQb8c35UvjmRTCwrCF8Q@mail.gmail.com>
+ <20180212212643.GA37044@ban.mtv.corp.google.com>
+ <CAL_Jsq+iqc8SB-=8mRbsvBg6XB+hjUcRrbEtUhDWiXVNZetcrA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180129162109.GA25266-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "xuwei (O)" <xuwei5-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "Guohanjun (Hanjun
-	Guo)" <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAL_Jsq+iqc8SB-=8mRbsvBg6XB+hjUcRrbEtUhDWiXVNZetcrA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
+On 12 February 2018 at 23:29, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Feb 12, 2018 at 3:26 PM, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On Mon, Feb 12, 2018 at 10:43:41AM -0600, Rob Herring wrote:
+>>> On Thu, Feb 8, 2018 at 3:23 PM, Enric Balletbo Serra
+>>> <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> > 2018-02-08 18:52 GMT+01:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>>> >> On Thu, Feb 8, 2018 at 9:20 AM, Enric Balletbo i Serra
+>>> >> <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>>> >>> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>> >>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+>>> >>> @@ -36,6 +36,12 @@ offset, enable bit, write mask bit.
+>>> >>>   - rockchip,uphy-dp-sel : the register of type-c phy enable DP function
+>>> >>>     for type-c phy0, it must be <0x6268 19 19>;
+>>> >>>     for type-c phy1, it must be <0x6268 3 19>;
+>>> >>> + - rockchip,usb3-host-disable : the register of type-c phy disable usb3 host
+>>> >>> +   for type-c phy0, it must be <0x2434 0 16>;
+>>> >>> +   for type-c phy1, it must be <0x2444 0 16>;
+>>> >>> + - rockchip,usb3-host-port : the register of type-c phy usb3 port number
+>>> >>> +   for type-c phy0, it must be <0x2434 12 28>;
+>>> >>> +   for type-c phy1, it must be <0x2444 12 28>;
+>>> >>
+>>> >> When does this list stop? Adding properties for various register
+>>> >> fields doesn't scale. This information should be in the driver and
+>>> >> based on the compatible string if necessary.
+>>> >>
+>>> >
+>>> > I see, seams reasonable to me, is this applicable to the new ones only
+>>> > or I should get rid of all the proprieties like this from the DT
+>>> > (including the old ones)?
+>>>
+>>> We're already kind of stuck with the existing ones. So it depends if
+>>> people want to phase them out or not.
+>>
+>> FWIW, any Chrome{device} using these sort of bindings is perfectly
+>> capable of handling changed bindings (we ship DTBs with the kernel). But
+>> that's not typically how mainline covers binding deprecation.
+>
+> If it's CrOS only that's using these, then it's really up to you all.
+> I guess it depends if many folks are trying to run mainline on CrOS
+> devices and don't necessarily keep things in sync.
 
-> -----Original Message-----
-> From: Will Deacon [mailto:will.deacon-5wv7dgnIgG8@public.gmane.org]
-> Sent: Monday, January 29, 2018 4:21 PM
-> To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; robin.murphy-5wv7dgnIgG8@public.gmane.org;
-> marc.zyngier-5wv7dgnIgG8@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; John Garry
-> <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; xuwei (O) <xuwei5-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; Guohanjun
-> (Hanjun Guo) <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org;
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Subject: Re: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon
-> 161010801 erratum(reserve HW MSI)
-> 
-> On Mon, Jan 29, 2018 at 04:16:33PM +0000, Shameerali Kolothum Thodi wrote:
-> > > -----Original Message-----
-> > > From: Will Deacon [mailto:will.deacon-5wv7dgnIgG8@public.gmane.org]
-> > > Sent: Monday, January 29, 2018 3:40 PM
-> > > To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > > Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org; robin.murphy-5wv7dgnIgG8@public.gmane.org;
-> > > marc.zyngier-5wv7dgnIgG8@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org; John Garry
-> > > <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; xuwei (O) <xuwei5-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; Guohanjun
-> > > (Hanjun Guo) <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
-> foundation.org;
-> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > > Subject: Re: [PATCH v12 0/3] iommu/smmu-v3: Workaround for hisilicon
-> > > 161010801 erratum(reserve HW MSI)
-> > > On Thu, Dec 14, 2017 at 04:09:54PM +0000, Shameer Kolothum wrote:
-> > > > On certain HiSilicon platforms (hip06/hip07) the GIC ITS and PCIe RC
-> > > > deviates from the standard implementation and this breaks PCIe MSI
-> > > > functionality when SMMU is enabled.
-> > > >
-[...]
+For what it's worth I run mainline on my Chromebook Plus (rk3399-gru-kevin),
+but in order to have a somewhat working setup you need to run
+4.16-rc1 + various patches from the rockchip mailing list which means
+you have to keep up with the latest mainline (both kernel and devicetree)
+anyway. So I'm all in favour of cleaning up the devicetree.
 
-> > > It occurred to me this morning that this series probably isn't queued
-> anywhere
-> > > because it's not obvious which tree is supposed to take it and I can't see it in
-> -
-> > > next.
-> > >
-> > > Is this one for arm64, IOMMU, irqchip or something else? It's probably
-> missed
-> > > the boat for 4.16 now...
-> > >
-> >
-> > I have been trying to ping you guys on this[1]. My expectation was that it will
-> be
-> > through IOMMU. Anyway missed the boat now, I will re-spin for 4.17.
-> 
-> The problem with "ping" emails is that they don't really mean anything. In
-> this case, everybody probably assumed somebody else was picking it up so you
-> didn't get a reply.
-> 
-> Joerg may be ok pulling this, but it's odd to have dts changes going via his
-> tree. You might want to split those out, at least. Talk to him.
-
-As this series missed out from the PULL request, I am preparing to send this again.
-Please let me know, you are ok with the dts changes being part of this or would like
-to split it.
-
-Thanks,
-Shameer
+>> If we're going to start recommending not putting these offsets in the
+>> DT, I'd vote for deprecating them, for consistency. (Otherwise, we'll
+>> keep running into this same question.) We only documented the RK3399
+>> ("rockchip,rk3399-typec-phy") binding, so all users should have the same
+>> offsets. I dunno if/how we pick a time for eventually removing the
+>> bindings entirely.
+>
+> Yes, makes sense.
+>
+> Rob
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
