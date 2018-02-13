@@ -1,61 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: RFC: build config via DT names
-Date: Tue, 13 Feb 2018 09:19:41 -0600
-Message-ID: <CAL_JsqJXJA+Z7b6SoUx=MVK_C=vcMRAibapriOi+Wss6L1ahsw@mail.gmail.com>
-References: <63f25fea-f163-f9cc-b5b2-f6f291d7f8d2@gmx.de> <d55f95cc-228b-e65f-b46c-2f314f4fa582@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Remove leading 0x and 0s from bindings notation
+Date: Tue, 13 Feb 2018 09:32:55 -0600
+Message-ID: <CAL_JsqLyv5io+iXWnzmUhZ1r=PBnA=MdZet8idJDmL8XphxThA@mail.gmail.com>
+References: <20171214165352.27902-1-malat@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d55f95cc-228b-e65f-b46c-2f314f4fa582-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20171214165352.27902-1-malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Enrico Weigelt, metux IT consult" <metux-Mmb7MZpHnFY@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 12, 2018 at 5:13 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> + devicetree mail list
+On Thu, Dec 14, 2017 at 10:53 AM, Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
+> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> following dtc warnings:
 >
-> On 02/10/18 07:52, Enrico Weigelt, metux IT consult wrote:
->> Hi folks,
->>
->> I've regularily have the task of configuring a kernel for a given DT.
->> To make this a little bit easier, I'd like to do this automatically.
->>
->> The tuff task here is getting a mapping between dt compatible strings
->> and corresponding CONFIG_* flags. Automatically extracting it from the
->> source code seems pretty tricky, especially w/ corner cases (eg. some
->> drivers support groups of devices, depending on config options) - IMHO
->> it will need some code changes anyways.
->>
->> Therefore I propose a simple approach using the existing Kconfig system:
->>
->> Add an extra (toplevel) menu and config flag naming scheme which
->> directly map DT compatible strings to config flags. For example:
->>
->>> fsl,mpc5200-gpio <=> CONFIG_DTDEV_FSL_MPC5200_GPIO
->>
->>> config CONFIG_DTDEV_FSL_MPC5200_GPIO
->>>    tristate "fsl,mpc5200-gpio"
->>>    select GPIO_MPC5200
->>
->> Note that these flags are separate from the actual drivers - they just
->> enable them automatically. Of course they'll have to be maintained by
->> the driver maintainers.
->>
->>
->> What do you think about this idea ?
+> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+>
+> and
+>
+> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+>
+> Converted using the following command:
+>
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -E -i -e "s/@0x([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" -e "s/@0+([0-9a-fA-F\.]+)\s?\{/@\L\1 \{/g" {} +
+>
+> For simplicity, two sed expressions were used to solve each warnings separately.
+>
+> To make the regex expression more robust a few other issues were resolved,
+> namely setting unit-address to lower case, and adding a whitespace before the
+> the opening curly brace:
+>
+> https://elinux.org/Device_Tree_Linux#Linux_conventions
+>
+> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+>
+> Reported-by: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Mathieu Malaterre <malat-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 2 +-
+>  arch/arm64/boot/dts/mediatek/mt8173.dtsi       | 2 +-
+>  arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi   | 6 +++---
+>  arch/arm64/boot/dts/qcom/msm8996.dtsi          | 6 +++---
+>  4 files changed, 8 insertions(+), 8 deletions(-)
 
-Doubling the number of driver config options is not going to fly. How
-would you handle multiple compatible strings per driver? We want fewer
-config options, not more.
+Arnd, Olof, Looks like this got missed. Can you pick up for 4.16.
 
-We have all the data, so we should be able to generate this which
-dt_to_config tries to do. I think part of the problem is dt_to_config
-works at the source level for everything. Really we need a more robust
-way to map source files to config options and extracting match tables
-from drivers. Perhaps doing the latter with coccinelle which can match
-struct types, using the object files instead, or using module aliases
-(though that doesn't work for built-in drivers).
+There's some arm32 ones too, but most of them need to be respun to
+mention upper to lower case fixes.
 
 Rob
 --
