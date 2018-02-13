@@ -1,88 +1,171 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 00/26] Fix watchdog on Renesas R-Car Gen2 and RZ/G1
-Date: Tue, 13 Feb 2018 09:05:12 +0100
-Message-ID: <20180213080512.huhc6pkowhie74nq@verge.net.au>
-References: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: "Tian, Kevin" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH 04/37] iommu/sva: Add a mm_exit callback for device
+ drivers
+Date: Tue, 13 Feb 2018 08:11:03 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D1910028F9@SHSMSX101.ccr.corp.intel.com>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+ <20180212183352.22730-5-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Ramesh
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180212183352.22730-5-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "sudeep.holla-5wv7dgnIgG8@public.gmane.org" <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org" <tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, xieyisheng1-hv44wF8Li91hl2p70BpVqQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 12, 2018 at 05:44:09PM +0000, Fabrizio Castro wrote:
-> Dear All,
+> From: Jean-Philippe Brucker
+> Sent: Tuesday, February 13, 2018 2:33 AM
 > 
-> this series has been around for some time as RFC, and it has collected
-> useful comments from the community along the way.
-> The solution proposed by this patch set works for most R-Car Gen2 and
-> RZ/G1 devices, but not all of them. We now know that for some R-Car
-> Gen2 early revisions there is no proper software fix. Anyway, no
-> product has been built around early revisions, but development boards
-> mounting early revisions (basically prototypes) are still out there.
-> As a result, this series isn't enabling the internal watchdog on R-Car
-> Gen2 boards, developers may enable it in board specific device trees
-> if needed.
-> This series has been tested by me on the iwg20d, iwg22d, Lager, Alt,
-> and Koelsch boards.
-> 
-> The problem
-> ===========
-> To deal with SMP on R-Car Gen2 and RZ/G1, we install a reset vector
-> to ICRAM1 and we program the [S]BAR registers so that when we turn ON
-> the non-boot CPUs they are redirected to the reset vector installed by
-> Linux in ICRAM1, and eventually they continue the execution to RAM,
-> where the SMP bring-up code will take care of the rest.
-> The content of the [S]BAR registers survives a watchdog triggered reset,
-> and as such after the watchdog fires the boot core will try and execute
-> the SMP bring-up code instead of jumping to the bootrom code.
-> 
-> The fix
-> =======
-> The main strategy for the solution is to let the reset vector decide
-> if it needs to jump to shmobile_boot_fn or to the bootrom code.
-> In a watchdog triggered reset scenario, since the [S]BAR registers keep
-> their values, the boot CPU will jump into the newly designed reset
-> vector, the assembly routine will eventually test WOVF (a bit in register
-> RWTCSRA that indicates if the watchdog counter has overflown, the value
-> of this bit gets retained in this scenario), and jump to the bootrom code
-> which will in turn load up the bootloader, etc.
-> When bringing up SMP or using CPU hotplug, the reset vector will jump
-> to shmobile_boot_fn instead.
-> 
-> Thank you All for your help.
-> 
-> Best regards,
-> 
-> Fabrizio Castro (26):
->   ARM: shmobile: Add watchdog support
->   ARM: dts: r8a7743: Adjust SMP routine size
->   ARM: dts: r8a7745: Adjust SMP routine size
->   ARM: dts: r8a7790: Adjust SMP routine size
->   ARM: dts: r8a7791: Adjust SMP routine size
->   ARM: dts: r8a7792: Adjust SMP routine size
->   ARM: dts: r8a7793: Adjust SMP routine size
->   ARM: dts: r8a7794: Adjust SMP routine size
->   soc: renesas: rcar-rst: Enable watchdog as reset trigger for Gen2
->   ARM: shmobile: rcar-gen2: Add watchdog support
->   dt-bindings: watchdog: renesas-wdt: Add R-Car Gen2 support
->   watchdog: renesas_wdt: Add R-Car Gen2 support
->   watchdog: renesas_wdt: Add restart handler
->   ARM: shmobile: defconfig: Enable RENESAS_WDT_GEN
->   clk: renesas: r8a7743: Add rwdt clock
->   clk: renesas: r8a7745: Add rwdt clock
->   clk: renesas: r8a7790: Add rwdt clock
->   clk: renesas: r8a7791/r8a7793: Add rwdt clock
->   clk: renesas: r8a7794: Add rwdt clock
->   ARM: dts: r8a7743: Add watchdog support to SoC dtsi
->   ARM: dts: r8a7745: Add watchdog support to SoC dtsi
->   ARM: dts: r8a7790: Add watchdog support to SoC dtsi
->   ARM: dts: r8a7791: Add watchdog support to SoC dtsi
->   ARM: dts: r8a7794: Add watchdog support to SoC dtsi
->   ARM: dts: iwg20m: Add watchdog support to SoM dtsi
->   ARM: dts: iwg22m: Add watchdog support to SoM dtsi
+> When an mm exits, devices that were bound to it must stop performing
+> DMA
+> on its PASID. Let device drivers register a callback to be notified on mm
+> exit. Add the callback to the iommu_param structure attached to struct
+> device.
 
-Thanks, I have applied the above "dts" and "defconfig" patches for v4.17.
+what about registering the callback in sva_device_init? 
+
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/iommu/iommu-sva.c | 54
+> +++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/iommu.h     | 18 ++++++++++++++++
+>  2 files changed, 72 insertions(+)
+> 
+> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
+> index f9af9d66b3ed..90b524c99d3d 100644
+> --- a/drivers/iommu/iommu-sva.c
+> +++ b/drivers/iommu/iommu-sva.c
+> @@ -569,3 +569,57 @@ void __iommu_sva_unbind_dev_all(struct device
+> *dev)
+>  	spin_unlock(&iommu_sva_lock);
+>  }
+>  EXPORT_SYMBOL_GPL(__iommu_sva_unbind_dev_all);
+> +
+> +/**
+> + * iommu_register_mm_exit_handler() - Set a callback for mm exit
+> + * @dev: the device
+> + * @handler: exit handler
+> + *
+> + * Users of the bind/unbind API should call this function to set a
+> + * device-specific callback telling them when a mm is exiting.
+> + *
+> + * After the callback returns, the device must not issue any more
+> transaction
+> + * with the PASID given as argument to the handler. In addition the
+> handler gets
+> + * an opaque pointer corresponding to the drvdata passed as argument of
+> bind().
+> + *
+> + * The handler itself should return 0 on success, and an appropriate error
+> code
+> + * otherwise.
+> + */
+> +int iommu_register_mm_exit_handler(struct device *dev,
+> +				   iommu_mm_exit_handler_t handler)
+> +{
+> +	struct iommu_param *dev_param = dev->iommu_param;
+> +
+> +	if (!dev_param)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * FIXME: racy. Same as iommu_sva_device_init, but here we'll
+> need a
+> +	 * spinlock to call the mm_exit param from atomic context.
+> +	 */
+> +	if (dev_param->mm_exit)
+> +		return -EBUSY;
+> +
+> +	get_device(dev);
+> +	dev_param->mm_exit = handler;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_register_mm_exit_handler);
+> +
+> +/**
+> + * iommu_unregister_mm_exit_handler() - Remove mm exit callback
+> + */
+> +int iommu_unregister_mm_exit_handler(struct device *dev)
+> +{
+> +	struct iommu_param *dev_param = dev->iommu_param;
+> +
+> +	if (!dev_param || !dev_param->mm_exit)
+> +		return -EINVAL;
+> +
+> +	dev_param->mm_exit = NULL;
+> +	put_device(dev);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_unregister_mm_exit_handler);
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 09d85f44142a..1b1a16892ac1 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -65,6 +65,8 @@ typedef int (*iommu_dev_fault_handler_t)(struct
+> iommu_fault_event *, void *);
+>  /* Request I/O page fault support */
+>  #define IOMMU_SVA_FEAT_IOPF		(1 << 1)
+> 
+> +typedef int (*iommu_mm_exit_handler_t)(struct device *dev, int pasid,
+> void *);
+> +
+>  struct iommu_domain_geometry {
+>  	dma_addr_t aperture_start; /* First address that can be mapped
+> */
+>  	dma_addr_t aperture_end;   /* Last address that can be mapped
+> */
+> @@ -424,6 +426,7 @@ struct iommu_param {
+>  	unsigned int min_pasid;
+>  	unsigned int max_pasid;
+>  	struct list_head mm_list;
+> +	iommu_mm_exit_handler_t mm_exit;
+>  };
+> 
+>  int  iommu_device_register(struct iommu_device *iommu);
+> @@ -941,6 +944,10 @@ extern int iommu_sva_bind_device(struct device
+> *dev, struct mm_struct *mm,
+>  				int *pasid, unsigned long flags, void
+> *drvdata);
+>  extern int iommu_sva_unbind_device(struct device *dev, int pasid);
+>  extern void __iommu_sva_unbind_dev_all(struct device *dev);
+> +extern int iommu_register_mm_exit_handler(struct device *dev,
+> +					  iommu_mm_exit_handler_t
+> handler);
+> +extern int iommu_unregister_mm_exit_handler(struct device *dev);
+> +
+>  #else /* CONFIG_IOMMU_SVA */
+>  static inline int iommu_sva_device_init(struct device *dev,
+>  					unsigned long features,
+> @@ -969,6 +976,17 @@ static inline int iommu_sva_unbind_device(struct
+> device *dev, int pasid)
+>  static inline void __iommu_sva_unbind_dev_all(struct device *dev)
+>  {
+>  }
+> +
+> +static inline int iommu_register_mm_exit_handler(struct device *dev,
+> +						 iommu_mm_exit_handler_t
+> handler)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline int iommu_unregister_mm_exit_handler(struct device *dev)
+> +{
+> +	return -ENODEV;
+> +}
+>  #endif /* CONFIG_IOMMU_SVA */
+> 
+>  #endif /* __LINUX_IOMMU_H */
+> --
+> 2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
