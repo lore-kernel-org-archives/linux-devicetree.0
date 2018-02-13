@@ -1,67 +1,81 @@
-From: Greentime Hu <green.hu@gmail.com>
-Subject: [PATCH v7 03/37] sparc: io: To use the define of ioremap_[nocache|wc|wb] in asm-generic/io.h
-Date: Tue, 13 Feb 2018 17:09:07 +0800
-Message-ID: <4bb01fd533c66c357f3dc23a64f56414109a2aad.1518505384.git.greentime@andestech.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
-In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
-References: <cover.1518505384.git.greentime@andestech.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
-Cc: green.hu@gmail.com
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v7 6/6] drm/msm: iommu: Replace runtime calls with runtime
+ suppliers
+Date: Tue, 13 Feb 2018 18:10:38 +0900
+Message-ID: <CAAFQd5AjopiX6fDgD+mO+-+d0yj-swEnVCNvccWRBSMO+XVJkA@mail.gmail.com>
+References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1517999482-17317-7-git-send-email-vivek.gautam@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1517999482-17317-7-git-send-email-vivek.gautam@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>,
+ Joerg Roedel <joro@8bytes.org>, " <iommu@lists.linux-foundation.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, freedreno@lists.freedesktop.org, Robin Murphy <robin.murphy@arm.com>, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A commit for the nds32 architecture bootstrap("asm-generic/io.h: move
-ioremap_nocache/ioremap_uc/ioremap_wc/ioremap_wt out of	ifndef CONFIG_MMU")
-will move the ioremap_nocache out of the CONFIG_MMU ifdef. This means that
-in order to suppress re-definition errors we need to remove the #define
-in io_32.h.
-
-Also, the change adds a prototype for ioremap where size is size_t and
-offset is phys_addr_t so fix that as well.
-
-Signed-off-by: Greentime Hu <greentime@andestech.com>
----
- arch/sparc/include/asm/io_32.h | 5 -----
- arch/sparc/kernel/ioport.c     | 4 ++--
- 2 files changed, 2 insertions(+), 7 deletions(-)
-
-diff --git a/arch/sparc/include/asm/io_32.h b/arch/sparc/include/asm/io_32.h
-index cd51a89b393c..df2dc1784673 100644
---- a/arch/sparc/include/asm/io_32.h
-+++ b/arch/sparc/include/asm/io_32.h
-@@ -127,12 +127,7 @@ static inline void sbus_memcpy_toio(volatile void __iomem *dst,
-  * Bus number may be embedded in the higher bits of the physical address.
-  * This is why we have no bus number argument to ioremap().
-  */
--void __iomem *ioremap(unsigned long offset, unsigned long size);
--#define ioremap_nocache(X,Y)	ioremap((X),(Y))
--#define ioremap_wc(X,Y)		ioremap((X),(Y))
--#define ioremap_wt(X,Y)		ioremap((X),(Y))
- void iounmap(volatile void __iomem *addr);
--
- /* Create a virtual mapping cookie for an IO port range */
- void __iomem *ioport_map(unsigned long port, unsigned int nr);
- void ioport_unmap(void __iomem *);
-diff --git a/arch/sparc/kernel/ioport.c b/arch/sparc/kernel/ioport.c
-index 7eeef80c02f7..3bcef9ce74df 100644
---- a/arch/sparc/kernel/ioport.c
-+++ b/arch/sparc/kernel/ioport.c
-@@ -122,12 +122,12 @@ static void xres_free(struct xresource *xrp) {
-  *
-  * Bus type is always zero on IIep.
-  */
--void __iomem *ioremap(unsigned long offset, unsigned long size)
-+void __iomem *ioremap(phys_addr_t offset, size_t size)
- {
- 	char name[14];
- 
- 	sprintf(name, "phys_%08x", (u32)offset);
--	return _sparc_alloc_io(0, offset, size, name);
-+	return _sparc_alloc_io(0, (unsigned long)offset, size, name);
- }
- EXPORT_SYMBOL(ioremap);
- 
--- 
-2.16.1
+SGkgVml2ZWssCgpUaGFua3MgZm9yIHRoZSBwYXRjaC4gUGxlYXNlIHNlZSBteSBjb21tZW50cyBp
+bmxpbmUuCgpPbiBXZWQsIEZlYiA3LCAyMDE4IGF0IDc6MzEgUE0sIFZpdmVrIEdhdXRhbQo8dml2
+ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiBXaGlsZSBoYW5kbGluZyB0aGUgY29u
+Y2VybmVkIGlvbW11LCB0aGVyZSBzaG91bGQgbm90IGJlIGEKPiBuZWVkIHRvIHBvd2VyIGNvbnRy
+b2wgdGhlIGRybSBkZXZpY2VzIGZyb20gaW9tbXUgaW50ZXJmYWNlLgo+IElmIHRoZXNlIGRybSBk
+ZXZpY2VzIG5lZWQgdG8gYmUgcG93ZXJlZCBhcm91bmQgdGhpcyB0aW1lLAo+IHRoZSByZXNwZWN0
+aXZlIGRyaXZlcnMgc2hvdWxkIHRha2UgY2FyZSBvZiB0aGlzLgo+Cj4gUmVwbGFjZSB0aGUgcG1f
+cnVudGltZV9nZXQvcHV0X3N5bmMoPGRybV9kZXZpY2U+KSB3aXRoCj4gcG1fcnVudGltZV9nZXQv
+cHV0X3N1cHBsaWVycyg8ZHJtX2RldmljZT4pIGNhbGxzLCB0byBwb3dlci11cAo+IHRoZSBjb25u
+ZWN0ZWQgaW9tbXUgdGhyb3VnaCB0aGUgZGV2aWNlIGxpbmsgaW50ZXJmYWNlLgo+IEluIGNhc2Ug
+dGhlIGRldmljZSBsaW5rIGlzIG5vdCBzZXR1cCB0aGVzZSBnZXQvcHV0X3N1cHBsaWVycygpCj4g
+Y2FsbHMgd2lsbCBiZSBhIG5vLW9wLCBhbmQgdGhlIGlvbW11IGRyaXZlciBzaG91bGQgdGFrZSBj
+YXJlIG9mCj4gcG93ZXJpbmcgb24gaXRzIGRldmljZXMgYWNjb3JkaW5nbHkuCj4KPiBTaWduZWQt
+b2ZmLWJ5OiBWaXZlayBHYXV0YW0gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0K
+PiAgZHJpdmVycy9ncHUvZHJtL21zbS9tc21faW9tbXUuYyB8IDE2ICsrKysrKysrLS0tLS0tLS0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkKPgo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9pb21tdS5jIGIvZHJpdmVycy9ncHUv
+ZHJtL21zbS9tc21faW9tbXUuYwo+IGluZGV4IGIyM2QzMzYyMmYzNy4uMWFiNjI5YmJlZTY5IDEw
+MDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2lvbW11LmMKPiArKysgYi9kcml2
+ZXJzL2dwdS9kcm0vbXNtL21zbV9pb21tdS5jCj4gQEAgLTQwLDkgKzQwLDkgQEAgc3RhdGljIGlu
+dCBtc21faW9tbXVfYXR0YWNoKHN0cnVjdCBtc21fbW11ICptbXUsIGNvbnN0IGNoYXIgKiBjb25z
+dCAqbmFtZXMsCj4gICAgICAgICBzdHJ1Y3QgbXNtX2lvbW11ICppb21tdSA9IHRvX21zbV9pb21t
+dShtbXUpOwo+ICAgICAgICAgaW50IHJldDsKPgo+IC0gICAgICAgcG1fcnVudGltZV9nZXRfc3lu
+YyhtbXUtPmRldik7Cj4gKyAgICAgICBwbV9ydW50aW1lX2dldF9zdXBwbGllcnMobW11LT5kZXYp
+Owo+ICAgICAgICAgcmV0ID0gaW9tbXVfYXR0YWNoX2RldmljZShpb21tdS0+ZG9tYWluLCBtbXUt
+PmRldik7Cj4gLSAgICAgICBwbV9ydW50aW1lX3B1dF9zeW5jKG1tdS0+ZGV2KTsKPiArICAgICAg
+IHBtX3J1bnRpbWVfcHV0X3N1cHBsaWVycyhtbXUtPmRldik7CgpGb3IgbWUsIGl0IGxvb2tzIGxp
+a2UgYSB3cm9uZyBwbGFjZSB0byBoYW5kbGUgcnVudGltZSBQTSBvZiBJT01NVQpoZXJlLiBpb21t
+dV9hdHRhY2hfZGV2aWNlKCkgY2FsbHMgaW50byBJT01NVSBkcml2ZXIncyBhdHRhY2hfZGV2aWNl
+KCkKY2FsbGJhY2sgYW5kIHRoYXQncyB3aGVyZSBuZWNlc3NhcnkgcnVudGltZSBQTSBnZXRzIHNo
+b3VsZCBoYXBwZW4sIGlmCmFueS4gSW4gb3RoZXIgd29yZHMsIGRyaXZlciBBIChNU00gRFJNIGRy
+aXZlcikgc2hvdWxkbid0IGJlIGRlYWxpbmcKd2l0aCBwb3dlciBzdGF0ZSBvZiBkZXZpY2UgY29u
+dHJvbGxlZCBieSBkcml2ZXIgQiAoQVJNIFNNTVUpLgoKVGhpcyBpcyBhbHNvIGltcG9ydGFudCBm
+b3IgdGhlIHJlYXNvbnMgSSBzdGF0ZWQgaW4gbXkgY29tbWVudHMgdG8KIltQQVRDSCB2NyAxLzZd
+IGJhc2U6IHBvd2VyOiBydW50aW1lOiBFeHBvcnQKcG1fcnVudGltZV9nZXQvcHV0X3N1cHBsaWVy
+cyIuIFF1b3RpbmcgZm9yIGV2ZXJ5b25lJ3MgY29udmVuaWVuY2U6Cgo+PiBUaGVyZSBhcmUgaG93
+ZXZlciBjYXNlcyBpbiB3aGljaCB0aGUgY29uc3VtZXIgd2FudHMgdG8gcG93ZXItb24KPj4gdGhl
+IHN1cHBsaWVyLCBidXQgbm90IGl0c2VsZi4KPj4gRS5nLiwgQSBHcmFwaGljcyBvciBtdWx0aW1l
+ZGlhIGRyaXZlciB3YW50cyB0byBwb3dlci1vbiB0aGUgU01NVQo+PiB0byB1bm1hcCBhIGJ1ZmZl
+ciBhbmQgZmluaXNoIHRoZSBUTEIgb3BlcmF0aW9ucyB3aXRob3V0IHBvd2VyaW5nCj4+IG9uIGl0
+c2VsZi4KPgo+VGhpcyBzb3VuZHMgc3RyYW5nZSB0byBtZS4gSWYgdGhlIFNNTVUgaXMgcG93ZXJl
+ZCBkb3duLCB3b3VsZG4ndCB0aGUKPlRMQiBsb3NlIGl0cyBjb250ZW50cyBhcyB3ZWxsIChhbmQg
+c28gbm8gZmx1c2hpbmcgbmVlZGVkKT8KPgo+T3RoZXIgdGhhbiB0aGF0LCB3aGF0IGtpbmQgb2Yg
+aGFyZHdhcmUgb3BlcmF0aW9ucyB3b3VsZCBiZSBuZWVkZWQKPmJlc2lkZXMganVzdCB1cGRhdGlu
+ZyB0aGUgcGFnZSB0YWJsZXMgZnJvbSB0aGUgQ1BVPwo+CgpJbiBvdGhlciB3b3JkcywgdGhlIFNN
+TVUgZHJpdmVyIGNhbiBkZWFsIHdpdGggaGFyZHdhcmUgc3RhdGUgYmFzZWQgb24KcmV0dXJuIHZh
+bHVlIG9mIHBtX3J1bnRpbWVfZ2V0X3N5bmMoKSBvciBwbV9ydW50aW1lX2dldF9pZl9pbl91c2Uo
+KQphbmQgZGVjaWRlIHdoZXRoZXIgc29tZSBvcGVyYXRpb25zIGFyZSBuZWNlc3Nhcnkgb3Igbm90
+LCBlLmcuCi0gYSBzdGF0ZSByZXN0b3JlIGlzIG5lY2Vzc2FyeSBpZiB0aGUgZG9tYWluIHdhcyBw
+b3dlcmVkIG9mZiwgYnV0IHdlCmFyZSBicmluZ2luZyB0aGUgbWFzdGVyIG9uLAotIGEgZmx1c2gg
+bWF5IG5vdCBiZSByZXF1aXJlZCB3aGVuICh1biltYXBwaW5nIHdpdGggdGhlIGRvbWFpbiBwb3dl
+cmVkIG9mZiwKLSBldGMuCgpCZXN0IHJlZ2FyZHMsClRvbWFzegpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
