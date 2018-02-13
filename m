@@ -1,98 +1,40 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: gpio: add raspberry pi GPIO expander
- binding
-Date: Tue, 13 Feb 2018 17:20:07 -0600
-Message-ID: <20180213232007.ieme6rjxgc7vidbw@rob-hp-laptop>
-References: <cover.1517923836.git.baruch@tkos.co.il>
- <214ff3856c430b8045b63b25d83733b77054dfab.1517923836.git.baruch@tkos.co.il>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <214ff3856c430b8045b63b25d83733b77054dfab.1517923836.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Stevenson <dave.stevenson-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: [PATCH] ARM: shmobile: Document Renesas H2-based Stout DT bindings
+Date: Wed, 14 Feb 2018 00:29:16 +0100
+Message-ID: <20180213232916.31470-1-marek.vasut+renesas@gmail.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 07, 2018 at 08:35:23PM +0200, Baruch Siach wrote:
-> The Raspberry Pi 3 GPIO expander is controlled by the VC4 firmware over
-> I2C. The firmware mailbox interface allows the ARM core to control the
-> GPIO lines.
-> 
-> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> ---
-> v4:
->   * Move the example gpio node under the firmware node
->   * Rename gpio node name to plain 'gpio'
-> 
-> v3:
->   * Rename node name.
-> 
-> v2:
->   * Rename compatible string to raspberrypi,firmware-gpio
-> ---
->  .../bindings/gpio/raspberrypi,firmware-gpio.txt    | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt b/Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt
-> new file mode 100644
-> index 000000000000..30326528faa9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt
-> @@ -0,0 +1,29 @@
-> +Raspberry Pi GPIO expander
-> +
-> +The Raspberry Pi 3 GPIO expander is controlled by the VC4 firmware. The
-> +firmware exposes a mailbox interface that allows the ARM core to control the
-> +GPIO lines on the expander.
-> +
-> +Required properties:
-> +
-> +- compatible : Should be "raspberrypi,firmware-gpio"
-> +- gpio-controller : Marks the device node as a gpio controller
-> +- #gpio-cells : Should be two.  The first cell is the pin number, and
-> +  the second cell is used to specify the gpio polarity:
-> +  0 = active high
-> +  1 = active low
-> +- firmware : Reference to the RPi firmware device node
+Document the Renesas H2 Stout (ADAS Starter Kit) device tree bindings,
+listing it as a supported board.
 
-This is the parent node. You don't need it.
+This allows to use checkpatch.pl to validate .dts files referring to
+the Stout board.
 
-> +
-> +Example:
-> +
-> +firmware: firmware {
-> +	compatible = "raspberrypi,bcm2835-firmware";
-> +	mboxes = <&mailbox>;
+Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-No, sorry. /firmware is the container of firmware nodes. So 
-something like this:
-
-firmware {
-	rpi-firmware {
-		compatible = "raspberrypi,bcm2835-firmware";
-		mboxes = <&mailbox>;
-		gpio {
-		 compatible = "raspberrypi,firmware-gpio";
-
-		};
-	};
-};
-
-> +
-> +	expgpio: gpio {
-> +		 compatible = "raspberrypi,firmware-gpio";
-> +		 gpio-controller;
-> +		 #gpio-cells = <2>;
-> +		 firmware = <&firmware>;
-> +	 };
-> +};
-> -- 
-> 2.15.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index 41d3920aaa5e..bf9bb6eda4a6 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -94,6 +94,8 @@ Boards:
+     compatible = "renesas,kzm9g", "renesas,sh73a0"
+   - Lager (RTP0RC7790SEB00010S)
+     compatible = "renesas,lager", "renesas,r8a7790"
++  - Stout (Y-R-CAR-ADAS-SKH2-BOARD)
++    compatible = "renesas,stout", "renesas,r8a7790"
+   - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
+     compatible = "renesas,m3ulcb", "renesas,r8a7796"
+   - Marzen (R0P7779A00010S)
+-- 
+2.15.1
