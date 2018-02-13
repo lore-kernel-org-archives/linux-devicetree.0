@@ -1,201 +1,185 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH v13 5/9] OF: Add missing I/O range exception for indirect-IO devices
-Date: Wed, 14 Feb 2018 01:45:29 +0800
-Message-ID: <1518543933-22456-6-git-send-email-john.garry@huawei.com>
-References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org
-Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org
+From: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Subject: [PATCH v3 00/25] ASoC: qcom: Add support to QDSP based Audio
+Date: Tue, 13 Feb 2018 16:58:12 +0000
+Message-ID: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, plai-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bgoswami-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rohkumar-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, spatakok-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Zhichang Yuan <yuanzhichang@hisilicon.com>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-There are some special ISA/LPC devices that work on a specific I/O range
-where it is not correct to specify a 'ranges' property in DTS parent node
-as cpu addresses translated from DTS node are only for memory space on
-some architectures, such as Arm64. Without the parent 'ranges' property,
-current of_translate_address() return an error.
-Here we add special handlings for this case.
-During the OF address translation, some checkings will be perfromed to
-identify whether the device node is registered as indirect-IO. If yes,
-the I/O translation will be done in a different way from that one of PCI
-MMIO. In this way, the I/O 'reg' property of the special ISA/LPC devices
-will be parsed correctly.
+This patchset aims to provide a basic version of QCOM DSP based
+audio support which is available in downstream andriod kernels.
+This patchset support audio playback on HDMI-RX, MI2S, SLIMBus and
+will add support to other features as we move on.
 
-Signed-off-by: Zhichang Yuan <yuanzhichang@hisilicon.com>
-Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>    #earlier draft
-Acked-by: Rob Herring <robh@kernel.org>
----
- drivers/of/address.c | 92 +++++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 76 insertions(+), 16 deletions(-)
+QDSP has both static and dynamic modules. static modules like AFE
+(Audio FrontEnd), ADM (Audio Device Manager), ASM(Audio Stream Manager)
+and CORE to provide this audio services.
+All these services use APR (Asynchronous Packet Router) protocol
+via smd/glink transport to communicate with Application processor.
+More details on each module is availble in there respective patch.
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index cdf047b..2db8b56 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -5,6 +5,7 @@
- #include <linux/fwnode.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
-+#include <linux/logic_pio.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/pci.h>
-@@ -562,9 +563,14 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
-  * that translation is impossible (that is we are not dealing with a value
-  * that can be mapped to a cpu physical address). This is not really specified
-  * that way, but this is traditionally the way IBM at least do things
-+ *
-+ * Whenever the translation fails, the *host pointer will be set to the
-+ * device that had registered logical PIO mapping, and the return code is
-+ * relative to that node.
-  */
- static u64 __of_translate_address(struct device_node *dev,
--				  const __be32 *in_addr, const char *rprop)
-+				  const __be32 *in_addr, const char *rprop,
-+				  struct device_node **host)
- {
- 	struct device_node *parent = NULL;
- 	struct of_bus *bus, *pbus;
-@@ -577,6 +583,7 @@ static u64 __of_translate_address(struct device_node *dev,
- 	/* Increase refcount at current level */
- 	of_node_get(dev);
- 
-+	*host = NULL;
- 	/* Get parent & match bus type */
- 	parent = of_get_parent(dev);
- 	if (parent == NULL)
-@@ -597,6 +604,8 @@ static u64 __of_translate_address(struct device_node *dev,
- 
- 	/* Translate */
- 	for (;;) {
-+		struct logic_pio_hwaddr *iorange;
-+
- 		/* Switch to parent bus */
- 		of_node_put(dev);
- 		dev = parent;
-@@ -609,6 +618,19 @@ static u64 __of_translate_address(struct device_node *dev,
- 			break;
- 		}
- 
-+		/*
-+		 * For indirectIO device which has no ranges property, get
-+		 * the address from reg directly.
-+		 */
-+		iorange = find_io_range_by_fwnode(&dev->fwnode);
-+		if (iorange && (iorange->flags != PIO_CPU_MMIO)) {
-+			result = of_read_number(addr + 1, na - 1);
-+			pr_debug("indirectIO matched(%s) 0x%llx\n",
-+					of_node_full_name(dev), result);
-+			*host = of_node_get(dev);
-+			break;
-+		}
-+
- 		/* Get new parent bus and counts */
- 		pbus = of_match_bus(parent);
- 		pbus->count_cells(dev, &pna, &pns);
-@@ -640,13 +662,32 @@ static u64 __of_translate_address(struct device_node *dev,
- 
- u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
- {
--	return __of_translate_address(dev, in_addr, "ranges");
-+	struct device_node *host;
-+	u64 ret;
-+
-+	ret = __of_translate_address(dev, in_addr, "ranges", &host);
-+	if (host) {
-+		of_node_put(host);
-+		return OF_BAD_ADDR;
-+	}
-+
-+	return ret;
- }
- EXPORT_SYMBOL(of_translate_address);
- 
- u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
- {
--	return __of_translate_address(dev, in_addr, "dma-ranges");
-+	struct device_node *host;
-+	u64 ret;
-+
-+	ret = __of_translate_address(dev, in_addr, "dma-ranges", &host);
-+
-+	if (host) {
-+		of_node_put(host);
-+		return OF_BAD_ADDR;
-+	}
-+
-+	return ret;
- }
- EXPORT_SYMBOL(of_translate_dma_address);
- 
-@@ -688,29 +729,48 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
- }
- EXPORT_SYMBOL(of_get_address);
- 
-+static u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr,
-+			u64 size)
-+{
-+	u64 taddr;
-+	unsigned long port;
-+	struct device_node *host;
-+
-+	taddr = __of_translate_address(dev, in_addr, "ranges", &host);
-+	if (host) {
-+		/* host specific port access */
-+		port = logic_pio_trans_hwaddr(&host->fwnode, taddr, size);
-+		of_node_put(host);
-+	} else {
-+		/* memory mapped I/O range */
-+		port = pci_address_to_pio(taddr);
-+	}
-+
-+	if (port == (unsigned long)-1)
-+		return OF_BAD_ADDR;
-+
-+	return port;
-+}
-+
- static int __of_address_to_resource(struct device_node *dev,
- 		const __be32 *addrp, u64 size, unsigned int flags,
- 		const char *name, struct resource *r)
- {
- 	u64 taddr;
- 
--	if ((flags & (IORESOURCE_IO | IORESOURCE_MEM)) == 0)
-+	if (flags & IORESOURCE_MEM)
-+		taddr = of_translate_address(dev, addrp);
-+	else if (flags & IORESOURCE_IO)
-+		taddr = of_translate_ioport(dev, addrp, size);
-+	else
- 		return -EINVAL;
--	taddr = of_translate_address(dev, addrp);
-+
- 	if (taddr == OF_BAD_ADDR)
- 		return -EINVAL;
- 	memset(r, 0, sizeof(struct resource));
--	if (flags & IORESOURCE_IO) {
--		unsigned long port;
--		port = pci_address_to_pio(taddr);
--		if (port == (unsigned long)-1)
--			return -EINVAL;
--		r->start = port;
--		r->end = port + size - 1;
--	} else {
--		r->start = taddr;
--		r->end = taddr + size - 1;
--	}
-+
-+	r->start = taddr;
-+	r->end = taddr + size - 1;
- 	r->flags = flags;
- 	r->name = name ? name : dev->full_name;
- 
+This patchset is tested on DB820c, with HDMI audio playback, MI2S on DB410c
+on top of mainline, Also tested SLIMBus analog audio using wcd9355
+with an additional patches.
+
+Here is my test branch incase somone want to try these patches
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/log/?h=v4.16-rc1-dsp-audio-v3
+
+Here is block diagram to give a quick overview of the components
+
+
+  +---------+          +---------+         +---------+   
+  |  q6asm  |          |q6routing|         | q6afe   | 
+  |  fedai  | <------> |  mixers | <-----> | bedai   |  
+  +---------+          +---------+         +---------+   
+      ^                     ^                   ^
+      |                     |                   |
+      |  +------------------+----------------+  |       
+      |  |                  |                |  |       
+      v  v                  v                v  v       
+  +---------+          +---------+         +---------+ 
+  |   q6ASM |          |  q6ADM  |         |   q6AFE |  
+  +---------+          +---------+         +---------+  
+      ^                     ^                   ^          ^
+      |                     |                   | CPU Side |
+------+---------------------+-------------------+--------
+      |                     |                   |
+      |                     |APR(smd/glink)     | 
+      |                     |                   |
+      |  +------------------+----------------+  |
+      |  |                  |                |  |
++-----+--+-----------------------------------+--+-------
+      |  |                  |                |  | QDSP Side |
+      v  v                  v                v  v           v
+ +---------+          +---------+         +---------+
+ |   ASM   | <------> |   ADM   | <-----> |   AFE   |
+ +---------+          +---------+         +---------+
+                                               ^
+                                               | 
+                           +-------------------+
+                           |
+---------------------------+--------------------------
+                           |            Audio I/O |
+                           v                      v
+    +--------------------------------------------------+
+    |                Audio devices                     |
+    | CODEC | HDMI-TX | PCM  | SLIMBUS | I2S |MI2S |...|
+    |                                                  |
+    +--------------------------------------------------+
+
+Changes since v2 (https://lwn.net/Articles/741472/)
+- fixed locking issues with ASM and APR.
+- Added support to MI2S and SLIMBus ports
+- moved dma device to apr.
+- added dt bindings for ASM, ADM, AFE.
+- Fixed dt bindings for msm8996 sound card.
+- added compatible strings to ASM, ADM, AFE modules.
+- Cleaned up common code as suggested in review.
+- converted sound card driver to proper apr client driver.
+- Fixed various issues spotted by Banajit and Kasam.
+- Tested on DB410c, DB820c for both analog and digital playbacks.
+- Exported q6core functions as suggested by Rohit.
+- Fixed various issues with dsp carsh/recover usecase.
+- Added multiple ASM streams as requested in review.
+
+Srinivas Kandagatla (25):
+  dt-bindings: soc: qcom: Add bindings for APR bus
+  soc: qcom: add support to APR bus driver
+  ASoC: qcom: qdsp6: Add common qdsp6 helper functions
+  dt-bindings: sound: qcom: Add bindings for q6afe
+  ASoC: qcom: qdsp6: Add support to Q6AFE
+  dt-bindings: sound: qcom: Add bindings for q6adm
+  ASoC: qcom: qdsp6: Add support to Q6ADM
+  dt-bindings: sound: qcom: Add bindings for q6asm
+  ASoC: qcom: qdsp6: Add support to Q6ASM
+  ASoC: qcom: q6asm: Add support to memory map and unmap
+  ASoC: qcom: q6asm: add support to audio stream apis
+  ASoC: qcom: qdsp6: Add support to Q6CORE
+  ASoC: qcom: qdsp6: Add support to q6routing driver
+  ASoC: qcom: qdsp6: Add support to q6afe dai driver
+  ASoC: qcom: qdsp6: Add support to q6asm dai driver
+  ASoC: qcom: q6afe: add SLIMBus port Support
+  ASoC: qcom: q6afe-dai: add support to slim afe dais
+  ASoC: qcom: q6routing: add support to all SLIMBus Mixers
+  ASoC: qcom: q6afe: add support to MI2S ports
+  ASoC: qcom: q6afe: add support to MI2S sysclks
+  ASoC: qcom: q6afe-dai: add support to 4 MI2S ports
+  ASoC: qcom: q6routing: add support to MI2S Mixers
+  dt-bindings: sound: qcom: Add devicetree bindings for apq8096
+  ASoC: qcom: apq8096: Add db820c machine driver
+  arm64: dts: msm8996: db820c: Add sound card support
+
+ .../devicetree/bindings/soc/qcom/qcom,apr.txt      |   83 ++
+ .../devicetree/bindings/sound/qcom,apq8096.txt     |   89 ++
+ .../devicetree/bindings/sound/qcom,q6adm.txt       |   31 +
+ .../devicetree/bindings/sound/qcom,q6afe.txt       |   38 +
+ .../devicetree/bindings/sound/qcom,q6asm.txt       |   38 +
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       |   44 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              |   62 ++
+ drivers/soc/qcom/Kconfig                           |    9 +
+ drivers/soc/qcom/Makefile                          |    1 +
+ drivers/soc/qcom/apr.c                             |  381 +++++++
+ include/dt-bindings/soc/qcom,apr.h                 |   27 +
+ include/dt-bindings/sound/qcom,q6afe.h             |   33 +
+ include/dt-bindings/sound/qcom,q6asm.h             |   22 +
+ include/linux/mod_devicetable.h                    |   11 +
+ include/linux/soc/qcom/apr.h                       |  131 +++
+ sound/soc/qcom/Kconfig                             |   42 +
+ sound/soc/qcom/Makefile                            |    5 +
+ sound/soc/qcom/apq8096.c                           |  173 ++++
+ sound/soc/qcom/qdsp6/Makefile                      |    5 +
+ sound/soc/qcom/qdsp6/q6adm.c                       |  634 ++++++++++++
+ sound/soc/qcom/qdsp6/q6adm.h                       |   29 +
+ sound/soc/qcom/qdsp6/q6afe-dai.c                   |  645 ++++++++++++
+ sound/soc/qcom/qdsp6/q6afe.c                       |  875 ++++++++++++++++
+ sound/soc/qcom/qdsp6/q6afe.h                       |   74 ++
+ sound/soc/qcom/qdsp6/q6asm-dai.c                   |  621 ++++++++++++
+ sound/soc/qcom/qdsp6/q6asm.c                       | 1063 ++++++++++++++++++++
+ sound/soc/qcom/qdsp6/q6asm.h                       |   66 ++
+ sound/soc/qcom/qdsp6/q6core.c                      |  235 +++++
+ sound/soc/qcom/qdsp6/q6core.h                      |    9 +
+ sound/soc/qcom/qdsp6/q6dsp-common.c                |   67 ++
+ sound/soc/qcom/qdsp6/q6dsp-common.h                |   24 +
+ sound/soc/qcom/qdsp6/q6dsp-errno.h                 |   97 ++
+ sound/soc/qcom/qdsp6/q6routing.c                   |  758 ++++++++++++++
+ sound/soc/qcom/qdsp6/q6routing.h                   |    9 +
+ 34 files changed, 6430 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,apq8096.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6adm.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6afe.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/qcom,q6asm.txt
+ create mode 100644 drivers/soc/qcom/apr.c
+ create mode 100644 include/dt-bindings/soc/qcom,apr.h
+ create mode 100644 include/dt-bindings/sound/qcom,q6afe.h
+ create mode 100644 include/dt-bindings/sound/qcom,q6asm.h
+ create mode 100644 include/linux/soc/qcom/apr.h
+ create mode 100644 sound/soc/qcom/apq8096.c
+ create mode 100644 sound/soc/qcom/qdsp6/Makefile
+ create mode 100644 sound/soc/qcom/qdsp6/q6adm.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6adm.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe-dai.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6afe.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm-dai.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6asm.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6core.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6core.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6dsp-common.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6dsp-common.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6dsp-errno.h
+ create mode 100644 sound/soc/qcom/qdsp6/q6routing.c
+ create mode 100644 sound/soc/qcom/qdsp6/q6routing.h
+
 -- 
-1.9.1
+2.15.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
