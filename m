@@ -1,72 +1,34 @@
-From: Daniel Schultz <d.schultz@phytec.de>
-Subject: [PATCH 3/3] ARM: dts: rockchip: phycore: Support UHS mode for SD card
- on phyCORE-RK3288 RDK
-Date: Tue, 13 Feb 2018 10:44:34 +0100
-Message-ID: <1518515074-22526-3-git-send-email-d.schultz@phytec.de>
-References: <1518515074-22526-1-git-send-email-d.schultz@phytec.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518515074-22526-1-git-send-email-d.schultz@phytec.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 13/15] Documentation: devicetree: ravb: Add r8a77965
+Date: Tue, 13 Feb 2018 10:46:00 +0100
+Message-ID: <1518515162-23663-14-git-send-email-jacopo+renesas@jmondi.org>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wadim Egorov <w.egorov@phytec.de>
+Add documentation for r8a77965 compatible string to renesas ravb device
+tree bindings documentation.
 
-The phyCORE-RK3288 RDK could enable SD3.0 card but need vdd_io_sd to
-support the voltage range from 1.8V to 3.3V.
-And we have also to add relevant UHS modes to the sdmmc node.
-Let's also turn off the vdd_io_sd regulator in suspend state.
-
-Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
-Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- arch/arm/boot/dts/rk3288-phycore-rdk.dts  | 4 ++++
- arch/arm/boot/dts/rk3288-phycore-som.dtsi | 5 ++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/rk3288-phycore-rdk.dts b/arch/arm/boot/dts/rk3288-phycore-rdk.dts
-index ecb26f0..985743f 100644
---- a/arch/arm/boot/dts/rk3288-phycore-rdk.dts
-+++ b/arch/arm/boot/dts/rk3288-phycore-rdk.dts
-@@ -265,6 +265,10 @@
- 	disable-wp;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
- 	vmmc-supply = <&vdd_sd>;
- 	vqmmc-supply = <&vdd_io_sd>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
-index 5eae477..f13bcb1 100644
---- a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
-@@ -336,11 +336,10 @@
- 				regulator-name = "vdd_io_sd";
- 				regulator-always-on;
- 				regulator-boot-on;
--				regulator-min-microvolt = <3300000>;
-+				regulator-min-microvolt = <1800000>;
- 				regulator-max-microvolt = <3300000>;
- 				regulator-state-mem {
--					regulator-on-in-suspend;
--					regulator-suspend-microvolt = <3300000>;
-+					regulator-off-in-suspend;
- 				};
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+index c902261..bf071a5 100644
+--- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
++++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+@@ -17,6 +17,7 @@ Required properties:
+ 
+       - "renesas,etheravb-r8a7795" for the R8A7795 SoC.
+       - "renesas,etheravb-r8a7796" for the R8A7796 SoC.
++      - "renesas,etheravb-r8a77965" for the R8A77965 SoC.
+       - "renesas,etheravb-r8a77970" for the R8A77970 SoC.
+       - "renesas,etheravb-r8a77995" for the R8A77995 SoC.
+       - "renesas,etheravb-rcar-gen3" as a fallback for the above
 -- 
 2.7.4
