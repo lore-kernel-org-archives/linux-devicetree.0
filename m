@@ -1,98 +1,68 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH v6 09/26] soc: renesas: rcar-rst: Enable watchdog as reset trigger for Gen2
-Date: Tue, 13 Feb 2018 13:02:44 +0000
-Message-ID: <1518526964-7400-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <20180213081910.x5llcsmwza44u4ow@verge.net.au>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20180213081910.x5llcsmwza44u4ow@verge.net.au>
-Sender: linux-clk-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Fabrizi
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH v5 14/26] ARM: shmobile: defconfig: Enable RENESAS_WDT_GEN
+Date: Tue, 13 Feb 2018 13:08:19 +0000
+Message-ID: <TY1PR06MB0895970E6725F954D1A97E4CC0F60@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1518457475-4480-15-git-send-email-fabrizio.castro@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518457475-4480-15-git-send-email-fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>C
 List-Id: devicetree@vger.kernel.org
 
-This patch allows for platform specific quirks as some of the SoC need
-further customization for the watchdog to work properly, like for R-Car
-Gen2 and for RZ/G.
+Hello Simon,
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
----
-v5->v6:
-* rebased on top of renesas-devel-20180213-v4.16-rc1
+what do you think about enabling the watchdog in multi_v7_defconfig as a mo=
+dule?
 
- drivers/soc/renesas/rcar-rst.c | 37 ++++++++++++++++++++++++++++++-------
- 1 file changed, 30 insertions(+), 7 deletions(-)
+Thanks,
+Fab
 
-diff --git a/drivers/soc/renesas/rcar-rst.c b/drivers/soc/renesas/rcar-rst.c
-index e2340eb..3413666 100644
---- a/drivers/soc/renesas/rcar-rst.c
-+++ b/drivers/soc/renesas/rcar-rst.c
-@@ -13,8 +13,18 @@
- #include <linux/of_address.h>
- #include <linux/soc/renesas/rcar-rst.h>
- 
-+#define WDTRSTCR_RESET		0xA55A0002
-+#define WDTRSTCR		0x0054
-+
-+static int rcar_rst_enable_wdt_reset(void __iomem *base)
-+{
-+	iowrite32(WDTRSTCR_RESET, base + WDTRSTCR);
-+	return 0;
-+}
-+
- struct rst_config {
--	unsigned int modemr;	/* Mode Monitoring Register Offset */
-+	unsigned int modemr;		/* Mode Monitoring Register Offset */
-+	int (*configure)(void *base);	/* Platform specific configuration */
- };
- 
- static const struct rst_config rcar_rst_gen1 __initconst = {
-@@ -23,6 +33,11 @@ static const struct rst_config rcar_rst_gen1 __initconst = {
- 
- static const struct rst_config rcar_rst_gen2 __initconst = {
- 	.modemr = 0x60,
-+	.configure = rcar_rst_enable_wdt_reset,
-+};
-+
-+static const struct rst_config rcar_rst_gen3 __initconst = {
-+	.modemr = 0x60,
- };
- 
- static const struct of_device_id rcar_rst_matches[] __initconst = {
-@@ -38,12 +53,12 @@ static const struct of_device_id rcar_rst_matches[] __initconst = {
- 	{ .compatible = "renesas,r8a7792-rst", .data = &rcar_rst_gen2 },
- 	{ .compatible = "renesas,r8a7793-rst", .data = &rcar_rst_gen2 },
- 	{ .compatible = "renesas,r8a7794-rst", .data = &rcar_rst_gen2 },
--	/* R-Car Gen3 is handled like R-Car Gen2 */
--	{ .compatible = "renesas,r8a7795-rst", .data = &rcar_rst_gen2 },
--	{ .compatible = "renesas,r8a7796-rst", .data = &rcar_rst_gen2 },
--	{ .compatible = "renesas,r8a77970-rst", .data = &rcar_rst_gen2 },
--	{ .compatible = "renesas,r8a77980-rst", .data = &rcar_rst_gen2 },
--	{ .compatible = "renesas,r8a77995-rst", .data = &rcar_rst_gen2 },
-+	/* R-Car Gen3 */
-+	{ .compatible = "renesas,r8a7795-rst", .data = &rcar_rst_gen3 },
-+	{ .compatible = "renesas,r8a7796-rst", .data = &rcar_rst_gen3 },
-+	{ .compatible = "renesas,r8a77970-rst", .data = &rcar_rst_gen3 },
-+	{ .compatible = "renesas,r8a77980-rst", .data = &rcar_rst_gen3 },
-+	{ .compatible = "renesas,r8a77995-rst", .data = &rcar_rst_gen3 },
- 	{ /* sentinel */ }
- };
- 
-@@ -72,6 +87,14 @@ static int __init rcar_rst_init(void)
- 	rcar_rst_base = base;
- 	cfg = match->data;
- 	saved_mode = ioread32(base + cfg->modemr);
-+	if (cfg->configure) {
-+		error = cfg->configure(base);
-+		if (error) {
-+			pr_warn("%pOF: Cannot run SoC specific configuration\n",
-+				np);
-+			goto out_put;
-+		}
-+	}
- 
- 	pr_debug("%pOF: MODE = 0x%08x\n", np, saved_mode);
- 
--- 
-2.7.4
+> Subject: [PATCH v5 14/26] ARM: shmobile: defconfig: Enable RENESAS_WDT_GE=
+N
+>
+> R-Car Gen2 and RZ/G1 platforms come with a watchdog IP, therefore enable
+> its driver by default.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRj3fQ9qLvQP4Q@public.gmane.org=
+s.com>
+> Reviewed-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+> ---
+> v4->v5:
+> * no change
+>
+>  arch/arm/configs/shmobile_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/configs/shmobile_defconfig b/arch/arm/configs/shmob=
+ile_defconfig
+> index 578434c..d5cdad8 100644
+> --- a/arch/arm/configs/shmobile_defconfig
+> +++ b/arch/arm/configs/shmobile_defconfig
+> @@ -132,6 +132,7 @@ CONFIG_CPU_THERMAL=3Dy
+>  CONFIG_RCAR_THERMAL=3Dy
+>  CONFIG_WATCHDOG=3Dy
+>  CONFIG_DA9063_WATCHDOG=3Dy
+> +CONFIG_RENESAS_WDT=3Dy
+>  CONFIG_MFD_AS3711=3Dy
+>  CONFIG_MFD_DA9063=3Dy
+>  CONFIG_REGULATOR_FIXED_VOLTAGE=3Dy
+> --
+> 2.7.4
 
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
