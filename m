@@ -1,109 +1,46 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH v3 06/11] ARM: dts: STi: Add fake reg property for remote processors
-Date: Tue, 13 Feb 2018 13:53:32 +0100
-Message-ID: <1518526417-11919-7-git-send-email-patrice.chotard@st.com>
-References: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH v5 09/26] soc: renesas: rcar-rst: Enable watchdog as reset
+ trigger for Gen2
+Date: Tue, 13 Feb 2018 12:57:56 +0000
+Message-ID: <TY1PR06MB08958CD1E38DBA3F321977EDC0F60@TY1PR06MB0895.apcprd06.prod.outlook.com>
+References: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1518457475-4480-10-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180213081910.x5llcsmwza44u4ow@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: patrice.chotard@st.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20180213081910.x5llcsmwza44u4ow@verge.net.au>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+Hello Simon,
 
-As st231-gp0, st231-delta are part of SoC, we add a fake reg
-property instead of moving all these nodes outside soc node.
-This allows to fix the following warning when compiling
-dtb with W=1 option:
+> Subject: Re: [PATCH v5 09/26] soc: renesas: rcar-rst: Enable watchdog as =
+reset trigger for Gen2
+>
+> On Mon, Feb 12, 2018 at 05:44:18PM +0000, Fabrizio Castro wrote:
+> > This patch allows for platform specific quirks as some of the SoC need
+> > further customization for the watchdog to work properly, like for R-Car
+> > Gen2 and for RZ/G.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.rene=
+sas.com>
+>
+> I am fine with this patch but please rebase it on top of
+> renesas-devel-20180212-v4.16-rc1 (or later).
 
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/st231-gp0 missing or empty reg/ranges property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/st231-delta missing or empty reg/ranges property
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/delta0 missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/st231-gp0 missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/st231-delta missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/delta0 missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/st231-gp0 missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/st231-delta missing or empty reg/ranges property
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/delta0 missing or empty reg/ranges property
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/st231-gp0 missing or empty reg/ranges property
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/st231-delta missing or empty reg/ranges property
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/delta0 missing or empty reg/ranges property
+sure, I will.
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
-
-v3: _ none
-v2: _ add a fake reg property to node without reg property
+Thanks,
+Fab
 
 
- arch/arm/boot/dts/stih407-family.dtsi | 9 ++++++---
- arch/arm/boot/dts/stih410.dtsi        | 2 +-
- 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index c8dc659fd14e..5a0bad07da9e 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -805,8 +805,9 @@
- 			status		= "okay";
- 		};
- 
--		st231_gp0: st231-gp0 {
-+		st231_gp0: st231-gp0@0 {
- 			compatible	= "st,st231-rproc";
-+			reg		= <0 0>;
- 			memory-region	= <&gp0_reserved>;
- 			resets		= <&softreset STIH407_ST231_GP0_SOFTRESET>;
- 			reset-names	= "sw_reset";
-@@ -818,8 +819,9 @@
- 			mboxes = <&mailbox0 0 2>, <&mailbox2 0 1>, <&mailbox0 0 3>, <&mailbox2 0 0>;
- 		};
- 
--		st231_delta: st231-delta {
-+		st231_delta: st231-delta@0 {
- 			compatible	= "st,st231-rproc";
-+			reg		= <0 0>;
- 			memory-region	= <&delta_reserved>;
- 			resets		= <&softreset STIH407_ST231_DMU_SOFTRESET>;
- 			reset-names	= "sw_reset";
-@@ -982,8 +984,9 @@
- 			status = "disabled";
- 		};
- 
--		delta0 {
-+		delta0@0 {
- 			compatible = "st,st-delta";
-+			reg = <0 0>;
- 			clock-names = "delta",
- 				      "delta-st231",
- 				      "delta-flash-promip";
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index d9f964702933..815df2f7c103 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -274,7 +274,7 @@
- 			interrupts = <GIC_SPI 205 IRQ_TYPE_EDGE_RISING>;
- 		};
- 
--		delta0 {
-+		delta0@0 {
- 			compatible = "st,st-delta";
- 			clock-names = "delta",
- 				      "delta-st231",
--- 
-1.9.1
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
