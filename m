@@ -1,65 +1,66 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v7 1/6] base: power: runtime: Export
- pm_runtime_get/put_suppliers
-Date: Tue, 13 Feb 2018 21:54:26 +0900
-Message-ID: <CAAFQd5DNzGYnTRuc2hDr1osQ2=6ruM0wQqV8svP=a10hxTVOGQ@mail.gmail.com>
-References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
- <1517999482-17317-2-git-send-email-vivek.gautam@codeaurora.org>
- <CAAFQd5BmroRf-C8dQkvTKHWK1psGnNi1t7g-q=Xce6KjrGTsdw@mail.gmail.com>
- <65d707c0-76cc-d59e-ff18-1fdd89306900@arm.com>
+From: <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v3 00/11] ARM: dts: STi: Fix DT dtc warnings
+Date: Tue, 13 Feb 2018 13:53:26 +0100
+Message-ID: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <65d707c0-76cc-d59e-ff18-1fdd89306900@arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel@vger.kernel.org, "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, freedreno@lists.freedesktop.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: patrice.chotard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBGZWIgMTMsIDIwMTggYXQgOTowMCBQTSwgUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJw
-aHlAYXJtLmNvbT4gd3JvdGU6Cj4gT24gMTMvMDIvMTggMDc6NDQsIFRvbWFzeiBGaWdhIHdyb3Rl
-Ogo+Pgo+PiBIaSBWaXZlaywKPj4KPj4gT24gV2VkLCBGZWIgNywgMjAxOCBhdCA3OjMxIFBNLCBW
-aXZlayBHYXV0YW0KPj4gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4+Pgo+
-Pj4gVGhlIGRldmljZSBsaW5rIGFsbG93cyB0aGUgcG0gZnJhbWV3b3JrIHRvIHRpZSB0aGUgc3Vw
-cGxpZXIgYW5kCj4+PiBjb25zdW1lci4gU28sIHdoZW5ldmVyIHRoZSBjb25zdW1lciBpcyBwb3dl
-cmVkLW9uIHRoZSBzdXBwbGllcgo+Pj4gaXMgcG93ZXJlZC1vbiBmaXJzdC4KPj4+Cj4+PiBUaGVy
-ZSBhcmUgaG93ZXZlciBjYXNlcyBpbiB3aGljaCB0aGUgY29uc3VtZXIgd2FudHMgdG8gcG93ZXIt
-b24KPj4+IHRoZSBzdXBwbGllciwgYnV0IG5vdCBpdHNlbGYuCj4+PiBFLmcuLCBBIEdyYXBoaWNz
-IG9yIG11bHRpbWVkaWEgZHJpdmVyIHdhbnRzIHRvIHBvd2VyLW9uIHRoZSBTTU1VCj4+PiB0byB1
-bm1hcCBhIGJ1ZmZlciBhbmQgZmluaXNoIHRoZSBUTEIgb3BlcmF0aW9ucyB3aXRob3V0IHBvd2Vy
-aW5nCj4+PiBvbiBpdHNlbGYuCj4+Cj4+Cj4+IFRoaXMgc291bmRzIHN0cmFuZ2UgdG8gbWUuIElm
-IHRoZSBTTU1VIGlzIHBvd2VyZWQgZG93biwgd291bGRuJ3QgdGhlCj4+IFRMQiBsb3NlIGl0cyBj
-b250ZW50cyBhcyB3ZWxsIChhbmQgc28gbm8gZmx1c2hpbmcgbmVlZGVkKT8KPgo+Cj4gRGVwZW5k
-cyBvbiBpbXBsZW1lbnRhdGlvbiBkZXRhaWxzIC0gaWYgcnVudGltZSBQTSBpcyBhY3R1YWxseSBp
-bXBsZW1lbnRlZAo+IHZpYSBleHRlcm5hbCBjbG9jayBnYXRpbmcgKGluIHRoZSBhYnNlbmNlIG9m
-IGZpbmUtZ3JhaW5lZCBwb3dlciBkb21haW5zKSwKPiB0aGVuICJzdXNwZW5kZWQiIFRMQnMgbWln
-aHQgYm90aCByZXRhaW4gc3RhdGUgYW5kIG5vdCByZWNlaXZlIGludmFsaWRhdGlvbgo+IHJlcXVl
-c3RzLCB3aGljaCBpcyByZWFsbHkgdGhlIHdvcnN0IGNhc2UuCgpBZ3JlZWQuIFRoYXQncyB3aHkg
-aW4gIltQQVRDSCB2NyAzLzZdIGlvbW11L2FybS1zbW11OiBJbnZva2UKcG1fcnVudGltZSBkdXJp
-bmcgcHJvYmUsIGFkZC9yZW1vdmUgZGV2aWNlIiBJIGFjdHVhbGx5IHN1Z2dlc3RlZAptYW5hZ2lu
-ZyBjbG9ja3Mgc2VwYXJhdGVseSBmcm9tIHJ1bnRpbWUgUE0uIEF0IGxlYXN0IHVudGlsIHJ1bnRp
-bWUgUE0KZnJhbWV3b3JrIGFycml2ZXMgYXQgYSBzdGF0ZSwgd2hlcmUgbXVsdGlwbGUgcG93ZXIg
-c3RhdGVzIGNhbiBiZQptYW5hZ2VkLCBpLmUuIGZ1bGwgcG93ZXIgc3RhdGUsIGNsb2NrLWdhdGVk
-IHN0YXRlLCBkb21haW4tb2ZmIHN0YXRlLgooSSB0aGluayBJIG1pZ2h0IGhhdmUgc2VlbiBzb21l
-IG9uZ29pbmcgd29yayBvbiB0aGlzIG9uIExXTiB0aG91Z2guLi4pCgo+Cj4+IE90aGVyIHRoYW4g
-dGhhdCwgd2hhdCBraW5kIG9mIGhhcmR3YXJlIG9wZXJhdGlvbnMgd291bGQgYmUgbmVlZGVkCj4+
-IGJlc2lkZXMganVzdCB1cGRhdGluZyB0aGUgcGFnZSB0YWJsZXMgZnJvbSB0aGUgQ1BVPwo+Cj4K
-PiBEb21haW4gYXR0YWNoL2RldGFjaCBhbHNvIHJlcXVpcmUgdXBkYXRpbmcgU01NVSBoYXJkd2Fy
-ZSBzdGF0ZSAoYW5kIHBvc3NpYmx5Cj4gVExCIG1haW50ZW5hbmNlKSwgYnV0IGRvbid0IGxvZ2lj
-YWxseSByZXF1aXJlIHRoZSBtYXN0ZXIgZGV2aWNlIGl0c2VsZiB0byBiZQo+IGFjdGl2ZSBhdCB0
-aGUgdGltZS4KCldvdWxkbid0IHRoaXMgaGFyZHdhcmUgc3RhdGUgbmVlZCB0byBiZSByZWluaXRp
-YWxpemVkIGFueXdheSBhZnRlcgpyZXNwZWN0aXZlIHBvd2VyIGRvbWFpbiBwb3dlciBjeWNsZXM/
-IChJbiBvdGhlciB3b3JkcywgaGFyZHdhcmUgd291bGQKb25seSBuZWVkIHByb2dyYW1taW5nIGlm
-IGl0J3MgcG93ZXJlZCBvbiBhdCB0aGUgbW9tZW50LikKCkJlc3QgcmVnYXJkcywKVG9tYXN6Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+
+This series fixes all dtc warnings related to STi platforms dt files.
+It has been reported by Rob Herring [1]
+
+For most of implicated node, the addition of a fake reg property
+fixes these warnings. For others nodes, their location in device tree
+have been updated.
+
+[1] https://www.spinics.net/lists/devicetree/msg206209.html
+
+v3: _ Update sound node location in patch 9
+    _ Merge preivous patch 10 and 11 by updating some clocks node location
+
+v2: _ Add a fake reg property to node without reg property, instead 
+      of moving them outside soc node.
+
+Patrice Chotard (11):
+  ARM: dts: STi: Fix bindings notation
+  ARM: dts: STi: Move leds node outside soc node
+  ARM: dts: STi: Add fake reg property for sti-display-subsystem
+  ARM: dts: STi: Add fake reg property for miphy28lp_phy
+  ARM: dts: STi: Add fake reg property for irq-syscfg
+  ARM: dts: STi: Add fake reg property for remote processors
+  ARM: dts: STi: Add fake reg for restart, powerdown and
+    picophy/softreset
+  ARM: dts: STi: Add fake reg property for usb2_picophyX nodes
+  ARM: dts: STi: Update sound related nodes location
+  ARM: dts: STi: Update clocks node location
+  ARM: dts: STi: Remove unused clk_ext2f_a9 clock
+
+ arch/arm/boot/dts/stih407-b2120.dts    |   2 +-
+ arch/arm/boot/dts/stih407-clock.dtsi   |  92 +++++++++++-------------
+ arch/arm/boot/dts/stih407-family.dtsi  |  42 ++++++-----
+ arch/arm/boot/dts/stih407-pinctrl.dtsi |  10 +--
+ arch/arm/boot/dts/stih407.dtsi         |   4 +-
+ arch/arm/boot/dts/stih410-b2120.dts    |   8 +--
+ arch/arm/boot/dts/stih410-b2260.dts    |  89 ++++++++++++-----------
+ arch/arm/boot/dts/stih410-clock.dtsi   |  96 +++++++++++--------------
+ arch/arm/boot/dts/stih410-pinctrl.dtsi |   2 +-
+ arch/arm/boot/dts/stih410.dtsi         |  13 ++--
+ arch/arm/boot/dts/stih418-b2199.dts    |  30 ++++----
+ arch/arm/boot/dts/stih418-clock.dtsi   |  95 +++++++++++--------------
+ arch/arm/boot/dts/stih418.dtsi         |   6 +-
+ arch/arm/boot/dts/stihxxx-b2120.dtsi   | 126 +++++++++++++++++----------------
+ 14 files changed, 300 insertions(+), 315 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
