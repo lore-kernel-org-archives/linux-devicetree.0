@@ -1,136 +1,153 @@
-From: Yogesh Narayan Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v2 1/2] mtd: fsl-quadspi: Update slave device hwcap based
- on mode provided in dtsi file
-Date: Tue, 13 Feb 2018 06:45:21 +0000
-Message-ID: <DB6PR0402MB28386AD10C84F1BA9DCD2B2799F60@DB6PR0402MB2838.eurprd04.prod.outlook.com>
-References: <1517549484-6024-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <1517549484-6024-2-git-send-email-yogeshnarayan.gaur@nxp.com>
- <b868bd0c-2d5e-f4cf-a32c-012e021d3a89@wedev4u.fr>
+From: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v3 1/2] mtd: fsl-quadspi: Update slave device hwcap based on mode provided in dtsi file
+Date: Tue, 13 Feb 2018 12:21:14 +0530
+Message-ID: <1518504675-26286-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+References: <1518504675-26286-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b868bd0c-2d5e-f4cf-a32c-012e021d3a89-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1518504675-26286-1-git-send-email-yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>, "festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, Suresh Gupta <suresh.gupta-3arQi8VN3Tc@public.gmane.org>
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org, suresh.gupta-3arQi8VN3Tc@public.gmane.org, Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ3lyaWxsZSwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDeXJp
-bGxlIFBpdGNoZW4gW21haWx0bzpjeXJpbGxlLnBpdGNoZW5Ad2VkZXY0dS5mcl0NCj4gU2VudDog
-VHVlc2RheSwgRmVicnVhcnkgMDYsIDIwMTggMjoxOSBBTQ0KPiBUbzogWW9nZXNoIE5hcmF5YW4g
-R2F1ciA8eW9nZXNobmFyYXlhbi5nYXVyQG54cC5jb20+OyBsaW51eC0NCj4gbXRkQGxpc3RzLmlu
-ZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyByb2JoQGtlcm5lbC5vcmc7
-DQo+IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnDQo+IENjOiBsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGJvcmlzLmJyZXppbGxvbkBmcmVlLWVs
-ZWN0cm9ucy5jb207DQo+IGNvbXB1dGVyc2ZvcnBlYWNlQGdtYWlsLmNvbTsgSGFuIFh1IDxoYW4u
-eHVAbnhwLmNvbT47DQo+IGZlc3RldmFtQGdtYWlsLmNvbTsgUHJhYmhha2FyIEt1c2h3YWhhIDxw
-cmFiaGFrYXIua3VzaHdhaGFAbnhwLmNvbT47DQo+IFN1cmVzaCBHdXB0YSA8c3VyZXNoLmd1cHRh
-QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIgMS8yXSBtdGQ6IGZzbC1xdWFkc3Bp
-OiBVcGRhdGUgc2xhdmUgZGV2aWNlIGh3Y2FwIGJhc2VkDQo+IG9uIG1vZGUgcHJvdmlkZWQgaW4g
-ZHRzaSBmaWxlDQo+IA0KPiBIaSBZb2dlc2gsDQo+IA0KPiBMZSAwMi8wMi8yMDE4IMOgIDA2OjMx
-LCBZb2dlc2ggR2F1ciBhIMOpY3JpdMKgOg0KPiA+IEZTTCBRdWFkU1BJIGNvbnRyb2xsZXIgc3Vw
-cG9ydHMgU2luZ2xlLCBkdWFsLCBxdWFkIG1vZGVzIG9mIG9wZXJhdGlvbi4NCj4gPiBNb2RlIGlu
-Zm9ybWF0aW9uIGlzIGF2YWlsYWJsZSB2aWEgInNwaS10eC1idXMtd2lkdGgiIGFuZA0KPiA+ICJz
-cGktcngtYnVzLXdpZHRoIiBub2RlcyBvZiBkZXZpY2UgdHJlZSBmb3IgdGhlIGNvbm5lY3RlZCBz
-bGF2ZSBkZXZpY2UuDQo+ID4NCj4gPiBVcGRhdGUgcmVhZCBhbmQgd3JpdGUgaHdjYXAgY2FwYWJp
-bGl0eSBmb3Igc2xhdmUgZGV2aWNlIGJ5IHJlYWRpbmcNCj4gPiAic3BpLXJ4LWJ1cy13aWR0aCIg
-YW5kICJzcGktdHgtYnVzLXdpZHRoIiByZXNwZWN0aXZlbHkuDQo+ID4gQXNzaWduIGh3Y2FwcyBt
-YXNrIHRvIG1pbmltYWwgY2FwcyBmb3IgdGhlIHNsYXZlIG5vZGUgaS5lLg0KPiA+IAlTTk9SX0hX
-Q0FQU19SRUFEIHwgU05PUl9IV0NBUFNfUFANCj4gPg0KPiA+IElmIHZhbHVlIG5vdCBwcm92aWRl
-ZCBpbiBkZXZpY2UgdHJlZSBmaWxlLCB0aGVuIGZhbGxiYWNrIHRvIGRlZmF1bHQNCj4gPiBtb2Rl
-IGkuZS4gU05PUl9IV0NBUFNfUkVBRF8xXzFfNCBhbmQgU05PUl9IV0NBUFNfUFAuDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBQcmFiaGFrYXIgS3VzaHdhaGEgPHByYWJoYWthci5rdXNod2FoYUBu
-eHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlvZ2VzaCBHYXVyIDx5b2dlc2huYXJheWFuLmdh
-dXJAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIGZvciB2MjoNCj4gPiAtIE5vbmUNCj4g
-Pg0KPiA+ICBkcml2ZXJzL210ZC9zcGktbm9yL2ZzbC1xdWFkc3BpLmMgfCA1Ng0KPiA+ICsrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwg
-NTEgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL210ZC9zcGktbm9yL2ZzbC1xdWFkc3BpLmMNCj4gPiBiL2RyaXZlcnMvbXRkL3NwaS1u
-b3IvZnNsLXF1YWRzcGkuYw0KPiA+IGluZGV4IGI5YzU5MTguLjE1MDNlMGMgMTAwNjQ0DQo+ID4g
-LS0tIGEvZHJpdmVycy9tdGQvc3BpLW5vci9mc2wtcXVhZHNwaS5jDQo+ID4gKysrIGIvZHJpdmVy
-cy9tdGQvc3BpLW5vci9mc2wtcXVhZHNwaS5jDQo+ID4gQEAgLTk5NCwxNyArOTk0LDE0IEBAIHN0
-YXRpYyB2b2lkIGZzbF9xc3BpX3VucHJlcChzdHJ1Y3Qgc3BpX25vciAqbm9yLA0KPiA+IGVudW0g
-c3BpX25vcl9vcHMgb3BzKQ0KPiA+DQo+ID4gIHN0YXRpYyBpbnQgZnNsX3FzcGlfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikgIHsNCj4gPiAtCWNvbnN0IHN0cnVjdCBzcGlfbm9y
-X2h3Y2FwcyBod2NhcHMgPSB7DQo+ID4gLQkJLm1hc2sgPSBTTk9SX0hXQ0FQU19SRUFEXzFfMV80
-IHwNCj4gPiAtCQkJU05PUl9IV0NBUFNfUFAsDQo+ID4gLQl9Ow0KPiA+ICsJc3RydWN0IHNwaV9u
-b3JfaHdjYXBzIGh3Y2FwczsNCj4gPiAgCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBwZGV2LT5k
-ZXYub2Zfbm9kZTsNCj4gPiAgCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ID4g
-IAlzdHJ1Y3QgZnNsX3FzcGkgKnE7DQo+ID4gIAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsNCj4gPiAg
-CXN0cnVjdCBzcGlfbm9yICpub3I7DQo+ID4gIAlzdHJ1Y3QgbXRkX2luZm8gKm10ZDsNCj4gPiAt
-CWludCByZXQsIGkgPSAwOw0KPiA+ICsJaW50IHJldCwgaSA9IDAsIHZhbHVlOw0KPiA+DQo+ID4g
-IAlxID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpxKSwgR0ZQX0tFUk5FTCk7DQo+ID4gIAlp
-ZiAoIXEpDQo+ID4gQEAgLTEwNzcsNiArMTA3NCwxMCBAQCBzdGF0aWMgaW50IGZzbF9xc3BpX3By
-b2JlKHN0cnVjdA0KPiA+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPg0KPiA+ICAJLyogaXRl
-cmF0ZSB0aGUgc3Vibm9kZXMuICovDQo+ID4gIAlmb3JfZWFjaF9hdmFpbGFibGVfY2hpbGRfb2Zf
-bm9kZShkZXYtPm9mX25vZGUsIG5wKSB7DQo+ID4gKwkJLyogUmVzZXQgaHdjYXBzIG1hc2sgdG8g
-bWluaW1hbCBjYXBzIGZvciB0aGUgc2xhdmUgbm9kZS4gKi8NCj4gPiArCQlod2NhcHMubWFzayA9
-IFNOT1JfSFdDQVBTX1JFQUQgfCBTTk9SX0hXQ0FQU19QUDsNCj4gPiArCQl2YWx1ZSA9IDA7DQo+
-ID4gKw0KPiA+ICAJCS8qIHNraXAgdGhlIGhvbGVzICovDQo+ID4gIAkJaWYgKCFxLT5oYXNfc2Vj
-b25kX2NoaXApDQo+ID4gIAkJCWkgKj0gMjsNCj4gPiBAQCAtMTEwNiw2ICsxMTA3LDUxIEBAIHN0
-YXRpYyBpbnQgZnNsX3FzcGlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRldikN
-Cj4gPiAgCQkvKiBzZXQgdGhlIGNoaXAgYWRkcmVzcyBmb3IgUkVBRElEICovDQo+ID4gIAkJZnNs
-X3FzcGlfc2V0X2Jhc2VfYWRkcihxLCBub3IpOw0KPiA+DQo+ID4gKwkJLyoNCj4gPiArCQkgKiBJ
-ZiBzcGktcngtYnVzLXdpZHRoIGFuZCBzcGktdHgtYnVzLXdpZHRoIG5vdCBkZWZpbmVkIGFzc2ln
-bg0KPiA+ICsJCSAqIGRlZmF1bHQgaGFyZHdhcmUgY2FwYWJpbGl0aWVzIFNOT1JfSFdDQVBTX1JF
-QURfMV8xXzQNCj4gYW5kDQo+ID4gKwkJICogU05PUl9IV0NBUFNfUFAgc3VwcG9ydGVkIGJ5IHRo
-ZSBRdWFkLVNQSSBjb250cm9sbGVyLg0KPiA+ICsJCSAqLw0KPiA+ICsJCWlmICghb2ZfcHJvcGVy
-dHlfcmVhZF91MzIobnAsICJzcGktcngtYnVzLXdpZHRoIiwgJnZhbHVlKSkgew0KPiA+ICsJCQlz
-d2l0Y2ggKHZhbHVlKSB7DQo+ID4gKwkJCWNhc2UgMToNCj4gPiArCQkJCWh3Y2Fwcy5tYXNrIHw9
-IFNOT1JfSFdDQVBTX1JFQUQgfA0KPiA+ICsJCQkJCSAgICAgICBTTk9SX0hXQ0FQU19SRUFEX0ZB
-U1Q7DQo+ID4gKwkJCQlicmVhazsNCj4gPiArCQkJY2FzZSAyOg0KPiA+ICsJCQkJaHdjYXBzLm1h
-c2sgfD0gU05PUl9IV0NBUFNfUkVBRF8xXzFfMg0KPiB8DQo+ID4gKwkJCQkJICAgICAgIFNOT1Jf
-SFdDQVBTX1JFQURfMV8yXzI7DQo+IA0KPiBJIGd1ZXNzIHRoZXJlIGlzIGEgbWlzdW5kZXJzdGFu
-ZGluZyBpbiB0aGUgbWVhbmluZyBvZiBzcGktcngtYnVzLXdpZHRoIGFuZCBzcGktDQo+IHR4LWJ1
-c193aWR0aC4NCj4gDQo+IHNwaS1yeC1idXMtd2lkdGggPSA8Tj4sIHJlc3AuIHNwaS10eC1idXMt
-d2lkdGggPSA8Tj4sIG1lYW5zIHRoZSBTUEkgY29udHJvbGxlcg0KPiBjYW4gcmVjZWl2ZSwgcmVz
-cC4gc2VuZCwgZGF0YSBvbiBOIEkvTyBMaW5lcy4NCj4gDQo+IFRoZW4gbGV0J3MgdGFrZSB0aGUg
-ZXhhbXBsZSBvZiBzb21lIEZhc3QgUmVhZCBYLVktWiBjb21tYW5kOg0KPiANCj4gdGhlIG9wIGNv
-ZGUgaXMgKnNlbnQqIG9uIFggSS9PIGxpbmVzOiB5b3UgbmVlZCB0byBjaGVjayBzcGktdHgtYnVz
-LXdpZHRoIHRoZQ0KPiBhZGRyZXNzL21vZGUvZHVtbXkgYml0cyBhcmUgKnNlbnQqIG9uIFkgSS9P
-IGxpbmVzOiBjaGVjayBzcGktdHgtYnVzLXdpZHRoIHRvbw0KPiB0aGUgZGF0YSBiaXRzIGFyZSAq
-cmVjZWl2ZWQqIG9uIFogSS9PIGxpbmVzOiBjaGVjayBzcGktcngtYnVzX3dpZHRoLg0KPiANCj4g
-PiArCQkJCWJyZWFrOw0KPiA+ICsJCQljYXNlIDQ6DQo+ID4gKwkJCQlod2NhcHMubWFzayB8PSBT
-Tk9SX0hXQ0FQU19SRUFEXzFfMV80DQo+IHwNCj4gPiArCQkJCQkgICAgICAgU05PUl9IV0NBUFNf
-UkVBRF8xXzRfNDsNCj4gDQo+IFRoZSBzYW1lIGhlcmU6IHRvIGFsbG93IFNQSSAxLTQtNCwgeW91
-IGhhdmUgdG8gY2hlY2sgdGhhdCBzcGktdHgtYnVzLXdpZHRoID09IDQuDQo+IA0KPiBTbyB5b3Vy
-IHVzYWdlIG9mIHNwaS17dHh8cnh9LWJ1cy13aWR0aCBpcyBub3QgY29uc2lzdGVudCB3aXRoIHRo
-ZSB1c2FnZSBkb25lIGluDQo+IHRoZSBTUEkgc3Vic3lzdGVtLiBQbGVhc2UgaGF2ZSBhIGxvb2sg
-YXQgZHJpdmVycy9tdGQvZGV2aWNlcy9tMjVwODAuYywNCj4gZXNwZWNpYWxseSBob3cgdGhlIFNQ
-SV9SWF9RVUFEIGFuZCBTUElfVFhfUVVBRCBmbGFncyBhcmUgdXNlZCBpbiB0aGUNCj4gbTI1cF9w
-cm9iZSgpIGZ1bmN0aW9uIHRvIGhhdmUgYSBiZXR0ZXIgaWRlYSBvZiBob3cgaXQgc2hvdWxkIHdv
-cmsuDQo+IA0KPiBBbHNvIGhhdmUgYSBsb29rIGF0IG9mX3NwaV9wYXJzZV9kdCgpIGluIGRyaXZl
-cnMvc3BpL3NwaS5jLCB0byBmaWd1cmUgb3V0IGhvdyB0aGUNCj4gU1BJX3tUWHxSWH1fe0RVQUx8
-UVVBRH0gZmxhZ3MgYXJlIHNldCBhY2NvcmRpbmcgdG8gdGhlIHNwaS17dHh8cnh9LWJ1cy13aWR0
-aA0KPiBEVCBwcm9wZXJ0aWVzLg0KPiANClRoYW5rcyBmb3IgcmV2aWV3LCB3b3VsZCBpbmNvcnBv
-cmF0ZSB5b3VyIHJldmlldyBjb21tZW50cyBhbmQgd291bGQgaGF2ZSB1c2FnZSBvZiBzcGkte3J4
-L3R4fS1idXMtd2lkdGggYXMgYmVpbmcgZG9uZSBpbiBTUEkgc3Vic3lzdGVtLg0KDQo+ID4gKwkJ
-CQlicmVhazsNCj4gPiArCQkJZGVmYXVsdDoNCj4gPiArCQkJCWRldl9lcnIoZGV2LA0KPiA+ICsJ
-CQkJCSJzcGktcngtYnVzLXdpZHRoICVkIG5vdCBzdXBwb3J0ZWRcbiIsDQo+ID4gKwkJCQkJdmFs
-dWUpOw0KPiA+ICsJCQkJYnJlYWs7DQo+ID4gKwkJCX0NCj4gPiArCQl9IGVsc2UNCj4gPiArCQkJ
-aHdjYXBzLm1hc2sgfD0gU05PUl9IV0NBUFNfUkVBRF8xXzFfNDsNCj4gDQo+IE5vdCBzdXJlIHdo
-ZXRoZXIgaXQgcGFzc2VzIGNoZWNrcGF0Y2gsIHlvdSBtYXkgaGF2ZSB0byBhZGQgeyB9IGZvciB0
-aGUgZWxzZQ0KPiBzdGF0ZW1lbnQgZXZlbiBpZiB0aGVyZSBpcyBhIHNpbmdsZSBsaW5lIGFzIHRo
-ZSBpZiBzdGF0ZW1lbnQgdXNlIHsgfS4NCj4gDQpJIGhhdmUgcnVuICcgLi9zY3JpcHRzL2NoZWNr
-cGF0Y2gucGwnIHByZXNlbnQgaW4gbGludXgtbXRkIGNvZGUgYmFzZSBhbmQgaXQgaGFzbid0IHJl
-cG9ydGVkIGFueSB3YXJuaW5nIG9yIGVycm9yIG1lc3NhZ2VzLg0KTWVhbndoaWxlLCB3b3VsZCBh
-ZGQge30gYnJhY2VzIGZvciB0aGlzIGVsc2Ugc3RhdGVtZW50IGFsc28uDQoNCi0tDQpSZWdhcmRz
-DQpZb2dlc2ggR2F1ci4NCg0KPiBQZXJzb25hbGx5IEkgZG9uJ3QgbWluZCB0aGF0IG11Y2guIFBs
-ZWFzZSBqdXN0IGNoZWNrIHRoYXQgeW91ciBwYXRjaCBwYXNzZXMNCj4gY2hlY2twYXRjaCB2ZXJp
-ZmljYXRpb24gYW5kIGl0IHdpbGwgYmUgb2theSBmb3IgbWUgOikNCj4gDQo+IEJlc3QgcmVnYXJk
-cywNCj4gDQo+IEN5cmlsbGUNCj4gDQo+ID4gKw0KPiA+ICsJCWlmICghb2ZfcHJvcGVydHlfcmVh
-ZF91MzIobnAsICJzcGktdHgtYnVzLXdpZHRoIiwgJnZhbHVlKSkgew0KPiA+ICsJCQlzd2l0Y2gg
-KHZhbHVlKSB7DQo+ID4gKwkJCWNhc2UgMToNCj4gPiArCQkJCWh3Y2Fwcy5tYXNrIHw9IFNOT1Jf
-SFdDQVBTX1BQOw0KPiA+ICsJCQkJYnJlYWs7DQo+ID4gKwkJCWNhc2UgNDoNCj4gPiArCQkJCWh3
-Y2Fwcy5tYXNrIHw9IFNOT1JfSFdDQVBTX1BQXzFfMV80IHwNCj4gPiArCQkJCQkgICAgICAgU05P
-Ul9IV0NBUFNfUFBfMV80XzQ7DQo+ID4gKwkJCQlicmVhazsNCj4gPiArCQkJZGVmYXVsdDoNCj4g
-PiArCQkJCWRldl9lcnIoZGV2LA0KPiA+ICsJCQkJCSJzcGktdHgtYnVzLXdpZHRoICVkIG5vdCBz
-dXBwb3J0ZWRcbiIsDQo+ID4gKwkJCQkJdmFsdWUpOw0KPiA+ICsJCQkJYnJlYWs7DQo+ID4gKwkJ
-CX0NCj4gPiArCQl9DQo+ID4gKw0KPiA+ICAJCXJldCA9IHNwaV9ub3Jfc2Nhbihub3IsIE5VTEws
-ICZod2NhcHMpOw0KPiA+ICAJCWlmIChyZXQpDQo+ID4gIAkJCWdvdG8gbXV0ZXhfZmFpbGVkOw0K
-PiA+DQoNCg==
+FSL QuadSPI controller supports Single, dual, quad modes of operation.
+Mode information is available via "spi-tx-bus-width" and
+"spi-rx-bus-width" nodes of device tree for the connected slave device.
+
+Update read and write hwcap capability for slave device by reading
+"spi-rx-bus-width" and "spi-tx-bus-width" respectively.
+Assign hwcaps mask to minimal caps for the slave node i.e.
+ SNOR_HWCAPS_READ | SNOR_HWCAPS_READ_FAST | SNOR_HWCAPS_PP
+
+If value not provided in device tree file, then fallback to default
+hwcaps for QSPI controller i.e. SNOR_HWCAPS_READ_1_1_4 and SNOR_HWCAPS_PP
+
+Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
+---
+Changes for v3:
+- Incorporated changes as per Cyrille's review comments.
+Changes for v2:
+- None.
+
+ drivers/mtd/spi-nor/fsl-quadspi.c | 72 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 67 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/mtd/spi-nor/fsl-quadspi.c b/drivers/mtd/spi-nor/fsl-quadspi.c
+index b9c5918..88f1184 100644
+--- a/drivers/mtd/spi-nor/fsl-quadspi.c
++++ b/drivers/mtd/spi-nor/fsl-quadspi.c
+@@ -29,6 +29,7 @@
+ #include <linux/mutex.h>
+ #include <linux/pm_qos.h>
+ #include <linux/sizes.h>
++#include <linux/spi/spi.h>
+ 
+ /* Controller needs driver to swap endian */
+ #define QUADSPI_QUIRK_SWAP_ENDIAN	(1 << 0)
+@@ -994,17 +995,14 @@ static void fsl_qspi_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
+ 
+ static int fsl_qspi_probe(struct platform_device *pdev)
+ {
+-	const struct spi_nor_hwcaps hwcaps = {
+-		.mask = SNOR_HWCAPS_READ_1_1_4 |
+-			SNOR_HWCAPS_PP,
+-	};
++	struct spi_nor_hwcaps hwcaps;
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
+ 	struct fsl_qspi *q;
+ 	struct resource *res;
+ 	struct spi_nor *nor;
+ 	struct mtd_info *mtd;
+-	int ret, i = 0;
++	int ret, i = 0, value, mode;
+ 
+ 	q = devm_kzalloc(dev, sizeof(*q), GFP_KERNEL);
+ 	if (!q)
+@@ -1077,6 +1075,13 @@ static int fsl_qspi_probe(struct platform_device *pdev)
+ 
+ 	/* iterate the subnodes. */
+ 	for_each_available_child_of_node(dev->of_node, np) {
++		/* Reset hwcaps mask to minimal caps for the slave node. */
++		hwcaps.mask = SNOR_HWCAPS_READ |
++			      SNOR_HWCAPS_READ_FAST |
++			      SNOR_HWCAPS_PP;
++		value = 0;
++		mode = 0;
++
+ 		/* skip the holes */
+ 		if (!q->has_second_chip)
+ 			i *= 2;
+@@ -1106,6 +1111,63 @@ static int fsl_qspi_probe(struct platform_device *pdev)
+ 		/* set the chip address for READID */
+ 		fsl_qspi_set_base_addr(q, nor);
+ 
++		/*
++		 * If spi-rx-bus-width and spi-tx-bus-width not defined assign
++		 * default hardware capabilities for READ as
++		 * SNOR_HWCAPS_READ_1_1_4.
++		 */
++		if (!of_property_read_u32(np, "spi-rx-bus-width", &value)) {
++			switch (value) {
++			case 1:
++				break;
++			case 2:
++				mode |= SPI_RX_DUAL;
++				break;
++			case 4:
++				mode |= SPI_RX_QUAD;
++				break;
++			default:
++				dev_err(dev,
++					"spi-rx-bus-width %d not supported\n",
++					value);
++				break;
++			}
++		} else {
++			hwcaps.mask |= SNOR_HWCAPS_READ_1_1_4;
++		}
++
++		if (!of_property_read_u32(np, "spi-tx-bus-width", &value)) {
++			switch (value) {
++			case 1:
++				break;
++			case 2:
++				mode |= SPI_TX_DUAL;
++				break;
++			case 4:
++				mode |= SPI_TX_QUAD;
++				break;
++			default:
++				dev_err(dev,
++					"spi-tx-bus-width %d not supported\n",
++					value);
++				break;
++			}
++		}
++
++		if (mode & SPI_RX_QUAD) {
++			hwcaps.mask |= SNOR_HWCAPS_READ_1_1_4;
++
++			if (mode & SPI_TX_QUAD)
++				hwcaps.mask |= (SNOR_HWCAPS_READ_1_4_4 |
++						SNOR_HWCAPS_PP_1_1_4 |
++						SNOR_HWCAPS_PP_1_4_4);
++		} else if (mode & SPI_RX_DUAL) {
++			hwcaps.mask |= SNOR_HWCAPS_READ_1_1_2;
++
++			if (mode & SPI_TX_DUAL)
++				hwcaps.mask |= SNOR_HWCAPS_READ_1_2_2;
++		}
++
+ 		ret = spi_nor_scan(nor, NULL, &hwcaps);
+ 		if (ret)
+ 			goto mutex_failed;
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
