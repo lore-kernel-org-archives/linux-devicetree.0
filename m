@@ -1,11 +1,11 @@
 From: Kieran Bingham <kbingham@kernel.org>
-Subject: [PATCH v2 4/4] arm64: dts: renesas: r8a7796: Fix register mappings on VSPs
-Date: Tue, 13 Feb 2018 19:30:37 +0000
-Message-ID: <1518550237-16753-5-git-send-email-kbingham@kernel.org>
+Subject: [PATCH v2 2/4] arm64: dts: renesas: r8a77995: add VSP instances
+Date: Tue, 13 Feb 2018 19:30:35 +0000
+Message-ID: <1518550237-16753-3-git-send-email-kbingham@kernel.org>
 References: <1518550237-16753-1-git-send-email-kbingham@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <1518550237-16753-1-git-send-email-kbingham@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
 Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
@@ -14,44 +14,74 @@ List-Id: devicetree@vger.kernel.org
 
 From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-The VSPD includes a CLUT on RPF2. Ensure that the register space is
-mapped correctly to support this.
+The r8a77995 has a VSPBS to support image processing such as blending of
+two input images, and has two VSPDs to handle display pipelines with a
+DU.
 
 Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
----
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 60755117cba5..3fe5566e0630 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -2285,7 +2285,7 @@
+---
+v2:
+ - Fix VSPD register map size
+ - Squash VSPBS and VSPD patches together
+
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+index 196a917afea6..19bd8be9926a 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+@@ -692,6 +692,16 @@
+ 			status = "disabled";
+ 		};
  
- 		vspd0: vsp@fea20000 {
- 			compatible = "renesas,vsp2";
--			reg = <0 0xfea20000 0 0x4000>;
++		vspbs: vsp@fe960000 {
++			compatible = "renesas,vsp2";
++			reg = <0 0xfe960000 0 0x4000>;
++			interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 627>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 627>;
++			renesas,fcp = <&fcpvb0>;
++		};
++
+ 		fcpvb0: fcp@fe96f000 {
+ 			compatible = "renesas,fcpv";
+ 			reg = <0 0xfe96f000 0 0x200>;
+@@ -701,6 +711,16 @@
+ 			iommus = <&ipmmu_vp0 5>;
+ 		};
+ 
++		vspd0: vsp@fea20000 {
++			compatible = "renesas,vsp2";
 +			reg = <0 0xfea20000 0 0x8000>;
- 			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 623>;
- 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-@@ -2305,7 +2305,7 @@
++			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 623>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 623>;
++			renesas,fcp = <&fcpvd0>;
++		};
++
+ 		fcpvd0: fcp@fea27000 {
+ 			compatible = "renesas,fcpv";
+ 			reg = <0 0xfea27000 0 0x200>;
+@@ -710,6 +730,16 @@
+ 			iommus = <&ipmmu_vi0 8>;
+ 		};
  
- 		vspd1: vsp@fea28000 {
- 			compatible = "renesas,vsp2";
--			reg = <0 0xfea28000 0 0x4000>;
++		vspd1: vsp@fea80000 {
++			compatible = "renesas,vsp2";
 +			reg = <0 0xfea28000 0 0x8000>;
- 			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 622>;
- 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-@@ -2325,7 +2325,7 @@
- 
- 		vspd2: vsp@fea30000 {
- 			compatible = "renesas,vsp2";
--			reg = <0 0xfea30000 0 0x4000>;
-+			reg = <0 0xfea30000 0 0x8000>;
- 			interrupts = <GIC_SPI 468 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 621>;
- 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
++			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 622>;
++			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
++			resets = <&cpg 622>;
++			renesas,fcp = <&fcpvd1>;
++		};
++
+ 		fcpvd1: fcp@fea2f000 {
+ 			compatible = "renesas,fcpv";
+ 			reg = <0 0xfea2f000 0 0x200>;
 -- 
 2.7.4
