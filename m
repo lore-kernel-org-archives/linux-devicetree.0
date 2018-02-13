@@ -1,86 +1,98 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm64: dts: renesas: r8a77995: add VSPD instances
-Date: Tue, 13 Feb 2018 14:45:41 +0200
-Message-ID: <4151746.tevFeqBdEH@avalon>
-References: <1518474330-8713-1-git-send-email-kbingham@kernel.org> <1518474330-8713-5-git-send-email-kbingham@kernel.org>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH 02/37] iommu/sva: Bind process address spaces to devices
+Date: Tue, 13 Feb 2018 12:57:23 +0000
+Message-ID: <b9eacb30-817f-9027-bc0a-1f01cf9f13f9@arm.com>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+ <20180212183352.22730-3-jean-philippe.brucker@arm.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D191002897@SHSMSX101.ccr.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518474330-8713-5-git-send-email-kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <kvm-owner@vger.kernel.org>
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D191002897@SHSMSX101.ccr.corp.intel.com>
+Content-Language: en-US
+Sender: kvm-owner@vger.kernel.org
+To: "Tian, Kevin" <kevin.tian@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Cc: "joro@8bytes.org" <joro@8bytes.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "hanjun.guo@linaro.org" <hanjun.guo@linaro.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "lenb@kernel.org" <lenb@kernel.org>, Robin Murphy <Robin.Murphy@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com" <alex.williamson@redhat.com>, "tn@semihalf.com" <tn@semihalf.com>, "liubo95@huawei.com" <liubo95@huawei.com>, "thunder.leizhen@huawei.com" <thunder.leizhen@huawei.com>, "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>"xuzaibo@huawei.com" <x>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
-
-Thank you for the patch.
-
-On Tuesday, 13 February 2018 00:25:29 EET Kieran Bingham wrote:
-> From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+On 13/02/18 07:54, Tian, Kevin wrote:
+>> From: Jean-Philippe Brucker
+>> Sent: Tuesday, February 13, 2018 2:33 AM
+>>
+>> Add bind() and unbind() operations to the IOMMU API. Device drivers can
+>> use them to share process page tables with their devices. bind_group()
+>> is provided for VFIO's convenience, as it needs to provide a coherent
+>> interface on containers. Other device drivers will most likely want to
+>> use bind_device(), which binds a single device in the group.
 > 
-> The r8a77995 has two VSPDs to handle display pipelines with a DU.
+> I saw your bind_group implementation tries to bind the address space
+> for all devices within a group, which IMO has some problem. Based on PCIe
+> spec, packet routing on the bus doesn't take PASID into consideration. 
+> since devices within same group cannot be isolated based on requestor-ID
+> i.e. traffic not guaranteed going to IOMMU, enabling SVA on multiple devices
+> could cause undesired p2p.
+But so does enabling "classic" DMA... If two devices are not protected by
+ACS for example, they are put in the same IOMMU group, and one device
+might be able to snoop the other's DMA. VFIO allows userspace to create a
+container for them and use MAP/UNMAP, but makes it explicit to the user
+that for DMA, these devices are not isolated and must be considered as a
+single device (you can't pass them to different VMs or put them in
+different containers). So I tried to keep the same idea as MAP/UNMAP for
+SVA, performing BIND/UNBIND operations on the VFIO container instead of
+the device.
+
+I kept the analogy simple though, because I don't think there will be many
+SVA-capable systems that require IOMMU groups. They will likely implement
+proper device isolation. Unlike iommu_attach_device(), bind_device()
+doesn't call bind_group(), because keeping bonds consistent in groups is
+complicated, not worth implementing (drivers can explicitly bind() all
+devices that need it) and probably wouldn't ever be used. I also can't
+test it. But maybe we could implement the following for now:
+
+* bind_device() fails if the device's group has more than one device,
+otherwise calls __bind_device(). This prevents device drivers that are
+oblivious to IOMMU groups from opening a backdoor.
+
+* bind_group() calls __bind_device() for all devices in group. This way
+users that are aware of IOMMU groups can still use them safely. Note that
+at the moment bind_group() fails as soon as it finds a device that doesn't
+support SVA. Having all devices support SVA in a given group is
+unrealistic and this behavior ought to be improved.
+
+* hotplugging a device into a group still succeeds even if the group
+already has mm bonds. Same happens for classic DMA, a hotplugged device
+will have access to all mappings already present in the domain.
+
+> If my understanding of PCIe spec is correct, probably we should fail 
+> calling bind_group()/bind_device() when there are multiple devices within 
+> the given group. If only one device then bind_group is essentially a wrapper
+> to bind_device.>>
+>> Regardless of the IOMMU group or domain a device is in, device drivers
+>> should call bind() for each device that will use the PASID.
+>>
+[...]
+>> +/**
+>> + * iommu_sva_bind_device() - Bind a process address space to a device
+>> + * @dev: the device
+>> + * @mm: the mm to bind, caller must hold a reference to it
+>> + * @pasid: valid address where the PASID will be stored
+>> + * @flags: bond properties (IOMMU_SVA_FEAT_*)
+>> + * @drvdata: private data passed to the mm exit handler
+>> + *
+>> + * Create a bond between device and task, allowing the device to access
+>> the mm
+>> + * using the returned PASID. A subsequent bind() for the same device and
+>> mm will
+>> + * reuse the bond (and return the same PASID), but users will have to call
+>> + * unbind() twice.
 > 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> b/arch/arm64/boot/dts/renesas/r8a77995.dtsi index
-> 50c891f6649f..2c14a8dfd201 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> @@ -711,6 +711,16 @@
->  			iommus = <&ipmmu_vp0 5>;
->  		};
-> 
-> +		vspd0: vsp@fea20000 {
-> +			compatible = "renesas,vsp2";
-> +			reg = <0 0xfea20000 0 0x4000>;
+> what's the point of requiring unbind twice?
 
-Same issue as in patch 3/4 (for which I have incorrectly mentioned VSPD 
-instead of VSPBS). I'd just extend the region size to 0x8000 for both VSPDs.
+Mmh, that was necessary when we kept bond information as domain<->mm, but
+since it's now device<->mm, we can probably remove the bond refcount. I
+consider that a bind() between a given device and mm will always be issued
+by the same driver.
 
-Apart from that,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-
-> +			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 623>;
-> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> +			resets = <&cpg 623>;
-> +			renesas,fcp = <&fcpvd0>;
-> +		};
-> +
->  		fcpvd0: fcp@fea27000 {
->  			compatible = "renesas,fcpv";
->  			reg = <0 0xfea27000 0 0x200>;
-> @@ -720,6 +730,16 @@
->  			iommus = <&ipmmu_vi0 8>;
->  		};
-> 
-> +		vspd1: vsp@fea80000 {
-> +			compatible = "renesas,vsp2";
-> +			reg = <0 0xfea28000 0 0x4000>;
-> +			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&cpg CPG_MOD 622>;
-> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> +			resets = <&cpg 622>;
-> +			renesas,fcp = <&fcpvd1>;
-> +		};
-> +
->  		fcpvd1: fcp@fea2f000 {
->  			compatible = "renesas,fcpv";
->  			reg = <0 0xfea2f000 0 0x200>;
-
--- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Jean
