@@ -1,50 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 0/3] Add R8A77970/Eagle PFC support
-Date: Tue, 13 Feb 2018 13:46:58 +0300
-Message-ID: <b6f69e47-1bce-1939-9315-0364c6397a85@cogentembedded.com>
-References: <20171110200218.747996672@cogentembedded.com>
- <20171113075303.zmkmq6bt3lfuttwu@verge.net.au>
- <049b0a0a-b1c2-73e6-c471-ca8342bba6ab@ideasonboard.com>
- <19d23fa2-1205-89a0-786f-f301ca7a0f7b@cogentembedded.com>
- <20180213075222.mf7dsbwgv5ln4ond@verge.net.au>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 15/15] ARM: dts: dra7: Add high speed modes capability
+ to MMC1/MMC2 dt node
+Date: Tue, 13 Feb 2018 16:40:07 +0530
+Message-ID: <4f18dab9-aee3-1023-d301-f142c6e2d358@ti.com>
+References: <20180206125806.19350-1-kishon@ti.com>
+ <20180206125806.19350-16-kishon@ti.com>
+ <210939ed-67fc-fa37-b4f2-c1faefcc4642@ti.com>
+ <b411cf11-61e9-e688-6f04-e624fe52ac66@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180213075222.mf7dsbwgv5ln4ond@verge.net.au>
-Content-Language: en-MW
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b411cf11-61e9-e688-6f04-e624fe52ac66@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/13/2018 10:52 AM, Simon Horman wrote:
-
->>>>> Here's the set of 3 patches against Simon Horman's 'renesas.git' repo's
->>>>> 'renesas-devel-20171110-v4.14-rc8' tag.  We're adding the R8A77970 PFC node
->>>>> and then describing the pins for SCIF0 and EtherAVB devices declared earlier.
->>>>> These patches depend on the R8A77970 PFC suport in order to work properly.
->>>>>
->>>>> [1/3] arm64: dts: renesas: r8a77970: add PFC support
->>>>> [2/3] arm64: dts: renesas: eagle: add SCIF0 pins
->>>>> [3/3] arm64: dts: renesas: eagle: add EtherAVB pins
->>>>
->>>> Hi Sergei,
->>>>
->>>> I have marked these patches as deferred pending acceptance of the PFC
->>>> driver. Please repost or otherwise ping me once that dependency has been
->>>> accepted.
->>>
->>> Has the dependency blocking this series been resolved yet ?
->>
->>    Now it is, except for the 3rd patch... Simon, do I need to repost the first two?
->> The 1st one did apply to 4.16-rc1 here with a fuzz...
+On Wednesday 07 February 2018 02:51 PM, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> Thanks for bringing this to my attention.  No need to repost. I've applied
-> all three patches and plan to push later today.
+> On Wednesday 07 February 2018 02:41 PM, Sekhar Nori wrote:
+>> Kishon,
+>>
+>> On Tuesday 06 February 2018 06:28 PM, Kishon Vijay Abraham I wrote:
+>>> Add UHS/HS200/DDR speed mode capability to MMC1 and MMC2 dt nodes.
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>
+>> Along with this, dont we need to have
+>>
+>> 	/delete-property/ mmc-hs200-1_8v;
+>>
+>> for eMMC on Beagle x15 which does not support HS200?
+>>
+>> Or are you planning to depend on lack of pinctrl entries for HS200 to
+>> take care of that?
+> 
+> right now it relies on lack of pinctrl entries but I think adding delete
+> property is appropriate. Actually I missed porting the patch that adds
+> /delete-property/.
 
-   My mentioning of the patch #3 wasn't just random: that patch shouldn't have been
-merged since the EtherAVB pin groups were dropped by Geert while merging the R8A77970
-PFC code. Now Eagle can't mount NFS root.
+Actually, thinking more, this should be probably be handled using
+"no-1-8-v" property. Reading the comment above SDHCI_QUIRK2_NO_1_8_V, it
+is specifically meant for the case when system (board) does not support
+1.8V even when host (controller) does. Which is exactly the case with
+Beagle x15.
 
-MBR, Sergei
+Thanks,
+Sekhar
