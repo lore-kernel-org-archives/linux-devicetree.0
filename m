@@ -1,57 +1,118 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 16/25] arm: zx: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Tue, 13 Feb 2018 09:37:12 -0600
-Message-ID: <CAL_JsqL02_v46mxqF2cFerC82fNPQAEpm0vfjr2F_78i3fVM7Q@mail.gmail.com>
-References: <20171215124649.30692-1-malat@debian.org> <20171226080312.GE23070@X250>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv4 1/3] dt-bindings: documentation: add clock bindings
+ information for Stratix10
+Date: Tue, 13 Feb 2018 09:44:49 -0600
+Message-ID: <CAL_JsqJNbMQOXxxDbHc=sVJFOmBWMjR25vHR-Jsqde_GnBsF0w@mail.gmail.com>
+References: <1518516286-14428-1-git-send-email-dinguyen@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171226080312.GE23070@X250>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mathieu Malaterre <malat@debian.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Jun Nie <jun.nie@linaro.org>, Baoyou Xie <baoyou.xie@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518516286-14428-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 26, 2017 at 2:03 AM, Shawn Guo <shawnguo@kernel.org> wrote:
-> On Fri, Dec 15, 2017 at 01:46:48PM +0100, Mathieu Malaterre wrote:
->> Improve the DTS files by removing all the leading "0x" and zeros to fix the
->> following dtc warnings:
->>
->> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
->>
->> and
->>
->> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
->>
->> Converted using the following command:
->>
->> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
->>
->> For simplicity, two sed expressions were used to solve each warnings separately.
->>
->> To make the regex expression more robust a few other issues were resolved,
->> namely setting unit-address to lower case, and adding a whitespace before the
->> the opening curly brace:
->>
->> https://elinux.org/Device_Tree_Linux#Linux_conventions
->>
->> This will solve as a side effect warning:
->>
->> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
->>
->> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
->>
->> Reported-by: David Daney <ddaney@caviumnetworks.com>
->> Suggested-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+On Tue, Feb 13, 2018 at 4:04 AM, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Document that Stratix10 clock bindings, and add the clock header file. The
+> clock header is an enumeration of all the different clocks on the Stratix10
+> platform.
 >
-> Hi Arnd, Olof,
+> Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> v4:
+> - remove '_' in node names
+> - remove stray tab
+> - add clock-frequency property for fixed-clocks
+> - put SPDX license as the very top line
+> v3:
+> - s/intc/intel for correct vendor prefix
+> - fixup node name to "intel,stratix10-clkmgr"
+> - document the required fixed-clock for oscillators
+> v2:
+> - use a single binding for the clock controller
+> ---
+>  .../devicetree/bindings/clock/intc_stratix10.txt   | 51 +++++++++++++
+>  include/dt-bindings/clock/stratix10-clock.h        | 84 ++++++++++++++++++++++
+>  2 files changed, 135 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/intc_stratix10.txt
+>  create mode 100644 include/dt-bindings/clock/stratix10-clock.h
 >
-> I do not have any other ZTE ZX platform patches to send you.  Is it okay
-> to send this one using IMX branch, or can you apply it to arm-soc
-> directly?
+> diff --git a/Documentation/devicetree/bindings/clock/intc_stratix10.txt b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
+> new file mode 100644
+> index 0000000..0652ff1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
+> @@ -0,0 +1,51 @@
+> +Device Tree Clock bindings for Intel's SoCFPGA Stratix10 platform
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible : shall be
+> +       "intel,stratix10-clkmgr"
+> +
+> +- reg : shall be the control register offset from CLOCK_MANAGER's base for the clock.
+> +
+> +- #clock-cells : from common clock binding, shall be set to 1.
+> +
+> +- clocks : Should contain fixed-clock sources, such as oscillators.
+> +
+> +Example:
+> +       clkmgr: clock-controller@ffd10000 {
+> +               compatible = "intel,stratix10-clkmgr";
+> +               reg = <0xffd10000 0x1000>;
+> +               #clock-cells = <1>;
+> +
+> +               clocks {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       cb_intosc_hs_div2_clk: cb-intosc-hs-div2-clk {
+> +                               #clock-cells = <0>;
+> +                               compatible = "fixed-clock";
+> +                               clock-frequency = <25000000>;
+> +                       };
+> +
+> +                       cb_intosc_ls_clk: cb-intosc-ls-clk {
+> +                               #clock-cells = <0>;
+> +                               compatible = "fixed-clock";
+> +                               clock-frequency = <25000000>;
+> +                       };
+> +
+> +                       f2s_free_clk: f2s-free-clk {
+> +                               #clock-cells = <0>;
+> +                               compatible = "fixed-clock";
+> +                               clock-frequency = <25000000>;
+> +                       };
+> +
+> +                       osc1: osc1 {
+> +                               #clock-cells = <0>;
+> +                               compatible = "fixed-clock";
+> +                               clock-frequency = <25000000>;
+> +                       };
+> +               };
+> +       };
+> diff --git a/include/dt-bindings/clock/stratix10-clock.h b/include/dt-bindings/clock/stratix10-clock.h
+> new file mode 100644
+> index 0000000..5be885d
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/stratix10-clock.h
+> @@ -0,0 +1,84 @@
+> +/* SPDX-License-Identifier:    GPL-2.0
 
-Ping. This one didn't make it into 4.16.
+Sigh. Should be a single line comment and a single space:
+
+/* SPDX-License-Identifier: GPL-2.0 */
+
+With that,
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
