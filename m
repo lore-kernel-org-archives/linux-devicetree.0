@@ -1,48 +1,60 @@
-From: Cosmin Samoila <cosmin.samoila@nxp.com>
-Subject: Re: [PATCH] ASoC: codecs: Add support for AK4458 DAC
-	driver
-Date: Tue, 13 Feb 2018 09:22:24 +0000
-Message-ID: <1518513744.25655.8.camel@nxp.com>
-References: <1517404809-25250-1-git-send-email-cosmin.samoila@nxp.com>
- <20180131170330.GB7763@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180131170330.GB7763@sirena.org.uk>
-Content-Language: en-US
-Content-ID: <EEEC3802193D804DA3A698232AF5AA61@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "broonie@kernel.org" <broonie@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wakasugi.jb@om.asahi-kasei.co.jp" <wakasugi.jb@om.asahi-kasei.co.jp>, dl-linux-imx <linux-imx@nxp.com>, "mihai.serban@nxp.com" <mihai.serban@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "mihai.serban@gmail.com" <mihai.serban@gmail.com>
+From: Greentime Hu <green.hu@gmail.com>
+Subject: [PATCH v7 33/37] dt-bindings: nds32 L2 cache controller Bindings
+Date: Tue, 13 Feb 2018 17:09:37 +0800
+Message-ID: <98f2057a0a26cfba1220386ebb9a0c389ac9c95b.1518505384.git.greentime@andestech.com>
+References: <cover.1518505384.git.greentime@andestech.com>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
+In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
+References: <cover.1518505384.git.greentime@andestech.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
+Cc: green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywNCg0KPiA+IA0KPiA+ICtzdGF0aWMgaW50IGFrNDQ1OF9od19wYXJhbXMoc3RydWN0
-IHNuZF9wY21fc3Vic3RyZWFtICpzdWJzdHJlYW0sDQo+ID4gKwkJCcKgwqDCoMKgc3RydWN0IHNu
-ZF9wY21faHdfcGFyYW1zICpwYXJhbXMsDQo+ID4gKwkJCcKgwqDCoMKgc3RydWN0IHNuZF9zb2Nf
-ZGFpICpkYWkpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBzbmRfc29jX2NvZGVjICpjb2RlYyA9IGRh
-aS0+Y29kZWM7DQo+ID4gKwlzdHJ1Y3QgYWs0NDU4X3ByaXYgKmFrNDQ1OCA9DQo+ID4gc25kX3Nv
-Y19jb2RlY19nZXRfZHJ2ZGF0YShjb2RlYyk7DQo+ID4gKwl1OCBmb3JtYXQ7DQo+ID4gKwlpbnQg
-cGNtX3dpZHRoID0gbWF4KHBhcmFtc19waHlzaWNhbF93aWR0aChwYXJhbXMpLCBhazQ0NTgtDQo+
-ID4gPnNsb3Rfd2lkdGgpOw0KPiA+ICsNCj4gPiArI2lmZGVmIEFLNDQ1OF9BQ0tTX1VTRV9NQU5V
-QUxfTU9ERQ0KPiA+ICsJdTggZGZzMSwgZGZzMjsNCj4gPiArI2VuZGlmDQo+IFdoYXQncyB0aGlz
-IGFuZCB3aHkgaXMgaXQgYSBjb21waWxlIHRpbWUgb3B0aW9uPw0KDQpUaGlzIGlzIHVzZWQgdG8g
-c2V0IHRoZSBjb2RlYyBpbiBNYW51YWwgU2V0dGluZyBNb2RlLCBtZWFuaW5nIHRoYXQNCnRoZSBk
-ZWZhdWx0IHNhbXBsaW5nIHNwZWVkIGlzIHNldCBiYXNlZCBvbiBERlMwIGFuZCBERlMxIGJpdHMu
-IEluDQpBdXRvIFNldHRpbmcgTW9kZSwgdGhlIE1DTEsgZnJlcXVlbmN5IGlzIGRldGVjdGVkIGF1
-dG9tYXRpY2FsbHkgYW5kDQpERlMgYml0cyBhcmUgaWdub3JlZC4NClRoaXMgY29tcGlsZSB0aW1l
-IG9wdGlvbiBpcyB1c2VkIHRvIGtub3cgd2hlbiB0byBzZXQgdGhlIEFDS1MgYml0IGluDQppbml0
-X3JlZyBmdW5jdGlvbiB0aGF0IHN3aXRjaGVzIGJldHdlZW4gbW9kZXMuDQpBdCB0aGlzIG1vbWVu
-dCB3ZSBhcmUgb25seSB1c2luZyBBdXRvIE1vZGUgYW5kIEkgY2FuIHJlbW92ZSBpdCBpZg0KeW91
-IHRoaW5rIGlzIG5vdCBuZWNlc3NhcnkuDQoNClRoYW5rIHlvdSwNCkNvc21pbgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcg
-bGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9q
-ZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
+This patch adds nds32 L2 cache controller binding documents.
+
+Signed-off-by: Greentime Hu <greentime@andestech.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
+ Documentation/devicetree/bindings/nds32/atl2c.txt | 28 +++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nds32/atl2c.txt
+
+diff --git a/Documentation/devicetree/bindings/nds32/atl2c.txt b/Documentation/devicetree/bindings/nds32/atl2c.txt
+new file mode 100644
+index 000000000000..da8ab8e7ae9b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nds32/atl2c.txt
+@@ -0,0 +1,28 @@
++* Andestech L2 cache Controller
++
++The level-2 cache controller plays an important role in reducing memory latency
++for high performance systems, such as thoese designs with AndesCore processors.
++Level-2 cache controller in general enhances overall system performance
++signigicantly and the system power consumption might be reduced as well by
++reducing DRAM accesses.
++
++This binding specifies what properties must be available in the device tree
++representation of an Andestech L2 cache controller.
++
++Required properties:
++	- compatible:
++		Usage: required
++		Value type: <string>
++		Definition: "andestech,atl2c"
++	- reg : Physical base address and size of cache controller's memory mapped
++	- cache-unified : Specifies the cache is a unified cache.
++	- cache-level : Should be set to 2 for a level 2 cache.
++
++* Example
++
++	cache-controller@e0500000 {
++		compatible = "andestech,atl2c";
++		reg = <0xe0500000 0x1000>;
++		cache-unified;
++		cache-level = <2>;
++	};
+-- 
+2.16.1
