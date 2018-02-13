@@ -1,170 +1,205 @@
-From: "Tian, Kevin" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH 04/37] iommu/sva: Add a mm_exit callback for device
- drivers
-Date: Tue, 13 Feb 2018 08:11:03 +0000
-Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D1910028F9@SHSMSX101.ccr.corp.intel.com>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
- <20180212183352.22730-5-jean-philippe.brucker@arm.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] gpio: Add GPIO driver for Spreadtrum SC9860 platform
+Date: Tue, 13 Feb 2018 09:13:32 +0100
+Message-ID: <CACRpkdYYmHLfozshnQcH+CR0N1zFtiLARRtUbXvJiLG+Bv+R9w@mail.gmail.com>
+References: <2834309f69a1ec37b84a33f153a3d0b90336bcc6.1517795460.git.baolin.wang@linaro.org>
+ <e6da9398355648fc72dc3f674a7c11e114c37d61.1517795461.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180212183352.22730-5-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <e6da9398355648fc72dc3f674a7c11e114c37d61.1517795461.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "sudeep.holla-5wv7dgnIgG8@public.gmane.org" <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robin.murphy-5wv7dgnIgG8@public.gmane.org" <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org" <tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, xieyisheng1-hv44wF8Li91hl2p70BpVqQ@public.gmane.org
+To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Jean-Philippe Brucker
-> Sent: Tuesday, February 13, 2018 2:33 AM
-> 
-> When an mm exits, devices that were bound to it must stop performing
-> DMA
-> on its PASID. Let device drivers register a callback to be notified on mm
-> exit. Add the callback to the iommu_param structure attached to struct
-> device.
+On Mon, Feb 5, 2018 at 2:55 AM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-what about registering the callback in sva_device_init? 
-
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+> The Spreadtrum SC9860 platform GPIO controller contains 16 groups and
+> each group contains 16 GPIOs. Each GPIO can set input/output and has
+> the interrupt capability.
+>
+> Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/iommu/iommu-sva.c | 54
-> +++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/iommu.h     | 18 ++++++++++++++++
->  2 files changed, 72 insertions(+)
-> 
-> diff --git a/drivers/iommu/iommu-sva.c b/drivers/iommu/iommu-sva.c
-> index f9af9d66b3ed..90b524c99d3d 100644
-> --- a/drivers/iommu/iommu-sva.c
-> +++ b/drivers/iommu/iommu-sva.c
-> @@ -569,3 +569,57 @@ void __iommu_sva_unbind_dev_all(struct device
-> *dev)
->  	spin_unlock(&iommu_sva_lock);
->  }
->  EXPORT_SYMBOL_GPL(__iommu_sva_unbind_dev_all);
-> +
-> +/**
-> + * iommu_register_mm_exit_handler() - Set a callback for mm exit
-> + * @dev: the device
-> + * @handler: exit handler
-> + *
-> + * Users of the bind/unbind API should call this function to set a
-> + * device-specific callback telling them when a mm is exiting.
-> + *
-> + * After the callback returns, the device must not issue any more
-> transaction
-> + * with the PASID given as argument to the handler. In addition the
-> handler gets
-> + * an opaque pointer corresponding to the drvdata passed as argument of
-> bind().
-> + *
-> + * The handler itself should return 0 on success, and an appropriate error
-> code
-> + * otherwise.
-> + */
-> +int iommu_register_mm_exit_handler(struct device *dev,
-> +				   iommu_mm_exit_handler_t handler)
-> +{
-> +	struct iommu_param *dev_param = dev->iommu_param;
-> +
-> +	if (!dev_param)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * FIXME: racy. Same as iommu_sva_device_init, but here we'll
-> need a
-> +	 * spinlock to call the mm_exit param from atomic context.
-> +	 */
-> +	if (dev_param->mm_exit)
-> +		return -EBUSY;
-> +
-> +	get_device(dev);
-> +	dev_param->mm_exit = handler;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_register_mm_exit_handler);
-> +
-> +/**
-> + * iommu_unregister_mm_exit_handler() - Remove mm exit callback
-> + */
-> +int iommu_unregister_mm_exit_handler(struct device *dev)
-> +{
-> +	struct iommu_param *dev_param = dev->iommu_param;
-> +
-> +	if (!dev_param || !dev_param->mm_exit)
-> +		return -EINVAL;
-> +
-> +	dev_param->mm_exit = NULL;
-> +	put_device(dev);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(iommu_unregister_mm_exit_handler);
-> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> index 09d85f44142a..1b1a16892ac1 100644
-> --- a/include/linux/iommu.h
-> +++ b/include/linux/iommu.h
-> @@ -65,6 +65,8 @@ typedef int (*iommu_dev_fault_handler_t)(struct
-> iommu_fault_event *, void *);
->  /* Request I/O page fault support */
->  #define IOMMU_SVA_FEAT_IOPF		(1 << 1)
-> 
-> +typedef int (*iommu_mm_exit_handler_t)(struct device *dev, int pasid,
-> void *);
-> +
->  struct iommu_domain_geometry {
->  	dma_addr_t aperture_start; /* First address that can be mapped
-> */
->  	dma_addr_t aperture_end;   /* Last address that can be mapped
-> */
-> @@ -424,6 +426,7 @@ struct iommu_param {
->  	unsigned int min_pasid;
->  	unsigned int max_pasid;
->  	struct list_head mm_list;
-> +	iommu_mm_exit_handler_t mm_exit;
->  };
-> 
->  int  iommu_device_register(struct iommu_device *iommu);
-> @@ -941,6 +944,10 @@ extern int iommu_sva_bind_device(struct device
-> *dev, struct mm_struct *mm,
->  				int *pasid, unsigned long flags, void
-> *drvdata);
->  extern int iommu_sva_unbind_device(struct device *dev, int pasid);
->  extern void __iommu_sva_unbind_dev_all(struct device *dev);
-> +extern int iommu_register_mm_exit_handler(struct device *dev,
-> +					  iommu_mm_exit_handler_t
-> handler);
-> +extern int iommu_unregister_mm_exit_handler(struct device *dev);
-> +
->  #else /* CONFIG_IOMMU_SVA */
->  static inline int iommu_sva_device_init(struct device *dev,
->  					unsigned long features,
-> @@ -969,6 +976,17 @@ static inline int iommu_sva_unbind_device(struct
-> device *dev, int pasid)
->  static inline void __iommu_sva_unbind_dev_all(struct device *dev)
->  {
->  }
-> +
-> +static inline int iommu_register_mm_exit_handler(struct device *dev,
-> +						 iommu_mm_exit_handler_t
-> handler)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static inline int iommu_unregister_mm_exit_handler(struct device *dev)
-> +{
-> +	return -ENODEV;
-> +}
->  #endif /* CONFIG_IOMMU_SVA */
-> 
->  #endif /* __LINUX_IOMMU_H */
-> --
-> 2.15.1
+> Changes since v2:
 
+Hi Baolin,
+
+sorry for taking so long to review :(
+
+I think you need to add
+
+depends on OF_GPIO to the dependencies. Else the build
+will break on compile test on things like Usermode Linux
+that doesn't have IOMEM.
+
+> +/* GPIO registers definition */
+> +#define SPRD_GPIO_DATA         0x0
+> +#define SPRD_GPIO_DMSK         0x4
+> +#define SPRD_GPIO_DIR          0x8
+> +#define SPRD_GPIO_IS           0xc
+> +#define SPRD_GPIO_IBE          0x10
+> +#define SPRD_GPIO_IEV          0x14
+> +#define SPRD_GPIO_IE           0x18
+> +#define SPRD_GPIO_RIS          0x1c
+> +#define SPRD_GPIO_MIS          0x20
+> +#define SPRD_GPIO_IC           0x24
+> +#define SPRD_GPIO_INEN         0x28
+
+So this is very simple. And the only reason we cannot use
+GPIO_GENERIC is that we have these groups inside the controller
+and a shared interrupt line :/
+
+Hm yeah I cannot think of anything better anyway.
+
+Have you contemplated just putting them into the device tree
+like this:
+
+ap_gpio0: gpio@40280000 {
+        compatible = "sprd,sc9860-gpio";
+        reg = <0 0x40280000 0 0x80>;
+        gpio-controller;
+        #gpio-cells = <2>;
+        interrupt-controller;
+        #interrupt-cells = <2>;
+        interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+};
+
+ap_gpio1: gpio@40280080 {
+        compatible = "sprd,sc9860-gpio";
+        reg = <0 0x40280080 0 0x80>;
+        gpio-controller;
+        #gpio-cells = <2>;
+        interrupt-controller;
+        #interrupt-cells = <2>;
+        interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+};
+
+ap_gpio2: gpio@40280100 {
+        compatible = "sprd,sc9860-gpio";
+        reg = <0 0x40280100 0 0x80>;
+        gpio-controller;
+        #gpio-cells = <2>;
+        interrupt-controller;
+        #interrupt-cells = <2>;
+        interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+};
+
+(...)
+
+?
+
+It is fine to have 16 driver instances if you grab the interrupt
+with IRQF_SHARED and really just handle the IRQ if it is for
+"your" instance. The upside is that you could then use
+GPIO_GENERIC and get a very small and simple driver.
+
+I understand that the current approach is also appealing though
+and I see why. I'm not gonna say no to it, so if you strongly
+prefer this approach we can go for it. Just wanted to point out
+alternatives.
+
+> +/* We have 16 groups GPIOs and each group contain 16 GPIOs */
+> +#define SPRD_GPIO_GROUP_NR     16
+> +#define SPRD_GPIO_NR           256
+> +#define SPRD_GPIO_GROUP_SIZE   0x80
+> +#define SPRD_GPIO_GROUP_MASK   GENMASK(15, 0)
+> +#define SPRD_GPIO_BIT(x)       ((x) & (SPRD_GPIO_GROUP_NR - 1))
+
+Please rename this from "groups" to "banks" because in the GPIO
+subsystem everyone talks about "banks" not "groups".
+
+This last thing many drivers do like this:
+
+bit = x % 15;
+
+but it is up to you, either way works (and probably result in the
+same assembly).
+
+> +static inline void __iomem *sprd_gpio_group_base(struct sprd_gpio *sprd_gpio,
+> +                                                unsigned int group)
+> +{
+> +       return sprd_gpio->base + SPRD_GPIO_GROUP_SIZE * group;
+> +}
+
+Since you're always using this like this:
+
+void __iomem *base = sprd_gpio_group_base(sprd_gpio,
+                                            offset / SPRD_GPIO_GROUP_NR);
+
+Why not simply have the offset as parameter to the function
+instead of group number and do the division inside this
+static inline?
+
+> +static void sprd_gpio_update(struct gpio_chip *chip, unsigned int offset,
+> +                            unsigned int reg, unsigned int val)
+
+I would use u16 reg.
+
+> +{
+> +       struct sprd_gpio *sprd_gpio = gpiochip_get_data(chip);
+> +       void __iomem *base = sprd_gpio_group_base(sprd_gpio,
+> +                                                 offset / SPRD_GPIO_GROUP_NR);
+> +       u32 shift = SPRD_GPIO_BIT(offset);
+> +       unsigned long flags;
+> +       u32 orig, tmp;
+> +
+> +       spin_lock_irqsave(&sprd_gpio->lock, flags);
+> +       orig = readl_relaxed(base + reg);
+> +
+> +       tmp = (orig & ~BIT(shift)) | (val << shift);
+> +       writel_relaxed(tmp, base + reg);
+> +       spin_unlock_irqrestore(&sprd_gpio->lock, flags);
+> +}
+
+You don't need shift, orig and tmp variables here, I think it
+gets hard to read.
+
+I would do it like this:
+
+u32 tmp;
+
+tmp = readl_relaxed(base + reg);
+if (val)
+    tmp |= BIT(SPRD_GPIO_BIT(offset));
+else
+    tmp &= ~BIT(SPRD_GPIO_BIT(offset));
+writel_relaxed(tmp, base + reg);
+
+I don't know if the macros really help much. Maybe just inline it:
+
+tmp = readl_relaxed(base + reg);
+if (val)
+    tmp |= BIT(offset % 15);
+else
+    tmp &= ~BIT(offset % 15);
+writel_relaxed(tmp, base + reg);
+
+It depends on taste. Just consider my options.
+(I'll go with what you feel is easiest to read.)
+
+> +static int sprd_gpio_read(struct gpio_chip *chip, unsigned int offset,
+> +                         unsigned int reg)
+> +{
+> +       struct sprd_gpio *sprd_gpio = gpiochip_get_data(chip);
+> +       void __iomem *base = sprd_gpio_group_base(sprd_gpio,
+> +                                                 offset / SPRD_GPIO_GROUP_NR);
+> +       u32 value = readl_relaxed(base + reg) & SPRD_GPIO_GROUP_MASK;
+> +       u32 shift = SPRD_GPIO_BIT(offset);
+> +
+> +       return !!(value & BIT(shift));
+
+I would just
+
+return !!(readl_relaxed(base + reg) & BIT(offset % 15)):
+
+But again it is a matter of taste.
+
+(the rest looks fine!)
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
