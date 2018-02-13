@@ -1,38 +1,43 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v7 1/6] base: power: runtime: Export pm_runtime_get/put_suppliers
-Date: Tue, 13 Feb 2018 16:44:37 +0900
-Message-ID: <CAAFQd5BmroRf-C8dQkvTKHWK1psGnNi1t7g-q=Xce6KjrGTsdw@mail.gmail.com>
-References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org> <1517999482-17317-2-git-send-email-vivek.gautam@codeaurora.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/3] Add R8A77970/Eagle PFC support
+Date: Tue, 13 Feb 2018 08:52:22 +0100
+Message-ID: <20180213075222.mf7dsbwgv5ln4ond@verge.net.au>
+References: <20171110200218.747996672@cogentembedded.com>
+ <20171113075303.zmkmq6bt3lfuttwu@verge.net.au>
+ <049b0a0a-b1c2-73e6-c471-ca8342bba6ab@ideasonboard.com>
+ <19d23fa2-1205-89a0-786f-f301ca7a0f7b@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1517999482-17317-2-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>"list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Greg KH <gregkh@linuxfoundation.org>, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <19d23fa2-1205-89a0-786f-f301ca7a0f7b@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Kieran Bingham <kieran.bingham@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
+On Mon, Feb 12, 2018 at 09:04:06PM +0300, Sergei Shtylyov wrote:
+> On 01/19/2018 01:48 PM, Kieran Bingham wrote:
+> 
+> >>> Here's the set of 3 patches against Simon Horman's 'renesas.git' repo's
+> >>> 'renesas-devel-20171110-v4.14-rc8' tag.  We're adding the R8A77970 PFC node
+> >>> and then describing the pins for SCIF0 and EtherAVB devices declared earlier.
+> >>> These patches depend on the R8A77970 PFC suport in order to work properly.
+> >>>
+> >>> [1/3] arm64: dts: renesas: r8a77970: add PFC support
+> >>> [2/3] arm64: dts: renesas: eagle: add SCIF0 pins
+> >>> [3/3] arm64: dts: renesas: eagle: add EtherAVB pins
+> >>
+> >> Hi Sergei,
+> >>
+> >> I have marked these patches as deferred pending acceptance of the PFC
+> >> driver. Please repost or otherwise ping me once that dependency has been
+> >> accepted.
+> > 
+> > Has the dependency blocking this series been resolved yet ?
+> 
+>    Now it is, except for the 3rd patch... Simon, do I need to repost the first two?
+> The 1st one did apply to 4.16-rc1 here with a fuzz...
 
-On Wed, Feb 7, 2018 at 7:31 PM, Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
-> The device link allows the pm framework to tie the supplier and
-> consumer. So, whenever the consumer is powered-on the supplier
-> is powered-on first.
->
-> There are however cases in which the consumer wants to power-on
-> the supplier, but not itself.
-> E.g., A Graphics or multimedia driver wants to power-on the SMMU
-> to unmap a buffer and finish the TLB operations without powering
-> on itself.
-
-This sounds strange to me. If the SMMU is powered down, wouldn't the
-TLB lose its contents as well (and so no flushing needed)?
-
-Other than that, what kind of hardware operations would be needed
-besides just updating the page tables from the CPU?
-
-Best regards,
-Tomasz
+Thanks for bringing this to my attention.  No need to repost. I've applied
+all three patches and plan to push later today.
