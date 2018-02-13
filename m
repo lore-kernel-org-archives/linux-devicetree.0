@@ -1,135 +1,89 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] dt-bindings: media: adv7604: Add support for i2c_new_secondary_device
-Date: Tue, 13 Feb 2018 15:30:06 +0200
-Message-ID: <52386641.uAENE5yG1n@avalon>
-References: <1518473273-6333-1-git-send-email-kbingham@kernel.org> <84376496.fPaZ5qpN3E@avalon> <e4d4e6ab-2f4b-27c3-f1ee-916e9bbad5ab@ideasonboard.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v7 1/6] base: power: runtime: Export
+ pm_runtime_get/put_suppliers
+Date: Tue, 13 Feb 2018 13:37:38 +0000
+Message-ID: <d6aa408f-6458-7a40-51ea-409ea9663af2@arm.com>
+References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1517999482-17317-2-git-send-email-vivek.gautam@codeaurora.org>
+ <CAAFQd5BmroRf-C8dQkvTKHWK1psGnNi1t7g-q=Xce6KjrGTsdw@mail.gmail.com>
+ <65d707c0-76cc-d59e-ff18-1fdd89306900@arm.com>
+ <CAAFQd5DNzGYnTRuc2hDr1osQ2=6ruM0wQqV8svP=a10hxTVOGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e4d4e6ab-2f4b-27c3-f1ee-916e9bbad5ab-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAAFQd5DNzGYnTRuc2hDr1osQ2=6ruM0wQqV8svP=a10hxTVOGQ@mail.gmail.com>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel@vger.kernel.org, "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Greg KH <gregkh@linuxfoundation.org>, freedreno@lists.freedesktop.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
-
-On Tuesday, 13 February 2018 15:14:43 EET Kieran Bingham wrote:
-> On 13/02/18 12:06, Laurent Pinchart wrote:
-> > On Tuesday, 13 February 2018 00:07:49 EET Kieran Bingham wrote:
-> >> From: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-> >>=20
-> >> The ADV7604 has thirteen 256-byte maps that can be accessed via the ma=
-in
-> >> I=B2C ports. Each map has it own I=B2C address and acts as a standard =
-slave
-> >> device on the I=B2C bus.
-> >>=20
-> >> Extend the device tree node bindings to be able to override the default
-> >> addresses so that address conflicts with other devices on the same bus
-> >> may be resolved at the board description level.
-> >>=20
-> >> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois-B+Q8N6RmIDZBDgjK7y7TUQ@public.gmane.org>
-> >> [Kieran: Re-adapted for mainline]
-> >> Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> >> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >=20
-> > Nitpicking, I might not mention i2c_new_secondary_device in the subject,
-> > as this is a DT bindings change. I don't mind too much though, as long =
-as
-> > the bindings themselves don't contain Linux-specific information, and t=
-hey
-> > don't, so
->=20
-> How about: ... adv7604: Extend bindings to allow specifying slave map
-> addresses
-
-Sounds good to me.
-
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->=20
-> Collected, thanks.
->=20
-> --
-> Kieran
->=20
-> >> ---
-> >>=20
-> >> Based upon the original posting :
-> >>   https://lkml.org/lkml/2014/10/22/469
-> >>=20
-> >> v2:
-> >>  - DT Binding update separated from code change
-> >>  - Minor reword to commit message to account for DT only change.
-> >>  - Collected Rob's RB tag.
-> >>=20
-> >> v3:
-> >>  - Split map register addresses into individual declarations.
-> >> =20
-> >>  .../devicetree/bindings/media/i2c/adv7604.txt          | 18
-> >>=20
-> >> ++++++++++++++++-- 1 file changed, 16 insertions(+), 2 deletions(-)
-> >>=20
-> >> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> >> b/Documentation/devicetree/bindings/media/i2c/adv7604.txt index
-> >> 9cbd92eb5d05..ebb5f070c05b 100644
-> >> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> >> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
-> >>=20
-> >> @@ -13,7 +13,11 @@ Required Properties:
-> >>      - "adi,adv7611" for the ADV7611
-> >>      - "adi,adv7612" for the ADV7612
-> >>=20
-> >> -  - reg: I2C slave address
-> >> +  - reg: I2C slave addresses
-> >> +    The ADV76xx has up to thirteen 256-byte maps that can be accessed
-> >> via
-> >> the +    main I=B2C ports. Each map has it own I=B2C address and acts =
-as a
-> >> standard +    slave device on the I=B2C bus. The main address is manda=
-tory,
-> >> others are +    optional and revert to defaults if not specified.
-> >>=20
-> >>    - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
-> >>   =20
-> >>      detection pins, one per HDMI input. The active flag indicates the
-> >>      GPIO
-> >>=20
-> >> @@ -35,6 +39,11 @@ Optional Properties:
-> >>    - reset-gpios: Reference to the GPIO connected to the device's reset
-> >>    pin.
-> >>=20
-> >> - default-input: Select which input is selected after reset.
-> >> +  - reg-names : Names of maps with programmable addresses.
-> >> +		It can contain any map needing a non-default address.
-> >> +		Possible maps names are :
-> >> +		  "main", "avlink", "cec", "infoframe", "esdp", "dpp", "afe",
-> >> +		  "rep", "edid", "hdmi", "test", "cp", "vdp"
-> >>=20
-> >>  Optional Endpoint Properties:
-> >> @@ -52,7 +61,12 @@ Example:
-> >>  	hdmi_receiver@4c {
-> >>  =09
-> >>  		compatible =3D "adi,adv7611";
-> >>=20
-> >> -		reg =3D <0x4c>;
-> >> +		/*
-> >> +		 * The edid page will be accessible @ 0x66 on the i2c bus. All
-> >> +		 * other maps will retain their default addresses.
-> >> +		 */
-> >> +		reg =3D <0x4c>, <0x66>;
-> >> +		reg-names "main", "edid";
-> >>=20
-> >>  		reset-gpios =3D <&ioexp 0 GPIO_ACTIVE_LOW>;
-> >>  		hpd-gpios =3D <&ioexp 2 GPIO_ACTIVE_HIGH>;
-
-=2D-=20
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMTMvMDIvMTggMTI6NTQsIFRvbWFzeiBGaWdhIHdyb3RlOgo+IE9uIFR1ZSwgRmViIDEzLCAy
+MDE4IGF0IDk6MDAgUE0sIFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+IHdyb3Rl
+Ogo+PiBPbiAxMy8wMi8xOCAwNzo0NCwgVG9tYXN6IEZpZ2Egd3JvdGU6Cj4+Pgo+Pj4gSGkgVml2
+ZWssCj4+Pgo+Pj4gT24gV2VkLCBGZWIgNywgMjAxOCBhdCA3OjMxIFBNLCBWaXZlayBHYXV0YW0K
+Pj4+IDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+Pj4+Cj4+Pj4gVGhlIGRl
+dmljZSBsaW5rIGFsbG93cyB0aGUgcG0gZnJhbWV3b3JrIHRvIHRpZSB0aGUgc3VwcGxpZXIgYW5k
+Cj4+Pj4gY29uc3VtZXIuIFNvLCB3aGVuZXZlciB0aGUgY29uc3VtZXIgaXMgcG93ZXJlZC1vbiB0
+aGUgc3VwcGxpZXIKPj4+PiBpcyBwb3dlcmVkLW9uIGZpcnN0Lgo+Pj4+Cj4+Pj4gVGhlcmUgYXJl
+IGhvd2V2ZXIgY2FzZXMgaW4gd2hpY2ggdGhlIGNvbnN1bWVyIHdhbnRzIHRvIHBvd2VyLW9uCj4+
+Pj4gdGhlIHN1cHBsaWVyLCBidXQgbm90IGl0c2VsZi4KPj4+PiBFLmcuLCBBIEdyYXBoaWNzIG9y
+IG11bHRpbWVkaWEgZHJpdmVyIHdhbnRzIHRvIHBvd2VyLW9uIHRoZSBTTU1VCj4+Pj4gdG8gdW5t
+YXAgYSBidWZmZXIgYW5kIGZpbmlzaCB0aGUgVExCIG9wZXJhdGlvbnMgd2l0aG91dCBwb3dlcmlu
+Zwo+Pj4+IG9uIGl0c2VsZi4KPj4+Cj4+Pgo+Pj4gVGhpcyBzb3VuZHMgc3RyYW5nZSB0byBtZS4g
+SWYgdGhlIFNNTVUgaXMgcG93ZXJlZCBkb3duLCB3b3VsZG4ndCB0aGUKPj4+IFRMQiBsb3NlIGl0
+cyBjb250ZW50cyBhcyB3ZWxsIChhbmQgc28gbm8gZmx1c2hpbmcgbmVlZGVkKT8KPj4KPj4KPj4g
+RGVwZW5kcyBvbiBpbXBsZW1lbnRhdGlvbiBkZXRhaWxzIC0gaWYgcnVudGltZSBQTSBpcyBhY3R1
+YWxseSBpbXBsZW1lbnRlZAo+PiB2aWEgZXh0ZXJuYWwgY2xvY2sgZ2F0aW5nIChpbiB0aGUgYWJz
+ZW5jZSBvZiBmaW5lLWdyYWluZWQgcG93ZXIgZG9tYWlucyksCj4+IHRoZW4gInN1c3BlbmRlZCIg
+VExCcyBtaWdodCBib3RoIHJldGFpbiBzdGF0ZSBhbmQgbm90IHJlY2VpdmUgaW52YWxpZGF0aW9u
+Cj4+IHJlcXVlc3RzLCB3aGljaCBpcyByZWFsbHkgdGhlIHdvcnN0IGNhc2UuCj4gCj4gQWdyZWVk
+LiBUaGF0J3Mgd2h5IGluICJbUEFUQ0ggdjcgMy82XSBpb21tdS9hcm0tc21tdTogSW52b2tlCj4g
+cG1fcnVudGltZSBkdXJpbmcgcHJvYmUsIGFkZC9yZW1vdmUgZGV2aWNlIiBJIGFjdHVhbGx5IHN1
+Z2dlc3RlZAo+IG1hbmFnaW5nIGNsb2NrcyBzZXBhcmF0ZWx5IGZyb20gcnVudGltZSBQTS4gQXQg
+bGVhc3QgdW50aWwgcnVudGltZSBQTQo+IGZyYW1ld29yayBhcnJpdmVzIGF0IGEgc3RhdGUsIHdo
+ZXJlIG11bHRpcGxlIHBvd2VyIHN0YXRlcyBjYW4gYmUKPiBtYW5hZ2VkLCBpLmUuIGZ1bGwgcG93
+ZXIgc3RhdGUsIGNsb2NrLWdhdGVkIHN0YXRlLCBkb21haW4tb2ZmIHN0YXRlLgo+IChJIHRoaW5r
+IEkgbWlnaHQgaGF2ZSBzZWVuIHNvbWUgb25nb2luZyB3b3JrIG9uIHRoaXMgb24gTFdOIHRob3Vn
+aC4uLikKPiAKPj4KPj4+IE90aGVyIHRoYW4gdGhhdCwgd2hhdCBraW5kIG9mIGhhcmR3YXJlIG9w
+ZXJhdGlvbnMgd291bGQgYmUgbmVlZGVkCj4+PiBiZXNpZGVzIGp1c3QgdXBkYXRpbmcgdGhlIHBh
+Z2UgdGFibGVzIGZyb20gdGhlIENQVT8KPj4KPj4KPj4gRG9tYWluIGF0dGFjaC9kZXRhY2ggYWxz
+byByZXF1aXJlIHVwZGF0aW5nIFNNTVUgaGFyZHdhcmUgc3RhdGUgKGFuZCBwb3NzaWJseQo+PiBU
+TEIgbWFpbnRlbmFuY2UpLCBidXQgZG9uJ3QgbG9naWNhbGx5IHJlcXVpcmUgdGhlIG1hc3RlciBk
+ZXZpY2UgaXRzZWxmIHRvIGJlCj4+IGFjdGl2ZSBhdCB0aGUgdGltZS4KPiAKPiBXb3VsZG4ndCB0
+aGlzIGhhcmR3YXJlIHN0YXRlIG5lZWQgdG8gYmUgcmVpbml0aWFsaXplZCBhbnl3YXkgYWZ0ZXIK
+PiByZXNwZWN0aXZlIHBvd2VyIGRvbWFpbiBwb3dlciBjeWNsZXM/IChJbiBvdGhlciB3b3Jkcywg
+aGFyZHdhcmUgd291bGQKPiBvbmx5IG5lZWQgcHJvZ3JhbW1pbmcgaWYgaXQncyBwb3dlcmVkIG9u
+IGF0IHRoZSBtb21lbnQuKQoKWWVzLCBpZiB0aGUgZW50aXJlIFNNTVUgd2FzIGZ1bGx5IHBvd2Vy
+ZWQgZG93biBiZWNhdXNlIGFsbCBtYXN0ZXJzIHdlcmUgCmluYWN0aXZlLCB0aGVuIGFsbCB0aGF0
+IHNob3VsZCBuZWVkIHRvIGJlIGRvbmUgaXMgdG8gdXBkYXRlIHRoZSBzb2Z0d2FyZSAKc2hhZG93
+IHN0YXRlIGluIHRoZSBleHBlY3RhdGlvbiB0aGF0IGFybV9zbW11X3Jlc2V0KCkgd291bGQgcmUt
+c3luYyBpdCAKdXBvbiBUQ1UgcG93ZXJ1cC4gSWYgYXQgbGVhc3Qgc29tZSBwYXJ0IG9mIHRoZSBp
+bnRlcm5hbCBsb2dpYyByZW1haW5zIAphY3RpdmUsIHRob3VnaCwgdGhlbiB5b3UgbWF5IG9yIG1h
+eSBub3QgbmVlZCB0byBmaWRkbGUgd2l0aCB6ZXJvIG9yIG1vcmUgCmNsb2NrcyBhbmQvb3IgcG93
+ZXIgZG9tYWlucyAoZGVwZW5kaW5nIG9uIG1pY3JvYXJjaGl0ZWN0dXJlIGFuZCAKaW50ZWdyYXRp
+b24pIGluIG9yZGVyIHRvIGJlIHN1cmUgdGhhdCBldmVyeXRoaW5nIGZyb20gdGhlIHByb2dyYW1t
+aW5nIApzbGF2ZSBpbnRlcmZhY2UgdGhyb3VnaCB0byB3aGVyZXZlciB0aGF0IHN0YXRlIGlzIGtl
+cHQgd29ya3MgY29ycmVjdGx5IApzbyB0aGF0IGl0IGNhbiBiZSBjaGFuZ2VkLgoKVGhlIG1haW4g
+bW90aXZhdGlvbiBoZXJlIGlzIHRoYXQgdGhlIFF1YWxjb21tIFNNTVUgbWljcm9hcmNoaXRlY3R1
+cmUgCmFwcGFyZW50bHkgYWxsb3dzIHRoZSBwcm9ncmFtbWluZyBpbnRlcmZhY2UgdG8gYmUgc2h1
+dCBkb3duIHNlcGFyYXRlbHkgCmZyb20gdGhlIFRDVSBjb3JlIChjb250ZXh0IGJhbmtzLCBwYWdl
+IHRhYmxlIHdhbGtlciwgZXRjLiksIGFuZCB0aGV5IGdldCAKYW4gYXBwcmVjaWFibGUgcG93ZXIg
+c2F2aW5nIGZyb20gZG9pbmcgc28uIFRoaXMgaXMgZGlmZmVyZW50IGZyb20sIHNheSwgCnRoZSBB
+cm0gTHRkLiBpbXBsZW1lbnRhdGlvbnMsIHdoZXJlIHRoZSBlbnRpcmUgVENVIGlzIGEgc2luZ2xl
+IApjbG9jay9wb3dlciBkb21haW4gaW50ZXJuYWxseSAoYWx0aG91Z2ggeW91IGNvdWxkIG1heWJl
+IHN0aWxsIGdhdGUgdGhlIApleHRlcm5hbCBBUEIgaW50ZXJmYWNlIGNsb2NrKS4KCkFzIHRoZSBw
+cmV2aW91cyBkaXNjdXNzaW9ucyBoYXZlIHNob3duLCB0aGlzIGlzIHJlYWxseSwgcmVhbGx5IGhh
+cmQgdG8gCmRvIHByb3Blcmx5IGluIGEgZ2VuZXJpYyBtYW5uZXIuCgpSb2Jpbi4KX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
