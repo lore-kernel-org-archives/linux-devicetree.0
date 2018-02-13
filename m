@@ -1,48 +1,40 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH v4 5/5] dmaengine: mediatek: fix zalloc-simple.cocci
- warnings
-Date: Tue, 13 Feb 2018 08:07:00 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1802130805550.2264@hadrien>
-References: <cover.1518110810.git.sean.wang@mediatek.com> <ede5702c460a5b4b41186a8cff1e3c29b2380c08.1518110810.git.sean.wang@mediatek.com> <20180209125817.GB3666@localhost> <alpine.DEB.2.20.1802091555290.2944@hadrien> <20180213064659.GD3666@localhost>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 2/7] ASoC: samsung: i2s: Ensure names of supplied
+ clocks are unique
+Date: Tue, 13 Feb 2018 08:25:27 +0100
+Message-ID: <CAJKOXPe5dFQYUQ+Fdn1NOynBT7Bp_256McYd=cYB2PFosqPbag@mail.gmail.com>
+References: <CGME20180212161641epcas1p2418c2323e5eb99a37a89b42c246f23dd@epcas1p2.samsung.com>
+ <20180212161538.22669-1-s.nawrocki@samsung.com> <20180212161538.22669-3-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180213064659.GD3666@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20180212161538.22669-3-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, alsa-devel@alsa-project.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jcsing.lee@samsung.com, sbkim73@samsung.com, linux-kernel@vger.kernel.org, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Tue, 13 Feb 2018, Vinod Koul wrote:
-
-> On Fri, Feb 09, 2018 at 03:55:58PM +0100, Julia Lawall wrote:
-> >
-> > > > -	ring->txd = dma_alloc_coherent(hsdma2dev(hsdma),
-> > > > -				       pc->sz_ring, &ring->tphys,
-> > > > -				       GFP_ATOMIC | __GFP_ZERO);
-> > > > +	ring->txd = dma_zalloc_coherent(hsdma2dev(hsdma), pc->sz_ring,
-> > > > +					&ring->tphys, GFP_ATOMIC);
-> > > >  	if (!ring->txd)
-> > > >  		return -ENOMEM;
-> > > >
-> > > > -	memset(ring->txd, 0, pc->sz_ring);
-> > >
-> > > This should be folded back..
-> >
-> > Sorry, I'm not sure what you mean by "folded back".
+On Mon, Feb 12, 2018 at 5:15 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
+> In order to support multiple instances of the I2S IP block the platform
+> device name is prepended to each clock registered by the driver.
+> The clock-output-names property is now not used, this should not cause
+> any issues as, for example, CDCLK clock is referenced through DT 'clocks'
+> property, not by name.
 >
-> Since the original patch is also up for review in this series, it doesn't
-> help much to add a change and fix on top in a series. The fix should be
-> folded back into the original commit. IIRC Fengguang's bot also recommends
-> so..
+> This change allows to have both I2S0 and I2S1 enabled simultaneously
+> on exynos5433 and working properly when #clock-cells property is specified
+> in respective DT nodes.
+>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+> Changes since v1:
+>  - added devm_kasprintf() error handling.
+> ---
+>  sound/soc/samsung/i2s.c | 28 +++++++++++++++++++---------
+>  1 file changed, 19 insertions(+), 9 deletions(-)
 
-Sure, no problem.  Thanks.  (I thought you meant folding or unfolding of a
-function definition).
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-julia
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
