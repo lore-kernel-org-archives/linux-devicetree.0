@@ -1,114 +1,88 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v2 2/3] arm64: dts: rockchip: add cdn-dp node for rk3399.
-Date: Tue, 13 Feb 2018 15:35:48 +0100
-Message-ID: <20180213143549.15197-2-enric.balletbo@collabora.com>
-References: <20180213143549.15197-1-enric.balletbo@collabora.com>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: Re: [PATCH 01/14] dt-bindings: Document STM32MP1 Reset Clock
+ Controller (RCC) bindings
+Date: Tue, 13 Feb 2018 14:36:24 +0000
+Message-ID: <3152089f-5a87-513b-7d6b-93ba38cf1d9f@st.com>
+References: <1517580222-23301-1-git-send-email-gabriel.fernandez@st.com>
+ <1517580222-23301-2-git-send-email-gabriel.fernandez@st.com>
+ <20180205042238.64xjrrguls2drtrg@rob-hp-laptop>
+ <19273eb9-0c8c-cd2a-d100-f25f25e93234@st.com>
+ <CAL_JsqJFD5g46mkyEWo2uH_ogYLhnvBLQ0f6mU9DG_bdh9n7sA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180213143549.15197-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJFD5g46mkyEWo2uH_ogYLhnvBLQ0f6mU9DG_bdh9n7sA@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <7BFBD70337723542985A9E4D72D38D2F@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>, Olivier BIDEAU <olivier.bideau@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-Add a node for the cdn DP controller which is embedded in the rk3399
-SoC.
-
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
----
-Changes since v1:
-- None
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 50 ++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index cdf733e4a450..17a9dc5591c5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -457,6 +457,46 @@
- 		};
- 	};
- 
-+        cdn_dp: dp@fec00000 {
-+                compatible = "rockchip,rk3399-cdn-dp";
-+                reg = <0x0 0xfec00000 0x0 0x100000>;
-+                interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+                clocks = <&cru SCLK_DP_CORE>, <&cru PCLK_DP_CTRL>,
-+                         <&cru SCLK_SPDIF_REC_DPTX>, <&cru PCLK_VIO_GRF>;
-+                clock-names = "core-clk", "pclk", "spdif", "grf";
-+                assigned-clocks = <&cru SCLK_DP_CORE>;
-+                assigned-clock-rates = <100000000>;
-+                power-domains = <&power RK3399_PD_HDCP>;
-+                phys = <&tcphy0_dp>, <&tcphy1_dp>;
-+                resets = <&cru SRST_DPTX_SPDIF_REC>, <&cru SRST_P_UPHY0_DPTX>,
-+                         <&cru SRST_P_UPHY0_APB>, <&cru SRST_DP_CORE>;
-+                reset-names = "spdif", "dptx", "apb", "core";
-+                rockchip,grf = <&grf>;
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+                #sound-dai-cells = <1>;
-+                status = "disabled";
-+
-+                ports {
-+                        #address-cells = <1>;
-+                        #size-cells = <0>;
-+
-+                        dp_in: port {
-+                                #address-cells = <1>;
-+                                #size-cells = <0>;
-+                                dp_in_vopb: endpoint@0 {
-+                                        reg = <0>;
-+                                        remote-endpoint = <&vopb_out_dp>;
-+                                };
-+
-+                                dp_in_vopl: endpoint@1 {
-+                                        reg = <1>;
-+                                        remote-endpoint = <&vopl_out_dp>;
-+                                };
-+                        };
-+                };
-+        };
-+
- 	gic: interrupt-controller@fee00000 {
- 		compatible = "arm,gic-v3";
- 		#interrupt-cells = <4>;
-@@ -1553,6 +1593,11 @@
- 				reg = <3>;
- 				remote-endpoint = <&mipi1_in_vopl>;
- 			};
-+
-+                        vopl_out_dp: endpoint@4 {
-+                                reg = <4>;
-+                                remote-endpoint = <&dp_in_vopl>;
-+                        };
- 		};
- 	};
- 
-@@ -1605,6 +1650,11 @@
- 				reg = <3>;
- 				remote-endpoint = <&mipi1_in_vopb>;
- 			};
-+
-+                        vopb_out_dp: endpoint@4 {
-+                                reg = <4>;
-+                                remote-endpoint = <&dp_in_vopb>;
-+                        };
- 		};
- 	};
- 
--- 
-2.15.1
+DQoNCk9uIDAyLzA3LzIwMTggMDc6MDMgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBNb24s
+IEZlYiA1LCAyMDE4IGF0IDE6MDEgQU0sIEdhYnJpZWwgRkVSTkFOREVaDQo+IDxnYWJyaWVsLmZl
+cm5hbmRlekBzdC5jb20+ICB3cm90ZToNCj4+IEhpIFJvYiwNCj4+DQo+PiBUaGFua3MgZm9yIHJl
+dmlld2luZy4NCj4+DQo+Pg0KPj4gT24gMDIvMDUvMjAxOCAwNzowOSBBTSwgUm9iIEhlcnJpbmcg
+d3JvdGU6DQo+Pj4gT24gRnJpLCBGZWIgMDIsIDIwMTggYXQgMDM6MDM6MjlQTSArMDEwMCxnYWJy
+aWVsLmZlcm5hbmRlekBzdC5jb20gIHdyb3RlOg0KPj4+PiBGcm9tOiBHYWJyaWVsIEZlcm5hbmRl
+ejxnYWJyaWVsLmZlcm5hbmRlekBzdC5jb20+DQo+Pj4+DQo+Pj4+IFRoZSBSQ0MgYmxvY2sgaXMg
+cmVzcG9uc2libGUgb2YgdGhlIG1hbmFnZW1lbnQgb2YgdGhlIGNsb2NrIGFuZCByZXNldA0KPj4+
+PiBnZW5lcmF0aW9uIGZvciB0aGUgY29tcGxldGUgY2lyY3VpdC4NCj4+Pj4NCj4+Pj4gU2lnbmVk
+LW9mZi1ieTogR2FicmllbCBGZXJuYW5kZXo8Z2FicmllbC5mZXJuYW5kZXpAc3QuY29tPg0KPj4+
+PiAtLS0NCj4+Pj4gICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0LHN0bTMyLXJjYy50
+eHQgICAgICAgfCA4NSArKysrKysrKysrKysrKysrKysrKysrDQo+Pj4+ICAgIDEgZmlsZSBjaGFu
+Z2VkLCA4NSBpbnNlcnRpb25zKCspDQo+Pj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0LHN0bTMyLXJjYy50eHQNCj4+Pj4NCj4+
+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3Qs
+c3RtMzItcmNjLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3Qs
+c3RtMzItcmNjLnR4dA0KPj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4+PiBpbmRleCAwMDAw
+MDAwLi4yODAxN2ExDQo+Pj4+IC0tLSAvZGV2L251bGwNCj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zdCxzdG0zMi1yY2MudHh0DQo+Pj4+IEBAIC0wLDAg
+KzEsODUgQEANCj4+Pj4gK1NUTWljcm9lbGVjdHJvbmljcyBTVE0zMiBQZXJpcGhlcmFsIFJlc2V0
+IENsb2NrIENvbnRyb2xsZXINCj4+Pj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4+Pj4gKw0KPj4+PiArVGhlIFJDQyBJUCBpcyBi
+b3RoIGEgcmVzZXQgYW5kIGEgY2xvY2sgY29udHJvbGxlci4NCj4+Pj4gKw0KPj4+PiArUGxlYXNl
+IGFsc28gcmVmZXIgdG8gcmVzZXQudHh0IGZvciBjb21tb24gcmVzZXQgY29udHJvbGxlciBiaW5k
+aW5nIHVzYWdlLg0KPj4+PiArDQo+Pj4+ICtQbGVhc2UgYWxzbyByZWZlciB0byBjbG9jay1iaW5k
+aW5ncy50eHQgZm9yIGNvbW1vbiBjbG9jayBjb250cm9sbGVyDQo+Pj4+ICtiaW5kaW5nIHVzYWdl
+Lg0KPj4+PiArDQo+Pj4+ICsNCj4+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+Pj4+ICstIGNv
+bXBhdGlibGU6ICJzaW1wbGUtbWZkIiwgInN5c2NvbiINCj4+Pj4gKy0gcmVnOiBzaG91bGQgYmUg
+cmVnaXN0ZXIgYmFzZSBhbmQgbGVuZ3RoIGFzIGRvY3VtZW50ZWQgaW4gdGhlIGRhdGFzaGVldA0K
+Pj4+PiArDQo+Pj4+ICstIFN1Yi1ub2RlczoNCj4+Pj4gKyAgLSBjb21wYXRpYmxlOiAic3Qsc3Rt
+MzJtcDEtcmNjLWNsayINCj4+Pj4gKyAgICAtICNjbG9jay1jZWxsczogMSwgZGV2aWNlIG5vZGVz
+IHNob3VsZCBzcGVjaWZ5IHRoZSBjbG9jayBpbiB0aGVpcg0KPj4+PiArICAgICAgImNsb2NrcyIg
+cHJvcGVydHksIGNvbnRhaW5pbmcgYSBwaGFuZGxlIHRvIHRoZSBjbG9jayBkZXZpY2Ugbm9kZSwN
+Cj4+Pj4gKyAgICAgIGFuIGluZGV4IHNwZWNpZnlpbmcgdGhlIGNsb2NrIHRvIHVzZS4NCj4+Pj4g
+Kw0KPj4+PiArICAtIGNvbXBhdGlibGU6ICJzdCxzdG0zMm1wMS1yY2MtcnN0Ig0KPj4+PiArICAg
+IC0gI3Jlc2V0LWNlbGxzOiBTaGFsbCBiZSAxDQo+Pj4+ICsNCj4+Pj4gK0V4YW1wbGU6DQo+Pj4+
+ICsgICAgcmNjOiByY2NANTAwMDAwMDAgew0KPj4+PiArICAgICAgICAgICAgY29tcGF0aWJsZSA9
+ICJzeXNjb24iLCAic2ltcGxlLW1mZCI7DQo+Pj4+ICsgICAgICAgICAgICByZWcgPSA8MHg1MDAw
+MDAwMCAweDEwMDA+Ow0KPj4+PiArDQo+Pj4+ICsgICAgICAgICAgICByY2NfY2xrOiByY2MtY2xr
+QDUwMDAwMDAwIHsNCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgI2Nsb2NrLWNlbGxzID0gPDE+
+Ow0KPj4+PiArICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInN0LHN0bTMybXAxLXJj
+Yy1jbGsiOw0KPj4+PiArICAgICAgICAgICAgfTsNCj4+Pj4gKw0KPj4+PiArICAgICAgICAgICAg
+cmNjX3JzdDogcmNjLXJlc2V0QDUwMDAwMDAwIHsNCj4+PiBZb3Ugc2hvdWxkIG5vdCBoYXZlIHRo
+ZSBzYW1lIHVuaXQtYWRkcmVzcyB0d2ljZS4NCj4+Pg0KPj4+IElNTywgdGhpcyBzaG91bGQganVz
+dCBiZToNCj4+Pg0KPj4+ICAgICAgICByY2M6IHJjY0A1MDAwMDAwMCB7DQo+Pj4gICAgICAgICAg
+ICAgICAgY29tcGF0aWJsZSA9ICJzdC1zdG0zMm1wMS1yY2MiOw0KPj4+ICAgICAgICAgICAgICAg
+IHJlZyA9IDwweDUwMDAwMDAwIDB4MTAwMD47DQo+Pj4gICAgICAgICAgICAgICAgI2Nsb2NrLWNl
+bGxzID0gPDE+Ow0KPj4+ICAgICAgICAgICAgICAgICNyZXNldC1jZWxscyA9IDwxPjsNCj4+PiAg
+ICAgICAgfTsNCj4+Pg0KPj4+IFRoZXJlJ3Mgbm8gcmVhc29uIGEgbm9kZSBjYW4ndCBwcm92aWRl
+IG1vcmUgdGhhbiAxIGZ1bmN0aW9uLg0KPj4gUkNDIGlzIGFuIGRlZGljYXRlZCBJUCBmb3IgY2xv
+Y2tzIGFuZCByZXNldHMsIGJ1dCBhbHNvIGZvciBwb3dlcg0KPj4gbWFuYWdlbWVudCAocGF0Y2hl
+cyB3aWxsIGJlIHNlbnQgbGF0ZXIpDQo+IElmIHRoZXJlJ3MgYWRkaXRpb25hbCBmdW5jdGlvbnMs
+IHRoZXkgc2hvdWxkIGJlIHBhcnQgb2YgdGhlIGJpbmRpbmcNCj4gbm93LCBub3QgbGF0ZXIuIGJp
+bmRpbmdzIHNob3VsZCBub3QgdW5uZWNlc3NhcmlseSBldm9sdmUuDQpZZXMgeW91J3JlIHJpZ2h0
+IGkgd2lsbCBkbyBpdC4NCj4+IFRoZW4gaSBuZWVkIHRvIHByb2JlIDMgZHJpdmVycyB3aXRoIHNh
+bWUgSVAuDQo+IERyaXZlcnMgYW5kIERUIG5vZGVzIGRvbid0IGhhdmUgdG8gYmUgMS0xLiBBIHBh
+cmVudCBkcml2ZXIgY2FuIGNyZWF0ZQ0KPiBhZGRpdGlvbmFsIGNoaWxkIGRldmljZXMuDQo+DQo+
+IEFsc28sIGxvb2tpbmcgYXQgeW91ciBleGlzdGluZyBiaW5kaW5ncyBmb3IgUkNDIElQLCBpdCBp
+cyBkb25lIGFzIEkgc3VnZ2VzdGVkLg0KPg0KPj4gSXQncyBhbHNvIGEgd2F5IHRvIGF2b2lkIHVz
+ZSBvZiAnQ0xLX09GX0RFQ0xBUkVfRFJJVkVSJyBhbmQgaSBuZWVkIGl0IHRvDQo+PiBwcm9iZSB0
+aGUgM3RoIGRyaXZlci4NCj4gU291bmRzIGxpa2UgYSBMaW51eCBwcm9ibGVtLCBub3QgYSBEVCBp
+c3N1ZS4NCj4NCj4gUm9iDQpSQ0MgaXMgYW4gSVAgYmxvY2sgd2ljaCBleHBvc2VkIG11bHRpcGxl
+IGZ1bmN0aW9uYWxpdGllcyAoY2xvY2ssIHJlc2V0LCANCnBvd2VyIG1hbmFnZW1lbnQpLA0KbWZk
+IHNob3VsZCBiZSB0aGUgYmVzdCBzb2x1dGlvbiB0byBwb3B1bGF0ZSBlYWNoIGZ1bmN0aW9uYWxp
+dHkgaW4gDQpuYXR1cmFsIHdheSwNCmFuZCB0byBhY2Nlc3MgdG8gcmVnaXN0ZXJzID8NCg0KR2Fi
+cmllbA0KDQoNCg==
