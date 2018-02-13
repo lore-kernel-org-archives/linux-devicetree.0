@@ -1,121 +1,51 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v8 5/6] iommu/arm-smmu: Add support for qcom,smmu-v2 variant
-Date: Tue, 13 Feb 2018 17:57:39 +0900
-Message-ID: <CAAFQd5AVUDmxjFNBUU1Si6jU75kY6-mt8oVxHpG5k+y280Kc-A@mail.gmail.com>
-References: <1517999482-17317-6-git-send-email-vivek.gautam@codeaurora.org> <1518173826-11759-1-git-send-email-vivek.gautam@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1518173826-11759-1-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <joro@8bytes.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>"list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Greg KH <gregkh@linuxfoundation.org>, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org
+From: Greentime Hu <green.hu@gmail.com>
+Subject: [PATCH v7 01/37] openrisc: add ioremap_nocache declaration before include asm-generic/io.h and sync ioremap prototype with it.
+Date: Tue, 13 Feb 2018 17:09:05 +0800
+Message-ID: <a5d727ac3c73a02c1ef3eff81be1494b1fad3644.1518505384.git.greentime@andestech.com>
+References: <cover.1518505384.git.greentime@andestech.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
+In-Reply-To: <cover.1518505384.git.greentime@andestech.com>
+References: <cover.1518505384.git.greentime@andestech.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: greentime@andestech.com, linux-kernel@vger.kernel.org, arnd@arndb.de, linux-arch@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, netdev@vger.kernel.org, deanbo422@gmail.com, devicetree@vger.kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com, will.deacon@arm.com, daniel.lezcano@linaro.org, linux-serial@vger.kernel.org, geert.uytterhoeven@gmail.com, linus.walleij@linaro.org, mark.rutland@arm.com, greg@kroah.com, ren_guo@c-sky.com, rdunlap@infradead.org, davem@davemloft.net, jonas@southpole.se, stefan.kristiansson@saunalahti.fi, shorne@gmail.com
+Cc: green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
+A future commit for the nds32 architecture bootstrap("asm-generic/io.h: move
+ioremap_nocache/ioremap_uc/ioremap_wc/ioremap_wt out of ifndef CONFIG_MMU")
+will move the ioremap_nocache out of the CONFIG_MMU ifdef. This means that
+in order to suppress re-definition errors we need to setup #define's before
+importing asm-generic/io.h.
 
-Thanks for the patch. Please see my comments inline.
+Also, the change adds a prototype for ioremap where size is size_t so fix that
+as well.
 
-On Fri, Feb 9, 2018 at 7:57 PM, Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
-> qcom,smmu-v2 is an arm,smmu-v2 implementation with specific
-> clock and power requirements. This smmu core is used with
-> multiple masters on msm8996, viz. mdss, video, etc.
-> Add bindings for the same.
->
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->
-> Changes in v8:
->  - Added the missing IOMMU_OF_DECLARE declaration for "qcom,smmu-v2"
->
->  .../devicetree/bindings/iommu/arm,smmu.txt         | 43 ++++++++++++++++++++++
->  drivers/iommu/arm-smmu.c                           | 14 +++++++
->  2 files changed, 57 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> index 8a6ffce12af5..169222ae2706 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -17,10 +17,19 @@ conditions.
->                          "arm,mmu-401"
->                          "arm,mmu-500"
->                          "cavium,smmu-v2"
-> +                        "qcom,<soc>-smmu-v2", "qcom,smmu-v2"
->
->                    depending on the particular implementation and/or the
->                    version of the architecture implemented.
->
-> +                  A number of Qcom SoCs use qcom,smmu-v2 version of the IP.
-> +                  "qcom,<soc>-smmu-v2" represents a soc specific compatible
-> +                  string that should be present along with the "qcom,smmu-v2"
-> +                  to facilitate SoC specific clocks/power connections and to
-> +                  address specific bug fixes.
-> +                  An example string would be -
-> +                  "qcom,msm8996-smmu-v2", "qcom,smmu-v2".
+Signed-off-by: Greentime Hu <greentime@andestech.com>
+Acked-by: Stafford Horne <shorne@gmail.com>
+---
+ arch/openrisc/include/asm/io.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Hmm, I remember that for <soc> and similar wildcards we required
-explicitly listing allowed values. Rob, has it changed since I
-stumbled upon such thing last time (or I just got it wrong before)?
-
-> +
->  - reg           : Base address and size of the SMMU.
->
->  - #global-interrupts : The number of global interrupts exposed by the
-> @@ -71,6 +80,23 @@ conditions.
->                    or using stream matching with #iommu-cells = <2>, and
->                    may be ignored if present in such cases.
->
-> +- clock-names:    Should be "bus", and "iface" for "qcom,smmu-v2"
-> +                  implementation.
-> +
-> +                  "bus" clock for "qcom,smmu-v2" is required for downstream
-> +                  bus access and for the smmu ptw.
-> +
-> +                  "iface" clock is required to access smmu's registers through
-> +                  the TCU's programming interface.
-
-nit: Could we have it in a bit more structured way? E.g.
-
-- clock-names: List of names of clocks input to the device. The
-required list depends on particular implementation and is as follows:
- - for "qcom,smmu-v2":
-   - "bus": clock required for downstream bus access and for the smmu ptw,
-   - "iface":  clock required to access smmu's registers through the
-TCU's programming interface.
- - unspecified for other implementations.
-
-(+/- wrapping)
-
-> +
-> +- clocks:         Phandles for respective clocks described by clock-names.
-
-Phandle is just a pointer to another node. Clocks are however
-specified using a phandle and a number of arguments, depending on the
-clock controller. I'd change it to:
-
-- clocks:         Specifiers for all clocks listed in the clock-names
-property, as per generic clock bindings.
-
-> +
-> +- power-domains:  Phandles to SMMU's power domain specifier. This is
-> +                  required even if SMMU belongs to the master's power
-> +                  domain, as the SMMU will have to be enabled and
-> +                  accessed before master gets enabled and linked to its
-> +                  SMMU.
-
->From DT point of view, the relationship of SMMU belonging to a master
-device doesn't exist. The power-domains property needs to be properly
-specified for all devices within power domains represented in DT, with
-an exception of the case when the parent-child relationship is
-explicitly stated in DT by child devices being represented by child
-nodes of the parent device node.
-
-- power-domains: Specifiers for power domains required to be powered
-on for the SMMU to operate, as per generic power domain bindings.
-
-Best regards,
-Tomasz
+diff --git a/arch/openrisc/include/asm/io.h b/arch/openrisc/include/asm/io.h
+index 7c691399da3f..6709b28a0221 100644
+--- a/arch/openrisc/include/asm/io.h
++++ b/arch/openrisc/include/asm/io.h
+@@ -29,13 +29,14 @@
+ #define PIO_OFFSET		0
+ #define PIO_MASK		0
+ 
++#define ioremap_nocache ioremap_nocache
+ #include <asm-generic/io.h>
+ #include <asm/pgtable.h>
+ 
+ extern void __iomem *__ioremap(phys_addr_t offset, unsigned long size,
+ 				pgprot_t prot);
+ 
+-static inline void __iomem *ioremap(phys_addr_t offset, unsigned long size)
++static inline void __iomem *ioremap(phys_addr_t offset, size_t size)
+ {
+ 	return __ioremap(offset, size, PAGE_KERNEL);
+ }
+-- 
+2.16.1
