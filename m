@@ -1,103 +1,53 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH v3 04/11] ARM: dts: STi: Add fake reg property for miphy28lp_phy
-Date: Tue, 13 Feb 2018 13:53:30 +0100
-Message-ID: <1518526417-11919-5-git-send-email-patrice.chotard@st.com>
-References: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 29/37] iommu/arm-smmu-v3: Add stall support for platform
+	devices
+Date: Tue, 13 Feb 2018 12:58:56 +0000
+Message-ID: <f8005429-8e51-fe54-17f8-820543883ce9@arm.com>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-30-jean-philippe.brucker@arm.com>
+	<5A824359.1080005@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518526417-11919-1-git-send-email-patrice.chotard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: patrice.chotard@st.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <5A824359.1080005-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Xu Zaibo <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "shunyong.yang-PT9Dzx9SjPiXmMXjJBpWqg@public.gmane.org" <shunyong.yang-PT9Dzx9SjPiXmMXjJBpWqg@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+Hi,
 
-Add fake reg property to miphy28lp_phy.
-This allows to fix the following warning when compiling
-dtb with W=1 option:
+On 13/02/18 01:46, Xu Zaibo wrote:
+> Hi,
+> 
+> On 2018/2/13 2:33, Jean-Philippe Brucker wrote:
+>> The SMMU provides a Stall model for handling page faults in platform
+>> devices. It is similar to PCI PRI, but doesn't require devices to have
+>> their own translation cache. Instead, faulting transactions are parked and
+>> the OS is given a chance to fix the page tables and retry the transaction.
+>>
+>> Enable stall for devices that support it (opt-in by firmware). When an
+>> event corresponds to a translation error, call the IOMMU fault handler. If
+>> the fault is recoverable, it will call us back to terminate or continue
+>> the stall.
+>>
+>> Note that this patch tweaks the iommu_fault_event and page_response_msg to
+>> extend the fault id field. Stall uses 16 bits of IDs whereas PCI PRI only
+>> uses 9.
+> For PCIe devices without ATC,  can they use this Stall model?
 
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/miphy28lp missing or empty reg/ranges property
+Unfortunately no, Stall it is incompatible with PCI. Timing constraints in
+PCI prevent from stalling transactions in the IOMMU.
 
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (simple_bus_reg):
-Node /soc/miphy28lp missing or empty reg/ranges property
-
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (simple_bus_reg):
-Node /soc/miphy28lp missing or empty reg/ranges property
-
-arch/arm/boot/dts/stih418-b2199.dtb: Warning (simple_bus_reg):
-Node /soc/miphy28lp missing or empty reg/ranges property
-
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
-v3: _ none
-v2: _ add a fake reg property to node without reg property
-
- arch/arm/boot/dts/stih407-family.dtsi | 3 ++-
- arch/arm/boot/dts/stih410-b2260.dts   | 2 +-
- arch/arm/boot/dts/stih418-b2199.dts   | 2 +-
- arch/arm/boot/dts/stihxxx-b2120.dtsi  | 2 +-
- 4 files changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-index 1608c70f05a9..e279cd07ba67 100644
---- a/arch/arm/boot/dts/stih407-family.dtsi
-+++ b/arch/arm/boot/dts/stih407-family.dtsi
-@@ -389,12 +389,13 @@
- 			reset-names = "global", "port";
- 		};
- 
--		miphy28lp_phy: miphy28lp {
-+		miphy28lp_phy: miphy28lp@0 {
- 			compatible = "st,miphy28lp-phy";
- 			st,syscfg = <&syscfg_core>;
- 			#address-cells	= <1>;
- 			#size-cells	= <1>;
- 			ranges;
-+			reg = <0 0>;
- 
- 			phy_port0: port@9b22000 {
- 				reg = <0x9b22000 0xff>,
-diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-index 69c2abcaeda8..cea5c840ca9f 100644
---- a/arch/arm/boot/dts/stih410-b2260.dts
-+++ b/arch/arm/boot/dts/stih410-b2260.dts
-@@ -200,7 +200,7 @@
- 			};
- 		};
- 
--		miphy28lp_phy: miphy28lp {
-+		miphy28lp_phy: miphy28lp@0 {
- 
- 			phy_port1: port@9b2a000 {
- 				st,osc-force-ext;
-diff --git a/arch/arm/boot/dts/stih418-b2199.dts b/arch/arm/boot/dts/stih418-b2199.dts
-index 1ce38ce79952..be0bbb05c5ec 100644
---- a/arch/arm/boot/dts/stih418-b2199.dts
-+++ b/arch/arm/boot/dts/stih418-b2199.dts
-@@ -88,7 +88,7 @@
- 			non-removable;
- 		};
- 
--		miphy28lp_phy: miphy28lp {
-+		miphy28lp_phy: miphy28lp@0 {
- 
- 			phy_port0: port@9b22000 {
- 				st,osc-rdy;
-diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-index 1fd3a2b5b938..66c1c6a5eb76 100644
---- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
-+++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
-@@ -80,7 +80,7 @@
- 			st,i2c-min-sda-pulse-width-us = <5>;
- 		};
- 
--		miphy28lp_phy: miphy28lp {
-+		miphy28lp_phy: miphy28lp@0 {
- 
- 			phy_port0: port@9b22000 {
- 				st,osc-rdy;
--- 
-1.9.1
+Thanks,
+Jean
