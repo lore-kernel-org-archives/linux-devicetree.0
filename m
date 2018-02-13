@@ -1,106 +1,119 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: Add Spreadtrum EIC controller
- documentation
-Date: Tue, 13 Feb 2018 17:39:45 -0600
-Message-ID: <20180213233945.55mfqpydfxmimak2@rob-hp-laptop>
-References: <e89b91042abbbcf04cb39a3350af000cc411eee1.1518076643.git.baolin.wang@linaro.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX
+ Device Tree bindings
+Date: Wed, 14 Feb 2018 01:40:33 +0200
+Message-ID: <20180213234032.jkjrqueewxdoh6fc@valkosipuli.retiisi.org.uk>
+References: <20180207142643.15746-1-maxime.ripard@bootlin.com>
+ <20180207142643.15746-2-maxime.ripard@bootlin.com>
+ <2476247.yR0nrT2UBg@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e89b91042abbbcf04cb39a3350af000cc411eee1.1518076643.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <2476247.yR0nrT2UBg@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 08, 2018 at 04:01:42PM +0800, Baolin Wang wrote:
-> This patch adds the device tree bindings for the Spreadtrum EIC
-> controller. The EIC can be recognized as one special type of GPIO,
-> which can only be used as input.
+Hi Laurent,
+
+On Thu, Feb 08, 2018 at 09:00:19PM +0200, Laurent Pinchart wrote:
+> Hi Maxime,
 > 
-> Signed-off-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/gpio/gpio-eic-sprd.txt     |   51 ++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
+> Thank you for the patch.
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt b/Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
-> new file mode 100644
-> index 0000000..34f194f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
-> @@ -0,0 +1,51 @@
-> +Spreadtrum EIC controller bindings
-> +
-> +The EIC is the abbreviation of external interrupt controller, which
-> +is only can be used as input mode. The EIC controller includes 4
-> +sub-modules: EIC-Debounce, EIC-Latch, EIC-Async, EIC-Sync.
-> +
-> +The EIC-debounce sub-module provides up to 8 source input signal
-> +connection. A debounce machanism is used to capture input signal's
-> +stable status (ms grade) and a single-trigger mechanism is introduced
-> +into this sub-module to enhance the input event detection reliability.
-> +In addition, this sub-module's clock can be shut-off automatically to
-> +reduce power dissipation. The debounce range is from 1ms to 4s with
-> +the step of 1ms. If the input signal is shorter than 1ms, it will be
-> +omitted as this sub-module.
-> +
-> +The EIC-latch sub-module is used to latch some special input signal
-> +and send interrupts to MCU core, and it can provide up to 8 latch
-> +source input signal connection.
-> +
-> +The EIC-async sub-module uses 32k clock to capture short signal (us
-> +grade) to generate interrupt to MCU by level or edge trigger.
-> +
-> +The EIC-sync is similar with GPIO's input function.
-> +
-> +Required properties:
-> +- compatible: Should be one of the following:
-> +  "sprd,sc9860-eic-debounce",
-> +  "sprd,sc9860-eic-latch",
-> +  "sprd,sc9860-eic-async",
-> +  "sprd,sc9860-eic-sync",
-> +  "sprd,sc27xx-eic-debounce".
-> +- reg: Define the base and range of the I/O address space containing
-> +  the GPIO controller registers.
-> +- gpio-controller: Marks the device node as a GPIO controller.
-
-Why a gpio controller? Do you read the input pin state?
-
-> +- #gpio-cells: Should be <2>. The first cell is the gpio number and
-> +  the second cell is used to specify optional parameters.
-> +- interrupt-controller: Marks the device node as an interrupt controller.
-> +- #interrupt-cells: Should be <2>. Specifies the number of cells needed
-> +  to encode interrupt source.
-> +- interrupts: Should be the port interrupt shared by all the gpios.
-> +
-> +Example:
-> +	eic_debounce: eic@40210000 {
-
-interrupt-controller@...
-
-Or (if this remains a gpio controller)
-
-gpio@...
-
-> +		compatible = "sprd,sc9860-eic-debounce";
-> +		reg = <0 0x40210000 0 0x80>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-
-The example doesn't seem to match your description of the block or 
-blocks. You talk about a bunch of sub modules and then there's just this 
-one node?
-
-> +	};
-> -- 
-> 1.7.9.5
+> On Wednesday, 7 February 2018 16:26:42 EET Maxime Ripard wrote:
+> > The Cadence MIPI-CSI2 TX controller is a CSI2 bridge that supports up to 4
+> > video streams and can output on up to 4 CSI-2 lanes, depending on the
+> > hardware implementation.
+> > 
+> > It can operate with an external D-PHY, an internal one or no D-PHY at all
+> > in some configurations.
+> > 
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> > ---
+> >  .../devicetree/bindings/media/cdns,csi2tx.txt      | 98 +++++++++++++++++++
+> >  1 file changed, 98 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+> > b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt new file mode
+> > 100644
+> > index 000000000000..acbbd625a75f
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+> > @@ -0,0 +1,98 @@
+> > +Cadence MIPI-CSI2 TX controller
+> > +===============================
+> > +
+> > +The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
+> > +4 CSI lanes in output, and up to 4 different pixel streams in input.
+> > +
+> > +Required properties:
+> > +  - compatible: must be set to "cdns,csi2tx"
+> > +  - reg: base address and size of the memory mapped region
+> > +  - clocks: phandles to the clocks driving the controller
+> > +  - clock-names: must contain:
+> > +    * esc_clk: escape mode clock
+> > +    * p_clk: register bank clock
+> > +    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
+> > +                         implemented in hardware, between 0 and 3
+> > +
+> > +Optional properties
+> > +  - phys: phandle to the D-PHY. If it is set, phy-names need to be set
+> > +  - phy-names: must contain dphy
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Nitpicking, I'd write "dphy" with double quotes.
+> 
+> > +Required subnodes:
+> > +  - ports: A ports node with one port child node per device input and
+> > output
+> > +           port, in accordance with the video interface bindings defined in
+> > +           Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > The
+> > +           port nodes numbered as follows.
+> 
+> s/numbered/are numbered/
+> 
+> > +
+> > +           Port Description
+> > +           -----------------------------
+> > +           0    CSI-2 output
+> > +           1    Stream 0 input
+> > +           2    Stream 1 input
+> > +           3    Stream 2 input
+> > +           4    Stream 3 input
+> > +
+> > +           The stream input port nodes are optional if they are not
+> > +           connected to anything at the hardware level or implemented
+> > +           in the design.
+> 
+> Are they optional (and thus valid if present), or should they be forbidden in 
+> case they're not implemented in the hardware ? I'd go for the latter and write
+> 
+> "One stream input port node is required per implemented hardware input, and no 
+> stream input port node can be present for unimplemented inputs."
+> 
+> > Since there is only one endpoint per port,
+> > +           the endpoints are not numbered.
+> 
+> I think it would be valid to number endpoints even if not required. I think 
+> that what you should document is that at most one endpoint is supported per 
+> port.
+
+If you allow them to be numbered, then the driver must be able to use any
+endpoint number. This provides no additional information on the hardware
+while it is more difficult to parse.
+
+That would require reg property in endpoints --- which is not defined here.
+
+I think all new drivers pretty much define it in a similar way (while the
+old definitions did not specify it explicitly).
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
