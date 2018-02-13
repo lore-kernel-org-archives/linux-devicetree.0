@@ -1,38 +1,88 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v9 2/3] arm: dts: add Nuvoton NPCM750 device tree
-Date: Tue, 13 Feb 2018 09:30:56 +0100
-Message-ID: <CAK8P3a0SJTAkv7_QtDW1sDWFDYHw8tFWZqO6EMwpZ_5KPbhq3Q@mail.gmail.com>
-References: <20180205235757.246758-1-brendanhiggins@google.com> <20180205235757.246758-3-brendanhiggins@google.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v7 4/6] iommu/arm-smmu: Add the device_link between
+ masters and smmu
+Date: Tue, 13 Feb 2018 17:31:57 +0900
+Message-ID: <CAAFQd5BQAs9=N27_Z0pJNSrndFY3vFin2KBP44UtiW+tMXy5nQ@mail.gmail.com>
+References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org> <1517999482-17317-5-git-send-email-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180205235757.246758-3-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1517999482-17317-5-git-send-email-vivek.gautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>"list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, freedreno@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Greg KH <gregkh@linuxfoundation.org>, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 6, 2018 at 12:57 AM, Brendan Higgins
-<brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
-> Add a common device tree for all Nuvoton NPCM750 BMCs and a board
-> specific device tree for the NPCM750 (Poleg) evaluation board.
+Hi Vivek,
+
+Thanks for the patch. Please see my comments inline.
+
+On Wed, Feb 7, 2018 at 7:31 PM, Vivek Gautam
+<vivek.gautam@codeaurora.org> wrote:
+> From: Sricharan R <sricharan@codeaurora.org>
 >
-> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Tested-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Tested-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-...
-> +               enable-method = "nuvoton,npcm7xx-smp";
+> Finally add the device link between the master device and
+> smmu, so that the smmu gets runtime enabled/disabled only when the
+> master needs it. This is done from add_device callback which gets
+> called once when the master is added to the smmu.
+>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> ---
+>  drivers/iommu/arm-smmu.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index c024f69c1682..c7e924d553bd 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -215,6 +215,9 @@ struct arm_smmu_device {
+>
+>         /* IOMMU core code handle */
+>         struct iommu_device             iommu;
+> +
+> +       /* runtime PM link to master */
+> +       struct device_link *link;
+>  };
+>
+>  enum arm_smmu_context_fmt {
+> @@ -1425,6 +1428,17 @@ static int arm_smmu_add_device(struct device *dev)
+>
+>         pm_runtime_put_sync(smmu->dev);
+>
+> +       /*
+> +        * Establish the link between smmu and master, so that the
+> +        * smmu gets runtime enabled/disabled as per the master's
+> +        * needs.
+> +        */
+> +       smmu->link = device_link_add(dev, smmu->dev, DL_FLAG_PM_RUNTIME);
+> +       if (!smmu->link)
+> +               dev_warn(smmu->dev,
+> +                        "Unable to create device link between %s and %s\n",
+> +                        dev_name(smmu->dev), dev_name(dev));
 
-I see this has already been reviewed quite a bit, but I'm curious
-about the 'npcm7xx'
-part here. Shouldn't that be a real chip name rather than a wildcard?
+How likely it is that the master can work normally even if the link
+add fails? Perhaps we should just return an error here?
 
-       Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+>         return 0;
+>
+>  out_rpm_put:
+> @@ -1449,6 +1463,8 @@ static void arm_smmu_remove_device(struct device *dev)
+>         cfg  = fwspec->iommu_priv;
+>         smmu = cfg->smmu;
+>
+> +       device_link_del(smmu->link);
+
+We allowed smmu->link in arm_smmu_add_device(), but here we don't
+check it. Looking at the code, device_link_del() doesn't seem to check
+either.
+
+Note that this problem would go away if we fail add_device on
+device_link_add() failure, as I suggested above, so no change would be
+necessary.
+
+Best regards,
+Tomasz
