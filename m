@@ -1,130 +1,66 @@
-From: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] arm64: dts: renesas: r8a77995: add VSP instances
-Date: Wed, 14 Feb 2018 08:39:19 +0000
-Message-ID: <10851181-b3b1-bb07-82e9-487ae51711ba@ideasonboard.com>
-References: <1518550237-16753-1-git-send-email-kbingham@kernel.org>
- <1518550237-16753-3-git-send-email-kbingham@kernel.org>
- <1667048.nVWrpUAVXQ@avalon>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: stout: Initial r8a7790 Stout board support
+Date: Wed, 14 Feb 2018 09:52:50 +0100
+Message-ID: <20180214085250.54r363tkjmswwgwl@katana>
+References: <20180213232948.31521-1-marek.vasut+renesas@gmail.com>
+ <20180214060547.bf6upib2mbgoexas@katana>
+ <CAMuHMdUYDWXF9uSzsYEOeOVysQKRSFhJ+bLbPhwFbMs-qBjbcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yzxdr67xvityphxv"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1667048.nVWrpUAVXQ@avalon>
-Content-Language: en-GB
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUYDWXF9uSzsYEOeOVysQKRSFhJ+bLbPhwFbMs-qBjbcA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
 
-Thanks for the review,
+--yzxdr67xvityphxv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 13/02/18 22:03, Laurent Pinchart wrote:
-> Hi Kieran,
-> 
-> Thank you for the patch.
-> 
-> On Tuesday, 13 February 2018 21:30:35 EET Kieran Bingham wrote:
->> From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->>
->> The r8a77995 has a VSPBS to support image processing such as blending of
->> two input images, and has two VSPDs to handle display pipelines with a
->> DU.
->>
->> Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->>
->> ---
->> v2:
->>  - Fix VSPD register map size
->>  - Squash VSPBS and VSPD patches together
->>
->>  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 30 ++++++++++++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
->> b/arch/arm64/boot/dts/renesas/r8a77995.dtsi index
->> 196a917afea6..19bd8be9926a 100644
->> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
->> @@ -692,6 +692,16 @@
->>  			status = "disabled";
->>  		};
->>
->> +		vspbs: vsp@fe960000 {
->> +			compatible = "renesas,vsp2";
->> +			reg = <0 0xfe960000 0 0x4000>;
-> 
-> The VSPBS also has OSD-CLUT support in its RPFs, so you need to extend the 
-> registers range too.
-> 
+Hi Geert,
 
-Wait, but I already changed this ...
+> The other R-Car Gen2 boards use 115200 bps for U-Boot and Linux, but some
+> other value (38400?) for the SPI loader that loads U-Boot.
 
-</me checks tree>
+Yes, mostly correct. I am quite sure I have one board which has non-115200
+for U-Boot. I am not at home currently, so I can't check now.
 
-Yup - this change is already in my tree ... which means I must have made the
-change *after* calling git format-patch. Not helpful.
+> What about U-Boot commit f40574e2d78c96a3 ("Kconfig: Migrate CONFIG_BAUDRATE"),
+> which says all R-Car Gen2 boards use 38400, before and after?
 
-Orz
+Don't like, too slow. Can we change it upstream with the reasoning that
+it is a) faster and b) BSP-compatible?
+
+Regards,
+
+   Wolfram
 
 
+--yzxdr67xvityphxv
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-> Apart from that,
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqD+NwACgkQFA3kzBSg
+KbZoKQ/+I3ebmBHzdTLYS6IcsvgjJIvo5qru8nCqs7DzwBZxO3A4PGe9yiRIiL0z
+rX6QRBnI2ZrNemYLeAjLMilZJLLZyR5efUJttxzwRujC0jh3yfy5Iq0WhzrN/MXs
+m8Ny8kiJG8ISi/Sp/LqpFvqSEvS6N9UB6RbpNOI7zvxIhXdKIJsy9l7fRyyTkAcG
+GGxOtJ3OglwdEbrc468axctFBoU1JnZEXznBRogj/rYbGPfL4dGdM491KHnChoFc
+dCdcdJ/Qqlixiif9vEesOP5dgASIkm+PL1mvZ6VWplZTg4P/DIvihX6Hn5CbHe2q
+MeqVl7prpyGUES7N9iBFFhO3fZ+yJteksWhLgijBLtLS4nMXA9YaMI+JOHeOJqCr
+cXzSuC4uT2xZ/zU7JbxTSOvnPuvsSdnMwLEeOVoIvAirTnj9wDPtSvrnZFs5IyRw
+Ch18opV558YXVJrKa/tRA17I5LV6/7iPr3Z9jbEdqVh87A5GilsDTP7CYpIAWH/n
+gd2yf8kr+se9SWLIg6MjMtIzoyNkAg9mGbC8pbi/lnZ3cpemoUvQ1DGVPglBSkOo
+4t3vBjEczwtLHu0xROsRmk9ABeNO7c74Udc1GHlFfTBnqyYnw0aM+fsNSonClbMm
+aqEHUXcBXsN0Rb00fRsRr0Kbp1B1IqXFbeLJKewlZi10alAsMOg=
+=aKXs
+-----END PGP SIGNATURE-----
 
-I'll collect the tag and repost, this time with the correctly updated version.
-
-(And I'll add in that missing vspd3 from the es1 tree too)
-
-
->> +			interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&cpg CPG_MOD 627>;
->> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
->> +			resets = <&cpg 627>;
->> +			renesas,fcp = <&fcpvb0>;
->> +		};
->> +
->>  		fcpvb0: fcp@fe96f000 {
->>  			compatible = "renesas,fcpv";
->>  			reg = <0 0xfe96f000 0 0x200>;
->> @@ -701,6 +711,16 @@
->>  			iommus = <&ipmmu_vp0 5>;
->>  		};
->>
->> +		vspd0: vsp@fea20000 {
->> +			compatible = "renesas,vsp2";
->> +			reg = <0 0xfea20000 0 0x8000>;
->> +			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&cpg CPG_MOD 623>;
->> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
->> +			resets = <&cpg 623>;
->> +			renesas,fcp = <&fcpvd0>;
->> +		};
->> +
->>  		fcpvd0: fcp@fea27000 {
->>  			compatible = "renesas,fcpv";
->>  			reg = <0 0xfea27000 0 0x200>;
->> @@ -710,6 +730,16 @@
->>  			iommus = <&ipmmu_vi0 8>;
->>  		};
->>
->> +		vspd1: vsp@fea80000 {
->> +			compatible = "renesas,vsp2";
->> +			reg = <0 0xfea28000 0 0x8000>;
->> +			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&cpg CPG_MOD 622>;
->> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
->> +			resets = <&cpg 622>;
->> +			renesas,fcp = <&fcpvd1>;
->> +		};
->> +
->>  		fcpvd1: fcp@fea2f000 {
->>  			compatible = "renesas,fcpv";
->>  			reg = <0 0xfea2f000 0 0x200>;
-> 
+--yzxdr67xvityphxv--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
