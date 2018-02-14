@@ -1,135 +1,80 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2] of: cache phandle nodes to reduce cost of
- of_find_node_by_phandle()
-Date: Tue, 13 Feb 2018 17:07:17 -0800
-Message-ID: <6e16f883-8aaf-c6af-10f3-3d96c8370bd6@gmail.com>
-References: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
- <CAL_JsqKrp_vL2ZnYEnabonRdHvPT17Gf8fk102g=j4VUH1HSSA@mail.gmail.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v7 6/6] drm/msm: iommu: Replace runtime calls with runtime suppliers
+Date: Wed, 14 Feb 2018 10:59:29 +0900
+Message-ID: <CAAFQd5BKRumpEfAKNF_RKS-ZZ8D671DfOz4vB2+w1SV3aG9NxQ@mail.gmail.com>
+References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1517999482-17317-7-git-send-email-vivek.gautam@codeaurora.org>
+ <CAAFQd5AjopiX6fDgD+mO+-+d0yj-swEnVCNvccWRBSMO+XVJkA@mail.gmail.com> <CAF6AEGs8qcRTvz6srSfc39ybZrPYMVg2w6qkaO2AdWL1GD4mQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKrp_vL2ZnYEnabonRdHvPT17Gf8fk102g=j4VUH1HSSA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Chintan Pandya <cpandya@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAF6AEGs8qcRTvz6srSfc39ybZrPYMVg2w6qkaO2AdWL1GD4mQw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>
+Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>"list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, freedreno <freedreno@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Greg KH <gregkh@linuxfoundation.org>, Stephen
 List-Id: devicetree@vger.kernel.org
 
-On 02/13/18 06:49, Rob Herring wrote:
-> On Mon, Feb 12, 2018 at 12:27 AM,  <frowand.list@gmail.com> wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
+On Wed, Feb 14, 2018 at 3:03 AM, Rob Clark <robdclark@gmail.com> wrote:
+> On Tue, Feb 13, 2018 at 4:10 AM, Tomasz Figa <tfiga@chromium.org> wrote:
+>> Hi Vivek,
 >>
->> Create a cache of the nodes that contain a phandle property.  Use this
->> cache to find the node for a given phandle value instead of scanning
->> the devicetree to find the node.  If the phandle value is not found
->> in the cache, of_find_node_by_phandle() will fall back to the tree
->> scan algorithm.
-> 
-> Please add some data here as to what speed up we see.
-
-Will do.
-
-
->> The cache is initialized in of_core_init().
+>> Thanks for the patch. Please see my comments inline.
 >>
->> The cache is freed via a late_initcall_sync() if modules are not
->> enabled.
+>> On Wed, Feb 7, 2018 at 7:31 PM, Vivek Gautam
+>> <vivek.gautam@codeaurora.org> wrote:
+>>> While handling the concerned iommu, there should not be a
+>>> need to power control the drm devices from iommu interface.
+>>> If these drm devices need to be powered around this time,
+>>> the respective drivers should take care of this.
+>>>
+>>> Replace the pm_runtime_get/put_sync(<drm_device>) with
+>>> pm_runtime_get/put_suppliers(<drm_device>) calls, to power-up
+>>> the connected iommu through the device link interface.
+>>> In case the device link is not setup these get/put_suppliers()
+>>> calls will be a no-op, and the iommu driver should take care of
+>>> powering on its devices accordingly.
+>>>
+>>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+>>> ---
+>>>  drivers/gpu/drm/msm/msm_iommu.c | 16 ++++++++--------
+>>>  1 file changed, 8 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+>>> index b23d33622f37..1ab629bbee69 100644
+>>> --- a/drivers/gpu/drm/msm/msm_iommu.c
+>>> +++ b/drivers/gpu/drm/msm/msm_iommu.c
+>>> @@ -40,9 +40,9 @@ static int msm_iommu_attach(struct msm_mmu *mmu, const char * const *names,
+>>>         struct msm_iommu *iommu = to_msm_iommu(mmu);
+>>>         int ret;
+>>>
+>>> -       pm_runtime_get_sync(mmu->dev);
+>>> +       pm_runtime_get_suppliers(mmu->dev);
+>>>         ret = iommu_attach_device(iommu->domain, mmu->dev);
+>>> -       pm_runtime_put_sync(mmu->dev);
+>>> +       pm_runtime_put_suppliers(mmu->dev);
 >>
->> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->> ---
->>
->> Changes since v1:
->>   - change short description from
->>     of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
->>   - rebase on v4.16-rc1
->>   - reorder new functions in base.c to avoid forward declaration
->>   - add locking around kfree(phandle_cache) for memory ordering
->>   - add explicit check for non-null of phandle_cache in
->>     of_find_node_by_phandle().  There is already a check for !handle,
->>     which prevents accessing a null phandle_cache, but that dependency
->>     is not obvious, so this check makes it more apparent.
->>   - do not free phandle_cache if modules are enabled, so that
->>     cached phandles will be available when modules are loaded
->>
->>  drivers/of/base.c       | 93 ++++++++++++++++++++++++++++++++++++++++++++++---
->>  drivers/of/of_private.h |  5 +++
->>  drivers/of/resolver.c   | 21 -----------
->>  3 files changed, 94 insertions(+), 25 deletions(-)
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index ad28de96e13f..b3597c250837 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -91,10 +91,88 @@ int __weak of_node_to_nid(struct device_node *np)
->>  }
->>  #endif
->>
->> +static struct device_node **phandle_cache;
->> +static u32 max_phandle_cache;
->> +
->> +phandle live_tree_max_phandle(void)
->> +{
->> +       struct device_node *node;
->> +       phandle max_phandle;
->> +       unsigned long flags;
->> +
->> +       raw_spin_lock_irqsave(&devtree_lock, flags);
->> +
->> +       max_phandle = 0;
->> +       for_each_of_allnodes(node) {
->> +               if (node->phandle != OF_PHANDLE_ILLEGAL &&
->> +                   node->phandle > max_phandle)
->> +                       max_phandle = node->phandle;
->> +               }
->> +
->> +       raw_spin_unlock_irqrestore(&devtree_lock, flags);
->> +
->> +       return max_phandle;
->> +}
->> +
->> +static void of_populate_phandle_cache(void)
->> +{
->> +       unsigned long flags;
->> +       phandle max_phandle;
->> +       u32 nodes = 0;
->> +       struct device_node *np;
->> +
->> +       if (phandle_cache)
->> +               return;
->> +
->> +       max_phandle = live_tree_max_phandle();
->> +
->> +       raw_spin_lock_irqsave(&devtree_lock, flags);
->> +
->> +       for_each_of_allnodes(np)
->> +               nodes++;
->> +
->> +       /* sanity cap for malformed tree */
-> 
-> Or any tree that doesn't match your assumptions.
-
-Will change to say so.
-
-
->> +       if (max_phandle > nodes)
->> +               max_phandle = nodes;
-> 
-> I fail to see how setting max_phandle to number of nodes helps you
-> here.
+>> For me, it looks like a wrong place to handle runtime PM of IOMMU
+>> here. iommu_attach_device() calls into IOMMU driver's attach_device()
+>> callback and that's where necessary runtime PM gets should happen, if
+>> any. In other words, driver A (MSM DRM driver) shouldn't be dealing
+>> with power state of device controlled by driver B (ARM SMMU).
 >
-> Either just bail out or mask the phandle values so this works
-> with any contiguous range.
+> Note that we end up having to do the same, because of iommu_unmap()
+> while DRM driver is powered off..  it might be cleaner if it was all
+> self contained in the iommu driver, but that would make it so other
+> drivers couldn't call iommu_unmap() from an irq handler, which is
+> apparently something that some of them want to do..
 
-I'll mask.
+I'd assume that runtime PM status is already guaranteed to be active
+when the IRQ handler is running, by some other means (e.g.
+pm_runtime_get_sync() called earlier, when queuing some work to the
+hardware). Otherwise, I'm not sure how a powered down device could
+trigger an IRQ.
 
+So, if the master device power is already on, suppliers should be
+powered on as well, thanks to device links.
 
-> Please capture somewhere what the assumptions are for the cache to
-> work (i.e. phandles were allocated contiguously from 0).
-
-Will do.
-
-
-> 
-> Rob
-> 
+Best regards,
+Tomasz
