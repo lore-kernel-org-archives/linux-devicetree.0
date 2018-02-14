@@ -1,310 +1,169 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v5 05/12] drm/bridge/synopsys: dw-hdmi: don't
- clobber drvdata
-Date: Wed, 14 Feb 2018 21:08:59 +0100
-Message-ID: <20180214200906.31509-6-jernej.skrabec@siol.net>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH v5 11/12] ARM: dts: sun8i: a83t: Add HDMI display pipeline
+Date: Wed, 14 Feb 2018 21:09:05 +0100
+Message-ID: <20180214200906.31509-12-jernej.skrabec@siol.net>
 References: <20180214200906.31509-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBCVPSLKAKGQEF4G2XDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180214200906.31509-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
-Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180214200906.31509-1-jernej.skrabec@siol.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maxime.ripard@free-electrons.com, wens@csie.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, narmstrong@baylibre.com, Jose.Abreu@synopsys.com
+Cc: jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-dw_hdmi shouldn't set drvdata since some drivers might need to store
-it's own data there. Rework dw_hdmi in a way to return struct dw_hdmi
-instead to store it in drvdata. This way drivers are responsible to
-store and pass structure when needed.
+This commit adds all bits necessary for HDMI on A83T - mixer1, tcon1,
+hdmi, hdmi phy and hdmi pinctrl entries.
 
-Idea was taken from the following commit:
-8242ecbd597d ("drm/bridge/synopsys: stop clobbering drvdata")
-
-Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c   | 31 ++++++++++++-----------------
- drivers/gpu/drm/imx/dw_hdmi-imx.c           | 13 +++++++++---
- drivers/gpu/drm/meson/meson_dw_hdmi.c       | 14 +++++++++----
- drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c      | 12 +++++++++--
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 13 +++++++++---
- include/drm/bridge/dw_hdmi.h                | 13 ++++++------
- 6 files changed, 60 insertions(+), 36 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 108 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 107 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 7d80f4b56683..f9802399cc0d 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -2543,8 +2543,6 @@ __dw_hdmi_probe(struct platform_device *pdev,
- 	if (hdmi->i2c)
- 		dw_hdmi_i2c_init(hdmi);
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 7f4955a5fab7..46ae4faa5894 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -155,7 +155,7 @@
  
--	platform_set_drvdata(pdev, hdmi);
--
- 	return hdmi;
+ 	de: display-engine {
+ 		compatible = "allwinner,sun8i-a83t-display-engine";
+-		allwinner,pipelines = <&mixer0>;
++		allwinner,pipelines = <&mixer0>, <&mixer1>;
+ 		status = "disabled";
+ 	};
  
- err_iahb:
-@@ -2594,25 +2592,23 @@ static void __dw_hdmi_remove(struct dw_hdmi *hdmi)
- /* -----------------------------------------------------------------------------
-  * Probe/remove API, used from platforms based on the DRM bridge API.
-  */
--int dw_hdmi_probe(struct platform_device *pdev,
--		  const struct dw_hdmi_plat_data *plat_data)
-+struct dw_hdmi *dw_hdmi_probe(struct platform_device *pdev,
-+			      const struct dw_hdmi_plat_data *plat_data)
- {
- 	struct dw_hdmi *hdmi;
+@@ -208,6 +208,29 @@
+ 			};
+ 		};
  
- 	hdmi = __dw_hdmi_probe(pdev, plat_data);
- 	if (IS_ERR(hdmi))
--		return PTR_ERR(hdmi);
-+		return hdmi;
- 
- 	drm_bridge_add(&hdmi->bridge);
- 
--	return 0;
-+	return hdmi;
- }
- EXPORT_SYMBOL_GPL(dw_hdmi_probe);
- 
--void dw_hdmi_remove(struct platform_device *pdev)
-+void dw_hdmi_remove(struct dw_hdmi *hdmi)
- {
--	struct dw_hdmi *hdmi = platform_get_drvdata(pdev);
--
- 	drm_bridge_remove(&hdmi->bridge);
- 
- 	__dw_hdmi_remove(hdmi);
-@@ -2622,31 +2618,30 @@ EXPORT_SYMBOL_GPL(dw_hdmi_remove);
- /* -----------------------------------------------------------------------------
-  * Bind/unbind API, used from platforms based on the component framework.
-  */
--int dw_hdmi_bind(struct platform_device *pdev, struct drm_encoder *encoder,
--		 const struct dw_hdmi_plat_data *plat_data)
-+struct dw_hdmi *dw_hdmi_bind(struct platform_device *pdev,
-+			     struct drm_encoder *encoder,
-+			     const struct dw_hdmi_plat_data *plat_data)
- {
- 	struct dw_hdmi *hdmi;
- 	int ret;
- 
- 	hdmi = __dw_hdmi_probe(pdev, plat_data);
- 	if (IS_ERR(hdmi))
--		return PTR_ERR(hdmi);
-+		return hdmi;
- 
- 	ret = drm_bridge_attach(encoder, &hdmi->bridge, NULL);
- 	if (ret) {
--		dw_hdmi_remove(pdev);
-+		dw_hdmi_remove(hdmi);
- 		DRM_ERROR("Failed to initialize bridge with drm\n");
--		return ret;
-+		return ERR_PTR(ret);
- 	}
- 
--	return 0;
-+	return hdmi;
- }
- EXPORT_SYMBOL_GPL(dw_hdmi_bind);
- 
--void dw_hdmi_unbind(struct device *dev)
-+void dw_hdmi_unbind(struct dw_hdmi *hdmi)
- {
--	struct dw_hdmi *hdmi = dev_get_drvdata(dev);
--
- 	__dw_hdmi_remove(hdmi);
- }
- EXPORT_SYMBOL_GPL(dw_hdmi_unbind);
-diff --git a/drivers/gpu/drm/imx/dw_hdmi-imx.c b/drivers/gpu/drm/imx/dw_hdmi-imx.c
-index b62763aa8706..fe6becdcc29e 100644
---- a/drivers/gpu/drm/imx/dw_hdmi-imx.c
-+++ b/drivers/gpu/drm/imx/dw_hdmi-imx.c
-@@ -25,6 +25,7 @@
- struct imx_hdmi {
- 	struct device *dev;
- 	struct drm_encoder encoder;
-+	struct dw_hdmi *hdmi;
- 	struct regmap *regmap;
- };
- 
-@@ -239,14 +240,18 @@ static int dw_hdmi_imx_bind(struct device *dev, struct device *master,
- 	drm_encoder_init(drm, encoder, &dw_hdmi_imx_encoder_funcs,
- 			 DRM_MODE_ENCODER_TMDS, NULL);
- 
--	ret = dw_hdmi_bind(pdev, encoder, plat_data);
-+	platform_set_drvdata(pdev, hdmi);
++		mixer1: mixer@1200000 {
++			compatible = "allwinner,sun8i-a83t-de2-mixer-1";
++			reg = <0x01200000 0x100000>;
++			clocks = <&display_clocks CLK_BUS_MIXER1>,
++				 <&display_clocks CLK_MIXER1>;
++			clock-names = "bus",
++				      "mod";
++			resets = <&display_clocks RST_WB>;
 +
-+	hdmi->hdmi = dw_hdmi_bind(pdev, encoder, plat_data);
- 
- 	/*
- 	 * If dw_hdmi_bind() fails we'll never call dw_hdmi_unbind(),
- 	 * which would have called the encoder cleanup.  Do it manually.
- 	 */
--	if (ret)
-+	if (IS_ERR(hdmi->hdmi)) {
-+		ret = PTR_ERR(hdmi->hdmi);
- 		drm_encoder_cleanup(encoder);
-+	}
- 
- 	return ret;
- }
-@@ -254,7 +259,9 @@ static int dw_hdmi_imx_bind(struct device *dev, struct device *master,
- static void dw_hdmi_imx_unbind(struct device *dev, struct device *master,
- 			       void *data)
- {
--	return dw_hdmi_unbind(dev);
-+	struct imx_hdmi *hdmi = dev_get_drvdata(dev);
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+	dw_hdmi_unbind(hdmi->hdmi);
- }
- 
- static const struct component_ops dw_hdmi_imx_ops = {
-diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-index e8c3ef8a94ce..d49af17310c9 100644
---- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
-+++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-@@ -140,6 +140,7 @@ struct meson_dw_hdmi {
- 	struct clk *venci_clk;
- 	struct regulator *hdmi_supply;
- 	u32 irq_stat;
-+	struct dw_hdmi *hdmi;
- };
- #define encoder_to_meson_dw_hdmi(x) \
- 	container_of(x, struct meson_dw_hdmi, encoder)
-@@ -878,9 +879,12 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
- 	dw_plat_data->input_bus_format = MEDIA_BUS_FMT_YUV8_1X24;
- 	dw_plat_data->input_bus_encoding = V4L2_YCBCR_ENC_709;
- 
--	ret = dw_hdmi_bind(pdev, encoder, &meson_dw_hdmi->dw_plat_data);
--	if (ret)
--		return ret;
-+	platform_set_drvdata(pdev, meson_dw_hdmi);
++				mixer1_out: port@1 {
++					reg = <1>;
 +
-+	meson_dw_hdmi->hdmi = dw_hdmi_bind(pdev, encoder,
-+					   &meson_dw_hdmi->dw_plat_data);
-+	if (IS_ERR(meson_dw_hdmi->hdmi))
-+		return PTR_ERR(meson_dw_hdmi->hdmi);
- 
- 	DRM_DEBUG_DRIVER("HDMI controller initialized\n");
- 
-@@ -890,7 +894,9 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
- static void meson_dw_hdmi_unbind(struct device *dev, struct device *master,
- 				   void *data)
- {
--	dw_hdmi_unbind(dev);
-+	struct meson_dw_hdmi *meson_dw_hdmi = dev_get_drvdata(dev);
++					mixer1_out_tcon1: endpoint {
++						remote-endpoint = <&tcon1_in_mixer1>;
++					};
++				};
++			};
++		};
 +
-+	dw_hdmi_unbind(meson_dw_hdmi->hdmi);
- }
+ 		syscon: syscon@1c00000 {
+ 			compatible = "allwinner,sun8i-a83t-system-controller",
+ 				"syscon";
+@@ -256,6 +279,40 @@
+ 			};
+ 		};
  
- static const struct component_ops meson_dw_hdmi_ops = {
-diff --git a/drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c b/drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c
-index dc85b53d58ef..3bebc6821e9c 100644
---- a/drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c
-@@ -68,12 +68,20 @@ static const struct dw_hdmi_plat_data rcar_dw_hdmi_plat_data = {
- 
- static int rcar_dw_hdmi_probe(struct platform_device *pdev)
- {
--	return dw_hdmi_probe(pdev, &rcar_dw_hdmi_plat_data);
-+	struct dw_hdmi *hdmi;
++		tcon1: lcd-controller@1c0d000 {
++			compatible = "allwinner,sun8i-a83t-tcon-tv";
++			reg = <0x01c0d000 0x1000>;
++			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_TCON1>, <&ccu CLK_TCON1>;
++			clock-names = "ahb", "tcon-ch1";
++			resets = <&ccu RST_BUS_TCON1>;
++			reset-names = "lcd";
 +
-+	hdmi = dw_hdmi_probe(pdev, &rcar_dw_hdmi_plat_data);
-+	if (IS_ERR(hdmi))
-+		return PTR_ERR(hdmi);
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +
-+	platform_set_drvdata(pdev, hdmi);
- }
- 
- static int rcar_dw_hdmi_remove(struct platform_device *pdev)
- {
--	dw_hdmi_remove(pdev);
-+	struct dw_hdmi *hdmi = platform_get_drvdata(dev);
++				tcon1_in: port@0 {
++					reg = <0>;
 +
-+	dw_hdmi_remove(hdmi);
- 
- 	return 0;
- }
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index 1eb02a82fd91..3574b0ae2ad1 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -48,6 +48,7 @@ struct rockchip_hdmi {
- 	const struct rockchip_hdmi_chip_data *chip_data;
- 	struct clk *vpll_clk;
- 	struct clk *grf_clk;
-+	struct dw_hdmi *hdmi;
- };
- 
- #define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
-@@ -377,14 +378,18 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
- 	drm_encoder_init(drm, encoder, &dw_hdmi_rockchip_encoder_funcs,
- 			 DRM_MODE_ENCODER_TMDS, NULL);
- 
--	ret = dw_hdmi_bind(pdev, encoder, plat_data);
-+	platform_set_drvdata(pdev, hdmi);
++					tcon1_in_mixer1: endpoint {
++						remote-endpoint = <&mixer1_out_tcon1>;
++					};
++				};
 +
-+	hdmi->hdmi = dw_hdmi_bind(pdev, encoder, plat_data);
- 
- 	/*
- 	 * If dw_hdmi_bind() fails we'll never call dw_hdmi_unbind(),
- 	 * which would have called the encoder cleanup.  Do it manually.
- 	 */
--	if (ret)
-+	if (IS_ERR(hdmi->hdmi)) {
-+		ret = PTR_ERR(hdmi->hdmi);
- 		drm_encoder_cleanup(encoder);
-+	}
- 
- 	return ret;
- }
-@@ -392,7 +397,9 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
- static void dw_hdmi_rockchip_unbind(struct device *dev, struct device *master,
- 				    void *data)
- {
--	return dw_hdmi_unbind(dev);
-+	struct rockchip_hdmi *hdmi = dev_get_drvdata(dev);
++				tcon1_out: port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <1>;
 +
-+	dw_hdmi_unbind(hdmi->hdmi);
- }
++					tcon1_out_hdmi: endpoint@1 {
++						reg = <1>;
++						remote-endpoint = <&hdmi_in_tcon1>;
++					};
++				};
++			};
++		};
++
+ 		mmc0: mmc@1c0f000 {
+ 			compatible = "allwinner,sun8i-a83t-mmc",
+ 				     "allwinner,sun7i-a20-mmc";
+@@ -427,6 +484,11 @@
+ 				drive-strength = <40>;
+ 			};
  
- static const struct component_ops dw_hdmi_rockchip_ops = {
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index f3f3f0e1b2d3..dd2a8cf7d20b 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -143,12 +143,13 @@ struct dw_hdmi_plat_data {
- 			     unsigned long mpixelclock);
- };
++			hdmi_pins: hdmi-pins {
++				pins = "PH6", "PH7", "PH8";
++				function = "hdmi";
++			};
++
+ 			i2c0_pins: i2c0-pins {
+ 				pins = "PH0", "PH1";
+ 				function = "i2c0";
+@@ -685,6 +747,50 @@
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
  
--int dw_hdmi_probe(struct platform_device *pdev,
--		  const struct dw_hdmi_plat_data *plat_data);
--void dw_hdmi_remove(struct platform_device *pdev);
--void dw_hdmi_unbind(struct device *dev);
--int dw_hdmi_bind(struct platform_device *pdev, struct drm_encoder *encoder,
--		 const struct dw_hdmi_plat_data *plat_data);
-+struct dw_hdmi *dw_hdmi_probe(struct platform_device *pdev,
-+			      const struct dw_hdmi_plat_data *plat_data);
-+void dw_hdmi_remove(struct dw_hdmi *hdmi);
-+void dw_hdmi_unbind(struct dw_hdmi *hdmi);
-+struct dw_hdmi *dw_hdmi_bind(struct platform_device *pdev,
-+			     struct drm_encoder *encoder,
-+			     const struct dw_hdmi_plat_data *plat_data);
- 
- void dw_hdmi_setup_rx_sense(struct device *dev, bool hpd, bool rx_sense);
- 
++		hdmi: hdmi@1ee0000 {
++			compatible = "allwinner,sun8i-a83t-dw-hdmi";
++			reg = <0x01ee0000 0x10000>;
++			reg-io-width = <1>;
++			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_SLOW>,
++				 <&ccu CLK_HDMI>;
++			clock-names = "iahb", "isfr", "tmds";
++			resets = <&ccu RST_BUS_HDMI1>;
++			reset-names = "ctrl";
++			phys = <&hdmi_phy>;
++			phy-names = "hdmi-phy";
++			pinctrl-names = "default";
++			pinctrl-0 = <&hdmi_pins>;
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				hdmi_in: port@0 {
++					reg = <0>;
++
++					hdmi_in_tcon1: endpoint {
++						remote-endpoint = <&tcon1_out_hdmi>;
++					};
++				};
++
++				hdmi_out: port@1 {
++					reg = <1>;
++				};
++			};
++		};
++
++		hdmi_phy: hdmi-phy@1ef0000 {
++			compatible = "allwinner,sun8i-a83t-hdmi-phy";
++			reg = <0x01ef0000 0x10000>;
++			clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_SLOW>;
++			clock-names = "bus", "mod";
++			resets = <&ccu RST_BUS_HDMI0>;
++			reset-names = "phy";
++			#phy-cells = <0>;
++		};
++
+ 		r_intc: interrupt-controller@1f00c00 {
+ 			compatible = "allwinner,sun8i-a83t-r-intc",
+ 				     "allwinner,sun6i-a31-r-intc";
 -- 
 2.16.1
