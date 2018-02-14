@@ -1,46 +1,72 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: stout: Initial r8a7790 Stout board support
-Date: Wed, 14 Feb 2018 09:28:47 +0100
-Message-ID: <CAMuHMdUYDWXF9uSzsYEOeOVysQKRSFhJ+bLbPhwFbMs-qBjbcA@mail.gmail.com>
-References: <20180213232948.31521-1-marek.vasut+renesas@gmail.com> <20180214060547.bf6upib2mbgoexas@katana>
+From: Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH 1/2] vfio: platform: Fix reset module leak in error path
+Date: Wed, 14 Feb 2018 09:36:57 +0100
+Message-ID: <2fe86be6-a3e2-9bd6-1d72-63cf0fe3a731@redhat.com>
+References: <1518539815-13774-1-git-send-email-geert+renesas@glider.be>
+ <1518539815-13774-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180214060547.bf6upib2mbgoexas@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1518539815-13774-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+Hi Geert,
 
-On Wed, Feb 14, 2018 at 7:05 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
->> +     chosen {
->> +             bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
->> +             stdout-path = "serial0:38400n8";
->
-> Hmm, that would be our first board to not have 115200, or? We already
-> have some other boards upstream where UBoot has 38400 and Linux 115200.
-> I'd prefer consistency here a little, but no strong opinion and asking
-> for other opinions.
+On 13/02/18 17:36, Geert Uytterhoeven wrote:
+> If the IOMMU group setup fails, the reset module is not released.
+> 
+> Fixes: b5add544d677d363 ("vfio, platform: make reset driver a requirement by default")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/vfio/platform/vfio_platform_common.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+> index 35469af87f88678e..b60bb5326668498c 100644
+> --- a/drivers/vfio/platform/vfio_platform_common.c
+> +++ b/drivers/vfio/platform/vfio_platform_common.c
+> @@ -680,18 +680,23 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
 
-The other R-Car Gen2 boards use 115200 bps for U-Boot and Linux, but some
-other value (38400?) for the SPI loader that loads U-Boot.
+Thanks for fixing this.
 
-What about U-Boot commit f40574e2d78c96a3 ("Kconfig: Migrate CONFIG_BAUDRATE"),
-which says all R-Car Gen2 boards use 38400, before and after?
+If I am not wrong we also leak the reset_module if
+vfio_platform_get_reset() fails to find the reset function (of_reset ==
+NULL), in which case we should do the module_put() in
+vfio_platform_get_reset().
 
-Gr{oetje,eeting}s,
+Thanks
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Eric
+>  	group = vfio_iommu_group_get(dev);
+>  	if (!group) {
+>  		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
+> -		return -EINVAL;
+> +		ret = -EINVAL;
+> +		goto put_reset;
+>  	}
+>  
+>  	ret = vfio_add_group_dev(dev, &vfio_platform_ops, vdev);
+> -	if (ret) {
+> -		vfio_iommu_group_put(group, dev);
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		goto put_iommu;
+>  
+>  	mutex_init(&vdev->igate);
+>  
+>  	return 0;
+> +
+> +put_iommu:
+> +	vfio_iommu_group_put(group, dev);
+> +put_reset:
+> +	vfio_platform_put_reset(vdev);
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(vfio_platform_probe_common);
+>  
+> 
