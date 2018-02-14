@@ -1,36 +1,82 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 7/9] ARM: dts: OMAP5: uevm: Fix "debounce-interval"
- property misspelling
-Date: Wed, 14 Feb 2018 08:22:34 -0800
-Message-ID: <20180214162234.GH6364@atomide.com>
-References: <1518531335-5170-1-git-send-email-geert+renesas@glider.be>
- <1518531335-5170-8-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1518531335-5170-8-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: dt: regulator-name is required property" to the regulator tree
+Date: Wed, 14 Feb 2018 16:28:29 +0000
+Message-ID: <E1elzv3-0005l2-MP@debutante>
+References: <1518532988-10990-1-git-send-email-harald@ccbib.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518532988-10990-1-git-send-email-harald@ccbib.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Harald Geyer <harald@ccbib.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.orgRob Herring <robh@kernel.org>, linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> [180213 06:16]:
-> "debounce_interval" was never supported.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> Cc: Benoît Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> ---
-> Please apply to your tree when appropriate.
+The patch
 
-Thanks applying into omap-for-v4.16/fixes.
+   regulator: dt: regulator-name is required property
 
-Regards,
+has been applied to the regulator tree at
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 4b75291621830acad2c66a1d21d7840a7ca169d3 Mon Sep 17 00:00:00 2001
+From: Harald Geyer <harald@ccbib.org>
+Date: Tue, 13 Feb 2018 14:43:08 +0000
+Subject: [PATCH] regulator: dt: regulator-name is required property
+
+These two drivers fail to probe if no name is provided. For details see:
+https://www.spinics.net/lists/kernel/msg2457515.html
+
+Signed-off-by: Harald Geyer <harald@ccbib.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 1 +
+ Documentation/devicetree/bindings/regulator/gpio-regulator.txt  | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 4fae41d54798..0c2a6c8a1536 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -2,6 +2,7 @@ Fixed Voltage regulators
+ 
+ Required properties:
+ - compatible: Must be "regulator-fixed";
++- regulator-name: Defined in regulator.txt as optional, but required here.
+ 
+ Optional properties:
+ - gpio: gpio to use for enable control
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+index dd1ed789728e..1f496159e2bb 100644
+--- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+@@ -2,6 +2,8 @@ GPIO controlled regulators
+ 
+ Required properties:
+ - compatible		: Must be "regulator-gpio".
++- regulator-name	: Defined in regulator.txt as optional, but required
++			  here.
+ - states		: Selection of available voltages and GPIO configs.
+                           if there are no states, then use a fixed regulator
+ 
+-- 
+2.16.1
