@@ -1,43 +1,40 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 15/15] ARM64: dts: r8a77965: Add EtherAVB device node
-Date: Wed, 14 Feb 2018 15:48:48 +0100
-Message-ID: <CAMuHMdUcBv7MXfTyU=N2P0mpWSK06Z2=HM_QntvsSE4suRA_Cw@mail.gmail.com>
-References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
- <1518515162-23663-16-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518515162-23663-16-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
+From: srinivas.kandagatla@linaro.org
+Subject: [PATCH v2 2/5] dt-bindings: dmaengine: bam_dma: add remote controlled bindings
+Date: Wed, 14 Feb 2018 14:44:56 +0000
+Message-ID: <20180214144459.29813-3-srinivas.kandagatla@linaro.org>
+References: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: vinod.koul@intel.com, andy.gross@linaro.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, david.brown@linaro.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 10:46 AM, Jacopo Mondi
-<jacopo+renesas@jmondi.org> wrote:
-> Populate the ethernet@e6800000 device node to enable Ethernet interface
-> for R-Car M3-N (r8a77965) SoC.
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This patch adds 2 new properties for remote controlled bam dt bindings.
+1. num-channels to indicate number of dma channels.
+2. qcom,num-ees to indicate number of Execution Environments.
 
-Gr{oetje,eeting}s,
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+index 9cbf5d9df8fd..cf5b9e44432c 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+@@ -15,6 +15,10 @@ Required properties:
+   the secure world.
+ - qcom,controlled-remotely : optional, indicates that the bam is controlled by
+   remote proccessor i.e. execution environment.
++- num-channels : optional, indicates supported number of DMA channels in a
++  remotely controlled bam.
++- qcom,num-ees : optional, indicates supported number of Execution Environments
++  in a remotely controlled bam.
+ 
+ Example:
+ 
+-- 
+2.15.1
