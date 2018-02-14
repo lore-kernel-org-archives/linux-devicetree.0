@@ -1,96 +1,67 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 10/15] ARM64: dts: r8a77965: Add SCIF device nodes
-Date: Wed, 14 Feb 2018 15:13:47 +0100
-Message-ID: <CAMuHMdUe1QJq8wFCbc4LoYKzn9roUoAj2iNGfEYfZM=RHtPgpw@mail.gmail.com>
-References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org> <1518515162-23663-11-git-send-email-jacopo+renesas@jmondi.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 0/7] ARM: stm32: add initial STM32MPU support
+Date: Wed, 14 Feb 2018 15:23:17 +0100
+Message-ID: <CAK8P3a16=B9g1cBxOfecgkt2KWthGLJOhg1AkrGEnxjZ-euLQA@mail.gmail.com>
+References: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com> <fa1d8118-6879-a984-4cd9-0e0da98c467b@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518515162-23663-11-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <fa1d8118-6879-a984-4cd9-0e0da98c467b@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Ludovic Barre <ludovic.Barre@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 10:45 AM, Jacopo Mondi
-<jacopo+renesas@jmondi.org> wrote:
-> Add SCIF[0-5] device nodes for M3-N (r8a77965) SoC.
+On Wed, Feb 14, 2018 at 12:05 PM, Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+> Hi Arnd,
 >
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> On 01/16/2018 03:56 PM, Ludovic Barre wrote:
+>>
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch series extends the existing STM32 microcontrollers (MCUs)
+>> family to microprocessors (MPUs). The MPU platform (based on
+>> Arm Cortex-A) is a continuation of the MCU one (based on Arm
+>> Cortex-M) in that it shares a wide number of hardware blocks.
+>>
+>> change v5:
+>> -fix serial3 aliases by serial0
+>>   change v4:
+>> -Add all available uarts in stm32mp157c
+>> -Move uart aliases to board files
+>>
+>> change v3:
+>> -Remove bootargs
+>> -Remove armv7m_restart and Share stm32_compat for mcu/mpu
+>> -Modify stm32 kconfig with Arnd template
+>> -Remove patch below (Linus W: Patch applied)
+>>   devicetree: bindings: Document supported STM32 SoC family
+>>   pinctrl: stm32: Add STM32MP157 MPU support
+>>
+>> change V2:
+>> -Add stm32 documentation in this serie to avoid merge conflict
+>> thread: "https://patchwork.kernel.org/patch/10102573/";
+>> -Split bindings (stm32.txt) to separate patches.
+>> -Remove ARCH_STM32_MCU/MPU flags
+>> -Adopt rst format for Documentation/arm/stm32 files
+>> -s/STMicrolectronics/STMicroelectronics/g
+>>  > Ludovic Barre (7):
+>>    Documentation: arm: stm32: move to rst format
+>>    ARM: stm32: prepare stm32 family to welcome armv7 architecture
+>>    dt-bindings: stm32: add support of STM32MP157
+>>    ARM: stm32: add initial support for STM32MP157
+>>    ARM: configs: multi_v7: add stm32 support
+>>    ARM: dts: stm32: add stm32mp157c initial support
+>>    ARM: dts: stm32: add initial support of stm32mp157c eval board
+>>
+> I will merge stm32 DT patches and mach-stm32 patches in my next pull
+> requests.
+> What about Documentation patch and multi-v7 config patch ?
+> (I could add Documentation patch in my DT pull request)
 
-> --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+Please make the DT pull request have only DT related changes including
+header files that are needed by DT and binding documentation, but
+have the rest in a separate pull request.
 
->                 scif3: serial@e6c50000 {
-> -                       /* placeholder */
-> +                       compatible = "renesas,scif-r8a7796",
-
-renesas,scif-r8a77965
-
-> +                                    "renesas,rcar-gen3-scif", "renesas,scif";
-> +                       reg = <0 0xe6c50000 0 64>;
-> +                       interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 204>,
-> +                                <&cpg CPG_CORE R8A77965_CLK_S3D1>,
-> +                                <&scif_clk>;
-> +                       clock-names = "fck", "brg_int", "scif_clk";
-> +                       dmas = <&dmac0 0x57>, <&dmac0 0x56>;
-> +                       dma-names = "tx", "rx";
-> +                       power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-> +                       resets = <&cpg 204>;
-> +                       status = "disabled";
->                 };
->
->                 scif4: serial@e6c40000 {
-> -                       /* placeholder */
-> +                       compatible = "renesas,scif-r8a7796",
-
-renesas,scif-r8a77965
-
-> +                                    "renesas,rcar-gen3-scif", "renesas,scif";
-> +                       reg = <0 0xe6c40000 0 64>;
-> +                       interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 203>,
-> +                                <&cpg CPG_CORE R8A77965_CLK_S3D1>,
-> +                                <&scif_clk>;
-> +                       clock-names = "fck", "brg_int", "scif_clk";
-> +                       dmas = <&dmac0 0x59>, <&dmac0 0x58>;
-> +                       dma-names = "tx", "rx";
-> +                       power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-> +                       resets = <&cpg 203>;
-> +                       status = "disabled";
->                 };
->
->                 scif5: serial@e6f30000 {
-> -                       /* placeholder */
-> +                       compatible = "renesas,scif-r8a7796",
-
-renesas,scif-r8a77965
-
-> +                                    "renesas,rcar-gen3-scif", "renesas,scif";
-> +                       reg = <0 0xe6f30000 0 64>;
-> +                       interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 202>,
-> +                                <&cpg CPG_CORE R8A77965_CLK_S3D1>,
-> +                                <&scif_clk>;
-> +                       clock-names = "fck", "brg_int", "scif_clk";
-> +                       dmas = <&dmac1 0x5b>, <&dmac1 0x5a>,
-> +                              <&dmac2 0x5b>, <&dmac2 0x5a>;
-> +                       dma-names = "tx", "rx", "tx", "rx";
-> +                       power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
-> +                       resets = <&cpg 202>;
-> +                       status = "disabled";
-
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+       Arnd
