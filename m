@@ -1,80 +1,80 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-Date: Wed, 14 Feb 2018 14:19:33 +0100
-Message-ID: <20180214131933.t75jg5b5cjfuo7r6@flea.home>
-References: <20180208150830.9219-1-maxime.ripard@bootlin.com>
- <20180208150830.9219-3-maxime.ripard@bootlin.com>
- <2517178.9jmyBy62ST@avalon>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="feaizwvindirbxfr"
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: samsung: Add missing #sound-dai-cells property documentation" to the asoc tree
+Date: Wed, 14 Feb 2018 13:28:57 +0000
+Message-ID: <E1elx7J-0006lR-2g@debutante>
+References: <20180212161538.22669-8-s.nawrocki@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2517178.9jmyBy62ST@avalon>
+In-Reply-To: <20180212161538.22669-8-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Boris Brezillon <boris.brezillon-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgkrzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---feaizwvindirbxfr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+   ASoC: samsung: Add missing #sound-dai-cells property documentation
 
-Hi Laurent,
+has been applied to the asoc tree at
 
-On Thu, Feb 08, 2018 at 08:17:19PM +0200, Laurent Pinchart wrote:
-> > +	/*
-> > +	 * Create a static mapping between the CSI virtual channels
-> > +	 * and the output stream.
-> > +	 *
-> > +	 * This should be enhanced, but v4l2 lacks the support for
-> > +	 * changing that mapping dynamically.
-> > +	 *
-> > +	 * We also cannot enable and disable independant streams here,
-> > +	 * hence the reference counting.
-> > +	 */
->=20
-> If you start all streams in one go, will s_stream(1) be called multiple t=
-imes=20
-> ? If not, you could possibly skip the whole reference counting and avoid=
-=20
-> locking.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-I guess that while we should expect the CSI-2 bus to be always
-enabled, the downstream camera interface could be shutdown
-independently, so I guess s_stream would be called each time one is
-brought up or brought down?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Maxime
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
---feaizwvindirbxfr
-Content-Type: application/pgp-signature; name="signature.asc"
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Mark
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqEN2QACgkQ0rTAlCFN
-r3Q36g/+KS4LmieOgw+WCi+8sgZVCYtu8lyuPVa+uL48xh1KhHUUO+dlFm4OZKzS
-0WcVhQ+KAMffU8kfG5jap7kLOFMBJj7PN9nHB6qsbBxlw+4M34gjBi/z0yjwY4FQ
-1hWyMQwzb7lXR/IABfJVb5MvIrOHoRKQOualAi/6BtK91Kk2J2Q7oFcJZLlQPjp3
-4Qsx0DMLw9XD/GtMvd5YOI//8BD0FKn3V1DIsDx3XbIQSxuiOJEY0jMtmRYGRNP5
-kioOsF3NR8zgqsR88O0WVKMB9XnpLWhVd0BatCXHJegnrcYbc4QYXZ12iMsXKmZ/
-XDDIK6/ImIrmlC//jt2PynHTDWZJGasZZOPb6UroImAhL5Oyi2xq9zeHxmA1Lf7g
-dAVWGUocAO85KxImPlL0MI2u/df0daNcqmqVQqXESXBCCHX0+d2a7KDDrZWX89yV
-rrPYjWSLBwbnhC8+Hat0IVjkIyHIyF31o+TxP0CwTOnQ6AtHP7VgLNsoTYV3iu3M
-j9nfroZejvvhGpUWRL3ifTVbF9SAzY6oSWqQNYLmDangPxdnLUof0JoCFKxaNkUi
-izvW3ZWxyhfZsv3BzaySHxG7etwbdRJ7xH4Qb/4wQx/cBncu7G0hEiXaoQMkh9Ku
-xAjr7iERh1BDk88Ampyyheqgj7cV6JK7bDhzHS/ZKcBKcIWxPls=
-=rZVy
------END PGP SIGNATURE-----
+>From 3f0c43e60d19e1c126ddad47c77a5e1036e52378 Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Date: Mon, 12 Feb 2018 17:15:38 +0100
+Subject: [PATCH] ASoC: samsung: Add missing #sound-dai-cells property
+ documentation
 
---feaizwvindirbxfr--
+The #sound-dai-cells property might be helpful in selecting primary
+or secondary CPU DAI and it's already present in i2s nodes for some
+exynos SoCs so let's add it to the DT binding documentation.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/samsung-i2s.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+index c1f508f18ac8..a88cb00fa096 100644
+--- a/Documentation/devicetree/bindings/sound/samsung-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+@@ -60,6 +60,7 @@ Optional SoC Specific Properties:
+   sub system(used in secondary sound source).
+ - pinctrl-0: Should specify pin control groups used for this controller.
+ - pinctrl-names: Should contain only one value - "default".
++- #sound-dai-cells: should be 1.
+ 
+ 
+ Example:
+@@ -79,4 +80,5 @@ i2s0: i2s@3830000 {
+ 	samsung,idma-addr = <0x03000000>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2s0_bus>;
++	#sound-dai-cells = <1>;
+ };
+-- 
+2.16.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
