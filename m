@@ -1,85 +1,43 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [PATCH v2 3/5] dmaengine: qcom: bam_dma: get num-channels and num-ees from dt
-Date: Wed, 14 Feb 2018 14:44:57 +0000
-Message-ID: <20180214144459.29813-4-srinivas.kandagatla@linaro.org>
-References: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: vinod.koul@intel.com, andy.gross@linaro.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, david.brown@linaro.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 15/15] ARM64: dts: r8a77965: Add EtherAVB device node
+Date: Wed, 14 Feb 2018 15:48:48 +0100
+Message-ID: <CAMuHMdUcBv7MXfTyU=N2P0mpWSK06Z2=HM_QntvsSE4suRA_Cw@mail.gmail.com>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1518515162-23663-16-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1518515162-23663-16-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Tue, Feb 13, 2018 at 10:46 AM, Jacopo Mondi
+<jacopo+renesas@jmondi.org> wrote:
+> Populate the ethernet@e6800000 device node to enable Ethernet interface
+> for R-Car M3-N (r8a77965) SoC.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-When Linux is master of BAM, it can directly read registers to know number
-of supported channels, however when its remotely controlled reading these
-registers would trigger a crash if the BAM is not yet initialized or
-powered up on the remote side.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This patch allows driver to read num-channels and num-ees from Device Tree
-for remotely controlled BAM.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/dma/qcom/bam_dma.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+                        Geert
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index ae4c7b6930b8..146b5d03256f 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -393,6 +393,7 @@ struct bam_device {
- 	struct device_dma_parameters dma_parms;
- 	struct bam_chan *channels;
- 	u32 num_channels;
-+	u32 num_ees;
- 
- 	/* execution environment ID, from DT */
- 	u32 ee;
-@@ -1128,15 +1129,19 @@ static int bam_init(struct bam_device *bdev)
- 	u32 val;
- 
- 	/* read revision and configuration information */
--	val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION)) >> NUM_EES_SHIFT;
--	val &= NUM_EES_MASK;
-+	if (!bdev->num_ees) {
-+		val = readl_relaxed(bam_addr(bdev, 0, BAM_REVISION));
-+		bdev->num_ees = (val >> NUM_EES_SHIFT) & NUM_EES_MASK;
-+	}
- 
- 	/* check that configured EE is within range */
--	if (bdev->ee >= val)
-+	if (bdev->ee >= bdev->num_ees)
- 		return -EINVAL;
- 
--	val = readl_relaxed(bam_addr(bdev, 0, BAM_NUM_PIPES));
--	bdev->num_channels = val & BAM_NUM_PIPES_MASK;
-+	if (!bdev->num_channels) {
-+		val = readl_relaxed(bam_addr(bdev, 0, BAM_NUM_PIPES));
-+		bdev->num_channels = val & BAM_NUM_PIPES_MASK;
-+	}
- 
- 	if (bdev->controlled_remotely)
- 		return 0;
-@@ -1232,6 +1237,18 @@ static int bam_dma_probe(struct platform_device *pdev)
- 	bdev->controlled_remotely = of_property_read_bool(pdev->dev.of_node,
- 						"qcom,controlled-remotely");
- 
-+	if (bdev->controlled_remotely) {
-+		ret = of_property_read_u32(pdev->dev.of_node, "num-channels",
-+					   &bdev->num_channels);
-+		if (ret)
-+			dev_err(bdev->dev, "num-channels unspecified in dt\n");
-+
-+		ret = of_property_read_u32(pdev->dev.of_node, "qcom,num-ees",
-+					   &bdev->num_ees);
-+		if (ret)
-+			dev_err(bdev->dev, "num-ees unspecified in dt\n");
-+	}
-+
- 	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
- 	if (IS_ERR(bdev->bamclk)) {
- 		bdev->bamclk = NULL;
--- 
-2.15.1
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
