@@ -1,43 +1,49 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v10 2/3] arm: dts: add Nuvoton NPCM750 device tree
-Date: Wed, 14 Feb 2018 15:29:39 +0100
-Message-ID: <CAK8P3a2_2sQYCaUK-thBxTJ+VhQiw4AcDgwJoyEG=Ssnr=PtQg@mail.gmail.com>
-References: <20180213200959.160157-1-brendanhiggins@google.com> <20180213200959.160157-3-brendanhiggins@google.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 08/37] nds32: Exception handling
+Date: Wed, 14 Feb 2018 15:31:44 +0100
+Message-ID: <CAK8P3a3hnHVrMJuTfDwWcy1R3C=o9UzDVN=OtsZdUzXboYPT5w@mail.gmail.com>
+References: <cover.1518505384.git.greentime@andestech.com> <5d7538f6cad0763594f968d58625c7c7a99f3225.1518505384.git.greentime@andestech.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180213200959.160157-3-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <5d7538f6cad0763594f968d58625c7c7a99f3225.1518505384.git.greentime@andestech.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.co>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 9:09 PM, Brendan Higgins
-<brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+On Tue, Feb 13, 2018 at 10:09 AM, Greentime Hu <green.hu@gmail.com> wrote:
+> This patch includes the exception/interrupt entries, pt_reg structure and
+> related accessors.
+>
+> /* Unaligned accessing handling*/
+> Andes processors cannot load/store information which is not naturally
+> aligned on the bus, i.e., loading a 4 byte data whose start address must
+> be divisible by 4. If unaligned data accessing is happened, data
+> unaligned exception will be triggered and user will get SIGSEGV or
+> kernel oops according to the unaligned address. In order to make user be
+> able to load/store data from an unaligned address, software load/store
+> emulation is implemented in arch/nds32/mm/alignment.c to address data
+> unaligned exception.
+>
+> Unaligned accessing handling is disabled by default because it is not a
+> normal case. User can enable this feature by following steps.
+>
+> A. Compile time:
+>     1. Enable kernel config CONFIG_ALIGNMENT_TRAP
+> B. Run time:
+>     1. Enter /proc/sys/nds32/unaligned_acess folder
+>     2. Write 1 to file enable_mode to enable unaligned accessing
+>        handling. User can disable it by writing 0 to this file.
+>     3. Write 1 to file debug to show which unaligned address is under
+>        processing. User can disable it by writing 0 to this file.
+>
+> However, unaligned accessing handler cannot work if this unaligned
+> address is not accessible such as protection violation. On this
+> condition, the default behaviors for addressing data unaligned exception
+> still happen
+>
+> Signed-off-by: Vincent Chen <vincentc@andestech.com>
+> Signed-off-by: Greentime Hu <greentime@andestech.com>
 
-> +
-> +Enable method name:    "nuvoton,npcm7xx-smp"
-> +Compatible machines:   "nuvoton,npcm750"
-> +Compatible CPUs:       "arm,cortex-a9"
-> +Related properties:    (none)
-> +
-> +Note:
-> +This enable method needs valid nodes compatible with "arm,cortex-a9-scu" and
-> +"nuvoton,npcm750-gcr".
-> +
-> +Example:
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               enable-method = "nuvoton,npcm7xx-smp";
-
-It seems you changed the DT files, but forgot to update the binding to match.
-
-Otherwise it looks al good to me.
-
-       Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Arnd Bergmann <arnd@arndb.de>
