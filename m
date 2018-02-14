@@ -1,100 +1,29 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v2 2/6] dt-bindings: phy-rockchip-typec: deprecate some register properties.
-Date: Wed, 14 Feb 2018 17:54:43 +0100
-Message-ID: <20180214165447.12181-2-enric.balletbo@collabora.com>
-References: <20180214165447.12181-1-enric.balletbo@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180214165447.12181-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Brian Norris <briannorris@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org, Chris Zhong <zyw@rock-chips.com>, William wu <wulf@rock-chips.com>, hl@rock-chips.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv2] nokia N9: Add support for magnetometer
+Date: Wed, 14 Feb 2018 08:58:35 -0800
+Message-ID: <20180214165835.GJ6364@atomide.com>
+References: <20180102131722.GA20706@amd>
+ <20180102172720.ghtez4d3d2fgcmj6@earth.universe>
+ <20180103141248.GA18821@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180103141248.GA18821@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, aaro.koskinen-X3B1VOXEql0@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, patrikbachan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, serge-A9i7LUbDfNHQT0dZR+AlfA@public.gmane.org, abcloriens-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clayton-fehKsxFhGzZIf6P1QZMOBw@public.gmane.org, martijn-28JJ9oSIdodmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Filip =?utf-8?Q?Matijevi=C4=87?= <filip.matijevic.pz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As now the following register properties are in the driver, document as
-deprecated these properties and recommend to not use them on new bindings.
+* Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> [180103 06:15]:
+> 
+> This adds dts support for magnetometer on Nokia N9.
 
-The deprecated properties are:
+Applying into omap-for-v4.17/dt thanks.
 
-- rockchip,typec-conn-dir : the register of type-c connector direction
-- rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2
-                           enable control.
-- rockchip,external-psm : the register of type-c phy external psm clock
-                          selection.
-- rockchip,pipe-status : the register of type-c phy pipe status.
-
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
----
-Changes since v1:
-- This patch is new on these series and is just a documentation update
-  due patch [1/6]
-
- .../devicetree/bindings/phy/phy-rockchip-typec.txt | 33 +++++-----------------
- 1 file changed, 7 insertions(+), 26 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-index 6ea867e3176f..bc44d6abe283 100644
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-@@ -16,24 +16,6 @@ Required properties:
- 		 "uphy", "uphy-pipe", "uphy-tcphy"
-  - extcon : extcon specifier for the Power Delivery
- 
--Note, there are 2 type-c phys for RK3399, and they are almost identical, except
--these registers(description below), every register node contains 3 sections:
--offset, enable bit, write mask bit.
-- - rockchip,typec-conn-dir : the register of type-c connector direction,
--   for type-c phy0, it must be <0xe580 0 16>;
--   for type-c phy1, it must be <0xe58c 0 16>;
-- - rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2 enable
--   control.
--   for type-c phy0, it must be <0xe580 3 19>;
--   for type-c phy1, it must be <0xe58c 3 19>;
-- - rockchip,external-psm : the register of type-c phy external psm clock
--   selection.
--   for type-c phy0, it must be <0xe588 14 30>;
--   for type-c phy1, it must be <0xe594 14 30>;
-- - rockchip,pipe-status : the register of type-c phy pipe status.
--   for type-c phy0, it must be <0xe5c0 0 0>;
--   for type-c phy1, it must be <0xe5c0 16 16>;
--
- Required nodes : a sub-node is required for each port the phy provides.
- 		 The sub-node name is used to identify dp or usb3 port,
- 		 and shall be the following entries:
-@@ -43,6 +25,13 @@ Required nodes : a sub-node is required for each port the phy provides.
- Required properties (port (child) node):
- - #phy-cells : must be 0, See ./phy-bindings.txt for details.
- 
-+Deprecated properties, do not use in new device tree sources, these
-+properties are now in the driver:
-+ - rockchip,typec-conn-dir
-+ - rockchip,usb3tousb2-en
-+ - rockchip,external-psm
-+ - rockchip,pipe-status
-+
- Example:
- 	tcphy0: phy@ff7c0000 {
- 		compatible = "rockchip,rk3399-typec-phy";
-@@ -58,10 +47,6 @@ Example:
- 			 <&cru SRST_UPHY0_PIPE_L00>,
- 			 <&cru SRST_P_UPHY0_TCPHY>;
- 		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
--		rockchip,typec-conn-dir = <0xe580 0 16>;
--		rockchip,usb3tousb2-en = <0xe580 3 19>;
--		rockchip,external-psm = <0xe588 14 30>;
--		rockchip,pipe-status = <0xe5c0 0 0>;
- 
- 		tcphy0_dp: dp-port {
- 			#phy-cells = <0>;
-@@ -86,10 +71,6 @@ Example:
- 			 <&cru SRST_UPHY1_PIPE_L00>,
- 			 <&cru SRST_P_UPHY1_TCPHY>;
- 		reset-names = "uphy", "uphy-pipe", "uphy-tcphy";
--		rockchip,typec-conn-dir = <0xe58c 0 16>;
--		rockchip,usb3tousb2-en = <0xe58c 3 19>;
--		rockchip,external-psm = <0xe594 14 30>;
--		rockchip,pipe-status = <0xe5c0 16 16>;
- 
- 		tcphy1_dp: dp-port {
- 			#phy-cells = <0>;
--- 
-2.15.1
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
