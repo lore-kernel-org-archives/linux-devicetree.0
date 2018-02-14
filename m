@@ -1,65 +1,66 @@
-From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 31/37] MAINTAINERS: Add nds32
-Date: Wed, 14 Feb 2018 13:54:53 +0800
-Message-ID: <CAEbi=3cYCAoqrw0JTQkEdnBNSpZUxZA+ZUSmrQd70S+xSro6Yw@mail.gmail.com>
-References: <cover.1518505384.git.greentime@andestech.com> <f7758221d49fd24fdff7c900aa5951a6c1c6a3cd.1518505384.git.greentime@andestech.com>
- <1518537768.22190.42.camel@perches.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] ARM: dts: stout: Initial r8a7790 Stout board support
+Date: Wed, 14 Feb 2018 07:05:47 +0100
+Message-ID: <20180214060547.bf6upib2mbgoexas@katana>
+References: <20180213232948.31521-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518537768.22190.42.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Greentime <greentime-MUIXKm3Oiri1Z/+hSey0Gg@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, David Howells <dhowells-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert.uytterhoeven-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tfe42vr6wdjrzf5u"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180213232948.31521-1-marek.vasut+renesas@gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-02-14 0:02 GMT+08:00 Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>:
-> On Tue, 2018-02-13 at 17:09 +0800, Greentime Hu wrote:
->> Add a maintainer information for the nds32(Andes) architecture.
-> []
->> diff --git a/MAINTAINERS b/MAINTAINERS
-> []
->> @@ -868,6 +868,17 @@ X:       drivers/iio/*/adjd*
->>  F:   drivers/staging/iio/*/ad*
->>  F:   drivers/staging/iio/trigger/iio-trig-bfin-timer.c
->>
->> +ANDES ARCHITECTURE
->> +M:   Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +M:   Vincent Chen <deanbo422-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> +T:   git https://github.com/andestech/linux.git
->> +S:   Supported
->> +F:   arch/nds32
->
-> This should have a trailing /
->
-> F:      arch/nds32/
 
-Thank you Joe.
-I will add this trailing /
->
->> +F:   Documentation/devicetree/bindings/interrupt-controller/andestech,ativic32.txt
->> +F:   Documentation/devicetree/bindings/nds32
+--tfe42vr6wdjrzf5u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-And here
+> +	chosen {
+> +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+> +		stdout-path = "serial0:38400n8";
 
->> +K:   nds32
->
-> Perhaps this should be
->
-> K:      \bnds32
->
-> as there are some existing uses of nds32 in the current tree.
->
-> or maybe case insensitive like
->
-> K:      (?i:\bnds32)
-> or
-> K:      (?:\bnds32|\bNDS32)
->
+Hmm, that would be our first board to not have 115200, or? We already
+have some other boards upstream where UBoot has 38400 and Linux 115200.
+I'd prefer consistency here a little, but no strong opinion and asking
+for other opinions.
 
-I think it might be better to keep it "nds32" becaue some intrinsic
-functions are defined with __nds32__xxx.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> +	vcc_sdhi0: regulator-vcc-sdhi0 {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "SDHI0 Vcc";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		gpio = <&gpio5 24 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +	};
+
+Just double checking: No 1.8V for SDR50/104?
+
+
+--tfe42vr6wdjrzf5u
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqD0boACgkQFA3kzBSg
+KbY+WhAAnjqAroQBHObE2Jp1a79suXhYcgrESbuJ/Jk3A3iuqOpGBKRxUoL7rECg
+y5TKMAhJ0xE/3GjOe9axAKwhH9dWS/i+9SwBOBKnO0Qn12282mMBXRIGDxzgxN5O
+tAuIpGjMjR1bHuInTbz5GiKfZxDPCktLk/K09E6TlBL0gMDqgXaf9zFJ+amst3Nh
+8kBvuqcXfLIMPxVAP/mYry9zF3srMep0wLk1t5S6xNBAQ/TQhjD0ON6dZJieaKM0
+0qYJM8bOwuGZPu3nQXs67dJy0LGVKTXUoR5CKPcDV9EWirqFNgKJOxTrXnSIWkKP
+mx4/A6nL7FDWkqEVndYPp+ZQwaCTkLREFfz+Tom6YWemFJe1hpAVszc80JVMXYRX
+4c6b/6nHeyxsRO+Hw2g68yMS/pz62WBGo0kKoN+XBhw+c9ivpp0Mhka6gWYgQz0d
+II7zP8/deft+vxdtsnPwarNQLTuAEp8TxTEStR8uy0ioLLE2Q+l4Glz5eHYanKFj
+G4ihL717ZO6C3tJ+imKuom8keWzjWQovv9hWrTT0QNlhfSb7UIbr9DRB7tG7SKQf
+bHWkIU9CGqztaoYL907xuGqBBJUxkDuz8VtZgzDAouRlwTuPTyDKV68MR2WI+o7h
+wxpCNzKozWpw0BLG4CvvhmIvkERMSJbE5Tf8vSkUPW4mOasvGlI=
+=TK5M
+-----END PGP SIGNATURE-----
+
+--tfe42vr6wdjrzf5u--
