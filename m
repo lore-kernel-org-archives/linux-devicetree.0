@@ -1,93 +1,133 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
-Date: Wed, 14 Feb 2018 09:50:24 -0600
-Message-ID: <CAL_JsqJQk8uiNKavOyB1AnawESxW17t4MTK7iM5X7t=BPNq0Rg@mail.gmail.com>
-References: <1518416868-8804-1-git-send-email-frowand.list@gmail.com>
- <6e967dd4-0fae-a912-88cd-b60f40ec0727@gmail.com> <75515998-10e0-5025-7828-649112231067@gmail.com>
+From: Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>
+Subject: [PATCH 1/2] mfd: arizona: Update reset pin to use GPIOD
+Date: Wed, 14 Feb 2018 15:55:11 +0000
+Message-ID: <20180214155512.17218-1-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <75515998-10e0-5025-7828-649112231067@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Chintan Pandya <cpandya@codeaurora.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 7:00 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> Hi Rob,
->
-> On 02/11/18 22:56, Frank Rowand wrote:
->> Hi Rob,
->>
->> On 02/11/18 22:27, frowand.list@gmail.com wrote:
->>> From: Frank Rowand <frank.rowand@sony.com>
->>>
->>> Create a cache of the nodes that contain a phandle property.  Use this
->>> cache to find the node for a given phandle value instead of scanning
->>> the devicetree to find the node.  If the phandle value is not found
->>> in the cache, of_find_node_by_phandle() will fall back to the tree
->>> scan algorithm.
->>>
->>> The cache is initialized in of_core_init().
->>>
->>> The cache is freed via a late_initcall_sync() if modules are not
->>> enabled.
->>>
->>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->>> ---
->>>
->>> Changes since v1:
->>>   - change short description from
->>>     of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
->>>   - rebase on v4.16-rc1
->>>   - reorder new functions in base.c to avoid forward declaration
->>>   - add locking around kfree(phandle_cache) for memory ordering
->>>   - add explicit check for non-null of phandle_cache in
->>>     of_find_node_by_phandle().  There is already a check for !handle,
->>>     which prevents accessing a null phandle_cache, but that dependency
->>>     is not obvious, so this check makes it more apparent.
->>>   - do not free phandle_cache if modules are enabled, so that
->>>     cached phandles will be available when modules are loaded
->>
->> < snip >
->>
->>
->>
->> In a previous thread, you said:
->>
->>> We should be able to do this earlier. We already walk the tree twice
->>> in unflattening. We can get the max phandle (or number of phandles
->>> IMO) on the first pass, allocate with the early allocator and then
->>> populate the cache in the 2nd pass. AIUI, you can alloc with memblock
->>> and then free with kfree as the memblock allocations get transferred
->>> to the slab.
->>
->> And I replied:
->>
->>    Thanks for pointing out that kfree() can be used for memory alloced
->>    with memblock.  I'll change to populate the cache earlier.
->>
->>
->> I started to make this change when I moved forward to v4.16-rc1.  There
->> are two obvious ways to do this.
->
-> < snip >
->
-> And I did not finish the explanation, sorry.  I meant to finish with saying
-> that given the drawbacks that I ended up not making the change for v2.
->
-> While modifying the patch to respond to the v2 comments, I decided to go
-> ahead and try using memblock to alloc memory earlier.  The result I got
-> was that when I tried to kfree() the memory at late_initcall_sync I got
-> a panic.  The alloc function I used is memblock_virt_alloc().  You mention
-> "slab" specifically.  Maybe the problem is that my system is using "slub"
-> instead.  Dunno...
+Now GPIOD has support for both pdata systems and for non-standard DT
+bindings the Arizona reset GPIO can be converted to use it.
 
-Maybe memblock_free() still works? Or there's something else that
-needs to be done to transfer them. In any case, I guess doing it later
-is fine.
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AA4QjBA90+/kJqQE7yCjDx5@public.gmane.org>
+---
+ drivers/mfd/arizona-core.c        | 50 ++++++++++++++++++++++++++-------------
+ include/linux/mfd/arizona/pdata.h |  3 ++-
+ 2 files changed, 35 insertions(+), 18 deletions(-)
 
-And by slab, I mean the allocator, not the implementation (which can
-be slab, slub, or slob).
+diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
+index 77875250abe5..50e35e90d42b 100644
+--- a/drivers/mfd/arizona-core.c
++++ b/drivers/mfd/arizona-core.c
+@@ -278,8 +278,7 @@ static int arizona_wait_for_boot(struct arizona *arizona)
+ 
+ static inline void arizona_enable_reset(struct arizona *arizona)
+ {
+-	if (arizona->pdata.reset)
+-		gpio_set_value_cansleep(arizona->pdata.reset, 0);
++	gpiod_set_value_cansleep(arizona->pdata.reset, 0);
+ }
+ 
+ static void arizona_disable_reset(struct arizona *arizona)
+@@ -295,7 +294,7 @@ static void arizona_disable_reset(struct arizona *arizona)
+ 			break;
+ 		}
+ 
+-		gpio_set_value_cansleep(arizona->pdata.reset, 1);
++		gpiod_set_value_cansleep(arizona->pdata.reset, 1);
+ 		usleep_range(1000, 5000);
+ 	}
+ }
+@@ -799,14 +798,25 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
+ 	struct arizona_pdata *pdata = &arizona->pdata;
+ 	int ret, i;
+ 
+-	pdata->reset = of_get_named_gpio(arizona->dev->of_node, "wlf,reset", 0);
+-	if (pdata->reset == -EPROBE_DEFER) {
+-		return pdata->reset;
+-	} else if (pdata->reset < 0) {
+-		dev_err(arizona->dev, "Reset GPIO missing/malformed: %d\n",
+-			pdata->reset);
++	pdata->reset = devm_gpiod_get_from_of_node(arizona->dev,
++						   arizona->dev->of_node,
++						   "wlf,reset", 0,
++						   GPIOD_OUT_LOW,
++						   "arizona /RESET");
++	if (IS_ERR(pdata->reset)) {
++		ret = PTR_ERR(pdata->reset);
++		switch (ret) {
++		case -ENOENT:
++			break;
++		case -EPROBE_DEFER:
++			return ret;
++		default:
++			dev_err(arizona->dev, "Reset GPIO malformed: %d\n",
++				ret);
++			break;
++		}
+ 
+-		pdata->reset = 0;
++		pdata->reset = NULL;
+ 	}
+ 
+ 	ret = of_property_read_u32_array(arizona->dev->of_node,
+@@ -1050,14 +1060,20 @@ int arizona_dev_init(struct arizona *arizona)
+ 		goto err_early;
+ 	}
+ 
+-	if (arizona->pdata.reset) {
++	if (!arizona->pdata.reset) {
+ 		/* Start out with /RESET low to put the chip into reset */
+-		ret = devm_gpio_request_one(arizona->dev, arizona->pdata.reset,
+-					    GPIOF_DIR_OUT | GPIOF_INIT_LOW,
+-					    "arizona /RESET");
+-		if (ret != 0) {
+-			dev_err(dev, "Failed to request /RESET: %d\n", ret);
+-			goto err_dcvdd;
++		arizona->pdata.reset = devm_gpiod_get(arizona->dev, "wlf,reset",
++						      GPIOD_OUT_LOW);
++		if (IS_ERR(arizona->pdata.reset)) {
++			ret = PTR_ERR(arizona->pdata.reset);
++			if (ret == -EPROBE_DEFER)
++				goto err_dcvdd;
++			else
++				dev_err(arizona->dev,
++					"Reset GPIO missing/malformed: %d\n",
++					ret);
++
++			arizona->pdata.reset = NULL;
+ 		}
+ 	}
+ 
+diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
+index f72dc53848d7..0013075d4cda 100644
+--- a/include/linux/mfd/arizona/pdata.h
++++ b/include/linux/mfd/arizona/pdata.h
+@@ -56,6 +56,7 @@
+ #define ARIZONA_MAX_PDM_SPK 2
+ 
+ struct regulator_init_data;
++struct gpio_desc;
+ 
+ struct arizona_micbias {
+ 	int mV;                    /** Regulated voltage */
+@@ -77,7 +78,7 @@ struct arizona_micd_range {
+ };
+ 
+ struct arizona_pdata {
+-	int reset;      /** GPIO controlling /RESET, if any */
++	struct gpio_desc *reset;      /** GPIO controlling /RESET, if any */
+ 
+ 	/** Regulator configuration for MICVDD */
+ 	struct arizona_micsupp_pdata micvdd;
+-- 
+2.11.0
 
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
