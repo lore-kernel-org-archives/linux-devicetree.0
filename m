@@ -1,90 +1,43 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 02/15] clk: renesas: cpg-msr: Add support for R-Car M3-N
-Date: Wed, 14 Feb 2018 12:03:40 +0100
-Message-ID: <CAMuHMdWzNky5zEPGBvgQi58NaxxptGfeybe5OF2w1V+S7SACmw@mail.gmail.com>
-References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org> <1518515162-23663-3-git-send-email-jacopo+renesas@jmondi.org>
+From: Amit Kucheria <amit.kucheria@verdurent.com>
+Subject: Re: [PATCH v2 7/7] tty: serial: msm_geni_serial: Add serial driver
+ support for GENI based QUP
+Date: Wed, 14 Feb 2018 16:34:39 +0530
+Message-ID: <CAHLCerNN_U7z7xNWSHXPwaazokGhctaQH2Z70tokB7O7n2fLVA@mail.gmail.com>
+References: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org> <1515805547-22816-8-git-send-email-kramasub@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518515162-23663-3-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1515805547-22816-8-git-send-email-kramasub@codeaurora.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Cc: corbet@lwn.net, Andy Gross <andy.gross@linaro.org>, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, Girish Mahadevan <girishm@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
-
-On Tue, Feb 13, 2018 at 10:45 AM, Jacopo Mondi
-<jacopo+renesas@jmondi.org> wrote:
-> Initial support for R-Car M3-N (r8a77965), including core and module
-> clocks.
+On Sat, Jan 13, 2018 at 6:35 AM, Karthikeyan Ramasubramanian
+<kramasub@codeaurora.org> wrote:
+> This driver supports GENI based UART Controller in the Qualcomm SOCs. The
+> Qualcomm Generic Interface (GENI) is a programmable module supporting a
+> wide range of serial interfaces including UART. This driver support console
+> operations using FIFO mode of transfer.
 >
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+> ---
+>  drivers/tty/serial/Kconfig            |   10 +
+>  drivers/tty/serial/Makefile           |    1 +
+>  drivers/tty/serial/qcom_geni_serial.c | 1414 +++++++++++++++++++++++++++++++++
+>  3 files changed, 1425 insertions(+)
+>  create mode 100644 drivers/tty/serial/qcom_geni_serial.c
 
-Thanks for your patch!
-
-Please refer to Table 8.2d of R-Car Series, 3rd Generation User's Manual:
-Hardware (Rev. 0.80, Oct 31, 2017), so we know which exact version of
-the datasheet
-was used for the core clock definitions.
-
-> --- /dev/null
-> +++ b/drivers/clk/renesas/r8a77965-cpg-mssr.c
-> @@ -0,0 +1,333 @@
-
-> +static const struct mssr_mod_clk r8a77965_mod_clks[] __initconst = {
-> +       DEF_MOD("scif5",                202,    R8A77965_CLK_S3D4),
-> +       DEF_MOD("scif4",                203,    R8A77965_CLK_S3D4),
-> +       DEF_MOD("scif3",                204,    R8A77965_CLK_S3D4),
-> +       DEF_MOD("scif1",                206,    R8A77965_CLK_S3D4),
-> +       DEF_MOD("scif0",                207,    R8A77965_CLK_S3D4),
-> +       DEF_MOD("sys-dmac2",            217,    R8A77965_CLK_S0D3),
-> +       DEF_MOD("sys-dmac1",            218,    R8A77965_CLK_S0D3),
-> +       DEF_MOD("sys-dmac0",            219,    R8A77965_CLK_S0D3),
+> +       if (!uport->membase) {
+> +               ret = -ENOMEM;
+> +               dev_err(&pdev->dev, "Err IO mapping serial iomem");
+> +               goto exit_geni_serial_probe;
+> +       }
 > +
-> +       DEF_MOD("cmt3",                 300,    R8A77965_CLK_R),
-> +       DEF_MOD("cmt2",                 301,    R8A77965_CLK_R),
-> +       DEF_MOD("cmt1",                 302,    R8A77965_CLK_R),
-> +       DEF_MOD("cmt0",                 303,    R8A77965_CLK_R),
-> +       DEF_MOD("scif2",                310,    R8A77965_CLK_S3D4),
-> +       DEF_MOD("sdif3",                311,    R8A77965_CLK_SD3),
-> +       DEF_MOD("sdif2",                312,    R8A77965_CLK_SD2),
-> +       DEF_MOD("sdif1",                313,    R8A77965_CLK_SD1),
-> +       DEF_MOD("sdif0",                314,    R8A77965_CLK_SD0),
-> +       DEF_MOD("pcie1",                318,    R8A77965_CLK_S3D1),
-> +       DEF_MOD("pcie0",                319,    R8A77965_CLK_S3D1),
-> +       DEF_MOD("usb3-if0",             328,    R8A77965_CLK_S3D1),
-> +       DEF_MOD("usb-dmac0",            330,    R8A77965_CLK_S3D1),
-> +       DEF_MOD("usb-dmac1",            331,    R8A77965_CLK_S3D1),
-> +
-> +       DEF_MOD("rwdt",                 402,    R8A77965_CLK_R),
-> +       DEF_MOD("intc-ex",              407,    R8A77965_CLK_CP),
-> +       DEF_MOD("intc-ap",              408,    R8A77965_CLK_S3D1),
+> +       dev_port->serial_rsc.geni_pinctrl = devm_pinctrl_get(&pdev->dev);
 
-According to Figure 12A.1 the parent clock is S0D3. See also commit
-6e7ddf89d67c2b0c ("clk: renesas: r8a7796: Correct parent clock of INTC-AP").
+You need to include linux/pinctrl/consumer.h for devm_pinctrl_get
 
-> +static int __init r8a77965_cpg_mssr_init(struct device *dev)
-> +{
-
-[...]
-
-> +
-> +       return rcar_gen3_cpg_init(cpg_pll_config, CLK_EXTALR, cpg_mode);
-> +};
-
-Stray semicolon.
-
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I couldn't compile test it w/o it.
