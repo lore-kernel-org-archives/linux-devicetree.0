@@ -1,13 +1,12 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v5 04/12] drm/bridge/synopsys: dw-hdmi: Export
- some PHY related functions
-Date: Wed, 14 Feb 2018 21:08:58 +0100
-Message-ID: <20180214200906.31509-5-jernej.skrabec@siol.net>
+Subject: [PATCH v5 07/12] drm/sun4i: Add has_channel_0 TCON quirk
+Date: Wed, 14 Feb 2018 21:09:01 +0100
+Message-ID: <20180214200906.31509-8-jernej.skrabec@siol.net>
 References: <20180214200906.31509-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBB5PSLKAKGQE6EDZLZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBD5PSLKAKGQE7FUK3WA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180214200906.31509-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,183 +19,165 @@ To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2F
 Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Parts of PHY code could be useful also for custom PHYs. For example,
-Allwinner A83T has custom PHY which is probably Synopsys gen2 PHY
-with few additional memory mapped registers, so most of the Synopsys PHY
-related code could be reused.
+Some TCONs on newer SoCs doesn't support channel 0, since they are meant
+to be used only with TV or HDMI encoder.
 
-Functions exported here are actually not specific to Synopsys PHYs but
-to DWC HDMI controller PHY interface. This means that even if the PHY is
-completely custom, i.e. not designed by Synopsys, exported functions can
-be useful.
+Prepare support for them with adding has_channel_0 quirk.
 
-Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 44 +++++++++++++++++++++----------
- drivers/gpu/drm/meson/meson_dw_hdmi.c     |  8 +++---
- include/drm/bridge/dw_hdmi.h              | 11 ++++++++
- 3 files changed, 45 insertions(+), 18 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 41 +++++++++++++++++++++++++++-----------
+ drivers/gpu/drm/sun4i/sun4i_tcon.h |  1 +
+ 2 files changed, 30 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 7ca14d7325b5..7d80f4b56683 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -1037,19 +1037,21 @@ static void dw_hdmi_phy_enable_svsret(struct dw_hdmi *hdmi, u8 enable)
- 			 HDMI_PHY_CONF0_SVSRET_MASK);
- }
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 3c15cf24b503..32d9a5eb9e25 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -84,6 +84,7 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
  
--static void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
-+void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable)
- {
- 	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
- 			 HDMI_PHY_CONF0_GEN2_PDDQ_OFFSET,
- 			 HDMI_PHY_CONF0_GEN2_PDDQ_MASK);
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_pddq);
+ 	switch (channel) {
+ 	case 0:
++		WARN_ON(!tcon->quirks->has_channel_0);
+ 		regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
+ 				   SUN4I_TCON0_CTL_TCON_ENABLE,
+ 				   enabled ? SUN4I_TCON0_CTL_TCON_ENABLE : 0);
+@@ -276,6 +277,8 @@ static void sun4i_tcon0_mode_set_lvds(struct sun4i_tcon *tcon,
+ 	u8 clk_delay;
+ 	u32 reg, val = 0;
  
--static void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
-+void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable)
- {
- 	hdmi_mask_writeb(hdmi, enable, HDMI_PHY_CONF0,
- 			 HDMI_PHY_CONF0_GEN2_TXPWRON_OFFSET,
- 			 HDMI_PHY_CONF0_GEN2_TXPWRON_MASK);
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_gen2_txpwron);
- 
- static void dw_hdmi_phy_sel_data_en_pol(struct dw_hdmi *hdmi, u8 enable)
- {
-@@ -1065,6 +1067,22 @@ static void dw_hdmi_phy_sel_interface_control(struct dw_hdmi *hdmi, u8 enable)
- 			 HDMI_PHY_CONF0_SELDIPIF_MASK);
- }
- 
-+void dw_hdmi_phy_reset(struct dw_hdmi *hdmi)
-+{
-+	/* PHY reset. The reset signal is active high on Gen2 PHYs. */
-+	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_PHYRSTZ, HDMI_MC_PHYRSTZ);
-+	hdmi_writeb(hdmi, 0, HDMI_MC_PHYRSTZ);
-+}
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_reset);
++	WARN_ON(!tcon->quirks->has_channel_0);
 +
-+void dw_hdmi_phy_i2c_set_addr(struct dw_hdmi *hdmi, u8 address)
-+{
-+	hdmi_phy_test_clear(hdmi, 1);
-+	hdmi_writeb(hdmi, address, HDMI_PHY_I2CM_SLAVE_ADDR);
-+	hdmi_phy_test_clear(hdmi, 0);
-+}
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_i2c_set_addr);
+ 	tcon->dclk_min_div = 7;
+ 	tcon->dclk_max_div = 7;
+ 	sun4i_tcon0_mode_set_common(tcon, mode);
+@@ -344,6 +347,8 @@ static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
+ 	u8 clk_delay;
+ 	u32 val = 0;
+ 
++	WARN_ON(!tcon->quirks->has_channel_0);
 +
- static void dw_hdmi_phy_power_off(struct dw_hdmi *hdmi)
- {
- 	const struct dw_hdmi_phy_data *phy = hdmi->phy.data;
-@@ -1203,16 +1221,11 @@ static int hdmi_phy_configure(struct dw_hdmi *hdmi)
- 	if (phy->has_svsret)
- 		dw_hdmi_phy_enable_svsret(hdmi, 1);
- 
--	/* PHY reset. The reset signal is active high on Gen2 PHYs. */
--	hdmi_writeb(hdmi, HDMI_MC_PHYRSTZ_PHYRSTZ, HDMI_MC_PHYRSTZ);
--	hdmi_writeb(hdmi, 0, HDMI_MC_PHYRSTZ);
-+	dw_hdmi_phy_reset(hdmi);
- 
- 	hdmi_writeb(hdmi, HDMI_MC_HEACPHY_RST_ASSERT, HDMI_MC_HEACPHY_RST);
- 
--	hdmi_phy_test_clear(hdmi, 1);
--	hdmi_writeb(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2,
--		    HDMI_PHY_I2CM_SLAVE_ADDR);
--	hdmi_phy_test_clear(hdmi, 0);
-+	dw_hdmi_phy_i2c_set_addr(hdmi, HDMI_PHY_I2CM_SLAVE_ADDR_PHY_GEN2);
- 
- 	/* Write to the PHY as configured by the platform */
- 	if (pdata->configure_phy)
-@@ -1251,15 +1264,16 @@ static void dw_hdmi_phy_disable(struct dw_hdmi *hdmi, void *data)
- 	dw_hdmi_phy_power_off(hdmi);
- }
- 
--static enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
--						      void *data)
-+enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
-+					       void *data)
- {
- 	return hdmi_readb(hdmi, HDMI_PHY_STAT0) & HDMI_PHY_HPD ?
- 		connector_status_connected : connector_status_disconnected;
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_read_hpd);
- 
--static void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
--				   bool force, bool disabled, bool rxsense)
-+void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
-+			    bool force, bool disabled, bool rxsense)
- {
- 	u8 old_mask = hdmi->phy_mask;
- 
-@@ -1271,8 +1285,9 @@ static void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
- 	if (old_mask != hdmi->phy_mask)
- 		hdmi_writeb(hdmi, hdmi->phy_mask, HDMI_PHY_MASK0);
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_update_hpd);
- 
--static void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
-+void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
- {
- 	/*
- 	 * Configure the PHY RX SENSE and HPD interrupts polarities and clear
-@@ -1291,6 +1306,7 @@ static void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data)
- 	hdmi_writeb(hdmi, ~(HDMI_IH_PHY_STAT0_HPD | HDMI_IH_PHY_STAT0_RX_SENSE),
- 		    HDMI_IH_MUTE_PHY_STAT0);
- }
-+EXPORT_SYMBOL_GPL(dw_hdmi_phy_setup_hpd);
- 
- static const struct dw_hdmi_phy_ops dw_hdmi_synopsys_phy_ops = {
- 	.init = dw_hdmi_phy_init,
-diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-index 17de3afd98f6..e8c3ef8a94ce 100644
---- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
-+++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-@@ -302,7 +302,7 @@ static void meson_hdmi_phy_setup_mode(struct meson_dw_hdmi *dw_hdmi,
+ 	tcon->dclk_min_div = 6;
+ 	tcon->dclk_max_div = 127;
+ 	sun4i_tcon0_mode_set_common(tcon, mode);
+@@ -570,10 +575,12 @@ static int sun4i_tcon_init_clocks(struct device *dev,
  	}
+ 	clk_prepare_enable(tcon->clk);
+ 
+-	tcon->sclk0 = devm_clk_get(dev, "tcon-ch0");
+-	if (IS_ERR(tcon->sclk0)) {
+-		dev_err(dev, "Couldn't get the TCON channel 0 clock\n");
+-		return PTR_ERR(tcon->sclk0);
++	if (tcon->quirks->has_channel_0) {
++		tcon->sclk0 = devm_clk_get(dev, "tcon-ch0");
++		if (IS_ERR(tcon->sclk0)) {
++			dev_err(dev, "Couldn't get the TCON channel 0 clock\n");
++			return PTR_ERR(tcon->sclk0);
++		}
+ 	}
+ 
+ 	if (tcon->quirks->has_channel_1) {
+@@ -930,10 +937,12 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 		goto err_free_clocks;
+ 	}
+ 
+-	ret = sun4i_dclk_create(dev, tcon);
+-	if (ret) {
+-		dev_err(dev, "Couldn't create our TCON dot clock\n");
+-		goto err_free_clocks;
++	if (tcon->quirks->has_channel_0) {
++		ret = sun4i_dclk_create(dev, tcon);
++		if (ret) {
++			dev_err(dev, "Couldn't create our TCON dot clock\n");
++			goto err_free_clocks;
++		}
+ 	}
+ 
+ 	ret = sun4i_tcon_init_irq(dev, tcon);
+@@ -991,7 +1000,8 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+ 	return 0;
+ 
+ err_free_dotclock:
+-	sun4i_dclk_free(tcon);
++	if (tcon->quirks->has_channel_0)
++		sun4i_dclk_free(tcon);
+ err_free_clocks:
+ 	sun4i_tcon_free_clocks(tcon);
+ err_assert_reset:
+@@ -1005,7 +1015,8 @@ static void sun4i_tcon_unbind(struct device *dev, struct device *master,
+ 	struct sun4i_tcon *tcon = dev_get_drvdata(dev);
+ 
+ 	list_del(&tcon->list);
+-	sun4i_dclk_free(tcon);
++	if (tcon->quirks->has_channel_0)
++		sun4i_dclk_free(tcon);
+ 	sun4i_tcon_free_clocks(tcon);
  }
  
--static inline void dw_hdmi_phy_reset(struct meson_dw_hdmi *dw_hdmi)
-+static inline void meson_dw_hdmi_phy_reset(struct meson_dw_hdmi *dw_hdmi)
- {
- 	struct meson_drm *priv = dw_hdmi->priv;
+@@ -1102,16 +1113,19 @@ static int sun6i_tcon_set_mux(struct sun4i_tcon *tcon,
+ }
  
-@@ -409,9 +409,9 @@ static int dw_hdmi_phy_init(struct dw_hdmi *hdmi, void *data,
- 	msleep(100);
+ static const struct sun4i_tcon_quirks sun4i_a10_quirks = {
++	.has_channel_0		= true,
+ 	.has_channel_1		= true,
+ 	.set_mux		= sun4i_a10_tcon_set_mux,
+ };
  
- 	/* Reset PHY 3 times in a row */
--	dw_hdmi_phy_reset(dw_hdmi);
--	dw_hdmi_phy_reset(dw_hdmi);
--	dw_hdmi_phy_reset(dw_hdmi);
-+	meson_dw_hdmi_phy_reset(dw_hdmi);
-+	meson_dw_hdmi_phy_reset(dw_hdmi);
-+	meson_dw_hdmi_phy_reset(dw_hdmi);
+ static const struct sun4i_tcon_quirks sun5i_a13_quirks = {
++	.has_channel_0		= true,
+ 	.has_channel_1		= true,
+ 	.set_mux		= sun5i_a13_tcon_set_mux,
+ };
  
- 	/* Temporary Disable VENC video stream */
- 	if (priv->venc.hdmi_use_enci)
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index 182f83283e24..f3f3f0e1b2d3 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -157,7 +157,18 @@ void dw_hdmi_audio_enable(struct dw_hdmi *hdmi);
- void dw_hdmi_audio_disable(struct dw_hdmi *hdmi);
+ static const struct sun4i_tcon_quirks sun6i_a31_quirks = {
++	.has_channel_0		= true,
+ 	.has_channel_1		= true,
+ 	.has_lvds_alt		= true,
+ 	.needs_de_be_mux	= true,
+@@ -1119,26 +1133,29 @@ static const struct sun4i_tcon_quirks sun6i_a31_quirks = {
+ };
  
- /* PHY configuration */
-+void dw_hdmi_phy_i2c_set_addr(struct dw_hdmi *hdmi, u8 address);
- void dw_hdmi_phy_i2c_write(struct dw_hdmi *hdmi, unsigned short data,
- 			   unsigned char addr);
+ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
++	.has_channel_0		= true,
+ 	.has_channel_1		= true,
+ 	.needs_de_be_mux	= true,
+ };
  
-+void dw_hdmi_phy_gen2_pddq(struct dw_hdmi *hdmi, u8 enable);
-+void dw_hdmi_phy_gen2_txpwron(struct dw_hdmi *hdmi, u8 enable);
-+void dw_hdmi_phy_reset(struct dw_hdmi *hdmi);
-+
-+enum drm_connector_status dw_hdmi_phy_read_hpd(struct dw_hdmi *hdmi,
-+					       void *data);
-+void dw_hdmi_phy_update_hpd(struct dw_hdmi *hdmi, void *data,
-+			    bool force, bool disabled, bool rxsense);
-+void dw_hdmi_phy_setup_hpd(struct dw_hdmi *hdmi, void *data);
-+
- #endif /* __IMX_HDMI_H__ */
+ static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
++	.has_channel_0		= true,
+ 	.has_channel_1		= true,
+ 	/* Same display pipeline structure as A10 */
+ 	.set_mux		= sun4i_a10_tcon_set_mux,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
++	.has_channel_0		= true,
+ 	.has_lvds_alt		= true,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
+-	/* nothing is supported */
++	.has_channel_0		= true,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_v3s_quirks = {
+-	/* nothing is supported */
++	.has_channel_0		= true,
+ };
+ 
+ /* sun4i_drv uses this list to check if a device node is a TCON */
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index b761c7b823c5..78d55e7cd2b3 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -172,6 +172,7 @@
+ struct sun4i_tcon;
+ 
+ struct sun4i_tcon_quirks {
++	bool	has_channel_0;	/* a83t does not have channel 0 on second TCON */
+ 	bool	has_channel_1;	/* a33 does not have channel 1 */
+ 	bool	has_lvds_alt;	/* Does the LVDS clock have a parent other than the TCON clock? */
+ 	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
 -- 
 2.16.1
