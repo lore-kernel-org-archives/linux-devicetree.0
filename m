@@ -1,153 +1,71 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v5 06/12] dt-bindings: display: sun4i-drm: Add
- A83T HDMI pipeline
-Date: Wed, 14 Feb 2018 21:09:00 +0100
-Message-ID: <20180214200906.31509-7-jernej.skrabec@siol.net>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH v5 12/12] ARM: dts: sun8i: a83t: Enable HDMI on BananaPi M3
+Date: Wed, 14 Feb 2018 21:09:06 +0100
+Message-ID: <20180214200906.31509-13-jernej.skrabec@siol.net>
 References: <20180214200906.31509-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBDNPSLKAKGQE5GUEKPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180214200906.31509-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
-Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180214200906.31509-1-jernej.skrabec@siol.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maxime.ripard@free-electrons.com, wens@csie.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, narmstrong@baylibre.com, Jose.Abreu@synopsys.com
+Cc: jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-This commit adds all necessary compatibles and descriptions needed to
-implement A83T HDMI pipeline.
+BananaPi M3 includes HDMI connector, so add support for it.
 
-Mixer is already properly described, so only compatible is added.
-
-However, A83T TV TCON, which is connected to HDMI, doesn't have channel 0,
-contrary to all TCONs currently described. Because of that, TCON
-documentation is extended.
-
-A83T features Synopsys DW HDMI controller with a custom PHY which looks
-like Synopsys Gen2 PHY with few additions. Since there is no
-documentation, needed properties were found out through experimentation
-and reading BSP code.
-
-At the end, example is added for newer SoCs, which feature DE2 and DW
-HDMI.
-
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 ---
- .../bindings/display/sunxi/sun4i-drm.txt           | 61 +++++++++++++++++++---
- 1 file changed, 55 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index cd626ee1147a..b995bfee734a 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -64,6 +64,52 @@ Required properties:
-     first port should be the input endpoint. The second should be the
-     output, usually to an HDMI connector.
+diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+index 6550bf0e594b..00e47423cd07 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+@@ -60,6 +60,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
-+DWC HDMI TX Encoder
-+-------------------
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
 +
-+The HDMI transmitter is a Synopsys DesignWare HDMI 1.4 TX controller IP
-+with Allwinner's own PHY IP. It supports audio and video outputs and CEC.
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
 +
-+These DT bindings follow the Synopsys DWC HDMI TX bindings defined in
-+Documentation/devicetree/bindings/display/bridge/dw_hdmi.txt with the
-+following device-specific properties.
-+
-+Required properties:
-+
-+  - compatible: value must be one of:
-+    * "allwinner,sun8i-a83t-dw-hdmi"
-+  - reg: base address and size of memory-mapped region
-+  - reg-io-width: See dw_hdmi.txt. Shall be 1.
-+  - interrupts: HDMI interrupt number
-+  - clocks: phandles to the clocks feeding the HDMI encoder
-+    * iahb: the HDMI bus clock
-+    * isfr: the HDMI register clock
-+    * tmds: TMDS clock
-+  - clock-names: the clock names mentioned above
-+  - resets: phandle to the reset controller
-+  - reset-names: must be "ctrl"
-+  - phys: phandle to the DWC HDMI PHY
-+  - phy-names: must be "phy"
-+
-+  - ports: A ports node with endpoint definitions as defined in
-+    Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+    first port should be the input endpoint. The second should be the
-+    output, usually to an HDMI connector.
-+
-+DWC HDMI PHY
-+------------
-+
-+Required properties:
-+  - compatible: value must be one of:
-+    * allwinner,sun8i-a83t-hdmi-phy
-+  - reg: base address and size of memory-mapped region
-+  - clocks: phandles to the clocks feeding the HDMI PHY
-+    * bus: the HDMI PHY interface clock
-+    * mod: the HDMI PHY module clock
-+  - clock-names: the clock names mentioned above
-+  - resets: phandle to the reset controller driving the PHY
-+  - reset-names: must be "phy"
-+
- TV Encoder
- ----------
+ 	reg_usb1_vbus: reg-usb1-vbus {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "usb1-vbus";
+@@ -82,6 +93,10 @@
+ 	};
+ };
  
-@@ -94,24 +140,26 @@ Required properties:
-    * allwinner,sun7i-a20-tcon
-    * allwinner,sun8i-a33-tcon
-    * allwinner,sun8i-a83t-tcon-lcd
-+   * allwinner,sun8i-a83t-tcon-tv
-    * allwinner,sun8i-v3s-tcon
-  - reg: base address and size of memory-mapped region
-  - interrupts: interrupt associated to this IP
-- - clocks: phandles to the clocks feeding the TCON. Three are needed:
-+ - clocks: phandles to the clocks feeding the TCON.
-    - 'ahb': the interface clocks
--   - 'tcon-ch0': The clock driving the TCON channel 0
-+   - 'tcon-ch0': The clock driving the TCON channel 0, except for A83T TV TCON
-  - resets: phandles to the reset controllers driving the encoder
-    - "lcd": the reset line for the TCON channel 0
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	/* Terminus Tech FE 1.1s 4-port USB 2.0 hub here */
+ 	status = "okay";
+@@ -100,6 +115,16 @@
+ 	status = "okay";
+ };
  
-  - clock-names: the clock names mentioned above
-  - reset-names: the reset names mentioned above
-- - clock-output-names: Name of the pixel clock created
-+ - clock-output-names: Name of the pixel clock created, if TCON supports
-+   channel 0.
- 
- - ports: A ports node with endpoint definitions as defined in
-   Documentation/devicetree/bindings/media/video-interfaces.txt. The
-   first port should be the input endpoint, the second one the output
- 
--  The output may have multiple endpoints. The TCON has two channels,
-+  The output may have multiple endpoints. TCON can have 1 or 2 channels,
-   usually with the first channel being used for the panels interfaces
-   (RGB, LVDS, etc.), and the second being used for the outputs that
-   require another controller (TV Encoder, HDMI, etc.). The endpoints
-@@ -122,8 +170,8 @@ Required properties:
- On SoCs other than the A33 and V3s, there is one more clock required:
-    - 'tcon-ch1': The clock driving the TCON channel 1
- 
--On SoCs that support LVDS (all SoCs but the A13, H3, H5 and V3s), you
--need one more reset line:
-+When TCON support LVDS (all TCONs except TV TCON on A83T and those found
-+in A13, H3, H5 and V3s SoCs), you need one more reset line:
-    - 'lvds': The reset line driving the LVDS logic
- 
- And on the A23, A31, A31s and A33, you need one more clock line:
-@@ -226,6 +274,7 @@ supported.
- Required properties:
-   - compatible: value must be one of:
-     * allwinner,sun8i-a83t-de2-mixer-0
-+    * allwinner,sun8i-a83t-de2-mixer-1
-     * allwinner,sun8i-v3s-de2-mixer
-   - reg: base address and size of the memory-mapped region.
-   - clocks: phandles to the clocks feeding the mixer
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &mdio {
+ 	rgmii_phy: ethernet-phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
 -- 
 2.16.1
