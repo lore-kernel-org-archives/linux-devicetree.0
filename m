@@ -1,106 +1,238 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 6/6] drm/msm: iommu: Replace runtime calls with runtime
-	suppliers
-Date: Tue, 13 Feb 2018 21:13:51 -0500
-Message-ID: <CAF6AEGuNZJKtwGZ5mLfqNND2jtU+HYM11UONfAtVTzoM0QVpdg@mail.gmail.com>
-References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
-	<1517999482-17317-7-git-send-email-vivek.gautam@codeaurora.org>
-	<CAAFQd5AjopiX6fDgD+mO+-+d0yj-swEnVCNvccWRBSMO+XVJkA@mail.gmail.com>
-	<CAF6AEGs8qcRTvz6srSfc39ybZrPYMVg2w6qkaO2AdWL1GD4mQw@mail.gmail.com>
-	<CAAFQd5BKRumpEfAKNF_RKS-ZZ8D671DfOz4vB2+w1SV3aG9NxQ@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v3 2/2] gpio: Add GPIO driver for Spreadtrum SC9860 platform
+Date: Wed, 14 Feb 2018 10:48:58 +0800
+Message-ID: <CAMz4kuJvVQewoJqamVB8rjbUA+fNcGN9p5U3nnnApqSZS8m9+g@mail.gmail.com>
+References: <2834309f69a1ec37b84a33f153a3d0b90336bcc6.1517795460.git.baolin.wang@linaro.org>
+ <e6da9398355648fc72dc3f674a7c11e114c37d61.1517795461.git.baolin.wang@linaro.org>
+ <CACRpkdYYmHLfozshnQcH+CR0N1zFtiLARRtUbXvJiLG+Bv+R9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAAFQd5BKRumpEfAKNF_RKS-ZZ8D671DfOz4vB2+w1SV3aG9NxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYYmHLfozshnQcH+CR0N1zFtiLARRtUbXvJiLG+Bv+R9w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 8:59 PM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> On Wed, Feb 14, 2018 at 3:03 AM, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, Feb 13, 2018 at 4:10 AM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>> Hi Vivek,
->>>
->>> Thanks for the patch. Please see my comments inline.
->>>
->>> On Wed, Feb 7, 2018 at 7:31 PM, Vivek Gautam
->>> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>> While handling the concerned iommu, there should not be a
->>>> need to power control the drm devices from iommu interface.
->>>> If these drm devices need to be powered around this time,
->>>> the respective drivers should take care of this.
->>>>
->>>> Replace the pm_runtime_get/put_sync(<drm_device>) with
->>>> pm_runtime_get/put_suppliers(<drm_device>) calls, to power-up
->>>> the connected iommu through the device link interface.
->>>> In case the device link is not setup these get/put_suppliers()
->>>> calls will be a no-op, and the iommu driver should take care of
->>>> powering on its devices accordingly.
->>>>
->>>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>> ---
->>>>  drivers/gpu/drm/msm/msm_iommu.c | 16 ++++++++--------
->>>>  1 file changed, 8 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
->>>> index b23d33622f37..1ab629bbee69 100644
->>>> --- a/drivers/gpu/drm/msm/msm_iommu.c
->>>> +++ b/drivers/gpu/drm/msm/msm_iommu.c
->>>> @@ -40,9 +40,9 @@ static int msm_iommu_attach(struct msm_mmu *mmu, const char * const *names,
->>>>         struct msm_iommu *iommu = to_msm_iommu(mmu);
->>>>         int ret;
->>>>
->>>> -       pm_runtime_get_sync(mmu->dev);
->>>> +       pm_runtime_get_suppliers(mmu->dev);
->>>>         ret = iommu_attach_device(iommu->domain, mmu->dev);
->>>> -       pm_runtime_put_sync(mmu->dev);
->>>> +       pm_runtime_put_suppliers(mmu->dev);
->>>
->>> For me, it looks like a wrong place to handle runtime PM of IOMMU
->>> here. iommu_attach_device() calls into IOMMU driver's attach_device()
->>> callback and that's where necessary runtime PM gets should happen, if
->>> any. In other words, driver A (MSM DRM driver) shouldn't be dealing
->>> with power state of device controlled by driver B (ARM SMMU).
+Hi Linus,
+
+On 13 February 2018 at 16:13, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, Feb 5, 2018 at 2:55 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+>> The Spreadtrum SC9860 platform GPIO controller contains 16 groups and
+>> each group contains 16 GPIOs. Each GPIO can set input/output and has
+>> the interrupt capability.
 >>
->> Note that we end up having to do the same, because of iommu_unmap()
->> while DRM driver is powered off..  it might be cleaner if it was all
->> self contained in the iommu driver, but that would make it so other
->> drivers couldn't call iommu_unmap() from an irq handler, which is
->> apparently something that some of them want to do..
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> ---
+>> Changes since v2:
 >
-> I'd assume that runtime PM status is already guaranteed to be active
-> when the IRQ handler is running, by some other means (e.g.
-> pm_runtime_get_sync() called earlier, when queuing some work to the
-> hardware). Otherwise, I'm not sure how a powered down device could
-> trigger an IRQ.
+> Hi Baolin,
 >
-> So, if the master device power is already on, suppliers should be
-> powered on as well, thanks to device links.
+> sorry for taking so long to review :(
 >
+> I think you need to add
+>
+> depends on OF_GPIO to the dependencies. Else the build
+> will break on compile test on things like Usermode Linux
+> that doesn't have IOMEM.
 
-umm, that is kindof the inverse of the problem..  the problem is
-things like gpu driver (and v4l2 drivers that import dma-buf's,
-afaict).. they will potentially call iommu->unmap() when device is not
-active (due to userspace or things beyond the control of the driver)..
-so *they* would want iommu to do pm get/put calls.  But other drivers
-trying to unmap from irq ctx would not.  Which is the contradictory
-requirement that lead to the idea of iommu user powering up iommu for
-unmap.
+OK.
 
-There has already been some discussion about this on various earlier
-permutations of this patchset.  I think we have exhausted all other
-options.
+>
+>> +/* GPIO registers definition */
+>> +#define SPRD_GPIO_DATA         0x0
+>> +#define SPRD_GPIO_DMSK         0x4
+>> +#define SPRD_GPIO_DIR          0x8
+>> +#define SPRD_GPIO_IS           0xc
+>> +#define SPRD_GPIO_IBE          0x10
+>> +#define SPRD_GPIO_IEV          0x14
+>> +#define SPRD_GPIO_IE           0x18
+>> +#define SPRD_GPIO_RIS          0x1c
+>> +#define SPRD_GPIO_MIS          0x20
+>> +#define SPRD_GPIO_IC           0x24
+>> +#define SPRD_GPIO_INEN         0x28
+>
+> So this is very simple. And the only reason we cannot use
+> GPIO_GENERIC is that we have these groups inside the controller
+> and a shared interrupt line :/
+>
+> Hm yeah I cannot think of anything better anyway.
+>
+> Have you contemplated just putting them into the device tree
+> like this:
+>
+> ap_gpio0: gpio@40280000 {
+>         compatible = "sprd,sc9860-gpio";
+>         reg = <0 0x40280000 0 0x80>;
+>         gpio-controller;
+>         #gpio-cells = <2>;
+>         interrupt-controller;
+>         #interrupt-cells = <2>;
+>         interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+> };
+>
+> ap_gpio1: gpio@40280080 {
+>         compatible = "sprd,sc9860-gpio";
+>         reg = <0 0x40280080 0 0x80>;
+>         gpio-controller;
+>         #gpio-cells = <2>;
+>         interrupt-controller;
+>         #interrupt-cells = <2>;
+>         interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+> };
+>
+> ap_gpio2: gpio@40280100 {
+>         compatible = "sprd,sc9860-gpio";
+>         reg = <0 0x40280100 0 0x80>;
+>         gpio-controller;
+>         #gpio-cells = <2>;
+>         interrupt-controller;
+>         #interrupt-cells = <2>;
+>         interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+> };
+>
+> (...)
+>
+> ?
+>
+> It is fine to have 16 driver instances if you grab the interrupt
+> with IRQF_SHARED and really just handle the IRQ if it is for
+> "your" instance. The upside is that you could then use
+> GPIO_GENERIC and get a very small and simple driver.
+>
+> I understand that the current approach is also appealing though
+> and I see why. I'm not gonna say no to it, so if you strongly
+> prefer this approach we can go for it. Just wanted to point out
+> alternatives.
 
-BR,
--R
+Thanks for pointing out another approach. But we only have one
+controller with multiple banks, so I think it is not easy to maintain
+if we split one GPIO controller into multiple ones. Moreover if we
+have more banks in future, there will be more device node to maintain.
+So I still would like to use one device node to describe the only one
+GPIO device.
+
+>
+>> +/* We have 16 groups GPIOs and each group contain 16 GPIOs */
+>> +#define SPRD_GPIO_GROUP_NR     16
+>> +#define SPRD_GPIO_NR           256
+>> +#define SPRD_GPIO_GROUP_SIZE   0x80
+>> +#define SPRD_GPIO_GROUP_MASK   GENMASK(15, 0)
+>> +#define SPRD_GPIO_BIT(x)       ((x) & (SPRD_GPIO_GROUP_NR - 1))
+>
+> Please rename this from "groups" to "banks" because in the GPIO
+> subsystem everyone talks about "banks" not "groups".
+
+Sure.
+
+>
+> This last thing many drivers do like this:
+>
+> bit = x % 15;
+>
+> but it is up to you, either way works (and probably result in the
+> same assembly).
+
+OK.
+
+>
+>> +static inline void __iomem *sprd_gpio_group_base(struct sprd_gpio *sprd_gpio,
+>> +                                                unsigned int group)
+>> +{
+>> +       return sprd_gpio->base + SPRD_GPIO_GROUP_SIZE * group;
+>> +}
+>
+> Since you're always using this like this:
+>
+> void __iomem *base = sprd_gpio_group_base(sprd_gpio,
+>                                             offset / SPRD_GPIO_GROUP_NR);
+>
+> Why not simply have the offset as parameter to the function
+> instead of group number and do the division inside this
+> static inline?
+
+In sprd_gpio_irq_handler() function, we should pass the group number
+as parameter, so to consistent with them, I use group number as
+parameter.
+
+>
+>> +static void sprd_gpio_update(struct gpio_chip *chip, unsigned int offset,
+>> +                            unsigned int reg, unsigned int val)
+>
+> I would use u16 reg.
+
+Sure.
+
+>
+>> +{
+>> +       struct sprd_gpio *sprd_gpio = gpiochip_get_data(chip);
+>> +       void __iomem *base = sprd_gpio_group_base(sprd_gpio,
+>> +                                                 offset / SPRD_GPIO_GROUP_NR);
+>> +       u32 shift = SPRD_GPIO_BIT(offset);
+>> +       unsigned long flags;
+>> +       u32 orig, tmp;
+>> +
+>> +       spin_lock_irqsave(&sprd_gpio->lock, flags);
+>> +       orig = readl_relaxed(base + reg);
+>> +
+>> +       tmp = (orig & ~BIT(shift)) | (val << shift);
+>> +       writel_relaxed(tmp, base + reg);
+>> +       spin_unlock_irqrestore(&sprd_gpio->lock, flags);
+>> +}
+>
+> You don't need shift, orig and tmp variables here, I think it
+> gets hard to read.
+>
+> I would do it like this:
+>
+> u32 tmp;
+>
+> tmp = readl_relaxed(base + reg);
+> if (val)
+>     tmp |= BIT(SPRD_GPIO_BIT(offset));
+> else
+>     tmp &= ~BIT(SPRD_GPIO_BIT(offset));
+> writel_relaxed(tmp, base + reg);
+
+OK. This seems more simpler and clearer.
+
+>
+> I don't know if the macros really help much. Maybe just inline it:
+>
+> tmp = readl_relaxed(base + reg);
+> if (val)
+>     tmp |= BIT(offset % 15);
+> else
+>     tmp &= ~BIT(offset % 15);
+> writel_relaxed(tmp, base + reg);
+>
+> It depends on taste. Just consider my options.
+> (I'll go with what you feel is easiest to read.)
+
+OK.
+
+>
+>> +static int sprd_gpio_read(struct gpio_chip *chip, unsigned int offset,
+>> +                         unsigned int reg)
+>> +{
+>> +       struct sprd_gpio *sprd_gpio = gpiochip_get_data(chip);
+>> +       void __iomem *base = sprd_gpio_group_base(sprd_gpio,
+>> +                                                 offset / SPRD_GPIO_GROUP_NR);
+>> +       u32 value = readl_relaxed(base + reg) & SPRD_GPIO_GROUP_MASK;
+>> +       u32 shift = SPRD_GPIO_BIT(offset);
+>> +
+>> +       return !!(value & BIT(shift));
+>
+> I would just
+>
+> return !!(readl_relaxed(base + reg) & BIT(offset % 15)):
+>
+> But again it is a matter of taste.
+
+OK. Thanks for your useful comments.
+
+-- 
+Baolin.wang
+Best Regards
