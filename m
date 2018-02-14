@@ -1,33 +1,63 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] net: phy: dp83867: Add binding for the CLK_OUT
- pin muxing option
-Date: Wed, 14 Feb 2018 17:14:12 +0100
-Message-ID: <20180214161412.GG12307@lunn.ch>
-References: <1518624432-15110-1-git-send-email-d.schultz@phytec.de>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2] PCI: qcom: add missing supplies required for msm8996
+Date: Wed, 14 Feb 2018 16:14:26 +0000
+Message-ID: <d2b0f220-2982-dc86-ae9e-edf88e0b8e7d@linaro.org>
+References: <20180214120616.23428-1-srinivas.kandagatla@linaro.org>
+ <79820f4c-5166-852f-1bc5-8cef2ff81a00@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1518624432-15110-1-git-send-email-d.schultz-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Schultz <d.schultz-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <79820f4c-5166-852f-1bc5-8cef2ff81a00@mm-sol.com>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>, stanimir.varbanov@linaro.org, linux-pci@vger.kernel.org, bhelgaas@google.com
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 14, 2018 at 05:07:11PM +0100, Daniel Schultz wrote:
-> From: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-> 
-> The DP83867 has a muxing option for the CLK_OUT pin. It is possible
-> to set CLK_OUT for different channels.
-> Create a binding to select a specific clock for CLK_OUT pin.
-> 
-> Signed-off-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-> Signed-off-by: Daniel Schultz <d.schultz-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 14/02/18 16:00, Stanimir Varbanov wrote:
+>>   .../devicetree/bindings/pci/qcom,pcie.txt          |  4 ++++
+>>   drivers/pci/dwc/pcie-qcom.c                        | 24 ++++++++++++++++++++--
+>>   2 files changed, 26 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> index 3c9d321b3d3b..1fd703bd73e0 100644
+>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+>> @@ -189,6 +189,10 @@
+>>   	Value type: <phandle>
+>>   	Definition: A phandle to the analog power supply for IC which generates
+>>   		    reference clock
+>> +- vddpe-3v3-supply:
+> shouldn't it be vddpe_3v3-supply to be aligned with the other supplies?
+> 
+I noticed that, I had to do it intentionally
+As dt properties should follow - instead of _
+
+
+>> +	Usage: optional
+>> +	Value type: <phandle>
+>> +	Definition: A phandle to the PCIe endpoint power supply
+>>   
+>>   - phys:
+>>   	Usage: required for apq8084
+>> diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
+>> index 3e89909f8cb9..519a2ae416eb 100644
+>> --- a/drivers/pci/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/dwc/pcie-qcom.c
+>> @@ -101,13 +101,14 @@ struct qcom_pcie_resources_1_0_0 {
+>>   	struct reset_control *core;
+>>   	struct regulator *vdda;
+>>   };
+>> -
+> please keep above blank line.
+Will fix it.
+> 
+>> +#define QCOM_PCIE_2_3_2_MAX_SUPPLY	2
+>>   struct qcom_pcie_resources_2_3_2 {
+>>   	struct clk *aux_clk;
+>>   	struct clk *master_clk;
+>>   	struct clk *slave_clk;
+>>   	struct clk *cfg_clk;
