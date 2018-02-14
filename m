@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/4] arm64: defconfig: Enable PWM for R-Car
-Date: Wed, 14 Feb 2018 15:23:29 +0900
-Message-ID: <1518589412-7330-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/4] arm64: defconfig: Enable USB-DMAC for R-Car
+Date: Wed, 14 Feb 2018 15:23:30 +0900
+Message-ID: <1518589412-7330-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1518589412-7330-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,7 +12,10 @@ To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8Avxtiu
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the Renesas R-Car's PWM controller.
+Enable the R-Car's USB-DMAC controller. This controller will be used
+by HS-USB (renesas_usbhs driver). Since the renesas_usbhs driver
+(CONFIG_USB_RENESAS_USBHS_UDC) is enabled as module, the USB-DMAC
+driver is also enabled as module.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
@@ -20,17 +23,17 @@ Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@pu
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a850bc5..59c11a5 100644
+index 59c11a5..9f55541 100644
 --- a/arch/arm64/configs/defconfig
 +++ b/arch/arm64/configs/defconfig
-@@ -548,6 +548,7 @@ CONFIG_PWM=y
- CONFIG_PWM_BCM2835=m
- CONFIG_PWM_CROS_EC=m
- CONFIG_PWM_MESON=m
-+CONFIG_PWM_RCAR=m
- CONFIG_PWM_ROCKCHIP=y
- CONFIG_PWM_SAMSUNG=y
- CONFIG_PWM_TEGRA=m
+@@ -501,6 +501,7 @@ CONFIG_QCOM_BAM_DMA=y
+ CONFIG_QCOM_HIDMA_MGMT=y
+ CONFIG_QCOM_HIDMA=y
+ CONFIG_RCAR_DMAC=y
++CONFIG_RENESAS_USB_DMAC=m
+ CONFIG_VFIO=y
+ CONFIG_VFIO_PCI=y
+ CONFIG_VIRTIO_PCI=y
 -- 
 1.9.1
 
