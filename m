@@ -1,43 +1,39 @@
-From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH,RESEND2] regulator: fixed, gpio: dt: regulator-name is required property
-Date: Wed, 14 Feb 2018 11:00:12 +0100
-Message-ID: <E1eltrI-0000Kv-W3@stardust.g4.wien.funkfeuer.at>
-References: <1518532988-10990-1-git-send-email-harald@ccbib.org> <20180213154530.GF5988@sirena.org.uk>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] arm64: dts: renesas: r8a77970: add GPIO support
+Date: Wed, 14 Feb 2018 11:01:26 +0100
+Message-ID: <CAMuHMdUsDDdbvTMEOD_ZVHcSLsKOvdweTGA2ZudFnj4-KCAEGg@mail.gmail.com>
+References: <038a791d-aa57-9c3d-eaea-09c5704ecb54@cogentembedded.com> <85e2d81e-3de9-4f61-ad8f-e0a0ec8381bc@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20180213154530.GF5988-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-ID: <1295.1518602412.1-rvrRdOlaWMmli2aaYNgTVBW+3FKk/ZpWT2auq/jSWdo@public.gmane.org>
+In-Reply-To: <85e2d81e-3de9-4f61-ad8f-e0a0ec8381bc-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mark Brown writes:
-> On Tue, Feb 13, 2018 at 02:43:08PM +0000, Harald Geyer wrote:
-> 
-> > BTW, it took me a bit to figure out that by "content free ping" you are
-> > refering to the quoting of the patch. Maybe you can reword your canned
-> > response to make it easier to understand.
-> 
-> No, a content free ping is when you just send a reply saying something
-> to the effect of "hey, what's going on with this?".
+On Tue, Feb 13, 2018 at 12:22 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Describe all 6 GPIO controllers in the R8A77970 device tree.
+>
+> Based on the original (and large) patch by Daisuke Matsushita
+> <daisuke.matsushita.ns-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org>.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Well, I did quote the entire patch and gave a summary of the status
-as far as I know it. So I really don't understand why I got the
-"no content free pings" response ...
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-> As I said in my
-> reply best case the answer is going to be "I have no idea, you need to
-> resend since I'll need the patch to do anything with it" and worst case
-> it just won't get seen at all if the thing really did get buried
-> somehow.
+Gr{oetje,eeting}s,
 
-So you are saying you don't want pings as followups to patches at all, if
-the patch is old enough that it probably got lost?
+                        Geert
 
-I guess that would make sense too, but again it's not obvious to read
-the canned response that way.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
