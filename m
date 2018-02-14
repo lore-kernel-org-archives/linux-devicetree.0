@@ -1,308 +1,59 @@
 From: Ilia Lin <ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3 09/10] DT: QCOM: Add cpufreq-dt to msm8996
-Date: Wed, 14 Feb 2018 15:59:51 +0200
-Message-ID: <1518616792-29028-10-git-send-email-ilialin@codeaurora.org>
-References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
+Subject: [PATCH v3 00/10] clk: qcom: CPU clock driver for msm8996
+Date: Wed, 14 Feb 2018 15:59:42 +0200
+Message-ID: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518616792-29028-1-git-send-email-ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, nicolas.dechesne-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, celster-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tfinkel-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree frequency table for the MSM8996 to be
-used by the upstream cpufreq-dt driver with the clk-cpu-8996
-driver as infrastructure.
+[v3]
+ * Rebased on top of the latest PLL driver changes
+ * Addressed comment from Rob Herring for bindings
 
-Signed-off-by: Ilia Lin <ilialin-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dts  |   4 +-
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi |   2 +-
- arch/arm64/boot/dts/qcom/msm8996.dtsi        | 188 ++++++++++++++++++++++++++-
- drivers/cpufreq/cpufreq-dt-platdev.c         |   3 +
- 4 files changed, 192 insertions(+), 5 deletions(-)
+This series adds support for the CPU clocks on msm8996 devices.
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-index 230e9c8..632cb42 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2014-2016,2018 The Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-@@ -17,5 +17,5 @@
- 
- / {
- 	model = "Qualcomm Technologies, Inc. DB820c";
--	compatible = "arrow,apq8096-db820c", "qcom,apq8096-sbc";
-+	compatible = "arrow,apq8096-db820c", "qcom,apq8096-sbc", "qcom,apq8096";
- };
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 492a011..930f68b 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2014-2016,2018 The Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 4b2afcc..0359197 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1,4 +1,4 @@
--/* Copyright (c) 2014-2015, The Linux Foundation. All rights reserved.
-+/* Copyright (c) 2014-2015,2018 The Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-@@ -86,6 +86,8 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			clocks = <&kryocc 0>;
-+			operating-points-v2 = <&cluster0_opp>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
- 			      compatible = "cache";
-@@ -98,6 +100,8 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
-+			clocks = <&kryocc 0>;
-+			operating-points-v2 = <&cluster0_opp>;
- 			next-level-cache = <&L2_0>;
- 		};
- 
-@@ -106,6 +110,8 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			clocks = <&kryocc 1>;
-+			operating-points-v2 = <&cluster1_opp>;
- 			next-level-cache = <&L2_1>;
- 			L2_1: l2-cache {
- 			      compatible = "cache";
-@@ -118,6 +124,8 @@
- 			compatible = "qcom,kryo";
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
-+			clocks = <&kryocc 1>;
-+			operating-points-v2 = <&cluster1_opp>;
- 			next-level-cache = <&L2_1>;
- 		};
- 
-@@ -144,6 +152,182 @@
- 		};
- 	};
- 
-+	cluster0_opp: opp_table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp@307200000 {
-+			opp-hz = /bits/ 64 <  307200000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@422400000 {
-+			opp-hz = /bits/ 64 <  422400000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@480000000 {
-+			opp-hz = /bits/ 64 <  480000000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@556800000 {
-+			opp-hz = /bits/ 64 <  556800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@652800000 {
-+			opp-hz = /bits/ 64 <  652800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@729600000 {
-+			opp-hz = /bits/ 64 <  729600000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@844800000 {
-+			opp-hz = /bits/ 64 <  844800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@960000000 {
-+			opp-hz = /bits/ 64 <  960000000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1036800000 {
-+			opp-hz = /bits/ 64 < 1036800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1113600000 {
-+			opp-hz = /bits/ 64 < 1113600000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1190400000 {
-+			opp-hz = /bits/ 64 < 1190400000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1228800000 {
-+			opp-hz = /bits/ 64 < 1228800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1324800000 {
-+			opp-hz = /bits/ 64 < 1324800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1401600000 {
-+			opp-hz = /bits/ 64 < 1401600000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1478400000 {
-+			opp-hz = /bits/ 64 < 1478400000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1593600000 {
-+			opp-hz = /bits/ 64 < 1593600000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+	};
-+
-+	cluster1_opp: opp_table1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp@307200000 {
-+			opp-hz = /bits/ 64 <  307200000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@403200000 {
-+			opp-hz = /bits/ 64 <  403200000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@480000000 {
-+			opp-hz = /bits/ 64 <  480000000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@556800000 {
-+			opp-hz = /bits/ 64 <  556800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@652800000 {
-+			opp-hz = /bits/ 64 <  652800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@729600000 {
-+			opp-hz = /bits/ 64 <  729600000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@806400000 {
-+			opp-hz = /bits/ 64 <  806400000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@883200000 {
-+			opp-hz = /bits/ 64 <  883200000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@940800000 {
-+			opp-hz = /bits/ 64 <  940800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1036800000 {
-+			opp-hz = /bits/ 64 < 1036800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1113600000 {
-+			opp-hz = /bits/ 64 < 1113600000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1190400000 {
-+			opp-hz = /bits/ 64 < 1190400000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1248000000 {
-+			opp-hz = /bits/ 64 < 1248000000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1324800000 {
-+			opp-hz = /bits/ 64 < 1324800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1401600000 {
-+			opp-hz = /bits/ 64 < 1401600000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1478400000 {
-+			opp-hz = /bits/ 64 < 1478400000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1552000000 {
-+			opp-hz = /bits/ 64 < 1552000000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1632000000 {
-+			opp-hz = /bits/ 64 < 1632000000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1708800000 {
-+			opp-hz = /bits/ 64 < 1708800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1785600000 {
-+			opp-hz = /bits/ 64 < 1785600000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1824000000 {
-+			opp-hz = /bits/ 64 < 1824000000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1920000000 {
-+			opp-hz = /bits/ 64 < 1920000000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@1996800000 {
-+			opp-hz = /bits/ 64 < 1996800000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@2073600000 {
-+			opp-hz = /bits/ 64 < 2073600000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+		opp@2150400000 {
-+			opp-hz = /bits/ 64 < 2150400000 >;
-+			clock-latency-ns = <200000>;
-+		};
-+
-+	};
- 	thermal-zones {
- 		cpu-thermal0 {
- 			polling-delay-passive = <250>;
-@@ -403,7 +587,7 @@
- 		};
- 
- 		kryocc: clock-controller@6400000 {
--			compatible = "qcom,apcc-msm8996";
-+			compatible = "qcom-msm8996-apcc";
- 			reg = <0x6400000 0x90000>;
- 			#clock-cells = <1>;
- 		};
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index 3b585e4..b6cd0ae 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -95,6 +95,9 @@
- 	{ .compatible = "xlnx,zynq-7000", },
- 	{ .compatible = "xlnx,zynqmp", },
- 
-+	{ .compatible = "qcom,msm8996", },
-+	{ .compatible = "qcom,apq8096", },
-+
- 	{ }
- };
- 
+The driver uses the existing PLL drivers and is required
+to control the CPU frequency scaling on the MSM8996.
+
+A previous post of RFC can be found here
+https://patchwork.kernel.org/patch/10144485/
+
+Ilia Lin (6):
+  soc: qcom: Separate kryo l2 accessors from PMU driver
+  clk: qcom: Add DT bindings for CPU clock driver for msm8996
+  clk: qcom: clk-cpu-8996: Prepare PLLs on probe
+  clk: qcom: Add ACD path to CPU clock driver for msm8996
+  DT: QCOM: Add cpufreq-dt to msm8996
+  DT: QCOM: Add thermal mitigation to msm8996
+
+Rajendra Nayak (4):
+  clk: qcom: Make clk_alpha_pll_configure available to modules
+  clk: qcom: Add CPU clock driver for msm8996
+  clk: qcom: cpu-8996: Add support to switch to alternate PLL
+  clk: qcom: cpu-8996: Add support to switch below 600Mhz
+
+ .../devicetree/bindings/clock/qcom,kryocc.txt      |  17 +
+ arch/arm64/Kconfig.platforms                       |   7 +
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dts        |   4 +-
+ arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi       |   2 +-
+ arch/arm64/boot/dts/qcom/msm8996.dtsi              | 286 ++++++++++-
+ drivers/clk/qcom/Kconfig                           |   8 +
+ drivers/clk/qcom/Makefile                          |   1 +
+ drivers/clk/qcom/clk-alpha-pll.c                   |   1 +
+ drivers/clk/qcom/clk-cpu-8996.c                    | 554 +++++++++++++++++++++
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   3 +
+ drivers/perf/qcom_l2_pmu.c                         |  50 +-
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/kryo-l2-accessors.c               |  64 +++
+ include/soc/qcom/kryo-l2-accessors.h               |  22 +
+ 14 files changed, 956 insertions(+), 64 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,kryocc.txt
+ create mode 100644 drivers/clk/qcom/clk-cpu-8996.c
+ create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
+ create mode 100644 include/soc/qcom/kryo-l2-accessors.h
+
 -- 
 1.9.1
 
