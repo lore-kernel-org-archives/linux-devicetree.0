@@ -1,45 +1,39 @@
-From: Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: [PATCH v2 3/7] soc: qcom: Add GENI based QUP Wrapper driver
-Date: Wed, 14 Feb 2018 16:37:05 +0530
-Message-ID: <CAHLCerOf3WMUind8-5Z+c6iXyyYvdjS7MaMbO8WzNU2-VaREPg@mail.gmail.com>
-References: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org> <1515805547-22816-4-git-send-email-kramasub@codeaurora.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: enable DP for gru.
+Date: Wed, 14 Feb 2018 12:13:19 +0100
+Message-ID: <14329289.ZsZsSgLk6a@diego>
+References: <20180213143549.15197-1-enric.balletbo@collabora.com> <20180213143549.15197-3-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1515805547-22816-4-git-send-email-kramasub@codeaurora.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Cc: corbet@lwn.net, Andy Gross <andy.gross@linaro.org>, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180213143549.15197-3-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 13, 2018 at 6:35 AM, Karthikeyan Ramasubramanian
-<kramasub@codeaurora.org> wrote:
-> This driver manages the Generic Interface (GENI) firmware based Qualcomm
-> Universal Peripheral (QUP) Wrapper. GENI based QUP is the next generation
-> programmable module composed of multiple Serial Engines (SE) and supports
-> a wide range of serial interfaces like UART, SPI, I2C, I3C, etc. This
-> driver also enables managing the serial interface independent aspects of
-> Serial Engines.
->
-> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+Am Dienstag, 13. Februar 2018, 15:35:49 CET schrieb Enric Balletbo i Serra:
+> From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> Enable cdn_dp and create a cdn-dp-sound for the DP audio. Delete the
+> endpoints between dp and vopL for gru, since we want the DP only use
+> VOP big, which can support 4K mode.
+> 
+> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 
 
-> +int geni_se_resources_off(struct geni_se_rsc *rsc)
-> +{
-> +       int ret = 0;
-> +       struct geni_se_device *geni_se_dev;
-> +
-> +       if (unlikely(!rsc || !rsc->wrapper_dev))
-> +               return -EINVAL;
-> +
-> +       geni_se_dev = dev_get_drvdata(rsc->wrapper_dev);
-> +       if (unlikely(!geni_se_dev))
-> +               return -ENODEV;
-> +
-> +       ret = pinctrl_select_state(rsc->geni_pinctrl, rsc->geni_gpio_sleep);
+applied for 4.17 after dropping the vop-related hacks
 
-You need to include linux/pinctrl/consumer.h for devm_pinctrl_get
+The devicetree should only describe the hardware and is generally not meant
+to do configuration-related things. Selecting the most suitable vops for any
+given combination of outputs should be in the realm of the driver and not
+hard-coded in the dt.
 
-I couldn't compile test it w/o it.
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
