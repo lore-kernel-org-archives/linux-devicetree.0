@@ -1,42 +1,50 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 00/16] mmc: tmio: another batch of TMIO MMC fixes and cleanups
-Date: Wed, 14 Feb 2018 10:36:42 +0100
-Message-ID: <CAPDyKFoxp7p0atQTV=PoQ7Bwt0fOs2aEq1KJHPtrq+zA3eFYgw@mail.gmail.com>
-References: <1516206496-16612-1-git-send-email-yamada.masahiro@socionext.com>
- <CAPDyKFp3dPjsEeyrKAbW_duErCS+xYD0K8zhcRPCY65eRNtMqg@mail.gmail.com> <20180207191152.kvqrugblst2cko3c@ninjato>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] Add support for PWM input capture on STM32
+Date: Wed, 14 Feb 2018 09:38:53 +0000
+Message-ID: <20180214093853.4sskffpd5iasswen@dell>
+References: <1516979499-3665-1-git-send-email-fabrice.gasnier@st.com>
+ <5ade7f05-f5cc-e272-842c-22effa78b716@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20180207191152.kvqrugblst2cko3c@ninjato>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulf Magnusson <ulfalizer@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms+renesas@verge.net.au>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rob Herring <robh@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Lee Jones <lee.jones@linaro.org>, Rich Felker <dalias@libc.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5ade7f05-f5cc-e272-842c-22effa78b716-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 February 2018 at 20:11, Wolfram Sang <wsa@the-dreams.de> wrote:
->
->> I picked patch5 and patch6, as those seemed trivial. Unless there is a
->> rc9, let's aim for 4.17 for the rest.
->
-> I can't find the branch where you picked these patches? I wanted to use
-> it to apply the rest of the patches. They don't seem to fit on v4.15
-> or current linus/master. Can you share this branch?
+On Wed, 14 Feb 2018, Fabrice Gasnier wrote:
 
-You need to check again. :-)
+> On 01/26/2018 04:11 PM, Fabrice Gasnier wrote:
+> > This series adds support for capture to stm32-pwm driver.
+> > Capture is based on DMAs.
+> > - First two patches are precursor patches
+> > - Subsequent two patches add support for requesting DMAs to MFD core
+> > - Next three patches add support for capture to stm32-pwm driver
+> > - This has been tested on stm32429i-eval board.
+> > 
+> > ---
+> > Changes in v2:
+> > - Abstract DMA handling from child driver: move it to MFD core
+> > - Rework pwm capture routines to adopt this change
+> > - Comment on optional dma support, beautify DMAs probe
+> 
+> Hi all,
+> 
+> Gentle ping for v2 driver review since DT Bindings has been reviewed by
+> Rob and the series by Benjamin.
 
-Patches up and to patch6 is already in Linus' tree v.16rc1, those I
-carried for quite a while on my next branch before sending them in the
-PR to Linus.
+Best thing to do is collect the Acks you have and send the set out as
+a [RESEND].
 
->
-> I will do reviewing now "visually". But please wait until I tested them
-> before applying.
-
-I am eager to apply those patches you already have reviewed (to
-patch14), as those mostly seemed rather trivial and should be nice
-cleanups.
-
-Do you mind me going ahead, then you can continue and review/test the rest?
-
-Kind regards
-Uffe
+-- 
+Lee Jones
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
