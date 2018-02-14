@@ -1,68 +1,49 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v13 7/9] ACPI: Translate the I/O range of non-MMIO devices
- before scanning
-Date: Wed, 14 Feb 2018 18:16:53 +0200
-Message-ID: <CAHp75VfOa5pN4MKT-aQmWBwPGWsOaQupyfrN-weWwfR3vMLtuA@mail.gmail.com>
-References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
- <1518543933-22456-8-git-send-email-john.garry@huawei.com> <CAHp75Ve7C4AJYK6AC=o-jzw6b2p8c8GBRd70Zjv+vYWbfytufg@mail.gmail.com>
- <adfa2009-476b-8c25-c661-b0eeb48a6c43@huawei.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/3] DT: display: renesas, lvds: document R8A77970 bindings
+Date: Wed, 14 Feb 2018 18:21:13 +0200
+Message-ID: <5802305.NSMfeCE6G5@avalon>
+References: <20180119183553.649510876@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <adfa2009-476b-8c25-c661-b0eeb48a6c43@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Corey Minyard <minyard@acm.org>devicetree <d>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180119183553.649510876@cogentembedded.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 14, 2018 at 5:33 PM, John Garry <john.garry@huawei.com> wrote:
-> On 14/02/2018 13:53, Andy Shevchenko wrote:
->> On Tue, Feb 13, 2018 at 7:45 PM, John Garry <john.garry@huawei.com> wrote:
-
->>> +       sys_port = logic_pio_trans_hwaddr(&host->fwnode, res->start,
->>> len);
->>> +       if (sys_port == -1UL)
-
->> Wouldn't it be better to compare with ULONG_MAX?
-
-> Could do, being the same thing. Maybe people prefer -1UL as it saves having
-> to figure out what ULONG_MAX is :)
-
--1UL looks confusing.
-
-Another approach is to use ~0UL if that is preferable.
-
->>> +       list_for_each_entry(rentry, &resource_list, node)
->>> +               resources[count++] = *rentry->res;
-
->> It has similarities with acpi_create_platform_device().
->> I guess we can utilize existing code.
-
-> For sure, this particular segment is effectively same as part of
-> acpi_create_platform_device():
-
-Not the same, acpi_create_platform_device() does a bit more than
-copying the resources. If it indeed makes no hurt...
-
->         list_for_each_entry(rentry, &resource_list, node)
->             acpi_platform_fill_resource(adev, rentry->res,
->                             &resources[count++]);
-
-> So is your idea to refactor this common segment into a helper function?
-
-...I would go with helper.
-
->>> +               char *name = &acpi_indirect_io_mfd_cell[count].name[0];
->>> +               char *pnpid = &acpi_indirect_io_mfd_cell[count].pnpid[0];
->>
->>
->> Plain x is equivalent to &x[0].
-
-> Right, but I thought for arrays that we should use address of x rather than
-> x itself, no?
-
-x is addressed by it's beginning.
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGkgU2VyZ2VpLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBGcmlkYXksIDE5IEphbnVh
+cnkgMjAxOCAyMDoyOToyMCBFRVQgU2VyZ2VpIFNodHlseW92IHdyb3RlOgo+IERvY3VtZW50IHRo
+ZSBSLUNhciBWM00gKFI4QTc3OTcwKSBTb0MgaW4gdGhlIFItQ2FyIExWRFMgYmluZGluZ3MuCj4g
+Cj4gU2lnbmVkLW9mZi1ieTogU2VyZ2VpIFNodHlseW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50
+ZW1iZWRkZWQuY29tPgoKUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGlu
+Y2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KCj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0IHwgICAgMSArCj4gIDEg
+ZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+IAo+IEluZGV4Ogo+IGxpbnV4L0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0
+Cj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PSAtLS0KPiBsaW51eC5vcmlnL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHgKPiB0ICsrKwo+IGxpbnV4L0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2
+ZHMudHh0IEBACj4gLTEzLDYgKzEzLDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgICAtICJy
+ZW5lc2FzLHI4YTc3OTMtbHZkcyIgZm9yIFI4QTc3OTEgKFItQ2FyIE0yLU4pIGNvbXBhdGlibGUg
+TFZEUwo+IGVuY29kZXJzIC0gInJlbmVzYXMscjhhNzc5NS1sdmRzIiBmb3IgUjhBNzc5NSAoUi1D
+YXIgSDMpIGNvbXBhdGlibGUgTFZEUwo+IGVuY29kZXJzIC0gInJlbmVzYXMscjhhNzc5Ni1sdmRz
+IiBmb3IgUjhBNzc5NiAoUi1DYXIgTTMtVykgY29tcGF0aWJsZSBMVkRTCj4gZW5jb2RlcnMgKyAg
+LSAicmVuZXNhcyxyOGE3Nzk3MC1sdmRzIiBmb3IgUjhBNzc5NzAgKFItQ2FyIFYzTSkgY29tcGF0
+aWJsZQo+IExWRFMgZW5jb2RlcnMKPiAKPiAgLSByZWc6IEJhc2UgYWRkcmVzcyBhbmQgbGVuZ3Ro
+IGZvciB0aGUgbWVtb3J5LW1hcHBlZCByZWdpc3RlcnMKPiAgLSBjbG9ja3M6IEEgcGhhbmRsZSAr
+IGNsb2NrLXNwZWNpZmllciBwYWlyIGZvciB0aGUgZnVuY3Rpb25hbCBjbG9jawoKLS0gClJlZ2Fy
+ZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
