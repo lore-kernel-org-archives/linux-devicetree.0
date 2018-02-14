@@ -1,46 +1,74 @@
-From: Mikko Perttunen <cyndis@kapsi.fi>
-Subject: Re: [PATCH V7 0/7] Refactor and add AHCI support for tegra210
-Date: Wed, 14 Feb 2018 15:11:15 +0200
-Message-ID: <3cda27d3-bb42-9e00-2e9f-ac52fbe66630@kapsi.fi>
-References: <1518456406-21564-1-git-send-email-pchandru@nvidia.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] irqchip/gic-v3: Support MSIs via aliases and distributor
+Date: Wed, 14 Feb 2018 13:17:30 +0000
+Message-ID: <f6cf3672-1723-a10c-6d8d-5f4cb3cf412a@arm.com>
+References: <20171127102408.6631-1-sboyd@codeaurora.org>
+ <bf71552e-6ea0-55f3-6b42-f4a1a3f65cb9@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1518456406-21564-1-git-send-email-pchandru@nvidia.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Preetham Chandru Ramchandra <pchandru@nvidia.com>, thierry.reding@gmail.com, tj@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: preetham260@gmail.com, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <bf71552e-6ea0-55f3-6b42-f4a1a3f65cb9@linaro.org>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sboyd@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-I think this now looks good enough to merge - others please take a look 
-as well.
+On 14/02/18 12:08, Srinivas Kandagatla wrote:
+> 
+> On 27/11/17 10:24, Stephen Boyd wrote:
+>> Some GIC configurations don't have an accessible ITS, but they
+>> want to support MSIs through the distributor's SETSPI registers
+>> or through the IMPLEMENTATION DEFINED message-based interrupt
+>> request register region. This mode of operation is similar to the
+>> v2m support on gic-400, but we don't necessarily know what
+>> particular SPIs are supported as MSIs so we need some help from
+>> firmware to know what to do.
+>>
+>> Introduce an "arm,spi-ranges" property for this, similar to the
+>> "marvell,spi-ranges" property, that indicates the base and size
+>> of each MSI range. This property applies equally to the
+>> distributor and alias registers. In either case, we detect this
+>> mode of operation by looking for a node with the "msi-controller"
+>> property and then probe the v2m frame code on top of it. Assume
+>> these nodes will have the "arm,spi-ranges" property in them so
+>> that the v2m code works mostly unmodified.
+>>
+>> Cc: <devicetree@vger.kernel.org>
+>> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+>> ---
+>>   .../bindings/interrupt-controller/arm,gic-v3.txt   |  48 +++++++++-
+>>   drivers/irqchip/irq-gic-v2m.c                      | 102 ++++++++++++++++-----
+>>   drivers/irqchip/irq-gic-v3.c                       |   4 +
+>>   include/linux/irqchip/arm-gic-common.h             |   3 +
+>>   4 files changed, 129 insertions(+), 28 deletions(-)
+> 
+> What's the plan on this?
+> I have not seen this patch in rc1 or in next.
 
-Series,
-Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
+Because I haven't had a chance to review it just yet. It will certainly
+not be merged before 4.17. Looking at it, it isn't anywhere near getting
+there.
 
-On 12.02.2018 19:26, Preetham Chandru Ramchandra wrote:
-> From: Preetham Ramchandra <pchandru@nvidia.com>
->
-> 1. ADD AHCI support for tegra210
-> 2. Extend the tegra AHCI controller device tree binding with tegra210
-> 3. Update initialization sequence
-> 4. Initialize regulators based on chip
-> 5. Disable DevSlp
-> 6. Disable DIPM
-> ---
-> Preetham Ramchandra (7):
->   dt-bindings: ahci-tegra: add binding documentation
->   arm64: tegra: Enable AHCI on Jetson TX1
->   ata: ahci_tegra: Update initialization sequence
->   ata: ahci_tegra: initialize regulators from soc_data
->   ata: ahci_tegra: disable devslp for t124
->   ata: ahci_tegra: disable DIPM
->   ata: ahci_tegra: Add AHCI support for Tegra210
->
->  .../bindings/ata/nvidia,tegra124-ahci.txt          |  35 +-
->  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |   6 +
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  16 +
->  drivers/ata/ahci_tegra.c                           | 362 ++++++++++++++++-----
->  4 files changed, 329 insertions(+), 90 deletions(-)
->
+Stacking the v2m driver on top of GICv3 is at best wrong. This is not
+the same HW, and I've NACKed that approach in the past. You're ignoring
+the level interrupt for which the HW has support for.
+
+I've mentioned reusing the GICP driver in the past, as it already caters
+for some of that, even if we're missing some infrastructure. How about
+having a common approach instead of reinventing the wheel?
+
+> We have a dependency on this to get WLAN working on DragonBoard820c.
+
+Even more of a reason to do the right thing then. If you want to have
+this supported, it needs to be a first class citizen, not a mix of two
+unrelated architectures.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
