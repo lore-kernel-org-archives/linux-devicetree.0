@@ -1,53 +1,65 @@
-From: Tomasz Figa <tfiga@chromium.org>
-Subject: Re: [PATCH v7 2/6] iommu/arm-smmu: Add pm_runtime/sleep ops
-Date: Wed, 14 Feb 2018 12:45:09 +0900
-Message-ID: <CAAFQd5Dke8VcR3K1Qg=b962AhQmqi3=HJO8dc4Uu1RZEO0juOw@mail.gmail.com>
-References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
- <1517999482-17317-3-git-send-email-vivek.gautam@codeaurora.org>
- <CAAFQd5B2u8RL-tdB3qgPxVUcXnsBSEhXRBZWxqO-w6rYKAiOtg@mail.gmail.com> <CAFp+6iHECNQ_b_rDwNKyHPgNG3xpc+qgpu8cXvqathai6EW9PQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iHECNQ_b_rDwNKyHPgNG3xpc+qgpu8cXvqathai6EW9PQ@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Clark <robdclark@gmail.com>"list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, freedreno <freedreno@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Greg KH <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeau>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RESEND v5 0/3] Add support for Hi3660 mailbox driver
+Date: Wed, 14 Feb 2018 11:49:48 +0800
+Message-ID: <1518580191-26451-1-git-send-email-leo.yan@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kaihua Zhong <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 7:25 PM, Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
->>> +static int arm_smmu_init_clks(struct arm_smmu_device *smmu)
->>> +{
->>> +       int i;
->>> +       int num = smmu->num_clks;
->>> +       const struct arm_smmu_match_data *data;
->>> +
->>> +       if (num < 1)
->>> +               return 0;
->>> +
->>> +       smmu->clocks = devm_kcalloc(smmu->dev, num,
->>> +                                   sizeof(*smmu->clocks), GFP_KERNEL);
->>> +       if (!smmu->clocks)
->>> +               return -ENOMEM;
->>> +
->>> +       data = of_device_get_match_data(smmu->dev);
->>> +
->>> +       for (i = 0; i < num; i++)
->>> +               smmu->clocks[i].id = data->clks[i];
->>
->> I'd argue that arm_smmu_device_dt_probe() is a better place for all
->> the code above, since this function is called regardless of whether
->> the device is probed from DT or not. Going further,
->> arm_smmu_device_acpi_probe() could fill smmu->num_clks and ->clocks
->> using ACPI-like way (as opposed to OF match data) if necessary.
->
-> Right, it's valid to fill the data in arm_smmu_device_dt_probe().
-> Perhaps we can just keep the devm_clk_bulk_get() in arm_smmu_device_probe()
-> at the point where we are currently doing arm_smmu_init_clks().
+Hi3660 mailbox controller is used to send message within multiple
+processors, MCU, HIFI, etc. This patch series is to implement an
+initial version for Hi3660 mailbox driver with "automatic
+acknowledge" mode.
 
-Sounds good to me. Thanks.
+The patch set have been verified with Hi3660 stub clock driver, so
+we can send message to MCU to execute CPU frequency scaling. This is
+tested on 96boards Hikey960.
 
-Best regards,
-Tomasz
+Changes from v4:
+* According to Jassi suggestion, refactored mailbox driver and removed
+  "inline" for function declaration;
+
+Changes from v3:
+* According to Jassi suggestion, refined structure name to
+  "struct hi3660_chan_info";
+* According to Jassi suggestion, moved channel 'lock'+'acquire'
+  operations into .startup();
+
+Changes from v2:
+* According to Mark Rutland suggestions, removed sev()/wfe() from
+  driver, the system has no two masters sharing the same channel for
+  data transferring so we don't need these instructions;
+* Refined DT binding and doc according to Rob suggestions;
+* Refined driver according to Julien suggestions;
+
+Changes from v1:
+* Added cover letter to track the changelog;
+* Added document for DT binding;
+* Refactored and simplized mailbox driver with "automatic ack" mode;
+* Refined commit logs for patches;
+
+
+Kaihua Zhong (2):
+  mailbox: Add support for Hi3660 mailbox
+  dts: arm64: Add mailbox binding for hi3660
+
+Leo Yan (1):
+  dt-bindings: mailbox: Introduce Hi3660 controller binding
+
+ .../bindings/mailbox/hisilicon,hi3660-mailbox.txt  |  51 ++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi          |   8 +
+ drivers/mailbox/Kconfig                            |   8 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/hi3660-mailbox.c                   | 316 +++++++++++++++++++++
+ 5 files changed, 385 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/hisilicon,hi3660-mailbox.txt
+ create mode 100644 drivers/mailbox/hi3660-mailbox.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
