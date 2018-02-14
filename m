@@ -1,74 +1,90 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH,RESEND2] regulator: fixed, gpio: dt: regulator-name is
- required property
-Date: Wed, 14 Feb 2018 10:42:35 +0000
-Message-ID: <20180214104235.GA9804@sirena.org.uk>
-References: <1518532988-10990-1-git-send-email-harald@ccbib.org>
- <20180213154530.GF5988@sirena.org.uk>
- <E1eltrI-0000Kv-W3@stardust.g4.wien.funkfeuer.at>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 02/15] clk: renesas: cpg-msr: Add support for R-Car M3-N
+Date: Wed, 14 Feb 2018 12:03:40 +0100
+Message-ID: <CAMuHMdWzNky5zEPGBvgQi58NaxxptGfeybe5OF2w1V+S7SACmw@mail.gmail.com>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org> <1518515162-23663-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1eltrI-0000Kv-W3-rvrRdOlaWMmli2aaYNgTVBW+3FKk/ZpWT2auq/jSWdo@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518515162-23663-3-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jacopo,
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Feb 13, 2018 at 10:45 AM, Jacopo Mondi
+<jacopo+renesas@jmondi.org> wrote:
+> Initial support for R-Car M3-N (r8a77965), including core and module
+> clocks.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-On Wed, Feb 14, 2018 at 11:00:12AM +0100, Harald Geyer wrote:
-> Mark Brown writes:
+Thanks for your patch!
 
-> > No, a content free ping is when you just send a reply saying something
-> > to the effect of "hey, what's going on with this?".
+Please refer to Table 8.2d of R-Car Series, 3rd Generation User's Manual:
+Hardware (Rev. 0.80, Oct 31, 2017), so we know which exact version of
+the datasheet
+was used for the core clock definitions.
 
-> Well, I did quote the entire patch and gave a summary of the status
-> as far as I know it. So I really don't understand why I got the
-> "no content free pings" response ...
+> --- /dev/null
+> +++ b/drivers/clk/renesas/r8a77965-cpg-mssr.c
+> @@ -0,0 +1,333 @@
 
-Which just boils down to a "what's going on with this" message.
+> +static const struct mssr_mod_clk r8a77965_mod_clks[] __initconst = {
+> +       DEF_MOD("scif5",                202,    R8A77965_CLK_S3D4),
+> +       DEF_MOD("scif4",                203,    R8A77965_CLK_S3D4),
+> +       DEF_MOD("scif3",                204,    R8A77965_CLK_S3D4),
+> +       DEF_MOD("scif1",                206,    R8A77965_CLK_S3D4),
+> +       DEF_MOD("scif0",                207,    R8A77965_CLK_S3D4),
+> +       DEF_MOD("sys-dmac2",            217,    R8A77965_CLK_S0D3),
+> +       DEF_MOD("sys-dmac1",            218,    R8A77965_CLK_S0D3),
+> +       DEF_MOD("sys-dmac0",            219,    R8A77965_CLK_S0D3),
+> +
+> +       DEF_MOD("cmt3",                 300,    R8A77965_CLK_R),
+> +       DEF_MOD("cmt2",                 301,    R8A77965_CLK_R),
+> +       DEF_MOD("cmt1",                 302,    R8A77965_CLK_R),
+> +       DEF_MOD("cmt0",                 303,    R8A77965_CLK_R),
+> +       DEF_MOD("scif2",                310,    R8A77965_CLK_S3D4),
+> +       DEF_MOD("sdif3",                311,    R8A77965_CLK_SD3),
+> +       DEF_MOD("sdif2",                312,    R8A77965_CLK_SD2),
+> +       DEF_MOD("sdif1",                313,    R8A77965_CLK_SD1),
+> +       DEF_MOD("sdif0",                314,    R8A77965_CLK_SD0),
+> +       DEF_MOD("pcie1",                318,    R8A77965_CLK_S3D1),
+> +       DEF_MOD("pcie0",                319,    R8A77965_CLK_S3D1),
+> +       DEF_MOD("usb3-if0",             328,    R8A77965_CLK_S3D1),
+> +       DEF_MOD("usb-dmac0",            330,    R8A77965_CLK_S3D1),
+> +       DEF_MOD("usb-dmac1",            331,    R8A77965_CLK_S3D1),
+> +
+> +       DEF_MOD("rwdt",                 402,    R8A77965_CLK_R),
+> +       DEF_MOD("intc-ex",              407,    R8A77965_CLK_CP),
+> +       DEF_MOD("intc-ap",              408,    R8A77965_CLK_S3D1),
 
-> > As I said in my
-> > reply best case the answer is going to be "I have no idea, you need to
-> > resend since I'll need the patch to do anything with it" and worst case
-> > it just won't get seen at all if the thing really did get buried
-> > somehow.
+According to Figure 12A.1 the parent clock is S0D3. See also commit
+6e7ddf89d67c2b0c ("clk: renesas: r8a7796: Correct parent clock of INTC-AP").
 
-> So you are saying you don't want pings as followups to patches at all, if
-> the patch is old enough that it probably got lost?
+> +static int __init r8a77965_cpg_mssr_init(struct device *dev)
+> +{
 
-> I guess that would make sense too, but again it's not obvious to read
-> the canned response that way.
+[...]
 
-No, I'm saying don't send pings at all.  Resend patches if you think
-they've got lost, and as normal when you're sending a patch it should
-start off a new thread.  The goal is to send something that can be
-directly acted on when it's seen rather than requring another round of
-mails.
+> +
+> +       return rcar_gen3_cpg_init(cpg_pll_config, CLK_EXTALR, cpg_mode);
+> +};
 
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature; name="signature.asc"
+Stray semicolon.
 
------BEGIN PGP SIGNATURE-----
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqEEpsACgkQJNaLcl1U
-h9DVTQf/bMdvugDYsrcHN5R15sh6pn8pr9OFoNDDXPdLxr7X6VjnuWP8Nw++rKaf
-2AxzSYU/kRA1hR2aUSusNqqaYuWtCVkGoM2cfIFnF0w3akOrbL8S4XP4sCO2LJQX
-BsqlrpjQAiD3UA6XjSN8H229xjHANdh3xgZoiR7UVTBHwiTOCOC1untkiPFt+zxm
-wRM6OTt9Y3+cIWH0mp9s+44nDimnoqRrKuL7KAvaeMTmynODgZkAAdDYgZWWZ+jk
-JrfngHPfeeZmrWYeJN5KYINOAH/ZlSNV1hDT9jC8Rq9+oZdC+WzhXnA0QYljtRdq
-MBFSVmTO/J3mrHFI4ZSeyykYMsLnJQ==
-=Uflm
------END PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
---tThc/1wpZn/ma/RB--
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
