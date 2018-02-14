@@ -1,100 +1,89 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Wed, 14 Feb 2018 11:34:19 -0800
-Message-ID: <20180214193419.GE93895@bjorns-mbp-2.lan>
-References: <20180208195154.3580-1-ilina@codeaurora.org>
- <20180208195154.3580-3-ilina@codeaurora.org>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH v5 02/12] clk: sunxi-ng: Use u64 for calculation
+ of nkmp rate
+Date: Wed, 14 Feb 2018 21:08:56 +0100
+Message-ID: <20180214200906.31509-3-jernej.skrabec@siol.net>
+References: <20180214200906.31509-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180208195154.3580-3-ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBAVPSLKAKGQEYC7BQ4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180214200906.31509-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 08 Feb 11:51 PST 2018, Lina Iyer wrote:
+When parent rate is 24MHz and multiplier N >= 180, intermediate clock
+rate doesn't fit in 32 bit variable anymore.
 
-> From: Mahesh Sivasubramanian <msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> 
-> Command DB provides information on shared resources like clocks,
-> regulators etc., probed at boot by the remote subsytem and made
-> available in shared memory.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Mahesh Sivasubramanian <msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/msm/cmd-db.txt         | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-> new file mode 100644
-> index 000000000000..e21666e40ebf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-> @@ -0,0 +1,38 @@
-> +Command DB
-> +---------
-> +
-> +Command DB is a database that provides a mapping between resource key and the
-> +resource address for a system resource managed by a remote processor. The data
-> +is stored in a shared memory region and is loaded by the remote processor.
-> +
-> +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
-> +controlling shared resources. Depending on the board configuration the shared
-> +resource properties may change. These properties are dynamically probed by the
-> +remote processor and made available in the shared memory.
-> +
-> +The devicetree representation of the command DB driver should be:
-> +
-> +PROPERTIES:
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Should be "qcom,cmd-db"
-> +
-> +- memory-region:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: The phandle to the reserved memory region.
-> +
-> +Example:
-> +
-> +	reserved-memory {
-> +		[...]
-> +		cmd_db_mem: qcom,cmd-db@c3f000c {
-> +			reg = <0x0 0xc3f000c 0x0 0x8>;
+Because of that, introduce function for calculating clock rate which
+uses 64 bit variable for intermediate result.
 
-I was hoping that we can describe the actual memory here, as I got the
-impression that it will also be a chunk of memory carved out from System
-RAM.
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+---
+ drivers/clk/sunxi-ng/ccu_nkmp.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-If not it would seem unlikely that there's a 8 byte carveout in the
-middle of DDR, what else is here?
-
-> +		};
-> +	};
-> +
-> +	qcom,cmd-db@c3f000c {
-> +		compatible = "qcom,cmd-db";
-
-Add "qcom,cmd-db" to "reserved_mem_matches" in drivers/of/platform.c,
-use of_reserved_mem_lookup(pdev->dev.of_node) to get the reserved_mem
-and you can just put the compatible directly on the reserved-memory
-node.
-
-That way you don't need this separate node that doesn't really represent
-anything.
-
-> +		memory-region = <&cmd_db_mem>;
-> +	};
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c b/drivers/clk/sunxi-ng/ccu_nkmp.c
+index a99068a08315..c3f6fe7be565 100644
+--- a/drivers/clk/sunxi-ng/ccu_nkmp.c
++++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
+@@ -20,6 +20,18 @@ struct _ccu_nkmp {
+ 	unsigned long	p, min_p, max_p;
+ };
+ 
++static unsigned long ccu_nkmp_calc_rate(unsigned long parent,
++					unsigned long n, unsigned long k,
++					unsigned long m, unsigned long p)
++{
++	u64 rate = parent;
++
++	rate *= n * k;
++	do_div(rate, m * p);
++
++	return rate;
++}
++
+ static void ccu_nkmp_find_best(unsigned long parent, unsigned long rate,
+ 			       struct _ccu_nkmp *nkmp)
+ {
+@@ -33,7 +45,9 @@ static void ccu_nkmp_find_best(unsigned long parent, unsigned long rate,
+ 				for (_p = nkmp->min_p; _p <= nkmp->max_p; _p <<= 1) {
+ 					unsigned long tmp_rate;
+ 
+-					tmp_rate = parent * _n * _k / (_m * _p);
++					tmp_rate = ccu_nkmp_calc_rate(parent,
++								      _n, _k,
++								      _m, _p);
+ 
+ 					if (tmp_rate > rate)
+ 						continue;
+@@ -107,7 +121,7 @@ static unsigned long ccu_nkmp_recalc_rate(struct clk_hw *hw,
+ 	p = reg >> nkmp->p.shift;
+ 	p &= (1 << nkmp->p.width) - 1;
+ 
+-	return (parent_rate * n * k >> p) / m;
++	return ccu_nkmp_calc_rate(parent_rate, n, k, m, 1 << p);
+ }
+ 
+ static long ccu_nkmp_round_rate(struct clk_hw *hw, unsigned long rate,
+@@ -127,7 +141,8 @@ static long ccu_nkmp_round_rate(struct clk_hw *hw, unsigned long rate,
+ 
+ 	ccu_nkmp_find_best(*parent_rate, rate, &_nkmp);
+ 
+-	return *parent_rate * _nkmp.n * _nkmp.k / (_nkmp.m * _nkmp.p);
++	return ccu_nkmp_calc_rate(*parent_rate, _nkmp.n, _nkmp.k,
++				  _nkmp.m, _nkmp.p);
+ }
+ 
+ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
+-- 
+2.16.1
