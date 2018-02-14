@@ -1,247 +1,100 @@
-From: Emmanuel Vadot <manu@bidouilliste.com>
-Subject: Re: [PATCH] Revert
- "ARM: dts: sunxi: Add regulators for Sinovoip BPI-M2"
-Date: Wed, 14 Feb 2018 20:16:54 +0100
-Message-ID: <20180214201654.cb8cb64bf50b958a53ebebbd@bidouilliste.com>
-References: <20180203112353.13497-1-icenowy@aosc.io>
-        <20180205095558.2e713c24cdb7c3232943db52@bidouilliste.com>
-        <207CD143-6535-42C9-BEF3-9D2614336482@aosc.io>
-        <c59ee4bd3246172ec62705967bb8f751@megadrive.org>
-        <CAGb2v66BDbLgNVAp=D0QXH4WEMZpa+rCWYk+uLXexme2qgjeBg@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Wed, 14 Feb 2018 11:34:19 -0800
+Message-ID: <20180214193419.GE93895@bjorns-mbp-2.lan>
+References: <20180208195154.3580-1-ilina@codeaurora.org>
+ <20180208195154.3580-3-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v66BDbLgNVAp=D0QXH4WEMZpa+rCWYk+uLXexme2qgjeBg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180208195154.3580-3-ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Feb 2018 18:36:24 +0800
-Chen-Yu Tsai <wens@csie.org> wrote:
+On Thu 08 Feb 11:51 PST 2018, Lina Iyer wrote:
 
-> On Sat, Feb 10, 2018 at 5:20 AM, Emmanuel Vadot <manu@bidouilliste.com> w=
-rote:
-> > On 2018-02-05 10:05, Icenowy Zheng wrote:
-> >>
-> >> ? 2018?2?5? GMT+08:00 ??4:55:58, Emmanuel Vadot <manu@bidouilliste.com>
-> >> ??:
-> >>>
-> >>>
-> >>> Hello,
-> >>>
-> >>> On Sat,  3 Feb 2018 19:23:53 +0800
-> >>> Icenowy Zheng <icenowy@aosc.io> wrote:
-> >>>
-> >>>> This reverts commit 7daa213700758b5b08fc0daab09bb139dd334165.
-> >>>>
-> >>>> The original commit has several problems:
-> >>>>
-> >>>> - vdd-cpus and aldo3 (AVCC of the SoC) are not set to always-on,
-> >>>
-> >>> which
-> >>>>
-> >>>> leads to system hang when disabling unused regulators.
-> >>>
-> >>>
-> >>> Indeed I should have make those always-on.
-> >>>
-> >>>> - GMAC (which uses dldo1 and aldo2) and Wi-Fi (which uses aldo1) are
-> >>>
-> >>> not
-> >>>>
-> >>>> considered, and will fail to work after adding this commit.
-> >>>
-> >>>
-> >>> While I understand the problem with vdd-cpus and aldo3 I don't see why
-> >>> when you don't declare regulator the code should do something with it.
-> >>> DT is supposed to describe the hardware and the code should not use
-> >>> hardware not described right ?
-> >>> The gmac node doesn't declare any regulators and the mmc2 uses
-> >>> reg_vcc3v0 (haven't checked on the schematics yet if it is correct).
-> >>
-> >>
-> >> It's because the regulator support isn't present before
-> >> this commit. However these parts really need special
-> >> regulators. I don't have M2 schematics at hand, so you'd
-> >> check it by yourself.
-> >
-> >
-> >  Yes but why does the PMIC should disable regulators not defined in the=
- DTS
-> > ? That the part I don't understand and want to know where it is
-> > described/documented.
->=20
-> They are defined. See axp22x.dtsi, which you included in your patch.
->=20
-> Now the system is free to do whatever it wants under the constraints
-> of the device tree. Since you do not reference the regulator, the
-> kernel is free to turn it off to save power.
+> From: Mahesh Sivasubramanian <msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> Command DB provides information on shared resources like clocks,
+> regulators etc., probed at boot by the remote subsytem and made
+> available in shared memory.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Mahesh Sivasubramanian <msivasub-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/msm/cmd-db.txt         | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> new file mode 100644
+> index 000000000000..e21666e40ebf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+> @@ -0,0 +1,38 @@
+> +Command DB
+> +---------
+> +
+> +Command DB is a database that provides a mapping between resource key and the
+> +resource address for a system resource managed by a remote processor. The data
+> +is stored in a shared memory region and is loaded by the remote processor.
+> +
+> +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
+> +controlling shared resources. Depending on the board configuration the shared
+> +resource properties may change. These properties are dynamically probed by the
+> +remote processor and made available in the shared memory.
+> +
+> +The devicetree representation of the command DB driver should be:
+> +
+> +PROPERTIES:
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: Should be "qcom,cmd-db"
+> +
+> +- memory-region:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: The phandle to the reserved memory region.
+> +
+> +Example:
+> +
+> +	reserved-memory {
+> +		[...]
+> +		cmd_db_mem: qcom,cmd-db@c3f000c {
+> +			reg = <0x0 0xc3f000c 0x0 0x8>;
 
- Yeah I realized that now and feel stupid ...
- Thanks for the clarification.
+I was hoping that we can describe the actual memory here, as I got the
+impression that it will also be a chunk of memory carved out from System
+RAM.
 
-> >
-> >> P.S. a proper device tree with AXP shouldn't use
-> >> reg_vcc3v0/3v3/1v8/etc. They're dummy
-> >> regulator nodes for
-> >> not implemented or not controllable regulators.
-> >>
-> >>>
-> >>>> This indicates that this patch should be not tested at all.
-> >>>
-> >>>
-> >>> This have indeed not been tested with linux.
-> >>> I think that this commit should not be reverted, I'll send a proper
-> >>> patch tonight or tomorow night max.
-> >>
-> >>
-> >> Please test patches sent to Linux on Linux :-)
-> >
-> >
-> >  If my patches adhere to the bindings I don't see why.
->=20
-> It adheres to the bindings, but does not accurately describe the
-> hardware constraints.
+If not it would seem unlikely that there's a 8 byte carveout in the
+middle of DDR, what else is here?
 
- Is there a place where there is build of the linux kernel for
-sunxi/multi7 and initrd available for download so I can add that to my
-test bench ?
+> +		};
+> +	};
+> +
+> +	qcom,cmd-db@c3f000c {
+> +		compatible = "qcom,cmd-db";
 
- Cheers,
+Add "qcom,cmd-db" to "reserved_mem_matches" in drivers/of/platform.c,
+use of_reserved_mem_lookup(pdev->dev.of_node) to get the reserved_mem
+and you can just put the compatible directly on the reserved-memory
+node.
 
-> ChenYu
->=20
-> >
-> >
-> >>>
-> >>> P.S.: Also as I'm the original sender I think I should have been in CC
-> >>> no ?
-> >>
-> >>
-> >> get_maintainer.pl didn't mention you and I forgot... sorry.
-> >>
-> >>>
-> >>> Cheers,
-> >>>
-> >>>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> >>>> ---
-> >>>>  arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts | 57
-> >>>
-> >>> ------------------------
-> >>>>
-> >>>>  1 file changed, 57 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
-> >>>
-> >>> b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
-> >>>>
-> >>>> index 51e6f1d21c32..a565316eb340 100644
-> >>>> --- a/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
-> >>>> +++ b/arch/arm/boot/dts/sun6i-a31s-sinovoip-bpi-m2.dts
-> >>>> @@ -86,10 +86,6 @@
-> >>>>         };
-> >>>>  };
-> >>>>
-> >>>> -&cpu0 {
-> >>>> -       cpu-supply =3D <&reg_dcdc3>;
-> >>>> -};
-> >>>> -
-> >>>>  &ehci0 {
-> >>>>         status =3D "okay";
-> >>>>  };
-> >>>> @@ -155,17 +151,6 @@
-> >>>>         status =3D "okay";
-> >>>>  };
-> >>>>
-> >>>> -&p2wi {
-> >>>> -       status =3D "okay";
-> >>>> -
-> >>>> -       axp22x: pmic@68 {
-> >>>> -               compatible =3D "x-powers,axp221";
-> >>>> -               reg =3D <0x68>;
-> >>>> -               interrupt-parent =3D <&nmi_intc>;
-> >>>> -               interrupts =3D <0 IRQ_TYPE_LEVEL_LOW>;
-> >>>> -       };
-> >>>> -};
-> >>>> -
-> >>>>  &pio {
-> >>>>         gmac_phy_reset_pin_bpi_m2: gmac_phy_reset_pin@0 {
-> >>>>                 pins =3D "PA21";
-> >>>> @@ -191,48 +176,6 @@
-> >>>>         };
-> >>>>  };
-> >>>>
-> >>>> -#include "axp22x.dtsi"
-> >>>> -
-> >>>> -&reg_dc5ldo {
-> >>>> -       regulator-min-microvolt =3D <700000>;
-> >>>> -       regulator-max-microvolt =3D <1320000>;
-> >>>> -       regulator-name =3D "vdd-cpus";
-> >>>> -};
-> >>>> -
-> >>>> -&reg_dcdc1 {
-> >>>> -       regulator-always-on;
-> >>>> -       regulator-min-microvolt =3D <3000000>;
-> >>>> -       regulator-max-microvolt =3D <3000000>;
-> >>>> -       regulator-name =3D "vdd-3v0";
-> >>>> -};
-> >>>> -
-> >>>> -&reg_dcdc2 {
-> >>>> -       regulator-min-microvolt =3D <700000>;
-> >>>> -       regulator-max-microvolt =3D <1320000>;
-> >>>> -       regulator-name =3D "vdd-gpu";
-> >>>> -};
-> >>>> -
-> >>>> -&reg_dcdc3 {
-> >>>> -       regulator-always-on;
-> >>>> -       regulator-min-microvolt =3D <700000>;
-> >>>> -       regulator-max-microvolt =3D <1320000>;
-> >>>> -       regulator-name =3D "vdd-cpu";
-> >>>> -};
-> >>>> -
-> >>>> -&reg_dcdc4 {
-> >>>> -       regulator-always-on;
-> >>>> -       regulator-min-microvolt =3D <700000>;
-> >>>> -       regulator-max-microvolt =3D <1320000>;
-> >>>> -       regulator-name =3D "vdd-sys-dll";
-> >>>> -};
-> >>>> -
-> >>>> -&reg_dcdc5 {
-> >>>> -       regulator-always-on;
-> >>>> -       regulator-min-microvolt =3D <1500000>;
-> >>>> -       regulator-max-microvolt =3D <1500000>;
-> >>>> -       regulator-name =3D "vcc-dram";
-> >>>> -};
-> >>>> -
-> >>>>  &uart0 {
-> >>>>         pinctrl-names =3D "default";
-> >>>>         pinctrl-0 =3D <&uart0_pins_a>;
-> >>>> --
-> >>>> 2.15.1
-> >>>>
-> >>>>
-> >>>> _______________________________________________
-> >>>> linux-arm-kernel mailing list
-> >>>> linux-arm-kernel@lists.infradead.org
-> >>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >>
-> >>
-> >> _______________________________________________
-> >> linux-arm-kernel mailing list
-> >> linux-arm-kernel@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >
-> >
-> > --
-> > Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+That way you don't need this separate node that doesn't really represent
+anything.
 
+> +		memory-region = <&cmd_db_mem>;
+> +	};
 
---=20
-Emmanuel Vadot <manu@bidouilliste.com> <manu@freebsd.org>
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
