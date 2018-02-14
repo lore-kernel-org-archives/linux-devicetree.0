@@ -1,135 +1,35 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 05/15] ARM64: dts: Add R-Car Salvator-x M3-N support
-Date: Wed, 14 Feb 2018 14:58:34 +0100
-Message-ID: <CAMuHMdW0SYdwNNWfzNttY8xdfnB-oLR4MvhWpO7Pks-WY76=3g@mail.gmail.com>
-References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org> <1518515162-23663-6-git-send-email-jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH 06/15] Documentation: devicetree: dma: Add r8a77965 dmac
+Date: Wed, 14 Feb 2018 14:59:30 +0100
+Message-ID: <CAMuHMdWSW8cBT5Y+ABtxinGqLO7eGeu48zTmzKQB2LgTg3qdpg@mail.gmail.com>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1518515162-23663-7-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518515162-23663-6-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1518515162-23663-7-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
-
-Hi Jacopo,
 
 On Tue, Feb 13, 2018 at 10:45 AM, Jacopo Mondi
 <jacopo+renesas@jmondi.org> wrote:
-> Add initial support for R-Car M3-N Salvator-x and r8a77965 SoC in
-> device tree with cpg-mssr, reset and clock nodes.
->
-> Add place-holder device nodes for all nodes referred by
-> "salvator-common.dtsi"
+> Add documentation for r8a77965 compatible string to rcar-dmac device
+> tree bindings documentation.
 >
 > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Thanks for your patch!
-
-Looks mostly fine to me.
-
-P.S. scripts/dtc/dtx_diff arch/arm64/boot/dts/renesas/r8a7796{,5}-salvator-x.dtb
-     is your friend.
-
->  arch/arm64/Kconfig.platforms                       |   6 +
->  arch/arm64/boot/dts/renesas/Makefile               |   1 +
->  .../arm64/boot/dts/renesas/r8a77965-salvator-x.dts |  30 ++
->  arch/arm64/boot/dts/renesas/r8a77965.dtsi          | 495 +++++++++++++++++++++
->  4 files changed, 532 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
->  create mode 100644 arch/arm64/boot/dts/renesas/r8a77965.dtsi
-
-The maintainer will probably ask you to split this in three parts:
-  - ARCH_R8A77965
-  - r8a77965.dtsi
-  - r8a77965-salvator-x.dts
-
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-> @@ -0,0 +1,30 @@
-> +// SPDX-License-Identifier: GPL-2.
-> +/*
-> + * Device Tree Source for the Salvator-X board
-
-with R-Car M3-N
-
-> + *
-> + * Copyright (C) 2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + */
-> +
-> +/dts-v1/;
-> +#include "r8a77965.dtsi"
-> +#include "salvator-x.dtsi"
-> +
-> +/ {
-> +       model = "Renesas Salvator-X board based on r8a77965";
-> +       compatible = "renesas,salvator-x", "renesas,r8a77965";
-> +
-> +       aliases {
-> +               serial0 = &scif2;
-> +       };
-> +
-> +       chosen {
-> +               bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
-> +               stdout-path = "serial0:115200n8";
-> +       };
-
-Both aliases and chosen are already defined in salvator-common.dtsi,
-included via salvator-x.dtsi.
-
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> @@ -0,0 +1,495 @@
-> +// SPDX-License-Identifier: GPL-2.
-> +/*
-> + * Device Tree Source for the r8a77965 SoC
-> + *
-> + * Copyright (C) 2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
-> + *
-> + * Based on r8a7796.dtsi
-> + * Copyright (C) 2016 Renesas Electronics Corp.
-> + */
-> +
-> +#include <dt-bindings/clock/r8a77965-cpg-mssr.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/power/r8a77965-sysc.h>
-> +
-> +#define CPG_AUDIO_CLK_I                R8A77965_CLK_S0D4
-> +
-> +/ {
-
-> +       soc {
-> +               compatible = "simple-bus";
-> +               interrupt-parent = <&gic>;
-> +               #address-cells = <2>;
-> +               #size-cells = <2>;
-> +               ranges;
-
-> +               timer {
-> +                       compatible = "arm,armv8-timer";
-> +                       interrupts = <GIC_PPI 13
-> +                                       (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +                                    <GIC_PPI 14
-> +                                       (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +                                    <GIC_PPI 11
-> +                                       (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
-> +                                    <GIC_PPI 10
-> +                                       (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>;
-> +               };
-
-Please move the timer out of the soc node, as it does't have a unit address
-and a reg property.
-
-> +               pmu_a57 {
-> +                       compatible = "arm,cortex-a57-pmu";
-> +                       interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-affinity = <&a57_0>,
-> +                                            <&a57_1>;
-> +               };
-
-Please move the pmu out of the soc node, as it does't have a unit address
-and a reg property.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
 
