@@ -1,378 +1,76 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v13 7/9] ACPI: Translate the I/O range of non-MMIO devices
- before scanning
-Date: Wed, 14 Feb 2018 15:33:59 +0000
-Message-ID: <adfa2009-476b-8c25-c661-b0eeb48a6c43@huawei.com>
-References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
- <1518543933-22456-8-git-send-email-john.garry@huawei.com>
- <CAHp75Ve7C4AJYK6AC=o-jzw6b2p8c8GBRd70Zjv+vYWbfytufg@mail.gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 14/25] arm: stm32: dts: Remove leading 0x and 0s from
+ bindings notation
+Date: Wed, 14 Feb 2018 16:37:02 +0100
+Message-ID: <9c2375af-b175-4ca4-3e93-ae844e255425@st.com>
+References: <20171215124646.30591-1-malat@debian.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Ve7C4AJYK6AC=o-jzw6b2p8c8GBRd70Zjv+vYWbfytufg@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Corey Minyard <minyard@acm.org>, devic
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20171215124646.30591-1-malat@debian.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Malaterre <malat@debian.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/02/2018 13:53, Andy Shevchenko wrote:
-> On Tue, Feb 13, 2018 at 7:45 PM, John Garry <john.garry@huawei.com> wrote:
->> On some platforms (such as arm64-based hip06/hip07), access to legacy
->> ISA/LPC devices through access IO space is required, similar to x86
->> platforms. As the I/O for these devices are not memory mapped like
->> PCI/PCIE MMIO host bridges, they require special low-level device
->> operations through some host to generate IO accesses, i.e. a non-
->> transparent bridge.
->>
->> Through the logical PIO framework, hosts are able to register address
->> ranges in the logical PIO space for IO accesses. For hosts which require
->> a LLDD to generate the IO accesses, through the logical PIO framework
->> the host also registers accessors as a backend to generate the physical
->> bus transactions for IO space accesses (called indirect IO).
->>
->> When describing the indirect IO child device in APCI tables, the IO
->> resource is the host-specific address for the child (generally a
->> bus address).
->> An example is as follows:
->>   Device (LPC0) {
->>     Name (_HID, "HISI0191")  // HiSi LPC
->>     Name (_CRS, ResourceTemplate () {
->>       Memory32Fixed (ReadWrite, 0xa01b0000, 0x1000)
->>     })
->>   }
->>
->>   Device (LPC0.IPMI) {
->>     Name (_HID, "IPI0001")
->>     Name (LORS, ResourceTemplate() {
->>       QWordIO (
->>         ResourceConsumer,
->>         MinNotFixed,     // _MIF
->>         MaxNotFixed,     // _MAF
->>         PosDecode,
->>         EntireRange,
->>         0x0,             // _GRA
->>         0xe4,            // _MIN
->>         0x3fff,          // _MAX
->>         0x0,             // _TRA
->>         0x04,            // _LEN
->>         , ,
->>         BTIO
->>       )
->>     })
->>
->> Since the IO resource for the child is a host-specific address,
->> special translation are required to retrieve the logical PIO address
->> for that child.
->>
->> To overcome the problem of associating this logical PIO address
->> with the child device, a scan handler is added to scan the ACPI
->> namespace for known indirect IO hosts. This scan handler creates an
->> MFD per child with the translated logical PIO address as it's IO
->> resource, as a substitute for the normal platform device which ACPI
->> would create during device enumeration.
->
+Hi
 
-Hi Andy,
+On 12/15/2017 01:46 PM, Mathieu Malaterre wrote:
+> Improve the DTS files by removing all the leading "0x" and zeros to fix the
+> following dtc warnings:
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+> 
+> and
+> 
+> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+> 
+> Converted using the following command:
+> 
+> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
+> 
+> For simplicity, two sed expressions were used to solve each warnings separately.
+> 
+> To make the regex expression more robust a few other issues were resolved,
+> namely setting unit-address to lower case, and adding a whitespace before the
+> the opening curly brace:
+> 
+> https://elinux.org/Device_Tree_Linux#Linux_conventions
+> 
+> This will solve as a side effect warning:
+> 
+> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
+> 
+> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
+> 
+> Reported-by: David Daney <ddaney@caviumnetworks.com>
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 
->> +       unsigned long sys_port;
->
->> +       sys_port = logic_pio_trans_hwaddr(&host->fwnode, res->start, len);
->> +       if (sys_port == -1UL)
->
-> Wouldn't it be better to compare with ULONG_MAX?
+Applied on stm32-next.
 
-Could do, being the same thing. Maybe people prefer -1UL as it saves 
-having to figure out what ULONG_MAX is :)
+thanks
 
->
->> +               return -EFAULT;
->
->
->> +/*
->
-> Shouldn't be a kernel-doc?
+Alex
 
-Right, I'll make it /**
 
->
->> + * acpi_indirect_io_set_res - set the resources for a child device
->> + * (MFD) of an "indirect IO" host.
->
-> In that case this would be one line w/o period at the end.
->
->> + * @child: the device node to be updated the I/O resource
->> + * @hostdev: the device node associated with the "indirect IO" host
->> + * @res: double pointer to be set to the address of translated resources
->> + * @num_res: pointer to variable to hold the number of translated resources
->> + *
->> + * Returns 0 when successful, and a negative value for failure.
->> + *
->> + * For a given "indirect IO" host, each child device will have associated
->> + * host-relevative address resource. This function will return the translated
->> + * logical PIO addresses for each child devices resources.
->> + */
->> +static int acpi_indirect_io_set_res(struct device *child,
->> +                                   struct device *hostdev,
->> +                                   const struct resource **res,
->> +                                   int *num_res)
->> +{
->> +       struct acpi_device *adev;
->> +       struct acpi_device *host;
->> +       struct resource_entry *rentry;
->> +       LIST_HEAD(resource_list);
->> +       struct resource *resources;
->> +       int count;
->> +       int i;
->> +       int ret = -EIO;
->> +
->> +       if (!child || !hostdev)
->> +               return -EINVAL;
->> +
->> +       host = to_acpi_device(hostdev);
->> +       adev = to_acpi_device(child);
->
-
-***
-
->> +       count = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
->> +       if (count <= 0) {
->> +               dev_err(child, "failed to get resources\n");
->> +               return count ? count : -EIO;
->> +       }
->> +
->> +       resources = kcalloc(count, sizeof(*resources), GFP_KERNEL);
->> +       if (!resources) {
->> +               acpi_dev_free_resource_list(&resource_list);
->> +               return -ENOMEM;
->> +       }
->> +       count = 0;
->> +       list_for_each_entry(rentry, &resource_list, node)
->> +               resources[count++] = *rentry->res;
->> +
->> +       acpi_dev_free_resource_list(&resource_list);
->
-> It has similarities with acpi_create_platform_device().
-> I guess we can utilize existing code.
->
-
-For sure, this particular segment is effectively same as part of 
-acpi_create_platform_device():
-
-struct platform_device *acpi_create_platform_device(struct acpi_device 
-*adev,
-                     struct property_entry *properties)
-{
-     struct platform_device *pdev = NULL;
-     struct platform_device_info pdevinfo;
-     struct resource_entry *rentry;
-     struct list_head resource_list;
-     struct resource *resources = NULL;
-     int count;
-
-     /* If the ACPI node already has a physical device attached, skip it. */
-     if (adev->physical_node_count)
-         return NULL;
-
-     if (!acpi_match_device_ids(adev, forbidden_id_list))
-         return ERR_PTR(-EINVAL);
-
-***>
-     INIT_LIST_HEAD(&resource_list);
-     count = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
-     if (count < 0) {
-         return NULL;
-     } else if (count > 0) {
-         resources = kzalloc(count * sizeof(struct resource),
-                     GFP_KERNEL);
-         if (!resources) {
-             dev_err(&adev->dev, "No memory for resources\n");
-             acpi_dev_free_resource_list(&resource_list);
-             return ERR_PTR(-ENOMEM);
-         }
-         count = 0;
-         list_for_each_entry(rentry, &resource_list, node)
-             acpi_platform_fill_resource(adev, rentry->res,
-                             &resources[count++]);
-
-         acpi_dev_free_resource_list(&resource_list);
-     }
-<****
-     memset(&pdevinfo, 0, sizeof(pdevinfo));
-     /*
-      * If the ACPI node has a parent and that parent has a physical
-
-So is your idea to refactor this common segment into a helper function?
-
->> +       /* translate the I/O resources */
->> +       for (i = 0; i < count; i++) {
->> +               if (!(resources[i].flags & IORESOURCE_IO))
->> +                       continue;
->
->> +               ret = acpi_indirect_io_xlat_res(adev, host, &resources[i]);
->> +               if (ret) {
->> +                       kfree(resources);
->> +                       dev_err(child, "translate IO range failed(%d)\n", ret);
->> +                       return ret;
->> +               }
->> +       }
->> +       *res = resources;
->> +       *num_res = count;
->> +
->> +       return ret;
->
-> Perhaps,
->
->    ret = ...
->    if (ret)
->     break;
->   }
->
->   if (ret) {
->                        kfree(resources);
->                        dev_err(child, "translate IO range failed(%d)\n", ret);
->                        return ret;
->   }
->
->   *res = resources;
->   *num_res = count;
->   return 0;
-
-seems fine
-
->
-> ?
->
->> +}
->> +
->> +/*
->> + * acpi_indirect_io_setup - scan handler for "indirect IO" host.
->> + * @adev: "indirect IO" host ACPI device pointer
->> + * Returns 0 when successful, and a negative value for failure.
->> + *
->> + * Setup an "indirect IO" host by scanning all child devices, and
->> + * create a per-device MFD with logical PIO translated IO resources.
->> + */
->> +static int acpi_indirect_io_setup(struct acpi_device *adev)
->> +{
->> +       struct platform_device *pdev;
->> +       struct mfd_cell *mfd_cells;
->> +       struct logic_pio_hwaddr *range;
->> +       struct acpi_device *child;
->> +       struct acpi_indirect_io_mfd_cell *acpi_indirect_io_mfd_cells;
->> +       int size, ret, count = 0, cell_num = 0;
->> +
->> +       range = kzalloc(sizeof(*range), GFP_KERNEL);
->> +       if (!range)
->> +               return -ENOMEM;
->> +       range->fwnode = &adev->fwnode;
->> +       range->flags = PIO_INDIRECT;
->> +       range->size = PIO_INDIRECT_SIZE;
->> +
->> +       ret = logic_pio_register_range(range);
->> +       if (ret)
->> +               goto free_range;
->> +
->> +       list_for_each_entry(child, &adev->children, node)
->> +               cell_num++;
->> +
->> +       /* allocate the mfd cell and companion acpi info, one per child */
->> +       size = sizeof(*mfd_cells) + sizeof(*acpi_indirect_io_mfd_cells);
->> +       mfd_cells = kcalloc(cell_num, size, GFP_KERNEL);
->> +       if (!mfd_cells) {
->> +               ret = -ENOMEM;
->> +               goto free_range;
->> +       }
->> +
->> +       acpi_indirect_io_mfd_cells = (struct acpi_indirect_io_mfd_cell *)
->> +                                       &mfd_cells[cell_num];
->> +       /* Only consider the children of the host */
->> +       list_for_each_entry(child, &adev->children, node) {
->> +               struct mfd_cell *mfd_cell = &mfd_cells[count];
->> +               struct acpi_indirect_io_mfd_cell *acpi_indirect_io_mfd_cell =
->> +                                       &acpi_indirect_io_mfd_cells[count];
->> +               const struct mfd_cell_acpi_match *acpi_match =
->> +                                       &acpi_indirect_io_mfd_cell->acpi_match;
->
->> +               char *name = &acpi_indirect_io_mfd_cell[count].name[0];
->> +               char *pnpid = &acpi_indirect_io_mfd_cell[count].pnpid[0];
->
-> Plain x is equivalent to &x[0].
-
-Right, but I thought for arrays that we should use address of x rather 
-than x itself, no?
-
->
->> +               struct mfd_cell_acpi_match match = {
->> +                       .pnpid = pnpid,
->> +               };
->> +
->> +               snprintf(name, ACPI_INDIRECT_IO_NAME_LEN, "indirect-io-%s",
->> +                        acpi_device_hid(child));
->> +               snprintf(pnpid, ACPI_INDIRECT_IO_NAME_LEN, "%s",
->> +                        acpi_device_hid(child))
->
->> +               memcpy((void *)acpi_match, (void *)&match, sizeof(*acpi_match));
->
-> Casting to void * is pointless. In both cases.
-
-I rechecked this. The casting to void * was there to mask another issue 
-which I've now fixed.
-
->
->> +               mfd_cell->name = name;
->> +               mfd_cell->acpi_match = acpi_match;
->> +
->> +               ret = acpi_indirect_io_set_res(&child->dev, &adev->dev,
->> +                                              &mfd_cell->resources,
->> +                                              &mfd_cell->num_resources);
->> +               if (ret) {
->> +                       dev_err(&child->dev, "set resource failed (%d)\n", ret);
->> +                       goto free_mfd_resources;
->> +               }
->> +               count++;
->> +       }
->> +
->> +       pdev = acpi_create_platform_device(adev, NULL);
->> +       if (IS_ERR_OR_NULL(pdev)) {
->> +               dev_err(&adev->dev, "create platform device for host failed\n");
->
->> +               ret = PTR_ERR(pdev);
->
-> So, NULL case will return 0. Is it expected?
->
-
-Should error in that case also, so I'll change.
-
->> +               goto free_mfd_resources;
->> +       }
->> +       acpi_device_set_enumerated(adev);
->> +
->> +       ret = mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
->> +                             mfd_cells, cell_num, NULL, 0, NULL);
->> +       if (ret) {
->> +               dev_err(&pdev->dev, "failed to add mfd cells (%d)\n", ret);
->> +               goto free_mfd_resources;
->> +       }
->> +
->> +       return ret;
->> +
->> +free_mfd_resources:
->> +       while (cell_num--)
->> +               kfree(mfd_cells[cell_num].resources);
->> +       kfree(mfd_cells);
->> +free_range:
->> +       kfree(range);
->> +
->> +       return ret;
->> +}
->
-> One question, what a scope of use of this function? Is it ->probe() time?
-> If it's so, can we use devm_* variants?
-
-It is called from a scan handler, so prior to device probing.
-
->
-
-Thanks,
-John
+> ---
+>   arch/arm/boot/dts/stm32h743.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+> index bbfcbaca0b36..a559d8b6a4a3 100644
+> --- a/arch/arm/boot/dts/stm32h743.dtsi
+> +++ b/arch/arm/boot/dts/stm32h743.dtsi
+> @@ -304,7 +304,7 @@
+>   			};
+>   		};
+>   
+> -		vrefbuf: regulator@58003C00 {
+> +		vrefbuf: regulator@58003c00 {
+>   			compatible = "st,stm32-vrefbuf";
+>   			reg = <0x58003C00 0x8>;
+>   			clocks = <&rcc VREF_CK>;
+> 
