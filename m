@@ -1,62 +1,32 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [PATCH v2 5/5] dmaengine: qcom: bam_dma: disable runtime pm on remote controlled
-Date: Wed, 14 Feb 2018 14:44:59 +0000
-Message-ID: <20180214144459.29813-6-srinivas.kandagatla@linaro.org>
-References: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 14/15] pinctrl: sh-pfc: r8a77965: Add EtherAVB groups/functions
+Date: Wed, 14 Feb 2018 15:47:40 +0100
+Message-ID: <CAMuHMdV1FA0r9v+xaNHRbJuE54d3aXcqYHwkPF3pF2mGT5KvUg@mail.gmail.com>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org> <1518515162-23663-15-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <1518515162-23663-15-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, andy.gross@linaro.org, dmaengine@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, david.brown@linaro.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Tue, Feb 13, 2018 at 10:46 AM, Jacopo Mondi
+<jacopo+renesas@jmondi.org> wrote:
+> Add EtherAVB groups and functions definitions for R-Car M3-N.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Remotely controlled BAM instance should not do any power management from
-CPU side, as cpu can not reliably say if the BAM is busy or not.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Disable it for such instances.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/dma/qcom/bam_dma.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+                        Geert
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index 88ec515ad125..6e4fe398f0c8 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -1330,6 +1330,11 @@ static int bam_dma_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_unregister_dma;
- 
-+	if (bdev->controlled_remotely) {
-+		pm_runtime_disable(&pdev->dev);
-+		return 0;
-+	}
-+
- 	pm_runtime_irq_safe(&pdev->dev);
- 	pm_runtime_set_autosuspend_delay(&pdev->dev, BAM_DMA_AUTOSUSPEND_DELAY);
- 	pm_runtime_use_autosuspend(&pdev->dev);
-@@ -1413,7 +1418,8 @@ static int __maybe_unused bam_dma_suspend(struct device *dev)
- {
- 	struct bam_device *bdev = dev_get_drvdata(dev);
- 
--	pm_runtime_force_suspend(dev);
-+	if (!bdev->controlled_remotely)
-+		pm_runtime_force_suspend(dev);
- 
- 	clk_unprepare(bdev->bamclk);
- 
-@@ -1429,7 +1435,8 @@ static int __maybe_unused bam_dma_resume(struct device *dev)
- 	if (ret)
- 		return ret;
- 
--	pm_runtime_force_resume(dev);
-+	if (!bdev->controlled_remotely)
-+		pm_runtime_force_resume(dev);
- 
- 	return 0;
- }
--- 
-2.15.1
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
