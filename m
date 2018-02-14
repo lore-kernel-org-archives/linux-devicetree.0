@@ -1,38 +1,67 @@
 From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH 05/15] ARM64: dts: Add R-Car Salvator-x M3-N support
-Date: Wed, 14 Feb 2018 22:22:42 +0100
-Message-ID: <CAOFm3uH08oBUiJSs7sOrThqXjLP0Tp1ur2mV-xvxHgoAVMNpUg@mail.gmail.com>
-References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
- <1518515162-23663-6-git-send-email-jacopo+renesas@jmondi.org> <CAMuHMdW0SYdwNNWfzNttY8xdfnB-oLR4MvhWpO7Pks-WY76=3g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] ASoC: codecs: Add support for AK4458 DAC driver
+Date: Wed, 14 Feb 2018 22:35:04 +0100
+Message-ID: <CAOFm3uGJU+bVAkL-F9R6Xk05rSkNgt14YT7sXSZhdE2QkrH_Bg@mail.gmail.com>
+References: <1518614467-20613-1-git-send-email-cosmin.samoila@nxp.com> <1518614467-20613-2-git-send-email-cosmin.samoila@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdW0SYdwNNWfzNttY8xdfnB-oLR4MvhWpO7Pks-WY76=3g@mail.gmail.com>
+In-Reply-To: <1518614467-20613-2-git-send-email-cosmin.samoila@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
+Cc: Mark <broonie@kernel.org>, ALSA <alsa-devel@alsa-project.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, mihai.serban@gmail.com, linux-imx@nxp.com, shegjiu.wang@nxp.com, daniel.baluta@nxp.com, LKML <linux-kernel@vger.kernel.org>, Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>, Mihai Serban <mihai.serban@nxp.com>, Shengjiu Wang <shengjiu.wang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Jacopo,
+On Wed, Feb 14, 2018 at 2:21 PM, Cosmin-Gabriel Samoila
+<cosmin.samoila@nxp.com> wrote:
+> The AK4458 is a 32-bit 8ch Premium DAC that corresponds
+> to a 768kHz PCM input and an 11.2MHz DSD input at maximum.
+> It supports I2S, DSD and TDM modes with 24 or 32 bit MSB
+> or 16, 24, 32 LSB formats. Its datasheet is available here:
+> https://www.akm.com/akm/en/file/datasheet/AK4458VN.pdf
+>
+> Signed-off-by: Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>
+> Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
+> ---
 
-On Wed, Feb 14, 2018 at 2:58 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
+> --- /dev/null
+> +++ b/sound/soc/codecs/ak4458.c
+> @@ -0,0 +1,659 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Audio driver for AK4458 DAC
+> + *
+> + * Copyright (C) 2016 Asahi Kasei Microdevices Corporation
+> + * Copyright 2018 NXP
 
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
->> @@ -0,0 +1,30 @@
->> +// SPDX-License-Identifier: GPL-2.
-
-This should be GPL-2.0
+Thanks for using the proper SPDX tag here.... yet see my comments below.
 
 <snip>
 
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
->> @@ -0,0 +1,495 @@
->> +// SPDX-License-Identifier: GPL-2.
+> +MODULE_AUTHOR("Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>");
+> +MODULE_AUTHOR("Mihai Serban <mihai.serban@nxp.com>");
+> +MODULE_DESCRIPTION("ASoC AK4458 DAC driver");
+> +MODULE_LICENSE("GPL");
 
-This should be GPL-2.0 too.
+This means GPL-2.0+ per module.h and therefore does not match your
+GPL-2.0 SPDX tag above.
+Go one way or the other, but not both way please.
+
+> diff --git a/sound/soc/codecs/ak4458.h b/sound/soc/codecs/ak4458.h
+> new file mode 100644
+> index 0000000..16d9d22
+> --- /dev/null
+> +++ b/sound/soc/codecs/ak4458.h
+> @@ -0,0 +1,86 @@
+> +// SPDX-License-Identifier: GPL-2.0
+
+As weird as it sounds the style should be plain /*
+SPDX-License-Identifier: GPL-2.0 /* here per [1]
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/license-rules.rst
+
 -- 
 Cordially
 Philippe Ombredanne
