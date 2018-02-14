@@ -1,51 +1,56 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v2] PCI: qcom: add missing supplies required for msm8996
-Date: Wed, 14 Feb 2018 18:38:39 +0200
-Message-ID: <fe5639be-e520-b7f2-233e-c091440c77dc@linaro.org>
-References: <20180214120616.23428-1-srinivas.kandagatla@linaro.org>
- <79820f4c-5166-852f-1bc5-8cef2ff81a00@mm-sol.com>
- <d2b0f220-2982-dc86-ae9e-edf88e0b8e7d@linaro.org>
+From: James Hogan <jhogan@kernel.org>
+Subject: Re: [PATCH v3 1/8] dt-bindings: mips: Add bindings for Microsemi SoCs
+Date: Wed, 14 Feb 2018 16:38:39 +0000
+Message-ID: <20180214163838.GB3986@saruman>
+References: <20180116101240.5393-1-alexandre.belloni@free-electrons.com>
+ <20180116101240.5393-2-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7iMSBzlTiPOCCT2k"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d2b0f220-2982-dc86-ae9e-edf88e0b8e7d@linaro.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180116101240.5393-2-alexandre.belloni@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--7iMSBzlTiPOCCT2k
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-On 02/14/2018 06:14 PM, Srinivas Kandagatla wrote:
-> 
-> 
-> On 14/02/18 16:00, Stanimir Varbanov wrote:
->>>   .../devicetree/bindings/pci/qcom,pcie.txt          |  4 ++++
->>>   drivers/pci/dwc/pcie-qcom.c                        | 24
->>> ++++++++++++++++++++--
->>>   2 files changed, 26 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>> b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>> index 3c9d321b3d3b..1fd703bd73e0 100644
->>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->>> @@ -189,6 +189,10 @@
->>>       Value type: <phandle>
->>>       Definition: A phandle to the analog power supply for IC which
->>> generates
->>>               reference clock
->>> +- vddpe-3v3-supply:
->> shouldn't it be vddpe_3v3-supply to be aligned with the other supplies?
->>
-> I noticed that, I had to do it intentionally
-> As dt properties should follow - instead of _
+On Tue, Jan 16, 2018 at 11:12:33AM +0100, Alexandre Belloni wrote:
+> +o CPU system control:
+> +
+> +The SoC has a few registers (ICPU_CFG:CPU_SYSTEM_CTRL) handling configuration of
+> +the CPU: 8 general purpose registers, reset control, CPU en/disabling, CPU
+> +endianess, CPU bus control, CPU status.
 
-I don't agree with that. If the supply name is more than one word it
-should be separated by underscore ('git grep \-supply' in dts files).
+nit: checkpatch suggests endianess should be spelt endianness
 
--- 
-regards,
-Stan
+Cheers
+James
+
+--7iMSBzlTiPOCCT2k
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlqEZg4ACgkQbAtpk944
+dnrviw/9F0TiLHgTY3AqdqIU4XRLfU0AeqpAYSW6fT7XVx7vshvSYbRM4VPQuI4Q
+jr4SnKdL5cpLCA4+WcveT8Qg+eIy0tmulBskiF1cY6KkCjKycB5De1dFWFZ8uBa8
+WuNMrJqGClZY6wl5ufKTIyUJmIb4DYyvfqjlxFpLY4ugmU3IjULII6f2HJTkeLxf
+q5D7oPHMQ8FtPS+LNruGduMBHqnMrBChck/yXNJCIDKwCoUaDU2gkacCuXGttNZY
+8uzPAxuAEohi+rEdBSx3kGoat3Q07o55HeH+Uges2uM2zo2T96n9bMmIs+gVj0dy
+HnvoZvraxpOBsEsCDhldRtQH5+2sLyDVk1hw9wFIk1uBu9NWlvGvgAu7iD8cpCgD
+pJwCDeiZIBT7DZhNlh9Mqq63HC+ys4IQbe+Pv5Qqbguq5mnV5fOtbU42jz54apJd
+ncyiSlr/MzIoFDPHEI8EeFdR2MbDQRWW8b6CNa7EF5YDpHxLs/Bs8mZU89viz+75
+hrfVQZytPxvtdBWOxAIHJFWNRdo28X0O7ubORIemejuYIJuGcarGi3KqLaNuxmf0
+3wyqcytg+PoVl5pwMQD2Vp2r6KYYLckbd53WyK1Wl9kTdo6d13TAyzZu1yAoiJ4A
+jmytX63lMvkyfIJGUBFYBFCHfSyRh2vhDeQZZYQfgOPay8rZx/Y=
+=ne0x
+-----END PGP SIGNATURE-----
+
+--7iMSBzlTiPOCCT2k--
