@@ -1,71 +1,79 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v2 6/6] drm/rockchip: cdn-dp: remove the DP phy switch
-Date: Wed, 14 Feb 2018 17:54:47 +0100
-Message-ID: <20180214165447.12181-6-enric.balletbo@collabora.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v2 3/6] phy: rockchip-typec: enable usb3 host during usb3 phy power on
+Date: Wed, 14 Feb 2018 17:54:44 +0100
+Message-ID: <20180214165447.12181-3-enric.balletbo@collabora.com>
 References: <20180214165447.12181-1-enric.balletbo@collabora.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180214165447.12181-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180214165447.12181-1-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Brian Norris <briannorris@chromium.org>
+Cc: Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org, Chris Zhong <zyw@rock-chips.com>, William wu <wulf@rock-chips.com>, hl@rock-chips.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: William wu <wulf@rock-chips.com>
 
-There are 2 Type-c PHYs in RK3399, but only one DP controller. Hence
-only one PHY can connect to DP controller at one time, the other should
-be disconnected. The GRF_SOC_CON26 register has a switch bit to do it,
-set this bit means enable PHY 1, clear this bit means enable PHY 0.
+We have forced usb3 to work in usb2 only mode in firmware by setting
+usb3tousb2_en (bit3 of GRF_USB3PHY0/1_CON0) to 1, and setting
+host_u3_port_disable (bit0 of GRF_USB3OTG0/1_CON1) to 1 and host_u3_port
+(bit15~12 of GRF_USB3OTG0/1_CON1) to 0. So we need to re-enable usb3
+host.
 
-If the board has 2 Type-C ports, the DP driver get the phy id from
-devm_of_phy_get_by_index, and then control this switch according to
-this id. But some others board only has one Type-C port, it may be PHY 0
-or PHY 1. The dts node id can not tell us the correct PHY id. Hence move
-this switch to PHY driver, the PHY driver can distinguish between PHY 0
-and PHY 1, and then write the correct register bit.
+Note that the RK3399 TRM suggests that we should keep the whole usb3
+controller in reset for the duration of the Type-C PHY initialization.
+However, it's hard to assert the reset in the current framework of
+reset. And according to the TRM, it doesn't require that we should
+clear the usb3tousb2 bit before pipe ready. So let's enable the usb3
+host after pipe ready to avoid the Type-C PHY initialization failure.
 
-Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Signed-off-by: William wu <wulf@rock-chips.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 Changes since v1:
-- This patch is new on these series and is related to [5/6] so I
-  included to this series. Like [5/6] the patch was send some time ago [1]
-  but got stuck, so it's also and attempt to revive it.
+- Use the registers offsets from the driver not the DT.
 
-[1] https://lkml.org/lkml/2017/2/10/74
+ drivers/phy/rockchip/phy-rockchip-typec.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
- drivers/gpu/drm/rockchip/cdn-dp-core.c | 7 -------
- 1 file changed, 7 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/cdn-dp-core.c b/drivers/gpu/drm/rockchip/cdn-dp-core.c
-index ec999d9f15f6..c6fbdcd87c16 100644
---- a/drivers/gpu/drm/rockchip/cdn-dp-core.c
-+++ b/drivers/gpu/drm/rockchip/cdn-dp-core.c
-@@ -43,8 +43,6 @@
- #define GRF_SOC_CON9		0x6224
- #define DP_SEL_VOP_LIT		BIT(12)
- #define GRF_SOC_CON26		0x6268
--#define UPHY_SEL_BIT		3
--#define UPHY_SEL_MASK		BIT(19)
- #define DPTX_HPD_SEL		(3 << 12)
- #define DPTX_HPD_DEL		(2 << 12)
- #define DPTX_HPD_SEL_MASK	(3 << 28)
-@@ -394,11 +392,6 @@ static int cdn_dp_enable_phy(struct cdn_dp_device *dp, struct cdn_dp_port *port)
- 	union extcon_property_value property;
- 	int ret;
+diff --git a/drivers/phy/rockchip/phy-rockchip-typec.c b/drivers/phy/rockchip/phy-rockchip-typec.c
+index 291493d9e9b6..40c5e7d6b5cb 100644
+--- a/drivers/phy/rockchip/phy-rockchip-typec.c
++++ b/drivers/phy/rockchip/phy-rockchip-typec.c
+@@ -363,6 +363,8 @@ struct rockchip_usb3phy_port_cfg {
+ 	struct usb3phy_reg usb3tousb2_en;
+ 	struct usb3phy_reg external_psm;
+ 	struct usb3phy_reg pipe_status;
++	struct usb3phy_reg usb3_host_disable;
++	struct usb3phy_reg usb3_host_port;
+ };
  
--	ret = cdn_dp_grf_write(dp, GRF_SOC_CON26,
--			       (port->id << UPHY_SEL_BIT) | UPHY_SEL_MASK);
--	if (ret)
--		return ret;
--
- 	if (!port->phy_enabled) {
- 		ret = phy_power_on(port->phy);
- 		if (ret) {
+ static const struct rockchip_usb3phy_port_cfg tcphy0_port_cfg = {
+@@ -370,6 +372,8 @@ static const struct rockchip_usb3phy_port_cfg tcphy0_port_cfg = {
+ 	.usb3tousb2_en	= { 0xe580, 3, 19 },
+ 	.external_psm	= { 0xe588, 14, 30 },
+ 	.pipe_status	= { 0xe5c0, 0, 0 },
++	.usb3_host_disable = { 0x2434, 0, 16 },
++	.usb3_host_port = { 0x2434, 12, 28 },
+ };
+ 
+ static const struct rockchip_usb3phy_port_cfg tcphy1_port_cfg = {
+@@ -377,6 +381,8 @@ static const struct rockchip_usb3phy_port_cfg tcphy1_port_cfg = {
+ 	.usb3tousb2_en	= { 0xe58c, 3, 19 },
+ 	.external_psm	= { 0xe594, 14, 30 },
+ 	.pipe_status	= { 0xe5c0, 16, 16 },
++	.usb3_host_disable = { 0x2444, 0, 16 },
++	.usb3_host_port = { 0x2444, 12, 28 },
+ };
+ 
+ struct rockchip_typec_phy {
+@@ -869,6 +875,9 @@ static int rockchip_usb3_phy_power_on(struct phy *phy)
+ 		regmap_read(tcphy->grf_regs, reg->offset, &val);
+ 		if (!(val & BIT(reg->enable_bit))) {
+ 			tcphy->mode |= new_mode & (MODE_DFP_USB | MODE_UFP_USB);
++			/* enable usb3 host */
++			property_enable(tcphy, &cfg->usb3_host_disable, 0);
++			property_enable(tcphy, &cfg->usb3_host_port, 1);
+ 			goto unlock_ret;
+ 		}
+ 		usleep_range(10, 20);
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
