@@ -1,112 +1,67 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH 2/2] vfio: platform: Add generic DT reset support
-Date: Wed, 14 Feb 2018 11:11:27 +0100
-Message-ID: <28255dd8-427f-f81a-1ec4-0837eb4738db@redhat.com>
-References: <1518539815-13774-1-git-send-email-geert+renesas@glider.be>
- <1518539815-13774-3-git-send-email-geert+renesas@glider.be>
- <ed556509-1460-3e05-b161-f476090ff480@redhat.com>
- <CAMuHMdULCdVCY7k5ZHX66poxRMTJZ3B1KvDrCzBmtkEipC=CMw@mail.gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3 00/16] mmc: tmio: another batch of TMIO MMC fixes and
+ cleanups
+Date: Wed, 14 Feb 2018 11:23:11 +0100
+Message-ID: <20180214102311.w7hfbnpfkecnjlkb@katana>
+References: <1516206496-16612-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAPDyKFp3dPjsEeyrKAbW_duErCS+xYD0K8zhcRPCY65eRNtMqg@mail.gmail.com>
+ <20180207191152.kvqrugblst2cko3c@ninjato>
+ <CAPDyKFoxp7p0atQTV=PoQ7Bwt0fOs2aEq1KJHPtrq+zA3eFYgw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdULCdVCY7k5ZHX66poxRMTJZ3B1KvDrCzBmtkEipC=CMw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="chnywmmjtoeycwvc"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFoxp7p0atQTV=PoQ7Bwt0fOs2aEq1KJHPtrq+zA3eFYgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Ulf Magnusson <ulfalizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-On 14/02/18 10:43, Geert Uytterhoeven wrote:
-> Hi Eric,
-> 
-> On Wed, Feb 14, 2018 at 10:09 AM, Auger Eric <eric.auger@redhat.com> wrote:
->> On 13/02/18 17:36, Geert Uytterhoeven wrote:
->>> Vfio-platform requires reset support, provided either by ACPI, or, on DT
->>> platforms, by a device-specific reset driver matching against the
->>> device's compatible value.
->>>
->>> On many SoCs, devices are connected to an SoC-internal reset controller,
->>> and can be reset in a generic way.  Hence add support to reset such
->>> devices using the reset controller subsystem, provided the reset
->>> hierarchy is described correctly in DT using the "resets" property.
->>
->> I first acknowledge I am not familiar with what those reset controllers
->> do in practice. My fear is that we may rely on generic SW pieces that
->> may not be adapted to passthrough constraints. We must guarantee that
->> any DMA access attempted by the devices are stopped and any interrupts
->> gets stopped. Can we guarantee that the reset controller always induce
->> that? Otherwise we may leave the door opened to badly reset assigned
->> devices.
-> 
-> An on-SoC reset controller is basically a block controlling signals to the
-> reset inputs of the individual on-SoC devices.
-> On Renesas ARM SoCs, this allows to do a full reset of the attached device.
-> 
-> Of course the exact semantics depend on the actual SoC.
-that's the issue actually.
-> If e.g. DMA and interrupts are not stopped for a specific device on a
-> specific SoC, it still needs a device-specific reset driver, matching against
-> the appropriate compatible value, cfr. the quoted paragraph below.
-yes but by default we still accept the reset controller solution.
-> 
-> You could add a whitelist for of_machine_is_compatible() or
-> of_device_is_compatible(), but that will grow large fast.
-Could be the kind of solution needed. At the moment the list of assigned
-platform devices is pretty reduced.
-
-Couldn't we imagine additional dt properties to emphasize the fact a
-platform device is passthrough friendly in terms of reset, either
-through a reset controller or exposing a single reg that need to be
-reset for full reset to be achieved, in accordance with assignment
-constraints. That way, the driver writer would somehow certify the
-device is eligible for passthrough. One of the issue today is that the
-vfio platform reset driver is not maintained by the native driver
-maintainer.
-
-I think if people want to do platform passthrough, they need to devise
-their HW IPs so that this reset modality is simplified by exposing this
-kind of single reg and then dt description may expose this. Also if
-possible, the dt node must be as simple/generic as possible to avoid
-writing a huge dt node creation function on QEMU side and avoid
-dependencies on other nodes.
+--chnywmmjtoeycwvc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
-> 
->>> Devices that require a more complex reset procedure can still
->>> provide a device-specific reset driver, as that takes precedence.
-> 
->>> @@ -138,6 +152,8 @@ static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
->>>
->>>       if (vdev->of_reset)
->>>               module_put(vdev->reset_module);
->>> +
->> if (vdev->reset_control) ?
->> reset_control_put seems to only check IS_ERR()
-> 
->     void reset_control_put(struct reset_control *rstc)
->     {
->             if (IS_ERR_OR_NULL(rstc))
->                     return;
-> 
-> So it does handle NULL.
-Sorry I checked an older 4.3 kernel version.
+> You need to check again. :-)
 
-Thanks
+Seems like it. Sorry for the noise.
 
-Eric
-> 
->>> +     reset_control_put(vdev->reset_control);
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+> I am eager to apply those patches you already have reviewed (to
+> patch14), as those mostly seemed rather trivial and should be nice
+> cleanups.
+>=20
+> Do you mind me going ahead, then you can continue and review/test the res=
+t?
+
+Yes, we can work incremently from there. I'll send patches if I discover
+something unexpected.
+
+
+--chnywmmjtoeycwvc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqEDgsACgkQFA3kzBSg
+KbaVOxAAnEIyy0lswAOLrIpsQ+2pdHoH9MoOE+lfqFoXg28YvNHF6YfWKA47gWoD
+lmklgXxahFD/Dz07hngX21PF0kujg01iUC78nBNdXeN+pm1NIdipUahohuDQgRGj
+Pac163PpS4CPjPLA7yRLz44pXg4LQsIratlR1O1Nnw8mRRFY7aRr42+r/1kBKdYY
+LRehZe+7FoFgYAws224BNPOzvOX5n8Hg194c5rLRPif3EV21XQlc9tygG8A4bW6g
+m86jriqDUEYeE1RCgqiRlyxDZqyLFqLzsAHXWrDLoDpFMgmnLAX7Uihi37N38mw7
+SGjmZOHQnD5vtblop+rINnt5eZn3oevvgmQogwB0HasjjtwjOxUlARyNPicxrir8
+SVt5A/fA+ix52owdXN+SH+D0T5biGJEO3vd6zWOxOiKLmmRp0vrBsGNHUyh/Mxeo
+q+1kQ2OnsSxkZmyg4cYXYh2cHe3fYQb5DCj4oomraVLSzb+txk0dXc/RGwRArGQB
+0W8sMIVWj1f46mQs/XYJkbyqQEe1CJQU+O6TNsS4We3vXyMQdBUSH6ow35ShcUlF
+84I5u/K/q4ALhaRbVsKfs0jg4M7HOvUnflLJJlzhZAiOD59yXlUWI2Ttmxls/VsS
+BIEIhEZ4bai8g9q4s1lr6AP4xcigtQJXytLhJIG+rrrUckuXrM8=
+=AECR
+-----END PGP SIGNATURE-----
+
+--chnywmmjtoeycwvc--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
