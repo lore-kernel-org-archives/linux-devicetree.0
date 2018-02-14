@@ -1,155 +1,250 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 6/6] drm/msm: iommu: Replace runtime
- calls with runtime suppliers
-Date: Wed, 14 Feb 2018 16:03:39 +0000
-Message-ID: <b003ecda-1cbe-4e5f-872b-107154ac40e5@arm.com>
-References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
- <1517999482-17317-7-git-send-email-vivek.gautam@codeaurora.org>
- <CAAFQd5AjopiX6fDgD+mO+-+d0yj-swEnVCNvccWRBSMO+XVJkA@mail.gmail.com>
- <CAF6AEGs8qcRTvz6srSfc39ybZrPYMVg2w6qkaO2AdWL1GD4mQw@mail.gmail.com>
- <CAAFQd5BKRumpEfAKNF_RKS-ZZ8D671DfOz4vB2+w1SV3aG9NxQ@mail.gmail.com>
- <CAF6AEGuNZJKtwGZ5mLfqNND2jtU+HYM11UONfAtVTzoM0QVpdg@mail.gmail.com>
- <CAAFQd5BZJ1G0RG32hYErNzPRvisBhhiSNCBsjbzfm0WzO=DnsQ@mail.gmail.com>
- <CAFp+6iHaycK=CcE1S15EeuMkaw8LnW0ebptU0hM6tUtWdeEOtA@mail.gmail.com>
- <CAAFQd5Afj-Bj+3wHwmF2tT7y=46EsYEtO_mXfY6stXBgHutEUg@mail.gmail.com>
- <CAFp+6iGX6pr+MdPSSHHG=qOnhHky_8OHiDqAcJ9UudEUv=JMHg@mail.gmail.com>
- <CAAFQd5DiwAugGnPOTw0+XrEfef9x-n-vx59JFuXpNawjiXHwCw@mail.gmail.com>
- <CAFp+6iEW0faeHDfzN_F1bRrHGcVo3sPCk4HSY=t9dnEvHkDkYw@mail.gmail.com>
+From: dann frazier <dann.frazier@canonical.com>
+Subject: Re: [PATCH v13 4/9] PCI: Apply the new generic I/O management on PCI
+ IO hosts
+Date: Wed, 14 Feb 2018 09:05:08 -0700
+Message-ID: <CALdTtnuWw_Ao_veyd1syO+2af4g1h+WCn+LD3iO3JqBV1bA9Tg@mail.gmail.com>
+References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
+ <1518543933-22456-5-git-send-email-john.garry@huawei.com> <20180213225721.GA22219@xps13.dannf>
+ <ffaf1c82-3738-86fd-8bc9-f76299f99a79@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAFp+6iEW0faeHDfzN_F1bRrHGcVo3sPCk4HSY=t9dnEvHkDkYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <ffaf1c82-3738-86fd-8bc9-f76299f99a79@huawei.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: mika.westerberg@linux.intel.com, Rafael Wysocki <rafael@kernel.org>, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, olof@lixom.net, andy.shevchenko@gmail.com, robh@kernel.org, joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, Corey Minyard <minyard@acm.org>, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQvMDIvMTggMTA6MzMsIFZpdmVrIEdhdXRhbSB3cm90ZToKPiBPbiBXZWQsIEZlYiAxNCwg
-MjAxOCBhdCAyOjQ2IFBNLCBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0ub3JnPiB3cm90ZToK
-PiAKPiBBZGRpbmcgSm9yZGFuIHRvIHRoaXMgdGhyZWFkIGFzIHdlbGwuCj4gCj4+IE9uIFdlZCwg
-RmViIDE0LCAyMDE4IGF0IDY6MTMgUE0sIFZpdmVrIEdhdXRhbQo+PiA8dml2ZWsuZ2F1dGFtQGNv
-ZGVhdXJvcmEub3JnPiB3cm90ZToKPj4+IEhpIFRvbWFzeiwKPj4+Cj4+PiBPbiBXZWQsIEZlYiAx
-NCwgMjAxOCBhdCAxMTowOCBBTSwgVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4gd3Jv
-dGU6Cj4+Pj4gT24gV2VkLCBGZWIgMTQsIDIwMTggYXQgMToxNyBQTSwgVml2ZWsgR2F1dGFtCj4+
-Pj4gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4+Pj4+IEhpIFRvbWFzeiwK
-Pj4+Pj4KPj4+Pj4gT24gV2VkLCBGZWIgMTQsIDIwMTggYXQgODozMSBBTSwgVG9tYXN6IEZpZ2Eg
-PHRmaWdhQGNocm9taXVtLm9yZz4gd3JvdGU6Cj4+Pj4+PiBPbiBXZWQsIEZlYiAxNCwgMjAxOCBh
-dCAxMToxMyBBTSwgUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cm90ZToKPj4+Pj4+
-PiBPbiBUdWUsIEZlYiAxMywgMjAxOCBhdCA4OjU5IFBNLCBUb21hc3ogRmlnYSA8dGZpZ2FAY2hy
-b21pdW0ub3JnPiB3cm90ZToKPj4+Pj4+Pj4gT24gV2VkLCBGZWIgMTQsIDIwMTggYXQgMzowMyBB
-TSwgUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cm90ZToKPj4+Pj4+Pj4+IE9uIFR1
-ZSwgRmViIDEzLCAyMDE4IGF0IDQ6MTAgQU0sIFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5v
-cmc+IHdyb3RlOgo+Pj4+Pj4+Pj4+IEhpIFZpdmVrLAo+Pj4+Pj4+Pj4+Cj4+Pj4+Pj4+Pj4gVGhh
-bmtzIGZvciB0aGUgcGF0Y2guIFBsZWFzZSBzZWUgbXkgY29tbWVudHMgaW5saW5lLgo+Pj4+Pj4+
-Pj4+Cj4+Pj4+Pj4+Pj4gT24gV2VkLCBGZWIgNywgMjAxOCBhdCA3OjMxIFBNLCBWaXZlayBHYXV0
-YW0KPj4+Pj4+Pj4+PiA8dml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPj4+Pj4+
-Pj4+Pj4gV2hpbGUgaGFuZGxpbmcgdGhlIGNvbmNlcm5lZCBpb21tdSwgdGhlcmUgc2hvdWxkIG5v
-dCBiZSBhCj4+Pj4+Pj4+Pj4+IG5lZWQgdG8gcG93ZXIgY29udHJvbCB0aGUgZHJtIGRldmljZXMg
-ZnJvbSBpb21tdSBpbnRlcmZhY2UuCj4+Pj4+Pj4+Pj4+IElmIHRoZXNlIGRybSBkZXZpY2VzIG5l
-ZWQgdG8gYmUgcG93ZXJlZCBhcm91bmQgdGhpcyB0aW1lLAo+Pj4+Pj4+Pj4+PiB0aGUgcmVzcGVj
-dGl2ZSBkcml2ZXJzIHNob3VsZCB0YWtlIGNhcmUgb2YgdGhpcy4KPj4+Pj4+Pj4+Pj4KPj4+Pj4+
-Pj4+Pj4gUmVwbGFjZSB0aGUgcG1fcnVudGltZV9nZXQvcHV0X3N5bmMoPGRybV9kZXZpY2U+KSB3
-aXRoCj4+Pj4+Pj4+Pj4+IHBtX3J1bnRpbWVfZ2V0L3B1dF9zdXBwbGllcnMoPGRybV9kZXZpY2U+
-KSBjYWxscywgdG8gcG93ZXItdXAKPj4+Pj4+Pj4+Pj4gdGhlIGNvbm5lY3RlZCBpb21tdSB0aHJv
-dWdoIHRoZSBkZXZpY2UgbGluayBpbnRlcmZhY2UuCj4+Pj4+Pj4+Pj4+IEluIGNhc2UgdGhlIGRl
-dmljZSBsaW5rIGlzIG5vdCBzZXR1cCB0aGVzZSBnZXQvcHV0X3N1cHBsaWVycygpCj4+Pj4+Pj4+
-Pj4+IGNhbGxzIHdpbGwgYmUgYSBuby1vcCwgYW5kIHRoZSBpb21tdSBkcml2ZXIgc2hvdWxkIHRh
-a2UgY2FyZSBvZgo+Pj4+Pj4+Pj4+PiBwb3dlcmluZyBvbiBpdHMgZGV2aWNlcyBhY2NvcmRpbmds
-eS4KPj4+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogVml2ZWsgR2F1dGFtIDx2
-aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+Cj4+Pj4+Pj4+Pj4+IC0tLQo+Pj4+Pj4+Pj4+PiAg
-IGRyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2lvbW11LmMgfCAxNiArKysrKysrKy0tLS0tLS0tCj4+
-Pj4+Pj4+Pj4+ICAgMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMo
-LSkKPj4+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
-c20vbXNtX2lvbW11LmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9pb21tdS5jCj4+Pj4+Pj4+
-Pj4+IGluZGV4IGIyM2QzMzYyMmYzNy4uMWFiNjI5YmJlZTY5IDEwMDY0NAo+Pj4+Pj4+Pj4+PiAt
-LS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9pb21tdS5jCj4+Pj4+Pj4+Pj4+ICsrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9tc20vbXNtX2lvbW11LmMKPj4+Pj4+Pj4+Pj4gQEAgLTQwLDkgKzQwLDkg
-QEAgc3RhdGljIGludCBtc21faW9tbXVfYXR0YWNoKHN0cnVjdCBtc21fbW11ICptbXUsIGNvbnN0
-IGNoYXIgKiBjb25zdCAqbmFtZXMsCj4+Pj4+Pj4+Pj4+ICAgICAgICAgIHN0cnVjdCBtc21faW9t
-bXUgKmlvbW11ID0gdG9fbXNtX2lvbW11KG1tdSk7Cj4+Pj4+Pj4+Pj4+ICAgICAgICAgIGludCBy
-ZXQ7Cj4+Pj4+Pj4+Pj4+Cj4+Pj4+Pj4+Pj4+IC0gICAgICAgcG1fcnVudGltZV9nZXRfc3luYyht
-bXUtPmRldik7Cj4+Pj4+Pj4+Pj4+ICsgICAgICAgcG1fcnVudGltZV9nZXRfc3VwcGxpZXJzKG1t
-dS0+ZGV2KTsKPj4+Pj4+Pj4+Pj4gICAgICAgICAgcmV0ID0gaW9tbXVfYXR0YWNoX2RldmljZShp
-b21tdS0+ZG9tYWluLCBtbXUtPmRldik7Cj4+Pj4+Pj4+Pj4+IC0gICAgICAgcG1fcnVudGltZV9w
-dXRfc3luYyhtbXUtPmRldik7Cj4+Pj4+Pj4+Pj4+ICsgICAgICAgcG1fcnVudGltZV9wdXRfc3Vw
-cGxpZXJzKG1tdS0+ZGV2KTsKPj4+Pj4+Pj4+Pgo+Pj4+Pj4+Pj4+IEZvciBtZSwgaXQgbG9va3Mg
-bGlrZSBhIHdyb25nIHBsYWNlIHRvIGhhbmRsZSBydW50aW1lIFBNIG9mIElPTU1VCj4+Pj4+Pj4+
-Pj4gaGVyZS4gaW9tbXVfYXR0YWNoX2RldmljZSgpIGNhbGxzIGludG8gSU9NTVUgZHJpdmVyJ3Mg
-YXR0YWNoX2RldmljZSgpCj4+Pj4+Pj4+Pj4gY2FsbGJhY2sgYW5kIHRoYXQncyB3aGVyZSBuZWNl
-c3NhcnkgcnVudGltZSBQTSBnZXRzIHNob3VsZCBoYXBwZW4sIGlmCj4+Pj4+Pj4+Pj4gYW55LiBJ
-biBvdGhlciB3b3JkcywgZHJpdmVyIEEgKE1TTSBEUk0gZHJpdmVyKSBzaG91bGRuJ3QgYmUgZGVh
-bGluZwo+Pj4+Pj4+Pj4+IHdpdGggcG93ZXIgc3RhdGUgb2YgZGV2aWNlIGNvbnRyb2xsZWQgYnkg
-ZHJpdmVyIEIgKEFSTSBTTU1VKS4KPj4+Pj4+Pj4+Cj4+Pj4+Pj4+PiBOb3RlIHRoYXQgd2UgZW5k
-IHVwIGhhdmluZyB0byBkbyB0aGUgc2FtZSwgYmVjYXVzZSBvZiBpb21tdV91bm1hcCgpCj4+Pj4+
-Pj4+PiB3aGlsZSBEUk0gZHJpdmVyIGlzIHBvd2VyZWQgb2ZmLi4gIGl0IG1pZ2h0IGJlIGNsZWFu
-ZXIgaWYgaXQgd2FzIGFsbAo+Pj4+Pj4+Pj4gc2VsZiBjb250YWluZWQgaW4gdGhlIGlvbW11IGRy
-aXZlciwgYnV0IHRoYXQgd291bGQgbWFrZSBpdCBzbyBvdGhlcgo+Pj4+Pj4+Pj4gZHJpdmVycyBj
-b3VsZG4ndCBjYWxsIGlvbW11X3VubWFwKCkgZnJvbSBhbiBpcnEgaGFuZGxlciwgd2hpY2ggaXMK
-Pj4+Pj4+Pj4+IGFwcGFyZW50bHkgc29tZXRoaW5nIHRoYXQgc29tZSBvZiB0aGVtIHdhbnQgdG8g
-ZG8uLgo+Pj4+Pj4+Pgo+Pj4+Pj4+PiBJJ2QgYXNzdW1lIHRoYXQgcnVudGltZSBQTSBzdGF0dXMg
-aXMgYWxyZWFkeSBndWFyYW50ZWVkIHRvIGJlIGFjdGl2ZQo+Pj4+Pj4+PiB3aGVuIHRoZSBJUlEg
-aGFuZGxlciBpcyBydW5uaW5nLCBieSBzb21lIG90aGVyIG1lYW5zIChlLmcuCj4+Pj4+Pj4+IHBt
-X3J1bnRpbWVfZ2V0X3N5bmMoKSBjYWxsZWQgZWFybGllciwgd2hlbiBxdWV1aW5nIHNvbWUgd29y
-ayB0byB0aGUKPj4+Pj4+Pj4gaGFyZHdhcmUpLiBPdGhlcndpc2UsIEknbSBub3Qgc3VyZSBob3cg
-YSBwb3dlcmVkIGRvd24gZGV2aWNlIGNvdWxkCj4+Pj4+Pj4+IHRyaWdnZXIgYW4gSVJRLgo+Pj4+
-Pj4+Pgo+Pj4+Pj4+PiBTbywgaWYgdGhlIG1hc3RlciBkZXZpY2UgcG93ZXIgaXMgYWxyZWFkeSBv
-biwgc3VwcGxpZXJzIHNob3VsZCBiZQo+Pj4+Pj4+PiBwb3dlcmVkIG9uIGFzIHdlbGwsIHRoYW5r
-cyB0byBkZXZpY2UgbGlua3MuCj4+Pj4+Pj4+Cj4+Pj4+Pj4KPj4+Pj4+PiB1bW0sIHRoYXQgaXMg
-a2luZG9mIHRoZSBpbnZlcnNlIG9mIHRoZSBwcm9ibGVtLi4gIHRoZSBwcm9ibGVtIGlzCj4+Pj4+
-Pj4gdGhpbmdzIGxpa2UgZ3B1IGRyaXZlciAoYW5kIHY0bDIgZHJpdmVycyB0aGF0IGltcG9ydCBk
-bWEtYnVmJ3MsCj4+Pj4+Pj4gYWZhaWN0KS4uIHRoZXkgd2lsbCBwb3RlbnRpYWxseSBjYWxsIGlv
-bW11LT51bm1hcCgpIHdoZW4gZGV2aWNlIGlzIG5vdAo+Pj4+Pj4+IGFjdGl2ZSAoZHVlIHRvIHVz
-ZXJzcGFjZSBvciB0aGluZ3MgYmV5b25kIHRoZSBjb250cm9sIG9mIHRoZSBkcml2ZXIpLi4KPj4+
-Pj4+PiBzbyAqdGhleSogd291bGQgd2FudCBpb21tdSB0byBkbyBwbSBnZXQvcHV0IGNhbGxzLgo+
-Pj4+Pj4KPj4+Pj4+IFdoaWNoIGlzIGZpbmUgYW5kIHdoaWNoIGlzIGFjdHVhbGx5IGFscmVhZHkg
-ZG9uZSBieSBvbmUgb2YgdGhlIHBhdGNoZXMKPj4+Pj4+IGluIHRoaXMgc2VyaWVzLCBub3QgZm9y
-IG1hcC91bm1hcCwgYnV0IHByb2JlLCBhZGRfZGV2aWNlLAo+Pj4+Pj4gcmVtb3ZlX2RldmljZS4g
-SGF2aW5nIHBhcnRzIG9mIHRoZSBBUEkgZG9pbmcgaXQgaW5zaWRlIHRoZSBjYWxsYmFjawo+Pj4+
-Pj4gYW5kIG90aGVyIHBhcnRzIG91dHNpZGUgc291bmRzIGF0IGxlYXN0IGluY29uc2lzdGVudC4K
-Pj4+Pj4+Cj4+Pj4+Pj4gQnV0IG90aGVyIGRyaXZlcnMKPj4+Pj4+PiB0cnlpbmcgdG8gdW5tYXAg
-ZnJvbSBpcnEgY3R4IHdvdWxkIG5vdC4gIFdoaWNoIGlzIHRoZSBjb250cmFkaWN0b3J5Cj4+Pj4+
-Pj4gcmVxdWlyZW1lbnQgdGhhdCBsZWFkIHRvIHRoZSBpZGVhIG9mIGlvbW11IHVzZXIgcG93ZXJp
-bmcgdXAgaW9tbXUgZm9yCj4+Pj4+Pj4gdW5tYXAuCj4+Pj4+Pgo+Pj4+Pj4gU29ycnksIG1heWJl
-IEkgd2Fzbid0IGNsZWFyLiBNeSBsYXN0IG1lc3NhZ2Ugd2FzIHN1cHBvc2VkIHRvIHNob3cgdGhh
-dAo+Pj4+Pj4gaXQncyBub3QgY29udHJhZGljdG9yeSBhdCBhbGwsIGJlY2F1c2UgIm90aGVyIGRy
-aXZlcnMgdHJ5aW5nIHRvIHVubWFwCj4+Pj4+PiBmcm9tIGlycSBjdHgiIHdvdWxkIGFscmVhZHkg
-aGF2ZSBjYWxsZWQgcG1fcnVudGltZV9nZXRfKigpIGVhcmxpZXIKPj4+Pj4+IGZyb20gYSBub24t
-aXJxIGN0eCwgd2hpY2ggd291bGQgaGF2ZSBhbHNvIGRvbmUgdGhlIHNhbWUgb24gYWxsIHRoZQo+
-Pj4+Pj4gbGlua2VkIHN1cHBsaWVycywgaW5jbHVkaW5nIHRoZSBJT01NVS4gVGhlIHVsdGltYXRl
-IHJlc3VsdCB3b3VsZCBiZQo+Pj4+Pj4gdGhhdCB0aGUgbWFwL3VubWFwKCkgb2YgdGhlIElPTU1V
-IGRyaXZlciBjYWxsaW5nIHBtX3J1bnRpbWVfZ2V0X3N5bmMoKQo+Pj4+Pj4gd291bGQgZG8gbm90
-aGluZyBiZXNpZGVzIGluY3JlbWVudGluZyB0aGUgcmVmZXJlbmNlIGNvdW50Lgo+Pj4+Pgo+Pj4+
-PiBUaGUgZW50aXJlIHBvaW50IHdhcyB0byBhdm9pZCB0aGUgc2xvd3BhdGggdGhhdCBwbV9ydW50
-aW1lX2dldC9wdXRfc3luYygpCj4+Pj4+IHdvdWxkIGFkZCBpbiBtYXAvdW5tYXAuIEl0IHdvdWxk
-IG5vdCBiZSBjb3JyZWN0IHRvIGFkZCBhIHNsb3dwYXRoIGluIGlycV9jdHgKPj4+Pj4gZm9yIHRh
-a2luZyBjYXJlIG9mIG5vbi1pcnFfY3R4IGFuZCBmb3IgdGhlIHNpdHVhdGlvbnMgd2hlcmUgbWFz
-dGVyIGlzIGFscmVhZHkKPj4+Pj4gcG93ZXJlZC1vZmYuCj4+Pj4KPj4+PiBDb3JyZWN0IG1lIGlm
-IEknbSB3cm9uZywgYnV0IEkgYmVsaWV2ZSB0aGF0IHdpdGggd2hhdCBJJ20gcHJvcG9zaW5nCj4+
-Pj4gdGhlcmUgd291bGRuJ3QgYmUgYW55IHNsb3cgcGF0aC4KPj4+Cj4+PiBZZWEsIGJ1dCBvbmx5
-IHdoZW4gdGhlIHBvd2VyIGRvbWFpbiBpcyBpcnEtc2FmZT8gQW5kIG5vdCBhbGwgcGxhdGZvcm1z
-Cj4+PiBlbmFibGUgaXJxLXNhZmUgcG93ZXIgZG9tYWlucy4gRm9yIGluc3RhbmNlLCBtc20gZG9l
-c24ndCBlbmFibGUgaXRzCj4+PiBnZHNjIHBvd2VyIGRvbWFpbnMgYXMgaXJxLXNhZmUuCj4+PiBJ
-cyBpdCBzb21ldGhpbmcgaSBhbSBtaXNzaW5nPwo+Pgo+PiBpcnEtc2FmZSB3b3VsZCBtYXR0ZXIg
-aWYgdGhlcmUgd291bGQgZXhpc3QgYSBjYXNlIHdoZW4gdGhlIGNhbGwgaXMKPj4gZG9uZSBmcm9t
-IElSUSBjb250ZXh0IGFuZCB0aGUgcG93ZXIgaXMgb2ZmLiBBcyBJIGV4cGxhaW5lZCBpbiBhKSwg
-aXQKPj4gc2hvdWxkbid0IGhhcHBlbi4KPiAKPiBIaSBSb2JpbiwgV2lsbAo+IAo+IERvZXMgYWRk
-aW5nIHBtX3J1bnRpbWVfZ2V0KCkgaW4gbWFwL3VubWFwIHNvdW5kcyBnb29kIHRvIHlvdT8KCkdp
-dmVuIHRoYXQgd2Ugc3BlbnQgc2lnbmlmaWNhbnQgZWZmb3J0IGxhc3QgeWVhciByZW1vdmluZyBh
-cyBtdWNoIApsb2NraW5nIGFzIHdlIHBvc3NpYmx5IGNvdWxkIGZyb20gdGhlIG1hcC91bm1hcCBw
-YXRoIHRvIG1pbmltaXNlIHRoZSAKc2lnbmlmaWNhbnQgcGVyZm9ybWFuY2UgaW1wYWN0IGl0IHdh
-cyBoYXZpbmcgb24gbmV0d29ya2luZy9zdG9yYWdlL2V0Yy4gCndvcmtsb2FkcywgSSByZWFsbHkg
-ZG9uJ3Qgd2FudCB0byBpbnRyb2R1Y2UgbW9yZSBmb3IgdGhlIHNha2Ugb2Ygb25lIApzcGVjaWZp
-YyB1c2UtY2FzZSwgc28gbm8uCgpSb2Jpbi4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZnJlZWRyZW5vCg==
+On Wed, Feb 14, 2018 at 8:42 AM, John Garry <john.garry@huawei.com> wrote:
+> On 13/02/2018 22:57, dann frazier wrote:
+>>
+>> On Wed, Feb 14, 2018 at 01:45:28AM +0800, John Garry wrote:
+>>>
+>>> From: Zhichang Yuan <yuanzhichang@hisilicon.com>
+>>>
+>>> After introducing the new generic I/O space management in logic pio, the
+>>> original PCI MMIO relevant helpers need to be updated based on the new
+>>> interfaces.
+>>> This patch adapts the corresponding code to match the changes introduced
+>>> by logic pio.
+>>>
+>>> Signed-off-by: Zhichang Yuan <yuanzhichang@hisilicon.com>
+>>> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>        #earlier draft
+>>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>>
+>>
+>> I saw that Bjorn Acked this back in v6, but it seems like the code in
+>> pci.c was reworked a bit for v7 onwards and I didn't see a follow-up
+>> review (apologies if I just missed it). In which case, maybe his Ack
+>> should have the "#earlier draft" tag as well?
+>>
+>
+> Hi Dann,
+>
+> I see Bjorn acked again later on in the series, here:
+> https://lkml.org/lkml/2017/5/26/612
+
+Yep, you're right, sorry for missing that :)
+
+>
+>>> ---
+>>>  drivers/pci/pci.c        | 95
+>>> +++++++++---------------------------------------
+>>>  include/asm-generic/io.h |  2 +-
+>>>  2 files changed, 18 insertions(+), 79 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>> index 07290a3..8aa5c54 100644
+>>> --- a/drivers/pci/pci.c
+>>> +++ b/drivers/pci/pci.c
+>>> @@ -22,6 +22,7 @@
+>>>  #include <linux/spinlock.h>
+>>>  #include <linux/string.h>
+>>>  #include <linux/log2.h>
+>>> +#include <linux/logic_pio.h>
+>>>  #include <linux/pci-aspm.h>
+>>>  #include <linux/pm_wakeup.h>
+>>>  #include <linux/interrupt.h>
+>>> @@ -3440,17 +3441,6 @@ int pci_request_regions_exclusive(struct pci_dev
+>>> *pdev, const char *res_name)
+>>>  }
+>>>  EXPORT_SYMBOL(pci_request_regions_exclusive);
+>>>
+>>> -#ifdef PCI_IOBASE
+>>> -struct io_range {
+>>> -       struct list_head list;
+>>> -       phys_addr_t start;
+>>> -       resource_size_t size;
+>>> -};
+>>> -
+>>> -static LIST_HEAD(io_range_list);
+>>> -static DEFINE_SPINLOCK(io_range_lock);
+>>> -#endif
+>>> -
+>>>  /*
+>>>   * Record the PCI IO range (expressed as CPU physical address + size).
+>>>   * Return a negative value if an error has occured, zero otherwise
+>>> @@ -3458,51 +3448,28 @@ struct io_range {
+>>>  int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t
+>>> addr,
+>>>                         resource_size_t size)
+>>>  {
+>>> -       int err = 0;
+>>> -
+>>> +       int ret = 0;
+>>>  #ifdef PCI_IOBASE
+>>> -       struct io_range *range;
+>>> -       resource_size_t allocated_size = 0;
+>>> -
+>>> -       /* check if the range hasn't been previously recorded */
+>>> -       spin_lock(&io_range_lock);
+>>> -       list_for_each_entry(range, &io_range_list, list) {
+>>> -               if (addr >= range->start && addr + size <= range->start +
+>>> size) {
+>>> -                       /* range already registered, bail out */
+>>> -                       goto end_register;
+>>> -               }
+>>> -               allocated_size += range->size;
+>>> -       }
+>>> +       struct logic_pio_hwaddr *range;
+>>>
+>>> -       /* range not registed yet, check for available space */
+>>> -       if (allocated_size + size - 1 > IO_SPACE_LIMIT) {
+>>> -               /* if it's too big check if 64K space can be reserved */
+>>> -               if (allocated_size + SZ_64K - 1 > IO_SPACE_LIMIT) {
+>>> -                       err = -E2BIG;
+>>> -                       goto end_register;
+>>> -               }
+>>> -
+>>> -               size = SZ_64K;
+>>> -               pr_warn("Requested IO range too big, new size set to
+>>> 64K\n");
+>>> -       }
+>>> +       if (!size || addr + size < addr)
+>>> +               return -EINVAL;
+>>>
+>>> -       /* add the range to the list */
+>>>         range = kzalloc(sizeof(*range), GFP_ATOMIC);
+>>> -       if (!range) {
+>>> -               err = -ENOMEM;
+>>> -               goto end_register;
+>>> -       }
+>>> +       if (!range)
+>>> +               return -ENOMEM;
+>>>
+>>> -       range->start = addr;
+>>> +       range->fwnode = fwnode;
+>>>         range->size = size;
+>>> +       range->hw_start = addr;
+>>> +       range->flags = PIO_CPU_MMIO;
+>>>
+>>> -       list_add_tail(&range->list, &io_range_list);
+>>> -
+>>> -end_register:
+>>> -       spin_unlock(&io_range_lock);
+>>> +       ret = logic_pio_register_range(range);
+>>> +       if (ret)
+>>> +               kfree(range);
+>>>  #endif
+>>>
+>>> -       return err;
+>>> +       return ret;
+>>>  }
+>>>
+>>>  phys_addr_t pci_pio_to_address(unsigned long pio)
+>>> @@ -3510,21 +3477,10 @@ phys_addr_t pci_pio_to_address(unsigned long pio)
+>>>         phys_addr_t address = (phys_addr_t)OF_BAD_ADDR;
+>>>
+>>>  #ifdef PCI_IOBASE
+>>> -       struct io_range *range;
+>>> -       resource_size_t allocated_size = 0;
+>>> -
+>>> -       if (pio > IO_SPACE_LIMIT)
+>>> +       if (pio >= MMIO_UPPER_LIMIT)
+>>>                 return address;
+>>>
+>>> -       spin_lock(&io_range_lock);
+>>> -       list_for_each_entry(range, &io_range_list, list) {
+>>> -               if (pio >= allocated_size && pio < allocated_size +
+>>> range->size) {
+>>> -                       address = range->start + pio - allocated_size;
+>>> -                       break;
+>>> -               }
+>>> -               allocated_size += range->size;
+>>> -       }
+>>> -       spin_unlock(&io_range_lock);
+>>> +       address = logic_pio_to_hwaddr(pio);
+>>>  #endif
+>>>
+>>>         return address;
+>>> @@ -3533,25 +3489,8 @@ phys_addr_t pci_pio_to_address(unsigned long pio)
+>>>  unsigned long __weak pci_address_to_pio(phys_addr_t address)
+>>>  {
+>>>  #ifdef PCI_IOBASE
+>>> -       struct io_range *res;
+>>> -       resource_size_t offset = 0;
+>>> -       unsigned long addr = -1;
+>>> -
+>>> -       spin_lock(&io_range_lock);
+>>> -       list_for_each_entry(res, &io_range_list, list) {
+>>> -               if (address >= res->start && address < res->start +
+>>> res->size) {
+>>> -                       addr = address - res->start + offset;
+>>> -                       break;
+>>> -               }
+>>> -               offset += res->size;
+>>> -       }
+>>> -       spin_unlock(&io_range_lock);
+>>> -
+>>> -       return addr;
+>>> +       return logic_pio_trans_cpuaddr(address);
+>>>  #else
+>>> -       if (address > IO_SPACE_LIMIT)
+>>> -               return (unsigned long)-1;
+>>> -
+>>
+>>
+>> Why is this check now safe to drop in the !PCI_IOBASE case?
+>
+>
+> So I have been studying the (long) patchset history and I don't see the
+> reason for removing this check, and I think it can be reinstated.
+>
+> The address and pio are analogous here, and pio should not exceed the IO
+> space limit, so just a safety check.
+
+Sounds good.
+
+ -dann
+
+>>
+>>   -dann
+>>
+>>>         return (unsigned long) address;
+>>>  #endif
+>>>  }
+>>> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+>>> index b7996a79..5a59931 100644
+>>> --- a/include/asm-generic/io.h
+>>> +++ b/include/asm-generic/io.h
+>>> @@ -901,7 +901,7 @@ static inline void iounmap(void __iomem *addr)
+>>>  #define ioport_map ioport_map
+>>>  static inline void __iomem *ioport_map(unsigned long port, unsigned int
+>>> nr)
+>>>  {
+>
+>
+> Thanks,
+> John
+>
+>>> -       return PCI_IOBASE + (port & IO_SPACE_LIMIT);
+>>> +       return PCI_IOBASE + (port & MMIO_UPPER_LIMIT);
+>>>  }
+>>>  #endif
+>>>
+>>
+>> .
+>>
+>
+>
