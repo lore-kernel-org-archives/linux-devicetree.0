@@ -1,58 +1,44 @@
-From: Kieran Bingham <kbingham@kernel.org>
-Subject: [PATCH v3 4/5] arm64: dts: renesas: r8a7795: Fix register mappings on VSPs
-Date: Wed, 14 Feb 2018 09:55:07 +0000
-Message-ID: <1518602108-1724-5-git-send-email-kbingham@kernel.org>
-References: <1518602108-1724-1-git-send-email-kbingham@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518602108-1724-1-git-send-email-kbingham@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
-        AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH,RESEND2] regulator: fixed, gpio: dt: regulator-name is required property
+Date: Wed, 14 Feb 2018 11:00:12 +0100
+Message-ID: <E1eltrI-0000Kv-W3@stardust.g4.wien.funkfeuer.at>
+References: <1518532988-10990-1-git-send-email-harald@ccbib.org> <20180213154530.GF5988@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20180213154530.GF5988-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-ID: <1295.1518602412.1-rvrRdOlaWMmli2aaYNgTVBW+3FKk/ZpWT2auq/jSWdo@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Mark Brown writes:
+> On Tue, Feb 13, 2018 at 02:43:08PM +0000, Harald Geyer wrote:
+> 
+> > BTW, it took me a bit to figure out that by "content free ping" you are
+> > refering to the quoting of the patch. Maybe you can reword your canned
+> > response to make it easier to understand.
+> 
+> No, a content free ping is when you just send a reply saying something
+> to the effect of "hey, what's going on with this?".
 
-The VSPD includes a CLUT on RPF2. Ensure that the register space is
-mapped correctly to support this.
+Well, I did quote the entire patch and gave a summary of the status
+as far as I know it. So I really don't understand why I got the
+"no content free pings" response ...
 
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> As I said in my
+> reply best case the answer is going to be "I have no idea, you need to
+> resend since I'll need the patch to do anything with it" and worst case
+> it just won't get seen at all if the thing really did get buried
+> somehow.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 1f32340af2d1..772991db8820 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -2607,7 +2607,7 @@
- 
- 		vspd0: vsp@fea20000 {
- 			compatible = "renesas,vsp2";
--			reg = <0 0xfea20000 0 0x4000>;
-+			reg = <0 0xfea20000 0 0x8000>;
- 			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 623>;
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-@@ -2627,7 +2627,7 @@
- 
- 		vspd1: vsp@fea28000 {
- 			compatible = "renesas,vsp2";
--			reg = <0 0xfea28000 0 0x4000>;
-+			reg = <0 0xfea28000 0 0x8000>;
- 			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 622>;
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-@@ -2647,7 +2647,7 @@
- 
- 		vspd2: vsp@fea30000 {
- 			compatible = "renesas,vsp2";
--			reg = <0 0xfea30000 0 0x4000>;
-+			reg = <0 0xfea30000 0 0x8000>;
- 			interrupts = <GIC_SPI 468 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 621>;
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
--- 
-2.7.4
+So you are saying you don't want pings as followups to patches at all, if
+the patch is old enough that it probably got lost?
+
+I guess that would make sense too, but again it's not obvious to read
+the canned response that way.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
