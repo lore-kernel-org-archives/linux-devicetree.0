@@ -1,76 +1,67 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 14/25] arm: stm32: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Wed, 14 Feb 2018 16:37:02 +0100
-Message-ID: <9c2375af-b175-4ca4-3e93-ae844e255425@st.com>
-References: <20171215124646.30591-1-malat@debian.org>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] irqchip: stm32: add stm32h7 support
+Date: Wed, 14 Feb 2018 16:38:15 +0100
+Message-ID: <37eef294-12ef-e3a3-df93-10c0ed8b1a57@st.com>
+References: <1509987819-29599-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20171215124646.30591-1-malat@debian.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1509987819-29599-1-git-send-email-ludovic.Barre-qxv4g6HH51o@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Malaterre <malat@debian.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Barre <ludovic.Barre-qxv4g6HH51o@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi
 
-On 12/15/2017 01:46 PM, Mathieu Malaterre wrote:
-> Improve the DTS files by removing all the leading "0x" and zeros to fix the
-> following dtc warnings:
+On 11/06/2017 06:03 PM, Ludovic Barre wrote:
+> From: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
 > 
-> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+> This series adds:
+> -Management of multi-bank of external interrupts
+> stm32h7 has up to 96 inputs (3 banks of  32 inputs).
+> -Fix initial value after cold/hot boot (wakeup issue).
 > 
-> and
+> Changes v3:
+> -remove chip.name and handler, already done by
+> irq_alloc_domain_generic_chips
+> -add Rob ack in dt-bindings commit
 > 
-> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
+> Changes v2:
+> -Remove irq_mask and adds const on struct stm32_exti_bank
+> -Add wrapper functions pending and ack
+> -Replace BITS_PER_LONG by IRQS_PER_BANK
+> -Fill commit message on
+> "ARM: dts: stm32: add support of exti on stm32h743"
+> -Add system config bank for stm32h7
 > 
-> Converted using the following command:
-> 
-> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
-> 
-> For simplicity, two sed expressions were used to solve each warnings separately.
-> 
-> To make the regex expression more robust a few other issues were resolved,
-> namely setting unit-address to lower case, and adding a whitespace before the
-> the opening curly brace:
-> 
-> https://elinux.org/Device_Tree_Linux#Linux_conventions
-> 
-> This will solve as a side effect warning:
-> 
-> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
-> 
-> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
-> 
-> Reported-by: David Daney <ddaney@caviumnetworks.com>
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> Ludovic Barre (9):
+>    irqchip: stm32: select GENERIC_IRQ_CHIP
+>    irqchip: stm32: add multi-bank management
+>    dt-bindings: interrupt-controllers: add compatible string for stm32h7
+>    irqchip: stm32: add stm32h7 support
+>    irqchip: stm32: fix initial values
+>    irqchip: stm32: move the wakeup on interrupt mask
+>    ARM: dts: stm32: add exti support for stm32h743
+>    ARM: dts: stm32: add system config bank node for stm32h743
+>    ARM: dts: stm32: add support of exti on stm32h743 pinctrl
 
-Applied on stm32-next.
+patches 7/8/9 (DT part) applied on stm32-next.
 
-thanks
-
+Thanks
 Alex
 
-
-> ---
->   arch/arm/boot/dts/stm32h743.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
-> index bbfcbaca0b36..a559d8b6a4a3 100644
-> --- a/arch/arm/boot/dts/stm32h743.dtsi
-> +++ b/arch/arm/boot/dts/stm32h743.dtsi
-> @@ -304,7 +304,7 @@
->   			};
->   		};
->   
-> -		vrefbuf: regulator@58003C00 {
-> +		vrefbuf: regulator@58003c00 {
->   			compatible = "st,stm32-vrefbuf";
->   			reg = <0x58003C00 0x8>;
->   			clocks = <&rcc VREF_CK>;
+>   .../interrupt-controller/st,stm32-exti.txt         |   4 +-
+>   arch/arm/boot/dts/stm32h743-pinctrl.dtsi           |  24 +++
+>   arch/arm/boot/dts/stm32h743.dtsi                   |  13 ++
+>   drivers/irqchip/Kconfig                            |   1 +
+>   drivers/irqchip/irq-stm32-exti.c                   | 206 ++++++++++++++++-----
+>   5 files changed, 198 insertions(+), 50 deletions(-)
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
