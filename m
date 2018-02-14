@@ -1,120 +1,197 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v7 6/6] drm/msm: iommu: Replace runtime calls with runtime suppliers
-Date: Wed, 14 Feb 2018 12:01:08 +0900
-Message-ID: <CAAFQd5BZJ1G0RG32hYErNzPRvisBhhiSNCBsjbzfm0WzO=DnsQ@mail.gmail.com>
-References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
- <1517999482-17317-7-git-send-email-vivek.gautam@codeaurora.org>
- <CAAFQd5AjopiX6fDgD+mO+-+d0yj-swEnVCNvccWRBSMO+XVJkA@mail.gmail.com>
- <CAF6AEGs8qcRTvz6srSfc39ybZrPYMVg2w6qkaO2AdWL1GD4mQw@mail.gmail.com>
- <CAAFQd5BKRumpEfAKNF_RKS-ZZ8D671DfOz4vB2+w1SV3aG9NxQ@mail.gmail.com> <CAF6AEGuNZJKtwGZ5mLfqNND2jtU+HYM11UONfAtVTzoM0QVpdg@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: Add Spreadtrum EIC controller documentation
+Date: Wed, 14 Feb 2018 11:08:02 +0800
+Message-ID: <CAMz4kuKmFyn0R94W1+9O0G5gRmwgZLN7jOzNVYWwjTsz3NDyZw@mail.gmail.com>
+References: <e89b91042abbbcf04cb39a3350af000cc411eee1.1518076643.git.baolin.wang@linaro.org>
+ <CACRpkdY1WDOr=BO-h4Us8k9n2d4cXHgBOAHTbUO5ggAoS3-dfA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAF6AEGuNZJKtwGZ5mLfqNND2jtU+HYM11UONfAtVTzoM0QVpdg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Joerg
-        Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>," <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>"list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Joerg
-        Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>," <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Stephen
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY1WDOr=BO-h4Us8k9n2d4cXHgBOAHTbUO5ggAoS3-dfA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 14, 2018 at 11:13 AM, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Feb 13, 2018 at 8:59 PM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> On Wed, Feb 14, 2018 at 3:03 AM, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Tue, Feb 13, 2018 at 4:10 AM, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>>> Hi Vivek,
->>>>
->>>> Thanks for the patch. Please see my comments inline.
->>>>
->>>> On Wed, Feb 7, 2018 at 7:31 PM, Vivek Gautam
->>>> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>>> While handling the concerned iommu, there should not be a
->>>>> need to power control the drm devices from iommu interface.
->>>>> If these drm devices need to be powered around this time,
->>>>> the respective drivers should take care of this.
->>>>>
->>>>> Replace the pm_runtime_get/put_sync(<drm_device>) with
->>>>> pm_runtime_get/put_suppliers(<drm_device>) calls, to power-up
->>>>> the connected iommu through the device link interface.
->>>>> In case the device link is not setup these get/put_suppliers()
->>>>> calls will be a no-op, and the iommu driver should take care of
->>>>> powering on its devices accordingly.
->>>>>
->>>>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>>> ---
->>>>>  drivers/gpu/drm/msm/msm_iommu.c | 16 ++++++++--------
->>>>>  1 file changed, 8 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
->>>>> index b23d33622f37..1ab629bbee69 100644
->>>>> --- a/drivers/gpu/drm/msm/msm_iommu.c
->>>>> +++ b/drivers/gpu/drm/msm/msm_iommu.c
->>>>> @@ -40,9 +40,9 @@ static int msm_iommu_attach(struct msm_mmu *mmu, const char * const *names,
->>>>>         struct msm_iommu *iommu = to_msm_iommu(mmu);
->>>>>         int ret;
->>>>>
->>>>> -       pm_runtime_get_sync(mmu->dev);
->>>>> +       pm_runtime_get_suppliers(mmu->dev);
->>>>>         ret = iommu_attach_device(iommu->domain, mmu->dev);
->>>>> -       pm_runtime_put_sync(mmu->dev);
->>>>> +       pm_runtime_put_suppliers(mmu->dev);
->>>>
->>>> For me, it looks like a wrong place to handle runtime PM of IOMMU
->>>> here. iommu_attach_device() calls into IOMMU driver's attach_device()
->>>> callback and that's where necessary runtime PM gets should happen, if
->>>> any. In other words, driver A (MSM DRM driver) shouldn't be dealing
->>>> with power state of device controlled by driver B (ARM SMMU).
->>>
->>> Note that we end up having to do the same, because of iommu_unmap()
->>> while DRM driver is powered off..  it might be cleaner if it was all
->>> self contained in the iommu driver, but that would make it so other
->>> drivers couldn't call iommu_unmap() from an irq handler, which is
->>> apparently something that some of them want to do..
->>
->> I'd assume that runtime PM status is already guaranteed to be active
->> when the IRQ handler is running, by some other means (e.g.
->> pm_runtime_get_sync() called earlier, when queuing some work to the
->> hardware). Otherwise, I'm not sure how a powered down device could
->> trigger an IRQ.
->>
->> So, if the master device power is already on, suppliers should be
->> powered on as well, thanks to device links.
->>
+Hi Linus,
+
+On 13 February 2018 at 16:28, Linus Walleij <linus.walleij@linaro.org> wrote:
+> Hi Baolin!
 >
-> umm, that is kindof the inverse of the problem..  the problem is
-> things like gpu driver (and v4l2 drivers that import dma-buf's,
-> afaict).. they will potentially call iommu->unmap() when device is not
-> active (due to userspace or things beyond the control of the driver)..
-> so *they* would want iommu to do pm get/put calls.
+> Thank you for your patch.
+>
+> On Thu, Feb 8, 2018 at 9:01 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+>> This patch adds the device tree bindings for the Spreadtrum EIC
+>> controller. The EIC can be recognized as one special type of GPIO,
+>
+> s/recognized as one/seen as a/g
 
-Which is fine and which is actually already done by one of the patches
-in this series, not for map/unmap, but probe, add_device,
-remove_device. Having parts of the API doing it inside the callback
-and other parts outside sounds at least inconsistent.
-
-> But other drivers
-> trying to unmap from irq ctx would not.  Which is the contradictory
-> requirement that lead to the idea of iommu user powering up iommu for
-> unmap.
-
-Sorry, maybe I wasn't clear. My last message was supposed to show that
-it's not contradictory at all, because "other drivers trying to unmap
-from irq ctx" would already have called pm_runtime_get_*() earlier
-from a non-irq ctx, which would have also done the same on all the
-linked suppliers, including the IOMMU. The ultimate result would be
-that the map/unmap() of the IOMMU driver calling pm_runtime_get_sync()
-would do nothing besides incrementing the reference count.
+Sorry for the typos.
 
 >
-> There has already been some discussion about this on various earlier
-> permutations of this patchset.  I think we have exhausted all other
-> options.
+>> which can only be used as input.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>
+>> +The EIC is the abbreviation of external interrupt controller, which
+>> +is only can be used as input mode. The EIC controller includes 4
+>
+> can be used only in input mode.
 
-I guess I should have read those. Let me do that now.
+OK.
 
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>> +sub-modules: EIC-Debounce, EIC-Latch, EIC-Async, EIC-Sync.
+>
+> Are they four sub-modules that are always synthesized into the
+> silicon at the same time, or do you mean that when producing the
+> hardware, the designer will choose one of these four types (it looks
+> like that from the example).
+
+Usually they are all synthesized into the silicon, but not always. For
+our PMIC EIC, we only have one debounce EIC.
+
+>
+>> +
+>> +The EIC-debounce sub-module provides up to 8 source input signal
+>> +connection.
+>
+> connections.
+>
+>> A debounce machanism is used to
+>
+> mechanism
+>
+>> capture input signal's
+>
+> capture the input signals'
+
+Sure.
+
+>
+> (note plural signals genitive)
+>
+>> +stable status (ms grade)
+>
+> is that millisecond resolution you mean?
+
+Yes.
+
+>
+>> and a single-trigger mechanism is introduced
+>> +into this sub-module to enhance the input event detection reliability.
+>> +In addition, this sub-module's clock can be shut-off automatically to
+>
+> no dash in "shut off"
+
+OK.
+
+>
+>> +reduce power dissipation. The debounce range is from 1ms to 4s with
+>> +the step of 1ms.
+>
+> a step size of
+
+OK.
+
+>
+>> If the input signal is shorter than 1ms, it will be
+>> +omitted as this sub-module.
+>
+> I don't understand the last part, do you mean the signal will be ignored
+> if it is asserted for less than 1 ms?
+
+Yes, sorry for confusing, and I will modify this part.
+
+>
+>> +The EIC-latch sub-module is used to latch some special input signal
+>
+> signals (plural)
+>
+> What is special about them?
+
+Ah, I will describe them in next version after making sure with my colleagues.
+
+>
+>> +and send interrupts to MCU core, and it can provide up to 8 latch
+>> +source input signal connection.
+>
+> connections (plural)
+>
+>> +The EIC-async sub-module uses 32k clock
+>
+> a 32kHz clock
+>
+>> to capture short signal
+>
+> to capture the short signal
+
+OK.
+
+>
+>> +(us grade)
+>
+> Do you mean "microsecond granularity"?
+
+Yes.
+
+>
+>> to generate interrupt to MCU by level or edge trigger.
+>
+> What is MCU? I think you can just omit it, it could be integrated
+> elsewhere.
+
+Sure, I will remove it.
+
+>
+>> +The EIC-sync is similar with GPIO's input function.
+>
+> Do you mean that the EIC-sync module is a synchronized signal input
+> register? Please write that.
+
+Yes. OK.
+
+>
+>> +Required properties:
+>> +- compatible: Should be one of the following:
+>> +  "sprd,sc9860-eic-debounce",
+>> +  "sprd,sc9860-eic-latch",
+>> +  "sprd,sc9860-eic-async",
+>> +  "sprd,sc9860-eic-sync",
+>> +  "sprd,sc27xx-eic-debounce".
+>
+> So it looks like there is one at the time, so in the SC9860
+> all four modules exist, but at different addresses?
+
+Yes.
+
+>
+> (...)
+>> +Example:
+>> +       eic_debounce: eic@40210000 {
+>> +               compatible = "sprd,sc9860-eic-debounce";
+>> +               reg = <0 0x40210000 0 0x80>;
+>
+> So does this mean that this is a debounced-only EIC?
+
+Yes.
+
+>
+> There are latch, async and sync versions somewhere else in
+> memory? Or there could be? And they are never say debounce
+> and latch at the same time? Etc?
+
+I did not list latch, async, and sync EIC. They are different
+sub-modules and they can be listed at the same time. I will add other
+device nodes in next version. Thanks for your comments.
+
+>
+> Yours,
+> Linus Walleij
+
+
+
+-- 
+Baolin.wang
+Best Regards
