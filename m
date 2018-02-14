@@ -1,32 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 14/15] pinctrl: sh-pfc: r8a77965: Add EtherAVB groups/functions
-Date: Wed, 14 Feb 2018 15:47:40 +0100
-Message-ID: <CAMuHMdV1FA0r9v+xaNHRbJuE54d3aXcqYHwkPF3pF2mGT5KvUg@mail.gmail.com>
-References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org> <1518515162-23663-15-git-send-email-jacopo+renesas@jmondi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: srinivas.kandagatla@linaro.org
+Subject: [PATCH v2 4/5] dmaengine: qcom: bam_dma: do not write to global regs in remote mode
+Date: Wed, 14 Feb 2018 14:44:58 +0000
+Message-ID: <20180214144459.29813-5-srinivas.kandagatla@linaro.org>
+References: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518515162-23663-15-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: vinod.koul@intel.com, andy.gross@linaro.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, david.brown@linaro.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 10:46 AM, Jacopo Mondi
-<jacopo+renesas@jmondi.org> wrote:
-> Add EtherAVB groups and functions definitions for R-Car M3-N.
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+BAM_DESC_CNT_TRSHLD register is global register, which can only be written
+when BAM is in master mode, So check the mode of operation before writing
+it.
 
-Gr{oetje,eeting}s,
+Without this check SOC's xPU would catch such access and crash the system.
+First noticed on DB820c while testing SLIMBus BAM.
 
-                        Geert
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+---
+ drivers/dma/qcom/bam_dma.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index 146b5d03256f..88ec515ad125 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -935,12 +935,15 @@ static void bam_apply_new_config(struct bam_chan *bchan,
+ 	struct bam_device *bdev = bchan->bdev;
+ 	u32 maxburst;
+ 
+-	if (dir == DMA_DEV_TO_MEM)
+-		maxburst = bchan->slave.src_maxburst;
+-	else
+-		maxburst = bchan->slave.dst_maxburst;
++	if (!bdev->controlled_remotely) {
++		if (dir == DMA_DEV_TO_MEM)
++			maxburst = bchan->slave.src_maxburst;
++		else
++			maxburst = bchan->slave.dst_maxburst;
+ 
+-	writel_relaxed(maxburst, bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
++		writel_relaxed(maxburst,
++			       bam_addr(bdev, 0, BAM_DESC_CNT_TRSHLD));
++	}
+ 
+ 	bchan->reconfigure = 0;
+ }
+-- 
+2.15.1
