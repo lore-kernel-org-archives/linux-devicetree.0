@@ -1,237 +1,57 @@
-From: Ilia Lin <ilialin@codeaurora.org>
-Subject: [PATCH v3 01/10] soc: qcom: Separate kryo l2 accessors from PMU driver
-Date: Wed, 14 Feb 2018 15:59:43 +0200
-Message-ID: <1518616792-29028-2-git-send-email-ilialin@codeaurora.org>
-References: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1518616792-29028-1-git-send-email-ilialin@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org
-Cc: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, will.deacon@arm.com, rnayak@codeaurora.org, ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 08/15] Documentation: devicetree: renesas,sci: Add r8a77965
+Date: Wed, 14 Feb 2018 15:03:16 +0100
+Message-ID: <CAMuHMdVEaq0P7L+iB7rFZYr-GYD8LPRvbvUtzJ8phbMcoDn+Rg@mail.gmail.com>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org> <1518515162-23663-9-git-send-email-jacopo+renesas@jmondi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518515162-23663-9-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver provides kernel level API for other drivers
-to access the MSM8996 L2 cache registers.
-Separating the L2 access code from the PMU driver and
-making it public to allow other drivers use it.
-The accesses must be separated with a single spinlock,
-maintained in this driver.
+Subject prefix should be "dt-bindings: serial: sh-sci: "
 
-Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
----
- arch/arm64/Kconfig.platforms         |  7 ++++
- drivers/perf/qcom_l2_pmu.c           | 50 ++--------------------------
- drivers/soc/qcom/Makefile            |  1 +
- drivers/soc/qcom/kryo-l2-accessors.c | 64 ++++++++++++++++++++++++++++++++++++
- include/soc/qcom/kryo-l2-accessors.h | 22 +++++++++++++
- 5 files changed, 96 insertions(+), 48 deletions(-)
- create mode 100644 drivers/soc/qcom/kryo-l2-accessors.c
- create mode 100644 include/soc/qcom/kryo-l2-accessors.h
+On Tue, Feb 13, 2018 at 10:45 AM, Jacopo Mondi
+<jacopo+renesas@jmondi.org> wrote:
+> Add documentation for r8a77965 compatible string to reneass sci-serial
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index fbedbd8..78a103b 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -145,6 +145,13 @@ config ARCH_REALTEK
- 	  This enables support for the ARMv8 based Realtek chipsets,
- 	  like the RTD1295.
- 
-+config ARCH_MSM8996
-+    bool "Enable Support for Qualcomm Technologies, Inc. MSM8996"
-+	depends on ARCH_QCOM
-+	help
-+	This enables support for the MSM8996 chipset. If you do not
-+	wish to build a kernel that runs on this chipset, say 'N' here.
-+
- config ARCH_ROCKCHIP
- 	bool "Rockchip Platforms"
- 	select ARCH_HAS_RESET_CONTROLLER
-diff --git a/drivers/perf/qcom_l2_pmu.c b/drivers/perf/qcom_l2_pmu.c
-index 4fdc848..8cece9e 100644
---- a/drivers/perf/qcom_l2_pmu.c
-+++ b/drivers/perf/qcom_l2_pmu.c
-@@ -1,4 +1,4 @@
--/* Copyright (c) 2015-2017 The Linux Foundation. All rights reserved.
-+/* Copyright (c) 2015-2018 The Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-@@ -30,7 +30,7 @@
- 
- #include <asm/barrier.h>
- #include <asm/local64.h>
--#include <asm/sysreg.h>
-+#include <soc/qcom/kryo-l2-accessors.h>
- 
- #define MAX_L2_CTRS             9
- 
-@@ -87,9 +87,6 @@
- #define L2_COUNTER_RELOAD       BIT_ULL(31)
- #define L2_CYCLE_COUNTER_RELOAD BIT_ULL(63)
- 
--#define L2CPUSRSELR_EL1         sys_reg(3, 3, 15, 0, 6)
--#define L2CPUSRDR_EL1           sys_reg(3, 3, 15, 0, 7)
--
- #define reg_idx(reg, i)         (((i) * IA_L2_REG_OFFSET) + reg##_BASE)
- 
- /*
-@@ -107,49 +104,6 @@
- #define L2_EVENT_STREX                     0x421
- #define L2_EVENT_CLREX                     0x422
- 
--static DEFINE_RAW_SPINLOCK(l2_access_lock);
--
--/**
-- * set_l2_indirect_reg: write value to an L2 register
-- * @reg: Address of L2 register.
-- * @value: Value to be written to register.
-- *
-- * Use architecturally required barriers for ordering between system register
-- * accesses
-- */
--static void set_l2_indirect_reg(u64 reg, u64 val)
--{
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&l2_access_lock, flags);
--	write_sysreg_s(reg, L2CPUSRSELR_EL1);
--	isb();
--	write_sysreg_s(val, L2CPUSRDR_EL1);
--	isb();
--	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
--}
--
--/**
-- * get_l2_indirect_reg: read an L2 register value
-- * @reg: Address of L2 register.
-- *
-- * Use architecturally required barriers for ordering between system register
-- * accesses
-- */
--static u64 get_l2_indirect_reg(u64 reg)
--{
--	u64 val;
--	unsigned long flags;
--
--	raw_spin_lock_irqsave(&l2_access_lock, flags);
--	write_sysreg_s(reg, L2CPUSRSELR_EL1);
--	isb();
--	val = read_sysreg_s(L2CPUSRDR_EL1);
--	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
--
--	return val;
--}
--
- struct cluster_pmu;
- 
- /*
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index dcebf28..4e91e2a 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -12,3 +12,4 @@ obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
- obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
- obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
- obj-$(CONFIG_QCOM_WCNSS_CTRL) += wcnss_ctrl.o
-+obj-$(CONFIG_ARCH_MSM8996) +=	kryo-l2-accessors.o
-diff --git a/drivers/soc/qcom/kryo-l2-accessors.c b/drivers/soc/qcom/kryo-l2-accessors.c
-new file mode 100644
-index 0000000..6743848
---- /dev/null
-+++ b/drivers/soc/qcom/kryo-l2-accessors.c
-@@ -0,0 +1,64 @@
-+/*
-+ * Copyright (c) 2014-2015, 2018, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/spinlock.h>
-+#include <asm/sysreg.h>
-+#include <soc/qcom/kryo-l2-accessors.h>
-+
-+#define L2CPUSRSELR_EL1         sys_reg(3, 3, 15, 0, 6)
-+#define L2CPUSRDR_EL1           sys_reg(3, 3, 15, 0, 7)
-+
-+static DEFINE_RAW_SPINLOCK(l2_access_lock);
-+
-+/**
-+ * set_l2_indirect_reg: write value to an L2 register
-+ * @reg: Address of L2 register.
-+ * @value: Value to be written to register.
-+ *
-+ * Use architecturally required barriers for ordering between system register
-+ * accesses, and system registers with respect to device memory
-+ */
-+void set_l2_indirect_reg(u64 reg, u64 val)
-+{
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&l2_access_lock, flags);
-+	write_sysreg_s(reg, L2CPUSRSELR_EL1);
-+	isb();
-+	write_sysreg_s(val, L2CPUSRDR_EL1);
-+	isb();
-+	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
-+}
-+EXPORT_SYMBOL(set_l2_indirect_reg);
-+
-+/**
-+ * get_l2_indirect_reg: read an L2 register value
-+ * @reg: Address of L2 register.
-+ *
-+ * Use architecturally required barriers for ordering between system register
-+ * accesses, and system registers with respect to device memory
-+ */
-+u64 get_l2_indirect_reg(u64 reg)
-+{
-+	u64 val;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&l2_access_lock, flags);
-+	write_sysreg_s(reg, L2CPUSRSELR_EL1);
-+	isb();
-+	val = read_sysreg_s(L2CPUSRDR_EL1);
-+	raw_spin_unlock_irqrestore(&l2_access_lock, flags);
-+
-+	return val;
-+}
-+EXPORT_SYMBOL(get_l2_indirect_reg);
-diff --git a/include/soc/qcom/kryo-l2-accessors.h b/include/soc/qcom/kryo-l2-accessors.h
-new file mode 100644
-index 0000000..e9a5eab
---- /dev/null
-+++ b/include/soc/qcom/kryo-l2-accessors.h
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __ASM_ARCH_MSM_MSM_KRYO_L2_ACCESSORS_H
-+#define __ASM_ARCH_MSM_MSM_KRYO_L2_ACCESSORS_H
-+
-+#ifdef CONFIG_ARCH_QCOM
-+void set_l2_indirect_reg(u64 reg_addr, u64 val);
-+u64 get_l2_indirect_reg(u64 reg_addr);
-+#endif
-+
-+#endif
--- 
-1.9.1
+Renesas
 
+> device tree bindings documentation.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> index cf504d0..cbb418a 100644
+> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> @@ -40,7 +40,9 @@ Required properties:
+>      - "renesas,scif-r8a7795" for R8A7795 (R-Car H3) SCIF compatible UART.
+>      - "renesas,hscif-r8a7795" for R8A7795 (R-Car H3) HSCIF compatible UART.
+>      - "renesas,scif-r8a7796" for R8A7796 (R-Car M3-W) SCIF compatible UART.
+> +    - "renesas,scif-r8a77965" for R8A77965 (R-Car M3-N) SCIF compatible UART.
+>      - "renesas,hscif-r8a7796" for R8A7796 (R-Car M3-W) HSCIF compatible UART.
+> +    - "renesas,hscif-r8a77965" for R8A77965 (R-Car M3-N) HSCIF compatible UART.
+
+Please keep both r8a77965 entries together, like is done for other SoCs.
+
+>      - "renesas,scif-r8a77970" for R8A77970 (R-Car V3M) SCIF compatible UART.
+>      - "renesas,hscif-r8a77970" for R8A77970 (R-Car V3M) HSCIF compatible UART.
+>      - "renesas,scif-r8a77995" for R8A77995 (R-Car D3) SCIF compatible UART.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
