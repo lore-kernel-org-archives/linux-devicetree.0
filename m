@@ -1,74 +1,81 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] irqchip/gic-v3: Support MSIs via aliases and distributor
-Date: Wed, 14 Feb 2018 13:17:30 +0000
-Message-ID: <f6cf3672-1723-a10c-6d8d-5f4cb3cf412a@arm.com>
-References: <20171127102408.6631-1-sboyd@codeaurora.org>
- <bf71552e-6ea0-55f3-6b42-f4a1a3f65cb9@linaro.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+Date: Wed, 14 Feb 2018 14:19:33 +0100
+Message-ID: <20180214131933.t75jg5b5cjfuo7r6@flea.home>
+References: <20180208150830.9219-1-maxime.ripard@bootlin.com>
+ <20180208150830.9219-3-maxime.ripard@bootlin.com>
+ <2517178.9jmyBy62ST@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bf71552e-6ea0-55f3-6b42-f4a1a3f65cb9@linaro.org>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sboyd@kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="feaizwvindirbxfr"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <2517178.9jmyBy62ST@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Boris Brezillon <boris.brezillon-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/02/18 12:08, Srinivas Kandagatla wrote:
-> 
-> On 27/11/17 10:24, Stephen Boyd wrote:
->> Some GIC configurations don't have an accessible ITS, but they
->> want to support MSIs through the distributor's SETSPI registers
->> or through the IMPLEMENTATION DEFINED message-based interrupt
->> request register region. This mode of operation is similar to the
->> v2m support on gic-400, but we don't necessarily know what
->> particular SPIs are supported as MSIs so we need some help from
->> firmware to know what to do.
->>
->> Introduce an "arm,spi-ranges" property for this, similar to the
->> "marvell,spi-ranges" property, that indicates the base and size
->> of each MSI range. This property applies equally to the
->> distributor and alias registers. In either case, we detect this
->> mode of operation by looking for a node with the "msi-controller"
->> property and then probe the v2m frame code on top of it. Assume
->> these nodes will have the "arm,spi-ranges" property in them so
->> that the v2m code works mostly unmodified.
->>
->> Cc: <devicetree@vger.kernel.org>
->> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->> ---
->>   .../bindings/interrupt-controller/arm,gic-v3.txt   |  48 +++++++++-
->>   drivers/irqchip/irq-gic-v2m.c                      | 102 ++++++++++++++++-----
->>   drivers/irqchip/irq-gic-v3.c                       |   4 +
->>   include/linux/irqchip/arm-gic-common.h             |   3 +
->>   4 files changed, 129 insertions(+), 28 deletions(-)
-> 
-> What's the plan on this?
-> I have not seen this patch in rc1 or in next.
 
-Because I haven't had a chance to review it just yet. It will certainly
-not be merged before 4.17. Looking at it, it isn't anywhere near getting
-there.
+--feaizwvindirbxfr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Stacking the v2m driver on top of GICv3 is at best wrong. This is not
-the same HW, and I've NACKed that approach in the past. You're ignoring
-the level interrupt for which the HW has support for.
+Hi Laurent,
 
-I've mentioned reusing the GICP driver in the past, as it already caters
-for some of that, even if we're missing some infrastructure. How about
-having a common approach instead of reinventing the wheel?
+On Thu, Feb 08, 2018 at 08:17:19PM +0200, Laurent Pinchart wrote:
+> > +	/*
+> > +	 * Create a static mapping between the CSI virtual channels
+> > +	 * and the output stream.
+> > +	 *
+> > +	 * This should be enhanced, but v4l2 lacks the support for
+> > +	 * changing that mapping dynamically.
+> > +	 *
+> > +	 * We also cannot enable and disable independant streams here,
+> > +	 * hence the reference counting.
+> > +	 */
+>=20
+> If you start all streams in one go, will s_stream(1) be called multiple t=
+imes=20
+> ? If not, you could possibly skip the whole reference counting and avoid=
+=20
+> locking.
 
-> We have a dependency on this to get WLAN working on DragonBoard820c.
+I guess that while we should expect the CSI-2 bus to be always
+enabled, the downstream camera interface could be shutdown
+independently, so I guess s_stream would be called each time one is
+brought up or brought down?
 
-Even more of a reason to do the right thing then. If you want to have
-this supported, it needs to be a first class citizen, not a mix of two
-unrelated architectures.
+Maxime
 
-Thanks,
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+--feaizwvindirbxfr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqEN2QACgkQ0rTAlCFN
+r3Q36g/+KS4LmieOgw+WCi+8sgZVCYtu8lyuPVa+uL48xh1KhHUUO+dlFm4OZKzS
+0WcVhQ+KAMffU8kfG5jap7kLOFMBJj7PN9nHB6qsbBxlw+4M34gjBi/z0yjwY4FQ
+1hWyMQwzb7lXR/IABfJVb5MvIrOHoRKQOualAi/6BtK91Kk2J2Q7oFcJZLlQPjp3
+4Qsx0DMLw9XD/GtMvd5YOI//8BD0FKn3V1DIsDx3XbIQSxuiOJEY0jMtmRYGRNP5
+kioOsF3NR8zgqsR88O0WVKMB9XnpLWhVd0BatCXHJegnrcYbc4QYXZ12iMsXKmZ/
+XDDIK6/ImIrmlC//jt2PynHTDWZJGasZZOPb6UroImAhL5Oyi2xq9zeHxmA1Lf7g
+dAVWGUocAO85KxImPlL0MI2u/df0daNcqmqVQqXESXBCCHX0+d2a7KDDrZWX89yV
+rrPYjWSLBwbnhC8+Hat0IVjkIyHIyF31o+TxP0CwTOnQ6AtHP7VgLNsoTYV3iu3M
+j9nfroZejvvhGpUWRL3ifTVbF9SAzY6oSWqQNYLmDangPxdnLUof0JoCFKxaNkUi
+izvW3ZWxyhfZsv3BzaySHxG7etwbdRJ7xH4Qb/4wQx/cBncu7G0hEiXaoQMkh9Ku
+xAjr7iERh1BDk88Ampyyheqgj7cV6JK7bDhzHS/ZKcBKcIWxPls=
+=rZVy
+-----END PGP SIGNATURE-----
+
+--feaizwvindirbxfr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
