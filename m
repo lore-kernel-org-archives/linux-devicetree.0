@@ -1,66 +1,51 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v3 00/16] mmc: tmio: another batch of TMIO MMC fixes and
- cleanups
-Date: Wed, 14 Feb 2018 11:23:11 +0100
-Message-ID: <20180214102311.w7hfbnpfkecnjlkb@katana>
-References: <1516206496-16612-1-git-send-email-yamada.masahiro@socionext.com>
- <CAPDyKFp3dPjsEeyrKAbW_duErCS+xYD0K8zhcRPCY65eRNtMqg@mail.gmail.com>
- <20180207191152.kvqrugblst2cko3c@ninjato>
- <CAPDyKFoxp7p0atQTV=PoQ7Bwt0fOs2aEq1KJHPtrq+zA3eFYgw@mail.gmail.com>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: stout: Initial r8a7790 Stout board support
+Date: Wed, 14 Feb 2018 11:21:13 +0100
+Message-ID: <e7483b9c-4e1e-47ff-d044-fd4853b96e94@gmail.com>
+References: <20180213232948.31521-1-marek.vasut+renesas@gmail.com>
+ <20180214060547.bf6upib2mbgoexas@katana>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="chnywmmjtoeycwvc"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFoxp7p0atQTV=PoQ7Bwt0fOs2aEq1KJHPtrq+zA3eFYgw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20180214060547.bf6upib2mbgoexas@katana>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Ulf Magnusson <ulfalizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 02/14/2018 07:05 AM, Wolfram Sang wrote:
+>> +	chosen {
+>> +		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+>> +		stdout-path = "serial0:38400n8";
+> 
+> Hmm, that would be our first board to not have 115200, or? We already
+> have some other boards upstream where UBoot has 38400 and Linux 115200.
+> I'd prefer consistency here a little, but no strong opinion and asking
+> for other opinions.
 
---chnywmmjtoeycwvc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The vendoruboot is wired to 38400 (sigh), I'm planning to set mainline
+uboot to 115200 though.
 
+>> +	vcc_sdhi0: regulator-vcc-sdhi0 {
+>> +		compatible = "regulator-fixed";
+>> +
+>> +		regulator-name = "SDHI0 Vcc";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +
+>> +		gpio = <&gpio5 24 GPIO_ACTIVE_HIGH>;
+>> +		enable-active-high;
+>> +	};
+> 
+> Just double checking: No 1.8V for SDR50/104?
 
-> You need to check again. :-)
+Nope, the SD card slot is hard-wired to 3V3.
 
-Seems like it. Sorry for the noise.
-
-> I am eager to apply those patches you already have reviewed (to
-> patch14), as those mostly seemed rather trivial and should be nice
-> cleanups.
->=20
-> Do you mind me going ahead, then you can continue and review/test the res=
-t?
-
-Yes, we can work incremently from there. I'll send patches if I discover
-something unexpected.
-
-
---chnywmmjtoeycwvc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqEDgsACgkQFA3kzBSg
-KbaVOxAAnEIyy0lswAOLrIpsQ+2pdHoH9MoOE+lfqFoXg28YvNHF6YfWKA47gWoD
-lmklgXxahFD/Dz07hngX21PF0kujg01iUC78nBNdXeN+pm1NIdipUahohuDQgRGj
-Pac163PpS4CPjPLA7yRLz44pXg4LQsIratlR1O1Nnw8mRRFY7aRr42+r/1kBKdYY
-LRehZe+7FoFgYAws224BNPOzvOX5n8Hg194c5rLRPif3EV21XQlc9tygG8A4bW6g
-m86jriqDUEYeE1RCgqiRlyxDZqyLFqLzsAHXWrDLoDpFMgmnLAX7Uihi37N38mw7
-SGjmZOHQnD5vtblop+rINnt5eZn3oevvgmQogwB0HasjjtwjOxUlARyNPicxrir8
-SVt5A/fA+ix52owdXN+SH+D0T5biGJEO3vd6zWOxOiKLmmRp0vrBsGNHUyh/Mxeo
-q+1kQ2OnsSxkZmyg4cYXYh2cHe3fYQb5DCj4oomraVLSzb+txk0dXc/RGwRArGQB
-0W8sMIVWj1f46mQs/XYJkbyqQEe1CJQU+O6TNsS4We3vXyMQdBUSH6ow35ShcUlF
-84I5u/K/q4ALhaRbVsKfs0jg4M7HOvUnflLJJlzhZAiOD59yXlUWI2Ttmxls/VsS
-BIEIhEZ4bai8g9q4s1lr6AP4xcigtQJXytLhJIG+rrrUckuXrM8=
-=AECR
------END PGP SIGNATURE-----
-
---chnywmmjtoeycwvc--
+-- 
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
