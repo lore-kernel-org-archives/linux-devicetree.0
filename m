@@ -1,79 +1,103 @@
 From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v2 3/6] phy: rockchip-typec: enable usb3 host during usb3 phy power on
-Date: Wed, 14 Feb 2018 17:54:44 +0100
-Message-ID: <20180214165447.12181-3-enric.balletbo@collabora.com>
+Subject: [PATCH v2 4/6] phy: rockchip-typec: force to USB2 if DP at 4 lanes
+ mode
+Date: Wed, 14 Feb 2018 17:54:45 +0100
+Message-ID: <20180214165447.12181-4-enric.balletbo@collabora.com>
 References: <20180214165447.12181-1-enric.balletbo@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180214165447.12181-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Brian Norris <briannorris@chromium.org>
-Cc: Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org, Chris Zhong <zyw@rock-chips.com>, William wu <wulf@rock-chips.com>, hl@rock-chips.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@collabora.com
+Cc: devicetree@vger.kernel.org, hl@rock-chips.com, dianders@chromium.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, William wu <wulf@rock-chips.com>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-From: William wu <wulf@rock-chips.com>
+From: Chris Zhong <zyw@rock-chips.com>
 
-We have forced usb3 to work in usb2 only mode in firmware by setting
-usb3tousb2_en (bit3 of GRF_USB3PHY0/1_CON0) to 1, and setting
-host_u3_port_disable (bit0 of GRF_USB3OTG0/1_CON1) to 1 and host_u3_port
-(bit15~12 of GRF_USB3OTG0/1_CON1) to 0. So we need to re-enable usb3
-host.
+The usb3tousb2_en BIT will be clear to 0 in probe(), it make USB
+controller work at USB3 mode, and if the USB phy is turned on with DP
+only mode(4 lanes DP), the rockchip_usb3_phy_power_on() will return
+directly, so usb3_host_disable and usb3_host_port these 2 BIT will keep
+a same value as coreboot. In coreboot, these 3 BITs are set as USB2
+mode, but now one of the bits is changed to USB3, it make USB controller
+work at a unknown status.
 
-Note that the RK3399 TRM suggests that we should keep the whole usb3
-controller in reset for the duration of the Type-C PHY initialization.
-However, it's hard to assert the reset in the current framework of
-reset. And according to the TRM, it doesn't require that we should
-clear the usb3tousb2 bit before pipe ready. So let's enable the usb3
-host after pipe ready to avoid the Type-C PHY initialization failure.
+These 3 BITs should be changed to USB2, if the Type-C works at 4 lanes
+mode, and then switch it back to USB3 mode, when USB disconnect.
 
-Signed-off-by: William wu <wulf@rock-chips.com>
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
 Changes since v1:
 - Use the registers offsets from the driver not the DT.
 
- drivers/phy/rockchip/phy-rockchip-typec.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/phy/rockchip/phy-rockchip-typec.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/phy/rockchip/phy-rockchip-typec.c b/drivers/phy/rockchip/phy-rockchip-typec.c
-index 291493d9e9b6..40c5e7d6b5cb 100644
+index 40c5e7d6b5cb..95cd5db5c910 100644
 --- a/drivers/phy/rockchip/phy-rockchip-typec.c
 +++ b/drivers/phy/rockchip/phy-rockchip-typec.c
-@@ -363,6 +363,8 @@ struct rockchip_usb3phy_port_cfg {
- 	struct usb3phy_reg usb3tousb2_en;
- 	struct usb3phy_reg external_psm;
- 	struct usb3phy_reg pipe_status;
-+	struct usb3phy_reg usb3_host_disable;
-+	struct usb3phy_reg usb3_host_port;
- };
+@@ -841,6 +841,18 @@ static int tcphy_get_mode(struct rockchip_typec_phy *tcphy)
+ 	return mode;
+ }
  
- static const struct rockchip_usb3phy_port_cfg tcphy0_port_cfg = {
-@@ -370,6 +372,8 @@ static const struct rockchip_usb3phy_port_cfg tcphy0_port_cfg = {
- 	.usb3tousb2_en	= { 0xe580, 3, 19 },
- 	.external_psm	= { 0xe588, 14, 30 },
- 	.pipe_status	= { 0xe5c0, 0, 0 },
-+	.usb3_host_disable = { 0x2434, 0, 16 },
-+	.usb3_host_port = { 0x2434, 12, 28 },
- };
++static int tcphy_cfg_usb3_to_usb2_only(struct rockchip_typec_phy *tcphy,
++				       bool value)
++{
++	struct rockchip_usb3phy_port_cfg *cfg = &tcphy->port_cfgs;
++
++	property_enable(tcphy, &cfg->usb3tousb2_en, value);
++	property_enable(tcphy, &cfg->usb3_host_disable, value);
++	property_enable(tcphy, &cfg->usb3_host_port, !value);
++
++	return 0;
++}
++
+ static int rockchip_usb3_phy_power_on(struct phy *phy)
+ {
+ 	struct rockchip_typec_phy *tcphy = phy_get_drvdata(phy);
+@@ -858,8 +870,10 @@ static int rockchip_usb3_phy_power_on(struct phy *phy)
+ 	}
  
- static const struct rockchip_usb3phy_port_cfg tcphy1_port_cfg = {
-@@ -377,6 +381,8 @@ static const struct rockchip_usb3phy_port_cfg tcphy1_port_cfg = {
- 	.usb3tousb2_en	= { 0xe58c, 3, 19 },
- 	.external_psm	= { 0xe594, 14, 30 },
- 	.pipe_status	= { 0xe5c0, 16, 16 },
-+	.usb3_host_disable = { 0x2444, 0, 16 },
-+	.usb3_host_port = { 0x2444, 12, 28 },
- };
+ 	/* DP-only mode; fall back to USB2 */
+-	if (!(new_mode & (MODE_DFP_USB | MODE_UFP_USB)))
++	if (!(new_mode & (MODE_DFP_USB | MODE_UFP_USB))) {
++		tcphy_cfg_usb3_to_usb2_only(tcphy, true);
+ 		goto unlock_ret;
++	}
  
- struct rockchip_typec_phy {
-@@ -869,6 +875,9 @@ static int rockchip_usb3_phy_power_on(struct phy *phy)
+ 	if (tcphy->mode == new_mode)
+ 		goto unlock_ret;
+@@ -875,9 +889,9 @@ static int rockchip_usb3_phy_power_on(struct phy *phy)
  		regmap_read(tcphy->grf_regs, reg->offset, &val);
  		if (!(val & BIT(reg->enable_bit))) {
  			tcphy->mode |= new_mode & (MODE_DFP_USB | MODE_UFP_USB);
-+			/* enable usb3 host */
-+			property_enable(tcphy, &cfg->usb3_host_disable, 0);
-+			property_enable(tcphy, &cfg->usb3_host_port, 1);
++
+ 			/* enable usb3 host */
+-			property_enable(tcphy, &cfg->usb3_host_disable, 0);
+-			property_enable(tcphy, &cfg->usb3_host_port, 1);
++			tcphy_cfg_usb3_to_usb2_only(tcphy, false);
  			goto unlock_ret;
  		}
  		usleep_range(10, 20);
+@@ -898,6 +912,7 @@ static int rockchip_usb3_phy_power_off(struct phy *phy)
+ 	struct rockchip_typec_phy *tcphy = phy_get_drvdata(phy);
+ 
+ 	mutex_lock(&tcphy->lock);
++	tcphy_cfg_usb3_to_usb2_only(tcphy, false);
+ 
+ 	if (tcphy->mode == MODE_DISCONNECT)
+ 		goto unlock;
 -- 
 2.15.1
