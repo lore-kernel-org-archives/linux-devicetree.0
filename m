@@ -1,61 +1,108 @@
 From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dmaengine: qcom: bam_dma: make bam clk optional
-Date: Wed, 14 Feb 2018 10:47:05 -0800
-Message-ID: <20180214184705.GC93895@bjorns-mbp-2.lan>
-References: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
- <20180214144459.29813-2-srinivas.kandagatla@linaro.org>
- <20180214154144.GB93895@bjorns-mbp-2.lan>
- <69c7a7e4-1a1f-e0e6-d5e9-c39ff666df64@linaro.org>
+Subject: Re: [PATCH v3 3/3] arm64: dts: sdm845: Add serial console support
+Date: Wed, 14 Feb 2018 11:11:25 -0800
+Message-ID: <20180214191125.GD93895@bjorns-mbp-2.lan>
+References: <20180212062832.2791-1-rnayak@codeaurora.org>
+ <20180212062832.2791-4-rnayak@codeaurora.org>
+ <CAD=FV=UXrmpsK3k+8yZCqVi6S+c_3icPUViDST+shnrQW1A6EA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <69c7a7e4-1a1f-e0e6-d5e9-c39ff666df64-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAD=FV=UXrmpsK3k+8yZCqVi6S+c_3icPUViDST+shnrQW1A6EA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhe-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, ramkri-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, sdharia-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 14 Feb 10:19 PST 2018, Srinivas Kandagatla wrote:
-
-> Thanks for the Review,
+On Tue 13 Feb 16:32 PST 2018, Doug Anderson wrote:
+> On Sun, Feb 11, 2018 at 10:28 PM, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+[..]
+> > +&soc {
+> > +       geni-se@ac0000 {
+> > +               serial@a84000 {
+> > +                       status = "okay";
+> > +               };
+> > +       };
 > 
-> On 14/02/18 15:41, Bjorn Andersson wrote:
-> > >   	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
-> > > -	if (IS_ERR(bdev->bamclk))
-> > > -		return PTR_ERR(bdev->bamclk);
-> > > -
-> > > -	ret = clk_prepare_enable(bdev->bamclk);
-> > > -	if (ret) {
-> > > -		dev_err(bdev->dev, "failed to prepare/enable clock\n");
-> > > -		return ret;
-> > > +	if (IS_ERR(bdev->bamclk)) {
-> > In the case of !bdev->controlled_remotely I think this should still be
-> > an error.
-> > 
-> Yep makes sense,
+> If others at QC have already decided that they like the style above
+> then it's OK with me, but I'd prefer instead (at the top level):
 > 
-> You mean something like this?
+> &qup_uart2 {
+>   status = "okay";
+> };
 > 
-> ------------------------->cut<------------------------
->         bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
->         if (IS_ERR(bdev->bamclk)) {
->                 if (!bdev->controlled_remotely);
->                         return PTR_ERR(bdev->bamclk);
+> ...then you don't need to replicate all the hierarchy.
 > 
->                 bdev->bamclk = NULL;
->         }
+> > +       pinctrl@3400000 {
 > 
->         ret = clk_prepare_enable(bdev->bamclk);
->         if (ret) {
->                 dev_err(bdev->dev, "failed to prepare/enable clock\n");
->                 return ret;
->         }
+> Similar here.  This could be:
 > 
-> ------------------------->cut<------------------------
+> &qup_uart2_default {
+>   pinconf {
+>     ...
+>   }
+> };
+> 
+> If you're upset about things being in a "random" order at the top
+> level, you can still create commented sections in the "dts" file to
+> organize things, but the above means that you don't end up tabbed in
+> several levels of indentation for no reason.
 > 
 
-Yes
+I prefer using the hierarchy to describe the relationship between
+sibling nodes, in favour of using comments and code review to keep
+things in order.
+
+This also mean that nodes that are not references by other parts of the
+tree does not need a label.
+
+That said, I've promised to write some patches to convert the prior
+platforms to this structure, so let's see how that turns out in
+practice - although it's still just an indication of what a fully
+described board would look like.
+
+> 
+> > +               qup-uart2-default {
+> > +                       pinconf {
+> > +                               pins = "gpio4", "gpio5";
+> > +                               drive-strength = <2>;
+> > +                               bias-disable;
+> 
+> Possibly you'd want some sort of pull on the "receive" pin unless
+> you're guaranteed that on this board that the other side will always
+> be driving the pin.  As far as I can tell this UART goes to a debug
+> connector.  If that debug connector is not populated this pin will be
+> floating, no?
+> 
+
+The rx pin is typically bias-pull-up and tx bias-disable, so I would
+expect the same.
+
+[..]
+> > +
+> > +               qup_1: geni-se@ac0000 {
+> 
+> Color me confused.  So you're saying here that this is "qup_1".
+> ...but above you turn the pinmux for pins "GPIO4" and "GPIO5" to
+> "qup9", right?  So UART2 is on "qup 1" and "qup 9"?
+> 
+> ...OK, so I stared at manuals a bunch more, and _maybe_ I get it.
+> Maybe there are 3 "QUP v3 modules" each of which handles up to 8
+> "QUP"s.  So QUP 9 is on "QUP module 1", is that right?  If everyone
+> understands this already and it's just me that's confused then I guess
+> you can just ignore this comment.  However, if you can think of any
+> better alias than "qup_1" that makes this less confusing then that
+> would make me extra happy.  Like maybe "qupv3_id_1" to match the
+> manual?
+
+This is indeed a source of confusion, in particular since there tend to
+be different numbering depending on what part of the puzzle you look at.
+But you're right that each QUP has a number of engines, each one being a
+UART/I2C/SPI controller.
+
+I don't see a reason for labeling this particular node though, aliases
+references individual engines, not the wrapper.
 
 Regards,
 Bjorn
