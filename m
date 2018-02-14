@@ -1,56 +1,62 @@
-From: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH v2 1/5] dmaengine: qcom: bam_dma: make bam clk optional
-Date: Wed, 14 Feb 2018 14:44:55 +0000
-Message-ID: <20180214144459.29813-2-srinivas.kandagatla@linaro.org>
+From: srinivas.kandagatla@linaro.org
+Subject: [PATCH v2 5/5] dmaengine: qcom: bam_dma: disable runtime pm on remote controlled
+Date: Wed, 14 Feb 2018 14:44:59 +0000
+Message-ID: <20180214144459.29813-6-srinivas.kandagatla@linaro.org>
 References: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180214144459.29813-1-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhe-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, ramkri-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, sdharia-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, andy.gross@linaro.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, david.brown@linaro.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-When BAM is remotely controlled it does not sound correct to control
-its clk on Linux side. Make it optional, so that its not mandatory
-for remote controlled BAM instances.
+Remotely controlled BAM instance should not do any power management from
+CPU side, as cpu can not reliably say if the BAM is busy or not.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Disable it for such instances.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/dma/qcom/bam_dma.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/dma/qcom/bam_dma.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index d076940e0c69..ae4c7b6930b8 100644
+index 88ec515ad125..6e4fe398f0c8 100644
 --- a/drivers/dma/qcom/bam_dma.c
 +++ b/drivers/dma/qcom/bam_dma.c
-@@ -1233,13 +1233,14 @@ static int bam_dma_probe(struct platform_device *pdev)
- 						"qcom,controlled-remotely");
+@@ -1330,6 +1330,11 @@ static int bam_dma_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_unregister_dma;
  
- 	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
--	if (IS_ERR(bdev->bamclk))
--		return PTR_ERR(bdev->bamclk);
--
--	ret = clk_prepare_enable(bdev->bamclk);
--	if (ret) {
--		dev_err(bdev->dev, "failed to prepare/enable clock\n");
--		return ret;
-+	if (IS_ERR(bdev->bamclk)) {
-+		bdev->bamclk = NULL;
-+	} else {
-+		ret = clk_prepare_enable(bdev->bamclk);
-+		if (ret) {
-+			dev_err(bdev->dev, "failed to prepare/enable clock\n");
-+			return ret;
-+		}
- 	}
++	if (bdev->controlled_remotely) {
++		pm_runtime_disable(&pdev->dev);
++		return 0;
++	}
++
+ 	pm_runtime_irq_safe(&pdev->dev);
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev, BAM_DMA_AUTOSUSPEND_DELAY);
+ 	pm_runtime_use_autosuspend(&pdev->dev);
+@@ -1413,7 +1418,8 @@ static int __maybe_unused bam_dma_suspend(struct device *dev)
+ {
+ 	struct bam_device *bdev = dev_get_drvdata(dev);
  
- 	ret = bam_init(bdev);
+-	pm_runtime_force_suspend(dev);
++	if (!bdev->controlled_remotely)
++		pm_runtime_force_suspend(dev);
+ 
+ 	clk_unprepare(bdev->bamclk);
+ 
+@@ -1429,7 +1435,8 @@ static int __maybe_unused bam_dma_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
+-	pm_runtime_force_resume(dev);
++	if (!bdev->controlled_remotely)
++		pm_runtime_force_resume(dev);
+ 
+ 	return 0;
+ }
 -- 
 2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
