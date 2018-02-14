@@ -1,35 +1,38 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v3 2/2] net: phy: dp83867: Add documentation for
- CLK_OUT pin muxing
-Date: Wed, 14 Feb 2018 15:34:06 -0500 (EST)
-Message-ID: <20180214.153406.64641691836057523.davem@davemloft.net>
-References: <1518624432-15110-1-git-send-email-d.schultz@phytec.de>
-        <1518624432-15110-2-git-send-email-d.schultz@phytec.de>
+From: Philippe Ombredanne <pombredanne@nexb.com>
+Subject: Re: [PATCH 05/15] ARM64: dts: Add R-Car Salvator-x M3-N support
+Date: Wed, 14 Feb 2018 22:22:42 +0100
+Message-ID: <CAOFm3uH08oBUiJSs7sOrThqXjLP0Tp1ur2mV-xvxHgoAVMNpUg@mail.gmail.com>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1518515162-23663-6-git-send-email-jacopo+renesas@jmondi.org> <CAMuHMdW0SYdwNNWfzNttY8xdfnB-oLR4MvhWpO7Pks-WY76=3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518624432-15110-2-git-send-email-d.schultz@phytec.de>
+In-Reply-To: <CAMuHMdW0SYdwNNWfzNttY8xdfnB-oLR4MvhWpO7Pks-WY76=3g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: d.schultz@phytec.de
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, w.egorov@phytec.de
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Daniel Schultz <d.schultz@phytec.de>
-Date: Wed, 14 Feb 2018 17:07:12 +0100
+Jacopo,
 
-> From: Wadim Egorov <w.egorov@phytec.de>
-> 
-> Add documentation of ti,clk-output-sel which can be used to select
-> a specific clock for CLK_OUT.
-> 
-> Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
-> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
-> ---
-> Changes:
-> 	v2:
-> 	  -
-> 	v3:
-> 	  Fixed indentation.
+On Wed, Feb 14, 2018 at 2:58 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 
-Also applied to net-next, thanks.
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
+>> @@ -0,0 +1,30 @@
+>> +// SPDX-License-Identifier: GPL-2.
+
+This should be GPL-2.0
+
+<snip>
+
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+>> @@ -0,0 +1,495 @@
+>> +// SPDX-License-Identifier: GPL-2.
+
+This should be GPL-2.0 too.
+-- 
+Cordially
+Philippe Ombredanne
