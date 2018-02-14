@@ -1,73 +1,168 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 1/5] dmaengine: qcom: bam_dma: make bam clk optional
-Date: Wed, 14 Feb 2018 18:19:54 +0000
-Message-ID: <69c7a7e4-1a1f-e0e6-d5e9-c39ff666df64@linaro.org>
-References: <20180214144459.29813-1-srinivas.kandagatla@linaro.org>
- <20180214144459.29813-2-srinivas.kandagatla@linaro.org>
- <20180214154144.GB93895@bjorns-mbp-2.lan>
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 08/37] iommu/fault: Handle mm faults
+Date: Wed, 14 Feb 2018 10:46:21 -0800
+Message-ID: <20180214104621.7675579c@jacob-builder>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-9-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180214154144.GB93895@bjorns-mbp-2.lan>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: vinod.koul@intel.com, andy.gross@linaro.org, dmaengine@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, david.brown@linaro.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180212183352.22730-9-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shunyong.yang-PT9Dzx9SjPiXmMXjJBpWqg@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the Review,
+On Mon, 12 Feb 2018 18:33:23 +0000
+Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
 
-On 14/02/18 15:41, Bjorn Andersson wrote:
->>   
->>   	bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
->> -	if (IS_ERR(bdev->bamclk))
->> -		return PTR_ERR(bdev->bamclk);
->> -
->> -	ret = clk_prepare_enable(bdev->bamclk);
->> -	if (ret) {
->> -		dev_err(bdev->dev, "failed to prepare/enable clock\n");
->> -		return ret;
->> +	if (IS_ERR(bdev->bamclk)) {
-> In the case of !bdev->controlled_remotely I think this should still be
-> an error.
+> When a recoverable page fault is handled by the fault workqueue, find
+> the associated mm and call handle_mm_fault.
 > 
-Yep makes sense,
-
-You mean something like this?
-
-------------------------->cut<------------------------
-         bdev->bamclk = devm_clk_get(bdev->dev, "bam_clk");
-         if (IS_ERR(bdev->bamclk)) {
-                 if (!bdev->controlled_remotely);
-                         return PTR_ERR(bdev->bamclk);
-
-                 bdev->bamclk = NULL;
-         }
-
-         ret = clk_prepare_enable(bdev->bamclk);
-         if (ret) {
-                 dev_err(bdev->dev, "failed to prepare/enable clock\n");
-                 return ret;
-         }
-
-------------------------->cut<------------------------
-
-
->> +		bdev->bamclk = NULL;
->> +	} else {
->> +		ret = clk_prepare_enable(bdev->bamclk);
->> +		if (ret) {
->> +			dev_err(bdev->dev, "failed to prepare/enable clock\n");
->> +			return ret;
->> +		}
-> The rest of the driver will keep operating the bamclk (which is okay),
-> so for symmetry purposes I think you should just keep the
-> clk_prepare_enable() block unmodified.
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/iommu/io-pgfault.c | 89
+> ++++++++++++++++++++++++++++++++++++++++++++-- 1 file changed, 87
+> insertions(+), 2 deletions(-)
 > 
-Yep, with above change, this block should be unchanged.
+> diff --git a/drivers/iommu/io-pgfault.c b/drivers/iommu/io-pgfault.c
+> index 33309ed316d2..565ec01a1b5f 100644
+> --- a/drivers/iommu/io-pgfault.c
+> +++ b/drivers/iommu/io-pgfault.c
+> @@ -9,6 +9,7 @@
+>  
+>  #include <linux/iommu.h>
+>  #include <linux/list.h>
+> +#include <linux/sched/mm.h>
+>  #include <linux/slab.h>
+>  #include <linux/workqueue.h>
+>  
+> @@ -82,8 +83,92 @@ static int iommu_fault_complete(struct
+> iommu_domain *domain, struct device *dev, 
+>  static int iommu_fault_handle_single(struct iommu_fault_context
+> *fault) {
+> -	/* TODO */
+> -	return -ENODEV;
+> +	struct mm_struct *mm;
+> +	struct vm_area_struct *vma;
+> +	unsigned int access_flags = 0;
+unsigned long to match vm_flags?
+> +	int ret = IOMMU_PAGE_RESP_INVALID;
+> +	unsigned int fault_flags = FAULT_FLAG_REMOTE;
+> +	struct iommu_fault_event *evt = &fault->evt;
+> +
+> +	if (!evt->pasid_valid)
+> +		return ret;
+I guess for not we don't handle PRQ without PASID, right?
+> +
+> +	/*
+> +	 * Special case: PASID Stop Marker (LRW = 0b100) doesn't
+> expect a
+> +	 * response. A Stop Marker may be generated when disabling a
+> PASID
+> +	 * (issuing a PASID stop request) in some PCI devices.
+> +	 *
+> +	 * When the mm_exit() callback returns from the device
+> driver, no page
+> +	 * request is generated for this PASID anymore and
+> outstanding ones have
+> +	 * been pushed to the IOMMU (as per PCIe 4.0r1.0 - 6.20.1
+> and 10.4.1.2 -
+> +	 * Managing PASID TLP Prefix Usage). Some PCI devices will
+> wait for all
+> +	 * outstanding page requests to come back with a response
+> before
+> +	 * completing the PASID stop request. Others do not wait for
+> page
+> +	 * responses, and instead issue this Stop Marker that tells
+> us when the
+> +	 * PASID can be reallocated.
+> +	 *
+> +	 * We ignore the Stop Marker because:
+> +	 * a. Page requests, which are posted requests, have been
+> flushed to the
+> +	 *    IOMMU when mm_exit() returns,
+> +	 * b. We flush all fault queues after mm_exit() returns and
+> before
+> +	 *    freeing the PASID.
+> +	 *
+> +	 * So even though the Stop Marker might be issued by the
+> device *after*
+> +	 * the stop request completes, outstanding faults will have
+> been dealt
+> +	 * with by the time we free the PASID.
+> +	 */
+> +	if (evt->last_req &&
+> +	    !(evt->prot & (IOMMU_FAULT_READ | IOMMU_FAULT_WRITE)))
+> +		return IOMMU_PAGE_RESP_HANDLED;
+> +
+If we don't expect a page response, shouldn't it be filtered by the
+IOMMU vendor driver in the first place? i.e. in the vendor IOMMU driver
+PRQ handler, it will sanitize the request anyway, for anything that
+does not need response, it will not call iommu_report_device_fault().
+> +	mm = iommu_sva_find(evt->pasid);
+> +	if (!mm)
+> +		return ret;
+> +
+> +	down_read(&mm->mmap_sem);
+> +
+> +	vma = find_extend_vma(mm, evt->addr);
+> +	if (!vma)
+> +		/* Unmapped area */
+> +		goto out_put_mm;
+> +
+> +	if (evt->prot & IOMMU_FAULT_READ)
+> +		access_flags |= VM_READ;
+> +
+> +	if (evt->prot & IOMMU_FAULT_WRITE) {
+> +		access_flags |= VM_WRITE;
+> +		fault_flags |= FAULT_FLAG_WRITE;
+> +	}
+> +
+> +	if (evt->prot & IOMMU_FAULT_EXEC) {
+> +		access_flags |= VM_EXEC;
+> +		fault_flags |= FAULT_FLAG_INSTRUCTION;
+> +	}
+> +
+> +	if (!(evt->prot & IOMMU_FAULT_PRIV))
+> +		fault_flags |= FAULT_FLAG_USER;
+> +
+> +	if (access_flags & ~vma->vm_flags)
+> +		/* Access fault */
+> +		goto out_put_mm;
+> +
+> +	ret = handle_mm_fault(vma, evt->addr, fault_flags);
+> +	ret = ret & VM_FAULT_ERROR ? IOMMU_PAGE_RESP_INVALID :
+> +		IOMMU_PAGE_RESP_SUCCESS;
+> +
+> +out_put_mm:
+> +	up_read(&mm->mmap_sem);
+> +
+> +	/*
+> +	 * If the process exits while we're handling the fault on
+> its mm, we
+> +	 * can't do mmput(). exit_mmap() would release the MMU
+> notifier, calling
+> +	 * iommu_notifier_release(), which has to flush the fault
+> queue that
+> +	 * we're executing on... So mmput_async() moves the release
+> of the mm to
+> +	 * another thread, if we're the last user.
+> +	 */
+> +	mmput_async(mm);
+> +
+> +	return ret;
+>  }
+>  
+>  static void iommu_fault_handle_group(struct work_struct *work)
 
-
---srini
-> Regards,
-> Bjorn
+[Jacob Pan]
