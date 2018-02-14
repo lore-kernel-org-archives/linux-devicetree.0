@@ -1,181 +1,169 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: dts: stout: Initial r8a7790 Stout board support
-Date: Wed, 14 Feb 2018 10:11:23 +0100
-Message-ID: <CAMuHMdUuuokCjJ-uz1+JMFLF5zytiB6gjhVC1Xtys_rWdFnPhg@mail.gmail.com>
-References: <20180213232948.31521-1-marek.vasut+renesas@gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 01/25] dt-bindings: soc: qcom: Add
+	bindings for APR bus
+Date: Wed, 14 Feb 2018 09:13:23 +0000
+Message-ID: <ae65a9c8-85a3-5494-f4cc-1038fd8c9bd1@linaro.org>
+References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
+ <20180213165837.1620-2-srinivas.kandagatla@linaro.org>
+ <20180213231244.ama4bwsehzuh5sr7@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180213232948.31521-1-marek.vasut+renesas@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180213231244.ama4bwsehzuh5sr7@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+Thanks for the review,
 
-On Wed, Feb 14, 2018 at 12:29 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> Stout base board support making use of 1 GiB of memory,
-> the Renesas H2 r8a7790 SoC with the SCIFA0 serial port
-> and CA15 with ARM architected timer.
->
-> Furthermore, this device tree contains entries for:
->   - 4x LEDs
->   - SDHI SD/MMC controller
->   - Display unit with HDMI output
->   - SH fast ethernet controller
->   - QSPI controller with S25FL512S attached to it
->   - I2C controller with DA9210 and DA 9063 PMICs
->
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+On 13/02/18 23:12, Rob Herring wrote:
+> On Tue, Feb 13, 2018 at 04:58:13PM +0000, srinivas.kandagatla@linaro.org wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>
+>> This patch add dt bindings for Qualcomm APR (Asynchronous Packet Router)
+>> bus driver. This bus is used for communicating with DSP which provides
+>> audio and various other services to cpu.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   .../devicetree/bindings/soc/qcom/qcom,apr.txt      | 83 ++++++++++++++++++++++
+>>   1 file changed, 83 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+>> new file mode 100644
+>> index 000000000000..1b95fbfed348
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+>> @@ -0,0 +1,83 @@
+>> +Qualcomm APR (Asynchronous Packet Router) binding
+>> +
+>> +This binding describes the Qualcomm APR. APR is a IPC protocol for
+>> +communication between Application processor and QDSP. APR is mainly
+>> +used for audio/voice services on the QDSP.
+>> +
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
+>> +
+>> +- qcom,apr-dest-domain-id
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: Destination processor ID.
+>> +	Possible values are :
+>> +			1 - APR simulator
+>> +			2 - PC
+>> +			3 - MODEM
+>> +			4 - ADSP
+>> +			5 - APPS
+>> +			6 - MODEM2
+>> +			7 - APPS2
+>> +
+>> += APR SERVICES
+>> +Each subnode of the APR node can represent service tied to this apr. The name
+>> +of the nodes are not important. The properties of these nodes are defined
+>> +by the individual bindings for the specific service
+>> +- but must contain the following property:
+>> +
+...
+>> += APR DEVICES:
+>> +Each subnode of the APR node can represent devices tied to this apr, like
+>> +sound-card. The properties of these nodes are defined by the individual
+>> +bindings for the specific device.
+> 
+> It's not a good design generally to mix different types of nodes at one
+> level.
 
-Thanks fro your patch!
+I agree, may be I can split the services and devices into different 
+subnodes like below, which should avoid mixing different types of nodes.
 
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r8a7790-stout.dts
-> @@ -0,0 +1,360 @@
-> +/*
-> + * Device Tree Source for the Stout board
-> + *
-> + * Copyright (C) 2018 Marek Vasut <marek.vasut@gmail.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public License
-> + * version 2.  This program is licensed "as is" without any warranty of any
-> + * kind, whether express or implied.
+Does this sound good to you?
 
-SPDX for new files?
+apr {
+         compatible = "qcom,apr-v2";
+         qcom,smd-channels = "apr_audio_svc";
+         qcom,apr-dest-domain-id = <APR_DOMAIN_ADSP>;
 
-> +/ {
+         apr-services {
+                 q6core {
+                         qcom,apr-svc-name = "CORE";
+                         qcom,apr-svc-id = <APR_SVC_ADSP_CORE>;
+                         compatible = "qcom,q6core";
+                 };
 
-> +       memory@40000000 {
-> +               device_type = "memory";
-> +               reg = <0 0x40000000 0 0x40000000>;
+                 q6afe: q6afe {
+                         compatible = "qcom,q6afe";
+                         qcom,apr-svc-name = "AFE";
+                         qcom,apr-svc-id = <APR_SVC_AFE>;
+                         #sound-dai-cells = <1>;
+                 };
 
-According to the schematics, Stout has 2 GiB of RAM.
-The extra 1 GiB can be added later, though.
+                 q6asm: q6asm {
+                         compatible = "qcom,q6asm";
+                         qcom,apr-svc-name = "ASM";
+                         qcom,apr-svc-id = <APR_SVC_ASM>;
+                         #sound-dai-cells = <1>;
+                 };
 
-> +       };
-> +
-> +       leds {
-> +               compatible = "gpio-leds";
-> +               led1 {
-> +                       gpios = <&gpio4 22 GPIO_ACTIVE_HIGH>;
-> +               };
-> +               led2 {
-> +                       gpios = <&gpio4 23 GPIO_ACTIVE_HIGH>;
-> +               };
-> +               led3 {
-> +                       gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
-> +               };
-> +               led5 {
-> +                       gpios = <&gpio4 24 GPIO_ACTIVE_HIGH>;
+                 q6adm: q6adm {
+                         compatible = "qcom,q6adm";
+                         qcom,apr-svc-name = "ADM";
+                         qcom,apr-svc-id = <APR_SVC_ADM>;
+                         #sound-dai-cells = <0>;
+                 };
+         };
 
-GPIO_ACTIVE_LOW, for all 4 LEDs, as there are no inverting NPN drivers.
-
-> +               };
-> +       };
-
-> +       x2_clk: x2-clock {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <148500000>;
-> +       };
-
-There's no X2 clock (copied from Lager?).
-
-> +
-> +       x13_clk: x13-clock {
-
-This clock is called "OSC1", not "X13".
-
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <148500000>;
-> +       };
-> +};
-> +
-> +&du {
-> +       pinctrl-0 = <&du_pins>;
-> +       pinctrl-names = "default";
-> +       status = "okay";
-> +
-> +       clocks = <&cpg CPG_MOD 724>, <&cpg CPG_MOD 723>, <&cpg CPG_MOD 722>,
-> +                <&cpg CPG_MOD 726>, <&cpg CPG_MOD 725>,
-> +                <&x13_clk>, <&x2_clk>;
-
-"<&osc1_clk>" instead of "<&x13_clk>".
-Please drop the reference to the non-existent "<&x2_clk>".
-
-> +       clock-names = "du.0", "du.1", "du.2", "lvds.0", "lvds.1",
-> +                     "dclkin.0", "dclkin.1";
-
-Please drop "dclkin.1", as it is not wired on Stout.
-
-> +&qspi {
-> +       pinctrl-0 = <&qspi_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       status = "okay";
-> +
-> +       flash: flash@0 {
-> +               compatible = "spansion,s25fl512s", "jedec,spi-nor";
-> +               reg = <0>;
-> +               spi-max-frequency = <30000000>;
-> +               spi-tx-bus-width = <4>;
-> +               spi-rx-bus-width = <4>;
-> +               spi-cpha;
-> +               spi-cpol;
-> +               m25p,fast-read;
-> +
-> +               partitions {
-> +                       compatible = "fixed-partitions";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +
-> +                       partition@0 {
-> +                               label = "loader";
-> +                               reg = <0x00000000 0x00040000>;
-> +                               read-only;
-> +                       };
-> +                       partition@40000 {
-> +                               label = "user";
-> +                               reg = <0x00040000 0x00400000>;
-> +                               read-only;
-> +                       };
-> +                       partition@440000 {
-> +                               label = "flash";
-> +                               reg = <0x00440000 0x03bc0000>;
-> +                       };
-
-I can't verify the partition layout.
-
-> +               };
-> +       };
-> +};
+         apr-devices {
+                 audio {
+                         compatible = "qcom,msm8996-snd-card";
+                         ...
+                 };
+         };
+};
+ 
+ 
 
 
-> +&iic2  {
-> +       status = "okay";
-> +       pinctrl-0 = <&iic2_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       clock-frequency = <100000>;
-> +
-> +       hdmi@39 {
-> +               compatible = "adi,adv7511w";
-> +               reg = <0x39>;
-> +               interrupt-parent = <&gpio1>;
-> +               interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
-
-Missing cec clock (OSC4).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+>> +
+>> += EXAMPLE
+>> +The following example represents a QDSP based sound card on a MSM8996 device
+>> +which uses apr as communication between Apps and QDSP.
+>> +
+>> +	apr {
+>> +		compatible = "qcom,apr-v2";
+>> +		qcom,smd-channels = "apr_audio_svc";
+>> +		qcom,apr-dest-domain-id = <APR_DOMAIN_ADSP>;
+>> +
+>> +		q6core {
+>> +			compatible = "qcom,q6core";
+>> +			qcom,apr-svc-name = "CORE";
+>> +			qcom,apr-svc-id = <APR_SVC_ADSP_CORE>;
+>> +		};
+>> +
+>> +		q6afe {
+>> +			compatible = "qcom,q6afe";
+>> +			qcom,apr-svc-name = "AFE";
+>> +			qcom,apr-svc-id = <APR_SVC_AFE>;
+>> +		};
+>> +
+>> +		audio {
+>> +			compatible = "qcom,msm8996-snd-card";
+>> +			...
+>> +		};
+>> +	};
+>> -- 
+>> 2.15.1
+>>
