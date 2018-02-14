@@ -1,71 +1,43 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 04/15] pinctrl: sh-pfc: Initial R-Car M3-N support
-Date: Wed, 14 Feb 2018 15:25:36 +0100
-Message-ID: <CAMuHMdV60atVdYWisihSJwYJr_sxYFfj-ZRG=jA2e0fkHVAuSQ@mail.gmail.com>
-References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
- <1518515162-23663-5-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdUpEjnNa4kru7mUnvhTu2YoofoopuCvUp=AGdRJqfaNEw@mail.gmail.com> <20180214135306.GA23932@w540>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v10 2/3] arm: dts: add Nuvoton NPCM750 device tree
+Date: Wed, 14 Feb 2018 15:29:39 +0100
+Message-ID: <CAK8P3a2_2sQYCaUK-thBxTJ+VhQiw4AcDgwJoyEG=Ssnr=PtQg@mail.gmail.com>
+References: <20180213200959.160157-1-brendanhiggins@google.com> <20180213200959.160157-3-brendanhiggins@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20180214135306.GA23932@w540>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180213200959.160157-3-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Tue, Feb 13, 2018 at 9:09 PM, Brendan Higgins
+<brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
 
-On Wed, Feb 14, 2018 at 2:53 PM, jacopo mondi <jacopo@jmondi.org> wrote:
-> On Wed, Feb 14, 2018 at 02:37:08PM +0100, Geert Uytterhoeven wrote:
->> On Tue, Feb 13, 2018 at 10:45 AM, Jacopo Mondi
->> <jacopo+renesas@jmondi.org> wrote:
->> > Add initial PFC support for R-Car M3-N (r8a77965) SoC.
->> > No groups or functions defined, just pin and registers enumeration.
->> >
->> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->>
->> Thanks for your patch!
->>
->> Looks mostly OK to me.
->> You do want to compare with pfc-r8a7796.c: all differences not related to
->> SATA_DEVSL, FSCLK, DU_DOTCLKIN2/3, and PRESET are issues that were fixed
->> recently in pfc-r8a7796.c, and should apply to pfc-r8a77965.c, too.
->>
->
-> I have used the M3-W tables with the exception of the pins/groups you
-> mentioned, that are clearly marked as different in the datasheet. At
-> least, this was my intention :)
->
-> I used v4.15 M3-W PFC tables, should I look in v4.16-rc1 or in
-> renesas-drivers for updates?
+> +
+> +Enable method name:    "nuvoton,npcm7xx-smp"
+> +Compatible machines:   "nuvoton,npcm750"
+> +Compatible CPUs:       "arm,cortex-a9"
+> +Related properties:    (none)
+> +
+> +Note:
+> +This enable method needs valid nodes compatible with "arm,cortex-a9-scu" and
+> +"nuvoton,npcm750-gcr".
+> +
+> +Example:
+> +
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               enable-method = "nuvoton,npcm7xx-smp";
 
-Always look at the latest version in my sh-pfc branch ;-)
+It seems you changed the DT files, but forgot to update the binding to match.
 
->> That leaves us with very few differences only, but it won't be trivial to have
->> a combined M3-W/N PFC driver, I'm afraid.
->
-> Takes a certain degree of grep-foo to clearly highlight differences
-> between the two version. Do you have any script/tools you use to
-> compare PFC tables a bit more easily?
+Otherwise it looks al good to me.
 
-The "--no-index" option of git diff allows to compare files against each
-other, instead of against some other version.
-Can be combined with wdiff:
-
-$ git help wdiff
-`git wdiff' is aliased to `diff --color-words'
-
-soc-dts-diff (https://www.spinics.net/lists/linux-renesas-soc/msg22630.html)
-also helps, even for drivers.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+       Arnd
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
