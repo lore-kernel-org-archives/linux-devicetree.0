@@ -1,68 +1,145 @@
-From: Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] arm64: tegra: Add Tegra194 chip device tree
-Date: Wed, 14 Feb 2018 13:34:58 +0200
-Message-ID: <d860ee1a-d69d-2d45-ce36-71f2b726ec3f@kapsi.fi>
-References: <1517901757-15353-1-git-send-email-mperttunen@nvidia.com>
- <1517901757-15353-7-git-send-email-mperttunen@nvidia.com>
- <458ba9f9-d703-9edf-8e7b-bc9d0f0ef0cc@arm.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v12 6/9] LPC: Support the LPC host on Hip06/Hip07 with DT
+ bindings
+Date: Wed, 14 Feb 2018 11:35:24 +0000
+Message-ID: <78ff2d7a-201f-8fff-9acc-ae23a65ce18f@huawei.com>
+References: <1516725385-24535-1-git-send-email-john.garry@huawei.com>
+ <1516725385-24535-7-git-send-email-john.garry@huawei.com>
+ <20180213184123.GA11446@xps13.dannf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <458ba9f9-d703-9edf-8e7b-bc9d0f0ef0cc-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, talho-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20180213184123.GA11446@xps13.dannf>
+Sender: linux-pci-owner@vger.kernel.org
+To: dann frazier <dann.frazier@canonical.com>
+Cc: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, hanjun.guo@linaro.org, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, linux-pci@vger.kernel.org, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, Zhichang Yuan <yuanzhichang@hisilicon.com>, Zou Rongrong <zourongrong@huawei.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07.02.2018 12:21, Marc Zyngier wrote:
-> Hi Mikko,
+Hi Dann,
+
+>> + */
+>> +static int
+>> +hisilpc_target_in(struct hisilpc_dev *lpcdev, struct lpc_cycle_para *para,
+>> +		  unsigned long ptaddr, unsigned char *buf,
+>> +		  unsigned long opcnt)
+>> +{
+>> +	unsigned long cnt_per_trans;
+>> +	unsigned int cmd_word;
+>> +	unsigned int waitcnt;
+>> +	int ret;
+>> +
+>> +	if (!buf || !opcnt || !para || !para->csize || !lpcdev)
+>> +		return -EINVAL;
+>> +
+>> +	cmd_word = LPC_CMD_TYPE_IO | LPC_CMD_READ;
+>> +	waitcnt = LPC_PEROP_WAITCNT;
+>> +	if (!(para->opflags & FG_INCRADDR_LPC)) {
+>> +		cmd_word |= LPC_CMD_SAMEADDR;
+>> +		waitcnt = LPC_MAX_WAITCNT;
+>> +	}
+>> +
+>> +	ret = 0;
+>> +	cnt_per_trans = (para->csize == 1) ? opcnt : para->csize;
+>> +	for (; opcnt && !ret; cnt_per_trans = para->csize) {
+>> +		unsigned long flags;
+>> +
+>> +		/* whole operation must be atomic */
+>> +		spin_lock_irqsave(&lpcdev->cycle_lock, flags);
+>> +
+>> +		writel_relaxed(cnt_per_trans, lpcdev->membase + LPC_REG_OP_LEN);
+>> +
+>> +		writel_relaxed(cmd_word, lpcdev->membase + LPC_REG_CMD);
+>> +
+>> +		writel_relaxed(ptaddr, lpcdev->membase + LPC_REG_ADDR);
+>> +
+>> +		writel(LPC_START_WORK, lpcdev->membase + LPC_REG_START);
+>> +
+>> +		/* whether the operation is finished */
+>> +		ret = wait_lpc_idle(lpcdev->membase, waitcnt);
+>> +		if (!ret) {
+>> +			opcnt -= cnt_per_trans;
 >
-> On 06/02/18 07:22, Mikko Perttunen wrote:
->> Add the chip-level device tree, including binding headers, for the
->> NVIDIA Tegra194 "Xavier" system-on-chip. Only a small subset of devices
->> are initially available, enough to boot to UART console.
->>
->> Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/nvidia/tegra194.dtsi       | 342 +++++++++++++
->>  include/dt-bindings/clock/tegra194-clock.h     | 664 +++++++++++++++++++++++++
->>  include/dt-bindings/gpio/tegra194-gpio.h       |  59 +++
->>  include/dt-bindings/power/tegra194-powergate.h |  49 ++
->>  include/dt-bindings/reset/tegra194-reset.h     | 166 +++++++
->>  5 files changed, 1280 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/nvidia/tegra194.dtsi
->>  create mode 100644 include/dt-bindings/clock/tegra194-clock.h
->>  create mode 100644 include/dt-bindings/gpio/tegra194-gpio.h
->>  create mode 100644 include/dt-bindings/power/tegra194-powergate.h
->>  create mode 100644 include/dt-bindings/reset/tegra194-reset.h
->>
->> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
->> new file mode 100644
->> index 000000000000..dda28d758cab
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> Do we need to check for an underflow here?
+
+I think that underflow is ensured not to happen.
+
+Regardless, I find this code hard to follow myself, so I will rewrite a 
+bit of this to make it more straightforward.
+
 >
-> [...]
+>> +			for (cnt_per_trans--; cnt_per_trans--; buf++)
+>> +				*buf = readb_relaxed(lpcdev->membase +
+>> +					LPC_REG_RDATA);
+>> +			*buf = readb(lpcdev->membase + LPC_REG_RDATA);
+>> +		}
+>> +
+>> +		spin_unlock_irqrestore(&lpcdev->cycle_lock, flags);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +/*
+>> + * hisilpc_target_out - trigger a series of lpc cycles to write required
+>> + *			data to target peripheral.
+>> + * @lpcdev: pointer to hisi lpc device
+>> + * @para: some parameters used to control the lpc I/O operations
+>> + * @ptaddr: the lpc I/O target port address
+>> + * @buf: where the data to be written is stored
+>> + * @opcnt: how many I/O operations required
+>> + *
+>> + * Only one byte data is read each I/O operation.
 >
->> +		gic: interrupt-controller@3881000 {
->> +			compatible = "arm,gic-400";
->> +			#interrupt-cells = <3>;
->> +			interrupt-controller;
->> +			reg = <0x03881000 0x1000>,
->> +			      <0x03882000 0x2000>;
+> s/read/written/ ?
+
+Right
+
 >
-> You're missing the GICH and GICV regions here.
+>> + * Returns 0 on success, non-zero on fail.
+>> + *
+>> + */
+>> +static int
+>> +hisilpc_target_out(struct hisilpc_dev *lpcdev, struct lpc_cycle_para *para,
+>> +		   unsigned long ptaddr, const unsigned char *buf,
+>> +		   unsigned long opcnt)
+>> +{
+>> +	unsigned long cnt_per_trans;
+>> +	unsigned int cmd_word;
+>> +	unsigned int waitcnt;
+>> +	int ret;
+>> +
+>> +	if (!buf || !opcnt || !para || !lpcdev)
+>> +		return -EINVAL;
+>> +
+>> +	/* default is increasing address */
+>> +	cmd_word = LPC_CMD_TYPE_IO | LPC_CMD_WRITE;
+>> +	waitcnt = LPC_PEROP_WAITCNT;
+>> +	if (!(para->opflags & FG_INCRADDR_LPC)) {
+>> +		cmd_word |= LPC_CMD_SAMEADDR;
+>> +		waitcnt = LPC_MAX_WAITCNT;
+>> +	}
+>> +
+>> +	ret = 0;
+>> +	cnt_per_trans = (para->csize == 1) ? opcnt : para->csize;
+>> +	for (; opcnt && !ret; cnt_per_trans = para->csize) {
+>> +		unsigned long flags;
+>> +
+>> +		spin_lock_irqsave(&lpcdev->cycle_lock, flags);
+>> +
+>> +		writel_relaxed(cnt_per_trans, lpcdev->membase + LPC_REG_OP_LEN);
+>> +		writel_relaxed(cmd_word, lpcdev->membase + LPC_REG_CMD);
+>> +		writel_relaxed(ptaddr, lpcdev->membase + LPC_REG_ADDR);
+>> +
+>> +		opcnt -= cnt_per_trans;
 >
->> +			interrupts = <GIC_PPI 9
->> +				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
->> +			interrupt-parent = <&gic>;
->> +		};
-> Thanks,
+> Underflow check needed?
+
+As above
+
 >
-> 	M.
+>  -dann
 >
 
-Thanks, fixed.
-
-Mikko
+Thanks,
+John
