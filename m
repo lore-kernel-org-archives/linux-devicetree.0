@@ -1,147 +1,190 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v13 7/9] ACPI: Translate the I/O range of non-MMIO devices
- before scanning
-Date: Wed, 14 Feb 2018 16:52:59 +0000
-Message-ID: <65185a4d-c712-4486-d713-3fa9de14e35d@huawei.com>
-References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
- <1518543933-22456-8-git-send-email-john.garry@huawei.com>
- <20180214161635.GA13849@e107981-ln.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180214161635.GA13849@e107981-ln.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: mika.westerberg@linux.intel.com, rafael@kernel.org, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org, joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v2 1/6] phy: rockchip-typec: deprecate some DT properties for various register fields.
+Date: Wed, 14 Feb 2018 17:54:42 +0100
+Message-ID: <20180214165447.12181-1-enric.balletbo@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/02/2018 16:16, Lorenzo Pieralisi wrote:
-> On Wed, Feb 14, 2018 at 01:45:31AM +0800, John Garry wrote:
->> On some platforms (such as arm64-based hip06/hip07), access to legacy
->> ISA/LPC devices through access IO space is required, similar to x86
->> platforms. As the I/O for these devices are not memory mapped like
->> PCI/PCIE MMIO host bridges, they require special low-level device
->> operations through some host to generate IO accesses, i.e. a non-
->> transparent bridge.
->>
->> Through the logical PIO framework, hosts are able to register address
->> ranges in the logical PIO space for IO accesses. For hosts which require
->> a LLDD to generate the IO accesses, through the logical PIO framework
->> the host also registers accessors as a backend to generate the physical
->> bus transactions for IO space accesses (called indirect IO).
->>
->> When describing the indirect IO child device in APCI tables, the IO
->> resource is the host-specific address for the child (generally a
->> bus address).
->> An example is as follows:
->>   Device (LPC0) {
->>     Name (_HID, "HISI0191")  // HiSi LPC
->>     Name (_CRS, ResourceTemplate () {
->>       Memory32Fixed (ReadWrite, 0xa01b0000, 0x1000)
->>     })
->>   }
->>
->>   Device (LPC0.IPMI) {
->>     Name (_HID, "IPI0001")
->>     Name (LORS, ResourceTemplate() {
->>       QWordIO (
->>         ResourceConsumer,
->> 	MinNotFixed,     // _MIF
->> 	MaxNotFixed,     // _MAF
->> 	PosDecode,
->> 	EntireRange,
->> 	0x0,             // _GRA
->> 	0xe4,            // _MIN
->> 	0x3fff,          // _MAX
->> 	0x0,             // _TRA
->> 	0x04,            // _LEN
->> 	, ,
->> 	BTIO
->>       )
->>     })
->>
->> Since the IO resource for the child is a host-specific address,
->> special translation are required to retrieve the logical PIO address
->> for that child.
->
+Adding properties for various register fields in the DT doesn't scale and
+this information should be in the driver instead.
 
-Hi Lorenzo,
+Before this patch these registers (description below) were specified in
+the DT, every register node contained 3 sections: offset, enable bit,
+write mask bit.
 
-> The problem I have with this patchset and with pretending that the ACPI
-> bits are generic is that the rules used to translate resources (I am
-> referring to LPC0.IPMI above) are documented _nowhere_ which means that
-> making this series generic code is just wishful thinking - there are no
-> bindings backing it, it will never ever be used on a platform different
-> from the one you are pushing this code for and I stated this already.
->
+ - rockchip,typec-conn-dir : the register of type-c connector direction,
+   for type-c phy0, it must be <0xe580 0 16>;
+   for type-c phy1, it must be <0xe58c 0 16>;
+ - rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2 enable
+   control.
+   for type-c phy0, it must be <0xe580 3 19>;
+   for type-c phy1, it must be <0xe58c 3 19>;
+ - rockchip,external-psm : the register of type-c phy external psm clock
+   selection.
+   for type-c phy0, it must be <0xe588 14 30>;
+   for type-c phy1, it must be <0xe594 14 30>;
+ - rockchip,pipe-status : the register of type-c phy pipe status.
+   for type-c phy0, it must be <0xe5c0 0 0>;
+   for type-c phy1, it must be <0xe5c0 16 16>;
 
-Right, it is working on the presumption that this is how all "indirectio 
-IO" hosts and children should/would be described in DSDT.
+After this patch these register definitions are in the driver. So can be
+removed from the DT. Note that there are 2 type-c phys for RK3399 with
+different offsets, the driver checks the phy base address of the running
+instance and applies the right offsets.
 
-> Reworded differently - this is a Hisilicon driver it is not generic ACPI
-> code; I can't see how it can be used on a multitude of platforms unless
-> you specify FW level bindings.
->
->> To overcome the problem of associating this logical PIO address
->> with the child device, a scan handler is added to scan the ACPI
->> namespace for known indirect IO hosts. This scan handler creates an
->> MFD per child with the translated logical PIO address as it's IO
->> resource, as a substitute for the normal platform device which ACPI
->> would create during device enumeration.
->>
->> Signed-off-by: John Garry <john.garry@huawei.com>
->> Signed-off-by: Zhichang Yuan <yuanzhichang@hisilicon.com>
->> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
->> ---
->>  drivers/acpi/arm64/Makefile          |   1 +
->>  drivers/acpi/arm64/acpi_indirectio.c | 250 +++++++++++++++++++++++++++++++++++
->
-> See above (and I do not understand what arm64 has to do with it).
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+Changes since v1:
+- This patch is new in this series to accomplish the purpose of get rid
+  of some registers from the DT. Suggested by Rob Herring.
 
-Nothing apart from only being used by arm64 platforms today, which is 
-circumstantial.
+ drivers/phy/rockchip/phy-rockchip-typec.c | 74 ++++++++++++-------------------
+ 1 file changed, 28 insertions(+), 46 deletions(-)
 
->
-> I understand you need to find a place to add the:
->
-> acpi_indirect_io_scan_init()
->
-> to be called from core ACPI code because ACPI can't handle probe
-> dependencies in any other way but other than that this patch is
-> a Hisilicon ACPI driver - there is nothing generic in it (or at
-> least there are no standard bindings to make it so).
->
-> Whether a callback from ACPI core code (acpi_scan_init()) to a driver
-> specific hook is sane or not that's the question and the only reason
-> why you want to add this in drivers/acpi/arm64 rather than, say,
-> drivers/bus (as you do for the DT driver).
->
-> I do not know Rafael's opinion on the above, I would like to help
-> you make forward progress but please understand my concerns, mostly
-> on FW side.
->
+diff --git a/drivers/phy/rockchip/phy-rockchip-typec.c b/drivers/phy/rockchip/phy-rockchip-typec.c
+index 7492c8978217..291493d9e9b6 100644
+--- a/drivers/phy/rockchip/phy-rockchip-typec.c
++++ b/drivers/phy/rockchip/phy-rockchip-typec.c
+@@ -349,6 +349,9 @@
+ #define MODE_DFP_USB			BIT(1)
+ #define MODE_DFP_DP			BIT(2)
+ 
++#define TYPEC_PHY0_BASE_ADDRESS		0xff7c0000
++#define TYPEC_PHY1_BASE_ADDRESS		0xff800000
++
+ struct usb3phy_reg {
+ 	u32 offset;
+ 	u32 enable_bit;
+@@ -362,6 +365,20 @@ struct rockchip_usb3phy_port_cfg {
+ 	struct usb3phy_reg pipe_status;
+ };
+ 
++static const struct rockchip_usb3phy_port_cfg tcphy0_port_cfg = {
++	.typec_conn_dir	= { 0xe580, 0, 16 },
++	.usb3tousb2_en	= { 0xe580, 3, 19 },
++	.external_psm	= { 0xe588, 14, 30 },
++	.pipe_status	= { 0xe5c0, 0, 0 },
++};
++
++static const struct rockchip_usb3phy_port_cfg tcphy1_port_cfg = {
++	.typec_conn_dir	= { 0xe58c, 0, 16 },
++	.usb3tousb2_en	= { 0xe58c, 3, 19 },
++	.external_psm	= { 0xe594, 14, 30 },
++	.pipe_status	= { 0xe5c0, 16, 16 },
++};
++
+ struct rockchip_typec_phy {
+ 	struct device *dev;
+ 	void __iomem *base;
+@@ -372,7 +389,7 @@ struct rockchip_typec_phy {
+ 	struct reset_control *uphy_rst;
+ 	struct reset_control *pipe_rst;
+ 	struct reset_control *tcphy_rst;
+-	struct rockchip_usb3phy_port_cfg port_cfgs;
++	const struct rockchip_usb3phy_port_cfg *port_cfgs;
+ 	/* mutex to protect access to individual PHYs */
+ 	struct mutex lock;
+ 
+@@ -691,7 +708,7 @@ static void tcphy_dp_aux_calibration(struct rockchip_typec_phy *tcphy)
+ 
+ static int tcphy_phy_init(struct rockchip_typec_phy *tcphy, u8 mode)
+ {
+-	struct rockchip_usb3phy_port_cfg *cfg = &tcphy->port_cfgs;
++	const struct rockchip_usb3phy_port_cfg *cfg = tcphy->port_cfgs;
+ 	int ret, i;
+ 	u32 val;
+ 
+@@ -821,7 +838,7 @@ static int tcphy_get_mode(struct rockchip_typec_phy *tcphy)
+ static int rockchip_usb3_phy_power_on(struct phy *phy)
+ {
+ 	struct rockchip_typec_phy *tcphy = phy_get_drvdata(phy);
+-	struct rockchip_usb3phy_port_cfg *cfg = &tcphy->port_cfgs;
++	const struct rockchip_usb3phy_port_cfg *cfg = tcphy->port_cfgs;
+ 	const struct usb3phy_reg *reg = &cfg->pipe_status;
+ 	int timeout, new_mode, ret = 0;
+ 	u32 val;
+@@ -984,51 +1001,9 @@ static const struct phy_ops rockchip_dp_phy_ops = {
+ 	.owner		= THIS_MODULE,
+ };
+ 
+-static int tcphy_get_param(struct device *dev,
+-			   struct usb3phy_reg *reg,
+-			   const char *name)
+-{
+-	u32 buffer[3];
+-	int ret;
+-
+-	ret = of_property_read_u32_array(dev->of_node, name, buffer, 3);
+-	if (ret) {
+-		dev_err(dev, "Can not parse %s\n", name);
+-		return ret;
+-	}
+-
+-	reg->offset = buffer[0];
+-	reg->enable_bit = buffer[1];
+-	reg->write_enable = buffer[2];
+-	return 0;
+-}
+-
+ static int tcphy_parse_dt(struct rockchip_typec_phy *tcphy,
+ 			  struct device *dev)
+ {
+-	struct rockchip_usb3phy_port_cfg *cfg = &tcphy->port_cfgs;
+-	int ret;
+-
+-	ret = tcphy_get_param(dev, &cfg->typec_conn_dir,
+-			      "rockchip,typec-conn-dir");
+-	if (ret)
+-		return ret;
+-
+-	ret = tcphy_get_param(dev, &cfg->usb3tousb2_en,
+-			      "rockchip,usb3tousb2-en");
+-	if (ret)
+-		return ret;
+-
+-	ret = tcphy_get_param(dev, &cfg->external_psm,
+-			      "rockchip,external-psm");
+-	if (ret)
+-		return ret;
+-
+-	ret = tcphy_get_param(dev, &cfg->pipe_status,
+-			      "rockchip,pipe-status");
+-	if (ret)
+-		return ret;
+-
+ 	tcphy->grf_regs = syscon_regmap_lookup_by_phandle(dev->of_node,
+ 							  "rockchip,grf");
+ 	if (IS_ERR(tcphy->grf_regs)) {
+@@ -1071,7 +1046,7 @@ static int tcphy_parse_dt(struct rockchip_typec_phy *tcphy,
+ 
+ static void typec_phy_pre_init(struct rockchip_typec_phy *tcphy)
+ {
+-	struct rockchip_usb3phy_port_cfg *cfg = &tcphy->port_cfgs;
++	const struct rockchip_usb3phy_port_cfg *cfg = tcphy->port_cfgs;
+ 
+ 	reset_control_assert(tcphy->tcphy_rst);
+ 	reset_control_assert(tcphy->uphy_rst);
+@@ -1103,6 +1078,13 @@ static int rockchip_typec_phy_probe(struct platform_device *pdev)
+ 	if (IS_ERR(tcphy->base))
+ 		return PTR_ERR(tcphy->base);
+ 
++	if (res->start == TYPEC_PHY0_BASE_ADDRESS)
++		tcphy->port_cfgs = &tcphy0_port_cfg;
++	else if (res->start == TYPEC_PHY1_BASE_ADDRESS)
++		tcphy->port_cfgs = &tcphy1_port_cfg;
++	else
++		return -EINVAL;
++
+ 	ret = tcphy_parse_dt(tcphy, dev);
+ 	if (ret)
+ 		return ret;
+-- 
+2.15.1
 
-I did mention an alternative in my "ping" in v12 patch 7/9 (Feb 1), but 
-no response to this specific note so I kept on the same path.
-
-Here's what I then wrote:
-"I think another solution - which you may prefer - is to avoid adding
-this scan handler (and all this other scan code) and add a check like
-acpi_is_serial_bus_slave() [which checks the device parent versus a list 
-of known indirectIO hosts] to not enumerate these children, and do it 
-from the LLDD host probe instead (https://lkml.org/lkml/2017/6/16/250)"
-
-Please consider this.
-
-> Thanks,
-> Lorenzo
->
->>  drivers/acpi/internal.h              |   5 +
->>  drivers/acpi/scan.c                  |   1 +
->>  4 files changed, 257 insertions(+)
->>  create mode 100644 drivers/acpi/arm64/acpi_indirectio.c
->>
-
-Cheers,
-John
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
