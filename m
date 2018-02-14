@@ -1,63 +1,42 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2] PCI: qcom: add missing supplies required for msm8996
-Date: Wed, 14 Feb 2018 16:14:26 +0000
-Message-ID: <d2b0f220-2982-dc86-ae9e-edf88e0b8e7d@linaro.org>
-References: <20180214120616.23428-1-srinivas.kandagatla@linaro.org>
- <79820f4c-5166-852f-1bc5-8cef2ff81a00@mm-sol.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v13 1/9] LIB: Introduce a generic PIO mapping method
+Date: Wed, 14 Feb 2018 16:13:57 +0000
+Message-ID: <b16db30e-67d3-0469-d8c7-029665702378@huawei.com>
+References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
+ <1518543933-22456-2-git-send-email-john.garry@huawei.com>
+ <20180213230551.GA24986@xps13.dannf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <79820f4c-5166-852f-1bc5-8cef2ff81a00@mm-sol.com>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>, stanimir.varbanov@linaro.org, linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180213230551.GA24986@xps13.dannf>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dann frazier <dann.frazier@canonical.com>
+Cc: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, andy.shevchenko@gmail.com, robh@kernel.org, joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 13/02/2018 23:05, dann frazier wrote:
+>>  	bool
+>> >
+>> > +config INDIRECT_PIO
+>> > +	bool "Access I/O in non-MMIO mode"
+>> > +	depends on ARM64
+>> > +	help
+>> > +	  On some platforms where no separate I/O space exists, there are I/O
+>> > +	  hosts which can not be accessed in MMIO mode. Using the logical PIO
+>> > +	  mechanism, the host-local I/O resource can be mapped into system
+>> > +	  logic PIO space shared with MMIO hosts, such as PCI/PCIE, then the
+>> > +	  system can access the I/O devices with the mapped logic PIO through
+>> > +	  I/O accessors.
+>> > +	  This way has a relatively little I/O performance cost. Please make
+> grammar nit - s/a relatively/relatively/
+>
 
+Fine, thanks
 
-On 14/02/18 16:00, Stanimir Varbanov wrote:
->>   .../devicetree/bindings/pci/qcom,pcie.txt          |  4 ++++
->>   drivers/pci/dwc/pcie-qcom.c                        | 24 ++++++++++++++++++++--
->>   2 files changed, 26 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->> index 3c9d321b3d3b..1fd703bd73e0 100644
->> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
->> @@ -189,6 +189,10 @@
->>   	Value type: <phandle>
->>   	Definition: A phandle to the analog power supply for IC which generates
->>   		    reference clock
->> +- vddpe-3v3-supply:
-> shouldn't it be vddpe_3v3-supply to be aligned with the other supplies?
-> 
-I noticed that, I had to do it intentionally
-As dt properties should follow - instead of _
+John
 
-
->> +	Usage: optional
->> +	Value type: <phandle>
->> +	Definition: A phandle to the PCIe endpoint power supply
->>   
->>   - phys:
->>   	Usage: required for apq8084
->> diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
->> index 3e89909f8cb9..519a2ae416eb 100644
->> --- a/drivers/pci/dwc/pcie-qcom.c
->> +++ b/drivers/pci/dwc/pcie-qcom.c
->> @@ -101,13 +101,14 @@ struct qcom_pcie_resources_1_0_0 {
->>   	struct reset_control *core;
->>   	struct regulator *vdda;
->>   };
->> -
-> please keep above blank line.
-Will fix it.
-> 
->> +#define QCOM_PCIE_2_3_2_MAX_SUPPLY	2
->>   struct qcom_pcie_resources_2_3_2 {
->>   	struct clk *aux_clk;
->>   	struct clk *master_clk;
->>   	struct clk *slave_clk;
->>   	struct clk *cfg_clk;
+>   -dann
+>
+>> > +	  sure your devices really need this configure item enabled.
+>> > +
