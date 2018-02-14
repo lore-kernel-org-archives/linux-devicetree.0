@@ -1,76 +1,57 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] ARM: shmobile: Document Renesas H2-based Stout DT bindings
-Date: Wed, 14 Feb 2018 09:16:50 +0100
-Message-ID: <CAMuHMdUtVkBPwYKzhEh0WObyMdJs4nk2a2UJ+hHT7cztM62_tw@mail.gmail.com>
-References: <20180213232916.31470-1-marek.vasut+renesas@gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 0/8] Add support for PWM input capture on STM32
+Date: Wed, 14 Feb 2018 09:23:10 +0100
+Message-ID: <5ade7f05-f5cc-e272-842c-22effa78b716@st.com>
+References: <1516979499-3665-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180213232916.31470-1-marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1516979499-3665-1-git-send-email-fabrice.gasnier@st.com>
+Content-Language: en-US
+Sender: linux-pwm-owner@vger.kernel.org
+To: lee.jones@linaro.org, thierry.reding@gmail.com
+Cc: robh+dt@kernel.org, alexandre.torgue@st.com, benjamin.gaignard@linaro.org, mark.rutland@arm.com, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
-
-On Wed, Feb 14, 2018 at 12:29 AM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Document the Renesas H2 Stout (ADAS Starter Kit) device tree bindings,
-
-Thanks for your patch!
-
-According to https://elinux.org/images/1/10/StoutTopWithLabels.png,
-it's called "ADAS Starterkit".
-
-> listing it as a supported board.
->
-> This allows to use checkpatch.pl to validate .dts files referring to
-> the Stout board.
->
-> Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-
-> Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+On 01/26/2018 04:11 PM, Fabrice Gasnier wrote:
+> This series adds support for capture to stm32-pwm driver.
+> Capture is based on DMAs.
+> - First two patches are precursor patches
+> - Subsequent two patches add support for requesting DMAs to MFD core
+> - Next three patches add support for capture to stm32-pwm driver
+> - This has been tested on stm32429i-eval board.
+> 
 > ---
->  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-> index 41d3920aaa5e..bf9bb6eda4a6 100644
-> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
-> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-> @@ -94,6 +94,8 @@ Boards:
->      compatible = "renesas,kzm9g", "renesas,sh73a0"
->    - Lager (RTP0RC7790SEB00010S)
->      compatible = "renesas,lager", "renesas,r8a7790"
-> +  - Stout (Y-R-CAR-ADAS-SKH2-BOARD)
+> Changes in v2:
+> - Abstract DMA handling from child driver: move it to MFD core
+> - Rework pwm capture routines to adopt this change
+> - Comment on optional dma support, beautify DMAs probe
 
-Please keep the list alphabetically sorted.
+Hi all,
 
-I'd add "ADAS Starterkit" here, too, cfr. M3ULCB below.
+Gentle ping for v2 driver review since DT Bindings has been reviewed by
+Rob and the series by Benjamin.
 
-> +    compatible = "renesas,stout", "renesas,r8a7790"
->    - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
->      compatible = "renesas,m3ulcb", "renesas,r8a7796"
->    - Marzen (R0P7779A00010S)
+Many thanks in advance
+Regards
+Fabrice
 
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Fabrice Gasnier (8):
+>   pwm: stm32: fix, remove unused struct device
+>   pwm: stm32: protect common prescaler for all channels
+>   dt-bindings: mfd: stm32-timers: add support for dmas
+>   mfd: stm32-timers: add support for dmas
+>   pwm: stm32: add capture support
+>   pwm: stm32: improve capture by tuning counter prescaler
+>   pwm: stm32: use input prescaler to improve period capture
+>   ARM: dts: stm32: Enable pwm3 input capture on stm32f429i-eval
+> 
+>  .../devicetree/bindings/mfd/stm32-timers.txt       |  20 ++
+>  arch/arm/boot/dts/stm32429i-eval.dts               |   3 +
+>  drivers/mfd/stm32-timers.c                         | 215 +++++++++++++++-
+>  drivers/pwm/pwm-stm32.c                            | 276 ++++++++++++++++++++-
+>  include/linux/mfd/stm32-timers.h                   |  39 +++
+>  5 files changed, 547 insertions(+), 6 deletions(-)
+> 
