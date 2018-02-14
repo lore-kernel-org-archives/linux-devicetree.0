@@ -1,38 +1,71 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH v5 10/12] drm/sun4i: Implement A83T HDMI driver
-Date: Wed, 14 Feb 2018 22:42:00 +0100
-Message-ID: <CAOFm3uFkkydWBT9N72ax1oeJs=J2A_s-VbaAW1P5WQopBjw_tA@mail.gmail.com>
-References: <20180214200906.31509-1-jernej.skrabec@siol.net> <20180214200906.31509-11-jernej.skrabec@siol.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180214200906.31509-11-jernej.skrabec@siol.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Neil Armstrong <narmstrong@baylibre.com>, Jose Abreu <Jose.Abreu@synopsys.com>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-clk@vger.kernel.org, linux-sunx
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCHv4 0/4] Motorola Droid 4 Audio Support
+Date: Wed, 14 Feb 2018 23:07:37 +0100
+Message-ID: <20180214220741.28306-1-sebastian.reichel@collabora.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 14, 2018 at 9:09 PM, Jernej Skrabec <jernej.skrabec@siol.net> wrote:
-> A83T has DW HDMI IP block with a custom PHY similar to Synopsys gen2
-> HDMI PHY.
->
-> Only video output was tested, while HW also supports audio and CEC.
-> Support for them will be added later.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Hi,
 
-...
+This adds audio support to Motorola Droid 4. I dropped the
+regulator from the DT binding as requested by Mark.
 
-> --- /dev/null
-> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> @@ -0,0 +1,44 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+Tested:
+ - Playing via both DACs using Speaker, Earpiece, Headphone
+ - Recording using internal Mic
+ - Volume Controls
 
-This should be
+Known not to work:
+ - 3.5mm detection support (requires closed source firmware,
+   needs further investigation)
+ - Modem / Bluetooth Audio (needs different DAI/I2S config)
 
-/* SPDX-License-Identifier: GPL-2.0+ /* in a .h per [1]
+Changes since PATCHv3:
+ * Drop regulator from DT binding, request VAUDIO from
+   global regulator namespace instead
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/license-rules.rst
+Changes since PATCHv2:
+ * Fix a whitespace issue
+ * Fix const notes Takashi provided
+ * Fix a DAPM route issue I accidently introduced in v2
+
+Changes since PATCHv1:
+ * Add patch from Tony exporting soc_dpcm_runtime_update
+ * Integrate DT patch for vaudio initial mode
+ * Split dt-binding from codec patch and add Ack from Rob
+ * Fix CPCAP position in Kconfig/Makefile
+ * Avoid "err +=" constructs
+ * Simplify reset function
+ * Drop cpcap_audio_read/write helpers
+ * Do not use tertiary operator for mute register value
+ * Update Input Mux logic
+ * Switch from simple-audio-card to audio-graph-card
+
+-- Sebastian
+
+Sebastian Reichel (4):
+  dt-bindings: sound: add motorola,cpcap-audio-codec
+  ASoC: codec: cpcap: new codec
+  ARM: dts: motorola-cpcap-mapphone: add audio-codec
+  ARM: dts: omap4-droid4: add soundcard
+
+ .../bindings/sound/motorola,cpcap-audio-codec.txt  |   17 +
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi     |    5 +
+ arch/arm/boot/dts/omap4-droid4-xt894.dts           |   84 ++
+ sound/soc/codecs/Kconfig                           |    5 +
+ sound/soc/codecs/Makefile                          |    2 +
+ sound/soc/codecs/cpcap.c                           | 1588 ++++++++++++++++++++
+ 6 files changed, 1701 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/motorola,cpcap-audio-codec.txt
+ create mode 100644 sound/soc/codecs/cpcap.c
+
 -- 
-Cordially
-Philippe Ombredanne
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
