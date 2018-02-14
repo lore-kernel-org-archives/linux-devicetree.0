@@ -1,89 +1,100 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v5 02/12] clk: sunxi-ng: Use u64 for calculation
- of nkmp rate
-Date: Wed, 14 Feb 2018 21:08:56 +0100
-Message-ID: <20180214200906.31509-3-jernej.skrabec@siol.net>
-References: <20180214200906.31509-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBAVPSLKAKGQEYC7BQ4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180214200906.31509-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
-Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH v5 00/12] drm/sun4i: Add A83T HDMI support
+Date: Wed, 14 Feb 2018 21:08:54 +0100
+Message-ID: <20180214200906.31509-1-jernej.skrabec@siol.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maxime.ripard@free-electrons.com, wens@csie.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, narmstrong@baylibre.com, Jose.Abreu@synopsys.com
+Cc: jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-When parent rate is 24MHz and multiplier N >= 180, intermediate clock
-rate doesn't fit in 32 bit variable anymore.
+This patch series implements support for A83T DW HDMI and PHY. Contrary to
+v1 series, this one is based on latest linux-next, since all needed patches
+were merged.
 
-Because of that, introduce function for calculating clock rate which
-uses 64 bit variable for intermediate result.
+While exactly this combination of HDMI controller and PHY is not common in
+Allwinner SoCs, this patch series nevertheless makes groundwork for other
+SoCs, which have same DW HDMI IP block, but different PHYs, like H3 and H5.
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
----
- drivers/clk/sunxi-ng/ccu_nkmp.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+Please take a look.
 
-diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c b/drivers/clk/sunxi-ng/ccu_nkmp.c
-index a99068a08315..c3f6fe7be565 100644
---- a/drivers/clk/sunxi-ng/ccu_nkmp.c
-+++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
-@@ -20,6 +20,18 @@ struct _ccu_nkmp {
- 	unsigned long	p, min_p, max_p;
- };
- 
-+static unsigned long ccu_nkmp_calc_rate(unsigned long parent,
-+					unsigned long n, unsigned long k,
-+					unsigned long m, unsigned long p)
-+{
-+	u64 rate = parent;
-+
-+	rate *= n * k;
-+	do_div(rate, m * p);
-+
-+	return rate;
-+}
-+
- static void ccu_nkmp_find_best(unsigned long parent, unsigned long rate,
- 			       struct _ccu_nkmp *nkmp)
- {
-@@ -33,7 +45,9 @@ static void ccu_nkmp_find_best(unsigned long parent, unsigned long rate,
- 				for (_p = nkmp->min_p; _p <= nkmp->max_p; _p <<= 1) {
- 					unsigned long tmp_rate;
- 
--					tmp_rate = parent * _n * _k / (_m * _p);
-+					tmp_rate = ccu_nkmp_calc_rate(parent,
-+								      _n, _k,
-+								      _m, _p);
- 
- 					if (tmp_rate > rate)
- 						continue;
-@@ -107,7 +121,7 @@ static unsigned long ccu_nkmp_recalc_rate(struct clk_hw *hw,
- 	p = reg >> nkmp->p.shift;
- 	p &= (1 << nkmp->p.width) - 1;
- 
--	return (parent_rate * n * k >> p) / m;
-+	return ccu_nkmp_calc_rate(parent_rate, n, k, m, 1 << p);
- }
- 
- static long ccu_nkmp_round_rate(struct clk_hw *hw, unsigned long rate,
-@@ -127,7 +141,8 @@ static long ccu_nkmp_round_rate(struct clk_hw *hw, unsigned long rate,
- 
- 	ccu_nkmp_find_best(*parent_rate, rate, &_nkmp);
- 
--	return *parent_rate * _nkmp.n * _nkmp.k / (_nkmp.m * _nkmp.p);
-+	return ccu_nkmp_calc_rate(*parent_rate, _nkmp.n, _nkmp.k,
-+				  _nkmp.m, _nkmp.p);
- }
- 
- static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
+Best regards,
+Jernej
+
+Changes from v4:
+- Added Acked-by tag
+- DT patch doesn't add second example anymore
+- Removed unneeded properties from dtsi
+
+Changes from v3:
+- Collected tags
+- drop patch for changing NKMP formula
+- add patch to use 64 bit intermediate variable for calculating NKMP
+  clock rate and thus preventing overflow in some cases
+- rework DT bindings patch according Rob's suggestions
+- move TMDS clock from PHY to controller driver, since documentation
+  suggest such relationship
+
+Changes from v2:
+- Collected ACKs and Review-by tags
+- patch for deinit callback was replaced with the one which gives control
+  of drvdata to driver
+- fixed meson driver (renamed reset function)
+- prototypes for newly exported functions in dw_hdmi.h were reordered
+
+Changes from v1:
+- Collected ACKs
+- Separated bindings for controller and PHY
+- Split driver into two parts - controller and PHY
+- HDMI PHY driver now uses regmap for writes
+- added defines for PHY registers and bits
+- updated DT entries to accommodate new bindings
+- removed already merged clock patch
+- reworked first clock patch according to comments
+- added new clock patch which changes NKMP formula
+- split TCON patch in two, one for quirk and one for new compatible
+- reworked patch which exports DW HDMI PHY functions:
+  - remove "gen2" from some function names
+  - removed parameter from dw_hdmi_phy_reset()
+  - added address parameter to dw_hdmi_phy_i2c_set_addr()
+- updated most of commit messages
+
+Jernej Skrabec (12):
+  clk: sunxi-ng: Mask nkmp factors when setting register
+  clk: sunxi-ng: Use u64 for calculation of nkmp rate
+  drm/bridge/synopsys: dw-hdmi: Enable workaround for v1.32a
+  drm/bridge/synopsys: dw-hdmi: Export some PHY related functions
+  drm/bridge/synopsys: dw-hdmi: don't clobber drvdata
+  dt-bindings: display: sun4i-drm: Add A83T HDMI pipeline
+  drm/sun4i: Add has_channel_0 TCON quirk
+  drm/sun4i: Add support for A83T second TCON
+  drm/sun4i: Add support for A83T second DE2 mixer
+  drm/sun4i: Implement A83T HDMI driver
+  ARM: dts: sun8i: a83t: Add HDMI display pipeline
+  ARM: dts: sun8i: a83t: Enable HDMI on BananaPi M3
+
+ .../bindings/display/sunxi/sun4i-drm.txt           |  61 ++++-
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts       |  25 ++
+ arch/arm/boot/dts/sun8i-a83t.dtsi                  | 108 ++++++++-
+ drivers/clk/sunxi-ng/ccu_nkmp.c                    |  42 +++-
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          |  83 ++++---
+ drivers/gpu/drm/imx/dw_hdmi-imx.c                  |  13 +-
+ drivers/gpu/drm/meson/meson_dw_hdmi.c              |  22 +-
+ drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c             |  12 +-
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        |  13 +-
+ drivers/gpu/drm/sun4i/Kconfig                      |   9 +
+ drivers/gpu/drm/sun4i/Makefile                     |   4 +
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                 |  46 +++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h                 |   1 +
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c              | 196 +++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h              |  44 ++++
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c             | 270 +++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_mixer.c                |  11 +
+ include/drm/bridge/dw_hdmi.h                       |  24 +-
+ 18 files changed, 896 insertions(+), 88 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+
 -- 
 2.16.1
