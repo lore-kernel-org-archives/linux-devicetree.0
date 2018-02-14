@@ -1,114 +1,76 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v3 2/3] arm64: dts: sdm845: Add minimal dts files for
- sdm845 SoC/MTP
-Date: Wed, 14 Feb 2018 13:39:40 +0530
-Message-ID: <2b726c57-3e7c-8406-bb49-3bd56193e009@codeaurora.org>
-References: <20180212062832.2791-1-rnayak@codeaurora.org>
- <20180212062832.2791-3-rnayak@codeaurora.org>
- <CAD=FV=UQ4YD7M8pqReBwE2etUbhuewye0akp0P9SuTnjwLgL4w@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] ARM: shmobile: Document Renesas H2-based Stout DT bindings
+Date: Wed, 14 Feb 2018 09:16:50 +0100
+Message-ID: <CAMuHMdUtVkBPwYKzhEh0WObyMdJs4nk2a2UJ+hHT7cztM62_tw@mail.gmail.com>
+References: <20180213232916.31470-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=UQ4YD7M8pqReBwE2etUbhuewye0akp0P9SuTnjwLgL4w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, evgreen@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180213232916.31470-1-marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[]..
+Hi Marek,
 
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
->> new file mode 100644
->> index 000000000000..617c7bb25fb1
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
->> @@ -0,0 +1,13 @@
->> +// SPDX-License-Identifier: GPL-2.0
-> 
-> It would, of course, be up to Qualcomm.  ...but might I suggest instead:
-> 
-> // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> 
-> The device tree files really don't have any special secret sauce in
-> them and IIRC allowing them to have a more permissive MIT license _or_
-> a GPL allowed people to run other operating systems on these boards.
-> This kind of thing is better to fix now so we don't have to go and get
-> everyone's permission later on.
+On Wed, Feb 14, 2018 at 12:29 AM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Document the Renesas H2 Stout (ADAS Starter Kit) device tree bindings,
 
-sure, sounds reasonable, but I am told I need to get this reviewed once
-by qualcomm legal before we go ahead and use the dual licensing copyright.
-I will update based on what I hear.
+Thanks for your patch!
 
-[]..
-> 
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> + */
-> 
-> IMHO add an extra line to this comment with a description to avoid the
-> bike shedding of how we're supposed to do 1-line comments in device
-> tree files.  AKA:
-> 
-> /*
->  * SDM845 MTP board device tree source
->  *
->  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->  */
+According to https://elinux.org/images/1/10/StoutTopWithLabels.png,
+it's called "ADAS Starterkit".
 
-sure will update.
+> listing it as a supported board.
+>
+> This allows to use checkpatch.pl to validate .dts files referring to
+> the Stout board.
+>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> 
-> 
->> +
->> +/dts-v1/;
->> +
->> +#include "sdm845.dtsi"
->> +
->> +/ {
->> +       model = "Qualcomm Technologies, Inc. SDM845 MTP";
->> +       compatible = "qcom,sdm845-mtp";
-> 
-> For me checkpatch complains about this.  It looks like the file
-> "Documentation/devicetree/bindings/arm/qcom.txt" needs to be updated
-> with "sdm845".  I don't think that will make checkpatch be quiet
-> (since  that file doesn't have a full list of every board), but it
-> still should be the correct thing to do.
 
-sure, I missed updating it, will fix.
+> Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+> Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+> index 41d3920aaa5e..bf9bb6eda4a6 100644
+> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> @@ -94,6 +94,8 @@ Boards:
+>      compatible = "renesas,kzm9g", "renesas,sh73a0"
+>    - Lager (RTP0RC7790SEB00010S)
+>      compatible = "renesas,lager", "renesas,r8a7790"
+> +  - Stout (Y-R-CAR-ADAS-SKH2-BOARD)
 
-> 
-> 
->> +};
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> new file mode 100644
->> index 000000000000..55a7e0b454e1
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -0,0 +1,275 @@
->> +// SPDX-License-Identifier: GPL-2.0
-> 
-> As per above, suggest dual licensed?
-> 
-> 
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> 
-> As per above, suggest adding an extra line to avoid the bikeshed.
-> 
-> SDM845 SoC device tree source
-> 
-> 
-> Besides those things, everything looks good as far as I can see.  I'm
-> not an expert on every one of the devices used in this file, but
-> reading through bindings docs and looking at other users of them, it
-> looks sane enough.  Thus, with the above nits fixed you can feel free
-> to add my Reviewed-by.
+Please keep the list alphabetically sorted.
 
-Thanks, the only thing I need to wait for before I respin this is to
-get a go ahead from legal for the dual licensing copyright header.
+I'd add "ADAS Starterkit" here, too, cfr. M3ULCB below.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+> +    compatible = "renesas,stout", "renesas,r8a7790"
+>    - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
+>      compatible = "renesas,m3ulcb", "renesas,r8a7796"
+>    - Marzen (R0P7779A00010S)
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
