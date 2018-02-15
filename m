@@ -1,35 +1,102 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v7 04/37] earlycon: add reg-offset to physical address
- before mapping
-Date: Thu, 15 Feb 2018 09:40:49 -0600
-Message-ID: <CAL_JsqJteT1P2GJGdesTsz=PuXU1qxiyhtKLURkGwV9sSQ7XZQ@mail.gmail.com>
-References: <cover.1518505384.git.greentime@andestech.com> <968497070242f849dd70ab1fa81635451f8fda7f.1518505384.git.greentime@andestech.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 04/11] soc: renesas: rcar-sysc: add R8A77980 support
+Date: Thu, 15 Feb 2018 19:48:28 +0300
+Message-ID: <b61b4bd9-a1ac-8145-237f-71049a13b90f@cogentembedded.com>
+References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
+ <0309d18d-d5d8-ab59-9c15-79b4093e0a51@cogentembedded.com>
+ <CAMuHMdUQuUhbiPnO1L7t5W5F8wJ72iYLM5VtT4gg0RuePcx7RA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <968497070242f849dd70ab1fa81635451f8fda7f.1518505384.git.greentime@andestech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: greentime@andestech.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, netdev <netdev@vger.kernel.org>, deanbo422@gmail.com, devicetree@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, ren_guo@c-sky.com, Randy Dunlap <rdunlap@infradead.org>, David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUQuUhbiPnO1L7t5W5F8wJ72iYLM5VtT4gg0RuePcx7RA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-MW
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 3:09 AM, Greentime Hu <green.hu@gmail.com> wrote:
-> It will get the wrong virtual address because port->mapbase is not added
-> the correct reg-offset yet. We have to update it before earlycon_map()
-> is called
->
-> Signed-off-by: Greentime Hu <greentime@andestech.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: Peter Hurley <peter@hurleysoftware.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 088da2a17619 ("of: earlycon: Initialize port fields from DT
-> properties")
+Hello!
 
-This should get applied now rather than sit in numerous revisions of
-this series for nds32.
+On 02/05/2018 04:23 PM, Geert Uytterhoeven wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+>> Add support for R-Car V3H (R8A77980) SoC power areas to the R-Car SYSC
+>> driver.
+>>
+>> Based on the original (and large) patch by Vladimir Barinov.
+>>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> Thanks for your patch!
+> 
+>> --- /dev/null
+>> +++ renesas/drivers/soc/renesas/r8a77980-sysc.c
+>> @@ -0,0 +1,52 @@
+[...]
+>> +static const struct rcar_sysc_area r8a77980_areas[] __initconst = {
+>> +       { "always-on",      0, 0, R8A77980_PD_ALWAYS_ON, -1, PD_ALWAYS_ON },
+>> +       { "ca53-scu",   0x140, 0, R8A77980_PD_CA53_SCU, R8A77980_PD_ALWAYS_ON,
+>> +         PD_SCU },
+>> +       { "ca53-cpu0",  0x200, 0, R8A77980_PD_CA53_CPU0, R8A77980_PD_CA53_SCU,
+>> +         PD_CPU_NOCR },
+>> +       { "ca53-cpu1",  0x200, 1, R8A77980_PD_CA53_CPU1, R8A77980_PD_CA53_SCU,
+>> +         PD_CPU_NOCR },
+>> +       { "ca53-cpu2",  0x200, 2, R8A77980_PD_CA53_CPU2, R8A77980_PD_CA53_SCU,
+>> +         PD_CPU_NOCR },
+>> +       { "ca53-cpu3",  0x200, 3, R8A77980_PD_CA53_CPU3, R8A77980_PD_CA53_SCU,
+>> +         PD_CPU_NOCR },
+>> +       { "cr7",        0x240, 0, R8A77980_PD_CR7,      R8A77980_PD_ALWAYS_ON },
+>> +       { "a3ir",       0x180, 0, R8A77980_PD_A3IR,     R8A77980_PD_ALWAYS_ON },
+>> +       { "a2ir0",      0x400, 0, R8A77980_PD_A2IR0,    R8A77980_PD_ALWAYS_ON },
+>> +       { "a2ir1",      0x400, 1, R8A77980_PD_A2IR1,    R8A77980_PD_A2IR0 },
+>> +       { "a2ir2",      0x400, 2, R8A77980_PD_A2IR2,    R8A77980_PD_A2IR0 },
+>> +       { "a2ir3",      0x400, 3, R8A77980_PD_A2IR3,    R8A77980_PD_A2IR0 },
+>> +       { "a2ir4",      0x400, 4, R8A77980_PD_A2IR4,    R8A77980_PD_A2IR0 },
+>> +       { "a2ir5",      0x400, 5, R8A77980_PD_A2IR5,    R8A77980_PD_A2IR0 },
+> 
+> Shouldn't all a2irN domains have a3ir as their parent?
 
-Greg, can you apply?
+   Maybe.... I'd looked at the r8a77970-sysc.c and it also had A2IR0 as parent to all
+other A2IR<n> clocks.
 
-Rob
+>> +       { "a2sc0",      0x400, 6, R8A77980_PD_A2SC0,    R8A77980_PD_ALWAYS_ON },
+>> +       { "a2sc1",      0x400, 7, R8A77980_PD_A2SC1,    R8A77980_PD_A2SC0 },
+>> +       { "a2sc2",      0x400, 8, R8A77980_PD_A2SC2,    R8A77980_PD_A2SC0 },
+>> +       { "a2sc3",      0x400, 9, R8A77980_PD_A2SC3,    R8A77980_PD_A2SC0 },
+>> +       { "a2sc4",      0x400, 10, R8A77980_PD_A2SC4,   R8A77980_PD_A2SC0 },
+> 
+> Shouldn't all a2scN domains have a3ir as their parent?
+
+   Why A3IR?
+
+>> +       { "a2pd0",      0x400, 11, R8A77980_PD_A2PD0,   R8A77980_PD_ALWAYS_ON },
+>> +       { "a2pd1",      0x400, 12, R8A77980_PD_A2PD1,   R8A77980_PD_A2PD0 },
+> 
+> Shouldn't all a2pdN domains have a3ir as their parent?
+
+   Again, why?
+
+> 
+>> +       { "a2cn",       0x400, 13, R8A77980_PD_A2CN,    R8A77980_PD_ALWAYS_ON },
+> 
+> Shouldn't the a2cn domain have a3ir as its parent?
+
+   ?
+
+>> +       { "a3vip",      0x2c0, 0, R8A77980_PD_A3VIP,    R8A77980_PD_ALWAYS_ON },
+>> +       { "a3vip1",     0x300, 0, R8A77980_PD_A3VIP1,   R8A77980_PD_A3VIP },
+>> +       { "a3vip2",     0x280, 0, R8A77980_PD_A3VIP2,   R8A77980_PD_A3VIP },
+> 
+> With the above fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+
+MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
