@@ -1,63 +1,66 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] arm64: dts: renesass: r8a77970: add FCPVD support
-Date: Thu, 15 Feb 2018 20:17:09 +0100
-Message-ID: <20180215191708.6hbgw3senigbzkzy@verge.net.au>
-References: <20180208154720.5766-1-niklas.soderlund+renesas@ragnatech.se>
- <20180208154720.5766-2-niklas.soderlund+renesas@ragnatech.se>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH V3] ARM: dts: stout: Initial r8a7790 Stout board support
+Date: Thu, 15 Feb 2018 20:33:02 +0100
+Message-ID: <20180215193302.dhpvyvyr6ez37dm3@katana>
+References: <20180215184919.31617-1-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gcqhbqhzfnp4mh6q"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180208154720.5766-2-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+In-Reply-To: <20180215184919.31617-1-marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 08, 2018 at 04:47:16PM +0100, Niklas Söderlund wrote:
-> From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> 
-> Describe FCPVD0 in the R8A77970 device tree; it will be used by VSPD0 in
-> the next patch...
-> 
-> Based on the original (and large) patch by Daisuke Matsushita
-> <daisuke.matsushita.ns-FCd8Q96Dh0JBDgjK7y7TUQ@public.gmane.org>.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/renesas/r8a77970.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77970.dtsi b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> index 13c88414cb432b1a..2567e68fe0c6cf7b 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> @@ -612,6 +612,14 @@
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  		};
-> +
-> +		fcpvd0: fcp@fea27000 {
-> +			compatible = "renesas,fcpv";
-> +			reg = <0 0xfea27000 0 0x200>;
-> +			clocks = <&cpg CPG_MOD 603>;
-> +			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-> +			resets = <&cpg 603>;
 
-Any reason the following is omitted?
+--gcqhbqhzfnp4mh6q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-			iommus = <&ipmmu_vi0 8>;
+On Thu, Feb 15, 2018 at 07:49:19PM +0100, Marek Vasut wrote:
+> Stout base board support making use of 1 GiB of memory,
+> the Renesas H2 r8a7790 SoC with the SCIFA0 serial port
+> and CA15 with ARM architected timer.
+>=20
+> Furthermore, this device tree contains entries for:
+>   - 4x LEDs
+>   - SDHI SD/MMC controller
+>   - Display unit with HDMI output
+>   - SH fast ethernet controller
+>   - QSPI controller with S25FL512S attached to it
+>   - I2C controller with DA9210 and DA 9063 PMICs
+>=20
+> Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> +		};
->  	};
->  
->  	timer {
-> -- 
-> 2.16.1
-> 
+Looks good, at least for the things I know best of all those:
+
+Acked-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+
+
+--gcqhbqhzfnp4mh6q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqF4GoACgkQFA3kzBSg
+KbbpZRAAkTjOznUiq1RHChi5cBWCncIQI4ih8sV2y4/w2iFxw2J9G5TYEafm5+fj
+sz1bzRT2B1ULYCkSfvWiYzO4Dl7T1oVvU8YcnnA8+Ezf3bT0UJRAit9t5FNZJx4u
+Qi85DAV6GDQnHCHTW7MQT3Utn9IYbciPrPQns2790tz+N4BZ5vLrAHzyPkS02t0R
+kGojQKiTkwo7UxmnJm+GHWH9VD+JdaxshFHdz0HCoHr1bqLhB0mSLkXZOLsVP48N
+HsdUWOy22rHkCHJO55fiJiX7Z7/07GGxI0y7ErRerortafu+ohF3WXClti2b6obH
+xPWWkBrhpVCObKEE7Kpmi7Bl1boCZP1GvW1sqPnNO1qGk5Molr4ZaBCsOOYEdLVy
++ufYSUuRGFpqWrseiWAOraksc6TBqv/2pXrs1pEIt3G0sX5YEX7jdf4yBfLAT+pl
+J3FlKcXJZY5sLiLUHbuha54N4UcTYJGYxybBg2rzqHtw8ew/I+76BziKEauoKQrO
+Ch8Mlx/9iCUnBcbpOG0Kx59uGmrRCHy3q3YkL4K41bXiNvndJYkLzDYn45Esh+5E
+J7oRuGlSDvUeXK1HKuadjqDl3LBE9+psTwDdS+bFGh6SsJAI0nN7esgTFrajLrWn
+Ux/xjaO3ZNrWLD6BOYWB4OOwGABYHSq3i/m6kUUXRvKneDxAVP8=
+=mRxi
+-----END PGP SIGNATURE-----
+
+--gcqhbqhzfnp4mh6q--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
