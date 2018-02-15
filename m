@@ -1,14 +1,15 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH v13 8/8] ARM: dts: imx: Add TDA19971 HDMI
-	Receiver to GW551x
-Date: Thu, 15 Feb 2018 09:55:36 -0800
-Message-ID: <1518717336-6271-9-git-send-email-tharvey@gateworks.com>
-References: <1518717336-6271-1-git-send-email-tharvey@gateworks.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH] ASoC: dmic: Add optional wakeup delay
+Date: Thu, 15 Feb 2018 10:18:00 -0800
+Message-ID: <20180215181800.GB99727@google.com>
+References: <20180214235156.81589-1-mka@chromium.org>
+ <7c9d5202-bcac-f989-6be2-f286de15a5de@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1518717336-6271-1-git-send-email-tharvey@gateworks.com>
+Content-Disposition: inline
+In-Reply-To: <7c9d5202-bcac-f989-6be2-f286de15a5de@ti.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -18,201 +19,95 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: linux-media@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, shawnguo@kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, huang lin <hl@rock-chips.com>, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Dylan Reid <dgreid@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
-v5:
- - add missing audmux config
-
- arch/arm/boot/dts/imx6qdl-gw551x.dtsi | 138 ++++++++++++++++++++++++++++++++++
- 1 file changed, 138 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-index 30d4662..749548a 100644
---- a/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw551x.dtsi
-@@ -46,6 +46,8 @@
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/media/tda1997x.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
- 
- / {
- 	/* these are used by bootloader for disabling nodes */
-@@ -98,6 +100,50 @@
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
- 	};
-+
-+	sound-digital {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "tda1997x-audio";
-+
-+		simple-audio-card,dai-link@0 {
-+			format = "i2s";
-+
-+			cpu {
-+				sound-dai = <&ssi2>;
-+			};
-+
-+			codec {
-+				bitclock-master;
-+				frame-master;
-+				sound-dai = <&tda1997x>;
-+			};
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>; /* AUD5<->tda1997x */
-+	status = "okay";
-+
-+	ssi1 {
-+		fsl,audmux-port = <0>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			IMX_AUDMUX_V2_PTCR_TFSEL(4+8) | /* RXFS */
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR |
-+			IMX_AUDMUX_V2_PTCR_TCSEL(4+8) | /* RXC */
-+			IMX_AUDMUX_V2_PTCR_SYN)
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(4)
-+		>;
-+	};
-+
-+	aud5 {
-+		fsl,audmux-port = <4>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(0)>;
-+	};
- };
- 
- &can1 {
-@@ -263,6 +309,60 @@
- 		#gpio-cells = <2>;
- 	};
- 
-+	tda1997x: tda1997x@48 {
-+		compatible = "nxp,tda19971";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_tda1997x>;
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		DOVDD-supply = <&reg_3p3>;
-+		AVDD-supply = <&reg_1p8b>;
-+		DVDD-supply = <&reg_1p8a>;
-+		#sound-dai-cells = <0>;
-+		nxp,audout-format = "i2s";
-+		nxp,audout-layout = <0>;
-+		nxp,audout-width = <16>;
-+		nxp,audout-mclk-fs = <128>;
-+		/*
-+		 * The 8bpp YUV422 semi-planar mode outputs CbCr[11:4]
-+		 * and Y[11:4] across 16bits in the same cycle
-+		 * which we map to VP[15:08]<->CSI_DATA[19:12]
-+		 */
-+		nxp,vidout-portcfg =
-+			/*G_Y_11_8<->VP[15:12]<->CSI_DATA[19:16]*/
-+			< TDA1997X_VP24_V15_12 TDA1997X_G_Y_11_8 >,
-+			/*G_Y_7_4<->VP[11:08]<->CSI_DATA[15:12]*/
-+			< TDA1997X_VP24_V11_08 TDA1997X_G_Y_7_4 >,
-+			/*R_CR_CBCR_11_8<->VP[07:04]<->CSI_DATA[11:08]*/
-+			< TDA1997X_VP24_V07_04 TDA1997X_R_CR_CBCR_11_8 >,
-+			/*R_CR_CBCR_7_4<->VP[03:00]<->CSI_DATA[07:04]*/
-+			< TDA1997X_VP24_V03_00 TDA1997X_R_CR_CBCR_7_4 >;
-+
-+		port {
-+			tda1997x_to_ipu1_csi0_mux: endpoint {
-+				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
-+				bus-width = <16>;
-+				hsync-active = <1>;
-+				vsync-active = <1>;
-+				data-active = <1>;
-+			};
-+		};
-+	};
-+};
-+
-+&ipu1_csi0_from_ipu1_csi0_mux {
-+	bus-width = <16>;
-+};
-+
-+&ipu1_csi0_mux_from_parallel_sensor {
-+	remote-endpoint = <&tda1997x_to_ipu1_csi0_mux>;
-+	bus-width = <16>;
-+};
-+
-+&ipu1_csi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ipu1_csi0>;
- };
- 
- &pcie {
-@@ -320,6 +420,14 @@
- };
- 
- &iomuxc {
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT19__AUD5_RXD	0x130b0
-+			MX6QDL_PAD_DISP0_DAT14__AUD5_RXC	0x130b0
-+			MX6QDL_PAD_DISP0_DAT13__AUD5_RXFS	0x130b0
-+		>;
-+	};
-+
- 	pinctrl_flexcan1: flexcan1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_KEY_ROW2__FLEXCAN1_RX	0x1b0b1
-@@ -375,6 +483,30 @@
- 		>;
- 	};
- 
-+	pinctrl_ipu1_csi0: ipu1_csi0grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT4__IPU1_CSI0_DATA04		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT5__IPU1_CSI0_DATA05		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT6__IPU1_CSI0_DATA06		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT7__IPU1_CSI0_DATA07		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT8__IPU1_CSI0_DATA08		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT9__IPU1_CSI0_DATA09		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT10__IPU1_CSI0_DATA10		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT11__IPU1_CSI0_DATA11		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19		0x1b0b0
-+			MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC		0x1b0b0
-+			MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK	0x1b0b0
-+			MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC		0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_pcie: pciegrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x1b0b0 /* PCIE RST */
-@@ -399,6 +531,12 @@
- 		>;
- 	};
- 
-+	pinctrl_tda1997x: tda1997xgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_7__GPIO1_IO07		0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_uart2: uart2grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
--- 
-2.7.4
+RWwgVGh1LCBGZWIgMTUsIDIwMTggYXQgMDk6NDI6MDFBTSArMDIwMCBQZXRlciBVamZhbHVzaSBo
+YSBkaXQ6Cgo+IAo+IAo+IE9uIDIwMTgtMDItMTUgMDE6NTEsIE1hdHRoaWFzIEthZWhsY2tlIHdy
+b3RlOgo+ID4gT24gc29tZSBzeXN0ZW1zIGEgZGVsYXkgaXMgbmVlZGVkIGFmdGVyIHN3aXRjaGlu
+ZyBvbiB0aGUgY2xvY2tzLCB0byBhbGxvdwo+ID4gdGhlIERNSUMgb3V0cHV0IHRvIHN0YWJpbGl6
+ZSBhbmQgYXZvaWQgYSBwb3BwaW5nIG5vaXNlIGF0IHRoZSBiZWdpbm5pbmcKPiA+IG9mIHRoZSBy
+ZWNvcmRpbmcuIEFkZCB0aGUgb3B0aW9uYWwgZGV2aWNlIHRyZWUgcHJvcGVydHkgJ3dha2V1cC1k
+ZWxheS1tcycKPiA+IGFuZCBhcHBseSB0aGUgc3BlY2lmaWVkIGRlbGF5IGluIHRoZSBuZXcgZG1p
+Y19kYWlvcHNfcHJlcGFyZSgpLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBLYWVo
+bGNrZSA8bWthQGNocm9taXVtLm9yZz4KPiA+IC0tLQo+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3NvdW5kL2RtaWMudHh0ICAgICAgICB8ICAyICsKPiA+ICBzb3VuZC9zb2MvY29kZWNzL2Rt
+aWMuYyAgICAgICAgICAgICAgICAgICAgICAgfCA1NCArKysrKysrKysrKysrKy0tLS0tCj4gPiAg
+MiBmaWxlcyBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkKPiA+IAo+
+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9k
+bWljLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9kbWljLnR4
+dAo+ID4gaW5kZXggNTRjOGVmNjQ5OGE4Li5kZTc0MWM2NjA5ZDAgMTAwNjQ0Cj4gPiAtLS0gYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvZG1pYy50eHQKPiA+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9kbWljLnR4dAo+ID4gQEAg
+LTcsMTAgKzcsMTIgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICAKPiA+ICBPcHRpb25hbCBw
+cm9wZXJ0aWVzOgo+ID4gIAktIGRtaWNlbi1ncGlvczogR1BJTyBzcGVjaWZpZXIgZm9yIGRtaWMg
+dG8gY29udHJvbCBzdGFydCBhbmQgc3RvcAo+ID4gKwktIHdha2V1cC1kZWxheS1tczogRGVsYXkg
+KGluIG1zKSBhZnRlciBlbmFibGluZyB0aGUgRE1JQwo+ID4gIAo+ID4gIEV4YW1wbGUgbm9kZToK
+PiA+ICAKPiA+ICAJZG1pY19jb2RlYzogZG1pY0AwIHsKPiA+ICAJCWNvbXBhdGlibGUgPSAiZG1p
+Yy1jb2RlYyI7Cj4gPiAgCQlkbWljZW4tZ3Bpb3MgPSA8JmdwaW80IDMgR1BJT19BQ1RJVkVfSElH
+SD47Cj4gPiArCQl3YWtldXAtZGVsYXktbXMgPDUwPjsKPiA+ICAJfTsKPiA+IGRpZmYgLS1naXQg
+YS9zb3VuZC9zb2MvY29kZWNzL2RtaWMuYyBiL3NvdW5kL3NvYy9jb2RlY3MvZG1pYy5jCj4gPiBp
+bmRleCBiODhhMWVlNjZmODAuLjExZjZhYmYxMTA3NCAxMDA2NDQKPiA+IC0tLSBhL3NvdW5kL3Nv
+Yy9jb2RlY3MvZG1pYy5jCj4gPiArKysgYi9zb3VuZC9zb2MvY29kZWNzL2RtaWMuYwo+ID4gQEAg
+LTE5LDYgKzE5LDcgQEAKPiA+ICAgKgo+ID4gICAqLwo+ID4gIAo+ID4gKyNpbmNsdWRlIDxsaW51
+eC9kZWxheS5oPgo+ID4gICNpbmNsdWRlIDxsaW51eC9ncGlvLmg+Cj4gPiAgI2luY2x1ZGUgPGxp
+bnV4L2dwaW8vY29uc3VtZXIuaD4KPiA+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNl
+Lmg+Cj4gPiBAQCAtMjksMjQgKzMwLDM4IEBACj4gPiAgI2luY2x1ZGUgPHNvdW5kL3NvYy5oPgo+
+ID4gICNpbmNsdWRlIDxzb3VuZC9zb2MtZGFwbS5oPgo+ID4gIAo+ID4gK3N0cnVjdCBkbWljIHsK
+PiA+ICsJc3RydWN0IGdwaW9fZGVzYyAqZ3Bpb19lbjsKPiA+ICsJaW50IHdha2V1cF9kZWxheTsK
+PiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgZG1pY19kYWlvcHNfcHJlcGFyZShzdHJ1Y3Qg
+c25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwKPiA+ICsJCQkJc3RydWN0IHNuZF9zb2NfZGFp
+ICpkYWkpCj4gPiArewo+ID4gKwlzdHJ1Y3QgZG1pYyAqZG1pYyA9IHNuZF9zb2NfZGFpX2dldF9k
+cnZkYXRhKGRhaSk7Cj4gPiArCj4gPiArCWlmIChkbWljLT5ncGlvX2VuKQo+ID4gKwkJZ3Bpb2Rf
+c2V0X3ZhbHVlKGRtaWMtPmdwaW9fZW4sIDEpOwo+IAo+IFlvdSBkb24ndCBuZWVkIHRoZSAnaWYg
+KGRtaWMtPmdwaW9fZW4pJwoKVHJ1ZSwgcGVyc29uYWxseSBJIHRoaW5rIHRoZSBpZiBzdGF0ZW1l
+bnQgbWFrZXMgaXQgY2xlYXJlciB0aGF0IHRoZQpHUElPIGlzIG9wdGlvbmFsLiBJJ20gZmluZSB3
+aXRoIHJlbW92aW5nIGl0IGlmIHRoZSBnZW5lcmFsIHNlbnNlIGlzCnRoYXQgaXQncyBqdXN0IG5v
+aXNlLgoKPiA+ICsKPiA+ICsJaWYgKGRtaWMtPndha2V1cF9kZWxheSkKPiA+ICsJCW1zbGVlcChk
+bWljLT53YWtldXBfZGVsYXkpOwo+ID4gKwo+ID4gKwlyZXR1cm4gMDsKPiA+ICt9Cj4gPiArCj4g
+PiAgc3RhdGljIGludCBkbWljX2RhaW9wc190cmlnZ2VyKHN0cnVjdCBzbmRfcGNtX3N1YnN0cmVh
+bSAqc3Vic3RyZWFtLAo+ID4gIAkJaW50IGNtZCwgc3RydWN0IHNuZF9zb2NfZGFpICpkYWkpCj4g
+PiAgewo+ID4gLQlzdHJ1Y3QgZ3Bpb19kZXNjICpkbWljX2VuID0gc25kX3NvY19kYWlfZ2V0X2Ry
+dmRhdGEoZGFpKTsKPiA+ICsJc3RydWN0IGRtaWMgKmRtaWMgPSBzbmRfc29jX2RhaV9nZXRfZHJ2
+ZGF0YShkYWkpOwo+ID4gIAo+ID4gLQlpZiAoIWRtaWNfZW4pCj4gPiArCWlmICghZG1pYy0+Z3Bp
+b19lbikKPiA+ICAJCXJldHVybiAwOwo+ID4gIAo+ID4gIAlzd2l0Y2ggKGNtZCkgewo+ID4gLQlj
+YXNlIFNORFJWX1BDTV9UUklHR0VSX1NUQVJUOgo+ID4gLQljYXNlIFNORFJWX1BDTV9UUklHR0VS
+X1JFU1VNRToKPiA+IC0JY2FzZSBTTkRSVl9QQ01fVFJJR0dFUl9QQVVTRV9SRUxFQVNFOgo+ID4g
+LQkJZ3Bpb2Rfc2V0X3ZhbHVlKGRtaWNfZW4sIDEpOwo+ID4gLQkJYnJlYWs7Cj4gPiAgCWNhc2Ug
+U05EUlZfUENNX1RSSUdHRVJfU1RPUDoKPiA+ICAJY2FzZSBTTkRSVl9QQ01fVFJJR0dFUl9TVVNQ
+RU5EOgo+ID4gIAljYXNlIFNORFJWX1BDTV9UUklHR0VSX1BBVVNFX1BVU0g6Cj4gPiAtCQlncGlv
+ZF9zZXRfdmFsdWUoZG1pY19lbiwgMCk7Cj4gPiArCQlncGlvZF9zZXRfdmFsdWUoZG1pYy0+Z3Bp
+b19lbiwgMCk7Cj4gPiAgCQlicmVhazsKPiA+ICAJfQo+IAo+IFdoYXQgaWYgaW5zdGVhZCBvZiB0
+aGlzIHRyaWNrZXJ5IHdlIHRyeSB0byBoYW5kbGUgdGhlIGdwaW8vZGVsYXkgdmlhCj4gREFQTT8g
+U05EX1NPQ19EQVBNX0FJRl9PVVRfRSgpIG1pZ2h0IGJlIGp1c3Qgd2hhdCB3ZSBuZWVkPwo+IAo+
+IFdlIGNvdWxkIHJlbW92ZSB0aGUgdHJpZ2dlciwgYW5kIHdpbGwgaGF2ZSBubyBuZWVkIGZvciB0
+aGUgcHJlcGFyZQo+IGNhbGxiYWNrIGVpdGhlci4uCgpTTkRfU09DX0RBUE1fQUlGX09VVF9FKCkg
+bG9va3MgcHJvbWlzaW5nLCB0aGFua3MgZm9yIHRoZSBwb2ludGVyIQoKPiA+IEBAIC01NCw2ICs2
+OSw3IEBAIHN0YXRpYyBpbnQgZG1pY19kYWlvcHNfdHJpZ2dlcihzdHJ1Y3Qgc25kX3BjbV9zdWJz
+dHJlYW0gKnN1YnN0cmVhbSwKPiA+ICB9Cj4gPiAgCj4gPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBz
+bmRfc29jX2RhaV9vcHMgZG1pY19kYWlfb3BzID0gewo+ID4gKwkucHJlcGFyZQk9IGRtaWNfZGFp
+b3BzX3ByZXBhcmUsCj4gPiAgCS50cmlnZ2VyCT0gZG1pY19kYWlvcHNfdHJpZ2dlciwKPiA+ICB9
+Owo+ID4gIAo+ID4gQEAgLTczLDE0ICs4OSwyNCBAQCBzdGF0aWMgc3RydWN0IHNuZF9zb2NfZGFp
+X2RyaXZlciBkbWljX2RhaSA9IHsKPiA+ICAKPiA+ICBzdGF0aWMgaW50IGRtaWNfY29kZWNfcHJv
+YmUoc3RydWN0IHNuZF9zb2NfY29kZWMgKmNvZGVjKQo+ID4gIHsKPiA+IC0Jc3RydWN0IGdwaW9f
+ZGVzYyAqZG1pY19lbjsKPiA+ICsJc3RydWN0IGRtaWMgKmRtaWM7Cj4gPiArCWludCBlcnI7Cj4g
+PiArCj4gPiArCWRtaWMgPSBkZXZtX2t6YWxsb2MoY29kZWMtPmRldiwgc2l6ZW9mKCpkbWljKSwg
+R0ZQX0tFUk5FTCk7Cj4gPiArCWlmICghZG1pYykKPiA+ICsJCXJldHVybiAtRU5PTUVNOwo+ID4g
+Kwo+ID4gKwlkbWljLT5ncGlvX2VuID0gZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoY29kZWMtPmRl
+diwKPiA+ICsJCQkJCQkiZG1pY2VuIiwgR1BJT0RfT1VUX0xPVyk7Cj4gPiArCWlmIChJU19FUlIo
+ZG1pYy0+Z3Bpb19lbikpCj4gPiArCQlyZXR1cm4gUFRSX0VSUihkbWljLT5ncGlvX2VuKTsKPiA+
+ICAKPiA+IC0JZG1pY19lbiA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGNvZGVjLT5kZXYsCj4g
+PiAtCQkJCQkiZG1pY2VuIiwgR1BJT0RfT1VUX0xPVyk7Cj4gPiAtCWlmIChJU19FUlIoZG1pY19l
+bikpCj4gPiAtCQlyZXR1cm4gUFRSX0VSUihkbWljX2VuKTsKPiA+ICsJZXJyID0gZGV2aWNlX3By
+b3BlcnR5X3JlYWRfdTMyKGNvZGVjLT5kZXYsICJ3YWtldXAtZGVsYXktbXMiLAo+ID4gKwkJCQkg
+ICAgICAgJmRtaWMtPndha2V1cF9kZWxheSk7Cj4gPiArCWlmIChlcnIgJiYgKGVyciAhPSAtRUlO
+VkFMKSkKPiA+ICsJCXJldHVybiBlcnI7Cj4gPiAgCj4gPiAtCXNuZF9zb2NfY29kZWNfc2V0X2Ry
+dmRhdGEoY29kZWMsIGRtaWNfZW4pOwo+ID4gKwlzbmRfc29jX2NvZGVjX3NldF9kcnZkYXRhKGNv
+ZGVjLCBkbWljKTsKPiA+ICAKPiA+ICAJcmV0dXJuIDA7Cj4gPiAgfQo+ID4gCj4gCj4gLSBQw6l0
+ZXIKPiAKPiBUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAw
+MDE4MCBIZWxzaW5raS4KPiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFp
+a2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJv
+amVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2Fsc2EtZGV2ZWwK
