@@ -1,127 +1,83 @@
-From: srinivas.kandagatla@linaro.org
-Subject: [PATCH v2] PCI: qcom: use regulator bulk api for apq8064 supplies
-Date: Thu, 15 Feb 2018 13:26:37 +0000
-Message-ID: <20180215132637.5673-1-srinivas.kandagatla@linaro.org>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: stanimir.varbanov@linaro.org, svarbanov@mm-sol.com, linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 0/2] media: v4l: Add support for the Cadence MIPI-CSI2 TX controller
+Date: Thu, 15 Feb 2018 14:31:55 +0100
+Message-ID: <20180215133157.8043-1-maxime.ripard@bootlin.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Boris Brezillon <boris.brezillon-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Hi,
 
-This patch converts existing regulators to use regulator bulk apis,
-to make it consistent with msm8996 changes also cut down some redundant code.
+Here is an attempt at supporting the MIPI-CSI2 TX block from Cadence.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
-Changes since v1:
-	updated index correctly and use ARRAY_SIZE
+This IP block is able to receive 4 video streams and stream them over
+a MIPI-CSI2 link using up to 4 lanes. Those streams are basically the
+interfaces to controllers generating some video signals, like a camera
+or a pattern generator.
 
- drivers/pci/dwc/pcie-qcom.c | 52 +++++++++++++--------------------------------
- 1 file changed, 15 insertions(+), 37 deletions(-)
+It is able to map input streams to CSI2 virtual channels and datatypes
+dynamically. The streaming devices choose their virtual channels
+through an additional signal that is transparent to the CSI2-TX. The
+datatypes however are yet another additional input signal, and can be
+mapped to any CSI2 datatypes.
 
-diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
-index e3f20e09a18d..50ff9b879c27 100644
---- a/drivers/pci/dwc/pcie-qcom.c
-+++ b/drivers/pci/dwc/pcie-qcom.c
-@@ -79,6 +79,7 @@
- #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
- #define SLV_ADDR_SPACE_SZ			0x10000000
- 
-+#define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
- struct qcom_pcie_resources_2_1_0 {
- 	struct clk *iface_clk;
- 	struct clk *core_clk;
-@@ -88,9 +89,7 @@ struct qcom_pcie_resources_2_1_0 {
- 	struct reset_control *ahb_reset;
- 	struct reset_control *por_reset;
- 	struct reset_control *phy_reset;
--	struct regulator *vdda;
--	struct regulator *vdda_phy;
--	struct regulator *vdda_refclk;
-+	struct regulator_bulk_data supplies[QCOM_PCIE_2_1_0_MAX_SUPPLY];
- };
- 
- struct qcom_pcie_resources_1_0_0 {
-@@ -218,18 +217,15 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
-+	int ret;
- 
--	res->vdda = devm_regulator_get(dev, "vdda");
--	if (IS_ERR(res->vdda))
--		return PTR_ERR(res->vdda);
--
--	res->vdda_phy = devm_regulator_get(dev, "vdda_phy");
--	if (IS_ERR(res->vdda_phy))
--		return PTR_ERR(res->vdda_phy);
--
--	res->vdda_refclk = devm_regulator_get(dev, "vdda_refclk");
--	if (IS_ERR(res->vdda_refclk))
--		return PTR_ERR(res->vdda_refclk);
-+	res->supplies[0].supply = "vdda";
-+	res->supplies[1].supply = "vdda_phy";
-+	res->supplies[2].supply = "vdda_refclk";
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(res->supplies),
-+				      res->supplies);
-+	if (ret)
-+		return ret;
- 
- 	res->iface_clk = devm_clk_get(dev, "iface");
- 	if (IS_ERR(res->iface_clk))
-@@ -275,9 +271,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
- 	clk_disable_unprepare(res->iface_clk);
- 	clk_disable_unprepare(res->core_clk);
- 	clk_disable_unprepare(res->phy_clk);
--	regulator_disable(res->vdda);
--	regulator_disable(res->vdda_phy);
--	regulator_disable(res->vdda_refclk);
-+	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
- }
- 
- static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
-@@ -288,24 +282,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 	u32 val;
- 	int ret;
- 
--	ret = regulator_enable(res->vdda);
--	if (ret) {
--		dev_err(dev, "cannot enable vdda regulator\n");
-+	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot enable regulators\n");
- 		return ret;
- 	}
- 
--	ret = regulator_enable(res->vdda_refclk);
--	if (ret) {
--		dev_err(dev, "cannot enable vdda_refclk regulator\n");
--		goto err_refclk;
--	}
--
--	ret = regulator_enable(res->vdda_phy);
--	if (ret) {
--		dev_err(dev, "cannot enable vdda_phy regulator\n");
--		goto err_vdda_phy;
--	}
--
- 	ret = reset_control_assert(res->ahb_reset);
- 	if (ret) {
- 		dev_err(dev, "cannot assert ahb reset\n");
-@@ -389,11 +371,7 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- err_clk_phy:
- 	clk_disable_unprepare(res->iface_clk);
- err_assert_ahb:
--	regulator_disable(res->vdda_phy);
--err_vdda_phy:
--	regulator_disable(res->vdda_refclk);
--err_refclk:
--	regulator_disable(res->vdda);
-+	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
- 
- 	return ret;
- }
+Since v4l2 doesn't really allow for that setup at the moment, this
+preliminary version is a rather dumb one in order to start the
+discussion on how to address this properly.
+
+Let me know what you think!
+Maxime
+
+Changes from v3:
+  - Added a comment about entity links walk concurrency
+  - Changed the default resolution to 1280x720
+  - Changed usleep_range calls to udelay
+  - Reworked the reference counting mechanism to remove a race
+    condition by adding a mutex instead of an atomic count
+  - Changed the entity function to MEDIA_ENT_F_VID_IF_BRIDGE
+  - Changed the name of the reg variable in _get_resources to dev_cfg
+  - Removed the redundant error message in the devm_ioremap_resource
+    error path
+  - Moved the subdev s_stream call before enabling the TX bridge
+  - Changed some int types to unsigned
+  - Init'd the pad formats properly
+  - Fixed typo in the CSI2TX_LANES_MAX define name
+  - Added Sakari Acked-by
+
+Changes from v2:
+  - Use SPDX license header
+  - Use the lane mapping from DT
+
+Changes from v1:
+  - Add a subdev notifier and start our downstream subdevice in
+    s_stream  
+  - Based the decision to enable the stream or not on the link state
+    instead of whether a format was being set on the pad
+  - Put the controller back in reset when stopping the pipeline
+  - Clarified the enpoints number in the DT binding
+  - Added a default format for the pads
+  - Added some missing const
+  - Added more explicit comments
+  - Rebased on 4.15
+
+Maxime Ripard (2):
+  dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
+  v4l: cadence: Add Cadence MIPI-CSI2 TX driver
+
+ .../devicetree/bindings/media/cdns,csi2tx.txt      |  98 ++++
+ drivers/media/platform/cadence/Kconfig             |  11 +
+ drivers/media/platform/cadence/Makefile            |   1 +
+ drivers/media/platform/cadence/cdns-csi2tx.c       | 602 +++++++++++++++++++++
+ 4 files changed, 712 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+ create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
+
 -- 
-2.15.1
+2.14.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
