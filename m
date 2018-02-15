@@ -1,47 +1,69 @@
 From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2] ARM: shmobile: Document Renesas H2-based Stout DT bindings
-Date: Thu, 15 Feb 2018 11:02:28 +0100
-Message-ID: <20180215100228.24695-1-marek.vasut+renesas@gmail.com>
+Subject: Re: [PATCH] ARM: dts: stout: Initial r8a7790 Stout board support
+Date: Thu, 15 Feb 2018 10:59:27 +0100
+Message-ID: <e28ab40d-85c1-8821-1482-09f59740b559@gmail.com>
+References: <20180213232948.31521-1-marek.vasut+renesas@gmail.com>
+ <CAMuHMdUuuokCjJ-uz1+JMFLF5zytiB6gjhVC1Xtys_rWdFnPhg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUuuokCjJ-uz1+JMFLF5zytiB6gjhVC1Xtys_rWdFnPhg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the Renesas H2 Stout (ADAS Starterkit) device tree bindings,
-listing it as a supported board.
+On 02/14/2018 10:11 AM, Geert Uytterhoeven wrote:
+> Hi Marek,
 
-This allows to use checkpatch.pl to validate .dts files referring to
-the Stout board.
+[...]
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
----
-V2: - Keep the list of boards alphabetically sorted
-    - Rename the board from ADAS Starter Kit to ADAS Starterkit
----
- Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
- 1 file changed, 2 insertions(+)
+>> +                       partition@0 {
+>> +                               label = "loader";
+>> +                               reg = <0x00000000 0x00040000>;
+>> +                               read-only;
+>> +                       };
+>> +                       partition@40000 {
+>> +                               label = "user";
+>> +                               reg = <0x00040000 0x00400000>;
+>> +                               read-only;
+>> +                       };
+>> +                       partition@440000 {
+>> +                               label = "flash";
+>> +                               reg = <0x00440000 0x03bc0000>;
+>> +                       };
+> 
+> I can't verify the partition layout.
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index 41d3920aaa5e..98916b3864c2 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -116,6 +116,8 @@ Boards:
-     compatible = "renesas,sk-rzg1e", "renesas,r8a7745"
-   - SK-RZG1M (YR8A77430S000BE)
-     compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
-+  - Stout (ADAS Starterkit, Y-R-CAR-ADAS-SKH2-BOARD)
-+    compatible = "renesas,stout", "renesas,r8a7790"
-   - V3MSK
-     compatible = "renesas,v3msk", "renesas,r8a77970"
-   - Wheat
+I adjusted it according to
+https://elinux.org/R-Car/Boards/Stout
+
+>> +               };
+>> +       };
+>> +};
+> 
+> 
+>> +&iic2  {
+>> +       status = "okay";
+>> +       pinctrl-0 = <&iic2_pins>;
+>> +       pinctrl-names = "default";
+>> +
+>> +       clock-frequency = <100000>;
+>> +
+>> +       hdmi@39 {
+>> +               compatible = "adi,adv7511w";
+>> +               reg = <0x39>;
+>> +               interrupt-parent = <&gpio1>;
+>> +               interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
+> 
+> Missing cec clock (OSC4).
+Fixed
+
 -- 
-2.15.1
-
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
