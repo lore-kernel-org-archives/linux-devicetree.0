@@ -1,143 +1,142 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH] ASoC: dmic: Add optional wakeup delay
-Date: Wed, 14 Feb 2018 15:51:56 -0800
-Message-ID: <20180214235156.81589-1-mka@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v3 00/12] R-Car DU: Convert LVDS code to bridge driver
+Date: Thu, 15 Feb 2018 02:04:03 +0200
+Message-ID: <20180215000415.19077-1-laurent.pinchart+renesas@ideasonboard.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On some systems a delay is needed after switching on the clocks, to allow
-the DMIC output to stabilize and avoid a popping noise at the beginning
-of the recording. Add the optional device tree property 'wakeup-delay-ms'
-and apply the specified delay in the new dmic_daiops_prepare().
-
-Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- .../devicetree/bindings/sound/dmic.txt        |  2 +
- sound/soc/codecs/dmic.c                       | 54 ++++++++++++++-----
- 2 files changed, 42 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/dmic.txt b/Documentation/devicetree/bindings/sound/dmic.txt
-index 54c8ef6498a8..de741c6609d0 100644
---- a/Documentation/devicetree/bindings/sound/dmic.txt
-+++ b/Documentation/devicetree/bindings/sound/dmic.txt
-@@ -7,10 +7,12 @@ Required properties:
- 
- Optional properties:
- 	- dmicen-gpios: GPIO specifier for dmic to control start and stop
-+	- wakeup-delay-ms: Delay (in ms) after enabling the DMIC
- 
- Example node:
- 
- 	dmic_codec: dmic@0 {
- 		compatible = "dmic-codec";
- 		dmicen-gpios = <&gpio4 3 GPIO_ACTIVE_HIGH>;
-+		wakeup-delay-ms <50>;
- 	};
-diff --git a/sound/soc/codecs/dmic.c b/sound/soc/codecs/dmic.c
-index b88a1ee66f80..11f6abf11074 100644
---- a/sound/soc/codecs/dmic.c
-+++ b/sound/soc/codecs/dmic.c
-@@ -19,6 +19,7 @@
-  *
-  */
- 
-+#include <linux/delay.h>
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/platform_device.h>
-@@ -29,24 +30,38 @@
- #include <sound/soc.h>
- #include <sound/soc-dapm.h>
- 
-+struct dmic {
-+	struct gpio_desc *gpio_en;
-+	int wakeup_delay;
-+};
-+
-+static int dmic_daiops_prepare(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct dmic *dmic = snd_soc_dai_get_drvdata(dai);
-+
-+	if (dmic->gpio_en)
-+		gpiod_set_value(dmic->gpio_en, 1);
-+
-+	if (dmic->wakeup_delay)
-+		msleep(dmic->wakeup_delay);
-+
-+	return 0;
-+}
-+
- static int dmic_daiops_trigger(struct snd_pcm_substream *substream,
- 		int cmd, struct snd_soc_dai *dai)
- {
--	struct gpio_desc *dmic_en = snd_soc_dai_get_drvdata(dai);
-+	struct dmic *dmic = snd_soc_dai_get_drvdata(dai);
- 
--	if (!dmic_en)
-+	if (!dmic->gpio_en)
- 		return 0;
- 
- 	switch (cmd) {
--	case SNDRV_PCM_TRIGGER_START:
--	case SNDRV_PCM_TRIGGER_RESUME:
--	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
--		gpiod_set_value(dmic_en, 1);
--		break;
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
--		gpiod_set_value(dmic_en, 0);
-+		gpiod_set_value(dmic->gpio_en, 0);
- 		break;
- 	}
- 
-@@ -54,6 +69,7 @@ static int dmic_daiops_trigger(struct snd_pcm_substream *substream,
- }
- 
- static const struct snd_soc_dai_ops dmic_dai_ops = {
-+	.prepare	= dmic_daiops_prepare,
- 	.trigger	= dmic_daiops_trigger,
- };
- 
-@@ -73,14 +89,24 @@ static struct snd_soc_dai_driver dmic_dai = {
- 
- static int dmic_codec_probe(struct snd_soc_codec *codec)
- {
--	struct gpio_desc *dmic_en;
-+	struct dmic *dmic;
-+	int err;
-+
-+	dmic = devm_kzalloc(codec->dev, sizeof(*dmic), GFP_KERNEL);
-+	if (!dmic)
-+		return -ENOMEM;
-+
-+	dmic->gpio_en = devm_gpiod_get_optional(codec->dev,
-+						"dmicen", GPIOD_OUT_LOW);
-+	if (IS_ERR(dmic->gpio_en))
-+		return PTR_ERR(dmic->gpio_en);
- 
--	dmic_en = devm_gpiod_get_optional(codec->dev,
--					"dmicen", GPIOD_OUT_LOW);
--	if (IS_ERR(dmic_en))
--		return PTR_ERR(dmic_en);
-+	err = device_property_read_u32(codec->dev, "wakeup-delay-ms",
-+				       &dmic->wakeup_delay);
-+	if (err && (err != -EINVAL))
-+		return err;
- 
--	snd_soc_codec_set_drvdata(codec, dmic_en);
-+	snd_soc_codec_set_drvdata(codec, dmic);
- 
- 	return 0;
- }
--- 
-2.16.1.291.g4437f3f132-goog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8sCgpUaGlzIHBhdGNoIHNlcmllcyBhZGRyZXNzZXMgYSBkZXNpZ24gbWlzdGFrZSB0aGF0
+IGRhdGVzIGJhY2sgZnJvbSB0aGUgaW5pdGlhbApEVSBzdXBwb3J0LiBTdXBwb3J0IGZvciB0aGUg
+TFZEUyBlbmNvZGVycywgd2hpY2ggYXJlIElQIGNvcmVzIHNlcGFyYXRlIGZyb20KdGhlIERVLCB3
+YXMgYnVuZGxlZCBpbiB0aGUgRFUgZHJpdmVyLiBXb3JzZSwgYm90aCB0aGUgRFUgYW5kIExWRFMg
+d2VyZQpkZXNjcmliZWQgdGhyb3VnaCBhIHNpbmdsZSBEVCBub2RlLgoKVG8gZml4IHRoZSwgcGF0
+Y2hlcyAwMS8xMiBhbmQgMDIvMTIgZGVmaW5lIG5ldyBEVCBiaW5kaW5ncyBmb3IgdGhlIExWRFMK
+ZW5jb2RlcnMsIGFuZCBkZXByZWNhdGUgdGhlaXIgZGVzY3JpcHRpb24gaW5zaWRlIHRoZSBEVSBi
+aW5kaW5ncy4gVG8gcmV0YWluCmJhY2t3YXJkIGNvbXBhdGliaWxpdHkgd2l0aCBleGlzdGluZyBE
+VCwgcGF0Y2ggMDMvMTIgdGhlbiBwYXRjaGVzIHRoZSBkZXZpY2UKdHJlZSBhdCBydW50aW1lIHRv
+IGNvbnZlcnQgdGhlIGxlZ2FjeSBiaW5kaW5ncyB0byB0aGUgbmV3IG9uZXMuCgpXaXRoIHRoZSBE
+VCBzaWRlIGFkZHJlc3NlZCwgcGF0Y2ggMDQvMTIgdGhlbiBjb252ZXJ0cyB0aGUgTFZEUyBzdXBw
+b3J0IGNvZGUgdG8KYSBzZXBhcmF0ZSBicmlkZ2UgZHJpdmVyLiBBZnRlciBhIHNtYWxsIGZpeCB0
+byB0aGUgUG9ydGVyIGJvYXJkIGRldmljZSB0cmVlIGluCnBhdGNoIDA1LzEyLCBwYXRjaGVzIDA2
+LzEyIHRvIDEyLzEyIHRoZW4gdXBkYXRlIGFsbCB0aGUgZGV2aWNlIHRyZWUgc291cmNlcyB0bwp0
+aGUgbmV3IERVIGFuZCBMVkRTIGVuY29kZXJzIGJpbmRpbmdzLgoKSSBkZWNpZGVkIHRvIGdvIGZv
+ciBsaXZlIERUIHBhdGNoaW5nIGluIHBhdGNoIDAzLzEyIGJlY2F1c2UgaW1wbGVtZW50aW5nCnN1
+cHBvcnQgZm9yIGJvdGggdGhlIGxlZ2FjeSBhbmQgbmV3IGJpbmRpbmdzIGluIHRoZSBkcml2ZXIg
+d291bGQgaGF2ZSBiZWVuCnZlcnkgaW50cnVzaXZlLCBhbmQgcHJldmVudGVkIGZ1cnRoZXIgY2xl
+YW51cHMuIFRoaXMgdmVyc2lvbiByZWxpZXMgbW9yZQpoZWF2aWx5IG9uIG92ZXJsYXlzIHRvIGF2
+b2lkIHRvdWNoaW5nIHRoZSBpbnRlcm5hbHMgb2YgdGhlIE9GIGNvcmUgY29tcGFyZWQgdG8KdjIs
+IGV2ZW4gaWYgbWFudWFsIGZpeGVzIHRvIHRoZSBkZXZpY2UgdHJlZSBhcmUgc3RpbGwgbmVlZGVk
+LgoKVGhlcmUgd2VyZSBhIGZldyBzaG9ydGNvbWluZ3MgaW4gdGhlIE9GIEFQSSB0aGF0IEkgd29y
+a2VkIGFyb3VuZCB3aXRoIGxvY2FsCmNvZGUgaW4gdGhlIGRyaXZlci4gSWYgYW55b25lIGlzIGlu
+dGVyZXN0ZWQgaW4gcGVyZm9ybWluZyBzaW1pbGFyIGxpdmUgRFQKcGF0Y2hpbmcgSSB0aGluayB3
+ZSBjb3VsZCBtb3ZlIHNvbWUgb2YgdGhlIGNvZGUgdG8gdGhlIE9GIGNvcmUuIEknbSB0aGlua2lu
+ZwppbiBwYXJ0aWN1bGFyIGFib3V0IHRoZSByY2FyX2R1X29mX2ZpbmRfbm9kZV9ieV9wYXRoKCkg
+ZnVuY3Rpb24gdGhhdCByZXNlbWJsZXMKb2ZfZmluZF9ub2RlX2J5X3BhdGgoKSBidXQgd2l0aCBh
+IGNvbmZpZ3VyYWJsZSBiYXNlIG5vZGUsIGFuZCBhYm91dCB0aGUKcmNhcl9kdV9vZl9hZGRfcHJv
+cGVydHkoKSBmdW5jdGlvbiB0aGF0IGFkZHMgYSBwcm9wZXJ0eSB0byBhbiBleGlzdGluZyBEVApu
+b2RlLiBSb2IsIEZyYW5rLCBzaG91bGQgSSBzdWJtaXQgcGF0Y2hlcyA/IEFueSBhZHZpY2UgPwoK
+Q29tcGFyZWQgdG8gdjIsIHRoZSBiaWdnZXN0IGNoYW5nZSBpcyBpbiBwYXRjaCAwMy8xMi4gRm9s
+bG93aW5nIFJvYidzIGFuZApGcmFuaydzIHJldmlld3MgaXQgd2FzIGNsZWFyIHRoYXQgbW9kaWZ5
+aW5nIHRoZSB1bmZsYXR0ZW5lZCBEVCBzdHJ1Y3R1cmUgb2YKdGhlIG92ZXJsYXkgYmVmb3JlIGFw
+cGx5aW5nIGl0IHdhc24ndCBwb3B1bGFyLiBJIGhhdmUgdGh1cyBkZWNpZGVkIHRvIHVzZSBvbmUK
+b3ZlcmxheSBzb3VyY2UgcGVyIFNvQyB0byBtb3ZlIGFzIG11Y2ggb2YgdGhlIERUIGNoYW5nZXMg
+dG8gdGhlIG92ZXJsYXkgYXMKcG9zc2libGUsIGFuZCBvbmx5IHBlcmZvcm0gbWFudWFsIG1vZGlm
+aWNhdGlvbnMgKHRoYXQgYXJlIHN0aWxsIG5lZWRlZCBhcyBzb21lCm9mIHRoZSBpbmZvcm1hdGlv
+biBpcyBib2FyZC1zcGVjaWZpYykgb24gdGhlIHN5c3RlbSBEVCBhZnRlciBhcHBseWluZyB0aGUK
+b3ZlcmxheS4gQXMgYSByZXN1bHQgdGhlIG92ZXJsYXkgaXMgcGFyc2VkIGFuZCBhcHBsaWVkIHdp
+dGhvdXQgYmVpbmcgbW9kaWZpZWQuCgpDb21wYXJlZCB0byB2MSwgdGhpcyBzZXJpZXMgdXBkYXRl
+IHRoZSByOGE3NzkyIGFuZCByOGE3Nzk0IGRldmljZSB0cmVlIHNvdXJjZXMKYW5kIGluY29ycG9y
+YXRlIHJldmlldyBmZWVkYmFjayBhcyBkZXNjcmliZWQgYnkgdGhlIGNoYW5nZWxvZ3Mgb2YgaW5k
+aXZpZHVhbApwYXRjaGVzLgoKTGF1cmVudCBQaW5jaGFydCAoMTIpOgogIGR0LWJpbmRpbmdzOiBk
+aXNwbGF5OiByZW5lc2FzOiBBZGQgUi1DYXIgTFZEUyBlbmNvZGVyIERUIGJpbmRpbmdzCiAgZHQt
+YmluZGluZ3M6IGRpc3BsYXk6IHJlbmVzYXM6IERlcHJlY2F0ZSBMVkRTIHN1cHBvcnQgaW4gdGhl
+IERVCiAgICBiaW5kaW5ncwogIGRybTogcmNhci1kdTogRml4IGxlZ2FjeSBEVCB0byBjcmVhdGUg
+TFZEUyBlbmNvZGVyIG5vZGVzCiAgZHJtOiByY2FyLWR1OiBDb252ZXJ0IExWRFMgZW5jb2RlciBj
+b2RlIHRvIGJyaWRnZSBkcml2ZXIKICBBUk06IGR0czogcG9ydGVyOiBGaXggSERNSSBvdXRwdXQg
+cm91dGluZwogIEFSTTogZHRzOiByOGE3NzkwOiBDb252ZXJ0IHRvIG5ldyBMVkRTIERUIGJpbmRp
+bmdzCiAgQVJNOiBkdHM6IHI4YTc3OTE6IENvbnZlcnQgdG8gbmV3IExWRFMgRFQgYmluZGluZ3MK
+ICBBUk06IGR0czogcjhhNzc5MjogQ29udmVydCB0byBuZXcgRFUgRFQgYmluZGluZ3MKICBBUk06
+IGR0czogcjhhNzc5MzogQ29udmVydCB0byBuZXcgTFZEUyBEVCBiaW5kaW5ncwogIEFSTTogZHRz
+OiByOGE3Nzk0OiBDb252ZXJ0IHRvIG5ldyBEVSBEVCBiaW5kaW5ncwogIGFybTY0OiBkdHM6IHJl
+bmVzYXM6IHI4YTc3OTU6IENvbnZlcnQgdG8gbmV3IExWRFMgRFQgYmluZGluZ3MKICBhcm02NDog
+ZHRzOiByZW5lc2FzOiByOGE3Nzk2OiBDb252ZXJ0IHRvIG5ldyBMVkRTIERUIGJpbmRpbmdzCgog
+Li4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgICAgICAgfCAgNTYg
+KysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0ICAgICB8
+ICAzMSArLQogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDEgKwogYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MC1sYWdlci5kdHMgICAgICAgICAg
+ICAgICAgfCAgMjIgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTAuZHRzaSAgICAgICAgICAg
+ICAgICAgICAgIHwgIDYwICsrLQogYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS1rb2Vsc2NoLmR0
+cyAgICAgICAgICAgICAgfCAgMTAgKy0KIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEtcG9ydGVy
+LmR0cyAgICAgICAgICAgICAgIHwgIDE4ICstCiBhcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLmR0
+c2kgICAgICAgICAgICAgICAgICAgICB8ICAzNCArLQogYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5
+Mi5kdHNpICAgICAgICAgICAgICAgICAgICAgfCAgIDEgLQogYXJjaC9hcm0vYm9vdC9kdHMvcjhh
+Nzc5My1nb3NlLmR0cyAgICAgICAgICAgICAgICAgfCAgMTAgKy0KIGFyY2gvYXJtL2Jvb3QvZHRz
+L3I4YTc3OTMuZHRzaSAgICAgICAgICAgICAgICAgICAgIHwgIDM0ICstCiBhcmNoL2FybS9ib290
+L2R0cy9yOGE3Nzk0LmR0c2kgICAgICAgICAgICAgICAgICAgICB8ICAgMSAtCiAuLi4vYm9vdC9k
+dHMvcmVuZXNhcy9yOGE3Nzk1LWVzMS1zYWx2YXRvci14LmR0cyAgICB8ICAgMyArLQogYXJjaC9h
+cm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTUtaDN1bGNiLmR0cyAgICAgfCAgIDMgKy0KIGFy
+Y2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk1LXNhbHZhdG9yLXguZHRzIHwgICAzICst
+CiAuLi4vYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk1LXNhbHZhdG9yLXhzLmR0cyB8ICAg
+MyArLQogYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTUuZHRzaSAgICAgICAgICAg
+fCAgMzQgKy0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk2LW0zdWxjYi5kdHMg
+ICAgIHwgICAzICstCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5Ni1zYWx2YXRv
+ci14LmR0cyB8ICAgMyArLQogYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3OTYuZHRz
+aSAgICAgICAgICAgfCAgMzQgKy0KIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L0tjb25maWcgICAg
+ICAgICAgICAgICAgICAgIHwgICA2ICstCiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9NYWtlZmls
+ZSAgICAgICAgICAgICAgICAgICB8ICAxMCArLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNh
+cl9kdV9jcnRjLmMgICAgICAgICAgICAgfCAgIDcgLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUv
+cmNhcl9kdV9jcnRjLmggICAgICAgICAgICAgfCAgIDMgLQogZHJpdmVycy9ncHUvZHJtL3JjYXIt
+ZHUvcmNhcl9kdV9kcnYuYyAgICAgICAgICAgICAgfCAgMjEgKy0KIGRyaXZlcnMvZ3B1L2RybS9y
+Y2FyLWR1L3JjYXJfZHVfZHJ2LmggICAgICAgICAgICAgIHwgICA1IC0KIGRyaXZlcnMvZ3B1L2Ry
+bS9yY2FyLWR1L3JjYXJfZHVfZW5jb2Rlci5jICAgICAgICAgIHwgMTc1ICstLS0tLS0KIGRyaXZl
+cnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZW5jb2Rlci5oICAgICAgICAgIHwgIDEyIC0KIGRy
+aXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZ3JvdXAuYyAgICAgICAgICAgIHwgIDEzICst
+CiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2ttcy5jICAgICAgICAgICAgICB8ICAx
+NCArLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9sdmRzY29uLmMgICAgICAgICAg
+fCAgOTMgLS0tLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9sdmRzY29uLmggICAg
+ICAgICAgfCAgMjQgLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9sdmRzZW5jLmMg
+ICAgICAgICAgfCAyMzggLS0tLS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9k
+dV9sdmRzZW5jLmggICAgICAgICAgfCAgNjQgLS0tCiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9y
+Y2FyX2R1X29mLmMgICAgICAgICAgICAgICB8IDM3NCArKysrKysrKysrKysrKysKIGRyaXZlcnMv
+Z3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuaCAgICAgICAgICAgICAgIHwgIDIwICsKIC4uLi9n
+cHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTAuZHRzICAgIHwgIDgxICsrKysK
+IC4uLi9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTEuZHRzICAgIHwgIDU1
+ICsrKwogLi4uL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5My5kdHMgICAg
+fCAgNTUgKysrCiAuLi4vZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3Nzk1LmR0
+cyAgICB8ICA1NSArKysKIC4uLi9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3
+OTYuZHRzICAgIHwgIDU1ICsrKwogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9sdmRzLmMg
+ICAgICAgICAgICAgICAgfCA1MjQgKysrKysrKysrKysrKysrKysrKysrCiA0MiBmaWxlcyBjaGFu
+Z2VkLCAxNTYxIGluc2VydGlvbnMoKyksIDcwNyBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVu
+ZXNhcyxsdmRzLnR4dAogZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
+L3JjYXJfZHVfbHZkc2Nvbi5jCiBkZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Jj
+YXItZHUvcmNhcl9kdV9sdmRzY29uLmgKIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vcmNhci1kdS9yY2FyX2R1X2x2ZHNlbmMuYwogZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2VuYy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTAuZHRzCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3
+OTEuZHRzCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9k
+dV9vZl9sdmRzX3I4YTc3OTMuZHRzCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
+L3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTUuZHRzCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTYuZHRzCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9sdmRzLmMKCi0tIApS
+ZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
