@@ -1,74 +1,36 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC PATCH v2 4/6] arm64: dts: exynos: add OF graph between MHL
- and USB connector
-Date: Thu, 15 Feb 2018 13:14:52 +0100
-Message-ID: <CAJKOXPdg81LPOFmxtJmL7hMXGgB2USAOhCz2yjU9obX1jWjEWw@mail.gmail.com>
-References: <CGME20180215103927eucas1p24785b56277ed6c9fa2fd70058096b944@eucas1p2.samsung.com>
- <20180215103920.32017-1-a.hajda@samsung.com>
- <20180215103920.32017-5-a.hajda@samsung.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v13 7/9] ACPI: Translate the I/O range of non-MMIO devices
+ before scanning
+Date: Thu, 15 Feb 2018 14:22:58 +0200
+Message-ID: <CAHp75VfFKcnUVQwPUxynzp88RXWdV8VEqtXxd0=_Q_GJKO6UpQ@mail.gmail.com>
+References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
+ <1518543933-22456-8-git-send-email-john.garry@huawei.com> <20180214161635.GA13849@e107981-ln.cambridge.arm.com>
+ <65185a4d-c712-4486-d713-3fa9de14e35d@huawei.com> <e3fb78b3-5f5c-fe96-9f02-e96092963c17@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180215103920.32017-5-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <e3fb78b3-5f5c-fe96-9f02-e96092963c17@huawei.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Corey Minyard <minyard@acm.org>devicetree <d>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBGZWIgMTUsIDIwMTggYXQgMTE6MzkgQU0sIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
-c2Ftc3VuZy5jb20+IHdyb3RlOgo+IE9GIGdyYXBoIGRlc2NyaWJlcyBNSEwgZGF0YSBsYW5lcyBi
-ZXR3ZWVuIE1ITCBhbmQgcmVzcGVjdGl2ZSBVU0IKPiBjb25uZWN0b3IuCj4KPiBTaWduZWQtb2Zm
-LWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgo+IC0tLQo+ICAuLi4vYm9v
-dC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLWNvbW1vbi5kdHNpICAgICB8IDMxICsrKysrKysr
-KysrKysrKysrKystLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKyksIDMgZGVs
-ZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5
-bm9zNTQzMy10bTItY29tbW9uLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9leHlu
-b3M1NDMzLXRtMi1jb21tb24uZHRzaQo+IGluZGV4IDdlNDlmYWRlZTQxMi4uZWY3NThmNzMzN2U5
-IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0y
-LWNvbW1vbi5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQz
-My10bTItY29tbW9uLmR0c2kKPiBAQCAtNzc5LDkgKzc3OSwyMiBAQAo+ICAgICAgICAgICAgICAg
-ICBjbG9ja3MgPSA8JnBtdV9zeXN0ZW1fY29udHJvbGxlciAwPjsKPiAgICAgICAgICAgICAgICAg
-Y2xvY2stbmFtZXMgPSAieHRhbCI7Cj4KPiAtICAgICAgICAgICAgICAgcG9ydCB7Cj4gLSAgICAg
-ICAgICAgICAgICAgICAgICAgbWhsX3RvX2hkbWk6IGVuZHBvaW50IHsKPiAtICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV90b19taGw+Owo+ICsg
-ICAgICAgICAgICAgICBwb3J0cyB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3Mt
-Y2VsbHMgPSA8MT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47
-Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIHBvcnRAMCB7Cj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBtaGxfdG9faGRtaTogZW5kcG9pbnQgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfdG9fbWhsPjsKPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsK
-PiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAxIHsKPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIG1obF90b19tdXNiX2NvbjogZW5kcG9pbnQgewo+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jm11c2JfY29uX3RvX21obD47Cj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgIH07Cj4gICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICB9Owo+IEBAIC04MDQsNiArODE3
-LDE4IEBACj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInVz
-Yi1iLWNvbm5lY3RvciI7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbCA9
-ICJtaWNyby1VU0IiOwo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9ICJt
-aWNybyI7Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydHMgewo+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwx
-PjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMg
-PSA8MD47Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0
-QDMgewoKSSB0aGluayB5b3UgbWlnaHQgbmVlZCBoZXJlICJyZWcgPSA8Mz4iLiBEb2Vzbid0IGl0
-IHByb2R1Y2UgYSB3YXJuaW5nIG5vdz8KCkJSLApLcnp5c3p0b2YKCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbXVzYl9jb25fdG9fbWhsOiBlbmRwb2lu
-dCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jm1obF90b19tdXNiX2Nvbj47Cj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIH07Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAgICAgICAgICAgICAg
-ICAgICB9Owo+ICAgICAgICAgICAgICAgICB9Owo+Cj4gLS0KPiAyLjE2LjEKPgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Feb 15, 2018 at 1:19 PM, John Garry <john.garry@huawei.com> wrote:
+
+> +static const struct acpi_device_id indirect_io_hosts[] = {
+> +    {"HISI0191", 0},    /* HiSilicon LPC host */
+> +    {},
+
+Just a nit.
+
+It seems lately this happens more often than usual, I mean a comma in
+the terminator line.
+
+If we remove it. we terminate not only at runtime, but at compile
+time, which is slightly better.
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
