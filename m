@@ -1,114 +1,29 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v7 2/2] dt-bindings/interrupt-controller: pdc: describe PDC device binding
-Date: Thu, 15 Feb 2018 14:27:42 -0700
-Message-ID: <20180215212742.4675-3-ilina@codeaurora.org>
-References: <20180215212742.4675-1-ilina@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180215212742.4675-1-ilina@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, asathyak@codeaurora.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] clk: npcm750: update text with fixed clocks
+Date: Thu, 15 Feb 2018 14:38:12 -0800
+Message-ID: <CAFd5g44gBJp0-mYEWGdyiA67BCi2pZWAG2bYPS-WdJEwH1oA5A@mail.gmail.com>
+References: <1518701959-22899-1-git-send-email-tali.perry1@gmail.com> <1518701959-22899-2-git-send-email-tali.perry1@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518701959-22899-2-git-send-email-tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tali Perry <tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Nancy Yuen <yuenn-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Archana Sathyakumar <asathyak@codeaurora.org>
+On Thu, Feb 15, 2018 at 5:39 AM, Tali Perry <tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> Signed-off-by: Tali Perry <tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+ <snip>
 
-Add device binding documentation for the PDC Interrupt controller on
-QCOM SoC's like the SDM845. The interrupt-controller can be used to
-sense edge low interrupts and wakeup interrupts when the GIC is
-non-operational.
+I think this should probably be rolled into [PATCH v2 1/1] npcm750: add fixed
+clocks (moved from drivers/clk/clk-npcm7xx.c):
+https://www.spinics.net/lists/arm-kernel/msg634678.html
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- .../bindings/interrupt-controller/qcom,pdc.txt     | 78 ++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-new file mode 100644
-index 000000000000..0b2c97ddb520
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-@@ -0,0 +1,78 @@
-+PDC interrupt controller
-+
-+Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
-+Power Domain Controller (PDC) that is on always-on domain. In addition to
-+providing power control for the power domains, the hardware also has an
-+interrupt controller that can be used to help detect edge low interrupts as
-+well detect interrupts when the GIC is non-operational.
-+
-+GIC is parent interrupt controller at the highest level. Platform interrupt
-+controller PDC is next in hierarchy, followed by others. Drivers requiring
-+wakeup capabilities of their device interrupts routed through the PDC, must
-+specify PDC as their interrupt controller and request the PDC port associated
-+with the GIC interrupt. See example below.
-+
-+Properties:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should contain "qcom,<soc>-pdc"
-+		    - "qcom,sdm845-pdc": For SDM845
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Specifies the base physical address for PDC hardware.
-+
-+- interrupt-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: Specifies the number of cells needed to encode an interrupt
-+		    source.
-+		    Must be 2.
-+		    The first element of the tuple is the PDC pin for the
-+		    interrupt.
-+		    The second element is the trigger type.
-+
-+- interrupt-parent:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: Specifies the interrupt parent necessary for hierarchical
-+		    domain to operate.
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <bool>
-+	Definition: Identifies the node as an interrupt controller.
-+
-+- qcom,pdc-ranges:
-+	Usage: required
-+	Value type: <u32 array>
-+	Definition: Specifies the PDC pin offset and the number of PDC ports.
-+		    The tuples indicates the valid mapping of valid PDC ports
-+		    and their hwirq mapping.
-+		    The first element of the tuple is the starting PDC port.
-+		    The second element is the GIC hwirq number for the PDC port.
-+		    The third element is the number of interrupts in sequence.
-+
-+Example:
-+
-+	pdc: interrupt-controller@b220000 {
-+		compatible = "qcom,sdm845-pdc";
-+		reg = <0xb220000 0x30000>;
-+		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
-+		#interrupt-cells = <2>;
-+		interrupt-parent = <&intc>;
-+		interrupt-controller;
-+	};
-+
-+DT binding of a device that wants to use the GIC SPI 514 as a wakeup
-+interrupt, must do -
-+
-+	wake-device {
-+		interrupts-extended = <&pdc 2 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+In this case interrupt 514 would be mapped to port 2 on the PDC as defined by
-+the qcom,pdc-ranges property.
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Cheers
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
