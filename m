@@ -1,32 +1,37 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] rtc: isl12026: Add driver.
-Date: Thu, 15 Feb 2018 16:35:38 +0200
-Message-ID: <CAHp75VcnR2U3DgSCv5Lpj=UBQnzX7YCbvbxzv__cZmW_+VcidQ@mail.gmail.com>
-References: <20180214005536.22739-1-david.daney@cavium.com>
- <CAHp75VcQm-gr0GRszBSRJSZOpdSutRyhVkw-BN_YAwhjaPM4yg@mail.gmail.com> <20180215131533.GL8219@piout.net>
+From: Mikko Perttunen <mperttunen@nvidia.com>
+Subject: [PATCH v3 3/7] soc/tegra: pmc: Add Tegra194 compatibility string
+Date: Thu, 15 Feb 2018 16:52:02 +0200
+Message-ID: <20180215145206.24775-4-mperttunen@nvidia.com>
+References: <20180215145206.24775-1-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180215131533.GL8219@piout.net>
+In-Reply-To: <20180215145206.24775-1-mperttunen@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: David Daney <david.daney@cavium.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: talho@nvidia.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mikko Perttunen <mperttunen@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 15, 2018 at 3:15 PM, Alexandre Belloni
-<alexandre.belloni@free-electrons.com> wrote:
-> On 15/02/2018 at 14:45:11 +0200, Andy Shevchenko wrote:
->> On Wed, Feb 14, 2018 at 2:55 AM, David Daney <david.daney@cavium.com> wrote:
+The Tegra194 PMC is mostly compatible with Tegra186, including in all
+currently supported features. As such, add a new compatibility string
+but point to the existing Tegra186 SoC data for now.
 
->> > +#ifdef CONFIG_OF
->>
->> Remove this ugly #ifdef. Your driver OF only one.
->>
->
-> Well, it is DT only because you asked for that on v1.
+Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
+---
+ drivers/soc/tegra/pmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes, and I asked to remove these #ifdef:s there as well.
-
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index ce62a47a6647..a2df230bf51a 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -1920,6 +1920,7 @@ static const struct tegra_pmc_soc tegra186_pmc_soc = {
+ };
+ 
+ static const struct of_device_id tegra_pmc_match[] = {
++	{ .compatible = "nvidia,tegra194-pmc", .data = &tegra186_pmc_soc },
+ 	{ .compatible = "nvidia,tegra186-pmc", .data = &tegra186_pmc_soc },
+ 	{ .compatible = "nvidia,tegra210-pmc", .data = &tegra210_pmc_soc },
+ 	{ .compatible = "nvidia,tegra132-pmc", .data = &tegra124_pmc_soc },
 -- 
-With Best Regards,
-Andy Shevchenko
+2.16.1
