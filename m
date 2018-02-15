@@ -1,40 +1,114 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v13 7/8] ARM: dts: imx: Add TDA19971 HDMI Receiver to GW54xx
-Date: Thu, 15 Feb 2018 13:19:17 -0800
-Message-ID: <CAJ+vNU3G9bJ16npp22O=7k72Pf3xSuQxW-CA2p5cbDq-nSZ4ew@mail.gmail.com>
-References: <1518717336-6271-1-git-send-email-tharvey@gateworks.com>
- <1518717336-6271-8-git-send-email-tharvey@gateworks.com> <7732637c-93bf-fac2-5553-695782890254@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v7 2/2] dt-bindings/interrupt-controller: pdc: describe PDC device binding
+Date: Thu, 15 Feb 2018 14:27:42 -0700
+Message-ID: <20180215212742.4675-3-ilina@codeaurora.org>
+References: <20180215212742.4675-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7732637c-93bf-fac2-5553-695782890254@xs4all.nl>
+In-Reply-To: <20180215212742.4675-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Shawn Guo <shawnguo@kernel.org>
-Cc: linux-media <linux-media@vger.kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, asathyak@codeaurora.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 15, 2018 at 10:36 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> On 15/02/18 18:55, Tim Harvey wrote:
->> The GW54xx has a front-panel microHDMI connector routed to a TDA19971
->> which is connected the the IPU CSI when using IMX6Q.
->
-> I assume that this and the next patch go through another subsystem for arm
-> and/or imx?
->
-> Regards,
->
->         Hans
->
+From: Archana Sathyakumar <asathyak@codeaurora.org>
 
-Hans,
+Add device binding documentation for the PDC Interrupt controller on
+QCOM SoC's like the SDM845. The interrupt-controller can be used to
+sense edge low interrupts and wakeup interrupts when the GIC is
+non-operational.
 
-Yes - Shawn should pick up the two dts patches:
-0007-ARM-dts-imx-Add-TDA19971-HDMI-Receiver-to-GW54xx.patch
-0008-ARM-dts-imx-Add-TDA19971-HDMI-Receiver-to-GW551x.patch
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ .../bindings/interrupt-controller/qcom,pdc.txt     | 78 ++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
 
-Shawn you've seen these before but haven't ack'd them - are they good
-to merge to your imx tree?
-
-Regards,
-
-Tim
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+new file mode 100644
+index 000000000000..0b2c97ddb520
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+@@ -0,0 +1,78 @@
++PDC interrupt controller
++
++Qualcomm Technologies Inc. SoCs based on the RPM Hardened architecture have a
++Power Domain Controller (PDC) that is on always-on domain. In addition to
++providing power control for the power domains, the hardware also has an
++interrupt controller that can be used to help detect edge low interrupts as
++well detect interrupts when the GIC is non-operational.
++
++GIC is parent interrupt controller at the highest level. Platform interrupt
++controller PDC is next in hierarchy, followed by others. Drivers requiring
++wakeup capabilities of their device interrupts routed through the PDC, must
++specify PDC as their interrupt controller and request the PDC port associated
++with the GIC interrupt. See example below.
++
++Properties:
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should contain "qcom,<soc>-pdc"
++		    - "qcom,sdm845-pdc": For SDM845
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Specifies the base physical address for PDC hardware.
++
++- interrupt-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: Specifies the number of cells needed to encode an interrupt
++		    source.
++		    Must be 2.
++		    The first element of the tuple is the PDC pin for the
++		    interrupt.
++		    The second element is the trigger type.
++
++- interrupt-parent:
++	Usage: required
++	Value type: <phandle>
++	Definition: Specifies the interrupt parent necessary for hierarchical
++		    domain to operate.
++
++- interrupt-controller:
++	Usage: required
++	Value type: <bool>
++	Definition: Identifies the node as an interrupt controller.
++
++- qcom,pdc-ranges:
++	Usage: required
++	Value type: <u32 array>
++	Definition: Specifies the PDC pin offset and the number of PDC ports.
++		    The tuples indicates the valid mapping of valid PDC ports
++		    and their hwirq mapping.
++		    The first element of the tuple is the starting PDC port.
++		    The second element is the GIC hwirq number for the PDC port.
++		    The third element is the number of interrupts in sequence.
++
++Example:
++
++	pdc: interrupt-controller@b220000 {
++		compatible = "qcom,sdm845-pdc";
++		reg = <0xb220000 0x30000>;
++		qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&intc>;
++		interrupt-controller;
++	};
++
++DT binding of a device that wants to use the GIC SPI 514 as a wakeup
++interrupt, must do -
++
++	wake-device {
++		interrupts-extended = <&pdc 2 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++In this case interrupt 514 would be mapped to port 2 on the PDC as defined by
++the qcom,pdc-ranges property.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
