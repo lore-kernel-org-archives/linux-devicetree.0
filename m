@@ -1,66 +1,58 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v5 00/12] drm/sun4i: Add A83T HDMI support
-Date: Thu, 15 Feb 2018 14:52:22 +0100
-Message-ID: <20180215135222.7ta2r22je3dun3lm@flea.lan>
-References: <20180214200906.31509-1-jernej.skrabec@siol.net>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/8] dt-bindings: display: renesas,
+ du: Document r8a77995 bindings
+Date: Thu, 15 Feb 2018 15:59:25 +0200
+Message-ID: <4647820.7KnCr1m3Y8@avalon>
+References: <1518683903-10681-1-git-send-email-kbingham@kernel.org>
+ <1518683903-10681-3-git-send-email-kbingham@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hmkaczg3omrq4h5g"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180214200906.31509-1-jernej.skrabec@siol.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: wens@csie.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, narmstrong@baylibre.com, Jose.Abreu@synopsys.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1518683903-10681-3-git-send-email-kbingham@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kieran Bingham <kbingham@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, open list <linux-kernel@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, geert@glider.be, "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---hmkaczg3omrq4h5g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 14, 2018 at 09:08:54PM +0100, Jernej Skrabec wrote:
-> This patch series implements support for A83T DW HDMI and PHY. Contrary to
-> v1 series, this one is based on latest linux-next, since all needed patch=
-es
-> were merged.
->=20
-> While exactly this combination of HDMI controller and PHY is not common in
-> Allwinner SoCs, this patch series nevertheless makes groundwork for other
-> SoCs, which have same DW HDMI IP block, but different PHYs, like H3 and H=
-5.
->=20
-> Please take a look.
-
-I've applied the two clk patches. I'm waiting for some review from
-Archit on the synopsys bridge before merging anything else.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
-
---hmkaczg3omrq4h5g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqFkJUACgkQ0rTAlCFN
-r3Ttxw/+LBVtH/qfKjzG6L16Jur2rgZk5GZtfhatjnRwsCpSAjYmNEaG2kbhfSwI
-rlY4sY+kE7MY26PKnSNx4hlQ1EB4yAa2I4nkE34a9tDRcdWcl88vz4hrM84yLB7d
-BuIB/qcgkAVxVP8IcRM5bFfWZx1JkBm3JUF1Md8ZITdY/aGyc1hdga+aQjbOwEiO
-AdROg0k79xnkacbEwxv6DGvFU+NquEObvQ29hNGQqXutbzKr/N1OYjc5hw+uFbmz
-HaXtoZXRnywJGeIEakufxHqgvnMxUEQd3J0jOOK4b3ZPMIqA6in0qKEzfWAhivpn
-JxXO7nMeDh/t9OAf3eKheFc/m46vp6/G0TB6HMif/ZYeLOB+bcGQThfDH3C/inWR
-Qhs/ivYEVOCVo/Gdv8Y5lkMXQt5RUW1JJnC8x9phQAD3rBfCLkHX5LkDdPtffYtv
-XLAFwUet1Q2ixENP3nEBsBne013nDZbYG7jyIVHrTGcWECqxa+hIbf1JwNaH3AUd
-3QS3dLMV9rs9twqdUcnKITNRZIDr9k5rSRknAZTyCKl04z+8KP6QSwH8bV83Ak4v
-7V7rRdkm4McJwjWSRIQSWHRjswT83AaalFy47AiMq5cMaco0uNiN/HJVPIyO4ku9
-eBzpg1FQfq/LNEfG0o/bDjXBVe2Pa4tuGHmDfEgjklKRDTCG/gI=
-=aMPH
------END PGP SIGNATURE-----
-
---hmkaczg3omrq4h5g--
+SGkgS2llcmFuLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMTUgRmVi
+cnVhcnkgMjAxOCAxMDozODoxNyBFRVQgS2llcmFuIEJpbmdoYW0gd3JvdGU6Cj4gRnJvbTogS2ll
+cmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiAK
+PiBEb2N1bWVudCB0aGUgRDMgKHI4YTc3OTk1KSBTb0MgaW4gdGhlIFItQ2FyIERVIGJpbmRpbmdz
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEtpZXJhbiBCaW5naGFtIDxraWVyYW4uYmluZ2hhbStyZW5l
+c2FzQGlkZWFzb25ib2FyZC5jb20+CgpSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1
+cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgoKYW5kIGFwcGxpZWQgdG8gbXkgdHJlZS4K
+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVz
+YXMsZHUudHh0IHwgMiArKwo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4gCj4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jl
+bmVzYXMsZHUudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9yZW5lc2FzLGR1LnR4dCBpbmRleAo+IDhmNmUwZTExOGUzZS4uNTZmNjc0NTNiOWFhIDEwMDY0
+NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVz
+YXMsZHUudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcmVuZXNhcyxkdS50eHQKPiBAQCAtMTMsNiArMTMsNyBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVz
+Ogo+ICAgICAgLSAicmVuZXNhcyxkdS1yOGE3Nzk0IiBmb3IgUjhBNzc5NCAoUi1DYXIgRTIpIGNv
+bXBhdGlibGUgRFUKPiAgICAgIC0gInJlbmVzYXMsZHUtcjhhNzc5NSIgZm9yIFI4QTc3OTUgKFIt
+Q2FyIEgzKSBjb21wYXRpYmxlIERVCj4gICAgICAtICJyZW5lc2FzLGR1LXI4YTc3OTYiIGZvciBS
+OEE3Nzk2IChSLUNhciBNMy1XKSBjb21wYXRpYmxlIERVCj4gKyAgICAtICJyZW5lc2FzLGR1LXI4
+YTc3OTk1IiBmb3IgUjhBNzc5OTUgKFItQ2FyIEQzKSBjb21wYXRpYmxlIERVCj4gCj4gICAgLSBy
+ZWc6IEEgbGlzdCBvZiBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiBlYWNoIG1lbW9yeSByZXNv
+dXJjZSwgb25lIGZvcgo+IGVhY2ggZW50cnkgaW4gdGhlIHJlZy1uYW1lcyBwcm9wZXJ0eS4KPiBA
+QCAtNjAsNiArNjEsNyBAQCBjb3JyZXNwb25kaW5nIHRvIGVhY2ggRFUgb3V0cHV0Lgo+ICAgUjhB
+Nzc5NCAoUi1DYXIgRTIpICAgRFBBRCAwICAgICAgICAgRFBBRCAxICAgICAgICAgLSAgICAgICAg
+ICAgICAgLQo+ICAgUjhBNzc5NSAoUi1DYXIgSDMpICAgRFBBRCAwICAgICAgICAgSERNSSAwICAg
+ICAgICAgSERNSSAxICAgICAgICAgTFZEUyAwCj4gICBSOEE3Nzk2IChSLUNhciBNMy1XKSBEUEFE
+IDAgICAgICAgICBIRE1JIDAgICAgICAgICBMVkRTIDAgICAgICAgICAtCj4gKyBSOEE3Nzk5NSAo
+Ui1DYXIgRDMpICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICBMVkRTIDEgICAgICAgICAt
+Cj4gCj4gCj4gIEV4YW1wbGU6IFI4QTc3OTUgKFItQ2FyIEgzKSBFUzIuMCBEVQoKCi0tIApSZWdh
+cmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
