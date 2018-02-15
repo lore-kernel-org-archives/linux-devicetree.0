@@ -1,90 +1,74 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/4] arm64: dts: renesas: r8a77995: add FCPVD nodes
-Date: Thu, 15 Feb 2018 17:14:05 +0100
-Message-ID: <20180215161404.pywzt7m3ccd7gygu@verge.net.au>
-References: <1518474330-8713-1-git-send-email-kbingham@kernel.org>
- <1518474330-8713-3-git-send-email-kbingham@kernel.org>
- <1541765.WkmPmS7X3L@avalon>
+Subject: Re: [PATCH 3/9] ARM: dts: kzm9d: Fix "debounce-interval" property
+ misspelling
+Date: Thu, 15 Feb 2018 17:18:54 +0100
+Message-ID: <20180215161853.m5wqgj6myjla3aab@verge.net.au>
+References: <1518531335-5170-1-git-send-email-geert+renesas@glider.be>
+ <1518531335-5170-4-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1541765.WkmPmS7X3L@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Kieran Bingham <kbingham@kernel.org>, linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <1518531335-5170-4-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 02:32:22PM +0200, Laurent Pinchart wrote:
-> Hi Kieran,
+[Cc linux-renesas-soc]
+
+On Tue, Feb 13, 2018 at 03:15:29PM +0100, Geert Uytterhoeven wrote:
+> "debounce_interval" was never supported.
 > 
-> Thank you for the patch.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Magnus Damm <magnus.damm@gmail.com>
+> ---
+> Please apply to your tree when appropriate.
+
+Thanks, applied.
+
 > 
-> On Tuesday, 13 February 2018 00:25:27 EET Kieran Bingham wrote:
-> > From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> > 
-> > The FCPVD handles the interface between the VSPD and memory.
-> > 
-> > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>  arch/arm/boot/dts/emev2-kzm9d.dts | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> diff --git a/arch/arm/boot/dts/emev2-kzm9d.dts b/arch/arm/boot/dts/emev2-kzm9d.dts
+> index 60d0a732833aaada..c238407133bfe2d7 100644
+> --- a/arch/arm/boot/dts/emev2-kzm9d.dts
+> +++ b/arch/arm/boot/dts/emev2-kzm9d.dts
+> @@ -38,28 +38,28 @@
+>  		#size-cells = <0>;
+>  
+>  		one {
+> -			debounce_interval = <50>;
+> +			debounce-interval = <50>;
+>  			wakeup-source;
+>  			label = "DSW2-1";
+>  			linux,code = <KEY_1>;
+>  			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+>  		};
+>  		two {
+> -			debounce_interval = <50>;
+> +			debounce-interval = <50>;
+>  			wakeup-source;
+>  			label = "DSW2-2";
+>  			linux,code = <KEY_2>;
+>  			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
+>  		};
+>  		three {
+> -			debounce_interval = <50>;
+> +			debounce-interval = <50>;
+>  			wakeup-source;
+>  			label = "DSW2-3";
+>  			linux,code = <KEY_3>;
+>  			gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+>  		};
+>  		four {
+> -			debounce_interval = <50>;
+> +			debounce-interval = <50>;
+>  			wakeup-source;
+>  			label = "DSW2-4";
+>  			linux,code = <KEY_4>;
+> -- 
+> 2.7.4
 > 
-> I would however squash this with patch 1/4 from the same series.
-
-Thanks, I've taken the liberty of doing so when applying this patch.
-The result is as follows:
-
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: [PATCH] arm64: dts: renesas: r8a77995: add FCPV[BD] node
-
-The FCPVB handles the interface between the VSPB and memory.
-The FCPVD handles the interface between the VSPD and memory.
-
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-[simon: squahsed FCPVB and FCPVD patches]
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index cd3c6a30fc47..196a917afea6 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -691,6 +691,33 @@
- 			#phy-cells = <0>;
- 			status = "disabled";
- 		};
-+
-+		fcpvb0: fcp@fe96f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfe96f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 607>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 607>;
-+			iommus = <&ipmmu_vp0 5>;
-+		};
-+
-+		fcpvd0: fcp@fea27000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea27000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 603>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 603>;
-+			iommus = <&ipmmu_vi0 8>;
-+		};
-+
-+		fcpvd1: fcp@fea2f000 {
-+			compatible = "renesas,fcpv";
-+			reg = <0 0xfea2f000 0 0x200>;
-+			clocks = <&cpg CPG_MOD 602>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 602>;
-+			iommus = <&ipmmu_vi0 9>;
-+		};
- 	};
- 
- 	timer {
--- 
-2.11.0
