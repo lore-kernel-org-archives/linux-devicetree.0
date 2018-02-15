@@ -1,92 +1,64 @@
-From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 13/13] dt: bindings: add bindings for wcn3990 wifi block
-Date: Thu, 15 Feb 2018 14:26:17 +0530
-Message-ID: <1518684977-14607-1-git-send-email-govinds@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 5/8] arm64: dts: renesas: r8a77995: Add LVDS support
+Date: Thu, 15 Feb 2018 10:07:14 +0100
+Message-ID: <CAMuHMdVKczZpoXgSDOSEJZb59LAZtbWsopRaa8PtHDoZcFEMTQ@mail.gmail.com>
+References: <1518683903-10681-1-git-send-email-kbingham@kernel.org> <1518683903-10681-6-git-send-email-kbingham@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518683903-10681-6-git-send-email-kbingham@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kieran Bingham <kbingham@kernel.org>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Kieran Bingham <kieran.bingham@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation details for wcn3990
-wifi block present in Qualcomm SDM845/APQ8098 SoC into
-"qcom,ath10k.txt".
+Hi Kieran,
 
-Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- .../bindings/net/wireless/qcom,ath10k.txt          | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+On Thu, Feb 15, 2018 at 9:38 AM, Kieran Bingham <kbingham@kernel.org> wrote:
+> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>
+> The r8a77995 D3 platform has 2 LVDS channels connected to the DU.
+>
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index 3d2a031..07b0f13 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible: Should be one of the following:
- 	* "qcom,ath10k"
- 	* "qcom,ipq4019-wifi"
-+	* "qcom,wcn3990-wifi"
- 
- PCI based devices uses compatible string "qcom,ath10k" and takes calibration
- data along with board specific data via "qcom,ath10k-calibration-data".
-@@ -18,8 +19,11 @@ In general, entry "qcom,ath10k-pre-calibration-data" and
- "qcom,ath10k-calibration-data" conflict with each other and only one
- can be provided per device.
- 
-+SNOC based devices (i.e. wcn3990) uses compatible string "qcom,wcn3990-wifi".
-+
- Optional properties:
- - reg: Address and length of the register set for the device.
-+- reg-names: Names of the memory regions defined in reg entry.
- - resets: Must contain an entry for each entry in reset-names.
-           See ../reset/reseti.txt for details.
- - reset-names: Must include the list of following reset names,
-@@ -49,6 +53,12 @@ Optional properties:
- 				 hw versions.
- - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
- 				     the length can vary between hw versions.
-+- qcom,<supply-name>-supply: handle to the regulator device tree node
-+			   optional "supply-name" is "vdd-0.8-cx-mx".
-+- qcom,<supply>-config: Specifies voltage levels for supply. Should be
-+			  specified in pairs (min, max), units uV.  There can
-+			   be optional load in uA and Regulator settle delay in
-+			   uS.
- 
- Example (to supply the calibration data alone):
- 
-@@ -119,3 +129,28 @@ wifi0: wifi@a000000 {
- 	qcom,msi_base = <0x40>;
- 	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
- };
-+
-+Example (to supply wcn3990 SoC wifi block details):
-+
-+qcom,msm_ath10k@18000000 {
-+		compatible = "qcom,wcn3990-wifi";
-+		reg = <0x18800000 0x800000>;
-+		reg-names = "membase";
-+		clocks = <&clock_gcc clk_aggre2_noc_clk>;
-+		clock-names = "smmu_aggre2_noc_clk"
-+		interrupts =
-+			   <0 130 0 /* CE0 */ >,
-+			   <0 131 0 /* CE1 */ >,
-+			   <0 132 0 /* CE2 */ >,
-+			   <0 133 0 /* CE3 */ >,
-+			   <0 134 0 /* CE4 */ >,
-+			   <0 135 0 /* CE5 */ >,
-+			   <0 136 0 /* CE6 */ >,
-+			   <0 137 0 /* CE7 */ >,
-+			   <0 138 0 /* CE8 */ >,
-+			   <0 139 0 /* CE9 */ >,
-+			   <0 140 0 /* CE10 */ >,
-+			   <0 141 0 /* CE11 */ >;
-+		vdd-0.8-cx-mx-supply = <&pm8998_l5>;
-+		qcom,vdd-0.8-cx-mx-config = <800000 800000 2400 1000>;
-+};
--- 
-1.9.1
+I love your patch!
+Yet something to improve...
+
+> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> @@ -773,18 +773,70 @@
+>                                 port@1 {
+>                                         reg = <1>;
+>                                         du_out_lvds0: endpoint {
+> +                                               remote-endpoint = <&du_out_lvds0>;
+>                                         };
+>                                 };
+>
+>                                 port@2 {
+>                                         reg = <2>;
+>                                         du_out_lvds1: endpoint {
+> +                                               remote-endpoint = <&du_out_lvds1>;
+>                                         };
+>                                 };
+>                         };
+>                 };
+>         };
+>
+> +       lvds0: lvds@feb90000 {
+> +               compatible = "renesas,lvds-r8a77995";
+> +               reg = <0 0xfeb90000 0 0x20>;
+> +               clocks = <&cpg CPG_MOD 727>;
+> +               status = "disabled";
+
+Missing resets, power-domains
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
