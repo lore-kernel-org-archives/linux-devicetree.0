@@ -1,59 +1,110 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/8] dt-bindings: display: renesas,
- lvds: Add LVDS binding for D3
-Date: Thu, 15 Feb 2018 16:04:55 +0200
-Message-ID: <3242490.rUUU4MHlpR@avalon>
-References: <1518683903-10681-1-git-send-email-kbingham@kernel.org>
- <1518683903-10681-4-git-send-email-kbingham@kernel.org>
- <ad5ea103-b039-7a2e-01c8-2cb16324115d@ideasonboard.com>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 13/13] dt: bindings: add bindings for wcn3990 wifi block
+Date: Fri, 16 Feb 2018 01:05:33 +1100
+Message-ID: <CAGRGNgVtOuPwejDi-1Bux+1mGTTup0Mcf4ED-OBcn3z8=atpNQ@mail.gmail.com>
+References: <1518684977-14607-1-git-send-email-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <ad5ea103-b039-7a2e-01c8-2cb16324115d@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, geert@glider.be, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, Kieran Bingham <kbingham@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518684977-14607-1-git-send-email-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2llcmFuLAoKT24gVGh1cnNkYXksIDE1IEZlYnJ1YXJ5IDIwMTggMTA6NDU6MzMgRUVUIEtp
-ZXJhbiBCaW5naGFtIHdyb3RlOgo+IE9uIDE1LzAyLzE4IDA4OjM4LCBLaWVyYW4gQmluZ2hhbSB3
-cm90ZToKPiA+IEZyb206IEtpZXJhbiBCaW5naGFtIDxraWVyYW4uYmluZ2hhbStyZW5lc2FzQGlk
-ZWFzb25ib2FyZC5jb20+Cj4gPiAKPiA+IFRoZSBEMyBzdXBwb3J0cyB0d28gTFZEUyBjaGFubmVs
-cy4gRXh0ZW5kIHRoZSBiaW5kaW5nIHRvIHN1cHBvcnQgdGhlbS4KPiA+IAo+ID4gU2lnbmVkLW9m
-Zi1ieTogS2llcmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRlYXNvbmJvYXJk
-LmNvbT4KPiA+IC0tLQo+ID4gCj4gPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgfCAxICsKPiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgMSBpbnNlcnRpb24oKykKPiA+IAo+ID4gZGlmZiAtLWdpdAo+ID4gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dAo+ID4g
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNh
-cyxsdmRzLnR4dCBpbmRleAo+ID4gNzk4NjBmNThhN2FkLi4wZGNmNDg4YjcwZGYgMTAwNjQ0Cj4g
-PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-cmVuZXNhcyxsdmRzLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKPiA+IAo+ID4gQEAgLTE0LDYgKzE0
-LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICAtIGNvbXBhdGlibGUgOiBTaGFsbCBjb250
-YWluIG9uZSBvZgo+ID4gICAgLSAicmVuZXNhcyxsdmRzLXI4YTc3OTUiIGZvciBSOEE3Nzk1IChS
-LUNhciBIMykgY29tcGF0aWJsZSBMVkRTCj4gPiAgICBlbmNvZGVycwo+ID4gICAgLSAicmVuZXNh
-cyxsdmRzLXI4YTc3OTYiIGZvciBSOEE3Nzk2IChSLUNhciBNMy1XKSBjb21wYXRpYmxlIExWRFMK
-PiA+ICAgIGVuY29kZXJzCj4gPiArICAtICJyZW5lc2FzLGx2ZHMtcjhhNzc5OTUiIGZvciBSOEE3
-Nzk5NSAoUi1DYXIgRDMpIGNvbXBhdGlibGUgTFZEUwo+ID4gZW5jb2RlcnMKPiAKPiBIaSBMYXVy
-ZW50LAo+IAo+IEFyZSB3ZSB1bmFibGUgdG8gaGF2ZSBhIGdlbmVyaWMgbHZkcy1nZW4zIGhlcmU/
-Cj4gCj4gKEFsdGhvdWdoIHRvIHBlcmhhcHMgYW5zd2VyIG15IG93biBxdWVzdGlvbiBJIHNlZSB0
-aGF0IHRoZSBEMy9FMyBoYXZlIGV4dHJhCj4gcmVnaXN0ZXJzKQo+IAo+IEFsc28gImxldHMgcHJl
-dGVuZCIgdGhhdCBJIGludGVudGlvbmFsbHkgc2VwYXJhdGVkIG91dCB0aGUgTFZEUyB1cGRhdGVz
-IHRvCj4gdGhlIHJjYXJfbHZkc19vZl90YWJsZSA6KQoKV2UgY291bGQgZm9yIEgzIGFuZCBNMy1X
-LCBidXQgYXMgeW91J3ZlIG5vdGljZWQgRDMvRTMgZGlmZmVyLCBhbmQgc28gZG9lcyBWM00uCgo+
-ID4gIC0gcmVnOiBCYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBmb3IgdGhlIG1lbW9yeS1tYXBwZWQg
-cmVnaXN0ZXJzCj4gPiAgLSBjbG9ja3M6IEEgcGhhbmRsZSArIGNsb2NrLXNwZWNpZmllciBwYWly
-IGZvciB0aGUgZnVuY3Rpb25hbCBjbG9jawoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Govind,
+
+On Thu, Feb 15, 2018 at 7:56 PM, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Add device tree binding documentation details for wcn3990
+> wifi block present in Qualcomm SDM845/APQ8098 SoC into
+> "qcom,ath10k.txt".
+>
+> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  .../bindings/net/wireless/qcom,ath10k.txt          | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> index 3d2a031..07b0f13 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>  - compatible: Should be one of the following:
+>         * "qcom,ath10k"
+>         * "qcom,ipq4019-wifi"
+> +       * "qcom,wcn3990-wifi"
+>
+>  PCI based devices uses compatible string "qcom,ath10k" and takes calibration
+>  data along with board specific data via "qcom,ath10k-calibration-data".
+> @@ -18,8 +19,11 @@ In general, entry "qcom,ath10k-pre-calibration-data" and
+>  "qcom,ath10k-calibration-data" conflict with each other and only one
+>  can be provided per device.
+>
+> +SNOC based devices (i.e. wcn3990) uses compatible string "qcom,wcn3990-wifi".
+> +
+>  Optional properties:
+>  - reg: Address and length of the register set for the device.
+> +- reg-names: Names of the memory regions defined in reg entry.
+>  - resets: Must contain an entry for each entry in reset-names.
+>            See ../reset/reseti.txt for details.
+>  - reset-names: Must include the list of following reset names,
+> @@ -49,6 +53,12 @@ Optional properties:
+>                                  hw versions.
+>  - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
+>                                      the length can vary between hw versions.
+> +- qcom,<supply-name>-supply: handle to the regulator device tree node
+> +                          optional "supply-name" is "vdd-0.8-cx-mx".
+> +- qcom,<supply>-config: Specifies voltage levels for supply. Should be
+> +                         specified in pairs (min, max), units uV.  There can
+> +                          be optional load in uA and Regulator settle delay in
+> +                          uS.
+>
+>  Example (to supply the calibration data alone):
+>
+> @@ -119,3 +129,28 @@ wifi0: wifi@a000000 {
+>         qcom,msi_base = <0x40>;
+>         qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
+>  };
+> +
+> +Example (to supply wcn3990 SoC wifi block details):
+> +
+> +qcom,msm_ath10k@18000000 {
+> +               compatible = "qcom,wcn3990-wifi";
+> +               reg = <0x18800000 0x800000>;
+> +               reg-names = "membase";
+> +               clocks = <&clock_gcc clk_aggre2_noc_clk>;
+> +               clock-names = "smmu_aggre2_noc_clk"
+> +               interrupts =
+> +                          <0 130 0 /* CE0 */ >,
+> +                          <0 131 0 /* CE1 */ >,
+> +                          <0 132 0 /* CE2 */ >,
+> +                          <0 133 0 /* CE3 */ >,
+> +                          <0 134 0 /* CE4 */ >,
+> +                          <0 135 0 /* CE5 */ >,
+> +                          <0 136 0 /* CE6 */ >,
+> +                          <0 137 0 /* CE7 */ >,
+> +                          <0 138 0 /* CE8 */ >,
+> +                          <0 139 0 /* CE9 */ >,
+> +                          <0 140 0 /* CE10 */ >,
+> +                          <0 141 0 /* CE11 */ >;
+> +               vdd-0.8-cx-mx-supply = <&pm8998_l5>;
+
+You've omitted the "qcom," you specify above.
+
+> +               qcom,vdd-0.8-cx-mx-config = <800000 800000 2400 1000>;
+> +};
+> --
+> 1.9.1
+>
+
+Thanks,
+
+-- 
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
