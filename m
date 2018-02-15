@@ -1,74 +1,38 @@
-From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] drivers: qcom: rpmh: add RPMH helper functions
-Date: Thu, 15 Feb 2018 14:19:48 +0530
-Message-ID: <217e3652-c7e9-a81a-fcd8-9d97ab7736cd@codeaurora.org>
-References: <20180119000157.7380-1-ilina@codeaurora.org>
- <20180119000157.7380-5-ilina@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: renesas: eagle: specify EtherAVB PHY
+ IRQ
+Date: Thu, 15 Feb 2018 11:51:58 +0300
+Message-ID: <9003179f-379d-0576-37bf-1b08700ebd41@cogentembedded.com>
+References: <038a791d-aa57-9c3d-eaea-09c5704ecb54@cogentembedded.com>
+ <0ccd631e-691a-2b15-7680-6e0c847a6ca2@cogentembedded.com>
+ <CAMuHMdX3XZSwvAT74fVhWw9GoxVmpdXoqR03=u0QC3FEB==X=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180119000157.7380-5-ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdX3XZSwvAT74fVhWw9GoxVmpdXoqR03=u0QC3FEB==X=w@mail.gmail.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lina Iyer <ilina-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-[]..
+Hello!
 
-> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-> new file mode 100644
-> index 000000000000..ad1def2c362c
-> --- /dev/null
-> +++ b/drivers/soc/qcom/rpmh.c
-> @@ -0,0 +1,264 @@
-> +/* Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/atomic.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mailbox_client.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include <linux/wait.h>
-> +
-> +#include <soc/qcom/rpmh.h>
-> +
-> +#include "rpmh-internal.h"
-> +
-> +#define RPMH_MAX_MBOXES			2
-> +#define RPMH_TIMEOUT			msecs_to_jiffies(10000)
-> +
-> +#define DEFINE_RPMH_MSG_ONSTACK(rc, s, q, c, name)
-> +	struct rpmh_msg name = {			\
-> +		.msg = {				\
-> +			.state = s,			\
-> +			.payload = name.cmd,		\
-> +			.num_payload = 0,		\
-> +			.is_complete = true,		\
-> +			.invalidate = false,		\
+On 2/14/2018 1:02 PM, Geert Uytterhoeven wrote:
 
-There seems to be no field called 'invalidate' as part of the struct
+>> Specify  EtherAVB PHY IRQ  in the Eagle board's device tree, now that we
+>> have the GPIO support (previously phylib had to resort to polling).
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> You've dropped my:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    Sorry, I was too hasty to resubmit. :-/
+
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
+
+MBR, Sergei
