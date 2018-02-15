@@ -1,114 +1,122 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 5/8] arm64: dts: renesas: r8a77995: Add LVDS support
-Date: Thu, 15 Feb 2018 16:10:58 +0200
-Message-ID: <1558036.KTdDODi8F6@avalon>
-References: <1518683903-10681-1-git-send-email-kbingham@kernel.org> <1518683903-10681-6-git-send-email-kbingham@kernel.org>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 6/8] arm64: dts: renesas: r8a77995-draak: Enable DU
+Date: Thu, 15 Feb 2018 16:12:38 +0200
+Message-ID: <6281511.bskcdgqsgb@avalon>
+References: <1518683903-10681-1-git-send-email-kbingham@kernel.org> <1518683903-10681-7-git-send-email-kbingham@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518683903-10681-6-git-send-email-kbingham@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kieran Bingham <kbingham@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kieran Bingham <kieran.bingham@ideasonboard.com>, Simon Horman <horms@verge.net.au>, geert@glider.be, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518683903-10681-7-git-send-email-kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Kieran,
 
 Thank you for the patch.
 
-On Thursday, 15 February 2018 10:38:20 EET Kieran Bingham wrote:
-> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+On Thursday, 15 February 2018 10:38:21 EET Kieran Bingham wrote:
+> From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 > 
-> The r8a77995 D3 platform has 2 LVDS channels connected to the DU.
+> Enable the DU, providing only the VGA output for now.
 > 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+I assume Simon will take care of this patch.
+
 > ---
->  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 52 ++++++++++++++++++++++++++++
->  1 file changed, 52 insertions(+)
+>  arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 51 +++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> b/arch/arm64/boot/dts/renesas/r8a77995.dtsi index
-> a57d5fecf79c..7851e37cfff1 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> @@ -773,18 +773,70 @@
->  				port@1 {
->  					reg = <1>;
->  					du_out_lvds0: endpoint {
-> +						remote-endpoint = <&du_out_lvds0>;
->  					};
->  				};
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts index
+> af07da240be0..668e246dfc5d 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> +++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+> @@ -27,6 +27,38 @@
+>  		stdout-path = "serial0:115200n8";
+>  	};
 > 
->  				port@2 {
->  					reg = <2>;
->  					du_out_lvds1: endpoint {
-> +						remote-endpoint = <&du_out_lvds1>;
-
-It's interesting how the DU ports reference themselves :-)
-
->  					};
->  				};
->  			};
+> +	vga {
+> +		compatible = "vga-connector";
+> +
+> +		port {
+> +			vga_in: endpoint {
+> +				remote-endpoint = <&adv7123_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	vga-encoder {
+> +		compatible = "adi,adv7123";
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				adv7123_in: endpoint {
+> +					remote-endpoint = <&du_out_rgb>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				adv7123_out: endpoint {
+> +					remote-endpoint = <&vga_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	memory@48000000 {
+>  		device_type = "memory";
+>  		/* first 128MB is reserved for secure area. */
+> @@ -46,6 +78,11 @@
 >  		};
 >  	};
 > 
-> +	lvds0: lvds@feb90000 {
-> +		compatible = "renesas,lvds-r8a77995";
-> +		reg = <0 0xfeb90000 0 0x20>;
-> +		clocks = <&cpg CPG_MOD 727>;
-> +		status = "disabled";
+> +	du_pins: du {
+> +		groups = "du_rgb888", "du_sync", "du_disp", "du_dotclkout0";
+> +		function = "du";
+> +	};
 > +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+>  	i2c0_pins: i2c0 {
+>  		groups = "i2c0";
+>  		function = "i2c0";
+> @@ -95,6 +132,20 @@
+>  	status = "okay";
+>  };
+> 
+> +&du {
+> +	pinctrl-0 = <&du_pins>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
 > +
-> +			port@0 {
-> +				reg = <0>;
-> +				lvds0_in: endpoint {
-> +					remote-endpoint = <&du_out_lvds0>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				lvds0_out: endpoint {
-> +				};
+> +	ports {
+> +		port@0 {
+> +			endpoint {
+> +				remote-endpoint = <&adv7123_in>;
 > +			};
 > +		};
 > +	};
+> +};
 > +
-> +	lvds1: lvds@feb90100 {
-> +		compatible = "renesas,lvds-r8a77995";
-> +		reg = <0 0xfeb90100 0 0x20>;
-> +		clocks = <&cpg CPG_MOD 727>;
-> +		status = "disabled";
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				lvds1_in: endpoint {
-> +					remote-endpoint = <&du_out_lvds1>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				lvds1_out: endpoint {
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->  	timer {
->  		compatible = "arm,armv8-timer";
->  		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) |
-> IRQ_TYPE_LEVEL_LOW)>,
+>  &ehci0 {
+>  	status = "okay";
+>  };
+
 
 -- 
 Regards,
 
 Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
