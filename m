@@ -1,98 +1,86 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: Applied "regulator: dt: regulator-name is required property" to
- the regulator tree
-Date: Thu, 15 Feb 2018 10:39:41 +0100
-Message-ID: <CAMuHMdVLO4Y-NzS6bLp2dUy1oSqmEthC_yD5jCe_R9H4vWBwMA@mail.gmail.com>
-References: <1518532988-10990-1-git-send-email-harald@ccbib.org> <E1elzv3-0005l2-MP@debutante>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v7 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+Date: Thu, 15 Feb 2018 10:50:18 +0100
+Message-ID: <20180215095018.hslnarg4ykegqsbo@flea.lan>
+References: <20180208150830.9219-1-maxime.ripard@bootlin.com>
+ <2517178.9jmyBy62ST@avalon>
+ <20180214131933.t75jg5b5cjfuo7r6@flea.home>
+ <1952975.8AbmfkeE6m@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <E1elzv3-0005l2-MP@debutante>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Harald Geyer <harald@ccbib.org>, Rob Herring <robh@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zkbrrwh56qyk3crj"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1952975.8AbmfkeE6m@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 14, 2018 at 5:28 PM, Mark Brown <broonie@kernel.org> wrote:
-> The patch
->
->    regulator: dt: regulator-name is required property
->
-> has been applied to the regulator tree at
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
->
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
->
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
->
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
->
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
->
-> Thanks,
-> Mark
->
-> From 4b75291621830acad2c66a1d21d7840a7ca169d3 Mon Sep 17 00:00:00 2001
-> From: Harald Geyer <harald@ccbib.org>
-> Date: Tue, 13 Feb 2018 14:43:08 +0000
-> Subject: [PATCH] regulator: dt: regulator-name is required property
->
-> These two drivers fail to probe if no name is provided. For details see:
-> https://www.spinics.net/lists/kernel/msg2457515.html
->
-> Signed-off-by: Harald Geyer <harald@ccbib.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-What about using the DT node name instead, as is done for single-output
-clocks?
+--zkbrrwh56qyk3crj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 1 +
->  Documentation/devicetree/bindings/regulator/gpio-regulator.txt  | 2 ++
->  2 files changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-> index 4fae41d54798..0c2a6c8a1536 100644
-> --- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-> @@ -2,6 +2,7 @@ Fixed Voltage regulators
->
->  Required properties:
->  - compatible: Must be "regulator-fixed";
-> +- regulator-name: Defined in regulator.txt as optional, but required here.
->
->  Optional properties:
->  - gpio: gpio to use for enable control
-> diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-> index dd1ed789728e..1f496159e2bb 100644
-> --- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-> @@ -2,6 +2,8 @@ GPIO controlled regulators
->
->  Required properties:
->  - compatible           : Must be "regulator-gpio".
-> +- regulator-name       : Defined in regulator.txt as optional, but required
-> +                         here.
->  - states               : Selection of available voltages and GPIO configs.
->                            if there are no states, then use a fixed regulator
+On Wed, Feb 14, 2018 at 05:03:26PM +0200, Laurent Pinchart wrote:
+> On Wednesday, 14 February 2018 15:19:33 EET Maxime Ripard wrote:
+> > On Thu, Feb 08, 2018 at 08:17:19PM +0200, Laurent Pinchart wrote:
+> > >> +	/*
+> > >> +	 * Create a static mapping between the CSI virtual channels
+> > >> +	 * and the output stream.
+> > >> +	 *
+> > >> +	 * This should be enhanced, but v4l2 lacks the support for
+> > >> +	 * changing that mapping dynamically.
+> > >> +	 *
+> > >> +	 * We also cannot enable and disable independant streams here,
+> > >> +	 * hence the reference counting.
+> > >> +	 */
+> > >=20
+> > > If you start all streams in one go, will s_stream(1) be called multip=
+le
+> > > times ? If not, you could possibly skip the whole reference counting =
+and
+> > > avoid locking.
+> >=20
+> > I guess that while we should expect the CSI-2 bus to be always
+> > enabled, the downstream camera interface could be shutdown
+> > independently, so I guess s_stream would be called each time one is
+> > brought up or brought down?
+>=20
+> That's the idea. However, we don't have support for multiplexed streams i=
+n=20
+> mainline yet, so there's no way it can be implemented today in your drive=
+r.
 
-Gr{oetje,eeting}s,
+Ok, but we definitely plan on supporting that soon, so I guess that
+wouldn't too much of a burden to keep it there.
 
-                        Geert
+Maxime
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--zkbrrwh56qyk3crj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqFV9kACgkQ0rTAlCFN
+r3RU5Q/9H1VTrVPGgvRJJmgI1F8/xIpOdCMFliYvjkxul/fF4fUn5JJiq/PTwApi
+yzrSKmRrarcYXqNZ1bSwQ9naN7sZHsiRT1L7xKUMPKEeMcWMvCSoCVrO0nrO9aWp
+OwY4lcTapDwQO1gXmcevgxkMiO+TytcHVUxVYjueeC9fnvqlwpGynmRZuV6/ODZ1
+gKOGzqdoAp3s4E4wm9OlrP4AjlgttZ7u4sdfC3bagSeqE0LIwNu4zCapg4toMbWu
+8jwBQX84mK3s1270KB3VYBO5kaei/8phAiCNdaOJUD8NuoBqEg/0s9VAJt7DjLuf
+QXjAbkx9KblNJK6NwYQzkuW1/7baf+eg1gM6SWnFmW0E4QFzxw21Cn5OlJOo/Pm8
+uhRox+j+He9ZzmdNNtMja8flZrz7arZfoqiWO+UYKEti8OhrsnrqoIbvE2F+q8Y8
+P0BS1WStp4h0tGwmMktK+66oO/ir3sgMkIz+Jt9LO1gbc8/1nUw3jOOwfOnF0GU8
+mAQgJX0xJfW3z/aiHIbLgEup/JOoVpiys3b2/uNUPW08sNYIYDTrthHkyZ3dhial
+MEC17MFx2nMqUf9JMfngLmeZfM6OvPGg/aelmRyslxD7IibWJ1gynozyW7yJnWcZ
+LBs2cI4+SquekTbyI7HZl3Lz28uhOx8iZR6gsyXQQJxucn7dY7E=
+=VPeT
+-----END PGP SIGNATURE-----
+
+--zkbrrwh56qyk3crj--
