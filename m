@@ -1,70 +1,40 @@
-From: Moritz Fischer <moritz.fischer@ettus.com>
-Subject: [PATCH 2/2] power: reset: gpio-poweroff: Add support for timeout from DT
-Date: Thu, 15 Feb 2018 12:49:26 -0800
-Message-ID: <20180215204926.23347-2-moritz.fischer@ettus.com>
-References: <20180215204926.23347-1-moritz.fischer@ettus.com>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH v13 7/8] ARM: dts: imx: Add TDA19971 HDMI Receiver to GW54xx
+Date: Thu, 15 Feb 2018 13:19:17 -0800
+Message-ID: <CAJ+vNU3G9bJ16npp22O=7k72Pf3xSuQxW-CA2p5cbDq-nSZ4ew@mail.gmail.com>
+References: <1518717336-6271-1-git-send-email-tharvey@gateworks.com>
+ <1518717336-6271-8-git-send-email-tharvey@gateworks.com> <7732637c-93bf-fac2-5553-695782890254@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180215204926.23347-1-moritz.fischer@ettus.com>
+In-Reply-To: <7732637c-93bf-fac2-5553-695782890254@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, sre@kernel.org, Moritz Fischer <mdf@kernel.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>, Shawn Guo <shawnguo@kernel.org>
+Cc: linux-media <linux-media@vger.kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Moritz Fischer <mdf@kernel.org>
+On Thu, Feb 15, 2018 at 10:36 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> On 15/02/18 18:55, Tim Harvey wrote:
+>> The GW54xx has a front-panel microHDMI connector routed to a TDA19971
+>> which is connected the the IPU CSI when using IMX6Q.
+>
+> I assume that this and the next patch go through another subsystem for arm
+> and/or imx?
+>
+> Regards,
+>
+>         Hans
+>
 
-Add support for reading a timeout value from devicetree.
-Fall back to previous default of 3s if nothing is specified.
+Hans,
 
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
----
- drivers/power/reset/gpio-poweroff.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Yes - Shawn should pick up the two dts patches:
+0007-ARM-dts-imx-Add-TDA19971-HDMI-Receiver-to-GW54xx.patch
+0008-ARM-dts-imx-Add-TDA19971-HDMI-Receiver-to-GW551x.patch
 
-diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gpio-poweroff.c
-index be3d81ff51cc..bc9fad17d22a 100644
---- a/drivers/power/reset/gpio-poweroff.c
-+++ b/drivers/power/reset/gpio-poweroff.c
-@@ -19,11 +19,13 @@
- #include <linux/of_platform.h>
- #include <linux/module.h>
- 
-+#define DEFAULT_TIMEOUT_MS 3000
- /*
-  * Hold configuration here, cannot be more than one instance of the driver
-  * since pm_power_off itself is global.
-  */
- static struct gpio_desc *reset_gpio;
-+static u32 timeout;
- 
- static void gpio_poweroff_do_poweroff(void)
- {
-@@ -40,7 +42,7 @@ static void gpio_poweroff_do_poweroff(void)
- 	gpiod_set_value(reset_gpio, 1);
- 
- 	/* give it some time */
--	mdelay(3000);
-+	mdelay(timeout);
- 
- 	WARN_ON(1);
- }
-@@ -49,6 +51,7 @@ static int gpio_poweroff_probe(struct platform_device *pdev)
- {
- 	bool input = false;
- 	enum gpiod_flags flags;
-+	int ret;
- 
- 	/* If a pm_power_off function has already been added, leave it alone */
- 	if (pm_power_off != NULL) {
-@@ -64,6 +67,10 @@ static int gpio_poweroff_probe(struct platform_device *pdev)
- 	else
- 		flags = GPIOD_OUT_LOW;
- 
-+	ret = of_property_read_u32(pdev->dev.of_node, "timeout", &timeout);
-+	if (ret)
-+		timeout = DEFAULT_TIMEOUT_MS;
-+
- 	reset_gpio = devm_gpiod_get(&pdev->dev, NULL, flags);
- 	if (IS_ERR(reset_gpio))
- 		return PTR_ERR(reset_gpio);
--- 
-2.16.1
+Shawn you've seen these before but haven't ack'd them - are they good
+to merge to your imx tree?
+
+Regards,
+
+Tim
