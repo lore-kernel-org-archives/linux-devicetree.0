@@ -1,117 +1,182 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v13 7/9] ACPI: Translate the I/O range of non-MMIO devices
- before scanning
-Date: Thu, 15 Feb 2018 12:59:36 +0000
-Message-ID: <4c81ecec-b3be-6b57-938a-b7d11ca7ee96@huawei.com>
-References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
- <1518543933-22456-8-git-send-email-john.garry@huawei.com>
- <20180214161635.GA13849@e107981-ln.cambridge.arm.com>
- <65185a4d-c712-4486-d713-3fa9de14e35d@huawei.com>
- <e3fb78b3-5f5c-fe96-9f02-e96092963c17@huawei.com>
- <CAJZ5v0jGvo+cutmvi3WSe1JNvQ1UvZhJr1mQ76=8=1E5Gq+iRg@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v2] rtc: isl12026: Add driver.
+Date: Thu, 15 Feb 2018 14:15:33 +0100
+Message-ID: <20180215131533.GL8219@piout.net>
+References: <20180214005536.22739-1-david.daney@cavium.com>
+ <CAHp75VcQm-gr0GRszBSRJSZOpdSutRyhVkw-BN_YAwhjaPM4yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0jGvo+cutmvi3WSe1JNvQ1UvZhJr1mQ76=8=1E5Gq+iRg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcQm-gr0GRszBSRJSZOpdSutRyhVkw-BN_YAwhjaPM4yg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Corey Minyard <minyard@acm.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: David Daney <david.daney@cavium.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/02/2018 11:47, Rafael J. Wysocki wrote:
-> On Thu, Feb 15, 2018 at 12:19 PM, John Garry <john.garry@huawei.com> wrote:
->>> Nothing apart from only being used by arm64 platforms today, which is
->>> circumstantial.
->>>
->>>>
->>>> I understand you need to find a place to add the:
->>>>
->>>> acpi_indirect_io_scan_init()
->>>>
->>>> to be called from core ACPI code because ACPI can't handle probe
->>>> dependencies in any other way but other than that this patch is
->>>> a Hisilicon ACPI driver - there is nothing generic in it (or at
->>>> least there are no standard bindings to make it so).
->>>>
->>>> Whether a callback from ACPI core code (acpi_scan_init()) to a driver
->>>> specific hook is sane or not that's the question and the only reason
->>>> why you want to add this in drivers/acpi/arm64 rather than, say,
->>>> drivers/bus (as you do for the DT driver).
->>>>
->>>> I do not know Rafael's opinion on the above, I would like to help
->>>> you make forward progress but please understand my concerns, mostly
->>>> on FW side.
->>>>
->>>
->>> I did mention an alternative in my "ping" in v12 patch 7/9 (Feb 1), but
->>> no response to this specific note so I kept on the same path.
->>>
->>> Here's what I then wrote:
->>> "I think another solution - which you may prefer - is to avoid adding
->>> this scan handler (and all this other scan code) and add a check like
->>> acpi_is_serial_bus_slave() [which checks the device parent versus a list
->>> of known indirectIO hosts] to not enumerate these children, and do it
->>> from the LLDD host probe instead (https://lkml.org/lkml/2017/6/16/250)"
->>>
->>
->> Hi Rafael, Lorenzo,
->>
->> I can avoid adding the scan handler in acpi_indirectio.c by skipping the
->> child enumeration, like with this change in scan.c:
->>
+On 15/02/2018 at 14:45:11 +0200, Andy Shevchenko wrote:
+> On Wed, Feb 14, 2018 at 2:55 AM, David Daney <david.daney@cavium.com> wrote:
+> > The ISL12026 is a combination RTC and EEPROM device with I2C
+> > interface.  The standard RTC driver interface is provided.  The EEPROM
+> > is accessed via the NVMEM interface via the "eeprom0" directory in the
+> > sysfs entry for the device.
+> 
+> Thanks for an update, my comments below.
+> 
+> > +struct isl12026 {
+> > +       struct rtc_device *rtc;
+> > +       struct i2c_client *nvm_client;
+> > +       struct nvmem_config nvm_cfg;
+> > +       /*
+> > +        * RTC write operations require that multiple messages be
+> > +        * transmitted, we hold the lock for all accesses to the
+> > +        * device so that these sequences cannot be disrupted.  Also,
+> 
+> > +        * the write cycle to the nvmem takes many mS during which the
+> 
+> What mS means? milliseconds? The standard abbreviation for it 'ms'.
+> 
+> > +        * device does not respond to commands, so holding the lock
+> > +        * also prevents access during these times.
+> > +        */
+> > +       struct mutex lock;
+> > +};
+> 
+> > +static int isl12026_read_reg(struct i2c_client *client, int reg)
+> > +{
+> 
+> > +       ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
+> > +       if (ret != ARRAY_SIZE(msgs)) {
+> > +               dev_err(&client->dev, "read reg error, ret=%d\n", ret);
+> > +               ret = ret < 0 ? ret : -EIO;
+> > +       } else {
+> > +               ret = val;
+> > +       }
+> 
+> > +       return val;
+> 
+> Something wrong. ret is not used after all.
+> 
+> > +}
+> 
+> Check entire code for such.
+> 
+> > +       /* 2 bytes of address, most significant first */
+> > +       addr[0] = (offset >> 8) & 0xff;
+> > +       addr[1] = offset & 0xff;
+> 
+> Consider to drop '& 0xff', they are pointless (you have u8 type).
+> 
+> > +               payload[0] = (offset >> 8) & 0xff;
+> > +               payload[1] = offset & 0xff;
+> 
+> Ditto.
+> 
+> > +static void isl12026_force_power_modes(struct i2c_client *client)
+> > +{
+> > +       int ret;
+> > +       int pwr, requested_pwr;
+> > +       u32 bsw_val, sbib_val;
+> 
+> > +       bool set_bsw, set_sbib;
+> > +
+> 
+> > +       ret = of_property_read_u32(client->dev.of_node,
+> > +                                  "isil,pwr-bsw", &bsw_val);
+> > +       set_bsw = (ret == 0);
+> 
+> Which is not fully correct. Better to do
+> 
+> set_bsw = of_property_present();
+> 
+> ret = of_property_read...();
+> if (ret)
+>   return ret;
+> 
+> > +
+> > +       ret = of_property_read_u32(client->dev.of_node,
+> > +                                  "isil,pwr-sbib", &sbib_val);
+> > +       set_sbib = (ret == 0);
+> 
+> Ditto.
+> 
+> > +
+> > +       /* Check if PWR.BSW and/or PWR.SBIB need specified values */
+> > +
+> 
+> > +       if (set_bsw || set_sbib) {
+> 
+> if (!x && !y)
+>  return;
+> 
+> > +               pwr = isl12026_read_reg(client, ISL12026_REG_PWR);
+> > +               if (pwr < 0) {
+> > +                       dev_err(&client->dev,
+> > +                               "Error: Failed to read PWR %d\n", pwr);
+> > +                       return;
+> > +               }
+> > +
+> > +               requested_pwr = pwr;
+> > +
+> > +               if (set_bsw) {
+> > +                       if (bsw_val)
+> > +                               requested_pwr |= ISL12026_REG_PWR_BSW;
+> > +                       else
+> > +                               requested_pwr &= ~ISL12026_REG_PWR_BSW;
+> > +               }
+> 
+> Undefined state if no value?
+> 
+> > +               if (set_sbib) {
+> > +                       if (sbib_val)
+> > +                               requested_pwr |= ISL12026_REG_PWR_SBIB;
+> > +                       else
+> > +                               requested_pwr &= ~ISL12026_REG_PWR_SBIB;
+> > +               }
+> 
+> Ditto.
+> 
+> > +
+> > +               if (pwr >= 0 && pwr != requested_pwr) {
+> 
+> > +                       dev_info(&client->dev, "PWR: %02x\n", (u8)pwr);
+> > +                       dev_info(&client->dev,
+> > +                                "Updating PWR to: %02x\n", (u8)requested_pwr);
+> > +                       isl12026_write_reg(client,
+> > +                                          ISL12026_REG_PWR, requested_pwr);
+> 
+> If you do explicit casting in printf() parameters you are doing
+> something wrong in 99.9% cases.
+> 
+> > +               }
+> > +       }
+> > +}
+> 
+> > +static int isl12026_probe_new(struct i2c_client *client)
+> > +{
+> > +       struct isl12026 *priv;
+> > +       int ret;
+> 
+> 
+> > +       /* The NVMem array responds at i2c address 0x57 */
+> > +       priv->nvm_client = i2c_new_dummy(client->adapter, 0x57);
+> 
+> Magic. Make it #define and put comment there.
+> 
+> > +       if (!priv->nvm_client)
+> > +               return -ENOMEM;
+> 
+> > +}
+> 
+> > +#ifdef CONFIG_OF
+> 
+> Remove this ugly #ifdef. Your driver OF only one.
+> 
 
-Hi Rafael,
+Well, it is DT only because you asked for that on v1.
 
->> +static const struct acpi_device_id indirect_io_hosts[] = {
->> +    {"HISI0191", 0},    /* HiSilicon LPC host */
->> +    {},
->> +};
->> +
->> +static bool acpi_is_indirect_io_slave(struct acpi_device *device)
->> +{
->
-> Why don't you put the table definition here?
->
 
-I can do.
-
->> +    struct acpi_device *parent = dev->parent;
->> +
->> +    if (!parent || acpi_match_device_ids(parent, indirect_io_hosts))
->> +        return false;
->> +
->> +    return true;
->
-> return parent && !acpi_match_device_ids(parent, indirect_io_hosts);
-
-Fine, a bit more concise
-
->
->> +}
->> +
->>  static bool acpi_is_serial_bus_slave(struct acpi_device *device)
->>  {
->>      struct list_head resource_list;
->>      bool is_serial_bus_slave = false;
->>
->> +    if (acpi_is_indirect_io_slave(device))
->> +        return true;
->> +
->>      /* Macs use device properties in lieu of _CRS resources */
->>
->>
->> This means I can move all this scan code into the LLDD.
->>
->> What do you think? Please let me know.
->
-> If Lorenzo agrees, that will be fine by me modulo the above remarks.
->
-> .
-
-I see Lorenzo also finds this ok, so I'll go with that.
-
-Thanks to all,
-John
-
->
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
