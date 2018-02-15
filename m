@@ -1,87 +1,67 @@
-From: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] serial: 8250: Add Nuvoton NPCM UART
-Date: Thu, 15 Feb 2018 12:15:26 +0200
-Message-ID: <CAKKbWA7FkFosy4aUyYXvOW8tYxsoPPYj6Z-=2A9i5o6zkkRupw@mail.gmail.com>
-References: <20180212044810.23547-1-joel@jms.id.au> <CAHp75VcCj2PtPgMEb+9ZmO-1t_K16oyY97vn3FbHr=LkGvna-Q@mail.gmail.com>
- <CACPK8XeUWV7rngfBmKn9kEnhv=NFsNCNrJdZq3p9GRTcjGVhqA@mail.gmail.com> <11dff5a3498949118b883b39be028611@NTILML02.nuvoton.com>
+From: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 02/37] iommu/sva: Bind process address spaces to devices
+Date: Thu, 15 Feb 2018 11:21:13 +0100
+Message-ID: <20180215102113.c7t7rrnyzgazmdli@8bytes.org>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-3-jean-philippe.brucker@arm.com>
+	<AADFC41AFE54684AB9EE6CBC0274A5D191002897@SHSMSX101.ccr.corp.intel.com>
+	<b9eacb30-817f-9027-bc0a-1f01cf9f13f9@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11dff5a3498949118b883b39be028611-qcV2a/0u7bE377JQJD9m/laTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, AP MS30 Linux Kernel community <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <b9eacb30-817f-9027-bc0a-1f01cf9f13f9-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mykyta.iziumtsev-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Raj,
+	Ashok" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2@infradead>
 List-Id: devicetree@vger.kernel.org
 
-> From: joel.stan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org [mailto:joel.stan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org] On Behalf Of Joel Stanley
-> Sent: Thursday, February 15, 2018 4:00 AM
->
-> On Wed, Feb 14, 2018 at 3:22 AM, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Mon, Feb 12, 2018 at 6:48 AM, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org> wrote:
->>> The Nuvoton UART is almost compatible with the 8250 driver when
->>> probed via the 8250_of driver, however it requires some extra
->>> configuration at startup.
->>
->>
->>> +       [PORT_NPCM] = {
->>> +               .name           = "Nuvoton 16550",
->>> +               .fifo_size      = 16,
->>> +               .tx_loadsz      = 16,
->>> +               .fcr            = UART_FCR_ENABLE_FIFO | UART_FCR_R_TRIG_10 |
->>> +                                 UART_FCR_CLEAR_RCVR | UART_FCR_CLEAR_XMIT,
->>> +               .rxtrig_bytes   = {1, 4, 8, 14},
->>> +               .flags          = UART_CAP_FIFO,
->>
->>> +
->>
->> Redundant.
->
-> You are referring to the extra whitespace?
->
->>> +       },
->>
->>> +               /*
->>> +                * Nuvoton calls the scratch register 'UART_TOR' (timeout
->>> +                * register). Enable it, and set TIOC (timeout interrupt
->>> +                * comparator) to be 0x20 for correct operation.
->>> +                */
->>> +               serial_port_out(port, UART_NPCM_TOR, UART_NPCM_TOIE |
->>> + 0x20);
->>
->>> +/* Nuvoton NPCM UARTs have a custom divisor calculation */
->>> +       return DIV_ROUND_CLOSEST(port->uartclk, 16 * baud + 2) - 2;
->>
->> Is there any link to datasheet?
->
-> I have a copy of the datasheet under NDA. The Nuvoton guys might be able to help you out. Avi?
+On Tue, Feb 13, 2018 at 12:57:23PM +0000, Jean-Philippe Brucker wrote:
+> * bind_device() fails if the device's group has more than one device,
+> otherwise calls __bind_device(). This prevents device drivers that are
+> oblivious to IOMMU groups from opening a backdoor.
+> 
+> * bind_group() calls __bind_device() for all devices in group. This way
+> users that are aware of IOMMU groups can still use them safely. Note that
+> at the moment bind_group() fails as soon as it finds a device that doesn't
+> support SVA. Having all devices support SVA in a given group is
+> unrealistic and this behavior ought to be improved.
 
-In the spec the calculation is as follows:
-  BaudOut = Selected UART Clock Source / ( 16 * [Divisor + 2] )
-To translate it to our code is:
-  baud = port->uartclk / (16 * (Divisor + 2) )
-So it should calculate without the "+ 2" inside as follow:
-+       return DIV_ROUND_CLOSEST(port->uartclk, 16 * baud) - 2;
+Yeah, so the problem on PCI is that all functions of a multi-function
+device are put into one group. For AMD-GPUs this means that the GPU
+(SVA-capable) will end up in the same group as the on-GPU sound
+device (not SVA-capable).
 
-In order to get the spec you can add somthing like that:
-"For getting the NPCM7XX Data Sheet please contact bmc_marketing-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org".
+Before this causes us big headaches I suggest to only provide the
+bind_device() function. This should be fine because for SVA we don't
+need all types of isolation that iommu_groups provide.
 
-BTW Andy, Intel has our Data Sheet under NDA, you can ask Mihm James
-<james.mihm-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>.
+IOMMU-groups provide two types of isolation:
 
->
->>
->>> +/* Nuvoton UART */
->>> +#define PORT_NPCM      118
->>
->> We have gaps there. #40 is perfect place for this one.
->
-> Ok, I will move it up. Thanks for the review.
->
-> Cheers,
->
-> Joel
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	1) They group devices together which the IOMMU can't distinguish
+	   from each other, like PCI devices behind a PCIe bridge.
+
+	2) Devices that can't be isolated from each other are also put
+	   into the same group. This is the case for multi-function PCIe
+	   devices as well as all PCIe devices behind a non-ACS bridge.
+	   But all these devices cann still be distinguished by the
+	   IOMMU.
+
+These two types of protection are needed to safely assign devices to
+guests, but for bare-metal SVA all we need is type 1) isolation, and
+not even that if we can assume that all SVA-capable devices have an
+exclusive device-id (or stream-id).
+
+
+
+	Joerg
