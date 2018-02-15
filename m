@@ -1,86 +1,79 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v7 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-Date: Thu, 15 Feb 2018 10:50:18 +0100
-Message-ID: <20180215095018.hslnarg4ykegqsbo@flea.lan>
-References: <20180208150830.9219-1-maxime.ripard@bootlin.com>
- <2517178.9jmyBy62ST@avalon>
- <20180214131933.t75jg5b5cjfuo7r6@flea.home>
- <1952975.8AbmfkeE6m@avalon>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCHv4 2/4] ASoC: codec: cpcap: new codec
+Date: Thu, 15 Feb 2018 10:50:22 +0100
+Message-ID: <CAOFm3uFJC2Xb0PuNECJ-Tvg2gQS==tMSc77p_keQoCexNqOkDg@mail.gmail.com>
+References: <20180214220741.28306-1-sebastian.reichel@collabora.co.uk> <20180214220741.28306-3-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zkbrrwh56qyk3crj"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1952975.8AbmfkeE6m@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180214220741.28306-3-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Dear Sebastian,
 
---zkbrrwh56qyk3crj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Feb 14, 2018 at 11:07 PM, Sebastian Reichel
+<sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
+> Motorola CPCAP is a PMIC with audio functionality, that can be
+> found on Motorola Droid 4 and probably a few other phones from
+> Motorola's Droid series.
+>
+> The driver has been written from scratch using Motorola's Android
+> driver, register dumps from running Android and datasheet for NXP
+> MC13783UG (which is similar to Motorola CPCAP, but not the same).
+>
+> The chip provides two audio interfaces, that can be muxed to two
+> different audio codecs. One provides support for stereo output
+> (named StDAC or HiFi), while the other only provides mono output
+> (named Voice). Only the Voice codec provides a Capture interface.
+>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 
-On Wed, Feb 14, 2018 at 05:03:26PM +0200, Laurent Pinchart wrote:
-> On Wednesday, 14 February 2018 15:19:33 EET Maxime Ripard wrote:
-> > On Thu, Feb 08, 2018 at 08:17:19PM +0200, Laurent Pinchart wrote:
-> > >> +	/*
-> > >> +	 * Create a static mapping between the CSI virtual channels
-> > >> +	 * and the output stream.
-> > >> +	 *
-> > >> +	 * This should be enhanced, but v4l2 lacks the support for
-> > >> +	 * changing that mapping dynamically.
-> > >> +	 *
-> > >> +	 * We also cannot enable and disable independant streams here,
-> > >> +	 * hence the reference counting.
-> > >> +	 */
-> > >=20
-> > > If you start all streams in one go, will s_stream(1) be called multip=
-le
-> > > times ? If not, you could possibly skip the whole reference counting =
-and
-> > > avoid locking.
-> >=20
-> > I guess that while we should expect the CSI-2 bus to be always
-> > enabled, the downstream camera interface could be shutdown
-> > independently, so I guess s_stream would be called each time one is
-> > brought up or brought down?
->=20
-> That's the idea. However, we don't have support for multiplexed streams i=
-n=20
-> mainline yet, so there's no way it can be implemented today in your drive=
-r.
+<snip>
 
-Ok, but we definitely plan on supporting that soon, so I guess that
-wouldn't too much of a burden to keep it there.
+> --- /dev/null
+> +++ b/sound/soc/codecs/cpcap.c
+> @@ -0,0 +1,1588 @@
+> +/*
+> + * ALSA SoC CPCAP codec driver
+> + *
+> + * Copyright (C) 2017 - 2018 Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> + *
+> + * Very loosely based on original driver from Motorola:
+> + * Copyright (C) 2007 - 2009 Motorola, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
 
-Maxime
+Could you consider using the new SPDX tags instead of this fine but
+long legalese? [1]
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+<snip>
 
---zkbrrwh56qyk3crj
-Content-Type: application/pgp-signature; name="signature.asc"
+> +MODULE_ALIAS("platform:cpcap-codec");
+> +MODULE_DESCRIPTION("ASoC CPCAP codec driver");
+> +MODULE_AUTHOR("Sebastian Reichel");
+> +MODULE_LICENSE("GPL");
 
------BEGIN PGP SIGNATURE-----
+This does not match your license: per module.h, GPL means GPL-2.0 or
+later. You notice above is GPL-2.0, not "or later"
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqFV9kACgkQ0rTAlCFN
-r3RU5Q/9H1VTrVPGgvRJJmgI1F8/xIpOdCMFliYvjkxul/fF4fUn5JJiq/PTwApi
-yzrSKmRrarcYXqNZ1bSwQ9naN7sZHsiRT1L7xKUMPKEeMcWMvCSoCVrO0nrO9aWp
-OwY4lcTapDwQO1gXmcevgxkMiO+TytcHVUxVYjueeC9fnvqlwpGynmRZuV6/ODZ1
-gKOGzqdoAp3s4E4wm9OlrP4AjlgttZ7u4sdfC3bagSeqE0LIwNu4zCapg4toMbWu
-8jwBQX84mK3s1270KB3VYBO5kaei/8phAiCNdaOJUD8NuoBqEg/0s9VAJt7DjLuf
-QXjAbkx9KblNJK6NwYQzkuW1/7baf+eg1gM6SWnFmW0E4QFzxw21Cn5OlJOo/Pm8
-uhRox+j+He9ZzmdNNtMja8flZrz7arZfoqiWO+UYKEti8OhrsnrqoIbvE2F+q8Y8
-P0BS1WStp4h0tGwmMktK+66oO/ir3sgMkIz+Jt9LO1gbc8/1nUw3jOOwfOnF0GU8
-mAQgJX0xJfW3z/aiHIbLgEup/JOoVpiys3b2/uNUPW08sNYIYDTrthHkyZ3dhial
-MEC17MFx2nMqUf9JMfngLmeZfM6OvPGg/aelmRyslxD7IibWJ1gynozyW7yJnWcZ
-LBs2cI4+SquekTbyI7HZl3Lz28uhOx8iZR6gsyXQQJxucn7dY7E=
-=VPeT
------END PGP SIGNATURE-----
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/license-rules.rst
 
---zkbrrwh56qyk3crj--
+-- 
+Cordially
+Philippe Ombredanne
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
