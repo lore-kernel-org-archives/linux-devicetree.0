@@ -1,138 +1,32 @@
-From: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 6/8] arm64: dts: renesas: r8a77995-draak: Enable DU
-Date: Thu, 15 Feb 2018 14:30:28 +0000
-Message-ID: <8b2c853c-2963-a116-a246-5fdb30b0688e@ideasonboard.com>
-References: <1518683903-10681-1-git-send-email-kbingham@kernel.org>
- <1518683903-10681-7-git-send-email-kbingham@kernel.org>
- <6281511.bskcdgqsgb@avalon>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] rtc: isl12026: Add driver.
+Date: Thu, 15 Feb 2018 16:35:38 +0200
+Message-ID: <CAHp75VcnR2U3DgSCv5Lpj=UBQnzX7YCbvbxzv__cZmW_+VcidQ@mail.gmail.com>
+References: <20180214005536.22739-1-david.daney@cavium.com>
+ <CAHp75VcQm-gr0GRszBSRJSZOpdSutRyhVkw-BN_YAwhjaPM4yg@mail.gmail.com> <20180215131533.GL8219@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6281511.bskcdgqsgb@avalon>
-Content-Language: en-GB
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Ulrich Hecht <ulrich.hecht-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180215131533.GL8219@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: David Daney <david.daney@cavium.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent, Simon,
+On Thu, Feb 15, 2018 at 3:15 PM, Alexandre Belloni
+<alexandre.belloni@free-electrons.com> wrote:
+> On 15/02/2018 at 14:45:11 +0200, Andy Shevchenko wrote:
+>> On Wed, Feb 14, 2018 at 2:55 AM, David Daney <david.daney@cavium.com> wrote:
 
-On 15/02/18 14:12, Laurent Pinchart wrote:
-> Hi Kieran,
-> 
-> Thank you for the patch.
-> 
-> On Thursday, 15 February 2018 10:38:21 EET Kieran Bingham wrote:
->> From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>> > +#ifdef CONFIG_OF
 >>
->> Enable the DU, providing only the VGA output for now.
+>> Remove this ugly #ifdef. Your driver OF only one.
 >>
->> Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> 
-> I assume Simon will take care of this patch.
+>
+> Well, it is DT only because you asked for that on v1.
 
-That will be great, - One small caveat on this patch though:
+Yes, and I asked to remove these #ifdef:s there as well.
 
-
->> ---
->>  arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 51 +++++++++++++++++++++++
->>  1 file changed, 51 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
->> b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts index
->> af07da240be0..668e246dfc5d 100644
->> --- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
->> +++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
->> @@ -27,6 +27,38 @@
->>  		stdout-path = "serial0:115200n8";
->>  	};
->>
->> +	vga {
->> +		compatible = "vga-connector";
->> +
->> +		port {
->> +			vga_in: endpoint {
->> +				remote-endpoint = <&adv7123_out>;
->> +			};
->> +		};
->> +	};
->> +
->> +	vga-encoder {
->> +		compatible = "adi,adv7123";
->> +
->> +		ports {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			port@0 {
->> +				reg = <0>;
->> +				adv7123_in: endpoint {
->> +					remote-endpoint = <&du_out_rgb>;
->> +				};
->> +			};
->> +			port@1 {
->> +				reg = <1>;
->> +				adv7123_out: endpoint {
->> +					remote-endpoint = <&vga_in>;
->> +				};
->> +			};
->> +		};
->> +	};
->> +
->>  	memory@48000000 {
->>  		device_type = "memory";
->>  		/* first 128MB is reserved for secure area. */
->> @@ -46,6 +78,11 @@
->>  		};
->>  	};
->>
->> +	du_pins: du {
->> +		groups = "du_rgb888", "du_sync", "du_disp", "du_dotclkout0";
-
-The du_dotclkout0 is named differently in Uli's patch. (Of course I believe my
-version is correct, but there is some precedent set it would seem).
-
-Anyway, If Uli's version of the PFC is accepted (Which I'm sure it will be),
-then I will have to re-spin this patch with the 'different' "du_clk_out_0" value
-in the groups.
-
---
-Kieran
-
-
->> +		function = "du";
->> +	};
->> +
->>  	i2c0_pins: i2c0 {
->>  		groups = "i2c0";
->>  		function = "i2c0";
->> @@ -95,6 +132,20 @@
->>  	status = "okay";
->>  };
->>
->> +&du {
->> +	pinctrl-0 = <&du_pins>;
->> +	pinctrl-names = "default";
->> +	status = "okay";
->> +
->> +	ports {
->> +		port@0 {
->> +			endpoint {
->> +				remote-endpoint = <&adv7123_in>;
->> +			};
->> +		};
->> +	};
->> +};
->> +
->>  &ehci0 {
->>  	status = "okay";
->>  };
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+With Best Regards,
+Andy Shevchenko
