@@ -1,142 +1,43 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v8 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
-Date: Thu, 15 Feb 2018 14:33:34 +0100
-Message-ID: <20180215133335.9335-2-maxime.ripard@bootlin.com>
-References: <20180215133335.9335-1-maxime.ripard@bootlin.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180215133335.9335-1-maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Boris Brezillon <boris.brezillon-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+From: Tali Perry <tali.perry1@gmail.com>
+Subject: [PATCH v2 0/1] clk: npcm: add NPCM7xx clock driver
+Date: Thu, 15 Feb 2018 15:30:53 +0200
+Message-ID: <1518701454-22697-1-git-send-email-tali.perry1@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tali Perry <tali.perry1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up to
-4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
-the hardware implementation.
+Add Nuvoton BMC NPCM7xx clock driver.
 
-It can operate with an external D-PHY, an internal one or no D-PHY at all
-in some configurations.
+Nuvoton BMC NPCM7xx contain integrated clock controller which
+generates and supplies clock to all modules within the NPCM7xx BMC
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
-Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Signed-off-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/media/cdns,csi2rx.txt      | 100 +++++++++++++++++++++
- 1 file changed, 100 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2rx.txt
+1 ==> 2
+This patch includes fix request described here:
+https://patchwork.kernel.org/patch/10200033/
+(move fixed clocks to DT)
 
-diff --git a/Documentation/devicetree/bindings/media/cdns,csi2rx.txt b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-new file mode 100644
-index 000000000000..6b02a0657ad9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/cdns,csi2rx.txt
-@@ -0,0 +1,100 @@
-+Cadence MIPI-CSI2 RX controller
-+===============================
-+
-+The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
-+lanes in input, and 4 different pixel streams in output.
-+
-+Required properties:
-+  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
-+  - reg: base address and size of the memory mapped region
-+  - clocks: phandles to the clocks driving the controller
-+  - clock-names: must contain:
-+    * sys_clk: main clock
-+    * p_clk: register bank clock
-+    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
-+                         implemented in hardware, between 0 and 3
-+
-+Optional properties:
-+  - phys: phandle to the external D-PHY, phy-names must be provided
-+  - phy-names: must contain "dphy", if the implementation uses an
-+               external D-PHY
-+
-+Required subnodes:
-+  - ports: A ports node with one port child node per device input and output
-+           port, in accordance with the video interface bindings defined in
-+           Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+           port nodes are numbered as follows:
-+
-+           Port Description
-+           -----------------------------
-+           0    CSI-2 input
-+           1    Stream 0 output
-+           2    Stream 1 output
-+           3    Stream 2 output
-+           4    Stream 3 output
-+
-+           The stream output port nodes are optional if they are not
-+           connected to anything at the hardware level or implemented
-+           in the design.Since there is only one endpoint per port,
-+           the endpoints are not numbered.
-+
-+
-+Example:
-+
-+csi2rx: csi-bridge@0d060000 {
-+	compatible = "cdns,csi2rx";
-+	reg = <0x0d060000 0x1000>;
-+	clocks = <&byteclock>, <&byteclock>
-+		 <&coreclock>, <&coreclock>,
-+		 <&coreclock>, <&coreclock>;
-+	clock-names = "sys_clk", "p_clk",
-+		      "pixel_if0_clk", "pixel_if1_clk",
-+		      "pixel_if2_clk", "pixel_if3_clk";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			csi2rx_in_sensor: endpoint {
-+				remote-endpoint = <&sensor_out_csi2rx>;
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			csi2rx_out_grabber0: endpoint {
-+				remote-endpoint = <&grabber0_in_csi2rx>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			csi2rx_out_grabber1: endpoint {
-+				remote-endpoint = <&grabber1_in_csi2rx>;
-+			};
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+
-+			csi2rx_out_grabber2: endpoint {
-+				remote-endpoint = <&grabber2_in_csi2rx>;
-+			};
-+		};
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			csi2rx_out_grabber3: endpoint {
-+				remote-endpoint = <&grabber3_in_csi2rx>;
-+			};
-+		};
-+	};
-+};
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+
+Tali Perry (1):
+  clk: npcm7xx: add clock controller. fixed clock at DT
+
+ drivers/clk/Makefile      |   1 +
+ drivers/clk/clk-npcm7xx.c | 759 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 760 insertions(+)
+ create mode 100644 drivers/clk/clk-npcm7xx.c
+
 -- 
-2.14.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.14.1
