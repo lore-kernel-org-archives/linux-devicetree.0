@@ -1,55 +1,69 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Applied "regulator: dt: regulator-name is required property" to
- the regulator tree
-Date: Thu, 15 Feb 2018 11:52:02 +0000
-Message-ID: <20180215115202.GC8374@sirena.org.uk>
-References: <1518532988-10990-1-git-send-email-harald@ccbib.org>
- <E1elzv3-0005l2-MP@debutante>
- <CAMuHMdVLO4Y-NzS6bLp2dUy1oSqmEthC_yD5jCe_R9H4vWBwMA@mail.gmail.com>
+From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 4/4] ARM64: dts: Add NOR connection type with IFC
+Date: Thu, 15 Feb 2018 17:21:44 +0530
+Message-ID: <20180215115144.23798-1-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JWEK1jqKZ6MHAcjA"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVLO4Y-NzS6bLp2dUy1oSqmEthC_yD5jCe_R9H4vWBwMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Connection between IFC and NOR flash is of big-endian type.
 
---JWEK1jqKZ6MHAcjA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+So add big-endian property in flash node to reflect the same.
 
-On Thu, Feb 15, 2018 at 10:39:41AM +0100, Geert Uytterhoeven wrote:
-> On Wed, Feb 14, 2018 at 5:28 PM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+---
+Changes for v2: None
+Changes for v3: None
+Changes for v4: Updated device tree as per new binding
 
-> > Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts | 1 +
+ 3 files changed, 3 insertions(+)
 
-> What about using the DT node name instead, as is done for single-output
-> clocks?
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+index 6341281485cf..80aed686933f 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+@@ -89,6 +89,7 @@
+ 		reg = <0x0 0x0 0x8000000>;
+ 		bank-width = <2>;
+ 		device-width = <1>;
++		big-endian;
+ 	};
+ 
+ 	nand@1,0 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+index 3dc0c8e9663d..600ab2fb6f5a 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+@@ -104,6 +104,7 @@
+ 			reg = <0x0 0x0 0x8000000>;
+ 			bank-width = <2>;
+ 			device-width = <1>;
++			big-endian;
+ 		};
+ 
+ 		nand@1,0 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+index 434383bade0e..153bba913e9a 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
+@@ -180,6 +180,7 @@
+ 		reg = <0x0 0x0 0x8000000>;
+ 		bank-width = <2>;
+ 		device-width = <1>;
++		big-endian;
+ 	};
+ 
+ 	nand@1,0 {
+-- 
+2.14.1
 
-Yup, that'd work too.
-
---JWEK1jqKZ6MHAcjA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqFdGEACgkQJNaLcl1U
-h9Apagf/RG/WwNdJgKfW2k7PCdeziFugNavoXpQWwF3MLJzEbbh8uFN2vZ3LwSPY
-OH2xKQXSiVLAXVXiFmk+sbs2yaxHiy04hDrNgnzqnNnnJgELHmJalX3kQC1AqoNx
-I/Y8747o3hBXVH1LjQRZ9pa24AxmeiIMdmnRAMYsR3j/AF9x+oIoGwjUPt1E+TCu
-9ER5Aw7PfRIrfJB3aM1tyeQXCFooMwei/wmunyas5j4Bl+a9m18D7b1yM26+Q7f8
-CGfkDrp0+dpu1RcjtI/PvxqJJNCchs8Qj7XgTVQitazpVhMRcIbOfg8HnBwd+0dK
-Mwzq0hCJx6/FRgTRC47k2pG1jxvXHg==
-=t1+4
------END PGP SIGNATURE-----
-
---JWEK1jqKZ6MHAcjA--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
