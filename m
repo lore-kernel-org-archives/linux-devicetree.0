@@ -1,101 +1,41 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 04/11] soc: renesas: rcar-sysc: add R8A77980 support
-Date: Thu, 15 Feb 2018 19:48:28 +0300
-Message-ID: <b61b4bd9-a1ac-8145-237f-71049a13b90f@cogentembedded.com>
-References: <46fca582-220d-e5a7-62cd-2fc77a29846b@cogentembedded.com>
- <0309d18d-d5d8-ab59-9c15-79b4093e0a51@cogentembedded.com>
- <CAMuHMdUQuUhbiPnO1L7t5W5F8wJ72iYLM5VtT4gg0RuePcx7RA@mail.gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 7/8] arm64: dts: renesas: r8a77995-draak: Add HDMI Out
+ through ADV7511
+Date: Thu, 15 Feb 2018 17:50:01 +0100
+Message-ID: <20180215165000.j6szepze6tyfww7n@verge.net.au>
+References: <1518683903-10681-1-git-send-email-kbingham@kernel.org>
+ <1518683903-10681-8-git-send-email-kbingham@kernel.org>
+ <2517305.jdPBFiRQEk@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUQuUhbiPnO1L7t5W5F8wJ72iYLM5VtT4gg0RuePcx7RA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-MW
+Content-Disposition: inline
+In-Reply-To: <2517305.jdPBFiRQEk@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 02/05/2018 04:23 PM, Geert Uytterhoeven wrote:
-
->> Add support for R-Car V3H (R8A77980) SoC power areas to the R-Car SYSC
->> driver.
->>
->> Based on the original (and large) patch by Vladimir Barinov.
->>
->> Signed-off-by: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+On Thu, Feb 15, 2018 at 04:16:00PM +0200, Laurent Pinchart wrote:
+> Hi Kieran,
 > 
-> Thanks for your patch!
+> Thank you for the patch.
 > 
->> --- /dev/null
->> +++ renesas/drivers/soc/renesas/r8a77980-sysc.c
->> @@ -0,0 +1,52 @@
-[...]
->> +static const struct rcar_sysc_area r8a77980_areas[] __initconst = {
->> +       { "always-on",      0, 0, R8A77980_PD_ALWAYS_ON, -1, PD_ALWAYS_ON },
->> +       { "ca53-scu",   0x140, 0, R8A77980_PD_CA53_SCU, R8A77980_PD_ALWAYS_ON,
->> +         PD_SCU },
->> +       { "ca53-cpu0",  0x200, 0, R8A77980_PD_CA53_CPU0, R8A77980_PD_CA53_SCU,
->> +         PD_CPU_NOCR },
->> +       { "ca53-cpu1",  0x200, 1, R8A77980_PD_CA53_CPU1, R8A77980_PD_CA53_SCU,
->> +         PD_CPU_NOCR },
->> +       { "ca53-cpu2",  0x200, 2, R8A77980_PD_CA53_CPU2, R8A77980_PD_CA53_SCU,
->> +         PD_CPU_NOCR },
->> +       { "ca53-cpu3",  0x200, 3, R8A77980_PD_CA53_CPU3, R8A77980_PD_CA53_SCU,
->> +         PD_CPU_NOCR },
->> +       { "cr7",        0x240, 0, R8A77980_PD_CR7,      R8A77980_PD_ALWAYS_ON },
->> +       { "a3ir",       0x180, 0, R8A77980_PD_A3IR,     R8A77980_PD_ALWAYS_ON },
->> +       { "a2ir0",      0x400, 0, R8A77980_PD_A2IR0,    R8A77980_PD_ALWAYS_ON },
->> +       { "a2ir1",      0x400, 1, R8A77980_PD_A2IR1,    R8A77980_PD_A2IR0 },
->> +       { "a2ir2",      0x400, 2, R8A77980_PD_A2IR2,    R8A77980_PD_A2IR0 },
->> +       { "a2ir3",      0x400, 3, R8A77980_PD_A2IR3,    R8A77980_PD_A2IR0 },
->> +       { "a2ir4",      0x400, 4, R8A77980_PD_A2IR4,    R8A77980_PD_A2IR0 },
->> +       { "a2ir5",      0x400, 5, R8A77980_PD_A2IR5,    R8A77980_PD_A2IR0 },
+> On Thursday, 15 February 2018 10:38:22 EET Kieran Bingham wrote:
+> > From: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> > 
+> > Provide a device node for the ADV7511 as found on the Draak D3 platform.
+> > 
+> > The ADV7511 is connected to the DU through a parallel mux chip, and is
+> > configurable in hardware whether it is connected to LVDS0 or LVDS1.
+> > 
+> > Connect through to LVDS0 as a default implementation.
 > 
-> Shouldn't all a2irN domains have a3ir as their parent?
+> You need to model the LVDS decoder in DT too. I know that no driver and no DT 
+> bindings are available at the moment, and I'm aware that this patch enables 
+> the HDMI output on the Draak board, but I don't think it's upstreamable as-is.
 
-   Maybe.... I'd looked at the r8a77970-sysc.c and it also had A2IR0 as parent to all
-other A2IR<n> clocks.
-
->> +       { "a2sc0",      0x400, 6, R8A77980_PD_A2SC0,    R8A77980_PD_ALWAYS_ON },
->> +       { "a2sc1",      0x400, 7, R8A77980_PD_A2SC1,    R8A77980_PD_A2SC0 },
->> +       { "a2sc2",      0x400, 8, R8A77980_PD_A2SC2,    R8A77980_PD_A2SC0 },
->> +       { "a2sc3",      0x400, 9, R8A77980_PD_A2SC3,    R8A77980_PD_A2SC0 },
->> +       { "a2sc4",      0x400, 10, R8A77980_PD_A2SC4,   R8A77980_PD_A2SC0 },
-> 
-> Shouldn't all a2scN domains have a3ir as their parent?
-
-   Why A3IR?
-
->> +       { "a2pd0",      0x400, 11, R8A77980_PD_A2PD0,   R8A77980_PD_ALWAYS_ON },
->> +       { "a2pd1",      0x400, 12, R8A77980_PD_A2PD1,   R8A77980_PD_A2PD0 },
-> 
-> Shouldn't all a2pdN domains have a3ir as their parent?
-
-   Again, why?
-
-> 
->> +       { "a2cn",       0x400, 13, R8A77980_PD_A2CN,    R8A77980_PD_ALWAYS_ON },
-> 
-> Shouldn't the a2cn domain have a3ir as its parent?
-
-   ?
-
->> +       { "a3vip",      0x2c0, 0, R8A77980_PD_A3VIP,    R8A77980_PD_ALWAYS_ON },
->> +       { "a3vip1",     0x300, 0, R8A77980_PD_A3VIP1,   R8A77980_PD_A3VIP },
->> +       { "a3vip2",     0x280, 0, R8A77980_PD_A3VIP2,   R8A77980_PD_A3VIP },
-> 
-> With the above fixed:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-
-MBR, Sergei
+Thanks, I've marked this as "Changes Requested".
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
