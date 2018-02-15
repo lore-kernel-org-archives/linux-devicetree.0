@@ -1,47 +1,27 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] ARM: dts: exynos: Add support for HDMI audio on
- exynos5433-tm2
-Date: Thu, 15 Feb 2018 19:32:57 +0100
-Message-ID: <20180215183257.lvtyzixgzwfcl7fq@kozik-lap>
-References: <20180212163147.11561-1-s.nawrocki@samsung.com>
- <CGME20180212163212epcas2p15a43c33e24b6c800544637ca0b030cb6@epcas2p1.samsung.com>
- <20180212163147.11561-3-s.nawrocki@samsung.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 0/4] arm64: defconfig: Enable PWM and USB for R-Car
+Date: Thu, 15 Feb 2018 19:33:32 +0100
+Message-ID: <20180215183331.56y6syawbjzdheor@verge.net.au>
+References: <1518589412-7330-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180212163147.11561-3-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1518589412-7330-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 12, 2018 at 05:31:47PM +0100, Sylwester Nawrocki wrote:
-> This patch updates the sound node of the exynos5433-tm2 board
-> and adds clock tree configuration in order to support HDMI sound.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
-> Changes since v2:
->  - nodes sorted alphabetically, changed the assigned clock
->    frequencies.
-> 
-> Changes since v1:
->  - dropped unnecessary assigned-clock* properties for AUD PLL
->    in cmu_top node,
->  - changed default AUD PLL frequency so it is within recommended
->    252...400 MHz range.
-> ---
->  .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 52 ++++++++++++++++++++--
->  arch/arm64/boot/dts/exynos/exynos5433.dtsi         |  1 +
->  2 files changed, 49 insertions(+), 4 deletions(-)
-> 
+On Wed, Feb 14, 2018 at 03:23:28PM +0900, Yoshihiro Shimoda wrote:
+> This patch set is based on the renesas.git / renesas-devel-20180213v2-v4.16-rc1
+> tag.
 
-Thanks, applied.
+Hi Shimoda-san,
 
-Best regards,
-Krzysztof
-
+these changes look fine to me but I believe that upstream
+prefers such patches to be consolidated. Could you consider
+reposting with these four patches squashed into one?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
