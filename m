@@ -1,58 +1,66 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 2/8] dt-bindings: display: renesas,
- du: Document r8a77995 bindings
-Date: Thu, 15 Feb 2018 15:59:25 +0200
-Message-ID: <4647820.7KnCr1m3Y8@avalon>
-References: <1518683903-10681-1-git-send-email-kbingham@kernel.org>
- <1518683903-10681-3-git-send-email-kbingham@kernel.org>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH 3/8] dt-bindings: display: renesas,lvds: Add LVDS binding for D3
+Date: Thu, 15 Feb 2018 16:02:49 +0200
+Message-ID: <2442341.aT5bf8aohc@avalon>
+References: <1518683903-10681-1-git-send-email-kbingham@kernel.org> <1518683903-10681-4-git-send-email-kbingham@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1518683903-10681-3-git-send-email-kbingham@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kieran Bingham <kbingham@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, open list <linux-kernel@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, geert@glider.be, "open list:DRM DRIVERS FOR RENESAS" <dri-devel@lists.freedesktop.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518683903-10681-4-git-send-email-kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "open list:DRM DRIVERS" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2llcmFuLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUaHVyc2RheSwgMTUgRmVi
-cnVhcnkgMjAxOCAxMDozODoxNyBFRVQgS2llcmFuIEJpbmdoYW0gd3JvdGU6Cj4gRnJvbTogS2ll
-cmFuIEJpbmdoYW0gPGtpZXJhbi5iaW5naGFtK3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiAK
-PiBEb2N1bWVudCB0aGUgRDMgKHI4YTc3OTk1KSBTb0MgaW4gdGhlIFItQ2FyIERVIGJpbmRpbmdz
-Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEtpZXJhbiBCaW5naGFtIDxraWVyYW4uYmluZ2hhbStyZW5l
-c2FzQGlkZWFzb25ib2FyZC5jb20+CgpSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1
-cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgoKYW5kIGFwcGxpZWQgdG8gbXkgdHJlZS4K
-Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVz
-YXMsZHUudHh0IHwgMiArKwo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4gCj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jl
-bmVzYXMsZHUudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9yZW5lc2FzLGR1LnR4dCBpbmRleAo+IDhmNmUwZTExOGUzZS4uNTZmNjc0NTNiOWFhIDEwMDY0
-NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVz
-YXMsZHUudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcmVuZXNhcyxkdS50eHQKPiBAQCAtMTMsNiArMTMsNyBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVz
-Ogo+ICAgICAgLSAicmVuZXNhcyxkdS1yOGE3Nzk0IiBmb3IgUjhBNzc5NCAoUi1DYXIgRTIpIGNv
-bXBhdGlibGUgRFUKPiAgICAgIC0gInJlbmVzYXMsZHUtcjhhNzc5NSIgZm9yIFI4QTc3OTUgKFIt
-Q2FyIEgzKSBjb21wYXRpYmxlIERVCj4gICAgICAtICJyZW5lc2FzLGR1LXI4YTc3OTYiIGZvciBS
-OEE3Nzk2IChSLUNhciBNMy1XKSBjb21wYXRpYmxlIERVCj4gKyAgICAtICJyZW5lc2FzLGR1LXI4
-YTc3OTk1IiBmb3IgUjhBNzc5OTUgKFItQ2FyIEQzKSBjb21wYXRpYmxlIERVCj4gCj4gICAgLSBy
-ZWc6IEEgbGlzdCBvZiBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiBlYWNoIG1lbW9yeSByZXNv
-dXJjZSwgb25lIGZvcgo+IGVhY2ggZW50cnkgaW4gdGhlIHJlZy1uYW1lcyBwcm9wZXJ0eS4KPiBA
-QCAtNjAsNiArNjEsNyBAQCBjb3JyZXNwb25kaW5nIHRvIGVhY2ggRFUgb3V0cHV0Lgo+ICAgUjhB
-Nzc5NCAoUi1DYXIgRTIpICAgRFBBRCAwICAgICAgICAgRFBBRCAxICAgICAgICAgLSAgICAgICAg
-ICAgICAgLQo+ICAgUjhBNzc5NSAoUi1DYXIgSDMpICAgRFBBRCAwICAgICAgICAgSERNSSAwICAg
-ICAgICAgSERNSSAxICAgICAgICAgTFZEUyAwCj4gICBSOEE3Nzk2IChSLUNhciBNMy1XKSBEUEFE
-IDAgICAgICAgICBIRE1JIDAgICAgICAgICBMVkRTIDAgICAgICAgICAtCj4gKyBSOEE3Nzk5NSAo
-Ui1DYXIgRDMpICBEUEFEIDAgICAgICAgICBMVkRTIDAgICAgICAgICBMVkRTIDEgICAgICAgICAt
-Cj4gCj4gCj4gIEV4YW1wbGU6IFI4QTc3OTUgKFItQ2FyIEgzKSBFUzIuMCBEVQoKCi0tIApSZWdh
-cmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+Hi Kieran,
+
+Thank you for the patch.
+
+On Thursday, 15 February 2018 10:38:18 EET Kieran Bingham wrote:
+> From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> 
+> The D3 supports two LVDS channels. Extend the binding to support them.
+> 
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt index
+> 79860f58a7ad..0dcf488b70df 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> @@ -14,6 +14,7 @@ Required properties:
+>  - compatible : Shall contain one of
+>    - "renesas,lvds-r8a7795" for R8A7795 (R-Car H3) compatible LVDS encoders
+>    - "renesas,lvds-r8a7796" for R8A7796 (R-Car M3-W) compatible LVDS
+> encoders
+> +  - "renesas,lvds-r8a77995" for R8A77995 (R-Car D3) compatible
+> LVDS encoders
+
+This should be "renesas,r8a77995-lvds". I've already fixed the series you've 
+based this patch on.
+
+Apart from this,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+and taken in my tree with the compatible string fixed.
+
+> 
+>  - reg: Base address and length for the memory-mapped registers
+>  - clocks: A phandle + clock-specifier pair for the functional clock
+
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
