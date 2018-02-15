@@ -1,47 +1,73 @@
-From: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: RE: [[INTERNAL] PATCH 0/2] Fix STM32F7 DWC2 OTG HS binding
-Date: Thu, 15 Feb 2018 15:48:04 +0000
-Message-ID: <0d93c90528ca408eac19e4648f09156a@SFHDAG3NODE2.st.com>
-References: <1518709601-17232-1-git-send-email-amelie.delaunay@st.com>
- <1518709601-17232-2-git-send-email-amelie.delaunay@st.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH 4/4] drivers: qcom: rpmh: add RPMH helper functions
+Date: Thu, 15 Feb 2018 15:52:12 +0000
+Message-ID: <20180215155212.GA23714@codeaurora.org>
+References: <20180119000157.7380-1-ilina@codeaurora.org>
+ <20180119000157.7380-5-ilina@codeaurora.org>
+ <217e3652-c7e9-a81a-fcd8-9d97ab7736cd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518709601-17232-2-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <217e3652-c7e9-a81a-fcd8-9d97ab7736cd@codeaurora.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Forget this one! Sorry for the inconvenience.
+On Thu, Feb 15 2018 at 08:49 +0000, Rajendra Nayak wrote:
+>[]..
+>
+>> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+>> new file mode 100644
+>> index 000000000000..ad1def2c362c
+>> --- /dev/null
+>> +++ b/drivers/soc/qcom/rpmh.c
+>> @@ -0,0 +1,264 @@
+>> +/* Copyright (c) 2016-2018, The Linux Foundation. All rights reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 and
+>> + * only version 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + */
+>> +
+>> +#include <linux/atomic.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/mailbox_client.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/types.h>
+>> +#include <linux/wait.h>
+>> +
+>> +#include <soc/qcom/rpmh.h>
+>> +
+>> +#include "rpmh-internal.h"
+>> +
+>> +#define RPMH_MAX_MBOXES			2
+>> +#define RPMH_TIMEOUT			msecs_to_jiffies(10000)
+>> +
+>> +#define DEFINE_RPMH_MSG_ONSTACK(rc, s, q, c, name)
+>> +	struct rpmh_msg name = {			\
+>> +		.msg = {				\
+>> +			.state = s,			\
+>> +			.payload = name.cmd,		\
+>> +			.num_payload = 0,		\
+>> +			.is_complete = true,		\
+>> +			.invalidate = false,		\
+>
+>There seems to be no field called 'invalidate' as part of the struct
+>
+Yup. Sorry, I will remove it in the next revision. I should be posting
+one in a day or so.
 
-> -----Original Message-----
-> From: Amelie DELAUNAY
-> Sent: jeudi 15 février 2018 16:47
-> To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>; Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>;
-> Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Rob Herring
-> <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-> Subject: [[INTERNAL] PATCH 0/2] Fix STM32F7 DWC2 OTG HS binding
-> 
-> This patchset fixes STM32F7 DWC2 OTG HS binding. It actually re-applies the
-> v2 former patches adding STM32F7 DWC2 OTG HS support.
-> 
-> Amelie Delaunay (2):
->   dt-bindings: usb: fix the STM32F7 DWC2 OTG HS core binding
->   usb: dwc2: fix STM32F7 USB OTG HS compatible
-> 
->  Documentation/devicetree/bindings/usb/dwc2.txt | 2 +-
->  drivers/usb/dwc2/params.c                      | 6 +++---
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> --
-> 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Lina
