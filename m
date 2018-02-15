@@ -1,36 +1,42 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v13 7/9] ACPI: Translate the I/O range of non-MMIO devices
- before scanning
-Date: Thu, 15 Feb 2018 14:22:58 +0200
-Message-ID: <CAHp75VfFKcnUVQwPUxynzp88RXWdV8VEqtXxd0=_Q_GJKO6UpQ@mail.gmail.com>
-References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
- <1518543933-22456-8-git-send-email-john.garry@huawei.com> <20180214161635.GA13849@e107981-ln.cambridge.arm.com>
- <65185a4d-c712-4486-d713-3fa9de14e35d@huawei.com> <e3fb78b3-5f5c-fe96-9f02-e96092963c17@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <e3fb78b3-5f5c-fe96-9f02-e96092963c17@huawei.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Corey Minyard <minyard@acm.org>devicetree <d>
+From: srinivas.kandagatla@linaro.org
+Subject: [PATCH v3 0/5] dmaengine: qcom: bam_dma: fixes for remotely controlled bam
+Date: Thu, 15 Feb 2018 12:25:06 +0000
+Message-ID: <20180215122511.13517-1-srinivas.kandagatla@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, andy.gross@linaro.org, dmaengine@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, david.brown@linaro.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 15, 2018 at 1:19 PM, John Garry <john.garry@huawei.com> wrote:
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-> +static const struct acpi_device_id indirect_io_hosts[] = {
-> +    {"HISI0191", 0},    /* HiSilicon LPC host */
-> +    {},
+Hi Andy,
 
-Just a nit.
+I did hit few issues while trying out SLIMBus BAM on DB820c, this BAM instance
+is remotely controlled and powered up after ADSP is booted using QMI commands.
 
-It seems lately this happens more often than usual, I mean a comma in
-the terminator line.
+Firstly some of the master registers are written even when the BAM is remotely
+controlled, and secondly reading registers when bam is not ready yet.
 
-If we remove it. we terminate not only at runtime, but at compile
-time, which is slightly better.
+These 4 patches address these issues, there are few more issues like doing PM
+in simillar usecase, these will be addressed soon.
 
-> +};
+Thanks,
+Srini
+
+Changes since v2:
+	return clk error in default case, suggested by Bjorn
+
+Srinivas Kandagatla (5):
+  dmaengine: qcom: bam_dma: make bam clk optional
+  dt-bindings: dmaengine: bam_dma: add remote controlled bindings
+  dmaengine: qcom: bam_dma: get num-channels and num-ees from dt
+  dmaengine: qcom: bam_dma: do not write to global regs in remote mode
+  dmaengine: qcom: bam_dma: disable runtime pm on remote controlled
+
+ .../devicetree/bindings/dma/qcom_bam_dma.txt       |  4 ++
+ drivers/dma/qcom/bam_dma.c                         | 59 +++++++++++++++++-----
+ 2 files changed, 49 insertions(+), 14 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.15.1
