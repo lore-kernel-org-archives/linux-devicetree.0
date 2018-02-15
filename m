@@ -1,266 +1,103 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v13 7/8] ARM: dts: imx: Add TDA19971 HDMI
- Receiver to GW54xx
-Date: Thu, 15 Feb 2018 19:36:43 +0100
-Message-ID: <7732637c-93bf-fac2-5553-695782890254@xs4all.nl>
-References: <1518717336-6271-1-git-send-email-tharvey@gateworks.com>
- <1518717336-6271-8-git-send-email-tharvey@gateworks.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Thu, 15 Feb 2018 18:46:17 +0000
+Message-ID: <20180215184617.GB23714@codeaurora.org>
+References: <20180208195154.3580-1-ilina@codeaurora.org>
+ <20180208195154.3580-3-ilina@codeaurora.org>
+ <20180214193419.GE93895@bjorns-mbp-2.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1518717336-6271-8-git-send-email-tharvey@gateworks.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tim Harvey <tharvey@gateworks.com>, linux-media@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hansverk@cisco.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, shawnguo@kernel.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180214193419.GE93895@bjorns-mbp-2.lan>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, msivasub@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15/02/18 18:55, Tim Harvey wrote:
-> The GW54xx has a front-panel microHDMI connector routed to a TDA19971
-> which is connected the the IPU CSI when using IMX6Q.
+On Wed, Feb 14 2018 at 19:34 +0000, Bjorn Andersson wrote:
+>On Thu 08 Feb 11:51 PST 2018, Lina Iyer wrote:
+>
+>> From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+>>
+>> Command DB provides information on shared resources like clocks,
+>> regulators etc., probed at boot by the remote subsytem and made
+>> available in shared memory.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/arm/msm/cmd-db.txt         | 38 ++++++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+>> new file mode 100644
+>> index 000000000000..e21666e40ebf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+>> @@ -0,0 +1,38 @@
+>> +Command DB
+>> +---------
+>> +
+>> +Command DB is a database that provides a mapping between resource key and the
+>> +resource address for a system resource managed by a remote processor. The data
+>> +is stored in a shared memory region and is loaded by the remote processor.
+>> +
+>> +Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
+>> +controlling shared resources. Depending on the board configuration the shared
+>> +resource properties may change. These properties are dynamically probed by the
+>> +remote processor and made available in the shared memory.
+>> +
+>> +The devicetree representation of the command DB driver should be:
+>> +
+>> +PROPERTIES:
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: Should be "qcom,cmd-db"
+>> +
+>> +- memory-region:
+>> +	Usage: required
+>> +	Value type: <phandle>
+>> +	Definition: The phandle to the reserved memory region.
+>> +
+>> +Example:
+>> +
+>> +	reserved-memory {
+>> +		[...]
+>> +		cmd_db_mem: qcom,cmd-db@c3f000c {
+>> +			reg = <0x0 0xc3f000c 0x0 0x8>;
+>
+>I was hoping that we can describe the actual memory here, as I got the
+>impression that it will also be a chunk of memory carved out from System
+>RAM.
+>
+Yes, it can be described. But, the location should always be read from
+the address above. Generally, the CMD DB memory would not change, but it
+is not always guaranteed.
 
-I assume that this and the next patch go through another subsystem for arm
-and/or imx?
+>If not it would seem unlikely that there's a 8 byte carveout in the
+>middle of DDR, what else is here?
+>
+>> +		};
+>> +	};
+>> +
+>> +	qcom,cmd-db@c3f000c {
+>> +		compatible = "qcom,cmd-db";
+>
+>Add "qcom,cmd-db" to "reserved_mem_matches" in drivers/of/platform.c,
+>use of_reserved_mem_lookup(pdev->dev.of_node) to get the reserved_mem
+>and you can just put the compatible directly on the reserved-memory
+>node.
+>
+>That way you don't need this separate node that doesn't really represent
+>anything.
+>
+Oh okay. I can take care of that.
 
-Regards,
-
-	Hans
-
-> 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> ---
-> v5:
->  - remove leading 0 from unit address
->  - add newline between property list and child node
-> 
-> v4: no changes
-> v3: no changes
-> 
-> v2:
->  - add HDMI audio input support
-> 
->  arch/arm/boot/dts/imx6q-gw54xx.dts    | 105 ++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi |  29 +++++++++-
->  2 files changed, 131 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-gw54xx.dts b/arch/arm/boot/dts/imx6q-gw54xx.dts
-> index 56e5b50..0477120 100644
-> --- a/arch/arm/boot/dts/imx6q-gw54xx.dts
-> +++ b/arch/arm/boot/dts/imx6q-gw54xx.dts
-> @@ -12,10 +12,30 @@
->  /dts-v1/;
->  #include "imx6q.dtsi"
->  #include "imx6qdl-gw54xx.dtsi"
-> +#include <dt-bindings/media/tda1997x.h>
->  
->  / {
->  	model = "Gateworks Ventana i.MX6 Dual/Quad GW54XX";
->  	compatible = "gw,imx6q-gw54xx", "gw,ventana", "fsl,imx6q";
-> +
-> +	sound-digital {
-> +		compatible = "simple-audio-card";
-> +		simple-audio-card,name = "tda1997x-audio";
-> +
-> +		simple-audio-card,dai-link@0 {
-> +			format = "i2s";
-> +
-> +			cpu {
-> +				sound-dai = <&ssi2>;
-> +			};
-> +
-> +			codec {
-> +				bitclock-master;
-> +				frame-master;
-> +				sound-dai = <&tda1997x>;
-> +			};
-> +		};
-> +	};
->  };
->  
->  &i2c3 {
-> @@ -35,6 +55,61 @@
->  			};
->  		};
->  	};
-> +
-> +	tda1997x: codec@48 {
-> +		compatible = "nxp,tda19971";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_tda1997x>;
-> +		reg = <0x48>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-> +		DOVDD-supply = <&reg_3p3v>;
-> +		AVDD-supply = <&sw4_reg>;
-> +		DVDD-supply = <&sw4_reg>;
-> +		#sound-dai-cells = <0>;
-> +		nxp,audout-format = "i2s";
-> +		nxp,audout-layout = <0>;
-> +		nxp,audout-width = <16>;
-> +		nxp,audout-mclk-fs = <128>;
-> +		/*
-> +		 * The 8bpp YUV422 semi-planar mode outputs CbCr[11:4]
-> +		 * and Y[11:4] across 16bits in the same cycle
-> +		 * which we map to VP[15:08]<->CSI_DATA[19:12]
-> +		 */
-> +		nxp,vidout-portcfg =
-> +			/*G_Y_11_8<->VP[15:12]<->CSI_DATA[19:16]*/
-> +			< TDA1997X_VP24_V15_12 TDA1997X_G_Y_11_8 >,
-> +			/*G_Y_7_4<->VP[11:08]<->CSI_DATA[15:12]*/
-> +			< TDA1997X_VP24_V11_08 TDA1997X_G_Y_7_4 >,
-> +			/*R_CR_CBCR_11_8<->VP[07:04]<->CSI_DATA[11:08]*/
-> +			< TDA1997X_VP24_V07_04 TDA1997X_R_CR_CBCR_11_8 >,
-> +			/*R_CR_CBCR_7_4<->VP[03:00]<->CSI_DATA[07:04]*/
-> +			< TDA1997X_VP24_V03_00 TDA1997X_R_CR_CBCR_7_4 >;
-> +
-> +		port {
-> +			tda1997x_to_ipu1_csi0_mux: endpoint {
-> +				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
-> +				bus-width = <16>;
-> +				hsync-active = <1>;
-> +				vsync-active = <1>;
-> +				data-active = <1>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&ipu1_csi0_from_ipu1_csi0_mux {
-> +	bus-width = <16>;
-> +};
-> +
-> +&ipu1_csi0_mux_from_parallel_sensor {
-> +	remote-endpoint = <&tda1997x_to_ipu1_csi0_mux>;
-> +	bus-width = <16>;
-> +};
-> +
-> +&ipu1_csi0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_ipu1_csi0>;
->  };
->  
->  &ipu2_csi1_from_ipu2_csi1_mux {
-> @@ -63,6 +138,30 @@
->  		>;
->  	};
->  
-> +	pinctrl_ipu1_csi0: ipu1_csi0grp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_CSI0_DAT4__IPU1_CSI0_DATA04		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT5__IPU1_CSI0_DATA05		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT6__IPU1_CSI0_DATA06		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT7__IPU1_CSI0_DATA07		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT8__IPU1_CSI0_DATA08		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT9__IPU1_CSI0_DATA09		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT10__IPU1_CSI0_DATA10		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT11__IPU1_CSI0_DATA11		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18		0x1b0b0
-> +			MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19		0x1b0b0
-> +			MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC		0x1b0b0
-> +			MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK	0x1b0b0
-> +			MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC		0x1b0b0
-> +		>;
-> +	};
-> +
->  	pinctrl_ipu2_csi1: ipu2_csi1grp {
->  		fsl,pins = <
->  			MX6QDL_PAD_EIM_EB2__IPU2_CSI1_DATA19    0x1b0b0
-> @@ -78,4 +177,10 @@
->  			MX6QDL_PAD_EIM_A16__IPU2_CSI1_PIXCLK    0x1b0b0
->  		>;
->  	};
-> +
-> +	pinctrl_tda1997x: tda1997xgrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_GPIO_7__GPIO1_IO07	0x1b0b0
-> +		>;
-> +	};
->  };
-> diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-> index eab75f3..f9e1fb9 100644
-> --- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-> @@ -10,6 +10,7 @@
->   */
->  
->  #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/sound/fsl-imx-audmux.h>
->  
->  / {
->  	/* these are used by bootloader for disabling nodes */
-> @@ -114,12 +115,12 @@
->  		};
->  	};
->  
-> -	sound {
-> +	sound-analog {
->  		compatible = "fsl,imx6q-ventana-sgtl5000",
->  			     "fsl,imx-audio-sgtl5000";
->  		model = "sgtl5000-audio";
->  		ssi-controller = <&ssi1>;
-> -		audio-codec = <&codec>;
-> +		audio-codec = <&sgtl5000>;
->  		audio-routing =
->  			"MIC_IN", "Mic Jack",
->  			"Mic Jack", "Mic Bias",
-> @@ -133,6 +134,25 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_audmux>; /* AUD4<->sgtl5000 */
->  	status = "okay";
-> +
-> +	ssi2 {
-> +		fsl,audmux-port = <1>;
-> +		fsl,port-config = <
-> +			(IMX_AUDMUX_V2_PTCR_TFSDIR |
-> +			IMX_AUDMUX_V2_PTCR_TFSEL(4+8) | /* RXFS */
-> +			IMX_AUDMUX_V2_PTCR_TCLKDIR |
-> +			IMX_AUDMUX_V2_PTCR_TCSEL(4+8) | /* RXC */
-> +			IMX_AUDMUX_V2_PTCR_SYN)
-> +			IMX_AUDMUX_V2_PDCR_RXDSEL(4)
-> +		>;
-> +	};
-> +
-> +	aud5 {
-> +		fsl,audmux-port = <4>;
-> +		fsl,port-config = <
-> +			IMX_AUDMUX_V2_PTCR_SYN
-> +			IMX_AUDMUX_V2_PDCR_RXDSEL(1)>;
-> +	};
->  };
->  
->  &can1 {
-> @@ -331,7 +351,7 @@
->  	pinctrl-0 = <&pinctrl_i2c3>;
->  	status = "okay";
->  
-> -	codec: sgtl5000@a {
-> +	sgtl5000: codec@a {
->  		compatible = "fsl,sgtl5000";
->  		reg = <0x0a>;
->  		clocks = <&clks IMX6QDL_CLK_CKO>;
-> @@ -475,6 +495,9 @@
->  			MX6QDL_PAD_SD2_DAT2__AUD4_TXD		0x110b0
->  			MX6QDL_PAD_SD2_DAT1__AUD4_TXFS		0x130b0
->  			MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x130b0 /* AUD4_MCK */
-> +			MX6QDL_PAD_EIM_D25__AUD5_RXC            0x130b0
-> +			MX6QDL_PAD_DISP0_DAT19__AUD5_RXD        0x130b0
-> +			MX6QDL_PAD_EIM_D24__AUD5_RXFS           0x130b0
->  		>;
->  	};
->  
-> 
+Thanks,
+Lina
+>> +		memory-region = <&cmd_db_mem>;
+>> +	};
