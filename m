@@ -1,37 +1,31 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 2/3] ARM: dts: stm32: select otg mode for usbotg_hs on stm32746g_eval
-Date: Thu, 15 Feb 2018 16:54:39 +0100
-Message-ID: <1518710080-18164-3-git-send-email-amelie.delaunay@st.com>
-References: <1518710080-18164-1-git-send-email-amelie.delaunay@st.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 06/15] Documentation: devicetree: dma: Add r8a77965 dmac
+Date: Thu, 15 Feb 2018 16:56:39 +0100
+Message-ID: <20180215155638.kh6hxxo4tmit3jj4@verge.net.au>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1518515162-23663-7-git-send-email-jacopo+renesas@jmondi.org>
+ <20180215153948.puwztivx3zwtqxet@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518710080-18164-1-git-send-email-amelie.delaunay@st.com>
+Content-Disposition: inline
+In-Reply-To: <20180215153948.puwztivx3zwtqxet@verge.net.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, geert@linux-m68k.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Configure USB OTG HS in OTG (DRD) mode on STM32746G_eval.
-The USB connector used will determine the role of USB OTG controller.
+On Thu, Feb 15, 2018 at 04:39:49PM +0100, Simon Horman wrote:
+> On Tue, Feb 13, 2018 at 10:45:53AM +0100, Jacopo Mondi wrote:
+> > Add documentation for r8a77965 compatible string to rcar-dmac device
+> > tree bindings documentation.
+> > 
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> 
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- arch/arm/boot/dts/stm32746g-eval.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry for not noticing this the first time around.
 
-diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
-index 2d4e717..90a4056 100644
---- a/arch/arm/boot/dts/stm32746g-eval.dts
-+++ b/arch/arm/boot/dts/stm32746g-eval.dts
-@@ -119,7 +119,7 @@
- };
- 
- &usbotg_hs {
--	dr_mode = "host";
-+	dr_mode = "otg";
- 	phys = <&usbotg_hs_phy>;
- 	phy-names = "usb2-phy";
- 	pinctrl-0 = <&usbotg_hs_pins_a>;
--- 
-2.7.4
+I think a better subject would be:
+
+dt-bindings: dmaengine: rcar-dmac: document R8A77964 support
