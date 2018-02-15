@@ -1,31 +1,52 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 06/15] Documentation: devicetree: dma: Add r8a77965 dmac
-Date: Thu, 15 Feb 2018 16:56:39 +0100
-Message-ID: <20180215155638.kh6hxxo4tmit3jj4@verge.net.au>
-References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
- <1518515162-23663-7-git-send-email-jacopo+renesas@jmondi.org>
- <20180215153948.puwztivx3zwtqxet@verge.net.au>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH 2/2] usb: dwc2: fix STM32F7 USB OTG HS compatible
+Date: Thu, 15 Feb 2018 16:46:41 +0100
+Message-ID: <1518709601-17232-4-git-send-email-amelie.delaunay@st.com>
+References: <1518709601-17232-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180215153948.puwztivx3zwtqxet@verge.net.au>
+In-Reply-To: <1518709601-17232-1-git-send-email-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, geert@linux-m68k.org, linux-arm-kernel@lists.infradead.org
+To: John Youn <johnyoun@synopsys.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 15, 2018 at 04:39:49PM +0100, Simon Horman wrote:
-> On Tue, Feb 13, 2018 at 10:45:53AM +0100, Jacopo Mondi wrote:
-> > Add documentation for r8a77965 compatible string to rcar-dmac device
-> > tree bindings documentation.
-> > 
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> 
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+This patch fixes compatible for STM32F7 USB OTG HS and consistently rename
+dw2_set_params function.
+The v2 former patch [1] had been acked by Paul Young, but v1 was merged.
 
-Sorry for not noticing this the first time around.
+[1] https://patchwork.kernel.org/patch/9925573/
 
-I think a better subject would be:
+Fixes: d8fae8b93682 ("usb: dwc2: add support for STM32F7xx USB OTG HS")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ drivers/usb/dwc2/params.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-dt-bindings: dmaengine: rcar-dmac: document R8A77964 support
+diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+index 03fd20f..c4a4749 100644
+--- a/drivers/usb/dwc2/params.c
++++ b/drivers/usb/dwc2/params.c
+@@ -137,7 +137,7 @@ static void dwc2_set_stm32f4x9_fsotg_params(struct dwc2_hsotg *hsotg)
+ 	p->activate_stm_fs_transceiver = true;
+ }
+ 
+-static void dwc2_set_stm32f7xx_hsotg_params(struct dwc2_hsotg *hsotg)
++static void dwc2_set_stm32f7_hsotg_params(struct dwc2_hsotg *hsotg)
+ {
+ 	struct dwc2_core_params *p = &hsotg->params;
+ 
+@@ -164,8 +164,8 @@ const struct of_device_id dwc2_of_match_table[] = {
+ 	{ .compatible = "st,stm32f4x9-fsotg",
+ 	  .data = dwc2_set_stm32f4x9_fsotg_params },
+ 	{ .compatible = "st,stm32f4x9-hsotg" },
+-	{ .compatible = "st,stm32f7xx-hsotg",
+-	  .data = dwc2_set_stm32f7xx_hsotg_params },
++	{ .compatible = "st,stm32f7-hsotg",
++	  .data = dwc2_set_stm32f7_hsotg_params },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
+-- 
+2.7.4
