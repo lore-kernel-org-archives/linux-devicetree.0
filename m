@@ -1,40 +1,98 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 1/3] ARM: dts: rockchip: phycore: Remove 1.8 GHz operation point
-Date: Thu, 15 Feb 2018 10:29:52 +0100
-Message-ID: <2724471.chboOZt3hh@diego>
-References: <1518515074-22526-1-git-send-email-d.schultz@phytec.de> <7871181.EPqc8gR4GV@diego> <a8de3d85-c4e6-eed6-d2e3-6d9b7318a9c2@phytec.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: Applied "regulator: dt: regulator-name is required property" to
+ the regulator tree
+Date: Thu, 15 Feb 2018 10:39:41 +0100
+Message-ID: <CAMuHMdVLO4Y-NzS6bLp2dUy1oSqmEthC_yD5jCe_R9H4vWBwMA@mail.gmail.com>
+References: <1518532988-10990-1-git-send-email-harald@ccbib.org> <E1elzv3-0005l2-MP@debutante>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a8de3d85-c4e6-eed6-d2e3-6d9b7318a9c2@phytec.de>
+In-Reply-To: <E1elzv3-0005l2-MP@debutante>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Schultz <d.schultz@phytec.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wadim Egorov <w.egorov@phytec.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: Harald Geyer <harald@ccbib.org>, Rob Herring <robh@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+On Wed, Feb 14, 2018 at 5:28 PM, Mark Brown <broonie@kernel.org> wrote:
+> The patch
+>
+>    regulator: dt: regulator-name is required property
+>
+> has been applied to the regulator tree at
+>
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git
+>
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+>
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+>
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+>
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+>
+> Thanks,
+> Mark
+>
+> From 4b75291621830acad2c66a1d21d7840a7ca169d3 Mon Sep 17 00:00:00 2001
+> From: Harald Geyer <harald@ccbib.org>
+> Date: Tue, 13 Feb 2018 14:43:08 +0000
+> Subject: [PATCH] regulator: dt: regulator-name is required property
+>
+> These two drivers fail to probe if no name is provided. For details see:
+> https://www.spinics.net/lists/kernel/msg2457515.html
+>
+> Signed-off-by: Harald Geyer <harald@ccbib.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-Am Mittwoch, 14. Februar 2018, 16:32:44 CET schrieb Daniel Schultz:
-> On 02/14/2018 09:07 AM, Heiko Stübner wrote:
-> > Am Dienstag, 13. Februar 2018, 10:44:32 CET schrieb Daniel Schultz:
-> >> Rockchip recommends to run the CPU cores only with operations points of
-> >> 1.6 GHz or lower.
-> >> 
-> >> Removed the cpu0 node with too high operation points and use the default
-> >> values instead.
-> >> 
-> >> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
-> > 
-> > applied all 3 for 4.17
-> 
-> Thanks! I think I should have mentioned this earlier, but can you please add
-> ARM: dts: rockchip: phycore: Remove 1.8 GHz operation point
-> to the stable tree v4.14?
+What about using the DT node name instead, as is done for single-output
+clocks?
 
-I've moved that patch to the fixes branch and added the necessary
-Fixes and cc-stable tags, so it should eventually reach stable kernels
-as well.
+> ---
+>  Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 1 +
+>  Documentation/devicetree/bindings/regulator/gpio-regulator.txt  | 2 ++
+>  2 files changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+> index 4fae41d54798..0c2a6c8a1536 100644
+> --- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+> @@ -2,6 +2,7 @@ Fixed Voltage regulators
+>
+>  Required properties:
+>  - compatible: Must be "regulator-fixed";
+> +- regulator-name: Defined in regulator.txt as optional, but required here.
+>
+>  Optional properties:
+>  - gpio: gpio to use for enable control
+> diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+> index dd1ed789728e..1f496159e2bb 100644
+> --- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+> @@ -2,6 +2,8 @@ GPIO controlled regulators
+>
+>  Required properties:
+>  - compatible           : Must be "regulator-gpio".
+> +- regulator-name       : Defined in regulator.txt as optional, but required
+> +                         here.
+>  - states               : Selection of available voltages and GPIO configs.
+>                            if there are no states, then use a fixed regulator
 
+Gr{oetje,eeting}s,
 
-Heiko
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
