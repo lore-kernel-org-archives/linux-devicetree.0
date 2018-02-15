@@ -1,44 +1,81 @@
-From: Philippe Cornu <philippe.cornu@st.com>
-Subject: [PATCH 1/3] ARM: dts: stm32: Add dt-bindings gpio.h include on stm32f469-disco
-Date: Thu, 15 Feb 2018 09:20:12 +0100
-Message-ID: <20180215082014.30383-2-philippe.cornu@st.com>
-References: <20180215082014.30383-1-philippe.cornu@st.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] ARM64: dts: allwinner: sun50i-h5-orangepi-zero-plus2:
+ rename mmc0_pins_a to mmc0_pins
+Date: Thu, 15 Feb 2018 09:21:17 +0100
+Message-ID: <20180215082117.rggaheb2k47azkgi@flea.home>
+References: <1518598487-29201-1-git-send-email-clabbe@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3aj2kuunf7odfd6s"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180215082014.30383-1-philippe.cornu@st.com>
+Content-Disposition: inline
+In-Reply-To: <1518598487-29201-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Philippe Cornu <philippe.cornu@st.com>, Vincent Abriou <vincent.abriou@st.com>
+To: Corentin Labbe <clabbe@baylibre.com>
+Cc: catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Add dt-bindings/gpio/gpio.h include and use it on vcc5v_otg.
 
-Signed-off-by: Philippe Cornu <philippe.cornu@st.com>
----
- arch/arm/boot/dts/stm32f469-disco.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+--3aj2kuunf7odfd6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-index bdd03ac7a4b5..7d53b794d27b 100644
---- a/arch/arm/boot/dts/stm32f469-disco.dts
-+++ b/arch/arm/boot/dts/stm32f469-disco.dts
-@@ -48,6 +48,7 @@
- /dts-v1/;
- #include "stm32f429.dtsi"
- #include "stm32f469-pinctrl.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "STMicroelectronics STM32F469i-DISCO board";
-@@ -74,7 +75,7 @@
- 	vcc5v_otg: vcc5v-otg-regulator {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
--		gpio = <&gpiob 2 0>;
-+		gpio = <&gpiob 2 GPIO_ACTIVE_HIGH>;
- 		regulator-name = "vcc5_host1";
- 		regulator-always-on;
- 	};
--- 
-2.15.1
+On Wed, Feb 14, 2018 at 08:54:47AM +0000, Corentin Labbe wrote:
+> mmc0_pins_a were renamed in arch/arm but not in arch/arm64 resulting in
+> a build failure.
+>=20
+> Fixes: 813f2c8fa119 ("ARM: dts: sunxi: h3-h5: rename mmc0_pins_a and mmc1=
+_pins_a")
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.=
+dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> index feee125a4e9a..87c1a0dace5f 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+> @@ -82,7 +82,7 @@
+> =20
+>  &mmc1 {
+>  	pinctrl-names =3D "default";
+> -	pinctrl-0 =3D <&mmc1_pins_a>;
+> +	pinctrl-0 =3D <&mmc1_pins>;
+
+The actual issue was that the commit 4db86a4b103e ("ARM: dts: sunxi:
+h3-h5: Move pinctrl of mmc1 from dts to dtsi") didn't remove the node
+in that DTS.
+
+I've amended it.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
+
+--3aj2kuunf7odfd6s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqFQvwACgkQ0rTAlCFN
+r3TQzRAAhvpNysWihu2H8Q82BRoVyuyxiR4J8JSvu7e9G0TgE1ebufVN9pPtQd/U
+2AG8TRpd/3pJXemBZ0HH/dWFH65okWYUwBIT4dQ9lQlF29NtPyI81qlAZnHuj5Tq
+cYd5+AYT8w0aFmv5X3JTMKNKhCwKPo4B0OdZwVkkXOcP3feSAJJl3LETXgecF5qB
+FWofa66HE+0dPR6XfMB+Jc9cMAdcp3B3uwVFSkX7s9IL5Z+4Evi7PsuJU4PgtTIN
+QnWNJPcQfPxsWpAVyRQ+ui/CNLq8tQVMnHbQu1VTqjqMMkNhErmCzFOhg9SDIwxz
+nndwbZBIPbuof1Vzi9ZrWNk7Q+HVgjl0vAjLpWkfwTRPox3i8m1LF4cMid4qEKB/
+NIARd8xeMo0kmTfohDkCqbaD+542NKTGnUW4H77/H8O/S56C66mT8SQ0+UGdbkNv
+B/P1pS8cvGCEhvpmRVZqRkrVVGYmf8OkBMW+k7b/WELMq7DQJa6h1P4VCiroyjQK
+qMIzV2V//gpF868k9XChLLOEjnK1K47gqxqKfIlhhkWhYjw/d5Jm/wF3uHcq6tEQ
+UarFy44fF90UtU02NRffCpryfApiNKO+nFezJGq6A/WaVTzCV1llB02S1ttbd6y2
+jBrrtF3onpvnaGJQgMol8IgaZ3C0wISF5IzTy1sndgIcvQ8ZYB0=
+=Nok/
+-----END PGP SIGNATURE-----
+
+--3aj2kuunf7odfd6s--
