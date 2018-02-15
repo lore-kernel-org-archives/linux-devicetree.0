@@ -1,81 +1,55 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] ARM64: dts: allwinner: sun50i-h5-orangepi-zero-plus2:
- rename mmc0_pins_a to mmc0_pins
-Date: Thu, 15 Feb 2018 09:21:17 +0100
-Message-ID: <20180215082117.rggaheb2k47azkgi@flea.home>
-References: <1518598487-29201-1-git-send-email-clabbe@baylibre.com>
+From: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 2/3] ARM: dts: stm32: Add new stm32f469 dtsi file with mipi dsi
+Date: Thu, 15 Feb 2018 09:20:13 +0100
+Message-ID: <20180215082014.30383-3-philippe.cornu@st.com>
+References: <20180215082014.30383-1-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3aj2kuunf7odfd6s"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1518598487-29201-1-git-send-email-clabbe@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin Labbe <clabbe@baylibre.com>
-Cc: catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, wens@csie.org, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180215082014.30383-1-philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+In the stm32f4 family, mipi dsi is only supported on stm32f469.
+So add a new stm32f469 dtsi file & add mipi dsi support inside.
 
---3aj2kuunf7odfd6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stm32f469.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 arch/arm/boot/dts/stm32f469.dtsi
 
-On Wed, Feb 14, 2018 at 08:54:47AM +0000, Corentin Labbe wrote:
-> mmc0_pins_a were renamed in arch/arm but not in arch/arm64 resulting in
-> a build failure.
->=20
-> Fixes: 813f2c8fa119 ("ARM: dts: sunxi: h3-h5: rename mmc0_pins_a and mmc1=
-_pins_a")
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.=
-dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> index feee125a4e9a..87c1a0dace5f 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-> @@ -82,7 +82,7 @@
-> =20
->  &mmc1 {
->  	pinctrl-names =3D "default";
-> -	pinctrl-0 =3D <&mmc1_pins_a>;
-> +	pinctrl-0 =3D <&mmc1_pins>;
+diff --git a/arch/arm/boot/dts/stm32f469.dtsi b/arch/arm/boot/dts/stm32f469.dtsi
+new file mode 100644
+index 000000000000..5ae5213f68cb
+--- /dev/null
++++ b/arch/arm/boot/dts/stm32f469.dtsi
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause) */
++/* Copyright (C) STMicroelectronics 2017 - All Rights Reserved */
++
++#include "stm32f429.dtsi"
++
++/ {
++	soc {
++		dsi: dsi@40016c00 {
++			compatible = "st,stm32-dsi";
++			reg = <0x40016c00 0x800>;
++			interrupts = <92>;
++			resets = <&rcc STM32F4_APB2_RESET(DSI)>;
++			reset-names = "apb";
++			clocks = <&rcc 1 CLK_F469_DSI>, <&clk_hse>;
++			clock-names = "pclk", "ref";
++			status = "disabled";
++		};
++	};
++};
+-- 
+2.15.1
 
-The actual issue was that the commit 4db86a4b103e ("ARM: dts: sunxi:
-h3-h5: Move pinctrl of mmc1 from dts to dtsi") didn't remove the node
-in that DTS.
-
-I've amended it.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
-
---3aj2kuunf7odfd6s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqFQvwACgkQ0rTAlCFN
-r3TQzRAAhvpNysWihu2H8Q82BRoVyuyxiR4J8JSvu7e9G0TgE1ebufVN9pPtQd/U
-2AG8TRpd/3pJXemBZ0HH/dWFH65okWYUwBIT4dQ9lQlF29NtPyI81qlAZnHuj5Tq
-cYd5+AYT8w0aFmv5X3JTMKNKhCwKPo4B0OdZwVkkXOcP3feSAJJl3LETXgecF5qB
-FWofa66HE+0dPR6XfMB+Jc9cMAdcp3B3uwVFSkX7s9IL5Z+4Evi7PsuJU4PgtTIN
-QnWNJPcQfPxsWpAVyRQ+ui/CNLq8tQVMnHbQu1VTqjqMMkNhErmCzFOhg9SDIwxz
-nndwbZBIPbuof1Vzi9ZrWNk7Q+HVgjl0vAjLpWkfwTRPox3i8m1LF4cMid4qEKB/
-NIARd8xeMo0kmTfohDkCqbaD+542NKTGnUW4H77/H8O/S56C66mT8SQ0+UGdbkNv
-B/P1pS8cvGCEhvpmRVZqRkrVVGYmf8OkBMW+k7b/WELMq7DQJa6h1P4VCiroyjQK
-qMIzV2V//gpF868k9XChLLOEjnK1K47gqxqKfIlhhkWhYjw/d5Jm/wF3uHcq6tEQ
-UarFy44fF90UtU02NRffCpryfApiNKO+nFezJGq6A/WaVTzCV1llB02S1ttbd6y2
-jBrrtF3onpvnaGJQgMol8IgaZ3C0wISF5IzTy1sndgIcvQ8ZYB0=
-=Nok/
------END PGP SIGNATURE-----
-
---3aj2kuunf7odfd6s--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
