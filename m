@@ -1,118 +1,35 @@
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Subject: Re: [PATCH v3 2/5] arm64: dts: renesas: r8a77995: add VSP instances
-Date: Thu, 15 Feb 2018 16:41:58 +0000
-Message-ID: <7db13491-f4f6-4c7c-e9e3-c1e91b0054b6@ideasonboard.com>
-References: <1518602108-1724-1-git-send-email-kbingham@kernel.org>
- <1518602108-1724-3-git-send-email-kbingham@kernel.org>
- <20180215163342.4evihm3uts3lfu5c@verge.net.au>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v7 04/37] earlycon: add reg-offset to physical address
+ before mapping
+Date: Thu, 15 Feb 2018 09:40:49 -0600
+Message-ID: <CAL_JsqJteT1P2GJGdesTsz=PuXU1qxiyhtKLURkGwV9sSQ7XZQ@mail.gmail.com>
+References: <cover.1518505384.git.greentime@andestech.com> <968497070242f849dd70ab1fa81635451f8fda7f.1518505384.git.greentime@andestech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180215163342.4evihm3uts3lfu5c@verge.net.au>
-Content-Language: en-GB
+In-Reply-To: <968497070242f849dd70ab1fa81635451f8fda7f.1518505384.git.greentime@andestech.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: greentime@andestech.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, netdev <netdev@vger.kernel.org>, deanbo422@gmail.com, devicetree@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, ren_guo@c-sky.com, Randy Dunlap <rdunlap@infradead.org>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Tue, Feb 13, 2018 at 3:09 AM, Greentime Hu <green.hu@gmail.com> wrote:
+> It will get the wrong virtual address because port->mapbase is not added
+> the correct reg-offset yet. We have to update it before earlycon_map()
+> is called
+>
+> Signed-off-by: Greentime Hu <greentime@andestech.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Cc: Peter Hurley <peter@hurleysoftware.com>
+> Cc: stable@vger.kernel.org
+> Fixes: 088da2a17619 ("of: earlycon: Initialize port fields from DT
+> properties")
 
-On 15/02/18 16:33, Simon Horman wrote:
-> On Wed, Feb 14, 2018 at 09:55:05AM +0000, Kieran Bingham wrote:
->> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->>
->> The r8a77995 has a VSPBS to support image processing such as blending of
->> two input images, and has two VSPDs to handle display pipelines with a
->> DU.
->>
->> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>
->> ---
->> v2:
->>  - Fix VSPD register map size
->>  - Squash VSPBS and VSPD patches together
->>
->> v3:
->>  - Fix VSPBS register map size too :-)
->>
->>  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 30 ++++++++++++++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
->> index 196a917afea6..0db242114bc5 100644
->> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
->> @@ -692,6 +692,16 @@
->>  			status = "disabled";
->>  		};
->>  
->> +		vspbs: vsp@fe960000 {
->> +			compatible = "renesas,vsp2";
->> +			reg = <0 0xfe960000 0 0x8000>;
->> +			interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&cpg CPG_MOD 627>;
->> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
->> +			resets = <&cpg 627>;
->> +			renesas,fcp = <&fcpvb0>;
->> +		};
->> +
->>  		fcpvb0: fcp@fe96f000 {
->>  			compatible = "renesas,fcpv";
->>  			reg = <0 0xfe96f000 0 0x200>;
->> @@ -701,6 +711,16 @@
->>  			iommus = <&ipmmu_vp0 5>;
->>  		};
->>  
->> +		vspd0: vsp@fea20000 {
->> +			compatible = "renesas,vsp2";
->> +			reg = <0 0xfea20000 0 0x8000>;
->> +			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&cpg CPG_MOD 623>;
->> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
->> +			resets = <&cpg 623>;
->> +			renesas,fcp = <&fcpvd0>;
->> +		};
->> +
->>  		fcpvd0: fcp@fea27000 {
->>  			compatible = "renesas,fcpv";
->>  			reg = <0 0xfea27000 0 0x200>;
->> @@ -710,6 +730,16 @@
->>  			iommus = <&ipmmu_vi0 8>;
->>  		};
->>  
->> +		vspd1: vsp@fea80000 {
-> 
-> The above should be:
-> 
-> 		vspd1: vsp@fea28000 {
+This should get applied now rather than sit in numerous revisions of
+this series for nds32.
 
-Good spot.
+Acked-by: Rob Herring <robh@kernel.org>
 
-</me looks to datasheet> That is correct.
+Greg, can you apply?
 
-Would you like me to resubmit this patch ? Or will you fix this up locally?
-
---
-Regards
-
-Kieran
-
-
-> 
->> +			compatible = "renesas,vsp2";
->> +			reg = <0 0xfea28000 0 0x8000>;
->> +			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks = <&cpg CPG_MOD 622>;
->> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
->> +			resets = <&cpg 622>;
->> +			renesas,fcp = <&fcpvd1>;
->> +		};
->> +
->>  		fcpvd1: fcp@fea2f000 {
->>  			compatible = "renesas,fcpv";
->>  			reg = <0 0xfea2f000 0 0x200>;
->> -- 
->> 2.7.4
->>
+Rob
