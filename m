@@ -1,181 +1,49 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] arm64: dts: renesas: r8a77995: add VSP instances
-Date: Thu, 15 Feb 2018 17:56:02 +0100
-Message-ID: <20180215165602.hkmwhwzt365ntton@verge.net.au>
-References: <1518602108-1724-1-git-send-email-kbingham@kernel.org>
- <1518602108-1724-3-git-send-email-kbingham@kernel.org>
- <20180215163342.4evihm3uts3lfu5c@verge.net.au>
- <7db13491-f4f6-4c7c-e9e3-c1e91b0054b6@ideasonboard.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v13 7/9] ACPI: Translate the I/O range of non-MMIO devices
+ before scanning
+Date: Thu, 15 Feb 2018 17:07:24 +0000
+Message-ID: <59e5293f-0ea5-12f4-27db-b13bbcf0918b@huawei.com>
+References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
+ <1518543933-22456-8-git-send-email-john.garry@huawei.com>
+ <CAHp75Ve7C4AJYK6AC=o-jzw6b2p8c8GBRd70Zjv+vYWbfytufg@mail.gmail.com>
+ <adfa2009-476b-8c25-c661-b0eeb48a6c43@huawei.com>
+ <CAHp75VfOa5pN4MKT-aQmWBwPGWsOaQupyfrN-weWwfR3vMLtuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7db13491-f4f6-4c7c-e9e3-c1e91b0054b6-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VfOa5pN4MKT-aQmWBwPGWsOaQupyfrN-weWwfR3vMLtuA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Corey Minyard <minyard@acm.org>, devic
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 15, 2018 at 04:41:58PM +0000, Kieran Bingham wrote:
-> Hi Simon,
-> 
-> On 15/02/18 16:33, Simon Horman wrote:
-> > On Wed, Feb 14, 2018 at 09:55:05AM +0000, Kieran Bingham wrote:
-> >> From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> >>
-> >> The r8a77995 has a VSPBS to support image processing such as blending of
-> >> two input images, and has two VSPDs to handle display pipelines with a
-> >> DU.
-> >>
-> >> Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> >> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> >>
-> >> ---
-> >> v2:
-> >>  - Fix VSPD register map size
-> >>  - Squash VSPBS and VSPD patches together
-> >>
-> >> v3:
-> >>  - Fix VSPBS register map size too :-)
-> >>
-> >>  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 30 ++++++++++++++++++++++++++++++
-> >>  1 file changed, 30 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> >> index 196a917afea6..0db242114bc5 100644
-> >> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> >> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-> >> @@ -692,6 +692,16 @@
-> >>  			status = "disabled";
-> >>  		};
-> >>  
-> >> +		vspbs: vsp@fe960000 {
-> >> +			compatible = "renesas,vsp2";
-> >> +			reg = <0 0xfe960000 0 0x8000>;
-> >> +			interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
-> >> +			clocks = <&cpg CPG_MOD 627>;
-> >> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> >> +			resets = <&cpg 627>;
-> >> +			renesas,fcp = <&fcpvb0>;
-> >> +		};
-> >> +
-> >>  		fcpvb0: fcp@fe96f000 {
-> >>  			compatible = "renesas,fcpv";
-> >>  			reg = <0 0xfe96f000 0 0x200>;
-> >> @@ -701,6 +711,16 @@
-> >>  			iommus = <&ipmmu_vp0 5>;
-> >>  		};
-> >>  
-> >> +		vspd0: vsp@fea20000 {
-> >> +			compatible = "renesas,vsp2";
-> >> +			reg = <0 0xfea20000 0 0x8000>;
-> >> +			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
-> >> +			clocks = <&cpg CPG_MOD 623>;
-> >> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-> >> +			resets = <&cpg 623>;
-> >> +			renesas,fcp = <&fcpvd0>;
-> >> +		};
-> >> +
-> >>  		fcpvd0: fcp@fea27000 {
-> >>  			compatible = "renesas,fcpv";
-> >>  			reg = <0 0xfea27000 0 0x200>;
-> >> @@ -710,6 +730,16 @@
-> >>  			iommus = <&ipmmu_vi0 8>;
-> >>  		};
-> >>  
-> >> +		vspd1: vsp@fea80000 {
-> > 
-> > The above should be:
-> > 
-> > 		vspd1: vsp@fea28000 {
-> 
-> Good spot.
-> 
-> </me looks to datasheet> That is correct.
-> 
-> Would you like me to resubmit this patch ? Or will you fix this up locally?
+On 14/02/2018 16:16, Andy Shevchenko wrote:
+> Another approach is to use ~0UL if that is preferable.
+>
+>>>> >>> +       list_for_each_entry(rentry, &resource_list, node)
+>>>> >>> +               resources[count++] = *rentry->res;
+>>> >> It has similarities with acpi_create_platform_device().
+>>> >> I guess we can utilize existing code.
+>> > For sure, this particular segment is effectively same as part of
+>> > acpi_create_platform_device():
+> Not the same, acpi_create_platform_device() does a bit more than
+> copying the resources. If it indeed makes no hurt...
+>
+>> >         list_for_each_entry(rentry, &resource_list, node)
+>> >             acpi_platform_fill_resource(adev, rentry->res,
+>> >                             &resources[count++]);
+>> > So is your idea to refactor this common segment into a helper function?
+> ...I would go with helper.
+>
 
-Thanks for confirming.
+Hi Andy,
 
-I noticed this using make dtbs W=1
+Since the plan now is that this code is no longer going to be added to 
+drivers/acpi, but instead pushed to the LLDD, I am pondering whether we 
+should still factor out of this common code. Opinion?
 
-I have fixed this up locally and applied your patch. The result is:
+Thanks,
+John
 
-
-From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH] arm64: dts: renesas: r8a77995: add VSP instances
-
-The r8a77995 has a VSPBS to support image processing such as blending of
-two input images, and has two VSPDs to handle display pipelines with a
-DU.
-
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-[simon: updated base address of vsp node to fea28000]
-Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index 196a917afea6..0db242114bc5 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -692,6 +692,16 @@
- 			status = "disabled";
- 		};
- 
-+		vspbs: vsp@fe960000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfe960000 0 0x8000>;
-+			interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 627>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 627>;
-+			renesas,fcp = <&fcpvb0>;
-+		};
-+
- 		fcpvb0: fcp@fe96f000 {
- 			compatible = "renesas,fcpv";
- 			reg = <0 0xfe96f000 0 0x200>;
-@@ -701,6 +711,16 @@
- 			iommus = <&ipmmu_vp0 5>;
- 		};
- 
-+		vspd0: vsp@fea20000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea20000 0 0x8000>;
-+			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 623>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 623>;
-+			renesas,fcp = <&fcpvd0>;
-+		};
-+
- 		fcpvd0: fcp@fea27000 {
- 			compatible = "renesas,fcpv";
- 			reg = <0 0xfea27000 0 0x200>;
-@@ -710,6 +730,16 @@
- 			iommus = <&ipmmu_vi0 8>;
- 		};
- 
-+		vspd1: vsp@fea80000 {
-+			compatible = "renesas,vsp2";
-+			reg = <0 0xfea28000 0 0x8000>;
-+			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 622>;
-+			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
-+			resets = <&cpg 622>;
-+			renesas,fcp = <&fcpvd1>;
-+		};
-+
- 		fcpvd1: fcp@fea2f000 {
- 			compatible = "renesas,fcpv";
- 			reg = <0 0xfea2f000 0 0x200>;
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>> >>> +               char *name = &acpi_indirect_io_mfd_cell[count].name[0];
