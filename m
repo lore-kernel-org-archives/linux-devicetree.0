@@ -1,90 +1,190 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 02/37] iommu/sva: Bind process address spaces to devices
-Date: Thu, 15 Feb 2018 12:46:36 +0000
-Message-ID: <9d440890-cb57-c890-334d-c40a6c68566e@arm.com>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
-	<20180212183352.22730-3-jean-philippe.brucker@arm.com>
-	<AADFC41AFE54684AB9EE6CBC0274A5D191002897@SHSMSX101.ccr.corp.intel.com>
-	<b9eacb30-817f-9027-bc0a-1f01cf9f13f9@arm.com>
-	<20180215102113.c7t7rrnyzgazmdli@8bytes.org>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] rtc: isl12026: Add driver.
+Date: Thu, 15 Feb 2018 14:45:11 +0200
+Message-ID: <CAHp75VcQm-gr0GRszBSRJSZOpdSutRyhVkw-BN_YAwhjaPM4yg@mail.gmail.com>
+References: <20180214005536.22739-1-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180215102113.c7t7rrnyzgazmdli-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mykyta.iziumtsev-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mykyta.iziumtsev-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Raj,
-	Ashok" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, dwmw
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180214005536.22739-1-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/02/18 10:21, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org wrote:
-> On Tue, Feb 13, 2018 at 12:57:23PM +0000, Jean-Philippe Brucker wrote:
->> * bind_device() fails if the device's group has more than one device,
->> otherwise calls __bind_device(). This prevents device drivers that are
->> oblivious to IOMMU groups from opening a backdoor.
->>
->> * bind_group() calls __bind_device() for all devices in group. This way
->> users that are aware of IOMMU groups can still use them safely. Note that
->> at the moment bind_group() fails as soon as it finds a device that doesn't
->> support SVA. Having all devices support SVA in a given group is
->> unrealistic and this behavior ought to be improved.
-> 
-> Yeah, so the problem on PCI is that all functions of a multi-function
-> device are put into one group. For AMD-GPUs this means that the GPU
-> (SVA-capable) will end up in the same group as the on-GPU sound
-> device (not SVA-capable).
+On Wed, Feb 14, 2018 at 2:55 AM, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
+> The ISL12026 is a combination RTC and EEPROM device with I2C
+> interface.  The standard RTC driver interface is provided.  The EEPROM
+> is accessed via the NVMEM interface via the "eeprom0" directory in the
+> sysfs entry for the device.
 
-As I understood it ACS also isolate functions within a device, for example
-the two PFs of my ixgbe card are in different groups. Strangely all VFs go
-in the same group, I haven't investigated why yet.
+Thanks for an update, my comments below.
 
-> Before this causes us big headaches I suggest to only provide the
-> bind_device() function.
+> +struct isl12026 {
+> +       struct rtc_device *rtc;
+> +       struct i2c_client *nvm_client;
+> +       struct nvmem_config nvm_cfg;
+> +       /*
+> +        * RTC write operations require that multiple messages be
+> +        * transmitted, we hold the lock for all accesses to the
+> +        * device so that these sequences cannot be disrupted.  Also,
 
-Ok. I added bind_group() to make it easier for VFIO - so if one bind()
-fails in the group, iommu.c can rollback and remove the bonds already
-created. If we mandate a single device in the group for SVA, then VFIO can
-use iommu_group_for_each_dev() and ensure that the callback was only
-called once.
+> +        * the write cycle to the nvmem takes many mS during which the
 
-> This should be fine because for SVA we don't
-> need all types of isolation that iommu_groups provide.
-> 
-> IOMMU-groups provide two types of isolation:
-> 
-> 	1) They group devices together which the IOMMU can't distinguish
-> 	   from each other, like PCI devices behind a PCIe bridge.
-> 
-> 	2) Devices that can't be isolated from each other are also put
-> 	   into the same group. This is the case for multi-function PCIe
-> 	   devices as well as all PCIe devices behind a non-ACS bridge.
-> 	   But all these devices cann still be distinguished by the
-> 	   IOMMU.
+What mS means? milliseconds? The standard abbreviation for it 'ms'.
 
-But transactions don't necessarily reach the IOMMU if devices are not
-isolated by ACS. So even if you disable all translation in the IOMMU for
-one device in the group, it may still have a view of address spaces shared
-with another device in that group.
+> +        * device does not respond to commands, so holding the lock
+> +        * also prevents access during these times.
+> +        */
+> +       struct mutex lock;
+> +};
 
-> These two types of protection are needed to safely assign devices to
-> guests, but for bare-metal SVA all we need is type 1) isolation, and
-> not even that if we can assume that all SVA-capable devices have an
-> exclusive device-id (or stream-id).
+> +static int isl12026_read_reg(struct i2c_client *client, int reg)
+> +{
 
-I'm not as optimistic that we won't need IOMMU groups with SVA devices for
-2) (hardware bugs, integration issues, etc). I'd be more comfortable if we
-added a sanity-check as suggested by Kevin, to ensure that SVA is
-disallowed if multiple devices are in the group.
+> +       ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
+> +       if (ret != ARRAY_SIZE(msgs)) {
+> +               dev_err(&client->dev, "read reg error, ret=%d\n", ret);
+> +               ret = ret < 0 ? ret : -EIO;
+> +       } else {
+> +               ret = val;
+> +       }
 
-Thanks,
-Jean
+> +       return val;
+
+Something wrong. ret is not used after all.
+
+> +}
+
+Check entire code for such.
+
+> +       /* 2 bytes of address, most significant first */
+> +       addr[0] = (offset >> 8) & 0xff;
+> +       addr[1] = offset & 0xff;
+
+Consider to drop '& 0xff', they are pointless (you have u8 type).
+
+> +               payload[0] = (offset >> 8) & 0xff;
+> +               payload[1] = offset & 0xff;
+
+Ditto.
+
+> +static void isl12026_force_power_modes(struct i2c_client *client)
+> +{
+> +       int ret;
+> +       int pwr, requested_pwr;
+> +       u32 bsw_val, sbib_val;
+
+> +       bool set_bsw, set_sbib;
+> +
+
+> +       ret = of_property_read_u32(client->dev.of_node,
+> +                                  "isil,pwr-bsw", &bsw_val);
+> +       set_bsw = (ret == 0);
+
+Which is not fully correct. Better to do
+
+set_bsw = of_property_present();
+
+ret = of_property_read...();
+if (ret)
+  return ret;
+
+> +
+> +       ret = of_property_read_u32(client->dev.of_node,
+> +                                  "isil,pwr-sbib", &sbib_val);
+> +       set_sbib = (ret == 0);
+
+Ditto.
+
+> +
+> +       /* Check if PWR.BSW and/or PWR.SBIB need specified values */
+> +
+
+> +       if (set_bsw || set_sbib) {
+
+if (!x && !y)
+ return;
+
+> +               pwr = isl12026_read_reg(client, ISL12026_REG_PWR);
+> +               if (pwr < 0) {
+> +                       dev_err(&client->dev,
+> +                               "Error: Failed to read PWR %d\n", pwr);
+> +                       return;
+> +               }
+> +
+> +               requested_pwr = pwr;
+> +
+> +               if (set_bsw) {
+> +                       if (bsw_val)
+> +                               requested_pwr |= ISL12026_REG_PWR_BSW;
+> +                       else
+> +                               requested_pwr &= ~ISL12026_REG_PWR_BSW;
+> +               }
+
+Undefined state if no value?
+
+> +               if (set_sbib) {
+> +                       if (sbib_val)
+> +                               requested_pwr |= ISL12026_REG_PWR_SBIB;
+> +                       else
+> +                               requested_pwr &= ~ISL12026_REG_PWR_SBIB;
+> +               }
+
+Ditto.
+
+> +
+> +               if (pwr >= 0 && pwr != requested_pwr) {
+
+> +                       dev_info(&client->dev, "PWR: %02x\n", (u8)pwr);
+> +                       dev_info(&client->dev,
+> +                                "Updating PWR to: %02x\n", (u8)requested_pwr);
+> +                       isl12026_write_reg(client,
+> +                                          ISL12026_REG_PWR, requested_pwr);
+
+If you do explicit casting in printf() parameters you are doing
+something wrong in 99.9% cases.
+
+> +               }
+> +       }
+> +}
+
+> +static int isl12026_probe_new(struct i2c_client *client)
+> +{
+> +       struct isl12026 *priv;
+> +       int ret;
+
+
+> +       /* The NVMem array responds at i2c address 0x57 */
+> +       priv->nvm_client = i2c_new_dummy(client->adapter, 0x57);
+
+Magic. Make it #define and put comment there.
+
+> +       if (!priv->nvm_client)
+> +               return -ENOMEM;
+
+> +}
+
+> +#ifdef CONFIG_OF
+
+Remove this ugly #ifdef. Your driver OF only one.
+
+> +static const struct of_device_id isl12026_dt_match[] = {
+> +       { .compatible = "isil,isl12026" },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, isl12026_dt_match);
+
+> +#endif
+
+> +               .of_match_table = of_match_ptr(isl12026_dt_match),
+
+Drop of_match_ptr().
+
+-- 
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
