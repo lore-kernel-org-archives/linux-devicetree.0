@@ -1,72 +1,97 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 01/37] iommu: Introduce Shared Virtual Addressing API
-Date: Thu, 15 Feb 2018 12:43:06 +0000
-Message-ID: <69405fb7-7453-8575-e020-2ded7b2b92f5@arm.com>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
-	<20180212183352.22730-2-jean-philippe.brucker@arm.com>
-	<20180215095909.r4nwqjhuijusssuy@8bytes.org>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH 5/8] arm64: dts: renesas: r8a77995: Add LVDS support
+Date: Thu, 15 Feb 2018 12:41:05 +0000
+Message-ID: <b8cc84ad-0a64-38f0-d8ac-ad9ae88c5912@ideasonboard.com>
+References: <1518683903-10681-1-git-send-email-kbingham@kernel.org>
+ <1518683903-10681-6-git-send-email-kbingham@kernel.org>
+ <CAMuHMdVKczZpoXgSDOSEJZb59LAZtbWsopRaa8PtHDoZcFEMTQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180215095909.r4nwqjhuijusssuy-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, rjw@rjwyso
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVKczZpoXgSDOSEJZb59LAZtbWsopRaa8PtHDoZcFEMTQ@mail.gmail.com>
+Content-Language: en-GB
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Kieran Bingham <kieran.bingham@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/02/18 09:59, Joerg Roedel wrote:
-> On Mon, Feb 12, 2018 at 06:33:16PM +0000, Jean-Philippe Brucker wrote:
->   
->> +config IOMMU_SVA
->> +	bool "Shared Virtual Addressing API for the IOMMU"
->> +	select IOMMU_API
->> +	help
->> +	  Enable process address space management for the IOMMU API. In systems
->> +	  that support it, device drivers can bind process address spaces to
->> +	  devices and share their page tables using this API.
->> +
->> +	  If unsure, say N here.
+Hi Geert,
+
+On 15/02/18 09:07, Geert Uytterhoeven wrote:
+> Hi Kieran,
 > 
-> I think this should be an option selected by IOMMU driver and not be
-> activly selectable by the user.
-
-Ok
-
->> +/**
->> + * iommu_sva_device_shutdown() - Shutdown Shared Virtual Addressing for a device
->> + * @dev: the device
->> + *
->> + * Disable SVA. The device should not be performing any DMA while this function
->> + * is running.
+> On Thu, Feb 15, 2018 at 9:38 AM, Kieran Bingham <kbingham@kernel.org> wrote:
+>> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>>
+>> The r8a77995 D3 platform has 2 LVDS channels connected to the DU.
+>>
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 > 
-> Is this a good idea? How about devices that get hot-unplugged while
-> processes still use them and there is DMA going back and forth? This
-> function can be the point to shut down all ongoing stuff first and the
-> shutdown the device.
+> I love your patch!
+> Yet something to improve...
+> 
+>> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+>> @@ -773,18 +773,70 @@
+>>                                 port@1 {
+>>                                         reg = <1>;
+>>                                         du_out_lvds0: endpoint {
+>> +                                               remote-endpoint = <&du_out_lvds0>;
+>>                                         };
+>>                                 };
+>>
+>>                                 port@2 {
+>>                                         reg = <2>;
+>>                                         du_out_lvds1: endpoint {
+>> +                                               remote-endpoint = <&du_out_lvds1>;
+>>                                         };
+>>                                 };
+>>                         };
+>>                 };
+>>         };
+>>
+>> +       lvds0: lvds@feb90000 {
+>> +               compatible = "renesas,lvds-r8a77995";
+>> +               reg = <0 0xfeb90000 0 0x20>;
+>> +               clocks = <&cpg CPG_MOD 727>;
+>> +               status = "disabled";
+> 
+> Missing resets, power-domains
 
-To be honest I don't know how hot-unplug works. But sva_device_shutdown()
-may be called, for instance, by the device driver before the device
-disappears, so it has to know how to stop DMA before calling it. The IOMMU
-driver can't really do anything more.
+Both lvds0, and lvds1 are actually the same 'module' (just different mappings
+within the same IP block).
 
-For hot-unplug I guess that device_driver::remove() is called first,
-allowing it to stop all DMA and call sva_device_shutdown().
+That means they will share clock, reset etc.
 
-Then the IOMMU gets a BUS_NOTIFY_REMOVED_DEVICE notification and calls
-iommu_ops::remove_device(), allowing to clean up SVA structure if the
-device driver didn't call unbind_device() and sva_device_shutdown(). But
-at that point we don't have a way to cooperate with the driver to stop DMA
-anymore.
+Will specifying the resets cause one to affect the other unduly?
 
-Thanks,
-Jean
+like if one becomes un-used, will it power down? or is it refcounted, and will
+gracefully handle both device nodes from the same device?
+
+I'm already fairly sure clocks is fine for this - but it's just the reset's that
+worry me. If the reset module tries to reset lvds0 for some reason - would lvds1
+get reset as a side effect ...
+
+Or perhaps that won't ever happen with an :
+
+		power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+		resets = <&cpg 727>;
+
+Regards
+--
+Kieran
+
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
