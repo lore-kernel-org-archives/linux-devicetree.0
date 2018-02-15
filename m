@@ -1,76 +1,174 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>
-Subject: Re: [PATCH 02/37] iommu/sva: Bind process address spaces to devices
-Date: Thu, 15 Feb 2018 13:29:34 +0100
-Message-ID: <88f5a22a-6db9-f34b-916b-83cd6e683ceb@amd.com>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
-	<20180212183352.22730-3-jean-philippe.brucker@arm.com>
-	<AADFC41AFE54684AB9EE6CBC0274A5D191002897@SHSMSX101.ccr.corp.intel.com>
-	<b9eacb30-817f-9027-bc0a-1f01cf9f13f9@arm.com>
-	<20180215102113.c7t7rrnyzgazmdli@8bytes.org>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH 1/8] pinctrl: sh-pfc: r8a77995: Add DU support
+Date: Thu, 15 Feb 2018 12:32:51 +0000
+Message-ID: <9ac40731-eb13-4727-864d-0e3b7059b9f8@ideasonboard.com>
+References: <1518683903-10681-1-git-send-email-kbingham@kernel.org>
+ <1518683903-10681-2-git-send-email-kbingham@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180215102113.c7t7rrnyzgazmdli-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: "joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org" <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mykyta.iziumtsev-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Raj,
-	Ashok" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2@infradead>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1518683903-10681-2-git-send-email-kbingham@kernel.org>
+Content-Language: en-GB
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Kieran Bingham <kbingham@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, geert@glider.be, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gMTUuMDIuMjAxOCB1bSAxMToyMSBzY2hyaWViIGpvcm9AOGJ5dGVzLm9yZzoKPiBPbiBUdWUs
-IEZlYiAxMywgMjAxOCBhdCAxMjo1NzoyM1BNICswMDAwLCBKZWFuLVBoaWxpcHBlIEJydWNrZXIg
-d3JvdGU6Cj4+ICogYmluZF9kZXZpY2UoKSBmYWlscyBpZiB0aGUgZGV2aWNlJ3MgZ3JvdXAgaGFz
-IG1vcmUgdGhhbiBvbmUgZGV2aWNlLAo+PiBvdGhlcndpc2UgY2FsbHMgX19iaW5kX2RldmljZSgp
-LiBUaGlzIHByZXZlbnRzIGRldmljZSBkcml2ZXJzIHRoYXQgYXJlCj4+IG9ibGl2aW91cyB0byBJ
-T01NVSBncm91cHMgZnJvbSBvcGVuaW5nIGEgYmFja2Rvb3IuCj4+Cj4+ICogYmluZF9ncm91cCgp
-IGNhbGxzIF9fYmluZF9kZXZpY2UoKSBmb3IgYWxsIGRldmljZXMgaW4gZ3JvdXAuIFRoaXMgd2F5
-Cj4+IHVzZXJzIHRoYXQgYXJlIGF3YXJlIG9mIElPTU1VIGdyb3VwcyBjYW4gc3RpbGwgdXNlIHRo
-ZW0gc2FmZWx5LiBOb3RlIHRoYXQKPj4gYXQgdGhlIG1vbWVudCBiaW5kX2dyb3VwKCkgZmFpbHMg
-YXMgc29vbiBhcyBpdCBmaW5kcyBhIGRldmljZSB0aGF0IGRvZXNuJ3QKPj4gc3VwcG9ydCBTVkEu
-IEhhdmluZyBhbGwgZGV2aWNlcyBzdXBwb3J0IFNWQSBpbiBhIGdpdmVuIGdyb3VwIGlzCj4+IHVu
-cmVhbGlzdGljIGFuZCB0aGlzIGJlaGF2aW9yIG91Z2h0IHRvIGJlIGltcHJvdmVkLgo+IFllYWgs
-IHNvIHRoZSBwcm9ibGVtIG9uIFBDSSBpcyB0aGF0IGFsbCBmdW5jdGlvbnMgb2YgYSBtdWx0aS1m
-dW5jdGlvbgo+IGRldmljZSBhcmUgcHV0IGludG8gb25lIGdyb3VwLiBGb3IgQU1ELUdQVXMgdGhp
-cyBtZWFucyB0aGF0IHRoZSBHUFUKPiAoU1ZBLWNhcGFibGUpIHdpbGwgZW5kIHVwIGluIHRoZSBz
-YW1lIGdyb3VwIGFzIHRoZSBvbi1HUFUgc291bmQKPiBkZXZpY2UgKG5vdCBTVkEtY2FwYWJsZSku
-CgpZZWFoLCBidXQgU1ZBIG9ubHkgYXBwbGllcyB0byByYXRoZXIgbmV3IEFNRC1HUFVzLCB3aGlj
-aCBpbiB0dXJuIGNhbiAKb25seSBkbyBQQ0llIGFuZCB0aGVyZSB0aGUgcHJvYmxlbSBkb2Vzbid0
-IHNlZW1zIHRvIGV4aXN0IGFueSBtb3JlLgoKRS5nLiB0aGUgYXVkaW8gZGV2aWNlIG9uIG15IFZl
-Z2ExMCBnZXRzIGEgc2VwYXJhdGUgZ3JvdXAgZGVzcGl0ZSBiZWluZyAKYmVoaW5kIHNldmVyYWwg
-YnJpZGdlczoKPiAwYjowMC4wIFZHQSBjb21wYXRpYmxlIGNvbnRyb2xsZXI6IEFkdmFuY2VkIE1p
-Y3JvIERldmljZXMsIEluYy4gCj4gW0FNRC9BVEldIFZlZ2EgMTAgW1JhZGVvbiBWZWdhIEZyb250
-aWVyIEVkaXRpb25dCj4gMGI6MDAuMSBBdWRpbyBkZXZpY2U6IEFkdmFuY2VkIE1pY3JvIERldmlj
-ZXMsIEluYy4gW0FNRC9BVEldIERldmljZSBhYWY4Ci4uLgo+IFvCoMKgwqAgNi4zNjI2NjVdIGlv
-bW11OiBBZGRpbmcgZGV2aWNlIDAwMDA6MGI6MDAuMCB0byBncm91cCAxNAo+IFvCoMKgwqAgNi4z
-Njg0NjhdIGlvbW11OiBVc2luZyBkaXJlY3QgbWFwcGluZyBmb3IgZGV2aWNlIDAwMDA6MGI6MDAu
-MAo+IFvCoMKgwqAgNi4zODAwNDBdIGlvbW11OiBBZGRpbmcgZGV2aWNlIDAwMDA6MGI6MDAuMSB0
-byBncm91cCAxNQoKUmVnYXJkcywKQ2hyaXN0aWFuLgoKPgo+IEJlZm9yZSB0aGlzIGNhdXNlcyB1
-cyBiaWcgaGVhZGFjaGVzIEkgc3VnZ2VzdCB0byBvbmx5IHByb3ZpZGUgdGhlCj4gYmluZF9kZXZp
-Y2UoKSBmdW5jdGlvbi4gVGhpcyBzaG91bGQgYmUgZmluZSBiZWNhdXNlIGZvciBTVkEgd2UgZG9u
-J3QKPiBuZWVkIGFsbCB0eXBlcyBvZiBpc29sYXRpb24gdGhhdCBpb21tdV9ncm91cHMgcHJvdmlk
-ZS4KPgo+IElPTU1VLWdyb3VwcyBwcm92aWRlIHR3byB0eXBlcyBvZiBpc29sYXRpb246Cj4KPiAJ
-MSkgVGhleSBncm91cCBkZXZpY2VzIHRvZ2V0aGVyIHdoaWNoIHRoZSBJT01NVSBjYW4ndCBkaXN0
-aW5ndWlzaAo+IAkgICBmcm9tIGVhY2ggb3RoZXIsIGxpa2UgUENJIGRldmljZXMgYmVoaW5kIGEg
-UENJZSBicmlkZ2UuCj4KPiAJMikgRGV2aWNlcyB0aGF0IGNhbid0IGJlIGlzb2xhdGVkIGZyb20g
-ZWFjaCBvdGhlciBhcmUgYWxzbyBwdXQKPiAJICAgaW50byB0aGUgc2FtZSBncm91cC4gVGhpcyBp
-cyB0aGUgY2FzZSBmb3IgbXVsdGktZnVuY3Rpb24gUENJZQo+IAkgICBkZXZpY2VzIGFzIHdlbGwg
-YXMgYWxsIFBDSWUgZGV2aWNlcyBiZWhpbmQgYSBub24tQUNTIGJyaWRnZS4KPiAJICAgQnV0IGFs
-bCB0aGVzZSBkZXZpY2VzIGNhbm4gc3RpbGwgYmUgZGlzdGluZ3Vpc2hlZCBieSB0aGUKPiAJICAg
-SU9NTVUuCj4KPiBUaGVzZSB0d28gdHlwZXMgb2YgcHJvdGVjdGlvbiBhcmUgbmVlZGVkIHRvIHNh
-ZmVseSBhc3NpZ24gZGV2aWNlcyB0bwo+IGd1ZXN0cywgYnV0IGZvciBiYXJlLW1ldGFsIFNWQSBh
-bGwgd2UgbmVlZCBpcyB0eXBlIDEpIGlzb2xhdGlvbiwgYW5kCj4gbm90IGV2ZW4gdGhhdCBpZiB3
-ZSBjYW4gYXNzdW1lIHRoYXQgYWxsIFNWQS1jYXBhYmxlIGRldmljZXMgaGF2ZSBhbgo+IGV4Y2x1
-c2l2ZSBkZXZpY2UtaWQgKG9yIHN0cmVhbS1pZCkuCj4KPgo+Cj4gCUpvZXJnCj4KCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmlvbW11IG1haWxpbmcgbGlz
-dAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZwpodHRwczovL2xpc3RzLmxpbnV4Zm91
-bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5mby9pb21tdQ==
+This patch duplicates work performed by Ulrich.
+
+Please consider this patch dropped, and no need for review.
+
+(especially the obvious error in the pin-values)
+
+Oh well - it was a fun exercise to go through :-)
+
+--
+Regards
+
+Kieran
+
+On 15/02/18 08:38, Kieran Bingham wrote:
+> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> 
+> Provide pin control support for the DU parallel RGB output signals.
+> 
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> ---
+>  drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 101 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 101 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+> index a4927b78a17b..277b0d6972f7 100644
+> --- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+> +++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+> @@ -1114,6 +1114,87 @@ static const unsigned int canfd1_data_mux[] = {
+>  	CANFD1_TX_MARK, CANFD1_RX_MARK,
+>  };
+>  
+> +/* - DU --------------------------------------------------------------------- */
+> +static const unsigned int du_rgb666_pins[] = {
+> +	/* R[7:2], G[7:2], B[7:2] */
+> +	RCAR_GP_PIN(1, 23), RCAR_GP_PIN(1, 22), RCAR_GP_PIN(1, 21),
+> +	RCAR_GP_PIN(1, 20), RCAR_GP_PIN(1, 19), RCAR_GP_PIN(1, 18),
+> +	RCAR_GP_PIN(1, 15), RCAR_GP_PIN(1, 14), RCAR_GP_PIN(1, 13),
+> +	RCAR_GP_PIN(1, 12), RCAR_GP_PIN(1, 11), RCAR_GP_PIN(1, 10),
+> +	RCAR_GP_PIN(1, 7),  RCAR_GP_PIN(1, 6),  RCAR_GP_PIN(1, 5),
+> +	RCAR_GP_PIN(1, 4),  RCAR_GP_PIN(1, 3),  RCAR_GP_PIN(1, 2),
+> +};
+> +static const unsigned int du_rgb666_mux[] = {
+> +	DU_DR7_MARK, DU_DR6_MARK, DU_DR5_MARK, DU_DR4_MARK,
+> +	DU_DR3_MARK, DU_DR2_MARK,
+> +	DU_DG7_MARK, DU_DG6_MARK, DU_DG5_MARK, DU_DG4_MARK,
+> +	DU_DG3_MARK, DU_DG2_MARK,
+> +	DU_DB7_MARK, DU_DB6_MARK, DU_DB5_MARK, DU_DB4_MARK,
+> +	DU_DB3_MARK, DU_DB2_MARK,
+> +};
+> +static const unsigned int du_rgb888_pins[] = {
+> +	/* R[7:0], G[7:0], B[7:0] */
+> +	RCAR_GP_PIN(1, 23), RCAR_GP_PIN(1, 22), RCAR_GP_PIN(1, 21),
+> +	RCAR_GP_PIN(1, 20), RCAR_GP_PIN(1, 19), RCAR_GP_PIN(1, 18),
+> +	RCAR_GP_PIN(1, 17), RCAR_GP_PIN(1, 16),
+> +	RCAR_GP_PIN(1, 15), RCAR_GP_PIN(1, 14), RCAR_GP_PIN(1, 13),
+> +	RCAR_GP_PIN(1, 12), RCAR_GP_PIN(1, 11), RCAR_GP_PIN(1, 10),
+> +	RCAR_GP_PIN(1, 9),  RCAR_GP_PIN(1, 8),
+> +	RCAR_GP_PIN(1, 7),  RCAR_GP_PIN(1, 6),  RCAR_GP_PIN(1, 5),
+> +	RCAR_GP_PIN(1, 4),  RCAR_GP_PIN(1, 3),  RCAR_GP_PIN(1, 2),
+> +	RCAR_GP_PIN(1, 1),  RCAR_GP_PIN(1, 0),
+> +};
+> +static const unsigned int du_rgb888_mux[] = {
+> +	DU_DR7_MARK, DU_DR6_MARK, DU_DR5_MARK, DU_DR4_MARK,
+> +	DU_DR3_MARK, DU_DR2_MARK, DU_DR1_MARK, DU_DR0_MARK,
+> +	DU_DG7_MARK, DU_DG6_MARK, DU_DG5_MARK, DU_DG4_MARK,
+> +	DU_DG3_MARK, DU_DG2_MARK, DU_DG1_MARK, DU_DG0_MARK,
+> +	DU_DB7_MARK, DU_DB6_MARK, DU_DB5_MARK, DU_DB4_MARK,
+> +	DU_DB3_MARK, DU_DB2_MARK, DU_DB1_MARK, DU_DB0_MARK,
+> +};
+> +static const unsigned int du_dotclkout0_pins[] = {
+> +	/* CLKOUT */
+> +	RCAR_GP_PIN(1, 24),
+> +};
+> +static const unsigned int du_dotclkout0_mux[] = {
+> +	DU_DOTCLKOUT0_MARK
+> +};
+> +static const unsigned int du_sync_pins[] = {
+> +	/* HSYNC, VSYNC */
+> +	RCAR_GP_PIN(1, 25), RCAR_GP_PIN(1, 26),
+> +};
+> +static const unsigned int du_sync_mux[] = {
+> +	DU_HSYNC_MARK, DU_VSYNC_MARK
+> +};
+> +static const unsigned int du_disp_pins[] = {
+> +	/* DISP */
+> +	RCAR_GP_PIN(2, 1),
+> +};
+> +static const unsigned int du_disp_mux[] = {
+> +	DU_DISP_MARK,
+> +};
+> +static const unsigned int du_dotclkin1_pins[] = {
+> +	/* DOTCLKOUT0 */
+> +	RCAR_GP_PIN(1, 28),
+> +};
+> +static const unsigned int du_dotclkin1_mux[] = {
+> +	DU_DOTCLKIN1_MARK,
+> +};
+> +static const unsigned int du_disp_cde_pins[] = {
+> +	/* DISP/CDE */
+> +	RCAR_GP_PIN(1, 28),
+> +};
+> +static const unsigned int du_disp_cde_mux[] = {
+> +	DU_DISP_CDE_MARK,
+> +};
+> +static const unsigned int du_cde_pins[] = {
+> +	/* CDE */
+> +	RCAR_GP_PIN(1, 29),
+> +};
+> +static const unsigned int du_cde_mux[] = {
+> +	DU_CDE_MARK,
+> +};
+> +
+>  /* - I2C -------------------------------------------------------------------- */
+>  static const unsigned int i2c0_pins[] = {
+>  	/* SCL, SDA */
+> @@ -1568,6 +1649,14 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
+>  	SH_PFC_PIN_GROUP(can_clk),
+>  	SH_PFC_PIN_GROUP(canfd0_data),
+>  	SH_PFC_PIN_GROUP(canfd1_data),
+> +	SH_PFC_PIN_GROUP(du_rgb666),
+> +	SH_PFC_PIN_GROUP(du_rgb888),
+> +	SH_PFC_PIN_GROUP(du_dotclkout0),
+> +	SH_PFC_PIN_GROUP(du_sync),
+> +	SH_PFC_PIN_GROUP(du_disp),
+> +	SH_PFC_PIN_GROUP(du_dotclkin1),
+> +	SH_PFC_PIN_GROUP(du_disp_cde),
+> +	SH_PFC_PIN_GROUP(du_cde),
+>  	SH_PFC_PIN_GROUP(i2c0),
+>  	SH_PFC_PIN_GROUP(i2c1),
+>  	SH_PFC_PIN_GROUP(i2c2_a),
+> @@ -1664,6 +1753,17 @@ static const char * const canfd1_groups[] = {
+>  	"canfd1_data",
+>  };
+>  
+> +static const char * const du_groups[] = {
+> +	"du_rgb666",
+> +	"du_rgb888",
+> +	"du_dotclk_out_0",
+> +	"du_sync",
+> +	"du_disp",
+> +	"du_dotclk_in_1",
+> +	"du_disp_cde",
+> +	"du_cde",
+> +};
+> +
+>  static const char * const i2c0_groups[] = {
+>  	"i2c0",
+>  };
+> @@ -1779,6 +1879,7 @@ static const struct sh_pfc_function pinmux_functions[] = {
+>  	SH_PFC_FUNCTION(can_clk),
+>  	SH_PFC_FUNCTION(canfd0),
+>  	SH_PFC_FUNCTION(canfd1),
+> +	SH_PFC_FUNCTION(du),
+>  	SH_PFC_FUNCTION(i2c0),
+>  	SH_PFC_FUNCTION(i2c1),
+>  	SH_PFC_FUNCTION(i2c2),
+> 
