@@ -1,45 +1,42 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 1/2][v2][RESEND] ARM: dts: Add big-endian for IFC on LS1021A
-Date: Thu, 15 Feb 2018 17:24:44 +0530
-Message-ID: <20180215115444.23936-1-prabhakar.kushwaha@nxp.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] ARM64: dts: meson-axg: fix pwm_AO_cd compatible
+Date: Thu, 15 Feb 2018 12:55:19 +0100
+Message-ID: <9a161f47-3e4a-d1ed-f829-d6989191583a@baylibre.com>
+References: <20180215101031.18934-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, Alison Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>, Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180215101031.18934-1-jbrunet@baylibre.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-For the patch to update struct map_info's swap field based on device
-characteristics defined in device tree, big-endian parameter is added
-for LS1021A.
+On 15/02/2018 11:10, Jerome Brunet wrote:
+> The compatible in pwm_AO_cd is wrong and does not match anything.
+> Correct this with the correct compatible string
+> 
+> Fixes: 4a81e5ddfb43 ("ARM64: dts: meson-axg: add PWM DT info for Meson-Axg SoC")
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> index a7cc9e401a92..880e25b113c1 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+> @@ -844,7 +844,7 @@
+>  			};
+>  
+>  			pwm_AO_cd: pwm@2000 {
+> -				compatible = "amlogic,axg-ao-pwm";
+> +				compatible = "amlogic,meson-axg-ao-pwm";
+>  				reg = <0x0 0x02000  0x0 0x20>;
+>  				#pwm-cells = <3>;
+>  				status = "disabled";
+> 
 
-Signed-off-by: Alison Wang <alison.wang-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Jagdish Gediya <jagdish.gediya-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
----
-Due to patch series http://patchwork.ozlabs.org/project/linux-mtd/list/?series=28735
-this patch is now independent of flash propoerty. So resending.
-
- arch/arm/boot/dts/ls1021a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 9319e1f0f1d8..babb086ad94f 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -145,6 +145,7 @@
- 		ifc: ifc@1530000 {
- 			compatible = "fsl,ifc", "simple-bus";
- 			reg = <0x0 0x1530000 0x0 0x10000>;
-+			big-endian;
- 			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
--- 
-2.14.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
