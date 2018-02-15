@@ -1,87 +1,87 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: rockchip: Fix DWMMC clocks
-Date: Thu, 15 Feb 2018 14:05:54 +0000
-Message-ID: <cccc5187b9925bb7f025326220f75f9919d562c2.1518703554.git.robin.murphy@arm.com>
-References: <74be71477b800f8a7b93a9e92ffeff9bf38c52ce.1518703554.git.robin.murphy@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74be71477b800f8a7b93a9e92ffeff9bf38c52ce.1518703554.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 4/8] arm64: dts: renesas: r8a77995: add DU support
+Date: Thu, 15 Feb 2018 16:07:35 +0200
+Message-ID: <60779847.OG4dpa2GEt@avalon>
+References: <1518683903-10681-1-git-send-email-kbingham@kernel.org> <1518683903-10681-5-git-send-email-kbingham@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1518683903-10681-5-git-send-email-kbingham@kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Kieran Bingham <kbingham@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kieran Bingham <kieran.bingham@ideasonboard.com>, Simon Horman <horms@verge.net.au>, geert@glider.be, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Trying to boot an RK3328 box with an HS200-capable eMMC, I see said eMMC
-fail to initialise as it can't run its tuning procedure, because the
-sample clock is missing. Upon closer inspection, whilst the clock is
-present in the DT, its name is subtly incorrect per the binding, so
-__of_clk_get_by_name() never finds it. By inspection, the drive clock
-suffers from a similar problem, so has never worked properly either.
+Hi Kieran,
 
-This error has propagated across the 32-bit DTs too, so fix those up.
+Thank you for the patch.
 
-Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm/boot/dts/rk3036.dtsi | 4 ++--
- arch/arm/boot/dts/rk322x.dtsi | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+On Thursday, 15 February 2018 10:38:19 EET Kieran Bingham wrote:
+> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> 
+> Define the generic r8a77995 part of the DU device node.
+> 
+> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 3b704cfed69a..a97458112ff6 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -280,7 +280,7 @@
- 		max-frequency = <37500000>;
- 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
- 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu_drv", "ciu_sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 		resets = <&cru SRST_SDIO>;
-@@ -298,7 +298,7 @@
- 		max-frequency = <37500000>;
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu_drv", "ciu_sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		default-sample-phase = <158>;
- 		disable-wp;
- 		dmas = <&pdma 12>;
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 780ec3a99b21..341deaf62ff6 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -621,7 +621,7 @@
- 		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
- 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu_drv", "ciu_sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_bus4>;
-@@ -634,7 +634,7 @@
- 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
- 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu_drv", "ciu_sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		fifo-depth = <0x100>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&sdio_clk &sdio_cmd &sdio_bus4>;
-@@ -649,7 +649,7 @@
- 		max-frequency = <37500000>;
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
--		clock-names = "biu", "ciu", "ciu_drv", "ciu_sample";
-+		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
- 		bus-width = <8>;
- 		default-sample-phase = <158>;
- 		fifo-depth = <0x100>;
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+I assume Simon will take care of this patch.
+
+> ---
+>  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 35 ++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> b/arch/arm64/boot/dts/renesas/r8a77995.dtsi index
+> 0db242114bc5..a57d5fecf79c 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+> @@ -748,6 +748,41 @@
+>  			resets = <&cpg 602>;
+>  			iommus = <&ipmmu_vi0 9>;
+>  		};
+> +
+> +		du: display@feb00000 {
+> +			compatible = "renesas,du-r8a77995";
+> +			reg = <0 0xfeb00000 0 0x80000>;
+> +			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 724>,
+> +				 <&cpg CPG_MOD 723>;
+> +			clock-names = "du.0", "du.1";
+> +			vsps = <&vspd0 0 &vspd1 0>;
+> +			status = "disabled";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					du_out_rgb: endpoint {
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					du_out_lvds0: endpoint {
+> +					};
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					du_out_lvds1: endpoint {
+> +					};
+> +				};
+> +			};
+> +		};
+>  	};
+> 
+>  	timer {
+
+
 -- 
-2.16.1.dirty
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
