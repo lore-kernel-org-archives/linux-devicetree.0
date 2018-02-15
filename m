@@ -1,58 +1,31 @@
-From: Mikko Perttunen <mperttunen@nvidia.com>
-Subject: [PATCH v3 2/7] soc/tegra: Add Tegra194 SoC configuration option
-Date: Thu, 15 Feb 2018 16:52:01 +0200
-Message-ID: <20180215145206.24775-3-mperttunen@nvidia.com>
-References: <20180215145206.24775-1-mperttunen@nvidia.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/2] arm64: dts: renesas: r8a77970: add GPIO support
+Date: Thu, 15 Feb 2018 16:13:19 +0100
+Message-ID: <20180215151318.e75whqwz4f4tevc2@verge.net.au>
+References: <038a791d-aa57-9c3d-eaea-09c5704ecb54@cogentembedded.com>
+ <85e2d81e-3de9-4f61-ad8f-e0a0ec8381bc@cogentembedded.com>
+ <CAMuHMdUsDDdbvTMEOD_ZVHcSLsKOvdweTGA2ZudFnj4-KCAEGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180215145206.24775-1-mperttunen@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: talho@nvidia.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mikko Perttunen <mperttunen@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUsDDdbvTMEOD_ZVHcSLsKOvdweTGA2ZudFnj4-KCAEGg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the configuration option to enable support for the Tegra194
-system-on-chip, and enable it by default in the arm64 defconfig.
+On Wed, Feb 14, 2018 at 11:01:26AM +0100, Geert Uytterhoeven wrote:
+> On Tue, Feb 13, 2018 at 12:22 PM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+> > Describe all 6 GPIO controllers in the R8A77970 device tree.
+> >
+> > Based on the original (and large) patch by Daisuke Matsushita
+> > <daisuke.matsushita.ns@hitachi.com>.
+> >
+> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
----
- arch/arm64/configs/defconfig |  1 +
- drivers/soc/tegra/Kconfig    | 10 ++++++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 78f669a21a9b..5a8f15baa850 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -537,6 +537,7 @@ CONFIG_ROCKCHIP_PM_DOMAINS=y
- CONFIG_ARCH_TEGRA_132_SOC=y
- CONFIG_ARCH_TEGRA_210_SOC=y
- CONFIG_ARCH_TEGRA_186_SOC=y
-+CONFIG_ARCH_TEGRA_194_SOC=y
- CONFIG_EXTCON_USB_GPIO=y
- CONFIG_IIO=y
- CONFIG_EXYNOS_ADC=y
-diff --git a/drivers/soc/tegra/Kconfig b/drivers/soc/tegra/Kconfig
-index 89ebe22a3e27..fe4481676da6 100644
---- a/drivers/soc/tegra/Kconfig
-+++ b/drivers/soc/tegra/Kconfig
-@@ -104,6 +104,16 @@ config ARCH_TEGRA_186_SOC
- 	  multi-format support, ISP for image capture processing and BPMP for
- 	  power management.
- 
-+config ARCH_TEGRA_194_SOC
-+	bool "NVIDIA Tegra194 SoC"
-+	select MAILBOX
-+	select TEGRA_BPMP
-+	select TEGRA_HSP_MBOX
-+	select TEGRA_IVC
-+	select SOC_TEGRA_PMC
-+	help
-+	  Enable support for the NVIDIA Tegra194 SoC.
-+
- endif
- endif
- 
--- 
-2.16.1
+Thanks, applied.
