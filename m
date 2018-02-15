@@ -1,249 +1,118 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: [PATCH v12 7/8] ARM: dts: imx: Add TDA19971 HDMI Receiver to GW54xx
-Date: Thu, 15 Feb 2018 08:39:26 -0800
-Message-ID: <1518712767-21928-8-git-send-email-tharvey@gateworks.com>
-References: <1518712767-21928-1-git-send-email-tharvey@gateworks.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518712767-21928-1-git-send-email-tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Hans Verkuil <hansverk-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH v3 2/5] arm64: dts: renesas: r8a77995: add VSP instances
+Date: Thu, 15 Feb 2018 16:41:58 +0000
+Message-ID: <7db13491-f4f6-4c7c-e9e3-c1e91b0054b6@ideasonboard.com>
+References: <1518602108-1724-1-git-send-email-kbingham@kernel.org>
+ <1518602108-1724-3-git-send-email-kbingham@kernel.org>
+ <20180215163342.4evihm3uts3lfu5c@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180215163342.4evihm3uts3lfu5c@verge.net.au>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The GW54xx has a front-panel microHDMI connector routed to a TDA19971
-which is connected the the IPU CSI when using IMX6Q.
+Hi Simon,
 
-Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
----
-v5:
- - remove leading 0 from unit address
- - add newline between property list and child node
+On 15/02/18 16:33, Simon Horman wrote:
+> On Wed, Feb 14, 2018 at 09:55:05AM +0000, Kieran Bingham wrote:
+>> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>>
+>> The r8a77995 has a VSPBS to support image processing such as blending of
+>> two input images, and has two VSPDs to handle display pipelines with a
+>> DU.
+>>
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>
+>> ---
+>> v2:
+>>  - Fix VSPD register map size
+>>  - Squash VSPBS and VSPD patches together
+>>
+>> v3:
+>>  - Fix VSPBS register map size too :-)
+>>
+>>  arch/arm64/boot/dts/renesas/r8a77995.dtsi | 30 ++++++++++++++++++++++++++++++
+>>  1 file changed, 30 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+>> index 196a917afea6..0db242114bc5 100644
+>> --- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+>> @@ -692,6 +692,16 @@
+>>  			status = "disabled";
+>>  		};
+>>  
+>> +		vspbs: vsp@fe960000 {
+>> +			compatible = "renesas,vsp2";
+>> +			reg = <0 0xfe960000 0 0x8000>;
+>> +			interrupts = <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&cpg CPG_MOD 627>;
+>> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+>> +			resets = <&cpg 627>;
+>> +			renesas,fcp = <&fcpvb0>;
+>> +		};
+>> +
+>>  		fcpvb0: fcp@fe96f000 {
+>>  			compatible = "renesas,fcpv";
+>>  			reg = <0 0xfe96f000 0 0x200>;
+>> @@ -701,6 +711,16 @@
+>>  			iommus = <&ipmmu_vp0 5>;
+>>  		};
+>>  
+>> +		vspd0: vsp@fea20000 {
+>> +			compatible = "renesas,vsp2";
+>> +			reg = <0 0xfea20000 0 0x8000>;
+>> +			interrupts = <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&cpg CPG_MOD 623>;
+>> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+>> +			resets = <&cpg 623>;
+>> +			renesas,fcp = <&fcpvd0>;
+>> +		};
+>> +
+>>  		fcpvd0: fcp@fea27000 {
+>>  			compatible = "renesas,fcpv";
+>>  			reg = <0 0xfea27000 0 0x200>;
+>> @@ -710,6 +730,16 @@
+>>  			iommus = <&ipmmu_vi0 8>;
+>>  		};
+>>  
+>> +		vspd1: vsp@fea80000 {
+> 
+> The above should be:
+> 
+> 		vspd1: vsp@fea28000 {
 
-v4: no changes
-v3: no changes
+Good spot.
 
-v2:
- - add HDMI audio input support
+</me looks to datasheet> That is correct.
 
- arch/arm/boot/dts/imx6q-gw54xx.dts    | 105 ++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-gw54xx.dtsi |  29 +++++++++-
- 2 files changed, 131 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6q-gw54xx.dts b/arch/arm/boot/dts/imx6q-gw54xx.dts
-index 56e5b50..0477120 100644
---- a/arch/arm/boot/dts/imx6q-gw54xx.dts
-+++ b/arch/arm/boot/dts/imx6q-gw54xx.dts
-@@ -12,10 +12,30 @@
- /dts-v1/;
- #include "imx6q.dtsi"
- #include "imx6qdl-gw54xx.dtsi"
-+#include <dt-bindings/media/tda1997x.h>
- 
- / {
- 	model = "Gateworks Ventana i.MX6 Dual/Quad GW54XX";
- 	compatible = "gw,imx6q-gw54xx", "gw,ventana", "fsl,imx6q";
-+
-+	sound-digital {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "tda1997x-audio";
-+
-+		simple-audio-card,dai-link@0 {
-+			format = "i2s";
-+
-+			cpu {
-+				sound-dai = <&ssi2>;
-+			};
-+
-+			codec {
-+				bitclock-master;
-+				frame-master;
-+				sound-dai = <&tda1997x>;
-+			};
-+		};
-+	};
- };
- 
- &i2c3 {
-@@ -35,6 +55,61 @@
- 			};
- 		};
- 	};
-+
-+	tda1997x: codec@48 {
-+		compatible = "nxp,tda19971";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_tda1997x>;
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		DOVDD-supply = <&reg_3p3v>;
-+		AVDD-supply = <&sw4_reg>;
-+		DVDD-supply = <&sw4_reg>;
-+		#sound-dai-cells = <0>;
-+		nxp,audout-format = "i2s";
-+		nxp,audout-layout = <0>;
-+		nxp,audout-width = <16>;
-+		nxp,audout-mclk-fs = <128>;
-+		/*
-+		 * The 8bpp YUV422 semi-planar mode outputs CbCr[11:4]
-+		 * and Y[11:4] across 16bits in the same cycle
-+		 * which we map to VP[15:08]<->CSI_DATA[19:12]
-+		 */
-+		nxp,vidout-portcfg =
-+			/*G_Y_11_8<->VP[15:12]<->CSI_DATA[19:16]*/
-+			< TDA1997X_VP24_V15_12 TDA1997X_G_Y_11_8 >,
-+			/*G_Y_7_4<->VP[11:08]<->CSI_DATA[15:12]*/
-+			< TDA1997X_VP24_V11_08 TDA1997X_G_Y_7_4 >,
-+			/*R_CR_CBCR_11_8<->VP[07:04]<->CSI_DATA[11:08]*/
-+			< TDA1997X_VP24_V07_04 TDA1997X_R_CR_CBCR_11_8 >,
-+			/*R_CR_CBCR_7_4<->VP[03:00]<->CSI_DATA[07:04]*/
-+			< TDA1997X_VP24_V03_00 TDA1997X_R_CR_CBCR_7_4 >;
-+
-+		port {
-+			tda1997x_to_ipu1_csi0_mux: endpoint {
-+				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
-+				bus-width = <16>;
-+				hsync-active = <1>;
-+				vsync-active = <1>;
-+				data-active = <1>;
-+			};
-+		};
-+	};
-+};
-+
-+&ipu1_csi0_from_ipu1_csi0_mux {
-+	bus-width = <16>;
-+};
-+
-+&ipu1_csi0_mux_from_parallel_sensor {
-+	remote-endpoint = <&tda1997x_to_ipu1_csi0_mux>;
-+	bus-width = <16>;
-+};
-+
-+&ipu1_csi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ipu1_csi0>;
- };
- 
- &ipu2_csi1_from_ipu2_csi1_mux {
-@@ -63,6 +138,30 @@
- 		>;
- 	};
- 
-+	pinctrl_ipu1_csi0: ipu1_csi0grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT4__IPU1_CSI0_DATA04		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT5__IPU1_CSI0_DATA05		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT6__IPU1_CSI0_DATA06		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT7__IPU1_CSI0_DATA07		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT8__IPU1_CSI0_DATA08		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT9__IPU1_CSI0_DATA09		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT10__IPU1_CSI0_DATA10		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT11__IPU1_CSI0_DATA11		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18		0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19		0x1b0b0
-+			MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC		0x1b0b0
-+			MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK	0x1b0b0
-+			MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC		0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_ipu2_csi1: ipu2_csi1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_EIM_EB2__IPU2_CSI1_DATA19    0x1b0b0
-@@ -78,4 +177,10 @@
- 			MX6QDL_PAD_EIM_A16__IPU2_CSI1_PIXCLK    0x1b0b0
- 		>;
- 	};
-+
-+	pinctrl_tda1997x: tda1997xgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_7__GPIO1_IO07	0x1b0b0
-+		>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-index eab75f3..f9e1fb9 100644
---- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
-@@ -10,6 +10,7 @@
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
- 
- / {
- 	/* these are used by bootloader for disabling nodes */
-@@ -114,12 +115,12 @@
- 		};
- 	};
- 
--	sound {
-+	sound-analog {
- 		compatible = "fsl,imx6q-ventana-sgtl5000",
- 			     "fsl,imx-audio-sgtl5000";
- 		model = "sgtl5000-audio";
- 		ssi-controller = <&ssi1>;
--		audio-codec = <&codec>;
-+		audio-codec = <&sgtl5000>;
- 		audio-routing =
- 			"MIC_IN", "Mic Jack",
- 			"Mic Jack", "Mic Bias",
-@@ -133,6 +134,25 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_audmux>; /* AUD4<->sgtl5000 */
- 	status = "okay";
-+
-+	ssi2 {
-+		fsl,audmux-port = <1>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			IMX_AUDMUX_V2_PTCR_TFSEL(4+8) | /* RXFS */
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR |
-+			IMX_AUDMUX_V2_PTCR_TCSEL(4+8) | /* RXC */
-+			IMX_AUDMUX_V2_PTCR_SYN)
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(4)
-+		>;
-+	};
-+
-+	aud5 {
-+		fsl,audmux-port = <4>;
-+		fsl,port-config = <
-+			IMX_AUDMUX_V2_PTCR_SYN
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(1)>;
-+	};
- };
- 
- &can1 {
-@@ -331,7 +351,7 @@
- 	pinctrl-0 = <&pinctrl_i2c3>;
- 	status = "okay";
- 
--	codec: sgtl5000@a {
-+	sgtl5000: codec@a {
- 		compatible = "fsl,sgtl5000";
- 		reg = <0x0a>;
- 		clocks = <&clks IMX6QDL_CLK_CKO>;
-@@ -475,6 +495,9 @@
- 			MX6QDL_PAD_SD2_DAT2__AUD4_TXD		0x110b0
- 			MX6QDL_PAD_SD2_DAT1__AUD4_TXFS		0x130b0
- 			MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x130b0 /* AUD4_MCK */
-+			MX6QDL_PAD_EIM_D25__AUD5_RXC            0x130b0
-+			MX6QDL_PAD_DISP0_DAT19__AUD5_RXD        0x130b0
-+			MX6QDL_PAD_EIM_D24__AUD5_RXFS           0x130b0
- 		>;
- 	};
- 
--- 
-2.7.4
+Would you like me to resubmit this patch ? Or will you fix this up locally?
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+
+Kieran
+
+
+> 
+>> +			compatible = "renesas,vsp2";
+>> +			reg = <0 0xfea28000 0 0x8000>;
+>> +			interrupts = <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&cpg CPG_MOD 622>;
+>> +			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+>> +			resets = <&cpg 622>;
+>> +			renesas,fcp = <&fcpvd1>;
+>> +		};
+>> +
+>>  		fcpvd1: fcp@fea2f000 {
+>>  			compatible = "renesas,fcpv";
+>>  			reg = <0 0xfea2f000 0 0x200>;
+>> -- 
+>> 2.7.4
+>>
