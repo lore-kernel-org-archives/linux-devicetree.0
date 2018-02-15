@@ -1,76 +1,69 @@
-From: frowand.list@gmail.com
-Subject: [PATCH v3 4/4] of: improve reporting invalid overlay target path
-Date: Wed, 14 Feb 2018 21:35:46 -0800
-Message-ID: <1518672946-7310-5-git-send-email-frowand.list@gmail.com>
-References: <1518672946-7310-1-git-send-email-frowand.list@gmail.com>
+From: Denis OSTERLAND <denis.osterland@diehl.com>
+Subject: Re: [PATCH 1/4] rtc: isl1208: Fix unintended clear of SR bits
+Date: Thu, 15 Feb 2018 07:27:47 +0000
+Message-ID: <1518679666.5448.4.camel@diehl.com>
+References: <20180123121801.4214-1-m.grzeschik@pengutronix.de>
+         <20180123121801.4214-2-m.grzeschik@pengutronix.de>
+         <20180214202610.GD8219@piout.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518672946-7310-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <20180214202610.GD8219@piout.net>
+Content-Language: en-US
+Content-ID: <8918867F65DE854DB8517F3F638CC2FA@diehl.internal>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org
+To: "m.grzeschik@pengutronix.de" <m.grzeschik@pengutronix.de>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>
+Cc: "linux@roeck-us.net" <linux@roeck-us.net>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jdelvare@suse.com" <jdelvare@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
-
-Errors while developing the patch to create of_overlay_fdt_apply()
-exposed inadequate error messages to debug problems when overlay
-devicetree fragment nodes contain an invalid target path.  Improve
-the messages in find_target_node() to remedy this.
-
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
-
-changes from v2:
-  - add fragment node name as suggested by Geert
-  - existing error message printed short node name, thus not
-    discriminating between fragments; change to full node name
-  - existing error message printed node address, which is devicetree
-    internal debugging, not useful in an overlay apply error message;
-    remove node address from message
-
- drivers/of/overlay.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 5f6c5569e97d..852e566d7744 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -488,20 +488,30 @@ static int build_changeset(struct overlay_changeset *ovcs)
-  */
- static struct device_node *find_target_node(struct device_node *info_node)
- {
-+	struct device_node *node;
- 	const char *path;
- 	u32 val;
- 	int ret;
- 
- 	ret = of_property_read_u32(info_node, "target", &val);
--	if (!ret)
--		return of_find_node_by_phandle(val);
-+	if (!ret) {
-+		node = of_find_node_by_phandle(val);
-+		if (!node)
-+			pr_err("find target, node: %pOF, phandle 0x%x not found\n",
-+			       info_node, val);
-+		return node;
-+	}
- 
- 	ret = of_property_read_string(info_node, "target-path", &path);
--	if (!ret)
--		return of_find_node_by_path(path);
-+	if (!ret) {
-+		node =  of_find_node_by_path(path);
-+		if (!node)
-+			pr_err("find target, node: %pOF, path '%s' not found\n",
-+			       info_node, path);
-+		return node;
-+	}
- 
--	pr_err("Failed to find target for node %p (%s)\n",
--		info_node, info_node->name);
-+	pr_err("find target, node: %pOF, no target property\n", info_node);
- 
- 	return NULL;
- }
--- 
-Frank Rowand <frank.rowand@sony.com>
+QW0gTWl0dHdvY2gsIGRlbiAxNC4wMi4yMDE4LCAyMToyNiArMDEwMCBzY2hyaWViIEFsZXhh
+bmRyZSBCZWxsb25pOg0KPiBPbiAyMy8wMS8yMDE4IGF0IDEzOjE3OjU4ICswMTAwLCBNaWNo
+YWVsIEdyemVzY2hpayB3cm90ZToNCj4gPiANCj4gPiBGcm9tOiBEZW5pcyBPc3RlcmxhbmQg
+PERlbmlzLk9zdGVybGFuZEBkaWVobC5jb20+DQo+ID4gDQo+ID4gQWZ0ZXIgc3VjY2Vzc2Z1
+bA0KPiA+IHNyID0gaXNsMTIwOF9pMmNfc2V0X3JlZ3MoY2xpZW50LCAwLCByZWdzLCBJU0wx
+MjA4X1JUQ19TRUNUSU9OX0xFTik7DQo+ID4gc3Igd2lsbCBiZSAwLg0KPiA+IEFzIGEgcmVz
+dWx0DQo+ID4gc3IgPSBpMmNfc21idXNfd3JpdGVfYnl0ZV9kYXRhKGNsaWVudCwgSVNMMTIw
+OF9SRUdfU1IsDQo+ID4gCQkJc3IgJiB+SVNMMTIwOF9SRUdfU1JfV1JUQyk7DQo+ID4gaXMg
+ZXF1YWwgdG8NCj4gPiBzciA9IGkyY19zbWJ1c193cml0ZV9ieXRlX2RhdGEoY2xpZW50LCBJ
+U0wxMjA4X1JFR19TUiwgMCk7DQo+ID4gd2hpY2ggY2xlYXJzIGFsbCBmbGFncyBpbiBTUi4N
+Cj4gPiANCj4gPiBBZGQgYW4gYWRkaXRpb25hbCByZWFkIG9mIFNSLCB0byBoYXZlIHZhbHVl
+IG9mIFNSIGluIHNyIGFnYWluLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IERlbmlzIE9z
+dGVybGFuZCA8RGVuaXMuT3N0ZXJsYW5kQGRpZWhsLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBNaWNoYWVsIEdyemVzY2hpayA8bS5ncnplc2NoaWtAcGVuZ3V0cm9uaXguZGU+DQo+ID4g
+LS0tDQo+ID4gwqBkcml2ZXJzL3J0Yy9ydGMtaXNsMTIwOC5jIHwgNSArKysrKw0KPiA+IMKg
+MSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiBBcHBsaWVkLCB0aGFu
+a3MuDQo+IA0KWW91IGFyZSB3ZWxjb21lLg0KDQpPbmUgcXVlc3Rpb24sIHNoYWxsIHdlIGF2
+b2lkIHJlc2VudCB0aGlzIHBhdGNoIGluIHYyIG9mIHRoaXMgc2VyaWVzPw0KSSBhc2sgYmVj
+YXVzZSB3ZSBhcmUgcHJldHR5IGZhciB3aXRoIHRoZSBzdWdnZXN0ZWQgY2hhbmdlcy4NCg0K
+UmVnYXJkcyBEZW5pcy4NCkRpZWhsIEFLTyBTdGlmdHVuZyAmIENvLiBLRywgUGZhbm5lcnN0
+cmHDn2UgNzUtODMsIDg4MjM5IFdhbmdlbiBpbSBBbGxnw6R1DQpCZXJlaWNoc3ZvcnN0YW5k
+OiBEci4tSW5nLiBNaWNoYWVsIFNpZWRlbnRvcCAoU3ByZWNoZXIpLCBKb3NlZiBGZWxsbmVy
+IChNaXRnbGllZCkNClNpdHogZGVyIEdlc2VsbHNjaGFmdDogV2FuZ2VuIGkuQS4g4oCTIFJl
+Z2lzdGVyZ2VyaWNodDogQW10c2dlcmljaHQgVWxtIEhSQSA2MjA2MDkg4oCTIFBlcnPDtm5s
+aWNoIGhhZnRlbmRlIEdlc2VsbHNjaGFmdGVyaW46IERpZWhsIFZlcndhbHR1bmdzLVN0aWZ0
+dW5nIOKAkyBTaXR6OiBOw7xybmJlcmcg4oCTIFJlZ2lzdGVyZ2VyaWNodDogQW10c2dlcmlj
+aHQgTsO8cm5iZXJnIEhSQSAxMTc1NiDigJMNClZvcnN0YW5kOiBEci4tSW5nLiBFLmguIFRo
+b21hcyBEaWVobCAo4oCgKSAoVm9yc2l0emVuZGVyKSwgSGVyciBEaXBsLi1XaXJ0c2NoLi1J
+bmcuIFdvbGZnYW5nIFdlZ2dlbiAoc3RlbGx2ZXJ0cmV0ZW5kZXIgVm9yc2l0emVuZGVyKSwg
+RGlwbC4tS2ZtLiBDbGF1cyBHw7xudGhlciwgRGlwbC4tS2ZtLiBGcmFuayBHdXR6ZWl0LCBE
+ci4tSW5nLiBIZWlucmljaCBTY2h1bmssIERyLi1JbmcuIE1pY2hhZWwgU2llZGVudG9wICwg
+RGlwbC4tS2ZtLiBEci4tSW5nLiBNYXJ0aW4gU29tbWVyLCBEaXBsLi1JbmcuIChGSCkgUmFp
+bmVyIHZvbiBCb3JzdGVsLCBWb3JzaXR6ZW5kZXIgZGVzIEF1ZnNpY2h0c3JhdGVzOiBEci4g
+S2xhdXMgTWFpZXINCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXw0KRGVyIEluaGFsdCBkZXIgdm9yc3RlaGVuZGVuIEUtTWFpbCBpc3QgbmljaHQgcmVj
+aHRsaWNoIGJpbmRlbmQuIERpZXNlIEUtTWFpbCBlbnRoYWVsdCB2ZXJ0cmF1bGljaGUgdW5k
+L29kZXIgcmVjaHRsaWNoIGdlc2NodWV0enRlIEluZm9ybWF0aW9uZW4uDQpJbmZvcm1pZXJl
+biBTaWUgdW5zIGJpdHRlLCB3ZW5uIFNpZSBkaWVzZSBFLU1haWwgZmFlbHNjaGxpY2hlcndl
+aXNlIGVyaGFsdGVuIGhhYmVuLiBCaXR0ZSBsb2VzY2hlbiBTaWUgaW4gZGllc2VtIEZhbGwg
+ZGllIE5hY2hyaWNodC4gSmVkZSB1bmVybGF1YnRlIEZvcm0gZGVyIFJlcHJvZHVrdGlvbiwg
+QmVrYW5udGdhYmUsIEFlbmRlcnVuZywgVmVydGVpbHVuZyB1bmQvb2RlciBQdWJsaWthdGlv
+biBkaWVzZXIgRS1NYWlsIGlzdCBzdHJlbmdzdGVucyB1bnRlcnNhZ3QuDQpUaGUgY29udGVu
+dHMgb2YgdGhlIGFib3ZlIG1lbnRpb25lZCBlLW1haWwgaXMgbm90IGxlZ2FsbHkgYmluZGlu
+Zy4gVGhpcyBlLW1haWwgY29udGFpbnMgY29uZmlkZW50aWFsIGFuZC9vciBsZWdhbGx5IHBy
+b3RlY3RlZCBpbmZvcm1hdGlvbi4gUGxlYXNlIGluZm9ybSB1cyBpZiB5b3UgaGF2ZSByZWNl
+aXZlZCB0aGlzIGUtbWFpbCBieSBtaXN0YWtlIGFuZCBkZWxldGUgaXQgaW4gc3VjaCBhIGNh
+c2UuIEVhY2ggdW5hdXRob3JpemVkIHJlcHJvZHVjdGlvbiwgZGlzY2xvc3VyZSwgYWx0ZXJh
+dGlvbiwgZGlzdHJpYnV0aW9uIGFuZC9vciBwdWJsaWNhdGlvbiBvZiB0aGlzIGUtbWFpbCBp
+cyBzdHJpY3RseSBwcm9oaWJpdGVkLg==
