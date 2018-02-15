@@ -1,84 +1,47 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 00/20][RESEND] firmware: ARM System Control and
- Management Interface(SCMI) support
-Date: Thu, 15 Feb 2018 09:59:51 +0000
-Message-ID: <ad072d94-84fc-cd07-a4de-4fe66ca47b05@arm.com>
-References: <1518461124-17371-1-git-send-email-sudeep.holla@arm.com>
- <CALW4P+LPiYSOCKW4iS6OwK9S=M3aCP+X6QNnDkycY5TYQsCb5A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2] ARM: shmobile: Document Renesas H2-based Stout DT bindings
+Date: Thu, 15 Feb 2018 11:02:28 +0100
+Message-ID: <20180215100228.24695-1-marek.vasut+renesas@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALW4P+LPiYSOCKW4iS6OwK9S=M3aCP+X6QNnDkycY5TYQsCb5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexey Klimov <klimov.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Document the Renesas H2 Stout (ADAS Starterkit) device tree bindings,
+listing it as a supported board.
 
+This allows to use checkpatch.pl to validate .dts files referring to
+the Stout board.
 
-On 15/02/18 00:09, Alexey Klimov wrote:
-> On Mon, Feb 12, 2018 at 6:45 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->> Hi all,
->>
->> ARM System Control and Management Interface(SCMI) is more flexible and
->> easily extensible than any of the existing interfaces. Many vendors were
->> involved in the making of this formal specification and is now published[1].
->>
->> There is a strong trend in the industry to provide micro-controllers in
->> systems to abstract various power, or other system management tasks.
->> These controllers usually have similar interfaces, both in terms of the
->> functions that are provided by them, and in terms of how requests are
->> communicated to them.
->>
->> This specification is to standardise and avoid (any further)
->> fragmentation in the design of such interface by various vendors.
->>
->> This patch set is intended to get feedback on the design and structure
->> of the code. This is not complete and not fully tested due to
->> non-availability of firmware with full feature set at this time.
-> 
-> If it's not fully tested and not complete (I read as this patch set is
-> not ready to be merged), then maybe it's better to mark it as RFC?
-> 
+Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+---
+V2: - Keep the list of boards alphabetically sorted
+    - Rename the board from ADAS Starter Kit to ADAS Starterkit
+---
+ Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Sorry that's copy paste error, will drop that. It was valid for onlyRFC
-version posted long ago.
-
->> It currently doesn't support notification, asynchronous/delayed response,
->> perf/power statistics region and sensor register region to name a few.
->> I have borrowed some of the ideas of message allocation/management from
->> TI SCI.
->>
->> Changes:
->>
->> v4[6]->v5:
->>         - Rebased to v4.16-rc1
->>         - Updated all the gathered Ack/Reviewed-by tags(which includes
->>           all the drivers using SCMI protocol)
-> 
-> You still didn't comment on all questions to previous patchset.
-> 
-
-Anything else other than the below one ? I addressed the lock issue you
-mentioned and asked for suggestions on the delay thing.
-
-> For example,
-> https://www.spinics.net/lists/arm-kernel/msg626719.html
-> 
-
-Sorry I thought I responded but I clearly missed it.
-I am not so for the module parameter as I did try and never found it
-useful for debug images of the firmware. Any other use case you have in
-mind ?
-
-I think it's better to keep it simpler, I am thinking of even dropping
-it as a configurable variable like max_rx_timeout_ms.
-
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index 41d3920aaa5e..98916b3864c2 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -116,6 +116,8 @@ Boards:
+     compatible = "renesas,sk-rzg1e", "renesas,r8a7745"
+   - SK-RZG1M (YR8A77430S000BE)
+     compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
++  - Stout (ADAS Starterkit, Y-R-CAR-ADAS-SKH2-BOARD)
++    compatible = "renesas,stout", "renesas,r8a7790"
+   - V3MSK
+     compatible = "renesas,v3msk", "renesas,r8a77970"
+   - Wheat
 -- 
-Regards,
-Sudeep
+2.15.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
