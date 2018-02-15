@@ -1,109 +1,75 @@
-From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 13/13] dt: bindings: add bindings for wcn3990 wifi block
-Date: Fri, 16 Feb 2018 01:05:33 +1100
-Message-ID: <CAGRGNgVtOuPwejDi-1Bux+1mGTTup0Mcf4ED-OBcn3z8=atpNQ@mail.gmail.com>
-References: <1518684977-14607-1-git-send-email-govinds@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 1/2] arm64: dts: rockchip: Fix DWMMC clocks
+Date: Thu, 15 Feb 2018 14:05:53 +0000
+Message-ID: <74be71477b800f8a7b93a9e92ffeff9bf38c52ce.1518703554.git.robin.murphy@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518684977-14607-1-git-send-email-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Govind,
+Trying to boot an RK3328 box with an HS200-capable eMMC, I see said eMMC
+fail to initialise as it can't run its tuning procedure, because the
+sample clock is missing. Upon closer inspection, whilst the clock is
+present in the DT, its name is subtly incorrect per the binding, so
+__of_clk_get_by_name() never finds it. By inspection, the drive clock
+suffers from a similar problem, so has never worked properly either.
 
-On Thu, Feb 15, 2018 at 7:56 PM, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> Add device tree binding documentation details for wcn3990
-> wifi block present in Qualcomm SDM845/APQ8098 SoC into
-> "qcom,ath10k.txt".
->
-> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../bindings/net/wireless/qcom,ath10k.txt          | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index 3d2a031..07b0f13 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  - compatible: Should be one of the following:
->         * "qcom,ath10k"
->         * "qcom,ipq4019-wifi"
-> +       * "qcom,wcn3990-wifi"
->
->  PCI based devices uses compatible string "qcom,ath10k" and takes calibration
->  data along with board specific data via "qcom,ath10k-calibration-data".
-> @@ -18,8 +19,11 @@ In general, entry "qcom,ath10k-pre-calibration-data" and
->  "qcom,ath10k-calibration-data" conflict with each other and only one
->  can be provided per device.
->
-> +SNOC based devices (i.e. wcn3990) uses compatible string "qcom,wcn3990-wifi".
-> +
->  Optional properties:
->  - reg: Address and length of the register set for the device.
-> +- reg-names: Names of the memory regions defined in reg entry.
->  - resets: Must contain an entry for each entry in reset-names.
->            See ../reset/reseti.txt for details.
->  - reset-names: Must include the list of following reset names,
-> @@ -49,6 +53,12 @@ Optional properties:
->                                  hw versions.
->  - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
->                                      the length can vary between hw versions.
-> +- qcom,<supply-name>-supply: handle to the regulator device tree node
-> +                          optional "supply-name" is "vdd-0.8-cx-mx".
-> +- qcom,<supply>-config: Specifies voltage levels for supply. Should be
-> +                         specified in pairs (min, max), units uV.  There can
-> +                          be optional load in uA and Regulator settle delay in
-> +                          uS.
->
->  Example (to supply the calibration data alone):
->
-> @@ -119,3 +129,28 @@ wifi0: wifi@a000000 {
->         qcom,msi_base = <0x40>;
->         qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
->  };
-> +
-> +Example (to supply wcn3990 SoC wifi block details):
-> +
-> +qcom,msm_ath10k@18000000 {
-> +               compatible = "qcom,wcn3990-wifi";
-> +               reg = <0x18800000 0x800000>;
-> +               reg-names = "membase";
-> +               clocks = <&clock_gcc clk_aggre2_noc_clk>;
-> +               clock-names = "smmu_aggre2_noc_clk"
-> +               interrupts =
-> +                          <0 130 0 /* CE0 */ >,
-> +                          <0 131 0 /* CE1 */ >,
-> +                          <0 132 0 /* CE2 */ >,
-> +                          <0 133 0 /* CE3 */ >,
-> +                          <0 134 0 /* CE4 */ >,
-> +                          <0 135 0 /* CE5 */ >,
-> +                          <0 136 0 /* CE6 */ >,
-> +                          <0 137 0 /* CE7 */ >,
-> +                          <0 138 0 /* CE8 */ >,
-> +                          <0 139 0 /* CE9 */ >,
-> +                          <0 140 0 /* CE10 */ >,
-> +                          <0 141 0 /* CE11 */ >;
-> +               vdd-0.8-cx-mx-supply = <&pm8998_l5>;
+Fix up all instances of the incorrect clock names across the 64-bit DTs.
 
-You've omitted the "qcom," you specify above.
+Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 6 +++---
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-> +               qcom,vdd-0.8-cx-mx-config = <800000 800000 2400 1000>;
-> +};
-> --
-> 1.9.1
->
-
-Thanks,
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index 822488bdf364..be2bfbc6b483 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -730,7 +730,7 @@
+ 		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+ 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+-		clock-names = "biu", "ciu", "ciu_drv", "ciu_sample";
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
+ 		status = "disabled";
+ 	};
+@@ -741,7 +741,7 @@
+ 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+ 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+-		clock-names = "biu", "ciu", "ciu_drv", "ciu_sample";
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
+ 		status = "disabled";
+ 	};
+@@ -752,7 +752,7 @@
+ 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+ 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+-		clock-names = "biu", "ciu", "ciu_drv", "ciu_sample";
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
+ 		status = "disabled";
+ 	};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index aa4d07046a7b..03458ac44201 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -257,7 +257,7 @@
+ 		max-frequency = <150000000>;
+ 		clocks = <&cru HCLK_SDIO0>, <&cru SCLK_SDIO0>,
+ 			 <&cru SCLK_SDIO0_DRV>, <&cru SCLK_SDIO0_SAMPLE>;
+-		clock-names = "biu", "ciu", "ciu_drv", "ciu_sample";
++		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+ 		fifo-depth = <0x100>;
+ 		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+ 		resets = <&cru SRST_SDIO0>;
 -- 
-Julian Calaby
+2.16.1.dirty
 
-Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Profile: http://www.google.com/profiles/julian.calaby/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
