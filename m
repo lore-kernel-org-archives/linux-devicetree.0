@@ -1,68 +1,51 @@
-From: Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 7/8] arm64: dts: renesas: r8a77995-draak: Add HDMI Out through ADV7511
-Date: Thu, 15 Feb 2018 08:38:22 +0000
-Message-ID: <1518683903-10681-8-git-send-email-kbingham@kernel.org>
+From: Kieran Bingham <kbingham@kernel.org>
+Subject: [PATCH 5/8] arm64: dts: renesas: r8a77995: Add LVDS support
+Date: Thu, 15 Feb 2018 08:38:20 +0000
+Message-ID: <1518683903-10681-6-git-send-email-kbingham@kernel.org>
 References: <1518683903-10681-1-git-send-email-kbingham@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518683903-10681-1-git-send-email-kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, geert-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1518683903-10681-1-git-send-email-kbingham@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, geert@glider.be, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 
-Provide a device node for the ADV7511 as found on the Draak D3 platform.
+The r8a77995 D3 platform has 2 LVDS channels connected to the DU.
 
-The ADV7511 is connected to the DU through a parallel mux chip, and is
-configurable in hardware whether it is connected to LVDS0 or LVDS1.
-
-Connect through to LVDS0 as a default implementation.
-
-Signed-off-by: Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 56 ++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi | 52 +++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-index 668e246dfc5d..df0c7773cb7d 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
-@@ -27,6 +27,17 @@
- 		stdout-path = "serial0:115200n8";
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+index a57d5fecf79c..7851e37cfff1 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+@@ -773,18 +773,70 @@
+ 				port@1 {
+ 					reg = <1>;
+ 					du_out_lvds0: endpoint {
++						remote-endpoint = <&du_out_lvds0>;
+ 					};
+ 				};
+ 
+ 				port@2 {
+ 					reg = <2>;
+ 					du_out_lvds1: endpoint {
++						remote-endpoint = <&du_out_lvds1>;
+ 					};
+ 				};
+ 			};
+ 		};
  	};
  
-+	hdmi-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_out: endpoint {
-+				remote-endpoint = <&adv7511_out>;
-+			};
-+		};
-+	};
-+
- 	vga {
- 		compatible = "vga-connector";
- 
-@@ -124,6 +135,39 @@
- 		reg = <0x50>;
- 		pagesize = <8>;
- 	};
-+
-+	hdmi@39 {
-+		compatible = "adi,adv7511w";
-+		reg = <0x39>, <0x3f>, <0x38>, <0x3c>;
-+		reg-names = "main", "edid", "packet", "cec";
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
-+
-+		adi,input-depth = <8>;
-+		adi,input-colorspace = "rgb";
-+		adi,input-clock = "1x";
-+		adi,input-style = <1>;
-+		adi,input-justification = "evenly";
++	lvds0: lvds@feb90000 {
++		compatible = "renesas,lvds-r8a77995";
++		reg = <0 0xfeb90000 0 0x20>;
++		clocks = <&cpg CPG_MOD 727>;
++		status = "disabled";
 +
 +		ports {
 +			#address-cells = <1>;
@@ -70,45 +53,46 @@ index 668e246dfc5d..df0c7773cb7d 100644
 +
 +			port@0 {
 +				reg = <0>;
-+				adv7511_in: endpoint {
-+					remote-endpoint = <&lvds0_out>;
++				lvds0_in: endpoint {
++					remote-endpoint = <&du_out_lvds0>;
 +				};
 +			};
 +
 +			port@1 {
 +				reg = <1>;
-+				adv7511_out: endpoint {
-+					remote-endpoint = <&hdmi_con_out>;
++				lvds0_out: endpoint {
 +				};
 +			};
 +		};
 +	};
- };
- 
- &i2c1 {
-@@ -146,6 +190,18 @@
- 	};
- };
- 
-+&lvds0 {
-+	status = "okay";
 +
-+	ports {
-+		port@1 {
-+			endpoint {
-+				remote-endpoint = <&adv7511_in>;
++	lvds1: lvds@feb90100 {
++		compatible = "renesas,lvds-r8a77995";
++		reg = <0 0xfeb90100 0 0x20>;
++		clocks = <&cpg CPG_MOD 727>;
++		status = "disabled";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				lvds1_in: endpoint {
++					remote-endpoint = <&du_out_lvds1>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				lvds1_out: endpoint {
++				};
 +			};
 +		};
 +	};
-+};
 +
- &ehci0 {
- 	status = "okay";
- };
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_LOW)>,
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
