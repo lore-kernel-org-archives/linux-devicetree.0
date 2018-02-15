@@ -1,32 +1,47 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 08/15] Documentation: devicetree: renesas,sci: Add r8a77965
-Date: Thu, 15 Feb 2018 16:47:52 +0100
-Message-ID: <20180215154752.ukm43os7fl7xnlie@verge.net.au>
-References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
- <1518515162-23663-9-git-send-email-jacopo+renesas@jmondi.org>
+From: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Subject: RE: [[INTERNAL] PATCH 0/2] Fix STM32F7 DWC2 OTG HS binding
+Date: Thu, 15 Feb 2018 15:48:04 +0000
+Message-ID: <0d93c90528ca408eac19e4648f09156a@SFHDAG3NODE2.st.com>
+References: <1518709601-17232-1-git-send-email-amelie.delaunay@st.com>
+ <1518709601-17232-2-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1518515162-23663-9-git-send-email-jacopo+renesas@jmondi.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, geert@linux-m68k.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518709601-17232-2-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 13, 2018 at 10:45:55AM +0100, Jacopo Mondi wrote:
-> Add documentation for r8a77965 compatible string to reneass sci-serial
-> device tree bindings documentation.
+Forget this one! Sorry for the inconvenience.
 
-I think a better subject would be:
+> -----Original Message-----
+> From: Amelie DELAUNAY
+> Sent: jeudi 15 février 2018 16:47
+> To: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>; Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>;
+> Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>; Rob Herring
+> <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+> Subject: [[INTERNAL] PATCH 0/2] Fix STM32F7 DWC2 OTG HS binding
+> 
+> This patchset fixes STM32F7 DWC2 OTG HS binding. It actually re-applies the
+> v2 former patches adding STM32F7 DWC2 OTG HS support.
+> 
+> Amelie Delaunay (2):
+>   dt-bindings: usb: fix the STM32F7 DWC2 OTG HS core binding
+>   usb: dwc2: fix STM32F7 USB OTG HS compatible
+> 
+>  Documentation/devicetree/bindings/usb/dwc2.txt | 2 +-
+>  drivers/usb/dwc2/params.c                      | 6 +++---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> --
+> 2.7.4
 
-dt-bindings: serial: sh-sci: Add support for r8a77965 (H)SCIF
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
