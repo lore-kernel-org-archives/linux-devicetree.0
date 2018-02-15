@@ -1,67 +1,195 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH 1/5] dt-bindings: mmc: document the stm32 sdmmc bindings
-Date: Thu, 15 Feb 2018 14:34:53 +0100
-Message-ID: <1518701697-14242-2-git-send-email-ludovic.Barre@st.com>
-References: <1518701697-14242-1-git-send-email-ludovic.Barre@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518701697-14242-1-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>
+From: Tali Perry <tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/1] clk: npcm750: update text with fixed clocks
+Date: Thu, 15 Feb 2018 15:39:19 +0200
+Message-ID: <1518701959-22899-2-git-send-email-tali.perry1@gmail.com>
+References: <1518701959-22899-1-git-send-email-tali.perry1@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518701959-22899-1-git-send-email-tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tali Perry <tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
 
-Document the binding for stm32 sdmmc controller.
+Signed-off-by: Tali Perry <tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- .../devicetree/bindings/mmc/st,stm32-sdmmc.txt     | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/st,stm32-sdmmc.txt
+ .../bindings/clock/nuvoton,npcm750-clk.txt         | 103 +++++++++++++++++++++
+ include/dt-bindings/clock/nuvoton,npcm7xx-clock.h  |  51 ++++++++++
+ 2 files changed, 154 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
+ create mode 100644 include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
 
-diff --git a/Documentation/devicetree/bindings/mmc/st,stm32-sdmmc.txt b/Documentation/devicetree/bindings/mmc/st,stm32-sdmmc.txt
+diff --git a/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt b/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
 new file mode 100644
-index 0000000..52eb1f8
+index 000000000000..5d14a8358e76
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/st,stm32-sdmmc.txt
-@@ -0,0 +1,35 @@
-+* STMicroelectronics STM32 SDMMC controller
++++ b/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
+@@ -0,0 +1,103 @@
++* Nuvoton NPCM7XX Clock Controller
 +
-+The highspeed MMC host controller on STM32 soc family
-+provides an interface for MMC, SD and SDIO types of memory cards.
++Nuvoton Poleg BMC NPCM7XX contains an integrated clock controller, which
++generates and supplies clocks to all modules within the BMC.
 +
-+This file documents differences between the core properties described
-+by mmc.txt and the properties used by the sdmmc driver.
++External clocks:
 +
-+Required properties:
-+ - compatible: Should be "st,stm32h7-sdmmc"
-+ - reg: mmc controller base registers
-+ - interrupts: Should contain the interrupt number
-+ - clocks: Should contain phandle for the clock feeding the controller
-+ - resets: Should contain phandle for the reset feeding the controller
++There are six fixed clocks that are generated outside the BMC. All clocks are of
++a known fixed value that cannot be changed. clk_refclk, clk_mcbypck and
++clk_sysbypck are inputs to the clock controller.
++clk_rg1refck, clk_rg2refck and clk_xin are external clocks suppling the
++network. They are set on the device tree, but not used by the clock module. The
++network devices use them directly.
++Example can be found below.
 +
-+Optional property:
-+- st,dirpol: Allow to select direction polarity of external voltage
-+  transceiver (which manage data and command direction).
-+  if set: Voltage transceiver IOs are driven as output when direction signals are high,
-+  else: Voltage transceiver IOs are driven as output when direction signals are low.
-+- st,negedge: generate data & command on sdmmc clock falling edge
-+- st,pin-ckin: use sdmmc_ckin pin from an external driver to sample
-+  the receive data (example: with voltage switch transceiver).
++All available clocks are defined as preprocessor macros in:
++dt-bindings/clock/nuvoton,npcm7xx-clock.h
++and can be reused as DT sources.
 +
-+Example:
-+	sdmmc1: sdmmc@52007000 {
-+		compatible = "st,stm32h7-sdmmc";
-+		reg = <0x52007000 0x1000>;
-+		interrupts = <49>;
-+		clocks = <&rcc SDMMC1_CK>;
-+		resets = <&rcc SDMMC1_R>;
-+		bus-width = <4>;
-+		cap-sd-highspeed;
-+		cap-mmc-highspeed;
++Required Properties of clock controller:
++
++Clock controller node requirements:
++	- compatible: "nuvoton,npcm750-clk" : for clock controller of Nuvoton
++		  Poleg BMC NPCM750
++
++	- reg: physical base address of the clock controller and length of
++		memory mapped region.
++
++	- #clock-cells: should be 1.
++
++Example: Clock controller node:
++
++	clk: clock-controller@f0801000 {
++		compatible = "nuvoton,npcm750-clk";
++		#clock-cells = <1>;
++		clock-controller;
++		reg = <0xf0801000 0x1000>;
 +	};
++
++Example: Required external clocks for network:
++
++	/* external reference clock */
++	clk_refclk: clk-refclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++		clock-output-names = "refclk";
++	};
++
++	/* external reference clock for cpu. float in normal operation */
++	clk_sysbypck: clk-sysbypck {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <800000000>;
++		clock-output-names = "sysbypck";
++	};
++
++	/* external reference clock for MC. float in normal operation */
++	clk_mcbypck: clk-mcbypck {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <800000000>;
++		clock-output-names = "mcbypck";
++	};
++
++	 /* external clock signal rg1refck, supplied by the phy */
++	clk_rg1refck: clk-rg1refck {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <125000000>;
++		clock-output-names = "clk_rg1refck";
++	};
++
++	 /* external clock signal rg2refck, supplied by the phy */
++	clk_rg2refck: clk-rg2refck {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <125000000>;
++		clock-output-names = "clk_rg2refck";
++	};
++
++	clk_xin: clk-xin {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <50000000>;
++		clock-output-names = "clk_xin";
++	};
++
++
++Example: GMAC controller node that consumes two clocks: a generated clk by the
++clock controller and a fixed clock from DT (clk_rg1refck).
++
++	gmac0: eth@f0802000 {
++		device_type = "network";
++		compatible = "snps,dwmac";
++		reg = <0xf0802000 0x2000>;
++		interrupts = <0 14 4>;
++		interrupt-names = "macirq";
++		ethernet = <0>;
++		clocks	= <&clk_rg1refck>, <&clk NPCM7XX_CLK_AHB>;
++		clock-names = "stmmaceth", "clk_gmac";
++		status = "disabled";
++	};
+diff --git a/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h b/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
+new file mode 100644
+index 000000000000..5499783649d6
+--- /dev/null
++++ b/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
+@@ -0,0 +1,51 @@
++/*
++ * Nuvoton NPCM7xx Clock Generator
++ * All the clocks are initialized by the bootloader, so this driver allow only
++ * reading of current settings directly from the hardware.
++ *
++ * Copyright (C) 2018 Nuvoton Technologies tali.perry-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org
++ *
++ * Released under the GPLv2 only.
++ * SPDX-License-Identifier: GPL-2.0
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_NPCM7XX_H
++#define __DT_BINDINGS_CLOCK_NPCM7XX_H
++
++
++#define NPCM7XX_CLK_CPU 0
++#define NPCM7XX_CLK_GFX_PIXEL 1
++#define NPCM7XX_CLK_MC 2
++#define NPCM7XX_CLK_ADC 3
++#define NPCM7XX_CLK_AHB 4
++#define NPCM7XX_CLK_TIMER 5
++#define NPCM7XX_CLK_UART 6
++#define NPCM7XX_CLK_MMC  7
++#define NPCM7XX_CLK_SPI3 8
++#define NPCM7XX_CLK_PCI  9
++#define NPCM7XX_CLK_AXI 10
++#define NPCM7XX_CLK_APB4 11
++#define NPCM7XX_CLK_APB3 12
++#define NPCM7XX_CLK_APB2 13
++#define NPCM7XX_CLK_APB1 14
++#define NPCM7XX_CLK_APB5 15
++#define NPCM7XX_CLK_CLKOUT 16
++#define NPCM7XX_CLK_GFX  17
++#define NPCM7XX_CLK_SU   18
++#define NPCM7XX_CLK_SU48 19
++#define NPCM7XX_CLK_SDHC 20
++#define NPCM7XX_CLK_SPI0 21
++#define NPCM7XX_CLK_SPIX 22
++
++#define NPCM7XX_CLK_REFCLK 23
++#define NPCM7XX_CLK_SYSBYPCK 24
++#define NPCM7XX_CLK_MCBYPCK 25
++
++
++#define NPCM7XX_NUM_CLOCKS	 (NPCM7XX_CLK_MCBYPCK+1)
++
++
++
++#endif
 -- 
-2.7.4
+2.14.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
