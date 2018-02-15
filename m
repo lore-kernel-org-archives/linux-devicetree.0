@@ -1,102 +1,99 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] ASoC: dmic: Add optional wakeup delay
-Date: Thu, 15 Feb 2018 09:42:01 +0200
-Message-ID: <7c9d5202-bcac-f989-6be2-f286de15a5de@ti.com>
-References: <20180214235156.81589-1-mka@chromium.org>
+From: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: stm32: Add display support on stm32f469-disco
+Date: Thu, 15 Feb 2018 09:20:14 +0100
+Message-ID: <20180215082014.30383-4-philippe.cornu@st.com>
+References: <20180215082014.30383-1-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180214235156.81589-1-mka@chromium.org>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Matthias Kaehlcke <mka@chromium.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, huang lin <hl@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Dylan Reid <dgreid@chromium.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180215082014.30383-1-philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyMDE4LTAyLTE1IDAxOjUxLCBNYXR0aGlhcyBLYWVobGNrZSB3cm90ZToKPiBPbiBzb21l
-IHN5c3RlbXMgYSBkZWxheSBpcyBuZWVkZWQgYWZ0ZXIgc3dpdGNoaW5nIG9uIHRoZSBjbG9ja3Ms
-IHRvIGFsbG93Cj4gdGhlIERNSUMgb3V0cHV0IHRvIHN0YWJpbGl6ZSBhbmQgYXZvaWQgYSBwb3Bw
-aW5nIG5vaXNlIGF0IHRoZSBiZWdpbm5pbmcKPiBvZiB0aGUgcmVjb3JkaW5nLiBBZGQgdGhlIG9w
-dGlvbmFsIGRldmljZSB0cmVlIHByb3BlcnR5ICd3YWtldXAtZGVsYXktbXMnCj4gYW5kIGFwcGx5
-IHRoZSBzcGVjaWZpZWQgZGVsYXkgaW4gdGhlIG5ldyBkbWljX2RhaW9wc19wcmVwYXJlKCkuCj4g
-Cj4gU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMgS2FlaGxja2UgPG1rYUBjaHJvbWl1bS5vcmc+Cj4g
-LS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2RtaWMudHh0ICAgICAgICB8ICAy
-ICsKPiAgc291bmQvc29jL2NvZGVjcy9kbWljLmMgICAgICAgICAgICAgICAgICAgICAgIHwgNTQg
-KysrKysrKysrKysrKystLS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKyks
-IDE0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3Mvc291bmQvZG1pYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3Mvc291bmQvZG1pYy50eHQKPiBpbmRleCA1NGM4ZWY2NDk4YTguLmRlNzQxYzY2MDlkMCAx
-MDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvZG1p
-Yy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvZG1p
-Yy50eHQKPiBAQCAtNywxMCArNywxMiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAKPiAgT3B0
-aW9uYWwgcHJvcGVydGllczoKPiAgCS0gZG1pY2VuLWdwaW9zOiBHUElPIHNwZWNpZmllciBmb3Ig
-ZG1pYyB0byBjb250cm9sIHN0YXJ0IGFuZCBzdG9wCj4gKwktIHdha2V1cC1kZWxheS1tczogRGVs
-YXkgKGluIG1zKSBhZnRlciBlbmFibGluZyB0aGUgRE1JQwo+ICAKPiAgRXhhbXBsZSBub2RlOgo+
-ICAKPiAgCWRtaWNfY29kZWM6IGRtaWNAMCB7Cj4gIAkJY29tcGF0aWJsZSA9ICJkbWljLWNvZGVj
-IjsKPiAgCQlkbWljZW4tZ3Bpb3MgPSA8JmdwaW80IDMgR1BJT19BQ1RJVkVfSElHSD47Cj4gKwkJ
-d2FrZXVwLWRlbGF5LW1zIDw1MD47Cj4gIAl9Owo+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2MvY29k
-ZWNzL2RtaWMuYyBiL3NvdW5kL3NvYy9jb2RlY3MvZG1pYy5jCj4gaW5kZXggYjg4YTFlZTY2Zjgw
-Li4xMWY2YWJmMTEwNzQgMTAwNjQ0Cj4gLS0tIGEvc291bmQvc29jL2NvZGVjcy9kbWljLmMKPiAr
-KysgYi9zb3VuZC9zb2MvY29kZWNzL2RtaWMuYwo+IEBAIC0xOSw2ICsxOSw3IEBACj4gICAqCj4g
-ICAqLwo+ICAKPiArI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+Cj4gICNpbmNsdWRlIDxsaW51eC9n
-cGlvLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9ncGlvL2NvbnN1bWVyLmg+Cj4gICNpbmNsdWRlIDxs
-aW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPiBAQCAtMjksMjQgKzMwLDM4IEBACj4gICNpbmNsdWRl
-IDxzb3VuZC9zb2MuaD4KPiAgI2luY2x1ZGUgPHNvdW5kL3NvYy1kYXBtLmg+Cj4gIAo+ICtzdHJ1
-Y3QgZG1pYyB7Cj4gKwlzdHJ1Y3QgZ3Bpb19kZXNjICpncGlvX2VuOwo+ICsJaW50IHdha2V1cF9k
-ZWxheTsKPiArfTsKPiArCj4gK3N0YXRpYyBpbnQgZG1pY19kYWlvcHNfcHJlcGFyZShzdHJ1Y3Qg
-c25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwKPiArCQkJCXN0cnVjdCBzbmRfc29jX2RhaSAq
-ZGFpKQo+ICt7Cj4gKwlzdHJ1Y3QgZG1pYyAqZG1pYyA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRh
-KGRhaSk7Cj4gKwo+ICsJaWYgKGRtaWMtPmdwaW9fZW4pCj4gKwkJZ3Bpb2Rfc2V0X3ZhbHVlKGRt
-aWMtPmdwaW9fZW4sIDEpOwoKWW91IGRvbid0IG5lZWQgdGhlICdpZiAoZG1pYy0+Z3Bpb19lbikn
-Cgo+ICsKPiArCWlmIChkbWljLT53YWtldXBfZGVsYXkpCj4gKwkJbXNsZWVwKGRtaWMtPndha2V1
-cF9kZWxheSk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gIHN0YXRpYyBpbnQgZG1pY19k
-YWlvcHNfdHJpZ2dlcihzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwKPiAgCQlp
-bnQgY21kLCBzdHJ1Y3Qgc25kX3NvY19kYWkgKmRhaSkKPiAgewo+IC0Jc3RydWN0IGdwaW9fZGVz
-YyAqZG1pY19lbiA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRhKGRhaSk7Cj4gKwlzdHJ1Y3QgZG1p
-YyAqZG1pYyA9IHNuZF9zb2NfZGFpX2dldF9kcnZkYXRhKGRhaSk7Cj4gIAo+IC0JaWYgKCFkbWlj
-X2VuKQo+ICsJaWYgKCFkbWljLT5ncGlvX2VuKQo+ICAJCXJldHVybiAwOwo+ICAKPiAgCXN3aXRj
-aCAoY21kKSB7Cj4gLQljYXNlIFNORFJWX1BDTV9UUklHR0VSX1NUQVJUOgo+IC0JY2FzZSBTTkRS
-Vl9QQ01fVFJJR0dFUl9SRVNVTUU6Cj4gLQljYXNlIFNORFJWX1BDTV9UUklHR0VSX1BBVVNFX1JF
-TEVBU0U6Cj4gLQkJZ3Bpb2Rfc2V0X3ZhbHVlKGRtaWNfZW4sIDEpOwo+IC0JCWJyZWFrOwo+ICAJ
-Y2FzZSBTTkRSVl9QQ01fVFJJR0dFUl9TVE9QOgo+ICAJY2FzZSBTTkRSVl9QQ01fVFJJR0dFUl9T
-VVNQRU5EOgo+ICAJY2FzZSBTTkRSVl9QQ01fVFJJR0dFUl9QQVVTRV9QVVNIOgo+IC0JCWdwaW9k
-X3NldF92YWx1ZShkbWljX2VuLCAwKTsKPiArCQlncGlvZF9zZXRfdmFsdWUoZG1pYy0+Z3Bpb19l
-biwgMCk7Cj4gIAkJYnJlYWs7Cj4gIAl9CgpXaGF0IGlmIGluc3RlYWQgb2YgdGhpcyB0cmlja2Vy
-eSB3ZSB0cnkgdG8gaGFuZGxlIHRoZSBncGlvL2RlbGF5IHZpYQpEQVBNPyBTTkRfU09DX0RBUE1f
-QUlGX09VVF9FKCkgbWlnaHQgYmUganVzdCB3aGF0IHdlIG5lZWQ/CgpXZSBjb3VsZCByZW1vdmUg
-dGhlIHRyaWdnZXIsIGFuZCB3aWxsIGhhdmUgbm8gbmVlZCBmb3IgdGhlIHByZXBhcmUKY2FsbGJh
-Y2sgZWl0aGVyLi4KCj4gIAo+IEBAIC01NCw2ICs2OSw3IEBAIHN0YXRpYyBpbnQgZG1pY19kYWlv
-cHNfdHJpZ2dlcihzdHJ1Y3Qgc25kX3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwKPiAgfQo+ICAK
-PiAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhaV9vcHMgZG1pY19kYWlfb3BzID0gewo+
-ICsJLnByZXBhcmUJPSBkbWljX2RhaW9wc19wcmVwYXJlLAo+ICAJLnRyaWdnZXIJPSBkbWljX2Rh
-aW9wc190cmlnZ2VyLAo+ICB9Owo+ICAKPiBAQCAtNzMsMTQgKzg5LDI0IEBAIHN0YXRpYyBzdHJ1
-Y3Qgc25kX3NvY19kYWlfZHJpdmVyIGRtaWNfZGFpID0gewo+ICAKPiAgc3RhdGljIGludCBkbWlj
-X2NvZGVjX3Byb2JlKHN0cnVjdCBzbmRfc29jX2NvZGVjICpjb2RlYykKPiAgewo+IC0Jc3RydWN0
-IGdwaW9fZGVzYyAqZG1pY19lbjsKPiArCXN0cnVjdCBkbWljICpkbWljOwo+ICsJaW50IGVycjsK
-PiArCj4gKwlkbWljID0gZGV2bV9remFsbG9jKGNvZGVjLT5kZXYsIHNpemVvZigqZG1pYyksIEdG
-UF9LRVJORUwpOwo+ICsJaWYgKCFkbWljKQo+ICsJCXJldHVybiAtRU5PTUVNOwo+ICsKPiArCWRt
-aWMtPmdwaW9fZW4gPSBkZXZtX2dwaW9kX2dldF9vcHRpb25hbChjb2RlYy0+ZGV2LAo+ICsJCQkJ
-CQkiZG1pY2VuIiwgR1BJT0RfT1VUX0xPVyk7Cj4gKwlpZiAoSVNfRVJSKGRtaWMtPmdwaW9fZW4p
-KQo+ICsJCXJldHVybiBQVFJfRVJSKGRtaWMtPmdwaW9fZW4pOwo+ICAKPiAtCWRtaWNfZW4gPSBk
-ZXZtX2dwaW9kX2dldF9vcHRpb25hbChjb2RlYy0+ZGV2LAo+IC0JCQkJCSJkbWljZW4iLCBHUElP
-RF9PVVRfTE9XKTsKPiAtCWlmIChJU19FUlIoZG1pY19lbikpCj4gLQkJcmV0dXJuIFBUUl9FUlIo
-ZG1pY19lbik7Cj4gKwllcnIgPSBkZXZpY2VfcHJvcGVydHlfcmVhZF91MzIoY29kZWMtPmRldiwg
-Indha2V1cC1kZWxheS1tcyIsCj4gKwkJCQkgICAgICAgJmRtaWMtPndha2V1cF9kZWxheSk7Cj4g
-KwlpZiAoZXJyICYmIChlcnIgIT0gLUVJTlZBTCkpCj4gKwkJcmV0dXJuIGVycjsKPiAgCj4gLQlz
-bmRfc29jX2NvZGVjX3NldF9kcnZkYXRhKGNvZGVjLCBkbWljX2VuKTsKPiArCXNuZF9zb2NfY29k
-ZWNfc2V0X2RydmRhdGEoY29kZWMsIGRtaWMpOwo+ICAKPiAgCXJldHVybiAwOwo+ICB9Cj4gCgot
-IFDDqXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwg
-MDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlr
-a2EvRG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9q
-ZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8v
-YWxzYS1kZXZlbAo=
+From: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+
+Add display support on the stm32f469-disco board.
+
+Signed-off-by: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stm32f469-disco.dts | 51 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 50 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+index 7d53b794d27b..9bfb040e9909 100644
+--- a/arch/arm/boot/dts/stm32f469-disco.dts
++++ b/arch/arm/boot/dts/stm32f469-disco.dts
+@@ -46,7 +46,7 @@
+  */
+ 
+ /dts-v1/;
+-#include "stm32f429.dtsi"
++#include "stm32f469.dtsi"
+ #include "stm32f469-pinctrl.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+ 
+@@ -89,6 +89,55 @@
+ 	clock-frequency = <8000000>;
+ };
+ 
++&dsi {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++			dsi_in: endpoint {
++				remote-endpoint = <&ltdc_out_dsi>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			dsi_out: endpoint {
++				remote-endpoint = <&dsi_panel_in>;
++			};
++		};
++	};
++
++	panel-dsi@0 {
++		compatible = "orisetech,otm8009a";
++		reg = <0>; /* dsi virtual channel (0..3) */
++		reset-gpios = <&gpioh 7 GPIO_ACTIVE_LOW>;
++		status = "okay";
++
++		port {
++			dsi_panel_in: endpoint {
++				remote-endpoint = <&dsi_out>;
++			};
++		};
++	};
++};
++
++&ltdc {
++	dma-ranges;
++	status = "okay";
++
++	port {
++		ltdc_out_dsi: endpoint@0 {
++			remote-endpoint = <&dsi_in>;
++		};
++	};
++};
++
+ &rtc {
+ 	status = "okay";
+ };
+-- 
+2.15.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
