@@ -1,314 +1,121 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 05/12] drm/bridge/synopsys: dw-hdmi: don't clobber
- drvdata
-Date: Fri, 16 Feb 2018 10:31:53 +0530
-Message-ID: <d96f32aa-cc37-44da-6b32-fde4db8ffe11@codeaurora.org>
-References: <20180214200906.31509-1-jernej.skrabec@siol.net>
- <20180214200906.31509-6-jernej.skrabec@siol.net>
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: aspeed-lpc: Document LPC Host
+ Interface Controller
+Date: Fri, 16 Feb 2018 15:34:19 +1030
+Message-ID: <1518757459.10440.32.camel@aj.id.au>
+References: <20180212070847.32387-1-joel@jms.id.au>
+         <20180212070847.32387-2-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg="pgp-sha512";
+        protocol="application/pgp-signature"; boundary="=-gNbZ4d3BCzIKF12NhpLC"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180214200906.31509-6-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20180212070847.32387-2-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--=-gNbZ4d3BCzIKF12NhpLC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thursday 15 February 2018 01:38 AM, Jernej Skrabec wrote:
-> dw_hdmi shouldn't set drvdata since some drivers might need to store
-> it's own data there. Rework dw_hdmi in a way to return struct dw_hdmi
-> instead to store it in drvdata. This way drivers are responsible to
-> store and pass structure when needed.
-> 
-> Idea was taken from the following commit:
-> 8242ecbd597d ("drm/bridge/synopsys: stop clobbering drvdata")
-
-Reviewed-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
-> 
-> Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-> Cc: narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-> Cc: Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-> Cc: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-> Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-> Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+On Mon, 2018-02-12 at 17:38 +1030, Joel Stanley wrote:
+> The LPC Host Interface Controller is part of a BMC SoC that is used for
+> communication with the host.
+>=20
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
 > ---
->   drivers/gpu/drm/bridge/synopsys/dw-hdmi.c   | 31 ++++++++++++-----------------
->   drivers/gpu/drm/imx/dw_hdmi-imx.c           | 13 +++++++++---
->   drivers/gpu/drm/meson/meson_dw_hdmi.c       | 14 +++++++++----
->   drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c      | 12 +++++++++--
->   drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 13 +++++++++---
->   include/drm/bridge/dw_hdmi.h                | 13 ++++++------
->   6 files changed, 60 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index 7d80f4b56683..f9802399cc0d 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -2543,8 +2543,6 @@ __dw_hdmi_probe(struct platform_device *pdev,
->   	if (hdmi->i2c)
->   		dw_hdmi_i2c_init(hdmi);
->   
-> -	platform_set_drvdata(pdev, hdmi);
-> -
->   	return hdmi;
->   
->   err_iahb:
-> @@ -2594,25 +2592,23 @@ static void __dw_hdmi_remove(struct dw_hdmi *hdmi)
->   /* -----------------------------------------------------------------------------
->    * Probe/remove API, used from platforms based on the DRM bridge API.
->    */
-> -int dw_hdmi_probe(struct platform_device *pdev,
-> -		  const struct dw_hdmi_plat_data *plat_data)
-> +struct dw_hdmi *dw_hdmi_probe(struct platform_device *pdev,
-> +			      const struct dw_hdmi_plat_data *plat_data)
->   {
->   	struct dw_hdmi *hdmi;
->   
->   	hdmi = __dw_hdmi_probe(pdev, plat_data);
->   	if (IS_ERR(hdmi))
-> -		return PTR_ERR(hdmi);
-> +		return hdmi;
->   
->   	drm_bridge_add(&hdmi->bridge);
->   
-> -	return 0;
-> +	return hdmi;
->   }
->   EXPORT_SYMBOL_GPL(dw_hdmi_probe);
->   
-> -void dw_hdmi_remove(struct platform_device *pdev)
-> +void dw_hdmi_remove(struct dw_hdmi *hdmi)
->   {
-> -	struct dw_hdmi *hdmi = platform_get_drvdata(pdev);
-> -
->   	drm_bridge_remove(&hdmi->bridge);
->   
->   	__dw_hdmi_remove(hdmi);
-> @@ -2622,31 +2618,30 @@ EXPORT_SYMBOL_GPL(dw_hdmi_remove);
->   /* -----------------------------------------------------------------------------
->    * Bind/unbind API, used from platforms based on the component framework.
->    */
-> -int dw_hdmi_bind(struct platform_device *pdev, struct drm_encoder *encoder,
-> -		 const struct dw_hdmi_plat_data *plat_data)
-> +struct dw_hdmi *dw_hdmi_bind(struct platform_device *pdev,
-> +			     struct drm_encoder *encoder,
-> +			     const struct dw_hdmi_plat_data *plat_data)
->   {
->   	struct dw_hdmi *hdmi;
->   	int ret;
->   
->   	hdmi = __dw_hdmi_probe(pdev, plat_data);
->   	if (IS_ERR(hdmi))
-> -		return PTR_ERR(hdmi);
-> +		return hdmi;
->   
->   	ret = drm_bridge_attach(encoder, &hdmi->bridge, NULL);
->   	if (ret) {
-> -		dw_hdmi_remove(pdev);
-> +		dw_hdmi_remove(hdmi);
->   		DRM_ERROR("Failed to initialize bridge with drm\n");
-> -		return ret;
-> +		return ERR_PTR(ret);
->   	}
->   
-> -	return 0;
-> +	return hdmi;
->   }
->   EXPORT_SYMBOL_GPL(dw_hdmi_bind);
->   
-> -void dw_hdmi_unbind(struct device *dev)
-> +void dw_hdmi_unbind(struct dw_hdmi *hdmi)
->   {
-> -	struct dw_hdmi *hdmi = dev_get_drvdata(dev);
-> -
->   	__dw_hdmi_remove(hdmi);
->   }
->   EXPORT_SYMBOL_GPL(dw_hdmi_unbind);
-> diff --git a/drivers/gpu/drm/imx/dw_hdmi-imx.c b/drivers/gpu/drm/imx/dw_hdmi-imx.c
-> index b62763aa8706..fe6becdcc29e 100644
-> --- a/drivers/gpu/drm/imx/dw_hdmi-imx.c
-> +++ b/drivers/gpu/drm/imx/dw_hdmi-imx.c
-> @@ -25,6 +25,7 @@
->   struct imx_hdmi {
->   	struct device *dev;
->   	struct drm_encoder encoder;
-> +	struct dw_hdmi *hdmi;
->   	struct regmap *regmap;
->   };
->   
-> @@ -239,14 +240,18 @@ static int dw_hdmi_imx_bind(struct device *dev, struct device *master,
->   	drm_encoder_init(drm, encoder, &dw_hdmi_imx_encoder_funcs,
->   			 DRM_MODE_ENCODER_TMDS, NULL);
->   
-> -	ret = dw_hdmi_bind(pdev, encoder, plat_data);
-> +	platform_set_drvdata(pdev, hdmi);
+>  .../devicetree/bindings/mfd/aspeed-lpc.txt         | 40 ++++++++++++++++=
+++++++
+>  1 file changed, 40 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Docum=
+entation/devicetree/bindings/mfd/aspeed-lpc.txt
+> index 514d82ced95b..94a31de109c4 100644
+> --- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> @@ -109,6 +109,46 @@ lpc: lpc@1e789000 {
+>  	};
+>  };
+> =20
+> +BMC Node Children
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +
-> +	hdmi->hdmi = dw_hdmi_bind(pdev, encoder, plat_data);
->   
->   	/*
->   	 * If dw_hdmi_bind() fails we'll never call dw_hdmi_unbind(),
->   	 * which would have called the encoder cleanup.  Do it manually.
->   	 */
-> -	if (ret)
-> +	if (IS_ERR(hdmi->hdmi)) {
-> +		ret = PTR_ERR(hdmi->hdmi);
->   		drm_encoder_cleanup(encoder);
-> +	}
->   
->   	return ret;
->   }
-> @@ -254,7 +259,9 @@ static int dw_hdmi_imx_bind(struct device *dev, struct device *master,
->   static void dw_hdmi_imx_unbind(struct device *dev, struct device *master,
->   			       void *data)
->   {
-> -	return dw_hdmi_unbind(dev);
-> +	struct imx_hdmi *hdmi = dev_get_drvdata(dev);
+> +LPC Host Interface Controller
+
+This should be under the Host Node Children header given the
+function's position in the MMIO layout and the split prescribed by the
+bindings.
+
+> +-------------------
 > +
-> +	dw_hdmi_unbind(hdmi->hdmi);
->   }
->   
->   static const struct component_ops dw_hdmi_imx_ops = {
-> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> index e8c3ef8a94ce..d49af17310c9 100644
-> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> @@ -140,6 +140,7 @@ struct meson_dw_hdmi {
->   	struct clk *venci_clk;
->   	struct regulator *hdmi_supply;
->   	u32 irq_stat;
-> +	struct dw_hdmi *hdmi;
->   };
->   #define encoder_to_meson_dw_hdmi(x) \
->   	container_of(x, struct meson_dw_hdmi, encoder)
-> @@ -878,9 +879,12 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
->   	dw_plat_data->input_bus_format = MEDIA_BUS_FMT_YUV8_1X24;
->   	dw_plat_data->input_bus_encoding = V4L2_YCBCR_ENC_709;
->   
-> -	ret = dw_hdmi_bind(pdev, encoder, &meson_dw_hdmi->dw_plat_data);
-> -	if (ret)
-> -		return ret;
-> +	platform_set_drvdata(pdev, meson_dw_hdmi);
+> +The LPC Host Interface Controller manages functions exposed to the host =
+such as
+> +LPC firmware hub cycles, configuration of the LPC-to-AHB mapping, UART
+> +management and bus snoop configuration.
 > +
-> +	meson_dw_hdmi->hdmi = dw_hdmi_bind(pdev, encoder,
-> +					   &meson_dw_hdmi->dw_plat_data);
-> +	if (IS_ERR(meson_dw_hdmi->hdmi))
-> +		return PTR_ERR(meson_dw_hdmi->hdmi);
->   
->   	DRM_DEBUG_DRIVER("HDMI controller initialized\n");
->   
-> @@ -890,7 +894,9 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
->   static void meson_dw_hdmi_unbind(struct device *dev, struct device *master,
->   				   void *data)
->   {
-> -	dw_hdmi_unbind(dev);
-> +	struct meson_dw_hdmi *meson_dw_hdmi = dev_get_drvdata(dev);
+> +Required properties:
 > +
-> +	dw_hdmi_unbind(meson_dw_hdmi->hdmi);
->   }
->   
->   static const struct component_ops meson_dw_hdmi_ops = {
-> diff --git a/drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c b/drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c
-> index dc85b53d58ef..3bebc6821e9c 100644
-> --- a/drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c
-> +++ b/drivers/gpu/drm/rcar-du/rcar_dw_hdmi.c
-> @@ -68,12 +68,20 @@ static const struct dw_hdmi_plat_data rcar_dw_hdmi_plat_data = {
->   
->   static int rcar_dw_hdmi_probe(struct platform_device *pdev)
->   {
-> -	return dw_hdmi_probe(pdev, &rcar_dw_hdmi_plat_data);
-> +	struct dw_hdmi *hdmi;
+> +- compatible:	One of:
+> +		"aspeed,ast2400-lpc-ctrl";
+> +		"aspeed,ast2500-lpc-ctrl";
 > +
-> +	hdmi = dw_hdmi_probe(pdev, &rcar_dw_hdmi_plat_data);
-> +	if (IS_ERR(hdmi))
-> +		return PTR_ERR(hdmi);
+> +- reg:		contains offset/length values of the host interface controller
+> +		memory regions
 > +
-> +	platform_set_drvdata(pdev, hdmi);
->   }
->   
->   static int rcar_dw_hdmi_remove(struct platform_device *pdev)
->   {
-> -	dw_hdmi_remove(pdev);
-> +	struct dw_hdmi *hdmi = platform_get_drvdata(dev);
+> +- clocks:	contains a phandle to the syscon node describing the clocks.
+> +		There should then be one cell representing the clock to use
 > +
-> +	dw_hdmi_remove(hdmi);
->   
->   	return 0;
->   }
-> diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-> index 1eb02a82fd91..3574b0ae2ad1 100644
-> --- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-> +++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-> @@ -48,6 +48,7 @@ struct rockchip_hdmi {
->   	const struct rockchip_hdmi_chip_data *chip_data;
->   	struct clk *vpll_clk;
->   	struct clk *grf_clk;
-> +	struct dw_hdmi *hdmi;
->   };
->   
->   #define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
-> @@ -377,14 +378,18 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
->   	drm_encoder_init(drm, encoder, &dw_hdmi_rockchip_encoder_funcs,
->   			 DRM_MODE_ENCODER_TMDS, NULL);
->   
-> -	ret = dw_hdmi_bind(pdev, encoder, plat_data);
-> +	platform_set_drvdata(pdev, hdmi);
+> +- memory-region: A phandle to a reserved_memory region to be used for th=
+e LPC
+> +		to AHB mapping
 > +
-> +	hdmi->hdmi = dw_hdmi_bind(pdev, encoder, plat_data);
->   
->   	/*
->   	 * If dw_hdmi_bind() fails we'll never call dw_hdmi_unbind(),
->   	 * which would have called the encoder cleanup.  Do it manually.
->   	 */
-> -	if (ret)
-> +	if (IS_ERR(hdmi->hdmi)) {
-> +		ret = PTR_ERR(hdmi->hdmi);
->   		drm_encoder_cleanup(encoder);
-> +	}
->   
->   	return ret;
->   }
-> @@ -392,7 +397,9 @@ static int dw_hdmi_rockchip_bind(struct device *dev, struct device *master,
->   static void dw_hdmi_rockchip_unbind(struct device *dev, struct device *master,
->   				    void *data)
->   {
-> -	return dw_hdmi_unbind(dev);
-> +	struct rockchip_hdmi *hdmi = dev_get_drvdata(dev);
+> +- flash:	A phandle to the SPI flash controller containing the flash to
+> +		be exposed over the LPC to AHB mapping
 > +
-> +	dw_hdmi_unbind(hdmi->hdmi);
->   }
->   
->   static const struct component_ops dw_hdmi_rockchip_ops = {
-> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-> index f3f3f0e1b2d3..dd2a8cf7d20b 100644
-> --- a/include/drm/bridge/dw_hdmi.h
-> +++ b/include/drm/bridge/dw_hdmi.h
-> @@ -143,12 +143,13 @@ struct dw_hdmi_plat_data {
->   			     unsigned long mpixelclock);
->   };
->   
-> -int dw_hdmi_probe(struct platform_device *pdev,
-> -		  const struct dw_hdmi_plat_data *plat_data);
-> -void dw_hdmi_remove(struct platform_device *pdev);
-> -void dw_hdmi_unbind(struct device *dev);
-> -int dw_hdmi_bind(struct platform_device *pdev, struct drm_encoder *encoder,
-> -		 const struct dw_hdmi_plat_data *plat_data);
-> +struct dw_hdmi *dw_hdmi_probe(struct platform_device *pdev,
-> +			      const struct dw_hdmi_plat_data *plat_data);
-> +void dw_hdmi_remove(struct dw_hdmi *hdmi);
-> +void dw_hdmi_unbind(struct dw_hdmi *hdmi);
-> +struct dw_hdmi *dw_hdmi_bind(struct platform_device *pdev,
-> +			     struct drm_encoder *encoder,
-> +			     const struct dw_hdmi_plat_data *plat_data);
->   
->   void dw_hdmi_setup_rx_sense(struct device *dev, bool hpd, bool rx_sense);
->   
-> 
+> +Example:
+> +
+> +lpc-host@80 {
+> +	lpc_ctrl: lpc-ctrl@0 {
+> +		compatible =3D "aspeed,ast2500-lpc-ctrl";
+> +		reg =3D <0x0 0x80>;
+> +		clocks =3D <&syscon ASPEED_CLK_GATE_LCLK>;
+> +		memory-region =3D <&flash_memory>;
+> +		flash =3D <&spi>;
+> +	};
+> +};
+
+ACK wrt the content, just need to fix its location.
+
+> +
+>  Host Node Children
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =20
+--=-gNbZ4d3BCzIKF12NhpLC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAABCgAGBQJahmZTAAoJEJ0dnzgO5LT52c4P/3ZzJU8r2LgucUqkicb8QSTq
+EK3WKpJcyJGYkIrvd8pf/8VdG0rTnz2jLVdNGUUMFRDWjG7aUo8rL0GtCPpFWsjB
+j9DRVdwZLrdAfYmZ8Bv8CK6isBx9jzjAWeFN7i+LvcjmS5LM/slRvk+n7UuwATe/
+1s5dpYu+6FrFSPV/1Fa0tG1VuEw9Iv2bDK1DdVPyVu0Lt1IogXnNnDLHkauFEhxU
+67XQbBBXRXNAklMrWDwnRtgdotKXVpmv5IcPA9uGgwAXH5J8QnEQ8DKRpLw+VPIt
+s2E3l2yZLydQ1sAoWaJeD5CUeAadt+p6CutV1oIU3o4YrgE4H0Lx1ikfFYXI6E2+
+xdL5ObabsBi9p4hJ/0kc5VUqX/FWkuTqMqsU7MOxjUocf9iKDRX8AP40zzppCqIO
+OqnySRxDrRy/sWEdPUrjM/XotooW55FPLlugP7MzFogoJAUMTJ+imZevEHUOK/Wx
+ZQY4ExX9fblB/r4hGiAu+guw3uRRqM027enVbJVIyW+8X126W7WCWXgB5tRcHg3E
+/2zxMwWwiEO2NLBHVKvju7V5uOH/jXifAISPrqfoyc2trJb4nf9vN40EFwq3YnEs
+0gh9rXGqxGI0WM8VxkhXO9qkYZ1LLzduElQG8Ly5XNj1Wu/WM60Ba+7p8zGdVU2Y
+Q5zBxZj6FzhZdTqPjLKe
+=Fyfi
+-----END PGP SIGNATURE-----
+
+--=-gNbZ4d3BCzIKF12NhpLC--
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
