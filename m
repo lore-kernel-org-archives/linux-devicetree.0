@@ -1,43 +1,53 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4] rtc: isl12026: Add driver.
-Date: Fri, 16 Feb 2018 22:13:40 +0200
-Message-ID: <CAHp75VfRDWC1DAhHK-B_2rGLdLGG_FjHmYAmRS5ucspaUoJygA@mail.gmail.com>
-References: <20180216194415.6103-1-david.daney@cavium.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 4/8] drm/rockchip: dw_hdmi: Allow outputs that don't need output switching
+Date: Fri, 16 Feb 2018 21:41:54 +0100
+Message-ID: <20180216204158.29839-5-heiko@sntech.de>
+References: <20180216204158.29839-1-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180216194415.6103-1-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20180216204158.29839-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, algea.cao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 16, 2018 at 9:44 PM, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
-> The ISL12026 is a combination RTC and EEPROM device with I2C
-> interface.  The standard RTC driver interface is provided.  The EEPROM
-> is accessed via the NVMEM interface via the "eeprom0" directory in the
-> sysfs entry for the device.
+So far we always encountered socs with 2 output crtcs needing the driver
+to tell the hdmi block which output to connect to. But there also exist
+socs with only one crtc like the rk3228, rk3328 and rk3368.
 
-> +config RTC_DRV_ISL12026
-> +       tristate "Intersil ISL12026"
+So adapt the register field to simply carry a negative value to signal
+that now output-switching is necessary.
 
-depends on OF
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> +static struct i2c_driver isl12026_driver = {
-> +       .driver         = {
-> +               .name   = "rtc-isl12026",
-> +               .of_match_table = of_match_ptr(isl12026_dt_match),
-
-/of_match_ptr//
-
-> +       },
-> +       .probe_new      = isl12026_probe_new,
-> +       .remove         = isl12026_remove,
-> +};
-
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+index 3574b0ae2ad1..6dc03f1a5709 100644
+--- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+@@ -36,7 +36,7 @@
+  * @lcdsel_lit: reg value of selecting vop little for HDMI
+  */
+ struct rockchip_hdmi_chip_data {
+-	u32	lcdsel_grf_reg;
++	int	lcdsel_grf_reg;
+ 	u32	lcdsel_big;
+ 	u32	lcdsel_lit;
+ };
+@@ -253,6 +253,9 @@ static void dw_hdmi_rockchip_encoder_enable(struct drm_encoder *encoder)
+ 	u32 val;
+ 	int ret;
+ 
++	if (hdmi->chip_data->lcdsel_grf_reg < 0)
++		return;
++
+ 	ret = drm_of_encoder_active_endpoint_id(hdmi->dev->of_node, encoder);
+ 	if (ret)
+ 		val = hdmi->chip_data->lcdsel_lit;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.15.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
