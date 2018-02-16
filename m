@@ -1,92 +1,65 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] of: cache phandle nodes to reduce cost of
- of_find_node_by_phandle()
-Date: Fri, 16 Feb 2018 14:33:32 -0800
-Message-ID: <40e5df43-4422-9209-01c8-3aea487da722@gmail.com>
-References: <1518655979-10910-1-git-send-email-frowand.list@gmail.com>
- <207e055e-1074-9010-e719-2a4c13ede9f9@codeaurora.org>
- <46d5fc76-33e3-d54a-26b8-e9bb8332924d@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <46d5fc76-33e3-d54a-26b8-e9bb8332924d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chintan Pandya <cpandya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v3 2/2] dt-bindings: introduce Command DB for QCOM SoCs
+Date: Fri, 16 Feb 2018 15:46:14 -0700
+Message-ID: <20180216224614.24037-3-ilina@codeaurora.org>
+References: <20180216224614.24037-1-ilina@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180216224614.24037-1-ilina@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org
+Cc: sboyd@codeaurora.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/16/18 14:20, Frank Rowand wrote:
-> On 02/16/18 01:04, Chintan Pandya wrote:
->>
->>
->> On 2/15/2018 6:22 AM, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->>>
->>> Create a cache of the nodes that contain a phandle property.  Use this
->>> cache to find the node for a given phandle value instead of scanning
->>> the devicetree to find the node.  If the phandle value is not found
->>> in the cache, of_find_node_by_phandle() will fall back to the tree
->>> scan algorithm.
->>>
-> 
-> < snip >
-> 
->>> diff --git a/drivers/of/base.c b/drivers/of/base.c
->>> index ad28de96e13f..ab545dfa9173 100644
->>> --- a/drivers/of/base.c
->>> +++ b/drivers/of/base.c
->>> @@ -91,10 +91,69 @@ int __weak of_node_to_nid(struct device_node *np)
->>>   }
->>>   #endif
->>>   +static struct device_node **phandle_cache;
->>> +static u32 phandle_cache_mask;
->>> +
->>> +/*
->>> + * Assumptions behind phandle_cache implementation:
->>> + *   - phandle property values are in a contiguous range of 1..n
->>> + *
->>> + * If the assumptions do not hold, then
->>> + *   - the phandle lookup overhead reduction provided by the cache
->>> + *     will likely be less
->>> + */
->>> +static void of_populate_phandle_cache(void)
->>> +{
->>> +    unsigned long flags;
->>> +    u32 cache_entries;
->>> +    struct device_node *np;
->>> +    u32 phandles = 0;
->>> +
->>> +    raw_spin_lock_irqsave(&devtree_lock, flags);
->>> +
->>> +    kfree(phandle_cache);
->>
->> I couldn't understood this. Everything else looks good to me.
-> 
-> I will be adding a call to of_populate_phandle_cache() from the
-> devicetree overlay code.  I put the kfree here so that the previous
-> cache memory is freed when a new cache is created.
-> 
-> Adding the call from the overlay code is not done in this
-> series because I have a patch series modifying overlays and
-> I do not want to create a conflict or ordering between that
-> series and that patch.  The lack of the call from overlay
-             ^^^^ this
+From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
 
-> code means that overlay code will gain some of the overhead
-> reduction from this patch, but possibly not the entire reduction.
-> 
-> 
->>
->>> +    phandle_cache = NULL;
->>> +
->>> +    for_each_of_allnodes(np)
-> 
-> < snip >
-> 
+Command DB provides information on shared resources like clocks,
+regulators etc., probed at boot by the remote subsytem and made
+available in shared memory.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ .../devicetree/bindings/arm/msm/cmd-db.txt         | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+new file mode 100644
+index 000000000000..039be54fe9c4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
+@@ -0,0 +1,30 @@
++Command DB
++---------
++
++Command DB is a database that provides a mapping between resource key and the
++resource address for a system resource managed by a remote processor. The data
++is stored in a shared memory region and is loaded by the remote processor.
++
++Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
++controlling shared resources. Depending on the board configuration the shared
++resource properties may change. These properties are dynamically probed by the
++remote processor and made available in the shared memory.
++
++The devicetree representation of the command DB driver should be:
++
++PROPERTIES:
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: Should be "qcom,cmd-db"
++
++Example:
++
++	reserved-memory {
++		[...]
++		qcom,cmd-db@c3f000c {
++			reg = <0x0 0xc3f000c 0x0 0x8>,
++			      <0x0 0x85fe0000 0x0 0x20000>;
++			compatible = "qcom,cmd-db";
++		};
++	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
