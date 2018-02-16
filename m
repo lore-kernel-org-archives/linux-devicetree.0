@@ -1,119 +1,163 @@
-From: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v7 6/6] drm/msm: iommu: Replace runtime
- calls with runtime suppliers
-Date: Fri, 16 Feb 2018 09:13:50 +0900
-Message-ID: <CAAFQd5DkLtq2w00=Zd4sMDB4QOWqi7R-zgydECJXLdTmaHty+g@mail.gmail.com>
-References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
- <CAAFQd5AjopiX6fDgD+mO+-+d0yj-swEnVCNvccWRBSMO+XVJkA@mail.gmail.com>
- <CAF6AEGs8qcRTvz6srSfc39ybZrPYMVg2w6qkaO2AdWL1GD4mQw@mail.gmail.com>
- <CAAFQd5BKRumpEfAKNF_RKS-ZZ8D671DfOz4vB2+w1SV3aG9NxQ@mail.gmail.com>
- <CAF6AEGuNZJKtwGZ5mLfqNND2jtU+HYM11UONfAtVTzoM0QVpdg@mail.gmail.com>
- <CAAFQd5BZJ1G0RG32hYErNzPRvisBhhiSNCBsjbzfm0WzO=DnsQ@mail.gmail.com>
- <CAFp+6iHaycK=CcE1S15EeuMkaw8LnW0ebptU0hM6tUtWdeEOtA@mail.gmail.com>
- <CAAFQd5Afj-Bj+3wHwmF2tT7y=46EsYEtO_mXfY6stXBgHutEUg@mail.gmail.com>
- <CAFp+6iGX6pr+MdPSSHHG=qOnhHky_8OHiDqAcJ9UudEUv=JMHg@mail.gmail.com>
- <CAAFQd5DiwAugGnPOTw0+XrEfef9x-n-vx59JFuXpNawjiXHwCw@mail.gmail.com>
- <CAFp+6iEW0faeHDfzN_F1bRrHGcVo3sPCk4HSY=t9dnEvHkDkYw@mail.gmail.com>
- <b003ecda-1cbe-4e5f-872b-107154ac40e5@arm.com>
- <CAAFQd5AmG1zSm+CouXOCJbs8SNGFk1-RqfU1nWGjMGJMB-qfvw@mail.gmail.com>
- <CAAFQd5A9B-di9svtiJbvk2hz1U1xo61rTY5vt6AD+KR5iMcG-A@mail.gmail.com>
- <7406f1ce-c2c9-a6bd-2886-5a34de45add6@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <7406f1ce-c2c9-a6bd-2886-5a34de45add6-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2] ASoC: dmic: Add optional wakeup delay
+Date: Thu, 15 Feb 2018 18:24:16 -0800
+Message-ID: <20180216022416.208265-1-mka@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMTYsIDIwMTggYXQgMjoxNCBBTSwgUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJw
-aHlAYXJtLmNvbT4gd3JvdGU6Cj4gT24gMTUvMDIvMTggMDQ6MTcsIFRvbWFzeiBGaWdhIHdyb3Rl
-Ogo+IFsuLi5dCj4+Pgo+Pj4gQ291bGQgeW91IGVsYWJvcmF0ZSBvbiB3aGF0IGtpbmQgb2YgbG9j
-a2luZyB5b3UgYXJlIGNvbmNlcm5lZCBhYm91dD8KPj4+IEFzIEkgZXhwbGFpbmVkIGJlZm9yZSwg
-dGhlIG5vcm1hbGx5IGhhcHBlbmluZyBmYXN0IHBhdGggd291bGQgbG9jawo+Pj4gZGV2LT5wb3dl
-cl9sb2NrIG9ubHkgZm9yIHRoZSBicmllZiBtb21lbnQgb2YgaW5jcmVtZW50aW5nIHRoZSBydW50
-aW1lCj4+PiBQTSB1c2FnZSBjb3VudGVyLgo+Pgo+Pgo+PiBNeSBiYWQsIHRoYXQncyBub3QgZXZl
-biBpdC4KPj4KPj4gVGhlIGF0b21pYyB1c2FnZSBjb3VudGVyIGlzIGluY3JlbWVudGVkIGJlZm9y
-ZWhhbmRzLCB3aXRob3V0IGFueQo+PiBsb2NraW5nIFsxXSBhbmQgdGhlIHNwaW5sb2NrIGlzIGFj
-cXVpcmVkIG9ubHkgZm9yIHRoZSBzYWtlIG9mCj4+IHZhbGlkYXRpbmcgdGhhdCBkZXZpY2UncyBy
-dW50aW1lIFBNIHN0YXRlIHJlbWFpbmVkIHZhbGlkIGluZGVlZCBbMl0sCj4+IHdoaWNoIHdvdWxk
-IGJlIHRoZSBjYXNlIGluIHRoZSBmYXN0IHBhdGggb2YgdGhlIHNhbWUgZHJpdmVyIGRvaW5nIHR3
-bwo+PiBtYXBwaW5ncyBpbiBwYXJhbGxlbCwgd2l0aCB0aGUgbWFzdGVyIHBvd2VyZWQgb24gKGFu
-ZCBzbyB0aGUgU01NVSwKPj4gdGhyb3VnaCBkZXZpY2UgbGlua3M7IGlmIG1hc3RlciB3YXMgbm90
-IHBvd2VyZWQgb24gYWxyZWFkeSwgcG93ZXJpbmcKPj4gb24gdGhlIFNNTVUgaXMgdW5hdm9pZGFi
-bGUgYW55d2F5IGFuZCBpdCB3b3VsZCBhZGQgbXVjaCBtb3JlIGxhdGVuY3kKPj4gdGhhbiB0aGUg
-c3BpbmxvY2sgaXRzZWxmKS4KPgo+Cj4gV2Ugbm93IGhhdmUgbm8gbG9ja2luZyBhdCBhbGwgaW4g
-dGhlIG1hcCBwYXRoLCBhbmQgb25seSBhIHBlci1kb21haW4gbG9jawo+IGFyb3VuZCBUTEIgc3lu
-YyBpbiB1bm1hcCB3aGljaCBpcyB1bmZvcnR1bmF0ZWx5IG5lY2Vzc2FyeSBmb3IgY29ycmVjdG5l
-c3M7Cj4gdGhlIGxhdHRlciBpc24ndCB0b28gdGVycmlibGUsIHNpbmNlIGluICJzZXJpb3VzIiBo
-YXJkd2FyZSBpdCBzaG91bGQgb25seSBiZQo+IHNlcmlhbGlzaW5nIGEgZmV3IGNwdXMgc2Vydmlu
-ZyB0aGUgc2FtZSBkZXZpY2UgYWdhaW5zdCBlYWNoIG90aGVyIChlLmcuIGZvcgo+IG11bHRpcGxl
-IHF1ZXVlcyBvbiBhIHNpbmdsZSBOSUMpLgo+Cj4gUHV0dGluZyBpbiBhIGdsb2JhbCBsb2NrIHdo
-aWNoIHNlcmlhbGlzZXMgKmFsbCogY29uY3VycmVudCBtYXAgYW5kIHVubWFwCj4gY2FsbHMgZm9y
-ICphbGwqIHVucmVsYXRlZCBkZXZpY2VzIG1ha2VzIHRoaW5ncyB3b3JzZS4gUGVyaW9kLiBFdmVu
-IGlmIHRoZQo+IGxvY2sgaXRzZWxmIHdlcmUgaGVsZCBmb3IgdGhlIG1pbmltdW0gcG9zc2libGUg
-dGltZSwgaS5lLiB0cml2aWFsbHkKPiAic3Bpbl9sb2NrKCZsb2NrKTsgc3Bpbl91bmxvY2soJmxv
-Y2spIiwgdGhlIGNvc3Qgb2YgcmVwZWF0ZWRseSBib3VuY2luZyB0aGF0Cj4gb25lIGNhY2hlIGxp
-bmUgYXJvdW5kIGJldHdlZW4gOTYgQ1BVcyBhY3Jvc3MgdHdvIHNvY2tldHMgaXMgbm90IG5lZ2xp
-Z2libGUuCgpGYWlyIGVub3VnaC4gTm90ZSB0aGF0IHdlJ3JlIGluIGEgcXVpdGUgaW50ZXJlc3Rp
-bmcgc2l0dWF0aW9uIG5vdzoKIGEpIFdlIG5lZWQgdG8gaGF2ZSBydW50aW1lIFBNIGVuYWJsZWQg
-b24gUXVhbGNvbW0gU29DIHRvIGhhdmUgcG93ZXIKcHJvcGVybHkgbWFuYWdlZCwKIGIpIFdlIG5l
-ZWQgdG8gaGF2ZSBsb2NrLWZyZWUgbWFwL3VubWFwIG9uIHN1Y2ggZGlzdHJpYnV0ZWQgc3lzdGVt
-cywKIGMpIElmIHJ1bnRpbWUgUE0gaXMgZW5hYmxlZCwgd2UgbmVlZCB0byBjYWxsIGludG8gcnVu
-dGltZSBQTSBmcm9tIGFueQpjb2RlIHRoYXQgZG9lcyBoYXJkd2FyZSBhY2Nlc3Nlcywgb3RoZXJ3
-aXNlIHRoZSBJT01NVSBBUEkgKGFuZCBzbyBETUEKQVBJIGFuZCB0aGVuIGFueSBWNEwyIGRyaXZl
-cikgYmVjb21lcyB1bnVzYWJsZS4KCkkgY2FuIHNlZSBvbmUgbW9yZSB3YXkgdGhhdCBjb3VsZCBw
-b3RlbnRpYWxseSBsZXQgdXMgaGF2ZSBhbGwgdGhlCnRocmVlLiBIb3cgYWJvdXQgZW5hYmxpbmcg
-cnVudGltZSBQTSBvbmx5IG9uIHNlbGVjdGVkIGltcGxlbWVudGF0aW9ucwooZS5nLiBxY29tLHNt
-bXUpIGFuZCB0aGVuIGhhdmluZyBhbGwgdGhlIHJ1bnRpbWUgUE0gY2FsbHMgc3Vycm91bmRlZAp3
-aXRoIGlmIChwbV9ydW50aW1lX2VuYWJsZWQoKSksIHdoaWNoIGlzIGxvY2tsZXNzPwoKPgo+PiBb
-MV0KPj4gaHR0cDovL2VsaXhpci5mcmVlLWVsZWN0cm9ucy5jb20vbGludXgvdjQuMTYtcmMxL3Nv
-dXJjZS9kcml2ZXJzL2Jhc2UvcG93ZXIvcnVudGltZS5jI0wxMDI4Cj4+IFsyXQo+PiBodHRwOi8v
-ZWxpeGlyLmZyZWUtZWxlY3Ryb25zLmNvbS9saW51eC92NC4xNi1yYzEvc291cmNlL2RyaXZlcnMv
-YmFzZS9wb3dlci9ydW50aW1lLmMjTDYxMwo+Pgo+PiBJbiBhbnkgY2FzZSwgSSBjYW4ndCBpbWFn
-aW5lIHRoaXMgd29ya2luZyB3aXRoIFY0TDIgb3IgYW55dGhpbmcgZWxzZQo+PiByZWx5aW5nIG9u
-IGFueSBtZW1vcnkgbWFuYWdlbWVudCBtb3JlIGdlbmVyaWMgdGhhbiBjYWxsaW5nIElPTU1VIEFQ
-SQo+PiBkaXJlY3RseSBmcm9tIHRoZSBkcml2ZXIsIHdpdGggdGhlIElPTU1VIGRldmljZSBoYXZp
-bmcgcnVudGltZSBQTQo+PiBlbmFibGVkLCBidXQgd2l0aG91dCBtYW5hZ2luZyB0aGUgcnVudGlt
-ZSBQTSBmcm9tIHRoZSBJT01NVSBkcml2ZXIncwo+PiBjYWxsYmFja3MgdGhhdCBuZWVkIGFjY2Vz
-cyB0byB0aGUgaGFyZHdhcmUuIEFzIEkgbWVudGlvbmVkIGJlZm9yZSwKPj4gb25seSB0aGUgSU9N
-TVUgZHJpdmVyIGtub3dzIHdoZW4gZXhhY3RseSB0aGUgcmVhbCBoYXJkd2FyZSBhY2Nlc3MKPj4g
-bmVlZHMgdG8gYmUgZG9uZSAoZS5nLiBSb2NrY2hpcC9FeHlub3MgZG9uJ3QgbmVlZCB0byBkbyB0
-aGF0IGZvcgo+PiBtYXAvdW5tYXAgaWYgdGhlIHBvd2VyIGlzIGRvd24sIGJ1dCBzb21lIGltcGxl
-bWVudGF0aW9ucyBvZiBTTU1VIHdpdGgKPj4gVExCIHBvd2VyZWQgc2VwYXJhdGVseSBtaWdodCBu
-ZWVkIHRvIGRvIHNvKS4KPgo+Cj4gSXQncyB3b3J0aCBub3RpbmcgdGhhdCBFeHlub3MgYW5kIFJv
-Y2tjaGlwIGFyZSByZWxhdGl2ZWx5IHNtYWxsCj4gc2VsZi1jb250YWluZWQgSVAgYmxvY2tzIGlu
-dGVncmF0ZWQgY2xvc2VseSB3aXRoIHRoZSBpbnRlcmZhY2VzIG9mIHRoZWlyCj4gcmVsZXZhbnQg
-bWFzdGVyIGRldmljZXM7IFNNTVUgaXMgYW4gYXJjaGl0ZWN0dXJlLCBpbXBsZW1lbnRhdGlvbnMg
-b2Ygd2hpY2gKPiBtYXkgYmUgbGFyZ2UsIGRpc3RyaWJ1dGVkLCBhbmQgaGF2ZSBjb21wbGV4IGFu
-ZCB3aWxkbHkgZGlmZmVyaW5nIGludGVybmFsCj4gdG9wb2xvZ2llcy4gQXMgc3VjaCwgaXQncyBh
-IGxvdCBoYXJkZXIgdG8gbWFrZSBoYXJkd2FyZS1zcGVjaWZpYyBhc3N1bXB0aW9ucwo+IGFuZC9v
-ciBiZSBjb3JyZWN0IGZvciBhbGwgcG9zc2libGUgY2FzZXMuCj4KPiBEb24ndCBnZXQgbWUgd3Jv
-bmcsIEkgZG8gdWx0aW1hdGVseSBhZ3JlZSB0aGF0IHRoZSBJT01NVSBkcml2ZXIgaXMgdGhlIG9u
-bHkKPiBhZ2VudCB3aG8gdWx0aW1hdGVseSBrbm93cyB3aGF0IGNhbGxzIGFyZSBnb2luZyB0byBi
-ZSBuZWNlc3NhcnkgZm9yIHdoYXRldmVyCj4gb3BlcmF0aW9uIGl0J3MgcGVyZm9ybWluZyBvbiBp
-dHMgb3duIGhhcmR3YXJlKjsgaXQncyBqdXN0IHRoYXQgZm9yIFNNTVUgaXQKPiBuZWVkcyB0byBi
-ZSBpbXBsZW1lbnRlZCBpbiBhIHdheSB0aGF0IGhhcyB6ZXJvIGltcGFjdCBvbiB0aGUgY2FzZXMg
-d2hlcmUgaXQKPiBkb2Vzbid0IG1hdHRlciwgYmVjYXVzZSBpdCdzIG5vdCB2aWFibGUgdG8gc3Bl
-Y2lhbGlzZSB0aGF0IGRyaXZlciBmb3IgYW55Cj4gcGFydGljdWxhciBJUCBpbXBsZW1lbnRhdGlv
-bi91c2UtY2FzZS4KClN0aWxsLCBleGFjdGx5IHRoZSBzYW1lIGhvbGRzIGZvciB0aGUgbG93IHBv
-d2VyIGVtYmVkZGVkIHVzZSBjYXNlcywKd2hlcmUgd2Ugc3RyaXZlIGZvciB0aGUgbG93ZXN0IHBv
-c3NpYmxlIHBvd2VyIGNvbnN1bXB0aW9uLCB3aGlsZQptYWludGFpbmluZyBwZXJmb3JtYW5jZSBs
-ZXZlbHMgaGlnaCBhcyB3ZWxsLiBBbmQgc28gdGhlIFNNTVUgY29kZSBpcwpleHBlY3RlZCB0byBh
-bHNvIHdvcmsgd2l0aCBvdXIgdXNlIGNhc2VzLCBzdWNoIGFzIFY0TDIgb3IgRFJNIGRyaXZlcnMu
-ClNpbmNlIHRoZXNlIHBvaW50cyBkb24ndCBob2xkIGZvciBjdXJyZW50IFNNTVUgY29kZSwgSSBj
-b3VsZCBzYXkgdGhhdAp0aGUgaXQgaGFzIGJlZW4gYWxyZWFkeSBzcGVjaWFsaXplZCBmb3IgbGFy
-Z2UsIGRpc3RyaWJ1dGVkCmltcGxlbWVudGF0aW9ucy4KCkJlc3QgcmVnYXJkcywKVG9tYXN6Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBt
-YWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On some systems a delay is needed after switching on the clocks, to allow
+the output to stabilize and avoid a popping noise at the beginning of
+the recording. Add the optional device tree property 'wakeup-delay-ms'
+and apply the specified delay after enabling the mic. A blocking delay
+can't be applied in dmic_daiops_trigger() since the function is called
+in atomic context. Instead use a DAPM event handler to set the enable
+GPIO and apply the delay in the handler.
+
+Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+Changes in v2:
+- use DAPM event handler instead of _prepare() and get rid of
+  _trigger()
+- skip error check for optional 'wakeup-delay-ms' property
+- updated commit message
+
+ .../devicetree/bindings/sound/dmic.txt        |  2 +
+ sound/soc/codecs/dmic.c                       | 63 ++++++++++---------
+ 2 files changed, 37 insertions(+), 28 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/dmic.txt b/Documentation/devicetree/bindings/sound/dmic.txt
+index f7bf65611453..e957b4136716 100644
+--- a/Documentation/devicetree/bindings/sound/dmic.txt
++++ b/Documentation/devicetree/bindings/sound/dmic.txt
+@@ -8,6 +8,7 @@ Required properties:
+ Optional properties:
+ 	- dmicen-gpios: GPIO specifier for dmic to control start and stop
+ 	- num-channels: Number of microphones on this DAI
++	- wakeup-delay-ms: Delay (in ms) after enabling the DMIC
+ 
+ Example node:
+ 
+@@ -15,4 +16,5 @@ Example node:
+ 		compatible = "dmic-codec";
+ 		dmicen-gpios = <&gpio4 3 GPIO_ACTIVE_HIGH>;
+ 		num-channels = <1>;
++		wakeup-delay-ms <50>;
+ 	};
+diff --git a/sound/soc/codecs/dmic.c b/sound/soc/codecs/dmic.c
+index cf83c423394d..b5f60ac22ace 100644
+--- a/sound/soc/codecs/dmic.c
++++ b/sound/soc/codecs/dmic.c
+@@ -19,6 +19,7 @@
+  *
+  */
+ 
++#include <linux/delay.h>
+ #include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/platform_device.h>
+@@ -29,34 +30,33 @@
+ #include <sound/soc.h>
+ #include <sound/soc-dapm.h>
+ 
+-static int dmic_daiops_trigger(struct snd_pcm_substream *substream,
+-		int cmd, struct snd_soc_dai *dai)
+-{
+-	struct gpio_desc *dmic_en = snd_soc_dai_get_drvdata(dai);
++struct dmic {
++	struct gpio_desc *gpio_en;
++	int wakeup_delay;
++};
+ 
+-	if (!dmic_en)
+-		return 0;
++static int dmic_aif_event(struct snd_soc_dapm_widget *w,
++			  struct snd_kcontrol *kcontrol, int event) {
++	struct snd_soc_codec *codec = snd_soc_dapm_to_codec(w->dapm);
++	struct dmic *dmic = snd_soc_codec_get_drvdata(codec);
+ 
+-	switch (cmd) {
+-	case SNDRV_PCM_TRIGGER_START:
+-	case SNDRV_PCM_TRIGGER_RESUME:
+-	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+-		gpiod_set_value(dmic_en, 1);
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMU:
++		if (dmic->gpio_en)
++			gpiod_set_value(dmic->gpio_en, 1);
++
++		if (dmic->wakeup_delay)
++			msleep(dmic->wakeup_delay);
+ 		break;
+-	case SNDRV_PCM_TRIGGER_STOP:
+-	case SNDRV_PCM_TRIGGER_SUSPEND:
+-	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+-		gpiod_set_value(dmic_en, 0);
++	case SND_SOC_DAPM_POST_PMD:
++		if (dmic->gpio_en)
++			gpiod_set_value(dmic->gpio_en, 0);
+ 		break;
+ 	}
+ 
+ 	return 0;
+ }
+ 
+-static const struct snd_soc_dai_ops dmic_dai_ops = {
+-	.trigger	= dmic_daiops_trigger,
+-};
+-
+ static struct snd_soc_dai_driver dmic_dai = {
+ 	.name = "dmic-hifi",
+ 	.capture = {
+@@ -68,26 +68,33 @@ static struct snd_soc_dai_driver dmic_dai = {
+ 			| SNDRV_PCM_FMTBIT_S24_LE
+ 			| SNDRV_PCM_FMTBIT_S16_LE,
+ 	},
+-	.ops    = &dmic_dai_ops,
+ };
+ 
+ static int dmic_codec_probe(struct snd_soc_codec *codec)
+ {
+-	struct gpio_desc *dmic_en;
++	struct dmic *dmic;
++
++	dmic = devm_kzalloc(codec->dev, sizeof(*dmic), GFP_KERNEL);
++	if (!dmic)
++		return -ENOMEM;
++
++	dmic->gpio_en = devm_gpiod_get_optional(codec->dev,
++						"dmicen", GPIOD_OUT_LOW);
++	if (IS_ERR(dmic->gpio_en))
++		return PTR_ERR(dmic->gpio_en);
+ 
+-	dmic_en = devm_gpiod_get_optional(codec->dev,
+-					"dmicen", GPIOD_OUT_LOW);
+-	if (IS_ERR(dmic_en))
+-		return PTR_ERR(dmic_en);
++	device_property_read_u32(codec->dev, "wakeup-delay-ms",
++				 &dmic->wakeup_delay);
+ 
+-	snd_soc_codec_set_drvdata(codec, dmic_en);
++	snd_soc_codec_set_drvdata(codec, dmic);
+ 
+ 	return 0;
+ }
+ 
+ static const struct snd_soc_dapm_widget dmic_dapm_widgets[] = {
+-	SND_SOC_DAPM_AIF_OUT("DMIC AIF", "Capture", 0,
+-			     SND_SOC_NOPM, 0, 0),
++	SND_SOC_DAPM_AIF_OUT_E("DMIC AIF", "Capture", 0,
++			       SND_SOC_NOPM, 0, 0, dmic_aif_event,
++			       SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
+ 	SND_SOC_DAPM_INPUT("DMic"),
+ };
+ 
+-- 
+2.16.1.291.g4437f3f132-goog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
