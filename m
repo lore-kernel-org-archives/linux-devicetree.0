@@ -1,643 +1,651 @@
-From: Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 37/37] vfio: Add support for Shared Virtual Addressing
-Date: Fri, 16 Feb 2018 12:33:29 -0700
-Message-ID: <20180216123329.10f6dc23@w520.home>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
-        <20180212183352.22730-38-jean-philippe.brucker@arm.com>
+From: David Daney <david.daney@cavium.com>
+Subject: [PATCH v4] rtc: isl12026: Add driver.
+Date: Fri, 16 Feb 2018 11:44:15 -0800
+Message-ID: <20180216194415.6103-1-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180212183352.22730-38-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jonathan.cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, shunyong.yang-PT9Dzx9SjPiXmMXjJBpWqg@public.gmane.org, nwatters-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, yi.l.liu@in
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 Feb 2018 18:33:52 +0000
-Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
+The ISL12026 is a combination RTC and EEPROM device with I2C
+interface.  The standard RTC driver interface is provided.  The EEPROM
+is accessed via the NVMEM interface via the "eeprom0" directory in the
+sysfs entry for the device.
 
-> Add two new ioctl for VFIO containers. VFIO_IOMMU_BIND_PROCESS creates a
-> bond between a container and a process address space, identified by a
-> device-specific ID named PASID. This allows the device to target DMA
-> transactions at the process virtual addresses without a need for mapping
-> and unmapping buffers explicitly in the IOMMU. The process page tables are
-> shared with the IOMMU, and mechanisms such as PCI ATS/PRI are used to
-> handle faults. VFIO_IOMMU_UNBIND_PROCESS removes a bond created with
-> VFIO_IOMMU_BIND_PROCESS.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 399 ++++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/vfio.h       |  76 ++++++++
->  2 files changed, 475 insertions(+)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index e30e29ae4819..cac066f0026b 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -30,6 +30,7 @@
->  #include <linux/iommu.h>
->  #include <linux/module.h>
->  #include <linux/mm.h>
-> +#include <linux/ptrace.h>
->  #include <linux/rbtree.h>
->  #include <linux/sched/signal.h>
->  #include <linux/sched/mm.h>
-> @@ -60,6 +61,7 @@ MODULE_PARM_DESC(disable_hugepages,
->  
->  struct vfio_iommu {
->  	struct list_head	domain_list;
-> +	struct list_head	mm_list;
->  	struct vfio_domain	*external_domain; /* domain for external user */
->  	struct mutex		lock;
->  	struct rb_root		dma_list;
-> @@ -90,6 +92,15 @@ struct vfio_dma {
->  struct vfio_group {
->  	struct iommu_group	*iommu_group;
->  	struct list_head	next;
-> +	bool			sva_enabled;
-> +};
-> +
-> +struct vfio_mm {
-> +#define VFIO_PASID_INVALID	(-1)
-> +	spinlock_t		lock;
-> +	int			pasid;
-> +	struct mm_struct	*mm;
-> +	struct list_head	next;
->  };
->  
->  /*
-> @@ -1117,6 +1128,157 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
->  	return 0;
->  }
->  
-> +static int vfio_iommu_mm_exit(struct device *dev, int pasid, void *data)
-> +{
-> +	struct vfio_mm *vfio_mm = data;
-> +
-> +	/*
-> +	 * The mm_exit callback cannot block, so we can't take the iommu mutex
-> +	 * and remove this vfio_mm from the list. Hopefully the SVA code will
-> +	 * relax its locking requirement in the future.
-> +	 *
-> +	 * We mostly care about attach_group, which will attempt to replay all
-> +	 * binds in this container. Ensure that it doesn't touch this defunct mm
-> +	 * struct, by clearing the pointer. The structure will be freed when the
-> +	 * group is removed from the container.
-> +	 */
-> +	spin_lock(&vfio_mm->lock);
-> +	vfio_mm->mm = NULL;
-> +	spin_unlock(&vfio_mm->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int vfio_iommu_sva_init(struct device *dev, void *data)
-> +{
-> +
-> +	int ret;
-> +
-> +	ret = iommu_sva_device_init(dev, IOMMU_SVA_FEAT_PASID |
-> +				    IOMMU_SVA_FEAT_IOPF, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return iommu_register_mm_exit_handler(dev, vfio_iommu_mm_exit);
-> +}
-> +
-> +static int vfio_iommu_sva_shutdown(struct device *dev, void *data)
-> +{
-> +	iommu_sva_device_shutdown(dev);
-> +	iommu_unregister_mm_exit_handler(dev);
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: David Daney <david.daney@cavium.com>
+---
+Changes from v3:
 
-Typically the order would be reverse of the setup, is it correct this
-way?
+o Add Reviewed-by
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int vfio_iommu_bind_group(struct vfio_iommu *iommu,
-> +				 struct vfio_group *group,
-> +				 struct vfio_mm *vfio_mm)
-> +{
-> +	int ret;
-> +	int pasid;
-> +
-> +	if (!group->sva_enabled) {
-> +		ret = iommu_group_for_each_dev(group->iommu_group, NULL,
-> +					       vfio_iommu_sva_init);
-> +		if (ret)
-> +			return ret;
+o s/dev_err/dev_warn/ in one place
 
-Seems were at an unknown state here, do we need to undo any that
-succeeded?
+o Remove redundant ','
 
-> +
-> +		group->sva_enabled = true;
-> +	}
-> +
-> +	ret = iommu_sva_bind_group(group->iommu_group, vfio_mm->mm, &pasid,
-> +				   IOMMU_SVA_FEAT_PASID | IOMMU_SVA_FEAT_IOPF,
-> +				   vfio_mm);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (WARN_ON(vfio_mm->pasid != VFIO_PASID_INVALID && pasid !=
-> +		    vfio_mm->pasid))
-> +		return -EFAULT;
-> +
-> +	vfio_mm->pasid = pasid;
-> +
-> +	return 0;
-> +}
-> +
-> +static void vfio_iommu_unbind_group(struct vfio_group *group,
-> +				    struct vfio_mm *vfio_mm)
-> +{
-> +	iommu_sva_unbind_group(group->iommu_group, vfio_mm->pasid);
-> +}
-> +
-> +static void vfio_iommu_unbind(struct vfio_iommu *iommu,
-> +			      struct vfio_mm *vfio_mm)
-> +{
-> +	struct vfio_group *group;
-> +	struct vfio_domain *domain;
-> +
-> +	list_for_each_entry(domain, &iommu->domain_list, next)
-> +		list_for_each_entry(group, &domain->group_list, next)
-> +			vfio_iommu_unbind_group(group, vfio_mm);
-> +}
-> +
-> +static bool vfio_mm_get(struct vfio_mm *vfio_mm)
-> +{
-> +	bool ret;
-> +
-> +	spin_lock(&vfio_mm->lock);
-> +	ret = vfio_mm->mm && mmget_not_zero(vfio_mm->mm);
-> +	spin_unlock(&vfio_mm->lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static void vfio_mm_put(struct vfio_mm *vfio_mm)
-> +{
-> +	mmput(vfio_mm->mm);
-> +}
-> +
-> +static int vfio_iommu_replay_bind(struct vfio_iommu *iommu, struct vfio_group *group)
-> +{
-> +	int ret = 0;
-> +	struct vfio_mm *vfio_mm;
-> +
-> +	list_for_each_entry(vfio_mm, &iommu->mm_list, next) {
-> +		/*
-> +		 * Ensure mm doesn't exit while we're binding it to the new
-> +		 * group.
-> +		 */
-> +		if (!vfio_mm_get(vfio_mm))
-> +			continue;
-> +		ret = vfio_iommu_bind_group(iommu, group, vfio_mm);
-> +		vfio_mm_put(vfio_mm);
-> +
-> +		if (ret)
-> +			goto out_unbind;
-> +	}
-> +
-> +	return 0;
-> +
-> +out_unbind:
-> +	list_for_each_entry_continue_reverse(vfio_mm, &iommu->mm_list, next) {
-> +		if (!vfio_mm_get(vfio_mm))
-> +			continue;
-> +		iommu_sva_unbind_group(group->iommu_group, vfio_mm->pasid);
-> +		vfio_mm_put(vfio_mm);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static void vfio_iommu_free_all_mm(struct vfio_iommu *iommu)
-> +{
-> +	struct vfio_mm *vfio_mm, *tmp;
-> +
-> +	/*
-> +	 * No need for unbind() here. Since all groups are detached from this
-> +	 * iommu, bonds have been removed.
-> +	 */
-> +	list_for_each_entry_safe(vfio_mm, tmp, &iommu->mm_list, next)
-> +		kfree(vfio_mm);
-> +	INIT_LIST_HEAD(&iommu->mm_list);
-> +}
-> +
->  /*
->   * We change our unmap behavior slightly depending on whether the IOMMU
->   * supports fine-grained superpages.  IOMMUs like AMD-Vi will use a superpage
-> @@ -1301,6 +1463,15 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  		    d->prot == domain->prot) {
->  			iommu_detach_group(domain->domain, iommu_group);
->  			if (!iommu_attach_group(d->domain, iommu_group)) {
-> +				if (vfio_iommu_replay_bind(iommu, group)) {
-> +					iommu_detach_group(d->domain, iommu_group);
-> +					ret = iommu_attach_group(domain->domain,
-> +								 iommu_group);
-> +					if (ret)
-> +						goto out_domain;
-> +					continue;
-> +				}
-> +
->  				list_add(&group->next, &d->group_list);
->  				iommu_domain_free(domain->domain);
->  				kfree(domain);
-> @@ -1321,6 +1492,10 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
->  	if (ret)
->  		goto out_detach;
->  
-> +	ret = vfio_iommu_replay_bind(iommu, group);
-> +	if (ret)
-> +		goto out_detach;
-> +
->  	if (resv_msi) {
->  		ret = iommu_get_msi_cookie(domain->domain, resv_msi_base);
->  		if (ret)
-> @@ -1426,6 +1601,11 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
->  			continue;
->  
->  		iommu_detach_group(domain->domain, iommu_group);
-> +		if (group->sva_enabled) {
-> +			iommu_group_for_each_dev(iommu_group, NULL,
-> +						 vfio_iommu_sva_shutdown);
-> +			group->sva_enabled = false;
-> +		}
->  		list_del(&group->next);
->  		kfree(group);
->  		/*
-> @@ -1441,6 +1621,7 @@ static void vfio_iommu_type1_detach_group(void *iommu_data,
->  					vfio_iommu_unmap_unpin_all(iommu);
->  				else
->  					vfio_iommu_unmap_unpin_reaccount(iommu);
-> +				vfio_iommu_free_all_mm(iommu);
->  			}
->  			iommu_domain_free(domain->domain);
->  			list_del(&domain->next);
-> @@ -1475,6 +1656,7 @@ static void *vfio_iommu_type1_open(unsigned long arg)
->  	}
->  
->  	INIT_LIST_HEAD(&iommu->domain_list);
-> +	INIT_LIST_HEAD(&iommu->mm_list);
->  	iommu->dma_list = RB_ROOT;
->  	mutex_init(&iommu->lock);
->  	BLOCKING_INIT_NOTIFIER_HEAD(&iommu->notifier);
-> @@ -1509,6 +1691,7 @@ static void vfio_iommu_type1_release(void *iommu_data)
->  		kfree(iommu->external_domain);
->  	}
->  
-> +	vfio_iommu_free_all_mm(iommu);
->  	vfio_iommu_unmap_unpin_all(iommu);
->  
->  	list_for_each_entry_safe(domain, domain_tmp,
-> @@ -1537,6 +1720,184 @@ static int vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
->  	return ret;
->  }
->  
-> +static struct mm_struct *vfio_iommu_get_mm_by_vpid(pid_t vpid)
-> +{
-> +	struct mm_struct *mm;
-> +	struct task_struct *task;
-> +
-> +	rcu_read_lock();
-> +	task = find_task_by_vpid(vpid);
-> +	if (task)
-> +		get_task_struct(task);
-> +	rcu_read_unlock();
-> +	if (!task)
-> +		return ERR_PTR(-ESRCH);
-> +
-> +	/* Ensure that current has RW access on the mm */
-> +	mm = mm_access(task, PTRACE_MODE_ATTACH_REALCREDS);
-> +	put_task_struct(task);
-> +
-> +	if (!mm)
-> +		return ERR_PTR(-ESRCH);
-> +
-> +	return mm;
-> +}
-> +
-> +static long vfio_iommu_type1_bind_process(struct vfio_iommu *iommu,
-> +					  void __user *arg,
-> +					  struct vfio_iommu_type1_bind *bind)
-> +{
-> +	struct vfio_iommu_type1_bind_process params;
-> +	struct vfio_domain *domain;
-> +	struct vfio_group *group;
-> +	struct vfio_mm *vfio_mm;
-> +	struct mm_struct *mm;
-> +	unsigned long minsz;
-> +	int ret = 0;
-> +
-> +	minsz = sizeof(*bind) + sizeof(params);
-> +	if (bind->argsz < minsz)
-> +		return -EINVAL;
-> +
-> +	arg += sizeof(*bind);
-> +	if (copy_from_user(&params, arg, sizeof(params)))
-> +		return -EFAULT;
-> +
-> +	if (params.flags & ~VFIO_IOMMU_BIND_PID)
-> +		return -EINVAL;
-> +
-> +	if (params.flags & VFIO_IOMMU_BIND_PID) {
-> +		mm = vfio_iommu_get_mm_by_vpid(params.pid);
-> +		if (IS_ERR(mm))
-> +			return PTR_ERR(mm);
-> +	} else {
-> +		mm = get_task_mm(current);
-> +		if (!mm)
-> +			return -EINVAL;
-> +	}
-> +
-> +	mutex_lock(&iommu->lock);
-> +	if (!IS_IOMMU_CAP_DOMAIN_IN_CONTAINER(iommu)) {
-> +		ret = -EINVAL;
-> +		goto out_put_mm;
-> +	}
-> +
-> +	list_for_each_entry(vfio_mm, &iommu->mm_list, next) {
-> +		if (vfio_mm->mm != mm)
-> +			continue;
-> +
-> +		params.pasid = vfio_mm->pasid;
-> +
-> +		ret = copy_to_user(arg, &params, sizeof(params)) ? -EFAULT : 0;
-> +		goto out_put_mm;
-> +	}
-> +
-> +	vfio_mm = kzalloc(sizeof(*vfio_mm), GFP_KERNEL);
-> +	if (!vfio_mm) {
-> +		ret = -ENOMEM;
-> +		goto out_put_mm;
-> +	}
-> +
-> +	vfio_mm->mm = mm;
-> +	vfio_mm->pasid = VFIO_PASID_INVALID;
-> +	spin_lock_init(&vfio_mm->lock);
-> +
-> +	list_for_each_entry(domain, &iommu->domain_list, next) {
-> +		list_for_each_entry(group, &domain->group_list, next) {
-> +			ret = vfio_iommu_bind_group(iommu, group, vfio_mm);
-> +			if (ret)
-> +				break;
-> +		}
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	if (ret) {
-> +		/* Undo all binds that already succeeded */
-> +		list_for_each_entry_continue_reverse(group, &domain->group_list,
-> +						     next)
-> +			vfio_iommu_unbind_group(group, vfio_mm);
-> +		list_for_each_entry_continue_reverse(domain, &iommu->domain_list,
-> +						     next)
-> +			list_for_each_entry(group, &domain->group_list, next)
-> +				vfio_iommu_unbind_group(group, vfio_mm);
-> +		kfree(vfio_mm);
-> +	} else {
-> +		list_add(&vfio_mm->next, &iommu->mm_list);
-> +
-> +		params.pasid = vfio_mm->pasid;
-> +		ret = copy_to_user(arg, &params, sizeof(params)) ? -EFAULT : 0;
-> +		if (ret) {
-> +			vfio_iommu_unbind(iommu, vfio_mm);
-> +			kfree(vfio_mm);
-> +		}
-> +	}
-> +
-> +out_put_mm:
-> +	mutex_unlock(&iommu->lock);
-> +	mmput(mm);
-> +
-> +	return ret;
-> +}
-> +
-> +static long vfio_iommu_type1_unbind_process(struct vfio_iommu *iommu,
-> +					    void __user *arg,
-> +					    struct vfio_iommu_type1_bind *bind)
-> +{
-> +	int ret = -EINVAL;
-> +	unsigned long minsz;
-> +	struct mm_struct *mm;
-> +	struct vfio_mm *vfio_mm;
-> +	struct vfio_iommu_type1_bind_process params;
-> +
-> +	minsz = sizeof(*bind) + sizeof(params);
-> +	if (bind->argsz < minsz)
-> +		return -EINVAL;
-> +
-> +	arg += sizeof(*bind);
-> +	if (copy_from_user(&params, arg, sizeof(params)))
-> +		return -EFAULT;
-> +
-> +	if (params.flags & ~VFIO_IOMMU_BIND_PID)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * We can't simply unbind a foreign process by PASID, because the
-> +	 * process might have died and the PASID might have been reallocated to
-> +	 * another process. Instead we need to fetch that process mm by PID
-> +	 * again to make sure we remove the right vfio_mm. In addition, holding
-> +	 * the mm guarantees that mm_users isn't dropped while we unbind and the
-> +	 * exit_mm handler doesn't fire. While not strictly necessary, not
-> +	 * having to care about that race simplifies everyone's life.
-> +	 */
-> +	if (params.flags & VFIO_IOMMU_BIND_PID) {
-> +		mm = vfio_iommu_get_mm_by_vpid(params.pid);
-> +		if (IS_ERR(mm))
-> +			return PTR_ERR(mm);
+Changes from v2:
 
-I don't understand how this works for a process that has exited, the
-mm_exit function gets called to clear vfio_mm.mm, the above may or may
-not work (could be new ptrace'able process with same pid), but it won't
-match the mm below, so is the vfio_mm that mm_exit zapped forever stuck
-in this list until the container is destroyed?
+o More code cleanups suggested by reviewers.
 
-> +	} else {
-> +		mm = get_task_mm(current);
-> +		if (!mm)
-> +			return -EINVAL;
-> +	}
-> +
-> +	ret = -ESRCH;
-> +	mutex_lock(&iommu->lock);
-> +	list_for_each_entry(vfio_mm, &iommu->mm_list, next) {
-> +		if (vfio_mm->mm != mm)
-> +			continue;
-> +
-> +		vfio_iommu_unbind(iommu, vfio_mm);
-> +		list_del(&vfio_mm->next);
-> +		kfree(vfio_mm);
-> +		ret = 0;
-> +		break;
-> +	}
-> +	mutex_unlock(&iommu->lock);
-> +	mmput(mm);
-> +
-> +	return ret;
-> +}
-> +
->  static long vfio_iommu_type1_ioctl(void *iommu_data,
->  				   unsigned int cmd, unsigned long arg)
->  {
-> @@ -1607,6 +1968,44 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
->  
->  		return copy_to_user((void __user *)arg, &unmap, minsz) ?
->  			-EFAULT : 0;
-> +
-> +	} else if (cmd == VFIO_IOMMU_BIND) {
-> +		struct vfio_iommu_type1_bind bind;
-> +
-> +		minsz = offsetofend(struct vfio_iommu_type1_bind, mode);
-> +
-> +		if (copy_from_user(&bind, (void __user *)arg, minsz))
-> +			return -EFAULT;
-> +
-> +		if (bind.argsz < minsz)
-> +			return -EINVAL;
-> +
-> +		switch (bind.mode) {
-> +		case VFIO_IOMMU_BIND_PROCESS:
-> +			return vfio_iommu_type1_bind_process(iommu, (void *)arg,
-> +							     &bind);
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +
-> +	} else if (cmd == VFIO_IOMMU_UNBIND) {
-> +		struct vfio_iommu_type1_bind bind;
-> +
-> +		minsz = offsetofend(struct vfio_iommu_type1_bind, mode);
-> +
-> +		if (copy_from_user(&bind, (void __user *)arg, minsz))
-> +			return -EFAULT;
-> +
-> +		if (bind.argsz < minsz)
-> +			return -EINVAL;
-> +
-> +		switch (bind.mode) {
-> +		case VFIO_IOMMU_BIND_PROCESS:
-> +			return vfio_iommu_type1_unbind_process(iommu, (void *)arg,
-> +							       &bind);
-> +		default:
-> +			return -EINVAL;
-> +		}
->  	}
->  
->  	return -ENOTTY;
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index c74372163ed2..e1b9b8c58916 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -638,6 +638,82 @@ struct vfio_iommu_type1_dma_unmap {
->  #define VFIO_IOMMU_ENABLE	_IO(VFIO_TYPE, VFIO_BASE + 15)
->  #define VFIO_IOMMU_DISABLE	_IO(VFIO_TYPE, VFIO_BASE + 16)
->  
-> +/*
-> + * VFIO_IOMMU_BIND_PROCESS
-> + *
-> + * Allocate a PASID for a process address space, and use it to attach this
-> + * process to all devices in the container. Devices can then tag their DMA
-> + * traffic with the returned @pasid to perform transactions on the associated
-> + * virtual address space. Mapping and unmapping buffers is performed by standard
-> + * functions such as mmap and malloc.
-> + *
-> + * If flag is VFIO_IOMMU_BIND_PID, @pid contains the pid of a foreign process to
-> + * bind. Otherwise the current task is bound. Given that the caller owns the
-> + * device, setting this flag grants the caller read and write permissions on the
-> + * entire address space of foreign process described by @pid. Therefore,
-> + * permission to perform the bind operation on a foreign process is governed by
-> + * the ptrace access mode PTRACE_MODE_ATTACH_REALCREDS check. See man ptrace(2)
-> + * for more information.
-> + *
-> + * On success, VFIO writes a Process Address Space ID (PASID) into @pasid. This
-> + * ID is unique to a process and can be used on all devices in the container.
-> + *
-> + * On fork, the child inherits the device fd and can use the bonds setup by its
-> + * parent. Consequently, the child has R/W access on the address spaces bound by
-> + * its parent. After an execv, the device fd is closed and the child doesn't
-> + * have access to the address space anymore.
-> + *
-> + * To remove a bond between process and container, VFIO_IOMMU_UNBIND ioctl is
-> + * issued with the same parameters. If a pid was specified in VFIO_IOMMU_BIND,
-> + * it should also be present for VFIO_IOMMU_UNBIND. Otherwise unbind the current
-> + * task from the container.
-> + */
-> +struct vfio_iommu_type1_bind_process {
-> +	__u32	flags;
-> +#define VFIO_IOMMU_BIND_PID		(1 << 0)
-> +	__u32	pasid;
-> +	__s32	pid;
-> +};
-> +
-> +/*
-> + * Only mode supported at the moment is VFIO_IOMMU_BIND_PROCESS, which takes
-> + * vfio_iommu_type1_bind_process in data.
-> + */
-> +struct vfio_iommu_type1_bind {
-> +	__u32	argsz;
-> +	__u32	mode;
+Changes from v1:
 
-s/mode/flags/
+o Fixed device tree bindings document example.
 
-> +#define VFIO_IOMMU_BIND_PROCESS		(1 << 0)
-> +	__u8	data[];
-> +};
+o Use RTC_NVMEM facility for eeprom support.
 
-I'm not convinced having a separate vfio_iommu_type1_bind_process
-struct is necessary.  It seems like we always expect to return a pasid,
-only the pid is optional, but that could be handled by a single
-structure with a flag bit to indicate a pid bind is requested.
+o Small code cleanups suggested by reviewers.
 
-> +
-> +/*
-> + * VFIO_IOMMU_BIND - _IOWR(VFIO_TYPE, VFIO_BASE + 22, struct vfio_iommu_bind)
+ .../devicetree/bindings/rtc/isil,isl12026.txt      |  28 ++
+ drivers/rtc/Kconfig                                |   9 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-isl12026.c                         | 529 +++++++++++++++++++++
+ 4 files changed, 567 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/isil,isl12026.txt
+ create mode 100644 drivers/rtc/rtc-isl12026.c
 
-vfio_iommu_type1_bind
-
-> + *
-> + * Manage address spaces of devices in this container. Initially a TYPE1
-> + * container can only have one address space, managed with
-> + * VFIO_IOMMU_MAP/UNMAP_DMA.
-> + *
-> + * An IOMMU of type VFIO_TYPE1_NESTING_IOMMU can be managed by both MAP/UNMAP
-> + * and BIND ioctls at the same time. MAP/UNMAP acts on the stage-2 (host) page
-> + * tables, and BIND manages the stage-1 (guest) page tables. Other types of
-> + * IOMMU may allow MAP/UNMAP and BIND to coexist, where MAP/UNMAP controls
-> + * non-PASID traffic and BIND controls PASID traffic. But this depends on the
-> + * underlying IOMMU architecture and isn't guaranteed.
-> + *
-> + * Availability of this feature depends on the device, its bus, the underlying
-> + * IOMMU and the CPU architecture.
-> + *
-> + * returns: 0 on success, -errno on failure.
-> + */
-> +#define VFIO_IOMMU_BIND		_IO(VFIO_TYPE, VFIO_BASE + 22)
-> +
-> +/*
-> + * VFIO_IOMMU_UNBIND - _IOWR(VFIO_TYPE, VFIO_BASE + 23, struct vfio_iommu_bind)
-
-vifo_iommu_type1_bind
-
-> + *
-> + * Undo what was done by the corresponding VFIO_IOMMU_BIND ioctl.
-> + */
-> +#define VFIO_IOMMU_UNBIND	_IO(VFIO_TYPE, VFIO_BASE + 23)
-> +
->  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU -------- */
->  
->  /*
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/rtc/isil,isl12026.txt b/Documentation/devicetree/bindings/rtc/isil,isl12026.txt
+new file mode 100644
+index 000000000000..2e0be45193bb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/isil,isl12026.txt
+@@ -0,0 +1,28 @@
++ISL12026 I2C RTC/EEPROM
++
++ISL12026 is an I2C RTC/EEPROM combination device.  The RTC and control
++registers respond at bus address 0x6f, and the EEPROM array responds
++at bus address 0x57.  The canonical "reg" value will be for the RTC portion.
++
++Required properties supported by the device:
++
++ - "compatible": must be "isil,isl12026"
++ - "reg": I2C bus address of the device (always 0x6f)
++
++Optional properties:
++
++ - "isil,pwr-bsw": If present PWR.BSW bit must be set to the specified
++                   value for proper operation.
++
++ - "isil,pwr-sbib": If present PWR.SBIB bit must be set to the specified
++                    value for proper operation.
++
++
++Example:
++
++	rtc@6f {
++		compatible = "isil,isl12026";
++		reg = <0x6f>;
++		isil,pwr-bsw = <0>;
++		isil,pwr-sbib = <1>;
++	}
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 8ab5f0a5d323..85171e9e3ada 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -407,6 +407,15 @@ config RTC_DRV_ISL12022
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-isl12022.
+ 
++config RTC_DRV_ISL12026
++	tristate "Intersil ISL12026"
++	help
++	  If you say yes here you get support for the
++	  Intersil ISL12026 RTC chip.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called rtc-isl12026.
++
+ config RTC_DRV_X1205
+ 	tristate "Xicor/Intersil X1205"
+ 	help
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 4fbf87e45a7c..f481661a6eae 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -76,6 +76,7 @@ obj-$(CONFIG_RTC_DRV_HID_SENSOR_TIME) += rtc-hid-sensor-time.o
+ obj-$(CONFIG_RTC_DRV_HYM8563)	+= rtc-hym8563.o
+ obj-$(CONFIG_RTC_DRV_IMXDI)	+= rtc-imxdi.o
+ obj-$(CONFIG_RTC_DRV_ISL12022)	+= rtc-isl12022.o
++obj-$(CONFIG_RTC_DRV_ISL12026)	+= rtc-isl12026.o
+ obj-$(CONFIG_RTC_DRV_ISL1208)	+= rtc-isl1208.o
+ obj-$(CONFIG_RTC_DRV_JZ4740)	+= rtc-jz4740.o
+ obj-$(CONFIG_RTC_DRV_LP8788)	+= rtc-lp8788.o
+diff --git a/drivers/rtc/rtc-isl12026.c b/drivers/rtc/rtc-isl12026.c
+new file mode 100644
+index 000000000000..29e5bdf96c67
+--- /dev/null
++++ b/drivers/rtc/rtc-isl12026.c
+@@ -0,0 +1,529 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * An I2C driver for the Intersil ISL 12026
++ *
++ * Copyright (c) 2018 Cavium, Inc.
++ */
++#include <linux/bcd.h>
++#include <linux/delay.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/nvmem-provider.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/rtc.h>
++#include <linux/slab.h>
++
++/* register offsets */
++#define ISL12026_REG_PWR	0x14
++# define ISL12026_REG_PWR_BSW	BIT(6)
++# define ISL12026_REG_PWR_SBIB	BIT(7)
++#define ISL12026_REG_SC		0x30
++#define ISL12026_REG_HR		0x32
++# define ISL12026_REG_HR_MIL	BIT(7)	/* military or 24 hour time */
++#define ISL12026_REG_SR		0x3f
++# define ISL12026_REG_SR_RTCF	BIT(0)
++# define ISL12026_REG_SR_WEL	BIT(1)
++# define ISL12026_REG_SR_RWEL	BIT(2)
++# define ISL12026_REG_SR_MBZ	BIT(3)
++# define ISL12026_REG_SR_OSCF	BIT(4)
++
++/* The EEPROM array responds at i2c address 0x57 */
++#define ISL12026_EEPROM_ADDR	0x57
++
++#define ISL12026_PAGESIZE 16
++#define ISL12026_NVMEM_WRITE_TIME 20
++
++struct isl12026 {
++	struct rtc_device *rtc;
++	struct i2c_client *nvm_client;
++	struct nvmem_config nvm_cfg;
++	/*
++	 * RTC write operations require that multiple messages be
++	 * transmitted, we hold the lock for all accesses to the
++	 * device so that these sequences cannot be disrupted.  Also,
++	 * the write cycle to the nvmem takes many ms during which the
++	 * device does not respond to commands, so holding the lock
++	 * also prevents access during these times.
++	 */
++	struct mutex lock;
++};
++
++static int isl12026_read_reg(struct i2c_client *client, int reg)
++{
++	struct isl12026 *priv = i2c_get_clientdata(client);
++	u8 addr[] = {0, reg};
++	u8 val;
++	int ret;
++
++	struct i2c_msg msgs[] = {
++		{
++			.addr	= client->addr,
++			.flags	= 0,
++			.len	= sizeof(addr),
++			.buf	= addr
++		}, {
++			.addr	= client->addr,
++			.flags	= I2C_M_RD,
++			.len	= 1,
++			.buf	= &val
++		}
++	};
++
++	mutex_lock(&priv->lock);
++
++	ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
++	if (ret != ARRAY_SIZE(msgs)) {
++		dev_err(&client->dev, "read reg error, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++	} else {
++		ret = val;
++	}
++
++	mutex_unlock(&priv->lock);
++
++	return ret;
++}
++
++static int isl12026_write_reg(struct i2c_client *client, int reg, u8 val)
++{
++	struct isl12026 *priv = i2c_get_clientdata(client);
++	int ret;
++	u8 op[3];
++	struct i2c_msg msg = {
++		.addr	= client->addr,
++		.flags	= 0,
++		.len	= 1,
++		.buf	= op
++	};
++
++	mutex_lock(&priv->lock);
++
++	/* Set SR.WEL */
++	op[0] = 0;
++	op[1] = ISL12026_REG_SR;
++	op[2] = ISL12026_REG_SR_WEL;
++	msg.len = 3;
++	ret = i2c_transfer(client->adapter, &msg, 1);
++	if (ret != 1) {
++		dev_err(&client->dev, "write error SR.WEL, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++		goto out;
++	}
++
++	/* Set SR.WEL and SR.RWEL */
++	op[2] = ISL12026_REG_SR_WEL | ISL12026_REG_SR_RWEL;
++	msg.len = 3;
++	ret = i2c_transfer(client->adapter, &msg, 1);
++	if (ret != 1) {
++		dev_err(&client->dev,
++			"write error SR.WEL|SR.RWEL, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++		goto out;
++	}
++
++	op[1] = reg;
++	op[2] = val;
++	msg.len = 3;
++	ret = i2c_transfer(client->adapter, &msg, 1);
++	if (ret != 1) {
++		dev_err(&client->dev, "write error CCR, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++		goto out;
++	}
++
++	msleep(ISL12026_NVMEM_WRITE_TIME);
++
++	/* Clear SR.WEL and SR.RWEL */
++	op[1] = ISL12026_REG_SR;
++	op[2] = 0;
++	msg.len = 3;
++	ret = i2c_transfer(client->adapter, &msg, 1);
++	if (ret != 1) {
++		dev_err(&client->dev, "write error SR, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++		goto out;
++	}
++	ret = 0;
++out:
++	mutex_unlock(&priv->lock);
++
++	return ret;
++}
++
++static int isl12026_rtc_set_time(struct device *dev, struct rtc_time *tm)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct isl12026 *priv = i2c_get_clientdata(client);
++	int ret;
++	u8 op[10];
++	struct i2c_msg msg = {
++		.addr	= client->addr,
++		.flags	= 0,
++		.len	= 1,
++		.buf	= op
++	};
++
++	mutex_lock(&priv->lock);
++
++	/* Set SR.WEL */
++	op[0] = 0;
++	op[1] = ISL12026_REG_SR;
++	op[2] = ISL12026_REG_SR_WEL;
++	msg.len = 3;
++	ret = i2c_transfer(client->adapter, &msg, 1);
++	if (ret != 1) {
++		dev_err(&client->dev, "write error SR.WEL, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++		goto out;
++	}
++
++	/* Set SR.WEL and SR.RWEL */
++	op[2] = ISL12026_REG_SR_WEL | ISL12026_REG_SR_RWEL;
++	msg.len = 3;
++	ret = i2c_transfer(client->adapter, &msg, 1);
++	if (ret != 1) {
++		dev_err(&client->dev,
++			"write error SR.WEL|SR.RWEL, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++		goto out;
++	}
++
++	/* Set the CCR registers */
++	op[1] = ISL12026_REG_SC;
++	op[2] = bin2bcd(tm->tm_sec); /* SC */
++	op[3] = bin2bcd(tm->tm_min); /* MN */
++	op[4] = bin2bcd(tm->tm_hour) | ISL12026_REG_HR_MIL; /* HR */
++	op[5] = bin2bcd(tm->tm_mday); /* DT */
++	op[6] = bin2bcd(tm->tm_mon + 1); /* MO */
++	op[7] = bin2bcd(tm->tm_year % 100); /* YR */
++	op[8] = bin2bcd(tm->tm_wday & 7); /* DW */
++	op[9] = bin2bcd(tm->tm_year >= 100 ? 20 : 19); /* Y2K */
++	msg.len = 10;
++	ret = i2c_transfer(client->adapter, &msg, 1);
++	if (ret != 1) {
++		dev_err(&client->dev, "write error CCR, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++		goto out;
++	}
++
++	/* Clear SR.WEL and SR.RWEL */
++	op[1] = ISL12026_REG_SR;
++	op[2] = 0;
++	msg.len = 3;
++	ret = i2c_transfer(client->adapter, &msg, 1);
++	if (ret != 1) {
++		dev_err(&client->dev, "write error SR, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++		goto out;
++	}
++	ret = 0;
++out:
++	mutex_unlock(&priv->lock);
++
++	return ret;
++}
++
++static int isl12026_rtc_read_time(struct device *dev, struct rtc_time *tm)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct isl12026 *priv = i2c_get_clientdata(client);
++	u8 ccr[8];
++	u8 addr[2];
++	u8 sr;
++	int ret;
++	struct i2c_msg msgs[] = {
++		{
++			.addr	= client->addr,
++			.flags	= 0,
++			.len	= sizeof(addr),
++			.buf	= addr
++		}, {
++			.addr	= client->addr,
++			.flags	= I2C_M_RD,
++		}
++	};
++
++	mutex_lock(&priv->lock);
++
++	/* First, read SR */
++	addr[0] = 0;
++	addr[1] = ISL12026_REG_SR;
++	msgs[1].len = 1;
++	msgs[1].buf = &sr;
++
++	ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
++	if (ret != ARRAY_SIZE(msgs)) {
++		dev_err(&client->dev, "read error, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++		goto out;
++	}
++
++	if (sr & ISL12026_REG_SR_RTCF)
++		dev_warn(&client->dev, "Real-Time Clock Failure on read\n");
++	if (sr & ISL12026_REG_SR_OSCF)
++		dev_warn(&client->dev, "Oscillator Failure on read\n");
++
++	/* Second, CCR regs */
++	addr[0] = 0;
++	addr[1] = ISL12026_REG_SC;
++	msgs[1].len = sizeof(ccr);
++	msgs[1].buf = ccr;
++
++	ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
++	if (ret != ARRAY_SIZE(msgs)) {
++		dev_err(&client->dev, "read error, ret=%d\n", ret);
++		ret = ret < 0 ? ret : -EIO;
++		goto out;
++	}
++
++	tm->tm_sec = bcd2bin(ccr[0] & 0x7F);
++	tm->tm_min = bcd2bin(ccr[1] & 0x7F);
++	if (ccr[2] & ISL12026_REG_HR_MIL)
++		tm->tm_hour = bcd2bin(ccr[2] & 0x3F);
++	else
++		tm->tm_hour = bcd2bin(ccr[2] & 0x1F) +
++			((ccr[2] & 0x20) ? 12 : 0);
++	tm->tm_mday = bcd2bin(ccr[3] & 0x3F);
++	tm->tm_mon = bcd2bin(ccr[4] & 0x1F) - 1;
++	tm->tm_year = bcd2bin(ccr[5]);
++	if (bcd2bin(ccr[7]) == 20)
++		tm->tm_year += 100;
++	tm->tm_wday = ccr[6] & 0x07;
++
++	ret = rtc_valid_tm(tm);
++out:
++	mutex_unlock(&priv->lock);
++	return ret;
++}
++
++static const struct rtc_class_ops isl12026_rtc_ops = {
++	.read_time	= isl12026_rtc_read_time,
++	.set_time	= isl12026_rtc_set_time,
++};
++
++static int isl12026_nvm_read(void *p, unsigned int offset,
++			     void *val, size_t bytes)
++{
++	struct isl12026 *priv = p;
++	int ret;
++	u8 addr[2];
++	struct i2c_msg msgs[] = {
++		{
++			.addr	= priv->nvm_client->addr,
++			.flags	= 0,
++			.len	= sizeof(addr),
++			.buf	= addr
++		}, {
++			.addr	= priv->nvm_client->addr,
++			.flags	= I2C_M_RD,
++			.buf	= val
++		}
++	};
++
++	if (offset >= priv->nvm_cfg.size)
++		return 0; /* End-of-file */
++	if (offset + bytes > priv->nvm_cfg.size)
++		bytes = priv->nvm_cfg.size - offset;
++
++	mutex_lock(&priv->lock);
++
++	/* 2 bytes of address, most significant first */
++	addr[0] = offset >> 8;
++	addr[1] = offset;
++	msgs[1].len = bytes;
++	ret = i2c_transfer(priv->nvm_client->adapter, msgs, ARRAY_SIZE(msgs));
++
++	mutex_unlock(&priv->lock);
++
++	if (ret != ARRAY_SIZE(msgs)) {
++		dev_err(priv->nvm_cfg.dev, "nvmem read error, ret=%d\n", ret);
++		return ret < 0 ? ret : -EIO;
++	}
++
++	return bytes;
++}
++
++static int isl12026_nvm_write(void *p, unsigned int offset,
++			      void *val, size_t bytes)
++{
++	struct isl12026 *priv = p;
++	int ret = -EIO;
++	u8 *v = val;
++	size_t chunk_size, num_written;
++	u8 payload[ISL12026_PAGESIZE + 2]; /* page + 2 address bytes */
++	struct i2c_msg msgs[] = {
++		{
++			.addr	= priv->nvm_client->addr,
++			.flags	= 0,
++			.buf	= payload
++		}
++	};
++
++	if (offset >= priv->nvm_cfg.size)
++		return 0; /* End-of-file */
++	if (offset + bytes > priv->nvm_cfg.size)
++		bytes = priv->nvm_cfg.size - offset;
++
++	mutex_lock(&priv->lock);
++
++	num_written = 0;
++	while (bytes) {
++		chunk_size = round_down(offset, ISL12026_PAGESIZE) +
++			ISL12026_PAGESIZE - offset;
++		chunk_size = min(bytes, chunk_size);
++		/*
++		 * 2 bytes of address, most significant first, followed
++		 * by page data bytes
++		 */
++		memcpy(payload + 2, v + num_written, chunk_size);
++		payload[0] = offset >> 8;
++		payload[1] = offset;
++		msgs[0].len = chunk_size + 2;
++		ret = i2c_transfer(priv->nvm_client->adapter,
++				   msgs, ARRAY_SIZE(msgs));
++		if (ret != ARRAY_SIZE(msgs)) {
++			dev_err(priv->nvm_cfg.dev,
++				"nvmem write error, ret=%d\n", ret);
++			ret = ret < 0 ? ret : -EIO;
++			break;
++		}
++		bytes -= chunk_size;
++		offset += chunk_size;
++		num_written += chunk_size;
++		msleep(ISL12026_NVMEM_WRITE_TIME);
++	}
++
++	mutex_unlock(&priv->lock);
++
++	return num_written >= 0 ? num_written : ret;
++}
++
++static void isl12026_force_power_modes(struct i2c_client *client)
++{
++	int ret;
++	int pwr, requested_pwr;
++	u32 bsw_val, sbib_val;
++	bool set_bsw, set_sbib;
++
++	/*
++	 * If we can read the of_property, set the specified value.
++	 * If there is an error reading the of_property (likely
++	 * because it does not exist), keep the current value.
++	 */
++	ret = of_property_read_u32(client->dev.of_node,
++				   "isil,pwr-bsw", &bsw_val);
++	set_bsw = (ret == 0);
++
++	ret = of_property_read_u32(client->dev.of_node,
++				   "isil,pwr-sbib", &sbib_val);
++	set_sbib = (ret == 0);
++
++	/* Check if PWR.BSW and/or PWR.SBIB need specified values */
++	if (!set_bsw && !set_sbib)
++		return;
++
++	pwr = isl12026_read_reg(client, ISL12026_REG_PWR);
++	if (pwr < 0) {
++		dev_warn(&client->dev, "Error: Failed to read PWR %d\n", pwr);
++		return;
++	}
++
++	requested_pwr = pwr;
++
++	if (set_bsw) {
++		if (bsw_val)
++			requested_pwr |= ISL12026_REG_PWR_BSW;
++		else
++			requested_pwr &= ~ISL12026_REG_PWR_BSW;
++	} /* else keep current BSW */
++
++	if (set_sbib) {
++		if (sbib_val)
++			requested_pwr |= ISL12026_REG_PWR_SBIB;
++		else
++			requested_pwr &= ~ISL12026_REG_PWR_SBIB;
++	} /* else keep current SBIB */
++
++	if (pwr >= 0 && pwr != requested_pwr) {
++		dev_info(&client->dev, "PWR: %02x\n", pwr);
++		dev_info(&client->dev,
++			 "Updating PWR to: %02x\n", requested_pwr);
++		isl12026_write_reg(client, ISL12026_REG_PWR, requested_pwr);
++	}
++}
++
++static int isl12026_probe_new(struct i2c_client *client)
++{
++	struct isl12026 *priv;
++	int ret;
++
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
++		return -ENODEV;
++
++	priv = devm_kzalloc(&client->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	mutex_init(&priv->lock);
++
++	i2c_set_clientdata(client, priv);
++
++	isl12026_force_power_modes(client);
++
++	priv->nvm_client = i2c_new_dummy(client->adapter, ISL12026_EEPROM_ADDR);
++	if (!priv->nvm_client)
++		return -ENOMEM;
++
++	priv->rtc = devm_rtc_allocate_device(&client->dev);
++	ret = PTR_ERR_OR_ZERO(priv->rtc);
++	if (ret)
++		return ret;
++
++	priv->rtc->ops = &isl12026_rtc_ops;
++
++	priv->nvm_cfg.name = "eeprom";
++	priv->nvm_cfg.read_only = false;
++	priv->nvm_cfg.root_only = true;
++	priv->nvm_cfg.base_dev = &client->dev;
++	priv->nvm_cfg.priv = priv;
++	priv->nvm_cfg.stride = 1;
++	priv->nvm_cfg.word_size = 1;
++	priv->nvm_cfg.size = 512;
++	priv->nvm_cfg.reg_read = isl12026_nvm_read;
++	priv->nvm_cfg.reg_write = isl12026_nvm_write;
++
++	priv->rtc->nvmem_config = &priv->nvm_cfg;
++	priv->rtc->nvram_old_abi = false;
++
++	return rtc_register_device(priv->rtc);
++}
++
++static int isl12026_remove(struct i2c_client *client)
++{
++	struct isl12026 *priv = i2c_get_clientdata(client);
++
++	i2c_unregister_device(priv->nvm_client);
++	return 0;
++}
++
++static const struct of_device_id isl12026_dt_match[] = {
++	{ .compatible = "isil,isl12026" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, isl12026_dt_match);
++
++static struct i2c_driver isl12026_driver = {
++	.driver		= {
++		.name	= "rtc-isl12026",
++		.of_match_table = of_match_ptr(isl12026_dt_match),
++	},
++	.probe_new	= isl12026_probe_new,
++	.remove		= isl12026_remove,
++};
++
++module_i2c_driver(isl12026_driver);
++
++MODULE_DESCRIPTION("ISL 12026 RTC driver");
++MODULE_LICENSE("GPL");
+-- 
+2.14.3
