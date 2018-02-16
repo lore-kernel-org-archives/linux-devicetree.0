@@ -1,58 +1,48 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: sun7i: Enable HDMI support on the Banana Pi
-Date: Fri, 16 Feb 2018 20:09:32 +0100
-Message-ID: <20180216190932.a3cs4bm3z2ctqd7z@flea.lan>
-References: <jwvbmgoapat.fsf-monnier@gnu.org>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v9 2/3] arm: dts: add Nuvoton NPCM750 device tree
+Date: Fri, 16 Feb 2018 11:14:00 -0800
+Message-ID: <CAFd5g44KScqzTZyH9Euwnsqjz5oecB2qovohjOmAwVZNtD1X9Q@mail.gmail.com>
+References: <20180205235757.246758-1-brendanhiggins@google.com>
+ <20180205235757.246758-3-brendanhiggins@google.com> <CACPK8XdXOaPZ5i=qKns3=V87nhfY62PNr4kwH9xwVYxY0djo0g@mail.gmail.com>
+ <CACPK8XeOUrrGinU_fmnmn4atYm3Bs-xSoB2MqT0Yr-LytHt78Q@mail.gmail.com> <A86ACBBE-0825-482F-81BE-24B7CAED92CD@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ahwl5kio3orgx5zf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <jwvbmgoapat.fsf-monnier@gnu.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Monnier <monnier@IRO.UMontreal.CA>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <A86ACBBE-0825-482F-81BE-24B7CAED92CD-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Julien Thierry <julien.thierry-5wv7dgnIgG8@public.gmane.org>, Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+<snip>
+>>Arnd, do we have this documented somewhere for new maintainers to
+>>follow?
+>
+> I would add a few things that we had to go through before for Broadcom SoCs:
+>
+> - send your pull requests to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org and copy Arnd, Olof and Kevin
+>
+> - you would want to get your PGP key signed by as many people as people as possible which should not be a problem if you are in an area with lots of kernel people like the Bay Area (which reminds me I should do that)
+>
+> - if you are going to be reasonably active every cycle consider getting a kernel.org account to host your tree (we are still not doing that...)
+>
+> - for future pull requests, you might want to break them into e.g: DTS, board/Kconfig, drivers, defconfig, maintainers file, and have as little dependencies between each branch to minimize merge conflicts
+>
+> - build test and run test your changes against at least one other platform, e.g: QEMU to check for multiplatform issues
+>
+> In case this is of any value, there is a script here that will automatically generate pull requests emails for you based on branches matching what was mentioned above, it will also take care of CC'ing the people involved in the different patches:
+>
+> https://github.com/ffainelli/misc-scripts/blob/master/gen-pull.pl
+>
+> It still requires you to create an appropriate tag for the pull requests, though I might semi-automate that in the future, at least spawn an editor and offer some guidance, based on commit messages as to what should be in the pull request email/tag.
+>
+> HTH
+>
+> --
+> Florian
 
---ahwl5kio3orgx5zf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Feb 16, 2018 at 11:16:04AM -0500, Stefan Monnier wrote:
-> From: Stefan Monnier <monnier@iro.umontreal.ca>
->=20
-> Enable the display pipeline and HDMI output
->=20
-> Signed-off-by: Stefan Monnier <monnier@iro.umontreal.ca>
-
-Applied, thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
-
---ahwl5kio3orgx5zf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqHLGwACgkQ0rTAlCFN
-r3Rz9g/6AzCBJ3ywAbOrIgis++yg5WGK46C8/YXYIb9ZKqOPUDJYg8UOpEObA0zO
-OtHJF/y8kje7AGgAEyNT9LZAUnksQiSxhcjW/y8rnuqFBg7VZfMNcRzcY/168eTn
-rbxT9cT+e61B9lepOaq+eScDPIlDUJNz9ucS8Rd51IONz411YPWN6JD1rjWzHSCK
-7xow2CkdFbruD9HWyV+LPPD48JEMoqKbjStFPdrrsyXR+w3DCU/X3OtOpRUTDwAK
-SI/x5ue1jIwqIhNk1YBl0P5KO3GQSBsuOF3KNCeIO06jOo1IozvCY8C40DZJtLXc
-/LSO3SoPbUHlDOg8lQlk+ahJiJnwRZdiok0Ueq5s8z8YJB/caXT56MtIcONl/V29
-4i9je2S8UAMEOKf3c/aErWwP25iiXiJEJ3LbqDzZF6ZV1YPP0Q3dnampuSAjz0xM
-M+ntN/+ySst4+SjGFzNQigjLCtasfvva5Hdz7jHbcD0BOy+LA5U9FRf+ttWJDz3S
-G1qJKarh9aoUyHMrhqtrec6NwHiDE47y+VoOqklkyKYC6MW+/Dhruw/h6KHg1L1R
-udINSDg9KKUF9EPG3HLvZ6Xh57HckmMI2YgKu00wLfwyNqostN2SpWBlFIcHW7qV
-AFIpeJkgokXcBW7A+IzY2S88DmfvG7MGjD6MkY+xZvD+z3+KwFw=
-=i9d5
------END PGP SIGNATURE-----
-
---ahwl5kio3orgx5zf--
+Thanks Florian, this was extremely helpful!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
