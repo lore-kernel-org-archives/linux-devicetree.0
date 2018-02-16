@@ -1,49 +1,43 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 0/4] Move DP phy switch to PHY driver
-Date: Fri, 16 Feb 2018 14:05:22 +0100
-Message-ID: <1752563.I66u68YxnT@diego>
-References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com> <a9eac594-33d5-6171-51ca-66204008fc1f@ti.com>
+From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: stm32: enable RTC on stm32h743i-eval
+Date: Fri, 16 Feb 2018 14:16:40 +0100
+Message-ID: <1518787000-10675-3-git-send-email-amelie.delaunay@st.com>
+References: <1518787000-10675-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a9eac594-33d5-6171-51ca-66204008fc1f@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Chris Zhong <zyw@rock-chips.com>, dri-devel@lists.freedesktop.org, robh@kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, mark.yao@rock-chips.com, groeck@chromium.org, seanpaul@chromium.org, William wu <wulf@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Shawn Lin <shawn.lin@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Elaine Zhang <zhangqing@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Tomasz Figa <tfiga@chromium.org>, Douglas Anderson <dianders@chromium.org>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jianqun Xu <jay.xu@rock->
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1518787000-10675-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+This patch enables RTC on stm32h743i-eval.
 
-Am Freitag, 16. Februar 2018, 12:04:42 CET schrieb Kishon Vijay Abraham I:
-> On Friday 10 February 2017 01:14 PM, Chris Zhong wrote:
-> > There are 2 Type-c PHYs in RK3399, but only one DP controller. Hence
-> > only one PHY can connect to DP controller at one time, the other should
-> > be disconnected. The GRF_SOC_CON26 register has a switch bit to do it,
-> > set this bit means enable PHY 1, clear this bit means enable PHY 0.
-> > 
-> > If the board has 2 Type-C ports, the DP driver get the phy id from
-> > devm_of_phy_get_by_index, and then control this switch according to
-> > this id. But some others board only has one Type-C port, it may be PHY 0
-> > or PHY 1. The dts node id can not tell us the correct PHY id. Hence move
-> > this switch to PHY driver, the PHY driver can distinguish between PHY 0
-> > and PHY 1, and then write the correct register bit.
-> 
-> Changed subject of "Documentation: bindings: add uphy-dp-sel for Rockchip
-> USB Type-C PHY" as suggested by Rob, rebased "phy: rockchip-typec: support
-> DP phy switch" to the latest kernel and merged.
+Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stm32h743i-eval.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I'm not sure how far along you are with your merging, but you might want to 
-revert this one.
+diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
+index 9f0e72c..cc8e458 100644
+--- a/arch/arm/boot/dts/stm32h743i-eval.dts
++++ b/arch/arm/boot/dts/stm32h743i-eval.dts
+@@ -84,6 +84,10 @@
+ 	clock-frequency = <25000000>;
+ };
+ 
++&rtc {
++	status = "okay";
++};
++
+ &usart1 {
+ 	pinctrl-0 = <&usart1_pins>;
+ 	pinctrl-names = "default";
+-- 
+2.7.4
 
-In your inbox you should find more recent threads about the type-c phy
-where Rob strongly suggested moving the whole grf registers out of the
-dt and into the driver.
-
-Enric Balletbo did just that and posted a series (including the dp-move)
-yesterday (refined in a v2 from today).
-
-Alternatively Enric could rebase his series on top of that recent change.
-
-
-Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
