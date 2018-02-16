@@ -1,54 +1,57 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V3 2/2 RESEND] ARM: dts: bcm283x: Fix probing
-	of bcm2835-i2s
-Date: Fri, 16 Feb 2018 11:55:34 +0100
-Message-ID: <1518778534-3328-3-git-send-email-stefan.wahren@i2se.com>
-References: <1518778534-3328-1-git-send-email-stefan.wahren@i2se.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/4] Move DP phy switch to PHY driver
+Date: Fri, 16 Feb 2018 16:34:42 +0530
+Message-ID: <a9eac594-33d5-6171-51ca-66204008fc1f@ti.com>
+References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1518778534-3328-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Anholt <eric@anholt.net>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486712654-15431-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark
 List-Id: devicetree@vger.kernel.org
 
-Since 517e7a1537a ("ASoC: bcm2835: move to use the clock framework")
-the bcm2835-i2s requires a clock as DT property. Unfortunately
-the necessary DT change has never been applied. While we are at it
-also fix the first PCM register range to cover the PCM_GRAY register.
+Hi,
 
-Fixes: 517e7a1537a ("ASoC: bcm2835: move to use the clock framework")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reviewed-by: Eric Anholt <eric@anholt.net>
-Tested-by: Matthias Reichl <hias@horus.com>
----
- arch/arm/boot/dts/bcm283x.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Friday 10 February 2017 01:14 PM, Chris Zhong wrote:
+> 
+> There are 2 Type-c PHYs in RK3399, but only one DP controller. Hence
+> only one PHY can connect to DP controller at one time, the other should
+> be disconnected. The GRF_SOC_CON26 register has a switch bit to do it,
+> set this bit means enable PHY 1, clear this bit means enable PHY 0.
+> 
+> If the board has 2 Type-C ports, the DP driver get the phy id from
+> devm_of_phy_get_by_index, and then control this switch according to
+> this id. But some others board only has one Type-C port, it may be PHY 0
+> or PHY 1. The dts node id can not tell us the correct PHY id. Hence move
+> this switch to PHY driver, the PHY driver can distinguish between PHY 0
+> and PHY 1, and then write the correct register bit.
+> 
+> 
 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 013431e..e08203c 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -396,8 +396,8 @@
- 
- 		i2s: i2s@7e203000 {
- 			compatible = "brcm,bcm2835-i2s";
--			reg = <0x7e203000 0x20>,
--			      <0x7e101098 0x02>;
-+			reg = <0x7e203000 0x24>;
-+			clocks = <&clocks BCM2835_CLOCK_PCM>;
- 
- 			dmas = <&dma 2>,
- 			       <&dma 3>;
--- 
-2.7.4
+Changed subject of "Documentation: bindings: add uphy-dp-sel for Rockchip USB
+Type-C PHY" as suggested by Rob, rebased "phy: rockchip-typec: support DP phy
+switch" to the latest kernel and merged.
+
+Thanks
+Kishon
+
+> 
+> Chris Zhong (4):
+>   Documentation: bindings: add uphy-dp-sel for Rockchip USB Type-C PHY
+>   arm64: dts: rockchip: add rockchip,uphy-dp-sel for Type-C phy
+>   phy: rockchip-typec: support DP phy switch
+>   drm/rockchip: cdn-dp: remove the DP phy switch
+> 
+>  Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt | 5 +++++
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi                     | 2 ++
+>  drivers/gpu/drm/rockchip/cdn-dp-core.c                       | 7 -------
+>  drivers/phy/phy-rockchip-typec.c                             | 9 +++++++++
+>  4 files changed, 16 insertions(+), 7 deletions(-)
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
