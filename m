@@ -1,27 +1,39 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 5/5] arm64: dts: renesas: r8a7796: Fix register
- mappings on VSPs
-Date: Fri, 16 Feb 2018 14:37:00 +0100
-Message-ID: <20180216133659.s4xf3ovi63fkwuyg@verge.net.au>
-References: <1518602108-1724-1-git-send-email-kbingham@kernel.org>
- <1518602108-1724-6-git-send-email-kbingham@kernel.org>
+Subject: Re: [PATCH 06/15] Documentation: devicetree: dma: Add r8a77965 dmac
+Date: Fri, 16 Feb 2018 14:40:08 +0100
+Message-ID: <20180216134007.vkkhb3ybose3tlrp@verge.net.au>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1518515162-23663-7-git-send-email-jacopo+renesas@jmondi.org>
+ <20180215153948.puwztivx3zwtqxet@verge.net.au>
+ <20180215155638.kh6hxxo4tmit3jj4@verge.net.au>
+ <CAMuHMdUPLPABkeefDE8+V4Bbs1GK9fBY0hzWU1_zAQ0o-3hTsg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1518602108-1724-6-git-send-email-kbingham@kernel.org>
+In-Reply-To: <CAMuHMdUPLPABkeefDE8+V4Bbs1GK9fBY0hzWU1_zAQ0o-3hTsg@mail.gmail.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kieran Bingham <kbingham@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Magnus Damm <magnus.damm@gmail.com>, open list <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, "moderated list:ARM64 PORT AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 14, 2018 at 09:55:08AM +0000, Kieran Bingham wrote:
-> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+On Fri, Feb 16, 2018 at 10:01:33AM +0100, Geert Uytterhoeven wrote:
+> On Thu, Feb 15, 2018 at 4:56 PM, Simon Horman <horms@verge.net.au> wrote:
+> > On Thu, Feb 15, 2018 at 04:39:49PM +0100, Simon Horman wrote:
+> >> On Tue, Feb 13, 2018 at 10:45:53AM +0100, Jacopo Mondi wrote:
+> >> > Add documentation for r8a77965 compatible string to rcar-dmac device
+> >> > tree bindings documentation.
+> >> >
+> >> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> >>
+> >> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> >
+> > Sorry for not noticing this the first time around.
+> >
+> > I think a better subject would be:
+> >
+> > dt-bindings: dmaengine: rcar-dmac: document R8A77964 support
 > 
-> The VSPD includes a CLUT on RPF2. Ensure that the register space is
-> mapped correctly to support this.
-> 
-> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> s/64/65/ ;-)
 
-Thanks, applied.
+These kind of errors allow you to verify that the email really came from me :)
