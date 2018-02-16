@@ -1,80 +1,140 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv4 2/4] ASoC: codec: cpcap: new codec
-Date: Fri, 16 Feb 2018 11:39:01 +0000
-Message-ID: <20180216113901.GC5886@sirena.org.uk>
-References: <20180214220741.28306-1-sebastian.reichel@collabora.co.uk>
- <20180214220741.28306-3-sebastian.reichel@collabora.co.uk>
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Subject: Re: [PATCH 7/8] arm64: dts: renesas: r8a77995-draak: Add HDMI Out
+ through ADV7511
+Date: Fri, 16 Feb 2018 11:51:51 +0000
+Message-ID: <95b1fa2c-8302-e264-2f00-eba5ac34bcd3@ideasonboard.com>
+References: <1518683903-10681-1-git-send-email-kbingham@kernel.org>
+ <1518683903-10681-8-git-send-email-kbingham@kernel.org>
+ <2517305.jdPBFiRQEk@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2390728037833373288=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180214220741.28306-3-sebastian.reichel@collabora.co.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2517305.jdPBFiRQEk@avalon>
+Content-Language: en-GB
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kieran Bingham <kieran.bingham@ideasonboard.com>, Simon Horman <horms@verge.net.au>, geert@glider.be, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Laurent,
 
---===============2390728037833373288==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jy6Sn24JjFx/iggw"
-Content-Disposition: inline
+On 15/02/18 14:16, Laurent Pinchart wrote:
+> Hi Kieran,
+> 
+> Thank you for the patch.
+> 
+> On Thursday, 15 February 2018 10:38:22 EET Kieran Bingham wrote:
+>> From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+>>
+>> Provide a device node for the ADV7511 as found on the Draak D3 platform.
+>>
+>> The ADV7511 is connected to the DU through a parallel mux chip, and is
+>> configurable in hardware whether it is connected to LVDS0 or LVDS1.
+>>
+>> Connect through to LVDS0 as a default implementation.
+> 
+> You need to model the LVDS decoder in DT too. I know that no driver and no DT 
+> bindings are available at the moment, and I'm aware that this patch enables 
+> the HDMI output on the Draak board, but I don't think it's upstreamable as-is.
 
+Ok, understood. - I'll drop this patch for now until we can schedule time to
+dedicate to looking into this.
 
---jy6Sn24JjFx/iggw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm sure the archive's will hold on to this patch for us as a starting point :-)
 
-On Wed, Feb 14, 2018 at 11:07:39PM +0100, Sebastian Reichel wrote:
+--
+Regards
 
-> +config SND_SOC_CPCAP
-> +	tristate "Motorola CPCAP codec"
-> +	depends on MFD_CPCAP
-> +	default MFD_CPCAP
-> +
+Kieran
 
-We don't have default lines like this for other MFDs...
-
-> +	SOC_ENUM("Hifi Left Phase Playback Switch",
-> +		cpcap_hifi_l_phase_inv_enum),
-> +	SOC_ENUM("Ext Left Phase Playback Switch",
-> +		cpcap_ext_l_phase_inv_enum),
-
-If this is a Switch control it should be a simple on/off binary control.
-If it's an enumeration it shouldn't have Switch at the end of the name
-since that's a keyword interpreted by userspace.  Either option seems
-fine in this case, if it's a switch it should be "Foo Invert Switch" or
-similar.
-
---jy6Sn24JjFx/iggw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqGwtUACgkQJNaLcl1U
-h9Bl0Qf9G0/FzroOGeLykBCGn9UJFAuxOww1IVCOSq1yX5MXbRzKLndkj7wl8xSr
-0LZlqyI9uEMR7neVga+k982xlUUNz1OfJxbBJyiH/26Y3BXi1kZ+DOnjb/LItj8Y
-IAHYvEn3ND6HjZtm2jf73BBCvkyAxBt/KuT87P/eOPov/F/ASsGhKZhs4agvGAId
-2rUnSrG3X++fgMd2GhxOgl58MsGW+5O2CEgwom06UUTeiPgCoF1HaEuZoh3p4dZY
-r6SPYStZlMFCNRqWrlfy2Yi5KwNCJwd2Y7u9spg94xMXI7j2V5Vbt42yrH1F6uz2
-fReE5awls/jlY8KpC4hmo4tb0zDutQ==
-=vnov
------END PGP SIGNATURE-----
-
---jy6Sn24JjFx/iggw--
-
---===============2390728037833373288==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2390728037833373288==--
+> 
+>> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+>> ---
+>>  arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 56 +++++++++++++++++++++++
+>>  1 file changed, 56 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+>> b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts index
+>> 668e246dfc5d..df0c7773cb7d 100644
+>> --- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+>> +++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+>> @@ -27,6 +27,17 @@
+>>  		stdout-path = "serial0:115200n8";
+>>  	};
+>>
+>> +	hdmi-out {
+>> +		compatible = "hdmi-connector";
+>> +		type = "a";
+>> +
+>> +		port {
+>> +			hdmi_con_out: endpoint {
+>> +				remote-endpoint = <&adv7511_out>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>>  	vga {
+>>  		compatible = "vga-connector";
+>>
+>> @@ -124,6 +135,39 @@
+>>  		reg = <0x50>;
+>>  		pagesize = <8>;
+>>  	};
+>> +
+>> +	hdmi@39 {
+>> +		compatible = "adi,adv7511w";
+>> +		reg = <0x39>, <0x3f>, <0x38>, <0x3c>;
+>> +		reg-names = "main", "edid", "packet", "cec";
+>> +		interrupt-parent = <&gpio1>;
+>> +		interrupts = <28 IRQ_TYPE_LEVEL_LOW>;
+>> +
+>> +		adi,input-depth = <8>;
+>> +		adi,input-colorspace = "rgb";
+>> +		adi,input-clock = "1x";
+>> +		adi,input-style = <1>;
+>> +		adi,input-justification = "evenly";
+>> +
+>> +		ports {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +
+>> +			port@0 {
+>> +				reg = <0>;
+>> +				adv7511_in: endpoint {
+>> +					remote-endpoint = <&lvds0_out>;
+>> +				};
+>> +			};
+>> +
+>> +			port@1 {
+>> +				reg = <1>;
+>> +				adv7511_out: endpoint {
+>> +					remote-endpoint = <&hdmi_con_out>;
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+>>  };
+>>
+>>  &i2c1 {
+>> @@ -146,6 +190,18 @@
+>>  	};
+>>  };
+>>
+>> +&lvds0 {
+>> +	status = "okay";
+>> +
+>> +	ports {
+>> +		port@1 {
+>> +			endpoint {
+>> +				remote-endpoint = <&adv7511_in>;
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> +
+>>  &ehci0 {
+>>  	status = "okay";
+>>  };
+> 
+> 
