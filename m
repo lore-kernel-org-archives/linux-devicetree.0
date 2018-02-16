@@ -1,80 +1,86 @@
-From: Stefan Monnier <monnier@IRO.UMontreal.CA>
-Subject: [PATCH] ARM: dts: sun7i: Enable HDMI support on the Banana Pi
-Date: Fri, 16 Feb 2018 11:16:04 -0500
-Message-ID: <jwvbmgoapat.fsf-monnier@gnu.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2] ASoC: dmic: Add optional wakeup delay
+Date: Fri, 16 Feb 2018 08:47:45 -0800
+Message-ID: <20180216164745.GC99727@google.com>
+References: <20180216022416.208265-1-mka@chromium.org>
+ <20180216024728.GA93733@rodete-desktop-imager.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180216024728.GA93733@rodete-desktop-imager.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dylan Reid <dgreid@chromium.org>, huang lin <hl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stefan Monnier <monnier@iro.umontreal.ca>
+El Thu, Feb 15, 2018 at 06:47:29PM -0800 Brian Norris ha dit:
 
-Enable the display pipeline and HDMI output
+> Hi,
+> 
+> On Thu, Feb 15, 2018 at 06:24:16PM -0800, Matthias Kaehlcke wrote:
+> > On some systems a delay is needed after switching on the clocks, to allow
+> > the output to stabilize and avoid a popping noise at the beginning of
+> > the recording. Add the optional device tree property 'wakeup-delay-ms'
+> > and apply the specified delay after enabling the mic. A blocking delay
+> > can't be applied in dmic_daiops_trigger() since the function is called
+> > in atomic context. Instead use a DAPM event handler to set the enable
+> > GPIO and apply the delay in the handler.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > Changes in v2:
+> > - use DAPM event handler instead of _prepare() and get rid of
+> >   _trigger()
+> > - skip error check for optional 'wakeup-delay-ms' property
+> > - updated commit message
+> 
+> Looks good to me in general:
+> 
+> Brian Norris <briannorris@chromium.org>
+> 
+> But I don't know much about the audio subsystem. One comment below.
+> 
+> > 
+> >  .../devicetree/bindings/sound/dmic.txt        |  2 +
+> >  sound/soc/codecs/dmic.c                       | 63 ++++++++++---------
+> >  2 files changed, 37 insertions(+), 28 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/sound/dmic.txt b/Documentation/devicetree/bindings/sound/dmic.txt
+> > index f7bf65611453..e957b4136716 100644
+> > --- a/Documentation/devicetree/bindings/sound/dmic.txt
+> > +++ b/Documentation/devicetree/bindings/sound/dmic.txt
+> > @@ -8,6 +8,7 @@ Required properties:
+> >  Optional properties:
+> >  	- dmicen-gpios: GPIO specifier for dmic to control start and stop
+> >  	- num-channels: Number of microphones on this DAI
+> > +	- wakeup-delay-ms: Delay (in ms) after enabling the DMIC
+> >  
+> >  Example node:
+> >  
+> > @@ -15,4 +16,5 @@ Example node:
+> >  		compatible = "dmic-codec";
+> >  		dmicen-gpios = <&gpio4 3 GPIO_ACTIVE_HIGH>;
+> >  		num-channels = <1>;
+> > +		wakeup-delay-ms <50>;
+> >  	};
+> > diff --git a/sound/soc/codecs/dmic.c b/sound/soc/codecs/dmic.c
+> > index cf83c423394d..b5f60ac22ace 100644
+> > --- a/sound/soc/codecs/dmic.c
+> > +++ b/sound/soc/codecs/dmic.c
+> [...]
+> 
+> >  static const struct snd_soc_dapm_widget dmic_dapm_widgets[] = {
+> > -	SND_SOC_DAPM_AIF_OUT("DMIC AIF", "Capture", 0,
+> > -			     SND_SOC_NOPM, 0, 0),
+> > +	SND_SOC_DAPM_AIF_OUT_E("DMIC AIF", "Capture", 0,
+> > +			       SND_SOC_NOPM, 0, 0, dmic_aif_event,
+> > +			       SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
+> 
+> Any good reason both are _POST_? It seems like you'd want them to be
+> inverses (e.g., power-power-up, and pre-power-down).
 
-Signed-off-by: Stefan Monnier <monnier@iro.umontreal.ca>
----
- arch/arm/boot/dts/sun7i-a20-bananapi.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index 88a1c2363c6c..45da8a282288 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -63,6 +63,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -109,6 +120,10 @@
- 		>;
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -130,6 +145,16 @@
- 	};
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
+Post-power-up is needed to avoid a popping noise when the clock is
+enabled (see 3a6f9dce6116 ("ASoC: rk3399_gru_sound: fix recording pop
+at first attempt") and disabling the mic before switching off the
+clock (pre-power-down) could cause noise at the end of the recording.
