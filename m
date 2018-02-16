@@ -1,33 +1,80 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add eMMC node for rk3288-vyasa
-Date: Fri, 16 Feb 2018 12:35:17 +0100
-Message-ID: <50628840.7FuqeNZ2tp@diego>
-References: <1518623251-21562-1-git-send-email-jagan@amarulasolutions.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv4 2/4] ASoC: codec: cpcap: new codec
+Date: Fri, 16 Feb 2018 11:39:01 +0000
+Message-ID: <20180216113901.GC5886@sirena.org.uk>
+References: <20180214220741.28306-1-sebastian.reichel@collabora.co.uk>
+ <20180214220741.28306-3-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518623251-21562-1-git-send-email-jagan@amarulasolutions.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jagan Teki <jagannadh.teki@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============2390728037833373288=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180214220741.28306-3-sebastian.reichel@collabora.co.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 14. Februar 2018, 16:47:31 CET schrieb Jagan Teki:
-> RK3288 Vyasa has eMMC, add dts node to support it.
-> 
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 
-applied for 4.17
+--===============2390728037833373288==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jy6Sn24JjFx/iggw"
+Content-Disposition: inline
 
 
-Thanks
-Heiko
+--jy6Sn24JjFx/iggw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Feb 14, 2018 at 11:07:39PM +0100, Sebastian Reichel wrote:
+
+> +config SND_SOC_CPCAP
+> +	tristate "Motorola CPCAP codec"
+> +	depends on MFD_CPCAP
+> +	default MFD_CPCAP
+> +
+
+We don't have default lines like this for other MFDs...
+
+> +	SOC_ENUM("Hifi Left Phase Playback Switch",
+> +		cpcap_hifi_l_phase_inv_enum),
+> +	SOC_ENUM("Ext Left Phase Playback Switch",
+> +		cpcap_ext_l_phase_inv_enum),
+
+If this is a Switch control it should be a simple on/off binary control.
+If it's an enumeration it shouldn't have Switch at the end of the name
+since that's a keyword interpreted by userspace.  Either option seems
+fine in this case, if it's a switch it should be "Foo Invert Switch" or
+similar.
+
+--jy6Sn24JjFx/iggw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqGwtUACgkQJNaLcl1U
+h9Bl0Qf9G0/FzroOGeLykBCGn9UJFAuxOww1IVCOSq1yX5MXbRzKLndkj7wl8xSr
+0LZlqyI9uEMR7neVga+k982xlUUNz1OfJxbBJyiH/26Y3BXi1kZ+DOnjb/LItj8Y
+IAHYvEn3ND6HjZtm2jf73BBCvkyAxBt/KuT87P/eOPov/F/ASsGhKZhs4agvGAId
+2rUnSrG3X++fgMd2GhxOgl58MsGW+5O2CEgwom06UUTeiPgCoF1HaEuZoh3p4dZY
+r6SPYStZlMFCNRqWrlfy2Yi5KwNCJwd2Y7u9spg94xMXI7j2V5Vbt42yrH1F6uz2
+fReE5awls/jlY8KpC4hmo4tb0zDutQ==
+=vnov
+-----END PGP SIGNATURE-----
+
+--jy6Sn24JjFx/iggw--
+
+--===============2390728037833373288==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2390728037833373288==--
