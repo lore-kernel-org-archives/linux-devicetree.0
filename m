@@ -1,166 +1,219 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3] ASoC: dmic: Add optional wakeup delay
-Date: Fri, 16 Feb 2018 09:53:12 -0800
-Message-ID: <20180216175312.88465-1-mka@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 2/2] net: ethernet: nixge: Add support for National
+ Instruments XGE netdev
+Date: Fri, 16 Feb 2018 19:17:07 +0100
+Message-ID: <20180216181707.GJ3080@lunn.ch>
+References: <20180216170033.3834-1-mdf@kernel.org>
+ <20180216170033.3834-2-mdf@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180216170033.3834-2-mdf@kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On some systems a delay is needed after switching on the clocks, to allow
-the output to stabilize and avoid a popping noise at the beginning of
-the recording. Add the optional device tree property 'wakeup-delay-ms'
-and apply the specified delay after enabling the mic. A blocking delay
-can't be applied in dmic_daiops_trigger() since the function is called
-in atomic context. Instead use a DAPM event handler to set the enable
-GPIO and apply the delay in the handler.
+On Fri, Feb 16, 2018 at 09:00:33AM -0800, Moritz Fischer wrote:
+> +#define NIXGE_MDIO_CLAUSE45	BIT(12)
+> +#define NIXGE_MDIO_CLAUSE22	0
+> +#define NIXGE_MDIO_OP(n)     (((n) & 0x3) << 10)
+> +#define NIXGE_MDIO_OP_ADDRESS	0
+> +#define NIXGE_MDIO_OP_WRITE	BIT(0)
+> +#define NIXGE_MDIO_OP_READ	(BIT(1) | BIT(0))
+> +#define MDIO_C22_WRITE		BIT(0)
+> +#define MDIO_C22_READ		BIT(1)
+> +#define MDIO_READ_POST		2
 
-Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
-Changes in v3:
-- rebased on latest dmic topic branch
+Hi Moritz
 
-Changes in v2:
-- use DAPM event handler instead of _prepare() and get rid of
-  _trigger()
-- skip error check for optional 'wakeup-delay-ms' property
-- updated commit message
 
- .../devicetree/bindings/sound/dmic.txt        |  2 +
- sound/soc/codecs/dmic.c                       | 63 ++++++++++---------
- 2 files changed, 37 insertions(+), 28 deletions(-)
+NIXGE prefix?
 
-diff --git a/Documentation/devicetree/bindings/sound/dmic.txt b/Documentation/devicetree/bindings/sound/dmic.txt
-index f7bf65611453..e957b4136716 100644
---- a/Documentation/devicetree/bindings/sound/dmic.txt
-+++ b/Documentation/devicetree/bindings/sound/dmic.txt
-@@ -8,6 +8,7 @@ Required properties:
- Optional properties:
- 	- dmicen-gpios: GPIO specifier for dmic to control start and stop
- 	- num-channels: Number of microphones on this DAI
-+	- wakeup-delay-ms: Delay (in ms) after enabling the DMIC
- 
- Example node:
- 
-@@ -15,4 +16,5 @@ Example node:
- 		compatible = "dmic-codec";
- 		dmicen-gpios = <&gpio4 3 GPIO_ACTIVE_HIGH>;
- 		num-channels = <1>;
-+		wakeup-delay-ms <50>;
- 	};
-diff --git a/sound/soc/codecs/dmic.c b/sound/soc/codecs/dmic.c
-index 32a8f71d51f1..bac5bbb2dd59 100644
---- a/sound/soc/codecs/dmic.c
-+++ b/sound/soc/codecs/dmic.c
-@@ -19,6 +19,7 @@
-  *
-  */
- 
-+#include <linux/delay.h>
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/platform_device.h>
-@@ -29,34 +30,33 @@
- #include <sound/soc.h>
- #include <sound/soc-dapm.h>
- 
--static int dmic_daiops_trigger(struct snd_pcm_substream *substream,
--		int cmd, struct snd_soc_dai *dai)
--{
--	struct gpio_desc *dmic_en = snd_soc_dai_get_drvdata(dai);
-+struct dmic {
-+	struct gpio_desc *gpio_en;
-+	int wakeup_delay;
-+};
- 
--	if (!dmic_en)
--		return 0;
-+static int dmic_aif_event(struct snd_soc_dapm_widget *w,
-+			  struct snd_kcontrol *kcontrol, int event) {
-+	struct snd_soc_codec *codec = snd_soc_dapm_to_codec(w->dapm);
-+	struct dmic *dmic = snd_soc_codec_get_drvdata(codec);
- 
--	switch (cmd) {
--	case SNDRV_PCM_TRIGGER_START:
--	case SNDRV_PCM_TRIGGER_RESUME:
--	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
--		gpiod_set_value(dmic_en, 1);
-+	switch (event) {
-+	case SND_SOC_DAPM_POST_PMU:
-+		if (dmic->gpio_en)
-+			gpiod_set_value(dmic->gpio_en, 1);
-+
-+		if (dmic->wakeup_delay)
-+			msleep(dmic->wakeup_delay);
- 		break;
--	case SNDRV_PCM_TRIGGER_STOP:
--	case SNDRV_PCM_TRIGGER_SUSPEND:
--	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
--		gpiod_set_value(dmic_en, 0);
-+	case SND_SOC_DAPM_POST_PMD:
-+		if (dmic->gpio_en)
-+			gpiod_set_value(dmic->gpio_en, 0);
- 		break;
- 	}
- 
- 	return 0;
- }
- 
--static const struct snd_soc_dai_ops dmic_dai_ops = {
--	.trigger	= dmic_daiops_trigger,
--};
--
- static struct snd_soc_dai_driver dmic_dai = {
- 	.name = "dmic-hifi",
- 	.capture = {
-@@ -68,26 +68,33 @@ static struct snd_soc_dai_driver dmic_dai = {
- 			| SNDRV_PCM_FMTBIT_S24_LE
- 			| SNDRV_PCM_FMTBIT_S16_LE,
- 	},
--	.ops    = &dmic_dai_ops,
- };
- 
- static int dmic_component_probe(struct snd_soc_component *component)
- {
--	struct gpio_desc *dmic_en;
-+	struct dmic *dmic;
-+
-+	dmic = devm_kzalloc(component->dev, sizeof(*dmic), GFP_KERNEL);
-+	if (!dmic)
-+		return -ENOMEM;
-+
-+	dmic->gpio_en = devm_gpiod_get_optional(component->dev,
-+						"dmicen", GPIOD_OUT_LOW);
-+	if (IS_ERR(dmic->gpio_en))
-+		return PTR_ERR(dmic->gpio_en);
- 
--	dmic_en = devm_gpiod_get_optional(component->dev,
--					"dmicen", GPIOD_OUT_LOW);
--	if (IS_ERR(dmic_en))
--		return PTR_ERR(dmic_en);
-+	device_property_read_u32(component->dev, "wakeup-delay-ms",
-+				 &dmic->wakeup_delay);
- 
--	snd_soc_component_set_drvdata(component, dmic_en);
-+	snd_soc_component_set_drvdata(component, dmic);
- 
- 	return 0;
- }
- 
- static const struct snd_soc_dapm_widget dmic_dapm_widgets[] = {
--	SND_SOC_DAPM_AIF_OUT("DMIC AIF", "Capture", 0,
--			     SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT_E("DMIC AIF", "Capture", 0,
-+			       SND_SOC_NOPM, 0, 0, dmic_aif_event,
-+			       SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
- 	SND_SOC_DAPM_INPUT("DMic"),
- };
- 
--- 
-2.16.1.291.g4437f3f132-goog
+> +#define NIXGE_MDIO_ADDR(n)   (((n) & 0x1f) << 5)
+> +#define NIXGE_MDIO_MMD(n)    (((n) & 0x1f) << 0)
+> +
+> +#define NIXGE_MAX_PHY_ADDR	32
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is nothing specific to this device. Please use the standard
+PHY_MAX_ADDR.
+
+> +static int nixge_open(struct net_device *ndev)
+> +{
+> +	struct nixge_priv *priv = netdev_priv(ndev);
+> +	struct phy_device *phy;
+> +	int ret;
+> +
+> +	nixge_device_reset(ndev);
+> +
+> +	phy = of_phy_connect(ndev, priv->phy_node,
+> +			     &nixge_handle_link_change, 0, priv->phy_mode);
+> +	if (!phy)
+> +		return -ENODEV;
+> +
+> +	phy_start(phy);
+> +
+> +	/* Enable tasklets for Axi DMA error handling */
+> +	tasklet_init(&priv->dma_err_tasklet, nixge_dma_err_handler,
+> +		     (unsigned long)priv);
+> +
+> +	napi_enable(&priv->napi);
+> +
+> +	/* Enable interrupts for Axi DMA Tx */
+> +	ret = request_irq(priv->tx_irq, nixge_tx_irq, 0, ndev->name, ndev);
+> +	if (ret)
+> +		goto err_tx_irq;
+> +	/* Enable interrupts for Axi DMA Rx */
+> +	ret = request_irq(priv->rx_irq, nixge_rx_irq, 0, ndev->name, ndev);
+> +	if (ret)
+> +		goto err_rx_irq;
+> +
+> +	netif_start_queue(ndev);
+> +
+> +	return 0;
+> +
+> +err_rx_irq:
+> +	free_irq(priv->tx_irq, ndev);
+> +err_tx_irq:
+> +	tasklet_kill(&priv->dma_err_tasklet);
+> +	netdev_err(ndev, "request_irq() failed\n");
+> +	return ret;
+
+Maybe you also want to stop the phy and disconnect it?
+
+> +static int nixge_stop(struct net_device *ndev)
+> +{
+> +	struct nixge_priv *priv = netdev_priv(ndev);
+> +	u32 cr;
+> +
+> +	netif_stop_queue(ndev);
+> +	napi_disable(&priv->napi);
+> +
+> +	if (ndev->phydev)
+> +		phy_stop(ndev->phydev);
+
+phy_disconnect() ?
+
+
+> +	cr = nixge_dma_read_reg(priv, XAXIDMA_RX_CR_OFFSET);
+> +	nixge_dma_write_reg(priv, XAXIDMA_RX_CR_OFFSET,
+> +			    cr & (~XAXIDMA_CR_RUNSTOP_MASK));
+> +	cr = nixge_dma_read_reg(priv, XAXIDMA_TX_CR_OFFSET);
+> +	nixge_dma_write_reg(priv, XAXIDMA_TX_CR_OFFSET,
+> +			    cr & (~XAXIDMA_CR_RUNSTOP_MASK));
+> +
+> +	tasklet_kill(&priv->dma_err_tasklet);
+> +
+> +	free_irq(priv->tx_irq, ndev);
+> +	free_irq(priv->rx_irq, ndev);
+> +
+> +	nixge_hw_dma_bd_release(ndev);
+> +
+> +	return 0;
+> +}
+
+> +static int nixge_mdio_read(struct mii_bus *bus, int phy_id, int reg)
+> +{
+> +	struct nixge_priv *priv = bus->priv;
+> +	u32 status, tmp;
+> +	int err;
+> +	u16 device;
+> +
+> +	if (reg & MII_ADDR_C45) {
+> +		device = (reg >> 16) & 0x1f;
+> +
+> +		nixge_ctrl_write_reg(priv, NIXGE_REG_MDIO_ADDR, reg & 0xffff);
+> +
+> +		tmp = NIXGE_MDIO_CLAUSE45 | NIXGE_MDIO_OP(NIXGE_MDIO_OP_ADDRESS)
+> +			| NIXGE_MDIO_ADDR(phy_id) | NIXGE_MDIO_MMD(device);
+> +
+> +		nixge_ctrl_write_reg(priv, NIXGE_REG_MDIO_OP, tmp);
+> +		nixge_ctrl_write_reg(priv, NIXGE_REG_MDIO_CTRL, 1);
+> +
+> +		err = nixge_ctrl_poll_timeout(priv, NIXGE_REG_MDIO_CTRL, status,
+> +					      !status, 10, 1000);
+> +		if (err) {
+> +			dev_err(priv->dev, "timeout setting address");
+> +			return err;
+> +		}
+> +
+> +		tmp = NIXGE_MDIO_CLAUSE45 | NIXGE_MDIO_OP(NIXGE_MDIO_OP_READ) |
+> +			NIXGE_MDIO_ADDR(phy_id) | NIXGE_MDIO_MMD(device);
+> +	} else {
+> +		device = reg & 0x1f;
+> +
+> +		tmp = NIXGE_MDIO_CLAUSE22 | NIXGE_MDIO_OP(MDIO_C22_READ) |
+> +			NIXGE_MDIO_ADDR(phy_id) | NIXGE_MDIO_MMD(device);
+
+It would be nice to have some naming consistency here. NIXGE_MDIO_C45_READ and 
+NIXGE_MDIO_C22_READ?
+
+> +	}
+> +
+> +	nixge_ctrl_write_reg(priv, NIXGE_REG_MDIO_OP, tmp);
+> +	nixge_ctrl_write_reg(priv, NIXGE_REG_MDIO_CTRL, 1);
+> +
+> +	err = nixge_ctrl_poll_timeout(priv, NIXGE_REG_MDIO_CTRL, status,
+> +				      !status, 10, 1000);
+> +	if (err) {
+> +		dev_err(priv->dev, "timeout setting read command");
+> +		return err;
+> +	}
+> +
+> +	status = nixge_ctrl_read_reg(priv, NIXGE_REG_MDIO_DATA);
+> +
+> +	return status;
+> +}
+> +
+> +static int nixge_mdio_setup(struct nixge_priv *priv, struct device_node *np)
+> +{
+> +	struct mii_bus *bus;
+> +	int err;
+> +
+> +	bus = mdiobus_alloc();
+
+devm_mdiobus_alloc() ?
+
+> +	if (!bus)
+> +		return -ENOMEM;
+> +
+> +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s-mii", dev_name(priv->dev));
+> +	bus->priv = priv;
+> +	bus->name = "nixge_mii_bus";
+> +	bus->read = nixge_mdio_read;
+> +	bus->write = nixge_mdio_write;
+> +	bus->parent = priv->dev;
+> +
+> +	priv->mii_bus = bus;
+> +	err = of_mdiobus_register(bus, np);
+> +	if (err)
+> +		goto err_register;
+> +
+> +	return 0;
+> +
+> +err_register:
+> +	mdiobus_free(bus);
+> +	return err;
+> +}
+
+> +static int nixge_remove(struct platform_device *pdev)
+> +{
+> +	struct net_device *ndev = platform_get_drvdata(pdev);
+> +	struct nixge_priv *priv = netdev_priv(ndev);
+> +
+> +	mdiobus_unregister(priv->mii_bus);
+> +	mdiobus_free(priv->mii_bus);
+> +
+> +	unregister_netdev(ndev);
+
+I'm not sure about the ordering here. It might be better to unregister
+the netdev, then destroy the MDIO bus.
+
+> +
+> +	free_netdev(ndev);
+> +
+> +	return 0;
+> +}
+
+  Andrew
