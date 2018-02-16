@@ -1,48 +1,108 @@
-From: Daniel Baluta <daniel.baluta@nxp.com>
-Subject: Re: [PATCH v4 1/2] ASoC: codecs: Add support for AK5558 ADC driver
-Date: Fri, 16 Feb 2018 12:28:21 +0000
-Message-ID: <1518784101.9517.21.camel@nxp.com>
-References: <1518532174-11350-1-git-send-email-daniel.baluta@nxp.com>
-         <1518532174-11350-2-git-send-email-daniel.baluta@nxp.com>
-         <20180216121445.GH5886@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Kieran Bingham <kbingham@kernel.org>
+Subject: [PATCH v2] arm64: dts: renesas: r8a77995-draak: Enable DU
+Date: Fri, 16 Feb 2018 12:32:35 +0000
+Message-ID: <1518784355-17272-1-git-send-email-kbingham@kernel.org>
+References: <1518683903-10681-7-git-send-email-kbingham@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180216121445.GH5886@sirena.org.uk>
-Content-Language: en-US
-Content-ID: <E59F09E99505474789D8B931C8BFEA55@eurprd04.prod.outlook.com>
+In-Reply-To: <1518683903-10681-7-git-send-email-kbingham@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "pombredanne@nexb.com" <pombredanne@nexb.com>, "broonie@kernel.org" <broonie@kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Cosmin Samoila <cosmin.samoila@nxp.com>, "daniel.baluta@gmail.com" <daniel.baluta@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wakasugi.jb@om.asahi-kasei.co.jp" <wakasugi.jb@om.asahi-kasei.co.jp>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "mihai.serban@gmail.com" <mihai.serban@gmail.com>, "robh@kernel.org" <robh@kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "mihai.serban@nxp.com" <mihai.serban@nxp.com>
+To: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kieran Bingham <kieran.bingham@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVmksIDIwMTgtMDItMTYgYXQgMTI6MTQgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+IE9u
-IFR1ZSwgRmViIDEzLCAyMDE4IGF0IDA0OjI5OjMzUE0gKzAyMDAsIERhbmllbCBCYWx1dGEgd3Jv
-dGU6DQo+IA0KPiA+IA0KPiA+ICsrKyBiL3NvdW5kL3NvYy9jb2RlY3MvYWs1NTU4LmMNCj4gPiBA
-QCAtMCwwICsxLDQxNyBAQA0KPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
-MA0KPiA+ICsvKg0KPiBKdXN0IG1ha2UgdGhpcyBhIEMrKyBjb21tbWVudCwgZG9uJ3QgbWl4IEMg
-YW5kIEMrKyAtIGl0IGxvb2tzIG5lYXRlci4NCj4gT3RoZXJ3aXNlIHRoaXMgbG9va3MgZ29vZCBz
-byBJJ2xsIGFwcGx5LCBwbGVhc2Ugc2VuZCBhIGZvbGxvd3VwIHBhdGNoDQo+IGZvciB0aGUgYWJv
-dmUuDQoNCkhpIE1hcmssDQoNCldpbGwgc2VuZCBhIHNlcGFyYXRlIHBhdGNoIHRvIGZpeCB0aGlz
-Lg0KDQpBbnlob3csIGxldHMgbWFrZSBzdXJlIHRoYXQgSSBnb3QgaXQgcmlnaHQgYmVjYXVzZSBs
-b29raW5nIGludG8NCnNvdW5kL3NvYy9jb2RlY3MgSSBjYW4gc2VlIGEgbWl4ZXMgb2Ygc3R5bGVz
-Lg0KDQpTbywgZm9yIGFrNTU1OC5jIHRoZSBjb3JyZWN0IGNvZGUgc2hvdWxkIGJlOg0KDQovLyBT
-UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KLy8NCi8vIEF1ZGlvIGRyaXZlciBmb3Ig
-QUs1NTU4IEFEQw0KLy8NCi8vIENvcHlyaWdodCAoQykgMjAxNSBBc2FoaSBLYXNlaSBNaWNyb2Rl
-dmljZXMgQ29ycG9yYXRpb24NCi8vIENvcHlyaWdodCAyMDE4IE5YUA0KLy8NCg0KTm93LCBmb3Ig
-dGhlIC5oIHRoZXJlIGlzIGEgdG90YWwgZGlmZmVyZW50IHN0b3J5LiBBcyBwZXLCoFBoaWxpcHBl
-J3MNCmxpbmsgdG8gZG9jdW1lbnRhdGlvbiBbMV0NCg0KdGhlIC5oIGZpbGUgc2hvdWxkIHN0YXJ0
-IHdpdGg6DQoNCkMgaGVhZGVyOgkvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogPFNQRFggTGlj
-ZW5zZSBFeHByZXNzaW9uPiAqLw0KDQpTbywgaXMgdGhlIGhlYWRlciBhazU1NTguaCBsb29raW5n
-IGxpa2UgdGhpcywgYWxsIHJpZ2h0Pw0KDQoNCi8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBH
-UEwtMi4wICovDQovKg0KwqAqIEF1ZGlvIGRyaXZlciBoZWFkZXIgZm9yIEFLNTU1OA0KwqAqDQrC
-oCogQ29weXJpZ2h0IChDKSAyMDE2IEFzYWhpIEthc2VpIE1pY3JvZGV2aWNlcyBDb3Jwb3JhdGlv
-bg0KwqAqIENvcHlyaWdodCAyMDE4IE5YUA0KwqAqLw0KDQpBcmUgeW91IHdpbGxpbmcgdG8gdGFr
-ZSBwYXRjaGVzIGZpeGluZyB0aGUgU1BEWCBpZGVudGlmaWVyIGZvciB0aGUgcmVzdCBvZiB0aGUg
-Y29kZWNzIGluIHNvdW5jL3NvYy9jb2RlY3M/DQoNCkkndmUgZ290IGEgYnVuY2ggb2Ygc3R1ZGVu
-dHMgbG9va2luZyBmb3IgY2xlYW51cCBwYXRjaGVzIGluIHRoZWlyIGFwcGxpY2F0aW9uIGZvciBH
-b29nbGUgU3VtbWVyIG9mIENvZGUgOikuDQoNCnRoYW5rcywNCkRhbmllbC4NCg0KWzFdaHR0cHM6
-Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXgu
-Z2l0L3RyZWUvRG9jdW1lbnRhdGlvbi9wcm9jZXNzL2xpY2Vuc2UtcnVsZXMucnN0I242Nw0KDQoN
-Cg0K
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+Enable the DU, providing only the VGA output for now.
+
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+
+Just a v2 update to fix the PFC name, and collect Laurent's RB tag.  The
+remainder of the series will likely be postponed due to dependencies on LVDS
+changes etc.
+
+v2:
+ - Update du_dot_clk_0 name to match Ulrich's PFC configuration.
+
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 51 ++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+index af07da240be0..37025251078a 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
++++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+@@ -27,6 +27,38 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	vga {
++		compatible = "vga-connector";
++
++		port {
++			vga_in: endpoint {
++				remote-endpoint = <&adv7123_out>;
++			};
++		};
++	};
++
++	vga-encoder {
++		compatible = "adi,adv7123";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				adv7123_in: endpoint {
++					remote-endpoint = <&du_out_rgb>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				adv7123_out: endpoint {
++					remote-endpoint = <&vga_in>;
++				};
++			};
++		};
++	};
++
+ 	memory@48000000 {
+ 		device_type = "memory";
+ 		/* first 128MB is reserved for secure area. */
+@@ -46,6 +78,11 @@
+ 		};
+ 	};
+ 
++	du_pins: du {
++		groups = "du_rgb888", "du_sync", "du_disp", "du_clk_out_0";
++		function = "du";
++	};
++
+ 	i2c0_pins: i2c0 {
+ 		groups = "i2c0";
+ 		function = "i2c0";
+@@ -95,6 +132,20 @@
+ 	status = "okay";
+ };
+ 
++&du {
++	pinctrl-0 = <&du_pins>;
++	pinctrl-names = "default";
++	status = "okay";
++
++	ports {
++		port@0 {
++			endpoint {
++				remote-endpoint = <&adv7123_in>;
++			};
++		};
++	};
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+-- 
+2.7.4
