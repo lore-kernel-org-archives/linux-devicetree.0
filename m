@@ -1,53 +1,56 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/5] improvements and fixes for the phy-meson-gxl-usb2
- driver
-Date: Fri, 16 Feb 2018 17:51:54 +0530
-Message-ID: <a2971b23-526a-a611-4f22-098e60e1fa74@ti.com>
-References: <20180128202245.25021-1-martin.blumenstingl@googlemail.com>
+From: Philippe Ombredanne <pombredanne-od1rfyK75/E@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] clk: npcm7xx: add clock controler. fixed clock at DT
+Date: Fri, 16 Feb 2018 13:27:44 +0100
+Message-ID: <CAOFm3uHCkv893H_y-fJthNiW0=wO23ddCkZKBdfeiOOF0GAE_Q@mail.gmail.com>
+References: <1518701454-22697-1-git-send-email-tali.perry1@gmail.com> <1518701454-22697-2-git-send-email-tali.perry1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180128202245.25021-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1518701454-22697-2-git-send-email-tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, yixun.lan-LpR1jeaWuhtBDgjK7y7TUQ@public.gmane.org
+To: Tali Perry <tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Tali,
 
+On Thu, Feb 15, 2018 at 2:30 PM, Tali Perry <tali.perry1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> --- /dev/null
+> +++ b/drivers/clk/clk-npcm7xx.c
+> @@ -0,0 +1,759 @@
+> +/*
+> + * Nuvoton NPCM7xx Clock Generator
+> + * All the clocks are initialized by the bootloader, so this driver allow only
+> + * reading of current settings directly from the hardware.
+> + *
+> + * Copyright (C) 2018 Nuvoton Technologies tali.perry-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
+> + * Released under the GPLv2 only.
+> + */
 
-On Monday 29 January 2018 01:52 AM, Martin Blumenstingl wrote:
-> This contains two fixes and two (minor) fixes for the phy-meson-gxl-usb2
-> driver:
-> - a clock and reset line is used for the PHYs. this was not clear from
->   the Amlogic GPL kernel sources since the clock is enabled very early
->   in the boot process (either because the hardware defaults to "on",
->   the bootrom enables it or a bootloader before BL3-3/u-boot enables it)
-> - we don't read the controller's dr_mode anymore because the USB2 PHY
->   can only be switched into host mode if the USB3 PHY knows about it.
->   Thus auto-detecting the mode doesn't work for this PHY so it's removed
->   in patch #3
-> - do not log an error message when the phy-supply is not ready yet and
->   we have to return -EPROBE_DEFER
-> - improve the naming of some U2P_R2 test mode registers
+Thank you for using the SPDX tags! but this can be streamlined a bit per [1]
 
-merged, thanks!
+The correct way would come out as this: (note the tag placement and
+comment style and the removal of the now redundant unstructured
+notice)
 
--Kishon
-> 
-> 
-> Martin Blumenstingl (5):
->   dt-bindings: phy: meson-gxl-usb2-phy: add the reset line and clock
->   phy: amlogic: phy-meson-gxl-usb2: support the clock and reset line
->   phy: amlogic: phy-meson-gxl-usb2: default to host mode
->   phy: amlogic: phy-meson-gxl-usb2: don't log an error on -EPROBE_DEFER
->   phy: amlogic: phy-meson-gxl-usb2: rename some of the U2P_R2 registers
-> 
->  .../devicetree/bindings/phy/meson-gxl-usb2-phy.txt |  4 ++
->  drivers/phy/amlogic/Kconfig                        |  1 -
->  drivers/phy/amlogic/phy-meson-gxl-usb2.c           | 78 ++++++++++++++++------
->  3 files changed, 61 insertions(+), 22 deletions(-)
-> 
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Nuvoton NPCM7xx Clock Generator
+> + * All the clocks are initialized by the bootloader, so this driver allow only
+> + * reading of current settings directly from the hardware.
+> + *
+> + * Copyright (C) 2018 Nuvoton Technologies tali.perry-KrzQf0k3Iz9BDgjK7y7TUQ@public.gmane.org
+> + */
+
+And yes you may be surprised by the use of C++ style comment for
+this... This has been discussed on list and is what Linus prefers.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/license-rules.rst
+-- 
+Cordially
+Philippe Ombredanne
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
