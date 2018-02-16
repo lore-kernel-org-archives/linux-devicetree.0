@@ -1,159 +1,261 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2] ASoC: dmic: Add optional wakeup delay
-Date: Thu, 15 Feb 2018 18:24:16 -0800
-Message-ID: <20180216022416.208265-1-mka@chromium.org>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v11 1/3] arm: npcm: add basic support for Nuvoton BMCs
+Date: Thu, 15 Feb 2018 18:40:09 -0800
+Message-ID: <20180216024011.189157-2-brendanhiggins@google.com>
+References: <20180216024011.189157-1-brendanhiggins@google.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180216024011.189157-1-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, huang lin <hl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, julien.thierry-5wv7dgnIgG8@public.gmane.org, pombredanne-od1rfyK75/E@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On some systems a delay is needed after switching on the clocks, to allow
-the output to stabilize and avoid a popping noise at the beginning of
-the recording. Add the optional device tree property 'wakeup-delay-ms'
-and apply the specified delay after enabling the mic. A blocking delay
-can't be applied in dmic_daiops_trigger() since the function is called
-in atomic context. Instead use a DAPM event handler to set the enable
-GPIO and apply the delay in the handler.
+Adds basic support for the Nuvoton NPCM750 BMC.
 
-Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Reviewed-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Tomer Maimon <tmaimon77-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Tested-by: Avi Fishman <avifishman70-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-Changes in v2:
-- use DAPM event handler instead of _prepare() and get rid of
-  _trigger()
-- skip error check for optional 'wakeup-delay-ms' property
-- updated commit message
+ arch/arm/Kconfig             |  2 +
+ arch/arm/Makefile            |  1 +
+ arch/arm/mach-npcm/Kconfig   | 48 +++++++++++++++++++++
+ arch/arm/mach-npcm/Makefile  |  3 ++
+ arch/arm/mach-npcm/headsmp.S | 17 ++++++++
+ arch/arm/mach-npcm/npcm7xx.c | 20 +++++++++
+ arch/arm/mach-npcm/platsmp.c | 81 ++++++++++++++++++++++++++++++++++++
+ 7 files changed, 172 insertions(+)
+ create mode 100644 arch/arm/mach-npcm/Kconfig
+ create mode 100644 arch/arm/mach-npcm/Makefile
+ create mode 100644 arch/arm/mach-npcm/headsmp.S
+ create mode 100644 arch/arm/mach-npcm/npcm7xx.c
+ create mode 100644 arch/arm/mach-npcm/platsmp.c
 
- .../devicetree/bindings/sound/dmic.txt        |  2 +
- sound/soc/codecs/dmic.c                       | 63 ++++++++++---------
- 2 files changed, 37 insertions(+), 28 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/dmic.txt b/Documentation/devicetree/bindings/sound/dmic.txt
-index f7bf65611453..e957b4136716 100644
---- a/Documentation/devicetree/bindings/sound/dmic.txt
-+++ b/Documentation/devicetree/bindings/sound/dmic.txt
-@@ -8,6 +8,7 @@ Required properties:
- Optional properties:
- 	- dmicen-gpios: GPIO specifier for dmic to control start and stop
- 	- num-channels: Number of microphones on this DAI
-+	- wakeup-delay-ms: Delay (in ms) after enabling the DMIC
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 7e3d53575486..6a8404cd5150 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -779,6 +779,8 @@ source "arch/arm/mach-netx/Kconfig"
  
- Example node:
+ source "arch/arm/mach-nomadik/Kconfig"
  
-@@ -15,4 +16,5 @@ Example node:
- 		compatible = "dmic-codec";
- 		dmicen-gpios = <&gpio4 3 GPIO_ACTIVE_HIGH>;
- 		num-channels = <1>;
-+		wakeup-delay-ms <50>;
- 	};
-diff --git a/sound/soc/codecs/dmic.c b/sound/soc/codecs/dmic.c
-index cf83c423394d..b5f60ac22ace 100644
---- a/sound/soc/codecs/dmic.c
-+++ b/sound/soc/codecs/dmic.c
-@@ -19,6 +19,7 @@
-  *
-  */
++source "arch/arm/mach-npcm/Kconfig"
++
+ source "arch/arm/mach-nspire/Kconfig"
  
-+#include <linux/delay.h>
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/platform_device.h>
-@@ -29,34 +30,33 @@
- #include <sound/soc.h>
- #include <sound/soc-dapm.h>
- 
--static int dmic_daiops_trigger(struct snd_pcm_substream *substream,
--		int cmd, struct snd_soc_dai *dai)
--{
--	struct gpio_desc *dmic_en = snd_soc_dai_get_drvdata(dai);
-+struct dmic {
-+	struct gpio_desc *gpio_en;
-+	int wakeup_delay;
+ source "arch/arm/plat-omap/Kconfig"
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index e83f5161fdd8..e4e537f27339 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -196,6 +196,7 @@ machine-$(CONFIG_ARCH_MEDIATEK)		+= mediatek
+ machine-$(CONFIG_ARCH_MXS)		+= mxs
+ machine-$(CONFIG_ARCH_NETX)		+= netx
+ machine-$(CONFIG_ARCH_NOMADIK)		+= nomadik
++machine-$(CONFIG_ARCH_NPCM)		+= npcm
+ machine-$(CONFIG_ARCH_NSPIRE)		+= nspire
+ machine-$(CONFIG_ARCH_OXNAS)		+= oxnas
+ machine-$(CONFIG_ARCH_OMAP1)		+= omap1
+diff --git a/arch/arm/mach-npcm/Kconfig b/arch/arm/mach-npcm/Kconfig
+new file mode 100644
+index 000000000000..6ff9df2636be
+--- /dev/null
++++ b/arch/arm/mach-npcm/Kconfig
+@@ -0,0 +1,48 @@
++menuconfig ARCH_NPCM
++	bool "Nuvoton NPCM Architecture"
++	select ARCH_REQUIRE_GPIOLIB
++	select USE_OF
++	select PINCTRL
++	select PINCTRL_NPCM7XX
++
++if ARCH_NPCM
++
++comment "NPCM7XX CPU type"
++
++config ARCH_NPCM750
++	depends on ARCH_NPCM && ARCH_MULTI_V7
++	bool "Support for NPCM750 BMC CPU (Poleg)"
++	select CACHE_L2X0
++	select CPU_V7
++	select ARM_GIC
++	select HAVE_SMP
++	select SMP
++	select SMP_ON_UP
++	select HAVE_ARM_SCU
++	select HAVE_ARM_TWD if SMP
++	select ARM_ERRATA_720789
++	select ARM_ERRATA_754322
++	select ARM_ERRATA_764369
++	select ARM_ERRATA_794072
++	select PL310_ERRATA_588369
++	select PL310_ERRATA_727915
++	select USB_EHCI_ROOT_HUB_TT
++	select USB_ARCH_HAS_HCD
++	select USB_ARCH_HAS_EHCI
++	select USB_EHCI_HCD
++	select USB_ARCH_HAS_OHCI
++	select USB_OHCI_HCD
++	select USB
++	select FIQ
++	select CPU_USE_DOMAINS
++	select GENERIC_CLOCKEVENTS
++	select CLKDEV_LOOKUP
++	select COMMON_CLK if OF
++	select NPCM750_TIMER
++	select MFD_SYSCON
++	help
++	  Support for NPCM750 BMC CPU (Poleg).
++
++	  Nuvoton NPCM750 BMC based on the Cortex A9.
++
++endif
+diff --git a/arch/arm/mach-npcm/Makefile b/arch/arm/mach-npcm/Makefile
+new file mode 100644
+index 000000000000..c7a1316d27c1
+--- /dev/null
++++ b/arch/arm/mach-npcm/Makefile
+@@ -0,0 +1,3 @@
++AFLAGS_headsmp.o		+= -march=armv7-a
++
++obj-$(CONFIG_ARCH_NPCM750)	+= npcm7xx.o platsmp.o headsmp.o
+diff --git a/arch/arm/mach-npcm/headsmp.S b/arch/arm/mach-npcm/headsmp.S
+new file mode 100644
+index 000000000000..c083fe09a07b
+--- /dev/null
++++ b/arch/arm/mach-npcm/headsmp.S
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2018 Nuvoton Technology corporation.
++// Copyright 2018 Google, Inc.
++
++#include <linux/linkage.h>
++#include <linux/init.h>
++#include <asm/assembler.h>
++
++/*
++ * The boot ROM does not start secondary CPUs in SVC mode, so we need to do that
++ * here.
++ */
++ENTRY(npcm7xx_secondary_startup)
++	safe_svcmode_maskall r0
++
++	b	secondary_startup
++ENDPROC(npcm7xx_secondary_startup)
+diff --git a/arch/arm/mach-npcm/npcm7xx.c b/arch/arm/mach-npcm/npcm7xx.c
+new file mode 100644
+index 000000000000..5f7cd88103ef
+--- /dev/null
++++ b/arch/arm/mach-npcm/npcm7xx.c
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2018 Nuvoton Technology corporation.
++// Copyright 2018 Google, Inc.
++
++#include <linux/kernel.h>
++#include <linux/types.h>
++#include <asm/mach/arch.h>
++#include <asm/mach-types.h>
++#include <asm/mach/map.h>
++#include <asm/hardware/cache-l2x0.h>
++
++static const char *const npcm7xx_dt_match[] = {
++	"nuvoton,npcm750",
++	NULL
 +};
- 
--	if (!dmic_en)
--		return 0;
-+static int dmic_aif_event(struct snd_soc_dapm_widget *w,
-+			  struct snd_kcontrol *kcontrol, int event) {
-+	struct snd_soc_codec *codec = snd_soc_dapm_to_codec(w->dapm);
-+	struct dmic *dmic = snd_soc_codec_get_drvdata(codec);
- 
--	switch (cmd) {
--	case SNDRV_PCM_TRIGGER_START:
--	case SNDRV_PCM_TRIGGER_RESUME:
--	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
--		gpiod_set_value(dmic_en, 1);
-+	switch (event) {
-+	case SND_SOC_DAPM_POST_PMU:
-+		if (dmic->gpio_en)
-+			gpiod_set_value(dmic->gpio_en, 1);
 +
-+		if (dmic->wakeup_delay)
-+			msleep(dmic->wakeup_delay);
- 		break;
--	case SNDRV_PCM_TRIGGER_STOP:
--	case SNDRV_PCM_TRIGGER_SUSPEND:
--	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
--		gpiod_set_value(dmic_en, 0);
-+	case SND_SOC_DAPM_POST_PMD:
-+		if (dmic->gpio_en)
-+			gpiod_set_value(dmic->gpio_en, 0);
- 		break;
- 	}
- 
- 	return 0;
- }
- 
--static const struct snd_soc_dai_ops dmic_dai_ops = {
--	.trigger	= dmic_daiops_trigger,
--};
--
- static struct snd_soc_dai_driver dmic_dai = {
- 	.name = "dmic-hifi",
- 	.capture = {
-@@ -68,26 +68,33 @@ static struct snd_soc_dai_driver dmic_dai = {
- 			| SNDRV_PCM_FMTBIT_S24_LE
- 			| SNDRV_PCM_FMTBIT_S16_LE,
- 	},
--	.ops    = &dmic_dai_ops,
- };
- 
- static int dmic_codec_probe(struct snd_soc_codec *codec)
- {
--	struct gpio_desc *dmic_en;
-+	struct dmic *dmic;
++DT_MACHINE_START(NPCM7XX_DT, "NPCM7XX Chip family")
++	.atag_offset	= 0x100,
++	.dt_compat	= npcm7xx_dt_match,
++MACHINE_END
+diff --git a/arch/arm/mach-npcm/platsmp.c b/arch/arm/mach-npcm/platsmp.c
+new file mode 100644
+index 000000000000..21633c70fe7f
+--- /dev/null
++++ b/arch/arm/mach-npcm/platsmp.c
+@@ -0,0 +1,81 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2018 Nuvoton Technology corporation.
++// Copyright 2018 Google, Inc.
 +
-+	dmic = devm_kzalloc(codec->dev, sizeof(*dmic), GFP_KERNEL);
-+	if (!dmic)
-+		return -ENOMEM;
++#define pr_fmt(fmt) "nuvoton,npcm7xx-smp: " fmt
 +
-+	dmic->gpio_en = devm_gpiod_get_optional(codec->dev,
-+						"dmicen", GPIOD_OUT_LOW);
-+	if (IS_ERR(dmic->gpio_en))
-+		return PTR_ERR(dmic->gpio_en);
- 
--	dmic_en = devm_gpiod_get_optional(codec->dev,
--					"dmicen", GPIOD_OUT_LOW);
--	if (IS_ERR(dmic_en))
--		return PTR_ERR(dmic_en);
-+	device_property_read_u32(codec->dev, "wakeup-delay-ms",
-+				 &dmic->wakeup_delay);
- 
--	snd_soc_codec_set_drvdata(codec, dmic_en);
-+	snd_soc_codec_set_drvdata(codec, dmic);
- 
- 	return 0;
- }
- 
- static const struct snd_soc_dapm_widget dmic_dapm_widgets[] = {
--	SND_SOC_DAPM_AIF_OUT("DMIC AIF", "Capture", 0,
--			     SND_SOC_NOPM, 0, 0),
-+	SND_SOC_DAPM_AIF_OUT_E("DMIC AIF", "Capture", 0,
-+			       SND_SOC_NOPM, 0, 0, dmic_aif_event,
-+			       SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_POST_PMD),
- 	SND_SOC_DAPM_INPUT("DMic"),
- };
- 
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/smp.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <asm/cacheflush.h>
++#include <asm/smp.h>
++#include <asm/smp_plat.h>
++#include <asm/smp_scu.h>
++
++#define NPCM7XX_SCRPAD_REG 0x13c
++
++extern void npcm7xx_secondary_startup(void);
++
++static int npcm7xx_smp_boot_secondary(unsigned int cpu,
++				      struct task_struct *idle)
++{
++	struct device_node *gcr_np;
++	void __iomem *gcr_base;
++	int ret = 0;
++
++	gcr_np = of_find_compatible_node(NULL, NULL, "nuvoton,npcm750-gcr");
++	if (!gcr_np) {
++		pr_err("no gcr device node\n");
++		ret = -ENODEV;
++		goto out;
++	}
++	gcr_base = of_iomap(gcr_np, 0);
++	if (!gcr_base) {
++		pr_err("could not iomap gcr");
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	/* give boot ROM kernel start address. */
++	iowrite32(__pa_symbol(npcm7xx_secondary_startup), gcr_base +
++		  NPCM7XX_SCRPAD_REG);
++	/* make sure the previous write is seen by all observers. */
++	dsb_sev();
++
++	iounmap(gcr_base);
++out:
++	return ret;
++}
++
++static void __init npcm7xx_smp_prepare_cpus(unsigned int max_cpus)
++{
++	struct device_node *scu_np;
++	void __iomem *scu_base;
++
++	scu_np = of_find_compatible_node(NULL, NULL, "arm,cortex-a9-scu");
++	if (!scu_np) {
++		pr_err("no scu device node\n");
++		return;
++	}
++	scu_base = of_iomap(scu_np, 0);
++	if (!scu_base) {
++		pr_err("could not iomap scu");
++		return;
++	}
++
++	scu_enable(scu_base);
++
++	iounmap(scu_base);
++}
++
++static struct smp_operations npcm7xx_smp_ops __initdata = {
++	.smp_prepare_cpus = npcm7xx_smp_prepare_cpus,
++	.smp_boot_secondary = npcm7xx_smp_boot_secondary,
++};
++
++CPU_METHOD_OF_DECLARE(npcm7xx_smp, "nuvoton,npcm750-smp", &npcm7xx_smp_ops);
 -- 
 2.16.1.291.g4437f3f132-goog
 
