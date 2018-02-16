@@ -1,75 +1,52 @@
-From: Stefan Monnier <monnier-TBKEPPAhkIr7qOVTksikzQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun7i: Enable HDMI support on the Orange Pi mini
-Date: Fri, 16 Feb 2018 15:52:09 -0500
-Message-ID: <jwvr2pk8xrb.fsf-monnier+diro@gnu.org>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4] rtc: isl12026: Add driver.
+Date: Fri, 16 Feb 2018 13:19:22 -0800
+Message-ID: <55b1edec-f93d-a25b-1736-d08783576424@caviumnetworks.com>
+References: <20180216194415.6103-1-david.daney@cavium.com>
+ <CAHp75VfRDWC1DAhHK-B_2rGLdLGG_FjHmYAmRS5ucspaUoJygA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75VfRDWC1DAhHK-B_2rGLdLGG_FjHmYAmRS5ucspaUoJygA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
+On 02/16/2018 12:13 PM, Andy Shevchenko wrote:
+> On Fri, Feb 16, 2018 at 9:44 PM, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
+>> The ISL12026 is a combination RTC and EEPROM device with I2C
+>> interface.  The standard RTC driver interface is provided.  The EEPROM
+>> is accessed via the NVMEM interface via the "eeprom0" directory in the
+>> sysfs entry for the device.
+> 
+>> +config RTC_DRV_ISL12026
+>> +       tristate "Intersil ISL12026"
+> 
+> depends on OF
 
-Enable the display pipeline and HDMI output for the Orange Pi mini
+It doesn't depend on CONFIG_OF, it builds just fine without it.
 
-Signed-off-by: Stefan Monnier <monnier-CRDzTM1onBSWkKpYnGOUKg@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+> 
+>> +static struct i2c_driver isl12026_driver = {
+>> +       .driver         = {
+>> +               .name   = "rtc-isl12026",
+>> +               .of_match_table = of_match_ptr(isl12026_dt_match),
+> 
+> /of_match_ptr//
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
-index 7af4c8fc1865..ce02ab532bc8 100644
---- a/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts
-@@ -61,6 +61,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	hdmi-connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -98,6 +109,10 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -119,6 +134,16 @@
- 	};
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &i2c0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins_a>;
+
+of_match_ptr() needed if we build without CONFIG_OF
+
+> 
+>> +       },
+>> +       .probe_new      = isl12026_probe_new,
+>> +       .remove         = isl12026_remove,
+>> +};
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
