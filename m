@@ -1,122 +1,57 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: aspeed-lpc: Document LPC Host
- Interface Controller
-Date: Fri, 16 Feb 2018 15:34:19 +1030
-Message-ID: <1518757459.10440.32.camel@aj.id.au>
-References: <20180212070847.32387-1-joel@jms.id.au>
-         <20180212070847.32387-2-joel@jms.id.au>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 0/8] ARM: sun9i: SMP and CPU hotplug support
+Date: Fri, 16 Feb 2018 13:37:20 +0800
+Message-ID: <CAGb2v64STu=qsWO2aZqqngVjqpN94hwt=ASgA-8C499Gkkh47w@mail.gmail.com>
+References: <20180117084654.8234-1-wens@csie.org> <CAGb2v67WeUPx2X0aJev0ezu5aO6TYsZMuxM2njictxPHRePPYA@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-gNbZ4d3BCzIKF12NhpLC"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180212070847.32387-2-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>, Lei YU <mine260309-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBKG4THKAKGQEYS6KIOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v67WeUPx2X0aJev0ezu5aO6TYsZMuxM2njictxPHRePPYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Feb 13, 2018 at 4:15 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> Hi Nicolas, Dave,
+>
+> On Wed, Jan 17, 2018 at 4:46 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> This is v4 of my sun9i SMP/hotplug support series which was started
+>> over two years ago [1]. We've tried to implement PSCI for both the A80
+>> and A83T. Results were not promising. The issue is that these two chips
+>> have a broken security extensions implementation. If a specific bit is
+>> not burned in its e-fuse, most if not all security protections don't
+>> work [2]. Even worse, non-secure access to the GIC become secure. This
+>> requires a crazy workaround in the GIC driver which probably doesn't work
+>> in all cases [3].
+>>
+>> Version 3 completely did away with the MCPM framework, instead just
+>> implementing a set of smp_ops. Most of the code from the previous
+>> version was reused, so the structure still has some traces of MCPM.
+>> As our hardware has CCI-400, we still need some sort of MMU/cache
+>> disabled trampoline code to enable cache coherency. Code for this
+>> was adapted from the MCPM framework. This and the entry code are done
+>> in inline assembly. Most of the other sunxi-specific code is derived
+>> from Allwinner code and documentation, with some references to the
+>> other MCPM implementations, as well as the Cortex's Technical Reference
+>> Manuals for the power sequencing stuff.
+>>
+>> In version 4, all traces of MCPM have been removed, except in the
+>> comments for atttributing code sources. Thumb2 mode is also fixed.
+>> It failed due to an unaligned word access.
+>
+> Any more comments on this series? Or is it OK for you guys now that
+> there are no traces of MCPM? :)
+>
+> We'll merge this series later this week for 4.17 if nothing else.
 
---=-gNbZ4d3BCzIKF12NhpLC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Merged for 4.17.
 
-On Mon, 2018-02-12 at 17:38 +1030, Joel Stanley wrote:
-> The LPC Host Interface Controller is part of a BMC SoC that is used for
-> communication with the host.
->=20
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-> ---
->  .../devicetree/bindings/mfd/aspeed-lpc.txt         | 40 ++++++++++++++++=
-++++++
->  1 file changed, 40 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Docum=
-entation/devicetree/bindings/mfd/aspeed-lpc.txt
-> index 514d82ced95b..94a31de109c4 100644
-> --- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> +++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> @@ -109,6 +109,46 @@ lpc: lpc@1e789000 {
->  	};
->  };
-> =20
-> +BMC Node Children
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +LPC Host Interface Controller
-
-This should be under the Host Node Children header given the
-function's position in the MMIO layout and the split prescribed by the
-bindings.
-
-> +-------------------
-> +
-> +The LPC Host Interface Controller manages functions exposed to the host =
-such as
-> +LPC firmware hub cycles, configuration of the LPC-to-AHB mapping, UART
-> +management and bus snoop configuration.
-> +
-> +Required properties:
-> +
-> +- compatible:	One of:
-> +		"aspeed,ast2400-lpc-ctrl";
-> +		"aspeed,ast2500-lpc-ctrl";
-> +
-> +- reg:		contains offset/length values of the host interface controller
-> +		memory regions
-> +
-> +- clocks:	contains a phandle to the syscon node describing the clocks.
-> +		There should then be one cell representing the clock to use
-> +
-> +- memory-region: A phandle to a reserved_memory region to be used for th=
-e LPC
-> +		to AHB mapping
-> +
-> +- flash:	A phandle to the SPI flash controller containing the flash to
-> +		be exposed over the LPC to AHB mapping
-> +
-> +Example:
-> +
-> +lpc-host@80 {
-> +	lpc_ctrl: lpc-ctrl@0 {
-> +		compatible =3D "aspeed,ast2500-lpc-ctrl";
-> +		reg =3D <0x0 0x80>;
-> +		clocks =3D <&syscon ASPEED_CLK_GATE_LCLK>;
-> +		memory-region =3D <&flash_memory>;
-> +		flash =3D <&spi>;
-> +	};
-> +};
-
-ACK wrt the content, just need to fix its location.
-
-> +
->  Host Node Children
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =20
---=-gNbZ4d3BCzIKF12NhpLC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJahmZTAAoJEJ0dnzgO5LT52c4P/3ZzJU8r2LgucUqkicb8QSTq
-EK3WKpJcyJGYkIrvd8pf/8VdG0rTnz2jLVdNGUUMFRDWjG7aUo8rL0GtCPpFWsjB
-j9DRVdwZLrdAfYmZ8Bv8CK6isBx9jzjAWeFN7i+LvcjmS5LM/slRvk+n7UuwATe/
-1s5dpYu+6FrFSPV/1Fa0tG1VuEw9Iv2bDK1DdVPyVu0Lt1IogXnNnDLHkauFEhxU
-67XQbBBXRXNAklMrWDwnRtgdotKXVpmv5IcPA9uGgwAXH5J8QnEQ8DKRpLw+VPIt
-s2E3l2yZLydQ1sAoWaJeD5CUeAadt+p6CutV1oIU3o4YrgE4H0Lx1ikfFYXI6E2+
-xdL5ObabsBi9p4hJ/0kc5VUqX/FWkuTqMqsU7MOxjUocf9iKDRX8AP40zzppCqIO
-OqnySRxDrRy/sWEdPUrjM/XotooW55FPLlugP7MzFogoJAUMTJ+imZevEHUOK/Wx
-ZQY4ExX9fblB/r4hGiAu+guw3uRRqM027enVbJVIyW+8X126W7WCWXgB5tRcHg3E
-/2zxMwWwiEO2NLBHVKvju7V5uOH/jXifAISPrqfoyc2trJb4nf9vN40EFwq3YnEs
-0gh9rXGqxGI0WM8VxkhXO9qkYZ1LLzduElQG8Ly5XNj1Wu/WM60Ba+7p8zGdVU2Y
-Q5zBxZj6FzhZdTqPjLKe
-=Fyfi
------END PGP SIGNATURE-----
-
---=-gNbZ4d3BCzIKF12NhpLC--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
