@@ -1,87 +1,62 @@
-From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2] dt: bindings: add bindings for wcn3990 wifi block
-Date: Fri, 16 Feb 2018 10:13:48 +0530
-Message-ID: <1518756228-6773-1-git-send-email-govinds@codeaurora.org>
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v5 03/12] drm/bridge/synopsys: dw-hdmi: Enable workaround
+ for v1.32a
+Date: Fri, 16 Feb 2018 10:31:03 +0530
+Message-ID: <859c9f7b-8be9-d53b-e8d5-aa04e6b5ca7b@codeaurora.org>
+References: <20180214200906.31509-1-jernej.skrabec@siol.net>
+ <20180214200906.31509-4-jernej.skrabec@siol.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20180214200906.31509-4-jernej.skrabec@siol.net>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Jernej Skrabec <jernej.skrabec@siol.net>, maxime.ripard@free-electrons.com, wens@csie.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, narmstrong@baylibre.com, Jose.Abreu@synopsys.com
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation details for wcn3990
-wifi block present in Qualcomm SDM845/APQ8098 SoC into
-"qcom,ath10k.txt".
 
-Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- .../bindings/net/wireless/qcom,ath10k.txt          | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index 3d2a031..e34d8f8 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible: Should be one of the following:
- 	* "qcom,ath10k"
- 	* "qcom,ipq4019-wifi"
-+	* "qcom,wcn3990-wifi"
- 
- PCI based devices uses compatible string "qcom,ath10k" and takes calibration
- data along with board specific data via "qcom,ath10k-calibration-data".
-@@ -18,8 +19,11 @@ In general, entry "qcom,ath10k-pre-calibration-data" and
- "qcom,ath10k-calibration-data" conflict with each other and only one
- can be provided per device.
- 
-+SNOC based devices (i.e. wcn3990) uses compatible string "qcom,wcn3990-wifi".
-+
- Optional properties:
- - reg: Address and length of the register set for the device.
-+- reg-names: Names of the memory regions defined in reg entry.
- - resets: Must contain an entry for each entry in reset-names.
-           See ../reset/reseti.txt for details.
- - reset-names: Must include the list of following reset names,
-@@ -49,6 +53,12 @@ Optional properties:
- 				 hw versions.
- - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
- 				     the length can vary between hw versions.
-+- qcom,<supply-name>-supply: handle to the regulator device tree node
-+			   optional "supply-name" is "vdd-0.8-cx-mx".
-+- qcom,<supply>-config: Specifies voltage levels for supply. Should be
-+			  specified in pairs (min, max), units uV.  There can
-+			   be optional load in uA and Regulator settle delay in
-+			   uS.
- 
- Example (to supply the calibration data alone):
- 
-@@ -119,3 +129,28 @@ wifi0: wifi@a000000 {
- 	qcom,msi_base = <0x40>;
- 	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
- };
-+
-+Example (to supply wcn3990 SoC wifi block details):
-+
-+qcom,msm_ath10k@18000000 {
-+		compatible = "qcom,wcn3990-wifi";
-+		reg = <0x18800000 0x800000>;
-+		reg-names = "membase";
-+		clocks = <&clock_gcc clk_aggre2_noc_clk>;
-+		clock-names = "smmu_aggre2_noc_clk"
-+		interrupts =
-+			   <0 130 0 /* CE0 */ >,
-+			   <0 131 0 /* CE1 */ >,
-+			   <0 132 0 /* CE2 */ >,
-+			   <0 133 0 /* CE3 */ >,
-+			   <0 134 0 /* CE4 */ >,
-+			   <0 135 0 /* CE5 */ >,
-+			   <0 136 0 /* CE6 */ >,
-+			   <0 137 0 /* CE7 */ >,
-+			   <0 138 0 /* CE8 */ >,
-+			   <0 139 0 /* CE9 */ >,
-+			   <0 140 0 /* CE10 */ >,
-+			   <0 141 0 /* CE11 */ >;
-+		qcom,vdd-0.8-cx-mx-supply = <&pm8998_l5>;
-+		qcom,vdd-0.8-cx-mx-config = <800000 800000 2400 1000>;
-+};
--- 
-1.9.1
+On Thursday 15 February 2018 01:38 AM, Jernej Skrabec wrote:
+> Allwinner SoCs have dw hdmi controller v1.32a which exhibits same
+> magenta line issue as i.MX6Q and i.MX6DL. Enable workaround for it.
+> 
+> Tests show that one iteration is enough.
+> 
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Reviewed-by: Archit Taneja <architt@codeaurora.org>
+
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>   drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index a38db40ce990..7ca14d7325b5 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -1634,9 +1634,10 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi *hdmi)
+>   	 * then write one of the FC registers several times.
+>   	 *
+>   	 * The number of iterations matters and depends on the HDMI TX revision
+> -	 * (and possibly on the platform). So far only i.MX6Q (v1.30a) and
+> -	 * i.MX6DL (v1.31a) have been identified as needing the workaround, with
+> -	 * 4 and 1 iterations respectively.
+> +	 * (and possibly on the platform). So far i.MX6Q (v1.30a), i.MX6DL
+> +	 * (v1.31a) and multiple Allwinner SoCs (v1.32a) have been identified
+> +	 * as needing the workaround, with 4 iterations for v1.30a and 1
+> +	 * iteration for others.
+>   	 */
+>   
+>   	switch (hdmi->version) {
+> @@ -1644,6 +1645,7 @@ static void dw_hdmi_clear_overflow(struct dw_hdmi *hdmi)
+>   		count = 4;
+>   		break;
+>   	case 0x131a:
+> +	case 0x132a:
+>   		count = 1;
+>   		break;
+>   	default:
+> 
