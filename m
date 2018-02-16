@@ -1,58 +1,137 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv4 2/4] ASoC: codec: cpcap: new codec
-Date: Fri, 16 Feb 2018 14:27:16 +0000
-Message-ID: <20180216142716.GJ5886@sirena.org.uk>
-References: <20180214220741.28306-1-sebastian.reichel@collabora.co.uk>
- <20180214220741.28306-3-sebastian.reichel@collabora.co.uk>
- <20180216113901.GC5886@sirena.org.uk>
- <20180216135113.akicejkodhbjpp2w@earth.universe>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2] rtc: isl12026: Add driver.
+Date: Fri, 16 Feb 2018 16:40:36 +0200
+Message-ID: <CAHp75Vdp1Q2LFRToRTgf+Zr7Pdvcegqu9ObQkpFKZFhXUExnCA@mail.gmail.com>
+References: <20180214005536.22739-1-david.daney@cavium.com>
+ <CAHp75VcQm-gr0GRszBSRJSZOpdSutRyhVkw-BN_YAwhjaPM4yg@mail.gmail.com> <4047b1de-40c6-813e-c410-543954190413@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cN519qCC4CN1mUcX"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180216135113.akicejkodhbjpp2w-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4047b1de-40c6-813e-c410-543954190413@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: David Daney <david.daney@cavium.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 15, 2018 at 9:01 PM, David Daney <ddaney@caviumnetworks.com> wrote:
+> On 02/15/2018 04:45 AM, Andy Shevchenko wrote:
+>> On Wed, Feb 14, 2018 at 2:55 AM, David Daney <david.daney@cavium.com>
+>> wrote:
+>>>
+>>> The ISL12026 is a combination RTC and EEPROM device with I2C
+>>> interface.  The standard RTC driver interface is provided.  The EEPROM
+>>> is accessed via the NVMEM interface via the "eeprom0" directory in the
+>>> sysfs entry for the device.
 
---cN519qCC4CN1mUcX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>>> +       /* 2 bytes of address, most significant first */
+>>> +       addr[0] = (offset >> 8) & 0xff;
+>>> +       addr[1] = offset & 0xff;
+>>
+>>
+>> Consider to drop '& 0xff', they are pointless (you have u8 type).
+>
+>
+> Generated code is the same, but the intent of the code is less clear when
+> the explicit masking is removed.  Never the less, since this seems to be
+> impeding progress, I will remove it.
 
-On Fri, Feb 16, 2018 at 02:51:13PM +0100, Sebastian Reichel wrote:
-> On Fri, Feb 16, 2018 at 11:39:01AM +0000, Mark Brown wrote:
+You can use the following:
 
-> > We don't have default lines like this for other MFDs...
+      addr[0] = offset >> 8;
+      addr[1] = offset >> 0;
 
-> Is there a reason not to add them? It looks very useful to me:
+>>> +       bool set_bsw, set_sbib;
+>>> +
 
-Consistency.  It's a lot easier to apply a single rule to everything
-than it is to have to individually think through and discuss the
-decisions on every individual driver, especially when there will
-inevitably be some cases where there are conflicting requirements from
-different users.  As you said in the rest of your mail hand configuring
-kernels is already a very specialist thing at the best of times.
+>>> +       ret = of_property_read_u32(client->dev.of_node,
+>>> +                                  "isil,pwr-bsw", &bsw_val);
+>>> +       set_bsw = (ret == 0);
 
---cN519qCC4CN1mUcX
-Content-Type: application/pgp-signature; name="signature.asc"
+>> Which is not fully correct. Better to do
 
------BEGIN PGP SIGNATURE-----
+> I think it is correct.  The properties are optional, so it it perfectly fine
+> for of_property_read_u32() to fail.  If it fails, we simply keep the current
+> value.  I will add comments to document the intended logic.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqG6kQACgkQJNaLcl1U
-h9AoCgf8CQYEgUAvlLn8toKeaZlwqe64eR8eKRYIUVGLT6JyPh9GGPFh3I7JhPgV
-fMakHQyW/Vw6OGthmS76ziyoAifgwww89o07qxjoOvJfnuVy2M1/wdaIcCOFfQZN
-hcLxYd6NnsoXBbIXuDWPSUWaxEUc9N7uH6fNeZFppv6DjEYaI+bunj/dTCJxvVnC
-5Q3R/+dVEoEEdK1Q41N3sjPypgjZc7D8xP+wXcmix9CBN7yZsBmJJMSCnfK214VD
-MXv8u0ahaR4SVTq7LeBUeQtFp7cW1y72BeAAZ+uQSb6iPxuE58OlInneT6uLc+B8
-MYWeCW5cs79YSTGAQuxomCRerXUAOw==
-=qpom
------END PGP SIGNATURE-----
+OK.
 
---cN519qCC4CN1mUcX--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> set_bsw = of_property_present();
+
+> There are no occurrences of "of_property_present" in my source tree.
+
+Ah, indeed.
+
+
+>> ret = of_property_read...();
+>> if (ret)
+>>    return ret;
+
+What about then
+
+set_bsw = of_property_read_bool();
+
+set_sbid = ...
+
+
+if (!x && !y)
+ return ...
+
+...
+
+if (x) {
+
+}
+
+>>
+>>> +
+>>> +       ret = of_property_read_u32(client->dev.of_node,
+>>> +                                  "isil,pwr-sbib", &sbib_val);
+>>> +       set_sbib = (ret == 0);
+>>
+>>
+>> Ditto.
+
+>>> +               if (set_bsw) {
+>>> +                       if (bsw_val)
+>>> +                               requested_pwr |= ISL12026_REG_PWR_BSW;
+>>> +                       else
+>>> +                               requested_pwr &= ~ISL12026_REG_PWR_BSW;
+>>> +               }
+>>
+>>
+>> Undefined state if no value?
+
+> It is defined.  See above.
+
+It's opaque. Depends on firmware settings, boot loader, etc.
+
+>>> +#ifdef CONFIG_OF
+>> Remove this ugly #ifdef. Your driver OF only one.
+
+> The driver doesn't require OF.
+
+>  By removing the #if (which I will do), the
+> size of the module may be bloated in the non-OF case.  If anybody cares
+> about this, they can add back the #if.
+
+Nobody.
+
+>>> +static const struct of_device_id isl12026_dt_match[] = {
+>>> +       { .compatible = "isil,isl12026" },
+>>> +       { },
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, isl12026_dt_match);
+
+>>> +               .of_match_table = of_match_ptr(isl12026_dt_match),
+>> Drop of_match_ptr().
+
+> Best to keep it so that the non-OF case is correctly handled.
+
+If you drop above ifdef, you need to drop this macro. And code bloat is not big.
+
+Btw, driver since ->probe_new() is become OF/ACPI only, so, otherwise
+there will be no way to enumerate.
+
+-- 
+With Best Regards,
+Andy Shevchenko
