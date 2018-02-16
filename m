@@ -1,54 +1,66 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 4/8] drm/rockchip: dw_hdmi: Allow outputs that don't need output switching
-Date: Fri, 16 Feb 2018 21:41:54 +0100
-Message-ID: <20180216204158.29839-5-heiko@sntech.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v2 1/8] dt-bindings: add binding for Rockchip hdmi phy using
+ an Innosilicon IP
+Date: Fri, 16 Feb 2018 21:41:51 +0100
+Message-ID: <20180216204158.29839-2-heiko@sntech.de>
 References: <20180216204158.29839-1-heiko@sntech.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180216204158.29839-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: hjc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, zhengyang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, algea.cao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180216204158.29839-1-heiko@sntech.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: hjc@rock-chips.com, architt@codeaurora.org, a.hajda@samsung.com, kishon@ti.com
+Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-So far we always encountered socs with 2 output crtcs needing the driver
-to tell the hdmi block which output to connect to. But there also exist
-socs with only one crtc like the rk3228, rk3328 and rk3368.
-
-So adapt the register field to simply carry a negative value to signal
-that now output-switching is necessary.
-
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index 3574b0ae2ad1..6dc03f1a5709 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -36,7 +36,7 @@
-  * @lcdsel_lit: reg value of selecting vop little for HDMI
-  */
- struct rockchip_hdmi_chip_data {
--	u32	lcdsel_grf_reg;
-+	int	lcdsel_grf_reg;
- 	u32	lcdsel_big;
- 	u32	lcdsel_lit;
- };
-@@ -253,6 +253,9 @@ static void dw_hdmi_rockchip_encoder_enable(struct drm_encoder *encoder)
- 	u32 val;
- 	int ret;
- 
-+	if (hdmi->chip_data->lcdsel_grf_reg < 0)
-+		return;
-+
- 	ret = drm_of_encoder_active_endpoint_id(hdmi->dev->of_node, encoder);
- 	if (ret)
- 		val = hdmi->chip_data->lcdsel_lit;
--- 
-2.15.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogWmhlbmcgWWFuZyA8emhlbmd5YW5nQHJvY2stY2hpcHMuY29tPgoKVGhlIHBoeSBpcyB1
+c2VkIHNvIGZhciBpbiB0d28gUm9ja2NoaXAgc29jcyB0aGUgcmszMjI4IGFuZCB0aGUgcmszMzI4
+LgoKU2lnbmVkLW9mZi1ieTogWmhlbmcgWWFuZyA8emhlbmd5YW5nQHJvY2stY2hpcHMuY29tPgpT
+aWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgotLS0KIC4uLi9i
+aW5kaW5ncy9waHkvcGh5LXJvY2tjaGlwLWlubm8taGRtaS50eHQgICAgICAgIHwgNDIgKysrKysr
+KysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKykKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1y
+b2NrY2hpcC1pbm5vLWhkbWkudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAtaW5uby1oZG1pLnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LXJvY2tjaGlwLWlubm8taGRtaS50eHQKbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi43ZDM2ZmQ4ZDVkOTQKLS0tIC9k
+ZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1y
+b2NrY2hpcC1pbm5vLWhkbWkudHh0CkBAIC0wLDAgKzEsNDIgQEAKK1JPQ0tDSElQIEhETUkgUEhZ
+IFdJVEggSU5OTyBJUCBCTE9DSworCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorIC0gY29tcGF0aWJs
+ZSA6IHNob3VsZCBiZSBvbmUgb2YgdGhlIGxpc3RlZCBjb21wYXRpYmxlczoKKwkqICJyb2NrY2hp
+cCxyazMyMjgtaGRtaS1waHkiLAorCSogInJvY2tjaGlwLHJrMzMyOC1oZG1pLXBoeSI7CisgLSBy
+ZWcgOiBBZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGhkbWkgcGh5IGNvbnRyb2wgcmVnaXN0ZXIg
+c2V0CisgLSBjbG9ja3MgOiBwaGFuZGxlICsgY2xvY2sgc3BlY2lmaWVyIGZvciB0aGUgcGh5IGNs
+b2NrcworIC0gY2xvY2stbmFtZXMgOiBzdHJpbmcsIGNsb2NrIG5hbWUsIG11c3QgY29udGFpbiAi
+c3lzY2xrIiBmb3Igc3lzdGVtCisJICBjb250cm9sIGFuZCByZWdpc3RlciBjb25maWd1cmF0aW9u
+IGFuZCAicmVmY2xrIiBmb3IgcmVmZXJlbmNlCisJICBjcnlzdGFsIG9zY2lsbGF0b3IgY2xvY2sg
+aW5wdXQgdG8gUExMCisgLSAjY2xvY2stY2VsbHM6IHNob3VsZCBiZSAwLgorIC0gY2xvY2stb3V0
+cHV0LW5hbWVzIDogc2hhbGwgYmUgdGhlIG5hbWUgZm9yIHRoZSBvdXRwdXQgY2xvY2suCisgLSBp
+bnRlcnJ1cHRzIDogcGhhbmRsZSArIGludGVycnVwdCBzcGVjaWZpZWQgZm9yIHRoZSBoZG1pcGh5
+IGludGVycnVwdAorIC0gI3BoeS1jZWxscyA6IG11c3QgYmUgMC4gU2VlIC4vcGh5LWJpbmRpbmdz
+LnR4dCBmb3IgZGV0YWlscy4KKworT3B0aW9uYWwgcHJvcGVydGllcyBmb3IgcmszMzI4LWhkbWkt
+cGh5OgorIC0gbnZtZW0tY2VsbHMgPSBwaGFuZGxlICsgbnZtZW0gc3BlY2lmaWVyIGZvciB0aGUg
+Y3B1LXZlcnNpb24gZWZ1c2UKKyAtIG52bWVtLWNlbGwtbmFtZXMgOiAiY3B1LXZlcnNpb24iIHRv
+IHJlYWQgdGhlIGNoaXAgdmVyc2lvbiwgcmVxdWlyZWQKKwkgIGZvciBhZGp1c3RtZW50IHRvIHNv
+bWUgZnJlcXVlbmN5IHNldHRpbmdzCisKK0V4YW1wbGU6CisJaGRtaV9waHk6IGhkbWktcGh5QDEy
+MDMwMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxyazMyMjgtaGRtaS1waHkiOworCQly
+ZWcgPSA8MHgxMjAzMDAwMCAweDEwMDAwPjsKKwkJI3BoeS1jZWxscyA9IDwwPjsKKwkJY2xvY2tz
+ID0gPCZjcnUgUENMS19IRE1JX1BIWT4sIDwmeGluMjRtPjsKKwkJY2xvY2stbmFtZXMgPSAic3lz
+Y2xrIiwgInJlZmNsayI7CisJCSNjbG9jay1jZWxscyA9IDwwPjsKKwkJY2xvY2stb3V0cHV0LW5h
+bWVzID0gImhkbWlfcGh5IjsKKwkJc3RhdHVzID0gImRpc2FibGVkIjsKKwl9OworCitUaGVuIHRo
+ZSBQSFkgY2FuIGJlIHVzZWQgaW4gb3RoZXIgbm9kZXMgc3VjaCBhczoKKworCWhkbWk6IGhkbWlA
+MjAwYTAwMDAgeworCQljb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzIyOC1kdy1oZG1pIjsKKwkJ
+Li4uCisJCXBoeXMgPSA8JmhkbWlfcGh5PjsKKwkJcGh5LW5hbWVzID0gImhkbWkiOworCQkuLi4K
+Kwl9OwotLSAKMi4xNS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
