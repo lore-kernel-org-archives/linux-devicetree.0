@@ -1,137 +1,58 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] rtc: isl12026: Add driver.
-Date: Fri, 16 Feb 2018 16:40:36 +0200
-Message-ID: <CAHp75Vdp1Q2LFRToRTgf+Zr7Pdvcegqu9ObQkpFKZFhXUExnCA@mail.gmail.com>
-References: <20180214005536.22739-1-david.daney@cavium.com>
- <CAHp75VcQm-gr0GRszBSRJSZOpdSutRyhVkw-BN_YAwhjaPM4yg@mail.gmail.com> <4047b1de-40c6-813e-c410-543954190413@caviumnetworks.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v13 7/9] ACPI: Translate the I/O range of non-MMIO devices
+ before scanning
+Date: Fri, 16 Feb 2018 16:42:34 +0200
+Message-ID: <CAHp75VeTQg+A9o5Ox-k_9Qx8=JPEnqg1taVjcd8Zd2rfj_TMog@mail.gmail.com>
+References: <1518543933-22456-1-git-send-email-john.garry@huawei.com>
+ <1518543933-22456-8-git-send-email-john.garry@huawei.com> <CAHp75Ve7C4AJYK6AC=o-jzw6b2p8c8GBRd70Zjv+vYWbfytufg@mail.gmail.com>
+ <adfa2009-476b-8c25-c661-b0eeb48a6c43@huawei.com> <CAHp75VfOa5pN4MKT-aQmWBwPGWsOaQupyfrN-weWwfR3vMLtuA@mail.gmail.com>
+ <59e5293f-0ea5-12f4-27db-b13bbcf0918b@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4047b1de-40c6-813e-c410-543954190413@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: David Daney <david.daney@cavium.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59e5293f-0ea5-12f4-27db-b13bbcf0918b-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Corey Minyard <minyard-HInyCGIudOg@public.gmane.org>devicetree <d>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 15, 2018 at 9:01 PM, David Daney <ddaney@caviumnetworks.com> wrote:
-> On 02/15/2018 04:45 AM, Andy Shevchenko wrote:
->> On Wed, Feb 14, 2018 at 2:55 AM, David Daney <david.daney@cavium.com>
->> wrote:
+On Thu, Feb 15, 2018 at 7:07 PM, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> On 14/02/2018 16:16, Andy Shevchenko wrote:
+
+>>>>> >>> +       list_for_each_entry(rentry, &resource_list, node)
+>>>>> >>> +               resources[count++] = *rentry->res;
+>>>>
+>>>> >> It has similarities with acpi_create_platform_device().
+>>>> >> I guess we can utilize existing code.
 >>>
->>> The ISL12026 is a combination RTC and EEPROM device with I2C
->>> interface.  The standard RTC driver interface is provided.  The EEPROM
->>> is accessed via the NVMEM interface via the "eeprom0" directory in the
->>> sysfs entry for the device.
-
->>> +       /* 2 bytes of address, most significant first */
->>> +       addr[0] = (offset >> 8) & 0xff;
->>> +       addr[1] = offset & 0xff;
+>>> > For sure, this particular segment is effectively same as part of
+>>> > acpi_create_platform_device():
 >>
+>> Not the same, acpi_create_platform_device() does a bit more than
+>> copying the resources. If it indeed makes no hurt...
 >>
->> Consider to drop '& 0xff', they are pointless (you have u8 type).
+>>> >         list_for_each_entry(rentry, &resource_list, node)
+>>> >             acpi_platform_fill_resource(adev, rentry->res,
+>>> >                             &resources[count++]);
+>>> > So is your idea to refactor this common segment into a helper function?
+>>
+>> ...I would go with helper.
+>>
 >
+> Hi Andy,
 >
-> Generated code is the same, but the intent of the code is less clear when
-> the explicit masking is removed.  Never the less, since this seems to be
-> impeding progress, I will remove it.
+> Since the plan now is that this code is no longer going to be added to
+> drivers/acpi, but instead pushed to the LLDD, I am pondering whether we
+> should still factor out of this common code. Opinion?
 
-You can use the following:
-
-      addr[0] = offset >> 8;
-      addr[1] = offset >> 0;
-
->>> +       bool set_bsw, set_sbib;
->>> +
-
->>> +       ret = of_property_read_u32(client->dev.of_node,
->>> +                                  "isil,pwr-bsw", &bsw_val);
->>> +       set_bsw = (ret == 0);
-
->> Which is not fully correct. Better to do
-
-> I think it is correct.  The properties are optional, so it it perfectly fine
-> for of_property_read_u32() to fail.  If it fails, we simply keep the current
-> value.  I will add comments to document the intended logic.
-
-OK.
-
->> set_bsw = of_property_present();
-
-> There are no occurrences of "of_property_present" in my source tree.
-
-Ah, indeed.
-
-
->> ret = of_property_read...();
->> if (ret)
->>    return ret;
-
-What about then
-
-set_bsw = of_property_read_bool();
-
-set_sbid = ...
-
-
-if (!x && !y)
- return ...
-
-...
-
-if (x) {
-
-}
-
->>
->>> +
->>> +       ret = of_property_read_u32(client->dev.of_node,
->>> +                                  "isil,pwr-sbib", &sbib_val);
->>> +       set_sbib = (ret == 0);
->>
->>
->> Ditto.
-
->>> +               if (set_bsw) {
->>> +                       if (bsw_val)
->>> +                               requested_pwr |= ISL12026_REG_PWR_BSW;
->>> +                       else
->>> +                               requested_pwr &= ~ISL12026_REG_PWR_BSW;
->>> +               }
->>
->>
->> Undefined state if no value?
-
-> It is defined.  See above.
-
-It's opaque. Depends on firmware settings, boot loader, etc.
-
->>> +#ifdef CONFIG_OF
->> Remove this ugly #ifdef. Your driver OF only one.
-
-> The driver doesn't require OF.
-
->  By removing the #if (which I will do), the
-> size of the module may be bloated in the non-OF case.  If anybody cares
-> about this, they can add back the #if.
-
-Nobody.
-
->>> +static const struct of_device_id isl12026_dt_match[] = {
->>> +       { .compatible = "isil,isl12026" },
->>> +       { },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, isl12026_dt_match);
-
->>> +               .of_match_table = of_match_ptr(isl12026_dt_match),
->> Drop of_match_ptr().
-
-> Best to keep it so that the non-OF case is correctly handled.
-
-If you drop above ifdef, you need to drop this macro. And code bloat is not big.
-
-Btw, driver since ->probe_new() is become OF/ACPI only, so, otherwise
-there will be no way to enumerate.
+I would still go with a common helper. Though, as first step, we can
+make it lazy, i.e. put a comment in your code, like a todo notice (w/o
+TODO word :-) ) to consider a common helper.
 
 -- 
 With Best Regards,
 Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
