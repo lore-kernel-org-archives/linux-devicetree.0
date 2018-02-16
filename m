@@ -1,42 +1,56 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v5 05/12] drm/bridge/synopsys: dw-hdmi: don't clobber
- drvdata
-Date: Fri, 16 Feb 2018 08:03:59 +0100
-Message-ID: <5806685.TbOkgmbs60@phil>
-References: <20180214200906.31509-1-jernej.skrabec@siol.net>
- <20180214200906.31509-6-jernej.skrabec@siol.net>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 11/16] mmc: sdhci: Program a relatively accurate SW
+ timeout value
+Date: Fri, 16 Feb 2018 12:47:41 +0530
+Message-ID: <aa30bb13-7271-a426-f606-59f21961806f@ti.com>
+References: <20180205125029.21570-1-kishon@ti.com>
+ <20180205125029.21570-12-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180214200906.31509-6-jernej.skrabec@siol.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, linux-sunxi@googlegroups.com, airlied@linux.ie, mturquette@baylibre.com, narmstrong@baylibre.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, sboyd@kernel.org, wens@csie.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, maxime.ripard@free-electrons.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20180205125029.21570-12-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gTWl0dHdvY2gsIDE0LiBGZWJydWFyIDIwMTgsIDIxOjA4OjU5IENFVCBzY2hyaWViIEplcm5l
-aiBTa3JhYmVjOgo+IGR3X2hkbWkgc2hvdWxkbid0IHNldCBkcnZkYXRhIHNpbmNlIHNvbWUgZHJp
-dmVycyBtaWdodCBuZWVkIHRvIHN0b3JlCj4gaXQncyBvd24gZGF0YSB0aGVyZS4gUmV3b3JrIGR3
-X2hkbWkgaW4gYSB3YXkgdG8gcmV0dXJuIHN0cnVjdCBkd19oZG1pCj4gaW5zdGVhZCB0byBzdG9y
-ZSBpdCBpbiBkcnZkYXRhLiBUaGlzIHdheSBkcml2ZXJzIGFyZSByZXNwb25zaWJsZSB0bwo+IHN0
-b3JlIGFuZCBwYXNzIHN0cnVjdHVyZSB3aGVuIG5lZWRlZC4KPiAKPiBJZGVhIHdhcyB0YWtlbiBm
-cm9tIHRoZSBmb2xsb3dpbmcgY29tbWl0Ogo+IDgyNDJlY2JkNTk3ZCAoImRybS9icmlkZ2Uvc3lu
-b3BzeXM6IHN0b3AgY2xvYmJlcmluZyBkcnZkYXRhIikKPiAKPiBDYzogcC56YWJlbEBwZW5ndXRy
-b25peC5kZQo+IENjOiBuYXJtc3Ryb25nQGJheWxpYnJlLmNvbQo+IENjOiBMYXVyZW50LnBpbmNo
-YXJ0QGlkZWFzb25ib2FyZC5jb20KPiBDYzogaGpjQHJvY2stY2hpcHMuY29tCj4gQ2M6IGhlaWtv
-QHNudGVjaC5kZQo+IEFja2VkLWJ5OiBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJy
-ZS5jb20+Cj4gU2lnbmVkLW9mZi1ieTogSmVybmVqIFNrcmFiZWMgPGplcm5lai5za3JhYmVjQHNp
-b2wubmV0PgoKRm9yIHRoZSBSb2NrY2hpcC1wYXJ0ClRlc3RlZC1ieTogSGVpa28gU3R1ZWJuZXIg
-PGhlaWtvQHNudGVjaC5kZT4KQWNrZWQtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2gu
-ZGU+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+On Monday 05 February 2018 06:20 PM, Kishon Vijay Abraham I wrote:
+> sdhci has a 10 second timeout to catch devices that stop responding.
+> Instead of programming 10 second arbitrary value, calculate the total time
+> it would take for the entire transfer to happen and program the timeout
+> value accordingly.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/mmc/host/sdhci.c | 46 +++++++++++++++++++++++++++++++++++++++-------
+>  drivers/mmc/host/sdhci.h | 10 ++++++++++
+>  2 files changed, 49 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 0489572d1892..d52f9e7eabe2 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -673,6 +673,37 @@ static void sdhci_adma_table_post(struct sdhci_host *host,
+>  	}
+>  }
+>  
+> +static void sdhci_calc_sw_timeout(struct sdhci_host *host,
+> +				  struct mmc_command *cmd,
+> +				  unsigned int target_timeout)
+> +{
+> +	struct mmc_data *data = cmd->data;
+> +	struct mmc_host *mmc = host->mmc;
+> +	unsigned long long transfer_time;
+> +	struct mmc_ios *ios = &mmc->ios;
+> +	unsigned char bus_width = ios->bus_width;
+
+This should have been 1 << ios->bus_width.
+
+-Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
