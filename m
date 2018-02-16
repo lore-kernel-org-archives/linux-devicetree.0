@@ -1,89 +1,72 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCHv4 2/4] ASoC: codec: cpcap: new codec
-Date: Fri, 16 Feb 2018 14:51:13 +0100
-Message-ID: <20180216135113.akicejkodhbjpp2w@earth.universe>
-References: <20180214220741.28306-1-sebastian.reichel@collabora.co.uk>
- <20180214220741.28306-3-sebastian.reichel@collabora.co.uk>
- <20180216113901.GC5886@sirena.org.uk>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 0/4] Move DP phy switch to PHY driver
+Date: Fri, 16 Feb 2018 19:29:15 +0530
+Message-ID: <5d20a7bf-f96a-f030-1350-aea2c5cd8153@ti.com>
+References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
+ <a9eac594-33d5-6171-51ca-66204008fc1f@ti.com> <1752563.I66u68YxnT@diego>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qnpszhyifoopthl6"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180216113901.GC5886@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1752563.I66u68YxnT@diego>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, groeck@chromium.org, Chris Zhong <zyw@rock-chips.com>, robh@kernel.org, Brian Norris <briannorris@chromium.org>, linux-rockchip@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, seanpaul@chromium.org, William wu <wulf@rock-chips.com>, linux-arm-kernel@lists.infradead.org, mark.yao@rock-chips.com, Douglas Anderson <dianders@chromium.org>, Tomasz Figa <tfiga@chromium.org>, David Wu <david.wu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
 
---qnpszhyifoopthl6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Mark,
+On Friday 16 February 2018 06:35 PM, Heiko St=FCbner wrote:
+> Hi Kishon,
+> =
 
-On Fri, Feb 16, 2018 at 11:39:01AM +0000, Mark Brown wrote:
-> On Wed, Feb 14, 2018 at 11:07:39PM +0100, Sebastian Reichel wrote:
->=20
-> > +config SND_SOC_CPCAP
-> > +	tristate "Motorola CPCAP codec"
-> > +	depends on MFD_CPCAP
-> > +	default MFD_CPCAP
-> > +
->=20
-> We don't have default lines like this for other MFDs...
+> Am Freitag, 16. Februar 2018, 12:04:42 CET schrieb Kishon Vijay Abraham I:
+>> On Friday 10 February 2017 01:14 PM, Chris Zhong wrote:
+>>> There are 2 Type-c PHYs in RK3399, but only one DP controller. Hence
+>>> only one PHY can connect to DP controller at one time, the other should
+>>> be disconnected. The GRF_SOC_CON26 register has a switch bit to do it,
+>>> set this bit means enable PHY 1, clear this bit means enable PHY 0.
+>>>
+>>> If the board has 2 Type-C ports, the DP driver get the phy id from
+>>> devm_of_phy_get_by_index, and then control this switch according to
+>>> this id. But some others board only has one Type-C port, it may be PHY 0
+>>> or PHY 1. The dts node id can not tell us the correct PHY id. Hence move
+>>> this switch to PHY driver, the PHY driver can distinguish between PHY 0
+>>> and PHY 1, and then write the correct register bit.
+>>
+>> Changed subject of "Documentation: bindings: add uphy-dp-sel for Rockchip
+>> USB Type-C PHY" as suggested by Rob, rebased "phy: rockchip-typec: suppo=
+rt
+>> DP phy switch" to the latest kernel and merged.
+> =
 
-Is there a reason not to add them? It looks very useful to me:
+> I'm not sure how far along you are with your merging, but you might want =
+to =
 
-99% of people are not interested in the MFD. They don't enable
-it and are not affected at all. They do not even see extra
-configuration entry due to the dependency.
+> revert this one.
+> =
 
-0.9% of people have the MFD in their system and want their
-hardware to 'just work'. With this line it's enough to enable
-the MFD and the audio subsystem, so less knowledge and configuration
-is required.
+> In your inbox you should find more recent threads about the type-c phy
+> where Rob strongly suggested moving the whole grf registers out of the
+> dt and into the driver.
+> =
 
-0.1% of people have special requirements and want the MFD
-and generic audio support, but no support for the MFD audio
-codec. There is a high chance, that they know how to configure
-it properly :)
+> Enric Balletbo did just that and posted a series (including the dp-move)
+> yesterday (refined in a v2 from today).
+> =
 
-> > +	SOC_ENUM("Hifi Left Phase Playback Switch",
-> > +		cpcap_hifi_l_phase_inv_enum),
-> > +	SOC_ENUM("Ext Left Phase Playback Switch",
-> > +		cpcap_ext_l_phase_inv_enum),
->=20
-> If this is a Switch control it should be a simple on/off binary control.
-> If it's an enumeration it shouldn't have Switch at the end of the name
-> since that's a keyword interpreted by userspace.  Either option seems
-> fine in this case, if it's a switch it should be "Foo Invert Switch" or
-> similar.
+> Alternatively Enric could rebase his series on top of that recent change.
 
-Ok.
+I can drop this series and take Enric's series. All of them are still in my
+local system.
 
--- Sebastian
-
---qnpszhyifoopthl6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlqG4c8ACgkQ2O7X88g7
-+prytxAApQfU9evuavpOT0hbpERznCy64y2UYXCdwCBq8vG900eNN/Cxcepl5Sln
-eq9HNjceGrYgLb83ynHNL9I4enp7Rf7wMIAu6NLPRYzuNgoABLWWOlLoiEf+dWzE
-kojXaxu9uFdi50+kGy723cxXFzXGddUhEHic5L9GOKt/BawV76ZWX7DkGa5HKgO3
-L2UPSv68U1GdOV1zYYFvAa5TBu+klr8OHwG1v/EQ4H3F+8R59QiFRhotfRjah8d6
-+z+xRA1wLlyh+h8nbVRM5Q1V9964n79zkE67U3LsZ9j8xdeO8njW2L0Fwdkcl+G4
-+7o7VZSRTWP5FftXacvFQ9LqxYLi7G84CG/1XU0+630kdfdNUpYz7rIBlhjBU52u
-qJJkVIHsSCeJwMoRGhkrlsIxjiYQa6JgNS9cqdEWerJv33q6wyhMcRWC79VIcYB8
-Y5nSPjym8Ph+brG0B5TApUtm/2/yMTZLp0rG8s8x+7BjSAXqF19SVhVux6XzE6BG
-haStiWk9V+lpWaxM3gcyVcPYgcsRn2FDmjw9jRHQ5LCFUlAwEw9nB+V8qnJhDHo2
-lpTas0MFwOs5yM2tUerhivD7MttWNXfdrvlE6A4SDOlFBy0u3kwGTcu3T0mjgCyt
-aAuSo828I/3GLQY3I6EwdS+e0LrjRls6vtBP70s+pwa9JgnA8qo=
-=Swer
------END PGP SIGNATURE-----
-
---qnpszhyifoopthl6--
+Thanks
+Kishon
