@@ -1,10 +1,12 @@
 From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 00/15] add dts nodes to MT7622 SoC
-Date: Sun, 18 Feb 2018 03:54:35 +0800
-Message-ID: <cover.1518895232.git.sean.wang@mediatek.com>
+Subject: [PATCH v3 03/15] arm64: dts: mt7622: add power domain controller device nodes
+Date: Sun, 18 Feb 2018 03:54:38 +0800
+Message-ID: <eb065107cb116f17370ea0da100f8a968cc0fdc3.1518895232.git.sean.wang@mediatek.com>
+References: <cover.1518895232.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1518895232.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
@@ -12,64 +14,47 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Changes since v2:
-- rebase to 4.16-rc1 and solve all conflicts
-- add proper list Cc in patch 1
-- add fixup in patch 4 in v2 with the uniform pinmux definition
-  that is always adding property function before property groups
-- add Acked-by from Philippe in patch 5
-- add clock related property into all CPU nodes in patch 6
-- merge patch 14 in v2 into patch 8 as this is where the node is
-  defined in the first place
+add power domain controller nodes
 
-Changes since v1:
-- add usb, thermal, HSDMA, mmc related nodes
-- fix Warning (unit_address_vs_reg): Node /oscillator@0 has
-  a unit name, but no reg property in patch 2
-- fix Warning (pci_bridge): Node /pcie@1a140000/pcie@0,0 missing
-  bus-range for PCI bridge
-- fix Warning (pci_bridge): Node /pcie@1a140000/pcie@1,0 missing
-  bus-range for PCI bridge
-- fix Warning (unit_address_format): Failed prerequisite 'pci_bridge'
-- fix Warning (pci_device_reg): Failed prerequisite 'pci_bridge'
-- fix Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
-- enhance commit log in patch 4
-- use - instead of _ in DT node name in patch 4 and 6
-- use SPDX-License-Identifier for newly added files in patch 5
-- use proper #size-cells for spi nor nodes in patch 9
-- remove currently no needed #address-cells and #size-cells in
-children nodes of spi nor in patch 9.
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Chunfeng Yun (1):
-  arm64: dts: mt7622: add usb device nodes
-
-Ryder Lee (2):
-  arm64: dts: mt7622: add PCIe device nodes
-  arm64: dts: mt7622: add SATA device nodes
-
-Sean Wang (12):
-  dt-bindings: clock: mediatek: add missing required #reset-cells
-  arm64: dts: mt7622: add clock controller device nodes
-  arm64: dts: mt7622: add power domain controller device nodes
-  arm64: dts: mt7622: add pinctrl related device nodes
-  arm64: dts: mt7622: add PMIC MT6380 related nodes
-  arm64: dts: mt7622: add cpufreq related device nodes
-  arm64: dts: mt7622: turn uart0 clock to real ones
-  arm64: dts: mt7622: add SoC and peripheral related device nodes
-  arm64: dts: mt7622: add flash related device nodes
-  arm64: dts: mt7622: add ethernet device nodes
-  arm64: dts: mt7622: add High-Speed DMA device nodes
-  arm64: dts: mt7622: add mmc related device nodes
-
- .../bindings/arm/mediatek/mediatek,ethsys.txt      |   1 +
- .../bindings/arm/mediatek/mediatek,pciesys.txt     |   2 +
- .../bindings/arm/mediatek/mediatek,ssusbsys.txt    |   2 +
- arch/arm64/boot/dts/mediatek/mt6380.dtsi           |  86 +++
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts       | 469 ++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi           | 685 ++++++++++++++++++++-
- 6 files changed, 1240 insertions(+), 5 deletions(-)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt6380.dtsi
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index 73e5d62..81207e6 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -9,6 +9,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/mt7622-clk.h>
++#include <dt-bindings/power/mt7622-power.h>
+ #include <dt-bindings/reset/mt7622-reset.h>
+ 
+ / {
+@@ -109,6 +110,20 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
++	scpsys: scpsys@10006000 {
++		compatible = "mediatek,mt7622-scpsys",
++			     "syscon";
++		#power-domain-cells = <1>;
++		reg = <0 0x10006000 0 0x1000>;
++		interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 166 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 167 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 168 IRQ_TYPE_LEVEL_LOW>;
++		infracfg = <&infracfg>;
++		clocks = <&topckgen CLK_TOP_HIF_SEL>;
++		clock-names = "hif_sel";
++	};
++
+ 	sysirq: interrupt-controller@10200620 {
+ 		compatible = "mediatek,mt7622-sysirq",
+ 			     "mediatek,mt6577-sysirq";
 -- 
 2.7.4
 
