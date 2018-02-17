@@ -1,59 +1,75 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [RFC] ARM: dts: imx28-tx28: Pass the memory unit name
-Date: Sat, 17 Feb 2018 13:41:43 -0200
-Message-ID: <1518882103-17137-1-git-send-email-festevam@gmail.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v5 0/3] add support for Mediatek High-Speed DMA controller on MT7622 and MT7623 SoC
+Date: Sun, 18 Feb 2018 03:08:28 +0800
+Message-ID: <cover.1518857746.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org, LW@karo-electronics.de
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, dan.j.williams@intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+From: Sean Wang <sean.wang@mediatek.com>
 
-Pass the memory unit name in order to fix the following
-dtc warning with W=1:
+Changes since v4:
+- rebase to 4.16-rc1
+- fold back patch 4 and 5 in v4 into the original commit
+- add the missing header included
+- fix typo and add more explanation in existing comments
+- fix the comments with kernel-doc style which uses /** as the begin
+- begin the multi-line comments with /*
 
-arch/arm/boot/dts/imx28-tx28.dtb: Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
+Changes since v3:
+- enhance dt-binding documents based on Rob's comments
+- make consistent among all comments
+- perfer ordering declarations longest to shortest
+- fix warning reported from kbuild test robot
+- add patch 4 and 5 to keep Fengguang and Julia's effort
 
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
----
-Hi,
+Changes since v2:
+- remove extra tasklets and refactor driver for letting descriptors being processed ASAP.
+- add more comments stating the relevant logic
+- remove unused macro and variables
+- change to use the disclaimer with SPDX identifier
+- add mt7622 support
+- refine hardware initialization sequence
+- add tx_status support for DMA_RESIDUE_GRANULARITY_SEGMENT
+- refine remove handler with killing vc's tasklet
 
-Currently the only dtc warnings observed with W=1 are the ones:
-Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
+Changes since v1:
+- fix typo in the commit message.
+- delete status shown in the dt-binding example.
 
-If this solution can be accepted I can clean all the other i.MX dts files.
+This patchset introduces support for MediaTek High-Speed DMA controller
+(MTK-HSDMA) Currently, the driver is already tested successfully with
+dmatest module on MT7622 and MT7623 SoC. 
 
-Please advise.
+MTK-HSDMA on MT7622/23 SoC has a single ring which is dedicated for
+doing memory-to-memory transfer through ring-based descriptor management.
+Even though there is only a single ring available inside HSDMA, the
+driver is being extended to the support for multiple virtual channels
+processing simultaneously by means of DMA_VIRTUAL_CHANNELS.
 
- arch/arm/boot/dts/imx28-tx28.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Sean Wang (3):
+  dt-bindings: dmaengine: Add MediaTek High-Speed DMA controller
+    bindings
+  dmaengine: mediatek: Add MediaTek High-Speed DMA controller for MT7622
+    and MT7623 SoC
+  dmaengine: mediatek: update MAINTAINERS entry with MediaTek DMA driver
 
-diff --git a/arch/arm/boot/dts/imx28-tx28.dts b/arch/arm/boot/dts/imx28-tx28.dts
-index 8a4f5bc..bbdf004 100644
---- a/arch/arm/boot/dts/imx28-tx28.dts
-+++ b/arch/arm/boot/dts/imx28-tx28.dts
-@@ -65,8 +65,8 @@
- 		usbotg = &usb0;
- 	};
- 
--	memory {
--		reg = <0 0>; /* will be filled in by U-Boot */
-+	memory@40000000 {
-+		reg = <0x40000000 0>; /* will be filled in by U-Boot */
- 	};
- 
- 	onewire {
+ .../devicetree/bindings/dma/mtk-hsdma.txt          |   33 +
+ MAINTAINERS                                        |    9 +
+ drivers/dma/Kconfig                                |    2 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/mediatek/Kconfig                       |   13 +
+ drivers/dma/mediatek/Makefile                      |    1 +
+ drivers/dma/mediatek/mtk-hsdma.c                   | 1054 ++++++++++++++++++++
+ 7 files changed, 1113 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/mtk-hsdma.txt
+ create mode 100644 drivers/dma/mediatek/Kconfig
+ create mode 100644 drivers/dma/mediatek/Makefile
+ create mode 100644 drivers/dma/mediatek/mtk-hsdma.c
+
 -- 
 2.7.4
