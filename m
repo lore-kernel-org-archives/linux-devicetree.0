@@ -1,101 +1,79 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v3 10/15] arm64: dts: mt7622: add ethernet device nodes
-Date: Sun, 18 Feb 2018 03:54:45 +0800
-Message-ID: <c53c28525ef104c6d3c54d2538e771afdf8c836a.1518895232.git.sean.wang@mediatek.com>
-References: <cover.1518895232.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 00/15] add dts nodes to MT7622 SoC
+Date: Sun, 18 Feb 2018 03:54:35 +0800
+Message-ID: <cover.1518895232.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1518895232.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-add ethernet device nodes which enable GMAC1 with SGMII interface
+Changes since v2:
+- rebase to 4.16-rc1 and solve all conflicts
+- add proper list Cc in patch 1
+- add fixup in patch 4 in v2 with the uniform pinmux definition
+  that is always adding property function before property groups
+- add Acked-by from Philippe in patch 5
+- add clock related property into all CPU nodes in patch 6
+- merge patch 14 in v2 into patch 8 as this is where the node is
+  defined in the first place
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 22 ++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 31 ++++++++++++++++++++++++++++
- 2 files changed, 53 insertions(+)
+Changes since v1:
+- add usb, thermal, HSDMA, mmc related nodes
+- fix Warning (unit_address_vs_reg): Node /oscillator@0 has
+  a unit name, but no reg property in patch 2
+- fix Warning (pci_bridge): Node /pcie@1a140000/pcie@0,0 missing
+  bus-range for PCI bridge
+- fix Warning (pci_bridge): Node /pcie@1a140000/pcie@1,0 missing
+  bus-range for PCI bridge
+- fix Warning (unit_address_format): Failed prerequisite 'pci_bridge'
+- fix Warning (pci_device_reg): Failed prerequisite 'pci_bridge'
+- fix Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
+- enhance commit log in patch 4
+- use - instead of _ in DT node name in patch 4 and 6
+- use SPDX-License-Identifier for newly added files in patch 5
+- use proper #size-cells for spi nor nodes in patch 9
+- remove currently no needed #address-cells and #size-cells in
+children nodes of spi nor in patch 9.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index 48c5ba4..e2bd93e 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -249,6 +249,28 @@
- 	status = "okay";
- };
- 
-+&eth {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&eth_pins>;
-+	status = "okay";
-+
-+	gmac1: mac@1 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <1>;
-+		phy-handle = <&phy5>;
-+	};
-+
-+	mdio-bus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		phy5: ethernet-phy@5 {
-+			reg = <5>;
-+			phy-mode = "sgmii";
-+		};
-+	};
-+};
-+
- &i2c1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins>;
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index d287d75..95f947e 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -550,6 +550,37 @@
- 		#reset-cells = <1>;
- 	};
- 
-+	eth: ethernet@1b100000 {
-+		compatible = "mediatek,mt7622-eth",
-+			     "mediatek,mt2701-eth",
-+			     "syscon";
-+		reg = <0 0x1b100000 0 0x20000>;
-+		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 224 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 225 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&topckgen CLK_TOP_ETH_SEL>,
-+			 <&ethsys CLK_ETH_ESW_EN>,
-+			 <&ethsys CLK_ETH_GP0_EN>,
-+			 <&ethsys CLK_ETH_GP1_EN>,
-+			 <&ethsys CLK_ETH_GP2_EN>,
-+			 <&sgmiisys CLK_SGMII_TX250M_EN>,
-+			 <&sgmiisys CLK_SGMII_RX250M_EN>,
-+			 <&sgmiisys CLK_SGMII_CDR_REF>,
-+			 <&sgmiisys CLK_SGMII_CDR_FB>,
-+			 <&topckgen CLK_TOP_SGMIIPLL>,
-+			 <&apmixedsys CLK_APMIXED_ETH2PLL>;
-+		clock-names = "ethif", "esw", "gp0", "gp1", "gp2",
-+			      "sgmii_tx250m", "sgmii_rx250m",
-+			      "sgmii_cdr_ref", "sgmii_cdr_fb", "sgmii_ck",
-+			      "eth2pll";
-+		power-domains = <&scpsys MT7622_POWER_DOMAIN_ETHSYS>;
-+		mediatek,ethsys = <&ethsys>;
-+		mediatek,sgmiisys = <&sgmiisys>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	sgmiisys: sgmiisys@1b128000 {
- 		compatible = "mediatek,mt7622-sgmiisys",
- 			     "syscon";
+Chunfeng Yun (1):
+  arm64: dts: mt7622: add usb device nodes
+
+Ryder Lee (2):
+  arm64: dts: mt7622: add PCIe device nodes
+  arm64: dts: mt7622: add SATA device nodes
+
+Sean Wang (12):
+  dt-bindings: clock: mediatek: add missing required #reset-cells
+  arm64: dts: mt7622: add clock controller device nodes
+  arm64: dts: mt7622: add power domain controller device nodes
+  arm64: dts: mt7622: add pinctrl related device nodes
+  arm64: dts: mt7622: add PMIC MT6380 related nodes
+  arm64: dts: mt7622: add cpufreq related device nodes
+  arm64: dts: mt7622: turn uart0 clock to real ones
+  arm64: dts: mt7622: add SoC and peripheral related device nodes
+  arm64: dts: mt7622: add flash related device nodes
+  arm64: dts: mt7622: add ethernet device nodes
+  arm64: dts: mt7622: add High-Speed DMA device nodes
+  arm64: dts: mt7622: add mmc related device nodes
+
+ .../bindings/arm/mediatek/mediatek,ethsys.txt      |   1 +
+ .../bindings/arm/mediatek/mediatek,pciesys.txt     |   2 +
+ .../bindings/arm/mediatek/mediatek,ssusbsys.txt    |   2 +
+ arch/arm64/boot/dts/mediatek/mt6380.dtsi           |  86 +++
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts       | 469 ++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi           | 685 ++++++++++++++++++++-
+ 6 files changed, 1240 insertions(+), 5 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6380.dtsi
+
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
