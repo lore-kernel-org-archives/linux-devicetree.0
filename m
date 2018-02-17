@@ -1,64 +1,122 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 03/15] arm64: dts: mt7622: add power domain controller device nodes
-Date: Sun, 18 Feb 2018 03:54:38 +0800
-Message-ID: <eb065107cb116f17370ea0da100f8a968cc0fdc3.1518895232.git.sean.wang@mediatek.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v3 09/15] arm64: dts: mt7622: add flash related device nodes
+Date: Sun, 18 Feb 2018 03:54:44 +0800
+Message-ID: <beb719f3772b3dba25a026a8cfc7b477eb624b85.1518895232.git.sean.wang@mediatek.com>
 References: <cover.1518895232.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1518895232.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1518895232.git.sean.wang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: Guochun Mao <guochun.mao@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, RogerCC Lin <rogercc.lin@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-add power domain controller nodes
+add nodes for NOR flash, parallel Nand flash with error correction code
+support.
 
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Cc: RogerCC Lin <rogercc.lin@mediatek.com>
+Cc: Guochun Mao <guochun.mao@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt7622.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 21 +++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 34 ++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index ba6a79c..48c5ba4 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -235,6 +235,10 @@
+ 	};
+ };
+ 
++&bch {
++	status = "disabled";
++};
++
+ &btif {
+ 	status = "okay";
+ };
+@@ -257,6 +261,23 @@
+ 	status = "okay";
+ };
+ 
++&nandc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&parallel_nand_pins>;
++	status = "disabled";
++};
++
++&nor_flash {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi_nor_pins>;
++	status = "disabled";
++
++	flash@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++	};
++};
++
+ &pwm {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pwm7_pins>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index 73e5d62..81207e6 100644
+index 448cd36..d287d75 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/mt7622-clk.h>
-+#include <dt-bindings/power/mt7622-power.h>
- #include <dt-bindings/reset/mt7622-reset.h>
- 
- / {
-@@ -109,6 +110,20 @@
- 		#reset-cells = <1>;
+@@ -468,6 +468,40 @@
+ 		status = "disabled";
  	};
  
-+	scpsys: scpsys@10006000 {
-+		compatible = "mediatek,mt7622-scpsys",
-+			     "syscon";
-+		#power-domain-cells = <1>;
-+		reg = <0 0x10006000 0 0x1000>;
-+		interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 166 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 167 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 168 IRQ_TYPE_LEVEL_LOW>;
-+		infracfg = <&infracfg>;
-+		clocks = <&topckgen CLK_TOP_HIF_SEL>;
-+		clock-names = "hif_sel";
++	nandc: nfi@1100d000 {
++		compatible = "mediatek,mt7622-nfc";
++		reg = <0 0x1100D000 0 0x1000>;
++		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_NFI_PD>,
++			 <&pericfg CLK_PERI_SNFI_PD>;
++		clock-names = "nfi_clk", "pad_clk";
++		ecc-engine = <&bch>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
 +	};
 +
- 	sysirq: interrupt-controller@10200620 {
- 		compatible = "mediatek,mt7622-sysirq",
- 			     "mediatek,mt6577-sysirq";
++	bch: ecc@1100e000 {
++		compatible = "mediatek,mt7622-ecc";
++		reg = <0 0x1100e000 0 0x1000>;
++		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_NFIECC_PD>;
++		clock-names = "nfiecc_clk";
++		status = "disabled";
++	};
++
++	nor_flash: spi@11014000 {
++		compatible = "mediatek,mt7622-nor",
++			     "mediatek,mt8173-nor";
++		reg = <0 0x11014000 0 0xe0>;
++		clocks = <&pericfg CLK_PERI_FLASH_PD>,
++			 <&topckgen CLK_TOP_FLASH_SEL>;
++		clock-names = "spi", "sf";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
+ 	spi1: spi@11016000 {
+ 		compatible = "mediatek,mt7622-spi";
+ 		reg = <0 0x11016000 0 0x100>;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
