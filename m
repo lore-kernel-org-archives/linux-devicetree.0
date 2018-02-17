@@ -1,145 +1,150 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v3 13/15] arm64: dts: mt7622: add usb device nodes
-Date: Sun, 18 Feb 2018 03:54:48 +0800
-Message-ID: <cce598c3aa18c71b8d2d9ac7e8c4529d0613803a.1518895232.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 02/15] arm64: dts: mt7622: add clock controller device nodes
+Date: Sun, 18 Feb 2018 03:54:37 +0800
+Message-ID: <816b712599b2da8b13fb6f6baed98cd7da872610.1518895232.git.sean.wang@mediatek.com>
 References: <cover.1518895232.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1518895232.git.sean.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1518895232.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-add xhci node and usb3 phy nodes
+Add clock controller nodes for MT7622 and include header for topckgen,
+infracfg, pericfg, apmixedsys, ethsys, sgmiisys, pciesys and ssusbsys
+for those devices nodes to be added afterwards.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Tested-by: Jumin Li <jumin.li@mediatek.com>
+In addition, provides an oscillator node for the source of PLLs and dummy
+clock for PWARP to complement missing support of clock gate for the
+wrapper circuit in the driver.
+
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 28 +++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 51 ++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 76 ++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index 6715ffa..cc89e2e 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -52,6 +52,24 @@
- 	memory {
- 		reg = <0 0x40000000 0 0x3F000000>;
- 	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-3.3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+
-+	reg_5v: regulator-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "fixed-5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
- };
- 
- &pcie {
-@@ -343,6 +361,16 @@
- 	status = "okay";
- };
- 
-+&ssusb {
-+	vusb33-supply = <&reg_3p3v>;
-+	vbus-supply = <&reg_5v>;
-+	status = "okay";
-+};
-+
-+&u3phy {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index 881bc17..bad1e99 100644
+index b111fec..73e5d62 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -535,6 +535,57 @@
- 		#reset-cells = <1>;
+@@ -8,6 +8,8 @@
+ 
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/mt7622-clk.h>
++#include <dt-bindings/reset/mt7622-reset.h>
+ 
+ / {
+ 	compatible = "mediatek,mt7622";
+@@ -48,6 +50,19 @@
+ 		clock-frequency = <280000000>;
  	};
  
-+	ssusb: usb@1a0c0000 {
-+		compatible = "mediatek,mt7622-xhci",
-+			     "mediatek,mtk-xhci";
-+		reg = <0 0x1a0c0000 0 0x01000>,
-+		      <0 0x1a0c4700 0 0x0100>;
-+		reg-names = "mac", "ippc";
-+		interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_LOW>;
-+		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF1>;
-+		clocks = <&ssusbsys CLK_SSUSB_SYS_EN>,
-+			 <&ssusbsys CLK_SSUSB_REF_EN>,
-+			 <&ssusbsys CLK_SSUSB_MCU_EN>,
-+			 <&ssusbsys CLK_SSUSB_DMA_EN>;
-+		clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck";
-+		phys = <&u2port0 PHY_TYPE_USB2>,
-+		       <&u3port0 PHY_TYPE_USB3>,
-+		       <&u2port1 PHY_TYPE_USB2>;
-+
-+		status = "disabled";
++	pwrap_clk: dummy40m {
++		compatible = "fixed-clock";
++		clock-frequency = <40000000>;
++		#clock-cells = <0>;
 +	};
 +
-+	u3phy: usb-phy@1a0c4000 {
-+		compatible = "mediatek,mt7622-u3phy",
-+			     "mediatek,generic-tphy-v1";
-+		reg = <0 0x1a0c4000 0 0x700>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+
-+		u2port0: usb-phy@1a0c4800 {
-+			reg = <0 0x1a0c4800 0 0x0100>;
-+			#phy-cells = <1>;
-+			clocks = <&ssusbsys CLK_SSUSB_U2_PHY_EN>;
-+			clock-names = "ref";
-+		};
-+
-+		u3port0: usb-phy@1a0c4900 {
-+			reg = <0 0x1a0c4900 0 0x0700>;
-+			#phy-cells = <1>;
-+			clocks = <&clk25m>;
-+			clock-names = "ref";
-+		};
-+
-+		u2port1: usb-phy@1a0c5000 {
-+			reg = <0 0x1a0c5000 0 0x0100>;
-+			#phy-cells = <1>;
-+			clocks = <&ssusbsys CLK_SSUSB_U2_PHY_1P_EN>;
-+			clock-names = "ref";
-+		};
++	clk25m: oscillator {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++		clock-output-names = "clkxtal";
 +	};
 +
- 	pciesys: pciesys@1a100800 {
- 		compatible = "mediatek,mt7622-pciesys",
- 			     "syscon";
+ 	psci {
+ 		compatible  = "arm,psci-0.2";
+ 		method      = "smc";
+@@ -78,6 +93,22 @@
+ 			      IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
+ 
++	infracfg: infracfg@10000000 {
++		compatible = "mediatek,mt7622-infracfg",
++			     "syscon";
++		reg = <0 0x10000000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	pericfg: pericfg@10002000 {
++		compatible = "mediatek,mt7622-pericfg",
++			     "syscon";
++		reg = <0 0x10002000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
+ 	sysirq: interrupt-controller@10200620 {
+ 		compatible = "mediatek,mt7622-sysirq",
+ 			     "mediatek,mt6577-sysirq";
+@@ -87,6 +118,20 @@
+ 		reg = <0 0x10200620 0 0x20>;
+ 	};
+ 
++	apmixedsys: apmixedsys@10209000 {
++		compatible = "mediatek,mt7622-apmixedsys",
++			     "syscon";
++		reg = <0 0x10209000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	topckgen: topckgen@10210000 {
++		compatible = "mediatek,mt7622-topckgen",
++			     "syscon";
++		reg = <0 0x10210000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
+ 	gic: interrupt-controller@10300000 {
+ 		compatible = "arm,gic-400";
+ 		interrupt-controller;
+@@ -107,4 +152,35 @@
+ 		clock-names = "baud", "bus";
+ 		status = "disabled";
+ 	};
++
++	ssusbsys: ssusbsys@1a000000 {
++		compatible = "mediatek,mt7622-ssusbsys",
++			     "syscon";
++		reg = <0 0x1a000000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	pciesys: pciesys@1a100800 {
++		compatible = "mediatek,mt7622-pciesys",
++			     "syscon";
++		reg = <0 0x1a100800 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	ethsys: syscon@1b000000 {
++		compatible = "mediatek,mt7622-ethsys",
++			     "syscon";
++		reg = <0 0x1b000000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	sgmiisys: sgmiisys@1b128000 {
++		compatible = "mediatek,mt7622-sgmiisys",
++			     "syscon";
++		reg = <0 0x1b128000 0 0x1000>;
++		#clock-cells = <1>;
++	};
+ };
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
