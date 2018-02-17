@@ -1,113 +1,702 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: omap4-droid4: Configure MDM6600 USB PHY
-Date: Sat, 17 Feb 2018 13:33:01 -0800
-Message-ID: <20180217213301.21849-2-tony@atomide.com>
-References: <20180217213301.21849-1-tony@atomide.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180217213301.21849-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 04/10] pinctrl: actions: Add Actions S900 pinctrl driver
+Date: Sat, 17 Feb 2018 22:41:48 +0100
+Message-ID: <086c080d-6d2d-6922-1cf3-1b1fbe028b0e@suse.de>
+References: <20180217204433.3095-1-manivannan.sadhasivam@linaro.org>
+ <20180217204433.3095-5-manivannan.sadhasivam@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20180217204433.3095-5-manivannan.sadhasivam@linaro.org>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linus.walleij@linaro.org, robh+dt@kernel.org
+Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Configure MDM6600 USB PHY.
+Am 17.02.2018 um 21:44 schrieb Manivannan Sadhasivam:
+> Add pinctrl driver for Actions Semi S900 SoC. The driver supports
+> pinctrl, pinmux and pinconf functionalities through a range of registers
+> common to both gpio driver and pinctrl driver.
+> 
+> Pinmux functionality is available only for the pin groups while the
+> pinconf functionality is available for both pin groups and individual
+> pins.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/pinctrl/Kconfig                |    1 +
+>  drivers/pinctrl/Makefile               |    1 +
+>  drivers/pinctrl/actions/Kconfig        |   12 +
+>  drivers/pinctrl/actions/Makefile       |    2 +
+>  drivers/pinctrl/actions/pinctrl-owl.c  |  573 ++++++++
+>  drivers/pinctrl/actions/pinctrl-owl.h  |  178 +++
+>  drivers/pinctrl/actions/pinctrl-s900.c | 2536 ++++++++++++++++++++++++++++++++
+>  7 files changed, 3303 insertions(+)
+>  create mode 100644 drivers/pinctrl/actions/Kconfig
+>  create mode 100644 drivers/pinctrl/actions/Makefile
+>  create mode 100644 drivers/pinctrl/actions/pinctrl-owl.c
+>  create mode 100644 drivers/pinctrl/actions/pinctrl-owl.h
+>  create mode 100644 drivers/pinctrl/actions/pinctrl-s900.c
+> 
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 0f254b35c378..838c8fff8c24 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -368,6 +368,7 @@ config PINCTRL_OCELOT
+>  	select GENERIC_PINMUX_FUNCTIONS
+>  	select REGMAP_MMIO
+>  
+> +source "drivers/pinctrl/actions/Kconfig"
+>  source "drivers/pinctrl/aspeed/Kconfig"
+>  source "drivers/pinctrl/bcm/Kconfig"
+>  source "drivers/pinctrl/berlin/Kconfig"
+> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+> index d3692633e9ed..bf41d2484a44 100644
+> --- a/drivers/pinctrl/Makefile
+> +++ b/drivers/pinctrl/Makefile
+> @@ -48,6 +48,7 @@ obj-$(CONFIG_PINCTRL_INGENIC)	+= pinctrl-ingenic.o
+>  obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
+>  obj-$(CONFIG_PINCTRL_OCELOT)	+= pinctrl-ocelot.o
+>  
+> +obj-$(CONFIG_ARCH_ACTIONS)	+= actions/
 
-Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
-Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/omap4-droid4-xt894.dts | 61 ++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+Here you require CONFIG_ARCH_ACTIONS ...
 
-diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
---- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-+++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-@@ -71,6 +71,25 @@
- 		regulator-always-on;
- 	};
- 
-+	/* FS USB Host PHY on port 1 for mdm6600 */
-+	fsusb1_phy: fsusb1_phy {
-+		compatible = "motorola,mapphone-mdm6600";
-+		pinctrl-0 = <&usb_mdm6600_pins>;
-+		pinctrl-names = "default";
-+		enable-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;     /* gpio_95 */
-+		power-gpios = <&gpio2 22 GPIO_ACTIVE_HIGH>;	/* gpio_54 */
-+		reset-gpios = <&gpio2 17 GPIO_ACTIVE_HIGH>;	/* gpio_49 */
-+		mode-gpios = <&gpio5 20 GPIO_ACTIVE_HIGH>,	/* gpio_148 */
-+			     <&gpio5 21 GPIO_ACTIVE_HIGH>;	/* gpio_149 */
-+		status-gpios = <&gpio2 23 GPIO_ACTIVE_HIGH>,	/* gpio_55 */
-+			       <&gpio2 21 GPIO_ACTIVE_HIGH>,	/* gpio_53 */
-+			       <&gpio2 20 GPIO_ACTIVE_HIGH>;	/* gpio_52 */
-+		cmd-gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>,	/* gpio_103 */
-+			    <&gpio4 8 GPIO_ACTIVE_HIGH>,	/* gpio_104 */
-+			    <&gpio5 14 GPIO_ACTIVE_HIGH>;	/* gpio_142 */
-+		#phy-cells = <0>;
-+	};
-+
- 	/* HS USB host TLL nop-phy on port 2 for w3glte */
- 	hsusb2_phy: hsusb2_phy {
- 		compatible = "usb-nop-xceiv";
-@@ -459,6 +478,43 @@
- 		>;
- 	};
- 
-+	usb_mdm6600_pins: pinmux_usb_mdm6600_pins {
-+		pinctrl-single,pins = <
-+		/* enable 0x4a1000d8 usbb1_ulpitll_dat7.gpio_95 ag16 */
-+		OMAP4_IOPAD(0x0d8, PIN_INPUT | MUX_MODE3)
-+
-+		/* power 0x4a10007c gpmc_nwp.gpio_54 c25 */
-+		OMAP4_IOPAD(0x07c, PIN_OUTPUT | MUX_MODE3)
-+
-+		/* reset 0x4a100072 gpmc_a25.gpio_49 d20 */
-+		OMAP4_IOPAD(0x072, PIN_OUTPUT | MUX_MODE3)
-+
-+		/* mode0/bpwake 0x4a10014e sdmmc5_dat1.gpio_148 af4 */
-+		OMAP4_IOPAD(0x14e, PIN_OUTPUT | MUX_MODE3)
-+
-+		/* mode1/apwake 0x4a100150 sdmmc5_dat2.gpio_149 ag3 */
-+		OMAP4_IOPAD(0x150, PIN_OFF_OUTPUT_LOW | PIN_INPUT | MUX_MODE3)
-+
-+		/* status0 0x4a10007e gpmc_clk.gpio_55 b22 */
-+		OMAP4_IOPAD(0x07e, PIN_INPUT | MUX_MODE3)
-+
-+		/* status1 0x4a10007a gpmc_ncs3.gpio_53 c22 */
-+		OMAP4_IOPAD(0x07a, PIN_INPUT | MUX_MODE3)
-+
-+		/* status2 0x4a100078 gpmc_ncs2.gpio_52 d21 */
-+		OMAP4_IOPAD(0x078, PIN_INPUT | MUX_MODE3)
-+
-+		/* cmd0 0x4a100094 gpmc_ncs6.gpio_103 c24 */
-+		OMAP4_IOPAD(0x094, PIN_OUTPUT | MUX_MODE3)
-+
-+		/* cmd1 0x4a100096 gpmc_ncs7.gpio_104 d24 */
-+		OMAP4_IOPAD(0x096, PIN_OUTPUT | MUX_MODE3)
-+
-+		/* cmd2 0x4a100142 uart3_rts_sd.gpio_142 f28 */
-+		OMAP4_IOPAD(0x142, PIN_OUTPUT | MUX_MODE3)
-+		>;
-+	};
-+
- 	usb_ulpi_pins: pinmux_usb_ulpi_pins {
- 		pinctrl-single,pins = <
- 		OMAP4_IOPAD(0x196, MUX_MODE7)
-@@ -583,6 +639,11 @@
- 	};
- };
- 
-+&usbhsohci {
-+	phys = <&fsusb1_phy>;
-+	phy-names = "usb";
-+};
-+
- &usbhsehci {
- 	phys = <&hsusb2_phy>;
- };
+>  obj-$(CONFIG_ARCH_ASPEED)	+= aspeed/
+>  obj-y				+= bcm/
+>  obj-$(CONFIG_PINCTRL_BERLIN)	+= berlin/
+> diff --git a/drivers/pinctrl/actions/Kconfig b/drivers/pinctrl/actions/Kconfig
+> new file mode 100644
+> index 000000000000..6075909d04e9
+> --- /dev/null
+> +++ b/drivers/pinctrl/actions/Kconfig
+> @@ -0,0 +1,12 @@
+> +config PINCTRL_OWL
+> +        bool
+
+Indentation.
+
+> +	depends on (ARCH_ACTIONS || COMPILE_TEST) && OF
+
+... so || COMPILE_TEST becomes moot.
+
+Use CONFIG_PINCTRL_OWL in Makefile instead?
+
+> +	select PINMUX
+> +	select PINCONF
+> +	select GENERIC_PINCONF
+> +
+> +config PINCTRL_S900
+> +	bool "Actions Semi S900 pinctrl driver"
+> +	select PINCTRL_OWL
+> +	help
+> +	  Say Y here to enable Actions S900 pinctrl driver
+
+Repeating the shortened name does not seem too helpful?
+
+> diff --git a/drivers/pinctrl/actions/Makefile b/drivers/pinctrl/actions/Makefile
+> new file mode 100644
+> index 000000000000..bd232d28400f
+> --- /dev/null
+> +++ b/drivers/pinctrl/actions/Makefile
+> @@ -0,0 +1,2 @@
+> +obj-$(CONFIG_PINCTRL_OWL)	+= pinctrl-owl.o
+> +obj-$(CONFIG_PINCTRL_S900) 	+= pinctrl-s900.o
+> diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
+> new file mode 100644
+> index 000000000000..7ed8625c30f3
+> --- /dev/null
+> +++ b/drivers/pinctrl/actions/pinctrl-owl.c
+> @@ -0,0 +1,573 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * OWL SoC's Pinctrl driver
+> + *
+> + * Copyright (c) 2014 Actions Semi Inc.
+> + * Author: David Liu <liuwei@actions-semi.com>
+> + *
+> + * Copyright (c) 2018 Linaro Ltd.
+> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pinctrl/machine.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/pinctrl/pinmux.h>
+> +#include <linux/pinctrl/pinconf.h>
+> +#include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +
+> +#include "../core.h"
+> +#include "../pinctrl-utils.h"
+> +#include "pinctrl-owl.h"
+> +
+> +/**
+> + * struct owl_pinctrl - pinctrl state of the device
+> + * @dev: device handle
+> + * @pctrldev: pinctrl handle
+> + * @lock: spinlock to protect registers
+> + * @soc: reference to soc_data
+> + * @base: pinctrl register base address
+> + */
+> +struct owl_pinctrl {
+> +	struct device *dev;
+> +	struct pinctrl_dev *pctrldev;
+> +	raw_spinlock_t lock;
+> +	struct clk *clk;
+> +	const struct owl_pinctrl_soc_data *soc;
+> +	void __iomem *base;
+> +};
+> +
+> +static int owl_get_groups_count(struct pinctrl_dev *pctrldev)
+> +{
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +
+> +	return pctrl->soc->ngroups;
+> +}
+> +
+> +static const char *owl_get_group_name(struct pinctrl_dev *pctrldev,
+> +				unsigned int group)
+> +{
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +
+> +	return pctrl->soc->groups[group].name;
+> +}
+> +
+> +static int owl_get_group_pins(struct pinctrl_dev *pctrldev,
+> +				unsigned int group,
+> +				const unsigned int **pins,
+> +				unsigned int *num_pins)
+> +{
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +
+> +	*pins = pctrl->soc->groups[group].pads;
+> +	*num_pins = pctrl->soc->groups[group].npads;
+> +
+> +	return 0;
+> +}
+> +
+> +static void owl_pin_dbg_show(struct pinctrl_dev *pctrldev,
+> +				struct seq_file *s,
+> +				unsigned int offset)
+> +{
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +
+> +	seq_printf(s, "%s", dev_name(pctrl->dev));
+> +}
+> +
+> +static struct pinctrl_ops owl_pinctrl_ops = {
+> +	.get_groups_count = owl_get_groups_count,
+> +	.get_group_name = owl_get_group_name,
+> +	.get_group_pins = owl_get_group_pins,
+> +	.pin_dbg_show = owl_pin_dbg_show,
+> +	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
+> +	.dt_free_map = pinctrl_utils_free_map,
+> +};
+> +
+> +static int owl_get_funcs_count(struct pinctrl_dev *pctrldev)
+> +{
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +
+> +	return pctrl->soc->nfunctions;
+> +}
+> +
+> +static const char *owl_get_func_name(struct pinctrl_dev *pctrldev,
+> +				unsigned int function)
+> +{
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +
+> +	return pctrl->soc->functions[function].name;
+> +}
+> +
+> +static int owl_get_func_groups(struct pinctrl_dev *pctrldev,
+> +				unsigned int function,
+> +				const char * const **groups,
+> +				unsigned int * const num_groups)
+> +{
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +
+> +	*groups = pctrl->soc->functions[function].groups;
+> +	*num_groups = pctrl->soc->functions[function].ngroups;
+> +
+> +	return 0;
+> +}
+> +
+> +static inline int get_group_mfp_mask_val(const struct owl_pingroup *g,
+> +				int function,
+> +				u32 *mask,
+> +				u32 *val)
+> +{
+> +	int id;
+> +	u32 option_num;
+> +	u32 option_mask;
+> +
+> +	for (id = 0; id < g->nfuncs; id++) {
+> +		if (g->funcs[id] == function)
+> +			break;
+> +	}
+> +	if (WARN_ON(id == g->nfuncs))
+> +		return -EINVAL;
+> +
+> +	option_num = (1 << g->mfpctl_width);
+> +	if (id > option_num)
+> +		id -= option_num;
+> +
+> +	option_mask = option_num - 1;
+> +	*mask = (option_mask  << g->mfpctl_shift);
+> +	*val = (id << g->mfpctl_shift);
+> +
+> +	return 0;
+> +}
+> +
+> +static int owl_set_mux(struct pinctrl_dev *pctrldev,
+> +				unsigned int function,
+> +				unsigned int group)
+> +{
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +	const struct owl_pingroup *g;
+> +	unsigned long flags;
+> +	u32 val, mask, mfpval;
+> +
+> +	g = &pctrl->soc->groups[group];
+> +
+> +	if (get_group_mfp_mask_val(g, function, &mask, &val))
+> +		return -EINVAL;
+> +
+> +	raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +
+> +	mfpval = readl(pctrl->base + g->mfpctl_reg);
+> +	mfpval &= ~mask;
+> +	mfpval |= val;
+> +	writel(mfpval, pctrl->base + g->mfpctl_reg);
+> +
+> +	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct pinmux_ops owl_pinmux_ops = {
+> +	.get_functions_count = owl_get_funcs_count,
+> +	.get_function_name = owl_get_func_name,
+> +	.get_function_groups = owl_get_func_groups,
+> +	.set_mux = owl_set_mux,
+> +};
+> +
+> +static int owl_pad_pinconf_reg(const struct owl_padinfo *info,
+> +				unsigned int param,
+> +				u32 *reg,
+> +				u32 *bit,
+> +				u32 *width)
+> +{
+> +	switch (param) {
+> +	case PIN_CONFIG_BIAS_BUS_HOLD:
+> +	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +		if (!info->pullctl)
+> +			return -EINVAL;
+> +		*reg = info->pullctl->reg;
+> +		*bit = info->pullctl->shift;
+> +		*width = info->pullctl->width;
+> +		break;
+> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> +		if (!info->st)
+> +			return -EINVAL;
+> +		*reg = info->st->reg;
+> +		*bit = info->st->shift;
+> +		*width = info->st->width;
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int owl_pad_pinconf_arg2val(const struct owl_padinfo *info,
+> +				unsigned int param,
+> +				u32 *arg)
+> +{
+> +	switch (param) {
+> +	case PIN_CONFIG_BIAS_BUS_HOLD:
+> +		*arg = OWL_PINCONF_PULL_HOLD;
+> +		break;
+> +	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
+> +		*arg = OWL_PINCONF_PULL_HIZ;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> +		*arg = OWL_PINCONF_PULL_DOWN;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +		*arg = OWL_PINCONF_PULL_UP;
+> +		break;
+> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> +		*arg = (*arg >= 1 ? 1 : 0);
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int owl_pad_pinconf_val2arg(const struct owl_padinfo *padinfo,
+> +				unsigned int param,
+> +				u32 *arg)
+> +{
+> +	switch (param) {
+> +	case PIN_CONFIG_BIAS_BUS_HOLD:
+> +		*arg = *arg == OWL_PINCONF_PULL_HOLD;
+> +		break;
+> +	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
+> +		*arg = *arg == OWL_PINCONF_PULL_HIZ;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> +		*arg = *arg == OWL_PINCONF_PULL_DOWN;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +		*arg = *arg == OWL_PINCONF_PULL_UP;
+> +		break;
+> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> +		*arg = *arg == 1;
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int owl_pin_config_get(struct pinctrl_dev *pctrldev,
+> +				unsigned int pin,
+> +				unsigned long *config)
+> +{
+> +	int ret = 0;
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +	const struct owl_padinfo *info;
+> +	unsigned int param = pinconf_to_config_param(*config);
+> +	u32 reg, bit, width;
+> +	u32 tmp, mask;
+> +	u32 arg = 0;
+> +
+> +	info = &pctrl->soc->padinfo[pin];
+> +
+> +	ret = owl_pad_pinconf_reg(info, param, &reg, &bit, &width);
+> +	if (ret)
+> +		return ret;
+> +
+> +	tmp = readl(pctrl->base + reg);
+> +	mask = (1 << width) - 1;
+> +	arg = (tmp >> bit) & mask;
+> +
+> +	ret = owl_pad_pinconf_val2arg(info, param, &arg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*config = pinconf_to_config_packed(param, arg);
+> +
+> +	return ret;
+> +}
+> +
+> +static int owl_pin_config_set(struct pinctrl_dev *pctrldev,
+> +				unsigned int pin,
+> +				unsigned long *configs,
+> +				unsigned int num_configs)
+> +{
+> +	int ret = 0;
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +	const struct owl_padinfo *info;
+> +	unsigned long flags;
+> +	unsigned int param;
+> +	u32 reg, bit, width;
+> +	u32 mask = 0, tmp, arg = 0;
+> +	int i;
+> +
+> +	info = &pctrl->soc->padinfo[pin];
+> +
+> +	for (i = 0; i < num_configs; i++) {
+> +		param = pinconf_to_config_param(configs[i]);
+> +		arg = pinconf_to_config_argument(configs[i]);
+> +
+> +		ret = owl_pad_pinconf_reg(info, param, &reg, &bit, &width);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = owl_pad_pinconf_arg2val(info, param, &arg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +
+> +		mask = (1 << width) - 1;
+> +		mask = mask << bit;
+> +		tmp = readl(pctrl->base + reg);
+> +		tmp &= ~mask;
+> +		tmp |= arg << bit;
+> +		writel(tmp, pctrl->base + reg);
+> +
+> +		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int owl_group_pinconf_reg(const struct owl_pingroup *g,
+> +				unsigned int param,
+> +				u32 *reg,
+> +				u32 *bit,
+> +				u32 *width)
+> +{
+> +	switch (param) {
+> +	case PIN_CONFIG_DRIVE_STRENGTH:
+> +		if (g->drv_reg < 0)
+> +			return -EINVAL;
+> +		*reg = g->drv_reg;
+> +		*bit = g->drv_shift;
+> +		*width = g->drv_width;
+> +		break;
+> +	case PIN_CONFIG_SLEW_RATE:
+> +		if (g->sr_reg < 0)
+> +			return -EINVAL;
+> +		*reg = g->sr_reg;
+> +		*bit = g->sr_shift;
+> +		*width = g->sr_width;
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int owl_group_pinconf_arg2val(const struct owl_pingroup *g,
+> +				unsigned int param,
+> +				u32 *arg)
+> +{
+> +	switch (param) {
+> +	case PIN_CONFIG_DRIVE_STRENGTH:
+> +		switch (*arg) {
+> +		case 2:
+> +			*arg = OWL_PINCONF_DRV_2MA;
+> +			break;
+> +		case 4:
+> +			*arg = OWL_PINCONF_DRV_4MA;
+> +			break;
+> +		case 8:
+> +			*arg = OWL_PINCONF_DRV_8MA;
+> +			break;
+> +		case 12:
+> +			*arg = OWL_PINCONF_DRV_12MA;
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	case PIN_CONFIG_SLEW_RATE:
+> +		if (*arg)
+> +			*arg = OWL_PINCONF_SLEW_FAST;
+> +		else
+> +			*arg = OWL_PINCONF_SLEW_SLOW;
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int owl_group_pinconf_val2arg(const struct owl_pingroup *g,
+> +				unsigned int param,
+> +				u32 *arg)
+> +{
+> +	switch (param) {
+> +	case PIN_CONFIG_DRIVE_STRENGTH:
+> +		switch (*arg) {
+> +		case OWL_PINCONF_DRV_2MA:
+> +			*arg = 2;
+> +			break;
+> +		case OWL_PINCONF_DRV_4MA:
+> +			*arg = 4;
+> +			break;
+> +		case OWL_PINCONF_DRV_8MA:
+> +			*arg = 8;
+> +			break;
+> +		case OWL_PINCONF_DRV_12MA:
+> +			*arg = 12;
+> +			break;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	case PIN_CONFIG_SLEW_RATE:
+> +		if (*arg)
+> +			*arg = 1;
+> +		else
+> +			*arg = 0;
+> +		break;
+> +	default:
+> +		return -ENOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int owl_group_config_get(struct pinctrl_dev *pctrldev,
+> +				unsigned int group,
+> +				unsigned long *config)
+> +{
+> +	int ret = 0;
+> +	const struct owl_pingroup *g;
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +	unsigned int param = pinconf_to_config_param(*config);
+> +	u32 reg, bit, width;
+> +	u32 mask, tmp, arg = 0;
+> +
+> +	g = &pctrl->soc->groups[group];
+> +
+> +	ret = owl_group_pinconf_reg(g, param, &reg, &bit, &width);
+> +	if (ret)
+> +		return ret;
+> +
+> +	tmp = readl(pctrl->base + reg);
+> +	mask = (1 << width) - 1;
+> +	arg = (tmp >> bit) & mask;
+> +
+> +	ret = owl_group_pinconf_val2arg(g, param, &arg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*config = pinconf_to_config_packed(param, arg);
+> +
+> +	return ret;
+> +
+> +}
+> +
+> +static int owl_group_config_set(struct pinctrl_dev *pctrldev,
+> +				unsigned int group,
+> +				unsigned long *configs,
+> +				unsigned int num_configs)
+> +{
+> +	int ret = 0;
+> +	const struct owl_pingroup *g;
+> +	struct owl_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctrldev);
+> +	unsigned long flags;
+> +	unsigned int param;
+> +	u32 reg, bit, width;
+> +	u32 mask, arg = 0;
+> +	u32 tmp;
+> +	int i;
+> +
+> +	g = &pctrl->soc->groups[group];
+> +
+> +	for (i = 0; i < num_configs; i++) {
+> +		param = pinconf_to_config_param(configs[i]);
+> +		arg = pinconf_to_config_argument(configs[i]);
+> +
+> +		ret = owl_group_pinconf_reg(g, param, &reg, &bit, &width);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = owl_group_pinconf_arg2val(g, param, &arg);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* Update register */
+> +		raw_spin_lock_irqsave(&pctrl->lock, flags);
+> +
+> +		mask = (1 << width) - 1;
+> +		mask = mask << bit;
+> +		tmp = readl(pctrl->base + reg);
+> +		tmp &= ~mask;
+> +		tmp |= arg << bit;
+> +		writel(tmp, pctrl->base + reg);
+> +
+> +		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct pinconf_ops owl_pinconf_ops = {
+> +	.is_generic = true,
+> +	.pin_config_get = owl_pin_config_get,
+> +	.pin_config_set = owl_pin_config_set,
+> +	.pin_config_group_get = owl_group_config_get,
+> +	.pin_config_group_set = owl_group_config_set,
+> +};
+> +
+> +static struct pinctrl_desc owl_pinctrl_desc = {
+> +	.pctlops = &owl_pinctrl_ops,
+> +	.pmxops = &owl_pinmux_ops,
+> +	.confops = &owl_pinconf_ops,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +int owl_pinctrl_probe(struct platform_device *pdev,
+> +				struct owl_pinctrl_soc_data *soc_data)
+> +{
+> +	struct resource *res;
+> +	struct owl_pinctrl *pctrl;
+> +
+> +	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
+> +	if (!pctrl)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	pctrl->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(pctrl->base))
+> +		return PTR_ERR(pctrl->base);
+> +
+> +	/* enable GPIO/MFP clock */
+> +	pctrl->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(pctrl->clk)) {
+> +		dev_err(&pdev->dev, "no clock defined\n");
+> +		return -ENODEV;
+
+You need to return PTR_ERR(pctrl->clk) to make deferred loading work.
+
+> +	}
+> +	clk_prepare_enable(pctrl->clk);
+> +
+> +	raw_spin_lock_init(&pctrl->lock);
+> +
+> +	owl_pinctrl_desc.name = dev_name(&pdev->dev);
+> +	owl_pinctrl_desc.pins = soc_data->pins;
+> +	owl_pinctrl_desc.npins = soc_data->npins;
+> +
+> +	pctrl->soc = soc_data;
+> +	pctrl->dev = &pdev->dev;
+> +
+> +	pctrl->pctrldev = devm_pinctrl_register(&pdev->dev,
+> +					&owl_pinctrl_desc, pctrl);
+> +	if (IS_ERR(pctrl->pctrldev)) {
+> +		dev_err(&pdev->dev, "could not register Actions OWL pinmux driver\n");
+> +		return PTR_ERR(pctrl->pctrldev);
+> +	}
+> +
+> +	platform_set_drvdata(pdev, pctrl);
+> +
+> +	pr_info("Initialized Actions OWL pin control driver\n");
+
+Drop?
+
+> +
+> +	return 0;
+> +}
+[snip]
+
+Let's discuss concerns about the naming and design separately.
+
+Regards,
+Andreas
+
 -- 
-2.16.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
