@@ -1,274 +1,76 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 04/15] arm64: dts: mt7622: add pinctrl related device nodes
-Date: Sun, 18 Feb 2018 03:54:39 +0800
-Message-ID: <5bf0248c9c39ebe76b9790458832fc37b067b0d4.1518895232.git.sean.wang@mediatek.com>
-References: <cover.1518895232.git.sean.wang@mediatek.com>
+From: Paul Burton <paul.burton@mips.com>
+Subject: [PATCH v5 03/14] dt-bindings: net: Document Intel pch_gbe binding
+Date: Sat, 17 Feb 2018 12:10:26 -0800
+Message-ID: <20180217201037.3006-4-paul.burton@mips.com>
+References: <20180217201037.3006-1-paul.burton@mips.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1518895232.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180217201037.3006-1-paul.burton@mips.com>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: Hassan Naveed <hassan.naveed@mips.com>, Matt Redfearn <matt.redfearn@mips.com>, "David S . Miller" <davem@davemloft.net>, linux-mips@linux-mips.org, Paul Burton <paul.burton@mips.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Introduce documentation for a device tree binding for the Intel Platform
+Controller Hub (PCH) GigaBit Ethernet (GBE) device. Although this is a
+PCIe device & thus largely auto-detectable, this binding will be used to
+provide the driver with the PHY reset GPIO.
 
-add pinctrl device nodes and rfb1 board, additionally include all pin
-groups possible being used on rfb1 board and available gpio keys.
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: netdev@vger.kernel.org
 
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 200 +++++++++++++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi     |   7 +
- 2 files changed, 207 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index c08309d..fc8ef78 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -7,6 +7,8 @@
-  */
- 
- /dts-v1/;
-+#include <dt-bindings/input/input.h>
+Changes in v5:
+- Use standard gpio & ethernet node names in example.
+- Remove bus number from example unit addresses.
+
+Changes in v4: None
+Changes in v3:
+- New patch.
+
+Changes in v2: None
+
+ Documentation/devicetree/bindings/net/pch_gbe.txt | 25 +++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/pch_gbe.txt
+
+diff --git a/Documentation/devicetree/bindings/net/pch_gbe.txt b/Documentation/devicetree/bindings/net/pch_gbe.txt
+new file mode 100644
+index 000000000000..cff2687e6e75
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/pch_gbe.txt
+@@ -0,0 +1,25 @@
++Intel Platform Controller Hub (PCH) GigaBit Ethernet (GBE)
 +
- #include "mt7622.dtsi"
- 
- / {
-@@ -17,11 +19,209 @@
- 		bootargs = "console=ttyS0,115200n1";
- 	};
- 
-+	gpio-keys {
-+		compatible = "gpio-keys-polled";
-+		poll-interval = <100>;
++Required properties:
++- compatible:		Should be the PCI vendor & device ID, eg. "pci8086,8802".
++- reg:			Should be a PCI device number as specified by the PCI bus
++			binding to IEEE Std 1275-1994.
++- phy-reset-gpios:	Should be a GPIO list containing a single GPIO that
++			resets the attached PHY when active.
 +
-+		factory {
-+			label = "factory";
-+			linux,code = <BTN_0>;
-+			gpios = <&pio 0 0>;
-+		};
++Example:
 +
-+		wps {
-+			label = "wps";
-+			linux,code = <KEY_WPS_BUTTON>;
-+			gpios = <&pio 102 0>;
-+		};
++	ethernet@0,1 {
++		compatible = "pci8086,8802";
++		reg = <0x00020100 0 0 0 0>;
++		phy-reset-gpios = <&eg20t_gpio 6
++				   GPIO_ACTIVE_LOW>;
 +	};
 +
- 	memory {
- 		reg = <0 0x40000000 0 0x3F000000>;
- 	};
- };
- 
-+&pio {
-+	/* eMMC is shared pin with parallel NAND */
-+	emmc_pins_default: emmc-pins-default {
-+		mux {
-+			function = "emmc", "emmc_rst";
-+			groups = "emmc";
-+		};
-+	};
++	eg20t_gpio: gpio@0,2 {
++		compatible = "pci8086,8803";
++		reg = <0x00020200 0 0 0 0>;
 +
-+	emmc_pins_uhs: emmc-pins-uhs {
-+		mux {
-+			function = "emmc";
-+			groups = "emmc";
-+		};
-+	};
-+
-+	eth_pins: eth-pins {
-+		mux {
-+			function = "eth";
-+			groups = "mdc_mdio", "rgmii_via_gmac2";
-+		};
-+	};
-+
-+	i2c1_pins: i2c1-pins {
-+		mux {
-+			function = "i2c";
-+			groups =  "i2c1_0";
-+		};
-+	};
-+
-+	i2c2_pins: i2c2-pins {
-+		mux {
-+			function = "i2c";
-+			groups =  "i2c2_0";
-+		};
-+	};
-+
-+	i2s1_pins: i2s1-pins {
-+		mux {
-+			function = "i2s";
-+			groups =  "i2s_out_bclk_ws_mclk",
-+				  "i2s1_in_data",
-+				  "i2s1_out_data";
-+		};
-+	};
-+
-+	irrx_pins: irrx-pins {
-+		mux {
-+			function = "ir";
-+			groups =  "ir_1_rx";
-+		};
-+	};
-+
-+	irtx_pins: irtx-pins {
-+		mux {
-+			function = "ir";
-+			groups =  "ir_1_tx";
-+		};
-+	};
-+
-+	/* Parallel nand is shared pin with eMMC */
-+	parallel_nand_pins: parallel-nand-pins {
-+		mux {
-+			function = "flash";
-+			groups = "par_nand";
-+		};
-+	};
-+
-+	pcie0_pins: pcie0-pins {
-+		mux {
-+			function = "pcie";
-+			groups = "pcie0_pad_perst",
-+				 "pcie0_1_waken",
-+				 "pcie0_1_clkreq";
-+		};
-+	};
-+
-+	pcie1_pins: pcie1-pins {
-+		mux {
-+			function = "pcie";
-+			groups = "pcie1_pad_perst",
-+				 "pcie1_0_waken",
-+				 "pcie1_0_clkreq";
-+		};
-+	};
-+
-+	pmic_bus_pins: pmic-bus-pins {
-+		mux {
-+			function = "pmic";
-+			groups = "pmic_bus";
-+		};
-+	};
-+
-+	pwm7_pins: pwm1-2-pins {
-+		mux {
-+			function = "pwm";
-+			groups = "pwm_ch7_2";
-+		};
-+	};
-+
-+	wled_pins: wled-pins {
-+		mux {
-+			function = "led";
-+			groups = "wled";
-+		};
-+	};
-+
-+	sd0_pins_default: sd0-pins-default {
-+		mux {
-+			function = "sd";
-+			groups = "sd_0";
-+		};
-+	};
-+
-+	sd0_pins_uhs: sd0-pins-uhs {
-+		mux {
-+			function = "sd";
-+			groups = "sd_0";
-+		};
-+	};
-+
-+	/* Serial NAND is shared pin with SPI-NOR */
-+	serial_nand_pins: serial-nand-pins {
-+		mux {
-+			function = "flash";
-+			groups = "snfi";
-+		};
-+	};
-+
-+	spic0_pins: spic0-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spic0_0";
-+		};
-+	};
-+
-+	spic1_pins: spic1-pins {
-+		mux {
-+			function = "spi";
-+			groups = "spic1_0";
-+		};
-+	};
-+
-+	/* SPI-NOR is shared pin with serial NAND */
-+	spi_nor_pins: spi-nor-pins {
-+		mux {
-+			function = "flash";
-+			groups = "spi_nor";
-+		};
-+	};
-+
-+	/* serial NAND is shared pin with SPI-NOR */
-+	serial_nand_pins: serial-nand-pins {
-+		mux {
-+			function = "flash";
-+			groups = "snfi";
-+		};
-+	};
-+
-+	uart0_pins: uart0-pins {
-+		mux {
-+			function = "uart";
-+			groups = "uart0_0_tx_rx" ;
-+		};
-+	};
-+
-+	uart2_pins: uart2-pins {
-+		mux {
-+			function = "uart";
-+			groups = "uart2_1_tx_rx" ;
-+		};
-+	};
-+
-+	watchdog_pins: watchdog-pins {
-+		mux {
-+			function = "watchdog";
-+			groups = "watchdog";
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index 81207e6..8211bf7 100644
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -147,6 +147,13 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	pio: pinctrl@10211000 {
-+		compatible = "mediatek,mt7622-pinctrl";
-+		reg = <0 0x10211000 0 0x1000>;
 +		gpio-controller;
 +		#gpio-cells = <2>;
 +	};
-+
- 	gic: interrupt-controller@10300000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.16.1
