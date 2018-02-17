@@ -1,56 +1,101 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v5 3/3] dmaengine: mediatek: update MAINTAINERS entry with
- MediaTek DMA driver
-Date: Sun, 18 Feb 2018 03:08:31 +0800
-Message-ID: <4ebffd841fc3b2093fb35c3d10b8b167a9e42bcc.1518857747.git.sean.wang@mediatek.com>
-References: <cover.1518857746.git.sean.wang@mediatek.com>
+Subject: [PATCH v3 10/15] arm64: dts: mt7622: add ethernet device nodes
+Date: Sun, 18 Feb 2018 03:54:45 +0800
+Message-ID: <c53c28525ef104c6d3c54d2538e771afdf8c836a.1518895232.git.sean.wang@mediatek.com>
+References: <cover.1518895232.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1518857746.git.sean.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1518895232.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-I work for MediaTek and maintain SoC targeting to home gateway and
-also will keep extending and testing the function.
+add ethernet device nodes which enable GMAC1 with SGMII interface
 
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 22 ++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 31 ++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3bdc260..d3c33d7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8785,6 +8785,15 @@ M:	Sean Wang <sean.wang@mediatek.com>
- S:	Maintained
- F:	drivers/media/rc/mtk-cir.c
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index 48c5ba4..e2bd93e 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -249,6 +249,28 @@
+ 	status = "okay";
+ };
  
-+MEDIATEK DMA DRIVER
-+M:	Sean Wang <sean.wang@mediatek.com>
-+L:	dmaengine@vger.kernel.org
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-mediatek@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/dma/mtk-*
-+F:	drivers/dma/mediatek/
++&eth {
++	pinctrl-names = "default";
++	pinctrl-0 = <&eth_pins>;
++	status = "okay";
 +
- MEDIATEK PMIC LED DRIVER
- M:	Sean Wang <sean.wang@mediatek.com>
- S:	Maintained
++	gmac1: mac@1 {
++		compatible = "mediatek,eth-mac";
++		reg = <1>;
++		phy-handle = <&phy5>;
++	};
++
++	mdio-bus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		phy5: ethernet-phy@5 {
++			reg = <5>;
++			phy-mode = "sgmii";
++		};
++	};
++};
++
+ &i2c1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c1_pins>;
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index d287d75..95f947e 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -550,6 +550,37 @@
+ 		#reset-cells = <1>;
+ 	};
+ 
++	eth: ethernet@1b100000 {
++		compatible = "mediatek,mt7622-eth",
++			     "mediatek,mt2701-eth",
++			     "syscon";
++		reg = <0 0x1b100000 0 0x20000>;
++		interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 224 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 225 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&topckgen CLK_TOP_ETH_SEL>,
++			 <&ethsys CLK_ETH_ESW_EN>,
++			 <&ethsys CLK_ETH_GP0_EN>,
++			 <&ethsys CLK_ETH_GP1_EN>,
++			 <&ethsys CLK_ETH_GP2_EN>,
++			 <&sgmiisys CLK_SGMII_TX250M_EN>,
++			 <&sgmiisys CLK_SGMII_RX250M_EN>,
++			 <&sgmiisys CLK_SGMII_CDR_REF>,
++			 <&sgmiisys CLK_SGMII_CDR_FB>,
++			 <&topckgen CLK_TOP_SGMIIPLL>,
++			 <&apmixedsys CLK_APMIXED_ETH2PLL>;
++		clock-names = "ethif", "esw", "gp0", "gp1", "gp2",
++			      "sgmii_tx250m", "sgmii_rx250m",
++			      "sgmii_cdr_ref", "sgmii_cdr_fb", "sgmii_ck",
++			      "eth2pll";
++		power-domains = <&scpsys MT7622_POWER_DOMAIN_ETHSYS>;
++		mediatek,ethsys = <&ethsys>;
++		mediatek,sgmiisys = <&sgmiisys>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++	};
++
+ 	sgmiisys: sgmiisys@1b128000 {
+ 		compatible = "mediatek,mt7622-sgmiisys",
+ 			     "syscon";
 -- 
 2.7.4
