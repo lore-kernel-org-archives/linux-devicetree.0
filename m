@@ -1,122 +1,134 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v3 09/15] arm64: dts: mt7622: add flash related device nodes
-Date: Sun, 18 Feb 2018 03:54:44 +0800
-Message-ID: <beb719f3772b3dba25a026a8cfc7b477eb624b85.1518895232.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 06/15] arm64: dts: mt7622: add cpufreq related device nodes
+Date: Sun, 18 Feb 2018 03:54:41 +0800
+Message-ID: <2cf761c2a20a8ff8a9208ddf3872f10f6f3198f5.1518895232.git.sean.wang@mediatek.com>
 References: <cover.1518895232.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1518895232.git.sean.wang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: Guochun Mao <guochun.mao@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, RogerCC Lin <rogercc.lin@mediatek.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1518895232.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-add nodes for NOR flash, parallel Nand flash with error correction code
-support.
+Add clocks, regulators and opp information into cpu nodes.
+In addition, the power supply for cpu nodes is deployed on
+mt7622-rfb1 board.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Cc: RogerCC Lin <rogercc.lin@mediatek.com>
-Cc: Guochun Mao <guochun.mao@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 21 +++++++++++++++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 34 ++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 12 +++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 52 ++++++++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-index ba6a79c..48c5ba4 100644
+index 42bd3a4..b387865 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
 +++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -235,6 +235,10 @@
+@@ -20,6 +20,18 @@
+ 		bootargs = "console=ttyS0,115200n1";
  	};
- };
  
-+&bch {
-+	status = "disabled";
-+};
++	cpus {
++		cpu@0 {
++			proc-supply = <&mt6380_vcpu_reg>;
++			sram-supply = <&mt6380_vm_reg>;
++		};
 +
- &btif {
- 	status = "okay";
- };
-@@ -257,6 +261,23 @@
- 	status = "okay";
- };
- 
-+&nandc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&parallel_nand_pins>;
-+	status = "disabled";
-+};
-+
-+&nor_flash {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_nor_pins>;
-+	status = "disabled";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
++		cpu@1 {
++			proc-supply = <&mt6380_vcpu_reg>;
++			sram-supply = <&mt6380_vm_reg>;
++		};
 +	};
-+};
 +
- &pwm {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pwm7_pins>;
+ 	gpio-keys {
+ 		compatible = "gpio-keys-polled";
+ 		poll-interval = <100>;
 diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-index 448cd36..d287d75 100644
+index c387c4c..7256879 100644
 --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -468,6 +468,40 @@
- 		status = "disabled";
- 	};
+@@ -18,6 +18,50 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
  
-+	nandc: nfi@1100d000 {
-+		compatible = "mediatek,mt7622-nfc";
-+		reg = <0 0x1100D000 0 0x1000>;
-+		interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_NFI_PD>,
-+			 <&pericfg CLK_PERI_SNFI_PD>;
-+		clock-names = "nfi_clk", "pad_clk";
-+		ecc-engine = <&bch>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
++	cpu_opp_table: opp-table {
++		compatible = "operating-points-v2";
++		opp-shared;
++		opp-300000000 {
++			opp-hz = /bits/ 64 <30000000>;
++			opp-microvolt = <950000>;
++		};
++
++		opp-437500000 {
++			opp-hz = /bits/ 64 <437500000>;
++			opp-microvolt = <1000000>;
++		};
++
++		opp-600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <1050000>;
++		};
++
++		opp-812500000 {
++			opp-hz = /bits/ 64 <812500000>;
++			opp-microvolt = <1100000>;
++		};
++
++		opp-1025000000 {
++			opp-hz = /bits/ 64 <1025000000>;
++			opp-microvolt = <1150000>;
++		};
++
++		opp-1137500000 {
++			opp-hz = /bits/ 64 <1137500000>;
++			opp-microvolt = <1200000>;
++		};
++
++		opp-1262500000 {
++			opp-hz = /bits/ 64 <1262500000>;
++			opp-microvolt = <1250000>;
++		};
++
++		opp-1350000000 {
++			opp-hz = /bits/ 64 <1350000000>;
++			opp-microvolt = <1310000>;
++		};
 +	};
 +
-+	bch: ecc@1100e000 {
-+		compatible = "mediatek,mt7622-ecc";
-+		reg = <0 0x1100e000 0 0x1000>;
-+		interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_NFIECC_PD>;
-+		clock-names = "nfiecc_clk";
-+		status = "disabled";
-+	};
-+
-+	nor_flash: spi@11014000 {
-+		compatible = "mediatek,mt7622-nor",
-+			     "mediatek,mt8173-nor";
-+		reg = <0 0x11014000 0 0xe0>;
-+		clocks = <&pericfg CLK_PERI_FLASH_PD>,
-+			 <&topckgen CLK_TOP_FLASH_SEL>;
-+		clock-names = "spi", "sf";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	spi1: spi@11016000 {
- 		compatible = "mediatek,mt7622-spi";
- 		reg = <0 0x11016000 0 0x100>;
+ 	cpus {
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+@@ -26,6 +70,10 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x0>;
++			clocks = <&infracfg CLK_INFRA_MUX1_SEL>,
++				 <&apmixedsys CLK_APMIXED_MAIN_CORE_EN>;
++			clock-names = "cpu", "intermediate";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			enable-method = "psci";
+ 			clock-frequency = <1300000000>;
+ 		};
+@@ -34,6 +82,10 @@
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			reg = <0x0 0x1>;
++			clocks = <&infracfg CLK_INFRA_MUX1_SEL>,
++				 <&apmixedsys CLK_APMIXED_MAIN_CORE_EN>;
++			clock-names = "cpu", "intermediate";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			enable-method = "psci";
+ 			clock-frequency = <1300000000>;
+ 		};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
