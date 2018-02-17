@@ -1,65 +1,39 @@
-From: Boris Brezillon <boris.brezillon-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: spi: updated usage example for
- spi-rx/tx-bus-width properties
-Date: Sat, 17 Feb 2018 09:48:46 +0100
-Message-ID: <20180217094846.60475e2f@bbrezillon>
-References: <1518504675-26286-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <1518504675-26286-3-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 1/2] dt-bindings: thermal: add binding for MT7622 SoC
+Date: Sat, 17 Feb 2018 16:49:01 +0800
+Message-ID: <c72262a17332a227aa2db39b682db50e2324821a.1518856935.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1518504675-26286-3-git-send-email-yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org, suresh.gupta-3arQi8VN3Tc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: robh+dt@kernel.org, rui.zhang@intel.com, edubezval@gmail.com
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, Shunli Wang <shunli.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yogesh,
+From: Sean Wang <sean.wang@mediatek.com>
 
-Looks like you forgot to Cc Mark and the linux-spi ML.
+Add devicetree bindings for MediaTek MT7622 thermal controller
 
-Regards,
+Changes v1 -> v2: add tag from Rob
 
-Boris
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Shunli Wang <shunli.wang@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/thermal/mediatek-thermal.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Tue, 13 Feb 2018 12:21:15 +0530
-Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org> wrote:
-
-> Updated usage example by adding properties spi-rx-bus-width
-> and spi-tx-bus-width for slave node binding.
-> 
-> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur-3arQi8VN3Tc@public.gmane.org>
-> ---
-> Changes for v3:
-> - None
-> Changes for v2:
-> - None
-> 
->  Documentation/devicetree/bindings/spi/spi-bus.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index 1f6e86f..4dbe267 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -101,6 +101,8 @@ SPI example for an MPC5200 SPI bus:
->  			compatible = "micrel,ks8995m";
->  			spi-max-frequency = <1000000>;
->  			reg = <0>;
-> +			spi-rx-bus-width = 4;
-> +			spi-tx-bus-width = 4;
->  		};
->  
->  		codec@1 {
-
-
-
+diff --git a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+index 0d73ea5..41d6a44 100644
+--- a/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/mediatek-thermal.txt
+@@ -12,6 +12,7 @@ Required properties:
+   - "mediatek,mt8173-thermal" : For MT8173 family of SoCs
+   - "mediatek,mt2701-thermal" : For MT2701 family of SoCs
+   - "mediatek,mt2712-thermal" : For MT2712 family of SoCs
++  - "mediatek,mt7622-thermal" : For MT7622 SoC
+ - reg: Address range of the thermal controller
+ - interrupts: IRQ for the thermal controller
+ - clocks, clock-names: Clocks needed for the thermal controller. required
 -- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
