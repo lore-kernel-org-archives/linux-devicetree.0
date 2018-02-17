@@ -1,75 +1,71 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v5 0/3] add support for Mediatek High-Speed DMA controller on MT7622 and MT7623 SoC
-Date: Sun, 18 Feb 2018 03:08:28 +0800
-Message-ID: <cover.1518857746.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 1/3] dt-bindings: dmaengine: Add MediaTek High-Speed DMA controller bindings
+Date: Sun, 18 Feb 2018 03:08:29 +0800
+Message-ID: <94e4a39e05a30f2ca3fafb61d19777f41fa49645.1518857747.git.sean.wang@mediatek.com>
+References: <cover.1518857746.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, dan.j.williams@intel.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1518857746.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Changes since v4:
-- rebase to 4.16-rc1
-- fold back patch 4 and 5 in v4 into the original commit
-- add the missing header included
-- fix typo and add more explanation in existing comments
-- fix the comments with kernel-doc style which uses /** as the begin
-- begin the multi-line comments with /*
+Document the devicetree bindings for MediaTek High-Speed DMA controller
+which could be found on MT7623 SoC or other similar Mediatek SoCs.
 
-Changes since v3:
-- enhance dt-binding documents based on Rob's comments
-- make consistent among all comments
-- perfer ordering declarations longest to shortest
-- fix warning reported from kbuild test robot
-- add patch 4 and 5 to keep Fengguang and Julia's effort
-
-Changes since v2:
-- remove extra tasklets and refactor driver for letting descriptors being processed ASAP.
-- add more comments stating the relevant logic
-- remove unused macro and variables
-- change to use the disclaimer with SPDX identifier
-- add mt7622 support
-- refine hardware initialization sequence
-- add tx_status support for DMA_RESIDUE_GRANULARITY_SEGMENT
-- refine remove handler with killing vc's tasklet
-
-Changes since v1:
-- fix typo in the commit message.
-- delete status shown in the dt-binding example.
-
-This patchset introduces support for MediaTek High-Speed DMA controller
-(MTK-HSDMA) Currently, the driver is already tested successfully with
-dmatest module on MT7622 and MT7623 SoC. 
-
-MTK-HSDMA on MT7622/23 SoC has a single ring which is dedicated for
-doing memory-to-memory transfer through ring-based descriptor management.
-Even though there is only a single ring available inside HSDMA, the
-driver is being extended to the support for multiple virtual channels
-processing simultaneously by means of DMA_VIRTUAL_CHANNELS.
-
-Sean Wang (3):
-  dt-bindings: dmaengine: Add MediaTek High-Speed DMA controller
-    bindings
-  dmaengine: mediatek: Add MediaTek High-Speed DMA controller for MT7622
-    and MT7623 SoC
-  dmaengine: mediatek: update MAINTAINERS entry with MediaTek DMA driver
-
- .../devicetree/bindings/dma/mtk-hsdma.txt          |   33 +
- MAINTAINERS                                        |    9 +
- drivers/dma/Kconfig                                |    2 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/mediatek/Kconfig                       |   13 +
- drivers/dma/mediatek/Makefile                      |    1 +
- drivers/dma/mediatek/mtk-hsdma.c                   | 1054 ++++++++++++++++++++
- 7 files changed, 1113 insertions(+)
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/dma/mtk-hsdma.txt          | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/mtk-hsdma.txt
- create mode 100644 drivers/dma/mediatek/Kconfig
- create mode 100644 drivers/dma/mediatek/Makefile
- create mode 100644 drivers/dma/mediatek/mtk-hsdma.c
 
+diff --git a/Documentation/devicetree/bindings/dma/mtk-hsdma.txt b/Documentation/devicetree/bindings/dma/mtk-hsdma.txt
+new file mode 100644
+index 0000000..4bb31735
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/mtk-hsdma.txt
+@@ -0,0 +1,33 @@
++MediaTek High-Speed DMA Controller
++==================================
++
++This device follows the generic DMA bindings defined in dma/dma.txt.
++
++Required properties:
++
++- compatible:	Must be one of
++		  "mediatek,mt7622-hsdma": for MT7622 SoC
++		  "mediatek,mt7623-hsdma": for MT7623 SoC
++- reg:		Should contain the register's base address and length.
++- interrupts:	Should contain a reference to the interrupt used by this
++		device.
++- clocks:	Should be the clock specifiers corresponding to the entry in
++		clock-names property.
++- clock-names:	Should contain "hsdma" entries.
++- power-domains: Phandle to the power domain that the device is part of
++- #dma-cells: 	The length of the DMA specifier, must be <1>. This one cell
++		in dmas property of a client device represents the channel
++		number.
++Example:
++
++        hsdma: dma-controller@1b007000 {
++		compatible = "mediatek,mt7623-hsdma";
++		reg = <0 0x1b007000 0 0x1000>;
++		interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&ethsys CLK_ETHSYS_HSDMA>;
++		clock-names = "hsdma";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
++		#dma-cells = <1>;
++	};
++
++DMA clients must use the format described in dma/dma.txt file.
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
