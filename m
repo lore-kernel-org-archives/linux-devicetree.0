@@ -1,65 +1,57 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v3 2/2] dt-bindings: introduce Command DB for QCOM SoCs
-Date: Fri, 16 Feb 2018 15:46:14 -0700
-Message-ID: <20180216224614.24037-3-ilina@codeaurora.org>
-References: <20180216224614.24037-1-ilina@codeaurora.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 1/6] phy: rockchip-typec: deprecate some DT properties for various register fields.
+Date: Sat, 17 Feb 2018 01:06:47 +0100
+Message-ID: <7311922.FVjtJqota6@phil>
+References: <20180216120956.19034-1-enric.balletbo@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180216224614.24037-1-ilina@codeaurora.org>
+In-Reply-To: <20180216120956.19034-1-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org
-Cc: sboyd@codeaurora.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org, Mahesh Sivasubramanian <msivasub@codeaurora.org>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Brian Norris <briannorris@chromium.org>, dianders@chromium.org, Chris Zhong <zyw@rock-chips.com>, William wu <wulf@rock-chips.com>, hl@rock-chips.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-From: Mahesh Sivasubramanian <msivasub@codeaurora.org>
+Am Freitag, 16. Februar 2018, 13:09:51 CET schrieb Enric Balletbo i Serra:
+> Adding properties for various register fields in the DT doesn't scale and
+> this information should be in the driver instead.
+> 
+> Before this patch these registers (description below) were specified in
+> the DT, every register node contained 3 sections: offset, enable bit,
+> write mask bit.
+> 
+>  - rockchip,typec-conn-dir : the register of type-c connector direction,
+>    for type-c phy0, it must be <0xe580 0 16>;
+>    for type-c phy1, it must be <0xe58c 0 16>;
+>  - rockchip,usb3tousb2-en : the register of type-c force usb3 to usb2 enable
+>    control.
+>    for type-c phy0, it must be <0xe580 3 19>;
+>    for type-c phy1, it must be <0xe58c 3 19>;
+>  - rockchip,external-psm : the register of type-c phy external psm clock
+>    selection.
+>    for type-c phy0, it must be <0xe588 14 30>;
+>    for type-c phy1, it must be <0xe594 14 30>;
+>  - rockchip,pipe-status : the register of type-c phy pipe status.
+>    for type-c phy0, it must be <0xe5c0 0 0>;
+>    for type-c phy1, it must be <0xe5c0 16 16>;
+> 
+> After this patch these register definitions are in the driver. So can be
+> removed from the DT. Note that there are 2 type-c phys for RK3399 with
+> different offsets, the driver checks the phy base address of the running
+> instance and applies the right offsets.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> Changes since v2:
+> - Suggested by Heiko Stuebner:
+>   - Prefix phy config struct with rk3399_ as is rk3399-specific.
+>   - Create a new struct similar to things like the inno-usb2-phy
+>   - Select phy config according to the compatible and remove the
+>     specific constants.
+> Changes since v1:
+> - This patch is new in this series to accomplish the purpose of get rid
+>   of some registers from the DT. Suggested by Rob Herring.
 
-Command DB provides information on shared resources like clocks,
-regulators etc., probed at boot by the remote subsytem and made
-available in shared memory.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Mahesh Sivasubramanian <msivasub@codeaurora.org>
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- .../devicetree/bindings/arm/msm/cmd-db.txt         | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/msm/cmd-db.txt b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-new file mode 100644
-index 000000000000..039be54fe9c4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/cmd-db.txt
-@@ -0,0 +1,30 @@
-+Command DB
-+---------
-+
-+Command DB is a database that provides a mapping between resource key and the
-+resource address for a system resource managed by a remote processor. The data
-+is stored in a shared memory region and is loaded by the remote processor.
-+
-+Some of the Qualcomm Technologies Inc SoC's have hardware accelerators for
-+controlling shared resources. Depending on the board configuration the shared
-+resource properties may change. These properties are dynamically probed by the
-+remote processor and made available in the shared memory.
-+
-+The devicetree representation of the command DB driver should be:
-+
-+PROPERTIES:
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Should be "qcom,cmd-db"
-+
-+Example:
-+
-+	reserved-memory {
-+		[...]
-+		qcom,cmd-db@c3f000c {
-+			reg = <0x0 0xc3f000c 0x0 0x8>,
-+			      <0x0 0x85fe0000 0x0 0x20000>;
-+			compatible = "qcom,cmd-db";
-+		};
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+looks great now
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
