@@ -1,33 +1,26 @@
 Return-Path: <robherring2@gmail.com>
-Date: Mon, 19 Feb 2018 14:16:05 -0600
+Date: Sun, 18 Feb 2018 17:13:49 -0600
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: net: Add bindings for National
- Instruments XGE netdev
-Message-ID: <20180219201605.f7lhgcqxpcjh2ujc@rob-hp-laptop>
-References: <20180216170033.3834-1-mdf@kernel.org>
+Subject: Re: [PATCH] watchdog: imx2_wdt: allow setting timeout in devicetree
+Message-ID: <20180218231349.k55xhl7z7wzwbbjg@rob-hp-laptop>
+References: <20180208131108.3048-1-marcus.folkesson@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20180216170033.3834-1-mdf@kernel.org>
-To: Moritz Fischer <mdf@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, davem@davemloft.net
+In-Reply-To: <20180208131108.3048-1-marcus.folkesson@gmail.com>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Feb 16, 2018 at 09:00:32AM -0800, Moritz Fischer wrote:
-> This adds bindings for the NI XGE 1G/10G network device.
+On Thu, Feb 08, 2018 at 02:11:08PM +0100, Marcus Folkesson wrote:
+> By following best practice described in
+> Documentation/watchdog/watchdog-kernel-api.txt, it also let us to set
+> timout-sec property in devicetree.
 > 
-> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
 > ---
-> 
-> Changes from v2:
-> - Addressed Rob's comments w.r.t to IRQ names and typo
-> 
-> Changes from v1:
-> - Corrected from nixge -> nixge.txt
-> 
-> ---
->  Documentation/devicetree/bindings/net/nixge.txt | 32 +++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/nixge.txt
+>  Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.txt | 2 ++
+>  drivers/watchdog/imx2_wdt.c                                | 8 ++------
+>  2 files changed, 4 insertions(+), 6 deletions(-)
 
 Reviewed-by: Rob Herring <robh@kernel.org>
