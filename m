@@ -1,101 +1,36 @@
-Return-Path: <>
-From: Gaku Inami <gaku.inami.xh@renesas.com>
-Subject: [PATCH 5/5] soc: renesas: rcar-topology: Add support to be aware cpu capacity
-Date: Tue, 27 Feb 2018 11:19:55 +0900
-Message-Id: <1519697995-6061-6-git-send-email-gaku.inami.xh@renesas.com>
-In-Reply-To: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
-References: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
+Return-Path: <SRS0=ad3+=FM=suse.de=afaerber@kernel.org>
+Subject: Re: [PATCH] arm64: dts: actions: Convert to new-style SPDX license
+ identifiers
+References: <20180121162317.24361-1-afaerber@suse.de>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Message-ID: <ec4db896-2a93-f128-3d6e-caf3a6ce0054@suse.de>
+Date: Sun, 18 Feb 2018 15:51:26 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gaku Inami <gaku.inami.xh@renesas.com>
+In-Reply-To: <20180121162317.24361-1-afaerber@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?5byg5aSp55uK?= <tyzhang@actions-semi.com>, =?UTF-8?B?5qKF5Yip?= <harrymei@actions-semi.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Thomas Liau <thomas.liau@actions-semi.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf@actions-semi.com>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, Jeff Chen <jeff.chen@actions-semi.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Some R-Car SoCs support big LITTLE architecture produced by ARM, that
-have different power/performance characteristics between each CPUs.
-In order to aware such as difference, this patch changes the sched
-domain flags that the tasks can be scheduled with capacity awareness.
-If you use big LITTLE without this patch, the scheduler may make
-unintended behaviors.
+Am 21.01.2018 um 17:23 schrieb Andreas Färber:
+> Move SPDX-License-Identifier to the top and add one for the Makefile.
+> 
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> ---
+>  arch/arm64/boot/dts/actions/Makefile              | 2 ++
+>  arch/arm64/boot/dts/actions/s900-bubblegum-96.dts | 3 +--
+>  arch/arm64/boot/dts/actions/s900.dtsi             | 3 +--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
 
-Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
----
- drivers/soc/renesas/Kconfig         |  4 ++++
- drivers/soc/renesas/Makefile        |  1 +
- drivers/soc/renesas/rcar-topology.c | 36 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 41 insertions(+)
- create mode 100644 drivers/soc/renesas/rcar-topology.c
+Applied to v4.17/dt64:
+https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git/log/?h=v4.17/dt64
 
-diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
-index 6efd7be..296bdee 100644
---- a/drivers/soc/renesas/Kconfig
-+++ b/drivers/soc/renesas/Kconfig
-@@ -16,6 +16,7 @@ config SOC_RENESAS
- 	select SYSC_R8A7796 if ARCH_R8A7796
- 	select SYSC_R8A77970 if ARCH_R8A77970
- 	select SYSC_R8A77995 if ARCH_R8A77995
-+	select RCAR_CPU_TOPOLOGY if ARCH_R8A7795 || ARCH_R8A7796
- 
- if SOC_RENESAS
- 
-@@ -71,4 +72,7 @@ config RST_RCAR
- config SYSC_RCAR
- 	bool "R-Car System Controller support" if COMPILE_TEST
- 
-+config RCAR_CPU_TOPOLOGY
-+	bool "R-Car CPU Topology" if COMPILE_TEST
-+
- endif # SOC_RENESAS
-diff --git a/drivers/soc/renesas/Makefile b/drivers/soc/renesas/Makefile
-index 845d62a..244f243 100644
---- a/drivers/soc/renesas/Makefile
-+++ b/drivers/soc/renesas/Makefile
-@@ -18,3 +18,4 @@ obj-$(CONFIG_SYSC_R8A77995)	+= r8a77995-sysc.o
- # Family
- obj-$(CONFIG_RST_RCAR)		+= rcar-rst.o
- obj-$(CONFIG_SYSC_RCAR)		+= rcar-sysc.o
-+obj-$(CONFIG_RCAR_CPU_TOPOLOGY)	+= rcar-topology.o
-diff --git a/drivers/soc/renesas/rcar-topology.c b/drivers/soc/renesas/rcar-topology.c
-new file mode 100644
-index 0000000..7e941cf
---- /dev/null
-+++ b/drivers/soc/renesas/rcar-topology.c
-@@ -0,0 +1,36 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  R-Car CPU topology for ARM big.LITTLE platforms
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corporation.
-+ *
-+ */
-+
-+#include <linux/cpuset.h>
-+#include <linux/init.h>
-+#include <linux/of.h>
-+#include <linux/sched/topology.h>
-+#include <linux/topology.h>
-+
-+static int rcar_cpu_cpu_flags(void)
-+{
-+	return SD_ASYM_CPUCAPACITY;
-+}
-+
-+static struct sched_domain_topology_level rcar_topology[] = {
-+#ifdef CONFIG_SCHED_MC
-+	{ cpu_coregroup_mask, cpu_core_flags, SD_INIT_NAME(MC) },
-+#endif
-+	{ cpu_cpu_mask, rcar_cpu_cpu_flags, SD_INIT_NAME(DIE) },
-+	{ NULL, }
-+};
-+
-+static int __init rcar_topology_init(void)
-+{
-+	if (of_machine_is_compatible("renesas,r8a7795") ||
-+	    of_machine_is_compatible("renesas,r8a7796"))
-+		set_sched_topology(rcar_topology);
-+
-+	return 0;
-+}
-+early_initcall(rcar_topology_init);
+Regards,
+Andreas
+
 -- 
-2.7.4
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
