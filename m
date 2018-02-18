@@ -1,36 +1,43 @@
-Return-Path: <SRS0=mxgJ=FQ=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 5/6] arm64: dts: renesas: r8a77965: Add #pwm-cells property
-Date: Thu, 22 Feb 2018 20:06:09 +0100
-Message-Id: <1519326370-15805-6-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
-To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=+B7o=FM=gmail.com=digetx@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v2 1/2] ARM: dts: tegra30: Add IRAM node
+Date: Sun, 18 Feb 2018 22:46:55 +0300
+Message-Id: <eca7e53ced963c97e3363d7598fe3778f35e79f2.1518981147.git.digetx@gmail.com>
+In-Reply-To: <cover.1518981147.git.digetx@gmail.com>
+References: <cover.1518981147.git.digetx@gmail.com>
+In-Reply-To: <cover.1518981147.git.digetx@gmail.com>
+References: <cover.1518981147.git.digetx@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add "#pwm-cells" property to "pwm@e6e31000" device node.
+IRAM is a static RAM that consists of four contiguous 64 KiB blocks,
+it is currently used to store CPU resume code, utilized by the video
+decoder engine and could be used as a general-purpose fast memory.
 
-This silences the following DTC compiler warning:
-Warning (pwms_property): Missing property '#pwm-cells' in node
-/soc/pwm@e6e31000 or bad phandle (referred from /backlight:pwms[0])
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/tegra30.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index cd12176..cdd4868 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -668,6 +668,7 @@
- 
- 		pwm1: pwm@e6e31000 {
- 			reg = <0 0xe6e31000 0 8>;
-+			#pwm-cells = <2>;
- 			/* placeholder */
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index c3e9f1e847db..833d97206aef 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -91,6 +91,14 @@
  		};
+ 	};
  
++	iram@40000000 {
++		compatible = "mmio-sram";
++		reg = <0x40000000 0x40000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x40000000 0x40000>;
++	};
++
+ 	host1x@50000000 {
+ 		compatible = "nvidia,tegra30-host1x", "simple-bus";
+ 		reg = <0x50000000 0x00024000>;
 -- 
-2.7.4
+2.16.1
