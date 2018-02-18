@@ -1,111 +1,185 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH usb-next v10 8/8] usb: core: hcd: remove support for
- initializing a single PHY
-Date: Sun, 18 Feb 2018 19:45:04 +0100
-Message-ID: <20180218184504.3331-9-martin.blumenstingl@googlemail.com>
-References: <20180218184504.3331-1-martin.blumenstingl@googlemail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 01/25] dt-bindings: soc: qcom: Add
+	bindings for APR bus
+Date: Sun, 18 Feb 2018 17:04:14 -0600
+Message-ID: <20180218230414.dkd6kb6kd35arcyv@rob-hp-laptop>
+References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
+ <20180213165837.1620-2-srinivas.kandagatla@linaro.org>
+ <20180213231244.ama4bwsehzuh5sr7@rob-hp-laptop>
+ <ae65a9c8-85a3-5494-f4cc-1038fd8c9bd1@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180218184504.3331-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-usb@vger.kernel.org, mathias.nyman@intel.com, arnd@arndb.de, gregkh@linuxfoundation.org, felipe.balbi@linux.intel.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Peter.Chen@nxp.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, narmstrong@baylibre.com, yixun.lan@amlogic.com, robh+dt@kernel.org, jonathanh@nvidia.com, linux@prisktech.co.nz, matthias.bgg@gmail.com, thierry.reding@gmail.com, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org, stern@rowland.harvard.edu, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <ae65a9c8-85a3-5494-f4cc-1038fd8c9bd1@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With the new PHY wrapper in place we can now handle multiple PHYs.
-Remove the code which handles only one generic PHY as this is now
-covered (with support for multiple PHYs as well as suspend/resume
-support) by the new PHY wrapper.
+On Wed, Feb 14, 2018 at 09:13:23AM +0000, Srinivas Kandagatla wrote:
+> Thanks for the review,
+> 
+> On 13/02/18 23:12, Rob Herring wrote:
+> > On Tue, Feb 13, 2018 at 04:58:13PM +0000, srinivas.kandagatla@linaro.org wrote:
+> > > From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > 
+> > > This patch add dt bindings for Qualcomm APR (Asynchronous Packet Router)
+> > > bus driver. This bus is used for communicating with DSP which provides
+> > > audio and various other services to cpu.
+> > > 
+> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > > ---
+> > >   .../devicetree/bindings/soc/qcom/qcom,apr.txt      | 83 ++++++++++++++++++++++
+> > >   1 file changed, 83 insertions(+)
+> > >   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> > > new file mode 100644
+> > > index 000000000000..1b95fbfed348
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
+> > > @@ -0,0 +1,83 @@
+> > > +Qualcomm APR (Asynchronous Packet Router) binding
+> > > +
+> > > +This binding describes the Qualcomm APR. APR is a IPC protocol for
+> > > +communication between Application processor and QDSP. APR is mainly
+> > > +used for audio/voice services on the QDSP.
+> > > +
+> > > +- compatible:
+> > > +	Usage: required
+> > > +	Value type: <stringlist>
+> > > +	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
+> > > +
+> > > +- qcom,apr-dest-domain-id
+> > > +	Usage: required
+> > > +	Value type: <prop-encoded-array>
+> > > +	Definition: Destination processor ID.
+> > > +	Possible values are :
+> > > +			1 - APR simulator
+> > > +			2 - PC
+> > > +			3 - MODEM
+> > > +			4 - ADSP
+> > > +			5 - APPS
+> > > +			6 - MODEM2
+> > > +			7 - APPS2
+> > > +
+> > > += APR SERVICES
+> > > +Each subnode of the APR node can represent service tied to this apr. The name
+> > > +of the nodes are not important. The properties of these nodes are defined
+> > > +by the individual bindings for the specific service
+> > > +- but must contain the following property:
+> > > +
+> ...
+> > > += APR DEVICES:
+> > > +Each subnode of the APR node can represent devices tied to this apr, like
+> > > +sound-card. The properties of these nodes are defined by the individual
+> > > +bindings for the specific device.
+> > 
+> > It's not a good design generally to mix different types of nodes at one
+> > level.
+> 
+> I agree, may be I can split the services and devices into different subnodes
+> like below, which should avoid mixing different types of nodes.
+> 
+> Does this sound good to you?
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- drivers/usb/core/hcd.c  | 37 -------------------------------------
- include/linux/usb/hcd.h |  1 -
- 2 files changed, 38 deletions(-)
+Seems your original example wasn't so complete...
 
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index 32797c25ac3b..5a92d8f7c484 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -2757,30 +2757,6 @@ int usb_add_hcd(struct usb_hcd *hcd,
- 		}
- 	}
- 
--	if (IS_ENABLED(CONFIG_GENERIC_PHY) && !hcd->skip_phy_initialization) {
--		struct phy *phy = phy_get(hcd->self.sysdev, "usb");
--
--		if (IS_ERR(phy)) {
--			retval = PTR_ERR(phy);
--			if (retval == -EPROBE_DEFER)
--				goto err_phy;
--		} else {
--			retval = phy_init(phy);
--			if (retval) {
--				phy_put(phy);
--				goto err_phy;
--			}
--			retval = phy_power_on(phy);
--			if (retval) {
--				phy_exit(phy);
--				phy_put(phy);
--				goto err_phy;
--			}
--			hcd->phy = phy;
--			hcd->remove_phy = 1;
--		}
--	}
--
- 	if (!hcd->skip_phy_initialization) {
- 		hcd->phy_roothub = usb_phy_roothub_init(hcd->self.sysdev);
- 		if (IS_ERR(hcd->phy_roothub)) {
-@@ -2961,13 +2937,6 @@ int usb_add_hcd(struct usb_hcd *hcd,
- err_usb_phy_roothub_power_on:
- 	usb_phy_roothub_exit(hcd->phy_roothub);
- err_phy_roothub_init:
--	if (IS_ENABLED(CONFIG_GENERIC_PHY) && hcd->remove_phy && hcd->phy) {
--		phy_power_off(hcd->phy);
--		phy_exit(hcd->phy);
--		phy_put(hcd->phy);
--		hcd->phy = NULL;
--	}
--err_phy:
- 	if (hcd->remove_phy && hcd->usb_phy) {
- 		usb_phy_shutdown(hcd->usb_phy);
- 		usb_put_phy(hcd->usb_phy);
-@@ -3048,12 +3017,6 @@ void usb_remove_hcd(struct usb_hcd *hcd)
- 	usb_phy_roothub_power_off(hcd->phy_roothub);
- 	usb_phy_roothub_exit(hcd->phy_roothub);
- 
--	if (IS_ENABLED(CONFIG_GENERIC_PHY) && hcd->remove_phy && hcd->phy) {
--		phy_power_off(hcd->phy);
--		phy_exit(hcd->phy);
--		phy_put(hcd->phy);
--		hcd->phy = NULL;
--	}
- 	if (hcd->remove_phy && hcd->usb_phy) {
- 		usb_phy_shutdown(hcd->usb_phy);
- 		usb_put_phy(hcd->usb_phy);
-diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
-index a042675e03ba..aef50cb2ed1b 100644
---- a/include/linux/usb/hcd.h
-+++ b/include/linux/usb/hcd.h
-@@ -103,7 +103,6 @@ struct usb_hcd {
- 	 * other external phys should be software-transparent
- 	 */
- 	struct usb_phy		*usb_phy;
--	struct phy		*phy;
- 	struct usb_phy_roothub	*phy_roothub;
- 
- 	/* Flags that need to be manipulated atomically because they can
--- 
-2.16.1
+I don't see why you need all these nodes in the first place. For a 
+single SoC, how much does all this vary?
+
+> 
+> apr {
+>         compatible = "qcom,apr-v2";
+>         qcom,smd-channels = "apr_audio_svc";
+>         qcom,apr-dest-domain-id = <APR_DOMAIN_ADSP>;
+> 
+>         apr-services {
+>                 q6core {
+>                         qcom,apr-svc-name = "CORE";
+>                         qcom,apr-svc-id = <APR_SVC_ADSP_CORE>;
+>                         compatible = "qcom,q6core";
+>                 };
+> 
+>                 q6afe: q6afe {
+>                         compatible = "qcom,q6afe";
+>                         qcom,apr-svc-name = "AFE";
+>                         qcom,apr-svc-id = <APR_SVC_AFE>;
+>                         #sound-dai-cells = <1>;
+>                 };
+> 
+>                 q6asm: q6asm {
+>                         compatible = "qcom,q6asm";
+>                         qcom,apr-svc-name = "ASM";
+>                         qcom,apr-svc-id = <APR_SVC_ASM>;
+>                         #sound-dai-cells = <1>;
+>                 };
+> 
+>                 q6adm: q6adm {
+>                         compatible = "qcom,q6adm";
+>                         qcom,apr-svc-name = "ADM";
+>                         qcom,apr-svc-id = <APR_SVC_ADM>;
+>                         #sound-dai-cells = <0>;
+>                 };
+
+All these DAI nodes could be a single node and the cell value be the 
+svc-id?
+
+>         };
+> 
+>         apr-devices {
+>                 audio {
+>                         compatible = "qcom,msm8996-snd-card";
+
+This is a pseudo device. Why not put it at the top level like other 
+sound cards?
+
+>                         ...
+>                 };
+>         };
+> };
+> 
+> 
+> 
+> 
+> > 
+> > > +
+> > > += EXAMPLE
+> > > +The following example represents a QDSP based sound card on a MSM8996 device
+> > > +which uses apr as communication between Apps and QDSP.
+> > > +
+> > > +	apr {
+> > > +		compatible = "qcom,apr-v2";
+> > > +		qcom,smd-channels = "apr_audio_svc";
+> > > +		qcom,apr-dest-domain-id = <APR_DOMAIN_ADSP>;
+> > > +
+> > > +		q6core {
+> > > +			compatible = "qcom,q6core";
+> > > +			qcom,apr-svc-name = "CORE";
+> > > +			qcom,apr-svc-id = <APR_SVC_ADSP_CORE>;
+> > > +		};
+> > > +
+> > > +		q6afe {
+> > > +			compatible = "qcom,q6afe";
+> > > +			qcom,apr-svc-name = "AFE";
+> > > +			qcom,apr-svc-id = <APR_SVC_AFE>;
+> > > +		};
+> > > +
+> > > +		audio {
+> > > +			compatible = "qcom,msm8996-snd-card";
+> > > +			...
+> > > +		};
+> > > +	};
+> > > -- 
+> > > 2.15.1
+> > > 
