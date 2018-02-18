@@ -1,65 +1,32 @@
-Return-Path: <SRS0=kFSR=FN=gmail.com=joel.stan@kernel.org>
-Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 2/3] reset: simple: Enable for ASPEED systems
-Date: Mon, 19 Feb 2018 17:24:37 +1030
-Message-Id: <20180219065438.19933-3-joel@jms.id.au>
-In-Reply-To: <20180219065438.19933-1-joel@jms.id.au>
-References: <20180219065438.19933-1-joel@jms.id.au>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Jeffery <andrew@aj.id.au>
-Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Return-Path: <robherring2@gmail.com>
+Date: Sun, 18 Feb 2018 17:52:26 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt/bindings: fix binding examples for tegra gmi
+ controller
+Message-ID: <20180218235226.ys5sxq5yr3zddsnb@rob-hp-laptop>
+References: <20180210013326.27771-1-marcel@ziswiler.com>
+ <20180210013326.27771-2-marcel@ziswiler.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180210013326.27771-2-marcel@ziswiler.com>
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-ASPEED BMC SoCs have a reset controller in the LPC IP that can be
-controlled using this driver to release the UARTs from reset.
+On Sat, Feb 10, 2018 at 02:33:22AM +0100, Marcel Ziswiler wrote:
+> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> 
+> Fix devicetree binding examples for the Generic Memory Interface (GMI)
+> bus driver found on Tegra SOCs.
+> 
+> While at it also remove double new lines as a left over from Rob's
+> commit 4da722ca19f3 ("dt-bindings: Remove "status" from examples").
+> 
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> ---
+> 
+>  Documentation/devicetree/bindings/bus/nvidia,tegra20-gmi.txt | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 
-No special configuration is required, so only the compatible string is
-added.
-
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- drivers/reset/Kconfig        | 10 +++++++---
- drivers/reset/reset-simple.c |  2 ++
- 2 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 7fc77696bb1e..18f152d251d7 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -83,14 +83,18 @@ config RESET_PISTACHIO
- 
- config RESET_SIMPLE
- 	bool "Simple Reset Controller Driver" if COMPILE_TEST
--	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
-+	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
- 	help
- 	  This enables a simple reset controller driver for reset lines that
- 	  that can be asserted and deasserted by toggling bits in a contiguous,
- 	  exclusive register space.
- 
--	  Currently this driver supports Altera SoCFPGAs, the RCC reset
--	  controller in STM32 MCUs, Allwinner SoCs, and ZTE's zx2967 family.
-+	  Currently this driver supports:
-+	   - Altera SoCFPGAs
-+	   - ASPEED BMC SoCs
-+	   - RCC reset controller in STM32 MCUs
-+	   - Allwinner SoCs
-+	   - ZTE's zx2967 family
- 
- config RESET_SUNXI
- 	bool "Allwinner SoCs Reset Driver" if COMPILE_TEST && !ARCH_SUNXI
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index 2d4f362ef025..f7ce8910a392 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -125,6 +125,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
- 		.data = &reset_simple_active_low },
- 	{ .compatible = "zte,zx296718-reset",
- 		.data = &reset_simple_active_low },
-+	{ .compatible = "aspeed,ast2400-lpc-reset" },
-+	{ .compatible = "aspeed,ast2500-lpc-reset" },
- 	{ /* sentinel */ },
- };
- 
--- 
-2.15.1
+Reviewed-by: Rob Herring <robh@kernel.org>
