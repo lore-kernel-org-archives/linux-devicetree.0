@@ -1,14 +1,14 @@
 Return-Path: <SRS0=+B7o=FM=gmail.com=digetx@kernel.org>
 From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v2 2/2] ARM: dts: tegra30: Add video decoder node
-Date: Sun, 18 Feb 2018 22:46:56 +0300
-Message-Id: <97998e361326230278c0508e774ff4ec570394c5.1518981147.git.digetx@gmail.com>
-In-Reply-To: <cover.1518981147.git.digetx@gmail.com>
-References: <cover.1518981147.git.digetx@gmail.com>
-In-Reply-To: <cover.1518981147.git.digetx@gmail.com>
-References: <cover.1518981147.git.digetx@gmail.com>
+Subject: [PATCH v1 2/2] ARM: dts: tegra30: Add video decoder node
+Date: Sun, 18 Feb 2018 20:01:46 +0300
+Message-Id: <6ac145a1259566f85c88bd29be9c8b3e44e53bcf.1518973069.git.digetx@gmail.com>
+In-Reply-To: <cover.1518973069.git.digetx@gmail.com>
+References: <cover.1518973069.git.digetx@gmail.com>
+In-Reply-To: <cover.1518973069.git.digetx@gmail.com>
+References: <cover.1518973069.git.digetx@gmail.com>
 To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 Add device tree node for the Video Decoder Engine found on Tegra30 SoC's.
@@ -19,21 +19,21 @@ Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
  1 file changed, 27 insertions(+)
 
 diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index 833d97206aef..a110cf84d85f 100644
+index 1fb0c421a9d8..8ae72ffe0048 100644
 --- a/arch/arm/boot/dts/tegra30.dtsi
 +++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -97,6 +97,11 @@
+@@ -17,6 +17,11 @@
  		#address-cells = <1>;
  		#size-cells = <1>;
  		ranges = <0 0x40000000 0x40000>;
 +
-+		vde_pool: vde@400 {
++		vde_pool: vde {
 +			reg = <0x400 0x3fc00>;
 +			pool;
 +		};
  	};
  
- 	host1x@50000000 {
+ 	pcie@3000 {
 @@ -366,6 +371,28 @@
  		*/
  	};
