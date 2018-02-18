@@ -1,58 +1,44 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH 0/7] ARM: davinci: add genpd support
-Date: Sat, 17 Feb 2018 21:41:01 -0600
-Message-ID: <79a981ae-881f-b358-629c-0b64e48f192d@lechnology.com>
-References: <20180207134553.13510-1-brgl@bgdev.pl>
- <4dbc57ec-3506-eb1d-e00d-adfe75c3b39b@lechnology.com>
- <a736d727-5805-94ea-3e40-34fc4a6267ef@ti.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v1 2/2] ARM: dts: tegra30: Add video decoder node
+Date: Sun, 18 Feb 2018 19:03:26 +0100
+Message-ID: <4cf77dcd-0921-dec2-e5cd-ed8b5dc2fb7c@suse.de>
+References: <cover.1518973069.git.digetx@gmail.com>
+ <6ac145a1259566f85c88bd29be9c8b3e44e53bcf.1518973069.git.digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a736d727-5805-94ea-3e40-34fc4a6267ef-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6ac145a1259566f85c88bd29be9c8b3e44e53bcf.1518973069.git.digetx@gmail.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/2018 06:42 AM, Sekhar Nori wrote:
-> Hi David,
-> 
-> On Thursday 08 February 2018 04:13 AM, David Lechner wrote:
->> On 02/07/2018 07:45 AM, Bartosz Golaszewski wrote:
->>> From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>
->>> Hi Sekhar et al,
->>>
->>> please take a look at the following patches. They add a simple genpd
->>> driver and use it in DT mode on da850 boards.
->>>
->>> I was trying to use genpd in legacy mode too, but couldn't find neither
->>> any interfaces nor users that would do that. For now I added a check in
->>> arch/arm/mach-davinci/pm_domain.c that disables the clock pm setup if
->>> we're using genpd.
->>>
->>> This series applies on top of and has been tested with David Lechner's
->>> for-bartosz branch. It fixes the clock look-up issues we faced with
->>> lcdc and emac.
->>
->> I'm starting to think that it makes more sense to just make the PSC driver
->> a power-domain and reset provider rather than a clock provider. It is
->> unfortunate that genpd is DT only.
-> 
-> This will mean that the only way to enable clocks on DaVinci is to use
-> pm_runtime() calls. We do still have drivers which depend on clk api for
-> enabling clocks, so I am not sure its feasible just yet.
-> 
-> I think a question like this can arise for any gate clock.
-> 
-
-I've incorporated parts of this series into my v7 work in progress
-using the suggestions I made about using the existing PSC device
-as the power domain provider.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QW0gMTguMDIuMjAxOCB1bSAxODowMSBzY2hyaWViIERtaXRyeSBPc2lwZW5rbzoKPiBBZGQgZGV2
+aWNlIHRyZWUgbm9kZSBmb3IgdGhlIFZpZGVvIERlY29kZXIgRW5naW5lIGZvdW5kIG9uIFRlZ3Jh
+MzAgU29DJ3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogRG1pdHJ5IE9zaXBlbmtvIDxkaWdldHhAZ21h
+aWwuY29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy90ZWdyYTMwLmR0c2kgfCAyNyArKysr
+KysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMo
+KykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC5kdHNpIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvdGVncmEzMC5kdHNpCj4gaW5kZXggMWZiMGM0MjFhOWQ4Li44YWU3MmZm
+ZTAwNDggMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC5kdHNpCj4gKysr
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvdGVncmEzMC5kdHNpCj4gQEAgLTE3LDYgKzE3LDExIEBACj4g
+IAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gIAkJI3NpemUtY2VsbHMgPSA8MT47Cj4gIAkJcmFu
+Z2VzID0gPDAgMHg0MDAwMDAwMCAweDQwMDAwPjsKPiArCj4gKwkJdmRlX3Bvb2w6IHZkZSB7Cj4g
+KwkJCXJlZyA9IDwweDQwMCAweDNmYzAwPjsKCnZkZUA0MDAgdGhlbiwgdG8gYXZvaWQgZHRjIHdh
+cm5pbmdzLgoKPiArCQkJcG9vbDsKPiArCQl9Owo+ICAJfTsKPiAgCj4gIAlwY2llQDMwMDAgewoK
+UmVnYXJkcywKQW5kcmVhcwoKLS0gClNVU0UgTGludXggR21iSCwgTWF4ZmVsZHN0ci4gNSwgOTA0
+MDkgTsO8cm5iZXJnLCBHZXJtYW55CkdGOiBGZWxpeCBJbWVuZMO2cmZmZXIsIEphbmUgU21pdGhh
+cmQsIEdyYWhhbSBOb3J0b24KSFJCIDIxMjg0IChBRyBOw7xybmJlcmcpCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
