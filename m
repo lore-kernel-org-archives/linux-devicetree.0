@@ -1,185 +1,116 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 01/25] dt-bindings: soc: qcom: Add
-	bindings for APR bus
-Date: Sun, 18 Feb 2018 17:04:14 -0600
-Message-ID: <20180218230414.dkd6kb6kd35arcyv@rob-hp-laptop>
-References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
- <20180213165837.1620-2-srinivas.kandagatla@linaro.org>
- <20180213231244.ama4bwsehzuh5sr7@rob-hp-laptop>
- <ae65a9c8-85a3-5494-f4cc-1038fd8c9bd1@linaro.org>
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: Add ST Multi-Function eXpander
+ driver
+Date: Sun, 18 Feb 2018 17:19:38 -0600
+Message-ID: <20180218231938.goeht7tomfkab6uu@rob-hp-laptop>
+References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
+ <1518100057-23234-2-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <ae65a9c8-85a3-5494-f4cc-1038fd8c9bd1@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1518100057-23234-2-git-send-email-amelie.delaunay@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 14, 2018 at 09:13:23AM +0000, Srinivas Kandagatla wrote:
-> Thanks for the review,
+On Thu, Feb 08, 2018 at 03:27:32PM +0100, Amelie Delaunay wrote:
+> This patch adds documentation of device tree bindings for the
+> STMicroelectronics Multi-Function eXpander (MFX).
 > 
-> On 13/02/18 23:12, Rob Herring wrote:
-> > On Tue, Feb 13, 2018 at 04:58:13PM +0000, srinivas.kandagatla@linaro.org wrote:
-> > > From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > 
-> > > This patch add dt bindings for Qualcomm APR (Asynchronous Packet Router)
-> > > bus driver. This bus is used for communicating with DSP which provides
-> > > audio and various other services to cpu.
-> > > 
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > ---
-> > >   .../devicetree/bindings/soc/qcom/qcom,apr.txt      | 83 ++++++++++++++++++++++
-> > >   1 file changed, 83 insertions(+)
-> > >   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> > > new file mode 100644
-> > > index 000000000000..1b95fbfed348
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt
-> > > @@ -0,0 +1,83 @@
-> > > +Qualcomm APR (Asynchronous Packet Router) binding
-> > > +
-> > > +This binding describes the Qualcomm APR. APR is a IPC protocol for
-> > > +communication between Application processor and QDSP. APR is mainly
-> > > +used for audio/voice services on the QDSP.
-> > > +
-> > > +- compatible:
-> > > +	Usage: required
-> > > +	Value type: <stringlist>
-> > > +	Definition: must be "qcom,apr-v<VERSION-NUMBER>", example "qcom,apr-v2"
-> > > +
-> > > +- qcom,apr-dest-domain-id
-> > > +	Usage: required
-> > > +	Value type: <prop-encoded-array>
-> > > +	Definition: Destination processor ID.
-> > > +	Possible values are :
-> > > +			1 - APR simulator
-> > > +			2 - PC
-> > > +			3 - MODEM
-> > > +			4 - ADSP
-> > > +			5 - APPS
-> > > +			6 - MODEM2
-> > > +			7 - APPS2
-> > > +
-> > > += APR SERVICES
-> > > +Each subnode of the APR node can represent service tied to this apr. The name
-> > > +of the nodes are not important. The properties of these nodes are defined
-> > > +by the individual bindings for the specific service
-> > > +- but must contain the following property:
-> > > +
-> ...
-> > > += APR DEVICES:
-> > > +Each subnode of the APR node can represent devices tied to this apr, like
-> > > +sound-card. The properties of these nodes are defined by the individual
-> > > +bindings for the specific device.
-> > 
-> > It's not a good design generally to mix different types of nodes at one
-> > level.
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/st-mfx.txt | 51 ++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/st-mfx.txt
 > 
-> I agree, may be I can split the services and devices into different subnodes
-> like below, which should avoid mixing different types of nodes.
-> 
-> Does this sound good to you?
+> diff --git a/Documentation/devicetree/bindings/mfd/st-mfx.txt b/Documentation/devicetree/bindings/mfd/st-mfx.txt
+> new file mode 100644
+> index 0000000..423d800
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/st-mfx.txt
+> @@ -0,0 +1,51 @@
+> +STMicroelectronics Multi-Function eXpander
+> +
+> +ST Multi-Function eXpander (MFX) is a slave controller using I2C for
+> +communication with the main MCU. Its main features are gpio expansion, main
+> +MCU IDD measurement (IDD is the amount of current that flows through VDD)
+> +and resistive touchscreen controller.
 
-Seems your original example wasn't so complete...
+You don't have to implement all the drivers now, but please completely 
+describe the device. As is, there is no reason to have a child GPIO 
+node.
 
-I don't see why you need all these nodes in the first place. For a 
-single SoC, how much does all this vary?
+> +
+> +Required properties:
+> +- compatible: must be "st,mfx"
 
-> 
-> apr {
->         compatible = "qcom,apr-v2";
->         qcom,smd-channels = "apr_audio_svc";
->         qcom,apr-dest-domain-id = <APR_DOMAIN_ADSP>;
-> 
->         apr-services {
->                 q6core {
->                         qcom,apr-svc-name = "CORE";
->                         qcom,apr-svc-id = <APR_SVC_ADSP_CORE>;
->                         compatible = "qcom,q6core";
->                 };
-> 
->                 q6afe: q6afe {
->                         compatible = "qcom,q6afe";
->                         qcom,apr-svc-name = "AFE";
->                         qcom,apr-svc-id = <APR_SVC_AFE>;
->                         #sound-dai-cells = <1>;
->                 };
-> 
->                 q6asm: q6asm {
->                         compatible = "qcom,q6asm";
->                         qcom,apr-svc-name = "ASM";
->                         qcom,apr-svc-id = <APR_SVC_ASM>;
->                         #sound-dai-cells = <1>;
->                 };
-> 
->                 q6adm: q6adm {
->                         compatible = "qcom,q6adm";
->                         qcom,apr-svc-name = "ADM";
->                         qcom,apr-svc-id = <APR_SVC_ADM>;
->                         #sound-dai-cells = <0>;
->                 };
+Kind of generic. Only 1 single version ever?
 
-All these DAI nodes could be a single node and the cell value be the 
-svc-id?
+> +- reg: I2C address of the device
+> +- interrupts: interrupt triggered by MFX_IRQ_OUT signal
+> +- interrupt-parent: interrupt controller MFX is connected to
+> +- interrupt-controller: marks the device as an interrupt controller
+> +- #interrupt-cells: should be <1>, index of the interrupt within the
+> +  controller, in accordance with the "one cell" variant of
+> +  <devicetree/bindings/interrupt-controller/interrupt.txt>
+> +
+> +Optional nodes:
+> +
+> +* GPIO eXpander
+> +MFX provides 16 programmable GPIOs, and it is also possible to recover 8
+> +alternate GPIOs if the main functions are not used (touchscreen controller and
+> +IDD measurement not enabled).
+> +
+> +Required properties:
+> +- compatible : must be "st,mfx-gpio"
+> +- interrupt-parent : must be <&mfx>
 
->         };
-> 
->         apr-devices {
->                 audio {
->                         compatible = "qcom,msm8996-snd-card";
+Not necessary. A parent node with 'interrupt-controller' property is the 
+interrupt's parent.
 
-This is a pseudo device. Why not put it at the top level like other 
-sound cards?
+> +- interrupts = must be <0>
+> +- gpio-controller: marks the device node as a GPIO controller
+> +- #gpio-cells: should be <2>, the first cell is the GPIO offset on this GPIO
+> +  controller, the second cell is the gpio flags in accordance with
+> +  <dt-bindings/gpio/st-mfx-gpio.h>.
 
->                         ...
->                 };
->         };
-> };
+Custom flags? Use standard flags.
+
+DT binding headers should be part of this patch.
+
+> +
+> +Example:
+> +
+> +	mfx: mfx@42 {
+> +		compatible = "st,mfx";
+> +		reg = <0x42>;
+> +		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
+> +		interrupt-parent = <&gpioi>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +
+> +		mfxgpio: mfx_gpio {
+
+gpio {
+
+> +			compatible = "st,mfx-gpio";
+> +			interrupt-parent = <&mfx>;
+> +			interrupts = <0>;
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +		};
+> +	};
+> -- 
+> 2.7.4
 > 
-> 
-> 
-> 
-> > 
-> > > +
-> > > += EXAMPLE
-> > > +The following example represents a QDSP based sound card on a MSM8996 device
-> > > +which uses apr as communication between Apps and QDSP.
-> > > +
-> > > +	apr {
-> > > +		compatible = "qcom,apr-v2";
-> > > +		qcom,smd-channels = "apr_audio_svc";
-> > > +		qcom,apr-dest-domain-id = <APR_DOMAIN_ADSP>;
-> > > +
-> > > +		q6core {
-> > > +			compatible = "qcom,q6core";
-> > > +			qcom,apr-svc-name = "CORE";
-> > > +			qcom,apr-svc-id = <APR_SVC_ADSP_CORE>;
-> > > +		};
-> > > +
-> > > +		q6afe {
-> > > +			compatible = "qcom,q6afe";
-> > > +			qcom,apr-svc-name = "AFE";
-> > > +			qcom,apr-svc-id = <APR_SVC_AFE>;
-> > > +		};
-> > > +
-> > > +		audio {
-> > > +			compatible = "qcom,msm8996-snd-card";
-> > > +			...
-> > > +		};
-> > > +	};
-> > > -- 
-> > > 2.15.1
-> > > 
