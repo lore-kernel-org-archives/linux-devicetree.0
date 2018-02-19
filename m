@@ -1,13 +1,18 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 1/7] ARM: sun8i: smp: Add support for A83T
-Date: Mon, 19 Feb 2018 10:04:01 +0100
-Message-ID: <20180219090401.5uxmwtnkd7oadaxx@flea.lan>
-References: <20180219081837.15482-1-mylene.josserand@bootlin.com>
- <20180219081837.15482-2-mylene.josserand@bootlin.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 4/5] arm64: dts: renesas: initial Condor board device
+ tree
+Date: Mon, 19 Feb 2018 10:12:23 +0100
+Message-ID: <20180219091223.rvumtwr6t47szrwo@verge.net.au>
+References: <ae31804b-969b-9b20-16d0-50f5dea42f08@cogentembedded.com>
+ <5cf82cb1-0278-010c-165d-07dbcbe0878d@cogentembedded.com>
+ <CAMuHMdWwjXw0SwVK704_AtkDg3C-or5bUbXPwMEvTwU5eLGrpQ@mail.gmail.com>
+ <da5c612d-d23d-be36-7dfe-e3e78cc2b086@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3956790189730970349=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180219081837.15482-2-mylene.josserand@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <da5c612d-d23d-be36-7dfe-e3e78cc2b086@cogentembedded.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,86 +22,148 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Feb 19, 2018 at 11:34:41AM +0300, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 2/19/2018 11:30 AM, Geert Uytterhoeven wrote:
+> 
+> > > Add the initial device  tree for  the R8A77980 SoC based Condor board.
+> > > The board has 1 debug serial port (SCIF0); include support for it, so
+> > > that the serial console can work.
+> > > 
+> > > Based on the original (and large) patch by Vladimir Barinov.
+> > > 
+> > > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> > > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > 
+> > > ---
+> > > Changes in version 2:
+> > > - removed the useless "status" property from the SCIF_CLK node;
+> > > - fixed the memory size;
+> > > - added Geert's tag.
+> > 
+> > > --- /dev/null
+> > > +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+> > > @@ -0,0 +1,45 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Device Tree Source for the Condor board
+> > > + *
+> > > + * Copyright (C) 2018 Renesas Electronics Corp.
+> > > + * Copyright (C) 2018 Cogent Embedded, Inc.
+> > > + */
+> > > +
+> > > +/dts-v1/;
+> > > +#include "r8a77980.dtsi"
+> > > +
+> > > +/ {
+> > > +       model = "Renesas Condor board based on r8a77980";
+> > > +       compatible = "renesas,condor", "renesas,r8a77980";
+> > > +
+> > > +       aliases {
+> > > +               serial0 = &scif0;
+> > > +       };
+> > > +
+> > > +       chosen {
+> > > +               stdout-path = "serial0:115200n8";
+> > > +       };
+> > > +
+> > > +       memory@48000000 {
+> > > +               device_type = "memory";
+> > > +               /* first 128MB is reserved for secure area. */
+> > > +               reg = <0 0x48000000 0 0xb8000000>;
+> > 
+> > Shouldn't the size be 0x78000000, or is there really 3 GiB of RAM?
+> 
+>    Ugh, so I finally mixed up limit and size... :-/
 
---===============3956790189730970349==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zurc3lyefgfkcgrh"
-Content-Disposition: inline
+Thanks, I will apply the following, with the memory corrected to 2 GiB.
 
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] arm64: dts: renesas: initial Condor board device tree
 
---zurc3lyefgfkcgrh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add the initial device  tree for  the R8A77980 SoC based Condor board.
+The board has 1 debug serial port (SCIF0); include support for it, so
+that the serial console can work.
 
-Hi,
+Based on the original (and large) patch by Vladimir Barinov.
 
-On Mon, Feb 19, 2018 at 09:18:31AM +0100, Myl=E8ne Josserand wrote:
-> Add the support for A83T.
->=20
-> A83T SoC has an additional register than A80 to handle CPU configurations:
-> R_CPUS_CFG. Information about the register comes from Allwinner's BSP
-> driver.
-> An important difference is the Power Off Gating register for clusters
-> which is BIT(4) in case of SUN9I-A80 and BIT(0) in case of SUN8I-A83T.
->=20
-> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+[simon: correct memory size to 0x78000000 (2GiB)]
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ arch/arm64/boot/dts/renesas/Makefile            |  1 +
+ arch/arm64/boot/dts/renesas/r8a77980-condor.dts | 45 +++++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a77980-condor.dts
 
-This is some high-level review, but you should split this patch in
-three:
-  - One to refactor the current code to split the DT parsing function
-    (and rename the function to sun9i_smp_dt_parse) and the variable renames
-  - One to enable the A83t SMP (with the function called sun8i_a83t_smp_dt_=
-parse)
-  - One to enable the A83t hotplug (merged with your last patch)
-
-Also, you're calling a lot of times of_machine_is_compatible, and this
-is quite inefficient. You should call it once and store the result.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
-
---zurc3lyefgfkcgrh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqKkwAACgkQ0rTAlCFN
-r3QrKBAAjaZn7OSiihbmARgIRI8POZKPgg9l59UJTpkBIyxIkTI0Yn51BEeIFZ4u
-F1gk2mc7d409A+c9TFwy8T2mg0HqFkCXCgo6vZO9Ze7duwFx6D3QC30NvKFzosy2
-ijZxCR+WhF3itt8kPfKv8Wr4ir3sGiEd5kpS9hFm5A+pf8MSs+Pwz2ZUlXWI53s2
-W2tpoRHlPQ/qCsTop6zArheZjr6Eui2Mz7l0uOUkegyhLGAUma1exYuokRqVNPOn
-6i6Tw73ygv1rRctqc3nFRnS+mk+IpXg/+faLuKNw4OOCG8L3wlvaDF1GUriupHCz
-BX/7e8Hx0lcN9S15LNUAhaUDJOeFVECInF3DjWnfn6Dd/PcEWbK6/smiBVNRHd9f
-8Jo75G48lNA0ZR4I4cSZeZHkXmMq3sppolA4aOUh9cv1+x7Mx3o4tV7NDqH9fV9p
-HDuEftIpllfqolYmtoIxZH6qMXOOZPh28VWWBqQG7nA9TBJxUWA0HgfELlIkjuNJ
-Ei0JSpQ1NcTMmv/DUnMrM6seMtF1Ugzm45v3YRjHazyWZZrG76EfXWBthqB0uvZD
-95Mz9tSUb0mPG0X66Jd8Ke9tVNCuQ8yFt1E9tDFZJK62dqAGiHL3lxf8okJrpkD/
-LTYmCpaVNNzAmm6cjK3sXCSxgbvOpVJaQXGYaW3O8+vEvyJCt6g=
-=2H89
------END PGP SIGNATURE-----
-
---zurc3lyefgfkcgrh--
-
-
---===============3956790189730970349==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3956790189730970349==--
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 2186d0193b73..c885eef4e660 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -8,4 +8,5 @@ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb r8a7796-m3ulcb.dtb
+ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-m3ulcb-kf.dtb
+ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-xs.dtb
+ dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-eagle.dtb r8a77970-v3msk.dtb
++dtb-$(CONFIG_ARCH_R8A77980) += r8a77980-condor.dtb
+ dtb-$(CONFIG_ARCH_R8A77995) += r8a77995-draak.dtb
+diff --git a/arch/arm64/boot/dts/renesas/r8a77980-condor.dts b/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+new file mode 100644
+index 000000000000..daf2957d3504
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the Condor board
++ *
++ * Copyright (C) 2018 Renesas Electronics Corp.
++ * Copyright (C) 2018 Cogent Embedded, Inc.
++ */
++
++/dts-v1/;
++#include "r8a77980.dtsi"
++
++/ {
++	model = "Renesas Condor board based on r8a77980";
++	compatible = "renesas,condor", "renesas,r8a77980";
++
++	aliases {
++		serial0 = &scif0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@48000000 {
++		device_type = "memory";
++		/* first 128MB is reserved for secure area. */
++		reg = <0 0x48000000 0 0x78000000>;
++	};
++};
++
++&extal_clk {
++	clock-frequency = <16666666>;
++};
++
++&extalr_clk {
++	clock-frequency = <32768>;
++};
++
++&scif0 {
++	status = "okay";
++};
++
++&scif_clk {
++	clock-frequency = <14745600>;
++};
+-- 
+2.11.0
