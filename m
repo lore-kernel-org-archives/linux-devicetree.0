@@ -1,13 +1,14 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 7/7] ARM: sun8i: smp: Remove the disabling of CPU0
-Date: Mon, 19 Feb 2018 09:54:08 +0100
-Message-ID: <20180219085408.5to43p7jbtijx4q3@flea.lan>
+Subject: Re: [PATCH v3 3/7] ARM: dts: sun8i: Add PRCM device node for the
+ A83T dtsi
+Date: Mon, 19 Feb 2018 09:48:22 +0100
+Message-ID: <20180219084822.zudk3w55z75lx5gx@flea.lan>
 References: <20180219081837.15482-1-mylene.josserand@bootlin.com>
- <20180219081837.15482-8-mylene.josserand@bootlin.com>
+ <20180219081837.15482-4-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2609233806834620112=="
+Content-Type: multipart/mixed; boundary="===============5935879829263143353=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180219081837.15482-8-mylene.josserand@bootlin.com>
+In-Reply-To: <20180219081837.15482-4-mylene.josserand@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,45 +23,50 @@ Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
 
---===============2609233806834620112==
+--===============5935879829263143353==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="n3avigllm7j4bwce"
+	protocol="application/pgp-signature"; boundary="h5iq7xbklwuo4uuy"
 Content-Disposition: inline
 
 
---n3avigllm7j4bwce
+--h5iq7xbklwuo4uuy
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 19, 2018 at 09:18:37AM +0100, Myl=E8ne Josserand wrote:
-> On sun8i-a63t, hotplug CPU for CPU0 is currently not working.
-> Remove the possibility to disable CPU0 only for sun8i-a83t.
+Hi,
+
+On Mon, Feb 19, 2018 at 09:18:33AM +0100, Myl=E8ne Josserand wrote:
+> As we found in Sun9i-A80, PRCM is a collection of clock controls,
+> reset controls, and various power switches/gates.
+> It is used with CPUCFG for SMP bringup and CPU hotplugging.
 >=20
 > Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
 > ---
->  arch/arm/mach-sunxi/mc_smp.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 >=20
-> diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
-> index fec592bf68b4..69d5ae5b3d72 100644
-> --- a/arch/arm/mach-sunxi/mc_smp.c
-> +++ b/arch/arm/mach-sunxi/mc_smp.c
-> @@ -661,8 +661,12 @@ static int sunxi_mc_smp_cpu_kill(unsigned int l_cpu)
->  	return !ret;
->  }
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-=
+a83t.dtsi
+> index e45bab836620..3e7317ec3e43 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -699,6 +699,11 @@
+>  			interrupts =3D <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
 > =20
-> -static bool sunxi_mc_smp_cpu_can_disable(unsigned int __unused)
-> +static bool sunxi_mc_smp_cpu_can_disable(unsigned int cpu)
->  {
-> +	/* CPU0 hotplug handled only for sun9i */
-> +	if (of_machine_is_compatible("allwinner,sun8i-a83t"))
-> +		if (cpu =3D=3D 0)
-> +			return false;
+> +		prcm@1f01400 {
+> +			compatible =3D "allwinner,sun8i-a83t-prcm";
+> +			reg =3D <0x1f01400 0x400>;
+> +		};
+> +
+>  		r_ccu: clock@1f01400 {
+>  			compatible =3D "allwinner,sun8i-a83t-r-ccu";
+>  			reg =3D <0x01f01400 0x400>;
 
-This also means that you have a window in your patch sequence where
-you can disable the CPU0 on the A83t. This patch should be earlier.
+These two are exactly the same nodes.
 
+Thanks!
 Maxime
 
 --=20
@@ -68,30 +74,30 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 http://bootlin.com
 
---n3avigllm7j4bwce
+--h5iq7xbklwuo4uuy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqKkK8ACgkQ0rTAlCFN
-r3Txuw//UM3frw2Utw0Qi37IMTm2va2eh/yqzkQaYi1bZE29+XDQiAwxyLNb+066
-efCWddCxIvxoFANfZ+95+NoccGYXtU3Csg36+40AV84xpxOLEp3HR8+ueH5GFhL6
-oh9mxmrQ/eZMYKVEp97u4Dft7H0TdTpPF8qDppzdqGVmZFpXzjjdxGUTArQrDpik
-Z1Hl3rGDubNy20LXlcxvBhXpBamrZhMjO4uk1tjqvNR1tFX5AXDZGI81FFTVBcX0
-VYWq+NcGIW0bOTbtgJM6QY8m8aC5O4siQ35VMPU69HqQ2VpMn0w07gMkBYH32YUj
-4OGuKFCCHTFThE0TCD0LgooVxwVU/7V8pfIQxKgDIb88TiepCh6fx0IdBYRXbyeH
-YvFpy8R/DGnKNuLrDkVHiBsfv3Ia5bvWpoDakMzi7ykSeivuZc+gvsnyWz5zhXcN
-iEVi13Sx6HNUYXwcNqGCA8I3MOc3abn+xm2tQGWIJUtVimo2X8hyjVTE0d5YtQnh
-xN7eUo5hWmAHFqpKMXK4eHsS7bdm257XArKiANQHt0rOQpwEJ0TiPnE3ffAP9vbI
-GW9F0KMPICLEXYhsg8luP1r1F3MHTSzGi7LyP5OFN+X+ILNEPhYes/SfO5bLG8nC
-VQm+ds/noz326rlZT/hlUVWbWYiZjWrgBzGjSm4pjo1vRThuwd0=
-=eZxo
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqKj1UACgkQ0rTAlCFN
+r3QXGw//Xz19zmOzKQJsUbYJpNSgHLVlYy+K/kkJg7OrAiZ+MXQzPxbgu2seLL/h
+wj8Ezy1PceI7HJ86TU7oArvWofpITV4lWUjs+GvB5+K/3BUxCXAhn2kzNO4yvh0z
+N1Nqvsf5OhGsvJNxp3DgEp02/pyskjZUACfqSPxRlQ2DndXZyzzjOWiKvO1gEpQ0
+lbHpKSxqE+KZv5CK1orprhtVWBl8KTpjj+ELgDnhGEUVhspm0MKx/5UFFBkzl9Rv
+TkLlWCxHeBhoXYu/COAn4MmSi8NwqiXuHdwLaK33Xz9pcpXNx0qMwyBUU2kanKdi
+WdAazYe/A/GoT8DdVnWcMect8omh+KPmM7lJ2KUedrg1gXaqHT6Eo2UT5AagxsTe
+17w/D+2srv+iBGyHLxar3wk/ParU1Eln1DvUbCvpDtP9s89XV7WeslrKuzaN2QCN
+/0bl3oSrQ1Q2cgPtMq196liQxrk5Hq0WIwsGKBvSw6HWEkfsGRui1R9LA/y00gCx
+a50cDTKNLW7lNJ5unW7v0zw1IJ9PhQUscfImcd7sAENMxTiYaAIyy4MjNjmn//UY
+puZPiITengGQhvX1hMCnOapz9CdnuU+B4XhE2vB9upRARGqhQYWUUlB9oeMI24XW
+kyLER8JnOORKQky3sKigYRkl/ShQFDg+TeEV4QTHKizhaBGaUSk=
+=YeS5
 -----END PGP SIGNATURE-----
 
---n3avigllm7j4bwce--
+--h5iq7xbklwuo4uuy--
 
 
---===============2609233806834620112==
+--===============5935879829263143353==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -102,4 +108,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============2609233806834620112==--
+--===============5935879829263143353==--
