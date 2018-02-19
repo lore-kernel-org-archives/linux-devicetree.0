@@ -1,7 +1,8 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v7 40/42] ARM: davinci: add device tree support to timer
-Date: Mon, 19 Feb 2018 14:22:01 -0600
-Message-ID: <1519071723-31790-41-git-send-email-david@lechnology.com>
+Subject: [PATCH v7 21/42] ARM: davinci: da830: add new clock init using common
+ clock framework
+Date: Mon, 19 Feb 2018 14:21:42 -0600
+Message-ID: <1519071723-31790-22-git-send-email-david@lechnology.com>
 References: <1519071723-31790-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,80 +22,177 @@ To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree support to the davinci timer so that when clocks
-are moved to device tree, the timer will still work.
+This adds the new board-specific clock init in mach-davinci/da830.c
+using the new common clock framework drivers.
+
+The #ifdefs are needed to prevent compile errors until the entire
+ARCH_DAVINCI is converted.
+
+Also clean up the #includes since we are adding some here.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v7 changes:
-- add workaround for platform devices not available in early boot
+- add clock platform device declarations
+- register platform devices instead of registering clocks directly
+- clkdev lookup is moved to drivers/clk
+- add davinci prefix to commit description
 
 v6 changes:
-- none
+- add blank lines between function calls
+- include da8xx_register_cfgchip()
 
 
- arch/arm/mach-davinci/Kconfig |  1 +
- arch/arm/mach-davinci/time.c  | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
+ arch/arm/mach-davinci/board-da830-evm.c    |  2 +
+ arch/arm/mach-davinci/da830.c              | 77 +++++++++++++++++++++++++++---
+ arch/arm/mach-davinci/include/mach/da8xx.h |  1 +
+ 3 files changed, 74 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
-index ba9912b..da8a039 100644
---- a/arch/arm/mach-davinci/Kconfig
-+++ b/arch/arm/mach-davinci/Kconfig
-@@ -59,6 +59,7 @@ config MACH_DA8XX_DT
- 	default y
- 	depends on ARCH_DAVINCI_DA850
- 	select PINCTRL
-+	select TIMER_OF
- 	help
- 	  Say y here to include support for TI DaVinci DA850 based using
- 	  Flattened Device Tree. More information at Documentation/devicetree
-diff --git a/arch/arm/mach-davinci/time.c b/arch/arm/mach-davinci/time.c
-index d6a78f7..590b118 100644
---- a/arch/arm/mach-davinci/time.c
-+++ b/arch/arm/mach-davinci/time.c
-@@ -17,6 +17,7 @@
- #include <linux/io.h>
- #include <linux/clk.h>
- #include <linux/err.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/sched_clock.h>
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index 004f9c8..3973124 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -551,6 +551,8 @@ static __init void da830_evm_init(void)
+ 	struct davinci_soc_info *soc_info = &davinci_soc_info;
+ 	int ret;
  
-@@ -405,3 +406,33 @@ void __init davinci_timer_init(struct clk *timer_clk)
- 	for (i=0; i< ARRAY_SIZE(timers); i++)
- 		timer32_config(&timers[i]);
- }
++	da830_register_clocks();
 +
-+static int __init of_davinci_timer_init(struct device_node *np)
-+{
+ 	ret = da830_register_gpio();
+ 	if (ret)
+ 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
+diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
+index 0b17e5a..c1c2604 100644
+--- a/arch/arm/mach-davinci/da830.c
++++ b/arch/arm/mach-davinci/da830.c
+@@ -8,23 +8,26 @@
+  * is licensed "as is" without any warranty of any kind, whether express
+  * or implied.
+  */
++#include <linux/clk-provider.h>
+ #include <linux/gpio.h>
+ #include <linux/init.h>
+-#include <linux/clk.h>
+ #include <linux/platform_data/gpio-davinci.h>
+ 
+ #include <asm/mach/map.h>
+ 
+-#include "psc.h"
+-#include <mach/irqs.h>
+-#include <mach/cputype.h>
+ #include <mach/common.h>
+-#include <mach/time.h>
++#include <mach/cputype.h>
+ #include <mach/da8xx.h>
++#include <mach/irqs.h>
++#include <mach/time.h>
+ 
+-#include "clock.h"
+ #include "mux.h"
+ 
++#ifndef CONFIG_COMMON_CLK
++#include "clock.h"
++#include "psc.h"
++#endif
++
+ /* Offsets of the 8 compare registers on the da830 */
+ #define DA830_CMP12_0		0x60
+ #define DA830_CMP12_1		0x64
+@@ -37,6 +40,7 @@
+ 
+ #define DA830_REF_FREQ		24000000
+ 
++#ifndef CONFIG_COMMON_CLK
+ static struct pll_data pll0_data = {
+ 	.num		= 1,
+ 	.phys_base	= DA8XX_PLL0_BASE,
+@@ -432,6 +436,7 @@ static struct clk_lookup da830_clks[] = {
+ 	CLK(NULL,		"rmii",		&rmii_clk),
+ 	CLK(NULL,		NULL,		NULL),
+ };
++#endif
+ 
+ /*
+  * Device specific mux setup
+@@ -1223,6 +1228,66 @@ void __init da830_init(void)
+ 
+ void __init da830_init_time(void)
+ {
++#ifdef CONFIG_COMMON_CLK
 +	struct clk *clk;
 +
-+	clk = of_clk_get(np, 0);
-+	if (IS_ERR(clk)) {
-+		struct of_phandle_args clkspec;
-+
-+		/*
-+		 * Fall back to using ref_clk if the actual clock is not
-+		 * available. This currently always happens because platform
-+		 * clocks (i.e PLLs and PSCs) are registered as platform
-+		 * devices and therefore are not available at this point in
-+		 * the boot process.
-+		 */
-+		clkspec.np = of_find_node_by_name(NULL, "ref_clk");
-+		if (IS_ERR(clkspec.np)) {
-+			pr_err("%s: No clock available for timer!\n", __func__);
-+			return PTR_ERR(clkspec.np);
-+		}
-+		clk = of_clk_get_from_provider(&clkspec);
-+		of_node_put(clkspec.np);
-+	}
++	clk = clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DA830_REF_FREQ);
 +
 +	davinci_timer_init(clk);
-+
-+	return 0;
++#else
+ 	davinci_clk_init(da830_clks);
+ 	davinci_timer_init(&timerp64_0_clk);
++#endif
 +}
-+TIMER_OF_DECLARE(davinci_timer, "ti,davinci-timer", of_davinci_timer_init);
++
++static struct resource da830_pll_resources[] = {
++	{
++		.start	= DA8XX_PLL0_BASE,
++		.end	= DA8XX_PLL0_BASE + SZ_4K - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct platform_device da830_pll_device = {
++	.name		= "da830-pll",
++	.id		= -1,
++	.resource	= da830_pll_resources,
++	.num_resources	= ARRAY_SIZE(da830_pll_resources),
++};
++
++static struct resource da830_psc0_resources[] = {
++	{
++		.start	= DA8XX_PSC0_BASE,
++		.end	= DA8XX_PSC0_BASE + SZ_4K - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct platform_device da830_psc0_device = {
++	.name		= "da830-psc0",
++	.id		= -1,
++	.resource	= da830_psc0_resources,
++	.num_resources	= ARRAY_SIZE(da830_psc0_resources),
++};
++
++static struct resource da830_psc1_resources[] = {
++	{
++		.start	= DA8XX_PSC1_BASE,
++		.end	= DA8XX_PSC1_BASE + SZ_4K - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct platform_device da830_psc1_device = {
++	.name		= "da830-psc1",
++	.id		= -1,
++	.resource	= da830_psc1_resources,
++	.num_resources	= ARRAY_SIZE(da830_psc1_resources),
++};
++
++void __init da830_register_clocks(void)
++{
++	platform_device_register(&da830_pll_device);
++	platform_device_register(&da830_psc0_device);
++	platform_device_register(&da830_psc1_device);
+ }
+diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
+index 9fd6d01..64861ac 100644
+--- a/arch/arm/mach-davinci/include/mach/da8xx.h
++++ b/arch/arm/mach-davinci/include/mach/da8xx.h
+@@ -89,6 +89,7 @@ extern unsigned int da850_max_speed;
+ 
+ void da830_init(void);
+ void da830_init_time(void);
++void da830_register_clocks(void);
+ 
+ void da850_init(void);
+ void da850_init_time(void);
 -- 
 2.7.4
