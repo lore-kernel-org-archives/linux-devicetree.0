@@ -1,15 +1,14 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v2 09/16] mmc: sdhci: Add quirk to disable HW timeout
-Date: Mon, 19 Feb 2018 10:51:20 +0200
-Message-ID: <cda22332-ed17-9309-4989-19765744879b@intel.com>
-References: <20180205125029.21570-1-kishon@ti.com>
- <20180205125029.21570-10-kishon@ti.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 6/7] arm: dts: sun8i: a83t: Fix undefined offset with
+ virtual timer
+Date: Mon, 19 Feb 2018 09:52:05 +0100
+Message-ID: <20180219085205.jh6bcmbzcxqffkhk@flea.lan>
+References: <20180219081837.15482-1-mylene.josserand@bootlin.com>
+ <20180219081837.15482-7-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============4833618675298603748=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180205125029.21570-10-kishon@ti.com>
-Content-Language: en-US
+In-Reply-To: <20180219081837.15482-7-mylene.josserand@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,102 +18,85 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/18 14:50, Kishon Vijay Abraham I wrote:
-> Add quirk to disable HW timeout if the requested timeout is more than
-> the maximum obtainable timeout.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/mmc/host/sdhci.c | 12 ++++++++++++
->  drivers/mmc/host/sdhci.h |  7 +++++++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 070aff9c108f..1aa74b4682f3 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -735,6 +735,12 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd)
->  		DBG("Too large timeout 0x%x requested for CMD%d!\n",
->  		    count, cmd->opcode);
->  		count = 0xE;
-> +		if (host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) {
-> +			host->ier &= ~SDHCI_INT_DATA_TIMEOUT;
-> +			sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
-> +			sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-> +			host->hw_timeout_disabled = true;
-> +		}
 
-sdhci_calc_timeout() is really for calculations so please do this in
-sdhci_set_timeout() instead (i.e. change sdhci_calc_timeout() to return
-whether the timeout is too big).  Note that you need to cater for the "/*
-Unspecified timeout, assume max */" case and the
-SDHCI_QUIRK_BROKEN_TIMEOUT_VAL case.
-
-Also if SDHCI_INT_DATA_TIMEOUT is not being disabled, check here to
-re-enable it and leave sdhci_request_done() alone. i.e.
-
-	else if (!(host->ier & SDHCI_INT_DATA_TIMEOUT)) {
-		host->ier |= SDHCI_INT_DATA_TIMEOUT;
-		sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
-		sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-	}
-
-Maybe make a separate subroutine for the update:
-
-void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
-{
-	if (enable)
-		host->ier |= SDHCI_INT_DATA_TIMEOUT;
-	else
-		host->ier &= ~SDHCI_INT_DATA_TIMEOUT;
-	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
-	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-}
+--===============4833618675298603748==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="swcqkmnxnqqwxqtn"
+Content-Disposition: inline
 
 
->  	}
->  
->  	return count;
-> @@ -2349,6 +2355,12 @@ static bool sdhci_request_done(struct sdhci_host *host)
->  	}
->  
->  	sdhci_del_timer(host, mrq);
-> +	if (sdhci_data_line_cmd(mrq->cmd) && host->hw_timeout_disabled) {
-> +		host->ier |= SDHCI_INT_DATA_TIMEOUT;
-> +		sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
-> +		sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-> +		host->hw_timeout_disabled = false;
-> +	}
->  
->  	/*
->  	 * Always unmap the data buffers if they were mapped by
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index afab26fd70e6..3a967a56fcc3 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -437,6 +437,11 @@ struct sdhci_host {
->  #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
->  /* Controller has CRC in 136 bit Command Response */
->  #define SDHCI_QUIRK2_RSP_136_HAS_CRC			(1<<16)
-> +/*
-> + * Disable HW timeout if the requested timeout is more than the maximum
-> + * obtainable timeout
-> + */
-> +#define SDHCI_QUIRK2_DISABLE_HW_TIMEOUT			(1<<17)
->  
->  	int irq;		/* Device IRQ */
->  	void __iomem *ioaddr;	/* Mapped address */
-> @@ -522,6 +527,8 @@ struct sdhci_host {
->  	unsigned int            ocr_avail_mmc;
->  	u32 ocr_mask;		/* available voltages */
->  
-> +	bool			hw_timeout_disabled;
-> +
->  	unsigned		timing;		/* Current timing */
->  
->  	u32			thread_isr;
-> 
+--swcqkmnxnqqwxqtn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Feb 19, 2018 at 09:18:36AM +0100, Myl=E8ne Josserand wrote:
+> The ARM architected timers use an offset between their physical and
+> virtual counters. That offset should be configured by the bootloader
+> in CNTVOFF.
+>=20
+> However, the A83t bootloader fails to do so, and we end up with an
+> undefined offset (which in our case is random), meaning that each CPU
+> will have a different time, which isn't working very well.
+>=20
+> Fix that by setting the arm,cpu-registers-not-fw-configured that will
+> make Linux use the physical timers instead of the virtual ones. One
+> possible side effect would be that the virtualization features would
+> be disabled. However, due to the way the GIC has been integrated in
+> the system, it is already unusable so we're effectively not losing any
+> feature.
+>=20
+> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+
+One small nitpick on this one (and the previous one), arm in the
+subject prefix should be uppercase.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
+
+--swcqkmnxnqqwxqtn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqKkDQACgkQ0rTAlCFN
+r3SXPQ/9HiMOITN6rhCMOcwolM6if0cK1KZMFq1LLftQXV5N/6JUdehvV7aSZfC6
+YRGq3Nmz33cgnwnZcuZzWTwSSCOwtQox2P6G91q5W/nT8cMvP+nS6j8RoNVAdxkn
+SfqI+yJzAxkW9fJy2lWtohIzPRShorGlnkEhq9hK7/6W5dQtEXUEKvjrY2eW2RPy
+UmV4XtPcXGb++A+mnLyTq7NtcYu4zFRkrierrVefi6GHFeHlxIlWqP2KdkpZl5qM
+mV+pulcZhMT/7u8EwBYlJI/0eAPz7IkwzqCFAn4K3oV6RwXP4Icx0aejgbcMyspB
+ySy4L1XxqzuB9zxZX/bPyeo9vFddMULl39w+K23Ivil0KIdo9Ec8aDegpSOa+4zW
+z5fZkoJmMdYtA1ZPA9G2p9NHk4akNoEniZxhA3L2HmJ1wcXcYW8wOxLuGCHU/Len
+SgiJyg0I+X5v4smtcNrvoILH9KcuvLzUjDFInqaiGCJyUWaoqbeNcer6UpX7in8s
+kMVllEu6QXYaIrQ2khujCknj4InyMqv1pgIoOuYULbxxZ1g/B/UYng9okd3kw1Am
+Oyakr/GgPLtE14cHmqBu9wLVkYclzvIULNVqzHvDWAgaGphw0JLtx8XKzeDfClfU
+juEzyz1BaDY+zWYZ8eaoaZ2QGpBrK5xVFsl6z++20HykBUwsE0I=
+=s1e8
+-----END PGP SIGNATURE-----
+
+--swcqkmnxnqqwxqtn--
+
+
+--===============4833618675298603748==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============4833618675298603748==--
