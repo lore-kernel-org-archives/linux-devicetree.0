@@ -1,235 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/1] clk: npcm750: update text with fixed clocks
-Date: Mon, 19 Feb 2018 08:56:17 -0600
-Message-ID: <20180219145617.66qjtafuuy2odgak@rob-hp-laptop>
-References: <1518701959-22899-1-git-send-email-tali.perry1@gmail.com>
- <1518701959-22899-2-git-send-email-tali.perry1@gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: Clarify timing subnode use as
+ panel-timing
+Date: Mon, 19 Feb 2018 15:59:33 +0100
+Message-ID: <20180219145933.GL11455@ulmo>
+References: <20180208174855.55620-1-seanpaul@chromium.org>
+ <20180208174855.55620-2-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1518701959-22899-2-git-send-email-tali.perry1@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tali Perry <tali.perry1@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, tmaimon77@gmail.com, avifishman70@gmail.com, openbmc@lists.ozlabs.org, brendanhiggins@google.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, raltherr@google.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============0434547176=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180208174855.55620-2-seanpaul@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <seanpaul@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Doug Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 15, 2018 at 03:39:19PM +0200, Tali Perry wrote:
-> 
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> 
-> ---
->  .../bindings/clock/nuvoton,npcm750-clk.txt         | 103 +++++++++++++++++++++
->  include/dt-bindings/clock/nuvoton,npcm7xx-clock.h  |  51 ++++++++++
->  2 files changed, 154 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
->  create mode 100644 include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt b/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
-> new file mode 100644
-> index 000000000000..5d14a8358e76
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
-> @@ -0,0 +1,103 @@
-> +* Nuvoton NPCM7XX Clock Controller
-> +
-> +Nuvoton Poleg BMC NPCM7XX contains an integrated clock controller, which
-> +generates and supplies clocks to all modules within the BMC.
-> +
-> +External clocks:
-> +
-> +There are six fixed clocks that are generated outside the BMC. All clocks are of
-> +a known fixed value that cannot be changed. clk_refclk, clk_mcbypck and
-> +clk_sysbypck are inputs to the clock controller.
-> +clk_rg1refck, clk_rg2refck and clk_xin are external clocks suppling the
-> +network. They are set on the device tree, but not used by the clock module. The
-> +network devices use them directly.
-> +Example can be found below.
-> +
-> +All available clocks are defined as preprocessor macros in:
-> +dt-bindings/clock/nuvoton,npcm7xx-clock.h
-> +and can be reused as DT sources.
-> +
-> +Required Properties of clock controller:
-> +
-> +Clock controller node requirements:
 
-This line is redundant.
+--===============0434547176==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Swj79WlilW4BQYVz"
+Content-Disposition: inline
 
-> +	- compatible: "nuvoton,npcm750-clk" : for clock controller of Nuvoton
-> +		  Poleg BMC NPCM750
-> +
-> +	- reg: physical base address of the clock controller and length of
-> +		memory mapped region.
-> +
-> +	- #clock-cells: should be 1.
-> +
-> +Example: Clock controller node:
-> +
-> +	clk: clock-controller@f0801000 {
-> +		compatible = "nuvoton,npcm750-clk";
-> +		#clock-cells = <1>;
-> +		clock-controller;
 
-That's not a defined property.
+--Swj79WlilW4BQYVz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +		reg = <0xf0801000 0x1000>;
+On Thu, Feb 08, 2018 at 12:48:48PM -0500, Sean Paul wrote:
+> Add a note in the documentation explaining when it's appropriate to use
+> the display-timings subnode on its own, as well as the preferred name to
+> use (panel-timing).
 
-No input clocks for the clock controller?
+panel-timing seems rather redundant, but I guess that's the de facto
+standard, so:
 
-> +	};
-> +
-> +Example: Required external clocks for network:
-> +
-> +	/* external reference clock */
-> +	clk_refclk: clk-refclk {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <25000000>;
-> +		clock-output-names = "refclk";
-> +	};
-> +
-> +	/* external reference clock for cpu. float in normal operation */
-> +	clk_sysbypck: clk-sysbypck {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <800000000>;
-> +		clock-output-names = "sysbypck";
-> +	};
-> +
-> +	/* external reference clock for MC. float in normal operation */
-> +	clk_mcbypck: clk-mcbypck {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <800000000>;
-> +		clock-output-names = "mcbypck";
-> +	};
-> +
-> +	 /* external clock signal rg1refck, supplied by the phy */
-> +	clk_rg1refck: clk-rg1refck {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <125000000>;
-> +		clock-output-names = "clk_rg1refck";
-> +	};
-> +
-> +	 /* external clock signal rg2refck, supplied by the phy */
-> +	clk_rg2refck: clk-rg2refck {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <125000000>;
-> +		clock-output-names = "clk_rg2refck";
-> +	};
-> +
-> +	clk_xin: clk-xin {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <50000000>;
-> +		clock-output-names = "clk_xin";
-> +	};
-> +
-> +
-> +Example: GMAC controller node that consumes two clocks: a generated clk by the
-> +clock controller and a fixed clock from DT (clk_rg1refck).
-> +
-> +	gmac0: eth@f0802000 {
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-ethernet@...
+--Swj79WlilW4BQYVz
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +		device_type = "network";
+-----BEGIN PGP SIGNATURE-----
 
-device_type is deprecated (except in a few places).
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqK5lUACgkQ3SOs138+
+s6Fq1xAApels5m4VvPRbJzkGf6k07e8urhqjpucf55zP7cccqWI1yfkk9P4ujTXF
+X5UOfKrHlBFtDstAJtrkhVcT9FMBi9HSv4AJcO1SdspTZR3C8LjDFT+suY1WevNK
+B5BY+Tjp7aGflj8flNqA1TerhFgvpQyhbctdWEljcPck4XJ/cG6i3fuSPxqbw/NQ
+BZ7xLRiQSgNhcnBzR/LD1JnhsWcxs74hdmJDuAnqw9K+3LNLJJimvfeNXzOeym80
+dM6tXG1/A6y61ru8Fd9hssvYvj500CVmAhkN7DH27AeV7iVBCyI+Fz3WDhuPg8HP
+4HS7y207jHUQdLOlkiNh0YPtHQtunOvkcLy5MG1u6RmRp+zFZ/jbMUh08Y4qkxMQ
+5enufVyj1RY1g/tCEYJAeEvoKZCc3lDNiA2xppKfA68wJf8wBsfb3HhzoPFvJlPq
+LdN+8t/W3fwWPihNiVKeo0Iukv70LNSZVCDdihVI1tJXeokb8860vWCZt2fVBfnB
+Fy/msaNXWk0ehhstj6AWdJh90XbIlWJ+No0fvD2mDihcsGOMZcJPxp/MPQjnCS1F
+HebwdinuSsRx8zrY2wA93WDvkiaGmkjd/xcC3tze/W5Fbk7X6GuOoSckTr3umq5J
+9QdNr3VyG+uPed0LwiB53BtG2vqy9lU6keav6Rn4QNr7FeOSgI8=
+=6Pqs
+-----END PGP SIGNATURE-----
 
-> +		compatible = "snps,dwmac";
-> +		reg = <0xf0802000 0x2000>;
-> +		interrupts = <0 14 4>;
-> +		interrupt-names = "macirq";
-> +		ethernet = <0>;
+--Swj79WlilW4BQYVz--
 
-Not a standard property.
+--===============0434547176==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-> +		clocks	= <&clk_rg1refck>, <&clk NPCM7XX_CLK_AHB>;
-> +		clock-names = "stmmaceth", "clk_gmac";
-> +		status = "disabled";
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
-Don't show status in examples.
-
-> +	};
-> diff --git a/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h b/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
-> new file mode 100644
-> index 000000000000..5499783649d6
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
-> @@ -0,0 +1,51 @@
-> +/*
-> + * Nuvoton NPCM7xx Clock Generator
-> + * All the clocks are initialized by the bootloader, so this driver allow only
-> + * reading of current settings directly from the hardware.
-
-This comment doesn't really match what the file is.
-
-> + *
-> + * Copyright (C) 2018 Nuvoton Technologies tali.perry@nuvoton.com
-> + *
-> + * Released under the GPLv2 only.
-> + * SPDX-License-Identifier: GPL-2.0
-
-Goes on first line as a separate comment.
-
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-
-Don't need these.
-
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_NPCM7XX_H
-> +#define __DT_BINDINGS_CLOCK_NPCM7XX_H
-> +
-> +
-> +#define NPCM7XX_CLK_CPU 0
-> +#define NPCM7XX_CLK_GFX_PIXEL 1
-> +#define NPCM7XX_CLK_MC 2
-> +#define NPCM7XX_CLK_ADC 3
-> +#define NPCM7XX_CLK_AHB 4
-> +#define NPCM7XX_CLK_TIMER 5
-> +#define NPCM7XX_CLK_UART 6
-> +#define NPCM7XX_CLK_MMC  7
-> +#define NPCM7XX_CLK_SPI3 8
-> +#define NPCM7XX_CLK_PCI  9
-> +#define NPCM7XX_CLK_AXI 10
-> +#define NPCM7XX_CLK_APB4 11
-> +#define NPCM7XX_CLK_APB3 12
-> +#define NPCM7XX_CLK_APB2 13
-> +#define NPCM7XX_CLK_APB1 14
-> +#define NPCM7XX_CLK_APB5 15
-> +#define NPCM7XX_CLK_CLKOUT 16
-> +#define NPCM7XX_CLK_GFX  17
-> +#define NPCM7XX_CLK_SU   18
-> +#define NPCM7XX_CLK_SU48 19
-> +#define NPCM7XX_CLK_SDHC 20
-> +#define NPCM7XX_CLK_SPI0 21
-> +#define NPCM7XX_CLK_SPIX 22
-> +
-> +#define NPCM7XX_CLK_REFCLK 23
-> +#define NPCM7XX_CLK_SYSBYPCK 24
-> +#define NPCM7XX_CLK_MCBYPCK 25
-> +
-> +
-> +#define NPCM7XX_NUM_CLOCKS	 (NPCM7XX_CLK_MCBYPCK+1)
-> +
-> +
-> +
-> +#endif
-> -- 
-> 2.14.1
-> 
+--===============0434547176==--
