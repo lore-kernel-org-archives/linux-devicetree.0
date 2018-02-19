@@ -1,144 +1,52 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2] Documentation: DT: arm: Add topology property to
- define package boundaries
-Date: Mon, 19 Feb 2018 12:28:23 +0000
-Message-ID: <20180219122823.GA22083@e107981-ln.cambridge.arm.com>
-References: <20180209120034.13388-1-lorenzo.pieralisi@arm.com>
- <20180218234452.2mtv74pxfjt6fqhl@rob-hp-laptop>
+From: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 05/13] mfd: axp20x: probe axp20x_adc driver
+ for AXP813
+Date: Mon, 19 Feb 2018 13:47:28 +0100
+Message-ID: <a82ff9673c8652d3fbc17c5966feb230349e6200.1519044068.git-series.quentin.schulz@bootlin.com>
+References: <cover.6545459c99a33874413abf619136986f53d2c2a2.1519044068.git-series.quentin.schulz@bootlin.com>
+Reply-To: quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180218234452.2mtv74pxfjt6fqhl@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeremy Linton <jeremy.linton@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Frank Rowand <frowand.list@gmail.com>, Morten Rasmussen <morten.rasmussen@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBDUPVPKAKGQEJSYEAUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.6545459c99a33874413abf619136986f53d2c2a2.1519044068.git-series.quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <cover.6545459c99a33874413abf619136986f53d2c2a2.1519044068.git-series.quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+References: <cover.6545459c99a33874413abf619136986f53d2c2a2.1519044068.git-series.quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 18, 2018 at 05:44:52PM -0600, Rob Herring wrote:
-> On Fri, Feb 09, 2018 at 12:00:34PM +0000, Lorenzo Pieralisi wrote:
-> > The current ARM DT topology description provides the operating system
-> > with a topological view of the system that is based on leaf nodes
-> > representing either cores or threads (in an SMT system) and a
-> > hierarchical set of cluster nodes that creates a hierarchical topology
-> > view of how those cores and threads are grouped.
-> > 
-> > As opposed to the ACPI topology description ([1], PPTT table), this
-> > hierarchical representation of clusters does not allow to describe what
-> > topology level actually represents the physical package boundary, which
-> > is a key piece of information to be used by an operating system to
-> > optimize resource allocation and scheduling.
-> 
-> Don't the NUMA related bindings already provide this?
+This makes the axp20x_adc driver probe with platform device id
+"axp813-adc".
 
-They provide information for NUMA nodes but those nodes do not
-necessarily represent package boundaries (ie we may have systems
-with NUMA nodes in-package).
+Signed-off-by: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/mfd/axp20x.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> The only thing I could see this being needed for is servicing (e.g. to 
-> replace a bad socket).
-
-Yes - it also an important bit of information to define what a package
-is at topological level without resorting to guessing it using cache
-topology information.
-
-> > Define an optional, backward compatible boolean property for cluster
-> > nodes that, by reusing the ACPI nomenclature, add to the ARM DT
-> > topological description a binding to define what cluster level
-> > represents a physical package boundary.
-> > 
-> > [1] http://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > Cc: Jeremy Linton <jeremy.linton@arm.com>
-> > Cc: Morten Rasmussen <morten.rasmussen@arm.com>
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > ---
-> > v1->v2:
-> > 
-> > 	- Added dual-package example
-> > 	- Improved physical-package property description according to review
-> > 	- Dropped RFC tag
-> > 
-> > v1: https://marc.info/?l=linux-arm-kernel&m=151664137216555&w=2
-> > 
-> >  Documentation/devicetree/bindings/arm/topology.txt | 432 +++++++++++++++++++++
-> >  1 file changed, 432 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
-> > index de9eb0486630..09b3b22e57c1 100644
-> > --- a/Documentation/devicetree/bindings/arm/topology.txt
-> > +++ b/Documentation/devicetree/bindings/arm/topology.txt
-> > @@ -109,6 +109,21 @@ Bindings for cluster/cpu/thread nodes are defined as follows:
-> >  	The cluster node name must be "clusterN" as described in 2.1 above.
-> >  	A cluster node can not be a leaf node.
-> >  
-> > +	Properties for cluster nodes:
-> > +
-> > +	- physical-package
-> > +		Usage: optional
-> > +		Value type: <empty>
-> > +		Definition: if present the cluster node represents the
-> > +			    boundary of a physical package, whether socketed
-> > +			    or surface mounted.
-> > +			    The cluster node itself and all its children nodes
-> > +			    represent a single distinct physical-package unit.
-> > +			    The cluster node parent and sibling cluster nodes
-> > +			    (if any) must therefore be considered part of
-> > +			    separate physical package units in multi
-> > +			    physical-package systems.
-> > +
-> >  	A cluster node's child nodes must be:
-> >  
-> >  	- one or more cluster nodes; or
-> > @@ -470,6 +485,423 @@ cpus {
-> >  	};
-> >  };
-> >  
-> > +Example 3 (ARM 64-bit, 32-cpu system, 2 packages):
-> 
-> Can't you expand an existing example. If you have the complex cases, you 
-> can derive simple ones.
-
-Yes, I can, I thought that adding a separate example would help but I
-will patch an existing one if that makes things simpler.
-
-> > +
-> > +cpus {
-> > +	#size-cells = <0>;
-> > +	#address-cells = <2>;
-> > +
-> > +	cpu-map {
-> > +		cluster0 {
-> > +			physical-package;
-> 
-> Why not just make this part of the node name? .../cluster0/cluster0/... 
-> isn't really the best naming IMO.
-
-It would break the bindings rules I think (the 2.1 naming scheme) -
-that's why I opted for a property. Actually "cluster" was not a very
-nice choice for naming (eg "container" would have been nicer
-but "cluster" is what we chose at the time as if such a thing had
-architectural significance).
-
-I agree this stuff is not necessarily crystal-clear but please understand
-our point - it would be good to have DT/ACPI convergence to interpret
-the topology for consistency (ie ACPI defines a "physical package" flag
-in the respective topology "container" level).
-
-Please let me know what you think and I will update accordingly.
-
-Thanks,
-Lorenzo
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index 1977a03..e5516aa 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -885,7 +885,10 @@ static struct mfd_cell axp813_cells[] = {
+ 	}, {
+ 		.name			= "axp20x-gpio",
+ 		.of_compatible		= "x-powers,axp813-gpio",
+-	}
++	}, {
++		.name			= "axp813-adc",
++		.of_compatible		= "x-powers,axp813-adc",
++	},
+ };
+ 
+ static struct axp20x_dev *axp20x_pm_power_off;
+-- 
+git-series 0.9.1
