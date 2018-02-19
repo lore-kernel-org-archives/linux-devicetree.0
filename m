@@ -1,35 +1,39 @@
-Return-Path: <SRS0=V9ZR=FR=samsung.com=jh80.chung@kernel.org>
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH 4/6] arm64: dts: stratix10: remove 'num-slots' property for
- dwmmc
-Date: Fri, 23 Feb 2018 15:41:36 +0900
-Message-id: <20180223064138.18401-4-jh80.chung@samsung.com>
-In-reply-to: <20180223064138.18401-1-jh80.chung@samsung.com>
-References: <20180223064138.18401-1-jh80.chung@samsung.com>
-	<CGME20180223064140epcas2p3804fe3b7d63e4b7975d94a178e94dffb@epcas2p3.samsung.com>
-To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, manabian@gmail.com, dinguyen@kernel.org, will.deacon@arm.com, xuwei5@hisilicon.com, Jaehoon Chung <jh80.chung@samsung.com>
+Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
+From: John Garry <john.garry@huawei.com>
+Subject: [PATCH v14 2/9] PCI: Remove unused __weak attribute in pci_register_io_range()
+Date: Tue, 20 Feb 2018 01:48:33 +0800
+Message-ID: <1519062520-198902-3-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1519062520-198902-1-git-send-email-john.garry@huawei.com>
+References: <1519062520-198902-1-git-send-email-john.garry@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org
+Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-Since 'num-slots' had already deprecated, remove the property in
-device-tree file.
+From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Currently pci_register_io_range() has only one definition;
+therefore there is no use of the __weak attribute.
+
+Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pci/pci.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-index a37c46112876..4e146b4e6487 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
-@@ -88,7 +88,6 @@
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index f6a4dd1..4666a01 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3455,7 +3455,7 @@ struct io_range {
+  * Record the PCI IO range (expressed as CPU physical address + size).
+  * Return a negative value if an error has occured, zero otherwise
+  */
+-int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
++int pci_register_io_range(phys_addr_t addr, resource_size_t size)
+ {
+ 	int err = 0;
  
- &mmc {
- 	status = "okay";
--	num-slots = <1>;
- 	cap-sd-highspeed;
- 	broken-cd;
- 	bus-width = <4>;
 -- 
-2.15.1
+1.9.1
