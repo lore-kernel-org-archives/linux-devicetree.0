@@ -1,123 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt: bindings: add bindings for wcn3990 wifi block
-Date: Mon, 19 Feb 2018 12:40:46 -0600
-Message-ID: <20180219184046.pr6b7r5x5um22vim@rob-hp-laptop>
-References: <1518756228-6773-1-git-send-email-govinds@codeaurora.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 3/8] drm/bridge: dw-hdmi: allow overriding of phy-type
+ reading
+Date: Mon, 19 Feb 2018 19:46:46 +0100
+Message-ID: <3104429.3dFhngZnWQ@phil>
+References: <20180216204158.29839-1-heiko@sntech.de>
+ <20180216204158.29839-4-heiko@sntech.de> <3905607.btOD7ERYi5@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1518756228-6773-1-git-send-email-govinds@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/ath10k/>
-List-Post: <mailto:ath10k@lists.infradead.org>
-List-Help: <mailto:ath10k-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=subscribe>
-Sender: "ath10k" <ath10k-bounces@lists.infradead.org>
-Errors-To: ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org
-To: Govind Singh <govinds@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, ath10k@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3905607.btOD7ERYi5@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, kishon@ti.com, robh+dt@kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 16, 2018 at 10:13:48AM +0530, Govind Singh wrote:
-> Add device tree binding documentation details for wcn3990
-> wifi block present in Qualcomm SDM845/APQ8098 SoC into
-> "qcom,ath10k.txt".
-> 
-> Signed-off-by: Govind Singh <govinds@codeaurora.org>
-> ---
->  .../bindings/net/wireless/qcom,ath10k.txt          | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> index 3d2a031..e34d8f8 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  - compatible: Should be one of the following:
->  	* "qcom,ath10k"
->  	* "qcom,ipq4019-wifi"
-> +	* "qcom,wcn3990-wifi"
->  
->  PCI based devices uses compatible string "qcom,ath10k" and takes calibration
->  data along with board specific data via "qcom,ath10k-calibration-data".
-> @@ -18,8 +19,11 @@ In general, entry "qcom,ath10k-pre-calibration-data" and
->  "qcom,ath10k-calibration-data" conflict with each other and only one
->  can be provided per device.
->  
-> +SNOC based devices (i.e. wcn3990) uses compatible string "qcom,wcn3990-wifi".
-> +
->  Optional properties:
->  - reg: Address and length of the register set for the device.
-> +- reg-names: Names of the memory regions defined in reg entry.
-
-You must define what the names are and how many (so reg needs updating 
-too if there is more than 1).
-
-Though with only 1 -names, it is kind of pointless.
-
-
->  - resets: Must contain an entry for each entry in reset-names.
->            See ../reset/reseti.txt for details.
->  - reset-names: Must include the list of following reset names,
-> @@ -49,6 +53,12 @@ Optional properties:
->  				 hw versions.
->  - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
->  				     the length can vary between hw versions.
-> +- qcom,<supply-name>-supply: handle to the regulator device tree node
-> +			   optional "supply-name" is "vdd-0.8-cx-mx".
-
-You can drop the qcom prefix. Just name this "vdd-0.8-cx-mx-supply".
-
-> +- qcom,<supply>-config: Specifies voltage levels for supply. Should be
-> +			  specified in pairs (min, max), units uV.  There can
-> +			   be optional load in uA and Regulator settle delay in
-> +			   uS.
-
-We have standard regulator properties for this I think.
-
->  
->  Example (to supply the calibration data alone):
->  
-> @@ -119,3 +129,28 @@ wifi0: wifi@a000000 {
->  	qcom,msi_base = <0x40>;
->  	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
->  };
-> +
-> +Example (to supply wcn3990 SoC wifi block details):
-> +
-> +qcom,msm_ath10k@18000000 {
-
-wifi@...
-
-> +		compatible = "qcom,wcn3990-wifi";
-> +		reg = <0x18800000 0x800000>;
-> +		reg-names = "membase";
-> +		clocks = <&clock_gcc clk_aggre2_noc_clk>;
-> +		clock-names = "smmu_aggre2_noc_clk"
-> +		interrupts =
-> +			   <0 130 0 /* CE0 */ >,
-> +			   <0 131 0 /* CE1 */ >,
-> +			   <0 132 0 /* CE2 */ >,
-> +			   <0 133 0 /* CE3 */ >,
-> +			   <0 134 0 /* CE4 */ >,
-> +			   <0 135 0 /* CE5 */ >,
-> +			   <0 136 0 /* CE6 */ >,
-> +			   <0 137 0 /* CE7 */ >,
-> +			   <0 138 0 /* CE8 */ >,
-> +			   <0 139 0 /* CE9 */ >,
-> +			   <0 140 0 /* CE10 */ >,
-> +			   <0 141 0 /* CE11 */ >;
-> +		qcom,vdd-0.8-cx-mx-supply = <&pm8998_l5>;
-> +		qcom,vdd-0.8-cx-mx-config = <800000 800000 2400 1000>;
-> +};
-> -- 
-> 1.9.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTGF1cmVudCwKCkFtIE1vbnRhZywgMTkuIEZlYnJ1YXIgMjAxOCwgMTc6NTk6MDIgQ0VUIHNj
+aHJpZWIgTGF1cmVudCBQaW5jaGFydDoKPiBPbiBGcmlkYXksIDE2IEZlYnJ1YXJ5IDIwMTggMjI6
+NDE6NTMgRUVUIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+ID4gSW4gc29tZSBJUCBpbXBsZW1lbnRh
+dGlvbnMgdGhlIHJlYWRpbmcgb2YgdGhlIHBoeS10eXBlIG1heSBiZSBicm9rZW4uCj4gPiBPbmUg
+ZXhhbXBsZSBhcmUgdGhlIFJvY2tjaGlwIHJrMzIyOCBhbmQgcmszMzI4IHNvY3MgdGhhdCB1c2Ug
+YSBzZXBhcmF0ZQo+ID4gcGh5IGZyb20gSW5ub3NpbGljb24gYnV0IHN0aWxsIHJlcG9ydCB0aGUg
+SERNSTIwX1RYIHR5cGUuCj4gPiAKPiA+IFNvIGFsbG93IHRoZSBnbHVlIGRyaXZlciB0byBmb3Jj
+ZSBhIHNwZWNpZmljIHR5cGUsIGxpa2UgdGhlIHZlbmRvci1waHkKPiA+IGZvciB0aGVzZSBjYXNl
+cy4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5k
+ZT4KPiAKPiBUZXN0ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRl
+YXNvbmJvYXJkLmNvbT4KCnRoYW5rcyBmb3IgdGVzdGluZyA6LSkKCj4gPiAtLS0KPiA+ICBkcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYyB8IDQgKysrLQo+ID4gIGluY2x1
+ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmggICAgICAgICAgICAgIHwgMSArCj4gPiAgMiBmaWxlcyBj
+aGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+IAo+ID4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5jCj4gPiBiL2RyaXZl
+cnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5jIGluZGV4Cj4gPiBmOTgwMjM5OWNj
+MGQuLjUwZDIzMTYyNmM0ZCAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
+c3lub3BzeXMvZHctaGRtaS5jCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9w
+c3lzL2R3LWhkbWkuYwo+ID4gQEAgLTIyMTgsNyArMjIxOCw5IEBAIHN0YXRpYyBpbnQgZHdfaGRt
+aV9kZXRlY3RfcGh5KHN0cnVjdCBkd19oZG1pICpoZG1pKQo+ID4gIAl1bnNpZ25lZCBpbnQgaTsK
+PiA+ICAJdTggcGh5X3R5cGU7Cj4gPiAKPiA+IC0JcGh5X3R5cGUgPSBoZG1pX3JlYWRiKGhkbWks
+IEhETUlfQ09ORklHMl9JRCk7Cj4gPiArCXBoeV90eXBlID0gKGhkbWktPnBsYXRfZGF0YS0+cGh5
+X2ZvcmNlX3R5cGUpID8KPiA+ICsJCQkJaGRtaS0+cGxhdF9kYXRhLT5waHlfZm9yY2VfdHlwZSA6
+Cj4gPiArCQkJCWhkbWlfcmVhZGIoaGRtaSwgSERNSV9DT05GSUcyX0lEKTsKPiAKPiBObyBuZWVk
+IGZvciBwYXJlbnRoZXNlcy4gWW91IGNvdWxkIGV2ZW4gd3JpdGUgdGhpcwo+IAo+ICAgICAgICAg
+cGh5X3R5cGUgPSBoZG1pLT5wbGF0X2RhdGEtPnBoeV9mb3JjZV90eXBlID8gCj4gICAgICAgICAg
+ICAgICAgICA6IGhkbWlfcmVhZGIoaGRtaSwgSERNSV9DT05GSUcyX0lEKTsKPiAKPiBidXQgdGhh
+dCdzIHVwIHRvIHlvdS4KPiAKPiBXaGF0IGlmIGEgZHJpdmVyIHdhbnRzIHRvIGZvcmNlIHRoZSBQ
+SFkgdHlwZSB0byBEV19IRE1JX1BIWV9EV0NfSERNSV9UWF9QSFkgPyAKPiBPciBkbyB5b3UgZXhw
+ZWN0IG9ubHkgdGhlIERXX0hETUlfUEhZX1ZFTkRPUl9QSFkgdHlwZSB0byBiZSBmb3JjZWQgPyBJ
+ZiBzbywgd2UgCj4gY291bGQgYWxzbyB1c2UgYSBmb3JjZV92ZW5kb3JfcGh5IGJvb2xlYW4gZmll
+bGQgaW5zdGVhZCBvZiBwaHlfZm9yY2VfdHlwZS4KCkluaXRpYWxseSBJIHRob3VnaHQgb2YgaW1w
+bGljaXRseSBvdmVycmlkaW5nIHRoZSBwaHktdHlwZSB3aGVuIHRoZSBleHRlcm5hbApwaHktb3Bz
+IGFyZSBzZXQsIGJ1dCBkZWNpZGVkIGFnYWluc3QgaXQgYmVjYXVzZSB0aGF0IG1pZ2h0IGJyZWFr
+Cih0aGVvcmV0aWNhbCkgY2FzZXMgd2hlcmUgcGh5LW9wcyBtYXkgYmUgYWx3YXlzIHNldCBidXQg
+b25seSB1c2VkIHdoZW4KdGhlIGlwIHJldHVybnMgYSBtYXRjaGluZyBwaHktdHlwZSBhbmQgdGh1
+cyBjYW1lIHRvIGp1c3QgYWxsb3cgb3ZlcnJpZGluZwp0aGF0IHR5cGUgcmVhZGluZy4KCkFzIGZv
+ciBsaW1pdGluZyB0byBvbmx5IGFsbG93IGZvcmNpbmcgdGhlIHZlbmRvciB0eXBlLCBteSBwZXJz
+b25hbCBmZWVsaW5nCndvdWxkIGJlIHRvIGFsbG93IGdsdWUgZHJpdmVycyB0byBqdXN0IG92ZXJy
+aWRlIHRoZSB0eXBlIGFzIG5lZWRlZApsaWtlIGRvbmUgaW4gdGhlIHBhdGNoLiBBcyBjYW4gYmUg
+c2VlbiBvbiB0aGUgcmszMzI4LCB0aGUgZHctaGRtaQpyZXBvcnRzIG9uZSBvZiB0aGUgcmVndWxh
+ciBwaHlzIChmb3Jnb3Qgd2hpY2ggb25lKSBidXQgaW5zdGVhZCBoYXMgYQpjb21wbGV0ZWx5IHNl
+cGFyYXRlIGlwIGZvciBpdCwgc28gSSdkIGd1ZXNzIHdlIG1heSB2ZXJ5IHdlbGwgc2VlCmltcGxl
+bWVudGF0aW9ucyB0aGF0IGp1c3QgcmVwb3J0IGEgd3JvbmcgdHlwZSAobm8gdmVuZG9yLXR5cGUp
+LgoKU28gSSBkb24ndCBzZWUgYW4gaXNzdWUgd2l0aCBkcml2ZXJzIGJlaW5nIGFsbG93ZWQgdG8g
+c2V0IHRoZSB0eXBlIHRvCkRXX0hETUlfUEhZX0RXQ19IRE1JX1RYX1BIWSwgYmVjYXVzZSBzdWNo
+IGNhc2VzIG1heSBleGlzdCBpbiB0aGUKZnV0dXJlIGFuZCBJJ2QgZXhwZWN0IGRyaXZlciBhdXRo
+b3JzIHRvIHNvbWV3aGF0IGtub3cgd2hhdCB0aGV5J3JlIGRvaW5nLgoKQnV0IEknbSBub3QgdGll
+ZCB0byB0aGF0LCBzbyB3aWxsIGdvIHdpdGggdGhlIG1ham9yaXR5IG9waW5pb24gOi1EIC4KCgpI
+ZWlrbwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
