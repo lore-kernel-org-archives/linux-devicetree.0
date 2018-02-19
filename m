@@ -1,17 +1,13 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v5 11/20] firmware: arm_scmi: add support for polling
- based SCMI transfers
-Date: Mon, 19 Feb 2018 11:50:42 +0000
-Message-ID: <d1acd809-48d0-5889-0eb1-e52b68445dfe@arm.com>
-References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
- <1514904162-11201-12-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a31CMsLUSm0rsHLdvM4sbjZ6fwocKmA1JiuCtF97vj3PQ@mail.gmail.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
+Subject: Re: [RFC] ARM: dts: imx28-tx28: Pass the memory unit name
+Date: Mon, 19 Feb 2018 13:06:24 +0100
+Message-ID: <20180219130624.30a5f572@karo-electronics.de>
+References: <1518882103-17137-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK8P3a31CMsLUSm0rsHLdvM4sbjZ6fwocKmA1JiuCtF97vj3PQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1518882103-17137-1-git-send-email-festevam@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,44 +17,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Nishanth Menon <nm@ti.com>, DTML <devicetree@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Harb Abdulhamid <harba@codeaurora.org>, Ryan Harkin <Ryan.Harkin@arm.com>, LKML <linux-kernel@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Alexey Klimov <klimov.linux@gmail.com>, Loc Ho <lho@apm.com>, Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 19/02/18 11:32, Arnd Bergmann wrote:
-> On Tue, Jan 2, 2018 at 3:42 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> 
->> +#define SCMI_MAX_POLLING_TIMEOUT_NS    (100 * NSEC_PER_USEC)
->>  /**
->>   * scmi_do_xfer() - Do one transfer
->>   *
->> @@ -389,14 +406,30 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
-> 
->> +       if (xfer->hdr.poll_completion) {
->> +               ktime_t stop, cur;
->> +
->> +               stop = ktime_add_ns(ktime_get(), SCMI_MAX_POLLING_TIMEOUT_NS);
->> +               do {
->> +                       udelay(5);
->> +                       cur = ktime_get();
->> +               } while (!scmi_xfer_poll_done(info, xfer) &&
->> +                        ktime_before(cur, stop));
-> 
-> The 5 microsecond back-off isn't that much smaller than the 100 microsecond
-> timeout, given that udelay() often waits much longer than the specified time.
-> 
-> How did you come up with those two numbers? Are you sure this is better
-> than just using a cpu_relax() instead of the udelay()?
-> 
-
-Somehow I assumed that cpu_relax will schedule out and since this is
-called in the fast switching path, I can't do that. But now I see that
-it's just an hint and so I can use it. Sorry for missing it earlier, you
-did point this out in previous version and I retained it based on my
-wrong assumption. Thanks.
-
--- 
-Regards,
-Sudeep
+SGksCgpPbiBTYXQsIDE3IEZlYiAyMDE4IDEzOjQxOjQzIC0wMjAwIEZhYmlvIEVzdGV2YW0gd3Jv
+dGU6Cj4gRnJvbTogRmFiaW8gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPgo+IAo+IFBh
+c3MgdGhlIG1lbW9yeSB1bml0IG5hbWUgaW4gb3JkZXIgdG8gZml4IHRoZSBmb2xsb3dpbmcKPiBk
+dGMgd2FybmluZyB3aXRoIFc9MToKPiAKPiBhcmNoL2FybS9ib290L2R0cy9pbXgyOC10eDI4LmR0
+YjogV2FybmluZyAodW5pdF9hZGRyZXNzX3ZzX3JlZyk6IE5vZGUgL21lbW9yeSBoYXMgYSByZWcg
+b3IgcmFuZ2VzIHByb3BlcnR5LCBidXQgbm8gdW5pdCBuYW1lCj4gCj4gU2lnbmVkLW9mZi1ieTog
+RmFiaW8gRXN0ZXZhbSA8ZmFiaW8uZXN0ZXZhbUBueHAuY29tPgo+IC0tLQo+IEhpLAo+IAo+IEN1
+cnJlbnRseSB0aGUgb25seSBkdGMgd2FybmluZ3Mgb2JzZXJ2ZWQgd2l0aCBXPTEgYXJlIHRoZSBv
+bmVzOgo+IFdhcm5pbmcgKHVuaXRfYWRkcmVzc192c19yZWcpOiBOb2RlIC9tZW1vcnkgaGFzIGEg
+cmVnIG9yIHJhbmdlcyBwcm9wZXJ0eSwgYnV0IG5vIHVuaXQgbmFtZQo+IAo+IElmIHRoaXMgc29s
+dXRpb24gY2FuIGJlIGFjY2VwdGVkIEkgY2FuIGNsZWFuIGFsbCB0aGUgb3RoZXIgaS5NWCBkdHMg
+ZmlsZXMuCj4gCj4gUGxlYXNlIGFkdmlzZS4KPiAKPiAgYXJjaC9hcm0vYm9vdC9kdHMvaW14Mjgt
+dHgyOC5kdHMgfCA0ICsrLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBk
+ZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtdHgy
+OC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyOC10eDI4LmR0cwo+IGluZGV4IDhhNGY1YmMu
+LmJiZGYwMDQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14MjgtdHgyOC5kdHMK
+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXgyOC10eDI4LmR0cwo+IEBAIC02NSw4ICs2NSw4
+IEBACj4gIAkJdXNib3RnID0gJnVzYjA7Cj4gIAl9Owo+ICAKPiAtCW1lbW9yeSB7Cj4gLQkJcmVn
+ID0gPDAgMD47IC8qIHdpbGwgYmUgZmlsbGVkIGluIGJ5IFUtQm9vdCAqLwo+ICsJbWVtb3J5QDQw
+MDAwMDAwIHsKPiArCQlyZWcgPSA8MHg0MDAwMDAwMCAwPjsgLyogd2lsbCBiZSBmaWxsZWQgaW4g
+YnkgVS1Cb290ICovCj4gIAl9Owo+ICAKPiAgCW9uZXdpcmUgewo+CkkgaGF2ZSBubyBvYmplY3Rp
+b25zIHRvIHRoaXMgY2hhbmdlLiBVLUJvb3Qgc3RpbGwgZmluZHMgdGhlIG1lbW9yeSBub2RlCmFu
+ZCBwdXRzIHRoZSBjb3JyZWN0IHNpemUgaW50byB0aGUgJ3JlZycgcHJvcGVydHkuCgpBY2tlZC1i
+eTogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgoKCkxvdGhhciBXYcOf
+bWFubgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAo=
