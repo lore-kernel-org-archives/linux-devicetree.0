@@ -1,13 +1,15 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 5/7] arm: dts: sun8i: a83t: Add CCI-400 node
-Date: Mon, 19 Feb 2018 09:49:44 +0100
-Message-ID: <20180219084944.iqrdzhpl63gdf6wy@flea.lan>
-References: <20180219081837.15482-1-mylene.josserand@bootlin.com>
- <20180219081837.15482-6-mylene.josserand@bootlin.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v2 09/16] mmc: sdhci: Add quirk to disable HW timeout
+Date: Mon, 19 Feb 2018 10:51:20 +0200
+Message-ID: <cda22332-ed17-9309-4989-19765744879b@intel.com>
+References: <20180205125029.21570-1-kishon@ti.com>
+ <20180205125029.21570-10-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5570921564877982168=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180219081837.15482-6-mylene.josserand@bootlin.com>
+In-Reply-To: <20180205125029.21570-10-kishon@ti.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,76 +19,102 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/02/18 14:50, Kishon Vijay Abraham I wrote:
+> Add quirk to disable HW timeout if the requested timeout is more than
+> the maximum obtainable timeout.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/mmc/host/sdhci.c | 12 ++++++++++++
+>  drivers/mmc/host/sdhci.h |  7 +++++++
+>  2 files changed, 19 insertions(+)
+> 
+> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> index 070aff9c108f..1aa74b4682f3 100644
+> --- a/drivers/mmc/host/sdhci.c
+> +++ b/drivers/mmc/host/sdhci.c
+> @@ -735,6 +735,12 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd)
+>  		DBG("Too large timeout 0x%x requested for CMD%d!\n",
+>  		    count, cmd->opcode);
+>  		count = 0xE;
+> +		if (host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) {
+> +			host->ier &= ~SDHCI_INT_DATA_TIMEOUT;
+> +			sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+> +			sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+> +			host->hw_timeout_disabled = true;
+> +		}
 
---===============5570921564877982168==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3wtrrwihokkagakw"
-Content-Disposition: inline
+sdhci_calc_timeout() is really for calculations so please do this in
+sdhci_set_timeout() instead (i.e. change sdhci_calc_timeout() to return
+whether the timeout is too big).  Note that you need to cater for the "/*
+Unspecified timeout, assume max */" case and the
+SDHCI_QUIRK_BROKEN_TIMEOUT_VAL case.
 
+Also if SDHCI_INT_DATA_TIMEOUT is not being disabled, check here to
+re-enable it and leave sdhci_request_done() alone. i.e.
 
---3wtrrwihokkagakw
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	else if (!(host->ier & SDHCI_INT_DATA_TIMEOUT)) {
+		host->ier |= SDHCI_INT_DATA_TIMEOUT;
+		sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+		sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+	}
 
-Hi,
+Maybe make a separate subroutine for the update:
 
-On Mon, Feb 19, 2018 at 09:18:35AM +0100, Myl=E8ne Josserand wrote:
-> +				interrupts =3D <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 135 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
-
-You should align these blocks on the first one in the array.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
-
---3wtrrwihokkagakw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqKj6cACgkQ0rTAlCFN
-r3S60w//c/kfpgsnq89Es2YlR9bEb/fuju59qDYxfA2CDHmr9hi/SnyFDq9aU2wo
-0SvMOf8oF9xuoEosEHEjDS255JOYkDeBO0umWDqDfCwnwT0bCshNRClZNtcDs4ge
-uFDV730/dHWjTqvYgoSO0jAjz8nRhvaKPf9VEZuGBxlS0i/RSfLzx4Ss+86b6APp
-yUJpQRVgCDwmb9+MHHIA6Rv3mYKjR82v64y2nfO8r3E0a6aHMfobKiK84G0zEFL1
-T3byG3Zg1Oiyox2r7hsdZ6UgJMni74WPqTMzu+RbOpgVcfH90xIt5HuMmHVEgYfc
-/THLtT92c0cuR+4JMGcSWddkFjCTaKmY2KLmM+Uvg5XRDcT+5mKhrOGsjqirw9kc
-/FdS6+GIMSumOJmZ966OhFcTbOhZqPxiKKJ9umz6VXPj15A5mtL0vgSRawjkUn0Q
-ahbbA5hD6dfYzUIPYi9YM92jbS0PepbHrMkrhvagHsz+ymVDAg3qbssupiVED+o2
-a1A7QoByjZgRlgHaehKLy3KnJdUbbzkiZAnf2nekP+tU+7cUHokeMdmeFN0mzKeX
-tGnufSIQEerMcC03nzqYd7EINBCEW6hOTOCWsua+0T7M+NcGHtS3FspMSReveL0C
-Gli2z3FB6NT87BdYy5l+pnJMq7e3yK4xFxDsrP2/I3tD0zV5omg=
-=kjdy
------END PGP SIGNATURE-----
-
---3wtrrwihokkagakw--
+void sdhci_set_data_timeout_irq(struct sdhci_host *host, bool enable)
+{
+	if (enable)
+		host->ier |= SDHCI_INT_DATA_TIMEOUT;
+	else
+		host->ier &= ~SDHCI_INT_DATA_TIMEOUT;
+	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+}
 
 
---===============5570921564877982168==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5570921564877982168==--
+>  	}
+>  
+>  	return count;
+> @@ -2349,6 +2355,12 @@ static bool sdhci_request_done(struct sdhci_host *host)
+>  	}
+>  
+>  	sdhci_del_timer(host, mrq);
+> +	if (sdhci_data_line_cmd(mrq->cmd) && host->hw_timeout_disabled) {
+> +		host->ier |= SDHCI_INT_DATA_TIMEOUT;
+> +		sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
+> +		sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
+> +		host->hw_timeout_disabled = false;
+> +	}
+>  
+>  	/*
+>  	 * Always unmap the data buffers if they were mapped by
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index afab26fd70e6..3a967a56fcc3 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -437,6 +437,11 @@ struct sdhci_host {
+>  #define SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN		(1<<15)
+>  /* Controller has CRC in 136 bit Command Response */
+>  #define SDHCI_QUIRK2_RSP_136_HAS_CRC			(1<<16)
+> +/*
+> + * Disable HW timeout if the requested timeout is more than the maximum
+> + * obtainable timeout
+> + */
+> +#define SDHCI_QUIRK2_DISABLE_HW_TIMEOUT			(1<<17)
+>  
+>  	int irq;		/* Device IRQ */
+>  	void __iomem *ioaddr;	/* Mapped address */
+> @@ -522,6 +527,8 @@ struct sdhci_host {
+>  	unsigned int            ocr_avail_mmc;
+>  	u32 ocr_mask;		/* available voltages */
+>  
+> +	bool			hw_timeout_disabled;
+> +
+>  	unsigned		timing;		/* Current timing */
+>  
+>  	u32			thread_isr;
+> 
