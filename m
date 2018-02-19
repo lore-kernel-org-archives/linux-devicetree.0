@@ -1,60 +1,55 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 4/8] drm/rockchip: dw_hdmi: Allow outputs that don't
- need output switching
-Date: Mon, 19 Feb 2018 11:43:11 +0000
-Message-ID: <f1104948-5b95-968c-edc4-7a4d5212bae0@arm.com>
-References: <20180216204158.29839-1-heiko@sntech.de>
- <20180216204158.29839-5-heiko@sntech.de>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v5 05/20] firmware: arm_scmi: add scmi protocol bus to
+ enumerate protocol devices
+Date: Mon, 19 Feb 2018 11:44:43 +0000
+Message-ID: <776fa373-f27f-b32b-6c1f-bb10f257ddc7@arm.com>
+References: <1514904162-11201-1-git-send-email-sudeep.holla@arm.com>
+ <1514904162-11201-6-git-send-email-sudeep.holla@arm.com>
+ <CAK8P3a1wBBVZnd6ns5K-HhQ28WKAwVbaWsnmE+83SyOnTQt4_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180216204158.29839-5-heiko@sntech.de>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>, hjc@rock-chips.com, architt@codeaurora.org, a.hajda@samsung.com, kishon@ti.com
-Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a1wBBVZnd6ns5K-HhQ28WKAwVbaWsnmE+83SyOnTQt4_w@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Nishanth Menon <nm@ti.com>, DTML <devicetree@vger.kernel.org>, Jassi Brar <jassisinghbrar@gmail.com>, Harb Abdulhamid <harba@codeaurora.org>, Ryan Harkin <Ryan.Harkin@arm.com>, LKML <linux-kernel@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Alexey Klimov <klimov.linux@gmail.com>, Loc Ho <lho@apm.com>, Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpPbiAxNi8wMi8xOCAyMDo0MSwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gU28g
-ZmFyIHdlIGFsd2F5cyBlbmNvdW50ZXJlZCBzb2NzIHdpdGggMiBvdXRwdXQgY3J0Y3MgbmVlZGlu
-ZyB0aGUgZHJpdmVyCj4gdG8gdGVsbCB0aGUgaGRtaSBibG9jayB3aGljaCBvdXRwdXQgdG8gY29u
-bmVjdCB0by4gQnV0IHRoZXJlIGFsc28gZXhpc3QKPiBzb2NzIHdpdGggb25seSBvbmUgY3J0YyBs
-aWtlIHRoZSByazMyMjgsIHJrMzMyOCBhbmQgcmszMzY4Lgo+IAo+IFNvIGFkYXB0IHRoZSByZWdp
-c3RlciBmaWVsZCB0byBzaW1wbHkgY2FycnkgYSBuZWdhdGl2ZSB2YWx1ZSB0byBzaWduYWwKPiB0
-aGF0IG5vdyBvdXRwdXQtc3dpdGNoaW5nIGlzIG5lY2Vzc2FyeS4KCk5pdDogcy9ub3cvbm8vID8g
-KEhvb3JheSBmb3IgZ3JhbW1hdGljYWxseS1jb3JyZWN0IHR5cG9zIHdoaWNoIGludmVydCAKdGhl
-IGVudGlyZSBtZWFuaW5nIG9mIHRoZSBzZW50ZW5jZSEpCgpXaGF0IGFyZSB0aGUgbmVjZXNzYXJ5
-IGRlcGVuZGVuY2llcyBmb3IgdGhlc2UgcGF0Y2hlcz8gSSB0cmllZCBhcHBseWluZyAKdGhlIHNl
-cmllcyBvbiA0LjE2LXJjMSB0byB0ZXN0LCBidXQgaXQgZmFpbGVkIGF0IHBhdGNoICM2IHdpdGgg
-c29tZSAKbWlzc2luZyBjb250ZXh0IChJIHRyaWVkIGNoZWNraW5nIGRybS1uZXh0IGZvciB3aGVy
-ZSByb2NrY2hpcF9oZG1pOjpoZG1pIAptaWdodCBoYXZlIGNvbWUgZnJvbSwgYnV0IGRpZG4ndCBz
-ZWUgYW55dGhpbmcgb2J2aW91cykKClRoYW5rcywKUm9iaW4uCgo+IFNpZ25lZC1vZmYtYnk6IEhl
-aWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gLS0tCj4gICBkcml2ZXJzL2dwdS9kcm0v
-cm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jIHwgNSArKysrLQo+ICAgMSBmaWxlIGNoYW5nZWQs
-IDQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jIGIvZHJpdmVycy9ncHUvZHJtL3Jv
-Y2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYwo+IGluZGV4IDM1NzRiMGFlMmFkMS4uNmRjMDNmMWE1
-NzA5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tj
-aGlwLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5j
-Cj4gQEAgLTM2LDcgKzM2LDcgQEAKPiAgICAqIEBsY2RzZWxfbGl0OiByZWcgdmFsdWUgb2Ygc2Vs
-ZWN0aW5nIHZvcCBsaXR0bGUgZm9yIEhETUkKPiAgICAqLwo+ICAgc3RydWN0IHJvY2tjaGlwX2hk
-bWlfY2hpcF9kYXRhIHsKPiAtCXUzMglsY2RzZWxfZ3JmX3JlZzsKPiArCWludAlsY2RzZWxfZ3Jm
-X3JlZzsKPiAgIAl1MzIJbGNkc2VsX2JpZzsKPiAgIAl1MzIJbGNkc2VsX2xpdDsKPiAgIH07Cj4g
-QEAgLTI1Myw2ICsyNTMsOSBAQCBzdGF0aWMgdm9pZCBkd19oZG1pX3JvY2tjaGlwX2VuY29kZXJf
-ZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKPiAgIAl1MzIgdmFsOwo+ICAgCWlu
-dCByZXQ7Cj4gICAKPiArCWlmIChoZG1pLT5jaGlwX2RhdGEtPmxjZHNlbF9ncmZfcmVnIDwgMCkK
-PiArCQlyZXR1cm47Cj4gKwo+ICAgCXJldCA9IGRybV9vZl9lbmNvZGVyX2FjdGl2ZV9lbmRwb2lu
-dF9pZChoZG1pLT5kZXYtPm9mX25vZGUsIGVuY29kZXIpOwo+ICAgCWlmIChyZXQpCj4gICAJCXZh
-bCA9IGhkbWktPmNoaXBfZGF0YS0+bGNkc2VsX2xpdDsKPiAKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+On 19/02/18 11:35, Arnd Bergmann wrote:
+> On Tue, Jan 2, 2018 at 3:42 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> 
+>> +#ifdef CONFIG_ARM_SCMI_PROTOCOL
+>> +int scmi_driver_register(struct scmi_driver *driver,
+>> +                        struct module *owner, const char *mod_name);
+>> +void scmi_driver_unregister(struct scmi_driver *driver);
+>> +#else
+>> +static int scmi_driver_register(struct scmi_driver *driver,
+>> +                               struct module *owner, const char *mod_name)
+>> +{
+>> +       return -EINVAL;
+>> +}
+>> +static void scmi_driver_unregister(struct scmi_driver *driver) {}
+>> +#endif /* CONFIG_ARM_SCMI_PROTOCOL */
+> 
+> The dummy helpers must be 'static inline', not just 'static', otherwise you
+> get a warning when this header is included by a file that doesn't call
+> both of them.
+> 
+
+Thanks, fixed locally now.
+
+-- 
+Regards,
+Sudeep
