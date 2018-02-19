@@ -1,18 +1,15 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 2/6] mfd: Add ST Multi-Function eXpander core driver
-Date: Mon, 19 Feb 2018 16:00:48 +0000
-Message-ID: <889cec8c-5a3a-ffc5-e6fa-aa388485e601@st.com>
-References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
- <1518100057-23234-3-git-send-email-amelie.delaunay@st.com>
- <20180212120600.5cghrzz4jqvvkgz6@dell>
- <CAOFm3uH+DLcOqiSV0z0N6JnmSk+JfTF3bfkC0_2kdFT-eDMr8A@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v4 3/4] arm64: dts: sdm845: Add minimal dts/dtsi files
+ for sdm845 SoC and MTP
+Date: Mon, 19 Feb 2018 16:36:51 +0000
+Message-ID: <20180219163651.66936056@why.wild-wind.fr.eu.org>
+References: <20180216060503.22006-1-rnayak@codeaurora.org>
+ <20180216060503.22006-4-rnayak@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOFm3uH+DLcOqiSV0z0N6JnmSk+JfTF3bfkC0_2kdFT-eDMr8A@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <7693714657D62040ADFB3C50F73EB2A2@st.com>
+In-Reply-To: <20180216060503.22006-4-rnayak@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,71 +19,321 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philippe Ombredanne <pombredanne@nexb.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, dianders@chromium.org, evgreen@chromium.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Philippe,
+On Fri, 16 Feb 2018 11:35:02 +0530
+Rajendra Nayak <rnayak@codeaurora.org> wrote:
 
-I will take this into account for V2.
+> Add a skeletal sdm845 SoC dtsi and MTP board dts/dtsi files
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile       |   1 +
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  15 ++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 277 ++++++++++++++++++++++++++++++++
+>  3 files changed, 293 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
+> 
 
-Regards,
-Amelie
+[...]
 
-On 02/12/2018 03:15 PM, Philippe Ombredanne wrote:
-> Amelie,
-> 
-> On Mon, Feb 12, 2018 at 1:06 PM, Lee Jones <lee.jones@linaro.org> wrote:
->> On Thu, 08 Feb 2018, Amelie Delaunay wrote:
->>
->>> ST Multi-Function eXpander (MFX) is a slave controller using I2C
->>> for communication with the main MCU. Main features are:
->>> - 16 fast GPIOs individually configurable in input/output
->>> - 8 alternate GPIOs individually configurable in input/output
->>> - Main MCU IDD measurement
->>> - Resistive touchscreen controller
->>>
->>> Only GPIO expander (16 fast GPIOs + 8 alternate) feature is
->>> supported for the moment.
->>>
->>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> 
-> <snip>
-> 
->>> --- /dev/null
->>> +++ b/drivers/mfd/st-mfx.c
->>> @@ -0,0 +1,526 @@
->>> +/*
->>> + * STMicroelectronics Multi-Function eXpander (ST-MFX) Core Driver
->>> + *
->>> + * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
->>> + * Author(s): Amelie Delaunay <amelie.delaunay@st.com> for STMicroelectronics.
->>
->> You don't need to put "for STMicroelectronics".  This was something we
->> made up when submitting from a different (!st.com) email address.
->>
->>> + * License terms: GPL V2.0.
->>> + *
->>> + * st-mfx Core Driver is free software; you can redistribute it and/or modify it
->>> + * under the terms of the GNU General Public License version 2 as published by
->>> + * the Free Software Foundation.
->>> + *
->>> + * st-mfx Core Driver is distributed in the hope that it will be useful, but
->>> + * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->>> + * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
->>> + * details.
->>> + *
->>> + * You should have received a copy of the GNU General Public License along with
->>> + * st-mfx Core Driver. If not, see <http://www.gnu.org/licenses/>.
->>
->> You should be able to use the short version of the licensing
->> agreement.  Also, please grep for "SPDX".
-> 
-> You can check the doc for the (fairly new) way to remove legalese
-> boilerplate at Documentation/process/license-rules.rst or [1]
-> It helps keep the focus on the code and less on licensing!
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/license-rules.rst
-> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> new file mode 100644
+> index 000000000000..c46e726af621
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -0,0 +1,277 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * SDM845 SoC device tree source
+> + *
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	interrupt-parent = <&intc>;
+> +
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	chosen { };
+> +
+> +	memory@80000000 {
+> +		device_type = "memory";
+> +		/* We expect the bootloader to fill in the size */
+> +		reg = <0 0x80000000 0 0>;
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		CPU0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_0>;
+> +			L2_0: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +				L3_0: l3-cache {
+> +				      compatible = "cache";
+> +				};
+> +			};
+> +		};
+> +
+> +		CPU1: cpu@100 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x100>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_100>;
+> +			L2_100: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU2: cpu@200 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x200>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_200>;
+> +			L2_200: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU3: cpu@300 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x300>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_300>;
+> +			L2_300: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU4: cpu@400 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x400>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_400>;
+> +			L2_400: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU5: cpu@500 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x500>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_500>;
+> +			L2_500: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU6: cpu@600 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x600>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_600>;
+> +			L2_600: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +
+> +		CPU7: cpu@700 {
+> +			device_type = "cpu";
+> +			compatible = "qcom,kryo385";
+> +			reg = <0x0 0x700>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&L2_700>;
+> +			L2_700: l2-cache {
+> +				compatible = "cache";
+> +				next-level-cache = <&L3_0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	clocks {
+> +		xo_board: xo-board {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <19200000>;
+> +		};
+> +
+> +		sleep_clk: sleep-clk {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <32764>;
+> +		};
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	soc: soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0 0xffffffff>;
+> +		compatible = "simple-bus";
+> +
+> +		intc: interrupt-controller@17a00000 {
+> +			compatible = "arm,gic-v3";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			#interrupt-cells = <3>;
+> +			interrupt-controller;
+> +			#redistributor-regions = <1>;
+> +			redistributor-stride = <0x0 0x20000>;
+> +			reg = <0x17a00000 0x10000>,     /* GICD */
+> +			      <0x17a60000 0x100000>;    /* GICR * 8 */
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +			gic-its@17a40000 {
+> +				compatible = "arm,gic-v3-its";
+> +				msi-controller;
+> +				#msi-cells = <1>;
+> +				reg = <0x17a40000 0x20000>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gcc: clock-controller@100000 {
+> +			compatible = "qcom,gcc-sdm845";
+> +			reg = <0x100000 0x1f0000>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +		};
+> +
+> +		tlmm: pinctrl@3400000 {
+> +			compatible = "qcom,sdm845-pinctrl";
+> +			reg = <0x03400000 0xc00000>;
+> +			interrupts = <GIC_SPI 208 IRQ_TYPE_NONE>;
+
+Please do not use IRQ_TYPE_NONE, ever. It doesn't exist in the GIC
+binding. Set it to the actual trigger value.
+
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +
+> +		timer@17c90000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			compatible = "arm,armv7-timer-mem";
+> +			reg = <0x17c90000 0x1000>;
+> +
+> +			frame@17ca0000 {
+> +				frame-number = <0>;
+> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17ca0000 0x1000>,
+> +				      <0x17cb0000 0x1000>;
+> +			};
+> +
+> +			frame@17cc0000 {
+> +				frame-number = <1>;
+> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17cc0000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17cd0000 {
+> +				frame-number = <2>;
+> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17cd0000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17ce0000 {
+> +				frame-number = <3>;
+> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17ce0000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17cf0000 {
+> +				frame-number = <4>;
+> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17cf0000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17d00000 {
+> +				frame-number = <5>;
+> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17d00000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +
+> +			frame@17d10000 {
+> +				frame-number = <6>;
+> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> +				reg = <0x17d10000 0x1000>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		spmi_bus: spmi@c440000 {
+> +			compatible = "qcom,spmi-pmic-arb";
+> +			reg = <0xc440000 0x1100>,
+> +			      <0xc600000 0x2000000>,
+> +			      <0xe600000 0x100000>,
+> +			      <0xe700000 0xa0000>,
+> +			      <0xc40a000 0x26000>;
+> +			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
+> +			interrupt-names = "periph_irq";
+> +			interrupts = <GIC_SPI 481 IRQ_TYPE_NONE>;
+
+Same here.
+
+> +			qcom,ee = <0>;
+> +			qcom,channel = <0>;
+> +			#address-cells = <2>;
+> +			#size-cells = <0>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <4>;
+> +			cell-index = <0>;
+> +		};
+> +	};
+> +};
+
+Thanks,
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
