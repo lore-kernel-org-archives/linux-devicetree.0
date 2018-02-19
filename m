@@ -1,14 +1,14 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 3/5] arm64: dts: renesas: r8a77980: add EtherAVB support
-Date: Mon, 19 Feb 2018 09:35:35 +0100
-Message-ID: <CAMuHMdVZ6WW+cmpzZ689zcq6muvk03PbQQ8p=vrCP-Dhs7orrA@mail.gmail.com>
-References: <ae31804b-969b-9b20-16d0-50f5dea42f08@cogentembedded.com>
- <e857aaca-0328-2bd2-5bbf-b6badb5a4b1e@cogentembedded.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH v2 2/3] ARM: dts: stm32: add USB OTG FS support for STM32H743
+ SoC
+Date: Mon, 19 Feb 2018 09:46:27 +0100
+Message-ID: <1519029988-9261-3-git-send-email-amelie.delaunay@st.com>
+References: <1519029988-9261-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e857aaca-0328-2bd2-5bbf-b6badb5a4b1e@cogentembedded.com>
+In-Reply-To: <1519029988-9261-1-git-send-email-amelie.delaunay@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,28 +18,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
+Cc: devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 16, 2018 at 7:32 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Define the generic R8A77980 part of the EtherAVB device node.
->
-> Based on the original (and large) patch by Vladimir Barinov.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+This patch adds support for USB OTG FS on STM32H743 SoC.
+USB OTG FS controller is the same than the one used on STM32F4 SoCs.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ arch/arm/boot/dts/stm32h743.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+index 0f6c078..68fc12f 100644
+--- a/arch/arm/boot/dts/stm32h743.dtsi
++++ b/arch/arm/boot/dts/stm32h743.dtsi
+@@ -229,6 +229,15 @@
+ 			status = "disabled";
+ 		};
+ 
++		usbotg_fs: usb@40080000 {
++			compatible = "st,stm32f4x9-fsotg";
++			reg = <0x40080000 0x40000>;
++			interrupts = <101>;
++			clocks = <&rcc USB2OTG_CK>;
++			clock-names = "otg";
++			status = "disabled";
++		};
++
+ 		mdma1: dma@52000000 {
+ 			compatible = "st,stm32h7-mdma";
+ 			reg = <0x52000000 0x1000>;
+-- 
+2.7.4
