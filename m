@@ -1,163 +1,72 @@
-Return-Path: <SRS0=hmuH=FO=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 18/19] pinctrl: sh-pfc: r8a77965: Add EtherAVB groups/functions
-Date: Tue, 20 Feb 2018 16:12:20 +0100
-Message-Id: <1519139541-18783-19-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
-To: geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <robherring2@gmail.com>
+Date: Sun, 18 Feb 2018 18:04:21 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC 2/3] usb: chipidea: Hook into mux framework to toggle usb
+ switch
+Message-ID: <20180219000421.gzlpomgkfbwumlki@rob-hp-laptop>
+References: <1518351341-6740-1-git-send-email-yossim@codeaurora.org>
+ <1518351341-6740-2-git-send-email-yossim@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1518351341-6740-2-git-send-email-yossim@codeaurora.org>
+To: Yossi Mansharoff <yossim@codeaurora.org>
+Cc: rfried@codeaurora.org, Peter Rosin <peda@axentia.se>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add EtherAVB groups and functions definitions for R-Car M3-N.
+On Sun, Feb 11, 2018 at 02:15:40PM +0200, Yossi Mansharoff wrote:
+> On the db410c 96boards platform we have a TC7USB40MU on the board
+> to mux the D+/D- lines coming from the controller between a micro
+> usb "device" port and a USB hub for "host" roles[1]. During a
+> role switch, we need to toggle this mux to forward the D+/D-
+> lines to either the port or the hub. Add the necessary code to do
+> the role switch in chipidea core via the generic mux framework.
+> Board configurations like on db410c are expected to change roles
+> via the sysfs API described in
+> Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
+> 
+> [1] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+> 
+> Cc: Peter Rosin <peda@axentia.se>
+> Cc: Peter Chen <peter.chen@nxp.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> 
+> Signed-off-by: Yossi Mansharoff <yossim@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt |  6 ++++++
+>  drivers/usb/chipidea/Kconfig                           |  2 ++
+>  drivers/usb/chipidea/core.c                            |  6 ++++++
+>  drivers/usb/chipidea/host.c                            |  7 +++++++
+>  drivers/usb/chipidea/udc.c                             | 13 ++++++++++++-
+>  include/linux/usb/chipidea.h                           |  2 ++
+>  6 files changed, 35 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> index 0e03344..2e93181 100644
+> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> @@ -76,6 +76,10 @@ Optional properties:
+>    needs to make sure it does not send more than 90%
+>    maximum_periodic_data_per_frame. The use case is multiple transactions, but
+>    less frame rate.
+> +- mux-controls: The mux control for toggling host/device output of this
+> +  controller. It's expected that a mux state of 0 indicates device mode and a
+> +  mux state of 1 indicates host mode.
+> +- mux-control-names: Shall be "usb_switch" if mux-controls is specified.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/pinctrl/sh-pfc/pfc-r8a77965.c | 110 ++++++++++++++++++++++++++++++++++
- 1 file changed, 110 insertions(+)
+Kind of pointless to have -names when there is only one.
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-index 43ffd63..7b9fea9 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77965.c
-@@ -1571,6 +1571,92 @@ static const struct sh_pfc_pin pinmux_pins[] = {
- 	SH_PFC_PIN_NAMED_CFG(ROW_GROUP_A('T'), 30, ASEBRK, CFG_FLAGS),
- };
- 
-+/* - EtherAVB --------------------------------------------------------------- */
-+static const unsigned int avb_link_pins[] = {
-+	/* AVB_LINK */
-+	RCAR_GP_PIN(2, 12),
-+};
-+static const unsigned int avb_link_mux[] = {
-+	AVB_LINK_MARK,
-+};
-+static const unsigned int avb_magic_pins[] = {
-+	/* AVB_MAGIC_ */
-+	RCAR_GP_PIN(2, 10),
-+};
-+static const unsigned int avb_magic_mux[] = {
-+	AVB_MAGIC_MARK,
-+};
-+static const unsigned int avb_phy_int_pins[] = {
-+	/* AVB_PHY_INT */
-+	RCAR_GP_PIN(2, 11),
-+};
-+static const unsigned int avb_phy_int_mux[] = {
-+	AVB_PHY_INT_MARK,
-+};
-+static const unsigned int avb_mdc_pins[] = {
-+	/* AVB_MDC, AVB_MDIO */
-+	RCAR_GP_PIN(2, 9), PIN_NUMBER('A', 9),
-+};
-+static const unsigned int avb_mdc_mux[] = {
-+	AVB_MDC_MARK, AVB_MDIO_MARK,
-+};
-+static const unsigned int avb_mii_pins[] = {
-+	/*
-+	 * AVB_TX_CTL, AVB_TXC, AVB_TD0,
-+	 * AVB_TD1, AVB_TD2, AVB_TD3,
-+	 * AVB_RX_CTL, AVB_RXC, AVB_RD0,
-+	 * AVB_RD1, AVB_RD2, AVB_RD3,
-+	 * AVB_TXCREFCLK
-+	 */
-+	PIN_NUMBER('A', 8), PIN_NUMBER('A', 19), PIN_NUMBER('A', 18),
-+	PIN_NUMBER('B', 18), PIN_NUMBER('A', 17), PIN_NUMBER('B', 17),
-+	PIN_NUMBER('A', 16), PIN_NUMBER('B', 19), PIN_NUMBER('A', 13),
-+	PIN_NUMBER('B', 13), PIN_NUMBER('A', 14), PIN_NUMBER('B', 14),
-+	PIN_NUMBER('A', 12),
-+
-+};
-+static const unsigned int avb_mii_mux[] = {
-+	AVB_TX_CTL_MARK, AVB_TXC_MARK, AVB_TD0_MARK,
-+	AVB_TD1_MARK, AVB_TD2_MARK, AVB_TD3_MARK,
-+	AVB_RX_CTL_MARK, AVB_RXC_MARK, AVB_RD0_MARK,
-+	AVB_RD1_MARK, AVB_RD2_MARK, AVB_RD3_MARK,
-+	AVB_TXCREFCLK_MARK,
-+};
-+static const unsigned int avb_avtp_pps_pins[] = {
-+	/* AVB_AVTP_PPS */
-+	RCAR_GP_PIN(2, 6),
-+};
-+static const unsigned int avb_avtp_pps_mux[] = {
-+	AVB_AVTP_PPS_MARK,
-+};
-+static const unsigned int avb_avtp_match_a_pins[] = {
-+	/* AVB_AVTP_MATCH_A */
-+	RCAR_GP_PIN(2, 13),
-+};
-+static const unsigned int avb_avtp_match_a_mux[] = {
-+	AVB_AVTP_MATCH_A_MARK,
-+};
-+static const unsigned int avb_avtp_capture_a_pins[] = {
-+	/* AVB_AVTP_CAPTURE_A */
-+	RCAR_GP_PIN(2, 14),
-+};
-+static const unsigned int avb_avtp_capture_a_mux[] = {
-+	AVB_AVTP_CAPTURE_A_MARK,
-+};
-+static const unsigned int avb_avtp_match_b_pins[] = {
-+	/*  AVB_AVTP_MATCH_B */
-+	RCAR_GP_PIN(1, 8),
-+};
-+static const unsigned int avb_avtp_match_b_mux[] = {
-+	AVB_AVTP_MATCH_B_MARK,
-+};
-+static const unsigned int avb_avtp_capture_b_pins[] = {
-+	/* AVB_AVTP_CAPTURE_B */
-+	RCAR_GP_PIN(1, 11),
-+};
-+static const unsigned int avb_avtp_capture_b_mux[] = {
-+	AVB_AVTP_CAPTURE_B_MARK,
-+};
- /* - SCIF0 ------------------------------------------------------------------ */
- static const unsigned int scif0_data_pins[] = {
- 	/* RX, TX */
-@@ -1783,6 +1869,16 @@ static const unsigned int scif_clk_b_mux[] = {
- };
- 
- static const struct sh_pfc_pin_group pinmux_groups[] = {
-+	SH_PFC_PIN_GROUP(avb_link),
-+	SH_PFC_PIN_GROUP(avb_magic),
-+	SH_PFC_PIN_GROUP(avb_phy_int),
-+	SH_PFC_PIN_GROUP(avb_mdc),
-+	SH_PFC_PIN_GROUP(avb_mii),
-+	SH_PFC_PIN_GROUP(avb_avtp_pps),
-+	SH_PFC_PIN_GROUP(avb_avtp_match_a),
-+	SH_PFC_PIN_GROUP(avb_avtp_capture_a),
-+	SH_PFC_PIN_GROUP(avb_avtp_match_b),
-+	SH_PFC_PIN_GROUP(avb_avtp_capture_b),
- 	SH_PFC_PIN_GROUP(scif0_data),
- 	SH_PFC_PIN_GROUP(scif0_clk),
- 	SH_PFC_PIN_GROUP(scif0_ctrl),
-@@ -1814,6 +1910,19 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
- 	SH_PFC_PIN_GROUP(scif_clk_b),
- };
- 
-+static const char * const avb_groups[] = {
-+	"avb_link",
-+	"avb_magic",
-+	"avb_phy_int",
-+	"avb_mdc",
-+	"avb_mii",
-+	"avb_avtp_pps",
-+	"avb_avtp_match_a",
-+	"avb_avtp_capture_a",
-+	"avb_avtp_match_b",
-+	"avb_avtp_capture_b",
-+};
-+
- static const char * const scif0_groups[] = {
- 	"scif0_data",
- 	"scif0_clk",
-@@ -1864,6 +1973,7 @@ static const char * const scif_clk_groups[] = {
- };
- 
- static const struct sh_pfc_function pinmux_functions[] = {
-+	SH_PFC_FUNCTION(avb),
- 	SH_PFC_FUNCTION(scif0),
- 	SH_PFC_FUNCTION(scif1),
- 	SH_PFC_FUNCTION(scif2),
--- 
-2.7.4
+Otherwise, the binding looks okay to me.
+
+>  
+>  i.mx specific properties
+>  - fsl,usbmisc: phandler of non-core register device, with one
+> @@ -102,4 +106,6 @@ Example:
+>  		rx-burst-size-dword = <0x10>;
+>  		extcon = <0>, <&usb_id>;
+>  		phy-clkgate-delay-us = <400>;
+> +		mux-controls = <&usb_switch>;
+> +		mux-control-names = "usb_switch";
+>  	};
