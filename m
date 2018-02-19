@@ -1,11 +1,16 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCH] ARM: dts: imx6dl: remove 'lcdif' node
-Date: Mon, 19 Feb 2018 11:47:05 +0100
-Message-ID: <1519037225-22872-1-git-send-email-LW@KARO-electronics.de>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 0/7] ARM: davinci: add genpd support
+Date: Mon, 19 Feb 2018 11:49:07 +0100
+Message-ID: <CAMpxmJXc6Fr+JhN8WxXGAYRzkk9+u+cCkHGtsXAT-3ikw408rg@mail.gmail.com>
+References: <20180207134553.13510-1-brgl@bgdev.pl>
+ <4dbc57ec-3506-eb1d-e00d-adfe75c3b39b@lechnology.com>
+ <a736d727-5805-94ea-3e40-34fc4a6267ef@ti.com>
+ <79a981ae-881f-b358-629c-0b64e48f192d@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <79a981ae-881f-b358-629c-0b64e48f192d@lechnology.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,25 +20,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "moderated list:ARM/FREESCALE IMX / MXC
- ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE
- BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-QWNjb3JkaW5nIHRvIHRoZSAiaS5NWCA2U29sby82RHVhbExpdGUgQXBwbGljYXRpb25zIFByb2Nl
-c3NvcgpSZWZlcmVuY2UgTWFudWFsIiBSZXYuIDMsIDA5LzIwMTcgdGhlcmUgaXMgbm8gTENESUYg
-dW5pdCBvbiB0aGUKaS5NWDZETC4KClNpZ25lZC1vZmYtYnk6IExvdGhhciBXYcOfbWFubiA8TFdA
-S0FSTy1lbGVjdHJvbmljcy5kZT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9pbXg2ZGwuZHRzaSB8
-IDUgLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA1IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZkbC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLmR0
-c2kKaW5kZXggYzAxNjc0Zi4uZDljNTAyYSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
-aW14NmRsLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLmR0c2kKQEAgLTgwLDEx
-ICs4MCw2IEBACiAJCQkJcmVnID0gPDB4MDIwZjQwMDAgMHg0MDAwPjsKIAkJCQlpbnRlcnJ1cHRz
-ID0gPDAgOTcgSVJRX1RZUEVfTEVWRUxfSElHSD47CiAJCQl9OwotCi0JCQlsY2RpZjogbGNkaWZA
-MjBmODAwMCB7Ci0JCQkJcmVnID0gPDB4MDIwZjgwMDAgMHg0MDAwPjsKLQkJCQlpbnRlcnJ1cHRz
-ID0gPDAgMzkgSVJRX1RZUEVfTEVWRUxfSElHSD47Ci0JCQl9OwogCQl9OwogCiAJCWFpcHMyOiBh
-aXBzLWJ1c0AyMTAwMDAwIHsKLS0gCjIuMS40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+2018-02-18 4:41 GMT+01:00 David Lechner <david@lechnology.com>:
+> On 02/09/2018 06:42 AM, Sekhar Nori wrote:
+>>
+>> Hi David,
+>>
+>> On Thursday 08 February 2018 04:13 AM, David Lechner wrote:
+>>>
+>>> On 02/07/2018 07:45 AM, Bartosz Golaszewski wrote:
+>>>>
+>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>
+>>>> Hi Sekhar et al,
+>>>>
+>>>> please take a look at the following patches. They add a simple genpd
+>>>> driver and use it in DT mode on da850 boards.
+>>>>
+>>>> I was trying to use genpd in legacy mode too, but couldn't find neither
+>>>> any interfaces nor users that would do that. For now I added a check in
+>>>> arch/arm/mach-davinci/pm_domain.c that disables the clock pm setup if
+>>>> we're using genpd.
+>>>>
+>>>> This series applies on top of and has been tested with David Lechner's
+>>>> for-bartosz branch. It fixes the clock look-up issues we faced with
+>>>> lcdc and emac.
+>>>
+>>>
+>>> I'm starting to think that it makes more sense to just make the PSC
+>>> driver
+>>> a power-domain and reset provider rather than a clock provider. It is
+>>> unfortunate that genpd is DT only.
+>>
+>>
+>> This will mean that the only way to enable clocks on DaVinci is to use
+>> pm_runtime() calls. We do still have drivers which depend on clk api for
+>> enabling clocks, so I am not sure its feasible just yet.
+>>
+>> I think a question like this can arise for any gate clock.
+>>
+>
+> I've incorporated parts of this series into my v7 work in progress
+> using the suggestions I made about using the existing PSC device
+> as the power domain provider.
+>
+
+FYI I had added the power domain functionality to the v6 PSC driver
+here: https://github.com/brgl/linux/commits/topic/davinci-genpd-final-v2
+
+Thanks,
+Bartosz
