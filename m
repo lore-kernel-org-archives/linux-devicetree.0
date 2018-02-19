@@ -1,16 +1,15 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 2/7] watchdog: sunxi: allow setting timeout in
- devicetree
-Date: Mon, 19 Feb 2018 11:01:19 +0800
-Message-ID: <CAGb2v67ei8atFKyiFXA=EZ_wPbjBt+-2e-aSRqSzS9zaxHaTKg@mail.gmail.com>
-References: <20180211200847.25000-1-marcus.folkesson@gmail.com>
- <20180211200847.25000-2-marcus.folkesson@gmail.com>
- <20180219000619.4pjftflhcew5zav6@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 2/5] dt-bindings: scsi: ufs: add document for hisi-ufs
+Date: Sun, 18 Feb 2018 21:03:09 -0600
+Message-ID: <20180219030309.vcunedttrszwmidk@rob-hp-laptop>
+References: <20180213101412.5717-1-liwei213@huawei.com>
+ <20180213101412.5717-3-liwei213@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180219000619.4pjftflhcew5zav6@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20180213101412.5717-3-liwei213@huawei.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,26 +19,17 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Marcus Folkesson <marcus.folkesson@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, "moderated list:ARM/Mediatek SoC..." <linux-mediatek@lists.infradead.org>, Barry Song <baohua@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>, Matthias Brugger <matthias.bgg@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Guenter Roeck <linux@roeck-us.net>
+To: Li Wei <liwei213@huawei.com>
+Cc: mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, eric@anholt.net, krzk@kernel.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, linux-scsi@vger.kernel.org, khilman@baylibre.com, zangleigang@hisilicon.com, xuwei5@hisilicon.com, zhangfei.gao@linaro.org, treding@nvidia.com, devicetree@vger.kernel.org, arnd@arndb.de, fengbaopeng@hisilicon.com, gregory.clement@free-electrons.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, guodong.xu@linaro.org, martin.petersen@oracle.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, linux-kernel@vger.kernel.org, gengjianfeng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 19, 2018 at 8:06 AM, Rob Herring <robh@kernel.org> wrote:
-> On Sun, Feb 11, 2018 at 09:08:42PM +0100, Marcus Folkesson wrote:
->> watchdog_init_timeout() will allways pick timeout_param since it
->> defaults to a valid timeout.
->>
->> By following best practice described in
->> Documentation/watchdog/watchdog-kernel-api.txt, it also
->> let us to set timout-sec property in devicetree.
->>
->> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->> ---
->>  Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt | 4 ++++
->>  drivers/watchdog/sunxi_wdt.c                             | 2 +-
->>  2 files changed, 5 insertions(+), 1 deletion(-)
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue, Feb 13, 2018 at 06:14:09PM +0800, Li Wei wrote:
+> add ufs node document for Hisilicon.
+> 
+> Signed-off-by: Li Wei <liwei213@huawei.com>
+> ---
+>  Documentation/devicetree/bindings/ufs/ufs-hisi.txt | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ufs/ufs-hisi.txt
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
