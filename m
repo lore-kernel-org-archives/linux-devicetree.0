@@ -1,164 +1,91 @@
-Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v3 15/15] memory: tegra: Add Tegra20 memory controller hot resets
-Date: Tue, 20 Feb 2018 19:36:32 +0300
-Message-Id: <c828837ae96880e031f22bed1b416b3f4f8310aa.1519141896.git.digetx@gmail.com>
-In-Reply-To: <c8edcd52ec69afcca6007d8c2a1045aae7333bb4.1519141896.git.digetx@gmail.com>
-References: <c8edcd52ec69afcca6007d8c2a1045aae7333bb4.1519141896.git.digetx@gmail.com>
-In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
-References: <cover.1519141896.git.digetx@gmail.com>
-To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.free-electrons.com ([62.4.15.54]:49698 "EHLO
+        mail.free-electrons.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932116AbeBSWUv (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 19 Feb 2018 17:20:51 -0500
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 2/2] arm64: dts: marvell: use reworked NAND controller driver on Armada 8K
+Date: Mon, 19 Feb 2018 23:20:45 +0100
+Message-Id: <20180219222045.1927-3-miquel.raynal@bootlin.com>
+In-Reply-To: <20180219222045.1927-1-miquel.raynal@bootlin.com>
+References: <20180219222045.1927-1-miquel.raynal@bootlin.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Define the table of memory controller hot resets for Tegra20 and add
-specific to Tegra20 hot reset operations.
+Use the new bindings of the reworked Marvell NAND controller driver.
+Also adapt the nand controller node organization to distinguish which
+property is relevant for the controller, and which one is NAND chip
+specific. Expose the partitions as a subnode of the NAND chip.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Remove the 'marvell,nand-enable-arbiter' property, not needed anymore as
+the driver activates the arbiter by default for all boards (either
+needed or harmless).
+
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/memory/tegra/tegra20.c | 118 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+ arch/arm64/boot/dts/marvell/armada-8040-db.dts | 44 +++++++++++++++-----------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/memory/tegra/tegra20.c b/drivers/memory/tegra/tegra20.c
-index 512a3418cb80..c7add1ef01ed 100644
---- a/drivers/memory/tegra/tegra20.c
-+++ b/drivers/memory/tegra/tegra20.c
-@@ -6,6 +6,8 @@
-  * published by the Free Software Foundation.
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-db.dts b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+index dba55baff20f..fecd455ca047 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-db.dts
+@@ -279,27 +279,35 @@
+  * Proper NAND usage will require DPR-76 to be in position 1-2, which disables
+  * MDIO signal of CP1.
   */
+-&cp1_nand {
+-	num-cs = <1>;
++&cp1_nand_controller {
+ 	pinctrl-0 = <&nand_pins>, <&nand_rb>;
+ 	pinctrl-names = "default";
+-	nand-ecc-strength = <4>;
+-	nand-ecc-step-size = <512>;
+-	marvell,nand-enable-arbiter;
+-	marvell,system-controller = <&cp1_syscon0>;
+-	nand-on-flash-bbt;
  
-+#include <dt-bindings/memory/tegra20-mc.h>
+-	partition@0 {
+-		label = "U-Boot";
+-		reg = <0 0x200000>;
+-	};
+-	partition@200000 {
+-		label = "Linux";
+-		reg = <0x200000 0xe00000>;
+-	};
+-	partition@1000000 {
+-		label = "Filesystem";
+-		reg = <0x1000000 0x3f000000>;
++	nand@0 {
++		reg = <0>;
++		nand-rb = <0>;
++		nand-on-flash-bbt;
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
 +
- #include "mc.h"
- 
- static const struct tegra_mc_client tegra20_mc_clients[] = {
-@@ -168,6 +170,119 @@ static const struct tegra_mc_client tegra20_mc_clients[] = {
- 	},
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "U-Boot";
++				reg = <0 0x200000>;
++			};
++			partition@200000 {
++				label = "Linux";
++				reg = <0x200000 0xe00000>;
++			};
++			partition@1000000 {
++				label = "Filesystem";
++				reg = <0x1000000 0x3f000000>;
++			};
++		};
+ 	};
  };
  
-+#define TEGRA20_MC_RESET(_name, _control, _status, _reset, _bit)	\
-+	{								\
-+		.name = #_name,						\
-+		.id = TEGRA20_MC_RESET_##_name,				\
-+		.control = _control,					\
-+		.status = _status,					\
-+		.reset = _reset,					\
-+		.bit = _bit,						\
-+	}
-+
-+static const struct tegra_mc_reset tegra20_mc_resets[] = {
-+	TEGRA20_MC_RESET(AVPC,   0x100, 0x140, 0x104,  0),
-+	TEGRA20_MC_RESET(DC,     0x100, 0x144, 0x104,  1),
-+	TEGRA20_MC_RESET(DCB,    0x100, 0x148, 0x104,  2),
-+	TEGRA20_MC_RESET(EPP,    0x100, 0x14c, 0x104,  3),
-+	TEGRA20_MC_RESET(2D,     0x100, 0x150, 0x104,  4),
-+	TEGRA20_MC_RESET(HC,     0x100, 0x154, 0x104,  5),
-+	TEGRA20_MC_RESET(ISP,    0x100, 0x158, 0x104,  6),
-+	TEGRA20_MC_RESET(MPCORE, 0x100, 0x15c, 0x104,  7),
-+	TEGRA20_MC_RESET(MPEA,   0x100, 0x160, 0x104,  8),
-+	TEGRA20_MC_RESET(MPEB,   0x100, 0x164, 0x104,  9),
-+	TEGRA20_MC_RESET(MPEC,   0x100, 0x168, 0x104, 10),
-+	TEGRA20_MC_RESET(3D,     0x100, 0x16c, 0x104, 11),
-+	TEGRA20_MC_RESET(PPCS,   0x100, 0x170, 0x104, 12),
-+	TEGRA20_MC_RESET(VDE,    0x100, 0x174, 0x104, 13),
-+	TEGRA20_MC_RESET(VI,     0x100, 0x178, 0x104, 14),
-+};
-+
-+static int terga20_mc_hotreset_assert(struct tegra_mc *mc,
-+				      const struct tegra_mc_reset *rst)
-+{
-+	unsigned long flags;
-+	u32 value;
-+
-+	spin_lock_irqsave(&mc->lock, flags);
-+
-+	value = mc_readl(mc, rst->reset);
-+	mc_writel(mc, value & ~BIT(rst->bit), rst->reset);
-+
-+	spin_unlock_irqrestore(&mc->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int terga20_mc_hotreset_deassert(struct tegra_mc *mc,
-+					const struct tegra_mc_reset *rst)
-+{
-+	unsigned long flags;
-+	u32 value;
-+
-+	spin_lock_irqsave(&mc->lock, flags);
-+
-+	value = mc_readl(mc, rst->reset);
-+	mc_writel(mc, value | BIT(rst->bit), rst->reset);
-+
-+	spin_unlock_irqrestore(&mc->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int terga20_mc_block_dma(struct tegra_mc *mc,
-+				const struct tegra_mc_reset *rst)
-+{
-+	unsigned long flags;
-+	u32 value;
-+
-+	spin_lock_irqsave(&mc->lock, flags);
-+
-+	value = mc_readl(mc, rst->control) & ~BIT(rst->bit);
-+	mc_writel(mc, value, rst->control);
-+
-+	spin_unlock_irqrestore(&mc->lock, flags);
-+
-+	return 0;
-+}
-+
-+static bool terga20_mc_dma_idling(struct tegra_mc *mc,
-+				  const struct tegra_mc_reset *rst)
-+{
-+	return mc_readl(mc, rst->status) == 0;
-+}
-+
-+static int terga20_mc_reset_status(struct tegra_mc *mc,
-+				   const struct tegra_mc_reset *rst)
-+{
-+	return (mc_readl(mc, rst->reset) & BIT(rst->bit)) == 0;
-+}
-+
-+static int terga20_mc_unblock_dma(struct tegra_mc *mc,
-+				  const struct tegra_mc_reset *rst)
-+{
-+	unsigned long flags;
-+	u32 value;
-+
-+	spin_lock_irqsave(&mc->lock, flags);
-+
-+	value = mc_readl(mc, rst->control) | BIT(rst->bit);
-+	mc_writel(mc, value, rst->control);
-+
-+	spin_unlock_irqrestore(&mc->lock, flags);
-+
-+	return 0;
-+}
-+
-+const struct tegra_mc_reset_ops terga20_mc_resets_ops = {
-+	.hotreset_assert = terga20_mc_hotreset_assert,
-+	.hotreset_deassert = terga20_mc_hotreset_deassert,
-+	.block_dma = terga20_mc_block_dma,
-+	.dma_idling = terga20_mc_dma_idling,
-+	.unblock_dma = terga20_mc_unblock_dma,
-+	.reset_status = terga20_mc_reset_status,
-+};
-+
- const struct tegra_mc_soc tegra20_mc_soc = {
- 	.clients = tegra20_mc_clients,
- 	.num_clients = ARRAY_SIZE(tegra20_mc_clients),
-@@ -175,4 +290,7 @@ const struct tegra_mc_soc tegra20_mc_soc = {
- 	.client_id_mask = 0x3f,
- 	.intmask = MC_INT_SECURITY_VIOLATION | MC_INT_INVALID_GART_PAGE |
- 		   MC_INT_DECERR_EMEM,
-+	.resets_ops = &terga20_mc_resets_ops,
-+	.resets = tegra20_mc_resets,
-+	.num_resets = ARRAY_SIZE(tegra20_mc_resets),
- };
 -- 
-2.16.1
+2.14.1
+
