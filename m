@@ -1,231 +1,84 @@
-Return-Path: <SRS0=8IC+=FN=retiisi.org.uk=sakari.ailus@kernel.org>
-Date: Mon, 19 Feb 2018 22:32:03 +0200
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4 2/2] v4l2: i2c: ov7670: Implement OF mbus configuration
-Message-ID: <20180219203203.aeiuedswxrpthxia@valkosipuli.retiisi.org.uk>
-References: <1516786250-3750-1-git-send-email-jacopo+renesas@jmondi.org>
- <1516786250-3750-3-git-send-email-jacopo+renesas@jmondi.org>
+Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
+From: John Garry <john.garry@huawei.com>
+Subject: [PATCH 4/8] scsi: hisi_sas: fix the issue of setting linkrate register
+Date: Tue, 20 Feb 2018 03:13:27 +0800
+Message-ID: <1519067611-206638-5-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
+References: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1516786250-3750-3-git-send-email-jacopo+renesas@jmondi.org>
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: corbet@lwn.net, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>, John Garry <john.garry@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Jan 24, 2018 at 10:30:50AM +0100, Jacopo Mondi wrote:
-> ov7670 driver supports two optional properties supplied through platform
-> data, but currently does not support any standard video interface
-> property.
-> 
-> Add support through OF parsing for 2 generic properties (vsync and hsync
-> polarities) and for one custom property already supported through
-> platform data to suppress pixel clock output during horizontal
-> blanking.
-> 
-> While at there, check return value of register writes in set_fmt
-> function and rationalize spacings.
-> 
-> Signal polarities and pixel clock blanking verified through scope and
-> image capture.
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+From: Xiaofei Tan <tanxiaofei@huawei.com>
 
-Hi Jacopo,
+It is not right to set the register PROG_PHY_LINK_RATE while PHY
+is still enabled. So if we want to change PHY linkrate, we need to
+disable PHY before setting the register PROG_PHY_LINK_RATE, and then
+start-up PHY. This patch is to fix this issue.
 
-I'll add the following diff to the patch in order to fix the build error
-without V4L2_FWNODE:
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c | 5 +++--
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 5 +++--
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 5 +++--
+ 3 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index 535f85b73075..245387f7b65e 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -683,6 +683,7 @@ config VIDEO_OV7670
- 	tristate "OmniVision OV7670 sensor support"
- 	depends on I2C && VIDEO_V4L2
- 	depends on MEDIA_CAMERA_SUPPORT
-+	select V4L2_FWNODE
- 	---help---
- 	  This is a Video4Linux2 sensor-level driver for the OmniVision
- 	  OV7670 VGA camera.  It currently only works with the M88ALP01
-
-> ---
->  drivers/media/i2c/ov7670.c | 98 +++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 84 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-> index 61c472e..80c822c 100644
-> --- a/drivers/media/i2c/ov7670.c
-> +++ b/drivers/media/i2c/ov7670.c
-> @@ -21,6 +21,7 @@
->  #include <linux/gpio/consumer.h>
->  #include <media/v4l2-device.h>
->  #include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-fwnode.h>
->  #include <media/v4l2-mediabus.h>
->  #include <media/v4l2-image-sizes.h>
->  #include <media/i2c/ov7670.h>
-> @@ -242,6 +243,7 @@ struct ov7670_info {
->  	struct clk *clk;
->  	struct gpio_desc *resetb_gpio;
->  	struct gpio_desc *pwdn_gpio;
-> +	unsigned int mbus_config;	/* Media bus configuration flags */
->  	int min_width;			/* Filter out smaller sizes */
->  	int min_height;			/* Filter out smaller sizes */
->  	int clock_speed;		/* External clock speed (MHz) */
-> @@ -1018,7 +1020,7 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  #ifdef CONFIG_VIDEO_V4L2_SUBDEV_API
->  	struct v4l2_mbus_framefmt *mbus_fmt;
->  #endif
-> -	unsigned char com7;
-> +	unsigned char com7, com10 = 0;
->  	int ret;
->  
->  	if (format->pad)
-> @@ -1038,7 +1040,6 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  	}
->  
->  	ret = ov7670_try_fmt_internal(sd, &format->format, &ovfmt, &wsize);
-> -
->  	if (ret)
->  		return ret;
->  	/*
-> @@ -1049,16 +1050,41 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  	 */
->  	com7 = ovfmt->regs[0].value;
->  	com7 |= wsize->com7_bit;
-> -	ov7670_write(sd, REG_COM7, com7);
-> +	ret = ov7670_write(sd, REG_COM7, com7);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Configure the media bus through COM10 register
-> +	 */
-> +	if (info->mbus_config & V4L2_MBUS_VSYNC_ACTIVE_LOW)
-> +		com10 |= COM10_VS_NEG;
-> +	if (info->mbus_config & V4L2_MBUS_HSYNC_ACTIVE_LOW)
-> +		com10 |= COM10_HREF_REV;
-> +	if (info->pclk_hb_disable)
-> +		com10 |= COM10_PCLK_HB;
-> +	ret = ov7670_write(sd, REG_COM10, com10);
-> +	if (ret)
-> +		return ret;
-> +
->  	/*
->  	 * Now write the rest of the array.  Also store start/stops
->  	 */
-> -	ov7670_write_array(sd, ovfmt->regs + 1);
-> -	ov7670_set_hw(sd, wsize->hstart, wsize->hstop, wsize->vstart,
-> -			wsize->vstop);
-> -	ret = 0;
-> -	if (wsize->regs)
-> +	ret = ov7670_write_array(sd, ovfmt->regs + 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = ov7670_set_hw(sd, wsize->hstart, wsize->hstop, wsize->vstart,
-> +			    wsize->vstop);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (wsize->regs) {
->  		ret = ov7670_write_array(sd, wsize->regs);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	info->fmt = ovfmt;
->  
->  	/*
-> @@ -1071,8 +1097,10 @@ static int ov7670_set_fmt(struct v4l2_subdev *sd,
->  	 * to write it unconditionally, and that will make the frame
->  	 * rate persistent too.
->  	 */
-> -	if (ret == 0)
-> -		ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-> +	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-> +	if (ret)
-> +		return ret;
-> +
->  	return 0;
->  }
->  
-> @@ -1698,6 +1726,45 @@ static int ov7670_init_gpio(struct i2c_client *client, struct ov7670_info *info)
->  	return 0;
->  }
->  
-> +/*
-> + * ov7670_parse_dt() - Parse device tree to collect mbus configuration
-> + *			properties
-> + */
-> +static int ov7670_parse_dt(struct device *dev,
-> +			   struct ov7670_info *info)
-> +{
-> +	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> +	struct v4l2_fwnode_endpoint bus_cfg;
-> +	struct fwnode_handle *ep;
-> +	int ret;
-> +
-> +	if (!fwnode)
-> +		return -EINVAL;
-> +
-> +	info->pclk_hb_disable = false;
-> +	if (fwnode_property_present(fwnode, "ov7670,pclk-hb-disable"))
-> +		info->pclk_hb_disable = true;
-> +
-> +	ep = fwnode_graph_get_next_endpoint(fwnode, NULL);
-> +	if (!ep)
-> +		return -EINVAL;
-> +
-> +	ret = v4l2_fwnode_endpoint_parse(ep, &bus_cfg);
-> +	if (ret) {
-> +		fwnode_handle_put(ep);
-> +		return ret;
-> +	}
-> +
-> +	if (bus_cfg.bus_type != V4L2_MBUS_PARALLEL) {
-> +		dev_err(dev, "Unsupported media bus type\n");
-> +		fwnode_handle_put(ep);
-> +		return ret;
-> +	}
-> +	info->mbus_config = bus_cfg.bus.parallel.flags;
-> +
-> +	return 0;
-> +}
-> +
->  static int ov7670_probe(struct i2c_client *client,
->  			const struct i2c_device_id *id)
->  {
-> @@ -1718,7 +1785,13 @@ static int ov7670_probe(struct i2c_client *client,
->  #endif
->  
->  	info->clock_speed = 30; /* default: a guess */
-> -	if (client->dev.platform_data) {
-> +
-> +	if (dev_fwnode(&client->dev)) {
-> +		ret = ov7670_parse_dt(&client->dev, info);
-> +		if (ret)
-> +			return ret;
-> +
-> +	} else if (client->dev.platform_data) {
->  		struct ov7670_config *config = client->dev.platform_data;
->  
->  		/*
-> @@ -1785,9 +1858,6 @@ static int ov7670_probe(struct i2c_client *client,
->  	tpf.denominator = 30;
->  	info->devtype->set_framerate(sd, &tpf);
->  
-> -	if (info->pclk_hb_disable)
-> -		ov7670_write(sd, REG_COM10, COM10_PCLK_HB);
-> -
->  	v4l2_ctrl_handler_init(&info->hdl, 10);
->  	v4l2_ctrl_new_std(&info->hdl, &ov7670_ctrl_ops,
->  			V4L2_CID_BRIGHTNESS, 0, 255, 1, 128);
-> -- 
-> 2.7.4
-> 
-
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+index 38bbda9..2eb8980 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+@@ -881,10 +881,11 @@ static void phy_set_linkrate_v1_hw(struct hisi_hba *hisi_hba, int phy_no,
+ 	prog_phy_link_rate &= ~0xff;
+ 	prog_phy_link_rate |= rate_mask;
+ 
++	disable_phy_v1_hw(hisi_hba, phy_no);
++	msleep(100);
+ 	hisi_sas_phy_write32(hisi_hba, phy_no, PROG_PHY_LINK_RATE,
+ 			prog_phy_link_rate);
+-
+-	phy_hard_reset_v1_hw(hisi_hba, phy_no);
++	start_phy_v1_hw(hisi_hba, phy_no);
+ }
+ 
+ static int get_wideport_bitmap_v1_hw(struct hisi_hba *hisi_hba, int port_id)
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+index 662d259..357138f 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+@@ -1611,10 +1611,11 @@ static void phy_set_linkrate_v2_hw(struct hisi_hba *hisi_hba, int phy_no,
+ 	prog_phy_link_rate &= ~0xff;
+ 	prog_phy_link_rate |= rate_mask;
+ 
++	disable_phy_v2_hw(hisi_hba, phy_no);
++	msleep(100);
+ 	hisi_sas_phy_write32(hisi_hba, phy_no, PROG_PHY_LINK_RATE,
+ 			prog_phy_link_rate);
+-
+-	phy_hard_reset_v2_hw(hisi_hba, phy_no);
++	start_phy_v2_hw(hisi_hba, phy_no);
+ }
+ 
+ static int get_wideport_bitmap_v2_hw(struct hisi_hba *hisi_hba, int port_id)
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index 1ee95ab..8da9de7 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -1862,10 +1862,11 @@ static void phy_set_linkrate_v3_hw(struct hisi_hba *hisi_hba, int phy_no,
+ 	prog_phy_link_rate &= ~0xff;
+ 	prog_phy_link_rate |= rate_mask;
+ 
++	disable_phy_v3_hw(hisi_hba, phy_no);
++	msleep(100);
+ 	hisi_sas_phy_write32(hisi_hba, phy_no, PROG_PHY_LINK_RATE,
+ 			prog_phy_link_rate);
+-
+-	phy_hard_reset_v3_hw(hisi_hba, phy_no);
++	start_phy_v3_hw(hisi_hba, phy_no);
+ }
+ 
+ static void interrupt_disable_v3_hw(struct hisi_hba *hisi_hba)
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+1.9.1
