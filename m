@@ -1,339 +1,67 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v4 3/4] arm64: dts: sdm845: Add minimal dts/dtsi files
- for sdm845 SoC and MTP
-Date: Mon, 19 Feb 2018 16:36:51 +0000
-Message-ID: <20180219163651.66936056@why.wild-wind.fr.eu.org>
-References: <20180216060503.22006-1-rnayak@codeaurora.org>
- <20180216060503.22006-4-rnayak@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/8] drm/bridge: dw-hdmi: allow overriding of phy-type
+ reading
+Date: Mon, 19 Feb 2018 18:59:02 +0200
+Message-ID: <3905607.btOD7ERYi5@avalon>
+References: <20180216204158.29839-1-heiko@sntech.de>
+ <20180216204158.29839-4-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180216060503.22006-4-rnayak@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, dianders@chromium.org, evgreen@chromium.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180216204158.29839-4-heiko@sntech.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, kishon@ti.com, robh+dt@kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 Feb 2018 11:35:02 +0530
-Rajendra Nayak <rnayak@codeaurora.org> wrote:
-
-> Add a skeletal sdm845 SoC dtsi and MTP board dts/dtsi files
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/Makefile       |   1 +
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  15 ++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 277 ++++++++++++++++++++++++++++++++
->  3 files changed, 293 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-mtp.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/sdm845.dtsi
-> 
-
-[...]
-
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> new file mode 100644
-> index 000000000000..c46e726af621
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -0,0 +1,277 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * SDM845 SoC device tree source
-> + *
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	interrupt-parent = <&intc>;
-> +
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	chosen { };
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		/* We expect the bootloader to fill in the size */
-> +		reg = <0 0x80000000 0 0>;
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_0>;
-> +			L2_0: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +				L3_0: l3-cache {
-> +				      compatible = "cache";
-> +				};
-> +			};
-> +		};
-> +
-> +		CPU1: cpu@100 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x100>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_100>;
-> +			L2_100: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x200>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_200>;
-> +			L2_200: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU3: cpu@300 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x300>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_300>;
-> +			L2_300: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU4: cpu@400 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x400>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_400>;
-> +			L2_400: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU5: cpu@500 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x500>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_500>;
-> +			L2_500: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU6: cpu@600 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x600>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_600>;
-> +			L2_600: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +
-> +		CPU7: cpu@700 {
-> +			device_type = "cpu";
-> +			compatible = "qcom,kryo385";
-> +			reg = <0x0 0x700>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_700>;
-> +			L2_700: l2-cache {
-> +				compatible = "cache";
-> +				next-level-cache = <&L3_0>;
-> +			};
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
-> +	clocks {
-> +		xo_board: xo-board {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <19200000>;
-> +		};
-> +
-> +		sleep_clk: sleep-clk {
-> +			compatible = "fixed-clock";
-> +			#clock-cells = <0>;
-> +			clock-frequency = <32764>;
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	soc: soc {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0 0xffffffff>;
-> +		compatible = "simple-bus";
-> +
-> +		intc: interrupt-controller@17a00000 {
-> +			compatible = "arm,gic-v3";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			#redistributor-regions = <1>;
-> +			redistributor-stride = <0x0 0x20000>;
-> +			reg = <0x17a00000 0x10000>,     /* GICD */
-> +			      <0x17a60000 0x100000>;    /* GICR * 8 */
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			gic-its@17a40000 {
-> +				compatible = "arm,gic-v3-its";
-> +				msi-controller;
-> +				#msi-cells = <1>;
-> +				reg = <0x17a40000 0x20000>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		gcc: clock-controller@100000 {
-> +			compatible = "qcom,gcc-sdm845";
-> +			reg = <0x100000 0x1f0000>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		tlmm: pinctrl@3400000 {
-> +			compatible = "qcom,sdm845-pinctrl";
-> +			reg = <0x03400000 0xc00000>;
-> +			interrupts = <GIC_SPI 208 IRQ_TYPE_NONE>;
-
-Please do not use IRQ_TYPE_NONE, ever. It doesn't exist in the GIC
-binding. Set it to the actual trigger value.
-
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +		};
-> +
-> +		timer@17c90000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			compatible = "arm,armv7-timer-mem";
-> +			reg = <0x17c90000 0x1000>;
-> +
-> +			frame@17ca0000 {
-> +				frame-number = <0>;
-> +				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17ca0000 0x1000>,
-> +				      <0x17cb0000 0x1000>;
-> +			};
-> +
-> +			frame@17cc0000 {
-> +				frame-number = <1>;
-> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17cc0000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17cd0000 {
-> +				frame-number = <2>;
-> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17cd0000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17ce0000 {
-> +				frame-number = <3>;
-> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17ce0000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17cf0000 {
-> +				frame-number = <4>;
-> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17cf0000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17d00000 {
-> +				frame-number = <5>;
-> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17d00000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@17d10000 {
-> +				frame-number = <6>;
-> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +				reg = <0x17d10000 0x1000>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		spmi_bus: spmi@c440000 {
-> +			compatible = "qcom,spmi-pmic-arb";
-> +			reg = <0xc440000 0x1100>,
-> +			      <0xc600000 0x2000000>,
-> +			      <0xe600000 0x100000>,
-> +			      <0xe700000 0xa0000>,
-> +			      <0xc40a000 0x26000>;
-> +			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
-> +			interrupt-names = "periph_irq";
-> +			interrupts = <GIC_SPI 481 IRQ_TYPE_NONE>;
-
-Same here.
-
-> +			qcom,ee = <0>;
-> +			qcom,channel = <0>;
-> +			#address-cells = <2>;
-> +			#size-cells = <0>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <4>;
-> +			cell-index = <0>;
-> +		};
-> +	};
-> +};
-
-Thanks,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+SGkgSGVpa28sCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIEZyaWRheSwgMTYgRmVicnVh
+cnkgMjAxOCAyMjo0MTo1MyBFRVQgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gSW4gc29tZSBJUCBp
+bXBsZW1lbnRhdGlvbnMgdGhlIHJlYWRpbmcgb2YgdGhlIHBoeS10eXBlIG1heSBiZSBicm9rZW4u
+Cj4gT25lIGV4YW1wbGUgYXJlIHRoZSBSb2NrY2hpcCByazMyMjggYW5kIHJrMzMyOCBzb2NzIHRo
+YXQgdXNlIGEgc2VwYXJhdGUKPiBwaHkgZnJvbSBJbm5vc2lsaWNvbiBidXQgc3RpbGwgcmVwb3J0
+IHRoZSBIRE1JMjBfVFggdHlwZS4KPiAKPiBTbyBhbGxvdyB0aGUgZ2x1ZSBkcml2ZXIgdG8gZm9y
+Y2UgYSBzcGVjaWZpYyB0eXBlLCBsaWtlIHRoZSB2ZW5kb3ItcGh5Cj4gZm9yIHRoZXNlIGNhc2Vz
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+CgpU
+ZXN0ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJk
+LmNvbT4KCj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5j
+IHwgNCArKystCj4gIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmggICAgICAgICAgICAgIHwg
+MSArCj4gIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4g
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5j
+Cj4gYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYyBpbmRleAo+IGY5
+ODAyMzk5Y2MwZC4uNTBkMjMxNjI2YzRkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9i
+cmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9z
+eW5vcHN5cy9kdy1oZG1pLmMKPiBAQCAtMjIxOCw3ICsyMjE4LDkgQEAgc3RhdGljIGludCBkd19o
+ZG1pX2RldGVjdF9waHkoc3RydWN0IGR3X2hkbWkgKmhkbWkpCj4gIAl1bnNpZ25lZCBpbnQgaTsK
+PiAgCXU4IHBoeV90eXBlOwo+IAo+IC0JcGh5X3R5cGUgPSBoZG1pX3JlYWRiKGhkbWksIEhETUlf
+Q09ORklHMl9JRCk7Cj4gKwlwaHlfdHlwZSA9IChoZG1pLT5wbGF0X2RhdGEtPnBoeV9mb3JjZV90
+eXBlKSA/Cj4gKwkJCQloZG1pLT5wbGF0X2RhdGEtPnBoeV9mb3JjZV90eXBlIDoKPiArCQkJCWhk
+bWlfcmVhZGIoaGRtaSwgSERNSV9DT05GSUcyX0lEKTsKCk5vIG5lZWQgZm9yIHBhcmVudGhlc2Vz
+LiBZb3UgY291bGQgZXZlbiB3cml0ZSB0aGlzCgogICAgICAgIHBoeV90eXBlID0gaGRtaS0+cGxh
+dF9kYXRhLT5waHlfZm9yY2VfdHlwZSA/IAogICAgICAgICAgICAgICAgIDogaGRtaV9yZWFkYiho
+ZG1pLCBIRE1JX0NPTkZJRzJfSUQpOwoKYnV0IHRoYXQncyB1cCB0byB5b3UuCgpXaGF0IGlmIGEg
+ZHJpdmVyIHdhbnRzIHRvIGZvcmNlIHRoZSBQSFkgdHlwZSB0byBEV19IRE1JX1BIWV9EV0NfSERN
+SV9UWF9QSFkgPyAKT3IgZG8geW91IGV4cGVjdCBvbmx5IHRoZSBEV19IRE1JX1BIWV9WRU5ET1Jf
+UEhZIHR5cGUgdG8gYmUgZm9yY2VkID8gSWYgc28sIHdlIApjb3VsZCBhbHNvIHVzZSBhIGZvcmNl
+X3ZlbmRvcl9waHkgYm9vbGVhbiBmaWVsZCBpbnN0ZWFkIG9mIHBoeV9mb3JjZV90eXBlLgoKPiAg
+CWlmIChwaHlfdHlwZSA9PSBEV19IRE1JX1BIWV9WRU5ET1JfUEhZKSB7Cj4gIAkJLyogVmVuZG9y
+IFBIWXMgcmVxdWlyZSBzdXBwb3J0IGZyb20gdGhlIGdsdWUgbGF5ZXIuICovCj4gZGlmZiAtLWdp
+dCBhL2luY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmggYi9pbmNsdWRlL2RybS9icmlkZ2UvZHdf
+aGRtaS5oCj4gaW5kZXggZGQyYThjZjdkMjBiLi4zYzFkZGRiMDliOTUgMTAwNjQ0Cj4gLS0tIGEv
+aW5jbHVkZS9kcm0vYnJpZGdlL2R3X2hkbWkuaAo+ICsrKyBiL2luY2x1ZGUvZHJtL2JyaWRnZS9k
+d19oZG1pLmgKPiBAQCAtMTMzLDYgKzEzMyw3IEBAIHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSB7
+Cj4gIAljb25zdCBzdHJ1Y3QgZHdfaGRtaV9waHlfb3BzICpwaHlfb3BzOwo+ICAJY29uc3QgY2hh
+ciAqcGh5X25hbWU7Cj4gIAl2b2lkICpwaHlfZGF0YTsKPiArCXU4IHBoeV9mb3JjZV90eXBlOwo+
+IAo+ICAJLyogU3lub3BzeXMgUEhZIHN1cHBvcnQgKi8KPiAgCWNvbnN0IHN0cnVjdCBkd19oZG1p
+X21wbGxfY29uZmlnICptcGxsX2NmZzsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
