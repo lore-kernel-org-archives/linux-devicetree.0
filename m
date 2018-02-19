@@ -1,7 +1,8 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v7 42/42] ARM: dts: da850: Add clocks
-Date: Mon, 19 Feb 2018 14:22:03 -0600
-Message-ID: <1519071723-31790-43-git-send-email-david@lechnology.com>
+Subject: [PATCH v7 23/42] ARM: davinci: dm355: add new clock init using common
+ clock framework
+Date: Mon, 19 Feb 2018 14:21:44 -0600
+Message-ID: <1519071723-31790-24-git-send-email-david@lechnology.com>
 References: <1519071723-31790-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,481 +22,204 @@ To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds clock provider nodes for da850 and wires them up to all of the
-devices.
+This adds the new board-specific clock init in mach-davinci/dm355.c
+using the new common clock framework drivers.
+
+The #ifdefs are needed to prevent compile errors until the entire
+ARCH_DAVINCI is converted.
+
+Also clean up the #includes since we are adding some here.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v7 changes:
-- move ref_clk frequency to board-specific DT files
-- enable sata_refclk in da850-lcdk.dts
-- drop async2 fixed factor clock
-- add power-domains for devices that use them
-- fix USB PHY clock-names property
-- move assigned-clocks to PSC device node
-- drop clocks property from devices that don't use it (e.g. EDMA)
-- add clock to RTC node
-- add clock-ranges to usb0 and aemif nodes
-- add clock-names property to aemif node
-- fix typo in psc1 clock-names
+- add clock platform device declarations
+- register platform devices instead of registering clocks directly
+- add davinci prefix to commit description
 
 v6 changes:
-- updated for device tree bindings changes earlier in this series
-- use single async2 clock instead of duplicate fixed factor clocks
-- add clock-names property to mdio node
+- add blank lines between function calls
 
+ arch/arm/mach-davinci/board-dm355-evm.c     |  2 +
+ arch/arm/mach-davinci/board-dm355-leopard.c |  2 +
+ arch/arm/mach-davinci/davinci.h             |  1 +
+ arch/arm/mach-davinci/dm355.c               | 88 +++++++++++++++++++++++++----
+ 4 files changed, 81 insertions(+), 12 deletions(-)
 
- arch/arm/boot/dts/da850-enbw-cmc.dts |   4 +
- arch/arm/boot/dts/da850-evm.dts      |   4 +
- arch/arm/boot/dts/da850-lcdk.dts     |   9 ++
- arch/arm/boot/dts/da850-lego-ev3.dts |   4 +
- arch/arm/boot/dts/da850.dtsi         | 159 +++++++++++++++++++++++++++++++++++
- 5 files changed, 180 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850-enbw-cmc.dts b/arch/arm/boot/dts/da850-enbw-cmc.dts
-index 14dff3e..0102ffc 100644
---- a/arch/arm/boot/dts/da850-enbw-cmc.dts
-+++ b/arch/arm/boot/dts/da850-enbw-cmc.dts
-@@ -35,6 +35,10 @@
- 	};
- };
+diff --git a/arch/arm/mach-davinci/board-dm355-evm.c b/arch/arm/mach-davinci/board-dm355-evm.c
+index 9ef24513..711f723 100644
+--- a/arch/arm/mach-davinci/board-dm355-evm.c
++++ b/arch/arm/mach-davinci/board-dm355-evm.c
+@@ -384,6 +384,8 @@ static __init void dm355_evm_init(void)
+ 	struct clk *aemif;
+ 	int ret;
  
-+&ref_clk {
-+	clock-frequency = <24000000>;
++	dm355_register_clocks();
++
+ 	ret = dm355_gpio_register();
+ 	if (ret)
+ 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
+diff --git a/arch/arm/mach-davinci/board-dm355-leopard.c b/arch/arm/mach-davinci/board-dm355-leopard.c
+index 3ebc89d..f46b185 100644
+--- a/arch/arm/mach-davinci/board-dm355-leopard.c
++++ b/arch/arm/mach-davinci/board-dm355-leopard.c
+@@ -233,6 +233,8 @@ static __init void dm355_leopard_init(void)
+ 	struct clk *aemif;
+ 	int ret;
+ 
++	dm355_register_clocks();
++
+ 	ret = dm355_gpio_register();
+ 	if (ret)
+ 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
+diff --git a/arch/arm/mach-davinci/davinci.h b/arch/arm/mach-davinci/davinci.h
+index 270cef8..6b6abf0a 100644
+--- a/arch/arm/mach-davinci/davinci.h
++++ b/arch/arm/mach-davinci/davinci.h
+@@ -84,6 +84,7 @@ int davinci_init_wdt(void);
+ /* DM355 function declarations */
+ void dm355_init(void);
+ void dm355_init_time(void);
++void dm355_register_clocks(void);
+ void dm355_init_spi0(unsigned chipselect_mask,
+ 		const struct spi_board_info *info, unsigned len);
+ void dm355_init_asp1(u32 evt_enable);
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index 0da7516..f53e07a 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -8,31 +8,34 @@
+  * is licensed "as is" without any warranty of any kind, whether express
+  * or implied.
+  */
+-#include <linux/init.h>
+-#include <linux/clk.h>
+-#include <linux/serial_8250.h>
+-#include <linux/platform_device.h>
++#include <linux/clk-provider.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmaengine.h>
+-#include <linux/spi/spi.h>
++#include <linux/init.h>
+ #include <linux/platform_data/edma.h>
+ #include <linux/platform_data/gpio-davinci.h>
+ #include <linux/platform_data/spi-davinci.h>
++#include <linux/platform_device.h>
++#include <linux/serial_8250.h>
++#include <linux/spi/spi.h>
+ 
+ #include <asm/mach/map.h>
+ 
++#include <mach/common.h>
+ #include <mach/cputype.h>
+-#include "psc.h"
+-#include <mach/mux.h>
+ #include <mach/irqs.h>
+-#include <mach/time.h>
++#include <mach/mux.h>
+ #include <mach/serial.h>
+-#include <mach/common.h>
++#include <mach/time.h>
+ 
++#include "asp.h"
+ #include "davinci.h"
+-#include "clock.h"
+ #include "mux.h"
+-#include "asp.h"
++
++#ifndef CONFIG_COMMON_CLK
++#include "clock.h"
++#include "psc.h"
++#endif
+ 
+ #define DM355_UART2_BASE	(IO_PHYS + 0x206000)
+ #define DM355_OSD_BASE		(IO_PHYS + 0x70200)
+@@ -43,6 +46,7 @@
+  */
+ #define DM355_REF_FREQ		24000000	/* 24 or 36 MHz */
+ 
++#ifndef CONFIG_COMMON_CLK
+ static struct pll_data pll1_data = {
+ 	.num       = 1,
+ 	.phys_base = DAVINCI_PLL1_BASE,
+@@ -382,7 +386,7 @@ static struct clk_lookup dm355_clks[] = {
+ 	CLK(NULL, "usb", &usb_clk),
+ 	CLK(NULL, NULL, NULL),
+ };
+-
++#endif
+ /*----------------------------------------------------------------------*/
+ 
+ static u64 dm355_spi0_dma_mask = DMA_BIT_MASK(32);
+@@ -1046,8 +1050,68 @@ void __init dm355_init(void)
+ 
+ void __init dm355_init_time(void)
+ {
++#ifdef CONFIG_COMMON_CLK
++	struct clk *clk;
++
++	clk = clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM355_REF_FREQ);
++
++	davinci_timer_init(clk);
++#else
+ 	davinci_clk_init(dm355_clks);
+ 	davinci_timer_init(&timer0_clk);
++#endif
++}
++
++static struct resource dm355_pll1_resources[] = {
++	{
++		.start	= DAVINCI_PLL1_BASE,
++		.end	= DAVINCI_PLL1_BASE + SZ_4K - 1,
++		.flags	= IORESOURCE_MEM,
++	},
 +};
 +
- &edma0 {
- 	ti,edma-reserved-slot-ranges = <32 50>;
- };
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index a86a8a1..6e13613 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -195,6 +195,10 @@
- 	};
- };
- 
-+&ref_clk {
-+	clock-frequency = <24000000>;
++static struct platform_device dm355_pll1_device = {
++	.name		= "dm355-pll1",
++	.id		= -1,
++	.resource	= dm355_pll1_resources,
++	.num_resources	= ARRAY_SIZE(dm355_pll1_resources),
 +};
 +
- /include/ "tps6507x.dtsi"
- 
- &tps {
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index a1f4d6d..90b917c 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -123,6 +123,10 @@
- 	};
- };
- 
-+&ref_clk {
-+	clock-frequency = <24000000>;
++static struct resource dm355_pll2_resources[] = {
++	{
++		.start	= DAVINCI_PLL2_BASE,
++		.end	= DAVINCI_PLL2_BASE + SZ_4K - 1,
++		.flags	= IORESOURCE_MEM,
++	},
 +};
 +
- &pmx_core {
- 	status = "okay";
- 
-@@ -175,6 +179,11 @@
- 	status = "okay";
- };
- 
-+&sata_refclk {
-+	status = "okay";
-+	clock-frequency = <100000000>;
++static struct platform_device dm355_pll2_device = {
++	.name		= "dm355-pll2",
++	.id		= -1,
++	.resource	= dm355_pll2_resources,
++	.num_resources	= ARRAY_SIZE(dm355_pll2_resources),
 +};
 +
- &sata {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
-index 81942ae..dd3bf93 100644
---- a/arch/arm/boot/dts/da850-lego-ev3.dts
-+++ b/arch/arm/boot/dts/da850-lego-ev3.dts
-@@ -186,6 +186,10 @@
- 	};
- };
- 
-+&ref_clk {
-+	clock-frequency = <24000000>;
++static struct resource dm355_psc_resources[] = {
++	{
++		.start	= DAVINCI_PWR_SLEEP_CNTRL_BASE,
++		.end	= DAVINCI_PWR_SLEEP_CNTRL_BASE + SZ_4K - 1,
++		.flags	= IORESOURCE_MEM,
++	},
 +};
 +
- &pmx_core {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index c66cf78..85f760d 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -21,6 +21,26 @@
- 			#interrupt-cells = <1>;
- 			ti,intc-size = <101>;
- 			reg = <0xfffee000 0x2000>;
-+			clocks = <&psc0 6>;
-+		};
-+	};
-+	clocks: clocks {
-+		ref_clk: ref_clk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-output-names = "ref_clk";
-+		};
-+		sata_refclk: sata_refclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-output-names = "sata_refclk";
-+			status = "disabled";
-+		};
-+		usb_refclkin: usb_refclkin {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-output-names = "usb_refclkin";
-+			status = "disabled";
- 		};
- 	};
- 	dsp: dsp@11800000 {
-@@ -33,6 +53,7 @@
- 		reg-names = "l2sram", "l1pram", "l1dram", "host1cfg", "chipsig";
- 		interrupt-parent = <&intc>;
- 		interrupts = <28>;
-+		clocks = <&psc0 15>;
- 		status = "disabled";
- 	};
- 	soc@1c00000 {
-@@ -43,6 +64,37 @@
- 		ranges = <0x0 0x01c00000 0x400000>;
- 		interrupt-parent = <&intc>;
- 
-+		psc0: clock-controller@10000 {
-+			compatible = "ti,da850-psc0";
-+			reg = <0x10000 0x1000>;
-+			#clock-cells = <1>;
-+			#power-domain-cells = <1>;
-+			clocks = <&pll0_sysclk 1>, <&pll0_sysclk 2>,
-+				 <&pll0_sysclk 4>, <&pll0_sysclk 6>,
-+				 <&async1_clk>;
-+			clock_names = "pll0_sysclk1", "pll0_sysclk2",
-+				      "pll0_sysclk4", "pll0_sysclk6",
-+				      "async1";
-+		};
-+		pll0: clock-controller@11000 {
-+			compatible = "ti,da850-pll0";
-+			reg = <0x11000 0x1000>;
-+			clocks = <&ref_clk>, <&pll1_sysclk 3>;
-+			clock-names = "clksrc", "extclksrc";
++static struct platform_device dm355_psc_device = {
++	.name		= "dm355-psc",
++	.id		= -1,
++	.resource	= dm355_psc_resources,
++	.num_resources	= ARRAY_SIZE(dm355_psc_resources),
++};
 +
-+			pll0_pllout: pllout {
-+				#clock-cells = <0>;
-+			};
-+			pll0_sysclk: sysclk {
-+				#clock-cells = <1>;
-+			};
-+			pll0_auxclk: auxclk {
-+				#clock-cells = <0>;
-+			};
-+			pll0_obsclk: obsclk {
-+				#clock-cells = <0>;
-+			};
-+		};
- 		pmx_core: pinmux@14120 {
- 			compatible = "pinctrl-single";
- 			reg = <0x14120 0x50>;
-@@ -264,8 +316,41 @@
- 			usb_phy: usb-phy {
- 				compatible = "ti,da830-usb-phy";
- 				#phy-cells = <1>;
-+				clocks = <&usb_phy_clk 0>, <&usb_phy_clk 1>;
-+				clock-names = "usb0_clk48", "usb1_clk48";
- 				status = "disabled";
- 			};
-+			usb_phy_clk: usb-phy-clocks {
-+				compatible = "ti,da830-usb-phy-clocks";
-+				#clock-cells = <1>;
-+				clocks = <&psc1 1>, <&usb_refclkin>,
-+					 <&pll0_auxclk>;
-+				clock-names = "fck", "usb_refclkin", "auxclk";
-+			};
-+			ehrpwm_tbclk: ehrpwm_tbclk {
-+				compatible = "ti,da830-tbclksync";
-+				#clock-cells = <0>;
-+				clocks = <&psc1 17>;
-+				clock-names = "fck";
-+			};
-+			div4p5_clk: div4.5 {
-+				compatible = "ti,da830-div4p5ena";
-+				#clock-cells = <0>;
-+				clocks = <&pll0_pllout>;
-+				clock-names = "pll0_pllout";
-+			};
-+			async1_clk: async1 {
-+				compatible = "ti,da850-async1-clksrc";
-+				#clock-cells = <0>;
-+				clocks = <&pll0_sysclk 3>, <&div4p5_clk>;
-+				clock-names = "pll0_sysclk3", "div4.5";
-+			};
-+			async3_clk: async3 {
-+				compatible = "ti,da850-async3-clksrc";
-+				#clock-cells = <0>;
-+				clocks = <&pll0_sysclk 2>, <&pll1_sysclk 2>;
-+				clock-names = "pll0_sysclk2", "pll1_sysclk2";
-+			};
- 		};
- 		edma0: edma@0 {
- 			compatible = "ti,edma3-tpcc";
-@@ -313,6 +398,8 @@
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
- 			interrupts = <25>;
-+			clocks = <&psc0 9>;
-+			power-domains = <&psc0 9>;
- 			status = "disabled";
- 		};
- 		serial1: serial@10c000 {
-@@ -321,6 +408,8 @@
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
- 			interrupts = <53>;
-+			clocks = <&psc1 12>;
-+			power-domains = <&psc1 12>;
- 			status = "disabled";
- 		};
- 		serial2: serial@10d000 {
-@@ -329,6 +418,8 @@
- 			reg-io-width = <4>;
- 			reg-shift = <2>;
- 			interrupts = <61>;
-+			clocks = <&psc1 13>;
-+			power-domains = <&psc1 13>;
- 			status = "disabled";
- 		};
- 		rtc0: rtc@23000 {
-@@ -336,6 +427,8 @@
- 			reg = <0x23000 0x1000>;
- 			interrupts = <19
- 				      19>;
-+			clocks = <&pll0_auxclk>;
-+			clock-names = "int-clk";
- 			status = "disabled";
- 		};
- 		i2c0: i2c@22000 {
-@@ -344,6 +437,7 @@
- 			interrupts = <15>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			clocks = <&pll0_auxclk>;
- 			status = "disabled";
- 		};
- 		i2c1: i2c@228000 {
-@@ -352,11 +446,18 @@
- 			interrupts = <51>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			clocks = <&psc1 11>;
- 			status = "disabled";
- 		};
-+		clocksource: timer@20000 {
-+			compatible = "ti,davinci-timer";
-+			reg = <0x20000 0x1000>;
-+			clocks = <&pll0_auxclk>;
-+		};
- 		wdt: wdt@21000 {
- 			compatible = "ti,davinci-wdt";
- 			reg = <0x21000 0x1000>;
-+			clocks = <&pll0_auxclk>;
- 			status = "disabled";
- 		};
- 		mmc0: mmc@40000 {
-@@ -367,12 +468,14 @@
- 			interrupts = <16>;
- 			dmas = <&edma0 16 0>, <&edma0 17 0>;
- 			dma-names = "rx", "tx";
-+			clocks = <&psc0 5>;
- 			status = "disabled";
- 		};
- 		vpif: video@217000 {
- 			compatible = "ti,da850-vpif";
- 			reg = <0x217000 0x1000>;
- 			interrupts = <92>;
-+			clocks = <&psc1 9>;
- 			status = "disabled";
++void __init dm355_register_clocks(void)
++{
++	platform_device_register(&dm355_pll1_device);
++	platform_device_register(&dm355_pll2_device);
++	platform_device_register(&dm355_psc_device);
+ }
  
- 			/* VPIF capture port */
-@@ -395,6 +498,7 @@
- 			interrupts = <72>;
- 			dmas = <&edma1 28 0>, <&edma1 29 0>;
- 			dma-names = "rx", "tx";
-+			clocks = <&psc1 18>;
- 			status = "disabled";
- 		};
- 		ehrpwm0: pwm@300000 {
-@@ -402,6 +506,8 @@
- 				     "ti,am33xx-ehrpwm";
- 			#pwm-cells = <3>;
- 			reg = <0x300000 0x2000>;
-+			clocks = <&psc1 17>, <&ehrpwm_tbclk>;
-+			clock-names = "fck", "tbclk";
- 			status = "disabled";
- 		};
- 		ehrpwm1: pwm@302000 {
-@@ -409,6 +515,8 @@
- 				     "ti,am33xx-ehrpwm";
- 			#pwm-cells = <3>;
- 			reg = <0x302000 0x2000>;
-+			clocks = <&psc1 17>, <&ehrpwm_tbclk>;
-+			clock-names = "fck", "tbclk";
- 			status = "disabled";
- 		};
- 		ecap0: ecap@306000 {
-@@ -416,6 +524,8 @@
- 				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x306000 0x80>;
-+			clocks = <&psc1 20>;
-+			clock-names = "fck";
- 			status = "disabled";
- 		};
- 		ecap1: ecap@307000 {
-@@ -423,6 +533,8 @@
- 				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x307000 0x80>;
-+			clocks = <&psc1 20>;
-+			clock-names = "fck";
- 			status = "disabled";
- 		};
- 		ecap2: ecap@308000 {
-@@ -430,6 +542,8 @@
- 				     "ti,am33xx-ecap";
- 			#pwm-cells = <3>;
- 			reg = <0x308000 0x80>;
-+			clocks = <&psc1 20>;
-+			clock-names = "fck";
- 			status = "disabled";
- 		};
- 		spi0: spi@41000 {
-@@ -442,6 +556,7 @@
- 			interrupts = <20>;
- 			dmas = <&edma0 14 0>, <&edma0 15 0>;
- 			dma-names = "rx", "tx";
-+			clocks = <&psc0 4>;
- 			status = "disabled";
- 		};
- 		spi1: spi@30e000 {
-@@ -454,6 +569,7 @@
- 			interrupts = <56>;
- 			dmas = <&edma0 18 0>, <&edma0 19 0>;
- 			dma-names = "rx", "tx";
-+			clocks = <&psc1 10>;
- 			status = "disabled";
- 		};
- 		usb0: usb@200000 {
-@@ -465,6 +581,8 @@
- 			dr_mode = "otg";
- 			phys = <&usb_phy 0>;
- 			phy-names = "usb-phy";
-+			clocks = <&psc1 1>;
-+			clock-ranges;
- 			status = "disabled";
- 
- 			#address-cells = <1>;
-@@ -495,13 +613,31 @@
- 			compatible = "ti,da850-ahci";
- 			reg = <0x218000 0x2000>, <0x22c018 0x4>;
- 			interrupts = <67>;
-+			clocks = <&psc1 8>, <&sata_refclk>;
-+			clock-names = "fck", "refclk";
- 			status = "disabled";
- 		};
-+		pll1: clock-controller@21a000 {
-+			compatible = "ti,da850-pll1";
-+			reg = <0x21a000 0x1000>;
-+			clocks = <&ref_clk>;
-+			clock-names = "clksrc";
-+
-+			pll1_sysclk: sysclk {
-+				#clock-cells = <1>;
-+			};
-+			pll1_obsclk: obsclk {
-+				#clock-cells = <0>;
-+			};
-+		};
- 		mdio: mdio@224000 {
- 			compatible = "ti,davinci_mdio";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x224000 0x1000>;
-+			clocks = <&psc1 5>;
-+			clock-names = "fck";
-+			power-domains = <&psc1 5>;
- 			status = "disabled";
- 		};
- 		eth0: ethernet@220000 {
-@@ -517,6 +653,8 @@
- 					35
- 					36
- 					>;
-+			clocks = <&psc1 5>;
-+			power-domains = <&psc1 5>;
- 			status = "disabled";
- 		};
- 		usb1: usb@225000 {
-@@ -525,6 +663,7 @@
- 			interrupts = <59>;
- 			phys = <&usb_phy 1>;
- 			phy-names = "usb-phy";
-+			clocks = <&psc1 2>;
- 			status = "disabled";
- 		};
- 		gpio: gpio@226000 {
-@@ -542,6 +681,19 @@
- 			status = "disabled";
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+			clocks = <&psc1 3>;
-+			clock-names = "gpio";
-+		};
-+		psc1: clock-controller@227000 {
-+			compatible = "ti,da850-psc1";
-+			reg = <0x227000 0x1000>;
-+			#clock-cells = <1>;
-+			#power-domain-cells = <1>;
-+			clocks = <&pll0_sysclk 2>, <&pll0_sysclk 4>,
-+				 <&async3_clk>;
-+			clock-names = "pll0_sysclk2", "pll0_sysclk4", "async3";
-+			assigned-clocks = <&async3_clk>;
-+			assigned-clock-parents = <&pll1_sysclk 2>;
- 		};
- 		pinconf: pin-controller@22c00c {
- 			compatible = "ti,da850-pupd";
-@@ -560,6 +712,7 @@
- 			dmas = <&edma0 1 1>,
- 				<&edma0 0 1>;
- 			dma-names = "tx", "rx";
-+			clocks = <&psc1 7>;
- 		};
- 
- 		lcdc: display@213000 {
-@@ -567,6 +720,9 @@
- 			reg = <0x213000 0x1000>;
- 			interrupts = <52>;
- 			max-pixelclock = <37500>;
-+			clocks = <&psc1 16>;
-+			clock-names = "fck";
-+			power-domains = <&psc1 16>;
- 			status = "disabled";
- 		};
- 	};
-@@ -578,6 +734,9 @@
- 		reg = <0x68000000 0x00008000>;
- 		ranges = <0 0 0x60000000 0x08000000
- 			  1 0 0x68000000 0x00008000>;
-+		clocks = <&psc0 3>;
-+		clock-names = "aemif";
-+		clock-ranges;
- 		status = "disabled";
- 	};
- 	memctrl: memory-controller@b0000000 {
+ int __init dm355_init_video(struct vpfe_config *vpfe_cfg,
 -- 
 2.7.4
