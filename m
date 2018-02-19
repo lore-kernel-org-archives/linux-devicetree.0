@@ -1,16 +1,15 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 0/7] ARM: davinci: add genpd support
-Date: Mon, 19 Feb 2018 11:49:07 +0100
-Message-ID: <CAMpxmJXc6Fr+JhN8WxXGAYRzkk9+u+cCkHGtsXAT-3ikw408rg@mail.gmail.com>
-References: <20180207134553.13510-1-brgl@bgdev.pl>
- <4dbc57ec-3506-eb1d-e00d-adfe75c3b39b@lechnology.com>
- <a736d727-5805-94ea-3e40-34fc4a6267ef@ti.com>
- <79a981ae-881f-b358-629c-0b64e48f192d@lechnology.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v3 7/7] ARM: sun8i: smp: Remove the disabling of CPU0
+Date: Mon, 19 Feb 2018 11:50:31 +0100
+Message-ID: <20180219115031.77a0a1ca@dell-desktop.home>
+References: <20180219081837.15482-1-mylene.josserand@bootlin.com>
+ <20180219081837.15482-8-mylene.josserand@bootlin.com>
+ <20180219085408.5to43p7jbtijx4q3@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <79a981ae-881f-b358-629c-0b64e48f192d@lechnology.com>
+In-Reply-To: <20180219085408.5to43p7jbtijx4q3@flea.lan>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,56 +19,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2018-02-18 4:41 GMT+01:00 David Lechner <david@lechnology.com>:
-> On 02/09/2018 06:42 AM, Sekhar Nori wrote:
->>
->> Hi David,
->>
->> On Thursday 08 February 2018 04:13 AM, David Lechner wrote:
->>>
->>> On 02/07/2018 07:45 AM, Bartosz Golaszewski wrote:
->>>>
->>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>
->>>> Hi Sekhar et al,
->>>>
->>>> please take a look at the following patches. They add a simple genpd
->>>> driver and use it in DT mode on da850 boards.
->>>>
->>>> I was trying to use genpd in legacy mode too, but couldn't find neither
->>>> any interfaces nor users that would do that. For now I added a check in
->>>> arch/arm/mach-davinci/pm_domain.c that disables the clock pm setup if
->>>> we're using genpd.
->>>>
->>>> This series applies on top of and has been tested with David Lechner's
->>>> for-bartosz branch. It fixes the clock look-up issues we faced with
->>>> lcdc and emac.
->>>
->>>
->>> I'm starting to think that it makes more sense to just make the PSC
->>> driver
->>> a power-domain and reset provider rather than a clock provider. It is
->>> unfortunate that genpd is DT only.
->>
->>
->> This will mean that the only way to enable clocks on DaVinci is to use
->> pm_runtime() calls. We do still have drivers which depend on clk api for
->> enabling clocks, so I am not sure its feasible just yet.
->>
->> I think a question like this can arise for any gate clock.
->>
->
-> I've incorporated parts of this series into my v7 work in progress
-> using the suggestions I made about using the existing PSC device
-> as the power domain provider.
->
-
-FYI I had added the power domain functionality to the v6 PSC driver
-here: https://github.com/brgl/linux/commits/topic/davinci-genpd-final-v2
-
-Thanks,
-Bartosz
+SGksCgpPbiBNb24sIDE5IEZlYiAyMDE4IDA5OjU0OjA4ICswMTAwCk1heGltZSBSaXBhcmQgPG1h
+eGltZS5yaXBhcmRAYm9vdGxpbi5jb20+IHdyb3RlOgoKPiBPbiBNb24sIEZlYiAxOSwgMjAxOCBh
+dCAwOToxODozN0FNICswMTAwLCBNeWzDqG5lIEpvc3NlcmFuZCB3cm90ZToKPiA+IE9uIHN1bjhp
+LWE2M3QsIGhvdHBsdWcgQ1BVIGZvciBDUFUwIGlzIGN1cnJlbnRseSBub3Qgd29ya2luZy4KPiA+
+IFJlbW92ZSB0aGUgcG9zc2liaWxpdHkgdG8gZGlzYWJsZSBDUFUwIG9ubHkgZm9yIHN1bjhpLWE4
+M3QuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE15bMOobmUgSm9zc2VyYW5kIDxteWxlbmUuam9z
+c2VyYW5kQGJvb3RsaW4uY29tPgo+ID4gLS0tCj4gPiAgYXJjaC9hcm0vbWFjaC1zdW54aS9tY19z
+bXAuYyB8IDYgKysrKystCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMSBk
+ZWxldGlvbigtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1zdW54aS9tY19z
+bXAuYyBiL2FyY2gvYXJtL21hY2gtc3VueGkvbWNfc21wLmMKPiA+IGluZGV4IGZlYzU5MmJmNjhi
+NC4uNjlkNWFlNWIzZDcyIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm0vbWFjaC1zdW54aS9tY19z
+bXAuYwo+ID4gKysrIGIvYXJjaC9hcm0vbWFjaC1zdW54aS9tY19zbXAuYwo+ID4gQEAgLTY2MSw4
+ICs2NjEsMTIgQEAgc3RhdGljIGludCBzdW54aV9tY19zbXBfY3B1X2tpbGwodW5zaWduZWQgaW50
+IGxfY3B1KQo+ID4gIAlyZXR1cm4gIXJldDsKPiA+ICB9Cj4gPiAgCj4gPiAtc3RhdGljIGJvb2wg
+c3VueGlfbWNfc21wX2NwdV9jYW5fZGlzYWJsZSh1bnNpZ25lZCBpbnQgX191bnVzZWQpCj4gPiAr
+c3RhdGljIGJvb2wgc3VueGlfbWNfc21wX2NwdV9jYW5fZGlzYWJsZSh1bnNpZ25lZCBpbnQgY3B1
+KQo+ID4gIHsKPiA+ICsJLyogQ1BVMCBob3RwbHVnIGhhbmRsZWQgb25seSBmb3Igc3VuOWkgKi8K
+PiA+ICsJaWYgKG9mX21hY2hpbmVfaXNfY29tcGF0aWJsZSgiYWxsd2lubmVyLHN1bjhpLWE4M3Qi
+KSkKPiA+ICsJCWlmIChjcHUgPT0gMCkKPiA+ICsJCQlyZXR1cm4gZmFsc2U7ICAKPiAKPiBUaGlz
+IGFsc28gbWVhbnMgdGhhdCB5b3UgaGF2ZSBhIHdpbmRvdyBpbiB5b3VyIHBhdGNoIHNlcXVlbmNl
+IHdoZXJlCj4geW91IGNhbiBkaXNhYmxlIHRoZSBDUFUwIG9uIHRoZSBBODN0LiBUaGlzIHBhdGNo
+IHNob3VsZCBiZSBlYXJsaWVyLgoKSXQgaXMgdHJ1ZS4KV2l0aCB5b3VyIGNvbW1lbnQgaW4gbXkg
+Zmlyc3QgcGF0Y2gsIGl0IHdpbGwgYmUgZG9uZSBlYXJsaWVyLgoKVGhhbmtzLAoKTXlsw6huZQoK
+LS0gCk15bMOobmUgSm9zc2VyYW5kLCBCb290bGluIChmb3JtZXJseSBGcmVlIEVsZWN0cm9ucykK
+RW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8vYm9vdGxpbi5jb20K
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
