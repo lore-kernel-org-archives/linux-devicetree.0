@@ -1,51 +1,56 @@
-Return-Path: <SRS0=goDf=FR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from laurent.telenet-ops.be ([195.130.137.89]:35368 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751654AbeBWNin (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 23 Feb 2018 08:38:43 -0500
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 5/9] serial: pxa: Fix out-of-bounds access through serial port index
-Date: Fri, 23 Feb 2018 14:38:33 +0100
-Message-Id: <1519393117-31998-6-git-send-email-geert+renesas@glider.be>
-In-Reply-To: <1519393117-31998-1-git-send-email-geert+renesas@glider.be>
-References: <1519393117-31998-1-git-send-email-geert+renesas@glider.be>
+Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60192 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752901AbeBSOvl (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 19 Feb 2018 09:51:41 -0500
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: [PATCH 1/4] crypto: ccree: remove unused definitions
+Date: Mon, 19 Feb 2018 14:51:21 +0000
+Message-Id: <1519051887-4668-2-git-send-email-gilad@benyossef.com>
+In-Reply-To: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
+References: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Barry Song <baohua@kernel.org>, Vineet Gupta <vgupta@synopsys.com>, Jiri Slaby <jslaby@suse.com>, Michal Simek <michal.simek@xilinx.com>, linux-serial@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The serial_pxa_ports[] array is indexed using a value derived from the
-"serialN" alias in DT, or from platform data, which may lead to an
-out-of-bounds access.
+Remove enum definition which are not used by the REE interface
+driver.
 
-Fix this by adding a range check.
-
-Fixes: 699c20f3e6310aa2 ("serial: pxa: add OF support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
 ---
-v2:
-  - Fix Fixes reference,
-  - Fix off-by-one error (use ">="),
-  - Update patch description for platform data.
----
- drivers/tty/serial/pxa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/crypto/ccree/cc_crypto_ctx.h | 20 --------------------
+ 1 file changed, 20 deletions(-)
 
-diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
-index baf552944d5686e8..eda3c7710d6a745f 100644
---- a/drivers/tty/serial/pxa.c
-+++ b/drivers/tty/serial/pxa.c
-@@ -885,6 +885,10 @@ static int serial_pxa_probe(struct platform_device *dev)
- 		sport->port.line = dev->id;
- 	else if (ret < 0)
- 		goto err_clk;
-+	if (sport->port.line >= ARRAY_SIZE(serial_pxa_ports)) {
-+		dev_err(&dev->dev, "serial%d out of range\n", sport->port.line);
-+		return -EINVAL;
-+	}
- 	snprintf(sport->name, PXA_NAME_LEN - 1, "UART%d", sport->port.line + 1);
+diff --git a/drivers/crypto/ccree/cc_crypto_ctx.h b/drivers/crypto/ccree/cc_crypto_ctx.h
+index 5cb4dde..06a7860 100644
+--- a/drivers/crypto/ccree/cc_crypto_ctx.h
++++ b/drivers/crypto/ccree/cc_crypto_ctx.h
+@@ -146,24 +146,4 @@ enum drv_hash_hw_mode {
+ 	DRV_HASH_HW_RESERVE32B = S32_MAX
+ };
  
- 	sport->port.membase = ioremap(mmres->start, resource_size(mmres));
+-/* drv_crypto_key_type[1:0] is mapped to cipher_do[1:0] */
+-/* drv_crypto_key_type[2] is mapped to cipher_config2 */
+-enum drv_crypto_key_type {
+-	DRV_NULL_KEY = -1,
+-	DRV_USER_KEY = 0,		/* 0x000 */
+-	DRV_ROOT_KEY = 1,		/* 0x001 */
+-	DRV_PROVISIONING_KEY = 2,	/* 0x010 */
+-	DRV_SESSION_KEY = 3,		/* 0x011 */
+-	DRV_APPLET_KEY = 4,		/* NA */
+-	DRV_PLATFORM_KEY = 5,		/* 0x101 */
+-	DRV_CUSTOMER_KEY = 6,		/* 0x110 */
+-	DRV_END_OF_KEYS = S32_MAX,
+-};
+-
+-enum drv_crypto_padding_type {
+-	DRV_PADDING_NONE = 0,
+-	DRV_PADDING_PKCS7 = 1,
+-	DRV_PADDING_RESERVE32B = S32_MAX
+-};
+-
+ #endif /* _CC_CRYPTO_CTX_H_ */
 -- 
 2.7.4
 
