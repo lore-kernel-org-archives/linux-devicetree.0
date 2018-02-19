@@ -1,16 +1,12 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v2 10/16] mmc: sdhci: Fix to use data_timer only for data
- line commands
-Date: Mon, 19 Feb 2018 10:03:42 +0200
-Message-ID: <192a7c1e-9180-e473-8000-4a4aa806df91@intel.com>
-References: <20180205125029.21570-1-kishon@ti.com>
- <20180205125029.21570-11-kishon@ti.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] ARM: dts: sun7i: Enable HDMI support on the Orange Pi mini
+Date: Mon, 19 Feb 2018 09:07:20 +0100
+Message-ID: <20180219080720.lty2fa5ntzarmefz@flea.lan>
+References: <jwvr2pk8xrb.fsf-monnier+diro@gnu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0166089748773053838=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180205125029.21570-11-kishon@ti.com>
-Content-Language: en-US
+In-Reply-To: <jwvr2pk8xrb.fsf-monnier+diro@gnu.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,57 +16,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Stefan Monnier <monnier@IRO.UMontreal.CA>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/18 14:50, Kishon Vijay Abraham I wrote:
-> commit d7422fb489eee5587d3eec ("mmc: sdhci: Separate timer timeout for
-> command and data requests") while separating timer timeout for
-> command and data requests, passed cmd->mrq to sdhci_mod_timer (cmd is an
-> argument to sdhci_send_command) and in sdhci_mod_timer used mrq->cmd
-> to check if it is a data line command. This results in using
-> data timer for commands like MMC_SET_BLOCK_COUNT (CMD23) though it is
-> not a data line command. Fix it here.
 
-I am not sure why you need this change, but it is not right actually.  There
-are 2 timers because there can be 2 mrqs and we need to delete the correct
-timer in sdhci_request_done() so it is better to make the selection based on
-the mrq not the last command.
+--===============0166089748773053838==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="sh3hd2h2gy5ypoyu"
+Content-Disposition: inline
 
-> 
-> Fixes: commit d7422fb489eee5587d3eec ("mmc: sdhci: Separate timer timeout for
-> command and data requests")
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/mmc/host/sdhci.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 1aa74b4682f3..0489572d1892 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1073,10 +1073,10 @@ static void sdhci_finish_data(struct sdhci_host *host)
->  	}
->  }
->  
-> -static void sdhci_mod_timer(struct sdhci_host *host, struct mmc_request *mrq,
-> +static void sdhci_mod_timer(struct sdhci_host *host, struct mmc_command *cmd,
->  			    unsigned long timeout)
->  {
-> -	if (sdhci_data_line_cmd(mrq->cmd))
-> +	if (sdhci_data_line_cmd(cmd))
->  		mod_timer(&host->data_timer, timeout);
->  	else
->  		mod_timer(&host->timer, timeout);
-> @@ -1135,7 +1135,7 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->  		timeout += DIV_ROUND_UP(cmd->busy_timeout, 1000) * HZ + HZ;
->  	else
->  		timeout += 10 * HZ;
-> -	sdhci_mod_timer(host, cmd->mrq, timeout);
-> +	sdhci_mod_timer(host, cmd, timeout);
->  
->  	host->cmd = cmd;
->  	if (sdhci_data_line_cmd(cmd)) {
-> 
+
+--sh3hd2h2gy5ypoyu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Feb 16, 2018 at 03:52:09PM -0500, Stefan Monnier wrote:
+> From: Stefan Monnier <monnier@iro.umontreal.ca>
+>=20
+> Enable the display pipeline and HDMI output for the Orange Pi mini
+>=20
+> Signed-off-by: Stefan Monnier <monnier@iro.umontreal.ca>
+
+Applied, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
+
+--sh3hd2h2gy5ypoyu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqKhbcACgkQ0rTAlCFN
+r3QmpA/6AtJX6WYFkqMJVWrya3OqRYIDvU43ERY1yF2jeTuQr2qz6ogIDaG50ZMU
+A7eNMxhIKJn1cojen9jjg6wZ7JE6U83uIbw+r4RvlZ4YhPrSRKvhWG9P20fV4GgJ
+7ZO3rsawxMV2jIdH53QcBTAQpQiDiuiiXQ1XkvFWrFVjAYKHnQZ2k+xyWdBLYnEq
+AEWVk0awyuSUUpzD9AaXF9N6xVsleSMxlzM1ZOKOp9wBY8ueg/rj5yFdXJ2FoRmQ
+hbAhYjRLeEMpUk+C5GtFU3P/yDawtIeLZaJcNwHQcLJmwzg4jxsScP7h3M7NreQH
+JIFcUiXXRpZHRpXYg/4erZeX+qvaKnPaxuvsi0DzULfDnkYA7WaBM/gYGPa5VKH+
+UdAcg4NIEzNt/CVFuBCUTTMMx/tjRh22v2L7oJR/ib/TtrNfgdfde3KJ77i04YfK
+m0FzA2x31Oo5fWz8a6CAAFK7cBIusQlf0APrQX/9p5vm+KjDK0g8F4Dv+vcwcFQJ
+YErLUd6bk+/mSySVW4D2WNusPHEkUC7wk6JAGpHGXR920v58jH5cXx4QIha9it/t
+yFYOjqHG9wBTJ9E4xtgApJaSMGn8gFFURrJAX3My7y/yOplGtLSds8j6ufCPiRbk
+YUs5Jq6rvYWxPckX75a5AFtYAvY9RhW0qpcW5yo94ss39y4CZPE=
+=JLIY
+-----END PGP SIGNATURE-----
+
+--sh3hd2h2gy5ypoyu--
+
+
+--===============0166089748773053838==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0166089748773053838==--
