@@ -1,83 +1,88 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 3/8] drm/bridge: dw-hdmi: allow overriding of phy-type
- reading
-Date: Mon, 19 Feb 2018 21:06:40 +0200
-Message-ID: <16512170.VqSpgYmDPS@avalon>
-References: <20180216204158.29839-1-heiko@sntech.de>
- <3905607.btOD7ERYi5@avalon> <3104429.3dFhngZnWQ@phil>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 4/5] arm64: dts: renesas: initial Condor board device
+ tree
+Date: Mon, 19 Feb 2018 22:18:44 +0300
+Message-ID: <52bd5a2c-900e-7603-4cce-efa0fb315494@cogentembedded.com>
+References: <ae31804b-969b-9b20-16d0-50f5dea42f08@cogentembedded.com>
+ <5cf82cb1-0278-010c-165d-07dbcbe0878d@cogentembedded.com>
+ <CAMuHMdWwjXw0SwVK704_AtkDg3C-or5bUbXPwMEvTwU5eLGrpQ@mail.gmail.com>
+ <da5c612d-d23d-be36-7dfe-e3e78cc2b086@cogentembedded.com>
+ <20180219091223.rvumtwr6t47szrwo@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3104429.3dFhngZnWQ@phil>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, kishon@ti.com, robh+dt@kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180219091223.rvumtwr6t47szrwo@verge.net.au>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGVpa28sCgpPbiBNb25kYXksIDE5IEZlYnJ1YXJ5IDIwMTggMjA6NDY6NDYgRUVUIEhlaWtv
-IFN0dWVibmVyIHdyb3RlOgo+IEFtIE1vbnRhZywgMTkuIEZlYnJ1YXIgMjAxOCwgMTc6NTk6MDIg
-Q0VUIHNjaHJpZWIgTGF1cmVudCBQaW5jaGFydDoKPiA+IE9uIEZyaWRheSwgMTYgRmVicnVhcnkg
-MjAxOCAyMjo0MTo1MyBFRVQgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gPj4gSW4gc29tZSBJUCBp
-bXBsZW1lbnRhdGlvbnMgdGhlIHJlYWRpbmcgb2YgdGhlIHBoeS10eXBlIG1heSBiZSBicm9rZW4u
-Cj4gPj4gT25lIGV4YW1wbGUgYXJlIHRoZSBSb2NrY2hpcCByazMyMjggYW5kIHJrMzMyOCBzb2Nz
-IHRoYXQgdXNlIGEgc2VwYXJhdGUKPiA+PiBwaHkgZnJvbSBJbm5vc2lsaWNvbiBidXQgc3RpbGwg
-cmVwb3J0IHRoZSBIRE1JMjBfVFggdHlwZS4KPiA+PiAKPiA+PiBTbyBhbGxvdyB0aGUgZ2x1ZSBk
-cml2ZXIgdG8gZm9yY2UgYSBzcGVjaWZpYyB0eXBlLCBsaWtlIHRoZSB2ZW5kb3ItcGh5Cj4gPj4g
-Zm9yIHRoZXNlIGNhc2VzLgo+ID4+IAo+ID4+IFNpZ25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVy
-IDxoZWlrb0BzbnRlY2guZGU+Cj4gPiAKPiA+IFRlc3RlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8
-bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+IAo+IHRoYW5rcyBmb3IgdGVzdGlu
-ZyA6LSkKPiAKPiA+PiAtLS0KPiA+PiAKPiA+PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5v
-cHN5cy9kdy1oZG1pLmMgfCA0ICsrKy0KPiA+PiAgaW5jbHVkZS9kcm0vYnJpZGdlL2R3X2hkbWku
-aCAgICAgICAgICAgICAgfCAxICsKPiA+PiAgMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMo
-KyksIDEgZGVsZXRpb24oLSkKPiA+PiAKPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMKPiA+PiBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uv
-c3lub3BzeXMvZHctaGRtaS5jIGluZGV4Cj4gPj4gZjk4MDIzOTljYzBkLi41MGQyMzE2MjZjNGQg
-MTAwNjQ0Cj4gPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1p
-LmMKPiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYwo+
-ID4+IEBAIC0yMjE4LDcgKzIyMTgsOSBAQCBzdGF0aWMgaW50IGR3X2hkbWlfZGV0ZWN0X3BoeShz
-dHJ1Y3QgZHdfaGRtaQo+ID4+ICpoZG1pKQo+ID4+ICAJdW5zaWduZWQgaW50IGk7Cj4gPj4gIAl1
-OCBwaHlfdHlwZTsKPiA+PiAKPiA+PiAtCXBoeV90eXBlID0gaGRtaV9yZWFkYihoZG1pLCBIRE1J
-X0NPTkZJRzJfSUQpOwo+ID4+ICsJcGh5X3R5cGUgPSAoaGRtaS0+cGxhdF9kYXRhLT5waHlfZm9y
-Y2VfdHlwZSkgPwo+ID4+ICsJCQkJaGRtaS0+cGxhdF9kYXRhLT5waHlfZm9yY2VfdHlwZSA6Cj4g
-Pj4gKwkJCQloZG1pX3JlYWRiKGhkbWksIEhETUlfQ09ORklHMl9JRCk7Cj4gPiAKPiA+IE5vIG5l
-ZWQgZm9yIHBhcmVudGhlc2VzLiBZb3UgY291bGQgZXZlbiB3cml0ZSB0aGlzCj4gPiAKPiA+ICAg
-ICAgICAgcGh5X3R5cGUgPSBoZG1pLT5wbGF0X2RhdGEtPnBoeV9mb3JjZV90eXBlID8KPiA+ICAg
-ICAgICAgICAgICAgICAgOiBoZG1pX3JlYWRiKGhkbWksIEhETUlfQ09ORklHMl9JRCk7Cj4gPiAK
-PiA+IGJ1dCB0aGF0J3MgdXAgdG8geW91Lgo+ID4gCj4gPiBXaGF0IGlmIGEgZHJpdmVyIHdhbnRz
-IHRvIGZvcmNlIHRoZSBQSFkgdHlwZSB0bwo+ID4gRFdfSERNSV9QSFlfRFdDX0hETUlfVFhfUEhZ
-ID8gT3IgZG8geW91IGV4cGVjdCBvbmx5IHRoZQo+ID4gRFdfSERNSV9QSFlfVkVORE9SX1BIWSB0
-eXBlIHRvIGJlIGZvcmNlZCA/IElmIHNvLCB3ZSBjb3VsZCBhbHNvIHVzZSBhCj4gPiBmb3JjZV92
-ZW5kb3JfcGh5IGJvb2xlYW4gZmllbGQgaW5zdGVhZCBvZiBwaHlfZm9yY2VfdHlwZS4KPiAKPiBJ
-bml0aWFsbHkgSSB0aG91Z2h0IG9mIGltcGxpY2l0bHkgb3ZlcnJpZGluZyB0aGUgcGh5LXR5cGUg
-d2hlbiB0aGUgZXh0ZXJuYWwKPiBwaHktb3BzIGFyZSBzZXQsIGJ1dCBkZWNpZGVkIGFnYWluc3Qg
-aXQgYmVjYXVzZSB0aGF0IG1pZ2h0IGJyZWFrCj4gKHRoZW9yZXRpY2FsKSBjYXNlcyB3aGVyZSBw
-aHktb3BzIG1heSBiZSBhbHdheXMgc2V0IGJ1dCBvbmx5IHVzZWQgd2hlbgo+IHRoZSBpcCByZXR1
-cm5zIGEgbWF0Y2hpbmcgcGh5LXR5cGUgYW5kIHRodXMgY2FtZSB0byBqdXN0IGFsbG93IG92ZXJy
-aWRpbmcKPiB0aGF0IHR5cGUgcmVhZGluZy4KPiAKPiBBcyBmb3IgbGltaXRpbmcgdG8gb25seSBh
-bGxvdyBmb3JjaW5nIHRoZSB2ZW5kb3IgdHlwZSwgbXkgcGVyc29uYWwgZmVlbGluZwo+IHdvdWxk
-IGJlIHRvIGFsbG93IGdsdWUgZHJpdmVycyB0byBqdXN0IG92ZXJyaWRlIHRoZSB0eXBlIGFzIG5l
-ZWRlZAo+IGxpa2UgZG9uZSBpbiB0aGUgcGF0Y2guIEFzIGNhbiBiZSBzZWVuIG9uIHRoZSByazMz
-MjgsIHRoZSBkdy1oZG1pCj4gcmVwb3J0cyBvbmUgb2YgdGhlIHJlZ3VsYXIgcGh5cyAoZm9yZ290
-IHdoaWNoIG9uZSkgYnV0IGluc3RlYWQgaGFzIGEKPiBjb21wbGV0ZWx5IHNlcGFyYXRlIGlwIGZv
-ciBpdCwgc28gSSdkIGd1ZXNzIHdlIG1heSB2ZXJ5IHdlbGwgc2VlCj4gaW1wbGVtZW50YXRpb25z
-IHRoYXQganVzdCByZXBvcnQgYSB3cm9uZyB0eXBlIChubyB2ZW5kb3ItdHlwZSkuCj4gCj4gU28g
-SSBkb24ndCBzZWUgYW4gaXNzdWUgd2l0aCBkcml2ZXJzIGJlaW5nIGFsbG93ZWQgdG8gc2V0IHRo
-ZSB0eXBlIHRvCj4gRFdfSERNSV9QSFlfRFdDX0hETUlfVFhfUEhZLCBiZWNhdXNlIHN1Y2ggY2Fz
-ZXMgbWF5IGV4aXN0IGluIHRoZQo+IGZ1dHVyZSBhbmQgSSdkIGV4cGVjdCBkcml2ZXIgYXV0aG9y
-cyB0byBzb21ld2hhdCBrbm93IHdoYXQgdGhleSdyZSBkb2luZy4KCk15IHBvaW50IHdhcyB0aGF0
-IERXX0hETUlfUEhZX0RXQ19IRE1JX1RYX1BIWSA9PSAwLCBzbyB0cnlpbmcgdG8gZm9yY2UgCkRX
-X0hETUlfUEhZX0RXQ19IRE1JX1RYX1BIWSB0aHJvdWdoIHBoeV9mb3JjZV90eXBlIHdvbid0IHdv
-cmsuCgo+IEJ1dCBJJ20gbm90IHRpZWQgdG8gdGhhdCwgc28gd2lsbCBnbyB3aXRoIHRoZSBtYWpv
-cml0eSBvcGluaW9uIDotRCAuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 02/19/2018 12:12 PM, Simon Horman wrote:
+
+>>>> Add the initial device  tree for  the R8A77980 SoC based Condor board.
+>>>> The board has 1 debug serial port (SCIF0); include support for it, so
+>>>> that the serial console can work.
+>>>>
+>>>> Based on the original (and large) patch by Vladimir Barinov.
+>>>>
+>>>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>>
+>>>> ---
+>>>> Changes in version 2:
+>>>> - removed the useless "status" property from the SCIF_CLK node;
+>>>> - fixed the memory size;
+>>>> - added Geert's tag.
+>>>
+>>>> --- /dev/null
+>>>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77980-condor.dts
+>>>> @@ -0,0 +1,45 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Device Tree Source for the Condor board
+>>>> + *
+>>>> + * Copyright (C) 2018 Renesas Electronics Corp.
+>>>> + * Copyright (C) 2018 Cogent Embedded, Inc.
+>>>> + */
+>>>> +
+>>>> +/dts-v1/;
+>>>> +#include "r8a77980.dtsi"
+>>>> +
+>>>> +/ {
+>>>> +       model = "Renesas Condor board based on r8a77980";
+>>>> +       compatible = "renesas,condor", "renesas,r8a77980";
+>>>> +
+>>>> +       aliases {
+>>>> +               serial0 = &scif0;
+>>>> +       };
+>>>> +
+>>>> +       chosen {
+>>>> +               stdout-path = "serial0:115200n8";
+>>>> +       };
+>>>> +
+>>>> +       memory@48000000 {
+>>>> +               device_type = "memory";
+>>>> +               /* first 128MB is reserved for secure area. */
+>>>> +               reg = <0 0x48000000 0 0xb8000000>;
+>>>
+>>> Shouldn't the size be 0x78000000, or is there really 3 GiB of RAM?
+>>
+>>    Ugh, so I finally mixed up limit and size... :-/
+> 
+> Thanks, I will apply the following, with the memory corrected to 2 GiB.
+
+   Thank you! Just made sure that whatever is in this node in .dts, the RAM size
+ends up being 0x78000000. Probably U-Boot is too smart. :-)
+
+MBR, Sergei
