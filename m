@@ -1,108 +1,114 @@
 Return-Path: <SRS0=5STX=FN=gmail.com=thierry.reding@kernel.org>
-Date: Mon, 19 Feb 2018 15:27:33 +0100
+Date: Mon, 19 Feb 2018 15:24:33 +0100
 From: Thierry Reding <thierry.reding@gmail.com>
 Subject: Re: [PATCH V7 1/7] dt-bindings: ahci-tegra: add binding documentation
-Message-ID: <20180219142733.GC11455@ulmo>
+Message-ID: <20180219142433.GB11455@ulmo>
 References: <1518456406-21564-1-git-send-email-pchandru@nvidia.com>
  <1518456406-21564-2-git-send-email-pchandru@nvidia.com>
+ <20180219024635.n6yaussnqdxuop5x@rob-hp-laptop>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="96YOpH+ONegL0A3E"
+	protocol="application/pgp-signature"; boundary="Fba/0zbH8Xs+Fj9o"
 Content-Disposition: inline
-In-Reply-To: <1518456406-21564-2-git-send-email-pchandru@nvidia.com>
-To: Preetham Chandru Ramchandra <pchandru@nvidia.com>
-Cc: tj@kernel.org, cyndis@kapsi.fi, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, preetham260@gmail.com, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com
+In-Reply-To: <20180219024635.n6yaussnqdxuop5x@rob-hp-laptop>
+To: Rob Herring <robh@kernel.org>
+Cc: Preetham Chandru Ramchandra <pchandru@nvidia.com>, tj@kernel.org, cyndis@kapsi.fi, mark.rutland@arm.com, devicetree@vger.kernel.org, preetham260@gmail.com, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com
 List-ID: <devicetree@vger.kernel.org>
 
 
---96YOpH+ONegL0A3E
+--Fba/0zbH8Xs+Fj9o
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 12, 2018 at 10:56:40PM +0530, Preetham Chandru Ramchandra wrote:
-> From: Preetham Ramchandra <pchandru@nvidia.com>
+On Sun, Feb 18, 2018 at 08:46:35PM -0600, Rob Herring wrote:
+> On Mon, Feb 12, 2018 at 10:56:40PM +0530, Preetham Chandru Ramchandra wro=
+te:
+> > From: Preetham Ramchandra <pchandru@nvidia.com>
+> >=20
+> > This adds bindings documentation for the
+> > AHCI controller on Tegra210
+> >=20
+> > Signed-off-by: Preetham Chandru R <pchandru@nvidia.com>
+> > ---
+> > v7:
+> > * For Aux register set drop the Tegra210 since this register
+> >   set also works on Tegra124
+> > * rephrase the sentence for cml1 clock
+> > * change the commit subject to include ahci-tegra
+> > * drop pll_e since CCF handles it automatically as
+> >   CML1 is a child clock of it.
+> > v4:
+> > * changed the commit message
+> > * changed 'sata-cold' reset to mandatory for t210 and t124
+> > * Removed the regulators for T210 since these regulators
+> >   will be enabled in phy driver.
+> > v3:
+> > * Add AUX register.
+> > v2:
+> > * change cml1, pll_e and phy regulators as optional
+> >   for T210.
+> > ---
+> >  .../bindings/ata/nvidia,tegra124-ahci.txt          | 35 ++++++++++++++=
+--------
+> >  1 file changed, 22 insertions(+), 13 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci=
+=2Etxt b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
+> > index 66c83c3e8915..0f4520a00716 100644
+> > --- a/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
+> > +++ b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
+> > @@ -1,20 +1,19 @@
+> > -Tegra124 SoC SATA AHCI controller
+> > +Tegra SoC SATA AHCI controller
+> > =20
+> >  Required properties :
+> > -- compatible : For Tegra124, must contain "nvidia,tegra124-ahci".  Oth=
+erwise,
+> > -  must contain '"nvidia,<chip>-ahci", "nvidia,tegra124-ahci"', where <=
+chip>
+> > -  is tegra132.
+> > -- reg : Should contain 2 entries:
+> > +- compatible : Must be one of:
+> > +  - Tegra124 : "nvidia,tegra124-ahci"
+> > +  - Tegra210 : "nvidia,tegra210-ahci"
 >=20
-> This adds bindings documentation for the
-> AHCI controller on Tegra210
+> Are you dropping T132?
+>=20
+> > +- reg : Should contain 3 entries:
+>=20
+> You can't just add more entries to existing compatibles. Does this apply=
+=20
+> to T124?
 
-Please avoid lines that are too short. They shouldn't exceed 72
-characters, but you're supposed to make fully use of those. Also the
-above is a sentence, so should end with a '.'.
+I'd consider this a bug in existing DTSs. The SATA AUX registers exist
+as far back as Tegra30. The reason why they were never included in the
+DTS in because the driver never programmed those registers.
 
-> diff --git a/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.t=
-xt b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-> index 66c83c3e8915..0f4520a00716 100644
-> --- a/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-> +++ b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-> @@ -1,20 +1,19 @@
-> -Tegra124 SoC SATA AHCI controller
-> +Tegra SoC SATA AHCI controller
-> =20
->  Required properties :
-> -- compatible : For Tegra124, must contain "nvidia,tegra124-ahci".  Other=
-wise,
-> -  must contain '"nvidia,<chip>-ahci", "nvidia,tegra124-ahci"', where <ch=
-ip>
-> -  is tegra132.
-> -- reg : Should contain 2 entries:
-> +- compatible : Must be one of:
-> +  - Tegra124 : "nvidia,tegra124-ahci"
-> +  - Tegra210 : "nvidia,tegra210-ahci"
-> +- reg : Should contain 3 entries:
->    - AHCI register set (SATA BAR5)
->    - SATA register set
-> +  - AUX register set
->  - interrupts : Defines the interrupt used by SATA
->  - clocks : Must contain an entry for each entry in clock-names.
->    See ../clocks/clock-bindings.txt for details.
->  - clock-names : Must include the following entries:
->    - sata
->    - sata-oob
-> -  - cml1
-> -  - pll_e
->  - resets : Must contain an entry for each entry in reset-names.
->    See ../reset/reset.txt for details.
->  - reset-names : Must include the following entries:
-> @@ -24,9 +23,19 @@ Required properties :
->  - phys : Must contain an entry for each entry in phy-names.
->    See ../phy/phy-bindings.txt for details.
->  - phy-names : Must include the following entries:
-> -  - sata-phy : XUSB PADCTL SATA PHY
-> -- hvdd-supply : Defines the SATA HVDD regulator
-> -- vddio-supply : Defines the SATA VDDIO regulator
-> -- avdd-supply : Defines the SATA AVDD regulator
-> -- target-5v-supply : Defines the SATA 5V power regulator
-> -- target-12v-supply : Defines the SATA 12V power regulator
-> +  - For T124:
-> +    - sata-phy : XUSB PADCTL SATA PHY
-> +  - For T210:
-> +    - sata-0
-> +- For T124:
-
-Can we please use TegraXYZ here? I find it useful to be consistent here
-because those will show up if I grep for "tegra", whereas TXYZ won't.
+However, the driver change in patch 5/7 which uses this has a comment
+that AUX registers are optional, so perhaps we can just add that fact to
+the bindings as well.
 
 Thierry
 
---96YOpH+ONegL0A3E
+--Fba/0zbH8Xs+Fj9o
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqK3tUACgkQ3SOs138+
-s6E2QQ/+K0ggtXK0LGrL27RTS4DO9e/dowrX33gYK7H9bm3PFx3qBj1BNYAspVEI
-fJIRYOMhGIz5pDkaVGOj3lkuftVzW3LEYCAYyaGD2HoLqY3Ixum7dIqzvIkBkF1p
-eSHGIzXsxCgSMT8H3ncI8AgOd0y7rgH8lQFx4dbcUhDIiiSPEZJBEscm2aPDcO/S
-fGHY4836RcQmq7uRiGCjq/oHDqo+h5u/a4gLh34Ss48TrzjnRLnjQboL1fnk93bW
-fUPl1z+L0ku6ypFLtzlwiKFZ6+kePqOYuLqb4hAEVe6n7Vxtp3eYJgbFBbyycQJ1
-zlIY8tsQe2pnOMmdlkkVsmMGylMOmns+nKLxTNBIC3vZdmPRC8emfj4MauzpANCF
-yQNHZYLwxhSmMJHullZ2ZV71FlZVI3z8sanE86V84KgI6M1lSyuoDJ8yBoFe3wEP
-1Sc83WU1n9GAhA4XpiI3/rY26hUBQ0IF33VCoCo9EShydAeFl3Y6jfXjiPSC7iWW
-TBkJDvve/VAbM2immGTMSeMpoOzRYAbihWeQt3YWMmFgMO2dnGPTCB+j+tMo7TfK
-IeN+gMAuGGXQRkRiJvF4QVXBUmgy3ovI2vjJIpuAtXp5aMgMK2miXJKFWWAZfNHj
-WAj7n0O64muN5F2dl5p9720snl+d8tYTtG8417v5bKbXj6SPLS4=
-=K/MR
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqK3iEACgkQ3SOs138+
+s6GmTg//SZ+IfVZRmAA/A3Yx4zFS4PmqTquiqJ3iWFuIryiftBAZMTLgpZ++LsZ9
+Px8IXKUfkOWjMeHIskU3CJCMHRYuz3iqVYekaCJ7hWgOw1xmZSGcKuKjO/70sur5
++waERE0loorhEoSgXm1D/MdV92XbZoQZvcEkIAf282B9ln+sg+G/l6QPUAe7XTPy
+X9m00YgVYlJ8Md41tHDTxOf55XybIxelN1KJpwl7Zoq1As638SGycAH3KC/7ev5j
+utTxpeX629O5BqxO95TGdnqnmgu/E/8rh7pCFt2x8FNTSCzNFjJ5uyfBdAeSrvd2
+FyxjeUSGDrvWMhxH4g1n/4LjaikLAk61VaLWiw1ZmnYjN5yFbmlkRqLE4jeYRdKP
+MDRQRdPtuXZOtrJnMyh02bO0vQ8yBLg4pdYeU1KqbJozuE83XRVCh4AgvZ5cFq75
+1hngFfL5Ac/H78+LDorbX9JYClS6RKxw4kAJW8bfKnnT1Asz8qf7JkeKnLZRYkME
+u6N1YE6DdJGze6VLMVErCurXEPZJFDyUXBEzKuz46CCyN2OflML0kV/KpbKUbRkQ
+INit60YHuFwXf2Gyc/8g6GawEFd7+cjB0DDxebxSh09s5ZQ1qXmzQxMrb2RW0PzA
+hCVPasGkjNp/EPsH9x6xDrxlzI4+XanwCh/+sDQXp+VHPBK8ojg=
+=kwB/
 -----END PGP SIGNATURE-----
 
---96YOpH+ONegL0A3E--
+--Fba/0zbH8Xs+Fj9o--
