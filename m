@@ -1,50 +1,46 @@
-Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-he1eur01on0073.outbound.protection.outlook.com ([104.47.0.73]:64918
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752877AbeBZME7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Feb 2018 07:04:59 -0500
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v2 05/12] staging: typec: tcpci: enable vbus detection
-Date: Mon, 26 Feb 2018 19:49:12 +0800
-Message-Id: <1519645759-12701-6-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
-References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.free-electrons.com ([62.4.15.54]:49680 "EHLO
+        mail.free-electrons.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932116AbeBSWUu (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 19 Feb 2018 17:20:50 -0500
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v2 0/2] Update 64-bit DT with new NAND controller bindings
+Date: Mon, 19 Feb 2018 23:20:43 +0100
+Message-Id: <20180219222045.1927-1-miquel.raynal@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-TCPCI implementation may need SW to enable VBUS detection to generate
-power status events.
+Hello,
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
-Change for v2:
-- Directly enable vbus detect in tcpci_init rather than adding a API.
+These two patches have already been submitted and accepted by Gregory
+and were stacked for 4.17. But since then a small modification happened
+due to a request from Rob Herring. Also, armada-cp110-[master/slave].dtsi
+files became armada-cp110.dtsi due to the DT de-duplication work from
+Thomas Petazzoni. This small series should replace the two patches
+laying in the mvebu tree and should apply cleanly.
 
- drivers/staging/typec/tcpci.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Thank you,
+Miquèl
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 1db67f0..953fc97 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -345,6 +345,12 @@ static int tcpci_init(struct tcpc_dev *tcpc)
- 	if (ret < 0)
- 		return ret;
- 
-+	/* Enable Vbus detection */
-+	ret = regmap_write(tcpci->regmap, TCPC_COMMAND,
-+			   TCPC_CMD_ENABLE_VBUS_DETECT);
-+	if (ret < 0)
-+		return ret;
-+
- 	reg = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_FAILED |
- 		TCPC_ALERT_TX_DISCARDED | TCPC_ALERT_RX_STATUS |
- 		TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_CC_STATUS;
+Changes since v1:
+  - Renamed a NAND property: s/marvell,rb/nand-rb/ which is already
+    documented.
+  - Rebased on v4.16-rc1.
+
+Miquel Raynal (2):
+  arm64: dts: marvell: use reworked NAND controller driver on Armada 7K
+  arm64: dts: marvell: use reworked NAND controller driver on Armada 8K
+
+ arch/arm64/boot/dts/marvell/armada-7040-db.dts | 50 ++++++++++++++++----------
+ arch/arm64/boot/dts/marvell/armada-8040-db.dts | 44 +++++++++++++----------
+ arch/arm64/boot/dts/marvell/armada-cp110.dtsi  |  8 ++---
+ 3 files changed, 61 insertions(+), 41 deletions(-)
+
 -- 
-2.7.4
+2.14.1
 
