@@ -1,92 +1,103 @@
-Return-Path: <robherring2@gmail.com>
-Date: Sun, 18 Feb 2018 17:34:53 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] Input: gpio-keys - allow setting wakeup interrupt
- trigger type in DT
-Message-ID: <20180218233453.ytvuvggnzx5rhbls@rob-hp-laptop>
-References: <20180209115510.11868-1-jeffy.chen@rock-chips.com>
- <20180209115510.11868-3-jeffy.chen@rock-chips.com>
- <20180209234246.GA252335@ban.mtv.corp.google.com>
+Return-Path: <SRS0=h/bn=FN=gmail.com=frowand.list@kernel.org>
+Subject: Re: [PATCH v3 4/4] of: improve reporting invalid overlay target path
+References: <1518672946-7310-1-git-send-email-frowand.list@gmail.com>
+ <1518672946-7310-5-git-send-email-frowand.list@gmail.com>
+ <20180219032141.lapcr32f4zqulvvb@rob-hp-laptop>
+From: Frank Rowand <frowand.list@gmail.com>
+Message-ID: <b2bd1af4-1231-23d9-fd89-ad45d49d8257@gmail.com>
+Date: Sun, 18 Feb 2018 22:30:40 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180209234246.GA252335@ban.mtv.corp.google.com>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Jeffy Chen <jeffy.chen@rock-chips.com>, linux-kernel@vger.kernel.org, briannorris@google.com, dtor@google.com, dianders@google.com, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <20180219032141.lapcr32f4zqulvvb@rob-hp-laptop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Feb 09, 2018 at 03:42:47PM -0800, Brian Norris wrote:
-> Hi Jeffy,
+On 02/18/18 19:21, Rob Herring wrote:
+> On Wed, Feb 14, 2018 at 09:35:46PM -0800, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Errors while developing the patch to create of_overlay_fdt_apply()
+>> exposed inadequate error messages to debug problems when overlay
+>> devicetree fragment nodes contain an invalid target path.  Improve
+>> the messages in find_target_node() to remedy this.
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>>
+>> changes from v2:
+>>   - add fragment node name as suggested by Geert
+>>   - existing error message printed short node name, thus not
+>>     discriminating between fragments; change to full node name
+>>   - existing error message printed node address, which is devicetree
+>>     internal debugging, not useful in an overlay apply error message;
+>>     remove node address from message
+>>
+>>  drivers/of/overlay.c | 22 ++++++++++++++++------
+>>  1 file changed, 16 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>> index 5f6c5569e97d..852e566d7744 100644
+>> --- a/drivers/of/overlay.c
+>> +++ b/drivers/of/overlay.c
+>> @@ -488,20 +488,30 @@ static int build_changeset(struct overlay_changeset *ovcs)
+>>   */
+>>  static struct device_node *find_target_node(struct device_node *info_node)
+>>  {
+>> +	struct device_node *node;
+>>  	const char *path;
+>>  	u32 val;
+>>  	int ret;
+>>  
+>>  	ret = of_property_read_u32(info_node, "target", &val);
+>> -	if (!ret)
+>> -		return of_find_node_by_phandle(val);
+>> +	if (!ret) {
+>> +		node = of_find_node_by_phandle(val);
+>> +		if (!node)
+>> +			pr_err("find target, node: %pOF, phandle 0x%x not found\n",
 > 
-> On Fri, Feb 09, 2018 at 07:55:09PM +0800, Jeffy Chen wrote:
-> > Allow specifying a different interrupt trigger type for wakeup when
-> > using the gpio-keys input device as a wakeup source.
-> > 
-> > Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> > ---
-> > 
-> >  Documentation/devicetree/bindings/input/gpio-keys.txt | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
-> > index a94940481e55..61926cef708f 100644
-> > --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
-> > +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-> > @@ -26,6 +26,15 @@ Optional subnode-properties:
-> >  	  If not specified defaults to 5.
-> >  	- wakeup-source: Boolean, button can wake-up the system.
-> >  			 (Legacy property supported: "gpio-key,wakeup")
-> > +	- wakeup-trigger-type: Specifies the interrupt trigger type for wakeup.
-> > +		 The value is defined in <dt-bindings/interrupt-controller/irq.h>
-> 
-> Do you really want to codify interrupt triggers here? It seems like most
-> of the information about edge vs. level is already codified elsewhere,
-> so this becomes a little redundant. And in fact, some bindings may be
-> specifying a "gpio", not technically an interrupt (at least not
-> directly), so it feels weird to apply IRQ_* flags to them right here.
-> Anyway, I think he only piece you really want to describe here is, do we
-> wake on "event asserted", "event deasserted", or both. (The "none" case
-> would just mean you shouldn't have the "wakeup-source" property.)
-> 
-> So maybe:
-> 
-> 	wakeup-trigger-type: Specifies whether the key should wake the
-> 	system when asserted, when deasserted, or both. This property is
-> 	only valid for keys that wake up the system (e.g., when the
-> 	"wakeup-source" property is also provided). Supported values
-> 	are:
-> 	  1: asserted
+> I'm wondering if the core should print the error rather than having all 
+> the callers do it. The question is whether there are cases where failing 
+> is okay? I guess sometimes we use 0 to skip cells, but the core handle 
+> not printing an error in that case.
 
-As wakeup is an IRQ, that's assumed.
+find_target_node() is overlay specific, and is only called from one location
+in overlay.c.
 
-> 	  2: deasserted
+There are no cases where failing is ok.  This is used to find the target
+node that an overlay fragment is being applied to.  If it fails then
+either the base devicetree or the overlay devicetree has an error.
 
-Just invert the flags for the IRQ.
+-Frank
 
-> 	  3: both asserted and deasserted
 
-I don't see what would be the usecase. But wouldn't this be any edge 
-(because level certainly doesn't make sense)?
-
+> Rob
 > 
-> ? We could still make macros out of those, if we want
-> (input/linux-event-codes.h?). And then leave it up to the driver to
-> determine how to translate that into the appropriate edge or level
-> triggers.
+>> +			       info_node, val);
+>> +		return node;
+>> +	}
+>>  
+>>  	ret = of_property_read_string(info_node, "target-path", &path);
+>> -	if (!ret)
+>> -		return of_find_node_by_path(path);
+>> +	if (!ret) {
+>> +		node =  of_find_node_by_path(path);
+>> +		if (!node)
+>> +			pr_err("find target, node: %pOF, path '%s' not found\n",
+>> +			       info_node, path);
+>> +		return node;
+>> +	}
+>>  
+>> -	pr_err("Failed to find target for node %p (%s)\n",
+>> -		info_node, info_node->name);
+>> +	pr_err("find target, node: %pOF, no target property\n", info_node);
+>>  
+>>  	return NULL;
+>>  }
+>> -- 
+>> Frank Rowand <frank.rowand@sony.com>
+>>
 > 
-> Brian
-> 
-> > +		 Only the following flags are supported:
-> > +			IRQ_TYPE_NONE
-> > +			IRQ_TYPE_EDGE_RISING
-> > +			IRQ_TYPE_EDGE_FALLING
-> > +			IRQ_TYPE_EDGE_BOTH
-> > +			IRQ_TYPE_LEVEL_HIGH
-> > +			IRQ_TYPE_LEVEL_LOW
-> >  	- linux,can-disable: Boolean, indicates that button is connected
-> >  	  to dedicated (not shared) interrupt which can be disabled to
-> >  	  suppress events from the button.
-> > -- 
-> > 2.11.0
-> > 
-> > 
