@@ -1,16 +1,13 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 05/10] dt-bindings: gpio: Add gpio nodes for Actions S900
- SoC
-Date: Mon, 19 Feb 2018 14:35:23 -0600
-Message-ID: <20180219203523.rhvbnym7oomzahwi@rob-hp-laptop>
-References: <20180217204433.3095-1-manivannan.sadhasivam@linaro.org>
- <20180217204433.3095-6-manivannan.sadhasivam@linaro.org>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v7 29/42] ARM: davinci: remove CONFIG_DAVINCI_RESET_CLOCKS
+Date: Mon, 19 Feb 2018 14:21:50 -0600
+Message-ID: <1519071723-31790-30-git-send-email-david@lechnology.com>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180217204433.3095-6-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1519071723-31790-1-git-send-email-david@lechnology.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,43 +17,79 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, linus.walleij@linaro.org, liuwei@actions-semi.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-gpio@vger.kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 18, 2018 at 02:14:28AM +0530, Manivannan Sadhasivam wrote:
-> Add gpio nodes for Actions Semi S900 SoC.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../devicetree/bindings/gpio/actions,owl-gpio.txt         | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt b/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
-> new file mode 100644
-> index 000000000000..4cd4cb7bfd1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
-> @@ -0,0 +1,15 @@
-> +* Actions Semi OWL GPIO controller bindings
-> +
-> +- compatible      : Should be "actions,s900-gpio"
-> +- reg             : Address and range of the GPIO controller registers.
-> +- gpio-controller : Marks the device node as a GPIO controller.
-> +- #gpio-cells     : Should be <2>. The first cell is the gpio number and
-> +                    the second cell is used to specify optional parameters.
+The common clock framework will take care of disabling unused clocks when
+we switch from the legacy davinci clocks and having this enabled will
+cause compile errors after we switch, so remove it now.
 
-Doesn't do interrupts?
+Signed-off-by: David Lechner <david@lechnology.com>
+Reviewed-by: Sekhar Nori <nsekhar@ti.com>
+---
 
-> +
-> +Example:
-> +       gpio: gpio@e01b0000 {
-> +               compatible = "actions,s900-gpio";
-> +               reg = <0x0 0xe01b0000 0x0 0x1000>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +       };
-> -- 
-> 2.14.1
-> 
+v7 changes:
+- none
+
+v6 changes:
+- none
+
+
+ arch/arm/mach-davinci/Kconfig               | 12 ------------
+ arch/arm/mach-davinci/common.c              |  1 -
+ arch/arm/mach-davinci/include/mach/common.h |  6 ------
+ 3 files changed, 19 deletions(-)
+
+diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
+index 05c3eecf..ba9912b 100644
+--- a/arch/arm/mach-davinci/Kconfig
++++ b/arch/arm/mach-davinci/Kconfig
+@@ -231,18 +231,6 @@ config DAVINCI_MUX_WARNINGS
+ 	  to change the pin multiplexing setup. When there are no warnings
+ 	  printed, it's safe to deselect DAVINCI_MUX for your product.
+ 
+-config DAVINCI_RESET_CLOCKS
+-	bool "Reset unused clocks during boot"
+-	depends on ARCH_DAVINCI
+-	help
+-	  Say Y if you want to reset unused clocks during boot.
+-	  This option saves power, but assumes all drivers are
+-	  using the clock framework. Broken drivers that do not
+-	  yet use clock framework may not work with this option.
+-	  If you are booting from another operating system, you
+-	  probably do not want this option enabled until your
+-	  device drivers work properly.
+-
+ endmenu
+ 
+ endif
+diff --git a/arch/arm/mach-davinci/common.c b/arch/arm/mach-davinci/common.c
+index bcb6a7b..e03f95c 100644
+--- a/arch/arm/mach-davinci/common.c
++++ b/arch/arm/mach-davinci/common.c
+@@ -118,5 +118,4 @@ void __init davinci_common_init(const struct davinci_soc_info *soc_info)
+ void __init davinci_init_late(void)
+ {
+ 	davinci_cpufreq_init();
+-	davinci_clk_disable_unused();
+ }
+diff --git a/arch/arm/mach-davinci/include/mach/common.h b/arch/arm/mach-davinci/include/mach/common.h
+index 5f45d0a..ded8f5f 100644
+--- a/arch/arm/mach-davinci/include/mach/common.h
++++ b/arch/arm/mach-davinci/include/mach/common.h
+@@ -83,12 +83,6 @@ extern void davinci_common_init(const struct davinci_soc_info *soc_info);
+ extern void davinci_init_ide(void);
+ void davinci_init_late(void);
+ 
+-#ifdef CONFIG_DAVINCI_RESET_CLOCKS
+-int davinci_clk_disable_unused(void);
+-#else
+-static inline int davinci_clk_disable_unused(void) { return 0; }
+-#endif
+-
+ #ifdef CONFIG_CPU_FREQ
+ int davinci_cpufreq_init(void);
+ #else
+-- 
+2.7.4
