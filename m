@@ -1,46 +1,36 @@
-Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH 0/8] hisi_sas: support x6000 board and some misc changes
-Date: Tue, 20 Feb 2018 03:13:23 +0800
-Message-ID: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, John Garry <john.garry@huawei.com>
+Return-Path: <SRS0=kFSR=FN=gmail.com=joel.stan@kernel.org>
+Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2 0/3] misc: aspeed-lpc-ctrl fixes
+Date: Mon, 19 Feb 2018 17:54:19 +1030
+Message-Id: <20180219072422.22733-1-joel@jms.id.au>
+To: Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Cyril Bur <cyrilbur@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Lei YU <mine260309@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patchset primarily adds support for the Huawei x6000 board,
-which includes hip07 chipset. Unfortunately, due to some board
-layout differences with our development board, we need to set
-a PHY-related register differently for optimal signal quality. As
-such, a signal attenuation property is added to describe the
-differences in the boards and allow the PHY register to be set
-appropriately.
+Hi Greg,
 
-In addition to this above feature, some misc changes are added for:
-- PHY linkrate sysfs interface
-- linkrate set function
-- internal abort timer timeout increase
+Once Andrew has acked the bindings I think this is ready to go.
 
-Xiang Chen (2):
-  scsi: hisi_sas: remove unused variable hisi_sas_devices.running_req
-  scsi: hisi_sas: Code cleanup and minor bug fixes
+v2: Fix binding layout and add Rob's ack
 
-Xiaofei Tan (6):
-  dt-bindings: scsi: hisi_sas: add an property of signal attenuation
-  scsi: hisi_sas: support the property of signal attenuation for v2 hw
-  scsi: hisi_sas: fix the issue of link rate inconsistency
-  scsi: hisi_sas: fix the issue of setting linkrate register
-  scsi: hisi_sas: increase timer expire of internal abort task
-  scsi: hisi_sas: fix return value of hisi_sas_task_prep()
+These patches were developed when testing upstream Linux with OpenBMC on
+Romulus. We need to ensure the LPC clock is enabled, now that the clock
+driver turns off any unused clocks. We also need to enable the LPC
+firmware cycles bit as we do not intend to upstream any mach-aspeed
+hacks.
 
- .../devicetree/bindings/scsi/hisilicon-sas.txt     |  7 +++
- drivers/scsi/hisi_sas/hisi_sas.h                   |  1 -
- drivers/scsi/hisi_sas/hisi_sas_main.c              | 34 +++++-------
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c             | 13 +++--
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c             | 62 +++++++++++++++++-----
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c             | 34 +++++-------
- 6 files changed, 88 insertions(+), 63 deletions(-)
+There was no existing binding document for the LPC host interface
+controller, so I wrote one that includes the required clock description.
+
+Joel Stanley (3):
+  dt-bindings: aspeed-lpc: Document LPC Host Interface Controller
+  misc: aspeed-lpc: Request and enable LPC clock
+  misc: aspeed-lpc-ctrl: Enable FWH and A2H bridge cycles
+
+ .../devicetree/bindings/mfd/aspeed-lpc.txt         | 41 ++++++++++++++++++++
+ drivers/misc/aspeed-lpc-ctrl.c                     | 44 +++++++++++++++++++---
+ 2 files changed, 80 insertions(+), 5 deletions(-)
 
 -- 
-1.9.1
+2.15.1
