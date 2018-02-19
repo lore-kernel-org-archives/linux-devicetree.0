@@ -1,97 +1,49 @@
-Return-Path: <SRS0=YrF9=FM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-qk0-f194.google.com ([209.85.220.194]:36354 "EHLO
-        mail-qk0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751440AbeBRPHw (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 18 Feb 2018 10:07:52 -0500
-MIME-Version: 1.0
-In-Reply-To: <20180217020756.21474-1-marek.vasut+renesas@gmail.com>
-References: <20180217020756.21474-1-marek.vasut+renesas@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Sun, 18 Feb 2018 16:07:51 +0100
-Message-ID: <CAMuHMdUiGAV7r55mqRH549BufDsh8_j8_S-BD_49sCM=aO9hZQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: porter: Add missing PMIC nodes
-Content-Type: text/plain; charset="UTF-8"
+Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.free-electrons.com ([62.4.15.54]:49942 "EHLO
+        mail.free-electrons.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932163AbeBSWgH (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 19 Feb 2018 17:36:07 -0500
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v4 5/6] arm: dts: pxa: use reworked NAND controller driver
+Date: Mon, 19 Feb 2018 23:35:56 +0100
+Message-Id: <20180219223557.2458-6-miquel.raynal@bootlin.com>
+In-Reply-To: <20180219223557.2458-1-miquel.raynal@bootlin.com>
+References: <20180219223557.2458-1-miquel.raynal@bootlin.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Steve Twiss <stwiss.opensource@diasemi.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Cc: linux-mtd@lists.infradead.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Eric Miao <eric.y.miao@gmail.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Marek,
+Use the new bindings of the reworked Marvell NAND controller driver.
 
-CC Steve Twiss
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ arch/arm/boot/dts/pxa3xx.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On Sat, Feb 17, 2018 at 3:07 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> Add PMIC nodes to Porter and connect CPU DVFS supply. There is
-> one DA9063 and one DA9210 on Porter, the only difference from
-> the other boards is that DA9063 is at I2C address 0x5a rather
-> than 0x58 .
->
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
+index 55c75b67351c..982d1a62661d 100644
+--- a/arch/arm/boot/dts/pxa3xx.dtsi
++++ b/arch/arm/boot/dts/pxa3xx.dtsi
+@@ -117,15 +117,15 @@
+ 			status = "disabled";
+ 		};
+ 
+-		nand0: nand@43100000 {
+-			compatible = "marvell,pxa3xx-nand";
++		nand_controller: nand-controller@43100000 {
++			compatible = "marvell,pxa3xx-nand-controller";
+ 			reg = <0x43100000 90>;
+ 			interrupts = <45>;
+ 			clocks = <&clks CLK_NAND>;
+ 			dmas = <&pdma 97 3>;
+ 			dma-names = "data";
+ 			#address-cells = <1>;
+-			#size-cells = <1>;	
++			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.14.1
 
-Thanks for your patch!
-
-> --- a/arch/arm/boot/dts/r8a7791-porter.dts
-> +++ b/arch/arm/boot/dts/r8a7791-porter.dts
-> @@ -354,10 +354,47 @@
->         clock-frequency = <400000>;
->  };
->
-> +&i2c6 {
-> +       status = "okay";
-> +       clock-frequency = <100000>;
-> +
-> +       pmic@5a {
-> +               compatible = "dlg,da9063";
-
-Does it matter that this is a DA9063L ("Variant 6B")?
-Do we need a new compatible value, or can this be detected at runtime?
-
-> +               reg = <0x5a>;
-> +               interrupt-parent = <&irqc0>;
-> +               interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-> +               interrupt-controller;
-> +
-> +               rtc {
-> +                       compatible = "dlg,da9063-rtc";
-> +               };
-> +
-> +               wdt {
-> +                       compatible = "dlg,da9063-watchdog";
-> +               };
-> +       };
-> +
-> +       vdd_dvfs: regulator@68 {
-> +               compatible = "dlg,da9210";
-> +               reg = <0x68>;
-> +               interrupt-parent = <&irqc0>;
-> +               interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +               regulator-min-microvolt = <1000000>;
-> +               regulator-max-microvolt = <1000000>;
-> +               regulator-boot-on;
-> +               regulator-always-on;
-> +       };
-> +};
-> +
->  &sata0 {
->         status = "okay";
->  };
->
-> +&cpu0 {
-> +       cpu0-supply = <&vdd_dvfs>;
-> +};
-> +
->  /* composite video input */
->  &vin0 {
->         status = "okay";
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
