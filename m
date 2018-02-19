@@ -1,14 +1,12 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v2 0/2] Add reboot modes for LEGO MINDSTORMS EV3
-Date: Mon, 19 Feb 2018 12:03:35 -0600
-Message-ID: <be3b9e55-a425-cf82-39e4-6ee625ece7fd@lechnology.com>
-References: <1515724191-30499-1-git-send-email-david@lechnology.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] arm64: dts: r8a77965-salvator-xs: Add support for Salvator-XS
+ with R-Car M3-N
+Date: Mon, 19 Feb 2018 19:18:22 +0100
+Message-ID: <1519064302-12003-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1515724191-30499-1-git-send-email-david@lechnology.com>
-Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,29 +16,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2018 08:29 PM, David Lechner wrote:
-> This series adds a new device tree node to declare a special memory
-> address that is used by the I2C bootloader on LEGO MINDSTORMS EV3
-> to boot into a special firmware update mode and enables the required
-> module to use it.
-> 
-> v2 changes:
-> * rebase on linux-davinci/master
-> 
-> David Lechner (2):
->    ARM: dts: da850-lego-ev3: Add node for reboot modes
->    ARM: davinci_all_defconfig: enable SYSCON_REBOOT_MODE
-> 
->   arch/arm/boot/dts/da850-lego-ev3.dts   | 17 +++++++++++++++++
->   arch/arm/configs/davinci_all_defconfig |  1 +
->   2 files changed, 18 insertions(+)
-> 
+From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 
-Hi Sekhar,
+Add initial support for the Renesas Salvator-XS (Salvator-X 2nd version)
+development board equipped with an R-Car M3-N SiP.
 
-Any objection to pickup up this series? It is independent of all
-of the other changes I have been working on.
+Most features are enabled through the shared salvator-xs.dtsi board
+description.  The memory configuration is specific to the M3-N SiP.
+
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+[geert: Switch to SPDX-License-Identifier, update patch description]
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Against renesas-devel-20180212-v4.16-rc1 with Jacopo Mondi's "[PATCH
+00/15] R-Car M3-N initial support"
+(https://www.spinics.net/lists/arm-kernel/msg634121.html).
+See branches topic/r8a77965-v1 and topic/r8a77965-v1+ in
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git.
+
+ arch/arm64/boot/dts/renesas/Makefile                |  2 +-
+ .../arm64/boot/dts/renesas/r8a77965-salvator-xs.dts | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
+
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index 3680ecd638c44482..e9b525123a2e5f9a 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -7,6 +7,6 @@ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-es1-h3ulcb-kf.dtb
+ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb r8a7796-m3ulcb.dtb
+ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-m3ulcb-kf.dtb
+ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-xs.dtb
+-dtb-$(CONFIG_ARCH_R8A77965) += r8a77965-salvator-x.dtb
++dtb-$(CONFIG_ARCH_R8A77965) += r8a77965-salvator-x.dtb r8a77965-salvator-xs.dtb
+ dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-eagle.dtb r8a77970-v3msk.dtb
+ dtb-$(CONFIG_ARCH_R8A77995) += r8a77995-draak.dtb
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
+new file mode 100644
+index 0000000000000000..8a45fc43348d9adc
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-xs.dts
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Device Tree Source for the Salvator-X 2nd version board
++ *
++ * Copyright (C) 2017 Renesas Electronics Corp.
++ */
++
++/dts-v1/;
++#include "r8a77965.dtsi"
++#include "salvator-xs.dtsi"
++
++/ {
++	model = "Renesas Salvator-X 2nd version board based on r8a77965";
++	compatible = "renesas,salvator-xs", "renesas,r8a77965";
++
++	memory@48000000 {
++		device_type = "memory";
++		/* first 128MB is reserved for secure area. */
++		reg = <0x0 0x48000000 0x0 0x78000000>;
++	};
++};
+-- 
+2.7.4
