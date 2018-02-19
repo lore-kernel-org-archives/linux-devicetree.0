@@ -1,72 +1,100 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-Subject: [PATCH v3 5/7] arm: dts: sun8i: a83t: Add CCI-400 node
-Date: Mon, 19 Feb 2018 09:18:35 +0100
-Message-ID: <20180219081837.15482-6-mylene.josserand@bootlin.com>
-References: <20180219081837.15482-1-mylene.josserand@bootlin.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/2] arm64: dts: rockchip: move rk3399-sapphire sdio to
+ excavator baseboard
+Date: Mon, 19 Feb 2018 09:15:16 +0100
+Message-ID: <3840224.sEPfbROKII@phil>
+References: <CAAMcf8CY1m+998+GpD2wOfAZb=oZNkL2GqYu_o5piGEh76uoYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180219081837.15482-1-mylene.josserand@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: maxime.ripard@bootlin.com, wens@csie.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAAMcf8CY1m+998+GpD2wOfAZb=oZNkL2GqYu_o5piGEh76uoYw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Vicente Bergas <vicencb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIENDSS00MDAgbm9kZSBhbmQgY29udHJvbC1wb3J0IG9uIENQVXMgbmVlZGVkIGJ5IFNNUCBi
-cmluZ3VwLgoKU2lnbmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJh
-bmRAYm9vdGxpbi5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNpIHwg
-NDEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdl
-ZCwgNDEgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhp
-LWE4M3QuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaQppbmRleCA3YWU2
-MzFmYzA0ZDUuLmU5N2E2ZDE3YjhkMCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3Vu
-OGktYTgzdC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaQpAQCAt
-NjQsNDggKzY0LDU2IEBACiAJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTciOwogCQkJZGV2
-aWNlX3R5cGUgPSAiY3B1IjsKIAkJCXJlZyA9IDwwPjsKKwkJCWNjaS1jb250cm9sLXBvcnQgPSA8
-JmNjaV9jb250cm9sMD47CiAJCX07CiAKIAkJY3B1QDEgewogCQkJY29tcGF0aWJsZSA9ICJhcm0s
-Y29ydGV4LWE3IjsKIAkJCWRldmljZV90eXBlID0gImNwdSI7CiAJCQlyZWcgPSA8MT47CisJCQlj
-Y2ktY29udHJvbC1wb3J0ID0gPCZjY2lfY29udHJvbDA+OwogCQl9OwogCiAJCWNwdUAyIHsKIAkJ
-CWNvbXBhdGlibGUgPSAiYXJtLGNvcnRleC1hNyI7CiAJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOwog
-CQkJcmVnID0gPDI+OworCQkJY2NpLWNvbnRyb2wtcG9ydCA9IDwmY2NpX2NvbnRyb2wwPjsKIAkJ
-fTsKIAogCQljcHVAMyB7CiAJCQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTciOwogCQkJZGV2
-aWNlX3R5cGUgPSAiY3B1IjsKIAkJCXJlZyA9IDwzPjsKKwkJCWNjaS1jb250cm9sLXBvcnQgPSA8
-JmNjaV9jb250cm9sMD47CiAJCX07CiAKIAkJY3B1QDEwMCB7CiAJCQljb21wYXRpYmxlID0gImFy
-bSxjb3J0ZXgtYTciOwogCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsKIAkJCXJlZyA9IDwweDEwMD47
-CisJCQljY2ktY29udHJvbC1wb3J0ID0gPCZjY2lfY29udHJvbDE+OwogCQl9OwogCiAJCWNwdUAx
-MDEgewogCQkJY29tcGF0aWJsZSA9ICJhcm0sY29ydGV4LWE3IjsKIAkJCWRldmljZV90eXBlID0g
-ImNwdSI7CiAJCQlyZWcgPSA8MHgxMDE+OworCQkJY2NpLWNvbnRyb2wtcG9ydCA9IDwmY2NpX2Nv
-bnRyb2wxPjsKIAkJfTsKIAogCQljcHVAMTAyIHsKIAkJCWNvbXBhdGlibGUgPSAiYXJtLGNvcnRl
-eC1hNyI7CiAJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOwogCQkJcmVnID0gPDB4MTAyPjsKKwkJCWNj
-aS1jb250cm9sLXBvcnQgPSA8JmNjaV9jb250cm9sMT47CiAJCX07CiAKIAkJY3B1QDEwMyB7CiAJ
-CQljb21wYXRpYmxlID0gImFybSxjb3J0ZXgtYTciOwogCQkJZGV2aWNlX3R5cGUgPSAiY3B1IjsK
-IAkJCXJlZyA9IDwweDEwMz47CisJCQljY2ktY29udHJvbC1wb3J0ID0gPCZjY2lfY29udHJvbDE+
-OwogCQl9OwogCX07CiAKQEAgLTIxMyw2ICsyMjEsMzkgQEAKIAkJCXJlZyA9IDwweDAxNzAwMDAw
-IDB4NDAwPjsKIAkJfTsKIAorCQljY2lAMTc5MDAwMCB7CisJCQljb21wYXRpYmxlID0gImFybSxj
-Y2ktNDAwIjsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMgPSA8MT47
-CisJCQlyZWcgPSA8MHgwMTc5MDAwMCAweDEwMDAwPjsKKwkJCXJhbmdlcyA9IDwweDAgMHgwMTc5
-MDAwMCAweDEwMDAwPjsKKworCQkJY2NpX2NvbnRyb2wwOiBzbGF2ZS1pZkA0MDAwIHsKKwkJCQlj
-b21wYXRpYmxlID0gImFybSxjY2ktNDAwLWN0cmwtaWYiOworCQkJCWludGVyZmFjZS10eXBlID0g
-ImFjZSI7CisJCQkJcmVnID0gPDB4NDAwMCAweDEwMDA+OworCQkJfTsKKworCQkJY2NpX2NvbnRy
-b2wxOiBzbGF2ZS1pZkA1MDAwIHsKKwkJCQljb21wYXRpYmxlID0gImFybSxjY2ktNDAwLWN0cmwt
-aWYiOworCQkJCWludGVyZmFjZS10eXBlID0gImFjZSI7CisJCQkJcmVnID0gPDB4NTAwMCAweDEw
-MDA+OworCQkJfTsKKworCQkJcG11QDkwMDAgeworCQkJCWNvbXBhdGlibGUgPSAiYXJtLGNjaS00
-MDAtcG11LHIxIjsKKwkJCQlyZWcgPSA8MHg5MDAwIDB4NTAwMD47CisJCQkJaW50ZXJydXB0cyA9
-IDxHSUNfU1BJIDEzMiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCQk8R0lDX1NQSSAxMzMgSVJR
-X1RZUEVfTEVWRUxfSElHSD4sCisJCQkJPEdJQ19TUEkgMTM0IElSUV9UWVBFX0xFVkVMX0hJR0g+
-LAorCQkJCTxHSUNfU1BJIDEzNSBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCQk8R0lDX1NQSSAx
-NTEgSVJRX1RZUEVfTEVWRUxfSElHSD4sCisJCQkJPEdJQ19TUEkgMTUyIElSUV9UWVBFX0xFVkVM
-X0hJR0g+LAorCQkJCTxHSUNfU1BJIDE1MyBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCQk8R0lD
-X1NQSSAxNTQgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQl9OworCQl9OworCiAJCXN5c2Nvbjog
-c3lzY29uQDFjMDAwMDAgewogCQkJY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuOGktYTgzdC1z
-eXN0ZW0tY29udHJvbGxlciIsCiAJCQkJInN5c2NvbiI7Ci0tIAoyLjExLjAKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+The sdio signals are routed through the connector to the baseboard,
+where the wifi module is also located. So move the sdio node to
+the excavator as well.
+
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+Hi Vicente,
+
+after looking at the issue, I guess something like this and the following
+patch should help your situation?
+I've heared about the sapphire being used standalone some times and
+thus think it can be justified to add that standalone version.
+
+
+Heiko
+
+ .../boot/dts/rockchip/rk3399-sapphire-excavator.dts      | 16 ++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi        | 16 ----------------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
+index b7bd88fb3ae3..68416fae4fea 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
+@@ -232,6 +232,22 @@
+ 	};
+ };
+ 
++&sdio0 {
++	bus-width = <4>;
++	cap-sd-highspeed;
++	cap-sdio-irq;
++	clock-frequency = <50000000>;
++	disable-wp;
++	keep-power-in-suspend;
++	max-frequency = <50000000>;
++	mmc-pwrseq = <&sdio_pwrseq>;
++	non-removable;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
++	sd-uhs-sdr104;
++	status = "okay";
++};
++
+ &spdif {
+ 	i2c-scl-rising-time-ns = <450>;
+ 	i2c-scl-falling-time-ns = <15>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+index 46c95ccfd5cb..31568b4e8aa1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+@@ -520,22 +520,6 @@
+ 	status = "okay";
+ };
+ 
+-&sdio0 {
+-	bus-width = <4>;
+-	cap-sd-highspeed;
+-	cap-sdio-irq;
+-	clock-frequency = <50000000>;
+-	disable-wp;
+-	keep-power-in-suspend;
+-	max-frequency = <50000000>;
+-	mmc-pwrseq = <&sdio_pwrseq>;
+-	non-removable;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
+-	sd-uhs-sdr104;
+-	status = "okay";
+-};
+-
+ &sdmmc {
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+-- 
+2.15.1
