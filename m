@@ -1,72 +1,30 @@
-Return-Path: <robherring2@gmail.com>
-Date: Sun, 18 Feb 2018 18:04:21 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 2/3] usb: chipidea: Hook into mux framework to toggle usb
- switch
-Message-ID: <20180219000421.gzlpomgkfbwumlki@rob-hp-laptop>
-References: <1518351341-6740-1-git-send-email-yossim@codeaurora.org>
- <1518351341-6740-2-git-send-email-yossim@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1518351341-6740-2-git-send-email-yossim@codeaurora.org>
-To: Yossi Mansharoff <yossim@codeaurora.org>
-Cc: rfried@codeaurora.org, Peter Rosin <peda@axentia.se>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>
+Return-Path: <SRS0=Z85Q=FN=pengutronix.de=p.zabel@kernel.org>
+Message-ID: <1519040770.3408.5.camel@pengutronix.de>
+Subject: Re: [PATCH 0/3] reset: simple: enable for ASPEED SoCs
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Date: Mon, 19 Feb 2018 12:46:10 +0100
+In-Reply-To: <20180219065438.19933-1-joel@jms.id.au>
+References: <20180219065438.19933-1-joel@jms.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+To: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>
+Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, Feb 11, 2018 at 02:15:40PM +0200, Yossi Mansharoff wrote:
-> On the db410c 96boards platform we have a TC7USB40MU on the board
-> to mux the D+/D- lines coming from the controller between a micro
-> usb "device" port and a USB hub for "host" roles[1]. During a
-> role switch, we need to toggle this mux to forward the D+/D-
-> lines to either the port or the hub. Add the necessary code to do
-> the role switch in chipidea core via the generic mux framework.
-> Board configurations like on db410c are expected to change roles
-> via the sysfs API described in
-> Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
-> 
-> [1] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
-> 
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: Peter Chen <peter.chen@nxp.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> 
-> Signed-off-by: Yossi Mansharoff <yossim@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt |  6 ++++++
->  drivers/usb/chipidea/Kconfig                           |  2 ++
->  drivers/usb/chipidea/core.c                            |  6 ++++++
->  drivers/usb/chipidea/host.c                            |  7 +++++++
->  drivers/usb/chipidea/udc.c                             | 13 ++++++++++++-
->  include/linux/usb/chipidea.h                           |  2 ++
->  6 files changed, 35 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> index 0e03344..2e93181 100644
-> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
-> @@ -76,6 +76,10 @@ Optional properties:
->    needs to make sure it does not send more than 90%
->    maximum_periodic_data_per_frame. The use case is multiple transactions, but
->    less frame rate.
-> +- mux-controls: The mux control for toggling host/device output of this
-> +  controller. It's expected that a mux state of 0 indicates device mode and a
-> +  mux state of 1 indicates host mode.
-> +- mux-control-names: Shall be "usb_switch" if mux-controls is specified.
+Hi Joel,
 
-Kind of pointless to have -names when there is only one.
+On Mon, 2018-02-19 at 17:24 +1030, Joel Stanley wrote:
+> Hello Philip,
+> 
+> Here is a series that enables the simple reset driver for the ASPEED
+> SoCs. You may recall I posted a patch back in May 2017 with a
+> similar idea[1]. I was happy to see that you merged a driver that solves
+> the problem, and suits our purpose for the ASPEED. Thanks!
 
-Otherwise, the binding looks okay to me.
+Yes, sometimes it takes a few drivers to see what the common patterns
+are. When it came to unify them, starting from one of the preexisting
+drivers seemed like the straightforward thing to do.
 
->  
->  i.mx specific properties
->  - fsl,usbmisc: phandler of non-core register device, with one
-> @@ -102,4 +106,6 @@ Example:
->  		rx-burst-size-dword = <0x10>;
->  		extcon = <0>, <&usb_id>;
->  		phy-clkgate-delay-us = <400>;
-> +		mux-controls = <&usb_switch>;
-> +		mux-control-names = "usb_switch";
->  	};
+regards
+Philipp
