@@ -1,16 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 6/7] arm64: tegra: Add Tegra194 chip device tree
-Date: Mon, 19 Feb 2018 09:36:38 -0600
-Message-ID: <CAL_JsqJXUDzrWJ+yKR7Ow6==j=k5yZgjrXehfHtDyOC0RAiGAw@mail.gmail.com>
-References: <1517901757-15353-1-git-send-email-mperttunen@nvidia.com>
- <1517901757-15353-7-git-send-email-mperttunen@nvidia.com>
- <20180209225402.uexw7vlzwflo7zmr@rob-hp-laptop>
- <49fc21ac-4630-b90c-04fb-31740354b35b@kapsi.fi>
+Subject: Re: [PATCH 1/5] dt-bindings: clock: ti: add latching support to mux
+ and divider clocks
+Date: Mon, 19 Feb 2018 08:36:20 -0600
+Message-ID: <20180219143620.vu3ucann7vmgsdlt@rob-hp-laptop>
+References: <1518698991-10099-1-git-send-email-t-kristo@ti.com>
+ <1518698991-10099-2-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <49fc21ac-4630-b90c-04fb-31740354b35b@kapsi.fi>
+Content-Disposition: inline
+In-Reply-To: <1518698991-10099-2-git-send-email-t-kristo@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,55 +20,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mikko Perttunen <cyndis@kapsi.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>, talho@nvidia.com, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Mikko Perttunen <mperttunen@nvidia.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Tero Kristo <t-kristo@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, tony@atomide.com, linux-omap@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 14, 2018 at 5:56 AM, Mikko Perttunen <cyndis@kapsi.fi> wrote:
-> On 10.02.2018 00:54, Rob Herring wrote:
->>
->> On Tue, Feb 06, 2018 at 09:22:36AM +0200, Mikko Perttunen wrote:
->>>
->>> ...
->>> index 000000000000..dcc6eea52684
->>> --- /dev/null
->>> +++ b/include/dt-bindings/clock/tegra194-clock.h
+On Thu, Feb 15, 2018 at 02:49:47PM +0200, Tero Kristo wrote:
+> Certain hardware configurations, like dra76x, have some of the clock
+> registers partitioned in a funky manner that requires the clock
+> control setup to be latched for PRCM to be notified of the change. This
+> is accomplished with a separate control bit under the register. Add
+> support for this clock latching support to divider and mux clocks.
+> 
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  Documentation/devicetree/bindings/clock/ti/divider.txt | 3 +++
+>  Documentation/devicetree/bindings/clock/ti/mux.txt     | 3 +++
+>  2 files changed, 6 insertions(+)
 
->>> + */
->>> +
->>> +#ifndef __ABI_MACH_T194_CLOCK_H
->>> +#define __ABI_MACH_T194_CLOCK_H
->>> +
->>> +/** @file */
->>> +
->>> +/** @brief output of mux controlled by TEGRA194_CLK_SOC_ACTMON */
->>> +#define TEGRA194_CLK_ACTMON                    1
->>> +/** @brief output of gate CLK_ENB_ADSP */
->>
->>
->> These comments don't add much and make readability horrible.
->
->
-> The comments allow mapping each define to the clocks defined in the chip
-> technical reference manual.
-
-If that's not obvious from the define name, then fix the define name.
-Looks like in most cases it is.
-
-> The file also comes as is from the firmware team
-> so I'd prefer to keep changes to a minimum.
-
-I can appreciate that and perhaps if this was something imported at
-some frequency then it would be worthwhile to maintain formatting. But
-this is an ABI and defined by the hardware (as opposed to BPMP
-firmware) so it generally shouldn't ever change. And bindings should
-be complete, so if you plan periodic additions to it, that's a
-separate problem.
-
-> We have done this previously
-> with the BPMP ABI and device tree binding headers for the Tegra186.
-
-Generally, we don't accept doxygen comments in the kernel tree.
-There's only a handful of cases that seem to have sneaked in.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
