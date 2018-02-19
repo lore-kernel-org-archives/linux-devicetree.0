@@ -1,14 +1,16 @@
-From: Philippe Ombredanne <pombredanne@nexb.com>
-Subject: Re: [PATCH 04/10] pinctrl: actions: Add Actions S900 pinctrl driver
-Date: Tue, 20 Feb 2018 08:53:22 +0100
-Message-ID: <CAOFm3uF=n+_TJUAuXh-KihA6gprJaLMiH+y6b3y-5QpcGqGNtg@mail.gmail.com>
-References: <20180217204433.3095-1-manivannan.sadhasivam@linaro.org>
- <20180217204433.3095-5-manivannan.sadhasivam@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: add a standalone version of
+ the  rk3399 sapphire
+Date: Mon, 19 Feb 2018 14:42:55 -0600
+Message-ID: <20180219204255.cvn2z5dw5ritjkod@rob-hp-laptop>
+References: <CAAMcf8CY1m+998+GpD2wOfAZb=oZNkL2GqYu_o5piGEh76uoYw@mail.gmail.com>
+ <3840224.sEPfbROKII@phil> <7102557.xWtZfjvKIZ@phil>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180217204433.3095-5-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <7102557.xWtZfjvKIZ@phil>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,40 +20,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, liuwei@actions-semi.com, LKML <linux-kernel@vger.kernel.org>, amit.kucheria@linaro.org, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mark.rutland@arm.com, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Vicente Bergas <vicencb@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Manivannan,
+On Mon, Feb 19, 2018 at 09:16:17AM +0100, Heiko Stuebner wrote:
+> While the sapphire board is a system-on-module and mostly used with the
+> excavator baseboard, it is also possible to use it standalone without
+> any base. So add a board-variant for this type.
+> 
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.txt |  4 ++++
+>  arch/arm64/boot/dts/rockchip/Makefile              |  1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-sapphire.dts   | 12 ++++++++++++
+>  3 files changed, 17 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-sapphire.dts
 
-On Sat, Feb 17, 2018 at 9:44 PM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> Add pinctrl driver for Actions Semi S900 SoC. The driver supports
-> pinctrl, pinmux and pinconf functionalities through a range of registers
-> common to both gpio driver and pinctrl driver.
->
-> Pinmux functionality is available only for the pin groups while the
-> pinconf functionality is available for both pin groups and individual
-> pins.
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-
-<snip>
-
-
-> --- /dev/null
-> +++ b/drivers/pinctrl/actions/pinctrl-s900.c
-> @@ -0,0 +1,2536 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-
-<snip>
-
-> +MODULE_LICENSE("GPL v2");
-
-This does not match your license above. Per module.h "GPL v2" means
-GPL-2.0 where you license above GPL-2.0+ means or later
-
--- 
-Cordially
-Philippe Ombredanne
+Reviewed-by: Rob Herring <robh@kernel.org>
