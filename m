@@ -1,35 +1,82 @@
-Return-Path: <SRS0=V9ZR=FR=samsung.com=jh80.chung@kernel.org>
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH 5/6] ARM: dts: lpc18xx: remove 'num-slots' property for
- dwmmc
-Date: Fri, 23 Feb 2018 15:41:37 +0900
-Message-id: <20180223064138.18401-5-jh80.chung@samsung.com>
-In-reply-to: <20180223064138.18401-1-jh80.chung@samsung.com>
-References: <20180223064138.18401-1-jh80.chung@samsung.com>
-	<CGME20180223064140epcas2p1bf475ebcbfa8a0c46e92402e31590891@epcas2p1.samsung.com>
-To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, manabian@gmail.com, dinguyen@kernel.org, will.deacon@arm.com, xuwei5@hisilicon.com, Jaehoon Chung <jh80.chung@samsung.com>
+Return-Path: <SRS0=kFSR=FN=gmail.com=joel.stan@kernel.org>
+Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2 1/3] dt-bindings: aspeed-lpc: Document LPC Host Interface Controller
+Date: Mon, 19 Feb 2018 17:54:20 +1030
+Message-Id: <20180219072422.22733-2-joel@jms.id.au>
+In-Reply-To: <20180219072422.22733-1-joel@jms.id.au>
+References: <20180219072422.22733-1-joel@jms.id.au>
+To: Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Cyril Bur <cyrilbur@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Lei YU <mine260309@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Since 'num-slots' had already deprecated, remove the property in
-device-tree file.
+The LPC Host Interface Controller is part of a BMC SoC that is used for
+communication with the host.
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- arch/arm/boot/dts/lpc18xx.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+v2:
+ - Move the content to below the Host Node Children heading
+ - Add Rob's review tag
+---
+ .../devicetree/bindings/mfd/aspeed-lpc.txt         | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-diff --git a/arch/arm/boot/dts/lpc18xx.dtsi b/arch/arm/boot/dts/lpc18xx.dtsi
-index 7cae9c5e27db..10b8249b8ab6 100644
---- a/arch/arm/boot/dts/lpc18xx.dtsi
-+++ b/arch/arm/boot/dts/lpc18xx.dtsi
-@@ -115,7 +115,6 @@
- 			compatible = "snps,dw-mshc";
- 			reg = <0x40004000 0x1000>;
- 			interrupts = <6>;
--			num-slots = <1>;
- 			clocks = <&ccu2 CLK_SDIO>, <&ccu1 CLK_CPU_SDIO>;
- 			clock-names = "ciu", "biu";
- 			resets = <&rgu 20>;
+diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+index 514d82ced95b..69aadee00d5f 100644
+--- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
++++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+@@ -109,9 +109,50 @@ lpc: lpc@1e789000 {
+ 	};
+ };
+ 
++BMC Node Children
++==================
++
++
+ Host Node Children
+ ==================
+ 
++LPC Host Interface Controller
++-------------------
++
++The LPC Host Interface Controller manages functions exposed to the host such as
++LPC firmware hub cycles, configuration of the LPC-to-AHB mapping, UART
++management and bus snoop configuration.
++
++Required properties:
++
++- compatible:	One of:
++		"aspeed,ast2400-lpc-ctrl";
++		"aspeed,ast2500-lpc-ctrl";
++
++- reg:		contains offset/length values of the host interface controller
++		memory regions
++
++- clocks:	contains a phandle to the syscon node describing the clocks.
++		There should then be one cell representing the clock to use
++
++- memory-region: A phandle to a reserved_memory region to be used for the LPC
++		to AHB mapping
++
++- flash:	A phandle to the SPI flash controller containing the flash to
++		be exposed over the LPC to AHB mapping
++
++Example:
++
++lpc-host@80 {
++	lpc_ctrl: lpc-ctrl@0 {
++		compatible = "aspeed,ast2500-lpc-ctrl";
++		reg = <0x0 0x80>;
++		clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
++		memory-region = <&flash_memory>;
++		flash = <&spi>;
++	};
++};
++
+ LPC Host Controller
+ -------------------
+ 
 -- 
 2.15.1
