@@ -1,172 +1,222 @@
-Return-Path: <SRS0=KUOu=FP=bootlin.com=boris.brezillon@kernel.org>
-Date: Wed, 21 Feb 2018 15:22:48 +0100
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
-Message-ID: <20180221152248.5486100d@bbrezillon>
-In-Reply-To: <20171219093643.GA3903@kroah.com>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
-	<20171214151610.19153-3-boris.brezillon@free-electrons.com>
-	<20171219085250.GC15010@kroah.com>
-	<20171219100900.35c0f66e@bbrezillon>
-	<20171219101336.337d0afc@bbrezillon>
-	<20171219092119.GA32748@kroah.com>
-	<20171219102858.001d4bf5@bbrezillon>
-	<20171219093643.GA3903@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Linus Walleij <linus.walleij@linaro.org>
+Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.free-electrons.com ([62.4.15.54]:49903 "EHLO
+        mail.free-electrons.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932171AbeBSWgD (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 19 Feb 2018 17:36:03 -0500
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v4 1/6] mtd: nand: use Marvell reworked NAND controller driver with all platforms
+Date: Mon, 19 Feb 2018 23:35:52 +0100
+Message-Id: <20180219223557.2458-2-miquel.raynal@bootlin.com>
+In-Reply-To: <20180219223557.2458-1-miquel.raynal@bootlin.com>
+References: <20180219223557.2458-1-miquel.raynal@bootlin.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
+Cc: linux-mtd@lists.infradead.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Eric Miao <eric.y.miao@gmail.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Greg,
+Compile marvell_nand.c instead of pxa3xx_nand.c with all PXA based SoCs.
+Convert all board files and defconfigs so that the new driver is used
+everywhere instead of the old one.
 
-On Tue, 19 Dec 2017 10:36:43 +0100
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+Board files using CONFIG_MTD_NAND_PXA3xx now use CONFIG_MTD_NAND_MARVELL
+instead.
 
-> On Tue, Dec 19, 2017 at 10:28:58AM +0100, Boris Brezillon wrote:
-> > On Tue, 19 Dec 2017 10:21:19 +0100
-> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> >   
-> > > On Tue, Dec 19, 2017 at 10:13:36AM +0100, Boris Brezillon wrote:  
-> > > > On Tue, 19 Dec 2017 10:09:00 +0100
-> > > > Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
-> > > >     
-> > > > > On Tue, 19 Dec 2017 09:52:50 +0100
-> > > > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> > > > >     
-> > > > > > On Thu, Dec 14, 2017 at 04:16:05PM +0100, Boris Brezillon wrote:      
-> > > > > > > +/**
-> > > > > > > + * i3c_device_match_id() - Find the I3C device ID entry matching an I3C dev
-> > > > > > > + * @i3cdev: the I3C device we're searching a match for
-> > > > > > > + * @id_table: the I3C device ID table
-> > > > > > > + *
-> > > > > > > + * Return: a pointer to the first entry matching @i3cdev, or NULL if there's
-> > > > > > > + *	   no match.
-> > > > > > > + */
-> > > > > > > +const struct i3c_device_id *
-> > > > > > > +i3c_device_match_id(struct i3c_device *i3cdev,
-> > > > > > > +		    const struct i3c_device_id *id_table)
-> > > > > > > +{
-> > > > > > > +	const struct i3c_device_id *id;
-> > > > > > > +
-> > > > > > > +	/*
-> > > > > > > +	 * The lower 32bits of the provisional ID is just filled with a random
-> > > > > > > +	 * value, try to match using DCR info.
-> > > > > > > +	 */
-> > > > > > > +	if (!I3C_PID_RND_LOWER_32BITS(i3cdev->info.pid)) {
-> > > > > > > +		u16 manuf = I3C_PID_MANUF_ID(i3cdev->info.pid);
-> > > > > > > +		u16 part = I3C_PID_PART_ID(i3cdev->info.pid);
-> > > > > > > +		u16 ext_info = I3C_PID_EXTRA_INFO(i3cdev->info.pid);
-> > > > > > > +
-> > > > > > > +		/* First try to match by manufacturer/part ID. */
-> > > > > > > +		for (id = id_table; id->match_flags != 0; id++) {
-> > > > > > > +			if ((id->match_flags & I3C_MATCH_MANUF_AND_PART) !=
-> > > > > > > +			    I3C_MATCH_MANUF_AND_PART)
-> > > > > > > +				continue;
-> > > > > > > +
-> > > > > > > +			if (manuf != id->manuf_id || part != id->part_id)
-> > > > > > > +				continue;
-> > > > > > > +
-> > > > > > > +			if ((id->match_flags & I3C_MATCH_EXTRA_INFO) &&
-> > > > > > > +			    ext_info != id->extra_info)
-> > > > > > > +				continue;
-> > > > > > > +
-> > > > > > > +			return id;
-> > > > > > > +		}
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	/* Fallback to DCR match. */
-> > > > > > > +	for (id = id_table; id->match_flags != 0; id++) {
-> > > > > > > +		if ((id->match_flags & I3C_MATCH_DCR) &&
-> > > > > > > +		    id->dcr == i3cdev->info.dcr)
-> > > > > > > +			return id;
-> > > > > > > +	}
-> > > > > > > +
-> > > > > > > +	return NULL;
-> > > > > > > +}
-> > > > > > > +EXPORT_SYMBOL_GPL(i3c_device_match_id);        
-> > > > > > 
-> > > > > > I just picked one random export here, but it feels like you are
-> > > > > > exporting a bunch of symbols you don't need to.  Why would something
-> > > > > > outside of the i3c "core" need to call this function?      
-> > > > > 
-> > > > > Because I'm not passing the i3c_device_id to the ->probe() method, and
-> > > > > if the driver is supporting different variants of the device, it may
-> > > > > want to know which one is being probed.
-> > > > > 
-> > > > > I considered retrieving this information in the core just before probing
-> > > > > the driver and passing it to the ->probe() function, but it means
-> > > > > having an extra i3c_device_match_id() call for everyone even those who
-> > > > > don't care about the device_id information, so I thought exporting this
-> > > > > function was a good alternative (device drivers can use it when they
-> > > > > actually need to retrieve the device_id).
-> > > > > 
-> > > > > Anyway, that's something I can change if you think passing the
-> > > > > i3c_device_id to the ->probe() method is preferable.
-> > > > >     
-> > > > > > Have you looked
-> > > > > > to see if you really have callers for everything you are exporting?      
-> > > > > 
-> > > > > Yes, I tried to only export functions that I think will be needed by
-> > > > > I3C device drivers and I3C master drivers. Note that I didn't post the
-> > > > > dummy device driver I developed to test the framework (partly because
-> > > > > this is     
-> > > > 
-> > > > Sorry, I hit the send button before finishing my sentence :-).
-> > > > 
-> > > > "
-> > > > Note that I didn't post the dummy device driver [1] I developed to test
-> > > > the framework (partly because the quality of the code does not meet
-> > > > mainline standards and I was ashamed of posting it publicly :-)), but
-> > > > this driver is using some of the exported functions.
-> > > > "    
-> > > 
-> > > We don't export functions that has no in-kernel users :)  
-> > 
-> > But then, I can't export device driver related functions, because
-> > there's no official device driver yet :-). So what should I do?  
-> 
-> Export them when you have a driver.  Or better yet, submit a driver as
-> part of the patch series.  Why would we want infrastructure that no one
-> uses?
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Tested-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+ arch/arm/configs/cm_x300_defconfig  | 2 +-
+ arch/arm/configs/pxa3xx_defconfig   | 3 +--
+ arch/arm/configs/pxa_defconfig      | 2 +-
+ arch/arm/configs/raumfeld_defconfig | 2 +-
+ arch/arm/mach-mmp/ttc_dkb.c         | 4 ++--
+ arch/arm/mach-pxa/cm-x300.c         | 2 +-
+ arch/arm/mach-pxa/colibri-pxa3xx.c  | 2 +-
+ arch/arm/mach-pxa/colibri.h         | 2 +-
+ arch/arm/mach-pxa/littleton.c       | 4 ++--
+ arch/arm/mach-pxa/mxm8x10.c         | 4 ++--
+ arch/arm/mach-pxa/zylonite.c        | 4 ++--
+ 11 files changed, 15 insertions(+), 16 deletions(-)
 
-I understand your point of view, it may sound odd to add a framework
-for a bus that we have no slave devices for. But, as far as I can tell,
-many vendors (both IP vendors and sensor manufacturers) are working
-actively on creating master and slave I3C devices. Actually, I've even
-been contacted privately by an IP vendor after posting this patchset.
-So, I think one argument for pushing the current framework with no
-users yet is that it may help others develop drivers for their device
-early on, or even help them test those devices more easily than if they
-had to develop baremetal code.
-
-The kernel community has been asking hardware vendors for a long time to
-upstream their code as early as possible. And this is exactly what is
-happening with I3C: even before actual devices are shipping, we have
-the opportunity to start merging support for I3C in the mainline
-kernel. It would be good to merge it before vendors spend time working
-on competing implementations, which will take even more time to
-reconcile when they will be submitted for upstream inclusion.
-
-Also, we're not talking about some random bus/protocol, I3C spec is
-developed and pushed by MIPI, and for once, they decided to open the
-spec, so anyone can actually make sure the framework is matching the
-protocol description if they want to.
-
-Now, if you still think an I3C device driver is needed to consider
-merging these patches, I can provide one. As I said earlier, I
-developed a driver for a dummy device to test the various features I
-add support for in this series, it's just that this device will never
-ever be available in real life and it's not even fitting in any of the
-subsystem we have in the kernel, hence my initial decision to not
-upstream it.
-
-Regards,
-
-Boris
-
+diff --git a/arch/arm/configs/cm_x300_defconfig b/arch/arm/configs/cm_x300_defconfig
+index c0418e03d180..5e349c625b71 100644
+--- a/arch/arm/configs/cm_x300_defconfig
++++ b/arch/arm/configs/cm_x300_defconfig
+@@ -49,7 +49,7 @@ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+ CONFIG_MTD=y
+ CONFIG_MTD_BLOCK=y
+ CONFIG_MTD_NAND=y
+-CONFIG_MTD_NAND_PXA3xx=y
++CONFIG_MTD_NAND_MARVELL=y
+ CONFIG_MTD_UBI=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_RAM=y
+diff --git a/arch/arm/configs/pxa3xx_defconfig b/arch/arm/configs/pxa3xx_defconfig
+index bfea6874b0a1..3e0de035ab77 100644
+--- a/arch/arm/configs/pxa3xx_defconfig
++++ b/arch/arm/configs/pxa3xx_defconfig
+@@ -32,8 +32,7 @@ CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+ CONFIG_MTD=y
+ CONFIG_MTD_BLOCK=y
+ CONFIG_MTD_NAND=y
+-CONFIG_MTD_NAND_PXA3xx=y
+-CONFIG_MTD_NAND_PXA3xx_BUILTIN=y
++CONFIG_MTD_NAND_MARVELL=y
+ CONFIG_MTD_ONENAND=y
+ CONFIG_MTD_ONENAND_VERIFY_WRITE=y
+ CONFIG_MTD_ONENAND_GENERIC=y
+diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
+index 837d0c9c8b0e..5655a1cee87d 100644
+--- a/arch/arm/configs/pxa_defconfig
++++ b/arch/arm/configs/pxa_defconfig
+@@ -197,7 +197,7 @@ CONFIG_MTD_NAND_DISKONCHIP_PROBE_ADDRESS=0x4000000
+ CONFIG_MTD_NAND_DISKONCHIP_PROBE_HIGH=y
+ CONFIG_MTD_NAND_DISKONCHIP_BBTWRITE=y
+ CONFIG_MTD_NAND_SHARPSL=m
+-CONFIG_MTD_NAND_PXA3xx=m
++CONFIG_MTD_NAND_MARVELL=m
+ CONFIG_MTD_NAND_CM_X270=m
+ CONFIG_MTD_NAND_TMIO=m
+ CONFIG_MTD_NAND_BRCMNAND=m
+diff --git a/arch/arm/configs/raumfeld_defconfig b/arch/arm/configs/raumfeld_defconfig
+index 77a56c23c6ef..2dd56e9a484e 100644
+--- a/arch/arm/configs/raumfeld_defconfig
++++ b/arch/arm/configs/raumfeld_defconfig
+@@ -33,7 +33,7 @@ CONFIG_NFTL=y
+ CONFIG_NFTL_RW=y
+ CONFIG_MTD_BLOCK2MTD=y
+ CONFIG_MTD_NAND=y
+-CONFIG_MTD_NAND_PXA3xx=y
++CONFIG_MTD_NAND_MARVELL=y
+ CONFIG_MTD_UBI=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_ISL29003=y
+diff --git a/arch/arm/mach-mmp/ttc_dkb.c b/arch/arm/mach-mmp/ttc_dkb.c
+index d90c74fa614d..e0b6073c61a7 100644
+--- a/arch/arm/mach-mmp/ttc_dkb.c
++++ b/arch/arm/mach-mmp/ttc_dkb.c
+@@ -178,7 +178,7 @@ static struct mv_usb_platform_data ttc_usb_pdata = {
+ #endif
+ #endif
+ 
+-#if IS_ENABLED(CONFIG_MTD_NAND_PXA3xx)
++#if IS_ENABLED(CONFIG_MTD_NAND_MARVELL)
+ static struct pxa3xx_nand_platform_data dkb_nand_info = {
+ 	.enable_arbiter = 1,
+ 	.num_cs = 1,
+@@ -275,7 +275,7 @@ static void __init ttc_dkb_init(void)
+ 
+ 	/* on-chip devices */
+ 	pxa910_add_uart(1);
+-#if IS_ENABLED(CONFIG_MTD_NAND_PXA3xx)
++#if IS_ENABLED(CONFIG_MTD_NAND_MARVELL)
+ 	pxa910_add_nand(&dkb_nand_info);
+ #endif
+ 
+diff --git a/arch/arm/mach-pxa/cm-x300.c b/arch/arm/mach-pxa/cm-x300.c
+index c487401b6fdb..de1f8c995076 100644
+--- a/arch/arm/mach-pxa/cm-x300.c
++++ b/arch/arm/mach-pxa/cm-x300.c
+@@ -391,7 +391,7 @@ static void __init cm_x300_init_ac97(void)
+ static inline void cm_x300_init_ac97(void) {}
+ #endif
+ 
+-#if defined(CONFIG_MTD_NAND_PXA3xx) || defined(CONFIG_MTD_NAND_PXA3xx_MODULE)
++#if IS_ENABLED(CONFIG_MTD_NAND_MARVELL)
+ static struct mtd_partition cm_x300_nand_partitions[] = {
+ 	[0] = {
+ 		.name        = "OBM",
+diff --git a/arch/arm/mach-pxa/colibri-pxa3xx.c b/arch/arm/mach-pxa/colibri-pxa3xx.c
+index b04431bb4ba7..3018eafd723e 100644
+--- a/arch/arm/mach-pxa/colibri-pxa3xx.c
++++ b/arch/arm/mach-pxa/colibri-pxa3xx.c
+@@ -110,7 +110,7 @@ void __init colibri_pxa3xx_init_lcd(int bl_pin)
+ }
+ #endif
+ 
+-#if defined(CONFIG_MTD_NAND_PXA3xx) || defined(CONFIG_MTD_NAND_PXA3xx_MODULE)
++#if IS_ENABLED(CONFIG_MTD_NAND_MARVELL)
+ static struct mtd_partition colibri_nand_partitions[] = {
+ 	{
+ 		.name        = "bootloader",
+diff --git a/arch/arm/mach-pxa/colibri.h b/arch/arm/mach-pxa/colibri.h
+index 673a131da875..85525d49e321 100644
+--- a/arch/arm/mach-pxa/colibri.h
++++ b/arch/arm/mach-pxa/colibri.h
+@@ -46,7 +46,7 @@ static inline void colibri_pxa3xx_init_lcd(int bl_pin) {}
+ extern void colibri_pxa3xx_init_eth(struct ax_plat_data *plat_data);
+ #endif
+ 
+-#if defined(CONFIG_MTD_NAND_PXA3xx) || defined(CONFIG_MTD_NAND_PXA3xx_MODULE)
++#if IS_ENABLED(CONFIG_MTD_NAND_MARVELL)
+ extern void colibri_pxa3xx_init_nand(void);
+ #else
+ static inline void colibri_pxa3xx_init_nand(void) {}
+diff --git a/arch/arm/mach-pxa/littleton.c b/arch/arm/mach-pxa/littleton.c
+index 4105614cc38e..193dccca1086 100644
+--- a/arch/arm/mach-pxa/littleton.c
++++ b/arch/arm/mach-pxa/littleton.c
+@@ -291,7 +291,7 @@ static void __init littleton_init_mmc(void)
+ static inline void littleton_init_mmc(void) {}
+ #endif
+ 
+-#if defined(CONFIG_MTD_NAND_PXA3xx) || defined(CONFIG_MTD_NAND_PXA3xx_MODULE)
++#if IS_ENABLED(CONFIG_MTD_NAND_MARVELL)
+ static struct mtd_partition littleton_nand_partitions[] = {
+ 	[0] = {
+ 		.name        = "Bootloader",
+@@ -341,7 +341,7 @@ static void __init littleton_init_nand(void)
+ }
+ #else
+ static inline void littleton_init_nand(void) {}
+-#endif /* CONFIG_MTD_NAND_PXA3xx || CONFIG_MTD_NAND_PXA3xx_MODULE */
++#endif /* IS_ENABLED(CONFIG_MTD_NAND_MARVELL) */
+ 
+ #if defined(CONFIG_I2C_PXA) || defined(CONFIG_I2C_PXA_MODULE)
+ static struct led_info littleton_da9034_leds[] = {
+diff --git a/arch/arm/mach-pxa/mxm8x10.c b/arch/arm/mach-pxa/mxm8x10.c
+index f9e3d41a4609..5cc379c0626c 100644
+--- a/arch/arm/mach-pxa/mxm8x10.c
++++ b/arch/arm/mach-pxa/mxm8x10.c
+@@ -359,7 +359,7 @@ void __init mxm_8x10_ac97_init(void)
+ }
+ 
+ /* NAND flash Support */
+-#if defined(CONFIG_MTD_NAND_PXA3xx) || defined(CONFIG_MTD_NAND_PXA3xx_MODULE)
++#if IS_ENABLED(CONFIG_MTD_NAND_MARVELL)
+ #define NAND_BLOCK_SIZE SZ_128K
+ #define NB(x)           (NAND_BLOCK_SIZE * (x))
+ static struct mtd_partition mxm_8x10_nand_partitions[] = {
+@@ -402,7 +402,7 @@ static void __init mxm_8x10_nand_init(void)
+ }
+ #else
+ static inline void mxm_8x10_nand_init(void) {}
+-#endif /* CONFIG_MTD_NAND_PXA3xx || CONFIG_MTD_NAND_PXA3xx_MODULE */
++#endif /* IS_ENABLED(CONFIG_MTD_NAND_MARVELL) */
+ 
+ /* Ethernet support: Davicom DM9000 */
+ static struct resource dm9k_resources[] = {
+diff --git a/arch/arm/mach-pxa/zylonite.c b/arch/arm/mach-pxa/zylonite.c
+index 4268552d600d..3a99fc054e96 100644
+--- a/arch/arm/mach-pxa/zylonite.c
++++ b/arch/arm/mach-pxa/zylonite.c
+@@ -338,7 +338,7 @@ static void __init zylonite_init_keypad(void)
+ static inline void zylonite_init_keypad(void) {}
+ #endif
+ 
+-#if defined(CONFIG_MTD_NAND_PXA3xx) || defined(CONFIG_MTD_NAND_PXA3xx_MODULE)
++#if IS_ENABLED(CONFIG_MTD_NAND_MARVELL)
+ static struct mtd_partition zylonite_nand_partitions[] = {
+ 	[0] = {
+ 		.name        = "Bootloader",
+@@ -388,7 +388,7 @@ static void __init zylonite_init_nand(void)
+ }
+ #else
+ static inline void zylonite_init_nand(void) {}
+-#endif /* CONFIG_MTD_NAND_PXA3xx || CONFIG_MTD_NAND_PXA3xx_MODULE */
++#endif /* IS_ENABLED(CONFIG_MTD_NAND_MARVELL) */
+ 
+ #if defined(CONFIG_USB_OHCI_HCD) || defined(CONFIG_USB_OHCI_HCD_MODULE)
+ static struct pxaohci_platform_data zylonite_ohci_info = {
 -- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.14.1
+
