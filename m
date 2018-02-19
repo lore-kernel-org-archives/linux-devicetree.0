@@ -1,7 +1,8 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v7 09/42] dt-bindings: clock: New bindings for TI Davinci PSC
-Date: Mon, 19 Feb 2018 14:21:30 -0600
-Message-ID: <1519071723-31790-10-git-send-email-david@lechnology.com>
+Subject: [PATCH v7 25/42] ARM: davinci: dm644x: add new clock init using
+ common clock framework
+Date: Mon, 19 Feb 2018 14:21:46 -0600
+Message-ID: <1519071723-31790-26-git-send-email-david@lechnology.com>
 References: <1519071723-31790-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,109 +22,213 @@ To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a new binding for the Power Sleep Controller (PSC) for the
-mach-davinci family of processors.
+This adds the new board-specific clock init in mach-davinci/dm644x.c
+using the new common clock framework drivers.
 
-Note: Although TI Keystone has a very similar PSC, we are not using the
-existing bindings. Keystone is using a legacy one-node-per-clock binding
-(actually two nodes if you count the separate reset binding for the same
-IP block). Also, some davinci LPSCs have quirks that aren't handled by
-the keystone bindings, so we would be adding one compatible string per
-clock with quirks instead of just a new compatible string for each
-controller.
+The #ifdefs are needed to prevent compile errors until the entire
+ARCH_DAVINCI is converted.
+
+Also clean up the #includes since we are adding some here.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
 v7 changes:
-- Fixed clock-names property typo
-- Added #power-domain-cells property
+- add clock platform device declarations
+- register platform devices instead of registering clocks directly
+- add davinci prefix to commit description
 
 v6 changes:
-- added clocks and clock-names properties
-- expanded examples
+- add blank lines between function calls
 
 
- .../devicetree/bindings/clock/ti/davinci/psc.txt   | 71 ++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
+ arch/arm/mach-davinci/board-dm644x-evm.c  |  2 +
+ arch/arm/mach-davinci/board-neuros-osd2.c |  2 +
+ arch/arm/mach-davinci/board-sffsdr.c      |  2 +
+ arch/arm/mach-davinci/davinci.h           |  1 +
+ arch/arm/mach-davinci/dm644x.c            | 83 +++++++++++++++++++++++++++----
+ 5 files changed, 81 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt b/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
-new file mode 100644
-index 0000000..dae4ad8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
-@@ -0,0 +1,71 @@
-+Binding for TI DaVinci Power Sleep Controller (PSC)
+diff --git a/arch/arm/mach-davinci/board-dm644x-evm.c b/arch/arm/mach-davinci/board-dm644x-evm.c
+index 95b55aa..91c7525 100644
+--- a/arch/arm/mach-davinci/board-dm644x-evm.c
++++ b/arch/arm/mach-davinci/board-dm644x-evm.c
+@@ -768,6 +768,8 @@ static __init void davinci_evm_init(void)
+ 	struct clk *aemif_clk;
+ 	struct davinci_soc_info *soc_info = &davinci_soc_info;
+ 
++	dm644x_register_clocks();
 +
-+The PSC provides power management, clock gating and reset functionality. It is
-+primarily used for clocking.
+ 	ret = dm644x_gpio_register();
+ 	if (ret)
+ 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
+diff --git a/arch/arm/mach-davinci/board-neuros-osd2.c b/arch/arm/mach-davinci/board-neuros-osd2.c
+index f287577..ae17d3e 100644
+--- a/arch/arm/mach-davinci/board-neuros-osd2.c
++++ b/arch/arm/mach-davinci/board-neuros-osd2.c
+@@ -174,6 +174,8 @@ static __init void davinci_ntosd2_init(void)
+ 	struct clk *aemif_clk;
+ 	struct davinci_soc_info *soc_info = &davinci_soc_info;
+ 
++	dm644x_register_clocks();
 +
-+Required properties:
-+- compatible: shall be one of:
-+	- "ti,da850-psc0" for PSC0 on DA850/OMAP-L138/AM18XX
-+	- "ti,da850-psc1" for PSC1 on DA850/OMAP-L138/AM18XX
-+- reg: physical base address and size of the controller's register area
-+- #clock-cells: from common clock binding; shall be set to 1
-+- #power-domain-cells: from generic power domain binding; shall be set to 1.
-+- clocks: phandles to clocks corresponding to the clock-names property
-+- clock-names: list of parent clock names - depends on compatible value
-+	- for "ti,da850-psc0", shall be "pll0_sysclk1", "pll0_sysclk2",
-+	  "pll0_sysclk4", "pll0_sysclk6", "async1"
-+	- for "ti,da850-psc1", shall be "pll0_sysclk2", "pll0_sysclk4", "async3"
+ 	ret = dm644x_gpio_register();
+ 	if (ret)
+ 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
+diff --git a/arch/arm/mach-davinci/board-sffsdr.c b/arch/arm/mach-davinci/board-sffsdr.c
+index 2922da9..933cc08 100644
+--- a/arch/arm/mach-davinci/board-sffsdr.c
++++ b/arch/arm/mach-davinci/board-sffsdr.c
+@@ -134,6 +134,8 @@ static __init void davinci_sffsdr_init(void)
+ {
+ 	struct davinci_soc_info *soc_info = &davinci_soc_info;
+ 
++	dm644x_register_clocks();
 +
-+Optional properties:
-+- #reset-cells: from reset binding; shall be set to 1 - only applicable when
-+  at least one local domain provides a local reset.
+ 	platform_add_devices(davinci_sffsdr_devices,
+ 			     ARRAY_SIZE(davinci_sffsdr_devices));
+ 	sffsdr_init_i2c();
+diff --git a/arch/arm/mach-davinci/davinci.h b/arch/arm/mach-davinci/davinci.h
+index c865226..2861a6f 100644
+--- a/arch/arm/mach-davinci/davinci.h
++++ b/arch/arm/mach-davinci/davinci.h
+@@ -107,6 +107,7 @@ int dm365_gpio_register(void);
+ /* DM644x function declarations */
+ void dm644x_init(void);
+ void dm644x_init_time(void);
++void dm644x_register_clocks(void);
+ void dm644x_init_asp(void);
+ int dm644x_init_video(struct vpfe_config *, struct vpbe_config *);
+ int dm644x_gpio_register(void);
+diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
+index 71a16fc..64f5193 100644
+--- a/arch/arm/mach-davinci/dm644x.c
++++ b/arch/arm/mach-davinci/dm644x.c
+@@ -8,28 +8,31 @@
+  * is licensed "as is" without any warranty of any kind, whether express
+  * or implied.
+  */
+-#include <linux/init.h>
+-#include <linux/clk.h>
+-#include <linux/serial_8250.h>
++#include <linux/clk-provider.h>
+ #include <linux/dmaengine.h>
+-#include <linux/platform_device.h>
++#include <linux/init.h>
+ #include <linux/platform_data/edma.h>
+ #include <linux/platform_data/gpio-davinci.h>
++#include <linux/platform_device.h>
++#include <linux/serial_8250.h>
+ 
+ #include <asm/mach/map.h>
+ 
++#include <mach/common.h>
+ #include <mach/cputype.h>
+ #include <mach/irqs.h>
+-#include "psc.h"
+ #include <mach/mux.h>
+-#include <mach/time.h>
+ #include <mach/serial.h>
+-#include <mach/common.h>
++#include <mach/time.h>
+ 
++#include "asp.h"
+ #include "davinci.h"
+-#include "clock.h"
+ #include "mux.h"
+-#include "asp.h"
 +
-+Consumers:
++#ifndef CONFIG_COMMON_CLK
++#include "clock.h"
++#include "psc.h"
++#endif
+ 
+ /*
+  * Device specific clocks
+@@ -43,6 +46,7 @@
+ #define DM644X_EMAC_CNTRL_RAM_OFFSET	0x2000
+ #define DM644X_EMAC_CNTRL_RAM_SIZE	0x2000
+ 
++#ifndef CONFIG_COMMON_CLK
+ static struct pll_data pll1_data = {
+ 	.num       = 1,
+ 	.phys_base = DAVINCI_PLL1_BASE,
+@@ -326,6 +330,7 @@ static struct clk_lookup dm644x_clks[] = {
+ 	CLK("davinci-wdt", NULL, &timer2_clk),
+ 	CLK(NULL, NULL, NULL),
+ };
++#endif
+ 
+ static struct emac_platform_data dm644x_emac_pdata = {
+ 	.ctrl_reg_offset	= DM644X_EMAC_CNTRL_OFFSET,
+@@ -934,8 +939,68 @@ void __init dm644x_init(void)
+ 
+ void __init dm644x_init_time(void)
+ {
++#ifdef CONFIG_COMMON_CLK
++	struct clk *clk;
 +
-+	Clock, power domain and reset consumers shall use the local power domain
-+	module ID (LPSC) as the index corresponding to the clock cell. Refer to
-+	the device-specific datasheet to find these numbers. NB: Most local
-+	domains	only provide a clock/power domain and not a reset.
++	clk = clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM644X_REF_FREQ);
 +
-+Examples:
++	davinci_timer_init(clk);
++#else
+ 	davinci_clk_init(dm644x_clks);
+ 	davinci_timer_init(&timer0_clk);
++#endif
++}
 +
-+	psc0: clock-controller@10000 {
-+		compatible = "ti,da850-psc0";
-+		reg = <0x10000 0x1000>;
-+		#clock-cells = <1>;
-+		#power-domain-cells = <1>;
-+		#reset-cells = <1>;
-+		clocks = <&pll0_sysclk 1>, <&pll0_sysclk 2>,
-+			 <&pll0_sysclk 4>, <&pll0_sysclk 6>, <&async1_clk>;
-+		clock_names = "pll0_sysclk1", "pll0_sysclk2",
-+			      "pll0_sysclk4", "pll0_sysclk6", "async1";
-+	};
-+	psc1: clock-controller@227000 {
-+		compatible = "ti,da850-psc1";
-+		reg = <0x227000 0x1000>;
-+		#clock-cells = <1>;
-+		#power-domain-cells = <1>;
-+		clocks = <&pll0_sysclk 2>, <&pll0_sysclk 4>, <&async3_clk>;
-+		clock_names = "pll0_sysclk2", "pll0_sysclk4", "async3";
-+	};
++static struct resource dm644x_pll1_resources[] = {
++	{
++		.start	= DAVINCI_PLL1_BASE,
++		.end	= DAVINCI_PLL1_BASE + SZ_4K - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
 +
-+	/* consumer */
-+	dsp: dsp@11800000 {
-+		compatible = "ti,da850-dsp";
-+		reg = <0x11800000 0x40000>,
-+		      <0x11e00000 0x8000>,
-+		      <0x11f00000 0x8000>,
-+		      <0x01c14044 0x4>,
-+		      <0x01c14174 0x8>;
-+		reg-names = "l2sram", "l1pram", "l1dram", "host1cfg", "chipsig";
-+		interrupt-parent = <&intc>;
-+		interrupts = <28>;
-+		clocks = <&psc0 15>;
-+		power-domains = <&psc0 15>;
-+		resets = <&psc0 15>;
-+	};
++static struct platform_device dm644x_pll1_device = {
++	.name		= "dm644x-pll1",
++	.id		= -1,
++	.resource	= dm644x_pll1_resources,
++	.num_resources	= ARRAY_SIZE(dm644x_pll1_resources),
++};
 +
-+Also see:
-+- Documentation/devicetree/bindings/clock/clock-bindings.txt
-+- Documentation/devicetree/bindings/power/power_domain.txt
-+- Documentation/devicetree/bindings/reset/reset.txt
++static struct resource dm644x_pll2_resources[] = {
++	{
++		.start	= DAVINCI_PLL2_BASE,
++		.end	= DAVINCI_PLL2_BASE + SZ_4K - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct platform_device dm644x_pll2_device = {
++	.name		= "dm644x-pll2",
++	.id		= -1,
++	.resource	= dm644x_pll2_resources,
++	.num_resources	= ARRAY_SIZE(dm644x_pll2_resources),
++};
++
++static struct resource dm644x_psc_resources[] = {
++	{
++		.start	= DAVINCI_PWR_SLEEP_CNTRL_BASE,
++		.end	= DAVINCI_PWR_SLEEP_CNTRL_BASE + SZ_4K - 1,
++		.flags	= IORESOURCE_MEM,
++	},
++};
++
++static struct platform_device dm644x_psc_device = {
++	.name		= "dm644x-psc",
++	.id		= -1,
++	.resource	= dm644x_psc_resources,
++	.num_resources	= ARRAY_SIZE(dm644x_psc_resources),
++};
++
++void __init dm644x_register_clocks(void)
++{
++	platform_device_register(&dm644x_pll1_device);
++	platform_device_register(&dm644x_pll2_device);
++	platform_device_register(&dm644x_psc_device);
+ }
+ 
+ int __init dm644x_init_video(struct vpfe_config *vpfe_cfg,
 -- 
 2.7.4
