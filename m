@@ -1,52 +1,65 @@
-Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-db5eur01on0051.outbound.protection.outlook.com ([104.47.2.51]:31376
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752919AbeBZMFW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Feb 2018 07:05:22 -0500
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v2 09/12] staging: typec: tcpci: Only touch target bit when enable vconn
-Date: Mon, 26 Feb 2018 19:49:16 +0800
-Message-Id: <1519645759-12701-10-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
-References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+Return-Path: <SRS0=kFSR=FN=gmail.com=joel.stan@kernel.org>
+Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH 2/3] reset: simple: Enable for ASPEED systems
+Date: Mon, 19 Feb 2018 17:24:37 +1030
+Message-Id: <20180219065438.19933-3-joel@jms.id.au>
+In-Reply-To: <20180219065438.19933-1-joel@jms.id.au>
+References: <20180219065438.19933-1-joel@jms.id.au>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Jeffery <andrew@aj.id.au>
+Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-We need regmap_update_bits to avoid touch any other bits when
-enable or disable vconn.
+ASPEED BMC SoCs have a reset controller in the LPC IP that can be
+controlled using this driver to release the UARTs from reset.
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
+No special configuration is required, so only the compatible string is
+added.
+
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/staging/typec/tcpci.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/reset/Kconfig        | 10 +++++++---
+ drivers/reset/reset-simple.c |  2 ++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 7145771..27d53c6 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -213,14 +213,10 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
- static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
- {
- 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
--	int ret;
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 7fc77696bb1e..18f152d251d7 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -83,14 +83,18 @@ config RESET_PISTACHIO
  
--	ret = regmap_write(tcpci->regmap, TCPC_POWER_CTRL,
--			   enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
--	if (ret < 0)
--		return ret;
--
--	return 0;
-+	return regmap_update_bits(tcpci->regmap, TCPC_POWER_CTRL,
-+				TCPC_POWER_CTRL_VCONN_ENABLE,
-+				enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
- }
+ config RESET_SIMPLE
+ 	bool "Simple Reset Controller Driver" if COMPILE_TEST
+-	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
++	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
+ 	help
+ 	  This enables a simple reset controller driver for reset lines that
+ 	  that can be asserted and deasserted by toggling bits in a contiguous,
+ 	  exclusive register space.
  
- static int tcpci_set_roles(struct tcpc_dev *tcpc, bool attached,
+-	  Currently this driver supports Altera SoCFPGAs, the RCC reset
+-	  controller in STM32 MCUs, Allwinner SoCs, and ZTE's zx2967 family.
++	  Currently this driver supports:
++	   - Altera SoCFPGAs
++	   - ASPEED BMC SoCs
++	   - RCC reset controller in STM32 MCUs
++	   - Allwinner SoCs
++	   - ZTE's zx2967 family
+ 
+ config RESET_SUNXI
+ 	bool "Allwinner SoCs Reset Driver" if COMPILE_TEST && !ARCH_SUNXI
+diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+index 2d4f362ef025..f7ce8910a392 100644
+--- a/drivers/reset/reset-simple.c
++++ b/drivers/reset/reset-simple.c
+@@ -125,6 +125,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
+ 		.data = &reset_simple_active_low },
+ 	{ .compatible = "zte,zx296718-reset",
+ 		.data = &reset_simple_active_low },
++	{ .compatible = "aspeed,ast2400-lpc-reset" },
++	{ .compatible = "aspeed,ast2500-lpc-reset" },
+ 	{ /* sentinel */ },
+ };
+ 
 -- 
-2.7.4
-
+2.15.1
