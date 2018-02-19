@@ -1,14 +1,13 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 6/7] arm: dts: sun8i: a83t: Fix undefined offset with
- virtual timer
-Date: Mon, 19 Feb 2018 09:52:05 +0100
-Message-ID: <20180219085205.jh6bcmbzcxqffkhk@flea.lan>
+Subject: Re: [PATCH v3 7/7] ARM: sun8i: smp: Remove the disabling of CPU0
+Date: Mon, 19 Feb 2018 09:54:08 +0100
+Message-ID: <20180219085408.5to43p7jbtijx4q3@flea.lan>
 References: <20180219081837.15482-1-mylene.josserand@bootlin.com>
- <20180219081837.15482-7-mylene.josserand@bootlin.com>
+ <20180219081837.15482-8-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4833618675298603748=="
+Content-Type: multipart/mixed; boundary="===============2609233806834620112=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180219081837.15482-7-mylene.josserand@bootlin.com>
+In-Reply-To: <20180219081837.15482-8-mylene.josserand@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,41 +22,45 @@ Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
 
---===============4833618675298603748==
+--===============2609233806834620112==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="swcqkmnxnqqwxqtn"
+	protocol="application/pgp-signature"; boundary="n3avigllm7j4bwce"
 Content-Disposition: inline
 
 
---swcqkmnxnqqwxqtn
+--n3avigllm7j4bwce
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Mon, Feb 19, 2018 at 09:18:36AM +0100, Myl=E8ne Josserand wrote:
-> The ARM architected timers use an offset between their physical and
-> virtual counters. That offset should be configured by the bootloader
-> in CNTVOFF.
->=20
-> However, the A83t bootloader fails to do so, and we end up with an
-> undefined offset (which in our case is random), meaning that each CPU
-> will have a different time, which isn't working very well.
->=20
-> Fix that by setting the arm,cpu-registers-not-fw-configured that will
-> make Linux use the physical timers instead of the virtual ones. One
-> possible side effect would be that the virtualization features would
-> be disabled. However, due to the way the GIC has been integrated in
-> the system, it is already unusable so we're effectively not losing any
-> feature.
+On Mon, Feb 19, 2018 at 09:18:37AM +0100, Myl=E8ne Josserand wrote:
+> On sun8i-a63t, hotplug CPU for CPU0 is currently not working.
+> Remove the possibility to disable CPU0 only for sun8i-a83t.
 >=20
 > Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+> ---
+>  arch/arm/mach-sunxi/mc_smp.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
+> index fec592bf68b4..69d5ae5b3d72 100644
+> --- a/arch/arm/mach-sunxi/mc_smp.c
+> +++ b/arch/arm/mach-sunxi/mc_smp.c
+> @@ -661,8 +661,12 @@ static int sunxi_mc_smp_cpu_kill(unsigned int l_cpu)
+>  	return !ret;
+>  }
+> =20
+> -static bool sunxi_mc_smp_cpu_can_disable(unsigned int __unused)
+> +static bool sunxi_mc_smp_cpu_can_disable(unsigned int cpu)
+>  {
+> +	/* CPU0 hotplug handled only for sun9i */
+> +	if (of_machine_is_compatible("allwinner,sun8i-a83t"))
+> +		if (cpu =3D=3D 0)
+> +			return false;
 
-One small nitpick on this one (and the previous one), arm in the
-subject prefix should be uppercase.
+This also means that you have a window in your patch sequence where
+you can disable the CPU0 on the A83t. This patch should be earlier.
 
-Thanks!
 Maxime
 
 --=20
@@ -65,30 +68,30 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 http://bootlin.com
 
---swcqkmnxnqqwxqtn
+--n3avigllm7j4bwce
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqKkDQACgkQ0rTAlCFN
-r3SXPQ/9HiMOITN6rhCMOcwolM6if0cK1KZMFq1LLftQXV5N/6JUdehvV7aSZfC6
-YRGq3Nmz33cgnwnZcuZzWTwSSCOwtQox2P6G91q5W/nT8cMvP+nS6j8RoNVAdxkn
-SfqI+yJzAxkW9fJy2lWtohIzPRShorGlnkEhq9hK7/6W5dQtEXUEKvjrY2eW2RPy
-UmV4XtPcXGb++A+mnLyTq7NtcYu4zFRkrierrVefi6GHFeHlxIlWqP2KdkpZl5qM
-mV+pulcZhMT/7u8EwBYlJI/0eAPz7IkwzqCFAn4K3oV6RwXP4Icx0aejgbcMyspB
-ySy4L1XxqzuB9zxZX/bPyeo9vFddMULl39w+K23Ivil0KIdo9Ec8aDegpSOa+4zW
-z5fZkoJmMdYtA1ZPA9G2p9NHk4akNoEniZxhA3L2HmJ1wcXcYW8wOxLuGCHU/Len
-SgiJyg0I+X5v4smtcNrvoILH9KcuvLzUjDFInqaiGCJyUWaoqbeNcer6UpX7in8s
-kMVllEu6QXYaIrQ2khujCknj4InyMqv1pgIoOuYULbxxZ1g/B/UYng9okd3kw1Am
-Oyakr/GgPLtE14cHmqBu9wLVkYclzvIULNVqzHvDWAgaGphw0JLtx8XKzeDfClfU
-juEzyz1BaDY+zWYZ8eaoaZ2QGpBrK5xVFsl6z++20HykBUwsE0I=
-=s1e8
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqKkK8ACgkQ0rTAlCFN
+r3Txuw//UM3frw2Utw0Qi37IMTm2va2eh/yqzkQaYi1bZE29+XDQiAwxyLNb+066
+efCWddCxIvxoFANfZ+95+NoccGYXtU3Csg36+40AV84xpxOLEp3HR8+ueH5GFhL6
+oh9mxmrQ/eZMYKVEp97u4Dft7H0TdTpPF8qDppzdqGVmZFpXzjjdxGUTArQrDpik
+Z1Hl3rGDubNy20LXlcxvBhXpBamrZhMjO4uk1tjqvNR1tFX5AXDZGI81FFTVBcX0
+VYWq+NcGIW0bOTbtgJM6QY8m8aC5O4siQ35VMPU69HqQ2VpMn0w07gMkBYH32YUj
+4OGuKFCCHTFThE0TCD0LgooVxwVU/7V8pfIQxKgDIb88TiepCh6fx0IdBYRXbyeH
+YvFpy8R/DGnKNuLrDkVHiBsfv3Ia5bvWpoDakMzi7ykSeivuZc+gvsnyWz5zhXcN
+iEVi13Sx6HNUYXwcNqGCA8I3MOc3abn+xm2tQGWIJUtVimo2X8hyjVTE0d5YtQnh
+xN7eUo5hWmAHFqpKMXK4eHsS7bdm257XArKiANQHt0rOQpwEJ0TiPnE3ffAP9vbI
+GW9F0KMPICLEXYhsg8luP1r1F3MHTSzGi7LyP5OFN+X+ILNEPhYes/SfO5bLG8nC
+VQm+ds/noz326rlZT/hlUVWbWYiZjWrgBzGjSm4pjo1vRThuwd0=
+=eZxo
 -----END PGP SIGNATURE-----
 
---swcqkmnxnqqwxqtn--
+--n3avigllm7j4bwce--
 
 
---===============4833618675298603748==
+--===============2609233806834620112==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -99,4 +102,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============4833618675298603748==--
+--===============2609233806834620112==--
