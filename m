@@ -1,178 +1,140 @@
-Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v3 07/15] memory: tegra: Apply interrupts mask per SoC
-Date: Tue, 20 Feb 2018 19:25:20 +0300
-Message-Id: <2d2ea1c4fd03fb76c60748cf362105909c3baf4d.1519141896.git.digetx@gmail.com>
-In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
-References: <cover.1519141896.git.digetx@gmail.com>
-In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
-References: <cover.1519141896.git.digetx@gmail.com>
-To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
+From: John Garry <john.garry@huawei.com>
+Subject: [PATCH 3/8] scsi: hisi_sas: fix the issue of link rate inconsistency
+Date: Tue, 20 Feb 2018 03:13:26 +0800
+Message-ID: <1519067611-206638-4-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
+References: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>, John Garry <john.garry@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Currently we are enabling handling of interrupts specific to Tegra124+
-which happen to overlap with previous generations. Let's specify
-interrupts mask per SoC generation for consistency and in a preparation
-of squashing of Tegra20 driver into the common one that will enable
-handling of GART faults which may be undesirable by newer generations.
+From: Xiaofei Tan <tanxiaofei@huawei.com>
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+In sysfs, there are two files about minimum linkrate, and also
+two files for maximum linkrate. Take maximum linkrate example,
+maximum_linkrate_hw is read-only and indicated by the register
+HARD_PHY_LINKRATE, and maximum_linkrate is read-write and
+corresponding to the register PROG_PHY_LINK_RATE.
+
+But in the function phy_up_v*_hw(), we get *_linkrate value from
+HARD_PHY_LINKRATE. It is not right. This patch is to fix this issue.
+
+Unreferenced PHY-interrupt enum is also removed for v3 hw.
+
+Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- drivers/memory/tegra/mc.c       | 21 +++------------------
- drivers/memory/tegra/mc.h       |  9 +++++++++
- drivers/memory/tegra/tegra114.c |  2 ++
- drivers/memory/tegra/tegra124.c |  6 ++++++
- drivers/memory/tegra/tegra210.c |  3 +++
- drivers/memory/tegra/tegra30.c  |  2 ++
- include/soc/tegra/mc.h          |  2 ++
- 7 files changed, 27 insertions(+), 18 deletions(-)
+ drivers/scsi/hisi_sas/hisi_sas_main.c  |  2 ++
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c |  1 -
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |  8 +-------
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 13 +------------
+ 4 files changed, 4 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
-index e55b9733bd83..60509f0a386b 100644
---- a/drivers/memory/tegra/mc.c
-+++ b/drivers/memory/tegra/mc.c
-@@ -20,14 +20,6 @@
- #include "mc.h"
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
+index 2d4dbed..9d16372 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_main.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
+@@ -683,6 +683,8 @@ static void hisi_sas_phy_init(struct hisi_hba *hisi_hba, int phy_no)
  
- #define MC_INTSTATUS 0x000
--#define  MC_INT_DECERR_MTS (1 << 16)
--#define  MC_INT_SECERR_SEC (1 << 13)
--#define  MC_INT_DECERR_VPR (1 << 12)
--#define  MC_INT_INVALID_APB_ASID_UPDATE (1 << 11)
--#define  MC_INT_INVALID_SMMU_PAGE (1 << 10)
--#define  MC_INT_ARBITRATION_EMEM (1 << 9)
--#define  MC_INT_SECURITY_VIOLATION (1 << 8)
--#define  MC_INT_DECERR_EMEM (1 << 6)
+ 	phy->hisi_hba = hisi_hba;
+ 	phy->port = NULL;
++	phy->minimum_linkrate = SAS_LINK_RATE_1_5_GBPS;
++	phy->maximum_linkrate = hisi_hba->hw->phy_get_max_linkrate();
+ 	sas_phy->enabled = (phy_no < hisi_hba->n_phy) ? 1 : 0;
+ 	sas_phy->class = SAS;
+ 	sas_phy->iproto = SAS_PROTOCOL_ALL;
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+index 679e76f..38bbda9 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
+@@ -873,7 +873,6 @@ static void phy_set_linkrate_v1_hw(struct hisi_hba *hisi_hba, int phy_no,
+ 	sas_phy->phy->maximum_linkrate = max;
+ 	sas_phy->phy->minimum_linkrate = min;
  
- #define MC_INTMASK 0x004
+-	min -= SAS_LINK_RATE_1_5_GBPS;
+ 	max -= SAS_LINK_RATE_1_5_GBPS;
  
-@@ -248,13 +240,11 @@ static const char *const error_names[8] = {
- static irqreturn_t tegra_mc_irq(int irq, void *data)
+ 	for (i = 0; i <= max; i++)
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+index ab6db50..662d259 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
+@@ -1603,7 +1603,6 @@ static void phy_set_linkrate_v2_hw(struct hisi_hba *hisi_hba, int phy_no,
+ 	sas_phy->phy->maximum_linkrate = max;
+ 	sas_phy->phy->minimum_linkrate = min;
+ 
+-	min -= SAS_LINK_RATE_1_5_GBPS;
+ 	max -= SAS_LINK_RATE_1_5_GBPS;
+ 
+ 	for (i = 0; i <= max; i++)
+@@ -2684,7 +2683,7 @@ static int prep_abort_v2_hw(struct hisi_hba *hisi_hba,
+ static int phy_up_v2_hw(int phy_no, struct hisi_hba *hisi_hba)
  {
- 	struct tegra_mc *mc = data;
--	unsigned long status, mask;
-+	unsigned long status;
- 	unsigned int bit;
+ 	int i, res = IRQ_HANDLED;
+-	u32 port_id, link_rate, hard_phy_linkrate;
++	u32 port_id, link_rate;
+ 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
+ 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
+ 	struct device *dev = hisi_hba->dev;
+@@ -2723,11 +2722,6 @@ static int phy_up_v2_hw(int phy_no, struct hisi_hba *hisi_hba)
+ 	}
  
- 	/* mask all interrupts to avoid flooding */
--	mask = mc_readl(mc, MC_INTMASK);
--	status = mc_readl(mc, MC_INTSTATUS) & mask;
+ 	sas_phy->linkrate = link_rate;
+-	hard_phy_linkrate = hisi_sas_phy_read32(hisi_hba, phy_no,
+-						HARD_PHY_LINKRATE);
+-	phy->maximum_linkrate = hard_phy_linkrate & 0xf;
+-	phy->minimum_linkrate = (hard_phy_linkrate >> 4) & 0xf;
 -
-+	status = mc_readl(mc, MC_INTSTATUS) & mc->soc->intmask;
- 	if (!status)
- 		return IRQ_NONE;
+ 	sas_phy->oob_mode = SAS_OOB_MODE;
+ 	memcpy(sas_phy->attached_sas_addr, &id->sas_addr, SAS_ADDR_SIZE);
+ 	dev_info(dev, "phyup: phy%d link_rate=%d\n", phy_no, link_rate);
+diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+index a1f1868..1ee95ab 100644
+--- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
++++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
+@@ -340,12 +340,6 @@ struct hisi_sas_err_record_v3 {
+ #define HISI_SAS_COMMAND_ENTRIES_V3_HW 4096
+ #define HISI_SAS_MSI_COUNT_V3_HW 32
  
-@@ -349,7 +339,6 @@ static int tegra_mc_probe(struct platform_device *pdev)
- 	const struct of_device_id *match;
- 	struct resource *res;
- 	struct tegra_mc *mc;
--	u32 value;
- 	int err;
- 
- 	match = of_match_node(tegra_mc_of_match, pdev->dev.of_node);
-@@ -409,11 +398,7 @@ static int tegra_mc_probe(struct platform_device *pdev)
- 
- 	WARN(!mc->soc->client_id_mask, "Missing client ID mask for this SoC\n");
- 
--	value = MC_INT_DECERR_MTS | MC_INT_SECERR_SEC | MC_INT_DECERR_VPR |
--		MC_INT_INVALID_APB_ASID_UPDATE | MC_INT_INVALID_SMMU_PAGE |
--		MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM;
+-enum {
+-	HISI_SAS_PHY_PHY_UPDOWN,
+-	HISI_SAS_PHY_CHNL_INT,
+-	HISI_SAS_PHY_INT_NR
+-};
 -
--	mc_writel(mc, value, MC_INTMASK);
-+	mc_writel(mc, mc->soc->intmask, MC_INTMASK);
- 
- 	err = devm_request_irq(&pdev->dev, mc->irq, tegra_mc_irq, IRQF_SHARED,
- 			       dev_name(&pdev->dev), mc);
-diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
-index ddb16676c3af..24e020b4609b 100644
---- a/drivers/memory/tegra/mc.h
-+++ b/drivers/memory/tegra/mc.h
-@@ -14,6 +14,15 @@
- 
- #include <soc/tegra/mc.h>
- 
-+#define MC_INT_DECERR_MTS (1 << 16)
-+#define MC_INT_SECERR_SEC (1 << 13)
-+#define MC_INT_DECERR_VPR (1 << 12)
-+#define MC_INT_INVALID_APB_ASID_UPDATE (1 << 11)
-+#define MC_INT_INVALID_SMMU_PAGE (1 << 10)
-+#define MC_INT_ARBITRATION_EMEM (1 << 9)
-+#define MC_INT_SECURITY_VIOLATION (1 << 8)
-+#define MC_INT_DECERR_EMEM (1 << 6)
-+
- static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
+ #define DIR_NO_DATA 0
+ #define DIR_TO_INI 1
+ #define DIR_TO_DEVICE 2
+@@ -1121,7 +1115,7 @@ static int prep_abort_v3_hw(struct hisi_hba *hisi_hba,
+ static int phy_up_v3_hw(int phy_no, struct hisi_hba *hisi_hba)
  {
- 	return readl(mc->regs + offset);
-diff --git a/drivers/memory/tegra/tegra114.c b/drivers/memory/tegra/tegra114.c
-index b20e6e3e208e..7560b2f558a7 100644
---- a/drivers/memory/tegra/tegra114.c
-+++ b/drivers/memory/tegra/tegra114.c
-@@ -945,4 +945,6 @@ const struct tegra_mc_soc tegra114_mc_soc = {
- 	.atom_size = 32,
- 	.client_id_mask = 0x7f,
- 	.smmu = &tegra114_smmu_soc,
-+	.intmask = MC_INT_INVALID_SMMU_PAGE | MC_INT_SECURITY_VIOLATION |
-+		   MC_INT_DECERR_EMEM,
- };
-diff --git a/drivers/memory/tegra/tegra124.c b/drivers/memory/tegra/tegra124.c
-index 8b6360eabb8a..bd16555cca0f 100644
---- a/drivers/memory/tegra/tegra124.c
-+++ b/drivers/memory/tegra/tegra124.c
-@@ -1035,6 +1035,9 @@ const struct tegra_mc_soc tegra124_mc_soc = {
- 	.smmu = &tegra124_smmu_soc,
- 	.emem_regs = tegra124_mc_emem_regs,
- 	.num_emem_regs = ARRAY_SIZE(tegra124_mc_emem_regs),
-+	.intmask = MC_INT_DECERR_MTS | MC_INT_SECERR_SEC | MC_INT_DECERR_VPR |
-+		   MC_INT_INVALID_APB_ASID_UPDATE | MC_INT_INVALID_SMMU_PAGE |
-+		   MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM,
- };
- #endif /* CONFIG_ARCH_TEGRA_124_SOC */
+ 	int i, res = 0;
+-	u32 context, port_id, link_rate, hard_phy_linkrate;
++	u32 context, port_id, link_rate;
+ 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
+ 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
+ 	struct device *dev = hisi_hba->dev;
+@@ -1139,10 +1133,6 @@ static int phy_up_v3_hw(int phy_no, struct hisi_hba *hisi_hba)
+ 		goto end;
+ 	}
+ 	sas_phy->linkrate = link_rate;
+-	hard_phy_linkrate = hisi_sas_phy_read32(hisi_hba, phy_no,
+-						HARD_PHY_LINKRATE);
+-	phy->maximum_linkrate = hard_phy_linkrate & 0xf;
+-	phy->minimum_linkrate = (hard_phy_linkrate >> 4) & 0xf;
+ 	phy->phy_type &= ~(PORT_TYPE_SAS | PORT_TYPE_SATA);
  
-@@ -1059,5 +1062,8 @@ const struct tegra_mc_soc tegra132_mc_soc = {
- 	.atom_size = 32,
- 	.client_id_mask = 0x7f,
- 	.smmu = &tegra132_smmu_soc,
-+	.intmask = MC_INT_DECERR_MTS | MC_INT_SECERR_SEC | MC_INT_DECERR_VPR |
-+		   MC_INT_INVALID_APB_ASID_UPDATE | MC_INT_INVALID_SMMU_PAGE |
-+		   MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM,
- };
- #endif /* CONFIG_ARCH_TEGRA_132_SOC */
-diff --git a/drivers/memory/tegra/tegra210.c b/drivers/memory/tegra/tegra210.c
-index d398bcd3fc57..3b8d0100088c 100644
---- a/drivers/memory/tegra/tegra210.c
-+++ b/drivers/memory/tegra/tegra210.c
-@@ -1092,4 +1092,7 @@ const struct tegra_mc_soc tegra210_mc_soc = {
- 	.atom_size = 64,
- 	.client_id_mask = 0xff,
- 	.smmu = &tegra210_smmu_soc,
-+	.intmask = MC_INT_DECERR_MTS | MC_INT_SECERR_SEC | MC_INT_DECERR_VPR |
-+		   MC_INT_INVALID_APB_ASID_UPDATE | MC_INT_INVALID_SMMU_PAGE |
-+		   MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM,
- };
-diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
-index d756c837f23e..d2ba50ed0490 100644
---- a/drivers/memory/tegra/tegra30.c
-+++ b/drivers/memory/tegra/tegra30.c
-@@ -967,4 +967,6 @@ const struct tegra_mc_soc tegra30_mc_soc = {
- 	.atom_size = 16,
- 	.client_id_mask = 0x7f,
- 	.smmu = &tegra30_smmu_soc,
-+	.intmask = MC_INT_INVALID_SMMU_PAGE | MC_INT_SECURITY_VIOLATION |
-+		   MC_INT_DECERR_EMEM,
- };
-diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
-index 233bae954970..be6e49124c6d 100644
---- a/include/soc/tegra/mc.h
-+++ b/include/soc/tegra/mc.h
-@@ -108,6 +108,8 @@ struct tegra_mc_soc {
- 	u8 client_id_mask;
+ 	/* Check for SATA dev */
+@@ -1864,7 +1854,6 @@ static void phy_set_linkrate_v3_hw(struct hisi_hba *hisi_hba, int phy_no,
+ 	sas_phy->phy->maximum_linkrate = max;
+ 	sas_phy->phy->minimum_linkrate = min;
  
- 	const struct tegra_smmu_soc *smmu;
-+
-+	u32 intmask;
- };
+-	min -= SAS_LINK_RATE_1_5_GBPS;
+ 	max -= SAS_LINK_RATE_1_5_GBPS;
  
- struct tegra_mc {
+ 	for (i = 0; i <= max; i++)
 -- 
-2.16.1
+1.9.1
