@@ -1,339 +1,128 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v7 22/42] ARM: davinci: da850: add new clock init using common
- clock framework
-Date: Mon, 19 Feb 2018 14:21:43 -0600
-Message-ID: <1519071723-31790-23-git-send-email-david@lechnology.com>
-References: <1519071723-31790-1-git-send-email-david@lechnology.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCHv2 4/8] dt-bindings: panel: common: document orientation
+ property
+Date: Mon, 19 Feb 2018 12:06:18 +0100
+Message-ID: <20180219110618.7hgsf3g6womvecay@earth.universe>
+References: <20180208183035.8461-1-sebastian.reichel@collabora.co.uk>
+ <20180208183035.8461-5-sebastian.reichel@collabora.co.uk>
+ <20180218232424.47ejrqdze7nm7g5d@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519071723-31790-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
+Content-Type: multipart/mixed; boundary="===============1543935678=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180218232424.47ejrqdze7nm7g5d@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the new board-specific clock init in mach-davinci/da850.c
-using the new common clock framework drivers.
 
-The #ifdefs are needed to prevent compile errors until the entire
-ARCH_DAVINCI is converted.
-
-Also clean up the #includes since we are adding some here.
-
-Some CFGCHIP macros were removed because we are now including
-linux/mfd/da8xx-cfgchip.h which defines the same values.
-
-Signed-off-by: David Lechner <david@lechnology.com>
----
-
-v7 changes:
-- add clock platform device declarations
-- register platform devices instead of registering clocks directly
-- clkdev lookup is moved to drivers/clk
-- add davinci prefix to commit description
-
-v6 changes:
-- add blank lines between function calls
-- include da8xx_register_cfgchip()
-- add async1 and async2 clock domains
+--===============1543935678==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qhcmj2p5ihe2p6al"
+Content-Disposition: inline
 
 
- arch/arm/mach-davinci/board-da850-evm.c     |   2 +
- arch/arm/mach-davinci/board-mityomapl138.c  |   2 +
- arch/arm/mach-davinci/board-omapl138-hawk.c |   2 +
- arch/arm/mach-davinci/da850.c               | 143 +++++++++++++++++++++++++---
- arch/arm/mach-davinci/da8xx-dt.c            |   2 +
- arch/arm/mach-davinci/include/mach/da8xx.h  |   1 +
- 6 files changed, 139 insertions(+), 13 deletions(-)
+--qhcmj2p5ihe2p6al
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 3063478..78a670a 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -1334,6 +1334,8 @@ static __init void da850_evm_init(void)
- {
- 	int ret;
- 
-+	da850_register_clocks();
-+
- 	ret = da850_register_gpio();
- 	if (ret)
- 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
-diff --git a/arch/arm/mach-davinci/board-mityomapl138.c b/arch/arm/mach-davinci/board-mityomapl138.c
-index d1c8548..f442784 100644
---- a/arch/arm/mach-davinci/board-mityomapl138.c
-+++ b/arch/arm/mach-davinci/board-mityomapl138.c
-@@ -502,6 +502,8 @@ static void __init mityomapl138_init(void)
- {
- 	int ret;
- 
-+	da850_register_clocks();
-+
- 	/* for now, no special EDMA channels are reserved */
- 	ret = da850_register_edma(NULL);
- 	if (ret)
-diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
-index e2ba9da..6a4e486 100644
---- a/arch/arm/mach-davinci/board-omapl138-hawk.c
-+++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
-@@ -281,6 +281,8 @@ static __init void omapl138_hawk_init(void)
- {
- 	int ret;
- 
-+	da850_register_clocks();
-+
- 	ret = da850_register_gpio();
- 	if (ret)
- 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
-diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-index 1dbf01c..9086f2b 100644
---- a/arch/arm/mach-davinci/da850.c
-+++ b/arch/arm/mach-davinci/da850.c
-@@ -11,39 +11,43 @@
-  * is licensed "as is" without any warranty of any kind, whether express
-  * or implied.
-  */
-+
-+#include <linux/clk-provider.h>
- #include <linux/clkdev.h>
-+#include <linux/cpufreq.h>
- #include <linux/gpio.h>
- #include <linux/init.h>
--#include <linux/clk.h>
-+#include <linux/mfd/da8xx-cfgchip.h>
-+#include <linux/platform_data/clk-da8xx-cfgchip.h>
-+#include <linux/platform_data/gpio-davinci.h>
- #include <linux/platform_device.h>
--#include <linux/cpufreq.h>
-+#include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
--#include <linux/platform_data/gpio-davinci.h>
- 
- #include <asm/mach/map.h>
- 
--#include "psc.h"
--#include <mach/irqs.h>
--#include <mach/cputype.h>
- #include <mach/common.h>
--#include <mach/time.h>
--#include <mach/da8xx.h>
- #include <mach/cpufreq.h>
-+#include <mach/cputype.h>
-+#include <mach/da8xx.h>
-+#include <mach/irqs.h>
- #include <mach/pm.h>
-+#include <mach/time.h>
- 
--#include "clock.h"
- #include "mux.h"
- 
-+#ifndef CONFIG_COMMON_CLK
-+#include "clock.h"
-+#include "psc.h"
-+#endif
-+
- #define DA850_PLL1_BASE		0x01e1a000
- #define DA850_TIMER64P2_BASE	0x01f0c000
- #define DA850_TIMER64P3_BASE	0x01f0d000
- 
- #define DA850_REF_FREQ		24000000
- 
--#define CFGCHIP3_ASYNC3_CLKSRC	BIT(4)
--#define CFGCHIP3_PLL1_MASTER_LOCK	BIT(5)
--#define CFGCHIP0_PLL_MASTER_LOCK	BIT(4)
--
-+#ifndef CONFIG_COMMON_CLK
- static int da850_set_armrate(struct clk *clk, unsigned long rate);
- static int da850_round_armrate(struct clk *clk, unsigned long rate);
- static int da850_set_pll0rate(struct clk *clk, unsigned long armrate);
-@@ -583,6 +587,7 @@ static struct clk_lookup da850_clks[] = {
- 	CLK("ecap.2",		"fck",		&ecap2_clk),
- 	CLK(NULL,		NULL,		NULL),
- };
-+#endif
- 
- /*
-  * Device specific mux setup
-@@ -1170,6 +1175,7 @@ int da850_register_cpufreq(char *async_clk)
- 	return platform_device_register(&da850_cpufreq_device);
- }
- 
-+#ifndef CONFIG_COMMON_CLK
- static int da850_round_armrate(struct clk *clk, unsigned long rate)
- {
- 	int ret = 0, diff;
-@@ -1232,12 +1238,14 @@ static int da850_set_pll0rate(struct clk *clk, unsigned long rate)
- 
- 	return 0;
- }
-+#endif /* CONFIG_COMMON_CLK */
- #else
- int __init da850_register_cpufreq(char *async_clk)
- {
- 	return 0;
- }
- 
-+#ifndef CONFIG_COMMON_CLK
- static int da850_set_armrate(struct clk *clk, unsigned long rate)
- {
- 	return -EINVAL;
-@@ -1252,6 +1260,7 @@ static int da850_round_armrate(struct clk *clk, unsigned long rate)
- {
- 	return clk->rate;
- }
-+#endif /* CONFIG_COMMON_CLK */
- #endif
- 
- /* VPIF resource, platform data */
-@@ -1395,6 +1404,114 @@ void __init da850_init(void)
- 
- void __init da850_init_time(void)
- {
-+#ifdef CONFIG_COMMON_CLK
-+	struct clk *clk;
-+
-+	clk = clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DA850_REF_FREQ);
-+
-+	davinci_timer_init(clk);
-+#else
- 	davinci_clk_init(da850_clks);
- 	davinci_timer_init(&timerp64_0_clk);
-+#endif
-+}
-+
-+static struct resource da850_pll0_resources[] = {
-+	{
-+		.start	= DA8XX_PLL0_BASE,
-+		.end	= DA8XX_PLL0_BASE + SZ_4K - 1,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device da850_pll0_device = {
-+	.name		= "da850-pll0",
-+	.id		= -1,
-+	.resource	= da850_pll0_resources,
-+	.num_resources	= ARRAY_SIZE(da850_pll0_resources),
-+};
-+
-+static struct resource da850_pll1_resources[] = {
-+	{
-+		.start	= DA850_PLL1_BASE,
-+		.end	= DA850_PLL1_BASE + SZ_4K - 1,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device da850_pll1_device = {
-+	.name		= "da850-pll1",
-+	.id		= -1,
-+	.resource	= da850_pll1_resources,
-+	.num_resources	= ARRAY_SIZE(da850_pll1_resources),
-+};
-+
-+static struct resource da850_psc0_resources[] = {
-+	{
-+		.start	= DA8XX_PSC0_BASE,
-+		.end	= DA8XX_PSC0_BASE + SZ_4K - 1,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device da850_psc0_device = {
-+	.name		= "da850-psc0",
-+	.id		= -1,
-+	.resource	= da850_psc0_resources,
-+	.num_resources	= ARRAY_SIZE(da850_psc0_resources),
-+};
-+
-+static struct resource da850_psc1_resources[] = {
-+	{
-+		.start	= DA8XX_PSC1_BASE,
-+		.end	= DA8XX_PSC1_BASE + SZ_4K - 1,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device da850_psc1_device = {
-+	.name		= "da850-psc1",
-+	.id		= -1,
-+	.resource	= da850_psc1_resources,
-+	.num_resources	= ARRAY_SIZE(da850_psc1_resources),
-+};
-+
-+static struct platform_device da850_async1_clksrc_device = {
-+	.name		= "da850-async1-clksrc",
-+	.id		= -1,
-+};
-+
-+static struct platform_device da850_async3_clksrc_device = {
-+	.name		= "da850-async3-clksrc",
-+	.id		= -1,
-+};
-+
-+static struct platform_device da830_tbclksync_device = {
-+	.name		= "da830-tbclksync",
-+	.id		= -1,
-+};
-+
-+void __init da850_register_clocks(void)
-+{
-+	static struct da8xx_cfgchip_clk_platform_data async1_pdata;
-+	static struct da8xx_cfgchip_clk_platform_data async3_pdata;
-+	static struct da8xx_cfgchip_clk_platform_data tbclksync_pdata;
-+
-+	platform_device_register(&da850_pll0_device);
-+	platform_device_register(&da850_pll1_device);
-+
-+	async1_pdata.cfgchip = da8xx_get_cfgchip();
-+	da850_async1_clksrc_device.dev.platform_data = &async1_pdata;
-+	platform_device_register(&da850_async1_clksrc_device);
-+
-+	async3_pdata.cfgchip = da8xx_get_cfgchip();
-+	da850_async3_clksrc_device.dev.platform_data = &async3_pdata;
-+	platform_device_register(&da850_async3_clksrc_device);
-+
-+	platform_device_register(&da850_psc0_device);
-+	platform_device_register(&da850_psc1_device);
-+
-+	tbclksync_pdata.cfgchip = da8xx_get_cfgchip();
-+	da830_tbclksync_device.dev.platform_data = &tbclksync_pdata;
-+	platform_device_register(&da830_tbclksync_device);
- }
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index ab199f4..91dd9cb 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -67,6 +67,8 @@ static void __init da850_init_machine(void)
- 
- 	int ret;
- 
-+	da850_register_clocks();
-+
- 	ret = da8xx_register_usb20_phy_clk(false);
- 	if (ret)
- 		pr_warn("%s: registering USB 2.0 PHY clock failed: %d",
-diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
-index 64861ac..612e454 100644
---- a/arch/arm/mach-davinci/include/mach/da8xx.h
-+++ b/arch/arm/mach-davinci/include/mach/da8xx.h
-@@ -93,6 +93,7 @@ void da830_register_clocks(void);
- 
- void da850_init(void);
- void da850_init_time(void);
-+void da850_register_clocks(void);
- 
- int da830_register_edma(struct edma_rsv_info *rsv);
- int da850_register_edma(struct edma_rsv_info *rsv[2]);
--- 
-2.7.4
+Hi,
+
+On Sun, Feb 18, 2018 at 05:24:24PM -0600, Rob Herring wrote:
+> On Thu, Feb 08, 2018 at 07:30:31PM +0100, Sebastian Reichel wrote:
+> > Introduce new "orientation" property for describing in which
+> > orientation a panel has been mounted to the device. This can
+> > be used by the operating system to automatically rotate the
+> > display correctly.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> > ---
+> >  .../devicetree/bindings/display/panel/panel-common.txt     | 12 ++++++=
+++++++
+> >  include/dt-bindings/display/common.h                       | 14 ++++++=
+++++++++
+> >  2 files changed, 26 insertions(+)
+> >  create mode 100644 include/dt-bindings/display/common.h
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/display/panel/panel-comm=
+on.txt b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+> > index 557fa765adcb..c646b8908458 100644
+> > --- a/Documentation/devicetree/bindings/display/panel/panel-common.txt
+> > +++ b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+> > @@ -18,6 +18,18 @@ Descriptive Properties
+> >    physical area where images are displayed. These properties are expre=
+ssed in
+> >    millimeters and rounded to the closest unit.
+> > =20
+> > +- orientation: The orientation property specifies the panel orientation
+> > +  in relation to the device's casing. The following values are possibl=
+e:
+> > +
+> > +   * 0 =3D The top side of the panel matches the top side of the devic=
+e's
+> > +         casing.
+> > +   * 1 =3D The top side of the panel matches the bottom side of the de=
+vice's
+> > +         casing. In other words the panel is mounted upside-down.
+> > +   * 2 =3D The left side of the panel matches the top side of the devi=
+ce's
+> > +         casing.
+> > +   * 3 =3D The right side of the panel matches the top side of the dev=
+ice's
+> > +         casing.
+>=20
+> The rotation property in panel.txt already handles this, right?
+
+Yes, looks like it can be used. I guess panel.txt and
+panel-common.txt should be merged, though?
+
+> >  - label: The label property specifies a symbolic name for the panel as=
+ a
+> >    string suitable for use by humans. It typically contains a name insc=
+ribed on
+> >    the system (e.g. as an affixed label) or specified in the system's
+
+-- Sebastian
+
+--qhcmj2p5ihe2p6al
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlqKr6cACgkQ2O7X88g7
++po8cQ/9EVteOZx3fXZjuP4II4ARxZC9O6ylnbMakNUSqww40FfzU23Jjfu+4e0T
+KxtluJxmzIkDSFr7FyUqH5p3d1zCpPiqVywvl1sw/66Ixm1XnrXsw84r7+r/ZVAA
+1Yy6YT8UCAQiIa7ktzdLkK1sTIeyQAiHPvjYUxORuxWi3ozOg372uEt3+iw32u5+
+rp0NMPV/ty2HVcOW19un+pbcJdt3bBKMTl3fgW7t9wzGu4u0V28hEzZrxk0LzTXb
+9fxRodwfza9vDzaQ1izeAQ7li//f/PUp7xT8jZglQnI60Sobr6AVYs6nIZWimXSP
+aahP5Il3+eLUjEFIrzQX/CW3dVTNAkZk10OrGurxc8TmT0cFx232OzAGW9fZKpXR
+dYox9VlDRfOdJLWAszLMB3MMYmm1zZ2W9iivl9FrX2Y3qSy8/mLvDwG79bcF2fXa
++m00+Orw8u16Q7reMgaRgd5BvXilnTT6dIxRrco0xXMiA1z86pHRLgLkS3YOICKF
+tPnUcSTmX9iXW77ceWPLf9lBBhRLr/xRCHK4o9ApsOKJToDO+/gQmHmowSuma+W3
+skA4CTIpFtlSXSVVrHxnF7Tv/+WKCtV+fXzUNuFr3co5kEfZPBIBKFzYRyZpeVHM
+S+kFDrbl5jy79zJW+sEKXHj9s5omTyAzDxp+zX9OS8OVcnOYKsY=
+=96Q3
+-----END PGP SIGNATURE-----
+
+--qhcmj2p5ihe2p6al--
+
+--===============1543935678==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1543935678==--
