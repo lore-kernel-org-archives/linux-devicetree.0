@@ -1,65 +1,116 @@
-Return-Path: <SRS0=r5lV=FO=gmail.com=joel.stan@kernel.org>
-Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 2/3] reset: simple: Enable for ASPEED systems
-Date: Tue, 20 Feb 2018 12:13:29 +1030
-Message-Id: <20180220014330.23425-3-joel@jms.id.au>
-In-Reply-To: <20180220014330.23425-1-joel@jms.id.au>
-References: <20180220014330.23425-1-joel@jms.id.au>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Jeffery <andrew@aj.id.au>
-Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
+From: John Garry <john.garry@huawei.com>
+Subject: [PATCH v14 3/9] PCI: Add fwnode handler as input param of pci_register_io_range()
+Date: Tue, 20 Feb 2018 01:48:34 +0800
+Message-ID: <1519062520-198902-4-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1519062520-198902-1-git-send-email-john.garry@huawei.com>
+References: <1519062520-198902-1-git-send-email-john.garry@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org
+Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-ASPEED BMC SoCs have a reset controller in the LPC IP that can be
-controlled using this driver to release the UARTs from reset.
+From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
 
-No special configuration is required, so only the compatible string is
-added.
+In preparation for having the PCI MMIO helpers to use the new generic
+I/O space management(logical PIO) we need to add the fwnode handler as
+extra input parameter.
+This patch changes the signature of pci_register_io_range() and of
+its callers as needed.
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/reset/Kconfig        | 10 +++++++---
- drivers/reset/reset-simple.c |  2 ++
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/acpi/pci_root.c | 8 +++++---
+ drivers/of/address.c    | 4 +++-
+ drivers/pci/pci.c       | 3 ++-
+ include/linux/pci.h     | 3 ++-
+ 4 files changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 7fc77696bb1e..18f152d251d7 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -83,14 +83,18 @@ config RESET_PISTACHIO
+diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+index 6fc204a..1213479 100644
+--- a/drivers/acpi/pci_root.c
++++ b/drivers/acpi/pci_root.c
+@@ -729,7 +729,8 @@ static void acpi_pci_root_validate_resources(struct device *dev,
+ 	}
+ }
  
- config RESET_SIMPLE
- 	bool "Simple Reset Controller Driver" if COMPILE_TEST
--	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
-+	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
- 	help
- 	  This enables a simple reset controller driver for reset lines that
- 	  that can be asserted and deasserted by toggling bits in a contiguous,
- 	  exclusive register space.
+-static void acpi_pci_root_remap_iospace(struct resource_entry *entry)
++static void acpi_pci_root_remap_iospace(struct fwnode_handle *fwnode,
++			struct resource_entry *entry)
+ {
+ #ifdef PCI_IOBASE
+ 	struct resource *res = entry->res;
+@@ -738,7 +739,7 @@ static void acpi_pci_root_remap_iospace(struct resource_entry *entry)
+ 	resource_size_t length = resource_size(res);
+ 	unsigned long port;
  
--	  Currently this driver supports Altera SoCFPGAs, the RCC reset
--	  controller in STM32 MCUs, Allwinner SoCs, and ZTE's zx2967 family.
-+	  Currently this driver supports:
-+	   - Altera SoCFPGAs
-+	   - ASPEED BMC SoCs
-+	   - RCC reset controller in STM32 MCUs
-+	   - Allwinner SoCs
-+	   - ZTE's zx2967 family
+-	if (pci_register_io_range(cpu_addr, length))
++	if (pci_register_io_range(fwnode, cpu_addr, length))
+ 		goto err;
  
- config RESET_SUNXI
- 	bool "Allwinner SoCs Reset Driver" if COMPILE_TEST && !ARCH_SUNXI
-diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-index 2d4f362ef025..f7ce8910a392 100644
---- a/drivers/reset/reset-simple.c
-+++ b/drivers/reset/reset-simple.c
-@@ -125,6 +125,8 @@ static const struct of_device_id reset_simple_dt_ids[] = {
- 		.data = &reset_simple_active_low },
- 	{ .compatible = "zte,zx296718-reset",
- 		.data = &reset_simple_active_low },
-+	{ .compatible = "aspeed,ast2400-lpc-reset" },
-+	{ .compatible = "aspeed,ast2500-lpc-reset" },
- 	{ /* sentinel */ },
- };
+ 	port = pci_address_to_pio(cpu_addr);
+@@ -780,7 +781,8 @@ int acpi_pci_probe_root_resources(struct acpi_pci_root_info *info)
+ 	else {
+ 		resource_list_for_each_entry_safe(entry, tmp, list) {
+ 			if (entry->res->flags & IORESOURCE_IO)
+-				acpi_pci_root_remap_iospace(entry);
++				acpi_pci_root_remap_iospace(&device->fwnode,
++						entry);
  
+ 			if (entry->res->flags & IORESOURCE_DISABLED)
+ 				resource_list_destroy_entry(entry);
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index ce4d3d8..cdf047b 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -2,6 +2,7 @@
+ #define pr_fmt(fmt)	"OF: " fmt
+ 
+ #include <linux/device.h>
++#include <linux/fwnode.h>
+ #include <linux/io.h>
+ #include <linux/ioport.h>
+ #include <linux/module.h>
+@@ -333,7 +334,8 @@ int of_pci_range_to_resource(struct of_pci_range *range,
+ 
+ 	if (res->flags & IORESOURCE_IO) {
+ 		unsigned long port;
+-		err = pci_register_io_range(range->cpu_addr, range->size);
++		err = pci_register_io_range(&np->fwnode, range->cpu_addr,
++				range->size);
+ 		if (err)
+ 			goto invalid_range;
+ 		port = pci_address_to_pio(range->cpu_addr);
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 4666a01..07290a3 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3455,7 +3455,8 @@ struct io_range {
+  * Record the PCI IO range (expressed as CPU physical address + size).
+  * Return a negative value if an error has occured, zero otherwise
+  */
+-int pci_register_io_range(phys_addr_t addr, resource_size_t size)
++int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
++			resource_size_t	size)
+ {
+ 	int err = 0;
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 25b7a35..17cc998 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1221,7 +1221,8 @@ int __must_check pci_bus_alloc_resource(struct pci_bus *bus,
+ 			void *alignf_data);
+ 
+ 
+-int pci_register_io_range(phys_addr_t addr, resource_size_t size);
++int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
++			resource_size_t size);
+ unsigned long pci_address_to_pio(phys_addr_t addr);
+ phys_addr_t pci_pio_to_address(unsigned long pio);
+ int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
 -- 
-2.15.1
+1.9.1
