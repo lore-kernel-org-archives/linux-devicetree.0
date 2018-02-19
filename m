@@ -1,25 +1,33 @@
-Return-Path: <SRS0=Q8ug=FQ=linaro.org=linus.walleij@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <1519032320-103817-3-git-send-email-preid@electromag.com.au>
-References: <1519032320-103817-1-git-send-email-preid@electromag.com.au> <1519032320-103817-3-git-send-email-preid@electromag.com.au>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 22 Feb 2018 16:06:27 +0100
-Message-ID: <CACRpkdYGyeZp26atVaCfm=5-B4JJ2_49PNUWtxOJ75mtLdVJ0g@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] dt-bindings: pinctrl: mcp23s08: add documentation
- for drive-open-drain
-Content-Type: text/plain; charset="UTF-8"
-To: Phil Reid <preid@electromag.com.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
+Return-Path: <SRS0=/mGh=FN=electromag.com.au=preid@kernel.org>
+From: Phil Reid <preid@electromag.com.au>
+Subject: [PATCH v4 2/3] dt-bindings: pinctrl: mcp23s08: add documentation for drive-open-drain
+Date: Mon, 19 Feb 2018 17:25:19 +0800
+Message-Id: <1519032320-103817-3-git-send-email-preid@electromag.com.au>
+In-Reply-To: <1519032320-103817-1-git-send-email-preid@electromag.com.au>
+References: <1519032320-103817-1-git-send-email-preid@electromag.com.au>
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, preid@electromag.com.au, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, jan.kundrat@cesnet.cz
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Feb 19, 2018 at 10:25 AM, Phil Reid <preid@electromag.com.au> wrote:
+This flag set the mcp23s08 device irq type to open drain active low.
 
-> This flag set the mcp23s08 device irq type to open drain active low.
->
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Phil Reid <preid@electromag.com.au>
+---
+ Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Patch applied.
-
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+index 7d262e9..72bac30 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mcp23s08.txt
+@@ -45,6 +45,8 @@ Optional properties:
+   - first cell is the pin number
+   - second cell is used to specify flags.
+ - interrupt-controller: Marks the device node as a interrupt controller.
++- drive-open-drain: Sets the ODR flag in the IOCON register. This configures
++        the IRQ output as open drain active low.
+ 
+ Optional device specific properties:
+ - microchip,irq-mirror: Sets the mirror flag in the IOCON register. Devices
+-- 
+1.8.3.1
