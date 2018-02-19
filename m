@@ -1,25 +1,41 @@
-Return-Path: <robherring2@gmail.com>
-Date: Mon, 19 Feb 2018 14:49:15 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: Add DT bindings for ccree 710 and 630p
-Message-ID: <20180219204915.wepfsovgnxf5ivx5@rob-hp-laptop>
+Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from foss.arm.com ([217.140.101.70]:60202 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1752901AbeBSOvq (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 19 Feb 2018 09:51:46 -0500
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: [PATCH 2/4] dt-bindings: Add DT bindings for ccree 710 and 630p
+Date: Mon, 19 Feb 2018 14:51:22 +0000
+Message-Id: <1519051887-4668-3-git-send-email-gilad@benyossef.com>
+In-Reply-To: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
 References: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
- <1519051887-4668-3-git-send-email-gilad@benyossef.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1519051887-4668-3-git-send-email-gilad@benyossef.com>
-To: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: devicetree-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Feb 19, 2018 at 02:51:22PM +0000, Gilad Ben-Yossef wrote:
-> Add device tree bindings for Arm CryptoCell 710 and 630p hardware
-> revisions.
-> 
-> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> ---
->  Documentation/devicetree/bindings/crypto/arm-cryptocell.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+Add device tree bindings for Arm CryptoCell 710 and 630p hardware
+revisions.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+---
+ Documentation/devicetree/bindings/crypto/arm-cryptocell.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+index cec8d5d..c2598ab 100644
+--- a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
++++ b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
+@@ -1,7 +1,8 @@
+ Arm TrustZone CryptoCell cryptographic engine
+ 
+ Required properties:
+-- compatible: Should be "arm,cryptocell-712-ree".
++- compatible: Should be one of: "arm,cryptocell-712-ree",
++  "arm,cryptocell-710-ree" or "arm,cryptocell-630p-ree".
+ - reg: Base physical address of the engine and length of memory mapped region.
+ - interrupts: Interrupt number for the device.
+ 
+-- 
+2.7.4
+
