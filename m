@@ -1,11 +1,13 @@
-From: Tomasz Maciej Nowak <tmn505@gmail.com>
-Subject: [PATCH] ARM: dtc: tegra: enable front panel leds in TrimSlice
-Date: Mon, 19 Feb 2018 21:16:23 +0100
-Message-ID: <20180219201623.6987-1-tmn505@gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v7 40/42] ARM: davinci: add device tree support to timer
+Date: Mon, 19 Feb 2018 14:22:01 -0600
+Message-ID: <1519071723-31790-41-git-send-email-david@lechnology.com>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519071723-31790-1-git-send-email-david@lechnology.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,64 +17,84 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: thierry.reding@gmail.com, jonathanh@nvidia.com, linux-tegra@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds device nodes for two front panel LEDs.
+This adds device tree support to the davinci timer so that when clocks
+are moved to device tree, the timer will still work.
 
-Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
+Signed-off-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/boot/dts/tegra20-trimslice.dts | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts b/arch/arm/boot/dts/tegra20-trimslice.dts
-index d55c6b240a30..31a8b088d386 100644
---- a/arch/arm/boot/dts/tegra20-trimslice.dts
-+++ b/arch/arm/boot/dts/tegra20-trimslice.dts
-@@ -200,16 +200,17 @@
- 			conf_ata {
- 				nvidia,pins = "ata", "atc", "atd", "ate",
- 					"crtp", "dap2", "dap3", "dap4", "dta",
--					"dtb", "dtc", "dtd", "dte", "gmb",
--					"gme", "i2cp", "pta", "slxc", "slxd",
--					"spdi", "spdo", "uda";
-+					"dtb", "dtc", "dtd", "gmb", "gme",
-+					"i2cp", "pta", "slxc", "slxd", "spdi",
-+					"spdo", "uda";
- 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
- 				nvidia,tristate = <TEGRA_PIN_ENABLE>;
- 			};
- 			conf_atb {
- 				nvidia,pins = "atb", "cdev1", "cdev2", "dap1",
--					"gma", "gmc", "gmd", "gpu", "gpu7",
--					"gpv", "sdio1", "slxa", "slxk", "uac";
-+					"dte", "gma", "gmc", "gmd", "gpu",
-+					"gpu7", "gpv", "sdio1", "slxa", "slxk",
-+					"uac";
- 				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
- 				nvidia,tristate = <TEGRA_PIN_DISABLE>;
- 			};
-@@ -402,6 +403,20 @@
- 		};
- 	};
+v7 changes:
+- add workaround for platform devices not available in early boot
+
+v6 changes:
+- none
+
+
+ arch/arm/mach-davinci/Kconfig |  1 +
+ arch/arm/mach-davinci/time.c  | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
+
+diff --git a/arch/arm/mach-davinci/Kconfig b/arch/arm/mach-davinci/Kconfig
+index ba9912b..da8a039 100644
+--- a/arch/arm/mach-davinci/Kconfig
++++ b/arch/arm/mach-davinci/Kconfig
+@@ -59,6 +59,7 @@ config MACH_DA8XX_DT
+ 	default y
+ 	depends on ARCH_DAVINCI_DA850
+ 	select PINCTRL
++	select TIMER_OF
+ 	help
+ 	  Say y here to include support for TI DaVinci DA850 based using
+ 	  Flattened Device Tree. More information at Documentation/devicetree
+diff --git a/arch/arm/mach-davinci/time.c b/arch/arm/mach-davinci/time.c
+index d6a78f7..590b118 100644
+--- a/arch/arm/mach-davinci/time.c
++++ b/arch/arm/mach-davinci/time.c
+@@ -17,6 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/sched_clock.h>
  
-+	gpio-leds {
-+		compatible = "gpio-leds";
+@@ -405,3 +406,33 @@ void __init davinci_timer_init(struct clk *timer_clk)
+ 	for (i=0; i< ARRAY_SIZE(timers); i++)
+ 		timer32_config(&timers[i]);
+ }
 +
-+		ds2 {
-+			label = "trimslice:green:right";
-+			gpios = <&gpio TEGRA_GPIO(D, 2) GPIO_ACTIVE_LOW>;
-+		};
++static int __init of_davinci_timer_init(struct device_node *np)
++{
++	struct clk *clk;
 +
-+		ds3 {
-+			label = "trimslice:green:left";
-+			gpios = <&gpio TEGRA_GPIO(BB, 5) GPIO_ACTIVE_LOW>;
-+		};
-+	};
++	clk = of_clk_get(np, 0);
++	if (IS_ERR(clk)) {
++		struct of_phandle_args clkspec;
 +
- 	poweroff {
- 		compatible = "gpio-poweroff";
- 		gpios = <&gpio TEGRA_GPIO(X, 7) GPIO_ACTIVE_LOW>;
++		/*
++		 * Fall back to using ref_clk if the actual clock is not
++		 * available. This currently always happens because platform
++		 * clocks (i.e PLLs and PSCs) are registered as platform
++		 * devices and therefore are not available at this point in
++		 * the boot process.
++		 */
++		clkspec.np = of_find_node_by_name(NULL, "ref_clk");
++		if (IS_ERR(clkspec.np)) {
++			pr_err("%s: No clock available for timer!\n", __func__);
++			return PTR_ERR(clkspec.np);
++		}
++		clk = of_clk_get_from_provider(&clkspec);
++		of_node_put(clkspec.np);
++	}
++
++	davinci_timer_init(clk);
++
++	return 0;
++}
++TIMER_OF_DECLARE(davinci_timer, "ti,davinci-timer", of_davinci_timer_init);
 -- 
-2.16.2
+2.7.4
