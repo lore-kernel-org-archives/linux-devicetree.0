@@ -1,18 +1,24 @@
-Return-Path: <SRS0=Q8ug=FQ=linaro.org=linus.walleij@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <1519032320-103817-2-git-send-email-preid@electromag.com.au>
-References: <1519032320-103817-1-git-send-email-preid@electromag.com.au> <1519032320-103817-2-git-send-email-preid@electromag.com.au>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 22 Feb 2018 16:05:19 +0100
-Message-ID: <CACRpkdZ7x+QcG6sWNU5pzuO8TfeHeffMRV8UgJewiQ4FN9hnYg@mail.gmail.com>
+Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from office2.cesnet.cz ([195.113.144.244]:56556 "EHLO
+        office2.cesnet.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753624AbeBSVYk (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 19 Feb 2018 16:24:40 -0500
+From: =?iso-8859-1?Q?Jan_Kundr=E1t?= <jan.kundrat@cesnet.cz>
 Subject: Re: [PATCH v4 1/3] pinctrl: mcp23s08: fix probing of mcp23s18
-Content-Type: text/plain; charset="UTF-8"
+Date: Mon, 19 Feb 2018 22:24:37 +0100
+MIME-Version: 1.0
+Message-ID: <30843485-da3c-48b0-92b1-807058e1ad94@cesnet.cz>
+In-Reply-To: <1519032320-103817-2-git-send-email-preid@electromag.com.au>
+References: <1519032320-103817-1-git-send-email-preid@electromag.com.au>
+ <1519032320-103817-2-git-send-email-preid@electromag.com.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Sender: devicetree-owner@vger.kernel.org
 To: Phil Reid <preid@electromag.com.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Feb 19, 2018 at 10:25 AM, Phil Reid <preid@electromag.com.au> wrote:
-
+On pond=C4=9Bl=C3=AD 19. =C3=BAnora 2018 10:25:18 CET, Phil Reid wrote:
 > one_regmap_config is always null if mcp type is MCP_TYPE_S18.
 > Remove the null check so that the mcp23s18 will probe.
 >
@@ -21,7 +27,28 @@ On Mon, Feb 19, 2018 at 10:25 AM, Phil Reid <preid@electromag.com.au> wrote:
 >
 > Signed-off-by: Phil Reid <preid@electromag.com.au>
 
-Patch applied with Jan's ACK.
+Thanks, and sorry for this mistake.
 
-Yours,
-Linus Walleij
+Reviewed-by: Jan Kundr=C3=A1t <jan.kundrat@cesnet.cz>
+Fixes: 9b3e4207661e ("pinctrl: mcp23s08: spi: Fix regmap debugfs entries")
+
+> ---
+>  drivers/pinctrl/pinctrl-mcp23s08.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c=20
+> b/drivers/pinctrl/pinctrl-mcp23s08.c
+> index f3f9f19..83277570 100644
+> --- a/drivers/pinctrl/pinctrl-mcp23s08.c
+> +++ b/drivers/pinctrl/pinctrl-mcp23s08.c
+> @@ -823,8 +823,6 @@ static int mcp23s08_probe_one(struct=20
+> mcp23s08 *mcp, struct device *dev,
+>  =09=09break;
+> =20
+>  =09case MCP_TYPE_S18:
+> -=09=09if (!one_regmap_config)
+> -=09=09=09return -ENOMEM;
+>  =09=09mcp->regmap =3D devm_regmap_init(dev, &mcp23sxx_spi_regmap, mcp,
+>  =09=09=09=09=09       &mcp23x17_regmap);
+>  =09=09mcp->reg_shift =3D 1;
+
