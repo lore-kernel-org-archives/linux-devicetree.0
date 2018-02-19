@@ -1,68 +1,44 @@
-Return-Path: <SRS0=FvkB=FS=linaro.org=baolin.wang@kernel.org>
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v5 1/2] dt-bindings: gpio: Add Spreadtrum GPIO controller documentation
-Date: Sat, 24 Feb 2018 10:07:17 +0800
-Message-Id: <c2db9b3b5c611cadfbe5ea97327be7ee5981fa54.1519437750.git.baolin.wang@linaro.org>
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, andy.shevchenko@gmail.com
+Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from foss.arm.com ([217.140.101.70]:60178 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1753022AbeBSOvh (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 19 Feb 2018 09:51:37 -0500
+From: Gilad Ben-Yossef <gilad@benyossef.com>
+Subject: [PATCH 0/4] cleanups and new HW rev support
+Date: Mon, 19 Feb 2018 14:51:20 +0000
+Message-Id: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the device tree bindings for the Spreadtrum
-GPIO controller. The gpios will be supported by the GPIO
-generic library.
+This patch set introduces backward compatible support for the older
+CryptoCell hardware revision 710 and 630 along some minor code
+cleanups.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes since v4:
- - No updates.
+Gilad Ben-Yossef (4):
+  crypto: ccree: remove unused definitions
+  dt-bindings: Add DT bindings for ccree 710 and 630p
+  crypto: ccree: add support for older HW revs
+  crypto: ccree: replace memset+kfree with kzfree
 
-Changes since v3:
- - Add acked tag from Rob.
+ .../devicetree/bindings/crypto/arm-cryptocell.txt  |   3 +-
+ drivers/crypto/Kconfig                             |   6 +-
+ drivers/crypto/ccree/cc_aead.c                     |  34 +++--
+ drivers/crypto/ccree/cc_cipher.c                   |  25 +++-
+ drivers/crypto/ccree/cc_crypto_ctx.h               |  36 -----
+ drivers/crypto/ccree/cc_driver.c                   |  68 ++++++++--
+ drivers/crypto/ccree/cc_driver.h                   |  23 +++-
+ drivers/crypto/ccree/cc_fips.c                     |  13 +-
+ drivers/crypto/ccree/cc_hash.c                     | 149 +++++++++++----------
+ drivers/crypto/ccree/cc_hash.h                     |  12 +-
+ drivers/crypto/ccree/cc_host_regs.h                |   3 +
+ drivers/crypto/ccree/cc_hw_queue_defs.h            |   2 +-
+ drivers/crypto/ccree/cc_kernel_regs.h              |   1 +
+ drivers/crypto/ccree/cc_request_mgr.c              |   9 +-
+ drivers/crypto/ccree/cc_sram_mgr.c                 |  14 ++
+ 15 files changed, 240 insertions(+), 158 deletions(-)
 
-Changes since v2:
- - No updates.
-
-Changes since v1:
- - No updates.
----
- .../devicetree/bindings/gpio/gpio-sprd.txt         |   28 ++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sprd.txt
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-sprd.txt b/Documentation/devicetree/bindings/gpio/gpio-sprd.txt
-new file mode 100644
-index 0000000..eca97d4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-sprd.txt
-@@ -0,0 +1,28 @@
-+Spreadtrum GPIO controller bindings
-+
-+The controller's registers are organized as sets of sixteen 16-bit
-+registers with each set controlling a bank of up to 16 pins. A single
-+interrupt is shared for all of the banks handled by the controller.
-+
-+Required properties:
-+- compatible: Should be "sprd,sc9860-gpio".
-+- reg: Define the base and range of the I/O address space containing
-+the GPIO controller registers.
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- #gpio-cells: Should be <2>. The first cell is the gpio number and
-+the second cell is used to specify optional parameters.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells: Should be <2>. Specifies the number of cells needed
-+to encode interrupt source.
-+- interrupts: Should be the port interrupt shared by all the gpios.
-+
-+Example:
-+	ap_gpio: gpio@40280000 {
-+		compatible = "sprd,sc9860-gpio";
-+		reg = <0 0x40280000 0 0x1000>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+	};
 -- 
-1.7.9.5
+2.7.4
+
