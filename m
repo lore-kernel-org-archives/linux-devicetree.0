@@ -1,569 +1,186 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] powerpc: dts: replace 'linux,stdout-path' with 'stdout-path'
-Date: Wed, 28 Feb 2018 16:44:06 -0600
-Message-ID: <20180228224406.7049-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v7 20/42] ARM: davinci: pass clock as parameter to
+ davinci_timer_init()
+Date: Mon, 19 Feb 2018 14:21:41 -0600
+Message-ID: <1519071723-31790-21-git-send-email-david@lechnology.com>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519071723-31790-1-git-send-email-david@lechnology.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-'linux,stdout-path' has been deprecated for some time in favor of
-'stdout-path'. Now dtc will warn on occurrences of 'linux,stdout-path'.
-Search and replace all the of occurrences with 'stdout-path'.
+This changes davinci_timer_init() so that we pass the clock as a
+parameter instead of using clk_get(). This is done in preparation
+for converting to the common clock framework.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
+It removes the requirement that we have to have a clock with con_id
+of "timer0", which will be good for DT bindings since clock-names =
+"timer0" doesn't really make sense.
+
+Additionally, when we convert to the common clock framework, most of
+the clocks will be platform devices, which will not be available at
+this point during the boot process, so we will need to pass a clock
+that is available (i.e. ref_clk) instead of the "timer0" clock.
+
+NB: The comment added in time.c is not entirely true when this patch
+is applied, but it will be correct once the conversion to the common
+clock framework is complete in subsequent patches.
+
+Also, drop use of extern in header file since we are touching the
+definition.
+
+Signed-off-by: David Lechner <david@lechnology.com>
 ---
- arch/powerpc/boot/dts/acadia.dts           | 2 +-
- arch/powerpc/boot/dts/adder875-redboot.dts | 2 +-
- arch/powerpc/boot/dts/adder875-uboot.dts   | 2 +-
- arch/powerpc/boot/dts/akebono.dts          | 2 +-
- arch/powerpc/boot/dts/amigaone.dts         | 2 +-
- arch/powerpc/boot/dts/asp834x-redboot.dts  | 2 +-
- arch/powerpc/boot/dts/bamboo.dts           | 2 +-
- arch/powerpc/boot/dts/c2k.dts              | 2 +-
- arch/powerpc/boot/dts/currituck.dts        | 2 +-
- arch/powerpc/boot/dts/ebony.dts            | 2 +-
- arch/powerpc/boot/dts/eiger.dts            | 2 +-
- arch/powerpc/boot/dts/ep405.dts            | 2 +-
- arch/powerpc/boot/dts/fsl/mvme7100.dts     | 2 +-
- arch/powerpc/boot/dts/fsp2.dts             | 2 +-
- arch/powerpc/boot/dts/holly.dts            | 2 +-
- arch/powerpc/boot/dts/hotfoot.dts          | 2 +-
- arch/powerpc/boot/dts/icon.dts             | 2 +-
- arch/powerpc/boot/dts/iss4xx-mpic.dts      | 2 +-
- arch/powerpc/boot/dts/iss4xx.dts           | 2 +-
- arch/powerpc/boot/dts/katmai.dts           | 2 +-
- arch/powerpc/boot/dts/klondike.dts         | 2 +-
- arch/powerpc/boot/dts/ksi8560.dts          | 2 +-
- arch/powerpc/boot/dts/media5200.dts        | 2 +-
- arch/powerpc/boot/dts/mpc8272ads.dts       | 2 +-
- arch/powerpc/boot/dts/mpc866ads.dts        | 2 +-
- arch/powerpc/boot/dts/mpc885ads.dts        | 2 +-
- arch/powerpc/boot/dts/mvme5100.dts         | 2 +-
- arch/powerpc/boot/dts/obs600.dts           | 2 +-
- arch/powerpc/boot/dts/pq2fads.dts          | 2 +-
- arch/powerpc/boot/dts/rainier.dts          | 2 +-
- arch/powerpc/boot/dts/redwood.dts          | 2 +-
- arch/powerpc/boot/dts/sam440ep.dts         | 2 +-
- arch/powerpc/boot/dts/sequoia.dts          | 2 +-
- arch/powerpc/boot/dts/storcenter.dts       | 2 +-
- arch/powerpc/boot/dts/taishan.dts          | 2 +-
- arch/powerpc/boot/dts/virtex440-ml507.dts  | 2 +-
- arch/powerpc/boot/dts/virtex440-ml510.dts  | 2 +-
- arch/powerpc/boot/dts/walnut.dts           | 2 +-
- arch/powerpc/boot/dts/warp.dts             | 2 +-
- arch/powerpc/boot/dts/xpedite5200_xmon.dts | 2 +-
- arch/powerpc/boot/dts/yosemite.dts         | 2 +-
- 41 files changed, 41 insertions(+), 41 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/acadia.dts b/arch/powerpc/boot/dts/acadia.dts
-index 86266159521e..deb52e41ab84 100644
---- a/arch/powerpc/boot/dts/acadia.dts
-+++ b/arch/powerpc/boot/dts/acadia.dts
-@@ -219,6 +219,6 @@
- 	};
+v7 changes:
+- new in v7
+
+ arch/arm/mach-davinci/da830.c               |  2 +-
+ arch/arm/mach-davinci/da850.c               |  2 +-
+ arch/arm/mach-davinci/dm355.c               |  2 +-
+ arch/arm/mach-davinci/dm365.c               |  2 +-
+ arch/arm/mach-davinci/dm644x.c              |  2 +-
+ arch/arm/mach-davinci/dm646x.c              |  2 +-
+ arch/arm/mach-davinci/include/mach/common.h |  3 ++-
+ arch/arm/mach-davinci/time.c                | 13 +++++++++----
+ 8 files changed, 17 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
+index 350d767..0b17e5a 100644
+--- a/arch/arm/mach-davinci/da830.c
++++ b/arch/arm/mach-davinci/da830.c
+@@ -1224,5 +1224,5 @@ void __init da830_init(void)
+ void __init da830_init_time(void)
+ {
+ 	davinci_clk_init(da830_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timerp64_0_clk);
+ }
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index 34117e61..1dbf01c 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -1396,5 +1396,5 @@ void __init da850_init(void)
+ void __init da850_init_time(void)
+ {
+ 	davinci_clk_init(da850_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timerp64_0_clk);
+ }
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index f294804..0da7516 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -1047,7 +1047,7 @@ void __init dm355_init(void)
+ void __init dm355_init_time(void)
+ {
+ 	davinci_clk_init(dm355_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timer0_clk);
+ }
  
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600300";
-+		stdout-path = "/plb/opb/serial@ef600300";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/adder875-redboot.dts b/arch/powerpc/boot/dts/adder875-redboot.dts
-index 083984720b2f..7f5ff4168482 100644
---- a/arch/powerpc/boot/dts/adder875-redboot.dts
-+++ b/arch/powerpc/boot/dts/adder875-redboot.dts
-@@ -178,6 +178,6 @@
- 	};
+ int __init dm355_init_video(struct vpfe_config *vpfe_cfg,
+diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
+index 1e3df9d..871372a 100644
+--- a/arch/arm/mach-davinci/dm365.c
++++ b/arch/arm/mach-davinci/dm365.c
+@@ -1172,7 +1172,7 @@ void __init dm365_init(void)
+ void __init dm365_init_time(void)
+ {
+ 	davinci_clk_init(dm365_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timer0_clk);
+ }
  
- 	chosen {
--		linux,stdout-path = &console;
-+		stdout-path = &console;
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/adder875-uboot.dts b/arch/powerpc/boot/dts/adder875-uboot.dts
-index e4554caf8f8d..bd9f33c57737 100644
---- a/arch/powerpc/boot/dts/adder875-uboot.dts
-+++ b/arch/powerpc/boot/dts/adder875-uboot.dts
-@@ -177,6 +177,6 @@
- 	};
+ static struct resource dm365_vpss_resources[] = {
+diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
+index b409801..71a16fc 100644
+--- a/arch/arm/mach-davinci/dm644x.c
++++ b/arch/arm/mach-davinci/dm644x.c
+@@ -935,7 +935,7 @@ void __init dm644x_init(void)
+ void __init dm644x_init_time(void)
+ {
+ 	davinci_clk_init(dm644x_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timer0_clk);
+ }
  
- 	chosen {
--		linux,stdout-path = &console;
-+		stdout-path = &console;
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/akebono.dts b/arch/powerpc/boot/dts/akebono.dts
-index 746779202a12..8a7a10139bc9 100644
---- a/arch/powerpc/boot/dts/akebono.dts
-+++ b/arch/powerpc/boot/dts/akebono.dts
-@@ -410,6 +410,6 @@
- 	};
+ int __init dm644x_init_video(struct vpfe_config *vpfe_cfg,
+diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
+index 109ab1f..e1d6e92 100644
+--- a/arch/arm/mach-davinci/dm646x.c
++++ b/arch/arm/mach-davinci/dm646x.c
+@@ -956,7 +956,7 @@ void __init dm646x_init_time(unsigned long ref_clk_rate,
+ 	ref_clk.rate = ref_clk_rate;
+ 	aux_clkin.rate = aux_clkin_rate;
+ 	davinci_clk_init(dm646x_clks);
+-	davinci_timer_init();
++	davinci_timer_init(&timer0_clk);
+ }
  
- 	chosen {
--		linux,stdout-path = &UART0;
-+		stdout-path = &UART0;
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/amigaone.dts b/arch/powerpc/boot/dts/amigaone.dts
-index 49ac36b16dd7..712430155b99 100644
---- a/arch/powerpc/boot/dts/amigaone.dts
-+++ b/arch/powerpc/boot/dts/amigaone.dts
-@@ -168,6 +168,6 @@
- 	};
+ static int __init dm646x_init_devices(void)
+diff --git a/arch/arm/mach-davinci/include/mach/common.h b/arch/arm/mach-davinci/include/mach/common.h
+index f0d5e858..5f45d0a 100644
+--- a/arch/arm/mach-davinci/include/mach/common.h
++++ b/arch/arm/mach-davinci/include/mach/common.h
+@@ -12,11 +12,12 @@
+ #ifndef __ARCH_ARM_MACH_DAVINCI_COMMON_H
+ #define __ARCH_ARM_MACH_DAVINCI_COMMON_H
  
- 	chosen {
--		linux,stdout-path = "/pci@80000000/isa@7/serial@3f8";
-+		stdout-path = "/pci@80000000/isa@7/serial@3f8";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/asp834x-redboot.dts b/arch/powerpc/boot/dts/asp834x-redboot.dts
-index 9198745f45fb..e987b5af9326 100644
---- a/arch/powerpc/boot/dts/asp834x-redboot.dts
-+++ b/arch/powerpc/boot/dts/asp834x-redboot.dts
-@@ -304,7 +304,7 @@
++#include <linux/clk.h>
+ #include <linux/compiler.h>
+ #include <linux/types.h>
+ #include <linux/reboot.h>
  
- 	chosen {
- 		bootargs = "console=ttyS0,38400 root=/dev/mtdblock3 rootfstype=jffs2";
--		linux,stdout-path = &serial0;
-+		stdout-path = &serial0;
- 	};
+-extern void davinci_timer_init(void);
++void davinci_timer_init(struct clk *clk);
  
- };
-diff --git a/arch/powerpc/boot/dts/bamboo.dts b/arch/powerpc/boot/dts/bamboo.dts
-index aa68911f6560..538e42b1120d 100644
---- a/arch/powerpc/boot/dts/bamboo.dts
-+++ b/arch/powerpc/boot/dts/bamboo.dts
-@@ -295,6 +295,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600300";
-+		stdout-path = "/plb/opb/serial@ef600300";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/c2k.dts b/arch/powerpc/boot/dts/c2k.dts
-index 27f169e3ade9..c5beb72d18b7 100644
---- a/arch/powerpc/boot/dts/c2k.dts
-+++ b/arch/powerpc/boot/dts/c2k.dts
-@@ -361,6 +361,6 @@
- 		};
- 	};
- 	chosen {
--		linux,stdout-path = &MPSC0;
-+		stdout-path = &MPSC0;
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/currituck.dts b/arch/powerpc/boot/dts/currituck.dts
-index f2ad5815f08d..a04a4fcfde63 100644
---- a/arch/powerpc/boot/dts/currituck.dts
-+++ b/arch/powerpc/boot/dts/currituck.dts
-@@ -237,6 +237,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = &UART0;
-+		stdout-path = &UART0;
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/ebony.dts b/arch/powerpc/boot/dts/ebony.dts
-index ec2d142291b4..5d11e6ea7405 100644
---- a/arch/powerpc/boot/dts/ebony.dts
-+++ b/arch/powerpc/boot/dts/ebony.dts
-@@ -332,6 +332,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@40000200";
-+		stdout-path = "/plb/opb/serial@40000200";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/eiger.dts b/arch/powerpc/boot/dts/eiger.dts
-index 48bcf7187924..7a1231d9d6f0 100644
---- a/arch/powerpc/boot/dts/eiger.dts
-+++ b/arch/powerpc/boot/dts/eiger.dts
-@@ -421,7 +421,7 @@
- 
- 	};
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600200";
-+		stdout-path = "/plb/opb/serial@ef600200";
- 	};
- 
- };
-diff --git a/arch/powerpc/boot/dts/ep405.dts b/arch/powerpc/boot/dts/ep405.dts
-index 53ef06cc2134..4ac9c5ab6e6b 100644
---- a/arch/powerpc/boot/dts/ep405.dts
-+++ b/arch/powerpc/boot/dts/ep405.dts
-@@ -225,6 +225,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600300";
-+		stdout-path = "/plb/opb/serial@ef600300";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/mvme7100.dts b/arch/powerpc/boot/dts/fsl/mvme7100.dts
-index e2d306ad37a6..721cb53758ae 100644
---- a/arch/powerpc/boot/dts/fsl/mvme7100.dts
-+++ b/arch/powerpc/boot/dts/fsl/mvme7100.dts
-@@ -146,7 +146,7 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = &serial0;
-+		stdout-path = &serial0;
- 	};
+ extern void davinci_irq_init(void);
+ extern void __iomem *davinci_intc_base;
+diff --git a/arch/arm/mach-davinci/time.c b/arch/arm/mach-davinci/time.c
+index 1bb991a..2521333 100644
+--- a/arch/arm/mach-davinci/time.c
++++ b/arch/arm/mach-davinci/time.c
+@@ -334,10 +334,8 @@ static struct clock_event_device clockevent_davinci = {
+ 	.set_state_oneshot	= davinci_set_oneshot,
  };
  
-diff --git a/arch/powerpc/boot/dts/fsp2.dts b/arch/powerpc/boot/dts/fsp2.dts
-index 6560283c5aec..9311b86b1bd9 100644
---- a/arch/powerpc/boot/dts/fsp2.dts
-+++ b/arch/powerpc/boot/dts/fsp2.dts
-@@ -607,7 +607,7 @@
- 	};
+-
+-void __init davinci_timer_init(void)
++void __init davinci_timer_init(struct clk *timer_clk)
+ {
+-	struct clk *timer_clk;
+ 	struct davinci_soc_info *soc_info = &davinci_soc_info;
+ 	unsigned int clockevent_id;
+ 	unsigned int clocksource_id;
+@@ -373,7 +371,14 @@ void __init davinci_timer_init(void)
+ 		}
+ 	}
  
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@b0020000";
-+		stdout-path = "/plb/opb/serial@b0020000";
- 		bootargs = "console=ttyS0,115200 rw log_buf_len=32768 debug";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/holly.dts b/arch/powerpc/boot/dts/holly.dts
-index 43e6f0c8e449..02bd304c7d38 100644
---- a/arch/powerpc/boot/dts/holly.dts
-+++ b/arch/powerpc/boot/dts/holly.dts
-@@ -191,6 +191,6 @@
- 	};
+-	timer_clk = clk_get(NULL, "timer0");
++	/*
++	 * REVISIT: Currently, timer_clk will be "ref_clk". However, the actual
++	 * clock for this device comes from a PLL AUXCLK or a PSC clock
++	 * (depending on the SoC). The PLL and PSC clocks are not registered
++	 * until later in boot because they are platform devices. We should try
++	 * again later to get the real clock so that the real clock is not
++	 * turned off when disabling unused clocks, which would stop the timer.
++	 */
+ 	BUG_ON(IS_ERR(timer_clk));
+ 	clk_prepare_enable(timer_clk);
  
- 	chosen {
--		linux,stdout-path = "/tsi109@c0000000/serial@7808";
-+		stdout-path = "/tsi109@c0000000/serial@7808";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/hotfoot.dts b/arch/powerpc/boot/dts/hotfoot.dts
-index 71d3bb4931dc..b93bf2d9dd5b 100644
---- a/arch/powerpc/boot/dts/hotfoot.dts
-+++ b/arch/powerpc/boot/dts/hotfoot.dts
-@@ -291,6 +291,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = &UART0;
-+		stdout-path = &UART0;
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/icon.dts b/arch/powerpc/boot/dts/icon.dts
-index 9c94fd737f7c..2e6e3a7b2604 100644
---- a/arch/powerpc/boot/dts/icon.dts
-+++ b/arch/powerpc/boot/dts/icon.dts
-@@ -442,6 +442,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@f0000200";
-+		stdout-path = "/plb/opb/serial@f0000200";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/iss4xx-mpic.dts b/arch/powerpc/boot/dts/iss4xx-mpic.dts
-index 23e9d9b7e400..f7063198b2dc 100644
---- a/arch/powerpc/boot/dts/iss4xx-mpic.dts
-+++ b/arch/powerpc/boot/dts/iss4xx-mpic.dts
-@@ -150,6 +150,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@40000200";
-+		stdout-path = "/plb/opb/serial@40000200";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/iss4xx.dts b/arch/powerpc/boot/dts/iss4xx.dts
-index 4ff6555c866d..5533aff25e41 100644
---- a/arch/powerpc/boot/dts/iss4xx.dts
-+++ b/arch/powerpc/boot/dts/iss4xx.dts
-@@ -111,6 +111,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@40000200";
-+		stdout-path = "/plb/opb/serial@40000200";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/katmai.dts b/arch/powerpc/boot/dts/katmai.dts
-index f913dbe25d35..02629e119b87 100644
---- a/arch/powerpc/boot/dts/katmai.dts
-+++ b/arch/powerpc/boot/dts/katmai.dts
-@@ -505,6 +505,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@f0000200";
-+		stdout-path = "/plb/opb/serial@f0000200";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/klondike.dts b/arch/powerpc/boot/dts/klondike.dts
-index 8c9429033618..d9613b7b945f 100644
---- a/arch/powerpc/boot/dts/klondike.dts
-+++ b/arch/powerpc/boot/dts/klondike.dts
-@@ -222,6 +222,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@50001000";
-+		stdout-path = "/plb/opb/serial@50001000";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/ksi8560.dts b/arch/powerpc/boot/dts/ksi8560.dts
-index 5d68236e7c3c..fe6c17c8812a 100644
---- a/arch/powerpc/boot/dts/ksi8560.dts
-+++ b/arch/powerpc/boot/dts/ksi8560.dts
-@@ -339,6 +339,6 @@
- 
- 
- 	chosen {
--		linux,stdout-path = "/soc/cpm/serial@91a00";
-+		stdout-path = "/soc/cpm/serial@91a00";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/media5200.dts b/arch/powerpc/boot/dts/media5200.dts
-index b5413cb85f13..843f156a49c4 100644
---- a/arch/powerpc/boot/dts/media5200.dts
-+++ b/arch/powerpc/boot/dts/media5200.dts
-@@ -25,7 +25,7 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = &console;
-+		stdout-path = &console;
- 	};
- 
- 	cpus {
-diff --git a/arch/powerpc/boot/dts/mpc8272ads.dts b/arch/powerpc/boot/dts/mpc8272ads.dts
-index 6d2cddf64cfd..98282c18d989 100644
---- a/arch/powerpc/boot/dts/mpc8272ads.dts
-+++ b/arch/powerpc/boot/dts/mpc8272ads.dts
-@@ -262,6 +262,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/soc/cpm/serial@11a00";
-+		stdout-path = "/soc/cpm/serial@11a00";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/mpc866ads.dts b/arch/powerpc/boot/dts/mpc866ads.dts
-index 34c1f48b1a09..4443fac3f576 100644
---- a/arch/powerpc/boot/dts/mpc866ads.dts
-+++ b/arch/powerpc/boot/dts/mpc866ads.dts
-@@ -185,6 +185,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/soc/cpm/serial@a80";
-+		stdout-path = "/soc/cpm/serial@a80";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/mpc885ads.dts b/arch/powerpc/boot/dts/mpc885ads.dts
-index 4e93bd961e0f..5b037f51741d 100644
---- a/arch/powerpc/boot/dts/mpc885ads.dts
-+++ b/arch/powerpc/boot/dts/mpc885ads.dts
-@@ -227,6 +227,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/soc/cpm/serial@a80";
-+		stdout-path = "/soc/cpm/serial@a80";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/mvme5100.dts b/arch/powerpc/boot/dts/mvme5100.dts
-index 1ecb341a232a..a7eb6d25903d 100644
---- a/arch/powerpc/boot/dts/mvme5100.dts
-+++ b/arch/powerpc/boot/dts/mvme5100.dts
-@@ -179,7 +179,7 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = &serial0;
-+		stdout-path = &serial0;
-         };
- 
- };
-diff --git a/arch/powerpc/boot/dts/obs600.dts b/arch/powerpc/boot/dts/obs600.dts
-index 18e7d79ee4c3..d10b0411809b 100644
---- a/arch/powerpc/boot/dts/obs600.dts
-+++ b/arch/powerpc/boot/dts/obs600.dts
-@@ -309,6 +309,6 @@
- 		};
- 	};
-         chosen {
--                linux,stdout-path = "/plb/opb/serial@ef600200";
-+                stdout-path = "/plb/opb/serial@ef600200";
-         };
- };
-diff --git a/arch/powerpc/boot/dts/pq2fads.dts b/arch/powerpc/boot/dts/pq2fads.dts
-index 0c525ff0c257..a477615e3468 100644
---- a/arch/powerpc/boot/dts/pq2fads.dts
-+++ b/arch/powerpc/boot/dts/pq2fads.dts
-@@ -242,6 +242,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/soc/cpm/serial@11a00";
-+		stdout-path = "/soc/cpm/serial@11a00";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/rainier.dts b/arch/powerpc/boot/dts/rainier.dts
-index 9684c80e4093..e59829cff556 100644
---- a/arch/powerpc/boot/dts/rainier.dts
-+++ b/arch/powerpc/boot/dts/rainier.dts
-@@ -344,7 +344,7 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600300";
-+		stdout-path = "/plb/opb/serial@ef600300";
- 		bootargs = "console=ttyS0,115200";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/redwood.dts b/arch/powerpc/boot/dts/redwood.dts
-index d86a3a498118..f3e046fb49e2 100644
---- a/arch/powerpc/boot/dts/redwood.dts
-+++ b/arch/powerpc/boot/dts/redwood.dts
-@@ -381,7 +381,7 @@
- 
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600200";
-+		stdout-path = "/plb/opb/serial@ef600200";
- 	};
- 
- };
-diff --git a/arch/powerpc/boot/dts/sam440ep.dts b/arch/powerpc/boot/dts/sam440ep.dts
-index 088361cf4636..7d15f18e1180 100644
---- a/arch/powerpc/boot/dts/sam440ep.dts
-+++ b/arch/powerpc/boot/dts/sam440ep.dts
-@@ -288,6 +288,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600300";
-+		stdout-path = "/plb/opb/serial@ef600300";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/sequoia.dts b/arch/powerpc/boot/dts/sequoia.dts
-index e41b88a5eaee..60d211da9593 100644
---- a/arch/powerpc/boot/dts/sequoia.dts
-+++ b/arch/powerpc/boot/dts/sequoia.dts
-@@ -406,7 +406,7 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600300";
-+		stdout-path = "/plb/opb/serial@ef600300";
- 		bootargs = "console=ttyS0,115200";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/storcenter.dts b/arch/powerpc/boot/dts/storcenter.dts
-index 2a555738517e..99f6f544dc5f 100644
---- a/arch/powerpc/boot/dts/storcenter.dts
-+++ b/arch/powerpc/boot/dts/storcenter.dts
-@@ -137,6 +137,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = &serial0;
-+		stdout-path = &serial0;
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/taishan.dts b/arch/powerpc/boot/dts/taishan.dts
-index 1657ad0bf8a6..803f1bff7fa8 100644
---- a/arch/powerpc/boot/dts/taishan.dts
-+++ b/arch/powerpc/boot/dts/taishan.dts
-@@ -422,6 +422,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@40000300";
-+		stdout-path = "/plb/opb/serial@40000300";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/virtex440-ml507.dts b/arch/powerpc/boot/dts/virtex440-ml507.dts
-index 391a4e299783..66f1c6312de6 100644
---- a/arch/powerpc/boot/dts/virtex440-ml507.dts
-+++ b/arch/powerpc/boot/dts/virtex440-ml507.dts
-@@ -32,7 +32,7 @@
- 	} ;
- 	chosen {
- 		bootargs = "console=ttyS0 root=/dev/ram";
--		linux,stdout-path = &RS232_Uart_1;
-+		stdout-path = &RS232_Uart_1;
- 	} ;
- 	cpus {
- 		#address-cells = <1>;
-diff --git a/arch/powerpc/boot/dts/virtex440-ml510.dts b/arch/powerpc/boot/dts/virtex440-ml510.dts
-index 81201d3907e2..3b736ca26ddc 100644
---- a/arch/powerpc/boot/dts/virtex440-ml510.dts
-+++ b/arch/powerpc/boot/dts/virtex440-ml510.dts
-@@ -26,7 +26,7 @@
- 	} ;
- 	chosen {
- 		bootargs = "console=ttyS0 root=/dev/ram";
--		linux,stdout-path = "/plb@0/serial@83e00000";
-+		stdout-path = "/plb@0/serial@83e00000";
- 	} ;
- 	cpus {
- 		#address-cells = <1>;
-diff --git a/arch/powerpc/boot/dts/walnut.dts b/arch/powerpc/boot/dts/walnut.dts
-index 4a9f726ada13..0872862c9363 100644
---- a/arch/powerpc/boot/dts/walnut.dts
-+++ b/arch/powerpc/boot/dts/walnut.dts
-@@ -241,6 +241,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600300";
-+		stdout-path = "/plb/opb/serial@ef600300";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/warp.dts b/arch/powerpc/boot/dts/warp.dts
-index ea9053ef4819..b4f32740870e 100644
---- a/arch/powerpc/boot/dts/warp.dts
-+++ b/arch/powerpc/boot/dts/warp.dts
-@@ -304,6 +304,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600300";
-+		stdout-path = "/plb/opb/serial@ef600300";
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/xpedite5200_xmon.dts b/arch/powerpc/boot/dts/xpedite5200_xmon.dts
-index 646acfbef0dd..d5e14421c39a 100644
---- a/arch/powerpc/boot/dts/xpedite5200_xmon.dts
-+++ b/arch/powerpc/boot/dts/xpedite5200_xmon.dts
-@@ -503,6 +503,6 @@
- 
- 	/* Needed for dtbImage boot wrapper compatibility */
- 	chosen {
--		linux,stdout-path = &serial0;
-+		stdout-path = &serial0;
- 	};
- };
-diff --git a/arch/powerpc/boot/dts/yosemite.dts b/arch/powerpc/boot/dts/yosemite.dts
-index 30bb4753577a..56508785ce13 100644
---- a/arch/powerpc/boot/dts/yosemite.dts
-+++ b/arch/powerpc/boot/dts/yosemite.dts
-@@ -327,6 +327,6 @@
- 	};
- 
- 	chosen {
--		linux,stdout-path = "/plb/opb/serial@ef600300";
-+		stdout-path = "/plb/opb/serial@ef600300";
- 	};
- };
 -- 
-2.14.1
+2.7.4
