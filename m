@@ -1,14 +1,14 @@
 Return-Path: <SRS0=5STX=FN=gmail.com=thierry.reding@kernel.org>
-Date: Mon, 19 Feb 2018 15:24:33 +0100
+Date: Mon, 19 Feb 2018 15:14:40 +0100
 From: Thierry Reding <thierry.reding@gmail.com>
 Subject: Re: [PATCH V7 1/7] dt-bindings: ahci-tegra: add binding documentation
-Message-ID: <20180219142433.GB11455@ulmo>
+Message-ID: <20180219141440.GA11455@ulmo>
 References: <1518456406-21564-1-git-send-email-pchandru@nvidia.com>
  <1518456406-21564-2-git-send-email-pchandru@nvidia.com>
  <20180219024635.n6yaussnqdxuop5x@rob-hp-laptop>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Fba/0zbH8Xs+Fj9o"
+	protocol="application/pgp-signature"; boundary="wac7ysb48OaltWcw"
 Content-Disposition: inline
 In-Reply-To: <20180219024635.n6yaussnqdxuop5x@rob-hp-laptop>
 To: Rob Herring <robh@kernel.org>
@@ -16,7 +16,7 @@ Cc: Preetham Chandru Ramchandra <pchandru@nvidia.com>, tj@kernel.org, cyndis@kap
 List-ID: <devicetree@vger.kernel.org>
 
 
---Fba/0zbH8Xs+Fj9o
+--wac7ysb48OaltWcw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -74,41 +74,40 @@ chip>
 > > +  - Tegra210 : "nvidia,tegra210-ahci"
 >=20
 > Are you dropping T132?
->=20
-> > +- reg : Should contain 3 entries:
->=20
-> You can't just add more entries to existing compatibles. Does this apply=
-=20
-> to T124?
 
-I'd consider this a bug in existing DTSs. The SATA AUX registers exist
-as far back as Tegra30. The reason why they were never included in the
-DTS in because the driver never programmed those registers.
+Tegra132 is identical to Tegra124 except for the CPU cores. That said,
+we've erred on the side of caution in the past and required that the
+compatible properties for Tegra132 contain both "nvidia,tegra132-*" and
+"nvidia,tegra124-*". The reason was that we'd get support from drivers
+that support Tegra124 automatically while at the same time having a chip
+specific compatible string that would allow us to add Tegra132 specific
+quirks should there be any.
 
-However, the driver change in patch 5/7 which uses this has a comment
-that AUX registers are optional, so perhaps we can just add that fact to
-the bindings as well.
+So I think it'd be best if AHCI followed that and we add an entry for
+Tegra132 here:
+
+  - Tegra132: "nvidia,tegra132-ahci", "nvidia,tegra124-ahci"
 
 Thierry
 
---Fba/0zbH8Xs+Fj9o
+--wac7ysb48OaltWcw
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqK3iEACgkQ3SOs138+
-s6GmTg//SZ+IfVZRmAA/A3Yx4zFS4PmqTquiqJ3iWFuIryiftBAZMTLgpZ++LsZ9
-Px8IXKUfkOWjMeHIskU3CJCMHRYuz3iqVYekaCJ7hWgOw1xmZSGcKuKjO/70sur5
-+waERE0loorhEoSgXm1D/MdV92XbZoQZvcEkIAf282B9ln+sg+G/l6QPUAe7XTPy
-X9m00YgVYlJ8Md41tHDTxOf55XybIxelN1KJpwl7Zoq1As638SGycAH3KC/7ev5j
-utTxpeX629O5BqxO95TGdnqnmgu/E/8rh7pCFt2x8FNTSCzNFjJ5uyfBdAeSrvd2
-FyxjeUSGDrvWMhxH4g1n/4LjaikLAk61VaLWiw1ZmnYjN5yFbmlkRqLE4jeYRdKP
-MDRQRdPtuXZOtrJnMyh02bO0vQ8yBLg4pdYeU1KqbJozuE83XRVCh4AgvZ5cFq75
-1hngFfL5Ac/H78+LDorbX9JYClS6RKxw4kAJW8bfKnnT1Asz8qf7JkeKnLZRYkME
-u6N1YE6DdJGze6VLMVErCurXEPZJFDyUXBEzKuz46CCyN2OflML0kV/KpbKUbRkQ
-INit60YHuFwXf2Gyc/8g6GawEFd7+cjB0DDxebxSh09s5ZQ1qXmzQxMrb2RW0PzA
-hCVPasGkjNp/EPsH9x6xDrxlzI4+XanwCh/+sDQXp+VHPBK8ojg=
-=kwB/
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqK28wACgkQ3SOs138+
+s6ESog//RcYTF6TV3B+ulMsGlFvDfABgJx3jkZR5bTcVo1C+m+raLpp3qw+ZFbm3
+qQfav+dy9uhTbfr7lJ5S+hygv6ZIWu9QotzKJ4Wn3vaqBiVxMgN3qyL8u4D+oyB9
+f7D7jSa1+fhbTeKQ38MrQJ8cZVh5t5GjGNojk19AGEjde3MtkISlcl/w/XaIvt8/
+Uw1r2nKmFF/Taf61/GPrjRVZ3stAJsOvig+0SXVRa09VSWidJzZTWjbnbtb4+2GI
+Ey5g44y9iDNT+tgEOzMdJY72+tTWxCo2xoHP5Vcf+e3qjrsdN6tvREaV1zH34GbO
+A9VKsa/jtCZnIHOQ8M6Dn7j0oEjewOar3P13xGG2ykmFuxtM+VsiAynWkjyAVM7Y
+W9Y6pDDvtUp7hGwE17DOZrVLWBUnRE7U7oDv9SfHpSPe6GsukXrXG/5ufzm4N0MV
+UlG48dKvjfWdlPe4qkMfyEdKYTFBP3ACo7mzw+C0pzG6WzwVM62VzSFn5yW9reGn
+IlVl3ZtOMqatKQOy5vvk6O3FtVL0z8JJITb9NXknC3N5fTnJSNQ2lp/liVDamvsN
+MonBFRJIkz+M6NV1HWMeDH/eCD+jVR3cif1Wv2l83WZDqbsf+fh12HuXBHLhd3X4
+t4ngTx/v3fa5qzTztuVuzoJ7l9hB2sLtBoj5nTbtJldHUzExcM0=
+=5lDx
 -----END PGP SIGNATURE-----
 
---Fba/0zbH8Xs+Fj9o--
+--wac7ysb48OaltWcw--
