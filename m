@@ -1,56 +1,83 @@
-Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60192 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752901AbeBSOvl (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 19 Feb 2018 09:51:41 -0500
-From: Gilad Ben-Yossef <gilad@benyossef.com>
-Subject: [PATCH 1/4] crypto: ccree: remove unused definitions
-Date: Mon, 19 Feb 2018 14:51:21 +0000
-Message-Id: <1519051887-4668-2-git-send-email-gilad@benyossef.com>
-In-Reply-To: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
-References: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=R5PR=FN=gmail.com=rjwysocki@kernel.org>
+MIME-Version: 1.0
+Sender: rjwysocki@gmail.com
+In-Reply-To: <1519062520-198902-8-git-send-email-john.garry@huawei.com>
+References: <1519062520-198902-1-git-send-email-john.garry@huawei.com> <1519062520-198902-8-git-send-email-john.garry@huawei.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 19 Feb 2018 22:38:19 +0100
+Message-ID: <CAJZ5v0jL9mVq43+NtnkUAuEqan17ZNqNPBqBpKwCYRiQn0Ni2w@mail.gmail.com>
+Subject: Re: [PATCH v14 7/9] ACPI / scan: do not enumerate Indirect IO host children
+Content-Type: text/plain; charset="UTF-8"
+To: John Garry <john.garry@huawei.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Corey Minyard <minyard@acm.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Remove enum definition which are not used by the REE interface
-driver.
+On Mon, Feb 19, 2018 at 6:48 PM, John Garry <john.garry@huawei.com> wrote:
+> Through the logical PIO framework systems which otherwise have
+> no IO space access to legacy ISA/LPC devices may access these
+> devices through so-called "indirect IO" method. In this, IO
+> space accesses for non-PCI hosts are redirected to a host
+> LLDD to manually generate the IO space (bus) accesses. Hosts
+> are able to register a region in logical PIO space to map to
+> its bus address range.
+>
+> Indirect IO child devices have an associated host-specific bus
+> address. Special translation is required to map between
+> a logical PIO address for a device and it's host bus address.
+>
+> Since in the ACPI tables the child device IO resources would
+> be the host-specific values, it is required the ACPI scan code
+> should not enumerate these devices, and that this should be
+> the responsibility of the host driver so that it can "fixup"
+> the resources so that they map to the appropriate logical PIO
+> addresses.
+>
+> To avoid enumerating these child devices, we check whether
+> the parent for a device is a member of a known list of
+> "indirect IO" hosts. For now, the HiSilicon LPC host
+> controller ID is added.
+>
+> To flag a device to not be enumerated, we reuse the existing
+> serial bus slave flag.
+>
+> Signed-off-by: John Garry <john.garry@huawei.com>
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
----
- drivers/crypto/ccree/cc_crypto_ctx.h | 20 --------------------
- 1 file changed, 20 deletions(-)
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-diff --git a/drivers/crypto/ccree/cc_crypto_ctx.h b/drivers/crypto/ccree/cc_crypto_ctx.h
-index 5cb4dde..06a7860 100644
---- a/drivers/crypto/ccree/cc_crypto_ctx.h
-+++ b/drivers/crypto/ccree/cc_crypto_ctx.h
-@@ -146,24 +146,4 @@ enum drv_hash_hw_mode {
- 	DRV_HASH_HW_RESERVE32B = S32_MAX
- };
- 
--/* drv_crypto_key_type[1:0] is mapped to cipher_do[1:0] */
--/* drv_crypto_key_type[2] is mapped to cipher_config2 */
--enum drv_crypto_key_type {
--	DRV_NULL_KEY = -1,
--	DRV_USER_KEY = 0,		/* 0x000 */
--	DRV_ROOT_KEY = 1,		/* 0x001 */
--	DRV_PROVISIONING_KEY = 2,	/* 0x010 */
--	DRV_SESSION_KEY = 3,		/* 0x011 */
--	DRV_APPLET_KEY = 4,		/* NA */
--	DRV_PLATFORM_KEY = 5,		/* 0x101 */
--	DRV_CUSTOMER_KEY = 6,		/* 0x110 */
--	DRV_END_OF_KEYS = S32_MAX,
--};
--
--enum drv_crypto_padding_type {
--	DRV_PADDING_NONE = 0,
--	DRV_PADDING_PKCS7 = 1,
--	DRV_PADDING_RESERVE32B = S32_MAX
--};
--
- #endif /* _CC_CRYPTO_CTX_H_ */
--- 
-2.7.4
-
+> ---
+>  drivers/acpi/scan.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 8e63d93..c1a60852 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -1524,11 +1524,25 @@ static int acpi_check_serial_bus_slave(struct acpi_resource *ares, void *data)
+>         return -1;
+>  }
+>
+> +static bool acpi_is_indirect_io_slave(struct acpi_device *device)
+> +{
+> +       struct acpi_device *parent = device->parent;
+> +       const struct acpi_device_id indirect_io_hosts[] = {
+> +               {"HISI0191", 0},
+> +               {}
+> +       };
+> +
+> +       return parent && !acpi_match_device_ids(parent, indirect_io_hosts);
+> +}
+> +
+>  static bool acpi_is_serial_bus_slave(struct acpi_device *device)
+>  {
+>         struct list_head resource_list;
+>         bool is_serial_bus_slave = false;
+>
+> +       if (acpi_is_indirect_io_slave(device))
+> +               return true;
+> +
+>         /* Macs use device properties in lieu of _CRS resources */
+>         if (x86_apple_machine &&
+>             (fwnode_property_present(&device->fwnode, "spiSclkPeriod") ||
+> --
+> 1.9.1
+>
