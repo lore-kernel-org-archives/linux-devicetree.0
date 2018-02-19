@@ -1,52 +1,101 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 5/7] watchdog: mtk: allow setting timeout in devicetree
-Date: Sun, 18 Feb 2018 17:08:32 -0800
-Message-ID: <46ff7605-5166-477b-85b1-7d2f53f7c57b@roeck-us.net>
-References: <20180211200847.25000-1-marcus.folkesson@gmail.com>
- <20180211200847.25000-5-marcus.folkesson@gmail.com>
- <20180219000835.ualdfczfsnjzqr6d@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: add support for STM32 USB PHY
+ Controller (USBPHYC)
+Date: Sun, 18 Feb 2018 19:51:08 -0600
+Message-ID: <20180219015108.bxt6qn7tz53ydguv@rob-hp-laptop>
+References: <1518438929-5254-1-git-send-email-amelie.delaunay@st.com>
+ <1518438929-5254-2-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180219000835.ualdfczfsnjzqr6d@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1518438929-5254-2-git-send-email-amelie.delaunay@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/18/2018 04:08 PM, Rob Herring wrote:
-> On Sun, Feb 11, 2018 at 09:08:45PM +0100, Marcus Folkesson wrote:
->> watchdog_init_timeout() will allways pick timeout_param since it
->> defaults to a valid timeout.
->>
->> By following best practice described in
->> Documentation/watchdog/watchdog-kernel-api.txt, it also
->> let us to set timout-sec property in devicetree.
+On Mon, Feb 12, 2018 at 01:35:28PM +0100, Amelie Delaunay wrote:
+> This patch adds the device tree bindings description for STM32 USBPHYC
+> (USB PHY Controller).
 > 
-> Same problems in this one.
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>  .../devicetree/bindings/phy/phy-stm32-usbphyc.txt  | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+> new file mode 100644
+> index 0000000..1e65e0a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+> @@ -0,0 +1,46 @@
+> +STMicroelectronics STM32 USB HS PHY controller
+> +
+> +The STM32 USBPHYC block contains a dual port High Speed UTMI+ PHY and a UTMI
+> +switch. It controls PHY configuration and status, and the UTMI+ switch that
+> +selects either OTG or HOST controller for the second PHY port. It also sets
+> +PLL configuration.
+> +
+> +USBPHYC
+> +  |_ PLL
+> +  |
+> +  |_ PHY port#1 _________________ HOST controller
+> +  |                                      |
+> +  |_ PHY port#2_______                   |
+> +  |                   |_                 |
+> +  |_ UTMI switch_____/ 1|________________|
+> +                    |   |________________
+> +                     \_0|                |
+> +		                  OTG controller
+> +
+> +Required properties:
+> +- compatible: must be "st,stm32mp1-usbphyc"
+> +- reg: address and length of the usb phy control register set
+> +- clocks: phandle + clock specifier for the PLL phy clock
+> +- phy-supply: from the generic phy bindings, phandle to the regulator
+> +  providing 3V3 power to the PHY, see phy-bindings.txt
+> +- vdda1v1-supply: phandle to the regulator providing 1V1 power to the PHY
+> +- vdda1v8-supply: phandle to the regulator providing 1V8 power to the PHY
+> +
+> +Optional properties:
+> +- assigned-clocks: phandle + clock specifier for the PLL phy clock
+> +- assigned-clock-parents: the PLL phy clock parent
+> +- resets: phandle + reset specifier
+> +- st,port2-switch-to-host: select HOST controller on UTMI switch for port#2
 
-Same answer. In the existing driver;
+This one seems very specific. If another device had the mux on a 
+different port number you'd need a new property for example.
 
-         mtk_wdt->wdt_dev.timeout = WDT_MAX_TIMEOUT;
+But really I think this should be determined by either a USB connector 
+node (a binding is in the works) or cable detection.
 
-Guenter
+> +
+> +
+> +Example:
+> +		usbphyc: usbphyc@5a006000 {
 
->>
->> Signed-off-by: Marcus Folkesson <marcus.folkesson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 4 ++++
->>   drivers/watchdog/mtk_wdt.c                             | 2 +-
->>   2 files changed, 5 insertions(+), 1 deletion(-)
+usb-phy@...
+
+> +			compatible = "st,stm32mp1-usbphyc";
+> +			reg = <0x5a006000 0x1000>;
+> +			clocks = <&rcc_clk USBPHY_K>;
+> +			resets = <&rcc_rst USBPHY_R>;
+> +			st,port2-switch-to-host;
+> +			phy-supply = <&vdd_usb>;
+> +			vdda1v1-supply = <&reg11>;
+> +			vdda1v8-supply = <&reg18>
+> +		};
+> -- 
+> 2.7.4
 > 
