@@ -1,42 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/7] watchdog: mtk: allow setting timeout in devicetree
-Date: Sun, 18 Feb 2018 18:08:35 -0600
-Message-ID: <20180219000835.ualdfczfsnjzqr6d@rob-hp-laptop>
-References: <20180211200847.25000-1-marcus.folkesson@gmail.com>
- <20180211200847.25000-5-marcus.folkesson@gmail.com>
+Subject: Re: [PATCH 04/24] dt-bindings: display: add HPD gpio to DVI connector
+Date: Sun, 18 Feb 2018 18:11:11 -0600
+Message-ID: <20180219001111.kg76ywua4pgwtw3v@rob-hp-laptop>
+References: <1518428694-18018-1-git-send-email-tomi.valkeinen@ti.com>
+ <1518428694-18018-5-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20180211200847.25000-5-marcus.folkesson@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, linux-mediatek@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, Vladimir Zapolskiy <vz@mleia.com>, Matthias Brugger <matthias.bgg@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sylvain Lemieux <slemieux.tyco@gmail.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <1518428694-18018-5-git-send-email-tomi.valkeinen@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 11, 2018 at 09:08:45PM +0100, Marcus Folkesson wrote:
-> watchdog_init_timeout() will allways pick timeout_param since it
-> defaults to a valid timeout.
-> 
-> By following best practice described in
-> Documentation/watchdog/watchdog-kernel-api.txt, it also
-> let us to set timout-sec property in devicetree.
-
-Same problems in this one.
-
-> 
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 4 ++++
->  drivers/watchdog/mtk_wdt.c                             | 2 +-
->  2 files changed, 5 insertions(+), 1 deletion(-)
+T24gTW9uLCBGZWIgMTIsIDIwMTggYXQgMTE6NDQ6MzRBTSArMDIwMCwgVG9taSBWYWxrZWluZW4g
+d3JvdGU6Cj4gQWRkIGhwZC1ncGlvcyBwcm9wZXJ0eSB0byBkdmktY29ubmVjdG9yLnR4dC4KPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgo+
+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9jb25uZWN0b3IvZHZpLWNvbm5lY3Rvci50eHQgfCAx
+ICsKPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpSZXZpZXdlZC1ieTogUm9iIEhl
+cnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
