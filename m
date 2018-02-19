@@ -1,36 +1,46 @@
-Return-Path: <SRS0=kFSR=FN=gmail.com=joel.stan@kernel.org>
-Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH 0/3] reset: simple: enable for ASPEED SoCs
-Date: Mon, 19 Feb 2018 17:24:35 +1030
-Message-Id: <20180219065438.19933-1-joel@jms.id.au>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Jeffery <andrew@aj.id.au>
-Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
+From: John Garry <john.garry@huawei.com>
+Subject: [PATCH 0/8] hisi_sas: support x6000 board and some misc changes
+Date: Tue, 20 Feb 2018 03:13:23 +0800
+Message-ID: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, John Garry <john.garry@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Philip,
+This patchset primarily adds support for the Huawei x6000 board,
+which includes hip07 chipset. Unfortunately, due to some board
+layout differences with our development board, we need to set
+a PHY-related register differently for optimal signal quality. As
+such, a signal attenuation property is added to describe the
+differences in the boards and allow the PHY register to be set
+appropriately.
 
-Here is a series that enables the simple reset driver for the ASPEED
-SoCs. You may recall I posted a patch back in May 2017 with a
-similar idea[1]. I was happy to see that you merged a driver that solves
-the problem, and suits our purpose for the ASPEED. Thanks!
+In addition to this above feature, some misc changes are added for:
+- PHY linkrate sysfs interface
+- linkrate set function
+- internal abort timer timeout increase
 
-Cheers,
+Xiang Chen (2):
+  scsi: hisi_sas: remove unused variable hisi_sas_devices.running_req
+  scsi: hisi_sas: Code cleanup and minor bug fixes
 
-Joel
+Xiaofei Tan (6):
+  dt-bindings: scsi: hisi_sas: add an property of signal attenuation
+  scsi: hisi_sas: support the property of signal attenuation for v2 hw
+  scsi: hisi_sas: fix the issue of link rate inconsistency
+  scsi: hisi_sas: fix the issue of setting linkrate register
+  scsi: hisi_sas: increase timer expire of internal abort task
+  scsi: hisi_sas: fix return value of hisi_sas_task_prep()
 
-[1] https://lkml.org/lkml/2017/5/25/940
-
-
-Joel Stanley (3):
-  dt-bindings: aspeed-lpc: Add reset controller
-  reset: simple: Enable for ASPEED systems
-  reset: simple: Allow user selection of driver
-
- .../devicetree/bindings/mfd/aspeed-lpc.txt          | 21 +++++++++++++++++++++
- drivers/reset/Kconfig                               | 12 ++++++++----
- drivers/reset/reset-simple.c                        |  2 ++
- 3 files changed, 31 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/scsi/hisilicon-sas.txt     |  7 +++
+ drivers/scsi/hisi_sas/hisi_sas.h                   |  1 -
+ drivers/scsi/hisi_sas/hisi_sas_main.c              | 34 +++++-------
+ drivers/scsi/hisi_sas/hisi_sas_v1_hw.c             | 13 +++--
+ drivers/scsi/hisi_sas/hisi_sas_v2_hw.c             | 62 +++++++++++++++++-----
+ drivers/scsi/hisi_sas/hisi_sas_v3_hw.c             | 34 +++++-------
+ 6 files changed, 88 insertions(+), 63 deletions(-)
 
 -- 
-2.15.1
+1.9.1
