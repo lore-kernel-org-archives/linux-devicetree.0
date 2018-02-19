@@ -1,36 +1,26 @@
-Return-Path: <SRS0=RmUO=FN=socionext.com=yamada.masahiro@kernel.org>
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] sh: fix build error for empty CONFIG_BUILTIN_DTB_SOURCE
-Date: Tue, 20 Feb 2018 02:09:42 +0900
-Message-Id: <1519060182-1746-1-git-send-email-yamada.masahiro@socionext.com>
-To: linux-kbuild@vger.kernel.org
-Cc: Nicholas Piggin <npiggin@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rich Felker <dalias@libc.org>, Mark Rutland <mark.rutland@arm.com>
+Return-Path: <robherring2@gmail.com>
+Date: Sun, 18 Feb 2018 18:10:17 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: aspeed-lpc: Document LPC Host Interface
+ Controller
+Message-ID: <20180219001017.cnei34oijn7ybh72@rob-hp-laptop>
+References: <20180212070847.32387-1-joel@jms.id.au>
+ <20180212070847.32387-2-joel@jms.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180212070847.32387-2-joel@jms.id.au>
+To: Joel Stanley <joel@jms.id.au>
+Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Cyril Bur <cyrilbur@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Lei YU <mine260309@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-If CONFIG_USE_BUILTIN_DTB is enabled, but CONFIG_BUILTIN_DTB_SOURCE
-is empty (for example, allmodconfig), a build error occurs.
+On Mon, Feb 12, 2018 at 05:38:45PM +1030, Joel Stanley wrote:
+> The LPC Host Interface Controller is part of a BMC SoC that is used for
+> communication with the host.
+> 
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  .../devicetree/bindings/mfd/aspeed-lpc.txt         | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 
-Surround obj-y with ifneq ... endif.
-
-I replaced $(CONFIG_USE_BUILTIN_DTB) with 'y' since this is always
-the case from the following code from arch/sh/Makefile:
-
-  core-$(CONFIG_USE_BUILTIN_DTB)  += arch/sh/boot/dts/
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- arch/sh/boot/dts/Makefile | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
-index 715def0..01d0f7f 100644
---- a/arch/sh/boot/dts/Makefile
-+++ b/arch/sh/boot/dts/Makefile
-@@ -1 +1,3 @@
--obj-$(CONFIG_USE_BUILTIN_DTB) += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
-+ifneq ($(CONFIG_BUILTIN_DTB_SOURCE),"")
-+obj-y += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
-+endif
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
