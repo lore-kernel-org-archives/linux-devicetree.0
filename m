@@ -1,396 +1,153 @@
-From: Olivier Moysan <olivier.moysan@st.com>
-Subject: [RFC PATCH 3/3] ASoC: stm32: sai: Add support of
-	S/PDIF playback
-Date: Mon, 19 Feb 2018 16:00:37 +0100
-Message-ID: <1519052437-24011-4-git-send-email-olivier.moysan@st.com>
-References: <1519052437-24011-1-git-send-email-olivier.moysan@st.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: Add panel-timing subnode to
+ simple-panel
+Date: Mon, 19 Feb 2018 16:09:30 +0100
+Message-ID: <20180219150930.GM11455@ulmo>
+References: <20180208174855.55620-1-seanpaul@chromium.org>
+ <20180208174855.55620-4-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1519052437-24011-1-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
-Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
+Content-Type: multipart/mixed; boundary="===============0865176954=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180208174855.55620-4-seanpaul@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <seanpaul@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Doug Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, =?utf-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support of S/PDIF iec60958 playback on STM32 SAI.
 
-Signed-off-by: olivier moysan <olivier.moysan@st.com>
----
- sound/soc/stm/stm32_sai.c     |   2 +
- sound/soc/stm/stm32_sai.h     |   2 +
- sound/soc/stm/stm32_sai_sub.c | 153 +++++++++++++++++++++++++++++++++++-------
- 3 files changed, 133 insertions(+), 24 deletions(-)
+--===============0865176954==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hdhkc9EpVJoq6PQ6"
+Content-Disposition: inline
 
-diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
-index d743b7d..f226542 100644
---- a/sound/soc/stm/stm32_sai.c
-+++ b/sound/soc/stm/stm32_sai.c
-@@ -30,10 +30,12 @@
- 
- static const struct stm32_sai_conf stm32_sai_conf_f4 = {
- 	.version = SAI_STM32F4,
-+	.has_spdif = false,
- };
- 
- static const struct stm32_sai_conf stm32_sai_conf_h7 = {
- 	.version = SAI_STM32H7,
-+	.has_spdif = true,
- };
- 
- static const struct of_device_id stm32_sai_ids[] = {
-diff --git a/sound/soc/stm/stm32_sai.h b/sound/soc/stm/stm32_sai.h
-index bb062e7..f254221 100644
---- a/sound/soc/stm/stm32_sai.h
-+++ b/sound/soc/stm/stm32_sai.h
-@@ -248,9 +248,11 @@ enum stm32_sai_version {
- /**
-  * struct stm32_sai_conf - SAI configuration
-  * @version: SAI version
-+ * @has_spdif: SAI S/PDIF support flag
-  */
- struct stm32_sai_conf {
- 	int version;
-+	bool has_spdif;
- };
- 
- /**
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index 08583b9..cfeb219 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -23,6 +23,7 @@
- #include <linux/of_platform.h>
- #include <linux/regmap.h>
- 
-+#include <sound/asoundef.h>
- #include <sound/core.h>
- #include <sound/dmaengine_pcm.h>
- #include <sound/pcm_params.h>
-@@ -30,6 +31,7 @@
- #include "stm32_sai.h"
- 
- #define SAI_FREE_PROTOCOL	0x0
-+#define SAI_SPDIF_PROTOCOL	0x1
- 
- #define SAI_SLOT_SIZE_AUTO	0x0
- #define SAI_SLOT_SIZE_16	0x1
-@@ -59,8 +61,13 @@
- #define SAI_SYNC_INTERNAL	0x1
- #define SAI_SYNC_EXTERNAL	0x2
- 
-+#define STM_SAI_PROTOCOL_IS_SPDIF(ip)	((ip)->spdif)
-+#define STM_SAI_HAS_SPDIF(x)	((x)->pdata->conf->has_spdif)
- #define STM_SAI_HAS_EXT_SYNC(x) (!STM_SAI_IS_F4(sai->pdata))
- 
-+#define SAI_IEC60958_BLOCK_FRAMES	192
-+#define SAI_IEC60958_STATUS_BYTES	24
-+
- /**
-  * struct stm32_sai_sub_data - private data of SAI sub block (block A or B)
-  * @pdev: device data pointer
-@@ -78,6 +85,7 @@
-  * @id: SAI sub block id corresponding to sub-block A or B
-  * @dir: SAI block direction (playback or capture). set at init
-  * @master: SAI block mode flag. (true=master, false=slave) set at init
-+ * @spdif: SAI S/PDIF iec60958 mode flag. set at init
-  * @fmt: SAI block format. relevant only for custom protocols. set at init
-  * @sync: SAI block synchronization mode. (none, internal or external)
-  * @synco: SAI block ext sync source (provider setting). (none, sub-block A/B)
-@@ -87,6 +95,8 @@
-  * @slot_width: rx or tx slot width in bits
-  * @slot_mask: rx or tx active slots mask. set at init or at runtime
-  * @data_size: PCM data width. corresponds to PCM substream width.
-+ * @spdif_frm_cnt: S/PDIF playback frame counter
-+ * @spdif_status_bits: S/PDIF status bits
-  */
- struct stm32_sai_sub_data {
- 	struct platform_device *pdev;
-@@ -104,6 +114,7 @@ struct stm32_sai_sub_data {
- 	unsigned int id;
- 	int dir;
- 	bool master;
-+	bool spdif;
- 	int fmt;
- 	int sync;
- 	int synco;
-@@ -113,6 +124,8 @@ struct stm32_sai_sub_data {
- 	int slot_width;
- 	int slot_mask;
- 	int data_size;
-+	unsigned int spdif_frm_cnt;
-+	unsigned char spdif_status_bits[SAI_IEC60958_STATUS_BYTES];
- };
- 
- enum stm32_sai_fifo_th {
-@@ -171,6 +184,10 @@ static bool stm32_sai_sub_writeable_reg(struct device *dev, unsigned int reg)
- 	}
- }
- 
-+static const unsigned char default_status_bits[SAI_IEC60958_STATUS_BYTES] = {
-+	0, 0, 0, IEC958_AES3_CON_FS_48000,
-+};
-+
- static const struct regmap_config stm32_sai_sub_regmap_config_f4 = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
-@@ -277,6 +294,11 @@ static int stm32_sai_set_dai_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
- 	struct stm32_sai_sub_data *sai = snd_soc_dai_get_drvdata(cpu_dai);
- 	int slotr, slotr_mask, slot_size;
- 
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		dev_warn(cpu_dai->dev, "Slot setting relevant only for TDM\n");
-+		return 0;
-+	}
-+
- 	dev_dbg(cpu_dai->dev, "Masks tx/rx:%#x/%#x, slots:%d, width:%d\n",
- 		tx_mask, rx_mask, slots, slot_width);
- 
-@@ -326,8 +348,17 @@ static int stm32_sai_set_dai_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
- 
- 	dev_dbg(cpu_dai->dev, "fmt %x\n", fmt);
- 
--	cr1_mask = SAI_XCR1_PRTCFG_MASK;
--	cr1 = SAI_XCR1_PRTCFG_SET(SAI_FREE_PROTOCOL);
-+	/* Do not generate master by default */
-+	cr1 = SAI_XCR1_NODIV;
-+	cr1_mask = SAI_XCR1_NODIV;
-+
-+	cr1_mask |= SAI_XCR1_PRTCFG_MASK;
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		cr1 |= SAI_XCR1_PRTCFG_SET(SAI_SPDIF_PROTOCOL);
-+		goto conf_update;
-+	}
-+
-+	cr1 |= SAI_XCR1_PRTCFG_SET(SAI_FREE_PROTOCOL);
- 
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	/* SCK active high for all protocols */
-@@ -409,10 +440,7 @@ static int stm32_sai_set_dai_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
- 
- 	cr1_mask |= SAI_XCR1_SLAVE;
- 
--	/* do not generate master by default */
--	cr1 |= SAI_XCR1_NODIV;
--	cr1_mask |= SAI_XCR1_NODIV;
--
-+conf_update:
- 	ret = regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX, cr1_mask, cr1);
- 	if (ret < 0) {
- 		dev_err(cpu_dai->dev, "Failed to update CR1 register\n");
-@@ -478,6 +506,12 @@ static int stm32_sai_set_config(struct snd_soc_dai *cpu_dai,
- 			   SAI_XCR2_FFLUSH |
- 			   SAI_XCR2_FTH_SET(STM_SAI_FIFO_TH_HALF));
- 
-+	/* DS bits in CR1 not set for SPDIF (size forced to 24 bits).*/
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		sai->spdif_frm_cnt = 0;
-+		return 0;
-+	}
-+
- 	/* Mode, data format and channel config */
- 	cr1_mask = SAI_XCR1_DS_MASK;
- 	switch (params_format(params)) {
-@@ -592,13 +626,14 @@ static int stm32_sai_configure_clock(struct snd_soc_dai *cpu_dai,
- 	int cr1, mask, div = 0;
- 	int sai_clk_rate, mclk_ratio, den, ret;
- 	int version = sai->pdata->conf->version;
-+	unsigned int rate = params_rate(params);
- 
- 	if (!sai->mclk_rate) {
- 		dev_err(cpu_dai->dev, "Mclk rate is null\n");
- 		return -EINVAL;
- 	}
- 
--	if (!(params_rate(params) % 11025))
-+	if (!(rate % 11025))
- 		clk_set_parent(sai->sai_ck, sai->pdata->clk_x11k);
- 	else
- 		clk_set_parent(sai->sai_ck, sai->pdata->clk_x8k);
-@@ -623,24 +658,28 @@ static int stm32_sai_configure_clock(struct snd_soc_dai *cpu_dai,
- 		 *      MCKDIV = sai_ck / (frl x ws)	(NOMCK=1)
- 		 * Note: NOMCK/NODIV correspond to same bit.
- 		 */
--		if (sai->mclk_rate) {
--			mclk_ratio = sai->mclk_rate / params_rate(params);
--			if (mclk_ratio != 256) {
-+		if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+			div = DIV_ROUND_CLOSEST(sai_clk_rate,
-+						(params_rate(params) * 128));
-+		} else {
-+			if (sai->mclk_rate) {
-+				mclk_ratio = sai->mclk_rate / rate;
- 				if (mclk_ratio == 512) {
- 					mask = SAI_XCR1_OSR;
- 					cr1 = SAI_XCR1_OSR;
--				} else {
-+				} else if (mclk_ratio != 256) {
- 					dev_err(cpu_dai->dev,
- 						"Wrong mclk ratio %d\n",
- 						mclk_ratio);
- 					return -EINVAL;
- 				}
-+				div = DIV_ROUND_CLOSEST(sai_clk_rate,
-+							sai->mclk_rate);
-+			} else {
-+				/* mclk-fs not set, master clock not active */
-+				den = sai->fs_length * params_rate(params);
-+				div = DIV_ROUND_CLOSEST(sai_clk_rate, den);
- 			}
--			div = DIV_ROUND_CLOSEST(sai_clk_rate, sai->mclk_rate);
--		} else {
--			/* mclk-fs not set, master clock not active. NOMCK=1 */
--			den = sai->fs_length * params_rate(params);
--			div = DIV_ROUND_CLOSEST(sai_clk_rate, den);
- 		}
- 	}
- 
-@@ -670,10 +709,12 @@ static int stm32_sai_hw_params(struct snd_pcm_substream *substream,
- 
- 	sai->data_size = params_width(params);
- 
--	ret = stm32_sai_set_slots(cpu_dai);
--	if (ret < 0)
--		return ret;
--	stm32_sai_set_frame(cpu_dai);
-+	if (!STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		ret = stm32_sai_set_slots(cpu_dai);
-+		if (ret < 0)
-+			return ret;
-+		stm32_sai_set_frame(cpu_dai);
-+	}
- 
- 	ret = stm32_sai_set_config(cpu_dai, substream, params);
- 	if (ret)
-@@ -723,6 +764,9 @@ static int stm32_sai_trigger(struct snd_pcm_substream *substream, int cmd,
- 					 (unsigned int)~SAI_XCR1_DMAEN);
- 		if (ret < 0)
- 			dev_err(cpu_dai->dev, "Failed to update CR1 register\n");
-+
-+		if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
-+			sai->spdif_frm_cnt = 0;
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -776,6 +820,10 @@ static int stm32_sai_dai_probe(struct snd_soc_dai *cpu_dai)
- 				     sai->synco, sai->synci);
- 	}
- 
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
-+		memcpy(sai->spdif_status_bits, default_status_bits,
-+		       sizeof(default_status_bits));
-+
- 	cr1_mask |= SAI_XCR1_SYNCEN_MASK;
- 	cr1 |= SAI_XCR1_SYNCEN_SET(sai->sync);
- 
-@@ -792,6 +840,42 @@ static int stm32_sai_dai_probe(struct snd_soc_dai *cpu_dai)
- 	.shutdown	= stm32_sai_shutdown,
- };
- 
-+static int stm32_sai_pcm_process_spdif(struct snd_pcm_substream *substream,
-+				       int channel, unsigned long hwoff,
-+				       void *buf, unsigned long bytes)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct stm32_sai_sub_data *sai = dev_get_drvdata(cpu_dai->dev);
-+	int *ptr = (int *)(runtime->dma_area + hwoff +
-+			   channel * (runtime->dma_bytes / runtime->channels));
-+	ssize_t cnt = bytes_to_samples(runtime, bytes);
-+	unsigned int frm_cnt = sai->spdif_frm_cnt;
-+	unsigned int byte;
-+	unsigned int mask;
-+
-+	do {
-+		*ptr = ((*ptr >> 8) & 0x00ffffff);
-+
-+		/* Set channel status bit */
-+		byte = frm_cnt >> 3;
-+		mask = 1 << (frm_cnt - (byte << 3));
-+		if (sai->spdif_status_bits[byte] & mask)
-+			*ptr |= 0x04000000;
-+		ptr++;
-+
-+		if (!(cnt % 2))
-+			frm_cnt++;
-+
-+		if (frm_cnt == SAI_IEC60958_BLOCK_FRAMES)
-+			frm_cnt = 0;
-+	} while (--cnt);
-+	sai->spdif_frm_cnt = frm_cnt;
-+
-+	return 0;
-+}
-+
- static const struct snd_pcm_hardware stm32_sai_pcm_hw = {
- 	.info = SNDRV_PCM_INFO_INTERLEAVED | SNDRV_PCM_INFO_MMAP,
- 	.buffer_bytes_max = 8 * PAGE_SIZE,
-@@ -842,8 +926,14 @@ static int stm32_sai_dai_probe(struct snd_soc_dai *cpu_dai)
- };
- 
- static const struct snd_dmaengine_pcm_config stm32_sai_pcm_config = {
--	.pcm_hardware	= &stm32_sai_pcm_hw,
--	.prepare_slave_config	= snd_dmaengine_pcm_prepare_slave_config,
-+	.pcm_hardware = &stm32_sai_pcm_hw,
-+	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
-+};
-+
-+static const struct snd_dmaengine_pcm_config stm32_sai_pcm_config_spdif = {
-+	.pcm_hardware = &stm32_sai_pcm_hw,
-+	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
-+	.process = stm32_sai_pcm_process_spdif,
- };
- 
- static const struct snd_soc_component_driver stm32_component = {
-@@ -900,6 +990,18 @@ static int stm32_sai_sub_parse_of(struct platform_device *pdev,
- 		return -EINVAL;
- 	}
- 
-+	/* Get spdif iec60958 property */
-+	sai->spdif = false;
-+	if (of_get_property(np, "st,iec60958", NULL)) {
-+		if (!STM_SAI_HAS_SPDIF(sai) ||
-+		    sai->dir == SNDRV_PCM_STREAM_CAPTURE) {
-+			dev_err(&pdev->dev, "S/PDIF IEC60958 not supported\n");
-+			return -EINVAL;
-+		}
-+		sai->spdif = true;
-+		sai->master = true;
-+	}
-+
- 	/* Get synchronization property */
- 	args.np = NULL;
- 	ret = of_parse_phandle_with_fixed_args(np, "st,sync", 1, 0, &args);
-@@ -999,6 +1101,7 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- {
- 	struct stm32_sai_sub_data *sai;
- 	const struct of_device_id *of_id;
-+	const struct snd_dmaengine_pcm_config *conf = &stm32_sai_pcm_config;
- 	int ret;
- 
- 	sai = devm_kzalloc(&pdev->dev, sizeof(*sai), GFP_KERNEL);
-@@ -1039,8 +1142,10 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = devm_snd_dmaengine_pcm_register(&pdev->dev,
--					      &stm32_sai_pcm_config, 0);
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
-+		conf = &stm32_sai_pcm_config_spdif;
-+
-+	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register pcm dma\n");
- 		return ret;
--- 
-1.9.1
+
+--hdhkc9EpVJoq6PQ6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Feb 08, 2018 at 12:48:50PM -0500, Sean Paul wrote:
+> This patch adds a new subnode to simple-panel allowing us to override
+> the typical timing expressed in the panel's display_timing.
+>=20
+> Changes in v2:
+>  - Split out the binding into a new patch (Rob)
+>  - display-timings is a new section (Rob)
+>  - Use the full display-timings subnode instead of picking the timing
+>    out (Rob/Thierry)
+> Changes in v3:
+>  - Go back to using the timing subnode directly, but rename to
+>    panel-timing (Rob)
+>=20
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Eric Anholt <eric@anholt.net>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Jeffy Chen <jeffy.chen@rock-chips.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: St=C3=A9phane Marchesin <marcheu@chromium.org>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-rockchip@lists.infradead.org
+> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+> ---
+>  .../bindings/display/panel/simple-panel.txt        | 30 ++++++++++++++++=
+++++++
+>  1 file changed, 30 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/panel/simple-panel=
+=2Etxt b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> index 45a457ad38f0..7788b9ce160b 100644
+> --- a/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/simple-panel.txt
+> @@ -12,6 +12,24 @@ Optional properties:
+>  - enable-gpios: GPIO pin to enable or disable the panel
+>  - backlight: phandle of the backlight device attached to the panel
+> =20
+> +panel-timing subnode
+> +--------------------
+> +
+> +This optional subnode is for devices which require a mode differing from=
+ the
+> +panel's "typical" display timing as programmed in the simple-panel drive=
+r.
+> +Overriding the driver mode must only be done in the following scenario:
+> + - The restrictions motivating the override cannot be applied to the pla=
+tform's
+> +   display driver (ie: it must be specific to the device not the platfor=
+m)
+> + - The panel must not have a fixed mode attributed to it in the driver
+
+I think this is somewhat ambiguous. One could argue that panels only
+have a fixed mode. What you means if obviously the fixed DRM display
+mode, but that's not something that should go into the binding. I'd
+simply drop this requirement.
+
+> + - The panel must provide at list one display_timing range by which the =
+override
+> +   mode can be validated against
+
+This is the important bit and kind of obsoletes the above anyway. Oh,
+and you probably meant "... provide at _least_ one..."
+
+> + - The override mode will use the 'typ' values from the panel-timings su=
+bnode
+
+The properties for display timings in DT don't list anything other than
+the 'typ' values, right? I'm not sure I understand this requirement.
+
+> + - You must provide all required properties for the panel-timing subnode
+
+Isn't this redundant? required properties are always required.
+
+Other than the unclarities, the above does reflect what we had discussed
+on IRC. I wonder, though, how much of this really belongs in the device
+tree bindings. The above are almost all restrictions that apply to the
+driver, and are very specific to Linux. Perhaps this is something that
+belongs in the GPU documentation rather than DT bindings. They are more
+like guidelines for what panel drivers should look like rather than what
+the DT should look like.
+
+Thierry
+
+--hdhkc9EpVJoq6PQ6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqK6KoACgkQ3SOs138+
+s6EasQ//TXaKOcEATrKdv49bi0O4g5yl44ADHE+++3Q0Ussc2J+HSk/4nyUV9s9p
+qTirUqihhxMcH0g7llm2PBB7yr25oJzDzJ8yQiW2oIbE6B3GhNwTpJNi8mIVRDt0
+wn1IN0l/69ZGS429FdG6CqHQJwRRDiI9Ks7ARUAHb2U0bp5SqSeXZ55Zgiat21k0
+3KCF2NMZd9mSNz/sR1m4vpkNTuRi4BFVoUC78ebTknGNnjrqzJjUYzCrpXJOjJlY
+7AjWKRYAcATfJ0AIn7acQjSCywh0yk+4iAb0quZ+bg1DUo4/doeV/JgNezhTXSYq
+jpM1PqpUo/eXGswOzCMzRazjjvkdRUd+23K+PCj4k5muG0xlSIS3dDbBv2Z+wB3L
+Zxxdr6XpoXwkHfN9uOQKA6rWtHDgO9HEUjUMQGh/bzXv9yd7YRJgEwOKK7zBbFF1
+KHYsAASpu+ezFd5J7jmnkiafn1kBgOn3Ugvx/Q2KsyjflE+IYC8PzQ1qWmupLLIi
+Ut2WjE1vo6ulYH0iJYgWUfF5ge3uvdO/4uhgrdDBShBmhOfh3esCXjSufJvLME29
+QfqtxNmSQN5kP88mlLy4qaEoxtiBzeY7INca3KEggvpsaSpf4mgPZMCb0Uj7MP8U
+iGHRMAqhSzS1SjocDx2vJxonIKrSJcIvNqG2IPkwvVbIAlnmuMY=
+=/lNv
+-----END PGP SIGNATURE-----
+
+--hdhkc9EpVJoq6PQ6--
+
+--===============0865176954==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0865176954==--
