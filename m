@@ -1,14 +1,17 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH 1/9] ARM: dts: am33xx: Reserve pm code and data regions in
- ocmcram sram node
-Date: Sun, 18 Feb 2018 21:34:57 -0600
-Message-ID: <1519011305-17822-2-git-send-email-d-gerlach@ti.com>
-References: <1519011305-17822-1-git-send-email-d-gerlach@ti.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 10/10] dt-bindings: thermal: Remove
+ "cooling-{min|max}-level" properties
+Date: Mon, 19 Feb 2018 09:13:38 +0530
+Message-ID: <20180219034338.GI28462@vireshk-i7>
+References: <cover.1518166039.git.viresh.kumar@linaro.org>
+ <0ec53640f1a09e6e0d7aa1a21d1a3266c3c209c7.1518166039.git.viresh.kumar@linaro.org>
+ <20180218232906.jkpymin3a4qxjhnc@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519011305-17822-1-git-send-email-d-gerlach@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20180218232906.jkpymin3a4qxjhnc@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,48 +21,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy J <j-keerthy@ti.com>, Johan Hovold <johan@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, Rafael Wysocki <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a 'pm_sram_code' reserved region to the ocmcram node to be exposed
-by the mmio-sram driver as a pool but also mark it protect-exec so that
-it can run code copied to it using sram_exec_copy.
+On 18-02-18, 17:29, Rob Herring wrote:
+> On Fri, Feb 09, 2018 at 02:28:10PM +0530, Viresh Kumar wrote:
+> > The "cooling-min-level" and "cooling-max-level" properties are not
+> > parsed by any part of kernel currently and the max cooling state of a
+> > CPU cooling device is found by referring to the cpufreq table instead.
+> 
+> What about non-CPU devices? A fan for example.
 
-Add another 'pm_sram_data' reserved region to the ocmcram node to act as
-the data space for any code running from the 'pm_sram_code' region that
-is exposed as a regular pool.
+Even they aren't using these properties. The gpio-fan binding[1] for
+example uses the "gpio-fan,speed-map" property instead to find the
+number of states it supports.
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- arch/arm/boot/dts/am33xx.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 628c77b0b386..a9bbf68db077 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -905,6 +905,21 @@
- 		ocmcram: ocmcram@40300000 {
- 			compatible = "mmio-sram";
- 			reg = <0x40300000 0x10000>; /* 64k */
-+			ranges = <0x0 0x40300000 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			pm_sram_code: pm-sram-code@0 {
-+				compatible = "ti,sram";
-+				reg = <0x0 0x1000>;
-+				protect-exec;
-+			};
-+
-+			pm_sram_data: pm-sram-data@1000 {
-+				compatible = "ti,sram";
-+				reg = <0x1000 0x1000>;
-+				pool;
-+			};
- 		};
- 
- 		elm: elm@48080000 {
 -- 
-2.16.1
+viresh
+
+[1] Documentation/devicetree/bindings/gpio/gpio-fan.txt
