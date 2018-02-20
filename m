@@ -1,88 +1,80 @@
 Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
 From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v3 12/15] memory: tegra: Add Tegra124 memory controller hot resets
-Date: Tue, 20 Feb 2018 19:36:29 +0300
-Message-Id: <74072a57f9dd4c865f6e5f3494e160f91cf82671.1519141896.git.digetx@gmail.com>
-In-Reply-To: <c8edcd52ec69afcca6007d8c2a1045aae7333bb4.1519141896.git.digetx@gmail.com>
-References: <c8edcd52ec69afcca6007d8c2a1045aae7333bb4.1519141896.git.digetx@gmail.com>
-In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
-References: <cover.1519141896.git.digetx@gmail.com>
+Subject: [PATCH v3 00/15] Memory controller hot reset
+Date: Tue, 20 Feb 2018 19:25:13 +0300
+Message-Id: <cover.1519141896.git.digetx@gmail.com>
 To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Define the table of memory controller hot resets for Tegra124.
+Tegra's memory controller has a "memory hot reset" functionality that
+blocks all memory transactions for the memory client, which is required
+for a proper HW resetting. HW could perform DMA while being reset and this
+could lead to a system hang or memory corruption, so here comes the memory
+hot reset that blocks all interactions of HW with memory so that it could
+be reset safely. Memory hot reset is urgently required for multimedia (on
+Tegra20 especially), like GPU or video decoder, as it is quite easy to get
+in a trouble without a proper HW reset.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/memory/tegra/tegra124.c | 42 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Changelog:
 
-diff --git a/drivers/memory/tegra/tegra124.c b/drivers/memory/tegra/tegra124.c
-index bd16555cca0f..cd2c99526de2 100644
---- a/drivers/memory/tegra/tegra124.c
-+++ b/drivers/memory/tegra/tegra124.c
-@@ -1012,6 +1012,42 @@ static const struct tegra_smmu_group_soc tegra124_groups[] = {
- 	},
- };
- 
-+#define TEGRA124_MC_RESET(_name, _control, _status, _bit)	\
-+	{							\
-+		.name = #_name,					\
-+		.id = TEGRA124_MC_RESET_##_name,		\
-+		.control = _control,				\
-+		.status = _status,				\
-+		.bit = _bit,					\
-+	}
-+
-+static const struct tegra_mc_reset tegra124_mc_resets[] = {
-+	TEGRA124_MC_RESET(AFI,       0x200, 0x204,  0),
-+	TEGRA124_MC_RESET(AVPC,      0x200, 0x204,  1),
-+	TEGRA124_MC_RESET(DC,        0x200, 0x204,  2),
-+	TEGRA124_MC_RESET(DCB,       0x200, 0x204,  3),
-+	TEGRA124_MC_RESET(HC,        0x200, 0x204,  6),
-+	TEGRA124_MC_RESET(HDA,       0x200, 0x204,  7),
-+	TEGRA124_MC_RESET(ISP2,      0x200, 0x204,  8),
-+	TEGRA124_MC_RESET(MPCORE,    0x200, 0x204,  9),
-+	TEGRA124_MC_RESET(MPCORELP,  0x200, 0x204, 10),
-+	TEGRA124_MC_RESET(MSENC,     0x200, 0x204, 11),
-+	TEGRA124_MC_RESET(PPCS,      0x200, 0x204, 14),
-+	TEGRA124_MC_RESET(SATA,      0x200, 0x204, 15),
-+	TEGRA124_MC_RESET(VDE,       0x200, 0x204, 16),
-+	TEGRA124_MC_RESET(VI,        0x200, 0x204, 17),
-+	TEGRA124_MC_RESET(VIC,       0x200, 0x204, 18),
-+	TEGRA124_MC_RESET(XUSB_HOST, 0x200, 0x204, 19),
-+	TEGRA124_MC_RESET(XUSB_DEV,  0x200, 0x204, 20),
-+	TEGRA124_MC_RESET(TSEC,      0x200, 0x204, 21),
-+	TEGRA124_MC_RESET(SDMMC1,    0x200, 0x204, 22),
-+	TEGRA124_MC_RESET(SDMMC2,    0x200, 0x204, 23),
-+	TEGRA124_MC_RESET(SDMMC3,    0x200, 0x204, 25),
-+	TEGRA124_MC_RESET(SDMMC4,    0x970, 0x974,  0),
-+	TEGRA124_MC_RESET(ISP2B,     0x970, 0x974,  1),
-+	TEGRA124_MC_RESET(GPU,       0x970, 0x974,  2),
-+};
-+
- #ifdef CONFIG_ARCH_TEGRA_124_SOC
- static const struct tegra_smmu_soc tegra124_smmu_soc = {
- 	.clients = tegra124_mc_clients,
-@@ -1038,6 +1074,9 @@ const struct tegra_mc_soc tegra124_mc_soc = {
- 	.intmask = MC_INT_DECERR_MTS | MC_INT_SECERR_SEC | MC_INT_DECERR_VPR |
- 		   MC_INT_INVALID_APB_ASID_UPDATE | MC_INT_INVALID_SMMU_PAGE |
- 		   MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM,
-+	.resets_ops = &terga_mc_resets_ops_common,
-+	.resets = tegra124_mc_resets,
-+	.num_resets = ARRAY_SIZE(tegra124_mc_resets),
- };
- #endif /* CONFIG_ARCH_TEGRA_124_SOC */
- 
-@@ -1065,5 +1104,8 @@ const struct tegra_mc_soc tegra132_mc_soc = {
- 	.intmask = MC_INT_DECERR_MTS | MC_INT_SECERR_SEC | MC_INT_DECERR_VPR |
- 		   MC_INT_INVALID_APB_ASID_UPDATE | MC_INT_INVALID_SMMU_PAGE |
- 		   MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM,
-+	.resets_ops = &terga_mc_resets_ops_common,
-+	.resets = tegra124_mc_resets,
-+	.num_resets = ARRAY_SIZE(tegra124_mc_resets),
- };
- #endif /* CONFIG_ARCH_TEGRA_132_SOC */
+V3:
+	Addressed review comments to V2 from Thierry Reding. MC now
+	uses generic reset controller API instead of a custom one,
+	hence DT changes are now involved and so Rob Herring is CC'd
+	for a review.
+
+	Added couple minor cleanup/correction patches.
+
+V2:
+	Basically a re-send of V1 with some minor changes.
+
+Dmitry Osipenko (14):
+  dt-bindings: arm: tegra: Remove duplicated Tegra30+ MC binding
+  dt-bindings: memory: tegra: Document #reset-cells property of the
+    Tegra30 MC
+  dt-bindings: arm: tegra: Document #reset-cells property of the Tegra20
+    MC
+  dt-bindings: memory: tegra: Add hot resets definitions
+  memory: tegra: Do not handle spurious interrupts
+  memory: tegra: Setup interrupts mask before requesting IRQ
+  memory: tegra: Apply interrupts mask per SoC
+  memory: tegra: Remove unused headers inclusions
+  memory: tegra: Squash tegra20-mc into common tegra-mc driver
+  memory: tegra: Introduce memory client hot reset
+  memory: tegra: Add Tegra124 memory controller hot resets
+  memory: tegra: Add Tegra114 memory controller hot resets
+  memory: tegra: Add Tegra30 memory controller hot resets
+  memory: tegra: Add Tegra20 memory controller hot resets
+
+Thierry Reding (1):
+  memory: tegra: Add Tegra210 memory controller hot resets
+
+ .../bindings/arm/tegra/nvidia,tegra20-mc.txt       |  12 +-
+ .../bindings/arm/tegra/nvidia,tegra30-mc.txt       |  18 --
+ .../memory-controllers/nvidia,tegra30-mc.txt       |   5 +
+ drivers/memory/Kconfig                             |  10 -
+ drivers/memory/Makefile                            |   1 -
+ drivers/memory/tegra/Makefile                      |   1 +
+ drivers/memory/tegra/mc.c                          | 358 +++++++++++++++++++--
+ drivers/memory/tegra/mc.h                          |  22 ++
+ drivers/memory/tegra/tegra114.c                    |  35 ++
+ drivers/memory/tegra/tegra124.c                    |  48 +++
+ drivers/memory/tegra/tegra20.c                     | 296 +++++++++++++++++
+ drivers/memory/tegra/tegra210.c                    |  53 ++-
+ drivers/memory/tegra/tegra30.c                     |  35 ++
+ drivers/memory/tegra20-mc.c                        | 254 ---------------
+ include/dt-bindings/memory/tegra114-mc.h           |  19 ++
+ include/dt-bindings/memory/tegra124-mc.h           |  25 ++
+ include/dt-bindings/memory/tegra20-mc.h            |  21 ++
+ include/dt-bindings/memory/tegra210-mc.h           |  31 ++
+ include/dt-bindings/memory/tegra30-mc.h            |  19 ++
+ include/soc/tegra/mc.h                             |  37 ++-
+ 20 files changed, 978 insertions(+), 322 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra30-mc.txt
+ create mode 100644 drivers/memory/tegra/tegra20.c
+ delete mode 100644 drivers/memory/tegra20-mc.c
+ create mode 100644 include/dt-bindings/memory/tegra20-mc.h
+
 -- 
 2.16.1
