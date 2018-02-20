@@ -1,67 +1,71 @@
-Return-Path: <SRS0=+B7o=FM=gmail.com=digetx@kernel.org>
+Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
 From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v1 2/2] ARM: dts: tegra30: Add video decoder node
-Date: Sun, 18 Feb 2018 20:01:46 +0300
-Message-Id: <6ac145a1259566f85c88bd29be9c8b3e44e53bcf.1518973069.git.digetx@gmail.com>
-In-Reply-To: <cover.1518973069.git.digetx@gmail.com>
-References: <cover.1518973069.git.digetx@gmail.com>
-In-Reply-To: <cover.1518973069.git.digetx@gmail.com>
-References: <cover.1518973069.git.digetx@gmail.com>
-To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 13/15] memory: tegra: Add Tegra114 memory controller hot resets
+Date: Tue, 20 Feb 2018 19:36:30 +0300
+Message-Id: <89e9cf16ce60e426ff1b47f921be621311c09c70.1519141896.git.digetx@gmail.com>
+In-Reply-To: <c8edcd52ec69afcca6007d8c2a1045aae7333bb4.1519141896.git.digetx@gmail.com>
+References: <c8edcd52ec69afcca6007d8c2a1045aae7333bb4.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree node for the Video Decoder Engine found on Tegra30 SoC's.
+Define the table of memory controller hot resets for Tegra114.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/boot/dts/tegra30.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/memory/tegra/tegra114.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index 1fb0c421a9d8..8ae72ffe0048 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -17,6 +17,11 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges = <0 0x40000000 0x40000>;
-+
-+		vde_pool: vde {
-+			reg = <0x400 0x3fc00>;
-+			pool;
-+		};
- 	};
+diff --git a/drivers/memory/tegra/tegra114.c b/drivers/memory/tegra/tegra114.c
+index 7560b2f558a7..e317a1836ce6 100644
+--- a/drivers/memory/tegra/tegra114.c
++++ b/drivers/memory/tegra/tegra114.c
+@@ -938,6 +938,36 @@ static const struct tegra_smmu_soc tegra114_smmu_soc = {
+ 	.num_asids = 4,
+ };
  
- 	pcie@3000 {
-@@ -366,6 +371,28 @@
- 		*/
- 	};
- 
-+	vde@6001a000 {
-+		compatible = "nvidia,tegra30-vde", "nvidia,tegra20-vde";
-+		reg = <0x6001a000 0x1000   /* Syntax Engine */
-+		       0x6001b000 0x1000   /* Video Bitstream Engine */
-+		       0x6001c000  0x100   /* Macroblock Engine */
-+		       0x6001c200  0x100   /* Post-processing Engine */
-+		       0x6001c400  0x100   /* Motion Compensation Engine */
-+		       0x6001c600  0x100   /* Transform Engine */
-+		       0x6001c800  0x100   /* Pixel prediction block */
-+		       0x6001ca00  0x100   /* Video DMA */
-+		       0x6001d800  0x400>; /* Video frame controls */
-+		reg-names = "sxe", "bsev", "mbe", "ppe", "mce",
-+			    "tfe", "ppb", "vdma", "frameid";
-+		iram = <&vde_pool>; /* IRAM region */
-+		interrupts = <GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>, /* Sync token interrupt */
-+			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>, /* BSE-V interrupt */
-+			     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>; /* SXE interrupt */
-+		interrupt-names = "sync-token", "bsev", "sxe";
-+		clocks = <&tegra_car TEGRA30_CLK_VDE>;
-+		resets = <&tegra_car 61>;
-+	};
++#define TEGRA114_MC_RESET(_name, _control, _status, _bit)	\
++	{							\
++		.name = #_name,					\
++		.id = TEGRA114_MC_RESET_##_name,		\
++		.control = _control,				\
++		.status = _status,				\
++		.bit = _bit,					\
++	}
 +
- 	apbmisc@70000800 {
- 		compatible = "nvidia,tegra30-apbmisc", "nvidia,tegra20-apbmisc";
- 		reg = <0x70000800 0x64   /* Chip revision */
++static const struct tegra_mc_reset tegra114_mc_resets[] = {
++	TEGRA114_MC_RESET(AFI,      0x200, 0x204,  0),
++	TEGRA114_MC_RESET(AVPC,     0x200, 0x204,  1),
++	TEGRA114_MC_RESET(DC,       0x200, 0x204,  2),
++	TEGRA114_MC_RESET(DCB,      0x200, 0x204,  3),
++	TEGRA114_MC_RESET(EPP,      0x200, 0x204,  4),
++	TEGRA114_MC_RESET(2D,       0x200, 0x204,  5),
++	TEGRA114_MC_RESET(HC,       0x200, 0x204,  6),
++	TEGRA114_MC_RESET(HDA,      0x200, 0x204,  7),
++	TEGRA114_MC_RESET(ISP,      0x200, 0x204,  8),
++	TEGRA114_MC_RESET(MPCORE,   0x200, 0x204,  9),
++	TEGRA114_MC_RESET(MPCORELP, 0x200, 0x204, 10),
++	TEGRA114_MC_RESET(MPE,      0x200, 0x204, 11),
++	TEGRA114_MC_RESET(3D,       0x200, 0x204, 12),
++	TEGRA114_MC_RESET(3D2,      0x200, 0x204, 13),
++	TEGRA114_MC_RESET(PPCS,     0x200, 0x204, 14),
++	TEGRA114_MC_RESET(SATA,     0x200, 0x204, 15),
++	TEGRA114_MC_RESET(VDE,      0x200, 0x204, 16),
++	TEGRA114_MC_RESET(VI,       0x200, 0x204, 17),
++};
++
+ const struct tegra_mc_soc tegra114_mc_soc = {
+ 	.clients = tegra114_mc_clients,
+ 	.num_clients = ARRAY_SIZE(tegra114_mc_clients),
+@@ -947,4 +977,7 @@ const struct tegra_mc_soc tegra114_mc_soc = {
+ 	.smmu = &tegra114_smmu_soc,
+ 	.intmask = MC_INT_INVALID_SMMU_PAGE | MC_INT_SECURITY_VIOLATION |
+ 		   MC_INT_DECERR_EMEM,
++	.resets_ops = &terga_mc_resets_ops_common,
++	.resets = tegra114_mc_resets,
++	.num_resets = ARRAY_SIZE(tegra114_mc_resets),
+ };
 -- 
 2.16.1
