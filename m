@@ -1,131 +1,55 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: add support for STM32 USB PHY
- Controller (USBPHYC)
-Date: Tue, 20 Feb 2018 09:40:51 +0000
-Message-ID: <05225cb4-6584-a003-380f-bb9ca5f2da85@st.com>
-References: <1518438929-5254-1-git-send-email-amelie.delaunay@st.com>
- <1518438929-5254-2-git-send-email-amelie.delaunay@st.com>
- <20180219015108.bxt6qn7tz53ydguv@rob-hp-laptop>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 7/9] serial: sh-sci: Fix out-of-bounds access through DT alias
+Date: Tue, 20 Feb 2018 10:40:22 +0100
+Message-ID: <1519119624-1268-8-git-send-email-geert+renesas@glider.be>
+References: <1519119624-1268-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180219015108.bxt6qn7tz53ydguv@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <B75EC419CE37AE4489CF6546838474EA@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519119624-1268-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Vineet Gupta <vgupta@synopsys.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The sci_ports[] array is indexed using a value derived from the
+"serialN" alias in DT, which may lead to an out-of-bounds access.
 
+Fix this by adding a range check.
 
-On 02/19/2018 02:51 AM, Rob Herring wrote:
-> On Mon, Feb 12, 2018 at 01:35:28PM +0100, Amelie Delaunay wrote:
->> This patch adds the device tree bindings description for STM32 USBPHYC
->> (USB PHY Controller).
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
->> ---
->>   .../devicetree/bindings/phy/phy-stm32-usbphyc.txt  | 46 ++++++++++++++++++++++
->>   1 file changed, 46 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
->> new file mode 100644
->> index 0000000..1e65e0a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
->> @@ -0,0 +1,46 @@
->> +STMicroelectronics STM32 USB HS PHY controller
->> +
->> +The STM32 USBPHYC block contains a dual port High Speed UTMI+ PHY and a UTMI
->> +switch. It controls PHY configuration and status, and the UTMI+ switch that
->> +selects either OTG or HOST controller for the second PHY port. It also sets
->> +PLL configuration.
->> +
->> +USBPHYC
->> +  |_ PLL
->> +  |
->> +  |_ PHY port#1 _________________ HOST controller
->> +  |                                      |
->> +  |_ PHY port#2_______                   |
->> +  |                   |_                 |
->> +  |_ UTMI switch_____/ 1|________________|
->> +                    |   |________________
->> +                     \_0|                |
->> +		                  OTG controller
->> +
->> +Required properties:
->> +- compatible: must be "st,stm32mp1-usbphyc"
->> +- reg: address and length of the usb phy control register set
->> +- clocks: phandle + clock specifier for the PLL phy clock
->> +- phy-supply: from the generic phy bindings, phandle to the regulator
->> +  providing 3V3 power to the PHY, see phy-bindings.txt
->> +- vdda1v1-supply: phandle to the regulator providing 1V1 power to the PHY
->> +- vdda1v8-supply: phandle to the regulator providing 1V8 power to the PHY
->> +
->> +Optional properties:
->> +- assigned-clocks: phandle + clock specifier for the PLL phy clock
->> +- assigned-clock-parents: the PLL phy clock parent
->> +- resets: phandle + reset specifier
->> +- st,port2-switch-to-host: select HOST controller on UTMI switch for port#2
-> 
-> This one seems very specific. If another device had the mux on a
-> different port number you'd need a new property for example.
-> 
+Note that the array size is defined by a Kconfig symbol
+(CONFIG_SERIAL_SH_SCI_NR_UARTS), so this can even be triggered using a
+legitimate DTB.
 
-You're right. I will update the scheme with the following:
+Fixes: f650cdf1c115498e ("serial: sh-sci: Fix out-of-bounds access through DT alias")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/tty/serial/sh-sci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-USBPHYC
-      |_ PLL
-      |
-      |_ PHY port#1 _________________ HOST controller
-      |                    _                 |
-      |                  / 1|________________|
-      |_ PHY port#2 ----|   |________________
-      |                  \_0|                |
-      |_ UTMI switch_______|          OTG controller
-
-
-This way would be more generic:
-st,utmi-switch = <0>; //To select the controller connected to UTMI 
-switch #0 output.
-st,utmi-switch = <1>; //To select the controller connected to UTMI 
-switch #1 output.
-
-> But really I think this should be determined by either a USB connector
-> node (a binding is in the works) or cable detection.
->
-
-This needs to be further studied. Could it be an upcoming evolution ?
-
-Thanks for review,
-Amelie
->> +
->> +
->> +Example:
->> +		usbphyc: usbphyc@5a006000 {
-> 
-> usb-phy@...
-> 
->> +			compatible = "st,stm32mp1-usbphyc";
->> +			reg = <0x5a006000 0x1000>;
->> +			clocks = <&rcc_clk USBPHY_K>;
->> +			resets = <&rcc_rst USBPHY_R>;
->> +			st,port2-switch-to-host;
->> +			phy-supply = <&vdd_usb>;
->> +			vdda1v1-supply = <&reg11>;
->> +			vdda1v8-supply = <&reg18>
->> +		};
->> -- 
->> 2.7.4
->>
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 4d14f321cbec95e0..0fb4784860da6188 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -3620,6 +3620,10 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
+ 		dev_err(&pdev->dev, "failed to get alias id (%d)\n", id);
+ 		return NULL;
+ 	}
++	if (id >= SCI_NPORTS) {
++		dev_err(&pdev->dev, "serial%d out of range\n", id);
++		return NULL;
++	}
+ 
+ 	sp = &sci_ports[id];
+ 	*dev_id = id;
+-- 
+2.7.4
