@@ -1,7 +1,7 @@
 From: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-Subject: [PATCH 1/2] ASoC: ak4458: Modify SPDX license format
-Date: Tue, 20 Feb 2018 10:56:07 +0200
-Message-ID: <1519116968-31759-2-git-send-email-cosmin.samoila@nxp.com>
+Subject: [PATCH 2/2] ASoC: ak4458: Sort headers alphabetically
+Date: Tue, 20 Feb 2018 10:56:08 +0200
+Message-ID: <1519116968-31759-3-git-send-email-cosmin.samoila@nxp.com>
 References: <1519116968-31759-1-git-send-email-cosmin.samoila@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,51 +21,41 @@ To: broonie@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
 Cc: shengjiu.wang@nxp.com, linux-kernel@vger.kernel.org, wakasugi.jb@om.asahi-kasei.co.jp, linux-imx@nxp.com, Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>, daniel.baluta@nxp.com, mihai.serban@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Modify SPDX comment style to match the rules. Since the original
-code had a GPL-2.0 license and SPDX is compatible with GPL-2.0+,
-we also modified the MODULE_LICENSE.
+Keep headers sorted alphabetically.
 
 Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
 ---
- sound/soc/codecs/ak4458.c | 13 ++++++-------
- sound/soc/codecs/ak4458.h |  2 +-
- 2 files changed, 7 insertions(+), 8 deletions(-)
+ sound/soc/codecs/ak4458.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
-index d2815ac..8a49dd2 100644
+index 8a49dd2..31ec0ba 100644
 --- a/sound/soc/codecs/ak4458.c
 +++ b/sound/soc/codecs/ak4458.c
-@@ -1,10 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
--/*
-- * Audio driver for AK4458 DAC
-- *
-- * Copyright (C) 2016 Asahi Kasei Microdevices Corporation
-- * Copyright 2018 NXP
-- */
-+//
-+// Audio driver for AK4458 DAC
-+//
-+// Copyright (C) 2016 Asahi Kasei Microdevices Corporation
-+// Copyright 2018 NXP
+@@ -5,19 +5,19 @@
+ // Copyright (C) 2016 Asahi Kasei Microdevices Corporation
+ // Copyright 2018 NXP
  
- #include <linux/module.h>
+-#include <linux/module.h>
  #include <linux/delay.h>
-@@ -655,4 +654,4 @@ module_i2c_driver(ak4458_i2c_driver);
- MODULE_AUTHOR("Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>");
- MODULE_AUTHOR("Mihai Serban <mihai.serban@nxp.com>");
- MODULE_DESCRIPTION("ASoC AK4458 DAC driver");
--MODULE_LICENSE("GPL");
-+MODULE_LICENSE("GPL v2");
-diff --git a/sound/soc/codecs/ak4458.h b/sound/soc/codecs/ak4458.h
-index 16d9d22..f906215 100644
---- a/sound/soc/codecs/ak4458.h
-+++ b/sound/soc/codecs/ak4458.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Audio driver for AK4458
-  *
+-#include <linux/slab.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/i2c.h>
++#include <linux/module.h>
+ #include <linux/of_device.h>
+ #include <linux/of_gpio.h>
+ #include <linux/pm_runtime.h>
+-#include <linux/i2c.h>
++#include <linux/slab.h>
++#include <sound/initval.h>
++#include <sound/pcm_params.h>
+ #include <sound/soc.h>
+ #include <sound/soc-dapm.h>
+-#include <sound/initval.h>
+ #include <sound/tlv.h>
+-#include <sound/pcm_params.h>
+ 
+ #include "ak4458.h"
+ 
 -- 
 2.7.4
