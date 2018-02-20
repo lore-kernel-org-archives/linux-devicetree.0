@@ -1,66 +1,69 @@
-Return-Path: <SRS0=kFSR=FN=gmail.com=joel.stan@kernel.org>
-Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 3/3] misc: aspeed-lpc-ctrl: Enable FWH and A2H bridge cycles
-Date: Mon, 19 Feb 2018 17:54:22 +1030
-Message-Id: <20180219072422.22733-4-joel@jms.id.au>
-In-Reply-To: <20180219072422.22733-1-joel@jms.id.au>
-References: <20180219072422.22733-1-joel@jms.id.au>
-To: Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Cyril Bur <cyrilbur@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Lei YU <mine260309@gmail.com>
+Return-Path: <SRS0=RDbo=FO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-bl2nam02on0053.outbound.protection.outlook.com ([104.47.38.53]:47631
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1750781AbeBTIga (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 20 Feb 2018 03:36:30 -0500
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCH 1/2] doc: fpga: Add reset bridge support
+Date: Tue, 20 Feb 2018 14:12:50 +0530
+Message-ID: <1519116171-7182-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+Sender: devicetree-owner@vger.kernel.org
+To: linux-fpga@vger.kernel.org
+Cc: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, michal.simek@xilinx.com, devicetree@vger.kernel.org, shubhrajyoti.datta@gmail.com, nofooter@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-To date this driver has relied on prevous state from out of tree hacks
-and vendor u-boot trees in order to have the host be able to access
-data over the LPC bus.
+Add reset bridge support. Once this bridge is enabled.
+The reset line(s) will be toggled. Generally it will be
+called after the bitstream load to reset the PL.
 
-Now we explicitly enable the AHB to LPC bridge and FWH cycles from when
-the user first configures the address to map. We chose to do this then
-as before that time there is no way for the kernel to know where it is
-safe to point the LPC window.
-
-Tested-by: Lei YU <mine260309@gmail.com>
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
- drivers/misc/aspeed-lpc-ctrl.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/fpga/xlnx,rst-bridge.txt   | 22 ++++++++++++++++++=
+++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,rst-bridge.=
+txt
 
-diff --git a/drivers/misc/aspeed-lpc-ctrl.c b/drivers/misc/aspeed-lpc-ctrl.c
-index 1827b7aa6674..a024f8042259 100644
---- a/drivers/misc/aspeed-lpc-ctrl.c
-+++ b/drivers/misc/aspeed-lpc-ctrl.c
-@@ -21,6 +21,10 @@
- 
- #define DEVICE_NAME	"aspeed-lpc-ctrl"
- 
-+#define HICR5 0x0
-+#define HICR5_ENL2H	BIT(8)
-+#define HICR5_ENFWH	BIT(10)
+diff --git a/Documentation/devicetree/bindings/fpga/xlnx,rst-bridge.txt b/D=
+ocumentation/devicetree/bindings/fpga/xlnx,rst-bridge.txt
+new file mode 100644
+index 0000000..6f1bfc2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/xlnx,rst-bridge.txt
+@@ -0,0 +1,22 @@
++Xilinx fpga reset bridge
 +
- #define HICR7 0x8
- #define HICR8 0xc
- 
-@@ -155,8 +159,18 @@ static long aspeed_lpc_ctrl_ioctl(struct file *file, unsigned int cmd,
- 		if (rc)
- 			return rc;
- 
--		return regmap_write(lpc_ctrl->regmap, HICR8,
--			(~(map.size - 1)) | ((map.size >> 16) - 1));
-+		rc = regmap_write(lpc_ctrl->regmap, HICR8,
-+				(~(map.size - 1)) | ((map.size >> 16) - 1));
-+		if (rc)
-+			return rc;
++The Xilinx reset bridge toggles the reset line to the PL
++in Zynqmp Ultrascale plus.
 +
-+		/*
-+		 * Enable LPC FHW cycles. This is required for the host to
-+		 * access the regions specified.
-+		 */
-+		return regmap_update_bits(lpc_ctrl->regmap, HICR5,
-+				HICR5_ENFWH | HICR5_ENL2H,
-+				HICR5_ENFWH | HICR5_ENL2H);
- 	}
- 
- 	return -EINVAL;
--- 
-2.15.1
++
++Required properties:
++- compatible   : Should contain "xlnx,rst-bridge"
++- reset                : reset phandles
++
++Optional properties:
++- bridge-enable                : 0 if driver should disable bridge at star=
+tup
++                         1 if driver should enable bridge at startup
++                         Default is to leave bridge in current state.
++
++See Documentation/devicetree/bindings/fpga/fpga-region.txt for generic bin=
+dings.
++
++Example:
++fpga_rst_bridge: fpga_rst_bridge {
++       compatible =3D "xlnx,rst-bridge";
++       resets =3D <&rst 115>;
++};
+--
+2.1.1
+
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
