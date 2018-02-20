@@ -1,62 +1,66 @@
-Return-Path: <SRS0=o2nh=FR=vger.kernel.org=devicetree-compiler-owner@kernel.org>
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC dtc 0/2] Drop unit addresses from overlay fragments
-Date: Fri, 23 Feb 2018 09:35:15 +0100
-Message-Id: <1519374917-30171-1-git-send-email-geert+renesas@glider.be>
-Sender: devicetree-compiler-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>, Jon Loeliger <jdl@jdl.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree-compiler@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=MMX2=FO=googlemail.com=martin.blumenstingl@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20180211211517.5846-1-martin.blumenstingl@googlemail.com>
+References: <20180211211517.5846-1-martin.blumenstingl@googlemail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Tue, 20 Feb 2018 23:39:45 +0100
+Message-ID: <CAFBinCBhOy2J7dgyLg-Oii1iMn0RJyud7ykW=EMBGg+F8X7DpA@mail.gmail.com>
+Subject: Re: [PATCH usb-next v2 0/3] DWC3 support for Amlogic Meson AXG and
+ GXL SoCs
+Content-Type: text/plain; charset="UTF-8"
+To: balbi@kernel.org
+Cc: linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, yixun.lan@amlogic.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-	Hi all,
+Hello Felipe,
 
-Using "fragment@N" as node name for overlay fragments violates unit
-address rules:
+On Sun, Feb 11, 2018 at 10:15 PM, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+> Amlogic Meson AXG and GXL SoCs can use the dwc3-of-simple with little
+> modifications. These SoCs use:
+> - a gate clock for the USB components (DWC3, USB PHYs)
+> - a reset line which is shared across all USB components (DWC3, USB2 and
+>   USB3 PHYs, OTG detection logic inside the USB3 PHY registers)
+> - a reset pulse to trigger the reset
+> - depending on the SoC two or more PHYs (AXG: 1x USB2 and 1x USB3 PHY,
+>   GXL: 2x USB2 and 1x USB3 PHY)
+>
+> This extends the dwc3-of-simple so it supports (depending on the
+> platform) shared and level resets. Additionally it adds new bindings
+> for the Amlogic Meson AXG and GXL SoCs, along with the documentation
+> (dt-bindings).
+>
+> NOTE: for full support on Amlogic Meson GXL SoCs my other series called
+> "initialize (multiple) PHYs for a HCD" (see [0] for v8 of that series)
+> is required. However, there is no direct dependency on that series.
+> Especially since Meson AXG doesn't need it (since it only has one USB2
+> and one USB3 PHY, which is already supported by the current dwc3 driver,
+> unlike the 2x USB2 and 1x USB3 PHYs on Meson GXL).
+> So I believe that this series can still be merged, even if the other
+> patchset is not ready yet.
+>
+>
+> changes since v1 at [1]:
+> - use of_device_is_compatible() instead of struct dwc3_of_simple_params
+>   as requested by Felipe Balbi (affects PATCH #2 and #3)
+> - added Rob's Acked-by to the dt-bindings patch
+> - added Yixun Lan's Tested-by to the whole series as he tested this
+>   successfully (along with other patches) on the Amlogic Meson AXG SoC
+>
+>
+> [0] http://lists.infradead.org/pipermail/linux-amlogic/2018-January/006274.html
+> [1] http://lists.infradead.org/pipermail/linux-amlogic/2018-January/006286.html
+>
+> Martin Blumenstingl (3):
+>   dt-bindings: usb: add support for dwc3 controller on Amlogic Meson GX
+>   usb: dwc3: of-simple: add support for shared and pulsed reset lines
+>   usb: dwc3: of-simple: add support for the Amlogic Meson GXL and AXG
+>     SoCs
+could you please let me know if you spotted any problems, code-style
+issues in v2 or whether you are waiting for feedback from another
+maintainer?
+in case everything is fine: will you take this series through your tree?
 
-    <stdout>: Warning (unit_address_vs_reg): Node /fragment@0 has a unit name, but no reg property
 
-This patch series (for dtc) fixes:
-  1. generation of node names when using overlay sugar syntax,
-  2. all documentation and tests.
-
-If this is accepted, I'll send similar patches for Linux.
-
-Note that I've been using "fragment-N" in hand-written DT overlays for
-years, so this is known to work fine with Linux.
-
-Thanks for your comments!
-
-Geert Uytterhoeven (2):
-  overlay: Do not use @ in overlay fragment generation
-  Use "fragment-N" instead of "fragment@N"
-
- Documentation/dt-object-internal.txt        | 20 +++++++--------
- livetree.c                                  |  2 +-
- tests/overlay_bad_fixup_bad_index.dts       |  2 +-
- tests/overlay_bad_fixup_base.dtsi           |  2 +-
- tests/overlay_bad_fixup_empty_index.dts     |  2 +-
- tests/overlay_bad_fixup_index_trailing.dts  |  2 +-
- tests/overlay_bad_fixup_path_empty_prop.dts |  2 +-
- tests/overlay_bad_fixup_path_only.dts       |  2 +-
- tests/overlay_bad_fixup_path_only_sep.dts   |  2 +-
- tests/overlay_bad_fixup_path_prop.dts       |  2 +-
- tests/overlay_overlay.dts                   | 16 ++++++------
- tests/overlay_overlay_manual_fixups.dts     | 38 ++++++++++++++---------------
- tests/overlay_overlay_no_fixups.dts         | 16 ++++++------
- tests/stacked_overlay_bar.dts               |  2 +-
- tests/stacked_overlay_baz.dts               |  2 +-
- 15 files changed, 56 insertions(+), 56 deletions(-)
-
--- 
-2.7.4
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Regards
+Martin
