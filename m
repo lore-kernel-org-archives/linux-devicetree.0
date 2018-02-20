@@ -1,166 +1,78 @@
-Return-Path: <robherring2@gmail.com>
-Date: Mon, 19 Feb 2018 09:58:22 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 02/10] dt-bindings: introduce RPMH RSC bindings for
- Qualcomm SoCs
-Message-ID: <20180219155822.4js35b53vu3wwt52@rob-hp-laptop>
-References: <20180215173507.10989-1-ilina@codeaurora.org>
- <20180215173507.10989-3-ilina@codeaurora.org>
+Return-Path: <SRS0=vcW4=FO=huawei.com=john.garry@kernel.org>
+Subject: Re: [PATCH v14 1/9] LIB: Introduce a generic PIO mapping method
+References: <1519062520-198902-1-git-send-email-john.garry@huawei.com>
+ <1519062520-198902-2-git-send-email-john.garry@huawei.com>
+ <CAHp75Vf102MDDZ8d9kXw2K0+0_WkhFMSq7o=Vz=KrzOM=NRW5A@mail.gmail.com>
+From: John Garry <john.garry@huawei.com>
+Message-ID: <7197ce31-c4c2-d00e-be04-1edc14c3e721@huawei.com>
+Date: Tue, 20 Feb 2018 15:06:51 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180215173507.10989-3-ilina@codeaurora.org>
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <CAHp75Vf102MDDZ8d9kXw2K0+0_WkhFMSq7o=Vz=KrzOM=NRW5A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Rafael J. Wysocki  <rjw@rjwysocki.net>, Hanjun Guo <hanjun.guo@linaro.org>,  Rob Herring  <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,  Arnd Bergmann  <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson" <olof@lixom.net>, Dann Frazier <dann.frazier@canonical.com>, Rob Herring <robh@kernel.org>, Joe Perches <joe@perches.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-pci@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, Corey Minyard <minyard@acm.org>, devicetree <devicetree@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Feb 15, 2018 at 10:34:59AM -0700, Lina Iyer wrote:
-> Add device binding documentation for Qualcomm Technology Inc's RPMH RSC
-> driver. The hardware block is used for communicating resource state
-> requests for shared resources.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
+On 20/02/2018 14:33, Andy Shevchenko wrote:
+> On Mon, Feb 19, 2018 at 7:48 PM, John Garry <john.garry@huawei.com> wrote:
+>> From: Zhichang Yuan <yuanzhichang@hisilicon.com>
+>>
+>> In commit 41f8bba7f555 ("of/pci: Add pci_register_io_range() and
+>> pci_pio_to_address()"), a new I/O space management was supported. With
+>> that driver, the I/O ranges configured for PCI/PCIe hosts on some
+>> architectures can be mapped to logical PIO, converted easily between
+>> CPU address and the corresponding logicial PIO. Based on this, PCI
+>> I/O devices can be accessed in a memory read/write way through the
+>> unified in/out accessors.
+>>
+>> But on some archs/platforms, there are bus hosts which access I/O
+>> peripherals with host-local I/O port addresses rather than memory
+>> addresses after memory-mapped.
+>>
+>> To support those devices, a more generic I/O mapping method is introduced
+>> here. Through this patch, both the CPU addresses and the host-local port
+>> can be mapped into the logical PIO space with different logical/fake PIOs.
+>> After this, all the I/O accesses to either PCI MMIO devices or host-local
+>> I/O peripherals can be unified into the existing I/O accessors defined in
+>> asm-generic/io.h and be redirected to the right device-specific hooks
+>> based on the input logical PIO.
+>
 
-Changes in v2?
+Hi Andy,
 
->  .../devicetree/bindings/arm/msm/rpmh-rsc.txt       | 146 +++++++++++++++++++++
->  1 file changed, 146 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt b/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
-> new file mode 100644
-> index 000000000000..6cb36ae98bf9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/msm/rpmh-rsc.txt
-> @@ -0,0 +1,146 @@
-> +RPMH RSC:
-> +------------
-> +
-> +RPMH is the mechanism for communicating with the hardened resource
-> +accelerators. Requests to the resources can be written to the TCS mailbox
-> +registers and using a (addr, val) pair and triggered. Messages in the TCS are
-> +then sent in sequence over an internal bus.
-> +
-> +The hardware block (Direct Resource Voter or DRV) is a part of the h/w entity
-> +(Resource State Coordinator a.k.a RSC) that can handle a multiple sleep and
-> +active/wake resource requests. Multiple such DRVs can exist in a SoC and can
-> +be written to from Linux. The structure of each DRV follows the same template
-> +with a few variations that are captured by the properties here.
-> +
-> +Each DRV could have 'm' TCS instances. Each TCS could have 'n' slots. Each
-> +slot has a header (u32), address (u32), data (u32), status (u32) and a
-> +read-response (u32). A TCS when triggered will send all the enabled commands
-> +of the 'n' commands in that slot in sequence.
-> +
-> +A TCS may be triggered from Linux or triggered by the F/W after all the CPUs
-> +have powered off to facilitate idle power saving. TCS could be classified as -
-> +
-> +	SLEEP,  /* Triggered by F/W */
-> +	WAKE,   /* Triggered by F/W */
-> +	ACTIVE, /* Triggered by Linux */
-> +	CONTROL /* Triggered by F/W */
-> +
-> +The order in which they are described in the DT, should match the hardware
-> +configuration.
-> +
-> +Requests can be made for the state of a resource, when the subsystem is active
-> +or idle. When all subsystems like Modem, GPU, CPU are idle, the resource state
-> +will be an aggregate of the sleep votes from each of those subsystem. Drivers
-> +may request a sleep value for their shared resources in addition to the active
-> +mode requests.
-> +
-> +Control requests are instance specific requests that may or may not reach an
-> +accelerator. Only one platform device in Linux can request a control channel
-> +on a DRV.
-> +
-> +CONTROLLER:
-> +----------
-> +
-> +PROPERTIES:
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Should be "qcom,rpmh-rsc".
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: The first register specifies the base address of the DRV.
-> +	            The second register specifies the start address of the
-> +	            TCS.
-> +
-> +- reg-names:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Maps the register specified in the reg property. Must be
-> +	            "drv" and "tcs".
-> +
-> +- interrupts:
-> +	Usage: required
-> +	Value type: <prop-encoded-interrupt>
-> +	Definition: The interrupt that trips when a message complete/response
-> +	           is received for this DRV from the accelerators.
-> +
-> +- qcom,drv-id:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: the id of the DRV in the RSC block.
-> +
-> +- qcom,tcs-config:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: the tuple defining the configuration of TCS.
-> +	            Must have 2 cells which describe each TCS type.
-> +	            <type number_of_tcs>.
-> +	            The order of the TCS must match the hardware
-> +	            configuration.
-> +	- Cell #1 (TCS Type): TCS types to be specified -
-> +		SLEEP_TCS
-> +		WAKE_TCS
-> +		ACTIVE_TCS
-> +		CONTROL_TCS
-> +	- Cell #2 (Number of TCS): <u32>
-> +
-> +- label:
-> +	Usage: optional
-> +	Value type: <string>
-> +	Definition: Name for the RSC. The name would be used in trace logs.
-> +
-> +Platform drivers that want to use the RSC to communicate with RPMH must
+>> +#define PIO_INDIRECT           0x01UL /* indirect IO flag */
+>> +#define PIO_CPU_MMIO           0x00UL /* memory mapped io flag */
+>
+> It looks like bitfield, but from use I don't see it.
+>
 
-Platform driver is a linux term. DT is not a platform driver 
-instantiation language.
+IIRC, the orignal intention was that this would be a bit value in a 
+bitfield.
 
-> +specify their bindings as child of the corresponding RSC controllers.
-> +
-> +EXAMPLE 1:
-> +
-> +For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
-> +register offsets for DRV2 start at 0D00, the register calculations are like
-> +this -
-> +First tuple: 0x179C0000 + 0x10000 * 2 = 0x179E0000
-> +Second tuple: 0x179E0000 + 0xD00 = 0x179E0D00
-> +
-> +	apps_rsc: rsc@179e000 {
-> +		label = "apps_rsc";
-> +		compatible = "qcom,rpmh-rsc";
-> +		reg = <0x179e0000 0x10000>, <0x179e0d00 0x3000>;
-> +		reg-names = "drv", "tcs";
-> +		interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>
-> +		qcom,drv-id = <2>;
-> +		qcom,tcs-config = <SLEEP_TCS   3>,
-> +				  <WAKE_TCS    3>,
-> +				  <ACTIVE_TCS  2>,
-> +				  <CONTROL_TCS 1>;
-> +
-> +		foo-clk {
-> +			compatible = "foo-clk";
+> Perhaps use enum instead?
 
-What is this? Child nodes need to be documented too.
+I'll change to enum to be clear.
 
-> +		};
-> +	};
-> +
+>> +       resource_size_t hwaddr = -1;
+>
+>> +unsigned long
+>> +               return -1;
+>> +               return -1;
+>
+>> +unsigned long
+>> +       return -1;
+>
+>> +type logic_in##bw(unsigned long addr)                                  \
+>> +       type ret = -1;                                                  \
+>
+> All types above are unsigned. I'm not sure it's the best approach to
+> use -1 implicitly casted to unsigned type.
+>
+> I would rather use ~0UL or alike.
+>
+
+Yes, I can change these.
+
+Much appreciated,
+John
