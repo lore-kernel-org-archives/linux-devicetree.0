@@ -1,14 +1,13 @@
-From: Timur Tabi <timur@codeaurora.org>
-Subject: Re: [PATCH v2 0/3] Support qcom pinctrl protected pins
-Date: Tue, 20 Feb 2018 10:45:03 -0600
-Message-ID: <94a7bd07-8ad5-7ab1-20ab-a02fe2476efd@codeaurora.org>
-References: <20180126011400.2191-1-sboyd@codeaurora.org>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH 1/8] ARM: dts: artpec: disable Accelerator Coherency Port
+Date: Tue, 20 Feb 2018 18:00:42 +0100
+Message-ID: <20180220170049.22809-2-niklas.cassel@axis.com>
+References: <20180220170049.22809-1-niklas.cassel@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180126011400.2191-1-sboyd@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20180220170049.22809-1-niklas.cassel@axis.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,28 +17,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-arm-kernel@lists.infradead.org
+To: arm@kernel.org, Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>, Niklas Cassel <niklass@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/2018 07:13 PM, Stephen Boyd wrote:
-> This patchset proposes a solution to describing the valid
-> pins for a pin controller in a semi-generic way so that qcom
-> platforms can expose the pins that are really available.
-> 
-> Typically, this has been done by having drivers and firmware
-> descriptions only use pins they know they have access to, and that
-> still works now because we no longer read the pin direction at
-> boot. But there are still some userspace drivers and debugfs facilities
-> that don't know what pins are available and attempt to read everything
-> they can. On qcom platforms, this may lead to a system hang, which isn't
-> very nice behavior, even if root is the only user that can trigger it.
+Accesses via 0x80000000 go through the ACP instead of using the DDR
+directly.
 
-Any progress on this patch set?  Stephen no longer works for Qualcomm, 
-so I don't know what the next step is, and I really want this feature in 
-4.17 (we've missed so many merge windows already).
+Unfortunately the ACP has proven to be the cause of complete system
+hangs. Disabling the ACP makes these problems go away.
 
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+---
+ arch/arm/boot/dts/artpec6.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
+index 2ed11773048d..d9776a97d8ff 100644
+--- a/arch/arm/boot/dts/artpec6.dtsi
++++ b/arch/arm/boot/dts/artpec6.dtsi
+@@ -185,8 +185,7 @@
+ 		#address-cells = <0x1>;
+ 		#size-cells = <0x1>;
+ 		ranges;
+-		dma-ranges = <0x80000000 0x00000000 0x40000000>;
+-		dma-coherent;
++		dma-ranges;
+ 
+ 		ethernet: ethernet@f8010000 {
+ 			clock-names = "phy_ref_clk", "apb_pclk";
 -- 
-Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm
-Technologies, Inc.  Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.14.2
