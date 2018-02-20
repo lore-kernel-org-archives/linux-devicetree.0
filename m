@@ -1,16 +1,16 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH 2/2] i2c: add support for Socionext SynQuacer I2C
- controller
-Date: Tue, 20 Feb 2018 18:04:32 +0000
-Message-ID: <CAKv+Gu8A1YKr5t0B=Fe2sF6+QT9iCVeRW+99K37g22viEoismA@mail.gmail.com>
-References: <20180220090827.913-1-ard.biesheuvel@linaro.org>
- <20180220090827.913-3-ard.biesheuvel@linaro.org>
- <CAHp75VeUJpXLpL55erp+uoMH4jqppoG5zTt1DcffqNYPsJMdUQ@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v3 6/7] arm: dts: sun8i: a83t: Fix undefined offset with
+ virtual timer
+Date: Tue, 20 Feb 2018 18:07:54 +0000
+Message-ID: <823f256a-3240-7bb4-cc0b-711108f3076c@arm.com>
+References: <20180219081837.15482-1-mylene.josserand@bootlin.com>
+ <20180219081837.15482-7-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAHp75VeUJpXLpL55erp+uoMH4jqppoG5zTt1DcffqNYPsJMdUQ@mail.gmail.com>
+In-Reply-To: <20180219081837.15482-7-mylene.josserand@bootlin.com>
+Content-Language: en-GB
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,283 +20,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Jassi Brar <jassisinghbrar@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+To: =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@bootlin.com>, maxime.ripard@bootlin.com, wens@csie.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20 February 2018 at 14:02, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Tue, Feb 20, 2018 at 11:08 AM, Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
->> This is a cleaned up version of the I2C controller driver for
->> the Fujitsu F_I2C IP, which was never supported upstream, and
->> has now been incorporated into the Socionext SynQuacer SoC.
->>
->
-> Typical issues below.
->
->> +/* SPDX-License-Identifier: GPL-2.0 */
->
-> Shouldn't be // ?
->
-
-IIUC, this applies to .h files only, and /* */ is preferred for .c files.
-
->> +#include <linux/init.h>
->
->> +#include <linux/module.h>
->
-> Supposed to be one of them, not both.
->
-
-Ok.
-
->> +#define WAIT_PCLK(n, rate)     ndelay((((1000000000 +  (rate) - 1) / \
->> +                                        (rate) + n - 1) / n) + 10)
->
-> This split makes it harder to catch the calculus.
-> Also, you can use DIV_ROUND_UP(), though it longer, but adds a bit of
-> clarity to the calculus.
->
-
-Yeah. This was present in the original code, and I tried to avoid
-touching it :-)
-
->> +#define SYNQUACER_I2C_TIMEOUT(x) (msecs_to_jiffies(x))
->
-> Isn't shorter to use original function in place?
->
-
-Indeed. Will change.
-
->> +static inline unsigned long calc_timeout_ms(struct synquacer_i2c *i2c,
->> +                                           struct i2c_msg *msgs,
->> +                                           int num)
->> +{
->> +       unsigned long bit_count = 0;
->> +       int i;
->> +
->> +       for (i = 0; i < num; i++, msgs++)
->> +               bit_count += msgs->len;
->> +
->> +       return DIV_ROUND_UP(((bit_count * 9) + (10 * num)) * 3, 200) + 10;
->
-> Redundant parens surrounding multiplications.
->
-> bit_count * 9 + num * 10 ?
->
-
-OK
-
->> +}
->
->> +static void synquacer_i2c_stop(struct synquacer_i2c *i2c, int ret)
->> +{
->> +       dev_dbg(i2c->dev, "STOP\n");
->
-> Hmm... Can't use FTRACE ?
->
-
-What do you mean?
-
->> +
->> +       /*
->> +        * clear IRQ (INT=0, BER=0)
->> +        * set Stop Condition (MSS=0)
->> +        * Interrupt Disable
->> +        */
->> +       writeb(0, i2c->base + SYNQUACER_I2C_REG_BCR);
->> +
->> +       i2c->state = STATE_IDLE;
->> +
->> +       i2c->msg_ptr = 0;
->> +       i2c->msg = NULL;
->> +       i2c->msg_idx++;
->> +       i2c->msg_num = 0;
->> +       if (ret)
->> +               i2c->msg_idx = ret;
->> +
->> +       complete(&i2c->completion);
->> +}
->
->> +       default:
->> +               BUG();
->
-> Oh, oh. What is the strong argument to have this kind of crash here?
->
-
-None. Will fix.
-
->> +static int synquacer_i2c_master_start(struct synquacer_i2c *i2c,
->> +                                     struct i2c_msg *pmsg)
->> +{
->> +       unsigned char bsr, bcr;
->
->> +       dev_dbg(i2c->dev, "%s slave:0x%02x\n", __func__, pmsg->addr);
->
-> __func__ is redundant (See dynamic debug manual how to enable run-time).
->
-
-OK. Will remove.
-
->> +       /* Force to make one clock pulse */
->
->> +       count = 0;
->> +       for (;;) {
->
->> +               if (++count > 9) {
->> +                       dev_err(i2c->dev, "%s: count: %i, bc2r: 0x%x\n",
->> +                               __func__, count, bc2r);
->> +                       return -EIO;
->> +               }
->> +       }
->
-> Personally I think for iterations do {} while approach looks cleaner
-> and more understandable:
->
-> unsigned int count = 10;
->
-> do {
-> ...
-> } while (--count);
->
-
-I'll clean that up, it does look a bit awkward.
-
->> +static int synquacer_i2c_doxfer(struct synquacer_i2c *i2c,
->> +                               struct i2c_msg *msgs, int num)
->> +{
->> +       unsigned char bsr;
->> +       unsigned long timeout, bb_timeout;
->
->> +       int ret = 0;
->
-> Redundant assignment.
->
-
-Will fix
-
->> +       ret = synquacer_i2c_master_start(i2c, i2c->msg);
->> +       if (ret < 0) {
->> +               dev_dbg(i2c->dev, "Address failed: (0x%08x)\n", ret);
->
-> ret as a hex?!?!
-> So confusing.
->
-> A side note, %#08x will print 0x.
->
-
-Yeah that should be %d
-
->> +out:
->> +       return ret;
->
-> Useless label since there is nothing except returning an error code.
->
-
-Will remove
-
->> +static int synquacer_i2c_probe(struct platform_device *pdev)
->> +{
->> +       struct synquacer_i2c *i2c;
->> +       struct resource *r;
->> +       int speed_khz;
->> +       int ret;
->
->> +       if (dev_of_node(&pdev->dev)) {
->> +               i2c->clk = devm_clk_get(&pdev->dev, "pclk");
->> +               if (IS_ERR(i2c->clk)) {
->> +                       dev_err(&pdev->dev, "cannot get clock\n");
->> +                       return PTR_ERR(i2c->clk);
->> +               }
->> +               dev_dbg(&pdev->dev, "clock source %p\n", i2c->clk);
->> +
->> +               i2c->clkrate = clk_get_rate(i2c->clk);
->> +               dev_dbg(&pdev->dev, "clock rate %d\n", i2c->clkrate);
->> +               clk_prepare_enable(i2c->clk);
->> +       } else {
->
->> +               ret = device_property_read_u32(&pdev->dev,
->> +                                              "socionext,pclk-rate",
->> +                                              &i2c->clkrate);
->
-> I suppose for ACPI we just register a fixed rate clock and use it in
-> the driver in the same way as in OF case.
-> I guess at some point we even can provide a generic clock provider for
-> ACPI based on rate property.
->
-
-Is there a question here? Do you want me to change anything?
-
->> +               if (ret)
->> +                       return ret;
->> +       }
->
->> +       i2c->state = STATE_IDLE;
->> +       i2c->dev = &pdev->dev;
->
->> +       i2c->msg = NULL;
->
-> Isn't it done by z letter in allocation?
->
-
-Yes it is
-
->
->> +#ifdef CONFIG_PM_SLEEP
->
-> __maybe_unused instead of ugly #ifdef:s.
->
-
-OK
-
->> +static int synquacer_i2c_suspend(struct device *dev)
->
->> +static int synquacer_i2c_resume(struct device *dev)
->
->> +#else
->> +#define SYNQUACER_I2C_PM       NULL
->> +#endif
->
->> +#ifdef CONFIG_OF
->
-> OK, this is fine since we have an ACPI ID for it.
->
->> +static const struct of_device_id synquacer_i2c_dt_ids[] = {
->> +       { .compatible = "socionext,synquacer-i2c" },
->> +       { /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, synquacer_i2c_dt_ids);
->> +#endif
->> +
->> +#ifdef CONFIG_ACPI
->> +static const struct acpi_device_id synquacer_i2c_acpi_ids[] = {
->> +       { "SCX0003" },
->> +       { /* sentinel */ }
->> +};
->> +#endif
->
->> +static struct platform_driver synquacer_i2c_driver = {
->> +       .probe  = synquacer_i2c_probe,
->> +       .remove = synquacer_i2c_remove,
->> +       .driver = {
->
->> +               .owner = THIS_MODULE,
->
-> Macro below will fill this for you.
->
-
-OK
-
->> +               .name = "synquacer_i2c",
->> +               .of_match_table = of_match_ptr(synquacer_i2c_dt_ids),
->> +               .acpi_match_table = ACPI_PTR(synquacer_i2c_acpi_ids),
->> +               .pm = SYNQUACER_I2C_PM,
->> +       },
->> +};
->> +module_platform_driver(synquacer_i2c_driver);
->
-> --
-> With Best Regards,
-> Andy Shevchenko
-
-Thanks for the review.
+SGkgTXlsw6huZSwKCk9uIDE5LzAyLzE4IDA4OjE4LCBNeWzDqG5lIEpvc3NlcmFuZCB3cm90ZToK
+PiBUaGUgQVJNIGFyY2hpdGVjdGVkIHRpbWVycyB1c2UgYW4gb2Zmc2V0IGJldHdlZW4gdGhlaXIg
+cGh5c2ljYWwgYW5kCj4gdmlydHVhbCBjb3VudGVycy4gVGhhdCBvZmZzZXQgc2hvdWxkIGJlIGNv
+bmZpZ3VyZWQgYnkgdGhlIGJvb3Rsb2FkZXIKPiBpbiBDTlRWT0ZGLgo+IAo+IEhvd2V2ZXIsIHRo
+ZSBBODN0IGJvb3Rsb2FkZXIgZmFpbHMgdG8gZG8gc28sIGFuZCB3ZSBlbmQgdXAgd2l0aCBhbgo+
+IHVuZGVmaW5lZCBvZmZzZXQgKHdoaWNoIGluIG91ciBjYXNlIGlzIHJhbmRvbSksIG1lYW5pbmcg
+dGhhdCBlYWNoIENQVQo+IHdpbGwgaGF2ZSBhIGRpZmZlcmVudCB0aW1lLCB3aGljaCBpc24ndCB3
+b3JraW5nIHZlcnkgd2VsbC4KPiAKPiBGaXggdGhhdCBieSBzZXR0aW5nIHRoZSBhcm0sY3B1LXJl
+Z2lzdGVycy1ub3QtZnctY29uZmlndXJlZCB0aGF0IHdpbGwKPiBtYWtlIExpbnV4IHVzZSB0aGUg
+cGh5c2ljYWwgdGltZXJzIGluc3RlYWQgb2YgdGhlIHZpcnR1YWwgb25lcy4gT25lCj4gcG9zc2li
+bGUgc2lkZSBlZmZlY3Qgd291bGQgYmUgdGhhdCB0aGUgdmlydHVhbGl6YXRpb24gZmVhdHVyZXMg
+d291bGQKPiBiZSBkaXNhYmxlZC4gSG93ZXZlciwgZHVlIHRvIHRoZSB3YXkgdGhlIEdJQyBoYXMg
+YmVlbiBpbnRlZ3JhdGVkIGluCj4gdGhlIHN5c3RlbSwgaXQgaXMgYWxyZWFkeSB1bnVzYWJsZSBz
+byB3ZSdyZSBlZmZlY3RpdmVseSBub3QgbG9zaW5nIGFueQo+IGZlYXR1cmUuCj4gCj4gU2lnbmVk
+LW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRAYm9vdGxpbi5jb20+
+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaSB8IDEgKwo+ICAxIGZp
+bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
+dC9kdHMvc3VuOGktYTgzdC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNp
+Cj4gaW5kZXggZTk3YTZkMTdiOGQwLi5iOWJkYjg5MWNmMmYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3Vu
+OGktYTgzdC5kdHNpCj4gQEAgLTEyMyw2ICsxMjMsNyBAQAo+ICAJCQkgICAgIDxHSUNfUFBJIDE0
+IChHSUNfQ1BVX01BU0tfU0lNUExFKDgpIHwgSVJRX1RZUEVfTEVWRUxfTE9XKT4sCj4gIAkJCSAg
+ICAgPEdJQ19QUEkgMTEgKEdJQ19DUFVfTUFTS19TSU1QTEUoOCkgfCBJUlFfVFlQRV9MRVZFTF9M
+T1cpPiwKPiAgCQkJICAgICA8R0lDX1BQSSAxMCAoR0lDX0NQVV9NQVNLX1NJTVBMRSg4KSB8IElS
+UV9UWVBFX0xFVkVMX0xPVyk+Owo+ICsJCWFybSxjcHUtcmVnaXN0ZXJzLW5vdC1mdy1jb25maWd1
+cmVkOwo+ICAJfTsKPiAgCj4gIAljbG9ja3Mgewo+IAoKSXMgdGhlIGZpcm13YXJlIGRyb3BwaW5n
+IHlvdSBpbiB0aGUga2VybmVsIGluIHNlY3VyZSBvciBub24tc2VjdXJlIG1vZGU/CgpJZiB0aGUg
+bGF0ZXIsIHdoYXQgeW91IGhhdmUgaXMgdGhlIG9ubHkgc29sdXRpb24uIElmIHRoZSBmb3JtZXIs
+IHRoYXQKSSdkIHN1Z2dlc3QgeW91IGFkb3B0IHdoYXQgd2UgYWxyZWFkeSBoYXZlIGZvciB0aGUg
+UmVuZXNhcyBzdHVmZiAoc2VlCmFyY2gvYXJtL21hY2gtc2htb2JpbGUvaGVhZHNtcC1hcG11LlMg
+YW5kIGNvbW1pdCAzZmQ0NWExMzZmZjYpLgoKSXQgd291bGQgYWxsb3cgeW91IHRvIHVzZSB0aGUg
+dmlydHVhbCB0aW1lciBhcyBpbnRlbmRlZC4KClRoYW5rcywKCglNLgotLSAKSmF6eiBpcyBub3Qg
+ZGVhZC4gSXQganVzdCBzbWVsbHMgZnVubnkuLi4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
