@@ -1,17 +1,16 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/5] dt-bindings: gpio: add raspberry pi GPIO expander
- binding
-Date: Tue, 20 Feb 2018 07:39:58 -0600
-Message-ID: <CAL_JsqLdyH+hzv=aRn_szQ6=h3aB1dP9swG-+Q73nZDH3mPF3w@mail.gmail.com>
-References: <cover.1517923836.git.baruch@tkos.co.il>
- <214ff3856c430b8045b63b25d83733b77054dfab.1517923836.git.baruch@tkos.co.il>
- <20180213232007.ieme6rjxgc7vidbw@rob-hp-laptop>
- <20180220073427.vaxp5wkygs6pwaxi@tarshish>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 11/15] gpio: rcar: Add R-Car M3-N compatible string
+Date: Tue, 20 Feb 2018 14:40:50 +0100
+Message-ID: <CAMuHMdWRLdXAUCRo_i14zt+aX=UM9_DJNbJgAwbF=q8+=8vkOQ@mail.gmail.com>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1518515162-23663-12-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdXW-7+6_iSPk3oUo-fWsMxqvSawuy2QZ3VTYhoeN8kB4w@mail.gmail.com>
+ <20180220133532.GE7203@w540>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180220073427.vaxp5wkygs6pwaxi@tarshish>
+In-Reply-To: <20180220133532.GE7203@w540>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,76 +20,52 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Eric Anholt <eric@anholt.net>, Michael Zoran <mzoran@crowfest.net>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, Dave Stevenson <dave.stevenson@raspberrypi.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 20, 2018 at 1:34 AM, Baruch Siach <baruch@tkos.co.il> wrote:
-> Hi Rob,
->
-> Thanks again for reviewing.
->
-> On Tue, Feb 13, 2018 at 05:20:07PM -0600, Rob Herring wrote:
->> On Wed, Feb 07, 2018 at 08:35:23PM +0200, Baruch Siach wrote:
->> > +Raspberry Pi GPIO expander
->> > +
->> > +The Raspberry Pi 3 GPIO expander is controlled by the VC4 firmware. The
->> > +firmware exposes a mailbox interface that allows the ARM core to control the
->> > +GPIO lines on the expander.
->> > +
->> > +Required properties:
->> > +
->> > +- compatible : Should be "raspberrypi,firmware-gpio"
->> > +- gpio-controller : Marks the device node as a gpio controller
->> > +- #gpio-cells : Should be two.  The first cell is the pin number, and
->> > +  the second cell is used to specify the gpio polarity:
->> > +  0 = active high
->> > +  1 = active low
->> > +- firmware : Reference to the RPi firmware device node
->>
->> This is the parent node. You don't need it.
->
-> OK. I guess of_get_parent() will do the trick.
->
->> > +Example:
->> > +
->> > +firmware: firmware {
->> > +   compatible = "raspberrypi,bcm2835-firmware";
->> > +   mboxes = <&mailbox>;
->>
->> No, sorry. /firmware is the container of firmware nodes. So
->> something like this:
->>
->> firmware {
->>       rpi-firmware {
->>               compatible = "raspberrypi,bcm2835-firmware";
->>               mboxes = <&mailbox>;
->>               gpio {
->>                compatible = "raspberrypi,firmware-gpio";
->>
->>               };
->>       };
->> };
->
-> This is the hierarchy we currently have at arch/arm/boot/dts/bcm2835-rpi.dtsi:
->
-> / {
->         soc {
->                 firmware: firmware {
->                         compatible = "raspberrypi,bcm2835-firmware";
->                         mboxes = <&mailbox>;
->                 };
->         };
-> };
->
-> Are you suggesting to add another container between 'soc' and 'firmware'? Or
-> is it the 'firmware' node name that we need to change to 'rpi-firmware'?
+Hi Jacopo,
 
-Ah, I guess RPi missed following putting its firmware node under a
-/firmware node rather than under /soc. We try to put all firmware
-interfaces (you can have more than one) under /firmware. So just as I
-wrote out. But you don't need to change that for this.
+On Tue, Feb 20, 2018 at 2:35 PM, jacopo mondi <jacopo@jmondi.org> wrote:
+> On Wed, Feb 14, 2018 at 03:05:05PM +0100, Geert Uytterhoeven wrote:
+>> On Tue, Feb 13, 2018 at 10:45 AM, Jacopo Mondi
+>> <jacopo+renesas@jmondi.org> wrote:
+>> > Add compatible string for R-Car M3-N (r8a77965) in gpio-rcar.
+>> >
+>> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>
+>> > --- a/drivers/gpio/gpio-rcar.c
+>> > +++ b/drivers/gpio/gpio-rcar.c
+>> > @@ -360,6 +360,10 @@ static const struct of_device_id gpio_rcar_of_table[] = {
+>> >                 /* Gen3 GPIO is identical to Gen2. */
+>> >                 .data = &gpio_rcar_info_gen2,
+>> >         }, {
+>> > +               .compatible = "renesas,gpio-r8a77965",
+>> > +               /* Gen3 GPIO is identical to Gen2. */
+>> > +               .data = &gpio_rcar_info_gen2,
+>> > +       }, {
+>>
+>> This part is not needed, as the driver already matches agains the generic
+>> "renesas,rcar-gen3-gpio".
+>
+> Just to point out that the compatible string is there for M3-W and H3.
+> Anyway, if that's not good practice to add per-SoC strings here, I'll
+> drop this bit.
 
-Just noting this is a child of "raspberrypi,bcm2835-firmware" is enough.
+That's correct. Initially, we added the H3 string first, and the M3-W later.
+After that we learned about new future Gen3 members, and we started using
+the family-specific one.
 
-Rob
+Note that we cannot drop the strings for H3 and M3-W from the driver, as
+old DTBs do not have the family-specific strings.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
