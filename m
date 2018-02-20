@@ -1,41 +1,35 @@
-Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from foss.arm.com ([217.140.101.70]:60202 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752901AbeBSOvq (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 19 Feb 2018 09:51:46 -0500
-From: Gilad Ben-Yossef <gilad@benyossef.com>
-Subject: [PATCH 2/4] dt-bindings: Add DT bindings for ccree 710 and 630p
-Date: Mon, 19 Feb 2018 14:51:22 +0000
-Message-Id: <1519051887-4668-3-git-send-email-gilad@benyossef.com>
-In-Reply-To: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
-References: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=J+uo=FO=intel.com=fengguang.wu@kernel.org>
+Date: Tue, 20 Feb 2018 13:22:23 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: [RFC PATCH] media: i2c: ov772x: ov772x_frame_intervals[] can be
+ static
+Message-ID: <20180220052223.GA27152@lkp-sb04>
+References: <1519059584-30844-8-git-send-email-jacopo+renesas@jmondi.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1519059584-30844-8-git-send-email-jacopo+renesas@jmondi.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: kbuild-all@01.org, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings for Arm CryptoCell 710 and 630p hardware
-revisions.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Fixes: 42b7d5be5f1f ("media: i2c: ov772x: Support frame interval handling")
+Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
 ---
- Documentation/devicetree/bindings/crypto/arm-cryptocell.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ ov772x.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-index cec8d5d..c2598ab 100644
---- a/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-+++ b/Documentation/devicetree/bindings/crypto/arm-cryptocell.txt
-@@ -1,7 +1,8 @@
- Arm TrustZone CryptoCell cryptographic engine
+diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+index eba71d97..0d8ce2a 100644
+--- a/drivers/media/i2c/ov772x.c
++++ b/drivers/media/i2c/ov772x.c
+@@ -532,7 +532,7 @@ static const struct ov772x_win_size ov772x_win_sizes[] = {
+ /*
+  * frame rate settings lists
+  */
+-unsigned int ov772x_frame_intervals[] = { 5, 10, 15, 20, 30, 60 };
++static unsigned int ov772x_frame_intervals[] = { 5, 10, 15, 20, 30, 60 };
+ #define OV772X_N_FRAME_INTERVALS ARRAY_SIZE(ov772x_frame_intervals)
  
- Required properties:
--- compatible: Should be "arm,cryptocell-712-ree".
-+- compatible: Should be one of: "arm,cryptocell-712-ree",
-+  "arm,cryptocell-710-ree" or "arm,cryptocell-630p-ree".
- - reg: Base physical address of the engine and length of memory mapped region.
- - interrupts: Interrupt number for the device.
- 
--- 
-2.7.4
-
+ /*
