@@ -1,194 +1,71 @@
-Return-Path: <SRS0=KmYq=FF=mediatek.com=argus.lin@kernel.org>
-From: =?utf-8?B?QXJndXMgTGluICjmnpfmm7jmhbYp?= <argus.lin@mediatek.com>
-Subject: RE: [PATCH v2 1/5] dt-bindings: pwrap: mediatek: add pwrap support
- for MT6797
-Date: Sun, 11 Feb 2018 08:52:51 +0000
-Message-ID: <90ac394e93b248fda7c51e3c3c76fd54@mtkmbs03n2.mediatek.inc>
-References: <20180129090944.28687-1-argus.lin@mediatek.com>
- <ffcadc29-c6f2-eb8c-b662-1c0016648cbc@gmail.com>
-In-Reply-To: <ffcadc29-c6f2-eb8c-b662-1c0016648cbc@gmail.com>
-Content-Language: zh-TW
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_005_1517274837.668912280"
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: =?utf-8?B?Q2hlbmdsaW4gWHUgKOW+kOaIkOaelyk=?= <Chenglin.Xu@mediatek.com>, =?utf-8?B?U2VhbiBXYW5nICjnjovlv5fkupgp?= <sean.wang@mediatek.com>, wsd_upstream <wsd_upstream@mediatek.com>, =?utf-8?B?SGVucnlDIENoZW4gKOmZs+W7uuixqik=?= <HenryC.Chen@mediatek.com>, =?utf-8?B?RmxvcmEgRnUgKOWCheWQm+iMuSk=?= <Flora.Fu@mediatek.com>, =?utf-8?B?Q2hlbiBaaG9uZyAo6ZKf6L6wKQ==?= <Chen.Zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra . v" <shailendra.v@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>
+Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v3 14/15] memory: tegra: Add Tegra30 memory controller hot resets
+Date: Tue, 20 Feb 2018 19:36:31 +0300
+Message-Id: <d0c480e3b0bf7b2025c99a678088890a27bab5cc.1519141896.git.digetx@gmail.com>
+In-Reply-To: <c8edcd52ec69afcca6007d8c2a1045aae7333bb4.1519141896.git.digetx@gmail.com>
+References: <c8edcd52ec69afcca6007d8c2a1045aae7333bb4.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_005_1517274837.668912280
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_006_1329631674.1748809845"
+Define the table of memory controller hot resets for Tegra30.
 
---__=_Part_Boundary_006_1329631674.1748809845
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/memory/tegra/tegra30.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-PHByZT4NCg0KDQotLS0tLU9yaWdpbmFsJiMzMjtNZXNzYWdlLS0tLS0NCkZyb206JiMzMjtNYXR0
-aGlhcyYjMzI7QnJ1Z2dlciYjMzI7W21haWx0bzptYXR0aGlhcy5iZ2dAZ21haWwuY29tXSYjMzI7
-DQpTZW50OiYjMzI7VHVlc2RheSwmIzMyO0phbnVhcnkmIzMyOzMwLCYjMzI7MjAxOCYjMzI7ODo1
-OCYjMzI7UE0NClRvOiYjMzI7QXJndXMmIzMyO0xpbiYjMzI7KCYjMjY1MTk7JiMyNjM2MDsmIzI0
-OTUwOykmIzMyOyZsdDthcmd1cy5saW5AbWVkaWF0ZWsuY29tJmd0OzsmIzMyO1JvYiYjMzI7SGVy
-cmluZyYjMzI7Jmx0O3JvYmgrZHRAa2VybmVsLm9yZyZndDs7JiMzMjtNYXJrJiMzMjtSdXRsYW5k
-JiMzMjsmbHQ7bWFyay5ydXRsYW5kQGFybS5jb20mZ3Q7OyYjMzI7Q2F0YWxpbiYjMzI7TWFyaW5h
-cyYjMzI7Jmx0O2NhdGFsaW4ubWFyaW5hc0Bhcm0uY29tJmd0OzsmIzMyO1dpbGwmIzMyO0RlYWNv
-biYjMzI7Jmx0O3dpbGwuZGVhY29uQGFybS5jb20mZ3Q7DQpDYzomIzMyO0NoZW5nbGluJiMzMjtY
-dSYjMzI7KCYjMjQ0NjQ7JiMyNTEwNDsmIzI2NTE5OykmIzMyOyZsdDtDaGVuZ2xpbi5YdUBtZWRp
-YXRlay5jb20mZ3Q7OyYjMzI7U2VhbiYjMzI7V2FuZyYjMzI7KCYjMjk1Nzk7JiMyNDUzNTsmIzIw
-MTIwOykmIzMyOyZsdDtzZWFuLndhbmdAbWVkaWF0ZWsuY29tJmd0OzsmIzMyO3dzZF91cHN0cmVh
-bSYjMzI7Jmx0O3dzZF91cHN0cmVhbUBtZWRpYXRlay5jb20mZ3Q7OyYjMzI7SGVucnlDJiMzMjtD
-aGVuJiMzMjsoJiMzODUxNTsmIzI0MzE0OyYjMzU5NDY7KSYjMzI7Jmx0O0hlbnJ5Qy5DaGVuQG1l
-ZGlhdGVrLmNvbSZndDs7JiMzMjtGbG9yYSYjMzI7RnUmIzMyOygmIzIwNjEzOyYjMjE1MzE7JiMz
-MzU5MzspJiMzMjsmbHQ7RmxvcmEuRnVAbWVkaWF0ZWsuY29tJmd0OzsmIzMyO0NoZW4mIzMyO1po
-b25nJiMzMjsoJiMzODA0NzsmIzM2Nzg0OykmIzMyOyZsdDtDaGVuLlpob25nQG1lZGlhdGVrLmNv
-bSZndDs7JiMzMjtDaHJpc3RvcGhlJiMzMjtKYWlsbGV0JiMzMjsmbHQ7Y2hyaXN0b3BoZS5qYWls
-bGV0QHdhbmFkb28uZnImZ3Q7OyYjMzI7c2hhaWxlbmRyYSYjMzI7LiYjMzI7diYjMzI7Jmx0O3No
-YWlsZW5kcmEudkBzYW1zdW5nLmNvbSZndDs7JiMzMjtkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsmIzMyO2xpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7JiMzMjtsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmc7JiMzMjtsaW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQu
-b3JnDQpTdWJqZWN0OiYjMzI7UmU6JiMzMjtbUEFUQ0gmIzMyO3YyJiMzMjsxLzVdJiMzMjtkdC1i
-aW5kaW5nczomIzMyO3B3cmFwOiYjMzI7bWVkaWF0ZWs6JiMzMjthZGQmIzMyO3B3cmFwJiMzMjtz
-dXBwb3J0JiMzMjtmb3ImIzMyO01UNjc5Nw0KDQoNCg0KT24mIzMyOzAxLzI5LzIwMTgmIzMyOzEw
-OjA5JiMzMjtBTSwmIzMyO2FyZ3VzLmxpbkBtZWRpYXRlay5jb20mIzMyO3dyb3RlOg0KJmd0OyYj
-MzI7RnJvbTomIzMyO0FyZ3VzJiMzMjtMaW4mIzMyOyZsdDthcmd1cy5saW5AbWVkaWF0ZWsuY29t
-Jmd0Ow0KJmd0OyYjMzI7DQomZ3Q7JiMzMjtXZSYjMzI7YWRkJiMzMjtwd3JhcCYjMzI7c3VwcG9y
-dCYjMzI7Zm9yJiMzMjtNVDY3OTcmIzMyO1NvQ3MuDQomZ3Q7JiMzMjsNCiZndDsmIzMyO1NpZ25l
-ZC1vZmYtYnk6JiMzMjtBcmd1cyYjMzI7TGluJiMzMjsmbHQ7YXJndXMubGluQG1lZGlhdGVrLmNv
-bSZndDsNCiZndDsmIzMyOy0tLQ0KJmd0OyYjMzI7JiMzMjtEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dCYjMzI7fCYjMzI7MSYjMzI7Kw0KJmd0
-OyYjMzI7JiMzMjsxJiMzMjtmaWxlJiMzMjtjaGFuZ2VkLCYjMzI7MSYjMzI7aW5zZXJ0aW9uKCsp
-DQomZ3Q7JiMzMjsNCiZndDsmIzMyO2RpZmYmIzMyOy0tZ2l0JiMzMjthL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0JiMzMjsNCiZndDsmIzMy
-O2IvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9wd3JhcC50
-eHQNCiZndDsmIzMyO2luZGV4JiMzMjtiZjgwZTNmOTZmOGMuLmY5OTg3YzMwZjBkNSYjMzI7MTAw
-NjQ0DQomZ3Q7JiMzMjstLS0mIzMyO2EvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3NvYy9tZWRpYXRlay9wd3JhcC50eHQNCiZndDsmIzMyOysrKyYjMzI7Yi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL3B3cmFwLnR4dA0KJmd0OyYjMzI7QEAm
-IzMyOy0xOSw2JiMzMjsrMTksNyYjMzI7QEAmIzMyO0lQJiMzMjtQYWlyaW5nDQomZ3Q7JiMzMjsm
-IzMyO1JlcXVpcmVkJiMzMjtwcm9wZXJ0aWVzJiMzMjtpbiYjMzI7cHdyYXAmIzMyO2RldmljZSYj
-MzI7bm9kZS4NCiZndDsmIzMyOyYjMzI7LSYjMzI7Y29tcGF0aWJsZToNCiZndDsmIzMyOyYjMzI7
-JnF1b3Q7bWVkaWF0ZWssbXQyNzAxLXB3cmFwJnF1b3Q7JiMzMjtmb3ImIzMyO01UMjcwMS83NjIz
-JiMzMjtTb0NzDQomZ3Q7JiMzMjsrJnF1b3Q7bWVkaWF0ZWssbXQ2Nzk3LXB3cmFwJnF1b3Q7JiMz
-Mjtmb3ImIzMyO01UNjc5NyYjMzI7U29Dcw0KDQpMb29rcyYjMzI7Z29vZCYjMzI7dG8mIzMyO21l
-LiYjMzI7V2hlbiYjMzI7eW91JiMzMjtzZW5kJiMzMjt0aGUmIzMyO25ldyYjMzI7c2VyaWVzLCYj
-MzI7d291bGQmIzMyO3lvdSYjMzI7bWluZCYjMzI7dG8mIzMyO2FkZCYjMzI7YSYjMzI7Y292ZXIm
-IzMyO2xldHRlciYjMzI7aW4mIzMyO3doaWNoJiMzMjt5b3UmIzMyO2Rlc2NyaWJlJiMzMjt3aGlj
-aCYjMzI7Y2hhbmdlcyYjMzI7eW91JiMzMjttYWRlJiMzMjtpbiYjMzI7ZXZlcnkmIzMyO3ZlcnNp
-b24mIzMyO29mJiMzMjt0aGUmIzMyO3BhdGNoJiMzMjtzZXJpZXMmIzYzOyYjMzI7VGhhdCYjMzI7
-bWFrZXMmIzMyO3RoZSYjMzI7cmV2aWV3aW5nJiMzMjtmb3ImIzMyO21lJiMzMjttdWNoJiMzMjtl
-YXNpZXImIzMyOzopDQoNClRoYW5rcyENCg0KRGVhciYjMzI7TWF0dGhpYXM6DQpTdXJlLCYjMzI7
-SSYjMzI7d2lsbCYjMzI7YWRkJiMzMjtjb3ZlciYjMzI7bGV0dGVyJiMzMjtuZXh0JiMzMjt0aW1l
-Lg0KJmd0OyYjMzI7JiMzMjsmcXVvdDttZWRpYXRlayxtdDc2MjItcHdyYXAmcXVvdDsmIzMyO2Zv
-ciYjMzI7TVQ3NjIyJiMzMjtTb0NzDQomZ3Q7JiMzMjsmIzMyOyZxdW90O21lZGlhdGVrLG10ODEz
-NS1wd3JhcCZxdW90OyYjMzI7Zm9yJiMzMjtNVDgxMzUmIzMyO1NvQ3MNCiZndDsmIzMyOyYjMzI7
-JnF1b3Q7bWVkaWF0ZWssbXQ4MTczLXB3cmFwJnF1b3Q7JiMzMjtmb3ImIzMyO01UODE3MyYjMzI7
-U29Dcw0KJmd0OyYjMzI7LS0NCiZndDsmIzMyOzIuMTIuNQ0KJmd0OyYjMzI7DQomZ3Q7JiMzMjsq
-KioqKioqKioqKioqJiMzMjtFbWFpbCYjMzI7Q29uZmlkZW50aWFsaXR5JiMzMjtOb3RpY2UNCiZn
-dDsmIzMyOyYjMzI7KioqKioqKioqKioqKioqKioqKioNCiZndDsmIzMyO1RoZSYjMzI7aW5mb3Jt
-YXRpb24mIzMyO2NvbnRhaW5lZCYjMzI7aW4mIzMyO3RoaXMmIzMyO2UtbWFpbCYjMzI7bWVzc2Fn
-ZSYjMzI7KGluY2x1ZGluZyYjMzI7YW55DQomZ3Q7JiMzMjthdHRhY2htZW50cykmIzMyO21heSYj
-MzI7YmUmIzMyO2NvbmZpZGVudGlhbCwmIzMyO3Byb3ByaWV0YXJ5LCYjMzI7cHJpdmlsZWdlZCwm
-IzMyO29yJiMzMjsNCiZndDsmIzMyO290aGVyd2lzZSYjMzI7ZXhlbXB0JiMzMjtmcm9tJiMzMjtk
-aXNjbG9zdXJlJiMzMjt1bmRlciYjMzI7YXBwbGljYWJsZSYjMzI7bGF3cy4mIzMyO0l0JiMzMjtp
-cyYjMzI7aW50ZW5kZWQmIzMyOw0KJmd0OyYjMzI7dG8mIzMyO2JlJiMzMjtjb252ZXllZCYjMzI7
-b25seSYjMzI7dG8mIzMyO3RoZSYjMzI7ZGVzaWduYXRlZCYjMzI7cmVjaXBpZW50KHMpLiYjMzI7
-QW55JiMzMjt1c2UsJiMzMjsNCiZndDsmIzMyO2Rpc3NlbWluYXRpb24sJiMzMjtkaXN0cmlidXRp
-b24sJiMzMjtwcmludGluZywmIzMyO3JldGFpbmluZyYjMzI7b3ImIzMyO2NvcHlpbmcmIzMyO29m
-JiMzMjt0aGlzJiMzMjsNCiZndDsmIzMyO2UtbWFpbCYjMzI7KGluY2x1ZGluZyYjMzI7aXRzDQom
-Z3Q7JiMzMjthdHRhY2htZW50cykmIzMyO2J5JiMzMjt1bmludGVuZGVkJiMzMjtyZWNpcGllbnQo
-cykmIzMyO2lzJiMzMjtzdHJpY3RseSYjMzI7cHJvaGliaXRlZCYjMzI7YW5kJiMzMjttYXkmIzMy
-Ow0KJmd0OyYjMzI7YmUmIzMyO3VubGF3ZnVsLiYjMzI7SWYmIzMyO3lvdSYjMzI7YXJlJiMzMjtu
-b3QmIzMyO2FuJiMzMjtpbnRlbmRlZCYjMzI7cmVjaXBpZW50JiMzMjtvZiYjMzI7dGhpcyYjMzI7
-ZS1tYWlsLCYjMzI7b3ImIzMyOw0KJmd0OyYjMzI7YmVsaWV2ZQ0KJmd0OyYjMzI7JiMzMjsNCiZn
-dDsmIzMyO3RoYXQmIzMyO3lvdSYjMzI7aGF2ZSYjMzI7cmVjZWl2ZWQmIzMyO3RoaXMmIzMyO2Ut
-bWFpbCYjMzI7aW4mIzMyO2Vycm9yLCYjMzI7cGxlYXNlJiMzMjtub3RpZnkmIzMyO3RoZSYjMzI7
-c2VuZGVyJiMzMjsNCiZndDsmIzMyO2ltbWVkaWF0ZWx5JiMzMjsoYnkmIzMyO3JlcGx5aW5nJiMz
-Mjt0byYjMzI7dGhpcyYjMzI7ZS1tYWlsKSwmIzMyO2RlbGV0ZSYjMzI7YW55JiMzMjthbmQmIzMy
-O2FsbCYjMzI7Y29waWVzJiMzMjtvZiYjMzI7DQomZ3Q7JiMzMjt0aGlzJiMzMjtlLW1haWwmIzMy
-OyhpbmNsdWRpbmcmIzMyO2FueSYjMzI7YXR0YWNobWVudHMpJiMzMjtmcm9tJiMzMjt5b3VyJiMz
-MjtzeXN0ZW0sJiMzMjthbmQmIzMyO2RvJiMzMjtub3QmIzMyOw0KJmd0OyYjMzI7ZGlzY2xvc2Um
-IzMyO3RoZSYjMzI7Y29udGVudCYjMzI7b2YmIzMyO3RoaXMmIzMyO2UtbWFpbCYjMzI7dG8mIzMy
-O2FueSYjMzI7b3RoZXImIzMyO3BlcnNvbi4mIzMyO1RoYW5rJiMzMjsmIzMyO3lvdSENCiZndDsm
-IzMyOw0KDQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioq
-KiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlICoqKioqKioqKioqKioqKioqKioqDQpUaGUg
-aW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBh
-bnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZp
-bGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNh
-YmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVz
-aWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0
-aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1
-ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3Ry
-aWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFu
-IGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZSANCnRoYXQgeW91
-IGhhdmUgcmVjZWl2ZWQgdGhpcyBlLW1haWwgaW4gZXJyb3IsIHBsZWFzZSBub3RpZnkgdGhlIHNl
-bmRlciANCmltbWVkaWF0ZWx5IChieSByZXBseWluZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBh
-bnkgYW5kIGFsbCBjb3BpZXMgb2YgDQp0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGFueSBhdHRhY2ht
-ZW50cykgZnJvbSB5b3VyIHN5c3RlbSwgYW5kIGRvIG5vdA0KZGlzY2xvc2UgdGhlIGNvbnRlbnQg
-b2YgdGhpcyBlLW1haWwgdG8gYW55IG90aGVyIHBlcnNvbi4gVGhhbmsgeW91ITwvcHJlPjwhLS19
-LS0+
-
---__=_Part_Boundary_006_1329631674.1748809845
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBNYXR0aGlhcyBCcnVnZ2VyIFtt
-YWlsdG86bWF0dGhpYXMuYmdnQGdtYWlsLmNvbV0gDQpTZW50OiBUdWVzZGF5LCBKYW51YXJ5IDMw
-LCAyMDE4IDg6NTggUE0NClRvOiBBcmd1cyBMaW4gKOael+abuOaFtikgPGFyZ3VzLmxpbkBtZWRp
-YXRlay5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5k
-IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IENhdGFsaW4gTWFyaW5hcyA8Y2F0YWxpbi5tYXJpbmFz
-QGFybS5jb20+OyBXaWxsIERlYWNvbiA8d2lsbC5kZWFjb25AYXJtLmNvbT4NCkNjOiBDaGVuZ2xp
-biBYdSAo5b6Q5oiQ5p6XKSA8Q2hlbmdsaW4uWHVAbWVkaWF0ZWsuY29tPjsgU2VhbiBXYW5nICjn
-jovlv5fkupgpIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPjsgd3NkX3Vwc3RyZWFtIDx3c2RfdXBz
-dHJlYW1AbWVkaWF0ZWsuY29tPjsgSGVucnlDIENoZW4gKOmZs+W7uuixqikgPEhlbnJ5Qy5DaGVu
-QG1lZGlhdGVrLmNvbT47IEZsb3JhIEZ1ICjlgoXlkJvojLkpIDxGbG9yYS5GdUBtZWRpYXRlay5j
-b20+OyBDaGVuIFpob25nICjpkp/ovrApIDxDaGVuLlpob25nQG1lZGlhdGVrLmNvbT47IENocmlz
-dG9waGUgSmFpbGxldCA8Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI+OyBzaGFpbGVuZHJh
-IC4gdiA8c2hhaWxlbmRyYS52QHNhbXN1bmcuY29tPjsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZzsgbGludXgtbWVkaWF0ZWtAbGlzdHMuaW5mcmFkZWFkLm9yZw0KU3ViamVj
-dDogUmU6IFtQQVRDSCB2MiAxLzVdIGR0LWJpbmRpbmdzOiBwd3JhcDogbWVkaWF0ZWs6IGFkZCBw
-d3JhcCBzdXBwb3J0IGZvciBNVDY3OTcNCg0KDQoNCk9uIDAxLzI5LzIwMTggMTA6MDkgQU0sIGFy
-Z3VzLmxpbkBtZWRpYXRlay5jb20gd3JvdGU6DQo+IEZyb206IEFyZ3VzIExpbiA8YXJndXMubGlu
-QG1lZGlhdGVrLmNvbT4NCj4gDQo+IFdlIGFkZCBwd3JhcCBzdXBwb3J0IGZvciBNVDY3OTcgU29D
-cy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFyZ3VzIExpbiA8YXJndXMubGluQG1lZGlhdGVrLmNv
-bT4NCj4gLS0tDQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlh
-dGVrL3B3cmFwLnR4dCB8IDEgKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+
-IA0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9t
-ZWRpYXRlay9wd3JhcC50eHQgDQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3NvYy9tZWRpYXRlay9wd3JhcC50eHQNCj4gaW5kZXggYmY4MGUzZjk2ZjhjLi5mOTk4N2MzMGYw
-ZDUgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2Mv
-bWVkaWF0ZWsvcHdyYXAudHh0DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9zb2MvbWVkaWF0ZWsvcHdyYXAudHh0DQo+IEBAIC0xOSw2ICsxOSw3IEBAIElQIFBhaXJp
-bmcNCj4gIFJlcXVpcmVkIHByb3BlcnRpZXMgaW4gcHdyYXAgZGV2aWNlIG5vZGUuDQo+ICAtIGNv
-bXBhdGlibGU6DQo+ICAJIm1lZGlhdGVrLG10MjcwMS1wd3JhcCIgZm9yIE1UMjcwMS83NjIzIFNv
-Q3MNCj4gKwkibWVkaWF0ZWssbXQ2Nzk3LXB3cmFwIiBmb3IgTVQ2Nzk3IFNvQ3MNCg0KTG9va3Mg
-Z29vZCB0byBtZS4gV2hlbiB5b3Ugc2VuZCB0aGUgbmV3IHNlcmllcywgd291bGQgeW91IG1pbmQg
-dG8gYWRkIGEgY292ZXIgbGV0dGVyIGluIHdoaWNoIHlvdSBkZXNjcmliZSB3aGljaCBjaGFuZ2Vz
-IHlvdSBtYWRlIGluIGV2ZXJ5IHZlcnNpb24gb2YgdGhlIHBhdGNoIHNlcmllcz8gVGhhdCBtYWtl
-cyB0aGUgcmV2aWV3aW5nIGZvciBtZSBtdWNoIGVhc2llciA6KQ0KDQpUaGFua3MhDQoNCkRlYXIg
-TWF0dGhpYXM6DQpTdXJlLCBJIHdpbGwgYWRkIGNvdmVyIGxldHRlciBuZXh0IHRpbWUuDQo+ICAJ
-Im1lZGlhdGVrLG10NzYyMi1wd3JhcCIgZm9yIE1UNzYyMiBTb0NzDQo+ICAJIm1lZGlhdGVrLG10
-ODEzNS1wd3JhcCIgZm9yIE1UODEzNSBTb0NzDQo+ICAJIm1lZGlhdGVrLG10ODE3My1wd3JhcCIg
-Zm9yIE1UODE3MyBTb0NzDQo+IC0tDQo+IDIuMTIuNQ0KPiANCj4gKioqKioqKioqKioqKiBFbWFp
-bCBDb25maWRlbnRpYWxpdHkgTm90aWNlDQo+ICAqKioqKioqKioqKioqKioqKioqKg0KPiBUaGUg
-aW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBh
-bnkNCj4gYXR0YWNobWVudHMpIG1heSBiZSBjb25maWRlbnRpYWwsIHByb3ByaWV0YXJ5LCBwcml2
-aWxlZ2VkLCBvciANCj4gb3RoZXJ3aXNlIGV4ZW1wdCBmcm9tIGRpc2Nsb3N1cmUgdW5kZXIgYXBw
-bGljYWJsZSBsYXdzLiBJdCBpcyBpbnRlbmRlZCANCj4gdG8gYmUgY29udmV5ZWQgb25seSB0byB0
-aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1c2UsIA0KPiBkaXNzZW1pbmF0aW9uLCBk
-aXN0cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5pbmcgb3IgY29weWluZyBvZiB0aGlzIA0KPiBl
-LW1haWwgKGluY2x1ZGluZyBpdHMNCj4gYXR0YWNobWVudHMpIGJ5IHVuaW50ZW5kZWQgcmVjaXBp
-ZW50KHMpIGlzIHN0cmljdGx5IHByb2hpYml0ZWQgYW5kIG1heSANCj4gYmUgdW5sYXdmdWwuIElm
-IHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgDQo+
-IGJlbGlldmUNCj4gIA0KPiB0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVy
-cm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQo+IGltbWVkaWF0ZWx5IChieSByZXBseWlu
-ZyB0byB0aGlzIGUtbWFpbCksIGRlbGV0ZSBhbnkgYW5kIGFsbCBjb3BpZXMgb2YgDQo+IHRoaXMg
-ZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBhbmQg
-ZG8gbm90IA0KPiBkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3Ro
-ZXIgcGVyc29uLiBUaGFuayAgeW91IQ0KPiANCg0K
-
---__=_Part_Boundary_006_1329631674.1748809845--
-
---__=_Part_Boundary_005_1517274837.668912280--
+diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
+index d2ba50ed0490..8ace95910133 100644
+--- a/drivers/memory/tegra/tegra30.c
++++ b/drivers/memory/tegra/tegra30.c
+@@ -960,6 +960,36 @@ static const struct tegra_smmu_soc tegra30_smmu_soc = {
+ 	.num_asids = 4,
+ };
+ 
++#define TEGRA30_MC_RESET(_name, _control, _status, _bit)	\
++	{							\
++		.name = #_name,					\
++		.id = TEGRA30_MC_RESET_##_name,			\
++		.control = _control,				\
++		.status = _status,				\
++		.bit = _bit,					\
++	}
++
++static const struct tegra_mc_reset tegra30_mc_resets[] = {
++	TEGRA30_MC_RESET(AFI,      0x200, 0x204,  0),
++	TEGRA30_MC_RESET(AVPC,     0x200, 0x204,  1),
++	TEGRA30_MC_RESET(DC,       0x200, 0x204,  2),
++	TEGRA30_MC_RESET(DCB,      0x200, 0x204,  3),
++	TEGRA30_MC_RESET(EPP,      0x200, 0x204,  4),
++	TEGRA30_MC_RESET(2D,       0x200, 0x204,  5),
++	TEGRA30_MC_RESET(HC,       0x200, 0x204,  6),
++	TEGRA30_MC_RESET(HDA,      0x200, 0x204,  7),
++	TEGRA30_MC_RESET(ISP,      0x200, 0x204,  8),
++	TEGRA30_MC_RESET(MPCORE,   0x200, 0x204,  9),
++	TEGRA30_MC_RESET(MPCORELP, 0x200, 0x204, 10),
++	TEGRA30_MC_RESET(MPE,      0x200, 0x204, 11),
++	TEGRA30_MC_RESET(3D,       0x200, 0x204, 12),
++	TEGRA30_MC_RESET(3D2,      0x200, 0x204, 13),
++	TEGRA30_MC_RESET(PPCS,     0x200, 0x204, 14),
++	TEGRA30_MC_RESET(SATA,     0x200, 0x204, 15),
++	TEGRA30_MC_RESET(VDE,      0x200, 0x204, 16),
++	TEGRA30_MC_RESET(VI,       0x200, 0x204, 17),
++};
++
+ const struct tegra_mc_soc tegra30_mc_soc = {
+ 	.clients = tegra30_mc_clients,
+ 	.num_clients = ARRAY_SIZE(tegra30_mc_clients),
+@@ -969,4 +999,7 @@ const struct tegra_mc_soc tegra30_mc_soc = {
+ 	.smmu = &tegra30_smmu_soc,
+ 	.intmask = MC_INT_INVALID_SMMU_PAGE | MC_INT_SECURITY_VIOLATION |
+ 		   MC_INT_DECERR_EMEM,
++	.resets_ops = &terga_mc_resets_ops_common,
++	.resets = tegra30_mc_resets,
++	.num_resets = ARRAY_SIZE(tegra30_mc_resets),
+ };
+-- 
+2.16.1
