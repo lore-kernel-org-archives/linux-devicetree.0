@@ -1,71 +1,67 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 4/8] dt-bindings: panel: common: document orientation
- property
-Date: Tue, 20 Feb 2018 13:09:03 -0600
-Message-ID: <CAL_JsqLyj3GrmyxYtQU=nT6iLyWoiRvo0opjdi7Nx8j3TH-KPA@mail.gmail.com>
-References: <20180208183035.8461-1-sebastian.reichel@collabora.co.uk>
- <20180208183035.8461-5-sebastian.reichel@collabora.co.uk>
- <20180218232424.47ejrqdze7nm7g5d@rob-hp-laptop>
- <20180219110618.7hgsf3g6womvecay@earth.universe>
+From: Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v5 1/4] dt-bindings: firmware: Add bindings for ZynqMP firmware
+Date: Tue, 20 Feb 2018 11:21:04 -0800
+Message-ID: <1519154467-2896-2-git-send-email-jollys@xilinx.com>
+References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180219110618.7hgsf3g6womvecay@earth.universe>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@collabora.com, Tony Lindgren <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Hans de Goede <hdegoede@redhat.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, rajanv@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBGZWIgMTksIDIwMTggYXQgNTowNiBBTSwgU2ViYXN0aWFuIFJlaWNoZWwKPHNlYmFz
-dGlhbi5yZWljaGVsQGNvbGxhYm9yYS5jby51az4gd3JvdGU6Cj4gSGksCj4KPiBPbiBTdW4sIEZl
-YiAxOCwgMjAxOCBhdCAwNToyNDoyNFBNIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToKPj4gT24g
-VGh1LCBGZWIgMDgsIDIwMTggYXQgMDc6MzA6MzFQTSArMDEwMCwgU2ViYXN0aWFuIFJlaWNoZWwg
-d3JvdGU6Cj4+ID4gSW50cm9kdWNlIG5ldyAib3JpZW50YXRpb24iIHByb3BlcnR5IGZvciBkZXNj
-cmliaW5nIGluIHdoaWNoCj4+ID4gb3JpZW50YXRpb24gYSBwYW5lbCBoYXMgYmVlbiBtb3VudGVk
-IHRvIHRoZSBkZXZpY2UuIFRoaXMgY2FuCj4+ID4gYmUgdXNlZCBieSB0aGUgb3BlcmF0aW5nIHN5
-c3RlbSB0byBhdXRvbWF0aWNhbGx5IHJvdGF0ZSB0aGUKPj4gPiBkaXNwbGF5IGNvcnJlY3RseS4K
-Pj4gPgo+PiA+IFNpZ25lZC1vZmYtYnk6IFNlYmFzdGlhbiBSZWljaGVsIDxzZWJhc3RpYW4ucmVp
-Y2hlbEBjb2xsYWJvcmEuY28udWs+Cj4+ID4gLS0tCj4+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtY29tbW9uLnR4dCAgICAgfCAxMiArKysrKysrKysrKysK
-Pj4gPiAgaW5jbHVkZS9kdC1iaW5kaW5ncy9kaXNwbGF5L2NvbW1vbi5oICAgICAgICAgICAgICAg
-ICAgICAgICB8IDE0ICsrKysrKysrKysrKysrCj4+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjYgaW5z
-ZXJ0aW9ucygrKQo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9k
-aXNwbGF5L2NvbW1vbi5oCj4+ID4KPj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtY29tbW9uLnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLWNvbW1vbi50eHQK
-Pj4gPiBpbmRleCA1NTdmYTc2NWFkY2IuLmM2NDZiODkwODQ1OCAxMDA2NDQKPj4gPiAtLS0gYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1jb21t
-b24udHh0Cj4+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcGFuZWwvcGFuZWwtY29tbW9uLnR4dAo+PiA+IEBAIC0xOCw2ICsxOCwxOCBAQCBEZXNjcmlw
-dGl2ZSBQcm9wZXJ0aWVzCj4+ID4gICAgcGh5c2ljYWwgYXJlYSB3aGVyZSBpbWFnZXMgYXJlIGRp
-c3BsYXllZC4gVGhlc2UgcHJvcGVydGllcyBhcmUgZXhwcmVzc2VkIGluCj4+ID4gICAgbWlsbGlt
-ZXRlcnMgYW5kIHJvdW5kZWQgdG8gdGhlIGNsb3Nlc3QgdW5pdC4KPj4gPgo+PiA+ICstIG9yaWVu
-dGF0aW9uOiBUaGUgb3JpZW50YXRpb24gcHJvcGVydHkgc3BlY2lmaWVzIHRoZSBwYW5lbCBvcmll
-bnRhdGlvbgo+PiA+ICsgIGluIHJlbGF0aW9uIHRvIHRoZSBkZXZpY2UncyBjYXNpbmcuIFRoZSBm
-b2xsb3dpbmcgdmFsdWVzIGFyZSBwb3NzaWJsZToKPj4gPiArCj4+ID4gKyAgICogMCA9IFRoZSB0
-b3Agc2lkZSBvZiB0aGUgcGFuZWwgbWF0Y2hlcyB0aGUgdG9wIHNpZGUgb2YgdGhlIGRldmljZSdz
-Cj4+ID4gKyAgICAgICAgIGNhc2luZy4KPj4gPiArICAgKiAxID0gVGhlIHRvcCBzaWRlIG9mIHRo
-ZSBwYW5lbCBtYXRjaGVzIHRoZSBib3R0b20gc2lkZSBvZiB0aGUgZGV2aWNlJ3MKPj4gPiArICAg
-ICAgICAgY2FzaW5nLiBJbiBvdGhlciB3b3JkcyB0aGUgcGFuZWwgaXMgbW91bnRlZCB1cHNpZGUt
-ZG93bi4KPj4gPiArICAgKiAyID0gVGhlIGxlZnQgc2lkZSBvZiB0aGUgcGFuZWwgbWF0Y2hlcyB0
-aGUgdG9wIHNpZGUgb2YgdGhlIGRldmljZSdzCj4+ID4gKyAgICAgICAgIGNhc2luZy4KPj4gPiAr
-ICAgKiAzID0gVGhlIHJpZ2h0IHNpZGUgb2YgdGhlIHBhbmVsIG1hdGNoZXMgdGhlIHRvcCBzaWRl
-IG9mIHRoZSBkZXZpY2Uncwo+PiA+ICsgICAgICAgICBjYXNpbmcuCj4+Cj4+IFRoZSByb3RhdGlv
-biBwcm9wZXJ0eSBpbiBwYW5lbC50eHQgYWxyZWFkeSBoYW5kbGVzIHRoaXMsIHJpZ2h0Pwo+Cj4g
-WWVzLCBsb29rcyBsaWtlIGl0IGNhbiBiZSB1c2VkLiBJIGd1ZXNzIHBhbmVsLnR4dCBhbmQKPiBw
-YW5lbC1jb21tb24udHh0IHNob3VsZCBiZSBtZXJnZWQsIHRob3VnaD8KClllcywgcGxlYXNlLiBB
-Y3R1YWxseSwgSSdkIGxpa2UgdG8gbWVyZ2Ugc2ltcGxlLXBhbmVsLnR4dCB0b28gYmVjYXVzZQp0
-aGF0IGlzIHJlYWxseSBrZXJuZWwgZHJpdmVyLCBub3QgYSB0eXBlIG9mIHBhbmVsLiBCdXQgdGhl
-cmUncyBhIGxvdApvZiByZWZlcmVuY2VzIHRvIGl0IHRvIGZpeC4KClJvYgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Add documentation to describe Xilinx ZynqMP firmware driver
+bindings. Firmware driver provides an interface to firmware
+APIs. Interface APIs can be used by any driver to communicate
+to PMUFW (Platform Management Unit).
+
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+---
+ .../firmware/xilinx/xlnx,zynqmp-firmware.txt       | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+
+diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+new file mode 100644
+index 0000000..99434ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+@@ -0,0 +1,24 @@
++Xilinx Zynq MPSoC Firmware Device Tree Bindings
++
++The zynqmp-firmware node describes the interface to platform firmware.
++ZynqMP has an interface to communicate with secure firmware. Firmware
++driver provides an interface to firmware APIs. Interface APIs can be
++used by any driver to communicate to PMUFW(Platform Management Unit).
++These requests include clock management, pin control, device control,
++power management service, FPGA service and other platform management
++services.
++
++Required properties:
++ - compatible:	Must contain:  "xlnx,zynqmp-firmware"
++ - method:	The method of calling the PM-API firmware layer.
++		Permitted values are:
++		  - "smc" : SMC #0, following the SMCCC
++		  - "hvc" : HVC #0, following the SMCCC
++
++Examples:
++	firmware {
++		zynqmp_firmware: zynqmp-firmware {
++			compatible = "xlnx,zynqmp-firmware";
++			method = "smc";
++		};
++	};
+-- 
+2.7.4
