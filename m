@@ -1,15 +1,15 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 13/19] pinctrl: sh-pfc: r8a77965: Add SCIFs
+Subject: Re: [PATCH v2 18/19] pinctrl: sh-pfc: r8a77965: Add EtherAVB
  groups/functions
-Date: Tue, 20 Feb 2018 19:36:15 +0100
-Message-ID: <CAMuHMdVCQ4W=0MW64fqDA1u6_kq+sftAQbCDq3RVKfo=G=0uLw@mail.gmail.com>
+Date: Tue, 20 Feb 2018 19:36:40 +0100
+Message-ID: <CAMuHMdWi9Gh=3vz=tgXzS+KDczwiVQUcPVXXf6TDPukw93C62g@mail.gmail.com>
 References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519139541-18783-14-git-send-email-jacopo+renesas@jmondi.org>
+ <1519139541-18783-19-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519139541-18783-14-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1519139541-18783-19-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,7 +24,7 @@ Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED 
 List-Id: devicetree@vger.kernel.org
 
 On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Add SCIF[0-5] groups and pin function definitions for R-Car M3-N.
+> Add EtherAVB groups and functions definitions for R-Car M3-N.
 >
 > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
