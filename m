@@ -1,97 +1,96 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 1/2] dmaengine: Introduce DW AXI DMAC driver
-Date: Tue, 20 Feb 2018 15:39:17 +0200
-Message-ID: <CAHp75VdQ_tVG29+JdycoTg-0tBAxKa9dNvesU-b+f8RqhQf4Rw@mail.gmail.com>
-References: <20180220123047.24469-1-Eugeniy.Paltsev@synopsys.com>
- <20180220123047.24469-2-Eugeniy.Paltsev@synopsys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/5] dt-bindings: gpio: add raspberry pi GPIO expander
+ binding
+Date: Tue, 20 Feb 2018 07:39:58 -0600
+Message-ID: <CAL_JsqLdyH+hzv=aRn_szQ6=h3aB1dP9swG-+Q73nZDH3mPF3w@mail.gmail.com>
+References: <cover.1517923836.git.baruch@tkos.co.il>
+ <214ff3856c430b8045b63b25d83733b77054dfab.1517923836.git.baruch@tkos.co.il>
+ <20180213232007.ieme6rjxgc7vidbw@rob-hp-laptop>
+ <20180220073427.vaxp5wkygs6pwaxi@tarshish>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180220123047.24469-2-Eugeniy.Paltsev@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, Rob Herring <robh+dt@kernel.org>, dmaengine <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, linux-snps-arc@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180220073427.vaxp5wkygs6pwaxi@tarshish>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Eric Anholt <eric@anholt.net>, Michael Zoran <mzoran@crowfest.net>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, Dave Stevenson <dave.stevenson@raspberrypi.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 20, 2018 at 2:30 PM, Eugeniy Paltsev
-<Eugeniy.Paltsev@synopsys.com> wrote:
-> This patch adds support for the DW AXI DMAC controller.
-> DW AXI DMAC is a part of HSDK development board from Synopsys.
+On Tue, Feb 20, 2018 at 1:34 AM, Baruch Siach <baruch@tkos.co.il> wrote:
+> Hi Rob,
 >
-> In this driver implementation only DMA_MEMCPY transfers are
-> supported.
-
-Just few comments, code looks fine I hope.
-
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13344,6 +13344,12 @@ F:     include/linux/dma/dw.h
->  F:     include/linux/platform_data/dma-dw.h
->  F:     drivers/dma/dw/
+> Thanks again for reviewing.
 >
-> +SYNOPSYS DESIGNWARE AXI DMAC DRIVER
-> +M:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> +S:     Maintained
-> +F:     drivers/dma/dwi-axi-dmac/
-> +F:     Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+> On Tue, Feb 13, 2018 at 05:20:07PM -0600, Rob Herring wrote:
+>> On Wed, Feb 07, 2018 at 08:35:23PM +0200, Baruch Siach wrote:
+>> > +Raspberry Pi GPIO expander
+>> > +
+>> > +The Raspberry Pi 3 GPIO expander is controlled by the VC4 firmware. The
+>> > +firmware exposes a mailbox interface that allows the ARM core to control the
+>> > +GPIO lines on the expander.
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible : Should be "raspberrypi,firmware-gpio"
+>> > +- gpio-controller : Marks the device node as a gpio controller
+>> > +- #gpio-cells : Should be two.  The first cell is the pin number, and
+>> > +  the second cell is used to specify the gpio polarity:
+>> > +  0 = active high
+>> > +  1 = active low
+>> > +- firmware : Reference to the RPi firmware device node
+>>
+>> This is the parent node. You don't need it.
+>
+> OK. I guess of_get_parent() will do the trick.
+>
+>> > +Example:
+>> > +
+>> > +firmware: firmware {
+>> > +   compatible = "raspberrypi,bcm2835-firmware";
+>> > +   mboxes = <&mailbox>;
+>>
+>> No, sorry. /firmware is the container of firmware nodes. So
+>> something like this:
+>>
+>> firmware {
+>>       rpi-firmware {
+>>               compatible = "raspberrypi,bcm2835-firmware";
+>>               mboxes = <&mailbox>;
+>>               gpio {
+>>                compatible = "raspberrypi,firmware-gpio";
+>>
+>>               };
+>>       };
+>> };
+>
+> This is the hierarchy we currently have at arch/arm/boot/dts/bcm2835-rpi.dtsi:
+>
+> / {
+>         soc {
+>                 firmware: firmware {
+>                         compatible = "raspberrypi,bcm2835-firmware";
+>                         mboxes = <&mailbox>;
+>                 };
+>         };
+> };
+>
+> Are you suggesting to add another container between 'soc' and 'firmware'? Or
+> is it the 'firmware' node name that we need to change to 'rpi-firmware'?
 
-AXI is earlier in alphabet than DMAC in previous record.
+Ah, I guess RPi missed following putting its firmware node under a
+/firmware node rather than under /soc. We try to put all firmware
+interfaces (you can have more than one) under /firmware. So just as I
+wrote out. But you don't need to change that for this.
 
-Linus even submitted a script last year to sort the MAINTAINERS data base.
+Just noting this is a child of "raspberrypi,bcm2835-firmware" is enough.
 
-> +/*
-> + * Synopsys DesignWare AXI DMA Controller driver.
-> + *
-> + * Copyright (C) 2017-2018 Synopsys, Inc. (www.synopsys.com)
-> + * Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-
-Now we have SPDX identifiers.
-
-> +static u32 axi_chan_get_xfer_width(struct axi_dma_chan *chan, dma_addr_t src,
-> +                                  dma_addr_t dst, size_t len)
-> +{
-> +       u32 max_width = chan->chip->dw->hdata->m_data_width;
-> +
-> +       return min_t(size_t, __ffs(src | dst | len), max_width);
-
-size_t -> u32 ?
-
-> +}
-
-> +       unsigned int timeout = 20; /* timeout iterations */
-
-> +       do  {
-> +               if (axi_chan_irq_read(chan) & DWAXIDMAC_IRQ_SUSPENDED) {
-> +                       ret = 0;
-> +                       break;
-> +               }
-> +               udelay(2);
-> +       } while (timeout--);
-
-Off-by-one. You will have 21 tries here.
-
-} while (--timeout);
-
--- 
-With Best Regards,
-Andy Shevchenko
+Rob
