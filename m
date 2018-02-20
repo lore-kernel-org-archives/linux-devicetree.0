@@ -1,52 +1,71 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/9] serial: fsl_lpuart: Fix out-of-bounds access through DT
- alias
-Date: Tue, 20 Feb 2018 10:40:17 +0100
-Message-ID: <1519119624-1268-3-git-send-email-geert+renesas@glider.be>
-References: <1519119624-1268-1-git-send-email-geert+renesas@glider.be>
+From: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
+Subject: [PATCH 1/2] ASoC: ak4458: Modify SPDX license format
+Date: Tue, 20 Feb 2018 10:56:07 +0200
+Message-ID: <1519116968-31759-2-git-send-email-cosmin.samoila@nxp.com>
+References: <1519116968-31759-1-git-send-email-cosmin.samoila@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519119624-1268-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Vineet Gupta <vgupta@synopsys.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1519116968-31759-1-git-send-email-cosmin.samoila@nxp.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: shengjiu.wang@nxp.com, linux-kernel@vger.kernel.org, wakasugi.jb@om.asahi-kasei.co.jp, linux-imx@nxp.com, Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>, daniel.baluta@nxp.com, mihai.serban@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The lpuart_ports[] array is indexed using a value derived from the
-"serialN" alias in DT, which may lead to an out-of-bounds access.
+Modify SPDX comment style to match the rules. Since the original
+code had a GPL-2.0 license and SPDX is compatible with GPL-2.0+,
+we also modified the MODULE_LICENSE.
 
-Fix this by adding a range check.
-
-Fixes: 970416c691dc68b5 ("serial: fsl_lpuart: Fix out-of-bounds access through DT alias")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
 ---
- drivers/tty/serial/fsl_lpuart.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ sound/soc/codecs/ak4458.c | 13 ++++++-------
+ sound/soc/codecs/ak4458.h |  2 +-
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 8cf112f2efc30707..5218e2ed1ba90a5b 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -2145,6 +2145,10 @@ static int lpuart_probe(struct platform_device *pdev)
- 		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
- 		return ret;
- 	}
-+	if (ret >= UART_NR) {
-+		dev_err(&pdev->dev, "serial%d out of range\n", ret);
-+		return -EINVAL;
-+	}
- 	sport->port.line = ret;
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	sport->port.membase = devm_ioremap_resource(&pdev->dev, res);
+diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
+index d2815ac..8a49dd2 100644
+--- a/sound/soc/codecs/ak4458.c
++++ b/sound/soc/codecs/ak4458.c
+@@ -1,10 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/*
+- * Audio driver for AK4458 DAC
+- *
+- * Copyright (C) 2016 Asahi Kasei Microdevices Corporation
+- * Copyright 2018 NXP
+- */
++//
++// Audio driver for AK4458 DAC
++//
++// Copyright (C) 2016 Asahi Kasei Microdevices Corporation
++// Copyright 2018 NXP
+ 
+ #include <linux/module.h>
+ #include <linux/delay.h>
+@@ -655,4 +654,4 @@ module_i2c_driver(ak4458_i2c_driver);
+ MODULE_AUTHOR("Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>");
+ MODULE_AUTHOR("Mihai Serban <mihai.serban@nxp.com>");
+ MODULE_DESCRIPTION("ASoC AK4458 DAC driver");
+-MODULE_LICENSE("GPL");
++MODULE_LICENSE("GPL v2");
+diff --git a/sound/soc/codecs/ak4458.h b/sound/soc/codecs/ak4458.h
+index 16d9d22..f906215 100644
+--- a/sound/soc/codecs/ak4458.h
++++ b/sound/soc/codecs/ak4458.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Audio driver for AK4458
+  *
 -- 
 2.7.4
