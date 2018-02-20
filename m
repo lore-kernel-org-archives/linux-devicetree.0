@@ -1,17 +1,11 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH v2] usb: host: ehci-platform: add support for optional
- external vbus supply
-Date: Tue, 20 Feb 2018 14:46:07 +0000
-Message-ID: <2ef38200-947c-1419-1c91-f033da390f74@st.com>
-References: <1519131492-27913-1-git-send-email-amelie.delaunay@st.com>
- <bfaa3001-d90f-7903-17e8-90af9a03c338@ti.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 00/19] R-Car M3-N initial support
+Date: Tue, 20 Feb 2018 16:12:02 +0100
+Message-ID: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <bfaa3001-d90f-7903-17e8-90af9a03c338@ti.com>
-Content-Language: en-US
-Content-ID: <2753CB0B96FF3C4584ACEF41C723FBDA@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,132 +15,100 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello, second round for R-Car M3-N SoC and M3-N based Salvator-X board.
 
-On 02/20/2018 03:00 PM, Roger Quadros wrote:
-> Hi,
-> 
-> On 20/02/18 14:58, Amelie Delaunay wrote:
->> On some boards, especially when vbus supply requires large current,
->> and the charge pump on the PHY isn't enough, an external vbus power switch
->> may be used.
->> Add support for this optional external vbus supply in ehci-platform.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
->>
->> ---
->> Changes in v2:
->>   * Address Roger Quadros comments: move regulator_enable/disable from
->> ehci_platform_power_on/off to ehci_platform_port_power.
->> ---
->>   Documentation/devicetree/bindings/usb/usb-ehci.txt |  1 +
->>   drivers/usb/host/ehci-platform.c                   | 31 ++++++++++++++++++++++
->>   2 files changed, 32 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
->> index 3efde12..fc480cd 100644
->> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
->> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
->> @@ -19,6 +19,7 @@ Optional properties:
->>    - phys : phandle + phy specifier pair
->>    - phy-names : "usb"
->>    - resets : phandle + reset specifier pair
->> + - vbus-supply : phandle of regulator supplying vbus
->>   
-> 
-> Can platforms have more than one regulator e.g. one regulator per port?
-> 
+I have fixed all comments I have received and re-based on latest Geert's
+renesas-drivers-2018-02-13-v4.16-rc1
 
-I imagine that yes, platforms could have one regulator per port.
-Regulator consumers bindings impose a <name>-supply property per 
-regulator, so, what do you think about :
-vbus0-supply for port#0
-vbus1-supply for port#1
-...
-vbusN-supply for port#N
+I have applied requested changes, and updated PFC tables to comply with
+last patches applied to r8a7796 that were not part of v4.15 which v1 was
+based on.
 
-And then in probe, allocate 'struct regulator *vbus_supplies' with a 
-size corresponding to 'HCS_N_PORTS(ehci->hcs_params) * sizeof(struct 
-regulator *)'.
-And loop to get optional regulator vbus0, vbus1,..., vbusN.
-And then enable/disable the corresponding regulator in 
-ehci_platform_port_power thanks to portnum.
+I have added a per-patch change log as summarizing all little changes here
+had not real benefit imho, being them mostly tiny changes specific to each
+patch.
 
->>   Example (Sequoia 440EPx):
->>       ehci@e0000300 {
->> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
->> index b065a96..05be100 100644
->> --- a/drivers/usb/host/ehci-platform.c
->> +++ b/drivers/usb/host/ehci-platform.c
->> @@ -29,6 +29,7 @@
->>   #include <linux/of.h>
->>   #include <linux/phy/phy.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/regulator/consumer.h>
->>   #include <linux/reset.h>
->>   #include <linux/usb.h>
->>   #include <linux/usb/hcd.h>
->> @@ -46,6 +47,7 @@ struct ehci_platform_priv {
->>   	struct reset_control *rsts;
->>   	struct phy **phys;
->>   	int num_phys;
->> +	struct regulator *vbus_supply;
->>   	bool reset_on_resume;
->>   };
->>   
->> @@ -76,6 +78,25 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
->>   	return 0;
->>   }
->>   
->> +static int ehci_platform_port_power(struct usb_hcd *hcd, int portnum,
->> +				    bool enable)
->> +{
->> +	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
->> +	int ret = 0;
->> +
->> +	if (priv->vbus_supply) {
->> +		if (enable)
->> +			ret = regulator_enable(priv->vbus_supply);
->> +		else
->> +			ret = regulator_disable(priv->vbus_supply);
->> +		if (ret)
->> +			dev_err(hcd->self.controller,
->> +				"failed to %s vbus supply: %d\n",
->> +				enable ? "enable" : "disable", ret);
->> +	}
->> +	return ret;
->> +}
->> +
->>   static int ehci_platform_power_on(struct platform_device *dev)
->>   {
->>   	struct usb_hcd *hcd = platform_get_drvdata(dev);
->> @@ -134,6 +155,7 @@ static struct hc_driver __read_mostly ehci_platform_hc_driver;
->>   static const struct ehci_driver_overrides platform_overrides __initconst = {
->>   	.reset =		ehci_platform_reset,
->>   	.extra_priv_size =	sizeof(struct ehci_platform_priv),
->> +	.port_power =		ehci_platform_port_power,
->>   };
->>   
->>   static struct usb_ehci_pdata ehci_platform_defaults = {
->> @@ -247,6 +269,15 @@ static int ehci_platform_probe(struct platform_device *dev)
->>   	if (err)
->>   		goto err_put_clks;
->>   
->> +	priv->vbus_supply = devm_regulator_get_optional(&dev->dev, "vbus");
->> +	if (IS_ERR(priv->vbus_supply)) {
->> +		err = PTR_ERR(priv->vbus_supply);
->> +		if (err == -ENODEV)
->> +			priv->vbus_supply = NULL;
->> +		else
->> +			goto err_reset;
->> +	}
->> +
->>   	if (pdata->big_endian_desc)
->>   		ehci->big_endian_desc = 1;
->>   	if (pdata->big_endian_mmio)
->>
-> 
+As a general note, I have split patches and bindings where requested and split
+single patches in multiple ones where opportune (mostly when adding components
+to drivers/soc/ and when introducing board and SoC DT files).
+
+Tested serial console output and Ethernet interface.
+
+Thanks
+   j
+
+v1 -> v2:
+- Rebased on renesas-drivers-2018-02-13-v4.16-rc1
+- Split patches when introducing rst, sysc in drivers/soc/
+- Split patches when adding device tree file for Salvator-X board and
+  r8a77965 SoC.
+- Single change logs are reported per-patch
+
+Jacopo Mondi (19):
+  clk: renesas: cpg-mssr: Add support for R-Car M3-N
+  soc: renesas: rcar-rst: Add support for R-Car M3-N
+  soc: renesas: Identify R-Car M3-N
+  soc: renesas: rcar-sysc: Add R-Car M3-N support
+  pinctrl: sh-pfc: Initial R-Car M3-N support
+  dt-bindings: arm: Document R-Car M3-N SoC DT bindings
+  ARM64: Add Renesas R-Car M3-N config symbol
+  ARM64: dts: Add Renesas R8A77965 SoC support
+  ARM64: dts: Add R-Car Salvator-x M3-N support
+  dt-bindings: dmaengine: rcar-dmac: document R8A77965 support
+  ARM64: dts: r8a77965: Add dmac device nods
+  dt-bindings: serial: sh-sci: Add support for r8a77965 (H)SCIF
+  pinctrl: sh-pfc: r8a77965: Add SCIFs groups/functions
+  ARM64: dts: r8a77965: Add SCIF device nodes
+  dt-bindings: gpio: Add support for r8a77965
+  ARM64: dts: r8a77965: Add GPIO nodes
+  dt-bindings: net: ravb: Add support for r8a77965 SoC
+  pinctrl: sh-pfc: r8a77965: Add EtherAVB groups/functions
+  ARM64: dts: r8a77965: Add EtherAVB device node
+
+ Documentation/devicetree/bindings/arm/shmobile.txt |    2 +
+ .../devicetree/bindings/clock/renesas,cpg-mssr.txt |    1 +
+ .../devicetree/bindings/dma/renesas,rcar-dmac.txt  |    1 +
+ .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |    1 +
+ .../devicetree/bindings/net/renesas,ravb.txt       |    1 +
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    1 +
+ .../bindings/power/renesas,rcar-sysc.txt           |    1 +
+ .../devicetree/bindings/reset/renesas,rst.txt      |    1 +
+ .../bindings/serial/renesas,sci-serial.txt         |    2 +
+ arch/arm64/Kconfig.platforms                       |    6 +
+ arch/arm64/boot/dts/renesas/Makefile               |    1 +
+ .../arm64/boot/dts/renesas/r8a77965-salvator-x.dts |   21 +
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi          |  782 +++++
+ drivers/clk/renesas/Kconfig                        |    5 +
+ drivers/clk/renesas/Makefile                       |    1 +
+ drivers/clk/renesas/r8a77965-cpg-mssr.c            |  334 +++
+ drivers/clk/renesas/renesas-cpg-mssr.c             |    6 +
+ drivers/clk/renesas/renesas-cpg-mssr.h             |    1 +
+ drivers/pinctrl/sh-pfc/Kconfig                     |    5 +
+ drivers/pinctrl/sh-pfc/Makefile                    |    1 +
+ drivers/pinctrl/sh-pfc/core.c                      |    6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a77965.c              | 3128 ++++++++++++++++++++
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |    1 +
+ drivers/soc/renesas/Kconfig                        |    9 +-
+ drivers/soc/renesas/Makefile                       |    1 +
+ drivers/soc/renesas/r8a77965-sysc.c                |   37 +
+ drivers/soc/renesas/rcar-rst.c                     |    1 +
+ drivers/soc/renesas/rcar-sysc.c                    |    3 +
+ drivers/soc/renesas/rcar-sysc.h                    |    1 +
+ drivers/soc/renesas/renesas-soc.c                  |    8 +
+ include/dt-bindings/clock/r8a77965-cpg-mssr.h      |   62 +
+ include/dt-bindings/power/r8a77965-sysc.h          |   30 +
+ 32 files changed, 4459 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a77965.dtsi
+ create mode 100644 drivers/clk/renesas/r8a77965-cpg-mssr.c
+ create mode 100644 drivers/pinctrl/sh-pfc/pfc-r8a77965.c
+ create mode 100644 drivers/soc/renesas/r8a77965-sysc.c
+ create mode 100644 include/dt-bindings/clock/r8a77965-cpg-mssr.h
+ create mode 100644 include/dt-bindings/power/r8a77965-sysc.h
+
+--
+2.7.4
