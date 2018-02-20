@@ -1,47 +1,36 @@
-Return-Path: <SRS0=RDbo=FO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pl0-f66.google.com ([209.85.160.66]:42310 "EHLO
-        mail-pl0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751529AbeBTMiX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 20 Feb 2018 07:38:23 -0500
-Received: by mail-pl0-f66.google.com with SMTP id 31so7328332ple.9
-        for <devicetree@vger.kernel.org>; Tue, 20 Feb 2018 04:38:23 -0800 (PST)
-From: shyam saini <mayhs11saini@gmail.com>
-Subject: [PATCH] ARM: dts: imx6dl: Include correct dtsi file for Engicam i.CoreM6 DualLite/Solo RQS
-Date: Tue, 20 Feb 2018 18:08:08 +0530
-Message-Id: <1519130288-12666-1-git-send-email-mayhs11saini@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, devicetree@vger.kernel.org, michael@amarulasolutions.com, jagan@amarulasolutions.com, Shyam Saini <shyam@amarulasolutions.com>
+Return-Path: <SRS0=r5lV=FO=gmail.com=joel.stan@kernel.org>
+Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2 3/3] reset: simple: Allow user selection of driver
+Date: Tue, 20 Feb 2018 12:13:30 +1030
+Message-Id: <20180220014330.23425-4-joel@jms.id.au>
+In-Reply-To: <20180220014330.23425-1-joel@jms.id.au>
+References: <20180220014330.23425-1-joel@jms.id.au>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Jeffery <andrew@aj.id.au>
+Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shyam Saini <shyam@amarulasolutions.com>
+Currently this driver is only user selectable if COMPILE_TEST is turned
+on. Users may wish to select (and deselect) it, so remove this
+restriction.
 
-This patch fixes the wrongly included dtsi file which
-was breaking mainline support for Engicam i.CoreM6 DualLite/Solo RQS.
-
-As per the board name, the correct file should be imx6dl.dtsi instead
-of imx6q.dtsi
-
-Reported-by: Michael Trimarchi <michael@amarulasolutions.com>
-Suggested-by: Jagan Teki <jagan@amarulasolutions.com>
-Signed-off-by: Shyam Saini <shyam@amarulasolutions.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- arch/arm/boot/dts/imx6dl-icore-rqs.dts | 2 +-
+ drivers/reset/Kconfig | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-icore-rqs.dts b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-index cf42c2f..1281bc3 100644
---- a/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-+++ b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-@@ -42,7 +42,7 @@
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 18f152d251d7..7490a4370900 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -82,7 +82,7 @@ config RESET_PISTACHIO
+ 	  This enables the reset driver for ImgTec Pistachio SoCs.
  
- /dts-v1/;
- 
--#include "imx6q.dtsi"
-+#include "imx6dl.dtsi"
- #include "imx6qdl-icore-rqs.dtsi"
- 
- / {
+ config RESET_SIMPLE
+-	bool "Simple Reset Controller Driver" if COMPILE_TEST
++	bool "Simple Reset Controller Driver"
+ 	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX || ARCH_ASPEED
+ 	help
+ 	  This enables a simple reset controller driver for reset lines that
 -- 
-2.7.4
-
+2.15.1
