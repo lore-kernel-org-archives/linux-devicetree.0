@@ -1,36 +1,39 @@
-Return-Path: <SRS0=/mGh=FN=electromag.com.au=preid@kernel.org>
-From: Phil Reid <preid@electromag.com.au>
-Subject: [PATCH v4 1/3] pinctrl: mcp23s08: fix probing of mcp23s18
-Date: Mon, 19 Feb 2018 17:25:18 +0800
-Message-Id: <1519032320-103817-2-git-send-email-preid@electromag.com.au>
-In-Reply-To: <1519032320-103817-1-git-send-email-preid@electromag.com.au>
-References: <1519032320-103817-1-git-send-email-preid@electromag.com.au>
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, preid@electromag.com.au, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, jan.kundrat@cesnet.cz
+Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v3 08/15] memory: tegra: Remove unused headers inclusions
+Date: Tue, 20 Feb 2018 19:25:21 +0300
+Message-Id: <637f4a311b576b9361a580019980bbf0329b9e49.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-one_regmap_config is always null if mcp type is MCP_TYPE_S18.
-Remove the null check so that the mcp23s18 will probe.
+Tegra210 contains some unused leftover headers, remove them for
+consistency.
 
-Fixes: 1781af563aef66c2eb7cda ("pinctrl: mcp23s08: spi: Fix
-duplicate pinctrl debugfs entries")
-
-Signed-off-by: Phil Reid <preid@electromag.com.au>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/pinctrl/pinctrl-mcp23s08.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/memory/tegra/tegra210.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index f3f9f19..83277570 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -823,8 +823,6 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 		break;
+diff --git a/drivers/memory/tegra/tegra210.c b/drivers/memory/tegra/tegra210.c
+index 3b8d0100088c..b729f49ffc8f 100644
+--- a/drivers/memory/tegra/tegra210.c
++++ b/drivers/memory/tegra/tegra210.c
+@@ -6,11 +6,6 @@
+  * published by the Free Software Foundation.
+  */
  
- 	case MCP_TYPE_S18:
--		if (!one_regmap_config)
--			return -ENOMEM;
- 		mcp->regmap = devm_regmap_init(dev, &mcp23sxx_spi_regmap, mcp,
- 					       &mcp23x17_regmap);
- 		mcp->reg_shift = 1;
+-#include <linux/of.h>
+-#include <linux/mm.h>
+-
+-#include <asm/cacheflush.h>
+-
+ #include <dt-bindings/memory/tegra210-mc.h>
+ 
+ #include "mc.h"
 -- 
-1.8.3.1
+2.16.1
