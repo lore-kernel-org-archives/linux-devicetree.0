@@ -1,74 +1,97 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 11/15] gpio: rcar: Add R-Car M3-N compatible string
-Date: Tue, 20 Feb 2018 14:35:32 +0100
-Message-ID: <20180220133532.GE7203@w540>
-References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
- <1518515162-23663-12-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdXW-7+6_iSPk3oUo-fWsMxqvSawuy2QZ3VTYhoeN8kB4w@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 1/2] dmaengine: Introduce DW AXI DMAC driver
+Date: Tue, 20 Feb 2018 15:39:17 +0200
+Message-ID: <CAHp75VdQ_tVG29+JdycoTg-0tBAxKa9dNvesU-b+f8RqhQf4Rw@mail.gmail.com>
+References: <20180220123047.24469-1-Eugeniy.Paltsev@synopsys.com>
+ <20180220123047.24469-2-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXW-7+6_iSPk3oUo-fWsMxqvSawuy2QZ3VTYhoeN8kB4w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180220123047.24469-2-Eugeniy.Paltsev@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, Rob Herring <robh+dt@kernel.org>, dmaengine <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On Tue, Feb 20, 2018 at 2:30 PM, Eugeniy Paltsev
+<Eugeniy.Paltsev@synopsys.com> wrote:
+> This patch adds support for the DW AXI DMAC controller.
+> DW AXI DMAC is a part of HSDK development board from Synopsys.
+>
+> In this driver implementation only DMA_MEMCPY transfers are
+> supported.
 
-On Wed, Feb 14, 2018 at 03:05:05PM +0100, Geert Uytterhoeven wrote:
-> On Tue, Feb 13, 2018 at 10:45 AM, Jacopo Mondi
-> <jacopo+renesas@jmondi.org> wrote:
-> > Add compatible string for R-Car M3-N (r8a77965) in gpio-rcar.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->
-> > --- a/drivers/gpio/gpio-rcar.c
-> > +++ b/drivers/gpio/gpio-rcar.c
-> > @@ -360,6 +360,10 @@ static const struct of_device_id gpio_rcar_of_table[] = {
-> >                 /* Gen3 GPIO is identical to Gen2. */
-> >                 .data = &gpio_rcar_info_gen2,
-> >         }, {
-> > +               .compatible = "renesas,gpio-r8a77965",
-> > +               /* Gen3 GPIO is identical to Gen2. */
-> > +               .data = &gpio_rcar_info_gen2,
-> > +       }, {
->
-> This part is not needed, as the driver already matches agains the generic
-> "renesas,rcar-gen3-gpio".
+Just few comments, code looks fine I hope.
 
-Just to point out that the compatible string is there for M3-W and H3.
-Anyway, if that's not good practice to add per-SoC strings here, I'll
-drop this bit.
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13344,6 +13344,12 @@ F:     include/linux/dma/dw.h
+>  F:     include/linux/platform_data/dma-dw.h
+>  F:     drivers/dma/dw/
+>
+> +SYNOPSYS DESIGNWARE AXI DMAC DRIVER
+> +M:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> +S:     Maintained
+> +F:     drivers/dma/dwi-axi-dmac/
+> +F:     Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
 
-Thanks
-   j
+AXI is earlier in alphabet than DMAC in previous record.
 
->
-> >                 .compatible = "renesas,rcar-gen1-gpio",
-> >                 .data = &gpio_rcar_info_gen1,
-> >         }, {
->
-> With the above fixed:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+Linus even submitted a script last year to sort the MAINTAINERS data base.
+
+> +/*
+> + * Synopsys DesignWare AXI DMA Controller driver.
+> + *
+> + * Copyright (C) 2017-2018 Synopsys, Inc. (www.synopsys.com)
+> + * Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+
+Now we have SPDX identifiers.
+
+> +static u32 axi_chan_get_xfer_width(struct axi_dma_chan *chan, dma_addr_t src,
+> +                                  dma_addr_t dst, size_t len)
+> +{
+> +       u32 max_width = chan->chip->dw->hdata->m_data_width;
+> +
+> +       return min_t(size_t, __ffs(src | dst | len), max_width);
+
+size_t -> u32 ?
+
+> +}
+
+> +       unsigned int timeout = 20; /* timeout iterations */
+
+> +       do  {
+> +               if (axi_chan_irq_read(chan) & DWAXIDMAC_IRQ_SUSPENDED) {
+> +                       ret = 0;
+> +                       break;
+> +               }
+> +               udelay(2);
+> +       } while (timeout--);
+
+Off-by-one. You will have 21 tries here.
+
+} while (--timeout);
+
+-- 
+With Best Regards,
+Andy Shevchenko
