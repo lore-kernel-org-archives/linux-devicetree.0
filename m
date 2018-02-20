@@ -1,64 +1,175 @@
 Return-Path: <SRS0=RDbo=FO=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-dm3nam03on0082.outbound.protection.outlook.com ([104.47.41.82]:4313
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+Received: from mail-co1nam03on0042.outbound.protection.outlook.com ([104.47.40.42]:33376
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750732AbeBTIdi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 20 Feb 2018 03:33:38 -0500
+        id S1750703AbeBTIga (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 20 Feb 2018 03:36:30 -0500
 From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Subject: [PATCH 1/2] doc: fpga: Add reset bridge support
-Date: Tue, 20 Feb 2018 14:10:02 +0530
-Message-ID: <1519116003-6967-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+Subject: [PATCH 2/2] fpga: reset bridge: Add the reset bridge
+Date: Tue, 20 Feb 2018 14:12:51 +0530
+Message-ID: <1519116171-7182-2-git-send-email-shubhrajyoti.datta@xilinx.com>
+In-Reply-To: <1519116171-7182-1-git-send-email-shubhrajyoti.datta@xilinx.com>
+References: <1519116171-7182-1-git-send-email-shubhrajyoti.datta@xilinx.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 Sender: devicetree-owner@vger.kernel.org
 To: linux-fpga@vger.kernel.org
-Cc: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, michal.simek@xilinx.com, devicetree@vger.kernel.org, shubhrajyoti.datta@gmail.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, michal.simek@xilinx.com, devicetree@vger.kernel.org, shubhrajyoti.datta@gmail.com, nofooter@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add reset bridge support. Once this bridge is enabled.
-The reset line(s) will be toggled. Generally it will be
-called after the bitstream load to reset the PL.
+Adds the reset bridge. After the bitstream load the reset
+bridge helps in reseting the programable logic. The
+reset lines depends on the design.
 
 Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 ---
- .../devicetree/bindings/fpga/xlnx,rst-bridge.txt   | 22 ++++++++++++++++++=
+ drivers/fpga/Kconfig             |   8 ++++
+ drivers/fpga/Makefile            |   1 +
+ drivers/fpga/xilinx-rst-bridge.c | 100 +++++++++++++++++++++++++++++++++++=
 ++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,rst-bridge.=
-txt
+ 3 files changed, 109 insertions(+)
+ create mode 100644 drivers/fpga/xilinx-rst-bridge.c
 
-diff --git a/Documentation/devicetree/bindings/fpga/xlnx,rst-bridge.txt b/D=
-ocumentation/devicetree/bindings/fpga/xlnx,rst-bridge.txt
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index ad5448f..752a907 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -117,4 +117,12 @@ config XILINX_PR_DECOUPLER
+          region of the FPGA from the busses while that region is
+          being reprogrammed during partial reconfig.
+
++config XILINX_RST_BRIDGE
++       tristate "Xilinx Reset bridge"
++       depends on FPGA_BRIDGE
++       help
++         Say Y to enable drivers for Xilinx Reset bridge.
++         After writing the bitstream there has to be a reset.
++         The reset lines are design specific.
++
+ endif # FPGA
+diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+index f98dcf1..c1b0d13 100644
+--- a/drivers/fpga/Makefile
++++ b/drivers/fpga/Makefile
+@@ -23,6 +23,7 @@ obj-$(CONFIG_FPGA_BRIDGE)             +=3D fpga-bridge.o
+ obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)      +=3D altera-hps2fpga.o altera-fpga2=
+sdram.o
+ obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)     +=3D altera-freeze-bridge.o
+ obj-$(CONFIG_XILINX_PR_DECOUPLER)      +=3D xilinx-pr-decoupler.o
++obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)     +=3D xilinx-rst-bridge.o
+
+ # High Level Interfaces
+ obj-$(CONFIG_FPGA_REGION)              +=3D fpga-region.o
+diff --git a/drivers/fpga/xilinx-rst-bridge.c b/drivers/fpga/xilinx-rst-bri=
+dge.c
 new file mode 100644
-index 0000000..6f1bfc2
+index 0000000..8062283
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/xlnx,rst-bridge.txt
-@@ -0,0 +1,22 @@
-+Xilinx fpga reset bridge
++++ b/drivers/fpga/xilinx-rst-bridge.c
+@@ -0,0 +1,100 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Xilinx FPGA reset bridge.
++ * Copyright (c) 2018 Xilinx Inc.
++ *
++ */
 +
-+The Xilinx reset bridge toggles the reset line to the PL
-+in Zynqmp Ultrascale plus.
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/fpga/fpga-bridge.h>
++#include <linux/reset.h>
 +
-+
-+Required properties:
-+- compatible   : Should contain "xlnx,rst-bridge"
-+- reset                : reset phandles
-+
-+Optional properties:
-+- bridge-enable                : 0 if driver should disable bridge at star=
-tup
-+                         1 if driver should enable bridge at startup
-+                         Default is to leave bridge in current state.
-+
-+See Documentation/devicetree/bindings/fpga/fpga-region.txt for generic bin=
-dings.
-+
-+Example:
-+fpga_rst_bridge: fpga_rst_bridge {
-+       compatible =3D "xlnx,rst-bridge";
-+       resets =3D <&rst 115>;
++struct xlnx_rst_bridge_priv {
++       struct device *dev;
++       bool enable;
 +};
++
++static int xlnx_rst_bridge_enable_set(struct fpga_bridge *bridge, bool ena=
+ble)
++{
++       struct xlnx_rst_bridge_priv *priv =3D bridge->priv;
++       struct device *dev =3D priv->dev;
++       struct reset_control *rstc;
++       int ret =3D 0;
++
++       if (enable) {
++               rstc =3D of_reset_control_array_get(dev->of_node, false, fa=
+lse);
++               if (IS_ERR(rstc))
++                       return PTR_ERR(rstc);
++
++               ret =3D reset_control_reset(rstc);
++
++               reset_control_put(rstc);
++
++               if (ret)
++                       dev_err(dev, "Reset failed\n");
++       } else {
++               dev_dbg(dev, "Bridge disabled\n");
++       }
++
++       if (!ret)
++               priv->enable =3D enable;
++
++       return ret;
++}
++
++static int xlnx_rst_bridge_enable_show(struct fpga_bridge *bridge)
++{
++       struct xlnx_rst_bridge_priv *priv =3D bridge->priv;
++
++       return priv->enable;
++}
++
++static struct fpga_bridge_ops xlnx_rst_bridge_ops =3D {
++       .enable_set =3D xlnx_rst_bridge_enable_set,
++       .enable_show =3D xlnx_rst_bridge_enable_show,
++};
++
++static int xlnx_rst_bridge_probe(struct platform_device *pdev)
++{
++       struct xlnx_rst_bridge_priv *priv;
++       struct device *dev =3D &pdev->dev;
++
++       priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++       if (!priv)
++               return -ENOMEM;
++
++       priv->dev =3D dev;
++
++       return fpga_bridge_register(dev, "xlnx_rst_bridge",
++                                   &xlnx_rst_bridge_ops, priv);
++}
++
++static int xlnx_rst_bridge_remove(struct platform_device *pdev)
++{
++       fpga_bridge_unregister(&pdev->dev);
++
++       return 0;
++}
++
++static const struct of_device_id xlnx_rst_bridge_of_match[] =3D {
++       { .compatible =3D "xlnx,rst-bridge", },
++       {},
++};
++MODULE_DEVICE_TABLE(of, xlnx_rst_bridge_of_match);
++
++static struct platform_driver xlnx_rst_bridge_driver =3D {
++       .probe =3D xlnx_rst_bridge_probe,
++       .remove =3D xlnx_rst_bridge_remove,
++       .driver =3D {
++               .name   =3D "xlnx_rst_bridge",
++               .of_match_table =3D of_match_ptr(xlnx_rst_bridge_of_match),
++       },
++};
++
++module_platform_driver(xlnx_rst_bridge_driver);
++
++MODULE_DESCRIPTION("Xilinx reset Bridge");
++MODULE_AUTHOR("Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>");
++MODULE_LICENSE("GPL v2");
 --
 2.1.1
 
