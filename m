@@ -1,85 +1,61 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH v5 0/5] gpio: driver for the RPi3 GPIO expander
-Date: Tue, 20 Feb 2018 14:19:30 +0200
-Message-ID: <cover.1519128054.git.baruch@tkos.co.il>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 9/9] serial: xuartps: Fix out-of-bounds access through DT
+ alias
+Date: Tue, 20 Feb 2018 13:27:53 +0100
+Message-ID: <CAMuHMdWe9XkoDKkyfu1pOG0oS0_Tdx1w=OOk05EvTr_dK=tp7Q@mail.gmail.com>
+References: <1519119624-1268-1-git-send-email-geert+renesas@glider.be>
+ <1519119624-1268-10-git-send-email-geert+renesas@glider.be>
+ <c16b025a-a302-8515-2697-f7eca478e939@xilinx.com>
+ <CAMuHMdUOKMM5mSrnnrxCi0gX_TbjYkj7vwn11b2D5p7XigM+Ag@mail.gmail.com>
+ <6cabf7c6-302e-efa9-8f4d-25fd35ecddad@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>
-Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-gpio@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6cabf7c6-302e-efa9-8f4d-25fd35ecddad@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Barry Song <baohua@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Vineet Gupta <vgupta@synopsys.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, arcml <linux-snps-arc@lists.infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Raspberry Pi 3 has a GPIO expander that controls, among others, the 
-activity LED, and the camera connector GPIOs. The GPIO expander on an I2C bus 
-that is not directly controlled from the ARM core. The VC4 firmware controls 
-the I2C bus, and allows the ARM core to set/get GPIO settings over its mailbox 
-interface.
+Hi Michal,
 
-This series adds support for the RPi3 expander.
+On Tue, Feb 20, 2018 at 12:27 PM, Michal Simek <michal.simek@xilinx.com> wrote:
+> On 20.2.2018 11:38, Geert Uytterhoeven wrote:
+>> On Tue, Feb 20, 2018 at 11:22 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+>>> On 20.2.2018 10:40, Geert Uytterhoeven wrote:
+>>>> The cdns_uart_port[] array is indexed using a value derived from the
+>>>> "serialN" alias in DT, which may lead to an out-of-bounds access.
+>>>>
+>>>> Fix this by adding a range check.
 
-The driver is ported from the downstream kernel at 
-https://github.com/raspberrypi/linux/, branch rpi-4.9.y.
+> I have checked 4 patches I have sent in past which didn't reach mainline
+> (probably because of RFC)
+> Take a look at
+> https://www.spinics.net/lists/linux-serial/msg27106.html
+>
+> I have removed cdns_uart_port array completely there.
 
-This series is based on commit v4.16-rc2.
+Nice! I'd love to get rid of fixed arrays in serial...
 
-Changes in v5:
+However, IMHO it's still worthwhile to fix the out-of-bounds access first,
+as that fix can be backported to stable kernels easily.
 
-  * Remove the 'firmware' property from the binding as suggested by Rob
-    Herring. The firmware node is the parent of the gpio node, so use
-    of_get_parent() instead of a phandle.
+Gr{oetje,eeting}s,
 
-Changes in v4:
+                        Geert
 
-  * Move the gpio expander node under the firmware node; this requires an
-    addtional patch that makes the firmware node into a bus
-  * Rename the gpio node to just 'gpio'
-  * Drop the platform driver .owner set
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Changes in v3:
-
-  * Kconfig tweaks
-  * Check rpi_exp_gpio_get_polarity() return value
-  * Redundant header removal
-  * Redundant platform_set_drvdata() call removal
-  * Small coding style changes
-
-Changes in v2:
-
-  * Driver renamed to gpio-raspberrypi-exp
-  * Compatible string renamed to "raspberrypi,firmware-gpio"
-  * Firmware error check
-  * Smaller tweaks listed in individual patches
-
-Baruch Siach (4):
-  ARM: bcm2835: sync firmware properties with downstream
-  dt-bindings: gpio: add raspberry pi GPIO expander binding
-  ARM: dts: bcm2835: make the firmware node into a bus
-  ARM: dts: bcm2837-rpi-3-b: add GPIO expander
-
-Dave Stevenson (1):
-  gpio: raspberrypi-exp: Driver for RPi3 GPIO expander via mailbox
-    service
-
- .../bindings/gpio/raspberrypi,firmware-gpio.txt    |  30 +++
- arch/arm/boot/dts/bcm2835-rpi.dtsi                 |   4 +-
- arch/arm/boot/dts/bcm2837-rpi-3-b.dts              |  17 ++
- drivers/gpio/Kconfig                               |   9 +
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-raspberrypi-exp.c                | 252 +++++++++++++++++++++
- include/soc/bcm2835/raspberrypi-firmware.h         |  18 ++
- 7 files changed, 330 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt
- create mode 100644 drivers/gpio/gpio-raspberrypi-exp.c
-
--- 
-2.16.1
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
