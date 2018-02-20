@@ -1,16 +1,14 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3 6/7] arm: dts: sun8i: a83t: Fix undefined offset with
- virtual timer
-Date: Tue, 20 Feb 2018 18:07:54 +0000
-Message-ID: <823f256a-3240-7bb4-cc0b-711108f3076c@arm.com>
-References: <20180219081837.15482-1-mylene.josserand@bootlin.com>
- <20180219081837.15482-7-mylene.josserand@bootlin.com>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v2] usb: host: ehci-platform: add support for optional
+ external vbus supply
+Date: Tue, 20 Feb 2018 13:10:30 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1802201300400.1428-100000@iolanthe.rowland.org>
+References: <f2af8c41-f3d7-cffb-4e1e-2a12bc51c776@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180219081837.15482-7-mylene.josserand@bootlin.com>
-Content-Language: en-GB
+In-Reply-To: <f2af8c41-f3d7-cffb-4e1e-2a12bc51c776@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,43 +18,156 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Myl=c3=a8ne_Josserand?= <mylene.josserand@bootlin.com>, maxime.ripard@bootlin.com, wens@csie.org, linux@armlinux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amelie DELAUNAY <amelie.delaunay@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tony Prisk <linux@prisktech.co.nz>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTXlsw6huZSwKCk9uIDE5LzAyLzE4IDA4OjE4LCBNeWzDqG5lIEpvc3NlcmFuZCB3cm90ZToK
-PiBUaGUgQVJNIGFyY2hpdGVjdGVkIHRpbWVycyB1c2UgYW4gb2Zmc2V0IGJldHdlZW4gdGhlaXIg
-cGh5c2ljYWwgYW5kCj4gdmlydHVhbCBjb3VudGVycy4gVGhhdCBvZmZzZXQgc2hvdWxkIGJlIGNv
-bmZpZ3VyZWQgYnkgdGhlIGJvb3Rsb2FkZXIKPiBpbiBDTlRWT0ZGLgo+IAo+IEhvd2V2ZXIsIHRo
-ZSBBODN0IGJvb3Rsb2FkZXIgZmFpbHMgdG8gZG8gc28sIGFuZCB3ZSBlbmQgdXAgd2l0aCBhbgo+
-IHVuZGVmaW5lZCBvZmZzZXQgKHdoaWNoIGluIG91ciBjYXNlIGlzIHJhbmRvbSksIG1lYW5pbmcg
-dGhhdCBlYWNoIENQVQo+IHdpbGwgaGF2ZSBhIGRpZmZlcmVudCB0aW1lLCB3aGljaCBpc24ndCB3
-b3JraW5nIHZlcnkgd2VsbC4KPiAKPiBGaXggdGhhdCBieSBzZXR0aW5nIHRoZSBhcm0sY3B1LXJl
-Z2lzdGVycy1ub3QtZnctY29uZmlndXJlZCB0aGF0IHdpbGwKPiBtYWtlIExpbnV4IHVzZSB0aGUg
-cGh5c2ljYWwgdGltZXJzIGluc3RlYWQgb2YgdGhlIHZpcnR1YWwgb25lcy4gT25lCj4gcG9zc2li
-bGUgc2lkZSBlZmZlY3Qgd291bGQgYmUgdGhhdCB0aGUgdmlydHVhbGl6YXRpb24gZmVhdHVyZXMg
-d291bGQKPiBiZSBkaXNhYmxlZC4gSG93ZXZlciwgZHVlIHRvIHRoZSB3YXkgdGhlIEdJQyBoYXMg
-YmVlbiBpbnRlZ3JhdGVkIGluCj4gdGhlIHN5c3RlbSwgaXQgaXMgYWxyZWFkeSB1bnVzYWJsZSBz
-byB3ZSdyZSBlZmZlY3RpdmVseSBub3QgbG9zaW5nIGFueQo+IGZlYXR1cmUuCj4gCj4gU2lnbmVk
-LW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRAYm9vdGxpbi5jb20+
-Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWE4M3QuZHRzaSB8IDEgKwo+ICAxIGZp
-bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvc3VuOGktYTgzdC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNp
-Cj4gaW5kZXggZTk3YTZkMTdiOGQwLi5iOWJkYjg5MWNmMmYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3Vu
-OGktYTgzdC5kdHNpCj4gQEAgLTEyMyw2ICsxMjMsNyBAQAo+ICAJCQkgICAgIDxHSUNfUFBJIDE0
-IChHSUNfQ1BVX01BU0tfU0lNUExFKDgpIHwgSVJRX1RZUEVfTEVWRUxfTE9XKT4sCj4gIAkJCSAg
-ICAgPEdJQ19QUEkgMTEgKEdJQ19DUFVfTUFTS19TSU1QTEUoOCkgfCBJUlFfVFlQRV9MRVZFTF9M
-T1cpPiwKPiAgCQkJICAgICA8R0lDX1BQSSAxMCAoR0lDX0NQVV9NQVNLX1NJTVBMRSg4KSB8IElS
-UV9UWVBFX0xFVkVMX0xPVyk+Owo+ICsJCWFybSxjcHUtcmVnaXN0ZXJzLW5vdC1mdy1jb25maWd1
-cmVkOwo+ICAJfTsKPiAgCj4gIAljbG9ja3Mgewo+IAoKSXMgdGhlIGZpcm13YXJlIGRyb3BwaW5n
-IHlvdSBpbiB0aGUga2VybmVsIGluIHNlY3VyZSBvciBub24tc2VjdXJlIG1vZGU/CgpJZiB0aGUg
-bGF0ZXIsIHdoYXQgeW91IGhhdmUgaXMgdGhlIG9ubHkgc29sdXRpb24uIElmIHRoZSBmb3JtZXIs
-IHRoYXQKSSdkIHN1Z2dlc3QgeW91IGFkb3B0IHdoYXQgd2UgYWxyZWFkeSBoYXZlIGZvciB0aGUg
-UmVuZXNhcyBzdHVmZiAoc2VlCmFyY2gvYXJtL21hY2gtc2htb2JpbGUvaGVhZHNtcC1hcG11LlMg
-YW5kIGNvbW1pdCAzZmQ0NWExMzZmZjYpLgoKSXQgd291bGQgYWxsb3cgeW91IHRvIHVzZSB0aGUg
-dmlydHVhbCB0aW1lciBhcyBpbnRlbmRlZC4KClRoYW5rcywKCglNLgotLSAKSmF6eiBpcyBub3Qg
-ZGVhZC4gSXQganVzdCBzbWVsbHMgZnVubnkuLi4KCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Tue, 20 Feb 2018, Roger Quadros wrote:
+
+> On 20/02/18 16:46, Amelie DELAUNAY wrote:
+> > Hi,
+> > 
+> > On 02/20/2018 03:00 PM, Roger Quadros wrote:
+> >> Hi,
+> >>
+> >> On 20/02/18 14:58, Amelie Delaunay wrote:
+> >>> On some boards, especially when vbus supply requires large current,
+> >>> and the charge pump on the PHY isn't enough, an external vbus power switch
+> >>> may be used.
+> >>> Add support for this optional external vbus supply in ehci-platform.
+> >>>
+> >>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> >>>
+> >>> ---
+> >>> Changes in v2:
+> >>>   * Address Roger Quadros comments: move regulator_enable/disable from
+> >>> ehci_platform_power_on/off to ehci_platform_port_power.
+> >>> ---
+> >>>   Documentation/devicetree/bindings/usb/usb-ehci.txt |  1 +
+> >>>   drivers/usb/host/ehci-platform.c                   | 31 ++++++++++++++++++++++
+> >>>   2 files changed, 32 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >>> index 3efde12..fc480cd 100644
+> >>> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >>> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >>> @@ -19,6 +19,7 @@ Optional properties:
+> >>>    - phys : phandle + phy specifier pair
+> >>>    - phy-names : "usb"
+> >>>    - resets : phandle + reset specifier pair
+> >>> + - vbus-supply : phandle of regulator supplying vbus
+> >>>   
+> >>
+> >> Can platforms have more than one regulator e.g. one regulator per port?
+> >>
+> > 
+> > I imagine that yes, platforms could have one regulator per port.
+> > Regulator consumers bindings impose a <name>-supply property per 
+> > regulator, so, what do you think about :
+> > vbus0-supply for port#0
+> > vbus1-supply for port#1
+> > ...
+> > vbusN-supply for port#N
+> > 
+> > And then in probe, allocate 'struct regulator *vbus_supplies' with a 
+> > size corresponding to 'HCS_N_PORTS(ehci->hcs_params) * sizeof(struct 
+> > regulator *)'.
+> > And loop to get optional regulator vbus0, vbus1,..., vbusN.
+> > And then enable/disable the corresponding regulator in 
+> > ehci_platform_port_power thanks to portnum.
+> 
+> Looks fine to me but we need to get Alan's opinion if this is worth the effort.
+> If there isn't a single platform needing it we could probably do without it
+> but the DT binding must be scalable to add this feature in the future.
+
+I agree that for now there don't seem to be any platforms requiring 
+more than one regulator, but this should be implemented in a way that 
+could be expanded if necessary.
+
+Anyway, the basic idea is reasonable.  I don't know to what extent 
+people want to power-off their EHCI ports, but if they do then we ought 
+to turn off external regulators at the same time.
+
+Is there a real-life use case for this?
+
+Alan Stern
+
+> And what if it is ganged power? i.e. one regulator for more than one port.
+> Probably they all can point to the same regulator instance and it should work.
+> 
+> > 
+> >>>   Example (Sequoia 440EPx):
+> >>>       ehci@e0000300 {
+> >>> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+> >>> index b065a96..05be100 100644
+> >>> --- a/drivers/usb/host/ehci-platform.c
+> >>> +++ b/drivers/usb/host/ehci-platform.c
+> >>> @@ -29,6 +29,7 @@
+> >>>   #include <linux/of.h>
+> >>>   #include <linux/phy/phy.h>
+> >>>   #include <linux/platform_device.h>
+> >>> +#include <linux/regulator/consumer.h>
+> >>>   #include <linux/reset.h>
+> >>>   #include <linux/usb.h>
+> >>>   #include <linux/usb/hcd.h>
+> >>> @@ -46,6 +47,7 @@ struct ehci_platform_priv {
+> >>>   	struct reset_control *rsts;
+> >>>   	struct phy **phys;
+> >>>   	int num_phys;
+> >>> +	struct regulator *vbus_supply;
+> >>>   	bool reset_on_resume;
+> >>>   };
+> >>>   
+> >>> @@ -76,6 +78,25 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
+> >>>   	return 0;
+> >>>   }
+> >>>   
+> >>> +static int ehci_platform_port_power(struct usb_hcd *hcd, int portnum,
+> >>> +				    bool enable)
+> >>> +{
+> >>> +	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+> >>> +	int ret = 0;
+> >>> +
+> >>> +	if (priv->vbus_supply) {
+> >>> +		if (enable)
+> >>> +			ret = regulator_enable(priv->vbus_supply);
+> >>> +		else
+> >>> +			ret = regulator_disable(priv->vbus_supply);
+> >>> +		if (ret)
+> >>> +			dev_err(hcd->self.controller,
+> >>> +				"failed to %s vbus supply: %d\n",
+> >>> +				enable ? "enable" : "disable", ret);
+> >>> +	}
+> >>> +	return ret;
+> >>> +}
+> >>> +
+> >>>   static int ehci_platform_power_on(struct platform_device *dev)
+> >>>   {
+> >>>   	struct usb_hcd *hcd = platform_get_drvdata(dev);
+> >>> @@ -134,6 +155,7 @@ static struct hc_driver __read_mostly ehci_platform_hc_driver;
+> >>>   static const struct ehci_driver_overrides platform_overrides __initconst = {
+> >>>   	.reset =		ehci_platform_reset,
+> >>>   	.extra_priv_size =	sizeof(struct ehci_platform_priv),
+> >>> +	.port_power =		ehci_platform_port_power,
+> >>>   };
+> >>>   
+> >>>   static struct usb_ehci_pdata ehci_platform_defaults = {
+> >>> @@ -247,6 +269,15 @@ static int ehci_platform_probe(struct platform_device *dev)
+> >>>   	if (err)
+> >>>   		goto err_put_clks;
+> >>>   
+> >>> +	priv->vbus_supply = devm_regulator_get_optional(&dev->dev, "vbus");
+> >>> +	if (IS_ERR(priv->vbus_supply)) {
+> >>> +		err = PTR_ERR(priv->vbus_supply);
+> >>> +		if (err == -ENODEV)
+> >>> +			priv->vbus_supply = NULL;
+> >>> +		else
+> >>> +			goto err_reset;
+> >>> +	}
+> >>> +
+> >>>   	if (pdata->big_endian_desc)
+> >>>   		ehci->big_endian_desc = 1;
+> >>>   	if (pdata->big_endian_mmio)
+> >>>
+> 
+> 
