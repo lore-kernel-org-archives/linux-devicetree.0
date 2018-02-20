@@ -1,15 +1,13 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v4 06/13] power: supply: axp20x_battery: use data struct
- for variant specific code
-Date: Tue, 20 Feb 2018 17:12:25 +0800
-Message-ID: <201802201606.lLg38XZv%fengguang.wu@intel.com>
-References: <52f68b8ed9452d643d9156a849014c9d0eb4404b.1519044068.git-series.quentin.schulz@bootlin.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 6/9] serial: samsung: Fix out-of-bounds access through DT alias
+Date: Tue, 20 Feb 2018 10:40:21 +0100
+Message-ID: <1519119624-1268-7-git-send-email-geert+renesas@glider.be>
+References: <1519119624-1268-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <52f68b8ed9452d643d9156a849014c9d0eb4404b.1519044068.git-series.quentin.schulz@bootlin.com>
+In-Reply-To: <1519119624-1268-1-git-send-email-geert+renesas@glider.be>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,30 +17,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@bootlin.com>, lars@metafoo.de, thomas.petazzoni@bootlin.com, linux-pm@vger.kernel.org, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux@armlinux.org.uk, sre@kernel.org, linux-iio@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, kbuild-all@01.org, pmeerw@pmeerw.net, knaack.h@gmx.de, lee.jones@linaro.org, jic23@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Vineet Gupta <vgupta@synopsys.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Quentin,
+The s3c24xx_serial_ports[] array is indexed using a value derived from
+the "serialN" alias in DT, which may lead to an out-of-bounds access.
 
-Thank you for the patch! Perhaps something to improve:
+Fix this by adding a range check.
 
-[auto build test WARNING on ]
+Note that the array size is defined by a Kconfig symbol
+(CONFIG_SERIAL_SAMSUNG_UARTS), so this can even be triggered using a
+legitimate DTB.
 
-url:    https://github.com/0day-ci/linux/commits/Quentin-Schulz/add-support-for-AXP813-ADC-and-battery-power-supply/20180220-051138
-base:    
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/power/supply/axp20x_battery.c:479:23: sparse: symbol 'axp209_data' was not declared. Should it be
->> drivers/power/supply/axp20x_battery.c:486:23: sparse: symbol 'axp221_data' was not declared. Should it be
-
-Please review and possibly fold the followup patch.
-
+Fixes: 3ac337e76a1c637b ("serial: samsung: Fix out-of-bounds access through DT alias")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ drivers/tty/serial/samsung.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
+index f9fecc5ed0cee826..9ea42197ceefabba 100644
+--- a/drivers/tty/serial/samsung.c
++++ b/drivers/tty/serial/samsung.c
+@@ -1818,6 +1818,10 @@ static int s3c24xx_serial_probe(struct platform_device *pdev)
+ 
+ 	dbg("s3c24xx_serial_probe(%p) %d\n", pdev, index);
+ 
++	if (index >= CONFIG_SERIAL_SAMSUNG_UARTS) {
++		dev_err(&pdev->dev, "serial%d out of range\n", index);
++		return -EINVAL;
++	}
+ 	ourport = &s3c24xx_serial_ports[index];
+ 
+ 	ourport->drv_data = s3c24xx_get_driver_data(pdev);
+-- 
+2.7.4
