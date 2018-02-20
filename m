@@ -1,57 +1,152 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 8/8] drm/rockchip: dw_hdmi: add dw-hdmi support for the
- rk3328
-Date: Tue, 20 Feb 2018 08:32:55 -0600
-Message-ID: <CAL_JsqJpThp3Bd2QEvDqY432JTzhsA9V1nEnfz65NYAyTpnY1A@mail.gmail.com>
-References: <20180216204158.29839-1-heiko@sntech.de>
- <20180216204158.29839-9-heiko@sntech.de>
- <20180219202853.eovn6onxtk7p7f4p@rob-hp-laptop> <6129590.ZtzF0TqO4l@phil>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v2] usb: host: ehci-platform: add support for optional
+ external vbus supply
+Date: Tue, 20 Feb 2018 14:46:07 +0000
+Message-ID: <2ef38200-947c-1419-1c91-f033da390f74@st.com>
+References: <1519131492-27913-1-git-send-email-amelie.delaunay@st.com>
+ <bfaa3001-d90f-7903-17e8-90af9a03c338@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <6129590.ZtzF0TqO4l@phil>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jose Abreu <Jose.Abreu@synopsys.com>, algea.cao@rock-chips.com, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Kishon Vijay Abraham I <kishon@ti.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Zheng Yang <zhengyang@rock-chips.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <bfaa3001-d90f-7903-17e8-90af9a03c338@ti.com>
+Content-Language: en-US
+Content-ID: <2753CB0B96FF3C4584ACEF41C723FBDA@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Roger Quadros <rogerq@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBGZWIgMTksIDIwMTggYXQgMjo0NiBQTSwgSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNu
-dGVjaC5kZT4gd3JvdGU6Cj4gSGkgUm9iLAo+Cj4gQW0gTW9udGFnLCAxOS4gRmVicnVhciAyMDE4
-LCAyMToyODo1MyBDRVQgc2NocmllYiBSb2IgSGVycmluZzoKPj4gT24gRnJpLCBGZWIgMTYsIDIw
-MTggYXQgMDk6NDE6NThQTSArMDEwMCwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4+ID4gVGhlIHJr
-MzMyOCB1c2VzIGFuIGV4dGVybmFsIGhkbWkgcGh5IGZyb20gSW5ub3NpbGljb24gd2hpY2ggdXNl
-cwo+PiA+IHRoZSBnZW5lcmljIHBoeSBmcmFtZXdvcmsgZm9yIGFjY2Vzcy4gQWRkIHRoZSBuZWNl
-c3NhcnkgZGF0YQo+PiA+IGFuZCB0aGUgY29tcGF0aWJsZSBmb3IgaXQuCj4+ID4KPj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgo+PiA+IC0tLQo+PiA+
-ICAuLi4vYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dCB8ICAg
-MSArCj4+ID4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgICAg
-ICAgIHwgMTA2ICsrKysrKysrKysrKysrKysrKysrKwo+PiA+ICAyIGZpbGVzIGNoYW5nZWQsIDEw
-NyBpbnNlcnRpb25zKCspCj4+ID4KPj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19oZG1p
-LXJvY2tjaGlwLnR4dAo+PiA+IGluZGV4IDkzN2JmYjQ3MmUxZC4uMzkxNDM0MjRhNDc0IDEwMDY0
-NAo+PiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jv
-Y2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0Cj4+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQKPj4g
-PiBAQCAtMTMsNiArMTMsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiA+Cj4+ID4gIC0gY29t
-cGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5nOgo+PiA+ICAgICAgICAgICAg
-ICJyb2NrY2hpcCxyazMyODgtZHctaGRtaSIKPj4gPiArICAgICAgICAgICAicm9ja2NoaXAscmsz
-MzI4LWR3LWhkbWkiCj4+Cj4+IElzIERlc2lnbndhcmUgKFN5bm9wc3lzKSBub3cgSW5ub3NpbGlj
-b24/Cj4KPiBOb3BlIDotKSAuCj4KPiBUaGUgcmszMzI4IGp1c3QgY29tYmluZXMgdGhlIERlc2ln
-bndhcmUgZHctaGRtaSB3aXRoIGFuIChleHRlcm5hbCkKPiBoZG1pLXBoeSBmcm9tIElubm9zaWxp
-Y29uLCB3aGVyZSB0aGUgaGRtaS1waHkgb3RoZXJ3aXNlIHdhcyB3YXMKPiBpbnRlZ3JhdGVkIGlu
-dG8gdGhlIGhkbWkgaXAtYmxvY2suCgpPa2F5LCB0aGUgY29tbWl0IG1zZyBpcyBtaXNsZWFkaW5n
-IGJlY2F1c2UgaXQgdGFsa3MgYWJvdXQgdGhlIHBoeSBhbmQKYWRkaW5nIHRoZSAiY29tcGF0aWJs
-ZSBmb3IgaXQiLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Hi,
+
+On 02/20/2018 03:00 PM, Roger Quadros wrote:
+> Hi,
+> 
+> On 20/02/18 14:58, Amelie Delaunay wrote:
+>> On some boards, especially when vbus supply requires large current,
+>> and the charge pump on the PHY isn't enough, an external vbus power switch
+>> may be used.
+>> Add support for this optional external vbus supply in ehci-platform.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>>
+>> ---
+>> Changes in v2:
+>>   * Address Roger Quadros comments: move regulator_enable/disable from
+>> ehci_platform_power_on/off to ehci_platform_port_power.
+>> ---
+>>   Documentation/devicetree/bindings/usb/usb-ehci.txt |  1 +
+>>   drivers/usb/host/ehci-platform.c                   | 31 ++++++++++++++++++++++
+>>   2 files changed, 32 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> index 3efde12..fc480cd 100644
+>> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> @@ -19,6 +19,7 @@ Optional properties:
+>>    - phys : phandle + phy specifier pair
+>>    - phy-names : "usb"
+>>    - resets : phandle + reset specifier pair
+>> + - vbus-supply : phandle of regulator supplying vbus
+>>   
+> 
+> Can platforms have more than one regulator e.g. one regulator per port?
+> 
+
+I imagine that yes, platforms could have one regulator per port.
+Regulator consumers bindings impose a <name>-supply property per 
+regulator, so, what do you think about :
+vbus0-supply for port#0
+vbus1-supply for port#1
+...
+vbusN-supply for port#N
+
+And then in probe, allocate 'struct regulator *vbus_supplies' with a 
+size corresponding to 'HCS_N_PORTS(ehci->hcs_params) * sizeof(struct 
+regulator *)'.
+And loop to get optional regulator vbus0, vbus1,..., vbusN.
+And then enable/disable the corresponding regulator in 
+ehci_platform_port_power thanks to portnum.
+
+>>   Example (Sequoia 440EPx):
+>>       ehci@e0000300 {
+>> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+>> index b065a96..05be100 100644
+>> --- a/drivers/usb/host/ehci-platform.c
+>> +++ b/drivers/usb/host/ehci-platform.c
+>> @@ -29,6 +29,7 @@
+>>   #include <linux/of.h>
+>>   #include <linux/phy/phy.h>
+>>   #include <linux/platform_device.h>
+>> +#include <linux/regulator/consumer.h>
+>>   #include <linux/reset.h>
+>>   #include <linux/usb.h>
+>>   #include <linux/usb/hcd.h>
+>> @@ -46,6 +47,7 @@ struct ehci_platform_priv {
+>>   	struct reset_control *rsts;
+>>   	struct phy **phys;
+>>   	int num_phys;
+>> +	struct regulator *vbus_supply;
+>>   	bool reset_on_resume;
+>>   };
+>>   
+>> @@ -76,6 +78,25 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
+>>   	return 0;
+>>   }
+>>   
+>> +static int ehci_platform_port_power(struct usb_hcd *hcd, int portnum,
+>> +				    bool enable)
+>> +{
+>> +	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+>> +	int ret = 0;
+>> +
+>> +	if (priv->vbus_supply) {
+>> +		if (enable)
+>> +			ret = regulator_enable(priv->vbus_supply);
+>> +		else
+>> +			ret = regulator_disable(priv->vbus_supply);
+>> +		if (ret)
+>> +			dev_err(hcd->self.controller,
+>> +				"failed to %s vbus supply: %d\n",
+>> +				enable ? "enable" : "disable", ret);
+>> +	}
+>> +	return ret;
+>> +}
+>> +
+>>   static int ehci_platform_power_on(struct platform_device *dev)
+>>   {
+>>   	struct usb_hcd *hcd = platform_get_drvdata(dev);
+>> @@ -134,6 +155,7 @@ static struct hc_driver __read_mostly ehci_platform_hc_driver;
+>>   static const struct ehci_driver_overrides platform_overrides __initconst = {
+>>   	.reset =		ehci_platform_reset,
+>>   	.extra_priv_size =	sizeof(struct ehci_platform_priv),
+>> +	.port_power =		ehci_platform_port_power,
+>>   };
+>>   
+>>   static struct usb_ehci_pdata ehci_platform_defaults = {
+>> @@ -247,6 +269,15 @@ static int ehci_platform_probe(struct platform_device *dev)
+>>   	if (err)
+>>   		goto err_put_clks;
+>>   
+>> +	priv->vbus_supply = devm_regulator_get_optional(&dev->dev, "vbus");
+>> +	if (IS_ERR(priv->vbus_supply)) {
+>> +		err = PTR_ERR(priv->vbus_supply);
+>> +		if (err == -ENODEV)
+>> +			priv->vbus_supply = NULL;
+>> +		else
+>> +			goto err_reset;
+>> +	}
+>> +
+>>   	if (pdata->big_endian_desc)
+>>   		ehci->big_endian_desc = 1;
+>>   	if (pdata->big_endian_mmio)
+>>
+> 
