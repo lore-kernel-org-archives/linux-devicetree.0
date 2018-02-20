@@ -1,66 +1,109 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 02/25] soc: qcom: add support to APR bus
-	driver
-Date: Tue, 20 Feb 2018 09:33:39 +0000
-Message-ID: <6be00df2-de80-0d40-9603-8b0fd94efa41@linaro.org>
-References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
- <20180213165837.1620-3-srinivas.kandagatla@linaro.org>
- <20180219030819.qovj4swuvged6c24@rob-hp-laptop>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH] usb: host: ehci-platform: add support for optional external
+ vbus supply
+Date: Tue, 20 Feb 2018 10:11:45 +0100
+Message-ID: <1519117905-12095-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180219030819.qovj4swuvged6c24@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>
+Cc: devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for review comments,
+On some boards, especially when vbus supply requires large current,
+and the charge pump on the PHY isn't enough, an external vbus power switch
+may be used.
+Add support for this optional external vbus supply in ehci-platform.
 
-On 19/02/18 03:08, Rob Herring wrote:
-> On Tue, Feb 13, 2018 at 04:58:14PM +0000,srinivas.kandagatla@linaro.org  wrote:
->> From: Srinivas Kandagatla<srinivas.kandagatla@linaro.org>
->>
->> This patch adds support toi APR bus (Asynchronous Packet Router) driver.
->> ARP driver is made as a bus driver so that the apr devices can added removed
->> more dynamically depending on the state of the services on the dsp.
->> APR is used for communication between application processor and QDSP to
->> use services on QDSP like Audio and others.
->>
->> Signed-off-by: Srinivas Kandagatla<srinivas.kandagatla@linaro.org>
->> ---
->>   drivers/soc/qcom/Kconfig           |   9 +
->>   drivers/soc/qcom/Makefile          |   1 +
->>   drivers/soc/qcom/apr.c             | 381 +++++++++++++++++++++++++++++++++++++
->>   include/dt-bindings/soc/qcom,apr.h |  27 +++
-> This belongs in the binding patch.
-> 
-I agree, will fix it in next version.
->>   include/linux/mod_devicetable.h    |  11 ++
->>   include/linux/soc/qcom/apr.h       | 131 +++++++++++++
->>   6 files changed, 560 insertions(+)
->>   create mode 100644 drivers/soc/qcom/apr.c
->>   create mode 100644 include/dt-bindings/soc/qcom,apr.h
->>   create mode 100644 include/linux/soc/qcom/apr.h
-> 
->> diff --git a/include/dt-bindings/soc/qcom,apr.h b/include/dt-bindings/soc/qcom,apr.h
->> new file mode 100644
->> index 000000000000..fb162ac4ca0e
->> --- /dev/null
->> +++ b/include/dt-bindings/soc/qcom,apr.h
->> @@ -0,0 +1,27 @@
-> SPDX tag
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+---
+ Documentation/devicetree/bindings/usb/usb-ehci.txt |  1 +
+ drivers/usb/host/ehci-platform.c                   | 23 ++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-Thanks for reminding this.. Will fix it in next spin.
-
-> 
+diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+index 3efde12..fc480cd 100644
+--- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+@@ -19,6 +19,7 @@ Optional properties:
+  - phys : phandle + phy specifier pair
+  - phy-names : "usb"
+  - resets : phandle + reset specifier pair
++ - vbus-supply : phandle of regulator supplying vbus
+ 
+ Example (Sequoia 440EPx):
+     ehci@e0000300 {
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index b065a96..76cc781 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -29,6 +29,7 @@
+ #include <linux/of.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/reset.h>
+ #include <linux/usb.h>
+ #include <linux/usb/hcd.h>
+@@ -46,6 +47,7 @@ struct ehci_platform_priv {
+ 	struct reset_control *rsts;
+ 	struct phy **phys;
+ 	int num_phys;
++	struct regulator *vbus_supply;
+ 	bool reset_on_resume;
+ };
+ 
+@@ -99,6 +101,15 @@ static int ehci_platform_power_on(struct platform_device *dev)
+ 		}
+ 	}
+ 
++	if (priv->vbus_supply) {
++		ret = regulator_enable(priv->vbus_supply);
++		if (ret) {
++			dev_err(&dev->dev,
++				"failed to enable vbus supply: %d\n", ret);
++			goto err_exit_phy;
++		}
++	}
++
+ 	return 0;
+ 
+ err_exit_phy:
+@@ -119,6 +130,9 @@ static void ehci_platform_power_off(struct platform_device *dev)
+ 	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+ 	int clk, phy_num;
+ 
++	if (priv->vbus_supply)
++		regulator_disable(priv->vbus_supply);
++
+ 	for (phy_num = 0; phy_num < priv->num_phys; phy_num++) {
+ 		phy_power_off(priv->phys[phy_num]);
+ 		phy_exit(priv->phys[phy_num]);
+@@ -247,6 +261,15 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 	if (err)
+ 		goto err_put_clks;
+ 
++	priv->vbus_supply = devm_regulator_get_optional(&dev->dev, "vbus");
++	if (IS_ERR(priv->vbus_supply)) {
++		err = PTR_ERR(priv->vbus_supply);
++		if (err == -ENODEV)
++			priv->vbus_supply = NULL;
++		else
++			goto err_reset;
++	}
++
+ 	if (pdata->big_endian_desc)
+ 		ehci->big_endian_desc = 1;
+ 	if (pdata->big_endian_mmio)
+-- 
+2.7.4
