@@ -1,89 +1,53 @@
-Return-Path: <robherring2@gmail.com>
-Date: Sun, 18 Feb 2018 21:21:41 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 4/4] of: improve reporting invalid overlay target path
-Message-ID: <20180219032141.lapcr32f4zqulvvb@rob-hp-laptop>
-References: <1518672946-7310-1-git-send-email-frowand.list@gmail.com>
- <1518672946-7310-5-git-send-email-frowand.list@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1518672946-7310-5-git-send-email-frowand.list@gmail.com>
-To: frowand.list@gmail.com
-Cc: pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org
+Return-Path: <SRS0=r5lV=FO=gmail.com=joel.stan@kernel.org>
+Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2 1/3] dt-bindings: aspeed-lpc: Add reset controller
+Date: Tue, 20 Feb 2018 12:13:28 +1030
+Message-Id: <20180220014330.23425-2-joel@jms.id.au>
+In-Reply-To: <20180220014330.23425-1-joel@jms.id.au>
+References: <20180220014330.23425-1-joel@jms.id.au>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Jeffery <andrew@aj.id.au>
+Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Feb 14, 2018 at 09:35:46PM -0800, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> Errors while developing the patch to create of_overlay_fdt_apply()
-> exposed inadequate error messages to debug problems when overlay
-> devicetree fragment nodes contain an invalid target path.  Improve
-> the messages in find_target_node() to remedy this.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
-> 
-> changes from v2:
->   - add fragment node name as suggested by Geert
->   - existing error message printed short node name, thus not
->     discriminating between fragments; change to full node name
->   - existing error message printed node address, which is devicetree
->     internal debugging, not useful in an overlay apply error message;
->     remove node address from message
-> 
->  drivers/of/overlay.c | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 5f6c5569e97d..852e566d7744 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -488,20 +488,30 @@ static int build_changeset(struct overlay_changeset *ovcs)
->   */
->  static struct device_node *find_target_node(struct device_node *info_node)
->  {
-> +	struct device_node *node;
->  	const char *path;
->  	u32 val;
->  	int ret;
->  
->  	ret = of_property_read_u32(info_node, "target", &val);
-> -	if (!ret)
-> -		return of_find_node_by_phandle(val);
-> +	if (!ret) {
-> +		node = of_find_node_by_phandle(val);
-> +		if (!node)
-> +			pr_err("find target, node: %pOF, phandle 0x%x not found\n",
+This describes the reset controller present in the LPC address space.
 
-I'm wondering if the core should print the error rather than having all 
-the callers do it. The question is whether there are cases where failing 
-is okay? I guess sometimes we use 0 to skip cells, but the core handle 
-not printing an error in that case.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+V2: Fix spelling mistakes
+---
+ .../devicetree/bindings/mfd/aspeed-lpc.txt          | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-Rob
-
-> +			       info_node, val);
-> +		return node;
-> +	}
->  
->  	ret = of_property_read_string(info_node, "target-path", &path);
-> -	if (!ret)
-> -		return of_find_node_by_path(path);
-> +	if (!ret) {
-> +		node =  of_find_node_by_path(path);
-> +		if (!node)
-> +			pr_err("find target, node: %pOF, path '%s' not found\n",
-> +			       info_node, path);
-> +		return node;
-> +	}
->  
-> -	pr_err("Failed to find target for node %p (%s)\n",
-> -		info_node, info_node->name);
-> +	pr_err("find target, node: %pOF, no target property\n", info_node);
->  
->  	return NULL;
->  }
-> -- 
-> Frank Rowand <frank.rowand@sony.com>
-> 
+diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+index 514d82ced95b..9bdd3e8c91ec 100644
+--- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
++++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+@@ -135,3 +135,24 @@ lhc: lhc@20 {
+ 	compatible = "aspeed,ast2500-lhc";
+ 	reg = <0x20 0x24 0x48 0x8>;
+ };
++
++LPC reset control
++-----------------
++
++The UARTs present in the ASPEED SoC can have their resets tied to the reset
++state of the LPC bus. Some systems may chose to modify this configuration.
++
++Required properties:
++
++ - compatible:		"aspeed,ast2500-lpc-reset" or
++ 			"aspeed,ast2400-lpc-reset"
++ - reg:			offset and length of the IP in the LHC memory region
++ - #reset-controller	indicates the number of reset cells expected
++
++Example:
++
++lpc_reset: reset-controller@18 {
++        compatible = "aspeed,ast2500-lpc-reset";
++        reg = <0x18 0x4>;
++        #reset-cells = <1>;
++};
+-- 
+2.15.1
