@@ -1,13 +1,13 @@
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 06/19] dt-bindings: arm: Document R-Car M3-N SoC DT bindings
-Date: Tue, 20 Feb 2018 16:12:08 +0100
-Message-ID: <1519139541-18783-7-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 0/2] add ethernet nodes for UniPhier SoCs
+Date: Wed, 21 Feb 2018 00:26:58 +0900
+Message-ID: <CAK7LNASu-+GhZ11TPP3bjpJdTRbisSAKDJB6JJBJyQ3uZkA-bw@mail.gmail.com>
+References: <1518600629-14317-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1518600629-14317-1-git-send-email-hayashi.kunihiko@socionext.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,32 +17,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Renesas R-Car M3-N (r8a77965)
-SoC.
+2018-02-14 18:30 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
+> This series adds ethernet nodes for UniPhier Pro4, PXs2, LD6b, LD11, LD20 SoCs
+> and the boards.
+>
+> Changes since v1:
+> - move common descriptions to .dtsi files
+> - rename labels of the ethernet nodes to "eth"
+>
+> Kunihiko Hayashi (2):
+>   ARM: dts: uniphier: add AVE ethernet node
+>   arm64: dts: uniphier: add AVE ethernet node
+>
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Applied to linux-uniphier. Thanks!
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index 41d3920..67889a9 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -39,6 +39,8 @@ SoCs:
-     compatible = "renesas,r8a7795"
-   - R-Car M3-W (R8A77960)
-     compatible = "renesas,r8a7796"
-+  - R-Car M3-N (R8A77965)
-+    compatible = "renesas,r8a77965"
-   - R-Car V3M (R8A77970)
-     compatible = "renesas,r8a77970"
-   - R-Car V3H (R8A77980)
+
 -- 
-2.7.4
+Best Regards
+Masahiro Yamada
