@@ -1,87 +1,83 @@
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: Re: [PATCH 7/8] ARM: dts: artpec: add disabled node for PCIe
- endpoint mode
-Date: Tue, 20 Feb 2018 22:29:45 +0100
-Message-ID: <20180220212945.GA30339@axis.com>
-References: <20180220170049.22809-1-niklas.cassel@axis.com>
- <20180220170049.22809-8-niklas.cassel@axis.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v4 01/16] dt-bindings: display: renesas: Add R-Car LVDS
+ encoder DT bindings
+Date: Wed, 21 Feb 2018 01:10:31 +0200
+Message-ID: <20180220231046.32638-2-laurent.pinchart+renesas@ideasonboard.com>
+References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180220170049.22809-8-niklas.cassel@axis.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org, Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 20, 2018 at 06:00:48PM +0100, Niklas Cassel wrote:
-> The PCIe controller in the artpec6 SoC supports both root complex and
-> endpoint mode, however, the controller can only be used in one of the
-> modes.
-> 
-> Both pci nodes are disabled by default. A DTS file can enable one of
-> them, depending on what mode it wants to run.
-> 
-> Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
-> ---
->  arch/arm/boot/dts/artpec6.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
-> index 1c46df0c03ce..8d02d210574a 100644
-> --- a/arch/arm/boot/dts/artpec6.dtsi
-> +++ b/arch/arm/boot/dts/artpec6.dtsi
-> @@ -154,6 +154,10 @@
->  		interrupt-affinity = <&cpu0>, <&cpu1>;
->  	};
->  
-> +	/*
-> +	 * Both pci nodes cannot be enabled at the same time,
-> +	 * leave the unwanted node as disabled.
-> +	 */
->  	pcie: pcie@f8050000 {
->  		compatible = "axis,artpec6-pcie", "snps,dw-pcie";
->  		reg = <0xf8050000 0x2000
-> @@ -181,6 +185,22 @@
->  		status = "disabled";
->  	};
->  
-> +	pcie_ep: pcie_ep@f8050000 {
-> +		compatible = "axis,artpec6-pcie-ep", "snps,dw-pcie";
-> +		reg = <0xf8050000 0x2000
-> +		       0xf8051000 0x2000
-> +		       0xf8040000 0x1000
-> +		       0xc0000000 0x20000000>;
-> +		reg-names = "dbi", "dbi2", "phy", "addr_space";
-> +		num-ib-windows = <6>;
-> +		num-ob-windows = <2>;
-> +		num-lanes = <2>;
-> +		interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-names = "msi";
-
-Actually, interrupts and interrupt-names are not needed in EP mode,
-so these two properties should be removed.
-
-Will send out a V2 to fix this, but in the meantime, feel free to
-review the rest of the patch series.
-
-> +		axis,syscon-pcie = <&syscon>;
-> +		status = "disabled";
-> +	};
-> +
->  	pinctrl: pinctrl@f801d000 {
->  		compatible = "axis,artpec6-pinctrl";
->  		reg = <0xf801d000 0x400>;
-> -- 
-> 2.14.2
-> 
+VGhlIFJlbmVzYXMgUi1DYXIgR2VuMiBhbmQgR2VuMyBTb0NzIGhhdmUgaW50ZXJuYWwgTFZEUyBl
+bmNvZGVycy4gQWRkCmNvcnJlc3BvbmRpbmcgZGV2aWNlIHRyZWUgYmluZGluZ3MuCgpTaWduZWQt
+b2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNv
+bmJvYXJkLmNvbT4KUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0t
+LQpDaGFuZ2VzIHNpbmNlIHYxOgoKLSBNb3ZlIHRoZSBTb0MgbmFtZSBiZWZvcmUgdGhlIElQIG5h
+bWUgaW4gY29tcGF0aWJsZSBzdHJpbmdzCi0gUmVuYW1lIHBhcmFsbGVsIGlucHV0IHRvIHBhcmFs
+bGVsIFJHQiBpbnB1dAotIEZpeGVkICJyZW5lc2FzLHI4YTc3NDMtbHZkcyIgZGVzY3JpcHRpb24K
+LSBEb2N1bWVudCB0aGUgcmVzZXRzIHByb3BlcnR5Ci0gRml4ZWQgdHlwbwotLS0KIC4uLi9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0ICAgICAgIHwgNTYgKysrKysrKysr
+KysrKysrKysrKysrKwogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCAgMSArCiAyIGZpbGVzIGNoYW5nZWQsIDU3IGluc2VydGlvbnMoKykKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvcmVuZXNhcyxsdmRzLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQK
+bmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi4yYjE5Y2U1MWVjMDcKLS0t
+IC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dApAQCAtMCwwICsxLDU2IEBACitSZW5lc2FzIFItQ2Fy
+IExWRFMgRW5jb2RlcgorPT09PT09PT09PT09PT09PT09PT09PT09PT0KKworVGhlc2UgRFQgYmlu
+ZGluZ3MgZGVzY3JpYmUgdGhlIExWRFMgZW5jb2RlciBlbWJlZGRlZCBpbiB0aGUgUmVuZXNhcyBS
+LUNhcgorR2VuMiwgUi1DYXIgR2VuMyBhbmQgUlovRyBTb0NzLgorCitSZXF1aXJlZCBwcm9wZXJ0
+aWVzOgorCistIGNvbXBhdGlibGUgOiBTaGFsbCBjb250YWluIG9uZSBvZgorICAtICJyZW5lc2Fz
+LHI4YTc3NDMtbHZkcyIgZm9yIFI4QTc3NDMgKFJaL0cxTSkgY29tcGF0aWJsZSBMVkRTIGVuY29k
+ZXJzCisgIC0gInJlbmVzYXMscjhhNzc5MC1sdmRzIiBmb3IgUjhBNzc5MCAoUi1DYXIgSDIpIGNv
+bXBhdGlibGUgTFZEUyBlbmNvZGVycworICAtICJyZW5lc2FzLHI4YTc3OTEtbHZkcyIgZm9yIFI4
+QTc3OTEgKFItQ2FyIE0yLVcpIGNvbXBhdGlibGUgTFZEUyBlbmNvZGVycworICAtICJyZW5lc2Fz
+LHI4YTc3OTMtbHZkcyIgZm9yIFI4QTc3OTEgKFItQ2FyIE0yLU4pIGNvbXBhdGlibGUgTFZEUyBl
+bmNvZGVycworICAtICJyZW5lc2FzLHI4YTc3OTUtbHZkcyIgZm9yIFI4QTc3OTUgKFItQ2FyIEgz
+KSBjb21wYXRpYmxlIExWRFMgZW5jb2RlcnMKKyAgLSAicmVuZXNhcyxyOGE3Nzk2LWx2ZHMiIGZv
+ciBSOEE3Nzk2IChSLUNhciBNMy1XKSBjb21wYXRpYmxlIExWRFMgZW5jb2RlcnMKKworLSByZWc6
+IEJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIGZvciB0aGUgbWVtb3J5LW1hcHBlZCByZWdpc3RlcnMK
+Ky0gY2xvY2tzOiBBIHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpciBmb3IgdGhlIGZ1bmN0
+aW9uYWwgY2xvY2sKKy0gcmVzZXRzOiBBIHBoYW5kbGUgKyByZXNldCBzcGVjaWZpZXIgZm9yIHRo
+ZSBtb2R1bGUgcmVzZXQKKworUmVxdWlyZWQgbm9kZXM6CisKK1RoZSBMVkRTIGVuY29kZXIgaGFz
+IHR3byB2aWRlbyBwb3J0cy4gVGhlaXIgY29ubmVjdGlvbnMgYXJlIG1vZGVsbGVkIHVzaW5nIHRo
+ZQorT0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9ncmFwaC50eHQuCisKKy0gVmlkZW8gcG9ydCAwIGNvcnJlc3BvbmRzIHRvIHRo
+ZSBwYXJhbGxlbCBSR0IgaW5wdXQKKy0gVmlkZW8gcG9ydCAxIGNvcnJlc3BvbmRzIHRvIHRoZSBM
+VkRTIG91dHB1dAorCitFYWNoIHBvcnQgc2hhbGwgaGF2ZSBhIHNpbmdsZSBlbmRwb2ludC4KKwor
+CitFeGFtcGxlOgorCisJbHZkczA6IGx2ZHNAZmViOTAwMDAgeworCQljb21wYXRpYmxlID0gInJl
+bmVzYXMscjhhNzc5MC1sdmRzIjsKKwkJcmVnID0gPDAgMHhmZWI5MDAwMCAwIDB4MWM+OworCQlj
+bG9ja3MgPSA8JmNwZyBDUEdfTU9EIDcyNj47CisJCXJlc2V0cyA9IDwmY3BnIDcyNj47CisKKwkJ
+cG9ydHMgeworCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxscyA9IDwwPjsK
+KworCQkJcG9ydEAwIHsKKwkJCQlyZWcgPSA8MD47CisJCQkJbHZkczBfaW46IGVuZHBvaW50IHsK
+KwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkdV9vdXRfbHZkczA+OworCQkJCX07CisJCQl9Owor
+CQkJcG9ydEAxIHsKKwkJCQlyZWcgPSA8MT47CisJCQkJbHZkczBfb3V0OiBlbmRwb2ludCB7CisJ
+CQkJfTsKKwkJCX07CisJCX07CisJfTsKZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRB
+SU5FUlMKaW5kZXggMmFmYmE5MDk3MjRjLi4xM2M4ZWMxMTEzNWEgMTAwNjQ0Ci0tLSBhL01BSU5U
+QUlORVJTCisrKyBiL01BSU5UQUlORVJTCkBAIC00NzQ0LDYgKzQ3NDQsNyBAQCBGOglkcml2ZXJz
+L2dwdS9kcm0vcmNhci1kdS8KIEY6CWRyaXZlcnMvZ3B1L2RybS9zaG1vYmlsZS8KIEY6CWluY2x1
+ZGUvbGludXgvcGxhdGZvcm1fZGF0YS9zaG1vYl9kcm0uaAogRjoJRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsZHctaGRtaS50eHQKK0Y6CURv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2
+ZHMudHh0CiBGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5l
+c2FzLGR1LnR4dAogCiBEUk0gRFJJVkVSUyBGT1IgUk9DS0NISVAKLS0gClJlZ2FyZHMsCgpMYXVy
+ZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
