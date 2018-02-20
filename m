@@ -1,107 +1,64 @@
-Return-Path: <SRS0=5STX=FN=gmail.com=thierry.reding@kernel.org>
-Date: Mon, 19 Feb 2018 15:31:12 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V7 2/7] arm64: tegra: Enable AHCI on Jetson TX1
-Message-ID: <20180219143112.GE11455@ulmo>
-References: <1518456406-21564-1-git-send-email-pchandru@nvidia.com>
- <1518456406-21564-3-git-send-email-pchandru@nvidia.com>
+Return-Path: <SRS0=RDbo=FO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pg0-f66.google.com ([74.125.83.66]:45911 "EHLO
+        mail-pg0-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752240AbeBTQqI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 20 Feb 2018 11:46:08 -0500
+Received: by mail-pg0-f66.google.com with SMTP id e11so7301158pgq.12
+        for <devicetree@vger.kernel.org>; Tue, 20 Feb 2018 08:46:08 -0800 (PST)
+Date: Tue, 20 Feb 2018 08:41:22 -0800
+From: Moritz Fischer <mdf@kernel.org>
+Subject: Re: [PATCH v2 2/2] power: reset: gpio-poweroff: Add support for
+ timeout from DT
+Message-ID: <20180220164122.GA32079@tyrael.ni.corp.natinst.com>
+References: <20180219225918.2311-1-mdf@kernel.org>
+ <20180219225918.2311-2-mdf@kernel.org>
+ <CAHp75VfKXe-7pzPT=9N3r20YV5Sq1UyHPoYwoLL1L4mjt8cEUA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MIdTMoZhcV1D07fI"
+        protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
 Content-Disposition: inline
-In-Reply-To: <1518456406-21564-3-git-send-email-pchandru@nvidia.com>
-To: Preetham Chandru Ramchandra <pchandru@nvidia.com>
-Cc: tj@kernel.org, cyndis@kapsi.fi, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, preetham260@gmail.com, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com
+In-Reply-To: <CAHp75VfKXe-7pzPT=9N3r20YV5Sq1UyHPoYwoLL1L4mjt8cEUA@mail.gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Moritz Fischer <mdf@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
 
---MIdTMoZhcV1D07fI
+--EVF5PPMfhYS0aIcm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 12, 2018 at 10:56:41PM +0530, Preetham Chandru Ramchandra wrote:
-> From: Preetham Ramchandra <pchandru@nvidia.com>
+On Tue, Feb 20, 2018 at 04:12:59PM +0200, Andy Shevchenko wrote:
+> On Tue, Feb 20, 2018 at 12:59 AM, Moritz Fischer <mdf@kernel.org> wrote:
+> > Add support for reading a timeout value from devicetree.
+> > Fall back to previous default of 3s if nothing is specified.
 >=20
-> Add sata node to the Tegra210 device tree, and
-> enable the device and assign board-specific
-> properties on Jetson TX1.
-> Signed-off-by: Preetham Chandru R <pchandru@nvidia.com>
+>=20
+> > +       of_property_read_u32(pdev->dev.of_node, "timeout_ms", &timeout);
+>=20
+> Perhaps stop being OF-centric by using device_property_read_u32() instead?
 
-Tags such as Signed-off-by: should be in a separate paragraph, so the
-above is missing a blank line before the Signed-off-by:.
+Good catch, will do. Should probably change commit message accordingly,
+too.
 
-> ---
-> v7:
-> * Change commit message to reflect accordingly
-> v4:
-> * Fixed missing space after 'AUX'
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi |  6 ++++++
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi       | 16 ++++++++++++++++
->  2 files changed, 22 insertions(+)
+Thanks,
 
-I prefer these to be two separate patches, one for the SoC .dtsi and
-another for the P2597 carrier.
+Moritz
 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/=
-boot/dts/nvidia/tegra210-p2597.dtsi
-> index d67ef4319f3b..2aa2979cd6b5 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
-> @@ -1325,6 +1325,12 @@
->  		status =3D "okay";
->  	};
-> =20
-> +	sata@70020000 {
-> +		status =3D "okay";
-> +		phys =3D <&{/padctl@7009f000/pads/sata/lanes/sata-0}>;
-> +		phy-names =3D "sata-0";
-> +	};
-> +
->  	padctl@7009f000 {
->  		status =3D "okay";
-> =20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/d=
-ts/nvidia/tegra210.dtsi
-> index 9c2402108772..bf72db5386a5 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-> @@ -798,6 +798,22 @@
->  		#iommu-cells =3D <1>;
->  	};
-> =20
-> +	sata@70020000 {
-> +		compatible =3D "nvidia,tegra210-ahci";
-> +		reg =3D <0x0 0x70027000 0x0 0x2000>, /* AHCI */
-> +		      <0x0 0x70020000 0x0 0x7000>, /* SATA */
-> +		      <0x0 0x70001100 0x0 0x1000>; /* SATA AUX */
-> +		interrupts =3D <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks =3D <&tegra_car TEGRA210_CLK_SATA>,
-> +			<&tegra_car TEGRA210_CLK_SATA_OOB>;
-
-Nit: these are not properly aligned.
-
-Thierry
-
---MIdTMoZhcV1D07fI
+--EVF5PPMfhYS0aIcm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlqK37AACgkQ3SOs138+
-s6H+mRAAtvFZOQfMQpqaI/nbTaJCJN4cCNOJH9qu4Mp5K7+487SqzHYBer2x1mBh
-XaUCDO128Q+VJhAe3MpEM2Y7PJZ+tsylSXB1d1zdU1o6yvlFA0S8JPPmZZ+yuUd5
-CDFgSmzF+CCOTuV4FyV3igVwmevipcBFfFcJs8WigwGqhR81jEhEhBz5cr9xZNX2
-N9KNhYTJ4haSshfATOpyDVAIbss4xm3rLh4kwHM2x5O47b8AJHZuPq7cPNGvILBP
-EKQAKOtFozumY1CGw0elH6YUYmfHTToqOyrzg4Od/FPOH/onws8IrT2RvMekIffu
-YhR1mGgkIcMnEzmIut6XcgmEY6B6LuAYPQtjdbGL+Ayrxi3Z+2dByv+IYrZChZ8J
-qqm3lxmOOjvF/3HWHwiFwQleV9wuAFVp22k4uPJ9D91D1g7KHsBzI8T6tjgylcEg
-ST5ZmdPodI0SWrf8SN5tMZeoV2DUibEGbVp2ETkOEd3LGpjmXaAUOwgcwLKEDiLa
-ZCa5lb2jJlhQ/gh9tpV6eA9PzuvY8gh8+bxpFzWRWECdH/k+8DiXIM888wGsN1up
-UQ3Aoav9HByhKSsR+63+tycpZG86yVDUW37JWGtjcsNJexYfUyxkgRD9Et4hqddV
-w6V7jlVNDPzKww+p+m8jhOfJpFiCtkbikFb2mnSzP6IMjzZzGXo=
-=cv+z
+iQEzBAEBCAAdFiEEowQ4eJSlIZpNWnl2UVwKRFcJcNgFAlqMT64ACgkQUVwKRFcJ
+cNhfLwgAvdUUqoE3q2++dLoXZJ6YqurxkID/VWkbsqDIkWsjNQ4woqXct9Z9Kymm
+Is9oetzJ1Gni5wvUPL6FgVOX+BlkD7/1JmuBrbl5IB8J2H1MKCMYwWgFy0LxHZq9
+dK/w0Pj8/ywLpGIBrOjJA3aEnZNmZIuXQaH2Aw0xbEVlBj570UCgT7SDEpMNwK8C
+KHbiO5FpScy0wGHcGvSlmyWj+Qa4QbznP16vIOWzKJ7+JnpThF41hMxnElxoNoEy
+eM5Px3Qa/00A23nE89yBvx/+DQX6CNg5hgeDc+fMPRFSQET8q5gGnu7716FpNnug
+Tc9hzy9EPRv43wB0+EgfIWFvOuzWLg==
+=jG01
 -----END PGP SIGNATURE-----
 
---MIdTMoZhcV1D07fI--
+--EVF5PPMfhYS0aIcm--
