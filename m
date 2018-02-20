@@ -1,33 +1,131 @@
-From: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-Subject: [PATCH 0/2] Fix coding style issues in AK4458 DAC
-Date: Tue, 20 Feb 2018 10:56:06 +0200
-Message-ID: <1519116968-31759-1-git-send-email-cosmin.samoila@nxp.com>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH 1/2] dt-bindings: phy: add support for STM32 USB PHY
+ Controller (USBPHYC)
+Date: Tue, 20 Feb 2018 09:40:51 +0000
+Message-ID: <05225cb4-6584-a003-380f-bb9ca5f2da85@st.com>
+References: <1518438929-5254-1-git-send-email-amelie.delaunay@st.com>
+ <1518438929-5254-2-git-send-email-amelie.delaunay@st.com>
+ <20180219015108.bxt6qn7tz53ydguv@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: shengjiu.wang@nxp.com, linux-kernel@vger.kernel.org, wakasugi.jb@om.asahi-kasei.co.jp, linux-imx@nxp.com, Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>, daniel.baluta@nxp.com, mihai.serban@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180219015108.bxt6qn7tz53ydguv@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <B75EC419CE37AE4489CF6546838474EA@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Modify SPDX license comment style and sort headers alphabetically.
 
-Cosmin-Gabriel Samoila (2):
-  ASoC: ak4458: Modify SPDX license format
-  ASoC: ak4458: Sort headers alphabetically
 
- sound/soc/codecs/ak4458.c | 23 +++++++++++------------
- sound/soc/codecs/ak4458.h |  2 +-
- 2 files changed, 12 insertions(+), 13 deletions(-)
+On 02/19/2018 02:51 AM, Rob Herring wrote:
+> On Mon, Feb 12, 2018 at 01:35:28PM +0100, Amelie Delaunay wrote:
+>> This patch adds the device tree bindings description for STM32 USBPHYC
+>> (USB PHY Controller).
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>> ---
+>>   .../devicetree/bindings/phy/phy-stm32-usbphyc.txt  | 46 ++++++++++++++++++++++
+>>   1 file changed, 46 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+>> new file mode 100644
+>> index 0000000..1e65e0a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+>> @@ -0,0 +1,46 @@
+>> +STMicroelectronics STM32 USB HS PHY controller
+>> +
+>> +The STM32 USBPHYC block contains a dual port High Speed UTMI+ PHY and a UTMI
+>> +switch. It controls PHY configuration and status, and the UTMI+ switch that
+>> +selects either OTG or HOST controller for the second PHY port. It also sets
+>> +PLL configuration.
+>> +
+>> +USBPHYC
+>> +  |_ PLL
+>> +  |
+>> +  |_ PHY port#1 _________________ HOST controller
+>> +  |                                      |
+>> +  |_ PHY port#2_______                   |
+>> +  |                   |_                 |
+>> +  |_ UTMI switch_____/ 1|________________|
+>> +                    |   |________________
+>> +                     \_0|                |
+>> +		                  OTG controller
+>> +
+>> +Required properties:
+>> +- compatible: must be "st,stm32mp1-usbphyc"
+>> +- reg: address and length of the usb phy control register set
+>> +- clocks: phandle + clock specifier for the PLL phy clock
+>> +- phy-supply: from the generic phy bindings, phandle to the regulator
+>> +  providing 3V3 power to the PHY, see phy-bindings.txt
+>> +- vdda1v1-supply: phandle to the regulator providing 1V1 power to the PHY
+>> +- vdda1v8-supply: phandle to the regulator providing 1V8 power to the PHY
+>> +
+>> +Optional properties:
+>> +- assigned-clocks: phandle + clock specifier for the PLL phy clock
+>> +- assigned-clock-parents: the PLL phy clock parent
+>> +- resets: phandle + reset specifier
+>> +- st,port2-switch-to-host: select HOST controller on UTMI switch for port#2
+> 
+> This one seems very specific. If another device had the mux on a
+> different port number you'd need a new property for example.
+> 
 
--- 
-2.7.4
+You're right. I will update the scheme with the following:
+
+USBPHYC
+      |_ PLL
+      |
+      |_ PHY port#1 _________________ HOST controller
+      |                    _                 |
+      |                  / 1|________________|
+      |_ PHY port#2 ----|   |________________
+      |                  \_0|                |
+      |_ UTMI switch_______|          OTG controller
+
+
+This way would be more generic:
+st,utmi-switch = <0>; //To select the controller connected to UTMI 
+switch #0 output.
+st,utmi-switch = <1>; //To select the controller connected to UTMI 
+switch #1 output.
+
+> But really I think this should be determined by either a USB connector
+> node (a binding is in the works) or cable detection.
+>
+
+This needs to be further studied. Could it be an upcoming evolution ?
+
+Thanks for review,
+Amelie
+>> +
+>> +
+>> +Example:
+>> +		usbphyc: usbphyc@5a006000 {
+> 
+> usb-phy@...
+> 
+>> +			compatible = "st,stm32mp1-usbphyc";
+>> +			reg = <0x5a006000 0x1000>;
+>> +			clocks = <&rcc_clk USBPHY_K>;
+>> +			resets = <&rcc_rst USBPHY_R>;
+>> +			st,port2-switch-to-host;
+>> +			phy-supply = <&vdd_usb>;
+>> +			vdda1v1-supply = <&reg11>;
+>> +			vdda1v8-supply = <&reg18>
+>> +		};
+>> -- 
+>> 2.7.4
+>>
