@@ -1,61 +1,168 @@
-From: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-Subject: [PATCH 2/2] ASoC: ak4458: Sort headers alphabetically
-Date: Tue, 20 Feb 2018 10:56:08 +0200
-Message-ID: <1519116968-31759-3-git-send-email-cosmin.samoila@nxp.com>
-References: <1519116968-31759-1-git-send-email-cosmin.samoila@nxp.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 03/15] soc: renesas: Add R-Car M3-N support
+Date: Tue, 20 Feb 2018 11:10:04 +0100
+Message-ID: <20180220101004.GD7203@w540>
+References: <1518515162-23663-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1518515162-23663-4-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdU-pYNwjrXSR7j2kNkJSYsKd=0Kf0Tzq5LHpwA7p4_9MA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1519116968-31759-1-git-send-email-cosmin.samoila@nxp.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
-Cc: shengjiu.wang@nxp.com, linux-kernel@vger.kernel.org, wakasugi.jb@om.asahi-kasei.co.jp, linux-imx@nxp.com, Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>, daniel.baluta@nxp.com, mihai.serban@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdU-pYNwjrXSR7j2kNkJSYsKd=0Kf0Tzq5LHpwA7p4_9MA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Keep headers sorted alphabetically.
+Hi Geert,
 
-Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
----
- sound/soc/codecs/ak4458.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+On Wed, Feb 14, 2018 at 01:48:27PM +0100, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+>
+> Thanks for your patch!
+>
+> On Tue, Feb 13, 2018 at 10:45 AM, Jacopo Mondi
+> <jacopo+renesas@jmondi.org> wrote:
+> > Add support for R-Car M3-N (r8a77965) power areas and reset.
+> > M3-N power areas are identical to M3-W ones, so just copy and rename
+> > them.
+>
+> They are not identical:
+>   - M3-N does not have the CA53-related areas,
+>   - M3-W does not have A3VP,
+>   - M3-N does not have A2VC0 (M3-W also doesn't, according to latest
+> datasheet?).
+>
+> The datasheet also mentions A3SH, without further info about the register
+> block. I think we need to bring this up with Renesas.
+>
+> >  .../bindings/power/renesas,rcar-sysc.txt           |  1 +
+> >  .../devicetree/bindings/reset/renesas,rst.txt      |  1 +
+> >  drivers/soc/renesas/Kconfig                        |  9 ++++--
+> >  drivers/soc/renesas/Makefile                       |  1 +
+> >  drivers/soc/renesas/r8a77965-sysc.c                | 37 ++++++++++++++++++++++
+> >  drivers/soc/renesas/rcar-rst.c                     |  1 +
+> >  drivers/soc/renesas/rcar-sysc.c                    |  3 ++
+> >  drivers/soc/renesas/rcar-sysc.h                    |  1 +
+> >  drivers/soc/renesas/renesas-soc.c                  |  8 +++++
+> >  include/dt-bindings/power/r8a77965-sysc.h          | 31 ++++++++++++++++++
+> >  10 files changed, 91 insertions(+), 2 deletions(-)
+> >  create mode 100644 drivers/soc/renesas/r8a77965-sysc.c
+> >  create mode 100644 include/dt-bindings/power/r8a77965-sysc.h
+>
+> The maintainer may ask you to split this patch by functionality...
+>
+> > --- /dev/null
+> > +++ b/drivers/soc/renesas/r8a77965-sysc.c
+> > @@ -0,0 +1,37 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Renesas R-Car M3-N System Controller
+> > + * Copyright (C) 2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > + *
+> > + * Based on Renesas R-Car M3-W System Controller
+> > + * Copyright (C) 2016 Glider bvba
+> > + */
+> > +
+> > +#include <linux/bug.h>
+> > +#include <linux/kernel.h>
+> > +
+> > +#include <dt-bindings/power/r8a77965-sysc.h>
+> > +
+> > +#include "rcar-sysc.h"
+> > +
+> > +static const struct rcar_sysc_area r8a77965_areas[] __initconst = {
+> > +       { "always-on",      0, 0, R8A77965_PD_ALWAYS_ON, -1, PD_ALWAYS_ON },
+> > +       { "ca57-scu",   0x1c0, 0, R8A77965_PD_CA57_SCU, R8A77965_PD_ALWAYS_ON,
+> > +         PD_SCU },
+> > +       { "ca57-cpu0",   0x80, 0, R8A77965_PD_CA57_CPU0, R8A77965_PD_CA57_SCU,
+> > +         PD_CPU_NOCR },
+> > +       { "ca57-cpu1",   0x80, 1, R8A77965_PD_CA57_CPU1, R8A77965_PD_CA57_SCU,
+> > +         PD_CPU_NOCR },
+> > +       { "cr7",        0x240, 0, R8A77965_PD_CR7,      R8A77965_PD_ALWAYS_ON },
+> > +       { "a3vc",       0x380, 0, R8A77965_PD_A3VC,     R8A77965_PD_ALWAYS_ON },
+> > +       { "a2vc0",      0x3c0, 0, R8A77965_PD_A2VC0,    R8A77965_PD_A3VC },
+>
+> M3-N (and M3-W) does not have A2VC0?
 
-diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
-index 8a49dd2..31ec0ba 100644
---- a/sound/soc/codecs/ak4458.c
-+++ b/sound/soc/codecs/ak4458.c
-@@ -5,19 +5,19 @@
- // Copyright (C) 2016 Asahi Kasei Microdevices Corporation
- // Copyright 2018 NXP
- 
--#include <linux/module.h>
- #include <linux/delay.h>
--#include <linux/slab.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
--#include <linux/i2c.h>
-+#include <linux/slab.h>
-+#include <sound/initval.h>
-+#include <sound/pcm_params.h>
- #include <sound/soc.h>
- #include <sound/soc-dapm.h>
--#include <sound/initval.h>
- #include <sound/tlv.h>
--#include <sound/pcm_params.h>
- 
- #include "ak4458.h"
- 
--- 
-2.7.4
+Why do I still see that power area listed in latest renesas-drivers for
+M3-W? Are there patch pendings for that?
+
+I'll remove it anyway for M3-N.
+
+Thanks
+   j
+
+>
+> > +       { "a2vc1",      0x3c0, 1, R8A77965_PD_A2VC1,    R8A77965_PD_A3VC },
+> > +       { "3dg-a",      0x100, 0, R8A77965_PD_3DG_A,    R8A77965_PD_ALWAYS_ON },
+> > +       { "3dg-b",      0x100, 1, R8A77965_PD_3DG_B,    R8A77965_PD_3DG_A },
+> > +       { "a3ir",       0x180, 0, R8A77965_PD_A3IR,     R8A77965_PD_ALWAYS_ON },
+>
+> A3VP is missing?
+>
+> > +};
+> > +
+> > +const struct rcar_sysc_info r8a77965_sysc_info __initconst = {
+> > +       .areas = r8a77965_areas,
+> > +       .num_areas = ARRAY_SIZE(r8a77965_areas),
+> > +};
+>
+> > --- /dev/null
+> > +++ b/include/dt-bindings/power/r8a77965-sysc.h
+> > @@ -0,0 +1,31 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (C) 2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > + * Copyright (C) 2016 Glider bvba
+> > + */
+> > +
+> > +#ifndef __DT_BINDINGS_POWER_R8A77965_SYSC_H__
+> > +#define __DT_BINDINGS_POWER_R8A77965_SYSC_H__
+> > +
+> > +/*
+> > + * These power domain indices match the numbers of the interrupt bits
+> > + * representing the power areas in the various Interrupt Registers
+> > + * (e.g. SYSCISR, Interrupt Status Register)
+> > + */
+> > +
+> > +#define R8A77965_PD_CA57_CPU0           0
+> > +#define R8A77965_PD_CA57_CPU1           1
+> > +#define R8A77965_PD_A3VP                9
+> > +#define R8A77965_PD_CA57_SCU           12
+> > +#define R8A77965_PD_CR7                        13
+> > +#define R8A77965_PD_A3VC               14
+> > +#define R8A77965_PD_3DG_A              17
+> > +#define R8A77965_PD_3DG_B              18
+> > +#define R8A77965_PD_A3IR               24
+> > +#define R8A77965_PD_A2VC0              25
+>
+> M3-N (and M3-W) does not have A2VC0?
+>
+> > +#define R8A77965_PD_A2VC1              26
+> > +
+> > +/* Always-on power area */
+> > +#define R8A77965_PD_ALWAYS_ON          32
+> > +
+> > +#endif /* __DT_BINDINGS_POWER_R8A77965_SYSC_H__ */
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
