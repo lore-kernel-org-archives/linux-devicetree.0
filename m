@@ -1,13 +1,15 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2 0/2] add ethernet nodes for UniPhier SoCs
-Date: Wed, 21 Feb 2018 00:26:58 +0900
-Message-ID: <CAK7LNASu-+GhZ11TPP3bjpJdTRbisSAKDJB6JJBJyQ3uZkA-bw@mail.gmail.com>
-References: <1518600629-14317-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 02/19] soc: renesas: rcar-rst: Add support for R-Car
+ M3-N
+Date: Tue, 20 Feb 2018 16:29:37 +0100
+Message-ID: <CAMuHMdVPkbKQf=svj+R_jjt2_+FqHXaCRmW7Wu7c0AfJzZR2Sg@mail.gmail.com>
+References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519139541-18783-3-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518600629-14317-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1519139541-18783-3-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,26 +19,22 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2018-02-14 18:30 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
-> This series adds ethernet nodes for UniPhier Pro4, PXs2, LD6b, LD11, LD20 SoCs
-> and the boards.
->
-> Changes since v1:
-> - move common descriptions to .dtsi files
-> - rename labels of the ethernet nodes to "eth"
->
-> Kunihiko Hayashi (2):
->   ARM: dts: uniphier: add AVE ethernet node
->   arm64: dts: uniphier: add AVE ethernet node
->
+On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-Applied to linux-uniphier. Thanks!
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
 
--- 
-Best Regards
-Masahiro Yamada
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
