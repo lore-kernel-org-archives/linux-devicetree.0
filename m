@@ -1,68 +1,66 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH 1/2] dt-bindings: i2c: add binding for Socionext SynQuacer I2C
-Date: Tue, 20 Feb 2018 09:08:26 +0000
-Message-ID: <20180220090827.913-2-ard.biesheuvel@linaro.org>
-References: <20180220090827.913-1-ard.biesheuvel@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 02/25] soc: qcom: add support to APR bus
+	driver
+Date: Tue, 20 Feb 2018 09:33:39 +0000
+Message-ID: <6be00df2-de80-0d40-9603-8b0fd94efa41@linaro.org>
+References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
+ <20180213165837.1620-3-srinivas.kandagatla@linaro.org>
+ <20180219030819.qovj4swuvged6c24@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180220090827.913-1-ard.biesheuvel@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
-Cc: jassisinghbrar@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180219030819.qovj4swuvged6c24@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, broonie@kernel.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a binding for the I2C controller that can be found in the Socionext
-SynQuacer SoC. Note that this is the exact same IP as the Fujitsu F_I2C.
+Thanks for review comments,
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
----
- Documentation/devicetree/bindings/i2c/i2c-synquacer.txt | 29 ++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+On 19/02/18 03:08, Rob Herring wrote:
+> On Tue, Feb 13, 2018 at 04:58:14PM +0000,srinivas.kandagatla@linaro.org  wrote:
+>> From: Srinivas Kandagatla<srinivas.kandagatla@linaro.org>
+>>
+>> This patch adds support toi APR bus (Asynchronous Packet Router) driver.
+>> ARP driver is made as a bus driver so that the apr devices can added removed
+>> more dynamically depending on the state of the services on the dsp.
+>> APR is used for communication between application processor and QDSP to
+>> use services on QDSP like Audio and others.
+>>
+>> Signed-off-by: Srinivas Kandagatla<srinivas.kandagatla@linaro.org>
+>> ---
+>>   drivers/soc/qcom/Kconfig           |   9 +
+>>   drivers/soc/qcom/Makefile          |   1 +
+>>   drivers/soc/qcom/apr.c             | 381 +++++++++++++++++++++++++++++++++++++
+>>   include/dt-bindings/soc/qcom,apr.h |  27 +++
+> This belongs in the binding patch.
+> 
+I agree, will fix it in next version.
+>>   include/linux/mod_devicetable.h    |  11 ++
+>>   include/linux/soc/qcom/apr.h       | 131 +++++++++++++
+>>   6 files changed, 560 insertions(+)
+>>   create mode 100644 drivers/soc/qcom/apr.c
+>>   create mode 100644 include/dt-bindings/soc/qcom,apr.h
+>>   create mode 100644 include/linux/soc/qcom/apr.h
+> 
+>> diff --git a/include/dt-bindings/soc/qcom,apr.h b/include/dt-bindings/soc/qcom,apr.h
+>> new file mode 100644
+>> index 000000000000..fb162ac4ca0e
+>> --- /dev/null
+>> +++ b/include/dt-bindings/soc/qcom,apr.h
+>> @@ -0,0 +1,27 @@
+> SPDX tag
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-synquacer.txt b/Documentation/devicetree/bindings/i2c/i2c-synquacer.txt
-new file mode 100644
-index 000000000000..4d0bb6a71211
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-synquacer.txt
-@@ -0,0 +1,29 @@
-+Socionext SynQuacer I2C
-+
-+Required properties:
-+- compatible      : Must be "socionext,synquacer-i2c"
-+- reg             : Offset and length of the register set for the device
-+- interrupts      : the interrupt specifier
-+- #address-cells  : Must be <1>;
-+- #size-cells     : Must be <0>;
-+- clock-names     : Must contain "pclk".
-+- clocks          : Must contain an entry for each name in clock-names.
-+                    (See the common clock bindings.)
-+
-+Optional properties:
-+- clock-frequency : Desired I2C bus clock frequency in Hz. As only Normal and
-+                    Fast modes are supported, possible values are 100000 and
-+                    400000.
-+
-+Example :
-+
-+    i2c@51210000 {
-+        compatible = "socionext,synquacer-i2c";
-+        reg = <0x51210000 0x1000>;
-+        interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        clock-names = "pclk";
-+        clocks = <&clk_i2c>;
-+        clock-frequency = <400000>;
-+    };
--- 
-2.11.0
+Thanks for reminding this.. Will fix it in next spin.
+
+> 
