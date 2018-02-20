@@ -1,14 +1,15 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 09/19] ARM64: dts: Add R-Car Salvator-x M3-N support
-Date: Tue, 20 Feb 2018 16:46:23 +0100
-Message-ID: <CAMuHMdVDCga8htL+UD3P0Kzt9-OQ6hof+szGOiV9d0gwxGExqQ@mail.gmail.com>
+Subject: Re: [PATCH v2 12/19] dt-bindings: serial: sh-sci: Add support for
+ r8a77965 (H)SCIF
+Date: Tue, 20 Feb 2018 16:46:49 +0100
+Message-ID: <CAMuHMdVEEcG6HcnnS0W6gTW57aD-y5Gg5ojvEr6TDvUp_irUPw@mail.gmail.com>
 References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519139541-18783-10-git-send-email-jacopo+renesas@jmondi.org>
+ <1519139541-18783-13-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519139541-18783-10-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1519139541-18783-13-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,11 +24,8 @@ Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED 
 List-Id: devicetree@vger.kernel.org
 
 On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Add basic support for R-Car Salvator-X M3-N (R8A77965) board.
->
-> Based on original work from:
-> Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> Magnus Damm <damm+renesas@opensource.se>
+> Add documentation for r8a77965 compatible string to Renesas sci-serial
+> device tree bindings documentation.
 >
 > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
