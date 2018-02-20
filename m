@@ -1,105 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: ak4458: Modify SPDX license format" to
-	the asoc tree
-Date: Tue, 20 Feb 2018 12:09:15 +0000
-Message-ID: <E1eo6jT-00038Y-30@debutante>
-References: <1519116968-31759-2-git-send-email-cosmin.samoila@nxp.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH v5 4/5] ARM: dts: bcm2835: make the firmware node into a bus
+Date: Tue, 20 Feb 2018 14:19:34 +0200
+Message-ID: <43f9082a6835df6d7bcd3e16d79db687c52826d2.1519128054.git.baruch@tkos.co.il>
+References: <cover.1519128054.git.baruch@tkos.co.il>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1519116968-31759-2-git-send-email-cosmin.samoila@nxp.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, shengjiu.wang@nxp.com, linux-kernel@vger.kernel.org, wakasugi.jb@om.asahi-kasei.co.jp, broonie@kernel.org, linux-imx@nxp.com, daniel.baluta@nxp.com, mihai.serban@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1519128054.git.baruch@tkos.co.il>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-gpio@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+This allows adding devices for which the firmware exposes control interface
+via the mailbox. An example of such device is the GPIO expander.
 
-   ASoC: ak4458: Modify SPDX license format
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 05aa6165cfdb796916197da6b8ef93b22a62e3a9 Mon Sep 17 00:00:00 2001
-From: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-Date: Tue, 20 Feb 2018 10:56:07 +0200
-Subject: [PATCH] ASoC: ak4458: Modify SPDX license format
-
-Modify SPDX comment style to match the rules. Since the original
-code had a GPL-2.0 license and SPDX is compatible with GPL-2.0+,
-we also modified the MODULE_LICENSE.
-
-Signed-off-by: Cosmin-Gabriel Samoila <cosmin.samoila@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 ---
- sound/soc/codecs/ak4458.c | 13 ++++++-------
- sound/soc/codecs/ak4458.h |  2 +-
- 2 files changed, 7 insertions(+), 8 deletions(-)
+v4: New patch in this series
+---
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
-index d2815ac9cffa..8a49dd24e6b7 100644
---- a/sound/soc/codecs/ak4458.c
-+++ b/sound/soc/codecs/ak4458.c
-@@ -1,10 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
--/*
-- * Audio driver for AK4458 DAC
-- *
-- * Copyright (C) 2016 Asahi Kasei Microdevices Corporation
-- * Copyright 2018 NXP
-- */
-+//
-+// Audio driver for AK4458 DAC
-+//
-+// Copyright (C) 2016 Asahi Kasei Microdevices Corporation
-+// Copyright 2018 NXP
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index e36c392a2b8f..0198bd46ef7c 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -18,7 +18,9 @@
  
- #include <linux/module.h>
- #include <linux/delay.h>
-@@ -655,4 +654,4 @@ module_i2c_driver(ak4458_i2c_driver);
- MODULE_AUTHOR("Junichi Wakasugi <wakasugi.jb@om.asahi-kasei.co.jp>");
- MODULE_AUTHOR("Mihai Serban <mihai.serban@nxp.com>");
- MODULE_DESCRIPTION("ASoC AK4458 DAC driver");
--MODULE_LICENSE("GPL");
-+MODULE_LICENSE("GPL v2");
-diff --git a/sound/soc/codecs/ak4458.h b/sound/soc/codecs/ak4458.h
-index 16d9d22a413a..f906215f7e4e 100644
---- a/sound/soc/codecs/ak4458.h
-+++ b/sound/soc/codecs/ak4458.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Audio driver for AK4458
-  *
+ 	soc {
+ 		firmware: firmware {
+-			compatible = "raspberrypi,bcm2835-firmware";
++			compatible = "raspberrypi,bcm2835-firmware", "simple-bus";
++			#address-cells = <0>;
++			#size-cells = <0>;
+ 			mboxes = <&mailbox>;
+ 		};
+ 
 -- 
 2.16.1
