@@ -1,56 +1,78 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v4 07/16] i2c: demux: Use changeset helpers for clarity
-Date: Wed, 21 Feb 2018 01:10:37 +0200
-Message-ID: <20180220231046.32638-8-laurent.pinchart+renesas@ideasonboard.com>
-References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 09/37] iommu/fault: Let handler return a fault response
+Date: Tue, 20 Feb 2018 15:19:33 -0800
+Message-ID: <20180220151933.022f1036@jacob-builder>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-10-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180212183352.22730-10-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUGFudGVsaXMgQW50b25pb3UgPHBhbnRlbGlzLmFudG9uaW91QGtvbnN1bGtvLmNvbT4K
-ClRoZSBjaGFuZ2VzZXQgaGVscGVycyBhcmUgZWFzaWVyIHRvIHVzZSwgdXNlIHRoZW0gaW5zdGVh
-ZCBvZgp1c2luZyB0aGUgc3RhdGljIHByb3BlcnR5LgoKU2lnbmVkLW9mZi1ieTogUGFudGVsaXMg
-QW50b25pb3UgPHBhbnRlbGlzLmFudG9uaW91QGtvbnN1bGtvLmNvbT4KQWNrZWQtYnk6IFdvbGZy
-YW0gU2FuZyA8d3NhQHRoZS1kcmVhbXMuZGU+Clsib2theSIgLT4gIm9rIl0KU2lnbmVkLW9mZi1i
-eTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydCtyZW5lc2FzQGlkZWFzb25ib2Fy
-ZC5jb20+Ci0tLQogZHJpdmVycy9pMmMvbXV4ZXMvaTJjLWRlbXV4LXBpbmN0cmwuYyB8IDEyICsr
-Ky0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMo
-LSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtZGVtdXgtcGluY3RybC5jIGIv
-ZHJpdmVycy9pMmMvbXV4ZXMvaTJjLWRlbXV4LXBpbmN0cmwuYwppbmRleCAzM2NlMDMyY2I3MDEu
-LjBmMDA0NjgzMTQ5MiAxMDA2NDQKLS0tIGEvZHJpdmVycy9pMmMvbXV4ZXMvaTJjLWRlbXV4LXBp
-bmN0cmwuYworKysgYi9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtZGVtdXgtcGluY3RybC5jCkBAIC0y
-MjAsMTAgKzIyMCw3IEBAIHN0YXRpYyBpbnQgaTJjX2RlbXV4X3BpbmN0cmxfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAogCXByaXYgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRl
-diwgc2l6ZW9mKCpwcml2KQogCQkJICAgKyBudW1fY2hhbiAqIHNpemVvZihzdHJ1Y3QgaTJjX2Rl
-bXV4X3BpbmN0cmxfY2hhbiksIEdGUF9LRVJORUwpOwotCi0JcHJvcHMgPSBkZXZtX2tjYWxsb2Mo
-JnBkZXYtPmRldiwgbnVtX2NoYW4sIHNpemVvZigqcHJvcHMpLCBHRlBfS0VSTkVMKTsKLQotCWlm
-ICghcHJpdiB8fCAhcHJvcHMpCisJaWYgKCFwcml2KQogCQlyZXR1cm4gLUVOT01FTTsKIAogCWVy
-ciA9IG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKG5wLCAiaTJjLWJ1cy1uYW1lIiwgJnByaXYtPmJ1
-c19uYW1lKTsKQEAgLTI0MSwxMiArMjM4LDkgQEAgc3RhdGljIGludCBpMmNfZGVtdXhfcGluY3Ry
-bF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCQl9CiAJCXByaXYtPmNoYW5b
-aV0ucGFyZW50X25wID0gYWRhcF9ucDsKIAotCQlwcm9wc1tpXS5uYW1lID0gZGV2bV9rc3RyZHVw
-KCZwZGV2LT5kZXYsICJzdGF0dXMiLCBHRlBfS0VSTkVMKTsKLQkJcHJvcHNbaV0udmFsdWUgPSBk
-ZXZtX2tzdHJkdXAoJnBkZXYtPmRldiwgIm9rIiwgR0ZQX0tFUk5FTCk7Ci0JCXByb3BzW2ldLmxl
-bmd0aCA9IDM7Ci0KIAkJb2ZfY2hhbmdlc2V0X2luaXQoJnByaXYtPmNoYW5baV0uY2hnc2V0KTsK
-LQkJb2ZfY2hhbmdlc2V0X3VwZGF0ZV9wcm9wZXJ0eSgmcHJpdi0+Y2hhbltpXS5jaGdzZXQsIGFk
-YXBfbnAsICZwcm9wc1tpXSk7CisJCW9mX2NoYW5nZXNldF91cGRhdGVfcHJvcGVydHlfc3RyaW5n
-KCZwcml2LT5jaGFuW2ldLmNoZ3NldCwKKwkJCQkJCSAgICBhZGFwX25wLCAic3RhdHVzIiwgIm9r
-Iik7CiAJfQogCiAJcHJpdi0+bnVtX2NoYW4gPSBudW1fY2hhbjsKLS0gClJlZ2FyZHMsCgpMYXVy
-ZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+On Mon, 12 Feb 2018 18:33:24 +0000
+Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
+
+>  
+> +/**
+> + * enum page_response_code - Return status of fault handlers,
+> telling the IOMMU
+> + * driver how to proceed with the fault.
+> + *
+> + * @IOMMU_FAULT_STATUS_HANDLED: Stop processing the fault, and do
+> not send a
+> + *	reply to the device.
+> + * @IOMMU_FAULT_STATUS_CONTINUE: Fault was not handled. Call the
+> next handler,
+> + *	or terminate.
+> + * @IOMMU_FAULT_STATUS_SUCCESS: Fault has been handled and the page
+> tables
+> + *	populated, retry the access. This is "Success" in PCI PRI.
+> + * @IOMMU_FAULT_STATUS_FAILURE: General error. Drop all subsequent
+> faults from
+> + *	this device if possible. This is "Response Failure" in PCI
+> PRI.
+> + * @IOMMU_FAULT_STATUS_INVALID: Could not handle this fault, don't
+> retry the
+> + *	access. This is "Invalid Request" in PCI PRI.
+> + */
+> +enum page_response_code {
+> +	IOMMU_PAGE_RESP_HANDLED = 0,
+> +	IOMMU_PAGE_RESP_CONTINUE,
+> +	IOMMU_PAGE_RESP_SUCCESS,
+> +	IOMMU_PAGE_RESP_INVALID,
+> +	IOMMU_PAGE_RESP_FAILURE,
+> +};
+it seems to me two things are mixed here:
+1. driver handler response status (HANDLED, CONTINUE)
+2. PCI standard page response code (the rest)
+Can we leave them separate? then we don't have to convert this enum
+to/from PCI ATS page response code.
+
+> +
+>  /**
+>   * Generic page response information based on PCI ATS and PASID spec.
+>   * @addr: servicing page address
+> @@ -202,12 +225,7 @@ enum page_response_type {
+>  struct page_response_msg {
+>  	u64 addr;
+>  	u32 pasid;
+> -	u32 resp_code:4;
+> -#define IOMMU_PAGE_RESP_SUCCESS	0
+> -#define IOMMU_PAGE_RESP_INVALID	1
+> -#define IOMMU_PAGE_RESP_HANDLED	2
+> -#define IOMMU_PAGE_RESP_FAILURE	0xF
+> -
+[Jacob Pan]
