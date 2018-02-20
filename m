@@ -1,53 +1,345 @@
-Return-Path: <SRS0=r5lV=FO=gmail.com=joel.stan@kernel.org>
-Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 1/3] dt-bindings: aspeed-lpc: Add reset controller
-Date: Tue, 20 Feb 2018 12:13:28 +1030
-Message-Id: <20180220014330.23425-2-joel@jms.id.au>
-In-Reply-To: <20180220014330.23425-1-joel@jms.id.au>
-References: <20180220014330.23425-1-joel@jms.id.au>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Andrew Jeffery <andrew@aj.id.au>
-Cc: Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v3 10/15] memory: tegra: Introduce memory client hot reset
+Date: Tue, 20 Feb 2018 19:36:27 +0300
+Message-Id: <c8edcd52ec69afcca6007d8c2a1045aae7333bb4.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This describes the reset controller present in the LPC address space.
+In order to reset busy HW properly, memory controller needs to be
+involved, otherwise it is possible to get corrupted memory or hang machine
+if HW was reset during DMA. Introduce memory client 'hot reset' that will
+be used for resetting of busy HW.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
-V2: Fix spelling mistakes
----
- .../devicetree/bindings/mfd/aspeed-lpc.txt          | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/memory/tegra/mc.c | 210 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/memory/tegra/mc.h |   2 +
+ include/soc/tegra/mc.h    |  33 ++++++++
+ 3 files changed, 245 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-index 514d82ced95b..9bdd3e8c91ec 100644
---- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-+++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-@@ -135,3 +135,24 @@ lhc: lhc@20 {
- 	compatible = "aspeed,ast2500-lhc";
- 	reg = <0x20 0x24 0x48 0x8>;
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index 10011d61d08c..85f74ebfd8cb 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -7,6 +7,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+@@ -72,6 +73,207 @@ static const struct of_device_id tegra_mc_of_match[] = {
  };
+ MODULE_DEVICE_TABLE(of, tegra_mc_of_match);
+ 
++static int terga_mc_block_dma_common(struct tegra_mc *mc,
++				     const struct tegra_mc_reset *rst)
++{
++	unsigned long flags;
++	u32 value;
 +
-+LPC reset control
-+-----------------
++	spin_lock_irqsave(&mc->lock, flags);
 +
-+The UARTs present in the ASPEED SoC can have their resets tied to the reset
-+state of the LPC bus. Some systems may chose to modify this configuration.
++	value = mc_readl(mc, rst->control) | BIT(rst->bit);
++	mc_writel(mc, value, rst->control);
 +
-+Required properties:
++	spin_unlock_irqrestore(&mc->lock, flags);
 +
-+ - compatible:		"aspeed,ast2500-lpc-reset" or
-+ 			"aspeed,ast2400-lpc-reset"
-+ - reg:			offset and length of the IP in the LHC memory region
-+ - #reset-controller	indicates the number of reset cells expected
++	return 0;
++}
 +
-+Example:
++static bool terga_mc_dma_idling_common(struct tegra_mc *mc,
++				       const struct tegra_mc_reset *rst)
++{
++	return (mc_readl(mc, rst->status) & BIT(rst->bit)) != 0;
++}
 +
-+lpc_reset: reset-controller@18 {
-+        compatible = "aspeed,ast2500-lpc-reset";
-+        reg = <0x18 0x4>;
-+        #reset-cells = <1>;
++static int terga_mc_unblock_dma_common(struct tegra_mc *mc,
++				       const struct tegra_mc_reset *rst)
++{
++	unsigned long flags;
++	u32 value;
++
++	spin_lock_irqsave(&mc->lock, flags);
++
++	value = mc_readl(mc, rst->control) & ~BIT(rst->bit);
++	mc_writel(mc, value, rst->control);
++
++	spin_unlock_irqrestore(&mc->lock, flags);
++
++	return 0;
++}
++
++static int terga_mc_reset_status_common(struct tegra_mc *mc,
++					const struct tegra_mc_reset *rst)
++{
++	return (mc_readl(mc, rst->control) & BIT(rst->bit)) != 0;
++}
++
++const struct tegra_mc_reset_ops terga_mc_resets_ops_common = {
++	.block_dma = terga_mc_block_dma_common,
++	.dma_idling = terga_mc_dma_idling_common,
++	.unblock_dma = terga_mc_unblock_dma_common,
++	.reset_status = terga_mc_reset_status_common,
 +};
++
++static inline struct tegra_mc *reset_to_mc(struct reset_controller_dev *rcdev)
++{
++	return container_of(rcdev, struct tegra_mc, reset);
++}
++
++static const struct tegra_mc_reset *tegra_mc_reset_find(struct tegra_mc *mc,
++							unsigned long id)
++{
++	unsigned int i;
++
++	for (i = 0; i < mc->soc->num_resets; i++)
++		if (mc->soc->resets[i].id == id)
++			return &mc->soc->resets[i];
++
++	return NULL;
++}
++
++static int tegra_mc_hotreset_assert(struct reset_controller_dev *rcdev,
++				    unsigned long id)
++{
++	struct tegra_mc *mc = reset_to_mc(rcdev);
++	const struct tegra_mc_reset_ops *rst_ops;
++	const struct tegra_mc_reset *rst;
++	int retries = 500;
++	int err;
++
++	rst = tegra_mc_reset_find(mc, id);
++	if (!rst)
++		return -ENODEV;
++
++	rst_ops = mc->soc->resets_ops;
++	if (!rst_ops)
++		return -ENODEV;
++
++	if (rst_ops->block_dma) {
++		/* block clients DMA requests */
++		err = rst_ops->block_dma(mc, rst);
++		if (err) {
++			dev_err(mc->dev, "Failed to block %s DMA: %d\n",
++				rst->name, err);
++			return err;
++		}
++	}
++
++	if (rst_ops->dma_idling) {
++		/* wait for completion of the outstanding DMA requests */
++		while (!rst_ops->dma_idling(mc, rst)) {
++			if (!retries--) {
++				dev_err(mc->dev, "Failed to flush %s DMA\n",
++					rst->name);
++				return -EBUSY;
++			}
++
++			usleep_range(10, 100);
++		}
++	}
++
++	if (rst_ops->hotreset_assert) {
++		/* clear clients DMA requests sitting before arbitration */
++		err = rst_ops->hotreset_assert(mc, rst);
++		if (err) {
++			dev_err(mc->dev, "Failed to hot reset %s: %d\n",
++				rst->name, err);
++			return err;
++		}
++	}
++
++	return 0;
++}
++
++static int tegra_mc_hotreset_deassert(struct reset_controller_dev *rcdev,
++				      unsigned long id)
++{
++	struct tegra_mc *mc = reset_to_mc(rcdev);
++	const struct tegra_mc_reset_ops *rst_ops;
++	const struct tegra_mc_reset *rst;
++	int err;
++
++	rst = tegra_mc_reset_find(mc, id);
++	if (!rst)
++		return -ENODEV;
++
++	rst_ops = mc->soc->resets_ops;
++	if (!rst_ops)
++		return -ENODEV;
++
++	if (rst_ops->hotreset_deassert) {
++		/* take out client from hot reset */
++		err = rst_ops->hotreset_deassert(mc, rst);
++		if (err) {
++			dev_err(mc->dev, "Failed to deassert hot reset %s: %d\n",
++				rst->name, err);
++			return err;
++		}
++	}
++
++	if (rst_ops->unblock_dma) {
++		/* allow new DMA requests to proceed to arbitration */
++		err = rst_ops->unblock_dma(mc, rst);
++		if (err) {
++			dev_err(mc->dev, "Failed to unblock %s DMA : %d\n",
++				rst->name, err);
++			return err;
++		}
++	}
++
++	return 0;
++}
++
++static int tegra_mc_hotreset_status(struct reset_controller_dev *rcdev,
++				    unsigned long id)
++{
++	struct tegra_mc *mc = reset_to_mc(rcdev);
++	const struct tegra_mc_reset_ops *rst_ops;
++	const struct tegra_mc_reset *rst;
++
++	rst = tegra_mc_reset_find(mc, id);
++	if (!rst)
++		return -ENODEV;
++
++	rst_ops = mc->soc->resets_ops;
++	if (!rst_ops)
++		return -ENODEV;
++
++	return rst_ops->reset_status(mc, rst);
++}
++
++static const struct reset_control_ops tegra_mc_reset_ops = {
++	.assert = tegra_mc_hotreset_assert,
++	.deassert = tegra_mc_hotreset_deassert,
++	.status = tegra_mc_hotreset_status,
++};
++
++static int tegra_mc_reset_setup(struct tegra_mc *mc)
++{
++	int err;
++
++	mc->reset.ops = &tegra_mc_reset_ops;
++	mc->reset.owner = THIS_MODULE;
++	mc->reset.of_node = mc->dev->of_node;
++	mc->reset.of_reset_n_cells = 1;
++	mc->reset.nr_resets = mc->soc->num_resets;
++
++	err = reset_controller_register(&mc->reset);
++	if (err < 0)
++		return err;
++
++	return 0;
++}
++
+ static int tegra_mc_setup_latency_allowance(struct tegra_mc *mc)
+ {
+ 	unsigned long long tick;
+@@ -432,6 +634,7 @@ static int tegra_mc_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	platform_set_drvdata(pdev, mc);
++	spin_lock_init(&mc->lock);
+ 	mc->soc = match->data;
+ 	mc->dev = &pdev->dev;
+ 
+@@ -486,6 +689,13 @@ static int tegra_mc_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	err = tegra_mc_reset_setup(mc);
++	if (err < 0) {
++		dev_err(&pdev->dev, "failed to register reset controller: %d\n",
++			err);
++		return err;
++	}
++
+ 	mc->irq = platform_get_irq(pdev, 0);
+ 	if (mc->irq < 0) {
+ 		dev_err(&pdev->dev, "interrupt not specified\n");
+diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+index cdd6911f4079..e6374a86e8c3 100644
+--- a/drivers/memory/tegra/mc.h
++++ b/drivers/memory/tegra/mc.h
+@@ -41,6 +41,8 @@ static inline void mc_writel(struct tegra_mc *mc, u32 value,
+ 	writel(value, mc->regs + offset);
+ }
+ 
++extern const struct tegra_mc_reset_ops terga_mc_resets_ops_common;
++
+ #ifdef CONFIG_ARCH_TEGRA_2x_SOC
+ extern const struct tegra_mc_soc tegra20_mc_soc;
+ #endif
+diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
+index bea7fe776825..56e06bc652a0 100644
+--- a/include/soc/tegra/mc.h
++++ b/include/soc/tegra/mc.h
+@@ -9,6 +9,7 @@
+ #ifndef __SOC_TEGRA_MC_H__
+ #define __SOC_TEGRA_MC_H__
+ 
++#include <linux/reset-controller.h>
+ #include <linux/types.h>
+ 
+ struct clk;
+@@ -95,6 +96,30 @@ static inline void tegra_smmu_remove(struct tegra_smmu *smmu)
+ }
+ #endif
+ 
++struct tegra_mc_reset {
++	const char *name;
++	unsigned long id;
++	unsigned int control;
++	unsigned int status;
++	unsigned int reset;
++	unsigned int bit;
++};
++
++struct tegra_mc_reset_ops {
++	int (*hotreset_assert)(struct tegra_mc *mc,
++			       const struct tegra_mc_reset *rst);
++	int (*hotreset_deassert)(struct tegra_mc *mc,
++				 const struct tegra_mc_reset *rst);
++	int (*block_dma)(struct tegra_mc *mc,
++			 const struct tegra_mc_reset *rst);
++	bool (*dma_idling)(struct tegra_mc *mc,
++			   const struct tegra_mc_reset *rst);
++	int (*unblock_dma)(struct tegra_mc *mc,
++			   const struct tegra_mc_reset *rst);
++	int (*reset_status)(struct tegra_mc *mc,
++			    const struct tegra_mc_reset *rst);
++};
++
+ struct tegra_mc_soc {
+ 	const struct tegra_mc_client *clients;
+ 	unsigned int num_clients;
+@@ -110,6 +135,10 @@ struct tegra_mc_soc {
+ 	const struct tegra_smmu_soc *smmu;
+ 
+ 	u32 intmask;
++
++	const struct tegra_mc_reset_ops *resets_ops;
++	const struct tegra_mc_reset *resets;
++	unsigned int num_resets;
+ };
+ 
+ struct tegra_mc {
+@@ -124,6 +153,10 @@ struct tegra_mc {
+ 
+ 	struct tegra_mc_timing *timings;
+ 	unsigned int num_timings;
++
++	struct reset_controller_dev reset;
++
++	spinlock_t lock;
+ };
+ 
+ void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate);
 -- 
-2.15.1
+2.16.1
