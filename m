@@ -1,68 +1,178 @@
-Return-Path: <SRS0=dhma=FO=ettus.com=moritz.fischer@kernel.org>
-From: Moritz Fischer <mdf@kernel.org>
-Subject: [PATCH v4 1/2] dt-bindings: net: Add bindings for National Instruments XGE netdev
-Date: Tue, 20 Feb 2018 09:32:40 -0800
-Message-Id: <20180220173241.32658-1-mdf@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, davem@davemloft.net, Moritz Fischer <mdf@kernel.org>
+Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v3 07/15] memory: tegra: Apply interrupts mask per SoC
+Date: Tue, 20 Feb 2018 19:25:20 +0300
+Message-Id: <2d2ea1c4fd03fb76c60748cf362105909c3baf4d.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This adds bindings for the NI XGE 1G/10G network device.
+Currently we are enabling handling of interrupts specific to Tegra124+
+which happen to overlap with previous generations. Let's specify
+interrupts mask per SoC generation for consistency and in a preparation
+of squashing of Tegra20 driver into the common one that will enable
+handling of GART faults which may be undesirable by newer generations.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
+ drivers/memory/tegra/mc.c       | 21 +++------------------
+ drivers/memory/tegra/mc.h       |  9 +++++++++
+ drivers/memory/tegra/tegra114.c |  2 ++
+ drivers/memory/tegra/tegra124.c |  6 ++++++
+ drivers/memory/tegra/tegra210.c |  3 +++
+ drivers/memory/tegra/tegra30.c  |  2 ++
+ include/soc/tegra/mc.h          |  2 ++
+ 7 files changed, 27 insertions(+), 18 deletions(-)
 
-Changes from v3:
-- Added Rob's Reviewed-by
-
-Changes from v2:
-- Addressed Rob's comments w.r.t to IRQ names and typo
-
-Changes from v1:
-- Corrected from nixge -> nixge.txt
----
- Documentation/devicetree/bindings/net/nixge.txt | 32 +++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/nixge.txt
-
-diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
-new file mode 100644
-index 000000000000..e55af7f0881a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/nixge.txt
-@@ -0,0 +1,32 @@
-+* NI XGE Ethernet controller
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index e55b9733bd83..60509f0a386b 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -20,14 +20,6 @@
+ #include "mc.h"
+ 
+ #define MC_INTSTATUS 0x000
+-#define  MC_INT_DECERR_MTS (1 << 16)
+-#define  MC_INT_SECERR_SEC (1 << 13)
+-#define  MC_INT_DECERR_VPR (1 << 12)
+-#define  MC_INT_INVALID_APB_ASID_UPDATE (1 << 11)
+-#define  MC_INT_INVALID_SMMU_PAGE (1 << 10)
+-#define  MC_INT_ARBITRATION_EMEM (1 << 9)
+-#define  MC_INT_SECURITY_VIOLATION (1 << 8)
+-#define  MC_INT_DECERR_EMEM (1 << 6)
+ 
+ #define MC_INTMASK 0x004
+ 
+@@ -248,13 +240,11 @@ static const char *const error_names[8] = {
+ static irqreturn_t tegra_mc_irq(int irq, void *data)
+ {
+ 	struct tegra_mc *mc = data;
+-	unsigned long status, mask;
++	unsigned long status;
+ 	unsigned int bit;
+ 
+ 	/* mask all interrupts to avoid flooding */
+-	mask = mc_readl(mc, MC_INTMASK);
+-	status = mc_readl(mc, MC_INTSTATUS) & mask;
+-
++	status = mc_readl(mc, MC_INTSTATUS) & mc->soc->intmask;
+ 	if (!status)
+ 		return IRQ_NONE;
+ 
+@@ -349,7 +339,6 @@ static int tegra_mc_probe(struct platform_device *pdev)
+ 	const struct of_device_id *match;
+ 	struct resource *res;
+ 	struct tegra_mc *mc;
+-	u32 value;
+ 	int err;
+ 
+ 	match = of_match_node(tegra_mc_of_match, pdev->dev.of_node);
+@@ -409,11 +398,7 @@ static int tegra_mc_probe(struct platform_device *pdev)
+ 
+ 	WARN(!mc->soc->client_id_mask, "Missing client ID mask for this SoC\n");
+ 
+-	value = MC_INT_DECERR_MTS | MC_INT_SECERR_SEC | MC_INT_DECERR_VPR |
+-		MC_INT_INVALID_APB_ASID_UPDATE | MC_INT_INVALID_SMMU_PAGE |
+-		MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM;
+-
+-	mc_writel(mc, value, MC_INTMASK);
++	mc_writel(mc, mc->soc->intmask, MC_INTMASK);
+ 
+ 	err = devm_request_irq(&pdev->dev, mc->irq, tegra_mc_irq, IRQF_SHARED,
+ 			       dev_name(&pdev->dev), mc);
+diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
+index ddb16676c3af..24e020b4609b 100644
+--- a/drivers/memory/tegra/mc.h
++++ b/drivers/memory/tegra/mc.h
+@@ -14,6 +14,15 @@
+ 
+ #include <soc/tegra/mc.h>
+ 
++#define MC_INT_DECERR_MTS (1 << 16)
++#define MC_INT_SECERR_SEC (1 << 13)
++#define MC_INT_DECERR_VPR (1 << 12)
++#define MC_INT_INVALID_APB_ASID_UPDATE (1 << 11)
++#define MC_INT_INVALID_SMMU_PAGE (1 << 10)
++#define MC_INT_ARBITRATION_EMEM (1 << 9)
++#define MC_INT_SECURITY_VIOLATION (1 << 8)
++#define MC_INT_DECERR_EMEM (1 << 6)
 +
-+Required properties:
-+- compatible: Should be "ni,xge-enet-2.00"
-+- reg: Address and length of the register set for the device
-+- interrupts: Should contain tx and rx interrupt
-+- interrupt-names: Should be "rx" and "tx"
-+- phy-mode: See ethernet.txt file in the same directory.
-+- phy-handle: See ethernet.txt file in the same directory.
-+- nvmem-cells: Phandle of nvmem cell containing the MAC address
-+- nvmem-cell-names: Should be "address"
+ static inline u32 mc_readl(struct tegra_mc *mc, unsigned long offset)
+ {
+ 	return readl(mc->regs + offset);
+diff --git a/drivers/memory/tegra/tegra114.c b/drivers/memory/tegra/tegra114.c
+index b20e6e3e208e..7560b2f558a7 100644
+--- a/drivers/memory/tegra/tegra114.c
++++ b/drivers/memory/tegra/tegra114.c
+@@ -945,4 +945,6 @@ const struct tegra_mc_soc tegra114_mc_soc = {
+ 	.atom_size = 32,
+ 	.client_id_mask = 0x7f,
+ 	.smmu = &tegra114_smmu_soc,
++	.intmask = MC_INT_INVALID_SMMU_PAGE | MC_INT_SECURITY_VIOLATION |
++		   MC_INT_DECERR_EMEM,
+ };
+diff --git a/drivers/memory/tegra/tegra124.c b/drivers/memory/tegra/tegra124.c
+index 8b6360eabb8a..bd16555cca0f 100644
+--- a/drivers/memory/tegra/tegra124.c
++++ b/drivers/memory/tegra/tegra124.c
+@@ -1035,6 +1035,9 @@ const struct tegra_mc_soc tegra124_mc_soc = {
+ 	.smmu = &tegra124_smmu_soc,
+ 	.emem_regs = tegra124_mc_emem_regs,
+ 	.num_emem_regs = ARRAY_SIZE(tegra124_mc_emem_regs),
++	.intmask = MC_INT_DECERR_MTS | MC_INT_SECERR_SEC | MC_INT_DECERR_VPR |
++		   MC_INT_INVALID_APB_ASID_UPDATE | MC_INT_INVALID_SMMU_PAGE |
++		   MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM,
+ };
+ #endif /* CONFIG_ARCH_TEGRA_124_SOC */
+ 
+@@ -1059,5 +1062,8 @@ const struct tegra_mc_soc tegra132_mc_soc = {
+ 	.atom_size = 32,
+ 	.client_id_mask = 0x7f,
+ 	.smmu = &tegra132_smmu_soc,
++	.intmask = MC_INT_DECERR_MTS | MC_INT_SECERR_SEC | MC_INT_DECERR_VPR |
++		   MC_INT_INVALID_APB_ASID_UPDATE | MC_INT_INVALID_SMMU_PAGE |
++		   MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM,
+ };
+ #endif /* CONFIG_ARCH_TEGRA_132_SOC */
+diff --git a/drivers/memory/tegra/tegra210.c b/drivers/memory/tegra/tegra210.c
+index d398bcd3fc57..3b8d0100088c 100644
+--- a/drivers/memory/tegra/tegra210.c
++++ b/drivers/memory/tegra/tegra210.c
+@@ -1092,4 +1092,7 @@ const struct tegra_mc_soc tegra210_mc_soc = {
+ 	.atom_size = 64,
+ 	.client_id_mask = 0xff,
+ 	.smmu = &tegra210_smmu_soc,
++	.intmask = MC_INT_DECERR_MTS | MC_INT_SECERR_SEC | MC_INT_DECERR_VPR |
++		   MC_INT_INVALID_APB_ASID_UPDATE | MC_INT_INVALID_SMMU_PAGE |
++		   MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM,
+ };
+diff --git a/drivers/memory/tegra/tegra30.c b/drivers/memory/tegra/tegra30.c
+index d756c837f23e..d2ba50ed0490 100644
+--- a/drivers/memory/tegra/tegra30.c
++++ b/drivers/memory/tegra/tegra30.c
+@@ -967,4 +967,6 @@ const struct tegra_mc_soc tegra30_mc_soc = {
+ 	.atom_size = 16,
+ 	.client_id_mask = 0x7f,
+ 	.smmu = &tegra30_smmu_soc,
++	.intmask = MC_INT_INVALID_SMMU_PAGE | MC_INT_SECURITY_VIOLATION |
++		   MC_INT_DECERR_EMEM,
+ };
+diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
+index 233bae954970..be6e49124c6d 100644
+--- a/include/soc/tegra/mc.h
++++ b/include/soc/tegra/mc.h
+@@ -108,6 +108,8 @@ struct tegra_mc_soc {
+ 	u8 client_id_mask;
+ 
+ 	const struct tegra_smmu_soc *smmu;
 +
-+Examples (10G generic PHY):
-+	nixge0: ethernet@40000000 {
-+		compatible = "ni,xge-enet-2.00";
-+		reg = <0x40000000 0x6000>;
-+
-+		nvmem-cells = <&eth1_addr>;
-+		nvmem-cell-names = "address";
-+
-+		interrupts = <0 29 IRQ_TYPE_LEVEL_HIGH>, <0 30 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "rx", "tx";
-+		interrupt-parent = <&intc>;
-+
-+		phy-mode = "xgmii";
-+		phy-handle = <&ethernet_phy1>;
-+
-+		ethernet_phy1: ethernet-phy@4 {
-+			compatible = "ethernet-phy-ieee802.3-c45";
-+			reg = <4>;
-+		};
-+	};
++	u32 intmask;
+ };
+ 
+ struct tegra_mc {
 -- 
 2.16.1
