@@ -1,81 +1,77 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 2/2] dt-bindings: Document the Synopsys DW AXI DMA bindings
-Date: Tue, 20 Feb 2018 15:30:47 +0300
-Message-ID: <20180220123047.24469-3-Eugeniy.Paltsev@synopsys.com>
-References: <20180220123047.24469-1-Eugeniy.Paltsev@synopsys.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH v5 5/5] ARM: dts: bcm2837-rpi-3-b: add GPIO expander
+Date: Tue, 20 Feb 2018 14:19:35 +0200
+Message-ID: <a6d59692dc4847e0b1639a26542e28c95ad5240f.1519128054.git.baruch@tkos.co.il>
+References: <cover.1519128054.git.baruch@tkos.co.il>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180220123047.24469-1-Eugeniy.Paltsev@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: dmaengine@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-kernel@vger.kernel.org, Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, Rob Herring <robh+dt@kernel.org>, Dan Williams <dan.j.williams@intel.com>, linux-snps-arc@lists.infradead.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1519128054.git.baruch@tkos.co.il>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Dave Stevenson <dave.stevenson@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, linux-gpio@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation of device tree bindings for the Synopsys
-DesignWare AXI DMA controller.
+Add a description of the RPi3 GPIO expander that the VC4 firmware controls.
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
 ---
- .../devicetree/bindings/dma/snps,dw-axi-dmac.txt   | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+v5:
+  * Drop the 'firmware' property
 
-diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-new file mode 100644
-index 0000000..f237b79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-@@ -0,0 +1,41 @@
-+Synopsys DesignWare AXI DMA Controller
-+
-+Required properties:
-+- compatible: "snps,axi-dma-1.01a"
-+- reg: Address range of the DMAC registers. This should include
-+  all of the per-channel registers.
-+- interrupt: Should contain the DMAC interrupt number.
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device.
-+- dma-channels: Number of channels supported by hardware.
-+- snps,dma-masters: Number of AXI masters supported by the hardware.
-+- snps,data-width: Maximum AXI data width supported by hardware.
-+  (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
-+- snps,priority: Priority of channel. Array size is equal to the number of
-+  dma-channels. Priority value must be programmed within [0:dma-channels-1]
-+  range. (0 - minimum priority)
-+- snps,block-size: Maximum block size supported by the controller channel.
-+  Array size is equal to the number of dma-channels.
-+
-+Optional properties:
-+- snps,axi-max-burst-len: Restrict master AXI burst length by value specified
-+  in this property. If this property is missing the maximum AXI burst length
-+  supported by DMAC is used. [1:256]
-+
-+Example:
-+
-+dmac: dma-controller@80000 {
-+	compatible = "snps,axi-dma-1.01a";
-+	reg = <0x80000 0x400>;
-+	clocks = <&core_clk>, <&cfgr_clk>;
-+	clock-names = "core-clk", "cfgr-clk";
-+	interrupt-parent = <&intc>;
-+	interrupts = <27>;
-+
-+	dma-channels = <4>;
-+	snps,dma-masters = <2>;
-+	snps,data-width = <3>;
-+	snps,block-size = <4096 4096 4096 4096>;
-+	snps,priority = <0 1 2 3>;
-+	snps,axi-max-burst-len = <16>;
+v4:
+  * Move the gpio node under the firmware node
+  * Rename the gpio node to plain 'gpio'
+  * Add Stefan's ack
+
+v3:
+  * List GPIO names one per line.
+
+v2:
+  * Move GPIO expander node out of the soc container
+  * Rename compatible string
+  * Add gpio-line-names property
+---
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+index 3e4ed7c5b0b3..0b31d995a066 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -25,6 +25,23 @@
+ 	};
+ };
+ 
++&firmware {
++	expgpio: gpio {
++		compatible = "raspberrypi,firmware-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "BT_ON",
++				  "WL_ON",
++				  "STATUS_LED",
++				  "LAN_RUN",
++				  "HPD_N",
++				  "CAM_GPIO0",
++				  "CAM_GPIO1",
++				  "PWR_LOW_N";
++		status = "okay";
++	};
 +};
++
+ /* uart0 communicates with the BT module */
+ &uart0 {
+ 	pinctrl-names = "default";
 -- 
-2.9.3
+2.16.1
