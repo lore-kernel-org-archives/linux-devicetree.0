@@ -1,67 +1,49 @@
-Return-Path: <SRS0=JN/F=FQ=axis.com=niklas.cassel@kernel.org>
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: [PATCH 2/2] dt-bindings: pinctrl: artpec6: add smaller groups for uarts
-Date: Thu, 22 Feb 2018 16:22:47 +0100
-Message-Id: <20180222152247.10554-2-niklas.cassel@axis.com>
-In-Reply-To: <20180222152247.10554-1-niklas.cassel@axis.com>
-References: <20180222152247.10554-1-niklas.cassel@axis.com>
-To: Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>, Niklas Cassel <niklass@axis.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@axis.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v3 01/15] dt-bindings: arm: tegra: Remove duplicated Tegra30+ MC binding
+Date: Tue, 20 Feb 2018 19:25:14 +0300
+Message-Id: <0d1b4a840954796f319621e481ec1a90baee98cc.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add group configuration for uarts that are cut down
-variants, the standard being full, i.e. all signals,
-flow control, i.e. rx/tx and cts/rts, and rx/tx only.
+There are two bindings for the same Memory Controller. One of the bindings
+became obsolete long time ago and probably was left unnoticed, remove it
+for consistency.
 
-This allows us to be more precise in which pins we're
-actually using.
-
-Unfortunately the existing naming scheme leaves things
-to be desired, e.g. uart3grp0 means RX/TX and CTS/RTS,
-yet uart0grp0 means all pins.
-Since the exising suffixes have different meaning for
-different uarts, and the fact that we cannot change
-the name of existing groups, makes it hard to use a
-descriptive name for the newly added groups.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- .../devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt  | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ .../bindings/arm/tegra/nvidia,tegra30-mc.txt           | 18 ------------------
+ 1 file changed, 18 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra30-mc.txt
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
-index c3f9826692bc..678f5097058e 100644
---- a/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
-@@ -19,8 +19,9 @@ Required subnode-properties:
- 	Available functions and groups (function: group0, group1...):
- 		gpio: cpuclkoutgrp0, udlclkoutgrp0, i2c1grp0, i2c2grp0,
- 		      i2c3grp0, i2s0grp0, i2s1grp0, i2srefclkgrp0, spi0grp0,
--		      spi1grp0, pciedebuggrp0, uart0grp0, uart0grp1, uart1grp0,
--		      uart2grp0, uart2grp1, uart3grp0, uart4grp0, uart5grp0,
-+		      spi1grp0, pciedebuggrp0, uart0grp0, uart0grp1, uart0grp2,
-+		      uart1grp0, uart1grp1, uart2grp0, uart2grp1, uart2grp2,
-+		      uart3grp0, uart4grp0, uart4grp1, uart5grp0, uart5grp1,
- 		      uart5nocts
- 		cpuclkout: cpuclkoutgrp0
- 		udlclkout: udlclkoutgrp0
-@@ -33,12 +34,12 @@ Required subnode-properties:
- 		spi0: spi0grp0
- 		spi1: spi1grp0
- 		pciedebug: pciedebuggrp0
--		uart0: uart0grp0, uart0grp1
--		uart1: uart1grp0
--		uart2: uart2grp0, uart2grp1
-+		uart0: uart0grp0, uart0grp1, uart0grp2
-+		uart1: uart1grp0, uart1grp1
-+		uart2: uart2grp0, uart2grp1, uart2grp2
- 		uart3: uart3grp0
--		uart4: uart4grp0
--		uart5: uart5grp0, uart5nocts
-+		uart4: uart4grp0, uart4grp1
-+		uart5: uart5grp0, uart5grp1, uart5nocts
- 		nand: nandgrp0
- 		sdio0: sdio0grp0
- 		sdio1: sdio1grp0
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra30-mc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra30-mc.txt
+deleted file mode 100644
+index bdf1a612422b..000000000000
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra30-mc.txt
++++ /dev/null
+@@ -1,18 +0,0 @@
+-NVIDIA Tegra30 MC(Memory Controller)
+-
+-Required properties:
+-- compatible : "nvidia,tegra30-mc"
+-- reg : Should contain 4 register ranges(address and length); see the
+-  example below. Note that the MC registers are interleaved with the
+-  SMMU registers, and hence must be represented as multiple ranges.
+-- interrupts : Should contain MC General interrupt.
+-
+-Example:
+-	memory-controller {
+-		compatible = "nvidia,tegra30-mc";
+-		reg = <0x7000f000 0x010
+-		       0x7000f03c 0x1b4
+-		       0x7000f200 0x028
+-		       0x7000f284 0x17c>;
+-		interrupts = <0 77 0x04>;
+-	};
 -- 
-2.14.2
+2.16.1
