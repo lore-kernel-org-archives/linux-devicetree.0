@@ -1,11 +1,14 @@
-From: Graham Moore <graham.moore@linux.intel.com>
-Subject: [PATCH] arm64: dts: stratix10: Add PL330 DMAC to Stratix10 dts
-Date: Tue, 20 Feb 2018 09:38:47 -0600
-Message-ID: <1519141127-22038-1-git-send-email-graham.moore@linux.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 03/19] soc: renesas: Identify R-Car M3-N
+Date: Tue, 20 Feb 2018 16:40:34 +0100
+Message-ID: <CAMuHMdVw4OSPP7XYLGuE7SfVjOk_6VK847NdsVwszBX9XshQ3A@mail.gmail.com>
+References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519139541-18783-4-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519139541-18783-4-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,47 +18,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Graham Moore <graham.moore@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Stratix10 SoCFPGA uses the PL330 DMAC.  This patch adds the PL330
-DMAC to the Stratix10 device tree.
+Hi Jacopo,
 
-Signed-off-by: Graham Moore <graham.moore@linux.intel.com>
----
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add support for indentifying R-Car M3-N (R8A77965) SoC.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index aa4080d..0666c0f 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -711,6 +711,25 @@
- 			reg = <0xffe00000 0x100000>;
- 		};
- 
-+		pdma: pdma@ffda0000 {
-+			compatible = "arm,pl330", "arm,primecell";
-+			reg = <0xffda0000 0x1000>;
-+			interrupts = <0 81 4>,
-+				     <0 82 4>,
-+				     <0 83 4>,
-+				     <0 84 4>,
-+				     <0 85 4>,
-+				     <0 86 4>,
-+				     <0 87 4>,
-+				     <0 88 4>,
-+				     <0 89 4>;
-+			#dma-cells = <1>;
-+			#dma-channels = <8>;
-+			#dma-requests = <32>;
-+			clocks = <&l4_main_clk>;
-+			clock-names = "apb_pclk";
-+		};
-+
- 		rst: rstmgr@ffd11000 {
- 			#reset-cells = <1>;
- 			compatible = "altr,rst-mgr";
--- 
-2.7.4
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/drivers/soc/renesas/renesas-soc.c
+> +++ b/drivers/soc/renesas/renesas-soc.c
+> @@ -149,6 +149,11 @@ static const struct renesas_soc soc_rcar_v3m __initconst __maybe_unused = {
+>         .id     = 0x54,
+>  };
+>
+> +static const struct renesas_soc soc_rcar_m3_n __initconst __maybe_unused = {
+> +       .family = &fam_rcar_gen3,
+> +       .id     = 0x55,
+> +};
+
+Note that the list was sorted by SoC part number.
+
+> +
+>  static const struct renesas_soc soc_rcar_v3h __initconst __maybe_unused = {
+>         .family = &fam_rcar_gen3,
+>         .id     = 0x56,
+> @@ -214,6 +219,9 @@ static const struct of_device_id renesas_socs[] __initconst = {
+>  #ifdef CONFIG_ARCH_R8A7796
+>         { .compatible = "renesas,r8a7796",      .data = &soc_rcar_m3_w },
+>  #endif
+> +#ifdef CONFIG_ARCH_R8A77965
+> +       { .compatible = "renesas,r8a77965",     .data = &soc_rcar_m3_n },
+> +#endif
+>  #ifdef CONFIG_ARCH_R8A77970
+>         { .compatible = "renesas,r8a77970",     .data = &soc_rcar_v3m },
+>  #endif
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
