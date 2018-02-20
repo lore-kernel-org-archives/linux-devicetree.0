@@ -1,37 +1,53 @@
-Return-Path: <SRS0=Z6b/=FS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68]:33838 "EHLO
-        mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751414AbeBXSBU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 24 Feb 2018 13:01:20 -0500
-Received: by mail-lf0-f68.google.com with SMTP id l191so16742793lfe.1
-        for <devicetree@vger.kernel.org>; Sat, 24 Feb 2018 10:01:19 -0800 (PST)
-Subject: Re: [PATCH] DT: net: renesas,ravb: document R8A77980 bindings
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <1eb6b81c-500e-ef21-7c21-e8bc7a1ff227@cogentembedded.com>
-Message-ID: <ad5fce6e-81df-f898-387e-3c40417fe691@cogentembedded.com>
-Date: Sat, 24 Feb 2018 21:01:15 +0300
-MIME-Version: 1.0
-In-Reply-To: <1eb6b81c-500e-ef21-7c21-e8bc7a1ff227@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, David Miller <davem@davemloft.net>
+Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v3 02/15] dt-bindings: memory: tegra: Document #reset-cells property of the Tegra30 MC
+Date: Tue, 20 Feb 2018 19:25:15 +0300
+Message-Id: <cc137269e617947fe6b80629cb439ff17eec38a6.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
+References: <cover.1519141896.git.digetx@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 02/01/2018 11:13 PM, Sergei Shtylyov wrote:
+Memory Controller has a memory client "hot reset" functionality, which
+resets the DMA interface of a memory client. So MC is a reset controller
+in addition to IOMMU. Documentation the new property.
 
-> Renesas R-Car V3H (R8A77980) SoC has the R-Car gen3 compatible EtherAVB
-> device, so document the SoC specific bindings.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
-> The patch is against DaveM's 'net-next.git' repo but I wouldn't mind if it's
-> applied to 'net.git' instead. :-)
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ .../devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt     | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-   David, I see this patch was marked as "not applicable" in patchwork. Why, because
-it was posted during the merge window?
-
-MNBR, Sergei
+diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt
+index 14968b048cd3..a878b5908a4d 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra30-mc.txt
+@@ -12,6 +12,9 @@ Required properties:
+ - clock-names: Must include the following entries:
+   - mc: the module's clock input
+ - interrupts: The interrupt outputs from the controller.
++- #reset-cells : Should be 1. This cell represents memory client module ID.
++  The assignments may be found in header file <dt-bindings/memory/tegra30-mc.h>
++  or in the TRM documentation.
+ 
+ Required properties for Tegra30, Tegra114, Tegra124, Tegra132 and Tegra210:
+ - #iommu-cells: Should be 1. The single cell of the IOMMU specifier defines
+@@ -72,12 +75,14 @@ Example SoC include file:
+ 		interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 		#iommu-cells = <1>;
++		#reset-cells = <1>;
+ 	};
+ 
+ 	sdhci@700b0000 {
+ 		compatible = "nvidia,tegra124-sdhci";
+ 		...
+ 		iommus = <&mc TEGRA_SWGROUP_SDMMC1A>;
++		resets = <&mc TEGRA124_MC_RESET_SDMMC1>;
+ 	};
+ };
+ 
+-- 
+2.16.1
