@@ -1,15 +1,17 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v5 2/5] dt-bindings: gpio: add raspberry pi GPIO expander
- binding
-Date: Tue, 20 Feb 2018 07:40:36 -0600
-Message-ID: <CAL_JsqJW43q1rmSKa4joNj7=XpFScts2prXsHSpUjWWj3fOPdw@mail.gmail.com>
-References: <cover.1519128054.git.baruch@tkos.co.il>
- <f400b48cbcd8a138c39d4e8f63d6c1f569090dcc.1519128054.git.baruch@tkos.co.il>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v2] usb: host: ehci-platform: add support for optional
+ external vbus supply
+Date: Tue, 20 Feb 2018 13:48:18 +0000
+Message-ID: <a34d376e-45c2-0791-7c69-d6647170aff9@st.com>
+References: <1519131492-27913-1-git-send-email-amelie.delaunay@st.com>
+ <87h8qbq0em.fsf@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f400b48cbcd8a138c39d4e8f63d6c1f569090dcc.1519128054.git.baruch@tkos.co.il>
+In-Reply-To: <87h8qbq0em.fsf@linux.intel.com>
+Content-Language: en-US
+Content-ID: <B926517B6812714298BA59338EE82C50@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,33 +21,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Eric Anholt <eric@anholt.net>, Michael Zoran <mzoran@crowfest.net>, "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, Dave Stevenson <dave.stevenson@raspberrypi.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Felipe Balbi <felipe.balbi@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, Roger Quadros <rogerq@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 20, 2018 at 6:19 AM, Baruch Siach <baruch@tkos.co.il> wrote:
-> The Raspberry Pi 3 GPIO expander is controlled by the VC4 firmware over
-> I2C. The firmware mailbox interface allows the ARM core to control the
-> GPIO lines.
->
-> Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-> ---
-> v5:
->   * Remove the 'firmware' property
->   * Note that the gpio node is a child of the firmware node
->
-> v4:
->   * Move the example gpio node under the firmware node
->   * Rename gpio node name to plain 'gpio'
->
-> v3:
->   * Rename node name.
->
-> v2:
->   * Rename compatible string to raspberrypi,firmware-gpio
-> ---
->  .../bindings/gpio/raspberrypi,firmware-gpio.txt    | 30 ++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt
+Hi,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 02/20/2018 02:02 PM, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Amelie Delaunay <amelie.delaunay@st.com> writes:
+>> On some boards, especially when vbus supply requires large current,
+>> and the charge pump on the PHY isn't enough, an external vbus power switch
+>> may be used.
+>> Add support for this optional external vbus supply in ehci-platform.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>>
+>> ---
+>> Changes in v2:
+>>   * Address Roger Quadros comments: move regulator_enable/disable from
+>> ehci_platform_power_on/off to ehci_platform_port_power.
+>> ---
+>>   Documentation/devicetree/bindings/usb/usb-ehci.txt |  1 +
+>>   drivers/usb/host/ehci-platform.c                   | 31 ++++++++++++++++++++++
+>>   2 files changed, 32 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> index 3efde12..fc480cd 100644
+>> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> @@ -19,6 +19,7 @@ Optional properties:
+>>    - phys : phandle + phy specifier pair
+>>    - phy-names : "usb"
+>>    - resets : phandle + reset specifier pair
+>> + - vbus-supply : phandle of regulator supplying vbus
+>>   
+>>   Example (Sequoia 440EPx):
+>>       ehci@e0000300 {
+>> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+>> index b065a96..05be100 100644
+>> --- a/drivers/usb/host/ehci-platform.c
+>> +++ b/drivers/usb/host/ehci-platform.c
+>> @@ -29,6 +29,7 @@
+>>   #include <linux/of.h>
+>>   #include <linux/phy/phy.h>
+>>   #include <linux/platform_device.h>
+>> +#include <linux/regulator/consumer.h>
+>>   #include <linux/reset.h>
+>>   #include <linux/usb.h>
+>>   #include <linux/usb/hcd.h>
+>> @@ -46,6 +47,7 @@ struct ehci_platform_priv {
+>>   	struct reset_control *rsts;
+>>   	struct phy **phys;
+>>   	int num_phys;
+>> +	struct regulator *vbus_supply;
+>>   	bool reset_on_resume;
+>>   };
+>>   
+>> @@ -76,6 +78,25 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
+>>   	return 0;
+>>   }
+>>   
+>> +static int ehci_platform_port_power(struct usb_hcd *hcd, int portnum,
+>> +				    bool enable)
+>> +{
+>> +	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+>> +	int ret = 0;
+>> +
+>> +	if (priv->vbus_supply) {
+> 
+> you can reduce indentation here:
+> 
+> 	if (!priv->vbus_supply)
+>          	return 0;
+> 
+
+You're right, thanks! I will fix it in upcoming v3, waiting for other 
+additional comments.
+Amelie
