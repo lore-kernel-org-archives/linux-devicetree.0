@@ -1,16 +1,18 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 1/8] [PATCH 1/8] drivers/peci: Add support for PECI
- bus driver core
-Date: Wed, 21 Feb 2018 18:04:34 +0100
-Message-ID: <20180221170434.GF29204@lunn.ch>
-References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
- <20180221161606.32247-2-jae.hyun.yoo@linux.intel.com>
+From: David Lechner <david@lechnology.com>
+Subject: =?UTF-8?Q?Re:_[PATCH_v7_00/42]_ARM:_davinci:_convert_to_common_cloc?=
+ =?UTF-8?Q?k_framework=e2=80=8b?=
+Date: Wed, 21 Feb 2018 11:05:41 -0600
+Message-ID: <ebc57f3b-4f5d-612f-5b63-ddda4dd25031@lechnology.com>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
+ <CAMRc=MdT5Vd68eoWfJGv=5_uzD0L5m3Y+wi6r7N6O8y6HZrQSg@mail.gmail.com>
+ <6142ab0d-85b1-84da-3a35-bdd8733bebd9@lechnology.com>
+ <CAMRc=Mf_pumyTZPn9T=sG7Ab95YS3KqKc2bT0evhESTRRFeiuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180221161606.32247-2-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <CAMRc=Mf_pumyTZPn9T=sG7Ab95YS3KqKc2bT0evhESTRRFeiuQ@mail.gmail.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,207 +22,88 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, arnd@arndb.de, linux-doc@vger.kernel.org, andrew@aj.id.au, gregkh@linuxfoundation.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> +static int peci_locked_xfer(struct peci_adapter *adapter,
-> +			    struct peci_xfer_msg *msg,
-> +			    bool do_retry,
-> +			    bool has_aw_fcs)
-> +{
-> +	ktime_t start, end;
-> +	s64 elapsed_ms;
-> +	int rc = 0;
-> +
-> +	if (!adapter->xfer) {
-> +		dev_dbg(&adapter->dev, "PECI level transfers not supported\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (in_atomic() || irqs_disabled()) {
+On 02/21/2018 06:01 AM, Bartosz Golaszewski wrote:
+> 2018-02-20 19:39 GMT+01:00 David Lechner <david@lechnology.com>:
+>> On 02/20/2018 07:33 AM, Bartosz Golaszewski wrote:
+>>>
+>>> 2018-02-19 21:21 GMT+01:00 David Lechner <david@lechnology.com>:
+>>>>
+>>>> This series converts mach-davinci to use the common clock framework.
+>>>>
+>>>>
+>>>
+>>> Hi David,
+>>>
+>>> just some quick results from today's playing with v7.
+>>>
+>>> I started out with da850-lcdk with my standard rootfs over NFS. I was
+>>> not able to boot to console so far. The first problem is that mdio
+>>> fails to probe:
+>>>
+>>> libphy: Fixed MDIO Bus: probed
+>>> davinci_mdio 1e24000.mdio: davinci mdio revision 1.5, bus freq 2200000
+>>> davinci_mdio 1e24000.mdio: no live phy, scanning all
+>>> davinci_mdio: probe of 1e24000.mdio failed with error -5> After some
+>>> digging I noticed that the supplied clock rate differs
+>>> between mainline (114000000Hz) vs common-clock-v7 (18000000). Since
+>>> we're not setting the rate in mdio, using LPSC_SET_RATE_PARENT would
+>>> not help like with lcdc.
+>>
+>>
+>> Can you post the output of this command so that I can see how your
+>> clocks are setup:
+>>
+>> cat /sys/kernel/debug/clk/clk_summary
+>>
+>>
+>>>
+>>> After that, the boot just hangs without ever getting to emac's probe.
+>>
+>>
+>> Using your workaround, can you run:
+>>
+>> cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+>>
+>> If you see:
+>>    1e27000.clock-controller: emac  off-0
+>>
+>> then genpd is not working like it is supposed to. You should see something
+>> like this for device that are working:
+>>            1e27000.clock-controller: uart2  on
+>>      /devices/platform/soc@1c00000/1d0d000.serial        active
+>>
+>>
+>>>
+>>> Once I set the emac clock to always enabled (a workaround that was
+>>> necessary with v6, but could be dropped with my first
+>>> genpd-in-a-separate-driver attempt), I'm getting a rather strange NULL
+>>> pointer dereference:
+>>
+>>
+>> I noticed this too when adding the power-domains property to some device
+>> tree nodes. This is part of the reason why I didn't add it everywhere.
+>> I wasn't able to figure out the cause of this yet. As a work around
+>> though, please try removing the power-domains property from the emac
+>> and mdio nodes and use your previous workaround of having an always
+>> enabled clock.
+>>
+>>
+> 
+> When I use any of the workarounds I just keep getting more problems
+> (e.g. [1] from blk and pinctrl). I only had a couple hours today to
+> play with it but it seems to me we have some memory corruption
+> somewhere. I'll check the initialization order of all the frameworks
+> involved tomorrow.
+> 
+> Best regards,
+> Bartosz
+> 
+> [1] https://pastebin.com/75mkkuJL
+> 
 
-Hi Jae
-
-Is there a real need to do transfers in atomic context, or with
-interrupts disabled? 
-
-> +		rt_mutex_trylock(&adapter->bus_lock);
-> +		if (!rc)
-> +			return -EAGAIN; /* PECI activity is ongoing */
-> +	} else {
-> +		rt_mutex_lock(&adapter->bus_lock);
-> +	}
-> +
-> +	if (do_retry)
-> +		start = ktime_get();
-> +
-> +	do {
-> +		rc = adapter->xfer(adapter, msg);
-> +
-> +		if (!do_retry)
-> +			break;
-> +
-> +		/* Per the PECI spec, need to retry commands that return 0x8x */
-> +		if (!(!rc && ((msg->rx_buf[0] & DEV_PECI_CC_RETRY_ERR_MASK) ==
-> +			      DEV_PECI_CC_TIMEOUT)))
-> +			break;
-> +
-> +		/* Set the retry bit to indicate a retry attempt */
-> +		msg->tx_buf[1] |= DEV_PECI_RETRY_BIT;
-> +
-> +		/* Recalculate the AW FCS if it has one */
-> +		if (has_aw_fcs)
-> +			msg->tx_buf[msg->tx_len - 1] = 0x80 ^
-> +						peci_aw_fcs((u8 *)msg,
-> +							    2 + msg->tx_len);
-> +
-> +		/* Retry for at least 250ms before returning an error */
-> +		end = ktime_get();
-> +		elapsed_ms = ktime_to_ms(ktime_sub(end, start));
-> +		if (elapsed_ms >= DEV_PECI_RETRY_TIME_MS) {
-> +			dev_dbg(&adapter->dev, "Timeout retrying xfer!\n");
-> +			break;
-> +		}
-> +	} while (true);
-
-So you busy loop to 1/4 second? How about putting a sleep in here so
-other things can be done between each retry.
-
-And should it not return -ETIMEDOUT after that 1/4 second?
-
-> +static int peci_scan_cmd_mask(struct peci_adapter *adapter)
-> +{
-> +	struct peci_xfer_msg msg;
-> +	u32 dib;
-> +	int rc = 0;
-> +
-> +	/* Update command mask just once */
-> +	if (adapter->cmd_mask & BIT(PECI_CMD_PING))
-> +		return 0;
-> +
-> +	msg.addr      = PECI_BASE_ADDR;
-> +	msg.tx_len    = GET_DIB_WR_LEN;
-> +	msg.rx_len    = GET_DIB_RD_LEN;
-> +	msg.tx_buf[0] = GET_DIB_PECI_CMD;
-> +
-> +	rc = peci_xfer(adapter, &msg);
-> +	if (rc < 0) {
-> +		dev_dbg(&adapter->dev, "PECI xfer error, rc : %d\n", rc);
-> +		return rc;
-> +	}
-> +
-> +	dib = msg.rx_buf[0] | (msg.rx_buf[1] << 8) |
-> +	      (msg.rx_buf[2] << 16) | (msg.rx_buf[3] << 24);
-> +
-> +	/* Check special case for Get DIB command */
-> +	if (dib == 0x00) {
-> +		dev_dbg(&adapter->dev, "DIB read as 0x00\n");
-> +		return -1;
-> +	}
-> +
-> +	if (!rc) {
-> +		/**
-> +		 * setting up the supporting commands based on minor rev#
-> +		 * see PECI Spec Table 3-1
-> +		 */
-> +		dib = (dib >> 8) & 0xF;
-> +
-> +		if (dib >= 0x1) {
-> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PKG_CFG);
-> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PKG_CFG);
-> +		}
-> +
-> +		if (dib >= 0x2)
-> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_IA_MSR);
-> +
-> +		if (dib >= 0x3) {
-> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PCI_CFG_LOCAL);
-> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PCI_CFG_LOCAL);
-> +		}
-> +
-> +		if (dib >= 0x4)
-> +			adapter->cmd_mask |= BIT(PECI_CMD_RD_PCI_CFG);
-> +
-> +		if (dib >= 0x5)
-> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_PCI_CFG);
-> +
-> +		if (dib >= 0x6)
-> +			adapter->cmd_mask |= BIT(PECI_CMD_WR_IA_MSR);
-
-Lots of magic numbers here. Can they be replaced with #defines.  Also,
-it looks like a switch statement could be used, with fall through.
-
-> +
-> +		adapter->cmd_mask |= BIT(PECI_CMD_GET_TEMP);
-> +		adapter->cmd_mask |= BIT(PECI_CMD_GET_DIB);
-> +		adapter->cmd_mask |= BIT(PECI_CMD_PING);
-> +	} else {
-> +		dev_dbg(&adapter->dev, "Error reading DIB, rc : %d\n", rc);
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-
-> +static int peci_ioctl_get_temp(struct peci_adapter *adapter, void *vmsg)
-> +{
-> +	struct peci_get_temp_msg *umsg = vmsg;
-> +	struct peci_xfer_msg msg;
-> +	int rc;
-> +
-
-Is this getting the temperature?
-
-> +	rc = peci_cmd_support(adapter, PECI_CMD_GET_TEMP);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	msg.addr      = umsg->addr;
-> +	msg.tx_len    = GET_TEMP_WR_LEN;
-> +	msg.rx_len    = GET_TEMP_RD_LEN;
-> +	msg.tx_buf[0] = GET_TEMP_PECI_CMD;
-> +
-> +	rc = peci_xfer(adapter, &msg);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	umsg->temp_raw = msg.rx_buf[0] | (msg.rx_buf[1] << 8);
-> +
-> +	return 0;
-> +}
-
-
-
-> +static long peci_ioctl(struct file *file, unsigned int iocmd, unsigned long arg)
-> +{
-> +	struct peci_adapter *adapter = file->private_data;
-> +	void __user *argp = (void __user *)arg;
-> +	unsigned int msg_len;
-> +	enum peci_cmd cmd;
-> +	u8 *msg;
-> +	int rc = 0;
-> +
-> +	dev_dbg(&adapter->dev, "ioctl, cmd=0x%x, arg=0x%lx\n", iocmd, arg);
-> +
-> +	switch (iocmd) {
-> +	case PECI_IOC_PING:
-> +	case PECI_IOC_GET_DIB:
-> +	case PECI_IOC_GET_TEMP:
-> +	case PECI_IOC_RD_PKG_CFG:
-> +	case PECI_IOC_WR_PKG_CFG:
-> +	case PECI_IOC_RD_IA_MSR:
-> +	case PECI_IOC_RD_PCI_CFG:
-> +	case PECI_IOC_RD_PCI_CFG_LOCAL:
-> +	case PECI_IOC_WR_PCI_CFG_LOCAL:
-> +		cmd = _IOC_TYPE(iocmd) - PECI_IOC_BASE;
-> +		msg_len = _IOC_SIZE(iocmd);
-> +		break;
-
-Adding new ioctl calls is pretty frowned up. Can you export this info
-via /sysfs?
-
-Also, should there be some permission checks here? Or is any user
-allowed to call these ioctls?
-
-	Andrew
+I wonder if we need to delete all of the __init and __initconst attributes
+now that this has been converted to platform devices.
