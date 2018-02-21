@@ -1,113 +1,107 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [PATCH v4 6/6] drm/bridge/sii8620: use micro-USB cable detection
- logic to detect MHL
-Date: Wed, 21 Feb 2018 09:55:41 +0100
-Message-ID: <20180221085541.14556-7-a.hajda@samsung.com>
-References: <20180221085541.14556-1-a.hajda@samsung.com>
- <CGME20180221085610eucas1p162a5cf356642e8556f6bc72163c3a5db@eucas1p1.samsung.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH v2 5/8] ARM: dts: artpec: add and utilize artpec6 pin
+ controller
+Date: Wed, 21 Feb 2018 09:59:57 +0100
+Message-ID: <20180221090000.18091-6-niklas.cassel@axis.com>
+References: <20180221090000.18091-1-niklas.cassel@axis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20180221085541.14556-1-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "open list:OPEN FIRMWARE AND FLATTENED DEVICE
- TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maciej Purski <m.purski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180221090000.18091-1-niklas.cassel@axis.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org, Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>, Niklas Cassel <niklass@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogTWFjaWVqIFB1cnNraSA8bS5wdXJza2lAc2Ftc3VuZy5jb20+CgpDdXJyZW50bHkgTUhM
-IGNoaXAgbXVzdCBiZSB0dXJuZWQgb24gcGVybWFuZW50bHkgdG8gZGV0ZWN0IE1ITCBjYWJsZS4g
-SXQKZHVwbGljYXRlcyBtaWNyby1VU0IgY29udHJvbGxlcidzIChNVUlDKSBmdW5jdGlvbmFsaXR5
-IGFuZCBjb25zdW1lcwp1bm5lY2Vzc2FyeSBwb3dlci4gTGV0cyB1c2UgZXh0Y29uIGF0dGFjaGVk
-IHRvIE1VSUMgdG8gZW5hYmxlIE1ITCBjaGlwCm9ubHkgaWYgaXQgZGV0ZWN0cyBNSEwgY2FibGUu
-CgpTaWduZWQtb2ZmLWJ5OiBNYWNpZWogUHVyc2tpIDxtLnB1cnNraUBzYW1zdW5nLmNvbT4KU2ln
-bmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KLS0tClRoaXMg
-aXMgcmV3b3JrIG9mIHRoZSBwYXRjaCBieSBNYWNpZWogd2l0aCBmb2xsb3dpbmcgY2hhbmdlczoK
-LSB1c2UgbWljcm8tVVNCIHBvcnQgYmluZGluZ3MgdG8gZ2V0IGV4dGNvbiwgaW5zdGVhZCBvZiBl
-eHRjb24gcHJvcGVydHksCi0gZml4ZWQgcmVtb3ZlIHNlcXVlbmNlLAotIGZpeGVkIGV4dGNvbiBn
-ZXQgc3RhdGUgbG9naWMuCgpDb2RlIGZpbmRpbmcgZXh0Y29uIG5vZGUgaXMgaGFja3kgSU1PLCBJ
-IGd1ZXNzIHVsdGltYXRlbHkgaXQgc2hvdWxkIGJlIGRvbmUKdmlhIHNvbWUgZnJhbWV3b3JrICht
-YXliZSBldmVuIGV4dGNvbiksIG9yIGF0IGxlYXN0IHZpYSBoZWxwZXIsIEkgaG9wZSBpdApjYW4g
-c3RheSBhcyBpcyB1bnRpbCB0aGUgcHJvcGVyIHNvbHV0aW9uIHdpbGwgYmUgbWVyZ2VkLgoKU2ln
-bmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KLS0tCiBkcml2
-ZXJzL2dwdS9kcm0vYnJpZGdlL3NpbC1zaWk4NjIwLmMgfCA5NyArKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrLS0KIDEgZmlsZSBjaGFuZ2VkLCA5NCBpbnNlcnRpb25zKCspLCAzIGRl
-bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lsLXNpaTg2
-MjAuYyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lsLXNpaTg2MjAuYwppbmRleCA5ZTc4NWI4
-ZTBlYTIuLjU2NWNjMzUyY2E4MSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9z
-aWwtc2lpODYyMC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2lsLXNpaTg2MjAuYwpA
-QCAtMTcsNiArMTcsNyBAQAogCiAjaW5jbHVkZSA8bGludXgvY2xrLmg+CiAjaW5jbHVkZSA8bGlu
-dXgvZGVsYXkuaD4KKyNpbmNsdWRlIDxsaW51eC9leHRjb24uaD4KICNpbmNsdWRlIDxsaW51eC9n
-cGlvL2NvbnN1bWVyLmg+CiAjaW5jbHVkZSA8bGludXgvaTJjLmg+CiAjaW5jbHVkZSA8bGludXgv
-aW50ZXJydXB0Lmg+CkBAIC0yNSw2ICsyNiw3IEBACiAjaW5jbHVkZSA8bGludXgvbGlzdC5oPgog
-I2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgogI2luY2x1ZGUgPGxpbnV4L211dGV4Lmg+CisjaW5j
-bHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KICNpbmNsdWRlIDxsaW51eC9yZWd1bGF0b3IvY29uc3Vt
-ZXIuaD4KICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+CiAKQEAgLTgxLDYgKzgzLDEwIEBAIHN0cnVj
-dCBzaWk4NjIwIHsKIAlzdHJ1Y3QgZWRpZCAqZWRpZDsKIAl1bnNpZ25lZCBpbnQgZ2VuMl93cml0
-ZV9idXJzdDoxOwogCWVudW0gc2lpODYyMF9tdF9zdGF0ZSBtdF9zdGF0ZTsKKwlzdHJ1Y3QgZXh0
-Y29uX2RldiAqZXh0Y29uOworCXN0cnVjdCBub3RpZmllcl9ibG9jayBleHRjb25fbmI7CisJc3Ry
-dWN0IHdvcmtfc3RydWN0IGV4dGNvbl93cTsKKwlpbnQgY2FibGVfc3RhdGU7CiAJc3RydWN0IGxp
-c3RfaGVhZCBtdF9xdWV1ZTsKIAlzdHJ1Y3QgewogCQlpbnQgcl9zaXplOwpAQCAtMjE3NSw2ICsy
-MTgxLDc3IEBAIHN0YXRpYyB2b2lkIHNpaTg2MjBfaW5pdF9yY3BfaW5wdXRfZGV2KHN0cnVjdCBz
-aWk4NjIwICpjdHgpCiAJY3R4LT5yY19kZXYgPSByY19kZXY7CiB9CiAKK3N0YXRpYyB2b2lkIHNp
-aTg2MjBfY2FibGVfb3V0KHN0cnVjdCBzaWk4NjIwICpjdHgpCit7CisJZGlzYWJsZV9pcnEodG9f
-aTJjX2NsaWVudChjdHgtPmRldiktPmlycSk7CisJc2lpODYyMF9od19vZmYoY3R4KTsKK30KKwor
-c3RhdGljIHZvaWQgc2lpODYyMF9leHRjb25fd29yayhzdHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmsp
-Cit7CisJc3RydWN0IHNpaTg2MjAgKmN0eCA9CisJCWNvbnRhaW5lcl9vZih3b3JrLCBzdHJ1Y3Qg
-c2lpODYyMCwgZXh0Y29uX3dxKTsKKwlpbnQgc3RhdGUgPSBleHRjb25fZ2V0X3N0YXRlKGN0eC0+
-ZXh0Y29uLCBFWFRDT05fRElTUF9NSEwpOworCisJaWYgKHN0YXRlID09IGN0eC0+Y2FibGVfc3Rh
-dGUpCisJCXJldHVybjsKKworCWN0eC0+Y2FibGVfc3RhdGUgPSBzdGF0ZTsKKworCWlmIChzdGF0
-ZSA+IDApCisJCXNpaTg2MjBfY2FibGVfaW4oY3R4KTsKKwllbHNlCisJCXNpaTg2MjBfY2FibGVf
-b3V0KGN0eCk7Cit9CisKK3N0YXRpYyBpbnQgc2lpODYyMF9leHRjb25fbm90aWZpZXIoc3RydWN0
-IG5vdGlmaWVyX2Jsb2NrICpzZWxmLAorCQkJdW5zaWduZWQgbG9uZyBldmVudCwgdm9pZCAqcHRy
-KQoreworCXN0cnVjdCBzaWk4NjIwICpjdHggPQorCQljb250YWluZXJfb2Yoc2VsZiwgc3RydWN0
-IHNpaTg2MjAsIGV4dGNvbl9uYik7CisKKwlzY2hlZHVsZV93b3JrKCZjdHgtPmV4dGNvbl93cSk7
-CisKKwlyZXR1cm4gTk9USUZZX0RPTkU7Cit9CisKK3N0YXRpYyBpbnQgc2lpODYyMF9leHRjb25f
-aW5pdChzdHJ1Y3Qgc2lpODYyMCAqY3R4KQoreworCXN0cnVjdCBleHRjb25fZGV2ICplZGV2Owor
-CXN0cnVjdCBkZXZpY2Vfbm9kZSAqbXVzYiwgKm11aWM7CisJaW50IHJldDsKKworCS8qIGdldCBt
-aWNyby1VU0IgY29ubmVjdG9yIG5vZGUgKi8KKwltdXNiID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9u
-b2RlKGN0eC0+ZGV2LT5vZl9ub2RlLCAxLCAtMSk7CisJLyogbmV4dCBnZXQgbWljcm8tVVNCIElu
-dGVyZmFjZSBDb250cm9sbGVyIG5vZGUgKi8KKwltdWljID0gb2ZfZ2V0X25leHRfcGFyZW50KG11
-c2IpOworCisJaWYgKCFtdWljKSB7CisJCWRldl9pbmZvKGN0eC0+ZGV2LCAibm8gZXh0Y29uIGZv
-dW5kLCBzd2l0Y2hpbmcgdG8gJ2Fsd2F5cyBvbicgbW9kZVxuIik7CisJCXJldHVybiAwOworCX0K
-KworCWVkZXYgPSBleHRjb25fZ2V0X2VkZXZfYnlfb2Zfbm9kZShtdWljKTsKKwlvZl9ub2RlX3B1
-dChtdWljKTsKKwlpZiAoSVNfRVJSKGVkZXYpKSB7CisJCWlmIChQVFJfRVJSKGVkZXYpID09IC1F
-UFJPQkVfREVGRVIpCisJCQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKKwkJZGV2X2VycihjdHgtPmRl
-diwgIkludmFsaWQgb3IgbWlzc2luZyBleHRjb25cbiIpOworCQlyZXR1cm4gUFRSX0VSUihlZGV2
-KTsKKwl9CisKKwljdHgtPmV4dGNvbiA9IGVkZXY7CisJY3R4LT5leHRjb25fbmIubm90aWZpZXJf
-Y2FsbCA9IHNpaTg2MjBfZXh0Y29uX25vdGlmaWVyOworCUlOSVRfV09SSygmY3R4LT5leHRjb25f
-d3EsIHNpaTg2MjBfZXh0Y29uX3dvcmspOworCXJldCA9IGV4dGNvbl9yZWdpc3Rlcl9ub3RpZmll
-cihlZGV2LCBFWFRDT05fRElTUF9NSEwsICZjdHgtPmV4dGNvbl9uYik7CisJaWYgKHJldCkgewor
-CQlkZXZfZXJyKGN0eC0+ZGV2LCAiZmFpbGVkIHRvIHJlZ2lzdGVyIG5vdGlmaWVyIGZvciBNSExc
-biIpOworCQlyZXR1cm4gcmV0OworCX0KKworCXJldHVybiAwOworfQorCiBzdGF0aWMgaW5saW5l
-IHN0cnVjdCBzaWk4NjIwICpicmlkZ2VfdG9fc2lpODYyMChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJp
-ZGdlKQogewogCXJldHVybiBjb250YWluZXJfb2YoYnJpZGdlLCBzdHJ1Y3Qgc2lpODYyMCwgYnJp
-ZGdlKTsKQEAgLTIzMDcsMTMgKzIzODQsMjAgQEAgc3RhdGljIGludCBzaWk4NjIwX3Byb2JlKHN0
-cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsCiAJaWYgKHJldCkKIAkJcmV0dXJuIHJldDsKIAorCXJl
-dCA9IHNpaTg2MjBfZXh0Y29uX2luaXQoY3R4KTsKKwlpZiAocmV0IDwgMCkgeworCQlkZXZfZXJy
-KGN0eC0+ZGV2LCAiZmFpbGVkIHRvIGluaXRpYWxpemUgRVhUQ09OXG4iKTsKKwkJcmV0dXJuIHJl
-dDsKKwl9CisKIAlpMmNfc2V0X2NsaWVudGRhdGEoY2xpZW50LCBjdHgpOwogCiAJY3R4LT5icmlk
-Z2UuZnVuY3MgPSAmc2lpODYyMF9icmlkZ2VfZnVuY3M7CiAJY3R4LT5icmlkZ2Uub2Zfbm9kZSA9
-IGRldi0+b2Zfbm9kZTsKIAlkcm1fYnJpZGdlX2FkZCgmY3R4LT5icmlkZ2UpOwogCi0Jc2lpODYy
-MF9jYWJsZV9pbihjdHgpOworCWlmICghY3R4LT5leHRjb24pCisJCXNpaTg2MjBfY2FibGVfaW4o
-Y3R4KTsKIAogCXJldHVybiAwOwogfQpAQCAtMjMyMiw4ICsyNDA2LDE1IEBAIHN0YXRpYyBpbnQg
-c2lpODYyMF9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCkKIHsKIAlzdHJ1Y3Qgc2lp
-ODYyMCAqY3R4ID0gaTJjX2dldF9jbGllbnRkYXRhKGNsaWVudCk7CiAKLQlkaXNhYmxlX2lycSh0
-b19pMmNfY2xpZW50KGN0eC0+ZGV2KS0+aXJxKTsKLQlzaWk4NjIwX2h3X29mZihjdHgpOworCWlm
-IChjdHgtPmV4dGNvbikgeworCQlleHRjb25fdW5yZWdpc3Rlcl9ub3RpZmllcihjdHgtPmV4dGNv
-biwgRVhUQ09OX0RJU1BfTUhMLAorCQkJCQkgICAmY3R4LT5leHRjb25fbmIpOworCQlmbHVzaF93
-b3JrKCZjdHgtPmV4dGNvbl93cSk7CisJCWlmIChjdHgtPmNhYmxlX3N0YXRlID4gMCkKKwkJCXNp
-aTg2MjBfY2FibGVfb3V0KGN0eCk7CisJfSBlbHNlIHsKKwkJc2lpODYyMF9jYWJsZV9vdXQoY3R4
-KTsKKwl9CiAJZHJtX2JyaWRnZV9yZW1vdmUoJmN0eC0+YnJpZGdlKTsKIAogCXJldHVybiAwOwot
-LSAKMi4xNi4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Add node for the pin controller used in the artpec6 SoC,
+and start using it for the exising UARTs.
+
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+---
+ arch/arm/boot/dts/artpec6.dtsi | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
+index 981aecd27b0b..7a6d8f39823a 100644
+--- a/arch/arm/boot/dts/artpec6.dtsi
++++ b/arch/arm/boot/dts/artpec6.dtsi
+@@ -180,6 +180,32 @@
+ 		status = "disabled";
+ 	};
+ 
++	pinctrl: pinctrl@f801d000 {
++		compatible = "axis,artpec6-pinctrl";
++		reg = <0xf801d000 0x400>;
++
++		pinctrl_uart0: uart0grp {
++			function = "uart0";
++			groups = "uart0grp2";
++			bias-pull-up;
++		};
++		pinctrl_uart1: uart1grp {
++			function = "uart1";
++			groups = "uart1grp0";
++			bias-pull-up;
++		};
++		pinctrl_uart2: uart2grp {
++			function = "uart2";
++			groups = "uart2grp1";
++			bias-pull-up;
++		};
++		pinctrl_uart3: uart3grp {
++			function = "uart3";
++			groups = "uart3grp0";
++			bias-pull-up;
++		};
++	};
++
+ 	amba@0 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <0x1>;
+@@ -238,6 +264,8 @@
+ 			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
+ 				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
+ 			clock-names = "uart_clk", "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_uart0>;
+ 			status = "disabled";
+ 		};
+ 		uart1: serial@f8037000 {
+@@ -247,6 +275,8 @@
+ 			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
+ 				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
+ 			clock-names = "uart_clk", "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_uart1>;
+ 			status = "disabled";
+ 		};
+ 		uart2: serial@f8038000 {
+@@ -256,6 +286,8 @@
+ 			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
+ 				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
+ 			clock-names = "uart_clk", "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_uart2>;
+ 			status = "disabled";
+ 		};
+ 		uart3: serial@f8039000 {
+@@ -265,6 +297,8 @@
+ 			clocks = <&clkctrl ARTPEC6_CLK_UART_REFCLK>,
+ 				<&clkctrl ARTPEC6_CLK_UART_PCLK>;
+ 			clock-names = "uart_clk", "apb_pclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_uart3>;
+ 			status = "disabled";
+ 		};
+ 	};
+-- 
+2.14.2
