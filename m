@@ -1,13 +1,16 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 07/16] i2c: demux: Use changeset helpers for clarity
-Date: Wed, 21 Feb 2018 09:06:50 +0100
-Message-ID: <20180221080650.t5hshljcnfsxeget@ninjato>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v4 01/16] dt-bindings: display: renesas: Add R-Car LVDS
+ encoder DT bindings
+Date: Wed, 21 Feb 2018 11:35:13 +0300
+Message-ID: <3ec6ef0d-1753-cf81-f619-cf43913044de@cogentembedded.com>
 References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180220231046.32638-8-laurent.pinchart+renesas@ideasonboard.com>
+ <20180220231046.32638-2-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1999631169=="
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180220231046.32638-8-laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <20180220231046.32638-2-laurent.pinchart+renesas@ideasonboard.com>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -17,64 +20,55 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============1999631169==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="czmofhikde4js2ho"
-Content-Disposition: inline
-
-
---czmofhikde4js2ho
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 21, 2018 at 01:10:37AM +0200, Laurent Pinchart wrote:
-> From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->=20
-> The changeset helpers are easier to use, use them instead of
-> using the static property.
->=20
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> Acked-by: Wolfram Sang <wsa@the-dreams.de>
-
-My ack still holds. Good luck pushing this series!
-
-
---czmofhikde4js2ho
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqNKJYACgkQFA3kzBSg
-KbaY9w/8DjlK+c4m1pGIjK9b+aJ57FGBmxbKpzTuuR1gW5zd0+WH5hFGRXorwWI6
-mAXfPyTmWuTT4D27irtoLSt8y88REkyX55D63CmGqDrKKEMWAIHc0r2U+4F/uuHm
-MRaow8tdfs84Xp/UBLBG0W4okGMfnU6h+9b6gfwMLx3eDk5GlLxqz9lsNEbn6BWE
-GI+ZGPgvBf6T4jY62gDiqGEH2QqLcrV/HgJ/GXgcx0lHt6+rSsZD2f1QbAzYne6G
-6vQVE44y273s0fMdQy5KAoxhXLG4pzQ3JI/ajlmetWXmEE3bm5XrcOVVzBS3zkiI
-NE19TC15j26yKLr+3LkaNLKQDLbzlW2CKjXi6AlL5NDEZBw98y8QYlBXXS4idPC7
-bn5+lfVtjnCQ4eEj/BYl8Vqexv4QyfsqFp86muex/hF70jrhtlIpCIlz1hAtUVVR
-rNRXm8hhMRFOrqSZV6U0XNzpnP0/u8zWE/cB4L5hTFo3xXKAkKHPi74kxmuml1L0
-j1b4ZHdCx9PvbSJQZSoPkQz0uGDywOvp5LejUBnjzq3B7uy025y0qG04nH+jO9AV
-snUm68Du0bb/LpmbbWEgN46E4s8U8SWgvoJnDO5I2xcYLUwcOoG9DD1A0/Mc2WxN
-+PfzYueF9s9mEhsTCPFUApuCPDKIdqXJlq2MJdDZHnrnQy9TvRM=
-=Zf7u
------END PGP SIGNATURE-----
-
---czmofhikde4js2ho--
-
---===============1999631169==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1999631169==--
+T24gMi8yMS8yMDE4IDI6MTAgQU0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cgo+IFRoZSBSZW5l
+c2FzIFItQ2FyIEdlbjIgYW5kIEdlbjMgU29DcyBoYXZlIGludGVybmFsIExWRFMgZW5jb2RlcnMu
+IEFkZAo+IGNvcnJlc3BvbmRpbmcgZGV2aWNlIHRyZWUgYmluZGluZ3MuCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydCtyZW5lc2FzQGlkZWFzb25i
+b2FyZC5jb20+Cj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4g
+LS0tCj4gQ2hhbmdlcyBzaW5jZSB2MToKPiAKPiAtIE1vdmUgdGhlIFNvQyBuYW1lIGJlZm9yZSB0
+aGUgSVAgbmFtZSBpbiBjb21wYXRpYmxlIHN0cmluZ3MKPiAtIFJlbmFtZSBwYXJhbGxlbCBpbnB1
+dCB0byBwYXJhbGxlbCBSR0IgaW5wdXQKPiAtIEZpeGVkICJyZW5lc2FzLHI4YTc3NDMtbHZkcyIg
+ZGVzY3JpcHRpb24KPiAtIERvY3VtZW50IHRoZSByZXNldHMgcHJvcGVydHkKPiAtIEZpeGVkIHR5
+cG8KPiAtLS0KPiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0
+ICAgICAgIHwgNTYgKysrKysrKysrKysrKysrKysrKysrKwo+ICAgTUFJTlRBSU5FUlMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMSArCj4gICAyIGZpbGVzIGNoYW5n
+ZWQsIDU3IGluc2VydGlvbnMoKykKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dAo+IAo+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvcmVuZXNhcyxsdmRzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjJiMTljZTUxZWMwNwo+IC0tLSAvZGV2L251bGwKPiArKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNh
+cyxsdmRzLnR4dAo+IEBAIC0wLDAgKzEsNTYgQEAKPiArUmVuZXNhcyBSLUNhciBMVkRTIEVuY29k
+ZXIKPiArPT09PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4gK1RoZXNlIERUIGJpbmRpbmdz
+IGRlc2NyaWJlIHRoZSBMVkRTIGVuY29kZXIgZW1iZWRkZWQgaW4gdGhlIFJlbmVzYXMgUi1DYXIK
+PiArR2VuMiwgUi1DYXIgR2VuMyBhbmQgUlovRyBTb0NzLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVy
+dGllczoKPiArCj4gKy0gY29tcGF0aWJsZSA6IFNoYWxsIGNvbnRhaW4gb25lIG9mCj4gKyAgLSAi
+cmVuZXNhcyxyOGE3NzQzLWx2ZHMiIGZvciBSOEE3NzQzIChSWi9HMU0pIGNvbXBhdGlibGUgTFZE
+UyBlbmNvZGVycwo+ICsgIC0gInJlbmVzYXMscjhhNzc5MC1sdmRzIiBmb3IgUjhBNzc5MCAoUi1D
+YXIgSDIpIGNvbXBhdGlibGUgTFZEUyBlbmNvZGVycwo+ICsgIC0gInJlbmVzYXMscjhhNzc5MS1s
+dmRzIiBmb3IgUjhBNzc5MSAoUi1DYXIgTTItVykgY29tcGF0aWJsZSBMVkRTIGVuY29kZXJzCj4g
+KyAgLSAicmVuZXNhcyxyOGE3NzkzLWx2ZHMiIGZvciBSOEE3NzkxIChSLUNhciBNMi1OKSBjb21w
+YXRpYmxlIExWRFMgZW5jb2RlcnMKPiArICAtICJyZW5lc2FzLHI4YTc3OTUtbHZkcyIgZm9yIFI4
+QTc3OTUgKFItQ2FyIEgzKSBjb21wYXRpYmxlIExWRFMgZW5jb2RlcnMKPiArICAtICJyZW5lc2Fz
+LHI4YTc3OTYtbHZkcyIgZm9yIFI4QTc3OTYgKFItQ2FyIE0zLVcpIGNvbXBhdGlibGUgTFZEUyBl
+bmNvZGVycwo+ICsKPiArLSByZWc6IEJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIGZvciB0aGUgbWVt
+b3J5LW1hcHBlZCByZWdpc3RlcnMKPiArLSBjbG9ja3M6IEEgcGhhbmRsZSArIGNsb2NrLXNwZWNp
+ZmllciBwYWlyIGZvciB0aGUgZnVuY3Rpb25hbCBjbG9jawo+ICstIHJlc2V0czogQSBwaGFuZGxl
+ICsgcmVzZXQgc3BlY2lmaWVyIGZvciB0aGUgbW9kdWxlIHJlc2V0Cj4gKwo+ICtSZXF1aXJlZCBu
+b2RlczoKPiArCj4gK1RoZSBMVkRTIGVuY29kZXIgaGFzIHR3byB2aWRlbyBwb3J0cy4gVGhlaXIg
+Y29ubmVjdGlvbnMgYXJlIG1vZGVsbGVkIHVzaW5nIHRoZQo+ICtPRiBncmFwaCBiaW5kaW5ncyBz
+cGVjaWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4K
+PiArCj4gKy0gVmlkZW8gcG9ydCAwIGNvcnJlc3BvbmRzIHRvIHRoZSBwYXJhbGxlbCBSR0IgaW5w
+dXQKPiArLSBWaWRlbyBwb3J0IDEgY29ycmVzcG9uZHMgdG8gdGhlIExWRFMgb3V0cHV0Cj4gKwo+
+ICtFYWNoIHBvcnQgc2hhbGwgaGF2ZSBhIHNpbmdsZSBlbmRwb2ludC4KPiArCj4gKwo+ICtFeGFt
+cGxlOgo+ICsKPiArCWx2ZHMwOiBsdmRzQGZlYjkwMDAwIHsKCiAgICAibHZkcy1lbmNvZGVyQGZl
+YjkwMDAwIiBtYXliZT8gQW5kIGRvIHdlIG5lZWQgYSAjIGluIHRoZSBsYWJlbCBpZiB0aGUgCmVu
+Y29kZXIgaXMgYWxvbmUgaW4gRFQgYW55d2F5PwoKWy4uLl0KCk1CUiwgU2VyZ2VpCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
