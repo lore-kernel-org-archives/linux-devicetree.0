@@ -1,49 +1,84 @@
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: [PATCH v2 2/8] ARM: dts: artpec: use 1 GiB RAM
-Date: Wed, 21 Feb 2018 09:59:54 +0100
-Message-ID: <20180221090000.18091-3-niklas.cassel@axis.com>
-References: <20180221090000.18091-1-niklas.cassel@axis.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v2 00/10] drm/sun4i: Allwinner MIPI-DSI support
+Date: Wed, 21 Feb 2018 10:20:24 +0100
+Message-ID: <cover.68c39205c8726547449e3df67b549d89380e51a2.1519204731.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180221090000.18091-1-niklas.cassel@axis.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org, Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>, Niklas Cassel <niklass@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-There has never been an artpec6 devboard produced
-with less than 1 GiB RAM.
-
-Increase the default value to 1 GiB RAM, so that we
-can netboot with large initramfs without going OOM.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
----
- arch/arm/boot/dts/artpec6-devboard.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/artpec6-devboard.dts b/arch/arm/boot/dts/artpec6-devboard.dts
-index 9dfe845694cf..502f3de6dc5b 100644
---- a/arch/arm/boot/dts/artpec6-devboard.dts
-+++ b/arch/arm/boot/dts/artpec6-devboard.dts
-@@ -26,7 +26,7 @@
- 
- 	memory {
- 		device_type = "memory";
--		reg = <0x0 0x10000000>;
-+		reg = <0x0 0x40000000>;
- 	};
- };
- 
--- 
-2.14.2
+SGksCgpIZXJlIGlzIGFuIHByZWxpbWluYXJ5IHZlcnNpb24gb2YgdGhlIE1JUEktRFNJIHN1cHBv
+cnQgZm9yIHRoZSBBbGx3aW5uZXIKU29Dcy4KClRoaXMgY29udHJvbGxlciBjYW4gYmUgZm91bmQg
+b24gYSBudW1iZXIgb2YgcmVjZW50IFNvQ3MsIHN1Y2ggYXMgdGhlCkEzMSwgQTMzIG9yIHRoZSBB
+NjQuCgpHaXZlbiB0aGUgc3BhcnNlIGRvY3VtZW50YXRpb24sIHRoZXJlJ3MgYSBudW1iZXIgb2Yg
+b2JzY3VyZSBhcmVhcywgYnV0CnRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uIGhhcyBiZWVuIHRl
+c3RlZCB3aXRoIGEgNC1sYW5lcyBEU0kgcGFuZWwgb24KYW4gQTMzLgoKVGhlIHN1cHBvcnQgaXMg
+YSBiaXQgcm91Z2ggYXJvdW5kIHRoZSBlZGdlcyBhdCB0aGUgdGltZSwgYW5kIHNvbWUgYXJ0aWZh
+Y3RzCmFyZSBzdGlsbCBzaG93biBvbiB0aGUgc2NyZWVuIGZvciBzb21lIHJlYXNvbnMuIFdpZGVy
+IHRlc3Rpbmcgd2l0aApkaWZmZXJlbnQgZGlzcGxheSB3aWxsIGhvcGVmdWxseSBuYWlsIHRob3Nl
+IGRvd24uCgpMZXQgbWUga25vdyB3aGF0IHlvdSB0aGluaywKTWF4aW1lCgpDaGFuZ2VzIGZyb20g
+djE6CiAgLSBSZWJhc2VkIG9uIDQuMTYtcmMxCiAgLSBDb25zdGlmaWVkIGEgZmV3IGZ1bmN0aW9u
+IGFyZ3VtZW50cyBhbmQgc3RydWN0dXJlcwogIC0gUmV3b3JrZWQgdGhlIERUIGJpbmRpbmcgZXhh
+bXBsZSBhIGJpdAogIC0gUmV3b3JrZWQgdGhlIHBhbmVsIGRyaXZlciB0byBjaGVjayBmb3IgRFNJ
+IHJldHVybiBjb2RlcywgYW5kIHVzZSBEQ1MKICAgIGhlbHBlcnMgd2hlbiBwb3NzaWJsZQoKTWF4
+aW1lIFJpcGFyZCAoMTApOgogIHJlZ21hcDogbW1pbzogQWRkIGZ1bmN0aW9uIHRvIGF0dGFjaCBh
+IGNsb2NrCiAgZHJtL3N1bjRpOiB0Y29uOiBBZGQgVFJJIGZpbmlzaCBpbnRlcnJ1cHQgZm9yIHZi
+bGFuawogIGRybS9zdW40aTogUHJvdGVjdCB0aGUgVENPTiBwaXhlbCBjbG9ja3MKICBkdC1iaW5k
+aW5nczogZGlzcGxheTogQWRkIEFsbHdpbm5lciBNSVBJLURTSSBiaW5kaW5ncwogIGRybS9zdW40
+aTogQWRkIEFsbHdpbm5lciBBMzEgTUlQSS1EU0kgY29udHJvbGxlciBzdXBwb3J0CiAgZHQtYmlu
+ZGluZ3M6IHZlbmRvcjogQWRkIEh1YXJ1aSBMaWdodGluZwogIGR0LWJpbmRpbmdzOiBwYW5lbDog
+QWRkIEh1YXJ1aSBMSFIwNTBINDEgcGFuZWwgZG9jdW1lbnRhdGlvbgogIGRybS9wYW5lbDogQWRk
+IEh1YXJ1aSBMSFIwNTBINDEgcGFuZWwgZHJpdmVyCiAgYXJtOiBkdHM6IHN1bjhpOiBhMzM6IEFk
+ZCB0aGUgRFNJLXJlbGF0ZWQgbm9kZXMKICBbRE8gTk9UIE1FUkdFXSBhcm06IGR0czogc3VuOGk6
+IGJwaS1tMm06IEFkZCBEU0kgZGlzcGxheQoKIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3BhbmVsL2h1YXJ1aSxsaHIwNTBoNDEudHh0IHwgICAxOSArLQogRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuNmktZHNpLnR4dCAg
+ICAgICAgfCAgIDg0ICsrKysrLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Zl
+bmRvci1wcmVmaXhlcy50eHQgICAgICAgICAgICAgICAgfCAgICAxICstCiBhcmNoL2FybS9ib290
+L2R0cy9zdW44aS1hMzMuZHRzaSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMzUgKystCiBhcmNoL2FybS9ib290L2R0cy9zdW44aS1yMTYtYmFuYW5hcGktbTJtLmR0cyAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICAgMzkgKysrLQogZHJpdmVycy9iYXNlL3JlZ21hcC9y
+ZWdtYXAtbW1pby5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDI0ICsr
+LQogZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgICA5ICstCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvTWFrZWZpbGUg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKy0KIGRyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9wYW5lbC1odWFydWktbGhyMDUwaDQxLmMgICAgICAgICAgICAgICAgICAg
+ICAgIHwgIDUwNiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystCiBkcml2ZXJzL2dw
+dS9kcm0vc3VuNGkvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgMTAgKy0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9NYWtlZmlsZSAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNCArLQogZHJpdmVycy9ncHUvZHJtL3N1bjRp
+L3N1bjRpX3Rjb24uYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMTE1ICsr
+KysrKy0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmggICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIHwgICA0NiArKystCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3Vu
+NmlfbWlwaV9kcGh5LmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyOTcgKysrKysr
+KysrKysrKysrKysrKy0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5jICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTExMSArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystCiBkcml2
+ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9kc2kuaCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAgNjcgKysrKy0KIGluY2x1ZGUvbGludXgvcmVnbWFwLmggICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgMyArLQogMTcgZmlsZXMgY2hh
+bmdlZCwgMjM2NiBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2h1YXJ1
+aSxsaHIwNTBoNDEudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuNmktZHNpLnR4dAogY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1odWFydWktbGhyMDUwaDQxLmMKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9kcGh5LmMKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9kc2kuYwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5o
+CgpiYXNlLWNvbW1pdDogOTFhYjg4M2ViMjEzMjVhZDgwZjM0NzM2MzNmNzk0Yzc4YWM4N2Y1MQot
+LSAKZ2l0LXNlcmllcyAwLjkuMQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
