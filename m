@@ -1,151 +1,94 @@
-Return-Path: <SRS0=ZZb2=FP=pengutronix.de=p.zabel@kernel.org>
-Message-ID: <1519231860.3405.11.camel@pengutronix.de>
-Subject: Re: [PATCH 2/2] vfio: platform: Add generic DT reset support
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Date: Wed, 21 Feb 2018 17:51:00 +0100
-In-Reply-To: <1518539815-13774-3-git-send-email-geert+renesas@glider.be>
+Return-Path: <SRS0=V8pR=FP=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <28255dd8-427f-f81a-1ec4-0837eb4738db@redhat.com>
 References: <1518539815-13774-1-git-send-email-geert+renesas@glider.be>
-	 <1518539815-13774-3-git-send-email-geert+renesas@glider.be>
+ <1518539815-13774-3-git-send-email-geert+renesas@glider.be>
+ <ed556509-1460-3e05-b161-f476090ff480@redhat.com> <CAMuHMdULCdVCY7k5ZHX66poxRMTJZ3B1KvDrCzBmtkEipC=CMw@mail.gmail.com>
+ <28255dd8-427f-f81a-1ec4-0837eb4738db@redhat.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 21 Feb 2018 17:12:13 +0100
+Message-ID: <CAMuHMdXaG2Vef4UPKnAYWc27Pd=iK=e+-_R1=1+zTGXcYSg4uQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] vfio: platform: Add generic DT reset support
 Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Auger Eric <eric.auger@redhat.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Geert,
+Hi Eric,
 
-I have a suggestion to avoid having to use the IS_ERR_OR_NULL macro, see
-below:
+On Wed, Feb 14, 2018 at 11:11 AM, Auger Eric <eric.auger@redhat.com> wrote:
+> On 14/02/18 10:43, Geert Uytterhoeven wrote:
+>> On Wed, Feb 14, 2018 at 10:09 AM, Auger Eric <eric.auger@redhat.com> wrote:
+>>> On 13/02/18 17:36, Geert Uytterhoeven wrote:
+>>>> Vfio-platform requires reset support, provided either by ACPI, or, on DT
+>>>> platforms, by a device-specific reset driver matching against the
+>>>> device's compatible value.
+>>>>
+>>>> On many SoCs, devices are connected to an SoC-internal reset controller,
+>>>> and can be reset in a generic way.  Hence add support to reset such
+>>>> devices using the reset controller subsystem, provided the reset
+>>>> hierarchy is described correctly in DT using the "resets" property.
+>>>
+>>> I first acknowledge I am not familiar with what those reset controllers
+>>> do in practice. My fear is that we may rely on generic SW pieces that
+>>> may not be adapted to passthrough constraints. We must guarantee that
+>>> any DMA access attempted by the devices are stopped and any interrupts
+>>> gets stopped. Can we guarantee that the reset controller always induce
+>>> that? Otherwise we may leave the door opened to badly reset assigned
+>>> devices.
+>>
+>> An on-SoC reset controller is basically a block controlling signals to the
+>> reset inputs of the individual on-SoC devices.
+>> On Renesas ARM SoCs, this allows to do a full reset of the attached device.
+>>
+>> Of course the exact semantics depend on the actual SoC.
+> that's the issue actually.
+>> If e.g. DMA and interrupts are not stopped for a specific device on a
+>> specific SoC, it still needs a device-specific reset driver, matching against
+>> the appropriate compatible value, cfr. the quoted paragraph below.
+> yes but by default we still accept the reset controller solution.
+>>
+>> You could add a whitelist for of_machine_is_compatible() or
+>> of_device_is_compatible(), but that will grow large fast.
+> Could be the kind of solution needed. At the moment the list of assigned
+> platform devices is pretty reduced.
+>
+> Couldn't we imagine additional dt properties to emphasize the fact a
+> platform device is passthrough friendly in terms of reset, either
+> through a reset controller or exposing a single reg that need to be
+> reset for full reset to be achieved, in accordance with assignment
+> constraints. That way, the driver writer would somehow certify the
+> device is eligible for passthrough. One of the issue today is that the
+> vfio platform reset driver is not maintained by the native driver
+> maintainer.
 
-On Tue, 2018-02-13 at 17:36 +0100, Geert Uytterhoeven wrote:
-> Vfio-platform requires reset support, provided either by ACPI, or, on DT
-> platforms, by a device-specific reset driver matching against the
-> device's compatible value.
-> 
-> On many SoCs, devices are connected to an SoC-internal reset controller,
-> and can be reset in a generic way.  Hence add support to reset such
-> devices using the reset controller subsystem, provided the reset
-> hierarchy is described correctly in DT using the "resets" property.
-> 
-> Devices that require a more complex reset procedure can still
-> provide a device-specific reset driver, as that takes precedence.
-> 
-> Note that this functionality depends on CONFIG_RESET_CONTROLLER=y, and
-> becomes a no-op if reset controller support is disabled.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/vfio/platform/vfio_platform_common.c  | 23 +++++++++++++++++++++--
->  drivers/vfio/platform/vfio_platform_private.h |  1 +
->  2 files changed, 22 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
-> index b60bb5326668498c..5d1e48f96e423508 100644
-> --- a/drivers/vfio/platform/vfio_platform_common.c
-> +++ b/drivers/vfio/platform/vfio_platform_common.c
-> @@ -17,6 +17,7 @@
->  #include <linux/iommu.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/reset.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
-> @@ -112,7 +113,13 @@ static bool vfio_platform_has_reset(struct vfio_platform_device *vdev)
->  	if (VFIO_PLATFORM_IS_ACPI(vdev))
->  		return vfio_platform_acpi_has_reset(vdev);
->  
-> -	return vdev->of_reset ? true : false;
-> +	if (vdev->of_reset)
-> +		return true;
-> +
-> +	if (!IS_ERR_OR_NULL(vdev->reset_control))
-> +		return true;
+I'm not so fond of adding more DT properties for this. They can be abused
+as well.
 
-I'd avoid storing error values in vdev->reset_control at all, so this
-could be:
+In general, if there's a "resets" DT property, it means the device can be
+reset through the pointed-by reset controller. So that's the common case,
+which I'd like to optimize/simplify for.
 
-	if (vdev->reset_control)
-		return true;
+If more is needed, a separate (device-specific) vfio_reset handler needs
+to be written, by the people that know the hardware.
 
-> +
-> +	return false;
->  }
->  
->  static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
-> @@ -127,8 +134,15 @@ static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
->  		vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
->  							&vdev->reset_module);
->  	}
-> +	if (vdev->of_reset)
-> +		return 0;
-> +
-> +	vdev->reset_control = __of_reset_control_get(vdev->device->of_node,
-> +						     NULL, 0, false, false);
-> +	if (!IS_ERR(vdev->reset_control))
-> +		return 0;
+> I think if people want to do platform passthrough, they need to devise
+> their HW IPs so that this reset modality is simplified by exposing this
+> kind of single reg and then dt description may expose this. Also if
+> possible, the dt node must be as simple/generic as possible to avoid
+> writing a huge dt node creation function on QEMU side and avoid
+> dependencies on other nodes.
 
-if you assign to a local variable first here:
+Yes. It all depends on sane hardware ;-)
 
-	struct reset_control *rstc;
+Gr{oetje,eeting}s,
 
-	 ...
+                        Geert
 
-	rstc = of_reset_control_get_exclusive(vdev->device->of_node, NULL);
-	if (!IS_ERR(rstc)) {
-		vdev->reset_control = rstc;
-		return 0;
-	}
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Also, please don't use __of_reset_control_get directly.
-
->  
-> -	return vdev->of_reset ? 0 : -ENOENT;
-> +	return PTR_ERR(vdev->reset_control);
-
-	return PTR_ERR(rstc);
-
->  }
->  
->  static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
-> @@ -138,6 +152,8 @@ static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
->  
->  	if (vdev->of_reset)
->  		module_put(vdev->reset_module);
-> +
-> +	reset_control_put(vdev->reset_control);
->  }
->  
->  static int vfio_platform_regions_init(struct vfio_platform_device *vdev)
-> @@ -217,6 +233,9 @@ static int vfio_platform_call_reset(struct vfio_platform_device *vdev,
->  	} else if (vdev->of_reset) {
->  		dev_info(vdev->device, "reset\n");
->  		return vdev->of_reset(vdev);
-> +	} else if (!IS_ERR_OR_NULL(vdev->reset_control)) {
-> +		dev_info(vdev->device, "reset\n");
-> +		return reset_control_reset(vdev->reset_control);
-
-	} else {
-		if (vdev->reset_control)
-			dev_info(vdev->device, "reset\n");
-		return reset_control_reset(vdev->reset_control);
-
->  	}
->  
->  	dev_warn(vdev->device, "no reset function found!\n");
-> diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
-> index 85ffe5d9d1abd94e..a56e80ae5986540b 100644
-> --- a/drivers/vfio/platform/vfio_platform_private.h
-> +++ b/drivers/vfio/platform/vfio_platform_private.h
-> @@ -60,6 +60,7 @@ struct vfio_platform_device {
->  	const char			*compat;
->  	const char			*acpihid;
->  	struct module			*reset_module;
-> +	struct reset_control		*reset_control;
->  	struct device			*device;
->  
->  	/*
-
-regards
-Philipp
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
