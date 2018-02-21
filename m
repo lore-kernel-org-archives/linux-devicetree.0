@@ -1,107 +1,80 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 08/16] drm: rcar-du: Fix legacy DT to create LVDS
- encoder nodes
-Date: Thu, 22 Feb 2018 01:54:23 +0200
-Message-ID: <31008700.E3yMoWPLls@avalon>
-References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180220231046.32638-9-laurent.pinchart+renesas@ideasonboard.com>
- <CAL_JsqKBSeNU2jDX-pLsGAUJtzBVk9=-Hg0Etq_0JTd_8RccVQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/4] dt-bindings: qcom: Add SDM845 bindings
+Date: Wed, 21 Feb 2018 17:58:49 -0600
+Message-ID: <CAL_JsqL85KCd+U+1n5QdFu6Bn_ygiTPQnqmZD+xgkUgFu0qvMw@mail.gmail.com>
+References: <20180216060503.22006-1-rnayak@codeaurora.org>
+ <20180216060503.22006-3-rnayak@codeaurora.org>
+ <20180219193426.darxcui4g4oxyf32@rob-hp-laptop>
+ <CAD=FV=UWUD4VMN4gLxBLsSEnsTnOot+ydsaOiFqvD-B2e_RQAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqKBSeNU2jDX-pLsGAUJtzBVk9=-Hg0Etq_0JTd_8RccVQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Frank Rowand <frowand.list@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAD=FV=UWUD4VMN4gLxBLsSEnsTnOot+ydsaOiFqvD-B2e_RQAg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, evgreen@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gVGh1cnNkYXksIDIyIEZlYnJ1YXJ5IDIwMTggMDE6Mjg6NDggRUVUIFJvYiBI
-ZXJyaW5nIHdyb3RlOgo+IE9uIFR1ZSwgRmViIDIwLCAyMDE4IGF0IDU6MTAgUE0sIExhdXJlbnQg
-UGluY2hhcnQgd3JvdGU6Cj4gPiBUaGUgaW50ZXJuYWwgTFZEUyBlbmNvZGVycyBub3cgaGF2ZSB0
-aGVpciBvd24gRFQgYmluZGluZ3MuIEJlZm9yZQo+ID4gc3dpdGNoaW5nIHRoZSBkcml2ZXIgaW5m
-cmFzdHJ1Y3R1cmUgdG8gdGhvc2UgbmV3IGJpbmRpbmdzLCBpbXBsZW1lbnQKPiA+IGJhY2t3YXJk
-LWNvbXBhdGliaWxpdHkgdGhyb3VnaCBsaXZlIERUIHBhdGNoaW5nLgo+ID4gCj4gPiBQYXRjaGlu
-ZyBpcyBkaXNhYmxlZCBhbmQgd2lsbCBiZSBlbmFibGVkIGFsb25nIHdpdGggc3VwcG9ydCBmb3Ig
-dGhlIG5ldwo+ID4gRFQgYmluZGluZ3MgaW4gdGhlIERVIGRyaXZlci4KPiA+IAo+ID4gU2lnbmVk
-LW9mZi1ieTogTGF1cmVudCBQaW5jaGFydAo+ID4gPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0Bp
-ZGVhc29uYm9hcmQuY29tPgo+ID4gLS0tCj4gCj4gWy4uLl0KPiAKPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5MC5kdHMKPiA+IGIv
-ZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTAuZHRzIG5ldyBm
-aWxlIG1vZGUKPiA+IDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi42ZWJiMzU1YjY1MmEK
-PiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJf
-ZHVfb2ZfbHZkc19yOGE3NzkwLmR0cwo+ID4gQEAgLTAsMCArMSw4MSBAQAo+ID4gKy8vIFNQRFgt
-TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4gPiArLyoKPiA+ICsgKiByY2FyX2R1X29mX2x2
-ZHNfcjhhNzc5MC5kdHMgLSBMZWdhY3kgTFZEUyBEVCBiaW5kaW5ncyBjb252ZXJzaW9uIGZvcgo+
-ID4gUjhBNzc5MAo+ID4gKyAqCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE4IExhdXJlbnQgUGlu
-Y2hhcnQKPiA+IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4gPiArICoKPiA+
-ICsgKiBCYXNlZCBvbiB3b3JrIGZyb20gSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KPiA+ICsg
-KiBDb3B5cmlnaHQgKEMpIDIwMTUgVGV4YXMgSW5zdHJ1bWVudHMKPiA+ICsgKi8KPiA+ICsKPiA+
-ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svcmVuZXNhcy1jcGctbXNzci5oPgo+IAo+IERv
-ZXNuJ3Qgc2VlbSB0byBiZSB1c2VkIGluIGFueSBvZiB0aGVzZS4KCkl0J3MgYSBsZWZ0b3ZlciBm
-cm9tIGEgcHJldmlvdXMgdGVzdC4gSSdsbCByZW1vdmUgaXQgaW4gYWxsIHRoZSAuZHRzIGZpbGVz
-LgoKPiBPdGhlcndpc2UsCj4gCj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
-bC5vcmc+Cj4gCj4gPiArCj4gPiArL2R0cy12MS87Cj4gPiArL3BsdWdpbi87Cj4gPiArLyB7Cj4g
-PiArICAgICAgIGZyYWdtZW50QDAgewo+ID4gKyAgICAgICAgICAgICAgIHRhcmdldC1wYXRoID0g
-Ii8iOwo+ID4gKyAgICAgICAgICAgICAgIF9fb3ZlcmxheV9fIHsKPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgI3NpemUtY2VsbHMgPSA8Mj47Cj4gPiArCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBs
-dmRzQGZlYjkwMDAwIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0
-aWJsZSA9ICJyZW5lc2FzLHI4YTc3OTAtbHZkcyI7Cj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHJlZyA9IDwwIDB4ZmViOTAwMDAgMCAweDFjPjsKPiA+ICsKPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcG9ydHMgewo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ID4gKwo+ID4g
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRAMCB7Cj4gPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsdmRzMF9p
-bnB1dDogZW5kcG9pbnQgewo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfTsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICB9Owo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRAMSB7
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcg
-PSA8MT47Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBsdmRzMF9vdXQ6IGVuZHBvaW50IHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIH07Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgfTsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIH07Cj4gPiArCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICBsdmRzQGZlYjk0MDAwIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29t
-cGF0aWJsZSA9ICJyZW5lc2FzLHI4YTc3OTAtbHZkcyI7Cj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHJlZyA9IDwwIDB4ZmViOTQwMDAgMCAweDFjPjsKPiA+ICsKPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydHMgewo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ID4gKwo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRAMCB7Cj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsdmRz
-MV9pbnB1dDogZW5kcG9pbnQgewo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfTsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICB9Owo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRA
-MSB7Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
-ZWcgPSA8MT47Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBsdmRzMV9vdXQ6IGVuZHBvaW50IHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIH07Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfTsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gPiArICAgICAgICAgICAgICAgfTsKPiA+ICsg
-ICAgICAgfTsKPiA+ICsKPiA+ICsgICAgICAgZnJhZ21lbnRAMSB7Cj4gPiArICAgICAgICAgICAg
-ICAgdGFyZ2V0LXBhdGggPSAiL2Rpc3BsYXlAZmViMDAwMDAvcG9ydHMiOwo+ID4gKyAgICAgICAg
-ICAgICAgIF9fb3ZlcmxheV9fIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHBvcnRAMSB7
-Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVuZHBvaW50IHsKPiA+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jmx2
-ZHMwX2lucHV0PjsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIH07Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBwb3J0
-QDIgewo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbmRwb2ludCB7Cj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0g
-PCZsdmRzMV9pbnB1dD47Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ID4gKyAgICAgICAgICAgICAgIH07Cj4gPiAr
-ICAgICAgIH07Cj4gPiArfTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Feb 21, 2018 at 10:51 AM, Doug Anderson <dianders@chromium.org> wrote:
+> Rob,
+>
+> On Mon, Feb 19, 2018 at 11:34 AM, Rob Herring <robh@kernel.org> wrote:
+>> On Fri, Feb 16, 2018 at 11:35:01AM +0530, Rajendra Nayak wrote:
+>>> Add a SoC string 'sdm845' for the qualcomm SDM845 SoC
+>>>
+>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/qcom.txt | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
+>>> index 0ed4d39d7fe1..ee532e705d6c 100644
+>>> --- a/Documentation/devicetree/bindings/arm/qcom.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
+>>> @@ -26,6 +26,7 @@ The 'SoC' element must be one of the following strings:
+>>>       msm8996
+>>>       mdm9615
+>>>       ipq8074
+>>> +     sdm845
+>>
+>> These should really be the full string with 'qcom,', but you don't have
+>> to fix that now.
+>>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> Thanks for the review!  I agree that we should land this and then make
+> further progress in additional patches.
+>
+>
+> Are you suggesting to rewriting this whole bindings doc to not specify
+> things in an "M x N" type of way?  AKA the top of this doc says:
+>
+>> Each board must specify a top-level board compatible string with the following
+>> format:
+>>         compatible = "qcom,<SoC>[-<soc_version>][-<foundry_id>]-<board>[/<subtype>][-<board_version>]"
+>> The 'SoC' and 'board' elements are required. All other elements are optional.
+>
+> ...and then the doc goes on to give lists of known SoC and board values.
+>
+>
+> Presumably if someone were to fix this then they'd need to try to
+> track down existing boards so they could enumerate every known
+> combination?
+
+Ah, I forgot about all this QCom craziness. NM.
+
+Though I'm not sure any of these optional suffixes ever got
+implemented. AFAIK, downstream still uses those separate board-id
+properties (though the bootloaders can finally deal with them being
+absent).
+
+Rob
