@@ -1,94 +1,79 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 3/8] drm/bridge: dw-hdmi: allow overriding of phy-type
- reading
-Date: Wed, 21 Feb 2018 19:55:12 +0100
-Message-ID: <3085916.UFWCNBIZfU@phil>
-References: <20180216204158.29839-1-heiko@sntech.de> <3104429.3dFhngZnWQ@phil>
- <16512170.VqSpgYmDPS@avalon>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 08/10] gpio: Add gpio driver for Actions OWL S900 SoC
+Date: Wed, 21 Feb 2018 21:13:53 +0200
+Message-ID: <CAHp75VfLkmZp7HwX-du4EYdtJ8h=y59OrSbu53Ltf-_kFfpczg@mail.gmail.com>
+References: <20180221160044.15089-1-manivannan.sadhasivam@linaro.org>
+ <20180221160044.15089-9-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <16512170.VqSpgYmDPS@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, kishon@ti.com, robh+dt@kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180221160044.15089-9-manivannan.sadhasivam@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, hzhang@ucrobotics.com, Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, amit.kucheria@linaro.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, bdong@ucrobotics.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCkFtIE1vbnRhZywgMTkuIEZlYnJ1YXIgMjAxOCwgMjA6MDY6NDAgQ0VUIHNj
-aHJpZWIgTGF1cmVudCBQaW5jaGFydDoKPiBPbiBNb25kYXksIDE5IEZlYnJ1YXJ5IDIwMTggMjA6
-NDY6NDYgRUVUIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+ID4gQW0gTW9udGFnLCAxOS4gRmVicnVh
-ciAyMDE4LCAxNzo1OTowMiBDRVQgc2NocmllYiBMYXVyZW50IFBpbmNoYXJ0Ogo+ID4gPiBPbiBG
-cmlkYXksIDE2IEZlYnJ1YXJ5IDIwMTggMjI6NDE6NTMgRUVUIEhlaWtvIFN0dWVibmVyIHdyb3Rl
-Ogo+ID4gPj4gSW4gc29tZSBJUCBpbXBsZW1lbnRhdGlvbnMgdGhlIHJlYWRpbmcgb2YgdGhlIHBo
-eS10eXBlIG1heSBiZSBicm9rZW4uCj4gPiA+PiBPbmUgZXhhbXBsZSBhcmUgdGhlIFJvY2tjaGlw
-IHJrMzIyOCBhbmQgcmszMzI4IHNvY3MgdGhhdCB1c2UgYSBzZXBhcmF0ZQo+ID4gPj4gcGh5IGZy
-b20gSW5ub3NpbGljb24gYnV0IHN0aWxsIHJlcG9ydCB0aGUgSERNSTIwX1RYIHR5cGUuCj4gPiA+
-PiAKPiA+ID4+IFNvIGFsbG93IHRoZSBnbHVlIGRyaXZlciB0byBmb3JjZSBhIHNwZWNpZmljIHR5
-cGUsIGxpa2UgdGhlIHZlbmRvci1waHkKPiA+ID4+IGZvciB0aGVzZSBjYXNlcy4KPiA+ID4+IAo+
-ID4gPj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiA+
-ID4gCj4gPiA+IFRlc3RlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBp
-ZGVhc29uYm9hcmQuY29tPgo+ID4gCj4gPiB0aGFua3MgZm9yIHRlc3RpbmcgOi0pCj4gPiAKPiA+
-ID4+IC0tLQo+ID4gPj4gCj4gPiA+PiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9k
-dy1oZG1pLmMgfCA0ICsrKy0KPiA+ID4+ICBpbmNsdWRlL2RybS9icmlkZ2UvZHdfaGRtaS5oICAg
-ICAgICAgICAgICB8IDEgKwo+ID4gPj4gIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCsp
-LCAxIGRlbGV0aW9uKC0pCj4gPiA+PiAKPiA+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYwo+ID4gPj4gYi9kcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL3N5bm9wc3lzL2R3LWhkbWkuYyBpbmRleAo+ID4gPj4gZjk4MDIzOTljYzBkLi41MGQyMzE2
-MjZjNGQgMTAwNjQ0Cj4gPiA+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lz
-L2R3LWhkbWkuYwo+ID4gPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9k
-dy1oZG1pLmMKPiA+ID4+IEBAIC0yMjE4LDcgKzIyMTgsOSBAQCBzdGF0aWMgaW50IGR3X2hkbWlf
-ZGV0ZWN0X3BoeShzdHJ1Y3QgZHdfaGRtaQo+ID4gPj4gKmhkbWkpCj4gPiA+PiAgCXVuc2lnbmVk
-IGludCBpOwo+ID4gPj4gIAl1OCBwaHlfdHlwZTsKPiA+ID4+IAo+ID4gPj4gLQlwaHlfdHlwZSA9
-IGhkbWlfcmVhZGIoaGRtaSwgSERNSV9DT05GSUcyX0lEKTsKPiA+ID4+ICsJcGh5X3R5cGUgPSAo
-aGRtaS0+cGxhdF9kYXRhLT5waHlfZm9yY2VfdHlwZSkgPwo+ID4gPj4gKwkJCQloZG1pLT5wbGF0
-X2RhdGEtPnBoeV9mb3JjZV90eXBlIDoKPiA+ID4+ICsJCQkJaGRtaV9yZWFkYihoZG1pLCBIRE1J
-X0NPTkZJRzJfSUQpOwo+ID4gPiAKPiA+ID4gTm8gbmVlZCBmb3IgcGFyZW50aGVzZXMuIFlvdSBj
-b3VsZCBldmVuIHdyaXRlIHRoaXMKPiA+ID4gCj4gPiA+ICAgICAgICAgcGh5X3R5cGUgPSBoZG1p
-LT5wbGF0X2RhdGEtPnBoeV9mb3JjZV90eXBlID8KPiA+ID4gICAgICAgICAgICAgICAgICA6IGhk
-bWlfcmVhZGIoaGRtaSwgSERNSV9DT05GSUcyX0lEKTsKPiA+ID4gCj4gPiA+IGJ1dCB0aGF0J3Mg
-dXAgdG8geW91Lgo+ID4gPiAKPiA+ID4gV2hhdCBpZiBhIGRyaXZlciB3YW50cyB0byBmb3JjZSB0
-aGUgUEhZIHR5cGUgdG8KPiA+ID4gRFdfSERNSV9QSFlfRFdDX0hETUlfVFhfUEhZID8gT3IgZG8g
-eW91IGV4cGVjdCBvbmx5IHRoZQo+ID4gPiBEV19IRE1JX1BIWV9WRU5ET1JfUEhZIHR5cGUgdG8g
-YmUgZm9yY2VkID8gSWYgc28sIHdlIGNvdWxkIGFsc28gdXNlIGEKPiA+ID4gZm9yY2VfdmVuZG9y
-X3BoeSBib29sZWFuIGZpZWxkIGluc3RlYWQgb2YgcGh5X2ZvcmNlX3R5cGUuCj4gPiAKPiA+IElu
-aXRpYWxseSBJIHRob3VnaHQgb2YgaW1wbGljaXRseSBvdmVycmlkaW5nIHRoZSBwaHktdHlwZSB3
-aGVuIHRoZSBleHRlcm5hbAo+ID4gcGh5LW9wcyBhcmUgc2V0LCBidXQgZGVjaWRlZCBhZ2FpbnN0
-IGl0IGJlY2F1c2UgdGhhdCBtaWdodCBicmVhawo+ID4gKHRoZW9yZXRpY2FsKSBjYXNlcyB3aGVy
-ZSBwaHktb3BzIG1heSBiZSBhbHdheXMgc2V0IGJ1dCBvbmx5IHVzZWQgd2hlbgo+ID4gdGhlIGlw
-IHJldHVybnMgYSBtYXRjaGluZyBwaHktdHlwZSBhbmQgdGh1cyBjYW1lIHRvIGp1c3QgYWxsb3cg
-b3ZlcnJpZGluZwo+ID4gdGhhdCB0eXBlIHJlYWRpbmcuCj4gPiAKPiA+IEFzIGZvciBsaW1pdGlu
-ZyB0byBvbmx5IGFsbG93IGZvcmNpbmcgdGhlIHZlbmRvciB0eXBlLCBteSBwZXJzb25hbCBmZWVs
-aW5nCj4gPiB3b3VsZCBiZSB0byBhbGxvdyBnbHVlIGRyaXZlcnMgdG8ganVzdCBvdmVycmlkZSB0
-aGUgdHlwZSBhcyBuZWVkZWQKPiA+IGxpa2UgZG9uZSBpbiB0aGUgcGF0Y2guIEFzIGNhbiBiZSBz
-ZWVuIG9uIHRoZSByazMzMjgsIHRoZSBkdy1oZG1pCj4gPiByZXBvcnRzIG9uZSBvZiB0aGUgcmVn
-dWxhciBwaHlzIChmb3Jnb3Qgd2hpY2ggb25lKSBidXQgaW5zdGVhZCBoYXMgYQo+ID4gY29tcGxl
-dGVseSBzZXBhcmF0ZSBpcCBmb3IgaXQsIHNvIEknZCBndWVzcyB3ZSBtYXkgdmVyeSB3ZWxsIHNl
-ZQo+ID4gaW1wbGVtZW50YXRpb25zIHRoYXQganVzdCByZXBvcnQgYSB3cm9uZyB0eXBlIChubyB2
-ZW5kb3ItdHlwZSkuCj4gPiAKPiA+IFNvIEkgZG9uJ3Qgc2VlIGFuIGlzc3VlIHdpdGggZHJpdmVy
-cyBiZWluZyBhbGxvd2VkIHRvIHNldCB0aGUgdHlwZSB0bwo+ID4gRFdfSERNSV9QSFlfRFdDX0hE
-TUlfVFhfUEhZLCBiZWNhdXNlIHN1Y2ggY2FzZXMgbWF5IGV4aXN0IGluIHRoZQo+ID4gZnV0dXJl
-IGFuZCBJJ2QgZXhwZWN0IGRyaXZlciBhdXRob3JzIHRvIHNvbWV3aGF0IGtub3cgd2hhdCB0aGV5
-J3JlIGRvaW5nLgo+IAo+IE15IHBvaW50IHdhcyB0aGF0IERXX0hETUlfUEhZX0RXQ19IRE1JX1RY
-X1BIWSA9PSAwLCBzbyB0cnlpbmcgdG8gZm9yY2UgCj4gRFdfSERNSV9QSFlfRFdDX0hETUlfVFhf
-UEhZIHRocm91Z2ggcGh5X2ZvcmNlX3R5cGUgd29uJ3Qgd29yay4KCkFyZ2gsIG9rIG5vdyBJIGdl
-dCBpdC4KClNvIGl0IHdpbGwgbmVlZCBzb21lIGFkYXB0aW9uIGZvciB0aGF0LCBiZWNhdXNlIGFs
-bG93aW5nIGV2ZXJ5dGhpbmcgYnV0CkRXX0hETUlfUEhZX0RXQ19IRE1JX1RYX1BIWSB3b3VsZCBi
-ZSBxdWl0ZSBjb3VudGVyLWludHVpdGl2ZSA6LSkgLgoKRXhwZWN0aW5nIHBoeV9mb3JjZV90eXBl
-ID09IC0xIGZvciByZWd1bGFyIHJlYWRzIHNvdW5kcyBiYWQgYXMgd2VsbCwKYmVjYXVzZSB0aGVu
-IGV2ZXJ5IGdsdWUgZHJpdmVyIHdvdWxkIG5lZWQgdG8gc2V0IHRoYXQsIHdoaWNoIGN1cnJlbnRs
-eQpnZXRzIHNvbHZlcyBhdXRvbWF0aWNhbGx5IHdoZW4gdGhlIGZpZWxkIGlzIG5vdCBleHBsaWNp
-dGx5IHNldC4KClNvIGdvaW5nIHdpdGggeW91ciBmb3JjZV92ZW5kb3JfcGh5IGlkZWEgc291bmRz
-IGxlc3MgaW50cnVzaXZlIGZvciB0aGUKdGltZSBiZWluZyBhbmQgdW50aWwgdGhlcmUgaXMgYW4g
-YWN0dWFsIGNhc2Ugd2hlcmUgdGhlcmUgaXMgYSBkaWZmZXJlbnQKaW50ZXJuYWwgcGh5LXR5cGUg
-bmVjZXNzYXJ5PwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Feb 21, 2018 at 6:00 PM, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> Add gpio driver for Actions Semi OWL family S900 SoC. Set of registers
+> controlling the gpio shares the same register range with pinctrl block.
+>
+> GPIO registers are organized as 6 banks and each bank controls the
+> maximum of 32 gpios.
+
+> +static void owl_gpio_set_reg(void __iomem *base, unsigned int pin, int flag)
+> +{
+> +       u32 val;
+> +
+> +       if (flag) {
+> +               val = readl(base);
+> +               val |= BIT(pin);
+> +               writel(val, base);
+> +       } else {
+> +               val = readl(base);
+> +               val &= ~BIT(pin);
+> +               writel(val, base);
+> +       }
+> +}
+
+Why not to use the same pattern as below?
+
+readl()
+if ()
+ ...
+else
+...
+writel()
+
+?
+
+> +static void owl_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+> +{
+> +       struct owl_gpio *gpio = gpiochip_get_data(chip);
+> +       const struct owl_gpio_port *port = gpio->port;
+> +       void __iomem *gpio_base = gpio->base + port->offset;
+> +       u32 val;
+> +
+> +       val = readl(gpio_base + GPIO_DAT);
+> +
+> +       if (value)
+> +               val |= BIT(offset);
+> +       else
+> +               val &= ~BIT(offset);
+> +
+> +       writel(val, gpio_base + GPIO_DAT);
+> +}
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
