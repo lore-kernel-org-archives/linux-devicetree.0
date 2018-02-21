@@ -1,70 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] ASoC: add DT bindings documentation
- for ROHM BD28623 codec
-Date: Wed, 21 Feb 2018 12:13:54 +0000
-Message-ID: <20180221121354.GG8334@sirena.org.uk>
-References: <20180221043311.25840-1-suzuki.katsuhiro@socionext.com>
- <20180221043311.25840-2-suzuki.katsuhiro@socionext.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4 03/16] of: dynamic: Add __of_node_dupv()
+Date: Wed, 21 Feb 2018 14:15:39 +0200
+Message-ID: <8443535.FeXUiDPB9F@avalon>
+References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20180220231046.32638-4-laurent.pinchart+renesas@ideasonboard.com>
+ <CAMuHMdWQEKETp50VnU4eiHcXvBqzgdwH1z6CYbkJq_YH1=UHaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8949939869198474218=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180221043311.25840-2-suzuki.katsuhiro@socionext.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAMuHMdWQEKETp50VnU4eiHcXvBqzgdwH1z6CYbkJq_YH1=UHaw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Marek Vasut <marex@denx.de>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-
---===============8949939869198474218==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hcut4fGOf7Kh6EdG"
-Content-Disposition: inline
-
-
---hcut4fGOf7Kh6EdG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Feb 21, 2018 at 01:33:10PM +0900, Katsuhiro Suzuki wrote:
-
-> +Optional properties:
-> +- VCCA-supply : regulator phandle for the VCCA supply
-> +- VCCP1-supply: regulator phandle for the VCCP1 supply
-> +- VCCP2-supply: regulator phandle for the VCCP2 supply
-
-These should be documented as mandatory unless the device genuinely
-operates without power which seems unlikely.
-
---hcut4fGOf7Kh6EdG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqNYoEACgkQJNaLcl1U
-h9A53Qf/WmJ8q4PvAqNeknQqNme9JDwOBoQujRRtz76hfLuFEw4mUHLzudT9RE9p
-hOHPYtcBlcMgPGKRkW5E5OUxleVhjaTxrpBaHTRTEkbEdAfycje6RtqjqQ2sezfi
-xyzMBu0cf1ynMV5zIVqOSlsPVGX6Ih0Ypx4JsHSQ2np9u4CqSzVYIcuUpgHEtaiN
-9u+xVjnmr1NomCYFrpZWbtruqQMpsj0bYSPsU33fgy+fiVMaRn3qNRpEXgiOfJtJ
-R+KmdvUs6/VfhGY1oQS2E/JF46ldohQGCLlgGkvwfsT4OLO8BwL/UZ0hVcG/Q0Qv
-QYicnuQjfzlC7HjlbtZ6/lAfYZ5oYQ==
-=5fLQ
------END PGP SIGNATURE-----
-
---hcut4fGOf7Kh6EdG--
-
---===============8949939869198474218==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8949939869198474218==--
+SGkgR2VlcnQsCgpPbiBXZWRuZXNkYXksIDIxIEZlYnJ1YXJ5IDIwMTggMTI6MjY6NDUgRUVUIEdl
+ZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToKPiBPbiBXZWQsIEZlYiAyMSwgMjAxOCBhdCAxMjoxMCBB
+TSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IEZyb206IFBhbnRlbGlzIEFudG9uaW91IDxw
+YW50ZWxpcy5hbnRvbmlvdUBrb25zdWxrby5jb20+Cj4gPiAKPiA+IEFkZCBhbiBfX29mX25vZGVf
+ZHVwdigpIHByaXZhdGUgbWV0aG9kIGFuZCBtYWtlIF9fb2Zfbm9kZV9kdXAoKSB1c2UgaXQuCj4g
+PiBUaGlzIGlzIHJlcXVpcmVkIGZvciB0aGUgc3Vic2VxdWVudCBjaGFuZ2VzZXQgYWNjZXNzb3Jz
+IHdoaWNoIHdpbGwKPiA+IG1ha2UgdXNlIG9mIGl0Lgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBQ
+YW50ZWxpcyBBbnRvbmlvdSA8cGFudGVsaXMuYW50b25pb3VAa29uc3Vsa28uY29tPgo+ID4gU2ln
+bmVkLW9mZi1ieTogTGF1cmVudCBQaW5jaGFydAo+ID4gPGxhdXJlbnQucGluY2hhcnQrcmVuZXNh
+c0BpZGVhc29uYm9hcmQuY29tPgo+ID4gLS0tCj4gPiAKPiA+ICBkcml2ZXJzL29mL2R5bmFtaWMu
+YyB8IDI5ICsrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tCj4gPiAgMSBmaWxlIGNoYW5nZWQs
+IDIzIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL29mL2R5bmFtaWMuYyBiL2RyaXZlcnMvb2YvZHluYW1pYy5jCj4gPiBpbmRleCA3YmIz
+M2QyMmI0ZTIuLjRmZmQwNDkyNWZkZiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvb2YvZHluYW1p
+Yy5jCj4gPiArKysgYi9kcml2ZXJzL29mL2R5bmFtaWMuYwo+ID4gQEAgLTM4Miw4ICszODIsOSBA
+QCBzdHJ1Y3QgcHJvcGVydHkgKl9fb2ZfcHJvcF9kdXAoY29uc3Qgc3RydWN0IHByb3BlcnR5Cj4g
+PiAqcHJvcCwgZ2ZwX3QgYWxsb2NmbGFncyk+IAo+ID4gIH0KPiA+ICAKPiA+ICAvKioKPiA+IAo+
+ID4gLSAqIF9fb2Zfbm9kZV9kdXAoKSAtIER1cGxpY2F0ZSBvciBjcmVhdGUgYW4gZW1wdHkgZGV2
+aWNlIG5vZGUKPiA+IGR5bmFtaWNhbGx5Lgo+ID4gLSAqIEBmbXQ6IEZvcm1hdCBzdHJpbmcgKHBs
+dXMgdmFyZ3MpIGZvciBuZXcgZnVsbCBuYW1lIG9mIHRoZSBkZXZpY2Ugbm9kZQo+ID4gKyAqIF9f
+b2Zfbm9kZV9kdXB2KCkgLSBEdXBsaWNhdGUgb3IgY3JlYXRlIGFuIGVtcHR5IGRldmljZSBub2Rl
+Cj4gPiBkeW5hbWljYWxseS4gKyAqIEBmbXQ6IEZvcm1hdCBzdHJpbmcgZm9yIG5ldyBmdWxsIG5h
+bWUgb2YgdGhlIGRldmljZSBub2RlCj4gPiArICogQHZhcmdzOiB2YV9saXN0IGNvbnRhaW5pbmcg
+dGhlIGFydWdtZW50cyBmb3IgdGhlIG5vZGUgZnVsbCBuYW1lCj4gPiAKPiA+ICAgKgo+ID4gICAq
+IENyZWF0ZSBhbiBkZXZpY2UgdHJlZSBub2RlLCBlaXRoZXIgYnkgZHVwbGljYXRpbmcgYW4gZW1w
+dHkgbm9kZSBvciBieQo+ID4gICBhbGxvY2F0aW5nICogYW4gZW1wdHkgb25lIHN1aXRhYmxlIGZv
+ciBmdXJ0aGVyIG1vZGlmaWNhdGlvbi4gIFRoZSBub2RlCj4gPiAgIGRhdGEgYXJlPiAKPiA+IEBA
+IC0zOTEsMTcgKzM5MiwxNSBAQCBzdHJ1Y3QgcHJvcGVydHkgKl9fb2ZfcHJvcF9kdXAoY29uc3Qg
+c3RydWN0IHByb3BlcnR5Cj4gPiAqcHJvcCwgZ2ZwX3QgYWxsb2NmbGFncyk+IAo+ID4gICAqIE9G
+X0RFVEFDSEVEIGJpdHMgc2V0LiBSZXR1cm5zIHRoZSBuZXdseSBhbGxvY2F0ZWQgbm9kZSBvciBO
+VUxMIG9uIG91dAo+ID4gICBvZgo+ID4gICAqIG1lbW9yeSBlcnJvci4KPiA+ICAgKi8KPiA+IAo+
+ID4gLXN0cnVjdCBkZXZpY2Vfbm9kZSAqX19vZl9ub2RlX2R1cChjb25zdCBzdHJ1Y3QgZGV2aWNl
+X25vZGUgKm5wLCBjb25zdAo+ID4gY2hhciAqZm10LCAuLi4pICtzdHJ1Y3QgZGV2aWNlX25vZGUg
+Kl9fb2Zfbm9kZV9kdXB2KGNvbnN0IHN0cnVjdAo+ID4gZGV2aWNlX25vZGUgKm5wLAo+IAo+IHN0
+YXRpYywgY2ZyLgo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwv
+Z2l0L2dlZXJ0L3JlbmVzYXMtZHJpdmVycy5naXQvY28KPiBtbWl0Lz9oPXRvcGljL292ZXJsYXlz
+JmlkPWM0NTMyNGUxODA3ZGQ3MDgzNDRjOWE0NzhiNzc3YjY4YWNhMTFjZGYKCkknbGwgZml4IHRo
+YXQgaW4gdGhlIG5leHQgdmVyc2lvbi4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
