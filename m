@@ -1,33 +1,50 @@
-Return-Path: <robherring2@gmail.com>
-Date: Sun, 18 Feb 2018 17:51:11 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 2/2] dt-bindings/interrupt-controller: pdc: descibe
- PDC device binding
-Message-ID: <20180218235111.ih5fnrjqseasjpsw@rob-hp-laptop>
-References: <20180209165735.19151-1-ilina@codeaurora.org>
- <20180209165735.19151-3-ilina@codeaurora.org>
+Return-Path: <SRS0=BTBO=FP=xs4all.nl=hverkuil@kernel.org>
+Subject: Re: [PATCH v9 07/11] media: i2c: ov772x: Support frame interval
+ handling
+References: <1519059584-30844-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519059584-30844-8-git-send-email-jacopo+renesas@jmondi.org>
+ <f154f229-6977-4d3e-38b9-6d1669adbf91@xs4all.nl> <20180221151644.GI7203@w540>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <9a33f0c2-4bef-5c9f-906e-b1d6d44f6de6@xs4all.nl>
+Date: Wed, 21 Feb 2018 16:23:10 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180209165735.19151-3-ilina@codeaurora.org>
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, asathyak@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <20180221151644.GI7203@w540>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Feb 09, 2018 at 09:57:35AM -0700, Lina Iyer wrote:
-> From: Archana Sathyakumar <asathyak@codeaurora.org>
+On 02/21/18 16:16, jacopo mondi wrote:
+>>>  static const struct v4l2_subdev_pad_ops ov772x_subdev_pad_ops = {
+>>> -	.enum_mbus_code = ov772x_enum_mbus_code,
+>>> -	.get_selection	= ov772x_get_selection,
+>>> -	.get_fmt	= ov772x_get_fmt,
+>>> -	.set_fmt	= ov772x_set_fmt,
+>>> +	.enum_frame_interval	= ov772x_enum_frame_interval,
+>>> +	.enum_mbus_code		= ov772x_enum_mbus_code,
+>>> +	.get_selection		= ov772x_get_selection,
+>>> +	.get_fmt		= ov772x_get_fmt,
+>>> +	.set_fmt		= ov772x_set_fmt,
+>>
+>> Shouldn't these last four ops be added in the previous patch?
+>> They don't have anything to do with the frame interval support.
+>>
 > 
-> Add device binding documentation for the PDC Interrupt controller on
-> QCOM SoC's like the SDM845. The interrupt-controller can be used to
-> sense edge low interrupts and wakeup interrupts when the GIC is
-> non-operational.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Archana Sathyakumar <asathyak@codeaurora.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  .../bindings/interrupt-controller/qcom,pdc.txt     | 78 ++++++++++++++++++++++
->  1 file changed, 78 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
+> If you look closely you'll notice I have just re-aligned them, since I
+> was at there to add enum_frame_interval operation
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Ah, sorry. I missed that. Never mind then :-)
+
+	Hans
+
+> 
+>> Anyway, after taking care of the memsets and these four ops you can add
+>> my:
+>>
+>> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+> 
+> Thanks
+>    j
+> 
