@@ -1,22 +1,19 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 19/19] ARM64: dts: r8a77965: Add EtherAVB device node
-Date: Wed, 21 Feb 2018 21:53:58 +0300
-Message-ID: <eaf3c72b-a482-86cf-88e7-4af457f74558@cogentembedded.com>
-References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519139541-18783-20-git-send-email-jacopo+renesas@jmondi.org>
- <cf157266-5ea7-6795-1e31-0d1ccf85e7e8@cogentembedded.com>
- <20180221100716.GF7203@w540>
- <cbeb1b6b-1b02-7665-0f1f-847ab8de69e3@cogentembedded.com>
- <20180221173106.vgyshbz3kkc4p3cu@verge.net.au>
- <321c6c8c-8853-ac00-7567-c0be82b510f4@cogentembedded.com>
- <35959135-cb3b-040a-1944-26845e0c07b0@cogentembedded.com>
- <20180221182340.wvdvgtv5pw7pvd3v@verge.net.au>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/2] i2c: add support for Socionext SynQuacer I2C
+ controller
+Date: Wed, 21 Feb 2018 20:54:16 +0200
+Message-ID: <CAHp75VepC+gch+st16FA8Bzisg7+X_oZg2Ua83QpHyZ43Pd5ow@mail.gmail.com>
+References: <20180220090827.913-1-ard.biesheuvel@linaro.org>
+ <20180220090827.913-3-ard.biesheuvel@linaro.org>
+ <CAHp75VeUJpXLpL55erp+uoMH4jqppoG5zTt1DcffqNYPsJMdUQ@mail.gmail.com>
+ <CAKv+Gu8A1YKr5t0B=Fe2sF6+QT9iCVeRW+99K37g22viEoismA@mail.gmail.com>
+ <CAHp75Vd=dww8AQM4tC5Z38i4PNaV4vxMFsTf=ozJ1Yw3Gd9DWg@mail.gmail.com>
+ <CAKv+Gu_5N3bTAasc5Gt0pTo-s3mMdqmvt-C=GM0ACkkptyrN-Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180221182340.wvdvgtv5pw7pvd3v@verge.net.au>
-Content-Language: en-MW
+In-Reply-To: <CAKv+Gu_5N3bTAasc5Gt0pTo-s3mMdqmvt-C=GM0ACkkptyrN-Q@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,44 +23,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jacopo mondi <jacopo@jmondi.org>, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, geert@linux-m68k.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Jassi Brar <jassisinghbrar@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/21/2018 09:23 PM, Simon Horman wrote:
+On Wed, Feb 21, 2018 at 8:20 PM, Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> On 20 February 2018 at 19:39, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>> On Tue, Feb 20, 2018 at 8:04 PM, Ard Biesheuvel
+>> <ard.biesheuvel@linaro.org> wrote:
+>>> On 20 February 2018 at 14:02, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> ...
-> 
->>>>>>>> +			clocks = <&cpg CPG_MOD 812>;
->>>>>>>> +			power-domains = <&sysc 32>;
->>>>>>>> +			resets = <&cpg 812>;
->>>>>>>> +			phy-mode = "rgmii-txid";
->>>>>>>
->>>>>>>    Why not just "rgmii"? TX delay is a board specific detail, no?
->>>>>>>
->>>>>> I admit I took this one straight from r8a7796 dtsi.
->>>>>> Would you like to me resend and change this?
->>>>>
->>>>>    Yes, unless Simon would fix it while merging...
+>>>>> +               ret = device_property_read_u32(&pdev->dev,
+>>>>> +                                              "socionext,pclk-rate",
+>>>>> +                                              &i2c->clkrate);
 >>>>
->>>> Can I confirm the desired change is s/rgmii-txid/rgmii/ ?
->>>
->>>    Yes.
+>>>> I suppose for ACPI we just register a fixed rate clock and use it in
+>>>> the driver in the same way as in OF case.
+>>>> I guess at some point we even can provide a generic clock provider for
+>>>> ACPI based on rate property.
 >>
->>    Apparently that means that this prop should be overridden in the board file
->> (which may not be an easy task given the board is Salvator-XS again).
+>>> Is there a question here? Do you want me to change anything?
 >>
->> [...]
-> 
-> Can we override it in r8a77965-salvator-x.dts or r8a77965-salvator-xs.dts?
+>> Is it opener for discussion. At least in the drivers we have done for
+>> x86 we do the way I described.
+>>
+>> See, for example, drivers/mfd/intel-lpss.c
 
-   In salvator-common.dtsi most probably -- it has the PHY data for Ether AVB.
+> OK, I see what you mean now. But for this driver, creating a fixed
+> rate clock with no controls whatsoever, only to interrogate it for its
+> rate (which we retrieved from the ACPI device node in the first place)
+> seems rather pointless to me. Am I missing something here?
 
-> I feel that I'm missing an important point here.
+Somehow you are right. That's why I'm thinking that we need to provide
+a generic clock provider for such cases.
+It's really not a driver business to know the details of resource provider.
 
-   Well, r8a779{5|6}.dtsi also have phy-mode = "rgmii-txid" (which was unjustified
-in my current understanding). Thus such board override wouldn't hurt them. But we lack
-a patch modifying salvator-common.dtsi in htis series, so I'm now thinking a respin of
-this series is needed anyway... sorry for being unclear. :-)
-
-MBR, Sergei
+-- 
+With Best Regards,
+Andy Shevchenko
