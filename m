@@ -1,84 +1,40 @@
-Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH 4/8] scsi: hisi_sas: fix the issue of setting linkrate register
-Date: Tue, 20 Feb 2018 03:13:27 +0800
-Message-ID: <1519067611-206638-5-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
-References: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
+Return-Path: <SRS0=R3el=FP=renesas.com=yoshihiro.shimoda.uh@kernel.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH 0/4] arm64: defconfig: Enable PWM and USB for R-Car
+Date: Wed, 21 Feb 2018 06:02:02 +0000
+Message-ID: <TY1PR06MB099260F3A468DE01B49244E0D8CE0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1518589412-7330-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20180215183331.56y6syawbjzdheor@verge.net.au>
+In-Reply-To: <20180215183331.56y6syawbjzdheor@verge.net.au>
+Content-Language: ja-JP
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>, John Garry <john.garry@huawei.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+Hi Simon-san,
 
-It is not right to set the register PROG_PHY_LINK_RATE while PHY
-is still enabled. So if we want to change PHY linkrate, we need to
-disable PHY before setting the register PROG_PHY_LINK_RATE, and then
-start-up PHY. This patch is to fix this issue.
+> From: Simon Horman, Sent: Friday, February 16, 2018 3:34 AM
+> To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Cc: magnus.damm@gmail.com; robh+dt@kernel.org; mark.rutland@arm.com; devi=
+cetree@vger.kernel.org;
+> linux-renesas-soc@vger.kernel.org
+> Subject: Re: [PATCH 0/4] arm64: defconfig: Enable PWM and USB for R-Car
+>=20
+> On Wed, Feb 14, 2018 at 03:23:28PM +0900, Yoshihiro Shimoda wrote:
+> > This patch set is based on the renesas.git / renesas-devel-20180213v2-v=
+4.16-rc1
+> > tag.
+>=20
+> Hi Shimoda-san,
+>=20
+> these changes look fine to me but I believe that upstream
+> prefers such patches to be consolidated. Could you consider
+> reposting with these four patches squashed into one?
 
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c | 5 +++--
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 5 +++--
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 5 +++--
- 3 files changed, 9 insertions(+), 6 deletions(-)
+Sure! I will submit v2 patch soon.
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-index 38bbda9..2eb8980 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-@@ -881,10 +881,11 @@ static void phy_set_linkrate_v1_hw(struct hisi_hba *hisi_hba, int phy_no,
- 	prog_phy_link_rate &= ~0xff;
- 	prog_phy_link_rate |= rate_mask;
- 
-+	disable_phy_v1_hw(hisi_hba, phy_no);
-+	msleep(100);
- 	hisi_sas_phy_write32(hisi_hba, phy_no, PROG_PHY_LINK_RATE,
- 			prog_phy_link_rate);
--
--	phy_hard_reset_v1_hw(hisi_hba, phy_no);
-+	start_phy_v1_hw(hisi_hba, phy_no);
- }
- 
- static int get_wideport_bitmap_v1_hw(struct hisi_hba *hisi_hba, int port_id)
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index 662d259..357138f 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -1611,10 +1611,11 @@ static void phy_set_linkrate_v2_hw(struct hisi_hba *hisi_hba, int phy_no,
- 	prog_phy_link_rate &= ~0xff;
- 	prog_phy_link_rate |= rate_mask;
- 
-+	disable_phy_v2_hw(hisi_hba, phy_no);
-+	msleep(100);
- 	hisi_sas_phy_write32(hisi_hba, phy_no, PROG_PHY_LINK_RATE,
- 			prog_phy_link_rate);
--
--	phy_hard_reset_v2_hw(hisi_hba, phy_no);
-+	start_phy_v2_hw(hisi_hba, phy_no);
- }
- 
- static int get_wideport_bitmap_v2_hw(struct hisi_hba *hisi_hba, int port_id)
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index 1ee95ab..8da9de7 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -1862,10 +1862,11 @@ static void phy_set_linkrate_v3_hw(struct hisi_hba *hisi_hba, int phy_no,
- 	prog_phy_link_rate &= ~0xff;
- 	prog_phy_link_rate |= rate_mask;
- 
-+	disable_phy_v3_hw(hisi_hba, phy_no);
-+	msleep(100);
- 	hisi_sas_phy_write32(hisi_hba, phy_no, PROG_PHY_LINK_RATE,
- 			prog_phy_link_rate);
--
--	phy_hard_reset_v3_hw(hisi_hba, phy_no);
-+	start_phy_v3_hw(hisi_hba, phy_no);
- }
- 
- static void interrupt_disable_v3_hw(struct hisi_hba *hisi_hba)
--- 
-1.9.1
+Best regards,
+Yoshihiro Shimoda
