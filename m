@@ -1,16 +1,16 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] ARM: dtc: tegra: enable front panel leds in TrimSlice
-Date: Wed, 21 Feb 2018 09:46:28 -0700
-Message-ID: <f291dd94-107f-cf03-a8e8-bc0806421c2d@wwwdotorg.org>
-References: <20180219201623.6987-1-tmn505@gmail.com>
- <57945bd2-d8c2-f7bc-f01f-29d679762446@wwwdotorg.org>
- <873b01dc-3ca5-3151-2654-a8272cb9dd88@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 03/19] soc: renesas: Identify R-Car M3-N
+Date: Wed, 21 Feb 2018 17:50:54 +0100
+Message-ID: <20180221165053.xx6gqdyja2zfghmy@verge.net.au>
+References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519139541-18783-4-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdVw4OSPP7XYLGuE7SfVjOk_6VK847NdsVwszBX9XshQ3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <873b01dc-3ca5-3151-2654-a8272cb9dd88@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVw4OSPP7XYLGuE7SfVjOk_6VK847NdsVwszBX9XshQ3A@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,31 +20,88 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Maciej Nowak <tmn505@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, jonathanh@nvidia.com, thierry.reding@gmail.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIvMjEvMjAxOCAwOToyMCBBTSwgVG9tYXN6IE1hY2llaiBOb3dhayB3cm90ZToKPiBXIGRu
-aXUgMjAuMDIuMjAxOCBvwqAyMDo1NSwgU3RlcGhlbiBXYXJyZW4gcGlzemU6Cj4+IE9uIDAyLzE5
-LzIwMTggMDE6MTYgUE0sIFRvbWFzeiBNYWNpZWogTm93YWsgd3JvdGU6Cj4+PiBBZGRzIGRldmlj
-ZSBub2RlcyBmb3IgdHdvIGZyb250IHBhbmVsIExFRHMuCj4+Cj4+IFdoeSBkbyB5b3UgbmVlZCB0
-byBjaGFuZ2UgdGhlIHBpbm11eCBzZXR0aW5ncz8gQ29uZmlndXJpbmcgYSBwaW4gYXMgYSAKPj4g
-R1BJTyBzaG91bGQgb3ZlcnJpZGUgYW55IHBpbm11eCBzcGVjaWFsIGZ1bmN0aW9uIHNlbGVjdGlv
-biBhbmQgaGVuY2UgCj4+IG1ha2UgaXQgaXJyZWxldmFudCwgc28gSSBkb24ndCB0aGluayB5b3Ug
-c2hvdWxkIG5lZWQgdG8gY2hhbmdlIHRoZSAKPj4gcGlubXV4Lgo+IAo+IEF0IGZpcnN0IEkgZGlk
-IGV4YWN0bHkgdGhhdCB3aXRob3V0IGNoYW5naW5nIHRoZSBwaW5tdXgsIGJ1dCB0aGUgTEVEcyAK
-PiBkaWRuJ3QgbGlnaHQgdXAuIEFmdGVyIHRoYXQgSSBjb21wYXJlZCB3aXRoIENvbXB1TGFiIHNv
-dXJjZSB0cmVlIFsxXS4gCj4gVGhlIHBpbm11eCB3YXMgc3BlY2lmaWVkIGFzIGluIG15IHBhdGNo
-LiBXaXRoIHRoaXMgY2hhbmdlIHRoZSBMRURzIGFyZSAKPiBmdWxseSBmdW5jdGlvbmFsLgo+IAo+
-IDEuIAo+IGh0dHBzOi8vZ2l0b3Jpb3VzLm9yZy90cmltc2xpY2Uta2VybmVsL3RyaW1zbGljZS1r
-ZXJuZWw/cD10cmltc2xpY2Uta2VybmVsOnRyaW1zbGljZS1rZXJuZWwuZ2l0O2E9YmxvYjtmPWFy
-Y2gvYXJtL21hY2gtdGVncmEvYm9hcmQtdHJpbXNsaWNlLXBpbm11eC5jO2g9Y2M2ZDUyMjVkOTdl
-YjkzMjdjODIwYmYxZDViMmJjMTZhYjhjNmRkYTtoYj1kMjViZjQ1ZDYzMTQwODk0ODliMzBkMjE4
-ZWQ4YTBkNmQ5NDQxN2Y5I2w0NSAKCk9oIEkgc2VlLiBZb3VyIHBhdGNoIGlzbid0IGNoYW5naW5n
-IHRoZSBwaW5tdXggZnVuY3Rpb24gc2VsZWN0aW9uIGJ1dCAKdGhlIG90aGVyIGNvbmZpZ3VyYXRp
-b24gYml0cywgd2hpY2ggYXJlIHJlbGV2YW50IGV2ZW4gd2hlbiB0aGUgcGluIGlzIGluIApHUElP
-IG1vZGUuIEluIHBhcnRpY3VsYXIsIGl0IGNsZWFycyB0aGUgdHJpc3RhdGUgYml0IGZvciB0aGUg
-ZHRlIApwaW5ncm91cC4gVGhhdCBtYWtlcyBwZXJmZWN0IHNlbnNlLgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, Feb 20, 2018 at 04:40:34PM +0100, Geert Uytterhoeven wrote:
+> Hi Jacopo,
+> 
+> On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> > Add support for indentifying R-Car M3-N (R8A77965) SoC.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> > --- a/drivers/soc/renesas/renesas-soc.c
+> > +++ b/drivers/soc/renesas/renesas-soc.c
+> > @@ -149,6 +149,11 @@ static const struct renesas_soc soc_rcar_v3m __initconst __maybe_unused = {
+> >         .id     = 0x54,
+> >  };
+> >
+> > +static const struct renesas_soc soc_rcar_m3_n __initconst __maybe_unused = {
+> > +       .family = &fam_rcar_gen3,
+> > +       .id     = 0x55,
+> > +};
+> 
+> Note that the list was sorted by SoC part number.
+
+Thanks, I have moved the above structure to between
+the similar structure for m3_w and v3m. The result is below.
+
+> > +
+> >  static const struct renesas_soc soc_rcar_v3h __initconst __maybe_unused = {
+> >         .family = &fam_rcar_gen3,
+> >         .id     = 0x56,
+> > @@ -214,6 +219,9 @@ static const struct of_device_id renesas_socs[] __initconst = {
+> >  #ifdef CONFIG_ARCH_R8A7796
+> >         { .compatible = "renesas,r8a7796",      .data = &soc_rcar_m3_w },
+> >  #endif
+> > +#ifdef CONFIG_ARCH_R8A77965
+> > +       { .compatible = "renesas,r8a77965",     .data = &soc_rcar_m3_n },
+> > +#endif
+> >  #ifdef CONFIG_ARCH_R8A77970
+> >         { .compatible = "renesas,r8a77970",     .data = &soc_rcar_v3m },
+> >  #endif
+
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH] soc: renesas: Identify R-Car M3-N
+
+Add support for indentifying R-Car M3-N (R8A77965) SoC.
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ drivers/soc/renesas/renesas-soc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/soc/renesas/renesas-soc.c b/drivers/soc/renesas/renesas-soc.c
+index 000834321774..ea71c413c926 100644
+--- a/drivers/soc/renesas/renesas-soc.c
++++ b/drivers/soc/renesas/renesas-soc.c
+@@ -144,6 +144,11 @@ static const struct renesas_soc soc_rcar_m3_w __initconst __maybe_unused = {
+ 	.id	= 0x52,
+ };
+ 
++static const struct renesas_soc soc_rcar_m3_n __initconst __maybe_unused = {
++	.family = &fam_rcar_gen3,
++	.id     = 0x55,
++};
++
+ static const struct renesas_soc soc_rcar_v3m __initconst __maybe_unused = {
+ 	.family	= &fam_rcar_gen3,
+ 	.id	= 0x54,
+@@ -214,6 +219,9 @@ static const struct of_device_id renesas_socs[] __initconst = {
+ #ifdef CONFIG_ARCH_R8A7796
+ 	{ .compatible = "renesas,r8a7796",	.data = &soc_rcar_m3_w },
+ #endif
++#ifdef CONFIG_ARCH_R8A77965
++	{ .compatible = "renesas,r8a77965",	.data = &soc_rcar_m3_n },
++#endif
+ #ifdef CONFIG_ARCH_R8A77970
+ 	{ .compatible = "renesas,r8a77970",	.data = &soc_rcar_v3m },
+ #endif
+-- 
+2.11.0
