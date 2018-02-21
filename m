@@ -1,42 +1,58 @@
-Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v3 05/15] memory: tegra: Do not handle spurious interrupts
-Date: Tue, 20 Feb 2018 19:25:18 +0300
-Message-Id: <48059f0e134d779e65fd92938e4162b191e400de.1519141896.git.digetx@gmail.com>
-In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
-References: <cover.1519141896.git.digetx@gmail.com>
-In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
-References: <cover.1519141896.git.digetx@gmail.com>
-To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=FOuU=FP=jmondi.org=jacopo+renesas@kernel.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v10 02/10] include: media: Add Renesas CEU driver interface
+Date: Wed, 21 Feb 2018 18:47:56 +0100
+Message-Id: <1519235284-32286-3-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1519235284-32286-1-git-send-email-jacopo+renesas@jmondi.org>
+References: <1519235284-32286-1-git-send-email-jacopo+renesas@jmondi.org>
+To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The ISR reads interrupts-enable mask, but doesn't utilize it. Apply the
-mask to the interrupt status and don't handle interrupts that MC driver
-haven't asked for. Kernel would disable spurious MC IRQ and report the
-error. This would happen only in a case of a very severe bug.
+Add renesas-ceu header file.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Do not remove the existing sh_mobile_ceu.h one as long as the original
+driver does not go away.
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
- drivers/memory/tegra/mc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/media/drv-intf/renesas-ceu.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 include/media/drv-intf/renesas-ceu.h
 
-diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
-index a4803ac192bb..d2005b995821 100644
---- a/drivers/memory/tegra/mc.c
-+++ b/drivers/memory/tegra/mc.c
-@@ -252,8 +252,11 @@ static irqreturn_t tegra_mc_irq(int irq, void *data)
- 	unsigned int bit;
- 
- 	/* mask all interrupts to avoid flooding */
--	status = mc_readl(mc, MC_INTSTATUS);
- 	mask = mc_readl(mc, MC_INTMASK);
-+	status = mc_readl(mc, MC_INTSTATUS) & mask;
+diff --git a/include/media/drv-intf/renesas-ceu.h b/include/media/drv-intf/renesas-ceu.h
+new file mode 100644
+index 0000000..52841d1
+--- /dev/null
++++ b/include/media/drv-intf/renesas-ceu.h
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * renesas-ceu.h - Renesas CEU driver interface
++ *
++ * Copyright 2017-2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
++ */
 +
-+	if (!status)
-+		return IRQ_NONE;
- 
- 	for_each_set_bit(bit, &status, 32) {
- 		const char *error = status_names[bit] ?: "unknown";
++#ifndef __MEDIA_DRV_INTF_RENESAS_CEU_H__
++#define __MEDIA_DRV_INTF_RENESAS_CEU_H__
++
++#define CEU_MAX_SUBDEVS		2
++
++struct ceu_async_subdev {
++	unsigned long flags;
++	unsigned char bus_width;
++	unsigned char bus_shift;
++	unsigned int i2c_adapter_id;
++	unsigned int i2c_address;
++};
++
++struct ceu_platform_data {
++	unsigned int num_subdevs;
++	struct ceu_async_subdev subdevs[CEU_MAX_SUBDEVS];
++};
++
++#endif /* ___MEDIA_DRV_INTF_RENESAS_CEU_H__ */
 -- 
-2.16.1
+2.7.4
