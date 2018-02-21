@@ -1,40 +1,71 @@
-Return-Path: <SRS0=mxgJ=FQ=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 6/6] arm64: dts: renesas: r8a77965: Add #interrupt-cells property
-Date: Thu, 22 Feb 2018 20:06:10 +0100
-Message-Id: <1519326370-15805-7-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
-To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=2fum=FP=gmail.com=arndbergmann@kernel.org>
+MIME-Version: 1.0
+Sender: arndbergmann@gmail.com
+In-Reply-To: <CAEbi=3eCfWYXZiN+5uaSqDKcEs1Kf3Av=ua6LCZmy2jAy5-Fdw@mail.gmail.com>
+References: <cover.1518505384.git.greentime@andestech.com> <4bb01fd533c66c357f3dc23a64f56414109a2aad.1518505384.git.greentime@andestech.com>
+ <CAK8P3a1MYopHeyWAs974zHRmfe5z8RS7G1mVQyC+iJXqa28EfA@mail.gmail.com> <CAEbi=3eCfWYXZiN+5uaSqDKcEs1Kf3Av=ua6LCZmy2jAy5-Fdw@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 21 Feb 2018 13:27:55 +0100
+Message-ID: <CAK8P3a19k92HhqEVBYO7wqx77k5PN6t_-9UbbU-DDYfZrnUUhA@mail.gmail.com>
+Subject: Re: [PATCH v7 03/37] sparc: io: To use the define of
+ ioremap_[nocache|wc|wb] in asm-generic/io.h
+Content-Type: text/plain; charset="UTF-8"
+To: Greentime Hu <green.hu@gmail.com>
+Cc: sparclinux <sparclinux@vger.kernel.org>, Greentime <greentime@andestech.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Networking <netdev@vger.kernel.org>, Vincent Chen <deanbo422@gmail.com>, DTML <devicetree@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, David Howells <dhowells@redhat.com>, Will Deacon <will.deacon@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-serial@vger.kernel.org, Geert Uytterhoeven <geert.uytterhoeven@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <greg@kroah.com>, Guo Ren <ren_guo@c-sky.com>, Randy Dunlap <rdunlap@infradead.org>, David Miller <davem@davemloft.net>, Jonas Bonn <jonas@southpole.se>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Stafford Horne <shorne@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add "#interrupt-cells" property and "interrupt-controller" label to
-"interrupt-controller@e61c0000" device node.
+On Wed, Feb 21, 2018 at 9:05 AM, Greentime Hu <green.hu@gmail.com> wrote:
+> 2018-02-14 22:43 GMT+08:00 Arnd Bergmann <arnd@arndb.de>:
+>> On Tue, Feb 13, 2018 at 10:09 AM, Greentime Hu <green.hu@gmail.com> wrote:
+>>> A commit for the nds32 architecture bootstrap("asm-generic/io.h: move
+>>> ioremap_nocache/ioremap_uc/ioremap_wc/ioremap_wt out of ifndef CONFIG_MMU")
+>>> will move the ioremap_nocache out of the CONFIG_MMU ifdef. This means that
+>>> in order to suppress re-definition errors we need to remove the #define
+>>> in io_32.h.
+>>>
+>>> Also, the change adds a prototype for ioremap where size is size_t and
+>>> offset is phys_addr_t so fix that as well.
+>>>
+>>> Signed-off-by: Greentime Hu <greentime@andestech.com>
+>>
+>> This patch should have been addressed to the sparclinux mailing list to
+>> the maintainers can see it, otherwise they are unlikely to notice.
+>>
+>> Added it to Cc now.
+>>
+>> Can you confirm that the patches are ordered correctly in your series so that
+>> at no point, sparc is in a state that fails to be build cleanly?
+>>
+>> If not, this may have to get merged into the other patch.
+>
+> Hi, Arnd:
+>
+> These 2 patch will cause sparc building error in any order.
 
-This silences the following DTC compiler warnings:
-Warning (interrupts_property): Missing interrupt-controller or
-interrupt-map property in /soc/interrupt-controller@e61c0000
-Warning (interrupts_property): Missing #interrupt-cells in
-interrupt-parent /soc/interrupt-controller@e61c000
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+>
+> Should I merge them together like this?
+>
+> asm-generic/io.h: move ioremap_nocache/ioremap_uc/ioremap_wc/ioremap_wt out of
+> ifndef CONFIG_MMU
+>
+> It allows some architectures to use this generic macro instead of
+> defining theirs.
+>
+> sparc: io: To use the define of ioremap_[nocache|wc|wb] in asm-generic/io.h
+> It will move the ioremap_nocache out of the CONFIG_MMU ifdef. This means that
+> in order to suppress re-definition errors we need to remove the #define
+> in arch/sparc/include/asm/io_32.h. Also, the change adds a prototype for
+> ioremap where size is size_t and offset is phys_addr_t so fix that as well.
+>
+> Signed-off-by: Greentime Hu <greentime@andestech.com>
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index cdd4868..665e126 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -316,6 +316,8 @@
- 		};
- 
- 		intc_ex: interrupt-controller@e61c0000 {
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
- 			reg = <0 0xe61c0000 0 0x200>;
- 			/* placeholder */
- 		};
--- 
-2.7.4
+That looks reasonable since both patches are fairly small, yes.
+
+For a more complex patch that requires interdependent changes
+in different areas of the kernel, it may be necessary instead to
+come up with a way to stage out the changes differently so they
+are truly independent. Getting that right requires a bit practice
+but is usually possible.
+
+       Arnd
