@@ -1,15 +1,13 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 1/4] dt-bindings: at24: sort manufacturers alphabetically
-Date: Wed, 21 Feb 2018 10:11:30 +0100
-Message-ID: <20180221091130.4sdfnalrng4sd77i@ninjato>
-References: <20180116160618.27859-1-peda@axentia.se>
- <20180116160618.27859-2-peda@axentia.se>
- <20180129161727.g4kdrr5sih22vs5a@rob-hp-laptop>
- <CAMRc=Mcqj36KP7dG71dzSn_7cxw-Tru5kNtXdr5-SiH=jbCfMA@mail.gmail.com>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH v2 4/8] ARM: dts: artpec: migrate ethernet to stmmac binding
+Date: Wed, 21 Feb 2018 09:59:56 +0100
+Message-ID: <20180221090000.18091-5-niklas.cassel@axis.com>
+References: <20180221090000.18091-1-niklas.cassel@axis.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4320651002899549681=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMRc=Mcqj36KP7dG71dzSn_7cxw-Tru5kNtXdr5-SiH=jbCfMA@mail.gmail.com>
+In-Reply-To: <20180221090000.18091-1-niklas.cassel@axis.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,80 +17,94 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-i2c <linux-i2c@vger.kernel.org>, Peter Rosin <peda@axentia.se>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: arm@kernel.org, Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>, Niklas Cassel <niklass@axis.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The snps,dwc-qos-ethernet binding is still supported as a glue layer
+in the stmmac driver.
+However, since the snps,dwc-qos-ethernet binding is now deprecated,
+migrate to stmmac's native binding.
 
---===============4320651002899549681==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="r2eb7okx7lhiwtec"
-Content-Disposition: inline
+At the same time, enable features supported by the stmmac driver,
+such as PTP, LPI, and an additional tx queue.
 
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+---
+ arch/arm/boot/dts/artpec6-devboard.dts |  1 +
+ arch/arm/boot/dts/artpec6.dtsi         | 42 ++++++++++++++++++++++++++++------
+ 2 files changed, 36 insertions(+), 7 deletions(-)
 
---r2eb7okx7lhiwtec
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jan 29, 2018 at 05:56:52PM +0100, Bartosz Golaszewski wrote:
-> 2018-01-29 17:17 GMT+01:00 Rob Herring <robh@kernel.org>:
-> > On Tue, Jan 16, 2018 at 05:06:15PM +0100, Peter Rosin wrote:
-> >> Makes them easier to find.
-> >>
-> >> Signed-off-by: Peter Rosin <peda@axentia.se>
-> >> ---
-> >>  Documentation/devicetree/bindings/eeprom/at24.txt | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > This one should go into 4.16. I can apply after rc1 or apply to tree
-> > with at24.txt changes queued.
-> >
-> > Acked-by: Rob Herring <robh@kernel.org>
-> >
-> > Rob
->=20
-> Wolfram,
->=20
-> can you take this via the i2c tree for 4.16?
-
-I missed this mail because I leave at24 patches to you now.
-Please send pull requests for patches I shall take. Least room for
-confusion (I hope).
-
-
---r2eb7okx7lhiwtec
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlqNN8IACgkQFA3kzBSg
-KbYBFxAAms4N9T01ToIDTtK0i0l6S21CWRH9VsyfnUKa3QVG8p2ggl5+TVixMFNm
-aQk0C91VQIo0WqHRYCudv26GstuO29dycaF8lwrgKtAiFGTTVSEqIGJqpQdRH+vo
-f/qsdCtTBsM7lBLL1pnUr/m7rOivS21Xsi2lhG0WxS3zFSWYSiyRlVtSCq7UPADY
-/D/PObzpndnOxwLZT9ra5yoELn15YZM69G82x0f9yRsBAj7h8d0ZphIJby7AA05r
-uLkOmiQqaH31oa2HPbt268NH9TLvE4oBDptCqKDnxoi6S5Qtk7n8sIZPrh0SPFfD
-nPdW3ZySuOwIUMIzmL4mhjoZ0VfgESF6gZbc7VG00rMB4CORmDbvXkKcrkphU85k
-+MXK9q6O1dTJNFWxsYzrcLVFMwHf0InLH2wlX/+lbh32HBIuECQlZih2NaANLJ1k
-3W5STVUmhHDtaT6pGnF5dH5dOzPUbdvH9ins52GWYoWhzZqefpSbUTMxqGyKhQ85
-kYD72/y5EoPSaMYu0s6zSHH7qsUY+r3Zb8rGpwTd5xM8GnGGUuLj+4cFbnoIZ82m
-P6nDFQqSmHCdhFFMP2e2pvsaI4xAA/CzOmlC3F6NnWO3BITKMN561s9eT8Q3aazt
-Bu5PjGV9v6B7gvpl7hAMcwzBcDWaoQaPfhTiDwJ+li7ucnyHt/w=
-=mnhA
------END PGP SIGNATURE-----
-
---r2eb7okx7lhiwtec--
-
-
---===============4320651002899549681==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4320651002899549681==--
+diff --git a/arch/arm/boot/dts/artpec6-devboard.dts b/arch/arm/boot/dts/artpec6-devboard.dts
+index 502f3de6dc5b..d20d95359b28 100644
+--- a/arch/arm/boot/dts/artpec6-devboard.dts
++++ b/arch/arm/boot/dts/artpec6-devboard.dts
+@@ -59,6 +59,7 @@
+ 	mdio {
+ 		#address-cells = <0x1>;
+ 		#size-cells = <0x0>;
++		compatible = "snps,dwmac-mdio";
+ 		phy1: phy@0 {
+ 			compatible = "ethernet-phy-ieee802.3-c22";
+ 			device_type = "ethernet-phy";
+diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
+index f4b39738f1ac..981aecd27b0b 100644
+--- a/arch/arm/boot/dts/artpec6.dtsi
++++ b/arch/arm/boot/dts/artpec6.dtsi
+@@ -188,19 +188,47 @@
+ 		dma-ranges;
+ 
+ 		ethernet: ethernet@f8010000 {
+-			clock-names = "phy_ref_clk", "apb_pclk";
+-			clocks = <&eth_phy_ref_clk>,
+-				<&clkctrl ARTPEC6_CLK_ETH_ACLK>;
+-			compatible = "snps,dwc-qos-ethernet-4.10";
+-			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "stmmaceth", "ptp_ref";
++			clocks = <&clkctrl ARTPEC6_CLK_ETH_ACLK>,
++				<&clkctrl ARTPEC6_CLK_PTP_REF>;
++			compatible = "snps,dwmac-4.10a", "snps,dwmac";
++			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq", "eth_lpi";
+ 			reg = <0xf8010000 0x4000>;
+ 
+-			snps,write-requests = <2>;
+-			snps,read-requests = <16>;
++			snps,axi-config = <&stmmac_axi_setup>;
++			snps,mtl-rx-config = <&mtl_rx_setup>;
++			snps,mtl-tx-config = <&mtl_tx_setup>;
++
+ 			snps,txpbl = <8>;
+ 			snps,rxpbl = <2>;
++			snps,aal;
++			snps,tso;
+ 
+ 			status = "disabled";
++
++			stmmac_axi_setup: stmmac-axi-config {
++				snps,wr_osr_lmt = <1>;
++				snps,rd_osr_lmt = <15>;
++				/* If FB is disabled, the AXI master chooses
++				 * a burst length of any value less than the
++				 * maximum enabled burst length
++				 * (all lesser burst length enables are redundant).
++				 */
++				snps,blen = <0 0 0 0 16 0 0>;
++			};
++
++			mtl_rx_setup: rx-queues-config {
++				snps,rx-queues-to-use = <1>;
++				queue0 {};
++			};
++
++			mtl_tx_setup: tx-queues-config {
++				snps,tx-queues-to-use = <2>;
++				queue0 {};
++				queue1 {};
++			};
+ 		};
+ 
+ 		uart0: serial@f8036000 {
+-- 
+2.14.2
