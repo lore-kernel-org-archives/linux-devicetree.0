@@ -1,18 +1,18 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 05/10] dt-bindings: gpio: Add gpio nodes for Actions S900
- SoC
-Date: Wed, 21 Feb 2018 19:05:57 +0100
-Message-ID: <ac193690-220e-4160-5dd5-6ddeaea4d5d0@suse.de>
-References: <20180217204433.3095-1-manivannan.sadhasivam@linaro.org>
- <20180217204433.3095-6-manivannan.sadhasivam@linaro.org>
- <20180219203523.rhvbnym7oomzahwi@rob-hp-laptop>
- <20180221145821.bhoxjndibp3bqfxi@linaro.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH 2/2] i2c: add support for Socionext SynQuacer I2C
+ controller
+Date: Wed, 21 Feb 2018 18:20:08 +0000
+Message-ID: <CAKv+Gu_5N3bTAasc5Gt0pTo-s3mMdqmvt-C=GM0ACkkptyrN-Q@mail.gmail.com>
+References: <20180220090827.913-1-ard.biesheuvel@linaro.org>
+ <20180220090827.913-3-ard.biesheuvel@linaro.org>
+ <CAHp75VeUJpXLpL55erp+uoMH4jqppoG5zTt1DcffqNYPsJMdUQ@mail.gmail.com>
+ <CAKv+Gu8A1YKr5t0B=Fe2sF6+QT9iCVeRW+99K37g22viEoismA@mail.gmail.com>
+ <CAHp75Vd=dww8AQM4tC5Z38i4PNaV4vxMFsTf=ozJ1Yw3Gd9DWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180221145821.bhoxjndibp3bqfxi@linaro.org>
-Content-Language: en-US
+In-Reply-To: <CAHp75Vd=dww8AQM4tC5Z38i4PNaV4vxMFsTf=ozJ1Yw3Gd9DWg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,40 +22,95 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, linus.walleij@linaro.org, liuwei@actions-semi.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-gpio@vger.kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Jassi Brar <jassisinghbrar@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gMjEuMDIuMjAxOCB1bSAxNTo1OCBzY2hyaWViIE1hbml2YW5uYW4gU2FkaGFzaXZhbToKPiBI
-aSBSb2IsCj4gT24gTW9uLCBGZWIgMTksIDIwMTggYXQgMDI6MzU6MjNQTSAtMDYwMCwgUm9iIEhl
-cnJpbmcgd3JvdGU6Cj4+IE9uIFN1biwgRmViIDE4LCAyMDE4IGF0IDAyOjE0OjI4QU0gKzA1MzAs
-IE1hbml2YW5uYW4gU2FkaGFzaXZhbSB3cm90ZToKPj4+IEFkZCBncGlvIG5vZGVzIGZvciBBY3Rp
-b25zIFNlbWkgUzkwMCBTb0MuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogTWFuaXZhbm5hbiBTYWRo
-YXNpdmFtIDxtYW5pdmFubmFuLnNhZGhhc2l2YW1AbGluYXJvLm9yZz4KPj4+IC0tLQo+Pj4gIC4u
-Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vYWN0aW9ucyxvd2wtZ3Bpby50eHQgICAgICAgICB8
-IDE1ICsrKysrKysrKysrKysrKwo+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCsp
-Cj4+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9ncGlvL2FjdGlvbnMsb3dsLWdwaW8udHh0Cj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2FjdGlvbnMsb3dsLWdwaW8udHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8vYWN0aW9ucyxvd2wtZ3Bpby50eHQK
-Pj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjRjZDRjYjdi
-ZmQxYgo+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2dwaW8vYWN0aW9ucyxvd2wtZ3Bpby50eHQKPj4+IEBAIC0wLDAgKzEsMTUgQEAK
-Pj4+ICsqIEFjdGlvbnMgU2VtaSBPV0wgR1BJTyBjb250cm9sbGVyIGJpbmRpbmdzCj4+PiArCj4+
-PiArLSBjb21wYXRpYmxlICAgICAgOiBTaG91bGQgYmUgImFjdGlvbnMsczkwMC1ncGlvIgo+Pj4g
-Ky0gcmVnICAgICAgICAgICAgIDogQWRkcmVzcyBhbmQgcmFuZ2Ugb2YgdGhlIEdQSU8gY29udHJv
-bGxlciByZWdpc3RlcnMuCj4+PiArLSBncGlvLWNvbnRyb2xsZXIgOiBNYXJrcyB0aGUgZGV2aWNl
-IG5vZGUgYXMgYSBHUElPIGNvbnRyb2xsZXIuCj4+PiArLSAjZ3Bpby1jZWxscyAgICAgOiBTaG91
-bGQgYmUgPDI+LiBUaGUgZmlyc3QgY2VsbCBpcyB0aGUgZ3BpbyBudW1iZXIgYW5kCj4+PiArICAg
-ICAgICAgICAgICAgICAgICB0aGUgc2Vjb25kIGNlbGwgaXMgdXNlZCB0byBzcGVjaWZ5IG9wdGlv
-bmFsIHBhcmFtZXRlcnMuCj4+Cj4+IERvZXNuJ3QgZG8gaW50ZXJydXB0cz8KPj4KPiBJbnRlcnJ1
-cHQgc3VwcG9ydCB3aWxsIGJlIGFkZGVkIG9uY2UgdGhpcyBiYXNlIGRyaXZlciBnZXRzIGluLgo+
-IE9uZSBzdGVwIGF0IGEgdGltZSA7LSkKClJvYiByZWplY3RlZCB0aGF0IHN0ZXAtYnktc3RlcCBh
-cHByb2FjaCBmb3IgbXkgUkRBIE1pY3JvIGJpbmRpbmdzLCB3aGljaAppcyB3aHkgaXQgaXMgY3Vy
-cmVudGx5IHN0dWNrLiA7KQoKUmVnYXJkcywKQW5kcmVhcwoKLS0gClNVU0UgTGludXggR21iSCwg
-TWF4ZmVsZHN0ci4gNSwgOTA0MDkgTsO8cm5iZXJnLCBHZXJtYW55CkdGOiBGZWxpeCBJbWVuZMO2
-cmZmZXIsIEphbmUgU21pdGhhcmQsIEdyYWhhbSBOb3J0b24KSFJCIDIxMjg0IChBRyBOw7xybmJl
-cmcpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+On 20 February 2018 at 19:39, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> On Tue, Feb 20, 2018 at 8:04 PM, Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+>> On 20 February 2018 at 14:02, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>>> On Tue, Feb 20, 2018 at 11:08 AM, Ard Biesheuvel
+>>> <ard.biesheuvel@linaro.org> wrote:
+>
+>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>
+>>> Shouldn't be // ?
+>
+>> IIUC, this applies to .h files only, and /* */ is preferred for .c files.
+>
+> Other way around.
+>
+> Documentation/process/license-rules.rst
+>
+
+OK got it
+
+>>>> +#define WAIT_PCLK(n, rate)     ndelay((((1000000000 +  (rate) - 1) / \
+>>>> +                                        (rate) + n - 1) / n) + 10)
+>>>
+>>> This split makes it harder to catch the calculus.
+>>> Also, you can use DIV_ROUND_UP(), though it longer, but adds a bit of
+>>> clarity to the calculus.
+>
+>> Yeah. This was present in the original code, and I tried to avoid
+>> touching it :-)
+>
+> Yeah, but below there are several instances with DIV_ROUND_UP().
+>
+
+I'll replace it with the equivalent
+
+#define WAIT_PCLK(n, rate) \
+    ndelay(DIV_ROUND_UP(DIV_ROUND_UP(1000000000, rate), n) + 10)
+
+>>>> +static void synquacer_i2c_stop(struct synquacer_i2c *i2c, int ret)
+>>>> +{
+>>>> +       dev_dbg(i2c->dev, "STOP\n");
+>>>
+>>> Hmm... Can't use FTRACE ?
+>
+>> What do you mean?
+>
+> The message kinda useless, esp. if you can enable functional tracing.
+> I saw a lot of debugging messages in the code, perhaps it makes sense
+> at some point to make some trace points in I2C core and leave only HW
+> related here.
+>
+
+OK, I will just drop it.
+
+>>>> +       if (dev_of_node(&pdev->dev)) {
+>>>> +               i2c->clk = devm_clk_get(&pdev->dev, "pclk");
+>>>> +               if (IS_ERR(i2c->clk)) {
+>>>> +                       dev_err(&pdev->dev, "cannot get clock\n");
+>>>> +                       return PTR_ERR(i2c->clk);
+>>>> +               }
+>>>> +               dev_dbg(&pdev->dev, "clock source %p\n", i2c->clk);
+>>>> +
+>>>> +               i2c->clkrate = clk_get_rate(i2c->clk);
+>>>> +               dev_dbg(&pdev->dev, "clock rate %d\n", i2c->clkrate);
+>>>> +               clk_prepare_enable(i2c->clk);
+>>>> +       } else {
+>>>
+>>>> +               ret = device_property_read_u32(&pdev->dev,
+>>>> +                                              "socionext,pclk-rate",
+>>>> +                                              &i2c->clkrate);
+>>>
+>>> I suppose for ACPI we just register a fixed rate clock and use it in
+>>> the driver in the same way as in OF case.
+>>> I guess at some point we even can provide a generic clock provider for
+>>> ACPI based on rate property.
+>
+>> Is there a question here? Do you want me to change anything?
+>
+> Is it opener for discussion. At least in the drivers we have done for
+> x86 we do the way I described.
+>
+> See, for example, drivers/mfd/intel-lpss.c
+>
+
+OK, I see what you mean now. But for this driver, creating a fixed
+rate clock with no controls whatsoever, only to interrogate it for its
+rate (which we retrieved from the ACPI device node in the first place)
+seems rather pointless to me. Am I missing something here?
