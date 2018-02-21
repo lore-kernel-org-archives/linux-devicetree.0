@@ -1,49 +1,112 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 04/16] of: changesets: Introduce changeset helper
- methods
-Date: Wed, 21 Feb 2018 16:46:56 +0100
-Message-ID: <CAMuHMdVcbgX-Gi7p15JgsF0Ghe2wo4XEkPM2c=uxgqxJ9f2i=Q@mail.gmail.com>
-References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180220231046.32638-5-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdVJfKXWNFaN259JQ1bOVZQSbC-=u4Kmys2PE+HLa=xQKw@mail.gmail.com>
- <CAL_JsqJA=2JLqRfERJ1hN=ErUqw+xT8OhZVMjSVeRH4mgrE36Q@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 19/19] ARM64: dts: r8a77965: Add EtherAVB device node
+Date: Wed, 21 Feb 2018 18:48:59 +0300
+Message-ID: <cbeb1b6b-1b02-7665-0f1f-847ab8de69e3@cogentembedded.com>
+References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519139541-18783-20-git-send-email-jacopo+renesas@jmondi.org>
+ <cf157266-5ea7-6795-1e31-0d1ccf85e7e8@cogentembedded.com>
+ <20180221100716.GF7203@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqJA=2JLqRfERJ1hN=ErUqw+xT8OhZVMjSVeRH4mgrE36Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Marek Vasut <marex@denx.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180221100716.GF7203@w540>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gV2VkLCBGZWIgMjEsIDIwMTggYXQgNDoyMyBQTSwgUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4gT24gV2VkLCBGZWIgMjEsIDIwMTggYXQgNDoyMSBBTSwg
-R2VlcnQgVXl0dGVyaG9ldmVuCj4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPiB3cm90ZToKPj4gWW91
-IG1pc3NlZCBvbmUgZml4IEkgaGF2ZSBpbiBteSB0b3BpYy9vdmVybGF5cyBicmFuY2gKPj4gaHR0
-cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvZ2VlcnQvcmVuZXNh
-cy1kcml2ZXJzLmdpdC9jb21taXQvP2g9dG9waWMvb3ZlcmxheXMmaWQ9MTUwZjk1YjlkZWM3N2Nl
-MzcxYzIyOWY3YWM0ZDZkZDg2MjBiZWY0YQo+Cj4gQXJlIHlvdSBwbGFubmluZyB0byB0cnkgdG8g
-dXBzdHJlYW0gYWxsIHRoaXM/IElmIG5vdCwgSSdsbCBnZXQgRnJhbmsKCk5vdCByZWFsbHkuIEJ1
-dCBJIGRvIG5lZWQgYSB3YXkgdG8gbG9hZCBEVCBvdmVybGF5cyBhdCBydW50aW1lLCBmb3IgdGVz
-dGluZwpoYXJkd2FyZSBvbiBleHBhbnNpb24gY29ubmVjdG9ycy4KCj4gdG8ga2VlcCBjaGFuZ2lu
-ZyB0aGUgb3ZlcmxheSBBUEkgdG8gbWFrZSBjYXJyeWluZyBpdCBvdXQgb2YgdHJlZSBtb3JlCj4g
-cGFpbmZ1bC4gOikKCkhlIGFscmVhZHkgZGlkIGEgdmVyeSBnb29kIGpvYiB3LnIudC4gdGhhdCBp
-biB2NC4xNS1yYzEgO14pCgpHcntvZXRqZSxlZXRpbmd9cywKCiAgICAgICAgICAgICAgICAgICAg
-ICAgIEdlZXJ0CgotLQpHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4
-IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJz
-YXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0
-CndoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIg
-b3Igc29tZXRoaW5nIGxpa2UgdGhhdC4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAt
-LSBMaW51cyBUb3J2YWxkcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Hello!
+
+On 02/21/2018 01:07 PM, jacopo mondi wrote:
+
+>>> Populate the ethernet@e6800000 device node to enable Ethernet interface
+>>> for R-Car M3-N (r8a77965) SoC.
+>>>
+>>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>>
+>>> ---
+>>> v1 -> v2:
+>>> - Replace ALWAYS_ON power area identifier with numeric constant
+>>> ---
+>>>  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 43 ++++++++++++++++++++++++++++++-
+>>>  1 file changed, 42 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+>>> index 55f05f7..c249895 100644
+>>> --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+>>> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+>>> @@ -520,7 +520,48 @@
+>>>  		};
+>>>
+>>>  		avb: ethernet@e6800000 {
+>>> -			/* placeholder */
+>>> +			compatible = "renesas,etheravb-r8a77965",
+>>> +				     "renesas,etheravb-rcar-gen3";
+>>> +			reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
+>>> +			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
+>>> +				     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
+>>> +			interrupt-names = "ch0", "ch1", "ch2", "ch3",
+>>> +					  "ch4", "ch5", "ch6", "ch7",
+>>> +					  "ch8", "ch9", "ch10", "ch11",
+>>> +					  "ch12", "ch13", "ch14", "ch15",
+>>> +					  "ch16", "ch17", "ch18", "ch19",
+>>> +					  "ch20", "ch21", "ch22", "ch23",
+>>> +					  "ch24";
+>>> +			clocks = <&cpg CPG_MOD 812>;
+>>> +			power-domains = <&sysc 32>;
+>>> +			resets = <&cpg 812>;
+>>> +			phy-mode = "rgmii-txid";
+>>
+>>    Why not just "rgmii"? TX delay is a board specific detail, no?
+>>
+> 
+> I admit I took this one straight from r8a7796 dtsi.
+> Would you like to me resend and change this?
+
+   Yes, unless Simon would fix it while merging...
+
+> Thanks
+>    j
+> 
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <0>;
+>>> +			status = "disabled";
+>>>  		};
+>>>
+>>>  		csi20: csi2@fea80000 {
+
+MBR, Sergei
