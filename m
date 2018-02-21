@@ -1,102 +1,71 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v7_00=2F42=5D_ARM=3A_davinci=3A_convert_to_common?=
- =?UTF-8?Q?_clock_framework=E2=80=8B?=
-Date: Wed, 21 Feb 2018 13:01:44 +0100
-Message-ID: <CAMRc=Mf_pumyTZPn9T=sG7Ab95YS3KqKc2bT0evhESTRRFeiuQ@mail.gmail.com>
-References: <1519071723-31790-1-git-send-email-david@lechnology.com>
- <CAMRc=MdT5Vd68eoWfJGv=5_uzD0L5m3Y+wi6r7N6O8y6HZrQSg@mail.gmail.com>
- <6142ab0d-85b1-84da-3a35-bdd8733bebd9@lechnology.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 0/8] drm/rockchip: hdmi support for rk3328
+Date: Wed, 21 Feb 2018 12:07:34 +0000
+Message-ID: <1f50b49e-d402-3621-c2e8-9e0a96e859f9@arm.com>
+References: <20180216204158.29839-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6142ab0d-85b1-84da-3a35-bdd8733bebd9@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180216204158.29839-1-heiko@sntech.de>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>, hjc@rock-chips.com, architt@codeaurora.org, a.hajda@samsung.com, kishon@ti.com
+Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-2018-02-20 19:39 GMT+01:00 David Lechner <david@lechnology.com>:
-> On 02/20/2018 07:33 AM, Bartosz Golaszewski wrote:
->>
->> 2018-02-19 21:21 GMT+01:00 David Lechner <david@lechnology.com>:
->>>
->>> This series converts mach-davinci to use the common clock framework.
->>>
->>>
->>
->> Hi David,
->>
->> just some quick results from today's playing with v7.
->>
->> I started out with da850-lcdk with my standard rootfs over NFS. I was
->> not able to boot to console so far. The first problem is that mdio
->> fails to probe:
->>
->> libphy: Fixed MDIO Bus: probed
->> davinci_mdio 1e24000.mdio: davinci mdio revision 1.5, bus freq 2200000
->> davinci_mdio 1e24000.mdio: no live phy, scanning all
->> davinci_mdio: probe of 1e24000.mdio failed with error -5> After some
->> digging I noticed that the supplied clock rate differs
->> between mainline (114000000Hz) vs common-clock-v7 (18000000). Since
->> we're not setting the rate in mdio, using LPSC_SET_RATE_PARENT would
->> not help like with lcdc.
->
->
-> Can you post the output of this command so that I can see how your
-> clocks are setup:
->
-> cat /sys/kernel/debug/clk/clk_summary
->
->
->>
->> After that, the boot just hangs without ever getting to emac's probe.
->
->
-> Using your workaround, can you run:
->
-> cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
->
-> If you see:
->   1e27000.clock-controller: emac  off-0
->
-> then genpd is not working like it is supposed to. You should see something
-> like this for device that are working:
->           1e27000.clock-controller: uart2  on
->     /devices/platform/soc@1c00000/1d0d000.serial        active
->
->
->>
->> Once I set the emac clock to always enabled (a workaround that was
->> necessary with v6, but could be dropped with my first
->> genpd-in-a-separate-driver attempt), I'm getting a rather strange NULL
->> pointer dereference:
->
->
-> I noticed this too when adding the power-domains property to some device
-> tree nodes. This is part of the reason why I didn't add it everywhere.
-> I wasn't able to figure out the cause of this yet. As a work around
-> though, please try removing the power-domains property from the emac
-> and mdio nodes and use your previous workaround of having an always
-> enabled clock.
->
->
-
-When I use any of the workarounds I just keep getting more problems
-(e.g. [1] from blk and pinctrl). I only had a couple hours today to
-play with it but it seems to me we have some memory corruption
-somewhere. I'll check the initialization order of all the frameworks
-involved tomorrow.
-
-Best regards,
-Bartosz
-
-[1] https://pastebin.com/75mkkuJL
+T24gMTYvMDIvMTggMjA6NDEsIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+IFRoZSByazMyMjgvcmsz
+MjI5IGFuZCByazMzMjggc29jcyBzdGFydGVkIHVzaW5nIGEgbmV3IHR5cGUgb2YgaGRtaS1waHkK
+PiBmcm9tIElubm9zaWxpY29uIHRoYXQgcmVzaWRlcyBjb21wbGV0ZWx5IHNlcGFyYXRlIGZyb20g
+dGhlIGR3LWhkbWkgYmxvY2sKPiBhbmQgZ2V0cyBhY2Nlc3NlZCB2aWEgbW1pby4KPiAKPiBBZGRp
+dGlvbmFsbHkgdGhlIHJrMzMyOCBkdy1oZG1pIGRvZXMgbm90IHJlcG9ydCB0aGUgdmVuZG9yLXBo
+eSB0eXBlCj4gYnV0IGEgZGlmZmVyZW50IG9uZSBpbnN0ZWFkLCBzbyBhZGQgdGhlIHBvc3NpYmls
+aXR5IHRvIG92ZXJyaWRlIHRoZQo+IHBoeSB0eXBlIHdoZW4gdGhlIGdsdWUgZHJpdmVyIGtub3dz
+IGJldHRlciB0aGFuIHRoZSBpcCBibG9jayBpdHNlbGYuCj4gCj4gCj4gSSd2ZSBwdXQgYm90aCB0
+aGUgcGh5IGRyaXZlciBhbmQgZHctaGRtaSBjaGFuZ2VzIGludG8gb25lIHNlcmllcyBqdXN0Cj4g
+dG8gc2hvd2Nhc2UgaG93IGV2ZXJ5dGhpbmcgY29tZXMgdG9nZXRoZXIsIGJ1dCB3b3VsZCBvZiBj
+b3Vyc2Ugc3RpbGwKPiBleHBlY3QgdGhpbmdzIHRvIGdvIHRocm91Z2ggdGhlIHNlcGFyYXRlIHBo
+eSBhbmQgZHJtIHRyZWVzIG9uY2UgZGVlbWVkCj4gcmVhZHkuCj4gCj4gU28gcGF0Y2hlcyAxKzIg
+YXJlIGV4cGVjdGVkIHRvIGdvIHRocm91Z2ggdGhlIHBoeS10cmVlIGFuZCB0aGUgcmVzdAo+IHNo
+b3VsZCBnbyB0aHJvdWdoIHRoZSBkcm0gdHJlZS4KCkZvciBwYXRjaGVzIDIsIDMsIDQsIDYsIDcs
+IDgsCgpUZXN0ZWQtYnk6IFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+Cgo+IGNo
+YW5nZXMgaW4gdjI6Cj4gLSBwaHk6IHByZXZlbnQgb3ZlcmZsb3cgaW4gdG1kc2NsayBjYWxjdWxh
+dGlvbgo+ICAgIGFzIHJlcG9ydGVkIGJ5IE1hcnRpbiBDZXJ2ZW55Cj4gLSBwaHk6IHVzZSB1bnNp
+Z25lZCBsb25nIGZvciBhbGwgdG1kc2NsayByYXRlIHVzZXMKPiAtIHBoeTogc2ltcGxpZnkgdG1k
+cyByYXRlIGNhbGN1bGF0aW9uCj4gCj4gLSBkcm9wcGVkIHBhdGNoIGV4cG9ydGluZyBzb21lIGR3
+LWhkbWkgcGh5IGZ1bmN0aW9ucwo+ICAgIGFzIGEgc2ltaWxhciBwYXRjaCBlbnRlcmVkIGRybS1t
+aXNjIGFscmVhZHkKPiAKPiBIZWlrbyBTdHVlYm5lciAoNik6Cj4gICAgZHJtL2JyaWRnZTogZHct
+aGRtaTogYWxsb3cgb3ZlcnJpZGluZyBvZiBwaHktdHlwZSByZWFkaW5nCj4gICAgZHJtL3JvY2tj
+aGlwOiBkd19oZG1pOiBBbGxvdyBvdXRwdXRzIHRoYXQgZG9uJ3QgbmVlZCBvdXRwdXQgc3dpdGNo
+aW5nCj4gICAgZHQtYmluZGluZ3M6IGFsbG93IG9wdGlvbmFsIHBoeXMgaW4gUm9ja2NoaXAgZHdf
+aGRtaSBiaW5kaW5nCj4gICAgZHJtL3JvY2tjaGlwOiBkd19oZG1pOiBhbGxvdyBpbmNsdWRpbmcg
+ZXh0ZXJuYWwgcGh5cwo+ICAgIGRybS9yb2NrY2hpcDogZHdfaGRtaTogc3RvcmUgcm9ja2NoaXBf
+aGRtaSByZWZlcmVuY2UgaW4gcGh5X2RhdGEKPiAgICAgIG9iamVjdAo+ICAgIGRybS9yb2NrY2hp
+cDogZHdfaGRtaTogYWRkIGR3LWhkbWkgc3VwcG9ydCBmb3IgdGhlIHJrMzMyOAo+IAo+IFpoZW5n
+IFlhbmcgKDIpOgo+ICAgIGR0LWJpbmRpbmdzOiBhZGQgYmluZGluZyBmb3IgUm9ja2NoaXAgaGRt
+aSBwaHkgdXNpbmcgYW4gSW5ub3NpbGljb24gSVAKPiAgICBwaHk6IGFkZCBSb2NrY2hpcCBJbm5v
+c2lsaWNvbiBoZG1pIHBoeQo+IAo+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdf
+aGRtaS1yb2NrY2hpcC50eHQgfCAgICAzICsKPiAgIC4uLi9iaW5kaW5ncy9waHkvcGh5LXJvY2tj
+aGlwLWlubm8taGRtaS50eHQgICAgICAgIHwgICA0MiArCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL3N5bm9wc3lzL2R3LWhkbWkuYyAgICAgICAgICB8ICAgIDQgKy0KPiAgIGRyaXZlcnMvZ3B1
+L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgICAgICAgIHwgIDEzMCArKy0KPiAgIGRy
+aXZlcnMvcGh5L3JvY2tjaGlwL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNyAr
+Cj4gICBkcml2ZXJzL3BoeS9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8
+ICAgIDEgKwo+ICAgZHJpdmVycy9waHkvcm9ja2NoaXAvcGh5LXJvY2tjaGlwLWlubm8taGRtaS5j
+ICAgICAgfCAxMjA5ICsrKysrKysrKysrKysrKysrKysrCj4gICBpbmNsdWRlL2RybS9icmlkZ2Uv
+ZHdfaGRtaS5oICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+ICAgOCBmaWxlcyBjaGFu
+Z2VkLCAxMzkzIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4gICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAt
+aW5uby1oZG1pLnR4dAo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGh5L3JvY2tjaGlw
+L3BoeS1yb2NrY2hpcC1pbm5vLWhkbWkuYwo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
