@@ -1,111 +1,83 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v2 19/19] ARM64: dts: r8a77965: Add EtherAVB device node
-Date: Wed, 21 Feb 2018 11:07:16 +0100
-Message-ID: <20180221100716.GF7203@w540>
-References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519139541-18783-20-git-send-email-jacopo+renesas@jmondi.org>
- <cf157266-5ea7-6795-1e31-0d1ccf85e7e8@cogentembedded.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v4 04/16] of: changesets: Introduce changeset helper
+ methods
+Date: Wed, 21 Feb 2018 11:21:50 +0100
+Message-ID: <CAMuHMdVJfKXWNFaN259JQ1bOVZQSbC-=u4Kmys2PE+HLa=xQKw@mail.gmail.com>
+References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20180220231046.32638-5-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <cf157266-5ea7-6795-1e31-0d1ccf85e7e8@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-renesas-soc@vger.kernel.org, horms@verge.net.au, geert@linux-m68k.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180220231046.32638-5-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Tue, Feb 20, 2018 at 06:30:56PM +0300, Sergei Shtylyov wrote:
-> On 02/20/2018 06:12 PM, Jacopo Mondi wrote:
->
-> > Populate the ethernet@e6800000 device node to enable Ethernet interface
-> > for R-Car M3-N (r8a77965) SoC.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > ---
-> > v1 -> v2:
-> > - Replace ALWAYS_ON power area identifier with numeric constant
-> > ---
-> >  arch/arm64/boot/dts/renesas/r8a77965.dtsi | 43 ++++++++++++++++++++++++++++++-
-> >  1 file changed, 42 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> > index 55f05f7..c249895 100644
-> > --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-> > @@ -520,7 +520,48 @@
-> >  		};
-> >
-> >  		avb: ethernet@e6800000 {
-> > -			/* placeholder */
-> > +			compatible = "renesas,etheravb-r8a77965",
-> > +				     "renesas,etheravb-rcar-gen3";
-> > +			reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
-> > +			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
-> > +				     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
-> > +			interrupt-names = "ch0", "ch1", "ch2", "ch3",
-> > +					  "ch4", "ch5", "ch6", "ch7",
-> > +					  "ch8", "ch9", "ch10", "ch11",
-> > +					  "ch12", "ch13", "ch14", "ch15",
-> > +					  "ch16", "ch17", "ch18", "ch19",
-> > +					  "ch20", "ch21", "ch22", "ch23",
-> > +					  "ch24";
-> > +			clocks = <&cpg CPG_MOD 812>;
-> > +			power-domains = <&sysc 32>;
-> > +			resets = <&cpg 812>;
-> > +			phy-mode = "rgmii-txid";
->
->    Why not just "rgmii"? TX delay is a board specific detail, no?
->
-
-I admit I took this one straight from r8a7796 dtsi.
-Would you like to me resend and change this?
-
-Thanks
-   j
-
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			status = "disabled";
-> >  		};
-> >
-> >  		csi20: csi2@fea80000 {
-> >
->
-> MBR, Sergei
+SGkgTGF1cmVudCwKCk9uIFdlZCwgRmViIDIxLCAyMDE4IGF0IDEyOjEwIEFNLCBMYXVyZW50IFBp
+bmNoYXJ0CjxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6
+Cj4gRnJvbTogUGFudGVsaXMgQW50b25pb3UgPHBhbnRlbGlzLmFudG9uaW91QGtvbnN1bGtvLmNv
+bT4KPgo+IENoYW5nZXNldHMgYXJlIHZlcnkgcG93ZXJmdWwsIGJ1dCB0aGUgbGFjayBvZiBhIGhl
+bHBlciBBUEkKPiBtYWtlcyB1c2luZyB0aGVtIGN1bWJlcnNvbWUuIEludHJvZHVjZSBhIHNpbXBs
+ZSBjb3B5IGJhc2VkCj4gQVBJIHRoYXQgbWFrZXMgdGhpbmdzIGNvbnNpZGVyYWJseSBlYXNpZXIu
+Cj4KPiBUbyB3aXQsIGFkZGluZyBhIHByb3BlcnR5IHVzaW5nIHRoZSByYXcgQVBJLgo+Cj4gICAg
+ICAgICBzdHJ1Y3QgcHJvcGVydHkgKnByb3A7Cj4gICAgICAgICBwcm9wID0ga3phbGxvYyhzaXpl
+b2YoKnByb3ApKSwgR0ZQX0tFUk5FTCk7Cj4gICAgICAgICBwcm9wLT5uYW1lID0ga3N0cmR1cCgi
+Y29tcGF0aWJsZSIpOwo+ICAgICAgICAgcHJvcC0+dmFsdWUgPSBrc3RyZHVwKCJmb28sYmFyIik7
+Cj4gICAgICAgICBwcm9wLT5sZW5ndGggPSBzdHJsZW4ocHJvcC0+dmFsdWUpICsgMTsKPiAgICAg
+ICAgIG9mX2NoYW5nZXNldF9hZGRfcHJvcGVydHkob2NzLCBucCwgcHJvcCk7Cj4KPiB3aGlsZSB1
+c2luZyB0aGUgaGVscGVyIEFQSQo+Cj4gICAgICAgICBvZl9jaGFuZ2VzZXRfYWRkX3Byb3BlcnR5
+X3N0cmluZyhvY3MsIG5wLCAiY29tcGF0aWJsZSIsCj4gICAgICAgICAgICAgICAgICAgICAgICAg
+ImZvbyxiYXIiKTsKPgo+IFNpZ25lZC1vZmYtYnk6IFBhbnRlbGlzIEFudG9uaW91IDxwYW50ZWxp
+cy5hbnRvbmlvdUBrb25zdWxrby5jb20+Cj4gW0ZpeGVkIG1lbW9yeSBsZWFrIGluIF9fb2ZfY2hh
+bmdlc2V0X2FkZF91cGRhdGVfcHJvcGVydHlfY29weSgpXQo+IFNpZ25lZC1vZmYtYnk6IExhdXJl
+bnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgoK
+WW91IG1pc3NlZCBvbmUgZml4IEkgaGF2ZSBpbiBteSB0b3BpYy9vdmVybGF5cyBicmFuY2gKaHR0
+cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvZ2VlcnQvcmVuZXNh
+cy1kcml2ZXJzLmdpdC9jb21taXQvP2g9dG9waWMvb3ZlcmxheXMmaWQ9MTUwZjk1YjlkZWM3N2Nl
+MzcxYzIyOWY3YWM0ZDZkZDg2MjBiZWY0YQoKPiAtLS0gYS9pbmNsdWRlL2xpbnV4L29mLmgKPiAr
+KysgYi9pbmNsdWRlL2xpbnV4L29mLmgKCj4gKy8qKgo+ICsgKiBvZl9jaGFuZ2VzZXRfYWRkX3By
+b3BlcnR5X3UzMiAtIENyZWF0ZSBhIG5ldyB1MzIgcHJvcGVydHkKPiArICoKPiArICogQG9jczog
+ICAgICAgY2hhbmdlc2V0IHBvaW50ZXIKPiArICogQG5wOiAgICAgICAgICAgICAgICBkZXZpY2Ug
+bm9kZSBwb2ludGVyCj4gKyAqIEBuYW1lOiAgICAgIG5hbWUgb2YgdGhlIHByb3BlcnR5Cj4gKyAq
+IEB2YWw6ICAgICAgIHZhbHVlIGluIGhvc3QgZW5kaWFuIGZvcm1hdAo+ICsgKgo+ICsgKiBBZGRz
+IGEgdTMyIHByb3BlcnR5IHRvIHRoZSBjaGFuZ2VzZXQuCj4gKyAqCj4gKyAqIFJldHVybnMgemVy
+byBvbiBzdWNjZXNzLCBhIG5lZ2F0aXZlIGVycm9yIHZhbHVlIG90aGVyd2lzZS4KPiArICovCj4g
+K3N0YXRpYyBpbmxpbmUgaW50IG9mX2NoYW5nZXNldF9hZGRfcHJvcGVydHlfdTMyKHN0cnVjdCBv
+Zl9jaGFuZ2VzZXQgKm9jcywKPiArICAgICAgICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpu
+cCwgY29uc3QgY2hhciAqbmFtZSwgdTMyIHZhbCkKPiArewo+ICsgICAgICAgdmFsID0gY3B1X3Rv
+X2JlMzIodmFsKTsKCllvdSBtdXN0IHVzZSBhbiBpbnRlcm1lZGlhdGUsIHRvIGF2b2lkIGNvbXBs
+YWludHMgZnJvbSBzcGFyc2U6CgogICAgX19iZTMyIHggPSBjcHVfdG9fYmUzMih2YWwpOwoKPiAr
+ICAgICAgIHJldHVybiBfX29mX2NoYW5nZXNldF9hZGRfdXBkYXRlX3Byb3BlcnR5X2NvcHkob2Nz
+LCBucCwgbmFtZSwgJnZhbCwKPiArICAgICAgICAgICAgICAgICAgICAgICBzaXplb2YodmFsKSwg
+ZmFsc2UpOwoKcy92YWwveC8KCj4gK30KPiArCj4gKy8qKgo+ICsgKiBvZl9jaGFuZ2VzZXRfdXBk
+YXRlX3Byb3BlcnR5X3UzMiAtIFVwZGF0ZSB1MzIgcHJvcGVydHkKPiArICoKPiArICogQG9jczog
+ICAgICAgY2hhbmdlc2V0IHBvaW50ZXIKPiArICogQG5wOiAgICAgICAgICAgICAgICBkZXZpY2Ug
+bm9kZSBwb2ludGVyCj4gKyAqIEBuYW1lOiAgICAgIG5hbWUgb2YgdGhlIHByb3BlcnR5Cj4gKyAq
+IEB2YWw6ICAgICAgIHZhbHVlIGluIGhvc3QgZW5kaWFuIGZvcm1hdAo+ICsgKgo+ICsgKiBVcGRh
+dGVzIGEgdTMyIHByb3BlcnR5IHRvIHRoZSBjaGFuZ2VzZXQuCj4gKyAqCj4gKyAqIFJldHVybnMg
+emVybyBvbiBzdWNjZXNzLCBhIG5lZ2F0aXZlIGVycm9yIHZhbHVlIG90aGVyd2lzZS4KPiArICov
+Cj4gK3N0YXRpYyBpbmxpbmUgaW50IG9mX2NoYW5nZXNldF91cGRhdGVfcHJvcGVydHlfdTMyKAo+
+ICsgICAgICAgc3RydWN0IG9mX2NoYW5nZXNldCAqb2NzLCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5w
+LAo+ICsgICAgICAgY29uc3QgY2hhciAqbmFtZSwgdTMyIHZhbCkKPiArewo+ICsgICAgICAgdmFs
+ID0gY3B1X3RvX2JlMzIodmFsKTsKCk9oLCBhIG5ldyBvbmUuCgo+ICsgICAgICAgcmV0dXJuIF9f
+b2ZfY2hhbmdlc2V0X2FkZF91cGRhdGVfcHJvcGVydHlfY29weShvY3MsIG5wLCBuYW1lLCAmdmFs
+LAo+ICsgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZih2YWwpLCB0cnVlKTsKPiArfQoKR3J7
+b2V0amUsZWV0aW5nfXMsCgogICAgICAgICAgICAgICAgICAgICAgICBHZWVydAoKLS0KR2VlcnQg
+VXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVy
+dEBsaW51eC1tNjhrLm9yZwoKSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNh
+bCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRv
+IGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRo
+YXQuCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
