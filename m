@@ -1,394 +1,199 @@
-Return-Path: <SRS0=mxgJ=FQ=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v11 10/10] arch: sh: migor: Use new renesas-ceu camera driver
-Date: Thu, 22 Feb 2018 11:37:26 +0100
-Message-Id: <1519295846-11612-11-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519295846-11612-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519295846-11612-1-git-send-email-jacopo+renesas@jmondi.org>
-To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=Zag9=FP=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:44934 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1750831AbeBUHpZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 21 Feb 2018 02:45:25 -0500
+From: Yossi Mansharoff <yossim@codeaurora.org>
+Subject: [PATCH 2/4] usb: chipidea: Hook into mux framework to toggle usb switch
+Date: Wed, 21 Feb 2018 09:44:59 +0200
+Message-Id: <1519199101-27065-2-git-send-email-yossim@codeaurora.org>
+In-Reply-To: <1519199101-27065-1-git-send-email-yossim@codeaurora.org>
+References: <1519199101-27065-1-git-send-email-yossim@codeaurora.org>
+Sender: devicetree-owner@vger.kernel.org
+To: dragonboard-aosp@lists.96boards.org
+Cc: Yossi Mansharoff <yossim@codeaurora.org>, Peter Rosin <peda@axentia.se>, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Migo-R platform uses sh_mobile_ceu camera driver, which is now being
-replaced by a proper V4L2 camera driver named 'renesas-ceu'.
+On the db410c 96boards platform we have a TC7USB40MU on the board
+to mux the D+/D- lines coming from the controller between a micro
+usb "device" port and a USB hub for "host" roles[1]. During a
+role switch, we need to toggle this mux to forward the D+/D-
+lines to either the port or the hub. Add the necessary code to do
+the role switch in chipidea core via the generic mux framework.
+Board configurations like on db410c are expected to change roles
+via the sysfs API described in
+Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
 
-Move Migo-R platform to use the v4l2 renesas-ceu camera driver
-interface and get rid of soc_camera defined components used to register
-sensor drivers and of platform specific enable/disable routines.
+[1] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
 
-Register clock source and GPIOs for sensor drivers, so they can use
-clock and gpio APIs.
+Cc: Peter Rosin <peda@axentia.se>
+Cc: Peter Chen <peter.chen@nxp.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
 
-Also, memory for CEU video buffers is now reserved with membocks APIs,
-and need to be declared as dma_coherent during machine initialization to
-remove that architecture specific part from CEU driver.
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Yossi Mansharoff <yossim@codeaurora.org>
 ---
- arch/sh/boards/mach-migor/setup.c      | 225 +++++++++++++++------------------
- arch/sh/kernel/cpu/sh4a/clock-sh7722.c |   2 +-
- 2 files changed, 101 insertions(+), 126 deletions(-)
+ Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt |  6 ++++++
+ drivers/usb/chipidea/Kconfig                           |  2 ++
+ drivers/usb/chipidea/core.c                            |  6 ++++++
+ drivers/usb/chipidea/host.c                            |  7 +++++++
+ drivers/usb/chipidea/udc.c                             | 13 ++++++++++++-
+ include/linux/usb/chipidea.h                           |  2 ++
+ 6 files changed, 35 insertions(+), 1 deletion(-)
 
-diff --git a/arch/sh/boards/mach-migor/setup.c b/arch/sh/boards/mach-migor/setup.c
-index 0bcbe58..271dfc2 100644
---- a/arch/sh/boards/mach-migor/setup.c
-+++ b/arch/sh/boards/mach-migor/setup.c
-@@ -1,17 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Renesas System Solutions Asia Pte. Ltd - Migo-R
-  *
-  * Copyright (C) 2008 Magnus Damm
-- *
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
-  */
-+#include <linux/clkdev.h>
- #include <linux/init.h>
- #include <linux/platform_device.h>
- #include <linux/interrupt.h>
- #include <linux/input.h>
- #include <linux/input/sh_keysc.h>
-+#include <linux/memblock.h>
- #include <linux/mmc/host.h>
- #include <linux/mtd/physmap.h>
- #include <linux/mfd/tmio.h>
-@@ -23,10 +22,11 @@
- #include <linux/delay.h>
- #include <linux/clk.h>
- #include <linux/gpio.h>
-+#include <linux/gpio/machine.h>
- #include <linux/videodev2.h>
- #include <linux/sh_intc.h>
- #include <video/sh_mobile_lcdc.h>
--#include <media/drv-intf/sh_mobile_ceu.h>
-+#include <media/drv-intf/renesas-ceu.h>
- #include <media/i2c/ov772x.h>
- #include <media/soc_camera.h>
- #include <media/i2c/tw9910.h>
-@@ -45,6 +45,9 @@
-  * 0x18000000       8GB    8   NAND Flash (K9K8G08U0A)
-  */
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index 0e03344..2e93181 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -76,6 +76,10 @@ Optional properties:
+   needs to make sure it does not send more than 90%
+   maximum_periodic_data_per_frame. The use case is multiple transactions, but
+   less frame rate.
++- mux-controls: The mux control for toggling host/device output of this
++  controller. It's expected that a mux state of 0 indicates device mode and a
++  mux state of 1 indicates host mode.
++- mux-control-names: Shall be "usb_switch" if mux-controls is specified.
  
-+#define CEU_BUFFER_MEMORY_SIZE		(4 << 20)
-+static phys_addr_t ceu_dma_membase;
-+
- static struct smc91x_platdata smc91x_info = {
- 	.flags = SMC91X_USE_16BIT | SMC91X_NOWAIT,
- };
-@@ -301,65 +304,24 @@ static struct platform_device migor_lcdc_device = {
- 	},
- };
+ i.mx specific properties
+ - fsl,usbmisc: phandler of non-core register device, with one
+@@ -102,4 +106,6 @@ Example:
+ 		rx-burst-size-dword = <0x10>;
+ 		extcon = <0>, <&usb_id>;
+ 		phy-clkgate-delay-us = <400>;
++		mux-controls = <&usb_switch>;
++		mux-control-names = "usb_switch";
+ 	};
+diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
+index 51f4157..72aadfa 100644
+--- a/drivers/usb/chipidea/Kconfig
++++ b/drivers/usb/chipidea/Kconfig
+@@ -3,6 +3,8 @@ config USB_CHIPIDEA
+ 	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
+ 	select EXTCON
+ 	select RESET_CONTROLLER
++	select MULTIPLEXER
++	select MUX_GPIO
+ 	help
+ 	  Say Y here if your system has a dual role high speed USB
+ 	  controller based on ChipIdea silicon IP. It supports:
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index 43ea5fb..aa71b96 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -64,6 +64,7 @@
+ #include <linux/of.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/usb/ehci_def.h>
++#include <linux/mux/consumer.h>
  
--static struct clk *camera_clk;
--static DEFINE_MUTEX(camera_lock);
--
--static void camera_power_on(int is_tw)
--{
--	mutex_lock(&camera_lock);
--
--	/* Use 10 MHz VIO_CKO instead of 24 MHz to work
--	 * around signal quality issues on Panel Board V2.1.
--	 */
--	camera_clk = clk_get(NULL, "video_clk");
--	clk_set_rate(camera_clk, 10000000);
--	clk_enable(camera_clk);	/* start VIO_CKO */
--
--	/* use VIO_RST to take camera out of reset */
--	mdelay(10);
--	if (is_tw) {
--		gpio_set_value(GPIO_PTT2, 0);
--		gpio_set_value(GPIO_PTT0, 0);
--	} else {
--		gpio_set_value(GPIO_PTT0, 1);
--	}
--	gpio_set_value(GPIO_PTT3, 0);
--	mdelay(10);
--	gpio_set_value(GPIO_PTT3, 1);
--	mdelay(10); /* wait to let chip come out of reset */
--}
--
--static void camera_power_off(void)
--{
--	clk_disable(camera_clk); /* stop VIO_CKO */
--	clk_put(camera_clk);
--
--	gpio_set_value(GPIO_PTT3, 0);
--	mutex_unlock(&camera_lock);
--}
--
--static int ov7725_power(struct device *dev, int mode)
--{
--	if (mode)
--		camera_power_on(0);
--	else
--		camera_power_off();
--
--	return 0;
--}
--
--static int tw9910_power(struct device *dev, int mode)
--{
--	if (mode)
--		camera_power_on(1);
--	else
--		camera_power_off();
--
--	return 0;
--}
--
--static struct sh_mobile_ceu_info sh_mobile_ceu_info = {
--	.flags = SH_CEU_FLAG_USE_8BIT_BUS,
-+static struct ceu_platform_data ceu_pdata = {
-+	.num_subdevs			= 2,
-+	.subdevs = {
-+		{ /* [0] = ov772x */
-+			.flags		= 0,
-+			.bus_width	= 8,
-+			.bus_shift	= 0,
-+			.i2c_adapter_id	= 0,
-+			.i2c_address	= 0x21,
-+		},
-+		{ /* [1] = tw9910 */
-+			.flags		= 0,
-+			.bus_width	= 8,
-+			.bus_shift	= 0,
-+			.i2c_adapter_id	= 0,
-+			.i2c_address	= 0x45,
-+		},
-+	},
- };
+ #include "ci.h"
+ #include "udc.h"
+@@ -690,6 +691,11 @@ static int ci_get_platdata(struct device *dev,
+ 	if (of_find_property(dev->of_node, "non-zero-ttctrl-ttha", NULL))
+ 		platdata->flags |= CI_HDRC_SET_NON_ZERO_TTHA;
  
- static struct resource migor_ceu_resources[] = {
-@@ -373,18 +335,32 @@ static struct resource migor_ceu_resources[] = {
- 		.start  = evt2irq(0x880),
- 		.flags  = IORESOURCE_IRQ,
- 	},
--	[2] = {
--		/* place holder for contiguous memory */
--	},
- };
- 
- static struct platform_device migor_ceu_device = {
--	.name		= "sh_mobile_ceu",
--	.id             = 0, /* "ceu0" clock */
-+	.name		= "renesas-ceu",
-+	.id             = 0, /* ceu.0 */
- 	.num_resources	= ARRAY_SIZE(migor_ceu_resources),
- 	.resource	= migor_ceu_resources,
- 	.dev	= {
--		.platform_data	= &sh_mobile_ceu_info,
-+		.platform_data	= &ceu_pdata,
-+	},
-+};
-+
-+/* Powerdown/reset gpios for CEU image sensors */
-+static struct gpiod_lookup_table ov7725_gpios = {
-+	.dev_id		= "0-0021",
-+	.table		= {
-+		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT0, "pwdn", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT3, "rstb", GPIO_ACTIVE_LOW),
-+	},
-+};
-+
-+static struct gpiod_lookup_table tw9910_gpios = {
-+	.dev_id		= "0-0045",
-+	.table		= {
-+		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT2, "pdn", GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP("sh7722_pfc", GPIO_PTT3, "rstb", GPIO_ACTIVE_LOW),
- 	},
- };
- 
-@@ -423,6 +399,15 @@ static struct platform_device sdhi_cn9_device = {
- 	},
- };
- 
-+static struct ov772x_camera_info ov7725_info = {
-+	.flags		= 0,
-+};
-+
-+static struct tw9910_video_info tw9910_info = {
-+	.buswidth       = 8,
-+	.mpout          = TW9910_MPO_FIELD,
-+};
-+
- static struct i2c_board_info migor_i2c_devices[] = {
- 	{
- 		I2C_BOARD_INFO("rs5c372b", 0x32),
-@@ -434,51 +419,13 @@ static struct i2c_board_info migor_i2c_devices[] = {
- 	{
- 		I2C_BOARD_INFO("wm8978", 0x1a),
- 	},
--};
--
--static struct i2c_board_info migor_i2c_camera[] = {
- 	{
- 		I2C_BOARD_INFO("ov772x", 0x21),
-+		.platform_data = &ov7725_info,
- 	},
- 	{
- 		I2C_BOARD_INFO("tw9910", 0x45),
--	},
--};
--
--static struct ov772x_camera_info ov7725_info;
--
--static struct soc_camera_link ov7725_link = {
--	.power		= ov7725_power,
--	.board_info	= &migor_i2c_camera[0],
--	.i2c_adapter_id	= 0,
--	.priv		= &ov7725_info,
--};
--
--static struct tw9910_video_info tw9910_info = {
--	.buswidth	= SOCAM_DATAWIDTH_8,
--	.mpout		= TW9910_MPO_FIELD,
--};
--
--static struct soc_camera_link tw9910_link = {
--	.power		= tw9910_power,
--	.board_info	= &migor_i2c_camera[1],
--	.i2c_adapter_id	= 0,
--	.priv		= &tw9910_info,
--};
--
--static struct platform_device migor_camera[] = {
--	{
--		.name	= "soc-camera-pdrv",
--		.id	= 0,
--		.dev	= {
--			.platform_data = &ov7725_link,
--		},
--	}, {
--		.name	= "soc-camera-pdrv",
--		.id	= 1,
--		.dev	= {
--			.platform_data = &tw9910_link,
--		},
-+		.platform_data = &tw9910_info,
- 	},
- };
- 
-@@ -486,12 +433,9 @@ static struct platform_device *migor_devices[] __initdata = {
- 	&smc91x_eth_device,
- 	&sh_keysc_device,
- 	&migor_lcdc_device,
--	&migor_ceu_device,
- 	&migor_nor_flash_device,
- 	&migor_nand_flash_device,
- 	&sdhi_cn9_device,
--	&migor_camera[0],
--	&migor_camera[1],
- };
- 
- extern char migor_sdram_enter_start;
-@@ -501,6 +445,8 @@ extern char migor_sdram_leave_end;
- 
- static int __init migor_devices_setup(void)
- {
-+	struct clk *video_clk;
-+
- 	/* register board specific self-refresh code */
- 	sh_mobile_register_self_refresh(SUSP_SH_STANDBY | SUSP_SH_SF,
- 					&migor_sdram_enter_start,
-@@ -620,20 +566,8 @@ static int __init migor_devices_setup(void)
- 	gpio_request(GPIO_FN_VIO_D9, NULL);
- 	gpio_request(GPIO_FN_VIO_D8, NULL);
- 
--	gpio_request(GPIO_PTT3, NULL); /* VIO_RST */
--	gpio_direction_output(GPIO_PTT3, 0);
--	gpio_request(GPIO_PTT2, NULL); /* TV_IN_EN */
--	gpio_direction_output(GPIO_PTT2, 1);
--	gpio_request(GPIO_PTT0, NULL); /* CAM_EN */
--#ifdef CONFIG_SH_MIGOR_RTA_WVGA
--	gpio_direction_output(GPIO_PTT0, 0);
--#else
--	gpio_direction_output(GPIO_PTT0, 1);
--#endif
- 	__raw_writew(__raw_readw(PORT_MSELCRB) | 0x2000, PORT_MSELCRB); /* D15->D8 */
- 
--	platform_resource_setup_memory(&migor_ceu_device, "ceu", 4 << 20);
--
- 	/* SIU: Port B */
- 	gpio_request(GPIO_FN_SIUBOLR, NULL);
- 	gpio_request(GPIO_FN_SIUBOBT, NULL);
-@@ -647,9 +581,36 @@ static int __init migor_devices_setup(void)
- 	 */
- 	__raw_writew(__raw_readw(PORT_MSELCRA) | 1, PORT_MSELCRA);
- 
-+	 /*
-+	  * Use 10 MHz VIO_CKO instead of 24 MHz to work around signal quality
-+	  * issues on Panel Board V2.1.
-+	  */
-+	video_clk = clk_get(NULL, "video_clk");
-+	if (!IS_ERR(video_clk)) {
-+		clk_set_rate(video_clk, clk_round_rate(video_clk, 10000000));
-+		clk_put(video_clk);
++	platdata->usb_switch = devm_mux_control_get_optional(dev, "usb_switch");
++	if (IS_ERR(platdata->usb_switch)){
++		return PTR_ERR(platdata->usb_switch);
 +	}
 +
-+	/* Add a clock alias for ov7725 xclk source. */
-+	clk_add_alias("xclk", "0-0021", "video_clk", NULL);
-+
-+	/* Register GPIOs for video sources. */
-+	gpiod_add_lookup_table(&ov7725_gpios);
-+	gpiod_add_lookup_table(&tw9910_gpios);
-+
- 	i2c_register_board_info(0, migor_i2c_devices,
- 				ARRAY_SIZE(migor_i2c_devices));
+ 	ext_id = ERR_PTR(-ENODEV);
+ 	ext_vbus = ERR_PTR(-ENODEV);
+ 	if (of_property_read_bool(dev->of_node, "extcon")) {
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index 18cb8e4..9ef3ecf 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -25,6 +25,7 @@
+ #include <linux/usb/hcd.h>
+ #include <linux/usb/chipidea.h>
+ #include <linux/regulator/consumer.h>
++#include <linux/mux/consumer.h>
  
-+	/* Initialize CEU platform device separately to map memory first */
-+	device_initialize(&migor_ceu_device.dev);
-+	arch_setup_pdev_archdata(&migor_ceu_device);
-+	dma_declare_coherent_memory(&migor_ceu_device.dev,
-+				    ceu_dma_membase, ceu_dma_membase,
-+				    ceu_dma_membase + CEU_BUFFER_MEMORY_SIZE - 1,
-+				    DMA_MEMORY_EXCLUSIVE);
+ #include "../host/ehci.h"
+ 
+@@ -175,6 +176,10 @@ static int host_start(struct ci_hdrc *ci)
+ 		if (ci_otg_is_fsm_mode(ci)) {
+ 			otg->host = &hcd->self;
+ 			hcd->self.otg_port = 1;
++		} else {
++			ret = mux_control_select(ci->platdata->usb_switch, 1);
++			if (ret)
++				goto disable_reg;
+ 		}
+ 	}
+ 
+@@ -195,6 +200,8 @@ static void host_stop(struct ci_hdrc *ci)
+ 	struct usb_hcd *hcd = ci->hcd;
+ 
+ 	if (hcd) {
++		if (!ci_otg_is_fsm_mode(ci))
++			mux_control_deselect(ci->platdata->usb_switch);
+ 		if (ci->platdata->notify_event)
+ 			ci->platdata->notify_event(ci,
+ 				CI_HDRC_CONTROLLER_STOPPED_EVENT);
+diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+index fe8a905..17f22e2 100644
+--- a/drivers/usb/chipidea/udc.c
++++ b/drivers/usb/chipidea/udc.c
+@@ -22,6 +22,7 @@
+ #include <linux/usb/gadget.h>
+ #include <linux/usb/otg-fsm.h>
+ #include <linux/usb/chipidea.h>
++#include <linux/mux/consumer.h>
+ 
+ #include "ci.h"
+ #include "udc.h"
+@@ -1964,16 +1965,26 @@ void ci_hdrc_gadget_destroy(struct ci_hdrc *ci)
+ 
+ static int udc_id_switch_for_device(struct ci_hdrc *ci)
+ {
++	int ret = 0;
 +
-+	platform_device_add(&migor_ceu_device);
+ 	if (ci->is_otg)
+ 		/* Clear and enable BSV irq */
+ 		hw_write_otgsc(ci, OTGSC_BSVIS | OTGSC_BSVIE,
+ 					OTGSC_BSVIS | OTGSC_BSVIE);
+ 
+-	return 0;
++	if (!ci_otg_is_fsm_mode(ci))
++		ret = mux_control_select(ci->platdata->usb_switch, 0);
 +
- 	return platform_add_devices(migor_devices, ARRAY_SIZE(migor_devices));
- }
- arch_initcall(migor_devices_setup);
-@@ -665,10 +626,24 @@ static int migor_mode_pins(void)
- 	return MODE_PIN0 | MODE_PIN1 | MODE_PIN5;
++	if (ci->is_otg && ret)
++		hw_write_otgsc(ci, OTGSC_BSVIE | OTGSC_BSVIS, OTGSC_BSVIS);
++
++	return ret;
  }
  
-+/* Reserve a portion of memory for CEU buffers */
-+static void __init migor_mv_mem_reserve(void)
-+{
-+	phys_addr_t phys;
-+	phys_addr_t size = CEU_BUFFER_MEMORY_SIZE;
+ static void udc_id_switch_for_host(struct ci_hdrc *ci)
+ {
++	mux_control_deselect(ci->platdata->usb_switch);
 +
-+	phys = memblock_alloc_base(size, PAGE_SIZE, MEMBLOCK_ALLOC_ANYWHERE);
-+	memblock_free(phys, size);
-+	memblock_remove(phys, size);
-+
-+	ceu_dma_membase = phys;
-+}
-+
- /*
-  * The Machine Vector
-  */
- static struct sh_machine_vector mv_migor __initmv = {
- 	.mv_name		= "Migo-R",
- 	.mv_mode_pins		= migor_mode_pins,
-+	.mv_mem_reserve		= migor_mv_mem_reserve,
+ 	/*
+ 	 * host doesn't care B_SESSION_VALID event
+ 	 * so clear and disbale BSV irq
+diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+index d725cff..7e5d008 100644
+--- a/include/linux/usb/chipidea.h
++++ b/include/linux/usb/chipidea.h
+@@ -9,6 +9,7 @@
+ #include <linux/usb/otg.h>
+ 
+ struct ci_hdrc;
++struct mux_control;
+ 
+ /**
+  * struct ci_hdrc_cable - structure for external connector cable state tracking
+@@ -75,6 +76,7 @@ struct ci_hdrc_platform_data {
+ 	/* VBUS and ID signal state tracking, using extcon framework */
+ 	struct ci_hdrc_cable		vbus_extcon;
+ 	struct ci_hdrc_cable		id_extcon;
++	struct mux_control		*usb_switch;
+ 	u32			phy_clkgate_delay_us;
  };
-diff --git a/arch/sh/kernel/cpu/sh4a/clock-sh7722.c b/arch/sh/kernel/cpu/sh4a/clock-sh7722.c
-index 8f07a1a..d85091e 100644
---- a/arch/sh/kernel/cpu/sh4a/clock-sh7722.c
-+++ b/arch/sh/kernel/cpu/sh4a/clock-sh7722.c
-@@ -223,7 +223,7 @@ static struct clk_lookup lookups[] = {
- 	CLKDEV_DEV_ID("sh-vou.0", &mstp_clks[HWBLK_VOU]),
- 	CLKDEV_CON_ID("jpu0", &mstp_clks[HWBLK_JPU]),
- 	CLKDEV_CON_ID("beu0", &mstp_clks[HWBLK_BEU]),
--	CLKDEV_DEV_ID("sh_mobile_ceu.0", &mstp_clks[HWBLK_CEU]),
-+	CLKDEV_DEV_ID("renesas-ceu.0", &mstp_clks[HWBLK_CEU]),
- 	CLKDEV_CON_ID("veu0", &mstp_clks[HWBLK_VEU]),
- 	CLKDEV_CON_ID("vpu0", &mstp_clks[HWBLK_VPU]),
- 	CLKDEV_DEV_ID("sh_mobile_lcdc_fb.0", &mstp_clks[HWBLK_LCDC]),
+ 
 -- 
-2.7.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
