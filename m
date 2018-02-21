@@ -1,83 +1,105 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 04/16] of: changesets: Introduce changeset helper
- methods
-Date: Wed, 21 Feb 2018 14:19:02 +0200
-Message-ID: <2176862.3cxL0kyTvc@avalon>
-References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180220231046.32638-5-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdVJfKXWNFaN259JQ1bOVZQSbC-=u4Kmys2PE+HLa=xQKw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: support ROHM BD28623 codec
+Date: Wed, 21 Feb 2018 12:26:39 +0000
+Message-ID: <20180221122639.GH8334@sirena.org.uk>
+References: <20180221043311.25840-1-suzuki.katsuhiro@socionext.com>
+ <20180221043311.25840-3-suzuki.katsuhiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAMuHMdVJfKXWNFaN259JQ1bOVZQSbC-=u4Kmys2PE+HLa=xQKw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marek Vasut <marex@denx.de>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: multipart/mixed; boundary="===============2658973806587407352=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180221043311.25840-3-suzuki.katsuhiro@socionext.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsCgpPbiBXZWRuZXNkYXksIDIxIEZlYnJ1YXJ5IDIwMTggMTI6MjE6NTAgRUVUIEdl
-ZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToKPiBPbiBXZWQsIEZlYiAyMSwgMjAxOCBhdCAxMjoxMCBB
-TSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiA+IEZyb206IFBhbnRlbGlzIEFudG9uaW91IDxw
-YW50ZWxpcy5hbnRvbmlvdUBrb25zdWxrby5jb20+Cj4gPiAKPiA+IENoYW5nZXNldHMgYXJlIHZl
-cnkgcG93ZXJmdWwsIGJ1dCB0aGUgbGFjayBvZiBhIGhlbHBlciBBUEkKPiA+IG1ha2VzIHVzaW5n
-IHRoZW0gY3VtYmVyc29tZS4gSW50cm9kdWNlIGEgc2ltcGxlIGNvcHkgYmFzZWQKPiA+IEFQSSB0
-aGF0IG1ha2VzIHRoaW5ncyBjb25zaWRlcmFibHkgZWFzaWVyLgo+ID4gCj4gPiBUbyB3aXQsIGFk
-ZGluZyBhIHByb3BlcnR5IHVzaW5nIHRoZSByYXcgQVBJLgo+ID4gCj4gPiAgICAgICAgIHN0cnVj
-dCBwcm9wZXJ0eSAqcHJvcDsKPiA+ICAgICAgICAgcHJvcCA9IGt6YWxsb2Moc2l6ZW9mKCpwcm9w
-KSksIEdGUF9LRVJORUwpOwo+ID4gICAgICAgICBwcm9wLT5uYW1lID0ga3N0cmR1cCgiY29tcGF0
-aWJsZSIpOwo+ID4gICAgICAgICBwcm9wLT52YWx1ZSA9IGtzdHJkdXAoImZvbyxiYXIiKTsKPiA+
-ICAgICAgICAgcHJvcC0+bGVuZ3RoID0gc3RybGVuKHByb3AtPnZhbHVlKSArIDE7Cj4gPiAgICAg
-ICAgIG9mX2NoYW5nZXNldF9hZGRfcHJvcGVydHkob2NzLCBucCwgcHJvcCk7Cj4gPiAKPiA+IHdo
-aWxlIHVzaW5nIHRoZSBoZWxwZXIgQVBJCj4gPiAKPiA+ICAgICAgICAgb2ZfY2hhbmdlc2V0X2Fk
-ZF9wcm9wZXJ0eV9zdHJpbmcob2NzLCBucCwgImNvbXBhdGlibGUiLAo+ID4gICAgICAgICAKPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgICJmb28sYmFyIik7Cj4gPiAKPiA+IFNpZ25lZC1vZmYt
-Ynk6IFBhbnRlbGlzIEFudG9uaW91IDxwYW50ZWxpcy5hbnRvbmlvdUBrb25zdWxrby5jb20+Cj4g
-PiBbRml4ZWQgbWVtb3J5IGxlYWsgaW4gX19vZl9jaGFuZ2VzZXRfYWRkX3VwZGF0ZV9wcm9wZXJ0
-eV9jb3B5KCldCj4gPiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0Cj4gPiA8bGF1cmVu
-dC5waW5jaGFydCtyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+Cj4gCj4gWW91IG1pc3NlZCBvbmUg
-Zml4IEkgaGF2ZSBpbiBteSB0b3BpYy9vdmVybGF5cyBicmFuY2gKPiBodHRwczovL2dpdC5rZXJu
-ZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9nZWVydC9yZW5lc2FzLWRyaXZlcnMuZ2l0
-L2NvCj4gbW1pdC8/aD10b3BpYy9vdmVybGF5cyZpZD0xNTBmOTViOWRlYzc3Y2UzNzFjMjI5Zjdh
-YzRkNmRkODYyMGJlZjRhCj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L29mLmgKPiA+ICsrKyBiL2lu
-Y2x1ZGUvbGludXgvb2YuaAo+ID4gCj4gPiArLyoqCj4gPiArICogb2ZfY2hhbmdlc2V0X2FkZF9w
-cm9wZXJ0eV91MzIgLSBDcmVhdGUgYSBuZXcgdTMyIHByb3BlcnR5Cj4gPiArICoKPiA+ICsgKiBA
-b2NzOiAgICAgICBjaGFuZ2VzZXQgcG9pbnRlcgo+ID4gKyAqIEBucDogICAgICAgICAgICAgICAg
-ZGV2aWNlIG5vZGUgcG9pbnRlcgo+ID4gKyAqIEBuYW1lOiAgICAgIG5hbWUgb2YgdGhlIHByb3Bl
-cnR5Cj4gPiArICogQHZhbDogICAgICAgdmFsdWUgaW4gaG9zdCBlbmRpYW4gZm9ybWF0Cj4gPiAr
-ICoKPiA+ICsgKiBBZGRzIGEgdTMyIHByb3BlcnR5IHRvIHRoZSBjaGFuZ2VzZXQuCj4gPiArICoK
-PiA+ICsgKiBSZXR1cm5zIHplcm8gb24gc3VjY2VzcywgYSBuZWdhdGl2ZSBlcnJvciB2YWx1ZSBv
-dGhlcndpc2UuCj4gPiArICovCj4gPiArc3RhdGljIGlubGluZSBpbnQgb2ZfY2hhbmdlc2V0X2Fk
-ZF9wcm9wZXJ0eV91MzIoc3RydWN0IG9mX2NoYW5nZXNldCAqb2NzLAo+ID4gKyAgICAgICAgICAg
-ICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIGNvbnN0IGNoYXIgKm5hbWUsIHUzMiB2YWwpCj4g
-PiArewo+ID4gKyAgICAgICB2YWwgPSBjcHVfdG9fYmUzMih2YWwpOwo+IAo+IFlvdSBtdXN0IHVz
-ZSBhbiBpbnRlcm1lZGlhdGUsIHRvIGF2b2lkIGNvbXBsYWludHMgZnJvbSBzcGFyc2U6Cj4gCj4g
-ICAgIF9fYmUzMiB4ID0gY3B1X3RvX2JlMzIodmFsKTsKPiAKPiA+ICsgICAgICAgcmV0dXJuIF9f
-b2ZfY2hhbmdlc2V0X2FkZF91cGRhdGVfcHJvcGVydHlfY29weShvY3MsIG5wLCBuYW1lLAo+ID4g
-JnZhbCwKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZih2YWwpLCBmYWxzZSk7Cj4g
-Cj4gcy92YWwveC8KCkknbGwgZml4IGJvdGggaW4gdGhlIG5leHQgdmVyc2lvbiwgdGhhbmtzLgoK
-PiA+ICt9Cj4gPiArCj4gPiArLyoqCj4gPiArICogb2ZfY2hhbmdlc2V0X3VwZGF0ZV9wcm9wZXJ0
-eV91MzIgLSBVcGRhdGUgdTMyIHByb3BlcnR5Cj4gPiArICoKPiA+ICsgKiBAb2NzOiAgICAgICBj
-aGFuZ2VzZXQgcG9pbnRlcgo+ID4gKyAqIEBucDogICAgICAgICAgICAgICAgZGV2aWNlIG5vZGUg
-cG9pbnRlcgo+ID4gKyAqIEBuYW1lOiAgICAgIG5hbWUgb2YgdGhlIHByb3BlcnR5Cj4gPiArICog
-QHZhbDogICAgICAgdmFsdWUgaW4gaG9zdCBlbmRpYW4gZm9ybWF0Cj4gPiArICoKPiA+ICsgKiBV
-cGRhdGVzIGEgdTMyIHByb3BlcnR5IHRvIHRoZSBjaGFuZ2VzZXQuCj4gPiArICoKPiA+ICsgKiBS
-ZXR1cm5zIHplcm8gb24gc3VjY2VzcywgYSBuZWdhdGl2ZSBlcnJvciB2YWx1ZSBvdGhlcndpc2Uu
-Cj4gPiArICovCj4gPiArc3RhdGljIGlubGluZSBpbnQgb2ZfY2hhbmdlc2V0X3VwZGF0ZV9wcm9w
-ZXJ0eV91MzIoCj4gPiArICAgICAgIHN0cnVjdCBvZl9jaGFuZ2VzZXQgKm9jcywgc3RydWN0IGRl
-dmljZV9ub2RlICpucCwKPiA+ICsgICAgICAgY29uc3QgY2hhciAqbmFtZSwgdTMyIHZhbCkKPiA+
-ICt7Cj4gPiArICAgICAgIHZhbCA9IGNwdV90b19iZTMyKHZhbCk7Cj4gCj4gT2gsIGEgbmV3IG9u
-ZS4KPiAKPiA+ICsgICAgICAgcmV0dXJuIF9fb2ZfY2hhbmdlc2V0X2FkZF91cGRhdGVfcHJvcGVy
-dHlfY29weShvY3MsIG5wLCBuYW1lLAo+ID4gJnZhbCwKPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIHNpemVvZih2YWwpLCB0cnVlKTsKPiA+ICt9CgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGlu
-Y2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--===============2658973806587407352==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="D6IIOQQv2Iwyp54J"
+Content-Disposition: inline
+
+
+--D6IIOQQv2Iwyp54J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Feb 21, 2018 at 01:33:11PM +0900, Katsuhiro Suzuki wrote:
+
+> +++ b/sound/soc/codecs/bd28623.c
+> @@ -0,0 +1,258 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ROHM BD28623MUV class D speaker amplifier codec driver.
+> + *
+
+Please make the entire comment C++ so this looks intentional.
+
+> +		dev_err(dev, "Failed to enable supplies: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	gpiod_set_value(bd->reset_gpio, 0);
+
+Since this GPIO is not needed in atomic contexts you should use the
+_cansleep() versions of the GPIO functions - it doesn't cost you
+anything and means that if for some reason someone wired this up to a
+GPIO that can't be used in atomic context the driver will just work.
+
+> +	bd->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+> +						 GPIOD_OUT_HIGH);
+
+> +	bd->mute_gpio = devm_gpiod_get_optional(dev, "mute",
+> +						GPIOD_OUT_HIGH);
+
+These properties were documented as mandatory in the binding but are
+optional here.  It's fine that they're optional but I'd expect the
+binding to be consistent with this.
+
+> +static int bd28623_remove(struct platform_device *pdev)
+> +{
+> +	struct bd28623_priv *bd = platform_get_drvdata(pdev);
+> +
+> +	regulator_bulk_disable(ARRAY_SIZE(bd->supplies), bd->supplies);
+> +
+> +	return 0;
+> +}
+
+We don't enable the supplies explicitly as part of the probe function so
+it feels wrong to disable on remove() - I'm sure it is fine in practice
+as-is but I'd have to think too hard to confirm that.  I'd put this in a
+component level remove function instead so that it's consistent.
+
+--D6IIOQQv2Iwyp54J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqNZX8ACgkQJNaLcl1U
+h9DNAQf9FMSYO+XzOf0FlGdUNepbhpojEFe1cMVQrWpLcByW145hU9fzr1zi6Bj4
+A2orZHrJcODhcCmwqVJ3UX0mlKlYuDKN+DfQ2QXGIg3Hic3FXEBN9XySXB3eto5d
+rwpyHRJBNTZUC7R81N9Bg2zYqhcQjynZu1smSas4iBCTlAGZK3J/Ukwhz3ycL/fr
+YU7P0QjjqH9Z3eLHrk7WVuIYLDjH7n/BbiZfKVFX/4c9Rhu3o7o5iYEHYSGnFfnx
+PaPnLnkgFd8inLLG6WcujCQqN1RGw8ZACSLRNB9MRDsqIlEkuGSmc+rliW190zYI
+IaPz4u38Uz6EF/CWa8XjNYJltC73Ww==
+=UtZM
+-----END PGP SIGNATURE-----
+
+--D6IIOQQv2Iwyp54J--
+
+--===============2658973806587407352==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2658973806587407352==--
