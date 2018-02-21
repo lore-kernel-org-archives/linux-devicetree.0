@@ -1,65 +1,47 @@
-Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-db5eur01on0078.outbound.protection.outlook.com ([104.47.2.78]:29115
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752909AbeBZMFK (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Feb 2018 07:05:10 -0500
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v2 07/12] staging: typec: tcpci: correct drp toggling
-Date: Mon, 26 Feb 2018 19:49:14 +0800
-Message-Id: <1519645759-12701-8-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
-References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=V8pR=FP=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+Sender: geert.uytterhoeven@gmail.com
+In-Reply-To: <CAMuHMdXm97QFTC8VYDoByHsXaG5BQqFdhwqMTuGVRKDe-oh8EQ@mail.gmail.com>
+References: <1518539815-13774-1-git-send-email-geert+renesas@glider.be>
+ <1518539815-13774-2-git-send-email-geert+renesas@glider.be>
+ <2fe86be6-a3e2-9bd6-1d72-63cf0fe3a731@redhat.com> <CAMuHMdXm97QFTC8VYDoByHsXaG5BQqFdhwqMTuGVRKDe-oh8EQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 21 Feb 2018 17:07:14 +0100
+Message-ID: <CAMuHMdVkTy=TELjG0Jh7HMDe5075EHSebpNUWqBDt+6ik_Aixw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] vfio: platform: Fix reset module leak in error path
+Content-Type: text/plain; charset="UTF-8"
+To: Auger Eric <eric.auger@redhat.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Per tcpci spec 4.4.5.2 ROLE_CONTROL description: "the TCPM shall
-write B6 (DRP) =1b and the starting value of Rp/Rd to B3..0 (CC1/CC2)
-to indicate DRP autonomous toggling mode to the TCPC", so add CC1/CC2
-setting, also we should issue COMMAND.Look4Connection to start it.
+Hi Eric,
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
- drivers/staging/typec/tcpci.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+On Wed, Feb 14, 2018 at 10:32 AM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Wed, Feb 14, 2018 at 9:36 AM, Auger Eric <eric.auger@redhat.com> wrote:
+>> If I am not wrong we also leak the reset_module if
+>> vfio_platform_get_reset() fails to find the reset function (of_reset ==
+>> NULL), in which case we should do the module_put() in
+>> vfio_platform_get_reset().
+>
+> Correct. Will look into fixing it...
 
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 953fc97..530a5d7 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -109,6 +109,7 @@ static int tcpci_start_drp_toggling(struct tcpc_dev *tcpc,
- {
- 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
- 	unsigned int reg = TCPC_ROLE_CTRL_DRP;
-+	int ret;
- 
- 	switch (cc) {
- 	default:
-@@ -126,7 +127,19 @@ static int tcpci_start_drp_toggling(struct tcpc_dev *tcpc,
- 		break;
- 	}
- 
--	return regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
-+	if (cc == TYPEC_CC_RD)
-+		reg |= (TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT) |
-+			(TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT);
-+	else
-+		reg |= (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
-+			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT);
-+
-+	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	return regmap_write(tcpci->regmap, TCPC_COMMAND,
-+				TCPC_CMD_LOOK4CONNECTION);
- }
- 
- static enum typec_cc_status tcpci_to_typec_cc(unsigned int cc, bool sink)
--- 
-2.7.4
+Upon second look, I don't think there's a leak in vfio_platform_get_reset().
 
+If try_module_get() succeeded, there will always be a valid reset function
+(unless someone registered a vfio_reset_handler with a NULL reset function).
+
+Or do you mean the call to request_module()?
+That one doesn't do a module_get(), it merely tries to load a module.
+Hence there's no need to do a module_put() afterwards.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
