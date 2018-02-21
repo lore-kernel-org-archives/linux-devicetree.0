@@ -1,14 +1,19 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 07/10] arm64: dts: actions: Add gpio line names to
- Bubblegum-96 board
-Date: Wed, 21 Feb 2018 21:30:41 +0530
-Message-ID: <20180221160044.15089-8-manivannan.sadhasivam@linaro.org>
-References: <20180221160044.15089-1-manivannan.sadhasivam@linaro.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 05/10] hwmon: generic-pwm-tachometer: Add generic PWM
+ based tachometer
+Date: Wed, 21 Feb 2018 08:08:33 -0800
+Message-ID: <20180221160833.GA8063@roeck-us.net>
+References: <1519196339-9377-1-git-send-email-rrajk@nvidia.com>
+ <1519196339-9377-6-git-send-email-rrajk@nvidia.com>
+ <ee03e1e5-bbeb-1238-04ed-b992fe3a3ce6@kapsi.fi>
+ <c1192f75-0e6e-c735-67e1-2901624831ae@roeck-us.net>
+ <a5db25f7-6999-ff3a-21c2-161cfcf4db35@kapsi.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180221160044.15089-1-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <a5db25f7-6999-ff3a-21c2-161cfcf4db35@kapsi.fi>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,219 +23,279 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de
-Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, liuwei@actions-semi.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-gpio@vger.kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: Mikko Perttunen <cyndis@kapsi.fi>
+Cc: mark.rutland@arm.com, kstewart@linuxfoundation.org, heiko@sntech.de, linux-pwm@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, mperttunen@nvidia.com, linux-tegra@vger.kernel.org, thierry.reding@gmail.com, krzk@kernel.org, mmaddireddy@nvidia.com, corbet@lwn.net, timur@codeaurora.org, linux-doc@vger.kernel.org, xuwei5@hisilicon.com, jonathanh@nvidia.com, elder@linaro.org, andy.gross@linaro.org, devicetree@vger.kernel.org, jdelvare@suse.com, arnd@arndb.de, Rajkumar Rampelli <rrajk@nvidia.com>, robh+dt@kernel.org, gregory.clement@free-electrons.com, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, ard.biesheuvel@linaro.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, pombredanne@nexb.com
 List-Id: devicetree@vger.kernel.org
 
-Add gpio line names to Actions Semi S900 based Bubblegum-96 board.
+On Wed, Feb 21, 2018 at 05:20:29PM +0200, Mikko Perttunen wrote:
+> On 21.02.2018 16:46, Guenter Roeck wrote:
+> >On 02/20/2018 11:15 PM, Mikko Perttunen wrote:
+> >>AIUI, the PWM framework already exposes a sysfs node with period
+> >>information. We should just use that instead of adding a new driver
+> >>for this.
+> >>
+> >
+> >I am kind of lost. Please explain.
+> >
+> >Are you saying that we should drop the pwm-fan driver as well (which goes
+> >the opposite way), as well as any other drivers doing anything with pwm
+> >signals,
+> >because after all those signals are already exposed to userspace a sysfs
+> >attributes,
+> >and a kernel driver to abstract those values is thus not needed ?
+> 
+> The only thing this driver does is do a constant division in kernelspace.
+> I'm not really seeing why that couldn't be done in userspace. But if you
+> think it's appropriate to do the RPM conversion in kernelspace then I'm not
+> greatly opposed to that.
+> 
+Isn't that true for any conversion from and to pwm values ? Voltages,
+for example ? Should those be handled in userspace as well ?
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/actions/s900-bubblegum-96.dts | 195 ++++++++++++++++++++++
- 1 file changed, 195 insertions(+)
+Note that I am not entirely convinced that the approach suggested in this
+patch series makes sense. Patch 4 seems to move the notion of a tachometer
+into the pwm subsystem. I am not really convinced that this makes sense
+(maybe all that code should be in the hwmon driver instead, or in a thermal
+driver if the author prefers). But that is a different issue. The question
+you raised is if there should be any abstraction to or from raw pwm values
+in the kernel.
 
-diff --git a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-index 60ddaf98401b..05ec8a7e924d 100644
---- a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-+++ b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-@@ -40,3 +40,198 @@
- 	status = "okay";
- 	clocks = <&cmu CLK_UART5>;
- };
-+
-+/*
-+ * GPIO name legend: proper name = the GPIO line is used as GPIO
-+ *         NC = not connected (pin out but not routed from the chip to
-+ *              anything the board)
-+ *         "[PER]" = pin is muxed for [peripheral] (not GPIO)
-+ *         LSEC = Low Speed External Connector
-+ *         HSEC = High Speed External Connector
-+ *
-+ * Line names are taken from the schematic "Schematics Bubblegum96"
-+ * version v1.0
-+ *
-+ * For the lines routed to the external connectors the
-+ * lines are named after the 96Boards CE Specification 1.0,
-+ * Appendix "Expansion Connector Signal Description".
-+ *
-+ * When the 96Boards naming of a line and the schematic name of
-+ * the same line are in conflict, the 96Boards specification
-+ * takes precedence, which means that the external UART on the
-+ * LSEC is named UART0 while the schematic and SoC names this
-+ * UART2. Only exception is the I2C lines for which the schematic
-+ * naming has been preferred. This is only for the informational
-+ * lines i.e. "[FOO]", the GPIO named lines "GPIO-A" thru "GPIO-L"
-+ * are the only ones actually used for GPIO.
-+ */
-+
-+&gpioa {
-+	gpio-line-names =
-+		"GPIO-A", /* GPIO_0, LSEC pin 23 */
-+		"GPIO-B", /* GPIO_1, LSEC pin 24 */
-+		"GPIO-C", /* GPIO_2, LSEC pin 25 */
-+		"GPIO-D", /* GPIO_3, LSEC pin 26 */
-+		"GPIO-E", /* GPIO_4, LSEC pin 27 */
-+		"GPIO-F", /* GPIO_5, LSEC pin 28 */
-+		"GPIO-G", /* GPIO_6, LSEC pin 29 */
-+		"GPIO-H", /* GPIO_7, LSEC pin 30 */
-+		"GPIO-I", /* GPIO_8, LSEC pin 31 */
-+		"GPIO-J", /* GPIO_9, LSEC pin 32 */
-+		"NC", /* GPIO_10 */
-+		"NC", /* GPIO_11 */
-+		"SIRQ2_1V8", /* GPIO_12 */
-+		"PCM0_OUT", /* GPIO_13 */
-+		"WIFI_LED", /* GPIO_14 */
-+		"PCM0_SYNC", /* GPIO_15 */
-+		"PCM0_CLK", /* GPIO_16 */
-+		"PCM0_IN", /* GPIO_17 */
-+		"BT_LED", /* GPIO_18 */
-+		"LED0", /* GPIO_19 */
-+		"LED1", /* GPIO_20 */
-+		"JTAG_TCK", /* GPIO_21 */
-+		"JTAG_TMS", /* GPIO_22 */
-+		"JTAG_TDI", /* GPIO_23 */
-+		"JTAG_TDO", /* GPIO_24 */
-+		"[UART1_RxD]", /* GPIO_25, LSEC pin 13 */
-+		"NC", /* GPIO_26 */
-+		"[UART1_TxD]", /* GPIO_27, LSEC pin 11 */
-+		"SD0_D0", /* GPIO_28 */
-+		"SD0_D1", /* GPIO_29 */
-+		"SD0_D2", /* GPIO_30 */
-+		"SD0_D3"; /* GPIO_31 */
-+};
-+
-+&gpiob {
-+	gpio-line-names =
-+		"SD1_D0", /* GPIO_32 */
-+		"SD1_D1", /* GPIO_33 */
-+		"SD1_D2", /* GPIO_34 */
-+		"SD1_D3", /* GPIO_35 */
-+		"SD0_CMD", /* GPIO_36 */
-+		"SD0_CLK", /* GPIO_37 */
-+		"SD1_CMD", /* GPIO_38 */
-+		"SD1_CLK", /* GPIO_39 */
-+		"SPI0_SCLK", /* GPIO_40, LSEC pin 8 */
-+		"SPI0_CS", /* GPIO_41, LSEC pin 12 */
-+		"SPI0_DIN", /* GPIO_42, LSEC pin 10 */
-+		"SPI0_DOUT", /* GPIO_43, LSEC pin 14 */
-+		"I2C5_SDATA", /* GPIO_44, HSEC pin 36 */
-+		"I2C5_SCLK", /* GPIO_45, HSEC pin 38 */
-+		"UART0_RX", /* GPIO_46, LSEC pin 7 */
-+		"UART0_TX", /* GPIO_47, LSEC pin 5 */
-+		"UART0_RTSB", /* GPIO_48, LSEC pin 9 */
-+		"UART0_CTSB", /* GPIO_49, LSEC pin 3 */
-+		"I2C4_SCLK", /* GPIO_50, HSEC pin 32 */
-+		"I2C4_SDATA", /* GPIO_51, HSEC pin 34 */
-+		"I2C0_SCLK", /* GPIO_52 */
-+		"I2C0_SDATA", /* GPIO_53 */
-+		"I2C1_SCLK", /* GPIO_54, LSEC pin 15 */
-+		"I2C1_SDATA", /* GPIO_55, LSEC pin 17 */
-+		"I2C2_SCLK", /* GPIO_56, LSEC pin 19 */
-+		"I2C2_SDATA", /* GPIO_57, LSEC pin 21 */
-+		"CSI0_DN0", /* GPIO_58, HSEC pin 10 */
-+		"CSI0_DP0", /* GPIO_59, HSEC pin 8 */
-+		"CSI0_DN1", /* GPIO_60, HSEC pin 16 */
-+		"CSI0_DP1", /* GPIO_61, HSEC pin 14 */
-+		"CSI0_CN", /* GPIO_62, HSEC pin 4 */
-+		"CSI0_CP"; /* GPIO_63, HSEC pin 2 */
-+};
-+
-+&gpioc {
-+	gpio-line-names =
-+		"CSI0_DN2", /* GPIO_64, HSEC pin 22 */
-+		"CSI0_DP2", /* GPIO_65, HSEC pin 20 */
-+		"CSI0_DN3", /* GPIO_66, HSEC pin 28 */
-+		"CSI0_DP3", /* GPIO_67, HSEC pin 26 */
-+		"[CLK0]", /* GPIO_68, HSEC pin 15 */
-+		"CSI1_DN0", /* GPIO_69, HSEC pin 44 */
-+		"CSI1_DP0", /* GPIO_70, HSEC pin 42 */
-+		"CSI1_DN1", /* GPIO_71, HSEC pin 50 */
-+		"CSI1_DP1", /* GPIO_72, HSEC pin 48 */
-+		"CSI1_CN", /* GPIO_73, HSEC pin 56 */
-+		"CSI1_CP", /* GPIO_74, HSEC pin 54 */
-+		"[CLK1]"; /* GPIO_75, HSEC pin 17 */
-+};
-+
-+&gpiod {
-+	gpio-line-names =
-+		"[GPIOD0]", /* GPIO_76 */
-+		"[GPIOD1]", /* GPIO_77 */
-+		"BT_RST_N", /* GPIO_78 */
-+		"EXT_DC_EN", /* GPIO_79 */
-+		"[PCM_DI]", /* GPIO_80, LSEC pin 22 */
-+		"[PCM_DO]", /* GPIO_81, LSEC pin 20 */
-+		"[PCM_CLK]", /* GPIO_82, LSEC pin 18 */
-+		"[PCM_FS]", /* GPIO_83, LSEC pin 16 */
-+		"WAKE_BT", /* GPIO_84 */
-+		"WL_REG_ON", /* GPIO_85 */
-+		"NC", /* GPIO_86 */
-+		"NC", /* GPIO_87 */
-+		"NC", /* GPIO_88 */
-+		"NC", /* GPIO_89 */
-+		"NC", /* GPIO_90 */
-+		"WIFI_WAKE", /* GPIO_91 */
-+		"BT_WAKE", /* GPIO_92 */
-+		"NC", /* GPIO_93 */
-+		"OTG_EN2", /* GPIO_94 */
-+		"OTG_EN", /* GPIO_95 */
-+		"DSI_DP3", /* GPIO_96, HSEC pin 45 */
-+		"DSI_DN3", /* GPIO_97, HSEC pin 47 */
-+		"DSI_DP1", /* GPIO_98, HSEC pin 33 */
-+		"DSI_DN1", /* GPIO_99, HSEC pin 35 */
-+		"DSI_CP", /* GPIO_100, HSEC pin 21 */
-+		"DSI_CN", /* GPIO_101, HSEC pin 23 */
-+		"DSI_DP0", /* GPIO_102, HSEC pin 27 */
-+		"DSI_DN0", /* GPIO_103, HSEC pin 29 */
-+		"DSI_DP2", /* GPIO_104, HSEC pin 39 */
-+		"DSI_DN2"; /* GPIO_105, HSEC pin 41 */
-+};
-+
-+&gpioe {
-+	gpio-line-names =
-+		"N0_D0", /* GPIO_106 */
-+		"N0_D1", /* GPIO_107 */
-+		"N0_D2", /* GPIO_108 */
-+		"N0_D3", /* GPIO_109 */
-+		"N0_D4", /* GPIO_110 */
-+		"N0_D5", /* GPIO_111 */
-+		"N0_D6", /* GPIO_112 */
-+		"N0_D7", /* GPIO_113 */
-+		"N0_DQS", /* GPIO_114 */
-+		"N0_DQSN", /* GPIO_115 */
-+		"NC", /* GPIO_116 */
-+		"NC", /* GPIO_117 */
-+		"NC", /* GPIO_118 */
-+		"N0_CEB1", /* GPIO_119 */
-+		"CARD_DT", /* GPIO_120 */
-+		"N0_CEB3", /* GPIO_121 */
-+		"SD_DAT0", /* GPIO_122, HSEC pin 1 */
-+		"SD_DAT1", /* GPIO_123, HSEC pin 3 */
-+		"SD_DAT2", /* GPIO_124, HSEC pin 5 */
-+		"SD_DAT3", /* GPIO_125, HSEC pin 7 */
-+		"NC", /* GPIO_126 */
-+		"NC", /* GPIO_127 */
-+		"[PWR_BTN_N]", /* GPIO_128, LSEC pin 4 */
-+		"[RST_BTN_N]", /* GPIO_129, LSEC pin 6 */
-+		"NC", /* GPIO_130 */
-+		"SD_CMD", /* GPIO_131 */
-+		"GPIO-L", /* GPIO_132, LSEC pin 34 */
-+		"GPIO-K", /* GPIO_133, LSEC pin 33 */
-+		"NC", /* GPIO_134 */
-+		"SD_SCLK", /* GPIO_135 */
-+		"NC", /* GPIO_136 */
-+		"JTAG_TRST"; /* GPIO_137 */
-+};
-+
-+&gpiof {
-+	gpio-line-names =
-+		"I2C3_SCLK", /* GPIO_138 */
-+		"LED2", /* GPIO_139 */
-+		"LED3", /* GPIO_140 */
-+		"I2C3_SDATA", /* GPIO_141 */
-+		"UART3_RX", /* GPIO_142 */
-+		"UART3_TX", /* GPIO_143 */
-+		"UART3_RTSB", /* GPIO_144 */
-+		"UART3_CTSB"; /* GPIO_145 */
-+};
--- 
-2.14.1
+> >
+> >>In any case, we cannot add something like this to device tree since
+> >>it's not a hardware device.
+> >>
+> >
+> >So you are saying there is no means to express in devicetree that
+> >a pwm input is connected to a fan ? How is that not hardware ?
+> >
+> >If so, how do you express in devicetree that a pwm signal is connected
+> >to anything ?
+> 
+> If we want to describe that the tachometer is connected to a fan, then we
+> should have a fan node in the board's device tree. We don't have a chip that
+> has a thing called "generic-pwm-tachometer" attached to it. (We have chips
+> that have a "nvidia,tegra186-tachometer", so it's proper to have that.)
+> 
+So you are concerned about the property name ? I don't really care how
+it is called.
+
+Guenter
+
+> Thanks,
+> Mikko
+> 
+> >
+> >Guenter
+> >
+> >>Mikko
+> >>
+> >>On 21.02.2018 08:58, Rajkumar Rampelli wrote:
+> >>>Add generic PWM based tachometer driver via HWMON interface
+> >>>to report the RPM of motor. This drivers get the period/duty
+> >>>cycle from PWM IP which captures the motor PWM output.
+> >>>
+> >>>This driver implements a simple interface for monitoring the speed of
+> >>>a fan and exposes it in roatations per minute (RPM) to the user space
+> >>>by using the hwmon's sysfs interface
+> >>>
+> >>>Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
+> >>>---
+> >>> Documentation/hwmon/generic-pwm-tachometer |  17 +++++
+> >>> drivers/hwmon/Kconfig                      |  10 +++
+> >>> drivers/hwmon/Makefile                     |   1 +
+> >>> drivers/hwmon/generic-pwm-tachometer.c     | 112
+> >>>+++++++++++++++++++++++++++++
+> >>> 4 files changed, 140 insertions(+)
+> >>> create mode 100644 Documentation/hwmon/generic-pwm-tachometer
+> >>> create mode 100644 drivers/hwmon/generic-pwm-tachometer.c
+> >>>
+> >>>diff --git a/Documentation/hwmon/generic-pwm-tachometer
+> >>>b/Documentation/hwmon/generic-pwm-tachometer
+> >>>new file mode 100644
+> >>>index 0000000..e0713ee
+> >>>--- /dev/null
+> >>>+++ b/Documentation/hwmon/generic-pwm-tachometer
+> >>>@@ -0,0 +1,17 @@
+> >>>+Kernel driver generic-pwm-tachometer
+> >>>+====================================
+> >>>+
+> >>>+This driver enables the use of a PWM module to monitor a fan. It
+> >>>uses the
+> >>>+generic PWM interface and can be used on SoCs as along as the SoC
+> >>>supports
+> >>>+Tachometer controller that moniors the Fan speed in periods.
+> >>>+
+> >>>+Author: Rajkumar Rampelli <rrajk@nvidia.com>
+> >>>+
+> >>>+Description
+> >>>+-----------
+> >>>+
+> >>>+The driver implements a simple interface for monitoring the Fan
+> >>>speed using
+> >>>+PWM module and Tachometer controller. It requests period value
+> >>>through PWM
+> >>>+capture interface to Tachometer and measures the Rotations per
+> >>>minute using
+> >>>+received period value. It exposes the Fan speed in RPM to the user
+> >>>space by
+> >>>+using the hwmon's sysfs interface.
+> >>>diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> >>>index ef23553..8912dcb 100644
+> >>>--- a/drivers/hwmon/Kconfig
+> >>>+++ b/drivers/hwmon/Kconfig
+> >>>@@ -1878,6 +1878,16 @@ config SENSORS_XGENE
+> >>>       If you say yes here you get support for the temperature
+> >>>       and power sensors for APM X-Gene SoC.
+> >>>
+> >>>+config GENERIC_PWM_TACHOMETER
+> >>>+    tristate "Generic PWM based tachometer driver"
+> >>>+    depends on PWM
+> >>>+    help
+> >>>+      Enables a driver to use PWM signal from motor to use
+> >>>+      for measuring the motor speed. The RPM is captured by
+> >>>+      PWM modules which has PWM capture capability and this
+> >>>+      drivers reads the captured data from PWM IP to convert
+> >>>+      it to speed in RPM.
+> >>>+
+> >>> if ACPI
+> >>>
+> >>> comment "ACPI drivers"
+> >>>diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> >>>index f814b4a..9dcc374 100644
+> >>>--- a/drivers/hwmon/Makefile
+> >>>+++ b/drivers/hwmon/Makefile
+> >>>@@ -175,6 +175,7 @@ obj-$(CONFIG_SENSORS_WM8350)    += wm8350-hwmon.o
+> >>> obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
+> >>>
+> >>> obj-$(CONFIG_PMBUS)        += pmbus/
+> >>>+obj-$(CONFIG_GENERIC_PWM_TACHOMETER) += generic-pwm-tachometer.o
+> >>>
+> >>> ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
+> >>>
+> >>>diff --git a/drivers/hwmon/generic-pwm-tachometer.c
+> >>>b/drivers/hwmon/generic-pwm-tachometer.c
+> >>>new file mode 100644
+> >>>index 0000000..9354d43
+> >>>--- /dev/null
+> >>>+++ b/drivers/hwmon/generic-pwm-tachometer.c
+> >>>@@ -0,0 +1,112 @@
+> >>>+/*
+> >>>+ * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights reserved.
+> >>>+ *
+> >>>+ * This program is free software; you can redistribute it and/or
+> >>>modify it
+> >>>+ * under the terms and conditions of the GNU General Public License,
+> >>>+ * version 2, as published by the Free Software Foundation.
+> >>>+ *
+> >>>+ * This program is distributed in the hope it will be useful, but
+> >>>WITHOUT
+> >>>+ * ANY WARRANTY; without even the implied warranty of
+> >>>MERCHANTABILITY or
+> >>>+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+> >>>License for
+> >>>+ * more details.
+> >>>+ *
+> >>>+ */
+> >>>+
+> >>>+#include <linux/module.h>
+> >>>+#include <linux/platform_device.h>
+> >>>+#include <linux/err.h>
+> >>>+#include <linux/pwm.h>
+> >>>+#include <linux/hwmon.h>
+> >>>+#include <linux/hwmon-sysfs.h>
+> >>>+
+> >>>+struct pwm_hwmon_tach {
+> >>>+    struct device        *dev;
+> >>>+    struct pwm_device    *pwm;
+> >>>+    struct device        *hwmon;
+> >>>+};
+> >>>+
+> >>>+static ssize_t show_rpm(struct device *dev, struct device_attribute
+> >>>*attr,
+> >>>+            char *buf)
+> >>>+{
+> >>>+    struct pwm_hwmon_tach *ptt = dev_get_drvdata(dev);
+> >>>+    struct pwm_device *pwm = ptt->pwm;
+> >>>+    struct pwm_capture result;
+> >>>+    int err;
+> >>>+    unsigned int rpm = 0;
+> >>>+
+> >>>+    err = pwm_capture(pwm, &result, 0);
+> >>>+    if (err < 0) {
+> >>>+        dev_err(ptt->dev, "Failed to capture PWM: %d\n", err);
+> >>>+        return err;
+> >>>+    }
+> >>>+
+> >>>+    if (result.period)
+> >>>+        rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
+> >>>+                        result.period);
+> >>>+
+> >>>+    return sprintf(buf, "%u\n", rpm);
+> >>>+}
+> >>>+
+> >>>+static SENSOR_DEVICE_ATTR(rpm, 0444, show_rpm, NULL, 0);
+> >>>+
+> >>>+static struct attribute *pwm_tach_attrs[] = {
+> >>>+    &sensor_dev_attr_rpm.dev_attr.attr,
+> >>>+    NULL,
+> >>>+};
+> >>>+
+> >>>+ATTRIBUTE_GROUPS(pwm_tach);
+> >>>+
+> >>>+static int pwm_tach_probe(struct platform_device *pdev)
+> >>>+{
+> >>>+    struct pwm_hwmon_tach *ptt;
+> >>>+    int err;
+> >>>+
+> >>>+    ptt = devm_kzalloc(&pdev->dev, sizeof(*ptt), GFP_KERNEL);
+> >>>+    if (!ptt)
+> >>>+        return -ENOMEM;
+> >>>+
+> >>>+    ptt->dev = &pdev->dev;
+> >>>+
+> >>>+    platform_set_drvdata(pdev, ptt);
+> >>>+    dev_set_drvdata(&pdev->dev, ptt);
+> >>>+
+> >>>+    ptt->pwm = devm_of_pwm_get(&pdev->dev, pdev->dev.of_node, NULL);
+> >>>+    if (IS_ERR(ptt->pwm)) {
+> >>>+        err = PTR_ERR(ptt->pwm);
+> >>>+        dev_err(&pdev->dev, "Failed to get pwm handle, err: %d\n",
+> >>>+            err);
+> >>>+        return err;
+> >>>+    }
+> >>>+
+> >>>+    ptt->hwmon = devm_hwmon_device_register_with_groups(&pdev->dev,
+> >>>+                     "pwm_tach", ptt, pwm_tach_groups);
+> >>>+    if (IS_ERR(ptt->hwmon)) {
+> >>>+        err = PTR_ERR_OR_ZERO(ptt->hwmon);
+> >>>+        dev_err(&pdev->dev, "Failed to register hwmon device: %d\n",
+> >>>+            err);
+> >>>+        return err;
+> >>>+    }
+> >>>+
+> >>>+    return 0;
+> >>>+}
+> >>>+
+> >>>+static const struct of_device_id pwm_tach_of_match[] = {
+> >>>+    { .compatible = "generic-pwm-tachometer" },
+> >>>+    {}
+> >>>+};
+> >>>+MODULE_DEVICE_TABLE(of, pwm_tach_of_match);
+> >>>+
+> >>>+static struct platform_driver pwm_tach_driver = {
+> >>>+    .driver = {
+> >>>+        .name = "generic-pwm-tachometer",
+> >>>+        .of_match_table = pwm_tach_of_match,
+> >>>+    },
+> >>>+    .probe = pwm_tach_probe,
+> >>>+};
+> >>>+
+> >>>+module_platform_driver(pwm_tach_driver);
+> >>>+
+> >>>+MODULE_DESCRIPTION("PWM based Generic Tachometer driver");
+> >>>+MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
+> >>>+MODULE_AUTHOR("Rajkumar Rampelli <rrajk@nvidia.com>");
+> >>>+MODULE_LICENSE("GPL v2");
+> >>>
+> >>
+> >
