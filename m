@@ -1,425 +1,367 @@
-Return-Path: <SRS0=goDf=FR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga18.intel.com ([134.134.136.126]:11780 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1751402AbeBWQJF (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 23 Feb 2018 11:09:05 -0500
-From: Andy Yeh <andy.yeh@intel.com>
-Subject: [v5 1/2] media: dw9807: Add dw9807 vcm driver
-Date: Sat, 24 Feb 2018 00:13:41 +0800
-Message-Id: <1519402422-9595-2-git-send-email-andy.yeh@intel.com>
-In-Reply-To: <1519402422-9595-1-git-send-email-andy.yeh@intel.com>
-References: <1519402422-9595-1-git-send-email-andy.yeh@intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: andy.yeh@intel.com, sakari.ailus@linux.intel.com, tfiga@google.com, devicetree@vger.kernel.org, Alan Chiang <alanx.chiang@intel.com>
+Return-Path: <SRS0=FOuU=FP=jmondi.org=jacopo+renesas@kernel.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v10 09/10] media: i2c: tw9910: Remove soc_camera dependencies
+Date: Wed, 21 Feb 2018 18:48:03 +0100
+Message-Id: <1519235284-32286-10-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1519235284-32286-1-git-send-email-jacopo+renesas@jmondi.org>
+References: <1519235284-32286-1-git-send-email-jacopo+renesas@jmondi.org>
+To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Alan Chiang <alanx.chiang@intel.com>
+Remove soc_camera framework dependencies from tw9910 sensor driver.
+- Handle clock and gpios
+- Register async subdevice
+- Remove soc_camera specific g/s_mbus_config operations
+- Add kernel doc to driver interface header file
+- Adjust build system
 
-DW9807 is a 10 bit DAC from Dongwoon, designed for linear
-control of voice coil motor.
+This commit does not remove the original soc_camera based driver as long
+as other platforms depends on soc_camera-based CEU driver.
 
-This driver creates a V4L2 subdevice and
-provides control to set the desired focus.
-
-Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
-since v1:
-- changed author.
-since v2:
-- addressed outstanding comments.
-- enabled sequential write to update 2 registers in a single transaction.
-since v3:
-- addressed comments for v3.
-- Remove redundant codes and declare some variables as constant variable.
-- separate DT binding to another patch
-sicne v4:
-- sent patchset included DT binding with cover page
-
- MAINTAINERS                |   7 +
- drivers/media/i2c/Kconfig  |  10 ++
+ drivers/media/i2c/Kconfig  |   9 +++
  drivers/media/i2c/Makefile |   1 +
- drivers/media/i2c/dw9807.c | 320 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 338 insertions(+)
- create mode 100644 drivers/media/i2c/dw9807.c
+ drivers/media/i2c/tw9910.c | 162 ++++++++++++++++++++++++++++-----------------
+ include/media/i2c/tw9910.h |   9 +++
+ 4 files changed, 120 insertions(+), 61 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 845fc25..a339bb5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4385,6 +4385,13 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/i2c/dw9714.c
- 
-+DONGWOON DW9807 LENS VOICE COIL DRIVER
-+M:	Sakari Ailus <sakari.ailus@linux.intel.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	drivers/media/i2c/dw9807.c
-+
- DOUBLETALK DRIVER
- M:	"James R. Van Zandt" <jrv@vanzandt.mv.com>
- L:	blinux-list@redhat.com
 diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index cb5d7ff..fd01842 100644
+index e71e968..0460613 100644
 --- a/drivers/media/i2c/Kconfig
 +++ b/drivers/media/i2c/Kconfig
-@@ -325,6 +325,16 @@ config VIDEO_DW9714
- 	  capability. This is designed for linear control of
- 	  voice coil motors, controlled via I2C serial interface.
+@@ -423,6 +423,15 @@ config VIDEO_TW9906
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called tw9906.
  
-+config VIDEO_DW9807
-+	tristate "DW9807 lens voice coil support"
-+	depends on I2C && VIDEO_V4L2 && MEDIA_CONTROLLER
-+	depends on VIDEO_V4L2_SUBDEV_API
++config VIDEO_TW9910
++	tristate "Techwell TW9910 video decoder"
++	depends on VIDEO_V4L2 && I2C
 +	---help---
-+	  This is a driver for the DW9807 camera lens voice coil.
-+	  DW9807 is a 10 bit DAC with 100mA output current sink
-+	  capability. This is designed for linear control of
-+	  voice coil motors, controlled via I2C serial interface.
++	  Support for Techwell TW9910 NTSC/PAL/SECAM video decoder.
 +
- config VIDEO_SAA7110
- 	tristate "Philips SAA7110 video decoder"
++	  To compile this driver as a module, choose M here: the
++	  module will be called tw9910.
++
+ config VIDEO_VPX3220
+ 	tristate "vpx3220a, vpx3216b & vpx3214c video decoders"
  	depends on VIDEO_V4L2 && I2C
 diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index 548a9ef..1b62639 100644
+index b0489a1..23c3ac6 100644
 --- a/drivers/media/i2c/Makefile
 +++ b/drivers/media/i2c/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_VIDEO_SAA7185) += saa7185.o
- obj-$(CONFIG_VIDEO_SAA6752HS) += saa6752hs.o
- obj-$(CONFIG_VIDEO_AD5820)  += ad5820.o
- obj-$(CONFIG_VIDEO_DW9714)  += dw9714.o
-+obj-$(CONFIG_VIDEO_DW9807)  += dw9807.o
- obj-$(CONFIG_VIDEO_ADV7170) += adv7170.o
- obj-$(CONFIG_VIDEO_ADV7175) += adv7175.o
- obj-$(CONFIG_VIDEO_ADV7180) += adv7180.o
-diff --git a/drivers/media/i2c/dw9807.c b/drivers/media/i2c/dw9807.c
-new file mode 100644
-index 0000000..95626e9
---- /dev/null
-+++ b/drivers/media/i2c/dw9807.c
-@@ -0,0 +1,320 @@
-+// Copyright (C) 2018 Intel Corporation
+@@ -48,6 +48,7 @@ obj-$(CONFIG_VIDEO_TVP7002) += tvp7002.o
+ obj-$(CONFIG_VIDEO_TW2804) += tw2804.o
+ obj-$(CONFIG_VIDEO_TW9903) += tw9903.o
+ obj-$(CONFIG_VIDEO_TW9906) += tw9906.o
++obj-$(CONFIG_VIDEO_TW9910) += tw9910.o
+ obj-$(CONFIG_VIDEO_CS3308) += cs3308.o
+ obj-$(CONFIG_VIDEO_CS5345) += cs5345.o
+ obj-$(CONFIG_VIDEO_CS53L32A) += cs53l32a.o
+diff --git a/drivers/media/i2c/tw9910.c b/drivers/media/i2c/tw9910.c
+index bdb5e0a..96792df 100644
+--- a/drivers/media/i2c/tw9910.c
++++ b/drivers/media/i2c/tw9910.c
+@@ -1,6 +1,9 @@
 +// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/acpi.h>
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
-+
-+#define DW9807_NAME		"dw9807"
-+#define DW9807_MAX_FOCUS_POS	1023
-+/*
-+ * This sets the minimum granularity for the focus positions.
-+ * A value of 1 gives maximum accuracy for a desired focus position
-+ */
-+#define DW9807_FOCUS_STEPS	1
-+/*
-+ * This acts as the minimum granularity of lens movement.
-+ * Keep this value power of 2, so the control steps can be
-+ * uniformly adjusted for gradual lens movement, with desired
-+ * number of control steps.
-+ */
-+#define DW9807_CTRL_STEPS	16
-+#define DW9807_CTRL_DELAY_US	1000
-+
-+#define DW9807_CTL_ADDR		0x02
-+/*
-+ * DW9807 separates two registers to control the VCM position.
-+ * One for MSB value, another is LSB value.
-+ */
-+#define DW9807_MSB_ADDR		0x03
-+#define DW9807_LSB_ADDR		0x04
-+#define DW9807_STATUS_ADDR	0x05
-+#define DW9807_MODE_ADDR	0x06
-+#define DW9807_RESONANCE_ADDR	0x07
-+
-+#define MAX_RETRY		10
-+
-+struct dw9807_device {
-+	struct v4l2_ctrl_handler ctrls_vcm;
-+	struct v4l2_subdev sd;
-+	u16 current_val;
-+};
-+
-+static inline struct dw9807_device *sd_to_dw9807_vcm(struct v4l2_subdev *subdev)
+ /*
+  * tw9910 Video Driver
+  *
++ * Copyright (C) 2017 Jacopo Mondi <jacopo+renesas@jmondi.org>
++ *
+  * Copyright (C) 2008 Renesas Solutions Corp.
+  * Kuninori Morimoto <morimoto.kuninori@renesas.com>
+  *
+@@ -10,12 +13,10 @@
+  * Copyright 2006-7 Jonathan Corbet <corbet@lwn.net>
+  * Copyright (C) 2008 Magnus Damm
+  * Copyright (C) 2008, Guennadi Liakhovetski <kernel@pengutronix.de>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+  */
+ 
++#include <linux/clk.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/i2c.h>
+@@ -25,9 +26,7 @@
+ #include <linux/v4l2-mediabus.h>
+ #include <linux/videodev2.h>
+ 
+-#include <media/soc_camera.h>
+ #include <media/i2c/tw9910.h>
+-#include <media/v4l2-clk.h>
+ #include <media/v4l2-subdev.h>
+ 
+ #define GET_ID(val)  ((val & 0xF8) >> 3)
+@@ -228,8 +227,10 @@ struct tw9910_scale_ctrl {
+ 
+ struct tw9910_priv {
+ 	struct v4l2_subdev		subdev;
+-	struct v4l2_clk			*clk;
++	struct clk			*clk;
+ 	struct tw9910_video_info	*info;
++	struct gpio_desc		*pdn_gpio;
++	struct gpio_desc		*rstb_gpio;
+ 	const struct tw9910_scale_ctrl	*scale;
+ 	v4l2_std_id			norm;
+ 	u32				revision;
+@@ -582,13 +583,66 @@ static int tw9910_s_register(struct v4l2_subdev *sd,
+ }
+ #endif
+ 
++static int tw9910_power_on(struct tw9910_priv *priv)
 +{
-+	return container_of(subdev, struct dw9807_device, sd);
-+}
-+
-+static int dw9807_i2c_check(struct i2c_client *client)
-+{
-+	const char status_addr = DW9807_STATUS_ADDR;
-+	char status_result = 0x1;
++	struct i2c_client *client = v4l2_get_subdevdata(&priv->subdev);
 +	int ret;
 +
-+	ret = i2c_master_send(client, (const char *)&status_addr, sizeof(status_addr));
-+	if (ret != sizeof(status_addr)) {
-+		dev_err(&client->dev, "I2C write STATUS address fail ret = %d\n",
-+			ret);
-+		return -EIO;
++	if (priv->clk) {
++		ret = clk_prepare_enable(priv->clk);
++		if (ret)
++			return ret;
 +	}
 +
-+	ret = i2c_master_recv(client, (char *)&status_result, sizeof(status_result));
-+	if (ret != sizeof(status_result)) {
-+		dev_err(&client->dev, "I2C read STATUS value fail ret=%d\n",
-+			ret);
-+		return -EIO;
++	if (priv->pdn_gpio) {
++		gpiod_set_value(priv->pdn_gpio, 0);
++		usleep_range(500, 1000);
 +	}
-+
-+	return status_result;
-+}
-+
-+static int dw9807_set_dac(struct i2c_client *client, u16 data)
-+{
-+	const char tx_data[3] = {
-+		DW9807_MSB_ADDR, ((data >> 8) & 0x03), (data & 0xFF) };
-+	int ret, retry = 0;
 +
 +	/*
-+	 * According to the datasheet, need to check the bus status before we
-+	 * write VCM position. This ensure that we really write the value
-+	 * into the register
++	 * FIXME: The reset signal is connected to a shared GPIO on some
++	 * platforms (namely the SuperH Migo-R). Until a framework becomes
++	 * available to handle this cleanly, request the GPIO temporarily
++	 * to avoid conflicts.
 +	 */
-+	while (dw9807_i2c_check(client) != 0) {
-+		if (MAX_RETRY == ++retry) {
-+			dev_err(&client->dev, "Cannot do the write operation because VCM is busy\n");
-+			return -EIO;
-+		}
-+		usleep_range(DW9807_CTRL_DELAY_US, DW9807_CTRL_DELAY_US + 10);
++	priv->rstb_gpio = gpiod_get_optional(&client->dev, "rstb",
++					     GPIOD_OUT_LOW);
++	if (IS_ERR(priv->rstb_gpio)) {
++		dev_info(&client->dev, "Unable to get GPIO \"rstb\"");
++		return PTR_ERR(priv->rstb_gpio);
 +	}
 +
-+	/* Write VCM position to registers */
-+	ret = i2c_master_send(client, tx_data, sizeof(tx_data));
-+	if (ret != sizeof(tx_data)) {
-+		dev_err(&client->dev, "I2C write MSB fail\n");
-+		return -EIO;
-+	}
++	if (priv->rstb_gpio) {
++		gpiod_set_value(priv->rstb_gpio, 1);
++		usleep_range(500, 1000);
++		gpiod_set_value(priv->rstb_gpio, 0);
++		usleep_range(500, 1000);
 +
-+	return 0;
-+}
-+
-+static int dw9807_set_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct dw9807_device *dev_vcm = container_of(ctrl->handler, struct dw9807_device, ctrls_vcm);
-+
-+	if (ctrl->id == V4L2_CID_FOCUS_ABSOLUTE) {
-+		struct i2c_client *client = v4l2_get_subdevdata(&dev_vcm->sd);
-+
-+		dev_vcm->current_val = ctrl->val;
-+		return dw9807_set_dac(client, ctrl->val);
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct v4l2_ctrl_ops dw9807_vcm_ctrl_ops = {
-+	.s_ctrl = dw9807_set_ctrl,
-+};
-+
-+static int dw9807_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
-+{
-+	int rval;
-+
-+	rval = pm_runtime_get_sync(sd->dev);
-+	if (rval < 0) {
-+		pm_runtime_put_noidle(sd->dev);
-+		return rval;
++		gpiod_put(priv->rstb_gpio);
 +	}
 +
 +	return 0;
 +}
 +
-+static int dw9807_close(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
++static int tw9910_power_off(struct tw9910_priv *priv)
 +{
-+	pm_runtime_put(sd->dev);
++	clk_disable_unprepare(priv->clk);
 +
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_internal_ops dw9807_int_ops = {
-+	.open = dw9807_open,
-+	.close = dw9807_close,
-+};
-+
-+static const struct v4l2_subdev_ops dw9807_ops = { };
-+
-+static void dw9807_subdev_cleanup(struct dw9807_device *dw9807_dev)
-+{
-+	v4l2_async_unregister_subdev(&dw9807_dev->sd);
-+	v4l2_ctrl_handler_free(&dw9807_dev->ctrls_vcm);
-+	media_entity_cleanup(&dw9807_dev->sd.entity);
-+}
-+
-+static int dw9807_init_controls(struct dw9807_device *dev_vcm)
-+{
-+	struct v4l2_ctrl_handler *hdl = &dev_vcm->ctrls_vcm;
-+	const struct v4l2_ctrl_ops *ops = &dw9807_vcm_ctrl_ops;
-+	struct i2c_client *client = v4l2_get_subdevdata(&dev_vcm->sd);
-+
-+	v4l2_ctrl_handler_init(hdl, 1);
-+
-+	v4l2_ctrl_new_std(hdl, ops, V4L2_CID_FOCUS_ABSOLUTE,
-+			  0, DW9807_MAX_FOCUS_POS, DW9807_FOCUS_STEPS, 0);
-+
-+	dev_vcm->sd.ctrl_handler = hdl;
-+	if (hdl->error) {
-+		dev_err(&client->dev, "%s fail error: 0x%x\n",
-+			__func__, hdl->error);
-+		return hdl->error;
++	if (priv->pdn_gpio) {
++		gpiod_set_value(priv->pdn_gpio, 1);
++		usleep_range(500, 1000);
 +	}
 +
 +	return 0;
 +}
 +
-+static int dw9807_probe(struct i2c_client *client)
-+{
-+	struct dw9807_device *dw9807_dev;
-+	int rval;
+ static int tw9910_s_power(struct v4l2_subdev *sd, int on)
+ {
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
+-	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+ 	struct tw9910_priv *priv = to_tw9910(client);
+ 
+-	return soc_camera_set_power(&client->dev, ssdd, priv->clk, on);
++	return on ? tw9910_power_on(priv) :
++		    tw9910_power_off(priv);
+ }
+ 
+ static int tw9910_set_frame(struct v4l2_subdev *sd, u32 *width, u32 *height)
+@@ -614,7 +668,7 @@ static int tw9910_set_frame(struct v4l2_subdev *sd, u32 *width, u32 *height)
+ 	 * set bus width
+ 	 */
+ 	val = 0x00;
+-	if (SOCAM_DATAWIDTH_16 == priv->info->buswidth)
++	if (priv->info->buswidth == 16)
+ 		val = LEN;
+ 
+ 	ret = tw9910_mask_set(client, OPFORM, LEN, val);
+@@ -799,8 +853,7 @@ static int tw9910_video_probe(struct i2c_client *client)
+ 	/*
+ 	 * tw9910 only use 8 or 16 bit bus width
+ 	 */
+-	if (SOCAM_DATAWIDTH_16 != priv->info->buswidth &&
+-	    SOCAM_DATAWIDTH_8  != priv->info->buswidth) {
++	if (priv->info->buswidth != 16 && priv->info->buswidth != 8) {
+ 		dev_err(&client->dev, "bus width error\n");
+ 		return -ENODEV;
+ 	}
+@@ -856,45 +909,6 @@ static int tw9910_enum_mbus_code(struct v4l2_subdev *sd,
+ 	return 0;
+ }
+ 
+-static int tw9910_g_mbus_config(struct v4l2_subdev *sd,
+-				struct v4l2_mbus_config *cfg)
+-{
+-	struct i2c_client *client = v4l2_get_subdevdata(sd);
+-	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+-
+-	cfg->flags = V4L2_MBUS_PCLK_SAMPLE_RISING | V4L2_MBUS_MASTER |
+-		V4L2_MBUS_VSYNC_ACTIVE_HIGH | V4L2_MBUS_VSYNC_ACTIVE_LOW |
+-		V4L2_MBUS_HSYNC_ACTIVE_HIGH | V4L2_MBUS_HSYNC_ACTIVE_LOW |
+-		V4L2_MBUS_DATA_ACTIVE_HIGH;
+-	cfg->type = V4L2_MBUS_PARALLEL;
+-	cfg->flags = soc_camera_apply_board_flags(ssdd, cfg);
+-
+-	return 0;
+-}
+-
+-static int tw9910_s_mbus_config(struct v4l2_subdev *sd,
+-				const struct v4l2_mbus_config *cfg)
+-{
+-	struct i2c_client *client = v4l2_get_subdevdata(sd);
+-	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+-	u8 val = VSSL_VVALID | HSSL_DVALID;
+-	unsigned long flags = soc_camera_apply_board_flags(ssdd, cfg);
+-
+-	/*
+-	 * set OUTCTR1
+-	 *
+-	 * We use VVALID and DVALID signals to control VSYNC and HSYNC
+-	 * outputs, in this mode their polarity is inverted.
+-	 */
+-	if (flags & V4L2_MBUS_HSYNC_ACTIVE_LOW)
+-		val |= HSP_HI;
+-
+-	if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+-		val |= VSP_HI;
+-
+-	return i2c_smbus_write_byte_data(client, OUTCTR1, val);
+-}
+-
+ static int tw9910_g_tvnorms(struct v4l2_subdev *sd, v4l2_std_id *norm)
+ {
+ 	*norm = V4L2_STD_NTSC | V4L2_STD_PAL;
+@@ -905,8 +919,6 @@ static const struct v4l2_subdev_video_ops tw9910_subdev_video_ops = {
+ 	.s_std		= tw9910_s_std,
+ 	.g_std		= tw9910_g_std,
+ 	.s_stream	= tw9910_s_stream,
+-	.g_mbus_config	= tw9910_g_mbus_config,
+-	.s_mbus_config	= tw9910_s_mbus_config,
+ 	.g_tvnorms	= tw9910_g_tvnorms,
+ };
+ 
+@@ -935,15 +947,14 @@ static int tw9910_probe(struct i2c_client *client,
+ 	struct tw9910_video_info	*info;
+ 	struct i2c_adapter		*adapter =
+ 		to_i2c_adapter(client->dev.parent);
+-	struct soc_camera_subdev_desc	*ssdd = soc_camera_i2c_to_desc(client);
+ 	int ret;
+ 
+-	if (!ssdd || !ssdd->drv_priv) {
++	if (!client->dev.platform_data) {
+ 		dev_err(&client->dev, "TW9910: missing platform data!\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	info = ssdd->drv_priv;
++	info = client->dev.platform_data;
+ 
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE_DATA)) {
+ 		dev_err(&client->dev,
+@@ -959,13 +970,37 @@ static int tw9910_probe(struct i2c_client *client,
+ 
+ 	v4l2_i2c_subdev_init(&priv->subdev, client, &tw9910_subdev_ops);
+ 
+-	priv->clk = v4l2_clk_get(&client->dev, "mclk");
+-	if (IS_ERR(priv->clk))
++	priv->clk = clk_get(&client->dev, "xti");
++	if (PTR_ERR(priv->clk) == -ENOENT) {
++		priv->clk = NULL;
++	} else if (IS_ERR(priv->clk)) {
++		dev_err(&client->dev, "Unable to get xti clock\n");
+ 		return PTR_ERR(priv->clk);
++	}
 +
-+	dw9807_dev = devm_kzalloc(&client->dev, sizeof(*dw9807_dev),
-+				  GFP_KERNEL);
-+	if (dw9807_dev == NULL)
-+		return -ENOMEM;
++	priv->pdn_gpio = gpiod_get_optional(&client->dev, "pdn",
++					    GPIOD_OUT_HIGH);
++	if (IS_ERR(priv->pdn_gpio)) {
++		dev_info(&client->dev, "Unable to get GPIO \"pdn\"");
++		ret = PTR_ERR(priv->pdn_gpio);
++		goto error_clk_put;
++	}
+ 
+ 	ret = tw9910_video_probe(client);
+ 	if (ret < 0)
+-		v4l2_clk_put(priv->clk);
++		goto error_gpio_put;
 +
-+	v4l2_i2c_subdev_init(&dw9807_dev->sd, client, &dw9807_ops);
-+	dw9807_dev->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	dw9807_dev->sd.internal_ops = &dw9807_int_ops;
++	ret = v4l2_async_register_subdev(&priv->subdev);
++	if (ret)
++		goto error_gpio_put;
 +
-+	rval = dw9807_init_controls(dw9807_dev);
-+	if (rval)
-+		goto err_cleanup;
++	return ret;
 +
-+	rval = media_entity_pads_init(&dw9807_dev->sd.entity, 0, NULL);
-+	if (rval < 0)
-+		goto err_cleanup;
++error_gpio_put:
++	if (priv->pdn_gpio)
++		gpiod_put(priv->pdn_gpio);
++error_clk_put:
++	clk_put(priv->clk);
+ 
+ 	return ret;
+ }
+@@ -973,7 +1008,12 @@ static int tw9910_probe(struct i2c_client *client,
+ static int tw9910_remove(struct i2c_client *client)
+ {
+ 	struct tw9910_priv *priv = to_tw9910(client);
+-	v4l2_clk_put(priv->clk);
 +
-+	dw9807_dev->sd.entity.function = MEDIA_ENT_F_LENS;
++	if (priv->pdn_gpio)
++		gpiod_put(priv->pdn_gpio);
++	clk_put(priv->clk);
++	v4l2_device_unregister_subdev(&priv->subdev);
 +
-+	rval = v4l2_async_register_subdev(&dw9807_dev->sd);
-+	if (rval < 0)
-+		goto err_cleanup;
-+
-+	pm_runtime_set_active(&client->dev);
-+	pm_runtime_enable(&client->dev);
-+	pm_runtime_idle(&client->dev);
-+
-+	return 0;
-+
-+err_cleanup:
-+	dw9807_subdev_cleanup(dw9807_dev);
-+	return rval;
-+}
-+
-+static int dw9807_remove(struct i2c_client *client)
-+{
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct dw9807_device *dw9807_dev = sd_to_dw9807_vcm(sd);
-+
-+	pm_runtime_disable(&client->dev);
-+	pm_runtime_set_suspended(&client->dev);
-+
-+	dw9807_subdev_cleanup(dw9807_dev);
-+
-+	return 0;
-+}
-+
-+/*
-+ * This function sets the vcm position, so it consumes least current
-+ * The lens position is gradually moved in units of DW9807_CTRL_STEPS,
-+ * to make the movements smoothly.
+ 	return 0;
+ }
+ 
+@@ -994,6 +1034,6 @@ static struct i2c_driver tw9910_i2c_driver = {
+ 
+ module_i2c_driver(tw9910_i2c_driver);
+ 
+-MODULE_DESCRIPTION("SoC Camera driver for tw9910");
++MODULE_DESCRIPTION("V4L2 driver for TW9910 video decoder");
+ MODULE_AUTHOR("Kuninori Morimoto");
+ MODULE_LICENSE("GPL v2");
+diff --git a/include/media/i2c/tw9910.h b/include/media/i2c/tw9910.h
+index 90bcf1f..bec8f7b 100644
+--- a/include/media/i2c/tw9910.h
++++ b/include/media/i2c/tw9910.h
+@@ -18,6 +18,9 @@
+ 
+ #include <media/soc_camera.h>
+ 
++/**
++ * tw9910_mpout_pin - MPOUT (multi-purpose output) pin functions
 + */
-+static int __maybe_unused dw9807_vcm_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct dw9807_device *dw9807_dev = sd_to_dw9807_vcm(sd);
-+	const char tx_data[2] = { DW9807_CTL_ADDR, 0x01 };
-+	int ret, val;
-+
-+	for (val = dw9807_dev->current_val & ~(DW9807_CTRL_STEPS - 1);
-+	     val >= 0; val -= DW9807_CTRL_STEPS) {
-+		ret = dw9807_set_dac(client, val);
-+		if (ret)
-+			dev_err_once(dev, "%s I2C failure: %d", __func__, ret);
-+		usleep_range(DW9807_CTRL_DELAY_US, DW9807_CTRL_DELAY_US + 10);
-+	}
-+
-+	/* Power down */
-+	ret = i2c_master_send(client, tx_data, sizeof(tx_data));
-+
-+	if (ret != sizeof(tx_data)) {
-+		dev_err(&client->dev, "I2C write CTL fail\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * This function sets the vcm position to the value set by the user
-+ * through v4l2_ctrl_ops s_ctrl handler
-+ * The lens position is gradually moved in units of DW9807_CTRL_STEPS,
-+ * to make the movements smoothly.
+ enum tw9910_mpout_pin {
+ 	TW9910_MPO_VLOSS,
+ 	TW9910_MPO_HLOCK,
+@@ -29,6 +32,12 @@ enum tw9910_mpout_pin {
+ 	TW9910_MPO_RTCO,
+ };
+ 
++/**
++ * tw9910_video_info -	tw9910 driver interface structure
++ * @buswidth:		Parallel data bus width (8 or 16).
++ * @mpout:		Selected function of MPOUT (multi-purpose output) pin.
++ *			See &enum tw9910_mpout_pin
 + */
-+static int  __maybe_unused dw9807_vcm_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct dw9807_device *dw9807_dev = sd_to_dw9807_vcm(sd);
-+	const char tx_data[2] = { DW9807_CTL_ADDR, 0x00 };
-+	int ret, val;
-+
-+	/* Power on */
-+	ret = i2c_master_send(client, tx_data, sizeof(tx_data));
-+	if (ret != sizeof(tx_data)) {
-+		dev_err(&client->dev, "I2C write CTL fail\n");
-+		return -EIO;
-+	}
-+
-+	for (val = dw9807_dev->current_val % DW9807_CTRL_STEPS;
-+	     val < dw9807_dev->current_val + DW9807_CTRL_STEPS - 1;
-+	     val += DW9807_CTRL_STEPS) {
-+		ret = dw9807_set_dac(client, val);
-+		if (ret)
-+			dev_err_ratelimited(dev, "%s I2C failure: %d",
-+						__func__, ret);
-+		usleep_range(DW9807_CTRL_DELAY_US, DW9807_CTRL_DELAY_US + 10);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id dw9807_of_table[] = {
-+	{ .compatible = "dongwoon,dw9807" },
-+	{ { 0 } }
-+};
-+MODULE_DEVICE_TABLE(of, dw9807_of_table);
-+
-+static const struct dev_pm_ops dw9807_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(dw9807_vcm_suspend, dw9807_vcm_resume)
-+	SET_RUNTIME_PM_OPS(dw9807_vcm_suspend, dw9807_vcm_resume, NULL)
-+};
-+
-+static struct i2c_driver dw9807_i2c_driver = {
-+	.driver = {
-+		.name = DW9807_NAME,
-+		.pm = &dw9807_pm_ops,
-+		.of_match_table = dw9807_of_table,
-+	},
-+	.probe_new = dw9807_probe,
-+	.remove = dw9807_remove,
-+};
-+
-+module_i2c_driver(dw9807_i2c_driver);
-+
-+MODULE_AUTHOR("Chiang, Alan <alanx.chiang@intel.com>");
-+MODULE_DESCRIPTION("DW9807 VCM driver");
-+MODULE_LICENSE("GPL v2");
+ struct tw9910_video_info {
+ 	unsigned long		buswidth;
+ 	enum tw9910_mpout_pin	mpout;
 -- 
 2.7.4
-
