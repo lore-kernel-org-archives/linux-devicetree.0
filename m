@@ -1,64 +1,107 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 05/10] dt-bindings: gpio: Add gpio nodes for Actions S900
- SoC
-Date: Wed, 21 Feb 2018 17:52:23 -0600
-Message-ID: <CAL_JsqK+586zyvsZ0b9i+x78V5NDnAput6Ygfw0qFXu=B-hb9g@mail.gmail.com>
-References: <20180217204433.3095-1-manivannan.sadhasivam@linaro.org>
- <20180217204433.3095-6-manivannan.sadhasivam@linaro.org>
- <20180219203523.rhvbnym7oomzahwi@rob-hp-laptop>
- <20180221145821.bhoxjndibp3bqfxi@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4 08/16] drm: rcar-du: Fix legacy DT to create LVDS
+ encoder nodes
+Date: Thu, 22 Feb 2018 01:54:23 +0200
+Message-ID: <31008700.E3yMoWPLls@avalon>
+References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20180220231046.32638-9-laurent.pinchart+renesas@ideasonboard.com>
+ <CAL_JsqKBSeNU2jDX-pLsGAUJtzBVk9=-Hg0Etq_0JTd_8RccVQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180221145821.bhoxjndibp3bqfxi@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, linux-gpio@vger.kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqKBSeNU2jDX-pLsGAUJtzBVk9=-Hg0Etq_0JTd_8RccVQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Frank Rowand <frowand.list@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 21, 2018 at 8:58 AM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> Hi Rob,
-> On Mon, Feb 19, 2018 at 02:35:23PM -0600, Rob Herring wrote:
->> On Sun, Feb 18, 2018 at 02:14:28AM +0530, Manivannan Sadhasivam wrote:
->> > Add gpio nodes for Actions Semi S900 SoC.
->> >
->> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->> > ---
->> >  .../devicetree/bindings/gpio/actions,owl-gpio.txt         | 15 +++++++++++++++
->> >  1 file changed, 15 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt b/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
->> > new file mode 100644
->> > index 000000000000..4cd4cb7bfd1b
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
->> > @@ -0,0 +1,15 @@
->> > +* Actions Semi OWL GPIO controller bindings
->> > +
->> > +- compatible      : Should be "actions,s900-gpio"
->> > +- reg             : Address and range of the GPIO controller registers.
->> > +- gpio-controller : Marks the device node as a GPIO controller.
->> > +- #gpio-cells     : Should be <2>. The first cell is the gpio number and
->> > +                    the second cell is used to specify optional parameters.
->>
->> Doesn't do interrupts?
->>
-> Interrupt support will be added once this base driver gets in.
-> One step at a time ;-)
-
-Binding are separate from the driver. Drivers can evolve, but h/w
-doesn't (for a given piece of Si). It is not a high bar to list
-#interrupt-cells and interrupt-controller.
-
-Rob
+SGkgUm9iLAoKT24gVGh1cnNkYXksIDIyIEZlYnJ1YXJ5IDIwMTggMDE6Mjg6NDggRUVUIFJvYiBI
+ZXJyaW5nIHdyb3RlOgo+IE9uIFR1ZSwgRmViIDIwLCAyMDE4IGF0IDU6MTAgUE0sIExhdXJlbnQg
+UGluY2hhcnQgd3JvdGU6Cj4gPiBUaGUgaW50ZXJuYWwgTFZEUyBlbmNvZGVycyBub3cgaGF2ZSB0
+aGVpciBvd24gRFQgYmluZGluZ3MuIEJlZm9yZQo+ID4gc3dpdGNoaW5nIHRoZSBkcml2ZXIgaW5m
+cmFzdHJ1Y3R1cmUgdG8gdGhvc2UgbmV3IGJpbmRpbmdzLCBpbXBsZW1lbnQKPiA+IGJhY2t3YXJk
+LWNvbXBhdGliaWxpdHkgdGhyb3VnaCBsaXZlIERUIHBhdGNoaW5nLgo+ID4gCj4gPiBQYXRjaGlu
+ZyBpcyBkaXNhYmxlZCBhbmQgd2lsbCBiZSBlbmFibGVkIGFsb25nIHdpdGggc3VwcG9ydCBmb3Ig
+dGhlIG5ldwo+ID4gRFQgYmluZGluZ3MgaW4gdGhlIERVIGRyaXZlci4KPiA+IAo+ID4gU2lnbmVk
+LW9mZi1ieTogTGF1cmVudCBQaW5jaGFydAo+ID4gPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0Bp
+ZGVhc29uYm9hcmQuY29tPgo+ID4gLS0tCj4gCj4gWy4uLl0KPiAKPiA+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5MC5kdHMKPiA+IGIv
+ZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTAuZHRzIG5ldyBm
+aWxlIG1vZGUKPiA+IDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi42ZWJiMzU1YjY1MmEK
+PiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJf
+ZHVfb2ZfbHZkc19yOGE3NzkwLmR0cwo+ID4gQEAgLTAsMCArMSw4MSBAQAo+ID4gKy8vIFNQRFgt
+TGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4gPiArLyoKPiA+ICsgKiByY2FyX2R1X29mX2x2
+ZHNfcjhhNzc5MC5kdHMgLSBMZWdhY3kgTFZEUyBEVCBiaW5kaW5ncyBjb252ZXJzaW9uIGZvcgo+
+ID4gUjhBNzc5MAo+ID4gKyAqCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE4IExhdXJlbnQgUGlu
+Y2hhcnQKPiA+IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4gPiArICoKPiA+
+ICsgKiBCYXNlZCBvbiB3b3JrIGZyb20gSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KPiA+ICsg
+KiBDb3B5cmlnaHQgKEMpIDIwMTUgVGV4YXMgSW5zdHJ1bWVudHMKPiA+ICsgKi8KPiA+ICsKPiA+
+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svcmVuZXNhcy1jcGctbXNzci5oPgo+IAo+IERv
+ZXNuJ3Qgc2VlbSB0byBiZSB1c2VkIGluIGFueSBvZiB0aGVzZS4KCkl0J3MgYSBsZWZ0b3ZlciBm
+cm9tIGEgcHJldmlvdXMgdGVzdC4gSSdsbCByZW1vdmUgaXQgaW4gYWxsIHRoZSAuZHRzIGZpbGVz
+LgoKPiBPdGhlcndpc2UsCj4gCj4gUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
+bC5vcmc+Cj4gCj4gPiArCj4gPiArL2R0cy12MS87Cj4gPiArL3BsdWdpbi87Cj4gPiArLyB7Cj4g
+PiArICAgICAgIGZyYWdtZW50QDAgewo+ID4gKyAgICAgICAgICAgICAgIHRhcmdldC1wYXRoID0g
+Ii8iOwo+ID4gKyAgICAgICAgICAgICAgIF9fb3ZlcmxheV9fIHsKPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgI3NpemUtY2VsbHMgPSA8Mj47Cj4gPiArCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBs
+dmRzQGZlYjkwMDAwIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0
+aWJsZSA9ICJyZW5lc2FzLHI4YTc3OTAtbHZkcyI7Cj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHJlZyA9IDwwIDB4ZmViOTAwMDAgMCAweDFjPjsKPiA+ICsKPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcG9ydHMgewo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ID4gKwo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRAMCB7Cj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsdmRzMF9p
+bnB1dDogZW5kcG9pbnQgewo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfTsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB9Owo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRAMSB7
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcg
+PSA8MT47Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBsdmRzMF9vdXQ6IGVuZHBvaW50IHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIH07Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfTsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIH07Cj4gPiArCj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICBsdmRzQGZlYjk0MDAwIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29t
+cGF0aWJsZSA9ICJyZW5lc2FzLHI4YTc3OTAtbHZkcyI7Cj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHJlZyA9IDwwIDB4ZmViOTQwMDAgMCAweDFjPjsKPiA+ICsKPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydHMgewo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ID4gKwo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRAMCB7Cj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsdmRz
+MV9pbnB1dDogZW5kcG9pbnQgewo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfTsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB9Owo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRA
+MSB7Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
+ZWcgPSA8MT47Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBsdmRzMV9vdXQ6IGVuZHBvaW50IHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIH07Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfTsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gPiArICAgICAgICAgICAgICAgfTsKPiA+ICsg
+ICAgICAgfTsKPiA+ICsKPiA+ICsgICAgICAgZnJhZ21lbnRAMSB7Cj4gPiArICAgICAgICAgICAg
+ICAgdGFyZ2V0LXBhdGggPSAiL2Rpc3BsYXlAZmViMDAwMDAvcG9ydHMiOwo+ID4gKyAgICAgICAg
+ICAgICAgIF9fb3ZlcmxheV9fIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHBvcnRAMSB7
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVuZHBvaW50IHsKPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8Jmx2
+ZHMwX2lucHV0PjsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIH07Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBwb3J0
+QDIgewo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBlbmRwb2ludCB7Cj4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0g
+PCZsdmRzMV9pbnB1dD47Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+ID4gKyAgICAgICAgICAgICAgIH07Cj4gPiAr
+ICAgICAgIH07Cj4gPiArfTsKCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
