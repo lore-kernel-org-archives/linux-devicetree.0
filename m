@@ -1,16 +1,16 @@
-From: gregkh <gregkh@linuxfoundation.org>
-Subject: Re: stable-rc/linux-4.15.y build: 185 builds: 0 failed, 185 passed,
- 46 warnings (v4.15.1-61-g7ab5513e4cbc)
-Date: Wed, 21 Feb 2018 12:35:48 +0100
-Message-ID: <20180221113548.GB19900@kroah.com>
-References: <5a78c368.5896df0a.8f293.fd41@mx.google.com>
- <CAK8P3a1n2ELL56MHqEgffzNg2B8gdpwHpMnp_vgN4ftAAiwW8A@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v7_00=2F42=5D_ARM=3A_davinci=3A_convert_to_common?=
+ =?UTF-8?Q?_clock_framework=E2=80=8B?=
+Date: Wed, 21 Feb 2018 13:01:44 +0100
+Message-ID: <CAMRc=Mf_pumyTZPn9T=sG7Ab95YS3KqKc2bT0evhESTRRFeiuQ@mail.gmail.com>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
+ <CAMRc=MdT5Vd68eoWfJGv=5_uzD0L5m3Y+wi6r7N6O8y6HZrQSg@mail.gmail.com>
+ <6142ab0d-85b1-84da-3a35-bdd8733bebd9@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1n2ELL56MHqEgffzNg2B8gdpwHpMnp_vgN4ftAAiwW8A@mail.gmail.com>
+In-Reply-To: <6142ab0d-85b1-84da-3a35-bdd8733bebd9@lechnology.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,140 +20,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: DTML <devicetree@vger.kernel.org>, "kernelci.org bot" <bot@kernelci.org>, Kernel Build Reports Mailman List <kernel-build-reports@lists.linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "4.15.x" <stable@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 06, 2018 at 04:08:49PM +0100, Arnd Bergmann wrote:
-> On Mon, Feb 5, 2018 at 9:49 PM, kernelci.org bot <bot@kernelci.org> wrote:
-> >
-> > stable-rc/linux-4.15.y build: 185 builds: 0 failed, 185 passed, 46 warnings (v4.15.1-61-g7ab5513e4cbc)
-> 
-> Hi Greg,
-> 
-> FYI, the device tree compiler warnings are all fixed in
-> linux-4.16-rc1. These are basically fixes
-> that we ended up not submitting last minute for the release after one
-> of them (the USB PHY
-> one, if you remember) had blown up.
-> 
-> Anyway, I think the risk is rather low for any of them (they are
-> mostly platforms that
-> are not widely used, and the fixes make things work that didn't), so
-> to get a clean
-> build, feel free to pick up the remaining patches from mainline now or
-> after -rc1:
-> 
-> > Warnings Detected:
-> >
-> > Warnings summary:
-> > 2 arch/arm/boot/dts/spear1340-evb.dtb: Warning (dmas_property): Property 'dmas', cell 4 is not a phandle reference in /ahb/apb/serial@b4100000
-> > 2 arch/arm/boot/dts/spear1340-evb.dtb: Warning (dmas_property): Missing property '#dma-cells' in node /interrupt-controller@ec801000 or bad phandle (referred from /ahb/apb/serial@b4100000:dmas[4])
-> 
-> cdd104099141 ("arm: spear13xx: Fix dmas cells")
+2018-02-20 19:39 GMT+01:00 David Lechner <david@lechnology.com>:
+> On 02/20/2018 07:33 AM, Bartosz Golaszewski wrote:
+>>
+>> 2018-02-19 21:21 GMT+01:00 David Lechner <david@lechnology.com>:
+>>>
+>>> This series converts mach-davinci to use the common clock framework.
+>>>
+>>>
+>>
+>> Hi David,
+>>
+>> just some quick results from today's playing with v7.
+>>
+>> I started out with da850-lcdk with my standard rootfs over NFS. I was
+>> not able to boot to console so far. The first problem is that mdio
+>> fails to probe:
+>>
+>> libphy: Fixed MDIO Bus: probed
+>> davinci_mdio 1e24000.mdio: davinci mdio revision 1.5, bus freq 2200000
+>> davinci_mdio 1e24000.mdio: no live phy, scanning all
+>> davinci_mdio: probe of 1e24000.mdio failed with error -5> After some
+>> digging I noticed that the supplied clock rate differs
+>> between mainline (114000000Hz) vs common-clock-v7 (18000000). Since
+>> we're not setting the rate in mdio, using LPSC_SET_RATE_PARENT would
+>> not help like with lcdc.
+>
+>
+> Can you post the output of this command so that I can see how your
+> clocks are setup:
+>
+> cat /sys/kernel/debug/clk/clk_summary
+>
+>
+>>
+>> After that, the boot just hangs without ever getting to emac's probe.
+>
+>
+> Using your workaround, can you run:
+>
+> cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+>
+> If you see:
+>   1e27000.clock-controller: emac  off-0
+>
+> then genpd is not working like it is supposed to. You should see something
+> like this for device that are working:
+>           1e27000.clock-controller: uart2  on
+>     /devices/platform/soc@1c00000/1d0d000.serial        active
+>
+>
+>>
+>> Once I set the emac clock to always enabled (a workaround that was
+>> necessary with v6, but could be dropped with my first
+>> genpd-in-a-separate-driver attempt), I'm getting a rather strange NULL
+>> pointer dereference:
+>
+>
+> I noticed this too when adding the power-domains property to some device
+> tree nodes. This is part of the reason why I didn't add it everywhere.
+> I wasn't able to figure out the cause of this yet. As a work around
+> though, please try removing the power-domains property from the emac
+> and mdio nodes and use your previous workaround of having an always
+> enabled clock.
+>
+>
 
-Now applied.
+When I use any of the workarounds I just keep getting more problems
+(e.g. [1] from blk and pinctrl). I only had a couple hours today to
+play with it but it seems to me we have some memory corruption
+somewhere. I'll check the initialization order of all the frameworks
+involved tomorrow.
 
-> > 2 arch/arm/boot/dts/spear1310-evb.dtb: Warning (gpios_property): Property 'cs-gpios', cell 6 is not a phandle reference in /ahb/apb/spi@e0100000
-> > 2 arch/arm/boot/dts/spear1310-evb.dtb: Warning (gpios_property): Missing property '#gpio-cells' in node /interrupt-controller@ec801000 or bad phandle (referred from /ahb/apb/spi@e0100000:cs-gpios[6])
-> 
-> f8975cb1b8a3 ("arm: spear13xx: Fix spics gpio controller's warning")
+Best regards,
+Bartosz
 
-Applied.
-
-> > 2 arch/arm/boot/dts/exynos5410-smdk5410.dtb: Warning (interrupts_property): Missing interrupt-controller or interrupt-map property in /soc/system-controller@10040000
-> > 2 arch/arm/boot/dts/exynos5410-smdk5410.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/system-controller@10040000
-> > 2 arch/arm/boot/dts/exynos5410-odroidxu.dtb: Warning (interrupts_property): Missing interrupt-controller or interrupt-map property in /soc/system-controller@10040000
-> > 2 arch/arm/boot/dts/exynos5410-odroidxu.dtb: Warning (interrupts_property): Missing #interrupt-cells in interrupt-parent /soc/system-controller@10040000
-> 
-> 5628a8ca1414 ("ARM: dts: exynos: fix RTC interrupt for exynos5410")
-
-Applied
-
-> > 2 WARNING: modpost: missing MODULE_LICENSE() in arch/arm/mach-pxa/tosa-bt.o
-> 
-> 3343647813fd ("ARM: pxa/tosa-bt: add MODULE_LICENSE tag")
-
-Applied
-
-> > 1 arch/arm64/boot/dts/qcom/msm8916-mtp.dtb: Warning (phys_property): Missing property '#phy-cells' in node /soc/mdss@1a00000/dsi-phy@1a98300 or bad phandle (referred from /soc/mdss@1a00000/dsi@1a98000:phys[0])
-> > 1 arch/arm64/boot/dts/qcom/apq8016-sbc.dtb: Warning (phys_property): Missing property '#phy-cells' in node /soc/mdss@1a00000/dsi-phy@1a98300 or bad phandle (referred from /soc/mdss@1a00000/dsi@1a98000:phys[0])
-> 
-> b0ab681285aa ("arm64: dts: msm8916: Add missing #phy-cells")
-
-Applied.
-
-> > 1 arch/arm64/boot/dts/mediatek/mt8173-evb.dtb: Warning (cooling_device_property): Missing property '#cooling-cells' in node /cpus/cpu@100 or bad phandle (referred from /thermal-zones/cpu_thermal/cooling-maps/map@1:cooling-device[0])
-> > 1 arch/arm64/boot/dts/mediatek/mt8173-evb.dtb: Warning (cooling_device_property): Missing property '#cooling-cells' in node /cpus/cpu@0 or bad phandle (referred from /thermal-zones/cpu_thermal/cooling-maps/map@0:cooling-device[0])
-> 
-> acbf76ee0506 ("arm64: dts: add #cooling-cells to CPU nodes")
-
-Does not apply at all, can you send a backport?
-
-> > 1 arch/arm/boot/dts/stih410-b2260.dtb: Warning (gpios_property): hdmi,hpd-gpio property size (8) too small for cell size 2 in /soc/sti-display-subsystem/sti-hdmi@8d04000
-> > 1 arch/arm/boot/dts/stih410-b2120.dtb: Warning (gpios_property): hdmi,hpd-gpio property size (8) too small for cell size 2 in /soc/sti-display-subsystem/sti-hdmi@8d04000
-> > 1 arch/arm/boot/dts/stih407-b2120.dtb: Warning (gpios_property): hdmi,hpd-gpio property size (8) too small for cell size 2 in /soc/sti-display-subsystem/sti-hdmi@8d04000
-> 
-> 7ac1f59c09a6 ("ARM: dts: STi: Add gpio polarity for "hdmi,hpd-gpio" property")
-
-Applied.
-
-> > 1 arch/arm/boot/dts/ste-nomadik-s8815.dtb: Warning (interrupts_property): Missing interrupt-parent for /amba/clcd@10120000
-> > 1 arch/arm/boot/dts/ste-nomadik-nhk15.dtb: Warning (interrupts_property): Missing interrupt-parent for /amba/clcd@10120000
-> 
-> e8bfa0422469 ("ARM: dts: nomadik: add interrupt-parent for clcd")
-
-Applied
-
-> > 1 arch/arm/boot/dts/spear600-evb.dtb: Warning (interrupts_property): Missing interrupt-parent for /ahb/apb/rtc@fc900000
-> 
-> 6ffb5b4f248f ("arm: spear600: Add missing interrupt-parent of rtc")
-
-Applied.
-
-> > 1 arch/arm/boot/dts/s5pv210-torbreck.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
-> > 1 arch/arm/boot/dts/s5pv210-smdkv210.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
-> > 1 arch/arm/boot/dts/s5pv210-smdkc110.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
-> > 1 arch/arm/boot/dts/s5pv210-goni.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
-> > 1 arch/arm/boot/dts/s5pv210-aquila.dtb: Warning (interrupts_property): Missing interrupt-parent for /soc/ohci@ec300000
-> 
-> 5c1037196b9e ("ARM: dts: s5pv210: add interrupt-parent for ohci")
-
-Applied.
-
-> > 1 arch/arm/boot/dts/mt7623n-rfb-nand.dtb: Warning (resets_property): Missing property '#reset-cells' in node /syscon@1b000000 or bad phandle (referred from /ethernet@1b100000:resets[0])
-> > 1 arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning (resets_property): Missing property '#reset-cells' in node /syscon@1b000000 or bad phandle (referred from /ethernet@1b100000:resets[0])
-> 
-> 76a09ce214ad ("arm: dts: mt7623: Update ethsys binding")
-
-Applied.
-
-> > 1 arch/arm/boot/dts/mt2701-evb.dtb: Warning (resets_property): Missing property '#reset-cells' in node /syscon@1b000000 or bad phandle (referred from /ethernet@1b100000:resets[0])
-> 
-> ae72e95b5e4d ("arm: dts: mt2701: Add reset-cells")
-
-Applied.
-
-> > 1 arch/arm/boot/dts/lpc3250-phy3250.dtb: Warning (gpios_property): reset-gpio property size (12) too small for cell size 3 in /ahb/apb/i2c@400A0000/uda1380@18
-> > 1 arch/arm/boot/dts/lpc3250-phy3250.dtb: Warning (gpios_property): power-gpio property size (12) too small for cell size 3 in /ahb/apb/i2c@400A0000/uda1380@18
-> > 1 arch/arm/boot/dts/lpc3250-ea3250.dtb: Warning (gpios_property): reset-gpio property size (12) too small for cell size 3 in /ahb/apb/i2c@400A0000/uda1380@18
-> > 1 arch/arm/boot/dts/lpc3250-ea3250.dtb: Warning (gpios_property): power-gpio property size (12) too small for cell size 3 in /ahb/apb/i2c@400A0000/uda1380@18
-> 
-> ca32e0c4bf9c ("ARM: lpc3250: fix uda1380 gpio numbers")
-
-Applied.
-
-> > 1 arch/arm/boot/dts/arm-realview-eb-a9mp.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /fpga/charlcd@10008000
-> > 1 arch/arm/boot/dts/arm-realview-eb-a9mp-bbrevd.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /fpga/charlcd@10008000
-> > 1 arch/arm/boot/dts/arm-realview-eb-11mp.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /fpga/charlcd@10008000
-> > 1 arch/arm/boot/dts/arm-realview-eb-11mp-ctrevb.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /fpga/charlcd@10008000
-> > 1 arch/arm/boot/dts/arm-realview-eb-11mp-bbrevd.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /fpga/charlcd@10008000
-> > 1 arch/arm/boot/dts/arm-realview-eb-11mp-bbrevd-ctrevb.dtb: Warning (interrupts_property): interrupts size is (8), expected multiple of 12 in /fpga/charlcd@10008000
-> 
-> 586b2a4befad ("ARM: dts: Delete bogus reference to the charlcd")
-
-Applied.
-
-Thanks for all of these, only one needs manual help.
-
-greg k-h
+[1] https://pastebin.com/75mkkuJL
