@@ -1,52 +1,100 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 3/4] arm64: dts: sdm845: Add minimal dts/dtsi files for
- sdm845 SoC and MTP
-Date: Wed, 21 Feb 2018 15:23:57 -0800
-Message-ID: <CAD=FV=WgyX-O8haJp3WpzPodV2f1sokL9hW_qe7R8hVYy3v+sg@mail.gmail.com>
-References: <20180216060503.22006-1-rnayak@codeaurora.org>
- <20180216060503.22006-4-rnayak@codeaurora.org>
- <20180219163651.66936056@why.wild-wind.fr.eu.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 08/16] drm: rcar-du: Fix legacy DT to create LVDS
+ encoder nodes
+Date: Wed, 21 Feb 2018 17:28:48 -0600
+Message-ID: <CAL_JsqKBSeNU2jDX-pLsGAUJtzBVk9=-Hg0Etq_0JTd_8RccVQ@mail.gmail.com>
+References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20180220231046.32638-9-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180219163651.66936056@why.wild-wind.fr.eu.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, evgreen@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180220231046.32638-9-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Feb 19, 2018 at 8:36 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
->> +                     interrupts = <GIC_SPI 208 IRQ_TYPE_NONE>;
->
-> Please do not use IRQ_TYPE_NONE, ever. It doesn't exist in the GIC
-> binding. Set it to the actual trigger value.
->
-
->> +                     interrupts = <GIC_SPI 481 IRQ_TYPE_NONE>;
->
-> Same here.
-
-Thanks for the review Marc!
-
-
-Andy: If I'm reading everything correctly you're the one who would
-collect these patches and apply them.  Is that right?  Do they look OK
-to you in general?  Would you prefer that Rajendra send out a v5 with
-the fixes pointed out by Marc, or would you prefer to fix them up
-yourself when applying?  Is now a good time or would you prefer to
-wait?
-
-Thanks!  :)
-
--Doug
+T24gVHVlLCBGZWIgMjAsIDIwMTggYXQgNToxMCBQTSwgTGF1cmVudCBQaW5jaGFydAo8bGF1cmVu
+dC5waW5jaGFydCtyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+IHdyb3RlOgo+IFRoZSBpbnRlcm5h
+bCBMVkRTIGVuY29kZXJzIG5vdyBoYXZlIHRoZWlyIG93biBEVCBiaW5kaW5ncy4gQmVmb3JlCj4g
+c3dpdGNoaW5nIHRoZSBkcml2ZXIgaW5mcmFzdHJ1Y3R1cmUgdG8gdGhvc2UgbmV3IGJpbmRpbmdz
+LCBpbXBsZW1lbnQKPiBiYWNrd2FyZC1jb21wYXRpYmlsaXR5IHRocm91Z2ggbGl2ZSBEVCBwYXRj
+aGluZy4KPgo+IFBhdGNoaW5nIGlzIGRpc2FibGVkIGFuZCB3aWxsIGJlIGVuYWJsZWQgYWxvbmcg
+d2l0aCBzdXBwb3J0IGZvciB0aGUgbmV3Cj4gRFQgYmluZGluZ3MgaW4gdGhlIERVIGRyaXZlci4K
+Pgo+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnQrcmVu
+ZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+IC0tLQoKWy4uLl0KCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkwLmR0cyBiL2RyaXZlcnMv
+Z3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkwLmR0cwo+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi42ZWJiMzU1YjY1MmEKPiAtLS0gL2Rldi9u
+dWxsCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3
+OTAuZHRzCj4gQEAgLTAsMCArMSw4MSBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjog
+R1BMLTIuMAo+ICsvKgo+ICsgKiByY2FyX2R1X29mX2x2ZHNfcjhhNzc5MC5kdHMgLSBMZWdhY3kg
+TFZEUyBEVCBiaW5kaW5ncyBjb252ZXJzaW9uIGZvciBSOEE3NzkwCj4gKyAqCj4gKyAqIENvcHly
+aWdodCAoQykgMjAxOCBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25i
+b2FyZC5jb20+Cj4gKyAqCj4gKyAqIEJhc2VkIG9uIHdvcmsgZnJvbSBKeXJpIFNhcmhhIDxqc2Fy
+aGFAdGkuY29tPgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTUgVGV4YXMgSW5zdHJ1bWVudHMKPiAr
+ICovCj4gKwo+ICsjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svcmVuZXNhcy1jcGctbXNzci5o
+PgoKRG9lc24ndCBzZWVtIHRvIGJlIHVzZWQgaW4gYW55IG9mIHRoZXNlLgoKT3RoZXJ3aXNlLAoK
+UmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cgo+ICsKPiArL2R0cy12
+MS87Cj4gKy9wbHVnaW4vOwo+ICsvIHsKPiArICAgICAgIGZyYWdtZW50QDAgewo+ICsgICAgICAg
+ICAgICAgICB0YXJnZXQtcGF0aCA9ICIvIjsKPiArICAgICAgICAgICAgICAgX19vdmVybGF5X18g
+ewo+ICsgICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDI+Owo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDI+Owo+ICsKPiArICAgICAgICAgICAg
+ICAgICAgICAgICBsdmRzQGZlYjkwMDAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyOGE3NzkwLWx2ZHMiOwo+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgcmVnID0gPDAgMHhmZWI5MDAwMCAwIDB4MWM+Owo+ICsKPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRzIHsKPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAwIHsKPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbHZkczBfaW5wdXQ6IGVu
+ZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0QDEgewo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsdmRzMF9vdXQ6IGVuZHBv
+aW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9
+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+
+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICBsdmRzQGZlYjk0MDAwIHsKPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVuZXNhcyxyOGE3NzkwLWx2ZHMi
+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDAgMHhmZWI5NDAwMCAw
+IDB4MWM+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcnRzIHsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8
+MT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxz
+ID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9y
+dEAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
+ZWcgPSA8MD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgbHZkczFfaW5wdXQ6IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0
+QDEgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
+ZyA9IDwxPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBsdmRzMV9vdXQ6IGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAg
+ICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgfTsKPiArCj4g
+KyAgICAgICBmcmFnbWVudEAxIHsKPiArICAgICAgICAgICAgICAgdGFyZ2V0LXBhdGggPSAiL2Rp
+c3BsYXlAZmViMDAwMDAvcG9ydHMiOwo+ICsgICAgICAgICAgICAgICBfX292ZXJsYXlfXyB7Cj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAxIHsKPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzMF9pbnB1dD47Cj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgcG9ydEAyIHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIGVuZHBvaW50IHsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+cmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzMV9pbnB1dD47Cj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgICAg
+ICAgIH07Cj4gKyAgICAgICB9Owo+ICt9OwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
