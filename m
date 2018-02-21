@@ -1,149 +1,130 @@
-Return-Path: <SRS0=oNRe=FO=opensource.cirrus.com=ckeepax@kernel.org>
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v4 1/2] mfd: arizona: Update reset pin to use GPIOD
-Date: Tue, 20 Feb 2018 16:59:30 +0000
-Message-ID: <20180220165931.8809-1-ckeepax@opensource.cirrus.com>
+Return-Path: <SRS0=y8Uw=FP=gmail.com=jacek.anaszewski@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: leds: document Panasonic AN30259A
+ bindings
+References: <20180220005446.8577-1-simon@lineageos.org>
+ <20180220005446.8577-2-simon@lineageos.org>
+ <affb0dcc-05a0-20f5-4caf-528453b59fb6@gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <e0e0f999-bb14-6f08-4cc8-2c4936b04ed0@gmail.com>
+Date: Wed, 21 Feb 2018 20:35:22 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-To: lee.jones@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+In-Reply-To: <affb0dcc-05a0-20f5-4caf-528453b59fb6@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+To: Simon Shields <simon@lineageos.org>, linux-leds@vger.kernel.org
+Cc: Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Now GPIOD has support for both pdata systems and for non-standard DT
-bindings the Arizona reset GPIO can be converted to use it.
+On 02/20/2018 10:28 PM, Jacek Anaszewski wrote:
+> Hi Simon,
+> 
+> Thank you for the patch. I have a few comments below.
+> 
+> On 02/20/2018 01:54 AM, Simon Shields wrote:
+>> Signed-off-by: Simon Shields <simon@lineageos.org>
+>> ---
+>>  .../devicetree/bindings/leds/leds-an30259a.txt     | 41 ++++++++++++++++++++++
+>>  1 file changed, 41 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-an30259a.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-an30259a.txt b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+>> new file mode 100644
+>> index 000000000000..d3586ce71eef
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+>> @@ -0,0 +1,41 @@
+>> +* Panasonic AN30259A 3-channel LED driver
+>> +
+>> +The AN30259A is a LED controller capable of driving three LEDs independently. It supports
+>> +constant current output and sloping current output modes. The chip is connected over I2C.
+>> +
+>> +Required properties:
+>> +	- compatible : must be "panasonic,an30259a"
+> 
+> s/must/Must/ and please put a dot in the end.
+> 
+>> +	- reg -  I2C slave address
+>> +
+>> +Each led is represented as a sub-node of the panasonic,an30259a node.
+> 
+> s/led/LED/
+> 
+>> +
+>> +Optional sub-node properties:
+>> +	- label: see Documentation/devicetree/bindings/leds/common.txt
+>> +	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
+>> +	- led-sources: 0 if LED is connected to LED1 pin,
+> 
+> led-sources is applicable in e bit different arrangements.
+> Here please use "reg" property instead. In this case you will
+> need also below in the "Required properties":
+> 
+> - #address-cells: Must be 1.
+> - #size-cells: Must be 0.
+> 
+> 
+>> +	  1 if LED is connected to LED2 pin, or 2 if LED is connected to LED3 pin.
+>> +
+>> +Example:
+>> +an30259a@30 {
+> 
+> According to the lesson from Rob [0] it should be:
+> 
+> led-controller@30 {
+>   #address-cells = <1>;
+>   #size-cells = <0>
+>   reg = <30>;
+> 
+>   led0 {
+>     reg = <0>;
+>     label = "red";	
+>   };
+> 
+>   green@1 {
+>     reg = <1>;
+>     label = "green";
+>   };
+> 
+>   blue@2 {
+>     reg = <2>;
+>     label = "blue";
+>   };
+> };
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
+Of course s/green@1/led@1/ and s/blue@2/led@2/
 
-Changes since v3:
- - Update header includes
+Moreover, label should describe LED function, color
+is only an extra info. Please refer to the other LED bindings
+for a reference.
 
-Thanks,
-Charles
+> 
+>> +	compatible = "panasonic,an30259a";
+>> +	reg = <0x30>;
+>> +
+>> +	red {
+>> +		led-sources = <0>;
+>> +		linux,default-trigger = "heartbeat";
+>> +		label = "red";
+>> +	};
+>> +
+>> +	green {
+>> +		led-sources = <1>;
+>> +		label = "green";
+>> +	};
+>> +
+>> +	blue {
+>> +		led-sources = <2>;
+>> +		label = "blue";
+>> +	};
+>> +};
+>> +
+>> +For more information please see the link below:
+>> +https://www.alliedelec.com/m/d/a9d2b3ee87c2d1a535a41dd747b1c247.pdf
+>>
+> 
+> [0] https://patchwork.kernel.org/patch/10093757/
+> 
 
- drivers/mfd/arizona-core.c        | 53 ++++++++++++++++++++++++++-------------
- include/linux/mfd/arizona/pdata.h |  3 ++-
- 2 files changed, 37 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index 8d46e3ad9529..ad7d1a7c411c 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -13,13 +13,12 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/err.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/mfd/core.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
--#include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
-@@ -279,7 +278,7 @@ static int arizona_wait_for_boot(struct arizona *arizona)
- static inline void arizona_enable_reset(struct arizona *arizona)
- {
- 	if (arizona->pdata.reset)
--		gpio_set_value_cansleep(arizona->pdata.reset, 0);
-+		gpiod_set_value_cansleep(arizona->pdata.reset, 0);
- }
- 
- static void arizona_disable_reset(struct arizona *arizona)
-@@ -295,7 +294,7 @@ static void arizona_disable_reset(struct arizona *arizona)
- 			break;
- 		}
- 
--		gpio_set_value_cansleep(arizona->pdata.reset, 1);
-+		gpiod_set_value_cansleep(arizona->pdata.reset, 1);
- 		usleep_range(1000, 5000);
- 	}
- }
-@@ -804,14 +803,26 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
- 	int ret, i;
- 	int count = 0;
- 
--	pdata->reset = of_get_named_gpio(arizona->dev->of_node, "wlf,reset", 0);
--	if (pdata->reset == -EPROBE_DEFER) {
--		return pdata->reset;
--	} else if (pdata->reset < 0) {
--		dev_err(arizona->dev, "Reset GPIO missing/malformed: %d\n",
--			pdata->reset);
-+	pdata->reset = devm_gpiod_get_from_of_node(arizona->dev,
-+						   arizona->dev->of_node,
-+						   "wlf,reset", 0,
-+						   GPIOD_OUT_LOW,
-+						   "arizona /RESET");
-+	if (IS_ERR(pdata->reset)) {
-+		ret = PTR_ERR(pdata->reset);
-+		switch (ret) {
-+		case -ENOENT:
-+		case -ENOSYS:
-+			break;
-+		case -EPROBE_DEFER:
-+			return ret;
-+		default:
-+			dev_err(arizona->dev, "Reset GPIO malformed: %d\n",
-+				ret);
-+			break;
-+		}
- 
--		pdata->reset = 0;
-+		pdata->reset = NULL;
- 	}
- 
- 	ret = of_property_read_u32_array(arizona->dev->of_node,
-@@ -1113,14 +1124,20 @@ int arizona_dev_init(struct arizona *arizona)
- 		goto err_early;
- 	}
- 
--	if (arizona->pdata.reset) {
-+	if (!arizona->pdata.reset) {
- 		/* Start out with /RESET low to put the chip into reset */
--		ret = devm_gpio_request_one(arizona->dev, arizona->pdata.reset,
--					    GPIOF_DIR_OUT | GPIOF_INIT_LOW,
--					    "arizona /RESET");
--		if (ret != 0) {
--			dev_err(dev, "Failed to request /RESET: %d\n", ret);
--			goto err_dcvdd;
-+		arizona->pdata.reset = devm_gpiod_get(arizona->dev, "reset",
-+						      GPIOD_OUT_LOW);
-+		if (IS_ERR(arizona->pdata.reset)) {
-+			ret = PTR_ERR(arizona->pdata.reset);
-+			if (ret == -EPROBE_DEFER)
-+				goto err_dcvdd;
-+			else
-+				dev_err(arizona->dev,
-+					"Reset GPIO missing/malformed: %d\n",
-+					ret);
-+
-+			arizona->pdata.reset = NULL;
- 		}
- 	}
- 
-diff --git a/include/linux/mfd/arizona/pdata.h b/include/linux/mfd/arizona/pdata.h
-index bfeecf179895..fdba6f3a286a 100644
---- a/include/linux/mfd/arizona/pdata.h
-+++ b/include/linux/mfd/arizona/pdata.h
-@@ -56,6 +56,7 @@
- #define ARIZONA_MAX_PDM_SPK 2
- 
- struct regulator_init_data;
-+struct gpio_desc;
- 
- struct arizona_micbias {
- 	int mV;                    /** Regulated voltage */
-@@ -77,7 +78,7 @@ struct arizona_micd_range {
- };
- 
- struct arizona_pdata {
--	int reset;      /** GPIO controlling /RESET, if any */
-+	struct gpio_desc *reset;      /** GPIO controlling /RESET, if any */
- 
- 	/** Regulator configuration for MICVDD */
- 	struct arizona_micsupp_pdata micvdd;
 -- 
-2.11.0
+Best regards,
+Jacek Anaszewski
