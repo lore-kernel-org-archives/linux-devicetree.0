@@ -1,71 +1,70 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 0/8] drm/rockchip: hdmi support for rk3328
-Date: Wed, 21 Feb 2018 12:07:34 +0000
-Message-ID: <1f50b49e-d402-3621-c2e8-9e0a96e859f9@arm.com>
-References: <20180216204158.29839-1-heiko@sntech.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: add DT bindings documentation
+ for ROHM BD28623 codec
+Date: Wed, 21 Feb 2018 12:13:54 +0000
+Message-ID: <20180221121354.GG8334@sirena.org.uk>
+References: <20180221043311.25840-1-suzuki.katsuhiro@socionext.com>
+ <20180221043311.25840-2-suzuki.katsuhiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180216204158.29839-1-heiko@sntech.de>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>, hjc@rock-chips.com, architt@codeaurora.org, a.hajda@samsung.com, kishon@ti.com
-Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+Content-Type: multipart/mixed; boundary="===============8949939869198474218=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180221043311.25840-2-suzuki.katsuhiro@socionext.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYvMDIvMTggMjA6NDEsIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+IFRoZSByazMyMjgvcmsz
-MjI5IGFuZCByazMzMjggc29jcyBzdGFydGVkIHVzaW5nIGEgbmV3IHR5cGUgb2YgaGRtaS1waHkK
-PiBmcm9tIElubm9zaWxpY29uIHRoYXQgcmVzaWRlcyBjb21wbGV0ZWx5IHNlcGFyYXRlIGZyb20g
-dGhlIGR3LWhkbWkgYmxvY2sKPiBhbmQgZ2V0cyBhY2Nlc3NlZCB2aWEgbW1pby4KPiAKPiBBZGRp
-dGlvbmFsbHkgdGhlIHJrMzMyOCBkdy1oZG1pIGRvZXMgbm90IHJlcG9ydCB0aGUgdmVuZG9yLXBo
-eSB0eXBlCj4gYnV0IGEgZGlmZmVyZW50IG9uZSBpbnN0ZWFkLCBzbyBhZGQgdGhlIHBvc3NpYmls
-aXR5IHRvIG92ZXJyaWRlIHRoZQo+IHBoeSB0eXBlIHdoZW4gdGhlIGdsdWUgZHJpdmVyIGtub3dz
-IGJldHRlciB0aGFuIHRoZSBpcCBibG9jayBpdHNlbGYuCj4gCj4gCj4gSSd2ZSBwdXQgYm90aCB0
-aGUgcGh5IGRyaXZlciBhbmQgZHctaGRtaSBjaGFuZ2VzIGludG8gb25lIHNlcmllcyBqdXN0Cj4g
-dG8gc2hvd2Nhc2UgaG93IGV2ZXJ5dGhpbmcgY29tZXMgdG9nZXRoZXIsIGJ1dCB3b3VsZCBvZiBj
-b3Vyc2Ugc3RpbGwKPiBleHBlY3QgdGhpbmdzIHRvIGdvIHRocm91Z2ggdGhlIHNlcGFyYXRlIHBo
-eSBhbmQgZHJtIHRyZWVzIG9uY2UgZGVlbWVkCj4gcmVhZHkuCj4gCj4gU28gcGF0Y2hlcyAxKzIg
-YXJlIGV4cGVjdGVkIHRvIGdvIHRocm91Z2ggdGhlIHBoeS10cmVlIGFuZCB0aGUgcmVzdAo+IHNo
-b3VsZCBnbyB0aHJvdWdoIHRoZSBkcm0gdHJlZS4KCkZvciBwYXRjaGVzIDIsIDMsIDQsIDYsIDcs
-IDgsCgpUZXN0ZWQtYnk6IFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+Cgo+IGNo
-YW5nZXMgaW4gdjI6Cj4gLSBwaHk6IHByZXZlbnQgb3ZlcmZsb3cgaW4gdG1kc2NsayBjYWxjdWxh
-dGlvbgo+ICAgIGFzIHJlcG9ydGVkIGJ5IE1hcnRpbiBDZXJ2ZW55Cj4gLSBwaHk6IHVzZSB1bnNp
-Z25lZCBsb25nIGZvciBhbGwgdG1kc2NsayByYXRlIHVzZXMKPiAtIHBoeTogc2ltcGxpZnkgdG1k
-cyByYXRlIGNhbGN1bGF0aW9uCj4gCj4gLSBkcm9wcGVkIHBhdGNoIGV4cG9ydGluZyBzb21lIGR3
-LWhkbWkgcGh5IGZ1bmN0aW9ucwo+ICAgIGFzIGEgc2ltaWxhciBwYXRjaCBlbnRlcmVkIGRybS1t
-aXNjIGFscmVhZHkKPiAKPiBIZWlrbyBTdHVlYm5lciAoNik6Cj4gICAgZHJtL2JyaWRnZTogZHct
-aGRtaTogYWxsb3cgb3ZlcnJpZGluZyBvZiBwaHktdHlwZSByZWFkaW5nCj4gICAgZHJtL3JvY2tj
-aGlwOiBkd19oZG1pOiBBbGxvdyBvdXRwdXRzIHRoYXQgZG9uJ3QgbmVlZCBvdXRwdXQgc3dpdGNo
-aW5nCj4gICAgZHQtYmluZGluZ3M6IGFsbG93IG9wdGlvbmFsIHBoeXMgaW4gUm9ja2NoaXAgZHdf
-aGRtaSBiaW5kaW5nCj4gICAgZHJtL3JvY2tjaGlwOiBkd19oZG1pOiBhbGxvdyBpbmNsdWRpbmcg
-ZXh0ZXJuYWwgcGh5cwo+ICAgIGRybS9yb2NrY2hpcDogZHdfaGRtaTogc3RvcmUgcm9ja2NoaXBf
-aGRtaSByZWZlcmVuY2UgaW4gcGh5X2RhdGEKPiAgICAgIG9iamVjdAo+ICAgIGRybS9yb2NrY2hp
-cDogZHdfaGRtaTogYWRkIGR3LWhkbWkgc3VwcG9ydCBmb3IgdGhlIHJrMzMyOAo+IAo+IFpoZW5n
-IFlhbmcgKDIpOgo+ICAgIGR0LWJpbmRpbmdzOiBhZGQgYmluZGluZyBmb3IgUm9ja2NoaXAgaGRt
-aSBwaHkgdXNpbmcgYW4gSW5ub3NpbGljb24gSVAKPiAgICBwaHk6IGFkZCBSb2NrY2hpcCBJbm5v
-c2lsaWNvbiBoZG1pIHBoeQo+IAo+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdf
-aGRtaS1yb2NrY2hpcC50eHQgfCAgICAzICsKPiAgIC4uLi9iaW5kaW5ncy9waHkvcGh5LXJvY2tj
-aGlwLWlubm8taGRtaS50eHQgICAgICAgIHwgICA0MiArCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL3N5bm9wc3lzL2R3LWhkbWkuYyAgICAgICAgICB8ICAgIDQgKy0KPiAgIGRyaXZlcnMvZ3B1
-L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMgICAgICAgIHwgIDEzMCArKy0KPiAgIGRy
-aXZlcnMvcGh5L3JvY2tjaGlwL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNyAr
-Cj4gICBkcml2ZXJzL3BoeS9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8
-ICAgIDEgKwo+ICAgZHJpdmVycy9waHkvcm9ja2NoaXAvcGh5LXJvY2tjaGlwLWlubm8taGRtaS5j
-ICAgICAgfCAxMjA5ICsrKysrKysrKysrKysrKysrKysrCj4gICBpbmNsdWRlL2RybS9icmlkZ2Uv
-ZHdfaGRtaS5oICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+ICAgOCBmaWxlcyBjaGFu
-Z2VkLCAxMzkzIGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4gICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktcm9ja2NoaXAt
-aW5uby1oZG1pLnR4dAo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcGh5L3JvY2tjaGlw
-L3BoeS1yb2NrY2hpcC1pbm5vLWhkbWkuYwo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+
+--===============8949939869198474218==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hcut4fGOf7Kh6EdG"
+Content-Disposition: inline
+
+
+--hcut4fGOf7Kh6EdG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Feb 21, 2018 at 01:33:10PM +0900, Katsuhiro Suzuki wrote:
+
+> +Optional properties:
+> +- VCCA-supply : regulator phandle for the VCCA supply
+> +- VCCP1-supply: regulator phandle for the VCCP1 supply
+> +- VCCP2-supply: regulator phandle for the VCCP2 supply
+
+These should be documented as mandatory unless the device genuinely
+operates without power which seems unlikely.
+
+--hcut4fGOf7Kh6EdG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqNYoEACgkQJNaLcl1U
+h9A53Qf/WmJ8q4PvAqNeknQqNme9JDwOBoQujRRtz76hfLuFEw4mUHLzudT9RE9p
+hOHPYtcBlcMgPGKRkW5E5OUxleVhjaTxrpBaHTRTEkbEdAfycje6RtqjqQ2sezfi
+xyzMBu0cf1ynMV5zIVqOSlsPVGX6Ih0Ypx4JsHSQ2np9u4CqSzVYIcuUpgHEtaiN
+9u+xVjnmr1NomCYFrpZWbtruqQMpsj0bYSPsU33fgy+fiVMaRn3qNRpEXgiOfJtJ
+R+KmdvUs6/VfhGY1oQS2E/JF46ldohQGCLlgGkvwfsT4OLO8BwL/UZ0hVcG/Q0Qv
+QYicnuQjfzlC7HjlbtZ6/lAfYZ5oYQ==
+=5fLQ
+-----END PGP SIGNATURE-----
+
+--hcut4fGOf7Kh6EdG--
+
+--===============8949939869198474218==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8949939869198474218==--
