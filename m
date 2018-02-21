@@ -1,79 +1,104 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 08/10] gpio: Add gpio driver for Actions OWL S900 SoC
-Date: Wed, 21 Feb 2018 21:13:53 +0200
-Message-ID: <CAHp75VfLkmZp7HwX-du4EYdtJ8h=y59OrSbu53Ltf-_kFfpczg@mail.gmail.com>
-References: <20180221160044.15089-1-manivannan.sadhasivam@linaro.org>
- <20180221160044.15089-9-manivannan.sadhasivam@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 3/8] drm/bridge: dw-hdmi: allow overriding of phy-type
+ reading
+Date: Wed, 21 Feb 2018 21:15:26 +0200
+Message-ID: <4888467.l85TM0qZuY@avalon>
+References: <20180216204158.29839-1-heiko@sntech.de>
+ <16512170.VqSpgYmDPS@avalon> <3085916.UFWCNBIZfU@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180221160044.15089-9-manivannan.sadhasivam@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, hzhang@ucrobotics.com, Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, amit.kucheria@linaro.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, bdong@ucrobotics.com, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3085916.UFWCNBIZfU@phil>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: mark.rutland@arm.com, Jose.Abreu@synopsys.com, algea.cao@rock-chips.com, devicetree@vger.kernel.org, airlied@linux.ie, dri-devel@lists.freedesktop.org, kishon@ti.com, robh+dt@kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 21, 2018 at 6:00 PM, Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
-> Add gpio driver for Actions Semi OWL family S900 SoC. Set of registers
-> controlling the gpio shares the same register range with pinctrl block.
->
-> GPIO registers are organized as 6 banks and each bank controls the
-> maximum of 32 gpios.
-
-> +static void owl_gpio_set_reg(void __iomem *base, unsigned int pin, int flag)
-> +{
-> +       u32 val;
-> +
-> +       if (flag) {
-> +               val = readl(base);
-> +               val |= BIT(pin);
-> +               writel(val, base);
-> +       } else {
-> +               val = readl(base);
-> +               val &= ~BIT(pin);
-> +               writel(val, base);
-> +       }
-> +}
-
-Why not to use the same pattern as below?
-
-readl()
-if ()
- ...
-else
-...
-writel()
-
-?
-
-> +static void owl_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
-> +{
-> +       struct owl_gpio *gpio = gpiochip_get_data(chip);
-> +       const struct owl_gpio_port *port = gpio->port;
-> +       void __iomem *gpio_base = gpio->base + port->offset;
-> +       u32 val;
-> +
-> +       val = readl(gpio_base + GPIO_DAT);
-> +
-> +       if (value)
-> +               val |= BIT(offset);
-> +       else
-> +               val &= ~BIT(offset);
-> +
-> +       writel(val, gpio_base + GPIO_DAT);
-> +}
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGkgSGVpa28sCgpPbiBXZWRuZXNkYXksIDIxIEZlYnJ1YXJ5IDIwMTggMjA6NTU6MTIgRUVUIEhl
+aWtvIFN0dWVibmVyIHdyb3RlOgo+IEFtIE1vbnRhZywgMTkuIEZlYnJ1YXIgMjAxOCwgMjA6MDY6
+NDAgQ0VUIHNjaHJpZWIgTGF1cmVudCBQaW5jaGFydDoKPiA+IE9uIE1vbmRheSwgMTkgRmVicnVh
+cnkgMjAxOCAyMDo0Njo0NiBFRVQgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4gPiA+IEFtIE1vbnRh
+ZywgMTkuIEZlYnJ1YXIgMjAxOCwgMTc6NTk6MDIgQ0VUIHNjaHJpZWIgTGF1cmVudCBQaW5jaGFy
+dDoKPiA+ID4gPiBPbiBGcmlkYXksIDE2IEZlYnJ1YXJ5IDIwMTggMjI6NDE6NTMgRUVUIEhlaWtv
+IFN0dWVibmVyIHdyb3RlOgo+ID4gPiA+PiBJbiBzb21lIElQIGltcGxlbWVudGF0aW9ucyB0aGUg
+cmVhZGluZyBvZiB0aGUgcGh5LXR5cGUgbWF5IGJlIGJyb2tlbi4KPiA+ID4gPj4gT25lIGV4YW1w
+bGUgYXJlIHRoZSBSb2NrY2hpcCByazMyMjggYW5kIHJrMzMyOCBzb2NzIHRoYXQgdXNlIGEKPiA+
+ID4gPj4gc2VwYXJhdGUKPiA+ID4gPj4gcGh5IGZyb20gSW5ub3NpbGljb24gYnV0IHN0aWxsIHJl
+cG9ydCB0aGUgSERNSTIwX1RYIHR5cGUuCj4gPiA+ID4+IAo+ID4gPiA+PiBTbyBhbGxvdyB0aGUg
+Z2x1ZSBkcml2ZXIgdG8gZm9yY2UgYSBzcGVjaWZpYyB0eXBlLCBsaWtlIHRoZQo+ID4gPiA+PiB2
+ZW5kb3ItcGh5Cj4gPiA+ID4+IGZvciB0aGVzZSBjYXNlcy4KPiA+ID4gPj4gCj4gPiA+ID4+IFNp
+Z25lZC1vZmYtYnk6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gPiA+ID4gCj4g
+PiA+ID4gVGVzdGVkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFz
+b25ib2FyZC5jb20+Cj4gPiA+IAo+ID4gPiB0aGFua3MgZm9yIHRlc3RpbmcgOi0pCj4gPiA+IAo+
+ID4gPiA+PiAtLS0KPiA+ID4gPj4gCj4gPiA+ID4+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5
+bm9wc3lzL2R3LWhkbWkuYyB8IDQgKysrLQo+ID4gPiA+PiAgaW5jbHVkZS9kcm0vYnJpZGdlL2R3
+X2hkbWkuaCAgICAgICAgICAgICAgfCAxICsKPiA+ID4gPj4gIDIgZmlsZXMgY2hhbmdlZCwgNCBp
+bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPiA+ID4+IAo+ID4gPiA+PiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMKPiA+ID4gPj4gYi9k
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LWhkbWkuYyBpbmRleAo+ID4gPiA+PiBm
+OTgwMjM5OWNjMGQuLjUwZDIzMTYyNmM0ZCAxMDA2NDQKPiA+ID4gPj4gLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMKPiA+ID4gPj4gKysrIGIvZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9kdy1oZG1pLmMKPiA+ID4gPj4gQEAgLTIyMTgsNyArMjIx
+OCw5IEBAIHN0YXRpYyBpbnQgZHdfaGRtaV9kZXRlY3RfcGh5KHN0cnVjdCBkd19oZG1pCj4gPiA+
+ID4+ICpoZG1pKQo+ID4gPiA+PiAKPiA+ID4gPj4gIAl1bnNpZ25lZCBpbnQgaTsKPiA+ID4gPj4g
+IAl1OCBwaHlfdHlwZTsKPiA+ID4gPj4gCj4gPiA+ID4+IC0JcGh5X3R5cGUgPSBoZG1pX3JlYWRi
+KGhkbWksIEhETUlfQ09ORklHMl9JRCk7Cj4gPiA+ID4+ICsJcGh5X3R5cGUgPSAoaGRtaS0+cGxh
+dF9kYXRhLT5waHlfZm9yY2VfdHlwZSkgPwo+ID4gPiA+PiArCQkJCWhkbWktPnBsYXRfZGF0YS0+
+cGh5X2ZvcmNlX3R5cGUgOgo+ID4gPiA+PiArCQkJCWhkbWlfcmVhZGIoaGRtaSwgSERNSV9DT05G
+SUcyX0lEKTsKPiA+ID4gPiAKPiA+ID4gPiBObyBuZWVkIGZvciBwYXJlbnRoZXNlcy4gWW91IGNv
+dWxkIGV2ZW4gd3JpdGUgdGhpcwo+ID4gPiA+IAo+ID4gPiA+ICAgICAgICAgcGh5X3R5cGUgPSBo
+ZG1pLT5wbGF0X2RhdGEtPnBoeV9mb3JjZV90eXBlID8KPiA+ID4gPiAgICAgICAgIAo+ID4gPiA+
+ICAgICAgICAgICAgICAgICAgOiBoZG1pX3JlYWRiKGhkbWksIEhETUlfQ09ORklHMl9JRCk7Cj4g
+PiA+ID4gCj4gPiA+ID4gYnV0IHRoYXQncyB1cCB0byB5b3UuCj4gPiA+ID4gCj4gPiA+ID4gV2hh
+dCBpZiBhIGRyaXZlciB3YW50cyB0byBmb3JjZSB0aGUgUEhZIHR5cGUgdG8KPiA+ID4gPiBEV19I
+RE1JX1BIWV9EV0NfSERNSV9UWF9QSFkgPyBPciBkbyB5b3UgZXhwZWN0IG9ubHkgdGhlCj4gPiA+
+ID4gRFdfSERNSV9QSFlfVkVORE9SX1BIWSB0eXBlIHRvIGJlIGZvcmNlZCA/IElmIHNvLCB3ZSBj
+b3VsZCBhbHNvIHVzZSBhCj4gPiA+ID4gZm9yY2VfdmVuZG9yX3BoeSBib29sZWFuIGZpZWxkIGlu
+c3RlYWQgb2YgcGh5X2ZvcmNlX3R5cGUuCj4gPiA+IAo+ID4gPiBJbml0aWFsbHkgSSB0aG91Z2h0
+IG9mIGltcGxpY2l0bHkgb3ZlcnJpZGluZyB0aGUgcGh5LXR5cGUgd2hlbiB0aGUKPiA+ID4gZXh0
+ZXJuYWwKPiA+ID4gcGh5LW9wcyBhcmUgc2V0LCBidXQgZGVjaWRlZCBhZ2FpbnN0IGl0IGJlY2F1
+c2UgdGhhdCBtaWdodCBicmVhawo+ID4gPiAodGhlb3JldGljYWwpIGNhc2VzIHdoZXJlIHBoeS1v
+cHMgbWF5IGJlIGFsd2F5cyBzZXQgYnV0IG9ubHkgdXNlZCB3aGVuCj4gPiA+IHRoZSBpcCByZXR1
+cm5zIGEgbWF0Y2hpbmcgcGh5LXR5cGUgYW5kIHRodXMgY2FtZSB0byBqdXN0IGFsbG93Cj4gPiA+
+IG92ZXJyaWRpbmcKPiA+ID4gdGhhdCB0eXBlIHJlYWRpbmcuCj4gPiA+IAo+ID4gPiBBcyBmb3Ig
+bGltaXRpbmcgdG8gb25seSBhbGxvdyBmb3JjaW5nIHRoZSB2ZW5kb3IgdHlwZSwgbXkgcGVyc29u
+YWwKPiA+ID4gZmVlbGluZwo+ID4gPiB3b3VsZCBiZSB0byBhbGxvdyBnbHVlIGRyaXZlcnMgdG8g
+anVzdCBvdmVycmlkZSB0aGUgdHlwZSBhcyBuZWVkZWQKPiA+ID4gbGlrZSBkb25lIGluIHRoZSBw
+YXRjaC4gQXMgY2FuIGJlIHNlZW4gb24gdGhlIHJrMzMyOCwgdGhlIGR3LWhkbWkKPiA+ID4gcmVw
+b3J0cyBvbmUgb2YgdGhlIHJlZ3VsYXIgcGh5cyAoZm9yZ290IHdoaWNoIG9uZSkgYnV0IGluc3Rl
+YWQgaGFzIGEKPiA+ID4gY29tcGxldGVseSBzZXBhcmF0ZSBpcCBmb3IgaXQsIHNvIEknZCBndWVz
+cyB3ZSBtYXkgdmVyeSB3ZWxsIHNlZQo+ID4gPiBpbXBsZW1lbnRhdGlvbnMgdGhhdCBqdXN0IHJl
+cG9ydCBhIHdyb25nIHR5cGUgKG5vIHZlbmRvci10eXBlKS4KPiA+ID4gCj4gPiA+IFNvIEkgZG9u
+J3Qgc2VlIGFuIGlzc3VlIHdpdGggZHJpdmVycyBiZWluZyBhbGxvd2VkIHRvIHNldCB0aGUgdHlw
+ZSB0bwo+ID4gPiBEV19IRE1JX1BIWV9EV0NfSERNSV9UWF9QSFksIGJlY2F1c2Ugc3VjaCBjYXNl
+cyBtYXkgZXhpc3QgaW4gdGhlCj4gPiA+IGZ1dHVyZSBhbmQgSSdkIGV4cGVjdCBkcml2ZXIgYXV0
+aG9ycyB0byBzb21ld2hhdCBrbm93IHdoYXQgdGhleSdyZQo+ID4gPiBkb2luZy4KPiA+IAo+ID4g
+TXkgcG9pbnQgd2FzIHRoYXQgRFdfSERNSV9QSFlfRFdDX0hETUlfVFhfUEhZID09IDAsIHNvIHRy
+eWluZyB0byBmb3JjZQo+ID4gRFdfSERNSV9QSFlfRFdDX0hETUlfVFhfUEhZIHRocm91Z2ggcGh5
+X2ZvcmNlX3R5cGUgd29uJ3Qgd29yay4KPiAKPiBBcmdoLCBvayBub3cgSSBnZXQgaXQuCj4gCj4g
+U28gaXQgd2lsbCBuZWVkIHNvbWUgYWRhcHRpb24gZm9yIHRoYXQsIGJlY2F1c2UgYWxsb3dpbmcg
+ZXZlcnl0aGluZyBidXQKPiBEV19IRE1JX1BIWV9EV0NfSERNSV9UWF9QSFkgd291bGQgYmUgcXVp
+dGUgY291bnRlci1pbnR1aXRpdmUgOi0pIC4KPiAKPiBFeHBlY3RpbmcgcGh5X2ZvcmNlX3R5cGUg
+PT0gLTEgZm9yIHJlZ3VsYXIgcmVhZHMgc291bmRzIGJhZCBhcyB3ZWxsLAo+IGJlY2F1c2UgdGhl
+biBldmVyeSBnbHVlIGRyaXZlciB3b3VsZCBuZWVkIHRvIHNldCB0aGF0LCB3aGljaCBjdXJyZW50
+bHkKPiBnZXRzIHNvbHZlcyBhdXRvbWF0aWNhbGx5IHdoZW4gdGhlIGZpZWxkIGlzIG5vdCBleHBs
+aWNpdGx5IHNldC4KPiAKPiBTbyBnb2luZyB3aXRoIHlvdXIgZm9yY2VfdmVuZG9yX3BoeSBpZGVh
+IHNvdW5kcyBsZXNzIGludHJ1c2l2ZSBmb3IgdGhlCj4gdGltZSBiZWluZyBhbmQgdW50aWwgdGhl
+cmUgaXMgYW4gYWN0dWFsIGNhc2Ugd2hlcmUgdGhlcmUgaXMgYSBkaWZmZXJlbnQKPiBpbnRlcm5h
+bCBwaHktdHlwZSBuZWNlc3Nhcnk/CgpUaGF0J3MgYXQgbGVhc3Qgd2hhdCBJJ2QgcmVjb21tZW5k
+LCBhcyBJIGRvbid0IHNlZSBhbnkgdXNlIGNhc2Ugbm93IGZvciAKb3ZlcnJpZGluZyB0aGUgaGFy
+ZHdhcmUtcmVwb3J0ZWQgUEhZIHR5cGUgdG8gYSBzdGFuZGFyZCBQSFkgdHlwZS4gSWYgd2UgZXZl
+ciAKZW5kIHVwIG5lZWRpbmcgdGhhdCBpbiB0aGUgZnV0dXJlIHdlIHdpbGwgb2YgY291cnNlIHN1
+cHBvcnQgaXQuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
