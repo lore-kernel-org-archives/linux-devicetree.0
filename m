@@ -1,67 +1,193 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 03/16] of: dynamic: Add __of_node_dupv()
-Date: Wed, 21 Feb 2018 11:26:45 +0100
-Message-ID: <CAMuHMdWQEKETp50VnU4eiHcXvBqzgdwH1z6CYbkJq_YH1=UHaw@mail.gmail.com>
-References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180220231046.32638-4-laurent.pinchart+renesas@ideasonboard.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH v3 15/25] ASoC: qcom: qdsp6: Add support to
+ q6asm dai driver
+Date: Wed, 21 Feb 2018 16:44:24 +0530
+Message-ID: <6ea65838-f01a-ecbf-70cd-0dc9299eae80@codeaurora.org>
+References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
+ <20180213165837.1620-16-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180220231046.32638-4-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180213165837.1620-16-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, lgirdwood@gmail.com, plai@codeaurora.org, linux-kernel@vger.kernel.org, tiwai@suse.com, david.brown@linaro.org, robh+dt@kernel.org, spatakok@qti.qualcomm.com, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIFdlZCwgRmViIDIxLCAyMDE4IGF0IDEyOjEwIEFNLCBMYXVyZW50IFBp
-bmNoYXJ0CjxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6
-Cj4gRnJvbTogUGFudGVsaXMgQW50b25pb3UgPHBhbnRlbGlzLmFudG9uaW91QGtvbnN1bGtvLmNv
-bT4KPgo+IEFkZCBhbiBfX29mX25vZGVfZHVwdigpIHByaXZhdGUgbWV0aG9kIGFuZCBtYWtlIF9f
-b2Zfbm9kZV9kdXAoKSB1c2UgaXQuCj4gVGhpcyBpcyByZXF1aXJlZCBmb3IgdGhlIHN1YnNlcXVl
-bnQgY2hhbmdlc2V0IGFjY2Vzc29ycyB3aGljaCB3aWxsCj4gbWFrZSB1c2Ugb2YgaXQuCj4KPiBT
-aWduZWQtb2ZmLWJ5OiBQYW50ZWxpcyBBbnRvbmlvdSA8cGFudGVsaXMuYW50b25pb3VAa29uc3Vs
-a28uY29tPgo+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hh
-cnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+IC0tLQo+ICBkcml2ZXJzL29mL2R5bmFtaWMu
-YyB8IDI5ICsrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
-MyBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-b2YvZHluYW1pYy5jIGIvZHJpdmVycy9vZi9keW5hbWljLmMKPiBpbmRleCA3YmIzM2QyMmI0ZTIu
-LjRmZmQwNDkyNWZkZiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL29mL2R5bmFtaWMuYwo+ICsrKyBi
-L2RyaXZlcnMvb2YvZHluYW1pYy5jCj4gQEAgLTM4Miw4ICszODIsOSBAQCBzdHJ1Y3QgcHJvcGVy
-dHkgKl9fb2ZfcHJvcF9kdXAoY29uc3Qgc3RydWN0IHByb3BlcnR5ICpwcm9wLCBnZnBfdCBhbGxv
-Y2ZsYWdzKQo+ICB9Cj4KPiAgLyoqCj4gLSAqIF9fb2Zfbm9kZV9kdXAoKSAtIER1cGxpY2F0ZSBv
-ciBjcmVhdGUgYW4gZW1wdHkgZGV2aWNlIG5vZGUgZHluYW1pY2FsbHkuCj4gLSAqIEBmbXQ6IEZv
-cm1hdCBzdHJpbmcgKHBsdXMgdmFyZ3MpIGZvciBuZXcgZnVsbCBuYW1lIG9mIHRoZSBkZXZpY2Ug
-bm9kZQo+ICsgKiBfX29mX25vZGVfZHVwdigpIC0gRHVwbGljYXRlIG9yIGNyZWF0ZSBhbiBlbXB0
-eSBkZXZpY2Ugbm9kZSBkeW5hbWljYWxseS4KPiArICogQGZtdDogRm9ybWF0IHN0cmluZyBmb3Ig
-bmV3IGZ1bGwgbmFtZSBvZiB0aGUgZGV2aWNlIG5vZGUKPiArICogQHZhcmdzOiB2YV9saXN0IGNv
-bnRhaW5pbmcgdGhlIGFydWdtZW50cyBmb3IgdGhlIG5vZGUgZnVsbCBuYW1lCj4gICAqCj4gICAq
-IENyZWF0ZSBhbiBkZXZpY2UgdHJlZSBub2RlLCBlaXRoZXIgYnkgZHVwbGljYXRpbmcgYW4gZW1w
-dHkgbm9kZSBvciBieSBhbGxvY2F0aW5nCj4gICAqIGFuIGVtcHR5IG9uZSBzdWl0YWJsZSBmb3Ig
-ZnVydGhlciBtb2RpZmljYXRpb24uICBUaGUgbm9kZSBkYXRhIGFyZQo+IEBAIC0zOTEsMTcgKzM5
-MiwxNSBAQCBzdHJ1Y3QgcHJvcGVydHkgKl9fb2ZfcHJvcF9kdXAoY29uc3Qgc3RydWN0IHByb3Bl
-cnR5ICpwcm9wLCBnZnBfdCBhbGxvY2ZsYWdzKQo+ICAgKiBPRl9ERVRBQ0hFRCBiaXRzIHNldC4g
-UmV0dXJucyB0aGUgbmV3bHkgYWxsb2NhdGVkIG5vZGUgb3IgTlVMTCBvbiBvdXQgb2YKPiAgICog
-bWVtb3J5IGVycm9yLgo+ICAgKi8KPiAtc3RydWN0IGRldmljZV9ub2RlICpfX29mX25vZGVfZHVw
-KGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIGNvbnN0IGNoYXIgKmZtdCwgLi4uKQo+ICtz
-dHJ1Y3QgZGV2aWNlX25vZGUgKl9fb2Zfbm9kZV9kdXB2KGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9k
-ZSAqbnAsCgpzdGF0aWMsIGNmci4KaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
-L2tlcm5lbC9naXQvZ2VlcnQvcmVuZXNhcy1kcml2ZXJzLmdpdC9jb21taXQvP2g9dG9waWMvb3Zl
-cmxheXMmaWQ9YzQ1MzI0ZTE4MDdkZDcwODM0NGM5YTQ3OGI3NzdiNjhhY2ExMWNkZgoKR3J7b2V0
-amUsZWV0aW5nfXMsCgogICAgICAgICAgICAgICAgICAgICAgICBHZWVydAoKLS0KR2VlcnQgVXl0
-dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBs
-aW51eC1tNjhrLm9yZwoKSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBw
-ZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRvIGpv
-dXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQu
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+On 2/13/2018 10:28 PM, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>
+> This patch adds support to q6asm dai driver which configures Q6ASM streams
+> to pass pcm data.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+[..]
+> diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> new file mode 100644
+> index 000000000000..7c5e94b2ced4
+> --- /dev/null
+> +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> @@ -0,0 +1,621 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2011-2016, The Linux Foundation
+> + * Copyright (c) 2017, Linaro Limited
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <sound/soc.h>
+> +#include <sound/soc-dapm.h>
+> +#include <sound/pcm.h>
+> +#include <asm/dma.h>
+[..]
+> +static struct snd_pcm_hw_constraint_list constraints_sample_rates = {
+> +	.count = ARRAY_SIZE(supported_sample_rates),
+> +	.list = supported_sample_rates,
+> +	.mask = 0,
+> +};
+> +
+> +static void event_handler(uint32_t opcode, uint32_t token,
+> +			  uint32_t *payload, void *priv)
+> +{
+> +	struct q6asm_dai_rtd *prtd = priv;
+> +	struct snd_pcm_substream *substream = prtd->substream;
+> +
+> +	switch (opcode) {
+> +	case ASM_CLIENT_EVENT_CMD_RUN_DONE:
+Need to add support for V2 version of opcodes
+> +		q6asm_write_async(prtd->audio_client,
+> +				   prtd->pcm_count, 0, 0, NO_TIMESTAMP);
+> +		break;
+> +	case ASM_CLIENT_EVENT_CMD_EOS_DONE:
+> +		prtd->state = Q6ASM_STREAM_STOPPED;
+> +		break;
+> +	case ASM_CLIENT_EVENT_DATA_WRITE_DONE: {
+> +		prtd->pcm
+[..]
+> +
+> +static int q6asm_dai_trigger(struct snd_pcm_substream *substream, int cmd)
+> +{
+> +	int ret = 0;
+> +	struct snd_pcm_runtime *runtime = substream->runtime;
+> +	struct q6asm_dai_rtd *prtd = runtime->private_data;
+> +
+> +	switch (cmd) {
+> +	case SNDRV_PCM_TRIGGER_START:
+> +		ret = q6asm_run_nowait(prtd->audio_client, 0, 0, 0);
+> +		break;
+below two cases can be combined with START if no change
+> +	case SNDRV_PCM_TRIGGER_RESUME:
+> +	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+> +		ret = q6asm_run_nowait(prtd->audio_client, 0, 0, 0);
+> +		break;
+> +	case SNDRV_PCM_TRIGGER_STOP:
+> +		prtd->state = Q6ASM_STREAM_STOPPED;
+> +		ret = q6asm_cmd_nowait(prtd->audio_client, CMD_EOS);
+> +		break;
+> +	case SNDRV_PCM_TRIGGER_SUSPEND:
+> +	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+> +		ret = q6asm_cmd_nowait(prtd->audio_client, CMD_PAUSE);
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int q6asm_dai_open(struct snd_pcm_substream *substream)
+> +{
+> +	struct snd_pcm_runtime *runtime = substream->runtime;
+> +	struct snd_soc_pcm_runtime *soc_prtd = substream->private_data;
+> +	struct snd_soc_dai *cpu_dai = soc_prtd->cpu_dai;
+> +
+> +	struct q6asm_dai_rtd *prtd;
+> +	struct q6asm_dai_data *pdata;
+> +	struct device *dev = soc_prtd->platform->dev;
+> +	int ret = 0;
+> +	int stream_id;
+> +
+> +	stream_id = cpu_dai->driver->id;
+> +
+> +	pdata = q6asm_get_dai_data(dev);
+> +	if (!pdata) {
+> +		pr_err("Platform data not found ..\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	prtd = kzalloc(sizeof(struct q6asm_dai_rtd), GFP_KERNEL);
+> +	if (prtd == NULL)
+> +		return -ENOMEM;
+> +
+> +	prtd->substream = substream;
+> +	prtd->audio_client = q6asm_audio_client_alloc(dev,
+> +				(q6asm_cb)event_handler, prtd, stream_id);
+> +	if (!prtd->audio_client) {
+> +		pr_info("%s: Could not allocate memory\n", __func__);
+> +		kfree(prtd);
+> +		return -ENOMEM;
+> +	}
+> +
+> +//	prtd->audio_client->dev = dev;
+cleanup this
+> +
+> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> +		runtime->hw = q6asm_dai_hardware_playback;
+> +
+> +	ret = snd_pcm_hw_constraint_list(runtime, 0,
+> +				SNDRV_PCM_HW_PARAM_RATE,
+> +				&constraints_sample_rates);
+[..]
+> +
+> +static int q6asm_dai_pcm_new(struct snd_soc_pcm_runtime *rtd)
+> +{
+> +	struct snd_pcm_substream *substream;
+> +	struct of_phandle_args args;
+> +	struct device_node *node;
+> +	struct q6asm_dai_data *pdata;
+> +	struct snd_pcm *pcm = rtd->pcm;
+> +	struct device *dev;
+> +	int size, ret;
+> +
+> +	dev = rtd->platform->dev->parent;
+> +	node = dev->of_node;
+> +	pdata = q6asm_get_dai_data(rtd->platform->dev);
+> +
+> +	ret = of_parse_phandle_with_fixed_args(node, "iommus", 1, 0, &args);
+> +	if (ret < 0)
+> +		pdata->sid = -1;
+> +	else
+> +		pdata->sid = args.args[0];
+> +
+> +
+> +
+iommus for sdm845 is 16bit value. we need to have sid_mask which is 0x1 
+in sdm845. We need to mask sid with 0x1 to get proper sid.
+pdata->sid &= 0x1;
+> +	substream = pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].substream;
+> +	size = q6asm_dai_hardware_playback.buffer_bytes_max;
+> +	ret = snd_dma_alloc_pages(SNDRV_DMA_TYPE_DEV, dev, size,
+> +				  &substream->dma_buffer);
+> +	if (ret)
+> +		dev_err(dev, "Cannot allocate buffer(s)\n");
+> +
+> +	return ret;
+> +}
+> +
