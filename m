@@ -1,83 +1,73 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4 04/16] of: changesets: Introduce changeset helper
- methods
-Date: Wed, 21 Feb 2018 11:21:50 +0100
-Message-ID: <CAMuHMdVJfKXWNFaN259JQ1bOVZQSbC-=u4Kmys2PE+HLa=xQKw@mail.gmail.com>
-References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180220231046.32638-5-laurent.pinchart+renesas@ideasonboard.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 09/37] iommu/fault: Let handler return a fault response
+Date: Wed, 21 Feb 2018 10:28:04 +0000
+Message-ID: <11811f62-10d8-836c-f184-742d510bbdbc@arm.com>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-10-jean-philippe.brucker@arm.com>
+	<20180220151933.022f1036@jacob-builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180220231046.32638-5-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180220151933.022f1036@jacob-builder>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, rjw@rjwyso
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIFdlZCwgRmViIDIxLCAyMDE4IGF0IDEyOjEwIEFNLCBMYXVyZW50IFBp
-bmNoYXJ0CjxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6
-Cj4gRnJvbTogUGFudGVsaXMgQW50b25pb3UgPHBhbnRlbGlzLmFudG9uaW91QGtvbnN1bGtvLmNv
-bT4KPgo+IENoYW5nZXNldHMgYXJlIHZlcnkgcG93ZXJmdWwsIGJ1dCB0aGUgbGFjayBvZiBhIGhl
-bHBlciBBUEkKPiBtYWtlcyB1c2luZyB0aGVtIGN1bWJlcnNvbWUuIEludHJvZHVjZSBhIHNpbXBs
-ZSBjb3B5IGJhc2VkCj4gQVBJIHRoYXQgbWFrZXMgdGhpbmdzIGNvbnNpZGVyYWJseSBlYXNpZXIu
-Cj4KPiBUbyB3aXQsIGFkZGluZyBhIHByb3BlcnR5IHVzaW5nIHRoZSByYXcgQVBJLgo+Cj4gICAg
-ICAgICBzdHJ1Y3QgcHJvcGVydHkgKnByb3A7Cj4gICAgICAgICBwcm9wID0ga3phbGxvYyhzaXpl
-b2YoKnByb3ApKSwgR0ZQX0tFUk5FTCk7Cj4gICAgICAgICBwcm9wLT5uYW1lID0ga3N0cmR1cCgi
-Y29tcGF0aWJsZSIpOwo+ICAgICAgICAgcHJvcC0+dmFsdWUgPSBrc3RyZHVwKCJmb28sYmFyIik7
-Cj4gICAgICAgICBwcm9wLT5sZW5ndGggPSBzdHJsZW4ocHJvcC0+dmFsdWUpICsgMTsKPiAgICAg
-ICAgIG9mX2NoYW5nZXNldF9hZGRfcHJvcGVydHkob2NzLCBucCwgcHJvcCk7Cj4KPiB3aGlsZSB1
-c2luZyB0aGUgaGVscGVyIEFQSQo+Cj4gICAgICAgICBvZl9jaGFuZ2VzZXRfYWRkX3Byb3BlcnR5
-X3N0cmluZyhvY3MsIG5wLCAiY29tcGF0aWJsZSIsCj4gICAgICAgICAgICAgICAgICAgICAgICAg
-ImZvbyxiYXIiKTsKPgo+IFNpZ25lZC1vZmYtYnk6IFBhbnRlbGlzIEFudG9uaW91IDxwYW50ZWxp
-cy5hbnRvbmlvdUBrb25zdWxrby5jb20+Cj4gW0ZpeGVkIG1lbW9yeSBsZWFrIGluIF9fb2ZfY2hh
-bmdlc2V0X2FkZF91cGRhdGVfcHJvcGVydHlfY29weSgpXQo+IFNpZ25lZC1vZmYtYnk6IExhdXJl
-bnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgoK
-WW91IG1pc3NlZCBvbmUgZml4IEkgaGF2ZSBpbiBteSB0b3BpYy9vdmVybGF5cyBicmFuY2gKaHR0
-cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvZ2VlcnQvcmVuZXNh
-cy1kcml2ZXJzLmdpdC9jb21taXQvP2g9dG9waWMvb3ZlcmxheXMmaWQ9MTUwZjk1YjlkZWM3N2Nl
-MzcxYzIyOWY3YWM0ZDZkZDg2MjBiZWY0YQoKPiAtLS0gYS9pbmNsdWRlL2xpbnV4L29mLmgKPiAr
-KysgYi9pbmNsdWRlL2xpbnV4L29mLmgKCj4gKy8qKgo+ICsgKiBvZl9jaGFuZ2VzZXRfYWRkX3By
-b3BlcnR5X3UzMiAtIENyZWF0ZSBhIG5ldyB1MzIgcHJvcGVydHkKPiArICoKPiArICogQG9jczog
-ICAgICAgY2hhbmdlc2V0IHBvaW50ZXIKPiArICogQG5wOiAgICAgICAgICAgICAgICBkZXZpY2Ug
-bm9kZSBwb2ludGVyCj4gKyAqIEBuYW1lOiAgICAgIG5hbWUgb2YgdGhlIHByb3BlcnR5Cj4gKyAq
-IEB2YWw6ICAgICAgIHZhbHVlIGluIGhvc3QgZW5kaWFuIGZvcm1hdAo+ICsgKgo+ICsgKiBBZGRz
-IGEgdTMyIHByb3BlcnR5IHRvIHRoZSBjaGFuZ2VzZXQuCj4gKyAqCj4gKyAqIFJldHVybnMgemVy
-byBvbiBzdWNjZXNzLCBhIG5lZ2F0aXZlIGVycm9yIHZhbHVlIG90aGVyd2lzZS4KPiArICovCj4g
-K3N0YXRpYyBpbmxpbmUgaW50IG9mX2NoYW5nZXNldF9hZGRfcHJvcGVydHlfdTMyKHN0cnVjdCBv
-Zl9jaGFuZ2VzZXQgKm9jcywKPiArICAgICAgICAgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpu
-cCwgY29uc3QgY2hhciAqbmFtZSwgdTMyIHZhbCkKPiArewo+ICsgICAgICAgdmFsID0gY3B1X3Rv
-X2JlMzIodmFsKTsKCllvdSBtdXN0IHVzZSBhbiBpbnRlcm1lZGlhdGUsIHRvIGF2b2lkIGNvbXBs
-YWludHMgZnJvbSBzcGFyc2U6CgogICAgX19iZTMyIHggPSBjcHVfdG9fYmUzMih2YWwpOwoKPiAr
-ICAgICAgIHJldHVybiBfX29mX2NoYW5nZXNldF9hZGRfdXBkYXRlX3Byb3BlcnR5X2NvcHkob2Nz
-LCBucCwgbmFtZSwgJnZhbCwKPiArICAgICAgICAgICAgICAgICAgICAgICBzaXplb2YodmFsKSwg
-ZmFsc2UpOwoKcy92YWwveC8KCj4gK30KPiArCj4gKy8qKgo+ICsgKiBvZl9jaGFuZ2VzZXRfdXBk
-YXRlX3Byb3BlcnR5X3UzMiAtIFVwZGF0ZSB1MzIgcHJvcGVydHkKPiArICoKPiArICogQG9jczog
-ICAgICAgY2hhbmdlc2V0IHBvaW50ZXIKPiArICogQG5wOiAgICAgICAgICAgICAgICBkZXZpY2Ug
-bm9kZSBwb2ludGVyCj4gKyAqIEBuYW1lOiAgICAgIG5hbWUgb2YgdGhlIHByb3BlcnR5Cj4gKyAq
-IEB2YWw6ICAgICAgIHZhbHVlIGluIGhvc3QgZW5kaWFuIGZvcm1hdAo+ICsgKgo+ICsgKiBVcGRh
-dGVzIGEgdTMyIHByb3BlcnR5IHRvIHRoZSBjaGFuZ2VzZXQuCj4gKyAqCj4gKyAqIFJldHVybnMg
-emVybyBvbiBzdWNjZXNzLCBhIG5lZ2F0aXZlIGVycm9yIHZhbHVlIG90aGVyd2lzZS4KPiArICov
-Cj4gK3N0YXRpYyBpbmxpbmUgaW50IG9mX2NoYW5nZXNldF91cGRhdGVfcHJvcGVydHlfdTMyKAo+
-ICsgICAgICAgc3RydWN0IG9mX2NoYW5nZXNldCAqb2NzLCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5w
-LAo+ICsgICAgICAgY29uc3QgY2hhciAqbmFtZSwgdTMyIHZhbCkKPiArewo+ICsgICAgICAgdmFs
-ID0gY3B1X3RvX2JlMzIodmFsKTsKCk9oLCBhIG5ldyBvbmUuCgo+ICsgICAgICAgcmV0dXJuIF9f
-b2ZfY2hhbmdlc2V0X2FkZF91cGRhdGVfcHJvcGVydHlfY29weShvY3MsIG5wLCBuYW1lLCAmdmFs
-LAo+ICsgICAgICAgICAgICAgICAgICAgICAgIHNpemVvZih2YWwpLCB0cnVlKTsKPiArfQoKR3J7
-b2V0amUsZWV0aW5nfXMsCgogICAgICAgICAgICAgICAgICAgICAgICBHZWVydAoKLS0KR2VlcnQg
-VXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVy
-dEBsaW51eC1tNjhrLm9yZwoKSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNh
-bCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRv
-IGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRo
-YXQuCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 20/02/18 23:19, Jacob Pan wrote:
+> On Mon, 12 Feb 2018 18:33:24 +0000
+> Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org> wrote:
+> 
+>>  
+>> +/**
+>> + * enum page_response_code - Return status of fault handlers,
+>> telling the IOMMU
+>> + * driver how to proceed with the fault.
+>> + *
+>> + * @IOMMU_FAULT_STATUS_HANDLED: Stop processing the fault, and do
+>> not send a
+>> + *	reply to the device.
+>> + * @IOMMU_FAULT_STATUS_CONTINUE: Fault was not handled. Call the
+>> next handler,
+>> + *	or terminate.
+>> + * @IOMMU_FAULT_STATUS_SUCCESS: Fault has been handled and the page
+>> tables
+>> + *	populated, retry the access. This is "Success" in PCI PRI.
+>> + * @IOMMU_FAULT_STATUS_FAILURE: General error. Drop all subsequent
+>> faults from
+>> + *	this device if possible. This is "Response Failure" in PCI
+>> PRI.
+>> + * @IOMMU_FAULT_STATUS_INVALID: Could not handle this fault, don't
+>> retry the
+>> + *	access. This is "Invalid Request" in PCI PRI.
+>> + */
+>> +enum page_response_code {
+>> +	IOMMU_PAGE_RESP_HANDLED = 0,
+>> +	IOMMU_PAGE_RESP_CONTINUE,
+>> +	IOMMU_PAGE_RESP_SUCCESS,
+>> +	IOMMU_PAGE_RESP_INVALID,
+>> +	IOMMU_PAGE_RESP_FAILURE,
+>> +};
+> it seems to me two things are mixed here:
+> 1. driver handler response status (HANDLED, CONTINUE)
+> 2. PCI standard page response code (the rest)
+> Can we leave them separate? then we don't have to convert this enum
+> to/from PCI ATS page response code.
+
+Except when the producer is a platform device instead of PCI :) But I get
+your point. I liked combining them into one enum because it may simplify
+some device drivers. I can separate HANDLED/CONTINUE and have drivers
+always call page_response().
+
+Thanks,
+Jean
