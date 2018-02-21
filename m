@@ -1,16 +1,17 @@
-From: "Katsuhiro Suzuki" <suzuki.katsuhiro@socionext.com>
-Subject: Re: [PATCH 2/2] ASoC: support ROHM BD28623 codec
-Date: Wed, 21 Feb 2018 22:15:52 +0900
-Message-ID: <002601d3ab16$195fdf20$4c1f9d60$@socionext.com>
-References: <20180221043311.25840-1-suzuki.katsuhiro@socionext.com>
- <20180221043311.25840-3-suzuki.katsuhiro@socionext.com>
- <20180221122639.GH8334@sirena.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/1] clk: npcm750: update text with fixed clocks
+Date: Wed, 21 Feb 2018 07:23:50 -0600
+Message-ID: <CAL_JsqKq-+fKapT6RKwqBubRuJszpKMJevS7NOObPP-bVA2_kw@mail.gmail.com>
+References: <1518701959-22899-1-git-send-email-tali.perry1@gmail.com>
+ <1518701959-22899-2-git-send-email-tali.perry1@gmail.com>
+ <CAFd5g44gBJp0-mYEWGdyiA67BCi2pZWAG2bYPS-WdJEwH1oA5A@mail.gmail.com>
+ <20180219144905.bfrycjnas7dcuo34@rob-hp-laptop>
+ <CAFd5g44argF0oaOq7fOM0YbCBK5h8NyRia+H8CbRC5qAQHe5WA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180221122639.GH8334@sirena.org.uk>
-Content-Language: ja
+In-Reply-To: <CAFd5g44argF0oaOq7fOM0YbCBK5h8NyRia+H8CbRC5qAQHe5WA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,81 +21,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: 'Mark Brown' <broonie@kernel.org>, =?iso-2022-jp?B?U3V6dWtpLCBLYXRzdWhpcm8vGyRCTmtMWhsoQiAbJEI+IUduGyhC?= <suzuki.katsuhiro@socionext.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, linux-kernel@vger.kernel.org, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>, Avi Fishman <avifishman70@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Russell King <linux@armlinux.org.uk>, Tali Perry <tali.perry1@gmail.com>, Nancy Yuen <yuenn@google.com>, Patrick Venture <venture@google.com>, Rick Altherr <raltherr@google.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+On Tue, Feb 20, 2018 at 10:47 PM, Brendan Higgins
+<brendanhiggins@google.com> wrote:
+> On Mon, Feb 19, 2018 at 6:49 AM, Rob Herring <robh@kernel.org> wrote:
+>> On Thu, Feb 15, 2018 at 02:38:12PM -0800, Brendan Higgins wrote:
+>>> On Thu, Feb 15, 2018 at 5:39 AM, Tali Perry <tali.perry1@gmail.com> wrote:
+>>> >
+>>> > Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+>>> >
+>>>  <snip>
+>>>
+>>> I think this should probably be rolled into [PATCH v2 1/1] npcm750: add fixed
+>>> clocks (moved from drivers/clk/clk-npcm7xx.c):
+>>> https://www.spinics.net/lists/arm-kernel/msg634678.html
+>>
+>> No, binding docs, dts files and driver code should all be separate
+>> patches.
+>
+> My mistake. This patch has a dt-bindings include file; should the include file
+> go in here, with the dtsi changes, or in its own separate patch?
 
-> -----Original Message-----
-> From: Mark Brown [mailto:broonie@kernel.org]
-> Sent: Wednesday, February 21, 2018 9:27 PM
-> To: Suzuki, Katsuhiro <suzuki.katsuhiro@socionext.com>
-> Cc: alsa-devel@alsa-project.org; Rob Herring <robh+dt@kernel.org>; devicetree@vger.kernel.org; Masami Hiramatsu
-> <masami.hiramatsu@linaro.org>; Jassi Brar <jaswinder.singh@linaro.org>; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 2/2] ASoC: support ROHM BD28623 codec
-> 
-> On Wed, Feb 21, 2018 at 01:33:11PM +0900, Katsuhiro Suzuki wrote:
-> 
-> > +++ b/sound/soc/codecs/bd28623.c
-> > @@ -0,0 +1,258 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * ROHM BD28623MUV class D speaker amplifier codec driver.
-> > + *
-> 
-> Please make the entire comment C++ so this looks intentional.
-> 
-> > +		dev_err(dev, "Failed to enable supplies: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	gpiod_set_value(bd->reset_gpio, 0);
-> 
-> Since this GPIO is not needed in atomic contexts you should use the
-> _cansleep() versions of the GPIO functions - it doesn't cost you
-> anything and means that if for some reason someone wired this up to a
-> GPIO that can't be used in atomic context the driver will just work.
-> 
+It defines the binding, so with the binding documentation.
 
-Thank you, I'll fix it.
-
-
-> > +	bd->reset_gpio = devm_gpiod_get_optional(dev, "reset",
-> > +						 GPIOD_OUT_HIGH);
-> 
-> > +	bd->mute_gpio = devm_gpiod_get_optional(dev, "mute",
-> > +						GPIOD_OUT_HIGH);
-> 
-> These properties were documented as mandatory in the binding but are
-> optional here.  It's fine that they're optional but I'd expect the
-> binding to be consistent with this.
-> 
-
-These GPIO is optional if board vendor connects directly RSTX and MUTEX pins
-to VCC. So I think I should fix DT-bindings document.
-
-
-> > +static int bd28623_remove(struct platform_device *pdev)
-> > +{
-> > +	struct bd28623_priv *bd = platform_get_drvdata(pdev);
-> > +
-> > +	regulator_bulk_disable(ARRAY_SIZE(bd->supplies), bd->supplies);
-> > +
-> > +	return 0;
-> > +}
-> 
-> We don't enable the supplies explicitly as part of the probe function so
-> it feels wrong to disable on remove() - I'm sure it is fine in practice
-> as-is but I'd have to think too hard to confirm that.  I'd put this in a
-> component level remove function instead so that it's consistent.
-
-Ah, indeed. I will use component driver's remove() function instead of platform.
-
-Thank you for review!
-
-
-Regards,
---
-Katsuhiro Suzuki
+Rob
