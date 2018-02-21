@@ -1,95 +1,52 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 1/5] drm: xlnx: Xilinx DRM KMS module
-Date: Thu, 22 Feb 2018 01:22:31 +0200
-Message-ID: <2015708.iEdeFCBY9S@avalon>
-References: <1517967400-16993-1-git-send-email-hyun.kwon@xilinx.com>
- <20180219094307.GK22199@phenom.ffwll.local>
- <20180220171141.GA5004@smtp.xilinx.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 3/4] arm64: dts: sdm845: Add minimal dts/dtsi files for
+ sdm845 SoC and MTP
+Date: Wed, 21 Feb 2018 15:23:57 -0800
+Message-ID: <CAD=FV=WgyX-O8haJp3WpzPodV2f1sokL9hW_qe7R8hVYy3v+sg@mail.gmail.com>
+References: <20180216060503.22006-1-rnayak@codeaurora.org>
+ <20180216060503.22006-4-rnayak@codeaurora.org>
+ <20180219163651.66936056@why.wild-wind.fr.eu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180220171141.GA5004@smtp.xilinx.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: hyun.kwon@xilinx.com
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180219163651.66936056@why.wild-wind.fr.eu.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Marc Zyngier <marc.zyngier@arm.com>, linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, evgreen@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSHl1biwKCk9uIFR1ZXNkYXksIDIwIEZlYnJ1YXJ5IDIwMTggMTk6MTE6NDIgRUVUIGh5dW4u
-a3dvbkB4aWxpbnguY29tIHdyb3RlOgo+IE9uIE1vbmRheSwgRmVicnVhcnkgMTksIDIwMTggMTo0
-MyBBTSBEYW5pZWwgVmV0dGVyIHdyb3RlOgo+ID4gT24gVHVlLCBGZWIgMDYsIDIwMTggYXQgMDU6
-MzY6MzZQTSAtMDgwMCwgSHl1biBLd29uIHdyb3RlOgo+ID4+IFhpbGlueCBoYXMgdmFyaW91cyBw
-bGF0Zm9ybXMgZm9yIGRpc3BsYXksIHdoZXJlIHVzZXJzIGNhbiBjcmVhdGUKPiA+PiB1c2luZyBt
-dWx0aXBsZSBJUHMgaW4gdGhlIHByb2dyYW1tYWJsZSBGUEdBIGZhYnJpYywgb3Igd2hlcmUKPiA+
-PiBzb21lIGhhcmRlbmVkIHBpZXBsaW5lIGlzIGF2YWlsYWJsZSBvbiB0aGUgY2hpcC4gRnVydGhl
-cm1vcmUsCj4gPj4gaGFyZGVuZWQgcGlwZWxpbmUgY2FuIGFsc28gaW50ZXJhY3Qgd2l0aCBzb2Z0
-IGxvZ2ljcyBpbiBGUEdBLgo+ID4+IAo+ID4+IFRoZSBYaWxpbnggRFJNIEtNUyBtb2R1bGUgaXMg
-dG8gaW50ZWdyYXRlIG11bHRpcGxlIHN1YmRldmljZXMgYW5kCj4gPj4gdG8gcmVwcmVzZW50IHRo
-ZSBlbnRpcmUgcGlwZWxpbmUgYXMgYSBzaW5nbGUgRFJNIGRldmljZS4gVGhlIG1vZHVsZQo+ID4+
-IGluY2x1ZGVzIGhlbHBlciAoZXgsIGZyYW1lYnVmZmVyIGFuZCBnZW0gaGVscGVycykgYW5kCj4g
-Pj4gZ2x1ZSBsb2dpYyAoZXgsIGNydGMgaW50ZXJmYWNlKSBmdW5jdGlvbnMuCj4gPj4gCj4gPj4g
-U2lnbmVkLW9mZi1ieTogSHl1biBLd29uIDxoeXVuLmt3b25AeGlsaW54LmNvbT4KPiA+PiBBY2tl
-ZC1ieTogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KPiA+IAo+ID4gTG9v
-a3MgYWxsIHJlYWR5IGZvciBtZXJnaW5nLiBEaWQgeW91IGFwcGx5IGZvciBjb21taXQgcmlnaHRz
-IHRvIGRybS1taXNjCj4gPiBhbHJlYWR5IHNvIHlvdSBjb3VsZCBwdXNoIHRoaXMgcmlnaHQgYXdh
-eT8KPiAKPiBZZXMsIEkndmUgY3JlYXRlZCB0aGUgcmVxdWVzdCwgYW5kIGFtIHdhaXRpbmcgZm9y
-IHRoZSByZXNwb25zZSB0aGVyZToKPiBodHRwczovL2J1Z3MuZnJlZWRlc2t0b3Aub3JnL3Nob3df
-YnVnLmNnaT9pZD0xMDUwMTcKCkkndmUganVzdCBzZW50IGFuIGluLWRlcHRoIHJldmlldyBvZiBw
-YXRjaCAxLzUgKHNvcnJ5IGZvciBiZWluZyBsYXRlKS4gVGhlcmUgCmFyZSBsb3RzIG9mIHNtYWxs
-IGNvbW1lbnRzIHRoYXQgY291bGQgYmUgYWRkcmVzc2VkIGFzIGZvbGxvdy11cCBwYXRjaGVzIGlu
-IHRoZSAKd29yc3QgY2FzZSwgYnV0IHRoZXJlJ3Mgb25lIGNvbW1lbnQgcmVnYXJkaW5nIHRoZSBw
-b3J0cyBEVCBwcm9wZXJ0eSB0aGF0IAp3b3JyaWVzIG1lIGFuZCB0aGF0IEknZCBsaWtlIHRvIHNl
-ZSBhZGRyZXNzZWQgKG9yLCBpZiBJIGdvdCBpdCB3cm9uZywgCmV4cGxhaW5lZCkgYmVmb3JlIHdl
-IG1lcmdlIHRoaXMuIEFub3RoZXIgcmVsYXRlZCBpc3N1ZSB0aGF0IEknZCBsaWtlIHRvIApkaXNj
-dXNzIGlzIHRoZSBuZWVkIGZvciB0aGUgYXJ0aWZpY2lhbCB4aWxpbngtZHJtIHBsYXRmb3JtIGRl
-dmljZS4gQW5kIG9mIApjb3Vyc2UgaWYgYSB2NiBpcyBuZWVkZWQsIHlvdSBjYW4gYWRkcmVzcyBh
-bGwgdGhlIG90aGVyIHNtYWxsIGNvbW1lbnRzIDotKQoKPiA+PiAtLS0KPiA+PiB2NQo+ID4+IC0g
-UmVkZWZpbmUgeGxueF9waXBlbGluZV9pbml0KCkKPiA+PiB2NAo+ID4+IC0gRml4IGEgYnVnIGlu
-IG9mIGdyYXBoIGJpbmRpbmcgaGFuZGxpbmcKPiA+PiAtIFJlbW92ZSB2YmxhbmsgY2FsbGJhY2tz
-IGZyb20geGxueF9jcnRjCj4gPj4gLSBSZW1vdmUgdGhlIGR0IGJpbmRpbmcuIFRoaXMgbW9kdWxl
-IGJlY29tZXMgbW9yZSBsaWtlIGEgbGlicmFyeS4KPiA+PiAtIFJlcGhyYXNlIHRoZSBjb21taXQg
-bWVzc2FnZQo+ID4+IHYzCj4gPj4gLSBBZGQgTGF1cmVudCBhcyBhIG1haW50YWluZXIKPiA+PiAt
-IEZpeCBtdWx0aXBsZS1yZWZlcmVuY2Ugb24gZ2VtIG9iamVjdHMKPiA+PiB2Mgo+ID4+IC0gQ2hh
-bmdlIHRoZSBTUERYIGlkZW50aWZpZXIgZm9ybWF0Cj4gPj4gLSBNZXJnZSBwYXRjaGVzKGNydGMs
-IGdlbSwgZmIpIGludG8gc2luZ2xlIG9uZQo+ID4+IHYyIG9mIHhsbnhfZHJ2Cj4gPj4gLSBSZW5h
-bWUga21zIHRvIGRpc3BsYXkgaW4geGxueF9kcnYKPiA+PiAtIFJlcGxhY2Ugc29tZSB4bG54IHNw
-ZWNpZmljIGZiIGhlbHBlciB3aXRoIGNvbW1vbiBoZWxwZXJzIGluIHhsbnhfZHJ2Cj4gPj4gLSBE
-b24ndCBzZXQgdGhlIGNvbW1pdCB0YWlsIGNhbGxiYWNrIGluIHhsbnhfZHJ2Cj4gPj4gLSBTdXBw
-b3J0ICdwb3J0cycgZ3JhcGggYmluZGluZyBpbiB4bG54X2Rydgo+ID4+IHYyIG9mIHhsbnhfZmIK
-PiA+PiAtIFJlbW92ZSB3cmFwcGVycyBpbiB4bG54X2ZiCj4gPj4gLSBSZXBsYWNlIHNvbWUgZnVu
-Y3Rpb25zIHdpdGggZHJtIGNvcmUgaGVscGVycyBpbiB4bG54X2ZiCj4gPj4gLS0tCj4gPj4gLS0t
-Cj4gPj4gCj4gPj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgIHwgICA5ICsKPiA+
-PiAgZHJpdmVycy9ncHUvZHJtL0tjb25maWcgICAgICAgICAgfCAgIDIgKwo+ID4+ICBkcml2ZXJz
-L2dwdS9kcm0vTWFrZWZpbGUgICAgICAgICB8ICAgMSArCj4gPj4gIGRyaXZlcnMvZ3B1L2RybS94
-bG54L0tjb25maWcgICAgIHwgIDEyICsKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3hsbngvTWFrZWZp
-bGUgICAgfCAgIDIgKwo+ID4+ICBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2NydGMuYyB8IDE3
-NyArKysrKysrKysrKysrKwo+ID4+ICBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2NydGMuaCB8
-ICA3MCArKysrKysKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9kcnYuYyAgfCA1MDEg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gPj4gIGRyaXZlcnMvZ3B1L2RybS94
-bG54L3hsbnhfZHJ2LmggIHwgIDMzICsrKwo+ID4+ICBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54
-X2ZiLmMgICB8IDI5OCArKysrKysrKysrKysrKysrKysrKysrKwo+ID4+ICBkcml2ZXJzL2dwdS9k
-cm0veGxueC94bG54X2ZiLmggICB8ICAzMyArKysKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3hsbngv
-eGxueF9nZW0uYyAgfCAgNDcgKysrKwo+ID4+ICBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2dl
-bS5oICB8ICAyNiArKwo+ID4+ICAxMyBmaWxlcyBjaGFuZ2VkLCAxMjExIGluc2VydGlvbnMoKykK
-PiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L0tjb25maWcKPiA+
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L01ha2VmaWxlCj4gPj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2NydGMuYwo+ID4+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9jcnRjLmgKPiA+
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZHJ2LmMKPiA+
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZHJ2LmgKPiA+
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZmIuYwo+ID4+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9mYi5oCj4gPj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2dlbS5jCj4gPj4g
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2dlbS5oCgpbc25p
-cF0KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+On Mon, Feb 19, 2018 at 8:36 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+>> +                     interrupts = <GIC_SPI 208 IRQ_TYPE_NONE>;
+>
+> Please do not use IRQ_TYPE_NONE, ever. It doesn't exist in the GIC
+> binding. Set it to the actual trigger value.
+>
+
+>> +                     interrupts = <GIC_SPI 481 IRQ_TYPE_NONE>;
+>
+> Same here.
+
+Thanks for the review Marc!
+
+
+Andy: If I'm reading everything correctly you're the one who would
+collect these patches and apply them.  Is that right?  Do they look OK
+to you in general?  Would you prefer that Rajendra send out a v5 with
+the fixes pointed out by Marc, or would you prefer to fix them up
+yourself when applying?  Is now a good time or would you prefer to
+wait?
+
+Thanks!  :)
+
+-Doug
