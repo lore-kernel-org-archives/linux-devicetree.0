@@ -1,16 +1,15 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 09/19] ARM64: dts: Add R-Car Salvator-x M3-N support
-Date: Wed, 21 Feb 2018 18:15:04 +0100
-Message-ID: <20180221171504.dac7yikrqfnjiiog@verge.net.au>
+Subject: Re: [PATCH v2 11/19] ARM64: dts: r8a77965: Add dmac device nods
+Date: Wed, 21 Feb 2018 18:18:08 +0100
+Message-ID: <20180221171808.3fbzhupb42ef4nh3@verge.net.au>
 References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519139541-18783-10-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdVDCga8htL+UD3P0Kzt9-OQ6hof+szGOiV9d0gwxGExqQ@mail.gmail.com>
+ <1519139541-18783-12-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVDCga8htL+UD3P0Kzt9-OQ6hof+szGOiV9d0gwxGExqQ@mail.gmail.com>
+In-Reply-To: <1519139541-18783-12-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,83 +19,16 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, geert@linux-m68k.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 20, 2018 at 04:46:23PM +0100, Geert Uytterhoeven wrote:
-> On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> > Add basic support for R-Car Salvator-X M3-N (R8A77965) board.
-> >
-> > Based on original work from:
-> > Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> > Magnus Damm <damm+renesas@opensource.se>
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+On Tue, Feb 20, 2018 at 04:12:13PM +0100, Jacopo Mondi wrote:
+> Add dmac[0-2] device nodes for R-Car M3-N (r8a77965) SoC.
 > 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks, applied with prefix updated to
+Thanks, applied with prefix updated to:
 
-"arm64: dts: renesas:"
-
-There was some fuzz applying this patch, the result is as follows.
-
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH] arm64: dts: renesas: Add R-Car Salvator-x M3-N support
-
-Add basic support for R-Car Salvator-X M3-N (R8A77965) board.
-
-Based on original work from:
-Takeshi Kihara <takeshi.kihara.df@renesas.com>
-Magnus Damm <damm+renesas@opensource.se>
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm64/boot/dts/renesas/Makefile                |  1 +
- arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts | 21 +++++++++++++++++++++
- 2 files changed, 22 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index c885eef4e660..9ea5ec0daeba 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-es1-h3ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb r8a7796-m3ulcb.dtb
- dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-m3ulcb-kf.dtb
- dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-xs.dtb
-+dtb-$(CONFIG_ARCH_R8A77965) += r8a77965-salvator-x.dtb
- dtb-$(CONFIG_ARCH_R8A77970) += r8a77970-eagle.dtb r8a77970-v3msk.dtb
- dtb-$(CONFIG_ARCH_R8A77980) += r8a77980-condor.dtb
- dtb-$(CONFIG_ARCH_R8A77995) += r8a77995-draak.dtb
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-new file mode 100644
-index 000000000000..75d890d91df9
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dts
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the Salvator-X board with R-Car M3-N
-+ *
-+ * Copyright (C) 2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
-+ */
-+
-+/dts-v1/;
-+#include "r8a77965.dtsi"
-+#include "salvator-x.dtsi"
-+
-+/ {
-+	model = "Renesas Salvator-X board based on r8a77965";
-+	compatible = "renesas,salvator-x", "renesas,r8a77965";
-+
-+	memory@48000000 {
-+		device_type = "memory";
-+		/* first 128MB is reserved for secure area. */
-+		reg = <0x0 0x48000000 0x0 0x78000000>;
-+	};
-+};
--- 
-2.11.0
+arm64: dts: renesas: r8a77965:
