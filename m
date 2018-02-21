@@ -1,82 +1,26 @@
-Return-Path: <SRS0=goDf=FR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr40102.outbound.protection.outlook.com ([40.107.4.102]:10720
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751843AbeBWVJW (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 23 Feb 2018 16:09:22 -0500
-From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Subject: [PATCH v5 2/2] dt/bindings: Add bindings for Layerscape external irqs
-Date: Fri, 23 Feb 2018 22:09:00 +0100
-Message-Id: <20180223210901.23480-3-rasmus.villemoes@prevas.dk>
-In-Reply-To: <20180223210901.23480-1-rasmus.villemoes@prevas.dk>
-References: <20180125150230.7234-1-rasmus.villemoes@prevas.dk>
- <20180223210901.23480-1-rasmus.villemoes@prevas.dk>
+Return-Path: <SRS0=QFP4=FP=verge.net.au=horms@kernel.org>
+Date: Wed, 21 Feb 2018 19:29:18 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v10 04/10] ARM: dts: r7s72100: Add Capture Engine Unit
+ (CEU)
+Message-ID: <20180221182918.fbxnhdl4r4y3ejfj@verge.net.au>
+References: <1519235284-32286-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519235284-32286-5-git-send-email-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Andy Tang <andy.tang@nxp.com>, Alexander Stein <alexander.stein@systec-electronic.com>, Rasmus Villemoes <rasmus.villemoes@prevas.dk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1519235284-32286-5-git-send-email-jacopo+renesas@jmondi.org>
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This adds Device Tree binding documentation for the external interrupt
-lines with configurable polarity present on some Layerscape SOCs.
+On Wed, Feb 21, 2018 at 06:47:58PM +0100, Jacopo Mondi wrote:
+> Add Capture Engine Unit (CEU) node to device tree.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 
-Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
----
- .../interrupt-controller/fsl,ls-extirq.txt         | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
-new file mode 100644
-index 000000000000..e510c715e8f6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
-@@ -0,0 +1,44 @@
-+* Freescale Layerscape external IRQs
-+
-+Some Layerscape SOCs (LS1021A, LS1043A, LS1046A) support inverting
-+the polarity of certain external interrupt lines.
-+
-+The device node must be a child of the node representing the
-+Supplemental Configuration Unit (SCFG).
-+
-+Required properties:
-+- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
-+- interrupt-controller: Identifies the node as an interrupt controller
-+- #interrupt-cells: Must be 2. The first element is the index of the
-+  external interrupt line. The second element is the trigger type.
-+- interrupt-parent: phandle of GIC.
-+- reg: Specifies the Interrupt Polarity Control Register (INTPCR) in the SCFG.
-+- fsl,extirq-map: Specifies the mapping to interrupt numbers in the parent
-+  interrupt controller. Interrupts are mapped one-to-one to parent
-+  interrupts.
-+
-+Optional properties:
-+- fsl,bit-reverse: This boolean property should be set on the LS1021A
-+  if the SCFGREVCR register has been set to all-ones (which is usually
-+  the case), meaning that all reads and writes of SCFG registers are
-+  implicitly bit-reversed. Other compatible platforms do not have such
-+  a register.
-+
-+Example:
-+	scfg: scfg@1570000 {
-+		compatible = "fsl,ls1021a-scfg", "syscon";
-+		...
-+		extirq: interrupt-controller {
-+			compatible = "fsl,ls1021a-extirq";
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			interrupt-parent = <&gic>;
-+			reg = <0x1ac>;
-+			fsl,extirq-map = <163 164 165 167 168 169>;
-+			fsl,bit-reverse;
-+		};
-+	};
-+
-+
-+	interrupts-extended = <&gic GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-+			      <&extirq 1 IRQ_TYPE_LEVEL_LOW>;
--- 
-2.15.1
-
+This patch depends on the binding for "renesas,r7s72100-ceu".
+Please repost or otherwise ping me once that dependency has been accepted.
