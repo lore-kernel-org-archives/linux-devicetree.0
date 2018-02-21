@@ -1,58 +1,97 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v4 5/6] extcon: add possibility to get extcon device by
- OF node
-Date: Wed, 21 Feb 2018 16:54:42 +0100
-Message-ID: <6da27f54-76d0-2ac8-666e-e3ebfc71b2c1@samsung.com>
-References: <CGME20180221085608eucas1p162d2e579a1cc887672b722458edb98fe@eucas1p1.samsung.com>
- <20180221085541.14556-1-a.hajda@samsung.com>
- <20180221085541.14556-6-a.hajda@samsung.com>
- <CAHp75VdxGDCGQBN05bL3_h8P62-v6+5oGW3M7CA+701o15ZXnQ@mail.gmail.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 00/10] Add Actions Semi S900 pinctrl and gpio support
+Date: Wed, 21 Feb 2018 21:30:34 +0530
+Message-ID: <20180221160044.15089-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAHp75VdxGDCGQBN05bL3_h8P62-v6+5oGW3M7CA+701o15ZXnQ@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, USB <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de
+Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, liuwei@actions-semi.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-gpio@vger.kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjEuMDIuMjAxOCAxNToyNywgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOgo+IE9uIFdlZCwgRmVi
-IDIxLCAyMDE4IGF0IDEwOjU1IEFNLCBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29t
-PiB3cm90ZToKPj4gU2luY2UgZXh0Y29uIHByb3BlcnR5IGlzIG5vdCBhbGxvd2VkIGluIERULCBl
-eHRjb24gc3Vic3lzdGVtIHJlcXVpcmVzCj4+IGFub3RoZXIgd2F5IHRvIGdldCBleHRjb24gZGV2
-aWNlLiBMZXRzIHRyeSB0aGUgc2ltcGxlc3QgYXBwcm9hY2ggLSBnZXQKPj4gZWRldiBieSBvZl9u
-b2RlLgo+PiArLyoKPj4gKyAqIGV4dGNvbl9nZXRfZWRldl9ieV9vZl9ub2RlIC0gR2V0IHRoZSBl
-eHRjb24gZGV2aWNlIGZyb20gZGV2aWNldHJlZS4KPj4gKyAqIEBub2RlICAgICAgIDogT0Ygbm9k
-ZSBpZGVudHlmeWluZyBlZGV2Cj4+ICsgKgo+PiArICogUmV0dXJuIHRoZSBwb2ludGVyIG9mIGV4
-dGNvbiBkZXZpY2UgaWYgc3VjY2VzcyBvciBFUlJfUFRSKGVycikgaWYgZmFpbC4KPj4gKyAqLwo+
-PiArc3RydWN0IGV4dGNvbl9kZXYgKmV4dGNvbl9nZXRfZWRldl9ieV9vZl9ub2RlKHN0cnVjdCBk
-ZXZpY2Vfbm9kZSAqbm9kZSkKPiBGaXJzdCBvZiBhbGwsIHRoZSBhbGwgb3RoZXIgc2ltaWxhciBj
-YXNlcyB1c2UgIl9ieV9ub2RlIiBpbiB0aGUgbmFtZS4KCk9LLCBsb29rcyBiZXR0ZXIuCgo+IFNl
-Y29uZCwgaXQncyBub3QgX2dldF8sIGl0J3MgX2ZpbmRfLgoKVGhlIHBhdGNoIHNwbGl0cyBleGlz
-aXRpbmcgZXh0Y29uX2dldF9lZGV2X2J5X3BoYW5kbGUgZnVuY3Rpb24gaW50byB0d28KZnVuY3Rp
-b25zLCBub3RoaW5nIG1vcmUuClRodXMgaXQgZm9sbG93ZWQgbmFtaW5nIGNvbnZlbnRpb24gcHJl
-c2VudCBpbiBleHRjb24gZnJhbWV3b3JrLiBJIGNhbgpzd2l0Y2ggaXQgb2YgY291cnNlIHRvIF9m
-aW5kXy4KCj4KPj4gK3sKPj4gKyAgICAgICBzdHJ1Y3QgZXh0Y29uX2RldiAqZWRldjsKPj4gKwo+
-PiArICAgICAgIG11dGV4X2xvY2soJmV4dGNvbl9kZXZfbGlzdF9sb2NrKTsKPj4gKyAgICAgICBs
-aXN0X2Zvcl9lYWNoX2VudHJ5KGVkZXYsICZleHRjb25fZGV2X2xpc3QsIGVudHJ5KQo+PiArICAg
-ICAgICAgICAgICAgaWYgKGVkZXYtPmRldi5wYXJlbnQgJiYgZWRldi0+ZGV2LnBhcmVudC0+b2Zf
-bm9kZSA9PSBub2RlKQo+PiArICAgICAgICAgICAgICAgICAgICAgICBnb3RvIG91dDsKPj4gKyAg
-ICAgICBlZGV2ID0gRVJSX1BUUigtRVBST0JFX0RFRkVSKTsKPj4gK291dDoKPj4gKyAgICAgICBt
-dXRleF91bmxvY2soJmV4dGNvbl9kZXZfbGlzdF9sb2NrKTsKPj4gKwo+PiArICAgICAgIHJldHVy
-biBlZGV2Owo+IENhbid0IGl0IGJlIGRvbmUgdXNpbmcgYnVzX2ZpbmRfZGV2aWNlKCk/CgpUaGVy
-ZSBpcyBubyBzcGVjaWFsIGV4dGNvbiBidXMsIHNvIEkgYW0gbm90IHN1cmUuIEFueXdheSBpZiBp
-dCBjYW4sIGl0CnNob3VsZCBiZSBkb25lIHByb2JhYmx5IGluIGFub3RoZXIgcGF0Y2guCgpSZWdh
-cmRzCkFuZHJ6ZWoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+This patchset adds pinctrl and gpio support for Actions Semi S900 SoC.
+Pinctrl and gpio subsystems share the common set of register range but
+implemented as individual drivers for making it less complex.
+
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
+
+gpio-line-names has been added for the Bubblegum-96 board matching the
+96Boards CE specification v1.0.
+
+Both pinctrl and gpio drivers are verified using the Bubblegum-96 board.
+
+This patchset depends on the clock driver which is still under review:
+https://lkml.org/lkml/2018/2/9/831
+
+There is also S500 pinctrl and gpio driver developed by Andreas Farber
+independently to this patchset.
+https://github.com/afaerber/linux/commits/bg96-next
+
+If this patchseries seems to be good enough to add base OWL pinctrl and
+gpio support. Then, we may decide on adding S500 support on top of this later
+by reusing the pinctrl definitions from Andreas.
+
+Thanks,
+Mani
+
+Changes in v2:
+
+* Implemented each GPIO bank as its own gpio-controller
+* Added gpio-ranges property
+* Modified pin group to follow pad names instead of register names
+* Incorporated review comments from Andy
+* Incorporated review comments from Andreas
+* Fixed the MODULE_LICENSE with respect to SPDX tag
+* Added Reviewed by tag from Rob for pinctrl binding
+
+Manivannan Sadhasivam (10):
+  dt-bindings: pinctrl: Add bindings for Actions S900 SoC
+  arm64: dts: actions: Add pinctrl node for S900
+  arm64: actions: Enable PINCTRL in platforms Kconfig
+  pinctrl: actions: Add Actions S900 pinctrl driver
+  dt-bindings: gpio: Add gpio nodes for Actions S900 SoC
+  arm64: dts: actions: Add S900 gpio nodes
+  arm64: dts: actions: Add gpio line names to Bubblegum-96 board
+  gpio: Add gpio driver for Actions OWL S900 SoC
+  MAINTAINERS: Add reviewer for ACTIONS platforms
+  MAINTAINERS: Add Actions Semi S900 pinctrl and gpio entries
+
+ .../devicetree/bindings/gpio/actions,owl-gpio.txt  |   76 +
+ .../bindings/pinctrl/actions,s900-pinctrl.txt      |  178 ++
+ MAINTAINERS                                        |    5 +
+ arch/arm64/Kconfig.platforms                       |    1 +
+ arch/arm64/boot/dts/actions/s900-bubblegum-96.dts  |  201 ++
+ arch/arm64/boot/dts/actions/s900.dtsi              |   54 +
+ drivers/gpio/Kconfig                               |    8 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-owl.c                            |  219 ++
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/actions/Kconfig                    |   12 +
+ drivers/pinctrl/actions/Makefile                   |    2 +
+ drivers/pinctrl/actions/pinctrl-owl.c              |  571 +++++
+ drivers/pinctrl/actions/pinctrl-owl.h              |  178 ++
+ drivers/pinctrl/actions/pinctrl-s900.c             | 2505 ++++++++++++++++++++
+ 16 files changed, 4013 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
+ create mode 100644 drivers/gpio/gpio-owl.c
+ create mode 100644 drivers/pinctrl/actions/Kconfig
+ create mode 100644 drivers/pinctrl/actions/Makefile
+ create mode 100644 drivers/pinctrl/actions/pinctrl-owl.c
+ create mode 100644 drivers/pinctrl/actions/pinctrl-owl.h
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s900.c
+
+-- 
+2.14.1
