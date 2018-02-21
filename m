@@ -1,82 +1,51 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [SPAM]Re: [PATCH v3 4/5] dt-bindings: clock: mediatek: update
- audsys documentation to adapt MFD device
-Date: Wed, 21 Feb 2018 08:10:37 -0600
-Message-ID: <CAL_JsqLjcMpS=bLzAV0arLJY143O1XefjSR0djM73E8uC4oJHg@mail.gmail.com>
-References: <cover.1518424204.git.ryder.lee@mediatek.com>
- <61928ad523a7aeffb8f16d4caad56836b65ae407.1518424204.git.ryder.lee@mediatek.com>
- <CAL_JsqJgo0pKJjrs2fdw+q=DJYwht0X5L3Bomz8gf98mEN7hkg@mail.gmail.com>
- <1519193048.18794.42.camel@mtkswgap22>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 5/6] extcon: add possibility to get extcon device by OF
+ node
+Date: Wed, 21 Feb 2018 16:27:11 +0200
+Message-ID: <CAHp75VdxGDCGQBN05bL3_h8P62-v6+5oGW3M7CA+701o15ZXnQ@mail.gmail.com>
+References: <CGME20180221085608eucas1p162d2e579a1cc887672b722458edb98fe@eucas1p1.samsung.com>
+ <20180221085541.14556-1-a.hajda@samsung.com>
+ <20180221085541.14556-6-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519193048.18794.42.camel@mtkswgap22>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: devicetree@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180221085541.14556-6-a.hajda@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, USB <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 21, 2018 at 12:04 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> On Mon, 2018-02-19 at 12:29 -0600, Rob Herring wrote:
->> On Mon, Feb 12, 2018 at 5:28 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
->> > The MediaTek audio hardware block that exposes functionalities that are
->> > handled by separate subsystems in the kernel.  These functions are all
->> > mapped somewhere at 0x112xxxxx, and there are some control bits are mixed
->> > up with other functions within the same registers.
->>
->> I still don't think this change is necessary.
->>
->> Just because a hardware block in DT maps to different subsystems in a
->> particular OS doesn't mean you need a DT node for each OS subsystem.
->> What we have subsystems for changes over time and DT shouldn't really
->> be changing based on that. And DT is not the only way to instantiate
->> drivers.
->>
->
-> Apart right now we have the definition of both functions. The other
-> location is here:../sonud/mt2701-afe-pcm.txt. The ways I could come up
-> with are:
-
-There are several problems you need to fix. First,
-"mediatek,mt2701-audsys" is not documented. It is only used in the
-example. Second, bindings/arm/mediatek/mediatek,audsys.txt should move
-to bindings/sound/ if it is only audio related functions. Or perhaps
-just combine the 2 documents because it is all inconsistent currently.
-
-The 2 documents are inconsistent as to what is the relationship of
--audsys and -audio (afe) nodes. mt2701-afe-pcm.txt shows that the AFE
-is already a child of -audsys. The -audsys node should have
-#clock-cells. It should also not be a simple-mfd (another
-inconsistency in the binding) because it needs to probe first to
-provide clocks to child nodes, and then trigger probing the child
-nodes.
-
-Rob
-
->
-> 1. Add a dummy MFD driver (need to think a new compatible or just use
-> '*-audsys' which has already been picked by clock driver) to instantiate
-> two sub-devices through id_table and mfd_cell.
->
-> 2. For the sake of simplification - add a new compatible "simple-mfd".
->
-> 3. The last thing - keep two nodes separated/independent. (x)
->
-> I'm not sure which one is better.
->
->
->
-> @Lee @Matthias: What do you suggest?
->
-> Ryder.
->
->
+T24gV2VkLCBGZWIgMjEsIDIwMTggYXQgMTA6NTUgQU0sIEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFA
+c2Ftc3VuZy5jb20+IHdyb3RlOgo+IFNpbmNlIGV4dGNvbiBwcm9wZXJ0eSBpcyBub3QgYWxsb3dl
+ZCBpbiBEVCwgZXh0Y29uIHN1YnN5c3RlbSByZXF1aXJlcwo+IGFub3RoZXIgd2F5IHRvIGdldCBl
+eHRjb24gZGV2aWNlLiBMZXRzIHRyeSB0aGUgc2ltcGxlc3QgYXBwcm9hY2ggLSBnZXQKPiBlZGV2
+IGJ5IG9mX25vZGUuCgo+ICsvKgo+ICsgKiBleHRjb25fZ2V0X2VkZXZfYnlfb2Zfbm9kZSAtIEdl
+dCB0aGUgZXh0Y29uIGRldmljZSBmcm9tIGRldmljZXRyZWUuCj4gKyAqIEBub2RlICAgICAgIDog
+T0Ygbm9kZSBpZGVudHlmeWluZyBlZGV2Cj4gKyAqCj4gKyAqIFJldHVybiB0aGUgcG9pbnRlciBv
+ZiBleHRjb24gZGV2aWNlIGlmIHN1Y2Nlc3Mgb3IgRVJSX1BUUihlcnIpIGlmIGZhaWwuCj4gKyAq
+Lwo+ICtzdHJ1Y3QgZXh0Y29uX2RldiAqZXh0Y29uX2dldF9lZGV2X2J5X29mX25vZGUoc3RydWN0
+IGRldmljZV9ub2RlICpub2RlKQoKRmlyc3Qgb2YgYWxsLCB0aGUgYWxsIG90aGVyIHNpbWlsYXIg
+Y2FzZXMgdXNlICJfYnlfbm9kZSIgaW4gdGhlIG5hbWUuClNlY29uZCwgaXQncyBub3QgX2dldF8s
+IGl0J3MgX2ZpbmRfLgoKPiArewo+ICsgICAgICAgc3RydWN0IGV4dGNvbl9kZXYgKmVkZXY7Cj4g
+Kwo+ICsgICAgICAgbXV0ZXhfbG9jaygmZXh0Y29uX2Rldl9saXN0X2xvY2spOwo+ICsgICAgICAg
+bGlzdF9mb3JfZWFjaF9lbnRyeShlZGV2LCAmZXh0Y29uX2Rldl9saXN0LCBlbnRyeSkKPiArICAg
+ICAgICAgICAgICAgaWYgKGVkZXYtPmRldi5wYXJlbnQgJiYgZWRldi0+ZGV2LnBhcmVudC0+b2Zf
+bm9kZSA9PSBub2RlKQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gb3V0Owo+ICsgICAg
+ICAgZWRldiA9IEVSUl9QVFIoLUVQUk9CRV9ERUZFUik7Cj4gK291dDoKPiArICAgICAgIG11dGV4
+X3VubG9jaygmZXh0Y29uX2Rldl9saXN0X2xvY2spOwo+ICsKPiArICAgICAgIHJldHVybiBlZGV2
+OwoKQ2FuJ3QgaXQgYmUgZG9uZSB1c2luZyBidXNfZmluZF9kZXZpY2UoKT8KCj4gK30KClNlZSBn
+b29kIGV4YW1wbGUgaW4gaTJjLWNvcmUtb2YuYwoKb2ZfZmluZF9pMmNfYWRhcHRlcl9ieV9ub2Rl
+KCkKb2ZfZ2V0X2kyY19hZGFwdGVyX2J5X25vZGUoKQoKLS0gCldpdGggQmVzdCBSZWdhcmRzLApB
+bmR5IFNoZXZjaGVua28KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
