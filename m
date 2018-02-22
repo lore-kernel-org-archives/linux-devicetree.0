@@ -1,100 +1,104 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 00/16] R-Car DU: Convert LVDS code to bridge driver
-Date: Wed, 21 Feb 2018 17:39:25 +0100
-Message-ID: <20180221163924.cikog34sqr6aggyk@verge.net.au>
-References: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [RFC PATCH] mmc: sdhci-of-arasan: Add auto tuning support for
+ ZynqMP Platform
+Date: Thu, 22 Feb 2018 10:20:07 +0200
+Message-ID: <ce9efad6-b007-4cd9-18e7-a7932835846c@intel.com>
+References: <1517336073-18142-1-git-send-email-mnarani@xilinx.com>
+ <608309c3-fc4d-25a2-f0a9-21c0f3e2db46@intel.com>
+ <SN1PR0201MB1791863A71475E3F0D896DD0C1CE0@SN1PR0201MB1791.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180220231046.32638-1-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <SN1PR0201MB1791863A71475E3F0D896DD0C1CE0@SN1PR0201MB1791.namprd02.prod.outlook.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Manish Narani <MNARANI@xilinx.com>, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: Srinivas Goud <sgoud@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMjEsIDIwMTggYXQgMDE6MTA6MzBBTSArMDIwMCwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiBIZWxsbywKPiAKPiBUaGlzIHBhdGNoIHNlcmllcyBhZGRyZXNzZXMgYSBkZXNp
-Z24gbWlzdGFrZSB0aGF0IGRhdGVzIGJhY2sgZnJvbSB0aGUgaW5pdGlhbAo+IERVIHN1cHBvcnQu
-IFN1cHBvcnQgZm9yIHRoZSBMVkRTIGVuY29kZXJzLCB3aGljaCBhcmUgSVAgY29yZXMgc2VwYXJh
-dGUgZnJvbQo+IHRoZSBEVSwgd2FzIGJ1bmRsZWQgaW4gdGhlIERVIGRyaXZlci4gV29yc2UsIGJv
-dGggdGhlIERVIGFuZCBMVkRTIHdlcmUKPiBkZXNjcmliZWQgdGhyb3VnaCBhIHNpbmdsZSBEVCBu
-b2RlLgo+IAo+IFRvIGZpeCB0aGUsIHBhdGNoZXMgMDEvMTYgYW5kIDAyLzE2IGRlZmluZSBuZXcg
-RFQgYmluZGluZ3MgZm9yIHRoZSBMVkRTCj4gZW5jb2RlcnMsIGFuZCBkZXByZWNhdGUgdGhlaXIg
-ZGVzY3JpcHRpb24gaW5zaWRlIHRoZSBEVSBiaW5kaW5ncy4gVG8gcmV0YWluCj4gYmFja3dhcmQg
-Y29tcGF0aWJpbGl0eSB3aXRoIGV4aXN0aW5nIERULCBwYXRjaGVzIDAzLzE2IHRvIDA4LzE2IHRo
-ZW4gcGF0Y2ggdGhlCj4gZGV2aWNlIHRyZWUgYXQgcnVudGltZSB0byBjb252ZXJ0IHRoZSBsZWdh
-Y3kgYmluZGluZ3MgdG8gdGhlIG5ldyBvbmVzLgo+IAo+IFdpdGggdGhlIERUIHNpZGUgYWRkcmVz
-c2VkLCBwYXRjaCAwOS8xNiBjb252ZXJ0cyB0aGUgTFZEUyBzdXBwb3J0IGNvZGUgdG8gYQo+IHNl
-cGFyYXRlIGJyaWRnZSBkcml2ZXIuIFBhdGNoZXMgMTEvMTYgdG8gMTYvMTYgdGhlbiB1cGRhdGUg
-YWxsIHRoZSBkZXZpY2UgdHJlZQo+IHNvdXJjZXMgdG8gdGhlIG5ldyBEVSBhbmQgTFZEUyBlbmNv
-ZGVycyBiaW5kaW5ncy4KPiAKPiBJIGRlY2lkZWQgdG8gZ28gZm9yIGxpdmUgRFQgcGF0Y2hpbmcg
-aW4gcGF0Y2ggMDgvMTYgYmVjYXVzZSBpbXBsZW1lbnRpbmcKPiBzdXBwb3J0IGZvciBib3RoIHRo
-ZSBsZWdhY3kgYW5kIG5ldyBiaW5kaW5ncyBpbiB0aGUgZHJpdmVyIHdvdWxkIGhhdmUgYmVlbgo+
-IHZlcnkgaW50cnVzaXZlLCBhbmQgcHJldmVudGVkIGZ1cnRoZXIgY2xlYW51cHMuIFRoaXMgdmVy
-c2lvbiByZWxpZXMgbW9yZQo+IGhlYXZpbHkgb24gb3ZlcmxheXMgdG8gYXZvaWQgdG91Y2hpbmcg
-dGhlIGludGVybmFscyBvZiB0aGUgT0YgY29yZSBjb21wYXJlZCB0bwo+IHYyLCBldmVuIGlmIG1h
-bnVhbCBmaXhlcyB0byB0aGUgZGV2aWNlIHRyZWUgYXJlIHN0aWxsIG5lZWRlZC4KPiAKPiBDb21w
-YXJlZCB0byB2MywgdGhpcyBzZXJpZXMgdXNlcyB0aGUgT0YgY2hhbmdlc2V0IEFQSSB0byB1cGRh
-dGUgcHJvcGVydGllcwo+IGluc3RlYWQgb2YgYWNjZXNzaW5nIHRoZSBpbnRlcm5hbHMgb2YgdGhl
-IHByb3BlcnR5IHN0cnVjdHVyZS4gVGhpcyByZW1vdmVzIHRoZQo+IGxvY2FsIGltcGxlbWVudGF0
-aW9uIG9mIGZ1bmN0aW9ucyB0byBsb29rIHVwIG5vZGVzIGJ5IHBhdGggYW5kIHVwZGF0ZQo+IHBy
-b3BlcnRpZXMuIEluIG9yZGVyIHRvIGRvIHRoaXMsIEkgcHVsbGVkIGluIFBhbnRlbGlzJyBwYXRj
-aCBzZXJpZXMgdGl0bGVkCj4gIltQQVRDSCB2MiAwLzVdIG9mOiBkeW5hbWljOiBDaGFuZ2VzZXRz
-IGhlbHBlcnMgJiBmaXhlcyIgYXQgUm9iJ3MgcmVxdWVzdCwgYW5kCj4gcmViYXNlZCBpdCB3aGls
-ZSB0YWtpbmcgdHdvIHNtYWxsIHJldmlldyBjb21tZW50cyBpbnRvIGFjY291bnQuCj4gCj4gUm9i
-LCBJJ2QgbGlrZSB0aGlzIHNlcmllcyB0byBiZSBtZXJnZWQgaW4gdjQuMTcuIEFzIHRoZSBjaGFu
-Z2VzZXQgaGVscGVycyBhcmUKPiBub3cgYSBkZXBlbmRlbmN5LCBJJ2QgbmVlZCB5b3UgdG8gbWVy
-Z2UgdGhlbSBlYXJseSAoaWRlYWxseSBvbiB0b3Agb2YKPiB2NC4xNi1yYzEpIGFuZCBwcm92aWRl
-IGEgc3RhYmxlIGJyYW5jaCwgb3IgZ2V0IHlvdXIgYWNrIHRvIG1lcmdlIHRoZW0gdGhyb3VnaAo+
-IERhdmUncyB0cmVlIGlmIHRoZXkgZG9uJ3QgY29uZmxpY3Qgd2l0aCB3aGF0IHlvdSBoYXZlIGFu
-ZCB3aWxsIHF1ZXVlIGZvcgo+IHY0LjE3Lgo+IAo+IFRoaXMgdmVyc2lvbiBhbHNvIGRyb3BzIHRo
-ZSBzbWFsbCBmaXggdG8gdGhlIFBvcnRlciBib2FyZCBkZXZpY2UgdHJlZSB0aGF0IGhhcwo+IGJl
-ZW4gcXVldWVkIGZvciB2NC4xNyBhbHJlYWR5Lgo+IAo+IENvbXBhcmVkIHRvIHYyLCB0aGUgYmln
-Z2VzdCBjaGFuZ2UgaXMgaW4gcGF0Y2ggMDMvMTYuIEZvbGxvd2luZyBSb2IncyBhbmQKPiBGcmFu
-aydzIHJldmlld3MgaXQgd2FzIGNsZWFyIHRoYXQgbW9kaWZ5aW5nIHRoZSB1bmZsYXR0ZW5lZCBE
-VCBzdHJ1Y3R1cmUgb2YKPiB0aGUgb3ZlcmxheSBiZWZvcmUgYXBwbHlpbmcgaXQgd2Fzbid0IHBv
-cHVsYXIuIEkgaGF2ZSB0aHVzIGRlY2lkZWQgdG8gdXNlIG9uZQo+IG92ZXJsYXkgc291cmNlIHBl
-ciBTb0MgdG8gbW92ZSBhcyBtdWNoIG9mIHRoZSBEVCBjaGFuZ2VzIHRvIHRoZSBvdmVybGF5IGFz
-Cj4gcG9zc2libGUsIGFuZCBvbmx5IHBlcmZvcm0gbWFudWFsIG1vZGlmaWNhdGlvbnMgKHRoYXQg
-YXJlIHN0aWxsIG5lZWRlZCBhcyBzb21lCj4gb2YgdGhlIGluZm9ybWF0aW9uIGlzIGJvYXJkLXNw
-ZWNpZmljKSBvbiB0aGUgc3lzdGVtIERUIGFmdGVyIGFwcGx5aW5nIHRoZQo+IG92ZXJsYXkuIEFz
-IGEgcmVzdWx0IHRoZSBvdmVybGF5IGlzIHBhcnNlZCBhbmQgYXBwbGllZCB3aXRob3V0IGJlaW5n
-IG1vZGlmaWVkLgo+IAo+IENvbXBhcmVkIHRvIHYxLCB0aGlzIHNlcmllcyB1cGRhdGUgdGhlIHI4
-YTc3OTIgYW5kIHI4YTc3OTQgZGV2aWNlIHRyZWUgc291cmNlcwo+IGFuZCBpbmNvcnBvcmF0ZSBy
-ZXZpZXcgZmVlZGJhY2sgYXMgZGVzY3JpYmVkIGJ5IHRoZSBjaGFuZ2Vsb2dzIG9mIGluZGl2aWR1
-YWwKPiBwYXRjaGVzLgo+IAo+IAo+IExhdXJlbnQgUGluY2hhcnQgKDExKToKPiAgIGR0LWJpbmRp
-bmdzOiBkaXNwbGF5OiByZW5lc2FzOiBBZGQgUi1DYXIgTFZEUyBlbmNvZGVyIERUIGJpbmRpbmdz
-Cj4gICBkdC1iaW5kaW5nczogZGlzcGxheTogcmVuZXNhczogRGVwcmVjYXRlIExWRFMgc3VwcG9y
-dCBpbiB0aGUgRFUKPiAgICAgYmluZGluZ3MKPiAgIGRybTogcmNhci1kdTogRml4IGxlZ2FjeSBE
-VCB0byBjcmVhdGUgTFZEUyBlbmNvZGVyIG5vZGVzCj4gICBkcm06IHJjYXItZHU6IENvbnZlcnQg
-TFZEUyBlbmNvZGVyIGNvZGUgdG8gYnJpZGdlIGRyaXZlcgo+ICAgQVJNOiBkdHM6IHI4YTc3OTA6
-IENvbnZlcnQgdG8gbmV3IExWRFMgRFQgYmluZGluZ3MKPiAgIEFSTTogZHRzOiByOGE3NzkxOiBD
-b252ZXJ0IHRvIG5ldyBMVkRTIERUIGJpbmRpbmdzCj4gICBBUk06IGR0czogcjhhNzc5MjogQ29u
-dmVydCB0byBuZXcgRFUgRFQgYmluZGluZ3MKPiAgIEFSTTogZHRzOiByOGE3NzkzOiBDb252ZXJ0
-IHRvIG5ldyBMVkRTIERUIGJpbmRpbmdzCj4gICBBUk06IGR0czogcjhhNzc5NDogQ29udmVydCB0
-byBuZXcgRFUgRFQgYmluZGluZ3MKPiAgIGFybTY0OiBkdHM6IHJlbmVzYXM6IHI4YTc3OTU6IENv
-bnZlcnQgdG8gbmV3IExWRFMgRFQgYmluZGluZ3MKPiAgIGFybTY0OiBkdHM6IHJlbmVzYXM6IHI4
-YTc3OTY6IENvbnZlcnQgdG8gbmV3IExWRFMgRFQgYmluZGluZ3MKCkkgaGF2ZSBtYXJrZWQgdGhl
-IGR0cyBwYXRjaGVzIGFib3ZlIGFzIGRlZmVycmVkIGFzIHRoZXkgZGVwZW5kCm9uIHRoZSBkcml2
-ZXIgY2hhbmdlcyBub3QgdG8gY2F1c2UgYSByZWdyZXNzaW9uLiBQbGVhc2UgcmVwb3N0IHRoZW0K
-b3Igb3RoZXJ3aXNlIHBpbmcgbWUgb25jZSB0aGUgZHJpdmVyIGRlcGVuZGVuY2llcyBhcmUgcHJl
-c2VudCBpbiBhbiByYwpyZWxlYXNlLgoKSSBhbSBhc3N1bWluZyB0aGF0IHRoZSBvdGhlciBwYXRj
-aGVzIGluIHRoaXMgc2VyaWVzIGFyZSBub3QgdGFyZ2V0ZWQKYXQgdGhlIHJlbmVzYXMgdHJlZS4K
-Cj4gCj4gUGFudGVsaXMgQW50b25pb3UgKDUpOgo+ICAgb2Y6IGR5bmFtaWM6IEFkZCBfX29mX25v
-ZGVfZHVwdigpCj4gICBvZjogY2hhbmdlc2V0czogSW50cm9kdWNlIGNoYW5nZXNldCBoZWxwZXIg
-bWV0aG9kcwo+ICAgb2Y6IGNoYW5nZXNldDogQWRkIG9mX2NoYW5nZXNldF9ub2RlX21vdmUgbWV0
-aG9kCj4gICBvZjogdW5pdHRlc3Q6IGNoYW5nZXNldCBoZWxwZXJzCj4gICBpMmM6IGRlbXV4OiBV
-c2UgY2hhbmdlc2V0IGhlbHBlcnMgZm9yIGNsYXJpdHkKCi4uLgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 21/02/18 17:00, Manish Narani wrote:
+> Hi Adrian,
+> 
+>> -----Original Message-----
+>> From: Manish Narani
+>> Sent: Wednesday, February 21, 2018 11:39 AM
+>> To: Adrian Hunter <adrian.hunter@intel.com>; michal.simek@xilinx.com;
+>> ulf.hansson@linaro.org; linux-arm-kernel@lists.infradead.org; linux-
+>> mmc@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> devicetree@vger.kernel.org; mark.rutland@arm.com; robh+dt@kernel.org
+>> Cc: Anirudha Sarangi <anirudh@xilinx.com>; Srinivas Goud
+>> <sgoud@xilinx.com>
+>> Subject: RE: [RFC PATCH] mmc: sdhci-of-arasan: Add auto tuning support for
+>> ZynqMP Platform
+>>
+>> Hi Adrian,
+>>
+>>
+>>> -----Original Message-----
+>>> From: Adrian Hunter [mailto:adrian.hunter@intel.com]
+>>> Sent: Friday, February 16, 2018 7:37 PM
+>>> To: Manish Narani <MNARANI@xilinx.com>; michal.simek@xilinx.com;
+>>> ulf.hansson@linaro.org; linux-arm-kernel@lists.infradead.org; linux-
+>>> mmc@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>> devicetree@vger.kernel.org; mark.rutland@arm.com; robh+dt@kernel.org
+>>> Cc: Anirudha Sarangi <anirudh@xilinx.com>; Srinivas Goud
+>>> <sgoud@xilinx.com>; Manish Narani <MNARANI@xilinx.com>
+>>> Subject: Re: [RFC PATCH] mmc: sdhci-of-arasan: Add auto tuning support
+>>> for ZynqMP Platform
+>>>
+>>> On 30/01/18 20:14, Manish Narani wrote:
+>>>> This patch adds support of SD auto tuning for ZynqMP platform. Auto
+>>>> tuning sequence sends tuning block to card when operating in UHS-1
+>>>> modes. This resets the DLL and sends CMD19/CMD21 as a part of the
+>>>> auto tuning process. Once the auto tuning process gets completed,
+>>>> reset the DLL to load the newly obtained SDHC tuned tap value.
+>>>
+>>> How is this different from:
+>>> 	1. reset the dll
+>>> 	2. call sdhci_execute_tuning
+>>> 	3. reset the dll
+>>>
+> Below is my take on your above comments:
+> - 'Reset the dll' is a platform specific call inside 'arasan_zynqmp_execute_tuning' which is implemented in sdhci-of-arasan.c 
+> - 'arasan_zynqmp_execute_tuning' is called from 'sdhci_execute_tuning' as a platform_execute_tuning routine
+> - So to keep 'DLL reset' routine called from sdhci-of-arasan.c, I have implemented the execute_tuning in sdhci-of-arasan.c
+
+I meant something like:
+
+	if (of_device_is_compatible(pdev->dev.of_node, "xlnx,zynqmp-8.9a"))
+		host->mmc_host_ops.execute_tuning = arasan_zynqmp_execute_tuning;
+
+
+static int arasan_zynqmp_execute_tuning(struct mmc_host *mmc, u32 opcode)
+{
+	struct sdhci_host *host = mmc_priv(mmc);
+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
+	int err;
+
+	arasan_zynqmp_dll_reset(host, sdhci_arasan->device_id);
+
+	err = sdhci_execute_tuning(mmc, opcode);
+	if (err)
+		return err;
+
+	arasan_zynqmp_dll_reset(host, sdhci_arasan->device_id);
+
+	return 0;
+}
+
+> 
+> Alternative way (Please review):
+> - Define a host->quirk2 bit (SDHCI_QUIRK2_DLL_RESET_NEEDED) in sdhci-of-arasan.c indicating DLL reset needed while tuning operation
+> - Call 'dll reset' routine before and after __sdhci_execute_tuning() in sdhci.c when a host->quirk2 bit (SDHCI_QUIRK2_DLL_RESET_NEEDED) is set
+
+We should try to avoid quirks.
