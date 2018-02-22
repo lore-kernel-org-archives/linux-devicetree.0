@@ -1,41 +1,74 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 6/8] i2c: demux: Use changeset helpers for clarity
-Date: Thu, 22 Feb 2018 12:19:32 +0200
-Message-ID: <2195898.2J8Qfnu3DQ@avalon>
-References: <20180222000531.19448-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180222000531.19448-7-laurent.pinchart+renesas@ideasonboard.com>
- <CAMuHMdVy9=e5eZZTdV6E=apvHxL3n5Qqob2JE+FsON3RG-JWWg@mail.gmail.com>
+From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Subject: [PATCH 2/4][v4][RESEND] driver: mtd: update struct map_info's swap as
+ per map requirement
+Date: Thu, 22 Feb 2018 15:45:07 +0530
+Message-ID: <20180222101511.29631-3-prabhakar.kushwaha@nxp.com>
+References: <20180222101511.29631-1-prabhakar.kushwaha@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAMuHMdVy9=e5eZZTdV6E=apvHxL3n5Qqob2JE+FsON3RG-JWWg@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marek Vasut <marex@denx.de>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180222101511.29631-1-prabhakar.kushwaha@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
+Cc: boris.brezillon@free-electrons.com, leoyang.li@nxp.com, oss@buserror.net, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Jagdish Gediya <jagdish.gediya@nxp.com>, cyrille.pitchen@wedev4u.fr, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsCgpPbiBUaHVyc2RheSwgMjIgRmVicnVhcnkgMjAxOCAxMToyNjo0NCBFRVQgR2Vl
-cnQgVXl0dGVyaG9ldmVuIHdyb3RlOgo+IE9uIFRodSwgRmViIDIyLCAyMDE4IGF0IDE6MDUgQU0s
-IExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBGcm9tOiBQYW50ZWxpcyBBbnRvbmlvdSA8cGFu
-dGVsaXMuYW50b25pb3VAa29uc3Vsa28uY29tPgo+ID4gCj4gPiBUaGUgY2hhbmdlc2V0IGhlbHBl
-cnMgYXJlIGVhc2llciB0byB1c2UsIHVzZSB0aGVtIGluc3RlYWQgb2YKPiA+IHVzaW5nIHRoZSBz
-dGF0aWMgcHJvcGVydHkuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFBhbnRlbGlzIEFudG9uaW91
-IDxwYW50ZWxpcy5hbnRvbmlvdUBrb25zdWxrby5jb20+Cj4gPiBBY2tlZC1ieTogV29sZnJhbSBT
-YW5nIDx3c2FAdGhlLWRyZWFtcy5kZT4KPiA+IFsib2theSIgLT4gIm9rIl0KPiAKPiBXaHk/IGVQ
-QVBSIHNheXMgIm9rYXkiLCAiZGlzYWJsZWQiLCAiZmFpbCIsIG9yICJmYWlsLXNzcyIuCj4gCj4g
-U29ycnkgZm9yIG1pc3NpbmcgdGhpcyBpbiB0aGUgcHJldmlvdXMgcm91bmQuCgpUaGF0IHdhcyBw
-ZXIgV29sZnJhbSdzIHJlcXVlc3QsIGFuZCBiZWNhdXNlIHRoZSBleGlzdGluZyBjb2RlIHVzZXMg
-Im9rIi4gSSdtIApwZXJzb25hbGx5IGZpbmUgd2l0aCBhbnkuCgotLSAKUmVnYXJkcywKCkxhdXJl
-bnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+It is not necessary for all device's maps to be CFI_HOST_ENDIAN.
+Maps device can be Big endian or little endian.
+
+Currently it is being taken care using CONFIG_MTD_CFI_LE_BYTE_SWAP or
+CONFIG_MTD_CFI_BE_BYTE_SWAP i.e. compile time.
+
+Now update struct map_info's swap field based on device characteristics
+defined in device tree.
+
+Signed-off-by: Jagdish Gediya <jagdish.gediya@nxp.com>
+Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+---
+Changes for v2: Incorporated review comments from Boris Brezillon
+http://patchwork.ozlabs.org/patch/758381/
+Changes for v3: None
+Changes for v4: Updated code as per new defined binding of physmap.txt
+
+Resending as all patches of patchset never reaches to patchwork.
+
+ drivers/mtd/maps/physmap_of_core.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/mtd/maps/physmap_of_core.c b/drivers/mtd/maps/physmap_of_core.c
+index b1bd4faecfb2..6eee160dfb3d 100644
+--- a/drivers/mtd/maps/physmap_of_core.c
++++ b/drivers/mtd/maps/physmap_of_core.c
+@@ -20,6 +20,7 @@
+ #include <linux/mtd/map.h>
+ #include <linux/mtd/partitions.h>
+ #include <linux/mtd/concat.h>
++#include <linux/mtd/cfi_endian.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_platform.h>
+@@ -233,6 +234,13 @@ static int of_flash_probe(struct platform_device *dev)
+ 		info->list[i].map.bankwidth = be32_to_cpup(width);
+ 		info->list[i].map.device_node = dp;
+ 
++		if (of_property_read_bool(dp, "big-endian"))
++			info->list[i].map.swap = CFI_BIG_ENDIAN;
++		else if (of_property_read_bool(dp, "little-endian"))
++			info->list[i].map.swap = CFI_LITTLE_ENDIAN;
++		else
++			info->list[i].map.swap = CFI_HOST_ENDIAN;
++
+ 		err = of_flash_probe_gemini(dev, dp, &info->list[i].map);
+ 		if (err)
+ 			goto err_out;
+-- 
+2.14.1
