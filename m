@@ -1,54 +1,48 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v13 7/8] ARM: dts: imx: Add TDA19971 HDMI
- Receiver to GW54xx
-Date: Thu, 22 Feb 2018 14:13:38 +0800
-Message-ID: <20180222061336.GI3217@dragon>
-References: <1518717336-6271-1-git-send-email-tharvey@gateworks.com>
- <1518717336-6271-8-git-send-email-tharvey@gateworks.com>
- <7732637c-93bf-fac2-5553-695782890254@xs4all.nl>
- <CAJ+vNU3G9bJ16npp22O=7k72Pf3xSuQxW-CA2p5cbDq-nSZ4ew@mail.gmail.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v5 1/4] dt-bindings: arm: Document kryo385 cpu
+Date: Thu, 22 Feb 2018 11:42:05 +0530
+Message-ID: <20180222061208.2031-2-rnayak@codeaurora.org>
+References: <20180222061208.2031-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU3G9bJ16npp22O=7k72Pf3xSuQxW-CA2p5cbDq-nSZ4ew@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hansverk@cisco.com>, linux-media <linux-media@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180222061208.2031-1-rnayak@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: andy.gross@linaro.org
+Cc: devicetree@vger.kernel.org, dianders@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>, marc.zyngier@arm.com, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, evgreen@chromium.org, bjorn.andersson@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 15, 2018 at 01:19:17PM -0800, Tim Harvey wrote:
-> On Thu, Feb 15, 2018 at 10:36 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> > On 15/02/18 18:55, Tim Harvey wrote:
-> >> The GW54xx has a front-panel microHDMI connector routed to a TDA19971
-> >> which is connected the the IPU CSI when using IMX6Q.
-> >
-> > I assume that this and the next patch go through another subsystem for arm
-> > and/or imx?
-> >
-> > Regards,
-> >
-> >         Hans
-> >
-> 
-> Hans,
-> 
-> Yes - Shawn should pick up the two dts patches:
-> 0007-ARM-dts-imx-Add-TDA19971-HDMI-Receiver-to-GW54xx.patch
-> 0008-ARM-dts-imx-Add-TDA19971-HDMI-Receiver-to-GW551x.patch
-> 
-> Shawn you've seen these before but haven't ack'd them - are they good
-> to merge to your imx tree?
+Document the compatible string for the Kryo385 cpus found in qualcomm
+SoCs.
 
-Yes.  I will pick up the dts patches after Hans merges driver part.
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Shawn
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index a0009b72e9be..19611ccb61d9 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -184,6 +184,7 @@ described below.
+ 			    "nvidia,tegra186-denver"
+ 			    "qcom,krait"
+ 			    "qcom,kryo"
++			    "qcom,kryo385"
+ 			    "qcom,scorpion"
+ 	- enable-method
+ 		Value type: <stringlist>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
