@@ -1,111 +1,22 @@
-Return-Path: <SRS0=goDf=FR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr0-f194.google.com ([209.85.128.194]:44400 "EHLO
-        mail-wr0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751408AbeBWO4o (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 23 Feb 2018 09:56:44 -0500
-Received: by mail-wr0-f194.google.com with SMTP id v65so14359403wrc.11
-        for <devicetree@vger.kernel.org>; Fri, 23 Feb 2018 06:56:43 -0800 (PST)
-References: <20180222102338.28896-1-rui.silva@linaro.org> <20180222102338.28896-2-rui.silva@linaro.org> <20180222105932.t4j7ranj2qp4jhj6@paasikivi.fi.intel.com>
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH 1/2] media: ov2680: dt: Add bindings for OV2680
-In-reply-to: <20180222105932.t4j7ranj2qp4jhj6@paasikivi.fi.intel.com>
-Date: Fri, 23 Feb 2018 14:56:41 +0000
-Message-ID: <m3k1v3kb4m.fsf@linaro.org>
+Return-Path: <SRS0=7KmP=FQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-oi0-f54.google.com ([209.85.218.54]:33459 "EHLO
+        mail-oi0-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1753521AbeBVLbI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 22 Feb 2018 06:31:08 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
+In-Reply-To: <20180222102338.28896-2-rui.silva@linaro.org>
+References: <20180222102338.28896-1-rui.silva@linaro.org> <20180222102338.28896-2-rui.silva@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Thu, 22 Feb 2018 08:31:06 -0300
+Message-ID: <CAOMZO5ARc-b55bDoOsm+YO0wdu-MTjY=a=vhgnUowrGy0E9V7Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] media: ov2680: dt: Add bindings for OV2680
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: mchehab@kernel.org, hverkuil@xs4all.nl, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, devicetree@vger.kernel.org
+To: Rui Miguel Silva <rmfrfs@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media <linux-media@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Sakari,
-Thanks for the review.
+On Thu, Feb 22, 2018 at 7:23 AM, Rui Miguel Silva <rmfrfs@gmail.com> wrote:
+> Add device tree binding documentation for the OV5640 camera sensor.
 
-On Thu 22 Feb 2018 at 10:59, Sakari Ailus wrote:
-> Hi Rui,
->
-> Thanks for the patchset.
->
-> Could you use "dt: bindings: " prefix in the subject?
-
-Sure, no problem.
-
->
-> On Thu, Feb 22, 2018 at 10:23:37AM +0000, Rui Miguel Silva 
-> wrote:
->> Add device tree binding documentation for the OV5640 camera 
->> sensor.
->> 
->> CC: devicetree@vger.kernel.org
->> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
->> ---
->>  .../devicetree/bindings/media/i2c/ov2680.txt       | 34 
->>  ++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>  create mode 100644 
->>  Documentation/devicetree/bindings/media/i2c/ov2680.txt
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/media/i2c/ov2680.txt 
->> b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
->> new file mode 100644
->> index 000000000000..f9dc63ce5044
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
->> @@ -0,0 +1,34 @@
->> +* Omnivision OV2680 MIPI CSI-2 sensor
->> +
->> +Required Properties:
->> +- compatible: should be "ovti,ov2680"
->> +- clocks: reference to the xvclk input clock.
->> +- clock-names: should be "xvclk".
->> +
->> +Optional Properties:
->> +- powerdown-gpios: reference to the GPIO connected to the 
->> powerdown pin,
->> +		     if any. This is an active high signal to the 
->> OV2680.
->> +
->> +The device node must contain one 'port' child node for its 
->> digital output
->
-> Please add that the port contains a single endpoint as well.
-
-Ack.
-
->
->> +video port, in accordance with the video interface bindings 
->> defined in
->> +Documentation/devicetree/bindings/media/video-interfaces.txt.
->
-> Please list required and optional endpoint properties as well.
-
-OK.
-
----
-Cheers,
-	Rui
-
->
->> +
->> +Example:
->> +
->> +&i2c2 {
->> +	ov2680: camera-sensor@36 {
->> +		compatible = "ovti,ov2680";
->> +		reg = <0x36>;
->> +		clocks = <&osc>;
->> +		clock-names = "xvclk";
->> +		powerdown-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
->> +
->> +		port {
->> +			ov2680_mipi_ep: endpoint {
->> +				remote-endpoint = 
->> <&mipi_sensor_ep>;
->> +				clock-lanes = <0>;
->> +				data-lanes = <1>;
->> +			};
->> +		};
->> +	};
->> +};
-
+s/OV5640/OV2680
