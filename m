@@ -1,65 +1,72 @@
-Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH 7/8] scsi: hisi_sas: fix return value of hisi_sas_task_prep()
-Date: Tue, 20 Feb 2018 03:13:30 +0800
-Message-ID: <1519067611-206638-8-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
-References: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>, John Garry <john.garry@huawei.com>
+Return-Path: <SRS0=VmpS=FQ=ettus.com=moritz.fischer@kernel.org>
+From: Moritz Fischer <mdf@kernel.org>
+Subject: [PATCH v3 2/2] power: reset: gpio-poweroff: Support for timeout from device property
+Date: Thu, 22 Feb 2018 15:17:14 -0800
+Message-Id: <20180222231714.11843-2-mdf@kernel.org>
+In-Reply-To: <20180222231714.11843-1-mdf@kernel.org>
+References: <20180222231714.11843-1-mdf@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, sre@kernel.org, robh+dt@kernel.org, andy.shevchenko@gmail.com, Moritz Fischer <mdf@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+Add support for reading a timeout value from device property.
+Fall back to previous default of 3s if nothing is specified.
 
-It is an implicit regulation that error code that function returned
-should be negative. But hisi_sas_task_prep() doesn't follow this.
-This may cause problems in the upper layer code.
-
-For example, in sas_expander.c of libsas, smp_execute_task_sg() may
-return the number of bytes of underrun. It will be conflicted with
-the scenaio lldd_execute_task() return an positive error code.
-
-This patch change the return value from SAS_PHY_DOWN to -ECOMM in
-hisi_sas_task_prep().
-
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes from v2:
+- use device_property_read_{bool,u32} instead of of equivalent
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 88ad8d4..dff9723 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -316,7 +316,7 @@ static int hisi_sas_task_prep(struct sas_task *task, struct hisi_sas_dq
- 		 */
- 		if (device->dev_type != SAS_SATA_DEV)
- 			task->task_done(task);
--		return SAS_PHY_DOWN;
-+		return -ECOMM;
+Changes from v1:
+- of_property_read_u32() overwrites the output only if it succeeds,
+  simplify error handling
+---
+
+ drivers/power/reset/gpio-poweroff.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/power/reset/gpio-poweroff.c b/drivers/power/reset/gpio-poweroff.c
+index be3d81ff51cc..6273ad3b411d 100644
+--- a/drivers/power/reset/gpio-poweroff.c
++++ b/drivers/power/reset/gpio-poweroff.c
+@@ -19,11 +19,13 @@
+ #include <linux/of_platform.h>
+ #include <linux/module.h>
+ 
++#define DEFAULT_TIMEOUT_MS 3000
+ /*
+  * Hold configuration here, cannot be more than one instance of the driver
+  * since pm_power_off itself is global.
+  */
+ static struct gpio_desc *reset_gpio;
++static u32 timeout = DEFAULT_TIMEOUT_MS;
+ 
+ static void gpio_poweroff_do_poweroff(void)
+ {
+@@ -40,7 +42,7 @@ static void gpio_poweroff_do_poweroff(void)
+ 	gpiod_set_value(reset_gpio, 1);
+ 
+ 	/* give it some time */
+-	mdelay(3000);
++	mdelay(timeout);
+ 
+ 	WARN_ON(1);
+ }
+@@ -58,12 +60,14 @@ static int gpio_poweroff_probe(struct platform_device *pdev)
+ 		return -EBUSY;
  	}
  
- 	if (DEV_IS_GONE(sas_dev)) {
-@@ -327,7 +327,7 @@ static int hisi_sas_task_prep(struct sas_task *task, struct hisi_sas_dq
- 			dev_info(dev, "task prep: device %016llx not ready\n",
- 				 SAS_ADDR(device->sas_addr));
+-	input = of_property_read_bool(pdev->dev.of_node, "input");
++	input = device_property_read_bool(&pdev->dev, "input");
+ 	if (input)
+ 		flags = GPIOD_IN;
+ 	else
+ 		flags = GPIOD_OUT_LOW;
  
--		return SAS_PHY_DOWN;
-+		return -ECOMM;
- 	}
- 
- 	port = to_hisi_sas_port(sas_port);
-@@ -337,7 +337,7 @@ static int hisi_sas_task_prep(struct sas_task *task, struct hisi_sas_dq
- 			 "SATA/STP" : "SAS",
- 			 device->port->id);
- 
--		return SAS_PHY_DOWN;
-+		return -ECOMM;
- 	}
- 
- 	if (!sas_protocol_ata(task->task_proto)) {
++	device_property_read_u32(&pdev->dev, "timeout-ms", &timeout);
++
+ 	reset_gpio = devm_gpiod_get(&pdev->dev, NULL, flags);
+ 	if (IS_ERR(reset_gpio))
+ 		return PTR_ERR(reset_gpio);
 -- 
-1.9.1
+2.16.1
