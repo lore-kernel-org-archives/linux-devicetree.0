@@ -1,38 +1,71 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V4 2/2] ARM: dts: imx7s: add snvs rtc clock
-Date: Thu, 22 Feb 2018 13:19:41 +0800
-Message-ID: <20180222051939.GH3217@dragon>
-References: <1515491526-14060-1-git-send-email-Anson.Huang@nxp.com>
- <1515491526-14060-2-git-send-email-Anson.Huang@nxp.com>
- <20180202034457.GF20833@dragon>
+From: Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v1 4/5] arm64: dts: add clock device nodes of MT2712
+Date: Thu, 22 Feb 2018 13:48:50 +0800
+Message-ID: <20180222054851.26096-6-weiyi.lu@mediatek.com>
+References: <20180222054851.26096-1-weiyi.lu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180202034457.GF20833@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, aymen.sghaier@nxp.com, herbert@gondor.apana.org.au, horia.geanta@nxp.com, davem@davemloft.net, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, stefan@agner.ch, linux@armlinux.org.uk, fabio.estevam@nxp.com, robh+dt@kernel.org, linux-crypto@vger.kernel.org, kernel@pengutronix.de, adriana.reus@nxp.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dongas86@gmail.com
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180222054851.26096-1-weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 02, 2018 at 11:44:59AM +0800, Shawn Guo wrote:
-> On Tue, Jan 09, 2018 at 05:52:06PM +0800, Anson Huang wrote:
-> > Add i.MX7 SNVS RTC clock.
-> > 
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Looks fine to me.  Ping me when clk driver part lands mainline.
+add new clocks according to ECO design change
 
-I'm collecting i.MX clock patches and later will send them to clk
-maintainers in form of pull request.  So applied both.
+Signed-off-by: Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-Shawn
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+index fdf66f4fe7c3..d7688bc9db1b 100644
+--- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+@@ -199,6 +199,34 @@
+ 		clock-output-names = "clkaud_ext_i_2";
+ 	};
+ 
++	clki2si0_mck_i: oscillator@6 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <30000000>;
++		clock-output-names = "clki2si0_mck_i";
++	};
++
++	clki2si1_mck_i: oscillator@7 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <30000000>;
++		clock-output-names = "clki2si1_mck_i";
++	};
++
++	clki2si2_mck_i: oscillator@8 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <30000000>;
++		clock-output-names = "clki2si2_mck_i";
++	};
++
++	clktdmin_mclk_i: oscillator@9 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <30000000>;
++		clock-output-names = "clktdmin_mclk_i";
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupt-parent = <&gic>;
+-- 
+2.12.5
