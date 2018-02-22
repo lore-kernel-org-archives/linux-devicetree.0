@@ -1,74 +1,77 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH V3 2/2 RESEND] ARM: dts: bcm283x: Fix
-	probing of bcm2835-i2s
-Date: Thu, 22 Feb 2018 12:11:55 -0800
-Message-ID: <871shcaino.fsf@anholt.net>
-References: <1518778534-3328-1-git-send-email-stefan.wahren@i2se.com>
- <1518778534-3328-3-git-send-email-stefan.wahren@i2se.com>
+Subject: Re: [PATCH v4] ARM: dts: bcm283x: Fix pin function of JTAG pins
+Date: Thu, 22 Feb 2018 12:12:23 -0800
+Message-ID: <87y3jk942g.fsf@anholt.net>
+References: <1516243293-25010-1-git-send-email-henryzhang62@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2003072645562715533=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1518778534-3328-3-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============6520529255332756237=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1516243293-25010-1-git-send-email-henryzhang62@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, stefan.wahren@i2se.com, sbranden@broadcom.com, rjui@broadcom.com, linux@armlinux.org.uk, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Henry Zhang <henryzhang62@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============2003072645562715533==
+--===============6520529255332756237==
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha512; protocol="application/pgp-signature"
 
 --=-=-=
 Content-Type: text/plain
 
-Stefan Wahren <stefan.wahren@i2se.com> writes:
+henryzhang62@gmail.com writes:
 
-> Since 517e7a1537a ("ASoC: bcm2835: move to use the clock framework")
-> the bcm2835-i2s requires a clock as DT property. Unfortunately
-> the necessary DT change has never been applied. While we are at it
-> also fix the first PCM register range to cover the PCM_GRAY register.
+> From: Henry Zhang <henryzhang62@gmail.com>
 >
-> Fixes: 517e7a1537a ("ASoC: bcm2835: move to use the clock framework")
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> Reviewed-by: Eric Anholt <eric@anholt.net>
-> Tested-by: Matthias Reichl <hias@horus.com>
+> BCM2835 ARM Peripherals doc shows gpio pins 4, 5, 6, 12 and 13
+> carry altenate function, ALT5 for ARM JTAG
+>
+> Fixes: 21ff843931b2 ("ARM: dts: bcm283x: Define standard pinctrl groups in the gpio node.")
+>
+> Signed-off-by: Henry Zhang <henryzhang62@gmail.com>
+> Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-I've applied these 2 to bcm2835-dt-next.  Thanks!
+Applied to bcm2835-dt-next.  Thanks!
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqPJAsACgkQtdYpNtH8
-nuhpWA//Ycq4jAee62ig9gVmxi7DOXtC9xoDJFZL9f5jx4+i4LeEy2Wf2EATx/sr
-er/e24DTTJQEUOVZB7/iYUHmBi1Wx4bedCIWmTVqav98N+nZXI0EG4JKzz6btG0j
-DIzVt2Jwf/Z2H5hy3mDEAH7HBxKkA77XBTb9tfN/TDUMGBzxMDGJkbF8uYg7NnwV
-qT4Z4FBe1y8BbKP017+KYBk5pQnRcH4uC69mqkGaW5yRXrvfYNTw4N0bUPyY6tVr
-FrD2Wlm31zB9elRY71miVb/PoIdxRt3eEOLHFH86ARV9fwzkf5L1C7bHwpaDmAHB
-O9NTyZa+8bz0Ol6FOhf9oZ8LUM3BGR9xH5rfLGT94Ex7nnLu2eN6d3qcEszUWgyt
-yGGOjJ8q9ncnVYIkdYrFRDZTV3VQJdycJ0UH4R9oZeAxijltN0ysuO4cznXXjOVA
-5JZru0/7wkmmIkc8jaUVqBFpDMCnSbG8xt4IYkyAhnGfn+1kNmXPjhpU3eRckvNO
-jaxGSXLo+jG7az3+RAWblLq9uTRUBCIkeehmwdX5pvl4vaIQz/aZP97DDYShVjts
-pdpDCbfoRV+uFvF8mWA7K38LOMzkrGwCsvQ9Vsaoo2AfbkJ2PV7jzgJ7S0XAH1Z4
-IbH3ylnH2AeQDczCEeGLYQ4XUI9dmt80XAcdZGeZwAeicPQRaN0=
-=xbJw
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqPJCcACgkQtdYpNtH8
+nuj4YQ//ZBegd1W0n/xkbdqgQJcJIbo8/OZXFr7u/lXCMcySmKYzWSjqQzObWc5S
+d29nixbwLjTpgPoOc8UUc5e/6mBZMB2KLBh2mF6XJ/GsyXUHYqPSaOT5SgwOdGyt
+8nXiPndjkHdHfe7OdKkHbu+RFRXem0bR8MCKyQRYAzzyAPWMo2xNXxWdw72TdDPF
+eJDW9RygNMrmfCqol5E9X9QHrIaA/9KXs0A0J+R5ftzV1sxNq05t2kLJT/C1JgYj
+4gOi9rxalrct1ogX4oXmx60t2TcEzekfTP0a8sUDK25EzT0KDdx3q2g1MURX0gd6
+NIV64Oj3Cgaybu0RCR6f1P0LwyXkVTrSPkpmw29MdiE1KlwhUVS2A4C/VPeobUn/
+gY7mOYLfyV1asFKLG3ORdSYpU6LuL2kEUD7gxeNKJALb8HqTQ6qjIPLkJ9UgTAdw
+OKm5XdIaESc9oZQr/vXKGsreWgAuhBFue+tZufTJSddegIV3AsvRm+iIi72LT60S
+pvykhPIFm8WEC5x0rMPv04ErgH5ic+Sv+8/BUoV95wvd6tL0R/MThFNZ3af+7pH+
++0TDZMod+wDA6ZKyi6UCCRUZVWox7gVdFAdLZIa/GuwcgVoji6HGRsnEzmdIgJl6
+dqg56Oqqgae1Tek5uS/5U8fQaZpv6GyOiJiE1vloabt0LM943xI=
+=2d4z
 -----END PGP SIGNATURE-----
 --=-=-=--
 
---===============2003072645562715533==
+
+--===============6520529255332756237==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============2003072645562715533==--
+--===============6520529255332756237==--
