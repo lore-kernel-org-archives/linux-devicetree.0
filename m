@@ -1,42 +1,48 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 4/5] drm: xlnx: DRM KMS driver for Xilinx ZynqMP
- DisplayPort
-Date: Thu, 22 Feb 2018 02:18:35 +0200
-Message-ID: <1979079.CDeAWn4OqI@avalon>
-References: <1517967400-16993-1-git-send-email-hyun.kwon@xilinx.com>
- <1517967400-16993-4-git-send-email-hyun.kwon@xilinx.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 7/8] [PATCH 7/8] drivers/hwmon: Add a generic PECI
+ hwmon client driver
+Date: Thu, 22 Feb 2018 01:37:20 +0100
+Message-ID: <20180222003720.GA25250@lunn.ch>
+References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
+ <20180221161606.32247-8-jae.hyun.yoo@linux.intel.com>
+ <20180221182608.GA11635@roeck-us.net>
+ <618f34cd-ee43-d8e4-4fb0-3c23bf03835f@linux.intel.com>
+ <20180221214859.GA30263@roeck-us.net>
+ <576a50c6-c302-654c-ceb3-aaf820b7738a@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1517967400-16993-4-git-send-email-hyun.kwon@xilinx.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hyun Kwon <hyun.kwon@xilinx.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <576a50c6-c302-654c-ceb3-aaf820b7738a@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, arnd@arndb.de, linux-doc@vger.kernel.org, andrew@aj.id.au, gregkh@linuxfoundation.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org, Guenter Roeck <linux@roeck-us.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSHl1biwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gV2VkbmVzZGF5LCA3IEZlYnJ1
-YXJ5IDIwMTggMDM6MzY6MzkgRUVUIEh5dW4gS3dvbiB3cm90ZToKPiBUaGlzIGRyaXZlciBjcmVh
-dGVzIERSTSBlbmNvZGVyIGFuZCBjb25uZWN0b3IgZm9yIFp5bnFNUCBEaXNwbGF5UG9ydC4KPiAK
-PiBTaWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5dW4ua3dvbkB4aWxpbnguY29tPgo+IEFja2Vk
-LWJ5OiBEYW5pZWwgVmV0dGVyIDxkYW5pZWwudmV0dGVyQGZmd2xsLmNoPgoKQmVmb3JlIEkgZ28g
-YW5kIHJldmlldyB0aGUgY29kZSwgc2hvdWxkbid0IHRoaXMgYmUgaW1wbGVtZW50ZWQgYXMgYSBk
-cm1fYnJpZGdlIApkcml2ZXIgPwoKPiAtLS0KPiB2Mgo+IC0gQ2hhbmdlIHRoZSBTUERYIGlkZW50
-aWZpZXIgZm9ybWF0Cj4gLSBTcGxpdCBkcm0gcHJvcGVydGllcyBpbnRvIGEgc2VwYXJhdGUgcGF0
-Y2gKPiAtLS0KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2RwLmMgfCAxNzM4
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS94
-bG54L3p5bnFtcF9kcC5oIHwgICAzNyArCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTc3NSBpbnNlcnRp
-b25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0veGxueC96eW5xbXBf
-ZHAuYwo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngvenlucW1wX2Rw
-LmgKCltzbmlwXQoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+> But even with this change, it still needs to use delayed creation
+> because BMC side kernel doesn't know how many DIMMs are populated on
+> a remote server before the remote server completes its memory
+> training and testing in BIOS, but it needs to check the remote
+> server's CPU temperature as immediate as possible to make
+> appropriate thermal control based on the remote CPU's temperature to
+> avoid any critical thermal issue. What would be a better solution in
+> this case?
+
+You could change this driver so that it supports one DIMM.  Move the
+'hotplug' part into another driver which creates and destroys
+instances of the hwmon DIMM device as the DIMMS come and go.
+
+Also, do you need to handle CPU hotplug? You could split the CPU
+temperature part into a separate hwmon driver? And again create and
+destroy devices as CPUs come and go?
+
+	Andrew
