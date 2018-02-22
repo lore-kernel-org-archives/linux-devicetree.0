@@ -1,56 +1,33 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [RFC PATCH] drivers/peci: peci_match_id() can be static
-Date: Thu, 22 Feb 2018 09:25:02 -0800
-Message-ID: <f5f9afd0-a5ce-346f-772a-e8dec78bd872@linux.intel.com>
-References: <20180221161606.32247-2-jae.hyun.yoo@linux.intel.com>
- <20180222070111.GA22310@lkp-ne02>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 06/10] pwm: add PWM modes
+Date: Thu, 22 Feb 2018 19:28:03 +0200
+Message-ID: <CAHp75Ver6GuKSDooAr2DW+eqt=B3p8O+X6+rOSWNgfhHxgVqNQ@mail.gmail.com>
+References: <1519300881-8136-1-git-send-email-claudiu.beznea@microchip.com>
+ <1519300881-8136-7-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180222070111.GA22310@lkp-ne02>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: fengguang.wu@intel.com
-Cc: linux-hwmon@vger.kernel.org, andrew@lunn.ch, jdelvare@suse.com, arnd@arndb.de, linux-doc@vger.kernel.org, andrew@aj.id.au, gregkh@linuxfoundation.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1519300881-8136-7-git-send-email-claudiu.beznea@microchip.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, milo.kim@ti.com, linux-fbdev@vger.kernel.org, Sean Young <sean@mess.org>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, kamil@wypas.org, dri-devel@lists.freedesktop.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, linux-samsung-soc@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>, Jonathan Corbet <corbet@lwn.net>, Linux Documentation List <linux-doc@vger.kernel.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, kgene@k
 List-Id: devicetree@vger.kernel.org
 
-On 2/21/2018 11:01 PM, kbuild test robot wrote:
-> 
-> Fixes: 99f5d2b99ecd ("drivers/peci: Add support for PECI bus driver core")
-> Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
-> ---
->   peci-core.c |    4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/peci/peci-core.c b/drivers/peci/peci-core.c
-> index d976c73..4709b8c 100644
-> --- a/drivers/peci/peci-core.c
-> +++ b/drivers/peci/peci-core.c
-> @@ -770,8 +770,8 @@ peci_of_match_device(const struct of_device_id *matches,
->   }
->   #endif
->   
-> -const struct peci_device_id *peci_match_id(const struct peci_device_id *id,
-> -					   struct peci_client *client)
-> +static const struct peci_device_id *peci_match_id(const struct peci_device_id *id,
-> +						  struct peci_client *client)
->   {
->   	if (!(id && client))
->   		return NULL;
-> 
-
-Hi Fengguang,
-
-Thanks a lot for the fix. I'll merge your patch in v3 submission.
-
-BR,
-Jae
+T24gVGh1LCBGZWIgMjIsIDIwMTggYXQgMjowMSBQTSwgQ2xhdWRpdSBCZXpuZWEKPGNsYXVkaXUu
+YmV6bmVhQG1pY3JvY2hpcC5jb20+IHdyb3RlOgo+IEFkZCBQV00gbm9ybWFsIGFuZCBjb21wbGVt
+ZW50YXJ5IG1vZGVzLgoKPiArLSBQV01fRFRNT0RFX0NPTVBMRU1FTlRBUlk6IFBXTSBjb21wbGVt
+ZW50YXJ5IHdvcmtpbmcgbW9kZSAoZm9yIFBXTQo+ICtjaGFubmVscyB0d28gb3V0cHV0cyk7IGlm
+IG5vdCBzcGVjaWZpZWQsIHRoZSBkZWZhdWx0IGZvciBQV00gY2hhbm5lbCB3aWxsCj4gK2JlIHVz
+ZWQKCldoYXQgRFQgc3RhbmRzIGZvcj8KCi0tIApXaXRoIEJlc3QgUmVnYXJkcywKQW5keSBTaGV2
+Y2hlbmtvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
