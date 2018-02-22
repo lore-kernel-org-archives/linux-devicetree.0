@@ -1,91 +1,133 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 6/6] drm/msm: iommu: Replace runtime
- calls with runtime suppliers
-Date: Thu, 22 Feb 2018 08:30:35 -0500
-Message-ID: <CAF6AEGvspue=27t3-n2hwuHh+1RNCrqiE6vLsh6fqR9CA=N8pg@mail.gmail.com>
-References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
- <CAAFQd5AjopiX6fDgD+mO+-+d0yj-swEnVCNvccWRBSMO+XVJkA@mail.gmail.com>
- <CAF6AEGs8qcRTvz6srSfc39ybZrPYMVg2w6qkaO2AdWL1GD4mQw@mail.gmail.com>
- <CAAFQd5BKRumpEfAKNF_RKS-ZZ8D671DfOz4vB2+w1SV3aG9NxQ@mail.gmail.com>
- <CAF6AEGuNZJKtwGZ5mLfqNND2jtU+HYM11UONfAtVTzoM0QVpdg@mail.gmail.com>
- <CAAFQd5BZJ1G0RG32hYErNzPRvisBhhiSNCBsjbzfm0WzO=DnsQ@mail.gmail.com>
- <CAFp+6iHaycK=CcE1S15EeuMkaw8LnW0ebptU0hM6tUtWdeEOtA@mail.gmail.com>
- <CAAFQd5Afj-Bj+3wHwmF2tT7y=46EsYEtO_mXfY6stXBgHutEUg@mail.gmail.com>
- <CAFp+6iGX6pr+MdPSSHHG=qOnhHky_8OHiDqAcJ9UudEUv=JMHg@mail.gmail.com>
- <CAAFQd5DiwAugGnPOTw0+XrEfef9x-n-vx59JFuXpNawjiXHwCw@mail.gmail.com>
- <CAFp+6iEW0faeHDfzN_F1bRrHGcVo3sPCk4HSY=t9dnEvHkDkYw@mail.gmail.com>
- <b003ecda-1cbe-4e5f-872b-107154ac40e5@arm.com>
- <CAAFQd5AmG1zSm+CouXOCJbs8SNGFk1-RqfU1nWGjMGJMB-qfvw@mail.gmail.com>
- <CAAFQd5A9B-di9svtiJbvk2hz1U1xo61rTY5vt6AD+KR5iMcG-A@mail.gmail.com>
- <7406f1ce-c2c9-a6bd-2886-5a34de45add6@arm.com>
- <CAAFQd5DkLtq2w00=Zd4sMDB4QOWqi7R-zgydECJXLdTmaHty+g@mail.gmail.com>
- <CAAFQd5CQoDqunAunwoVo7W=QXa=ET=eJ2s_j9j+3YgAR2EGgCg@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v7_00=2F42=5D_ARM=3A_davinci=3A_convert_to_common?=
+ =?UTF-8?Q?_clock_framework=E2=80=8B?=
+Date: Thu, 22 Feb 2018 14:36:36 +0100
+Message-ID: <CAMRc=MeeAH0ObZS6kMNZnVj27Yjb+C7PCp+EyC8Tz1G9zwNo1g@mail.gmail.com>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
+ <CAMRc=MdT5Vd68eoWfJGv=5_uzD0L5m3Y+wi6r7N6O8y6HZrQSg@mail.gmail.com>
+ <6142ab0d-85b1-84da-3a35-bdd8733bebd9@lechnology.com>
+ <CAMRc=Mf_pumyTZPn9T=sG7Ab95YS3KqKc2bT0evhESTRRFeiuQ@mail.gmail.com>
+ <ebc57f3b-4f5d-612f-5b63-ddda4dd25031@lechnology.com>
+ <CAMRc=MdQy-Y3mDh++sfFPhV3o544J-K_P9DMuzWZq9XCfESH5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAAFQd5CQoDqunAunwoVo7W=QXa=ET=eJ2s_j9j+3YgAR2EGgCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMRc=MdQy-Y3mDh++sfFPhV3o544J-K_P9DMuzWZq9XCfESH5A@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Adam Ford <aford173@gmail.com>, linux-clk@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBGZWIgMjIsIDIwMTggYXQgMzoxMyBBTSwgVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9t
-aXVtLm9yZz4gd3JvdGU6Cj4gT24gRnJpLCBGZWIgMTYsIDIwMTggYXQgOToxMyBBTSwgVG9tYXN6
-IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4gd3JvdGU6Cj4+IE9uIEZyaSwgRmViIDE2LCAyMDE4
-IGF0IDI6MTQgQU0sIFJvYmluIE11cnBoeSA8cm9iaW4ubXVycGh5QGFybS5jb20+IHdyb3RlOgo+
-Pj4gT24gMTUvMDIvMTggMDQ6MTcsIFRvbWFzeiBGaWdhIHdyb3RlOgo+Pj4gWy4uLl0KPj4+Pj4K
-Pj4+Pj4gQ291bGQgeW91IGVsYWJvcmF0ZSBvbiB3aGF0IGtpbmQgb2YgbG9ja2luZyB5b3UgYXJl
-IGNvbmNlcm5lZCBhYm91dD8KPj4+Pj4gQXMgSSBleHBsYWluZWQgYmVmb3JlLCB0aGUgbm9ybWFs
-bHkgaGFwcGVuaW5nIGZhc3QgcGF0aCB3b3VsZCBsb2NrCj4+Pj4+IGRldi0+cG93ZXJfbG9jayBv
-bmx5IGZvciB0aGUgYnJpZWYgbW9tZW50IG9mIGluY3JlbWVudGluZyB0aGUgcnVudGltZQo+Pj4+
-PiBQTSB1c2FnZSBjb3VudGVyLgo+Pj4+Cj4+Pj4KPj4+PiBNeSBiYWQsIHRoYXQncyBub3QgZXZl
-biBpdC4KPj4+Pgo+Pj4+IFRoZSBhdG9taWMgdXNhZ2UgY291bnRlciBpcyBpbmNyZW1lbnRlZCBi
-ZWZvcmVoYW5kcywgd2l0aG91dCBhbnkKPj4+PiBsb2NraW5nIFsxXSBhbmQgdGhlIHNwaW5sb2Nr
-IGlzIGFjcXVpcmVkIG9ubHkgZm9yIHRoZSBzYWtlIG9mCj4+Pj4gdmFsaWRhdGluZyB0aGF0IGRl
-dmljZSdzIHJ1bnRpbWUgUE0gc3RhdGUgcmVtYWluZWQgdmFsaWQgaW5kZWVkIFsyXSwKPj4+PiB3
-aGljaCB3b3VsZCBiZSB0aGUgY2FzZSBpbiB0aGUgZmFzdCBwYXRoIG9mIHRoZSBzYW1lIGRyaXZl
-ciBkb2luZyB0d28KPj4+PiBtYXBwaW5ncyBpbiBwYXJhbGxlbCwgd2l0aCB0aGUgbWFzdGVyIHBv
-d2VyZWQgb24gKGFuZCBzbyB0aGUgU01NVSwKPj4+PiB0aHJvdWdoIGRldmljZSBsaW5rczsgaWYg
-bWFzdGVyIHdhcyBub3QgcG93ZXJlZCBvbiBhbHJlYWR5LCBwb3dlcmluZwo+Pj4+IG9uIHRoZSBT
-TU1VIGlzIHVuYXZvaWRhYmxlIGFueXdheSBhbmQgaXQgd291bGQgYWRkIG11Y2ggbW9yZSBsYXRl
-bmN5Cj4+Pj4gdGhhbiB0aGUgc3BpbmxvY2sgaXRzZWxmKS4KPj4+Cj4+Pgo+Pj4gV2Ugbm93IGhh
-dmUgbm8gbG9ja2luZyBhdCBhbGwgaW4gdGhlIG1hcCBwYXRoLCBhbmQgb25seSBhIHBlci1kb21h
-aW4gbG9jawo+Pj4gYXJvdW5kIFRMQiBzeW5jIGluIHVubWFwIHdoaWNoIGlzIHVuZm9ydHVuYXRl
-bHkgbmVjZXNzYXJ5IGZvciBjb3JyZWN0bmVzczsKPj4+IHRoZSBsYXR0ZXIgaXNuJ3QgdG9vIHRl
-cnJpYmxlLCBzaW5jZSBpbiAic2VyaW91cyIgaGFyZHdhcmUgaXQgc2hvdWxkIG9ubHkgYmUKPj4+
-IHNlcmlhbGlzaW5nIGEgZmV3IGNwdXMgc2VydmluZyB0aGUgc2FtZSBkZXZpY2UgYWdhaW5zdCBl
-YWNoIG90aGVyIChlLmcuIGZvcgo+Pj4gbXVsdGlwbGUgcXVldWVzIG9uIGEgc2luZ2xlIE5JQyku
-Cj4+Pgo+Pj4gUHV0dGluZyBpbiBhIGdsb2JhbCBsb2NrIHdoaWNoIHNlcmlhbGlzZXMgKmFsbCog
-Y29uY3VycmVudCBtYXAgYW5kIHVubWFwCj4+PiBjYWxscyBmb3IgKmFsbCogdW5yZWxhdGVkIGRl
-dmljZXMgbWFrZXMgdGhpbmdzIHdvcnNlLiBQZXJpb2QuIEV2ZW4gaWYgdGhlCj4+PiBsb2NrIGl0
-c2VsZiB3ZXJlIGhlbGQgZm9yIHRoZSBtaW5pbXVtIHBvc3NpYmxlIHRpbWUsIGkuZS4gdHJpdmlh
-bGx5Cj4+PiAic3Bpbl9sb2NrKCZsb2NrKTsgc3Bpbl91bmxvY2soJmxvY2spIiwgdGhlIGNvc3Qg
-b2YgcmVwZWF0ZWRseSBib3VuY2luZyB0aGF0Cj4+PiBvbmUgY2FjaGUgbGluZSBhcm91bmQgYmV0
-d2VlbiA5NiBDUFVzIGFjcm9zcyB0d28gc29ja2V0cyBpcyBub3QgbmVnbGlnaWJsZS4KPj4KPj4g
-RmFpciBlbm91Z2guIE5vdGUgdGhhdCB3ZSdyZSBpbiBhIHF1aXRlIGludGVyZXN0aW5nIHNpdHVh
-dGlvbiBub3c6Cj4+ICBhKSBXZSBuZWVkIHRvIGhhdmUgcnVudGltZSBQTSBlbmFibGVkIG9uIFF1
-YWxjb21tIFNvQyB0byBoYXZlIHBvd2VyCj4+IHByb3Blcmx5IG1hbmFnZWQsCj4+ICBiKSBXZSBu
-ZWVkIHRvIGhhdmUgbG9jay1mcmVlIG1hcC91bm1hcCBvbiBzdWNoIGRpc3RyaWJ1dGVkIHN5c3Rl
-bXMsCj4+ICBjKSBJZiBydW50aW1lIFBNIGlzIGVuYWJsZWQsIHdlIG5lZWQgdG8gY2FsbCBpbnRv
-IHJ1bnRpbWUgUE0gZnJvbSBhbnkKPj4gY29kZSB0aGF0IGRvZXMgaGFyZHdhcmUgYWNjZXNzZXMs
-IG90aGVyd2lzZSB0aGUgSU9NTVUgQVBJIChhbmQgc28gRE1BCj4+IEFQSSBhbmQgdGhlbiBhbnkg
-VjRMMiBkcml2ZXIpIGJlY29tZXMgdW51c2FibGUuCj4+Cj4+IEkgY2FuIHNlZSBvbmUgbW9yZSB3
-YXkgdGhhdCBjb3VsZCBwb3RlbnRpYWxseSBsZXQgdXMgaGF2ZSBhbGwgdGhlCj4+IHRocmVlLiBI
-b3cgYWJvdXQgZW5hYmxpbmcgcnVudGltZSBQTSBvbmx5IG9uIHNlbGVjdGVkIGltcGxlbWVudGF0
-aW9ucwo+PiAoZS5nLiBxY29tLHNtbXUpIGFuZCB0aGVuIGhhdmluZyBhbGwgdGhlIHJ1bnRpbWUg
-UE0gY2FsbHMgc3Vycm91bmRlZAo+PiB3aXRoIGlmIChwbV9ydW50aW1lX2VuYWJsZWQoKSksIHdo
-aWNoIGlzIGxvY2tsZXNzPwo+Pgo+Cj4gU29ycnkgZm9yIHBpbmdpbmcsIGJ1dCBhbnkgb3Bpbmlv
-biBvbiB0aGlzIGtpbmQgb2YgYXBwcm9hY2g/Cj4KCkl0IGlzIG9rIGJ5IG1lLCBmb3Igd2hhdGV2
-ZXIgdGhhdCBpcyB3b3J0aAoKQlIsCi1SCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2ZyZWVkcmVubwo=
+2018-02-21 18:46 GMT+01:00 Bartosz Golaszewski <brgl@bgdev.pl>:
+> 2018-02-21 18:05 GMT+01:00 David Lechner <david@lechnology.com>:
+>> On 02/21/2018 06:01 AM, Bartosz Golaszewski wrote:
+>>>
+>>> 2018-02-20 19:39 GMT+01:00 David Lechner <david@lechnology.com>:
+>>>>
+>>>> On 02/20/2018 07:33 AM, Bartosz Golaszewski wrote:
+>>>>>
+>>>>>
+>>>>> 2018-02-19 21:21 GMT+01:00 David Lechner <david@lechnology.com>:
+>>>>>>
+>>>>>>
+>>>>>> This series converts mach-davinci to use the common clock framework.
+>>>>>>
+>>>>>>
+>>>>>
+>>>>> Hi David,
+>>>>>
+>>>>> just some quick results from today's playing with v7.
+>>>>>
+>>>>> I started out with da850-lcdk with my standard rootfs over NFS. I was
+>>>>> not able to boot to console so far. The first problem is that mdio
+>>>>> fails to probe:
+>>>>>
+>>>>> libphy: Fixed MDIO Bus: probed
+>>>>> davinci_mdio 1e24000.mdio: davinci mdio revision 1.5, bus freq 2200000
+>>>>> davinci_mdio 1e24000.mdio: no live phy, scanning all
+>>>>> davinci_mdio: probe of 1e24000.mdio failed with error -5> After some
+>>>>> digging I noticed that the supplied clock rate differs
+>>>>> between mainline (114000000Hz) vs common-clock-v7 (18000000). Since
+>>>>> we're not setting the rate in mdio, using LPSC_SET_RATE_PARENT would
+>>>>> not help like with lcdc.
+>>>>
+>>>>
+>>>>
+>>>> Can you post the output of this command so that I can see how your
+>>>> clocks are setup:
+>>>>
+>>>> cat /sys/kernel/debug/clk/clk_summary
+>>>>
+>>>>
+>>>>>
+>>>>> After that, the boot just hangs without ever getting to emac's probe.
+>>>>
+>>>>
+>>>>
+>>>> Using your workaround, can you run:
+>>>>
+>>>> cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+>>>>
+>>>> If you see:
+>>>>    1e27000.clock-controller: emac  off-0
+>>>>
+>>>> then genpd is not working like it is supposed to. You should see
+>>>> something
+>>>> like this for device that are working:
+>>>>            1e27000.clock-controller: uart2  on
+>>>>      /devices/platform/soc@1c00000/1d0d000.serial        active
+>>>>
+>>>>
+>>>>>
+>>>>> Once I set the emac clock to always enabled (a workaround that was
+>>>>> necessary with v6, but could be dropped with my first
+>>>>> genpd-in-a-separate-driver attempt), I'm getting a rather strange NULL
+>>>>> pointer dereference:
+>>>>
+>>>>
+>>>>
+>>>> I noticed this too when adding the power-domains property to some device
+>>>> tree nodes. This is part of the reason why I didn't add it everywhere.
+>>>> I wasn't able to figure out the cause of this yet. As a work around
+>>>> though, please try removing the power-domains property from the emac
+>>>> and mdio nodes and use your previous workaround of having an always
+>>>> enabled clock.
+>>>>
+>>>>
+>>>
+>>> When I use any of the workarounds I just keep getting more problems
+>>> (e.g. [1] from blk and pinctrl). I only had a couple hours today to
+>>> play with it but it seems to me we have some memory corruption
+>>> somewhere. I'll check the initialization order of all the frameworks
+>>> involved tomorrow.
+>>>
+>>> Best regards,
+>>> Bartosz
+>>>
+>>> [1] https://pastebin.com/75mkkuJL
+>>>
+>>
+>> I wonder if we need to delete all of the __init and __initconst attributes
+>> now that this has been converted to platform devices.
+>>
+>
+> Duh... Of course we do. IIRC everything in the init section gets
+> removed after late_initcall. I'll test that tomorrow.
+>
+> Bart
+
+It's not that. Not only anyway as it doesn't fix anything, I'm getting
+the exact same panics. I tried to play with various settings, like
+initializing the platform driver later in the boot sequence etc. but
+haven't yet figured out what's going on.
+
+Bart
