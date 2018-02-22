@@ -1,58 +1,25 @@
-Return-Path: <SRS0=mxgJ=FQ=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v11 02/10] include: media: Add Renesas CEU driver interface
-Date: Thu, 22 Feb 2018 11:37:18 +0100
-Message-Id: <1519295846-11612-3-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519295846-11612-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519295846-11612-1-git-send-email-jacopo+renesas@jmondi.org>
-To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=Q8ug=FQ=linaro.org=linus.walleij@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <1519032320-103817-3-git-send-email-preid@electromag.com.au>
+References: <1519032320-103817-1-git-send-email-preid@electromag.com.au> <1519032320-103817-3-git-send-email-preid@electromag.com.au>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 22 Feb 2018 16:06:27 +0100
+Message-ID: <CACRpkdYGyeZp26atVaCfm=5-B4JJ2_49PNUWtxOJ75mtLdVJ0g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] dt-bindings: pinctrl: mcp23s08: add documentation
+ for drive-open-drain
+Content-Type: text/plain; charset="UTF-8"
+To: Phil Reid <preid@electromag.com.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
 List-ID: <devicetree@vger.kernel.org>
 
-Add renesas-ceu header file.
+On Mon, Feb 19, 2018 at 10:25 AM, Phil Reid <preid@electromag.com.au> wrote:
 
-Do not remove the existing sh_mobile_ceu.h one as long as the original
-driver does not go away.
+> This flag set the mcp23s08 device irq type to open drain active low.
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
----
- include/media/drv-intf/renesas-ceu.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 include/media/drv-intf/renesas-ceu.h
+Patch applied.
 
-diff --git a/include/media/drv-intf/renesas-ceu.h b/include/media/drv-intf/renesas-ceu.h
-new file mode 100644
-index 0000000..52841d1
---- /dev/null
-+++ b/include/media/drv-intf/renesas-ceu.h
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * renesas-ceu.h - Renesas CEU driver interface
-+ *
-+ * Copyright 2017-2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
-+ */
-+
-+#ifndef __MEDIA_DRV_INTF_RENESAS_CEU_H__
-+#define __MEDIA_DRV_INTF_RENESAS_CEU_H__
-+
-+#define CEU_MAX_SUBDEVS		2
-+
-+struct ceu_async_subdev {
-+	unsigned long flags;
-+	unsigned char bus_width;
-+	unsigned char bus_shift;
-+	unsigned int i2c_adapter_id;
-+	unsigned int i2c_address;
-+};
-+
-+struct ceu_platform_data {
-+	unsigned int num_subdevs;
-+	struct ceu_async_subdev subdevs[CEU_MAX_SUBDEVS];
-+};
-+
-+#endif /* ___MEDIA_DRV_INTF_RENESAS_CEU_H__ */
--- 
-2.7.4
+Yours,
+Linus Walleij
