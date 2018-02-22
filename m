@@ -1,20 +1,16 @@
 From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: Add ST Multi-Function eXpander
- driver
-Date: Thu, 22 Feb 2018 15:15:20 +0000
-Message-ID: <7667aba8-2c96-a16b-45f8-5d69a9613c7c@st.com>
+Subject: Re: [PATCH 0/6] Introduce STMicroelectronics MultiFunction eXpander
+Date: Thu, 22 Feb 2018 15:13:30 +0000
+Message-ID: <276d5f97-55c2-406e-92c7-0d03c7f7a49d@st.com>
 References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
- <1518100057-23234-2-git-send-email-amelie.delaunay@st.com>
- <20180218231938.goeht7tomfkab6uu@rob-hp-laptop>
- <b08ab2cd-d6a0-b5da-e33e-ad150370776b@st.com>
- <CACRpkdYfHgjAu=By-4pbtpYrbBjRLGEKJhzXobnM6RFYYgjaRw@mail.gmail.com>
+ <CACRpkdZYnQC5BusLyK5aAcA2q0NmvHu=TaLhFCfu2M0bgBcjrQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYfHgjAu=By-4pbtpYrbBjRLGEKJhzXobnM6RFYYgjaRw@mail.gmail.com>
+In-Reply-To: <CACRpkdZYnQC5BusLyK5aAcA2q0NmvHu=TaLhFCfu2M0bgBcjrQ@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <363C5EF53D014A43AF6DAD8F9C4EAECC@st.com>
+Content-ID: <CC33488A7E6801469D12F0B3DDDD9228@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,71 +21,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
 
+Thanks for your review on the whole series.
 
-On 02/22/2018 02:22 PM, Linus Walleij wrote:
-> On Mon, Feb 19, 2018 at 4:59 PM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
->> On 02/19/2018 12:19 AM, Rob Herring wrote:
->>> On Thu, Feb 08, 2018 at 03:27:32PM +0100, Amelie Delaunay wrote:
+On 02/22/2018 02:06 PM, Linus Walleij wrote:
+> Hi Amelie,
 > 
->>>> +- interrupts = must be <0>
->>>> +- gpio-controller: marks the device node as a GPIO controller
->>>> +- #gpio-cells: should be <2>, the first cell is the GPIO offset on this GPIO
->>>> +  controller, the second cell is the gpio flags in accordance with
->>>> +  <dt-bindings/gpio/st-mfx-gpio.h>.
->>>
->>> Custom flags? Use standard flags.
->>>
->>> DT binding headers should be part of this patch.
->>>
->> Custom flags because MFX GPIOs have several types:
->> - Output open drain with internal pull-up resistor
->> - Output open drain without internal pull-up resistor
->> - Output push pull without internal pull resistor
->> - Input with internal pull-up resistor
->> - Input with internal pull-down resistor
->> - Input floating
->> - Input analog.
->> Standard flags don't have pull up or down information. That's why I am
->> using custom flags, they overloads standard flags.
+> thanks a lot for your patches!
 > 
-> This is because pull up/down and tristate/high z (floating)
-> also known as PIN_CONFIG_BIAS_HIGH_IMPEDANCE,
-> is controlled by the pin control subsystem, not GPIO.
+> On Thu, Feb 8, 2018 at 3:27 PM, Amelie Delaunay <amelie.delaunay@st.com> wrote:
 > 
-> If your hardware does even more pin control (like multiplexing)
-> then I suggest that you create a pin control driver back-end for
-> this and put the resulting driver in drivers/pinctrl.
+>> This series adds support for STMicroelectronics MultiFunction eXpander
+>> (ST MFX), used on some STM32 discovery and evaluation boards.
 > 
-> Some recent additions of expanders in drivers/pinctrl makes
-> for great inspiration for this work. See for example:
-> drivers/pinctrl/pinctrl-sx150x.c
-> drivers/pinctrl/pinctrl-mcp23s08.c
-> 
-> These are both combined pin control and GPIO drivers that
-> we moved from drivers/gpio because we concluded that they
-> do more than just GPIO. The GPIO lines are matches to
-> pins using the GPIO ranges from the call to
-> gpiochip_add_pin_range() and using gpiochip_generic_config()
-> as the gpiochip .set_config() callback.
-> 
-> It has been discussed to expose subsets of pin config to
-> GPIO. Indeed, we already handle open drain/source and
-> debounce by simply calling into the pin control back-end
-> or handling it directly in the GPIO driver using the standard
-> pin config properties.
-> 
-> I am reluctant about this, I think the split of responsibilities
-> is pretty nice.
-> 
-> I'd recommend looking at the sx150x pin control driver and
-> check if you can maybe take this direction with the patch?
+> So I take it that the department creating the STMPE
+> "ST MPE" or "ST Microelectronics MultiPurpose Expander"
+> Now created a new set of circuits?
 > 
 
-Thanks for highlighting these examples. I will have a look on these!
+ST MFX is based on a STM32L152 with a firmware offering features similar 
+to the STMPE (GPIO and TS controller) but also IDD measurement to 
+measure the power consumption of the MCU to which MFX is connected to.
+
+> Can we first establish whether this new family is really so
+> different from STMPE that it really needs a new driver in
+> MFD and GPIO (and I guess pin control as well)?
+> 
+
+ST MFX is different from STMPE as far as the HW is completely different.
+IDD is a new feature.
+TS management is completely different.
+GPIO management looks like but is also rather different.
+ST MFX counts a first level of 8 interrupts (acked by writing in the ACK 
+register), then a second level of 24 interrupts for GPIOs. GPIO IRQ can 
+be triggered on low level, falling edge, high level, rising edge. GPIO 
+IRQ have to be acked by writing in the GPI_ACK register, GPIO can be 
+output open-drain with/without internal pull-up, output push-pull, input 
+with pull-up/down, input floating or analog.
+
+> I would be annoyed to see later that it is just a few bytes
+> separating it from the STMPE, in that case I think it is
+> better to just reuse/improve the good old stmpe driver
+> and take it from there.
+> 
+
+Sure, but if it was a new STMPE variant, it would be called STMPE24xx or 
+something like that (24 GPIOs maximum, 20 if IDD or TS is enabled, 16 if 
+IDD and TS are enabled).
 
 Regards,
 Amelie
