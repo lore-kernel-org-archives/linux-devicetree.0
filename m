@@ -1,55 +1,95 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 7/7] watchdog: coh901327: make use of timeout-secs
- provided in devicetree
-Date: Thu, 22 Feb 2018 15:01:30 +0100
-Message-ID: <CACRpkdZzw+3DPvS7VOUzghmSgDTgDeCZ2i+FE=DCE+R5i1qycQ@mail.gmail.com>
-References: <20180211200847.25000-1-marcus.folkesson@gmail.com>
- <20180211200847.25000-7-marcus.folkesson@gmail.com>
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v7 6/6] drm/msm: iommu: Replace runtime calls with runtime
+ suppliers
+Date: Thu, 22 Feb 2018 23:12:19 +0900
+Message-ID: <CAAFQd5CzOJ0oS8LLcKP-DgyXSXgzafg5CWPAvnR-QDPS+DZAUg@mail.gmail.com>
+References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
+ <CAF6AEGs8qcRTvz6srSfc39ybZrPYMVg2w6qkaO2AdWL1GD4mQw@mail.gmail.com>
+ <CAAFQd5BKRumpEfAKNF_RKS-ZZ8D671DfOz4vB2+w1SV3aG9NxQ@mail.gmail.com>
+ <CAF6AEGuNZJKtwGZ5mLfqNND2jtU+HYM11UONfAtVTzoM0QVpdg@mail.gmail.com>
+ <CAAFQd5BZJ1G0RG32hYErNzPRvisBhhiSNCBsjbzfm0WzO=DnsQ@mail.gmail.com>
+ <CAFp+6iHaycK=CcE1S15EeuMkaw8LnW0ebptU0hM6tUtWdeEOtA@mail.gmail.com>
+ <CAAFQd5Afj-Bj+3wHwmF2tT7y=46EsYEtO_mXfY6stXBgHutEUg@mail.gmail.com>
+ <CAFp+6iGX6pr+MdPSSHHG=qOnhHky_8OHiDqAcJ9UudEUv=JMHg@mail.gmail.com>
+ <CAAFQd5DiwAugGnPOTw0+XrEfef9x-n-vx59JFuXpNawjiXHwCw@mail.gmail.com>
+ <CAFp+6iEW0faeHDfzN_F1bRrHGcVo3sPCk4HSY=t9dnEvHkDkYw@mail.gmail.com>
+ <b003ecda-1cbe-4e5f-872b-107154ac40e5@arm.com>
+ <CAAFQd5AmG1zSm+CouXOCJbs8SNGFk1-RqfU1nWGjMGJMB-qfvw@mail.gmail.com>
+ <CAAFQd5A9B-di9svtiJbvk2hz1U1xo61rTY5vt6AD+KR5iMcG-A@mail.gmail.com>
+ <7406f1ce-c2c9-a6bd-2886-5a34de45add6@arm.com>
+ <CAAFQd5DkLtq2w00=Zd4sMDB4QOWqi7R-zgydECJXLdTmaHty+g@mail.gmail.com>
+ <28466b36-b5d3-4f60-a45e-b75d79c2a3cb@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180211200847.25000-7-marcus.folkesson@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Barry Song <baohua@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Chen-Yu Tsai <wens@csie.org>, Vladimir Zapolskiy <vz@mleia.com>, Matthias Brugger <matthias.bgg@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Guenter
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <28466b36-b5d3-4f60-a45e-b75d79c2a3cb@arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Robin Murphy <robin.murphy@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, dri-devel <dri-devel@lists.freedesktop.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, freedreno <freedreno@lists.freedesktop.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 11, 2018 at 9:08 PM, Marcus Folkesson
-<marcus.folkesson@gmail.com> wrote:
-
-> watchdog_init_timeout() will allways pick timeout_param since it
-> defaults to a valid timeout.
->
-> Following best practice described in
-> Documentation/watchdog/watchdog-kernel-api.txt to make use of
-> the parameter logic.
->
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> ---
->
-> Notes:
->     v3:
->         - Reformat and use coh901327_wdt.timeout instead of margin when print out
->           timout in probe function.
->
->     v2:
->         - Set .timeout in coh901327_wdt structure declaration.
->         - Set .min_timeout to 1 instead of 0. I could not find a datasheet
->           for coh901327, so I'm not sure if 0 is valid. However, 0 seems
->           wrong to me and most driver has 1 as min value. If it should
->           be 0, please let me know and I have to set another initial
->           value for margin.
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+T24gVGh1LCBGZWIgMjIsIDIwMTggYXQgMTA6NDUgUE0sIFJvYmluIE11cnBoeSA8cm9iaW4ubXVy
+cGh5QGFybS5jb20+IHdyb3RlOgo+IFtzb3JyeSwgSSBoYWQgaW50ZW5kZWQgdG8gcmVwbHkgc29v
+bmVyIGJ1dCBjbGVhcmx5IGZvcmdvdF0KPgo+Cj4gT24gMTYvMDIvMTggMDA6MTMsIFRvbWFzeiBG
+aWdhIHdyb3RlOgo+Pgo+PiBPbiBGcmksIEZlYiAxNiwgMjAxOCBhdCAyOjE0IEFNLCBSb2JpbiBN
+dXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29tPgo+PiB3cm90ZToKPj4+Cj4+PiBPbiAxNS8wMi8x
+OCAwNDoxNywgVG9tYXN6IEZpZ2Egd3JvdGU6Cj4+PiBbLi4uXQo+Pj4+Pgo+Pj4+Pgo+Pj4+PiBD
+b3VsZCB5b3UgZWxhYm9yYXRlIG9uIHdoYXQga2luZCBvZiBsb2NraW5nIHlvdSBhcmUgY29uY2Vy
+bmVkIGFib3V0Pwo+Pj4+PiBBcyBJIGV4cGxhaW5lZCBiZWZvcmUsIHRoZSBub3JtYWxseSBoYXBw
+ZW5pbmcgZmFzdCBwYXRoIHdvdWxkIGxvY2sKPj4+Pj4gZGV2LT5wb3dlcl9sb2NrIG9ubHkgZm9y
+IHRoZSBicmllZiBtb21lbnQgb2YgaW5jcmVtZW50aW5nIHRoZSBydW50aW1lCj4+Pj4+IFBNIHVz
+YWdlIGNvdW50ZXIuCj4+Pj4KPj4+Pgo+Pj4+Cj4+Pj4gTXkgYmFkLCB0aGF0J3Mgbm90IGV2ZW4g
+aXQuCj4+Pj4KPj4+PiBUaGUgYXRvbWljIHVzYWdlIGNvdW50ZXIgaXMgaW5jcmVtZW50ZWQgYmVm
+b3JlaGFuZHMsIHdpdGhvdXQgYW55Cj4+Pj4gbG9ja2luZyBbMV0gYW5kIHRoZSBzcGlubG9jayBp
+cyBhY3F1aXJlZCBvbmx5IGZvciB0aGUgc2FrZSBvZgo+Pj4+IHZhbGlkYXRpbmcgdGhhdCBkZXZp
+Y2UncyBydW50aW1lIFBNIHN0YXRlIHJlbWFpbmVkIHZhbGlkIGluZGVlZCBbMl0sCj4+Pj4gd2hp
+Y2ggd291bGQgYmUgdGhlIGNhc2UgaW4gdGhlIGZhc3QgcGF0aCBvZiB0aGUgc2FtZSBkcml2ZXIg
+ZG9pbmcgdHdvCj4+Pj4gbWFwcGluZ3MgaW4gcGFyYWxsZWwsIHdpdGggdGhlIG1hc3RlciBwb3dl
+cmVkIG9uIChhbmQgc28gdGhlIFNNTVUsCj4+Pj4gdGhyb3VnaCBkZXZpY2UgbGlua3M7IGlmIG1h
+c3RlciB3YXMgbm90IHBvd2VyZWQgb24gYWxyZWFkeSwgcG93ZXJpbmcKPj4+PiBvbiB0aGUgU01N
+VSBpcyB1bmF2b2lkYWJsZSBhbnl3YXkgYW5kIGl0IHdvdWxkIGFkZCBtdWNoIG1vcmUgbGF0ZW5j
+eQo+Pj4+IHRoYW4gdGhlIHNwaW5sb2NrIGl0c2VsZikuCj4+Pgo+Pj4KPj4+Cj4+PiBXZSBub3cg
+aGF2ZSBubyBsb2NraW5nIGF0IGFsbCBpbiB0aGUgbWFwIHBhdGgsIGFuZCBvbmx5IGEgcGVyLWRv
+bWFpbiBsb2NrCj4+PiBhcm91bmQgVExCIHN5bmMgaW4gdW5tYXAgd2hpY2ggaXMgdW5mb3J0dW5h
+dGVseSBuZWNlc3NhcnkgZm9yCj4+PiBjb3JyZWN0bmVzczsKPj4+IHRoZSBsYXR0ZXIgaXNuJ3Qg
+dG9vIHRlcnJpYmxlLCBzaW5jZSBpbiAic2VyaW91cyIgaGFyZHdhcmUgaXQgc2hvdWxkIG9ubHkK
+Pj4+IGJlCj4+PiBzZXJpYWxpc2luZyBhIGZldyBjcHVzIHNlcnZpbmcgdGhlIHNhbWUgZGV2aWNl
+IGFnYWluc3QgZWFjaCBvdGhlciAoZS5nLgo+Pj4gZm9yCj4+PiBtdWx0aXBsZSBxdWV1ZXMgb24g
+YSBzaW5nbGUgTklDKS4KPj4+Cj4+PiBQdXR0aW5nIGluIGEgZ2xvYmFsIGxvY2sgd2hpY2ggc2Vy
+aWFsaXNlcyAqYWxsKiBjb25jdXJyZW50IG1hcCBhbmQgdW5tYXAKPj4+IGNhbGxzIGZvciAqYWxs
+KiB1bnJlbGF0ZWQgZGV2aWNlcyBtYWtlcyB0aGluZ3Mgd29yc2UuIFBlcmlvZC4gRXZlbiBpZiB0
+aGUKPj4+IGxvY2sgaXRzZWxmIHdlcmUgaGVsZCBmb3IgdGhlIG1pbmltdW0gcG9zc2libGUgdGlt
+ZSwgaS5lLiB0cml2aWFsbHkKPj4+ICJzcGluX2xvY2soJmxvY2spOyBzcGluX3VubG9jaygmbG9j
+aykiLCB0aGUgY29zdCBvZiByZXBlYXRlZGx5IGJvdW5jaW5nCj4+PiB0aGF0Cj4+PiBvbmUgY2Fj
+aGUgbGluZSBhcm91bmQgYmV0d2VlbiA5NiBDUFVzIGFjcm9zcyB0d28gc29ja2V0cyBpcyBub3QK
+Pj4+IG5lZ2xpZ2libGUuCj4+Cj4+Cj4+IEZhaXIgZW5vdWdoLiBOb3RlIHRoYXQgd2UncmUgaW4g
+YSBxdWl0ZSBpbnRlcmVzdGluZyBzaXR1YXRpb24gbm93Ogo+PiAgIGEpIFdlIG5lZWQgdG8gaGF2
+ZSBydW50aW1lIFBNIGVuYWJsZWQgb24gUXVhbGNvbW0gU29DIHRvIGhhdmUgcG93ZXIKPj4gcHJv
+cGVybHkgbWFuYWdlZCwKPj4gICBiKSBXZSBuZWVkIHRvIGhhdmUgbG9jay1mcmVlIG1hcC91bm1h
+cCBvbiBzdWNoIGRpc3RyaWJ1dGVkIHN5c3RlbXMsCj4+ICAgYykgSWYgcnVudGltZSBQTSBpcyBl
+bmFibGVkLCB3ZSBuZWVkIHRvIGNhbGwgaW50byBydW50aW1lIFBNIGZyb20gYW55Cj4+IGNvZGUg
+dGhhdCBkb2VzIGhhcmR3YXJlIGFjY2Vzc2VzLCBvdGhlcndpc2UgdGhlIElPTU1VIEFQSSAoYW5k
+IHNvIERNQQo+PiBBUEkgYW5kIHRoZW4gYW55IFY0TDIgZHJpdmVyKSBiZWNvbWVzIHVudXNhYmxl
+Lgo+Pgo+PiBJIGNhbiBzZWUgb25lIG1vcmUgd2F5IHRoYXQgY291bGQgcG90ZW50aWFsbHkgbGV0
+IHVzIGhhdmUgYWxsIHRoZQo+PiB0aHJlZS4gSG93IGFib3V0IGVuYWJsaW5nIHJ1bnRpbWUgUE0g
+b25seSBvbiBzZWxlY3RlZCBpbXBsZW1lbnRhdGlvbnMKPj4gKGUuZy4gcWNvbSxzbW11KSBhbmQg
+dGhlbiBoYXZpbmcgYWxsIHRoZSBydW50aW1lIFBNIGNhbGxzIHN1cnJvdW5kZWQKPj4gd2l0aCBp
+ZiAocG1fcnVudGltZV9lbmFibGVkKCkpLCB3aGljaCBpcyBsb2NrbGVzcz8KPgo+Cj4gWWVzLCB0
+aGF0J3MgdGhlIGtpbmQgb2YgdGhpbmcgSSB3YXMgZ3Jhdml0YXRpbmcgdG93YXJkcyAtIG15IHZh
+Z3VlIHRob3VnaHQKPiB3YXMgYWRkaW5nIHNvbWUgZmxhZyB0byB0aGUgc21tdV9kb21haW4sIGJ1
+dCBwbV9ydW50aW1lX2VuYWJsZWQoKSBkb2VzIGxvb2sKPiBjb25jZXB0dWFsbHkgYSBsb3QgY2xl
+YW5lci4KCkdyZWF0LCB0aGFua3MuIExvb2tzIGxpa2Ugd2UncmUgaW4gYWdyZWVtZW50IG5vdy4g
+XG8vCgpWaXZlaywgZG9lcyB0aGlzIHNvdW5kIHJlYXNvbmFibGUgdG8geW91PwoKQmVzdCByZWdh
+cmRzLApUb21hc3oKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
