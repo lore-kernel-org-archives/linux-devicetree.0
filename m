@@ -1,101 +1,36 @@
-Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH 2/8] scsi: hisi_sas: support the property of signal attenuation for v2 hw
-Date: Tue, 20 Feb 2018 03:13:25 +0800
-Message-ID: <1519067611-206638-3-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
-References: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>, John Garry <john.garry@huawei.com>
+Return-Path: <SRS0=mxgJ=FQ=jmondi.org=jacopo+renesas@kernel.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 5/6] arm64: dts: renesas: r8a77965: Add #pwm-cells property
+Date: Thu, 22 Feb 2018 20:06:09 +0100
+Message-Id: <1519326370-15805-6-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
+References: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
+To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+Add "#pwm-cells" property to "pwm@e6e31000" device node.
 
-The register SAS_PHY_CTRL is configured according to signal quality.
-The signal quality is calculated by signal attenuation of hardware
-physical link. It may be different for different PCB layout.
+This silences the following DTC compiler warning:
+Warning (pwms_property): Missing property '#pwm-cells' in node
+/soc/pwm@e6e31000 or bad phandle (referred from /backlight:pwms[0])
 
-So, in order to give better support to new board, this patch add
-support to reading the devicetree property, signal-attenuation.
-Of course, we still keep an default value in driver to adapt old
-board.
-
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 39 +++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index 4ccb61e..ab6db50 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -406,6 +406,17 @@ struct hisi_sas_err_record_v2 {
- 	__le32 dma_rx_err_type;
- };
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index cd12176..cdd4868 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -668,6 +668,7 @@
  
-+struct signal_attenuation_s {
-+	u32 de_emphasis;
-+	u32 preshoot;
-+	u32 boost;
-+};
-+
-+struct sig_atten_lu_s {
-+	const struct signal_attenuation_s *att;
-+	u32 sas_phy_ctrl;
-+};
-+
- static const struct hisi_sas_hw_error one_bit_ecc_errors[] = {
- 	{
- 		.irq_msk = BIT(SAS_ECC_INTR_DQE_ECC_1B_OFF),
-@@ -1130,9 +1141,16 @@ static void phys_try_accept_stp_links_v2_hw(struct hisi_hba *hisi_hba)
- 	}
- }
+ 		pwm1: pwm@e6e31000 {
+ 			reg = <0 0xe6e31000 0 8>;
++			#pwm-cells = <2>;
+ 			/* placeholder */
+ 		};
  
-+static const struct signal_attenuation_s x6000 = {9200, 0, 10476};
-+static const struct sig_atten_lu_s sig_atten_lu[] = {
-+	{ &x6000, 0x3016a68 },
-+};
-+
- static void init_reg_v2_hw(struct hisi_hba *hisi_hba)
- {
- 	struct device *dev = hisi_hba->dev;
-+	u32 sas_phy_ctrl = 0x30b9908;
-+	u32 signal[3];
- 	int i;
- 
- 	/* Global registers init */
-@@ -1176,9 +1194,28 @@ static void init_reg_v2_hw(struct hisi_hba *hisi_hba)
- 	hisi_sas_write32(hisi_hba, AXI_AHB_CLK_CFG, 1);
- 	hisi_sas_write32(hisi_hba, HYPER_STREAM_ID_EN_CFG, 1);
- 
-+	/* Get sas_phy_ctrl value to deal with TX FFE issue. */
-+	if (!device_property_read_u32_array(dev, "signal-attenuation",
-+					signal, ARRAY_SIZE(signal))) {
-+		for (i = 0; i < ARRAY_SIZE(sig_atten_lu); i++) {
-+			const struct sig_atten_lu_s *lookup = &sig_atten_lu[i];
-+			const struct signal_attenuation_s *att = lookup->att;
-+
-+			if ((signal[0] == att->de_emphasis) &&
-+			    (signal[1] == att->preshoot) &&
-+			    (signal[2] == att->boost)) {
-+				sas_phy_ctrl = lookup->sas_phy_ctrl;
-+				break;
-+			}
-+		}
-+
-+		if (i == ARRAY_SIZE(sig_atten_lu))
-+			dev_warn(dev, "unknown signal attenuation values, using default PHY ctrl config\n");
-+	}
-+
- 	for (i = 0; i < hisi_hba->n_phy; i++) {
- 		hisi_sas_phy_write32(hisi_hba, i, PROG_PHY_LINK_RATE, 0x855);
--		hisi_sas_phy_write32(hisi_hba, i, SAS_PHY_CTRL, 0x30b9908);
-+		hisi_sas_phy_write32(hisi_hba, i, SAS_PHY_CTRL, sas_phy_ctrl);
- 		hisi_sas_phy_write32(hisi_hba, i, SL_TOUT_CFG, 0x7d7d7d7d);
- 		hisi_sas_phy_write32(hisi_hba, i, SL_CONTROL, 0x0);
- 		hisi_sas_phy_write32(hisi_hba, i, TXID_AUTO, 0x2);
 -- 
-1.9.1
+2.7.4
