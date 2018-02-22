@@ -1,43 +1,73 @@
-Return-Path: <SRS0=Qujd=FN=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v9 11/11] media: i2c: ov7670: Fully set mbus frame fmt
-Date: Mon, 19 Feb 2018 17:59:44 +0100
-Message-Id: <1519059584-30844-12-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519059584-30844-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519059584-30844-1-git-send-email-jacopo+renesas@jmondi.org>
-To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=j4g7=FQ=gmail.com=shubhrajyoti.datta@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <20180221174440.GA17947@tyrael.ni.corp.natinst.com>
+References: <1519188826-2047-1-git-send-email-shubhrajyoti.datta@gmail.com> <20180221174440.GA17947@tyrael.ni.corp.natinst.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Date: Thu, 22 Feb 2018 15:17:04 +0530
+Message-ID: <CAKfKVtFoF52S=6eoAdEfwm4-Puh1wnmsvxMY=M9G9S0_SHO1WA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] doc: fpga: Add reset bridge support
+Content-Type: text/plain; charset="UTF-8"
+To: Moritz Fischer <mdf@kernel.org>
+Cc: linux-fpga@vger.kernel.org, Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, nofooter@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The sensor driver sets mbus format colorspace information and sizes,
-but not ycbcr encoding, quantization and xfer function. When supplied
-with an badly initialized mbus frame format structure, those fields
-need to be set explicitly not to leave them uninitialized. This is
-tested by v4l2-compliance, which supplies a mbus format description
-structure and checks for all fields to be properly set.
+Hi Moritz,
 
-Without this commit, v4l2-compliance fails when testing formats with:
-fail: v4l2-test-formats.cpp(335): ycbcr_enc >= 0xff
+On Wed, Feb 21, 2018 at 11:14 PM, Moritz Fischer <mdf@kernel.org> wrote:
+> On Wed, Feb 21, 2018 at 10:23:45AM +0530, shubhrajyoti.datta@gmail.com wrote:
+>> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+>>
+>> Add reset bridge support. Once this bridge is enabled.
+>> The reset line(s) will be toggled. Generally it will be
+>> called after the bitstream load to reset the PL.
+>>
+>> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+>> ---
+>>  .../devicetree/bindings/fpga/xlnx,rst-bridge.txt   | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,rst-bridge.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/fpga/xlnx,rst-bridge.txt b/Documentation/devicetree/bindings/fpga/xlnx,rst-bridge.txt
+>> new file mode 100644
+>> index 0000000..6f1bfc2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/fpga/xlnx,rst-bridge.txt
+>> @@ -0,0 +1,22 @@
+>> +Xilinx fpga reset bridge
+>> +
+>> +The Xilinx reset bridge toggles the reset line to the PL
+>> +in Zynqmp Ultrascale plus.
+>
+> Out of curiosity do you have a reference in the TRM where this is
+> explained?
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
----
- drivers/media/i2c/ov7670.c | 4 ++++
- 1 file changed, 4 insertions(+)
+https://www.xilinx.com/support/documentation/ip_documentation/zynq_ultra_ps_e/v2_0/pg201-zynq-ultrascale-plus-processing-system.pdf
 
-diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-index 25b26d4..61c472e 100644
---- a/drivers/media/i2c/ov7670.c
-+++ b/drivers/media/i2c/ov7670.c
-@@ -996,6 +996,10 @@ static int ov7670_try_fmt_internal(struct v4l2_subdev *sd,
- 	fmt->height = wsize->height;
- 	fmt->colorspace = ov7670_formats[index].colorspace;
- 
-+	fmt->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
-+	fmt->quantization = V4L2_QUANTIZATION_DEFAULT;
-+	fmt->xfer_func = V4L2_XFER_FUNC_DEFAULT;
-+
- 	info->format = *fmt;
- 
- 	return 0;
--- 
-2.7.4
+section :Fabric Reset Enable
+>> +
+>> +
+>> +Required properties:
+>> +- compatible : Should contain "xlnx,rst-bridge"
+>> +- reset              : reset phandles
+>> +
+>> +Optional properties:
+>> +- bridge-enable              : 0 if driver should disable bridge at startup
+>> +                       1 if driver should enable bridge at startup
+>> +                       Default is to leave bridge in current state.
+>> +
+>> +See Documentation/devicetree/bindings/fpga/fpga-region.txt for generic bindings.
+>
+> Since this would be the 5th? time of replicating this I sent out a patch
+> [1] to consolidate this paragraph into a single file.
+>
+> Feel free to add this to your series and replace the above with
+>
+> See Documentation/devicetree/bindings/fpga/fpga-bridge.txt for generic bindings.
+Will do
+
+>
+> Thanks
+>
+> Moritz
+>
+> [1] https://lkml.org/lkml/2018/2/21/1099
