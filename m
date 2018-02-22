@@ -1,13 +1,15 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/6] Introduce STMicroelectronics MultiFunction eXpander
-Date: Thu, 22 Feb 2018 14:06:37 +0100
-Message-ID: <CACRpkdZYnQC5BusLyK5aAcA2q0NmvHu=TaLhFCfu2M0bgBcjrQ@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: Add ST Multi-Function eXpander
+ driver
+Date: Thu, 22 Feb 2018 14:11:26 +0100
+Message-ID: <CACRpkdZxJhntgHwgsg=P98i0aGnXSQ2rXO16H0U=cJ+sBbF27g@mail.gmail.com>
 References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
+ <1518100057-23234-2-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <1518100057-23234-2-git-send-email-amelie.delaunay@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,27 +23,45 @@ To: Amelie Delaunay <amelie.delaunay@st.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Amelie,
-
-thanks a lot for your patches!
-
 On Thu, Feb 8, 2018 at 3:27 PM, Amelie Delaunay <amelie.delaunay@st.com> wrote:
 
-> This series adds support for STMicroelectronics MultiFunction eXpander
-> (ST MFX), used on some STM32 discovery and evaluation boards.
+> +Required properties:
+> +- compatible: must be "st,mfx"
 
-So I take it that the department creating the STMPE
-"ST MPE" or "ST Microelectronics MultiPurpose Expander"
-Now created a new set of circuits?
+I bet this should be more specific. Tomorrow there will be a new
+version of this expander and then we will wish that we used
+a more specific compatible for the first one.
 
-Can we first establish whether this new family is really so
-different from STMPE that it really needs a new driver in
-MFD and GPIO (and I guess pin control as well)?
+Does this chip have any kind of product number on it?
 
-I would be annoyed to see later that it is just a few bytes
-separating it from the STMPE, in that case I think it is
-better to just reuse/improve the good old stmpe driver
-and take it from there.
+Else I would be tempted to use the compatible "st,mfx-0000"
+or something, indicating it is the first of its kind.
+
+> +- reg: I2C address of the device
+> +- interrupts: interrupt triggered by MFX_IRQ_OUT signal
+> +- interrupt-parent: interrupt controller MFX is connected to
+> +- interrupt-controller: marks the device as an interrupt controller
+> +- #interrupt-cells: should be <1>, index of the interrupt within the
+> +  controller, in accordance with the "one cell" variant of
+> +  <devicetree/bindings/interrupt-controller/interrupt.txt>
+
+Seems fine.
+
+> +Optional nodes:
+> +
+> +* GPIO eXpander
+> +MFX provides 16 programmable GPIOs, and it is also possible to recover 8
+> +alternate GPIOs if the main functions are not used (touchscreen controller and
+> +IDD measurement not enabled).
+
+Apparenly Rob thinks this should go elsewhere.
+
+> +- gpio-controller: marks the device node as a GPIO controller
+> +- #gpio-cells: should be <2>, the first cell is the GPIO offset on this GPIO
+> +  controller, the second cell is the gpio flags in accordance with
+> +  <dt-bindings/gpio/st-mfx-gpio.h>.
+
+Let's discuss these extra GPIO flag bindings separately.
 
 Yours,
 Linus Walleij
