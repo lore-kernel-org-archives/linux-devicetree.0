@@ -1,35 +1,27 @@
 Return-Path: <SRS0=Q8ug=FQ=linaro.org=linus.walleij@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20180214155512.17218-1-ckeepax@opensource.cirrus.com>
-References: <20180214155512.17218-1-ckeepax@opensource.cirrus.com>
+In-Reply-To: <1519032320-103817-2-git-send-email-preid@electromag.com.au>
+References: <1519032320-103817-1-git-send-email-preid@electromag.com.au> <1519032320-103817-2-git-send-email-preid@electromag.com.au>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 22 Feb 2018 15:46:55 +0100
-Message-ID: <CACRpkda3Tc0U_UJAyu-Jhja3E8xg2FRcswcxe2hMofrrXLTAEQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mfd: arizona: Update reset pin to use GPIOD
+Date: Thu, 22 Feb 2018 16:05:19 +0100
+Message-ID: <CACRpkdZ7x+QcG6sWNU5pzuO8TfeHeffMRV8UgJewiQ4FN9hnYg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] pinctrl: mcp23s08: fix probing of mcp23s18
 Content-Type: text/plain; charset="UTF-8"
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com
+To: Phil Reid <preid@electromag.com.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sebastian Reichel <sre@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Feb 14, 2018 at 4:55 PM, Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
+On Mon, Feb 19, 2018 at 10:25 AM, Phil Reid <preid@electromag.com.au> wrote:
 
-> Now GPIOD has support for both pdata systems and for non-standard DT
-> bindings the Arizona reset GPIO can be converted to use it.
+> one_regmap_config is always null if mcp type is MCP_TYPE_S18.
+> Remove the null check so that the mcp23s18 will probe.
 >
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-(...)
-> +       pdata->reset = devm_gpiod_get_from_of_node(arizona->dev,
-> +                                                  arizona->dev->of_node,
-> +                                                  "wlf,reset", 0,
-> +                                                  GPIOD_OUT_LOW,
-> +                                                  "arizona /RESET");
+> Fixes: 1781af563aef66c2eb7cda ("pinctrl: mcp23s08: spi: Fix
+> duplicate pinctrl debugfs entries")
+>
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
 
-It seems this call is really useful.
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Also thanks for testing this API, I had nothing to test it on...
+Patch applied with Jan's ACK.
 
 Yours,
 Linus Walleij
