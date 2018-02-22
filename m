@@ -1,130 +1,122 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: Re: [PATCH v2] ARM: tegra: fix ulpi regression on tegra20
-Date: Thu, 22 Feb 2018 22:37:48 +0100
-Message-ID: <23F053F8-8CE2-49A0-ADE6-1AC720953849@ziswiler.com>
-References: <20180222143825.1517-1-marcel@ziswiler.com>
- <278c02d3-7fc2-a92e-b309-1da8116e7c41@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 3/4] drm: rcar-du: Fix legacy DT to create LVDS encoder
+ nodes
+Date: Fri, 23 Feb 2018 00:22:16 +0200
+Message-ID: <1614965.g7Hy4FaxWG@avalon>
+References: <20180222131336.7712-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20180222131336.7712-4-laurent.pinchart+renesas@ideasonboard.com>
+ <06d3fb91-961d-a053-df22-cddf3419b159@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <278c02d3-7fc2-a92e-b309-1da8116e7c41@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dmitry Osipenko <digetx@gmail.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <06d3fb91-961d-a053-df22-cddf3419b159@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On February 22, 2018 9:08:44 PM GMT+01:00, Dmitry Osipenko <digetx@gmail.com> wrote:
->On 22.02.2018 17:38, Marcel Ziswiler wrote:
->> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->> 
->> Since commit f8f8f1d04494 ("clk: Don't touch hardware when
->reparenting
->> during registration") ULPI has been broken on Tegra20 leading to the
->> following error message during boot:
->> 
->> [    1.974698] ulpi_phy_power_on: ulpi write failed
->> [    1.979384] tegra-ehci c5004000.usb: Failed to power on the phy
->> [    1.985434] tegra-ehci: probe of c5004000.usb failed with error
->-110
->> 
->> Debugging through the changes and finally also consulting the TRM
->> revealed that rather than the CDEV2 clock off OSC requiring such pin
->> muxing actually the PLL_P_OUT4 clock is in use. It looks like so far
->it
->> just worked by chance of that one having been enabled which Stephen's
->> commit now changed when reparenting sclk away from pll_p_out4 leaving
->> that one disabled. Fix this by properly assigning the PLL_P_OUT4
->clock
->> as the ULPI PHY clock.
->> 
->> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->
->Indeed CDEV2 clock doesn't exist on Tegra, but there is a CDEV2 pinmux
->pad
->group. Looks like another clk-related relic from downstream driver that
->was
->borrowed to upstream and stayed unnoticed for a long time.
->
->I think in practice all T20 boards have CDEV2 configured to PLL_P_OUT4,
-
-Exactly.
-
->so this
->patch is correct to me. Probably it would also worth to set CDEV2
->parent to
->PLL_P_OUT4 in the clk driver for DT backwards compatibility
-
-I guess that might work but what the original designer(s) probably meant by that strange otherwise nonexistent cdev2 clock might be the other configuration of that pad group called OSC which would allow outputting the base Oscillator frequency even with a separate divider allowing by 2, 4 or even 8 as far as I remember from glancing at the TRM. However like you correctly noted no design ever made use of any such as far as I can tell.
-
-> or even
->make clk
->driver to read the CDEV2 pinmux config and set the proper parent based
->on it.
-
-Sounds a little too fancy to me but might work if device tree backwards compatibility is required at utmost importance.
-
->CC'ed Peter.
->
->Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-
-Thanks Dmitry.
-
->> ---
->> 
->> Changes in v2:
->> - Updated device tree binding documentation as well.
->> - CCing Dmitry as well.
->> 
->>  Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt | 4
->+++-
->>  arch/arm/boot/dts/tegra20.dtsi                                   | 2
->+-
->>  2 files changed, 4 insertions(+), 2 deletions(-)
->> 
->> diff --git
->a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
->b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
->> index a9aa79fb90ed..1aa6f2674af5 100644
->> ---
->a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
->> +++
->b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
->> @@ -21,7 +21,9 @@ Required properties :
->>     - timer: The timeout clock (clk_m). Present if phy_type == utmi.
->>     - utmi-pads: The clock needed to access the UTMI pad control
->registers.
->>       Present if phy_type == utmi.
->> -   - ulpi-link: The clock Tegra provides to the ULPI PHY (cdev2).
->> +   - ulpi-link: The clock Tegra provides to the ULPI PHY (usually
->pad DAP_MCLK2
->> +     with pad group aka "nvidia,pins" cdev2 and pin mux option
->config aka
->> +     "nvidia,function" pllp_out4).
->>       Present if phy_type == ulpi, and ULPI link mode is in use.
->>   - resets : Must contain an entry for each entry in reset-names.
->>     See ../reset/reset.txt for details.
->> diff --git a/arch/arm/boot/dts/tegra20.dtsi
->b/arch/arm/boot/dts/tegra20.dtsi
->> index 864a95872b8d..e05b6bb2599f 100644
->> --- a/arch/arm/boot/dts/tegra20.dtsi
->> +++ b/arch/arm/boot/dts/tegra20.dtsi
->> @@ -741,7 +741,7 @@
->>  		phy_type = "ulpi";
->>  		clocks = <&tegra_car TEGRA20_CLK_USB2>,
->>  			 <&tegra_car TEGRA20_CLK_PLL_U>,
->> -			 <&tegra_car TEGRA20_CLK_CDEV2>;
->> +			 <&tegra_car TEGRA20_CLK_PLL_P_OUT4>;
->>  		clock-names = "reg", "pll_u", "ulpi-link";
->>  		resets = <&tegra_car 58>, <&tegra_car 22>;
->>  		reset-names = "usb", "utmi-pads";
+SGkgRnJhbmssCgpPbiBGcmlkYXksIDIzIEZlYnJ1YXJ5IDIwMTggMDA6MTA6MTcgRUVUIEZyYW5r
+IFJvd2FuZCB3cm90ZToKPiBIaSBMYXVyZW50LCBSb2IsCj4gCj4gVGhhbmtzIGZvciB0aGUgcHJv
+bXB0IHNwaW4gdG8gYWRkcmVzcyBteSBjb25jZXJucy4gIFRoZXJlIGFyZSBzb21lIHNtYWxsCj4g
+dGVjaG5pY2FsIGlzc3Vlcy4KPiAKPiBJIGRpZCBub3QgcmVhZCB0aGUgdjMgcGF0Y2ggdW50aWwg
+dG9kYXkuICB2MyB0aHJvdWdoIHY2IGFyZSBzdGlsbCB1c2luZyB0aGUKPiBvbGQgb3ZlcmxheSBh
+cHBseSBtZXRob2Qgd2hpY2ggdXNlcyBhbiBleHBhbmRlZCBkZXZpY2UgdHJlZSBhcyBpbnB1dC4K
+PiAKPiBSb2IsIEkgZG9uJ3Qgc2VlIG15IG92ZXJsYXkgcGF0Y2hlcyBpbiB5b3UgZm9yLW5leHQg
+YnJhbmNoLCBhbmQgSSBoYXZlCj4gbm90IHNlZW4gYW4gIkFwcGxpZWQiIG1lc3NhZ2UgZnJvbSB5
+b3UuICBXaGF0IGlzIHRoZSBzdGF0dXMgb2YgdGhlCj4gb3ZlcmxheSBwYXRjaGVzPwo+IAo+IENv
+bW1lbnRzIGluIHRoZSBwYXRjaCBiZWxvdy4KPiAKPiBPbiAwMi8yMi8xOCAwNToxMywgTGF1cmVu
+dCBQaW5jaGFydCB3cm90ZToKPiA+IFRoZSBpbnRlcm5hbCBMVkRTIGVuY29kZXJzIG5vdyBoYXZl
+IHRoZWlyIG93biBEVCBiaW5kaW5ncy4gQmVmb3JlCj4gPiBzd2l0Y2hpbmcgdGhlIGRyaXZlciBp
+bmZyYXN0cnVjdHVyZSB0byB0aG9zZSBuZXcgYmluZGluZ3MsIGltcGxlbWVudAo+ID4gYmFja3dh
+cmQtY29tcGF0aWJpbGl0eSB0aHJvdWdoIGxpdmUgRFQgcGF0Y2hpbmcuCj4gPiAKPiA+IFBhdGNo
+aW5nIGlzIGRpc2FibGVkIGFuZCB3aWxsIGJlIGVuYWJsZWQgYWxvbmcgd2l0aCBzdXBwb3J0IGZv
+ciB0aGUgbmV3Cj4gPiBEVCBiaW5kaW5ncyBpbiB0aGUgRFUgZHJpdmVyLgo+ID4gCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBMYXVyZW50IFBpbmNoYXJ0Cj4gPiA8bGF1cmVudC5waW5jaGFydCtyZW5lc2Fz
+QGlkZWFzb25ib2FyZC5jb20+Cj4gPiAtLS0KPiA+IENoYW5nZXMgc2luY2UgdjU6Cj4gPiAKPiA+
+IC0gVXNlIGEgcHJpdmF0ZSBjb3B5IG9mIHJjYXJfZHVfb2ZfY2hhbmdlc2V0X2FkZF9wcm9wZXJ0
+eSgpCj4gPiAKPiA+IENoYW5nZXMgc2luY2UgdjM6Cj4gPiAKPiA+IC0gVXNlIHRoZSBPRiBjaGFu
+Z2VzZXQgQVBJCj4gPiAtIFVzZSBvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncygpCj4gPiAt
+IFJlcGxhY2UgaGFyZGNvZGVkIGNvbnN0YW50cyBieSBzaXplb2YoKQo+ID4gCj4gPiBDaGFuZ2Vz
+IHNpbmNlIHYyOgo+ID4gCj4gPiAtIFVwZGF0ZSB0aGUgU1BEWCBoZWFkZXJzIHRvIHVzZSBDLXN0
+eWxlIGNvbW1lbnRzIGluIGhlYWRlciBmaWxlcwo+ID4gLSBSZW1vdmVkIHRoZSBtYW51YWxseSBj
+cmVhdGVkIF9fbG9jYWxfZml4dXBzX18gbm9kZQo+ID4gLSBQZXJmb3JtIG1hbnVhbCBmaXh1cHMg
+b24gbGl2ZSBEVCBpbnN0ZWFkIG9mIG92ZXJsYXkKPiA+IAo+ID4gQ2hhbmdlcyBzaW5jZSB2MToK
+PiA+IAo+ID4gLSBTZWxlY3QgT0ZfRkxBVFRSRUUKPiA+IC0gQ29tcGlsZSBMVkRTIERUIGJpbmRp
+bmdzIHBhdGNoIGNvZGUgd2hlbiBEUk1fUkNBUl9MVkRTIGlzIHNlbGVjdGVkCj4gPiAtIFVwZGF0
+ZSB0aGUgU1BEWCBoZWFkZXJzIHRvIHVzZSBHUEwtMi4wIGluc3RlYWQgb2YgR1BMLTIuMC1vbmx5
+Cj4gPiAtIFR1cm4gX19kdGJfcmNhcl9kdV9vZl9sdmRzXyhiZWdpbnxlbmQpIGZyb20gdTggdG8g
+Y2hhcgo+ID4gLSBQYXNzIHZvaWQgYmVnaW4gYW5kIGVuZCBwb2ludGVycyB0byByY2FyX2R1X29m
+X2dldF9vdmVybGF5KCkKPiA+IC0gVXNlIG9mX2dldF9wYXJlbnQoKSBpbnN0ZWFkIG9mIGFjY2Vz
+c2luZyB0aGUgcGFyZW50IHBvaW50ZXIgZGlyZWN0bHkKPiA+IC0gRmluZCB0aGUgTFZEUyBlbmRw
+b2ludHMgbm9kZXMgYmFzZWQgb24gdGhlIExWRFMgbm9kZSBpbnN0ZWFkIG9mIHRoZQo+ID4gCj4g
+PiAgIHJvb3Qgb2YgdGhlIG92ZXJsYXkKPiA+IAo+ID4gLSBVcGRhdGUgdG8gdGhlIDxzb2M+LWx2
+ZHMgY29tcGF0aWJsZSBzdHJpbmcgZm9ybWF0Cj4gPiAtLS0KPiA+IAo+ID4gIGRyaXZlcnMvZ3B1
+L2RybS9yY2FyLWR1L0tjb25maWcgICAgICAgICAgICAgICAgICAgIHwgICAyICsKPiA+ICBkcml2
+ZXJzL2dwdS9kcm0vcmNhci1kdS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICB8ICAgNyArLQo+
+ID4gIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuYyAgICAgICAgICAgICAgIHwg
+MzQyICsrKysrKysrKysrKysrKysKPiA+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1
+X29mLmggICAgICAgICAgICAgICB8ICAyMCArKwo+ID4gIC4uLi9ncHUvZHJtL3JjYXItZHUvcmNh
+cl9kdV9vZl9sdmRzX3I4YTc3OTAuZHRzICAgIHwgIDc5ICsrKysrCj4gPiAgLi4uL2dwdS9kcm0v
+cmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5MS5kdHMgICAgfCAgNTMgKysrKwo+ID4gIC4u
+Li9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTMuZHRzICAgIHwgIDUzICsr
+KysKPiA+ICAuLi4vZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3Nzk1LmR0cyAg
+ICB8ICA1MyArKysrCj4gPiAgLi4uL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhh
+Nzc5Ni5kdHMgICAgfCAgNTMgKysrKwo+ID4gIDkgZmlsZXMgY2hhbmdlZCwgNjYxIGluc2VydGlv
+bnMoKyksIDEgZGVsZXRpb24oLSkKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5jCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuaAo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5MC5kdHMKPiA+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4
+YTc3OTEuZHRzCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
+L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkzLmR0cwo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5NS5kdHMKPiA+ICBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4
+YTc3OTYuZHRzCgpbc25pcF0KCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JjYXIt
+ZHUvcmNhcl9kdV9vZi5jCj4gPiBiL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2Yu
+YyBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5hYzQ0MmRkZmVk
+MTYKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3Jj
+YXJfZHVfb2YuYwoKW3NuaXBdCgo+ID4gK3N0YXRpYyBpbnQgX19pbml0IHJjYXJfZHVfb2ZfYXBw
+bHlfb3ZlcmxheShjb25zdCBzdHJ1Y3QKPiA+IHJjYXJfZHVfb2Zfb3ZlcmxheSAqZHRicywKPiA+
+ICsJCQkJCSAgIGNvbnN0IGNoYXIgKmNvbXBhdGlibGUpCj4gPiArewo+ID4gKwljb25zdCBzdHJ1
+Y3QgcmNhcl9kdV9vZl9vdmVybGF5ICpkdGIgPSBOVUxMOwo+ID4gKwlzdHJ1Y3QgZGV2aWNlX25v
+ZGUgKm5vZGUgPSBOVUxMOwo+ID4gKwl1bnNpZ25lZCBpbnQgaTsKPiA+ICsJaW50IG92Y3NfaWQ7
+Cj4gPiArCXZvaWQgKmRhdGE7Cj4gPiArCXZvaWQgKm1lbTsKPiA+ICsJaW50IHJldDsKPiA+ICsK
+PiA+ICsJZm9yIChpID0gMDsgZHRic1tpXS5jb21wYXRpYmxlOyArK2kpIHsKPiA+ICsJCWlmICgh
+c3RyY21wKGR0YnNbaV0uY29tcGF0aWJsZSwgY29tcGF0aWJsZSkpIHsKPiA+ICsJCQlkdGIgPSAm
+ZHRic1tpXTsKPiA+ICsJCQlicmVhazsKPiA+ICsJCX0KPiA+ICsJfQo+ID4gKwo+ID4gKwlpZiAo
+IWR0YikKPiA+ICsJCXJldHVybiAtRU5PREVWOwo+IAo+IF9fSWZfXyBteSBvdmVybGF5IHBhdGNo
+ZXMgYXJlIGFjY2VwdGVkLCB0aGlzIGJsb2NrOgo+IAo+ID4gKwo+ID4gKwlkYXRhID0ga21lbWR1
+cChkdGItPmJlZ2luLCBkdGItPmVuZCAtIGR0Yi0+YmVnaW4sIEdGUF9LRVJORUwpOwo+ID4gKwlp
+ZiAoIWRhdGEpCj4gPiArCQlyZXR1cm4gLUVOT01FTTsKPiA+ICsKPiA+ICsJbWVtID0gb2ZfZmR0
+X3VuZmxhdHRlbl90cmVlKGRhdGEsIE5VTEwsICZub2RlKTsKPiA+ICsJaWYgKCFtZW0pIHsKPiA+
+ICsJCXJldCA9IC1FTk9NRU07Cj4gPiArCQlnb3RvIGRvbmU7Cj4gPiArCX0KPiA+ICsKPiA+ICsJ
+b3Zjc19pZCA9IDA7Cj4gPiArCXJldCA9IG9mX292ZXJsYXlfYXBwbHkobm9kZSwgJm92Y3NfaWQp
+Owo+ID4gKwo+ID4gK2RvbmU6Cj4gPiArCW9mX25vZGVfcHV0KG5vZGUpOwo+ID4gKwlrZnJlZShk
+YXRhKTsKPiA+ICsJa2ZyZWUobWVtKTsKPiAKPiBiZWNvbWVzOgo+IAo+IAlyZXQgPSBvZl9vdmVy
+bGF5X2ZkdF9hcHBseShkdGItPmJlZ2luLCAmb3Zjc19pZCk7CgpJIHRyaWVkIHRvIHJld29yayB0
+aGlzIHBhdGNoIGluIGEgd2F5IHRoYXQgd291bGQgbWFrZSBzd2l0Y2hpbmcgdG8gRkRUIApvdmVy
+bGF5cyBlYXN5LCBhbmQgSSdtIGdsYWQgdG8gaGVhciBJIGhhdmVuJ3QgZG9uZSBhIHRvbyBiYWQg
+am9iIDotKQoKQXJlIHlvdXIgcGF0Y2hlcyBzY2hlZHVsZWQgZm9yIG1lcmdlIGluIHY0LjE3ID8g
+SWYgc28sIGlzIGl0IHBvc3NpYmxlIHRvIGdldCAKYXBwbHkgdGhlbSBpbiBhIHN0YWJsZSBicmFu
+Y2ggb24gdG9wIG9mIHY0LjE2LXJjMSB0aGF0IGNhbiBiZSBtZXJnZWQgYXMgYSAKZGVwZW5kZW5j
+eSBmb3IgdGhpcyBzZXJpZXMgPyBUaGVyZSBhcmUgY2hhbmdlcyB0byB0aGUgUmVuZXNhcyBEVCBx
+dWV1ZWQgZm9yIAptZXJnZSBpbiB2NC4xNyB0aGF0IHdvdWxkIG1ha2UgZGVsYXlpbmcgdGhpcyBw
+YXRjaCBzZXJpZXMgdG8gdjQuMTggcXVpdGUgCnBhaW5mdWwuCgo+IElmIG15IG92ZXJsYXkgcGF0
+Y2hlcyBkbyBub3QgZXhpc3QsIHRoZXJlIGFyZSBvdGhlciBzbWFsbCBlcnJvcnMKPiBpbiB0aGUg
+Y29kZSBibG9jayBhYm92ZS4gIEknbGwgaWdub3JlIHRoZW0gZm9yIHRoZSBtb21lbnQuCj4gCj4g
+QSBxdWljayBzY2FuIG9mIHRoZSByZXN0IG9mIHRoZSBjb2RlIGxvb2tzIE9LLiAgSSdsbCByZWFk
+IHRocm91Z2ggaXQKPiBtb3JlIGNhcmVmdWxseSwgYnV0IHdhbnRlZCB0byBnZXQgdGhpcyByZXBs
+eSBvdXQgd2l0aG91dCBmdXJ0aGVyCj4gZGVsYXkuCgpUaGFuayB5b3UuCgo+ID4gKwo+ID4gKwly
+ZXR1cm4gcmV0Owo+ID4gK30KCltzbmlwXQoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0
+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
