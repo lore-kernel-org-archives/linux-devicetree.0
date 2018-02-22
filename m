@@ -1,214 +1,177 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 15/25] ASoC: qcom: qdsp6: Add support to
- q6asm dai driver
-Date: Thu, 22 Feb 2018 11:16:26 +0000
-Message-ID: <d0f42d37-ed4b-fb19-17ce-d825bb78fe40@linaro.org>
-References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
- <20180213165837.1620-16-srinivas.kandagatla@linaro.org>
- <6ea65838-f01a-ecbf-70cd-0dc9299eae80@codeaurora.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 09/19] ARM64: dts: Add R-Car Salvator-x M3-N support
+Date: Thu, 22 Feb 2018 12:39:46 +0100
+Message-ID: <CAK8P3a30pgOXvLLHe3Hb-ubPz6QeUiZKFqMZLm8Qp_7KRr7QuA@mail.gmail.com>
+References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519139541-18783-10-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdVDCga8htL+UD3P0Kzt9-OQ6hof+szGOiV9d0gwxGExqQ@mail.gmail.com>
+ <20180221171504.dac7yikrqfnjiiog@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <6ea65838-f01a-ecbf-70cd-0dc9299eae80@codeaurora.org>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rohit Kumar <rohitkr@codeaurora.org>, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, lgirdwood@gmail.com, plai@codeaurora.org, linux-kernel@vger.kernel.org, tiwai@suse.com, david.brown@linaro.org, robh+dt@kernel.org, spatakok@qti.qualcomm.com, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180221171504.dac7yikrqfnjiiog@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for your review Rohit,
-
-On 21/02/18 11:14, Rohit Kumar wrote:
-> 
-> 
-> On 2/13/2018 10:28 PM, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Wed, Feb 21, 2018 at 6:15 PM, Simon Horman <horms@verge.net.au> wrote:
+> On Tue, Feb 20, 2018 at 04:46:23PM +0100, Geert Uytterhoeven wrote:
+>> On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+>> > Add basic support for R-Car Salvator-X M3-N (R8A77965) board.
+>> >
+>> > Based on original work from:
+>> > Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>> > Magnus Damm <damm+renesas@opensource.se>
+>> >
+>> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 >>
->> This patch adds support to q6asm dai driver which configures Q6ASM 
->> streams
->> to pass pcm data.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> [..]
->> diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c 
->> b/sound/soc/qcom/qdsp6/q6asm-dai.c
->> new file mode 100644
->> index 000000000000..7c5e94b2ced4
->> --- /dev/null
->> +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
->> @@ -0,0 +1,621 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2011-2016, The Linux Foundation
->> + * Copyright (c) 2017, Linaro Limited
->> + */
->> +
->> +#include <linux/init.h>
->> +#include <linux/err.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/slab.h>
->> +#include <sound/soc.h>
->> +#include <sound/soc-dapm.h>
->> +#include <sound/pcm.h>
->> +#include <asm/dma.h>
-> [..]
->> +static struct snd_pcm_hw_constraint_list constraints_sample_rates = {
->> +    .count = ARRAY_SIZE(supported_sample_rates),
->> +    .list = supported_sample_rates,
->> +    .mask = 0,
->> +};
->> +
->> +static void event_handler(uint32_t opcode, uint32_t token,
->> +              uint32_t *payload, void *priv)
->> +{
->> +    struct q6asm_dai_rtd *prtd = priv;
->> +    struct snd_pcm_substream *substream = prtd->substream;
->> +
->> +    switch (opcode) {
->> +    case ASM_CLIENT_EVENT_CMD_RUN_DONE:
-> Need to add support for V2 version of opcodes
-Makes sense, I will add them.
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Thanks, applied with prefix updated to
+>
+> "arm64: dts: renesas:"
+>
+> There was some fuzz applying this patch, the result is as follows.
+>
+> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Subject: [PATCH] arm64: dts: renesas: Add R-Car Salvator-x M3-N support
+>
+> Add basic support for R-Car Salvator-X M3-N (R8A77965) board.
+>
+> Based on original work from:
+> Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> Magnus Damm <damm+renesas@opensource.se>
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
->> +        q6asm_write_async(prtd->audio_client,
->> +                   prtd->pcm_count, 0, 0, NO_TIMESTAMP);
->> +        break;
->> +    case ASM_CLIENT_EVENT_CMD_EOS_DONE:
->> +        prtd->state = Q6ASM_STREAM_STOPPED;
->> +        break;
->> +    case ASM_CLIENT_EVENT_DATA_WRITE_DONE: {
->> +        prtd->pcm
-> [..]
->> +
->> +static int q6asm_dai_trigger(struct snd_pcm_substream *substream, int 
->> cmd)
->> +{
->> +    int ret = 0;
->> +    struct snd_pcm_runtime *runtime = substream->runtime;
->> +    struct q6asm_dai_rtd *prtd = runtime->private_data;
->> +
->> +    switch (cmd) {
->> +    case SNDRV_PCM_TRIGGER_START:
->> +        ret = q6asm_run_nowait(prtd->audio_client, 0, 0, 0);
->> +        break;
-> below two cases can be combined with START if no change
-Yep, I will do that in next version.
+Something went wrong with this patch, I suspect it's missing some prerequisites
+that fill in a few more device nodes to avoid these warnings in linux-next:
 
->> +    case SNDRV_PCM_TRIGGER_RESUME:
->> +    case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
->> +        ret = q6asm_run_nowait(prtd->audio_client, 0, 0, 0);
->> +        break;
->> +    case SNDRV_PCM_TRIGGER_STOP:
->> +        prtd->state = Q6ASM_STREAM_STOPPED;
->> +        ret = q6asm_cmd_nowait(prtd->audio_client, CMD_EOS);
->> +        break;
->> +    case SNDRV_PCM_TRIGGER_SUSPEND:
->> +    case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
->> +        ret = q6asm_cmd_nowait(prtd->audio_client, CMD_PAUSE);
->> +        break;
->> +    default:
->> +        ret = -EINVAL;
->> +        break;
->> +    }
->> +
->> +    return ret;
->> +}
->> +
->> +static int q6asm_dai_open(struct snd_pcm_substream *substream)
->> +{
->> +    struct snd_pcm_runtime *runtime = substream->runtime;
->> +    struct snd_soc_pcm_runtime *soc_prtd = substream->private_data;
->> +    struct snd_soc_dai *cpu_dai = soc_prtd->cpu_dai;
->> +
->> +    struct q6asm_dai_rtd *prtd;
->> +    struct q6asm_dai_data *pdata;
->> +    struct device *dev = soc_prtd->platform->dev;
->> +    int ret = 0;
->> +    int stream_id;
->> +
->> +    stream_id = cpu_dai->driver->id;
->> +
->> +    pdata = q6asm_get_dai_data(dev);
->> +    if (!pdata) {
->> +        pr_err("Platform data not found ..\n");
->> +        return -EINVAL;
->> +    }
->> +
->> +    prtd = kzalloc(sizeof(struct q6asm_dai_rtd), GFP_KERNEL);
->> +    if (prtd == NULL)
->> +        return -ENOMEM;
->> +
->> +    prtd->substream = substream;
->> +    prtd->audio_client = q6asm_audio_client_alloc(dev,
->> +                (q6asm_cb)event_handler, prtd, stream_id);
->> +    if (!prtd->audio_client) {
->> +        pr_info("%s: Could not allocate memory\n", __func__);
->> +        kfree(prtd);
->> +        return -ENOMEM;
->> +    }
->> +
->> +//    prtd->audio_client->dev = dev;
-> cleanup this
-Sure!
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/ethernet@e6800000/ethernet-phy@0
+has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/i2c@e6510000/codec@10 has invalid
+length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/i2c@e6510000/clk_multiplier@4f
+has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/i2c@e66d8000/gpio@20 has invalid
+length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/i2c@e66d8000/adc@7c has invalid
+length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/i2c@e66d8000/adc@7f has invalid
+length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/i2c@e66d8000/clock-generator@6a
+has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/i2c@e60b0000/pmic@30 has invalid
+length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/display@feb00000/ports/port@0 has
+invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/display@feb00000/ports/port@1 has
+invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(reg_format): "reg" property in /soc/display@feb00000/ports/port@2 has
+invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/ethernet@e6800000/ethernet-phy@0
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/ethernet@e6800000/ethernet-phy@0
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/i2c@e6510000/codec@10
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/i2c@e6510000/codec@10
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/i2c@e6510000/clk_multiplier@4f
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/i2c@e6510000/clk_multiplier@4f
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/i2c@e66d8000/gpio@20
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/i2c@e66d8000/gpio@20
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/i2c@e66d8000/adc@7c
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/i2c@e66d8000/adc@7c
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/i2c@e66d8000/adc@7f
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/i2c@e66d8000/adc@7f
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/i2c@e66d8000/clock-generator@6a
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/i2c@e66d8000/clock-generator@6a
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/i2c@e60b0000/pmic@30
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/i2c@e60b0000/pmic@30
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/display@feb00000/ports/port@0
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/display@feb00000/ports/port@0
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/display@feb00000/ports/port@1
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/display@feb00000/ports/port@1
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #address-cells value for
+/soc/display@feb00000/ports/port@2
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(avoid_default_addr_size): Relying on default #size-cells value for
+/soc/display@feb00000/ports/port@2
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(phys_property): Missing property '#phy-cells' in node
+/soc/usb-phy@e65ee000 or bad phandle (referred from
+/soc/usb@ee020000:phys[0])
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(pwms_property): Missing property '#pwm-cells' in node
+/soc/pwm@e6e31000 or bad phandle (referred from /backlight:pwms[0])
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(interrupts_property): Missing interrupt-controller or interrupt-map
+property in /soc/interrupt-controller@e61c0000
+arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+(interrupts_property): Missing #interrupt-cells in interrupt-parent
+/soc/interrupt-controller@e61c0000
 
->> +
->> +    if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
->> +        runtime->hw = q6asm_dai_hardware_playback;
->> +
->> +    ret = snd_pcm_hw_constraint_list(runtime, 0,
->> +                SNDRV_PCM_HW_PARAM_RATE,
->> +                &constraints_sample_rates);
-> [..]
->> +
->> +static int q6asm_dai_pcm_new(struct snd_soc_pcm_runtime *rtd)
->> +{
->> +    struct snd_pcm_substream *substream;
->> +    struct of_phandle_args args;
->> +    struct device_node *node;
->> +    struct q6asm_dai_data *pdata;
->> +    struct snd_pcm *pcm = rtd->pcm;
->> +    struct device *dev;
->> +    int size, ret;
->> +
->> +    dev = rtd->platform->dev->parent;
->> +    node = dev->of_node;
->> +    pdata = q6asm_get_dai_data(rtd->platform->dev);
->> +
->> +    ret = of_parse_phandle_with_fixed_args(node, "iommus", 1, 0, &args);
->> +    if (ret < 0)
->> +        pdata->sid = -1;
->> +    else
->> +        pdata->sid = args.args[0];
->> +
->> +
->> +
-> iommus for sdm845 is 16bit value. we need to have sid_mask which is 0x1 
-> in sdm845. We need to mask sid with 0x1 to get proper sid.
-> pdata->sid &= 0x1;
+Maybe just take out the patch adding the .dts file for the time being until
+the important nodes are all in place?
 
-Okay, I will take closer look at sdm845 and other socs, and make it more 
-generic in next version.
-
-
-
->> +    substream = pcm->streams[SNDRV_PCM_STREAM_PLAYBACK].substream;
->> +    size = q6asm_dai_hardware_playback.buffer_bytes_max;
->> +    ret = snd_dma_alloc_pages(SNDRV_DMA_TYPE_DEV, dev, size,
->> +                  &substream->dma_buffer);
->> +    if (ret)
->> +        dev_err(dev, "Cannot allocate buffer(s)\n");
->> +
->> +    return ret;
->> +}
->> +
-> 
-> 
+        Arnd
