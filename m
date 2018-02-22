@@ -1,15 +1,19 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 16/25] arm: zx: dts: Remove leading 0x and 0s from
- bindings notation
-Date: Thu, 22 Feb 2018 17:39:35 +0100
-Message-ID: <CAK8P3a3KCfjDOGGNCYgX5LkAJi0UaaVUWOJVg=y61G-BB=_T=Q@mail.gmail.com>
-References: <20171215124649.30692-1-malat@debian.org>
- <20171226080312.GE23070@X250>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v2 1/8] [PATCH 1/8] drivers/peci: Add support for PECI bus
+ driver core
+Date: Thu, 22 Feb 2018 09:20:47 -0800
+Message-ID: <9bd825f4-8497-4e2a-b8ea-56888df754e7@linux.intel.com>
+References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
+ <20180221161606.32247-2-jae.hyun.yoo@linux.intel.com>
+ <20180221175853.GA22320@kroah.com>
+ <7f152459-a232-e62a-3c34-e995f8c85d63@linux.intel.com>
+ <20180222065455.GA2428@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171226080312.GE23070@X250>
+In-Reply-To: <20180222065455.GA2428@kroah.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,49 +23,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Mathieu Malaterre <malat@debian.org>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Jun Nie <jun.nie@linaro.org>, Baoyou Xie <baoyou.xie@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-hwmon@vger.kernel.org, andrew@lunn.ch, jdelvare@suse.com, arnd@arndb.de, linux-doc@vger.kernel.org, andrew@aj.id.au, benh@kernel.crashing.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, joel@jms.id.au, linux@roeck-us.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 26, 2017 at 9:03 AM, Shawn Guo <shawnguo@kernel.org> wrote:
-> On Fri, Dec 15, 2017 at 01:46:48PM +0100, Mathieu Malaterre wrote:
->> Improve the DTS files by removing all the leading "0x" and zeros to fix the
->> following dtc warnings:
+On 2/21/2018 10:54 PM, Greg KH wrote:
+> On Wed, Feb 21, 2018 at 12:42:30PM -0800, Jae Hyun Yoo wrote:
+>> On 2/21/2018 9:58 AM, Greg KH wrote:
+>>> On Wed, Feb 21, 2018 at 08:15:59AM -0800, Jae Hyun Yoo wrote:
+>>>> This commit adds driver implementation for PECI bus into linux
+>>>> driver framework.
+>>>>
+>>>> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+>>>> ---
+>>>
+>>> Why is there no other Intel developers willing to review and sign off on
+>>> this patch?  Please get their review first before asking us to do their
+>>> work for them :)
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>>
 >>
->> Warning (unit_address_format): Node /XXX unit name should not have leading "0x"
+>> Hi Greg,
 >>
->> and
->>
->> Warning (unit_address_format): Node /XXX unit name should not have leading 0s
->>
->> Converted using the following command:
->>
->> find . -type f \( -iname *.dts -o -iname *.dtsi \) -exec sed -i -e "s/@\([0-9a-fA-FxX\.;:#]+\)\s*{/@\L\1 {/g" -e "s/@0x\(.*\) {/@\1 {/g" -e "s/@0+\(.*\) {/@\1 {/g" {} +^C
->>
->> For simplicity, two sed expressions were used to solve each warnings separately.
->>
->> To make the regex expression more robust a few other issues were resolved,
->> namely setting unit-address to lower case, and adding a whitespace before the
->> the opening curly brace:
->>
->> https://elinux.org/Device_Tree_Linux#Linux_conventions
->>
->> This will solve as a side effect warning:
->>
->> Warning (simple_bus_reg): Node /XXX@<UPPER> simple-bus unit address format error, expected "<lower>"
->>
->> This is a follow up to commit 4c9847b7375a ("dt-bindings: Remove leading 0x from bindings notation")
->>
->> Reported-by: David Daney <ddaney@caviumnetworks.com>
->> Suggested-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Mathieu Malaterre <malat@debian.org>
->
-> Hi Arnd, Olof,
->
-> I do not have any other ZTE ZX platform patches to send you.  Is it okay
-> to send this one using IMX branch, or can you apply it to arm-soc
-> directly?
+>> This patch set got our internal review process. Sorry if it's code quality
+>> is under your expectation but it's the reason why I'm asking you to review
+>> the code. Could you please share your time to review it?
+> 
+> Nope.  If no other Intel developer thinks it is good enough to put their
+> name on it as part of their review process, why should I?
+> 
+> Again, please use the resources you have, to fix the obvious problems in
+> your code, BEFORE asking the community to do that work for you.
+> 
+> greg k-h
+> 
 
-Applied to fixes now, thanks and sorry for the delay.
+Okay. I'll take our internal review process again on this patch set and 
+collect more credit tags before submitting v3.
 
-      Arnd
+Thanks for your advice!
+
+Jae
