@@ -1,683 +1,177 @@
-Return-Path: <SRS0=FvkB=FS=linaro.org=baolin.wang@kernel.org>
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v2 2/3] gpio: Add Spreadtrum EIC driver support
-Date: Sat, 24 Feb 2018 18:44:19 +0800
-Message-Id: <2e9852f21fcc6213bdb1cef0c473b9d002ad5670.1519468782.git.baolin.wang@linaro.org>
-In-Reply-To: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
-References: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
-In-Reply-To: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
-References: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, andy.shevchenko@gmail.com
+Return-Path: <SRS0=VmpS=FQ=ettus.com=moritz.fischer@kernel.org>
+Date: Thu, 22 Feb 2018 09:30:08 -0800
+From: Moritz Fischer <mdf@kernel.org>
+Subject: Re: [PATCH] dt-bindings: fpga: Consolidate bridge properties
+Message-ID: <20180222173008.GA12391@tyrael.ni.corp.natinst.com>
+References: <20180221173306.17265-1-mdf@kernel.org>
+ <8751fd85-fc84-f422-94e7-dd5689cb6922@xilinx.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Content-Disposition: inline
+In-Reply-To: <8751fd85-fc84-f422-94e7-dd5689cb6922@xilinx.com>
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, atull@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The Spreadtrum digital-chip EIC controller has 4 sub-modules: debounce EIC,
-latch EIC, async EIC and sync EIC, and each sub-module can has multiple
-banks and each bank contains 8 EICs.
 
-Each EIC can only be used as input mode, and has the capability to trigger
-interrupts when detecting input signals.
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
-Changes since v1:
- - Add OF_GPIO dependency.
- - Fix some typos and grammar issues.
- - Simplify the sprd_eic_update() and sprd_eic_read().
- - Rename 'sprd_eic_data' to 'sprd_eic_variant_data'.
- - Rename sprd_eic_group_base() to sprd_eic_offset_base().
- - Split the PMIC EIC support into one separate driver.
- - Return -EIO for sprd_eic_direction_input().
- - Other optimization.
----
- drivers/gpio/Kconfig         |    8 +
- drivers/gpio/Makefile        |    1 +
- drivers/gpio/gpio-eic-sprd.c |  606 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 615 insertions(+)
- create mode 100644 drivers/gpio/gpio-eic-sprd.c
+On Thu, Feb 22, 2018 at 08:12:19AM +0100, Michal Simek wrote:
+> On 21.2.2018 18:33, Moritz Fischer wrote:
+> > Consolidate bridge properties in a single file, instead of duplicating
+> > the same optional property over and over again.
+> >=20
+> > Signed-off-by: Moritz Fischer <mdf@kernel.org>
+> > Cc: Alan Tull <atull@kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > ---
+> >  .../devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt |  5 +----
+> >  .../devicetree/bindings/fpga/altera-freeze-bridge.txt     |  5 +----
+> >  .../devicetree/bindings/fpga/altera-hps2fpga-bridge.txt   |  5 +----
+> >  Documentation/devicetree/bindings/fpga/fpga-bridge.txt    | 15 +++++++=
+++++++++
+> >  .../devicetree/bindings/fpga/xilinx-pr-decoupler.txt      |  8 ++------
+> >  5 files changed, 20 insertions(+), 18 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/fpga-bridge.=
+txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-b=
+ridge.txt b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge=
+=2Etxt
+> > index 817a8d4bf903..5dd0ff0f7b4e 100644
+> > --- a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.t=
+xt
+> > +++ b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.t=
+xt
+> > @@ -3,10 +3,7 @@ Altera FPGA To SDRAM Bridge Driver
+> >  Required properties:
+> >  - compatible		: Should contain "altr,socfpga-fpga2sdram-bridge"
+> > =20
+> > -Optional properties:
+> > -- bridge-enable		: 0 if driver should disable bridge at startup
+> > -			  1 if driver should enable bridge at startup
+> > -			  Default is to leave bridge in current state.
+> > +See Documentation/devicetree/bindings/fpga/fpga-bridge.txt for generic=
+ bindings.
+> > =20
+> >  Example:
+> >  	fpga_bridge3: fpga-bridge@ffc25080 {
+> > diff --git a/Documentation/devicetree/bindings/fpga/altera-freeze-bridg=
+e.txt b/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
+> > index f8e288c71b2d..8b26fbcff3c6 100644
+> > --- a/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
+> > +++ b/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
+> > @@ -10,10 +10,7 @@ Required properties:
+> >  - compatible		: Should contain "altr,freeze-bridge-controller"
+> >  - regs			: base address and size for freeze bridge module
+> > =20
+> > -Optional properties:
+> > -- bridge-enable		: 0 if driver should disable bridge at startup
+> > -			  1 if driver should enable bridge at startup
+> > -			  Default is to leave bridge in current state.
+> > +See Documentation/devicetree/bindings/fpga/fpga-bridge.txt for generic=
+ bindings.
+> > =20
+> >  Example:
+> >  	freeze-controller@100000450 {
+> > diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bri=
+dge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> > index 6406f9337eeb..68cce3945b10 100644
+> > --- a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> > +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> > @@ -9,10 +9,7 @@ Required properties:
+> >  - resets	: Phandle and reset specifier for this bridge's reset
+> >  - clocks	: Clocks used by this module.
+> > =20
+> > -Optional properties:
+> > -- bridge-enable	: 0 if driver should disable bridge at startup.
+> > -		  1 if driver should enable bridge at startup.
+> > -		  Default is to leave bridge in its current state.
+> > +See Documentation/devicetree/bindings/fpga/fpga-bridge.txt for generic=
+ bindings.
+> > =20
+> >  Example:
+> >  	fpga_bridge0: fpga-bridge@ff400000 {
+> > diff --git a/Documentation/devicetree/bindings/fpga/fpga-bridge.txt b/D=
+ocumentation/devicetree/bindings/fpga/fpga-bridge.txt
+> > new file mode 100644
+> > index 000000000000..82607b23a287
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/fpga-bridge.txt
+> > @@ -0,0 +1,15 @@
+> > +FPGA Bridge Device Tree Binding
+> > +
+> > +Moritz Fischer 2018 (Consolidated from previous bindings)
+>=20
+> nit: I would remove your name and year - it is visible from git log.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index a64b29d..c937407 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -159,6 +159,14 @@ config GPIO_DWAPB
- 	  Say Y or M here to build support for the Synopsys DesignWare APB
- 	  GPIO block.
- 
-+config GPIO_EIC_SPRD
-+	tristate "Spreadtrum EIC support"
-+	depends on ARCH_SPRD || COMPILE_TEST
-+	depends on OF_GPIO
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say yes here to support Spreadtrum EIC device.
-+
- config GPIO_EM
- 	tristate "Emma Mobile GPIO"
- 	depends on (ARCH_EMEV2 || COMPILE_TEST) && OF_GPIO
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 2e3d320..66eaa9e 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -44,6 +44,7 @@ obj-$(CONFIG_GPIO_DA9055)	+= gpio-da9055.o
- obj-$(CONFIG_GPIO_DAVINCI)	+= gpio-davinci.o
- obj-$(CONFIG_GPIO_DLN2)		+= gpio-dln2.o
- obj-$(CONFIG_GPIO_DWAPB)	+= gpio-dwapb.o
-+obj-$(CONFIG_GPIO_EIC_SPRD)	+= gpio-eic-sprd.o
- obj-$(CONFIG_GPIO_EM)		+= gpio-em.o
- obj-$(CONFIG_GPIO_EP93XX)	+= gpio-ep93xx.o
- obj-$(CONFIG_GPIO_ETRAXFS)	+= gpio-etraxfs.o
-diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-new file mode 100644
-index 0000000..ce00455e
---- /dev/null
-+++ b/drivers/gpio/gpio-eic-sprd.c
-@@ -0,0 +1,606 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2018 Spreadtrum Communications Inc.
-+ * Copyright (C) 2018 Linaro Ltd.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+
-+/* EIC registers definition */
-+#define SPRD_EIC_DBNC_DATA		0x0
-+#define SPRD_EIC_DBNC_DMSK		0x4
-+#define SPRD_EIC_DBNC_IEV		0x14
-+#define SPRD_EIC_DBNC_IE		0x18
-+#define SPRD_EIC_DBNC_RIS		0x1c
-+#define SPRD_EIC_DBNC_MIS		0x20
-+#define SPRD_EIC_DBNC_IC		0x24
-+#define SPRD_EIC_DBNC_TRIG		0x28
-+#define SPRD_EIC_DBNC_CTRL0		0x40
-+
-+#define SPRD_EIC_LATCH_INTEN		0x0
-+#define SPRD_EIC_LATCH_INTRAW		0x4
-+#define SPRD_EIC_LATCH_INTMSK		0x8
-+#define SPRD_EIC_LATCH_INTCLR		0xc
-+#define SPRD_EIC_LATCH_INTPOL		0x10
-+#define SPRD_EIC_LATCH_INTMODE		0x14
-+
-+#define SPRD_EIC_ASYNC_INTIE		0x0
-+#define SPRD_EIC_ASYNC_INTRAW		0x4
-+#define SPRD_EIC_ASYNC_INTMSK		0x8
-+#define SPRD_EIC_ASYNC_INTCLR		0xc
-+#define SPRD_EIC_ASYNC_INTMODE		0x10
-+#define SPRD_EIC_ASYNC_INTBOTH		0x14
-+#define SPRD_EIC_ASYNC_INTPOL		0x18
-+#define SPRD_EIC_ASYNC_DATA		0x1c
-+
-+#define SPRD_EIC_SYNC_INTIE		0x0
-+#define SPRD_EIC_SYNC_INTRAW		0x4
-+#define SPRD_EIC_SYNC_INTMSK		0x8
-+#define SPRD_EIC_SYNC_INTCLR		0xc
-+#define SPRD_EIC_SYNC_INTMODE		0x10
-+#define SPRD_EIC_SYNC_INTBOTH		0x14
-+#define SPRD_EIC_SYNC_INTPOL		0x18
-+#define SPRD_EIC_SYNC_DATA		0x1c
-+
-+/*
-+ * The digital-chip EIC controller can support maximum 3 banks, and each bank
-+ * contains 8 EICs.
-+ */
-+#define SPRD_EIC_MAX_BANK		3
-+#define SPRD_EIC_PER_BANK_NR		8
-+#define SPRD_EIC_DATA_MASK		GENMASK(7, 0)
-+#define SPRD_EIC_BIT(x)			((x) & (SPRD_EIC_PER_BANK_NR - 1))
-+#define SPRD_EIC_DBNC_MASK		GENMASK(11, 0)
-+
-+/*
-+ * The Spreadtrum EIC (external interrupt controller) can be used only in
-+ * input mode to generate interrupts if detecting input signals.
-+ *
-+ * The Spreadtrum digital-chip EIC controller contains 4 sub-modules:
-+ * debounce EIC, latch EIC, async EIC and sync EIC,
-+ *
-+ * The debounce EIC is used to capture the input signals' stable status
-+ * (millisecond resolution) and a single-trigger mechanism is introduced
-+ * into this sub-module to enhance the input event detection reliability.
-+ * The debounce range is from 1ms to 4s with a step size of 1ms.
-+ *
-+ * The latch EIC is used to latch some special power down signals and
-+ * generate interrupts, since the latch EIC does not depend on the APB clock
-+ * to capture signals.
-+ *
-+ * The async EIC uses a 32k clock to capture the short signals (microsecond
-+ * resolution) to generate interrupts by level or edge trigger.
-+ *
-+ * The EIC-sync is similar with GPIO's input function, which is a synchronized
-+ * signal input register.
-+ */
-+enum sprd_eic_type {
-+	SPRD_EIC_DEBOUNCE,
-+	SPRD_EIC_LATCH,
-+	SPRD_EIC_ASYNC,
-+	SPRD_EIC_SYNC,
-+	SPRD_EIC_MAX,
-+};
-+
-+struct sprd_eic {
-+	struct gpio_chip chip;
-+	struct irq_chip intc;
-+	void __iomem *base[SPRD_EIC_MAX_BANK];
-+	enum sprd_eic_type type;
-+	spinlock_t lock;
-+	int irq;
-+};
-+
-+struct sprd_eic_variant_data {
-+	enum sprd_eic_type type;
-+	u32 num_eics;
-+};
-+
-+static const char *sprd_eic_label_name[SPRD_EIC_MAX] = {
-+	"eic-debounce", "eic-latch", "eic-async",
-+	"eic-sync",
-+};
-+
-+static const struct sprd_eic_variant_data sc9860_eic_dbnc_data = {
-+	.type = SPRD_EIC_DEBOUNCE,
-+	.num_eics = 8,
-+};
-+
-+static const struct sprd_eic_variant_data sc9860_eic_latch_data = {
-+	.type = SPRD_EIC_LATCH,
-+	.num_eics = 8,
-+};
-+
-+static const struct sprd_eic_variant_data sc9860_eic_async_data = {
-+	.type = SPRD_EIC_ASYNC,
-+	.num_eics = 8,
-+};
-+
-+static const struct sprd_eic_variant_data sc9860_eic_sync_data = {
-+	.type = SPRD_EIC_SYNC,
-+	.num_eics = 8,
-+};
-+
-+static inline void __iomem *sprd_eic_offset_base(struct sprd_eic *sprd_eic,
-+						 unsigned int bank)
-+{
-+	if (bank >= SPRD_EIC_MAX_BANK)
-+		return NULL;
-+
-+	return sprd_eic->base[bank];
-+}
-+
-+static void sprd_eic_update(struct gpio_chip *chip, unsigned int offset,
-+			    u16 reg, unsigned int val)
-+{
-+	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
-+	void __iomem *base =
-+		sprd_eic_offset_base(sprd_eic, offset / SPRD_EIC_PER_BANK_NR);
-+	unsigned long flags;
-+	u32 tmp;
-+
-+	spin_lock_irqsave(&sprd_eic->lock, flags);
-+	tmp = readl_relaxed(base + reg);
-+
-+	if (val)
-+		tmp |= BIT(SPRD_EIC_BIT(offset));
-+	else
-+		tmp &= ~BIT(SPRD_EIC_BIT(offset));
-+
-+	writel_relaxed(tmp, base + reg);
-+	spin_unlock_irqrestore(&sprd_eic->lock, flags);
-+}
-+
-+static int sprd_eic_read(struct gpio_chip *chip, unsigned int offset, u16 reg)
-+{
-+	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
-+	void __iomem *base =
-+		sprd_eic_offset_base(sprd_eic, offset / SPRD_EIC_PER_BANK_NR);
-+
-+	return !!(readl_relaxed(base + reg) & BIT(SPRD_EIC_BIT(offset)));
-+}
-+
-+static int sprd_eic_request(struct gpio_chip *chip, unsigned int offset)
-+{
-+	sprd_eic_update(chip, offset, SPRD_EIC_DBNC_DMSK, 1);
-+	return 0;
-+}
-+
-+static void sprd_eic_free(struct gpio_chip *chip, unsigned int offset)
-+{
-+	sprd_eic_update(chip, offset, SPRD_EIC_DBNC_DMSK, 0);
-+}
-+
-+static int sprd_eic_get(struct gpio_chip *chip, unsigned int offset)
-+{
-+	return sprd_eic_read(chip, offset, SPRD_EIC_DBNC_DATA);
-+}
-+
-+static int sprd_eic_direction_input(struct gpio_chip *chip, unsigned int offset)
-+{
-+	/* EICs are always input, nothing need to do here. */
-+	return 0;
-+}
-+
-+static void sprd_eic_set(struct gpio_chip *chip, unsigned int offset, int value)
-+{
-+	/* EICs are always input, nothing need to do here. */
-+}
-+
-+static int sprd_eic_set_debounce(struct gpio_chip *chip, unsigned int offset,
-+				 unsigned int debounce)
-+{
-+	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
-+	void __iomem *base =
-+		sprd_eic_offset_base(sprd_eic, offset / SPRD_EIC_PER_BANK_NR);
-+	u32 reg = SPRD_EIC_DBNC_CTRL0 + SPRD_EIC_BIT(offset) * 0x4;
-+	u32 value = readl_relaxed(base + reg) & ~SPRD_EIC_DBNC_MASK;
-+
-+	value |= debounce / 1000;
-+	writel_relaxed(value, base + reg);
-+
-+	return 0;
-+}
-+
-+static int sprd_eic_set_config(struct gpio_chip *chip, unsigned int offset,
-+			       unsigned long config)
-+{
-+	unsigned long param = pinconf_to_config_param(config);
-+	u32 arg = pinconf_to_config_argument(config);
-+
-+	if (param == PIN_CONFIG_INPUT_DEBOUNCE)
-+		return sprd_eic_set_debounce(chip, offset, arg);
-+
-+	return -ENOTSUPP;
-+}
-+
-+static void sprd_eic_irq_mask(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
-+	u32 offset = irqd_to_hwirq(data);
-+
-+	switch (sprd_eic->type) {
-+	case SPRD_EIC_DEBOUNCE:
-+		sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IE, 0);
-+		sprd_eic_update(chip, offset, SPRD_EIC_DBNC_TRIG, 0);
-+		break;
-+	case SPRD_EIC_LATCH:
-+		sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTEN, 0);
-+		break;
-+	case SPRD_EIC_ASYNC:
-+		sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTIE, 0);
-+		break;
-+	case SPRD_EIC_SYNC:
-+		sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTIE, 0);
-+		break;
-+	default:
-+		dev_err(chip->parent, "Unsupported EIC type.\n");
-+	}
-+}
-+
-+static void sprd_eic_irq_unmask(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
-+	u32 offset = irqd_to_hwirq(data);
-+
-+	switch (sprd_eic->type) {
-+	case SPRD_EIC_DEBOUNCE:
-+		sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IE, 1);
-+		sprd_eic_update(chip, offset, SPRD_EIC_DBNC_TRIG, 1);
-+		break;
-+	case SPRD_EIC_LATCH:
-+		sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTEN, 1);
-+		break;
-+	case SPRD_EIC_ASYNC:
-+		sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTIE, 1);
-+		break;
-+	case SPRD_EIC_SYNC:
-+		sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTIE, 1);
-+		break;
-+	default:
-+		dev_err(chip->parent, "Unsupported EIC type.\n");
-+	}
-+}
-+
-+static void sprd_eic_irq_ack(struct irq_data *data)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
-+	u32 offset = irqd_to_hwirq(data);
-+
-+	switch (sprd_eic->type) {
-+	case SPRD_EIC_DEBOUNCE:
-+		sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IC, 1);
-+		break;
-+	case SPRD_EIC_LATCH:
-+		sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTCLR, 1);
-+		break;
-+	case SPRD_EIC_ASYNC:
-+		sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
-+		break;
-+	case SPRD_EIC_SYNC:
-+		sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
-+		break;
-+	default:
-+		dev_err(chip->parent, "Unsupported EIC type.\n");
-+	}
-+}
-+
-+static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-+	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
-+	u32 offset = irqd_to_hwirq(data);
-+
-+	switch (sprd_eic->type) {
-+	case SPRD_EIC_DEBOUNCE:
-+		switch (flow_type) {
-+		case IRQ_TYPE_LEVEL_HIGH:
-+			sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IEV, 1);
-+			break;
-+		case IRQ_TYPE_LEVEL_LOW:
-+			sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IEV, 0);
-+			break;
-+		default:
-+			return -ENOTSUPP;
-+		}
-+
-+		irq_set_handler_locked(data, handle_level_irq);
-+		break;
-+	case SPRD_EIC_LATCH:
-+		switch (flow_type) {
-+		case IRQ_TYPE_LEVEL_HIGH:
-+			sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTPOL, 0);
-+			break;
-+		case IRQ_TYPE_LEVEL_LOW:
-+			sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTPOL, 1);
-+			break;
-+		default:
-+			return -ENOTSUPP;
-+		}
-+
-+		irq_set_handler_locked(data, handle_level_irq);
-+		break;
-+	case SPRD_EIC_ASYNC:
-+		switch (flow_type) {
-+		case IRQ_TYPE_EDGE_RISING:
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 1);
-+			irq_set_handler_locked(data, handle_edge_irq);
-+			break;
-+		case IRQ_TYPE_EDGE_FALLING:
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 0);
-+			irq_set_handler_locked(data, handle_edge_irq);
-+			break;
-+		case IRQ_TYPE_EDGE_BOTH:
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 1);
-+			irq_set_handler_locked(data, handle_edge_irq);
-+			break;
-+		case IRQ_TYPE_LEVEL_HIGH:
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 1);
-+			irq_set_handler_locked(data, handle_level_irq);
-+			break;
-+		case IRQ_TYPE_LEVEL_LOW:
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 0);
-+			irq_set_handler_locked(data, handle_level_irq);
-+			break;
-+		default:
-+			return -ENOTSUPP;
-+		}
-+		break;
-+	case SPRD_EIC_SYNC:
-+		switch (flow_type) {
-+		case IRQ_TYPE_EDGE_RISING:
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 1);
-+			irq_set_handler_locked(data, handle_edge_irq);
-+			break;
-+		case IRQ_TYPE_EDGE_FALLING:
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 0);
-+			irq_set_handler_locked(data, handle_edge_irq);
-+			break;
-+		case IRQ_TYPE_EDGE_BOTH:
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 1);
-+			irq_set_handler_locked(data, handle_edge_irq);
-+			break;
-+		case IRQ_TYPE_LEVEL_HIGH:
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 1);
-+			irq_set_handler_locked(data, handle_level_irq);
-+			break;
-+		case IRQ_TYPE_LEVEL_LOW:
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 0);
-+			irq_set_handler_locked(data, handle_level_irq);
-+			break;
-+		default:
-+			return -ENOTSUPP;
-+		}
-+	default:
-+		dev_err(chip->parent, "Unsupported EIC type.\n");
-+		return -ENOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sprd_eic_match_chip_by_type(struct gpio_chip *chip, void *data)
-+{
-+	enum sprd_eic_type type = *(enum sprd_eic_type *)data;
-+
-+	return !strcmp(chip->label, sprd_eic_label_name[type]);
-+}
-+
-+static void sprd_eic_handle_one_type(struct gpio_chip *chip)
-+{
-+	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
-+	u32 bank, n, girq;
-+
-+	for (bank = 0; bank * SPRD_EIC_PER_BANK_NR < chip->ngpio; bank++) {
-+		void __iomem *base = sprd_eic_offset_base(sprd_eic, bank);
-+		unsigned long reg;
-+
-+		switch (sprd_eic->type) {
-+		case SPRD_EIC_DEBOUNCE:
-+			reg = readl_relaxed(base + SPRD_EIC_DBNC_MIS) &
-+				SPRD_EIC_DATA_MASK;
-+			break;
-+		case SPRD_EIC_LATCH:
-+			reg = readl_relaxed(base + SPRD_EIC_LATCH_INTMSK) &
-+				SPRD_EIC_DATA_MASK;
-+			break;
-+		case SPRD_EIC_ASYNC:
-+			reg = readl_relaxed(base + SPRD_EIC_ASYNC_INTMSK) &
-+				SPRD_EIC_DATA_MASK;
-+			break;
-+		case SPRD_EIC_SYNC:
-+			reg = readl_relaxed(base + SPRD_EIC_SYNC_INTMSK) &
-+				SPRD_EIC_DATA_MASK;
-+			break;
-+		default:
-+			dev_err(chip->parent, "Unsupported EIC type.\n");
-+			return;
-+		}
-+
-+		for_each_set_bit(n, &reg, SPRD_EIC_PER_BANK_NR) {
-+			girq = irq_find_mapping(chip->irq.domain,
-+					bank * SPRD_EIC_PER_BANK_NR + n);
-+
-+			generic_handle_irq(girq);
-+		}
-+	}
-+}
-+
-+static void sprd_eic_irq_handler(struct irq_desc *desc)
-+{
-+	struct irq_chip *ic = irq_desc_get_chip(desc);
-+	struct gpio_chip *chip;
-+	enum sprd_eic_type type;
-+
-+	chained_irq_enter(ic, desc);
-+
-+	/*
-+	 * Since the digital-chip EIC 4 sub-modules (debounce, latch, async
-+	 * and sync) share one same interrupt line, we should iterate each
-+	 * EIC module to check if there are EIC interrupts were triggered.
-+	 */
-+	for (type = SPRD_EIC_DEBOUNCE; type < SPRD_EIC_MAX; type++) {
-+		chip = gpiochip_find(&type, sprd_eic_match_chip_by_type);
-+		if (!chip)
-+			continue;
-+
-+		sprd_eic_handle_one_type(chip);
-+	}
-+
-+	chained_irq_exit(ic, desc);
-+}
-+
-+static int sprd_eic_probe(struct platform_device *pdev)
-+{
-+	const struct sprd_eic_variant_data *pdata;
-+	struct gpio_irq_chip *irq;
-+	struct sprd_eic *sprd_eic;
-+	struct resource *res;
-+	int ret, i;
-+
-+	pdata = of_device_get_match_data(&pdev->dev);
-+	if (!pdata) {
-+		dev_err(&pdev->dev, "No matching driver data found.\n");
-+		return -EINVAL;
-+	}
-+
-+	sprd_eic = devm_kzalloc(&pdev->dev, sizeof(*sprd_eic), GFP_KERNEL);
-+	if (!sprd_eic)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&sprd_eic->lock);
-+	sprd_eic->type = pdata->type;
-+
-+	sprd_eic->irq = platform_get_irq(pdev, 0);
-+	if (sprd_eic->irq < 0) {
-+		dev_err(&pdev->dev, "Failed to get EIC interrupt.\n");
-+		return sprd_eic->irq;
-+	}
-+
-+	for (i = 0; i < SPRD_EIC_MAX_BANK; i++) {
-+		/*
-+		 * We can have maximum 3 banks EICs, and each EIC has
-+		 * its own base address. But some platform maybe only
-+		 * have one bank EIC, thus base[1] and base[2] can be
-+		 * optional.
-+		 */
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
-+		if (!res)
-+			continue;
-+
-+		sprd_eic->base[i] = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(sprd_eic->base[i]))
-+			return PTR_ERR(sprd_eic->base[i]);
-+	}
-+
-+	sprd_eic->chip.label = sprd_eic_label_name[sprd_eic->type];
-+	sprd_eic->chip.ngpio = pdata->num_eics;
-+	sprd_eic->chip.base = -1;
-+	sprd_eic->chip.parent = &pdev->dev;
-+	sprd_eic->chip.of_node = pdev->dev.of_node;
-+	sprd_eic->chip.direction_input = sprd_eic_direction_input;
-+	switch (sprd_eic->type) {
-+	case SPRD_EIC_DEBOUNCE:
-+		sprd_eic->chip.request = sprd_eic_request;
-+		sprd_eic->chip.free = sprd_eic_free;
-+		sprd_eic->chip.set_config = sprd_eic_set_config;
-+		sprd_eic->chip.set = sprd_eic_set;
-+		/* fall-through */
-+	case SPRD_EIC_ASYNC:
-+		/* fall-through */
-+	case SPRD_EIC_SYNC:
-+		sprd_eic->chip.get = sprd_eic_get;
-+		break;
-+	case SPRD_EIC_LATCH:
-+		/* fall-through */
-+	default:
-+		break;
-+	}
-+
-+	sprd_eic->intc.name = dev_name(&pdev->dev);
-+	sprd_eic->intc.irq_ack = sprd_eic_irq_ack;
-+	sprd_eic->intc.irq_mask = sprd_eic_irq_mask;
-+	sprd_eic->intc.irq_unmask = sprd_eic_irq_unmask;
-+	sprd_eic->intc.irq_set_type = sprd_eic_irq_set_type;
-+	sprd_eic->intc.flags = IRQCHIP_SKIP_SET_WAKE;
-+
-+	irq = &sprd_eic->chip.irq;
-+	irq->chip = &sprd_eic->intc;
-+	irq->handler = handle_bad_irq;
-+	irq->default_type = IRQ_TYPE_NONE;
-+	irq->parent_handler = sprd_eic_irq_handler;
-+	irq->parent_handler_data = sprd_eic;
-+	irq->num_parents = 1;
-+	irq->parents = &sprd_eic->irq;
-+
-+	ret = devm_gpiochip_add_data(&pdev->dev, &sprd_eic->chip, sprd_eic);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Could not register gpiochip %d.\n", ret);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, sprd_eic);
-+	return 0;
-+}
-+
-+static const struct of_device_id sprd_eic_of_match[] = {
-+	{
-+		.compatible = "sprd,sc9860-eic-debounce",
-+		.data = &sc9860_eic_dbnc_data,
-+	},
-+	{
-+		.compatible = "sprd,sc9860-eic-latch",
-+		.data = &sc9860_eic_latch_data,
-+	},
-+	{
-+		.compatible = "sprd,sc9860-eic-async",
-+		.data = &sc9860_eic_async_data,
-+	},
-+	{
-+		.compatible = "sprd,sc9860-eic-sync",
-+		.data = &sc9860_eic_sync_data,
-+	},
-+	{
-+		/* end of list */
-+	}
-+};
-+MODULE_DEVICE_TABLE(of, sprd_eic_of_match);
-+
-+static struct platform_driver sprd_eic_driver = {
-+	.probe = sprd_eic_probe,
-+	.driver = {
-+		.name = "sprd-eic",
-+		.of_match_table	= sprd_eic_of_match,
-+	},
-+};
-+
-+module_platform_driver(sprd_eic_driver);
-+
-+MODULE_DESCRIPTION("Spreadtrum EIC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+Yeah can get rid of that, I copied from fpga-region.txt :)
+
+>=20
+> > +
+> > +Optional properties:
+> > +- bridge-enable		: 0 if driver should disable bridge at startup
+> > +			  1 if driver should enable bridge at startup
+> > +			  Default is to leave bridge in current state.
+> > +
+> > +Example:
+> > +	fpga_bridge3: fpga-bridge@ffc25080 {
+> > +		compatible =3D "altr,socfpga-fpga2sdram-bridge";
+> > +		reg =3D <0xffc25080 0x4>;
+> > +		bridge-enable =3D <0>;
+> > +	};
+> > diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler=
+=2Etxt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> > index 8dcfba926bc7..4284d293fa61 100644
+> > --- a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> > +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> > @@ -18,12 +18,8 @@ Required properties:
+> >  - clocks		: input clock to IP
+> >  - clock-names		: should contain "aclk"
+> > =20
+> > -Optional properties:
+> > -- bridge-enable		: 0 if driver should disable bridge at startup
+> > -			  1 if driver should enable bridge at startup
+> > -			  Default is to leave bridge in current state.
+> > -
+> > -See Documentation/devicetree/bindings/fpga/fpga-region.txt for generic=
+ bindings.
+> > +See Documentation/devicetree/bindings/fpga/fpga-region.txt and
+> > +Documentation/devicetree/bindings/fpga/fpga-bridge.txt for generic bin=
+dings.
+> > =20
+> >  Example:
+> >  	fpga-bridge@100000450 {
+> >=20
+>=20
+> Acked-by: Michal Simek <michal.simek@xilinx.com>
+>=20
+> Thanks,
+> Michal
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+- Moritz
+
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEowQ4eJSlIZpNWnl2UVwKRFcJcNgFAlqO/hsACgkQUVwKRFcJ
+cNhkVAf/eA8Nx34LxVVOUN/c+M/4FfBPP6Dj2cWCTsr+ixzMXEKyvP5nP79h2f+l
+rFNGAJbLs6vfvdVfvwMR6nAFr3DAp3d1upTSWMQ5bi6TwSiJpOmW/VsOa5WMf154
+hyTUsCPkdEfQUMo0j2r5rtVpuRvAanU9OM+4V4TEIyeNNe15DBh4niyQbtVL+2lb
+UaT+F3PNwA1MNxeyS5jLGBfBdoN0SpWdSP9EHm8XNwZNvWBbWh0b357W1fBsCT6Q
+C2UOhev5+klr0AQofOjdi3yanJg6SNGih7KCqtRNLhBCg7CldT8yEu8yWO7HKvHD
+ngpTOd+69E2SgNmtJSBzRuJ+1oCY3w==
+=fR1e
+-----END PGP SIGNATURE-----
+
+--sdtB3X0nJg68CQEu--
