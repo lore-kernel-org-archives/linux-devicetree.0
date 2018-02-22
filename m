@@ -1,95 +1,35 @@
-Return-Path: <SRS0=KIyI=FU=codeaurora.org=kramasub@kernel.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: soc: qcom: Add device tree binding
- for GENI SE
-References: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org>
- <1515805547-22816-3-git-send-email-kramasub@codeaurora.org>
- <20180117062558.GB6620@minitux>
-From: Karthik Ramasubramanian <kramasub@codeaurora.org>
-Message-ID: <14a7641c-a42b-5017-0dc4-f708dcb26696@codeaurora.org>
-Date: Mon, 26 Feb 2018 14:24:23 -0700
+Return-Path: <SRS0=Q8ug=FQ=linaro.org=linus.walleij@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20180117062558.GB6620@minitux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com
+In-Reply-To: <20180214155512.17218-1-ckeepax@opensource.cirrus.com>
+References: <20180214155512.17218-1-ckeepax@opensource.cirrus.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 22 Feb 2018 15:46:55 +0100
+Message-ID: <CACRpkda3Tc0U_UJAyu-Jhja3E8xg2FRcswcxe2hMofrrXLTAEQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mfd: arizona: Update reset pin to use GPIOD
+Content-Type: text/plain; charset="UTF-8"
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com
 List-ID: <devicetree@vger.kernel.org>
 
+On Wed, Feb 14, 2018 at 4:55 PM, Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
 
+> Now GPIOD has support for both pdata systems and for non-standard DT
+> bindings the Arizona reset GPIO can be converted to use it.
+>
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+(...)
+> +       pdata->reset = devm_gpiod_get_from_of_node(arizona->dev,
+> +                                                  arizona->dev->of_node,
+> +                                                  "wlf,reset", 0,
+> +                                                  GPIOD_OUT_LOW,
+> +                                                  "arizona /RESET");
 
-On 1/16/2018 11:25 PM, Bjorn Andersson wrote:
-> On Fri 12 Jan 17:05 PST 2018, Karthikeyan Ramasubramanian wrote:
-> 
->> Add device tree binding support for the QCOM GENI SE driver.
->>
->> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-> 
-> Better describe the entire GENI, with it's functions in the same
-> binding.
-Ok.
-> 
->> ---
->>   .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 34 ++++++++++++++++++++++
->>   1 file changed, 34 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
->>
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
->> new file mode 100644
->> index 0000000..66f8a16
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
->> @@ -0,0 +1,34 @@
->> +Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
->> +
->> +Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
->> +is a programmable module for supporting a wide range of serial interfaces
->> +like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
->> +Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
->> +Wrapper controller is modeled as a node with zero or more child nodes each
->> +representing a serial engine.
->> +
->> +Required properties:
->> +- compatible:		Must be "qcom,geni-se-qup".
->> +- reg:			Must contain QUP register address and length.
->> +- clock-names:		Must contain "m-ahb" and "s-ahb".
->> +- clocks:		AHB clocks needed by the device.
->> +
->> +Required properties if child node exists:
->> +- #address-cells: Must be 1
->> +- #size-cells: Must be 1
-> 
-> But on a 64-bit system, shouldn't these be 2?
-As pointed out by Rob in his response, the module size is less than 4G 
-and hence 1.
-> 
->> +- ranges: Must be present
->> +
->> +Properties for children:
->> +
->> +A GENI based QUP wrapper controller node can contain 0 or more child nodes
->> +representing serial devices.  These serial devices can be a QCOM UART, I2C
->> +controller, spi controller, or some combination of aforementioned devices.
->> +
->> +Example:
->> +	qup0: qcom,geniqup0@8c0000 {
-> 
-> I don't see a reason for this to be referenced, so skip the label. And
-> don't use qcom, in the node name; "geni" would be perfectly fine?
-Ok.
-> 
->> +		compatible = "qcom,geni-se-qup";
->> +		reg = <0x8c0000 0x6000>;
->> +		clock-names = "m-ahb", "s-ahb";
->> +		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
->> +			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
->> +	}
-> 
-> Regards,
-> Bjorn
-> 
-Regards,
-Karthik.
--- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+It seems this call is really useful.
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Also thanks for testing this API, I had nothing to test it on...
+
+Yours,
+Linus Walleij
