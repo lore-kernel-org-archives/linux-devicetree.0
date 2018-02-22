@@ -1,16 +1,14 @@
-From: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v3 06/10] pwm: add PWM modes
-Date: Thu, 22 Feb 2018 19:42:29 +0200
-Message-ID: <e5090740-520a-34c0-6b52-09cc8ada11b1@microchip.com>
-References: <1519300881-8136-1-git-send-email-claudiu.beznea@microchip.com>
- <1519300881-8136-7-git-send-email-claudiu.beznea@microchip.com>
- <CAHp75Ver6GuKSDooAr2DW+eqt=B3p8O+X6+rOSWNgfhHxgVqNQ@mail.gmail.com>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v2] usb: host: ehci-platform: add support for optional
+ external vbus supply
+Date: Thu, 22 Feb 2018 13:27:54 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1802221325220.1295-100000@iolanthe.rowland.org>
+References: <ec064186-9b0b-eeb4-5501-6bbc1e90da79@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAHp75Ver6GuKSDooAr2DW+eqt=B3p8O+X6+rOSWNgfhHxgVqNQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <ec064186-9b0b-eeb4-5501-6bbc1e90da79@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,35 +18,87 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, milo.kim@ti.com, linux-fbdev@vger.kernel.org, Sean Young <sean@mess.org>, devicetree <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, kamil@wypas.org, dri-devel@lists.freedesktop.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, linux-samsung-soc@vger.kernel.org, Alexander Shiyan <shc_work@mail.ru>, Jonathan Corbet <corbet@lwn.net>, Linux Documentation List <linux-doc@vger.kernel.org>, Russell King - ARM Linux <linux@armlinux.org.>
+To: Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tony Prisk <linux@prisktech.co.nz>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 22 Feb 2018, Amelie DELAUNAY wrote:
 
-
-On 22.02.2018 19:28, Andy Shevchenko wrote:
-> On Thu, Feb 22, 2018 at 2:01 PM, Claudiu Beznea
-> <claudiu.beznea@microchip.com> wrote:
->> Add PWM normal and complementary modes.
+> >>>>> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >>>>> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> >>>>> @@ -19,6 +19,7 @@ Optional properties:
+> >>>>>     - phys : phandle + phy specifier pair
+> >>>>>     - phy-names : "usb"
+> >>>>>     - resets : phandle + reset specifier pair
+> >>>>> + - vbus-supply : phandle of regulator supplying vbus
+> >>>>>    
+> >>>>
+> >>>> Can platforms have more than one regulator e.g. one regulator per port?
+> >>>>
+> >>>
+> >>> I imagine that yes, platforms could have one regulator per port.
+> >>> Regulator consumers bindings impose a <name>-supply property per
+> >>> regulator, so, what do you think about :
+> >>> vbus0-supply for port#0
+> >>> vbus1-supply for port#1
+> >>> ...
+> >>> vbusN-supply for port#N
+> >>>
+> >>> And then in probe, allocate 'struct regulator *vbus_supplies' with a
+> >>> size corresponding to 'HCS_N_PORTS(ehci->hcs_params) * sizeof(struct
+> >>> regulator *)'.
+> >>> And loop to get optional regulator vbus0, vbus1,..., vbusN.
+> >>> And then enable/disable the corresponding regulator in
+> >>> ehci_platform_port_power thanks to portnum.
+> >>
+> >> Looks fine to me but we need to get Alan's opinion if this is worth the effort.
+> >> If there isn't a single platform needing it we could probably do without it
+> >> but the DT binding must be scalable to add this feature in the future.
+> > 
+> > I agree that for now there don't seem to be any platforms requiring
+> > more than one regulator, but this should be implemented in a way that
+> > could be expanded if necessary.
+> > 
+> > Anyway, the basic idea is reasonable.  I don't know to what extent
+> > people want to power-off their EHCI ports, but if they do then we ought
+> > to turn off external regulators at the same time.
+> > 
+> > Is there a real-life use case for this?
+> > 
+> > Alan Stern
+> > 
 > 
->> +- PWM_DTMODE_COMPLEMENTARY: PWM complementary working mode (for PWM
->> +channels two outputs); if not specified, the default for PWM channel will
->> +be used
+> On my setup I have the following:
 > 
-> What DT stands for?
-It stands for Device Tree. It remained this way from the previous version. In
-the previous version I had modes described in an enum, to be used by PWM core,
-as follows:
-enum pwm_mode {
-	PWM_MODE_NORMAL,
-	PWM_MODE_COMPLEMENTARY,
-};
+>                   regulator_____vbus
+>   _________________             \
+> | EHCI controller |-port0-----[USB connector]
+> |_________________|-port1-----X
+> 
+> So, I have one regulator only for port0. But I could I have one more if 
+> port1 was connected. My current regulator could also supplies port1.
+> 
+> To allocate a vbus_supplies array depending on N_PORTS, I have to move 
+> this initialization from probe to ehci_platform_reset, after ehci_setup 
+> is done.
+> Then, I have to define each regulator id depending on the port number.
+> This imposes a binding like
+> - portN_vbus-supply : phandle of regulator supplying vbus for port N
+> But I don't know if we can describe it like this in dt-bindings ?
+> 
+> &ehci {
+> 	...
+> 	port0_vbus-supply = <&vbus_reg>;
+> 	port1_vbus-supply = <&vbus_reg>; //Could be another regulator, or not 
+> specified if port is not connected.
+> 	...
+> };
+> 
+> Is it ok to move vbus_supplies initialization in ehci_platform_reset ?
 
-and, to avoid conflict b/w these defines and the one from
-include/dt-bindings/pwm/pwm.h I introduced this DT in the define names from
-dt-bindings. But now the DT might be removed since I've changed the way the PWM
-mode is identified in PWM core. I will remove the DT in the next version, if not
-requested otherwise.
+Yes, it's okay to move the code if you need to.
 
-Thank you,
-Claudiu Benea
+However, I can not speak on the DT implications.  Someone who knows
+more about it should chime in.
+
+Alan Stern
