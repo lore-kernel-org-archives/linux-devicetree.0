@@ -1,38 +1,95 @@
-Return-Path: <SRS0=C+Y8=FR=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 4/7] arm64: dts: renesas: r8a77965: Add #phy-cells property
-Date: Fri, 23 Feb 2018 14:40:56 +0100
-Message-Id: <1519393259-26108-5-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519393259-26108-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519393259-26108-1-git-send-email-jacopo+renesas@jmondi.org>
-To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=KPmr=FQ=cavium.com=David.Daney@kernel.org>
+From: David Daney <david.daney@cavium.com>
+Subject: [PATCH v8 1/3] dt-bindings: Add Cavium Octeon Common Ethernet Interface.
+Date: Thu, 22 Feb 2018 15:32:03 -0800
+Message-Id: <20180222233205.28857-2-david.daney@cavium.com>
+In-Reply-To: <20180222233205.28857-1-david.daney@cavium.com>
+References: <20180222233205.28857-1-david.daney@cavium.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: linux-mips@linux-mips.org, ralf@linux-mips.org, James Hogan <james.hogan@mips.com>, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, "Steven J. Hill" <steven.hill@cavium.com>, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Philippe Ombredanne <pombredanne@nexb.com>, Carlos Munoz <cmunoz@cavium.com>, "Steven J . Hill" <Steven.Hill@cavium.com>, David Daney <david.daney@cavium.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add "#phy-cells" property to "usb-phy@e65ee000" device node.
+From: Carlos Munoz <cmunoz@cavium.com>
 
-This silences the following DTC compiler warning:
-Warning (phys_property): Missing property '#phy-cells' in node
-/soc/usb-phy@e65ee000 or bad phandle (referred from
-/soc/usb@ee020000:phys[0])
+Add bindings for Common Ethernet Interface (BGX) block.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Carlos Munoz <cmunoz@cavium.com>
+Signed-off-by: Steven J. Hill <Steven.Hill@cavium.com>
+Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/net/cavium-bgx.txt         | 61 ++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/cavium-bgx.txt
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 0536b94..1a21967 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -795,6 +795,7 @@
- 
- 		usb3_phy0: usb-phy@e65ee000 {
- 			reg = <0 0xe65ee000 0 0x90>;
-+			#phy-cells = <0>;
- 			/* placeholder */
- 		};
- 
+diff --git a/Documentation/devicetree/bindings/net/cavium-bgx.txt b/Documentation/devicetree/bindings/net/cavium-bgx.txt
+new file mode 100644
+index 000000000000..830c5f08dddd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/cavium-bgx.txt
+@@ -0,0 +1,61 @@
++* Common Ethernet Interface (BGX) block
++
++Properties:
++
++- compatible: "cavium,octeon-7890-bgx": Compatibility with all cn7xxx SOCs.
++
++- reg: The base address of the BGX block.
++
++- #address-cells: Must be <1>.
++
++- #size-cells: Must be <0>.  BGX addresses have no size component.
++
++A BGX block has several children, each representing an Ethernet
++interface.
++
++
++* Ethernet Interface (BGX port) connects to PKI/PKO
++
++Properties:
++
++- compatible: "cavium,octeon-7890-bgx-port": Compatibility with all
++	      cn7xxx SOCs.
++
++	      "cavium,octeon-7360-xcv": Compatibility with cn73xx SOCs
++	      for RGMII.
++
++- reg: The index of the interface within the BGX block.
++
++Optional properties:
++
++- local-mac-address: Mac address for the interface.
++
++- phy-handle: phandle to the phy node connected to the interface.
++
++- phy-mode: described in ethernet.txt.
++
++- fixed-link: described in fixed-link.txt.
++
++Example:
++
++	ethernet-mac-nexus@11800e0000000 {
++		compatible = "cavium,octeon-7890-bgx";
++		reg = <0x00011800 0xe0000000 0x00000000 0x01000000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethernet@0 {
++			compatible = "cavium,octeon-7360-xcv";
++			reg = <0>;
++			local-mac-address = [ 00 01 23 45 67 89 ];
++			phy-handle = <&phy3>;
++			phy-mode = "rgmii-rxid"
++		};
++		ethernet@1 {
++			compatible = "cavium,octeon-7890-bgx-port";
++			reg = <1>;
++			local-mac-address = [ 00 01 23 45 67 8a ];
++			phy-handle = <&phy4>;
++			phy-mode = "sgmii"
++		};
++	};
 -- 
-2.7.4
+2.14.3
