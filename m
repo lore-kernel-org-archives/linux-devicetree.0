@@ -1,14 +1,14 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v2] usb: host: ehci-platform: add support for optional
- external vbus supply
-Date: Thu, 22 Feb 2018 13:27:54 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1802221325220.1295-100000@iolanthe.rowland.org>
-References: <ec064186-9b0b-eeb4-5501-6bbc1e90da79@st.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 2/6] arm64: dts: renesas: r8a77965: Add #address-cells and
+ #size-cells
+Date: Thu, 22 Feb 2018 20:06:06 +0100
+Message-ID: <1519326370-15805-3-git-send-email-jacopo+renesas@jmondi.org>
+References: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ec064186-9b0b-eeb4-5501-6bbc1e90da79@st.com>
+In-Reply-To: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,87 +18,101 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tony Prisk <linux@prisktech.co.nz>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roger Quadros <rogerq@ti.com>
+To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Feb 2018, Amelie DELAUNAY wrote:
+Add "#address-cells" and "#size-cells" properties to all place-holder nodes
+that have children nodes defined by salvator-x[s].dtsi device tree.
 
-> >>>>> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> >>>>> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
-> >>>>> @@ -19,6 +19,7 @@ Optional properties:
-> >>>>>     - phys : phandle + phy specifier pair
-> >>>>>     - phy-names : "usb"
-> >>>>>     - resets : phandle + reset specifier pair
-> >>>>> + - vbus-supply : phandle of regulator supplying vbus
-> >>>>>    
-> >>>>
-> >>>> Can platforms have more than one regulator e.g. one regulator per port?
-> >>>>
-> >>>
-> >>> I imagine that yes, platforms could have one regulator per port.
-> >>> Regulator consumers bindings impose a <name>-supply property per
-> >>> regulator, so, what do you think about :
-> >>> vbus0-supply for port#0
-> >>> vbus1-supply for port#1
-> >>> ...
-> >>> vbusN-supply for port#N
-> >>>
-> >>> And then in probe, allocate 'struct regulator *vbus_supplies' with a
-> >>> size corresponding to 'HCS_N_PORTS(ehci->hcs_params) * sizeof(struct
-> >>> regulator *)'.
-> >>> And loop to get optional regulator vbus0, vbus1,..., vbusN.
-> >>> And then enable/disable the corresponding regulator in
-> >>> ehci_platform_port_power thanks to portnum.
-> >>
-> >> Looks fine to me but we need to get Alan's opinion if this is worth the effort.
-> >> If there isn't a single platform needing it we could probably do without it
-> >> but the DT binding must be scalable to add this feature in the future.
-> > 
-> > I agree that for now there don't seem to be any platforms requiring
-> > more than one regulator, but this should be implemented in a way that
-> > could be expanded if necessary.
-> > 
-> > Anyway, the basic idea is reasonable.  I don't know to what extent
-> > people want to power-off their EHCI ports, but if they do then we ought
-> > to turn off external regulators at the same time.
-> > 
-> > Is there a real-life use case for this?
-> > 
-> > Alan Stern
-> > 
-> 
-> On my setup I have the following:
-> 
->                   regulator_____vbus
->   _________________             \
-> | EHCI controller |-port0-----[USB connector]
-> |_________________|-port1-----X
-> 
-> So, I have one regulator only for port0. But I could I have one more if 
-> port1 was connected. My current regulator could also supplies port1.
-> 
-> To allocate a vbus_supplies array depending on N_PORTS, I have to move 
-> this initialization from probe to ehci_platform_reset, after ehci_setup 
-> is done.
-> Then, I have to define each regulator id depending on the port number.
-> This imposes a binding like
-> - portN_vbus-supply : phandle of regulator supplying vbus for port N
-> But I don't know if we can describe it like this in dt-bindings ?
-> 
-> &ehci {
-> 	...
-> 	port0_vbus-supply = <&vbus_reg>;
-> 	port1_vbus-supply = <&vbus_reg>; //Could be another regulator, or not 
-> specified if port is not connected.
-> 	...
-> };
-> 
-> Is it ok to move vbus_supplies initialization in ehci_platform_reset ?
+This silences the following DTC compiler warnings:
+Warning (reg_format): "reg" property in /soc/.. has invalid length (4 bytes)
+(#address-cells == 2, #size-cells == 1)
+Warning (avoid_default_addr_size): Relying on default #address-cells
+value for /soc/...
+Warning (avoid_default_addr_size): Relying on default #size-cells value
+for /soc/...
 
-Yes, it's okay to move the code if you need to.
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-However, I can not speak on the DT implications.  Someone who knows
-more about it should chime in.
-
-Alan Stern
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 4d9bba9..ab46cd2 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -521,6 +521,9 @@
+ 		};
+ 
+ 		avb: ethernet@e6800000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
+ 			reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
+ 			/* placeholder */
+ 		};
+@@ -528,11 +531,21 @@
+ 		csi20: csi2@fea80000 {
+ 			reg = <0 0xfea80000 0 0x10000>;
+ 			/* placeholder */
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
+ 		};
+ 
+ 		csi40: csi2@feaa0000 {
+ 			reg = <0 0xfeaa0000 0 0x10000>;
+ 			/* placeholder */
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
+ 		};
+ 
+ 		vin0: video@e6ef0000 {
+@@ -611,6 +624,9 @@
+ 		};
+ 
+ 		i2c2: i2c@e6510000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
+ 			reg = <0 0xe6510000 0 0x40>;
+ 			/* placeholder */
+ 		};
+@@ -621,6 +637,9 @@
+ 		};
+ 
+ 		i2c4: i2c@e66d8000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
+ 			reg = <0 0xe66d8000 0 0x40>;
+ 			/* placeholder */
+ 		};
+@@ -636,6 +655,9 @@
+ 		};
+ 
+ 		i2c_dvfs: i2c@e60b0000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
+ 			reg = <0 0xe60b0000 0 0x425>;
+ 			/* placeholder */
+ 		};
+@@ -681,6 +703,9 @@
+ 			/* placeholder */
+ 
+ 			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
+ 				port@0 {
+ 					reg = <0>;
+ 					du_out_rgb: endpoint {
+-- 
+2.7.4
