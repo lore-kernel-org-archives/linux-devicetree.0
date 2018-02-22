@@ -1,89 +1,58 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 2/4][v4] driver: mtd: update struct map_info's swap as
- per map requirement
-Date: Thu, 22 Feb 2018 11:21:43 +0100
-Message-ID: <20180222112143.191e829a@bbrezillon>
-References: <20180215115000.23684-1-prabhakar.kushwaha@nxp.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH v3 24/25] ASoC: qcom: apq8096: Add db820c
+ machine driver
+Date: Thu, 22 Feb 2018 16:30:59 +0530
+Message-ID: <2d646729-9bb2-86e5-22f5-19aaf009c0cc@codeaurora.org>
+References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
+ <20180213165837.1620-25-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180215115000.23684-1-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, boris.brezillon@free-electrons.com, leoyang.li@nxp.com, oss@buserror.net, linux-mtd@lists.infradead.org, Jagdish Gediya <jagdish.gediya@nxp.com>, cyrille.pitchen@wedev4u.fr, computersforpeace@gmail.com, shawnguo@kernel.org, robh@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180213165837.1620-25-srinivas.kandagatla@linaro.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org, andy.gross@linaro.org, broonie@kernel.org, linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, lgirdwood@gmail.com, plai@codeaurora.org, linux-kernel@vger.kernel.org, tiwai@suse.com, david.brown@linaro.org, robh+dt@kernel.org, spatakok@qti.qualcomm.com, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Feb 2018 17:20:00 +0530
-Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com> wrote:
 
-> It is not necessary for all device's maps to be CFI_HOST_ENDIAN.
-> Maps device can be Big endian or little endian.
-> 
-> Currently it is being taken care using CONFIG_MTD_CFI_LE_BYTE_SWAP or
-> CONFIG_MTD_CFI_BE_BYTE_SWAP i.e. compile time.
-> 
-> Now update struct map_info's swap field based on device characteristics
-> defined in device tree.
-> 
-> Signed-off-by: Jagdish Gediya <jagdish.gediya@nxp.com>
-> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+
+On 2/13/2018 10:28 PM, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>
+> This patch adds support to DB820c machine driver.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 > ---
-> Changes for v2: Incorporated review comments from Boris Brezillon
-> http://patchwork.ozlabs.org/patch/758381/
-> Changes for v3: None
-> Changes for v4: Updated code as per new defined binding of physmap.txt
-> 
->  drivers/mtd/maps/physmap_of_core.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/mtd/maps/physmap_of_core.c b/drivers/mtd/maps/physmap_of_core.c
-> index b1bd4faecfb2..6eee160dfb3d 100644
-> --- a/drivers/mtd/maps/physmap_of_core.c
-> +++ b/drivers/mtd/maps/physmap_of_core.c
-> @@ -20,6 +20,7 @@
->  #include <linux/mtd/map.h>
->  #include <linux/mtd/partitions.h>
->  #include <linux/mtd/concat.h>
-> +#include <linux/mtd/cfi_endian.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_platform.h>
-> @@ -233,6 +234,13 @@ static int of_flash_probe(struct platform_device *dev)
->  		info->list[i].map.bankwidth = be32_to_cpup(width);
->  		info->list[i].map.device_node = dp;
->  
-> +		if (of_property_read_bool(dp, "big-endian"))
-> +			info->list[i].map.swap = CFI_BIG_ENDIAN;
-> +		else if (of_property_read_bool(dp, "little-endian"))
-> +			info->list[i].map.swap = CFI_LITTLE_ENDIAN;
-> +		else
-> +			info->list[i].map.swap = CFI_HOST_ENDIAN;
+>   sound/soc/qcom/Kconfig   |   8 +++
+>   sound/soc/qcom/apq8096.c | 173 +++++++++++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 181 insertions(+)
+>   create mode 100644 sound/soc/qcom/apq8096.c
+>
+> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+> index 8c2d65e0a28e..fa4b575c086c 100644
+> --- a/sound/soc/qcom/Kconfig
+> +++ b/sound/soc/qcom/Kconfig
+> @@ -77,3 +77,11 @@ config SND_SOC_QDSP6
+>   	 This will enable sound soc platform specific
+>   	 audio drivers. This includes q6asm, q6adm,
+>   	 q6afe interfaces to DSP using apr.
 > +
-
-Are you sure we want the default to be CFI_HOST_ENDIAN when the
-property is not defined? I think we should leave ->swap to 0 and let
-the CFI logic use the CFI_DEFAULT_ENDIAN value. What you're doing here
-you're likely to break platforms that are not explicitly specifying
-endianness in their DT and are instead relying on the Kconfig choice.
-
-I think that was one of Scott's comments on your previous version.
-
->  		err = of_flash_probe_gemini(dev, dp, &info->list[i].map);
->  		if (err)
->  			goto err_out;
-
-
-
--- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +config SND_SOC_MSM8996
+> +	tristate "SoC Machine driver for MSM8996 and APQ8096 boards"
+> +	depends on QCOM_APR
+> +	select SND_SOC_QDSP6V2
+should be select SND_SOC_QDSP6, V2 is not defined
+> +	default n
+> +	help
+> +	 To add support for SoC audio on MSM8996 and APQ8096 boards
+>
