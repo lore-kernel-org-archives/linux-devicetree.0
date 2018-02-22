@@ -1,58 +1,40 @@
-Return-Path: <SRS0=FOuU=FP=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v10 02/10] include: media: Add Renesas CEU driver interface
-Date: Wed, 21 Feb 2018 18:47:56 +0100
-Message-Id: <1519235284-32286-3-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519235284-32286-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519235284-32286-1-git-send-email-jacopo+renesas@jmondi.org>
-To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=Q8ug=FQ=linaro.org=linus.walleij@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <CAMz4kuLCVPo1KgHQ8wOv=y+-c6UkV+ubp8uChXn8KQipvrNesA@mail.gmail.com>
+References: <2834309f69a1ec37b84a33f153a3d0b90336bcc6.1517795460.git.baolin.wang@linaro.org>
+ <CACRpkdZzqbhRs+JTiezkNfD4ne-foGgoW+b51DLcFeJsXH2Edg@mail.gmail.com> <CAMz4kuLCVPo1KgHQ8wOv=y+-c6UkV+ubp8uChXn8KQipvrNesA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 22 Feb 2018 15:38:07 +0100
+Message-ID: <CACRpkdYDaUi-8eoAt-7V3YwzFxjmtST0i_BqT46WdB0=2MU3FA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: gpio: Add Spreadtrum GPIO controller documentation
+Content-Type: text/plain; charset="UTF-8"
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add renesas-ceu header file.
+On Wed, Feb 14, 2018 at 3:51 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+> On 13 February 2018 at 17:20, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Mon, Feb 5, 2018 at 2:55 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+>>
+>>> This patch adds the device tree bindings for the Spreadtrum
+>>> GPIO controller. The gpios will be supported by the GPIO
+>>> generic library.
+>>>
+>>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>>
+>> I took this patch out again for now, as it turns out
+>> that not all of the variants are really GPIO controllers,
+>> but rather irqchips.
+>>
+>> If they can't read nor write any GPIO lines, they should
+>> not have the property gpio-controller at all. Then they are
+>> just irqchips.
+>
+> I did not get you here. All GPIOs can be read or write for this GPIO controller.
 
-Do not remove the existing sh_mobile_ceu.h one as long as the original
-driver does not go away.
+Sorry I confused one of the drivers for the other.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
----
- include/media/drv-intf/renesas-ceu.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 include/media/drv-intf/renesas-ceu.h
+I'm so clumsy sometimes :(
 
-diff --git a/include/media/drv-intf/renesas-ceu.h b/include/media/drv-intf/renesas-ceu.h
-new file mode 100644
-index 0000000..52841d1
---- /dev/null
-+++ b/include/media/drv-intf/renesas-ceu.h
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * renesas-ceu.h - Renesas CEU driver interface
-+ *
-+ * Copyright 2017-2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
-+ */
-+
-+#ifndef __MEDIA_DRV_INTF_RENESAS_CEU_H__
-+#define __MEDIA_DRV_INTF_RENESAS_CEU_H__
-+
-+#define CEU_MAX_SUBDEVS		2
-+
-+struct ceu_async_subdev {
-+	unsigned long flags;
-+	unsigned char bus_width;
-+	unsigned char bus_shift;
-+	unsigned int i2c_adapter_id;
-+	unsigned int i2c_address;
-+};
-+
-+struct ceu_platform_data {
-+	unsigned int num_subdevs;
-+	struct ceu_async_subdev subdevs[CEU_MAX_SUBDEVS];
-+};
-+
-+#endif /* ___MEDIA_DRV_INTF_RENESAS_CEU_H__ */
--- 
-2.7.4
+Yours,
+Linus Walleij
