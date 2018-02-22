@@ -1,61 +1,41 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: [PATCH 1/4][v4][RESEND] dt-bindings: mtd-physmap: Add endianness
- supports
-Date: Thu, 22 Feb 2018 15:45:06 +0530
-Message-ID: <20180222101511.29631-2-prabhakar.kushwaha@nxp.com>
-References: <20180222101511.29631-1-prabhakar.kushwaha@nxp.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v5 6/8] i2c: demux: Use changeset helpers for clarity
+Date: Thu, 22 Feb 2018 12:19:32 +0200
+Message-ID: <2195898.2J8Qfnu3DQ@avalon>
+References: <20180222000531.19448-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20180222000531.19448-7-laurent.pinchart+renesas@ideasonboard.com>
+ <CAMuHMdVy9=e5eZZTdV6E=apvHxL3n5Qqob2JE+FsON3RG-JWWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180222101511.29631-1-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: boris.brezillon@free-electrons.com, leoyang.li@nxp.com, oss@buserror.net, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, cyrille.pitchen@wedev4u.fr, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAMuHMdVy9=e5eZZTdV6E=apvHxL3n5Qqob2JE+FsON3RG-JWWg@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Marek Vasut <marex@denx.de>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Connection between flash and controller is not necessary to be always
-of same type. It may varies from platform to platform.
-
-Adding endianness (optional) property to provide connection type
-information.
-
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes for v2: updated subject
-Changes for v3: fixed typo for "big-endian"
-Changes for v4: Moved binding definition in mtd-physmap.txt
-as discussed at https://patchwork.ozlabs.org/patch/842543/
-
-Resending as all patches of patchset never reaches to patchwork.
-
- Documentation/devicetree/bindings/mtd/mtd-physmap.txt | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-index 4a0a48bf4ecb..961a8eed9d0d 100644
---- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-+++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-@@ -41,6 +41,11 @@ additional (optional) property is defined:
- 
-  - erase-size : The chip's physical erase block size in bytes.
- 
-+ The device tree may optionally contain endianness property.
-+ little-endian or big-endian : It represents connection between controller and
-+			flash. If this property is absent, flash is considered
-+			to be host-endian.
-+
- The device tree may optionally contain sub-nodes describing partitions of the
- address space. See partition.txt for more detail.
- 
--- 
-2.14.1
+SGkgR2VlcnQsCgpPbiBUaHVyc2RheSwgMjIgRmVicnVhcnkgMjAxOCAxMToyNjo0NCBFRVQgR2Vl
+cnQgVXl0dGVyaG9ldmVuIHdyb3RlOgo+IE9uIFRodSwgRmViIDIyLCAyMDE4IGF0IDE6MDUgQU0s
+IExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiBGcm9tOiBQYW50ZWxpcyBBbnRvbmlvdSA8cGFu
+dGVsaXMuYW50b25pb3VAa29uc3Vsa28uY29tPgo+ID4gCj4gPiBUaGUgY2hhbmdlc2V0IGhlbHBl
+cnMgYXJlIGVhc2llciB0byB1c2UsIHVzZSB0aGVtIGluc3RlYWQgb2YKPiA+IHVzaW5nIHRoZSBz
+dGF0aWMgcHJvcGVydHkuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFBhbnRlbGlzIEFudG9uaW91
+IDxwYW50ZWxpcy5hbnRvbmlvdUBrb25zdWxrby5jb20+Cj4gPiBBY2tlZC1ieTogV29sZnJhbSBT
+YW5nIDx3c2FAdGhlLWRyZWFtcy5kZT4KPiA+IFsib2theSIgLT4gIm9rIl0KPiAKPiBXaHk/IGVQ
+QVBSIHNheXMgIm9rYXkiLCAiZGlzYWJsZWQiLCAiZmFpbCIsIG9yICJmYWlsLXNzcyIuCj4gCj4g
+U29ycnkgZm9yIG1pc3NpbmcgdGhpcyBpbiB0aGUgcHJldmlvdXMgcm91bmQuCgpUaGF0IHdhcyBw
+ZXIgV29sZnJhbSdzIHJlcXVlc3QsIGFuZCBiZWNhdXNlIHRoZSBleGlzdGluZyBjb2RlIHVzZXMg
+Im9rIi4gSSdtIApwZXJzb25hbGx5IGZpbmUgd2l0aCBhbnkuCgotLSAKUmVnYXJkcywKCkxhdXJl
+bnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
