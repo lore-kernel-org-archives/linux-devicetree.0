@@ -1,101 +1,132 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/7] watchdog: sirfsoc: allow setting timeout in
- devicetree
-Date: Wed, 21 Feb 2018 18:02:02 -0600
-Message-ID: <CAL_Jsq+kQza8ouKCreOapno42iSBiG0SwLjJqziv_23cmFxJxw@mail.gmail.com>
-References: <20180211200847.25000-1-marcus.folkesson@gmail.com>
- <20180211200847.25000-3-marcus.folkesson@gmail.com>
- <20180219000735.i5i3gne4idzzhxot@rob-hp-laptop>
- <e318fd7a-f855-d0c0-ae6f-86bd48f58e1f@roeck-us.net>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v5 0/8] R-Car DU: Convert LVDS code to bridge driver
+Date: Thu, 22 Feb 2018 02:05:23 +0200
+Message-ID: <20180222000531.19448-1-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e318fd7a-f855-d0c0-ae6f-86bd48f58e1f@roeck-us.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>, Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, linux-mediatek@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, Vladimir Zapolskiy <vz@mleia.com>, Matthias Brugger <matthias.bgg@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 18, 2018 at 7:07 PM, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 02/18/2018 04:07 PM, Rob Herring wrote:
->>
->> On Sun, Feb 11, 2018 at 09:08:43PM +0100, Marcus Folkesson wrote:
->>>
->>> watchdog_init_timeout() will allways pick timeout_param since it
->>> defaults to a valid timeout.
->>>
->>> By following best practice described in
->>> Documentation/watchdog/watchdog-kernel-api.txt, it also
->>> let us to set timout-sec property in devicetree.
->>
->>
->> typo
->>
->>>
->>> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
->>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>> ---
->>>   Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt | 4 ++++
->>>   drivers/watchdog/sirfsoc_wdt.c                             | 2 +-
->>>   2 files changed, 5 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
->>> b/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
->>> index 9cbc76c89b2b..0dce5e3100b4 100644
->>> --- a/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
->>> +++ b/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
->>> @@ -5,10 +5,14 @@ Required properties:
->>>   - reg: Address range of tick timer/WDT register set
->>>   - interrupts: interrupt number to the cpu
->>>   +Optional properties:
->>> +- timeout-sec : Contains the watchdog timeout in seconds
->>> +
->>>   Example:
->>>     timer@b0020000 {
->>>         compatible = "sirf,prima2-tick";
->>>         reg = <0xb0020000 0x1000>;
->>>         interrupts = <0>;
->>> +       timeout-sec = <30>;
->>>   };
->>> diff --git a/drivers/watchdog/sirfsoc_wdt.c
->>> b/drivers/watchdog/sirfsoc_wdt.c
->>> index 4eea351e09b0..ac0c9d2c4aee 100644
->>> --- a/drivers/watchdog/sirfsoc_wdt.c
->>> +++ b/drivers/watchdog/sirfsoc_wdt.c
->>> @@ -29,7 +29,7 @@
->>>   #define SIRFSOC_WDT_MAX_TIMEOUT               (10 * 60)       /* 10
->>> mins */
->>>   #define SIRFSOC_WDT_DEFAULT_TIMEOUT   30              /* 30 secs */
->>>   -static unsigned int timeout = SIRFSOC_WDT_DEFAULT_TIMEOUT;
->>> +static unsigned int timeout;
->>
->>
->> If you have an old dtb, then you still need the default.
->>
->
-> No. It is optional to start with, and the driver already has
->
-> static struct watchdog_device sirfsoc_wdd = {
->         .info = &sirfsoc_wdt_ident,
->         .ops = &sirfsoc_wdt_ops,
->         .timeout = SIRFSOC_WDT_DEFAULT_TIMEOUT,                 <------
->         .min_timeout = SIRFSOC_WDT_MIN_TIMEOUT,
->         .max_timeout = SIRFSOC_WDT_MAX_TIMEOUT,
-> };
-
-Okay, then:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-for the lot.
-
-Rob
+SGVsbG8sCgpUaGlzIHBhdGNoIHNlcmllcyBhZGRyZXNzZXMgYSBkZXNpZ24gbWlzdGFrZSB0aGF0
+IGRhdGVzIGJhY2sgZnJvbSB0aGUgaW5pdGlhbApEVSBzdXBwb3J0LiBTdXBwb3J0IGZvciB0aGUg
+TFZEUyBlbmNvZGVycywgd2hpY2ggYXJlIElQIGNvcmVzIHNlcGFyYXRlIGZyb20KdGhlIERVLCB3
+YXMgYnVuZGxlZCBpbiB0aGUgRFUgZHJpdmVyLiBXb3JzZSwgYm90aCB0aGUgRFUgYW5kIExWRFMg
+d2VyZQpkZXNjcmliZWQgdGhyb3VnaCBhIHNpbmdsZSBEVCBub2RlLgoKVG8gZml4IHRoZSwgcGF0
+Y2hlcyAxLzggYW5kIDIvOCBkZWZpbmUgbmV3IERUIGJpbmRpbmdzIGZvciB0aGUgTFZEUwplbmNv
+ZGVycywgYW5kIGRlcHJlY2F0ZSB0aGVpciBkZXNjcmlwdGlvbiBpbnNpZGUgdGhlIERVIGJpbmRp
+bmdzLiBUbyByZXRhaW4KYmFja3dhcmQgY29tcGF0aWJpbGl0eSB3aXRoIGV4aXN0aW5nIERULCBw
+YXRjaGVzIDMvOCB0byA3LzggdGhlbiBwYXRjaCB0aGUKZGV2aWNlIHRyZWUgYXQgcnVudGltZSB0
+byBjb252ZXJ0IHRoZSBsZWdhY3kgYmluZGluZ3MgdG8gdGhlIG5ldyBvbmVzLgoKV2l0aCB0aGUg
+RFQgc2lkZSBhZGRyZXNzZWQsIHBhdGNoIDgvOCBjb252ZXJ0cyB0aGUgTFZEUyBzdXBwb3J0IGNv
+ZGUgdG8gYQpzZXBhcmF0ZSBicmlkZ2UgZHJpdmVyLgoKSSBkZWNpZGVkIHRvIGdvIGZvciBsaXZl
+IERUIHBhdGNoaW5nIGluIHBhdGNoIDcvOCBiZWNhdXNlIGltcGxlbWVudGluZwpzdXBwb3J0IGZv
+ciBib3RoIHRoZSBsZWdhY3kgYW5kIG5ldyBiaW5kaW5ncyBpbiB0aGUgZHJpdmVyIHdvdWxkIGhh
+dmUgYmVlbgp2ZXJ5IGludHJ1c2l2ZSwgYW5kIHByZXZlbnRlZCBmdXJ0aGVyIGNsZWFudXBzLiBU
+aGlzIHZlcnNpb24gcmVsaWVzIG1vcmUKaGVhdmlseSBvbiBvdmVybGF5cyB0byBhdm9pZCB0b3Vj
+aGluZyB0aGUgaW50ZXJuYWxzIG9mIHRoZSBPRiBjb3JlIGNvbXBhcmVkIHRvCnYyLCBldmVuIGlm
+IG1hbnVhbCBmaXhlcyB0byB0aGUgZGV2aWNlIHRyZWUgYXJlIHN0aWxsIG5lZWRlZC4KCkFzIGFs
+bCB0aGUgcGF0Y2hlcyBidXQgdGhlIGxhc3Qgb25lIGhhdmUgYmVlbiBhY2tlZCwgSSBwbGFuIHRv
+IHNlbmQgYSBwdWxsCnJlcXVlc3QgYnkgdGhlIGVuZCBvZiB0aGUgd2VlayBpZiBubyBuZXcgaXNz
+dWUgaXMgZGlzY292ZXJlZC4KCkNvbXBhcmVkIHRvIHY0LCB0aGUgcGF0Y2ggIm9mOiBjaGFuZ2Vz
+ZXQ6IEFkZCBvZl9jaGFuZ2VzZXRfbm9kZV9tb3ZlIG1ldGhvZCIKaGFzIGJlZW4gZHJvcHBlZCBh
+cyBpdCdzIG5vdCBuZWVkZWQuIFRoZSBwYXRjaGVzIHRoYXQgdXBkYXRlIHRoZSBEVCBzb3VyY2Vz
+IHRvCnRoZSBuZXcgRFUgYW5kIExWRFMgYmluZGluZ3MgaGF2ZSBiZWVuIGRyb3BwZWQgYXMgd2Vs
+bCB0byBhdm9pZCBzcGFtbWluZyB0aGUKbGlzdHMgYXMgdGhleSBkZXBlbmQgb24gdGhlIGRyaXZl
+ciBjaGFuZ2VzIGdvaW5nIGluIGZpcnN0IHRvIGF2b2lkCnJlZ3Jlc3Npb25zIGFuZCBoYXZlbid0
+IGJlZW4gY2hhbmdlZC4KCkNvbXBhcmVkIHRvIHYzLCB0aGlzIHNlcmllcyB1c2VzIHRoZSBPRiBj
+aGFuZ2VzZXQgQVBJIHRvIHVwZGF0ZSBwcm9wZXJ0aWVzCmluc3RlYWQgb2YgYWNjZXNzaW5nIHRo
+ZSBpbnRlcm5hbHMgb2YgdGhlIHByb3BlcnR5IHN0cnVjdHVyZS4gVGhpcyByZW1vdmVzIHRoZQps
+b2NhbCBpbXBsZW1lbnRhdGlvbiBvZiBmdW5jdGlvbnMgdG8gbG9vayB1cCBub2RlcyBieSBwYXRo
+IGFuZCB1cGRhdGUKcHJvcGVydGllcy4gSW4gb3JkZXIgdG8gZG8gdGhpcywgSSBwdWxsZWQgaW4g
+UGFudGVsaXMnIHBhdGNoIHNlcmllcyB0aXRsZWQKIltQQVRDSCB2MiAwLzVdIG9mOiBkeW5hbWlj
+OiBDaGFuZ2VzZXRzIGhlbHBlcnMgJiBmaXhlcyIgYXQgUm9iJ3MgcmVxdWVzdCwgYW5kCnJlYmFz
+ZWQgaXQgd2hpbGUgdGFraW5nIHR3byBzbWFsbCByZXZpZXcgY29tbWVudHMgaW50byBhY2NvdW50
+LgoKUm9iLCBJJ2QgbGlrZSB0aGlzIHNlcmllcyB0byBiZSBtZXJnZWQgaW4gdjQuMTcuIEFzIHRo
+ZSBjaGFuZ2VzZXQgaGVscGVycyBhcmUKbm93IGEgZGVwZW5kZW5jeSwgSSdkIG5lZWQgeW91IHRv
+IG1lcmdlIHRoZW0gZWFybHkgKGlkZWFsbHkgb24gdG9wIG9mCnY0LjE2LXJjMSkgYW5kIHByb3Zp
+ZGUgYSBzdGFibGUgYnJhbmNoLCBvciBnZXQgeW91ciBhY2sgdG8gbWVyZ2UgdGhlbSB0aHJvdWdo
+CkRhdmUncyB0cmVlIGlmIHRoZXkgZG9uJ3QgY29uZmxpY3Qgd2l0aCB3aGF0IHlvdSBoYXZlIGFu
+ZCB3aWxsIHF1ZXVlIGZvcgp2NC4xNy4KClRoaXMgdmVyc2lvbiBhbHNvIGRyb3BzIHRoZSBzbWFs
+bCBmaXggdG8gdGhlIFBvcnRlciBib2FyZCBkZXZpY2UgdHJlZSB0aGF0IGhhcwpiZWVuIHF1ZXVl
+ZCBmb3IgdjQuMTcgYWxyZWFkeS4KCkNvbXBhcmVkIHRvIHYyLCB0aGUgYmlnZ2VzdCBjaGFuZ2Ug
+aXMgaW4gcGF0Y2ggNy84LiBGb2xsb3dpbmcgUm9iJ3MgYW5kCkZyYW5rJ3MgcmV2aWV3cyBpdCB3
+YXMgY2xlYXIgdGhhdCBtb2RpZnlpbmcgdGhlIHVuZmxhdHRlbmVkIERUIHN0cnVjdHVyZSBvZgp0
+aGUgb3ZlcmxheSBiZWZvcmUgYXBwbHlpbmcgaXQgd2Fzbid0IHBvcHVsYXIuIEkgaGF2ZSB0aHVz
+IGRlY2lkZWQgdG8gdXNlIG9uZQpvdmVybGF5IHNvdXJjZSBwZXIgU29DIHRvIG1vdmUgYXMgbXVj
+aCBvZiB0aGUgRFQgY2hhbmdlcyB0byB0aGUgb3ZlcmxheSBhcwpwb3NzaWJsZSwgYW5kIG9ubHkg
+cGVyZm9ybSBtYW51YWwgbW9kaWZpY2F0aW9ucyAodGhhdCBhcmUgc3RpbGwgbmVlZGVkIGFzIHNv
+bWUKb2YgdGhlIGluZm9ybWF0aW9uIGlzIGJvYXJkLXNwZWNpZmljKSBvbiB0aGUgc3lzdGVtIERU
+IGFmdGVyIGFwcGx5aW5nIHRoZQpvdmVybGF5LiBBcyBhIHJlc3VsdCB0aGUgb3ZlcmxheSBpcyBw
+YXJzZWQgYW5kIGFwcGxpZWQgd2l0aG91dCBiZWluZyBtb2RpZmllZC4KCkNvbXBhcmVkIHRvIHYx
+LCB0aGlzIHNlcmllcyB1cGRhdGUgdGhlIHI4YTc3OTIgYW5kIHI4YTc3OTQgZGV2aWNlIHRyZWUg
+c291cmNlcwphbmQgaW5jb3Jwb3JhdGUgcmV2aWV3IGZlZWRiYWNrIGFzIGRlc2NyaWJlZCBieSB0
+aGUgY2hhbmdlbG9ncyBvZiBpbmRpdmlkdWFsCnBhdGNoZXMuCgpMYXVyZW50IFBpbmNoYXJ0ICg0
+KToKICBkdC1iaW5kaW5nczogZGlzcGxheTogcmVuZXNhczogQWRkIFItQ2FyIExWRFMgZW5jb2Rl
+ciBEVCBiaW5kaW5ncwogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiByZW5lc2FzOiBEZXByZWNhdGUg
+TFZEUyBzdXBwb3J0IGluIHRoZSBEVQogICAgYmluZGluZ3MKICBkcm06IHJjYXItZHU6IEZpeCBs
+ZWdhY3kgRFQgdG8gY3JlYXRlIExWRFMgZW5jb2RlciBub2RlcwogIGRybTogcmNhci1kdTogQ29u
+dmVydCBMVkRTIGVuY29kZXIgY29kZSB0byBicmlkZ2UgZHJpdmVyCgpQYW50ZWxpcyBBbnRvbmlv
+dSAoNCk6CiAgb2Y6IGR5bmFtaWM6IEFkZCBfX29mX25vZGVfZHVwdigpCiAgb2Y6IGNoYW5nZXNl
+dHM6IEludHJvZHVjZSBjaGFuZ2VzZXQgaGVscGVyIG1ldGhvZHMKICBvZjogdW5pdHRlc3Q6IGNo
+YW5nZXNldCBoZWxwZXJzCiAgaTJjOiBkZW11eDogVXNlIGNoYW5nZXNldCBoZWxwZXJzIGZvciBj
+bGFyaXR5CgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQgICAg
+ICAgfCAgNTYgKysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUu
+dHh0ICAgICB8ICAzMSArLQogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvS2NvbmZpZyAgICAg
+ICAgICAgICAgICAgICAgfCAgIDYgKy0KIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L01ha2VmaWxl
+ICAgICAgICAgICAgICAgICAgIHwgIDEwICstCiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2Fy
+X2R1X2Rydi5jICAgICAgICAgICAgICB8ICAyMSArLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUv
+cmNhcl9kdV9kcnYuaCAgICAgICAgICAgICAgfCAgIDUgLQogZHJpdmVycy9ncHUvZHJtL3JjYXIt
+ZHUvcmNhcl9kdV9lbmNvZGVyLmMgICAgICAgICAgfCAxNzUgKy0tLS0tLQogZHJpdmVycy9ncHUv
+ZHJtL3JjYXItZHUvcmNhcl9kdV9lbmNvZGVyLmggICAgICAgICAgfCAgMTIgLQogZHJpdmVycy9n
+cHUvZHJtL3JjYXItZHUvcmNhcl9kdV9rbXMuYyAgICAgICAgICAgICAgfCAgMTQgKy0KIGRyaXZl
+cnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2Nvbi5jICAgICAgICAgIHwgIDkzIC0tLS0K
+IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2Nvbi5oICAgICAgICAgIHwgIDI0
+IC0KIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2VuYy5jICAgICAgICAgIHwg
+MjM4IC0tLS0tLS0tLS0KIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2VuYy5o
+ICAgICAgICAgIHwgIDY0IC0tLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5j
+ICAgICAgICAgICAgICAgfCAzMDcgKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcmNhci1k
+dS9yY2FyX2R1X29mLmggICAgICAgICAgICAgICB8ICAyMCArCiAuLi4vZ3B1L2RybS9yY2FyLWR1
+L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkwLmR0cyAgICB8ICA3OSArKysrCiAuLi4vZ3B1L2RybS9y
+Y2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkxLmR0cyAgICB8ICA1MyArKysKIC4uLi9ncHUv
+ZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTMuZHRzICAgIHwgIDUzICsrKwogLi4u
+L2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5NS5kdHMgICAgfCAgNTMgKysr
+CiAuLi4vZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3Nzk2LmR0cyAgICB8ICA1
+MyArKysKIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfbHZkcy5jICAgICAgICAgICAgICAg
+IHwgNTI0ICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9pMmMvbXV4ZXMvaTJjLWRlbXV4
+LXBpbmN0cmwuYyAgICAgICAgICAgICAgfCAgMTIgKy0KIGRyaXZlcnMvb2YvZHluYW1pYy5jICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMjUxICsrKysrKysrKy0KIGRyaXZlcnMvb2Yv
+dW5pdHRlc3QuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDU0ICsrKwogaW5jbHVk
+ZS9saW51eC9vZi5oICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAzMjkgKysrKysr
+KysrKysrKwogMjYgZmlsZXMgY2hhbmdlZCwgMTg4NiBpbnNlcnRpb25zKCspLCA2NTIgZGVsZXRp
+b25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKIGRlbGV0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2x2ZHNjb24uYwogZGVsZXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2Nvbi5oCiBkZWxldGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9sdmRzZW5jLmMKIGRlbGV0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2x2ZHNlbmMuaAog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuYwog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuaAog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZk
+c19yOGE3NzkwLmR0cwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
+L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkxLmR0cwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMv
+Z3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkzLmR0cwogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3Nzk1LmR0
+cwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2Zf
+bHZkc19yOGE3Nzk2LmR0cwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2Fy
+LWR1L3JjYXJfbHZkcy5jCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
