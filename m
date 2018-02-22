@@ -1,94 +1,276 @@
-Return-Path: <SRS0=YrF9=FM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from fed1rmwml106.cox.net ([68.230.241.176]:51487 "EHLO
-        fed1rmwml106.cox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751337AbeBRPXN (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 18 Feb 2018 10:23:13 -0500
-Received: from eastrmimpo110.cox.net ([68.230.241.223])
-          by eastrmfepo102.cox.net
-          (InterMail vM.8.01.05.28 201-2260-151-171-20160122) with ESMTP
-          id <20180218151345.OLWG14605.eastrmfepo102.cox.net@eastrmimpo110.cox.net>
-          for <devicetree@vger.kernel.org>; Sun, 18 Feb 2018 10:13:45 -0500
-Date: Sun, 18 Feb 2018 10:13:44 -0500
-Subject: Re: Issue with dt_to_config with dts files that include headers from
- dt-bindings
-From: Chris Wyse <chris.wyse@cox.net>
-Message-ID: <BE4972C9-BC58-4950-8073-ADA3B25F6FC2@cox.net>
-Mime-version: 1.0
-Content-type: text/plain;
-        charset="UTF-8"
-Content-transfer-encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Return-Path: <SRS0=mxgJ=FQ=jmondi.org=jacopo+renesas@kernel.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 1/6] arm64: dts: renesas: r8a77965: Add "reg" properties
+Date: Thu, 22 Feb 2018 20:06:05 +0100
+Message-Id: <1519326370-15805-2-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
+References: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
+To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 11/07/16 10:51, Frank Rowand wrote:
-> On 11/05/16 13:56, Gaurav Minocha wrote:
->> On Nov 4, 2016 1:19 PM, "Peter Robinson" <pbrobinson@xxxxxxxxx> wrote:
->>>
->>> Hi Gaurav, Rob and Frank,
->>>
->>> I've just discovered the dt_to_config script (awesome thanks!) but it
->>> errors out when a dts(i) includes a header file from dt-bindings. EG
->>>
->>> ./scripts/dtc/dt_to_config arch/arm/boot/dts/am335x-boneblack.dts
->>> In file included from arch/arm/boot/dts/am335x-boneblack.dts:10:0:
->>> arch/arm/boot/dts/am33xx.dtsi:11:35: error: no include path in which
->>> to search for dt-bindings/gpio/gpio.h
->>>  #include <dt-bindings/gpio/gpio.h>
->>>                                    ^
->>> arch/arm/boot/dts/am33xx.dtsi:12:40: error: no include path in which
->>> to search for dt-bindings/pinctrl/am33xx.h
->>>  #include <dt-bindings/pinctrl/am33xx.h>
->>>                                         ^
->>> arch/arm/boot/dts/am335x-boneblack.dts:12:41: error: no include path
->>> in which to search for dt-bindings/display/tda998x.h
->>>  #include <dt-bindings/display/tda998x.h>
->>>                                          ^
->>> Error: arch/arm/boot/dts/am335x-bone-common.dtsi:33.23-24 syntax error
->>> FATAL ERROR: Unable to parse input tree
->>>
->> 
->> In bash do, export ARCH=arm
->> 
->> Works for me!
->> 
->>>
->>> Regards,
->>> Peter
->> 
->
->Were there any other error messages reported? There should have
->been a message suggesting that $ARCH was not set (if it wasn't)
->and that it did not have the value of "arm".
->
->If that message did not exist, I would like to understand why.
->
->If the message did exist, but was not clear, how could the
->message change to be more helpful?
->
->-Frank
->--
+Add "reg" properties to place-holder nodes with unit address defined for
+R-Car M3-N SoC.
 
-I just tried using this utility from inside a Yocto devshell, with a 4.1.15 kernel.  
-It didn't have dtx_diff or dt_to_config, so I copied them from the master branch.
-I received the same errors about the missing include path.  The ARCH environment
-variable was properly defined as 'arm'.  I resolved the problem by modifying the 
-dtx_diff script to use ${srctree}/include in its include path when using both dtc
-and gcc.
+This silences the following DTC compiler warning:
+Warning (unit_address_vs_reg): Node /soc/... has a unit name,
+but no reg property
 
->From dtx_diff:
-    cpp_flags="\
-            -nostdinc                                  \
-            -I${srctree}/scripts/dtc/include-prefixes  \
-            -I${srctree}/include                       \
-            -undef -D__DTS__"
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 51 +++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-    DTC="\
-            ${DTC}                                     \
-            -i ${srctree}/scripts/dtc/include-prefixes \
-            -I${srctree}/include                       \
-            -O dts -qq -f ${dtc_sort} -o -"
-
-Chris
-
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 55f05f7..4d9bba9 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -317,6 +317,7 @@
+ 		};
+ 
+ 		intc_ex: interrupt-controller@e61c0000 {
++			reg = <0 0xe61c0000 0 0x200>;
+ 			/* placeholder */
+ 		};
+ 
+@@ -520,130 +521,163 @@
+ 		};
+ 
+ 		avb: ethernet@e6800000 {
++			reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		csi20: csi2@fea80000 {
++			reg = <0 0xfea80000 0 0x10000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		csi40: csi2@feaa0000 {
++			reg = <0 0xfeaa0000 0 0x10000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		vin0: video@e6ef0000 {
++			reg = <0 0xe6ef0000 0 0x1000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		vin1: video@e6ef1000 {
++			reg = <0 0xe6ef1000 0 0x1000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		vin2: video@e6ef2000 {
++			reg = <0 0xe6ef2000 0 0x1000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		vin3: video@e6ef3000 {
++			reg = <0 0xe6ef3000 0 0x1000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		vin4: video@e6ef4000 {
++			reg = <0 0xe6ef4000 0 0x1000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		vin5: video@e6ef5000 {
++			reg = <0 0xe6ef5000 0 0x1000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		vin6: video@e6ef6000 {
++			reg = <0 0xe6ef6000 0 0x1000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		vin7: video@e6ef7000 {
++			reg = <0 0xe6ef7000 0 0x1000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		ohci0: usb@ee080000 {
++			reg = <0 0xee080000 0 0x100>;
+ 			/* placeholder */
+ 		};
+ 
+ 		ehci0: usb@ee080100 {
++			reg = <0 0xee080100 0 0x100>;
+ 			/* placeholder */
+ 		};
+ 
+ 		usb2_phy0: usb-phy@ee080200 {
++			reg = <0 0xee080200 0 0x700>;
+ 			/* placeholder */
+ 		};
+ 
+ 		ohci1: usb@ee0a0000 {
++			reg = <0 0xee0a0000 0 0x100>;
+ 			/* placeholder */
+ 		};
+ 
+ 		ehci1: usb@ee0a0100 {
++			reg = <0 0xee0a0100 0 0x100>;
+ 			/* placeholder */
+ 		};
+ 
+ 		i2c0: i2c@e6500000 {
++			reg = <0 0xe6500000 0 0x40>;
+ 			/* placeholder */
+ 		};
+ 
+ 		i2c1: i2c@e6508000 {
++			reg = <0 0xe6508000 0 0x40>;
+ 			/* placeholder */
+ 		};
+ 
+ 		i2c2: i2c@e6510000 {
++			reg = <0 0xe6510000 0 0x40>;
+ 			/* placeholder */
+ 		};
+ 
+ 		i2c3: i2c@e66d0000 {
++			reg = <0 0xe66d0000 0 0x40>;
+ 			/* placeholder */
+ 		};
+ 
+ 		i2c4: i2c@e66d8000 {
++			reg = <0 0xe66d8000 0 0x40>;
+ 			/* placeholder */
+ 		};
+ 
+ 		i2c5: i2c@e66e0000 {
++			reg = <0 0xe66e0000 0 0x40>;
+ 			/* placeholder */
+ 		};
+ 
+ 		i2c6: i2c@e66e8000 {
++			reg = <0 0xe66e8000 0 0x40>;
+ 			/* placeholder */
+ 		};
+ 
+ 		i2c_dvfs: i2c@e60b0000 {
++			reg = <0 0xe60b0000 0 0x425>;
+ 			/* placeholder */
+ 		};
+ 
+ 		pwm0: pwm@e6e30000 {
++			reg = <0 0xe6e30000 0 8>;
+ 			/* placeholder */
+ 		};
+ 
+ 		pwm1: pwm@e6e31000 {
++			reg = <0 0xe6e31000 0 8>;
+ 			/* placeholder */
+ 		};
+ 
+ 		pwm2: pwm@e6e32000 {
++			reg = <0 0xe6e32000 0 8>;
+ 			/* placeholder */
+ 		};
+ 
+ 		pwm3: pwm@e6e33000 {
++			reg = <0 0xe6e33000 0 8>;
+ 			/* placeholder */
+ 		};
+ 
+ 		pwm4: pwm@e6e34000 {
++			reg = <0 0xe6e34000 0 8>;
+ 			/* placeholder */
+ 		};
+ 
+ 		pwm5: pwm@e6e35000 {
++			reg = <0 0xe6e35000 0 8>;
+ 			/* placeholder */
+ 		};
+ 
+ 		pwm6: pwm@e6e36000 {
++			reg = <0 0xe6e36000 0 8>;
+ 			/* placeholder */
+ 		};
+ 
+ 		du: display@feb00000 {
++			reg = <0 0xfeb00000 0 0x70000>,
++			      <0 0xfeb90000 0 0x14>;
+ 			/* placeholder */
+ 
+ 			ports {
+@@ -666,18 +700,26 @@
+ 		};
+ 
+ 		hsusb: usb@e6590000 {
++			reg = <0 0xe6590000 0 0x100>;
+ 			/* placeholder */
+ 		};
+ 
+ 		pciec0: pcie@fe000000 {
++			reg = <0 0xfe000000 0 0x80000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		pciec1: pcie@ee800000 {
++			reg = <0 0xee800000 0 0x80000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		rcar_sound: sound@ec500000 {
++			reg =	<0 0xec500000 0 0x1000>, /* SCU */
++				<0 0xec5a0000 0 0x100>,  /* ADG */
++				<0 0xec540000 0 0x1000>, /* SSIU */
++				<0 0xec541000 0 0x280>,  /* SSI */
++				<0 0xec740000 0 0x200>;  /* Audio DMAC peri peri*/
+ 			/* placeholder */
+ 
+ 			rcar_sound,dvc {
+@@ -703,38 +745,47 @@
+ 		};
+ 
+ 		usb2_phy1: usb-phy@ee0a0200 {
++			reg = <0 0xee0a0200 0 0x700>;
+ 			/* placeholder */
+ 		};
+ 
+ 		sdhi0: sd@ee100000 {
++			reg = <0 0xee100000 0 0x2000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		sdhi1: sd@ee120000 {
++			reg = <0 0xee120000 0 0x2000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		sdhi2: sd@ee140000 {
++			reg = <0 0xee140000 0 0x2000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		sdhi3: sd@ee160000 {
++			reg = <0 0xee160000 0 0x2000>;
+ 			/* placeholder */
+ 		};
+ 
+ 		usb3_phy0: usb-phy@e65ee000 {
++			reg = <0 0xe65ee000 0 0x90>;
+ 			/* placeholder */
+ 		};
+ 
+ 		usb3_peri0: usb@ee020000 {
++			reg = <0 0xee020000 0 0x400>;
+ 			/* placeholder */
+ 		};
+ 
+ 		xhci0: usb@ee000000 {
++			reg = <0 0xee000000 0 0xc00>;
+ 			/* placeholder */
+ 		};
+ 
+ 		wdt0: watchdog@e6020000 {
++			reg = <0 0xe6020000 0 0x0c>;
+ 			/* placeholder */
+ 		};
+ 	};
+-- 
+2.7.4
