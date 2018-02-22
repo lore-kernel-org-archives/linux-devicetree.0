@@ -1,59 +1,97 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/2] ASoC: Add DT bindings documentation for
-	max9759 amplifier
-Date: Mon, 19 Feb 2018 14:45:57 +0100
-Message-ID: <1519047958-22583-2-git-send-email-narmstrong@baylibre.com>
-References: <1519047958-22583-1-git-send-email-narmstrong@baylibre.com>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH v3 2/4] gpio: Add GPIO driver for Nintendo Wii
+Date: Thu, 22 Feb 2018 14:08:31 +0100
+Message-ID: <20180222130831.hxhvdfyfpz4j4j5t@latitude>
+References: <20180209120732.17863-1-j.neuschaefer@gmx.net>
+ <20180209120732.17863-3-j.neuschaefer@gmx.net>
+ <CACRpkdZKLm2owgVu7-f80dOdQDzQKCbO2Vvh3QHfOpEzndMxxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1519047958-22583-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature"; boundary="2silb4ycf5a2su42"
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZKLm2owgVu7-f80dOdQDzQKCbO2Vvh3QHfOpEzndMxxg@mail.gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Albert Herranz <albert_herranz@yahoo.es>, Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Joel Stanley <joel@jms.id.au>, "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT bindings documentation for Maxim MAX9759
-speaker amplifier.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/sound/maxim,max9759.txt        | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/maxim,max9759.txt
+--2silb4ycf5a2su42
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/sound/maxim,max9759.txt b/Documentation/devicetree/bindings/sound/maxim,max9759.txt
-new file mode 100644
-index 0000000..737a996
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/maxim,max9759.txt
-@@ -0,0 +1,18 @@
-+Maxim MAX9759 Speaker Amplifier
-+===============================
-+
-+Required properties:
-+- compatible : "maxim,max9759"
-+- shutdown-gpios : the gpio connected to the shutdown pin
-+- mute-gpios : the gpio connected to the mute pin
-+- gain-gpios : the 2 gpios connected to the g1 and g2 pins
-+
-+Example:
-+
-+max9759: analog-amplifier {
-+	compatible = "maxim,max9759";
-+	shutdown-gpios = <&gpio3 20 GPIO_ACTIVE_LOW>;
-+	mute-gpios = <&gpio3 19 GPIO_ACTIVE_LOW>;
-+	gain-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>,
-+		     <&gpio3 25 GPIO_ACTIVE_LOW>;
-+};
--- 
-2.7.4
+On Thu, Feb 22, 2018 at 01:57:07PM +0100, Linus Walleij wrote:
+> On Fri, Feb 9, 2018 at 1:07 PM, Jonathan Neusch=C3=A4fer
+> <j.neuschaefer@gmx.net> wrote:
+>=20
+> > The Nintendo Wii's chipset (called "Hollywood") has a GPIO controller
+> > that supports a configurable number of pins (up to 32), interrupts, and
+> > some special mechanisms to share the controller between the system's
+> > security processor (an ARM926) and the PowerPC CPU. Pin multiplexing is
+> > not supported.
+> >
+> > This patch adds a basic driver for this GPIO controller. Interrupt
+> > support will come in a later patch.
+> >
+> > This patch is based on code developed by Albert Herranz and the GameCube
+> > Linux Team, file arch/powerpc/platforms/embedded6xx/hlwd-gpio.c,
+> > available at https://github.com/DeltaResero/GC-Wii-Linux-Kernels, but
+> > has grown quite dissimilar.
+> >
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> > Cc: Albert Herranz <albert_herranz@yahoo.es>
+> > Cc: Segher Boessenkool <segher@kernel.crashing.org>
+> > <---
+> >
+> > v3:
+> > - Do some style cleanups, as suggest by Andy Shevchenko
+>=20
+> Patch applied to the GPIO tree for v4.17 with all the review tags.
+>=20
+> I just folded the changelog into the commit message, for new
+> drivers it is sometimes useful to keep these around in
+> git actually.
+>=20
+> If any further changes are needed we can just patch on top
+> of this.
+>=20
+> It's a very pretty driver, good work!
+
+Thanks! :-)
+
+
+Jonathan Neusch=C3=A4fer
+
+--2silb4ycf5a2su42
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJajsDGAAoJEAgwRJqO81/bEuEQAKyDSerRX42NnNKQtZyCS+1I
+qYrcXBOLLdKa2ZOpNI9BxxalgJEJeJrRRpylu/sxbRsn+Kxbg1J5GVXf85c41wzs
+YHQqe9PXXBYFnJKO3119HXt4OE3sfjfEU7AZ/trKzy3VklKuDif+lvicexBZaPFP
+E/HIYWcMk7iCs817KOwau+SwXQwQe2wNOmCboG4dqTXvwWKGKEofOc3TlSYDmglc
+1ccOrr5/QEpEWj917tFO5jkGJt8kouHzzyEKw/tUD+IPd3xA0hbIi1dz3+qWIcXJ
+6AtQo6yDFYfLXhKev5QbR4Sq0EXzXrnlf0DebR4jksHgM1rnZu2Tog5udKmU8r0U
+DPjvwsm539LYYTKGgV1cAkawOwLFT8QpyFgD5k1zUszMbayLjffWKG9iGrJAwWYs
+ivB7DZwEPuem14FkJeUufrsGIG4mxq0MoXwP2JeH/GqWZi8mvH8xdIM93lhpms62
+x+dU8qipsKOoao3j3F2GA07WwF4220JIFxtOJIuHVVlw5Cq4rOak94GRj4MeJEO3
+USQ3bSoL549ZUrTTWPmzDSzigd/yVPt4vF9AMbYuVyWp1KXONEAEZOJiuncQt8vq
+TzYKW8xPSD+fz+a45kW4UBWgmPx8u9udIXYUP8xCEO7mfsGLr0ZJSxfOqqkA7J12
+E4SJS0ORWpGggYhec6zA
+=xJG3
+-----END PGP SIGNATURE-----
+
+--2silb4ycf5a2su42--
