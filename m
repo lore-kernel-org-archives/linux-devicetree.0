@@ -1,7 +1,7 @@
 From: Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v1 1/5] dt-bindings: soc: update MT2712 power dt-bindings
-Date: Thu, 22 Feb 2018 13:48:47 +0800
-Message-ID: <20180222054851.26096-3-weiyi.lu@mediatek.com>
+Subject: [PATCH v1 0/5] update Mediatek MT2712 clock and scpsys support
+Date: Thu, 22 Feb 2018 13:48:46 +0800
+Message-ID: <20180222054851.26096-2-weiyi.lu@mediatek.com>
 References: <20180222054851.26096-1-weiyi.lu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,26 +21,22 @@ To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ste
 Cc: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add new power domains(MFG_SC1/MFG_SC2/MFG_SC3)
-for MT2712 according to ECO design change.
+This series is based on v4.16-rc1 and composed of scpsys control (PATCH 1-2) and clock control (PATCH 3-5).
+Basically, all changes are for the ECO design change of MT2712.
 
-Signed-off-by: Weiyi Lu <weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- include/dt-bindings/power/mt2712-power.h | 3 +++
- 1 file changed, 3 insertions(+)
+Weiyi Lu (5):
+  dt-bindings: soc: update MT2712 power dt-bindings
+  soc: mediatek: update power domain data of MT2712
+  dt-bindings: clock: add clocks for MT2712
+  arm64: dts: add clock device nodes of MT2712
+  clk: mediatek: update clock driver of MT2712
 
-diff --git a/include/dt-bindings/power/mt2712-power.h b/include/dt-bindings/power/mt2712-power.h
-index 92b46d772fae..2c147817efc2 100644
---- a/include/dt-bindings/power/mt2712-power.h
-+++ b/include/dt-bindings/power/mt2712-power.h
-@@ -22,5 +22,8 @@
- #define MT2712_POWER_DOMAIN_USB		5
- #define MT2712_POWER_DOMAIN_USB2	6
- #define MT2712_POWER_DOMAIN_MFG		7
-+#define MT2712_POWER_DOMAIN_MFG_SC1	8
-+#define MT2712_POWER_DOMAIN_MFG_SC2	9
-+#define MT2712_POWER_DOMAIN_MFG_SC3	10
- 
- #endif /* _DT_BINDINGS_POWER_MT2712_POWER_H */
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi |  28 +++
+ drivers/clk/mediatek/clk-mt2712.c         |  69 +++++--
+ drivers/soc/mediatek/mtk-scpsys.c         |  42 ++++-
+ include/dt-bindings/clock/mt2712-clk.h    | 294 +++++++++++++++---------------
+ include/dt-bindings/power/mt2712-power.h  |   3 +
+ 5 files changed, 277 insertions(+), 159 deletions(-)
+
 -- 
 2.12.5
