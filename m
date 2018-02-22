@@ -1,184 +1,67 @@
-Return-Path: <SRS0=XlNi=FO=gmail.com=digetx@kernel.org>
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v3 04/15] dt-bindings: memory: tegra: Add hot resets definitions
-Date: Tue, 20 Feb 2018 19:25:17 +0300
-Message-Id: <8b54af80e13406fc873dcc5932223f5d1c196172.1519141896.git.digetx@gmail.com>
-In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
-References: <cover.1519141896.git.digetx@gmail.com>
-In-Reply-To: <cover.1519141896.git.digetx@gmail.com>
-References: <cover.1519141896.git.digetx@gmail.com>
-To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=JN/F=FQ=axis.com=niklas.cassel@kernel.org>
+From: Niklas Cassel <niklas.cassel@axis.com>
+Subject: [PATCH 2/2] dt-bindings: pinctrl: artpec6: add smaller groups for uarts
+Date: Thu, 22 Feb 2018 16:22:47 +0100
+Message-Id: <20180222152247.10554-2-niklas.cassel@axis.com>
+In-Reply-To: <20180222152247.10554-1-niklas.cassel@axis.com>
+References: <20180222152247.10554-1-niklas.cassel@axis.com>
+To: Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>, Niklas Cassel <niklass@axis.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@axis.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add definitions for the Tegra20+ memory controller hot resets.
+Add group configuration for uarts that are cut down
+variants, the standard being full, i.e. all signals,
+flow control, i.e. rx/tx and cts/rts, and rx/tx only.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+This allows us to be more precise in which pins we're
+actually using.
+
+Unfortunately the existing naming scheme leaves things
+to be desired, e.g. uart3grp0 means RX/TX and CTS/RTS,
+yet uart0grp0 means all pins.
+Since the exising suffixes have different meaning for
+different uarts, and the fact that we cannot change
+the name of existing groups, makes it hard to use a
+descriptive name for the newly added groups.
+
+Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
 ---
- include/dt-bindings/memory/tegra114-mc.h | 19 +++++++++++++++++++
- include/dt-bindings/memory/tegra124-mc.h | 25 +++++++++++++++++++++++++
- include/dt-bindings/memory/tegra20-mc.h  | 21 +++++++++++++++++++++
- include/dt-bindings/memory/tegra210-mc.h | 31 +++++++++++++++++++++++++++++++
- include/dt-bindings/memory/tegra30-mc.h  | 19 +++++++++++++++++++
- 5 files changed, 115 insertions(+)
- create mode 100644 include/dt-bindings/memory/tegra20-mc.h
+ .../devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt  | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/include/dt-bindings/memory/tegra114-mc.h b/include/dt-bindings/memory/tegra114-mc.h
-index 27c8386987ff..54a12adec7b8 100644
---- a/include/dt-bindings/memory/tegra114-mc.h
-+++ b/include/dt-bindings/memory/tegra114-mc.h
-@@ -23,4 +23,23 @@
- #define TEGRA_SWGROUP_EMUCIF	18
- #define TEGRA_SWGROUP_TSEC	19
- 
-+#define TEGRA114_MC_RESET_AFI		0
-+#define TEGRA114_MC_RESET_AVPC		1
-+#define TEGRA114_MC_RESET_DC		2
-+#define TEGRA114_MC_RESET_DCB		3
-+#define TEGRA114_MC_RESET_EPP		4
-+#define TEGRA114_MC_RESET_2D		5
-+#define TEGRA114_MC_RESET_HC		6
-+#define TEGRA114_MC_RESET_HDA		7
-+#define TEGRA114_MC_RESET_ISP		8
-+#define TEGRA114_MC_RESET_MPCORE	9
-+#define TEGRA114_MC_RESET_MPCORELP	10
-+#define TEGRA114_MC_RESET_MPE		11
-+#define TEGRA114_MC_RESET_3D		12
-+#define TEGRA114_MC_RESET_3D2		13
-+#define TEGRA114_MC_RESET_PPCS		14
-+#define TEGRA114_MC_RESET_SATA		15
-+#define TEGRA114_MC_RESET_VDE		16
-+#define TEGRA114_MC_RESET_VI		17
-+
- #endif
-diff --git a/include/dt-bindings/memory/tegra124-mc.h b/include/dt-bindings/memory/tegra124-mc.h
-index f534d7c06019..186e6b7e9b35 100644
---- a/include/dt-bindings/memory/tegra124-mc.h
-+++ b/include/dt-bindings/memory/tegra124-mc.h
-@@ -29,4 +29,29 @@
- #define TEGRA_SWGROUP_VIC	24
- #define TEGRA_SWGROUP_VI	25
- 
-+#define TEGRA124_MC_RESET_AFI		0
-+#define TEGRA124_MC_RESET_AVPC		1
-+#define TEGRA124_MC_RESET_DC		2
-+#define TEGRA124_MC_RESET_DCB		3
-+#define TEGRA124_MC_RESET_HC		4
-+#define TEGRA124_MC_RESET_HDA		5
-+#define TEGRA124_MC_RESET_ISP2		6
-+#define TEGRA124_MC_RESET_MPCORE	7
-+#define TEGRA124_MC_RESET_MPCORELP	8
-+#define TEGRA124_MC_RESET_MSENC		9
-+#define TEGRA124_MC_RESET_PPCS		10
-+#define TEGRA124_MC_RESET_SATA		11
-+#define TEGRA124_MC_RESET_VDE		12
-+#define TEGRA124_MC_RESET_VI		13
-+#define TEGRA124_MC_RESET_VIC		14
-+#define TEGRA124_MC_RESET_XUSB_HOST	15
-+#define TEGRA124_MC_RESET_XUSB_DEV	16
-+#define TEGRA124_MC_RESET_TSEC		17
-+#define TEGRA124_MC_RESET_SDMMC1	18
-+#define TEGRA124_MC_RESET_SDMMC2	19
-+#define TEGRA124_MC_RESET_SDMMC3	20
-+#define TEGRA124_MC_RESET_SDMMC4	21
-+#define TEGRA124_MC_RESET_ISP2B		22
-+#define TEGRA124_MC_RESET_GPU		23
-+
- #endif
-diff --git a/include/dt-bindings/memory/tegra20-mc.h b/include/dt-bindings/memory/tegra20-mc.h
-new file mode 100644
-index 000000000000..35e131eee198
---- /dev/null
-+++ b/include/dt-bindings/memory/tegra20-mc.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef DT_BINDINGS_MEMORY_TEGRA20_MC_H
-+#define DT_BINDINGS_MEMORY_TEGRA20_MC_H
-+
-+#define TEGRA20_MC_RESET_AVPC		0
-+#define TEGRA20_MC_RESET_DC		1
-+#define TEGRA20_MC_RESET_DCB		2
-+#define TEGRA20_MC_RESET_EPP		3
-+#define TEGRA20_MC_RESET_2D		4
-+#define TEGRA20_MC_RESET_HC		5
-+#define TEGRA20_MC_RESET_ISP		6
-+#define TEGRA20_MC_RESET_MPCORE		7
-+#define TEGRA20_MC_RESET_MPEA		8
-+#define TEGRA20_MC_RESET_MPEB		9
-+#define TEGRA20_MC_RESET_MPEC		10
-+#define TEGRA20_MC_RESET_3D		11
-+#define TEGRA20_MC_RESET_PPCS		12
-+#define TEGRA20_MC_RESET_VDE		13
-+#define TEGRA20_MC_RESET_VI		14
-+
-+#endif
-diff --git a/include/dt-bindings/memory/tegra210-mc.h b/include/dt-bindings/memory/tegra210-mc.h
-index 4490f7cf4772..cacf05617e03 100644
---- a/include/dt-bindings/memory/tegra210-mc.h
-+++ b/include/dt-bindings/memory/tegra210-mc.h
-@@ -34,4 +34,35 @@
- #define TEGRA_SWGROUP_ETR	29
- #define TEGRA_SWGROUP_TSECB	30
- 
-+#define TEGRA210_MC_RESET_AFI		0
-+#define TEGRA210_MC_RESET_AVPC		1
-+#define TEGRA210_MC_RESET_DC		2
-+#define TEGRA210_MC_RESET_DCB		3
-+#define TEGRA210_MC_RESET_HC		4
-+#define TEGRA210_MC_RESET_HDA		5
-+#define TEGRA210_MC_RESET_ISP2		6
-+#define TEGRA210_MC_RESET_MPCORE	7
-+#define TEGRA210_MC_RESET_NVENC		8
-+#define TEGRA210_MC_RESET_PPCS		9
-+#define TEGRA210_MC_RESET_SATA		10
-+#define TEGRA210_MC_RESET_VI		11
-+#define TEGRA210_MC_RESET_VIC		12
-+#define TEGRA210_MC_RESET_XUSB_HOST	13
-+#define TEGRA210_MC_RESET_XUSB_DEV	14
-+#define TEGRA210_MC_RESET_A9AVP		15
-+#define TEGRA210_MC_RESET_TSEC		16
-+#define TEGRA210_MC_RESET_SDMMC1	17
-+#define TEGRA210_MC_RESET_SDMMC2	18
-+#define TEGRA210_MC_RESET_SDMMC3	19
-+#define TEGRA210_MC_RESET_SDMMC4	20
-+#define TEGRA210_MC_RESET_ISP2B		21
-+#define TEGRA210_MC_RESET_GPU		22
-+#define TEGRA210_MC_RESET_NVDEC		23
-+#define TEGRA210_MC_RESET_APE		24
-+#define TEGRA210_MC_RESET_SE		25
-+#define TEGRA210_MC_RESET_NVJPG		26
-+#define TEGRA210_MC_RESET_AXIAP		27
-+#define TEGRA210_MC_RESET_ETR		28
-+#define TEGRA210_MC_RESET_TSECB		29
-+
- #endif
-diff --git a/include/dt-bindings/memory/tegra30-mc.h b/include/dt-bindings/memory/tegra30-mc.h
-index 3cac81919023..169f005fbc78 100644
---- a/include/dt-bindings/memory/tegra30-mc.h
-+++ b/include/dt-bindings/memory/tegra30-mc.h
-@@ -22,4 +22,23 @@
- #define TEGRA_SWGROUP_MPCORE	17
- #define TEGRA_SWGROUP_ISP	18
- 
-+#define TEGRA30_MC_RESET_AFI		0
-+#define TEGRA30_MC_RESET_AVPC		1
-+#define TEGRA30_MC_RESET_DC		2
-+#define TEGRA30_MC_RESET_DCB		3
-+#define TEGRA30_MC_RESET_EPP		4
-+#define TEGRA30_MC_RESET_2D		5
-+#define TEGRA30_MC_RESET_HC		6
-+#define TEGRA30_MC_RESET_HDA		7
-+#define TEGRA30_MC_RESET_ISP		8
-+#define TEGRA30_MC_RESET_MPCORE		9
-+#define TEGRA30_MC_RESET_MPCORELP	10
-+#define TEGRA30_MC_RESET_MPE		11
-+#define TEGRA30_MC_RESET_3D		12
-+#define TEGRA30_MC_RESET_3D2		13
-+#define TEGRA30_MC_RESET_PPCS		14
-+#define TEGRA30_MC_RESET_SATA		15
-+#define TEGRA30_MC_RESET_VDE		16
-+#define TEGRA30_MC_RESET_VI		17
-+
- #endif
+diff --git a/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
+index c3f9826692bc..678f5097058e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
+@@ -19,8 +19,9 @@ Required subnode-properties:
+ 	Available functions and groups (function: group0, group1...):
+ 		gpio: cpuclkoutgrp0, udlclkoutgrp0, i2c1grp0, i2c2grp0,
+ 		      i2c3grp0, i2s0grp0, i2s1grp0, i2srefclkgrp0, spi0grp0,
+-		      spi1grp0, pciedebuggrp0, uart0grp0, uart0grp1, uart1grp0,
+-		      uart2grp0, uart2grp1, uart3grp0, uart4grp0, uart5grp0,
++		      spi1grp0, pciedebuggrp0, uart0grp0, uart0grp1, uart0grp2,
++		      uart1grp0, uart1grp1, uart2grp0, uart2grp1, uart2grp2,
++		      uart3grp0, uart4grp0, uart4grp1, uart5grp0, uart5grp1,
+ 		      uart5nocts
+ 		cpuclkout: cpuclkoutgrp0
+ 		udlclkout: udlclkoutgrp0
+@@ -33,12 +34,12 @@ Required subnode-properties:
+ 		spi0: spi0grp0
+ 		spi1: spi1grp0
+ 		pciedebug: pciedebuggrp0
+-		uart0: uart0grp0, uart0grp1
+-		uart1: uart1grp0
+-		uart2: uart2grp0, uart2grp1
++		uart0: uart0grp0, uart0grp1, uart0grp2
++		uart1: uart1grp0, uart1grp1
++		uart2: uart2grp0, uart2grp1, uart2grp2
+ 		uart3: uart3grp0
+-		uart4: uart4grp0
+-		uart5: uart5grp0, uart5nocts
++		uart4: uart4grp0, uart4grp1
++		uart5: uart5grp0, uart5grp1, uart5nocts
+ 		nand: nandgrp0
+ 		sdio0: sdio0grp0
+ 		sdio1: sdio1grp0
 -- 
-2.16.1
+2.14.2
