@@ -1,11 +1,18 @@
-From: Marcel Ziswiler <marcel@ziswiler.com>
-Subject: [PATCH v2] ARM: tegra: fix ulpi regression on tegra20
-Date: Thu, 22 Feb 2018 15:38:25 +0100
-Message-ID: <20180222143825.1517-1-marcel@ziswiler.com>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: Add ST Multi-Function eXpander
+ driver
+Date: Thu, 22 Feb 2018 15:19:46 +0000
+Message-ID: <c44b4b09-8c28-5168-136f-c72c291d7b7b@st.com>
+References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
+ <1518100057-23234-2-git-send-email-amelie.delaunay@st.com>
+ <CACRpkdZxJhntgHwgsg=P98i0aGnXSQ2rXO16H0U=cJ+sBbF27g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZxJhntgHwgsg=P98i0aGnXSQ2rXO16H0U=cJ+sBbF27g@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <7CC796D646A239409EA3DC0E782F1B18@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,67 +22,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-Since commit f8f8f1d04494 ("clk: Don't touch hardware when reparenting
-during registration") ULPI has been broken on Tegra20 leading to the
-following error message during boot:
 
-[    1.974698] ulpi_phy_power_on: ulpi write failed
-[    1.979384] tegra-ehci c5004000.usb: Failed to power on the phy
-[    1.985434] tegra-ehci: probe of c5004000.usb failed with error -110
+On 02/22/2018 02:11 PM, Linus Walleij wrote:
+> On Thu, Feb 8, 2018 at 3:27 PM, Amelie Delaunay <amelie.delaunay@st.com> wrote:
+> 
+>> +Required properties:
+>> +- compatible: must be "st,mfx"
+> 
+> I bet this should be more specific. Tomorrow there will be a new
+> version of this expander and then we will wish that we used
+> a more specific compatible for the first one.
+> 
+> Does this chip have any kind of product number on it?
+> 
+> Else I would be tempted to use the compatible "st,mfx-0000"
+> or something, indicating it is the first of its kind.
+> 
 
-Debugging through the changes and finally also consulting the TRM
-revealed that rather than the CDEV2 clock off OSC requiring such pin
-muxing actually the PLL_P_OUT4 clock is in use. It looks like so far it
-just worked by chance of that one having been enabled which Stephen's
-commit now changed when reparenting sclk away from pll_p_out4 leaving
-that one disabled. Fix this by properly assigning the PLL_P_OUT4 clock
-as the ULPI PHY clock.
+This chip has a FW version. So, I agree, I should use a compatible that 
+reflects this FW version.
 
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+>> +- reg: I2C address of the device
+>> +- interrupts: interrupt triggered by MFX_IRQ_OUT signal
+>> +- interrupt-parent: interrupt controller MFX is connected to
+>> +- interrupt-controller: marks the device as an interrupt controller
+>> +- #interrupt-cells: should be <1>, index of the interrupt within the
+>> +  controller, in accordance with the "one cell" variant of
+>> +  <devicetree/bindings/interrupt-controller/interrupt.txt>
+> 
+> Seems fine.
+> 
+>> +Optional nodes:
+>> +
+>> +* GPIO eXpander
+>> +MFX provides 16 programmable GPIOs, and it is also possible to recover 8
+>> +alternate GPIOs if the main functions are not used (touchscreen controller and
+>> +IDD measurement not enabled).
+> 
+> Apparenly Rob thinks this should go elsewhere.
+> 
 
----
+It would go with gpio/pinctrl driver, so in dt-bindings/(gpio|pinctrl).
 
-Changes in v2:
-- Updated device tree binding documentation as well.
-- CCing Dmitry as well.
+Regards,
+Amelie
 
- Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt | 4 +++-
- arch/arm/boot/dts/tegra20.dtsi                                   | 2 +-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
-index a9aa79fb90ed..1aa6f2674af5 100644
---- a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
-@@ -21,7 +21,9 @@ Required properties :
-    - timer: The timeout clock (clk_m). Present if phy_type == utmi.
-    - utmi-pads: The clock needed to access the UTMI pad control registers.
-      Present if phy_type == utmi.
--   - ulpi-link: The clock Tegra provides to the ULPI PHY (cdev2).
-+   - ulpi-link: The clock Tegra provides to the ULPI PHY (usually pad DAP_MCLK2
-+     with pad group aka "nvidia,pins" cdev2 and pin mux option config aka
-+     "nvidia,function" pllp_out4).
-      Present if phy_type == ulpi, and ULPI link mode is in use.
-  - resets : Must contain an entry for each entry in reset-names.
-    See ../reset/reset.txt for details.
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index 864a95872b8d..e05b6bb2599f 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -741,7 +741,7 @@
- 		phy_type = "ulpi";
- 		clocks = <&tegra_car TEGRA20_CLK_USB2>,
- 			 <&tegra_car TEGRA20_CLK_PLL_U>,
--			 <&tegra_car TEGRA20_CLK_CDEV2>;
-+			 <&tegra_car TEGRA20_CLK_PLL_P_OUT4>;
- 		clock-names = "reg", "pll_u", "ulpi-link";
- 		resets = <&tegra_car 58>, <&tegra_car 22>;
- 		reset-names = "usb", "utmi-pads";
--- 
-2.14.3
+>> +- gpio-controller: marks the device node as a GPIO controller
+>> +- #gpio-cells: should be <2>, the first cell is the GPIO offset on this GPIO
+>> +  controller, the second cell is the gpio flags in accordance with
+>> +  <dt-bindings/gpio/st-mfx-gpio.h>.
+> 
+> Let's discuss these extra GPIO flag bindings separately.
+> 
+> Yours,
+> Linus Walleij
+> 
