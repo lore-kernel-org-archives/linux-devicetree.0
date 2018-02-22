@@ -1,15 +1,14 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v1 3/3] drivers: mtd: chips: add support for the dual
- die stacked PNOR
-Date: Thu, 22 Feb 2018 14:33:57 +0100
-Message-ID: <20180222143357.4ec680b6@bbrezillon>
-References: <1519241514-6466-1-git-send-email-beanhuo@outlook.com>
- <DM2PR12MB00143807EEF9602098FF0D4BA6CE0@DM2PR12MB0014.namprd12.prod.outlook.com>
+Subject: Re: [PATCH v4 0/6] Use the reworked Marvell NAND controller with
+ all boards
+Date: Thu, 22 Feb 2018 10:39:26 +0100
+Message-ID: <20180222103926.40e98f62@bbrezillon>
+References: <20180219223557.2458-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <DM2PR12MB00143807EEF9602098FF0D4BA6CE0@DM2PR12MB0014.namprd12.prod.outlook.com>
+In-Reply-To: <20180219223557.2458-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
@@ -19,104 +18,61 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
 Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Bean Huo <beanhuo@outlook.com>
-Cc: "boris.brezillon@free-elections.com" <boris.brezillon@free-elections.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "richard@nod.at" <richard@nod.at>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, beanhuo <beanhuo@micron.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>, Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: devicetree@vger.kernel.org, Eric Miao <eric.y.miao@gmail.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Richard Weinberger <richard@nod.at>, Gregory Clement <gregory.clement@bootlin.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Nadav Haklai <nadavh@marvell.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Feb 2018 19:32:37 +0000
-Bean Huo <beanhuo@outlook.com> wrote:
-
-> From: beanhuo <beanhuo@micron.com>
-> 
-> For the dual die stacked parallel NOR flash (PNOR), it comprises
-> two dies in the stack. These two dies can receive the commands in
-> parallel, but there is only one die can be selected or accept
-> commands according to the maximum address line A[max].
-> For example,Micron parallel NOR MT28FW02GBBA1HPC and Cypress
-> S70GL02GS, both are dual-die stacked PNOR with 2Gbit density,
-> and maximum address line A[26], when A[26] == 0, the lower 1Gb die
-> is selected, when A[26] == 1, the upper 1Gb is selected.
-> 
-> This patch is to check the accessing offset in the chip and rebase
-> the unlock cycle command base addresses.
-> 
-> Signed-off-by: beanhuo <beanhuo@micron.com>
-> ---
->  drivers/mtd/chips/cfi_cmdset_0002.c | 144 ++++++++++++++++++++++++++++--------
->  1 file changed, 113 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
-> index 56aa6b7..8fa2193 100644
-> --- a/drivers/mtd/chips/cfi_cmdset_0002.c
-> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c
-> @@ -1104,6 +1104,27 @@ do {  \
->  
->  #endif
->  
-> +/*
-> + * The dual die stacked device comprises two identical dies which connected
-
-								    ^are
-
-> + * in parallel.But there is only one die being selected each time according
-
-		  ^ missing space after the period
-
-> + * to maximum address line A[max]. When A[max] == 0, the lower die is selected,
-> + * when A[max] == 1, the upper die is selected. This function will reture the
-
-								      ^return
-
-> + * CFI unlock-command base address accrording to accessing address.
-
-Is it really just about unlock commands?
-
-> + */
-> +static loff_t get_cmd_base_address(struct map_info *map, struct flchip *chip,
-> +		loff_t offset)
-> +{
-> +	struct cfi_private *cfi = map->fldrv_priv;
-> +	unsigned long cmd_base_addr = chip->start;
-> +
-> +	if (cfi->device_stack == CFI_DEVICESTACK_2DIE) {
-> +		if (offset >= (1 << (cfi->cfiq->DevSize - 1)))
-> +			cmd_base_addr += (1 << (cfi->cfiq->DevSize - 1));
-> +	}
-
-Could be done in a more generic way:
-
-	unsigned long die = offset >> (cfi->cfiq->DevSize - 1);
-
-	if (cfi->device_stack == 1) {
-		WARN_ON(die);
-		return cmd_base_addr;
-	}
-
-	cmd_base_addr += die << (cfi->cfiq->DevSize - 1);
-
-> +
-> +	return cmd_base_addr;
-> +}
-> +
->  static inline int do_read_onechip(struct map_info *map, struct flchip *chip, loff_t adr, size_t len, u_char *buf)
->  {
->  	unsigned long cmd_addr;
-> @@ -1180,12 +1201,18 @@ static inline void otp_enter(struct map_info *map, struct flchip *chip,
->  			     loff_t adr, size_t len)
->  {
->  	struct cfi_private *cfi = map->fldrv_priv;
-> +	unsigned long  cmd_base_addr;
->  
-> -	cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
-> +	/* For the dual die device, rebase the command base address according
-
-Please do not use net-style comments.
-
--- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+SGkgUm9iZXJ0LAoKT24gTW9uLCAxOSBGZWIgMjAxOCAyMzozNTo1MSArMDEwMApNaXF1ZWwgUmF5
+bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3cm90ZToKCj4gSGVsbG8sCj4gCj4gTWFy
+dmVsbCBOQU5EIGNvbnRyb2xsZXIgZHJpdmVyIHB4YTN4eF9uYW5kIGhhcyBiZWVuIHJlcGxhY2Vk
+IGluIDQuMTYgYnkKPiBhIG5ldyBkcml2ZXIgZmVhdHVyaW5nIHRoZSBuZXcgLT5leGVjX29wKCkg
+aW50ZXJmYWNlIGNhbGxlZAo+IG1hcnZlbGxfbmFuZC4KPiAKPiBUaGVzZSBwYXRjaGVzIHdlcmUg
+cGFydCBvZiBhIGdyZWF0ZXIgc2VyaWVzIHRoYXQgaGFzIGJlZW4gcGFydGlhbGx5Cj4gYXBwbGll
+ZC4gTm93IHRoYXQgc3VwcG9ydCBmb3IgUFhBIGJvYXJkcyBsb29rcyBzdGFibGUsIG1pZ3JhdGUg
+YWxsIG9mCj4gdGhlbSB0byB1c2UgdGhlIG5ldyBkcml2ZXIuCj4gCj4gVG8gYXZvaWQgcmlza2lu
+ZyBjb21waWxhdGlvbiBpc3N1ZXMvYnJva2VuIGJpc2VjdGlvbiwgSSBndWVzcyBpdCB3b3VsZAo+
+IHByb2JhYmx5IGJlIGJldHRlciB0byBtYWtlIGFsbCB0aGVzZSBwYXRjaGVzIGdvIHRocm91Z2gg
+dGhlIE1URCB0cmVlPwo+IAo+IEJlc3QgcmVnYXJkcywKPiBNaXF1w6hsCj4gCj4gQ2hhbmdlcyBz
+aW5jZSB2MzoKPiAgIC0gU3BsaXQgdGhlIHJlbW92YWwgb2YgcHhhM3h4X25hbmQgZHJpdmVyIGlu
+IHR3bzogb25lIHBhdGNoIHRvIG1pZ3JhdGUKPiAgICAgdGhlIGRlZmNvbmZpZ3MsIGFub3RoZXIg
+dG8gcmVtb3ZlIHRoZSBkcml2ZXIuCj4gICAtIEFja2VkLWJ5L1Rlc3RlZC1ieSBmcm9tIFJvYmVy
+dCBKYXJ6bWlrLgo+IAo+IAo+IE1pcXVlbCBSYXluYWwgKDYpOgo+ICAgbXRkOiBuYW5kOiB1c2Ug
+TWFydmVsbCByZXdvcmtlZCBOQU5EIGNvbnRyb2xsZXIgZHJpdmVyIHdpdGggYWxsCj4gICAgIHBs
+YXRmb3Jtcwo+ICAgbXRkOiBuYW5kOiByZW1vdmUgZGVwcmVjYXRlZCBweGEzeHhfbmFuZCBkcml2
+ZXIKPiAgIG10ZDogbmFuZDogcmVtb3ZlIHVzZWxlc3MgZmllbGRzIGZyb20gcHhhM3h4IE5BTkQg
+cGxhdGZvcm0gZGF0YQo+ICAgZHQtYmluZGluZ3M6IG10ZDogcmVtb3ZlIHB4YTN4eCBOQU5EIGNv
+bnRyb2xsZXIgZG9jdW1lbnRhdGlvbgo+ICAgYXJtOiBkdHM6IHB4YTogdXNlIHJld29ya2VkIE5B
+TkQgY29udHJvbGxlciBkcml2ZXIKPiAgIE1BSU5UQUlORVJTOiByZW1vdmUgZW50cnkgZm9yIGRl
+bGV0ZWQgcHhhM3h4X25hbmQgZHJpdmVyCgpJJ20gYWJvdXQgdG8gYXBwbHkgdGhpcyBzZXJpZXMu
+IERvIHlvdSBwbGFuIHRvIGFkZCBhIGZldyBtb3JlIGFja3Mgb3IKaXMgaXQgb2theT8KCj4gCj4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9weGEzeHgtbmFuZC50eHQgICAgICAgIHwgICA1
+MCAtCj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgICAgNiAtCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3B4YTN4eC5kdHNpICAgICAgICAgICAgICAg
+ICAgICAgIHwgICAgNiArLQo+ICBhcmNoL2FybS9jb25maWdzL2NtX3gzMDBfZGVmY29uZmlnICAg
+ICAgICAgICAgICAgICB8ICAgIDIgKy0KPiAgYXJjaC9hcm0vY29uZmlncy9weGEzeHhfZGVmY29u
+ZmlnICAgICAgICAgICAgICAgICAgfCAgICAzICstCj4gIGFyY2gvYXJtL2NvbmZpZ3MvcHhhX2Rl
+ZmNvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArLQo+ICBhcmNoL2FybS9jb25maWdz
+L3JhdW1mZWxkX2RlZmNvbmZpZyAgICAgICAgICAgICAgICB8ICAgIDIgKy0KPiAgYXJjaC9hcm0v
+bWFjaC1tbXAvdHRjX2RrYi5jICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA0ICstCj4gIGFy
+Y2gvYXJtL21hY2gtcHhhL2NtLXgzMDAuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgOCAr
+LQo+ICBhcmNoL2FybS9tYWNoLXB4YS9jb2xpYnJpLXB4YTN4eC5jICAgICAgICAgICAgICAgICB8
+ICAgIDggKy0KPiAgYXJjaC9hcm0vbWFjaC1weGEvY29saWJyaS5oICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgICAyICstCj4gIGFyY2gvYXJtL21hY2gtcHhhL2xpdHRsZXRvbi5jICAgICAgICAg
+ICAgICAgICAgICAgIHwgICAxMCArLQo+ICBhcmNoL2FybS9tYWNoLXB4YS9teG04eDEwLmMgICAg
+ICAgICAgICAgICAgICAgICAgICB8ICAgMTAgKy0KPiAgYXJjaC9hcm0vbWFjaC1weGEvcmF1bWZl
+bGQuYyAgICAgICAgICAgICAgICAgICAgICAgfCAgICA2ICstCj4gIGFyY2gvYXJtL21hY2gtcHhh
+L3p5bG9uaXRlLmMgICAgICAgICAgICAgICAgICAgICAgIHwgICAxMCArLQo+ICBkcml2ZXJzL210
+ZC9uYW5kL3Jhdy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTEgLQo+ICBkcml2
+ZXJzL210ZC9uYW5kL3Jhdy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgLQo+
+ICBkcml2ZXJzL210ZC9uYW5kL3Jhdy9tYXJ2ZWxsX25hbmQuYyAgICAgICAgICAgICAgICB8ICAg
+IDMgKy0KPiAgZHJpdmVycy9tdGQvbmFuZC9yYXcvcHhhM3h4X25hbmQuYyAgICAgICAgICAgICAg
+ICAgfCAyMTAzIC0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gIGluY2x1ZGUvbGludXgvcGxhdGZvcm1f
+ZGF0YS9tdGQtbmFuZC1weGEzeHguaCAgICAgIHwgICA0MyArLQo+ICAyMCBmaWxlcyBjaGFuZ2Vk
+LCA0MyBpbnNlcnRpb25zKCspLCAyMjQ3IGRlbGV0aW9ucygtKQo+ICBkZWxldGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9weGEzeHgtbmFuZC50eHQK
+PiAgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbXRkL25hbmQvcmF3L3B4YTN4eF9uYW5kLmMK
+PiAKCgoKLS0gCkJvcmlzIEJyZXppbGxvbiwgQm9vdGxpbiAoZm9ybWVybHkgRnJlZSBFbGVjdHJv
+bnMpCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cHM6Ly9ib290bGlu
+LmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCkxpbnV4IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
