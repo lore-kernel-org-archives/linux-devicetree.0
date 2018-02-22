@@ -1,16 +1,17 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/4] dt-bindings: qcom: Add SDM845 bindings
-Date: Wed, 21 Feb 2018 17:58:49 -0600
-Message-ID: <CAL_JsqL85KCd+U+1n5QdFu6Bn_ygiTPQnqmZD+xgkUgFu0qvMw@mail.gmail.com>
-References: <20180216060503.22006-1-rnayak@codeaurora.org>
- <20180216060503.22006-3-rnayak@codeaurora.org>
- <20180219193426.darxcui4g4oxyf32@rob-hp-laptop>
- <CAD=FV=UWUD4VMN4gLxBLsSEnsTnOot+ydsaOiFqvD-B2e_RQAg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] watchdog: sirfsoc: allow setting timeout in
+ devicetree
+Date: Wed, 21 Feb 2018 18:02:02 -0600
+Message-ID: <CAL_Jsq+kQza8ouKCreOapno42iSBiG0SwLjJqziv_23cmFxJxw@mail.gmail.com>
+References: <20180211200847.25000-1-marcus.folkesson@gmail.com>
+ <20180211200847.25000-3-marcus.folkesson@gmail.com>
+ <20180219000735.i5i3gne4idzzhxot@rob-hp-laptop>
+ <e318fd7a-f855-d0c0-ae6f-86bd48f58e1f@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD=FV=UWUD4VMN4gLxBLsSEnsTnOot+ydsaOiFqvD-B2e_RQAg@mail.gmail.com>
+In-Reply-To: <e318fd7a-f855-d0c0-ae6f-86bd48f58e1f@roeck-us.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,61 +21,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, LKML <linux-kernel@vger.kernel.org>, evgreen@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Guenter Roeck <linux@roeck-us.net>, Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, linux-mediatek@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, Vladimir Zapolskiy <vz@mleia.com>, Matthias Brugger <matthias.bgg@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 21, 2018 at 10:51 AM, Doug Anderson <dianders@chromium.org> wrote:
-> Rob,
->
-> On Mon, Feb 19, 2018 at 11:34 AM, Rob Herring <robh@kernel.org> wrote:
->> On Fri, Feb 16, 2018 at 11:35:01AM +0530, Rajendra Nayak wrote:
->>> Add a SoC string 'sdm845' for the qualcomm SDM845 SoC
+On Sun, Feb 18, 2018 at 7:07 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> On 02/18/2018 04:07 PM, Rob Herring wrote:
+>>
+>> On Sun, Feb 11, 2018 at 09:08:43PM +0100, Marcus Folkesson wrote:
 >>>
->>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>>> watchdog_init_timeout() will allways pick timeout_param since it
+>>> defaults to a valid timeout.
+>>>
+>>> By following best practice described in
+>>> Documentation/watchdog/watchdog-kernel-api.txt, it also
+>>> let us to set timout-sec property in devicetree.
+>>
+>>
+>> typo
+>>
+>>>
+>>> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+>>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 >>> ---
->>>  Documentation/devicetree/bindings/arm/qcom.txt | 1 +
->>>  1 file changed, 1 insertion(+)
+>>>   Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt | 4 ++++
+>>>   drivers/watchdog/sirfsoc_wdt.c                             | 2 +-
+>>>   2 files changed, 5 insertions(+), 1 deletion(-)
 >>>
->>> diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
->>> index 0ed4d39d7fe1..ee532e705d6c 100644
->>> --- a/Documentation/devicetree/bindings/arm/qcom.txt
->>> +++ b/Documentation/devicetree/bindings/arm/qcom.txt
->>> @@ -26,6 +26,7 @@ The 'SoC' element must be one of the following strings:
->>>       msm8996
->>>       mdm9615
->>>       ipq8074
->>> +     sdm845
+>>> diff --git a/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
+>>> b/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
+>>> index 9cbc76c89b2b..0dce5e3100b4 100644
+>>> --- a/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
+>>> +++ b/Documentation/devicetree/bindings/watchdog/sirfsoc_wdt.txt
+>>> @@ -5,10 +5,14 @@ Required properties:
+>>>   - reg: Address range of tick timer/WDT register set
+>>>   - interrupts: interrupt number to the cpu
+>>>   +Optional properties:
+>>> +- timeout-sec : Contains the watchdog timeout in seconds
+>>> +
+>>>   Example:
+>>>     timer@b0020000 {
+>>>         compatible = "sirf,prima2-tick";
+>>>         reg = <0xb0020000 0x1000>;
+>>>         interrupts = <0>;
+>>> +       timeout-sec = <30>;
+>>>   };
+>>> diff --git a/drivers/watchdog/sirfsoc_wdt.c
+>>> b/drivers/watchdog/sirfsoc_wdt.c
+>>> index 4eea351e09b0..ac0c9d2c4aee 100644
+>>> --- a/drivers/watchdog/sirfsoc_wdt.c
+>>> +++ b/drivers/watchdog/sirfsoc_wdt.c
+>>> @@ -29,7 +29,7 @@
+>>>   #define SIRFSOC_WDT_MAX_TIMEOUT               (10 * 60)       /* 10
+>>> mins */
+>>>   #define SIRFSOC_WDT_DEFAULT_TIMEOUT   30              /* 30 secs */
+>>>   -static unsigned int timeout = SIRFSOC_WDT_DEFAULT_TIMEOUT;
+>>> +static unsigned int timeout;
 >>
->> These should really be the full string with 'qcom,', but you don't have
->> to fix that now.
 >>
->> Reviewed-by: Rob Herring <robh@kernel.org>
+>> If you have an old dtb, then you still need the default.
+>>
 >
-> Thanks for the review!  I agree that we should land this and then make
-> further progress in additional patches.
+> No. It is optional to start with, and the driver already has
 >
->
-> Are you suggesting to rewriting this whole bindings doc to not specify
-> things in an "M x N" type of way?  AKA the top of this doc says:
->
->> Each board must specify a top-level board compatible string with the following
->> format:
->>         compatible = "qcom,<SoC>[-<soc_version>][-<foundry_id>]-<board>[/<subtype>][-<board_version>]"
->> The 'SoC' and 'board' elements are required. All other elements are optional.
->
-> ...and then the doc goes on to give lists of known SoC and board values.
->
->
-> Presumably if someone were to fix this then they'd need to try to
-> track down existing boards so they could enumerate every known
-> combination?
+> static struct watchdog_device sirfsoc_wdd = {
+>         .info = &sirfsoc_wdt_ident,
+>         .ops = &sirfsoc_wdt_ops,
+>         .timeout = SIRFSOC_WDT_DEFAULT_TIMEOUT,                 <------
+>         .min_timeout = SIRFSOC_WDT_MIN_TIMEOUT,
+>         .max_timeout = SIRFSOC_WDT_MAX_TIMEOUT,
+> };
 
-Ah, I forgot about all this QCom craziness. NM.
+Okay, then:
 
-Though I'm not sure any of these optional suffixes ever got
-implemented. AFAIK, downstream still uses those separate board-id
-properties (though the bootloaders can finally deal with them being
-absent).
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+for the lot.
 
 Rob
