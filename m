@@ -1,18 +1,19 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 5/6] ARM: dts: stm32: add joystick support on
- stm32746g-eval
-Date: Thu, 22 Feb 2018 15:35:28 +0000
-Message-ID: <f8d91cc7-66aa-72bf-c1ed-8e95d39388ba@st.com>
-References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
- <1518100057-23234-6-git-send-email-amelie.delaunay@st.com>
- <CACRpkdbaFpLNdxZThVTO5V4y8wzekVpXoFJ_6EOOsKCD_h59cA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 09/19] ARM64: dts: Add R-Car Salvator-x M3-N support
+Date: Thu, 22 Feb 2018 16:46:34 +0100
+Message-ID: <CAK8P3a2tNdsx-Zpq8w+dKW1EMwZ0fT4Q++zb_j_heGwemeO36g@mail.gmail.com>
+References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519139541-18783-10-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdVDCga8htL+UD3P0Kzt9-OQ6hof+szGOiV9d0gwxGExqQ@mail.gmail.com>
+ <20180221171504.dac7yikrqfnjiiog@verge.net.au>
+ <CAK8P3a30pgOXvLLHe3Hb-ubPz6QeUiZKFqMZLm8Qp_7KRr7QuA@mail.gmail.com>
+ <CAMuHMdXJcHLee3mn56pSpUkFie_rQFZEPf=+6MWHe+W-+bMxgQ@mail.gmail.com>
+ <20180222153823.62bd7xfh7gj75x5j@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdbaFpLNdxZThVTO5V4y8wzekVpXoFJ_6EOOsKCD_h59cA@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <903C948E0C2F20429AC9EA9E2E0A4A8D@st.com>
+In-Reply-To: <20180222153823.62bd7xfh7gj75x5j@verge.net.au>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,48 +23,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE
- TREE BINDINGS" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 22, 2018 at 4:38 PM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Feb 22, 2018 at 02:28:46PM +0100, Geert Uytterhoeven wrote:
 
-
-On 02/22/2018 02:52 PM, Linus Walleij wrote:
-> Hi Amelie,
-> 
-> thanks for your patch.
-> 
-> On Thu, Feb 8, 2018 at 3:27 PM, Amelie Delaunay <amelie.delaunay@st.com> wrote:
-> 
->> The joystick on stm32746g-eval uses gpios on MFX gpio expander.
+>> Removing the .dts file removes the ability to boot the newly added board...
 >>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> (...)
->> +       joystick {
->> +               compatible = "gpio-keys";
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +               button@1 {
->> +                       label = "JoySel";
->> +                       linux,code = <KEY_ENTER>;
->> +                       gpios = <&mfxgpio 0 (GPIO_ACTIVE_LOW | GPIO_IN_PUSH_PULL | GPIO_PULL_UP)>;
->> +               };
-> 
-> As I think this should not all be handled by GPIO, the joystick on
-> gpio-keys needs a pin control handle pointing back to pin control
-> states on the respective pins in the pin control/GPIO driver,
-> where it can set up these properties.
-> 
-> For the individual lines the pushing and pulling flags should be
-> removed.
-> 
+>> The issue here is that we are sharing board .dtsi for boards that can be
+>> equipped with different pin-compatible SiPs (Ri-Car H3, M3-W, M3-N), while
+>> not all SoC support has been enabled and/or tested. As the board .dtsi
+>> references on-SoC devices using phandles, the new r8a77965.dtsi declares
+>> placeholders for the devices that are not yet enabled/tested.
+>> This worked fine for r8a7796.dtsi before, but causes dtc warnings due to
+>> recent improvements in DT validation.
+>>
+>> I think the simplest way to fix this is to add reg properties to the
+>> placeholders, as Simon did for the last two placeholders in r8a7796.dtsi in
+>> commit 4316989537a6ed53 ("arm64: dts: renesas: r8a7796: add reg properties to
+>> pciec[01] nodes").
+>
+> I think the best solution is an incremental patch on top of the renesas
+> devel branch to, as Geert suggests, add reg properties to the placeholders.
+>
+> I've asked Jacopo to prepare such a patch.
 
-Sure! I keep this in mind, thanks!
+Sounds good, thanks a lot for the quick reply!
 
-Regards,
-Amelie
-
-> Yours,
-> Linus Walleij
-> 
+     Arnd
