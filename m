@@ -1,67 +1,132 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: Add ST Multi-Function eXpander
- driver
-Date: Thu, 22 Feb 2018 14:11:26 +0100
-Message-ID: <CACRpkdZxJhntgHwgsg=P98i0aGnXSQ2rXO16H0U=cJ+sBbF27g@mail.gmail.com>
-References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
- <1518100057-23234-2-git-send-email-amelie.delaunay@st.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v6 0/4] R-Car DU: Convert LVDS code to bridge driver
+Date: Thu, 22 Feb 2018 15:13:32 +0200
+Message-ID: <20180222131336.7712-1-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518100057-23234-2-git-send-email-amelie.delaunay@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-renesas-soc@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 8, 2018 at 3:27 PM, Amelie Delaunay <amelie.delaunay@st.com> wrote:
-
-> +Required properties:
-> +- compatible: must be "st,mfx"
-
-I bet this should be more specific. Tomorrow there will be a new
-version of this expander and then we will wish that we used
-a more specific compatible for the first one.
-
-Does this chip have any kind of product number on it?
-
-Else I would be tempted to use the compatible "st,mfx-0000"
-or something, indicating it is the first of its kind.
-
-> +- reg: I2C address of the device
-> +- interrupts: interrupt triggered by MFX_IRQ_OUT signal
-> +- interrupt-parent: interrupt controller MFX is connected to
-> +- interrupt-controller: marks the device as an interrupt controller
-> +- #interrupt-cells: should be <1>, index of the interrupt within the
-> +  controller, in accordance with the "one cell" variant of
-> +  <devicetree/bindings/interrupt-controller/interrupt.txt>
-
-Seems fine.
-
-> +Optional nodes:
-> +
-> +* GPIO eXpander
-> +MFX provides 16 programmable GPIOs, and it is also possible to recover 8
-> +alternate GPIOs if the main functions are not used (touchscreen controller and
-> +IDD measurement not enabled).
-
-Apparenly Rob thinks this should go elsewhere.
-
-> +- gpio-controller: marks the device node as a GPIO controller
-> +- #gpio-cells: should be <2>, the first cell is the GPIO offset on this GPIO
-> +  controller, the second cell is the gpio flags in accordance with
-> +  <dt-bindings/gpio/st-mfx-gpio.h>.
-
-Let's discuss these extra GPIO flag bindings separately.
-
-Yours,
-Linus Walleij
+SGVsbG8sCgpUaGlzIHBhdGNoIHNlcmllcyBhZGRyZXNzZXMgYSBkZXNpZ24gbWlzdGFrZSB0aGF0
+IGRhdGVzIGJhY2sgZnJvbSB0aGUgaW5pdGlhbApEVSBzdXBwb3J0LiBTdXBwb3J0IGZvciB0aGUg
+TFZEUyBlbmNvZGVycywgd2hpY2ggYXJlIElQIGNvcmVzIHNlcGFyYXRlIGZyb20KdGhlIERVLCB3
+YXMgYnVuZGxlZCBpbiB0aGUgRFUgZHJpdmVyLiBXb3JzZSwgYm90aCB0aGUgRFUgYW5kIExWRFMg
+d2VyZQpkZXNjcmliZWQgdGhyb3VnaCBhIHNpbmdsZSBEVCBub2RlLgoKVG8gZml4IHRoZSwgcGF0
+Y2hlcyAxLzQgYW5kIDIvNCBkZWZpbmUgbmV3IERUIGJpbmRpbmdzIGZvciB0aGUgTFZEUwplbmNv
+ZGVycywgYW5kIGRlcHJlY2F0ZSB0aGVpciBkZXNjcmlwdGlvbiBpbnNpZGUgdGhlIERVIGJpbmRp
+bmdzLiBUbyByZXRhaW4KYmFja3dhcmQgY29tcGF0aWJpbGl0eSB3aXRoIGV4aXN0aW5nIERULCBw
+YXRjaCAzLzQgdGhlbiBwYXRjaCB0aGUgZGV2aWNlIHRyZWUKYXQgcnVudGltZSB0byBjb252ZXJ0
+IHRoZSBsZWdhY3kgYmluZGluZ3MgdG8gdGhlIG5ldyBvbmVzLgoKV2l0aCB0aGUgRFQgc2lkZSBh
+ZGRyZXNzZWQsIHBhdGNoIDQvNCBjb252ZXJ0cyB0aGUgTFZEUyBzdXBwb3J0IGNvZGUgdG8gYQpz
+ZXBhcmF0ZSBicmlkZ2UgZHJpdmVyLgoKSSBkZWNpZGVkIHRvIGdvIGZvciBsaXZlIERUIHBhdGNo
+aW5nIGluIHBhdGNoIDMvNCBiZWNhdXNlIGltcGxlbWVudGluZwpzdXBwb3J0IGZvciBib3RoIHRo
+ZSBsZWdhY3kgYW5kIG5ldyBiaW5kaW5ncyBpbiB0aGUgZHJpdmVyIHdvdWxkIGhhdmUgYmVlbgp2
+ZXJ5IGludHJ1c2l2ZSwgYW5kIHByZXZlbnRlZCBmdXJ0aGVyIGNsZWFudXBzLiBUaGlzIHZlcnNp
+b24gcmVsaWVzIG1vcmUKaGVhdmlseSBvbiBvdmVybGF5cyB0byBhdm9pZCB0b3VjaGluZyB0aGUg
+aW50ZXJuYWxzIG9mIHRoZSBPRiBjb3JlIGNvbXBhcmVkIHRvCnYyLCBldmVuIGlmIG1hbnVhbCBm
+aXhlcyB0byB0aGUgZGV2aWNlIHRyZWUgYXJlIHN0aWxsIG5lZWRlZC4KCkFzIGFsbCB0aGUgcGF0
+Y2hlcyBidXQgdGhlIGxhc3Qgb25lIGhhdmUgYmVlbiBhY2tlZCwgSSBwbGFuIHRvIHNlbmQgYSBw
+dWxsCnJlcXVlc3QgYnkgdGhlIGVuZCBvZiB0aGUgd2VlayBpZiBubyBuZXcgaXNzdWUgaXMgZGlz
+Y292ZXJlZC4KCkNvbXBhcmVkIHRvIHY1LCBJJ3ZlIGRyb3BwZWQgdGhlIE9GIGNoYW5nZXNldCBo
+YWxwZXJzIHNlcmllcyBhcyBGcmFuayByYWlzZWQKY29uY2VybnMgYWJvdXQgaGlkZGluZyBpdCBp
+biB0aGUgbWlkZGxlIG9mIGEgZHJpdmVyIHBhdGNoIHNlcmllcy4gSSd2ZSB0aHVzCmNvcGllZCB0
+aGUgaW1wbGVtZW50YXRpb24gb2Ygb2ZfY2hhbmdlc2V0X2FkZF9wcm9wZXJ0eV9jb3B5KCkgaW4g
+dGhlIGRyaXZlciB0bwphdm9pZCBibG9ja2luZyB0aGlzIHNlcmllcy4gVGhlIGZ1bmN0aW9uIGFy
+Z3VtZW50cyBhcmUgaWRlbnRpY2FsLCBzbyB3aGVuIHRoZQpPRiBjaGFuZ2VzZXQgaGVscGVycyB3
+aWxsIGxhbmQgaXQgd2lsbCBiZSB2ZXJ5IGVhc3kgdG8gZHJvcCB0aGUgcHJpdmF0ZSBjb3B5CmFu
+ZCB1c2UgdGhlIG9mX2NoYW5nZXNldF9hZGRfcHJvcGVydHlfY29weSgpIGhlbHBlci4KCkNvbXBh
+cmVkIHRvIHY0LCB0aGUgcGF0Y2ggIm9mOiBjaGFuZ2VzZXQ6IEFkZCBvZl9jaGFuZ2VzZXRfbm9k
+ZV9tb3ZlIG1ldGhvZCIKaGFzIGJlZW4gZHJvcHBlZCBhcyBpdCdzIG5vdCBuZWVkZWQuIFRoZSBw
+YXRjaGVzIHRoYXQgdXBkYXRlIHRoZSBEVCBzb3VyY2VzIHRvCnRoZSBuZXcgRFUgYW5kIExWRFMg
+YmluZGluZ3MgaGF2ZSBiZWVuIGRyb3BwZWQgYXMgd2VsbCB0byBhdm9pZCBzcGFtbWluZyB0aGUK
+bGlzdHMgYXMgdGhleSBkZXBlbmQgb24gdGhlIGRyaXZlciBjaGFuZ2VzIGdvaW5nIGluIGZpcnN0
+IHRvIGF2b2lkCnJlZ3Jlc3Npb25zIGFuZCBoYXZlbid0IGJlZW4gY2hhbmdlZC4KCkNvbXBhcmVk
+IHRvIHYzLCB0aGlzIHNlcmllcyB1c2VzIHRoZSBPRiBjaGFuZ2VzZXQgQVBJIHRvIHVwZGF0ZSBw
+cm9wZXJ0aWVzCmluc3RlYWQgb2YgYWNjZXNzaW5nIHRoZSBpbnRlcm5hbHMgb2YgdGhlIHByb3Bl
+cnR5IHN0cnVjdHVyZS4gVGhpcyByZW1vdmVzIHRoZQpsb2NhbCBpbXBsZW1lbnRhdGlvbiBvZiBm
+dW5jdGlvbnMgdG8gbG9vayB1cCBub2RlcyBieSBwYXRoIGFuZCB1cGRhdGUKcHJvcGVydGllcy4g
+SW4gb3JkZXIgdG8gZG8gdGhpcywgSSBwdWxsZWQgaW4gUGFudGVsaXMnIHBhdGNoIHNlcmllcyB0
+aXRsZWQKIltQQVRDSCB2MiAwLzVdIG9mOiBkeW5hbWljOiBDaGFuZ2VzZXRzIGhlbHBlcnMgJiBm
+aXhlcyIgYXQgUm9iJ3MgcmVxdWVzdCwgYW5kCnJlYmFzZWQgaXQgd2hpbGUgdGFraW5nIHR3byBz
+bWFsbCByZXZpZXcgY29tbWVudHMgaW50byBhY2NvdW50LgoKUm9iLCBJJ2QgbGlrZSB0aGlzIHNl
+cmllcyB0byBiZSBtZXJnZWQgaW4gdjQuMTcuIEFzIHRoZSBjaGFuZ2VzZXQgaGVscGVycyBhcmUK
+bm93IGEgZGVwZW5kZW5jeSwgSSdkIG5lZWQgeW91IHRvIG1lcmdlIHRoZW0gZWFybHkgKGlkZWFs
+bHkgb24gdG9wIG9mCnY0LjE2LXJjMSkgYW5kIHByb3ZpZGUgYSBzdGFibGUgYnJhbmNoLCBvciBn
+ZXQgeW91ciBhY2sgdG8gbWVyZ2UgdGhlbSB0aHJvdWdoCkRhdmUncyB0cmVlIGlmIHRoZXkgZG9u
+J3QgY29uZmxpY3Qgd2l0aCB3aGF0IHlvdSBoYXZlIGFuZCB3aWxsIHF1ZXVlIGZvcgp2NC4xNy4K
+ClRoaXMgdmVyc2lvbiBhbHNvIGRyb3BzIHRoZSBzbWFsbCBmaXggdG8gdGhlIFBvcnRlciBib2Fy
+ZCBkZXZpY2UgdHJlZSB0aGF0IGhhcwpiZWVuIHF1ZXVlZCBmb3IgdjQuMTcgYWxyZWFkeS4KCkNv
+bXBhcmVkIHRvIHYyLCB0aGUgYmlnZ2VzdCBjaGFuZ2UgaXMgaW4gcGF0Y2ggMy80LiBGb2xsb3dp
+bmcgUm9iJ3MgYW5kCkZyYW5rJ3MgcmV2aWV3cyBpdCB3YXMgY2xlYXIgdGhhdCBtb2RpZnlpbmcg
+dGhlIHVuZmxhdHRlbmVkIERUIHN0cnVjdHVyZSBvZgp0aGUgb3ZlcmxheSBiZWZvcmUgYXBwbHlp
+bmcgaXQgd2Fzbid0IHBvcHVsYXIuIEkgaGF2ZSB0aHVzIGRlY2lkZWQgdG8gdXNlIG9uZQpvdmVy
+bGF5IHNvdXJjZSBwZXIgU29DIHRvIG1vdmUgYXMgbXVjaCBvZiB0aGUgRFQgY2hhbmdlcyB0byB0
+aGUgb3ZlcmxheSBhcwpwb3NzaWJsZSwgYW5kIG9ubHkgcGVyZm9ybSBtYW51YWwgbW9kaWZpY2F0
+aW9ucyAodGhhdCBhcmUgc3RpbGwgbmVlZGVkIGFzIHNvbWUKb2YgdGhlIGluZm9ybWF0aW9uIGlz
+IGJvYXJkLXNwZWNpZmljKSBvbiB0aGUgc3lzdGVtIERUIGFmdGVyIGFwcGx5aW5nIHRoZQpvdmVy
+bGF5LiBBcyBhIHJlc3VsdCB0aGUgb3ZlcmxheSBpcyBwYXJzZWQgYW5kIGFwcGxpZWQgd2l0aG91
+dCBiZWluZyBtb2RpZmllZC4KCkNvbXBhcmVkIHRvIHYxLCB0aGlzIHNlcmllcyB1cGRhdGUgdGhl
+IHI4YTc3OTIgYW5kIHI4YTc3OTQgZGV2aWNlIHRyZWUgc291cmNlcwphbmQgaW5jb3Jwb3JhdGUg
+cmV2aWV3IGZlZWRiYWNrIGFzIGRlc2NyaWJlZCBieSB0aGUgY2hhbmdlbG9ncyBvZiBpbmRpdmlk
+dWFsCnBhdGNoZXMuCgpMYXVyZW50IFBpbmNoYXJ0ICg0KToKICBkdC1iaW5kaW5nczogZGlzcGxh
+eTogcmVuZXNhczogQWRkIFItQ2FyIExWRFMgZW5jb2RlciBEVCBiaW5kaW5ncwogIGR0LWJpbmRp
+bmdzOiBkaXNwbGF5OiByZW5lc2FzOiBEZXByZWNhdGUgTFZEUyBzdXBwb3J0IGluIHRoZSBEVQog
+ICAgYmluZGluZ3MKICBkcm06IHJjYXItZHU6IEZpeCBsZWdhY3kgRFQgdG8gY3JlYXRlIExWRFMg
+ZW5jb2RlciBub2RlcwogIGRybTogcmNhci1kdTogQ29udmVydCBMVkRTIGVuY29kZXIgY29kZSB0
+byBicmlkZ2UgZHJpdmVyCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZk
+cy50eHQgICAgICAgfCAgNTYgKysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jl
+bmVzYXMsZHUudHh0ICAgICB8ICAzMSArLQogTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvS2Nv
+bmZpZyAgICAgICAgICAgICAgICAgICAgfCAgIDYgKy0KIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgIHwgIDEwICstCiBkcml2ZXJzL2dwdS9kcm0vcmNh
+ci1kdS9yY2FyX2R1X2Rydi5jICAgICAgICAgICAgICB8ICAyMSArLQogZHJpdmVycy9ncHUvZHJt
+L3JjYXItZHUvcmNhcl9kdV9kcnYuaCAgICAgICAgICAgICAgfCAgIDUgLQogZHJpdmVycy9ncHUv
+ZHJtL3JjYXItZHUvcmNhcl9kdV9lbmNvZGVyLmMgICAgICAgICAgfCAxNzUgKy0tLS0tLQogZHJp
+dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9lbmNvZGVyLmggICAgICAgICAgfCAgMTIgLQog
+ZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9rbXMuYyAgICAgICAgICAgICAgfCAgMTQg
+Ky0KIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2Nvbi5jICAgICAgICAgIHwg
+IDkzIC0tLS0KIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2Nvbi5oICAgICAg
+ICAgIHwgIDI0IC0KIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2VuYy5jICAg
+ICAgICAgIHwgMjM4IC0tLS0tLS0tLS0KIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVf
+bHZkc2VuYy5oICAgICAgICAgIHwgIDY0IC0tLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNh
+cl9kdV9vZi5jICAgICAgICAgICAgICAgfCAzNDIgKysrKysrKysrKysrKysKIGRyaXZlcnMvZ3B1
+L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuaCAgICAgICAgICAgICAgIHwgIDIwICsKIC4uLi9ncHUv
+ZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTAuZHRzICAgIHwgIDc5ICsrKysKIC4u
+Li9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTEuZHRzICAgIHwgIDUzICsr
+KwogLi4uL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5My5kdHMgICAgfCAg
+NTMgKysrCiAuLi4vZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3Nzk1LmR0cyAg
+ICB8ICA1MyArKysKIC4uLi9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTYu
+ZHRzICAgIHwgIDUzICsrKwogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9sdmRzLmMgICAg
+ICAgICAgICAgICAgfCA1MjQgKysrKysrKysrKysrKysrKysrKysrCiAyMiBmaWxlcyBjaGFuZ2Vk
+LCAxMjkwIGluc2VydGlvbnMoKyksIDYzNyBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNh
+cyxsdmRzLnR4dAogZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3Jj
+YXJfZHVfbHZkc2Nvbi5jCiBkZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXIt
+ZHUvcmNhcl9kdV9sdmRzY29uLmgKIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+cmNhci1kdS9yY2FyX2R1X2x2ZHNlbmMuYwogZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9yY2FyLWR1L3JjYXJfZHVfbHZkc2VuYy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTAuZHRzCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTEu
+ZHRzCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9v
+Zl9sdmRzX3I4YTc3OTMuZHRzCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Jj
+YXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTUuZHRzCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTYuZHRzCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9sdmRzLmMKCi0tIApSZWdh
+cmRzLAoKTGF1cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
