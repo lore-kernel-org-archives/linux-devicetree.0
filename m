@@ -1,96 +1,74 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v2] ARM: tegra: fix ulpi regression on tegra20
-Date: Thu, 22 Feb 2018 23:08:44 +0300
-Message-ID: <278c02d3-7fc2-a92e-b309-1da8116e7c41@gmail.com>
-References: <20180222143825.1517-1-marcel@ziswiler.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH V3 2/2 RESEND] ARM: dts: bcm283x: Fix
+	probing of bcm2835-i2s
+Date: Thu, 22 Feb 2018 12:11:55 -0800
+Message-ID: <871shcaino.fsf@anholt.net>
+References: <1518778534-3328-1-git-send-email-stefan.wahren@i2se.com>
+ <1518778534-3328-3-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180222143825.1517-1-marcel@ziswiler.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Ziswiler <marcel@ziswiler.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============2003072645562715533=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1518778534-3328-3-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 22.02.2018 17:38, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> Since commit f8f8f1d04494 ("clk: Don't touch hardware when reparenting
-> during registration") ULPI has been broken on Tegra20 leading to the
-> following error message during boot:
-> 
-> [    1.974698] ulpi_phy_power_on: ulpi write failed
-> [    1.979384] tegra-ehci c5004000.usb: Failed to power on the phy
-> [    1.985434] tegra-ehci: probe of c5004000.usb failed with error -110
-> 
-> Debugging through the changes and finally also consulting the TRM
-> revealed that rather than the CDEV2 clock off OSC requiring such pin
-> muxing actually the PLL_P_OUT4 clock is in use. It looks like so far it
-> just worked by chance of that one having been enabled which Stephen's
-> commit now changed when reparenting sclk away from pll_p_out4 leaving
-> that one disabled. Fix this by properly assigning the PLL_P_OUT4 clock
-> as the ULPI PHY clock.
-> 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+--===============2003072645562715533==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Indeed CDEV2 clock doesn't exist on Tegra, but there is a CDEV2 pinmux pad
-group. Looks like another clk-related relic from downstream driver that was
-borrowed to upstream and stayed unnoticed for a long time.
+--=-=-=
+Content-Type: text/plain
 
-I think in practice all T20 boards have CDEV2 configured to PLL_P_OUT4, so this
-patch is correct to me. Probably it would also worth to set CDEV2 parent to
-PLL_P_OUT4 in the clk driver for DT backwards compatibility or even make clk
-driver to read the CDEV2 pinmux config and set the proper parent based on it.
-CC'ed Peter.
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Since 517e7a1537a ("ASoC: bcm2835: move to use the clock framework")
+> the bcm2835-i2s requires a clock as DT property. Unfortunately
+> the necessary DT change has never been applied. While we are at it
+> also fix the first PCM register range to cover the PCM_GRAY register.
+>
+> Fixes: 517e7a1537a ("ASoC: bcm2835: move to use the clock framework")
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Reviewed-by: Eric Anholt <eric@anholt.net>
+> Tested-by: Matthias Reichl <hias@horus.com>
 
-> ---
-> 
-> Changes in v2:
-> - Updated device tree binding documentation as well.
-> - CCing Dmitry as well.
-> 
->  Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt | 4 +++-
->  arch/arm/boot/dts/tegra20.dtsi                                   | 2 +-
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
-> index a9aa79fb90ed..1aa6f2674af5 100644
-> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
-> @@ -21,7 +21,9 @@ Required properties :
->     - timer: The timeout clock (clk_m). Present if phy_type == utmi.
->     - utmi-pads: The clock needed to access the UTMI pad control registers.
->       Present if phy_type == utmi.
-> -   - ulpi-link: The clock Tegra provides to the ULPI PHY (cdev2).
-> +   - ulpi-link: The clock Tegra provides to the ULPI PHY (usually pad DAP_MCLK2
-> +     with pad group aka "nvidia,pins" cdev2 and pin mux option config aka
-> +     "nvidia,function" pllp_out4).
->       Present if phy_type == ulpi, and ULPI link mode is in use.
->   - resets : Must contain an entry for each entry in reset-names.
->     See ../reset/reset.txt for details.
-> diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-> index 864a95872b8d..e05b6bb2599f 100644
-> --- a/arch/arm/boot/dts/tegra20.dtsi
-> +++ b/arch/arm/boot/dts/tegra20.dtsi
-> @@ -741,7 +741,7 @@
->  		phy_type = "ulpi";
->  		clocks = <&tegra_car TEGRA20_CLK_USB2>,
->  			 <&tegra_car TEGRA20_CLK_PLL_U>,
-> -			 <&tegra_car TEGRA20_CLK_CDEV2>;
-> +			 <&tegra_car TEGRA20_CLK_PLL_P_OUT4>;
->  		clock-names = "reg", "pll_u", "ulpi-link";
->  		resets = <&tegra_car 58>, <&tegra_car 22>;
->  		reset-names = "usb", "utmi-pads";
-> 
+I've applied these 2 to bcm2835-dt-next.  Thanks!
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqPJAsACgkQtdYpNtH8
+nuhpWA//Ycq4jAee62ig9gVmxi7DOXtC9xoDJFZL9f5jx4+i4LeEy2Wf2EATx/sr
+er/e24DTTJQEUOVZB7/iYUHmBi1Wx4bedCIWmTVqav98N+nZXI0EG4JKzz6btG0j
+DIzVt2Jwf/Z2H5hy3mDEAH7HBxKkA77XBTb9tfN/TDUMGBzxMDGJkbF8uYg7NnwV
+qT4Z4FBe1y8BbKP017+KYBk5pQnRcH4uC69mqkGaW5yRXrvfYNTw4N0bUPyY6tVr
+FrD2Wlm31zB9elRY71miVb/PoIdxRt3eEOLHFH86ARV9fwzkf5L1C7bHwpaDmAHB
+O9NTyZa+8bz0Ol6FOhf9oZ8LUM3BGR9xH5rfLGT94Ex7nnLu2eN6d3qcEszUWgyt
+yGGOjJ8q9ncnVYIkdYrFRDZTV3VQJdycJ0UH4R9oZeAxijltN0ysuO4cznXXjOVA
+5JZru0/7wkmmIkc8jaUVqBFpDMCnSbG8xt4IYkyAhnGfn+1kNmXPjhpU3eRckvNO
+jaxGSXLo+jG7az3+RAWblLq9uTRUBCIkeehmwdX5pvl4vaIQz/aZP97DDYShVjts
+pdpDCbfoRV+uFvF8mWA7K38LOMzkrGwCsvQ9Vsaoo2AfbkJ2PV7jzgJ7S0XAH1Z4
+IbH3ylnH2AeQDczCEeGLYQ4XUI9dmt80XAcdZGeZwAeicPQRaN0=
+=xbJw
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============2003072645562715533==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2003072645562715533==--
