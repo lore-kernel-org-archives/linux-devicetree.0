@@ -1,97 +1,98 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH v3 2/4] gpio: Add GPIO driver for Nintendo Wii
-Date: Thu, 22 Feb 2018 14:08:31 +0100
-Message-ID: <20180222130831.hxhvdfyfpz4j4j5t@latitude>
-References: <20180209120732.17863-1-j.neuschaefer@gmx.net>
- <20180209120732.17863-3-j.neuschaefer@gmx.net>
- <CACRpkdZKLm2owgVu7-f80dOdQDzQKCbO2Vvh3QHfOpEzndMxxg@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 09/19] ARM64: dts: Add R-Car Salvator-x M3-N support
+Date: Thu, 22 Feb 2018 14:28:46 +0100
+Message-ID: <CAMuHMdXJcHLee3mn56pSpUkFie_rQFZEPf=+6MWHe+W-+bMxgQ@mail.gmail.com>
+References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519139541-18783-10-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdVDCga8htL+UD3P0Kzt9-OQ6hof+szGOiV9d0gwxGExqQ@mail.gmail.com>
+ <20180221171504.dac7yikrqfnjiiog@verge.net.au>
+ <CAK8P3a30pgOXvLLHe3Hb-ubPz6QeUiZKFqMZLm8Qp_7KRr7QuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature"; boundary="2silb4ycf5a2su42"
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZKLm2owgVu7-f80dOdQDzQKCbO2Vvh3QHfOpEzndMxxg@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Albert Herranz <albert_herranz@yahoo.es>, Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Joel Stanley <joel@jms.id.au>, "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a30pgOXvLLHe3Hb-ubPz6QeUiZKFqMZLm8Qp_7KRr7QuA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd,
 
---2silb4ycf5a2su42
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Feb 22, 2018 at 12:39 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Wed, Feb 21, 2018 at 6:15 PM, Simon Horman <horms@verge.net.au> wrote:
+>> On Tue, Feb 20, 2018 at 04:46:23PM +0100, Geert Uytterhoeven wrote:
+>>> On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+>>> > Add basic support for R-Car Salvator-X M3-N (R8A77965) board.
+>>> >
+>>> > Based on original work from:
+>>> > Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>>> > Magnus Damm <damm+renesas@opensource.se>
+>>> >
+>>> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>>>
+>>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>> Thanks, applied with prefix updated to
+>>
+>> "arm64: dts: renesas:"
+>>
+>> There was some fuzz applying this patch, the result is as follows.
+>>
+>> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> Subject: [PATCH] arm64: dts: renesas: Add R-Car Salvator-x M3-N support
+>>
+>> Add basic support for R-Car Salvator-X M3-N (R8A77965) board.
+>>
+>> Based on original work from:
+>> Takeshi Kihara <takeshi.kihara.df@renesas.com>
+>> Magnus Damm <damm+renesas@opensource.se>
+>>
+>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Something went wrong with this patch, I suspect it's missing some prerequisites
+> that fill in a few more device nodes to avoid these warnings in linux-next:
+>
+> arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
+> (reg_format): "reg" property in /soc/ethernet@e6800000/ethernet-phy@0
+> has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
 
-On Thu, Feb 22, 2018 at 01:57:07PM +0100, Linus Walleij wrote:
-> On Fri, Feb 9, 2018 at 1:07 PM, Jonathan Neusch=C3=A4fer
-> <j.neuschaefer@gmx.net> wrote:
->=20
-> > The Nintendo Wii's chipset (called "Hollywood") has a GPIO controller
-> > that supports a configurable number of pins (up to 32), interrupts, and
-> > some special mechanisms to share the controller between the system's
-> > security processor (an ARM926) and the PowerPC CPU. Pin multiplexing is
-> > not supported.
-> >
-> > This patch adds a basic driver for this GPIO controller. Interrupt
-> > support will come in a later patch.
-> >
-> > This patch is based on code developed by Albert Herranz and the GameCube
-> > Linux Team, file arch/powerpc/platforms/embedded6xx/hlwd-gpio.c,
-> > available at https://github.com/DeltaResero/GC-Wii-Linux-Kernels, but
-> > has grown quite dissimilar.
-> >
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> > Cc: Albert Herranz <albert_herranz@yahoo.es>
-> > Cc: Segher Boessenkool <segher@kernel.crashing.org>
-> > <---
-> >
-> > v3:
-> > - Do some style cleanups, as suggest by Andy Shevchenko
->=20
-> Patch applied to the GPIO tree for v4.17 with all the review tags.
->=20
-> I just folded the changelog into the commit message, for new
-> drivers it is sometimes useful to keep these around in
-> git actually.
->=20
-> If any further changes are needed we can just patch on top
-> of this.
->=20
-> It's a very pretty driver, good work!
+[...]
 
-Thanks! :-)
+> Maybe just take out the patch adding the .dts file for the time being until
+> the important nodes are all in place?
 
+Removing the .dts file removes the ability to boot the newly added board...
 
-Jonathan Neusch=C3=A4fer
+The issue here is that we are sharing board .dtsi for boards that can be
+equipped with different pin-compatible SiPs (Ri-Car H3, M3-W, M3-N), while
+not all SoC support has been enabled and/or tested. As the board .dtsi
+references on-SoC devices using phandles, the new r8a77965.dtsi declares
+placeholders for the devices that are not yet enabled/tested.
+This worked fine for r8a7796.dtsi before, but causes dtc warnings due to
+recent improvements in DT validation.
 
---2silb4ycf5a2su42
-Content-Type: application/pgp-signature; name="signature.asc"
+I think the simplest way to fix this is to add reg properties to the
+placeholders, as Simon did for the last two placeholders in r8a7796.dtsi in
+commit 4316989537a6ed53 ("arm64: dts: renesas: r8a7796: add reg properties to
+pciec[01] nodes").
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Gr{oetje,eeting}s,
 
-iQIcBAABAgAGBQJajsDGAAoJEAgwRJqO81/bEuEQAKyDSerRX42NnNKQtZyCS+1I
-qYrcXBOLLdKa2ZOpNI9BxxalgJEJeJrRRpylu/sxbRsn+Kxbg1J5GVXf85c41wzs
-YHQqe9PXXBYFnJKO3119HXt4OE3sfjfEU7AZ/trKzy3VklKuDif+lvicexBZaPFP
-E/HIYWcMk7iCs817KOwau+SwXQwQe2wNOmCboG4dqTXvwWKGKEofOc3TlSYDmglc
-1ccOrr5/QEpEWj917tFO5jkGJt8kouHzzyEKw/tUD+IPd3xA0hbIi1dz3+qWIcXJ
-6AtQo6yDFYfLXhKev5QbR4Sq0EXzXrnlf0DebR4jksHgM1rnZu2Tog5udKmU8r0U
-DPjvwsm539LYYTKGgV1cAkawOwLFT8QpyFgD5k1zUszMbayLjffWKG9iGrJAwWYs
-ivB7DZwEPuem14FkJeUufrsGIG4mxq0MoXwP2JeH/GqWZi8mvH8xdIM93lhpms62
-x+dU8qipsKOoao3j3F2GA07WwF4220JIFxtOJIuHVVlw5Cq4rOak94GRj4MeJEO3
-USQ3bSoL549ZUrTTWPmzDSzigd/yVPt4vF9AMbYuVyWp1KXONEAEZOJiuncQt8vq
-TzYKW8xPSD+fz+a45kW4UBWgmPx8u9udIXYUP8xCEO7mfsGLr0ZJSxfOqqkA7J12
-E4SJS0ORWpGggYhec6zA
-=xJG3
------END PGP SIGNATURE-----
+                        Geert
 
---2silb4ycf5a2su42--
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
