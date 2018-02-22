@@ -1,16 +1,11 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 09/19] ARM64: dts: Add R-Car Salvator-x M3-N support
-Date: Thu, 22 Feb 2018 12:39:46 +0100
-Message-ID: <CAK8P3a30pgOXvLLHe3Hb-ubPz6QeUiZKFqMZLm8Qp_7KRr7QuA@mail.gmail.com>
-References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519139541-18783-10-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdVDCga8htL+UD3P0Kzt9-OQ6hof+szGOiV9d0gwxGExqQ@mail.gmail.com>
- <20180221171504.dac7yikrqfnjiiog@verge.net.au>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v3 00/10] extend PWM framework to support PWM modes
+Date: Thu, 22 Feb 2018 14:01:11 +0200
+Message-ID: <1519300881-8136-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180221171504.dac7yikrqfnjiiog@verge.net.au>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,158 +15,174 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: thierry.reding@gmail.com, shc_work@mail.ru, kgene@kernel.org, krzk@kernel.org, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com, airlied@linux.ie, kamil@wypas.org, b.zolnierkie@samsung.com, jdelvare@suse.com, linux@roeck-us.net, dmitry.torokhov@gmail.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, mchehab@kernel.org, sean@mess.org, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, milo.kim@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com
+Cc: linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, intel-gfx@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Claudiu Beznea <claudiu.beznea@microchip.com>, linux-leds@vger.kernel.org, linux-input@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 21, 2018 at 6:15 PM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Feb 20, 2018 at 04:46:23PM +0100, Geert Uytterhoeven wrote:
->> On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
->> > Add basic support for R-Car Salvator-X M3-N (R8A77965) board.
->> >
->> > Based on original work from:
->> > Takeshi Kihara <takeshi.kihara.df@renesas.com>
->> > Magnus Damm <damm+renesas@opensource.se>
->> >
->> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->>
->> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Thanks, applied with prefix updated to
->
-> "arm64: dts: renesas:"
->
-> There was some fuzz applying this patch, the result is as follows.
->
-> From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Subject: [PATCH] arm64: dts: renesas: Add R-Car Salvator-x M3-N support
->
-> Add basic support for R-Car Salvator-X M3-N (R8A77965) board.
->
-> Based on original work from:
-> Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> Magnus Damm <damm+renesas@opensource.se>
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi all,
 
-Something went wrong with this patch, I suspect it's missing some prerequisites
-that fill in a few more device nodes to avoid these warnings in linux-next:
+Please give feedback on these patches which extends the PWM framework in
+order to support multiple PWM modes of operations. This series is a rework
+of [1] and [2].
 
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/ethernet@e6800000/ethernet-phy@0
-has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/i2c@e6510000/codec@10 has invalid
-length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/i2c@e6510000/clk_multiplier@4f
-has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/i2c@e66d8000/gpio@20 has invalid
-length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/i2c@e66d8000/adc@7c has invalid
-length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/i2c@e66d8000/adc@7f has invalid
-length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/i2c@e66d8000/clock-generator@6a
-has invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/i2c@e60b0000/pmic@30 has invalid
-length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/display@feb00000/ports/port@0 has
-invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/display@feb00000/ports/port@1 has
-invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(reg_format): "reg" property in /soc/display@feb00000/ports/port@2 has
-invalid length (4 bytes) (#address-cells == 2, #size-cells == 1)
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/ethernet@e6800000/ethernet-phy@0
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/ethernet@e6800000/ethernet-phy@0
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/i2c@e6510000/codec@10
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/i2c@e6510000/codec@10
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/i2c@e6510000/clk_multiplier@4f
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/i2c@e6510000/clk_multiplier@4f
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/i2c@e66d8000/gpio@20
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/i2c@e66d8000/gpio@20
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/i2c@e66d8000/adc@7c
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/i2c@e66d8000/adc@7c
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/i2c@e66d8000/adc@7f
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/i2c@e66d8000/adc@7f
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/i2c@e66d8000/clock-generator@6a
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/i2c@e66d8000/clock-generator@6a
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/i2c@e60b0000/pmic@30
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/i2c@e60b0000/pmic@30
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/display@feb00000/ports/port@0
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/display@feb00000/ports/port@0
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/display@feb00000/ports/port@1
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/display@feb00000/ports/port@1
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #address-cells value for
-/soc/display@feb00000/ports/port@2
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(avoid_default_addr_size): Relying on default #size-cells value for
-/soc/display@feb00000/ports/port@2
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(phys_property): Missing property '#phy-cells' in node
-/soc/usb-phy@e65ee000 or bad phandle (referred from
-/soc/usb@ee020000:phys[0])
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(pwms_property): Missing property '#pwm-cells' in node
-/soc/pwm@e6e31000 or bad phandle (referred from /backlight:pwms[0])
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(interrupts_property): Missing interrupt-controller or interrupt-map
-property in /soc/interrupt-controller@e61c0000
-arch/arm64/boot/dts/renesas/r8a77965-salvator-x.dtb: Warning
-(interrupts_property): Missing #interrupt-cells in interrupt-parent
-/soc/interrupt-controller@e61c0000
+The current patch series add the following PWM modes:
+- PWM mode normal
+- PWM mode complementary
+- PWM mode push-pull
 
-Maybe just take out the patch adding the .dts file for the time being until
-the important nodes are all in place?
+Normal mode - for PWM channels with one output; output waveforms looks like
+this:
+             __    __    __    __
+    PWM   __|  |__|  |__|  |__|  |__
+            <--T-->
 
-        Arnd
+    Where T is the signal period
+
+Since PWMs with more than one output per channel could be used as one
+output PWM the normal mode is the default mode for all PWMs (if not
+specified otherwise).
+
+Complementary mode - for PWM channels with two outputs; output waveforms
+for a PWM channel in complementary mode looks line this:
+             __    __    __    __
+    PWMH1 __|  |__|  |__|  |__|  |__
+          __    __    __    __    __
+    PWML1   |__|  |__|  |__|  |__|
+            <--T-->
+
+    Where T is the signal period.
+
+Push-pull mode - for PWM channels with two outputs; output waveforms for a
+PWM channel in push-pull mode with normal polarity looks like this:
+            __          __
+    PWMH __|  |________|  |________
+                  __          __
+    PWML ________|  |________|  |__
+           <--T-->
+
+    If polarity is inversed:
+         __    ________    ________
+    PWMH   |__|        |__|
+         ________    ________    __
+    PWML         |__|        |__|
+           <--T-->
+
+    Where T is the signal period.
+
+The PWM working modes are per PWM channel registered as PWM's capabilities.
+The driver registers itself to PWM core a get_caps() function, in
+struct pwm_ops, that will be used by PWM core to retrieve PWM capabilities.
+If this function is not registered in driver's probe, a default function
+will be used to retrieve PWM capabilities. Currently, the default
+capabilities includes only PWM normal mode.
+
+PWM state has been updated to keep PWM mode. PWM mode could be configured
+via sysfs or via DT. pwm_apply_state() will do the preliminary validation
+for PWM mode to be applied.
+
+In sysfs, user could get PWM modes by reading mode file of PWM device:
+root@sama5d2-xplained:/sys/class/pwm/pwmchip0/pwm2# ls -l
+total 0
+-r--r--r-- 1 root root 4096 Oct  9 09:07 capture
+lrwxrwxrwx 1 root root    0 Oct  9 09:07 device -> ../../pwmchip0
+-rw-r--r-- 1 root root 4096 Oct  9 08:42 duty_cycle
+-rw-r--r-- 1 root root 4096 Oct  9 08:44 enable
+--w------- 1 root root 4096 Oct  9 09:07 export
+-rw-r--r-- 1 root root 4096 Oct  9 08:43 mode
+-r--r--r-- 1 root root 4096 Oct  9 09:07 npwm
+-rw-r--r-- 1 root root 4096 Oct  9 08:42 period
+-rw-r--r-- 1 root root 4096 Oct  9 08:44 polarity
+drwxr-xr-x 2 root root    0 Oct  9 09:07 power
+lrwxrwxrwx 1 root root    0 Oct  9 09:07 subsystem -> ../../../../../../../../class/pwm
+-rw-r--r-- 1 root root 4096 Oct  9 08:42 uevent
+--w------- 1 root root 4096 Oct  9 09:07 unexport
+root@sama5d2-xplained:/sys/class/pwm/pwmchip0/pwm2# cat mode
+normal complementary [push-pull]
+
+The mode enclosed in bracket is the currently active mode.
+
+The mode could be set, via sysfs, by writing to mode file one of the modes
+displayed at read:
+root@sama5d2-xplained:/sys/class/pwm/pwmchip0/pwm2# echo normal > mode
+root@sama5d2-xplained:/sys/class/pwm/pwmchip0/pwm2# cat mode
+[normal] complementary push-pull 
+
+The PWM push-pull mode could be usefull in applications like half bridge
+converters.
+
+This series also add support for PWM modes on Atmel/Microchip SoCs.
+
+Thank you,
+Claudiu Beznea
+
+[1] https://www.spinics.net/lists/arm-kernel/msg580275.html
+[2] https://lkml.org/lkml/2018/1/12/359
+
+Changes in v3:
+- removed changes related to only one of_xlate function for all PWM drivers
+- switch to PWM capabilities per PWM channel nor per PWM chip
+- squash documentation and bindings patches as requeted by reviewer
+- introduced PWM_MODE(name) macro and used a bit enum for pwm modes
+- related to DT bindings, used flags cell also for PWM modes
+- updated of_xlate specific functions with "state->mode = mode;"
+  instructions to avoid pwm_apply_state() failures
+- use available modes for PWM channel in pwm_config() by first calling
+  pwm_get_caps() to get caps.modes
+- use loops through available modes in mode_store()/mode_show() and also in
+  of_pwm_xlate_with_flags() instead of "if else" instructions; in this way,
+  the addition of a new mode is independent of this code sections
+- use DTLI=1, DTHI=0 register settings to obtain push-pull mode waveforms
+  for Atmel/Microchip PWM controller.
+
+Changes in v2:
+- remove of_xlate and of_pwm_n_cells and use generic functions to pharse DT
+  inputs; this is done in patches 1, 2, 3, 4, 5, 6, 7 of this series; this will
+  make easy the addition of PWM mode support from DT
+- add PWM mode normal
+- register PWM modes as capabilities of PWM chips at driver probe and, in case
+  driver doesn't provide these capabilities use default ones
+- change the way PWM mode is pharsed via DT by using a new input for pwms
+  binding property
+
+
+Claudiu Beznea (10):
+  pwm: extend PWM framework with PWM modes
+  pwm: clps711x: populate PWM mode in of_xlate function
+  pwm: cros-ec: populate PWM mode in of_xlate function
+  pwm: pxa: populate PWM mode in of_xlate function
+  pwm: add PWM mode to pwm_config()
+  pwm: add PWM modes
+  pwm: atmel: add pwm capabilities
+  pwm: add push-pull mode support
+  pwm: add documentation for pwm push-pull mode
+  pwm: atmel: add push-pull mode support
+
+ Documentation/devicetree/bindings/pwm/pwm.txt |  11 ++-
+ Documentation/pwm.txt                         |  42 ++++++++-
+ arch/arm/mach-s3c24xx/mach-rx1950.c           |  11 ++-
+ drivers/bus/ts-nbus.c                         |   2 +-
+ drivers/clk/clk-pwm.c                         |   3 +-
+ drivers/gpu/drm/i915/intel_panel.c            |  17 +++-
+ drivers/hwmon/pwm-fan.c                       |   2 +-
+ drivers/input/misc/max77693-haptic.c          |   2 +-
+ drivers/input/misc/max8997_haptic.c           |   6 +-
+ drivers/leds/leds-pwm.c                       |   5 +-
+ drivers/media/rc/ir-rx51.c                    |   5 +-
+ drivers/media/rc/pwm-ir-tx.c                  |   5 +-
+ drivers/pwm/core.c                            |  98 ++++++++++++++++++++-
+ drivers/pwm/pwm-atmel.c                       | 118 +++++++++++++++++++-------
+ drivers/pwm/pwm-clps711x.c                    |  12 ++-
+ drivers/pwm/pwm-cros-ec.c                     |   4 +
+ drivers/pwm/pwm-pxa.c                         |   4 +
+ drivers/pwm/sysfs.c                           |  56 ++++++++++++
+ drivers/video/backlight/lm3630a_bl.c          |   4 +-
+ drivers/video/backlight/lp855x_bl.c           |   4 +-
+ drivers/video/backlight/lp8788_bl.c           |   5 +-
+ drivers/video/backlight/pwm_bl.c              |  11 ++-
+ drivers/video/fbdev/ssd1307fb.c               |   3 +-
+ include/dt-bindings/pwm/pwm.h                 |   2 +
+ include/linux/pwm.h                           | 100 +++++++++++++++++++++-
+ 25 files changed, 470 insertions(+), 62 deletions(-)
+
+-- 
+2.7.4
