@@ -1,77 +1,121 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v5 5/8] of: unittest: changeset helpers
-Date: Thu, 22 Feb 2018 02:05:28 +0200
-Message-ID: <20180222000531.19448-6-laurent.pinchart+renesas@ideasonboard.com>
-References: <20180222000531.19448-1-laurent.pinchart+renesas@ideasonboard.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: Add ST Multi-Function eXpander
+ driver
+Date: Wed, 21 Feb 2018 18:06:42 -0600
+Message-ID: <CAL_JsqJdqd9rpSy9Vra4tjGcAWMLyiXmEmquCUDn8dTXj1YWGQ@mail.gmail.com>
+References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
+ <1518100057-23234-2-git-send-email-amelie.delaunay@st.com>
+ <20180218231938.goeht7tomfkab6uu@rob-hp-laptop>
+ <b08ab2cd-d6a0-b5da-e33e-ad150370776b@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180222000531.19448-1-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b08ab2cd-d6a0-b5da-e33e-ad150370776b@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUGFudGVsaXMgQW50b25pb3UgPHBhbnRlbGlzLmFudG9uaW91QGtvbnN1bGtvLmNvbT4K
-CkFkZCBhIHVuaXRlc3Qgc3BlY2lmaWMgZm9yIHRoZSBuZXcgY2hhbmdlc2V0IGhlbHBlcnMuCgpT
-aWduZWQtb2ZmLWJ5OiBQYW50ZWxpcyBBbnRvbmlvdSA8cGFudGVsaXMuYW50b25pb3VAa29uc3Vs
-a28uY29tPgpbVXNlIElTX0VOQUJMRUQgaW5zdGVhZCBvZiAjaWZkZWZdClNpZ25lZC1vZmYtYnk6
-IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQu
-Y29tPgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KLS0tCiBkcml2
-ZXJzL29mL3VuaXR0ZXN0LmMgfCA1NCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA1NCBpbnNlcnRpb25zKCspCgpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9vZi91bml0dGVzdC5jIGIvZHJpdmVycy9vZi91bml0dGVzdC5jCmlu
-ZGV4IDdhOWFiYWFlODc0ZC4uMWIyMWQyYzU0OWE4IDEwMDY0NAotLS0gYS9kcml2ZXJzL29mL3Vu
-aXR0ZXN0LmMKKysrIGIvZHJpdmVycy9vZi91bml0dGVzdC5jCkBAIC02MDksNiArNjA5LDU5IEBA
-IHN0YXRpYyB2b2lkIF9faW5pdCBvZl91bml0dGVzdF9jaGFuZ2VzZXQodm9pZCkKICNlbmRpZgog
-fQogCitzdGF0aWMgdm9pZCBfX2luaXQgb2ZfdW5pdHRlc3RfY2hhbmdlc2V0X2hlbHBlcih2b2lk
-KQoreworI2lmZGVmIENPTkZJR19PRl9EWU5BTUlDCisJc3RydWN0IGRldmljZV9ub2RlICpuMSwg
-Km4yLCAqbjIxLCAqcGFyZW50LCAqbnA7CisJc3RydWN0IG9mX2NoYW5nZXNldCBjaGdzZXQ7CisK
-KwlvZl9jaGFuZ2VzZXRfaW5pdCgmY2hnc2V0KTsKKworCXBhcmVudCA9IG9mX2ZpbmRfbm9kZV9i
-eV9wYXRoKCIvdGVzdGNhc2UtZGF0YS9jaGFuZ2VzZXQiKTsKKworCXVuaXR0ZXN0KHBhcmVudCwg
-InRlc3RjYXNlIHNldHVwIGZhaWx1cmVcbiIpOworCW4xID0gb2ZfY2hhbmdlc2V0X2NyZWF0ZV9k
-ZXZpY2Vfbm9kZSgmY2hnc2V0LAorCQkJcGFyZW50LCAiL3Rlc3RjYXNlLWRhdGEvY2hhbmdlc2V0
-L24xIik7CisJdW5pdHRlc3QobjEsICJ0ZXN0Y2FzZSBzZXR1cCBmYWlsdXJlXG4iKTsKKwluMiA9
-IG9mX2NoYW5nZXNldF9jcmVhdGVfZGV2aWNlX25vZGUoJmNoZ3NldCwKKwkJCXBhcmVudCwgIi90
-ZXN0Y2FzZS1kYXRhL2NoYW5nZXNldC9uMiIpOworCXVuaXR0ZXN0KG4yLCAidGVzdGNhc2Ugc2V0
-dXAgZmFpbHVyZVxuIik7CisJbjIxID0gb2ZfY2hhbmdlc2V0X2NyZWF0ZV9kZXZpY2Vfbm9kZSgm
-Y2hnc2V0LCBuMiwgIiVzLyVzIiwKKwkJCSIvdGVzdGNhc2UtZGF0YS9jaGFuZ2VzZXQvbjIiLCAi
-bjIxIik7CisJdW5pdHRlc3QobjIxLCAidGVzdGNhc2Ugc2V0dXAgZmFpbHVyZVxuIik7CisKKwl1
-bml0dGVzdCghb2ZfY2hhbmdlc2V0X2FkZF9wcm9wZXJ0eV9zdHJpbmcoJmNoZ3NldCwgcGFyZW50
-LAorCQkJCSJwcm9wLWFkZCIsICJmb28iKSwgImZhaWwgYWRkIHByb3BcbiIpOworCisJdW5pdHRl
-c3QoIW9mX2NoYW5nZXNldF9hdHRhY2hfbm9kZSgmY2hnc2V0LCBuMSksICJmYWlsIG4xIGF0dGFj
-aFxuIik7CisJdW5pdHRlc3QoIW9mX2NoYW5nZXNldF9hdHRhY2hfbm9kZSgmY2hnc2V0LCBuMiks
-ICJmYWlsIG4yIGF0dGFjaFxuIik7CisJdW5pdHRlc3QoIW9mX2NoYW5nZXNldF9hdHRhY2hfbm9k
-ZSgmY2hnc2V0LCBuMjEpLCAiZmFpbCBuMjEgYXR0YWNoXG4iKTsKKworCXVuaXR0ZXN0KCFvZl9j
-aGFuZ2VzZXRfYXBwbHkoJmNoZ3NldCksICJhcHBseSBmYWlsZWRcbiIpOworCisJLyogTWFrZSBz
-dXJlIG5vZGUgbmFtZXMgYXJlIGNvbnN0cnVjdGVkIGNvcnJlY3RseSAqLworCW5wID0gb2ZfZmlu
-ZF9ub2RlX2J5X3BhdGgoIi90ZXN0Y2FzZS1kYXRhL2NoYW5nZXNldC9uMSIpOworCXVuaXR0ZXN0
-KG5wLCAiJyVzJyBub3QgYWRkZWRcbiIsIG4xLT5mdWxsX25hbWUpOworCW9mX25vZGVfcHV0KG5w
-KTsKKworCS8qIE1ha2Ugc3VyZSBub2RlIG5hbWVzIGFyZSBjb25zdHJ1Y3RlZCBjb3JyZWN0bHkg
-Ki8KKwlucCA9IG9mX2ZpbmRfbm9kZV9ieV9wYXRoKCIvdGVzdGNhc2UtZGF0YS9jaGFuZ2VzZXQv
-bjIiKTsKKwl1bml0dGVzdChucCwgIiclcycgbm90IGFkZGVkXG4iLCBuMi0+ZnVsbF9uYW1lKTsK
-KwlvZl9ub2RlX3B1dChucCk7CisKKwlucCA9IG9mX2ZpbmRfbm9kZV9ieV9wYXRoKCIvdGVzdGNh
-c2UtZGF0YS9jaGFuZ2VzZXQvbjIvbjIxIik7CisJdW5pdHRlc3QobnAsICInJXMnIG5vdCBhZGRl
-ZFxuIiwgbjIxLT5mdWxsX25hbWUpOworCW9mX25vZGVfcHV0KG5wKTsKKworCXVuaXR0ZXN0KCFv
-Zl9jaGFuZ2VzZXRfcmV2ZXJ0KCZjaGdzZXQpLCAicmV2ZXJ0IGZhaWxlZFxuIik7CisKKwlvZl9j
-aGFuZ2VzZXRfZGVzdHJveSgmY2hnc2V0KTsKKworCW9mX25vZGVfcHV0KHBhcmVudCk7CisjZW5k
-aWYKK30KKworCiBzdGF0aWMgdm9pZCBfX2luaXQgb2ZfdW5pdHRlc3RfcGFyc2VfaW50ZXJydXB0
-cyh2b2lkKQogewogCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7CkBAIC0yMzYzLDYgKzI0MTYsNyBA
-QCBzdGF0aWMgaW50IF9faW5pdCBvZl91bml0dGVzdCh2b2lkKQogCW9mX3VuaXR0ZXN0X3Byb3Bl
-cnR5X3N0cmluZygpOwogCW9mX3VuaXR0ZXN0X3Byb3BlcnR5X2NvcHkoKTsKIAlvZl91bml0dGVz
-dF9jaGFuZ2VzZXQoKTsKKwlvZl91bml0dGVzdF9jaGFuZ2VzZXRfaGVscGVyKCk7CiAJb2ZfdW5p
-dHRlc3RfcGFyc2VfaW50ZXJydXB0cygpOwogCW9mX3VuaXR0ZXN0X3BhcnNlX2ludGVycnVwdHNf
-ZXh0ZW5kZWQoKTsKIAlvZl91bml0dGVzdF9tYXRjaF9ub2RlKCk7Ci0tIApSZWdhcmRzLAoKTGF1
-cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+On Mon, Feb 19, 2018 at 9:59 AM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+>
+>
+> On 02/19/2018 12:19 AM, Rob Herring wrote:
+>> On Thu, Feb 08, 2018 at 03:27:32PM +0100, Amelie Delaunay wrote:
+>>> This patch adds documentation of device tree bindings for the
+>>> STMicroelectronics Multi-Function eXpander (MFX).
+>>>
+>>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/mfd/st-mfx.txt | 51 ++++++++++++++++++++++++
+>>>   1 file changed, 51 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/mfd/st-mfx.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/st-mfx.txt b/Documentation/devicetree/bindings/mfd/st-mfx.txt
+>>> new file mode 100644
+>>> index 0000000..423d800
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mfd/st-mfx.txt
+>>> @@ -0,0 +1,51 @@
+>>> +STMicroelectronics Multi-Function eXpander
+>>> +
+>>> +ST Multi-Function eXpander (MFX) is a slave controller using I2C for
+>>> +communication with the main MCU. Its main features are gpio expansion, main
+>>> +MCU IDD measurement (IDD is the amount of current that flows through VDD)
+>>> +and resistive touchscreen controller.
+>>
+>> You don't have to implement all the drivers now, but please completely
+>> describe the device. As is, there is no reason to have a child GPIO
+>> node.
+>>
+> The MFD driver will be abandoned as only GPIO part is used. I'll send a
+> V2 soon.
+>>> +
+>>> +Required properties:
+>>> +- compatible: must be "st,mfx"
+>>
+>> Kind of generic. Only 1 single version ever?
+>>
+> "st-mfx" compatible will disappear in V2 (we keep only GPIO driver). MFX
+> version can be read in MFX FW_VERSION register. So do I keep
+> "st,mfx-gpio" compatible or you want to see mfx version ?
+
+That sounds a bit worrying. The other functions will *never* get
+accessed? The DT should reflect the h/w including any future needs,
+not just what you have a driver for today.
+
+>>> +- reg: I2C address of the device
+>>> +- interrupts: interrupt triggered by MFX_IRQ_OUT signal
+>>> +- interrupt-parent: interrupt controller MFX is connected to
+>>> +- interrupt-controller: marks the device as an interrupt controller
+>>> +- #interrupt-cells: should be <1>, index of the interrupt within the
+>>> +  controller, in accordance with the "one cell" variant of
+>>> +  <devicetree/bindings/interrupt-controller/interrupt.txt>
+>>> +
+>>> +Optional nodes:
+>>> +
+>>> +* GPIO eXpander
+>>> +MFX provides 16 programmable GPIOs, and it is also possible to recover 8
+>>> +alternate GPIOs if the main functions are not used (touchscreen controller and
+>>> +IDD measurement not enabled).
+>>> +
+>>> +Required properties:
+>>> +- compatible : must be "st,mfx-gpio"
+>>> +- interrupt-parent : must be <&mfx>
+>>
+>> Not necessary. A parent node with 'interrupt-controller' property is the
+>> interrupt's parent.
+>>
+> I will keep it in mind.
+>>> +- interrupts = must be <0>
+>>> +- gpio-controller: marks the device node as a GPIO controller
+>>> +- #gpio-cells: should be <2>, the first cell is the GPIO offset on this GPIO
+>>> +  controller, the second cell is the gpio flags in accordance with
+>>> +  <dt-bindings/gpio/st-mfx-gpio.h>.
+>>
+>> Custom flags? Use standard flags.
+>>
+>> DT binding headers should be part of this patch.
+>>
+> Custom flags because MFX GPIOs have several types:
+> - Output open drain with internal pull-up resistor
+> - Output open drain without internal pull-up resistor
+> - Output push pull without internal pull resistor
+> - Input with internal pull-up resistor
+> - Input with internal pull-down resistor
+> - Input floating
+> - Input analog.
+> Standard flags don't have pull up or down information. That's why I am
+> using custom flags, they overloads standard flags.
+
+I'll leave this one to Linus to comment on.
+
+> I will add DT bindings header in this patch V2.
