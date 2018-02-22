@@ -1,42 +1,69 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v5 6/8] i2c: demux: Use changeset helpers for clarity
-Date: Thu, 22 Feb 2018 10:26:44 +0100
-Message-ID: <CAMuHMdVy9=e5eZZTdV6E=apvHxL3n5Qqob2JE+FsON3RG-JWWg@mail.gmail.com>
-References: <20180222000531.19448-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180222000531.19448-7-laurent.pinchart+renesas@ideasonboard.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v3 6/7] arm: dts: sun8i: a83t: Fix undefined offset with
+ virtual timer
+Date: Thu, 22 Feb 2018 10:30:15 +0100
+Message-ID: <20180222103015.40249fee@dell-desktop.home>
+References: <20180219081837.15482-1-mylene.josserand@bootlin.com>
+ <20180219081837.15482-7-mylene.josserand@bootlin.com>
+ <823f256a-3240-7bb4-cc0b-711108f3076c@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180222000531.19448-7-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Marek Vasut <marex@denx.de>, Wolfram Sang <wsa@the-dreams.de>, Koen Kooi <koen@dominion.thruhere.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux I2C <linux-i2c@vger.kernel.org>, Matt Porter <mporter@konsulko.com>, Frank Rowand <frowand.list@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <823f256a-3240-7bb4-cc0b-711108f3076c@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, maxime.ripard@bootlin.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIFRodSwgRmViIDIyLCAyMDE4IGF0IDE6MDUgQU0sIExhdXJlbnQgUGlu
-Y2hhcnQKPGxhdXJlbnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPiB3cm90ZToK
-PiBGcm9tOiBQYW50ZWxpcyBBbnRvbmlvdSA8cGFudGVsaXMuYW50b25pb3VAa29uc3Vsa28uY29t
-Pgo+Cj4gVGhlIGNoYW5nZXNldCBoZWxwZXJzIGFyZSBlYXNpZXIgdG8gdXNlLCB1c2UgdGhlbSBp
-bnN0ZWFkIG9mCj4gdXNpbmcgdGhlIHN0YXRpYyBwcm9wZXJ0eS4KPgo+IFNpZ25lZC1vZmYtYnk6
-IFBhbnRlbGlzIEFudG9uaW91IDxwYW50ZWxpcy5hbnRvbmlvdUBrb25zdWxrby5jb20+Cj4gQWNr
-ZWQtYnk6IFdvbGZyYW0gU2FuZyA8d3NhQHRoZS1kcmVhbXMuZGU+Cj4gWyJva2F5IiAtPiAib2si
-XQoKV2h5PyBlUEFQUiBzYXlzICJva2F5IiwgImRpc2FibGVkIiwgImZhaWwiLCBvciAiZmFpbC1z
-c3MiLgoKU29ycnkgZm9yIG1pc3NpbmcgdGhpcyBpbiB0aGUgcHJldmlvdXMgcm91bmQuCgpHcntv
-ZXRqZSxlZXRpbmd9cywKCiAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0CgotLQpHZWVydCBV
-eXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0
-QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2Fs
-IHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcgdG8g
-am91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhh
-dC4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+SGkgTWFyYywKClRoYW5rIHlvdSBmb3IgdGhlIHJldmlldyEKCk9uIFR1ZSwgMjAgRmViIDIwMTgg
+MTg6MDc6NTQgKzAwMDAKTWFyYyBaeW5naWVyIDxtYXJjLnp5bmdpZXJAYXJtLmNvbT4gd3JvdGU6
+Cgo+IEhpIE15bMOobmUsCj4gCj4gT24gMTkvMDIvMTggMDg6MTgsIE15bMOobmUgSm9zc2VyYW5k
+IHdyb3RlOgo+ID4gVGhlIEFSTSBhcmNoaXRlY3RlZCB0aW1lcnMgdXNlIGFuIG9mZnNldCBiZXR3
+ZWVuIHRoZWlyIHBoeXNpY2FsIGFuZAo+ID4gdmlydHVhbCBjb3VudGVycy4gVGhhdCBvZmZzZXQg
+c2hvdWxkIGJlIGNvbmZpZ3VyZWQgYnkgdGhlIGJvb3Rsb2FkZXIKPiA+IGluIENOVFZPRkYuCj4g
+PiAKPiA+IEhvd2V2ZXIsIHRoZSBBODN0IGJvb3Rsb2FkZXIgZmFpbHMgdG8gZG8gc28sIGFuZCB3
+ZSBlbmQgdXAgd2l0aCBhbgo+ID4gdW5kZWZpbmVkIG9mZnNldCAod2hpY2ggaW4gb3VyIGNhc2Ug
+aXMgcmFuZG9tKSwgbWVhbmluZyB0aGF0IGVhY2ggQ1BVCj4gPiB3aWxsIGhhdmUgYSBkaWZmZXJl
+bnQgdGltZSwgd2hpY2ggaXNuJ3Qgd29ya2luZyB2ZXJ5IHdlbGwuCj4gPiAKPiA+IEZpeCB0aGF0
+IGJ5IHNldHRpbmcgdGhlIGFybSxjcHUtcmVnaXN0ZXJzLW5vdC1mdy1jb25maWd1cmVkIHRoYXQg
+d2lsbAo+ID4gbWFrZSBMaW51eCB1c2UgdGhlIHBoeXNpY2FsIHRpbWVycyBpbnN0ZWFkIG9mIHRo
+ZSB2aXJ0dWFsIG9uZXMuIE9uZQo+ID4gcG9zc2libGUgc2lkZSBlZmZlY3Qgd291bGQgYmUgdGhh
+dCB0aGUgdmlydHVhbGl6YXRpb24gZmVhdHVyZXMgd291bGQKPiA+IGJlIGRpc2FibGVkLiBIb3dl
+dmVyLCBkdWUgdG8gdGhlIHdheSB0aGUgR0lDIGhhcyBiZWVuIGludGVncmF0ZWQgaW4KPiA+IHRo
+ZSBzeXN0ZW0sIGl0IGlzIGFscmVhZHkgdW51c2FibGUgc28gd2UncmUgZWZmZWN0aXZlbHkgbm90
+IGxvc2luZyBhbnkKPiA+IGZlYXR1cmUuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE15bMOobmUg
+Sm9zc2VyYW5kIDxteWxlbmUuam9zc2VyYW5kQGJvb3RsaW4uY29tPgo+ID4gLS0tCj4gPiAgYXJj
+aC9hcm0vYm9vdC9kdHMvc3VuOGktYTgzdC5kdHNpIHwgMSArCj4gPiAgMSBmaWxlIGNoYW5nZWQs
+IDEgaW5zZXJ0aW9uKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9z
+dW44aS1hODN0LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1hODN0LmR0c2kKPiA+IGlu
+ZGV4IGU5N2E2ZDE3YjhkMC4uYjliZGI4OTFjZjJmIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvc3VuOGktYTgzdC5kdHNpCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW44
+aS1hODN0LmR0c2kKPiA+IEBAIC0xMjMsNiArMTIzLDcgQEAKPiA+ICAJCQkgICAgIDxHSUNfUFBJ
+IDE0IChHSUNfQ1BVX01BU0tfU0lNUExFKDgpIHwgSVJRX1RZUEVfTEVWRUxfTE9XKT4sCj4gPiAg
+CQkJICAgICA8R0lDX1BQSSAxMSAoR0lDX0NQVV9NQVNLX1NJTVBMRSg4KSB8IElSUV9UWVBFX0xF
+VkVMX0xPVyk+LAo+ID4gIAkJCSAgICAgPEdJQ19QUEkgMTAgKEdJQ19DUFVfTUFTS19TSU1QTEUo
+OCkgfCBJUlFfVFlQRV9MRVZFTF9MT1cpPjsKPiA+ICsJCWFybSxjcHUtcmVnaXN0ZXJzLW5vdC1m
+dy1jb25maWd1cmVkOwo+ID4gIAl9Owo+ID4gIAo+ID4gIAljbG9ja3Mgewo+ID4gICAKPiAKPiBJ
+cyB0aGUgZmlybXdhcmUgZHJvcHBpbmcgeW91IGluIHRoZSBrZXJuZWwgaW4gc2VjdXJlIG9yIG5v
+bi1zZWN1cmUgbW9kZT8KCkZvciBzdW44aS1hODN0LCB0aGUga2VybmVsIGlzIGluIHNlY3VyZSBt
+b2RlLgoKPiAKPiBJZiB0aGUgbGF0ZXIsIHdoYXQgeW91IGhhdmUgaXMgdGhlIG9ubHkgc29sdXRp
+b24uIElmIHRoZSBmb3JtZXIsIHRoYXQKPiBJJ2Qgc3VnZ2VzdCB5b3UgYWRvcHQgd2hhdCB3ZSBh
+bHJlYWR5IGhhdmUgZm9yIHRoZSBSZW5lc2FzIHN0dWZmIChzZWUKPiBhcmNoL2FybS9tYWNoLXNo
+bW9iaWxlL2hlYWRzbXAtYXBtdS5TIGFuZCBjb21taXQgM2ZkNDVhMTM2ZmY2KS4KPiAKPiBJdCB3
+b3VsZCBhbGxvdyB5b3UgdG8gdXNlIHRoZSB2aXJ0dWFsIHRpbWVyIGFzIGludGVuZGVkLgoKT2th
+eSwgdGhhbmtzIGZvciB0aGUgY29tbWl0IHBvaW50ZWQsIEkgd2lsbCB0cnkgdG8gYWRvcHQgd2hh
+dCBpdCBpcyBkb25lCmZvciBSZW5lc2FzLgoKQmVzdCByZWdhcmRzLAoKLS0gCk15bMOobmUgSm9z
+c2VyYW5kLCBCb290bGluIChmb3JtZXJseSBGcmVlIEVsZWN0cm9ucykKRW1iZWRkZWQgTGludXgg
+YW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8vYm9vdGxpbi5jb20KCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
+ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
