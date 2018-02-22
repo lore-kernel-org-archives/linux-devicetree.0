@@ -1,15 +1,15 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/6] gpio: Add GPIO support for the ST Multi-Function
- eXpander
-Date: Thu, 22 Feb 2018 14:47:39 +0100
-Message-ID: <CACRpkdaeFXuB1Qv-vqNpf4pHsAysiYh03_gfNoRdHBh1pN_Amw@mail.gmail.com>
+Subject: Re: [PATCH 5/6] ARM: dts: stm32: add joystick support on
+ stm32746g-eval
+Date: Thu, 22 Feb 2018 14:52:45 +0100
+Message-ID: <CACRpkdbaFpLNdxZThVTO5V4y8wzekVpXoFJ_6EOOsKCD_h59cA@mail.gmail.com>
 References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
- <1518100057-23234-4-git-send-email-amelie.delaunay@st.com>
+ <1518100057-23234-6-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518100057-23234-4-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <1518100057-23234-6-git-send-email-amelie.delaunay@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,19 +23,33 @@ To: Amelie Delaunay <amelie.delaunay@st.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Amelie,
+
+thanks for your patch.
+
 On Thu, Feb 8, 2018 at 3:27 PM, Amelie Delaunay <amelie.delaunay@st.com> wrote:
 
-> ST Multi-Function eXpander (MFX) can be used as GPIO expander.
-> It has 16 fast GPIOs and can have 8 extra alternate GPIOs
-> when other MFX features are not enabled.
+> The joystick on stm32746g-eval uses gpios on MFX gpio expander.
 >
 > Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+(...)
+> +       joystick {
+> +               compatible = "gpio-keys";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               button@1 {
+> +                       label = "JoySel";
+> +                       linux,code = <KEY_ENTER>;
+> +                       gpios = <&mfxgpio 0 (GPIO_ACTIVE_LOW | GPIO_IN_PUSH_PULL | GPIO_PULL_UP)>;
+> +               };
 
-As mentioned I think this driver needs to:
+As I think this should not all be handled by GPIO, the joystick on
+gpio-keys needs a pin control handle pointing back to pin control
+states on the respective pins in the pin control/GPIO driver,
+where it can set up these properties.
 
-- Move to drivers/pinctrl/pinctrl-stmfx.c similar to the sx150x controller.
-- Pass a regmap around instead of the custom accessor functions.
-- Maybe refactor and reuse STMPE infrastructure
+For the individual lines the pushing and pulling flags should be
+removed.
 
 Yours,
 Linus Walleij
