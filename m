@@ -1,70 +1,130 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 0/4] R-Car DU: Convert LVDS code to bridge driver
-Date: Thu, 22 Feb 2018 22:27:10 +0200
-Message-ID: <2099183.6c7g0IDd6G@avalon>
-References: <20180222131336.7712-1-laurent.pinchart+renesas@ideasonboard.com>
- <1ffb9d8c-fde3-af3b-c9a7-caac5ec253eb@gmail.com>
+From: Marcel Ziswiler <marcel@ziswiler.com>
+Subject: Re: [PATCH v2] ARM: tegra: fix ulpi regression on tegra20
+Date: Thu, 22 Feb 2018 22:37:48 +0100
+Message-ID: <23F053F8-8CE2-49A0-ADE6-1AC720953849@ziswiler.com>
+References: <20180222143825.1517-1-marcel@ziswiler.com>
+ <278c02d3-7fc2-a92e-b309-1da8116e7c41@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1ffb9d8c-fde3-af3b-c9a7-caac5ec253eb@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <278c02d3-7fc2-a92e-b309-1da8116e7c41@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Osipenko <digetx@gmail.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRnJhbmssCgpPbiBUaHVyc2RheSwgMjIgRmVicnVhcnkgMjAxOCAyMjoyMzoyMCBFRVQgRnJh
-bmsgUm93YW5kIHdyb3RlOgo+IE9uIDAyLzIyLzE4IDA1OjEzLCBMYXVyZW50IFBpbmNoYXJ0IHdy
-b3RlOgo+ID4gSGVsbG8sCj4gPiAKPiA+IFRoaXMgcGF0Y2ggc2VyaWVzIGFkZHJlc3NlcyBhIGRl
-c2lnbiBtaXN0YWtlIHRoYXQgZGF0ZXMgYmFjayBmcm9tIHRoZQo+ID4gaW5pdGlhbCBEVSBzdXBw
-b3J0LiBTdXBwb3J0IGZvciB0aGUgTFZEUyBlbmNvZGVycywgd2hpY2ggYXJlIElQIGNvcmVzCj4g
-PiBzZXBhcmF0ZSBmcm9tIHRoZSBEVSwgd2FzIGJ1bmRsZWQgaW4gdGhlIERVIGRyaXZlci4gV29y
-c2UsIGJvdGggdGhlIERVCj4gPiBhbmQgTFZEUyB3ZXJlIGRlc2NyaWJlZCB0aHJvdWdoIGEgc2lu
-Z2xlIERUIG5vZGUuCj4gPiAKPiA+IFRvIGZpeCB0aGUsIHBhdGNoZXMgMS80IGFuZCAyLzQgZGVm
-aW5lIG5ldyBEVCBiaW5kaW5ncyBmb3IgdGhlIExWRFMKPiA+IGVuY29kZXJzLCBhbmQgZGVwcmVj
-YXRlIHRoZWlyIGRlc2NyaXB0aW9uIGluc2lkZSB0aGUgRFUgYmluZGluZ3MuIFRvCj4gPiByZXRh
-aW4gYmFja3dhcmQgY29tcGF0aWJpbGl0eSB3aXRoIGV4aXN0aW5nIERULCBwYXRjaCAzLzQgdGhl
-biBwYXRjaCB0aGUKPiA+IGRldmljZSB0cmVlIGF0IHJ1bnRpbWUgdG8gY29udmVydCB0aGUgbGVn
-YWN5IGJpbmRpbmdzIHRvIHRoZSBuZXcgb25lcy4KPiA+IAo+ID4gV2l0aCB0aGUgRFQgc2lkZSBh
-ZGRyZXNzZWQsIHBhdGNoIDQvNCBjb252ZXJ0cyB0aGUgTFZEUyBzdXBwb3J0IGNvZGUgdG8gYQo+
-ID4gc2VwYXJhdGUgYnJpZGdlIGRyaXZlci4KPiA+IAo+ID4gSSBkZWNpZGVkIHRvIGdvIGZvciBs
-aXZlIERUIHBhdGNoaW5nIGluIHBhdGNoIDMvNCBiZWNhdXNlIGltcGxlbWVudGluZwo+ID4gc3Vw
-cG9ydCBmb3IgYm90aCB0aGUgbGVnYWN5IGFuZCBuZXcgYmluZGluZ3MgaW4gdGhlIGRyaXZlciB3
-b3VsZCBoYXZlIGJlZW4KPiA+IHZlcnkgaW50cnVzaXZlLCBhbmQgcHJldmVudGVkIGZ1cnRoZXIg
-Y2xlYW51cHMuIFRoaXMgdmVyc2lvbiByZWxpZXMgbW9yZQo+ID4gaGVhdmlseSBvbiBvdmVybGF5
-cyB0byBhdm9pZCB0b3VjaGluZyB0aGUgaW50ZXJuYWxzIG9mIHRoZSBPRiBjb3JlCj4gPiBjb21w
-YXJlZCB0byB2MiwgZXZlbiBpZiBtYW51YWwgZml4ZXMgdG8gdGhlIGRldmljZSB0cmVlIGFyZSBz
-dGlsbCBuZWVkZWQuCj4gPiAKPiA+IEFzIGFsbCB0aGUgcGF0Y2hlcyBidXQgdGhlIGxhc3Qgb25l
-IGhhdmUgYmVlbiBhY2tlZCwgSSBwbGFuIHRvIHNlbmQgYSBwdWxsCj4gPiByZXF1ZXN0IGJ5IHRo
-ZSBlbmQgb2YgdGhlIHdlZWsgaWYgbm8gbmV3IGlzc3VlIGlzIGRpc2NvdmVyZWQuCj4gPiAKPiA+
-IENvbXBhcmVkIHRvIHY1LCBJJ3ZlIGRyb3BwZWQgdGhlIE9GIGNoYW5nZXNldCBoYWxwZXJzIHNl
-cmllcyBhcyBGcmFuawo+ID4gcmFpc2VkIGNvbmNlcm5zIGFib3V0IGhpZGRpbmcgaXQgaW4gdGhl
-IG1pZGRsZSBvZiBhIGRyaXZlciBwYXRjaCBzZXJpZXMuCj4gPiBJJ3ZlIHRodXMgY29waWVkIHRo
-ZSBpbXBsZW1lbnRhdGlvbiBvZiBvZl9jaGFuZ2VzZXRfYWRkX3Byb3BlcnR5X2NvcHkoKQo+ID4g
-aW4gdGhlIGRyaXZlciB0byBhdm9pZCBibG9ja2luZyB0aGlzIHNlcmllcy4gVGhlIGZ1bmN0aW9u
-IGFyZ3VtZW50cyBhcmUKPiA+IGlkZW50aWNhbCwgc28gd2hlbiB0aGUgT0YgY2hhbmdlc2V0IGhl
-bHBlcnMgd2lsbCBsYW5kIGl0IHdpbGwgYmUgdmVyeQo+ID4gZWFzeSB0byBkcm9wIHRoZSBwcml2
-YXRlIGNvcHkgYW5kIHVzZSB0aGUKPiA+IG9mX2NoYW5nZXNldF9hZGRfcHJvcGVydHlfY29weSgp
-IGhlbHBlci4KPiAKPiBUaGFuayB5b3UgTGF1cmVudC4KPiAKPiBNeSBpc3N1ZXMgd2l0aCB0aGF0
-IGFyZSBwcm9jZWR1cmFsLCBhbmQgSSdsbCByZXBseSBsYXRlciBhYm91dCB0aGlzIGluIHRoZQo+
-IHY0IHBhdGNoIHRocmVhZCwgd2hlcmUgSSByYWlzZWQgdGhlIGlzc3VlLiAgKEZvciB0aGUgcGVh
-bnV0IGdhbGxlcnksIEkKPiByZXBsaWVkIGluIHRocmVhZCB2NCBfYWZ0ZXJfIExhdXJlbnQgc2Vu
-dCB2NSwgc28gTGF1cmVudCBkaWQgbm90IGlnbm9yZQo+IG1lIGluIHY1LikKCkkgd291bGQgaGF2
-ZSB3YWl0ZWQgZm9yIHlvdXIgYWNrIGFueXdheSA6LSkKCj4gTXkgdGVjaG5pY2FsIGNvbW1lbnRz
-IGFyZSBtb3JlIHJlbGV2ZW50IHRoYW4gbXkgcHJvY2VzcyBjb21tZW50cywgaW4gdGVybXMKPiBv
-ZiBoZWxwaW5nIExhdXJlbnQgZ2V0IGhpcyBkcml2ZXIgc3VibWl0dGVkLCBzbyBJIHdpbGwgZGVs
-YXkgdGhlIHByb2Nlc3MKPiBjb21tZW50cy4KClRoYW5rIHlvdS4gCgo+IE15IHRlY2huaWNhbCBj
-b21tZW50cyB3aWxsIGJlIGluIHJlcGx5IHRvIHBhdGNoIDMvNC4KCi0tIApSZWdhcmRzLAoKTGF1
-cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+
+
+On February 22, 2018 9:08:44 PM GMT+01:00, Dmitry Osipenko <digetx@gmail.com> wrote:
+>On 22.02.2018 17:38, Marcel Ziswiler wrote:
+>> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+>> 
+>> Since commit f8f8f1d04494 ("clk: Don't touch hardware when
+>reparenting
+>> during registration") ULPI has been broken on Tegra20 leading to the
+>> following error message during boot:
+>> 
+>> [    1.974698] ulpi_phy_power_on: ulpi write failed
+>> [    1.979384] tegra-ehci c5004000.usb: Failed to power on the phy
+>> [    1.985434] tegra-ehci: probe of c5004000.usb failed with error
+>-110
+>> 
+>> Debugging through the changes and finally also consulting the TRM
+>> revealed that rather than the CDEV2 clock off OSC requiring such pin
+>> muxing actually the PLL_P_OUT4 clock is in use. It looks like so far
+>it
+>> just worked by chance of that one having been enabled which Stephen's
+>> commit now changed when reparenting sclk away from pll_p_out4 leaving
+>> that one disabled. Fix this by properly assigning the PLL_P_OUT4
+>clock
+>> as the ULPI PHY clock.
+>> 
+>> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+>
+>Indeed CDEV2 clock doesn't exist on Tegra, but there is a CDEV2 pinmux
+>pad
+>group. Looks like another clk-related relic from downstream driver that
+>was
+>borrowed to upstream and stayed unnoticed for a long time.
+>
+>I think in practice all T20 boards have CDEV2 configured to PLL_P_OUT4,
+
+Exactly.
+
+>so this
+>patch is correct to me. Probably it would also worth to set CDEV2
+>parent to
+>PLL_P_OUT4 in the clk driver for DT backwards compatibility
+
+I guess that might work but what the original designer(s) probably meant by that strange otherwise nonexistent cdev2 clock might be the other configuration of that pad group called OSC which would allow outputting the base Oscillator frequency even with a separate divider allowing by 2, 4 or even 8 as far as I remember from glancing at the TRM. However like you correctly noted no design ever made use of any such as far as I can tell.
+
+> or even
+>make clk
+>driver to read the CDEV2 pinmux config and set the proper parent based
+>on it.
+
+Sounds a little too fancy to me but might work if device tree backwards compatibility is required at utmost importance.
+
+>CC'ed Peter.
+>
+>Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+
+Thanks Dmitry.
+
+>> ---
+>> 
+>> Changes in v2:
+>> - Updated device tree binding documentation as well.
+>> - CCing Dmitry as well.
+>> 
+>>  Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt | 4
+>+++-
+>>  arch/arm/boot/dts/tegra20.dtsi                                   | 2
+>+-
+>>  2 files changed, 4 insertions(+), 2 deletions(-)
+>> 
+>> diff --git
+>a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
+>b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
+>> index a9aa79fb90ed..1aa6f2674af5 100644
+>> ---
+>a/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
+>> +++
+>b/Documentation/devicetree/bindings/phy/nvidia,tegra20-usb-phy.txt
+>> @@ -21,7 +21,9 @@ Required properties :
+>>     - timer: The timeout clock (clk_m). Present if phy_type == utmi.
+>>     - utmi-pads: The clock needed to access the UTMI pad control
+>registers.
+>>       Present if phy_type == utmi.
+>> -   - ulpi-link: The clock Tegra provides to the ULPI PHY (cdev2).
+>> +   - ulpi-link: The clock Tegra provides to the ULPI PHY (usually
+>pad DAP_MCLK2
+>> +     with pad group aka "nvidia,pins" cdev2 and pin mux option
+>config aka
+>> +     "nvidia,function" pllp_out4).
+>>       Present if phy_type == ulpi, and ULPI link mode is in use.
+>>   - resets : Must contain an entry for each entry in reset-names.
+>>     See ../reset/reset.txt for details.
+>> diff --git a/arch/arm/boot/dts/tegra20.dtsi
+>b/arch/arm/boot/dts/tegra20.dtsi
+>> index 864a95872b8d..e05b6bb2599f 100644
+>> --- a/arch/arm/boot/dts/tegra20.dtsi
+>> +++ b/arch/arm/boot/dts/tegra20.dtsi
+>> @@ -741,7 +741,7 @@
+>>  		phy_type = "ulpi";
+>>  		clocks = <&tegra_car TEGRA20_CLK_USB2>,
+>>  			 <&tegra_car TEGRA20_CLK_PLL_U>,
+>> -			 <&tegra_car TEGRA20_CLK_CDEV2>;
+>> +			 <&tegra_car TEGRA20_CLK_PLL_P_OUT4>;
+>>  		clock-names = "reg", "pll_u", "ulpi-link";
+>>  		resets = <&tegra_car 58>, <&tegra_car 22>;
+>>  		reset-names = "usb", "utmi-pads";
