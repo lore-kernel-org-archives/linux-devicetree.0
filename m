@@ -1,24 +1,11 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 19/19] ARM64: dts: r8a77965: Add EtherAVB device node
-Date: Thu, 22 Feb 2018 22:08:46 +0300
-Message-ID: <fceb1fd4-b0bd-7061-7cb8-c33f2a05c503@cogentembedded.com>
-References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519139541-18783-20-git-send-email-jacopo+renesas@jmondi.org>
- <cf157266-5ea7-6795-1e31-0d1ccf85e7e8@cogentembedded.com>
- <20180221100716.GF7203@w540>
- <cbeb1b6b-1b02-7665-0f1f-847ab8de69e3@cogentembedded.com>
- <20180221173106.vgyshbz3kkc4p3cu@verge.net.au>
- <321c6c8c-8853-ac00-7567-c0be82b510f4@cogentembedded.com>
- <35959135-cb3b-040a-1944-26845e0c07b0@cogentembedded.com>
- <20180221182340.wvdvgtv5pw7pvd3v@verge.net.au>
- <eaf3c72b-a482-86cf-88e7-4af457f74558@cogentembedded.com>
- <20180222155411.gnn42poawtlf3rze@verge.net.au>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/2] ARM: dts: exynos: Fix address of PPMU ACP on Exynos4210
+Date: Thu, 22 Feb 2018 20:11:10 +0100
+Message-ID: <20180222191111.23747-1-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180222155411.gnn42poawtlf3rze@verge.net.au>
-Content-Language: en-MW
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -28,66 +15,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jacopo mondi <jacopo@jmondi.org>, magnus.damm@gmail.com, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, geert@linux-m68k.org, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Marian Mihailescu <mihailescu2m@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Typo in unit address of PPMU ACP caused DTC warnings:
 
-On 02/22/2018 06:54 PM, Simon Horman wrote:
+    arch/arm/boot/dts/exynos4412-odroidu3.dtb:
+        Warning (simple_bus_reg): Node /soc/ppmu_acp@10ae0000 simple-bus unit address format error, expected "106e0000"
 
->>> ...
->>>
->>>>>>>>>> +			clocks = <&cpg CPG_MOD 812>;
->>>>>>>>>> +			power-domains = <&sysc 32>;
->>>>>>>>>> +			resets = <&cpg 812>;
->>>>>>>>>> +			phy-mode = "rgmii-txid";
->>>>>>>>>
->>>>>>>>>    Why not just "rgmii"? TX delay is a board specific detail, no?
->>>>>>>>>
->>>>>>>> I admit I took this one straight from r8a7796 dtsi.
->>>>>>>> Would you like to me resend and change this?
->>>>>>>
->>>>>>>    Yes, unless Simon would fix it while merging...
->>>>>>
->>>>>> Can I confirm the desired change is s/rgmii-txid/rgmii/ ?
->>>>>
->>>>>    Yes.
->>>>
->>>>    Apparently that means that this prop should be overridden in the board file
->>>> (which may not be an easy task given the board is Salvator-XS again).
->>>>
->>>> [...]
->>>
->>> Can we override it in r8a77965-salvator-x.dts or r8a77965-salvator-xs.dts?
->>
->>    In salvator-common.dtsi most probably -- it has the PHY data for Ether AVB.
->>
->>> I feel that I'm missing an important point here.
->>
->>    Well, r8a779{5|6}.dtsi also have phy-mode = "rgmii-txid" (which was
->>    unjustified in my current understanding). Thus such board override
->>    wouldn't hurt them. But we lack a patch modifying salvator-common.dtsi
->>    in htis series, so I'm now thinking a respin of this series is needed
->>    anyway... sorry for being unclear. :-)
-> 
-> While I've applied other patches in this series I have
-> not applied this one - mainly to allow this discussion to conclude.
-> 
-> Is an appropriate solution to do the following?
-> 
-> 1) Atomically update
->    a) r8a779{5|6}.dtsi to use "rgmii" and
->    b) salvator-common.dtsi to use "rgmii-txid"
-> 2) Update this patch to use "rgmii"
+PPMU ACP (under 0x10ae0000 address) is present only in Exynos4210 so
+move this node to exynos4210.dtsi with fixing the reg address to proper
+one.
 
-   Yeah, I was thinking about doing exactly this...
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/exynos4.dtsi    | 6 ------
+ arch/arm/boot/dts/exynos4210.dtsi | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-> Sorry if I'm still missing the point.
-
-   I was referring to what the 2nd paragraph of [1] said about the internal delays
-(perhaps I just misunderstood it)...
-
-[1] https://en.wikipedia.org/wiki/Media-independent_interface#Reduced_gigabit_media-independent_interface
-
-MBR, Sergei
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 967cd02401c5..909a9f2bf5be 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -821,12 +821,6 @@
+ 			status = "disabled";
+ 		};
+ 
+-		ppmu_acp: ppmu_acp@10ae0000 {
+-			compatible = "samsung,exynos-ppmu";
+-			reg = <0x106e0000 0x2000>;
+-			status = "disabled";
+-		};
+-
+ 		ppmu_rightbus: ppmu_rightbus@112a0000 {
+ 			compatible = "samsung,exynos-ppmu";
+ 			reg = <0x112a0000 0x2000>;
+diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+index 853604d91158..88fb47cef9a8 100644
+--- a/arch/arm/boot/dts/exynos4210.dtsi
++++ b/arch/arm/boot/dts/exynos4210.dtsi
+@@ -162,6 +162,12 @@
+ 			iommus = <&sysmmu_g2d>;
+ 		};
+ 
++		ppmu_acp: ppmu_acp@10ae0000 {
++			compatible = "samsung,exynos-ppmu";
++			reg = <0x10ae0000 0x2000>;
++			status = "disabled";
++		};
++
+ 		ppmu_lcd1: ppmu_lcd1@12240000 {
+ 			compatible = "samsung,exynos-ppmu";
+ 			reg = <0x12240000 0x2000>;
+-- 
+2.14.1
