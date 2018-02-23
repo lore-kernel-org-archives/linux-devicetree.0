@@ -1,52 +1,52 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH] dt-bindings: iio: adc: sd-modulator: fix io-channel-cells
-Date: Fri, 23 Feb 2018 12:07:21 +0100
-Message-ID: <1519384041-23782-1-git-send-email-fabrice.gasnier@st.com>
+From: Bean Huo <beanhuo@outlook.com>
+Subject: Re: [PATCH v1 1/3] mtd: physmap: add dual die entry in devicetree
+ binding
+Date: Fri, 23 Feb 2018 11:07:17 +0000
+Message-ID: <DM2PR12MB0014BEF2B19FED0392EB0366A6CC0@DM2PR12MB0014.namprd12.prod.outlook.com>
+References: <1519241514-6466-1-git-send-email-beanhuo@outlook.com>
+ <DM2PR12MB001463BD62775C388AEBFD3FA6CE0@DM2PR12MB0014.namprd12.prod.outlook.com>,
+ <20180222140542.47340842@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, arnaud.pouliquen@st.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180222140542.47340842@bbrezillon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "richard@nod.at" <richard@nod.at>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, beanhuo <beanhuo@micron.com>
 List-Id: devicetree@vger.kernel.org
 
-io-channel-cells should be <0> since sigma delta modulator exports only
-one channel, as described in ../iio/iio-bindings.txt "IIO providers"
-section. Only the phandle is necessary for IIO consumers in this case.
+Boris,
+thanks for the review.
 
-Fixes: af11143757b7 ("IIO: Add DT bindings for sigma delta adc modulator")
+>> + - dual-die-stack: boolean to enable support for the devices with the
+>> +   two dies in stack.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>How about making that more future proof and adding a property that
+>directly contains the number of dies (num-dies)?
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-index e9ebb8a..ba24ca7 100644
---- a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-@@ -3,11 +3,11 @@ Device-Tree bindings for sigma delta modulator
- Required properties:
- - compatible: should be "ads1201", "sd-modulator". "sd-modulator" can be use
- 	as a generic SD modulator if modulator not specified in compatible list.
--- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers".
-+- #io-channel-cells = <0>: See the IIO bindings section "IIO consumers".
- 
- Example node:
- 
- 	ads1202: adc@0 {
- 		compatible = "sd-modulator";
--		#io-channel-cells = <1>;
-+		#io-channel-cells = <0>;
- 	};
--- 
-1.9.1
+Exactly, I also thought here should add a property, through which it can be compatible
+with all kinds of PNOR for the future more dies stacked device.
+But currently, it doesn't exist  PNOR device with more than two dies, and we
+have no idea about 4/6 dies stacked device operation sequence. so I simply add a boolean
+entry and try to only enable dual-die stacked PNOR firstly.
+
+Maybe I can try to do that in next version patch. the software implementation is so flexible.
+
+>>
+>>  For JEDEC compatible devices, the following additional properties
+>>  are defined:
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
