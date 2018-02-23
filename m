@@ -1,15 +1,15 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: add binding for i.MX8MQ CCM
-Date: Fri, 23 Feb 2018 17:29:35 +0800
-Message-ID: <20180223092934.GS3217@dragon>
-References: <20180201175412.9480-1-l.stach@pengutronix.de>
- <20180222035518.GG3217@dragon> <20180222141246.GL3217@dragon>
+From: JeffyChen <jeffy.chen@rock-chips.com>
+Subject: Re: [PATCH v2 0/3] gpio-keys: Add support for specifying wakeup event
+ action
+Date: Fri, 23 Feb 2018 17:43:06 +0800
+Message-ID: <5A8FE22A.1070709@rock-chips.com>
+References: <20180210110907.5504-1-jeffy.chen@rock-chips.com>
+ <1541427.8RRpDbxO4f@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180222141246.GL3217@dragon>
+In-Reply-To: <1541427.8RRpDbxO4f@diego>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,29 +19,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: "A . s . Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Emil Renner Berthing <kernel@esmil.dk>, stephen lu <lumotuwe@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Joseph Lo <josephl@nvidia.com>, Brian Norris <briannorris@chromium.org>, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, linux-input@vger.kernel.org, Arvind Yadav <arvind.yadav.cs@gmail.com>, dtor@google.com, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, dianders@google.com, Rob Herring <robh+dt@kernel.org>, briannorris@google.com, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-kernel@vger.kernel.org, Philippe Ombredanne <pombredanne@nexb.com>, Enric Balletbo i Serra <enric.bal>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 22, 2018 at 10:12:48PM +0800, Shawn Guo wrote:
-> On Thu, Feb 22, 2018 at 11:55:20AM +0800, Shawn Guo wrote:
-> > On Thu, Feb 01, 2018 at 06:54:09PM +0100, Lucas Stach wrote:
-> > > This adds the binding for the i.MX8MQ Clock Controller Module.
-> > > 
-> > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > 
-> > Applied all, thanks.
-> 
-> I decided to hold it a bit, as I found something which needs a bit more
-> discussion.  Will reply to individual patch tomorrow.
-
-Besides the comments I put on individual patches, please also go through
-the checkpatch results.  We ignore MAINTAINERS updating and line over
-80 characters warnings, but I see the following ones which I think we
-should fix.
-
- - ERROR: code indent should use tabs where possible
- - WARNING: please, no space before tabs
-
-Shawn
+SGkgSGVpa28sCgpUaGFua3MgZm9yIHlvdXIgcmVwbHkgOikKCk9uIDAyLzE0LzIwMTggMDk6Mzkg
+UE0sIEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+IEhpIEplZmZ5LAo+Cj4gQW0gU2Ftc3RhZywgMTAu
+IEZlYnJ1YXIgMjAxOCwgMTI6MDk6MDQgQ0VUIHNjaHJpZWIgSmVmZnkgQ2hlbjoKPj4gT24gY2hy
+b21lYm9vayBrZXZpbiwgd2UgYXJlIHVzaW5nIGdwaW8ta2V5cyBmb3IgcGVuIGluc2VydCBldmVu
+dC4gQnV0Cj4+IHdlIG9ubHkgd2FudCBpdCB0byB3YWtldXAgdGhlIHN5c3RlbSB3aGVuIGVqZWN0
+aW5nIHRoZSBwZW4uCj4+Cj4+IFNvIHdlIG1heSBuZWVkIHRvIGNoYW5nZSB0aGUgaW50ZXJydXB0
+IHRyaWdnZXIgdHlwZSBkdXJpbmcgc3VzcGVuZGluZy4KPj4KPj4gQ2hhbmdlcyBpbiB2MjoKPj4g
+U3BlY2lmeSB3YWtldXAgZXZlbnQgYWN0aW9uIGluc3RlYWQgb2YgaXJxIHRyaWdnZXIgdHlwZSBh
+cyBCcmlhbgo+PiBzdWdnZXN0ZWQuCj4+Cj4+IEplZmZ5IENoZW4gKDMpOgo+PiAgICBJbnB1dDog
+Z3Bpby1rZXlzIC0gYWRkIHN1cHBvcnQgZm9yIHdha2V1cCBldmVudCBhY3Rpb24KPj4gICAgSW5w
+dXQ6IGdwaW8ta2V5cyAtIGFsbG93IHNldHRpbmcgd2FrZXVwIGV2ZW50IGFjdGlvbiBpbiBEVAo+
+PiAgICBhcm02NDogZHRzOiByb2NrY2hpcDogQXZvaWQgd2FrZXVwIHdoZW4gaW5zZXJ0aW5nIHRo
+ZSBwZW4KPgo+IFRoZSByZWNpcGllbnQtc2VsZWN0aW9uIGZvciB0aGUgbWFpbCB0aHJlYWQgc2Vl
+bXMgdG8gYmUgYSBiaXQgb2ZmIGFuZAo+IEkgb25seSBnb3QgdGhlIGNvdmVyLWxldHRlciBhbmQg
+cGF0Y2ggMy8zLgo+IFRoZXJlZm9yZSBJIHdvbid0IHJlYWxseSBzZWUgaWYgYW5kIHdoZW4gdGhl
+IElucHV0LWNoYW5nZXMgZ2V0Cj4gYWNjZXB0ZWQuIFNvIHBsZWFzZSBwaW5nIG1lIG9uY2UgdGhh
+dCBoYXMgaGFwcGVuZWQgc28gSSBjYW4gcGljayB1cAo+IHRoZSByb2NrY2hpcCBkdHMgY2hhbmdl
+IGZvciBpdC4Kb29wcywgc29ycnksIGknbGwgYWRkIHlvdSB0byB0aGUgQ0MgbGlzdCBpbiB0aGUg
+bmV4dCB2ZXJzaW9uIDopCgo+Cj4KPiBUaGFua3MKPiBIZWlrbwo+Cj4KPgoKCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
