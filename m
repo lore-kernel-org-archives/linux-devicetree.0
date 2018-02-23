@@ -1,60 +1,65 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 7/9] serial: sh-sci: Fix out-of-bounds access through DT
- alias
-Date: Fri, 23 Feb 2018 14:38:35 +0100
-Message-ID: <1519393117-31998-8-git-send-email-geert+renesas@glider.be>
-References: <1519393117-31998-1-git-send-email-geert+renesas@glider.be>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
+Subject: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
+Date: Fri, 23 Feb 2018 14:37:42 +0100
+Message-ID: <20180223133742.26044-11-mylene.josserand@bootlin.com>
+References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519393117-31998-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Vineet Gupta <vgupta@synopsys.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180223133742.26044-1-mylene.josserand@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: maxime.ripard@bootlin.com, linux@armlinux.org.uk, wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux-kernel@vger.kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The sci_ports[] array is indexed using a value derived from the
-"serialN" alias in DT, which may lead to an out-of-bounds access.
-
-Fix this by adding a range check.
-
-Note that the array size is defined by a Kconfig symbol
-(CONFIG_SERIAL_SH_SCI_NR_UARTS), so this can even be triggered using a
-legitimate DTB.
-
-Fixes: 97ed9790c514066b ("serial: sh-sci: Remove unused platform data capabilities field")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Fix Fixes reference,
-  - Use ARRAY_SIZE().
----
- drivers/tty/serial/sh-sci.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-index 4d14f321cbec95e0..f6a6610d434efc33 100644
---- a/drivers/tty/serial/sh-sci.c
-+++ b/drivers/tty/serial/sh-sci.c
-@@ -3096,6 +3096,10 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
- 		dev_err(&pdev->dev, "failed to get alias id (%d)\n", id);
- 		return NULL;
- 	}
-+	if (id >= ARRAY_SIZE(sci_ports)) {
-+		dev_err(&pdev->dev, "serial%d out of range\n", id);
-+		return NULL;
-+	}
- 
- 	sp = &sci_ports[id];
- 	*dev_id = id;
--- 
-2.7.4
+T24gQ29ydGV4LUE3LCB0aGUgQ05UVk9GRiByZWdpc3RlciBmcm9tIGFyY2ggdGltZXIgaXMgdW5p
+bml0aWFsaXplZC4KSXQgc2hvdWxkIGJlIGRvbmUgYnkgdGhlIGJvb3Rsb2FkZXIgYnV0IGl0IGlz
+IGN1cnJlbnRseSBub3QgdGhlIGNhc2UsCmV2ZW4gZm9yIGJvb3QgQ1BVIGJlY2F1c2UgdGhpcyBT
+b0MgaXMgYm9vdGluZyBpbiBzZWN1cmUgbW9kZS4KSXQgbGVhZHMgdG8gYW4gcmFuZG9tIG9mZnNl
+dCB2YWx1ZSBtZWFuaW5nIHRoYXQgZWFjaCBDUFUgd2lsbCBoYXZlIGEKZGlmZmVyZW50IHRpbWUs
+IHdoaWNoIGlzbid0IHdvcmtpbmcgdmVyeSB3ZWxsLgoKQWRkIGFzc2VtYmx5IGNvZGUgdXNlZCBm
+b3IgYm9vdCBDUFUgYW5kIHNlY29uZGFyeSBDUFUgY29yZXMgdG8gbWFrZQpzdXJlIHRoYXQgdGhl
+IENOVFZPRkYgcmVnaXN0ZXIgaXMgaW5pdGlhbGl6ZWQuCgpTaWduZWQtb2ZmLWJ5OiBNeWzDqG5l
+IEpvc3NlcmFuZCA8bXlsZW5lLmpvc3NlcmFuZEBib290bGluLmNvbT4KLS0tCiBhcmNoL2FybS9t
+YWNoLXN1bnhpL2hlYWRzbXAuUyB8IDIxICsrKysrKysrKysrKysrKysrKysrKwogYXJjaC9hcm0v
+bWFjaC1zdW54aS9zdW54aS5jICAgfCAgNCArKysrCiAyIGZpbGVzIGNoYW5nZWQsIDI1IGluc2Vy
+dGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLXN1bnhpL2hlYWRzbXAuUyBiL2Fy
+Y2gvYXJtL21hY2gtc3VueGkvaGVhZHNtcC5TCmluZGV4IGQ1Yzk3ZTk0NWU2OS4uNjA1ODk2MjUx
+OTI3IDEwMDY0NAotLS0gYS9hcmNoL2FybS9tYWNoLXN1bnhpL2hlYWRzbXAuUworKysgYi9hcmNo
+L2FybS9tYWNoLXN1bnhpL2hlYWRzbXAuUwpAQCAtNjUsOSArNjUsMzAgQEAgRU5UUlkoc3VueGlf
+bWNfc21wX2NsdXN0ZXJfY2FjaGVfZW5hYmxlKQogCWZpcnN0OiAud29yZCBzdW54aV9tY19zbXBf
+Zmlyc3RfY29tZXIgLSAuCiBFTkRQUk9DKHN1bnhpX21jX3NtcF9jbHVzdGVyX2NhY2hlX2VuYWJs
+ZSkKIAorRU5UUlkoc3VueGlfaW5pdF9jbnR2b2ZmKQorCS8qCisJICogQ05UVk9GRiBoYXMgdG8g
+YmUgaW5pdGlhbGl6ZWQgZWl0aGVyIGZyb20gbm9uLXNlY3VyZSBIeXBlcnZpc29yCisJICogbW9k
+ZSBvciBzZWN1cmUgTW9uaXRvciBtb2RlIHdpdGggU0NSLk5TPT0xLiBJZiBUcnVzdFpvbmUgaXMg
+ZW5hYmxlZAorCSAqIHRoZW4gaXQgc2hvdWxkIGJlIGhhbmRsZWQgYnkgdGhlIHNlY3VyZSBjb2Rl
+CisJICovCisJY3BzCSNNT05fTU9ERQorCW1yYwlwMTUsIDAsIHIxLCBjMSwgYzEsIDAJCS8qIEdl
+dCBTZWN1cmUgQ29uZmlnICovCisJb3JyCXIwLCByMSwgIzEKKwltY3IJcDE1LCAwLCByMCwgYzEs
+IGMxLCAwCQkvKiBTZXQgTm9uIFNlY3VyZSBiaXQgKi8KKwlpbnN0cl9zeW5jCisJbW92CXIwLCAj
+MAorCW1jcnIJcDE1LCA0LCByMCwgcjAsIGMxNAkJLyogQ05UVk9GRiA9IDAgKi8KKwlpbnN0cl9z
+eW5jCisJbWNyCXAxNSwgMCwgcjEsIGMxLCBjMSwgMAkJLyogU2V0IFNlY3VyZSBiaXQgKi8KKwlp
+bnN0cl9zeW5jCisJY3BzCSNTVkNfTU9ERQorCXJldAlscgorRU5EUFJPQyhzdW54aV9pbml0X2Nu
+dHZvZmYpCisKICNpZmRlZiBDT05GSUdfU01QCiBFTlRSWShzdW54aV9ib290KQogCWJsCXN1bnhp
+X21jX3NtcF9jbHVzdGVyX2NhY2hlX2VuYWJsZQorCWJsCXN1bnhpX2luaXRfY250dm9mZgogCWIJ
+c2Vjb25kYXJ5X3N0YXJ0dXAKIEVORFBST0Moc3VueGlfYm9vdCkKIApkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vbWFjaC1zdW54aS9zdW54aS5jIGIvYXJjaC9hcm0vbWFjaC1zdW54aS9zdW54aS5jCmlu
+ZGV4IDVlOTYwMmNlMTU3My4uNGJiMDQxNDkyYjU0IDEwMDY0NAotLS0gYS9hcmNoL2FybS9tYWNo
+LXN1bnhpL3N1bnhpLmMKKysrIGIvYXJjaC9hcm0vbWFjaC1zdW54aS9zdW54aS5jCkBAIC0zNyw4
+ICszNywxMiBAQCBzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHN1bjZpX2JvYXJkX2R0X2NvbXBh
+dFtdID0gewogfTsKIAogZXh0ZXJuIHZvaWQgX19pbml0IHN1bjZpX3Jlc2V0X2luaXQodm9pZCk7
+CitleHRlcm4gdm9pZCBzdW54aV9pbml0X2NudHZvZmYodm9pZCk7CisKIHN0YXRpYyB2b2lkIF9f
+aW5pdCBzdW42aV90aW1lcl9pbml0KHZvaWQpCiB7CisJc3VueGlfaW5pdF9jbnR2b2ZmKCk7CisK
+IAlvZl9jbGtfaW5pdChOVUxMKTsKIAlpZiAoSVNfRU5BQkxFRChDT05GSUdfUkVTRVRfQ09OVFJP
+TExFUikpCiAJCXN1bjZpX3Jlc2V0X2luaXQoKTsKLS0gCjIuMTEuMAoKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
+ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
