@@ -1,14 +1,12 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 0/3] Support qcom pinctrl protected pins
-Date: Fri, 23 Feb 2018 15:22:42 +0100
-Message-ID: <CACRpkdbgz9PnyLgsn_grsGHbVnak54aOKhetsqfvag5wJNm7=g@mail.gmail.com>
-References: <20180126011400.2191-1-sboyd@codeaurora.org>
- <94a7bd07-8ad5-7ab1-20ab-a02fe2476efd@codeaurora.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH v2 0/8] arm64: zynqmp: Add support for existing Xilinx ZynqMP
+ based boards
+Date: Fri, 23 Feb 2018 15:40:22 +0100
+Message-ID: <cover.1519396753.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <94a7bd07-8ad5-7ab1-20ab-a02fe2476efd@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,31 +16,97 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Timur Tabi <timur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, monstr@monstr.eu, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 20, 2018 at 5:45 PM, Timur Tabi <timur@codeaurora.org> wrote:
-> On 01/25/2018 07:13 PM, Stephen Boyd wrote:
->>
->> This patchset proposes a solution to describing the valid
->> pins for a pin controller in a semi-generic way so that qcom
->> platforms can expose the pins that are really available.
->>
->> Typically, this has been done by having drivers and firmware
->> descriptions only use pins they know they have access to, and that
->> still works now because we no longer read the pin direction at
->> boot. But there are still some userspace drivers and debugfs facilities
->> that don't know what pins are available and attempt to read everything
->> they can. On qcom platforms, this may lead to a system hang, which isn't
->> very nice behavior, even if root is the only user that can trigger it.
->
-> Any progress on this patch set?  Stephen no longer works for Qualcomm, so I
-> don't know what the next step is, and I really want this feature in 4.17
-> (we've missed so many merge windows already).
+Hi,
 
-I depend on Bjorn as maintainer of the pin control driver to ACK
-the solution he likes.
+This patchset is adding all current existing Xilinx ZynqMP boards.
+zcu* boards are customer boards. zc1* are mainly Xilinx internal boards
+but some of them have been shared with customers. zc1751 is unique in
+this set because it is based board with FMC card for silicon/hard IP
+validation.
+All boards are using the same default clock configuration till clock
+driver is merged to mainline. Some boards also contain other components
+which are not described because mainline driver haven't been merged yet.
+For example nand, qspi, pinctrl and phy.
+Please let me know if you see any issue with these boards.
 
-Yours,
-Linus Walleij
+Thanks,
+Michal
+
+Changes in v2:
+- New patch in this series
+- Use i2c-mux instead of i2cswitch
+- Remove i2c mw u-boot commands
+- Use 96boards labels for i2cs and spis
+- Fix pmic and wifi node
+- Record compatible string to xilinx.txt
+- Remove Nathalie's email (she left Xilinx already)
+- Remove i2c mw u-boot commands
+- Use i2c-mux instead of i2cswitch
+- Use clock generator without numbers.
+- Use dash in node name zcu102 rev1.0
+- Record compatible string to xilinx.txt
+- Remove i2c mw u-boot commands
+- Record compatible string to xilinx.txt
+- Remove i2c mw u-boot commands
+- Use i2c-mux instead of i2cswitch
+- Use clock generator without numbers
+- Record compatible string to xilinx.txt
+- Remove i2c mw u-boot commands
+- Use i2c-mux instead of i2cswitch
+- Use clock generator without numbers.
+- Record compatible string to xilinx.txt
+- Record compatible string to xilinx.txt
+- Record compatible string to xilinx.txt
+
+Michal Simek (8):
+  dt-bindings: xilinx: Add description for ZynqMP
+  arm64: zynqmp: Add support for Xilinx zcu100-revC
+  arm64: zynqmp: Add support for Xilinx zcu102
+  arm64: zynqmp: Add support for Xilinx zcu104-revA
+  arm64: zynqmp: Add support for Xilinx zcu106-revA
+  arm64: zynqmp: Add support for Xilinx zcu111-revA
+  arm64: zynqmp: Add support for Xilinx zc12XX boards
+  arm64: zynqmp: Add support for Xilinx zc1751
+
+ Documentation/devicetree/bindings/arm/xilinx.txt   |  42 ++
+ arch/arm64/boot/dts/xilinx/Makefile                |  15 +
+ arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi         | 213 ++++++++
+ arch/arm64/boot/dts/xilinx/zynqmp-zc1232-revA.dts  |  54 ++
+ arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dts  |  42 ++
+ arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dts  |  42 ++
+ .../boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dts    | 133 +++++
+ .../boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts    | 170 +++++++
+ .../boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dts    | 153 ++++++
+ .../boot/dts/xilinx/zynqmp-zc1751-xm018-dc4.dts    | 181 +++++++
+ .../boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dts    | 126 +++++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts  | 292 +++++++++++
+ .../arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts |  36 ++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts  | 550 +++++++++++++++++++++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts  |  42 ++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts  | 197 ++++++++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts  | 524 ++++++++++++++++++++
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts  | 446 +++++++++++++++++
+ 18 files changed, 3258 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-clk.dtsi
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1232-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm015-dc1.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm018-dc4.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm019-dc5.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu106-revA.dts
+ create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu111-revA.dts
+
+-- 
+1.9.1
