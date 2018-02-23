@@ -1,26 +1,78 @@
-Return-Path: <SRS0=VKUP=FR=gmail.com=andy.shevchenko@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <20180223064138.18401-1-jh80.chung@samsung.com>
+Return-Path: <SRS0=V9ZR=FR=samsung.com=jh80.chung@kernel.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCH 1/6] mmc: dw_mmc: remove the deprecated "clock-freq-min-max"
+ property
+Date: Fri, 23 Feb 2018 15:41:33 +0900
+Message-id: <20180223064138.18401-1-jh80.chung@samsung.com>
 References: <CGME20180223064140epcas2p104fe6cca431ec24f2b09a6f5a45ed342@epcas2p1.samsung.com>
- <20180223064138.18401-1-jh80.chung@samsung.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 23 Feb 2018 15:27:06 +0200
-Message-ID: <CAHp75Vd27mFnSJTOta0ZWhfOGz1WA8ETNgU_GpuxEJ9nnhsR-g@mail.gmail.com>
-Subject: Re: [PATCH 1/6] mmc: dw_mmc: remove the deprecated
- "clock-freq-min-max" property
-Content-Type: text/plain; charset="UTF-8"
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joachim Eastwood <manabian@gmail.com>, dinguyen@kernel.org, Will Deacon <will.deacon@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>
+To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, manabian@gmail.com, dinguyen@kernel.org, will.deacon@arm.com, xuwei5@hisilicon.com, Jaehoon Chung <jh80.chung@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Feb 23, 2018 at 8:41 AM, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> 'clock-freq-min-max' property had already deprecated.
-> Remove the 'clock-freq-min-max' property that is kept to maintain
-> the compatibility.
+'clock-freq-min-max' property had already deprecated.
+Remove the 'clock-freq-min-max' property that is kept to maintain
+the compatibility.
 
-Removing a property without telling the user what to expect is a bad
-idea and ABI breakage.
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+---
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt          |  4 ----
+ drivers/mmc/host/dw_mmc.c                                 | 15 ++++-----------
+ 2 files changed, 4 insertions(+), 15 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+index ef3e5f14067a..75c9fdca4aaf 100644
+--- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+@@ -59,10 +59,6 @@ Optional properties:
+   is specified and the ciu clock is specified then we'll try to set the ciu
+   clock to this at probe time.
+ 
+-* clock-freq-min-max (DEPRECATED): Minimum and Maximum clock frequency for card output
+-  clock(cclk_out). If it's not specified, max is 200MHZ and min is 400KHz by default.
+-	  (Use the "max-frequency" instead of "clock-freq-min-max".)
+-
+ * num-slots (DEPRECATED): specifies the number of slots supported by the controller.
+   The number of physical slots actually used could be equal or less than the
+   value specified by num-slots. If this property is not specified, the value
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 0aa39975f33b..38e0e7c4ffd9 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -2784,7 +2784,6 @@ static int dw_mci_init_slot(struct dw_mci *host)
+ 	struct dw_mci_slot *slot;
+ 	const struct dw_mci_drv_data *drv_data = host->drv_data;
+ 	int ctrl_id, ret;
+-	u32 freq[2];
+ 
+ 	mmc = mmc_alloc_host(sizeof(struct dw_mci_slot), host->dev);
+ 	if (!mmc)
+@@ -2798,16 +2797,6 @@ static int dw_mci_init_slot(struct dw_mci *host)
+ 	host->slot = slot;
+ 
+ 	mmc->ops = &dw_mci_ops;
+-	if (device_property_read_u32_array(host->dev, "clock-freq-min-max",
+-					   freq, 2)) {
+-		mmc->f_min = DW_MCI_FREQ_MIN;
+-		mmc->f_max = DW_MCI_FREQ_MAX;
+-	} else {
+-		dev_info(host->dev,
+-			"'clock-freq-min-max' property was deprecated.\n");
+-		mmc->f_min = freq[0];
+-		mmc->f_max = freq[1];
+-	}
+ 
+ 	/*if there are external regulators, get them*/
+ 	ret = mmc_regulator_get_supply(mmc);
+@@ -2846,6 +2835,10 @@ static int dw_mci_init_slot(struct dw_mci *host)
+ 	if (ret)
+ 		goto err_host_allocated;
+ 
++	mmc->f_min = DW_MCI_FREQ_MIN;
++	if (!mmc->f_max)
++		mmc->f_max = DW_MCI_FREQ_MAX;
++
+ 	/* Process SDIO IRQs through the sdio_irq_work. */
+ 	if (mmc->caps & MMC_CAP_SDIO_IRQ)
+ 		mmc->caps2 |= MMC_CAP2_SDIO_IRQ_NOTHREAD;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.15.1
