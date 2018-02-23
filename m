@@ -1,14 +1,15 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
-Date: Sat, 24 Feb 2018 00:17:13 +0800
-Message-ID: <CAGb2v67SuK9Xr7_dVb7RVGXUJwYRKnTiJwDrOJ-Su5CXmm7HXA@mail.gmail.com>
-References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
- <20180223133742.26044-11-mylene.josserand@bootlin.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] arm64: dts: renesas: Add support for Salvator-XS with
+ R-Car M3-N
+Date: Fri, 23 Feb 2018 17:18:55 +0100
+Message-ID: <20180223161852.an5pmw6akj2na7tg@verge.net.au>
+References: <1519064455-12505-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180223133742.26044-11-mylene.josserand@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <1519064455-12505-1-git-send-email-geert+renesas@glider.be>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,67 +19,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, quentin.schulz@bootlin.com, Maxime Ripard <maxime.ripard@bootlin.com>, Russell King <linux@armlinux.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMjMsIDIwMTggYXQgOTozNyBQTSwgTXlsw6huZSBKb3NzZXJhbmQKPG15bGVu
-ZS5qb3NzZXJhbmRAYm9vdGxpbi5jb20+IHdyb3RlOgo+IE9uIENvcnRleC1BNywgdGhlIENOVFZP
-RkYgcmVnaXN0ZXIgZnJvbSBhcmNoIHRpbWVyIGlzIHVuaW5pdGlhbGl6ZWQuCj4gSXQgc2hvdWxk
-IGJlIGRvbmUgYnkgdGhlIGJvb3Rsb2FkZXIgYnV0IGl0IGlzIGN1cnJlbnRseSBub3QgdGhlIGNh
-c2UsCj4gZXZlbiBmb3IgYm9vdCBDUFUgYmVjYXVzZSB0aGlzIFNvQyBpcyBib290aW5nIGluIHNl
-Y3VyZSBtb2RlLgo+IEl0IGxlYWRzIHRvIGFuIHJhbmRvbSBvZmZzZXQgdmFsdWUgbWVhbmluZyB0
-aGF0IGVhY2ggQ1BVIHdpbGwgaGF2ZSBhCj4gZGlmZmVyZW50IHRpbWUsIHdoaWNoIGlzbid0IHdv
-cmtpbmcgdmVyeSB3ZWxsLgo+Cj4gQWRkIGFzc2VtYmx5IGNvZGUgdXNlZCBmb3IgYm9vdCBDUFUg
-YW5kIHNlY29uZGFyeSBDUFUgY29yZXMgdG8gbWFrZQo+IHN1cmUgdGhhdCB0aGUgQ05UVk9GRiBy
-ZWdpc3RlciBpcyBpbml0aWFsaXplZC4KPgo+IFNpZ25lZC1vZmYtYnk6IE15bMOobmUgSm9zc2Vy
-YW5kIDxteWxlbmUuam9zc2VyYW5kQGJvb3RsaW4uY29tPgo+IC0tLQo+ICBhcmNoL2FybS9tYWNo
-LXN1bnhpL2hlYWRzbXAuUyB8IDIxICsrKysrKysrKysrKysrKysrKysrKwo+ICBhcmNoL2FybS9t
-YWNoLXN1bnhpL3N1bnhpLmMgICB8ICA0ICsrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAyNSBpbnNl
-cnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1zdW54aS9oZWFkc21wLlMg
-Yi9hcmNoL2FybS9tYWNoLXN1bnhpL2hlYWRzbXAuUwo+IGluZGV4IGQ1Yzk3ZTk0NWU2OS4uNjA1
-ODk2MjUxOTI3IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL21hY2gtc3VueGkvaGVhZHNtcC5TCj4g
-KysrIGIvYXJjaC9hcm0vbWFjaC1zdW54aS9oZWFkc21wLlMKPiBAQCAtNjUsOSArNjUsMzAgQEAg
-RU5UUlkoc3VueGlfbWNfc21wX2NsdXN0ZXJfY2FjaGVfZW5hYmxlKQo+ICAgICAgICAgZmlyc3Q6
-IC53b3JkIHN1bnhpX21jX3NtcF9maXJzdF9jb21lciAtIC4KPiAgRU5EUFJPQyhzdW54aV9tY19z
-bXBfY2x1c3Rlcl9jYWNoZV9lbmFibGUpCj4KPiArRU5UUlkoc3VueGlfaW5pdF9jbnR2b2ZmKQo+
-ICsgICAgICAgLyoKPiArICAgICAgICAqIENOVFZPRkYgaGFzIHRvIGJlIGluaXRpYWxpemVkIGVp
-dGhlciBmcm9tIG5vbi1zZWN1cmUgSHlwZXJ2aXNvcgo+ICsgICAgICAgICogbW9kZSBvciBzZWN1
-cmUgTW9uaXRvciBtb2RlIHdpdGggU0NSLk5TPT0xLiBJZiBUcnVzdFpvbmUgaXMgZW5hYmxlZAo+
-ICsgICAgICAgICogdGhlbiBpdCBzaG91bGQgYmUgaGFuZGxlZCBieSB0aGUgc2VjdXJlIGNvZGUK
-PiArICAgICAgICAqLwo+ICsgICAgICAgY3BzICAgICAjTU9OX01PREUKPiArICAgICAgIG1yYyAg
-ICAgcDE1LCAwLCByMSwgYzEsIGMxLCAwICAgICAgICAgICAvKiBHZXQgU2VjdXJlIENvbmZpZyAq
-Lwo+ICsgICAgICAgb3JyICAgICByMCwgcjEsICMxCj4gKyAgICAgICBtY3IgICAgIHAxNSwgMCwg
-cjAsIGMxLCBjMSwgMCAgICAgICAgICAgLyogU2V0IE5vbiBTZWN1cmUgYml0ICovCj4gKyAgICAg
-ICBpbnN0cl9zeW5jCj4gKyAgICAgICBtb3YgICAgIHIwLCAjMAo+ICsgICAgICAgbWNyciAgICBw
-MTUsIDQsIHIwLCByMCwgYzE0ICAgICAgICAgICAgIC8qIENOVFZPRkYgPSAwICovCj4gKyAgICAg
-ICBpbnN0cl9zeW5jCj4gKyAgICAgICBtY3IgICAgIHAxNSwgMCwgcjEsIGMxLCBjMSwgMCAgICAg
-ICAgICAgLyogU2V0IFNlY3VyZSBiaXQgKi8KPiArICAgICAgIGluc3RyX3N5bmMKPiArICAgICAg
-IGNwcyAgICAgI1NWQ19NT0RFCj4gKyAgICAgICByZXQgICAgIGxyCj4gK0VORFBST0Moc3VueGlf
-aW5pdF9jbnR2b2ZmKQoKVGhlcmUgaXMgbm8gbmVlZCB0byBtb3ZlIGFsbCB0aGUgYXNzZW1ibHkg
-aW50byBhIHNlcGFyYXRlIGZpbGUsIGp1c3QKdG8gYWRkIHRoaXMgZnVuY3Rpb24uIEV2ZXJ5dGhp
-bmcgY2FuIGJlIGlubGluZWQgYXMgYSBuYWtlZCBmdW5jdGlvbi4KVGhlICJpbnN0cl9zeW5jIiBt
-YWNybyBjYW4gYmUgcmVwbGFjZWQgd2l0aCAiaXNiIiwgd2hpY2ggaXMgd2hhdCBpdApleHBhbmRz
-IHRvIGFueXdheS4KCkkgcmVhbGx5IHdhbnQgdG8ga2VlcCBldmVyeXRoaW5nIHNlbGYtY29udGFp
-bmVkIHdpdGhvdXQgZ2xvYmFsIHN5bWJvbHMsCmFuZCBpbiBDIGZpbGVzIGlmIHBvc3NpYmxlLgoK
-PiArCj4gICNpZmRlZiBDT05GSUdfU01QCj4gIEVOVFJZKHN1bnhpX2Jvb3QpCj4gICAgICAgICBi
-bCAgICAgIHN1bnhpX21jX3NtcF9jbHVzdGVyX2NhY2hlX2VuYWJsZQo+ICsgICAgICAgYmwgICAg
-ICBzdW54aV9pbml0X2NudHZvZmYKPiAgICAgICAgIGIgICAgICAgc2Vjb25kYXJ5X3N0YXJ0dXAK
-PiAgRU5EUFJPQyhzdW54aV9ib290KQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtc3Vu
-eGkvc3VueGkuYyBiL2FyY2gvYXJtL21hY2gtc3VueGkvc3VueGkuYwo+IGluZGV4IDVlOTYwMmNl
-MTU3My4uNGJiMDQxNDkyYjU0IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL21hY2gtc3VueGkvc3Vu
-eGkuYwo+ICsrKyBiL2FyY2gvYXJtL21hY2gtc3VueGkvc3VueGkuYwo+IEBAIC0zNyw4ICszNywx
-MiBAQCBzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHN1bjZpX2JvYXJkX2R0X2NvbXBhdFtdID0g
-ewo+ICB9Owo+Cj4gIGV4dGVybiB2b2lkIF9faW5pdCBzdW42aV9yZXNldF9pbml0KHZvaWQpOwo+
-ICtleHRlcm4gdm9pZCBzdW54aV9pbml0X2NudHZvZmYodm9pZCk7Cj4gKwo+ICBzdGF0aWMgdm9p
-ZCBfX2luaXQgc3VuNmlfdGltZXJfaW5pdCh2b2lkKQo+ICB7Cj4gKyAgICAgICBzdW54aV9pbml0
-X2NudHZvZmYoKTsKCllvdSBzaG91bGQgY2hlY2sgdGhlIGVuYWJsZS1tZXRob2QgdG8gc2VlIGlm
-IFBTQ0kgaXMgc2V0IG9yIG5vdCwKYXMgYW4gaW5kaWNhdG9yIHdoZXRoZXIgdGhlIGtlcm5lbCBp
-cyBib290ZWQgc2VjdXJlIG9yIG5vbi1zZWN1cmUuCkFGQUlLIHRyeWluZyB0byBzZXQgQ05UVk9G
-RiB1bmRlciBub24tc2VjdXJlIHdvdWxkIGJlIHZlcnkgYmFkLgoKClJlZ2FyZHMKQ2hlbll1Cgo+
-ICsKPiAgICAgICAgIG9mX2Nsa19pbml0KE5VTEwpOwo+ICAgICAgICAgaWYgKElTX0VOQUJMRUQo
-Q09ORklHX1JFU0VUX0NPTlRST0xMRVIpKQo+ICAgICAgICAgICAgICAgICBzdW42aV9yZXNldF9p
-bml0KCk7Cj4gLS0KPiAyLjExLjAKPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Mon, Feb 19, 2018 at 07:20:55PM +0100, Geert Uytterhoeven wrote:
+> From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> 
+> Add initial support for the Renesas Salvator-XS (Salvator-X 2nd version)
+> development board equipped with an R-Car M3-N SiP.
+> 
+> Most features are enabled through the shared salvator-xs.dtsi board
+> description.  The memory configuration is specific to the M3-N SiP.
+> 
+> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+> [geert: Switch to SPDX-License-Identifier, update patch description]
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - Fix patch prefix.
+
+Thanks, applied.
