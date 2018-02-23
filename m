@@ -1,58 +1,51 @@
-Return-Path: <SRS0=Qujd=FN=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v9 02/11] include: media: Add Renesas CEU driver interface
-Date: Mon, 19 Feb 2018 17:59:35 +0100
-Message-Id: <1519059584-30844-3-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519059584-30844-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519059584-30844-1-git-send-email-jacopo+renesas@jmondi.org>
-To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=goDf=FR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from laurent.telenet-ops.be ([195.130.137.89]:35368 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751654AbeBWNin (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 23 Feb 2018 08:38:43 -0500
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 5/9] serial: pxa: Fix out-of-bounds access through serial port index
+Date: Fri, 23 Feb 2018 14:38:33 +0100
+Message-Id: <1519393117-31998-6-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1519393117-31998-1-git-send-email-geert+renesas@glider.be>
+References: <1519393117-31998-1-git-send-email-geert+renesas@glider.be>
+Sender: devicetree-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Barry Song <baohua@kernel.org>, Vineet Gupta <vgupta@synopsys.com>, Jiri Slaby <jslaby@suse.com>, Michal Simek <michal.simek@xilinx.com>, linux-serial@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-Add renesas-ceu header file.
+The serial_pxa_ports[] array is indexed using a value derived from the
+"serialN" alias in DT, or from platform data, which may lead to an
+out-of-bounds access.
 
-Do not remove the existing sh_mobile_ceu.h one as long as the original
-driver does not go away.
+Fix this by adding a range check.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+Fixes: 699c20f3e6310aa2 ("serial: pxa: add OF support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- include/media/drv-intf/renesas-ceu.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 include/media/drv-intf/renesas-ceu.h
+v2:
+  - Fix Fixes reference,
+  - Fix off-by-one error (use ">="),
+  - Update patch description for platform data.
+---
+ drivers/tty/serial/pxa.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/media/drv-intf/renesas-ceu.h b/include/media/drv-intf/renesas-ceu.h
-new file mode 100644
-index 0000000..52841d1
---- /dev/null
-+++ b/include/media/drv-intf/renesas-ceu.h
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * renesas-ceu.h - Renesas CEU driver interface
-+ *
-+ * Copyright 2017-2018 Jacopo Mondi <jacopo+renesas@jmondi.org>
-+ */
-+
-+#ifndef __MEDIA_DRV_INTF_RENESAS_CEU_H__
-+#define __MEDIA_DRV_INTF_RENESAS_CEU_H__
-+
-+#define CEU_MAX_SUBDEVS		2
-+
-+struct ceu_async_subdev {
-+	unsigned long flags;
-+	unsigned char bus_width;
-+	unsigned char bus_shift;
-+	unsigned int i2c_adapter_id;
-+	unsigned int i2c_address;
-+};
-+
-+struct ceu_platform_data {
-+	unsigned int num_subdevs;
-+	struct ceu_async_subdev subdevs[CEU_MAX_SUBDEVS];
-+};
-+
-+#endif /* ___MEDIA_DRV_INTF_RENESAS_CEU_H__ */
+diff --git a/drivers/tty/serial/pxa.c b/drivers/tty/serial/pxa.c
+index baf552944d5686e8..eda3c7710d6a745f 100644
+--- a/drivers/tty/serial/pxa.c
++++ b/drivers/tty/serial/pxa.c
+@@ -885,6 +885,10 @@ static int serial_pxa_probe(struct platform_device *dev)
+ 		sport->port.line = dev->id;
+ 	else if (ret < 0)
+ 		goto err_clk;
++	if (sport->port.line >= ARRAY_SIZE(serial_pxa_ports)) {
++		dev_err(&dev->dev, "serial%d out of range\n", sport->port.line);
++		return -EINVAL;
++	}
+ 	snprintf(sport->name, PXA_NAME_LEN - 1, "UART%d", sport->port.line + 1);
+ 
+ 	sport->port.membase = ioremap(mmres->start, resource_size(mmres));
 -- 
 2.7.4
+
