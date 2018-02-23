@@ -1,77 +1,57 @@
-Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-db5eur01on0052.outbound.protection.outlook.com ([104.47.2.52]:22528
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752934AbeBZMFe (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Feb 2018 07:05:34 -0500
-From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v2 11/12] dt-bindings: usb: add documentation for typec port controller(TCPCI)
-Date: Mon, 26 Feb 2018 19:49:18 +0800
-Message-Id: <1519645759-12701-12-git-send-email-jun.li@nxp.com>
-In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
-References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+Return-Path: <SRS0=eEQM=FR=oracle.com=martin.petersen@kernel.org>
+Subject: Re: [PATCH 1/8] dt-bindings: scsi: hisi_sas: add an property of signal attenuation
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+References: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
+	<1519067611-206638-2-git-send-email-john.garry@huawei.com>
+Date: Thu, 22 Feb 2018 20:49:17 -0500
+In-Reply-To: <1519067611-206638-2-git-send-email-john.garry@huawei.com> (John
+	Garry's message of "Tue, 20 Feb 2018 03:13:24 +0800")
+Message-ID: <yq17er4bhlu.fsf@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
-Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-TCPCI stands for typec port controller interface, its implementation
-has full typec port control with power delivery support, it's a
-standard i2c slave with GPIO input as irq interface, detail see spec
-"Universal Serial Bus Type-C Port Controller Interface Specification
-Revision 1.0, Version 1.1"
 
-Signed-off-by: Li Jun <jun.li@nxp.com>
----
-Change for v2:
-- Use usb connector sub-node accordingly to specify typec properties.
+> From: Xiaofei Tan <tanxiaofei@huawei.com>
+>
+> For some new boards with hip07 chipset we are required to
+> set PHY config registers differently. The hw property which
+> determines how to set these registers is in the PHY signal
+> attenuation readings.
+>
+> This patch add an devicetree property, signal-attenuation, which
+> is used to describe the signal attenuation of an board.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>  Documentation/devicetree/bindings/scsi/hisilicon-sas.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> index df3bef7..bd32ecd 100644
+> --- a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> @@ -53,6 +53,13 @@ Main node required properties:
+>  Optional main node properties:
+>   - hip06-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
+>  			    "am-max-transmissions" limitation.
+> + - signal-attenuation : array of 3 32-bit values, containing de-emphasis,
+> +		preshoot, and boost attenuation readings for the board. They
+> +		are used to describe the signal attenuation of the board. These
+> +		values' range is 7600 to 12400, and used to represent -24dB to
+> +		24dB.
+> +		The formula is "y = (x-10000)/10000". For example, 10478
+> +		means 4.78dB.
+>  
+>  Example:
+>  	sas0: sas@c1000000 {
 
- .../devicetree/bindings/usb/typec-tcpci.txt        | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+Rob/Mark: Please review!
 
-diff --git a/Documentation/devicetree/bindings/usb/typec-tcpci.txt b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
-new file mode 100644
-index 0000000..318bf01
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
-@@ -0,0 +1,35 @@
-+TCPCI(Typec port cotroller interface) binding
-+---------------------------------------------
-+
-+Required properties:
-+- compatible:       should be "usb,tcpci".
-+- reg:              the i2c slave address of typec port controller device.
-+- interrupt-parent: the phandle to the interrupt controller which provides
-+                    the interrupt.
-+- interrupts:       interrupt specification for tcpci alert.
-+
-+Required sub-node:
-+- connector: The "usb-c-connector" attached to the tcpci chip, the bindings
-+  of connector node are specified in
-+  Documentation/devicetree/bindings/connector/usb-connector.txt
-+
-+Example:
-+
-+ptn5110@50 {
-+	compatible = "usb,tcpci";
-+	reg = <0x50>;
-+	interrupt-parent = <&gpio3>;
-+	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+
-+	usb_con: connector {
-+		compatible = "usb-c-connector";
-+		label = "USB-C";
-+		port-type = "dual";
-+		default-role = "sink";
-+		src-pdos = <0x380190c8>;
-+		snk-pdos = <0x380190c8 0x3802d0c8>;
-+		max-snk-mv = <9000>;
-+		max-snk-ma = <1000>;
-+		op-snk-mw = <9000>;
-+	};
-+};
 -- 
-2.7.4
-
+Martin K. Petersen	Oracle Linux Engineering
