@@ -1,17 +1,15 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v2 3/4] arm64: add support for i.MX8M EVK board
-Date: Fri, 23 Feb 2018 06:32:42 +0200
-Message-ID: <20180223043242.wkrlckws73kwu6xb@tarshish>
-References: <20180201183126.32384-1-l.stach@pengutronix.de>
- <20180201183126.32384-3-l.stach@pengutronix.de>
- <20180205072438.nxvhlqk54d7firbz@sapphire.tkos.co.il>
- <1517829046.3175.9.camel@pengutronix.de>
- <20180223034652.GM3217@dragon>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 2/4] clk: imx: add fractional PLL output clock
+Date: Fri, 23 Feb 2018 14:55:44 +0800
+Message-ID: <20180223065540.GO3217@dragon>
+References: <20180201175412.9480-1-l.stach@pengutronix.de>
+ <20180201175412.9480-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="6i3wrpsoiz64nqb4"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180223034652.GM3217@dragon>
+In-Reply-To: <20180201175412.9480-2-l.stach@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,319 +19,308 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, "A . s . Dong" <aisheng.dong@nxp.com>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: "A . s . Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---6i3wrpsoiz64nqb4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Sawn,
-
-On Fri, Feb 23, 2018 at 11:46:53AM +0800, Shawn Guo wrote:
-> On Mon, Feb 05, 2018 at 12:10:46PM +0100, Lucas Stach wrote:
-> > I've pushed a branch with all the MX8M work to:
-> > https://git.pengutronix.de/git/lst/linux mx8-work
+On Thu, Feb 01, 2018 at 06:54:10PM +0100, Lucas Stach wrote:
+> This is a new clock type introduced on i.MX8.
 > 
-> I have some problem to boot the kernel (and dtb) built from this branch.
-> I'm running an U-Boot from NXP which works fine with NXP kernel for
-> sure.  But using this U-Boot to load your kernel gives me nothing on
-> serial, even if I put 'earlycon=ec_imx6q,0x30860000' on kernel
-> cmdline.  Anything I'm missing here?  Thanks.
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  drivers/clk/imx/Makefile       |   1 +
+>  drivers/clk/imx/clk-frac-pll.c | 229 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/imx/clk.h          |   3 +
+>  3 files changed, 233 insertions(+)
+>  create mode 100644 drivers/clk/imx/clk-frac-pll.c
+> 
+> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+> index f91f2b2e11cd..9892ae63539c 100644
+> --- a/drivers/clk/imx/Makefile
+> +++ b/drivers/clk/imx/Makefile
+> @@ -6,6 +6,7 @@ obj-y += \
+>  	clk-cpu.o \
+>  	clk-fixup-div.o \
+>  	clk-fixup-mux.o \
+> +	clk-frac-pll.o \
+>  	clk-gate-exclusive.o \
+>  	clk-gate2.o \
+>  	clk-pllv1.o \
+> diff --git a/drivers/clk/imx/clk-frac-pll.c b/drivers/clk/imx/clk-frac-pll.c
+> new file mode 100644
+> index 000000000000..30736d53dfbe
+> --- /dev/null
+> +++ b/drivers/clk/imx/clk-frac-pll.c
+> @@ -0,0 +1,229 @@
+> +/*
+> + * Copyright 2017 NXP.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
 
-FWIW, I tested these patches on the i.MX8 EVK with the attached defconfig.
+The SPDX tag is being used for include/dt-bindings/clock/imx8mq-clock.h.
+It may be good for all clock driver new files as well?
 
-Hope this helps,
-baruch
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/slab.h>
+> +#include <linux/jiffies.h>
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+Sort them alphabetically?
 
---6i3wrpsoiz64nqb4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=imx8_evk_defconfig
+> +
+> +#include "clk.h"
+> +
+> +#define PLL_CFG0 	0x0
+> +#define PLL_CFG1	0x4
+> +
+> +#define PLL_LOCK_STATUS	(0x1 << 31)
+> +#define PLL_CLKE	21
 
-CONFIG_SYSVIPC=y
-CONFIG_POSIX_MQUEUE=y
-CONFIG_NO_HZ_IDLE=y
-CONFIG_HIGH_RES_TIMERS=y
-CONFIG_IRQ_TIME_ACCOUNTING=y
-CONFIG_BSD_PROCESS_ACCT=y
-CONFIG_BSD_PROCESS_ACCT_V3=y
-CONFIG_TASKSTATS=y
-CONFIG_TASK_DELAY_ACCT=y
-CONFIG_TASK_XACCT=y
-CONFIG_TASK_IO_ACCOUNTING=y
-# CONFIG_CPU_ISOLATION is not set
-CONFIG_IKCONFIG=y
-CONFIG_IKCONFIG_PROC=y
-# CONFIG_UTS_NS is not set
-# CONFIG_IPC_NS is not set
-# CONFIG_PID_NS is not set
-# CONFIG_NET_NS is not set
-CONFIG_BLK_DEV_INITRD=y
-# CONFIG_RD_BZIP2 is not set
-# CONFIG_RD_LZMA is not set
-# CONFIG_RD_XZ is not set
-# CONFIG_RD_LZO is not set
-# CONFIG_RD_LZ4 is not set
-CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-CONFIG_KALLSYMS_ALL=y
-# CONFIG_COMPAT_BRK is not set
-CONFIG_PROFILING=y
-CONFIG_JUMP_LABEL=y
-CONFIG_BLK_DEV_INTEGRITY=y
-# CONFIG_IOSCHED_DEADLINE is not set
-CONFIG_ARCH_MXC=y
-CONFIG_PCI=y
-CONFIG_PCIEPORTBUS=y
-CONFIG_PCI_HOST_GENERIC=y
-CONFIG_ARM64_VA_BITS_48=y
-CONFIG_SCHED_MC=y
-CONFIG_PREEMPT=y
-CONFIG_KSM=y
-CONFIG_TRANSPARENT_HUGEPAGE=y
-CONFIG_CMA=y
-# CONFIG_ARM64_SVE is not set
-# CONFIG_EFI is not set
-# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
-CONFIG_COMPAT=y
-CONFIG_HIBERNATION=y
-CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
-CONFIG_CPU_FREQ=y
-CONFIG_CPUFREQ_DT=y
-CONFIG_ARM_BIG_LITTLE_CPUFREQ=y
-CONFIG_NET=y
-CONFIG_PACKET=y
-CONFIG_UNIX=y
-CONFIG_INET=y
-CONFIG_IP_MULTICAST=y
-# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
-# CONFIG_INET_XFRM_MODE_TUNNEL is not set
-# CONFIG_INET_XFRM_MODE_BEET is not set
-# CONFIG_IPV6 is not set
-CONFIG_NETFILTER=y
-CONFIG_NF_CONNTRACK=y
-CONFIG_NF_CONNTRACK_EVENTS=y
-CONFIG_NETFILTER_XT_TARGET_CHECKSUM=y
-CONFIG_NETFILTER_XT_TARGET_LOG=y
-CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=y
-CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y
-CONFIG_NF_CONNTRACK_IPV4=y
-CONFIG_IP_NF_IPTABLES=y
-CONFIG_IP_NF_FILTER=y
-CONFIG_IP_NF_TARGET_REJECT=y
-CONFIG_IP_NF_NAT=y
-CONFIG_IP_NF_TARGET_MASQUERADE=y
-CONFIG_IP_NF_MANGLE=y
-CONFIG_DNS_RESOLVER=y
-# CONFIG_WIRELESS is not set
-CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
-CONFIG_DEVTMPFS=y
-CONFIG_DEVTMPFS_MOUNT=y
-CONFIG_DMA_CMA=y
-CONFIG_BRCMSTB_GISB_ARB=y
-CONFIG_VEXPRESS_CONFIG=y
-CONFIG_BLK_DEV_LOOP=y
-# CONFIG_VEXPRESS_SYSCFG is not set
-CONFIG_SCSI=y
-# CONFIG_SCSI_PROC_FS is not set
-CONFIG_BLK_DEV_SD=y
-CONFIG_SCSI_SAS_LIBSAS=y
-# CONFIG_SCSI_LOWLEVEL is not set
-CONFIG_NETDEVICES=y
-# CONFIG_NET_VENDOR_3COM is not set
-# CONFIG_NET_VENDOR_ADAPTEC is not set
-# CONFIG_NET_VENDOR_AGERE is not set
-# CONFIG_NET_VENDOR_ALACRITECH is not set
-# CONFIG_NET_VENDOR_ALTEON is not set
-# CONFIG_NET_VENDOR_AMAZON is not set
-# CONFIG_NET_VENDOR_AMD is not set
-# CONFIG_NET_VENDOR_AQUANTIA is not set
-# CONFIG_NET_VENDOR_ARC is not set
-# CONFIG_NET_VENDOR_ATHEROS is not set
-# CONFIG_NET_CADENCE is not set
-# CONFIG_NET_VENDOR_BROADCOM is not set
-# CONFIG_NET_VENDOR_BROCADE is not set
-# CONFIG_NET_VENDOR_CAVIUM is not set
-# CONFIG_NET_VENDOR_CHELSIO is not set
-# CONFIG_NET_VENDOR_CISCO is not set
-# CONFIG_NET_VENDOR_DEC is not set
-# CONFIG_NET_VENDOR_DLINK is not set
-# CONFIG_NET_VENDOR_EMULEX is not set
-# CONFIG_NET_VENDOR_EZCHIP is not set
-# CONFIG_NET_VENDOR_EXAR is not set
-CONFIG_FEC=y
-# CONFIG_NET_VENDOR_HISILICON is not set
-# CONFIG_NET_VENDOR_HP is not set
-# CONFIG_NET_VENDOR_HUAWEI is not set
-# CONFIG_NET_VENDOR_INTEL is not set
-# CONFIG_NET_VENDOR_MARVELL is not set
-# CONFIG_NET_VENDOR_MELLANOX is not set
-# CONFIG_NET_VENDOR_MICREL is not set
-# CONFIG_NET_VENDOR_MICROCHIP is not set
-# CONFIG_NET_VENDOR_MYRI is not set
-# CONFIG_NET_VENDOR_NATSEMI is not set
-# CONFIG_NET_VENDOR_NETRONOME is not set
-# CONFIG_NET_VENDOR_NVIDIA is not set
-# CONFIG_NET_VENDOR_OKI is not set
-# CONFIG_NET_PACKET_ENGINE is not set
-# CONFIG_NET_VENDOR_QLOGIC is not set
-# CONFIG_NET_VENDOR_QUALCOMM is not set
-# CONFIG_NET_VENDOR_REALTEK is not set
-# CONFIG_NET_VENDOR_RENESAS is not set
-# CONFIG_NET_VENDOR_RDC is not set
-# CONFIG_NET_VENDOR_ROCKER is not set
-# CONFIG_NET_VENDOR_SAMSUNG is not set
-# CONFIG_NET_VENDOR_SEEQ is not set
-# CONFIG_NET_VENDOR_SILAN is not set
-# CONFIG_NET_VENDOR_SIS is not set
-# CONFIG_NET_VENDOR_SOLARFLARE is not set
-# CONFIG_NET_VENDOR_SMSC is not set
-# CONFIG_NET_VENDOR_STMICRO is not set
-# CONFIG_NET_VENDOR_SUN is not set
-# CONFIG_NET_VENDOR_TEHUTI is not set
-# CONFIG_NET_VENDOR_TI is not set
-# CONFIG_NET_VENDOR_VIA is not set
-# CONFIG_NET_VENDOR_WIZNET is not set
-# CONFIG_NET_VENDOR_SYNOPSYS is not set
-CONFIG_AT803X_PHY=y
-CONFIG_MICREL_PHY=y
-CONFIG_REALTEK_PHY=y
-# CONFIG_USB_NET_DRIVERS is not set
-# CONFIG_WLAN is not set
-CONFIG_INPUT_POLLDEV=y
-CONFIG_INPUT_MATRIXKMAP=y
-CONFIG_INPUT_EVDEV=y
-CONFIG_KEYBOARD_GPIO=y
-CONFIG_INPUT_MISC=y
-# CONFIG_SERIO_SERPORT is not set
-CONFIG_SERIO_AMBAKMI=y
-CONFIG_VT_HW_CONSOLE_BINDING=y
-CONFIG_LEGACY_PTY_COUNT=16
-CONFIG_SERIAL_IMX=y
-CONFIG_SERIAL_IMX_CONSOLE=y
-# CONFIG_HW_RANDOM_CAVIUM is not set
-# CONFIG_DEVPORT is not set
-CONFIG_I2C=y
-CONFIG_I2C_CHARDEV=y
-CONFIG_I2C_MUX=y
-CONFIG_I2C_MUX_PCA954x=y
-CONFIG_I2C_IMX=y
-CONFIG_SPI=y
-CONFIG_SPI_SPIDEV=y
-CONFIG_PINCTRL=y
-CONFIG_PINCTRL_IMX8MQ=y
-CONFIG_GPIOLIB=y
-CONFIG_GPIO_SYSFS=y
-CONFIG_GPIO_GENERIC_PLATFORM=y
-CONFIG_THERMAL=y
-CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
-CONFIG_CPU_THERMAL=y
-CONFIG_THERMAL_EMULATION=y
-CONFIG_WATCHDOG=y
-CONFIG_IMX2_WDT=y
-CONFIG_MFD_SYSCON=y
-# CONFIG_MFD_VEXPRESS_SYSREG is not set
-CONFIG_REGULATOR=y
-CONFIG_REGULATOR_FIXED_VOLTAGE=y
-CONFIG_REGULATOR_GPIO=y
-CONFIG_REGULATOR_PFUZE100=y
-# CONFIG_HID_A4TECH is not set
-# CONFIG_HID_APPLE is not set
-# CONFIG_HID_BELKIN is not set
-# CONFIG_HID_CHERRY is not set
-# CONFIG_HID_CHICONY is not set
-# CONFIG_HID_CYPRESS is not set
-# CONFIG_HID_EZKEY is not set
-# CONFIG_HID_ITE is not set
-# CONFIG_HID_KENSINGTON is not set
-# CONFIG_HID_LOGITECH is not set
-# CONFIG_HID_MICROSOFT is not set
-# CONFIG_HID_MONTEREY is not set
-# CONFIG_USB_HID is not set
-CONFIG_USB=y
-# CONFIG_USB_PCI is not set
-CONFIG_USB_OTG=y
-CONFIG_USB_XHCI_HCD=y
-CONFIG_USB_XHCI_PLATFORM=y
-CONFIG_USB_EHCI_HCD=y
-CONFIG_USB_EHCI_MXC=y
-CONFIG_USB_EHCI_HCD_PLATFORM=y
-CONFIG_USB_STORAGE=y
-CONFIG_NOP_USB_XCEIV=y
-CONFIG_USB_ULPI=y
-CONFIG_MMC=y
-CONFIG_MMC_SDHCI=y
-CONFIG_MMC_SDHCI_PLTFM=y
-CONFIG_MMC_SDHCI_ESDHC_IMX=y
-CONFIG_NEW_LEDS=y
-CONFIG_LEDS_CLASS=y
-CONFIG_LEDS_GPIO=y
-CONFIG_LEDS_PWM=y
-CONFIG_LEDS_SYSCON=y
-CONFIG_LEDS_TRIGGERS=y
-CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-CONFIG_LEDS_TRIGGER_CPU=y
-CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
-CONFIG_RTC_CLASS=y
-# CONFIG_COMMON_CLK_XGENE is not set
-CONFIG_ARM_TIMER_SP804=y
-# CONFIG_IOMMU_SUPPORT is not set
-CONFIG_SOC_IMX8MQ=y
-CONFIG_PWM=y
-CONFIG_PWM_IMX=y
-CONFIG_RESET_CONTROLLER=y
-# CONFIG_ARM_PMU is not set
-CONFIG_EXT4_FS=y
-CONFIG_EXT4_FS_POSIX_ACL=y
-CONFIG_FANOTIFY=y
-CONFIG_VFAT_FS=y
-CONFIG_TMPFS=y
-# CONFIG_MISC_FILESYSTEMS is not set
-# CONFIG_NETWORK_FILESYSTEMS is not set
-CONFIG_NLS_CODEPAGE_437=y
-CONFIG_NLS_ISO8859_1=y
-CONFIG_PRINTK_TIME=y
-CONFIG_DEBUG_INFO=y
-CONFIG_DEBUG_FS=y
-CONFIG_MAGIC_SYSRQ=y
-CONFIG_DEBUG_KERNEL=y
-# CONFIG_SCHED_DEBUG is not set
-# CONFIG_DEBUG_PREEMPT is not set
-# CONFIG_FTRACE is not set
-CONFIG_MEMTEST=y
-CONFIG_KEYS=y
-# CONFIG_CRYPTO_ECHAINIV is not set
-CONFIG_CRYPTO_SHA256=y
-# CONFIG_CRYPTO_HW is not set
-CONFIG_ARM64_CRYPTO=y
-CONFIG_CRYPTO_SHA512_ARM64=y
-CONFIG_CRYPTO_SHA1_ARM64_CE=y
-CONFIG_CRYPTO_SHA2_ARM64_CE=y
-CONFIG_CRYPTO_GHASH_ARM64_CE=y
-CONFIG_CRYPTO_CRCT10DIF_ARM64_CE=y
-CONFIG_CRYPTO_CRC32_ARM64_CE=y
-CONFIG_CRYPTO_AES_ARM64_CE_CCM=y
-CONFIG_CRYPTO_AES_ARM64_CE_BLK=y
-CONFIG_CRYPTO_CHACHA20_NEON=y
-CONFIG_CRYPTO_AES_ARM64_BS=y
-CONFIG_CRC_ITU_T=y
-CONFIG_CRC7=y
+Unused define?
 
---6i3wrpsoiz64nqb4
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> +#define PLL_PD		19
+> +#define PLL_BYPASS	14
+> +#define PLL_NEWDIV_VAL		(1 << 12)
+> +#define PLL_NEWDIV_ACK		(1 << 11)
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+0x1 in PLL_LOCK_STATUS and 1 here lack consistency.  Maybe BIT() even
+better?
 
---6i3wrpsoiz64nqb4--
+> +#define PLL_FRAC_DIV_MASK	0xffffff
+> +#define PLL_INT_DIV_MASK	0x7f
+> +#define PLL_FRAC_DENOM		0x1000000
+
+Can we make the indentation of all these defines consistent?
+
+> +
+> +struct clk_frac_pll {
+> +	struct clk_hw	hw;
+> +	void __iomem	*base;
+> +};
+> +
+> +#define to_clk_frac_pll(_hw) container_of(_hw, struct clk_frac_pll, hw)
+> +
+> +static int clk_wait_lock(struct clk_frac_pll *pll)
+> +{
+> +	unsigned long timeout = jiffies + msecs_to_jiffies(10);
+> +
+> +	/* Wait for PLL to lock */
+> +	do {
+> +		if (readl_relaxed(pll->base) & PLL_LOCK_STATUS)
+> +			break;
+> +		if (time_after(jiffies, timeout))
+> +			break;
+> +	} while (1);
+> +
+> +	return readl_relaxed(pll->base) & PLL_LOCK_STATUS ? 0 : -ETIMEDOUT;
+> +}
+> +
+> +static int clk_wait_ack(struct clk_frac_pll *pll)
+> +{
+> +	unsigned long timeout = jiffies + msecs_to_jiffies(50);
+> +
+> +	/* return directly if the pll is in powerdown or in bypass */
+> +	if (readl_relaxed(pll->base) & ((1 << PLL_PD) | (1 << PLL_BYPASS)))
+
+Instead of bit shift, it seems that defining PLL_PD and PLL_BYPASS as
+bit mask will make the code a bit simpler.
+
+> +		return 0;
+> +
+> +	/* Wait for the pll's divfi and divff to be reloaded */
+> +	do {
+> +		if (readl_relaxed(pll->base) & PLL_NEWDIV_ACK)
+> +			break;
+> +		if (time_after(jiffies, timeout))
+> +			break;
+> +	} while (1);
+> +
+> +	return readl_relaxed(pll->base) & PLL_NEWDIV_ACK ? 0 : ETIMEDOUT;
+> +}
+> +
+> +static int clk_pll_prepare(struct clk_hw *hw)
+> +{
+> +	struct clk_frac_pll *pll = to_clk_frac_pll(hw);
+> +	u32 val;
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG0);
+> +	val &= ~(1 << PLL_PD);
+> +	writel_relaxed(val, pll->base + PLL_CFG0);
+> +
+> +	return clk_wait_lock(pll);
+> +}
+> +
+> +static void clk_pll_unprepare(struct clk_hw *hw)
+> +{
+> +	struct clk_frac_pll *pll = to_clk_frac_pll(hw);
+> +	u32 val;
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG0);
+> +	val |= (1 << PLL_PD);
+> +	writel_relaxed(val, pll->base + PLL_CFG0);
+> +}
+> +
+> +static int clk_pll_is_prepared(struct clk_hw *hw)
+> +{
+> +	struct clk_frac_pll *pll = to_clk_frac_pll(hw);
+> +	u32 val;
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG0);
+> +	return (val & (1 << PLL_PD)) ? 0 : 1;
+> +}
+> +
+> +static unsigned long clk_pll_recalc_rate(struct clk_hw *hw,
+> +					 unsigned long parent_rate)
+> +{
+> +	struct clk_frac_pll *pll = to_clk_frac_pll(hw);
+> +	u32 val, divff, divfi, divq;
+> +	u64 temp64;
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG0);
+> +	divq = ((val & 0x1f) + 1) * 2;
+> +	val = readl_relaxed(pll->base + PLL_CFG1);
+> +	divff = (val >> 7) & PLL_FRAC_DIV_MASK;
+> +	divfi = (val & PLL_INT_DIV_MASK);
+> +
+> +	temp64 = (u64)parent_rate * 8;
+> +	temp64 *= divff;
+> +	do_div(temp64, PLL_FRAC_DENOM);
+> +	temp64 /= divq;
+> +
+> +	return parent_rate * 8 * (divfi + 1) / divq + (unsigned long)temp64;
+> +}
+> +
+> +static long clk_pll_round_rate(struct clk_hw *hw, unsigned long rate,
+> +			       unsigned long *prate)
+> +{
+> +	u32 divff, divfi;
+> +	u64 temp64;
+> +	unsigned long parent_rate = *prate;
+> +
+> +	parent_rate *= 8;
+> +	rate *= 2;
+> +	divfi = rate / parent_rate;
+> +	temp64 = (u64)(rate - divfi * parent_rate);
+> +	temp64 *= PLL_FRAC_DENOM;
+> +	do_div(temp64, parent_rate);
+> +	divff = temp64;
+> +
+> +	temp64 = (u64)parent_rate;
+> +	temp64 *= divff;
+> +	do_div(temp64, PLL_FRAC_DENOM);
+> +
+> +	return (parent_rate * divfi + (unsigned long)temp64) / 2;
+> +}
+> +
+> +/*
+> + * To simplify the clock calculation, we can keep the 'PLL_OUTPUT_VAL' at zero
+> + * (means the PLL output will be divided by 2). So the PLL output can use
+> + * the below formula:
+> + * pllout = parent_rate * 8 / 2 * DIVF_VAL;
+> + * where DIVF_VAL = 1 + DIVFI + DIVFF / 2^24.
+> + */
+> +static int clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+> +			    unsigned long parent_rate)
+> +{
+> +	struct clk_frac_pll *pll = to_clk_frac_pll(hw);
+> +	u32 val, divfi, divff;
+> +	u64 temp64;
+> +	int ret;
+> +
+> +	parent_rate *= 8;
+> +	rate *= 2;
+> +	divfi = rate / parent_rate;
+> +	temp64 = (u64) (rate - divfi * parent_rate);
+> +	temp64 *= PLL_FRAC_DENOM;
+> +	do_div(temp64, parent_rate);
+> +	divff = temp64;
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG1);
+> +	val &= ~((PLL_FRAC_DIV_MASK << 7) | (PLL_INT_DIV_MASK));
+> +	val |= ((divff << 7) | (divfi - 1));
+
+	val |= (divff << 7) | (divfi - 1);
+
+Shawn
+
+> +	writel_relaxed(val, pll->base + PLL_CFG1);
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG0);
+> +	val &= ~0x1f;
+> +	writel_relaxed(val, pll->base + PLL_CFG0);
+> +
+> +	/* Set the NEV_DIV_VAL to reload the DIVFI and DIVFF */
+> +	val = readl_relaxed(pll->base + PLL_CFG0);
+> +	val |= PLL_NEWDIV_VAL;
+> +	writel_relaxed(val, pll->base + PLL_CFG0);
+> +
+> +	ret = clk_wait_ack(pll);
+> +
+> +	/* clear the NEV_DIV_VAL */
+> +	val = readl_relaxed(pll->base + PLL_CFG0);
+> +	val &= ~PLL_NEWDIV_VAL;
+> +	writel_relaxed(val, pll->base + PLL_CFG0);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct clk_ops clk_frac_pll_ops = {
+> +	.prepare	= clk_pll_prepare,
+> +	.unprepare	= clk_pll_unprepare,
+> +	.is_prepared	= clk_pll_is_prepared,
+> +	.recalc_rate	= clk_pll_recalc_rate,
+> +	.round_rate	= clk_pll_round_rate,
+> +	.set_rate	= clk_pll_set_rate,
+> +};
+> +
+> +struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
+> +			     void __iomem *base)
+> +{
+> +	struct clk_frac_pll *pll;
+> +	struct clk *clk;
+> +	struct clk_init_data init;
+> +
+> +	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+> +	if (!pll)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	pll->base = base;
+> +	init.name = name;
+> +	init.ops = &clk_frac_pll_ops;
+> +	init.flags = 0;
+> +	init.parent_names = &parent_name;
+> +	init.num_parents = 1;
+> +
+> +	pll->hw.init = &init;
+> +
+> +	clk = clk_register(NULL, &pll->hw);
+> +	if (IS_ERR(clk))
+> +		kfree(pll);
+> +
+> +	return clk;
+> +}
+> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+> index d69c4bbf3597..287610902ea8 100644
+> --- a/drivers/clk/imx/clk.h
+> +++ b/drivers/clk/imx/clk.h
+> @@ -27,6 +27,9 @@ struct clk *imx_clk_pllv1(enum imx_pllv1_type type, const char *name,
+>  struct clk *imx_clk_pllv2(const char *name, const char *parent,
+>  		void __iomem *base);
+>  
+> +struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
+> +			     void __iomem *base);
+> +
+>  enum imx_pllv3_type {
+>  	IMX_PLLV3_GENERIC,
+>  	IMX_PLLV3_SYS,
+> -- 
+> 2.15.1
+> 
