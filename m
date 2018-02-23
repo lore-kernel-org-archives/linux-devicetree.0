@@ -1,15 +1,15 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v2 5/5] arm: zynq: Add support for Xilinx zc770 xm013 dc4 board
-Date: Fri, 23 Feb 2018 16:00:23 +0100
-Message-ID: <7e29c4841930c4e4189a167934574fcf987b9f02.1519398009.git.michal.simek@xilinx.com>
-References: <cover.1519398009.git.michal.simek@xilinx.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 3/4] arm64: add support for i.MX8M EVK board
+Date: Fri, 23 Feb 2018 23:03:53 +0800
+Message-ID: <20180223150352.GU3217@dragon>
+References: <20180201183126.32384-1-l.stach@pengutronix.de>
+ <20180201183126.32384-3-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1519398009.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1519398009.git.michal.simek@xilinx.com>
-References: <cover.1519398009.git.michal.simek@xilinx.com>
+Content-Disposition: inline
+In-Reply-To: <20180201183126.32384-3-l.stach@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,134 +19,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, "A . s . Dong" <aisheng.dong@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-zc770 is based board which is extended by FMC/DC cards for SoC
-validation. FMCs/DCs are supposed to cover all SoC configurations.
-FMC/DC contains can, ethernet, i2c, qspi, spi and uart.
+On Thu, Feb 01, 2018 at 07:31:25PM +0100, Lucas Stach wrote:
+> +&usdhc1 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc1_cd_reset>, <&pinctrl_usdhc1_clk_strobe>,
+> +	            <&pinctrl_usdhc1_data>;
+> +	pinctrl-1 = <&pinctrl_usdhc1_cd_reset>,
+> +	            <&pinctrl_usdhc1_clk_strobe_100mhz>,
+> +	            <&pinctrl_usdhc1_data_100mhz>;
+> +	pinctrl-2 = <&pinctrl_usdhc1_cd_reset>,
+> +	            <&pinctrl_usdhc1_clk_strobe_200mhz>,
+> +	            <&pinctrl_usdhc1_data_200mhz>;
+> +	vqmmc-supply = <&sw4_reg>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	no-sd;
+> +	no-sdio;
+> +	status = "okay";
+> +};
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+I'm not sure it can be enabled right now.  Per my testing, eMMC is not
+working yet.
 
-Changes in v2:
-- use eeprom as node name instead of at25
-- Record compatible string to xilinx.txt
+[    0.879756] mmc0: Switching to 3.3V signalling voltage failed
+[    0.913587] mmc0: SDHCI controller on 30b40000.usdhc [30b40000.usdhc] using ADMA
+...
+[    1.007628] mmc0: switch to high-speed from hs200 failed, err:-110
+[    1.013873] mmc0: error -110 whilst initialising MMC card
+[    1.020639] mmc0: Switching to 3.3V signalling voltage failed
+...
+[    1.132462] mmc0: switch to high-speed from hs200 failed, err:-110
+[    1.138674] mmc0: error -110 whilst initialising MMC card
+[    1.145394] mmc0: Switching to 3.3V signalling voltage failed
+[    1.268367] mmc0: switch to high-speed from hs200 failed, err:-110
+[    1.274576] mmc0: error -110 whilst initialising MMC card
+[    1.281291] mmc0: Switching to 3.3V signalling voltage failed
+[    1.440708] mmc0: switch to high-speed from hs200 failed, err:-110
+[    1.446919] mmc0: error -110 whilst initialising MMC card
 
- Documentation/devicetree/bindings/arm/xilinx.txt |  1 +
- arch/arm/boot/dts/Makefile                       |  1 +
- arch/arm/boot/dts/zynq-zc770-xm013.dts           | 78 ++++++++++++++++++++++++
- 3 files changed, 80 insertions(+)
- create mode 100644 arch/arm/boot/dts/zynq-zc770-xm013.dts
+Or am I missing anything?
 
-diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
-index 745c898f2f7f..63705a451251 100644
---- a/Documentation/devicetree/bindings/arm/xilinx.txt
-+++ b/Documentation/devicetree/bindings/arm/xilinx.txt
-@@ -15,6 +15,7 @@ Additional compatible strings:
-   "xlnx,zynq-zc770-xm010"
-   "xlnx,zynq-zc770-xm011"
-   "xlnx,zynq-zc770-xm012"
-+  "xlnx,zynq-zc770-xm013"
- 
- ---------------------------------------------------------------
- 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 2c74b935ad1c..d5de3748a80a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1070,6 +1070,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
- 	zynq-zc770-xm010.dtb \
- 	zynq-zc770-xm011.dtb \
- 	zynq-zc770-xm012.dtb \
-+	zynq-zc770-xm013.dtb \
- 	zynq-zed.dtb \
- 	zynq-zybo.dtb
- dtb-$(CONFIG_MACH_ARMADA_370) += \
-diff --git a/arch/arm/boot/dts/zynq-zc770-xm013.dts b/arch/arm/boot/dts/zynq-zc770-xm013.dts
-new file mode 100644
-index 000000000000..8bb66859d774
---- /dev/null
-+++ b/arch/arm/boot/dts/zynq-zc770-xm013.dts
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Xilinx ZC770 XM013 board DTS
-+ *
-+ * Copyright (C) 2013 Xilinx, Inc.
-+ */
-+/dts-v1/;
-+#include "zynq-7000.dtsi"
-+
-+/ {
-+	compatible = "xlnx,zynq-zc770-xm013", "xlnx,zynq-7000";
-+	model = "Xilinx Zynq";
-+
-+	aliases {
-+		ethernet0 = &gem1;
-+		i2c0 = &i2c1;
-+		serial0 = &uart0;
-+		spi1 = &spi0;
-+	};
-+
-+	chosen {
-+		bootargs = "";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x40000000>;
-+	};
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&gem1 {
-+	status = "okay";
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ethernet_phy>;
-+
-+	ethernet_phy: ethernet-phy@7 {
-+		reg = <7>;
-+		device_type = "ethernet-phy";
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	si570: clock-generator@55 {
-+		#clock-cells = <0>;
-+		compatible = "silabs,si570";
-+		temperature-stability = <50>;
-+		reg = <0x55>;
-+		factory-fout = <156250000>;
-+		clock-frequency = <148500000>;
-+	};
-+};
-+
-+&spi0 {
-+	status = "okay";
-+	num-cs = <4>;
-+	is-decoded-cs = <0>;
-+	eeprom: eeprom@0 {
-+		at25,byte-len = <8192>;
-+		at25,addr-mode = <2>;
-+		at25,page-size = <32>;
-+
-+		compatible = "atmel,at25";
-+		reg = <2>;
-+		spi-max-frequency = <1000000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
--- 
-1.9.1
+Shawn
