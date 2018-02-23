@@ -1,59 +1,84 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Overlay sugar syntax (was: Re: [PATCH v6 3/4] drm: rcar-du: Fix
- legacy DT to create LVDS encoder nodes)
-Date: Fri, 23 Feb 2018 09:05:24 +0100
-Message-ID: <CAMuHMdUqvZEKu5v4E29ofjj09sv+Yxk41W4K+FnfqKQ=88AWRA@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCHv4 2/4] ASoC: codec: cpcap: new codec
+Date: Fri, 23 Feb 2018 09:07:14 +0100
+Message-ID: <20180223080714.GC1584@amd>
+References: <20180214220741.28306-1-sebastian.reichel@collabora.co.uk>
+ <20180214220741.28306-3-sebastian.reichel@collabora.co.uk>
+ <20180216113901.GC5886@sirena.org.uk>
+ <20180216135113.akicejkodhbjpp2w@earth.universe>
+ <20180216142716.GJ5886@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============6877952755298681874=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180216142716.GJ5886@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRnJhbmssCgpPbiBGcmksIEZlYiAyMywgMjAxOCBhdCAzOjM4IEFNLCBGcmFuayBSb3dhbmQg
-PGZyb3dhbmQubGlzdEBnbWFpbC5jb20+IHdyb3RlOgo+IEkgd2FzIGhvcGluZyB0byBiZSBhYmxl
-IHRvIGNvbnZlcnQgdGhlIC5kdHMgZmlsZXMgdG8gdXNlIHN1Z2FyIHN5bnRheAo+IGluc3RlYWQg
-b2YgaGFuZCBjb2RpbmcgdGhlIGZyYWdtZW50IG5vZGVzLCBidXQgZm9yIHRoaXMgc3BlY2lmaWMg
-c2V0Cj4gb2YgZmlsZXMgSSBmYWlsZWQsIHNpbmNlIHRoZSBsYWJlbHMgdGhhdCB3b3VsZCBoYXZl
-IGJlZW4gcmVxdWlyZWQgZG8KPiBub3QgYWxyZWFkeSBleGlzdCBpbiB0aGUgYmFzZSAuZHRzIGZp
-bGVzIHRoYXQgdGhhdCBvdmVybGF5cyB3b3VsZCBiZQo+IGFwcGxpZWQgYWdhaW5zdC4KCkluZGVl
-ZCwgaGVuY2UgdGhlIGZpeHVwIG92ZXJsYXlzIHVzZSAidGFyZ2V0LXBhdGgiLgoKQlRXLCBpcyB0
-aGVyZSBhbnkgc3BlY2lmaWMgcmVhc29uIHRoZXJlIGlzIG5vIHN1Z2FyIHN5bnRheCBzdXBwb3J0
-IGluIGR0Ywpmb3IgYWJzb2x1dGUgdGFyZ2V0IHBhdGhzPyBJIGd1ZXNzIHRvIHByZXZlbnQgYWRk
-aW5nIHN0dWZmIHRvIGEgcmFuZG9tCmV4aXN0aW5nIG5vZGUsIGFuZCB0byBlbmNvdXJhZ2UgcGVv
-cGxlIHRvIHVzZSBhICJjb25uZWN0b3IiIEFQSSBkZWZpbmVkIGluCnRlcm0gb2YgbGFiZWxzPwoK
-SSdtIGFsc28gaW4gdGhlIHByb2Nlc3Mgb2YgY29udmVydGluZyBteSBjb2xsZWN0aW9uIG9mIERU
-IG92ZXJsYXlzIHRvIHN1Z2FyCnN5bnRheCwgYW5kIGxhY2sgb2Ygc3VwcG9ydCBmb3IgInRhcmdl
-dC1wYXRoIiBpcyB0aGUgc29sZSB0aGluZyB0aGF0IGhvbGRzCm1lIGJhY2sgZnJvbSBjb21wbGV0
-aW5nIHRoaXMuIFNvIGZvciBub3cgSSB1c2UgYSBtaXggb2Ygc3VnYXIgYW5kCnRyYWRpdGlvbmFs
-IG92ZXJsYXkgc3ludGF4LgoKSW4gcGFydGljdWxhciwgSSBuZWVkICJ0YXJnZXQtcGF0aCIgZm9y
-IHR3byB0aGluZ3M6CiAgMS4gVG8gcmVmZXIgdG8gdGhlIHJvb3Qgbm9kZSwgZm9yIGFkZGluZyBk
-ZXZpY2VzIHRoYXQgc2hvdWxkIGxpdmUgYXQKICAgICAoYSBib2FyZCBzdWJub2RlIG9mKSB0aGUg
-cm9vdCBub2RlLCBsaWtlOgogICAgICAgLSBkZXZpY2VzIGNvbm5lY3RlZCB0byBHUElPIGNvbnRy
-b2xsZXJzIHByb3ZpZGVkIGJ5IG90aGVyIGJhc2Ugb3IKICAgICAgICAgb3ZlcmxheSBkZXZpY2Vz
-IChlLmcuIExFRHMsIGRpc3BsYXlzLCBidXR0b25zLCAuLi4pLAogICAgICAgLSBjbG9jayBwcm92
-aWRlcnMgZm9yIG90aGVyIG92ZXJsYXlzIGRldmljZXMgKGUuZy4gZml4ZWQtY2xvY2spLgogIDIu
-IFRvIHJlZmVyIHRvIHRoZSBhbGlhc2VzIG5vZGUsIGZvciBhZGRpbmcgbWFuZGF0b3J5IHNlcmlh
-bFggYWxpYXNlcy4KClRoZSBmb3JtZXIgaXMgdGhlIHJlYWwgYmxvY2tlciBmb3IgbWUuCgpUaGUg
-bGF0dGVyIGRvZXNuJ3Qgd29yayB3aXRoIHBsYWluIHVwc3RyZWFtIChoYWNreSBwYXRjaGVzIGF2
-YWlsYWJsZSksIHNvCkknbSB3b3JraW5nIG9uIGdldHRpbmcgcmlkIG9mIHRoZSBzZXJpYWxYIHJl
-cXVpcmVtZW50IGluIHRoZSBzZXJpYWwgZHJpdmVyLgoKVGhhbmtzIQoKR3J7b2V0amUsZWV0aW5n
-fXMsCgogICAgICAgICAgICAgICAgICAgICAgICBHZWVydAoKLS0KR2VlcnQgVXl0dGVyaG9ldmVu
-IC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhr
-Lm9yZwoKSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkg
-Y2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3Rz
-IEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============6877952755298681874==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HG+GLK89HZ1zG0kk"
+Content-Disposition: inline
+
+
+--HG+GLK89HZ1zG0kk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri 2018-02-16 14:27:16, Mark Brown wrote:
+> On Fri, Feb 16, 2018 at 02:51:13PM +0100, Sebastian Reichel wrote:
+> > On Fri, Feb 16, 2018 at 11:39:01AM +0000, Mark Brown wrote:
+>=20
+> > > We don't have default lines like this for other MFDs...
+>=20
+> > Is there a reason not to add them? It looks very useful to me:
+>=20
+> Consistency.  It's a lot easier to apply a single rule to everything
+> than it is to have to individually think through and discuss the
+> decisions on every individual driver, especially when there will
+> inevitably be some cases where there are conflicting requirements from
+> different users.  As you said in the rest of your mail hand configuring
+> kernels is already a very specialist thing at the best of times.
+
+Yes, so please don't make it any harder than it needs to be. Having to
+enable (by hand) more than one option per chip is annoying and error-prone.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--HG+GLK89HZ1zG0kk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlqPy7IACgkQMOfwapXb+vKrRACfSPOLbfTzlyi3wGezRGoMK7VH
+/XIAnj7ERmB7Ow0NtqtO7NdiHNvCrnwh
+=4tK+
+-----END PGP SIGNATURE-----
+
+--HG+GLK89HZ1zG0kk--
+
+--===============6877952755298681874==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6877952755298681874==--
