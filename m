@@ -1,118 +1,149 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCHv4 1/4] dt-bindings: sound: add motorola,
-	cpcap-audio-codec
-Date: Fri, 23 Feb 2018 13:47:20 +0100
-Message-ID: <20180223124720.wntxfitr5iu35osb@earth.universe>
-References: <20180214220741.28306-1-sebastian.reichel@collabora.co.uk>
- <20180214220741.28306-2-sebastian.reichel@collabora.co.uk>
- <20180216113008.GB5886@sirena.org.uk>
- <20180216132537.lkd4wzfg7uuoyx7k@earth.universe>
- <20180216134448.GI5886@sirena.org.uk>
- <20180216141237.rd75sbix7bopi7zu@earth.universe>
- <20180216151609.GK5886@sirena.org.uk>
- <20180216155706.GS6364@atomide.com>
- <20180219130514.GC32761@sirena.org.uk>
- <20180222195418.GC5184@atomide.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 2/2] i2c: add support for Socionext SynQuacer I2C
+ controller
+Date: Fri, 23 Feb 2018 15:12:26 +0200
+Message-ID: <CAHp75VfFKDkQQ9-vdjzDfE2Cdk2Cb93+kdceYQgEqt3hti=Wkg@mail.gmail.com>
+References: <20180222191647.4727-1-ard.biesheuvel@linaro.org>
+ <20180222191647.4727-3-ard.biesheuvel@linaro.org>
+ <CAHp75Vc1AGzdgTB281XVo=FmZerkU1vijLih3JUO=_wNPjxgfA@mail.gmail.com>
+ <CAKv+Gu9XkmSPHZf+jVKOm-SX1GCWJUc7y3zTCuaHBwk8O3OC3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6430628329297836213=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180222195418.GC5184@atomide.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAKv+Gu9XkmSPHZf+jVKOm-SX1GCWJUc7y3zTCuaHBwk8O3OC3Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Jassi Brar <jassisinghbrar@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 23, 2018 at 2:40 PM, Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> On 23 February 2018 at 12:27, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>> On Thu, Feb 22, 2018 at 9:16 PM, Ard Biesheuvel
+>> <ard.biesheuvel@linaro.org> wrote:
+>>> This is a cleaned up version of the I2C controller driver for
+>>> the Fujitsu F_I2C IP, which was never supported upstream, and
+>>> has now been incorporated into the Socionext SynQuacer SoC.
 
---===============6430628329297836213==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z65emjrrxhm2ftu2"
-Content-Disposition: inline
+>>> +       return DIV_ROUND_UP((bit_count * 9 + 10 * num) * 3, 200) + 10;
+>>
+>> When I suggested to drop parens, I also suggested to swap second pair
+>> arguments (b/c I was thinking that parens to prevent confusion + vs
+>> *), like
+>>
+>> 9 * bit_count + 10 * num, or
+>> bit_count * 9 + num * 10.
+>>
+>> Though, it is up to you, I still consider that + vs. * operator
+>> precedence is quite obvious.
 
+> I can change it if you like.
 
---z65emjrrxhm2ftu2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Feb 22, 2018 at 11:54:19AM -0800, Tony Lindgren wrote:
-> * Mark Brown <broonie@kernel.org> [180219 12:05]:
-> > On Fri, Feb 16, 2018 at 07:57:07AM -0800, Tony Lindgren wrote:
-> > > One advantage of using a compatible property for the pmic subdevices
-> > > though is that it leaves out a dependency between various device
-> > > drivers things happen automagically. The mfd core driver can be
-> > > minimal and just implement interrupt handling and regmap. So no need
-> > > to to parse the child nodes in the pmic mfd driver :)
-> >=20
-> > There's no need to do that anyway - with a MFD the child devices can
-> > assume that they're part of the MFD and reference their parent.
-> >=20
-> > > So personally I'd prefer the option that requires least amount
-> > > of custom code if compatible vs no compatible property is the
-> > > only issue here.
-> >=20
-> > It's a few lines of code to register the child devices from code rather
-> > than the DT, and keeps it out of the ABI.
->=20
-> OK yeah that's a good point with avoiding the ABI. Seems
-> we still want the dts child node(s) though. That way audio
-> device can be disabled for devices where audio is not wired
-> up at all on this PMIC.
-
-We need something to identify the correct child node. If there
-is no compatible, the node name will become ABI. So I don't
-think we gain anything by removing the compatible. As far as
-I can see it seems to be unusual to use fixed node names. I
-could find some examples, but most sub-devices are identified
-using compatibles. This method also has direct support in MFD
-(using .of_compatible in mfd_cell).
-
-Based on a bit of grepping through drivers/mfd/, the node name
-based identification seems to be mainly used by ASoC, while most
-other subsystems seem to prefer compatible based identification.
-
-Anyways, I have implemented the node name based identification and
-will post patches once I fixed the enum issue. I will probably
-send them later today.
-
--- Sebastian
-
---z65emjrrxhm2ftu2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlqQDVcACgkQ2O7X88g7
-+pqVNBAAovaQWV2URhZ0oya9TwHDO1QZVos67lwjSfiNCbgp5gRphq9jAzY8K90G
-qFX/3aEZuRTyWMXC0cjC9hopqVLeBRO1+UZemr1FsLBZBXmPk93CoMXRvX++V8/R
-CEsUq9rYcKCDVRoNfMg+vdoOKBRlWgBKRAiJWOroEp7wcqD3pRb3BWv2Dr3Xkwn4
-rfxf97FQvd1TGEA8vw/yA+WBQbeTAHLQM0SkgNTMDkmmjf2vdNpq1MyG7oorEK4D
-GgeTLzxis624bvFhrWLVk2sHZr6NzOQoJhKxnYgeoWLUUW3Gopj71lGrTnMhrqHO
-I4fPvvMvo2VrS3creCmM+kZ7/lQ2QGJxOe+kNnd97ZavhVVTCAkb7an18r2ShmIf
-Y1f6VSISyJmcOi94tQRSFMxo/NMVrHfQC2bovJW8jTYAf1nok6FmufFizljyny4a
-GEXHphrBzXFLyzyuPAYYy/YoQArMkkrlbsRVZfzBDl4tVDxSZSmdjcOyo8s8zz+H
-PZDSPZoeEIIgHu7tvWXqdC1OABQkvAlmOa+tH3F0YM8lVOsVvHrABVz/4u4OwdyW
-n6wnuvC9l+s/WTAwg7syvasTqzizi05R0bqDhB5Q8p9EQiW6CWtjGRK2YETdrJ13
-GeAiAvWqxqJE6KBZCgg0wPf+JLarV0RyRIIS2DDJE6Hnquxp9I8=
-=Mz6H
------END PGP SIGNATURE-----
-
---z65emjrrxhm2ftu2--
-
---===============6430628329297836213==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+I guess slightly better to change, thanks.
 
 
---===============6430628329297836213==--
+>>> +       ret = device_property_read_u32(&pdev->dev, "clock-frequency",
+>>> +                                      &speed_khz);
+>>> +       if (ret) {
+>>> +               dev_err(&pdev->dev,
+>>> +                       "Missing clock-frequency property\n");
+>>> +               return -EINVAL;
+>>> +       }
+>>> +       speed_khz /= 1000;
+
+>>> +       if (dev_of_node(&pdev->dev)) {
+>>> +               i2c->clk = devm_clk_get(&pdev->dev, "pclk");
+>>> +               if (IS_ERR(i2c->clk)) {
+>>> +                       dev_err(&pdev->dev, "cannot get clock\n");
+>>> +                       return PTR_ERR(i2c->clk);
+>>> +               }
+>>> +               dev_dbg(&pdev->dev, "clock source %p\n", i2c->clk);
+>>> +
+>>> +               i2c->clkrate = clk_get_rate(i2c->clk);
+>>> +               dev_dbg(&pdev->dev, "clock rate %d\n", i2c->clkrate);
+>>> +               clk_prepare_enable(i2c->clk);
+>>> +       } else {
+>>> +               ret = device_property_read_u32(&pdev->dev,
+>>> +                                              "socionext,pclk-rate",
+>>> +                                              &i2c->clkrate);
+>>> +               if (ret)
+>>> +                       return ret;
+>>> +       }
+>>
+>> Okay, I got this case. It's more likely the one in 8250_dw.c.
+>>
+>> Can you do the similar way?
+
+> Could you elaborate?
+
+--- 8< --- 8< --- 8< ---
+        device_property_read_u32(dev, "clock-frequency", &p->uartclk);
+
+       /* If there is separate baudclk, get the rate from it. */
+       data->clk = devm_clk_get(dev, "baudclk");
+...
+       if (IS_ERR(data->clk) && PTR_ERR(data->clk) == -EPROBE_DEFER)
+               return -EPROBE_DEFER;
+       if (!IS_ERR_OR_NULL(data->clk)) {
+               err = clk_prepare_enable(data->clk);
+               if (err)
+                       dev_warn(dev, "could not enable optional baudclk: %d\n",
+                                err);
+               else
+                       p->uartclk = clk_get_rate(data->clk);
+       }
+
+       /* If no clock rate is defined, fail. */
+       if (!p->uartclk) {
+               dev_err(dev, "clock rate not defined\n");
+               err = -EINVAL;
+               goto err_clk;
+--- 8< --- 8< --- 8< ---
+
+Replace 'baudclk' with 'pclk' and p->uartclk with i2c->clkrate in
+above and you are almost done.
+
+>>> +       i2c->irq = platform_get_irq(pdev, 0);
+>>> +       if (i2c->irq <= 0) {
+>>
+>> < 0 ?
+>>
+>> On some platforms IRQ == 0 might be valid.
+
+> Are you sure about that?
+
+Yes. I fixed some cases on one of a such.
+
+> http://yarchive.net/comp/linux/no_irq.html
+
+I agree with Linus from software IRQ (and nowadays luckily we are
+using IRQ descriptors), but I disagree with him from hardware
+prospective.
+0 is totally valid HW IRQ line. In hardware there is no descriptor
+(except, yes, MSI and alike cases), it's just a wire with an index.
+
+So, while drivers are getting better in code prospective (though I
+don't see many of them comparing this to 0), the IRQ framework is
+changing itself as well.
+
+At which circumstances we might get 0 in the first place?
+
+Second question, doesn't request_irq() fail on irq==0 if it's not
+supported as valid by platform?
+
+>>> +               dev_err(&pdev->dev, "no IRQ resource found\n");
+>>> +               return -ENODEV;
+>>> +       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
