@@ -1,129 +1,165 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [Freedreno] [PATCH v7 3/6] iommu/arm-smmu: Invoke pm_runtime
-	during probe, add/remove device
-Date: Fri, 23 Feb 2018 08:40:48 -0700
-Message-ID: <20180223154048.GB18743@jcrouse-lnx.qualcomm.com>
-References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
-	<1517999482-17317-4-git-send-email-vivek.gautam@codeaurora.org>
-	<20180222235200.GA18743@jcrouse-lnx.qualcomm.com>
-	<CAFp+6iGQ5Vckui14Jb=V0uk_Pjes95hOxo=KBijR4yxPeDDzFg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v4 03/10] ARM: sun8i: smp: Add support for A83T
+Date: Fri, 23 Feb 2018 16:03:05 +0100
+Message-ID: <20180223150305.7jsuxay2idzvcy2w@flea.lan>
+References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
+ <20180223133742.26044-4-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iGQ5Vckui14Jb=V0uk_Pjes95hOxo=KBijR4yxPeDDzFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============3585881949471961449=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180223133742.26044-4-mylene.josserand@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 23, 2018 at 04:06:39PM +0530, Vivek Gautam wrote:
-> On Fri, Feb 23, 2018 at 5:22 AM, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> > On Wed, Feb 07, 2018 at 04:01:19PM +0530, Vivek Gautam wrote:
-> >> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >>
-> >> The smmu device probe/remove and add/remove master device callbacks
-> >> gets called when the smmu is not linked to its master, that is without
-> >> the context of the master device. So calling runtime apis in those places
-> >> separately.
-> >>
-> >> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >> [vivek: Cleanup pm runtime calls]
-> >> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >> ---
-> >>  drivers/iommu/arm-smmu.c | 42 ++++++++++++++++++++++++++++++++++++++----
-> >>  1 file changed, 38 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> >> index 9e2f917e16c2..c024f69c1682 100644
-> >> --- a/drivers/iommu/arm-smmu.c
-> >> +++ b/drivers/iommu/arm-smmu.c
-> >> @@ -913,11 +913,15 @@ static void arm_smmu_destroy_domain_context(struct iommu_domain *domain)
-> >>       struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> >>       struct arm_smmu_device *smmu = smmu_domain->smmu;
-> >>       struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
-> >> -     int irq;
-> >> +     int ret, irq;
-> >>
-> >>       if (!smmu || domain->type == IOMMU_DOMAIN_IDENTITY)
-> >>               return;
-> >>
-> >> +     ret = pm_runtime_get_sync(smmu->dev);
-> >> +     if (ret)
-> >> +             return;
-> >> +
-> >>       /*
-> >>        * Disable the context bank and free the page tables before freeing
-> >>        * it.
-> >> @@ -932,6 +936,8 @@ static void arm_smmu_destroy_domain_context(struct iommu_domain *domain)
-> >>
-> >>       free_io_pgtable_ops(smmu_domain->pgtbl_ops);
-> >>       __arm_smmu_free_bitmap(smmu->context_map, cfg->cbndx);
-> >> +
-> >> +     pm_runtime_put_sync(smmu->dev);
-> >>  }
-> >>
-> >>  static struct iommu_domain *arm_smmu_domain_alloc(unsigned type)
-> >> @@ -1407,14 +1413,22 @@ static int arm_smmu_add_device(struct device *dev)
-> >>       while (i--)
-> >>               cfg->smendx[i] = INVALID_SMENDX;
-> >>
-> >> -     ret = arm_smmu_master_alloc_smes(dev);
-> >> +     ret = pm_runtime_get_sync(smmu->dev);
-> >>       if (ret)
-> >>               goto out_cfg_free;
-> >
-> > Hey Vivek, I just hit a problem with this on sdm845. It turns out that
-> > pm_runtime_get_sync() returns a positive 1 if the device is already active.
-> >
-> > I hit this in the GPU code. The a6xx has two platform devices that each use a
-> > different sid on the iommu. The GPU is probed normally from a platform driver
-> > and it in turn initializes the GMU device by way of a phandle.
-> >
-> > Because the GMU isn't probed with a platform driver we need to call
-> > of_dma_configure() on the device to set up the IOMMU for the device which ends
-> > up calling through this path and we discover that the smmu->dev is already
-> > powered (pm_runtime_get_sync returns 1).
-> >
-> > I'm not immediately sure if this is a bug on sdm845 or not because a cursory
-> > inspection says that the SMMU device shouldn't be powered at this time but there
-> > might be a connection that I'm not seeing. Obviously if the SMMU was left
-> > powered thats a bad thing. But putting that aside it is obvious that this
-> > code should be accommodating of the possibility that the device is already
-> > powered, and so this should be
-> >
-> > if (ret < 0)
-> >         goto out_cfg_free;
-> 
-> Right, as Tomasz also pointed, we should surely check the negative value of
-> pm_runtime_get_sync().
 
-Sorry, I didn't notice that Tomasz had pointed it out as well. I wanted to
-quickly get it on the mailing list so you could catch it in your time zone.
-
-> From your description, it may be that the GPU has turned on the smmu, and
-> then once if goes and probes the GMU, the GMU device also wants to turn-on
-> the same smmu device. But that's already active. So pm_runtime_get_sync()
-> returns 1.
-> Am i making sense?
-
-My concern is that this is happening during the probe and we shouldn't be
-energizing the GPU at this point. But it is entirely possible that the
-bus is on for other reasons. I'll do a bit of digging today and see exactly
-which device is at fault.
+--===============3585881949471961449==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="h6jqcllclooy7hs2"
+Content-Disposition: inline
 
 
-Jordan
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--h6jqcllclooy7hs2
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Feb 23, 2018 at 02:37:35PM +0100, Myl=E8ne Josserand wrote:
+> Add the support for A83T.
+>=20
+> A83T SoC has an additional register than A80 to handle CPU configurations:
+> R_CPUS_CFG. Information about the register comes from Allwinner's BSP
+> driver.
+> An important difference is the Power Off Gating register for clusters
+> which is BIT(4) in case of SUN9I-A80 and BIT(0) in case of SUN8I-A83T.
+>=20
+> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
+> ---
+>  arch/arm/mach-sunxi/Kconfig  |   2 +-
+>  arch/arm/mach-sunxi/mc_smp.c | 168 +++++++++++++++++++++++++++++++++++++=
+++++--
+>  2 files changed, 162 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+> index ce53ceaf4cc5..a0ad35c41c02 100644
+> --- a/arch/arm/mach-sunxi/Kconfig
+> +++ b/arch/arm/mach-sunxi/Kconfig
+> @@ -51,7 +51,7 @@ config MACH_SUN9I
+>  config ARCH_SUNXI_MC_SMP
+>  	bool
+>  	depends on SMP
+> -	default MACH_SUN9I
+> +	default y if MACH_SUN9I || MACH_SUN8I
+>  	select ARM_CCI400_PORT_CTRL
+>  	select ARM_CPU_SUSPEND
+> =20
+> diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
+> index de02e5662557..3bd9066a1422 100644
+> --- a/arch/arm/mach-sunxi/mc_smp.c
+> +++ b/arch/arm/mach-sunxi/mc_smp.c
+> @@ -55,22 +55,32 @@
+>  #define CPUCFG_CX_RST_CTRL_L2_RST	BIT(8)
+>  #define CPUCFG_CX_RST_CTRL_CX_RST(n)	BIT(4 + (n))
+>  #define CPUCFG_CX_RST_CTRL_CORE_RST(n)	BIT(n)
+> +#define CPUCFG_CX_RST_CTRL_CORE_RST_ALL	(0xf << 0)
+> =20
+>  #define PRCM_CPU_PO_RST_CTRL(c)		(0x4 + 0x4 * (c))
+>  #define PRCM_CPU_PO_RST_CTRL_CORE(n)	BIT(n)
+>  #define PRCM_CPU_PO_RST_CTRL_CORE_ALL	0xf
+>  #define PRCM_PWROFF_GATING_REG(c)	(0x100 + 0x4 * (c))
+> +/* The power off register for clusters are different from SUN9I and SUN8=
+I */
+> +#define PRCM_PWROFF_GATING_REG_CLUSTER_SUN8I	BIT(0)
+>  #define PRCM_PWROFF_GATING_REG_CLUSTER_SUN9I	BIT(4)
+>  #define PRCM_PWROFF_GATING_REG_CORE(n)	BIT(n)
+>  #define PRCM_PWR_SWITCH_REG(c, cpu)	(0x140 + 0x10 * (c) + 0x4 * (cpu))
+>  #define PRCM_CPU_SOFT_ENTRY_REG		0x164
+> =20
+> +/* R_CPUCFG registers, specific to SUN8I */
+> +#define R_CPUCFG_CLUSTER_PO_RST_CTRL(c)	(0x30 + (c) * 0x4)
+> +#define R_CPUCFG_CLUSTER_PO_RST_CTRL_CORE(n)	BIT(n)
+> +#define R_CPUCFG_CPU_SOFT_ENTRY_REG	0x01a4
+> +
+>  #define CPU0_SUPPORT_HOTPLUG_MAGIC0	0xFA50392F
+>  #define CPU0_SUPPORT_HOTPLUG_MAGIC1	0x790DCA3A
+> =20
+>  static void __iomem *cpucfg_base;
+> +static void __iomem *r_cpucfg_base;
+>  static void __iomem *prcm_base;
+>  static void __iomem *sram_b_smp_base;
+> +static bool is_sun9i;
+
+Since you always check for that condition to always be false, can't
+you do the opposite, ie have it called is_a83t, and verify it to be
+true?
+
+>  	/* Set the hardware entry point address */
+> -	writel(__pa_symbol(sunxi_mc_smp_secondary_startup),
+> -	       prcm_base + PRCM_CPU_SOFT_ENTRY_REG);
+> +	if (is_sun9i)
+> +		writel(__pa_symbol(sunxi_mc_smp_secondary_startup),
+> +		       prcm_base + PRCM_CPU_SOFT_ENTRY_REG);
+> +	else
+> +		writel(__pa_symbol(sunxi_mc_smp_secondary_startup),
+> +		       r_cpucfg_base + R_CPUCFG_CPU_SOFT_ENTRY_REG);
+
+if (is_a83t)
+	reg =3D prcm_base + PRCM_CPU_SOFT_ENTRY_REG;
+else
+	reg =3D r_cpucfg_base + R_CPUCFG_CPU_SOFT_ENTRY_REG;
+writel(__pa_symbol(sunxi_mc_smp_secondary_startup), reg);
+
+?
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--h6jqcllclooy7hs2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqQLSgACgkQ0rTAlCFN
+r3SefA/+Mf7lEuVAP6ZZ0SMM5TKVTa76Zsl28YLhYNZzB4VJgvO6iklBTFJ6bcLl
+qZCG47GAB5oEo2fbmq+jyq/EGMSp6OWj37J91OrWfMQzihKuXwUXTB1umoDxkFTK
+W/eYSShf6Xkf459moFlwTVxPgZFnf+dZo6lyjxbEelpzCXBLdF8NBt2ggKSifjFP
+kB43opV1SY2fl0AWzSIA+9j1Mf/SfBsiPMjwqWOzeKPY7/vku2Jb2zdhn1tRGmgh
+gGD7jK6oZR3fUPgqgLTuPovh0th0ud/gv28B/urOKujaBUrMLDc9t+9RbF0Su/rr
+2/MSQEyCcs60HygjKzsVy+aqfJQgfaF3IHY94Z0Iba50B8VU9eeWWN9kZT4KIsuQ
+A9S65WNW+40LyZUFpBFVJrwgvbqNogfRcvvJgrZQbuo2m+XXHFkLuzaXLqNYt6aH
+rUnT5B9cW1q6yTqNxelF0rwrlbuTCIlJhSR2yalnr3QTialab3yZWijEyjbJmAUd
+aS/rNhJGLiZQss/UtihtduH97hqUUMRkJfIMLoAgS1Eeprblek/YJL2VYSALRkSE
+eIPYwdnW/tkmHAQOi3GFOLpoJvez9uAGcDXEszdVIZ8RD2Kzs5RgFT+hTfTxojax
+3nQ/YxQi5Kq1idUJkpWuZ5kjtTWdJJTdcMzHTKyKpFzrrS107ug=
+=5O+N
+-----END PGP SIGNATURE-----
+
+--h6jqcllclooy7hs2--
+
+
+--===============3585881949471961449==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3585881949471961449==--
