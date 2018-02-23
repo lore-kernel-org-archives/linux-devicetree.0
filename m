@@ -1,75 +1,47 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH] dt-bindings: iio: adc: stm32-dfsdm: fix types, add
- missing pinctrl
-Date: Fri, 23 Feb 2018 14:47:36 +0100
-Message-ID: <7e40cdfc-8d9f-ccfb-f3fd-8d639a87d5b0@st.com>
-References: <1519384260-23875-1-git-send-email-fabrice.gasnier@st.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 3/9] serial: imx: Fix out-of-bounds access through
+ serial port index
+Date: Fri, 23 Feb 2018 14:51:29 +0100
+Message-ID: <20180223135129.lvk3rgepyuik7a2y@pengutronix.de>
+References: <1519393117-31998-1-git-send-email-geert+renesas@glider.be>
+ <1519393117-31998-4-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519384260-23875-1-git-send-email-fabrice.gasnier@st.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1519393117-31998-4-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Fri, Feb 23, 2018 at 02:38:31PM +0100, Geert Uytterhoeven wrote:
+> The imx_ports[] array is indexed using a value derived from the
+> "serialN" alias in DT, or from platform data, which may lead to an
+> out-of-bounds access.
+> =
 
-Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> Fix this by adding a range check.
+> =
 
-Regards,
-Arnaud
+> Fixes: ff05967a07225ab6 ("serial/imx: add of_alias_get_id() reference bac=
+k")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-On 02/23/2018 12:11 PM, Fabrice Gasnier wrote:
-> - Add missing pinctrl description. Support is made optional as dfsdm
->   may use internal sources (e.g. via registers)
-> - Fix typo in IIO STM32 DFSDM filter "MANCH_F" description.
-> Basically, this should be "falling edge = logic 0", not "1" that applies
-> to "MANCH_R".
-> BTW, make the description complete by describing both rising/falling
-> edges as described in reference manuals.
-> 
-> Fixes: 6c82f947fc97 ("IIO: add DT bindings for stm32 DFSDM filter")
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->  Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
-> index 911492da..ed7520d 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
-> @@ -32,6 +32,10 @@ Optional properties:
->  		  to "clock" property. Frequency must be a multiple of the rcc
->  		  clock frequency. If not, SPI CLKOUT frequency will not be
->  		  accurate.
-> +- pinctrl-names:	Set to "default".
-> +- pinctrl-0:		List of phandles pointing to pin configuration
-> +			nodes to set pins in mode of operation for dfsdm
-> +			on external pin.
->  
->  Contents of a STM32 DFSDM child nodes:
->  --------------------------------------
-> @@ -68,8 +72,8 @@ Optional properties:
->  - st,adc-channel-types:	Single-ended channel input type.
->  			- "SPI_R": SPI with data on rising edge (default)
->  			- "SPI_F": SPI with data on falling edge
-> -			- "MANCH_R": manchester codec, rising edge = logic 0
-> -			- "MANCH_F": manchester codec, falling edge = logic 1
-> +			- "MANCH_R": manchester codec, rising edge = logic 0, falling edge = logic 1
-> +			- "MANCH_F": manchester codec, rising edge = logic 1, falling edge = logic 0
->  - st,adc-channel-clk-src: Conversion clock source.
->  			  - "CLKIN": external SPI clock (CLKIN x)
->  			  - "CLKOUT": internal SPI clock (CLKOUT) (default)
-> 
+Thanks for your time
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
