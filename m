@@ -1,59 +1,51 @@
-Return-Path: <SRS0=FvkB=FS=linaro.org=baolin.wang@kernel.org>
+Return-Path: <SRS0=VKUP=FR=gmail.com=andy.shevchenko@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcKiah6sTYq5iJuF-7DyxFtHUx1sne5VpkZwBpQ-1aq8g@mail.gmail.com>
+In-Reply-To: <2009936f10a349fc6a24796c60e7fea6551b8f0d.1519360872.git.baolin.wang@linaro.org>
 References: <c2db9b3b5c611cadfbe5ea97327be7ee5981fa54.1519360872.git.baolin.wang@linaro.org>
  <2009936f10a349fc6a24796c60e7fea6551b8f0d.1519360872.git.baolin.wang@linaro.org>
- <CAHp75VcKiah6sTYq5iJuF-7DyxFtHUx1sne5VpkZwBpQ-1aq8g@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linaro.org>
-Date: Sat, 24 Feb 2018 09:57:51 +0800
-Message-ID: <CAMz4kuKGtRb1WimZkGOj2yCCj4WHz_kKr3FiCR6Q_RRv7_y8oA@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 23 Feb 2018 15:35:01 +0200
+Message-ID: <CAHp75VcKiah6sTYq5iJuF-7DyxFtHUx1sne5VpkZwBpQ-1aq8g@mail.gmail.com>
 Subject: Re: [PATCH v4 2/2] gpio: Add GPIO driver for Spreadtrum SC9860 platform
 Content-Type: text/plain; charset="UTF-8"
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Baolin Wang <baolin.wang@linaro.org>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Andy,
+On Fri, Feb 23, 2018 at 6:44 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+> The Spreadtrum SC9860 platform GPIO controller contains 16 groups and
+> each group contains 16 GPIOs. Each GPIO can set input/output and has
+> the interrupt capability.
+>
 
-On 23 February 2018 at 21:35, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Fri, Feb 23, 2018 at 6:44 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
->> The Spreadtrum SC9860 platform GPIO controller contains 16 groups and
->> each group contains 16 GPIOs. Each GPIO can set input/output and has
->> the interrupt capability.
->>
->
-> Sorry, couple comments below.
->
->> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->
->> +/* We have 16 banks GPIOs and each bank contain 16 GPIOs */
->> +#define SPRD_GPIO_BANK_NR      16
->> +#define SPRD_GPIO_NR           256
->
->> +#define SPRD_GPIO_BANK_SIZE    0x80
->
-> 128 ?
+Sorry, couple comments below.
 
-Um, I still would like to use 0x80 here to keep consistent with our GPIO Spec.
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
->
->> +       irq->handler = handle_simple_irq;
->
-> Shouldn't be handle_bad_irq() ?
+> +/* We have 16 banks GPIOs and each bank contain 16 GPIOs */
+> +#define SPRD_GPIO_BANK_NR      16
+> +#define SPRD_GPIO_NR           256
 
-Yes, handle_bad_irq() is better.
+> +#define SPRD_GPIO_BANK_SIZE    0x80
 
->> +static const struct of_device_id sprd_gpio_of_match[] = {
->> +       { .compatible = "sprd,sc9860-gpio", },
->
->> +       { /* end of list */ },
->
-> Comma is redundant. Absence of it even better at compile time if at
-> some weird case the item goes after a terminator.
+128 ?
 
-Sure. Thanks.
+> +       irq->handler = handle_simple_irq;
+
+Shouldn't be handle_bad_irq() ?
+
+
+> +static const struct of_device_id sprd_gpio_of_match[] = {
+> +       { .compatible = "sprd,sc9860-gpio", },
+
+> +       { /* end of list */ },
+
+Comma is redundant. Absence of it even better at compile time if at
+some weird case the item goes after a terminator.
+
+> +};
 
 -- 
-Baolin.wang
-Best Regards
+With Best Regards,
+Andy Shevchenko
