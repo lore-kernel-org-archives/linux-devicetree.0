@@ -1,75 +1,38 @@
-Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.free-electrons.com ([62.4.15.54]:49889 "EHLO
-        mail.free-electrons.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932163AbeBSWgD (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 19 Feb 2018 17:36:03 -0500
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 0/6] Use the reworked Marvell NAND controller with all boards
-Date: Mon, 19 Feb 2018 23:35:51 +0100
-Message-Id: <20180219223557.2458-1-miquel.raynal@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
-Cc: linux-mtd@lists.infradead.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Eric Miao <eric.y.miao@gmail.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+Return-Path: <SRS0=C+Y8=FR=jmondi.org=jacopo+renesas@kernel.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 4/7] arm64: dts: renesas: r8a77965: Add #phy-cells property
+Date: Fri, 23 Feb 2018 14:40:56 +0100
+Message-Id: <1519393259-26108-5-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1519393259-26108-1-git-send-email-jacopo+renesas@jmondi.org>
+References: <1519393259-26108-1-git-send-email-jacopo+renesas@jmondi.org>
+To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
+Add "#phy-cells" property to "usb-phy@e65ee000" device node.
 
-Marvell NAND controller driver pxa3xx_nand has been replaced in 4.16 by
-a new driver featuring the new ->exec_op() interface called
-marvell_nand.
+This silences the following DTC compiler warning:
+Warning (phys_property): Missing property '#phy-cells' in node
+/soc/usb-phy@e65ee000 or bad phandle (referred from
+/soc/usb@ee020000:phys[0])
 
-These patches were part of a greater series that has been partially
-applied. Now that support for PXA boards looks stable, migrate all of
-them to use the new driver.
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-To avoid risking compilation issues/broken bisection, I guess it would
-probably be better to make all these patches go through the MTD tree?
-
-Best regards,
-Miquèl
-
-Changes since v3:
-  - Split the removal of pxa3xx_nand driver in two: one patch to migrate
-    the defconfigs, another to remove the driver.
-  - Acked-by/Tested-by from Robert Jarzmik.
-
-
-Miquel Raynal (6):
-  mtd: nand: use Marvell reworked NAND controller driver with all
-    platforms
-  mtd: nand: remove deprecated pxa3xx_nand driver
-  mtd: nand: remove useless fields from pxa3xx NAND platform data
-  dt-bindings: mtd: remove pxa3xx NAND controller documentation
-  arm: dts: pxa: use reworked NAND controller driver
-  MAINTAINERS: remove entry for deleted pxa3xx_nand driver
-
- .../devicetree/bindings/mtd/pxa3xx-nand.txt        |   50 -
- MAINTAINERS                                        |    6 -
- arch/arm/boot/dts/pxa3xx.dtsi                      |    6 +-
- arch/arm/configs/cm_x300_defconfig                 |    2 +-
- arch/arm/configs/pxa3xx_defconfig                  |    3 +-
- arch/arm/configs/pxa_defconfig                     |    2 +-
- arch/arm/configs/raumfeld_defconfig                |    2 +-
- arch/arm/mach-mmp/ttc_dkb.c                        |    4 +-
- arch/arm/mach-pxa/cm-x300.c                        |    8 +-
- arch/arm/mach-pxa/colibri-pxa3xx.c                 |    8 +-
- arch/arm/mach-pxa/colibri.h                        |    2 +-
- arch/arm/mach-pxa/littleton.c                      |   10 +-
- arch/arm/mach-pxa/mxm8x10.c                        |   10 +-
- arch/arm/mach-pxa/raumfeld.c                       |    6 +-
- arch/arm/mach-pxa/zylonite.c                       |   10 +-
- drivers/mtd/nand/raw/Kconfig                       |   11 -
- drivers/mtd/nand/raw/Makefile                      |    1 -
- drivers/mtd/nand/raw/marvell_nand.c                |    3 +-
- drivers/mtd/nand/raw/pxa3xx_nand.c                 | 2103 --------------------
- include/linux/platform_data/mtd-nand-pxa3xx.h      |   43 +-
- 20 files changed, 43 insertions(+), 2247 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt
- delete mode 100644 drivers/mtd/nand/raw/pxa3xx_nand.c
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 0536b94..1a21967 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -795,6 +795,7 @@
+ 
+ 		usb3_phy0: usb-phy@e65ee000 {
+ 			reg = <0 0xe65ee000 0 0x90>;
++			#phy-cells = <0>;
+ 			/* placeholder */
+ 		};
+ 
 -- 
-2.14.1
-
+2.7.4
