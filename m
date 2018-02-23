@@ -1,51 +1,35 @@
-Return-Path: <SRS0=oNRe=FO=opensource.cirrus.com=ckeepax@kernel.org>
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v3 2/2] mfd: arizona: Update DT doc to support more standard reset binding
-Date: Tue, 20 Feb 2018 16:35:40 +0000
-Message-ID: <20180220163540.6704-2-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20180220163540.6704-1-ckeepax@opensource.cirrus.com>
-References: <20180220163540.6704-1-ckeepax@opensource.cirrus.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: lee.jones@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Return-Path: <SRS0=V9ZR=FR=samsung.com=jh80.chung@kernel.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCH 5/6] ARM: dts: lpc18xx: remove 'num-slots' property for
+ dwmmc
+Date: Fri, 23 Feb 2018 15:41:37 +0900
+Message-id: <20180223064138.18401-5-jh80.chung@samsung.com>
+In-reply-to: <20180223064138.18401-1-jh80.chung@samsung.com>
+References: <20180223064138.18401-1-jh80.chung@samsung.com>
+	<CGME20180223064140epcas2p1bf475ebcbfa8a0c46e92402e31590891@epcas2p1.samsung.com>
+To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, manabian@gmail.com, dinguyen@kernel.org, will.deacon@arm.com, xuwei5@hisilicon.com, Jaehoon Chung <jh80.chung@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Since 'num-slots' had already deprecated, remove the property in
+device-tree file.
+
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 ---
+ arch/arm/boot/dts/lpc18xx.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
-No changes since v2.
-
-Thanks,
-Charles
-
- Documentation/devicetree/bindings/mfd/arizona.txt | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-index bdd017686ea5..a014afb07902 100644
---- a/Documentation/devicetree/bindings/mfd/arizona.txt
-+++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-@@ -50,7 +50,7 @@ Required properties:
- 
- Optional properties:
- 
--  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
-+  - reset-gpios : GPIO specifier for the GPIO controlling /RESET
- 
-   - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
-   - clock-names: Should contains two strings:
-@@ -70,6 +70,10 @@ Optional properties:
-     Documentation/devicetree/bindings/regulator/regulator.txt
-     (wm5102, wm5110, wm8280, wm8997, wm8998, wm1814)
- 
-+Deprecated properties:
-+
-+  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
-+
- Also see child specific device properties:
-   Regulator - ../regulator/arizona-regulator.txt
-   Extcon    - ../extcon/extcon-arizona.txt
+diff --git a/arch/arm/boot/dts/lpc18xx.dtsi b/arch/arm/boot/dts/lpc18xx.dtsi
+index 7cae9c5e27db..10b8249b8ab6 100644
+--- a/arch/arm/boot/dts/lpc18xx.dtsi
++++ b/arch/arm/boot/dts/lpc18xx.dtsi
+@@ -115,7 +115,6 @@
+ 			compatible = "snps,dw-mshc";
+ 			reg = <0x40004000 0x1000>;
+ 			interrupts = <6>;
+-			num-slots = <1>;
+ 			clocks = <&ccu2 CLK_SDIO>, <&ccu1 CLK_CPU_SDIO>;
+ 			clock-names = "ciu", "biu";
+ 			resets = <&rgu 20>;
 -- 
-2.11.0
+2.15.1
