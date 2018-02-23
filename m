@@ -1,343 +1,109 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 3/4] clk: imx: add SCCG PLL type
-Date: Fri, 23 Feb 2018 16:46:15 +0800
-Message-ID: <20180223084614.GQ3217@dragon>
-References: <20180201175412.9480-1-l.stach@pengutronix.de>
- <20180201175412.9480-3-l.stach@pengutronix.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 3/4] drm: rcar-du: Fix legacy DT to create LVDS encoder
+ nodes
+Date: Fri, 23 Feb 2018 11:00:53 +0200
+Message-ID: <6897566.HfZ0CxhyhN@avalon>
+References: <20180222131336.7712-1-laurent.pinchart+renesas@ideasonboard.com>
+ <06d3fb91-961d-a053-df22-cddf3419b159@gmail.com>
+ <6342d241-9f7e-19ba-8336-599605612db9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180201175412.9480-3-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: "A . s . Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <6342d241-9f7e-19ba-8336-599605612db9@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 01, 2018 at 06:54:11PM +0100, Lucas Stach wrote:
-> The SCCG is a new PLL type introduced on i.MX8. Add support for this.
-> The driver currently misses the PLL lock check, as the preliminary
-> documentation mentions lock configurations, but is quiet about where
-> to find the actual lock status signal.
-> 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  drivers/clk/imx/Makefile       |   3 +-
->  drivers/clk/imx/clk-sccg-pll.c | 235 +++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/imx/clk.h          |   9 ++
->  3 files changed, 246 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/imx/clk-sccg-pll.c
-> 
-> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-> index 9892ae63539c..bfcbd5272d12 100644
-> --- a/drivers/clk/imx/Makefile
-> +++ b/drivers/clk/imx/Makefile
-> @@ -12,7 +12,8 @@ obj-y += \
->  	clk-pllv1.o \
->  	clk-pllv2.o \
->  	clk-pllv3.o \
-> -	clk-pfd.o
-> +	clk-pfd.o \
-> +	clk-sccg-pll.o
->  
->  obj-$(CONFIG_SOC_IMX1)   += clk-imx1.o
->  obj-$(CONFIG_SOC_IMX21)  += clk-imx21.o
-> diff --git a/drivers/clk/imx/clk-sccg-pll.c b/drivers/clk/imx/clk-sccg-pll.c
-> new file mode 100644
-> index 000000000000..3a79f952564b
-> --- /dev/null
-> +++ b/drivers/clk/imx/clk-sccg-pll.c
-> @@ -0,0 +1,235 @@
-> +/*
-> + * Copyright 2017 NXP.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/slab.h>
-> +
-> +#include "clk.h"
-> +
-> +/* PLL CFGs */
-> +#define PLL_CFG0	0x0
-> +#define PLL_CFG1	0x4
-> +#define PLL_CFG2	0x8
-> +
-> +#define PLL_DIVF1_SHIFT	13
-> +#define PLL_DIVF2_SHIFT	7
-> +#define PLL_DIVF_MASK	0x3f
-> +
-> +#define PLL_DIVR1_SHIFT	25
-> +#define PLL_DIVR2_SHIFT	19
-> +#define PLL_DIVR1_MASK	0x3
-> +#define PLL_DIVR2_MASK	0x3f
-> +#define PLL_REF_SHIFT	0
-> +#define PLL_REF_MASK	0x3
-> +
-> +#define PLL_LOCK	31
-> +#define PLL_PD		7
-> +
-> +#define OSC_25M		25000000
-> +#define OSC_27M		27000000
-> +
-> +struct clk_sccg_pll {
-> +	struct clk_hw	hw;
-> +	void __iomem	*base;
-> +};
-> +
-> +#define to_clk_sccg_pll(_hw) container_of(_hw, struct clk_sccg_pll, hw)
-> +
-> +static int clk_pll1_is_prepared(struct clk_hw *hw)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG0);
-> +	return (val & (1 << PLL_PD)) ? 0 : 1;
-> +}
-> +
-> +static unsigned long clk_pll1_recalc_rate(struct clk_hw *hw,
-> +					 unsigned long parent_rate)
-
-I found the indentation of multi-lines arguments is strange, i.e. it
-always missing one space.  Please check.
-
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val, divf;
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG2);
-> +	divf = (val >> PLL_DIVF1_SHIFT) & PLL_DIVF_MASK;
-> +
-> +	return parent_rate * 2 * (divf + 1);
-> +}
-> +
-> +static long clk_pll1_round_rate(struct clk_hw *hw, unsigned long rate,
-> +			       unsigned long *prate)
-> +{
-> +	unsigned long parent_rate = *prate;
-> +	u32 div;
-> +
-> +	div = rate / (parent_rate * 2);
-> +
-> +	return parent_rate * div * 2;
-> +}
-> +
-> +static int clk_pll1_set_rate(struct clk_hw *hw, unsigned long rate,
-> +			    unsigned long parent_rate)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val;
-> +	u32 divf;
-> +
-> +	divf = rate / (parent_rate * 2);
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG2);
-> +	val &= ~(PLL_DIVF_MASK << PLL_DIVF1_SHIFT);
-> +	val |= (divf - 1) << PLL_DIVF1_SHIFT;
-> +	writel_relaxed(val, pll->base + PLL_CFG2);
-> +
-> +	/* FIXME: PLL lock check */
-> +
-> +	return 0;
-> +}
-> +
-> +static int clk_pll1_prepare(struct clk_hw *hw)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(pll->base);
-> +	val &= ~(1 << PLL_PD);
-> +	writel_relaxed(val, pll->base);
-> +
-> +	/* FIXME: PLL lock check */
-> +
-> +	return 0;
-> +}
-> +
-> +static void clk_pll1_unprepare(struct clk_hw *hw)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(pll->base);
-> +	val |= (1 << PLL_PD);
-
-Unnecessary parentheses.
-
-> +	writel_relaxed(val, pll->base);
-> +}
-> +
-> +static unsigned long clk_pll2_recalc_rate(struct clk_hw *hw,
-> +					 unsigned long parent_rate)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val, ref, divr1, divf1, divr2, divf2;
-> +	u64 temp64;
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG0);
-> +	switch ((val >> PLL_REF_SHIFT) & PLL_REF_MASK) {
-> +	case 0:
-> +		ref = OSC_25M;
-> +		break;
-> +	case 1:
-> +		ref = OSC_27M;
-> +		break;
-> +	default:
-> +		ref = OSC_25M;
-> +		break;
-> +	}
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG2);
-> +	divr1 = (val >> PLL_DIVR1_SHIFT) & PLL_DIVR1_MASK;
-> +	divr2 = (val >> PLL_DIVR2_SHIFT) & PLL_DIVR2_MASK;
-> +	divf1 = (val >> PLL_DIVF1_SHIFT) & PLL_DIVF_MASK;
-> +	divf2 = (val >> PLL_DIVF2_SHIFT) & PLL_DIVF_MASK;
-> +
-> +	temp64 = ref * 2;
-> +	temp64 *= (divf1 + 1) * (divf2 + 1);
-> +
-> +	do_div(temp64, (divr1 + 1) * (divr2 + 1));
-> +
-> +	return (unsigned long)temp64;
-> +}
-> +
-> +static long clk_pll2_round_rate(struct clk_hw *hw, unsigned long rate,
-> +			       unsigned long *prate)
-> +{
-> +	u32 div;
-> +	unsigned long parent_rate = *prate;
-
-Can we consistently sort variables lines from the long ones to the
-short?
-
-> +
-> +	div = rate / (parent_rate);
-
-Unnecessary parentheses.
-
-> +
-> +	return parent_rate * div;
-> +}
-> +
-> +static int clk_pll2_set_rate(struct clk_hw *hw, unsigned long rate,
-> +			    unsigned long parent_rate)
-> +{
-> +	u32 val;
-> +	u32 divf;
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +
-> +	divf = rate / (parent_rate);
-
-Ditto
-
-Shawn
-
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG2);
-> +	val &= ~(PLL_DIVF_MASK << PLL_DIVF2_SHIFT);
-> +	val |= (divf - 1) << PLL_DIVF2_SHIFT;
-> +	writel_relaxed(val, pll->base + PLL_CFG2);
-> +
-> +	/* FIXME: PLL lock check */
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct clk_ops clk_sccg_pll1_ops = {
-> +	.is_prepared	= clk_pll1_is_prepared,
-> +	.recalc_rate	= clk_pll1_recalc_rate,
-> +	.round_rate	= clk_pll1_round_rate,
-> +	.set_rate	= clk_pll1_set_rate,
-> +};
-> +
-> +static const struct clk_ops clk_sccg_pll2_ops = {
-> +	.prepare	= clk_pll1_prepare,
-> +	.unprepare	= clk_pll1_unprepare,
-> +	.recalc_rate	= clk_pll2_recalc_rate,
-> +	.round_rate	= clk_pll2_round_rate,
-> +	.set_rate	= clk_pll2_set_rate,
-> +};
-> +
-> +struct clk *imx_clk_sccg_pll(const char *name, const char *parent_name,
-> +			     void __iomem *base, enum imx_sccg_pll_type pll_type)
-> +{
-> +	struct clk_sccg_pll *pll;
-> +	struct clk *clk;
-> +	struct clk_init_data init;
-> +
-> +	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
-> +	if (!pll)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	pll->base = base;
-> +	init.name = name;
-> +	switch (pll_type) {
-> +	case SCCG_PLL1:
-> +		init.ops = &clk_sccg_pll1_ops;
-> +		break;
-> +	case SCCG_PLL2:
-> +		init.ops = &clk_sccg_pll2_ops;
-> +		break;
-> +	}
-> +
-> +	init.flags = 0;
-> +	init.parent_names = &parent_name;
-> +	init.num_parents = 1;
-> +
-> +	pll->hw.init = &init;
-> +
-> +	clk = clk_register(NULL, &pll->hw);
-> +	if (IS_ERR(clk))
-> +		kfree(pll);
-> +
-> +	return clk;
-> +}
-> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-> index 287610902ea8..809509758e24 100644
-> --- a/drivers/clk/imx/clk.h
-> +++ b/drivers/clk/imx/clk.h
-> @@ -21,6 +21,11 @@ enum imx_pllv1_type {
->  	IMX_PLLV1_IMX35,
->  };
->  
-> +enum imx_sccg_pll_type {
-> +	SCCG_PLL1,
-> +	SCCG_PLL2,
-> +};
-> +
->  struct clk *imx_clk_pllv1(enum imx_pllv1_type type, const char *name,
->  		const char *parent, void __iomem *base);
->  
-> @@ -30,6 +35,10 @@ struct clk *imx_clk_pllv2(const char *name, const char *parent,
->  struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
->  			     void __iomem *base);
->  
-> +struct clk *imx_clk_sccg_pll(const char *name, const char *parent_name,
-> +			     void __iomem *base,
-> +			     enum imx_sccg_pll_type pll_type);
-> +
->  enum imx_pllv3_type {
->  	IMX_PLLV3_GENERIC,
->  	IMX_PLLV3_SYS,
-> -- 
-> 2.15.1
-> 
+SGkgRnJhbmssCgpPbiBGcmlkYXksIDIzIEZlYnJ1YXJ5IDIwMTggMDQ6Mzg6MDYgRUVUIEZyYW5r
+IFJvd2FuZCB3cm90ZToKPiBPbiAwMi8yMi8xOCAxNDoxMCwgRnJhbmsgUm93YW5kIHdyb3RlOgo+
+ID4gSGkgTGF1cmVudCwgUm9iLAo+ID4gCj4gPiBUaGFua3MgZm9yIHRoZSBwcm9tcHQgc3BpbiB0
+byBhZGRyZXNzIG15IGNvbmNlcm5zLiAgVGhlcmUgYXJlIHNvbWUgc21hbGwKPiA+IHRlY2huaWNh
+bCBpc3N1ZXMuCj4gPiAKPiA+IEkgZGlkIG5vdCByZWFkIHRoZSB2MyBwYXRjaCB1bnRpbCB0b2Rh
+eS4gIHYzIHRocm91Z2ggdjYgYXJlIHN0aWxsIHVzaW5nCj4gPiB0aGUgb2xkIG92ZXJsYXkgYXBw
+bHkgbWV0aG9kIHdoaWNoIHVzZXMgYW4gZXhwYW5kZWQgZGV2aWNlIHRyZWUgYXMgaW5wdXQuCj4g
+PiAKPiA+IFJvYiwgSSBkb24ndCBzZWUgbXkgb3ZlcmxheSBwYXRjaGVzIGluIHlvdSBmb3ItbmV4
+dCBicmFuY2gsIGFuZCBJIGhhdmUKPiA+IG5vdCBzZWVuIGFuICJBcHBsaWVkIiBtZXNzYWdlIGZy
+b20geW91LiAgV2hhdCBpcyB0aGUgc3RhdHVzIG9mIHRoZQo+ID4gb3ZlcmxheSBwYXRjaGVzPwo+
+ID4gCj4gPiBDb21tZW50cyBpbiB0aGUgcGF0Y2ggYmVsb3cuCj4gPiAKPiA+IE9uIDAyLzIyLzE4
+IDA1OjEzLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4+IFRoZSBpbnRlcm5hbCBMVkRTIGVu
+Y29kZXJzIG5vdyBoYXZlIHRoZWlyIG93biBEVCBiaW5kaW5ncy4gQmVmb3JlCj4gPj4gc3dpdGNo
+aW5nIHRoZSBkcml2ZXIgaW5mcmFzdHJ1Y3R1cmUgdG8gdGhvc2UgbmV3IGJpbmRpbmdzLCBpbXBs
+ZW1lbnQKPiA+PiBiYWNrd2FyZC1jb21wYXRpYmlsaXR5IHRocm91Z2ggbGl2ZSBEVCBwYXRjaGlu
+Zy4KPiA+PiAKPiA+PiBQYXRjaGluZyBpcyBkaXNhYmxlZCBhbmQgd2lsbCBiZSBlbmFibGVkIGFs
+b25nIHdpdGggc3VwcG9ydCBmb3IgdGhlIG5ldwo+ID4+IERUIGJpbmRpbmdzIGluIHRoZSBEVSBk
+cml2ZXIuCj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQaW5jaGFydAo+ID4+IDxs
+YXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiA+PiAtLS0KPiA+PiBD
+aGFuZ2VzIHNpbmNlIHY1Ogo+ID4+IAo+ID4+IC0gVXNlIGEgcHJpdmF0ZSBjb3B5IG9mIHJjYXJf
+ZHVfb2ZfY2hhbmdlc2V0X2FkZF9wcm9wZXJ0eSgpCj4gPj4gCj4gPj4gQ2hhbmdlcyBzaW5jZSB2
+MzoKPiA+PiAKPiA+PiAtIFVzZSB0aGUgT0YgY2hhbmdlc2V0IEFQSQo+ID4+IC0gVXNlIG9mX2dy
+YXBoX2dldF9lbmRwb2ludF9ieV9yZWdzKCkKPiA+PiAtIFJlcGxhY2UgaGFyZGNvZGVkIGNvbnN0
+YW50cyBieSBzaXplb2YoKQo+ID4+IAo+ID4+IENoYW5nZXMgc2luY2UgdjI6Cj4gPj4gCj4gPj4g
+LSBVcGRhdGUgdGhlIFNQRFggaGVhZGVycyB0byB1c2UgQy1zdHlsZSBjb21tZW50cyBpbiBoZWFk
+ZXIgZmlsZXMKPiA+PiAtIFJlbW92ZWQgdGhlIG1hbnVhbGx5IGNyZWF0ZWQgX19sb2NhbF9maXh1
+cHNfXyBub2RlCj4gPj4gLSBQZXJmb3JtIG1hbnVhbCBmaXh1cHMgb24gbGl2ZSBEVCBpbnN0ZWFk
+IG9mIG92ZXJsYXkKPiA+PiAKPiA+PiBDaGFuZ2VzIHNpbmNlIHYxOgo+ID4+IAo+ID4+IC0gU2Vs
+ZWN0IE9GX0ZMQVRUUkVFCj4gPj4gLSBDb21waWxlIExWRFMgRFQgYmluZGluZ3MgcGF0Y2ggY29k
+ZSB3aGVuIERSTV9SQ0FSX0xWRFMgaXMgc2VsZWN0ZWQKPiA+PiAtIFVwZGF0ZSB0aGUgU1BEWCBo
+ZWFkZXJzIHRvIHVzZSBHUEwtMi4wIGluc3RlYWQgb2YgR1BMLTIuMC1vbmx5Cj4gPj4gLSBUdXJu
+IF9fZHRiX3JjYXJfZHVfb2ZfbHZkc18oYmVnaW58ZW5kKSBmcm9tIHU4IHRvIGNoYXIKPiA+PiAt
+IFBhc3Mgdm9pZCBiZWdpbiBhbmQgZW5kIHBvaW50ZXJzIHRvIHJjYXJfZHVfb2ZfZ2V0X292ZXJs
+YXkoKQo+ID4+IC0gVXNlIG9mX2dldF9wYXJlbnQoKSBpbnN0ZWFkIG9mIGFjY2Vzc2luZyB0aGUg
+cGFyZW50IHBvaW50ZXIgZGlyZWN0bHkKPiA+PiAtIEZpbmQgdGhlIExWRFMgZW5kcG9pbnRzIG5v
+ZGVzIGJhc2VkIG9uIHRoZSBMVkRTIG5vZGUgaW5zdGVhZCBvZiB0aGUKPiA+PiAgIHJvb3Qgb2Yg
+dGhlIG92ZXJsYXkKPiA+PiAtIFVwZGF0ZSB0byB0aGUgPHNvYz4tbHZkcyBjb21wYXRpYmxlIHN0
+cmluZyBmb3JtYXQKPiA+PiAtLS0KPiA+PiAKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUv
+S2NvbmZpZyAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+ID4+ICBkcml2ZXJzL2dwdS9kcm0v
+cmNhci1kdS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICB8ICAgNyArLQo+ID4+ICBkcml2ZXJz
+L2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mLmMgICAgICAgICAgICAgICB8IDM0MiArKysrKysr
+KysrKysrKysKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5oICAgICAg
+ICAgICAgICAgfCAgMjAgKysKPiA+PiAgLi4uL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2
+ZHNfcjhhNzc5MC5kdHMgICAgfCAgNzkgKysrKysKPiA+PiAgLi4uL2dwdS9kcm0vcmNhci1kdS9y
+Y2FyX2R1X29mX2x2ZHNfcjhhNzc5MS5kdHMgICAgfCAgNTMgKysrKwo+ID4+ICAuLi4vZ3B1L2Ry
+bS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkzLmR0cyAgICB8ICA1MyArKysrCj4gPj4g
+IC4uLi9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTUuZHRzICAgIHwgIDUz
+ICsrKysKPiA+PiAgLi4uL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5Ni5k
+dHMgICAgfCAgNTMgKysrKwo+ID4+ICA5IGZpbGVzIGNoYW5nZWQsIDY2MSBpbnNlcnRpb25zKCsp
+LCAxIGRlbGV0aW9uKC0pCj4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+cmNhci1kdS9yY2FyX2R1X29mLmMKPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
+L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuaAo+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTAuZHRzCj4gPj4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhh
+Nzc5MS5kdHMKPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
+L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkzLmR0cwo+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTUuZHRzCj4gPj4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNf
+cjhhNzc5Ni5kdHMKPiA+PiAKPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JjYXIt
+ZHUvS2NvbmZpZwo+ID4+IGIvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvS2NvbmZpZyBpbmRleCA1
+ZDBiNGI3MTE5YWYuLjNmODMzNTJhNzMxMwo+ID4+IDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9yY2FyLWR1L0tjb25maWcKPiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcmNhci1k
+dS9LY29uZmlnCj4gCj4gPCBzbmlwID4KPiAKPiA+IGJlY29tZXM6Cj4gPiAJcmV0ID0gb2Zfb3Zl
+cmxheV9mZHRfYXBwbHkoZHRiLT5iZWdpbiwgJm92Y3NfaWQpOwo+ID4gCj4gPiBJZiBteSBvdmVy
+bGF5IHBhdGNoZXMgZG8gbm90IGV4aXN0LCB0aGVyZSBhcmUgb3RoZXIgc21hbGwgZXJyb3JzCj4g
+PiBpbiB0aGUgY29kZSBibG9jayBhYm92ZS4gIEknbGwgaWdub3JlIHRoZW0gZm9yIHRoZSBtb21l
+bnQuCj4gPiAKPiA+IEEgcXVpY2sgc2NhbiBvZiB0aGUgcmVzdCBvZiB0aGUgY29kZSBsb29rcyBP
+Sy4gIEknbGwgcmVhZCB0aHJvdWdoIGl0Cj4gPiBtb3JlIGNhcmVmdWxseSwgYnV0IHdhbnRlZCB0
+byBnZXQgdGhpcyByZXBseSBvdXQgd2l0aG91dCBmdXJ0aGVyCj4gPiBkZWxheS4KPiAKPiA8IHNu
+aXAgPgo+IAo+IEkgd2FzIGhvcGluZyB0byBiZSBhYmxlIHRvIGNvbnZlcnQgdGhlIC5kdHMgZmls
+ZXMgdG8gdXNlIHN1Z2FyIHN5bnRheAo+IGluc3RlYWQgb2YgaGFuZCBjb2RpbmcgdGhlIGZyYWdt
+ZW50IG5vZGVzLCBidXQgZm9yIHRoaXMgc3BlY2lmaWMgc2V0Cj4gb2YgZmlsZXMgSSBmYWlsZWQs
+IHNpbmNlIHRoZSBsYWJlbHMgdGhhdCB3b3VsZCBoYXZlIGJlZW4gcmVxdWlyZWQgZG8KPiBub3Qg
+YWxyZWFkeSBleGlzdCBpbiB0aGUgYmFzZSAuZHRzIGZpbGVzIHRoYXQgdGhhdCBvdmVybGF5cyB3
+b3VsZCBiZQo+IGFwcGxpZWQgYWdhaW5zdC4KCkFuZCBldmVuIGlmIHRoZXkgZXhpc3RlZCBpbiB0
+aGUgYmFzZSAuZHRzIGluIHRoZSBrZXJuZWwgc291cmNlcywgdGhlcmUncyBubyAKZ3VhcmFudGVl
+IHRoYXQgdGhlIC5kdGIgb24gdGhlIHN5c3RlbXMgd2Ugd2FudCB0byBwYXRjaCB3b3VsZCBjb250
+YWluIHN5bWJvbCwgCnNvIHRoYXQgd291bGRuJ3QgaGF2ZSBiZWVuIGFuIG9wdGlvbiBhbnl3YXks
+IHdvdWxkIGl0ID8KCj4gT2ggd2VsbC4gIEl0IHdhcyBhbiBpbnRlcmVzdGluZyBleGVyY2lzZSBh
+bnl3YXksIHRyeWluZyB0byBiZSBjcmFmdHkuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hh
+cnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
+ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
