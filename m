@@ -1,48 +1,59 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH 1/4] dt-bindings: at24: sort manufacturers alphabetically
-Date: Fri, 23 Feb 2018 08:52:20 +0100
-Message-ID: <CAMRc=MdE_LX276mjXCHaNgAthKyzaKPW-eWBfEuCcG187X7wvQ@mail.gmail.com>
-References: <20180116160618.27859-1-peda@axentia.se>
- <20180116160618.27859-2-peda@axentia.se>
- <20180129161727.g4kdrr5sih22vs5a@rob-hp-laptop>
- <CAMRc=Mcqj36KP7dG71dzSn_7cxw-Tru5kNtXdr5-SiH=jbCfMA@mail.gmail.com>
- <20180221091130.4sdfnalrng4sd77i@ninjato>
- <CAMRc=Mfcvh3PoF46DvU8RiVZ2bnQPkRm=pmv9MPEux1sHpnAOw@mail.gmail.com>
- <20180221094009.2zql6gbzkcklbakk@ninjato>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Overlay sugar syntax (was: Re: [PATCH v6 3/4] drm: rcar-du: Fix
+ legacy DT to create LVDS encoder nodes)
+Date: Fri, 23 Feb 2018 09:05:24 +0100
+Message-ID: <CAMuHMdUqvZEKu5v4E29ofjj09sv+Yxk41W4K+FnfqKQ=88AWRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180221094009.2zql6gbzkcklbakk@ninjato>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-i2c <linux-i2c@vger.kernel.org>, Peter Rosin <peda@axentia.se>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-02-21 10:40 GMT+01:00 Wolfram Sang <wsa@the-dreams.de>:
->
->> Will do. What about this (http://patchwork.ozlabs.org/patch/867169/)
->> one? It's part of a bigger series, do you want me to apply it to my
->> tree and provide you with an immutable branch?
->
-> Well, I would accept it for 4.16 using the "plain new id" rule. So, if
-> you add it on top of Peter's sorting patch, totally fine by me.
->
-> If you want it in v4.17, ok, too. I'd think an immutable branch is not
-> needed. There is a fallback property in the DTS. So at worst, there will
-> be a DTS warning during the merge window which will be fixed at rc1 time.
->
-> Unless I overlooked something.
->
-
-Ok, I'll have some time during the weekend, so I'll send a PR for rc3.
-
-Bart
+SGkgRnJhbmssCgpPbiBGcmksIEZlYiAyMywgMjAxOCBhdCAzOjM4IEFNLCBGcmFuayBSb3dhbmQg
+PGZyb3dhbmQubGlzdEBnbWFpbC5jb20+IHdyb3RlOgo+IEkgd2FzIGhvcGluZyB0byBiZSBhYmxl
+IHRvIGNvbnZlcnQgdGhlIC5kdHMgZmlsZXMgdG8gdXNlIHN1Z2FyIHN5bnRheAo+IGluc3RlYWQg
+b2YgaGFuZCBjb2RpbmcgdGhlIGZyYWdtZW50IG5vZGVzLCBidXQgZm9yIHRoaXMgc3BlY2lmaWMg
+c2V0Cj4gb2YgZmlsZXMgSSBmYWlsZWQsIHNpbmNlIHRoZSBsYWJlbHMgdGhhdCB3b3VsZCBoYXZl
+IGJlZW4gcmVxdWlyZWQgZG8KPiBub3QgYWxyZWFkeSBleGlzdCBpbiB0aGUgYmFzZSAuZHRzIGZp
+bGVzIHRoYXQgdGhhdCBvdmVybGF5cyB3b3VsZCBiZQo+IGFwcGxpZWQgYWdhaW5zdC4KCkluZGVl
+ZCwgaGVuY2UgdGhlIGZpeHVwIG92ZXJsYXlzIHVzZSAidGFyZ2V0LXBhdGgiLgoKQlRXLCBpcyB0
+aGVyZSBhbnkgc3BlY2lmaWMgcmVhc29uIHRoZXJlIGlzIG5vIHN1Z2FyIHN5bnRheCBzdXBwb3J0
+IGluIGR0Ywpmb3IgYWJzb2x1dGUgdGFyZ2V0IHBhdGhzPyBJIGd1ZXNzIHRvIHByZXZlbnQgYWRk
+aW5nIHN0dWZmIHRvIGEgcmFuZG9tCmV4aXN0aW5nIG5vZGUsIGFuZCB0byBlbmNvdXJhZ2UgcGVv
+cGxlIHRvIHVzZSBhICJjb25uZWN0b3IiIEFQSSBkZWZpbmVkIGluCnRlcm0gb2YgbGFiZWxzPwoK
+SSdtIGFsc28gaW4gdGhlIHByb2Nlc3Mgb2YgY29udmVydGluZyBteSBjb2xsZWN0aW9uIG9mIERU
+IG92ZXJsYXlzIHRvIHN1Z2FyCnN5bnRheCwgYW5kIGxhY2sgb2Ygc3VwcG9ydCBmb3IgInRhcmdl
+dC1wYXRoIiBpcyB0aGUgc29sZSB0aGluZyB0aGF0IGhvbGRzCm1lIGJhY2sgZnJvbSBjb21wbGV0
+aW5nIHRoaXMuIFNvIGZvciBub3cgSSB1c2UgYSBtaXggb2Ygc3VnYXIgYW5kCnRyYWRpdGlvbmFs
+IG92ZXJsYXkgc3ludGF4LgoKSW4gcGFydGljdWxhciwgSSBuZWVkICJ0YXJnZXQtcGF0aCIgZm9y
+IHR3byB0aGluZ3M6CiAgMS4gVG8gcmVmZXIgdG8gdGhlIHJvb3Qgbm9kZSwgZm9yIGFkZGluZyBk
+ZXZpY2VzIHRoYXQgc2hvdWxkIGxpdmUgYXQKICAgICAoYSBib2FyZCBzdWJub2RlIG9mKSB0aGUg
+cm9vdCBub2RlLCBsaWtlOgogICAgICAgLSBkZXZpY2VzIGNvbm5lY3RlZCB0byBHUElPIGNvbnRy
+b2xsZXJzIHByb3ZpZGVkIGJ5IG90aGVyIGJhc2Ugb3IKICAgICAgICAgb3ZlcmxheSBkZXZpY2Vz
+IChlLmcuIExFRHMsIGRpc3BsYXlzLCBidXR0b25zLCAuLi4pLAogICAgICAgLSBjbG9jayBwcm92
+aWRlcnMgZm9yIG90aGVyIG92ZXJsYXlzIGRldmljZXMgKGUuZy4gZml4ZWQtY2xvY2spLgogIDIu
+IFRvIHJlZmVyIHRvIHRoZSBhbGlhc2VzIG5vZGUsIGZvciBhZGRpbmcgbWFuZGF0b3J5IHNlcmlh
+bFggYWxpYXNlcy4KClRoZSBmb3JtZXIgaXMgdGhlIHJlYWwgYmxvY2tlciBmb3IgbWUuCgpUaGUg
+bGF0dGVyIGRvZXNuJ3Qgd29yayB3aXRoIHBsYWluIHVwc3RyZWFtIChoYWNreSBwYXRjaGVzIGF2
+YWlsYWJsZSksIHNvCkknbSB3b3JraW5nIG9uIGdldHRpbmcgcmlkIG9mIHRoZSBzZXJpYWxYIHJl
+cXVpcmVtZW50IGluIHRoZSBzZXJpYWwgZHJpdmVyLgoKVGhhbmtzIQoKR3J7b2V0amUsZWV0aW5n
+fXMsCgogICAgICAgICAgICAgICAgICAgICAgICBHZWVydAoKLS0KR2VlcnQgVXl0dGVyaG9ldmVu
+IC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhr
+Lm9yZwoKSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkg
+Y2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3Rz
+IEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCiAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
