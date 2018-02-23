@@ -1,60 +1,62 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2 9/9] serial: xuartps: Fix out-of-bounds access through
- DT alias
-Date: Fri, 23 Feb 2018 14:41:38 +0100
-Message-ID: <8e402b43-e773-4a44-6a0a-6bac2e46aaa3@xilinx.com>
-References: <1519393117-31998-1-git-send-email-geert+renesas@glider.be>
- <1519393117-31998-10-git-send-email-geert+renesas@glider.be>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH] dt-bindings: iio: adc: sd-modulator: fix io-channel-cells
+Date: Fri, 23 Feb 2018 14:46:19 +0100
+Message-ID: <c221e43d-c7fb-c33b-6fd1-bbf8aca6fa49@st.com>
+References: <1519384041-23782-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519393117-31998-10-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519384041-23782-1-git-send-email-fabrice.gasnier@st.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, Vineet Gupta <vgupta@synopsys.com>, Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>, jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.2.2018 14:38, Geert Uytterhoeven wrote:
-> The cdns_uart_port[] array is indexed using a value derived from the
-> "serialN" alias in DT, which may lead to an out-of-bounds access.
+Hello,
+
+Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+
+Regards,
+Arnaud
+
+On 02/23/2018 12:07 PM, Fabrice Gasnier wrote:
+> io-channel-cells should be <0> since sigma delta modulator exports only
+> one channel, as described in ../iio/iio-bindings.txt "IIO providers"
+> section. Only the phandle is necessary for IIO consumers in this case.
 > 
-> Fix this by adding a range check.
+> Fixes: af11143757b7 ("IIO: Add DT bindings for sigma delta adc modulator")
 > 
-> Fixes: 928e9263492069ee ("tty: xuartps: Initialize ports according to aliases")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > ---
-> v2:
->   - Fix Fixes reference.
-> ---
->  drivers/tty/serial/xilinx_uartps.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-> index b9b2bc76bcac606c..abcb4d09a2d866d0 100644
-> --- a/drivers/tty/serial/xilinx_uartps.c
-> +++ b/drivers/tty/serial/xilinx_uartps.c
-> @@ -1110,7 +1110,7 @@ static struct uart_port *cdns_uart_get_port(int id)
->  	struct uart_port *port;
+> diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
+> index e9ebb8a..ba24ca7 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
+> @@ -3,11 +3,11 @@ Device-Tree bindings for sigma delta modulator
+>  Required properties:
+>  - compatible: should be "ads1201", "sd-modulator". "sd-modulator" can be use
+>  	as a generic SD modulator if modulator not specified in compatible list.
+> -- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers".
+> +- #io-channel-cells = <0>: See the IIO bindings section "IIO consumers".
 >  
->  	/* Try the given port id if failed use default method */
-> -	if (cdns_uart_port[id].mapbase != 0) {
-> +	if (id < CDNS_UART_NR_PORTS && cdns_uart_port[id].mapbase != 0) {
->  		/* Find the next unused port */
->  		for (id = 0; id < CDNS_UART_NR_PORTS; id++)
->  			if (cdns_uart_port[id].mapbase == 0)
+>  Example node:
+>  
+>  	ads1202: adc@0 {
+>  		compatible = "sd-modulator";
+> -		#io-channel-cells = <1>;
+> +		#io-channel-cells = <0>;
+>  	};
 > 
-
-Reviewed-by: Michal Simek <michal.simek@xilinx.com>
-
-Thanks,
-Michal
