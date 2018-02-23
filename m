@@ -1,13 +1,13 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 08/10] ARM: sunxi: smp: Move assembly code into a file
-Date: Fri, 23 Feb 2018 16:09:49 +0100
-Message-ID: <20180223150949.ky4blpbc64tf44tt@flea.lan>
+Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
+Date: Fri, 23 Feb 2018 16:12:13 +0100
+Message-ID: <20180223151213.inrk7ghl6z3pbcol@flea.lan>
 References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
- <20180223133742.26044-9-mylene.josserand@bootlin.com>
+ <20180223133742.26044-11-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0853493064232517712=="
+Content-Type: multipart/mixed; boundary="===============2036481839656107809=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180223133742.26044-9-mylene.josserand@bootlin.com>
+In-Reply-To: <20180223133742.26044-11-mylene.josserand@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,161 +22,89 @@ Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
 
---===============0853493064232517712==
+--===============2036481839656107809==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gfhwlzw3mi3xnje6"
+	protocol="application/pgp-signature"; boundary="ulfzt5j6yrqtig2w"
 Content-Disposition: inline
 
 
---gfhwlzw3mi3xnje6
+--ulfzt5j6yrqtig2w
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2018 at 02:37:40PM +0100, Myl=E8ne Josserand wrote:
-> Move the assembly code for cluster cache enabling
-> into an assembly file instead of having it directly in C code.
+On Fri, Feb 23, 2018 at 02:37:42PM +0100, Myl=E8ne Josserand wrote:
+> On Cortex-A7, the CNTVOFF register from arch timer is uninitialized.
+> It should be done by the bootloader but it is currently not the case,
+> even for boot CPU because this SoC is booting in secure mode.
+> It leads to an random offset value meaning that each CPU will have a
+> different time, which isn't working very well.
 >=20
-> Create a sunxi_boot entry that will perform a cluster cached
-> enabling and called secondary_startup.
+> Add assembly code used for boot CPU and secondary CPU cores to make
+> sure that the CNTVOFF register is initialized.
 >=20
 > Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
 > ---
->  arch/arm/mach-sunxi/Makefile  |  1 +
->  arch/arm/mach-sunxi/headsmp.S | 73 +++++++++++++++++++++++++++++++++++++=
-++++
->  arch/arm/mach-sunxi/mc_smp.c  | 76 ++++---------------------------------=
-------
->  3 files changed, 80 insertions(+), 70 deletions(-)
->  create mode 100644 arch/arm/mach-sunxi/headsmp.S
+>  arch/arm/mach-sunxi/headsmp.S | 21 +++++++++++++++++++++
+>  arch/arm/mach-sunxi/sunxi.c   |  4 ++++
+>  2 files changed, 25 insertions(+)
 >=20
-> diff --git a/arch/arm/mach-sunxi/Makefile b/arch/arm/mach-sunxi/Makefile
-> index 7de9cc286d53..d1a072b879ed 100644
-> --- a/arch/arm/mach-sunxi/Makefile
-> +++ b/arch/arm/mach-sunxi/Makefile
-> @@ -1,5 +1,6 @@
->  CFLAGS_mc_smp.o	+=3D -march=3Darmv7-a
-> =20
->  obj-$(CONFIG_ARCH_SUNXI) +=3D sunxi.o
-> +obj-$(CONFIG_ARCH_SUNXI) +=3D headsmp.o
->  obj-$(CONFIG_ARCH_SUNXI_MC_SMP) +=3D mc_smp.o
->  obj-$(CONFIG_SMP) +=3D platsmp.o
 > diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
-> new file mode 100644
-> index 000000000000..4f5957a6e188
-> --- /dev/null
+> index d5c97e945e69..605896251927 100644
+> --- a/arch/arm/mach-sunxi/headsmp.S
 > +++ b/arch/arm/mach-sunxi/headsmp.S
-> @@ -0,0 +1,73 @@
-> +/*
-> + * SMP support for sunxi based systems with Cortex A7/A15
-> + *
-> + * Copyright (C) 2018 Bootlin
-
-This is just a copy, and while you can claim that you are one of the
-copyrights holder, you are not the sole one and the original author
-should be there.
-
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-
-You want to use SPDX there instead.
-
-> + */
-> +
-> +#include <linux/linkage.h>
-> +#include <asm/assembler.h>
-> +
-> +ENTRY(sunxi_mc_smp_cluster_cache_enable)
-> +	/*
-> +	* Enable cluster-level coherency, in preparation for turning on the MMU.
-> +	*
-> +	* Also enable regional clock gating and L2 data latency settings for
-> +	* Cortex-A15. These settings are from the vendor kernel.
-> +	*/
-
-The indentation is not correct there, the * should be aligned
-
-> +	mrc	p15, 0, r1, c0, c0, 0
-> +	movw	r2, #(0xff00fff0&0xffff)
-> +	movt	r2, #(0xff00fff0>>16)
-
-This used to be defines, we should keep them, and we should have
-spaces around the operators as well.
-
-> +	and	r1, r1, r2
-> +	movw	r2, #(0x4100c0f0&0xffff)
-> +	movt	r2, #(0x4100c0f0>>16)
-> +	cmp	r1, r2
-> +	bne	not_a15
-> +
-> +	/* The following is Cortex-A15 specific */
-> +
-> +	/* ACTLR2: Enable CPU regional clock gates */
-> +	mrc p15, 1, r1, c15, c0, 4
-> +	orr r1, r1, #(0x1<<31)
-> +	mcr p15, 1, r1, c15, c0, 4
-> +
-> +	/* L2ACTLR */
-> +	mrc p15, 1, r1, c15, c0, 0
-> +	/* Enable L2, GIC, and Timer regional clock gates */
-> +	orr r1, r1, #(0x1<<26)
-> +	/* Disable clean/evict from being pushed to external */
-> +	orr r1, r1, #(0x1<<3)
-> +	mcr p15, 1, r1, c15, c0, 0
-> +
-> +	/* L2CTRL: L2 data RAM latency */
-> +	mrc p15, 1, r1, c9, c0, 2
-> +	bic r1, r1, #(0x7<<0)
-> +	orr r1, r1, #(0x3<<0)
-> +	mcr p15, 1, r1, c9, c0, 2
-> +
-> +	/* End of Cortex-A15 specific setup */
-> +	not_a15:
-> +
-> +	/* Get value of sunxi_mc_smp_first_comer */
-> +	adr	r1, first
-> +	ldr	r0, [r1]
-> +	ldr	r0, [r1, r0]
-> +
-> +	/* Skip cci_enable_port_for_self if not first comer */
-> +	cmp	r0, #0
-> +	bxeq	lr
-> +	b	cci_enable_port_for_self
-> +
-> +	.align 2
-> +	first: .word sunxi_mc_smp_first_comer - .
-> +ENDPROC(sunxi_mc_smp_cluster_cache_enable)
-> +
-> +#ifdef CONFIG_SMP
-
-I guess that whole file should be compiled only if we have SMP
-enabled.
-
-> +ENTRY(sunxi_boot)
-> +	bl	sunxi_mc_smp_cluster_cache_enable
-> +	b	secondary_startup
-> +ENDPROC(sunxi_boot)
-> +#endif
-> diff --git a/arch/arm/mach-sunxi/mc_smp.c b/arch/arm/mach-sunxi/mc_smp.c
-> index f2c2cfca28cd..4e807cc11a0f 100644
-> --- a/arch/arm/mach-sunxi/mc_smp.c
-> +++ b/arch/arm/mach-sunxi/mc_smp.c
-> @@ -82,6 +82,9 @@ static void __iomem *prcm_base;
->  static void __iomem *sram_b_smp_base;
->  static bool is_sun9i;
+> @@ -65,9 +65,30 @@ ENTRY(sunxi_mc_smp_cluster_cache_enable)
+>  	first: .word sunxi_mc_smp_first_comer - .
+>  ENDPROC(sunxi_mc_smp_cluster_cache_enable)
 > =20
-> +extern void sunxi_boot(void);
+> +ENTRY(sunxi_init_cntvoff)
+> +	/*
+> +	 * CNTVOFF has to be initialized either from non-secure Hypervisor
+> +	 * mode or secure Monitor mode with SCR.NS=3D=3D1. If TrustZone is enab=
+led
+> +	 * then it should be handled by the secure code
+> +	 */
+> +	cps	#MON_MODE
+> +	mrc	p15, 0, r1, c1, c1, 0		/* Get Secure Config */
+> +	orr	r0, r1, #1
+> +	mcr	p15, 0, r0, c1, c1, 0		/* Set Non Secure bit */
+> +	instr_sync
+> +	mov	r0, #0
+> +	mcrr	p15, 4, r0, r0, c14		/* CNTVOFF =3D 0 */
+> +	instr_sync
+> +	mcr	p15, 0, r1, c1, c1, 0		/* Set Secure bit */
+> +	instr_sync
+> +	cps	#SVC_MODE
+> +	ret	lr
+> +ENDPROC(sunxi_init_cntvoff)
+> +
+>  #ifdef CONFIG_SMP
+>  ENTRY(sunxi_boot)
+>  	bl	sunxi_mc_smp_cluster_cache_enable
+> +	bl	sunxi_init_cntvoff
+>  	b	secondary_startup
+>  ENDPROC(sunxi_boot)
+> =20
+> diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
+> index 5e9602ce1573..4bb041492b54 100644
+> --- a/arch/arm/mach-sunxi/sunxi.c
+> +++ b/arch/arm/mach-sunxi/sunxi.c
+> @@ -37,8 +37,12 @@ static const char * const sun6i_board_dt_compat[] =3D {
+>  };
+> =20
+>  extern void __init sun6i_reset_init(void);
+> +extern void sunxi_init_cntvoff(void);
+> +
+>  static void __init sun6i_timer_init(void)
+>  {
+> +	sunxi_init_cntvoff();
+> +
 
-Why did you change the name of that function? The older one made it
-more obvious to tell what is going on.
+This would deserve a comment explaining why this is needed in the
+first place, and this is not correct. All the other SoCs listed in
+that machine have their CNTVOFF setup correctly on CPU0, and since
+Linux is booted in HYP, it's probably not even valid to do that.
 
-> +extern void sunxi_cluster_cache_enable(void);
-
-Is that used somewhere?
-
-Thanks!
 Maxime
 
 --=20
@@ -184,30 +112,30 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---gfhwlzw3mi3xnje6
+--ulfzt5j6yrqtig2w
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqQLrwACgkQ0rTAlCFN
-r3SXdg/+LWNbMXRJ+O5AVwLm6ab8rCOj97P4kvQ5zhhGXd/W2G+zqT4N+CoAA9Bt
-JV/rSpiLHlvjWj+0SH5rWTYALZ2HsWxBmhUdlY/wEOS6xYoTLd5ozwFNcZDAgASZ
-EbfhaQXXd4gqMRajPxMh4tJ8Un+uctFgZWiU8Y7hZ8t8IpA8eqPzKrGytiF9+Jvn
-lX2aBkJ4/VfMt2eizbudl13xRCkbhO6TAkN9eSTP5v3fzJrUPNyDHhCvt0UeoTD8
-H1qiK7CYpFx7cs0df5XwyWz9bnl6LRPF7RfIQoOh8NhbGJBz7Ysc/fO6zoSqPkgx
-2+pFnZA36bn7/9TshsUOVbZV87kt7TW6k8IFDtPViMawCkQr8Pf84myAypWkrfcx
-fZjD+pqpNEMSvKQi9LoM22IK/A6zwa4xVqP3wZzYNJJHNulkbl+09g9qN4M68aYd
-G7EVbuW2MaJiL6jASZfJvRPTy5U4Q2N7bGFju5JvXyV6O+gntfP4uvlJJwxvOP7q
-FYgPLiTHuFqFKEsUNyacjBJGejxHuK/MqMqhYGz5CCsZI9TQX383Q3ruPBlBjDMw
-Wxjhoq40SMV41pEXNxJCCC6RiVaqE2V52WAUAtA8xFiWvsexbcAACJYilwT2xads
-hjzAaeZ5XdXaQEmHlfFq3UO9kBmUntRfUsuJDoqfwvcB00IZ8DU=
-=ZXm8
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqQL0wACgkQ0rTAlCFN
+r3SspBAAi6rjoChO+AIbsyvs22zukl8PstofUuTy35osW5dX0s9aHc3XiZ8gUaRd
+1IdxK8z7sn6aAnW4Y2DUMaLvE1/LhExRT/qKJMj0hPUYdU/h0NvabMhsMNkUH7XC
+0FtcWWuEViSeJo60Ym92/9IFq1ueXYfDYJsBj3cr0B5AXzjwYIpz0FQdKnvcELG/
+tYdtdnRLwvyM45BbEJLRGLxvxbIM6aCgTRHH0BY4bSCGe7fj7PP2Lub6Jb5QYT31
+Oq3fyxkhb+WV+O+8+v2i6qLFdtz59jMyy3VUqVAZXIl4kH9wTFBnlZr3frJAkRj/
+yQG0umjmUty4xSfv/qB5q91s5nqnAsqKaUuVLK+YK/kqYyHJ9RRaFwaIG960OoBr
+J65D+MjWUlwpQqc18ttBcPFzSy6RLxU7kXnMoxjGF72vVE3E7QMjR8nXfUVGsSOV
+aeuTuzueKe1tcBQtjAmPca+QOC8ZMZk2bWGndyOaXl0e1pfBoH3XYjd7pOrj1Pq8
+SuUnCSZtGnftdysu+i42n9lR1PoEBCwINr601PIQFGoezRlCmrc2x5Ju3MF3QQu2
+mPhc9onrwjFAgxWvLcgxyh5CxbPF8Y8IAUv31esv4aifq4eojZbLH3pW6V4Hl/DT
+/nxB4M89ZjwzYxdD+ZVQUymkQk5TdyTYxL1BdnQVyFIcKlsc6/o=
+=NQiv
 -----END PGP SIGNATURE-----
 
---gfhwlzw3mi3xnje6--
+--ulfzt5j6yrqtig2w--
 
 
---===============0853493064232517712==
+--===============2036481839656107809==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -218,4 +146,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============0853493064232517712==--
+--===============2036481839656107809==--
