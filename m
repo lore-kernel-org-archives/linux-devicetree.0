@@ -1,95 +1,119 @@
-From: JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v5 08/13] iommu/rockchip: Control clocks needed to access
-	the IOMMU
-Date: Fri, 23 Feb 2018 18:24:06 +0800
-Message-ID: <5A8FEBC6.4000408@rock-chips.com>
-References: <20180124103516.2571-1-jeffy.chen@rock-chips.com>
-	<20180124103516.2571-9-jeffy.chen@rock-chips.com>
-	<20180130170515.3g6wtadqgmehxh5b@rob-hp-laptop>
-	<CAAFQd5A383Ey3Ntg_hcsvzHj2DsSuW6RMQ+kP=LPAZ1YmqjHOg@mail.gmail.com>
-	<CAL_JsqKFW0USD_TgGCO-s4wMBw9O2psToMObjeSEwCNReq-3=w@mail.gmail.com>
-	<5A72F7D2.1050201@rock-chips.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v1 13/19] arm: dts: mt7623: move node mt6323 leds to
+ mt6323.dtsi
+Date: Fri, 23 Feb 2018 18:16:33 +0800
+Message-ID: <e8a515a1aeaf06a7162b8b0e390bee615b323303.1519378872.git.sean.wang@mediatek.com>
+References: <cover.1519378871.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5A72F7D2.1050201-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, list-Y9sIeH5OGRo@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, open-Y9sIeH5OGRo@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1519378871.git.sean.wang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: Sean Wang <sean.wang@mediatek.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi guys,
+From: Sean Wang <sean.wang@mediatek.com>
 
-On 02/01/2018 07:19 PM, JeffyChen wrote:
->>>>>
->>>>>
->>>>> diff --git
->>>>> a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
->>>>> b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
->>>>> index 2098f7732264..33dd853359fa 100644
->>>>> --- a/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
->>>>> +++ b/Documentation/devicetree/bindings/iommu/rockchip,iommu.txt
->>>>> @@ -14,6 +14,13 @@ Required properties:
->>>>>                       "single-master" device, and needs no
->>>>> additional information
->>>>>                       to associate with its master device.  See:
->>>>>
->>>>> Documentation/devicetree/bindings/iommu/iommu.txt
->>>>> +Optional properties:
->>>>> +- clocks : A list of master clocks requires for the IOMMU to be
->>>>> accessible
->>>>> +           by the host CPU. The number of clocks depends on the
->>>>> master
->>>>> +           block and might as well be zero. See [1] for generic clock
->>>>> +           bindings description.
->>>>
->>>> Hardware blocks don't have a variable number of clock connections.
->>>
->>> I think you underestimate the imagination of hardware designers. :)
->>
->> Learned long ago to never do that. If there are 2 ways to do
->> something, they will find a 3rd way.
->>
->>> For Rockchip IOMMU, there is a set of clocks, which all need to be
->>> enabled for IOMMU register access to succeed. The clocks are not
->>> directly fed to the IOMMU, but they are needed for the various buses
->>> and intermediate blocks on the way to the IOMMU to work.
->>
->> The binding should describe the clock connections, not what clocks a
->> driver needs (currently). It sounds like a lack of managing bus clocks
->> to me.
->>
->> In any case, the binding must be written so it can be verified. If you
->> can have any number of clocks with any names, there's no point in
->> documenting.
->
-> the rockchip IOMMU is part of the master block in hardware, so it needs
-> to control the master's power domain and some of the master's clocks
-> when access it's registers.
->
-> and the number of clocks needed here, might be different between each
-> IOMMUs(according to which master block it belongs), it's a little like
-> our power domain:
-> https://elixir.free-electrons.com/linux/latest/source/arch/arm64/boot/dts/rockchip/rk3399.dtsi#L935
->
->
-> i'm not sure how to describe this correctly, is it ok use something like
-> "the same as it's master block"?
+Since those LEDs are parts of PMIC MT6323, it is reasonable to merge
+those LEDs node definition back into mt6323.dtsi. This way can improve
+the reusability of those nodes among different boards with the same PMIC.
 
-would it make sense to add a property to specify the master who owns the 
-iommu, and we can get all clocks(only some of those clocks are actually 
-needed) from it in the of_xlate()? and we can also reuse the clock-names 
-of that master to build clk_bulk_data and log errors in clk_bulk_get.
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+---
+ arch/arm/boot/dts/mt6323.dtsi                 | 26 ++++++++++++++++++++++++-
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 28 ---------------------------
+ 2 files changed, 25 insertions(+), 29 deletions(-)
 
->
->>
->> Rob
+diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
+index 7c783d6..44c5642 100644
+--- a/arch/arm/boot/dts/mt6323.dtsi
++++ b/arch/arm/boot/dts/mt6323.dtsi
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (c) 2017 MediaTek Inc.
++ * Copyright (c) 2017-2018 MediaTek Inc.
+  * Author: John Crispin <john@phrozen.org>
+  *	   Sean Wang <sean.wang@mediatek.com>
+  * This program is free software; you can redistribute it and/or modify
+@@ -237,5 +237,29 @@
+ 				regulator-enable-ramp-delay = <216>;
+ 			};
+ 		};
++
++		leds {
++			compatible = "mediatek,mt6323-led";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			led@0 {
++				reg = <0>;
++				label = "mt6323:isink:green";
++				default-state = "off";
++			};
++
++			led@1 {
++				reg = <1>;
++				label = "mt6323:isink:red";
++				default-state = "off";
++			};
++
++			led@2 {
++				reg = <2>;
++				label = "mt6323:isink:blue";
++				default-state = "off";
++			};
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+index 75e61c4..767b225 100644
+--- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
++++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+@@ -483,34 +483,6 @@
+ 	status = "okay";
+ };
+ 
+-&pwrap {
+-	mt6323 {
+-		mt6323led: led {
+-			compatible = "mediatek,mt6323-led";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			led@0 {
+-				reg = <0>;
+-				label = "bpi-r2:isink:green";
+-				default-state = "off";
+-			};
+-
+-			led@1 {
+-				reg = <1>;
+-				label = "bpi-r2:isink:red";
+-				default-state = "off";
+-			};
+-
+-			led@2 {
+-				reg = <2>;
+-				label = "bpi-r2:isink:blue";
+-				default-state = "off";
+-			};
+-		};
+-	};
+-};
+-
+ &spi0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&spi0_pins_a>;
+-- 
+2.7.4
