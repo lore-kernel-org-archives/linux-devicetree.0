@@ -1,15 +1,15 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/6] arm64: dts: renesas: r8a77965: Add #address-cells and
- #size-cells
-Date: Fri, 23 Feb 2018 10:23:13 +0100
-Message-ID: <CAMuHMdXW2JZr1=XTqdxc1s9_woH=Sget8m3aM6FMXFF4JYoeeg@mail.gmail.com>
+Subject: Re: [PATCH 3/6] arm64: dts: renesas: r8a77965: Remove stale reg
+ property
+Date: Fri, 23 Feb 2018 10:23:43 +0100
+Message-ID: <CAMuHMdVikGW4ZHbidVeSeBSPSDDk+1gcop_5TFsHakx9F_g_Kg@mail.gmail.com>
 References: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519326370-15805-3-git-send-email-jacopo+renesas@jmondi.org>
+ <1519326370-15805-4-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519326370-15805-3-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1519326370-15805-4-git-send-email-jacopo+renesas@jmondi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,16 +24,12 @@ Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED 
 List-Id: devicetree@vger.kernel.org
 
 On Thu, Feb 22, 2018 at 8:06 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Add "#address-cells" and "#size-cells" properties to all place-holder nodes
-> that have children nodes defined by salvator-x[s].dtsi device tree.
+> Remove "reg" property from cache-controller-0 device node as it does not
+> have any unit address.
 >
-> This silences the following DTC compiler warnings:
-> Warning (reg_format): "reg" property in /soc/.. has invalid length (4 bytes)
-> (#address-cells == 2, #size-cells == 1)
-> Warning (avoid_default_addr_size): Relying on default #address-cells
-> value for /soc/...
-> Warning (avoid_default_addr_size): Relying on default #size-cells value
-> for /soc/...
+> This silences the following DTC compiler warning:
+> Warning (unit_address_vs_reg): Node /cpus/cache-controller-0 has a reg
+> or ranges property, but no unit name
 >
 > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
