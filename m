@@ -1,54 +1,35 @@
-Return-Path: <SRS0=mxgJ=FQ=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v11 04/10] ARM: dts: r7s72100: Add Capture Engine Unit (CEU)
-Date: Thu, 22 Feb 2018 11:37:20 +0100
-Message-Id: <1519295846-11612-5-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519295846-11612-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519295846-11612-1-git-send-email-jacopo+renesas@jmondi.org>
-To: laurent.pinchart@ideasonboard.com, magnus.damm@gmail.com, geert@glider.be, hverkuil@xs4all.nl, mchehab@kernel.org, festevam@gmail.com, sakari.ailus@iki.fi, robh+dt@kernel.org, mark.rutland@arm.com, pombredanne@nexb.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=goDf=FR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wr0-f181.google.com ([209.85.128.181]:32926 "EHLO
+        mail-wr0-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751809AbeBWO5c (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 23 Feb 2018 09:57:32 -0500
+Received: by mail-wr0-f181.google.com with SMTP id s5so14406033wra.0
+        for <devicetree@vger.kernel.org>; Fri, 23 Feb 2018 06:57:31 -0800 (PST)
+References: <20180222102338.28896-1-rui.silva@linaro.org> <20180222102338.28896-2-rui.silva@linaro.org> <CAOMZO5ARc-b55bDoOsm+YO0wdu-MTjY=a=vhgnUowrGy0E9V7Q@mail.gmail.com>
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: Re: [PATCH 1/2] media: ov2680: dt: Add bindings for OV2680
+In-reply-to: <CAOMZO5ARc-b55bDoOsm+YO0wdu-MTjY=a=vhgnUowrGy0E9V7Q@mail.gmail.com>
+Date: Fri, 23 Feb 2018 14:57:28 +0000
+Message-ID: <m3inankb3b.fsf@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
+Sender: devicetree-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media <linux-media@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add Capture Engine Unit (CEU) node to device tree.
+Hi Fabio,
+On Thu 22 Feb 2018 at 11:31, Fabio Estevam wrote:
+> On Thu, Feb 22, 2018 at 7:23 AM, Rui Miguel Silva 
+> <rmfrfs@gmail.com> wrote:
+>> Add device tree binding documentation for the OV5640 camera 
+>> sensor.
+>
+> s/OV5640/OV2680
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+Thanks for notice this ;).
+
 ---
- arch/arm/boot/dts/r7s72100.dtsi | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+Cheers,
+	Rui
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index ab9645a..23e05ce 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -135,9 +135,9 @@
- 			#clock-cells = <1>;
- 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0xfcfe042c 4>;
--			clocks = <&p0_clk>;
--			clock-indices = <R7S72100_CLK_RTC>;
--			clock-output-names = "rtc";
-+			clocks = <&b_clk>, <&p0_clk>;
-+			clock-indices = <R7S72100_CLK_CEU R7S72100_CLK_RTC>;
-+			clock-output-names = "ceu", "rtc";
- 		};
- 
- 		mstp7_clks: mstp7_clks@fcfe0430 {
-@@ -667,4 +667,13 @@
- 		power-domains = <&cpg_clocks>;
- 		status = "disabled";
- 	};
-+
-+	ceu: camera@e8210000 {
-+		reg = <0xe8210000 0x3000>;
-+		compatible = "renesas,r7s72100-ceu";
-+		interrupts = <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp6_clks R7S72100_CLK_CEU>;
-+		power-domains = <&cpg_clocks>;
-+		status = "disabled";
-+	};
- };
--- 
-2.7.4
