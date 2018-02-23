@@ -1,188 +1,129 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 6/7] arm64: allwinner: h6: add the basical Allwinner
- H6 DTSI file
-Date: Fri, 23 Feb 2018 16:20:38 +0100
-Message-ID: <20180223152038.2bflylwa6vj4gzfj@flea.lan>
-References: <20180223123555.64009-6-icenowy@aosc.io>
- <20180223123555.64009-7-icenowy@aosc.io>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [Freedreno] [PATCH v7 3/6] iommu/arm-smmu: Invoke pm_runtime
+	during probe, add/remove device
+Date: Fri, 23 Feb 2018 08:40:48 -0700
+Message-ID: <20180223154048.GB18743@jcrouse-lnx.qualcomm.com>
+References: <1517999482-17317-1-git-send-email-vivek.gautam@codeaurora.org>
+	<1517999482-17317-4-git-send-email-vivek.gautam@codeaurora.org>
+	<20180222235200.GA18743@jcrouse-lnx.qualcomm.com>
+	<CAFp+6iGQ5Vckui14Jb=V0uk_Pjes95hOxo=KBijR4yxPeDDzFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2156292381715828893=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180223123555.64009-7-icenowy@aosc.io>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iGQ5Vckui14Jb=V0uk_Pjes95hOxo=KBijR4yxPeDDzFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 23, 2018 at 04:06:39PM +0530, Vivek Gautam wrote:
+> On Fri, Feb 23, 2018 at 5:22 AM, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> > On Wed, Feb 07, 2018 at 04:01:19PM +0530, Vivek Gautam wrote:
+> >> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >>
+> >> The smmu device probe/remove and add/remove master device callbacks
+> >> gets called when the smmu is not linked to its master, that is without
+> >> the context of the master device. So calling runtime apis in those places
+> >> separately.
+> >>
+> >> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >> [vivek: Cleanup pm runtime calls]
+> >> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >> ---
+> >>  drivers/iommu/arm-smmu.c | 42 ++++++++++++++++++++++++++++++++++++++----
+> >>  1 file changed, 38 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> >> index 9e2f917e16c2..c024f69c1682 100644
+> >> --- a/drivers/iommu/arm-smmu.c
+> >> +++ b/drivers/iommu/arm-smmu.c
+> >> @@ -913,11 +913,15 @@ static void arm_smmu_destroy_domain_context(struct iommu_domain *domain)
+> >>       struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> >>       struct arm_smmu_device *smmu = smmu_domain->smmu;
+> >>       struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> >> -     int irq;
+> >> +     int ret, irq;
+> >>
+> >>       if (!smmu || domain->type == IOMMU_DOMAIN_IDENTITY)
+> >>               return;
+> >>
+> >> +     ret = pm_runtime_get_sync(smmu->dev);
+> >> +     if (ret)
+> >> +             return;
+> >> +
+> >>       /*
+> >>        * Disable the context bank and free the page tables before freeing
+> >>        * it.
+> >> @@ -932,6 +936,8 @@ static void arm_smmu_destroy_domain_context(struct iommu_domain *domain)
+> >>
+> >>       free_io_pgtable_ops(smmu_domain->pgtbl_ops);
+> >>       __arm_smmu_free_bitmap(smmu->context_map, cfg->cbndx);
+> >> +
+> >> +     pm_runtime_put_sync(smmu->dev);
+> >>  }
+> >>
+> >>  static struct iommu_domain *arm_smmu_domain_alloc(unsigned type)
+> >> @@ -1407,14 +1413,22 @@ static int arm_smmu_add_device(struct device *dev)
+> >>       while (i--)
+> >>               cfg->smendx[i] = INVALID_SMENDX;
+> >>
+> >> -     ret = arm_smmu_master_alloc_smes(dev);
+> >> +     ret = pm_runtime_get_sync(smmu->dev);
+> >>       if (ret)
+> >>               goto out_cfg_free;
+> >
+> > Hey Vivek, I just hit a problem with this on sdm845. It turns out that
+> > pm_runtime_get_sync() returns a positive 1 if the device is already active.
+> >
+> > I hit this in the GPU code. The a6xx has two platform devices that each use a
+> > different sid on the iommu. The GPU is probed normally from a platform driver
+> > and it in turn initializes the GMU device by way of a phandle.
+> >
+> > Because the GMU isn't probed with a platform driver we need to call
+> > of_dma_configure() on the device to set up the IOMMU for the device which ends
+> > up calling through this path and we discover that the smmu->dev is already
+> > powered (pm_runtime_get_sync returns 1).
+> >
+> > I'm not immediately sure if this is a bug on sdm845 or not because a cursory
+> > inspection says that the SMMU device shouldn't be powered at this time but there
+> > might be a connection that I'm not seeing. Obviously if the SMMU was left
+> > powered thats a bad thing. But putting that aside it is obvious that this
+> > code should be accommodating of the possibility that the device is already
+> > powered, and so this should be
+> >
+> > if (ret < 0)
+> >         goto out_cfg_free;
+> 
+> Right, as Tomasz also pointed, we should surely check the negative value of
+> pm_runtime_get_sync().
 
---===============2156292381715828893==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="l2fdrnpsmitlpdua"
-Content-Disposition: inline
+Sorry, I didn't notice that Tomasz had pointed it out as well. I wanted to
+quickly get it on the mailing list so you could catch it in your time zone.
 
+> From your description, it may be that the GPU has turned on the smmu, and
+> then once if goes and probes the GMU, the GMU device also wants to turn-on
+> the same smmu device. But that's already active. So pm_runtime_get_sync()
+> returns 1.
+> Am i making sense?
 
---l2fdrnpsmitlpdua
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Feb 23, 2018 at 08:35:54PM +0800, Icenowy Zheng wrote:
-> Allwinner H6 is a new SoC with Cortex-A53 cores from Allwinner, with its
-> memory map fully reworked and some high-speed peripherals (PCIe, USB
-> 3.0) introduced.
->=20
-> This commit adds the basical DTSI file of it, including the clock
-> support and UART support.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-> ---
-> Changes in v3:
-> - SPDX license identifier fix.
->=20
-> Changes in v2:
-> - Add APB1 clock as PIO's APB clock.
-> - Switched to SPDX license identifier.
->=20
->  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 177 +++++++++++++++++++++=
-++++++
->  1 file changed, 177 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/bo=
-ot/dts/allwinner/sun50i-h6.dtsi
-> new file mode 100644
-> index 000000000000..4a6236bd9778
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-> @@ -0,0 +1,177 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ or MIT)
-> +/*
-> + * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/sun50i-h6-ccu.h>
-> +#include <dt-bindings/reset/sun50i-h6-ccu.h>
-> +
-> +/ {
-> +	interrupt-parent =3D <&gic>;
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +
-> +	cpus {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			compatible =3D "arm,cortex-a53", "arm,armv8";
-> +			device_type =3D "cpu";
-> +			reg =3D <0>;
-> +			enable-method =3D "psci";
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			compatible =3D "arm,cortex-a53", "arm,armv8";
-> +			device_type =3D "cpu";
-> +			reg =3D <1>;
-> +			enable-method =3D "psci";
-> +		};
-> +
-> +		cpu2: cpu@2 {
-> +			compatible =3D "arm,cortex-a53", "arm,armv8";
-> +			device_type =3D "cpu";
-> +			reg =3D <2>;
-> +			enable-method =3D "psci";
-> +		};
-> +
-> +		cpu3: cpu@3 {
-> +			compatible =3D "arm,cortex-a53", "arm,armv8";
-> +			device_type =3D "cpu";
-> +			reg =3D <3>;
-> +			enable-method =3D "psci";
-> +		};
-> +	};
-> +
-> +	iosc: internal-osc-clk {
-> +		#clock-cells =3D <0>;
-> +		compatible =3D "fixed-clock";
-> +		clock-frequency =3D <16000000>;
-> +		clock-accuracy =3D <300000000>;
-> +		clock-output-names =3D "iosc";
-> +	};
-
-You're not using it anywhere
-
-> +	osc24M: osc24M_clk {
-> +		#clock-cells =3D <0>;
-> +		compatible =3D "fixed-clock";
-> +		clock-frequency =3D <24000000>;
-> +		clock-output-names =3D "osc24M";
-> +	};
-> +
-> +	osc32k: osc32k_clk {
-> +		#clock-cells =3D <0>;
-> +		compatible =3D "fixed-clock";
-> +		clock-frequency =3D <32768>;
-> +		clock-output-names =3D "osc32k";
-> +	};
-> +
-> +	psci {
-> +		compatible =3D "arm,psci-0.2";
-> +		method =3D "smc";
-> +	};
-
-Is it needed? The bootloader should fill it with whatever version it
-has, shouldn't it?
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---l2fdrnpsmitlpdua
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqQMUUACgkQ0rTAlCFN
-r3TVHRAAk/zurzZNX92aYYFuKKrNaIZVtlQ3TjMUrhpHWREtUKOY6Eqww5ymSq/A
-lMJMDtBPP4cUMWqGfhJsOevAqzfpEVzta4QoIhUo44TclVAOVegBbDwEFemWsfg7
-S1RzpeAXmW2rNvbHdqp519L97tHZQTxZ1aPsyGDGcnMDOyej6moAPjj+im5istOW
-+rPlNSqd6Wa5/ZUoEJUJn/5U6R8sKvZNPgxdl3YlXWHlNNkzkJ36KaEu6vykwhV6
-6GgHdoVuTcWU/XtnNjIsC3j5GfQxOvGXBtvhKcnZowo1Vxt+p2Gb3bDkHtqjbLUy
-tNrFFxUTKZK0F06Ct/+cgm6N6SkFsu8WHlp7Ak4zP6uUvMHS+5FlycRCI49gmp05
-HkXbHndRnRJvSc+MKj6qjBhpceFzBtbViD2iUL3SEsQi1j+v75t6mZiHo7nFVbT6
-oPLAF/89ZFjO6XyfmMIEc0nVRr1UvEXo6XuOlByvXv2/ttcZQlHK62ruqjuiK1dE
-4bHknI2POiMi8/3AJkUwhS+g8h6KGhmTUyUR1cy99CSagRsnbe4Wd/YOsFFDeSAp
-LT5mvFcWSPUIrlYSfmxa98NFXi6DH7PL/+5m7IVjUzz1IfXBTR+rZ6zGoR1yko3o
-gn2hMHXn/YRQaewgp6zhorbffutDGzM+Wb+nYwMWCmQVe3YC7Og=
-=xle5
------END PGP SIGNATURE-----
-
---l2fdrnpsmitlpdua--
+My concern is that this is happening during the probe and we shouldn't be
+energizing the GPU at this point. But it is entirely possible that the
+bus is on for other reasons. I'll do a bit of digging today and see exactly
+which device is at fault.
 
 
---===============2156292381715828893==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2156292381715828893==--
+Jordan
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
