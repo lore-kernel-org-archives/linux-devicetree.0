@@ -1,109 +1,80 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 3/4] drm: rcar-du: Fix legacy DT to create LVDS encoder
- nodes
-Date: Fri, 23 Feb 2018 11:00:53 +0200
-Message-ID: <6897566.HfZ0CxhyhN@avalon>
-References: <20180222131336.7712-1-laurent.pinchart+renesas@ideasonboard.com>
- <06d3fb91-961d-a053-df22-cddf3419b159@gmail.com>
- <6342d241-9f7e-19ba-8336-599605612db9@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/6] arm64: dts: renesas: r8a77965: Add "reg" properties
+Date: Fri, 23 Feb 2018 10:19:21 +0100
+Message-ID: <CAMuHMdWGYpeOMJQKcT8=wm1YzQoB+vpK5H99Kg_pJ_HeBUw8Sw@mail.gmail.com>
+References: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1519326370-15805-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <6342d241-9f7e-19ba-8336-599605612db9@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519326370-15805-2-git-send-email-jacopo+renesas@jmondi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRnJhbmssCgpPbiBGcmlkYXksIDIzIEZlYnJ1YXJ5IDIwMTggMDQ6Mzg6MDYgRUVUIEZyYW5r
-IFJvd2FuZCB3cm90ZToKPiBPbiAwMi8yMi8xOCAxNDoxMCwgRnJhbmsgUm93YW5kIHdyb3RlOgo+
-ID4gSGkgTGF1cmVudCwgUm9iLAo+ID4gCj4gPiBUaGFua3MgZm9yIHRoZSBwcm9tcHQgc3BpbiB0
-byBhZGRyZXNzIG15IGNvbmNlcm5zLiAgVGhlcmUgYXJlIHNvbWUgc21hbGwKPiA+IHRlY2huaWNh
-bCBpc3N1ZXMuCj4gPiAKPiA+IEkgZGlkIG5vdCByZWFkIHRoZSB2MyBwYXRjaCB1bnRpbCB0b2Rh
-eS4gIHYzIHRocm91Z2ggdjYgYXJlIHN0aWxsIHVzaW5nCj4gPiB0aGUgb2xkIG92ZXJsYXkgYXBw
-bHkgbWV0aG9kIHdoaWNoIHVzZXMgYW4gZXhwYW5kZWQgZGV2aWNlIHRyZWUgYXMgaW5wdXQuCj4g
-PiAKPiA+IFJvYiwgSSBkb24ndCBzZWUgbXkgb3ZlcmxheSBwYXRjaGVzIGluIHlvdSBmb3ItbmV4
-dCBicmFuY2gsIGFuZCBJIGhhdmUKPiA+IG5vdCBzZWVuIGFuICJBcHBsaWVkIiBtZXNzYWdlIGZy
-b20geW91LiAgV2hhdCBpcyB0aGUgc3RhdHVzIG9mIHRoZQo+ID4gb3ZlcmxheSBwYXRjaGVzPwo+
-ID4gCj4gPiBDb21tZW50cyBpbiB0aGUgcGF0Y2ggYmVsb3cuCj4gPiAKPiA+IE9uIDAyLzIyLzE4
-IDA1OjEzLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4+IFRoZSBpbnRlcm5hbCBMVkRTIGVu
-Y29kZXJzIG5vdyBoYXZlIHRoZWlyIG93biBEVCBiaW5kaW5ncy4gQmVmb3JlCj4gPj4gc3dpdGNo
-aW5nIHRoZSBkcml2ZXIgaW5mcmFzdHJ1Y3R1cmUgdG8gdGhvc2UgbmV3IGJpbmRpbmdzLCBpbXBs
-ZW1lbnQKPiA+PiBiYWNrd2FyZC1jb21wYXRpYmlsaXR5IHRocm91Z2ggbGl2ZSBEVCBwYXRjaGlu
-Zy4KPiA+PiAKPiA+PiBQYXRjaGluZyBpcyBkaXNhYmxlZCBhbmQgd2lsbCBiZSBlbmFibGVkIGFs
-b25nIHdpdGggc3VwcG9ydCBmb3IgdGhlIG5ldwo+ID4+IERUIGJpbmRpbmdzIGluIHRoZSBEVSBk
-cml2ZXIuCj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQaW5jaGFydAo+ID4+IDxs
-YXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiA+PiAtLS0KPiA+PiBD
-aGFuZ2VzIHNpbmNlIHY1Ogo+ID4+IAo+ID4+IC0gVXNlIGEgcHJpdmF0ZSBjb3B5IG9mIHJjYXJf
-ZHVfb2ZfY2hhbmdlc2V0X2FkZF9wcm9wZXJ0eSgpCj4gPj4gCj4gPj4gQ2hhbmdlcyBzaW5jZSB2
-MzoKPiA+PiAKPiA+PiAtIFVzZSB0aGUgT0YgY2hhbmdlc2V0IEFQSQo+ID4+IC0gVXNlIG9mX2dy
-YXBoX2dldF9lbmRwb2ludF9ieV9yZWdzKCkKPiA+PiAtIFJlcGxhY2UgaGFyZGNvZGVkIGNvbnN0
-YW50cyBieSBzaXplb2YoKQo+ID4+IAo+ID4+IENoYW5nZXMgc2luY2UgdjI6Cj4gPj4gCj4gPj4g
-LSBVcGRhdGUgdGhlIFNQRFggaGVhZGVycyB0byB1c2UgQy1zdHlsZSBjb21tZW50cyBpbiBoZWFk
-ZXIgZmlsZXMKPiA+PiAtIFJlbW92ZWQgdGhlIG1hbnVhbGx5IGNyZWF0ZWQgX19sb2NhbF9maXh1
-cHNfXyBub2RlCj4gPj4gLSBQZXJmb3JtIG1hbnVhbCBmaXh1cHMgb24gbGl2ZSBEVCBpbnN0ZWFk
-IG9mIG92ZXJsYXkKPiA+PiAKPiA+PiBDaGFuZ2VzIHNpbmNlIHYxOgo+ID4+IAo+ID4+IC0gU2Vs
-ZWN0IE9GX0ZMQVRUUkVFCj4gPj4gLSBDb21waWxlIExWRFMgRFQgYmluZGluZ3MgcGF0Y2ggY29k
-ZSB3aGVuIERSTV9SQ0FSX0xWRFMgaXMgc2VsZWN0ZWQKPiA+PiAtIFVwZGF0ZSB0aGUgU1BEWCBo
-ZWFkZXJzIHRvIHVzZSBHUEwtMi4wIGluc3RlYWQgb2YgR1BMLTIuMC1vbmx5Cj4gPj4gLSBUdXJu
-IF9fZHRiX3JjYXJfZHVfb2ZfbHZkc18oYmVnaW58ZW5kKSBmcm9tIHU4IHRvIGNoYXIKPiA+PiAt
-IFBhc3Mgdm9pZCBiZWdpbiBhbmQgZW5kIHBvaW50ZXJzIHRvIHJjYXJfZHVfb2ZfZ2V0X292ZXJs
-YXkoKQo+ID4+IC0gVXNlIG9mX2dldF9wYXJlbnQoKSBpbnN0ZWFkIG9mIGFjY2Vzc2luZyB0aGUg
-cGFyZW50IHBvaW50ZXIgZGlyZWN0bHkKPiA+PiAtIEZpbmQgdGhlIExWRFMgZW5kcG9pbnRzIG5v
-ZGVzIGJhc2VkIG9uIHRoZSBMVkRTIG5vZGUgaW5zdGVhZCBvZiB0aGUKPiA+PiAgIHJvb3Qgb2Yg
-dGhlIG92ZXJsYXkKPiA+PiAtIFVwZGF0ZSB0byB0aGUgPHNvYz4tbHZkcyBjb21wYXRpYmxlIHN0
-cmluZyBmb3JtYXQKPiA+PiAtLS0KPiA+PiAKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUv
-S2NvbmZpZyAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+ID4+ICBkcml2ZXJzL2dwdS9kcm0v
-cmNhci1kdS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICB8ICAgNyArLQo+ID4+ICBkcml2ZXJz
-L2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mLmMgICAgICAgICAgICAgICB8IDM0MiArKysrKysr
-KysrKysrKysKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5oICAgICAg
-ICAgICAgICAgfCAgMjAgKysKPiA+PiAgLi4uL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2
-ZHNfcjhhNzc5MC5kdHMgICAgfCAgNzkgKysrKysKPiA+PiAgLi4uL2dwdS9kcm0vcmNhci1kdS9y
-Y2FyX2R1X29mX2x2ZHNfcjhhNzc5MS5kdHMgICAgfCAgNTMgKysrKwo+ID4+ICAuLi4vZ3B1L2Ry
-bS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkzLmR0cyAgICB8ICA1MyArKysrCj4gPj4g
-IC4uLi9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTUuZHRzICAgIHwgIDUz
-ICsrKysKPiA+PiAgLi4uL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5Ni5k
-dHMgICAgfCAgNTMgKysrKwo+ID4+ICA5IGZpbGVzIGNoYW5nZWQsIDY2MSBpbnNlcnRpb25zKCsp
-LCAxIGRlbGV0aW9uKC0pCj4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-cmNhci1kdS9yY2FyX2R1X29mLmMKPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
-L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuaAo+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTAuZHRzCj4gPj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhh
-Nzc5MS5kdHMKPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
-L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkzLmR0cwo+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTUuZHRzCj4gPj4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNf
-cjhhNzc5Ni5kdHMKPiA+PiAKPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JjYXIt
-ZHUvS2NvbmZpZwo+ID4+IGIvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvS2NvbmZpZyBpbmRleCA1
-ZDBiNGI3MTE5YWYuLjNmODMzNTJhNzMxMwo+ID4+IDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9yY2FyLWR1L0tjb25maWcKPiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcmNhci1k
-dS9LY29uZmlnCj4gCj4gPCBzbmlwID4KPiAKPiA+IGJlY29tZXM6Cj4gPiAJcmV0ID0gb2Zfb3Zl
-cmxheV9mZHRfYXBwbHkoZHRiLT5iZWdpbiwgJm92Y3NfaWQpOwo+ID4gCj4gPiBJZiBteSBvdmVy
-bGF5IHBhdGNoZXMgZG8gbm90IGV4aXN0LCB0aGVyZSBhcmUgb3RoZXIgc21hbGwgZXJyb3JzCj4g
-PiBpbiB0aGUgY29kZSBibG9jayBhYm92ZS4gIEknbGwgaWdub3JlIHRoZW0gZm9yIHRoZSBtb21l
-bnQuCj4gPiAKPiA+IEEgcXVpY2sgc2NhbiBvZiB0aGUgcmVzdCBvZiB0aGUgY29kZSBsb29rcyBP
-Sy4gIEknbGwgcmVhZCB0aHJvdWdoIGl0Cj4gPiBtb3JlIGNhcmVmdWxseSwgYnV0IHdhbnRlZCB0
-byBnZXQgdGhpcyByZXBseSBvdXQgd2l0aG91dCBmdXJ0aGVyCj4gPiBkZWxheS4KPiAKPiA8IHNu
-aXAgPgo+IAo+IEkgd2FzIGhvcGluZyB0byBiZSBhYmxlIHRvIGNvbnZlcnQgdGhlIC5kdHMgZmls
-ZXMgdG8gdXNlIHN1Z2FyIHN5bnRheAo+IGluc3RlYWQgb2YgaGFuZCBjb2RpbmcgdGhlIGZyYWdt
-ZW50IG5vZGVzLCBidXQgZm9yIHRoaXMgc3BlY2lmaWMgc2V0Cj4gb2YgZmlsZXMgSSBmYWlsZWQs
-IHNpbmNlIHRoZSBsYWJlbHMgdGhhdCB3b3VsZCBoYXZlIGJlZW4gcmVxdWlyZWQgZG8KPiBub3Qg
-YWxyZWFkeSBleGlzdCBpbiB0aGUgYmFzZSAuZHRzIGZpbGVzIHRoYXQgdGhhdCBvdmVybGF5cyB3
-b3VsZCBiZQo+IGFwcGxpZWQgYWdhaW5zdC4KCkFuZCBldmVuIGlmIHRoZXkgZXhpc3RlZCBpbiB0
-aGUgYmFzZSAuZHRzIGluIHRoZSBrZXJuZWwgc291cmNlcywgdGhlcmUncyBubyAKZ3VhcmFudGVl
-IHRoYXQgdGhlIC5kdGIgb24gdGhlIHN5c3RlbXMgd2Ugd2FudCB0byBwYXRjaCB3b3VsZCBjb250
-YWluIHN5bWJvbCwgCnNvIHRoYXQgd291bGRuJ3QgaGF2ZSBiZWVuIGFuIG9wdGlvbiBhbnl3YXks
-IHdvdWxkIGl0ID8KCj4gT2ggd2VsbC4gIEl0IHdhcyBhbiBpbnRlcmVzdGluZyBleGVyY2lzZSBh
-bnl3YXksIHRyeWluZyB0byBiZSBjcmFmdHkuCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hh
-cnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Jacopo,
+
+On Thu, Feb 22, 2018 at 8:06 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Add "reg" properties to place-holder nodes with unit address defined for
+> R-Car M3-N SoC.
+>
+> This silences the following DTC compiler warning:
+> Warning (unit_address_vs_reg): Node /soc/... has a unit name,
+> but no reg property
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
+A few minor nits below...
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+
+> @@ -520,130 +521,163 @@
+>                 };
+>
+>                 avb: ethernet@e6800000 {
+> +                       reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
+
+The first reg part would be sufficient for a placeholder.
+I think even setting the size to zero would work...
+
+>                 du: display@feb00000 {
+> +                       reg = <0 0xfeb00000 0 0x70000>,
+
+Unlike M3-W, the M3-N DU has a third channel, so the size is too small.
+
+> +                             <0 0xfeb90000 0 0x14>;
+>                         /* placeholder */
+
+> @@ -703,38 +745,47 @@
+>                 };
+>
+>                 usb2_phy1: usb-phy@ee0a0200 {
+> +                       reg = <0 0xee0a0200 0 0x700>;
+>                         /* placeholder */
+>                 };
+
+To be moved up, next to the other usb2 devices?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
