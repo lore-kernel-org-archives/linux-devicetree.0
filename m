@@ -1,52 +1,65 @@
-From: Bean Huo <beanhuo@outlook.com>
-Subject: Re: [PATCH v1 1/3] mtd: physmap: add dual die entry in devicetree
- binding
-Date: Fri, 23 Feb 2018 11:07:17 +0000
-Message-ID: <DM2PR12MB0014BEF2B19FED0392EB0366A6CC0@DM2PR12MB0014.namprd12.prod.outlook.com>
-References: <1519241514-6466-1-git-send-email-beanhuo@outlook.com>
- <DM2PR12MB001463BD62775C388AEBFD3FA6CE0@DM2PR12MB0014.namprd12.prod.outlook.com>,
- <20180222140542.47340842@bbrezillon>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH] dt-bindings: iio: adc: stm32-dfsdm: fix types,
+ add missing pinctrl
+Date: Fri, 23 Feb 2018 12:11:00 +0100
+Message-ID: <1519384260-23875-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180222140542.47340842@bbrezillon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "richard@nod.at" <richard@nod.at>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, beanhuo <beanhuo@micron.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, arnaud.pouliquen@st.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Boris,
-thanks for the review.
+- Add missing pinctrl description. Support is made optional as dfsdm
+  may use internal sources (e.g. via registers)
+- Fix typo in IIO STM32 DFSDM filter "MANCH_F" description.
+Basically, this should be "falling edge = logic 0", not "1" that applies
+to "MANCH_R".
+BTW, make the description complete by describing both rising/falling
+edges as described in reference manuals.
 
->> + - dual-die-stack: boolean to enable support for the devices with the
->> +   two dies in stack.
+Fixes: 6c82f947fc97 ("IIO: add DT bindings for stm32 DFSDM filter")
 
->How about making that more future proof and adding a property that
->directly contains the number of dies (num-dies)?
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Exactly, I also thought here should add a property, through which it can be compatible
-with all kinds of PNOR for the future more dies stacked device.
-But currently, it doesn't exist  PNOR device with more than two dies, and we
-have no idea about 4/6 dies stacked device operation sequence. so I simply add a boolean
-entry and try to only enable dual-die stacked PNOR firstly.
-
-Maybe I can try to do that in next version patch. the software implementation is so flexible.
-
->>
->>  For JEDEC compatible devices, the following additional properties
->>  are defined:
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
+index 911492da..ed7520d 100644
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt
+@@ -32,6 +32,10 @@ Optional properties:
+ 		  to "clock" property. Frequency must be a multiple of the rcc
+ 		  clock frequency. If not, SPI CLKOUT frequency will not be
+ 		  accurate.
++- pinctrl-names:	Set to "default".
++- pinctrl-0:		List of phandles pointing to pin configuration
++			nodes to set pins in mode of operation for dfsdm
++			on external pin.
+ 
+ Contents of a STM32 DFSDM child nodes:
+ --------------------------------------
+@@ -68,8 +72,8 @@ Optional properties:
+ - st,adc-channel-types:	Single-ended channel input type.
+ 			- "SPI_R": SPI with data on rising edge (default)
+ 			- "SPI_F": SPI with data on falling edge
+-			- "MANCH_R": manchester codec, rising edge = logic 0
+-			- "MANCH_F": manchester codec, falling edge = logic 1
++			- "MANCH_R": manchester codec, rising edge = logic 0, falling edge = logic 1
++			- "MANCH_F": manchester codec, rising edge = logic 1, falling edge = logic 0
+ - st,adc-channel-clk-src: Conversion clock source.
+ 			  - "CLKIN": external SPI clock (CLKIN x)
+ 			  - "CLKOUT": internal SPI clock (CLKOUT) (default)
+-- 
+1.9.1
