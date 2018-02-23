@@ -1,37 +1,49 @@
-Return-Path: <SRS0=mxgJ=FQ=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH 3/6] arm64: dts: renesas: r8a77965: Remove stale reg property
-Date: Thu, 22 Feb 2018 20:06:07 +0100
-Message-Id: <1519326370-15805-4-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519326370-15805-1-git-send-email-jacopo+renesas@jmondi.org>
-To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=goDf=FR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:45412 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751699AbeBWNin (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 23 Feb 2018 08:38:43 -0500
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 2/9] serial: fsl_lpuart: Fix out-of-bounds access through DT alias
+Date: Fri, 23 Feb 2018 14:38:30 +0100
+Message-Id: <1519393117-31998-3-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1519393117-31998-1-git-send-email-geert+renesas@glider.be>
+References: <1519393117-31998-1-git-send-email-geert+renesas@glider.be>
+Sender: devicetree-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Barry Song <baohua@kernel.org>, Vineet Gupta <vgupta@synopsys.com>, Jiri Slaby <jslaby@suse.com>, Michal Simek <michal.simek@xilinx.com>, linux-serial@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-Remove "reg" property from cache-controller-0 device node as it does not
-have any unit address.
+The lpuart_ports[] array is indexed using a value derived from the
+"serialN" alias in DT, which may lead to an out-of-bounds access.
 
-This silences the following DTC compiler warning:
-Warning (unit_address_vs_reg): Node /cpus/cache-controller-0 has a reg
-or ranges property, but no unit name
+Fix this by adding a range check.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Fixes: c9e2e946fb0ba5d2 ("tty: serial: add Freescale lpuart driver support")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+v2:
+  - Fix Fixes reference,
+  - Use ARRAY_SIZE().
+---
+ drivers/tty/serial/fsl_lpuart.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index ab46cd2..be4f25c 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -47,7 +47,6 @@
- 
- 		L2_CA57: cache-controller-0 {
- 			compatible = "cache";
--			reg = <0>;
- 			power-domains = <&sysc 12>;
- 			cache-unified;
- 			cache-level = <2>;
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 8cf112f2efc30707..51e47a63d61accef 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -2145,6 +2145,10 @@ static int lpuart_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "failed to get alias id, errno %d\n", ret);
+ 		return ret;
+ 	}
++	if (ret >= ARRAY_SIZE(lpuart_ports)) {
++		dev_err(&pdev->dev, "serial%d out of range\n", ret);
++		return -EINVAL;
++	}
+ 	sport->port.line = ret;
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	sport->port.membase = devm_ioremap_resource(&pdev->dev, res);
 -- 
 2.7.4
+
