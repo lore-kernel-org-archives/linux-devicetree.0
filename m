@@ -1,173 +1,72 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 00/26] Fix watchdog on Renesas R-Car Gen2 and RZ/G1
-Date: Fri, 23 Feb 2018 09:14:44 +0100
-Message-ID: <20180223081443.ak6kl3z72kamcxob@verge.net.au>
-References: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdX=m9ui6GczF51SJH2X7Cw1OnxoH9pfk1DybpDX-A873Q@mail.gmail.com>
- <20180221161326.ktvf3mlzzxith5kw@verge.net.au>
- <CAMuHMdUTSmrWggMK4ehSL3Ux-JUzVpamTuToveuXogjuvGKkaw@mail.gmail.com>
- <20180221183223.qacrmmuzoqlzzbpo@verge.net.au>
- <CAMuHMdXCt1-coXGgtgFBm4rZLGBRMvSjbgeBSweiyKrOfCF0Xg@mail.gmail.com>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH v1 2/2] drm/panel: otm8009a: Add support for the optional
+ power-supply
+Date: Fri, 23 Feb 2018 08:30:24 +0000
+Message-ID: <438395fc-f0f4-0536-155f-f2f3e60e912c@st.com>
+References: <20180205094532.23547-1-philippe.cornu@st.com>
+ <20180205094532.23547-3-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXCt1-coXGgtgFBm4rZLGBRMvSjbgeBSweiyKrOfCF0Xg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Wim Van Sebroeck <wim@iguana.be>, linux-clk <linux-clk@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Guenter Roeck <linux@roeck-us.net>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180205094532.23547-3-philippe.cornu@st.com>
+Content-Language: en-US
+Content-ID: <85EB1CD0E4FD334BB4A3E2482E3FDE3A@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Yannick FERTRE <yannick.fertre@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 22, 2018 at 09:38:39AM +0100, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Wed, Feb 21, 2018 at 7:32 PM, Simon Horman <horms@verge.net.au> wrote:
-> > On Wed, Feb 21, 2018 at 05:30:12PM +0100, Geert Uytterhoeven wrote:
-> >> On Wed, Feb 21, 2018 at 5:13 PM, Simon Horman <horms@verge.net.au> wrote:
-> >> > On Tue, Feb 20, 2018 at 01:51:28PM +0100, Geert Uytterhoeven wrote:
-> >> >> On Mon, Feb 12, 2018 at 6:44 PM, Fabrizio Castro
-> >> >> <fabrizio.castro@bp.renesas.com> wrote:
-> >> >> > this series has been around for some time as RFC, and it has collected
-> >> >> > useful comments from the community along the way.
-> >> >> > The solution proposed by this patch set works for most R-Car Gen2 and
-> >> >> > RZ/G1 devices, but not all of them. We now know that for some R-Car
-> >> >> > Gen2 early revisions there is no proper software fix. Anyway, no
-> >> >> > product has been built around early revisions, but development boards
-> >> >> > mounting early revisions (basically prototypes) are still out there.
-> >> >> > As a result, this series isn't enabling the internal watchdog on R-Car
-> >> >> > Gen2 boards, developers may enable it in board specific device trees
-> >> >> > if needed.
-> >> >> > This series has been tested by me on the iwg20d, iwg22d, Lager, Alt,
-> >> >> > and Koelsch boards.
-> >> >> >
-> >> >> > The problem
-> >> >> > ===========
-> >> >> > To deal with SMP on R-Car Gen2 and RZ/G1, we install a reset vector
-> >> >> > to ICRAM1 and we program the [S]BAR registers so that when we turn ON
-> >> >> > the non-boot CPUs they are redirected to the reset vector installed by
-> >> >> > Linux in ICRAM1, and eventually they continue the execution to RAM,
-> >> >> > where the SMP bring-up code will take care of the rest.
-> >> >> > The content of the [S]BAR registers survives a watchdog triggered reset,
-> >> >> > and as such after the watchdog fires the boot core will try and execute
-> >> >> > the SMP bring-up code instead of jumping to the bootrom code.
-> >> >> >
-> >> >> > The fix
-> >> >> > =======
-> >> >> > The main strategy for the solution is to let the reset vector decide
-> >> >> > if it needs to jump to shmobile_boot_fn or to the bootrom code.
-> >> >> > In a watchdog triggered reset scenario, since the [S]BAR registers keep
-> >> >> > their values, the boot CPU will jump into the newly designed reset
-> >> >> > vector, the assembly routine will eventually test WOVF (a bit in register
-> >> >> > RWTCSRA that indicates if the watchdog counter has overflown, the value
-> >> >> > of this bit gets retained in this scenario), and jump to the bootrom code
-> >> >> > which will in turn load up the bootloader, etc.
-> >> >> > When bringing up SMP or using CPU hotplug, the reset vector will jump
-> >> >> > to shmobile_boot_fn instead.
-> >> >> >
-> >> >> > Thank you All for your help.
-> >> >> >
-> >> >> > Best regards,
-> >> >> >
-> >> >> > Fabrizio Castro (26):
-> >> >> >   ARM: shmobile: Add watchdog support
-> >> >> >   ARM: dts: r8a7743: Adjust SMP routine size
-> >> >> >   ARM: dts: r8a7745: Adjust SMP routine size
-> >> >> >   ARM: dts: r8a7790: Adjust SMP routine size
-> >> >> >   ARM: dts: r8a7791: Adjust SMP routine size
-> >> >> >   ARM: dts: r8a7792: Adjust SMP routine size
-> >> >> >   ARM: dts: r8a7793: Adjust SMP routine size
-> >> >> >   ARM: dts: r8a7794: Adjust SMP routine size
-> >> >> >   soc: renesas: rcar-rst: Enable watchdog as reset trigger for Gen2
-> >> >> >   ARM: shmobile: rcar-gen2: Add watchdog support
-> >> >> >   dt-bindings: watchdog: renesas-wdt: Add R-Car Gen2 support
-> >> >> >   watchdog: renesas_wdt: Add R-Car Gen2 support
-> >> >> >   watchdog: renesas_wdt: Add restart handler
-> >> >> >   ARM: shmobile: defconfig: Enable RENESAS_WDT_GEN
-> >> >> >   clk: renesas: r8a7743: Add rwdt clock
-> >> >> >   clk: renesas: r8a7745: Add rwdt clock
-> >> >> >   clk: renesas: r8a7790: Add rwdt clock
-> >> >> >   clk: renesas: r8a7791/r8a7793: Add rwdt clock
-> >> >> >   clk: renesas: r8a7794: Add rwdt clock
-> >> >> >   ARM: dts: r8a7743: Add watchdog support to SoC dtsi
-> >> >> >   ARM: dts: r8a7745: Add watchdog support to SoC dtsi
-> >> >> >   ARM: dts: r8a7790: Add watchdog support to SoC dtsi
-> >> >> >   ARM: dts: r8a7791: Add watchdog support to SoC dtsi
-> >> >> >   ARM: dts: r8a7794: Add watchdog support to SoC dtsi
-> >> >> >   ARM: dts: iwg20m: Add watchdog support to SoM dtsi
-> >> >> >   ARM: dts: iwg22m: Add watchdog support to SoM dtsi
-> >> >> >
-> >> >> >  .../devicetree/bindings/watchdog/renesas-wdt.txt   | 19 ++++++--
-> >> >> >  arch/arm/boot/dts/r8a7743-iwg20m.dtsi              |  5 ++
-> >> >> >  arch/arm/boot/dts/r8a7743.dtsi                     | 12 ++++-
-> >> >> >  arch/arm/boot/dts/r8a7745-iwg22m.dtsi              |  5 ++
-> >> >> >  arch/arm/boot/dts/r8a7745.dtsi                     | 12 ++++-
-> >> >> >  arch/arm/boot/dts/r8a7790.dtsi                     | 12 ++++-
-> >> >> >  arch/arm/boot/dts/r8a7791.dtsi                     | 12 ++++-
-> >> >> >  arch/arm/boot/dts/r8a7792.dtsi                     |  2 +-
-> >> >> >  arch/arm/boot/dts/r8a7793.dtsi                     |  2 +-
-> >> >> >  arch/arm/boot/dts/r8a7794.dtsi                     | 12 ++++-
-> >> >> >  arch/arm/configs/shmobile_defconfig                |  1 +
-> >> >> >  arch/arm/mach-shmobile/common.h                    |  6 +++
-> >> >> >  arch/arm/mach-shmobile/headsmp.S                   | 55 ++++++++++++++++++++++
-> >> >> >  arch/arm/mach-shmobile/platsmp-apmu.c              |  1 +
-> >> >> >  arch/arm/mach-shmobile/pm-rcar-gen2.c              | 15 ++++--
-> >> >> >  drivers/clk/renesas/r8a7743-cpg-mssr.c             |  2 +
-> >> >> >  drivers/clk/renesas/r8a7745-cpg-mssr.c             |  2 +
-> >> >> >  drivers/clk/renesas/r8a7790-cpg-mssr.c             |  2 +
-> >> >> >  drivers/clk/renesas/r8a7791-cpg-mssr.c             |  2 +
-> >> >> >  drivers/clk/renesas/r8a7794-cpg-mssr.c             |  2 +
-> >> >> >  drivers/soc/renesas/rcar-rst.c                     | 35 +++++++++++---
-> >> >> >  drivers/watchdog/renesas_wdt.c                     | 39 +++++++++++++--
-> >> >>
-> >> >> Thanks, I've queued the clock patches in clk-renesas-for-v4.17, as they are
-> >> >> a hard dependency for:
-> >> >>   (1) The new reset vector in arch/arm/mach-shmobile/
-> >> >>   (2) The watchdog driver.
-> >> >>
-> >> >> Note that the watchdog driver itself (2) has a hard dependency on the
-> >> >> new reset vector (1).
-> >> >
-> >> > Thanks, I have marked the watchdog driver patch as Deferred.
-> >> > Please resubmit or otherwise ping me once they dependencies
-> >> > are in an rc release.
-> >>
-> >> I gave the dependencies a bit more thought.
-> >>
-> >> I think we can gain once release cycle if you would postpone the DTS patches
-> >> (both SMP routine size adjustments and RWDT device node additions) to v4.18.
-> >> Then all other parts can be upstreamed in parallel in v4.17, as nothing
-> >> will be activated before the DTS parts are in.
-> >>
-> >> Does this look sane?
-> >
-> > What about new DTS on old kernels of a specific vintage?
-> 
-> New DTS would work fine on v4.16 and older, which don't have any of the
-> other patches from this series.
-> New DTS would work fine on v4.17, assumed all other patches from this
-> series get into v4.17.
-> 
-> The only issue would be a new DTS on a kernel that has some but not all
-> other patches from this series.
-
-Thanks for the analysis. I think this is the key point. What is the risk of
-that happening?
-
-> If we want to fast-track everything into v4.17, we need a stable branch, to be
-> pulled by all 5 actors (clk-renesas, mach-shmobile, soc-renesas, watchdog,
-> renesas-dts).
-
-It seems that watchdog is the only item on that list that neither you nor I
-sign off on. So I conclude that if the watchdog patch goes in early enough
-in the cycle then we ought to be in good shape.
-
-None the less, is it worth the risk?
+SGkgVGhpZXJyeSAmIERhdmlkLA0KDQpNYXkgSSBhc2sgeW91IHBsZWFzZSB5b3VyIGZlZWRiYWNr
+IG9uIHRoaXMgc21hbGwgcGF0Y2g/DQpNYW55IHRoYW5rcywNCg0KUGhpbGlwcGUgOi0pDQoNCk9u
+IDAyLzA1LzIwMTggMTA6NDUgQU0sIFBoaWxpcHBlIENvcm51IHdyb3RlOg0KPiBBZGQgc3VwcG9y
+dCBmb3IgdGhlIG9wdGlvbmFsIHBvd2VyLXN1cHBseS4NCj4gDQo+IE5vdGU6IEEgImR1bW15IHJl
+Z3VsYXRvciIgaXMgcmV0dXJuZWQgYnkgZGV2bV9yZWd1bGF0b3JfZ2V0KCkNCj4gaWYgdGhlIG9w
+dGlvbmFsIHJlZ3VsYXRvciBpcyBub3QgcHJlc2VudCBpbiB0aGUgZGV2aWNlIHRyZWUsDQo+IHNp
+bXBsaWZ5aW5nIHRoZSBzb3VyY2UgY29kZSB3aGVuIGVuYWJsaW5nL2Rpc2FibGluZyB0aGUgcmVn
+dWxhdG9yLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNv
+cm51QHN0LmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW9yaXNl
+dGVjaC1vdG04MDA5YS5jIHwgMTcgKysrKysrKysrKysrKysrKysNCj4gICAxIGZpbGUgY2hhbmdl
+ZCwgMTcgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9w
+YW5lbC9wYW5lbC1vcmlzZXRlY2gtb3RtODAwOWEuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
+YW5lbC1vcmlzZXRlY2gtb3RtODAwOWEuYw0KPiBpbmRleCA3MjUzMDk4M2Q1NWQuLjkwZjFhZTRh
+ZjkzYyAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW9yaXNldGVj
+aC1vdG04MDA5YS5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1vcmlzZXRl
+Y2gtb3RtODAwOWEuYw0KPiBAQCAtMTEsNiArMTEsNyBAQA0KPiAgICNpbmNsdWRlIDxkcm0vZHJt
+X3BhbmVsLmg+DQo+ICAgI2luY2x1ZGUgPGxpbnV4L2JhY2tsaWdodC5oPg0KPiAgICNpbmNsdWRl
+IDxsaW51eC9ncGlvL2NvbnN1bWVyLmg+DQo+ICsjaW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2Nv
+bnN1bWVyLmg+DQo+ICAgI2luY2x1ZGUgPHZpZGVvL21pcGlfZGlzcGxheS5oPg0KPiAgIA0KPiAg
+ICNkZWZpbmUgRFJWX05BTUUgIm9yaXNldGVjaF9vdG04MDA5YSINCj4gQEAgLTYyLDYgKzYzLDcg
+QEAgc3RydWN0IG90bTgwMDlhIHsNCj4gICAJc3RydWN0IGRybV9wYW5lbCBwYW5lbDsNCj4gICAJ
+c3RydWN0IGJhY2tsaWdodF9kZXZpY2UgKmJsX2RldjsNCj4gICAJc3RydWN0IGdwaW9fZGVzYyAq
+cmVzZXRfZ3BpbzsNCj4gKwlzdHJ1Y3QgcmVndWxhdG9yICpzdXBwbHk7DQo+ICAgCWJvb2wgcHJl
+cGFyZWQ7DQo+ICAgCWJvb2wgZW5hYmxlZDsNCj4gICB9Ow0KPiBAQCAtMjc5LDYgKzI4MSw4IEBA
+IHN0YXRpYyBpbnQgb3RtODAwOWFfdW5wcmVwYXJlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQ0K
+PiAgIAkJbXNsZWVwKDIwKTsNCj4gICAJfQ0KPiAgIA0KPiArCXJlZ3VsYXRvcl9kaXNhYmxlKGN0
+eC0+c3VwcGx5KTsNCj4gKw0KPiAgIAljdHgtPnByZXBhcmVkID0gZmFsc2U7DQo+ICAgDQo+ICAg
+CXJldHVybiAwOw0KPiBAQCAtMjkyLDYgKzI5NiwxMiBAQCBzdGF0aWMgaW50IG90bTgwMDlhX3By
+ZXBhcmUoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpDQo+ICAgCWlmIChjdHgtPnByZXBhcmVkKQ0K
+PiAgIAkJcmV0dXJuIDA7DQo+ICAgDQo+ICsJcmV0ID0gcmVndWxhdG9yX2VuYWJsZShjdHgtPnN1
+cHBseSk7DQo+ICsJaWYgKHJldCA8IDApIHsNCj4gKwkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gZW5h
+YmxlIHN1cHBseTogJWRcbiIsIHJldCk7DQo+ICsJCXJldHVybiByZXQ7DQo+ICsJfQ0KPiArDQo+
+ICAgCWlmIChjdHgtPnJlc2V0X2dwaW8pIHsNCj4gICAJCWdwaW9kX3NldF92YWx1ZV9jYW5zbGVl
+cChjdHgtPnJlc2V0X2dwaW8sIDApOw0KPiAgIAkJZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwKGN0
+eC0+cmVzZXRfZ3BpbywgMSk7DQo+IEBAIC00MTQsNiArNDI0LDEzIEBAIHN0YXRpYyBpbnQgb3Rt
+ODAwOWFfcHJvYmUoc3RydWN0IG1pcGlfZHNpX2RldmljZSAqZHNpKQ0KPiAgIAkJcmV0dXJuIFBU
+Ul9FUlIoY3R4LT5yZXNldF9ncGlvKTsNCj4gICAJfQ0KPiAgIA0KPiArCWN0eC0+c3VwcGx5ID0g
+ZGV2bV9yZWd1bGF0b3JfZ2V0KGRldiwgInBvd2VyIik7DQo+ICsJaWYgKElTX0VSUihjdHgtPnN1
+cHBseSkpIHsNCj4gKwkJcmV0ID0gUFRSX0VSUihjdHgtPnN1cHBseSk7DQo+ICsJCWRldl9lcnIo
+ZGV2LCAiZmFpbGVkIHRvIHJlcXVlc3QgcmVndWxhdG9yOiAlZFxuIiwgcmV0KTsNCj4gKwkJcmV0
+dXJuIHJldDsNCj4gKwl9DQo+ICsNCj4gICAJbWlwaV9kc2lfc2V0X2RydmRhdGEoZHNpLCBjdHgp
+Ow0KPiAgIA0KPiAgIAljdHgtPmRldiA9IGRldjsNCj4gCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
