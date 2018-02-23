@@ -1,75 +1,50 @@
-Return-Path: <robherring2@gmail.com>
-Date: Sun, 18 Feb 2018 21:10:09 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: memory: ti-emif: add edac support under emif
-Message-ID: <20180219031009.wduweeg53lnncntd@rob-hp-laptop>
-References: <1518542129-25813-1-git-send-email-t-kristo@ti.com>
+Return-Path: <SRS0=VKUP=FR=gmail.com=andy.shevchenko@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1518542129-25813-1-git-send-email-t-kristo@ti.com>
-To: Tero Kristo <t-kristo@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ssantosh@kernel.org, linux-omap@vger.kernel.org
+In-Reply-To: <7ba335af-3fc5-2afd-8c52-03dca5eba9a4@rock-chips.com>
+References: <CGME20180223064140epcas2p104fe6cca431ec24f2b09a6f5a45ed342@epcas2p1.samsung.com>
+ <20180223064138.18401-1-jh80.chung@samsung.com> <CAHp75Vd27mFnSJTOta0ZWhfOGz1WA8ETNgU_GpuxEJ9nnhsR-g@mail.gmail.com>
+ <7ba335af-3fc5-2afd-8c52-03dca5eba9a4@rock-chips.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 23 Feb 2018 18:16:39 +0200
+Message-ID: <CAHp75VcthggOwOPjQFNX-xMmK44F99oXYOdeBxfO=euT_JvkoQ@mail.gmail.com>
+Subject: Re: [PATCH 1/6] mmc: dw_mmc: remove the deprecated
+ "clock-freq-min-max" property
+Content-Type: text/plain; charset="UTF-8"
+To: Shawn Lin <shawn.lin@rock-chips.com>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joachim Eastwood <manabian@gmail.com>, dinguyen@kernel.org, Will Deacon <will.deacon@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Feb 13, 2018 at 07:15:29PM +0200, Tero Kristo wrote:
-> Certain revisions of the TI EMIF IP contain ECC support in them. Reflect
-> this in the DT binding. Also, add interrupts property as a required
-> property for the emif controller, as all revisions of the emif IP contain
-> interrupt support; this might remain unused by the kernel driver though.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  .../devicetree/bindings/memory-controllers/ti/emif.txt      | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
-> index 621b41c..87022a9 100644
-> --- a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
-> +++ b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
-> @@ -3,7 +3,9 @@
->  EMIF - External Memory Interface - is an SDRAM controller used in
->  TI SoCs. EMIF supports, based on the IP revision, one or more of
->  DDR2/DDR3/LPDDR2 protocols. This binding describes a given instance
-> -of the EMIF IP and memory parts attached to it.
-> +of the EMIF IP and memory parts attached to it. Certain revisions
-> +of the EMIF controller also contain optional ECC support, which
-> +corrects one bit errors and detects two bit errors.
->  
->  Required properties:
->  - compatible	: Should be of the form "ti,emif-<ip-rev>" where <ip-rev>
-> @@ -11,6 +13,8 @@ Required properties:
->    compatible should be one of the following:
->    	     "ti,emif-am3352"
->  	     "ti,emif-am4372"
-> +	     "ti,emif-dra7xx"
-> +	     "ti,emif-keystone"
->  
->  - phy-type	: <u32> indicating the DDR phy type. Following are the
->    allowed values
-> @@ -22,6 +26,7 @@ Required properties:
->  - ti,hwmods	: For TI hwmods processing and omap device creation
->    the value shall be "emif<n>" where <n> is the number of the EMIF
->    instance with base 1.
-> +- interrupts	: interrupt used by the controller
+On Fri, Feb 23, 2018 at 4:19 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+> On 2018/2/23 21:27, Andy Shevchenko wrote:
+>> On Fri, Feb 23, 2018 at 8:41 AM, Jaehoon Chung <jh80.chung@samsung.com>
+>> wrote:
+>>>
+>>> 'clock-freq-min-max' property had already deprecated.
+>>> Remove the 'clock-freq-min-max' property that is kept to maintain
+>>> the compatibility.
+>>
+>>
+>> Removing a property without telling the user what to expect is a bad
+>> idea and ABI breakage.
+>>
+>
+> What's the general process to remove a property?
+>
+> I guess we should do:
+> 1) deprecate it in the first place and remove it from all upstream DT
+> 2) wait some long enough days for expecting the stale of all old DTB
+> containing that property
+> 3) remove the functionality of the deprecated property from the driver
+> but still leave some warning there
+> 4) remove the left warning finally
 
-Only for the new compatibles?
+I don't know. Perhaps Rob can shed a light here.
+But I would really OK with removal of some of such properties from
+some drivers where it's more burden to keep them.
 
->  
->  Required only for "ti,emif-am3352" and "ti,emif-am4372":
->  - sram			: Phandles for generic sram driver nodes,
-> @@ -71,3 +76,9 @@ emif: emif@4c000000 {
->          sram = <&pm_sram_code
->                  &pm_sram_data>;
->  };
-> +
-> +emif1: emif@4c000000 {
-> +	compatible = "ti,emif-dra7xx";
-> +	reg = <0x4c000000 0x200>;
-> +	interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-> +};
-> -- 
-> 1.9.1
-> 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> And for the ABI breakage, we should add something in Documentation/ABI
+> /obsolete  or Documentation/ABI/removed ?
+
+-- 
+With Best Regards,
+Andy Shevchenko
