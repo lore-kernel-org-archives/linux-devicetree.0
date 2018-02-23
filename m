@@ -1,69 +1,67 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 3/4] arm64: add support for i.MX8M EVK board
-Date: Fri, 23 Feb 2018 16:46:09 +0100
-Message-ID: <1519400769.8609.3.camel@pengutronix.de>
-References: <20180201183126.32384-1-l.stach@pengutronix.de>
- <20180201183126.32384-3-l.stach@pengutronix.de>
- <20180223150352.GU3217@dragon> <201802231630.45460.jbe@pengutronix.de>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v1 1/3] mtd: physmap: add dual die entry in devicetree
+ binding
+Date: Fri, 23 Feb 2018 16:53:40 +0100
+Message-ID: <20180223165340.24bb2c6c@bbrezillon>
+References: <1519241514-6466-1-git-send-email-beanhuo@outlook.com>
+ <DM2PR12MB001463BD62775C388AEBFD3FA6CE0@DM2PR12MB0014.namprd12.prod.outlook.com>
+ <20180222140542.47340842@bbrezillon>
+ <DM2PR12MB0014BEF2B19FED0392EB0366A6CC0@DM2PR12MB0014.namprd12.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201802231630.45460.jbe@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Juergen Borleis <jbe@pengutronix.de>, kernel@pengutronix.de
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "A . s . Dong" <aisheng.dong@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <DM2PR12MB0014BEF2B19FED0392EB0366A6CC0@DM2PR12MB0014.namprd12.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Bean Huo <beanhuo@outlook.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "boris.brezillon@free-electrons.com" <boris.brezillon@free-electrons.com>, "richard@nod.at" <richard@nod.at>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "cyrille.pitchen@wedev4u.fr" <cyrille.pitchen@wedev4u.fr>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, beanhuo <beanhuo@micron.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRnJlaXRhZywgZGVuIDIzLjAyLjIwMTgsIDE2OjMwICswMTAwIHNjaHJpZWIgSnVlcmdlbiBC
-b3JsZWlzOgo+IE9uIEZyaWRheSAyMyBGZWJydWFyeSAyMDE4IDE2OjAzOjUzIFNoYXduIEd1byB3
-cm90ZToKPiA+IE9uIFRodSwgRmViIDAxLCAyMDE4IGF0IDA3OjMxOjI1UE0gKzAxMDAsIEx1Y2Fz
-IFN0YWNoIHdyb3RlOgo+ID4gPiArJnVzZGhjMSB7Cj4gPiA+ICvCoMKgwqBwaW5jdHJsLW5hbWVz
-ID0gImRlZmF1bHQiLCAic3RhdGVfMTAwbWh6IiwgInN0YXRlXzIwMG1oeiI7Cj4gPiA+ICvCoMKg
-wqBwaW5jdHJsLTAgPSA8JnBpbmN0cmxfdXNkaGMxX2NkX3Jlc2V0PiwKPiA8JnBpbmN0cmxfdXNk
-aGMxX2Nsa19zdHJvYmU+LAo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8JnBp
-bmN0cmxfdXNkaGMxX2RhdGE+Owo+ID4gPiArwqDCoMKgcGluY3RybC0xID0gPCZwaW5jdHJsX3Vz
-ZGhjMV9jZF9yZXNldD4sCj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDwmcGlu
-Y3RybF91c2RoYzFfY2xrX3N0cm9iZV8xMDBtaHo+LAo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCA8JnBpbmN0cmxfdXNkaGMxX2RhdGFfMTAwbWh6PjsKPiA+ID4gK8KgwqDCoHBp
-bmN0cmwtMiA9IDwmcGluY3RybF91c2RoYzFfY2RfcmVzZXQ+LAo+ID4gPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCA8JnBpbmN0cmxfdXNkaGMxX2Nsa19zdHJvYmVfMjAwbWh6PiwKPiA+
-ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPCZwaW5jdHJsX3VzZGhjMV9kYXRhXzIw
-MG1oej47Cj4gPiA+ICvCoMKgwqB2cW1tYy1zdXBwbHkgPSA8JnN3NF9yZWc+Owo+ID4gPiArwqDC
-oMKgYnVzLXdpZHRoID0gPDg+Owo+ID4gPiArwqDCoMKgbm9uLXJlbW92YWJsZTsKPiA+ID4gK8Kg
-wqDCoG5vLXNkOwo+ID4gPiArwqDCoMKgbm8tc2RpbzsKPiA+ID4gK8KgwqDCoHN0YXR1cyA9ICJv
-a2F5IjsKPiA+ID4gK307Cj4gPgo+ID4gSSdtIG5vdCBzdXJlIGl0IGNhbiBiZSBlbmFibGVkIHJp
-Z2h0IG5vdy7CoCBQZXIgbXkgdGVzdGluZywgZU1NQyBpcwo+IG5vdAo+ID4gd29ya2luZyB5ZXQu
-Cj4gPgo+ID4gW8KgwqDCoCAwLjg3OTc1Nl0gbW1jMDogU3dpdGNoaW5nIHRvIDMuM1Ygc2lnbmFs
-bGluZyB2b2x0YWdlIGZhaWxlZAo+ID4gW8KgwqDCoCAwLjkxMzU4N10gbW1jMDogU0RIQ0kgY29u
-dHJvbGxlciBvbiAzMGI0MDAwMC51c2RoYwo+IFszMGI0MDAwMC51c2RoY10KPiA+IHVzaW5nIEFE
-TUEgLi4uCj4gPiBbwqDCoMKgIDEuMDA3NjI4XSBtbWMwOiBzd2l0Y2ggdG8gaGlnaC1zcGVlZCBm
-cm9tIGhzMjAwIGZhaWxlZCwgZXJyOi0KPiAxMTAKPiA+IFvCoMKgwqAgMS4wMTM4NzNdIG1tYzA6
-IGVycm9yIC0xMTAgd2hpbHN0IGluaXRpYWxpc2luZyBNTUMgY2FyZAo+ID4gW8KgwqDCoCAxLjAy
-MDYzOV0gbW1jMDogU3dpdGNoaW5nIHRvIDMuM1Ygc2lnbmFsbGluZyB2b2x0YWdlIGZhaWxlZAo+
-ID4gLi4uCj4gPiBbwqDCoMKgIDEuMTMyNDYyXSBtbWMwOiBzd2l0Y2ggdG8gaGlnaC1zcGVlZCBm
-cm9tIGhzMjAwIGZhaWxlZCwgZXJyOi0KPiAxMTAKPiA+IFvCoMKgwqAgMS4xMzg2NzRdIG1tYzA6
-IGVycm9yIC0xMTAgd2hpbHN0IGluaXRpYWxpc2luZyBNTUMgY2FyZAo+ID4gW8KgwqDCoCAxLjE0
-NTM5NF0gbW1jMDogU3dpdGNoaW5nIHRvIDMuM1Ygc2lnbmFsbGluZyB2b2x0YWdlIGZhaWxlZAo+
-ID4gW8KgwqDCoCAxLjI2ODM2N10gbW1jMDogc3dpdGNoIHRvIGhpZ2gtc3BlZWQgZnJvbSBoczIw
-MCBmYWlsZWQsIGVycjotCj4gMTEwCj4gPiBbwqDCoMKgIDEuMjc0NTc2XSBtbWMwOiBlcnJvciAt
-MTEwIHdoaWxzdCBpbml0aWFsaXNpbmcgTU1DIGNhcmQKPiA+IFvCoMKgwqAgMS4yODEyOTFdIG1t
-YzA6IFN3aXRjaGluZyB0byAzLjNWIHNpZ25hbGxpbmcgdm9sdGFnZSBmYWlsZWQKPiA+IFvCoMKg
-wqAgMS40NDA3MDhdIG1tYzA6IHN3aXRjaCB0byBoaWdoLXNwZWVkIGZyb20gaHMyMDAgZmFpbGVk
-LCBlcnI6LQo+IDExMAo+ID4gW8KgwqDCoCAxLjQ0NjkxOV0gbW1jMDogZXJyb3IgLTExMCB3aGls
-c3QgaW5pdGlhbGlzaW5nIE1NQyBjYXJkCj4gPgo+ID4gT3IgYW0gSSBtaXNzaW5nIGFueXRoaW5n
-Pwo+IAo+IFByb3BlcnR5ICJuby0xLTgtdjsiIGlmIG5vIDEuOCBWIGlzIGF2YWlsYWJsZT8KClRo
-ZSBpc3N1ZSBpcyB0aGUgb3RoZXIgd2F5IGFyb3VuZDogdGhlIGVNTUMgaXMgaGFyZHdpcmVkIHRv
-IDEuOFYgSU8Kdm9sdGFnZSAod2hpY2ggaXMgZmluZSBwZXIgZU1NQyBzcGVjKSwgc28gaXQgY2Fu
-J3Qgc3dpdGNoIHRvIDMuM1YgbW9kZS4KClJlZ2FyZHMsCkx1Y2FzCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri, 23 Feb 2018 11:07:17 +0000
+Bean Huo <beanhuo@outlook.com> wrote:
+
+> Boris,
+> thanks for the review.
+> 
+> >> + - dual-die-stack: boolean to enable support for the devices with the
+> >> +   two dies in stack.  
+> 
+> >How about making that more future proof and adding a property that
+> >directly contains the number of dies (num-dies)?  
+> 
+> Exactly, I also thought here should add a property, through which it can be compatible
+> with all kinds of PNOR for the future more dies stacked device.
+> But currently, it doesn't exist  PNOR device with more than two dies, and we
+> have no idea about 4/6 dies stacked device operation sequence. so I simply add a boolean
+> entry and try to only enable dual-die stacked PNOR firstly.
+
+Actually, I think it's better to think about future evolutions now than
+adding a new property every time a vendor decides to add more dies (I
+guess the number of dies will always be a power-of-2).
+
+> 
+> Maybe I can try to do that in next version patch. the software implementation is so flexible.
+> 
+> >>
+> >>  For JEDEC compatible devices, the following additional properties
+> >>  are defined:  
+> 
+
+
+
+-- 
+Boris Brezillon, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
