@@ -1,76 +1,65 @@
-Return-Path: <SRS0=2Y4/=FS=rock-chips.com=jeffy.chen@kernel.org>
-Message-ID: <5A914486.9080304@rock-chips.com>
-Date: Sat, 24 Feb 2018 18:55:02 +0800
-From: JeffyChen <jeffy.chen@rock-chips.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/6] Add endpoint driver for Rockchip PCIe controller
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-To: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>
+Return-Path: <SRS0=1Ni8=FR=linaro.org=baolin.wang@kernel.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v4 1/2] dt-bindings: gpio: Add Spreadtrum GPIO controller documentation
+Date: Fri, 23 Feb 2018 12:44:38 +0800
+Message-Id: <c2db9b3b5c611cadfbe5ea97327be7ee5981fa54.1519360872.git.baolin.wang@linaro.org>
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, andy.shevchenko@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi guys,
+This patch adds the device tree bindings for the Spreadtrum
+GPIO controller. The gpios will be supported by the GPIO
+generic library.
 
-tested on my chromebook kevin, with this series and enable 
-CONFIG_PCIE_ROCKCHIP_HOST, the pcie wifi(mrvl 8997) still works.
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes since v3:
+ - Add acked tag from Rob.
 
-so,
+Changes since v2:
+ - No updates.
 
-Tested-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+Changes since v1:
+ - No updates.
+---
+ .../devicetree/bindings/gpio/gpio-sprd.txt         |   28 ++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sprd.txt
 
-
-On 02/23/2018 09:15 AM, Shawn Lin wrote:
- >
-> Patch 1 firstly move the whole Rockchip PCIe host driver from
-> drivers/pci/host to a new folder, driver/pci/rockchip/, and rename
-> pcie-rockchip.c to pcie-rockchip-host.c. It also update the
-> Kconfig/Makefile etc to repect this change.
->
-> Then patch 2 and patch 3 are trying to spilt out some common code in
-> preparation for adding endponit controller driver support.
->
-> Patch 4 rename rockchip-pcie.txt to rockchip-pcie-host.txt.
->
-> Patch 5 adds endpoint controller driver support as well as the new
-> documentation, rockchip-pcie-ep.txt, introduced by patch 6.
->
->
-> Changes in v2:
-> - remove rockchip,rk3399-pcie-host compatible(Suggested by Rob)
-> - fix some error handling
->
-> Shawn Lin (6):
->    PCI: rockchip: Create individual folder for rockchip drivers
->    PCI: rockchip: Split out common function to parse DT
->    PCI: rockchip: Spilt out common function to init controller
->    dt-bindings: PCI: rockchip: Rename rockchip-pcie.txt to
->      rockchip-pcie-host.txt
->    PCI: rockchip: Add Endpoint controller driver for Rockchip PCIe
->      controller
->    dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe endpoint
->      controller
->
->   .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |  62 ++
->   .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |   0
->   MAINTAINERS                                        |   4 +-
->   drivers/pci/Kconfig                                |   1 +
->   drivers/pci/Makefile                               |   2 +
->   drivers/pci/host/Kconfig                           |  11 -
->   drivers/pci/host/Makefile                          |   1 -
->   drivers/pci/rockchip/Kconfig                       |  32 +
->   drivers/pci/rockchip/Makefile                      |   4 +
->   drivers/pci/rockchip/pcie-rockchip-ep.c            | 641 +++++++++++++++++++++
->   .../pcie-rockchip-host.c}                          | 594 +------------------
->   drivers/pci/rockchip/pcie-rockchip.c               | 417 ++++++++++++++
->   drivers/pci/rockchip/pcie-rockchip.h               | 343 +++++++++++
->   13 files changed, 1517 insertions(+), 595 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
->   rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
->   create mode 100644 drivers/pci/rockchip/Kconfig
->   create mode 100644 drivers/pci/rockchip/Makefile
->   create mode 100644 drivers/pci/rockchip/pcie-rockchip-ep.c
->   rename drivers/pci/{host/pcie-rockchip.c => rockchip/pcie-rockchip-host.c} (61%)
->   create mode 100644 drivers/pci/rockchip/pcie-rockchip.c
->   create mode 100644 drivers/pci/rockchip/pcie-rockchip.h
->
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-sprd.txt b/Documentation/devicetree/bindings/gpio/gpio-sprd.txt
+new file mode 100644
+index 0000000..eca97d4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-sprd.txt
+@@ -0,0 +1,28 @@
++Spreadtrum GPIO controller bindings
++
++The controller's registers are organized as sets of sixteen 16-bit
++registers with each set controlling a bank of up to 16 pins. A single
++interrupt is shared for all of the banks handled by the controller.
++
++Required properties:
++- compatible: Should be "sprd,sc9860-gpio".
++- reg: Define the base and range of the I/O address space containing
++the GPIO controller registers.
++- gpio-controller: Marks the device node as a GPIO controller.
++- #gpio-cells: Should be <2>. The first cell is the gpio number and
++the second cell is used to specify optional parameters.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells: Should be <2>. Specifies the number of cells needed
++to encode interrupt source.
++- interrupts: Should be the port interrupt shared by all the gpios.
++
++Example:
++	ap_gpio: gpio@40280000 {
++		compatible = "sprd,sc9860-gpio";
++		reg = <0 0x40280000 0 0x1000>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++	};
+-- 
+1.7.9.5
