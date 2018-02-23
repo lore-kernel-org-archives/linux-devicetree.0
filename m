@@ -1,92 +1,343 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH v6 1/4] dt-bindings: display: renesas: Add R-Car LVDS
- encoder DT bindings
-Date: Thu, 22 Feb 2018 14:37:19 +0100
-Message-ID: <20180222133719.GA6373@bigcity.dyn.berto.se>
-References: <20180222131336.7712-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180222131336.7712-2-laurent.pinchart+renesas@ideasonboard.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 3/4] clk: imx: add SCCG PLL type
+Date: Fri, 23 Feb 2018 16:46:15 +0800
+Message-ID: <20180223084614.GQ3217@dragon>
+References: <20180201175412.9480-1-l.stach@pengutronix.de>
+ <20180201175412.9480-3-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180222131336.7712-2-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+In-Reply-To: <20180201175412.9480-3-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: "A . s . Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKClRoYW5rcyBmb3IgeW91ciBwYXRjaC4KCk9uIDIwMTgtMDItMjIgMTU6MTM6
-MzMgKzAyMDAsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gVGhlIFJlbmVzYXMgUi1DYXIgR2Vu
-MiBhbmQgR2VuMyBTb0NzIGhhdmUgaW50ZXJuYWwgTFZEUyBlbmNvZGVycy4gQWRkCj4gY29ycmVz
-cG9uZGluZyBkZXZpY2UgdHJlZSBiaW5kaW5ncy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50
-IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiBS
-ZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiAtLS0KPiBDaGFuZ2Vz
-IHNpbmNlIHYxOgo+IAo+IC0gTW92ZSB0aGUgU29DIG5hbWUgYmVmb3JlIHRoZSBJUCBuYW1lIGlu
-IGNvbXBhdGlibGUgc3RyaW5ncwo+IC0gUmVuYW1lIHBhcmFsbGVsIGlucHV0IHRvIHBhcmFsbGVs
-IFJHQiBpbnB1dAo+IC0gRml4ZWQgInJlbmVzYXMscjhhNzc0My1sdmRzIiBkZXNjcmlwdGlvbgo+
-IC0gRG9jdW1lbnQgdGhlIHJlc2V0cyBwcm9wZXJ0eQo+IC0gRml4ZWQgdHlwbwo+IC0tLQo+ICAu
-Li4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dCAgICAgICB8IDU2ICsr
-KysrKysrKysrKysrKysrKysrKysKPiAgTUFJTlRBSU5FUlMgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfCAgMSArCj4gIDIgZmlsZXMgY2hhbmdlZCwgNTcgaW5zZXJ0aW9u
-cygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZk
-cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
-cmVuZXNhcyxsdmRzLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAw
-MDAwLi4yYjE5Y2U1MWVjMDcKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKPiBAQCAt
-MCwwICsxLDU2IEBACj4gK1JlbmVzYXMgUi1DYXIgTFZEUyBFbmNvZGVyCj4gKz09PT09PT09PT09
-PT09PT09PT09PT09PT09Cj4gKwo+ICtUaGVzZSBEVCBiaW5kaW5ncyBkZXNjcmliZSB0aGUgTFZE
-UyBlbmNvZGVyIGVtYmVkZGVkIGluIHRoZSBSZW5lc2FzIFItQ2FyCj4gK0dlbjIsIFItQ2FyIEdl
-bjMgYW5kIFJaL0cgU29Dcy4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKwo+ICstIGNv
-bXBhdGlibGUgOiBTaGFsbCBjb250YWluIG9uZSBvZgo+ICsgIC0gInJlbmVzYXMscjhhNzc0My1s
-dmRzIiBmb3IgUjhBNzc0MyAoUlovRzFNKSBjb21wYXRpYmxlIExWRFMgZW5jb2RlcnMKPiArICAt
-ICJyZW5lc2FzLHI4YTc3OTAtbHZkcyIgZm9yIFI4QTc3OTAgKFItQ2FyIEgyKSBjb21wYXRpYmxl
-IExWRFMgZW5jb2RlcnMKPiArICAtICJyZW5lc2FzLHI4YTc3OTEtbHZkcyIgZm9yIFI4QTc3OTEg
-KFItQ2FyIE0yLVcpIGNvbXBhdGlibGUgTFZEUyBlbmNvZGVycwo+ICsgIC0gInJlbmVzYXMscjhh
-Nzc5My1sdmRzIiBmb3IgUjhBNzc5MSAoUi1DYXIgTTItTikgY29tcGF0aWJsZSBMVkRTIGVuY29k
-ZXJzCgpTbWFsbCB0eXBvIGhlcmUgcy9SOEE3NzkxL1I4QTc3OTMvLCB3aXRoIHRoYXQgZml4ZWQg
-CgpSZXZpZXdlZC1ieTogTmlrbGFzIFPDtmRlcmx1bmQgPG5pa2xhcy5zb2Rlcmx1bmQrcmVuZXNh
-c0ByYWduYXRlY2guc2U+CgoKPiArICAtICJyZW5lc2FzLHI4YTc3OTUtbHZkcyIgZm9yIFI4QTc3
-OTUgKFItQ2FyIEgzKSBjb21wYXRpYmxlIExWRFMgZW5jb2RlcnMKPiArICAtICJyZW5lc2FzLHI4
-YTc3OTYtbHZkcyIgZm9yIFI4QTc3OTYgKFItQ2FyIE0zLVcpIGNvbXBhdGlibGUgTFZEUyBlbmNv
-ZGVycwo+ICsKPiArLSByZWc6IEJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIGZvciB0aGUgbWVtb3J5
-LW1hcHBlZCByZWdpc3RlcnMKPiArLSBjbG9ja3M6IEEgcGhhbmRsZSArIGNsb2NrLXNwZWNpZmll
-ciBwYWlyIGZvciB0aGUgZnVuY3Rpb25hbCBjbG9jawo+ICstIHJlc2V0czogQSBwaGFuZGxlICsg
-cmVzZXQgc3BlY2lmaWVyIGZvciB0aGUgbW9kdWxlIHJlc2V0Cj4gKwo+ICtSZXF1aXJlZCBub2Rl
-czoKPiArCj4gK1RoZSBMVkRTIGVuY29kZXIgaGFzIHR3byB2aWRlbyBwb3J0cy4gVGhlaXIgY29u
-bmVjdGlvbnMgYXJlIG1vZGVsbGVkIHVzaW5nIHRoZQo+ICtPRiBncmFwaCBiaW5kaW5ncyBzcGVj
-aWZpZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dC4KPiAr
-Cj4gKy0gVmlkZW8gcG9ydCAwIGNvcnJlc3BvbmRzIHRvIHRoZSBwYXJhbGxlbCBSR0IgaW5wdXQK
-PiArLSBWaWRlbyBwb3J0IDEgY29ycmVzcG9uZHMgdG8gdGhlIExWRFMgb3V0cHV0Cj4gKwo+ICtF
-YWNoIHBvcnQgc2hhbGwgaGF2ZSBhIHNpbmdsZSBlbmRwb2ludC4KPiArCj4gKwo+ICtFeGFtcGxl
-Ogo+ICsKPiArCWx2ZHMwOiBsdmRzQGZlYjkwMDAwIHsKPiArCQljb21wYXRpYmxlID0gInJlbmVz
-YXMscjhhNzc5MC1sdmRzIjsKPiArCQlyZWcgPSA8MCAweGZlYjkwMDAwIDAgMHgxYz47Cj4gKwkJ
-Y2xvY2tzID0gPCZjcGcgQ1BHX01PRCA3MjY+Owo+ICsJCXJlc2V0cyA9IDwmY3BnIDcyNj47Cj4g
-Kwo+ICsJCXBvcnRzIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNl
-bGxzID0gPDA+Owo+ICsKPiArCQkJcG9ydEAwIHsKPiArCQkJCXJlZyA9IDwwPjsKPiArCQkJCWx2
-ZHMwX2luOiBlbmRwb2ludCB7Cj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkdV9vdXRfbHZk
-czA+Owo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQkJcG9ydEAxIHsKPiArCQkJCXJlZyA9IDwxPjsK
-PiArCQkJCWx2ZHMwX291dDogZW5kcG9pbnQgewo+ICsJCQkJfTsKPiArCQkJfTsKPiArCQl9Owo+
-ICsJfTsKPiBkaWZmIC0tZ2l0IGEvTUFJTlRBSU5FUlMgYi9NQUlOVEFJTkVSUwo+IGluZGV4IDJh
-ZmJhOTA5NzI0Yy4uMTNjOGVjMTExMzVhIDEwMDY0NAo+IC0tLSBhL01BSU5UQUlORVJTCj4gKysr
-IGIvTUFJTlRBSU5FUlMKPiBAQCAtNDc0NCw2ICs0NzQ0LDcgQEAgRjoJZHJpdmVycy9ncHUvZHJt
-L3JjYXItZHUvCj4gIEY6CWRyaXZlcnMvZ3B1L2RybS9zaG1vYmlsZS8KPiAgRjoJaW5jbHVkZS9s
-aW51eC9wbGF0Zm9ybV9kYXRhL3NobW9iX2RybS5oCj4gIEY6CURvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGR3LWhkbWkudHh0Cj4gK0Y6CURv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2
-ZHMudHh0Cj4gIEY6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Jl
-bmVzYXMsZHUudHh0Cj4gIAo+ICBEUk0gRFJJVkVSUyBGT1IgUk9DS0NISVAKPiAtLSAKPiBSZWdh
-cmRzLAo+IAo+IExhdXJlbnQgUGluY2hhcnQKPiAKCi0tIApSZWdhcmRzLApOaWtsYXMgU8O2ZGVy
-bHVuZApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Feb 01, 2018 at 06:54:11PM +0100, Lucas Stach wrote:
+> The SCCG is a new PLL type introduced on i.MX8. Add support for this.
+> The driver currently misses the PLL lock check, as the preliminary
+> documentation mentions lock configurations, but is quiet about where
+> to find the actual lock status signal.
+> 
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  drivers/clk/imx/Makefile       |   3 +-
+>  drivers/clk/imx/clk-sccg-pll.c | 235 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/imx/clk.h          |   9 ++
+>  3 files changed, 246 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/clk/imx/clk-sccg-pll.c
+> 
+> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
+> index 9892ae63539c..bfcbd5272d12 100644
+> --- a/drivers/clk/imx/Makefile
+> +++ b/drivers/clk/imx/Makefile
+> @@ -12,7 +12,8 @@ obj-y += \
+>  	clk-pllv1.o \
+>  	clk-pllv2.o \
+>  	clk-pllv3.o \
+> -	clk-pfd.o
+> +	clk-pfd.o \
+> +	clk-sccg-pll.o
+>  
+>  obj-$(CONFIG_SOC_IMX1)   += clk-imx1.o
+>  obj-$(CONFIG_SOC_IMX21)  += clk-imx21.o
+> diff --git a/drivers/clk/imx/clk-sccg-pll.c b/drivers/clk/imx/clk-sccg-pll.c
+> new file mode 100644
+> index 000000000000..3a79f952564b
+> --- /dev/null
+> +++ b/drivers/clk/imx/clk-sccg-pll.c
+> @@ -0,0 +1,235 @@
+> +/*
+> + * Copyright 2017 NXP.
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/slab.h>
+> +
+> +#include "clk.h"
+> +
+> +/* PLL CFGs */
+> +#define PLL_CFG0	0x0
+> +#define PLL_CFG1	0x4
+> +#define PLL_CFG2	0x8
+> +
+> +#define PLL_DIVF1_SHIFT	13
+> +#define PLL_DIVF2_SHIFT	7
+> +#define PLL_DIVF_MASK	0x3f
+> +
+> +#define PLL_DIVR1_SHIFT	25
+> +#define PLL_DIVR2_SHIFT	19
+> +#define PLL_DIVR1_MASK	0x3
+> +#define PLL_DIVR2_MASK	0x3f
+> +#define PLL_REF_SHIFT	0
+> +#define PLL_REF_MASK	0x3
+> +
+> +#define PLL_LOCK	31
+> +#define PLL_PD		7
+> +
+> +#define OSC_25M		25000000
+> +#define OSC_27M		27000000
+> +
+> +struct clk_sccg_pll {
+> +	struct clk_hw	hw;
+> +	void __iomem	*base;
+> +};
+> +
+> +#define to_clk_sccg_pll(_hw) container_of(_hw, struct clk_sccg_pll, hw)
+> +
+> +static int clk_pll1_is_prepared(struct clk_hw *hw)
+> +{
+> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+> +	u32 val;
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG0);
+> +	return (val & (1 << PLL_PD)) ? 0 : 1;
+> +}
+> +
+> +static unsigned long clk_pll1_recalc_rate(struct clk_hw *hw,
+> +					 unsigned long parent_rate)
+
+I found the indentation of multi-lines arguments is strange, i.e. it
+always missing one space.  Please check.
+
+> +{
+> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+> +	u32 val, divf;
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG2);
+> +	divf = (val >> PLL_DIVF1_SHIFT) & PLL_DIVF_MASK;
+> +
+> +	return parent_rate * 2 * (divf + 1);
+> +}
+> +
+> +static long clk_pll1_round_rate(struct clk_hw *hw, unsigned long rate,
+> +			       unsigned long *prate)
+> +{
+> +	unsigned long parent_rate = *prate;
+> +	u32 div;
+> +
+> +	div = rate / (parent_rate * 2);
+> +
+> +	return parent_rate * div * 2;
+> +}
+> +
+> +static int clk_pll1_set_rate(struct clk_hw *hw, unsigned long rate,
+> +			    unsigned long parent_rate)
+> +{
+> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+> +	u32 val;
+> +	u32 divf;
+> +
+> +	divf = rate / (parent_rate * 2);
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG2);
+> +	val &= ~(PLL_DIVF_MASK << PLL_DIVF1_SHIFT);
+> +	val |= (divf - 1) << PLL_DIVF1_SHIFT;
+> +	writel_relaxed(val, pll->base + PLL_CFG2);
+> +
+> +	/* FIXME: PLL lock check */
+> +
+> +	return 0;
+> +}
+> +
+> +static int clk_pll1_prepare(struct clk_hw *hw)
+> +{
+> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+> +	u32 val;
+> +
+> +	val = readl_relaxed(pll->base);
+> +	val &= ~(1 << PLL_PD);
+> +	writel_relaxed(val, pll->base);
+> +
+> +	/* FIXME: PLL lock check */
+> +
+> +	return 0;
+> +}
+> +
+> +static void clk_pll1_unprepare(struct clk_hw *hw)
+> +{
+> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+> +	u32 val;
+> +
+> +	val = readl_relaxed(pll->base);
+> +	val |= (1 << PLL_PD);
+
+Unnecessary parentheses.
+
+> +	writel_relaxed(val, pll->base);
+> +}
+> +
+> +static unsigned long clk_pll2_recalc_rate(struct clk_hw *hw,
+> +					 unsigned long parent_rate)
+> +{
+> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+> +	u32 val, ref, divr1, divf1, divr2, divf2;
+> +	u64 temp64;
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG0);
+> +	switch ((val >> PLL_REF_SHIFT) & PLL_REF_MASK) {
+> +	case 0:
+> +		ref = OSC_25M;
+> +		break;
+> +	case 1:
+> +		ref = OSC_27M;
+> +		break;
+> +	default:
+> +		ref = OSC_25M;
+> +		break;
+> +	}
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG2);
+> +	divr1 = (val >> PLL_DIVR1_SHIFT) & PLL_DIVR1_MASK;
+> +	divr2 = (val >> PLL_DIVR2_SHIFT) & PLL_DIVR2_MASK;
+> +	divf1 = (val >> PLL_DIVF1_SHIFT) & PLL_DIVF_MASK;
+> +	divf2 = (val >> PLL_DIVF2_SHIFT) & PLL_DIVF_MASK;
+> +
+> +	temp64 = ref * 2;
+> +	temp64 *= (divf1 + 1) * (divf2 + 1);
+> +
+> +	do_div(temp64, (divr1 + 1) * (divr2 + 1));
+> +
+> +	return (unsigned long)temp64;
+> +}
+> +
+> +static long clk_pll2_round_rate(struct clk_hw *hw, unsigned long rate,
+> +			       unsigned long *prate)
+> +{
+> +	u32 div;
+> +	unsigned long parent_rate = *prate;
+
+Can we consistently sort variables lines from the long ones to the
+short?
+
+> +
+> +	div = rate / (parent_rate);
+
+Unnecessary parentheses.
+
+> +
+> +	return parent_rate * div;
+> +}
+> +
+> +static int clk_pll2_set_rate(struct clk_hw *hw, unsigned long rate,
+> +			    unsigned long parent_rate)
+> +{
+> +	u32 val;
+> +	u32 divf;
+> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
+> +
+> +	divf = rate / (parent_rate);
+
+Ditto
+
+Shawn
+
+> +
+> +	val = readl_relaxed(pll->base + PLL_CFG2);
+> +	val &= ~(PLL_DIVF_MASK << PLL_DIVF2_SHIFT);
+> +	val |= (divf - 1) << PLL_DIVF2_SHIFT;
+> +	writel_relaxed(val, pll->base + PLL_CFG2);
+> +
+> +	/* FIXME: PLL lock check */
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct clk_ops clk_sccg_pll1_ops = {
+> +	.is_prepared	= clk_pll1_is_prepared,
+> +	.recalc_rate	= clk_pll1_recalc_rate,
+> +	.round_rate	= clk_pll1_round_rate,
+> +	.set_rate	= clk_pll1_set_rate,
+> +};
+> +
+> +static const struct clk_ops clk_sccg_pll2_ops = {
+> +	.prepare	= clk_pll1_prepare,
+> +	.unprepare	= clk_pll1_unprepare,
+> +	.recalc_rate	= clk_pll2_recalc_rate,
+> +	.round_rate	= clk_pll2_round_rate,
+> +	.set_rate	= clk_pll2_set_rate,
+> +};
+> +
+> +struct clk *imx_clk_sccg_pll(const char *name, const char *parent_name,
+> +			     void __iomem *base, enum imx_sccg_pll_type pll_type)
+> +{
+> +	struct clk_sccg_pll *pll;
+> +	struct clk *clk;
+> +	struct clk_init_data init;
+> +
+> +	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
+> +	if (!pll)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	pll->base = base;
+> +	init.name = name;
+> +	switch (pll_type) {
+> +	case SCCG_PLL1:
+> +		init.ops = &clk_sccg_pll1_ops;
+> +		break;
+> +	case SCCG_PLL2:
+> +		init.ops = &clk_sccg_pll2_ops;
+> +		break;
+> +	}
+> +
+> +	init.flags = 0;
+> +	init.parent_names = &parent_name;
+> +	init.num_parents = 1;
+> +
+> +	pll->hw.init = &init;
+> +
+> +	clk = clk_register(NULL, &pll->hw);
+> +	if (IS_ERR(clk))
+> +		kfree(pll);
+> +
+> +	return clk;
+> +}
+> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
+> index 287610902ea8..809509758e24 100644
+> --- a/drivers/clk/imx/clk.h
+> +++ b/drivers/clk/imx/clk.h
+> @@ -21,6 +21,11 @@ enum imx_pllv1_type {
+>  	IMX_PLLV1_IMX35,
+>  };
+>  
+> +enum imx_sccg_pll_type {
+> +	SCCG_PLL1,
+> +	SCCG_PLL2,
+> +};
+> +
+>  struct clk *imx_clk_pllv1(enum imx_pllv1_type type, const char *name,
+>  		const char *parent, void __iomem *base);
+>  
+> @@ -30,6 +35,10 @@ struct clk *imx_clk_pllv2(const char *name, const char *parent,
+>  struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
+>  			     void __iomem *base);
+>  
+> +struct clk *imx_clk_sccg_pll(const char *name, const char *parent_name,
+> +			     void __iomem *base,
+> +			     enum imx_sccg_pll_type pll_type);
+> +
+>  enum imx_pllv3_type {
+>  	IMX_PLLV3_GENERIC,
+>  	IMX_PLLV3_SYS,
+> -- 
+> 2.15.1
+> 
