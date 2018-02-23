@@ -1,47 +1,37 @@
-Return-Path: <SRS0=aylg=FT=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH 1/2] pinctrl: sh-pfc: add PORT_GP_CFG_25() helper macro
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <e32c511f-89cd-254b-8a53-face984abe75@cogentembedded.com>
-Message-ID: <26e823ef-759f-16e7-f3da-ac6ce7c01ad3@cogentembedded.com>
-Date: Sun, 25 Feb 2018 21:13:02 +0300
-MIME-Version: 1.0
-In-Reply-To: <e32c511f-89cd-254b-8a53-face984abe75@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Return-Path: <SRS0=C+Y8=FR=jmondi.org=jacopo+renesas@kernel.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 5/7] arm64: dts: renesas: r8a77965: Add #pwm-cells property
+Date: Fri, 23 Feb 2018 14:40:57 +0100
+Message-Id: <1519393259-26108-6-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1519393259-26108-1-git-send-email-jacopo+renesas@jmondi.org>
+References: <1519393259-26108-1-git-send-email-jacopo+renesas@jmondi.org>
+To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-They follow the style of the existing PORT_GP_CFG_<n>() macros and
-will be used by a follow-up patch for the R8A77980 SoC.
+Add "#pwm-cells" property to "pwm@e6e31000" device node.
 
-Based on the original (and large) patch by Vladimir Barinov.
+This silences the following DTC compiler warning:
+Warning (pwms_property): Missing property '#pwm-cells' in node
+/soc/pwm@e6e31000 or bad phandle (referred from /backlight:pwms[0])
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/pinctrl/sh-pfc/sh_pfc.h |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Index: renesas/drivers/pinctrl/sh-pfc/sh_pfc.h
-===================================================================
---- renesas.orig/drivers/pinctrl/sh-pfc/sh_pfc.h
-+++ renesas/drivers/pinctrl/sh-pfc/sh_pfc.h
-@@ -470,9 +470,13 @@ extern const struct sh_pfc_soc_info shx3
- 	PORT_GP_CFG_1(bank, 23, fn, sfx, cfg)
- #define PORT_GP_24(bank, fn, sfx)	PORT_GP_CFG_24(bank, fn, sfx, 0)
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 1a21967..5dff176 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -668,6 +668,7 @@
  
--#define PORT_GP_CFG_26(bank, fn, sfx, cfg)				\
-+#define PORT_GP_CFG_25(bank, fn, sfx, cfg)				\
- 	PORT_GP_CFG_24(bank, fn, sfx, cfg),				\
--	PORT_GP_CFG_1(bank, 24, fn, sfx, cfg),				\
-+	PORT_GP_CFG_1(bank, 24, fn, sfx, cfg)
-+#define PORT_GP_25(bank, fn, sfx)	PORT_GP_CFG_25(bank, fn, sfx, 0)
-+
-+#define PORT_GP_CFG_26(bank, fn, sfx, cfg)				\
-+	PORT_GP_CFG_25(bank, fn, sfx, cfg),				\
- 	PORT_GP_CFG_1(bank, 25, fn, sfx, cfg)
- #define PORT_GP_26(bank, fn, sfx)	PORT_GP_CFG_26(bank, fn, sfx, 0)
+ 		pwm1: pwm@e6e31000 {
+ 			reg = <0 0xe6e31000 0 8>;
++			#pwm-cells = <2>;
+ 			/* placeholder */
+ 		};
  
+-- 
+2.7.4
