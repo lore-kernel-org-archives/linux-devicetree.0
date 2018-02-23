@@ -1,122 +1,90 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 3/4] drm: rcar-du: Fix legacy DT to create LVDS encoder
- nodes
-Date: Fri, 23 Feb 2018 21:56:47 +0200
-Message-ID: <1950752.H92aV169ua@avalon>
-References: <20180222131336.7712-1-laurent.pinchart+renesas@ideasonboard.com>
- <6897566.HfZ0CxhyhN@avalon> <65f98b4d-ceba-c8cf-525b-529df3635cac@gmail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv5 0/5] Motorola Droid 4 Audio Support
+Date: Fri, 23 Feb 2018 21:02:49 +0100
+Message-ID: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <65f98b4d-ceba-c8cf-525b-529df3635cac@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRnJhbmssCgpPbiBGcmlkYXksIDIzIEZlYnJ1YXJ5IDIwMTggMjE6NDM6MTcgRUVUIEZyYW5r
-IFJvd2FuZCB3cm90ZToKPiBPbiAwMi8yMy8xOCAwMTowMCwgTGF1cmVudCBQaW5jaGFydCB3cm90
-ZToKPiA+IE9uIEZyaWRheSwgMjMgRmVicnVhcnkgMjAxOCAwNDozODowNiBFRVQgRnJhbmsgUm93
-YW5kIHdyb3RlOgo+ID4+IE9uIDAyLzIyLzE4IDE0OjEwLCBGcmFuayBSb3dhbmQgd3JvdGU6Cj4g
-Pj4+IEhpIExhdXJlbnQsIFJvYiwKPiA+Pj4gCj4gPj4+IFRoYW5rcyBmb3IgdGhlIHByb21wdCBz
-cGluIHRvIGFkZHJlc3MgbXkgY29uY2VybnMuICBUaGVyZSBhcmUgc29tZSBzbWFsbAo+ID4+PiB0
-ZWNobmljYWwgaXNzdWVzLgo+ID4+PiAKPiA+Pj4gSSBkaWQgbm90IHJlYWQgdGhlIHYzIHBhdGNo
-IHVudGlsIHRvZGF5LiAgdjMgdGhyb3VnaCB2NiBhcmUgc3RpbGwgdXNpbmcKPiA+Pj4gdGhlIG9s
-ZCBvdmVybGF5IGFwcGx5IG1ldGhvZCB3aGljaCB1c2VzIGFuIGV4cGFuZGVkIGRldmljZSB0cmVl
-IGFzCj4gPj4+IGlucHV0Lgo+ID4+PiAKPiA+Pj4gUm9iLCBJIGRvbid0IHNlZSBteSBvdmVybGF5
-IHBhdGNoZXMgaW4geW91IGZvci1uZXh0IGJyYW5jaCwgYW5kIEkgaGF2ZQo+ID4+PiBub3Qgc2Vl
-biBhbiAiQXBwbGllZCIgbWVzc2FnZSBmcm9tIHlvdS4gIFdoYXQgaXMgdGhlIHN0YXR1cyBvZiB0
-aGUKPiA+Pj4gb3ZlcmxheSBwYXRjaGVzPwo+ID4+PiAKPiA+Pj4gQ29tbWVudHMgaW4gdGhlIHBh
-dGNoIGJlbG93Lgo+ID4+PiAKPiA+Pj4gT24gMDIvMjIvMTggMDU6MTMsIExhdXJlbnQgUGluY2hh
-cnQgd3JvdGU6Cj4gPj4+PiBUaGUgaW50ZXJuYWwgTFZEUyBlbmNvZGVycyBub3cgaGF2ZSB0aGVp
-ciBvd24gRFQgYmluZGluZ3MuIEJlZm9yZQo+ID4+Pj4gc3dpdGNoaW5nIHRoZSBkcml2ZXIgaW5m
-cmFzdHJ1Y3R1cmUgdG8gdGhvc2UgbmV3IGJpbmRpbmdzLCBpbXBsZW1lbnQKPiA+Pj4+IGJhY2t3
-YXJkLWNvbXBhdGliaWxpdHkgdGhyb3VnaCBsaXZlIERUIHBhdGNoaW5nLgo+ID4+Pj4gCj4gPj4+
-PiBQYXRjaGluZyBpcyBkaXNhYmxlZCBhbmQgd2lsbCBiZSBlbmFibGVkIGFsb25nIHdpdGggc3Vw
-cG9ydCBmb3IgdGhlIG5ldwo+ID4+Pj4gRFQgYmluZGluZ3MgaW4gdGhlIERVIGRyaXZlci4KPiA+
-Pj4+IAo+ID4+Pj4gU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQaW5jaGFydAo+ID4+Pj4gPGxhdXJl
-bnQucGluY2hhcnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgo+ID4+Pj4gLS0tCj4gPj4+PiBD
-aGFuZ2VzIHNpbmNlIHY1Ogo+ID4+Pj4gCj4gPj4+PiAtIFVzZSBhIHByaXZhdGUgY29weSBvZiBy
-Y2FyX2R1X29mX2NoYW5nZXNldF9hZGRfcHJvcGVydHkoKQo+ID4+Pj4gCj4gPj4+PiBDaGFuZ2Vz
-IHNpbmNlIHYzOgo+ID4+Pj4gCj4gPj4+PiAtIFVzZSB0aGUgT0YgY2hhbmdlc2V0IEFQSQo+ID4+
-Pj4gLSBVc2Ugb2ZfZ3JhcGhfZ2V0X2VuZHBvaW50X2J5X3JlZ3MoKQo+ID4+Pj4gLSBSZXBsYWNl
-IGhhcmRjb2RlZCBjb25zdGFudHMgYnkgc2l6ZW9mKCkKPiA+Pj4+IAo+ID4+Pj4gQ2hhbmdlcyBz
-aW5jZSB2MjoKPiA+Pj4+IAo+ID4+Pj4gLSBVcGRhdGUgdGhlIFNQRFggaGVhZGVycyB0byB1c2Ug
-Qy1zdHlsZSBjb21tZW50cyBpbiBoZWFkZXIgZmlsZXMKPiA+Pj4+IC0gUmVtb3ZlZCB0aGUgbWFu
-dWFsbHkgY3JlYXRlZCBfX2xvY2FsX2ZpeHVwc19fIG5vZGUKPiA+Pj4+IC0gUGVyZm9ybSBtYW51
-YWwgZml4dXBzIG9uIGxpdmUgRFQgaW5zdGVhZCBvZiBvdmVybGF5Cj4gPj4+PiAKPiA+Pj4+IENo
-YW5nZXMgc2luY2UgdjE6Cj4gPj4+PiAKPiA+Pj4+IC0gU2VsZWN0IE9GX0ZMQVRUUkVFCj4gPj4+
-PiAtIENvbXBpbGUgTFZEUyBEVCBiaW5kaW5ncyBwYXRjaCBjb2RlIHdoZW4gRFJNX1JDQVJfTFZE
-UyBpcyBzZWxlY3RlZAo+ID4+Pj4gLSBVcGRhdGUgdGhlIFNQRFggaGVhZGVycyB0byB1c2UgR1BM
-LTIuMCBpbnN0ZWFkIG9mIEdQTC0yLjAtb25seQo+ID4+Pj4gLSBUdXJuIF9fZHRiX3JjYXJfZHVf
-b2ZfbHZkc18oYmVnaW58ZW5kKSBmcm9tIHU4IHRvIGNoYXIKPiA+Pj4+IC0gUGFzcyB2b2lkIGJl
-Z2luIGFuZCBlbmQgcG9pbnRlcnMgdG8gcmNhcl9kdV9vZl9nZXRfb3ZlcmxheSgpCj4gPj4+PiAt
-IFVzZSBvZl9nZXRfcGFyZW50KCkgaW5zdGVhZCBvZiBhY2Nlc3NpbmcgdGhlIHBhcmVudCBwb2lu
-dGVyIGRpcmVjdGx5Cj4gPj4+PiAtIEZpbmQgdGhlIExWRFMgZW5kcG9pbnRzIG5vZGVzIGJhc2Vk
-IG9uIHRoZSBMVkRTIG5vZGUgaW5zdGVhZCBvZiB0aGUKPiA+Pj4+ICAgcm9vdCBvZiB0aGUgb3Zl
-cmxheQo+ID4+Pj4gLSBVcGRhdGUgdG8gdGhlIDxzb2M+LWx2ZHMgY29tcGF0aWJsZSBzdHJpbmcg
-Zm9ybWF0Cj4gPj4+PiAtLS0KPiA+Pj4+IAo+ID4+Pj4gIGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1
-L0tjb25maWcgICAgICAgICAgICAgICAgICAgIHwgICAyICsKPiA+Pj4+ICBkcml2ZXJzL2dwdS9k
-cm0vcmNhci1kdS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICB8ICAgNyArLQo+ID4+Pj4gIGRy
-aXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuYyAgICAgICAgICAgICAgIHwgMzQyICsr
-KysrKysrKysrKysKPiA+Pj4+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mLmgg
-ICAgICAgICAgICAgICB8ICAyMCArKwo+ID4+Pj4gIC4uLi9ncHUvZHJtL3JjYXItZHUvcmNhcl9k
-dV9vZl9sdmRzX3I4YTc3OTAuZHRzICAgIHwgIDc5ICsrKysrCj4gPj4+PiAgLi4uL2dwdS9kcm0v
-cmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5MS5kdHMgICAgfCAgNTMgKysrKwo+ID4+Pj4g
-IC4uLi9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTMuZHRzICAgIHwgIDUz
-ICsrKysKPiA+Pj4+ICAuLi4vZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3Nzk1
-LmR0cyAgICB8ICA1MyArKysrCj4gPj4+PiAgLi4uL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29m
-X2x2ZHNfcjhhNzc5Ni5kdHMgICAgfCAgNTMgKysrKwo+ID4+Pj4gIDkgZmlsZXMgY2hhbmdlZCwg
-NjYxIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiA+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5jCj4gPj4+PiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuaAo+ID4+Pj4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNf
-cjhhNzc5MC5kdHMKPiA+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Jj
-YXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTEuZHRzCj4gPj4+PiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkzLmR0cwo+
-ID4+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1
-X29mX2x2ZHNfcjhhNzc5NS5kdHMKPiA+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTYuZHRzCj4gPj4+PiAKPiA+Pj4+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9LY29uZmlnCj4gPj4+PiBiL2Ry
-aXZlcnMvZ3B1L2RybS9yY2FyLWR1L0tjb25maWcgaW5kZXggNWQwYjRiNzExOWFmLi4zZjgzMzUy
-YTczMTMKPiA+Pj4+IDEwMDY0NAo+ID4+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUv
-S2NvbmZpZwo+ID4+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvS2NvbmZpZwo+ID4+
-IAo+ID4+IDwgc25pcCA+Cj4gPj4gCj4gPj4+IGJlY29tZXM6Cj4gPj4+IAlyZXQgPSBvZl9vdmVy
-bGF5X2ZkdF9hcHBseShkdGItPmJlZ2luLCAmb3Zjc19pZCk7Cj4gPj4+IAo+ID4+PiBJZiBteSBv
-dmVybGF5IHBhdGNoZXMgZG8gbm90IGV4aXN0LCB0aGVyZSBhcmUgb3RoZXIgc21hbGwgZXJyb3Jz
-Cj4gPj4+IGluIHRoZSBjb2RlIGJsb2NrIGFib3ZlLiAgSSdsbCBpZ25vcmUgdGhlbSBmb3IgdGhl
-IG1vbWVudC4KCklmIHlvdSBoYXZlIHRpbWUgdG8gbm90IGlnbm9yZSB0aGVtIEknZCBhcHByZWNp
-YXRlIHlvdXIgY29tbWVudHMgOi0pIEknZCBsaWtlIAp0byBnZXQgdGhpcyBwYXRjaCBzZXJpZXMg
-bWVyZ2VkIGluIHY0LjE3LCBhbmQgZm9yIHRoYXQgSSB3YW50IHRvIGJlIHByZXBhcmVkIAp0byBz
-dWJtaXQgaXQgb24gdG9wIG9mIHlvdXIgb3ZlcmxheSBwYXRjaGVzIGlmIHRoZXkgbWFrZSBpdCB0
-byBtYWlubGluZSwgb3IgCndpdGhvdXQgdGhlbSBpZiB0aGV5IGRvbid0LgoKPiA+Pj4gQSBxdWlj
-ayBzY2FuIG9mIHRoZSByZXN0IG9mIHRoZSBjb2RlIGxvb2tzIE9LLiAgSSdsbCByZWFkIHRocm91
-Z2ggaXQKPiA+Pj4gbW9yZSBjYXJlZnVsbHksIGJ1dCB3YW50ZWQgdG8gZ2V0IHRoaXMgcmVwbHkg
-b3V0IHdpdGhvdXQgZnVydGhlcgo+ID4+PiBkZWxheS4KPiA+PiAKPiA+PiA8IHNuaXAgPgo+ID4+
-IAo+ID4+IEkgd2FzIGhvcGluZyB0byBiZSBhYmxlIHRvIGNvbnZlcnQgdGhlIC5kdHMgZmlsZXMg
-dG8gdXNlIHN1Z2FyIHN5bnRheAo+ID4+IGluc3RlYWQgb2YgaGFuZCBjb2RpbmcgdGhlIGZyYWdt
-ZW50IG5vZGVzLCBidXQgZm9yIHRoaXMgc3BlY2lmaWMgc2V0Cj4gPj4gb2YgZmlsZXMgSSBmYWls
-ZWQsIHNpbmNlIHRoZSBsYWJlbHMgdGhhdCB3b3VsZCBoYXZlIGJlZW4gcmVxdWlyZWQgZG8KPiA+
-PiBub3QgYWxyZWFkeSBleGlzdCBpbiB0aGUgYmFzZSAuZHRzIGZpbGVzIHRoYXQgdGhhdCBvdmVy
-bGF5cyB3b3VsZCBiZQo+ID4+IGFwcGxpZWQgYWdhaW5zdC4KPiA+IAo+ID4gQW5kIGV2ZW4gaWYg
-dGhleSBleGlzdGVkIGluIHRoZSBiYXNlIC5kdHMgaW4gdGhlIGtlcm5lbCBzb3VyY2VzLCB0aGVy
-ZSdzCj4gPiBubyBndWFyYW50ZWUgdGhhdCB0aGUgLmR0YiBvbiB0aGUgc3lzdGVtcyB3ZSB3YW50
-IHRvIHBhdGNoIHdvdWxkIGNvbnRhaW4KPiA+IHN5bWJvbCwgc28gdGhhdCB3b3VsZG4ndCBoYXZl
-IGJlZW4gYW4gb3B0aW9uIGFueXdheSwgd291bGQgaXQgPwo+IAo+IENvcnJlY3QuICBBbmQgZXZl
-biBtb3JlIHRyb3VibGVzb21lIGlzIHRoYXQgc29tZSBvZiB0aGUgZnJhZ21lbnRzIGFyZQo+IHRh
-cmdldGVkIGF0IG5vZGUgIi8iLCB3aGljaCBkdGMgZG9lcyBub3QgZXZlbiBhbGxvdyBhIGxhYmVs
-IG9uIChhdCB0aGUKPiBtb21lbnQpLgo+IAo+ID4+IE9oIHdlbGwuICBJdCB3YXMgYW4gaW50ZXJl
-c3RpbmcgZXhlcmNpc2UgYW55d2F5LCB0cnlpbmcgdG8gYmUgY3JhZnR5LgoKLS0gClJlZ2FyZHMs
-CgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+Hi,
+
+This adds audio support to Motorola Droid 4. I dropped the
+regulator from the DT binding as requested by Mark.
+
+Tested:
+ - Playing via both DACs using Speaker, Earpiece, Headphone
+ - Recording using internal Mic
+ - Volume Controls
+
+Known not to work:
+ - 3.5mm detection support (requires closed source firmware,
+   needs further investigation)
+ - Modem / Bluetooth Audio (this needs something more sophisticated
+   than the audio-graph-card driver. I will have a look once
+   the basic support has been merged)
+
+Changes since PATCHv4:
+ * Replace verbose GPL text with SPDX header
+ * Use "GPL v2" as MODULE_LICENSE
+ * Drop "default MFD_CPCAP" for the codec driver
+ * Use SOC_SINGLE instead of SOC_ENUM for Phase invert switches
+ * Find DT node by node name instead of by compatible property
+  - Drop Acked-by from Rob Herring
+ * Add new patch for MFD driver to implement the mentioned
+   DT change
+
+Changes since PATCHv3:
+ * Drop regulator from DT binding, request VAUDIO from
+   global regulator namespace instead
+
+Changes since PATCHv2:
+ * Fix a whitespace issue
+ * Fix const notes Takashi provided
+ * Fix a DAPM route issue I accidently introduced in v2
+
+Changes since PATCHv1:
+ * Add patch from Tony exporting soc_dpcm_runtime_update
+ * Integrate DT patch for vaudio initial mode
+ * Split dt-binding from codec patch and add Ack from Rob
+ * Fix CPCAP position in Kconfig/Makefile
+ * Avoid "err +=" constructs
+ * Simplify reset function
+ * Drop cpcap_audio_read/write helpers
+ * Do not use tertiary operator for mute register value
+ * Update Input Mux logic
+ * Switch from simple-audio-card to audio-graph-card
+
+-- Sebastian
+
+Sebastian Reichel (5):
+  dt-bindings: mfd: motorola-cpcap: document audio-codec
+  ASoC: codec: cpcap: new codec
+  mfd: motorola-cpcap: Add audio-codec support
+  ARM: dts: motorola-cpcap-mapphone: add audio-codec
+  ARM: dts: omap4-droid4: add soundcard
+
+ .../devicetree/bindings/mfd/motorola-cpcap.txt     |   42 +
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi     |   13 +
+ arch/arm/boot/dts/omap4-droid4-xt894.dts           |   78 +
+ drivers/mfd/motorola-cpcap.c                       |   51 +-
+ sound/soc/codecs/Kconfig                           |    4 +
+ sound/soc/codecs/Makefile                          |    2 +
+ sound/soc/codecs/cpcap.c                           | 1568 ++++++++++++++++++++
+ 7 files changed, 1757 insertions(+), 1 deletion(-)
+ create mode 100644 sound/soc/codecs/cpcap.c
+
+-- 
+2.16.1
