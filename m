@@ -1,892 +1,273 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 5/6] PCI: rockchip: Add Endpoint controller driver for
- Rockchip PCIe controller
-Date: Fri, 23 Feb 2018 09:17:33 +0800
-Message-ID: <1519348654-243597-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1519348503-243259-1-git-send-email-shawn.lin@rock-chips.com>
+From: Hyun Kwon <hyun.kwon@xilinx.com>
+Subject: Re: [PATCH v5 1/5] drm: xlnx: Xilinx DRM KMS module
+Date: Thu, 22 Feb 2018 18:23:18 -0800
+Message-ID: <20180223022317.GA9544@smtp.xilinx.com>
+References: <1517967400-16993-1-git-send-email-hyun.kwon@xilinx.com>
+ <1602665.SZ6qsW1oli@avalon>
+ <20180222025042.GA26081@smtp.xilinx.com>
+ <3578393.yJRbdMijlt@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1519348503-243259-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <3578393.yJRbdMijlt@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to the Rockchip PCIe controller in endpoint mode
-which currently supports up to 32 regions, and each regions should at
-least be 1MB per TRM.
-
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
----
-
-Changes in v2:
-- fix some error handling
-
- drivers/pci/rockchip/Kconfig            |  12 +
- drivers/pci/rockchip/Makefile           |   1 +
- drivers/pci/rockchip/pcie-rockchip-ep.c | 641 ++++++++++++++++++++++++++++++++
- drivers/pci/rockchip/pcie-rockchip.c    |  25 +-
- drivers/pci/rockchip/pcie-rockchip.h    |  92 +++++
- 5 files changed, 762 insertions(+), 9 deletions(-)
- create mode 100644 drivers/pci/rockchip/pcie-rockchip-ep.c
-
-diff --git a/drivers/pci/rockchip/Kconfig b/drivers/pci/rockchip/Kconfig
-index d655b77..668f850 100644
---- a/drivers/pci/rockchip/Kconfig
-+++ b/drivers/pci/rockchip/Kconfig
-@@ -17,4 +17,16 @@ config PCIE_ROCKCHIP_HOST
- 	  There is 1 internal PCIe port available to support GEN2 with
- 	  4 slots.
- 
-+config PCIE_ROCKCHIP_EP
-+	bool "Rockchip PCIe endpoint controller"
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
-+	depends on OF
-+	depends on PCI_ENDPOINT
-+	select MFD_SYSCON
-+	select PCIE_ROCKCHIP
-+	help
-+	  Say Y here if you want to support Rockchip PCIe controller in
-+	  endpoint mode on Rockchip SoC. There is 1 internal PCIe port
-+	  available to support GEN2 with 4 slots.
-+
- endmenu
-diff --git a/drivers/pci/rockchip/Makefile b/drivers/pci/rockchip/Makefile
-index 0af40db..8dce495 100644
---- a/drivers/pci/rockchip/Makefile
-+++ b/drivers/pci/rockchip/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PCIE_ROCKCHIP) += pcie-rockchip.o
- obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
-+obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
-diff --git a/drivers/pci/rockchip/pcie-rockchip-ep.c b/drivers/pci/rockchip/pcie-rockchip-ep.c
-new file mode 100644
-index 0000000..afe9fc4
---- /dev/null
-+++ b/drivers/pci/rockchip/pcie-rockchip-ep.c
-@@ -0,0 +1,641 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Rockchip AXI PCIe endpoint controller driver
-+ *
-+ * Copyright (c) 2018 Rockchip, Inc.
-+ *
-+ * Author: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ *         Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-+ *
-+ * Bits taken from Cadence endpoint controller driver
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/pci-epc.h>
-+#include <linux/platform_device.h>
-+#include <linux/sizes.h>
-+#include <linux/delay.h>
-+#include <linux/configfs.h>
-+#include <linux/pci-epf.h>
-+
-+#include "pcie-rockchip.h"
-+
-+/**
-+ * struct rockchip_pcie_ep - private data for PCIe endpoint controller driver
-+ * @pcie: Rockchip PCIe controller
-+ * @data: pointer to a 'struct rockchip_pcie_data'
-+ * @ob_region_map: bitmask of mapped outbound regions
-+ * @ob_addr: base addresses in the AXI bus where the outbound regions start
-+ * @irq_phys_addr: base address on the AXI bus where the MSI/legacy IRQ
-+ *		   dedicated outbound regions is mapped.
-+ * @irq_cpu_addr: base address in the CPU space where a write access triggers
-+ *		  the sending of a memory write (MSI) / normal message (legacy
-+ *		  IRQ) TLP through the PCIe bus.
-+ * @irq_pci_addr: used to save the current mapping of the MSI/legacy IRQ
-+ *		  dedicated outbound region.
-+ * @irq_pci_fn: the latest PCI function that has updated the mapping of
-+ *		the MSI/legacy IRQ dedicated outbound region.
-+ * @irq_pending: bitmask of asserted legacy IRQs.
-+ * @max_regions: maximum number of regions supported by hardware
-+ */
-+struct rockchip_pcie_ep {
-+	rockchip_pcie_epc	pcie;
-+	struct pci_epc		*epc;
-+	unsigned long		ob_region_map;
-+	phys_addr_t		*ob_addr;
-+	phys_addr_t		irq_phys_addr;
-+	void __iomem		*irq_cpu_addr;
-+	u64			irq_pci_addr;
-+	u8			irq_pci_fn;
-+	u8			irq_pending;
-+	u32			max_regions;
-+};
-+
-+void rockchip_pcie_prog_ep_ob_atu(struct rockchip_pcie *rockchip, u8 fn,
-+				  u32 r, u32 type, u64 cpu_addr, u64 pci_addr,
-+				  size_t size, bool is_clr)
-+{
-+	u64 sz = 1ULL << fls64(size - 1);
-+	int num_pass_bits = ilog2(sz);
-+	u32 addr0, addr1, desc0, desc1;
-+	bool is_nor_msg = (type == AXI_WRAPPER_NOR_MSG);
-+
-+	if (is_clr) {
-+		rockchip_pcie_write(rockchip, 0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0(r));
-+		rockchip_pcie_write(rockchip, 0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR1(r));
-+		rockchip_pcie_write(rockchip, 0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_DESC0(r));
-+		rockchip_pcie_write(rockchip, 0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_DESC1(r));
-+		rockchip_pcie_write(rockchip, 0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR0(r));
-+		rockchip_pcie_write(rockchip, 0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR1(r));
-+		return;
-+	}
-+
-+	/* The minimal region size is 1MB */
-+	if (num_pass_bits < 8)
-+		num_pass_bits = 8;
-+
-+	cpu_addr -= rockchip->mem_res->start;
-+	addr0 = ((is_nor_msg ? 0x10 : (num_pass_bits - 1)) &
-+		PCIE_CORE_OB_REGION_ADDR0_NUM_BITS) |
-+		(lower_32_bits(cpu_addr) & PCIE_CORE_OB_REGION_ADDR0_LO_ADDR);
-+	addr1 = upper_32_bits(is_nor_msg ? cpu_addr : pci_addr);
-+	desc0 = ROCKCHIP_PCIE_AT_OB_REGION_DESC0_DEVFN(fn) | type;
-+	desc1 = 0;
-+
-+	if (is_nor_msg) {
-+		rockchip_pcie_write(rockchip, 0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0(r));
-+		rockchip_pcie_write(rockchip, 0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR1(r));
-+		rockchip_pcie_write(rockchip, desc0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_DESC0(r));
-+		rockchip_pcie_write(rockchip, desc1,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_DESC1(r));
-+	} else {
-+		/* PCI bus address region */
-+		rockchip_pcie_write(rockchip, addr0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0(r));
-+		rockchip_pcie_write(rockchip, addr1,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR1(r));
-+		rockchip_pcie_write(rockchip, desc0,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_DESC0(r));
-+		rockchip_pcie_write(rockchip, desc1,
-+				    ROCKCHIP_PCIE_AT_OB_REGION_DESC1(r));
-+
-+		addr0 =
-+		    ((num_pass_bits - 1) & PCIE_CORE_OB_REGION_ADDR0_NUM_BITS) |
-+		    (lower_32_bits(cpu_addr) &
-+		     PCIE_CORE_OB_REGION_ADDR0_LO_ADDR);
-+		addr1 = upper_32_bits(cpu_addr);
-+	}
-+
-+	/* CPU bus address region */
-+	rockchip_pcie_write(rockchip, addr0,
-+			    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR0(r));
-+	rockchip_pcie_write(rockchip, addr1,
-+			    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR1(r));
-+}
-+
-+static int rockchip_pcie_ep_write_header(struct pci_epc *epc, u8 fn,
-+					 struct pci_epf_header *hdr)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->pcie;
-+
-+	/* All functions share the same vendor ID with function 0 */
-+	if (fn == 0) {
-+		u32 vid_regs = (hdr->vendorid & GENMASK(15, 0)) |
-+			       (hdr->subsys_vendor_id & GENMASK(31, 16)) << 16;
-+
-+		rockchip_pcie_write(rockchip, vid_regs,
-+				    PCIE_CORE_CONFIG_VENDOR);
-+	}
-+
-+	rockchip_pcie_write(rockchip, hdr->deviceid << 16,
-+			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) + PCI_VENDOR_ID);
-+
-+	rockchip_pcie_write(rockchip,
-+			    hdr->revid |
-+			    hdr->progif_code << 8 |
-+			    hdr->subclass_code << 16 |
-+			    hdr->baseclass_code << 24,
-+			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) + PCI_REVISION_ID);
-+	rockchip_pcie_write(rockchip, hdr->cache_line_size,
-+			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+			    PCI_CACHE_LINE_SIZE);
-+	rockchip_pcie_write(rockchip, hdr->subsys_id << 16,
-+			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+			    PCI_SUBSYSTEM_VENDOR_ID);
-+	rockchip_pcie_write(rockchip, hdr->interrupt_pin << 8,
-+			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+			    PCI_INTERRUPT_LINE);
-+
-+	return 0;
-+
-+}
-+
-+static int rockchip_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
-+				    enum pci_barno bar, dma_addr_t bar_phys,
-+				    size_t size, int flags)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->pcie;
-+	u32 addr0, addr1, reg, cfg, b, aperture, ctrl;
-+	u64 sz;
-+
-+	/* BAR size is 2^(aperture + 7) */
-+	sz = max_t(size_t, size, MIN_EP_APERTURE);
-+
-+	/*
-+	 * roundup_pow_of_two() returns an unsigned long, which is not suited
-+	 * for 64bit values.
-+	 */
-+	sz = 1ULL << fls64(sz - 1);
-+	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
-+
-+	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
-+		ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_IO_32BITS;
-+	} else {
-+		bool is_prefetch = !!(flags & PCI_BASE_ADDRESS_MEM_PREFETCH);
-+		bool is_64bits = sz > SZ_2G;
-+
-+		if (is_64bits && (bar & 1))
-+			return -EINVAL;
-+
-+		if (is_64bits && is_prefetch)
-+			ctrl =
-+			    ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH_MEM_64BITS;
-+		else if (is_prefetch)
-+			ctrl =
-+			    ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH_MEM_32BITS;
-+		else if (is_64bits)
-+			ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM_64BITS;
-+		else
-+			ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM_32BITS;
-+	}
-+
-+	if (bar < BAR_4) {
-+		reg = ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG0(fn);
-+		b = bar;
-+	} else {
-+		reg = ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG1(fn);
-+		b = bar - BAR_4;
-+	}
-+
-+	addr0 = lower_32_bits(bar_phys);
-+	addr1 = upper_32_bits(bar_phys);
-+
-+	cfg = rockchip_pcie_read(rockchip, reg);
-+	cfg &= ~(ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b) |
-+		 ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b));
-+	cfg |= (ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_APERTURE(b, aperture) |
-+		ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL(b, ctrl));
-+
-+	rockchip_pcie_write(rockchip, cfg, reg);
-+	rockchip_pcie_write(rockchip, addr0,
-+			    ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar));
-+	rockchip_pcie_write(rockchip, addr1,
-+			    ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar));
-+
-+	return 0;
-+}
-+
-+static void rockchip_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
-+				       enum pci_barno bar)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->pcie;
-+	u32 reg, cfg, b, ctrl;
-+
-+	if (bar < BAR_4) {
-+		reg = ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG0(fn);
-+		b = bar;
-+	} else {
-+		reg = ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG1(fn);
-+		b = bar - BAR_4;
-+	}
-+
-+	ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_DISABLED;
-+	cfg = rockchip_pcie_read(rockchip, reg);
-+	cfg &= ~(ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b) |
-+		 ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b));
-+	cfg |= ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL(b, ctrl);
-+
-+	rockchip_pcie_write(rockchip, cfg, reg);
-+	rockchip_pcie_write(rockchip, 0x0,
-+			    ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar));
-+	rockchip_pcie_write(rockchip, 0x0,
-+			    ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar));
-+
-+}
-+
-+static int rockchip_pcie_ep_map_addr(struct pci_epc *epc, u8 fn,
-+				     phys_addr_t addr, u64 pci_addr,
-+				     size_t size)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *pcie = &ep->pcie;
-+	u32 r;
-+
-+	r = find_first_zero_bit(&ep->ob_region_map,
-+				sizeof(ep->ob_region_map) * BITS_PER_LONG);
-+	if (r >= ep->max_regions - 1) {
-+		dev_err(&epc->dev, "no free outbound region\n");
-+		return -EINVAL;
-+	}
-+
-+	rockchip_pcie_prog_ep_ob_atu(pcie, fn, r, AXI_WRAPPER_MEM_WRITE, addr,
-+				     pci_addr, size, false);
-+
-+	set_bit(r, &ep->ob_region_map);
-+	ep->ob_addr[r] = addr;
-+
-+	return 0;
-+
-+}
-+
-+static void rockchip_pcie_ep_unmap_addr(struct pci_epc *epc, u8 fn,
-+					phys_addr_t addr)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->pcie;
-+	u32 r;
-+
-+	for (r = 0; r < ep->max_regions - 1; r++)
-+		if (ep->ob_addr[r] == addr)
-+			break;
-+
-+	if (r == ep->max_regions - 1)
-+		return;
-+
-+	rockchip_pcie_prog_ep_ob_atu(rockchip, 0, 0, 0, 0, 0, 0, true);
-+
-+	ep->ob_addr[r] = 0;
-+	clear_bit(r, &ep->ob_region_map);
-+}
-+
-+static int rockchip_pcie_ep_set_msi(struct pci_epc *epc, u8 fn,
-+				    u8 multi_msg_cap)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->pcie;
-+	u16 flags;
-+
-+	flags = rockchip_pcie_read(rockchip,
-+				   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+				   ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-+	flags &= ~ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_MASK;
-+	flags |=
-+	   ((multi_msg_cap << 1) <<  ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_OFFSET) |
-+	   PCI_MSI_FLAGS_64BIT;
-+	flags &= ~ROCKCHIP_PCIE_EP_MSI_CTRL_MASK_MSI_CAP;
-+	rockchip_pcie_write(rockchip, flags,
-+			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+			    ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-+	return 0;
-+}
-+
-+static int rockchip_pcie_ep_get_msi(struct pci_epc *epc, u8 fn)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->pcie;
-+	u16 flags;
-+
-+	flags = rockchip_pcie_read(rockchip,
-+				   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+				   ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-+	if (!(flags & ROCKCHIP_PCIE_EP_MSI_CTRL_ME))
-+		return -EINVAL;
-+
-+	return ((flags & ROCKCHIP_PCIE_EP_MSI_CTRL_MME_MASK) >>
-+			ROCKCHIP_PCIE_EP_MSI_CTRL_MME_OFFSET);
-+}
-+
-+static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
-+					 u8 intx, bool is_asserted)
-+{
-+	struct rockchip_pcie *rockchip = &ep->pcie;
-+	u32 r = ep->max_regions - 1;
-+	u32 offset;
-+	u16 status;
-+	u8 msg_code;
-+
-+	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||
-+		     ep->irq_pci_fn != fn)) {
-+		rockchip_pcie_prog_ep_ob_atu(rockchip, fn, r,
-+					     AXI_WRAPPER_NOR_MSG,
-+					     ep->irq_phys_addr, 0, 0, false);
-+		ep->irq_pci_addr = ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR;
-+		ep->irq_pci_fn = fn;
-+	}
-+
-+	intx &= 3;
-+	if (is_asserted) {
-+		ep->irq_pending |= BIT(intx);
-+		msg_code = ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA + intx;
-+	} else {
-+		ep->irq_pending &= ~BIT(intx);
-+		msg_code = ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTA + intx;
-+	}
-+
-+	status = rockchip_pcie_read(rockchip,
-+				    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+				    ROCKCHIP_PCIE_EP_CMD_STATUS);
-+	status &= ROCKCHIP_PCIE_EP_CMD_STATUS_IS;
-+
-+	if ((status != 0) ^ (ep->irq_pending != 0)) {
-+		status ^= ROCKCHIP_PCIE_EP_CMD_STATUS_IS;
-+		rockchip_pcie_write(rockchip, status,
-+				    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+				    ROCKCHIP_PCIE_EP_CMD_STATUS);
-+	}
-+
-+	offset =
-+	   ROCKCHIP_PCIE_MSG_ROUTING(ROCKCHIP_PCIE_MSG_ROUTING_LOCAL_INTX) |
-+	   ROCKCHIP_PCIE_MSG_CODE(msg_code) | ROCKCHIP_PCIE_MSG_NO_DATA;
-+	writel(0, ep->irq_cpu_addr + offset);
-+}
-+
-+static int rockchip_pcie_ep_send_legacy_irq(struct rockchip_pcie_ep *ep, u8 fn,
-+					    u8 intx)
-+{
-+	u16 cmd;
-+
-+	cmd = rockchip_pcie_read(&ep->pcie,
-+				 ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+				 ROCKCHIP_PCIE_EP_CMD_STATUS);
-+
-+	if (cmd & PCI_COMMAND_INTX_DISABLE)
-+		return -EINVAL;
-+
-+	rockchip_pcie_ep_assert_intx(ep, fn, intx, true);
-+	mdelay(1);
-+	rockchip_pcie_ep_assert_intx(ep, fn, intx, false);
-+	return 0;
-+}
-+
-+static int rockchip_pcie_ep_send_msi_irq(struct rockchip_pcie_ep *ep, u8 fn,
-+					 u8 interrupt_num)
-+{
-+	struct rockchip_pcie *rockchip = &ep->pcie;
-+	u16 flags, mme, data, data_mask;
-+	u8 msi_count;
-+	u64 pci_addr, pci_addr_mask = 0xff;
-+
-+	/* Check MSI enable bit */
-+	flags = rockchip_pcie_read(&ep->pcie,
-+				   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+				   ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-+	if (!(flags & ROCKCHIP_PCIE_EP_MSI_CTRL_ME))
-+		return -EINVAL;
-+
-+	/* Get MSI numbers from MME */
-+	mme = ((flags & ROCKCHIP_PCIE_EP_MSI_CTRL_MME_MASK) >>
-+			ROCKCHIP_PCIE_EP_MSI_CTRL_MME_OFFSET);
-+	msi_count = 1 << mme;
-+	if (!interrupt_num || interrupt_num > msi_count)
-+		return -EINVAL;
-+
-+	/* Set MSI private data */
-+	data_mask = msi_count - 1;
-+	data = rockchip_pcie_read(rockchip,
-+				  ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+				  ROCKCHIP_PCIE_EP_MSI_CTRL_REG +
-+				  PCI_MSI_DATA_64);
-+	data = (data & ~data_mask) | ((interrupt_num - 1) & data_mask);
-+
-+	/* Get MSI PCI address */
-+	pci_addr = rockchip_pcie_read(rockchip,
-+				      ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+				      ROCKCHIP_PCIE_EP_MSI_CTRL_REG +
-+				      PCI_MSI_ADDRESS_HI);
-+	pci_addr <<= 32;
-+	pci_addr |= rockchip_pcie_read(rockchip,
-+				       ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-+				       ROCKCHIP_PCIE_EP_MSI_CTRL_REG +
-+				       PCI_MSI_ADDRESS_LO);
-+	pci_addr &= GENMASK_ULL(63, 2);
-+
-+	/* Set the outbound region if needed. */
-+	if (unlikely(ep->irq_pci_addr != (pci_addr & ~pci_addr_mask) ||
-+		     ep->irq_pci_fn != fn)) {
-+		rockchip_pcie_prog_ep_ob_atu(rockchip, fn, ep->max_regions - 1,
-+					     AXI_WRAPPER_MEM_WRITE,
-+					     ep->irq_phys_addr,
-+					     pci_addr & ~pci_addr_mask,
-+					     pci_addr_mask + 1, false);
-+		ep->irq_pci_addr = (pci_addr & ~pci_addr_mask);
-+		ep->irq_pci_fn = fn;
-+	}
-+
-+	writew(data, ep->irq_cpu_addr + (pci_addr & pci_addr_mask));
-+	return 0;
-+}
-+
-+
-+static int rockchip_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn,
-+				      enum pci_epc_irq_type type,
-+				      u8 interrupt_num)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+
-+	switch (type) {
-+	case PCI_EPC_IRQ_LEGACY:
-+		return rockchip_pcie_ep_send_legacy_irq(ep, fn, 0);
-+	case PCI_EPC_IRQ_MSI:
-+		return rockchip_pcie_ep_send_msi_irq(ep, fn, interrupt_num);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int rockchip_pcie_ep_start(struct pci_epc *epc)
-+{
-+	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-+	struct rockchip_pcie *rockchip = &ep->pcie;
-+	struct pci_epf *epf;
-+	u32 cfg;
-+
-+	cfg = BIT(0);
-+	list_for_each_entry(epf, &epc->pci_epf, list)
-+		cfg |= BIT(epf->func_no);
-+
-+	rockchip_pcie_write(rockchip, cfg, PCIE_CORE_PHY_FUNC_CFG);
-+
-+	list_for_each_entry(epf, &epc->pci_epf, list)
-+		pci_epf_linkup(epf);
-+
-+	return 0;
-+}
-+
-+static const struct pci_epc_ops rockchip_pcie_epc_ops = {
-+	.write_header	= rockchip_pcie_ep_write_header,
-+	.set_bar	= rockchip_pcie_ep_set_bar,
-+	.clear_bar	= rockchip_pcie_ep_clear_bar,
-+	.map_addr	= rockchip_pcie_ep_map_addr,
-+	.unmap_addr	= rockchip_pcie_ep_unmap_addr,
-+	.set_msi	= rockchip_pcie_ep_set_msi,
-+	.get_msi	= rockchip_pcie_ep_get_msi,
-+	.raise_irq	= rockchip_pcie_ep_raise_irq,
-+	.start		= rockchip_pcie_ep_start,
-+};
-+
-+/**
-+ * rockchip_pcie_parse_dt - Parse Device Tree
-+ * @rockchip: PCIe port information
-+ *
-+ * Return: '0' on success and error value on failure
-+ */
-+static int rockchip_pcie_parse_ep_dt(struct rockchip_pcie *rockchip,
-+				     struct rockchip_pcie_ep *ep)
-+{
-+	struct device *dev = rockchip->dev;
-+	int err;
-+
-+	err = rockchip_pcie_parse_dt(rockchip);
-+	if (err)
-+		return err;
-+
-+	err = rockchip_pcie_get_phys(rockchip);
-+	if (err)
-+		return err;
-+
-+	err = of_property_read_u32(dev->of_node,
-+				   "rockchip,max-outbound-regions",
-+				   &ep->max_regions);
-+	if (err < 0 || ep->max_regions > MAX_REGION_LIMIT)
-+		ep->max_regions = MAX_REGION_LIMIT;
-+
-+	err = of_property_read_u8(dev->of_node, "max-functions",
-+				  &ep->epc->max_functions);
-+	if (err < 0)
-+		ep->epc->max_functions = 1;
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rockchip_pcie_ep_of_match[] = {
-+	{ .compatible = "rockchip,rk3399-pcie-ep"},
-+	{},
-+};
-+
-+static int rockchip_pcie_ep_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct rockchip_pcie_ep *ep;
-+	rockchip_pcie_epc *rockchip;
-+	struct pci_epc *epc;
-+	size_t max_regions;
-+	int err;
-+
-+	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
-+	if (!ep)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, ep);
-+
-+	rockchip = &ep->pcie;
-+	rockchip->is_rc = false;
-+	rockchip->dev = dev;
-+
-+	epc = devm_pci_epc_create(dev, &rockchip_pcie_epc_ops);
-+	if (IS_ERR(epc)) {
-+		dev_err(dev, "failed to create epc device\n");
-+		return PTR_ERR(epc);
-+	}
-+
-+	ep->epc = epc;
-+	epc_set_drvdata(epc, ep);
-+
-+	err = rockchip_pcie_parse_ep_dt(rockchip, ep);
-+	if (err)
-+		return err;
-+
-+	err = rockchip_pcie_enable_clocks(rockchip);
-+	if (err)
-+		return err;
-+
-+	err = rockchip_pcie_init_port(rockchip);
-+	if (err)
-+		goto err_disable_clocks;
-+
-+	/* Establish the link automatically */
-+	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
-+			    PCIE_CLIENT_CONFIG);
-+
-+	max_regions = ep->max_regions;
-+	ep->ob_addr = devm_kzalloc(dev, max_regions * sizeof(*ep->ob_addr),
-+				   GFP_KERNEL);
-+
-+	if (!ep->ob_addr) {
-+		err = -ENOMEM;
-+		goto err_uninit_port;
-+	}
-+
-+	/* Only enable function 0 by default */
-+	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
-+
-+
-+	err = pci_epc_mem_init(epc, rockchip->mem_res->start,
-+			       resource_size(rockchip->mem_res));
-+	if (err < 0) {
-+		dev_err(dev, "failed to initialize the memory space\n");
-+		goto err_uninit_port;
-+	}
-+
-+	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
-+						  SZ_128K);
-+	if (!ep->irq_cpu_addr) {
-+		dev_err(dev, "failed to reserve memory space for MSI\n");
-+		err = -ENOMEM;
-+		goto err_epc_mem_exit;
-+	}
-+
-+	ep->irq_pci_addr = ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR;
-+
-+	return 0;
-+err_epc_mem_exit:
-+	pci_epc_mem_exit(epc);
-+err_uninit_port:
-+	rockchip_pcie_deinit_phys(rockchip);
-+err_disable_clocks:
-+	rockchip_pcie_disable_clocks(rockchip);
-+	return err;
-+}
-+
-+static struct platform_driver rockchip_pcie_ep_driver = {
-+	.driver = {
-+		.name = "rockchip-pcie-ep",
-+		.of_match_table = rockchip_pcie_ep_of_match,
-+	},
-+	.probe = rockchip_pcie_ep_probe,
-+};
-+
-+builtin_platform_driver(rockchip_pcie_ep_driver);
-diff --git a/drivers/pci/rockchip/pcie-rockchip.c b/drivers/pci/rockchip/pcie-rockchip.c
-index d03508c..1d38ad7 100644
---- a/drivers/pci/rockchip/pcie-rockchip.c
-+++ b/drivers/pci/rockchip/pcie-rockchip.c
-@@ -29,15 +29,22 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
- 	struct resource *regs;
- 	int err;
- 
--	regs = platform_get_resource_byname(pdev,
--					    IORESOURCE_MEM,
--					    "axi-base");
--	rockchip->reg_base = devm_pci_remap_cfg_resource(dev, regs);
--	if (IS_ERR(rockchip->reg_base))
--		return PTR_ERR(rockchip->reg_base);
--
--	regs = platform_get_resource_byname(pdev,
--					    IORESOURCE_MEM,
-+	if (rockchip->is_rc) {
-+		regs = platform_get_resource_byname(pdev,
-+						    IORESOURCE_MEM,
-+						    "axi-base");
-+		rockchip->reg_base = devm_pci_remap_cfg_resource(dev, regs);
-+		if (IS_ERR(rockchip->reg_base))
-+			return PTR_ERR(rockchip->reg_base);
-+	} else {
-+		rockchip->mem_res =
-+			platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+						     "mem-base");
-+		if (!rockchip->mem_res)
-+			return -EINVAL;
-+	}
-+
-+	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
- 					    "apb-base");
- 	rockchip->apb_base = devm_ioremap_resource(dev, regs);
- 	if (IS_ERR(rockchip->apb_base))
-diff --git a/drivers/pci/rockchip/pcie-rockchip.h b/drivers/pci/rockchip/pcie-rockchip.h
-index af3e74f..f4bfc22 100644
---- a/drivers/pci/rockchip/pcie-rockchip.h
-+++ b/drivers/pci/rockchip/pcie-rockchip.h
-@@ -23,6 +23,9 @@
- 
- #define ENCODE_LANES(x)			((((x) >> 1) & 3) << 4)
- #define MAX_LANE_NUM			4
-+#define MAX_REGION_LIMIT		32
-+#define MIN_EP_APERTURE			28
-+
- 
- #define PCIE_CLIENT_BASE		0x0
- #define PCIE_CLIENT_CONFIG		(PCIE_CLIENT_BASE + 0x00)
-@@ -109,7 +112,14 @@
- #define   PCIE_CORE_INT_MMVC			BIT(19)
- #define PCIE_CORE_CONFIG_VENDOR		(PCIE_CORE_CTRL_MGMT_BASE + 0x44)
- #define PCIE_CORE_INT_MASK		(PCIE_CORE_CTRL_MGMT_BASE + 0x210)
-+#define PCIE_CORE_PHY_FUNC_CFG	(PCIE_CORE_CTRL_MGMT_BASE + 0x2c0)
- #define PCIE_RC_BAR_CONF		(PCIE_CORE_CTRL_MGMT_BASE + 0x300)
-+#define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_DISABLED			0x0
-+#define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_IO_32BITS			0x1
-+#define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM_32BITS			0x4
-+#define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH_MEM_32BITS	0x5
-+#define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM_64BITS			0x6
-+#define ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH_MEM_64BITS	0x7
- 
- #define PCIE_CORE_INT \
- 		(PCIE_CORE_INT_PRFPE | PCIE_CORE_INT_CRFPE | \
-@@ -120,6 +130,7 @@
- 		 PCIE_CORE_INT_CT | PCIE_CORE_INT_UTC | \
- 		 PCIE_CORE_INT_MMVC)
- 
-+#define PCIE_RC_RP_ATS_BASE			0x400000
- #define PCIE_RC_CONFIG_NORMAL_BASE	0x800000
- #define PCIE_RC_CONFIG_BASE		0xa00000
- #define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
-@@ -188,6 +199,85 @@
- #define RC_REGION_0_TYPE_MASK			GENMASK(3, 0)
- #define MAX_AXI_WRAPPER_REGION_NUM		33
- 
-+
-+#define ROCKCHIP_PCIE_MSG_ROUTING_TO_RC			0x0
-+#define ROCKCHIP_PCIE_MSG_ROUTING_VIA_ADDR		0x1
-+#define ROCKCHIP_PCIE_MSG_ROUTING_VIA_ID		0x2
-+#define ROCKCHIP_PCIE_MSG_ROUTING_BROADCAST		0x3
-+#define ROCKCHIP_PCIE_MSG_ROUTING_LOCAL_INTX		0x4
-+#define ROCKCHIP_PCIE_MSG_ROUTING_PME_ACK		0x5
-+#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA		0x20
-+#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTB		0x21
-+#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTC		0x22
-+#define ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTD		0x23
-+#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTA		0x24
-+#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTB		0x25
-+#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTC		0x26
-+#define ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTD		0x27
-+#define ROCKCHIP_PCIE_MSG_ROUTING_MASK			GENMASK(7, 5)
-+#define ROCKCHIP_PCIE_MSG_ROUTING(route) \
-+	(((route) << 5) & ROCKCHIP_PCIE_MSG_ROUTING_MASK)
-+#define ROCKCHIP_PCIE_MSG_CODE_MASK			GENMASK(15, 8)
-+#define ROCKCHIP_PCIE_MSG_CODE(code) \
-+	(((code) << 8) & ROCKCHIP_PCIE_MSG_CODE_MASK)
-+#define ROCKCHIP_PCIE_MSG_NO_DATA			BIT(16)
-+
-+
-+#define ROCKCHIP_PCIE_EP_CMD_STATUS			0x4
-+#define   ROCKCHIP_PCIE_EP_CMD_STATUS_IS		BIT(19)
-+#define ROCKCHIP_PCIE_EP_MSI_CTRL_REG			0x90
-+#define   ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_OFFSET		17
-+#define   ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_MASK		GENMASK(19, 17)
-+#define   ROCKCHIP_PCIE_EP_MSI_CTRL_MME_OFFSET		20
-+#define   ROCKCHIP_PCIE_EP_MSI_CTRL_MME_MASK		GENMASK(22, 20)
-+#define   ROCKCHIP_PCIE_EP_MSI_CTRL_ME				BIT(16)
-+#define   ROCKCHIP_PCIE_EP_MSI_CTRL_MASK_MSI_CAP	BIT(24)
-+#define ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR				0x1
-+#define ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR		0x3
-+#define ROCKCHIP_PCIE_EP_FUNC_BASE(fn)	(((fn) << 12) & GENMASK(19, 12))
-+#define ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar) \
-+		(PCIE_RC_RP_ATS_BASE + 0x0840 + (fn) * 0x0040 + (bar) * 0x0008)
-+#define ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar) \
-+		(PCIE_RC_RP_ATS_BASE + 0x0844 + (fn) * 0x0040 + (bar) * 0x0008)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0(r) \
-+		(PCIE_RC_RP_ATS_BASE + 0x0000 + ((r) & 0x1f) * 0x0020)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK	GENMASK(19, 12)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN(devfn) \
-+		(((devfn) << 12) & \
-+		 ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0_DEVFN_MASK)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0_BUS_MASK	GENMASK(27, 20)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0_BUS(bus) \
-+		(((bus) << 20) & ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0_BUS_MASK)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR1(r) \
-+		(PCIE_RC_RP_ATS_BASE + 0x0004 + ((r) & 0x1f) * 0x0020)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_DESC0_HARDCODED_RID	BIT(23)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_DESC0_DEVFN_MASK	GENMASK(31, 24)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_DESC0_DEVFN(devfn) \
-+		(((devfn) << 24) & ROCKCHIP_PCIE_AT_OB_REGION_DESC0_DEVFN_MASK)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_DESC0(r) \
-+		(PCIE_RC_RP_ATS_BASE + 0x0008 + ((r) & 0x1f) * 0x0020)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_DESC1(r)	\
-+		(PCIE_RC_RP_ATS_BASE + 0x000c + ((r) & 0x1f) * 0x0020)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR0(r) \
-+		(PCIE_RC_RP_ATS_BASE + 0x0018 + ((r) & 0x1f) * 0x0020)
-+#define ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR1(r) \
-+		(PCIE_RC_RP_ATS_BASE + 0x001c + ((r) & 0x1f) * 0x0020)
-+
-+#define ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG0(fn) \
-+		(PCIE_CORE_CTRL_MGMT_BASE + 0x0240 + (fn) * 0x0008)
-+#define ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG1(fn) \
-+		(PCIE_CORE_CTRL_MGMT_BASE + 0x0244 + (fn) * 0x0008)
-+#define ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b) \
-+		(GENMASK(4, 0) << ((b) * 8))
-+#define ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_APERTURE(b, a) \
-+		(((a) << ((b) * 8)) & \
-+		 ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b))
-+#define ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b) \
-+		(GENMASK(7, 5) << ((b) * 8))
-+#define ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL(b, c) \
-+		(((c) << ((b) * 8 + 5)) & \
-+		 ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b))
-+
- struct rockchip_pcie {
- 	void	__iomem *reg_base;		/* DT axi-base */
- 	void	__iomem *apb_base;		/* DT apb-base */
-@@ -225,8 +315,10 @@ struct rockchip_pcie {
- 	phys_addr_t msg_bus_addr;
- 	phys_addr_t mem_bus_addr;
- 	bool is_rc;
-+	struct resource *mem_res;
- };
- 
-+typedef struct rockchip_pcie rockchip_pcie_epc;
- 
- static u32 rockchip_pcie_read(struct rockchip_pcie *rockchip, u32 reg)
- {
--- 
-1.9.1
+SGkgTGF1cmVudCwKCk9uIFRodSwgMjAxOC0wMi0yMiBhdCAwNTo0MDo1MCAtMDgwMCwgTGF1cmVu
+dCBQaW5jaGFydCB3cm90ZToKPiBIaSBIeXVuLAo+IAo+IE9uIFRodXJzZGF5LCAyMiBGZWJydWFy
+eSAyMDE4IDA0OjUwOjQyIEVFVCBIeXVuIEt3b24gd3JvdGU6Cj4gPiBPbiBXZWQsIDIwMTgtMDIt
+MjEgYXQgMTU6MTc6MjUgLTA4MDAsIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4gPiA+IE9uIFdl
+ZG5lc2RheSwgNyBGZWJydWFyeSAyMDE4IDAzOjM2OjM2IEVFVCBIeXVuIEt3b24gd3JvdGU6Cj4g
+PiA+PiBYaWxpbnggaGFzIHZhcmlvdXMgcGxhdGZvcm1zIGZvciBkaXNwbGF5LCB3aGVyZSB1c2Vy
+cyBjYW4gY3JlYXRlCj4gPiA+PiB1c2luZyBtdWx0aXBsZSBJUHMgaW4gdGhlIHByb2dyYW1tYWJs
+ZSBGUEdBIGZhYnJpYywgb3Igd2hlcmUKPiA+ID4+IHNvbWUgaGFyZGVuZWQgcGllcGxpbmUgaXMg
+YXZhaWxhYmxlIG9uIHRoZSBjaGlwLiBGdXJ0aGVybW9yZSwKPiA+ID4gCj4gPiA+IHMvcGllcGxp
+bmUvcGlwZWxpbmUvCj4gPiA+IAo+ID4gPj4gaGFyZGVuZWQgcGlwZWxpbmUgY2FuIGFsc28gaW50
+ZXJhY3Qgd2l0aCBzb2Z0IGxvZ2ljcyBpbiBGUEdBLgo+ID4gPj4gCj4gPiA+PiBUaGUgWGlsaW54
+IERSTSBLTVMgbW9kdWxlIGlzIHRvIGludGVncmF0ZSBtdWx0aXBsZSBzdWJkZXZpY2VzIGFuZAo+
+ID4gPj4gdG8gcmVwcmVzZW50IHRoZSBlbnRpcmUgcGlwZWxpbmUgYXMgYSBzaW5nbGUgRFJNIGRl
+dmljZS4gVGhlIG1vZHVsZQo+ID4gPj4gaW5jbHVkZXMgaGVscGVyIChleCwgZnJhbWVidWZmZXIg
+YW5kIGdlbSBoZWxwZXJzKSBhbmQKPiA+ID4+IGdsdWUgbG9naWMgKGV4LCBjcnRjIGludGVyZmFj
+ZSkgZnVuY3Rpb25zLgo+ID4gPj4gCj4gPiA+PiBTaWduZWQtb2ZmLWJ5OiBIeXVuIEt3b24gPGh5
+dW4ua3dvbkB4aWxpbnguY29tPgo+ID4gPj4gQWNrZWQtYnk6IERhbmllbCBWZXR0ZXIgPGRhbmll
+bC52ZXR0ZXJAZmZ3bGwuY2g+Cj4gPiA+PiAtLS0KPiA+ID4+IHY1Cj4gPiA+PiAtIFJlZGVmaW5l
+IHhsbnhfcGlwZWxpbmVfaW5pdCgpCj4gPiA+PiB2NAo+ID4gPj4gLSBGaXggYSBidWcgaW4gb2Yg
+Z3JhcGggYmluZGluZyBoYW5kbGluZwo+ID4gPj4gLSBSZW1vdmUgdmJsYW5rIGNhbGxiYWNrcyBm
+cm9tIHhsbnhfY3J0Ywo+ID4gPj4gLSBSZW1vdmUgdGhlIGR0IGJpbmRpbmcuIFRoaXMgbW9kdWxl
+IGJlY29tZXMgbW9yZSBsaWtlIGEgbGlicmFyeS4KPiA+ID4+IC0gUmVwaHJhc2UgdGhlIGNvbW1p
+dCBtZXNzYWdlCj4gPiA+PiB2Mwo+ID4gPj4gLSBBZGQgTGF1cmVudCBhcyBhIG1haW50YWluZXIK
+PiA+ID4+IC0gRml4IG11bHRpcGxlLXJlZmVyZW5jZSBvbiBnZW0gb2JqZWN0cwo+ID4gPj4gdjIK
+PiA+ID4+IC0gQ2hhbmdlIHRoZSBTUERYIGlkZW50aWZpZXIgZm9ybWF0Cj4gPiA+PiAtIE1lcmdl
+IHBhdGNoZXMoY3J0YywgZ2VtLCBmYikgaW50byBzaW5nbGUgb25lCj4gPiA+PiB2MiBvZiB4bG54
+X2Rydgo+ID4gPj4gLSBSZW5hbWUga21zIHRvIGRpc3BsYXkgaW4geGxueF9kcnYKPiA+ID4+IC0g
+UmVwbGFjZSBzb21lIHhsbnggc3BlY2lmaWMgZmIgaGVscGVyIHdpdGggY29tbW9uIGhlbHBlcnMg
+aW4geGxueF9kcnYKPiA+ID4+IC0gRG9uJ3Qgc2V0IHRoZSBjb21taXQgdGFpbCBjYWxsYmFjayBp
+biB4bG54X2Rydgo+ID4gPj4gLSBTdXBwb3J0ICdwb3J0cycgZ3JhcGggYmluZGluZyBpbiB4bG54
+X2Rydgo+ID4gPj4gdjIgb2YgeGxueF9mYgo+ID4gPj4gLSBSZW1vdmUgd3JhcHBlcnMgaW4geGxu
+eF9mYgo+ID4gPj4gLSBSZXBsYWNlIHNvbWUgZnVuY3Rpb25zIHdpdGggZHJtIGNvcmUgaGVscGVy
+cyBpbiB4bG54X2ZiCj4gPiA+PiAtLS0KPiA+ID4+IC0tLQo+ID4gPj4gCj4gPiA+PiAgTUFJTlRB
+SU5FUlMgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKwo+ID4gPj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9LY29uZmlnICAgICAgICAgIHwgICAyICsKPiA+ID4+ICBkcml2ZXJzL2dwdS9kcm0vTWFrZWZp
+bGUgICAgICAgICB8ICAgMSArCj4gPiA+PiAgZHJpdmVycy9ncHUvZHJtL3hsbngvS2NvbmZpZyAg
+ICAgfCAgMTIgKwo+ID4gPj4gIGRyaXZlcnMvZ3B1L2RybS94bG54L01ha2VmaWxlICAgIHwgICAy
+ICsKPiA+ID4+ICBkcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2NydGMuYyB8IDE3NyArKysrKysr
+KysrKysrKwo+ID4gPj4gIGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfY3J0Yy5oIHwgIDcwICsr
+KysrKwo+ID4gPj4gIGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhfZHJ2LmMgIHwgNTAxICsrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gPj4gIGRyaXZlcnMvZ3B1L2RybS94bG54
+L3hsbnhfZHJ2LmggIHwgIDMzICsrKwo+ID4gPj4gIGRyaXZlcnMvZ3B1L2RybS94bG54L3hsbnhf
+ZmIuYyAgIHwgMjk4ICsrKysrKysrKysrKysrKysrKysrKysrCj4gPiA+PiAgZHJpdmVycy9ncHUv
+ZHJtL3hsbngveGxueF9mYi5oICAgfCAgMzMgKysrCj4gPiA+PiAgZHJpdmVycy9ncHUvZHJtL3hs
+bngveGxueF9nZW0uYyAgfCAgNDcgKysrKwo+ID4gPj4gIGRyaXZlcnMvZ3B1L2RybS94bG54L3hs
+bnhfZ2VtLmggIHwgIDI2ICsrCj4gPiA+PiAgMTMgZmlsZXMgY2hhbmdlZCwgMTIxMSBpbnNlcnRp
+b25zKCspCj4gPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS94bG54L0tj
+b25maWcKPiA+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngvTWFr
+ZWZpbGUKPiA+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngveGxu
+eF9jcnRjLmMKPiA+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hsbngv
+eGxueF9jcnRjLmgKPiA+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3hs
+bngveGxueF9kcnYuYwo+ID4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+eGxueC94bG54X2Rydi5oCj4gPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
+bS94bG54L3hsbnhfZmIuYwo+ID4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0veGxueC94bG54X2ZiLmgKPiA+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL3hsbngveGxueF9nZW0uYwo+ID4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
+dS9kcm0veGxueC94bG54X2dlbS5oCj4gCj4gW3NuaXBdCj4gCj4gPiA+PiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL3hsbngveGxueF9jcnRjLmMKPiA+ID4+IGIvZHJpdmVycy9ncHUvZHJt
+L3hsbngveGxueF9jcnRjLmMgbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+ID4+IGluZGV4IDAwMDAw
+MDAuLmRlODM5MDUKPiA+ID4+IC0tLSAvZGV2L251bGwKPiA+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS94bG54L3hsbnhfY3J0Yy5jCj4gCj4gW3NuaXBdCj4gCj4gPiA+PiArdWludDMyX3QgeGxu
+eF9jcnRjX2hlbHBlcl9nZXRfZm9ybWF0KHN0cnVjdCB4bG54X2NydGNfaGVscGVyICpoZWxwZXIp
+Cj4gPiA+IAo+ID4gPiBZb3UgY2FuIHVzZSB0aGUgdTMyIHR5cGUgd2l0aGluIHRoZSBrZXJuZWwu
+Cj4gPiA+IAo+ID4gPj4gK3sKPiA+ID4+ICsJc3RydWN0IHhsbnhfY3J0YyAqY3J0YzsKPiA+ID4+
+ICsJdTMyIGZvcm1hdCA9IDAsIHRtcDsKPiA+ID4+ICsKPiA+ID4+ICsJbGlzdF9mb3JfZWFjaF9l
+bnRyeShjcnRjLCAmaGVscGVyLT54bG54X2NydGNzLCBsaXN0KSB7Cj4gPiA+PiArCQlpZiAoY3J0
+Yy0+Z2V0X2Zvcm1hdCkgewo+ID4gPj4gKwkJCXRtcCA9IGNydGMtPmdldF9mb3JtYXQoY3J0Yyk7
+Cj4gPiA+PiArCQkJaWYgKGZvcm1hdCAmJiBmb3JtYXQgIT0gdG1wKQo+ID4gPj4gKwkJCQlyZXR1
+cm4gMDsKPiA+ID4+ICsJCQlmb3JtYXQgPSB0bXA7Cj4gPiA+IAo+ID4gPiBTYW1lIGNvbW1lbnRz
+IHJlZ2FyZGluZyB0aGUgdG1wIHZhcmlhYmxlIGFuZCB0aGUgbGlzdCBsb2NraW5nIGlzc3VlLgo+
+ID4gPiAKPiA+ID4+ICsJCX0KPiA+ID4+ICsJfQo+ID4gPj4gKwo+ID4gPj4gKwlyZXR1cm4gZm9y
+bWF0Owo+ID4gPiAKPiA+ID4gRG9lcyB0aGlzIG1lYW4gdGhhdCB5b3VyIENSVENzIHN1cHBvcnQg
+YSBzaW5nbGUgZm9ybWF0IGVhY2ggb25seSA/Cj4gCj4gRG9lcyBpdCA/IDotKQo+ICAKPiA+ID4+
+ICt9Cj4gCj4gW3NuaXBdCj4gCj4gPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3hs
+bngveGxueF9kcnYuYwo+ID4gPj4gYi9kcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2Rydi5jIG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiA+PiBpbmRleCAwMDAwMDAwLi44ZjBlMzU3Cj4gPiA+PiAt
+LS0gL2Rldi9udWxsCj4gPiA+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0veGxueC94bG54X2Rydi5j
+Cj4gCj4gW3NuaXBdCj4gCj4gPiA+PiArc3RhdGljIGludCB4bG54X29mX2NvbXBvbmVudF9wcm9i
+ZShzdHJ1Y3QgZGV2aWNlICptYXN0ZXJfZGV2LAo+ID4gPj4gKwkJCQkgICBpbnQgKCpjb21wYXJl
+X29mKShzdHJ1Y3QgZGV2aWNlICosIHZvaWQgKiksCj4gPiA+PiArCQkJCSAgIGNvbnN0IHN0cnVj
+dCBjb21wb25lbnRfbWFzdGVyX29wcyAqbV9vcHMpCj4gPiA+IAo+ID4gPiBBcyB0aGVyZSdzIGEg
+c2luZ2xlIHVzZXIgb2YgdGhpcyBmdW5jdGlvbiwgZG8geW91IG5lZWQgdG8gcGFzcyBjb21wYXJl
+X29mCj4gPiA+IGFzIGEgcGFyYW1ldGVyID8gQ291bGRuJ3QgeW91IG1vdmUgeGxueF9jb21wYXJl
+X29mKCkgYWJvdmUgYW5kIHVzZSBpdAo+ID4gPiBkaXJlY3RseSA/Cj4gPiA+IAo+ID4gPj4gK3sK
+PiA+ID4+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gbWFzdGVyX2Rldi0+cGFyZW50Owo+ID4gPj4g
+KwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmVwLCAqcG9ydCwgKnJlbW90ZSwgKnBhcmVudDsKPiA+ID4+
+ICsJc3RydWN0IGNvbXBvbmVudF9tYXRjaCAqbWF0Y2ggPSBOVUxMOwo+ID4gPj4gKwlpbnQgaTsK
+PiA+ID4gCj4gPiA+IGkgaXMgbmV2ZXIgbmVnYXRpdmUsIHlvdSBjYW4gbWFrZSBpdCB1bnNpZ25l
+ZC4KPiA+ID4gCj4gPiA+PiArCWlmICghZGV2LT5vZl9ub2RlKQo+ID4gPj4gKwkJcmV0dXJuIC1F
+SU5WQUw7Cj4gPiA+PiArCj4gPiA+PiArCWNvbXBvbmVudF9tYXRjaF9hZGQobWFzdGVyX2Rldiwg
+Jm1hdGNoLCBjb21wYXJlX29mLCBkZXYtPm9mX25vZGUpOwo+ID4gPj4gKwo+ID4gPj4gKwlmb3Ig
+KGkgPSAwOyA7IGkrKykgewo+ID4gPj4gKwkJcG9ydCA9IG9mX3BhcnNlX3BoYW5kbGUoZGV2LT5v
+Zl9ub2RlLCAicG9ydHMiLCBpKTsKPiA+ID4gCj4gPiA+IEkgZG9uJ3Qgc2VlIHRoZSBwb3J0cyBw
+cm9wZXJ0eSBkb2N1bWVudGVkIGluIHRoZSBEVCBiaW5kaW5ncyBpbiBwYXRjaCAyLzUuCj4gPiA+
+IEkgYXNzdW1lIHRoYXQncyBiZWNhdXNlIGl0IGhhcyBiZWVuIHJlbW92ZWQgaW4gdjQgYXMgc3Rh
+dGVkIGluIHRoZQo+ID4gPiBjaGFuZ2Vsb2cgOi0pIFlvdSBzaG91bGRuJ3QgbWFrZSB1c2Ugb2Yg
+aXQgdGhlbi4gSSd2ZSBza2lwcGVkIHJldmlld2luZwo+ID4gPiB0aGUgbG9naWMgZm9yIHRoZSBy
+ZXN0IG9mIHRoaXMgZnVuY3Rpb24gYXMgSSBuZWVkIHRvIHNlZSB0aGUKPiA+ID4gY29ycmVzcG9u
+ZGluZyBEVCBiaW5kaW5ncy4KPiA+IAo+ID4gR29vZCBjYXRjaCEgSSBuZWVkZWQgc29tZSBkaXNj
+dXNzaW9uIG9uIHRoaXMuIDotKSBUaGlzIGxvZ2ljIGlzIGFjdHVhbGx5Cj4gPiBpbnRlbmRlZCBm
+b3IgZnV0dXJlIGV4dGVudGlvbiBhbmQgdXNlZCBmb3IgcGlwZWxpbmVzIHdpdGggbXVsdGlwbGUK
+PiA+IGNvbXBvbmVudHMgKGV4LCB0aGlzIGRyaXZlciB3aXRoIHNvZnQgSVBzLCBvciBtdWx0aXBs
+ZSBzb2Z0IElQcyksIHdoZXJlIHRoZQo+ID4gZHQgZGVzY3JpYmVzIGl0cyBvd24gdG9wb2xvZ3kg
+b2YgdGhlIHBpcGVsaW5lLiBTb21lIHBhcnQgb2YgdGhpcyBsb2dpYyBpcwo+ID4gYWN0aXZlbHkg
+dXNlZCB3aXRoIGRvd25zdHJlYW0gZHJpdmVycywgYnV0IEkgY2FuIHNpbXBsaWZ5IHRoaXMgbG9n
+aWMKPiA+IChyZW1vdmUgbG9naWMgbm90IG5lZWRlZCBieSB0aGlzIHNldCkgYW5kIHJldmVydCBi
+YWNrIHdoZW4gaXQncyBhY3R1YWxseQo+ID4gbmVlZGVkLgo+ID4gCj4gPiBUaGVuIGFzIHlvdSBj
+b21tZW50ZWQsIHRoZSBkdCBiaW5kaW5nIGZvciB0aGlzIG1vZHVsZSBpcyBnb25lLCBzbyB0aGUK
+PiA+IGJlaGF2aW9yIG9mIHRoaXMgbG9naWMgaXMgZG9jdW1lbnRlZCBpbiB0aGUgZnVuY3Rpb24g
+ZGVzY3JpcHRpb24sIHRyZWF0aW5nCj4gPiB0aGUgZnVuY3Rpb24gYXMgYSBoZWxwZXIuIFNvIG15
+IGV4cGVjdGF0aW9uIGlzIHRoYXQgdGhlIGNvcnJlc3BvbmRpbmcKPiA+IGRyaXZlciB0aGF0IGNh
+bGxzIHRoaXMgZnVuY3Rpb24gc2hvdWxkIGRvY3VtZW50IHRoZSBkdCBiaW5kaW5nIGluIGl0cyBv
+d24uCj4gPiBBbmQgdGhlIERQIGRyaXZlciBpbiB0aGlzIHNldCBkb2Vzbid0IHN1cHBvcnQgc3Vj
+aCBiaW5kaW5nIHdpdGhvdXQgYW55IHNvZnQKPiA+IElQIGRyaXZlcnMsIHRodXMgaXQgZG9lc24n
+dCBkb2N1bWVudCBpdCBhcyBvZiBub3cuCj4gCj4gSSBzdXNwZWN0ZWQgc28gOi0pIEkgdGhpbmsg
+dGhlIHRvcG9sb2d5IHNob3VsZCBpbmRlZWQgYmUgZGVzY3JpYmVkIGluIERUIGluIAo+IHRoYXQg
+Y2FzZS4gSG93ZXZlciwgbG9va2luZyBhdCB0aGUgY29kZSAoYXMgdGhhdCdzIG15IG9ubHkgc291
+cmNlIG9mIAo+IGluZm9ybWF0aW9uIGdpdmVuIHRoZSBsYWNrIG9mIERUIGJpbmRpbmdzIGRvY3Vt
+ZW50YXRpb24pLCBpdCBzZWVtcyB0aGF0IHlvdSAKPiBwbGFuIHRvIHVzZSBhIHBvcnRzIHByb3Bl
+cnR5IHRoYXQgY29udGFpbnMgYSBsaXN0IG9mIHBoYW5kbGVzIHRvIGNvbXBvbmVudHMuIEkgCj4g
+YmVsaWV2ZSB3ZSBzaG91bGQgaW5zdGVhZCB1c2UgdGhlIE9GIGdyYXBoIGJpbmRpbmdzIHRvIG1v
+ZGVsIHRoZSBwaXBlbGluZSBpbiAKPiBEVCwgd2hpY2ggd291bGQgcmVxdWlyZSByZXdyaXRpbmcg
+dGhpcyBmdW5jdGlvbi4gSWYgeW91IHdhbnQgdG8gbWVyZ2UgdGhpcyAKPiBzZXJpZXMgd2l0aCBE
+VCBiaW5kaW5ncyBmb3IgbW9yZSBjb21wbGV4IHBpcGVsaW5lcyBJIHdvdWxkIHRodXMgZHJvcCB0
+aGlzIAo+IGNvZGUuCgpTdXJlLiBJJ20gZmluZSBkcm9wcGluZyB0aGlzIGZvciBub3cuIFRvIG5v
+dGUsIHRoaXMgaXMgYmFzZWQgb24KZHJtX29mX2NvbXBvbmVudF9wcm9iZSgpLCBhbmQgaXRzIGJp
+bmRpbmdzIGFyZSBzdHJ1Y3R1cmVkIGluIGEgd2F5IHdoZXJlCnRoZSBtYXN0ZXIgaGFzIHBoYW5k
+bGVzIHRvIGNydGMgbm9kZXMsIGFuZCBiZXR3ZWVuIGNydGMgbm9kZXMgYW5kIGVuY29kZXIKbm9k
+ZXMsIHRoZSBncmFwaCBiaW5kaW5ncyBhcmUgdXNlZC4gSSBiZWxpZXZlIGJpbmRpbmdzIG1ha2Ug
+c2Vuc2UsIHRodXMKdGhpcyBmb2xsb3dzLgoKPiAKPiBJIGhhdmUgcmVsYXRlZCBjb21tZW50cyBv
+biB0aGUgWnlucU1QIERQIHN1YnN5c3RlbSBiaW5kaW5ncywgSSdsbCByZXBseSB0byAKPiBwYXRj
+aCAyLzUuCj4gCj4gPiA+PiArCQlpZiAoIXBvcnQpCj4gPiA+PiArCQkJYnJlYWs7Cj4gPiA+PiAr
+Cj4gPiA+PiArCQlwYXJlbnQgPSBwb3J0LT5wYXJlbnQ7Cj4gPiA+PiArCQlpZiAoIW9mX25vZGVf
+Y21wKHBhcmVudC0+bmFtZSwgInBvcnRzIikpCj4gPiA+PiArCQkJcGFyZW50ID0gcGFyZW50LT5w
+YXJlbnQ7Cj4gPiA+PiArCQlwYXJlbnQgPSBvZl9ub2RlX2dldChwYXJlbnQpOwo+ID4gPiAKPiA+
+ID4gSSd2ZSByZWNlbnRseSBmb3VuZCBvdXQgdGhhdCBkZXJlZmVyZW5jaW5nIGEgZGV2aWNlX25v
+ZGUgcGFyZW50IGRpcmVjdGx5Cj4gPiA+IGlzIHByb25lIHRvIHJhY2UgY29uZGl0aW9ucy4gWW91
+IHNob3VsZCB1c2Ugb2ZfZ2V0X3BhcmVudCgpIGluc3RlYWQgKG9yCj4gPiA+IG9mX2dldF9uZXh0
+X3BhcmVudCgpIGFzIGFwcHJvcHJpYXRlIHRvIG1ha2UgZGV2aWNlX25vZGUgcmVmZXJlbmNlIGhh
+bmRsaW5nCj4gPiA+IGVhc2llcikuCj4gPiA+IAo+ID4gPj4gKwo+ID4gPj4gKwkJaWYgKCFvZl9k
+ZXZpY2VfaXNfYXZhaWxhYmxlKHBhcmVudCkpIHsKPiA+ID4+ICsJCQlvZl9ub2RlX3B1dChwYXJl
+bnQpOwo+ID4gPj4gKwkJCW9mX25vZGVfcHV0KHBvcnQpOwo+ID4gPj4gKwkJCWNvbnRpbnVlOwo+
+ID4gPj4gKwkJfQo+ID4gPj4gKwo+ID4gPj4gKwkJY29tcG9uZW50X21hdGNoX2FkZChtYXN0ZXJf
+ZGV2LCAmbWF0Y2gsIGNvbXBhcmVfb2YsIHBhcmVudCk7Cj4gPiA+PiArCQlvZl9ub2RlX3B1dChw
+YXJlbnQpOwo+ID4gPj4gKwkJb2Zfbm9kZV9wdXQocG9ydCk7Cj4gPiA+PiArCX0KPiA+ID4+ICsK
+PiA+ID4+ICsJcGFyZW50ID0gZGV2LT5vZl9ub2RlOwo+ID4gPj4gKwlmb3IgKGkgPSAwOyA7IGkr
+Kykgewo+ID4gPj4gKwkJcGFyZW50ID0gb2Zfbm9kZV9nZXQocGFyZW50KTsKPiA+ID4+ICsJCWlm
+ICghb2ZfZGV2aWNlX2lzX2F2YWlsYWJsZShwYXJlbnQpKSB7Cj4gPiA+PiArCQkJb2Zfbm9kZV9w
+dXQocGFyZW50KTsKPiA+ID4+ICsJCQljb250aW51ZTsKPiA+ID4+ICsJCX0KPiA+ID4+ICsKPiA+
+ID4+ICsJCWZvcl9lYWNoX2VuZHBvaW50X29mX25vZGUocGFyZW50LCBlcCkgewo+ID4gPj4gKwkJ
+CXJlbW90ZSA9IG9mX2dyYXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZXApOwo+ID4gPj4gKwkJ
+CWlmICghcmVtb3RlIHx8ICFvZl9kZXZpY2VfaXNfYXZhaWxhYmxlKHJlbW90ZSkgfHwKPiA+ID4+
+ICsJCQkgICAgcmVtb3RlID09IGRldi0+b2Zfbm9kZSkgewo+ID4gPj4gKwkJCQlvZl9ub2RlX3B1
+dChyZW1vdGUpOwo+ID4gPj4gKwkJCQljb250aW51ZTsKPiA+ID4+ICsJCQl9IGVsc2UgaWYgKCFv
+Zl9kZXZpY2VfaXNfYXZhaWxhYmxlKHJlbW90ZS0+cGFyZW50KSkgewo+ID4gPj4gKwkJCQlkZXZf
+d2FybihkZXYsICJwYXJlbnQgZGV2IG9mICVzIHVuYXZhaWxhYmxlXG4iLAo+ID4gPj4gKwkJCQkJ
+IHJlbW90ZS0+ZnVsbF9uYW1lKTsKPiA+ID4+ICsJCQkJb2Zfbm9kZV9wdXQocmVtb3RlKTsKPiA+
+ID4+ICsJCQkJY29udGludWU7Cj4gPiA+PiArCQkJfQo+ID4gPj4gKwkJCWNvbXBvbmVudF9tYXRj
+aF9hZGQobWFzdGVyX2RldiwgJm1hdGNoLCBjb21wYXJlX29mLAo+ID4gPj4gKwkJCQkJICAgIHJl
+bW90ZSk7Cj4gPiA+PiArCQkJb2Zfbm9kZV9wdXQocmVtb3RlKTsKPiA+ID4+ICsJCX0KPiA+ID4+
+ICsJCW9mX25vZGVfcHV0KHBhcmVudCk7Cj4gPiA+PiArCj4gPiA+PiArCQlwb3J0ID0gb2ZfcGFy
+c2VfcGhhbmRsZShkZXYtPm9mX25vZGUsICJwb3J0cyIsIGkpOwo+ID4gPj4gKwkJaWYgKCFwb3J0
+KQo+ID4gPj4gKwkJCWJyZWFrOwo+ID4gPj4gKwo+ID4gPj4gKwkJcGFyZW50ID0gcG9ydC0+cGFy
+ZW50Owo+ID4gPj4gKwkJaWYgKCFvZl9ub2RlX2NtcChwYXJlbnQtPm5hbWUsICJwb3J0cyIpKQo+
+ID4gPj4gKwkJCXBhcmVudCA9IHBhcmVudC0+cGFyZW50Owo+ID4gPj4gKwkJb2Zfbm9kZV9wdXQo
+cG9ydCk7Cj4gPiA+PiArCX0KPiA+ID4+ICsKPiA+ID4+ICsJcmV0dXJuIGNvbXBvbmVudF9tYXN0
+ZXJfYWRkX3dpdGhfbWF0Y2gobWFzdGVyX2RldiwgbV9vcHMsIG1hdGNoKTsKPiA+ID4+ICt9Cj4g
+Cj4gW3NuaXBdCj4gCj4gPiA+PiArLyogYml0bWFwIGZvciBtYXN0ZXIgaWQgKi8KPiA+ID4+ICtz
+dGF0aWMgdTMyIHhsbnhfbWFzdGVyX2lkcyA9IEdFTk1BU0soMzEsIDApOwo+ID4gPj4gKwo+ID4g
+Pj4gKy8qKgo+ID4gPj4gKyAqIHhpbGlueF9kcm1fcGlwZWxpbmVfaW5pdCAtIEluaXRpYWxpemUg
+dGhlIGRybSBwaXBlbGluZSBmb3IgdGhlCj4gPiA+PiBkZXZpY2UKPiA+ID4+ICsgKiBAcGRldjog
+VGhlIHBsYXRmb3JtIGRldmljZSB0byBpbml0aWFsaXplIHRoZSBkcm0gcGlwZWxpbmUgZGV2aWNl
+Cj4gPiA+PiArICoKPiA+ID4+ICsgKiBUaGlzIGZ1bmN0aW9uIGluaXRpYWxpemVzIHRoZSBkcm0g
+cGlwZWxpbmUgZGV2aWNlLCBzdHJ1Y3QKPiA+ID4+IGRybV9kZXZpY2UsCj4gPiA+PiArICogb24g
+QHBkZXYgYnkgY3JlYXRpbmcgYSBsb2dpY2FsIG1hc3RlciBwbGF0Zm9ybSBkZXZpY2UuIFRoZSBs
+b2dpY2FsCj4gPiA+PiBwbGF0Zm9ybQo+ID4gPj4gKyAqIGRldmljZSBhY3RzIGFzIGEgbWFzdGVy
+IGRldmljZSB0byBiaW5kIHNsYXZlIGRldmljZXMgYW5kIHJlcHJlc2VudHMKPiA+ID4+ICsgKiB0
+aGUgZW50aXJlIHBpcGVsaW5lLgo+ID4gPiAKPiA+ID4gSSdtIHNvcnJ5IHRvIGFzayB0aGlzIHF1
+ZXN0aW9uIHNvIGxhdGUsIGJ1dCBjb3VsZG4ndCB5b3UgZG8gd2l0aG91dCB0aGF0Cj4gPiA+IHBs
+YXRmb3JtIGRldmljZSA/IEkgZG9uJ3QgcmVhbGx5IHNlZSB3aGF0IGl0IGJyaW5ncyB5b3UuCj4g
+PiAKPiA+IEl0IGlzIGZpbmUgd2l0aG91dCB0aGlzIGluIGN1cnJlbnQgc2V0IHdoZXJlIHRoZXJl
+IGlzIG9ubHkgb25lIGNvbXBvbmVudCwKPiA+IGJ1dCBpdCBkb2Vzbid0IHNjYWxlIHdpdGggY29t
+cGxleCBwaXBlbGluZXMgd2hlcmUgc29mdCBhbmQgaGFyZGVuZWQgSVAKPiA+IGRyaXZlcnMgY2Fu
+IGJlIG1peGVkLiBUaGVyZSBjYW4gYmUgY2FzZXMgd2hlcmUgbXVsdGlwbGUgbWFzdGVyIGRldmlj
+ZXMKPiA+IGV4aXN0IGluIGEgc2luZ2xlIHBpcGVsaW5lLCBhbmQgdGhpcyBpcyBpbnRlbmRlZCB0
+byB1bmlmaXkgYW5kIHNpbXBsaWZ5IHRoZQo+ID4gbW9kZWwgYnkgY3JlYXRpbmcgYSBsb2dpY2Fs
+IG1hc3RlciBhbmQgYWxsb3dpbmcgYWxsIGRyaXZlcnMgdG8gYmUgYm91bmQgYXMKPiA+IHJlZ3Vs
+YXIgY29tcG9uZW50cy4KPiAKPiBJbiBvcmRlciB0byB1bmRlcnN0YW5kIGhvdyB5b3UgaW50ZW5k
+IHRoaXMgdG8gd29yayB3aXRoIG1vcmUgY29tcGxleCAKPiBwaXBlbGluZXMsIGNvdWxkIHlvdSBn
+aXZlIG1lIGEgcmVhbCBsaWZlIGV4YW1wbGUgdGhhdCBjYW4gc2VydmUgYXMgYSBiYXNpcyBmb3Ig
+Cj4gZGlzY3Vzc2lvbnMgPwoKVGhlIERQIGRyaXZlciBpbiB0aGlzIHNldCBpcyBzaW5nbGUgY29t
+cG9uZW50IHBpcGVsaW5lLiBUaGUgZGV2aWNlIG5vZGUgZG9lc24ndApyZWZlcmVuY2UgYW55IGV4
+dGVybmFsIG5vZGVzOgoKCXNpbmdsZSBaeW5xTVAgRFAgY29tcG9uZW50CgpIZXJlIHRoZSBEUCBk
+cml2ZXIgd291bGQgY3JlYXRlIGEgbG9naWNhbCBtYXN0ZXIsIGFuZCB0aGUgbWFzdGVyIGJpbmRz
+IHdpdGgKRFAuCgpUaGVyZSBjYW4gYmUgc29mdCBJUCBwaXBlbGluZXMgd2l0aCBtdWx0aXBsZSBj
+b21wb25lbnRzIChlYWNoIG9uZSBiZWxvdyBpcwphbiBpbmRlcGVuZGVudCBwaXBlbGluZSk6CgoJ
+U29mdCBJUCBNaXhlciBjb21wb25lbnQgKGNydGMpIDwtPiBTREkgdHggY29tcG9uZW50IChlbmNv
+ZGVyKQoKCVNvZnQgSVAgTWl4ZXIgY29tcG9uZW50IChjcnRjKSA8LT4gRFNJIHR4IGNvbXBvbmVu
+dCAoZW5jb2RlcikKCglTT2Z0IElQIHNpbXBsZSBETUEgKGNydGMpIDwtPiBEU0kgdHggbm9kZSAo
+ZW5jb2RlcikKCgkuLi4KCkhlcmUsIGFueSBDUlRDIGRyaXZlciB3b3VsZCBjcmVhdGUgYSBsb2dp
+Y2FsIG1hc3RlciwgYW5kIHRoZSBtYXN0ZXIgYmluZHMgd2l0aApib3RoIGNydGMgYW5kIGVuY29k
+ZXIgY29tcG9uZW50cyBhY2NvcmRpbmdseS4KClRob3NlIHR3byBjYW4gYmUgbWl4ZWQsIHdoZXJl
+IG91dHB1dCBvZiB0aGUgbWl4ZXIgaXMgY29ubmVjdGVkIHRvIERQIGlucHV0OgoKCQkJCQlaeW5x
+TVAgRFAgY29tcG9uZW50CgkJCQkJICAgICB8CglTb2Z0IElQIE1peGVyIGNvbXBvbmVudCAoY3J0
+YykgLS0tLS0tLQoKSW4gdGhpcyBjYXNlLCBvbmx5IG9uZSBtYXN0ZXIgbmVlZHMgdG8gYmUgY3Jl
+YXRlZCBhbmQgYmluZCB3aXRoIG1peGVyIGNvbXBvbmVudAphcyB3ZWxsIGFzIERQIGNvbXBvbmVu
+dC4KClNvLCBteSBpbnRlbnRpb24gaXMgdG8gaGF2ZSBhIHNpbmdsZSBsb2dpY2FsIG1hc3RlciBm
+b3Igb25lIGVudGlyZSBwaXBlbGluZQphbmQgbWFrZSBhbGwgb3RoZXIgZGV2aWNlcyBpbiB0aGUg
+cGlwZWxpbmUgYXMgcmVndWxhciBjb21wb25lbnRzIHRvIGJlIGJvdW5kCndpdGggdGhlIG1hc3Rl
+ci4KClRoYW5rcywKLWh5dW4KCj4gCj4gPiA+PiArICogVGhlIGxvZ2ljYWwgbWFzdGVyIHVzZXMg
+dGhlIHBvcnQgYmluZGluZ3Mgb2YgdGhlIGNhbGxpbmcgZGV2aWNlIHRvCj4gPiA+PiArICogZmln
+dXJlIG91dCB0aGUgcGlwZWxpbmUgdG9wb2xvZ3kuCj4gPiA+PiArICoKPiA+ID4+ICsgKiBSZXR1
+cm46IHRoZSBsb2dpY2FsIG1hc3RlciBwbGF0Zm9ybSBkZXZpY2UgaWYgdGhlIGRybSBkZXZpY2Ug
+aXMKPiA+ID4+IGluaXRpYWxpemVkCj4gPiA+PiArICogb24gQHBkZXYuIEVycm9yIGNvZGUgb3Ro
+ZXJ3aXNlLgo+ID4gPj4gKyAqLwo+ID4gPj4gK3N0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnhsbnhf
+ZHJtX3BpcGVsaW5lX2luaXQoc3RydWN0IHBsYXRmb3JtX2RldmljZQo+ID4gPj4gKnBkZXYpCj4g
+PiA+PiArewo+ID4gPj4gKwlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICptYXN0ZXI7Cj4gPiA+PiAr
+CWludCBpZCwgcmV0Owo+ID4gPj4gKwo+ID4gPiAKPiA+ID4gSXMgdGhlcmUgYW55IHJpc2sgb2Yg
+YSByYWNlIGJldHdlZW4gY29uY3VycmVudCBjYWxscyB0byB0aGlzIGZ1bmN0aW9uLCBvcgo+ID4g
+PiB0byB0aGlzIGZ1bmN0aW9uIGFuZCB4bG54X2RybV9waXBlbGluZV9leGl0KCkgPwo+ID4gPiAK
+PiA+ID4+ICsJaWQgPSBmZnMoeGxueF9tYXN0ZXJfaWRzKTsKPiA+ID4+ICsJaWYgKCFpZCkKPiA+
+ID4+ICsJCXJldHVybiBFUlJfUFRSKC1FTk9TUEMpOwo+ID4gPj4gKwo+ID4gPj4gKwltYXN0ZXIg
+PSBwbGF0Zm9ybV9kZXZpY2VfYWxsb2MoInhsbngtZHJtIiwgaWQgLSAxKTsKPiA+ID4+ICsJaWYg
+KCFtYXN0ZXIpCj4gPiA+PiArCQlyZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsKPiA+ID4+ICsKPiA+
+ID4+ICsJbWFzdGVyLT5kZXYucGFyZW50ID0gJnBkZXYtPmRldjsKPiA+ID4+ICsJcmV0ID0gcGxh
+dGZvcm1fZGV2aWNlX2FkZChtYXN0ZXIpOwo+ID4gPj4gKwlpZiAocmV0KQo+ID4gPj4gKwkJZ290
+byBlcnJfb3V0Owo+ID4gPiAKPiA+ID4gQXMgdGhpcyBpcyB0aGUgb25seSBsb2NhdGlvbiB3aGVy
+ZSB5b3UganVtcCB0byB0aGUgZXJyb3IgcGF0aCBJIHdvdWxkCj4gPiA+IGlubGluZSBpdC4KPiA+
+ID4gCj4gPiA+PiArCj4gPiA+PiArCVdBUk5fT04obWFzdGVyLT5pZCAhPSBpZCAtIDEpOwo+ID4g
+Pj4gKwl4bG54X21hc3Rlcl9pZHMgJj0gfkJJVChtYXN0ZXItPmlkKTsKPiA+ID4+ICsJcmV0dXJu
+IG1hc3RlcjsKPiA+ID4+ICsKPiA+ID4+ICtlcnJfb3V0Ogo+ID4gPj4gKwlwbGF0Zm9ybV9kZXZp
+Y2VfdW5yZWdpc3RlcihtYXN0ZXIpOwo+ID4gPj4gKwlyZXR1cm4gRVJSX1BUUihyZXQpOwo+ID4g
+Pj4gK30KPiA+ID4+ICtFWFBPUlRfU1lNQk9MX0dQTCh4bG54X2RybV9waXBlbGluZV9pbml0KTsK
+PiA+ID4+ICsKPiA+ID4+ICsvKioKPiA+ID4+ICsgKiB4aWxpbnhfZHJtX3BpcGVsaW5lX2V4aXQg
+LSBSZWxlYXNlIHRoZSBkcm0gcGlwZWxpbmUgZm9yIHRoZSBkZXZpY2UKPiA+ID4+ICsgKiBAbWFz
+dGVyOiBUaGUgbWFzdGVyIHBpcGVsaW5lIGRldmljZSB0byByZWxlYXNlCj4gPiA+PiArICoKPiA+
+ID4+ICsgKiBSZWxlYXNlIHRoZSBsb2dpY2FsIHBpcGVsaW5lIGRldmljZSByZXR1cm5lZCBieQo+
+ID4gPj4geGxueF9kcm1fcGlwZWxpbmVfaW5pdCgpLgo+ID4gPj4gKyAqLwo+ID4gPj4gK3ZvaWQg
+eGxueF9kcm1fcGlwZWxpbmVfZXhpdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICptYXN0ZXIpCj4g
+PiA+PiArewo+ID4gPj4gKwl4bG54X21hc3Rlcl9pZHMgfD0gQklUKG1hc3Rlci0+aWQpOwo+ID4g
+Pj4gKwlwbGF0Zm9ybV9kZXZpY2VfdW5yZWdpc3RlcihtYXN0ZXIpOwo+ID4gPj4gK30KPiA+ID4+
+ICtFWFBPUlRfU1lNQk9MX0dQTCh4bG54X2RybV9waXBlbGluZV9leGl0KTsKPiAKPiBbc25pcF0K
+PiAKPiAtLSAKPiBSZWdhcmRzLAo+IAo+IExhdXJlbnQgUGluY2hhcnQKPiAKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
