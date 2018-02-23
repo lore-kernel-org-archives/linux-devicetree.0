@@ -1,40 +1,35 @@
-Return-Path: <SRS0=R3el=FP=renesas.com=yoshihiro.shimoda.uh@kernel.org>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 0/4] arm64: defconfig: Enable PWM and USB for R-Car
-Date: Wed, 21 Feb 2018 06:02:02 +0000
-Message-ID: <TY1PR06MB099260F3A468DE01B49244E0D8CE0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1518589412-7330-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20180215183331.56y6syawbjzdheor@verge.net.au>
-In-Reply-To: <20180215183331.56y6syawbjzdheor@verge.net.au>
-Content-Language: ja-JP
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-To: Simon Horman <horms@verge.net.au>
-Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Return-Path: <SRS0=V9ZR=FR=samsung.com=jh80.chung@kernel.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCH 4/6] arm64: dts: stratix10: remove 'num-slots' property for
+ dwmmc
+Date: Fri, 23 Feb 2018 15:41:36 +0900
+Message-id: <20180223064138.18401-4-jh80.chung@samsung.com>
+In-reply-to: <20180223064138.18401-1-jh80.chung@samsung.com>
+References: <20180223064138.18401-1-jh80.chung@samsung.com>
+	<CGME20180223064140epcas2p3804fe3b7d63e4b7975d94a178e94dffb@epcas2p3.samsung.com>
+To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, manabian@gmail.com, dinguyen@kernel.org, will.deacon@arm.com, xuwei5@hisilicon.com, Jaehoon Chung <jh80.chung@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Simon-san,
+Since 'num-slots' had already deprecated, remove the property in
+device-tree file.
 
-> From: Simon Horman, Sent: Friday, February 16, 2018 3:34 AM
-> To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Cc: magnus.damm@gmail.com; robh+dt@kernel.org; mark.rutland@arm.com; devi=
-cetree@vger.kernel.org;
-> linux-renesas-soc@vger.kernel.org
-> Subject: Re: [PATCH 0/4] arm64: defconfig: Enable PWM and USB for R-Car
->=20
-> On Wed, Feb 14, 2018 at 03:23:28PM +0900, Yoshihiro Shimoda wrote:
-> > This patch set is based on the renesas.git / renesas-devel-20180213v2-v=
-4.16-rc1
-> > tag.
->=20
-> Hi Shimoda-san,
->=20
-> these changes look fine to me but I believe that upstream
-> prefers such patches to be consolidated. Could you consider
-> reposting with these four patches squashed into one?
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-Sure! I will submit v2 patch soon.
-
-Best regards,
-Yoshihiro Shimoda
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index a37c46112876..4e146b4e6487 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -88,7 +88,6 @@
+ 
+ &mmc {
+ 	status = "okay";
+-	num-slots = <1>;
+ 	cap-sd-highspeed;
+ 	broken-cd;
+ 	bus-width = <4>;
+-- 
+2.15.1
