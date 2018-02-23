@@ -1,14 +1,15 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 02/10] ARM: sun9i: smp: Rename clusters's power-off
- register
-Date: Fri, 23 Feb 2018 15:56:50 +0100
-Message-ID: <20180223145650.dzhdhh2cprqioq5m@flea.lan>
-References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
- <20180223133742.26044-3-mylene.josserand@bootlin.com>
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Subject: Re: [RFC PATCH] ARM: dts: ls1021a: add size-cells and address-cells
+ to scfg and dcfg nodes
+Date: Fri, 23 Feb 2018 15:57:17 +0100
+Message-ID: <ad7dde07-9a11-09fb-61c0-8ec97e35bb63@prevas.dk>
+References: <20180223133114.7091-1-rasmus.villemoes@prevas.dk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0397181955422323282=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180223133742.26044-3-mylene.josserand@bootlin.com>
+In-Reply-To: <20180223133114.7091-1-rasmus.villemoes@prevas.dk>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,80 +19,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 2018-02-23 14:31, Rasmus Villemoes wrote:
+> A single u32 is sufficient to specify a register in the Device
+> Configuration Unit/Supplemental Configuration Unit. Moreover, they only
+> consist of 32 bit registers (for the DCFG we even have "These registers
+> only support 32-bit accesses." according to the reference manual), so no
+> size specification is needed.
+> 
+> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> ---
+> None of the in-tree .dts files using ls1021a.dtsi currently define a
+> subnode of either node. It is possible, though somewhat unlikely, that
+> some out-of-tree .dts file is built against the in-tree ls1021a.dtsi,
+> and I don't know if such files are treated the same as out-of-tree
+> modules (i.e., they get to fix the breakage).
+> 
+> The reason I'm proposing to add these is that I'm about to add a subnode
+> of scfg with a reg property, and if possible I'd like to avoid the
+> somewhat clumsy
+> 
+>   reg = <0 0x1ac 0 4>;
 
---===============0397181955422323282==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rlbwter55etjdv6l"
-Content-Disposition: inline
+Ah, apparently I've misunderstood how address-cells/size-cells worked; I
+thought they would be taken from the nearest ancestor node specifying
+them, so that 2/2 would apply to scfg. But it seems they have to be
+present in the parent node itself, otherwise defaulting to 2/1. So the
+above should be <0 0x1ac 4>, which is still clumsier than needed.
 
-
---rlbwter55etjdv6l
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Feb 23, 2018 at 02:37:34PM +0100, Myl=E8ne Josserand wrote:
-> To prepare the support for sun8i-a83t, rename the variable name
-> that handles the power-off of clusters because it is different from
-> sun9i-a80 to sun8i-a83t.
->
-> The power off register for clusters are different from SUN9I and SUN8I
-
-This is just a nitpick, and I see you use them everywhere, but sun8i
-and sun9i are the family of SoCs, and A80 and A83t the name of SoCs
-within their respective families.
-
-So in your commit log, you want to support the A83t because it's
-different than the A80, and the sun9i and sun8i mentionned in your
-last sentence is not really meaningful.
-
-> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
-
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---rlbwter55etjdv6l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqQK7EACgkQ0rTAlCFN
-r3SedQ/8D/fQ6K6yNdLNiOEl7BJjjgQP43h0kTjahkMUBK8mzGhNpoebnPmxDHos
-m74jDNqGoML0F+1Q2FCnV3Pune872+rEGJGofwEigHcCcBlwLjxpOvaSlIhXp1iD
-ZkzI8PCTuEDDx4PsHvpra872My33D1bp6U4JGPZ07+EiTla10rFWA/QSRgOFw3hu
-vuO2W9xFOfQ9m2eATh+PKOKRML/J4jRjKGRwAKwzetmPNrA3W+1JLtenD2xJS5Xb
-4PGBuFKjpoO2YNHMIe8RariHKnw+Kj73bYPJQYUCdUHrA4mWauHDo1llEmT8rx+H
-KxNsPdnhqS9z8BsnX9TP56bh5tNOhksce/o/glY11qC8V6RDFENTePhD2Qovgxa0
-uAidOZT/+jMt2D7TiSmqfuW3HhsNYvlB1ZzreNWEZBdlYqthdrbeN6GpjfPX4v36
-xSkt2UM2wVPhb9+ANMoXCleL/oX2johhecRuTSX62A4UyUDZpIETRWJ3SJa7ir9l
-oOF+7wh/NznzpfZsrZh6Icfc/g+hod+IR+qnGz36kfXluf+VxtAfdZ3kx5ldknEb
-RUwV9Bl48yd+QaIKH8BTftB3qJaOSaB4uTGPEbvujawd0+XROVdR5RzCy9VpgoP5
-18qYSZloGPd4quOmzooGxCDZNWjl1nAyka8qQP20Ddp29sKqcuA=
-=y9Oz
------END PGP SIGNATURE-----
-
---rlbwter55etjdv6l--
-
-
---===============0397181955422323282==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0397181955422323282==--
+Rasmus
