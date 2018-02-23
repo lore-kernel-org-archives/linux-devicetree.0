@@ -1,130 +1,107 @@
-From: Hyun Kwon <hyun.kwon@xilinx.com>
-Subject: Re: [PATCH v5 2/5] dt-bindings: display: xlnx: Add ZynqMP DP
- subsystem bindings
-Date: Thu, 22 Feb 2018 18:27:50 -0800
-Message-ID: <20180223022749.GB9544@smtp.xilinx.com>
-References: <1517967400-16993-1-git-send-email-hyun.kwon@xilinx.com>
- <1517967400-16993-2-git-send-email-hyun.kwon@xilinx.com>
- <2731219.EK2Kz0loy1@avalon>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 3/4] arm64: add support for i.MX8M EVK board
+Date: Fri, 23 Feb 2018 11:46:53 +0800
+Message-ID: <20180223034652.GM3217@dragon>
+References: <20180201183126.32384-1-l.stach@pengutronix.de>
+ <20180201183126.32384-3-l.stach@pengutronix.de>
+ <20180205072438.nxvhlqk54d7firbz@sapphire.tkos.co.il>
+ <1517829046.3175.9.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <2731219.EK2Kz0loy1@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>
+In-Reply-To: <1517829046.3175.9.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, "A . s . Dong" <aisheng.dong@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKCk9uIFRodSwgMjAxOC0wMi0yMiBhdCAwNjoyMzozOCAtMDgwMCwgTGF1cmVu
-dCBQaW5jaGFydCB3cm90ZToKPiBIaSBIeXVuLAo+IAo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNo
-Lgo+IAo+IE9uIFdlZG5lc2RheSwgNyBGZWJydWFyeSAyMDE4IDAzOjM2OjM3IEVFVCBIeXVuIEt3
-b24gd3JvdGU6Cj4gPiBUaGlzIGFkZCBhIGR0IGJpbmRpbmcgZm9yIFp5bnFNUCBEUCBzdWJzeXN0
-ZW0uCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEh5dW4gS3dvbiA8aHl1bi5rd29uQHhpbGlueC5j
-b20+Cj4gPiBSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiA+IC0t
-LQo+ID4gdjQKPiA+IC0gU3BlY2lmeSBwaHkgcmVsYXRlZCBkZXNjcmlwdGlvbnMKPiA+IC0gU3Bl
-Y2lmeSBkbWEgcmVsYXRlZCBkZXNjcmlwdGlvbnMKPiA+IC0gUmVtb3ZlIHBvcnRzCj4gPiAtIFJl
-bW92ZSBjaGlsZCBub2RlcyBmb3IgbGF5ZXJzCj4gPiAtIFVwZGF0ZSB0aGUgZXhhbXBsZSBhY2Nv
-cmRpbmdseQo+ID4gdjIKPiA+IC0gR3JvdXAgbXVsdGlwbGUgcG9ydHMgdW5kZXIgJ3BvcnRzJwo+
-ID4gLSBSZXBsYWNlIGxpbnV4IHNwZWNpZmljIHRlcm1zIHdpdGggZ2VuZXJpYyBoYXJkd2FyZSBk
-ZXNjcmlwdGlvbnMKPiA+IC0tLQo+ID4gLS0tCj4gPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkveGxu
-eC94bG54LHp5bnFtcC1kcHN1Yi50eHQgICAgfCA2NyArKysrKysrKysrKysrKysrKysrCj4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQK
-PiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3hsbngveGxueCx6
-eW5xbXAtZHBzdWIudHh0Cj4gPiAKPiA+IGRpZmYgLS1naXQKPiA+IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94bG54LHp5bnFtcC1kcHN1Yi50eHQKPiA+
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkveGxueC94bG54LHp5
-bnFtcC1kcHN1Yi50eHQgbmV3Cj4gPiBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAw
-Li5mNGEyZTZkCj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS94bG54L3hsbngsenlucW1wLWRwc3ViLnR4dAo+ID4gQEAg
-LTAsMCArMSw2NyBAQAo+ID4gK1hpbGlueCBaeW5xTVAgRGlzcGxheVBvcnQgc3Vic3lzdGVtCj4g
-PiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAKPiBBIHNob3J0IGRlc2Ny
-aXB0aW9uIG9mIHRoZSBoYXJkd2FyZSB3b3VsZCBiZSB1c2VmdWwuIFlvdSBjYW4gYWxzbyBsaW5r
-IHRvIHRoZSAKPiBkb2N1bWVudGF0aW9uLiBJIGhhdmUgZm91bmQgdjEuMCwgdjIuMCBhbmQgdjIu
-MSBvZiB0aGUgUEcxOTkgZG9jdW1lbnQsIHdoaWNoIAo+IHNlZW0gdG8gY29ycmVzcG9uZCB0byB0
-aGUgImRwIiByZWdpc3RlciBtYXAgKGFuZCBjb25mdXNpbmdseSBkb2N1bWVudGVkIGFzIHRoZSAK
-PiAiRGlzcGxheVBvcnQgVFggU3Vic3lzdGVtIiksIGJ1dCBubyBkb2N1bWVudCB0aGF0IGRlc2Ny
-aWJlcyB0aGUgZnVsbCAKPiBEaXNwbGF5UG9ydCBzdWJzeXN0ZW0gYXMgZGVmaW5lZCBieSB0aGVz
-ZSBiaW5kaW5ncy4KClBsZWFzZSByZWZlciB0byBjaGFwdGVyIDMzIGluCmh0dHBzOi8vd3d3Lnhp
-bGlueC5jb20vc3VwcG9ydC9kb2N1bWVudGF0aW9uL3VzZXJfZ3VpZGVzL3VnMTA4NS16eW5xLXVs
-dHJhc2NhbGUtdHJtLnBkZgpOb3Qgc3VyZSBpZiBpdCBoYXMgZW5vdWdoIGRldGFpbHMsIGJ1dCBv
-bmx5IHB1YmxpYyBkb2N1bWVudGF0aW9uIHRoYXQgSSBrbm93IG9mLgoKPiAKPiA+ICtSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgo+ID4gKwo+ID4gKy0gY29tcGF0aWJsZTogTXVzdCBiZSAieGxueCx6eW5x
-bXAtZHBzdWItMS43Ii4KPiA+ICsKPiA+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFu
-ZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVycyBzZXQgZm9yIHRoZQo+ID4gZGV2aWNlLgo+ID4gKy0g
-cmVnLW5hbWVzOiBNdXN0IGJlICJkcCIsICJibGVuZCIsICJhdl9idWYiLCBhbmQgImF1ZCIgdG8g
-bWFwIGxvZ2ljYWwKPiA+IHJlZ2lzdGVyCj4gPiArICBwYXJ0aXRpb25zLgo+ID4gKwo+ID4gKy0g
-aW50ZXJydXB0czogSW50ZXJydXB0IG51bWJlci4KPiA+ICstIGludGVycnVwdHMtcGFyZW50OiBw
-aGFuZGxlIGZvciBpbnRlcnJ1cHQgY29udHJvbGxlci4KPiA+ICsKPiA+ICstIGNsb2NrczogcGhh
-bmRsZXMgZm9yIGF4aSwgYXVkaW8sIG5vbi1saXZlIHZpZGVvLCBhbmQgbGl2ZSB2aWRlbyBjbG9j
-a3MuCj4gPiArICBheGkgY2xvY2sgaXMgcmVxdWlyZWQuIEF1ZGlvIGNsb2NrIGlzIG9wdGlvbmFs
-LiBJZiBub3QgcHJlc2VudCwgYXVkaW8KPiA+IHdpbGwKPiA+ICsgIGJlIGRpc2FibGVkLiBPbmUg
-b2Ygbm9uLWxpdmUgb3IgbGl2ZSB2aWRlbyBjbG9jayBzaG91bGQgYmUgcHJlc2VudC4KPiA+ICst
-IGNsb2NrLW5hbWVzOiBUaGUgaWRlbnRpZmljYXRpb24gc3RyaW5ncyBhcmUgcmVxdWlyZWQuICJh
-Y2xrIiBmb3IgYXhpCj4gPiBjbG9jay4KPiA+ICsgICJkcF9hdWRfY2xrIiBmb3IgYXVkaW8gY2xv
-Y2suICJkcF92dGNfcGl4ZWxfY2xrX2luIiBmb3Igbm9uLWxpdmUgdmlkZW8KPiA+IGNsb2NrLgo+
-ID4gKyAgImRwX2xpdmVfdmlkZW9faW5fY2xrIiBmb3IgbGl2ZSB2aWRlbyBjbG9jayAoY2xvY2sg
-ZnJvbSBwcm9ncmFtbWFibGUKPiA+IGxvZ2ljKS4KPiA+ICsKPiA+ICstIHBoeXM6IHBoYW5kbGVz
-IGZvciBwaHkgc3BlY2lmaWVyLiBUaGUgbnVtYmVyIG9mIGxhbmVzIGlzIGNvbmZpZ3VyYWJsZQo+
-ID4gKyAgYmV0d2VlbiAxIGFuZCAyLiBUaGUgbnVtYmVyIG9mIHBoYW5kbGVzIHNob3VsZCBiZSAx
-IG9yIDIuCj4gPiArLSBwaHktbmFtZXM6IFRoZSBpZGVudGlmaWVyIHN0cmluZ3MuICJkcC1waHki
-IGZvbGxvd2VkIGJ5IGluZGV4LCAwIG9yIDEuCj4gPiArICBGb3Igc2luZ2xlIGxhbmUsIG9ubHkg
-ImRwLXBoeTAiIGlzIHJlcXVpcmVkLiBGb3IgZHVhbCBsYW5lLCBib3RoCj4gPiAiZHAtcGh5MCIK
-PiA+ICsgIGFuZCAiZHAtcGh5MSIgYXJlIHJlcXVpcmVkIHdoZXJlICJkcC1waHkwIiBpcyB0aGUg
-cHJpbWFyeSBsYW5lLgo+ID4gKwo+ID4gKy0gcG93ZXItZG9tYWluczogcGhhbmRsZSBmb3IgdGhl
-IGNvcnJlc3BvbmRpbmcgcG93ZXIgZG9tYWluCj4gPiArCj4gPiArLSBkbWFzOiBwaGFuZGxlcyBm
-b3IgRE1BIGNoYW5uZWxzIGFzIGRlZmluZWQgaW4KPiA+ICsgIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kbWEvZG1hLnR4dC4KPiA+ICstIGRtYS1uYW1lczogVGhlIGlkZW50aWZp
-ZXIgc3RyaW5ncyBhcmUgcmVxdWlyZWQuICJnZngwIiBmb3IgZ3JhcGhpY3MgbGF5ZXIKPiA+ICsg
-IGRtYSBjaGFubmVsLiAidmlkIiBmb2xsb3dlZCBieSBpbmRleCAoMCAtIDIpIGZvciB2aWRlbyBs
-YXllciBkbWEKPiA+IGNoYW5uZWxzLgo+ID4gKwo+ID4gK09wdGlvbmFsIGNoaWxkIG5vZGUKPiA+
-ICsKPiA+ICstIFRoZSBkcml2ZXIgcG9wdWxhdGVzIGFueSBjaGlsZCBkZXZpY2Ugbm9kZSBpbiB0
-aGlzIG5vZGUuIFRoaXMgY2FuIGJlCj4gPiB1c2VkLAo+ID4gKyAgZm9yIGV4YW1wbGUsIHRvIHBv
-cHVsYXRlIHRoZSBzb3VuZCBkZXZpY2UgZnJvbSB0aGUgRGlzcGxheVBvcnQgc3Vic3lzdGVtCj4g
-PiArICBkcml2ZXIuCj4gCj4gRFQgYmluZGluZ3Mgc2hvdWxkIGRlc2NyaWJlIHRoZSBoYXJkd2Fy
-ZSwgbm90IHRoZSBPUyBzb2Z0d2FyZS4gWW91IHNob3VsZCBub3QgCj4gbWVudGlvbiBkcml2ZXJz
-Lgo+IAo+IEZ1cnRoZXJtb3JlIHRoZSBhYm92ZSBwYXJhZ3JhcGggZG9lc24ndCBzZWVtIHZlcnkg
-Y2xlYXIgdG8gbWUsIGFuZCB0aGUgZXhhbXBsZSAKPiBkb2Vzbid0IGluY2x1ZGUgYW55IGNoaWxk
-IG5vZGUsIHNvIEknbSBsZWZ0IHdvbmRlcmluZyB3aGF0IHlvdSBtZWFudC4KCkkgbGVmdCBzb21l
-IHJvb20gZm9yIGZ1dHVyZSBhbmQgZG93bnN0cmVhbSwgYnV0IEkgYWdyZWUuIEkgY2FuIHJlbW92
-ZSB0aGlzIGZyb20KdGhpcyBzZXQuCgo+IAo+ID4gK0V4YW1wbGU6Cj4gPiArCXp5bnFtcC1kaXNw
-bGF5LXN1YnN5c3RlbUBmZDRhMDAwMCB7Cj4gPiArCQljb21wYXRpYmxlID0gInhsbngsenlucW1w
-LWRwc3ViLTEuNyI7Cj4gPiArCQlyZWcgPSA8MHgwIDB4ZmQ0YTAwMDAgMHgwIDB4MTAwMD4sCj4g
-PiArCQkgICAgICA8MHgwIDB4ZmQ0YWEwMDAgMHgwIDB4MTAwMD4sCj4gPiArCQkgICAgICA8MHgw
-IDB4ZmQ0YWIwMDAgMHgwIDB4MTAwMD4sCj4gPiArCQkgICAgICA8MHgwIDB4ZmQ0YWMwMDAgMHgw
-IDB4MTAwMD47Cj4gPiArCQlyZWctbmFtZXMgPSAiZHAiLCAiYmxlbmQiLCAiYXZfYnVmIiwgImF1
-ZCI7Cj4gCj4gV2l0aG91dCBzZWVpbmcgdGhlIGRvY3VtZW50YXRpb24gaXQncyBhIGJpdCBoYXJk
-IHRvIHRlbGwsIGJ1dCBpdCBsb29rcyB0byBtZSAKPiBsaWtlIHRoaXMgInN1YnN5c3RlbSIgYWdn
-cmVnYXRlcyBmb3VyIHNlcGFyYXRlIElQIGNvcmVzIHRoYXQgY2FuIGJlIHVzZWQgCj4gaW5kaXZp
-ZHVhbGx5LiBUaGUgImRwIiByZWdpc3RlcnMgaW4gcGFydGljdWxhciBtYWtlIG1lIHRoaW5rIHRo
-YXQgdGhlIAo+IERpc3BsYXlQb3J0IHRyYW5zbWl0dGVyIGlzIGEgc2VwYXJhdGUgSVAgY29yZSBj
-b3JyZXNwb25kaW5nIHRvIFBHMTk5LiBJZiAKPiB0aGF0J3MgdGhlIGNhc2UsIEkgdGhpbmsgdGhl
-IElQIGNvcmVzIHNob3VsZCBiZSBtb2RlbGVkIGFzIGluZGl2aWR1YWwgRFQgCj4gbm9kZXMsIGFu
-ZCBjb25uZWN0ZWQgdGhyb3VnaCB0aGUgT0YgZ3JhcGggYmluZGluZ3MuCj4gCgpUaGUgUEcxOTkg
-aXMgZm9yIHRoZSBzb2Z0IElQIGNvcmUsIGJ1dCB0aGlzIGlzIGZvciB0aGUgaGFyZGVuZWQgSVAg
-b24KWnlucU1QIFNvQy4gUGxlYXNlIHJlZmVyIHRvIGRvY3VtZW50YXRpb24gYWJvdmUuIEl0J3Mg
-YSBzaW5nbGUgSVAgd2l0aAptdWx0aXBsZSByZWdpc3RlciBwYXJ0aXRpb25zLCBvbmUgZm9yIGVh
-Y2ggYmxvY2ssIGFzIGRlc2NyaWJlZCBoZXJlLCBhbmQgdGhvc2UKYmxvY2tzIGFyZSBoYXJkLXdp
-cmVkIGluIHRoZSBJUC4KClRoYW5rcywKLWh5dW4KCj4gPiArCQlpbnRlcnJ1cHRzID0gPDAgMTE5
-IDQ+Owo+ID4gKwkJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2ljPjsKPiA+ICsKPiA+ICsJCWNsb2Nr
-LW5hbWVzID0gImRwX2FwYl9jbGsiLCAiZHBfYXVkX2NsayIsICJkcF9saXZlX3ZpZGVvX2luX2Ns
-ayI7Cj4gPiArCQljbG9ja3MgPSA8JmRwX2FjbGs+LCA8JmNsa2MgMTc+LCA8JnNpNTcwXzE+Owo+
-ID4gKwo+ID4gKwkJcGh5cyA9IDwmbGFuZTE+LCA8JmxhbmUwPjsKPiA+ICsJCXBoeS1uYW1lcyA9
-ICJkcC1waHkwIiwgImRwLXBoeTEiOwo+ID4gKwo+ID4gKwkJcG93ZXItZG9tYWlucyA9IDwmcGRf
-ZHA+Owo+ID4gKwo+ID4gKwkJZG1hLW5hbWVzID0gInZpZDAiLCAidmlkMSIsICJ2aWQyIiwgImdm
-eDAiOwo+ID4gKwkJZG1hcyA9IDwmeGxueF9kcGRtYSAwPiwKPiA+ICsJCSAgICAgICA8Jnhsbnhf
-ZHBkbWEgMT4sCj4gPiArCQkgICAgICAgPCZ4bG54X2RwZG1hIDI+LAo+ID4gKwkJICAgICAgIDwm
-eGxueF9kcGRtYSAzPjsKPiA+ICsJfTsKPiA+ICt9Owo+IAo+IC0tIAo+IFJlZ2FyZHMsCj4gCj4g
-TGF1cmVudCBQaW5jaGFydAo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+Hi Lucas,
+
+On Mon, Feb 05, 2018 at 12:10:46PM +0100, Lucas Stach wrote:
+> I've pushed a branch with all the MX8M work to:
+> https://git.pengutronix.de/git/lst/linux mx8-work
+
+I have some problem to boot the kernel (and dtb) built from this branch.
+I'm running an U-Boot from NXP which works fine with NXP kernel for
+sure.  But using this U-Boot to load your kernel gives me nothing on
+serial, even if I put 'earlycon=ec_imx6q,0x30860000' on kernel
+cmdline.  Anything I'm missing here?  Thanks.
+
+Shawn
+
+---8<--------------------------
+
+U-Boot 2017.03-00779-g777f3b0e3c60 (Jan 31 2018 - 13:54:54 +0800)
+
+CPU:   Freescale i.MX8MQ rev2.0 1500 MHz (running at 1000 MHz)
+CPU:   Commercial temperature grade (0C to 95C) at 30C
+Reset cause: POR
+Model: Freescale i.MX8MQ EVK
+DRAM:  3 GiB
+MMC:   FSL_SDHC: 0, FSL_SDHC: 1
+In:    serial
+Out:   serial
+Err:   serial
+
+ BuildInfo:
+  - ATF 0
+  - U-Boot 2017.03-00779-g777f3b0e3c60
+
+switch to partitions #0, OK
+mmc1 is current device
+Net:   eth0: ethernet@30be0000
+Normal Boot
+Hit any key to stop autoboot:  0 
+u-boot=> tftpboot 0x42000000 Image; tftpboot 0x48000000 imx8mq-evk.dtb;
+booti 0x42000000 - 0x48000000
+Using ethernet@30be0000 device
+TFTP from server 192.168.0.102; our IP address is 192.168.0.110
+Filename 'Image'.
+Load address: 0x42000000
+Loading:
+#################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         #################################################################
+         ###########################################
+         10.1 MiB/s
+done
+Bytes transferred = 17803776 (10faa00 hex)
+Using ethernet@30be0000 device
+TFTP from server 192.168.0.102; our IP address is 192.168.0.110
+Filename 'imx8mq-evk.dtb'.
+Load address: 0x48000000
+Loading: #
+         6.2 MiB/s
+done
+Bytes transferred = 12999 (32c7 hex)
+## Flattened Device Tree blob at 48000000
+   Booting using the fdt blob at 0x48000000
+   reserving fdt memory region: addr=40000000 size=20000
+   Using Device Tree in place at 0000000048000000, end 00000000480062c6
+
+Starting kernel ...
