@@ -1,43 +1,55 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv5 0/5] Motorola Droid 4 Audio Support
-Date: Fri, 23 Feb 2018 14:24:11 -0800
-Message-ID: <20180223222411.GD5593@atomide.com>
-References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [v2,03/10] drm/sun4i: Protect the TCON pixel clocks
+Date: Sat, 24 Feb 2018 00:31:36 +0100
+Message-ID: <7ed0fad9-6b3d-aafc-08a6-fb18761897aa@micronovasrl.com>
+References: <d5224d2e81ecf73dc09f234e580ada52c00eaee3.1519204731.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <d5224d2e81ecf73dc09f234e580ada52c00eaee3.1519204731.git-series.maxime.ripard@bootlin.com>
+Content-Language: it
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sebastian.reichel@collabora.co.uk> [180223 20:03]:
-> Hi,
-> 
-> This adds audio support to Motorola Droid 4. I dropped the
-> regulator from the DT binding as requested by Mark.
-
-Still works for me. Mark, are you happy now with the way
-the nodes are set up?
-
-For the binding and driver changes:
-
-Acked-by: Tony Lindgren <tony@atomide.com>
-
-Then I'll be picking up the dts related patches after
-no more comments.
-
-Regards,
-
-Tony
+SWwgMjEvMDIvMjAxOCAxMDoyMCwgTWF4aW1lIFJpcGFyZCBoYSBzY3JpdHRvOgo+IEZyb206IE1h
+eGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IAo+IEJvdGgg
+VENPTiBjbG9ja3MgYXJlIHZlcnkgc2Vuc2l0aXZlIHRvIGNsb2NrIGNoYW5nZXMsIHNpbmNlIGFu
+eSBjaGFuZ2UKPiBtaWdodCBsZWFkIHRvIGltcHJvcGVyIHRpbWluZ3MuCj4gCj4gTWFrZSBzdXJl
+IG91ciByYXRlIGlzIG5ldmVyIGNoYW5nZWQuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJp
+cGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+ClRlc3RlZC1ieTogR2l1bGlv
+IEJlbmV0dGkgPGdpdWxpby5iZW5ldHRpQG1pY3Jvbm92YXNybC5jb20+CgpUZXN0ZWQgb24gQTIw
+LUxpTm92YTEtNF8zaS1jdHAgd2l0aCBNYWxpIHI2cDIgaW5zdGFsbGVkLgpCZWZvcmUgTWFsaSBj
+aGFuZ2VkIGRvdGNsb2NrLCBub3cgaXQgZG9lc24ndCBhbnltb3JlLgoKPiAtLS0KPiAgIGRyaXZl
+cnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMgfCA0ICsrLS0KPiAgIDEgZmlsZSBjaGFuZ2Vk
+LCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3Vu
+NGlfdGNvbi5jCj4gaW5kZXggYjczYWNhYjc0ODY3Li5jYmU4N2NlZTEzZDEgMTAwNjQ0Cj4gLS0t
+IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwo+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9zdW40aS9zdW40aV90Y29uLmMKPiBAQCAtMjYxLDcgKzI2MSw3IEBAIHN0YXRpYyB2b2lk
+IHN1bjRpX3Rjb24wX21vZGVfc2V0X2NvbW1vbihzdHJ1Y3Qgc3VuNGlfdGNvbiAqdGNvbiwKPiAg
+IAkJCQkJY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCj4gICB7Cj4gICAJLyog
+Q29uZmlndXJlIHRoZSBkb3QgY2xvY2sgKi8KPiAtCWNsa19zZXRfcmF0ZSh0Y29uLT5kY2xrLCBt
+b2RlLT5jcnRjX2Nsb2NrICogMTAwMCk7Cj4gKwljbGtfc2V0X3JhdGVfZXhjbHVzaXZlKHRjb24t
+PmRjbGssIG1vZGUtPmNydGNfY2xvY2sgKiAxMDAwKTsKPiAgIAo+ICAgCS8qIFNldCB0aGUgcmVz
+b2x1dGlvbiAqLwo+ICAgCXJlZ21hcF93cml0ZSh0Y29uLT5yZWdzLCBTVU40SV9UQ09OMF9CQVNJ
+QzBfUkVHLAo+IEBAIC00MTksNyArNDE5LDcgQEAgc3RhdGljIHZvaWQgc3VuNGlfdGNvbjFfbW9k
+ZV9zZXQoc3RydWN0IHN1bjRpX3Rjb24gKnRjb24sCj4gICAJV0FSTl9PTighdGNvbi0+cXVpcmtz
+LT5oYXNfY2hhbm5lbF8xKTsKPiAgIAo+ICAgCS8qIENvbmZpZ3VyZSB0aGUgZG90IGNsb2NrICov
+Cj4gLQljbGtfc2V0X3JhdGUodGNvbi0+c2NsazEsIG1vZGUtPmNydGNfY2xvY2sgKiAxMDAwKTsK
+PiArCWNsa19zZXRfcmF0ZV9leGNsdXNpdmUodGNvbi0+c2NsazEsIG1vZGUtPmNydGNfY2xvY2sg
+KiAxMDAwKTsKPiAgIAo+ICAgCS8qIEFkanVzdCBjbG9jayBkZWxheSAqLwo+ICAgCWNsa19kZWxh
+eSA9IHN1bjRpX3Rjb25fZ2V0X2Nsa19kZWxheShtb2RlLCAxKTsKPiAKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
