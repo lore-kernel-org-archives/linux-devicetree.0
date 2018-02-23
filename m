@@ -1,37 +1,48 @@
 Return-Path: <SRS0=C+Y8=FR=jmondi.org=jacopo+renesas@kernel.org>
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 5/7] arm64: dts: renesas: r8a77965: Add #pwm-cells property
-Date: Fri, 23 Feb 2018 14:40:57 +0100
-Message-Id: <1519393259-26108-6-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 7/7] arm64: dts: renesas: r8a77965: Move usb2_phy1 up
+Date: Fri, 23 Feb 2018 14:40:59 +0100
+Message-Id: <1519393259-26108-8-git-send-email-jacopo+renesas@jmondi.org>
 In-Reply-To: <1519393259-26108-1-git-send-email-jacopo+renesas@jmondi.org>
 References: <1519393259-26108-1-git-send-email-jacopo+renesas@jmondi.org>
 To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add "#pwm-cells" property to "pwm@e6e31000" device node.
-
-This silences the following DTC compiler warning:
-Warning (pwms_property): Missing property '#pwm-cells' in node
-/soc/pwm@e6e31000 or bad phandle (referred from /backlight:pwms[0])
+Move "usb2_ph1" place-holder device node next to "usb2_phy0" one.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 1a21967..5dff176 100644
+index 0118956..8c9648a 100644
 --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -668,6 +668,7 @@
- 
- 		pwm1: pwm@e6e31000 {
- 			reg = <0 0xe6e31000 0 8>;
-+			#pwm-cells = <2>;
+@@ -604,6 +604,11 @@
  			/* placeholder */
  		};
  
++		usb2_phy1: usb-phy@ee0a0200 {
++			reg = <0 0xee0a0200 0 0x700>;
++			/* placeholder */
++		};
++
+ 		ohci1: usb@ee0a0000 {
+ 			reg = <0 0xee0a0000 0 0x100>;
+ 			/* placeholder */
+@@ -771,11 +776,6 @@
+ 			};
+ 		};
+ 
+-		usb2_phy1: usb-phy@ee0a0200 {
+-			reg = <0 0xee0a0200 0 0x700>;
+-			/* placeholder */
+-		};
+-
+ 		sdhi0: sd@ee100000 {
+ 			reg = <0 0xee100000 0 0x2000>;
+ 			/* placeholder */
 -- 
 2.7.4
