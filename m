@@ -1,14 +1,11 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 2/7] pinctrl: sunxi: support pin controllers with
- holes among IRQ banks
-Date: Fri, 23 Feb 2018 16:18:21 +0100
-Message-ID: <20180223151821.gqn66roldejpowzu@flea.lan>
-References: <20180223122552.58049-1-icenowy@aosc.io>
- <20180223122552.58049-3-icenowy@aosc.io>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] arm: dts: zynq: Use SPDX-License-Identifier
+Date: Fri, 23 Feb 2018 15:46:46 +0100
+Message-ID: <21416e9b76509131db1cb7adcd42f2cae8d6b2ef.1519397204.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0685803566576682428=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180223122552.58049-3-icenowy@aosc.io>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,161 +15,174 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, monstr@monstr.eu, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Russell King <linux@armlinux.org.uk>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Follow trend and use the SPDX License description.
 
---===============0685803566576682428==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hzki2yhvhouadvwv"
-Content-Disposition: inline
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
+ arch/arm/boot/dts/zynq-7000.dtsi      | 12 ++----------
+ arch/arm/boot/dts/zynq-microzed.dts   | 10 +---------
+ arch/arm/boot/dts/zynq-parallella.dts | 10 +---------
+ arch/arm/boot/dts/zynq-zc702.dts      | 10 +---------
+ arch/arm/boot/dts/zynq-zc706.dts      | 10 +---------
+ arch/arm/boot/dts/zynq-zed.dts        | 10 +---------
+ arch/arm/boot/dts/zynq-zybo.dts       | 10 +---------
+ 7 files changed, 8 insertions(+), 64 deletions(-)
 
---hzki2yhvhouadvwv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Feb 23, 2018 at 08:25:47PM +0800, Icenowy Zheng wrote:
-> The Allwinner H6 SoC have its pin controllers with the first IRQ-capable
-> GPIO bank at IRQ bank 1 and the second bank at IRQ bank 5. This
-> situation cannot be processed with the current pinctrl IRQ code, as it
-> only expects a offset to all IRQ banks.
->=20
-> Update the code to use a logical IRQ bank to hardware IRQ bank map, so
-> the new situation in H6 main pin controller can be processed. The old
-> special situation which uses a constant offset (on A33 and V3s, both
-> with a offset of 1) can be also processed with the new code.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
-> Changes in v3:
-> - change for the refactor in the new PATCH 1.
->=20
-> No changes in v2.
->=20
->  drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c |  4 +++-
->  drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c |  4 +++-
->  drivers/pinctrl/sunxi/pinctrl-sunxi.h     | 29 +++++++++++++++++--------=
-----
->  3 files changed, 23 insertions(+), 14 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c b/drivers/pinctrl/=
-sunxi/pinctrl-sun8i-a33.c
-> index da387211a75e..f043afa1aac5 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c
-> @@ -481,11 +481,13 @@ static const struct sunxi_desc_pin sun8i_a33_pins[]=
- =3D {
->  		  SUNXI_FUNCTION(0x3, "uart3")),	/* CTS */
->  };
-> =20
-> +static const unsigned int sun8i_a33_pinctrl_irq_bank_map[] =3D { 1, 2 };
-> +
->  static const struct sunxi_pinctrl_desc sun8i_a33_pinctrl_data =3D {
->  	.pins =3D sun8i_a33_pins,
->  	.npins =3D ARRAY_SIZE(sun8i_a33_pins),
->  	.irq_banks =3D 2,
-> -	.irq_bank_base =3D 1,
-> +	.irq_bank_map =3D sun8i_a33_pinctrl_irq_bank_map,
->  	.disable_strict_mode =3D true,
->  };
-> =20
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c b/drivers/pinctrl/=
-sunxi/pinctrl-sun8i-v3s.c
-> index 496ba34e1f5f..6704ce8e5e3d 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3s.c
-> @@ -293,11 +293,13 @@ static const struct sunxi_desc_pin sun8i_v3s_pins[]=
- =3D {
->  		  SUNXI_FUNCTION_IRQ_BANK(0x6, 1, 5)),	/* PG_EINT5 */
->  };
-> =20
-> +static const unsigned int sun8i_v3s_pinctrl_irq_bank_map[] =3D { 1, 2 };
-> +
->  static const struct sunxi_pinctrl_desc sun8i_v3s_pinctrl_data =3D {
->  	.pins =3D sun8i_v3s_pins,
->  	.npins =3D ARRAY_SIZE(sun8i_v3s_pins),
->  	.irq_banks =3D 2,
-> -	.irq_bank_base =3D 1,
-> +	.irq_bank_map =3D sun8i_v3s_pinctrl_irq_bank_map,
->  	.irq_read_needs_mux =3D true
->  };
-> =20
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunx=
-i/pinctrl-sunxi.h
-> index 909ca1504b61..36502cbef6c2 100644
-> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
-> @@ -110,7 +110,7 @@ struct sunxi_pinctrl_desc {
->  	int				npins;
->  	unsigned			pin_base;
->  	unsigned			irq_banks;
-> -	unsigned			irq_bank_base;
-> +	const unsigned int		*irq_bank_map;
->  	bool				irq_read_needs_mux;
->  	bool				disable_strict_mode;
->  };
-> @@ -263,14 +263,23 @@ static inline u32 sunxi_pull_offset(u16 pin)
->  	return pin_num * PULL_PINS_BITS;
->  }
-> =20
-> +static inline u32 sunxi_irq_hw_bank_num(u8 bank,
-> +					const struct sunxi_pinctrl_desc *desc)
-> +{
-> +	if (!desc->irq_bank_map)
-> +		return bank;
-> +	else
-> +		return desc->irq_bank_map[bank];
-> +}
-> +
-
-Same remark about the order of the argument, and I would have split
-this patch in two, one to introduce the new function (but still using
-the irq_bank_base), and then a second patch to introduce the
-irq_bank_map.
-
-Looks good otherwise, thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---hzki2yhvhouadvwv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqQML0ACgkQ0rTAlCFN
-r3TOoA/+IJr26dnmK1zjBiaE2I3eHpmYqrmmV7BmcTV3zEUAp0U/bCenYecTaG6C
-L6ck25pgYSYk1MJQf2JsOxK7YIUp+5dytqBmHq2JgUsgGam1OrESDMuPkJJXjiha
-I/6Fqunaa9Sa5gWjRAI426SL/9xe0gGz2Bf0d46MjycxgZlgrsxhLxDKEKASju7q
-ViGnN5uZNle6Y88+84FRIYH/wMl1CFAWjGoVQbiss1UVPQapatqBhcnxSgUIVRd2
-fbbc4As+/KgrN8CXZYY1vOmDF+PsGzDSngdZ4Sz+wKy5KMvZBTCplBCwl3+YkFJF
-9h96wlLWIbK7JnL1NxRRir+e7kWRHgEstXF4Qz5LDTwnAEkprTaFdd9nmHhJzgIf
-2Y44TpMIzhzCFA+rJG7hIJEWRCd4ZU726xLiJluqsKgTLz3S2DWFpn9ZAjVwRtXj
-kTON+NtvCiB+sdoRVeQlq2V6VExk0HJsntSo8CKlX0IynFCyDyRxZgx21zkj/bDN
-Oh5n24gGnqhZmArvCibeEKUOgzOEIkSLyrQbx28eOzgKGf28dH+xmUUpMFZqhzC8
-hkv8ylzeYayFqQWgbCnuWGuvQqLyiOEJIQu2DIBA4LUTvL0gs3mFtqaFE4IASGd8
-ZI2TMjJacm8bH0hMlzTANBDdvg67cr04wPDQYPjoiRrevTU4K58=
-=GXP9
------END PGP SIGNATURE-----
-
---hzki2yhvhouadvwv--
-
-
---===============0685803566576682428==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0685803566576682428==--
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index 0f79fe1ccd9d..e22507e23303 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -1,14 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+- *  Copyright (C) 2011 - 2014 Xilinx
+- *
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
++ * Copyright (C) 2011 - 2014 Xilinx
+  */
+ 
+ / {
+diff --git a/arch/arm/boot/dts/zynq-microzed.dts b/arch/arm/boot/dts/zynq-microzed.dts
+index b9376a4904b4..e017cb67ffba 100644
+--- a/arch/arm/boot/dts/zynq-microzed.dts
++++ b/arch/arm/boot/dts/zynq-microzed.dts
+@@ -1,15 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (C) 2011 - 2014 Xilinx
+  * Copyright (C) 2016 Jagan Teki <jteki@openedev.com>
+- *
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
+ /dts-v1/;
+ /include/ "zynq-7000.dtsi"
+diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/zynq-parallella.dts
+index 0144acfa9793..c05f4b67d4c1 100644
+--- a/arch/arm/boot/dts/zynq-parallella.dts
++++ b/arch/arm/boot/dts/zynq-parallella.dts
+@@ -1,3 +1,4 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Copyright (c) 2014 SUSE LINUX Products GmbH
+  *
+@@ -6,15 +7,6 @@
+  *  Copyright (C) 2011 Xilinx
+  *  Copyright (C) 2012 National Instruments Corp.
+  *  Copyright (C) 2013 Xilinx
+- *
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
+ /dts-v1/;
+ /include/ "zynq-7000.dtsi"
+diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+index ff3a7d22afba..f2330b0cb63d 100644
+--- a/arch/arm/boot/dts/zynq-zc702.dts
++++ b/arch/arm/boot/dts/zynq-zc702.dts
+@@ -1,15 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  *  Copyright (C) 2011 - 2014 Xilinx
+  *  Copyright (C) 2012 National Instruments Corp.
+- *
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
+ /dts-v1/;
+ #include "zynq-7000.dtsi"
+diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
+index 1825f5722ab9..3ad1260ff2a1 100644
+--- a/arch/arm/boot/dts/zynq-zc706.dts
++++ b/arch/arm/boot/dts/zynq-zc706.dts
+@@ -1,15 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  *  Copyright (C) 2011 - 2014 Xilinx
+  *  Copyright (C) 2012 National Instruments Corp.
+- *
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
+ /dts-v1/;
+ #include "zynq-7000.dtsi"
+diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
+index 5e44dc12fd60..53c6883ce1f6 100644
+--- a/arch/arm/boot/dts/zynq-zed.dts
++++ b/arch/arm/boot/dts/zynq-zed.dts
+@@ -1,15 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  *  Copyright (C) 2011 - 2014 Xilinx
+  *  Copyright (C) 2012 National Instruments Corp.
+- *
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
+ /dts-v1/;
+ #include "zynq-7000.dtsi"
+diff --git a/arch/arm/boot/dts/zynq-zybo.dts b/arch/arm/boot/dts/zynq-zybo.dts
+index e40cafc5ee5b..a6c00e7fa767 100644
+--- a/arch/arm/boot/dts/zynq-zybo.dts
++++ b/arch/arm/boot/dts/zynq-zybo.dts
+@@ -1,15 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  *  Copyright (C) 2011 - 2014 Xilinx
+  *  Copyright (C) 2012 National Instruments Corp.
+- *
+- * This software is licensed under the terms of the GNU General Public
+- * License version 2, as published by the Free Software Foundation, and
+- * may be copied, distributed, and modified under those terms.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+  */
+ /dts-v1/;
+ #include "zynq-7000.dtsi"
+-- 
+1.9.1
