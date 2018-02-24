@@ -1,16 +1,15 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH] ARM: dts: porter: Add missing PMIC nodes
-Date: Sat, 24 Feb 2018 11:05:49 +0100
-Message-ID: <1d93db7c-e65a-e2b3-5a65-a1eb4fa1d60e@gmail.com>
-References: <20180217020756.21474-1-marek.vasut+renesas@gmail.com>
- <CAMuHMdUiGAV7r55mqRH549BufDsh8_j8_S-BD_49sCM=aO9hZQ@mail.gmail.com>
- <20180223164517.aboazzeuujgtkh7q@verge.net.au>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v4 13/13] iio: adc: axp20x_adc: remove !! in favor of
+ ternary condition
+Date: Sat, 24 Feb 2018 12:20:29 +0000
+Message-ID: <20180224122029.1520fe89@archlinux>
+References: <cover.6545459c99a33874413abf619136986f53d2c2a2.1519044068.git-series.quentin.schulz@bootlin.com>
+ <9ec180ff4358ac6e163115aa7832a0674b6a640e.1519044068.git-series.quentin.schulz@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180223164517.aboazzeuujgtkh7q@verge.net.au>
-Content-Language: en-US
+In-Reply-To: <9ec180ff4358ac6e163115aa7832a0674b6a640e.1519044068.git-series.quentin.schulz@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,48 +19,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Steve Twiss <stwiss.opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
+To: Quentin Schulz <quentin.schulz@bootlin.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, thomas.petazzoni@bootlin.com, linux-pm@vger.kernel.org, maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, sre@kernel.org, linux@armlinux.org.uk, linux-iio@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/2018 05:45 PM, Simon Horman wrote:
-> On Sun, Feb 18, 2018 at 04:07:51PM +0100, Geert Uytterhoeven wrote:
->> Hi Marek,
->>
->> CC Steve Twiss
->>
->> On Sat, Feb 17, 2018 at 3:07 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
->>> Add PMIC nodes to Porter and connect CPU DVFS supply. There is
->>> one DA9063 and one DA9210 on Porter, the only difference from
->>> the other boards is that DA9063 is at I2C address 0x5a rather
->>> than 0x58 .
->>>
->>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
->>
->> Thanks for your patch!
->>
->>> --- a/arch/arm/boot/dts/r8a7791-porter.dts
->>> +++ b/arch/arm/boot/dts/r8a7791-porter.dts
->>> @@ -354,10 +354,47 @@
->>>         clock-frequency = <400000>;
->>>  };
->>>
->>> +&i2c6 {
->>> +       status = "okay";
->>> +       clock-frequency = <100000>;
->>> +
->>> +       pmic@5a {
->>> +               compatible = "dlg,da9063";
->>
->> Does it matter that this is a DA9063L ("Variant 6B")?
->> Do we need a new compatible value, or can this be detected at runtime?
-> 
-> Hi Marek,
-> 
-> could you follow up on this?
+On Mon, 19 Feb 2018 13:47:36 +0100
+Quentin Schulz <quentin.schulz@bootlin.com> wrote:
 
-Yes, ASAP, once I'm back in the office, currently I'm stuck at the airport.
+> !!'s behaviour isn't that obvious and sparse complained about it, so
+> let's replace it with a ternary condition.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
--- 
-Best regards,
-Marek Vasut
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/adc/axp20x_adc.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/axp20x_adc.c b/drivers/iio/adc/axp20x_adc.c
+> index a30a972..7a745cf 100644
+> --- a/drivers/iio/adc/axp20x_adc.c
+> +++ b/drivers/iio/adc/axp20x_adc.c
+> @@ -365,7 +365,7 @@ static int axp20x_adc_offset_voltage(struct iio_dev *indio_dev, int channel,
+>  		return -EINVAL;
+>  	}
+>  
+> -	*val = !!(*val) * 700000;
+> +	*val = *val ? 700000 : 0;
+>  
+>  	return IIO_VAL_INT;
+>  }
+> @@ -442,15 +442,17 @@ static int axp20x_write_raw(struct iio_dev *indio_dev,
+>  	if (val != 0 && val != 700000)
+>  		return -EINVAL;
+>  
+> +	val = val ? 1 : 0;
+> +
+>  	switch (chan->channel) {
+>  	case AXP20X_GPIO0_V:
+>  		reg = AXP20X_GPIO10_IN_RANGE_GPIO0;
+> -		regval = AXP20X_GPIO10_IN_RANGE_GPIO0_VAL(!!val);
+> +		regval = AXP20X_GPIO10_IN_RANGE_GPIO0_VAL(val);
+>  		break;
+>  
+>  	case AXP20X_GPIO1_V:
+>  		reg = AXP20X_GPIO10_IN_RANGE_GPIO1;
+> -		regval = AXP20X_GPIO10_IN_RANGE_GPIO1_VAL(!!val);
+> +		regval = AXP20X_GPIO10_IN_RANGE_GPIO1_VAL(val);
+>  		break;
+>  
+>  	default:
