@@ -1,16 +1,15 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 0/4][v4][RESEND] dt-bindings: mtd-physmap: Add endianness
- supports
-Date: Sat, 24 Feb 2018 17:09:18 +0800
-Message-ID: <20180224090917.GQ3217@dragon>
-References: <20180222101511.29631-1-prabhakar.kushwaha@nxp.com>
- <20180222112814.3717af47@bbrezillon>
+Subject: Re: [PATCH V4 2/2] thermal: imx: add i.MX7 thermal sensor support
+Date: Sat, 24 Feb 2018 17:20:12 +0800
+Message-ID: <20180224092011.GR3217@dragon>
+References: <1519459369-29083-1-git-send-email-Anson.Huang@nxp.com>
+ <1519459369-29083-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180222112814.3717af47@bbrezillon>
+In-Reply-To: <1519459369-29083-2-git-send-email-Anson.Huang@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,36 +19,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh@kernel.org, boris.brezillon@free-electrons.com, leoyang.li@nxp.com, oss@buserror.net, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, linux-mtd@lists.infradead.org, cyrille.pitchen@wedev4u.fr, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, edubezval@gmail.com, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, rui.zhang@intel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 22, 2018 at 11:28:14AM +0100, Boris Brezillon wrote:
-> Hi Prabhakar,
+On Sat, Feb 24, 2018 at 04:02:49PM +0800, Anson Huang wrote:
+> This patch adds i.MX7 thermal sensor support, most
+> of the i.MX7 thermal sensor functions are same with
+> i.MX6 except the registers offset/layout, so we move
+> those registers offset/layout definitions to soc data
+> structure.
 > 
-> On Thu, 22 Feb 2018 15:45:05 +0530
-> Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com> wrote:
+> i.MX7 uses single calibration data @25C, the calibration
+> data is located at OCOTP offset 0x4F0, bit[17:9], the
+> formula is as below:
 > 
-> > Connection between flash and controller is not necessary to be always
-> > of same type. It may varies from platform to platform.
-> > 
-> > Adding endianness (optional) property to provide connection type
-> > information. This endianness property is checked in physmap_of_core.c
-> > to decide swap type. 
-> > 
-> > This patch also set "big-endian" property for ls1021a, ls1043a
-> > and ls1046a device tree. here connection between IFC controller
-> > and NOR flash is big-endian.
-> > 
-> > Prabhakar Kushwaha (4):
-> >   dt-bindings: mtd-physmap: Add endianness supports
-> >   driver: mtd: update struct map_info's swap as per map requirement
-> >   ARM: dts: Add NOR connection type with IFC
-> >   ARM64: dts: Add NOR connection type with IFC
+> Tmeas = (Nmeas - n1) + 25; n1 is the fuse value for 25C.
 > 
-> First of all, can you stop sending dts changes until we've agreed on
-> the dt-bindings/driver changes.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
 
-+1
-
-Shawn
+Acked-by: Shawn Guo <shawnguo@kernel.org>
