@@ -1,7 +1,7 @@
 From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH] ARM: dts: bcm2835-rpi-zero-w: Enable OTG mode
-Date: Sat, 24 Feb 2018 14:47:08 +0100
-Message-ID: <1519480028-26430-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 0/2] ARM: dts: bcm283x: Fix DTC warnings
+Date: Sat, 24 Feb 2018 15:15:20 +0100
+Message-ID: <1519481722-22738-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -19,26 +19,16 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Since commit 9273083a1530 ("usb: dwc2: Fix TxFIFOn sizes and total TxFIFO
-size issues") we could use the OTG mode again.
+This patch series fixes some DTC warnings, which are only visible with W=1.
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
----
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Stefan Wahren (2):
+  ARM: dts: bcm283x: Fix unit address of local_intc
+  ARM: dts: bcm283x: Move arm-pmu out of soc node
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-index b8565fc..cf53436 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -12,7 +12,7 @@
- /dts-v1/;
- #include "bcm2835.dtsi"
- #include "bcm2835-rpi.dtsi"
--#include "bcm283x-rpi-usb-host.dtsi"
-+#include "bcm283x-rpi-usb-otg.dtsi"
- 
- / {
- 	compatible = "raspberrypi,model-zero-w", "brcm,bcm2835";
+ arch/arm/boot/dts/bcm2835.dtsi |  6 +++---
+ arch/arm/boot/dts/bcm2836.dtsi | 12 ++++++------
+ arch/arm/boot/dts/bcm2837.dtsi |  2 +-
+ 3 files changed, 10 insertions(+), 10 deletions(-)
+
 -- 
 2.7.4
