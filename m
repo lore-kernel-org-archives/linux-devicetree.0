@@ -1,11 +1,15 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: [PATCH] arm64: dts: ls1046a: drop incomplete memory node
-Date: Sat, 24 Feb 2018 15:04:56 +0800
-Message-ID: <1519455896-8924-1-git-send-email-shawnguo@kernel.org>
+Subject: Re: [PATCH 1/3] arm64: dts: ls1012a: add cpu idle support
+Date: Sat, 24 Feb 2018 15:12:40 +0800
+Message-ID: <20180224071239.GC3217@dragon>
+References: <20180208075436.38443-1-ran.wang_1@nxp.com>
+ <20180224062514.GB3217@dragon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180224062514.GB3217@dragon>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,41 +19,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Mingkai Hu <Mingkai.Hu@nxp.com>, Shaohui Xie <Shaohui.Xie@nxp.com>
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The memory node in fsl-ls1046a.dtsi has no 'reg' property, and causes
-the dtc warning below.
+On Sat, Feb 24, 2018 at 02:25:16PM +0800, Shawn Guo wrote:
+> On Thu, Feb 08, 2018 at 03:54:34PM +0800, Ran Wang wrote:
+> > From: Yuantian Tang <andy.tang@nxp.com>
+> > 
+> > Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+> > ---
+> >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |   18 ++++++++++++++++++
+> >  1 files changed, 18 insertions(+), 0 deletions(-)
+> 
+> Applied all, thanks.
 
-Warning (unit_address_vs_reg): Node /memory@80000000 has a unit name, but no reg property
+Ran,
 
-This is clearly an incomplete memory node.  Let's drop it.  Either
-a complete memory should be added, or bootloader needs to fill the node
-as a whole.
+Just noticed that these patches are authored by Yuantian.  When you send
+patches authored by someone else, you should have your SoB added to it.
 
-Cc: Mingkai Hu <Mingkai.Hu@nxp.com>
-Cc: Shaohui Xie <Shaohui.Xie@nxp.com>
-Cc: Li Yang <leoyang.li@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
----
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+I just append your SoB below to all 3 patches.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 606ea496f24e..cbf4b3e15c17 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -129,10 +129,6 @@
- 		};
- 	};
- 
--	memory@80000000 {
--		device_type = "memory";
--	};
--
- 	sysclk: sysclk {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
--- 
-1.9.1
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+
+Shawn
