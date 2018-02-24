@@ -1,22 +1,15 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v2 7/8] [PATCH 7/8] drivers/hwmon: Add a generic PECI
- hwmon client driver
-Date: Sat, 24 Feb 2018 01:32:53 -0800
-Message-ID: <85f66284-2e18-2a74-1e7b-9378353ab43e@linux.intel.com>
-References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
- <20180221161606.32247-8-jae.hyun.yoo@linux.intel.com>
- <20180221182608.GA11635@roeck-us.net>
- <618f34cd-ee43-d8e4-4fb0-3c23bf03835f@linux.intel.com>
- <20180221214859.GA30263@roeck-us.net>
- <576a50c6-c302-654c-ceb3-aaf820b7738a@linux.intel.com>
- <20180222003720.GA25250@lunn.ch>
- <b506b4b1-7e7d-abd6-bac2-c45e7c1e0aae@linux.intel.com>
- <CANiq72mjsfJRzfFmhbL7dnih_0=2pFoJDTrmi35x0yLmKrSBFA@mail.gmail.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH] ARM: dts: porter: Add missing PMIC nodes
+Date: Sat, 24 Feb 2018 11:05:49 +0100
+Message-ID: <1d93db7c-e65a-e2b3-5a65-a1eb4fa1d60e@gmail.com>
+References: <20180217020756.21474-1-marek.vasut+renesas@gmail.com>
+ <CAMuHMdUiGAV7r55mqRH549BufDsh8_j8_S-BD_49sCM=aO9hZQ@mail.gmail.com>
+ <20180223164517.aboazzeuujgtkh7q@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CANiq72mjsfJRzfFmhbL7dnih_0=2pFoJDTrmi35x0yLmKrSBFA@mail.gmail.com>
+In-Reply-To: <20180223164517.aboazzeuujgtkh7q@verge.net.au>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -27,55 +20,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: linux-hwmon@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, jdelvare@suse.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, andrew@aj.id.au, Greg KH <gregkh@linuxfoundation.org>, openbmc@lists.ozlabs.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org, Guenter Roeck <linux@roeck-us.net>, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Steve Twiss <stwiss.opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2/23/2018 4:00 PM, Miguel Ojeda wrote:
-> On Thu, Feb 22, 2018 at 2:29 AM, Jae Hyun Yoo
-> <jae.hyun.yoo@linux.intel.com> wrote:
->> On 2/21/2018 4:37 PM, Andrew Lunn wrote:
->>>>
->>>> But even with this change, it still needs to use delayed creation
->>>> because BMC side kernel doesn't know how many DIMMs are populated on
->>>> a remote server before the remote server completes its memory
->>>> training and testing in BIOS, but it needs to check the remote
->>>> server's CPU temperature as immediate as possible to make
->>>> appropriate thermal control based on the remote CPU's temperature to
->>>> avoid any critical thermal issue. What would be a better solution in
->>>> this case?
->>>
->>>
->>> You could change this driver so that it supports one DIMM.  Move the
->>> 'hotplug' part into another driver which creates and destroys
->>> instances of the hwmon DIMM device as the DIMMS come and go.
->>>
->>> Also, do you need to handle CPU hotplug? You could split the CPU
->>> temperature part into a separate hwmon driver? And again create and
->>> destroy devices as CPUs come and go?
->>>
->>>          Andrew
->>>
+On 02/23/2018 05:45 PM, Simon Horman wrote:
+> On Sun, Feb 18, 2018 at 04:07:51PM +0100, Geert Uytterhoeven wrote:
+>> Hi Marek,
 >>
->> That seems like a possible option. I'll rewrite the hwmon driver again like
->> that.
+>> CC Steve Twiss
 >>
->> Thanks for the good idea. :)
-> 
-> By the way, in the rewrite, please try to avoid the create*workqueue()
-> functions (they are deprecated :).
-> 
-> Cheers,
-> Miguel
-> 
-
-Hi Miguel,
-
-Thanks for letting me know that. I'll replace that with 
-alloc_workqueue(). :)
-
-Regards,
-Jae
-
+>> On Sat, Feb 17, 2018 at 3:07 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>>> Add PMIC nodes to Porter and connect CPU DVFS supply. There is
+>>> one DA9063 and one DA9210 on Porter, the only difference from
+>>> the other boards is that DA9063 is at I2C address 0x5a rather
+>>> than 0x58 .
+>>>
+>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 >>
->> Jae
+>> Thanks for your patch!
+>>
+>>> --- a/arch/arm/boot/dts/r8a7791-porter.dts
+>>> +++ b/arch/arm/boot/dts/r8a7791-porter.dts
+>>> @@ -354,10 +354,47 @@
+>>>         clock-frequency = <400000>;
+>>>  };
+>>>
+>>> +&i2c6 {
+>>> +       status = "okay";
+>>> +       clock-frequency = <100000>;
+>>> +
+>>> +       pmic@5a {
+>>> +               compatible = "dlg,da9063";
+>>
+>> Does it matter that this is a DA9063L ("Variant 6B")?
+>> Do we need a new compatible value, or can this be detected at runtime?
+> 
+> Hi Marek,
+> 
+> could you follow up on this?
+
+Yes, ASAP, once I'm back in the office, currently I'm stuck at the airport.
+
+-- 
+Best regards,
+Marek Vasut
