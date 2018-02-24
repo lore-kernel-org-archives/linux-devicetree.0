@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 14/15] ARM: dts: sun8i: h3: Enable HDMI output
- on H3 boards
-Date: Sat, 24 Feb 2018 22:45:44 +0100
-Message-ID: <20180224214545.3740-15-jernej.skrabec@siol.net>
+Subject: [PATCH 10/15] drm/sun4i: Move and expand DW HDMI PHY
+ register macros
+Date: Sat, 24 Feb 2018 22:45:40 +0100
+Message-ID: <20180224214545.3740-11-jernej.skrabec@siol.net>
 References: <20180224214545.3740-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBM52Y7KAKGQE4VNKKMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBTF2Y7KAKGQEELR3M4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180224214545.3740-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,414 +20,182 @@ To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2F
 Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable HDMI output on all boards which have HDMI connector.
+DW HDMI PHY macros are moved to header file and expanded with the
+registers present on newer SoCs like H3 and H5.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    | 25 ++++++++++++++++++++++
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts          | 25 ++++++++++++++++++++++
- arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 25 ++++++++++++++++++++++
- arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts           | 25 ++++++++++++++++++++++
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          | 25 ++++++++++++++++++++++
- arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts       | 25 ++++++++++++++++++++++
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        | 24 +++++++++++++++++++++
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         | 25 ++++++++++++++++++++++
- 8 files changed, 199 insertions(+)
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h  | 130 +++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c |  16 ----
+ 2 files changed, 130 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-index f1c3f1cc4d97..805ff120bb6d 100644
---- a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts
-@@ -61,6 +61,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+index 1e9eb6072615..4d625adf4b65 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
++++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+@@ -12,6 +12,136 @@
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
  
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
++#define SUN8I_HDMI_PHY_DBG_CTRL_REG	0x0000
++#define SUN8I_HDMI_PHY_DBG_CTRL_PX_LOCK		BIT(0)
++#define SUN8I_HDMI_PHY_DBG_CTRL_POL_MASK	GENMASK(15, 8)
++#define SUN8I_HDMI_PHY_DBG_CTRL_POL(val)	(val << 8)
++#define SUN8I_HDMI_PHY_DBG_CTRL_ADDR_MASK	GENMASK(23, 16)
++#define SUN8I_HDMI_PHY_DBG_CTRL_ADDR(addr)	(addr << 16)
 +
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
++#define SUN8I_HDMI_PHY_REXT_CTRL_REG	0x0004
++#define SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN	BIT(31)
 +
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -100,6 +111,10 @@
- 	};
- };
++#define SUN8I_HDMI_PHY_READ_EN_REG	0x0010
++#define SUN8I_HDMI_PHY_READ_EN_MAGIC		0x54524545
++
++#define SUN8I_HDMI_PHY_UNSCRAMBLE_REG	0x0014
++#define SUN8I_HDMI_PHY_UNSCRAMBLE_MAGIC		0x42494E47
++
++#define SUN8I_HDMI_PHY_ANA_CFG1_REG	0x0020
++#define SUN8I_HDMI_PHY_ANA_CFG1_REG_SWI		BIT(31)
++#define SUN8I_HDMI_PHY_ANA_CFG1_REG_PWEND	BIT(30)
++#define SUN8I_HDMI_PHY_ANA_CFG1_REG_PWENC	BIT(29)
++#define SUN8I_HDMI_PHY_ANA_CFG1_REG_CALSW	BIT(28)
++#define SUN8I_HDMI_PHY_ANA_CFG1_REG_SVRCAL(x)	((x) << 26)
++#define SUN8I_HDMI_PHY_ANA_CFG1_REG_SVBH(x)	((x) << 24)
++#define SUN8I_HDMI_PHY_ANA_CFG1_AMP_OPT		BIT(23)
++#define SUN8I_HDMI_PHY_ANA_CFG1_EMP_OPT		BIT(22)
++#define SUN8I_HDMI_PHY_ANA_CFG1_AMPCK_OPT	BIT(21)
++#define SUN8I_HDMI_PHY_ANA_CFG1_EMPCK_OPT	BIT(20)
++#define SUN8I_HDMI_PHY_ANA_CFG1_ENRCAL		BIT(19)
++#define SUN8I_HDMI_PHY_ANA_CFG1_ENCALOG		BIT(18)
++#define SUN8I_HDMI_PHY_ANA_CFG1_REG_SCKTMDS	BIT(17)
++#define SUN8I_HDMI_PHY_ANA_CFG1_TMDSCLK_EN	BIT(16)
++#define SUN8I_HDMI_PHY_ANA_CFG1_TXEN_MASK	GENMASK(15, 12)
++#define SUN8I_HDMI_PHY_ANA_CFG1_TXEN_ALL	(0xf << 12)
++#define SUN8I_HDMI_PHY_ANA_CFG1_BIASEN_TMDSCLK	BIT(11)
++#define SUN8I_HDMI_PHY_ANA_CFG1_BIASEN_TMDS2	BIT(10)
++#define SUN8I_HDMI_PHY_ANA_CFG1_BIASEN_TMDS1	BIT(9)
++#define SUN8I_HDMI_PHY_ANA_CFG1_BIASEN_TMDS0	BIT(8)
++#define SUN8I_HDMI_PHY_ANA_CFG1_ENP2S_TMDSCLK	BIT(7)
++#define SUN8I_HDMI_PHY_ANA_CFG1_ENP2S_TMDS2	BIT(6)
++#define SUN8I_HDMI_PHY_ANA_CFG1_ENP2S_TMDS1	BIT(5)
++#define SUN8I_HDMI_PHY_ANA_CFG1_ENP2S_TMDS0	BIT(4)
++#define SUN8I_HDMI_PHY_ANA_CFG1_CKEN		BIT(3)
++#define SUN8I_HDMI_PHY_ANA_CFG1_LDOEN		BIT(2)
++#define SUN8I_HDMI_PHY_ANA_CFG1_ENVBS		BIT(1)
++#define SUN8I_HDMI_PHY_ANA_CFG1_ENBI		BIT(0)
++
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG	0x0024
++#define SUN8I_HDMI_PHY_ANA_CFG2_M_EN		BIT(31)
++#define SUN8I_HDMI_PHY_ANA_CFG2_PLLDBEN		BIT(30)
++#define SUN8I_HDMI_PHY_ANA_CFG2_SEN		BIT(29)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_HPDPD	BIT(28)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_HPDEN	BIT(27)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_PLRCK	BIT(26)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_PLR(x)	((x) << 23)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_DENCK	BIT(22)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_DEN		BIT(21)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_CD(x)	((x) << 19)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_CKSS(x)	((x) << 17)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_BIGSWCK	BIT(16)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_BIGSW	BIT(15)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_CSMPS(x)	((x) << 13)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_SLV(x)	((x) << 10)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_BOOSTCK(x)	((x) << 8)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_BOOST(x)	((x) << 6)
++#define SUN8I_HDMI_PHY_ANA_CFG2_REG_RESDI(x)	((x) << 0)
++
++#define SUN8I_HDMI_PHY_ANA_CFG3_REG	0x0028
++#define SUN8I_HDMI_PHY_ANA_CFG3_REG_SLOWCK(x)	((x) << 30)
++#define SUN8I_HDMI_PHY_ANA_CFG3_REG_SLOW(x)	((x) << 28)
++#define SUN8I_HDMI_PHY_ANA_CFG3_REG_WIRE(x)	((x) << 18)
++#define SUN8I_HDMI_PHY_ANA_CFG3_REG_AMPCK(x)	((x) << 14)
++#define SUN8I_HDMI_PHY_ANA_CFG3_REG_EMPCK(x)	((x) << 11)
++#define SUN8I_HDMI_PHY_ANA_CFG3_REG_AMP(x)	((x) << 7)
++#define SUN8I_HDMI_PHY_ANA_CFG3_REG_EMP(x)	((x) << 4)
++#define SUN8I_HDMI_PHY_ANA_CFG3_SDAPD		BIT(3)
++#define SUN8I_HDMI_PHY_ANA_CFG3_SDAEN		BIT(2)
++#define SUN8I_HDMI_PHY_ANA_CFG3_SCLPD		BIT(1)
++#define SUN8I_HDMI_PHY_ANA_CFG3_SCLEN		BIT(0)
++
++#define SUN8I_HDMI_PHY_PLL_CFG1_REG	0x002c
++#define SUN8I_HDMI_PHY_PLL_CFG1_REG_OD1		BIT(31)
++#define SUN8I_HDMI_PHY_PLL_CFG1_REG_OD		BIT(30)
++#define SUN8I_HDMI_PHY_PLL_CFG1_LDO2_EN		BIT(29)
++#define SUN8I_HDMI_PHY_PLL_CFG1_LDO1_EN		BIT(28)
++#define SUN8I_HDMI_PHY_PLL_CFG1_HV_IS_33	BIT(27)
++#define SUN8I_HDMI_PHY_PLL_CFG1_CKIN_SEL	BIT(26)
++#define SUN8I_HDMI_PHY_PLL_CFG1_PLLEN		BIT(25)
++#define SUN8I_HDMI_PHY_PLL_CFG1_LDO_VSET(x)	((x) << 22)
++#define SUN8I_HDMI_PHY_PLL_CFG1_UNKNOWN(x)	((x) << 20)
++#define SUN8I_HDMI_PHY_PLL_CFG1_PLLDBEN		BIT(19)
++#define SUN8I_HDMI_PHY_PLL_CFG1_CS		BIT(18)
++#define SUN8I_HDMI_PHY_PLL_CFG1_CP_S(x)		((x) << 13)
++#define SUN8I_HDMI_PHY_PLL_CFG1_CNT_INT(x)	((x) << 7)
++#define SUN8I_HDMI_PHY_PLL_CFG1_BWS		BIT(6)
++#define SUN8I_HDMI_PHY_PLL_CFG1_B_IN_MSK	GENMASK(5, 0)
++#define SUN8I_HDMI_PHY_PLL_CFG1_B_IN_SHIFT	0
++
++#define SUN8I_HDMI_PHY_PLL_CFG2_REG	0x0030
++#define SUN8I_HDMI_PHY_PLL_CFG2_SV_H		BIT(31)
++#define SUN8I_HDMI_PHY_PLL_CFG2_PDCLKSEL(x)	((x) << 29)
++#define SUN8I_HDMI_PHY_PLL_CFG2_CLKSTEP(x)	((x) << 27)
++#define SUN8I_HDMI_PHY_PLL_CFG2_PSET(x)		((x) << 24)
++#define SUN8I_HDMI_PHY_PLL_CFG2_PCLK_SEL	BIT(23)
++#define SUN8I_HDMI_PHY_PLL_CFG2_AUTOSYNC_DIS	BIT(22)
++#define SUN8I_HDMI_PHY_PLL_CFG2_VREG2_OUT_EN	BIT(21)
++#define SUN8I_HDMI_PHY_PLL_CFG2_VREG1_OUT_EN	BIT(20)
++#define SUN8I_HDMI_PHY_PLL_CFG2_VCOGAIN_EN	BIT(19)
++#define SUN8I_HDMI_PHY_PLL_CFG2_VCOGAIN(x)	((x) << 16)
++#define SUN8I_HDMI_PHY_PLL_CFG2_VCO_S(x)	((x) << 12)
++#define SUN8I_HDMI_PHY_PLL_CFG2_VCO_RST_IN	BIT(11)
++#define SUN8I_HDMI_PHY_PLL_CFG2_SINT_FRAC	BIT(10)
++#define SUN8I_HDMI_PHY_PLL_CFG2_SDIV2		BIT(9)
++#define SUN8I_HDMI_PHY_PLL_CFG2_S(x)		((x) << 6)
++#define SUN8I_HDMI_PHY_PLL_CFG2_S6P25_7P5	BIT(5)
++#define SUN8I_HDMI_PHY_PLL_CFG2_S5_7		BIT(4)
++#define SUN8I_HDMI_PHY_PLL_CFG2_PREDIV_MSK	GENMASK(3, 0)
++#define SUN8I_HDMI_PHY_PLL_CFG2_PREDIV_SHIFT	0
++#define SUN8I_HDMI_PHY_PLL_CFG2_PREDIV(x)	(((x) - 1) << 0)
++
++#define SUN8I_HDMI_PHY_PLL_CFG3_REG	0x0034
++#define SUN8I_HDMI_PHY_PLL_CFG3_SOUT_DIV2	BIT(0)
++
++#define SUN8I_HDMI_PHY_ANA_STS_REG	0x0038
++#define SUN8I_HDMI_PHY_ANA_STS_B_OUT_SHIFT	11
++#define SUN8I_HDMI_PHY_ANA_STS_B_OUT_MSK	GENMASK(16, 11)
++#define SUN8I_HDMI_PHY_ANA_STS_RCALEND2D	BIT(7)
++#define SUN8I_HDMI_PHY_ANA_STS_RCAL_MASK	GENMASK(5, 0)
++
++#define SUN8I_HDMI_PHY_CEC_REG		0x003c
++
+ struct sun8i_hdmi_phy;
  
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -129,6 +144,16 @@
- 	};
- };
+ struct sun8i_hdmi_phy_variant {
+diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+index ab758f040acd..1bf96b04545b 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
++++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+@@ -7,22 +7,6 @@
  
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index 10da56e86ab8..0b30bcf81c3a 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -61,6 +61,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+ #include "sun8i_dw_hdmi.h"
  
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -100,6 +111,10 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -108,6 +123,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
-diff --git a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
-index d406571a0dd6..f1ef54d4b1a4 100644
---- a/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts
-@@ -23,6 +23,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -120,6 +131,10 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -143,6 +158,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
-index c77fbca4f227..9412668bb888 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
-@@ -49,6 +49,21 @@
- 	aliases {
- 		ethernet0 = &emac;
- 	};
-+
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+};
-+
-+&de {
-+	status = "okay";
- };
- 
- &ehci1 {
-@@ -66,6 +81,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-index b20be95b49d5..17101fdbad45 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-@@ -62,6 +62,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -114,6 +125,10 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
-@@ -125,6 +140,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts
-index a70a1daf4e2c..f0f1ca6e801f 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts
-@@ -61,6 +61,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -91,6 +102,10 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
-@@ -99,6 +114,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-index 82e5d28cd698..95aaf20c22b3 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
-@@ -60,6 +60,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -90,6 +101,10 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -102,9 +117,18 @@
- 	phy-handle = <&int_mii_phy>;
- 	phy-mode = "mii";
- 	allwinner,leds-active-low;
-+};
-+
-+&hdmi {
- 	status = "okay";
- };
- 
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index d22546df1b82..afcaeccc9625 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -60,6 +60,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -98,6 +109,10 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -121,6 +136,16 @@
- 	status = "okay";
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
+-#define SUN8I_HDMI_PHY_DBG_CTRL_REG	0x0000
+-#define SUN8I_HDMI_PHY_DBG_CTRL_PX_LOCK		BIT(0)
+-#define SUN8I_HDMI_PHY_DBG_CTRL_POL_MASK	GENMASK(15, 8)
+-#define SUN8I_HDMI_PHY_DBG_CTRL_POL(val)	(val << 8)
+-#define SUN8I_HDMI_PHY_DBG_CTRL_ADDR_MASK	GENMASK(23, 16)
+-#define SUN8I_HDMI_PHY_DBG_CTRL_ADDR(addr)	(addr << 16)
+-
+-#define SUN8I_HDMI_PHY_REXT_CTRL_REG	0x0004
+-#define SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN	BIT(31)
+-
+-#define SUN8I_HDMI_PHY_READ_EN_REG	0x0010
+-#define SUN8I_HDMI_PHY_READ_EN_MAGIC		0x54524545
+-
+-#define SUN8I_HDMI_PHY_UNSCRAMBLE_REG	0x0014
+-#define SUN8I_HDMI_PHY_UNSCRAMBLE_MAGIC		0x42494E47
+-
+ /*
+  * Address can be actually any value. Here is set to same value as
+  * it is set in BSP driver.
 -- 
 2.16.2
