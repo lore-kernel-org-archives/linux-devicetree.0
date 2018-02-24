@@ -1,11 +1,13 @@
 From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH 0/2] ARM: dts: bcm283x: Fix DTC warnings
-Date: Sat, 24 Feb 2018 15:15:20 +0100
-Message-ID: <1519481722-22738-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 1/2] ARM: dts: bcm283x: Fix unit address of local_intc
+Date: Sat, 24 Feb 2018 15:15:21 +0100
+Message-ID: <1519481722-22738-2-git-send-email-stefan.wahren@i2se.com>
+References: <1519481722-22738-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1519481722-22738-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
  <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
@@ -19,16 +21,40 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series fixes some DTC warnings, which are only visible with W=1.
+This patch fixes the following DTC warning (requires W=1):
+Node /soc/local_intc simple-bus unit address format error, expected "40000000"
 
-Stefan Wahren (2):
-  ARM: dts: bcm283x: Fix unit address of local_intc
-  ARM: dts: bcm283x: Move arm-pmu out of soc node
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm2836.dtsi | 2 +-
+ arch/arm/boot/dts/bcm2837.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
- arch/arm/boot/dts/bcm2835.dtsi |  6 +++---
- arch/arm/boot/dts/bcm2836.dtsi | 12 ++++++------
- arch/arm/boot/dts/bcm2837.dtsi |  2 +-
- 3 files changed, 10 insertions(+), 10 deletions(-)
-
+diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
+index 1dfd764..e47f2e9 100644
+--- a/arch/arm/boot/dts/bcm2836.dtsi
++++ b/arch/arm/boot/dts/bcm2836.dtsi
+@@ -9,7 +9,7 @@
+ 			 <0x40000000 0x40000000 0x00001000>;
+ 		dma-ranges = <0xc0000000 0x00000000 0x3f000000>;
+ 
+-		local_intc: local_intc {
++		local_intc: local_intc@40000000 {
+ 			compatible = "brcm,bcm2836-l1-intc";
+ 			reg = <0x40000000 0x100>;
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
+index efa7d33..7704bb0 100644
+--- a/arch/arm/boot/dts/bcm2837.dtsi
++++ b/arch/arm/boot/dts/bcm2837.dtsi
+@@ -8,7 +8,7 @@
+ 			 <0x40000000 0x40000000 0x00001000>;
+ 		dma-ranges = <0xc0000000 0x00000000 0x3f000000>;
+ 
+-		local_intc: local_intc {
++		local_intc: local_intc@40000000 {
+ 			compatible = "brcm,bcm2836-l1-intc";
+ 			reg = <0x40000000 0x100>;
+ 			interrupt-controller;
 -- 
 2.7.4
