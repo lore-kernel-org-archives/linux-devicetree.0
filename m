@@ -1,12 +1,15 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 00/15] Implement H3/H5 HDMI driver
-Date: Sat, 24 Feb 2018 22:45:30 +0100
-Message-ID: <20180224214545.3740-1-jernej.skrabec@siol.net>
+Subject: [PATCH 15/15] ARM64: dts: sun50i: h5: Enable HDMI
+ output on H5 boards
+Date: Sat, 24 Feb 2018 22:45:45 +0100
+Message-ID: <20180224214545.3740-16-jernej.skrabec@siol.net>
+References: <20180224214545.3740-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBL52Y7KAKGQEUAFJKAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBNN2Y7KAKGQE7S47RCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180224214545.3740-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,63 +20,157 @@ To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2F
 Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series implements H3/H5 HDMI driver. It was tested on OrangePi 2 (H3),
-OrangePi Plus2e (H3) and OrangePi PC2 (H5) with many resolutions and it
-works well, except in some not yet determined cases, when there is a crash
-at boot if HDMI monitor is connected. If it is connected later, everything
-works as expected. Hopefully, with driver merged in drm-misc more people
-could review the code and find solution.
+Enable HDMI output on all boards with HDMI connector.
 
-Code is based on drm-misc-next, since some required commits are not yet
-present in linux-next.
+Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+---
+ .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 25 ++++++++++++++++++++++
+ .../dts/allwinner/sun50i-h5-orangepi-prime.dts     | 25 ++++++++++++++++++++++
+ .../allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 25 ++++++++++++++++++++++
+ 3 files changed, 75 insertions(+)
 
-Best regards,
-Jernej
-
-Jernej Skrabec (15):
-  clk: sunxi-ng: Add check for minimal rate to NM PLLs
-  clk: sunxi-ng: h3: h5: Add minimal rate for video PLL
-  clk: sunxi-ng: h3: h5: Allow some clocks to set parent rate
-  clk: sunxi-ng: h3: h5: export CLK_PLL_VIDEO
-  dt-bindings: display: sun4i-drm: Add compatibles for H3 HDMI pipeline
-  drm/sun4i: Add support for H3 display engine
-  drm/sun4i: Add support for H3 mixer 0
-  drm/sun4i: Fix polarity configuration for DW HDMI PHY
-  drm/sun4i: Add support for variants to DW HDMI PHY
-  drm/sun4i: Move and expand DW HDMI PHY register macros
-  drm/sun4i: Add support for H3 HDMI PHY variant
-  drm/sun4i: Allow building on arm64
-  ARM: dts: sunxi: h3/h5: Add HDMI pipeline
-  ARM: dts: sun8i: h3: Enable HDMI output on H3 boards
-  ARM64: dts: sun50i: h5: Enable HDMI output on H5 boards
-
- .../bindings/display/sunxi/sun4i-drm.txt           |   6 +
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    |  25 ++
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts          |  25 ++
- arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts |  25 ++
- arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts           |  25 ++
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |  25 ++
- arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts       |  25 ++
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |  24 ++
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |  25 ++
- arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 108 ++++++
- .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  |  25 ++
- .../dts/allwinner/sun50i-h5-orangepi-prime.dts     |  25 ++
- .../allwinner/sun50i-h5-orangepi-zero-plus2.dts    |  25 ++
- drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |  32 +-
- drivers/clk/sunxi-ng/ccu-sun8i-h3.h                |   4 +-
- drivers/clk/sunxi-ng/ccu_nm.c                      |  11 +-
- drivers/clk/sunxi-ng/ccu_nm.h                      |  27 ++
- drivers/gpu/drm/sun4i/Kconfig                      |   2 +-
- drivers/gpu/drm/sun4i/Makefile                     |   1 +
- drivers/gpu/drm/sun4i/sun4i_drv.c                  |   1 +
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h              | 156 ++++++++-
- drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c             | 369 ++++++++++++++++++---
- drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c         | 130 ++++++++
- drivers/gpu/drm/sun4i/sun8i_mixer.c                |  12 +
- include/dt-bindings/clock/sun8i-h3-ccu.h           |   2 +
- 25 files changed, 1063 insertions(+), 72 deletions(-)
- create mode 100644 drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+index 9e51d3a5f4e6..7236cd81875f 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+@@ -67,6 +67,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -121,6 +132,10 @@
+ 	status = "okay";
+ };
+ 
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -153,6 +168,16 @@
+ 	};
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &ir {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&ir_pins_a>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
+index 0f25c4a6f15d..0cc9f4a9e733 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
+@@ -62,6 +62,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 
+@@ -128,6 +139,10 @@
+ 	status = "okay";
+ };
+ 
++&de {
++	status = "okay";
++};
++
+ &ehci0 {
+ 	status = "okay";
+ };
+@@ -160,6 +175,16 @@
+ 	};
+ };
+ 
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &ir {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&ir_pins_a>;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+index af43533c7134..1bc3d9351941 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+@@ -58,6 +58,17 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_con_in: endpoint {
++				remote-endpoint = <&hdmi_out_con>;
++			};
++		};
++	};
++
+ 	reg_vcc3v3: vcc3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc3v3";
+@@ -73,6 +84,20 @@
+ 	};
+ };
+ 
++&de {
++	status = "okay";
++};
++
++&hdmi {
++	status = "okay";
++};
++
++&hdmi_out {
++	hdmi_out_con: endpoint {
++		remote-endpoint = <&hdmi_con_in>;
++	};
++};
++
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins_a>;
 -- 
 2.16.2
