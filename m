@@ -1,60 +1,68 @@
-Return-Path: <>
-From: Gaku Inami <gaku.inami.xh@renesas.com>
-Subject: [PATCH 2/5] arm64: dts: renesas: r8a7796: Add multi-cluster definition
-Date: Tue, 27 Feb 2018 11:19:52 +0900
-Message-Id: <1519697995-6061-3-git-send-email-gaku.inami.xh@renesas.com>
-In-Reply-To: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
-References: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gaku Inami <gaku.inami.xh@renesas.com>
+Return-Path: <SRS0=FvkB=FS=linaro.org=baolin.wang@kernel.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH v5 1/2] dt-bindings: gpio: Add Spreadtrum GPIO controller documentation
+Date: Sat, 24 Feb 2018 10:07:17 +0800
+Message-Id: <c2db9b3b5c611cadfbe5ea97327be7ee5981fa54.1519437750.git.baolin.wang@linaro.org>
+To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, andy.shevchenko@gmail.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the "cpu-map" for multi-cluster into r8a7796
-device-tree. This definition is used to parse the cpu topology.
+This patch adds the device tree bindings for the Spreadtrum
+GPIO controller. The gpios will be supported by the GPIO
+generic library.
 
-Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+Changes since v4:
+ - No updates.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index f8e9313..154df9b 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -64,6 +64,32 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&a57_0>;
-+				};
-+				core1 {
-+					cpu = <&a57_1>;
-+				};
-+			};
+Changes since v3:
+ - Add acked tag from Rob.
+
+Changes since v2:
+ - No updates.
+
+Changes since v1:
+ - No updates.
+---
+ .../devicetree/bindings/gpio/gpio-sprd.txt         |   28 ++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sprd.txt
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-sprd.txt b/Documentation/devicetree/bindings/gpio/gpio-sprd.txt
+new file mode 100644
+index 0000000..eca97d4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-sprd.txt
+@@ -0,0 +1,28 @@
++Spreadtrum GPIO controller bindings
 +
-+			cluster1 {
-+				core0 {
-+					cpu = <&a53_0>;
-+				};
-+				core1 {
-+					cpu = <&a53_1>;
-+				};
-+				core2 {
-+					cpu = <&a53_2>;
-+				};
-+				core3 {
-+					cpu = <&a53_3>;
-+				};
-+			};
-+		};
++The controller's registers are organized as sets of sixteen 16-bit
++registers with each set controlling a bank of up to 16 pins. A single
++interrupt is shared for all of the banks handled by the controller.
 +
- 		a57_0: cpu@0 {
- 			compatible = "arm,cortex-a57", "arm,armv8";
- 			reg = <0x0>;
++Required properties:
++- compatible: Should be "sprd,sc9860-gpio".
++- reg: Define the base and range of the I/O address space containing
++the GPIO controller registers.
++- gpio-controller: Marks the device node as a GPIO controller.
++- #gpio-cells: Should be <2>. The first cell is the gpio number and
++the second cell is used to specify optional parameters.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells: Should be <2>. Specifies the number of cells needed
++to encode interrupt source.
++- interrupts: Should be the port interrupt shared by all the gpios.
++
++Example:
++	ap_gpio: gpio@40280000 {
++		compatible = "sprd,sc9860-gpio";
++		reg = <0 0x40280000 0 0x1000>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++	};
 -- 
-2.7.4
+1.7.9.5
