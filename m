@@ -1,15 +1,23 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V4 2/2] thermal: imx: add i.MX7 thermal sensor support
-Date: Sat, 24 Feb 2018 17:20:12 +0800
-Message-ID: <20180224092011.GR3217@dragon>
-References: <1519459369-29083-1-git-send-email-Anson.Huang@nxp.com>
- <1519459369-29083-2-git-send-email-Anson.Huang@nxp.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v2 7/8] [PATCH 7/8] drivers/hwmon: Add a generic PECI
+ hwmon client driver
+Date: Sat, 24 Feb 2018 01:32:53 -0800
+Message-ID: <85f66284-2e18-2a74-1e7b-9378353ab43e@linux.intel.com>
+References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
+ <20180221161606.32247-8-jae.hyun.yoo@linux.intel.com>
+ <20180221182608.GA11635@roeck-us.net>
+ <618f34cd-ee43-d8e4-4fb0-3c23bf03835f@linux.intel.com>
+ <20180221214859.GA30263@roeck-us.net>
+ <576a50c6-c302-654c-ceb3-aaf820b7738a@linux.intel.com>
+ <20180222003720.GA25250@lunn.ch>
+ <b506b4b1-7e7d-abd6-bac2-c45e7c1e0aae@linux.intel.com>
+ <CANiq72mjsfJRzfFmhbL7dnih_0=2pFoJDTrmi35x0yLmKrSBFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1519459369-29083-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <CANiq72mjsfJRzfFmhbL7dnih_0=2pFoJDTrmi35x0yLmKrSBFA@mail.gmail.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,24 +27,55 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, edubezval@gmail.com, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, rui.zhang@intel.com, linux-arm-kernel@lists.infradead.org
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: linux-hwmon@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, jdelvare@suse.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, andrew@aj.id.au, Greg KH <gregkh@linuxfoundation.org>, openbmc@lists.ozlabs.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org, Guenter Roeck <linux@roeck-us.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 24, 2018 at 04:02:49PM +0800, Anson Huang wrote:
-> This patch adds i.MX7 thermal sensor support, most
-> of the i.MX7 thermal sensor functions are same with
-> i.MX6 except the registers offset/layout, so we move
-> those registers offset/layout definitions to soc data
-> structure.
+On 2/23/2018 4:00 PM, Miguel Ojeda wrote:
+> On Thu, Feb 22, 2018 at 2:29 AM, Jae Hyun Yoo
+> <jae.hyun.yoo@linux.intel.com> wrote:
+>> On 2/21/2018 4:37 PM, Andrew Lunn wrote:
+>>>>
+>>>> But even with this change, it still needs to use delayed creation
+>>>> because BMC side kernel doesn't know how many DIMMs are populated on
+>>>> a remote server before the remote server completes its memory
+>>>> training and testing in BIOS, but it needs to check the remote
+>>>> server's CPU temperature as immediate as possible to make
+>>>> appropriate thermal control based on the remote CPU's temperature to
+>>>> avoid any critical thermal issue. What would be a better solution in
+>>>> this case?
+>>>
+>>>
+>>> You could change this driver so that it supports one DIMM.  Move the
+>>> 'hotplug' part into another driver which creates and destroys
+>>> instances of the hwmon DIMM device as the DIMMS come and go.
+>>>
+>>> Also, do you need to handle CPU hotplug? You could split the CPU
+>>> temperature part into a separate hwmon driver? And again create and
+>>> destroy devices as CPUs come and go?
+>>>
+>>>          Andrew
+>>>
+>>
+>> That seems like a possible option. I'll rewrite the hwmon driver again like
+>> that.
+>>
+>> Thanks for the good idea. :)
 > 
-> i.MX7 uses single calibration data @25C, the calibration
-> data is located at OCOTP offset 0x4F0, bit[17:9], the
-> formula is as below:
+> By the way, in the rewrite, please try to avoid the create*workqueue()
+> functions (they are deprecated :).
 > 
-> Tmeas = (Nmeas - n1) + 25; n1 is the fuse value for 25C.
+> Cheers,
+> Miguel
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Signed-off-by: Bai Ping <ping.bai@nxp.com>
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+Hi Miguel,
+
+Thanks for letting me know that. I'll replace that with 
+alloc_workqueue(). :)
+
+Regards,
+Jae
+
+>>
+>> Jae
