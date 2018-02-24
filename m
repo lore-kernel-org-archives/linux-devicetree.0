@@ -1,55 +1,69 @@
-From: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [v2,03/10] drm/sun4i: Protect the TCON pixel clocks
-Date: Sat, 24 Feb 2018 00:31:36 +0100
-Message-ID: <7ed0fad9-6b3d-aafc-08a6-fb18761897aa@micronovasrl.com>
-References: <d5224d2e81ecf73dc09f234e580ada52c00eaee3.1519204731.git-series.maxime.ripard@bootlin.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Subject: Re: [PATCH v2 7/8] [PATCH 7/8] drivers/hwmon: Add a generic PECI
+ hwmon client driver
+Date: Sat, 24 Feb 2018 01:00:47 +0100
+Message-ID: <CANiq72mjsfJRzfFmhbL7dnih_0=2pFoJDTrmi35x0yLmKrSBFA@mail.gmail.com>
+References: <20180221161606.32247-1-jae.hyun.yoo@linux.intel.com>
+ <20180221161606.32247-8-jae.hyun.yoo@linux.intel.com>
+ <20180221182608.GA11635@roeck-us.net>
+ <618f34cd-ee43-d8e4-4fb0-3c23bf03835f@linux.intel.com>
+ <20180221214859.GA30263@roeck-us.net>
+ <576a50c6-c302-654c-ceb3-aaf820b7738a@linux.intel.com>
+ <20180222003720.GA25250@lunn.ch>
+ <b506b4b1-7e7d-abd6-bac2-c45e7c1e0aae@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <d5224d2e81ecf73dc09f234e580ada52c00eaee3.1519204731.git-series.maxime.ripard@bootlin.com>
-Content-Language: it
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b506b4b1-7e7d-abd6-bac2-c45e7c1e0aae@linux.intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: linux-hwmon@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, jdelvare@suse.com, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, andrew@aj.id.au, Greg KH <gregkh@linuxfoundation.org>, openbmc@lists.ozlabs.org, linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, joel@jms.id.au, benh@kernel.crashing.org, Guenter Roeck <linux@roeck-us.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SWwgMjEvMDIvMjAxOCAxMDoyMCwgTWF4aW1lIFJpcGFyZCBoYSBzY3JpdHRvOgo+IEZyb206IE1h
-eGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IAo+IEJvdGgg
-VENPTiBjbG9ja3MgYXJlIHZlcnkgc2Vuc2l0aXZlIHRvIGNsb2NrIGNoYW5nZXMsIHNpbmNlIGFu
-eSBjaGFuZ2UKPiBtaWdodCBsZWFkIHRvIGltcHJvcGVyIHRpbWluZ3MuCj4gCj4gTWFrZSBzdXJl
-IG91ciByYXRlIGlzIG5ldmVyIGNoYW5nZWQuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJp
-cGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+ClRlc3RlZC1ieTogR2l1bGlv
-IEJlbmV0dGkgPGdpdWxpby5iZW5ldHRpQG1pY3Jvbm92YXNybC5jb20+CgpUZXN0ZWQgb24gQTIw
-LUxpTm92YTEtNF8zaS1jdHAgd2l0aCBNYWxpIHI2cDIgaW5zdGFsbGVkLgpCZWZvcmUgTWFsaSBj
-aGFuZ2VkIGRvdGNsb2NrLCBub3cgaXQgZG9lc24ndCBhbnltb3JlLgoKPiAtLS0KPiAgIGRyaXZl
-cnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMgfCA0ICsrLS0KPiAgIDEgZmlsZSBjaGFuZ2Vk
-LCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3Vu
-NGlfdGNvbi5jCj4gaW5kZXggYjczYWNhYjc0ODY3Li5jYmU4N2NlZTEzZDEgMTAwNjQ0Cj4gLS0t
-IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwo+ICsrKyBiL2RyaXZlcnMvZ3B1
-L2RybS9zdW40aS9zdW40aV90Y29uLmMKPiBAQCAtMjYxLDcgKzI2MSw3IEBAIHN0YXRpYyB2b2lk
-IHN1bjRpX3Rjb24wX21vZGVfc2V0X2NvbW1vbihzdHJ1Y3Qgc3VuNGlfdGNvbiAqdGNvbiwKPiAg
-IAkJCQkJY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCj4gICB7Cj4gICAJLyog
-Q29uZmlndXJlIHRoZSBkb3QgY2xvY2sgKi8KPiAtCWNsa19zZXRfcmF0ZSh0Y29uLT5kY2xrLCBt
-b2RlLT5jcnRjX2Nsb2NrICogMTAwMCk7Cj4gKwljbGtfc2V0X3JhdGVfZXhjbHVzaXZlKHRjb24t
-PmRjbGssIG1vZGUtPmNydGNfY2xvY2sgKiAxMDAwKTsKPiAgIAo+ICAgCS8qIFNldCB0aGUgcmVz
-b2x1dGlvbiAqLwo+ICAgCXJlZ21hcF93cml0ZSh0Y29uLT5yZWdzLCBTVU40SV9UQ09OMF9CQVNJ
-QzBfUkVHLAo+IEBAIC00MTksNyArNDE5LDcgQEAgc3RhdGljIHZvaWQgc3VuNGlfdGNvbjFfbW9k
-ZV9zZXQoc3RydWN0IHN1bjRpX3Rjb24gKnRjb24sCj4gICAJV0FSTl9PTighdGNvbi0+cXVpcmtz
-LT5oYXNfY2hhbm5lbF8xKTsKPiAgIAo+ICAgCS8qIENvbmZpZ3VyZSB0aGUgZG90IGNsb2NrICov
-Cj4gLQljbGtfc2V0X3JhdGUodGNvbi0+c2NsazEsIG1vZGUtPmNydGNfY2xvY2sgKiAxMDAwKTsK
-PiArCWNsa19zZXRfcmF0ZV9leGNsdXNpdmUodGNvbi0+c2NsazEsIG1vZGUtPmNydGNfY2xvY2sg
-KiAxMDAwKTsKPiAgIAo+ICAgCS8qIEFkanVzdCBjbG9jayBkZWxheSAqLwo+ICAgCWNsa19kZWxh
-eSA9IHN1bjRpX3Rjb25fZ2V0X2Nsa19kZWxheShtb2RlLCAxKTsKPiAKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Feb 22, 2018 at 2:29 AM, Jae Hyun Yoo
+<jae.hyun.yoo@linux.intel.com> wrote:
+> On 2/21/2018 4:37 PM, Andrew Lunn wrote:
+>>>
+>>> But even with this change, it still needs to use delayed creation
+>>> because BMC side kernel doesn't know how many DIMMs are populated on
+>>> a remote server before the remote server completes its memory
+>>> training and testing in BIOS, but it needs to check the remote
+>>> server's CPU temperature as immediate as possible to make
+>>> appropriate thermal control based on the remote CPU's temperature to
+>>> avoid any critical thermal issue. What would be a better solution in
+>>> this case?
+>>
+>>
+>> You could change this driver so that it supports one DIMM.  Move the
+>> 'hotplug' part into another driver which creates and destroys
+>> instances of the hwmon DIMM device as the DIMMS come and go.
+>>
+>> Also, do you need to handle CPU hotplug? You could split the CPU
+>> temperature part into a separate hwmon driver? And again create and
+>> destroy devices as CPUs come and go?
+>>
+>>         Andrew
+>>
+>
+> That seems like a possible option. I'll rewrite the hwmon driver again like
+> that.
+>
+> Thanks for the good idea. :)
+
+By the way, in the rewrite, please try to avoid the create*workqueue()
+functions (they are deprecated :).
+
+Cheers,
+Miguel
+
+>
+> Jae
