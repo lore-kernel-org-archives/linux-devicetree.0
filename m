@@ -1,7 +1,7 @@
 From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: bcm283x: Fix unit address of local_intc
-Date: Sat, 24 Feb 2018 15:15:21 +0100
-Message-ID: <1519481722-22738-2-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 2/2] ARM: dts: bcm283x: Move arm-pmu out of soc node
+Date: Sat, 24 Feb 2018 15:15:22 +0100
+Message-ID: <1519481722-22738-3-git-send-email-stefan.wahren@i2se.com>
 References: <1519481722-22738-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,40 +21,55 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the following DTC warning (requires W=1):
-Node /soc/local_intc simple-bus unit address format error, expected "40000000"
+The ARM PMU doesn't have a reg address, so fix the following DTC warning
+(requires W=1):
+Node /soc/arm-pmu missing or empty reg/ranges property
 
 Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 ---
- arch/arm/boot/dts/bcm2836.dtsi | 2 +-
- arch/arm/boot/dts/bcm2837.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/bcm2835.dtsi |  6 +++---
+ arch/arm/boot/dts/bcm2836.dtsi | 10 +++++-----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 0e3d2a5..a5c3824 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -18,10 +18,10 @@
+ 	soc {
+ 		ranges = <0x7e000000 0x20000000 0x02000000>;
+ 		dma-ranges = <0x40000000 0x00000000 0x20000000>;
++	};
+ 
+-		arm-pmu {
+-			compatible = "arm,arm1176-pmu";
+-		};
++	arm-pmu {
++		compatible = "arm,arm1176-pmu";
+ 	};
+ };
+ 
 diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
-index 1dfd764..e47f2e9 100644
+index e47f2e9..c933e84 100644
 --- a/arch/arm/boot/dts/bcm2836.dtsi
 +++ b/arch/arm/boot/dts/bcm2836.dtsi
-@@ -9,7 +9,7 @@
- 			 <0x40000000 0x40000000 0x00001000>;
- 		dma-ranges = <0xc0000000 0x00000000 0x3f000000>;
+@@ -16,12 +16,12 @@
+ 			#interrupt-cells = <2>;
+ 			interrupt-parent = <&local_intc>;
+ 		};
++	};
  
--		local_intc: local_intc {
-+		local_intc: local_intc@40000000 {
- 			compatible = "brcm,bcm2836-l1-intc";
- 			reg = <0x40000000 0x100>;
- 			interrupt-controller;
-diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
-index efa7d33..7704bb0 100644
---- a/arch/arm/boot/dts/bcm2837.dtsi
-+++ b/arch/arm/boot/dts/bcm2837.dtsi
-@@ -8,7 +8,7 @@
- 			 <0x40000000 0x40000000 0x00001000>;
- 		dma-ranges = <0xc0000000 0x00000000 0x3f000000>;
+-		arm-pmu {
+-			compatible = "arm,cortex-a7-pmu";
+-			interrupt-parent = <&local_intc>;
+-			interrupts = <9 IRQ_TYPE_LEVEL_HIGH>;
+-		};
++	arm-pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupt-parent = <&local_intc>;
++		interrupts = <9 IRQ_TYPE_LEVEL_HIGH>;
+ 	};
  
--		local_intc: local_intc {
-+		local_intc: local_intc@40000000 {
- 			compatible = "brcm,bcm2836-l1-intc";
- 			reg = <0x40000000 0x100>;
- 			interrupt-controller;
+ 	timer {
 -- 
 2.7.4
