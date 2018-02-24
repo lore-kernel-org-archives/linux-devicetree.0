@@ -1,106 +1,76 @@
-Return-Path: <SRS0=C+Y8=FR=jmondi.org=jacopo+renesas@kernel.org>
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 2/7] arm64: dts: renesas: r8a77965: Add #address-cells and #size-cells
-Date: Fri, 23 Feb 2018 14:40:54 +0100
-Message-Id: <1519393259-26108-3-git-send-email-jacopo+renesas@jmondi.org>
-In-Reply-To: <1519393259-26108-1-git-send-email-jacopo+renesas@jmondi.org>
-References: <1519393259-26108-1-git-send-email-jacopo+renesas@jmondi.org>
-To: arnd@arndb.de, geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <SRS0=2Y4/=FS=rock-chips.com=jeffy.chen@kernel.org>
+Message-ID: <5A914486.9080304@rock-chips.com>
+Date: Sat, 24 Feb 2018 18:55:02 +0800
+From: JeffyChen <jeffy.chen@rock-chips.com>
+MIME-Version: 1.0
+Subject: Re: [PATCH v2 0/6] Add endpoint driver for Rockchip PCIe controller
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+To: Shawn Lin <shawn.lin@rock-chips.com>, Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add "#address-cells" and "#size-cells" properties to all place-holder nodes
-that have children nodes defined by salvator-x[s].dtsi device tree.
+Hi guys,
 
-This silences the following DTC compiler warnings:
-Warning (reg_format): "reg" property in /soc/.. has invalid length (4 bytes)
-(#address-cells == 2, #size-cells == 1)
-Warning (avoid_default_addr_size): Relying on default #address-cells
-value for /soc/...
-Warning (avoid_default_addr_size): Relying on default #size-cells value
-for /soc/...
+tested on my chromebook kevin, with this series and enable 
+CONFIG_PCIE_ROCKCHIP_HOST, the pcie wifi(mrvl 8997) still works.
 
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+so,
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 4286453..61efb2d 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -521,6 +521,9 @@
- 		};
- 
- 		avb: ethernet@e6800000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
- 			reg = <0 0xe6800000 0 0x800>, <0 0xe6a00000 0 0x10000>;
- 			/* placeholder */
- 		};
-@@ -528,11 +531,21 @@
- 		csi20: csi2@fea80000 {
- 			reg = <0 0xfea80000 0 0x10000>;
- 			/* placeholder */
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 		};
- 
- 		csi40: csi2@feaa0000 {
- 			reg = <0 0xfeaa0000 0 0x10000>;
- 			/* placeholder */
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 		};
- 
- 		vin0: video@e6ef0000 {
-@@ -611,6 +624,9 @@
- 		};
- 
- 		i2c2: i2c@e6510000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
- 			reg = <0 0xe6510000 0 0x40>;
- 			/* placeholder */
- 		};
-@@ -621,6 +637,9 @@
- 		};
- 
- 		i2c4: i2c@e66d8000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
- 			reg = <0 0xe66d8000 0 0x40>;
- 			/* placeholder */
- 		};
-@@ -636,6 +655,9 @@
- 		};
- 
- 		i2c_dvfs: i2c@e60b0000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
- 			reg = <0 0xe60b0000 0 0x425>;
- 			/* placeholder */
- 		};
-@@ -681,6 +703,9 @@
- 			/* placeholder */
- 
- 			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
- 				port@0 {
- 					reg = <0>;
- 					du_out_rgb: endpoint {
--- 
-2.7.4
+Tested-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+
+
+On 02/23/2018 09:15 AM, Shawn Lin wrote:
+ >
+> Patch 1 firstly move the whole Rockchip PCIe host driver from
+> drivers/pci/host to a new folder, driver/pci/rockchip/, and rename
+> pcie-rockchip.c to pcie-rockchip-host.c. It also update the
+> Kconfig/Makefile etc to repect this change.
+>
+> Then patch 2 and patch 3 are trying to spilt out some common code in
+> preparation for adding endponit controller driver support.
+>
+> Patch 4 rename rockchip-pcie.txt to rockchip-pcie-host.txt.
+>
+> Patch 5 adds endpoint controller driver support as well as the new
+> documentation, rockchip-pcie-ep.txt, introduced by patch 6.
+>
+>
+> Changes in v2:
+> - remove rockchip,rk3399-pcie-host compatible(Suggested by Rob)
+> - fix some error handling
+>
+> Shawn Lin (6):
+>    PCI: rockchip: Create individual folder for rockchip drivers
+>    PCI: rockchip: Split out common function to parse DT
+>    PCI: rockchip: Spilt out common function to init controller
+>    dt-bindings: PCI: rockchip: Rename rockchip-pcie.txt to
+>      rockchip-pcie-host.txt
+>    PCI: rockchip: Add Endpoint controller driver for Rockchip PCIe
+>      controller
+>    dt-bindings: PCI: rockchip: Add DT bindings for Rockchip PCIe endpoint
+>      controller
+>
+>   .../devicetree/bindings/pci/rockchip-pcie-ep.txt   |  62 ++
+>   .../{rockchip-pcie.txt => rockchip-pcie-host.txt}  |   0
+>   MAINTAINERS                                        |   4 +-
+>   drivers/pci/Kconfig                                |   1 +
+>   drivers/pci/Makefile                               |   2 +
+>   drivers/pci/host/Kconfig                           |  11 -
+>   drivers/pci/host/Makefile                          |   1 -
+>   drivers/pci/rockchip/Kconfig                       |  32 +
+>   drivers/pci/rockchip/Makefile                      |   4 +
+>   drivers/pci/rockchip/pcie-rockchip-ep.c            | 641 +++++++++++++++++++++
+>   .../pcie-rockchip-host.c}                          | 594 +------------------
+>   drivers/pci/rockchip/pcie-rockchip.c               | 417 ++++++++++++++
+>   drivers/pci/rockchip/pcie-rockchip.h               | 343 +++++++++++
+>   13 files changed, 1517 insertions(+), 595 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
+>   rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
+>   create mode 100644 drivers/pci/rockchip/Kconfig
+>   create mode 100644 drivers/pci/rockchip/Makefile
+>   create mode 100644 drivers/pci/rockchip/pcie-rockchip-ep.c
+>   rename drivers/pci/{host/pcie-rockchip.c => rockchip/pcie-rockchip-host.c} (61%)
+>   create mode 100644 drivers/pci/rockchip/pcie-rockchip.c
+>   create mode 100644 drivers/pci/rockchip/pcie-rockchip.h
+>
