@@ -1,70 +1,44 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH] dt-bindings: iio: adc: sd-modulator: fix io-channel-cells
-Date: Sat, 24 Feb 2018 13:28:14 +0000
-Message-ID: <20180224132814.392603c3@archlinux>
-References: <1519384041-23782-1-git-send-email-fabrice.gasnier@st.com>
- <c221e43d-c7fb-c33b-6fd1-bbf8aca6fa49@st.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH] ARM: dts: bcm2835-rpi-zero-w: Enable OTG mode
+Date: Sat, 24 Feb 2018 14:47:08 +0100
+Message-ID: <1519480028-26430-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c221e43d-c7fb-c33b-6fd1-bbf8aca6fa49@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, Fabrice Gasnier <fabrice.gasnier@st.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
+List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Feb 2018 14:46:19 +0100
-Arnaud Pouliquen <arnaud.pouliquen@st.com> wrote:
+Since commit 9273083a1530 ("usb: dwc2: Fix TxFIFOn sizes and total TxFIFO
+size issues") we could use the OTG mode again.
 
-> Hello,
-> 
-> Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Applied to the fixes-togreg branch of iio.git.
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-
-Jonathan
-> 
-> Regards,
-> Arnaud
-> 
-> On 02/23/2018 12:07 PM, Fabrice Gasnier wrote:
-> > io-channel-cells should be <0> since sigma delta modulator exports only
-> > one channel, as described in ../iio/iio-bindings.txt "IIO providers"
-> > section. Only the phandle is necessary for IIO consumers in this case.
-> > 
-> > Fixes: af11143757b7 ("IIO: Add DT bindings for sigma delta adc modulator")
-> > 
-> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > ---
-> >  Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-> > index e9ebb8a..ba24ca7 100644
-> > --- a/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-> > +++ b/Documentation/devicetree/bindings/iio/adc/sigma-delta-modulator.txt
-> > @@ -3,11 +3,11 @@ Device-Tree bindings for sigma delta modulator
-> >  Required properties:
-> >  - compatible: should be "ads1201", "sd-modulator". "sd-modulator" can be use
-> >  	as a generic SD modulator if modulator not specified in compatible list.
-> > -- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers".
-> > +- #io-channel-cells = <0>: See the IIO bindings section "IIO consumers".
-> >  
-> >  Example node:
-> >  
-> >  	ads1202: adc@0 {
-> >  		compatible = "sd-modulator";
-> > -		#io-channel-cells = <1>;
-> > +		#io-channel-cells = <0>;
-> >  	};
-> >   
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+index b8565fc..cf53436 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+@@ -12,7 +12,7 @@
+ /dts-v1/;
+ #include "bcm2835.dtsi"
+ #include "bcm2835-rpi.dtsi"
+-#include "bcm283x-rpi-usb-host.dtsi"
++#include "bcm283x-rpi-usb-otg.dtsi"
+ 
+ / {
+ 	compatible = "raspberrypi,model-zero-w", "brcm,bcm2835";
+-- 
+2.7.4
