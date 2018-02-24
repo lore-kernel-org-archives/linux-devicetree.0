@@ -1,14 +1,14 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [RFC] ARM: dts: imx28-tx28: Pass the memory unit name
-Date: Sat, 24 Feb 2018 16:29:27 +0800
-Message-ID: <20180224082926.GJ3217@dragon>
-References: <1518882103-17137-1-git-send-email-festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx6dl: remove 'lcdif' node
+Date: Sat, 24 Feb 2018 16:46:11 +0800
+Message-ID: <20180224084610.GM3217@dragon>
+References: <1519037225-22872-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1518882103-17137-1-git-send-email-festevam@gmail.com>
+In-Reply-To: <1519037225-22872-1-git-send-email-LW@KARO-electronics.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,18 +18,16 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org, LW@karo-electronics.de
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 17, 2018 at 01:41:43PM -0200, Fabio Estevam wrote:
-> From: Fabio Estevam <fabio.estevam@nxp.com>
-> 
-> Pass the memory unit name in order to fix the following
-> dtc warning with W=1:
-> 
-> arch/arm/boot/dts/imx28-tx28.dtb: Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
-> 
-> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+On Mon, Feb 19, 2018 at 11:47:05AM +0100, Lothar Wa=DFmann wrote:
+> According to the "i.MX 6Solo/6DualLite Applications Processor
+> Reference Manual" Rev. 3, 09/2017 there is no LCDIF unit on the
+> i.MX6DL.
+> =
+
+> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
 
 Applied, thanks.
