@@ -1,16 +1,13 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH v2 3/4] arm64: add support for i.MX8M EVK board
-Date: Sun, 25 Feb 2018 10:00:26 +0000
-Message-ID: <AM3PR04MB3060B34988452406147628480C20@AM3PR04MB306.eurprd04.prod.outlook.com>
-References: <20180201183126.32384-1-l.stach@pengutronix.de>
- <20180201183126.32384-3-l.stach@pengutronix.de>
- <20180223150352.GU3217@dragon> <1519400704.8609.1.camel@pengutronix.de>
+From: Tali Perry <tali.perry1@gmail.com>
+Subject: [PATCH v10 2/3] NPCM750: add clock tree doc and binding
+Date: Sun, 25 Feb 2018 12:12:18 +0200
+Message-ID: <1519553539-15899-3-git-send-email-tali.perry1@gmail.com>
+References: <1519553539-15899-1-git-send-email-tali.perry1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519400704.8609.1.camel@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <1519553539-15899-1-git-send-email-tali.perry1@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,66 +17,175 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: brendanhiggins@google.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, Tali Perry <tali.perry1@gmail.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRv
-Omwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdDQo+IFNlbnQ6IEZyaWRheSwgRmVicnVhcnkgMjMsIDIw
-MTggMTE6NDUgUE0NCj4gVG86IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz4NCj4gQ2M6
-IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQNCj4gPG1hcmsu
-cnV0bGFuZEBhcm0uY29tPjsgQ2F0YWxpbiBNYXJpbmFzIDxjYXRhbGluLm1hcmluYXNAYXJtLmNv
-bT47IFdpbGwNCj4gRGVhY29uIDx3aWxsLmRlYWNvbkBhcm0uY29tPjsgRmFiaW8gRXN0ZXZhbSA8
-ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsNCj4gZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNv
-bT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IHBhdGNod29yay0NCj4gbHN0
-QHBlbmd1dHJvbml4LmRlOyBBLnMuIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPjsgQmFydWNo
-IFNpYWNoDQo+IDxiYXJ1Y2hAdGtvcy5jby5pbD4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAz
-LzRdIGFybTY0OiBhZGQgc3VwcG9ydCBmb3IgaS5NWDhNIEVWSyBib2FyZA0KPiANCj4gQW0gRnJl
-aXRhZywgZGVuIDIzLjAyLjIwMTgsIDIzOjAzICswODAwIHNjaHJpZWIgU2hhd24gR3VvOg0KPiA+
-IE9uIFRodSwgRmViIDAxLCAyMDE4IGF0IDA3OjMxOjI1UE0gKzAxMDAsIEx1Y2FzIFN0YWNoIHdy
-b3RlOg0KPiA+ID4gKyZ1c2RoYzEgew0KPiA+ID4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQi
-LCAic3RhdGVfMTAwbWh6IiwgInN0YXRlXzIwMG1oeiI7DQo+ID4gPiArCXBpbmN0cmwtMCA9IDwm
-cGluY3RybF91c2RoYzFfY2RfcmVzZXQ+LA0KPiA+ID4gPCZwaW5jdHJsX3VzZGhjMV9jbGtfc3Ry
-b2JlPiwNCj4gPiA+ICsJwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgPCZwaW5jdHJsX3VzZGhjMV9k
-YXRhPjsNCj4gPiA+ICsJcGluY3RybC0xID0gPCZwaW5jdHJsX3VzZGhjMV9jZF9yZXNldD4sDQo+
-ID4gPiArCcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDwmcGluY3RybF91c2RoYzFfY2xrX3N0cm9i
-ZV8xMDBtaHo+LA0KPiA+ID4gKwnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8JnBpbmN0cmxfdXNk
-aGMxX2RhdGFfMTAwbWh6PjsNCj4gPiA+ICsJcGluY3RybC0yID0gPCZwaW5jdHJsX3VzZGhjMV9j
-ZF9yZXNldD4sDQo+ID4gPiArCcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDwmcGluY3RybF91c2Ro
-YzFfY2xrX3N0cm9iZV8yMDBtaHo+LA0KPiA+ID4gKwnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8
-JnBpbmN0cmxfdXNkaGMxX2RhdGFfMjAwbWh6PjsNCj4gPiA+ICsJdnFtbWMtc3VwcGx5ID0gPCZz
-dzRfcmVnPjsNCj4gPiA+ICsJYnVzLXdpZHRoID0gPDg+Ow0KPiA+ID4gKwlub24tcmVtb3ZhYmxl
-Ow0KPiA+ID4gKwluby1zZDsNCj4gPiA+ICsJbm8tc2RpbzsNCj4gPiA+ICsJc3RhdHVzID0gIm9r
-YXkiOw0KPiA+ID4gK307DQo+ID4NCj4gPiBJJ20gbm90IHN1cmUgaXQgY2FuIGJlIGVuYWJsZWQg
-cmlnaHQgbm93LsKgwqBQZXIgbXkgdGVzdGluZywgZU1NQyBpcyBub3QNCj4gPiB3b3JraW5nIHll
-dC4NCj4gPg0KPiA+IFvCoMKgwqDCoDAuODc5NzU2XSBtbWMwOiBTd2l0Y2hpbmcgdG8gMy4zViBz
-aWduYWxsaW5nIHZvbHRhZ2UgZmFpbGVkIFsNCj4gPiAwLjkxMzU4N10gbW1jMDogU0RIQ0kgY29u
-dHJvbGxlciBvbiAzMGI0MDAwMC51c2RoYyBbMzBiNDAwMDAudXNkaGNdDQo+ID4gdXNpbmcgQURN
-QSAuLi4NCj4gPiBbwqDCoMKgwqAxLjAwNzYyOF0gbW1jMDogc3dpdGNoIHRvIGhpZ2gtc3BlZWQg
-ZnJvbSBoczIwMCBmYWlsZWQsIGVycjotMTEwDQo+ID4gW8KgwqDCoMKgMS4wMTM4NzNdIG1tYzA6
-IGVycm9yIC0xMTAgd2hpbHN0IGluaXRpYWxpc2luZyBNTUMgY2FyZCBbDQo+ID4gMS4wMjA2Mzld
-IG1tYzA6IFN3aXRjaGluZyB0byAzLjNWIHNpZ25hbGxpbmcgdm9sdGFnZSBmYWlsZWQgLi4uDQo+
-ID4gW8KgwqDCoMKgMS4xMzI0NjJdIG1tYzA6IHN3aXRjaCB0byBoaWdoLXNwZWVkIGZyb20gaHMy
-MDAgZmFpbGVkLCBlcnI6LTExMA0KPiA+IFvCoMKgwqDCoDEuMTM4Njc0XSBtbWMwOiBlcnJvciAt
-MTEwIHdoaWxzdCBpbml0aWFsaXNpbmcgTU1DIGNhcmQgWw0KPiA+IDEuMTQ1Mzk0XSBtbWMwOiBT
-d2l0Y2hpbmcgdG8gMy4zViBzaWduYWxsaW5nIHZvbHRhZ2UgZmFpbGVkIFsNCj4gPiAxLjI2ODM2
-N10gbW1jMDogc3dpdGNoIHRvIGhpZ2gtc3BlZWQgZnJvbSBoczIwMCBmYWlsZWQsIGVycjotMTEw
-IFsNCj4gPiAxLjI3NDU3Nl0gbW1jMDogZXJyb3IgLTExMCB3aGlsc3QgaW5pdGlhbGlzaW5nIE1N
-QyBjYXJkIFvCoMKgwqDCoDEuMjgxMjkxXQ0KPiA+IG1tYzA6IFN3aXRjaGluZyB0byAzLjNWIHNp
-Z25hbGxpbmcgdm9sdGFnZSBmYWlsZWQgW8KgwqDCoMKgMS40NDA3MDhdIG1tYzA6DQo+ID4gc3dp
-dGNoIHRvIGhpZ2gtc3BlZWQgZnJvbSBoczIwMCBmYWlsZWQsIGVycjotMTEwIFvCoMKgwqDCoDEu
-NDQ2OTE5XSBtbWMwOg0KPiA+IGVycm9yIC0xMTAgd2hpbHN0IGluaXRpYWxpc2luZyBNTUMgY2Fy
-ZA0KPiA+DQo+ID4gT3IgYW0gSSBtaXNzaW5nIGFueXRoaW5nPw0KPiANCj4gVGhpcyBpcyBzb21l
-dGhpbmcgSSBuZWVkIHRvIGxvb2sgaW50by4gVGhlIEhTMjAwIHN3aXRjaGluZyBzZXF1ZW5jZSBz
-ZWVtcyB0bw0KPiB0cnkgdG8gc3dpdGNoIHRvIDMuM1YgSFMgbW9kZSBpbnRlcm1lZGlhdGVseSwg
-d2hpY2ggZG9lc24ndCB3b3JrLiANCg0KVGhlIHN3aXRjaGluZyB0byAzLjN2IHNlZW1zIHRvIGhh
-cHBlbiBpbiBtbWNfcG93ZXJfdXAuDQpBcyBteDhtcSBldmsgYm9hcmQgZU1NQyBpcyBmaXhlZCB0
-byAxLjhWLCBJIGd1ZXNzIHRoaXMgcHJvYmFibHkgd2lsbCBub3QNCmNhdXNlIGFueSByZWFsIGlz
-c3VlIHJhdGhlciB0aGFuIGEgV0FSTklORy4NCg0KPiBEZXNwaXRlDQo+IHRoZSBlcnJvciBtZXNz
-YWdlcyBlTU1DIHdvcmtzIGZpbmUgaW4gbXkgdGVzdGluZy4NCg0KSXQncyBzdHJhbmdlIHRoYXQg
-SXQgZGlkIG5vdCB3b3JrIGF0IFNoYXduJ3MgYW5kIG15IHNpZGUuDQoNClJlZ2FyZHMNCkRvbmcg
-QWlzaGVuZw0KDQo+IA0KPiBSZWdhcmRzLA0KPiBMdWNhcw0KX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+
+---
+ .../bindings/clock/nuvoton,npcm750-clk.txt         | 100 +++++++++++++++++++++
+ include/dt-bindings/clock/nuvoton,npcm7xx-clock.h  |  44 +++++++++
+ 2 files changed, 144 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
+ create mode 100644 include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
+
+diff --git a/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt b/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
+new file mode 100644
+index 000000000000..dd17b86bd577
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
+@@ -0,0 +1,100 @@
++* Nuvoton NPCM7XX Clock Controller
++
++Nuvoton Poleg BMC NPCM7XX contains an integrated clock controller, which
++generates and supplies clocks to all modules within the BMC.
++
++External clocks:
++
++There are six fixed clocks that are generated outside the BMC. All clocks are of
++a known fixed value that cannot be changed. clk_refclk, clk_mcbypck and
++clk_sysbypck are inputs to the clock controller.
++clk_rg1refck, clk_rg2refck and clk_xin are external clocks suppling the
++network. They are set on the device tree, but not used by the clock module. The
++network devices use them directly.
++Example can be found below.
++
++All available clocks are defined as preprocessor macros in:
++dt-bindings/clock/nuvoton,npcm7xx-clock.h
++and can be reused as DT sources.
++
++Required Properties of clock controller:
++
++	- compatible: "nuvoton,npcm750-clk" : for clock controller of Nuvoton
++		  Poleg BMC NPCM750
++
++	- reg: physical base address of the clock controller and length of
++		memory mapped region.
++
++	- #clock-cells: should be 1.
++
++Example: Clock controller node:
++
++	clk: clock-controller@f0801000 {
++		compatible = "nuvoton,npcm750-clk";
++		#clock-cells = <1>;
++		reg = <0xf0801000 0x1000>;
++		clock-names = "refclk", "sysbypck", "mcbypck";
++		clocks = <&clk_refclk>, <&clk_sysbypck>, <&clk_mcbypck>;
++	};
++
++Example: Required external clocks for network:
++
++	/* external reference clock */
++	clk_refclk: clk-refclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++		clock-output-names = "refclk";
++	};
++
++	/* external reference clock for cpu. float in normal operation */
++	clk_sysbypck: clk-sysbypck {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <800000000>;
++		clock-output-names = "sysbypck";
++	};
++
++	/* external reference clock for MC. float in normal operation */
++	clk_mcbypck: clk-mcbypck {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <800000000>;
++		clock-output-names = "mcbypck";
++	};
++
++	 /* external clock signal rg1refck, supplied by the phy */
++	clk_rg1refck: clk-rg1refck {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <125000000>;
++		clock-output-names = "clk_rg1refck";
++	};
++
++	 /* external clock signal rg2refck, supplied by the phy */
++	clk_rg2refck: clk-rg2refck {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <125000000>;
++		clock-output-names = "clk_rg2refck";
++	};
++
++	clk_xin: clk-xin {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <50000000>;
++		clock-output-names = "clk_xin";
++	};
++
++
++Example: GMAC controller node that consumes two clocks: a generated clk by the
++clock controller and a fixed clock from DT (clk_rg1refck).
++
++	ethernet0: eth@f0802000 {
++		compatible = "snps,dwmac";
++		reg = <0xf0802000 0x2000>;
++		interrupts = <0 14 4>;
++		interrupt-names = "macirq";
++		clocks	= <&clk_rg1refck>, <&clk NPCM7XX_CLK_AHB>;
++		clock-names = "stmmaceth", "clk_gmac";
++	};
+diff --git a/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h b/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
+new file mode 100644
+index 000000000000..f21522605b94
+--- /dev/null
++++ b/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
+@@ -0,0 +1,44 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Nuvoton NPCM7xx Clock Generator binding
++ * clock binding number for all clocks supportted by nuvoton,npcm7xx-clk
++ *
++ * Copyright (C) 2018 Nuvoton Technologies tali.perry@nuvoton.com
++ *
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_NPCM7XX_H
++#define __DT_BINDINGS_CLOCK_NPCM7XX_H
++
++
++#define NPCM7XX_CLK_CPU 0
++#define NPCM7XX_CLK_GFX_PIXEL 1
++#define NPCM7XX_CLK_MC 2
++#define NPCM7XX_CLK_ADC 3
++#define NPCM7XX_CLK_AHB 4
++#define NPCM7XX_CLK_TIMER 5
++#define NPCM7XX_CLK_UART 6
++#define NPCM7XX_CLK_MMC  7
++#define NPCM7XX_CLK_SPI3 8
++#define NPCM7XX_CLK_PCI  9
++#define NPCM7XX_CLK_AXI 10
++#define NPCM7XX_CLK_APB4 11
++#define NPCM7XX_CLK_APB3 12
++#define NPCM7XX_CLK_APB2 13
++#define NPCM7XX_CLK_APB1 14
++#define NPCM7XX_CLK_APB5 15
++#define NPCM7XX_CLK_CLKOUT 16
++#define NPCM7XX_CLK_GFX  17
++#define NPCM7XX_CLK_SU   18
++#define NPCM7XX_CLK_SU48 19
++#define NPCM7XX_CLK_SDHC 20
++#define NPCM7XX_CLK_SPI0 21
++#define NPCM7XX_CLK_SPIX 22
++
++#define NPCM7XX_CLK_REFCLK 23
++#define NPCM7XX_CLK_SYSBYPCK 24
++#define NPCM7XX_CLK_MCBYPCK 25
++
++#define NPCM7XX_NUM_CLOCKS	 (NPCM7XX_CLK_MCBYPCK+1)
++
++#endif
+-- 
+2.14.1
