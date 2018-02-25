@@ -1,65 +1,56 @@
-Return-Path: <SRS0=1Ni8=FR=linaro.org=baolin.wang@kernel.org>
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v4 1/2] dt-bindings: gpio: Add Spreadtrum GPIO controller documentation
-Date: Fri, 23 Feb 2018 12:44:38 +0800
-Message-Id: <c2db9b3b5c611cadfbe5ea97327be7ee5981fa54.1519360872.git.baolin.wang@linaro.org>
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, andy.shevchenko@gmail.com
+Return-Path: <SRS0=pE4M=FT=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:43137 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751236AbeBYPPI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 25 Feb 2018 10:15:08 -0500
+Date: Sun, 25 Feb 2018 16:15:05 +0100
+From: Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH 1/4] Bluetooth: hci_bcm: Make shutdown and device wake
+ GPIO optional
+Message-ID: <20180225151505.GA17726@wunner.de>
+References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+ <1519567855-26105-2-git-send-email-stefan.wahren@i2se.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1519567855-26105-2-git-send-email-stefan.wahren@i2se.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Loic Poulain <loic.poulain@gmail.com>, =?iso-8859-1?Q?Fr=E9d=E9ric?= Danis <frederic.danis.oss@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Phil Elwell <phil@raspberrypi.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-bluetooth@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the device tree bindings for the Spreadtrum
-GPIO controller. The gpios will be supported by the GPIO
-generic library.
+On Sun, Feb 25, 2018 at 03:10:52PM +0100, Stefan Wahren wrote:
+> According to the devicetree binding the shutdown and device wake
+> GPIOs are optional. Since commit 3e81a4ca51a1 ("Bluetooth: hci_bcm:
+> Mandate presence of shutdown and device wake GPIO") this driver
+> won't probe anymore on Raspberry Pi 3 and Zero W (no device wake GPIO
+> connected). So fix this regression by reverting this commit partially.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes since v3:
- - Add acked tag from Rob.
+Okay when submitting 3e81a4ca51a1 I missed that gpiod_set_value()
+becomes a no-op if the gpio_desc is NULL, I thought it would oops.
 
-Changes since v2:
- - No updates.
 
-Changes since v1:
- - No updates.
----
- .../devicetree/bindings/gpio/gpio-sprd.txt         |   28 ++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sprd.txt
+> -	dev->device_wakeup = devm_gpiod_get(dev->dev, "device-wakeup",
+> -					    GPIOD_OUT_LOW);
+> +	dev->device_wakeup = devm_gpiod_get_optional(dev->dev,
+> +						     "device-wakeup",
+> +						     GPIOD_OUT_LOW);
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-sprd.txt b/Documentation/devicetree/bindings/gpio/gpio-sprd.txt
-new file mode 100644
-index 0000000..eca97d4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-sprd.txt
-@@ -0,0 +1,28 @@
-+Spreadtrum GPIO controller bindings
-+
-+The controller's registers are organized as sets of sixteen 16-bit
-+registers with each set controlling a bank of up to 16 pins. A single
-+interrupt is shared for all of the banks handled by the controller.
-+
-+Required properties:
-+- compatible: Should be "sprd,sc9860-gpio".
-+- reg: Define the base and range of the I/O address space containing
-+the GPIO controller registers.
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- #gpio-cells: Should be <2>. The first cell is the gpio number and
-+the second cell is used to specify optional parameters.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells: Should be <2>. Specifies the number of cells needed
-+to encode interrupt source.
-+- interrupts: Should be the port interrupt shared by all the gpios.
-+
-+Example:
-+	ap_gpio: gpio@40280000 {
-+		compatible = "sprd,sc9860-gpio";
-+		reg = <0 0x40280000 0 0x1000>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-+	};
--- 
-1.7.9.5
+The "device-wakeup" would still fit within 80 chars on the preceding line.
+Otherwise this is
+
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
+
+Thanks,
+
+Lukas
+
+>  	if (IS_ERR(dev->device_wakeup))
+>  		return PTR_ERR(dev->device_wakeup);
+>  
+> -	dev->shutdown = devm_gpiod_get(dev->dev, "shutdown", GPIOD_OUT_LOW);
+> +	dev->shutdown = devm_gpiod_get_optional(dev->dev, "shutdown",
+> +						GPIOD_OUT_LOW);
+>  	if (IS_ERR(dev->shutdown))
+>  		return PTR_ERR(dev->shutdown);
+>  
