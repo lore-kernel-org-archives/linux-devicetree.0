@@ -1,13 +1,15 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 4/4] ARM: bcm2385_defconfig: Enable BT support for BCM43438
-Date: Sun, 25 Feb 2018 15:10:55 +0100
-Message-ID: <1519567855-26105-5-git-send-email-stefan.wahren@i2se.com>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v4 01/10] ARM: sun9i: smp: Add sun9i dt parsing function
+Date: Sun, 25 Feb 2018 16:19:01 +0100
+Message-ID: <20180225161901.207b69fe@dell-desktop.home>
+References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
+ <20180223133742.26044-2-mylene.josserand@bootlin.com>
+ <20180223145423.5og5bdhtznu5qlw7@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <20180223145423.5og5bdhtznu5qlw7@flea.lan>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,39 +19,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Loic Poulain <loic.poulain@gmail.com>, =?UTF-8?q?Fr=C3=A9d=C3=A9ric=20Danis?= <frederic.danis.oss@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Phil Elwell <phil@raspberrypi.org>, linux-bluetooth@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Raspberry Pi Zero W has an onboard BT chip (BCM43438). So enable the
-necessary HCI UART driver (requires serial device bus).
-
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm/configs/bcm2835_defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835_defconfig
-index 43dab48..8682b15 100644
---- a/arch/arm/configs/bcm2835_defconfig
-+++ b/arch/arm/configs/bcm2835_defconfig
-@@ -49,6 +49,9 @@ CONFIG_IP_PNP=y
- CONFIG_IP_PNP_DHCP=y
- CONFIG_NETWORK_SECMARK=y
- CONFIG_NETFILTER=y
-+CONFIG_BT=y
-+CONFIG_BT_HCIUART=m
-+CONFIG_BT_HCIUART_BCM=y
- CONFIG_CFG80211=y
- CONFIG_MAC80211=y
- CONFIG_DEVTMPFS=y
-@@ -74,6 +77,7 @@ CONFIG_SERIAL_8250_SHARE_IRQ=y
- CONFIG_SERIAL_8250_BCM2835AUX=y
- CONFIG_SERIAL_AMBA_PL011=y
- CONFIG_SERIAL_AMBA_PL011_CONSOLE=y
-+CONFIG_SERIAL_DEV_BUS=y
- CONFIG_TTY_PRINTK=y
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_BCM2835=y
--- 
-2.7.4
+SGksCgpPbiBGcmksIDIzIEZlYiAyMDE4IDE1OjU0OjIzICswMTAwCk1heGltZSBSaXBhcmQgPG1h
+eGltZS5yaXBhcmRAYm9vdGxpbi5jb20+IHdyb3RlOgoKPiBIaSwKPiAKPiBPbiBGcmksIEZlYiAy
+MywgMjAxOCBhdCAwMjozNzozM1BNICswMTAwLCBNeWzDqG5lIEpvc3NlcmFuZCB3cm90ZToKPiA+
+IFRvIHByZXBhcmUgdGhlIHN1cHBvcnQgZm9yIHN1bjhpLWE4M3QsIGNyZWF0ZSBhIG5ldyBmdW5j
+dGlvbgo+ID4gdGhhdCBoYW5kbGVzIGFsbCB0aGUgcmVzb3VyY2VzIG5lZWRlZCBvbiBzdW45aS1h
+ODAgKGJlY2F1c2UKPiA+IGl0IHdpbGwgYmUgZGlmZmVyZW50IGZyb20gc3VuOGktYTgzdCkuCj4g
+PiAKPiA+IEFsbCB0aGUgcGFyc2luZyBvZiBkZXZpY2UgdHJlZSBpcyBtb3ZlZCBpbnRvIHRoaXMg
+bmV3IGZ1bmN0aW9uOgo+ID4gc3VuOWlfZHRfcGFyc2luZy4gQ3JlYXRlIGFsc28gYSBmdW5jdGlv
+biB0byByZWxlYXNlIHRoZSByZXNvdXJjZXMKPiA+IHJldHJpZXZlZCBkdXJpbmcgdGhlIGR0IHBh
+cnNpbmcgaW4gY2FzZSB0aGVyZSBpcyBhbiBlcnJvciBpbiBpbml0Cj4gPiBmdW5jdGlvbi4KPiA+
+IAo+ID4gU2lnbmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRA
+Ym9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+ICBhcmNoL2FybS9tYWNoLXN1bnhpL21jX3NtcC5jIHwg
+OTkgKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0KPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgNTggaW5zZXJ0aW9ucygrKSwgNDEgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRp
+ZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLXN1bnhpL21jX3NtcC5jIGIvYXJjaC9hcm0vbWFjaC1z
+dW54aS9tY19zbXAuYwo+ID4gaW5kZXggMTFlNDZjNmVmYjkwLi42NTBhMmFkNDM5OGYgMTAwNjQ0
+Cj4gPiAtLS0gYS9hcmNoL2FybS9tYWNoLXN1bnhpL21jX3NtcC5jCj4gPiArKysgYi9hcmNoL2Fy
+bS9tYWNoLXN1bnhpL21jX3NtcC5jCj4gPiBAQCAtNjg0LDM1ICs2ODQsMjIgQEAgc3RhdGljIGlu
+dCBfX2luaXQgc3VueGlfbWNfc21wX2xvb2tiYWNrKHZvaWQpCj4gPiAgCXJldHVybiByZXQ7Cj4g
+PiAgfQo+ID4gIAo+ID4gLXN0YXRpYyBpbnQgX19pbml0IHN1bnhpX21jX3NtcF9pbml0KHZvaWQp
+Cj4gPiArc3RhdGljIGludCBzdW45aV9kdF9wYXJzaW5nKHN0cnVjdCByZXNvdXJjZSByZXMpICAK
+PiAKPiBMaWtlIEkgdG9sZCB5b3UgaW4gdGhlIHByZXZpb3VzIHZlcnNpb24sIHRoaXMgc2hvdWxk
+IGJlIF9wYXJzZV9kdCwgYW5kCj4gbm90IF9kdF9wYXJzaW5nLgoKU29ycnksIEkgZm9yZ290IHRo
+aXMgcmV2aWV3LgoKPiAKPiBBbHNvLCBJJ20gbm90IHN1cmUgd2h5IHlvdSBhcmUgcGFzc2luZyBi
+eSBjb3B5IHRoZSByZXNvdXJjZSBzdHJ1Y3R1cmU/Cj4gCj4gPiAgewo+ID4gLQlzdHJ1Y3QgZGV2
+aWNlX25vZGUgKmNwdWNmZ19ub2RlLCAqc3JhbV9ub2RlLCAqbm9kZTsKPiA+IC0Jc3RydWN0IHJl
+c291cmNlIHJlczsKPiA+ICsJc3RydWN0IGRldmljZV9ub2RlICpwcmNtX25vZGUsICpjcHVjZmdf
+bm9kZSwgKnNyYW1fbm9kZTsKPiA+ICAJaW50IHJldDsKPiA+ICAKPiA+IC0JaWYgKCFvZl9tYWNo
+aW5lX2lzX2NvbXBhdGlibGUoImFsbHdpbm5lcixzdW45aS1hODAiKSkKPiA+IC0JCXJldHVybiAt
+RU5PREVWOwo+ID4gLQo+ID4gLQlpZiAoIXN1bnhpX21jX3NtcF9jcHVfdGFibGVfaW5pdCgpKQo+
+ID4gLQkJcmV0dXJuIC1FSU5WQUw7Cj4gPiAtCj4gPiAtCWlmICghY2NpX3Byb2JlZCgpKSB7Cj4g
+PiAtCQlwcl9lcnIoIiVzOiBDQ0ktNDAwIG5vdCBhdmFpbGFibGVcbiIsIF9fZnVuY19fKTsKPiA+
+IC0JCXJldHVybiAtRU5PREVWOwo+ID4gLQl9Cj4gPiAtCj4gPiAtCW5vZGUgPSBvZl9maW5kX2Nv
+bXBhdGlibGVfbm9kZShOVUxMLCBOVUxMLCAiYWxsd2lubmVyLHN1bjlpLWE4MC1wcmNtIik7Cj4g
+PiAtCWlmICghbm9kZSkgewo+ID4gLQkJcHJfZXJyKCIlczogUFJDTSBub3QgYXZhaWxhYmxlXG4i
+LCBfX2Z1bmNfXyk7Cj4gPiArCXByY21fbm9kZSA9IG9mX2ZpbmRfY29tcGF0aWJsZV9ub2RlKE5V
+TEwsIE5VTEwsCj4gPiArCQkJCSAgICAgICAiYWxsd2lubmVyLHN1bjlpLWE4MC1wcmNtIik7Cj4g
+PiArCWlmICghcHJjbV9ub2RlKQo+ID4gIAkJcmV0dXJuIC1FTk9ERVY7Cj4gPiAtCX0KPiA+ICAK
+PiA+ICAJLyoKPiA+ICAJICogVW5mb3J0dW5hdGVseSB3ZSBjYW4gbm90IHJlcXVlc3QgdGhlIEkv
+TyByZWdpb24gZm9yIHRoZSBQUkNNLgo+ID4gIAkgKiBJdCBpcyBzaGFyZWQgd2l0aCB0aGUgUFJD
+TSBjbG9jay4KPiA+ICAJICovCj4gPiAtCXByY21fYmFzZSA9IG9mX2lvbWFwKG5vZGUsIDApOwo+
+ID4gLQlvZl9ub2RlX3B1dChub2RlKTsKPiA+ICsJcHJjbV9iYXNlID0gb2ZfaW9tYXAocHJjbV9u
+b2RlLCAwKTsgIAo+IAo+IFNvIGl0IGRvZXMgbW9yZSBhIGJpdCBtb3JlIHRoYW4ganVzdCBwYXJz
+aW5nIHRoZSBEVD8KPiAKPiBDYW4geW91IG1heWJlIGp1c3QgZmlsbCB0aGUgRFQgbm9kZXMgYW5k
+IGhhdmUgdGhlIGNvbW1vbiBwYXJ0IG1hcCB0aGUKPiBtZW1vcnkgcmVnaW9ucyBpZiB0aGUgcG9p
+bnRlciBpcyBub3QgTlVMTD8KClllcCwgSSB3aWxsIHJld29yayB0aGlzIGZ1bmN0aW9uIHRvIG9u
+bHkgcGFyc2UgZGV2aWNlIHRyZWUgbm9kZXMuCgpUaGFua3MsCgpNeWzDqG5lCgotLSAKTXlsw6hu
+ZSBKb3NzZXJhbmQsIEJvb3RsaW4gKGZvcm1lcmx5IEZyZWUgRWxlY3Ryb25zKQpFbWJlZGRlZCBM
+aW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nCmh0dHA6Ly9ib290bGluLmNvbQoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
