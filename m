@@ -1,136 +1,51 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v6 3/4] drm: rcar-du: Fix legacy DT to create LVDS encoder
- nodes
-Date: Sun, 25 Feb 2018 13:33:01 +0200
-Message-ID: <2193011.n7ipjnO3AS@avalon>
-References: <20180222131336.7712-1-laurent.pinchart+renesas@ideasonboard.com>
- <06d3fb91-961d-a053-df22-cddf3419b159@gmail.com>
- <f31fad7e-112a-4ac3-4e60-f57534c0cf91@gmail.com>
+From: hao_zhang <hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/4] pwm support for allwinner sun8i SOCs.
+Date: Sun, 25 Feb 2018 21:49:46 +0800
+Message-ID: <20180225134946.GA14015@arx-s1>
+Reply-To: hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <f31fad7e-112a-4ac3-4e60-f57534c0cf91@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDKITZOARQMBBBH6ZLKAKGQEWVI3FFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Claudiu.Beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRnJhbmssCgpPbiBTdW5kYXksIDI1IEZlYnJ1YXJ5IDIwMTggMDA6NDI6NDcgRUVUIEZyYW5r
-IFJvd2FuZCB3cm90ZToKPiBPbiAwMi8yMi8xOCAxNDoxMCwgRnJhbmsgUm93YW5kIHdyb3RlOgo+
-ID4gSGkgTGF1cmVudCwgUm9iLAo+ID4gCj4gPiBUaGFua3MgZm9yIHRoZSBwcm9tcHQgc3BpbiB0
-byBhZGRyZXNzIG15IGNvbmNlcm5zLiAgVGhlcmUgYXJlIHNvbWUgc21hbGwKPiA+IHRlY2huaWNh
-bCBpc3N1ZXMuCj4gPiAKPiA+IEkgZGlkIG5vdCByZWFkIHRoZSB2MyBwYXRjaCB1bnRpbCB0b2Rh
-eS4gIHYzIHRocm91Z2ggdjYgYXJlIHN0aWxsIHVzaW5nCj4gPiB0aGUgb2xkIG92ZXJsYXkgYXBw
-bHkgbWV0aG9kIHdoaWNoIHVzZXMgYW4gZXhwYW5kZWQgZGV2aWNlIHRyZWUgYXMgaW5wdXQuCj4g
-PiAKPiA+IFJvYiwgSSBkb24ndCBzZWUgbXkgb3ZlcmxheSBwYXRjaGVzIGluIHlvdSBmb3ItbmV4
-dCBicmFuY2gsIGFuZCBJIGhhdmUKPiA+IG5vdCBzZWVuIGFuICJBcHBsaWVkIiBtZXNzYWdlIGZy
-b20geW91LiAgV2hhdCBpcyB0aGUgc3RhdHVzIG9mIHRoZQo+ID4gb3ZlcmxheSBwYXRjaGVzPwo+
-ID4gCj4gPiBDb21tZW50cyBpbiB0aGUgcGF0Y2ggYmVsb3cuCj4gPiAKPiA+IE9uIDAyLzIyLzE4
-IDA1OjEzLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4+IFRoZSBpbnRlcm5hbCBMVkRTIGVu
-Y29kZXJzIG5vdyBoYXZlIHRoZWlyIG93biBEVCBiaW5kaW5ncy4gQmVmb3JlCj4gPj4gc3dpdGNo
-aW5nIHRoZSBkcml2ZXIgaW5mcmFzdHJ1Y3R1cmUgdG8gdGhvc2UgbmV3IGJpbmRpbmdzLCBpbXBs
-ZW1lbnQKPiA+PiBiYWNrd2FyZC1jb21wYXRpYmlsaXR5IHRocm91Z2ggbGl2ZSBEVCBwYXRjaGlu
-Zy4KPiA+PiAKPiA+PiBQYXRjaGluZyBpcyBkaXNhYmxlZCBhbmQgd2lsbCBiZSBlbmFibGVkIGFs
-b25nIHdpdGggc3VwcG9ydCBmb3IgdGhlIG5ldwo+ID4+IERUIGJpbmRpbmdzIGluIHRoZSBEVSBk
-cml2ZXIuCj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQaW5jaGFydAo+ID4+IDxs
-YXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiA+PiAtLS0KPiA+PiBD
-aGFuZ2VzIHNpbmNlIHY1Ogo+ID4+IAo+ID4+IC0gVXNlIGEgcHJpdmF0ZSBjb3B5IG9mIHJjYXJf
-ZHVfb2ZfY2hhbmdlc2V0X2FkZF9wcm9wZXJ0eSgpCj4gPj4gCj4gPj4gQ2hhbmdlcyBzaW5jZSB2
-MzoKPiA+PiAKPiA+PiAtIFVzZSB0aGUgT0YgY2hhbmdlc2V0IEFQSQo+ID4+IC0gVXNlIG9mX2dy
-YXBoX2dldF9lbmRwb2ludF9ieV9yZWdzKCkKPiA+PiAtIFJlcGxhY2UgaGFyZGNvZGVkIGNvbnN0
-YW50cyBieSBzaXplb2YoKQo+ID4+IAo+ID4+IENoYW5nZXMgc2luY2UgdjI6Cj4gPj4gCj4gPj4g
-LSBVcGRhdGUgdGhlIFNQRFggaGVhZGVycyB0byB1c2UgQy1zdHlsZSBjb21tZW50cyBpbiBoZWFk
-ZXIgZmlsZXMKPiA+PiAtIFJlbW92ZWQgdGhlIG1hbnVhbGx5IGNyZWF0ZWQgX19sb2NhbF9maXh1
-cHNfXyBub2RlCj4gPj4gLSBQZXJmb3JtIG1hbnVhbCBmaXh1cHMgb24gbGl2ZSBEVCBpbnN0ZWFk
-IG9mIG92ZXJsYXkKPiA+PiAKPiA+PiBDaGFuZ2VzIHNpbmNlIHYxOgo+ID4+IAo+ID4+IC0gU2Vs
-ZWN0IE9GX0ZMQVRUUkVFCj4gPj4gLSBDb21waWxlIExWRFMgRFQgYmluZGluZ3MgcGF0Y2ggY29k
-ZSB3aGVuIERSTV9SQ0FSX0xWRFMgaXMgc2VsZWN0ZWQKPiA+PiAtIFVwZGF0ZSB0aGUgU1BEWCBo
-ZWFkZXJzIHRvIHVzZSBHUEwtMi4wIGluc3RlYWQgb2YgR1BMLTIuMC1vbmx5Cj4gPj4gLSBUdXJu
-IF9fZHRiX3JjYXJfZHVfb2ZfbHZkc18oYmVnaW58ZW5kKSBmcm9tIHU4IHRvIGNoYXIKPiA+PiAt
-IFBhc3Mgdm9pZCBiZWdpbiBhbmQgZW5kIHBvaW50ZXJzIHRvIHJjYXJfZHVfb2ZfZ2V0X292ZXJs
-YXkoKQo+ID4+IC0gVXNlIG9mX2dldF9wYXJlbnQoKSBpbnN0ZWFkIG9mIGFjY2Vzc2luZyB0aGUg
-cGFyZW50IHBvaW50ZXIgZGlyZWN0bHkKPiA+PiAtIEZpbmQgdGhlIExWRFMgZW5kcG9pbnRzIG5v
-ZGVzIGJhc2VkIG9uIHRoZSBMVkRTIG5vZGUgaW5zdGVhZCBvZiB0aGUKPiA+PiAKPiA+PiAgIHJv
-b3Qgb2YgdGhlIG92ZXJsYXkKPiA+PiAKPiA+PiAtIFVwZGF0ZSB0byB0aGUgPHNvYz4tbHZkcyBj
-b21wYXRpYmxlIHN0cmluZyBmb3JtYXQKPiA+PiAtLS0KPiA+PiAKPiA+PiAgZHJpdmVycy9ncHUv
-ZHJtL3JjYXItZHUvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+ID4+ICBkcml2
-ZXJzL2dwdS9kcm0vcmNhci1kdS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICB8ICAgNyArLQo+
-ID4+ICBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mLmMgICAgICAgICAgICAgICB8
-IDM0MiArKysrKysrKysrKysrKysKPiA+PiAgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9k
-dV9vZi5oICAgICAgICAgICAgICAgfCAgMjAgKysKPiA+PiAgLi4uL2dwdS9kcm0vcmNhci1kdS9y
-Y2FyX2R1X29mX2x2ZHNfcjhhNzc5MC5kdHMgICAgfCAgNzkgKysrKysKPiA+PiAgLi4uL2dwdS9k
-cm0vcmNhci1kdS9yY2FyX2R1X29mX2x2ZHNfcjhhNzc5MS5kdHMgICAgfCAgNTMgKysrKwo+ID4+
-ICAuLi4vZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkzLmR0cyAgICB8ICA1
-MyArKysrCj4gPj4gIC4uLi9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTUu
-ZHRzICAgIHwgIDUzICsrKysKPiA+PiAgLi4uL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mX2x2
-ZHNfcjhhNzc5Ni5kdHMgICAgfCAgNTMgKysrKwo+ID4+ICA5IGZpbGVzIGNoYW5nZWQsIDY2MSBp
-bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mLmMKPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfb2YuaAo+ID4+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTAuZHRz
-Cj4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1
-X29mX2x2ZHNfcjhhNzc5MS5kdHMKPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1
-L2RybS9yY2FyLWR1L3JjYXJfZHVfb2ZfbHZkc19yOGE3NzkzLmR0cwo+ID4+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZl9sdmRzX3I4YTc3OTUu
-ZHRzCj4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2Fy
-X2R1X29mX2x2ZHNfcjhhNzc5Ni5kdHMKCltzbmlwXQoKPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9vZi5jCj4gPj4gYi9kcml2ZXJzL2dwdS9kcm0vcmNh
-ci1kdS9yY2FyX2R1X29mLmMgbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+PiBpbmRleCAwMDAwMDAw
-MDAwMDAuLmFjNDQyZGRmZWQxNgo+ID4+IC0tLSAvZGV2L251bGwKPiA+PiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X29mLmMKCltzbmlwXQoKPiA+PiArc3RhdGljIGludCBf
-X2luaXQgcmNhcl9kdV9vZl9hcHBseV9vdmVybGF5KGNvbnN0IHN0cnVjdAo+ID4+IHJjYXJfZHVf
-b2Zfb3ZlcmxheSAqZHRicywKPiA+PiArCQkJCQkgICBjb25zdCBjaGFyICpjb21wYXRpYmxlKQo+
-ID4+ICt7Cj4gPj4gKwljb25zdCBzdHJ1Y3QgcmNhcl9kdV9vZl9vdmVybGF5ICpkdGIgPSBOVUxM
-Owo+ID4+ICsJc3RydWN0IGRldmljZV9ub2RlICpub2RlID0gTlVMTDsKPiA+PiArCXVuc2lnbmVk
-IGludCBpOwo+ID4+ICsJaW50IG92Y3NfaWQ7Cj4gPj4gKwl2b2lkICpkYXRhOwo+ID4+ICsJdm9p
-ZCAqbWVtOwo+ID4+ICsJaW50IHJldDsKPiA+PiArCj4gPj4gKwlmb3IgKGkgPSAwOyBkdGJzW2ld
-LmNvbXBhdGlibGU7ICsraSkgewo+ID4+ICsJCWlmICghc3RyY21wKGR0YnNbaV0uY29tcGF0aWJs
-ZSwgY29tcGF0aWJsZSkpIHsKPiA+PiArCQkJZHRiID0gJmR0YnNbaV07Cj4gPj4gKwkJCWJyZWFr
-Owo+ID4+ICsJCX0KPiA+PiArCX0KPiA+PiArCj4gPj4gKwlpZiAoIWR0YikKPiA+PiArCQlyZXR1
-cm4gLUVOT0RFVjsKPiAKPiBJIHdhcyB0cnlpbmcgdG8gYXZvaWQgcmV2aWV3aW5nIHRoaXMgbGl0
-dGxlIGJsb2NrIG9mIGNvZGUsIGJlY2F1c2UgaXQKPiBtZWFudCBzcGVuZGluZyB0aGUgdGltZSB0
-byBkbyB0aGUgcmVzZWFyY2ggdG8gdmVyaWZ5IG15IG1lbW9yeS4gIEkgZGlkCj4gdGhlIHJlc2Vh
-cmNoLCBzbyBoZXJlIGFyZSB0aGUgY29tbWVudHMuLi4KClRoYW5rIHlvdS4KCj4gPiBfX0lmX18g
-bXkgb3ZlcmxheSBwYXRjaGVzIGFyZSBhY2NlcHRlZCwgdGhpcyBibG9jazoKPiA+PiArCj4gPj4g
-KwlkYXRhID0ga21lbWR1cChkdGItPmJlZ2luLCBkdGItPmVuZCAtIGR0Yi0+YmVnaW4sIEdGUF9L
-RVJORUwpOwo+ID4+ICsJaWYgKCFkYXRhKQo+ID4+ICsJCXJldHVybiAtRU5PTUVNOwo+ID4+ICsK
-PiA+PiArCW1lbSA9IG9mX2ZkdF91bmZsYXR0ZW5fdHJlZShkYXRhLCBOVUxMLCAmbm9kZSk7Cj4g
-Pj4gKwlpZiAoIW1lbSkgewo+ID4+IAo+ID4+ICsJCXJldCA9IC1FTk9NRU07Cj4gCj4gICAgICAg
-ICAgICAgICAgIGtmcmVlKGRhdGEpOwo+IAo+IFRoaXMgY291bGQgYmUgZG9uZSBhdCB0aGUgdGFp
-bCBvZiB0aGUgZnVuY3Rpb24gaWYgeW91IHByZWZlciwgYnV0Cj4gaXQgaXMgZWFzaWVyIGZvciBt
-ZSB0byBwdXQgaXQgaGVyZSB0byBzaG93IHdoaWNoIGNhc2UgaXQgaXMgb2sKPiB0byBrZnJlZSgp
-LiAgQW5kIGlmIGRvaW5nIHRoZSBrZnJlZSgpIGhlcmUsIG1heSBhcyB3ZWxsIGp1c3QKPiByZXR1
-cm4gLUVOT01FTSBoZXJlIGluc3RlYWQgb2YgZ29pbmcgdG8gZG9uZS4KPiAKPiA+PiArCQlnb3Rv
-IGRvbmU7Cj4gPj4gKwl9Cj4gPj4gKwo+ID4+ICsJb3Zjc19pZCA9IDA7Cj4gPj4gKwlyZXQgPSBv
-Zl9vdmVybGF5X2FwcGx5KG5vZGUsICZvdmNzX2lkKTsKPiA+PiArCj4gCj4gPj4gK2RvbmU6Cj4g
-RG8gbm90IGRvIHRoZSBvZl9ub2RlX3B1dCgpIG9yIHRoZSBrZnJlZSgpcyBoZXJlLiAgVGhlIGxp
-dmUKPiBkZXZpY2V0cmVlIGFuZCB0aGUgb3ZlcmxheSBjaGFuZ2VzZXQgaGF2ZSBwb2ludGVycyBp
-bnRvIHRoZW0uCj4gCj4gU29tZSBlcnJvciB2YWx1ZXMgZnJvbSBvZl9vdmVybGF5X2FwcGx5KCkg
-ZG8gYWxsb3cgeW91IHRvIGRvIHNvbWUKPiBmcmVlaW5nLCBidXQgc2luY2UgdGhpcyBpcyBhdCBt
-b3N0IGEgdGVtcG9yYXJ5IHBpZWNlIG9mIGNvZGUsIGl0Cj4gaXNuJ3Qgd29ydGggYWxsIHRoZSBj
-b21wbGV4aXR5IG9mIHRyeWluZyB0byBmaWd1cmUgdGhhdCBvdXQuICBUaGUKPiBpbXBsaWNhdGlv
-bnMgb2YgdGhlIHZhcmlvdXMgcmV0dXJuIHZhbHVlcyBmcm9tIG9mX292ZXJsYXlfYXBwbHkoKQo+
-IGFyZSBhIGJpdCBvZiBhIGhhaXJiYWxsLgo+IAo+ID4+ICsJb2Zfbm9kZV9wdXQobm9kZSk7Cj4g
-Pj4gKwlrZnJlZShkYXRhKTsKPiA+PiArCWtmcmVlKG1lbSk7CgpPSywgSSdsbCByZW1vdmUgdGhl
-IGVycm9yIGhhbmRsaW5nIGNvZGUgaGVyZSBhbmQgYWRkIGEga2ZyZWUoZGF0YSkgaWYgCm9mX2Zk
-dF91bmZsYXR0ZW5fdHJlZSgpIGZhaWxzLiBUaGFuayB5b3UuCgo+ID4gYmVjb21lczoKPiA+IAly
-ZXQgPSBvZl9vdmVybGF5X2ZkdF9hcHBseShkdGItPmJlZ2luLCAmb3Zjc19pZCk7Cj4gPiAKPiA+
-IElmIG15IG92ZXJsYXkgcGF0Y2hlcyBkbyBub3QgZXhpc3QsIHRoZXJlIGFyZSBvdGhlciBzbWFs
-bCBlcnJvcnMKPiA+IGluIHRoZSBjb2RlIGJsb2NrIGFib3ZlLiAgSSdsbCBpZ25vcmUgdGhlbSBm
-b3IgdGhlIG1vbWVudC4KPiA+IAo+ID4gQSBxdWljayBzY2FuIG9mIHRoZSByZXN0IG9mIHRoZSBj
-b2RlIGxvb2tzIE9LLiAgSSdsbCByZWFkIHRocm91Z2ggaXQKPiA+IG1vcmUgY2FyZWZ1bGx5LCBi
-dXQgd2FudGVkIHRvIGdldCB0aGlzIHJlcGx5IG91dCB3aXRob3V0IGZ1cnRoZXIKPiA+IGRlbGF5
-Lgo+ID4gCj4gPiAtRnJhbmsKPiA+IAo+ID4+ICsKPiA+PiArCXJldHVybiByZXQ7Cj4gPj4gK30K
-CltzbmlwXQoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+PWM support for allwinner sun8i SOCs.
+
+This patchset adds pwm support for allwinner sun8i SOCs.
+
+
+v2 Changes:
+1. change sun8i-r40 symbol to sun8i.
+2. change pwm0_pin, pwm0-pin to pwm_ch0_pin, pwm-ch0-pin.
+3. remove clk_disable_unprepare(), check !match and IS_ERR(pwm->regmap).
+
+
+
+
+hao_zhang (4):
+  dt-bindings: pwm: binding allwinner sun8i.
+  ARM: dtsi: add pwm node for sun8i.
+  ARM: dts: add pwm status for r40.
+  ARM: PWM: add allwinner sun8i pwm support.
+
+ .../devicetree/bindings/pwm/pwm-sun8i.txt          |  18 +
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts  |   6 +
+ arch/arm/boot/dts/sun8i-r40.dtsi                   |  13 +
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-sun8i.c                            | 401 +++++++++++++++++++++
+ 6 files changed, 449 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
+ create mode 100644 drivers/pwm/pwm-sun8i.c
+
+-- 
+2.7.4
