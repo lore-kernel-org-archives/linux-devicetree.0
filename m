@@ -1,15 +1,15 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v4 03/10] ARM: sun8i: smp: Add support for A83T
-Date: Sun, 25 Feb 2018 16:25:35 +0100
-Message-ID: <20180225162535.7406803c@dell-desktop.home>
-References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
- <20180223133742.26044-4-mylene.josserand@bootlin.com>
- <20180223150305.7jsuxay2idzvcy2w@flea.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
+ slave
+Date: Sun, 25 Feb 2018 21:17:12 +0100
+Message-ID: <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
+References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+ <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180223150305.7jsuxay2idzvcy2w@flea.lan>
+In-Reply-To: <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,76 +19,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, quentin.schulz@bootlin.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, clabbe.montjoie@gmail.com, thomas.petazzoni@bootlin.com, linux-arm-kernel@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, Lukas Wunner <lukas@wunner.de>, Phil Elwell <phil@raspberrypi.org>, linux-bluetooth@vger.kernel.org, Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBGcmksIDIzIEZlYiAyMDE4IDE2OjAzOjA1ICswMTAwCk1heGltZSBSaXBhcmQgPG1h
-eGltZS5yaXBhcmRAYm9vdGxpbi5jb20+IHdyb3RlOgoKPiBPbiBGcmksIEZlYiAyMywgMjAxOCBh
-dCAwMjozNzozNVBNICswMTAwLCBNeWzDqG5lIEpvc3NlcmFuZCB3cm90ZToKPiA+IEFkZCB0aGUg
-c3VwcG9ydCBmb3IgQTgzVC4KPiA+IAo+ID4gQTgzVCBTb0MgaGFzIGFuIGFkZGl0aW9uYWwgcmVn
-aXN0ZXIgdGhhbiBBODAgdG8gaGFuZGxlIENQVSBjb25maWd1cmF0aW9uczoKPiA+IFJfQ1BVU19D
-RkcuIEluZm9ybWF0aW9uIGFib3V0IHRoZSByZWdpc3RlciBjb21lcyBmcm9tIEFsbHdpbm5lcidz
-IEJTUAo+ID4gZHJpdmVyLgo+ID4gQW4gaW1wb3J0YW50IGRpZmZlcmVuY2UgaXMgdGhlIFBvd2Vy
-IE9mZiBHYXRpbmcgcmVnaXN0ZXIgZm9yIGNsdXN0ZXJzCj4gPiB3aGljaCBpcyBCSVQoNCkgaW4g
-Y2FzZSBvZiBTVU45SS1BODAgYW5kIEJJVCgwKSBpbiBjYXNlIG9mIFNVTjhJLUE4M1QuCj4gPiAK
-PiA+IFNpZ25lZC1vZmYtYnk6IE15bMOobmUgSm9zc2VyYW5kIDxteWxlbmUuam9zc2VyYW5kQGJv
-b3RsaW4uY29tPgo+ID4gLS0tCj4gPiAgYXJjaC9hcm0vbWFjaC1zdW54aS9LY29uZmlnICB8ICAg
-MiArLQo+ID4gIGFyY2gvYXJtL21hY2gtc3VueGkvbWNfc21wLmMgfCAxNjggKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTYy
-IGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNo
-L2FybS9tYWNoLXN1bnhpL0tjb25maWcgYi9hcmNoL2FybS9tYWNoLXN1bnhpL0tjb25maWcKPiA+
-IGluZGV4IGNlNTNjZWFmNGNjNS4uYTBhZDM1YzQxYzAyIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9h
-cm0vbWFjaC1zdW54aS9LY29uZmlnCj4gPiArKysgYi9hcmNoL2FybS9tYWNoLXN1bnhpL0tjb25m
-aWcKPiA+IEBAIC01MSw3ICs1MSw3IEBAIGNvbmZpZyBNQUNIX1NVTjlJCj4gPiAgY29uZmlnIEFS
-Q0hfU1VOWElfTUNfU01QCj4gPiAgCWJvb2wKPiA+ICAJZGVwZW5kcyBvbiBTTVAKPiA+IC0JZGVm
-YXVsdCBNQUNIX1NVTjlJCj4gPiArCWRlZmF1bHQgeSBpZiBNQUNIX1NVTjlJIHx8IE1BQ0hfU1VO
-OEkKPiA+ICAJc2VsZWN0IEFSTV9DQ0k0MDBfUE9SVF9DVFJMCj4gPiAgCXNlbGVjdCBBUk1fQ1BV
-X1NVU1BFTkQKPiA+ICAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLXN1bnhpL21jX3Nt
-cC5jIGIvYXJjaC9hcm0vbWFjaC1zdW54aS9tY19zbXAuYwo+ID4gaW5kZXggZGUwMmU1NjYyNTU3
-Li4zYmQ5MDY2YTE0MjIgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9tYWNoLXN1bnhpL21jX3Nt
-cC5jCj4gPiArKysgYi9hcmNoL2FybS9tYWNoLXN1bnhpL21jX3NtcC5jCj4gPiBAQCAtNTUsMjIg
-KzU1LDMyIEBACj4gPiAgI2RlZmluZSBDUFVDRkdfQ1hfUlNUX0NUUkxfTDJfUlNUCUJJVCg4KQo+
-ID4gICNkZWZpbmUgQ1BVQ0ZHX0NYX1JTVF9DVFJMX0NYX1JTVChuKQlCSVQoNCArIChuKSkKPiA+
-ICAjZGVmaW5lIENQVUNGR19DWF9SU1RfQ1RSTF9DT1JFX1JTVChuKQlCSVQobikKPiA+ICsjZGVm
-aW5lIENQVUNGR19DWF9SU1RfQ1RSTF9DT1JFX1JTVF9BTEwJKDB4ZiA8PCAwKQo+ID4gIAo+ID4g
-ICNkZWZpbmUgUFJDTV9DUFVfUE9fUlNUX0NUUkwoYykJCSgweDQgKyAweDQgKiAoYykpCj4gPiAg
-I2RlZmluZSBQUkNNX0NQVV9QT19SU1RfQ1RSTF9DT1JFKG4pCUJJVChuKQo+ID4gICNkZWZpbmUg
-UFJDTV9DUFVfUE9fUlNUX0NUUkxfQ09SRV9BTEwJMHhmCj4gPiAgI2RlZmluZSBQUkNNX1BXUk9G
-Rl9HQVRJTkdfUkVHKGMpCSgweDEwMCArIDB4NCAqIChjKSkKPiA+ICsvKiBUaGUgcG93ZXIgb2Zm
-IHJlZ2lzdGVyIGZvciBjbHVzdGVycyBhcmUgZGlmZmVyZW50IGZyb20gU1VOOUkgYW5kIFNVTjhJ
-ICovCj4gPiArI2RlZmluZSBQUkNNX1BXUk9GRl9HQVRJTkdfUkVHX0NMVVNURVJfU1VOOEkJQklU
-KDApCj4gPiAgI2RlZmluZSBQUkNNX1BXUk9GRl9HQVRJTkdfUkVHX0NMVVNURVJfU1VOOUkJQklU
-KDQpCj4gPiAgI2RlZmluZSBQUkNNX1BXUk9GRl9HQVRJTkdfUkVHX0NPUkUobikJQklUKG4pCj4g
-PiAgI2RlZmluZSBQUkNNX1BXUl9TV0lUQ0hfUkVHKGMsIGNwdSkJKDB4MTQwICsgMHgxMCAqIChj
-KSArIDB4NCAqIChjcHUpKQo+ID4gICNkZWZpbmUgUFJDTV9DUFVfU09GVF9FTlRSWV9SRUcJCTB4
-MTY0Cj4gPiAgCj4gPiArLyogUl9DUFVDRkcgcmVnaXN0ZXJzLCBzcGVjaWZpYyB0byBTVU44SSAq
-Lwo+ID4gKyNkZWZpbmUgUl9DUFVDRkdfQ0xVU1RFUl9QT19SU1RfQ1RSTChjKQkoMHgzMCArIChj
-KSAqIDB4NCkKPiA+ICsjZGVmaW5lIFJfQ1BVQ0ZHX0NMVVNURVJfUE9fUlNUX0NUUkxfQ09SRShu
-KQlCSVQobikKPiA+ICsjZGVmaW5lIFJfQ1BVQ0ZHX0NQVV9TT0ZUX0VOVFJZX1JFRwkweDAxYTQK
-PiA+ICsKPiA+ICAjZGVmaW5lIENQVTBfU1VQUE9SVF9IT1RQTFVHX01BR0lDMAkweEZBNTAzOTJG
-Cj4gPiAgI2RlZmluZSBDUFUwX1NVUFBPUlRfSE9UUExVR19NQUdJQzEJMHg3OTBEQ0EzQQo+ID4g
-IAo+ID4gIHN0YXRpYyB2b2lkIF9faW9tZW0gKmNwdWNmZ19iYXNlOwo+ID4gK3N0YXRpYyB2b2lk
-IF9faW9tZW0gKnJfY3B1Y2ZnX2Jhc2U7Cj4gPiAgc3RhdGljIHZvaWQgX19pb21lbSAqcHJjbV9i
-YXNlOwo+ID4gIHN0YXRpYyB2b2lkIF9faW9tZW0gKnNyYW1fYl9zbXBfYmFzZTsKPiA+ICtzdGF0
-aWMgYm9vbCBpc19zdW45aTsgIAo+IAo+IFNpbmNlIHlvdSBhbHdheXMgY2hlY2sgZm9yIHRoYXQg
-Y29uZGl0aW9uIHRvIGFsd2F5cyBiZSBmYWxzZSwgY2FuJ3QKPiB5b3UgZG8gdGhlIG9wcG9zaXRl
-LCBpZSBoYXZlIGl0IGNhbGxlZCBpc19hODN0LCBhbmQgdmVyaWZ5IGl0IHRvIGJlCj4gdHJ1ZT8K
-ClllcywgSSB3aWxsIHN3aXRjaCB0aGUgdGVzdC4KCj4gCj4gPiAgCS8qIFNldCB0aGUgaGFyZHdh
-cmUgZW50cnkgcG9pbnQgYWRkcmVzcyAqLwo+ID4gLQl3cml0ZWwoX19wYV9zeW1ib2woc3VueGlf
-bWNfc21wX3NlY29uZGFyeV9zdGFydHVwKSwKPiA+IC0JICAgICAgIHByY21fYmFzZSArIFBSQ01f
-Q1BVX1NPRlRfRU5UUllfUkVHKTsKPiA+ICsJaWYgKGlzX3N1bjlpKQo+ID4gKwkJd3JpdGVsKF9f
-cGFfc3ltYm9sKHN1bnhpX21jX3NtcF9zZWNvbmRhcnlfc3RhcnR1cCksCj4gPiArCQkgICAgICAg
-cHJjbV9iYXNlICsgUFJDTV9DUFVfU09GVF9FTlRSWV9SRUcpOwo+ID4gKwllbHNlCj4gPiArCQl3
-cml0ZWwoX19wYV9zeW1ib2woc3VueGlfbWNfc21wX3NlY29uZGFyeV9zdGFydHVwKSwKPiA+ICsJ
-CSAgICAgICByX2NwdWNmZ19iYXNlICsgUl9DUFVDRkdfQ1BVX1NPRlRfRU5UUllfUkVHKTsgIAo+
-IAo+IGlmIChpc19hODN0KQo+IAlyZWcgPSBwcmNtX2Jhc2UgKyBQUkNNX0NQVV9TT0ZUX0VOVFJZ
-X1JFRzsKPiBlbHNlCj4gCXJlZyA9IHJfY3B1Y2ZnX2Jhc2UgKyBSX0NQVUNGR19DUFVfU09GVF9F
-TlRSWV9SRUc7Cj4gd3JpdGVsKF9fcGFfc3ltYm9sKHN1bnhpX21jX3NtcF9zZWNvbmRhcnlfc3Rh
-cnR1cCksIHJlZyk7Cj4gCgpNYWtlIHNlbnNlLCB0aGFua3MgZm9yIHRoZSByZXZpZXcuCgpNeWxl
-bmUKCi0tIApNeWzDqG5lIEpvc3NlcmFuZCwgQm9vdGxpbiAoZm9ybWVybHkgRnJlZSBFbGVjdHJv
-bnMpCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2Jvb3RsaW4u
-Y29tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+Hi Stefan,
+
+> Add BCM43438 (bluetooth) as a serdev slave device of uart0 (pl011/ttyAMA0).
+> This allows to automatically insert the bcm43438 to the bluetooth
+> subsystem instead of relying on patched userspace helpers (hciattach).
+> 
+> In order to keep a debug UART we need to switch to uart1.
+> 
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+> arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 14 +++++++++++++-
+> 1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+> index cf53436..b7f79f1 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+> +++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+> @@ -131,6 +131,18 @@
+> 
+> &uart0 {
+> 	pinctrl-names = "default";
+> -	pinctrl-0 = <&uart0_gpio14>;
+> +	pinctrl-0 = <&uart0_gpio32 &uart0_ctsrts_gpio30>;
+> +	status = "okay";
+> +
+> +	bluetooth {
+> +		compatible = "brcm,bcm43438-bt";
+> +		max-speed = <2000000>;
+> +		shutdown-gpios = <&gpio 45 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
+
+is the shutdown GPIO working as expected with this hardware. So even module unload and reload works fine? Meaning we are getting back to the 115200 default baud rate on the UART? Or is this actually the device-wakeup GPIO?
+
+Regards
+
+Marcel
