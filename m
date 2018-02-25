@@ -1,48 +1,60 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH] usb: host: xhci-rcar: add support for r8a77965
-Date: Tue, 27 Feb 2018 17:15:20 +0900
-Message-Id: <1519719320-27792-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=jmIy=FT=gmail.com=andy.shevchenko@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: mathias.nyman@intel.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <f4a2fefb4c3179e7598dbc8141a661833200b922.1519468782.git.baolin.wang@linaro.org>
+References: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
+ <f4a2fefb4c3179e7598dbc8141a661833200b922.1519468782.git.baolin.wang@linaro.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 25 Feb 2018 14:19:51 +0200
+Message-ID: <CAHp75VdvLDEmNs-YUFYf+Og18kaU6j6zAxXc1w31X2vw26ACHQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] gpio: Add Spreadtrum PMIC EIC driver support
+Content-Type: text/plain; charset="UTF-8"
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds support for r8a77965 (R-Car M3-N).
+On Sat, Feb 24, 2018 at 12:44 PM, Baolin Wang <baolin.wang@linaro.org> wrote:
+> The Spreadtrum PMIC EIC controller contains only one bank of debounce EIC,
+> and this bank contains 16 EICs. Each EIC can only be used as input mode,
+> as well as supporting the debounce and the capability to trigger interrupts
+> when detecting input signals.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
- drivers/usb/host/xhci-rcar.c                       | 4 ++++
- 2 files changed, 5 insertions(+)
+> +/*
+> + * These registers are modified under the irq bus lock and cached to avoid
+> + * unnecessary writes in bus_sync_unlock.
+> + */
+> +enum { REG_IEV, REG_IE, REG_TRIG, CACHE_NR_REGS };
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index e2ea59b..1651483a 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -13,6 +13,7 @@ Required properties:
-     - "renesas,xhci-r8a7793" for r8a7793 SoC
-     - "renesas,xhci-r8a7795" for r8a7795 SoC
-     - "renesas,xhci-r8a7796" for r8a7796 SoC
-+    - "renesas,xhci-r8a77965" for r8a77965 SoC
-     - "renesas,rcar-gen2-xhci" for a generic R-Car Gen2 or RZ/G1 compatible
-       device
-     - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 compatible device
-diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-rcar.c
-index f0b5596..f33ffc2 100644
---- a/drivers/usb/host/xhci-rcar.c
-+++ b/drivers/usb/host/xhci-rcar.c
-@@ -83,6 +83,10 @@
- 		.soc_id = "r8a7796",
- 		.data = (void *)RCAR_XHCI_FIRMWARE_V3,
- 	},
-+	{
-+		.soc_id = "r8a77965",
-+		.data = (void *)RCAR_XHCI_FIRMWARE_V3,
-+	},
- 	{ /* sentinel */ },
- };
- 
+One item per line.
+
+> +static int sprd_pmic_eic_direction_input(struct gpio_chip *chip,
+> +                                        unsigned int offset)
+> +{
+> +       /* EICs are always input, nothing need to do here. */
+> +       return 0;
+> +}
+> +
+> +static void sprd_pmic_eic_set(struct gpio_chip *chip, unsigned int offset,
+> +                             int value)
+> +{
+> +       /* EICs are always input, nothing need to do here. */
+> +}
+
+Remove both.
+
+Look at what GPIO core does.
+
+> +       value |= debounce / 1000;
+
+Possible overflow.
+
+> +       for (n = 0; n < chip->ngpio; n++) {
+> +               if (!(BIT(n) & val))
+
+for_each_set_bit().
+
+At some point you may need just to go across lib/ in the kernel and
+see what we have there.
+
 -- 
-1.9.1
+With Best Regards,
+Andy Shevchenko
