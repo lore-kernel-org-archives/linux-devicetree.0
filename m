@@ -1,93 +1,220 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH 14/15] ARM: dts: sun8i: h3: Enable HDMI
- output on H3 boards
-Date: Sun, 25 Feb 2018 17:08:50 +0800
-Message-ID: <51519389-EAEF-47B5-A49C-AA04692FB8FA@aosc.io>
-References: <20180224214545.3740-1-jernej.skrabec@siol.net> <20180224214545.3740-15-jernej.skrabec@siol.net> <CAGRGNgWgkfax2TUSjK4397i678gXTTLh80r2HWwTB6u0GM0Cuw@mail.gmail.com> <E26547A5-F219-4310-B0E6-49AC3A700566@aosc.io> <CAGRGNgXosix84T3i4y0_ct4eiDSq9ef-dfo3soU54Or42bjxbQ@mail.gmail.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCH v2 3/4] arm64: add support for i.MX8M EVK board
+Date: Sun, 25 Feb 2018 09:54:12 +0000
+Message-ID: <AM3PR04MB306682908666E720E2BFD7F80C20@AM3PR04MB306.eurprd04.prod.outlook.com>
+References: <20180201183126.32384-1-l.stach@pengutronix.de>
+ <20180201183126.32384-3-l.stach@pengutronix.de>
+ <20180223150352.GU3217@dragon> <201802231630.45460.jbe@pengutronix.de>
+ <1519400769.8609.3.camel@pengutronix.de>
+ <AM4PR0401MB23242FA10FAFF2C23443940690C30@AM4PR0401MB2324.eurprd04.prod.outlook.com>
+ <20180224060039.GA3217@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBRH2ZHKAKGQE2OJI2GY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGRGNgXosix84T3i4y0_ct4eiDSq9ef-dfo3soU54Or42bjxbQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgJulian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Mailing List, Arm" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, jernej.skrabec-gGgVlfcn5nU@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180224060039.GA3217@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Bough Chen <haibo.chen@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+> -----Original Message-----
+> From: Shawn Guo [mailto:shawnguo@kernel.org]
+> Sent: Saturday, February 24, 2018 2:01 PM
+> To: Bough Chen <haibo.chen@nxp.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>; Juergen Borleis
+> <jbe@pengutronix.de>; kernel@pengutronix.de; Mark Rutland
+> <mark.rutland@arm.com>; devicetree@vger.kernel.org; Baruch Siach
+> <baruch@tkos.co.il>; Catalin Marinas <catalin.marinas@arm.com>; Will
+> Deacon <will.deacon@arm.com>; patchwork-lst@pengutronix.de; Rob
+> Herring <robh+dt@kernel.org>; dl-linux-imx <linux-imx@nxp.com>; Fabio
+> Estevam <fabio.estevam@nxp.com>; A.s. Dong <aisheng.dong@nxp.com>;
+> linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH v2 3/4] arm64: add support for i.MX8M EVK board
+> =
+
+> Hi Bough,
+> =
+
+> On Sat, Feb 24, 2018 at 02:58:31AM +0000, Bough Chen wrote:
+> > >Am Freitag, den 23.02.2018, 16:30 +0100 schrieb Juergen Borleis:
+> > >> On Friday 23 February 2018 16:03:53 Shawn Guo wrote:
+> > >> > On Thu, Feb 01, 2018 at 07:31:25PM +0100, Lucas Stach wrote:
+> > >> > > +&usdhc1 {
+> > >> > > +=A0=A0=A0pinctrl-names =3D "default", "state_100mhz", "state_20=
+0mhz";
+> > >> > > +=A0=A0=A0pinctrl-0 =3D <&pinctrl_usdhc1_cd_reset>,
+> > >> <&pinctrl_usdhc1_clk_strobe>,
+> > >> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&pinctrl_usdhc1_dat=
+a>;
+> > >> > > +=A0=A0=A0pinctrl-1 =3D <&pinctrl_usdhc1_cd_reset>,
+> > >> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&pinctrl_usdhc1_clk=
+_strobe_100mhz>,
+> > >> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&pinctrl_usdhc1_dat=
+a_100mhz>;
+> > >> > > +=A0=A0=A0pinctrl-2 =3D <&pinctrl_usdhc1_cd_reset>,
+> > >> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&pinctrl_usdhc1_clk=
+_strobe_200mhz>,
+> > >> > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <&pinctrl_usdhc1_dat=
+a_200mhz>;
+> > >> > > +=A0=A0=A0vqmmc-supply =3D <&sw4_reg>;
+> > >> > > +=A0=A0=A0bus-width =3D <8>;
+> > >> > > +=A0=A0=A0non-removable;
+> > >> > > +=A0=A0=A0no-sd;
+> > >> > > +=A0=A0=A0no-sdio;
+> > >> > > +=A0=A0=A0status =3D "okay";
+> > >> > > +};
+> > >> >
+> >
+> > EMMC do not need cd pin, and I notice that pinctrl_usdhc1_cd_reset also
+> contains a usdhc2 pad, this is wrong. So please remove
+> pinctrl_usdhc1_cd_reset.
+> > EMMC I/O voltage is fixed to 1.8v so I think no need to add vqmmc-suppl=
+y,
+> can remove this property here.
+> > For pinctrl_usdhc1_clk_strobe, clock pad need to be pull down, otherwise
+> you will meet data crc error in hs400 mode.
+> =
+
+> Thanks for the input.  I suspect that there are more than what you suggest
+> here.  I remove vqmmc-supply and use the exactly same
+> pinctrl_usdhc1 as NXP kernel, but still see errors below.
+> =
+
+> [    0.952795] mmc0: SDHCI controller on 30b40000.usdhc [30b40000.usdhc]
+> using ADMA
+> [    1.054622] mmc0: Tuning failed, falling back to fixed sampling clock
+> [    1.076458] mmc0: new HS400 MMC card at address 0001
+> [    1.081980] mmcblk0: mmc0:0001 R1J56L 13.8 GiB
+> [    1.086880] mmcblk0boot0: mmc0:0001 R1J56L partition 1 4.00 MiB
+> [    1.093156] mmcblk0boot1: mmc0:0001 R1J56L partition 2 4.00 MiB
+> [    1.099220] mmcblk0rpmb: mmc0:0001 R1J56L partition 3 128 KiB, chardev
+> (248:0)
+> [    1.148214] mmc0: Tuning failed, falling back to fixed sampling clock
+> [    1.266704] print_req_error: I/O error, dev mmcblk0, sector 0
+> [    1.273487] Buffer I/O error on dev mmcblk0, logical block 0, async pa=
+ge
+> read
+> [    1.358863] print_req_error: I/O error, dev mmcblk0, sector 0
+> [    1.365640] Buffer I/O error on dev mmcblk0, logical block 0, async pa=
+ge
+> read
+> [    1.372816]  mmcblk0: unable to read partition table
+> [    7.231120] mmc0: switch to high-speed from hs200 failed, err:-110
+> [    7.372241] mmc0: switch to high-speed from hs200 failed, err:-110
+> [    7.378843] print_req_error: I/O error, dev mmcblk0, sector 0
+> =
 
 
-=E4=BA=8E 2018=E5=B9=B42=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885:=
-06:32, Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
->Hi Icenowy,
->
->On Sun, Feb 25, 2018 at 7:43 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->>
->>
->> =E4=BA=8E 2018=E5=B9=B42=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=884:11:34, Julian Calaby
-><julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =E5=86=99=E5=88=B0:
->>>Hi Jernej,
->>>
->>>On Sun, Feb 25, 2018 at 8:45 AM, Jernej Skrabec
->>><jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
->>>> Enable HDMI output on all boards which have HDMI connector.
->>>>
->>>> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
->>>> ---
->>>>  arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    | 25
->>>++++++++++++++++++++++
->>>>  arch/arm/boot/dts/sun8i-h3-beelink-x2.dts          | 25
->>>++++++++++++++++++++++
->>>>  arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 25
->>>++++++++++++++++++++++
->>>>  arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts           | 25
->>>++++++++++++++++++++++
->>>>  arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          | 25
->>>++++++++++++++++++++++
->>>>  arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts       | 25
->>>++++++++++++++++++++++
->>>>  arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        | 24
->>>+++++++++++++++++++++
->>>>  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         | 25
->>>++++++++++++++++++++++
->>>>  8 files changed, 199 insertions(+)
->>>
->>>As I understand it, the H2+ is just a slightly trimmed down H3. In
->>>terms of HDMI support, the difference is that the H2+ can't output
->4k.
->>
->> H2+ can OUTPUT 4K. The BSP restricts it to DECODE 4K. (And mainline
->won't have such restriction)
->
->Interesting!
->
->I'm getting my data from here: http://linux-sunxi.org/H3#Variants
->
->So essentially what you're saying is that the H2+ is just a H3 with
->less pins? (I'm assuming the "lack of gigabit mac" is effectively it
->not having the required pins, i.e. GPIO bank D)
+I did a few debug and made it work with below changes.
+There's a few quirk delays used in downstream tree to handle some special
+characteristic for uSDHC tuning.
 
-No it's just downspec and BSP decode code restricts 4K
-decode (by reserving less memory).
+Haibo is uSDHC expert from NXP. He can help follow up it later.
 
-Just similar to STM32F103C8T6, which has a spec of 64KiB Flash, but with in=
- fact 128KiB usable.
+I'd suggest not enable HS400 or HS200 in this bring up series at this time
+If we can't find a quick and reasonable way to fix it.
 
-For GbE with H2+, it's verified by Banana Pi.
+>From 0520477f5020632abdaccde440f0efcf6d284025 Mon Sep 17 00:00:00 2001
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Date: Sun, 25 Feb 2018 12:23:27 +0800
+Subject: [PATCH 1/1] hs400 work new
 
->
->Thanks,
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 3 ++-
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi    | 2 ++
+ drivers/mmc/host/sdhci-esdhc-imx.c           | 1 +
+ drivers/mmc/host/sdhci.c                     | 5 ++++-
+ 4 files changed, 9 insertions(+), 2 deletions(-)
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot=
+/dts/freescale/imx8mq-evk.dts
+index c0e5ee5d..5da40bd 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+@@ -167,7 +167,7 @@
+ 	            <&pinctrl_usdhc2_data_200mhz>;
+ 	cd-gpios =3D <&gpio2 12 GPIO_ACTIVE_LOW>;
+ 	vmmc-supply =3D <&reg_usdhc2_vmmc>;
+-	status =3D "okay";
++	status =3D "disabled";
+ };
+ =
+
+ &iomuxc {
+@@ -316,6 +316,7 @@
+ 			>;
+ 		drive-strength =3D <7>;
+ 		slew-rate =3D <3>;
++		input-schmitt-enable;
+ 	};
+ =
+
+ 	pinctrl_usdhc1_data_200mhz: usdhc1data200grp {
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mq.dtsi
+index 50ed302..34fef6c 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -357,6 +357,8 @@
+ 				clocks =3D <&clk IMX8MQ_CLK_DUMMY>,
+ 				         <&clk IMX8MQ_CLK_NAND_USDHC_BUS_DIV>,
+ 				         <&clk IMX8MQ_CLK_USDHC1_ROOT>;
++				assigned-clocks =3D <&clk IMX8MQ_CLK_USDHC1_DIV>;
++				assigned-clock-rates =3D <400000000>;
+ 				clock-names =3D "ipg", "ahb", "per";
+ 				fsl,tuning-start-tap =3D <20>;
+ 				fsl,tuning-step =3D <2>;
+diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-es=
+dhc-imx.c
+index 8b941f8..d26d3710 100644
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -1311,6 +1311,7 @@ static int sdhci_esdhc_imx_probe(struct platform_devi=
+ce *pdev)
+ 	if (imx_data->socdata->flags & ESDHC_FLAG_MAN_TUNING)
+ 		sdhci_esdhc_ops.platform_execute_tuning =3D
+ 					esdhc_executing_tuning;
++	host->tuning_delay =3D 1;
+ =
+
+ 	if (imx_data->socdata->flags & ESDHC_FLAG_ERR004536)
+ 		host->quirks |=3D SDHCI_QUIRK_BROKEN_ADMA;
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index e9290a3..548837d 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2116,8 +2116,11 @@ static void __sdhci_execute_tuning(struct sdhci_host=
+ *host, u32 opcode)
+ =
+
+ 		ctrl =3D sdhci_readw(host, SDHCI_HOST_CONTROL2);
+ 		if (!(ctrl & SDHCI_CTRL_EXEC_TUNING)) {
+-			if (ctrl & SDHCI_CTRL_TUNED_CLK)
++			if (ctrl & SDHCI_CTRL_TUNED_CLK) {
++				printk("tuning pass, delay 1ms\n");
++				mdelay(1);
+ 				return; /* Success! */
++			}
+ 			break;
+ 		}
+ =
+
+-- =
+
+2.7.4
+
+Regards
+Dong Aisheng
+
+> Shawn
