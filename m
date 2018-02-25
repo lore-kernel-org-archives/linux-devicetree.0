@@ -1,12 +1,12 @@
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v2 06/32] ASoC: rt5651: Configure jack-detect
-	source through a device-property
-Date: Sun, 25 Feb 2018 11:46:47 +0100
-Message-ID: <20180225104713.4745-7-hdegoede@redhat.com>
+Subject: [PATCH v2 17/32] ASoC: rt5651: Allow specifying
+	over-current thresholds through device-properties
+Date: Sun, 25 Feb 2018 11:46:58 +0100
+Message-ID: <20180225104713.4745-18-hdegoede@redhat.com>
 References: <20180225104713.4745-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <alsa-devel-bounces@alsa-project.org>
 In-Reply-To: <20180225104713.4745-1-hdegoede@redhat.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
@@ -22,212 +22,104 @@ To: Mark Brown <broonie@kernel.org>, Bard Liao <bardliao@realtek.com>, Oder Chio
 Cc: Hans de Goede <hdegoede@redhat.com>, alsa-devel@alsa-project.org, Carlo Caione <carlo@endlessm.com>, devicetree@vger.kernel.org, Takashi Iwai <tiwai@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-Configure the jack-detect source through a device-property which can be
-set by code outside of the codec driver. Rather then putting platform
-specific DMI quirks inside the generic codec driver.
-
-And move the jack-detect-source quirk for the KIANO SlimNote 14.2, which
-was present inside the codec driver to the machine driver, where we can
-bundle it together with the other quirks already present for this laptop.
-
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- Documentation/devicetree/bindings/sound/rt5651.txt |  6 ++++
- include/sound/rt5651.h                             |  4 +++
- sound/soc/codecs/rt5651.c                          | 31 ++++----------------
- sound/soc/intel/boards/bytcr_rt5651.c              | 34 ++++++++++++++++++----
- 4 files changed, 44 insertions(+), 31 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/rt5651.txt b/Documentation/devicetree/bindings/sound/rt5651.txt
-index 3875233095f5..1632c0cf6123 100644
---- a/Documentation/devicetree/bindings/sound/rt5651.txt
-+++ b/Documentation/devicetree/bindings/sound/rt5651.txt
-@@ -16,6 +16,12 @@ Optional properties:
- - realtek,dmic-en
-   Boolean. true if dmic is used.
- 
-+- realtek,jack-detect-source
-+  u32. Valid values:
-+  1: Use JD1_1 pin for jack-dectect
-+  2: Use JD1_2 pin for jack-dectect
-+  3: Use JD2 pin for jack-dectect
-+
- Pins on the device (for linking into audio routes) for RT5651:
- 
-   * DMIC L1
-diff --git a/include/sound/rt5651.h b/include/sound/rt5651.h
-index 1612462bf5ad..725b36c329d0 100644
---- a/include/sound/rt5651.h
-+++ b/include/sound/rt5651.h
-@@ -11,6 +11,10 @@
- #ifndef __LINUX_SND_RT5651_H
- #define __LINUX_SND_RT5651_H
- 
-+/*
-+ * Note these MUST match the values from the DT binding:
-+ * Documentation/devicetree/bindings/sound/rt5651.txt
-+ */
- enum rt5651_jd_src {
- 	RT5651_JD_NULL,
- 	RT5651_JD1_1,
-diff --git a/sound/soc/codecs/rt5651.c b/sound/soc/codecs/rt5651.c
-index 79a839c713ec..7d2bb6fbde4e 100644
---- a/sound/soc/codecs/rt5651.c
-+++ b/sound/soc/codecs/rt5651.c
-@@ -19,7 +19,6 @@
- #include <linux/platform_device.h>
- #include <linux/spi/spi.h>
- #include <linux/acpi.h>
--#include <linux/dmi.h>
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
-@@ -32,8 +31,6 @@
- #include "rl6231.h"
- #include "rt5651.h"
- 
--#define RT5651_JD_MAP(quirk)	((quirk) & GENMASK(7, 0))
--
- #define RT5651_DEVICE_ID_VALUE 0x6281
- 
- #define RT5651_PR_RANGE_BASE (0xff + 1)
-@@ -41,8 +38,6 @@
- 
- #define RT5651_PR_BASE (RT5651_PR_RANGE_BASE + (0 * RT5651_PR_SPACING))
- 
--static unsigned long rt5651_quirk;
--
- static const struct regmap_range_cfg rt5651_ranges[] = {
- 	{ .name = "PR", .range_min = RT5651_PR_BASE,
- 	  .range_max = RT5651_PR_BASE + 0xb4,
-@@ -1599,6 +1594,11 @@ static int rt5651_set_jack(struct snd_soc_component *component,
- 	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
- 	struct rt5651_priv *rt5651 = snd_soc_component_get_drvdata(component);
- 	int ret;
-+	u32 val;
-+
-+	if (device_property_read_u32(component->dev,
-+				     "realtek,jack-detect-source", &val) == 0)
-+		rt5651->jd_src = val;
- 
- 	if (!rt5651->irq)
- 		return -EINVAL;
-@@ -1826,24 +1826,6 @@ static const struct i2c_device_id rt5651_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, rt5651_i2c_id);
- 
--static int rt5651_quirk_cb(const struct dmi_system_id *id)
--{
--	rt5651_quirk = (unsigned long) id->driver_data;
--	return 1;
--}
--
--static const struct dmi_system_id rt5651_quirk_table[] = {
--	{
--		.callback = rt5651_quirk_cb,
--		.matches = {
--			DMI_MATCH(DMI_SYS_VENDOR, "KIANO"),
--			DMI_MATCH(DMI_PRODUCT_NAME, "KIANO SlimNote 14.2"),
--		},
--		.driver_data = (unsigned long *) RT5651_JD1_1,
--	},
--	{}
--};
--
- static int rt5651_jack_detect(struct snd_soc_component *component, int jack_insert)
- {
- 	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
-@@ -1922,9 +1904,6 @@ static int rt5651_i2c_probe(struct i2c_client *i2c,
- 
- 	i2c_set_clientdata(i2c, rt5651);
- 
--	dmi_check_system(rt5651_quirk_table);
--	rt5651->jd_src = RT5651_JD_MAP(rt5651_quirk);
--
- 	rt5651->regmap = devm_regmap_init_i2c(i2c, &rt5651_regmap);
- 	if (IS_ERR(rt5651->regmap)) {
- 		ret = PTR_ERR(rt5651->regmap);
-diff --git a/sound/soc/intel/boards/bytcr_rt5651.c b/sound/soc/intel/boards/bytcr_rt5651.c
-index 8008a027cc93..0af855d2df49 100644
---- a/sound/soc/intel/boards/bytcr_rt5651.c
-+++ b/sound/soc/intel/boards/bytcr_rt5651.c
-@@ -20,6 +20,7 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/acpi.h>
- #include <linux/clk.h>
- #include <linux/device.h>
-@@ -42,10 +43,21 @@ enum {
- 	BYT_RT5651_IN3_MAP,
- };
- 
--#define BYT_RT5651_MAP(quirk)	((quirk) & GENMASK(7, 0))
--#define BYT_RT5651_DMIC_EN	BIT(16)
--#define BYT_RT5651_MCLK_EN	BIT(17)
--#define BYT_RT5651_MCLK_25MHZ	BIT(18)
-+enum {
-+	BYT_RT5651_JD_NULL	= (RT5651_JD_NULL << 4),
-+	BYT_RT5651_JD1_1	= (RT5651_JD1_1 << 4),
-+	BYT_RT5651_JD1_2	= (RT5651_JD1_2 << 4),
-+	BYT_RT5651_JD2		= (RT5651_JD2 << 4),
-+};
-+
-+#define BYT_RT5651_MAP(quirk)		((quirk) & GENMASK(3, 0))
-+#define BYT_RT5651_JDSRC(quirk)		(((quirk) & GENMASK(7, 4)) >> 4)
-+#define BYT_RT5651_DMIC_EN		BIT(16)
-+#define BYT_RT5651_MCLK_EN		BIT(17)
-+#define BYT_RT5651_MCLK_25MHZ		BIT(18)
-+
-+/* jack-detect-source + terminating empty entry */
-+#define MAX_NO_PROPS 2
- 
- struct byt_rt5651_private {
- 	struct clk *mclk;
-@@ -66,6 +78,9 @@ static void log_quirks(struct device *dev)
- 		dev_info(dev, "quirk IN2_MAP enabled");
- 	if (BYT_RT5651_MAP(byt_rt5651_quirk) == BYT_RT5651_IN3_MAP)
- 		dev_info(dev, "quirk IN3_MAP enabled");
-+	if (BYT_RT5651_JDSRC(byt_rt5651_quirk))
-+		dev_info(dev, "quirk realtek,jack-detect-source %ld\n",
-+			 BYT_RT5651_JDSRC(byt_rt5651_quirk));
- 	if (byt_rt5651_quirk & BYT_RT5651_DMIC_EN)
- 		dev_info(dev, "quirk DMIC enabled");
- 	if (byt_rt5651_quirk & BYT_RT5651_MCLK_EN)
-@@ -288,6 +303,7 @@ static const struct dmi_system_id byt_rt5651_quirk_table[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "KIANO SlimNote 14.2"),
- 		},
- 		.driver_data = (void *)(BYT_RT5651_MCLK_EN |
-+					BYT_RT5651_JD1_1 |
- 					BYT_RT5651_IN1_IN2_MAP),
- 	},
- 	{}
-@@ -298,8 +314,9 @@ static int byt_rt5651_init(struct snd_soc_pcm_runtime *runtime)
- 	struct snd_soc_card *card = runtime->card;
- 	struct snd_soc_component *codec = runtime->codec_dai->component;
- 	struct byt_rt5651_private *priv = snd_soc_card_get_drvdata(card);
-+	struct property_entry props[MAX_NO_PROPS] = {};
- 	const struct snd_soc_dapm_route *custom_map;
--	int num_routes;
-+	int num_routes, cnt = 0;
- 	int ret;
- 
- 	card->dapm.idle_bias_off = true;
-@@ -360,6 +377,13 @@ static int byt_rt5651_init(struct snd_soc_pcm_runtime *runtime)
- 			dev_err(card->dev, "unable to set MCLK rate\n");
- 	}
- 
-+	props[cnt++] = PROPERTY_ENTRY_U32("realtek,jack-detect-source",
-+				BYT_RT5651_JDSRC(byt_rt5651_quirk));
-+
-+	ret = device_add_properties(codec->dev, props);
-+	if (ret)
-+		return ret;
-+
- 	ret = snd_soc_card_jack_new(runtime->card, "Headset",
- 				    SND_JACK_HEADSET, &priv->jack,
- 				    bytcr_jack_pins, ARRAY_SIZE(bytcr_jack_pins));
--- 
-2.14.3
+T1Zlci1DdXJyZW50LURldGVjdGlvbiAoT1ZDRCkgZm9yIHRoZSBtaWNiaWFzIGN1cnJlbnQgaXMg
+dXNlZCB0byBkZXRlY3QgaWYKYW4gaW5zZXJ0ZWQgamFjayBpcyBhIGhlYWRzZXQgb3IgaGVhZHBo
+b25lcyAobWljIHNob3J0ZWQgdG8gZ3JvdW5kKS4KClNvbWUgYm9hcmRzIG1heSBuZWVkIGRpZmZl
+cmVudCB2YWx1ZXMgZm9yIHRoZSBPVkNEIHRocmVzaG9sZCBiZWNhdXNlIG9mIGEKcmVzaXN0b3Ig
+b24gdGhlIGJvYXJkIGluIHNlcmlhbCB3aXRoIG9yIHBhcmFsbGVsIHRvIHRoZSBqYWNrIG1pYyBj
+b250YWN0LgoKVGhpcyBjb21taXQgYWRkcyBzdXBwb3J0IGZvciB0aGUgc29mYXIgdW5zZXQgT1ZD
+RCBzY2FsZS1mYWN0b3IgcmVnaXN0ZXIKdmFsdWVzIGFuZCBhZGRzIHN1cHBvcnQgZm9yIHNwZWNp
+Znlpbmcgbm9uLWRlZmF1bHQgdmFsdWVzIGZvciBib3RoIHRoZQpjdXJyZW50IHRocmVzaG9sZCBh
+bmQgdGhlIHNjYWxlLWZhY3RvciB0aHJvdWdoIGRldmljZS1wcm9wZXJ0aWVzLgoKQ2M6IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnClNpZ25lZC1vZmYtYnk6IEhhbnMgZGUgR29lZGUgPGhkZWdv
+ZWRlQHJlZGhhdC5jb20+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Nv
+dW5kL3J0NTY1MS50eHQgfCAxMSArKysrKysKIGluY2x1ZGUvc291bmQvcnQ1NjUxLmggICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgMTEgKysrKysrCiBzb3VuZC9zb2MvY29kZWNzL3J0NTY1
+MS5jICAgICAgICAgICAgICAgICAgICAgICAgICB8IDQyICsrKysrKysrKysrKysrKysrKysrKy0K
+IHNvdW5kL3NvYy9jb2RlY3MvcnQ1NjUxLmggICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTAg
+KysrKysrCiA0IGZpbGVzIGNoYW5nZWQsIDczIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkK
+CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvcnQ1
+NjUxLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9ydDU2NTEu
+dHh0CmluZGV4IDE2MzJjMGNmNjEyMy4uOGNiN2VlOGU3OWNmIDEwMDY0NAotLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvcnQ1NjUxLnR4dAorKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvcnQ1NjUxLnR4dApAQCAtMjIsNiArMjIs
+MTcgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKICAgMjogVXNlIEpEMV8yIHBpbiBmb3IgamFjay1k
+ZWN0ZWN0CiAgIDM6IFVzZSBKRDIgcGluIGZvciBqYWNrLWRlY3RlY3QKIAorLSByZWFsdGVrLG92
+ZXItY3VycmVudC10aHJlc2hvbGQKKyAgdTMyLCBtaWNiaWFzIG92ZXItY3VycmVudCBkZXRlY3Rp
+b24gdGhyZXNob2xkIGluIMK1QSwgdmFsaWQgdmFsdWVzIGFyZQorICA2MDAsIDE1MDAgYW5kIDIw
+MDDCtUEuCisKKy0gcmVhbHRlayxvdmVyLWN1cnJlbnQtc2NhbGUtZmFjdG9yCisgIHUzMiwgbWlj
+YmlhcyBvdmVyLWN1cnJlbnQgZGV0ZWN0aW9uIHNjYWxlLWZhY3RvciwgdmFsaWQgdmFsdWVzIGFy
+ZToKKyAgMDogU2NhbGUgY3VycmVudCBieSAwLjUKKyAgMTogU2NhbGUgY3VycmVudCBieSAwLjc1
+CisgIDI6IFNjYWxlIGN1cnJlbnQgYnkgMS4wCisgIDM6IFNjYWxlIGN1cnJlbnQgYnkgMS41CisK
+IFBpbnMgb24gdGhlIGRldmljZSAoZm9yIGxpbmtpbmcgaW50byBhdWRpbyByb3V0ZXMpIGZvciBS
+VDU2NTE6CiAKICAgKiBETUlDIEwxCmRpZmYgLS1naXQgYS9pbmNsdWRlL3NvdW5kL3J0NTY1MS5o
+IGIvaW5jbHVkZS9zb3VuZC9ydDU2NTEuaAppbmRleCA3MjViMzZjMzI5ZDAuLjY0MDNiODYyZmI5
+YSAxMDA2NDQKLS0tIGEvaW5jbHVkZS9zb3VuZC9ydDU2NTEuaAorKysgYi9pbmNsdWRlL3NvdW5k
+L3J0NTY1MS5oCkBAIC0yMiw0ICsyMiwxNSBAQCBlbnVtIHJ0NTY1MV9qZF9zcmMgewogCVJUNTY1
+MV9KRDIsCiB9OwogCisvKgorICogTm90ZSB0aGVzZSBNVVNUIG1hdGNoIHRoZSB2YWx1ZXMgZnJv
+bSB0aGUgRFQgYmluZGluZzoKKyAqIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b3VuZC9ydDU2NTEudHh0CisgKi8KK2VudW0gcnQ1NjUxX292Y2Rfc2YgeworCVJUNTY1MV9PVkNE
+X1NGXzBQNSwKKwlSVDU2NTFfT1ZDRF9TRl8wUDc1LAorCVJUNTY1MV9PVkNEX1NGXzFQMCwKKwlS
+VDU2NTFfT1ZDRF9TRl8xUDUsCit9OworCiAjZW5kaWYKZGlmZiAtLWdpdCBhL3NvdW5kL3NvYy9j
+b2RlY3MvcnQ1NjUxLmMgYi9zb3VuZC9zb2MvY29kZWNzL3J0NTY1MS5jCmluZGV4IGRmZGM4MjQ0
+ZDMwOC4uMzhkMmUxMmZlNzAxIDEwMDY0NAotLS0gYS9zb3VuZC9zb2MvY29kZWNzL3J0NTY1MS5j
+CisrKyBiL3NvdW5kL3NvYy9jb2RlY3MvcnQ1NjUxLmMKQEAgLTE1OTIsNiArMTU5MiwxMyBAQCBz
+dGF0aWMgaW50IHJ0NTY1MV9zZXRfamFjayhzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnQgKmNvbXBv
+bmVudCwKIAkJCSAgIHN0cnVjdCBzbmRfc29jX2phY2sgKmhwX2phY2ssIHZvaWQgKmRhdGEpCiB7
+CiAJc3RydWN0IHJ0NTY1MV9wcml2ICpydDU2NTEgPSBzbmRfc29jX2NvbXBvbmVudF9nZXRfZHJ2
+ZGF0YShjb21wb25lbnQpOworCS8qCisJICogVGVzdGluZyBvbiB2YXJpb3VzIGJvYXJkcyBoYXMg
+c2hvd24gdGhhdCBnb29kIGRlZmF1bHRzIGZvciB0aGUgT1ZDRAorCSAqIHRocmVzaG9sZCBhbmQg
+c2NhbGUtZmFjdG9yIGFyZSAyMDAwwrVBIGFuZCAwLjc1LiBGb3IgYW4gZWZmZWN0aXZlCisJICog
+bGltaXQgb2YgMTUwMMK1QSwgdGhpcyBzZWVtcyB0byBiZSBtb3JlIHJlbGlhYmxlIHRoZW4gMTUw
+MMK1QSBhbmQgMS4wLgorCSAqLworCXVuc2lnbmVkIGludCBvdmNkX3RoID0gUlQ1NjUxX01JQzFf
+T1ZUSF8yMDAwVUE7CisJdW5zaWduZWQgaW50IG92Y2Rfc2YgPSBSVDU2NTFfTUlDX09WQ0RfU0Zf
+MFA3NTsKIAlpbnQgcmV0OwogCXUzMiB2YWw7CiAKQEAgLTE1OTksNiArMTYwNiwzNSBAQCBzdGF0
+aWMgaW50IHJ0NTY1MV9zZXRfamFjayhzdHJ1Y3Qgc25kX3NvY19jb21wb25lbnQgKmNvbXBvbmVu
+dCwKIAkJCQkgICAgICJyZWFsdGVrLGphY2stZGV0ZWN0LXNvdXJjZSIsICZ2YWwpID09IDApCiAJ
+CXJ0NTY1MS0+amRfc3JjID0gdmFsOwogCisJaWYgKGRldmljZV9wcm9wZXJ0eV9yZWFkX3UzMihj
+b21wb25lbnQtPmRldiwKKwkJCSJyZWFsdGVrLG92ZXItY3VycmVudC10aHJlc2hvbGQiLCAmdmFs
+KSA9PSAwKSB7CisJCXN3aXRjaCAodmFsKSB7CisJCWNhc2UgNjAwOgorCQkJb3ZjZF90aCA9IFJU
+NTY1MV9NSUMxX09WVEhfNjAwVUE7CisJCQlicmVhazsKKwkJY2FzZSAxNTAwOgorCQkJb3ZjZF90
+aCA9IFJUNTY1MV9NSUMxX09WVEhfMTUwMFVBOworCQkJYnJlYWs7CisJCWNhc2UgMjAwMDoKKwkJ
+CW92Y2RfdGggPSBSVDU2NTFfTUlDMV9PVlRIXzIwMDBVQTsKKwkJCWJyZWFrOworCQlkZWZhdWx0
+OgorCQkJZGV2X2Vycihjb21wb25lbnQtPmRldiwgIkludmFsaWQgb3Zlci1jdXJyZW50LXRocmVz
+aG9sZCB2YWx1ZTogJWRcbiIsCisJCQkJdmFsKTsKKwkJCXJldHVybiAtRUlOVkFMOworCQl9CisJ
+fQorCisJaWYgKGRldmljZV9wcm9wZXJ0eV9yZWFkX3UzMihjb21wb25lbnQtPmRldiwKKwkJCSJy
+ZWFsdGVrLG92ZXItY3VycmVudC1zY2FsZS1mYWN0b3IiLCAmdmFsKSA9PSAwKSB7CisJCWlmICh2
+YWwgPiBSVDU2NTFfT1ZDRF9TRl8xUDUpIHsKKwkJCWRldl9lcnIoY29tcG9uZW50LT5kZXYsICJJ
+bnZhbGlkIG92ZXItY3VycmVudC1zY2FsZS1mYWN0b3IgdmFsdWU6ICVkXG4iLAorCQkJCXZhbCk7
+CisJCQlyZXR1cm4gLUVJTlZBTDsKKwkJfQorCQlvdmNkX3NmID0gdmFsIDw8IFJUNTY1MV9NSUNf
+T1ZDRF9TRl9TRlQ7CisJfQorCiAJaWYgKCFydDU2NTEtPmlycSkKIAkJcmV0dXJuIC1FSU5WQUw7
+CiAKQEAgLTE2MzcsMTMgKzE2NzMsMTcgQEAgc3RhdGljIGludCBydDU2NTFfc2V0X2phY2soc3Ry
+dWN0IHNuZF9zb2NfY29tcG9uZW50ICpjb21wb25lbnQsCiAJc25kX3NvY19jb21wb25lbnRfdXBk
+YXRlX2JpdHMoY29tcG9uZW50LCBSVDU2NTFfUFdSX0FOTEcyLAogCQlSVDU2NTFfUFdSX0pEX00s
+IFJUNTY1MV9QV1JfSkRfTSk7CiAKKwkvKiBTZXQgT1ZDRCB0aHJlc2hvbGQgY3VycmVudCBhbmQg
+c2NhbGUtZmFjdG9yICovCisJc25kX3NvY19jb21wb25lbnRfd3JpdGUoY29tcG9uZW50LCBSVDU2
+NTFfUFJfQkFTRSArIFJUNTY1MV9CSUFTX0NVUjQsCisJCQkJMHhhODAwIHwgb3ZjZF9zZik7CisK
+IAlzbmRfc29jX2NvbXBvbmVudF91cGRhdGVfYml0cyhjb21wb25lbnQsIFJUNTY1MV9NSUNCSUFT
+LAogCQkJCSAgICAgIFJUNTY1MV9NSUMxX09WQ0RfTUFTSyB8CiAJCQkJICAgICAgUlQ1NjUxX01J
+QzFfT1ZUSF9NQVNLIHwKIAkJCQkgICAgICBSVDU2NTFfUFdSX0NMSzEyTV9NQVNLIHwKIAkJCQkg
+ICAgICBSVDU2NTFfUFdSX01CX01BU0ssCiAJCQkJICAgICAgUlQ1NjUxX01JQzFfT1ZDRF9FTiB8
+Ci0JCQkJICAgICAgUlQ1NjUxX01JQzFfT1ZUSF82MDBVQSB8CisJCQkJICAgICAgb3ZjZF90aCB8
+CiAJCQkJICAgICAgUlQ1NjUxX1BXUl9NQl9QVSB8CiAJCQkJICAgICAgUlQ1NjUxX1BXUl9DTEsx
+Mk1fUFUpOwogCmRpZmYgLS1naXQgYS9zb3VuZC9zb2MvY29kZWNzL3J0NTY1MS5oIGIvc291bmQv
+c29jL2NvZGVjcy9ydDU2NTEuaAppbmRleCA3ZDlkNWZhMDlkNmYuLjVmYjI1ZjdlMmE4YyAxMDA2
+NDQKLS0tIGEvc291bmQvc29jL2NvZGVjcy9ydDU2NTEuaAorKysgYi9zb3VuZC9zb2MvY29kZWNz
+L3J0NTY1MS5oCkBAIC0xMzgsNiArMTM4LDcgQEAKIC8qIEluZGV4IG9mIENvZGVjIFByaXZhdGUg
+UmVnaXN0ZXIgZGVmaW5pdGlvbiAqLwogI2RlZmluZSBSVDU2NTFfQklBU19DVVIxCQkJMHgxMgog
+I2RlZmluZSBSVDU2NTFfQklBU19DVVIzCQkJMHgxNAorI2RlZmluZSBSVDU2NTFfQklBU19DVVI0
+CQkJMHgxNQogI2RlZmluZSBSVDU2NTFfQ0xTRF9JTlRfUkVHMQkJCTB4MWMKICNkZWZpbmUgUlQ1
+NjUxX0NIUFVNUF9JTlRfUkVHMQkJCTB4MjQKICNkZWZpbmUgUlQ1NjUxX01BTVBfSU5UX1JFRzIJ
+CQkweDM3CkBAIC0xOTY2LDYgKzE5NjcsMTUgQEAKICNkZWZpbmUgUlQ1NjUxX0RfR0FURV9FTl9T
+RlQJCQkwCiAKIC8qIENvZGVjIFByaXZhdGUgUmVnaXN0ZXIgZGVmaW5pdGlvbiAqLworCisvKiBN
+SUMgT3ZlciBjdXJyZW50IHRocmVzaG9sZCBzY2FsZSBmYWN0b3IgKDB4MTUpICovCisjZGVmaW5l
+IFJUNTY1MV9NSUNfT1ZDRF9TRl9NQVNLCQkJKDB4MyA8PCA4KQorI2RlZmluZSBSVDU2NTFfTUlD
+X09WQ0RfU0ZfU0ZUCQkJOAorI2RlZmluZSBSVDU2NTFfTUlDX09WQ0RfU0ZfMFA1CQkJKDB4MCA8
+PCA4KQorI2RlZmluZSBSVDU2NTFfTUlDX09WQ0RfU0ZfMFA3NQkJCSgweDEgPDwgOCkKKyNkZWZp
+bmUgUlQ1NjUxX01JQ19PVkNEX1NGXzFQMAkJCSgweDIgPDwgOCkKKyNkZWZpbmUgUlQ1NjUxX01J
+Q19PVkNEX1NGXzFQNQkJCSgweDMgPDwgOCkKKwogLyogM0QgU3BlYWtlciBDb250cm9sICgweDYz
+KSAqLwogI2RlZmluZSBSVDU2NTFfM0RfU1BLX01BU0sJCQkoMHgxIDw8IDE1KQogI2RlZmluZSBS
+VDU2NTFfM0RfU1BLX1NGVAkJCTE1Ci0tIAoyLjE0LjMKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2
+ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxt
+YW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
