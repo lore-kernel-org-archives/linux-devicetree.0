@@ -1,33 +1,51 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6: Add chosen node
-Date: Mon, 26 Feb 2018 18:56:02 -0300
-Message-ID: <CAOMZO5A=btFmHZvnXkcvoJauR+k-F_Lt=+vOw9kedXJoNUjqmA@mail.gmail.com>
-References: <20180226213110.3540-1-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180226213110.3540-1-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>
+From: frowand.list@gmail.com
+Subject: [PATCH v2 0/2] of: remove kbasename() from core
+Date: Mon, 26 Feb 2018 14:01:21 -0800
+Message-ID: <1519682483-19828-1-git-send-email-frowand.list@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+From: Frank Rowand <frank.rowand@sony.com>
 
-On Mon, Feb 26, 2018 at 6:31 PM, Stefan Agner <stefan@agner.ch> wrote:
-> Add Colibri UART_A as default serial console.
->
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+(One line description of patch 0/2 is now misleading, but leaving
+intact to make it easier to find v1.  One line description of other
+patches updated as they will be part of the git commit record.)
 
-Patch looks good, but the Subject could be improved to:
+Struct device_node full_name no longer includes the full path
+name.
 
-ARM: dts: imx6dl-colibri-eval-v3: Add chosen node
+Fix some broken overlay code that was not updated to reflect this.
+
+Clean up the unittest changeset test that calls into this
+overlay code.
+
+Version 1 of this patch removed kbasename() for other parts of
+core devicetree code.  But Geert kindly pointed out that a
+devicetree created from Open Firmware (instead from an FDT)
+could still contain a full path in the struct device_node
+full_path field.  This version (v2) of the patch leaves
+kbasename() in place where needed.
+
+Changes since v1:
+  - update patch 2/2 one-line description and full description
+  - no longer remove kbasename from resolver.c
+  - add_changeset_node(): add back kbasename() when comparing nodes
+    in the livetree against nodes in the overlay
+  - add_changeset_node(): add header comments to document assumptions
+    and behavior, and to explain why kbasename() is used
+  
+Frank Rowand (2):
+  of: unittest: clean up changeset test
+  of: overlay: do not include path in full_name of added nodes
+
+ drivers/of/dynamic.c    | 21 ++++++++++-----------
+ drivers/of/of_private.h |  3 ++-
+ drivers/of/overlay.c    | 18 +++++++++++++++---
+ drivers/of/unittest.c   | 48 +++++++++++++++++++++++++++++++++++++++---------
+ 4 files changed, 66 insertions(+), 24 deletions(-)
+
+-- 
+Frank Rowand <frank.rowand@sony.com>
