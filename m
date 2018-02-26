@@ -1,61 +1,66 @@
 From: Auger Eric <eric.auger@redhat.com>
 Subject: Re: [PATCH 1/2] vfio: platform: Fix reset module leak in error path
-Date: Mon, 26 Feb 2018 10:47:41 +0100
-Message-ID: <9c79c6ba-c3a8-68f3-4ac6-00858bd1ccb5@redhat.com>
+Date: Mon, 26 Feb 2018 10:49:21 +0100
+Message-ID: <a91f4719-41f8-b83d-b27c-5e22a8dad39b@redhat.com>
 References: <1518539815-13774-1-git-send-email-geert+renesas@glider.be>
  <1518539815-13774-2-git-send-email-geert+renesas@glider.be>
- <2fe86be6-a3e2-9bd6-1d72-63cf0fe3a731@redhat.com>
- <CAMuHMdXm97QFTC8VYDoByHsXaG5BQqFdhwqMTuGVRKDe-oh8EQ@mail.gmail.com>
- <CAMuHMdVkTy=TELjG0Jh7HMDe5075EHSebpNUWqBDt+6ik_Aixw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVkTy=TELjG0Jh7HMDe5075EHSebpNUWqBDt+6ik_Aixw@mail.gmail.com>
+In-Reply-To: <1518539815-13774-2-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Geert,
 
-On 21/02/18 17:07, Geert Uytterhoeven wrote:
-> Hi Eric,
+On 13/02/18 17:36, Geert Uytterhoeven wrote:
+> If the IOMMU group setup fails, the reset module is not released.
 > 
-> On Wed, Feb 14, 2018 at 10:32 AM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> On Wed, Feb 14, 2018 at 9:36 AM, Auger Eric <eric.auger@redhat.com> wrote:
->>> If I am not wrong we also leak the reset_module if
->>> vfio_platform_get_reset() fails to find the reset function (of_reset ==
->>> NULL), in which case we should do the module_put() in
->>> vfio_platform_get_reset().
->>
->> Correct. Will look into fixing it...
-> 
-> Upon second look, I don't think there's a leak in vfio_platform_get_reset().
-> 
-> If try_module_get() succeeded, there will always be a valid reset function
-> (unless someone registered a vfio_reset_handler with a NULL reset function).
-Hum yes, you are right. So the code is fine as is. Sorry for the noise.
+> Fixes: b5add544d677d363 ("vfio, platform: make reset driver a requirement by default")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
 Thanks
 
 Eric
-
-
+> ---
+>  drivers/vfio/platform/vfio_platform_common.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
 > 
-> Or do you mean the call to request_module()?
-> That one doesn't do a module_get(), it merely tries to load a module.
-> Hence there's no need to do a module_put() afterwards.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+> index 35469af87f88678e..b60bb5326668498c 100644
+> --- a/drivers/vfio/platform/vfio_platform_common.c
+> +++ b/drivers/vfio/platform/vfio_platform_common.c
+> @@ -680,18 +680,23 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+>  	group = vfio_iommu_group_get(dev);
+>  	if (!group) {
+>  		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
+> -		return -EINVAL;
+> +		ret = -EINVAL;
+> +		goto put_reset;
+>  	}
+>  
+>  	ret = vfio_add_group_dev(dev, &vfio_platform_ops, vdev);
+> -	if (ret) {
+> -		vfio_iommu_group_put(group, dev);
+> -		return ret;
+> -	}
+> +	if (ret)
+> +		goto put_iommu;
+>  
+>  	mutex_init(&vdev->igate);
+>  
+>  	return 0;
+> +
+> +put_iommu:
+> +	vfio_iommu_group_put(group, dev);
+> +put_reset:
+> +	vfio_platform_put_reset(vdev);
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(vfio_platform_probe_common);
+>  
 > 
