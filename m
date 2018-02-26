@@ -1,48 +1,50 @@
-Return-Path: <SRS0=h/bn=FN=gmail.com=frowand.list@kernel.org>
-From: frowand.list@gmail.com
-Subject: [PATCH] of: Kconfig: OF_OVERLAY, select OF_EARLY_FLATTREE
-Date: Sun, 18 Feb 2018 16:29:16 -0800
-Message-Id: <1519000156-14319-1-git-send-email-frowand.list@gmail.com>
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org
+Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-he1eur01on0073.outbound.protection.outlook.com ([104.47.0.73]:64918
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1752877AbeBZME7 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Feb 2018 07:04:59 -0500
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v2 05/12] staging: typec: tcpci: enable vbus detection
+Date: Mon, 26 Feb 2018 19:49:12 +0800
+Message-Id: <1519645759-12701-6-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Frank Rowand <frank.rowand@sony.com>
+TCPCI implementation may need SW to enable VBUS detection to generate
+power status events.
 
-kbuild test robot reported a new warning for a recent patch:
->> drivers/of/overlay.c:832:2: error: implicit declaration of function 'of_fdt_unflatten_tree' [-Werror=implicit-function-declaration]
-     of_fdt_unflatten_tree(new_fdt, NULL, &overlay_root);
-
-The cause is that the prototype for of_fdt_unflatten_tree() in
-include/linux/of_fdt.c is guarded by OF_EARLY_FLATTREE.
-
-This was a pre-existing problem for any overlay related caller of
-of_fdt_unflatten_device_tree(), who was then going to pass the
-unflattened tree to of_overlay_apply().  After the patch that triggered
-this warning, all other overlay callers of of_fdt_unflatten_device_tree()
-no longer exist, so adding the select to OF_OVERLAY is a sufficient fix.
-
-To reproduce the warning:
-  Use the .config attached to https://lkml.org/lkml/2018/2/17/268
-  make ARCH=i386 olddefconfig
-  make ARCH=i386 CC=gcc-7 drivers/of/overlay.o
-
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/of/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Change for v2:
+- Directly enable vbus detect in tcpci_init rather than adding a API.
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 783e0870bd22..00a6abfaaec7 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -92,6 +92,7 @@ config OF_RESOLVE
- config OF_OVERLAY
- 	bool "Device Tree overlays"
- 	select OF_DYNAMIC
-+	select OF_EARLY_FLATTREE
- 	select OF_RESOLVE
- 	help
- 	  Overlays are a method to dynamically modify part of the kernel's
+ drivers/staging/typec/tcpci.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 1db67f0..953fc97 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -345,6 +345,12 @@ static int tcpci_init(struct tcpc_dev *tcpc)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/* Enable Vbus detection */
++	ret = regmap_write(tcpci->regmap, TCPC_COMMAND,
++			   TCPC_CMD_ENABLE_VBUS_DETECT);
++	if (ret < 0)
++		return ret;
++
+ 	reg = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_FAILED |
+ 		TCPC_ALERT_TX_DISCARDED | TCPC_ALERT_RX_STATUS |
+ 		TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_CC_STATUS;
 -- 
-Frank Rowand <frank.rowand@sony.com>
+2.7.4
+
