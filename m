@@ -1,14 +1,12 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: bcm283x: Move arm-pmu out of soc node
-Date: Mon, 26 Feb 2018 15:32:12 -0800
-Message-ID: <87lgffjpj7.fsf@anholt.net>
-References: <1519481722-22738-1-git-send-email-stefan.wahren@i2se.com>
- <1519481722-22738-3-git-send-email-stefan.wahren@i2se.com>
- <87fu5nppxo.fsf@anholt.net> <216513579.120636.1519672190175@email.1und1.de>
+Subject: Re: [PATCH] ARM: dts: bcm2835-rpi-zero-w: Enable OTG mode
+Date: Mon, 26 Feb 2018 15:32:27 -0800
+Message-ID: <87inajjpis.fsf@anholt.net>
+References: <1519480028-26430-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1042746237493856134=="
+Content-Type: multipart/mixed; boundary="===============6019371887213542775=="
 Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <216513579.120636.1519672190175-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
+In-Reply-To: <1519480028-26430-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
  <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
@@ -22,60 +20,45 @@ To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <rob
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============1042746237493856134==
+--===============6019371887213542775==
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha512; protocol="application/pgp-signature"
 
 --=-=-=
 Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
 Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
->> Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> hat am 26. Februar 2018 um 19:26 geschrieb=
-en:
->>=20
->>=20
->> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
->>=20
->> > The ARM PMU doesn't have a reg address, so fix the following DTC warni=
-ng
->> > (requires W=3D1):
->> > Node /soc/arm-pmu missing or empty reg/ranges property
->> >
->> > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->>=20
->> These seem good to me, I justed wanted to be sure: Does the PMU still
->> probe when the node is at this level of the hierarchy?
+> Since commit 9273083a1530 ("usb: dwc2: Fix TxFIFOn sizes and total TxFIFO
+> size issues") we could use the OTG mode again.
 >
-> Yes, it does.=20
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 
-Great.  It sounds like Florian will cherry-pick these directly for
-fixes.
+Applied to bcm2835-dt-next.  Thanks!
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqUmPwACgkQtdYpNtH8
-nuiuoxAAheZRTkRY9kjgKJymIQ5mKTD6q+PNDASTMLZhS/Z5A8xphIMyAambmr8t
-hG3V6TdgaIqcAQPoejhr56Byk18WoOXP+Pf2I9nbW+A218cgx4tpB1GnhazDNUgM
-HqPwhNmR7baVFVJAQ45bk0i+xIRjfLhM9S7iYNzo6CdJoUFbGuUQsWVmNCx0S7l6
-w0Hlw+6ruourkSFTMMjAJvn7FgqjJGfB6dQyQiS/d1+FOqP2qawXwsRTC2NPrGrr
-1BMo0NH3bIVWjuoMmXJmaNHJENA88RcN4AkWNDk6d6k4dDADVXfgoRhGVLMbjwxe
-K8Gb0lSoHlzl1+LOSj9AMTpexTD8hzRFmEy7RhBeswIq1IrwZla/I5LOdcZNTtUn
-kAuRWsud6GRwxamR+j8LMARAXSSqQx43Q6Xh+QMyuzcErJjJy0OQFwiAghJN/gFk
-1E05IoMwOLfl0ZnpJPvvMmyqaMO31FfWEHdeIG2nZxj9k6Gv7s6fEnuF8hWdcgYy
-Vv4O8XEmCGiLiy7TQG111YVw+R7UHf5rcFQv2sM8om0xdfLkiry/cw83dK83YeIR
-CHvA44FKILu4nCCdREGlHeDr5Kubgh8EMas+7DzCPx4sv22s+M6JABHZuBsM75uN
-pu8LuruorIbvzNeZyreotZz1FYaO/dCUqXHNE1A8vdj41ZYUDto=
-=94uJ
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqUmQsACgkQtdYpNtH8
+nuiJqA/+PmMzsvhNKBaQ+Kl/FALnNQ3xsCAwPs51msx74lvn9GdPtSDDtbKmuA1i
+vtO2ixd8HQ6JaI0L4Vkf/apNj98kAJ9XxGjVwjCnQRmtEntNCT84+Zg5BfMiqj9y
++NA1YnwryaDcZC7Rc7BTL/BFEZOevvrh0aDuGEebN1rCzjOt6EbGXDmAccUv2jwe
+BcrmKcRg4XB6jDtALoHTvbqBtLvi0WkoePoGEgbxIMAxGBLdeD+yDVpfvontQmX0
+2OOzbhkGJTZUpWCB0lEmPpl2aQjNRt0ukfvMMUb3hyck4yYrPCTT04y81GeVkM+T
+fi8kst7UXHbT0Y+lsy3m77YmyduR8ksgwI+GdSNWi/r16zn/1P8v8enlXy1cnKOr
+36lA/c124xmUfu42x/p0We+YiXMlm4LAqgu92XXe3Ew/aNgKecbdYIM/PlqKdWim
+V8GCYD5sxSxr84u+TlriVCqhwiZ3tUghWkogdRFkTHgQRdgpdE0TDzp0DB5tp28+
+hBxOUnzV4gPqYS8eyr+ky217t5M6eIkivCH+mFW78HQRpY+PhrIA8rfbwzmZc7EM
+JyFbB83YekwhEfWK3SbLt7LuaD0vf0/GVbqqfXZsxO57adaBcVz67Tn+LnMN7XuI
+yOWHjJJZO9d1vCn8wo9FHxoJb26UeS2MuYKLp+a8Z/o6NZiGFpw=
+=us0Y
 -----END PGP SIGNATURE-----
 --=-=-=--
 
 
---===============1042746237493856134==
+--===============6019371887213542775==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -86,4 +69,4 @@ linux-rpi-kernel mailing list
 linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel
 
---===============1042746237493856134==--
+--===============6019371887213542775==--
