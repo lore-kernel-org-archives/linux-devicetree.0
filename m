@@ -1,52 +1,86 @@
-Return-Path: <SRS0=oZ+j=FV=linux.intel.com=heikki.krogerus@kernel.org>
-Date: Tue, 27 Feb 2018 13:03:02 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v2 03/12] staging: typec: tcpci: support port config
+Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-he1eur01on0052.outbound.protection.outlook.com ([104.47.0.52]:14240
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1753328AbeBZOa5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Feb 2018 09:30:57 -0500
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v2 03/12] staging: typec: tcpci: support port config
  passed via dt
-Message-ID: <20180227110302.GE25535@kuha.fi.intel.com>
+Date: Mon, 26 Feb 2018 14:30:53 +0000
+Message-ID: <VI1PR0402MB3917FFA57640C5B4B7030FA789C10@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
  <1519645759-12701-4-git-send-email-jun.li@nxp.com>
  <20180226140604.GD25535@kuha.fi.intel.com>
- <VI1PR0402MB3917FFA57640C5B4B7030FA789C10@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+In-Reply-To: <20180226140604.GD25535@kuha.fi.intel.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB3917FFA57640C5B4B7030FA789C10@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-To: Jun Li <jun.li@nxp.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-
-On Mon, Feb 26, 2018 at 02:30:53PM +0000, Jun Li wrote:
-> > > +	child = of_get_child_by_name(tcpci->dev->of_node, "connector");
-> > > +	if (!child) {
-> > > +		dev_err(tcpci->dev, "failed to get connector node.\n");
-> > > +		return -EINVAL;
-> > > +	}
-> > 
-> > Why do you need separate child node for the connector? You will always
-> > have only one connector per tcpc, i.e. the tcpci already represents the
-> > connector and all its capabilities.
-> > 
-> This is my original idea, my understanding is Rob expects those properties should
-> apply for a common usb connector node[1], that way I need add a child node for it,
-> sorry I didn't make the dt-binding patches come first in this series, please see
-> patch 10,11.
-> 
-> [1] https://patchwork.kernel.org/patch/10231447/
-
-But was the idea really to put properties like the TCPC capabilities
-under the usb connector child node? That will force us to extract
-the same properties in two different methods in every USB Type-C
-driver. One extracting them from DT, and another from other FW
-interfaces and build-in properties.
-
-To avoid that, let's just expect to get these properties in the node
-for tcpc, not the usb connector child.
-
-
-Thanks,
-
--- 
-heikki
+SGkNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtdXNiLW93bmVy
+QHZnZXIua2VybmVsLm9yZw0KPiBbbWFpbHRvOmxpbnV4LXVzYi1vd25lckB2Z2VyLmtlcm5lbC5v
+cmddIE9uIEJlaGFsZiBPZiBIZWlra2kgS3JvZ2VydXMNCj4gU2VudDogMjAxOMTqMtTCMjbI1SAy
+MjowNg0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gQ2M6IGdyZWdraEBsaW51eGZv
+dW5kYXRpb24ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IGxpbnV4QHJvZWNrLXVzLm5ldDsNCj4g
+YS5oYWpkYUBzYW1zdW5nLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IHl1ZXlhb0Bnb29nbGUu
+Y29tOw0KPiBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54cC5jb20+OyBnYXJzaWx2YUBlbWJlZGRl
+ZG9yLmNvbTsNCj4gb19sZXZlcXVlQG9yYW5nZS5mcjsgc2h1ZmFuX2xlZUByaWNodGVrLmNvbTsg
+bGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djIgMDMvMTJdIHN0YWdpbmc6IHR5cGVjOiB0Y3BjaTogc3VwcG9ydCBwb3J0IGNvbmZpZw0KPiBw
+YXNzZWQgdmlhIGR0DQo+IA0KPiBIaSwNCj4gDQo+IE9uIE1vbiwgRmViIDI2LCAyMDE4IGF0IDA3
+OjQ5OjEwUE0gKzA4MDAsIExpIEp1biB3cm90ZToNCj4gPiBVc2VyIGNhbiBkZWZpbmUgdGhlIHR5
+cGVjIHBvcnQgcHJvcGVydGllcyBpbiB0Y3BjaSBub2RlIHRvIHNldHVwIHRoZQ0KPiA+IHBvcnQg
+Y29uZmlnLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTGkgSnVuIDxqdW4ubGlAbnhwLmNvbT4N
+Cj4gPiAtLS0NCj4gPiBDaGFuZ2VzIGZvciB2MjoNCj4gPiAtIFVzZSBpbmZyYSBBUElzIHRvIGdl
+dCBzaW5rIGFuZCBzb3VyY2UgY29uZmlnLg0KPiA+IC0gSW1wcm92ZSB0aGUgZXJyb3IgbWVzc2Fn
+ZS4NCj4gPg0KPiA+ICBkcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2kuYyB8IDcwDQo+ICsrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0NCj4gPiAgaW5jbHVkZS9saW51
+eC91c2IvdGNwbS5oICAgICAgfCAgNiArKy0tDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNjYgaW5z
+ZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9zdGFnaW5nL3R5cGVjL3RjcGNpLmMNCj4gPiBiL2RyaXZlcnMvc3RhZ2luZy90eXBlYy90Y3Bj
+aS5jIGluZGV4IGI2YWJhZjcuLmJlNmVkMTYgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9zdGFn
+aW5nL3R5cGVjL3RjcGNpLmMNCj4gPiArKysgYi9kcml2ZXJzL3N0YWdpbmcvdHlwZWMvdGNwY2ku
+Yw0KPiA+IEBAIC00MjYsMTcgKzQyNiw3MyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHJlZ21hcF9j
+b25maWcNCj4gdGNwY2lfcmVnbWFwX2NvbmZpZyA9IHsNCj4gPiAgCS5tYXhfcmVnaXN0ZXIgPSAw
+eDdGLCAvKiAweDgwIC4uIDB4RkYgYXJlIHZlbmRvciBkZWZpbmVkICovICB9Ow0KPiA+DQo+ID4g
+LXN0YXRpYyBjb25zdCBzdHJ1Y3QgdGNwY19jb25maWcgdGNwY2lfdGNwY19jb25maWcgPSB7DQo+
+ID4gLQkudHlwZSA9IFRZUEVDX1BPUlRfREZQLA0KPiA+IC0JLmRlZmF1bHRfcm9sZSA9IFRZUEVD
+X1NJTkssDQo+ID4gLX07DQo+ID4gLQ0KPiA+ICsvKiBQb3B1bGF0ZSBzdHJ1Y3QgdGNwY19jb25m
+aWcgZnJvbSBkZXZpY2UtdHJlZSAqLw0KPiA+ICBzdGF0aWMgaW50IHRjcGNpX3BhcnNlX2NvbmZp
+ZyhzdHJ1Y3QgdGNwY2kgKnRjcGNpKSAgew0KPiA+ICsJc3RydWN0IHRjcGNfY29uZmlnICp0Y2Zn
+Ow0KPiA+ICsJc3RydWN0IGRldmljZV9ub2RlICpjaGlsZDsNCj4gPiArCWludCByZXQgPSAtRUlO
+VkFMOw0KPiA+ICsNCj4gPiAgCXRjcGNpLT5jb250cm9sc192YnVzID0gdHJ1ZTsgLyogWFhYICov
+DQo+ID4NCj4gPiAtCS8qIFRPRE86IFBvcHVsYXRlIHN0cnVjdCB0Y3BjX2NvbmZpZyBmcm9tIEFD
+UEkvZGV2aWNlLXRyZWUgKi8NCj4gPiAtCXRjcGNpLT50Y3BjLmNvbmZpZyA9ICZ0Y3BjaV90Y3Bj
+X2NvbmZpZzsNCj4gPiArCXRjcGNpLT50Y3BjLmNvbmZpZyA9IGRldm1fa3phbGxvYyh0Y3BjaS0+
+ZGV2LCBzaXplb2YoKnRjZmcpLA0KPiA+ICsJCQkJCSAgR0ZQX0tFUk5FTCk7DQo+ID4gKwlpZiAo
+IXRjcGNpLT50Y3BjLmNvbmZpZykNCj4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gPiArDQo+ID4g
+Kwl0Y2ZnID0gdGNwY2ktPnRjcGMuY29uZmlnOw0KPiA+ICsNCj4gPiArCWNoaWxkID0gb2ZfZ2V0
+X2NoaWxkX2J5X25hbWUodGNwY2ktPmRldi0+b2Zfbm9kZSwgImNvbm5lY3RvciIpOw0KPiA+ICsJ
+aWYgKCFjaGlsZCkgew0KPiA+ICsJCWRldl9lcnIodGNwY2ktPmRldiwgImZhaWxlZCB0byBnZXQg
+Y29ubmVjdG9yIG5vZGUuXG4iKTsNCj4gPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPiArCX0NCj4g
+DQo+IFdoeSBkbyB5b3UgbmVlZCBzZXBhcmF0ZSBjaGlsZCBub2RlIGZvciB0aGUgY29ubmVjdG9y
+PyBZb3Ugd2lsbCBhbHdheXMNCj4gaGF2ZSBvbmx5IG9uZSBjb25uZWN0b3IgcGVyIHRjcGMsIGku
+ZS4gdGhlIHRjcGNpIGFscmVhZHkgcmVwcmVzZW50cyB0aGUNCj4gY29ubmVjdG9yIGFuZCBhbGwg
+aXRzIGNhcGFiaWxpdGllcy4NCj4gDQpUaGlzIGlzIG15IG9yaWdpbmFsIGlkZWEsIG15IHVuZGVy
+c3RhbmRpbmcgaXMgUm9iIGV4cGVjdHMgdGhvc2UgcHJvcGVydGllcyBzaG91bGQNCmFwcGx5IGZv
+ciBhIGNvbW1vbiB1c2IgY29ubmVjdG9yIG5vZGVbMV0sIHRoYXQgd2F5IEkgbmVlZCBhZGQgYSBj
+aGlsZCBub2RlIGZvciBpdCwNCnNvcnJ5IEkgZGlkbid0IG1ha2UgdGhlIGR0LWJpbmRpbmcgcGF0
+Y2hlcyBjb21lIGZpcnN0IGluIHRoaXMgc2VyaWVzLCBwbGVhc2Ugc2VlDQpwYXRjaCAxMCwxMS4N
+Cg0KWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTAyMzE0NDcvDQoNCnRo
+YW5rcw0KTGkgSnVuDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAtLQ0KPiBoZWlra2kNCj4gLS0NCj4g
+VG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJl
+IGxpbnV4LXVzYiIgaW4gdGhlDQo+IGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2Vy
+Lmtlcm5lbC5vcmcgTW9yZSBtYWpvcmRvbW8gaW5mbyBhdA0KPiBodHRwczovL2VtZWEwMS5zYWZl
+bGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHAlM0ElMkYlMkZ2Z2VyDQo+IC5r
+ZXJuZWwub3JnJTJGbWFqb3Jkb21vLWluZm8uaHRtbCZkYXRhPTAyJTdDMDElN0NqdW4ubGklNDBu
+eHAuY29tDQo+ICU3Q2UzOWY4Y2RjZmY2NjQ4NThkOWVhMDhkNTdkMjIxYjdhJTdDNjg2ZWExZDNi
+YzJiNGM2ZmE5MmNkOTljNQ0KPiBjMzAxNjM1JTdDMCU3QzElN0M2MzY1NTI1MDc4MTk4NjI0OTYm
+c2RhdGE9U2dTdGtYaXF3VjdSSWZYY1JlQg0KPiB2SVpwT3lMRVhLTmh2SCUyRkI2cDRLWHhzQSUz
+RCZyZXNlcnZlZD0wDQo=
