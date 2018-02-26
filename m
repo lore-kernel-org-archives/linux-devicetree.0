@@ -1,428 +1,121 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: stm32: sai: Add support of S/PDIF
-	playback" to the asoc tree
-Date: Mon, 26 Feb 2018 11:20:15 +0000
-Message-ID: <E1eqGpL-0006D2-T7@debutante>
-References: <1519052437-24011-4-git-send-email-olivier.moysan@st.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 2/2] i2c: add support for Socionext SynQuacer I2C controller
+Date: Mon, 26 Feb 2018 13:35:16 +0200
+Message-ID: <CAHp75VcjUey4K1xOkjKjn_ppPKC0bktcBK2p9NjcPYG1ed7X0g@mail.gmail.com>
+References: <20180222191647.4727-1-ard.biesheuvel@linaro.org>
+ <20180222191647.4727-3-ard.biesheuvel@linaro.org> <CAHp75Vc1AGzdgTB281XVo=FmZerkU1vijLih3JUO=_wNPjxgfA@mail.gmail.com>
+ <CAKv+Gu9XkmSPHZf+jVKOm-SX1GCWJUc7y3zTCuaHBwk8O3OC3Q@mail.gmail.com>
+ <CAHp75VfFKDkQQ9-vdjzDfE2Cdk2Cb93+kdceYQgEqt3hti=Wkg@mail.gmail.com> <CAKv+Gu__HiajW5fWvRnDft3+ef+gOowijxEd8wrF4U5Vu=3o0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1519052437-24011-4-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, olivier.moysan@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, broonie@kernel.org, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKv+Gu__HiajW5fWvRnDft3+ef+gOowijxEd8wrF4U5Vu=3o0Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Mon, Feb 26, 2018 at 11:59 AM, Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> On 23 February 2018 at 13:12, Andy Shevchenko <andy.shevchenko@gmail.com>=
+ wrote:
+>> On Fri, Feb 23, 2018 at 2:40 PM, Ard Biesheuvel
+>> <ard.biesheuvel@linaro.org> wrote:
+>>> On 23 February 2018 at 12:27, Andy Shevchenko <andy.shevchenko@gmail.co=
+m> wrote:
+>>>> On Thu, Feb 22, 2018 at 9:16 PM, Ard Biesheuvel
+>>>> <ard.biesheuvel@linaro.org> wrote:
+> ...
+>>>>> +       ret =3D device_property_read_u32(&pdev->dev, "clock-frequency=
+",
+>>>>> +                                      &speed_khz);
+>>>>> +       if (ret) {
+>>>>> +               dev_err(&pdev->dev,
+>>>>> +                       "Missing clock-frequency property\n");
+>>>>> +               return -EINVAL;
+>>>>> +       }
+>>>>> +       speed_khz /=3D 1000;
+>>
+>>>>> +       if (dev_of_node(&pdev->dev)) {
+>>>>> +               i2c->clk =3D devm_clk_get(&pdev->dev, "pclk");
+>>>>> +               if (IS_ERR(i2c->clk)) {
+>>>>> +                       dev_err(&pdev->dev, "cannot get clock\n");
+>>>>> +                       return PTR_ERR(i2c->clk);
+>>>>> +               }
+>>>>> +               dev_dbg(&pdev->dev, "clock source %p\n", i2c->clk);
+>>>>> +
+>>>>> +               i2c->clkrate =3D clk_get_rate(i2c->clk);
+>>>>> +               dev_dbg(&pdev->dev, "clock rate %d\n", i2c->clkrate);
+>>>>> +               clk_prepare_enable(i2c->clk);
+>>>>> +       } else {
+>>>>> +               ret =3D device_property_read_u32(&pdev->dev,
+>>>>> +                                              "socionext,pclk-rate",
+>>>>> +                                              &i2c->clkrate);
+>>>>> +               if (ret)
+>>>>> +                       return ret;
+>>>>> +       }
+>>>>
+>>>> Okay, I got this case. It's more likely the one in 8250_dw.c.
+>>>>
+>>>> Can you do the similar way?
+>>
+>>> Could you elaborate?
+>>
+>> --- 8< --- 8< --- 8< ---
+>>         device_property_read_u32(dev, "clock-frequency", &p->uartclk);
+>>
+>>        /* If there is separate baudclk, get the rate from it. */
+>>        data->clk =3D devm_clk_get(dev, "baudclk");
+>> ...
+>>        if (IS_ERR(data->clk) && PTR_ERR(data->clk) =3D=3D -EPROBE_DEFER)
+>>                return -EPROBE_DEFER;
+>>        if (!IS_ERR_OR_NULL(data->clk)) {
+>>                err =3D clk_prepare_enable(data->clk);
+>>                if (err)
+>>                        dev_warn(dev, "could not enable optional baudclk:=
+ %d\n",
+>>                                 err);
+>>                else
+>>                        p->uartclk =3D clk_get_rate(data->clk);
+>>        }
+>>
+>>        /* If no clock rate is defined, fail. */
+>>        if (!p->uartclk) {
+>>                dev_err(dev, "clock rate not defined\n");
+>>                err =3D -EINVAL;
+>>                goto err_clk;
+>> --- 8< --- 8< --- 8< ---
+>>
+>> Replace 'baudclk' with 'pclk' and p->uartclk with i2c->clkrate in
+>> above and you are almost done.
+>>
+>
+> I don't think this is better.
 
-   ASoC: stm32: sai: Add support of S/PDIF playback
+It's a pattern over ACPI vs. clk cases at least for now.
+But hold on. We have already an example of dealing with ACPI /
+non-ACPI cases for I2C controllers =E2=80=94 i2c-designware-platdrv.c.
+Check how it's done there.
 
-has been applied to the asoc tree at
+I actually totally forgot about ACPI slaves described in the table. We
+need to take into account the ones with lowest bus speed.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+>  The generic DT I2C 'clock-frequency'
+> property denotes the bus clock rate not the rate of the clock that
+> feeds the IP block. This is rather different from the UART bindings.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> Also, I don't want to support 'socionext,pclk-rate' for DT platforms,
+> only for ACPI platforms.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Unfortunately, we are strong against deviations between DT and ACPI in
+case of device properties.
+You may provide a clock and use devm_clk_get() without any concerns
+from where this comes from.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+You won't find any deviation in DW I2C driver since there is none,
+while driver works for non-ACPI platforms as well.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 6eb17d70932b5fbe25d9e7fc6d45d29d7a6cdf94 Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 19 Feb 2018 16:00:37 +0100
-Subject: [PATCH] ASoC: stm32: sai: Add support of S/PDIF playback
-
-Add support of S/PDIF iec60958 playback on STM32 SAI.
-
-Signed-off-by: olivier moysan <olivier.moysan@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/stm/stm32_sai.c     |   2 +
- sound/soc/stm/stm32_sai.h     |   2 +
- sound/soc/stm/stm32_sai_sub.c | 153 +++++++++++++++++++++++++++++++++++-------
- 3 files changed, 133 insertions(+), 24 deletions(-)
-
-diff --git a/sound/soc/stm/stm32_sai.c b/sound/soc/stm/stm32_sai.c
-index d743b7dd52fb..f22654253c43 100644
---- a/sound/soc/stm/stm32_sai.c
-+++ b/sound/soc/stm/stm32_sai.c
-@@ -30,10 +30,12 @@
- 
- static const struct stm32_sai_conf stm32_sai_conf_f4 = {
- 	.version = SAI_STM32F4,
-+	.has_spdif = false,
- };
- 
- static const struct stm32_sai_conf stm32_sai_conf_h7 = {
- 	.version = SAI_STM32H7,
-+	.has_spdif = true,
- };
- 
- static const struct of_device_id stm32_sai_ids[] = {
-diff --git a/sound/soc/stm/stm32_sai.h b/sound/soc/stm/stm32_sai.h
-index bb062e70de63..f25422174909 100644
---- a/sound/soc/stm/stm32_sai.h
-+++ b/sound/soc/stm/stm32_sai.h
-@@ -248,9 +248,11 @@ enum stm32_sai_version {
- /**
-  * struct stm32_sai_conf - SAI configuration
-  * @version: SAI version
-+ * @has_spdif: SAI S/PDIF support flag
-  */
- struct stm32_sai_conf {
- 	int version;
-+	bool has_spdif;
- };
- 
- /**
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index 08583b958430..cfeb219e1d78 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -23,6 +23,7 @@
- #include <linux/of_platform.h>
- #include <linux/regmap.h>
- 
-+#include <sound/asoundef.h>
- #include <sound/core.h>
- #include <sound/dmaengine_pcm.h>
- #include <sound/pcm_params.h>
-@@ -30,6 +31,7 @@
- #include "stm32_sai.h"
- 
- #define SAI_FREE_PROTOCOL	0x0
-+#define SAI_SPDIF_PROTOCOL	0x1
- 
- #define SAI_SLOT_SIZE_AUTO	0x0
- #define SAI_SLOT_SIZE_16	0x1
-@@ -59,8 +61,13 @@
- #define SAI_SYNC_INTERNAL	0x1
- #define SAI_SYNC_EXTERNAL	0x2
- 
-+#define STM_SAI_PROTOCOL_IS_SPDIF(ip)	((ip)->spdif)
-+#define STM_SAI_HAS_SPDIF(x)	((x)->pdata->conf->has_spdif)
- #define STM_SAI_HAS_EXT_SYNC(x) (!STM_SAI_IS_F4(sai->pdata))
- 
-+#define SAI_IEC60958_BLOCK_FRAMES	192
-+#define SAI_IEC60958_STATUS_BYTES	24
-+
- /**
-  * struct stm32_sai_sub_data - private data of SAI sub block (block A or B)
-  * @pdev: device data pointer
-@@ -78,6 +85,7 @@
-  * @id: SAI sub block id corresponding to sub-block A or B
-  * @dir: SAI block direction (playback or capture). set at init
-  * @master: SAI block mode flag. (true=master, false=slave) set at init
-+ * @spdif: SAI S/PDIF iec60958 mode flag. set at init
-  * @fmt: SAI block format. relevant only for custom protocols. set at init
-  * @sync: SAI block synchronization mode. (none, internal or external)
-  * @synco: SAI block ext sync source (provider setting). (none, sub-block A/B)
-@@ -87,6 +95,8 @@
-  * @slot_width: rx or tx slot width in bits
-  * @slot_mask: rx or tx active slots mask. set at init or at runtime
-  * @data_size: PCM data width. corresponds to PCM substream width.
-+ * @spdif_frm_cnt: S/PDIF playback frame counter
-+ * @spdif_status_bits: S/PDIF status bits
-  */
- struct stm32_sai_sub_data {
- 	struct platform_device *pdev;
-@@ -104,6 +114,7 @@ struct stm32_sai_sub_data {
- 	unsigned int id;
- 	int dir;
- 	bool master;
-+	bool spdif;
- 	int fmt;
- 	int sync;
- 	int synco;
-@@ -113,6 +124,8 @@ struct stm32_sai_sub_data {
- 	int slot_width;
- 	int slot_mask;
- 	int data_size;
-+	unsigned int spdif_frm_cnt;
-+	unsigned char spdif_status_bits[SAI_IEC60958_STATUS_BYTES];
- };
- 
- enum stm32_sai_fifo_th {
-@@ -171,6 +184,10 @@ static bool stm32_sai_sub_writeable_reg(struct device *dev, unsigned int reg)
- 	}
- }
- 
-+static const unsigned char default_status_bits[SAI_IEC60958_STATUS_BYTES] = {
-+	0, 0, 0, IEC958_AES3_CON_FS_48000,
-+};
-+
- static const struct regmap_config stm32_sai_sub_regmap_config_f4 = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
-@@ -277,6 +294,11 @@ static int stm32_sai_set_dai_tdm_slot(struct snd_soc_dai *cpu_dai, u32 tx_mask,
- 	struct stm32_sai_sub_data *sai = snd_soc_dai_get_drvdata(cpu_dai);
- 	int slotr, slotr_mask, slot_size;
- 
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		dev_warn(cpu_dai->dev, "Slot setting relevant only for TDM\n");
-+		return 0;
-+	}
-+
- 	dev_dbg(cpu_dai->dev, "Masks tx/rx:%#x/%#x, slots:%d, width:%d\n",
- 		tx_mask, rx_mask, slots, slot_width);
- 
-@@ -326,8 +348,17 @@ static int stm32_sai_set_dai_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
- 
- 	dev_dbg(cpu_dai->dev, "fmt %x\n", fmt);
- 
--	cr1_mask = SAI_XCR1_PRTCFG_MASK;
--	cr1 = SAI_XCR1_PRTCFG_SET(SAI_FREE_PROTOCOL);
-+	/* Do not generate master by default */
-+	cr1 = SAI_XCR1_NODIV;
-+	cr1_mask = SAI_XCR1_NODIV;
-+
-+	cr1_mask |= SAI_XCR1_PRTCFG_MASK;
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		cr1 |= SAI_XCR1_PRTCFG_SET(SAI_SPDIF_PROTOCOL);
-+		goto conf_update;
-+	}
-+
-+	cr1 |= SAI_XCR1_PRTCFG_SET(SAI_FREE_PROTOCOL);
- 
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
- 	/* SCK active high for all protocols */
-@@ -409,10 +440,7 @@ static int stm32_sai_set_dai_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
- 
- 	cr1_mask |= SAI_XCR1_SLAVE;
- 
--	/* do not generate master by default */
--	cr1 |= SAI_XCR1_NODIV;
--	cr1_mask |= SAI_XCR1_NODIV;
--
-+conf_update:
- 	ret = regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX, cr1_mask, cr1);
- 	if (ret < 0) {
- 		dev_err(cpu_dai->dev, "Failed to update CR1 register\n");
-@@ -478,6 +506,12 @@ static int stm32_sai_set_config(struct snd_soc_dai *cpu_dai,
- 			   SAI_XCR2_FFLUSH |
- 			   SAI_XCR2_FTH_SET(STM_SAI_FIFO_TH_HALF));
- 
-+	/* DS bits in CR1 not set for SPDIF (size forced to 24 bits).*/
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		sai->spdif_frm_cnt = 0;
-+		return 0;
-+	}
-+
- 	/* Mode, data format and channel config */
- 	cr1_mask = SAI_XCR1_DS_MASK;
- 	switch (params_format(params)) {
-@@ -592,13 +626,14 @@ static int stm32_sai_configure_clock(struct snd_soc_dai *cpu_dai,
- 	int cr1, mask, div = 0;
- 	int sai_clk_rate, mclk_ratio, den, ret;
- 	int version = sai->pdata->conf->version;
-+	unsigned int rate = params_rate(params);
- 
- 	if (!sai->mclk_rate) {
- 		dev_err(cpu_dai->dev, "Mclk rate is null\n");
- 		return -EINVAL;
- 	}
- 
--	if (!(params_rate(params) % 11025))
-+	if (!(rate % 11025))
- 		clk_set_parent(sai->sai_ck, sai->pdata->clk_x11k);
- 	else
- 		clk_set_parent(sai->sai_ck, sai->pdata->clk_x8k);
-@@ -623,24 +658,28 @@ static int stm32_sai_configure_clock(struct snd_soc_dai *cpu_dai,
- 		 *      MCKDIV = sai_ck / (frl x ws)	(NOMCK=1)
- 		 * Note: NOMCK/NODIV correspond to same bit.
- 		 */
--		if (sai->mclk_rate) {
--			mclk_ratio = sai->mclk_rate / params_rate(params);
--			if (mclk_ratio != 256) {
-+		if (STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+			div = DIV_ROUND_CLOSEST(sai_clk_rate,
-+						(params_rate(params) * 128));
-+		} else {
-+			if (sai->mclk_rate) {
-+				mclk_ratio = sai->mclk_rate / rate;
- 				if (mclk_ratio == 512) {
- 					mask = SAI_XCR1_OSR;
- 					cr1 = SAI_XCR1_OSR;
--				} else {
-+				} else if (mclk_ratio != 256) {
- 					dev_err(cpu_dai->dev,
- 						"Wrong mclk ratio %d\n",
- 						mclk_ratio);
- 					return -EINVAL;
- 				}
-+				div = DIV_ROUND_CLOSEST(sai_clk_rate,
-+							sai->mclk_rate);
-+			} else {
-+				/* mclk-fs not set, master clock not active */
-+				den = sai->fs_length * params_rate(params);
-+				div = DIV_ROUND_CLOSEST(sai_clk_rate, den);
- 			}
--			div = DIV_ROUND_CLOSEST(sai_clk_rate, sai->mclk_rate);
--		} else {
--			/* mclk-fs not set, master clock not active. NOMCK=1 */
--			den = sai->fs_length * params_rate(params);
--			div = DIV_ROUND_CLOSEST(sai_clk_rate, den);
- 		}
- 	}
- 
-@@ -670,10 +709,12 @@ static int stm32_sai_hw_params(struct snd_pcm_substream *substream,
- 
- 	sai->data_size = params_width(params);
- 
--	ret = stm32_sai_set_slots(cpu_dai);
--	if (ret < 0)
--		return ret;
--	stm32_sai_set_frame(cpu_dai);
-+	if (!STM_SAI_PROTOCOL_IS_SPDIF(sai)) {
-+		ret = stm32_sai_set_slots(cpu_dai);
-+		if (ret < 0)
-+			return ret;
-+		stm32_sai_set_frame(cpu_dai);
-+	}
- 
- 	ret = stm32_sai_set_config(cpu_dai, substream, params);
- 	if (ret)
-@@ -723,6 +764,9 @@ static int stm32_sai_trigger(struct snd_pcm_substream *substream, int cmd,
- 					 (unsigned int)~SAI_XCR1_DMAEN);
- 		if (ret < 0)
- 			dev_err(cpu_dai->dev, "Failed to update CR1 register\n");
-+
-+		if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
-+			sai->spdif_frm_cnt = 0;
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -776,6 +820,10 @@ static int stm32_sai_dai_probe(struct snd_soc_dai *cpu_dai)
- 				     sai->synco, sai->synci);
- 	}
- 
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
-+		memcpy(sai->spdif_status_bits, default_status_bits,
-+		       sizeof(default_status_bits));
-+
- 	cr1_mask |= SAI_XCR1_SYNCEN_MASK;
- 	cr1 |= SAI_XCR1_SYNCEN_SET(sai->sync);
- 
-@@ -792,6 +840,42 @@ static const struct snd_soc_dai_ops stm32_sai_pcm_dai_ops = {
- 	.shutdown	= stm32_sai_shutdown,
- };
- 
-+static int stm32_sai_pcm_process_spdif(struct snd_pcm_substream *substream,
-+				       int channel, unsigned long hwoff,
-+				       void *buf, unsigned long bytes)
-+{
-+	struct snd_pcm_runtime *runtime = substream->runtime;
-+	struct snd_soc_pcm_runtime *rtd = substream->private_data;
-+	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
-+	struct stm32_sai_sub_data *sai = dev_get_drvdata(cpu_dai->dev);
-+	int *ptr = (int *)(runtime->dma_area + hwoff +
-+			   channel * (runtime->dma_bytes / runtime->channels));
-+	ssize_t cnt = bytes_to_samples(runtime, bytes);
-+	unsigned int frm_cnt = sai->spdif_frm_cnt;
-+	unsigned int byte;
-+	unsigned int mask;
-+
-+	do {
-+		*ptr = ((*ptr >> 8) & 0x00ffffff);
-+
-+		/* Set channel status bit */
-+		byte = frm_cnt >> 3;
-+		mask = 1 << (frm_cnt - (byte << 3));
-+		if (sai->spdif_status_bits[byte] & mask)
-+			*ptr |= 0x04000000;
-+		ptr++;
-+
-+		if (!(cnt % 2))
-+			frm_cnt++;
-+
-+		if (frm_cnt == SAI_IEC60958_BLOCK_FRAMES)
-+			frm_cnt = 0;
-+	} while (--cnt);
-+	sai->spdif_frm_cnt = frm_cnt;
-+
-+	return 0;
-+}
-+
- static const struct snd_pcm_hardware stm32_sai_pcm_hw = {
- 	.info = SNDRV_PCM_INFO_INTERLEAVED | SNDRV_PCM_INFO_MMAP,
- 	.buffer_bytes_max = 8 * PAGE_SIZE,
-@@ -842,8 +926,14 @@ static struct snd_soc_dai_driver stm32_sai_capture_dai[] = {
- };
- 
- static const struct snd_dmaengine_pcm_config stm32_sai_pcm_config = {
--	.pcm_hardware	= &stm32_sai_pcm_hw,
--	.prepare_slave_config	= snd_dmaengine_pcm_prepare_slave_config,
-+	.pcm_hardware = &stm32_sai_pcm_hw,
-+	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
-+};
-+
-+static const struct snd_dmaengine_pcm_config stm32_sai_pcm_config_spdif = {
-+	.pcm_hardware = &stm32_sai_pcm_hw,
-+	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
-+	.process = stm32_sai_pcm_process_spdif,
- };
- 
- static const struct snd_soc_component_driver stm32_component = {
-@@ -900,6 +990,18 @@ static int stm32_sai_sub_parse_of(struct platform_device *pdev,
- 		return -EINVAL;
- 	}
- 
-+	/* Get spdif iec60958 property */
-+	sai->spdif = false;
-+	if (of_get_property(np, "st,iec60958", NULL)) {
-+		if (!STM_SAI_HAS_SPDIF(sai) ||
-+		    sai->dir == SNDRV_PCM_STREAM_CAPTURE) {
-+			dev_err(&pdev->dev, "S/PDIF IEC60958 not supported\n");
-+			return -EINVAL;
-+		}
-+		sai->spdif = true;
-+		sai->master = true;
-+	}
-+
- 	/* Get synchronization property */
- 	args.np = NULL;
- 	ret = of_parse_phandle_with_fixed_args(np, "st,sync", 1, 0, &args);
-@@ -999,6 +1101,7 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- {
- 	struct stm32_sai_sub_data *sai;
- 	const struct of_device_id *of_id;
-+	const struct snd_dmaengine_pcm_config *conf = &stm32_sai_pcm_config;
- 	int ret;
- 
- 	sai = devm_kzalloc(&pdev->dev, sizeof(*sai), GFP_KERNEL);
-@@ -1039,8 +1142,10 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = devm_snd_dmaengine_pcm_register(&pdev->dev,
--					      &stm32_sai_pcm_config, 0);
-+	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
-+		conf = &stm32_sai_pcm_config_spdif;
-+
-+	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Could not register pcm dma\n");
- 		return ret;
--- 
-2.16.1
+--=20
+With Best Regards,
+Andy Shevchenko
