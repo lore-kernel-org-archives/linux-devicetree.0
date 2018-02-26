@@ -1,42 +1,34 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: bcm283x: Move arm-pmu out of soc node
-Date: Mon, 26 Feb 2018 20:09:50 +0100 (CET)
-Message-ID: <216513579.120636.1519672190175@email.1und1.de>
-References: <1519481722-22738-1-git-send-email-stefan.wahren@i2se.com>
- <1519481722-22738-3-git-send-email-stefan.wahren@i2se.com>
- <87fu5nppxo.fsf@anholt.net>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 0/6] of: remove kbasename() from core
+Date: Mon, 26 Feb 2018 11:42:16 -0800
+Message-ID: <48509f67-9e94-ebe6-746b-c1262ea143b0@gmail.com>
+References: <1519611750-22355-1-git-send-email-frowand.list@gmail.com>
+ <CAMuHMdUj63OQnJWz=Q57dbc1XKOnq+_et5-E_4yQjTZt+c++GQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <87fu5nppxo.fsf-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
-List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUj63OQnJWz=Q57dbc1XKOnq+_et5-E_4yQjTZt+c++GQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> hat am 26. Februar 2018 um 19:26 geschrieben:
+On 02/26/18 01:03, Geert Uytterhoeven wrote:
+> Hi Frank,
 > 
+> On Mon, Feb 26, 2018 at 3:22 AM,  <frowand.list@gmail.com> wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Struct device_node full_name no longer includes the full path
+>> name.
 > 
-> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
-> 
-> > The ARM PMU doesn't have a reg address, so fix the following DTC warning
-> > (requires W=1):
-> > Node /soc/arm-pmu missing or empty reg/ranges property
-> >
-> > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> 
-> These seem good to me, I justed wanted to be sure: Does the PMU still
-> probe when the node is at this level of the hierarchy?
+> Is this now also true on systems with real Open Firmware?
 
-Yes, it does. 
+Thanks, good point.  I can not remove the kbasename() calls.
 
-> If it does, then these get my r-b.
+Will re-spin, as a much smaller patch to deal with the
+overlay issues.
+
+-Frank
