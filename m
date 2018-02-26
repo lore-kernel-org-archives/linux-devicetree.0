@@ -1,66 +1,55 @@
-Return-Path: <>
-From: Gaku Inami <gaku.inami.xh@renesas.com>
-Subject: [PATCH 1/5] arm64: dts: renesas: r8a7795: Add multi-cluster definition
-Date: Tue, 27 Feb 2018 11:19:51 +0900
-Message-Id: <1519697995-6061-2-git-send-email-gaku.inami.xh@renesas.com>
-In-Reply-To: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
-References: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gaku Inami <gaku.inami.xh@renesas.com>
+Return-Path: <SRS0=8w0u=FU=mleia.com=vz@kernel.org>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH 1/2] dt-bindings: rng: Document Freescale i.MX31 RNGA compatible
+Date: Mon, 26 Feb 2018 20:38:48 +0200
+Message-Id: <20180226183849.11562-2-vz@mleia.com>
+In-Reply-To: <20180226183849.11562-1-vz@mleia.com>
+References: <20180226183849.11562-1-vz@mleia.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the "cpu-map" for multi-cluster into r8a7795
-device-tree. This definition is used to parse the cpu topology.
+Freescale i.MX31 SoC contains a Security Random Number Generator
+Accelerator module (RNGA), which is replaced by RNGB and RNGC modules
+on later i.MX SoC series, the change adds a new compatible property
+to describe the controller.
 
-Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
+Since all versions of Freescale RNG modules are legacy, apparently
+the documentation file has no more potential for further extensions,
+nevertheless generalize it by removing explicit RNGC specifics.
+
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ .../devicetree/bindings/rng/{imx-rngc.txt => imx-rng.txt}      | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+ rename Documentation/devicetree/bindings/rng/{imx-rngc.txt => imx-rng.txt} (59%)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index ce85704..ffcc91e 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -34,6 +34,38 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/rng/imx-rngc.txt b/Documentation/devicetree/bindings/rng/imx-rng.txt
+similarity index 59%
+rename from Documentation/devicetree/bindings/rng/imx-rngc.txt
+rename to Documentation/devicetree/bindings/rng/imx-rng.txt
+index 93c7174..fc10933 100644
+--- a/Documentation/devicetree/bindings/rng/imx-rngc.txt
++++ b/Documentation/devicetree/bindings/rng/imx-rng.txt
+@@ -1,15 +1,13 @@
+-Freescale RNGC (Random Number Generator Version C)
+-
+-The driver also supports version B, which is mostly compatible
+-to version C.
++Freescale RNGA/RNGB/RNGC (Random Number Generator Versions A, B and C)
  
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&a57_0>;
-+				};
-+				core1 {
-+					cpu = <&a57_1>;
-+				};
-+				core2 {
-+					cpu = <&a57_2>;
-+				};
-+				core3 {
-+					cpu = <&a57_3>;
-+				};
-+			};
-+
-+			cluster1 {
-+				core0 {
-+					cpu = <&a53_0>;
-+				};
-+				core1 {
-+					cpu = <&a53_1>;
-+				};
-+				core2 {
-+					cpu = <&a53_2>;
-+				};
-+				core3 {
-+					cpu = <&a53_3>;
-+				};
-+			};
-+		};
-+
- 		a57_0: cpu@0 {
- 			compatible = "arm,cortex-a57", "arm,armv8";
- 			reg = <0x0>;
+ Required properties:
+ - compatible : should be one of
++               "fsl,imx31-rnga"
+                "fsl,imx25-rngb"
+                "fsl,imx35-rngc"
+ - reg : offset and length of the register set of this block
+-- interrupts : the interrupt number for the RNGC block
+-- clocks : the RNGC clk source
++- interrupts : the interrupt number for the RNG block
++- clocks : the RNG clk source
+ 
+ Example:
+ 
 -- 
-2.7.4
+2.10.2
