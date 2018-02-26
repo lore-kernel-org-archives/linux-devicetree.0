@@ -1,70 +1,52 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v1 02/19] dt-bindings: cpufreq: mediatek: use - instead
- of _ in examples
-Date: Mon, 26 Feb 2018 09:43:36 +0530
-Message-ID: <20180226041336.GJ26947@vireshk-i7>
-References: <cover.1519378871.git.sean.wang@mediatek.com>
- <fd1fc4c6760ab8fcbf7518df1cecf3837ab18d2c.1519378871.git.sean.wang@mediatek.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] arm64: dts: ls1046a: drop incomplete memory node
+Date: Mon, 26 Feb 2018 12:35:33 +0800
+Message-ID: <20180226043532.GT3217@dragon>
+References: <1519455896-8924-1-git-send-email-shawnguo@kernel.org>
+ <AM4PR0401MB1699AD47DE96B4299F680E498FC10@AM4PR0401MB1699.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <fd1fc4c6760ab8fcbf7518df1cecf3837ab18d2c.1519378871.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+In-Reply-To: <AM4PR0401MB1699AD47DE96B4299F680E498FC10@AM4PR0401MB1699.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Li <leoyang.li@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Shaohui Xie <Shaohui.Xie@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 23-02-18, 18:16, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Mon, Feb 26, 2018 at 01:33:34AM +0000, Leo Li wrote:
 > 
-> It should be good that no use "_" is in examples. Consequently,
-> those nodes in certain files which have an inappropriate name containing
-> "_" are all being replaced with "-".
 > 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-pm@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> > -----Original Message-----
+> > From: Shawn Guo [mailto:shawnguo@kernel.org]
+> > Sent: Saturday, February 24, 2018 3:05 PM
+> > To: linux-arm-kernel@lists.infradead.org
+> > Cc: devicetree@vger.kernel.org; Shawn Guo <shawnguo@kernel.org>;
+> > Mingkai Hu <mingkai.hu@nxp.com>; Shaohui Xie <Shaohui.Xie@nxp.com>;
+> > Leo Li <leoyang.li@nxp.com>
+> > Subject: [PATCH] arm64: dts: ls1046a: drop incomplete memory node
+> > 
+> > The memory node in fsl-ls1046a.dtsi has no 'reg' property, and causes the
+> > dtc warning below.
+> > 
+> > Warning (unit_address_vs_reg): Node /memory@80000000 has a unit name,
+> > but no reg property
+> > 
+> > This is clearly an incomplete memory node.  Let's drop it.  Either a complete
+> > memory should be added, or bootloader needs to fill the node as a whole.
 > 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> index d36f07e..38cfbb5 100644
-> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-> @@ -26,7 +26,7 @@ Optional properties:
->  
->  Example 1 (MT7623 SoC):
->  
-> -	cpu_opp_table: opp_table {
-> +	cpu_opp_table: opp-table {
->  		compatible = "operating-points-v2";
->  		opp-shared;
->  
-> @@ -86,7 +86,7 @@ Example 1 (MT7623 SoC):
->  	};
->  
->  Example 2 (MT8173 SoC):
-> -	cpu_opp_table_a: opp_table_a {
-> +	cpu_opp_table_a: opp-table-a {
->  		compatible = "operating-points-v2";
->  		opp-shared;
->  
-> @@ -131,7 +131,7 @@ Example 2 (MT8173 SoC):
->  		};
->  	};
->  
-> -	cpu_opp_table_b: opp_table_b {
-> +	cpu_opp_table_b: opp-table-b {
->  		compatible = "operating-points-v2";
->  		opp-shared;
+> Or we can put in a dummy reg property to be updated by bootloader like the mac-address property?
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Yeah, I'm fine with either way, as long as we get rid of the warning.
+I will post v2 shortly.
 
--- 
-viresh
+Shawn
