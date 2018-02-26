@@ -1,49 +1,50 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 6/7] arm64: allwinner: h6: add the basical Allwinner
- H6 DTSI file
-Date: Mon, 26 Feb 2018 10:26:45 +0100
-Message-ID: <20180226092645.xghkmfowenzlbm42@flea.lan>
-References: <20180223123555.64009-6-icenowy@aosc.io>
- <20180223123555.64009-7-icenowy@aosc.io>
- <20180223152038.2bflylwa6vj4gzfj@flea.lan>
- <81D53DC5-7622-430E-A530-ED0DE5397DC3@aosc.io>
+Subject: Re: [PATCH 01/15] clk: sunxi-ng: Add check for minimal rate to NM PLLs
+Date: Mon, 26 Feb 2018 10:38:00 +0100
+Message-ID: <20180226093800.uwbo54wrdcwmsyzh@flea.lan>
+References: <20180224214545.3740-1-jernej.skrabec@siol.net>
+ <20180224214545.3740-2-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="z6o7m63bqzv2zod7"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <81D53DC5-7622-430E-A530-ED0DE5397DC3@aosc.io>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Content-Type: multipart/mixed; boundary="===============0300863989=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180224214545.3740-2-jernej.skrabec@siol.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, sboyd@kernel.org, wens@csie.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---z6o7m63bqzv2zod7
+--===============0300863989==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="73ci3fsbvg6labpp"
+Content-Disposition: inline
+
+
+--73ci3fsbvg6labpp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2018 at 11:22:06PM +0800, Icenowy Zheng wrote:
-> >> +	psci {
-> >> +		compatible =3D "arm,psci-0.2";
-> >> +		method =3D "smc";
-> >> +	};
-> >
-> >Is it needed? The bootloader should fill it with whatever version it
-> >has, shouldn't it?
+Hi,
+
+On Sat, Feb 24, 2018 at 10:45:31PM +0100, Jernej Skrabec wrote:
+> Some NM PLLs doesn't work well when their output clock rate is set below
+> certain rate.
 >=20
-> But we now use ATF rather than U-Boot PSCI. U-Boot will not fill ATF
-> info.
->=20
-> See A64/H5 device trees.
+> Add support for that constrain.
 
-So if the PSCI version implemented in ATF ever changes, we would have
-to update all the DT everywhere, but only if you're running the new
-version?
+In such a case, you should round the rate to the minimum the clock can
+operate at, and not return an error.
 
-Sigh.
-
+Thanks!
 Maxime
 
 --=20
@@ -51,24 +52,36 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---z6o7m63bqzv2zod7
+--73ci3fsbvg6labpp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqT0tQACgkQ0rTAlCFN
-r3TLwg/+Nz8rd3gYDqm5pcrYPGIJN0H61KEsqx/iB8F9FplnrLVH79Y2LXuehDAD
-OFNpmoWWZMXoRePjL/rpoA6/EfXeBddtks+IyMgAHQgBWqDjHgAvq0IV7NUAQ0hb
-AfcIVhDAposY/s8e0BmANAdxLZESlQkZE2kqZEgQ8nr1yDVHam4iALk0gp4DTwef
-U0aDUttzBlHmGZmcEVRuxh2CoPualNFBmav4+GLR/8UdzK/yu64bJHaVan19M9R7
-mGQ8JcU5GJgdFzWFrECgOCsgT5scQqEnve9PxA0w7NYqvP6yCPqTLQ0B58xPl92p
-CEgJqbogmdhE5a9/Mv+G1NXnJlUHFtJkQ030tMRAj6sA247wPnowW5uFnPYi35xc
-CfFrlG+IzcFYDdPy3wfhyHPfGn7o9yxZMNchlseLywyM4uBwf8wjds3nKNeP0Y0m
-NH8ZJK8PKQ+LXfj7Ihu4VSpmH64zkYSQwqMbjFFvuJXGsnBPqqS/Ok+ZzXKjgh1r
-/8grCvGLfKL/r/9/VCYFx0/oGh23oicUBkYLFAsYcDb3lOA0TO+03pqtdXARshaO
-QTbdqBi9Iz90Y3lxOfbpRMG90RvonBeUh9GpeRXKfxL5mD4M5vGh7lD3a2Jojek4
-mj2++whGyo3wLYsFirdAqeA4b0oGSJffC3vpSjzz1OW7U9MhJXA=
-=8ds1
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqT1XgACgkQ0rTAlCFN
+r3R80Q/9H17omm6C3YzI5Iio3y7R/y6XVWsQI+vmAkvLe6uhJiHN3CnHcxB3KbZp
+aLOpd9UNa7a7+y+laW962Py+nYjY3SLxmJiTy3Cm/r++Wqw6JUBhVKOOcZJQ6lQH
+WVnnLN7egl6SdV6Rau491Cw6gixZUwOvoJ5S4ip8aaKm7L3sgE6ypMhAWBj5KHM1
+7DlvmpRr0EYaoFdUHNOiiU8B2hUiJvQh457OqVfF0tKZJSRujqpBjKBi6j3WHaKR
+OBnHhj3ND2qjnpZNUBPPfQwzPM0l5vQUbgqmDerJmb7bO8vgsrekGeg5AsF1qZsK
+r7MbzQO7HvgU6WUi2PfFUNA6IRT0OtV3grAxqiu8r7ehd+8mWwf2u0PFO4jOpM1j
+vypQiT9GJFLxgfcu4Nk+ZPU9kBO9FTgvWaKBZLiPLCmzEosTagc2MbXHKyeH13T9
+Y3DdMN0JRir1RK7rK7mMNkADBxZrfO3dLNTn3X3rRedpaw8kdBeUOXFCVjBmF0l2
+vKIR5nNWJ7bJgnHZUsm5bzct1VCzAr65cItFMk+4c8zLotw2Ku8Q+9QwgkTeWpOu
++torKDKtakDZTMhNOizgJqQ6cQu/p3WZVJ1YgtMGb1ZJhGIYsU2FGp6rEibvS1rs
+o1aiA+iSdOjs9offi2pcYJgEJYGnvqj/m4BZoJ9Nv0ikl5+jucg=
+=jhPH
 -----END PGP SIGNATURE-----
 
---z6o7m63bqzv2zod7--
+--73ci3fsbvg6labpp--
+
+--===============0300863989==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0300863989==--
