@@ -1,73 +1,113 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: porter: Add missing PMIC nodes
-Date: Mon, 26 Feb 2018 11:55:10 +0100
-Message-ID: <20180226105510.azlj56eohhu5wu3n@verge.net.au>
-References: <20180217020756.21474-1-marek.vasut+renesas@gmail.com>
- <CAMuHMdUiGAV7r55mqRH549BufDsh8_j8_S-BD_49sCM=aO9hZQ@mail.gmail.com>
- <2860322f-89b9-32aa-37bc-4fa4a52c1837@gmail.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v7 2/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Mon, 26 Feb 2018 12:06:37 +0100
+Message-ID: <ce3a30b9-f017-61b6-1fe6-f5dcc8bd3ec3@xs4all.nl>
+References: <1517217696-17816-1-git-send-email-yong.deng@magewell.com>
+ <c86097d7-dade-01e5-3826-3f22f9ca4b4f@infradead.org>
+ <20180130104833.a06e44c558c7ddc6b38e20b3@magewell.com>
+Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <2860322f-89b9-32aa-37bc-4fa4a52c1837@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Steve Twiss <stwiss.opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBC3MVVMX3ELBBTGUZ7KAKGQEQSCQBPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180130104833.a06e44c558c7ddc6b38e20b3-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel@vger.k
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 24, 2018 at 11:11:31PM +0100, Marek Vasut wrote:
-> On 02/18/2018 04:07 PM, Geert Uytterhoeven wrote:
-> > Hi Marek,
-> 
+Hi all,
+
+On 01/30/2018 03:48 AM, Yong wrote:
 > Hi,
 > 
-> > CC Steve Twiss
-> > 
-> > On Sat, Feb 17, 2018 at 3:07 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> >> Add PMIC nodes to Porter and connect CPU DVFS supply. There is
-> >> one DA9063 and one DA9210 on Porter, the only difference from
-> >> the other boards is that DA9063 is at I2C address 0x5a rather
-> >> than 0x58 .
-> >>
-> >> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> > 
-> > Thanks for your patch!
-> > 
-> >> --- a/arch/arm/boot/dts/r8a7791-porter.dts
-> >> +++ b/arch/arm/boot/dts/r8a7791-porter.dts
-> >> @@ -354,10 +354,47 @@
-> >>         clock-frequency = <400000>;
-> >>  };
-> >>
-> >> +&i2c6 {
-> >> +       status = "okay";
-> >> +       clock-frequency = <100000>;
-> >> +
-> >> +       pmic@5a {
-> >> +               compatible = "dlg,da9063";
-> > 
-> > Does it matter that this is a DA9063L ("Variant 6B")?
-> > Do we need a new compatible value, or can this be detected at runtime?
+> On Mon, 29 Jan 2018 13:49:14 -0800
+> Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
 > 
-> The driver detects it
+>> On 01/29/2018 01:21 AM, Yong Deng wrote:
+>>> Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
+>>> interface and CSI1 is used for parallel interface. This is not
+>>> documented in datasheet but by test and guess.
+>>>
+>>> This patch implement a v4l2 framework driver for it.
+>>>
+>>> Currently, the driver only support the parallel interface. MIPI-CSI2,
+>>> ISP's support are not included in this patch.
+>>>
+>>> Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>
+>>
+>> A previous version (I think v6) had a build error with the use of
+>> PHYS_OFFSET, so Kconfig was modified to depend on ARM and ARCH_SUNXI
+>> (one of which seems to be overkill).  As is here, the COMPILE_TEST piece is
+>> meaningless for all arches except ARM.  If you care enough for COMPILE_TEST
+>> (and I would), then you could make COMPILE_TEST useful on any arch by
+>> removing the "depends on ARM" (the ARCH_SUNXI takes care of that) and by
+>> having an alternate value for PHYS_OFFSET, like so:
+>>
+>> +#if defined(CONFIG_COMPILE_TEST) && !defined(PHYS_OFFSET)
+>> +#define PHYS_OFFSET	0
+>> +#endif
+>>
+>> With those 2 changes, the driver builds for me on x86_64.
 > 
-> da9063 6-005a: Device detected (chip-ID: 0x61, var-ID: 0x63)
+> I have considered this method.
+> But it's so sick to put these code in dirver (for my own). I mean 
+> this is meaningless for the driver itself and make people confused.
 > 
-> Comparing the datasheets makes it obvious that 9063L is just a cut-down
-> version of 9063, with less LDOs and one less ADC. So I think we should
-> have extra compatible and have the driver restrict which LDOs can be
-> used with this smaller PMIC.
+> I grepped the driver/ code and I found many drivers writing Kconfig
+> like this. For example:
+> ARM && COMPILE_TEST
+> MIPS && COMPILE_TEST
+> PPC64 && COMPILE_TEST
+> 
+> BTW, for my own, I do not care about COMPILE_TEST.
 
-Thanks, and sorry to ping yo about this while you were in transit.
+There was a discussion about this in the v6 patch, but it petered out.
 
-It sounds like this patch should be updated.
-Accordingly I'm marking it as "Changes Requested".
+I want to merge this driver, but I would very much prefer that this
+compiles with COMPILE_TEST. So unless someone has a better solution, then
+adding 'hack' that defines PHYS_OFFSET to 0 for COMPILE_TEST would be required.
+
+Otherwise this driver looks good, so it is just this issue blocking it.
+
+Regards,
+
+	Hans
+
+> 
+>>
+>>> diff --git a/drivers/media/platform/sunxi/sun6i-csi/Kconfig b/drivers/media/platform/sunxi/sun6i-csi/Kconfig
+>>> new file mode 100644
+>>> index 0000000..f80c965
+>>> --- /dev/null
+>>> +++ b/drivers/media/platform/sunxi/sun6i-csi/Kconfig
+>>> @@ -0,0 +1,10 @@
+>>> +config VIDEO_SUN6I_CSI
+>>> +	tristate "Allwinner V3s Camera Sensor Interface driver"
+>>> +	depends on ARM
+>>> +	depends on VIDEO_V4L2 && COMMON_CLK && VIDEO_V4L2_SUBDEV_API && HAS_DMA
+>>> +	depends on ARCH_SUNXI || COMPILE_TEST
+>>> +	select VIDEOBUF2_DMA_CONTIG
+>>> +	select REGMAP_MMIO
+>>> +	select V4L2_FWNODE
+>>> +	---help---
+>>> +	   Support for the Allwinner Camera Sensor Interface Controller on V3s.
+>>
+>> thanks,
+>> -- 
+>> ~Randy
+> 
+> 
+> Thanks,
+> Yong
+> 
