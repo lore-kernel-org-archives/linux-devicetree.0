@@ -1,82 +1,39 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 3/3] gpio: Add Spreadtrum PMIC EIC driver support
-Date: Mon, 26 Feb 2018 14:02:41 +0200
-Message-ID: <CAHp75VeJiqp74LrsETHTwxd5iaOObRX5bdYXz=rYeHm-4KbgHA@mail.gmail.com>
-References: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
- <f4a2fefb4c3179e7598dbc8141a661833200b922.1519468782.git.baolin.wang@linaro.org>
- <CAHp75VdvLDEmNs-YUFYf+Og18kaU6j6zAxXc1w31X2vw26ACHQ@mail.gmail.com> <CAMz4kuJ+BmWnSFFvE91Ric-Wm6tzxs_a5UWMx82tPj_ZVvC4tw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Michel Pollet <michel.pollet@bp.renesas.com>
+Subject: [PATCH 0/2] arm: Support for Renesas RZ/N1D (R9A06G032)
+Date: Mon, 26 Feb 2018 12:18:18 +0000
+Message-ID: <1519647518-15579-1-git-send-email-michel.pollet@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMz4kuJ+BmWnSFFvE91Ric-Wm6tzxs_a5UWMx82tPj_ZVvC4tw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+To: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
+Cc: phil.edworthy@renesas.com, Michel Pollet <michel.pollet@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 26, 2018 at 5:01 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
-> On 25 February 2018 at 20:19, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->> On Sat, Feb 24, 2018 at 12:44 PM, Baolin Wang <baolin.wang@linaro.org> wrote:
+This series adds the plain basic support for booting a bare
+kernel on the RZ/N1D-DB Board. It's been trimmed to the strict
+minimum as a 'base', further patches that will add the
+rest of the support, pinctrl, clock architecture and quite
+a few others.
 
->>> +static int sprd_pmic_eic_direction_input(struct gpio_chip *chip,
->>> +                                        unsigned int offset)
->>> +{
->>> +       /* EICs are always input, nothing need to do here. */
->>> +       return 0;
->>> +}
->>> +
->>> +static void sprd_pmic_eic_set(struct gpio_chip *chip, unsigned int offset,
->>> +                             int value)
->>> +{
->>> +       /* EICs are always input, nothing need to do here. */
->>> +}
->>
->> Remove both.
->>
->> Look at what GPIO core does.
->
-> I've checked the GPIO core, we need the
-> sprd_pmic_eic_direction_input() returns 0, since user can set GPIOD_IN
-> flag when requesting one GPIO, otherwise it will return errors.
+Michel Pollet (2):
+  arm: add basic support for Renesas RZ/N1 boards
+  arm: rzn1: Add basic support for RZN1D-DB Board
 
-Right. I thought it depends on presence of direction_output().
-
-> We also need one dummy sprd_pmic_eic_set() when setting debounce for
-> one GPIO, otherwise it will return errors.
-
-This is pretty much a "feature" of GPIO framework. It shouldn't
-require ->set() by logic if there is no output facility.
-OK.
-
->>> +       for (n = 0; n < chip->ngpio; n++) {
->>> +               if (!(BIT(n) & val))
->>
->> for_each_set_bit().
->>
->> At some point you may need just to go across lib/ in the kernel and
->> see what we have there.
->
-> I've considered the for_each_set_bit(), it need one 'unsigned long'
-> type parameter, but we get the value from regmap is 'u32' type. So we
-> need one extra conversion from 'u32' to 'unsigned long' like:
->
-> unsigned long reg = val;
->
-> for_each_set_bit(n, &reg, chip->ngpio) {
->         .......
-> }
->
-> If you like this conversion, then I can change to use
-> for_each_set_bit(). Thanks.
-
-Wouldn't it work like
-
-unsigned long val;
-
-...regmap_read(..., &val);
-
-?
+ Documentation/devicetree/bindings/arm/shmobile.txt |   5 +-
+ arch/arm/boot/dts/rzn1.dtsi                        |  94 +++
+ arch/arm/boot/dts/rzn1d400-db.dts                  |  25 +
+ arch/arm/mach-shmobile/Kconfig                     |   5 +
+ arch/arm/mach-shmobile/Makefile                    |   1 +
+ arch/arm/mach-shmobile/setup-r9a06g032.c           |  60 ++
+ .../dt-bindings/interrupt-controller/rzn1-irq.h    | 137 ++++
+ include/dt-bindings/soc/renesas,rzn1-map.h         | 173 +++++
+ include/soc/rzn1/sysctrl.h                         | 736 +++++++++++++++++++++
+ 9 files changed, 1235 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/rzn1.dtsi
+ create mode 100644 arch/arm/boot/dts/rzn1d400-db.dts
+ create mode 100644 arch/arm/mach-shmobile/setup-r9a06g032.c
+ create mode 100644 include/dt-bindings/interrupt-controller/rzn1-irq.h
+ create mode 100644 include/dt-bindings/soc/renesas,rzn1-map.h
+ create mode 100644 include/soc/rzn1/sysctrl.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
