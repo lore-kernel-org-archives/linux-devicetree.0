@@ -1,49 +1,206 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 01/15] clk: sunxi-ng: Add check for minimal rate to NM PLLs
-Date: Mon, 26 Feb 2018 18:28:43 +0800
-Message-ID: <CAGb2v67X8BpvSbxj4So0fdPnY5c6yEKza6b=KZWf7qxMaOUXWg@mail.gmail.com>
-References: <20180224214545.3740-1-jernej.skrabec@siol.net>
- <20180224214545.3740-2-jernej.skrabec@siol.net>
- <20180226093800.uwbo54wrdcwmsyzh@flea.lan>
- <CAGb2v64fxs5Ne5=orQxNcg70Z_N0NJyyC7MPuNH6pxcqrsUq4g@mail.gmail.com>
- <20180226102557.7bgjs3txp7cbridn@flea.lan>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 3/3] PCI: dra7xx: Enable x2 mode support for dra74x,
+ dra76x and dra72x
+Date: Mon, 26 Feb 2018 10:30:58 +0000
+Message-ID: <20180226103058.GB19841@e107981-ln.cambridge.arm.com>
+References: <20171219085823.8695-1-kishon@ti.com>
+ <20171219085823.8695-4-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180226102557.7bgjs3txp7cbridn@flea.lan>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, David Airlie <airlied@linux.ie>, Mike Turquette <mturquette@baylibre.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stephen Boyd <sboyd@kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171219085823.8695-4-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBGZWIgMjYsIDIwMTggYXQgNjoyNSBQTSwgTWF4aW1lIFJpcGFyZAo8bWF4aW1lLnJp
-cGFyZEBib290bGluLmNvbT4gd3JvdGU6Cj4gT24gTW9uLCBGZWIgMjYsIDIwMTggYXQgMDU6NDM6
-MDFQTSArMDgwMCwgQ2hlbi1ZdSBUc2FpIHdyb3RlOgo+PiBPbiBNb24sIEZlYiAyNiwgMjAxOCBh
-dCA1OjM4IFBNLCBNYXhpbWUgUmlwYXJkCj4+IDxtYXhpbWUucmlwYXJkQGJvb3RsaW4uY29tPiB3
-cm90ZToKPj4gPiBIaSwKPj4gPgo+PiA+IE9uIFNhdCwgRmViIDI0LCAyMDE4IGF0IDEwOjQ1OjMx
-UE0gKzAxMDAsIEplcm5laiBTa3JhYmVjIHdyb3RlOgo+PiA+PiBTb21lIE5NIFBMTHMgZG9lc24n
-dCB3b3JrIHdlbGwgd2hlbiB0aGVpciBvdXRwdXQgY2xvY2sgcmF0ZSBpcyBzZXQgYmVsb3cKPj4g
-Pj4gY2VydGFpbiByYXRlLgo+PiA+Pgo+PiA+PiBBZGQgc3VwcG9ydCBmb3IgdGhhdCBjb25zdHJh
-aW4uCj4+ID4KPj4gPiBJbiBzdWNoIGEgY2FzZSwgeW91IHNob3VsZCByb3VuZCB0aGUgcmF0ZSB0
-byB0aGUgbWluaW11bSB0aGUgY2xvY2sgY2FuCj4+ID4gb3BlcmF0ZSBhdCwgYW5kIG5vdCByZXR1
-cm4gYW4gZXJyb3IuCj4+Cj4+IFRoYXQncyB0cnVlIGZvciByb3VuZF9yYXRlLiBCdXQgd2hhdCdz
-IHRoZSBleHBlY3RlZCBiZWhhdmlvciBvZiBzZXRfcmF0ZT8KPj4gQUZBSUsgd2UgcHJlc3VtZSBh
-bGwgdXNlcnMgY2FsbCByb3VuZF9yYXRlIGJlZm9yZSBzZXRfcmF0ZSwgYnV0IHRoYXQgZG9lc24n
-dAo+PiBzZWVtIHRvIGJlIHRydWUgYWxsIHRoZSB0aW1lLgo+Cj4gT25lIG9mIHRoZSBmaXJzdCB0
-aGluZ3MgdGhhdCBoYXBwZW5zIGR1cmluZyBhIHNldF9yYXRlIGlzIGEgcm91bmRfcmF0ZToKPiBo
-dHRwczovL2VsaXhpci5ib290bGluLmNvbS9saW51eC92NC4xNi1yYzMvc291cmNlL2RyaXZlcnMv
-Y2xrL2Nsay5jI0wxODczCgpBaCEgVGhpcyB3YXMgYWRkZWQgcmVjZW50bHkgaW4gY29tbWl0IGNh
-NWUwODlhMzJjNSAoImNsazogdXNlIHJvdW5kIHJhdGUKdG8gYmFpbCBvdXQgZWFybHkgaW4gc2V0
-X3JhdGUiKS4KClRoYW5rcyBmb3IgdGhlIHRpcCEKQ2hlbll1Cl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tue, Dec 19, 2017 at 02:28:23PM +0530, Kishon Vijay Abraham I wrote:
+> dra74x/dra76x and dra72x has separate compatible strings. Add support
+
+s/has/have
+
+> for these compatible strings in pci-dra7xx driver to perform syscon
+> configurations required to get x2 mode working.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/pci/dwc/pci-dra7xx.c | 90 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+> 
+> diff --git a/drivers/pci/dwc/pci-dra7xx.c b/drivers/pci/dwc/pci-dra7xx.c
+> index e77a4ceed74c..3b4427c10228 100644
+> --- a/drivers/pci/dwc/pci-dra7xx.c
+> +++ b/drivers/pci/dwc/pci-dra7xx.c
+> @@ -83,11 +83,15 @@
+>  #define MSI_REQ_GRANT					BIT(0)
+>  #define MSI_VECTOR_SHIFT				7
+>  
+> +#define PCIE_1LANE_2LANE_SELECTION			BIT(13)
+> +#define PCIE_B1C0_MODE_SEL				BIT(2)
+> +
+>  struct dra7xx_pcie {
+>  	struct dw_pcie		*pci;
+>  	void __iomem		*base;		/* DT ti_conf */
+>  	int			phy_count;	/* DT phy-names count */
+>  	struct phy		**phy;
+> +	u32			*b1c0_mask;
+
+This looks unused in the current patch.
+
+>  	int			link_gen;
+>  	struct irq_domain	*irq_domain;
+>  	enum dw_pcie_device_mode mode;
+> @@ -95,6 +99,7 @@ struct dra7xx_pcie {
+>  
+>  struct dra7xx_pcie_of_data {
+>  	enum dw_pcie_device_mode mode;
+> +	u32 b1co_mode_sel_mask;
+>  };
+>  
+>  #define to_dra7xx_pcie(x)	dev_get_drvdata((x)->dev)
+> @@ -533,6 +538,26 @@ static const struct dra7xx_pcie_of_data dra7xx_pcie_ep_of_data = {
+>  	.mode = DW_PCIE_EP_TYPE,
+>  };
+>  
+> +static const struct dra7xx_pcie_of_data dra746_pcie_rc_of_data = {
+> +	.b1co_mode_sel_mask = BIT(2),
+
+Nit: DT guys are more familiar than me on how this data should be
+encoded but maybe bit offset + length can be better ? I do not know, I
+have no problem leaving them as masks.
+
+> +	.mode = DW_PCIE_RC_TYPE,
+> +};
+> +
+> +static const struct dra7xx_pcie_of_data dra726_pcie_rc_of_data = {
+> +	.b1co_mode_sel_mask = GENMASK(3, 2),
+> +	.mode = DW_PCIE_RC_TYPE,
+> +};
+> +
+> +static const struct dra7xx_pcie_of_data dra746_pcie_ep_of_data = {
+> +	.b1co_mode_sel_mask = BIT(2),
+> +	.mode = DW_PCIE_EP_TYPE,
+> +};
+> +
+> +static const struct dra7xx_pcie_of_data dra726_pcie_ep_of_data = {
+> +	.b1co_mode_sel_mask = GENMASK(3, 2),
+> +	.mode = DW_PCIE_EP_TYPE,
+> +};
+> +
+>  static const struct of_device_id of_dra7xx_pcie_match[] = {
+>  	{
+>  		.compatible = "ti,dra7-pcie",
+> @@ -542,6 +567,22 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
+>  		.compatible = "ti,dra7-pcie-ep",
+>  		.data = &dra7xx_pcie_ep_of_data,
+>  	},
+> +	{
+> +		.compatible = "ti,dra746-pcie-rc",
+> +		.data = &dra746_pcie_rc_of_data,
+> +	},
+> +	{
+> +		.compatible = "ti,dra726-pcie-rc",
+> +		.data = &dra726_pcie_rc_of_data,
+> +	},
+> +	{
+> +		.compatible = "ti,dra746-pcie-ep",
+> +		.data = &dra746_pcie_ep_of_data,
+> +	},
+> +	{
+> +		.compatible = "ti,dra726-pcie-ep",
+> +		.data = &dra726_pcie_ep_of_data,
+> +	},
+>  	{},
+>  };
+>  
+> @@ -587,6 +628,47 @@ static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
+>  	return ret;
+>  }
+>  
+> +static int dra7xx_pcie_configure_two_lane(struct device *dev,
+> +					  u32 b1co_mode_sel_mask)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct regmap *pcie_syscon;
+> +	unsigned int pcie_reg;
+> +
+> +	pcie_syscon = syscon_regmap_lookup_by_phandle(np,
+> +						      "ti,syscon-lane-conf");
+> +	if (IS_ERR(pcie_syscon)) {
+> +		dev_err(dev, "unable to get ti,syscon-lane-conf\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u32_index(np, "ti,syscon-lane-conf", 1,
+> +				       &pcie_reg)) {
+> +		dev_err(dev, "couldn't get lane configuration reg offset\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	regmap_update_bits(pcie_syscon, pcie_reg, PCIE_1LANE_2LANE_SELECTION,
+> +			   PCIE_1LANE_2LANE_SELECTION);
+
+I do not know if this can create issues but the regmap should clear
+those bits in the error path ?
+
+> +
+> +	pcie_syscon = syscon_regmap_lookup_by_phandle(np, "ti,syscon-lane-sel");
+> +	if (IS_ERR(pcie_syscon)) {
+> +		dev_err(dev, "unable to get ti,syscon-lane-sel\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u32_index(np, "ti,syscon-lane-sel", 1,
+> +				       &pcie_reg)) {
+> +		dev_err(dev, "couldn't get lane selection reg offset\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	regmap_update_bits(pcie_syscon, pcie_reg, b1co_mode_sel_mask,
+> +			   PCIE_B1C0_MODE_SEL);
+> +
+> +	return 0;
+> +}
+> +
+>  static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>  {
+>  	u32 reg;
+> @@ -608,6 +690,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>  	const struct of_device_id *match;
+>  	const struct dra7xx_pcie_of_data *data;
+>  	enum dw_pcie_device_mode mode;
+> +	u32 b1co_mode_sel_mask;
+
+Again, do you need this temporary variable (given that you pass the
+value below) ?
+
+Thanks,
+Lorenzo
+
+>  	match = of_match_device(of_match_ptr(of_dra7xx_pcie_match), dev);
+>  	if (!match)
+> @@ -615,6 +698,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>  
+>  	data = (struct dra7xx_pcie_of_data *)match->data;
+>  	mode = (enum dw_pcie_device_mode)data->mode;
+> +	b1co_mode_sel_mask = data->b1co_mode_sel_mask;
+>  
+>  	dra7xx = devm_kzalloc(dev, sizeof(*dra7xx), GFP_KERNEL);
+>  	if (!dra7xx)
+> @@ -673,6 +757,12 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>  	dra7xx->pci = pci;
+>  	dra7xx->phy_count = phy_count;
+>  
+> +	if (phy_count == 2) {
+> +		ret = dra7xx_pcie_configure_two_lane(dev, b1co_mode_sel_mask);
+> +		if (ret < 0)
+> +			goto err_link;
+> +	}
+> +
+>  	ret = dra7xx_pcie_enable_phy(dra7xx);
+>  	if (ret) {
+>  		dev_err(dev, "failed to enable phy\n");
+> -- 
+> 2.11.0
+> 
