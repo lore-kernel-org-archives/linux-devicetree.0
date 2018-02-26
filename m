@@ -1,128 +1,66 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v7 14/15] cpufreq: Add module to register cpufreq on
- Krait CPUs
-Date: Mon, 26 Feb 2018 15:34:25 +0530
-Message-ID: <20180226100425.GO26947@vireshk-i7>
-References: <1519638811-17269-1-git-send-email-sricharan@codeaurora.org>
- <1519638811-17269-15-git-send-email-sricharan@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv5 1/5] dt-bindings: mfd: motorola-cpcap:
+ document audio-codec
+Date: Mon, 26 Feb 2018 10:08:36 +0000
+Message-ID: <20180226100836.GA6681@sirena.org.uk>
+References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
+ <20180223200254.25685-2-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1519638811-17269-15-git-send-email-sricharan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, robh@kernel.org
+Content-Type: multipart/mixed; boundary="===============0467356757974097013=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180223200254.25685-2-sebastian.reichel@collabora.co.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26-02-18, 15:23, Sricharan R wrote:
-> From: Stephen Boyd <sboyd@codeaurora.org>
 
-Is this email id still valid ?
+--===============0467356757974097013==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
+Content-Disposition: inline
 
-> +static int __init qcom_cpufreq_populate_opps(struct nvmem_cell *pvs_nvmem,
-> +					     struct opp_table **tbl)
-> +{
-> +	int speed = 0, pvs = 0, pvs_ver = 0, cpu;
-> +	struct device *cpu_dev;
-> +	u8 *buf;
-> +	size_t len;
-> +	char pvs_name[] = "speedXX-pvsXX-vXX";
-> +
-> +	buf = nvmem_cell_read(pvs_nvmem, &len);
-> +	if (len == 4)
-> +		get_krait_bin_format_a(&speed, &pvs, &pvs_ver, pvs_nvmem, buf);
-> +	else if (len == 8)
-> +		get_krait_bin_format_b(&speed, &pvs, &pvs_ver, pvs_nvmem, buf);
-> +	else
-> +		pr_warn("Unable to read nvmem data. Defaulting to 0!\n");
-> +
-> +	snprintf(pvs_name, sizeof(pvs_name), "speed%d-pvs%d-v%d",
-> +		 speed, pvs, pvs_ver);
-> +
-> +	for (cpu = 0; cpu < num_possible_cpus(); cpu++) {
-> +		cpu_dev = get_cpu_device(cpu);
-> +		if (!cpu_dev)
-> +			return -ENODEV;
-> +
-> +		tbl[cpu] = dev_pm_opp_set_prop_name(cpu_dev, pvs_name);
-> +
-> +		if (IS_ERR(tbl[cpu])) {
-> +			tbl[cpu] = 0;
-> +			pr_warn("failed to add OPP name %s\n", pvs_name);
-> +			return PTR_ERR(tbl[cpu]);
 
-You just set tbl[cpu] to 0 :)
+--cWoXeonUoKmBZSoM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __init qcom_cpufreq_driver_init(void)
-> +{
-> +	struct platform_device *pdev;
-> +	struct device *cpu_dev;
-> +	struct device_node *np;
-> +	struct nvmem_cell *pvs_nvmem;
-> +	struct opp_table *tbl[NR_CPUS] = { NULL };
-> +	int ret, cpu = 0;
-> +
-> +	cpu_dev = get_cpu_device(0);
-> +	if (!cpu_dev)
-> +		return -ENODEV;
-> +
-> +	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
-> +	if (!np)
-> +		return -ENOENT;
-> +
-> +	if (!of_device_is_compatible(np, "operating-points-v2-krait-cpu")) {
-> +		ret = -ENOENT;
-> +		goto free_np;
-> +	}
-> +
-> +	pvs_nvmem = of_nvmem_cell_get(np, NULL);
-> +	if (IS_ERR(pvs_nvmem)) {
-> +		dev_err(cpu_dev, "Could not get nvmem cell\n");
-> +		ret = PTR_ERR(pvs_nvmem);
-> +		goto free_np;
-> +	}
-> +
-> +	ret = qcom_cpufreq_populate_opps(pvs_nvmem, tbl);
-> +	if (ret)
-> +		goto free_opp_name;
-> +
-> +	pdev = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
-> +	if (IS_ERR(pdev)) {
-> +		ret = PTR_ERR(pdev);
-> +		goto free_opp_name;
-> +	}
-> +
-> +	of_node_put(np);
-> +
-> +	return 0;
-> +
-> +free_opp_name:
-> +	while (tbl[cpu]) {
-> +		dev_pm_opp_put_prop_name(tbl[cpu]);
-> +		cpu++;
-> +	}
-> +
-> +free_np:
-> +	of_node_put(np);
-> +
-> +	return ret;
-> +}
-> +late_initcall(qcom_cpufreq_driver_init);
-> +
-> +MODULE_DESCRIPTION("Qualcomm CPUfreq driver");
-> +MODULE_AUTHOR("Stephen Boyd <sboyd@codeaurora.org>");
-> +MODULE_LICENSE("GPL v2");
+On Fri, Feb 23, 2018 at 09:02:50PM +0100, Sebastian Reichel wrote:
+> This adds the DT binding for the audio-codec sub-module found
+> inside the Motorola CPCAP PMIC.
 
-Everything else is fine. Fix above issue and you can add
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+--cWoXeonUoKmBZSoM
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-viresh
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqT3KEACgkQJNaLcl1U
+h9DMHwf/SxL4YjgjlUiilDIxIrtHpbqJaqqXfwvwuYGZwLeVRvYaOzeH94LxxMSX
+maSLSjSgUh5UUBAfMmvH0e9zE+bnsFV6cRB4Y2Z2D8TXD8ZtwwvUFMK1tdP86J57
+b3Pap7Rxv1cIVuTf9kyyIJF4IH9+UqWF+/e/ysOvgsaP61CKMLRvvjVRJLG4c2z4
+0KY1gCdkJxW+CwK6LKdZTIrb90e7s8zh5wvzxmKzoCeqUdZFeH7mFa00MjGxC8Cr
+TxCNNWh6hSdeENZ8exBe7HyziYy9jHsq8hCkv4IsIozovrhwb2zA8kmXUolB4sJw
+OBSClQSg985LTZJ8vJweVjj3Eltt9A==
+=hQJt
+-----END PGP SIGNATURE-----
+
+--cWoXeonUoKmBZSoM--
+
+--===============0467356757974097013==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0467356757974097013==--
