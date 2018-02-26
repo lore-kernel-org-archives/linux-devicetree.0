@@ -1,46 +1,67 @@
-Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.free-electrons.com ([62.4.15.54]:49680 "EHLO
-        mail.free-electrons.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932116AbeBSWUu (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 19 Feb 2018 17:20:50 -0500
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 0/2] Update 64-bit DT with new NAND controller bindings
-Date: Mon, 19 Feb 2018 23:20:43 +0100
-Message-Id: <20180219222045.1927-1-miquel.raynal@bootlin.com>
+Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-db5eur01on0067.outbound.protection.outlook.com ([104.47.2.67]:46304
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1752918AbeBZMFQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Feb 2018 07:05:16 -0500
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v2 08/12] staging: typec: tcpci: keep the uncontact cc line open
+Date: Mon, 26 Feb 2018 19:49:15 +0800
+Message-Id: <1519645759-12701-9-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hello,
+While set polarity, we should keep the disconnected cc line to be
+open when attached.
 
-These two patches have already been submitted and accepted by Gregory
-and were stacked for 4.17. But since then a small modification happened
-due to a request from Rob Herring. Also, armada-cp110-[master/slave].dtsi
-files became armada-cp110.dtsi due to the DT de-duplication work from
-Thomas Petazzoni. This small series should replace the two patches
-laying in the mvebu tree and should apply cleanly.
+Signed-off-by: Li Jun <jun.li@nxp.com>
+---
+Change for v2:
+- Set the uncontact cc line to be open when set polarity, this way,
+  we don't need change set_cc api.
 
-Thank you,
-Miquèl
+ drivers/staging/typec/tcpci.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Changes since v1:
-  - Renamed a NAND property: s/marvell,rb/nand-rb/ which is already
-    documented.
-  - Rebased on v4.16-rc1.
-
-Miquel Raynal (2):
-  arm64: dts: marvell: use reworked NAND controller driver on Armada 7K
-  arm64: dts: marvell: use reworked NAND controller driver on Armada 8K
-
- arch/arm64/boot/dts/marvell/armada-7040-db.dts | 50 ++++++++++++++++----------
- arch/arm64/boot/dts/marvell/armada-8040-db.dts | 44 +++++++++++++----------
- arch/arm64/boot/dts/marvell/armada-cp110.dtsi  |  8 ++---
- 3 files changed, 61 insertions(+), 41 deletions(-)
-
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 530a5d7..7145771 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -184,6 +184,7 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
+ 			      enum typec_cc_polarity polarity)
+ {
+ 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
++	unsigned int reg;
+ 	int ret;
+ 
+ 	ret = regmap_write(tcpci->regmap, TCPC_TCPC_CTRL,
+@@ -192,6 +193,20 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
+ 	if (ret < 0)
+ 		return ret;
+ 
++	ret = regmap_read(tcpci->regmap, TCPC_ROLE_CTRL, &reg);
++	if (ret < 0)
++		return ret;
++
++	if (polarity == TYPEC_POLARITY_CC2)
++		ret = TCPC_ROLE_CTRL_CC1_SHIFT;
++	else
++		ret = TCPC_ROLE_CTRL_CC2_SHIFT;
++	reg |= TCPC_ROLE_CTRL_CC_OPEN << ret;
++	reg &= ~TCPC_ROLE_CTRL_DRP;
++	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
++	if (ret < 0)
++		return ret;
++
+ 	return 0;
+ }
+ 
 -- 
-2.14.1
+2.7.4
 
