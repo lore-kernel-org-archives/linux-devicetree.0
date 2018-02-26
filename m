@@ -1,59 +1,41 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] arm64: dts: r8a77965: Add INTC-EX device node
-Date: Mon, 26 Feb 2018 16:42:23 +0100
-Message-ID: <1519659743-27027-3-git-send-email-geert+renesas@glider.be>
-References: <1519659743-27027-1-git-send-email-geert+renesas@glider.be>
+From: John Garry <john.garry@huawei.com>
+Subject: [PATCH v15 9/9] MAINTAINERS: Add maintainer for HiSilicon LPC driver
+Date: Tue, 27 Feb 2018 00:40:49 +0800
+Message-ID: <1519663249-9850-10-git-send-email-john.garry@huawei.com>
+References: <1519663249-9850-1-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519659743-27027-1-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519663249-9850-1-git-send-email-john.garry@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org, andriy.shevchenko@linux.intel.com
+Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de
 List-Id: devicetree@vger.kernel.org
 
-Populate the device node for the Interrupt Controller for External
-Devices (INTC-EX) on R-Car M3-N, which serves external IRQ pins
-IRQ[0-5].
+Added maintainer for drivers/bus/hisi_lpc.c
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index 7435297d2581c410..2f3d1784343cf3ec 100644
---- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -320,10 +320,19 @@
- 		};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8c2320e1..ef5c38a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -6401,6 +6401,13 @@ W:	http://www.hisilicon.com
+ S:	Maintained
+ F:	drivers/net/ethernet/hisilicon/hns3/
  
- 		intc_ex: interrupt-controller@e61c0000 {
-+			compatible = "renesas,intc-ex-r8a77965", "renesas,irqc";
- 			#interrupt-cells = <2>;
- 			interrupt-controller;
- 			reg = <0 0xe61c0000 0 0x200>;
--			/* placeholder */
-+			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 407>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 407>;
- 		};
- 
- 		dmac0: dma-controller@e6700000 {
++HISILICON LPC BUS DRIVER
++M:	john.garry@huawei.com
++W:	http://www.hisilicon.com
++S:	Maintained
++F:	drivers/bus/hisi_lpc.c
++F:	Documentation/devicetree/bindings/arm/hisilicon/hisilicon-low-pin-count.txt
++
+ HISILICON NETWORK SUBSYSTEM DRIVER
+ M:	Yisen Zhuang <yisen.zhuang@huawei.com>
+ M:	Salil Mehta <salil.mehta@huawei.com>
 -- 
-2.7.4
+1.9.1
