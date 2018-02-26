@@ -1,125 +1,91 @@
-From: frowand.list@gmail.com
-Subject: [PATCH 1/6] of: unittest: clean up changeset test
-Date: Sun, 25 Feb 2018 18:22:25 -0800
-Message-ID: <1519611750-22355-2-git-send-email-frowand.list@gmail.com>
-References: <1519611750-22355-1-git-send-email-frowand.list@gmail.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v2 3/3] gpio: Add Spreadtrum PMIC EIC driver support
+Date: Mon, 26 Feb 2018 11:01:17 +0800
+Message-ID: <CAMz4kuJ+BmWnSFFvE91Ric-Wm6tzxs_a5UWMx82tPj_ZVvC4tw@mail.gmail.com>
+References: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
+ <f4a2fefb4c3179e7598dbc8141a661833200b922.1519468782.git.baolin.wang@linaro.org>
+ <CAHp75VdvLDEmNs-YUFYf+Og18kaU6j6zAxXc1w31X2vw26ACHQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519611750-22355-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <CAHp75VdvLDEmNs-YUFYf+Og18kaU6j6zAxXc1w31X2vw26ACHQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+Hi Andy,
 
-In preparation for fixing __of_node_dup(), clean up the unittest
-function that calls it.
+On 25 February 2018 at 20:19, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> On Sat, Feb 24, 2018 at 12:44 PM, Baolin Wang <baolin.wang@linaro.org> wrote:
+>> The Spreadtrum PMIC EIC controller contains only one bank of debounce EIC,
+>> and this bank contains 16 EICs. Each EIC can only be used as input mode,
+>> as well as supporting the debounce and the capability to trigger interrupts
+>> when detecting input signals.
+>
+>> +/*
+>> + * These registers are modified under the irq bus lock and cached to avoid
+>> + * unnecessary writes in bus_sync_unlock.
+>> + */
+>> +enum { REG_IEV, REG_IE, REG_TRIG, CACHE_NR_REGS };
+>
+> One item per line.
 
-Devicetree nodes created from a flattened device tree have a name
-property.  Follow this convention for nodes added by a changeset.
+Sure.
 
-For node added by changeset, remove incorrect initialization of
-child node pointer.
+>
+>> +static int sprd_pmic_eic_direction_input(struct gpio_chip *chip,
+>> +                                        unsigned int offset)
+>> +{
+>> +       /* EICs are always input, nothing need to do here. */
+>> +       return 0;
+>> +}
+>> +
+>> +static void sprd_pmic_eic_set(struct gpio_chip *chip, unsigned int offset,
+>> +                             int value)
+>> +{
+>> +       /* EICs are always input, nothing need to do here. */
+>> +}
+>
+> Remove both.
+>
+> Look at what GPIO core does.
 
-Add an additional node pointer 'changeset' to more naturally reflect
-where in the tree the changeset is added.
+I've checked the GPIO core, we need the
+sprd_pmic_eic_direction_input() returns 0, since user can set GPIOD_IN
+flag when requesting one GPIO, otherwise it will return errors.
+We also need one dummy sprd_pmic_eic_set() when setting debounce for
+one GPIO, otherwise it will return errors.
 
-Make changeset add property error messages unique.
+>
+>> +       value |= debounce / 1000;
+>
+> Possible overflow.
 
-Add whitespace to break apart logic blocks.
+OK. I should & SPRD_PMIC_EIC_DBC_MASK.
 
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
+>
+>> +       for (n = 0; n < chip->ngpio; n++) {
+>> +               if (!(BIT(n) & val))
+>
+> for_each_set_bit().
+>
+> At some point you may need just to go across lib/ in the kernel and
+> see what we have there.
 
-checkpatch warnings for "line over 80 characters" are for unittest
-code in a function with long lines as a normal style.
+I've considered the for_each_set_bit(), it need one 'unsigned long'
+type parameter, but we get the value from regmap is 'u32' type. So we
+need one extra conversion from 'u32' to 'unsigned long' like:
 
+unsigned long reg = val;
 
- drivers/of/unittest.c | 42 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 36 insertions(+), 6 deletions(-)
+for_each_set_bit(n, &reg, chip->ngpio) {
+        .......
+}
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 7a9abaae874d..490bbee0cf87 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -562,42 +562,72 @@ static void __init of_unittest_property_copy(void)
- static void __init of_unittest_changeset(void)
- {
- #ifdef CONFIG_OF_DYNAMIC
--	struct property *ppadd, padd = { .name = "prop-add", .length = 0, .value = "" };
-+	struct property *ppadd, padd = { .name = "prop-add", .length = 1, .value = "" };
-+	struct property *ppname_n1,  pname_n1  = { .name = "name", .length = 3, .value = "n1"  };
-+	struct property *ppname_n2,  pname_n2  = { .name = "name", .length = 3, .value = "n2"  };
-+	struct property *ppname_n21, pname_n21 = { .name = "name", .length = 3, .value = "n21" };
- 	struct property *ppupdate, pupdate = { .name = "prop-update", .length = 5, .value = "abcd" };
- 	struct property *ppremove;
--	struct device_node *n1, *n2, *n21, *nremove, *parent, *np;
-+	struct device_node *n1, *n2, *n21, *nchangeset, *nremove, *parent, *np;
- 	struct of_changeset chgset;
- 
- 	n1 = __of_node_dup(NULL, "/testcase-data/changeset/n1");
- 	unittest(n1, "testcase setup failure\n");
-+
- 	n2 = __of_node_dup(NULL, "/testcase-data/changeset/n2");
- 	unittest(n2, "testcase setup failure\n");
-+
- 	n21 = __of_node_dup(NULL, "%s/%s", "/testcase-data/changeset/n2", "n21");
- 	unittest(n21, "testcase setup failure %p\n", n21);
--	nremove = of_find_node_by_path("/testcase-data/changeset/node-remove");
-+
-+	nchangeset = of_find_node_by_path("/testcase-data/changeset");
-+	nremove = of_get_child_by_name(nchangeset, "node-remove");
- 	unittest(nremove, "testcase setup failure\n");
-+
- 	ppadd = __of_prop_dup(&padd, GFP_KERNEL);
- 	unittest(ppadd, "testcase setup failure\n");
-+
-+	ppname_n1  = __of_prop_dup(&pname_n1, GFP_KERNEL);
-+	unittest(ppname_n1, "testcase setup failure\n");
-+
-+	ppname_n2  = __of_prop_dup(&pname_n2, GFP_KERNEL);
-+	unittest(ppname_n2, "testcase setup failure\n");
-+
-+	ppname_n21 = __of_prop_dup(&pname_n21, GFP_KERNEL);
-+	unittest(ppname_n21, "testcase setup failure\n");
-+
- 	ppupdate = __of_prop_dup(&pupdate, GFP_KERNEL);
- 	unittest(ppupdate, "testcase setup failure\n");
--	parent = nremove->parent;
-+
-+	parent = nchangeset;
- 	n1->parent = parent;
- 	n2->parent = parent;
- 	n21->parent = n2;
--	n2->child = n21;
-+
- 	ppremove = of_find_property(parent, "prop-remove", NULL);
- 	unittest(ppremove, "failed to find removal prop");
- 
- 	of_changeset_init(&chgset);
-+
- 	unittest(!of_changeset_attach_node(&chgset, n1), "fail attach n1\n");
-+	unittest(!of_changeset_add_property(&chgset, n1, ppname_n1), "fail add prop name\n");
-+
- 	unittest(!of_changeset_attach_node(&chgset, n2), "fail attach n2\n");
-+	unittest(!of_changeset_add_property(&chgset, n2, ppname_n2), "fail add prop name\n");
-+
- 	unittest(!of_changeset_detach_node(&chgset, nremove), "fail remove node\n");
-+	unittest(!of_changeset_add_property(&chgset, n21, ppname_n21), "fail add prop name\n");
-+
- 	unittest(!of_changeset_attach_node(&chgset, n21), "fail attach n21\n");
--	unittest(!of_changeset_add_property(&chgset, parent, ppadd), "fail add prop\n");
-+
-+	unittest(!of_changeset_add_property(&chgset, parent, ppadd), "fail add prop prop-add\n");
- 	unittest(!of_changeset_update_property(&chgset, parent, ppupdate), "fail update prop\n");
- 	unittest(!of_changeset_remove_property(&chgset, parent, ppremove), "fail remove prop\n");
-+
- 	unittest(!of_changeset_apply(&chgset), "apply failed\n");
- 
-+	of_node_put(nchangeset);
-+
- 	/* Make sure node names are constructed correctly */
- 	unittest((np = of_find_node_by_path("/testcase-data/changeset/n2/n21")),
- 		 "'%pOF' not added\n", n21);
+If you like this conversion, then I can change to use
+for_each_set_bit(). Thanks.
+
 -- 
-Frank Rowand <frank.rowand@sony.com>
+Baolin.wang
+Best Regards
