@@ -1,46 +1,208 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v4 0/2] clocksource: npcm: add NPCM7xx timer driver
-Date: Mon, 26 Feb 2018 16:36:07 +0200
-Message-ID: <1519655769-25836-1-git-send-email-tmaimon77@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, avifishman70@gmail.com, brendanhiggins@google.com, joel@jms.id.au
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: [PATCHv6 2/3] arm64: dts: stratix10: use clock bindings for the
+ Stratix10 platform
+Date: Mon, 26 Feb 2018 08:47:34 -0600
+Message-ID: <1519656455-14629-2-git-send-email-dinguyen@kernel.org>
+References: <1519656455-14629-1-git-send-email-dinguyen@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519656455-14629-1-git-send-email-dinguyen@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-clk@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, dinguyen@kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Addressed comments from:.
- - Brendan Higgins: https://www.spinics.net/lists/devicetree/msg202331.html
+Use the clock bindings for the Stratix10 SoC. This includes changing the old
+binding of "intc,clk-s10-mgr" to "intel,stratix10-clkmgr". The reason that
+this can be done is that there are currently no clock driver for Stratix10,
+thus there are no consumers of the old binding. So changing the binding will
+not break any legacy code.
 
-Changes since version 3:
- - Modify prefix to npcm7xx_
- - Modify licensing to SPDX license format
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+v6:
+- no changes
+v5:
+- no changes
+v4:
+- remove '_' in name of clock nodes
+- use clock-controller in SoCDK node in dts file
+v3:
+- use the correct vendor prefix
+- explain the binding change
+v2:
+- use a single clock binding for the clock controller
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  | 50 +++++++++++++++++++++-
+ .../boot/dts/altera/socfpga_stratix10_socdk.dts    | 10 +++++
+ 2 files changed, 58 insertions(+), 2 deletions(-)
 
-Changes since version 2:
- - The shutdown function called oneshot function that can cause a crash in the system,
-   Modify shutdown call to unique shutdown function.
- - Adding support to resume function
- - Using timer-of.c API
- - Modify NPCM750 compatible name.
-
-Changes since version 1:
- - Rename driver name
- - Removing unnecessary dependencies in configuration
- - Adding prefix to the macros
- - No changes to dt-binding documentation since v1
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index c89d0c30..5a6a699 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -17,6 +17,7 @@
+ /dts-v1/;
+ #include <dt-bindings/reset/altr,rst-mgr-s10.h>
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/clock/stratix10-clock.h>
  
-Modified driver have been tested on the NPCM750 evaluation board.
+ / {
+ 	compatible = "altr,socfpga-stratix10";
+@@ -92,9 +93,35 @@
+ 		interrupt-parent = <&intc>;
+ 		ranges = <0 0 0 0xffffffff>;
  
-Tomer Maimon (2):
-  dt-binding: timer: document NPCM7xx timer DT bindings
-  clocksource: npcm: add NPCM7xx timer driver
-
- .../bindings/timer/nuvoton,npcm7xx-timer.txt       |  25 +++
- drivers/clocksource/Kconfig                        |   8 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/npcm7xx-timer.c                | 237 +++++++++++++++++++++
- 4 files changed, 271 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
- create mode 100644 drivers/clocksource/npcm7xx-timer.c
-
+-		clkmgr@ffd1000 {
+-			compatible = "altr,clk-mgr";
++		clkmgr: clock-controller@ffd10000 {
++			compatible = "intel,stratix10-clkmgr";
+ 			reg = <0xffd10000 0x1000>;
++			#clock-cells = <1>;
++
++			clocks {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				cb_intosc_hs_div2_clk: cb-intosc-hs-div2-clk {
++					#clock-cells = <0>;
++					compatible = "fixed-clock";
++				};
++
++				cb_intosc_ls_clk: cb-intosc-ls-clk {
++					#clock-cells = <0>;
++					compatible = "fixed-clock";
++				};
++
++				f2s_free_clk: f2s-free-clk {
++					#clock-cells = <0>;
++					compatible = "fixed-clock";
++				};
++
++				osc1: osc1 {
++					#clock-cells = <0>;
++					compatible = "fixed-clock";
++				};
++			};
+ 		};
+ 
+ 		gmac0: ethernet@ff800000 {
+@@ -105,6 +132,8 @@
+ 			mac-address = [00 00 00 00 00 00];
+ 			resets = <&rst EMAC0_RESET>;
+ 			reset-names = "stmmaceth";
++			clocks = <&clkmgr STRATIX10_EMAC0_CLK>;
++			clock-names = "stmmaceth";
+ 			status = "disabled";
+ 		};
+ 
+@@ -116,6 +145,8 @@
+ 			mac-address = [00 00 00 00 00 00];
+ 			resets = <&rst EMAC1_RESET>;
+ 			reset-names = "stmmaceth";
++			clocks = <&clkmgr STRATIX10_EMAC1_CLK>;
++			clock-names = "stmmaceth";
+ 			status = "disabled";
+ 		};
+ 
+@@ -127,6 +158,8 @@
+ 			mac-address = [00 00 00 00 00 00];
+ 			resets = <&rst EMAC2_RESET>;
+ 			reset-names = "stmmaceth";
++			clocks = <&clkmgr STRATIX10_EMAC2_CLK>;
++			clock-names = "stmmaceth";
+ 			status = "disabled";
+ 		};
+ 
+@@ -229,6 +262,9 @@
+ 			fifo-depth = <0x400>;
+ 			resets = <&rst SDMMC_RESET>;
+ 			reset-names = "reset";
++			clocks = <&clkmgr STRATIX10_L4_MP_CLK>,
++				 <&clkmgr STRATIX10_SDMMC_CLK>;
++			clock-names = "biu", "ciu";
+ 			status = "disabled";
+ 		};
+ 
+@@ -288,24 +324,32 @@
+ 			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 113 4>;
+ 			reg = <0xffc03000 0x100>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
++			clock-names = "timer";
+ 		};
+ 
+ 		timer1: timer1@ffc03100 {
+ 			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 114 4>;
+ 			reg = <0xffc03100 0x100>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
++			clock-names = "timer";
+ 		};
+ 
+ 		timer2: timer2@ffd00000 {
+ 			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 115 4>;
+ 			reg = <0xffd00000 0x100>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
++			clock-names = "timer";
+ 		};
+ 
+ 		timer3: timer3@ffd00100 {
+ 			compatible = "snps,dw-apb-timer";
+ 			interrupts = <0 116 4>;
+ 			reg = <0xffd00100 0x100>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
++			clock-names = "timer";
+ 		};
+ 
+ 		uart0: serial0@ffc02000 {
+@@ -315,6 +359,7 @@
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+ 			resets = <&rst UART0_RESET>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -325,6 +370,7 @@
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+ 			resets = <&rst UART1_RESET>;
++			clocks = <&clkmgr STRATIX10_L4_SP_CLK>;
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+index 0007564..b7f0b6b 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts
+@@ -50,6 +50,16 @@
+ 		/* We expect the bootloader to fill in the reg */
+ 		reg = <0 0 0 0>;
+ 	};
++
++	soc {
++		clock-controller@ffd10000 {
++			clocks {
++				osc1 {
++					clock-frequency = <25000000>;
++				};
++			};
++		};
++	};
+ };
+ 
+ &gpio1 {
 -- 
-2.14.1
+2.7.4
