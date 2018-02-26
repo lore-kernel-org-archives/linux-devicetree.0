@@ -1,80 +1,55 @@
-From: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v3 05/10] pwm: add PWM mode to pwm_config()
-Date: Mon, 26 Feb 2018 16:24:15 +0200
-Message-ID: <3a70b89c-b470-3723-760c-5294d0a75230@microchip.com>
-References: <1519300881-8136-1-git-send-email-claudiu.beznea@microchip.com>
- <1519300881-8136-6-git-send-email-claudiu.beznea@microchip.com>
- <20180222123308.mypx2r7n6o63mj5z@oak.lan> <87po4s2hve.fsf@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <87po4s2hve.fsf@intel.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
-To: Jani Nikula <jani.nikula@linux.intel.com>, Daniel Thompson <daniel.thompson@linaro.org>
-Cc: mark.rutland@arm.com, milo.kim@ti.com, linux-fbdev@vger.kernel.org, sean@mess.org, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, kamil@wypas.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, pavel@ucw.cz, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-leds@vger.kernel.org, linux-samsung-soc@vger.kernel.org, shc_work@mail.ru, corbet@lwn.net, linux-doc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, kgene@kernel.org, linux-input@vger.kernel.org, linux@roeck-us.net, linux-media@vger.kernel.org, linux-pwm@vger.kernel.org, jdelvare@suse.com, b.zolnierkie@samsung.com, intel-gfx@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, rodrigo.vivi@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, jingoohan1@gmail.com, dm
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v4 1/2] dt-binding: timer: document NPCM7xx timer DT bindings
+Date: Mon, 26 Feb 2018 16:36:08 +0200
+Message-ID: <1519655769-25836-2-git-send-email-tmaimon77@gmail.com>
+References: <1519655769-25836-1-git-send-email-tmaimon77@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519655769-25836-1-git-send-email-tmaimon77@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, tglx@linutronix.de, avifishman70@gmail.com, brendanhiggins@google.com, joel@jms.id.au
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAyNi4wMi4yMDE4IDExOjU3LCBKYW5pIE5pa3VsYSB3cm90ZToKPiBPbiBUaHUsIDIyIEZl
-YiAyMDE4LCBEYW5pZWwgVGhvbXBzb24gPGRhbmllbC50aG9tcHNvbkBsaW5hcm8ub3JnPiB3cm90
-ZToKPj4gT24gVGh1LCBGZWIgMjIsIDIwMTggYXQgMDI6MDE6MTZQTSArMDIwMCwgQ2xhdWRpdSBC
-ZXpuZWEgd3JvdGU6Cj4+PiBBZGQgUFdNIG1vZGUgdG8gcHdtX2NvbmZpZygpIGZ1bmN0aW9uLiBU
-aGUgZHJpdmVycyB3aGljaCB1c2VzIHB3bV9jb25maWcoKQo+Pj4gd2VyZSBhZGFwdGVkIHRvIHRo
-aXMgY2hhbmdlLgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IENsYXVkaXUgQmV6bmVhIDxjbGF1ZGl1
-LmJlem5lYUBtaWNyb2NoaXAuY29tPgo+Pj4gLS0tCj4+PiAgYXJjaC9hcm0vbWFjaC1zM2MyNHh4
-L21hY2gtcngxOTUwLmMgIHwgMTEgKysrKysrKysrLS0KPj4+ICBkcml2ZXJzL2J1cy90cy1uYnVz
-LmMgICAgICAgICAgICAgICAgfCAgMiArLQo+Pj4gIGRyaXZlcnMvY2xrL2Nsay1wd20uYyAgICAg
-ICAgICAgICAgICB8ICAzICsrLQo+Pj4gIGRyaXZlcnMvZ3B1L2RybS9pOTE1L2ludGVsX3BhbmVs
-LmMgICB8IDE3ICsrKysrKysrKysrKysrLS0tCj4+PiAgZHJpdmVycy9od21vbi9wd20tZmFuLmMg
-ICAgICAgICAgICAgIHwgIDIgKy0KPj4+ICBkcml2ZXJzL2lucHV0L21pc2MvbWF4Nzc2OTMtaGFw
-dGljLmMgfCAgMiArLQo+Pj4gIGRyaXZlcnMvaW5wdXQvbWlzYy9tYXg4OTk3X2hhcHRpYy5jICB8
-ICA2ICsrKysrLQo+Pj4gIGRyaXZlcnMvbGVkcy9sZWRzLXB3bS5jICAgICAgICAgICAgICB8ICA1
-ICsrKystCj4+PiAgZHJpdmVycy9tZWRpYS9yYy9pci1yeDUxLmMgICAgICAgICAgIHwgIDUgKysr
-Ky0KPj4+ICBkcml2ZXJzL21lZGlhL3JjL3B3bS1pci10eC5jICAgICAgICAgfCAgNSArKysrLQo+
-Pj4gIGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L2xtMzYzMGFfYmwuYyB8ICA0ICsrKy0KPj4+ICBk
-cml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9scDg1NXhfYmwuYyAgfCAgNCArKystCj4+PiAgZHJpdmVy
-cy92aWRlby9iYWNrbGlnaHQvbHA4Nzg4X2JsLmMgIHwgIDUgKysrKy0KPj4+ICBkcml2ZXJzL3Zp
-ZGVvL2JhY2tsaWdodC9wd21fYmwuYyAgICAgfCAxMSArKysrKysrKystLQo+Pj4gIGRyaXZlcnMv
-dmlkZW8vZmJkZXYvc3NkMTMwN2ZiLmMgICAgICB8ICAzICsrLQo+Pj4gIGluY2x1ZGUvbGludXgv
-cHdtLmggICAgICAgICAgICAgICAgICB8ICA2ICsrKystLQo+Pj4gIDE2IGZpbGVzIGNoYW5nZWQs
-IDcwIGluc2VydGlvbnMoKyksIDIxIGRlbGV0aW9ucygtKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9sbTM2MzBhX2JsLmMgYi9kcml2ZXJzL3ZpZGVvL2JhY2ts
-aWdodC9sbTM2MzBhX2JsLmMKPj4+IGluZGV4IDIwMzBhNmI3N2EwOS4uNjk2ZmEyNWRhZmQyIDEw
-MDY0NAo+Pj4gLS0tIGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvbG0zNjMwYV9ibC5jCj4+PiAr
-KysgYi9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9sbTM2MzBhX2JsLmMKPj4+IEBAIC0xNjUsOCAr
-MTY1LDEwIEBAIHN0YXRpYyB2b2lkIGxtMzYzMGFfcHdtX2N0cmwoc3RydWN0IGxtMzYzMGFfY2hp
-cCAqcGNoaXAsIGludCBiciwgaW50IGJyX21heCkKPj4+ICB7Cj4+PiAgCXVuc2lnbmVkIGludCBw
-ZXJpb2QgPSBwY2hpcC0+cGRhdGEtPnB3bV9wZXJpb2Q7Cj4+PiAgCXVuc2lnbmVkIGludCBkdXR5
-ID0gYnIgKiBwZXJpb2QgLyBicl9tYXg7Cj4+PiArCXN0cnVjdCBwd21fY2FwcyBjYXBzID0geyB9
-Owo+Pj4gIAo+Pj4gLQlwd21fY29uZmlnKHBjaGlwLT5wd21kLCBkdXR5LCBwZXJpb2QpOwo+Pj4g
-Kwlwd21fZ2V0X2NhcHMocGNoaXAtPnB3bWQtPmNoaXAsIHBjaGlwLT5wd21kLCAmY2Fwcyk7Cj4+
-PiArCXB3bV9jb25maWcocGNoaXAtPnB3bWQsIGR1dHksIHBlcmlvZCwgQklUKGZmcyhjYXBzLm1v
-ZGVzKSAtIDEpKTsKPj4KPj4gV2VsbC4uLiBJIGFkbWl0IEkndmUgb25seSByZWFsbHkgbG9va2Vk
-IGF0IHRoZSBwYXRjaGVzIHRoYXQgaW1wYWN0IAo+PiBiYWNrbGlnaHQgYnV0IGRpc3BlcnNpbmcg
-dGhpcyByZWFsbHkgb2RkIGxvb2tpbmcgYml0IHR3aWRkbGluZyAKPj4gdGhyb3VnaG91dCB0aGUg
-a2VybmVsIGRvZXNuJ3Qgc3RyaWtlIG1lIGEgZ3JlYXQgQVBJIGRlc2lnbi4KPj4KPj4gSU1ITyBj
-YWxsZXJzIHNob3VsZCBub3QgYmUgcmVxdWlyZWQgdG8gZmluZCB0aGUgZmlyc3Qgc2V0IGJpdCBp
-bgo+PiBzb21lIHNwZWNpYWxseSBjcmFmdGVkIHNldCBvZiBjYXBhYmlsaXR5IGJpdHMgc2ltcGx5
-IHRvIGdldCBzYW5lIAo+PiBkZWZhdWx0IGJlaGF2aW91ci4KPiAKPiBBZ3JlZWQuIElNSE8gdGhl
-IHJlZ3VsYXIgdXNlIGNhc2UgYmVjb21lcyByYXRoZXIgdGVkaW91cywgdWdseSwgYW5kCj4gZXJy
-b3IgcHJvbmUuCgpVc2luZyBzaW1wbHkgUFdNX01PREUoTk9STUFMKSBpbnN0ZWFkIG9mIEJJVChm
-ZnMoY2Fwcy5tb2RlcykgLSAxKSB3b3VsZCBiZSBPSwpmcm9tIHlvdXIgc2lkZT8KCk9yLCB3aGF0
-IGFib3V0IHVzaW5nIGEgZnVuY3Rpb24gbGlrZSBwd21fbW9kZV9maXJzdCgpIHRvIGdldCB0aGUg
-Zmlyc3Qgc3VwcG9ydGVkCm1vZGUgYnkgUFdNIGNoYW5uZWw/CgpPciwgd291bGQgeW91IHByZWZl
-ciB0byBzb2x2ZSB0aGlzIGluc2lkZSBwd21fY29uZmlnKCkgZnVuY3Rpb24sIGxldCdzIHNheSwg
-aW4KY2FzZSBhbiBpbnZhbGlkIG1vZGUgaXMgcGFzc2VkIGFzIGFyZ3VtZW50LCB0byBsZXQgcHdt
-X2NvbmZpZygpIHRvIGNob29zZSB0aGUKZmlyc3QgYXZhaWxhYmxlIFBXTSBtb2RlIGZvciBQV00g
-Y2hhbm5lbCBwYXNzZWQgYXMgYXJndW1lbnQ/CgpUaGFuayB5b3UsCkNsYXVkaXUgQmV6bmVhCgo+
-IAo+IEJSLAo+IEphbmkuCj4gCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCkludGVsLWdmeCBtYWlsaW5nIGxpc3QKSW50ZWwtZ2Z4QGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2ludGVsLWdmeAo=
+Added device tree binding documentation for Nuvoton NPCM7xx timer.
+
+Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ .../bindings/timer/nuvoton,npcm7xx-timer.txt       | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+
+diff --git a/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+new file mode 100644
+index 000000000000..c5150522e618
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+@@ -0,0 +1,25 @@
++Nuvoton NPCM7xx timer
++
++Nuvoton NPCM7xx have three timer modules, each timer module provides five 24-bit
++timer counters.
++
++Required properties:
++- compatible      : "nuvoton,npcm750-timer" for Poleg NPCM750.
++- reg             : Offset and length of the register set for the device.
++- interrupts      : Contain the timer interrupt with flags for
++                    falling edge.
++
++Required clocking property, have to be one of:
++- clocks          : phandle of timer reference clock.
++- clock-frequency : The frequency in Hz of the clock that drives the NPCM7xx
++                    timer (usually 25000000).
++
++Example:
++
++timer@f0008000 {
++    compatible = "nuvoton,npcm750-timer";
++    interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++    reg = <0xf0008000 0x1000>;
++    clocks = <&clk NPCM7XX_CLK_TIMER>;
++};
++
+-- 
+2.14.1
