@@ -1,73 +1,75 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH] arm64: dts: ls1046a: drop incomplete memory node
-Date: Mon, 26 Feb 2018 01:33:34 +0000
-Message-ID: <AM4PR0401MB1699AD47DE96B4299F680E498FC10@AM4PR0401MB1699.eurprd04.prod.outlook.com>
-References: <1519455896-8924-1-git-send-email-shawnguo@kernel.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [alsa-devel] [PATCHv5 2/5] ASoC: codec: cpcap: new codec
+Date: Mon, 26 Feb 2018 09:36:42 +0800
+Message-ID: <201802260921.u5yCEY8U%fengguang.wu@intel.com>
+References: <20180223200254.25685-3-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519455896-8924-1-git-send-email-shawnguo@kernel.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, Shaohui Xie <Shaohui.Xie@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180223200254.25685-3-sebastian.reichel@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sebastian,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on v4.16-rc2 next-20180223]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Sebastian-Reichel/Motorola-Droid-4-Audio-Support/20180226-063007
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
 
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> Sent: Saturday, February 24, 2018 3:05 PM
-> To: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org; Shawn Guo <shawnguo@kernel.org>;
-> Mingkai Hu <mingkai.hu@nxp.com>; Shaohui Xie <Shaohui.Xie@nxp.com>;
-> Leo Li <leoyang.li@nxp.com>
-> Subject: [PATCH] arm64: dts: ls1046a: drop incomplete memory node
-> 
-> The memory node in fsl-ls1046a.dtsi has no 'reg' property, and causes the
-> dtc warning below.
-> 
-> Warning (unit_address_vs_reg): Node /memory@80000000 has a unit name,
-> but no reg property
-> 
-> This is clearly an incomplete memory node.  Let's drop it.  Either a complete
-> memory should be added, or bootloader needs to fill the node as a whole.
+sparse warnings: (new ones prefixed by >>)
 
-Or we can put in a dummy reg property to be updated by bootloader like the mac-address property?
+>> sound/soc/codecs/cpcap.c:1406:54: sparse: restricted snd_pcm_format_t degrades to integer
 
-> 
-> Cc: Mingkai Hu <Mingkai.Hu@nxp.com>
-> Cc: Shaohui Xie <Shaohui.Xie@nxp.com>
-> Cc: Li Yang <leoyang.li@nxp.com>
-> Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> index 606ea496f24e..cbf4b3e15c17 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> @@ -129,10 +129,6 @@
->  		};
->  	};
-> 
-> -	memory@80000000 {
-> -		device_type = "memory";
-> -	};
-> -
->  	sysclk: sysclk {
->  		compatible = "fixed-clock";
->  		#clock-cells = <0>;
-> --
-> 1.9.1
+vim +1406 sound/soc/codecs/cpcap.c
+
+  1396	
+  1397	static struct snd_soc_dai_driver cpcap_dai[] = {
+  1398	{
+  1399		.id = 0,
+  1400		.name = "cpcap-hifi",
+  1401		.playback = {
+  1402			.stream_name = "HiFi Playback",
+  1403			.channels_min = 2,
+  1404			.channels_max = 2,
+  1405			.rates = SNDRV_PCM_RATE_8000_48000,
+> 1406			.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FORMAT_S24_LE,
+  1407		},
+  1408		.ops = &cpcap_dai_hifi_ops,
+  1409	},
+  1410	{
+  1411		.id = 1,
+  1412		.name = "cpcap-voice",
+  1413		.playback = {
+  1414			.stream_name = "Voice Playback",
+  1415			.channels_min = 1,
+  1416			.channels_max = 1,
+  1417			.rates = SNDRV_PCM_RATE_8000_48000,
+  1418			.formats = SNDRV_PCM_FMTBIT_S16_LE,
+  1419		},
+  1420		.capture = {
+  1421			.stream_name = "Voice Capture",
+  1422			.channels_min = 1,
+  1423			.channels_max = 2,
+  1424			.rates = SNDRV_PCM_RATE_8000_48000,
+  1425			.formats = SNDRV_PCM_FMTBIT_S16_LE,
+  1426		},
+  1427		.ops = &cpcap_dai_voice_ops,
+  1428	},
+  1429	};
+  1430	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
