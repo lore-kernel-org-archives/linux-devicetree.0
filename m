@@ -1,45 +1,63 @@
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: Re: [PATCH v8 3/9] mfd: madera: Add common support for Cirrus Logic
- Madera codecs
-Date: Mon, 26 Feb 2018 15:36:56 +0000
-Message-ID: <d541ca7e-5e02-a7e5-07c5-38fdebbbc014@opensource.cirrus.com>
-References: <20180226130558.7634-1-rf@opensource.cirrus.com>
- <20180226130558.7634-4-rf@opensource.cirrus.com>
- <CAOMZO5DEiwUBsMWfR-a6UgEkEeXvWqXPFAf0pPcwpeJY540xGg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH 2/2] dt-bindings: input: Add binding for RAVE SP input driver
+Date: Mon, 26 Feb 2018 07:41:30 -0800
+Message-ID: <20180226154130.25774-2-andrew.smirnov@gmail.com>
+References: <20180226154130.25774-1-andrew.smirnov@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DEiwUBsMWfR-a6UgEkEeXvWqXPFAf0pPcwpeJY540xGg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180226154130.25774-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 26/02/18 13:58, Fabio Estevam wrote:
-> On Mon, Feb 26, 2018 at 10:05 AM, Richard Fitzgerald
-> <rf@opensource.cirrus.com> wrote:
-> 
->> --- /dev/null
->> +++ b/drivers/mfd/madera-core.c
->> @@ -0,0 +1,602 @@
->> +// SPDX-License-Identifier: GPL-2.0
-> 
-> As you use SPDX line here....
-> 
->> +/*
->> + * Core MFD support for Cirrus Logic Madera codecs
->> + *
->> + * Copyright (C) 2015-2018 Cirrus Logic
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by the
->> + * Free Software Foundation; version 2.
-> 
-> You can remove this paragraph.
-> 
-> Same applies to the other places of this series.
-> 
+Add Device Tree bindings for RAVE SP input drvier - an MFD cell of
+parent RAVE SP driver (documented in
+Documentation/devicetree/bindings/mfd/zii,rave-sp.txt).
 
-Our legal team says no, these lines should stay.
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+ .../bindings/input/zii,rave-sp-pwrbutton.txt       | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/zii,rave-sp-pwrbutton.txt
+
+diff --git a/Documentation/devicetree/bindings/input/zii,rave-sp-pwrbutton.txt b/Documentation/devicetree/bindings/input/zii,rave-sp-pwrbutton.txt
+new file mode 100644
+index 000000000000..e14e12d27772
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/zii,rave-sp-pwrbutton.txt
+@@ -0,0 +1,24 @@
++Zodiac Inflight Innovations RAVE Supervisory Processor Power Button Bindings
++
++RAVE SP input device is a "MFD cell" device corresponding to power
++button functionality of RAVE Supervisory Processor. It is expected
++that its Device Tree node is specified as a child of the node
++corresponding to the parent RAVE SP device (as documented in
++Documentation/devicetree/bindings/mfd/zii,rave-sp.txt)
++
++Required properties:
++
++- compatible: Should be "zii,rave-sp-pwrbutton"
++
++Example:
++
++	rave-sp {
++		compatible = "zii,rave-sp-rdu1";
++		current-speed = <38400>;
++
++		pwrbutton {
++			compatible = "zii,rave-sp-pwrbutton";
++			status = "okay";
++		};
++	}
++
+-- 
+2.14.3
