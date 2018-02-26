@@ -1,113 +1,91 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v7 2/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Mon, 26 Feb 2018 12:06:37 +0100
-Message-ID: <ce3a30b9-f017-61b6-1fe6-f5dcc8bd3ec3@xs4all.nl>
-References: <1517217696-17816-1-git-send-email-yong.deng@magewell.com>
- <c86097d7-dade-01e5-3826-3f22f9ca4b4f@infradead.org>
- <20180130104833.a06e44c558c7ddc6b38e20b3@magewell.com>
-Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [v2,03/10] drm/sun4i: Protect the TCON pixel clocks
+Date: Mon, 26 Feb 2018 12:15:47 +0100
+Message-ID: <20180226111547.adm6cfvccceipgqh@flea.lan>
+References: <d5224d2e81ecf73dc09f234e580ada52c00eaee3.1519204731.git-series.maxime.ripard@bootlin.com>
+ <7ed0fad9-6b3d-aafc-08a6-fb18761897aa@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC3MVVMX3ELBBTGUZ7KAKGQEQSCQBPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180130104833.a06e44c558c7ddc6b38e20b3-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rick Chang <rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel@vger.k
+Content-Type: multipart/mixed; boundary="===============0810698522=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <7ed0fad9-6b3d-aafc-08a6-fb18761897aa@micronovasrl.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
 
-On 01/30/2018 03:48 AM, Yong wrote:
-> Hi,
-> 
-> On Mon, 29 Jan 2018 13:49:14 -0800
-> Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> wrote:
-> 
->> On 01/29/2018 01:21 AM, Yong Deng wrote:
->>> Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
->>> interface and CSI1 is used for parallel interface. This is not
->>> documented in datasheet but by test and guess.
->>>
->>> This patch implement a v4l2 framework driver for it.
->>>
->>> Currently, the driver only support the parallel interface. MIPI-CSI2,
->>> ISP's support are not included in this patch.
->>>
->>> Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
->>> ---
->>
->>
->> A previous version (I think v6) had a build error with the use of
->> PHYS_OFFSET, so Kconfig was modified to depend on ARM and ARCH_SUNXI
->> (one of which seems to be overkill).  As is here, the COMPILE_TEST piece is
->> meaningless for all arches except ARM.  If you care enough for COMPILE_TEST
->> (and I would), then you could make COMPILE_TEST useful on any arch by
->> removing the "depends on ARM" (the ARCH_SUNXI takes care of that) and by
->> having an alternate value for PHYS_OFFSET, like so:
->>
->> +#if defined(CONFIG_COMPILE_TEST) && !defined(PHYS_OFFSET)
->> +#define PHYS_OFFSET	0
->> +#endif
->>
->> With those 2 changes, the driver builds for me on x86_64.
-> 
-> I have considered this method.
-> But it's so sick to put these code in dirver (for my own). I mean 
-> this is meaningless for the driver itself and make people confused.
-> 
-> I grepped the driver/ code and I found many drivers writing Kconfig
-> like this. For example:
-> ARM && COMPILE_TEST
-> MIPS && COMPILE_TEST
-> PPC64 && COMPILE_TEST
-> 
-> BTW, for my own, I do not care about COMPILE_TEST.
+--===============0810698522==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lzhodxwy2knl7pia"
+Content-Disposition: inline
 
-There was a discussion about this in the v6 patch, but it petered out.
 
-I want to merge this driver, but I would very much prefer that this
-compiles with COMPILE_TEST. So unless someone has a better solution, then
-adding 'hack' that defines PHYS_OFFSET to 0 for COMPILE_TEST would be required.
+--lzhodxwy2knl7pia
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Otherwise this driver looks good, so it is just this issue blocking it.
+On Sat, Feb 24, 2018 at 12:31:36AM +0100, Giulio Benetti wrote:
+> Il 21/02/2018 10:20, Maxime Ripard ha scritto:
+> > From: Maxime Ripard <maxime.ripard@free-electrons.com>
+> >=20
+> > Both TCON clocks are very sensitive to clock changes, since any change
+> > might lead to improper timings.
+> >=20
+> > Make sure our rate is never changed.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Tested-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+>=20
+> Tested on A20-LiNova1-4_3i-ctp with Mali r6p2 installed.
+> Before Mali changed dotclock, now it doesn't anymore.
 
-Regards,
+Applied, thanks!
+Maxime
 
-	Hans
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> 
->>
->>> diff --git a/drivers/media/platform/sunxi/sun6i-csi/Kconfig b/drivers/media/platform/sunxi/sun6i-csi/Kconfig
->>> new file mode 100644
->>> index 0000000..f80c965
->>> --- /dev/null
->>> +++ b/drivers/media/platform/sunxi/sun6i-csi/Kconfig
->>> @@ -0,0 +1,10 @@
->>> +config VIDEO_SUN6I_CSI
->>> +	tristate "Allwinner V3s Camera Sensor Interface driver"
->>> +	depends on ARM
->>> +	depends on VIDEO_V4L2 && COMMON_CLK && VIDEO_V4L2_SUBDEV_API && HAS_DMA
->>> +	depends on ARCH_SUNXI || COMPILE_TEST
->>> +	select VIDEOBUF2_DMA_CONTIG
->>> +	select REGMAP_MMIO
->>> +	select V4L2_FWNODE
->>> +	---help---
->>> +	   Support for the Allwinner Camera Sensor Interface Controller on V3s.
->>
->> thanks,
->> -- 
->> ~Randy
-> 
-> 
-> Thanks,
-> Yong
-> 
+--lzhodxwy2knl7pia
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqT7GIACgkQ0rTAlCFN
+r3QPbA//d6OYNiqPr2qB2rLuV5iXbdz3GBaL/OdOqzZTxZukDuZMSjR4g2Ne/0JN
+qMVIgXOA3kmbHQ+LU7vor4vqH6Qr1CplFPyp61dB+/kgajwHv14C/5UWNiCtVYl1
+8EdruBIHZqpBI9VVV44F3JLFLt8j6ti031sIWYtqnm64gj2+ECeMN1g+0dwlTZO6
+axSkijL8Lmu431+BQoZrqmqBeuugxDwUdBoZug4cYxltTzFQbFdH9gkKubkr/2Hn
+iLIjjSK/F5ovA8kUvynaOLYB4ltvBfvnXwUMUMGyjboV6yem6638klMGqlzNaoWt
++UUQWEbesz8YaQV8afqs7wh+dPTaOG6nv9UXaRD1iqQdi3x441XQdcuLUBNYOfo7
+GPalYwjstfa9fszc/WSfXt2muudY6n5hK+1AoYiclaM0lV2MlLu0uVpTIl8wjRDA
+cEZULuM42oPg3Mk05hyBoUmOPE8vCpzzPnLrTM3W+hajFXpSAMeXrUZPyMsc4cPG
+1Sxf5R38WNGPyvwo3liZVXSbGX6L9Ip+4I4yUerlLvlWmiz6YfiTeCLiahJ+wz4D
+2ihv2D2J7GCDErf+/8CDxwbSKEoCN3vt1Qys9yujH58xRfCIQ/l2+X3ll5qKBMaz
+EZErYZflqwjZN0+N2BtYByEolm8nQswc1H0uv1kkifpBO6ixA2c=
+=mVNx
+-----END PGP SIGNATURE-----
+
+--lzhodxwy2knl7pia--
+
+--===============0810698522==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0810698522==--
