@@ -1,92 +1,82 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regmap: mmio: Add function to attach a clock" to the regmap
- tree
-Date: Mon, 26 Feb 2018 11:17:49 +0000
-Message-ID: <E1eqGmz-0005ZC-LJ@debutante>
-References: <1155920db000d014fd1cd604ed48d1b9a8f64ac1.1519204731.git-series.maxime.ripard@bootlin.com>
+Subject: Applied "ASoC: stm32: Add S/PDIF to SAI bindings" to
+	the asoc tree
+Date: Mon, 26 Feb 2018 11:20:23 +0000
+Message-ID: <E1eqGpT-0006EP-2M@debutante>
+References: <1519052437-24011-2-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1155920db000d014fd1cd604ed48d1b9a8f64ac1.1519204731.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1519052437-24011-2-git-send-email-olivier.moysan@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, olivier.moysan@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, broonie@kernel.org, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHBhdGNoCgogICByZWdtYXA6IG1taW86IEFkZCBmdW5jdGlvbiB0byBhdHRhY2ggYSBjbG9j
-awoKaGFzIGJlZW4gYXBwbGllZCB0byB0aGUgcmVnbWFwIHRyZWUgYXQKCiAgIGh0dHBzOi8vZ2l0
-Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2Jyb29uaWUvcmVnbWFwLmdpdCAK
-CkFsbCBiZWluZyB3ZWxsIHRoaXMgbWVhbnMgdGhhdCBpdCB3aWxsIGJlIGludGVncmF0ZWQgaW50
-byB0aGUgbGludXgtbmV4dAp0cmVlICh1c3VhbGx5IHNvbWV0aW1lIGluIHRoZSBuZXh0IDI0IGhv
-dXJzKSBhbmQgc2VudCB0byBMaW51cyBkdXJpbmcKdGhlIG5leHQgbWVyZ2Ugd2luZG93IChvciBz
-b29uZXIgaWYgaXQgaXMgYSBidWcgZml4KSwgaG93ZXZlciBpZgpwcm9ibGVtcyBhcmUgZGlzY292
-ZXJlZCB0aGVuIHRoZSBwYXRjaCBtYXkgYmUgZHJvcHBlZCBvciByZXZlcnRlZC4gIAoKWW91IG1h
-eSBnZXQgZnVydGhlciBlLW1haWxzIHJlc3VsdGluZyBmcm9tIGF1dG9tYXRlZCBvciBtYW51YWwg
-dGVzdGluZwphbmQgcmV2aWV3IG9mIHRoZSB0cmVlLCBwbGVhc2UgZW5nYWdlIHdpdGggcGVvcGxl
-IHJlcG9ydGluZyBwcm9ibGVtcyBhbmQKc2VuZCBmb2xsb3d1cCBwYXRjaGVzIGFkZHJlc3Npbmcg
-YW55IGlzc3VlcyB0aGF0IGFyZSByZXBvcnRlZCBpZiBuZWVkZWQuCgpJZiBhbnkgdXBkYXRlcyBh
-cmUgcmVxdWlyZWQgb3IgeW91IGFyZSBzdWJtaXR0aW5nIGZ1cnRoZXIgY2hhbmdlcyB0aGV5CnNo
-b3VsZCBiZSBzZW50IGFzIGluY3JlbWVudGFsIHVwZGF0ZXMgYWdhaW5zdCBjdXJyZW50IGdpdCwg
-ZXhpc3RpbmcKcGF0Y2hlcyB3aWxsIG5vdCBiZSByZXBsYWNlZC4KClBsZWFzZSBhZGQgYW55IHJl
-bGV2YW50IGxpc3RzIGFuZCBtYWludGFpbmVycyB0byB0aGUgQ0NzIHdoZW4gcmVwbHlpbmcKdG8g
-dGhpcyBtYWlsLgoKVGhhbmtzLApNYXJrCgpGcm9tIDMxODk1NjYyZjliYTgxZThlYTllZjA1YWJm
-OGVkY2IyOWQ0YjljMTggTW9uIFNlcCAxNyAwMDowMDowMCAyMDAxCkZyb206IE1heGltZSBSaXBh
-cmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgpEYXRlOiBXZWQsIDIxIEZlYiAy
-MDE4IDEwOjIwOjI1ICswMTAwClN1YmplY3Q6IFtQQVRDSF0gcmVnbWFwOiBtbWlvOiBBZGQgZnVu
-Y3Rpb24gdG8gYXR0YWNoIGEgY2xvY2sKCnJlZ21hcF9pbml0X21taW9fY2xrIGFsbG93cyB0byBz
-cGVjaWZ5IGEgY2xvY2sgdGhhdCBuZWVkcyB0byBiZSBlbmFibGVkCndoaWxlIGFjY2Vzc2luZyB0
-aGUgcmVnaXN0ZXJzLgoKSG93ZXZlciwgdGhhdCBjbG9jayBpcyByZXRyaWV2ZWQgdGhyb3VnaCBp
-dHMgY2xvY2sgSUQsIHdoaWNoIG1lYW5zIGl0IHdpbGwKbG9va3VwIHRoYXQgY2xvY2sgYmFzZWQg
-b24gdGhlIGN1cnJlbnQgZGV2aWNlIHRoYXQgcmVnaXN0ZXJzIHRoZSByZWdtYXAsCmFuZCwgaW4g
-dGhlIERUIGNhc2UsIHdpbGwgb25seSBsb29rIGluIHRoYXQgZGV2aWNlIE9GIG5vZGUuCgpUaGlz
-IG1pZ2h0IGJlIHByb2JsZW1hdGljIGlmIHRoZSBjbG9jayB0byBlbmFibGUgaXMgc3RvcmVkIGlu
-IGFub3RoZXIgbm9kZS4KTGV0J3MgYWRkIGEgZnVuY3Rpb24gdGhhdCBhbGxvd3MgdG8gYXR0YWNo
-IGEgY2xvY2sgdGhhdCBoYXMgYWxyZWFkeSBiZWVuCnJldHJpZXZlZCB0byBhIHJlZ21hcCBpbiBv
-cmRlciB0byBmaXggdGhpcy4KClNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5y
-aXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgpTaWduZWQtb2ZmLWJ5OiBNYXJrIEJyb3duIDxicm9v
-bmllQGtlcm5lbC5vcmc+Ci0tLQogZHJpdmVycy9iYXNlL3JlZ21hcC9yZWdtYXAtbW1pby5jIHwg
-MjQgKysrKysrKysrKysrKysrKysrKysrKysrCiBpbmNsdWRlL2xpbnV4L3JlZ21hcC5oICAgICAg
-ICAgICAgfCAgMyArKysKIDIgZmlsZXMgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKQoKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvYmFzZS9yZWdtYXAvcmVnbWFwLW1taW8uYyBiL2RyaXZlcnMvYmFzZS9y
-ZWdtYXAvcmVnbWFwLW1taW8uYwppbmRleCA1MTg5ZmQ2MTgyZjYuLjVjYWRmZDMzOTRkOCAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9iYXNlL3JlZ21hcC9yZWdtYXAtbW1pby5jCisrKyBiL2RyaXZlcnMv
-YmFzZS9yZWdtYXAvcmVnbWFwLW1taW8uYwpAQCAtMjgsNiArMjgsOCBAQAogc3RydWN0IHJlZ21h
-cF9tbWlvX2NvbnRleHQgewogCXZvaWQgX19pb21lbSAqcmVnczsKIAl1bnNpZ25lZCB2YWxfYnl0
-ZXM7CisKKwlib29sIGF0dGFjaGVkX2NsazsKIAlzdHJ1Y3QgY2xrICpjbGs7CiAKIAl2b2lkICgq
-cmVnX3dyaXRlKShzdHJ1Y3QgcmVnbWFwX21taW9fY29udGV4dCAqY3R4LApAQCAtMzYzLDQgKzM2
-NSwyNiBAQCBzdHJ1Y3QgcmVnbWFwICpfX2Rldm1fcmVnbWFwX2luaXRfbW1pb19jbGsoc3RydWN0
-IGRldmljZSAqZGV2LAogfQogRVhQT1JUX1NZTUJPTF9HUEwoX19kZXZtX3JlZ21hcF9pbml0X21t
-aW9fY2xrKTsKIAoraW50IHJlZ21hcF9tbWlvX2F0dGFjaF9jbGsoc3RydWN0IHJlZ21hcCAqbWFw
-LCBzdHJ1Y3QgY2xrICpjbGspCit7CisJc3RydWN0IHJlZ21hcF9tbWlvX2NvbnRleHQgKmN0eCA9
-IG1hcC0+YnVzX2NvbnRleHQ7CisKKwljdHgtPmNsayA9IGNsazsKKwljdHgtPmF0dGFjaGVkX2Ns
-ayA9IHRydWU7CisKKwlyZXR1cm4gY2xrX3ByZXBhcmUoY3R4LT5jbGspOworfQorRVhQT1JUX1NZ
-TUJPTF9HUEwocmVnbWFwX21taW9fYXR0YWNoX2Nsayk7CisKK3ZvaWQgcmVnbWFwX21taW9fZGV0
-YWNoX2NsayhzdHJ1Y3QgcmVnbWFwICptYXApCit7CisJc3RydWN0IHJlZ21hcF9tbWlvX2NvbnRl
-eHQgKmN0eCA9IG1hcC0+YnVzX2NvbnRleHQ7CisKKwljbGtfdW5wcmVwYXJlKGN0eC0+Y2xrKTsK
-KworCWN0eC0+YXR0YWNoZWRfY2xrID0gZmFsc2U7CisJY3R4LT5jbGsgPSBOVUxMOworfQorRVhQ
-T1JUX1NZTUJPTF9HUEwocmVnbWFwX21taW9fZGV0YWNoX2Nsayk7CisKIE1PRFVMRV9MSUNFTlNF
-KCJHUEwgdjIiKTsKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcmVnbWFwLmggYi9pbmNsdWRl
-L2xpbnV4L3JlZ21hcC5oCmluZGV4IDZhM2FlYmE0MGU5ZS4uNWY3YWQwNTUyYzAzIDEwMDY0NAot
-LS0gYS9pbmNsdWRlL2xpbnV4L3JlZ21hcC5oCisrKyBiL2luY2x1ZGUvbGludXgvcmVnbWFwLmgK
-QEAgLTIxLDYgKzIxLDcgQEAKICNpbmNsdWRlIDxsaW51eC9sb2NrZGVwLmg+CiAKIHN0cnVjdCBt
-b2R1bGU7CitzdHJ1Y3QgY2xrOwogc3RydWN0IGRldmljZTsKIHN0cnVjdCBpMmNfY2xpZW50Owog
-c3RydWN0IGlycV9kb21haW47CkBAIC05MDUsNiArOTA2LDggQEAgYm9vbCByZWdtYXBfYWM5N19k
-ZWZhdWx0X3ZvbGF0aWxlKHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHJlZyk7CiAJ
-X19yZWdtYXBfbG9ja2RlcF93cmFwcGVyKF9fZGV2bV9yZWdtYXBfaW5pdF9zZHcsICNjb25maWcs
-CVwKIAkJCQlzZHcsIGNvbmZpZykKIAoraW50IHJlZ21hcF9tbWlvX2F0dGFjaF9jbGsoc3RydWN0
-IHJlZ21hcCAqbWFwLCBzdHJ1Y3QgY2xrICpjbGspOwordm9pZCByZWdtYXBfbW1pb19kZXRhY2hf
-Y2xrKHN0cnVjdCByZWdtYXAgKm1hcCk7CiB2b2lkIHJlZ21hcF9leGl0KHN0cnVjdCByZWdtYXAg
-Km1hcCk7CiBpbnQgcmVnbWFwX3JlaW5pdF9jYWNoZShzdHJ1Y3QgcmVnbWFwICptYXAsCiAJCQlj
-b25zdCBzdHJ1Y3QgcmVnbWFwX2NvbmZpZyAqY29uZmlnKTsKLS0gCjIuMTYuMQoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The patch
+
+   ASoC: stm32: Add S/PDIF to SAI bindings
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 994f46610bafd75a5881544bce9dd3acdbe3626a Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Mon, 19 Feb 2018 16:00:35 +0100
+Subject: [PATCH] ASoC: stm32: Add S/PDIF to SAI bindings
+
+Add S/PDIF IEC6958 protocol support to STM32 SAI bindings.
+
+Signed-off-by: olivier moysan <olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/st,stm32-sai.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+index b1acc1a256ba..f301cdf0b7e6 100644
+--- a/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
++++ b/Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+@@ -45,6 +45,12 @@ SAI subnodes Optional properties:
+ 	This property sets SAI sub-block as slave of another SAI sub-block.
+ 	Must contain the phandle and index of the sai sub-block providing
+ 	the synchronization.
++  - st,iec60958: support S/PDIF IEC6958 protocol for playback
++	IEC60958 protocol is not available for capture.
++	By default, custom protocol is assumed, meaning that protocol is
++	configured according to protocol defined in related DAI link node,
++	such as i2s, left justified, right justified, dsp and pdm protocols.
++	Note: ac97 protocol is not supported by SAI driver
+ 
+ The device node should contain one 'port' child node with one child 'endpoint'
+ node, according to the bindings defined in Documentation/devicetree/bindings/
+-- 
+2.16.1
