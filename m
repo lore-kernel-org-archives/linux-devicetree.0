@@ -1,56 +1,42 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: imx51-zii-rdu1: Add node for RAVE SP device
-Date: Mon, 26 Feb 2018 06:49:42 -0800
-Message-ID: <20180226144943.9835-2-andrew.smirnov@gmail.com>
-References: <20180226144943.9835-1-andrew.smirnov@gmail.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH v2 0/2] Introduce DW AXI DMAC driver
+Date: Mon, 26 Feb 2018 17:56:26 +0300
+Message-ID: <20180226145628.11892-1-Eugeniy.Paltsev@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180226144943.9835-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Guenter Roeck <linux@roeck-us.net>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: dmaengine@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-With MFD and watchdog drivers for RAVE SP device support added by
-538ee27290fa ("mfd: Add driver for RAVE Supervisory Processor") and
-c3bb33345721 ("watchdog: Add RAVE SP watchdog driver") add
-corresponding DT node for RDU.
+This patch series add support for the DW AXI DMAC controller.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- arch/arm/boot/dts/imx51-zii-rdu1.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+DW AXI DMAC is a part of HSDK development board from Synopsys.
 
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index 5306b78de0ca..43cd06230751 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -568,6 +568,17 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart3>;
- 	status = "okay";
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu1";
-+		status = "okay";
-+		current-speed = <38400>;
-+
-+		watchdog {
-+			compatible = "zii,rave-sp-watchdog";
-+			status = "okay";
-+		};
-+	};
- };
- 
- &usbh1 {
+In this driver implementation only DMA_MEMCPY transfers
+are supported.
+
+Changes v1->v2 (suggested by Andy Shevchenko):
+ * Use SPDX licence identifier.
+ * Refactor axi_chan_get_xfer_width function.
+ * Fix timeout calculation in dma_chan_pause.
+ * Add record to MAINTAINERS in correct alphabetical order.
+
+Eugeniy Paltsev (2):
+  dmaengine: Introduce DW AXI DMAC driver
+  dt-bindings: Document the Synopsys DW AXI DMA bindings
+
+ .../devicetree/bindings/dma/snps,dw-axi-dmac.txt   |   41 +
+ MAINTAINERS                                        |    6 +
+ drivers/dma/Kconfig                                |   10 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/dw-axi-dmac/Makefile                   |    1 +
+ drivers/dma/dw-axi-dmac/axi_dma_platform.c         | 1010 ++++++++++++++++++++
+ drivers/dma/dw-axi-dmac/axi_dma_platform.h         |  342 +++++++
+ 7 files changed, 1411 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
+ create mode 100644 drivers/dma/dw-axi-dmac/Makefile
+ create mode 100644 drivers/dma/dw-axi-dmac/axi_dma_platform.c
+ create mode 100644 drivers/dma/dw-axi-dmac/axi_dma_platform.h
+
 -- 
-2.14.3
+2.9.3
