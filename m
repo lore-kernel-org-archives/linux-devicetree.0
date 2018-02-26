@@ -1,13 +1,13 @@
 Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-db5eur01on0063.outbound.protection.outlook.com ([104.47.2.63]:48864
+Received: from mail-db5eur01on0045.outbound.protection.outlook.com ([104.47.2.45]:3776
         "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752879AbeBZMFE (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Feb 2018 07:05:04 -0500
+        id S1752863AbeBZMEx (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Feb 2018 07:04:53 -0500
 From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v2 06/12] typec: tcpm: add starting value for drp toggling
-Date: Mon, 26 Feb 2018 19:49:13 +0800
-Message-Id: <1519645759-12701-7-git-send-email-jun.li@nxp.com>
+Subject: [PATCH v2 04/12] staging: typec: tcpci: register port before request irq
+Date: Mon, 26 Feb 2018 19:49:11 +0800
+Message-Id: <1519645759-12701-5-git-send-email-jun.li@nxp.com>
 In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
 References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
@@ -17,55 +17,42 @@ To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.
 Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-As DRP port autonomously toggles the Rp/Rd need a start value to
-begin with, so add one parameter for it in tcpm_start_drp_toggling.
+With that we can clear any pending events and the port is registered
+so driver can be ready to handle typec events once we request irq.
 
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
 Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/usb/typec/tcpm.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/staging/typec/tcpci.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index 409f1d0..488a252 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -1985,15 +1985,15 @@ static int tcpm_set_charge(struct tcpm_port *port, bool charge)
- 	return 0;
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index be6ed16..1db67f0 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -534,15 +534,18 @@ static int tcpci_probe(struct i2c_client *client,
+ 	/* Disable chip interrupts */
+ 	tcpci_write16(tcpci, TCPC_ALERT_MASK, 0);
+ 
++	tcpci->port = tcpm_register_port(tcpci->dev, &tcpci->tcpc);
++	if (IS_ERR(tcpci->port))
++		return PTR_ERR(tcpci->port);
++
+ 	err = devm_request_threaded_irq(tcpci->dev, client->irq, NULL,
+ 					tcpci_irq,
+ 					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+ 					dev_name(tcpci->dev), tcpci);
+-	if (err < 0)
+-		return err;
++	if (err)
++		tcpm_unregister_port(tcpci->port);
+ 
+-	tcpci->port = tcpm_register_port(tcpci->dev, &tcpci->tcpc);
+-	return PTR_ERR_OR_ZERO(tcpci->port);
++	return err;
  }
  
--static bool tcpm_start_drp_toggling(struct tcpm_port *port)
-+static bool tcpm_start_drp_toggling(struct tcpm_port *port,
-+				    enum typec_cc_status cc)
- {
- 	int ret;
- 
- 	if (port->tcpc->start_drp_toggling &&
- 	    port->port_type == TYPEC_PORT_DRP) {
- 		tcpm_log_force(port, "Start DRP toggling");
--		ret = port->tcpc->start_drp_toggling(port->tcpc,
--						     tcpm_rp_cc(port));
-+		ret = port->tcpc->start_drp_toggling(port->tcpc, cc);
- 		if (!ret)
- 			return true;
- 	}
-@@ -2302,7 +2302,7 @@ static void run_state_machine(struct tcpm_port *port)
- 		if (!port->non_pd_role_swap)
- 			tcpm_swap_complete(port, -ENOTCONN);
- 		tcpm_src_detach(port);
--		if (tcpm_start_drp_toggling(port)) {
-+		if (tcpm_start_drp_toggling(port, tcpm_rp_cc(port))) {
- 			tcpm_set_state(port, DRP_TOGGLING, 0);
- 			break;
- 		}
-@@ -2474,7 +2474,7 @@ static void run_state_machine(struct tcpm_port *port)
- 		if (!port->non_pd_role_swap)
- 			tcpm_swap_complete(port, -ENOTCONN);
- 		tcpm_snk_detach(port);
--		if (tcpm_start_drp_toggling(port)) {
-+		if (tcpm_start_drp_toggling(port, TYPEC_CC_RD)) {
- 			tcpm_set_state(port, DRP_TOGGLING, 0);
- 			break;
- 		}
+ static int tcpci_remove(struct i2c_client *client)
 -- 
 2.7.4
 
