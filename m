@@ -1,41 +1,52 @@
-Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from foss.arm.com ([217.140.101.70]:60222 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752492AbeBSOv5 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 19 Feb 2018 09:51:57 -0500
-From: Gilad Ben-Yossef <gilad@benyossef.com>
-Subject: [PATCH 4/4] crypto: ccree: replace memset+kfree with kzfree
-Date: Mon, 19 Feb 2018 14:51:24 +0000
-Message-Id: <1519051887-4668-5-git-send-email-gilad@benyossef.com>
-In-Reply-To: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
-References: <1519051887-4668-1-git-send-email-gilad@benyossef.com>
+Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-db5eur01on0051.outbound.protection.outlook.com ([104.47.2.51]:31376
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1752919AbeBZMFW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Feb 2018 07:05:22 -0500
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v2 09/12] staging: typec: tcpci: Only touch target bit when enable vconn
+Date: Mon, 26 Feb 2018 19:49:16 +0800
+Message-Id: <1519645759-12701-10-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Ofir Drang <ofir.drang@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-Replace memset to 0 followed by kfree with kzfree for
-simplicity.
+We need regmap_update_bits to avoid touch any other bits when
+enable or disable vconn.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/crypto/ccree/cc_request_mgr.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/staging/typec/tcpci.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/crypto/ccree/cc_request_mgr.c b/drivers/crypto/ccree/cc_request_mgr.c
-index 2fa0663..83a8aaae 100644
---- a/drivers/crypto/ccree/cc_request_mgr.c
-+++ b/drivers/crypto/ccree/cc_request_mgr.c
-@@ -81,8 +81,7 @@ void cc_req_mgr_fini(struct cc_drvdata *drvdata)
- 	/* Kill tasklet */
- 	tasklet_kill(&req_mgr_h->comptask);
- #endif
--	memset(req_mgr_h, 0, sizeof(struct cc_req_mgr_handle));
--	kfree(req_mgr_h);
-+	kzfree(req_mgr_h);
- 	drvdata->request_mgr_handle = NULL;
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 7145771..27d53c6 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -213,14 +213,10 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
+ static int tcpci_set_vconn(struct tcpc_dev *tcpc, bool enable)
+ {
+ 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+-	int ret;
+ 
+-	ret = regmap_write(tcpci->regmap, TCPC_POWER_CTRL,
+-			   enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
+-	if (ret < 0)
+-		return ret;
+-
+-	return 0;
++	return regmap_update_bits(tcpci->regmap, TCPC_POWER_CTRL,
++				TCPC_POWER_CTRL_VCONN_ENABLE,
++				enable ? TCPC_POWER_CTRL_VCONN_ENABLE : 0);
  }
  
+ static int tcpci_set_roles(struct tcpc_dev *tcpc, bool attached,
 -- 
 2.7.4
 
