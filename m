@@ -1,13 +1,13 @@
 Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-he1eur01on0077.outbound.protection.outlook.com ([104.47.0.77]:60177
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+Received: from mail-db5eur01on0052.outbound.protection.outlook.com ([104.47.2.52]:22528
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1752846AbeBZMEf (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 26 Feb 2018 07:04:35 -0500
+        id S1752934AbeBZMFe (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Feb 2018 07:05:34 -0500
 From: Li Jun <jun.li@nxp.com>
-Subject: [PATCH v2 01/12] usb: typec: add API to get port type and preferred role
-Date: Mon, 26 Feb 2018 19:49:08 +0800
-Message-Id: <1519645759-12701-2-git-send-email-jun.li@nxp.com>
+Subject: [PATCH v2 11/12] dt-bindings: usb: add documentation for typec port controller(TCPCI)
+Date: Mon, 26 Feb 2018 19:49:18 +0800
+Message-Id: <1519645759-12701-12-git-send-email-jun.li@nxp.com>
 In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
 References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
@@ -17,95 +17,61 @@ To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.
 Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch add 2 APIs to get port type and preferred role from firmware
-description.
+TCPCI stands for typec port controller interface, its implementation
+has full typec port control with power delivery support, it's a
+standard i2c slave with GPIO input as irq interface, detail see spec
+"Universal Serial Bus Type-C Port Controller Interface Specification
+Revision 1.0, Version 1.1"
 
 Signed-off-by: Li Jun <jun.li@nxp.com>
-
 ---
-change for v2
-- Change the 2 APIs name and input para to be device_node pointer.
+Change for v2:
+- Use usb connector sub-node accordingly to specify typec properties.
 
- drivers/usb/typec/typec.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/usb/typec.h |  2 ++
- 2 files changed, 48 insertions(+)
+ .../devicetree/bindings/usb/typec-tcpci.txt        | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-diff --git a/drivers/usb/typec/typec.c b/drivers/usb/typec/typec.c
-index 735726c..e7b2802 100644
---- a/drivers/usb/typec/typec.c
-+++ b/drivers/usb/typec/typec.c
-@@ -9,6 +9,7 @@
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- #include <linux/slab.h>
- #include <linux/usb/typec.h>
- 
-@@ -1246,6 +1247,51 @@ void typec_set_pwr_opmode(struct typec_port *port,
- }
- EXPORT_SYMBOL_GPL(typec_set_pwr_opmode);
- 
-+/**
-+ * typec_of_get_port_type - Get the typec port type
-+ * @np: device node from which the property value is to be read.
-+ *
-+ * This routine is used by typec hardware driver to read property port type
-+ * from the device firmware description.
-+ *
-+ * Returns typec_port_type if success, otherwise negative error code.
-+ */
-+int typec_of_get_port_type(struct device_node *np)
-+{
-+	const char *type_str;
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/usb/typec-tcpci.txt b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
+new file mode 100644
+index 0000000..318bf01
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
+@@ -0,0 +1,35 @@
++TCPCI(Typec port cotroller interface) binding
++---------------------------------------------
 +
-+	ret = of_property_read_string(np, "port-type", &type_str);
-+	if (ret < 0)
-+		return ret;
++Required properties:
++- compatible:       should be "usb,tcpci".
++- reg:              the i2c slave address of typec port controller device.
++- interrupt-parent: the phandle to the interrupt controller which provides
++                    the interrupt.
++- interrupts:       interrupt specification for tcpci alert.
 +
-+	return match_string(typec_port_types, ARRAY_SIZE(typec_port_types),
-+								 type_str);
-+}
-+EXPORT_SYMBOL_GPL(typec_get_port_type);
++Required sub-node:
++- connector: The "usb-c-connector" attached to the tcpci chip, the bindings
++  of connector node are specified in
++  Documentation/devicetree/bindings/connector/usb-connector.txt
 +
-+/**
-+ * typec_of_get_preferred_role - Get the typec preferred role
-+ * @np: device node from which the property value is to be read.
-+ *
-+ * This routine is used by typec hardware driver to read property default role
-+ * from the device firmware description.
-+ *
-+ * Returns typec_role if success, otherwise negative error code.
-+ */
-+int typec_of_get_preferred_role(struct device_node *np)
-+{
-+	const char *power_str;
-+	int ret;
++Example:
 +
-+	ret = of_property_read_string(np, "default-role", &power_str);
-+	if (ret < 0)
-+		return ret;
++ptn5110@50 {
++	compatible = "usb,tcpci";
++	reg = <0x50>;
++	interrupt-parent = <&gpio3>;
++	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
 +
-+	return match_string(typec_roles, ARRAY_SIZE(typec_roles), power_str);
-+}
-+EXPORT_SYMBOL_GPL(typec_get_preferred_role);
-+
- /* --------------------------------------- */
- 
- /**
-diff --git a/include/linux/usb/typec.h b/include/linux/usb/typec.h
-index 0d44ce6..f2a581a 100644
---- a/include/linux/usb/typec.h
-+++ b/include/linux/usb/typec.h
-@@ -244,5 +244,7 @@ void typec_set_data_role(struct typec_port *port, enum typec_data_role role);
- void typec_set_pwr_role(struct typec_port *port, enum typec_role role);
- void typec_set_vconn_role(struct typec_port *port, enum typec_role role);
- void typec_set_pwr_opmode(struct typec_port *port, enum typec_pwr_opmode mode);
-+int typec_of_get_port_type(struct device_node *np);
-+int typec_of_get_preferred_role(struct device_node *np);
- 
- #endif /* __LINUX_USB_TYPEC_H */
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++		port-type = "dual";
++		default-role = "sink";
++		src-pdos = <0x380190c8>;
++		snk-pdos = <0x380190c8 0x3802d0c8>;
++		max-snk-mv = <9000>;
++		max-snk-ma = <1000>;
++		op-snk-mw = <9000>;
++	};
++};
 -- 
 2.7.4
 
