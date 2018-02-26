@@ -1,76 +1,62 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: bcm283x: Move arm-pmu out of soc node
-Date: Mon, 26 Feb 2018 10:26:59 -0800
-Message-ID: <87fu5nppxo.fsf@anholt.net>
-References: <1519481722-22738-1-git-send-email-stefan.wahren@i2se.com>
- <1519481722-22738-3-git-send-email-stefan.wahren@i2se.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 0/8] R-Car M3-N: Enable EtherAVB device node
+Date: Mon, 26 Feb 2018 19:28:47 +0100
+Message-ID: <CAMuHMdXwxhT7MP5xs3HLP3oFX+V9rhCM5jQycXUiCyBOKOUg1Q@mail.gmail.com>
+References: <1519667836-31330-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4158322138796800159=="
-Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1519481722-22738-3-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
-List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1519667836-31330-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============4158322138796800159==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Hi Jacopo,
 
---=-=-=
-Content-Type: text/plain
+On Mon, Feb 26, 2018 at 6:57 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+>   as discussed with you Sergei and Geert, in order to enable EtherAVB for
+> R8A77965 we first wanted to make the phy-mode "rgmii-txid" a board specific
+> property for all other SoCs.
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+Thanks for your series!
 
-> The ARM PMU doesn't have a reg address, so fix the following DTC warning
-> (requires W=1):
-> Node /soc/arm-pmu missing or empty reg/ranges property
->
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> This series adds  the phy-mode property to salvator-common.dtsi and reset the
+> one for R8A77965/R8A7796/R8A77995 to "rgmii".
 
-These seem good to me, I justed wanted to be sure: Does the PMU still
-probe when the node is at this level of the hierarchy?  If it does, then
-these get my r-b.
+I forgot that r8a7795.dtsi and r8a7796.dtsi are used for the ULCB boards, too.
+So to avoid regressions, you need to make a similar change to ulcb.dtsi like you
+made for salvator-common.dtsi.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+In addition, r8a77995.dtsi is only used for the Draak board.
+So you have to update r8a7795-draak.dtsi first, too.
 
------BEGIN PGP SIGNATURE-----
+> Then, in order to enable EtherAVB for R-Car M3-N, iommu nodes had to be added
+> as they are referenced by the "avb" device node (CC the iommu list for the
+> series for that reason).
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqUUXMACgkQtdYpNtH8
-nujr6hAAsuX3E/vZb5CtnCiWuqYd+UygqEm6Tgeha+hk9HcMKe+FQoJyb+06aimo
-keGXu605KgR83w+7vR3ItqSzMGxWSyyY9R4/zSRQa1DEQMWEWTkJ6cPpy69U6i1N
-tFQhmHqItI+nvPKURa+itNGwrXDftESdFAnDNogT95OKyQGIEsMOy9p3RA/UQGIb
-qhL57kLdzSZlQ9bYiWS43yxfPCHqQDb9g0It7/1ZY0Ib+TP+7tja9KIfPbGXJ5Ze
-yQ/JqhrW9FnRAtgzRB2uYaz1wrvoPcB218lNpOgs/5hSvhH9529hQPpAMRdBYFzp
-7/P5Rfvm66jqCwUmJQDMvXAh2Je96WtYfGpacCMpScplRAi87bUkv7FwD4wMsZhE
-CEQwfRNxQ1im6kTX8J/K9HUVH99jEtyGhsVzBYd2rgAEtaAqJC50q616cMxM/oQi
-Ms153Gxvb399CC7FisgzEYWETMjsEoVopcKzSqOw26lW4RsrDIzCaZL6gVEzLhzW
-539Ryn9VUTYy8nQNvYlth/Ylbp6o418rWb/8du3qNX6abnjUITUSHLvK664FoW8S
-N88YtqUI2Zeg6ED+vqTPjrxRmRtZcLvq3qG1In+dZJztJ5tmke5VBDGkdqqNuEuA
-rJY5O93c8FvjWi6H28Whg3bRj8hLYRK7Zdy0WytUkTFLIcdKG0o=
-=PkeU
------END PGP SIGNATURE-----
---=-=-=--
+I don't think we need the iommu properties and nodes at this early stage.
+Ethernet works fine without them. Simon, do you agree?
 
+P.S. scripts/dtc/dtx_diff is a great tool to compare DTBs before and after your
+      changes. It would have revealed the changes for ULCB and Draak.
 
---===============4158322138796800159==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Gr{oetje,eeting}s,
 
-_______________________________________________
-linux-rpi-kernel mailing list
-linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel
+                        Geert
 
---===============4158322138796800159==--
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
