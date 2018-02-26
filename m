@@ -1,34 +1,74 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 0/6] of: remove kbasename() from core
-Date: Mon, 26 Feb 2018 10:03:22 +0100
-Message-ID: <CAMuHMdUj63OQnJWz=Q57dbc1XKOnq+_et5-E_4yQjTZt+c++GQ@mail.gmail.com>
-References: <1519611750-22355-1-git-send-email-frowand.list@gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 6/7] arm64: allwinner: h6: add the basical Allwinner
+ H6 DTSI file
+Date: Mon, 26 Feb 2018 10:26:45 +0100
+Message-ID: <20180226092645.xghkmfowenzlbm42@flea.lan>
+References: <20180223123555.64009-6-icenowy@aosc.io>
+ <20180223123555.64009-7-icenowy@aosc.io>
+ <20180223152038.2bflylwa6vj4gzfj@flea.lan>
+ <81D53DC5-7622-430E-A530-ED0DE5397DC3@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="z6o7m63bqzv2zod7"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519611750-22355-1-git-send-email-frowand.list@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <81D53DC5-7622-430E-A530-ED0DE5397DC3@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
 
-On Mon, Feb 26, 2018 at 3:22 AM,  <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> Struct device_node full_name no longer includes the full path
-> name.
+--z6o7m63bqzv2zod7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Is this now also true on systems with real Open Firmware?
+On Fri, Feb 23, 2018 at 11:22:06PM +0800, Icenowy Zheng wrote:
+> >> +	psci {
+> >> +		compatible =3D "arm,psci-0.2";
+> >> +		method =3D "smc";
+> >> +	};
+> >
+> >Is it needed? The bootloader should fill it with whatever version it
+> >has, shouldn't it?
+>=20
+> But we now use ATF rather than U-Boot PSCI. U-Boot will not fill ATF
+> info.
+>=20
+> See A64/H5 device trees.
 
-Gr{oetje,eeting}s,
+So if the PSCI version implemented in ATF ever changes, we would have
+to update all the DT everywhere, but only if you're running the new
+version?
 
-                        Geert
+Sigh.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Maxime
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--z6o7m63bqzv2zod7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqT0tQACgkQ0rTAlCFN
+r3TLwg/+Nz8rd3gYDqm5pcrYPGIJN0H61KEsqx/iB8F9FplnrLVH79Y2LXuehDAD
+OFNpmoWWZMXoRePjL/rpoA6/EfXeBddtks+IyMgAHQgBWqDjHgAvq0IV7NUAQ0hb
+AfcIVhDAposY/s8e0BmANAdxLZESlQkZE2kqZEgQ8nr1yDVHam4iALk0gp4DTwef
+U0aDUttzBlHmGZmcEVRuxh2CoPualNFBmav4+GLR/8UdzK/yu64bJHaVan19M9R7
+mGQ8JcU5GJgdFzWFrECgOCsgT5scQqEnve9PxA0w7NYqvP6yCPqTLQ0B58xPl92p
+CEgJqbogmdhE5a9/Mv+G1NXnJlUHFtJkQ030tMRAj6sA247wPnowW5uFnPYi35xc
+CfFrlG+IzcFYDdPy3wfhyHPfGn7o9yxZMNchlseLywyM4uBwf8wjds3nKNeP0Y0m
+NH8ZJK8PKQ+LXfj7Ihu4VSpmH64zkYSQwqMbjFFvuJXGsnBPqqS/Ok+ZzXKjgh1r
+/8grCvGLfKL/r/9/VCYFx0/oGh23oicUBkYLFAsYcDb3lOA0TO+03pqtdXARshaO
+QTbdqBi9Iz90Y3lxOfbpRMG90RvonBeUh9GpeRXKfxL5mD4M5vGh7lD3a2Jojek4
+mj2++whGyo3wLYsFirdAqeA4b0oGSJffC3vpSjzz1OW7U9MhJXA=
+=8ds1
+-----END PGP SIGNATURE-----
+
+--z6o7m63bqzv2zod7--
