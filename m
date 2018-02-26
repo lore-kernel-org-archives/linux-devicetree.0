@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH 3/6] of: remove kbasename(of->full_name) from base.c
-Date: Sun, 25 Feb 2018 18:22:27 -0800
-Message-ID: <1519611750-22355-4-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH 5/6] of: remove kbasename(of->full_name) from of_reserved_mem.c
+Date: Sun, 25 Feb 2018 18:22:29 -0800
+Message-ID: <1519611750-22355-6-git-send-email-frowand.list@gmail.com>
 References: <1519611750-22355-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1519611750-22355-1-git-send-email-frowand.list@gmail.com>
@@ -18,23 +18,29 @@ needed to extract the basename from full_name.
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/base.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/of/of_reserved_mem.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ad28de96e13f..926d08b8674d 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -691,8 +691,8 @@ struct device_node *__of_find_node_by_path(struct device_node *parent,
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 9a4f4246231d..e770cab4b95b 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -405,15 +405,13 @@ void of_reserved_mem_device_release(struct device *dev)
+  */
+ struct reserved_mem *of_reserved_mem_lookup(struct device_node *np)
+ {
+-	const char *name;
+ 	int i;
+ 
+ 	if (!np->full_name)
  		return NULL;
  
- 	__for_each_child_of_node(parent, child) {
--		const char *name = kbasename(child->full_name);
--		if (strncmp(path, name, len) == 0 && (strlen(name) == len))
-+		if (strncmp(path, child->full_name, len) == 0 &&
-+		    (strlen(child->full_name) == len))
- 			return child;
- 	}
+-	name = kbasename(np->full_name);
+ 	for (i = 0; i < reserved_mem_count; i++)
+-		if (!strcmp(reserved_mem[i].name, name))
++		if (!strcmp(reserved_mem[i].name, np->full_name))
+ 			return &reserved_mem[i];
+ 
  	return NULL;
 -- 
 Frank Rowand <frank.rowand@sony.com>
