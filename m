@@ -1,51 +1,85 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 8/8] arm64: dts: renesas: r8a77965: Add EtherAVB device
-	node
-Date: Mon, 26 Feb 2018 19:22:24 +0100
-Message-ID: <CAMuHMdUXRVwgvN0aZLFGUpFuvrcgcdYqjj-OsBb6vsVH9okq8g@mail.gmail.com>
-References: <1519667836-31330-1-git-send-email-jacopo+renesas@jmondi.org>
-	<1519667836-31330-9-git-send-email-jacopo+renesas@jmondi.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 6/6] arm64: dts: rockchip: Specify override mode for
+ kevin panel
+Date: Mon, 26 Feb 2018 10:23:00 -0800
+Message-ID: <CAD=FV=WGU+s015DQbNeWHkpqpHLFz+9AjHKAd0N3HWag0p5FWA@mail.gmail.com>
+References: <20180208174855.55620-1-seanpaul@chromium.org>
+ <20180208174855.55620-7-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1519667836-31330-9-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180208174855.55620-7-seanpaul@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <seanpaul@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Arnd Bergmann <arnd@arndb.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@chromium.org>, hoegsberg@chromium.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Emil Renner Berthing <kernel@esmil.dk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
-
-On Mon, Feb 26, 2018 at 6:57 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> Populate the ethernet@e6800000 device node to enable Ethernet interface
-> for R-Car M3-N (R8A77965) SoC.
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->
-> ---
-> v1 -> v2:
-> - Replace ALWAYS_ON power area identifier with numeric constant
-
-And you added the iommus property, which I wouldn't bother doing at this
-early stage.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGksCgpPbiBUaHUsIEZlYiA4LCAyMDE4IGF0IDk6NDggQU0sIFNlYW4gUGF1bCA8c2VhbnBhdWxA
+Y2hyb21pdW0ub3JnPiB3cm90ZToKPiBUaGlzIHBhdGNoIGFkZHMgYW4gb3ZlcnJpZGUgbW9kZSBm
+b3Iga2V2aW4gZGV2aWNlcy4gVGhlIG1vZGUgaW5jcmVhc2VzCj4gYm90aCBiYWNrIHBvcmNoZXMg
+dG8gYWxsb3cgYSBwaXhlbCBjbG9jayBvZiAyNjY2NmtIeiBhcyBvcHBvc2VkIHRvIHRoZQo+ICd0
+eXBpY2FsJyB2YWx1ZSBvZiAyNTI3NTBrSHouIFRoaXMgaXMgbmVlZGVkIHRvIGF2b2lkIGludGVy
+ZmVyZW5jZSB3aXRoCj4gdGhlIHRvdWNoIGRpZ2l0aXplciBvbiB0aGVzZSBsYXB0b3BzLgo+Cj4g
+Q2hhbmdlcyBpbiB2MjoKPiAgLSBXcmFwIHRoZSB0aW1pbmcgaW4gZGlzcGxheS10aW1pbmdzIG5v
+ZGUgdG8gbWF0Y2ggYmluZGluZyAoUm9iL1RoaWVycnkpCj4gQ2hhbmdlcyBpbiB2MzoKPiAgLSBV
+bndyYXAgdGhlIHRpbWluZyBmcm9tIGRpc3BsYXktdGltaW5ncyBhbmQgcmVuYW1lIHBhbmVsLXRp
+bWluZyAoUm9iKQo+Cj4gQ2M6IERvdWcgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4K
+PiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiBDYzogSGVpa28gU3R1ZWJuZXIg
+PGhlaWtvQHNudGVjaC5kZT4KPiBDYzogSmVmZnkgQ2hlbiA8amVmZnkuY2hlbkByb2NrLWNoaXBz
+LmNvbT4KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4KPiBDYzogU3TDqXBo
+YW5lIE1hcmNoZXNpbiA8bWFyY2hldUBjaHJvbWl1bS5vcmc+Cj4gQ2M6IFRoaWVycnkgUmVkaW5n
+IDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnCj4gQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBDYzogbGludXgtcm9j
+a2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IFNpZ25lZC1vZmYtYnk6IFNlYW4gUGF1bCA8c2Vh
+bnBhdWxAY2hyb21pdW0ub3JnPgo+IC0tLQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlw
+L3JrMzM5OS1ncnUta2V2aW4uZHRzIHwgMTQgKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5n
+ZWQsIDE0IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
+L3JvY2tjaGlwL3JrMzM5OS1ncnUta2V2aW4uZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2Nr
+Y2hpcC9yazMzOTktZ3J1LWtldmluLmR0cwo+IGluZGV4IDE5MWE2YmNiMTcwNC4uNjU4NDExY2Uz
+N2VhIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdy
+dS1rZXZpbi5kdHMKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1n
+cnUta2V2aW4uZHRzCj4gQEAgLTk4LDYgKzk4LDIwIEBACj4gICAgICAgICAgICAgICAgIGJhY2ts
+aWdodCA9IDwmYmFja2xpZ2h0PjsKPiAgICAgICAgICAgICAgICAgcG93ZXItc3VwcGx5ID0gPCZw
+cDMzMDBfZGlzcD47Cj4KPiArICAgICAgICAgICAgICAgcGFuZWwtdGltaW5nIHsKPiArICAgICAg
+ICAgICAgICAgICAgICAgICBjbG9jay1mcmVxdWVuY3kgPSA8MjY2NjA0NzIwPjsKPiArICAgICAg
+ICAgICAgICAgICAgICAgICBoYWN0aXZlID0gPDI0MDA+Owo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIGhmcm9udC1wb3JjaCA9IDw0OD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgaGJhY2st
+cG9yY2ggPSA8ODQ+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIGhzeW5jLWxlbiA9IDwzMj47
+Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgaHN5bmMtYWN0aXZlID0gPDA+Owo+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIHZhY3RpdmUgPSA8MTYwMD47Cj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgdmZyb250LXBvcmNoID0gPDM+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIHZiYWNrLXBv
+cmNoID0gPDEyMD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgdnN5bmMtbGVuID0gPDEwPjsK
+PiArICAgICAgICAgICAgICAgICAgICAgICB2c3luYy1hY3RpdmUgPSA8MD47Cj4gKyAgICAgICAg
+ICAgICAgIH07Cj4gKwo+ICAgICAgICAgICAgICAgICBwb3J0cyB7Cj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgcGFuZWxfaW5fZWRwOiBlbmRwb2ludCB7Cj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JmVkcF9vdXRfcGFuZWw+OwoKS3Jpc3RpYW4g
+YnJvdWdodCBhbiBvbGQgYnVnIHRvIG15IGF0dGVudGlvbgo8aHR0cHM6Ly9idWdzLmNocm9taXVt
+Lm9yZy9wL2Nocm9taXVtL2lzc3Vlcy9kZXRhaWw/aWQ9NzUwMzU0PiBhbmQgaXQKbWFkZSBtZSB0
+aGluay4gIFNob3VsZCB3ZSBzb21laG93IGFkanVzdCB0aGUgYmluZGluZ3MgaGVyZSB0byBhY2Nv
+dW50CmZvciB0aGUgZmFjdCB0aGF0IGEgYm9hcmQgbWF5IHNvdXJjZSBzZXZlcmFsIGRpZmZlcmVu
+dCBwYW5lbHM/CgpBS0E6IG9uIHNvbWUgYm9hcmRzIGFuIE9ETSBtYXkgd2FudCB0byBzZWNvbmQg
+c291cmNlIChvciB0aGlyZCBzb3VyY2UsCm9yIC4uLikgdGhlIHBhbmVsLiAgVGhleSdsbCByYW5k
+b21seSBjb25uZWN0IHNldmVyYWwgZGlmZmVyZW50IHBhbmVscwp0byB0aGUgYm9hcmQgYW5kIHNo
+aXAgdGhlIGJvYXJkcyBvdXQuICBUaGUgcGFuZWxzIGFyZSBhbGwgY29tcGF0aWJsZQplbGVjdHJp
+Y2FsbHkgKHNhbWUgcG93ZXIgc2VxdWVuY2luZykgYnV0IG1pZ2h0IG5lZWQgc2xpZ2h0bHkgZGlm
+ZmVyZW50CnRpbWluZ3MuICBJbiB0aGlzIHBhcnRpY3VsYXIgY2FzZSB0aGVyZSdzIG5vIGJvYXJk
+LWxldmVsIHN0cmFwcGluZ3MKZm9yIHRoZSBkaWZmZXJlbnQgcGFuZWxzLS1pdCdzIGFzc3VtZWQg
+dGhhdCB0aGUgRURJRCBvbiB0aGUgcGFuZWxzIGNhbgpiZSB1c2VkIHRvIGRpc3Rpbmd1aXNoIHRo
+ZW0uCgpJbiB0aGF0IGNhc2UgaXQgc2VlbXMgbGlrZSBpdCB3b3VsZCBiZSBuaWNlIHRvIGFsbG93
+IHNwZWNpZnlpbmcgbW9yZQp0aGFuIG9uZSAicGFuZWwtdGltaW5nIiBub2Rlcy4gIE1heWJlIGtl
+eWVkIG9mZiBzb21lIHR5cGUgb2YgSUQgdGhhdCdzCnByZXNlbnQgaW4gdGhlIEVESUQ/CgoKSXMg
+dGhhdCBzb21ldGhpbmcgd2UnZCB3YW50IHRvIGFjY291bnQgZm9yIGJlZm9yZSB3ZSBsYW5kIHRo
+aXMgc2VyaWVzPwogSXQgc2VlbXMgbGlrZSBpdCB3b3VsZCBqdXN0IGJlIGFkZGluZyBhbiBleHRy
+YSBsZXZlbCBvZiBub2Rlcz8KCgotRG91ZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
