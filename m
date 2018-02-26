@@ -1,41 +1,61 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 01/15] clk: sunxi-ng: Add check for minimal
- rate to NM PLLs
-Date: Mon, 26 Feb 2018 17:43:01 +0800
-Message-ID: <CAGb2v64fxs5Ne5=orQxNcg70Z_N0NJyyC7MPuNH6pxcqrsUq4g@mail.gmail.com>
-References: <20180224214545.3740-1-jernej.skrabec@siol.net>
- <20180224214545.3740-2-jernej.skrabec@siol.net> <20180226093800.uwbo54wrdcwmsyzh@flea.lan>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Auger Eric <eric.auger@redhat.com>
+Subject: Re: [PATCH 1/2] vfio: platform: Fix reset module leak in error path
+Date: Mon, 26 Feb 2018 10:47:41 +0100
+Message-ID: <9c79c6ba-c3a8-68f3-4ac6-00858bd1ccb5@redhat.com>
+References: <1518539815-13774-1-git-send-email-geert+renesas@glider.be>
+ <1518539815-13774-2-git-send-email-geert+renesas@glider.be>
+ <2fe86be6-a3e2-9bd6-1d72-63cf0fe3a731@redhat.com>
+ <CAMuHMdXm97QFTC8VYDoByHsXaG5BQqFdhwqMTuGVRKDe-oh8EQ@mail.gmail.com>
+ <CAMuHMdVkTy=TELjG0Jh7HMDe5075EHSebpNUWqBDt+6ik_Aixw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBPFNZ7KAKGQEF7MGILY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180226093800.uwbo54wrdcwmsyzh-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVkTy=TELjG0Jh7HMDe5075EHSebpNUWqBDt+6ik_Aixw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 26, 2018 at 5:38 PM, Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi,
->
-> On Sat, Feb 24, 2018 at 10:45:31PM +0100, Jernej Skrabec wrote:
->> Some NM PLLs doesn't work well when their output clock rate is set below
->> certain rate.
+Hi Geert,
+
+On 21/02/18 17:07, Geert Uytterhoeven wrote:
+> Hi Eric,
+> 
+> On Wed, Feb 14, 2018 at 10:32 AM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+>> On Wed, Feb 14, 2018 at 9:36 AM, Auger Eric <eric.auger@redhat.com> wrote:
+>>> If I am not wrong we also leak the reset_module if
+>>> vfio_platform_get_reset() fails to find the reset function (of_reset ==
+>>> NULL), in which case we should do the module_put() in
+>>> vfio_platform_get_reset().
 >>
->> Add support for that constrain.
->
-> In such a case, you should round the rate to the minimum the clock can
-> operate at, and not return an error.
+>> Correct. Will look into fixing it...
+> 
+> Upon second look, I don't think there's a leak in vfio_platform_get_reset().
+> 
+> If try_module_get() succeeded, there will always be a valid reset function
+> (unless someone registered a vfio_reset_handler with a NULL reset function).
+Hum yes, you are right. So the code is fine as is. Sorry for the noise.
 
-That's true for round_rate. But what's the expected behavior of set_rate?
-AFAIK we presume all users call round_rate before set_rate, but that doesn't
-seem to be true all the time.
+Thanks
 
-ChenYu
+Eric
+
+
+> 
+> Or do you mean the call to request_module()?
+> That one doesn't do a module_get(), it merely tries to load a module.
+> Hence there's no need to do a module_put() afterwards.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
