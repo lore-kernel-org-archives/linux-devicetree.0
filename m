@@ -1,73 +1,74 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] PCI: Move declaration of of_irq_parse_and_map_pci under OF_IRQ
-Date: Mon, 26 Feb 2018 15:19:05 -0800
-Message-ID: <1519687145-9430-1-git-send-email-linux@roeck-us.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 4/4] ARM: bcm2385_defconfig: Enable BT support for BCM43438
+Date: Mon, 26 Feb 2018 15:31:48 -0800
+Message-ID: <87o9kbjpjv.fsf@anholt.net>
+References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+ <1519567855-26105-5-git-send-email-stefan.wahren@i2se.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1401332058188979674=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519567855-26105-5-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Loic Poulain <loic.poulain@gmail.com>, =?utf-8?B?RnLDqWTDqXJpYw==?= Danis <frederic.danis.oss@gmail.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Phil Elwell <phil@raspberrypi.org>, linux-bluetooth@vger.kernel.org, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Since commit 4670d610d5923 ("PCI: Move OF-related PCI functions into
-PCI core"), sparc:allmodconfig fails to build with the following error.
+--===============1401332058188979674==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-pcie-cadence-host.c:(.text+0x4c4):
-	undefined reference to `of_irq_parse_and_map_pci'
-pcie-cadence-host.c:(.text+0x4c8):
-	undefined reference to `of_irq_parse_and_map_pci'
+--=-=-=
+Content-Type: text/plain
 
-of_irq_parse_and_map_pci is now only available if OF_IRQ is enabled.
-Make its declaration and its dummy function dependent on OF_IRQ
-to solve the problem.
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
-Fixes: 4670d610d5923 ("PCI: Move OF-related PCI functions into PCI core")
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- include/linux/of_pci.h | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+> The Raspberry Pi Zero W has an onboard BT chip (BCM43438). So enable the
+> necessary HCI UART driver (requires serial device bus).
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index 88865e0ebf4d..091033a6b836 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -13,7 +13,6 @@ struct device_node;
- struct device_node *of_pci_find_child_device(struct device_node *parent,
- 					     unsigned int devfn);
- int of_pci_get_devfn(struct device_node *np);
--int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
- int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
- int of_get_pci_domain_nr(struct device_node *node);
- int of_pci_get_max_link_speed(struct device_node *node);
-@@ -34,12 +33,6 @@ static inline int of_pci_get_devfn(struct device_node *np)
- }
- 
- static inline int
--of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
--{
--	return 0;
--}
--
--static inline int
- of_pci_parse_bus_range(struct device_node *node, struct resource *res)
- {
- 	return -EINVAL;
-@@ -67,6 +60,16 @@ of_pci_get_max_link_speed(struct device_node *node)
- static inline void of_pci_check_probe_only(void) { }
- #endif
- 
-+#if IS_ENABLED(CONFIG_OF_IRQ)
-+int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
-+#else
-+static inline int
-+of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin)
-+{
-+	return 0;
-+}
-+#endif
-+
- #if defined(CONFIG_OF_ADDRESS)
- int of_pci_get_host_bridge_resources(struct device_node *dev,
- 			unsigned char busno, unsigned char bus_max,
--- 
-2.7.4
+Applied patches 2-4 to bcm2835-dt-next and bcm2835-defconfig-next.
+Thanks!
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqUmOQACgkQtdYpNtH8
+nugtQRAAmiPGH0pBTkoT6m5JIyciCezgb1YEKC9KmYo+V8Vw5d43JadadIxRKrIJ
+zMZTz9EkePEUGXnLCXcPBLsIKPMLIgYj5aZH6K3BEdLzA7s8fqYLtQb3hF6Jkzwd
+HA7A6DnLUXimN3kBuRgb5vME8rPDhSYZsvDUDAFAdxIcol04vlvmbNHEdgrBnZWG
+0o9Q1GUrl/RF8Z4ySdQSpi3/FA42+D8G+/ScnShKQIvamoA/VMK9ZDYbkyK3jx38
+EXqGplTiznuiSCD1dq8mZWOC9hR9hDEFPZrxdQVdZgtA+11gXGp51fl4VyR6wDmw
+GR5uHMtYmJ3LP22gND1FqC6r2qNJLLqt4kyQjQ4JDgDnsyXFPunaRsh3//k3WqL9
+LEx10YXewSf+J6VKyAjC5B8RxtkNlt87MZpKJHzc+cVtc+atwZYJMnNrS/j60Qsk
+jJN00uKNJPQmKRnmgsLoQC2KaWNwR39ndnBgpYF5oHf1U0aGyQZ5wcQ7nFX1wNNY
+MiXLahYfOzeTr0UHb+BbnQBKNmOPSJ6L/P8ujh57+M/6sinZWuO0tzqOPmvzP8KU
+GLBdxI2NpXPejAx3jvXcovyzUvCofgVCtuWirODHRzRqdIRhTlqK//I3YN4mLHH5
+F2zIzz1vDA0sGrviYXjNYxgQbkb8RpJi9eWsnXpJknPC/H5zspo=
+=K0n+
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+--===============1401332058188979674==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1401332058188979674==--
