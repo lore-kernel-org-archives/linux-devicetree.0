@@ -1,70 +1,124 @@
-From: Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v3 05/10] pwm: add PWM mode to pwm_config()
-Date: Mon, 26 Feb 2018 11:57:25 +0200
-Message-ID: <87po4s2hve.fsf@intel.com>
-References: <1519300881-8136-1-git-send-email-claudiu.beznea@microchip.com>
- <1519300881-8136-6-git-send-email-claudiu.beznea@microchip.com>
- <20180222123308.mypx2r7n6o63mj5z@oak.lan>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH v2 2/2] i2c: add support for Socionext SynQuacer I2C controller
+Date: Mon, 26 Feb 2018 09:59:33 +0000
+Message-ID: <CAKv+Gu__HiajW5fWvRnDft3+ef+gOowijxEd8wrF4U5Vu=3o0Q@mail.gmail.com>
+References: <20180222191647.4727-1-ard.biesheuvel@linaro.org>
+ <20180222191647.4727-3-ard.biesheuvel@linaro.org> <CAHp75Vc1AGzdgTB281XVo=FmZerkU1vijLih3JUO=_wNPjxgfA@mail.gmail.com>
+ <CAKv+Gu9XkmSPHZf+jVKOm-SX1GCWJUc7y3zTCuaHBwk8O3OC3Q@mail.gmail.com> <CAHp75VfFKDkQQ9-vdjzDfE2Cdk2Cb93+kdceYQgEqt3hti=Wkg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <intel-gfx-bounces@lists.freedesktop.org>
-In-Reply-To: <20180222123308.mypx2r7n6o63mj5z@oak.lan>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/intel-gfx>
-List-Post: <mailto:intel-gfx@lists.freedesktop.org>
-List-Help: <mailto:intel-gfx-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/intel-gfx>,
- <mailto:intel-gfx-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: intel-gfx-bounces@lists.freedesktop.org
-Sender: "Intel-gfx" <intel-gfx-bounces@lists.freedesktop.org>
-To: Daniel Thompson <daniel.thompson@linaro.org>, Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: mark.rutland@arm.com, milo.kim@ti.com, linux-fbdev@vger.kernel.org, sean@mess.org, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, kamil@wypas.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, pavel@ucw.cz, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-leds@vger.kernel.org, linux-samsung-soc@vger.kernel.org, shc_work@mail.ru, corbet@lwn.net, linux-doc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, kgene@kernel.org, linux-input@vger.kernel.org, linux@roeck-us.net, linux-media@vger.kernel.org, linux-pwm@vger.kernel.org, jdelvare@suse.com, b.zolnierkie@samsung.com, intel-gfx@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, rodrigo.vivi@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, jingoohan1@gmail.com, dm
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VfFKDkQQ9-vdjzDfE2Cdk2Cb93+kdceYQgEqt3hti=Wkg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMiBGZWIgMjAxOCwgRGFuaWVsIFRob21wc29uIDxkYW5pZWwudGhvbXBzb25AbGlu
-YXJvLm9yZz4gd3JvdGU6Cj4gT24gVGh1LCBGZWIgMjIsIDIwMTggYXQgMDI6MDE6MTZQTSArMDIw
-MCwgQ2xhdWRpdSBCZXpuZWEgd3JvdGU6Cj4+IEFkZCBQV00gbW9kZSB0byBwd21fY29uZmlnKCkg
-ZnVuY3Rpb24uIFRoZSBkcml2ZXJzIHdoaWNoIHVzZXMgcHdtX2NvbmZpZygpCj4+IHdlcmUgYWRh
-cHRlZCB0byB0aGlzIGNoYW5nZS4KPj4gCj4+IFNpZ25lZC1vZmYtYnk6IENsYXVkaXUgQmV6bmVh
-IDxjbGF1ZGl1LmJlem5lYUBtaWNyb2NoaXAuY29tPgo+PiAtLS0KPj4gIGFyY2gvYXJtL21hY2gt
-czNjMjR4eC9tYWNoLXJ4MTk1MC5jICB8IDExICsrKysrKysrKy0tCj4+ICBkcml2ZXJzL2J1cy90
-cy1uYnVzLmMgICAgICAgICAgICAgICAgfCAgMiArLQo+PiAgZHJpdmVycy9jbGsvY2xrLXB3bS5j
-ICAgICAgICAgICAgICAgIHwgIDMgKystCj4+ICBkcml2ZXJzL2dwdS9kcm0vaTkxNS9pbnRlbF9w
-YW5lbC5jICAgfCAxNyArKysrKysrKysrKysrKy0tLQo+PiAgZHJpdmVycy9od21vbi9wd20tZmFu
-LmMgICAgICAgICAgICAgIHwgIDIgKy0KPj4gIGRyaXZlcnMvaW5wdXQvbWlzYy9tYXg3NzY5My1o
-YXB0aWMuYyB8ICAyICstCj4+ICBkcml2ZXJzL2lucHV0L21pc2MvbWF4ODk5N19oYXB0aWMuYyAg
-fCAgNiArKysrKy0KPj4gIGRyaXZlcnMvbGVkcy9sZWRzLXB3bS5jICAgICAgICAgICAgICB8ICA1
-ICsrKystCj4+ICBkcml2ZXJzL21lZGlhL3JjL2lyLXJ4NTEuYyAgICAgICAgICAgfCAgNSArKysr
-LQo+PiAgZHJpdmVycy9tZWRpYS9yYy9wd20taXItdHguYyAgICAgICAgIHwgIDUgKysrKy0KPj4g
-IGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L2xtMzYzMGFfYmwuYyB8ICA0ICsrKy0KPj4gIGRyaXZl
-cnMvdmlkZW8vYmFja2xpZ2h0L2xwODU1eF9ibC5jICB8ICA0ICsrKy0KPj4gIGRyaXZlcnMvdmlk
-ZW8vYmFja2xpZ2h0L2xwODc4OF9ibC5jICB8ICA1ICsrKystCj4+ICBkcml2ZXJzL3ZpZGVvL2Jh
-Y2tsaWdodC9wd21fYmwuYyAgICAgfCAxMSArKysrKysrKystLQo+PiAgZHJpdmVycy92aWRlby9m
-YmRldi9zc2QxMzA3ZmIuYyAgICAgIHwgIDMgKystCj4+ICBpbmNsdWRlL2xpbnV4L3B3bS5oICAg
-ICAgICAgICAgICAgICAgfCAgNiArKysrLS0KPj4gIDE2IGZpbGVzIGNoYW5nZWQsIDcwIGluc2Vy
-dGlvbnMoKyksIDIxIGRlbGV0aW9ucygtKQo+PiAKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlk
-ZW8vYmFja2xpZ2h0L2xtMzYzMGFfYmwuYyBiL2RyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L2xtMzYz
-MGFfYmwuYwo+PiBpbmRleCAyMDMwYTZiNzdhMDkuLjY5NmZhMjVkYWZkMiAxMDA2NDQKPj4gLS0t
-IGEvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvbG0zNjMwYV9ibC5jCj4+ICsrKyBiL2RyaXZlcnMv
-dmlkZW8vYmFja2xpZ2h0L2xtMzYzMGFfYmwuYwo+PiBAQCAtMTY1LDggKzE2NSwxMCBAQCBzdGF0
-aWMgdm9pZCBsbTM2MzBhX3B3bV9jdHJsKHN0cnVjdCBsbTM2MzBhX2NoaXAgKnBjaGlwLCBpbnQg
-YnIsIGludCBicl9tYXgpCj4+ICB7Cj4+ICAJdW5zaWduZWQgaW50IHBlcmlvZCA9IHBjaGlwLT5w
-ZGF0YS0+cHdtX3BlcmlvZDsKPj4gIAl1bnNpZ25lZCBpbnQgZHV0eSA9IGJyICogcGVyaW9kIC8g
-YnJfbWF4Owo+PiArCXN0cnVjdCBwd21fY2FwcyBjYXBzID0geyB9Owo+PiAgCj4+IC0JcHdtX2Nv
-bmZpZyhwY2hpcC0+cHdtZCwgZHV0eSwgcGVyaW9kKTsKPj4gKwlwd21fZ2V0X2NhcHMocGNoaXAt
-PnB3bWQtPmNoaXAsIHBjaGlwLT5wd21kLCAmY2Fwcyk7Cj4+ICsJcHdtX2NvbmZpZyhwY2hpcC0+
-cHdtZCwgZHV0eSwgcGVyaW9kLCBCSVQoZmZzKGNhcHMubW9kZXMpIC0gMSkpOwo+Cj4gV2VsbC4u
-LiBJIGFkbWl0IEkndmUgb25seSByZWFsbHkgbG9va2VkIGF0IHRoZSBwYXRjaGVzIHRoYXQgaW1w
-YWN0IAo+IGJhY2tsaWdodCBidXQgZGlzcGVyc2luZyB0aGlzIHJlYWxseSBvZGQgbG9va2luZyBi
-aXQgdHdpZGRsaW5nIAo+IHRocm91Z2hvdXQgdGhlIGtlcm5lbCBkb2Vzbid0IHN0cmlrZSBtZSBh
-IGdyZWF0IEFQSSBkZXNpZ24uCj4KPiBJTUhPIGNhbGxlcnMgc2hvdWxkIG5vdCBiZSByZXF1aXJl
-ZCB0byBmaW5kIHRoZSBmaXJzdCBzZXQgYml0IGluCj4gc29tZSBzcGVjaWFsbHkgY3JhZnRlZCBz
-ZXQgb2YgY2FwYWJpbGl0eSBiaXRzIHNpbXBseSB0byBnZXQgc2FuZSAKPiBkZWZhdWx0IGJlaGF2
-aW91ci4KCkFncmVlZC4gSU1ITyB0aGUgcmVndWxhciB1c2UgY2FzZSBiZWNvbWVzIHJhdGhlciB0
-ZWRpb3VzLCB1Z2x5LCBhbmQKZXJyb3IgcHJvbmUuCgpCUiwKSmFuaS4KCgotLSAKSmFuaSBOaWt1
-bGEsIEludGVsIE9wZW4gU291cmNlIFRlY2hub2xvZ3kgQ2VudGVyCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkludGVsLWdmeCBtYWlsaW5nIGxpc3QKSW50
-ZWwtZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2ludGVsLWdmeAo=
+On 23 February 2018 at 13:12, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> On Fri, Feb 23, 2018 at 2:40 PM, Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+>> On 23 February 2018 at 12:27, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>>> On Thu, Feb 22, 2018 at 9:16 PM, Ard Biesheuvel
+>>> <ard.biesheuvel@linaro.org> wrote:
+...
+>>>> +       ret = device_property_read_u32(&pdev->dev, "clock-frequency",
+>>>> +                                      &speed_khz);
+>>>> +       if (ret) {
+>>>> +               dev_err(&pdev->dev,
+>>>> +                       "Missing clock-frequency property\n");
+>>>> +               return -EINVAL;
+>>>> +       }
+>>>> +       speed_khz /= 1000;
+>
+>>>> +       if (dev_of_node(&pdev->dev)) {
+>>>> +               i2c->clk = devm_clk_get(&pdev->dev, "pclk");
+>>>> +               if (IS_ERR(i2c->clk)) {
+>>>> +                       dev_err(&pdev->dev, "cannot get clock\n");
+>>>> +                       return PTR_ERR(i2c->clk);
+>>>> +               }
+>>>> +               dev_dbg(&pdev->dev, "clock source %p\n", i2c->clk);
+>>>> +
+>>>> +               i2c->clkrate = clk_get_rate(i2c->clk);
+>>>> +               dev_dbg(&pdev->dev, "clock rate %d\n", i2c->clkrate);
+>>>> +               clk_prepare_enable(i2c->clk);
+>>>> +       } else {
+>>>> +               ret = device_property_read_u32(&pdev->dev,
+>>>> +                                              "socionext,pclk-rate",
+>>>> +                                              &i2c->clkrate);
+>>>> +               if (ret)
+>>>> +                       return ret;
+>>>> +       }
+>>>
+>>> Okay, I got this case. It's more likely the one in 8250_dw.c.
+>>>
+>>> Can you do the similar way?
+>
+>> Could you elaborate?
+>
+> --- 8< --- 8< --- 8< ---
+>         device_property_read_u32(dev, "clock-frequency", &p->uartclk);
+>
+>        /* If there is separate baudclk, get the rate from it. */
+>        data->clk = devm_clk_get(dev, "baudclk");
+> ...
+>        if (IS_ERR(data->clk) && PTR_ERR(data->clk) == -EPROBE_DEFER)
+>                return -EPROBE_DEFER;
+>        if (!IS_ERR_OR_NULL(data->clk)) {
+>                err = clk_prepare_enable(data->clk);
+>                if (err)
+>                        dev_warn(dev, "could not enable optional baudclk: %d\n",
+>                                 err);
+>                else
+>                        p->uartclk = clk_get_rate(data->clk);
+>        }
+>
+>        /* If no clock rate is defined, fail. */
+>        if (!p->uartclk) {
+>                dev_err(dev, "clock rate not defined\n");
+>                err = -EINVAL;
+>                goto err_clk;
+> --- 8< --- 8< --- 8< ---
+>
+> Replace 'baudclk' with 'pclk' and p->uartclk with i2c->clkrate in
+> above and you are almost done.
+>
+
+I don't think this is better. The generic DT I2C 'clock-frequency'
+property denotes the bus clock rate not the rate of the clock that
+feeds the IP block. This is rather different from the UART bindings.
+
+Also, I don't want to support 'socionext,pclk-rate' for DT platforms,
+only for ACPI platforms.
+
+>>>> +       i2c->irq = platform_get_irq(pdev, 0);
+>>>> +       if (i2c->irq <= 0) {
+>>>
+>>> < 0 ?
+>>>
+>>> On some platforms IRQ == 0 might be valid.
+>
+>> Are you sure about that?
+>
+> Yes. I fixed some cases on one of a such.
+>
+>> http://yarchive.net/comp/linux/no_irq.html
+>
+> I agree with Linus from software IRQ (and nowadays luckily we are
+> using IRQ descriptors), but I disagree with him from hardware
+> prospective.
+> 0 is totally valid HW IRQ line. In hardware there is no descriptor
+> (except, yes, MSI and alike cases), it's just a wire with an index.
+>
+> So, while drivers are getting better in code prospective (though I
+> don't see many of them comparing this to 0), the IRQ framework is
+> changing itself as well.
+>
+> At which circumstances we might get 0 in the first place?
+>
+> Second question, doesn't request_irq() fail on irq==0 if it's not
+> supported as valid by platform?
+>
+
+Yes, I suppose it does.
+
+I'll change it to '< 0'
