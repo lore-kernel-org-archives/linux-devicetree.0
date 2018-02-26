@@ -1,109 +1,193 @@
-Return-Path: <SRS0=goDf=FR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:43136 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1750798AbeBWKO3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 23 Feb 2018 05:14:29 -0500
-Date: Fri, 23 Feb 2018 12:14:25 +0200
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 01/13] media: v4l2-fwnode: Let parse_endpoint callback
- decide if no remote is error
-Message-ID: <20180223101424.qw67pd7xvv5oy4sw@valkosipuli.retiisi.org.uk>
-References: <1519263589-19647-1-git-send-email-steve_longerbeam@mentor.com>
- <3283028.CgXzGkPyKt@avalon>
- <1519379812.7712.1.camel@pengutronix.de>
- <2571855.0gglA1aPyk@avalon>
+Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr40074.outbound.protection.outlook.com ([40.107.4.74]:63808
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751791AbeBZJXD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Feb 2018 04:23:03 -0500
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH 2/4] usb: chipidea: Hook into mux framework to toggle usb
+ switch
+Date: Mon, 26 Feb 2018 09:23:00 +0000
+Message-ID: <HE1PR04MB1450EF343D9A15AAE5B2A9478BC10@HE1PR04MB1450.eurprd04.prod.outlook.com>
+References: <1519044665-16979-1-git-send-email-yossim@codeaurora.org>
+ <1519044665-16979-2-git-send-email-yossim@codeaurora.org>
+In-Reply-To: <1519044665-16979-2-git-send-email-yossim@codeaurora.org>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2571855.0gglA1aPyk@avalon>
 Sender: devicetree-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, Yong Zhi <yong.zhi@intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, niklas.soderlund@ragnatech.se, Sebastian Reichel <sre@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, devicetree@vger.kernel.org
+To: Yossi Mansharoff <yossim@codeaurora.org>, "qcomlt-patches@lists.linaro.org" <qcomlt-patches@lists.linaro.org>
+Cc: Peter Rosin <peda@axentia.se>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Stephen Boyd <stephen.boyd@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi guys,
+=20
+=20
+>=20
+> Signed-off-by: Yossi Mansharoff <yossim@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt |  6 ++++++
+>  drivers/usb/chipidea/Kconfig                           |  2 ++
+>  drivers/usb/chipidea/core.c                            |  6 ++++++
+>  drivers/usb/chipidea/host.c                            |  7 +++++++
+>  drivers/usb/chipidea/udc.c                             | 13 ++++++++++++=
+-
+>  include/linux/usb/chipidea.h                           |  2 ++
+>  6 files changed, 35 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> index 0e03344..2e93181 100644
+> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> @@ -76,6 +76,10 @@ Optional properties:
+>    needs to make sure it does not send more than 90%
+>    maximum_periodic_data_per_frame. The use case is multiple transactions=
+, but
+>    less frame rate.
+> +- mux-controls: The mux control for toggling host/device output of this
+> +  controller. It's expected that a mux state of 0 indicates device mode
+> +and a
+> +  mux state of 1 indicates host mode.
+> +- mux-control-names: Shall be "usb_switch" if mux-controls is specified.
+>=20
+>  i.mx specific properties
+>  - fsl,usbmisc: phandler of non-core register device, with one @@ -102,4 =
++106,6
+> @@ Example:
+>  		rx-burst-size-dword =3D <0x10>;
+>  		extcon =3D <0>, <&usb_id>;
+>  		phy-clkgate-delay-us =3D <400>;
+> +		mux-controls =3D <&usb_switch>;
+> +		mux-control-names =3D "usb_switch";
+>  	};
+> diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig =
+index
+> 51f4157..72aadfa 100644
+> --- a/drivers/usb/chipidea/Kconfig
+> +++ b/drivers/usb/chipidea/Kconfig
+> @@ -3,6 +3,8 @@ config USB_CHIPIDEA
+>  	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD
+> && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
+>  	select EXTCON
+>  	select RESET_CONTROLLER
+> +	select MULTIPLEXER
+> +	select MUX_GPIO
+>  	help
+>  	  Say Y here if your system has a dual role high speed USB
+>  	  controller based on ChipIdea silicon IP. It supports:
+> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c in=
+dex
+> 43ea5fb..aa71b96 100644
+> --- a/drivers/usb/chipidea/core.c
+> +++ b/drivers/usb/chipidea/core.c
+> @@ -64,6 +64,7 @@
+>  #include <linux/of.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/usb/ehci_def.h>
+> +#include <linux/mux/consumer.h>
+>=20
+>  #include "ci.h"
+>  #include "udc.h"
+> @@ -690,6 +691,11 @@ static int ci_get_platdata(struct device *dev,
+>  	if (of_find_property(dev->of_node, "non-zero-ttctrl-ttha", NULL))
+>  		platdata->flags |=3D CI_HDRC_SET_NON_ZERO_TTHA;
+>=20
+> +	platdata->usb_switch =3D devm_mux_control_get_optional(dev, "usb_switch=
+");
+> +	if (IS_ERR(platdata->usb_switch)){
+> +		return PTR_ERR(platdata->usb_switch);
+> +	}
+> +
+>  	ext_id =3D ERR_PTR(-ENODEV);
+>  	ext_vbus =3D ERR_PTR(-ENODEV);
+>  	if (of_property_read_bool(dev->of_node, "extcon")) { diff --git
+> a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c index 18cb8e4=
+..9ef3ecf
+> 100644
+> --- a/drivers/usb/chipidea/host.c
+> +++ b/drivers/usb/chipidea/host.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/usb/hcd.h>
+>  #include <linux/usb/chipidea.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/mux/consumer.h>
+>=20
+>  #include "../host/ehci.h"
+>=20
+> @@ -175,6 +176,10 @@ static int host_start(struct ci_hdrc *ci)
+>  		if (ci_otg_is_fsm_mode(ci)) {
+>  			otg->host =3D &hcd->self;
+>  			hcd->self.otg_port =3D 1;
+> +		} else {
+> +			ret =3D mux_control_select(ci->platdata->usb_switch, 1);
+> +			if (ret)
+> +				goto disable_reg;
+>  		}
+>  	}
+>=20
+> @@ -195,6 +200,8 @@ static void host_stop(struct ci_hdrc *ci)
+>  	struct usb_hcd *hcd =3D ci->hcd;
+>=20
+>  	if (hcd) {
+> +		if (!ci_otg_is_fsm_mode(ci))
+> +			mux_control_deselect(ci->platdata->usb_switch);
+>  		if (ci->platdata->notify_event)
+>  			ci->platdata->notify_event(ci,
+>  				CI_HDRC_CONTROLLER_STOPPED_EVENT);
+> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c inde=
+x
+> fe8a905..17f22e2 100644
+> --- a/drivers/usb/chipidea/udc.c
+> +++ b/drivers/usb/chipidea/udc.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/otg-fsm.h>
+>  #include <linux/usb/chipidea.h>
+> +#include <linux/mux/consumer.h>
+>=20
+>  #include "ci.h"
+>  #include "udc.h"
+> @@ -1964,16 +1965,26 @@ void ci_hdrc_gadget_destroy(struct ci_hdrc *ci)
+>=20
+>  static int udc_id_switch_for_device(struct ci_hdrc *ci)  {
+> +	int ret =3D 0;
+> +
+>  	if (ci->is_otg)
+>  		/* Clear and enable BSV irq */
+>  		hw_write_otgsc(ci, OTGSC_BSVIS | OTGSC_BSVIE,
+>  					OTGSC_BSVIS | OTGSC_BSVIE);
+>=20
+> -	return 0;
+> +	if (!ci_otg_is_fsm_mode(ci))
+> +		ret =3D mux_control_select(ci->platdata->usb_switch, 0);
+> +
+> +	if (ci->is_otg && ret)
+> +		hw_write_otgsc(ci, OTGSC_BSVIE | OTGSC_BSVIS,
+> OTGSC_BSVIS);
+> +
+> +	return ret;
+>  }
+>=20
+>  static void udc_id_switch_for_host(struct ci_hdrc *ci)  {
+> +	mux_control_deselect(ci->platdata->usb_switch);
+> +
+>  	/*
+>  	 * host doesn't care B_SESSION_VALID event
+>  	 * so clear and disbale BSV irq
+> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h =
+index
+> d725cff..7e5d008 100644
+> --- a/include/linux/usb/chipidea.h
+> +++ b/include/linux/usb/chipidea.h
+> @@ -9,6 +9,7 @@
+>  #include <linux/usb/otg.h>
+>=20
+>  struct ci_hdrc;
+> +struct mux_control;
+>=20
+=20
+I am ok with this patch, would you please send series to linux-usb, then I =
+can save and test it.
 
-On Fri, Feb 23, 2018 at 12:05:38PM +0200, Laurent Pinchart wrote:
-> Hi Philipp,
-> 
-> On Friday, 23 February 2018 11:56:52 EET Philipp Zabel wrote:
-> > On Fri, 2018-02-23 at 11:29 +0200, Laurent Pinchart wrote:
-> > > On Thursday, 22 February 2018 03:39:37 EET Steve Longerbeam wrote:
-> > >> For some subdevices, a fwnode endpoint that has no connection to a
-> > >> remote endpoint may not be an error. Let the parse_endpoint callback
-> > > make that decision in v4l2_async_notifier_fwnode_parse_endpoint(). If
-> > >> the callback indicates that is not an error, skip adding the asd to the
-> > >> notifier and return 0.
-> > >> 
-> > >> For the current users of v4l2_async_notifier_parse_fwnode_endpoints()
-> > >> (omap3isp, rcar-vin, intel-ipu3), return -EINVAL in the callback for
-> > >> unavailable remote fwnodes to maintain the previous behavior.
-> > > 
-> > > I'm not sure this should be a per-driver decision.
-> > > 
-> > > Generally speaking, if an endpoint node has no remote-endpoint property,
-> > > the endpoint node is not needed. I've always considered such an endpoint
-> > > node as invalid. The OF graphs DT bindings are however not clear on this
-> > > subject.
-> > 
-> > Documentation/devicetree/bindings/graph.txt says:
-> > 
-> >   Each endpoint should contain a 'remote-endpoint' phandle property
-> >   that points to the corresponding endpoint in the port of the remote
-> >   device.
-> > 
-> > ("should", not "must").
-> 
-> The DT bindings documentation has historically used "should" to mean "must" in 
-> many places :-( That was a big mistake.
-
-"Shall", not "must".
-
-Indeed, there's hardly use for an endpoint without the remote-endpoint
-property. My understanding is that such nodes might be best ignored, that's
-been at least the practice in a lot of DT parsing code. There are arguments
-both ways I guess.
-
-What comes to this patch is that I'd rather not burden individual drivers
-with such checks.
-
-> 
-> > Later, the remote-node property explicitly lists the remote-endpoint
-> > property as optional.
-> 
-> I've seen that too, and that's why I mentioned that the documentation isn't 
-> clear on the subject.
-> 
-> > > I have either failed to notice when they got merged, or they slowly
-> > > evolved over time to contain contradictory information. In any case, I
-> > > think we should decide on whether such a situation is valid or not from
-> > > an OF graph point of view, and then always reject or always accept and
-> > > ignore those endpoints.
-> > 
-> > We are currently using this on i.MX6 to provide empty labeled endpoints
-> > in the dtsi files for board DT writers to link to, both for the display
-> > output and video capture ports.
-> > See for example the endpoints with the labels ipu1_di0_disp0 and
-> > ipu1_csi0_mux_from_parallel_sensor in arch/arm/boot/dts/imx6q.dtsi.
-> 
-> This could also be achieved by adding the endpoints in the board DT files. See 
-> for instance the hdmi@fead0000 node in arch/arm64/boot/dts/renesas/
-> r8a7795.dtsi and how it gets extended in arch/arm64/boot/dts/renesas/r8a7795-
-> salvator-x.dts. On the other hand, I also have empty endpoints in the 
-> display@feb00000 node of arch/arm64/boot/dts/renesas/r8a7795.dtsi.
-> 
-> I think we should first decide what we want to do going forward (allowing for 
-> empty endpoints or not), clarify the documentation, and then update the code. 
-> In any case I don't think it should be a per-device decision.
-
-I don't think they should be allowed in the documentation. The
-implementation could still simply ignore them.
-
-Cc the devicetree list.
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi
+Peter
