@@ -1,121 +1,81 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/2] i2c: add support for Socionext SynQuacer I2C controller
-Date: Mon, 26 Feb 2018 13:35:16 +0200
-Message-ID: <CAHp75VcjUey4K1xOkjKjn_ppPKC0bktcBK2p9NjcPYG1ed7X0g@mail.gmail.com>
-References: <20180222191647.4727-1-ard.biesheuvel@linaro.org>
- <20180222191647.4727-3-ard.biesheuvel@linaro.org> <CAHp75Vc1AGzdgTB281XVo=FmZerkU1vijLih3JUO=_wNPjxgfA@mail.gmail.com>
- <CAKv+Gu9XkmSPHZf+jVKOm-SX1GCWJUc7y3zTCuaHBwk8O3OC3Q@mail.gmail.com>
- <CAHp75VfFKDkQQ9-vdjzDfE2Cdk2Cb93+kdceYQgEqt3hti=Wkg@mail.gmail.com> <CAKv+Gu__HiajW5fWvRnDft3+ef+gOowijxEd8wrF4U5Vu=3o0Q@mail.gmail.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH] ARM: dts: porter: Add missing PMIC nodes
+Date: Mon, 26 Feb 2018 12:15:39 +0100
+Message-ID: <0a1597df-a9ba-c178-3af2-042cb3e31de4@gmail.com>
+References: <20180217020756.21474-1-marek.vasut+renesas@gmail.com>
+ <CAMuHMdUiGAV7r55mqRH549BufDsh8_j8_S-BD_49sCM=aO9hZQ@mail.gmail.com>
+ <2860322f-89b9-32aa-37bc-4fa4a52c1837@gmail.com>
+ <20180226105510.azlj56eohhu5wu3n@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKv+Gu__HiajW5fWvRnDft3+ef+gOowijxEd8wrF4U5Vu=3o0Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180226105510.azlj56eohhu5wu3n@verge.net.au>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Steve Twiss <stwiss.opensource@diasemi.com>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 26, 2018 at 11:59 AM, Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
-> On 23 February 2018 at 13:12, Andy Shevchenko <andy.shevchenko@gmail.com>=
- wrote:
->> On Fri, Feb 23, 2018 at 2:40 PM, Ard Biesheuvel
->> <ard.biesheuvel@linaro.org> wrote:
->>> On 23 February 2018 at 12:27, Andy Shevchenko <andy.shevchenko@gmail.co=
-m> wrote:
->>>> On Thu, Feb 22, 2018 at 9:16 PM, Ard Biesheuvel
->>>> <ard.biesheuvel@linaro.org> wrote:
-> ...
->>>>> +       ret =3D device_property_read_u32(&pdev->dev, "clock-frequency=
-",
->>>>> +                                      &speed_khz);
->>>>> +       if (ret) {
->>>>> +               dev_err(&pdev->dev,
->>>>> +                       "Missing clock-frequency property\n");
->>>>> +               return -EINVAL;
->>>>> +       }
->>>>> +       speed_khz /=3D 1000;
+On 02/26/2018 11:55 AM, Simon Horman wrote:
+> On Sat, Feb 24, 2018 at 11:11:31PM +0100, Marek Vasut wrote:
+>> On 02/18/2018 04:07 PM, Geert Uytterhoeven wrote:
+>>> Hi Marek,
 >>
->>>>> +       if (dev_of_node(&pdev->dev)) {
->>>>> +               i2c->clk =3D devm_clk_get(&pdev->dev, "pclk");
->>>>> +               if (IS_ERR(i2c->clk)) {
->>>>> +                       dev_err(&pdev->dev, "cannot get clock\n");
->>>>> +                       return PTR_ERR(i2c->clk);
->>>>> +               }
->>>>> +               dev_dbg(&pdev->dev, "clock source %p\n", i2c->clk);
->>>>> +
->>>>> +               i2c->clkrate =3D clk_get_rate(i2c->clk);
->>>>> +               dev_dbg(&pdev->dev, "clock rate %d\n", i2c->clkrate);
->>>>> +               clk_prepare_enable(i2c->clk);
->>>>> +       } else {
->>>>> +               ret =3D device_property_read_u32(&pdev->dev,
->>>>> +                                              "socionext,pclk-rate",
->>>>> +                                              &i2c->clkrate);
->>>>> +               if (ret)
->>>>> +                       return ret;
->>>>> +       }
+>> Hi,
+>>
+>>> CC Steve Twiss
+>>>
+>>> On Sat, Feb 17, 2018 at 3:07 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>>>> Add PMIC nodes to Porter and connect CPU DVFS supply. There is
+>>>> one DA9063 and one DA9210 on Porter, the only difference from
+>>>> the other boards is that DA9063 is at I2C address 0x5a rather
+>>>> than 0x58 .
 >>>>
->>>> Okay, I got this case. It's more likely the one in 8250_dw.c.
+>>>> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+>>>
+>>> Thanks for your patch!
+>>>
+>>>> --- a/arch/arm/boot/dts/r8a7791-porter.dts
+>>>> +++ b/arch/arm/boot/dts/r8a7791-porter.dts
+>>>> @@ -354,10 +354,47 @@
+>>>>         clock-frequency = <400000>;
+>>>>  };
 >>>>
->>>> Can you do the similar way?
+>>>> +&i2c6 {
+>>>> +       status = "okay";
+>>>> +       clock-frequency = <100000>;
+>>>> +
+>>>> +       pmic@5a {
+>>>> +               compatible = "dlg,da9063";
+>>>
+>>> Does it matter that this is a DA9063L ("Variant 6B")?
+>>> Do we need a new compatible value, or can this be detected at runtime?
 >>
->>> Could you elaborate?
+>> The driver detects it
 >>
->> --- 8< --- 8< --- 8< ---
->>         device_property_read_u32(dev, "clock-frequency", &p->uartclk);
+>> da9063 6-005a: Device detected (chip-ID: 0x61, var-ID: 0x63)
 >>
->>        /* If there is separate baudclk, get the rate from it. */
->>        data->clk =3D devm_clk_get(dev, "baudclk");
->> ...
->>        if (IS_ERR(data->clk) && PTR_ERR(data->clk) =3D=3D -EPROBE_DEFER)
->>                return -EPROBE_DEFER;
->>        if (!IS_ERR_OR_NULL(data->clk)) {
->>                err =3D clk_prepare_enable(data->clk);
->>                if (err)
->>                        dev_warn(dev, "could not enable optional baudclk:=
- %d\n",
->>                                 err);
->>                else
->>                        p->uartclk =3D clk_get_rate(data->clk);
->>        }
->>
->>        /* If no clock rate is defined, fail. */
->>        if (!p->uartclk) {
->>                dev_err(dev, "clock rate not defined\n");
->>                err =3D -EINVAL;
->>                goto err_clk;
->> --- 8< --- 8< --- 8< ---
->>
->> Replace 'baudclk' with 'pclk' and p->uartclk with i2c->clkrate in
->> above and you are almost done.
->>
->
-> I don't think this is better.
+>> Comparing the datasheets makes it obvious that 9063L is just a cut-down
+>> version of 9063, with less LDOs and one less ADC. So I think we should
+>> have extra compatible and have the driver restrict which LDOs can be
+>> used with this smaller PMIC.
+> 
+> Thanks, and sorry to ping yo about this while you were in transit.
+> 
+> It sounds like this patch should be updated.
+> Accordingly I'm marking it as "Changes Requested".
 
-It's a pattern over ACPI vs. clk cases at least for now.
-But hold on. We have already an example of dealing with ACPI /
-non-ACPI cases for I2C controllers =E2=80=94 i2c-designware-platdrv.c.
-Check how it's done there.
+Correct
 
-I actually totally forgot about ACPI slaves described in the table. We
-need to take into account the ones with lowest bus speed.
-
->  The generic DT I2C 'clock-frequency'
-> property denotes the bus clock rate not the rate of the clock that
-> feeds the IP block. This is rather different from the UART bindings.
-
-> Also, I don't want to support 'socionext,pclk-rate' for DT platforms,
-> only for ACPI platforms.
-
-Unfortunately, we are strong against deviations between DT and ACPI in
-case of device properties.
-You may provide a clock and use devm_clk_get() without any concerns
-from where this comes from.
-
-You won't find any deviation in DW I2C driver since there is none,
-while driver works for non-ACPI platforms as well.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Best regards,
+Marek Vasut
