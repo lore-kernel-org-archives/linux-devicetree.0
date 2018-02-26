@@ -1,49 +1,34 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH 2/2] ARM: dts: am43xx: add emif interrupt info
-Date: Mon, 26 Feb 2018 17:05:00 +0200
-Message-ID: <1519657500-15490-3-git-send-email-t-kristo@ti.com>
-References: <1519657500-15490-1-git-send-email-t-kristo@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519657500-15490-1-git-send-email-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-omap@vger.kernel.org, tony@atomide.com
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, ssantosh@kernel.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: irqchip: renesas-irqc: Document R-Car M3-N support
+Date: Mon, 26 Feb 2018 16:25:12 +0100
+Message-ID: <1519658712-22910-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The EMIF instance on am43xx supports interrupts, so add the info for
-completeness sake. Right now, the driver does not use this for anything,
-but it is possible it would be used in future.
+Document support for the Interrupt Controller for Externel Devices
+(INTC-EX) in the Renesas M3-N (r8a77965) SoC.
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
+No driver update is needed.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/am4372.dtsi | 1 +
+ Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 964f3ef..5ebf911 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -237,6 +237,7 @@
- 			compatible = "ti,emif-am4372";
- 			reg = <0x4c000000 0x1000000>;
- 			ti,hwmods = "emif";
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
- 		edma: edma@49000000 {
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+index 33c9a10fdc91a1dc..20f121daa9106f17 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+@@ -14,6 +14,7 @@ Required properties:
+     - "renesas,irqc-r8a7794" (R-Car E2)
+     - "renesas,intc-ex-r8a7795" (R-Car H3)
+     - "renesas,intc-ex-r8a7796" (R-Car M3-W)
++    - "renesas,intc-ex-r8a77965" (R-Car M3-N)
+     - "renesas,intc-ex-r8a77970" (R-Car V3M)
+     - "renesas,intc-ex-r8a77995" (R-Car D3)
+ - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
 -- 
-1.9.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.7.4
