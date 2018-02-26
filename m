@@ -1,53 +1,65 @@
-Return-Path: <robherring2@gmail.com>
-Date: Sun, 18 Feb 2018 21:13:35 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] mfd: arizona: Update DT doc to support more standard
- reset binding
-Message-ID: <20180219031335.75rw2bdlyrxjt4ff@rob-hp-laptop>
-References: <20180214155512.17218-1-ckeepax@opensource.cirrus.com>
- <20180214155512.17218-2-ckeepax@opensource.cirrus.com>
+Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-db5eur01on0078.outbound.protection.outlook.com ([104.47.2.78]:29115
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1752909AbeBZMFK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Feb 2018 07:05:10 -0500
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v2 07/12] staging: typec: tcpci: correct drp toggling
+Date: Mon, 26 Feb 2018 19:49:14 +0800
+Message-Id: <1519645759-12701-8-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180214155512.17218-2-ckeepax@opensource.cirrus.com>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: lee.jones@linaro.org, mark.rutland@arm.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Feb 14, 2018 at 03:55:12PM +0000, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-> ---
->  Documentation/devicetree/bindings/mfd/arizona.txt | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
-> index bdd017686ea5..a1557220825e 100644
-> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
-> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
-> @@ -50,7 +50,7 @@ Required properties:
->  
->  Optional properties:
->  
-> -  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
-> +  - wlf,reset-gpios : GPIO specifier for the GPIO controlling /RESET
+Per tcpci spec 4.4.5.2 ROLE_CONTROL description: "the TCPM shall
+write B6 (DRP) =1b and the starting value of Rp/Rd to B3..0 (CC1/CC2)
+to indicate DRP autonomous toggling mode to the TCPC", so add CC1/CC2
+setting, also we should issue COMMAND.Look4Connection to start it.
 
-Just reset-gpios is widely used, so you can use that and drop the 
-vendor.
+Signed-off-by: Li Jun <jun.li@nxp.com>
+---
+ drivers/staging/typec/tcpci.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
->  
->    - clocks: Should reference the clocks supplied on MCLK1 and MCLK2
->    - clock-names: Should contains two strings:
-> @@ -70,6 +70,10 @@ Optional properties:
->      Documentation/devicetree/bindings/regulator/regulator.txt
->      (wm5102, wm5110, wm8280, wm8997, wm8998, wm1814)
->  
-> +Deprecated properties:
-> +
-> +  - wlf,reset : GPIO specifier for the GPIO controlling /RESET
-> +
->  Also see child specific device properties:
->    Regulator - ../regulator/arizona-regulator.txt
->    Extcon    - ../extcon/extcon-arizona.txt
-> -- 
-> 2.11.0
-> 
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
+index 953fc97..530a5d7 100644
+--- a/drivers/staging/typec/tcpci.c
++++ b/drivers/staging/typec/tcpci.c
+@@ -109,6 +109,7 @@ static int tcpci_start_drp_toggling(struct tcpc_dev *tcpc,
+ {
+ 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
+ 	unsigned int reg = TCPC_ROLE_CTRL_DRP;
++	int ret;
+ 
+ 	switch (cc) {
+ 	default:
+@@ -126,7 +127,19 @@ static int tcpci_start_drp_toggling(struct tcpc_dev *tcpc,
+ 		break;
+ 	}
+ 
+-	return regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
++	if (cc == TYPEC_CC_RD)
++		reg |= (TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT) |
++			(TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT);
++	else
++		reg |= (TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT) |
++			(TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT);
++
++	ret = regmap_write(tcpci->regmap, TCPC_ROLE_CTRL, reg);
++	if (ret < 0)
++		return ret;
++
++	return regmap_write(tcpci->regmap, TCPC_COMMAND,
++				TCPC_CMD_LOOK4CONNECTION);
+ }
+ 
+ static enum typec_cc_status tcpci_to_typec_cc(unsigned int cc, bool sink)
+-- 
+2.7.4
+
