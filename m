@@ -1,96 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 01/10] regmap: mmio: Add function to attach a clock
-Date: Mon, 26 Feb 2018 13:12:07 +0000
-Message-ID: <20180226131207.GB6681@sirena.org.uk>
-References: <cover.68c39205c8726547449e3df67b549d89380e51a2.1519204731.git-series.maxime.ripard@bootlin.com>
- <1155920db000d014fd1cd604ed48d1b9a8f64ac1.1519204731.git-series.maxime.ripard@bootlin.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v8 1/9] mfd: madera: Add register definitions for Cirrus
+ Logic Madera codecs
+Date: Mon, 26 Feb 2018 15:46:50 +0200
+Message-ID: <CAHp75VdTdtT8D0OmPo1DPZfjEogSJcBRJBuesHDPrB+bD9CVgA@mail.gmail.com>
+References: <20180226130558.7634-1-rf@opensource.cirrus.com> <20180226130558.7634-2-rf@opensource.cirrus.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1521752699=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1155920db000d014fd1cd604ed48d1b9a8f64ac1.1519204731.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180226130558.7634-2-rf@opensource.cirrus.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, patches@opensource.cirrus.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Feb 26, 2018 at 3:05 PM, Richard Fitzgerald
+<rf@opensource.cirrus.com> wrote:
+> This patch adds a header file of register definitions for Cirrus
+> Logic "Madera" class codecs. These codecs are all based off a common
+> set of hardware IP so have a common register map (with a few minor
+> device-to-device variations).
+>
+> The registers.h file is tool-generated directly from the hardware design
+> but has been manually stripped down to reduce size (full register
+> map is >44000 lines). All names are kept the same as datasheet names
+> so that they can be cross-referenced between source and datasheet without
+> confusion.
+>
+> The register map layout is kept fully-defined rather than factored into
+> macros and/or block-indexing code. The major reasons for this are:
+>
+>  - #1 is that it makes the source highly greppable, which is important.
+>    "What does the driver do with register bits XYZ" or "Where does it use
+>    register bits XYZ" are commonly types of questions. These can be quickly
+>    answered by a grep. Squashing definitions into generator macros or block-
+>    indexing code is a way of defeating grep.
+>
+>  - most of the register definitions are used in tables, so a constant value
+>    is required. Using generator macros make the table definition clunky and
+>    obscure.
+>
+>  - the code is clearer when it's there in the source exactly what register
+>    and field it is using
+>
+>  - it is easier to diff the register map of a new (unsupported) codec against
+>    what is already supported and merge in differences
+>
+>  - it makes the register map available in source for maintenance/debugging
+>    instead of having to refer back to the datasheet for a register map
 
---===============1521752699==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xXmbgvnjoT4axfJE"
-Content-Disposition: inline
+...
 
+> +#define MADERA_OTP_HPDET_GRADIENT_1X_MASK          0x0000FF00
 
---xXmbgvnjoT4axfJE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +#define MADERA_OTP_HPDET_GRADIENT_0X_MASK          0x000000FF
 
-On Wed, Feb 21, 2018 at 10:20:25AM +0100, Maxime Ripard wrote:
-> From: Maxime Ripard <maxime.ripard@free-electrons.com>
->=20
-> regmap_init_mmio_clk allows to specify a clock that needs to be enabled
-> while accessing the registers.
+GENMASK() for all masks?
 
-The following changes since commit 7928b2cbe55b2a410a0f5c1f154610059c57b1b2:
-
-  Linux 4.16-rc1 (2018-02-11 15:04:29 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/m=
-mio-clk-config
-
-for you to fetch changes up to 31895662f9ba81e8ea9ef05abf8edcb29d4b9c18:
-
-  regmap: mmio: Add function to attach a clock (2018-02-26 11:05:44 +0000)
-
-----------------------------------------------------------------
-regmap: MMIO regmap clock configuration
-
-This patch provides a mechanism for specifying a different clock to be
-used with the regmap clock integration.
-
-----------------------------------------------------------------
-Maxime Ripard (1):
-      regmap: mmio: Add function to attach a clock
-
- drivers/base/regmap/regmap-mmio.c | 24 ++++++++++++++++++++++++
- include/linux/regmap.h            |  3 +++
- 2 files changed, 27 insertions(+)
-
---xXmbgvnjoT4axfJE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqUB6YACgkQJNaLcl1U
-h9Cikwf+PMimnrn6dNczsXsvqRvm5hhO/h8dL0IBFzkQtwmA/qj6bHgIcu99EHNg
-rvyz+J6fGket2zqJGO1LX6sbUa9v0FoedKk1VqesmaSzIr/Z3QB6kmPXArGIr7T+
-u0dEmntyUh6CLNyjEyQJMuQEKWSoxjQnb8LbWpdydUynzUlJR6eSzM9vInxxmRqt
-McyD/wqJLNVBuc8Z8Xzlpqrx/IEKVUQsznUV8hAPW/GHq/H2ziCE8OFofVaRCqPW
-OjRpcs7suLWn1ky3iieLkGg/iJvbRGsI5xrRgs9MxqRr6HETVghViFGwYKd9Uyw7
-DagDsMXB9k5bWNsgDA5Oa1+xTIMUXw==
-=DRh6
------END PGP SIGNATURE-----
-
---xXmbgvnjoT4axfJE--
-
---===============1521752699==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1521752699==--
+-- 
+With Best Regards,
+Andy Shevchenko
