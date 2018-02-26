@@ -1,124 +1,207 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v2 2/2] i2c: add support for Socionext SynQuacer I2C controller
-Date: Mon, 26 Feb 2018 09:59:33 +0000
-Message-ID: <CAKv+Gu__HiajW5fWvRnDft3+ef+gOowijxEd8wrF4U5Vu=3o0Q@mail.gmail.com>
-References: <20180222191647.4727-1-ard.biesheuvel@linaro.org>
- <20180222191647.4727-3-ard.biesheuvel@linaro.org> <CAHp75Vc1AGzdgTB281XVo=FmZerkU1vijLih3JUO=_wNPjxgfA@mail.gmail.com>
- <CAKv+Gu9XkmSPHZf+jVKOm-SX1GCWJUc7y3zTCuaHBwk8O3OC3Q@mail.gmail.com> <CAHp75VfFKDkQQ9-vdjzDfE2Cdk2Cb93+kdceYQgEqt3hti=Wkg@mail.gmail.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH usb-next v10 2/8] usb: add a flag to skip PHY
+ initialization to struct usb_hcd
+Date: Mon, 26 Feb 2018 11:26:59 +0800
+Message-ID: <20180226032659.GC22100@b29397-desktop>
+References: <20180218184504.3331-1-martin.blumenstingl@googlemail.com>
+ <20180218184504.3331-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VfFKDkQQ9-vdjzDfE2Cdk2Cb93+kdceYQgEqt3hti=Wkg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180218184504.3331-3-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, yixun.lan@amlogic.com, arnd@arndb.de, felipe.balbi@linux.intel.com, Peter.Chen@nxp.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, narmstrong@baylibre.com, robh+dt@kernel.org, jonathanh@nvidia.com, mathias.nyman@intel.com, matthias.bgg@gmail.com, thierry.reding@gmail.com, linux-mediatek@lists.infradead.org, linux@prisktech.co.nz, linux-amlogic@lists.infradead.org, linux-tegra@vger.kernel.org, stern@rowland.harvard.edu, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 23 February 2018 at 13:12, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Fri, Feb 23, 2018 at 2:40 PM, Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
->> On 23 February 2018 at 12:27, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->>> On Thu, Feb 22, 2018 at 9:16 PM, Ard Biesheuvel
->>> <ard.biesheuvel@linaro.org> wrote:
-...
->>>> +       ret = device_property_read_u32(&pdev->dev, "clock-frequency",
->>>> +                                      &speed_khz);
->>>> +       if (ret) {
->>>> +               dev_err(&pdev->dev,
->>>> +                       "Missing clock-frequency property\n");
->>>> +               return -EINVAL;
->>>> +       }
->>>> +       speed_khz /= 1000;
->
->>>> +       if (dev_of_node(&pdev->dev)) {
->>>> +               i2c->clk = devm_clk_get(&pdev->dev, "pclk");
->>>> +               if (IS_ERR(i2c->clk)) {
->>>> +                       dev_err(&pdev->dev, "cannot get clock\n");
->>>> +                       return PTR_ERR(i2c->clk);
->>>> +               }
->>>> +               dev_dbg(&pdev->dev, "clock source %p\n", i2c->clk);
->>>> +
->>>> +               i2c->clkrate = clk_get_rate(i2c->clk);
->>>> +               dev_dbg(&pdev->dev, "clock rate %d\n", i2c->clkrate);
->>>> +               clk_prepare_enable(i2c->clk);
->>>> +       } else {
->>>> +               ret = device_property_read_u32(&pdev->dev,
->>>> +                                              "socionext,pclk-rate",
->>>> +                                              &i2c->clkrate);
->>>> +               if (ret)
->>>> +                       return ret;
->>>> +       }
->>>
->>> Okay, I got this case. It's more likely the one in 8250_dw.c.
->>>
->>> Can you do the similar way?
->
->> Could you elaborate?
->
-> --- 8< --- 8< --- 8< ---
->         device_property_read_u32(dev, "clock-frequency", &p->uartclk);
->
->        /* If there is separate baudclk, get the rate from it. */
->        data->clk = devm_clk_get(dev, "baudclk");
-> ...
->        if (IS_ERR(data->clk) && PTR_ERR(data->clk) == -EPROBE_DEFER)
->                return -EPROBE_DEFER;
->        if (!IS_ERR_OR_NULL(data->clk)) {
->                err = clk_prepare_enable(data->clk);
->                if (err)
->                        dev_warn(dev, "could not enable optional baudclk: %d\n",
->                                 err);
->                else
->                        p->uartclk = clk_get_rate(data->clk);
->        }
->
->        /* If no clock rate is defined, fail. */
->        if (!p->uartclk) {
->                dev_err(dev, "clock rate not defined\n");
->                err = -EINVAL;
->                goto err_clk;
-> --- 8< --- 8< --- 8< ---
->
-> Replace 'baudclk' with 'pclk' and p->uartclk with i2c->clkrate in
-> above and you are almost done.
->
+On Sun, Feb 18, 2018 at 07:44:58PM +0100, Martin Blumenstingl wrote:
+> The USB HCD core driver parses the device-tree node for "phys" and
+> "usb-phys" properties. It also manages the power state of these PHYs
+> automatically.
+> However, drivers may opt-out of this behavior by setting "phy" or
+> "usb_phy" in struct usb_hcd to a non-null value. An example where this
+> is required is the "Qualcomm USB2 controller", implemented by the
+> chipidea driver. The hardware requires that the PHY is only powered on
+> after the "reset completed" event from the controller is received.
+> 
+> A follow-up patch will allow the USB HCD core driver to manage more than
+> one PHY. Add a new "skip_phy_initialization" bitflag to struct usb_hcd
+> so drivers can opt-out of any PHY management provided by the USB HCD
+> core driver.
+> 
+> This also updates the existing drivers so they use the new flag if they
+> want to opt out of the PHY management provided by the USB HCD core
+> driver. This means that for these drivers the new "multiple PHY"
+> handling (which will be added in a follow-up patch) will be disabled as
+> well.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  drivers/usb/chipidea/host.c      | 6 ++----
+>  drivers/usb/core/hcd.c           | 4 ++--
+>  drivers/usb/host/ehci-fsl.c      | 2 ++
+>  drivers/usb/host/ehci-platform.c | 4 ++--
+>  drivers/usb/host/ehci-tegra.c    | 1 +
+>  drivers/usb/host/ohci-omap.c     | 1 +
+>  drivers/usb/host/ohci-platform.c | 4 ++--
+>  drivers/usb/host/xhci-plat.c     | 1 +
+>  include/linux/usb/hcd.h          | 6 ++++++
+>  9 files changed, 19 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+> index 19d60ed7e41f..af45aa3222b5 100644
+> --- a/drivers/usb/chipidea/host.c
+> +++ b/drivers/usb/chipidea/host.c
+> @@ -124,10 +124,8 @@ static int host_start(struct ci_hdrc *ci)
+>  
+>  	hcd->power_budget = ci->platdata->power_budget;
+>  	hcd->tpl_support = ci->platdata->tpl_support;
+> -	if (ci->phy)
+> -		hcd->phy = ci->phy;
+> -	else
+> -		hcd->usb_phy = ci->usb_phy;
+> +	if (ci->phy || ci->usb_phy)
+> +		hcd->skip_phy_initialization = 1;
+>  
+>  	ehci = hcd_to_ehci(hcd);
+>  	ehci->caps = ci->hw_bank.cap;
+> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> index fc32391a34d5..f2307470a31e 100644
+> --- a/drivers/usb/core/hcd.c
+> +++ b/drivers/usb/core/hcd.c
+> @@ -2727,7 +2727,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
+>  	int retval;
+>  	struct usb_device *rhdev;
+>  
+> -	if (IS_ENABLED(CONFIG_USB_PHY) && !hcd->usb_phy) {
+> +	if (IS_ENABLED(CONFIG_USB_PHY) && !hcd->skip_phy_initialization) {
+>  		struct usb_phy *phy = usb_get_phy_dev(hcd->self.sysdev, 0);
+>  
+>  		if (IS_ERR(phy)) {
+> @@ -2745,7 +2745,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
+>  		}
+>  	}
+>  
+> -	if (IS_ENABLED(CONFIG_GENERIC_PHY) && !hcd->phy) {
+> +	if (IS_ENABLED(CONFIG_GENERIC_PHY) && !hcd->skip_phy_initialization) {
+>  		struct phy *phy = phy_get(hcd->self.sysdev, "usb");
+>  
+>  		if (IS_ERR(phy)) {
+> diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
+> index c5094cb88cd5..0a9fd2022acf 100644
+> --- a/drivers/usb/host/ehci-fsl.c
+> +++ b/drivers/usb/host/ehci-fsl.c
+> @@ -155,6 +155,8 @@ static int fsl_ehci_drv_probe(struct platform_device *pdev)
+>  			retval = -ENODEV;
+>  			goto err2;
+>  		}
+> +
+> +		hcd->skip_phy_initialization = 1;
+>  	}
+>  #endif
+>  	return retval;
+> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+> index b065a960adc2..b91eea8c73ae 100644
+> --- a/drivers/usb/host/ehci-platform.c
+> +++ b/drivers/usb/host/ehci-platform.c
+> @@ -219,9 +219,9 @@ static int ehci_platform_probe(struct platform_device *dev)
+>  			if (IS_ERR(priv->phys[phy_num])) {
+>  				err = PTR_ERR(priv->phys[phy_num]);
+>  					goto err_put_hcd;
+> -			} else if (!hcd->phy) {
+> +			} else {
+>  				/* Avoiding phy_get() in usb_add_hcd() */
+> -				hcd->phy = priv->phys[phy_num];
+> +				hcd->skip_phy_initialization = 1;
+>  			}
+>  		}
+>  
+> diff --git a/drivers/usb/host/ehci-tegra.c b/drivers/usb/host/ehci-tegra.c
+> index c809f7d2f08f..a6f4389f7e88 100644
+> --- a/drivers/usb/host/ehci-tegra.c
+> +++ b/drivers/usb/host/ehci-tegra.c
+> @@ -461,6 +461,7 @@ static int tegra_ehci_probe(struct platform_device *pdev)
+>  		goto cleanup_clk_en;
+>  	}
+>  	hcd->usb_phy = u_phy;
+> +	hcd->skip_phy_initialization = 1;
+>  
+>  	tegra->needs_double_reset = of_property_read_bool(pdev->dev.of_node,
+>  		"nvidia,needs-double-reset");
+> diff --git a/drivers/usb/host/ohci-omap.c b/drivers/usb/host/ohci-omap.c
+> index 0201c49bc4fc..d8d35d456456 100644
+> --- a/drivers/usb/host/ohci-omap.c
+> +++ b/drivers/usb/host/ohci-omap.c
+> @@ -230,6 +230,7 @@ static int ohci_omap_reset(struct usb_hcd *hcd)
+>  		} else {
+>  			return -EPROBE_DEFER;
+>  		}
+> +		hcd->skip_phy_initialization = 1;
+>  		ohci->start_hnp = start_hnp;
+>  	}
+>  #endif
+> diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
+> index 1e6c954f4b3f..62ef36a9333f 100644
+> --- a/drivers/usb/host/ohci-platform.c
+> +++ b/drivers/usb/host/ohci-platform.c
+> @@ -186,9 +186,9 @@ static int ohci_platform_probe(struct platform_device *dev)
+>  			if (IS_ERR(priv->phys[phy_num])) {
+>  				err = PTR_ERR(priv->phys[phy_num]);
+>  				goto err_put_hcd;
+> -			} else if (!hcd->phy) {
+> +			} else {
+>  				/* Avoiding phy_get() in usb_add_hcd() */
+> -				hcd->phy = priv->phys[phy_num];
+> +				hcd->skip_phy_initialization = 1;
+>  			}
+>  		}
+>  
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index 6f038306c14d..6700e5ee82ad 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -284,6 +284,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>  		ret = usb_phy_init(hcd->usb_phy);
+>  		if (ret)
+>  			goto put_usb3_hcd;
+> +		hcd->skip_phy_initialization = 1;
+>  	}
+>  
+>  	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
+> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+> index 176900528822..693502c84c04 100644
+> --- a/include/linux/usb/hcd.h
+> +++ b/include/linux/usb/hcd.h
+> @@ -151,6 +151,12 @@ struct usb_hcd {
+>  	unsigned		msix_enabled:1;	/* driver has MSI-X enabled? */
+>  	unsigned		msi_enabled:1;	/* driver has MSI enabled? */
+>  	unsigned		remove_phy:1;	/* auto-remove USB phy */
+> +	/*
+> +	 * do not manage the PHY state in the HCD core, instead let the driver
+> +	 * handle this (for example if the PHY can only be turned on after a
+> +	 * specific event)
+> +	 */
+> +	unsigned		skip_phy_initialization:1;
+>  
+>  	/* The next flag is a stopgap, to be removed when all the HCDs
+>  	 * support the new root-hub polling mechanism. */
+> -- 
 
-I don't think this is better. The generic DT I2C 'clock-frequency'
-property denotes the bus clock rate not the rate of the clock that
-feeds the IP block. This is rather different from the UART bindings.
+For chipidea part:
 
-Also, I don't want to support 'socionext,pclk-rate' for DT platforms,
-only for ACPI platforms.
+Acked-by: Peter Chen <peter.chen@nxp.com>
 
->>>> +       i2c->irq = platform_get_irq(pdev, 0);
->>>> +       if (i2c->irq <= 0) {
->>>
->>> < 0 ?
->>>
->>> On some platforms IRQ == 0 might be valid.
->
->> Are you sure about that?
->
-> Yes. I fixed some cases on one of a such.
->
->> http://yarchive.net/comp/linux/no_irq.html
->
-> I agree with Linus from software IRQ (and nowadays luckily we are
-> using IRQ descriptors), but I disagree with him from hardware
-> prospective.
-> 0 is totally valid HW IRQ line. In hardware there is no descriptor
-> (except, yes, MSI and alike cases), it's just a wire with an index.
->
-> So, while drivers are getting better in code prospective (though I
-> don't see many of them comparing this to 0), the IRQ framework is
-> changing itself as well.
->
-> At which circumstances we might get 0 in the first place?
->
-> Second question, doesn't request_irq() fail on irq==0 if it's not
-> supported as valid by platform?
->
+-- 
 
-Yes, I suppose it does.
-
-I'll change it to '< 0'
+Best Regards,
+Peter Chen
