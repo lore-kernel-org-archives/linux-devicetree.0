@@ -1,296 +1,65 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH v15 8/9] HISI LPC: Add ACPI support
-Date: Tue, 27 Feb 2018 00:40:48 +0800
-Message-ID: <1519663249-9850-9-git-send-email-john.garry@huawei.com>
-References: <1519663249-9850-1-git-send-email-john.garry@huawei.com>
+From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] arm64: allwinner: h6: add the
+ basical Allwinner H6 DTSI file
+Date: Mon, 26 Feb 2018 09:54:01 -0600
+Message-ID: <b9bc5944-b9e3-91d7-8012-c87a2b2d17fa@sholland.org>
+References: <20180223123555.64009-6-icenowy@aosc.io>
+ <20180223123555.64009-7-icenowy@aosc.io>
+ <20180223152038.2bflylwa6vj4gzfj@flea.lan>
+ <81D53DC5-7622-430E-A530-ED0DE5397DC3@aosc.io>
+ <20180226092645.xghkmfowenzlbm42@flea.lan>
+Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519663249-9850-1-git-send-email-john.garry@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org, andriy.shevchenko@linux.intel.com
-Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDA2PU6QWEARBH632DKAKGQE4U6LVAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180226092645.xghkmfowenzlbm42-ZC1Zs529Oq4@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Based on the previous patches, this patch supports the
-LPC host on hip06/hip07 for ACPI FW.
+On 02/26/18 03:26, Maxime Ripard wrote:
+> On Fri, Feb 23, 2018 at 11:22:06PM +0800, Icenowy Zheng wrote:
+>>>> +	psci {
+>>>> +		compatible = "arm,psci-0.2";
+>>>> +		method = "smc";
+>>>> +	};
+>>>
+>>> Is it needed? The bootloader should fill it with whatever version it
+>>> has, shouldn't it?
+>>
+>> But we now use ATF rather than U-Boot PSCI. U-Boot will not fill ATF
+>> info.
+>>
+>> See A64/H5 device trees.
+> 
+> So if the PSCI version implemented in ATF ever changes, we would have
+> to update all the DT everywhere, but only if you're running the new
+> version?
 
-It is the responsibility of the LPC host driver to
-enumerate the child devices, as the ACPI scan code will
-not enumerate children of "indirect IO" hosts.
+Yes but no. PSCI 1.0 is generally backward compatible with PSCI 0.2. In fact,
+the Linux driver treats them exactly the same:
 
-The ACPI table for the LPC host controller and the child
-devices is in the following format:
-  Device (LPC0) {
-    Name (_HID, "HISI0191")  // HiSi LPC
-    Name (_CRS, ResourceTemplate () {
-      Memory32Fixed (ReadWrite, 0xa01b0000, 0x1000)
-    })
-  }
+        { .compatible = "arm,psci-0.2", .data = psci_0_2_init},
+        { .compatible = "arm,psci-1.0", .data = psci_0_2_init},
 
-  Device (LPC0.IPMI) {
-    Name (_HID, "IPI0001")
-    Name (LORS, ResourceTemplate() {
-      QWordIO (
-        ResourceConsumer,
-	MinNotFixed,     // _MIF
-	MaxNotFixed,     // _MAF
-	PosDecode,
-	EntireRange,
-	0x0,             // _GRA
-	0xe4,            // _MIN
-	0x3fff,          // _MAX
-	0x0,             // _TRA
-	0x04,            // _LEN
-	, ,
-	BTIO
-      )
-    })
+For the H6, however, the oldest ATF source available (which I believe was the
+one in use during bringup) is based on mainline 1.4, and is already at PSCI
+version 1.1:
 
-Since the IO resources of the child devices need to be
-translated from LPC bus addresses to logical PIO addresses,
-and we shouldn't modify the resources of the devices
-generated in the FW scan, a per-child MFD is created as
-a substitute. The MFD IO resources will be the translated
-bus addresses of the ACPI child.
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.1 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: MIGRATE_INFO_TYPE not supported.
 
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Zhichang Yuan <yuanzhichang@hisilicon.com>
-Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Tested-by: dann frazier <dann.frazier@canonical.com>
----
- drivers/bus/hisi_lpc.c | 197 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 197 insertions(+)
+So we could go ahead and bump the compatible to "arm,psci-1.0".
 
-diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
-index c2f3c14..0c7c1ec 100644
---- a/drivers/bus/hisi_lpc.c
-+++ b/drivers/bus/hisi_lpc.c
-@@ -12,6 +12,7 @@
- #include <linux/delay.h>
- #include <linux/io.h>
- #include <linux/logic_pio.h>
-+#include <linux/mfd/core.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-@@ -353,6 +354,199 @@ static void hisi_lpc_comm_out(void *hostdata, unsigned long pio,
- 	.outs = hisi_lpc_comm_outs,
- };
- 
-+#ifdef CONFIG_ACPI
-+#define MFD_CHILD_NAME_PREFIX DRV_NAME"-"
-+#define MFD_CHILD_NAME_LEN (ACPI_ID_LEN + sizeof(MFD_CHILD_NAME_PREFIX))
-+
-+struct hisi_lpc_mfd_cell {
-+	struct mfd_cell_acpi_match acpi_match;
-+	char name[MFD_CHILD_NAME_LEN];
-+	char pnpid[ACPI_ID_LEN];
-+};
-+
-+static int hisi_lpc_acpi_xlat_io_res(struct acpi_device *adev,
-+				     struct acpi_device *host,
-+				     struct resource *res)
-+{
-+	unsigned long sys_port;
-+	resource_size_t len = res->end - res->start;
-+
-+	sys_port = logic_pio_trans_hwaddr(&host->fwnode, res->start, len);
-+	if (sys_port == ~0UL)
-+		return -EFAULT;
-+
-+	res->start = sys_port;
-+	res->end = sys_port + len;
-+
-+	return 0;
-+}
-+
-+/*
-+ * hisi_lpc_acpi_set_io_res - set the resources for a child's MFD
-+ * @child: the device node to be updated the I/O resource
-+ * @hostdev: the device node associated with host controller
-+ * @res: double pointer to be set to the address of translated resources
-+ * @num_res: pointer to variable to hold the number of translated resources
-+ *
-+ * Returns 0 when successful, and a negative value for failure.
-+ *
-+ * For a given host controller, each child device will have an associated
-+ * host-relative address resource. This function will return the translated
-+ * logical PIO addresses for each child devices resources.
-+ */
-+static int hisi_lpc_acpi_set_io_res(struct device *child,
-+				    struct device *hostdev,
-+				    const struct resource **res,
-+				    int *num_res)
-+{
-+	struct acpi_device *adev;
-+	struct acpi_device *host;
-+	struct resource_entry *rentry;
-+	LIST_HEAD(resource_list);
-+	struct resource *resources;
-+	int count;
-+	int i;
-+
-+	if (!child || !hostdev)
-+		return -EINVAL;
-+
-+	host = to_acpi_device(hostdev);
-+	adev = to_acpi_device(child);
-+
-+	/* check the device state */
-+	if (!adev->status.present) {
-+		dev_dbg(child, "device is not present\n");
-+		return -EIO;
-+	}
-+	/* whether the child had been enumerated? */
-+	if (acpi_device_enumerated(adev)) {
-+		dev_dbg(child, "has been enumerated\n");
-+		return -EIO;
-+	}
-+
-+	/*
-+	 * The following code segment to retrieve the resources is common to
-+	 * acpi_create_platform_device(), so consider a common helper function
-+	 * in future.
-+	 */
-+	count = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
-+	if (count <= 0) {
-+		dev_dbg(child, "failed to get resources\n");
-+		return count ? count : -EIO;
-+	}
-+
-+	resources = devm_kcalloc(hostdev, count, sizeof(*resources),
-+				 GFP_KERNEL);
-+	if (!resources) {
-+		dev_warn(hostdev, "could not allocate memory for %d resources\n",
-+			 count);
-+		acpi_dev_free_resource_list(&resource_list);
-+		return -ENOMEM;
-+	}
-+	count = 0;
-+	list_for_each_entry(rentry, &resource_list, node)
-+		resources[count++] = *rentry->res;
-+
-+	acpi_dev_free_resource_list(&resource_list);
-+
-+	/* translate the I/O resources */
-+	for (i = 0; i < count; i++) {
-+		int ret;
-+
-+		if (!(resources[i].flags & IORESOURCE_IO))
-+			continue;
-+		ret = hisi_lpc_acpi_xlat_io_res(adev, host, &resources[i]);
-+		if (ret) {
-+			dev_err(child, "translate IO range failed(%d)\n", ret);
-+			return ret;
-+		}
-+	}
-+	*res = resources;
-+	*num_res = count;
-+
-+	return 0;
-+}
-+
-+/*
-+ * hisi_lpc_acpi_probe - probe children for ACPI FW
-+ * @hostdev: LPC host device pointer
-+ *
-+ * Returns 0 when successful, and a negative value for failure.
-+ *
-+ * Scan all child devices and create a per-device MFD with
-+ * logical PIO translated IO resources.
-+ */
-+static int hisi_lpc_acpi_probe(struct device *hostdev)
-+{
-+	struct acpi_device *adev = ACPI_COMPANION(hostdev);
-+	struct hisi_lpc_mfd_cell *hisi_lpc_mfd_cells;
-+	struct mfd_cell *mfd_cells;
-+	struct acpi_device *child;
-+	int size, ret, count = 0, cell_num = 0;
-+
-+	list_for_each_entry(child, &adev->children, node)
-+		cell_num++;
-+
-+	/* allocate the mfd cell and companion acpi info, one per child */
-+	size = sizeof(*mfd_cells) + sizeof(*hisi_lpc_mfd_cells);
-+	mfd_cells = devm_kcalloc(hostdev, cell_num, size, GFP_KERNEL);
-+	if (!mfd_cells)
-+		return -ENOMEM;
-+
-+	hisi_lpc_mfd_cells = (struct hisi_lpc_mfd_cell *)
-+					&mfd_cells[cell_num];
-+	/* Only consider the children of the host */
-+	list_for_each_entry(child, &adev->children, node) {
-+		struct mfd_cell *mfd_cell = &mfd_cells[count];
-+		struct hisi_lpc_mfd_cell *hisi_lpc_mfd_cell =
-+					&hisi_lpc_mfd_cells[count];
-+		struct mfd_cell_acpi_match *acpi_match =
-+					&hisi_lpc_mfd_cell->acpi_match;
-+		char *name = hisi_lpc_mfd_cell[count].name;
-+		char *pnpid = hisi_lpc_mfd_cell[count].pnpid;
-+		struct mfd_cell_acpi_match match = {
-+			.pnpid = pnpid,
-+		};
-+
-+		snprintf(name, MFD_CHILD_NAME_LEN, MFD_CHILD_NAME_PREFIX"%s",
-+			 acpi_device_hid(child));
-+		snprintf(pnpid, ACPI_ID_LEN, "%s", acpi_device_hid(child));
-+
-+		memcpy(acpi_match, &match, sizeof(*acpi_match));
-+		mfd_cell->name = name;
-+		mfd_cell->acpi_match = acpi_match;
-+
-+		ret = hisi_lpc_acpi_set_io_res(&child->dev, &adev->dev,
-+					       &mfd_cell->resources,
-+					       &mfd_cell->num_resources);
-+		if (ret) {
-+			dev_warn(&child->dev, "set resource fail(%d)\n", ret);
-+			return ret;
-+		}
-+		count++;
-+	}
-+
-+	ret = mfd_add_devices(hostdev, PLATFORM_DEVID_NONE,
-+			      mfd_cells, cell_num, NULL, 0, NULL);
-+	if (ret) {
-+		dev_err(hostdev, "failed to add mfd cells (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id hisi_lpc_acpi_match[] = {
-+	{"HISI0191"},
-+	{}
-+};
-+#else
-+static int hisi_lpc_acpi_probe(struct device *dev)
-+{
-+	return -ENODEV;
-+}
-+#endif // CONFIG_ACPI
-+
- /*
-  * hisi_lpc_probe - the probe callback function for hisi lpc host,
-  *		   will finish all the initialization.
-@@ -397,6 +591,8 @@ static int hisi_lpc_probe(struct platform_device *pdev)
- 	/* register the LPC host PIO resources */
- 	if (!acpi_device)
- 		ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
-+	else
-+		ret = hisi_lpc_acpi_probe(dev);
- 	if (ret)
- 		return ret;
- 
-@@ -420,6 +616,7 @@ static int hisi_lpc_probe(struct platform_device *pdev)
- 	.driver = {
- 		.name           = DRV_NAME,
- 		.of_match_table = hisi_lpc_of_match,
-+		.acpi_match_table = ACPI_PTR(hisi_lpc_acpi_match),
- 	},
- 	.probe = hisi_lpc_probe,
- };
--- 
-1.9.1
+Thanks,
+Samuel
