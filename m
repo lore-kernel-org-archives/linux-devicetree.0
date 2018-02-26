@@ -1,62 +1,45 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 01/19] clk: renesas: cpg-mssr: Add support for R-Car M3-N
-Date: Mon, 26 Feb 2018 09:14:36 +0100
-Message-ID: <CAMuHMdWcLd6BnwW2fwOPhpsRZ=qfuYE6YoehFj8WXkUmGZMW_A@mail.gmail.com>
-References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org> <1519139541-18783-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Subject: [PATCH v2 0/4] PINCTRL: Mediatek pinctrl driver for mt2712
+Date: Mon, 26 Feb 2018 16:33:58 +0800
+Message-ID: <1519634042-12063-1-git-send-email-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519139541-18783-2-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: robh+dt@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com
+Cc: srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, hongkun.cao@mediatek.com, biao.huang@mediatek.com, yt.shen@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+This series includes four patches:
+1.Add mt2712 pintcrl head file
+2.Add mt2712 pinctrl device node.
+3.Add mt2712 pinctrl driver.
+4.Support bias-disable of generic and special pins simultaneously
 
-On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
-> Initial support for R-Car M3-N (r8a77965), including core and module
-> clocks.
->
-> Based on Table 8.2d of "R-Car Series, 3rd Generation User's Manual:
-> Hardware (Rev. 0.80, Oct 31, 2017)".
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Changes in patch v2:
+1)Separate patch4 for supporting bias-disable of generic and special pins.
+2)GPIO16~17 direction setting is changed as generic pins in mt2712 E2,
+  So remove GPIO16~17 special direction setting and remove apmixedsys node in pinctrl device node.
+3)Add pinmux define in "mt2712-pinfunc.h" and "pinctrl-mtk-mt2712.h" for mt2712 E2 design.
 
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-> @@ -22,6 +22,7 @@ Required Properties:
->        - "renesas,r8a7794-cpg-mssr" for the r8a7794 SoC (R-Car E2)
->        - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC (R-Car H3)
->        - "renesas,r8a7796-cpg-mssr" for the r8a7796 SoC (R-Car M3-W)
-> +      - "renesas,r8a77965-cpg-mssr" for the r8a77965 SoC (R-Car M3-N)
->        - "renesas,r8a77970-cpg-mssr" for the r8a77970 SoC (R-Car V3M)
->        - "renesas,r8a77995-cpg-mssr" for the r8a77995 SoC (R-Car D3)
+Zhiyong Tao (4):
+  arm64: dts: mt2712: add pintcrl file
+  arm64: dts: mt2712: add pintcrl device node.
+  pinctrl: add mt2712 pinctrl driver
+  pintcrl: support bias-disable of generic and special pins
+    simultaneously
 
-You forgot to update the list of external parent clock names.
-No need to fix and resend, I've squashed in the following:
-
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-@@ -34,8 +34,8 @@ Required Properties:
-     clock-names
-   - clock-names: List of external parent clock names. Valid names are:
-       - "extal" (r8a7743, r8a7745, r8a7790, r8a7791, r8a7792, r8a7793, r8a7794,
--                r8a7795, r8a7796, r8a77970, r8a77980, r8a77995)
--      - "extalr" (r8a7795, r8a7796, r8a77970, r8a77980)
-+                r8a7795, r8a7796, r8a77965, r8a77970, r8a77980, r8a77995)
-+      - "extalr" (r8a7795, r8a7796, r8a77965, r8a77970, r8a77980)
-       - "usb_extal" (r8a7743, r8a7745, r8a7790, r8a7791, r8a7793, r8a7794)
-
-   - #clock-cells: Must be 2
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h | 1129 ++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi     |   18 +
+ drivers/pinctrl/mediatek/Kconfig              |    7 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt2712.c     |  639 ++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c |   13 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h | 1973 +++++++++++++++++++++++++
+ 7 files changed, 3778 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt2712.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+1.8.1.1.dirty
