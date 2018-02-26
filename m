@@ -1,34 +1,45 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: irqchip: renesas-irqc: Document R-Car M3-N support
-Date: Mon, 26 Feb 2018 16:25:12 +0100
-Message-ID: <1519658712-22910-1-git-send-email-geert+renesas@glider.be>
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+Subject: Re: [PATCH v8 3/9] mfd: madera: Add common support for Cirrus Logic
+ Madera codecs
+Date: Mon, 26 Feb 2018 15:36:56 +0000
+Message-ID: <d541ca7e-5e02-a7e5-07c5-38fdebbbc014@opensource.cirrus.com>
+References: <20180226130558.7634-1-rf@opensource.cirrus.com>
+ <20180226130558.7634-4-rf@opensource.cirrus.com>
+ <CAOMZO5DEiwUBsMWfR-a6UgEkEeXvWqXPFAf0pPcwpeJY540xGg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5DEiwUBsMWfR-a6UgEkEeXvWqXPFAf0pPcwpeJY540xGg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document support for the Interrupt Controller for Externel Devices
-(INTC-EX) in the Renesas M3-N (r8a77965) SoC.
+On 26/02/18 13:58, Fabio Estevam wrote:
+> On Mon, Feb 26, 2018 at 10:05 AM, Richard Fitzgerald
+> <rf@opensource.cirrus.com> wrote:
+> 
+>> --- /dev/null
+>> +++ b/drivers/mfd/madera-core.c
+>> @@ -0,0 +1,602 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+> 
+> As you use SPDX line here....
+> 
+>> +/*
+>> + * Core MFD support for Cirrus Logic Madera codecs
+>> + *
+>> + * Copyright (C) 2015-2018 Cirrus Logic
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by the
+>> + * Free Software Foundation; version 2.
+> 
+> You can remove this paragraph.
+> 
+> Same applies to the other places of this series.
+> 
 
-No driver update is needed.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-index 33c9a10fdc91a1dc..20f121daa9106f17 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
-@@ -14,6 +14,7 @@ Required properties:
-     - "renesas,irqc-r8a7794" (R-Car E2)
-     - "renesas,intc-ex-r8a7795" (R-Car H3)
-     - "renesas,intc-ex-r8a7796" (R-Car M3-W)
-+    - "renesas,intc-ex-r8a77965" (R-Car M3-N)
-     - "renesas,intc-ex-r8a77970" (R-Car V3M)
-     - "renesas,intc-ex-r8a77995" (R-Car D3)
- - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
--- 
-2.7.4
+Our legal team says no, these lines should stay.
