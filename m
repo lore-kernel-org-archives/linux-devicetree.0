@@ -1,200 +1,207 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: [PATCHv6 1/3] dt-bindings: documentation: add clock bindings
- information for Stratix10
-Date: Mon, 26 Feb 2018 08:47:33 -0600
-Message-ID: <1519656455-14629-1-git-send-email-dinguyen@kernel.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 2/4] usb: dwc3: add dwc3 glue layer for UniPhier SoCs
+Date: Mon, 26 Feb 2018 23:48:53 +0900
+Message-ID: <CAK7LNARE0YT8HQ-shz=Kg9eaB0pZzaefoqMe-ZnE=eqSQWFp-w@mail.gmail.com>
+References: <1516712454-2915-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <87o9lklnwb.fsf@linux.intel.com> <20180124215228.ED43.4A936039@socionext.com> <87a7x3l8gr.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-clk@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, dinguyen@kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87a7x3l8gr.fsf@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, linux-usb@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Document that Stratix10 clock bindings, and add the clock header file. The
-clock header is an enumeration of all the different clocks on the Stratix10
-platform.
+Hi Felipe,
 
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v6:
-- no changes
-v5:
-- moved SPDX license header to single line comment
-v4:
-- remove '_' in node names
-- remove stray tab
-- add clock-frequency property for fixed-clocks
-- put SPDX license as the very top line
-v3:
-- s/intc/intel for correct vendor prefix
-- fixup node name to "intel,stratix10-clkmgr"
-- document the required fixed-clock for oscillators
-v2:
-- use a single binding for the clock controller
----
- .../devicetree/bindings/clock/intc_stratix10.txt   | 51 +++++++++++++
- include/dt-bindings/clock/stratix10-clock.h        | 84 ++++++++++++++++++++++
- 2 files changed, 135 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/intc_stratix10.txt
- create mode 100644 include/dt-bindings/clock/stratix10-clock.h
 
-diff --git a/Documentation/devicetree/bindings/clock/intc_stratix10.txt b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
-new file mode 100644
-index 0000000..0652ff1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/intc_stratix10.txt
-@@ -0,0 +1,51 @@
-+Device Tree Clock bindings for Intel's SoCFPGA Stratix10 platform
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be
-+	"intel,stratix10-clkmgr"
-+
-+- reg : shall be the control register offset from CLOCK_MANAGER's base for the clock.
-+
-+- #clock-cells : from common clock binding, shall be set to 1.
-+
-+- clocks : Should contain fixed-clock sources, such as oscillators.
-+
-+Example:
-+	clkmgr: clock-controller@ffd10000 {
-+		compatible = "intel,stratix10-clkmgr";
-+		reg = <0xffd10000 0x1000>;
-+		#clock-cells = <1>;
-+
-+		clocks {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			cb_intosc_hs_div2_clk: cb-intosc-hs-div2-clk {
-+				#clock-cells = <0>;
-+				compatible = "fixed-clock";
-+				clock-frequency = <25000000>;
-+			};
-+
-+			cb_intosc_ls_clk: cb-intosc-ls-clk {
-+				#clock-cells = <0>;
-+				compatible = "fixed-clock";
-+				clock-frequency = <25000000>;
-+			};
-+
-+			f2s_free_clk: f2s-free-clk {
-+				#clock-cells = <0>;
-+				compatible = "fixed-clock";
-+				clock-frequency = <25000000>;
-+			};
-+
-+			osc1: osc1 {
-+				#clock-cells = <0>;
-+				compatible = "fixed-clock";
-+				clock-frequency = <25000000>;
-+			};
-+		};
-+	};
-diff --git a/include/dt-bindings/clock/stratix10-clock.h b/include/dt-bindings/clock/stratix10-clock.h
-new file mode 100644
-index 0000000..0ac1c90
---- /dev/null
-+++ b/include/dt-bindings/clock/stratix10-clock.h
-@@ -0,0 +1,84 @@
-+/* SPDX-License-Identifier:	GPL-2.0 */
-+/*
-+ * Copyright (C) 2017, Intel Corporation
-+ */
-+
-+#ifndef __STRATIX10_CLOCK_H
-+#define __STRATIX10_CLOCK_H
-+
-+/* fixed rate clocks */
-+#define STRATIX10_OSC1			0
-+#define STRATIX10_CB_INTOSC_HS_DIV2_CLK	1
-+#define STRATIX10_CB_INTOSC_LS_CLK	2
-+#define STRATIX10_F2S_FREE_CLK		3
-+
-+/* fixed factor clocks */
-+#define STRATIX10_L4_SYS_FREE_CLK	4
-+#define STRATIX10_MPU_PERIPH_CLK	5
-+#define STRATIX10_MPU_L2RAM_CLK		6
-+#define STRATIX10_SDMMC_CIU_CLK		7
-+
-+/* PLL clocks */
-+#define STRATIX10_MAIN_PLL_CLK		8
-+#define STRATIX10_PERIPH_PLL_CLK	9
-+#define STRATIX10_BOOT_CLK		10
-+
-+/* Periph clocks */
-+#define STRATIX10_MAIN_MPU_BASE_CLK	11
-+#define STRATIX10_MAIN_NOC_BASE_CLK	12
-+#define STRATIX10_MAIN_EMACA_CLK	13
-+#define STRATIX10_MAIN_EMACB_CLK	14
-+#define STRATIX10_MAIN_EMAC_PTP_CLK	15
-+#define STRATIX10_MAIN_GPIO_DB_CLK	16
-+#define STRATIX10_MAIN_SDMMC_CLK	17
-+#define STRATIX10_MAIN_S2F_USR0_CLK	18
-+#define STRATIX10_MAIN_S2F_USR1_CLK	19
-+#define STRATIX10_MAIN_PSI_REF_CLK	20
-+
-+#define STRATIX10_PERI_MPU_BASE_CLK	21
-+#define STRATIX10_PERI_NOC_BASE_CLK	22
-+#define STRATIX10_PERI_EMACA_CLK	23
-+#define STRATIX10_PERI_EMACB_CLK	24
-+#define STRATIX10_PERI_EMAC_PTP_CLK	25
-+#define STRATIX10_PERI_GPIO_DB_CLK	26
-+#define STRATIX10_PERI_SDMMC_CLK	27
-+#define STRATIX10_PERI_S2F_USR0_CLK	28
-+#define STRATIX10_PERI_S2F_USR1_CLK	29
-+#define STRATIX10_PERI_PSI_REF_CLK	30
-+
-+#define STRATIX10_MPU_FREE_CLK		31
-+#define STRATIX10_NOC_FREE_CLK		32
-+#define STRATIX10_S2F_USR0_CLK		33
-+#define STRATIX10_NOC_CLK		34
-+#define STRATIX10_EMAC_A_FREE_CLK	35
-+#define STRATIX10_EMAC_B_FREE_CLK	36
-+#define STRATIX10_EMAC_PTP_FREE_CLK	37
-+#define STRATIX10_GPIO_DB_FREE_CLK	38
-+#define STRATIX10_SDMMC_FREE_CLK	39
-+#define STRATIX10_S2F_USER1_FREE_CLK	40
-+#define STRATIX10_PSI_REF_FREE_CLK	41
-+
-+/* Gate clocks */
-+#define STRATIX10_MPU_CLK		42
-+#define STRATIX10_L4_MAIN_CLK		43
-+#define STRATIX10_L4_MP_CLK		44
-+#define STRATIX10_L4_SP_CLK		45
-+#define STRATIX10_CS_AT_CLK		46
-+#define STRATIX10_CS_TRACE_CLK		47
-+#define STRATIX10_CS_PDBG_CLK		48
-+#define STRATIX10_CS_TIMER_CLK		49
-+#define STRATIX10_S2F_USER0_CLK		50
-+#define STRATIX10_S2F_USER1_CLK		51
-+#define STRATIX10_EMAC0_CLK		52
-+#define STRATIX10_EMAC1_CLK		53
-+#define STRATIX10_EMAC2_CLK		54
-+#define STRATIX10_EMAC_PTP_CLK		55
-+#define STRATIX10_GPIO_DB_CLK		56
-+#define STRATIX10_SDMMC_CLK		57
-+#define STRATIX10_PSI_REF_CLK		58
-+#define STRATIX10_USB_CLK		59
-+#define STRATIX10_SPI_M_CLK		60
-+#define STRATIX10_NAND_CLK		61
-+#define STRATIX10_NUM_CLKS		62
-+
-+#endif	/* __STRATIX10_CLOCK_H */
+2018-01-24 21:58 GMT+09:00 Felipe Balbi <balbi@kernel.org>:
+>
+> Hi,
+>
+> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> writes:
+>> Hello Felipe,
+>>
+>> Thank you for your comments.
+>>
+>> On Tue, 23 Jan 2018 15:12:36 +0200 <balbi@kernel.org> wrote:
+>>
+>>>
+>>> Hi,
+>>>
+>>> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> writes:
+>>> > Add a specific glue layer for UniPhier SoC platform to support
+>>> > USB host mode. It manages hardware operating sequences to enable multiple
+>>> > clock gates and assert resets, and to prepare to use dwc3 controller
+>>> > on the SoC.
+>>> >
+>>> > This patch also handles the physical layer that has same register space
+>>> > as the glue layer, because it needs to integrate initialziation sequence
+>>> > between glue and phy.
+>>> >
+>>> > In case of some SoCs, since some initialization values for PHY are
+>>> > included in nvmem, this patch includes the way to get the values from nvmem.
+>>> >
+>>> > It supports PXs2 and LD20 SoCs.
+>>> >
+>>> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>>> > Signed-off-by: Motoya Tanigawa <tanigawa.motoya@socionext.com>
+>>> > Signed-off-by: Masami Hiramatsu <masami.hiramatsu@linaro.org>
+>>> > ---
+>>> >  drivers/usb/dwc3/Kconfig         |   9 +
+>>> >  drivers/usb/dwc3/Makefile        |   1 +
+>>> >  drivers/usb/dwc3/dwc3-uniphier.c | 554 +++++++++++++++++++++++++++++++++++++++
+>>> >  3 files changed, 564 insertions(+)
+>>> >  create mode 100644 drivers/usb/dwc3/dwc3-uniphier.c
+>>
+>> ...snip...
+>>
+>>> > +
+>>> > +static void dwc3u_ssphy_testio_write(struct dwc3u_priv *priv, int port,
+>>> > +                               u32 data)
+>>>
+>>> anything with sshphy or hsphy in the name should probably be part of a
+>>> PHY driver using drivers/phy/ framework.
+>>
+>> I can try to separate phy control from this driver.
+>> However, phy registers belongs to "dwc3-glue" IO map area (65b00000),
+>> and this area also contains a reset bit for "dwc3-core" hardware.
+>>
+>> Although the phy driver is called from dwc3-core driver,
+>> we need to deassert the reset bit before probing dwc3-core driver.
+>>
+>> As shown later, I think that it's difficut to determine the order of
+>> initializing the registers in this area.
+>>
+>>> > +static void dwc3u_vbus_disable(struct dwc3u_priv *priv)
+>>> > +{
+>>> > +  int i;
+>>> > +
+>>> > +  for (i = 0; i < priv->nvbus; i++) {
+>>> > +          dwc3u_maskwrite(priv, VBUS_CONTROL(i),
+>>> > +                          DRVVBUS_REG_EN | DRVVBUS_REG,
+>>> > +                          DRVVBUS_REG_EN | 0);
+>>> > +  }
+>>> > +}
+>>>
+>>> drivers/regulator maybe?
+>>
+>> VBUS_CONTROL register is used for determing whether "dwc3-glue" hardware
+>> enables vbus connected with "regulator" hardware.
+>>
+>> The regulator driver should manage "regulator" hardware, and
+>> I don't think that the driver should manage this register.
+>>
+>>> > +static void dwc3u_reset_init(struct dwc3u_priv *priv)
+>>> > +{
+>>> > +  dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, 0);
+>>> > +  usleep_range(1000, 2000);
+>>> > +  dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, LINK_RESET);
+>>> > +}
+>>> > +
+>>> > +static void dwc3u_reset_clear(struct dwc3u_priv *priv)
+>>> > +{
+>>> > +  dwc3u_maskwrite(priv, RESET_CTL, LINK_RESET, 0);
+>>> > +}
+>>>
+>>> drivers/reset ?
+>>
+>> The reset driver manages "sysctrl" IO map area in our SoC.
+>>
+>> RESET_CTL register belongs to "dwc3-glue" IO map area,
+>> and the kernel can't access this area until enabling usb clocks and
+>> deasserting usb resets in "sysctrl".
+>>
+>> I think that "dwc3-glue" register control should be separated from
+>> "sysctrl".
+>
+> Just split your address space and treat your glue as a device with
+> several children:
+>
+> glue@65b00000 {
+>         compatible = "foo"
+>
+>         phy@bar {
+>                 ...
+>         };
+>
+>         sysctrl@baz {
+>                 ...
+>         };
+>
+>         dwc3@foo {
+>                 compatible = "snps, dwc3";
+>                 ...
+>         };
+> };
+>
+> Then you know that you can let dwc3/core.c handle the PHY for you. If we
+> need to teach dwc3/core.c about regulators, we can do that. But we don't
+> need SoC-specific hacks ;-)
+>
+> --
+> balbi
+
+
+Slightly related question.
+
+
+Why don't we put clocks and resets to dwc3/core.c?
+
+dwc3-of-simple.c only handles clocks and resets.
+This is generic enough to be added to dwc3/core.c, I think.
+
+
+I checked the two instances of dwc3-of-simple.
+
+"qcom,dwc3"
+https://github.com/torvalds/linux/blob/v4.16-rc3/arch/arm64/boot/dts/qcom/msm8996.dtsi#L780
+
+"rockchip,rk3399-dwc3"
+https://github.com/torvalds/linux/blob/v4.16-rc3/arch/arm64/boot/dts/rockchip/rk3399.dtsi#L395
+
+
+They just contain clocks, resets, and "snps,dwc3" sub-node.
+
+
+If we do that,
+
+usb@7600000 {
+        compatible = "qcom,dwc3";
+        clocks = ...;
+
+        dwc3@7600000 {
+                compatible = "snps,dwc3";
+                reg = ...;
+                interrupts = ...;
+                phys = ...;
+        }
+};
+
+
+will be turned into
+
+
+dwc3@7600000 {
+        compatible = "qcom,dwc3", "snps,dwc3";
+        reg = ...;
+        clocks = ...;
+        interrupts = ...;
+        phys = ...;
+};
+
+
+This looks simpler.
+
+
+
+
+Also, dwc3/core.c and dwc3-of-simple.c
+duplicate runtime PM.
+
+
+
 -- 
-2.7.4
+Best Regards
+Masahiro Yamada
