@@ -1,151 +1,145 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
-Date: Mon, 26 Feb 2018 11:12:52 +0100
-Message-ID: <20180226101252.ozdsxjvawgkemz2c@flea.lan>
-References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
- <20180223133742.26044-11-mylene.josserand@bootlin.com>
- <CAGb2v67SuK9Xr7_dVb7RVGXUJwYRKnTiJwDrOJ-Su5CXmm7HXA@mail.gmail.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v7 14/15] cpufreq: Add module to register cpufreq on Krait
+ CPUs
+Date: Mon, 26 Feb 2018 15:45:59 +0530
+Message-ID: <ab5ad9c2-2016-47ca-b748-833ff6e75f70@codeaurora.org>
+References: <1519638811-17269-1-git-send-email-sricharan@codeaurora.org>
+ <1519638811-17269-15-git-send-email-sricharan@codeaurora.org>
+ <20180226100425.GO26947@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mbneedr2uplq73p2"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67SuK9Xr7_dVb7RVGXUJwYRKnTiJwDrOJ-Su5CXmm7HXA@mail.gmail.com>
+In-Reply-To: <20180226100425.GO26947@vireshk-i7>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: =?utf-8?Q?Myl=C3=A8ne?= Josserand <mylene.josserand@bootlin.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, quentin.schulz@bootlin.com
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Viresh,
 
---mbneedr2uplq73p2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2/26/2018 3:34 PM, Viresh Kumar wrote:
+> On 26-02-18, 15:23, Sricharan R wrote:
+>> From: Stephen Boyd <sboyd@codeaurora.org>
+> 
+> Is this email id still valid ?
+> 
 
-On Sat, Feb 24, 2018 at 12:17:13AM +0800, Chen-Yu Tsai wrote:
-> On Fri, Feb 23, 2018 at 9:37 PM, Myl=E8ne Josserand
-> <mylene.josserand@bootlin.com> wrote:
-> > On Cortex-A7, the CNTVOFF register from arch timer is uninitialized.
-> > It should be done by the bootloader but it is currently not the case,
-> > even for boot CPU because this SoC is booting in secure mode.
-> > It leads to an random offset value meaning that each CPU will have a
-> > different time, which isn't working very well.
-> >
-> > Add assembly code used for boot CPU and secondary CPU cores to make
-> > sure that the CNTVOFF register is initialized.
-> >
-> > Signed-off-by: Myl=E8ne Josserand <mylene.josserand@bootlin.com>
-> > ---
-> >  arch/arm/mach-sunxi/headsmp.S | 21 +++++++++++++++++++++
-> >  arch/arm/mach-sunxi/sunxi.c   |  4 ++++
-> >  2 files changed, 25 insertions(+)
-> >
-> > diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsm=
-p.S
-> > index d5c97e945e69..605896251927 100644
-> > --- a/arch/arm/mach-sunxi/headsmp.S
-> > +++ b/arch/arm/mach-sunxi/headsmp.S
-> > @@ -65,9 +65,30 @@ ENTRY(sunxi_mc_smp_cluster_cache_enable)
-> >         first: .word sunxi_mc_smp_first_comer - .
-> >  ENDPROC(sunxi_mc_smp_cluster_cache_enable)
-> >
-> > +ENTRY(sunxi_init_cntvoff)
-> > +       /*
-> > +        * CNTVOFF has to be initialized either from non-secure Hypervi=
-sor
-> > +        * mode or secure Monitor mode with SCR.NS=3D=3D1. If TrustZone=
- is enabled
-> > +        * then it should be handled by the secure code
-> > +        */
-> > +       cps     #MON_MODE
-> > +       mrc     p15, 0, r1, c1, c1, 0           /* Get Secure Config */
-> > +       orr     r0, r1, #1
-> > +       mcr     p15, 0, r0, c1, c1, 0           /* Set Non Secure bit */
-> > +       instr_sync
-> > +       mov     r0, #0
-> > +       mcrr    p15, 4, r0, r0, c14             /* CNTVOFF =3D 0 */
-> > +       instr_sync
-> > +       mcr     p15, 0, r1, c1, c1, 0           /* Set Secure bit */
-> > +       instr_sync
-> > +       cps     #SVC_MODE
-> > +       ret     lr
-> > +ENDPROC(sunxi_init_cntvoff)
->=20
-> There is no need to move all the assembly into a separate file, just
-> to add this function. Everything can be inlined as a naked function.
-> The "instr_sync" macro can be replaced with "isb", which is what it
-> expands to anyway.
->=20
-> I really want to keep everything self-contained without global symbols,
-> and in C files if possible.
+ Yes. codeaurora id should exist.
 
-What is the rationale for keeping it in C files (beside the global
-symbols)? Because the syntax is quite ugly, and it's much easier to
-read, review and amend using a separate file.
+>> +static int __init qcom_cpufreq_populate_opps(struct nvmem_cell *pvs_nvmem,
+>> +					     struct opp_table **tbl)
+>> +{
+>> +	int speed = 0, pvs = 0, pvs_ver = 0, cpu;
+>> +	struct device *cpu_dev;
+>> +	u8 *buf;
+>> +	size_t len;
+>> +	char pvs_name[] = "speedXX-pvsXX-vXX";
+>> +
+>> +	buf = nvmem_cell_read(pvs_nvmem, &len);
+>> +	if (len == 4)
+>> +		get_krait_bin_format_a(&speed, &pvs, &pvs_ver, pvs_nvmem, buf);
+>> +	else if (len == 8)
+>> +		get_krait_bin_format_b(&speed, &pvs, &pvs_ver, pvs_nvmem, buf);
+>> +	else
+>> +		pr_warn("Unable to read nvmem data. Defaulting to 0!\n");
+>> +
+>> +	snprintf(pvs_name, sizeof(pvs_name), "speed%d-pvs%d-v%d",
+>> +		 speed, pvs, pvs_ver);
+>> +
+>> +	for (cpu = 0; cpu < num_possible_cpus(); cpu++) {
+>> +		cpu_dev = get_cpu_device(cpu);
+>> +		if (!cpu_dev)
+>> +			return -ENODEV;
+>> +
+>> +		tbl[cpu] = dev_pm_opp_set_prop_name(cpu_dev, pvs_name);
+>> +
+>> +		if (IS_ERR(tbl[cpu])) {
+>> +			tbl[cpu] = 0;
+>> +			pr_warn("failed to add OPP name %s\n", pvs_name);
+>> +			return PTR_ERR(tbl[cpu]);
+> 
+> You just set tbl[cpu] to 0 :)
+> 
 
-> >  #ifdef CONFIG_SMP
-> >  ENTRY(sunxi_boot)
-> >         bl      sunxi_mc_smp_cluster_cache_enable
-> > +       bl      sunxi_init_cntvoff
-> >         b       secondary_startup
-> >  ENDPROC(sunxi_boot)
-> >
-> > diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-> > index 5e9602ce1573..4bb041492b54 100644
-> > --- a/arch/arm/mach-sunxi/sunxi.c
-> > +++ b/arch/arm/mach-sunxi/sunxi.c
-> > @@ -37,8 +37,12 @@ static const char * const sun6i_board_dt_compat[] =
-=3D {
-> >  };
-> >
-> >  extern void __init sun6i_reset_init(void);
-> > +extern void sunxi_init_cntvoff(void);
-> > +
-> >  static void __init sun6i_timer_init(void)
-> >  {
-> > +       sunxi_init_cntvoff();
->=20
-> You should check the enable-method to see if PSCI is set or not,
-> as an indicator whether the kernel is booted secure or non-secure.
+ my bad. will fix it.
 
-It's an indicator, but it's not really a perfect one. You could very
-well have your kernel booted in non-secure, without PSCI. Or even with
-PSCI, but without the SMP ops.
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int __init qcom_cpufreq_driver_init(void)
+>> +{
+>> +	struct platform_device *pdev;
+>> +	struct device *cpu_dev;
+>> +	struct device_node *np;
+>> +	struct nvmem_cell *pvs_nvmem;
+>> +	struct opp_table *tbl[NR_CPUS] = { NULL };
+>> +	int ret, cpu = 0;
+>> +
+>> +	cpu_dev = get_cpu_device(0);
+>> +	if (!cpu_dev)
+>> +		return -ENODEV;
+>> +
+>> +	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
+>> +	if (!np)
+>> +		return -ENOENT;
+>> +
+>> +	if (!of_device_is_compatible(np, "operating-points-v2-krait-cpu")) {
+>> +		ret = -ENOENT;
+>> +		goto free_np;
+>> +	}
+>> +
+>> +	pvs_nvmem = of_nvmem_cell_get(np, NULL);
+>> +	if (IS_ERR(pvs_nvmem)) {
+>> +		dev_err(cpu_dev, "Could not get nvmem cell\n");
+>> +		ret = PTR_ERR(pvs_nvmem);
+>> +		goto free_np;
+>> +	}
+>> +
+>> +	ret = qcom_cpufreq_populate_opps(pvs_nvmem, tbl);
+>> +	if (ret)
+>> +		goto free_opp_name;
+>> +
+>> +	pdev = platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
+>> +	if (IS_ERR(pdev)) {
+>> +		ret = PTR_ERR(pdev);
+>> +		goto free_opp_name;
+>> +	}
+>> +
+>> +	of_node_put(np);
+>> +
+>> +	return 0;
+>> +
+>> +free_opp_name:
+>> +	while (tbl[cpu]) {
+>> +		dev_pm_opp_put_prop_name(tbl[cpu]);
+>> +		cpu++;
+>> +	}
+>> +
+>> +free_np:
+>> +	of_node_put(np);
+>> +
+>> +	return ret;
+>> +}
+>> +late_initcall(qcom_cpufreq_driver_init);
+>> +
+>> +MODULE_DESCRIPTION("Qualcomm CPUfreq driver");
+>> +MODULE_AUTHOR("Stephen Boyd <sboyd@codeaurora.org>");
+>> +MODULE_LICENSE("GPL v2");
+> 
+> Everything else is fine. Fix above issue and you can add
+> 
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> 
 
-We have a quite big number of these cases already, where, depending on
-the configuration, we might not have access to the device we write to,
-the number of hacks to just enable that device for non-secure is a
-good example of that.
+ Thanks. Will fix and repost.
 
-> AFAIK trying to set CNTVOFF under non-secure would be very bad.
+Regards,
+ Sricharan
 
-Just like any other access we do :/
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---mbneedr2uplq73p2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqT3aMACgkQ0rTAlCFN
-r3Qmqw//WGnAKBTv6UvydDeyCIB9E8IQO19puDonvS5tDNbJCXX2sPNqlvZi5eYH
-gudBP8QUQsSpCdRR8YHOKrh2XLyTdjkRFuMa1bochbSAIk+jsA1IA3hW+V8i9N6B
-STw8FG/0araXLAMapBOc5/0JSzSEdc7o+X4XEUMG6WGlmlHxk2i0zxfSe3EhhF/Q
-hSHUUbkcwAlJhE4xW98ZmsgqgSH5zt3z03/MiQhNpo+DLZpR25xkRytz72Z1dhyZ
-VcRPtunBLlmXM0h/Q98G8LPVXsKmgdJITTYyt5SNfbuFRHOlkfkRD/D8u5GX2nGp
-xiefs8IqW9PywLjrsVd0tSX6V+zcEvbM02LN/8KSVKY6StkRaEH1ZthOR1QJmRty
-mHBRZhMgQWcpkjGzeIKp3dsrcH4fYISLvavqNNjgO3GDwtXeF8yMqsT1hbmd3daT
-d6R5AeDk8msU7CUFBSlKzgWyJ/BOaHIn0XR4YCu8sHyJVEUXEEtU2KnWtf5gc4QW
-3g9ROxL1NT9bALnnibi/sWELqTA1iiUeIbh0lGU4d+jAtIy8ZOJZa8hSWZUo7AOu
-s8FzovMl/3+1ZqGRTZbu18y2IPfhG9kDVUe8UaYyu1RpWAfhc4z+YemcKsa+5nm5
-O7ew3QimPym+PvAH/KNy4TfstyhrKXloi8pbVBCY035LudK1bC4=
-=86xh
------END PGP SIGNATURE-----
-
---mbneedr2uplq73p2--
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
