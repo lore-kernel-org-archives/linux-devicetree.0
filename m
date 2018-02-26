@@ -1,137 +1,51 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v2 2/2] i2c: add support for Socionext SynQuacer I2C controller
-Date: Mon, 26 Feb 2018 17:51:00 +0000
-Message-ID: <CAKv+Gu9qc=h1mC=6CHiu5aX0NSjLgzahyQ1xdRWo5ZYwcDir1Q@mail.gmail.com>
-References: <20180222191647.4727-1-ard.biesheuvel@linaro.org>
- <20180222191647.4727-3-ard.biesheuvel@linaro.org> <CAHp75Vc1AGzdgTB281XVo=FmZerkU1vijLih3JUO=_wNPjxgfA@mail.gmail.com>
- <CAKv+Gu9XkmSPHZf+jVKOm-SX1GCWJUc7y3zTCuaHBwk8O3OC3Q@mail.gmail.com>
- <CAHp75VfFKDkQQ9-vdjzDfE2Cdk2Cb93+kdceYQgEqt3hti=Wkg@mail.gmail.com>
- <CAKv+Gu__HiajW5fWvRnDft3+ef+gOowijxEd8wrF4U5Vu=3o0Q@mail.gmail.com>
- <CAHp75VcjUey4K1xOkjKjn_ppPKC0bktcBK2p9NjcPYG1ed7X0g@mail.gmail.com>
- <CAKv+Gu-y3GG+McAK2b8SCmMf60fo_XSHFBAWsKGw3OBvD04ggg@mail.gmail.com>
- <CAHp75Vco1wUR7cUu-zuaP-TVMnm+m7X+CctnRC0cgvpuo5S2vg@mail.gmail.com> <CAKv+Gu8ZAt43km=mANa9Ehx1Evbj8cLB5vFsFwji9x6ARvD-sw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 0/8] R-Car M3-N: Enable EtherAVB device node
+Date: Mon, 26 Feb 2018 18:57:08 +0100
+Message-ID: <1519667836-31330-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKv+Gu8ZAt43km=mANa9Ehx1Evbj8cLB5vFsFwji9x6ARvD-sw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>
+To: geert@linux-m68k.org, horms@verge.net.au, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 February 2018 at 17:16, Ard Biesheuvel <ard.biesheuvel@linaro.org> wr=
-ote:
-> On 26 February 2018 at 17:05, Andy Shevchenko <andy.shevchenko@gmail.com>=
- wrote:
->> On Mon, Feb 26, 2018 at 4:58 PM, Ard Biesheuvel
->> <ard.biesheuvel@linaro.org> wrote:
->>> On 26 February 2018 at 11:35, Andy Shevchenko <andy.shevchenko@gmail.co=
-m> wrote:
->>>> On Mon, Feb 26, 2018 at 11:59 AM, Ard Biesheuvel
->>>> <ard.biesheuvel@linaro.org> wrote:
->>>>> On 23 February 2018 at 13:12, Andy Shevchenko <andy.shevchenko@gmail.=
-com> wrote:
->>>>>> On Fri, Feb 23, 2018 at 2:40 PM, Ard Biesheuvel
->>>>>> <ard.biesheuvel@linaro.org> wrote:
->>
->>>>>> Replace 'baudclk' with 'pclk' and p->uartclk with i2c->clkrate in
->>>>>> above and you are almost done.
->>
->>>>> I don't think this is better.
->>>>
->>>> It's a pattern over ACPI vs. clk cases at least for now.
->>>> But hold on. We have already an example of dealing with ACPI /
->>>> non-ACPI cases for I2C controllers =E2=80=94 i2c-designware-platdrv.c.
->>>> Check how it's done there.
->>>>
->>>> I actually totally forgot about ACPI slaves described in the table. We
->>>> need to take into account the ones with lowest bus speed.
->>>>
->>>
->>> Wow, that code is absolutely terrible.
->>
->> To some degree I may say yes it is.
->>
->>> So even while _DSD device properties require vendor prefixes, which
->>> are lacking in this case,
->>
->> What kind? clock-frequency? Does it require prefix?
->>
->
-> What I remember from the _DSD discussions is that we should vendor
-> prefixes for per-device properties, and only use unprefixed names for
-> generic properties. However, looking more closely, I understand that
-> this undermines the idea of having parity between DT and ACPI, because
-> DT did not require vendor prefixes in the past (but it does now)
->
-> I guess 'clock-frequency' is one that would not require such a vendor pre=
-fix.
->
->>> and the fact that the ACPI flavor of the
->>> Designware I2C controller now provides two different ways to get the
->>> timing parameters (using device properties or using SSCN/FMCN/etc ACPI
->>> methods), you think this is a shining example of how this should be
->>> implemented?
->>
->> No, those methods because of windows driver and existed ACPI tables at
->> that time.
->> You are not supposed to uglify your case.
->>
->
-> OK, in that case, can you please spell out what you think is
-> mandatory? Because handwavy references to existing UART and I2C
-> drivers are not helping me here.
->
->>> Also, I still think implementing a clock device using rate X just to
->>> interrogate it for its rate (returning X) is absolutely pointless.
->>
->> OTOH the deviation in the driver is what I absolutely against of.
->> Driver must not know the resource provider (ideally at all).
->>
->
-> There is no 'resource provider'. There is only a single number, which
-> is the clock rate, and is only used to calculate some internal
-> dividers of the I2C IP block.
->
->>> So what I can do is invent an ACPI method that returns the PCLK rate.
->>> Would that work for you?
->>
->> Again, looking into existing examples (UART, I2C, etc) we better to
->> create a generic helper in clock framework that would provide us a
->> clock based on property value.
->> But doing different paths for different resource providers is not what
->> we are looking for.
->>
->> P.S. To move this somehow forward I may propose to submit an OF
->> driver, and discuss ACPI part after.
->>
->
-> Thanks, but that does not really work for me. What I can do is split
-> it into an initial DT only driver, and a followup ACPI patch.
->
-> Can you point me to an example of such a clock provider?
+Hi Simon,
+  as discussed with you Sergei and Geert, in order to enable EtherAVB for
+R8A77965 we first wanted to make the phy-mode "rgmii-txid" a board specific
+property for all other SoCs.
 
-Perhaps we could agree on the binding first? Currently, I have the followin=
-g
+This series adds  the phy-mode property to salvator-common.dtsi and reset the
+one for R8A77965/R8A7796/R8A77995 to "rgmii".
 
-    Device (I2C0) {
-      Name (_HID, "SCX0003")
-      Name (_UID, Zero)
-      Name (_CRS, ResourceTemplate () {
-        Memory32Fixed (ReadWrite, SYNQUACER_I2C1_BASE, SYNQUACER_I2C1_SIZE)
-        Interrupt (ResourceConsumer, Level, ActiveHigh, Exclusive) { 197 }
-      })
+Then, in order to enable EtherAVB for R-Car M3-N, iommu nodes had to be added
+as they are referenced by the "avb" device node (CC the iommu list for the
+series for that reason).
 
-      Name (_DSD, Package ()  // _DSD: Device-Specific Data
-      {
-        ToUUID ("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-        Package () {
-          Package (2) { "socionext,pclk-rate", 62500000 },
-        }
-      })
+Series based on what you already applied to your development tree (M3-N initial
+support - EtherAVB + DTS fixes). A branch for testing is available at
 
-and I don't intend to add 'clock-frequency' here because it would be
-redundant anyway.
+git://jmondi.org/linux m3-n/renesas-drivers-2018-02-13-v4.16-rc1/v2-simon
 
-Does this look sane?
+Thanks
+   j
+
+Jacopo Mondi (8):
+  arm64: dts: renesas: salvator-common: Override EtherAVB phy-mode
+  arm64: dts: renesas: r8a7796: Set EtherAVB phy mode to "rgmii"
+  arm64: dts: renesas: r8a7795: Set EtherAVB phy mode to "rgmii"
+  arm64: dts: renesas: r8a77995: Set EtherAVB phy mode to "rgmii"
+  dt-bindings: iommu/ipmmu-vmsa: Add R-Car M3-N (R8A77965)
+  iommu/ipmmu-vmsa: Hook up R8A77965 DT matching code
+  arm64: dts: renesas: r8a77965: Add IPMMU mm and ds0 blocks
+  arm64: dts: renesas: r8a77965: Add EtherAVB device node
+
+ .../bindings/iommu/renesas,ipmmu-vmsa.txt          |  1 +
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           |  2 +-
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi           |  2 +-
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi          | 61 ++++++++++++++++++++--
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi          |  2 +-
+ arch/arm64/boot/dts/renesas/salvator-common.dtsi   |  1 +
+ drivers/iommu/ipmmu-vmsa.c                         |  5 ++
+ 7 files changed, 68 insertions(+), 6 deletions(-)
+
+--
+2.7.4
