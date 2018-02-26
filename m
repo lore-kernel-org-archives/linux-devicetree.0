@@ -1,93 +1,74 @@
 Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-lf0-f68.google.com ([209.85.215.68]:36145 "EHLO
-        mail-lf0-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1751986AbeBZHqL (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 26 Feb 2018 02:46:11 -0500
-Received: by mail-lf0-f68.google.com with SMTP id g72so1332109lfg.3
-        for <devicetree@vger.kernel.org>; Sun, 25 Feb 2018 23:46:10 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/2 v3] spi: spi-gpio: Augment device tree bindings
-Date: Mon, 26 Feb 2018 08:45:59 +0100
-Message-Id: <20180226074559.3227-2-linus.walleij@linaro.org>
-In-Reply-To: <20180226074559.3227-1-linus.walleij@linaro.org>
-References: <20180226074559.3227-1-linus.walleij@linaro.org>
+Received: from mail-db5eur01on0058.outbound.protection.outlook.com ([104.47.2.58]:23232
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1752846AbeBZMEa (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Feb 2018 07:04:30 -0500
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v2 00/12] staging: typec: tcpci: move out of staging
+Date: Mon, 26 Feb 2018 19:49:07 +0800
+Message-Id: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-After we augmented the core to handle "gpio-sck"/"sck-gpios",
-"gpio-mosi"/"mosi-gpios", "gpio-miso"/"miso-gpios" alike,
-deprecate the old binding and put the strict modern and
-recommended binding practice into place as the default for
-GPIO-based SPI.
+This patch set attempts to move the tcpci driver out of staging by fix
+some tcpci driver issues and verified on NXP PTN5110, which is a standard
+tcpci typec port controller device with power delivery support, tested
+power source and sink with drp config.
 
-This reflects the similar change in I2C:
-commit 7d29f509d2cf
-("dt-bindings: i2c: i2c-gpio: Add support for named gpios")
+Main changes for v2:
+- Typec properties are based on general usb connector bindings[1] proposed
+  by Andrzej Hajda, use the standard unit suffixes as defined in
+  property-units.txt.
+- Add 2 infra APIs to get power sink and source config from dt.
+- Don't change the set_cc api, to keep the uncontacted cc line open,
+  set cc1/cc2 to be open in tcpci driver when set polarity.
+- Directly enable vbus detect in tcpci driver rather than add a API.
+- Details added in each patch.
+ 
+[1] https://patchwork.kernel.org/patch/10231447/
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v2->v3:
-- Collect Rob's ACK.
----
- Documentation/devicetree/bindings/spi/spi-gpio.txt | 24 ++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+Li Jun (12):
+  usb: typec: add API to get port type and preferred role
+  usb: typec: add API to get sink and source config
+  staging: typec: tcpci: support port config passed via dt
+  staging: typec: tcpci: register port before request irq
+  staging: typec: tcpci: enable vbus detection
+  typec: tcpm: add starting value for drp toggling
+  staging: typec: tcpci: correct drp toggling
+  staging: typec: tcpci: keep the uncontact cc line open
+  staging: typec: tcpci: Only touch target bit when enable vconn
+  dt-bindings: connector: add properties for typec power delivery
+  dt-bindings: usb: add documentation for typec port controller(TCPCI)
+  staging: typec: tcpci: move tcpci driver out of staging
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-gpio.txt b/Documentation/devicetree/bindings/spi/spi-gpio.txt
-index a95603bcf6ff..52db562f17a4 100644
---- a/Documentation/devicetree/bindings/spi/spi-gpio.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-gpio.txt
-@@ -1,18 +1,30 @@
- SPI-GPIO devicetree bindings
- 
-+This represents a group of 3-n GPIO lines used for bit-banged SPI on dedicated
-+GPIO lines.
-+
- Required properties:
- 
-  - compatible: should be set to "spi-gpio"
-  - #address-cells: should be set to <0x1>
-  - ranges
-- - gpio-sck: GPIO spec for the SCK line to use
-- - gpio-miso: GPIO spec for the MISO line to use
-- - gpio-mosi: GPIO spec for the MOSI line to use
-+ - sck-gpios: GPIO spec for the SCK line to use
-+ - miso-gpios: GPIO spec for the MISO line to use
-+ - mosi-gpios: GPIO spec for the MOSI line to use
-  - cs-gpios: GPIOs to use for chipselect lines.
-              Not needed if num-chipselects = <0>.
-  - num-chipselects: Number of chipselect lines. Should be <0> if a single device
-                     with no chip select is connected.
- 
-+Deprecated bindings:
-+
-+These legacy GPIO line bindings can alternatively be used to define the
-+GPIO lines used, they should not be used in new device trees.
-+
-+ - gpio-sck: GPIO spec for the SCK line to use
-+ - gpio-miso: GPIO spec for the MISO line to use
-+ - gpio-mosi: GPIO spec for the MOSI line to use
-+
- Example:
- 
- 	spi {
-@@ -20,9 +32,9 @@ Example:
- 		#address-cells = <0x1>;
- 		ranges;
- 
--		gpio-sck = <&gpio 95 0>;
--		gpio-miso = <&gpio 98 0>;
--		gpio-mosi = <&gpio 97 0>;
-+		sck-gpios = <&gpio 95 0>;
-+		miso-gpios = <&gpio 98 0>;
-+		mosi-gpios = <&gpio 97 0>;
- 		cs-gpios = <&gpio 125 0>;
- 		num-chipselects = <1>;
- 
+ .../bindings/connector/usb-connector.txt           |  43 +++++++
+ .../devicetree/bindings/usb/typec-tcpci.txt        |  35 ++++++
+ drivers/staging/Kconfig                            |   2 -
+ drivers/staging/Makefile                           |   1 -
+ drivers/staging/typec/Kconfig                      |  14 ---
+ drivers/staging/typec/Makefile                     |   1 -
+ drivers/staging/typec/TODO                         |   5 -
+ drivers/usb/typec/Kconfig                          |   7 ++
+ drivers/usb/typec/Makefile                         |   1 +
+ drivers/{staging => usb}/typec/tcpci.c             | 127 ++++++++++++++++++---
+ drivers/{staging => usb}/typec/tcpci.h             |   0
+ drivers/usb/typec/tcpm.c                           |  53 ++++++++-
+ drivers/usb/typec/typec.c                          |  46 ++++++++
+ include/linux/usb/tcpm.h                           |   8 +-
+ include/linux/usb/typec.h                          |   2 +
+ 15 files changed, 295 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/typec-tcpci.txt
+ delete mode 100644 drivers/staging/typec/Kconfig
+ delete mode 100644 drivers/staging/typec/Makefile
+ delete mode 100644 drivers/staging/typec/TODO
+ rename drivers/{staging => usb}/typec/tcpci.c (81%)
+ rename drivers/{staging => usb}/typec/tcpci.h (100%)
+
 -- 
-2.14.3
+2.7.4
 
