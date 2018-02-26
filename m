@@ -1,97 +1,80 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v5 0/7] ARM: stm32: add initial STM32MPU support
-Date: Mon, 26 Feb 2018 18:00:42 +0100
-Message-ID: <45339923-de01-16b5-1d24-17e95c643e06@st.com>
-References: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: exynos: Fix address of PPMU ACP on
+ Exynos4210
+Date: Mon, 26 Feb 2018 18:04:42 +0100
+Message-ID: <20180226170442.opmhse4wm3iqoshz@kozik-lap>
+References: <CGME20180222191146epcas2p1e0fc10e3f8b278f0c3671d32e2d76350@epcas2p1.samsung.com>
+ <20180222191111.23747-1-krzk@kernel.org>
+ <5A8F608E.4030509@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516114580-2424-1-git-send-email-ludovic.Barre@st.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <5A8F608E.4030509@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Marian Mihailescu <mihailescu2m@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ludovic
+On Fri, Feb 23, 2018 at 09:30:06AM +0900, Chanwoo Choi wrote:
+> On 2018년 02월 23일 04:11, Krzysztof Kozlowski wrote:
+> > Typo in unit address of PPMU ACP caused DTC warnings:
+> > 
+> >     arch/arm/boot/dts/exynos4412-odroidu3.dtb:
+> >         Warning (simple_bus_reg): Node /soc/ppmu_acp@10ae0000 simple-bus unit address format error, expected "106e0000"
+> > 
+> > PPMU ACP (under 0x10ae0000 address) is present only in Exynos4210 so
+> > move this node to exynos4210.dtsi with fixing the reg address to proper
+> > one.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  arch/arm/boot/dts/exynos4.dtsi    | 6 ------
+> >  arch/arm/boot/dts/exynos4210.dtsi | 6 ++++++
+> >  2 files changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> > index 967cd02401c5..909a9f2bf5be 100644
+> > --- a/arch/arm/boot/dts/exynos4.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4.dtsi
+> > @@ -821,12 +821,6 @@
+> >  			status = "disabled";
+> >  		};
+> >  
+> > -		ppmu_acp: ppmu_acp@10ae0000 {
+> > -			compatible = "samsung,exynos-ppmu";
+> > -			reg = <0x106e0000 0x2000>;
+> > -			status = "disabled";
+> > -		};
+> > -
+> >  		ppmu_rightbus: ppmu_rightbus@112a0000 {
+> >  			compatible = "samsung,exynos-ppmu";
+> >  			reg = <0x112a0000 0x2000>;
+> > diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+> > index 853604d91158..88fb47cef9a8 100644
+> > --- a/arch/arm/boot/dts/exynos4210.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4210.dtsi
+> > @@ -162,6 +162,12 @@
+> >  			iommus = <&sysmmu_g2d>;
+> >  		};
+> >  
+> > +		ppmu_acp: ppmu_acp@10ae0000 {
+> > +			compatible = "samsung,exynos-ppmu";
+> > +			reg = <0x10ae0000 0x2000>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> >  		ppmu_lcd1: ppmu_lcd1@12240000 {
+> >  			compatible = "samsung,exynos-ppmu";
+> >  			reg = <0x12240000 0x2000>;
+> > 
+> 
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-On 01/16/2018 03:56 PM, Ludovic Barre wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
-> 
-> This patch series extends the existing STM32 microcontrollers (MCUs)
-> family to microprocessors (MPUs). The MPU platform (based on
-> Arm Cortex-A) is a continuation of the MCU one (based on Arm
-> Cortex-M) in that it shares a wide number of hardware blocks.
+Thanks for reviews!
 
-Series applied on stm32-next (except patch3 which is already in 4.16-rc1).
+Applied both.
 
-Thanks
-alex
-
-> 
-> change v5:
-> -fix serial3 aliases by serial0
->   
-> change v4:
-> -Add all available uarts in stm32mp157c
-> -Move uart aliases to board files
-> 
-> change v3:
-> -Remove bootargs
-> -Remove armv7m_restart and Share stm32_compat for mcu/mpu
-> -Modify stm32 kconfig with Arnd template
-> -Remove patch below (Linus W: Patch applied)
->   devicetree: bindings: Document supported STM32 SoC family
->   pinctrl: stm32: Add STM32MP157 MPU support
-> 
-> change V2:
-> -Add stm32 documentation in this serie to avoid merge conflict
-> thread: "https://patchwork.kernel.org/patch/10102573/";
-> -Split bindings (stm32.txt) to separate patches.
-> -Remove ARCH_STM32_MCU/MPU flags
-> -Adopt rst format for Documentation/arm/stm32 files
-> -s/STMicrolectronics/STMicroelectronics/g
-> 
-> Ludovic Barre (7):
->    Documentation: arm: stm32: move to rst format
->    ARM: stm32: prepare stm32 family to welcome armv7 architecture
->    dt-bindings: stm32: add support of STM32MP157
->    ARM: stm32: add initial support for STM32MP157
->    ARM: configs: multi_v7: add stm32 support
->    ARM: dts: stm32: add stm32mp157c initial support
->    ARM: dts: stm32: add initial support of stm32mp157c eval board
-> 
->   Documentation/arm/stm32/overview.rst            |  34 +++++
->   Documentation/arm/stm32/overview.txt            |  33 ----
->   Documentation/arm/stm32/stm32f429-overview.rst  |  26 ++++
->   Documentation/arm/stm32/stm32f429-overview.txt  |  22 ---
->   Documentation/arm/stm32/stm32f746-overview.rst  |  33 ++++
->   Documentation/arm/stm32/stm32f746-overview.txt  |  34 -----
->   Documentation/arm/stm32/stm32h743-overview.rst  |  34 +++++
->   Documentation/arm/stm32/stm32h743-overview.txt  |  30 ----
->   Documentation/arm/stm32/stm32mp157-overview.rst |  19 +++
->   Documentation/devicetree/bindings/arm/stm32.txt |   1 +
->   arch/arm/boot/dts/Makefile                      |   6 +-
->   arch/arm/boot/dts/stm32mp157-pinctrl.dtsi       | 185 ++++++++++++++++++++++
->   arch/arm/boot/dts/stm32mp157c-ed1.dts           |  32 ++++
->   arch/arm/boot/dts/stm32mp157c-ev1.dts           |  21 +++
->   arch/arm/boot/dts/stm32mp157c.dtsi              | 194 ++++++++++++++++++++++++
->   arch/arm/configs/multi_v7_defconfig             |   3 +
->   arch/arm/mach-stm32/Kconfig                     |  38 +++--
->   arch/arm/mach-stm32/board-dt.c                  |   5 +-
->   18 files changed, 614 insertions(+), 136 deletions(-)
->   create mode 100644 Documentation/arm/stm32/overview.rst
->   delete mode 100644 Documentation/arm/stm32/overview.txt
->   create mode 100644 Documentation/arm/stm32/stm32f429-overview.rst
->   delete mode 100644 Documentation/arm/stm32/stm32f429-overview.txt
->   create mode 100644 Documentation/arm/stm32/stm32f746-overview.rst
->   delete mode 100644 Documentation/arm/stm32/stm32f746-overview.txt
->   create mode 100644 Documentation/arm/stm32/stm32h743-overview.rst
->   delete mode 100644 Documentation/arm/stm32/stm32h743-overview.txt
->   create mode 100644 Documentation/arm/stm32/stm32mp157-overview.rst
->   create mode 100644 arch/arm/boot/dts/stm32mp157-pinctrl.dtsi
->   create mode 100644 arch/arm/boot/dts/stm32mp157c-ed1.dts
->   create mode 100644 arch/arm/boot/dts/stm32mp157c-ev1.dts
->   create mode 100644 arch/arm/boot/dts/stm32mp157c.dtsi
-> 
+Best regards,
+Krzysztof
