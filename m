@@ -1,39 +1,95 @@
-Return-Path: <SRS0=8NQX=FO=gmail.com=keepcalm444@kernel.org>
-From: Simon Shields <simon@lineageos.org>
-Subject: [PATCH 0/2] Panasonic AN30259A support
-Date: Tue, 20 Feb 2018 11:54:44 +1100
-Message-Id: <20180220005446.8577-1-simon@lineageos.org>
-To: linux-leds@vger.kernel.org
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Simon Shields <simon@lineageos.org>
+Return-Path: <SRS0=KIyI=FU=codeaurora.org=kramasub@kernel.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: soc: qcom: Add device tree binding
+ for GENI SE
+References: <1515805547-22816-1-git-send-email-kramasub@codeaurora.org>
+ <1515805547-22816-3-git-send-email-kramasub@codeaurora.org>
+ <20180117062558.GB6620@minitux>
+From: Karthik Ramasubramanian <kramasub@codeaurora.org>
+Message-ID: <14a7641c-a42b-5017-0dc4-f708dcb26696@codeaurora.org>
+Date: Mon, 26 Feb 2018 14:24:23 -0700
+MIME-Version: 1.0
+In-Reply-To: <20180117062558.GB6620@minitux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
 
-This patch series adds DT bindings (patch #1) and the corresponding driver
-(patch #2) for the Panasonic AN30259A 3-channel LED driver. AN30259A
-uses an internal clock for controlling brightness/on-off cycles, but also supports
-using an external PWM/clock input. This patch series only implements
-support for the former.
 
-The AN30259A is connected using I2C, and the datasheet is freely
-available[0].
-
-Cheers,
-Simon
-
-[0]: https://www.alliedelec.com/m/d/a9d2b3ee87c2d1a535a41dd747b1c247.pdf
-
-Simon Shields (2):
-  dt-bindings: leds: document Panasonic AN30259A bindings
-  leds: add Panasonic AN30259A support
-
- .../devicetree/bindings/leds/leds-an30259a.txt     |  41 +++
- drivers/leds/Kconfig                               |  10 +
- drivers/leds/Makefile                              |   1 +
- drivers/leds/leds-an30259a.c                       | 338 +++++++++++++++++++++
- 4 files changed, 390 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-an30259a.txt
- create mode 100644 drivers/leds/leds-an30259a.c
-
+On 1/16/2018 11:25 PM, Bjorn Andersson wrote:
+> On Fri 12 Jan 17:05 PST 2018, Karthikeyan Ramasubramanian wrote:
+> 
+>> Add device tree binding support for the QCOM GENI SE driver.
+>>
+>> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+> 
+> Better describe the entire GENI, with it's functions in the same
+> binding.
+Ok.
+> 
+>> ---
+>>   .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 34 ++++++++++++++++++++++
+>>   1 file changed, 34 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>> new file mode 100644
+>> index 0000000..66f8a16
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>> @@ -0,0 +1,34 @@
+>> +Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
+>> +
+>> +Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
+>> +is a programmable module for supporting a wide range of serial interfaces
+>> +like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
+>> +Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
+>> +Wrapper controller is modeled as a node with zero or more child nodes each
+>> +representing a serial engine.
+>> +
+>> +Required properties:
+>> +- compatible:		Must be "qcom,geni-se-qup".
+>> +- reg:			Must contain QUP register address and length.
+>> +- clock-names:		Must contain "m-ahb" and "s-ahb".
+>> +- clocks:		AHB clocks needed by the device.
+>> +
+>> +Required properties if child node exists:
+>> +- #address-cells: Must be 1
+>> +- #size-cells: Must be 1
+> 
+> But on a 64-bit system, shouldn't these be 2?
+As pointed out by Rob in his response, the module size is less than 4G 
+and hence 1.
+> 
+>> +- ranges: Must be present
+>> +
+>> +Properties for children:
+>> +
+>> +A GENI based QUP wrapper controller node can contain 0 or more child nodes
+>> +representing serial devices.  These serial devices can be a QCOM UART, I2C
+>> +controller, spi controller, or some combination of aforementioned devices.
+>> +
+>> +Example:
+>> +	qup0: qcom,geniqup0@8c0000 {
+> 
+> I don't see a reason for this to be referenced, so skip the label. And
+> don't use qcom, in the node name; "geni" would be perfectly fine?
+Ok.
+> 
+>> +		compatible = "qcom,geni-se-qup";
+>> +		reg = <0x8c0000 0x6000>;
+>> +		clock-names = "m-ahb", "s-ahb";
+>> +		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
+>> +			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
+>> +	}
+> 
+> Regards,
+> Bjorn
+> 
+Regards,
+Karthik.
 -- 
-2.16.2
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
