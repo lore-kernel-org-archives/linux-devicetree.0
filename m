@@ -1,116 +1,135 @@
-Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH v14 3/9] PCI: Add fwnode handler as input param of pci_register_io_range()
-Date: Tue, 20 Feb 2018 01:48:34 +0800
-Message-ID: <1519062520-198902-4-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1519062520-198902-1-git-send-email-john.garry@huawei.com>
-References: <1519062520-198902-1-git-send-email-john.garry@huawei.com>
+Return-Path: <SRS0=m1Og=FU=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-db5eur01on0064.outbound.protection.outlook.com ([104.47.2.64]:2944
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1752947AbeBZMFj (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 26 Feb 2018 07:05:39 -0500
+From: Li Jun <jun.li@nxp.com>
+Subject: [PATCH v2 12/12] staging: typec: tcpci: move tcpci driver out of staging
+Date: Mon, 26 Feb 2018 19:49:19 +0800
+Message-Id: <1519645759-12701-13-git-send-email-jun.li@nxp.com>
+In-Reply-To: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org
-Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org
+Sender: devicetree-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: a.hajda@samsung.com, mark.rutland@arm.com, jun.li@nxp.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Move TCPCI(Typec port controller interface) driver out of staging.
 
-In preparation for having the PCI MMIO helpers to use the new generic
-I/O space management(logical PIO) we need to add the fwnode handler as
-extra input parameter.
-This patch changes the signature of pci_register_io_range() and of
-its callers as needed.
-
-Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Li Jun <jun.li@nxp.com>
 ---
- drivers/acpi/pci_root.c | 8 +++++---
- drivers/of/address.c    | 4 +++-
- drivers/pci/pci.c       | 3 ++-
- include/linux/pci.h     | 3 ++-
- 4 files changed, 12 insertions(+), 6 deletions(-)
+ drivers/staging/Kconfig                |  2 --
+ drivers/staging/Makefile               |  1 -
+ drivers/staging/typec/Kconfig          | 14 --------------
+ drivers/staging/typec/Makefile         |  1 -
+ drivers/staging/typec/TODO             |  5 -----
+ drivers/usb/typec/Kconfig              |  7 +++++++
+ drivers/usb/typec/Makefile             |  1 +
+ drivers/{staging => usb}/typec/tcpci.c |  0
+ drivers/{staging => usb}/typec/tcpci.h |  0
+ 9 files changed, 8 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 6fc204a..1213479 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -729,7 +729,8 @@ static void acpi_pci_root_validate_resources(struct device *dev,
- 	}
- }
+diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
+index 5546839..1e3d5d0 100644
+--- a/drivers/staging/Kconfig
++++ b/drivers/staging/Kconfig
+@@ -112,8 +112,6 @@ source "drivers/staging/vc04_services/Kconfig"
  
--static void acpi_pci_root_remap_iospace(struct resource_entry *entry)
-+static void acpi_pci_root_remap_iospace(struct fwnode_handle *fwnode,
-+			struct resource_entry *entry)
- {
- #ifdef PCI_IOBASE
- 	struct resource *res = entry->res;
-@@ -738,7 +739,7 @@ static void acpi_pci_root_remap_iospace(struct resource_entry *entry)
- 	resource_size_t length = resource_size(res);
- 	unsigned long port;
+ source "drivers/staging/ccree/Kconfig"
  
--	if (pci_register_io_range(cpu_addr, length))
-+	if (pci_register_io_range(fwnode, cpu_addr, length))
- 		goto err;
+-source "drivers/staging/typec/Kconfig"
+-
+ source "drivers/staging/vboxvideo/Kconfig"
  
- 	port = pci_address_to_pio(cpu_addr);
-@@ -780,7 +781,8 @@ int acpi_pci_probe_root_resources(struct acpi_pci_root_info *info)
- 	else {
- 		resource_list_for_each_entry_safe(entry, tmp, list) {
- 			if (entry->res->flags & IORESOURCE_IO)
--				acpi_pci_root_remap_iospace(entry);
-+				acpi_pci_root_remap_iospace(&device->fwnode,
-+						entry);
+ source "drivers/staging/pi433/Kconfig"
+diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
+index 6e53602..ba69c52 100644
+--- a/drivers/staging/Makefile
++++ b/drivers/staging/Makefile
+@@ -2,7 +2,6 @@
+ # Makefile for staging directory
  
- 			if (entry->res->flags & IORESOURCE_DISABLED)
- 				resource_list_destroy_entry(entry);
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index ce4d3d8..cdf047b 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -2,6 +2,7 @@
- #define pr_fmt(fmt)	"OF: " fmt
+ obj-y				+= media/
+-obj-y				+= typec/
+ obj-$(CONFIG_IRDA)		+= irda/net/
+ obj-$(CONFIG_IRDA)		+= irda/drivers/
+ obj-$(CONFIG_PRISM2_USB)	+= wlan-ng/
+diff --git a/drivers/staging/typec/Kconfig b/drivers/staging/typec/Kconfig
+deleted file mode 100644
+index 5359f55..0000000
+--- a/drivers/staging/typec/Kconfig
++++ /dev/null
+@@ -1,14 +0,0 @@
+-menu "USB Power Delivery and Type-C drivers"
+-
+-if TYPEC_TCPM
+-
+-config TYPEC_TCPCI
+-	tristate "Type-C Port Controller Interface driver"
+-	depends on I2C
+-	select REGMAP_I2C
+-	help
+-	  Type-C Port Controller driver for TCPCI-compliant controller.
+-
+-endif
+-
+-endmenu
+diff --git a/drivers/staging/typec/Makefile b/drivers/staging/typec/Makefile
+deleted file mode 100644
+index 53d649a..0000000
+--- a/drivers/staging/typec/Makefile
++++ /dev/null
+@@ -1 +0,0 @@
+-obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
+diff --git a/drivers/staging/typec/TODO b/drivers/staging/typec/TODO
+deleted file mode 100644
+index 53fe2f7..0000000
+--- a/drivers/staging/typec/TODO
++++ /dev/null
+@@ -1,5 +0,0 @@
+-tcpci:
+-- Test with real hardware
+-
+-Please send patches to Guenter Roeck <linux@roeck-us.net> and copy
+-Heikki Krogerus <heikki.krogerus@linux.intel.com>.
+diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+index bcb2744..711f7ee 100644
+--- a/drivers/usb/typec/Kconfig
++++ b/drivers/usb/typec/Kconfig
+@@ -54,6 +54,13 @@ config TYPEC_TCPM
  
- #include <linux/device.h>
-+#include <linux/fwnode.h>
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/module.h>
-@@ -333,7 +334,8 @@ int of_pci_range_to_resource(struct of_pci_range *range,
+ if TYPEC_TCPM
  
- 	if (res->flags & IORESOURCE_IO) {
- 		unsigned long port;
--		err = pci_register_io_range(range->cpu_addr, range->size);
-+		err = pci_register_io_range(&np->fwnode, range->cpu_addr,
-+				range->size);
- 		if (err)
- 			goto invalid_range;
- 		port = pci_address_to_pio(range->cpu_addr);
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 4666a01..07290a3 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3455,7 +3455,8 @@ struct io_range {
-  * Record the PCI IO range (expressed as CPU physical address + size).
-  * Return a negative value if an error has occured, zero otherwise
-  */
--int pci_register_io_range(phys_addr_t addr, resource_size_t size)
-+int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
-+			resource_size_t	size)
- {
- 	int err = 0;
++config TYPEC_TCPCI
++	tristate "Type-C Port Controller Interface driver"
++	depends on I2C
++	select REGMAP_I2C
++	help
++	  Type-C Port Controller driver for TCPCI-compliant controller.
++
+ source "drivers/usb/typec/fusb302/Kconfig"
  
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 25b7a35..17cc998 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1221,7 +1221,8 @@ int __must_check pci_bus_alloc_resource(struct pci_bus *bus,
- 			void *alignf_data);
- 
- 
--int pci_register_io_range(phys_addr_t addr, resource_size_t size);
-+int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
-+			resource_size_t size);
- unsigned long pci_address_to_pio(phys_addr_t addr);
- phys_addr_t pci_pio_to_address(unsigned long pio);
- int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
+ config TYPEC_WCOVE
+diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
+index bb3138a..59c88b4 100644
+--- a/drivers/usb/typec/Makefile
++++ b/drivers/usb/typec/Makefile
+@@ -5,3 +5,4 @@ obj-y				+= fusb302/
+ obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
+ obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
+ obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
++obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
+diff --git a/drivers/staging/typec/tcpci.c b/drivers/usb/typec/tcpci.c
+similarity index 100%
+rename from drivers/staging/typec/tcpci.c
+rename to drivers/usb/typec/tcpci.c
+diff --git a/drivers/staging/typec/tcpci.h b/drivers/usb/typec/tcpci.h
+similarity index 100%
+rename from drivers/staging/typec/tcpci.h
+rename to drivers/usb/typec/tcpci.h
 -- 
-1.9.1
+2.7.4
+
