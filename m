@@ -1,75 +1,62 @@
-From: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v3 01/10] pwm: extend PWM framework with PWM modes
-Date: Mon, 26 Feb 2018 10:11:45 +0200
-Message-ID: <a26cdf7b-024e-957b-8691-c3c898d0d9d6@microchip.com>
-References: <1519300881-8136-2-git-send-email-claudiu.beznea@microchip.com>
- <201802250410.reI8wAy2%fengguang.wu@intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 01/19] clk: renesas: cpg-mssr: Add support for R-Car M3-N
+Date: Mon, 26 Feb 2018 09:14:36 +0100
+Message-ID: <CAMuHMdWcLd6BnwW2fwOPhpsRZ=qfuYE6YoehFj8WXkUmGZMW_A@mail.gmail.com>
+References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org> <1519139541-18783-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201802250410.reI8wAy2%fengguang.wu@intel.com>
-Content-Language: en-US
+In-Reply-To: <1519139541-18783-2-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, thierry.reding@gmail.com, shc_work@mail.ru, kgene@kernel.org, krzk@kernel.org, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@codeaurora.org, jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com, airlied@linux.ie, kamil@wypas.org, b.zolnierkie@samsung.com, jdelvare@suse.com, linux@roeck-us.net, dmitry.torokhov@gmail.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, mchehab@kernel.org, sean@mess.org, lee.jones@linaro.org, daniel.thompson@linaro.org, jingoohan1@gmail.com, milo.kim@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-pwm@vger.kernel.orgl
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-I'll rebase it on latest for-next in next version.
+Hi Jacopo,
 
-Thank you,
-Claudiu Beznea
+On Tue, Feb 20, 2018 at 4:12 PM, Jacopo Mondi <jacopo+renesas@jmondi.org> wrote:
+> Initial support for R-Car M3-N (r8a77965), including core and module
+> clocks.
+>
+> Based on Table 8.2d of "R-Car Series, 3rd Generation User's Manual:
+> Hardware (Rev. 0.80, Oct 31, 2017)".
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-On 24.02.2018 22:49, kbuild test robot wrote:
-> Hi Claudiu,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on pwm/for-next]
-> [also build test WARNING on v4.16-rc2 next-20180223]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Claudiu-Beznea/extend-PWM-framework-to-support-PWM-modes/20180225-024011
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git for-next
-> config: xtensa-allmodconfig (attached as .config)
-> compiler: xtensa-linux-gcc (GCC) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=xtensa 
-> 
-> All warnings (new ones prefixed by >>):
-> 
->>> drivers//pwm/pwm-sun4i.c:36:0: warning: "PWM_MODE" redefined
->     #define PWM_MODE  BIT(7)
->     
->    In file included from drivers//pwm/pwm-sun4i.c:19:0:
->    include/linux/pwm.h:40:0: note: this is the location of the previous definition
->     #define PWM_MODE(name)  BIT(PWM_MODE_##name##_BIT)
->     
-> 
-> vim +/PWM_MODE +36 drivers//pwm/pwm-sun4i.c
-> 
-> 09853ce7 Alexandre Belloni 2014-12-17  29  
-> 09853ce7 Alexandre Belloni 2014-12-17  30  #define PWMCH_OFFSET		15
-> 09853ce7 Alexandre Belloni 2014-12-17  31  #define PWM_PRESCAL_MASK	GENMASK(3, 0)
-> 09853ce7 Alexandre Belloni 2014-12-17  32  #define PWM_PRESCAL_OFF		0
-> 09853ce7 Alexandre Belloni 2014-12-17  33  #define PWM_EN			BIT(4)
-> 09853ce7 Alexandre Belloni 2014-12-17  34  #define PWM_ACT_STATE		BIT(5)
-> 09853ce7 Alexandre Belloni 2014-12-17  35  #define PWM_CLK_GATING		BIT(6)
-> 09853ce7 Alexandre Belloni 2014-12-17 @36  #define PWM_MODE		BIT(7)
-> 09853ce7 Alexandre Belloni 2014-12-17  37  #define PWM_PULSE		BIT(8)
-> 09853ce7 Alexandre Belloni 2014-12-17  38  #define PWM_BYPASS		BIT(9)
-> 09853ce7 Alexandre Belloni 2014-12-17  39  
-> 
-> :::::: The code at line 36 was first introduced by commit
-> :::::: 09853ce7bc1003a490c7ee74a5705d7a7cf16b7d pwm: Add Allwinner SoC support
-> 
-> :::::: TO: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> :::::: CC: Thierry Reding <thierry.reding@gmail.com>
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+> @@ -22,6 +22,7 @@ Required Properties:
+>        - "renesas,r8a7794-cpg-mssr" for the r8a7794 SoC (R-Car E2)
+>        - "renesas,r8a7795-cpg-mssr" for the r8a7795 SoC (R-Car H3)
+>        - "renesas,r8a7796-cpg-mssr" for the r8a7796 SoC (R-Car M3-W)
+> +      - "renesas,r8a77965-cpg-mssr" for the r8a77965 SoC (R-Car M3-N)
+>        - "renesas,r8a77970-cpg-mssr" for the r8a77970 SoC (R-Car V3M)
+>        - "renesas,r8a77995-cpg-mssr" for the r8a77995 SoC (R-Car D3)
+
+You forgot to update the list of external parent clock names.
+No need to fix and resend, I've squashed in the following:
+
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+@@ -34,8 +34,8 @@ Required Properties:
+     clock-names
+   - clock-names: List of external parent clock names. Valid names are:
+       - "extal" (r8a7743, r8a7745, r8a7790, r8a7791, r8a7792, r8a7793, r8a7794,
+-                r8a7795, r8a7796, r8a77970, r8a77980, r8a77995)
+-      - "extalr" (r8a7795, r8a7796, r8a77970, r8a77980)
++                r8a7795, r8a7796, r8a77965, r8a77970, r8a77980, r8a77995)
++      - "extalr" (r8a7795, r8a7796, r8a77965, r8a77970, r8a77980)
+       - "usb_extal" (r8a7743, r8a7745, r8a7790, r8a7791, r8a7793, r8a7794)
+
+   - #clock-cells: Must be 2
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
