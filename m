@@ -1,13 +1,14 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [v2,03/10] drm/sun4i: Protect the TCON pixel clocks
-Date: Mon, 26 Feb 2018 12:15:47 +0100
-Message-ID: <20180226111547.adm6cfvccceipgqh@flea.lan>
-References: <d5224d2e81ecf73dc09f234e580ada52c00eaee3.1519204731.git-series.maxime.ripard@bootlin.com>
- <7ed0fad9-6b3d-aafc-08a6-fb18761897aa@micronovasrl.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regmap: mmio: Add function to attach a clock" to the regmap
+ tree
+Date: Mon, 26 Feb 2018 11:17:49 +0000
+Message-ID: <E1eqGmz-0005ZC-LJ@debutante>
+References: <1155920db000d014fd1cd604ed48d1b9a8f64ac1.1519204731.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0810698522=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <7ed0fad9-6b3d-aafc-08a6-fb18761897aa@micronovasrl.com>
+In-Reply-To: <1155920db000d014fd1cd604ed48d1b9a8f64ac1.1519204731.git-series.maxime.ripard@bootlin.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -17,75 +18,75 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Giulio Benetti <giulio.benetti@micronovasrl.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============0810698522==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lzhodxwy2knl7pia"
-Content-Disposition: inline
-
-
---lzhodxwy2knl7pia
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Feb 24, 2018 at 12:31:36AM +0100, Giulio Benetti wrote:
-> Il 21/02/2018 10:20, Maxime Ripard ha scritto:
-> > From: Maxime Ripard <maxime.ripard@free-electrons.com>
-> >=20
-> > Both TCON clocks are very sensitive to clock changes, since any change
-> > might lead to improper timings.
-> >=20
-> > Make sure our rate is never changed.
-> >=20
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Tested-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
->=20
-> Tested on A20-LiNova1-4_3i-ctp with Mali r6p2 installed.
-> Before Mali changed dotclock, now it doesn't anymore.
-
-Applied, thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---lzhodxwy2knl7pia
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqT7GIACgkQ0rTAlCFN
-r3QPbA//d6OYNiqPr2qB2rLuV5iXbdz3GBaL/OdOqzZTxZukDuZMSjR4g2Ne/0JN
-qMVIgXOA3kmbHQ+LU7vor4vqH6Qr1CplFPyp61dB+/kgajwHv14C/5UWNiCtVYl1
-8EdruBIHZqpBI9VVV44F3JLFLt8j6ti031sIWYtqnm64gj2+ECeMN1g+0dwlTZO6
-axSkijL8Lmu431+BQoZrqmqBeuugxDwUdBoZug4cYxltTzFQbFdH9gkKubkr/2Hn
-iLIjjSK/F5ovA8kUvynaOLYB4ltvBfvnXwUMUMGyjboV6yem6638klMGqlzNaoWt
-+UUQWEbesz8YaQV8afqs7wh+dPTaOG6nv9UXaRD1iqQdi3x441XQdcuLUBNYOfo7
-GPalYwjstfa9fszc/WSfXt2muudY6n5hK+1AoYiclaM0lV2MlLu0uVpTIl8wjRDA
-cEZULuM42oPg3Mk05hyBoUmOPE8vCpzzPnLrTM3W+hajFXpSAMeXrUZPyMsc4cPG
-1Sxf5R38WNGPyvwo3liZVXSbGX6L9Ip+4I4yUerlLvlWmiz6YfiTeCLiahJ+wz4D
-2ihv2D2J7GCDErf+/8CDxwbSKEoCN3vt1Qys9yujH58xRfCIQ/l2+X3ll5qKBMaz
-EZErYZflqwjZN0+N2BtYByEolm8nQswc1H0uv1kkifpBO6ixA2c=
-=mVNx
------END PGP SIGNATURE-----
-
---lzhodxwy2knl7pia--
-
---===============0810698522==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0810698522==--
+VGhlIHBhdGNoCgogICByZWdtYXA6IG1taW86IEFkZCBmdW5jdGlvbiB0byBhdHRhY2ggYSBjbG9j
+awoKaGFzIGJlZW4gYXBwbGllZCB0byB0aGUgcmVnbWFwIHRyZWUgYXQKCiAgIGh0dHBzOi8vZ2l0
+Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2Jyb29uaWUvcmVnbWFwLmdpdCAK
+CkFsbCBiZWluZyB3ZWxsIHRoaXMgbWVhbnMgdGhhdCBpdCB3aWxsIGJlIGludGVncmF0ZWQgaW50
+byB0aGUgbGludXgtbmV4dAp0cmVlICh1c3VhbGx5IHNvbWV0aW1lIGluIHRoZSBuZXh0IDI0IGhv
+dXJzKSBhbmQgc2VudCB0byBMaW51cyBkdXJpbmcKdGhlIG5leHQgbWVyZ2Ugd2luZG93IChvciBz
+b29uZXIgaWYgaXQgaXMgYSBidWcgZml4KSwgaG93ZXZlciBpZgpwcm9ibGVtcyBhcmUgZGlzY292
+ZXJlZCB0aGVuIHRoZSBwYXRjaCBtYXkgYmUgZHJvcHBlZCBvciByZXZlcnRlZC4gIAoKWW91IG1h
+eSBnZXQgZnVydGhlciBlLW1haWxzIHJlc3VsdGluZyBmcm9tIGF1dG9tYXRlZCBvciBtYW51YWwg
+dGVzdGluZwphbmQgcmV2aWV3IG9mIHRoZSB0cmVlLCBwbGVhc2UgZW5nYWdlIHdpdGggcGVvcGxl
+IHJlcG9ydGluZyBwcm9ibGVtcyBhbmQKc2VuZCBmb2xsb3d1cCBwYXRjaGVzIGFkZHJlc3Npbmcg
+YW55IGlzc3VlcyB0aGF0IGFyZSByZXBvcnRlZCBpZiBuZWVkZWQuCgpJZiBhbnkgdXBkYXRlcyBh
+cmUgcmVxdWlyZWQgb3IgeW91IGFyZSBzdWJtaXR0aW5nIGZ1cnRoZXIgY2hhbmdlcyB0aGV5CnNo
+b3VsZCBiZSBzZW50IGFzIGluY3JlbWVudGFsIHVwZGF0ZXMgYWdhaW5zdCBjdXJyZW50IGdpdCwg
+ZXhpc3RpbmcKcGF0Y2hlcyB3aWxsIG5vdCBiZSByZXBsYWNlZC4KClBsZWFzZSBhZGQgYW55IHJl
+bGV2YW50IGxpc3RzIGFuZCBtYWludGFpbmVycyB0byB0aGUgQ0NzIHdoZW4gcmVwbHlpbmcKdG8g
+dGhpcyBtYWlsLgoKVGhhbmtzLApNYXJrCgpGcm9tIDMxODk1NjYyZjliYTgxZThlYTllZjA1YWJm
+OGVkY2IyOWQ0YjljMTggTW9uIFNlcCAxNyAwMDowMDowMCAyMDAxCkZyb206IE1heGltZSBSaXBh
+cmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgpEYXRlOiBXZWQsIDIxIEZlYiAy
+MDE4IDEwOjIwOjI1ICswMTAwClN1YmplY3Q6IFtQQVRDSF0gcmVnbWFwOiBtbWlvOiBBZGQgZnVu
+Y3Rpb24gdG8gYXR0YWNoIGEgY2xvY2sKCnJlZ21hcF9pbml0X21taW9fY2xrIGFsbG93cyB0byBz
+cGVjaWZ5IGEgY2xvY2sgdGhhdCBuZWVkcyB0byBiZSBlbmFibGVkCndoaWxlIGFjY2Vzc2luZyB0
+aGUgcmVnaXN0ZXJzLgoKSG93ZXZlciwgdGhhdCBjbG9jayBpcyByZXRyaWV2ZWQgdGhyb3VnaCBp
+dHMgY2xvY2sgSUQsIHdoaWNoIG1lYW5zIGl0IHdpbGwKbG9va3VwIHRoYXQgY2xvY2sgYmFzZWQg
+b24gdGhlIGN1cnJlbnQgZGV2aWNlIHRoYXQgcmVnaXN0ZXJzIHRoZSByZWdtYXAsCmFuZCwgaW4g
+dGhlIERUIGNhc2UsIHdpbGwgb25seSBsb29rIGluIHRoYXQgZGV2aWNlIE9GIG5vZGUuCgpUaGlz
+IG1pZ2h0IGJlIHByb2JsZW1hdGljIGlmIHRoZSBjbG9jayB0byBlbmFibGUgaXMgc3RvcmVkIGlu
+IGFub3RoZXIgbm9kZS4KTGV0J3MgYWRkIGEgZnVuY3Rpb24gdGhhdCBhbGxvd3MgdG8gYXR0YWNo
+IGEgY2xvY2sgdGhhdCBoYXMgYWxyZWFkeSBiZWVuCnJldHJpZXZlZCB0byBhIHJlZ21hcCBpbiBv
+cmRlciB0byBmaXggdGhpcy4KClNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5y
+aXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgpTaWduZWQtb2ZmLWJ5OiBNYXJrIEJyb3duIDxicm9v
+bmllQGtlcm5lbC5vcmc+Ci0tLQogZHJpdmVycy9iYXNlL3JlZ21hcC9yZWdtYXAtbW1pby5jIHwg
+MjQgKysrKysrKysrKysrKysrKysrKysrKysrCiBpbmNsdWRlL2xpbnV4L3JlZ21hcC5oICAgICAg
+ICAgICAgfCAgMyArKysKIDIgZmlsZXMgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKQoKZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvYmFzZS9yZWdtYXAvcmVnbWFwLW1taW8uYyBiL2RyaXZlcnMvYmFzZS9y
+ZWdtYXAvcmVnbWFwLW1taW8uYwppbmRleCA1MTg5ZmQ2MTgyZjYuLjVjYWRmZDMzOTRkOCAxMDA2
+NDQKLS0tIGEvZHJpdmVycy9iYXNlL3JlZ21hcC9yZWdtYXAtbW1pby5jCisrKyBiL2RyaXZlcnMv
+YmFzZS9yZWdtYXAvcmVnbWFwLW1taW8uYwpAQCAtMjgsNiArMjgsOCBAQAogc3RydWN0IHJlZ21h
+cF9tbWlvX2NvbnRleHQgewogCXZvaWQgX19pb21lbSAqcmVnczsKIAl1bnNpZ25lZCB2YWxfYnl0
+ZXM7CisKKwlib29sIGF0dGFjaGVkX2NsazsKIAlzdHJ1Y3QgY2xrICpjbGs7CiAKIAl2b2lkICgq
+cmVnX3dyaXRlKShzdHJ1Y3QgcmVnbWFwX21taW9fY29udGV4dCAqY3R4LApAQCAtMzYzLDQgKzM2
+NSwyNiBAQCBzdHJ1Y3QgcmVnbWFwICpfX2Rldm1fcmVnbWFwX2luaXRfbW1pb19jbGsoc3RydWN0
+IGRldmljZSAqZGV2LAogfQogRVhQT1JUX1NZTUJPTF9HUEwoX19kZXZtX3JlZ21hcF9pbml0X21t
+aW9fY2xrKTsKIAoraW50IHJlZ21hcF9tbWlvX2F0dGFjaF9jbGsoc3RydWN0IHJlZ21hcCAqbWFw
+LCBzdHJ1Y3QgY2xrICpjbGspCit7CisJc3RydWN0IHJlZ21hcF9tbWlvX2NvbnRleHQgKmN0eCA9
+IG1hcC0+YnVzX2NvbnRleHQ7CisKKwljdHgtPmNsayA9IGNsazsKKwljdHgtPmF0dGFjaGVkX2Ns
+ayA9IHRydWU7CisKKwlyZXR1cm4gY2xrX3ByZXBhcmUoY3R4LT5jbGspOworfQorRVhQT1JUX1NZ
+TUJPTF9HUEwocmVnbWFwX21taW9fYXR0YWNoX2Nsayk7CisKK3ZvaWQgcmVnbWFwX21taW9fZGV0
+YWNoX2NsayhzdHJ1Y3QgcmVnbWFwICptYXApCit7CisJc3RydWN0IHJlZ21hcF9tbWlvX2NvbnRl
+eHQgKmN0eCA9IG1hcC0+YnVzX2NvbnRleHQ7CisKKwljbGtfdW5wcmVwYXJlKGN0eC0+Y2xrKTsK
+KworCWN0eC0+YXR0YWNoZWRfY2xrID0gZmFsc2U7CisJY3R4LT5jbGsgPSBOVUxMOworfQorRVhQ
+T1JUX1NZTUJPTF9HUEwocmVnbWFwX21taW9fZGV0YWNoX2Nsayk7CisKIE1PRFVMRV9MSUNFTlNF
+KCJHUEwgdjIiKTsKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcmVnbWFwLmggYi9pbmNsdWRl
+L2xpbnV4L3JlZ21hcC5oCmluZGV4IDZhM2FlYmE0MGU5ZS4uNWY3YWQwNTUyYzAzIDEwMDY0NAot
+LS0gYS9pbmNsdWRlL2xpbnV4L3JlZ21hcC5oCisrKyBiL2luY2x1ZGUvbGludXgvcmVnbWFwLmgK
+QEAgLTIxLDYgKzIxLDcgQEAKICNpbmNsdWRlIDxsaW51eC9sb2NrZGVwLmg+CiAKIHN0cnVjdCBt
+b2R1bGU7CitzdHJ1Y3QgY2xrOwogc3RydWN0IGRldmljZTsKIHN0cnVjdCBpMmNfY2xpZW50Owog
+c3RydWN0IGlycV9kb21haW47CkBAIC05MDUsNiArOTA2LDggQEAgYm9vbCByZWdtYXBfYWM5N19k
+ZWZhdWx0X3ZvbGF0aWxlKHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHJlZyk7CiAJ
+X19yZWdtYXBfbG9ja2RlcF93cmFwcGVyKF9fZGV2bV9yZWdtYXBfaW5pdF9zZHcsICNjb25maWcs
+CVwKIAkJCQlzZHcsIGNvbmZpZykKIAoraW50IHJlZ21hcF9tbWlvX2F0dGFjaF9jbGsoc3RydWN0
+IHJlZ21hcCAqbWFwLCBzdHJ1Y3QgY2xrICpjbGspOwordm9pZCByZWdtYXBfbW1pb19kZXRhY2hf
+Y2xrKHN0cnVjdCByZWdtYXAgKm1hcCk7CiB2b2lkIHJlZ21hcF9leGl0KHN0cnVjdCByZWdtYXAg
+Km1hcCk7CiBpbnQgcmVnbWFwX3JlaW5pdF9jYWNoZShzdHJ1Y3QgcmVnbWFwICptYXAsCiAJCQlj
+b25zdCBzdHJ1Y3QgcmVnbWFwX2NvbmZpZyAqY29uZmlnKTsKLS0gCjIuMTYuMQoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
