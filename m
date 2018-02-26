@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/2] arm64: dts: r8a77965: Add IIC-DVFS device node
-Date: Mon, 26 Feb 2018 16:42:22 +0100
-Message-ID: <1519659743-27027-2-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 2/2] arm64: dts: r8a77965: Add INTC-EX device node
+Date: Mon, 26 Feb 2018 16:42:23 +0100
+Message-ID: <1519659743-27027-3-git-send-email-geert+renesas@glider.be>
 References: <1519659743-27027-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,48 +21,39 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Populate the device node for the IIC Bus Interface for DVFS (IIC for
-DVFS) on R-Car M3-N, and add an alias to fix its bus number.
+Populate the device node for the Interrupt Controller for External
+Devices (INTC-EX) on R-Car M3-N, which serves external IRQ pins
+IRQ[0-5].
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm64/boot/dts/renesas/r8a77965.dtsi | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-index ebda00397d5310a1..7435297d2581c410 100644
+index 7435297d2581c410..2f3d1784343cf3ec 100644
 --- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
-@@ -18,6 +18,10 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-+	aliases {
-+		i2c7 = &i2c_dvfs;
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-1.0", "arm,psci-0.2";
- 		method = "smc";
-@@ -700,9 +704,17 @@
- 		i2c_dvfs: i2c@e60b0000 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--
-+			compatible = "renesas,iic-r8a77965",
-+				     "renesas,rcar-gen3-iic",
-+				     "renesas,rmobile-iic";
- 			reg = <0 0xe60b0000 0 0x425>;
--			/* placeholder */
-+			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 926>;
-+			power-domains = <&sysc 32>;
-+			resets = <&cpg 926>;
-+			dmas = <&dmac0 0x11>, <&dmac0 0x10>;
-+			dma-names = "tx", "rx";
-+			status = "disabled";
+@@ -320,10 +320,19 @@
  		};
  
- 		pwm0: pwm@e6e30000 {
+ 		intc_ex: interrupt-controller@e61c0000 {
++			compatible = "renesas,intc-ex-r8a77965", "renesas,irqc";
+ 			#interrupt-cells = <2>;
+ 			interrupt-controller;
+ 			reg = <0 0xe61c0000 0 0x200>;
+-			/* placeholder */
++			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH
++				      GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 407>;
++			power-domains = <&sysc 32>;
++			resets = <&cpg 407>;
+ 		};
+ 
+ 		dmac0: dma-controller@e6700000 {
 -- 
 2.7.4
