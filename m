@@ -1,54 +1,34 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH 1/3] arm64: dts: ls1012a: add cpu idle support
-Date: Mon, 26 Feb 2018 05:08:04 +0000
-Message-ID: <AM3PR04MB14893117A4351047456D5D5BF1C10@AM3PR04MB1489.eurprd04.prod.outlook.com>
-References: <20180208075436.38443-1-ran.wang_1@nxp.com>
- <20180224062514.GB3217@dragon> <20180224071239.GC3217@dragon>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH] ARM: dts: da850-lego-ev3: use a correct fallback for at24
+ compatible
+Date: Mon, 26 Feb 2018 11:25:54 +0530
+Message-ID: <134fc583-785c-0112-94f2-f94b9ff93065@ti.com>
+References: <20180122125505.16806-1-brgl@bgdev.pl>
+ <c4c07714-4937-48bd-466d-c2c9848c4725@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180224071239.GC3217@dragon>
+In-Reply-To: <c4c07714-4937-48bd-466d-c2c9848c4725@lechnology.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Tang <andy.tang@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: David Lechner <david@lechnology.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Monday 22 January 2018 10:20 PM, David Lechner wrote:
+> On 01/22/2018 06:55 AM, Bartosz Golaszewski wrote:
+>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>
+>> We now require all at24 users to use the "atmel,<model>" fallback in
+>> device tree for different manufacturers.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>> ---
+> 
+> Reviewed-by: David Lechner <david@lechnology.com>
 
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> Sent: Saturday, February 24, 2018 3:13 PM
-> To: Ran Wang <ran.wang_1@nxp.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>; devicetree@vger.kernel.org; Andy
-> Tang <andy.tang@nxp.com>; Catalin Marinas <catalin.marinas@arm.com>; Will
-> Deacon <will.deacon@arm.com>; linux-kernel@vger.kernel.org; Leo Li
-> <leoyang.li@nxp.com>; Rob Herring <robh+dt@kernel.org>; linux-arm-
-> kernel@lists.infradead.org
-> Subject: Re: [PATCH 1/3] arm64: dts: ls1012a: add cpu idle support
->=20
-> On Sat, Feb 24, 2018 at 02:25:16PM +0800, Shawn Guo wrote:
-> > On Thu, Feb 08, 2018 at 03:54:34PM +0800, Ran Wang wrote:
-> > > From: Yuantian Tang <andy.tang@nxp.com>
-> > >
-> > > Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |   18 ++++++++++++++=
-++++
-> > >  1 files changed, 18 insertions(+), 0 deletions(-)
-> >
-> > Applied all, thanks.
->=20
-> Ran,
->=20
-> Just noticed that these patches are authored by Yuantian.  When you send
-> patches authored by someone else, you should have your SoB added to it.
->=20
-> I just append your SoB below to all 3 patches.
->=20
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Applied to v4.17/dt
 
-Got it, thanks!
-
-Ran
+Thanks,
+Sekhar
