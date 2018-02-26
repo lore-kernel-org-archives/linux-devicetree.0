@@ -1,87 +1,96 @@
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: [PATCH v8 0/9] Add support for Cirrus Logic CS47L35/L85/L90/L91 codecs
-Date: Mon, 26 Feb 2018 13:05:49 +0000
-Message-ID: <20180226130558.7634-1-rf@opensource.cirrus.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 01/10] regmap: mmio: Add function to attach a clock
+Date: Mon, 26 Feb 2018 13:12:07 +0000
+Message-ID: <20180226131207.GB6681@sirena.org.uk>
+References: <cover.68c39205c8726547449e3df67b549d89380e51a2.1519204731.git-series.maxime.ripard@bootlin.com>
+ <1155920db000d014fd1cd604ed48d1b9a8f64ac1.1519204731.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, linus.walleij@linaro.org, andy.shevchenko@gmail.com, robh+dt@kernel.org
-Cc: patches@opensource.cirrus.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Fitzgerald <rf@opensource.cirrus.com>
+Content-Type: multipart/mixed; boundary="===============1521752699=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1155920db000d014fd1cd604ed48d1b9a8f64ac1.1519204731.git-series.maxime.ripard@bootlin.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-NOTE: Compared to older versions of this chain I have removed patches at the
-end of the chain that were being ignored until the earlier patches had been
-merged - an impossible circular dependency. There were too many moving targets
-to keep the whole chain up-to-date and so patches that were already acked were
-getting stale. The subset of patches here are all acked or close-to-acked, and
-can be built and used as they are to produce a working pinctrl and gpio.
 
-The Cirrus Logic CS47L35, CS47L85, CS47L90/91 codecs are complex audio SoC
-devices. In addition to the core audio capability they have onboard GPIO,
-regulators, DSPs and interrupt controller and a large register map space
-accessed over SPI or I2C. This family of codecs is based around common IP
-blocks and they are managed by a set of common drivers referred to as "Madera".
+--===============1521752699==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xXmbgvnjoT4axfJE"
+Content-Disposition: inline
 
-Richard Fitzgerald (9):
-  mfd: madera: Add register definitions for Cirrus Logic Madera codecs
-  mfd: madera: Add DT bindings for Cirrus Logic Madera codecs
-  mfd: madera: Add common support for Cirrus Logic Madera codecs
-  mfd: madera: Register map tables for Cirrus Logic CS47L35
-  mfd: madera: Register map tables for Cirrus Logic CS47L85
-  mfd: madera: Register map tables for Cirrus Logic CS47L90/91
-  pinctrl: madera: Add DT bindings for Cirrus Logic Madera codecs
-  pinctrl: madera: Add driver for Cirrus Logic Madera codecs
-  gpio: madera: Support Cirrus Logic Madera class codecs
 
- Documentation/devicetree/bindings/mfd/madera.txt   |  102 +
- .../bindings/pinctrl/cirrus,madera-pinctrl.txt     |   99 +
- MAINTAINERS                                        |   16 +
- drivers/gpio/Kconfig                               |    6 +
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-madera.c                         |  203 +
- drivers/mfd/Kconfig                                |   50 +
- drivers/mfd/Makefile                               |   14 +
- drivers/mfd/cs47l35-tables.c                       | 1609 ++++++++
- drivers/mfd/cs47l85-tables.c                       | 3009 +++++++++++++++
- drivers/mfd/cs47l90-tables.c                       | 2674 +++++++++++++
- drivers/mfd/madera-core.c                          |  602 +++
- drivers/mfd/madera-i2c.c                           |  141 +
- drivers/mfd/madera-spi.c                           |  140 +
- drivers/mfd/madera.h                               |   44 +
- drivers/pinctrl/Kconfig                            |    1 +
- drivers/pinctrl/Makefile                           |    1 +
- drivers/pinctrl/cirrus/Kconfig                     |   15 +
- drivers/pinctrl/cirrus/Makefile                    |   13 +
- drivers/pinctrl/cirrus/pinctrl-cs47l35.c           |   45 +
- drivers/pinctrl/cirrus/pinctrl-cs47l85.c           |   59 +
- drivers/pinctrl/cirrus/pinctrl-cs47l90.c           |   57 +
- drivers/pinctrl/cirrus/pinctrl-madera-core.c       | 1074 ++++++
- drivers/pinctrl/cirrus/pinctrl-madera.h            |   41 +
- include/linux/mfd/madera/core.h                    |  190 +
- include/linux/mfd/madera/pdata.h                   |   62 +
- include/linux/mfd/madera/registers.h               | 3917 ++++++++++++++++++++
- 27 files changed, 14185 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/madera.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
- create mode 100644 drivers/gpio/gpio-madera.c
- create mode 100644 drivers/mfd/cs47l35-tables.c
- create mode 100644 drivers/mfd/cs47l85-tables.c
- create mode 100644 drivers/mfd/cs47l90-tables.c
- create mode 100644 drivers/mfd/madera-core.c
- create mode 100644 drivers/mfd/madera-i2c.c
- create mode 100644 drivers/mfd/madera-spi.c
- create mode 100644 drivers/mfd/madera.h
- create mode 100644 drivers/pinctrl/cirrus/Kconfig
- create mode 100644 drivers/pinctrl/cirrus/Makefile
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l35.c
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l85.c
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-cs47l90.c
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-madera-core.c
- create mode 100644 drivers/pinctrl/cirrus/pinctrl-madera.h
- create mode 100644 include/linux/mfd/madera/core.h
- create mode 100644 include/linux/mfd/madera/pdata.h
- create mode 100644 include/linux/mfd/madera/registers.h
+--xXmbgvnjoT4axfJE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-2.11.0
+On Wed, Feb 21, 2018 at 10:20:25AM +0100, Maxime Ripard wrote:
+> From: Maxime Ripard <maxime.ripard@free-electrons.com>
+>=20
+> regmap_init_mmio_clk allows to specify a clock that needs to be enabled
+> while accessing the registers.
+
+The following changes since commit 7928b2cbe55b2a410a0f5c1f154610059c57b1b2:
+
+  Linux 4.16-rc1 (2018-02-11 15:04:29 -0800)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/m=
+mio-clk-config
+
+for you to fetch changes up to 31895662f9ba81e8ea9ef05abf8edcb29d4b9c18:
+
+  regmap: mmio: Add function to attach a clock (2018-02-26 11:05:44 +0000)
+
+----------------------------------------------------------------
+regmap: MMIO regmap clock configuration
+
+This patch provides a mechanism for specifying a different clock to be
+used with the regmap clock integration.
+
+----------------------------------------------------------------
+Maxime Ripard (1):
+      regmap: mmio: Add function to attach a clock
+
+ drivers/base/regmap/regmap-mmio.c | 24 ++++++++++++++++++++++++
+ include/linux/regmap.h            |  3 +++
+ 2 files changed, 27 insertions(+)
+
+--xXmbgvnjoT4axfJE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqUB6YACgkQJNaLcl1U
+h9Cikwf+PMimnrn6dNczsXsvqRvm5hhO/h8dL0IBFzkQtwmA/qj6bHgIcu99EHNg
+rvyz+J6fGket2zqJGO1LX6sbUa9v0FoedKk1VqesmaSzIr/Z3QB6kmPXArGIr7T+
+u0dEmntyUh6CLNyjEyQJMuQEKWSoxjQnb8LbWpdydUynzUlJR6eSzM9vInxxmRqt
+McyD/wqJLNVBuc8Z8Xzlpqrx/IEKVUQsznUV8hAPW/GHq/H2ziCE8OFofVaRCqPW
+OjRpcs7suLWn1ky3iieLkGg/iJvbRGsI5xrRgs9MxqRr6HETVghViFGwYKd9Uyw7
+DagDsMXB9k5bWNsgDA5Oa1+xTIMUXw==
+=DRh6
+-----END PGP SIGNATURE-----
+
+--xXmbgvnjoT4axfJE--
+
+--===============1521752699==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1521752699==--
