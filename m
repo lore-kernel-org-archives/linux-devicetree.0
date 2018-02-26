@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH 4/6] of: remove kbasename(of->full_name) from kobj.c
-Date: Sun, 25 Feb 2018 18:22:28 -0800
-Message-ID: <1519611750-22355-5-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH 3/6] of: remove kbasename(of->full_name) from base.c
+Date: Sun, 25 Feb 2018 18:22:27 -0800
+Message-ID: <1519611750-22355-4-git-send-email-frowand.list@gmail.com>
 References: <1519611750-22355-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1519611750-22355-1-git-send-email-frowand.list@gmail.com>
@@ -18,21 +18,23 @@ needed to extract the basename from full_name.
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/kobj.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/base.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/kobj.c b/drivers/of/kobj.c
-index 7a0a18980b98..b0aecea35706 100644
---- a/drivers/of/kobj.c
-+++ b/drivers/of/kobj.c
-@@ -128,7 +128,7 @@ int __of_attach_node_sysfs(struct device_node *np)
- 		name = safe_name(&of_kset->kobj, "base");
- 		parent = NULL;
- 	} else {
--		name = safe_name(&np->parent->kobj, kbasename(np->full_name));
-+		name = safe_name(&np->parent->kobj, np->full_name);
- 		parent = &np->parent->kobj;
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index ad28de96e13f..926d08b8674d 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -691,8 +691,8 @@ struct device_node *__of_find_node_by_path(struct device_node *parent,
+ 		return NULL;
+ 
+ 	__for_each_child_of_node(parent, child) {
+-		const char *name = kbasename(child->full_name);
+-		if (strncmp(path, name, len) == 0 && (strlen(name) == len))
++		if (strncmp(path, child->full_name, len) == 0 &&
++		    (strlen(child->full_name) == len))
+ 			return child;
  	}
- 	if (!name)
+ 	return NULL;
 -- 
 Frank Rowand <frank.rowand@sony.com>
