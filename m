@@ -1,89 +1,112 @@
-Return-Path: <SRS0=V9ZR=FR=samsung.com=jh80.chung@kernel.org>
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCH 2/6] mmc: dw_mmc: remove the deprecated "num-slots"
-Date: Fri, 23 Feb 2018 15:41:34 +0900
-Message-id: <20180223064138.18401-2-jh80.chung@samsung.com>
-In-reply-to: <20180223064138.18401-1-jh80.chung@samsung.com>
-References: <20180223064138.18401-1-jh80.chung@samsung.com>
-	<CGME20180223064140epcas2p41a734737c3fe7373329a94f485c21fd4@epcas2p4.samsung.com>
-To: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, manabian@gmail.com, dinguyen@kernel.org, will.deacon@arm.com, xuwei5@hisilicon.com, Jaehoon Chung <jh80.chung@samsung.com>
+Return-Path: <SRS0=mOwg=FU=ti.com=t-kristo@kernel.org>
+Subject: Re: [PATCH] dt-bindings: memory: ti-emif: add edac support under emif
+References: <1518542129-25813-1-git-send-email-t-kristo@ti.com>
+ <20180219031009.wduweeg53lnncntd@rob-hp-laptop>
+ <186b6e13-be1d-e8e8-38db-efa5e3496dd8@ti.com>
+ <CAL_JsqJTv+QH8xMGv6L7Dd-iF=mBZL+j4F0bVUWKipcMfY3zOQ@mail.gmail.com>
+ <e36fc21f-8dc7-733a-9c43-789c99d9cb36@ti.com>
+ <99ed2643-b01d-9e44-daf5-27860b963c27@oracle.com>
+From: Tero Kristo <t-kristo@ti.com>
+Message-ID: <4e7b1b46-404c-35dc-fd48-1b20caadde21@ti.com>
+Date: Mon, 26 Feb 2018 09:23:21 +0200
+MIME-Version: 1.0
+In-Reply-To: <99ed2643-b01d-9e44-daf5-27860b963c27@oracle.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Santosh Shilimkar <ssantosh@kernel.org>, linux-omap <linux-omap@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-'num-slots' property had already deprecated.
-Remove the 'nom-slots' property that is kept to maintain the compatibility.
+On 26/02/18 01:40, Santosh Shilimkar wrote:
+> 
+> On 2/21/2018 11:00 AM, Tero Kristo wrote:
+>> On 20/02/18 17:52, Rob Herring wrote:
+>>> On Mon, Feb 19, 2018 at 12:21 AM, Tero Kristo <t-kristo@ti.com> wrote:
+>>>> On 19/02/18 05:10, Rob Herring wrote:
+>>>>>
+>>>>> On Tue, Feb 13, 2018 at 07:15:29PM +0200, Tero Kristo wrote:
+>>>>>>
+>>>>>> Certain revisions of the TI EMIF IP contain ECC support in them. 
+>>>>>> Reflect
+>>>>>> this in the DT binding. Also, add interrupts property as a required
+>>>>>> property for the emif controller, as all revisions of the emif IP 
+>>>>>> contain
+>>>>>> interrupt support; this might remain unused by the kernel driver 
+>>>>>> though.
+>>>>>>
+>>>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>>>> ---
+>>>>>>    .../devicetree/bindings/memory-controllers/ti/emif.txt      | 13
+>>>>>> ++++++++++++-
+>>>>>>    1 file changed, 12 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+>>>>>> b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+>>>>>> index 621b41c..87022a9 100644
+>>>>>> --- 
+>>>>>> a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+>>>>>> +++ 
+>>>>>> b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+>>>>>> @@ -3,7 +3,9 @@
+>>>>>>    EMIF - External Memory Interface - is an SDRAM controller used in
+>>>>>>    TI SoCs. EMIF supports, based on the IP revision, one or more of
+>>>>>>    DDR2/DDR3/LPDDR2 protocols. This binding describes a given 
+>>>>>> instance
+>>>>>> -of the EMIF IP and memory parts attached to it.
+>>>>>> +of the EMIF IP and memory parts attached to it. Certain revisions
+>>>>>> +of the EMIF controller also contain optional ECC support, which
+>>>>>> +corrects one bit errors and detects two bit errors.
+>>>>>>      Required properties:
+>>>>>>    - compatible  : Should be of the form "ti,emif-<ip-rev>" where 
+>>>>>> <ip-rev>
+>>>>>> @@ -11,6 +13,8 @@ Required properties:
+>>>>>>      compatible should be one of the following:
+>>>>>>               "ti,emif-am3352"
+>>>>>>               "ti,emif-am4372"
+>>>>>> +            "ti,emif-dra7xx"
+>>>>>> +            "ti,emif-keystone"
+>>>>>>      - phy-type  : <u32> indicating the DDR phy type. Following 
+>>>>>> are the
+>>>>>>      allowed values
+>>>>>> @@ -22,6 +26,7 @@ Required properties:
+>>>>>>    - ti,hwmods   : For TI hwmods processing and omap device creation
+>>>>>>      the value shall be "emif<n>" where <n> is the number of the EMIF
+>>>>>>      instance with base 1.
+>>>>>> +- interrupts   : interrupt used by the controller
+>>>>>
+>>>>>
+>>>>> Only for the new compatibles?
+>>>>
+>>>>
+>>>> I added this as required property for all, as all EMIF versions 
+>>>> actually do
+>>>> have IRQ. Should this still be marked as optional as only certain 
+>>>> versions
+>>>> of the driver use it? On am3/am4 only it is optional right now, and 
+>>>> not used
+>>>> by the existing driver. On omap4 and omap5 it is required also (list of
+>>>> compatibles for the binding seem to be missing these actually; 
+>>>> ti,emif-4d
+>>>> and ti,emif-4d5.)
+>>>>
+>>>> Either way, I can mark this as optional property for am3/am4 if you 
+>>>> want (I
+>>>> actually asked this already before but did not get clear response), 
+>>>> what is
+>>>> your final take on this?
+>>>
+>>> Okay. I'm fine if it is required. You're going to update all the dts
+>>> files, right?
+>>
+>> Yeah, I will post patches for those, thanks for review.
+>>
+> Let me know if you have already posted the follow up series ?
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
----
- Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt | 5 -----
- drivers/mmc/host/dw_mmc-pci.c                              | 1 -
- drivers/mmc/host/dw_mmc.c                                  | 4 ----
- drivers/mmc/host/dw_mmc.h                                  | 3 ---
- 4 files changed, 13 deletions(-)
+Haven't posted yet, last week has been a complete mess for me. Will do 
+either today or later this week.
 
-diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-index 75c9fdca4aaf..7e5e427a22ce 100644
---- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-@@ -59,11 +59,6 @@ Optional properties:
-   is specified and the ciu clock is specified then we'll try to set the ciu
-   clock to this at probe time.
- 
--* num-slots (DEPRECATED): specifies the number of slots supported by the controller.
--  The number of physical slots actually used could be equal or less than the
--  value specified by num-slots. If this property is not specified, the value
--  of num-slot property is assumed to be 1.
--
- * fifo-depth: The maximum size of the tx/rx fifo's. If this property is not
-   specified, the default value of the fifo size is determined from the
-   controller registers.
-diff --git a/drivers/mmc/host/dw_mmc-pci.c b/drivers/mmc/host/dw_mmc-pci.c
-index ab8713297edb..3ad07d7b2c97 100644
---- a/drivers/mmc/host/dw_mmc-pci.c
-+++ b/drivers/mmc/host/dw_mmc-pci.c
-@@ -29,7 +29,6 @@
- 				MMC_CAP_SDIO_IRQ)
- 
- static struct dw_mci_board pci_board_data = {
--	.num_slots			= 1,
- 	.caps				= DW_MCI_CAPABILITIES,
- 	.bus_hz				= 33 * 1000 * 1000,
- 	.detect_delay_ms		= 200,
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 38e0e7c4ffd9..a63ca7bc1099 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -3124,10 +3124,6 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
- 			return ERR_PTR(-EPROBE_DEFER);
- 	}
- 
--	/* find out number of slots supported */
--	if (!device_property_read_u32(dev, "num-slots", &pdata->num_slots))
--		dev_info(dev, "'num-slots' was deprecated.\n");
--
- 	if (device_property_read_u32(dev, "fifo-depth", &pdata->fifo_depth))
- 		dev_info(dev,
- 			 "fifo-depth property not found, using value of FIFOTH register as default\n");
-diff --git a/drivers/mmc/host/dw_mmc.h b/drivers/mmc/host/dw_mmc.h
-index e3124f06a47e..80ff9a6c6fdd 100644
---- a/drivers/mmc/host/dw_mmc.h
-+++ b/drivers/mmc/host/dw_mmc.h
-@@ -102,7 +102,6 @@ struct dw_mci_dma_slave {
-  * @bus_hz: The rate of @mck in Hz. This forms the basis for MMC bus
-  *	rate and timeout calculations.
-  * @current_speed: Configured rate of the controller.
-- * @num_slots: Number of slots available.
-  * @fifoth_val: The value of FIFOTH register.
-  * @verid: Denote Version ID.
-  * @dev: Device associated with the MMC controller.
-@@ -253,8 +252,6 @@ struct dma_pdata;
- 
- /* Board platform data */
- struct dw_mci_board {
--	u32 num_slots;
--
- 	unsigned int bus_hz; /* Clock speed at the cclk_in pad */
- 
- 	u32 caps;	/* Capabilities */
--- 
-2.15.1
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
