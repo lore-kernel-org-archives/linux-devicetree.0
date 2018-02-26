@@ -1,75 +1,62 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [alsa-devel] [PATCHv5 2/5] ASoC: codec: cpcap: new codec
-Date: Mon, 26 Feb 2018 09:36:42 +0800
-Message-ID: <201802260921.u5yCEY8U%fengguang.wu@intel.com>
-References: <20180223200254.25685-3-sebastian.reichel@collabora.co.uk>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH 1/6] mmc: dw_mmc: remove the deprecated
+ "clock-freq-min-max" property
+Date: Mon, 26 Feb 2018 11:07:38 +0900
+Message-ID: <9938e4eb-45aa-bf68-dd64-bb0a23f99e3d@samsung.com>
+References: <CGME20180223064140epcas2p104fe6cca431ec24f2b09a6f5a45ed342@epcas2p1.samsung.com>
+        <20180223064138.18401-1-jh80.chung@samsung.com>
+        <CAHp75Vd27mFnSJTOta0ZWhfOGz1WA8ETNgU_GpuxEJ9nnhsR-g@mail.gmail.com>
+        <7ba335af-3fc5-2afd-8c52-03dca5eba9a4@rock-chips.com>
+        <CAHp75VcthggOwOPjQFNX-xMmK44F99oXYOdeBxfO=euT_JvkoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180223200254.25685-3-sebastian.reichel@collabora.co.uk>
+In-reply-to: <CAHp75VcthggOwOPjQFNX-xMmK44F99oXYOdeBxfO=euT_JvkoQ@mail.gmail.com>
+Content-language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>
+Cc: linux-mmc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joachim Eastwood <manabian@gmail.com>, dinguyen@kernel.org, Will Deacon <will.deacon@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On 02/24/2018 01:16 AM, Andy Shevchenko wrote:
+> On Fri, Feb 23, 2018 at 4:19 PM, Shawn Lin <shawn.lin@rock-chips.com> wrote:
+>> On 2018/2/23 21:27, Andy Shevchenko wrote:
+>>> On Fri, Feb 23, 2018 at 8:41 AM, Jaehoon Chung <jh80.chung@samsung.com>
+>>> wrote:
+>>>>
+>>>> 'clock-freq-min-max' property had already deprecated.
+>>>> Remove the 'clock-freq-min-max' property that is kept to maintain
+>>>> the compatibility.
+>>>
+>>>
+>>> Removing a property without telling the user what to expect is a bad
+>>> idea and ABI breakage.
+>>>
+>>
+>> What's the general process to remove a property?
+>>
+>> I guess we should do:
+>> 1) deprecate it in the first place and remove it from all upstream DT
+>> 2) wait some long enough days for expecting the stale of all old DTB
+>> containing that property
+>> 3) remove the functionality of the deprecated property from the driver
+>> but still leave some warning there
+>> 4) remove the left warning finally
+> 
+> I don't know. Perhaps Rob can shed a light here.
+> But I would really OK with removal of some of such properties from
+> some drivers where it's more burden to keep them.
 
-I love your patch! Perhaps something to improve:
+This property had deprecated about 8months ago.
+I think that it was enough to keep this property for maintaining the compatibility.
 
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on v4.16-rc2 next-20180223]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+I didn't remove this property without any alternative.
 
-url:    https://github.com/0day-ci/linux/commits/Sebastian-Reichel/Motorola-Droid-4-Audio-Support/20180226-063007
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+Best Regards,
+Jaehoon Chung
 
-
-sparse warnings: (new ones prefixed by >>)
-
->> sound/soc/codecs/cpcap.c:1406:54: sparse: restricted snd_pcm_format_t degrades to integer
-
-vim +1406 sound/soc/codecs/cpcap.c
-
-  1396	
-  1397	static struct snd_soc_dai_driver cpcap_dai[] = {
-  1398	{
-  1399		.id = 0,
-  1400		.name = "cpcap-hifi",
-  1401		.playback = {
-  1402			.stream_name = "HiFi Playback",
-  1403			.channels_min = 2,
-  1404			.channels_max = 2,
-  1405			.rates = SNDRV_PCM_RATE_8000_48000,
-> 1406			.formats = SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FORMAT_S24_LE,
-  1407		},
-  1408		.ops = &cpcap_dai_hifi_ops,
-  1409	},
-  1410	{
-  1411		.id = 1,
-  1412		.name = "cpcap-voice",
-  1413		.playback = {
-  1414			.stream_name = "Voice Playback",
-  1415			.channels_min = 1,
-  1416			.channels_max = 1,
-  1417			.rates = SNDRV_PCM_RATE_8000_48000,
-  1418			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-  1419		},
-  1420		.capture = {
-  1421			.stream_name = "Voice Capture",
-  1422			.channels_min = 1,
-  1423			.channels_max = 2,
-  1424			.rates = SNDRV_PCM_RATE_8000_48000,
-  1425			.formats = SNDRV_PCM_FMTBIT_S16_LE,
-  1426		},
-  1427		.ops = &cpcap_dai_voice_ops,
-  1428	},
-  1429	};
-  1430	
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+>> And for the ABI breakage, we should add something in Documentation/ABI
+>> /obsolete  or Documentation/ABI/removed ?
+> 
