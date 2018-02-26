@@ -1,157 +1,58 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 1/2] input: Add RAVE SP Powerbutton driver
-Date: Mon, 26 Feb 2018 07:41:29 -0800
-Message-ID: <20180226154130.25774-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/2] arm64: dts: r8a77965: salvator-x(s): Enable s2ram and PMIC
+Date: Mon, 26 Feb 2018 16:42:21 +0100
+Message-ID: <1519659743-27027-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add driver that properly handles input event emitted by RAVE SP
-devices.
+	Hi Simon, Magnus,
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- drivers/input/misc/Kconfig             |  9 ++++
- drivers/input/misc/Makefile            |  1 +
- drivers/input/misc/rave-sp-pwrbutton.c | 92 ++++++++++++++++++++++++++++++++++
- 3 files changed, 102 insertions(+)
- create mode 100644 drivers/input/misc/rave-sp-pwrbutton.c
+This patch populates the placeholders in the R-Car M3-N DTS file for the
+IIC Bus Interface for DVFS (IIC for DVFS) and Interrupt Controller for
+External Devices (INTC-EX) device nodes.
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 62a1312a7387..6a3c753b093b 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -841,4 +841,13 @@ config INPUT_HISI_POWERKEY
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called hisi_powerkey.
- 
-+config INPUT_RAVE_SP_PWRBUTTON
-+	tristate "RAVE SP Power button Driver"
-+	depends on RAVE_SP_CORE
-+	help
-+	  Say Y here if you want to enable power key reporting from RAVE SP
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called rave-sp-pwrbutton.
-+
- endif
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index a8f61af865aa..6ebeec1f4dd0 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -80,3 +80,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)		+= wm831x-on.o
- obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)	+= xen-kbdfront.o
- obj-$(CONFIG_INPUT_YEALINK)		+= yealink.o
- obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)	+= ideapad_slidebar.o
-+obj-$(CONFIG_INPUT_RAVE_SP_PWRBUTTON)	+= rave-sp-pwrbutton.o
-diff --git a/drivers/input/misc/rave-sp-pwrbutton.c b/drivers/input/misc/rave-sp-pwrbutton.c
-new file mode 100644
-index 000000000000..7511062c724b
---- /dev/null
-+++ b/drivers/input/misc/rave-sp-pwrbutton.c
-@@ -0,0 +1,92 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+/*
-+ * Power Button driver for RAVE SP
-+ *
-+ * Copyright (C) 2017 Zodiac Inflight Innovations
-+ *
-+ */
-+
-+#include <linux/input.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mfd/rave-sp.h>
-+#include <linux/platform_device.h>
-+
-+#define RAVE_SP_EVNT_BUTTON_PRESS	(RAVE_SP_EVNT_BASE + 0x00)
-+
-+struct rave_sp_power_button {
-+	struct input_dev *idev;
-+	struct notifier_block nb;
-+};
-+
-+static int rave_sp_power_button_event(struct notifier_block *nb,
-+				      unsigned long action, void *data)
-+{
-+	struct rave_sp_power_button *pb =
-+		container_of(nb, struct rave_sp_power_button, nb);
-+	const u8 event = rave_sp_action_unpack_event(action);
-+	const u8 value = rave_sp_action_unpack_value(action);
-+	struct input_dev *idev = pb->idev;
-+
-+	if (event == RAVE_SP_EVNT_BUTTON_PRESS) {
-+		input_report_key(idev, KEY_POWER, value);
-+		input_sync(idev);
-+
-+		return NOTIFY_STOP;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int rave_sp_pwrbutton_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct rave_sp_power_button *pb;
-+	struct input_dev *idev;
-+	int ret;
-+
-+	pb = devm_kzalloc(dev, sizeof(*pb), GFP_KERNEL);
-+	if (!pb)
-+		return -ENOMEM;
-+
-+	idev = devm_input_allocate_device(dev);
-+	if (!idev)
-+		return -ENOMEM;
-+
-+	idev->name = pdev->name;
-+	idev->dev.parent = dev;
-+
-+	input_set_capability(idev, EV_KEY, KEY_POWER);
-+
-+	ret = input_register_device(idev);
-+	if (ret)
-+		return ret;
-+
-+	pb->idev = idev;
-+	pb->nb.notifier_call = rave_sp_power_button_event;
-+	pb->nb.priority = 128;
-+
-+	return devm_rave_sp_register_event_notifier(dev, &pb->nb);
-+}
-+
-+static const struct of_device_id rave_sp_pwrbutton_of_match[] = {
-+	{ .compatible = "zii,rave-sp-pwrbutton" },
-+	{}
-+};
-+
-+static struct platform_driver rave_sp_pwrbutton_driver = {
-+	.probe = rave_sp_pwrbutton_probe,
-+	.driver	= {
-+		.name = KBUILD_MODNAME,
-+		.of_match_table = rave_sp_pwrbutton_of_match,
-+	},
-+};
-+module_platform_driver(rave_sp_pwrbutton_driver);
-+
-+MODULE_DEVICE_TABLE(of, rave_sp_pwrbutton_of_match);
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>");
-+MODULE_AUTHOR("Nikita Yushchenko <nikita.yoush@cogentembedded.com>");
-+MODULE_AUTHOR("Andrey Smirnov <andrew.smirnov@gmail.com>");
-+MODULE_DESCRIPTION("RAVE SP Power Button driver");
+After applying the first patch, you can start using s2ram (PSCI
+suspend), like on other Salvator-X(S) boards
+(https://elinux.org/R-Car/Boards/Salvator-XS#PSCI_System_Suspend).
+
+The second patch enables dependencies for the BD9571MWV PMIC device,
+which is described in salvator-common.dtsi. Note that operation still
+depends on "[PATCH] pinctrl: sh-pfc: r8a77965: Add support for INTC-EX
+IRQ pins".
+
+Thanks!
+
+Geert Uytterhoeven (2):
+  arm64: dts: r8a77965: Add IIC-DVFS device node
+  arm64: dts: r8a77965: Add INTC-EX device node
+
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
+
 -- 
-2.14.3
+2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
