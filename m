@@ -1,74 +1,62 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/4] dt-bindings: arm: Document Renesas V3MSK and Wheat
- board part numbers
-Date: Tue, 27 Feb 2018 22:14:32 +0100
-Message-ID: <CAMuHMdWqdFKH7AoFNAX5tHrCSn+cT5KTW38d8_CxYWJ76xGBMg@mail.gmail.com>
-References: <1519668225-12548-1-git-send-email-geert+renesas@glider.be>
- <1519668225-12548-3-git-send-email-geert+renesas@glider.be>
- <20180227081711.nnd2r35mu3h7rjz5@verge.net.au>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 4/6] arm64: dts: exynos: add OF graph between MHL and
+ USB connector
+Date: Tue, 27 Feb 2018 15:24:34 -0600
+Message-ID: <CAL_JsqKGVwvqu36D57WbB7bPMt2tOZmvq+ukFuNHbhgiWYuw-w@mail.gmail.com>
+References: <CGME20180221085607eucas1p1a08c82fac832049d79705b4222422fa9@eucas1p1.samsung.com>
+ <20180221085541.14556-1-a.hajda@samsung.com>
+ <20180221085541.14556-5-a.hajda@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180227081711.nnd2r35mu3h7rjz5@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180221085541.14556-5-a.hajda@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Tue, Feb 27, 2018 at 9:17 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Mon, Feb 26, 2018 at 07:03:43PM +0100, Geert Uytterhoeven wrote:
->> The DT binding documentation for the Renesas V3MSK and Wheat boards
->> lacked board part numbers.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> ---
->>  Documentation/devicetree/bindings/arm/shmobile.txt | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
->> index ded2cd3b5f4df0c8..82908a9447e4b051 100644
->> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
->> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
->> @@ -120,9 +120,9 @@ Boards:
->>      compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
->>    - Stout (ADAS Starterkit, Y-R-CAR-ADAS-SKH2-BOARD)
->>      compatible = "renesas,stout", "renesas,r8a7790"
->> -  - V3MSK
->> +  - V3MSK (Y-ASK-RCAR-V3M-WS10)
->>      compatible = "renesas,v3msk", "renesas,r8a77970"
->
-> Google also tells me there is WS20, but I guess WS10 what is
-> currently supported upstream.
->
->> -  - Wheat
->> +  - Wheat (RTP0RC7792ASKB0010JE)
->>      compatible = "renesas,wheat", "renesas,r8a7792"
->
-> I'm unable to confirm the above. Can anyone help?
-
-https://elinux.org/R-Car/Boards/Wheat
-
-Looks like I misinterpreted the pictures, and
-RTP0RC7792ASKB0000JE is the correct part number for Wheat.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gV2VkLCBGZWIgMjEsIDIwMTggYXQgMjo1NSBBTSwgQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBz
+YW1zdW5nLmNvbT4gd3JvdGU6Cj4gT0YgZ3JhcGggZGVzY3JpYmVzIE1ITCBkYXRhIGxhbmVzIGJl
+dHdlZW4gTUhMIGFuZCByZXNwZWN0aXZlIFVTQgo+IGNvbm5lY3Rvci4KPgo+IFNpZ25lZC1vZmYt
+Ynk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4gLS0tCj4gdjQ6Cj4gLSBh
+ZGRlZCBtaXNzaW5nIHJlZyBwcm9wZXJ0eSBpbiBjb25uZWN0b3IncyBwb3J0IG5vZGUgKEtyenlz
+enRvZikKPiAtLS0KPiAgLi4uL2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi1jb21tb24u
+ZHRzaSAgICAgfCAzMiArKysrKysrKysrKysrKysrKysrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
+OSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLWNvbW1vbi5kdHNpIGIvYXJjaC9hcm02
+NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTItY29tbW9uLmR0c2kKPiBpbmRleCBmNjA0
+ZjZiMWE5YzIuLjJlZDUwNmRmOTRkMCAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2V4eW5vcy9leHlub3M1NDMzLXRtMi1jb21tb24uZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLWNvbW1vbi5kdHNpCj4gQEAgLTgxNyw5ICs4MTcs
+MjIgQEAKPiAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZwbXVfc3lzdGVtX2NvbnRyb2xsZXIg
+MD47Cj4gICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gInh0YWwiOwo+Cj4gLSAgICAgICAg
+ICAgICAgIHBvcnQgewo+IC0gICAgICAgICAgICAgICAgICAgICAgIG1obF90b19oZG1pOiBlbmRw
+b2ludCB7Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQg
+PSA8JmhkbWlfdG9fbWhsPjsKPiArICAgICAgICAgICAgICAgcG9ydHMgewo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICBwb3J0
+QDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+Owo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgbWhsX3RvX2hkbWk6IGVuZHBvaW50IHsKPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZo
+ZG1pX3RvX21obD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAg
+ICAgICAgICAgICAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIHBvcnRA
+MSB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47Cj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBtaGxfdG9fbXVzYl9jb246IGVuZHBvaW50IHsKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0g
+PCZtdXNiX2Nvbl90b19taGw+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsK
+ClRoZXNlIHBvcnRzIGFyZSBtdXR1YWxseSBleGNsdXNpdmUsIHJpZ2h0PyBJZiBzbywgaXQgc2hv
+dWxkIGJlIDEgcG9ydAp3aXRoIDIgZW5kcG9pbnRzLiBQb3J0cyBzaG91bGQgcmVwcmVzZW50IGlu
+ZGVwZW5kZW50IGRhdGEgZmxvd3MuClNvbWV0aGluZyBtdXhlZCBvciByZXBsaWNhdGVkICgxIHRv
+IG1hbnkgY29ubmVjdGlvbikgc2hvdWxkIGJlIGJlCmVuZHBvaW50cy4KClJvYgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
