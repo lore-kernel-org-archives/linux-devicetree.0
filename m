@@ -1,140 +1,59 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 5/6] extcon: add possibility to get extcon device by
- OF node
-Date: Tue, 27 Feb 2018 20:03:14 +0900
-Message-ID: <5A953AF2.6030501@samsung.com>
-References: <20180227071134.28063-1-a.hajda@samsung.com>
-        <CGME20180227071141eucas1p1170216070d70007a07de120a0dc3363a@eucas1p1.samsung.com>
-        <20180227071134.28063-6-a.hajda@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv5 2/5] ASoC: codec: cpcap: new codec
+Date: Tue, 27 Feb 2018 11:03:15 +0000
+Message-ID: <20180227110315.GB11822@sirena.org.uk>
+References: <20180223200254.25685-1-sebastian.reichel@collabora.co.uk>
+ <20180223200254.25685-3-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hHWLQfXTYDoKhP50"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180227071134.28063-6-a.hajda@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20180223200254.25685-3-sebastian.reichel@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@collabora.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 2018년 02월 27일 16:11, Andrzej Hajda wrote:
-> Since extcon property is not allowed in DT, extcon subsystem requires
-> another way to get extcon device. Lets try the simplest approach - get
-> edev by of_node.
-> 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> ---
-> v5: function renamed to extcon_find_edev_by_node (Andy)
-> v2: changed label to follow local convention (Chanwoo)
-> ---
->  drivers/extcon/extcon.c | 44 ++++++++++++++++++++++++++++++++++----------
->  include/linux/extcon.h  |  6 ++++++
->  2 files changed, 40 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/extcon/extcon.c b/drivers/extcon/extcon.c
-> index cb38c2747684..47a5ca9eb86d 100644
-> --- a/drivers/extcon/extcon.c
-> +++ b/drivers/extcon/extcon.c
-> @@ -1336,6 +1336,28 @@ void extcon_dev_unregister(struct extcon_dev *edev)
->  EXPORT_SYMBOL_GPL(extcon_dev_unregister);
->  
->  #ifdef CONFIG_OF
-> +
-> +/*
-> + * extcon_find_edev_by_node - Find the extcon device from devicetree.
-> + * @node	: OF node identyfying edev
+--hHWLQfXTYDoKhP50
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-s/identyfying/identifying
+On Fri, Feb 23, 2018 at 09:02:51PM +0100, Sebastian Reichel wrote:
 
-> + *
-> + * Return the pointer of extcon device if success or ERR_PTR(err) if fail.
-> + */
-> +struct extcon_dev *extcon_find_edev_by_node(struct device_node *node)
-> +{
-> +	struct extcon_dev *edev;
-> +
-> +	mutex_lock(&extcon_dev_list_lock);
-> +	list_for_each_entry(edev, &extcon_dev_list, entry)
-> +		if (edev->dev.parent && edev->dev.parent->of_node == node)
-> +			goto out;
-> +	edev = ERR_PTR(-EPROBE_DEFER);
-> +out:
-> +	mutex_unlock(&extcon_dev_list_lock);
-> +
-> +	return edev;
-> +}
-> +
->  /*
->   * extcon_get_edev_by_phandle - Get the extcon device from devicetree.
->   * @dev		: the instance to the given device
-> @@ -1363,25 +1385,27 @@ struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev, int index)
->  		return ERR_PTR(-ENODEV);
->  	}
->  
-> -	mutex_lock(&extcon_dev_list_lock);
-> -	list_for_each_entry(edev, &extcon_dev_list, entry) {
-> -		if (edev->dev.parent && edev->dev.parent->of_node == node) {
-> -			mutex_unlock(&extcon_dev_list_lock);
-> -			of_node_put(node);
-> -			return edev;
-> -		}
-> -	}
-> -	mutex_unlock(&extcon_dev_list_lock);
-> +	edev = extcon_find_edev_by_node(node);
->  	of_node_put(node);
->  
-> -	return ERR_PTR(-EPROBE_DEFER);
-> +	return edev;
->  }
-> +
->  #else
-> +
-> +struct extcon_dev *extcon_find_edev_by_node(struct device_node *node)
-> +{
-> +	return ERR_PTR(-ENOSYS);
-> +}
-> +
->  struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev, int index)
->  {
->  	return ERR_PTR(-ENOSYS);
->  }
-> +
->  #endif /* CONFIG_OF */
-> +
-> +EXPORT_SYMBOL_GPL(extcon_find_edev_by_node);
->  EXPORT_SYMBOL_GPL(extcon_get_edev_by_phandle);
->  
->  /**
-> diff --git a/include/linux/extcon.h b/include/linux/extcon.h
-> index 6d94e82c8ad9..7f033b1ea568 100644
-> --- a/include/linux/extcon.h
-> +++ b/include/linux/extcon.h
-> @@ -230,6 +230,7 @@ extern void devm_extcon_unregister_notifier_all(struct device *dev,
->   * Following APIs get the extcon_dev from devicetree or by through extcon name.
->   */
->  extern struct extcon_dev *extcon_get_extcon_dev(const char *extcon_name);
-> +extern struct extcon_dev *extcon_find_edev_by_node(struct device_node *node);
->  extern struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev,
->  						     int index);
->  
-> @@ -283,6 +284,11 @@ static inline struct extcon_dev *extcon_get_extcon_dev(const char *extcon_name)
->  	return ERR_PTR(-ENODEV);
->  }
->  
-> +static inline struct extcon_dev *extcon_find_edev_by_node(struct device_node *node)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
->  static inline struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev,
->  				int index)
->  {
-> 
+> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+> +	case SND_SOC_DAIFMT_I2S:
+> +		val |= BIT(CPCAP_BIT_ST_DIG_AUD_FS0);
+> +		val |= BIT(CPCAP_BIT_ST_DIG_AUD_FS1);
+> +		break;
+> +	default:
+> +		/* 01 - 4 slots network mode */
+> +		val |= BIT(CPCAP_BIT_ST_DIG_AUD_FS0);
+> +		val &= ~BIT(CPCAP_BIT_ST_DIG_AUD_FS1);
+> +		/* L on slot 1 */
+> +		val |= BIT(CPCAP_BIT_ST_L_TIMESLOT0);
+> +		break;
+> +	}
 
+The default case here is really one specific mode, it looks like it's
+either DSP_A or DSP_B.  Most likely DSP_A but you should check.
+Otherwise this looks good so I'll apply it, please send a followup patch
+fixing this to match only the specific mode that's actually supported.
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+--hHWLQfXTYDoKhP50
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqVOvIACgkQJNaLcl1U
+h9DYbwf7BcnQly6YhUxqDK9VVhh77y0p1LW+LHXuIKaGjAzvy7b2LIvkkgSwOvEM
+zvKR7VU+wC22mEBj8WVBeGv4/tVTziH8N4/8q5n2vrg+TKSkvsGdniiifw2080hA
+IV2fkLXQRyoZLuACBXSQzapwsFdI+UoRDERJ9HDuENitog1sddFMGgV+spzT/gZO
+LSkEpODQBp5MRvgFZY+kdplq+z1Mi1tDiZ2ZYFRsEtcStVr5zgwCE4gDw5tJxIxT
+01NWyKtlvDq6+OHdstA5qGuxTtFEY7Xccjezbyg4Yn1LWrrdsXXM7mLjTjnX7g04
+k3RpsBb5rjLLTJ0QSj4WxOFzrsdATQ==
+=YQU8
+-----END PGP SIGNATURE-----
+
+--hHWLQfXTYDoKhP50--
