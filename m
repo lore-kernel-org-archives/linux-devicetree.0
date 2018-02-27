@@ -1,113 +1,68 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] arm64: dts: rockchip: Fix rk3399-gru-* s2r (pinctrl hogs, wifi reset)
-Date: Tue, 27 Feb 2018 12:47:11 -0800
-Message-ID: <20180227204711.29357-1-dianders@chromium.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
+Date: Tue, 27 Feb 2018 22:14:07 +0100
+Message-ID: <20180227221407.0cd7f8a9@bbrezillon>
+References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
+        <20171214151610.19153-3-boris.brezillon@free-electrons.com>
+        <b39f9016-b2ff-6d8d-96b3-945f32ab2b67@synopsys.com>
+        <20180223213000.407461d2@bbrezillon>
+        <1b8fe82f-079b-6f55-0e59-5773027faa8e@synopsys.com>
+        <20180226213607.7161bb0a@bbrezillon>
+        <b9c057ad-47a0-fa35-0f30-8d465d40b6f0@synopsys.com>
+        <MWHPR07MB27833F0CAD2597BFDD37CE6CCAC00@MWHPR07MB2783.namprd07.prod.outlook.com>
+        <20180227211302.26f76427@bbrezillon>
+        <MWHPR07MB278357B74A7D7E31EB109DC5CAC00@MWHPR07MB2783.namprd07.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <MWHPR07MB278357B74A7D7E31EB109DC5CAC00@MWHPR07MB2783.namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>
+To: Przemyslaw Sroka <psroka@cadence.com>
+Cc: Vitor Soares <Vitor.Soares@synopsys.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.m>
 List-Id: devicetree@vger.kernel.org
 
-Back in the early days when gru devices were still under development
-we found an issue where the WiFi reset line needed to be configured as
-early as possible during the boot process to avoid the WiFi module
-being in a bad state.
+On Tue, 27 Feb 2018 20:24:43 +0000
+Przemyslaw Sroka <psroka@cadence.com> wrote:
 
-We found that the way to get the kernel to do this in the earliest
-possible place was to configure this line in the pinctrl hogs, so
-that's what we did.  For some history here you can see
-<http://crosreview.com/368770>.  After the time that change landed in
-the kernel, we landed a firmware change to configure this line even
-earlier.  See <http://crosreview.com/399919>.  However, even after the
-firmware change landed we kept the kernel change to deal with the fact
-that some people working on devices might take a little while to
-update their firmware.
 
-At this there are definitely zero devices out in the wild that have
-firmware without the fix in it.  Specifically looking in the firmware
-branch several critically important fixes for memory stability landed
-after the patch in coreboot and I know we didn't ship without those.
-Thus, by now, everyone should have the new firmware and it's safe to
-not have the kernel set this up in a pinctrl hog.
+> > > SETDASA is simply faster than ENTDAA, but only if there is no
+> > > need to collect BCR/DCR/PID of such devices. I think most
+> > > applications would like to have them as an status information so
+> > > after all ENTDAA can be regarded as an generic approach (unless
+> > > I'm mistaken).  
+> > 
+> > Actually, we could retrieve BCR/DCR/PID (and all other relevant
+> > information, like MAXDS) even with the SETDASA approach. We just
+> > need to send the according CCC commands after SETDASA.
+> >   
+> I agree, what I meant by "SETDASA is simply faster than ENTDAA, but
+> only if there is no need to collect BCR/DCR/PID of such devices." Is
+> that it is faster than DAA but only if not followed by GET CCC
+> commands to gather BCR/DCR/PID. I think we are on the same page here.
 
-Historically, even though it wasn't needed to have this in a pinctrl
-hog, we still kept it since it didn't hurt.  Pinctrl would apply the
-default hog at bootup and then would never touch things again.  That
-all changed with commit 981ed1bfbc6c ("pinctrl: Really force states
-during suspend/resume").  After that commit then we'll re-apply the
-default hog at resume time and that can screw up the reset state of
-WiFi.  ...and on rk3399 if you touch a device on PCIe in the wrong way
-then the whole system can go haywire.  That's what was happening.
-Specifically you'd resume a rk3399-gru-* device and it would mostly
-resume, then would crash with some crazy weird crash.
+Yes, but right now it's not the case, see my other reply ;-).
 
-One could say, perhaps, that the recent pinctrl change was at fault
-(and should be fixed) since it changed behavior.  ...but that's not
-really true.  The device tree for rk3399-gru is really to blame.
-Specifically since the pinctrl is defined in the hog and not in the
-"wlan-pd-n" node then the actual user of this pin doesn't have a
-pinctrl entry for it.  That's bad.
+> 
+> > But that's also my understanding that ENTDAA should always work, and
+> > SETDASA usage is only needed if you want to reserve a dynamic
+> > address and assign it to a device before DAA takes place. This way
+> > you can enforce the device priority (WRT IBIs). But honestly,
+> > that's the only use case I can think of, and to me, it sounds like
+> > an advanced feature we may want to support at some point, but don't
+> > need in the initial implementation. 
+> Still ENTDAA seems to be sufficient for IBI prioritization but I can
+> imagine some use cases where people would like to use it for such
+> purposes. Note that SETDASA is applicable only for devices with SA so
+> it is self-explanatory that it cannot be considered as utility to
+> define priorities for all devices before ENTDAA. 
 
-Let's fix our problems by just moving the control of
-"wlan_module_reset_l pinctrl" out of the hog and put them in the
-proper place.
+We have SETNEWDA for other use cases: say you want one of your device to
+have an higher priority, you can just manually set a new dynamic
+address that is lower than any other devices on the bus (I plan to
+expose that through sysfs, by making the address file writable).
 
-NOTE: in theory, I think it should actually be possible to have a pin
-controlled _both_ by the hog and by an actual device.  Once the device
-claims the pin I think the hog is supposed to let go.  I'm not 100%
-sure that this works and in any case this solution would be more
-complex than is necessary.
-
-Reported-by: Marc Zyngier <marc.zyngier@arm.com>
-Fixes: 48f4d9796d99 ("arm64: dts: rockchip: add Gru/Kevin DTS")
-Fixes: 981ed1bfbc6c ("pinctrl: Really force states during suspend/resume")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index 6e50768a34ce..9ad54751d0d8 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -406,8 +406,9 @@
- 	wlan_pd_n: wlan-pd-n {
- 		compatible = "regulator-fixed";
- 		regulator-name = "wlan_pd_n";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wlan_module_reset_l>;
- 
--		/* Note the wlan_module_reset_l pinctrl */
- 		enable-active-high;
- 		gpio = <&gpio1 11 GPIO_ACTIVE_HIGH>;
- 
-@@ -988,12 +989,6 @@ ap_i2c_audio: &i2c8 {
- 	pinctrl-0 = <
- 		&ap_pwroff	/* AP will auto-assert this when in S3 */
- 		&clk_32k	/* This pin is always 32k on gru boards */
--
--		/*
--		 * We want this driven low ASAP; firmware should help us, but
--		 * we can help ourselves too.
--		 */
--		&wlan_module_reset_l
- 	>;
- 
- 	pcfg_output_low: pcfg-output-low {
-@@ -1173,12 +1168,7 @@ ap_i2c_audio: &i2c8 {
- 		};
- 
- 		wlan_module_reset_l: wlan-module-reset-l {
--			/*
--			 * We want this driven low ASAP (As {Soon,Strongly} As
--			 * Possible), to avoid leakage through the powered-down
--			 * WiFi.
--			 */
--			rockchip,pins = <1 11 RK_FUNC_GPIO &pcfg_output_low>;
-+			rockchip,pins = <1 11 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 
- 		bt_host_wake_l: bt-host-wake-l {
 -- 
-2.16.2.395.g2e18187dfd-goog
+Boris Brezillon, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
