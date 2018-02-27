@@ -1,56 +1,62 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 0/2] add support for Socionext SynQuacer I2C controller
-Date: Tue, 27 Feb 2018 17:59:20 +0200
-Message-ID: <CAHp75Vc_AUD2b5m-6CzKhAWJDudyObGs_oUUiFRk_BQv2QT7Xg@mail.gmail.com>
-References: <20180227110107.30259-1-ard.biesheuvel@linaro.org>
+From: shyam saini <mayhs11saini@gmail.com>
+Subject: [PATCH] ARM: dts: imx6dl-icore-rqs: Fix invalid PHY address
+ assignment for ethernet
+Date: Tue, 27 Feb 2018 21:29:03 +0530
+Message-ID: <1519747143-3036-1-git-send-email-mayhs11saini@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180227110107.30259-1-ard.biesheuvel@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: devicetree@vger.kernel.org, Shyam Saini <shyam@amarulasolutions.com>, robh+dt@kernel.org, jagan@amarulasolutions.com, kernel@pengutronix.de, fabio.estevam@nxp.com, michael@amarulasolutions.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 27, 2018 at 1:01 PM, Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
-> Add a binding and a driver for the I2C IP found in the Socionext SynQuacer
-> SoC, which is essentially a rebranded version of the Fujitsu F_I2C controller.
->
+From: Shyam Saini <shyam@amarulasolutions.com>
 
-Thanks for an update!
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Add "reg" property for ethernet to fix this issue.
 
-P.S. clk_prepare_enable() may fail in ->probe() as well.
+Errors in boot logs:
+mdio_bus 2188000.ethernet-1:
+/soc/aips-bus@02100000/ethernet@02188000/mdio/ethernet-phy
+has invalid PHY address
 
-> v3:
-> - incorporate more of Andy's review comments (#2), especially regarding the
->   bus speed and clock source handling for ACPI
-> - patch #1 unchanged.
->
-> v2:
-> - incorporate Andy's review comments (#2)
-> - patch #1 unchanged.
->
-> Ard Biesheuvel (2):
->   dt-bindings: i2c: add binding for Socionext SynQuacer I2C
->   i2c: add support for Socionext SynQuacer I2C controller
->
->  Documentation/devicetree/bindings/i2c/i2c-synquacer.txt |  29 +
->  drivers/i2c/busses/Kconfig                              |  10 +
->  drivers/i2c/busses/Makefile                             |   1 +
->  drivers/i2c/busses/i2c-synquacer.c                      | 787 ++++++++++++++++++++
->  4 files changed, 827 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-synquacer.txt
->  create mode 100644 drivers/i2c/busses/i2c-synquacer.c
->
-> --
-> 2.11.0
->
+mdio_bus 2188000.ethernet-1: scan phy ethernet-phy at address 0
+mdio_bus 2188000.ethernet-1: scan phy ethernet-phy at address 1
+mdio_bus 2188000.ethernet-1: scan phy ethernet-phy at address 2
+mdio_bus 2188000.ethernet-1: scan phy ethernet-phy at address 3
 
+Reported-by: Shyam Saini <shyam@amarulasolutions.com>
+Suggested-by: Michael Trimarchi <michael@amarulasolutions.com>
+Signed-off-by: Shyam Saini <shyam@amarulasolutions.com>
+---
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-
+diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+index 49daa2b7892d..acc3b11fba2a 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+@@ -200,7 +200,11 @@
+ 	status = "okay";
+ 
+ 	mdio {
+-		eth_phy: ethernet-phy {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		eth_phy: ethernet-phy@0 {
++			reg = <0x0>;
+ 			rxc-skew-ps = <1140>;
+ 			txc-skew-ps = <1140>;
+ 			txen-skew-ps = <600>;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
