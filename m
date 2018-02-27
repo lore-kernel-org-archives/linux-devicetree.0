@@ -1,68 +1,74 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
-Date: Tue, 27 Feb 2018 22:14:07 +0100
-Message-ID: <20180227221407.0cd7f8a9@bbrezillon>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
-        <20171214151610.19153-3-boris.brezillon@free-electrons.com>
-        <b39f9016-b2ff-6d8d-96b3-945f32ab2b67@synopsys.com>
-        <20180223213000.407461d2@bbrezillon>
-        <1b8fe82f-079b-6f55-0e59-5773027faa8e@synopsys.com>
-        <20180226213607.7161bb0a@bbrezillon>
-        <b9c057ad-47a0-fa35-0f30-8d465d40b6f0@synopsys.com>
-        <MWHPR07MB27833F0CAD2597BFDD37CE6CCAC00@MWHPR07MB2783.namprd07.prod.outlook.com>
-        <20180227211302.26f76427@bbrezillon>
-        <MWHPR07MB278357B74A7D7E31EB109DC5CAC00@MWHPR07MB2783.namprd07.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/4] dt-bindings: arm: Document Renesas V3MSK and Wheat
+ board part numbers
+Date: Tue, 27 Feb 2018 22:14:32 +0100
+Message-ID: <CAMuHMdWqdFKH7AoFNAX5tHrCSn+cT5KTW38d8_CxYWJ76xGBMg@mail.gmail.com>
+References: <1519668225-12548-1-git-send-email-geert+renesas@glider.be>
+ <1519668225-12548-3-git-send-email-geert+renesas@glider.be>
+ <20180227081711.nnd2r35mu3h7rjz5@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <MWHPR07MB278357B74A7D7E31EB109DC5CAC00@MWHPR07MB2783.namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Przemyslaw Sroka <psroka@cadence.com>
-Cc: Vitor Soares <Vitor.Soares@synopsys.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.m>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180227081711.nnd2r35mu3h7rjz5@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 Feb 2018 20:24:43 +0000
-Przemyslaw Sroka <psroka@cadence.com> wrote:
+Hi Simon,
 
+On Tue, Feb 27, 2018 at 9:17 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Mon, Feb 26, 2018 at 07:03:43PM +0100, Geert Uytterhoeven wrote:
+>> The DT binding documentation for the Renesas V3MSK and Wheat boards
+>> lacked board part numbers.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>>  Documentation/devicetree/bindings/arm/shmobile.txt | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+>> index ded2cd3b5f4df0c8..82908a9447e4b051 100644
+>> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+>> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+>> @@ -120,9 +120,9 @@ Boards:
+>>      compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
+>>    - Stout (ADAS Starterkit, Y-R-CAR-ADAS-SKH2-BOARD)
+>>      compatible = "renesas,stout", "renesas,r8a7790"
+>> -  - V3MSK
+>> +  - V3MSK (Y-ASK-RCAR-V3M-WS10)
+>>      compatible = "renesas,v3msk", "renesas,r8a77970"
+>
+> Google also tells me there is WS20, but I guess WS10 what is
+> currently supported upstream.
+>
+>> -  - Wheat
+>> +  - Wheat (RTP0RC7792ASKB0010JE)
+>>      compatible = "renesas,wheat", "renesas,r8a7792"
+>
+> I'm unable to confirm the above. Can anyone help?
 
-> > > SETDASA is simply faster than ENTDAA, but only if there is no
-> > > need to collect BCR/DCR/PID of such devices. I think most
-> > > applications would like to have them as an status information so
-> > > after all ENTDAA can be regarded as an generic approach (unless
-> > > I'm mistaken).  
-> > 
-> > Actually, we could retrieve BCR/DCR/PID (and all other relevant
-> > information, like MAXDS) even with the SETDASA approach. We just
-> > need to send the according CCC commands after SETDASA.
-> >   
-> I agree, what I meant by "SETDASA is simply faster than ENTDAA, but
-> only if there is no need to collect BCR/DCR/PID of such devices." Is
-> that it is faster than DAA but only if not followed by GET CCC
-> commands to gather BCR/DCR/PID. I think we are on the same page here.
+https://elinux.org/R-Car/Boards/Wheat
 
-Yes, but right now it's not the case, see my other reply ;-).
+Looks like I misinterpreted the pictures, and
+RTP0RC7792ASKB0000JE is the correct part number for Wheat.
 
-> 
-> > But that's also my understanding that ENTDAA should always work, and
-> > SETDASA usage is only needed if you want to reserve a dynamic
-> > address and assign it to a device before DAA takes place. This way
-> > you can enforce the device priority (WRT IBIs). But honestly,
-> > that's the only use case I can think of, and to me, it sounds like
-> > an advanced feature we may want to support at some point, but don't
-> > need in the initial implementation. 
-> Still ENTDAA seems to be sufficient for IBI prioritization but I can
-> imagine some use cases where people would like to use it for such
-> purposes. Note that SETDASA is applicable only for devices with SA so
-> it is self-explanatory that it cannot be considered as utility to
-> define priorities for all devices before ENTDAA. 
+Gr{oetje,eeting}s,
 
-We have SETNEWDA for other use cases: say you want one of your device to
-have an higher priority, you can just manually set a new dynamic
-address that is lower than any other devices on the bus (I plan to
-expose that through sysfs, by making the address file writable).
+                        Geert
 
--- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
