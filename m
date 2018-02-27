@@ -1,89 +1,43 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v1 2/4] ASoC: codecs: pcm179x: Add support for PCM1789
-Date: Tue, 27 Feb 2018 22:56:29 +0100
-Message-ID: <20180227225629.5cc4e802@windsurf.lan>
-References: <20180227212433.2189-1-mylene.josserand@bootlin.com>
-        <20180227212433.2189-3-mylene.josserand@bootlin.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v4 5/6] arm: dts: pxa: use reworked NAND controller driver
+Date: Tue, 27 Feb 2018 23:00:12 +0100
+Message-ID: <87a7vu6qkz.fsf@belgarion.home>
+References: <20180219223557.2458-1-miquel.raynal@bootlin.com>
+ <20180219223557.2458-6-miquel.raynal@bootlin.com>
+ <20180222104618.1ff78b52@bbrezillon> <87efl66vow.fsf@belgarion.home>
+ <20180227214245.4267448e@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180227212433.2189-3-mylene.josserand@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20180227214245.4267448e@bbrezillon> (Boris Brezillon's message
+ of "Tue, 27 Feb 2018 21:42:45 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: devicetree@vger.kernel.org, Eric Miao <eric.y.miao@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Antoine Tenart <antoine.tenart@bootlin.com>, Richard Weinberger <richard@nod.at>, Gregory Clement <gregory.clement@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Haojian Zhuang <haojian.zhuang@gmail.com>, Nadav Haklai <nadavh@marvell.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel <linux-arm-kernel-bounces@lists.infradead.org>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Boris Brezillon <boris.brezillon@bootlin.com> writes:
 
-On Tue, 27 Feb 2018 22:24:31 +0100, Mylène Josserand wrote:
+>> Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
+>
+> Unfortunately I didn't have your ack when I prepared the branch, so it's
+> not there. Let me know if this is a problem.
+No it's not.
 
-> diff --git a/sound/soc/codecs/pcm179x-i2c.c b/sound/soc/codecs/pcm179x-i2c.c
-> index 795a0657c097..83a2e1508df8 100644
-> --- a/sound/soc/codecs/pcm179x-i2c.c
-> +++ b/sound/soc/codecs/pcm179x-i2c.c
-> @@ -26,10 +26,13 @@
->  static int pcm179x_i2c_probe(struct i2c_client *client,
->  			      const struct i2c_device_id *id)
->  {
-> -	struct regmap *regmap;
-> +	struct regmap *regmap = NULL;
+Cheers.
 
-I don't think this change is useful, since regmap is always initialized
-below anyway.
-
-
-> +	if (mute)
-> +		val = ~(PCM1789_MUTE_L_EN | PCM1789_MUTE_R_EN);
-
-That's not really useful with regmap_update_bits() which already does
-the masking, no?
-
-> +	else
-> +		val = PCM1789_MUTE_L_EN | PCM1789_MUTE_R_EN;
-> +	ret = regmap_update_bits(priv->regmap, PCM1789_SOFT_MUTE,
-> +				 PCM1789_MUTE_MASK, val);
-
-Couldn't this be:
-
-	if (mute)
-		val = 0;
-	else
-		val = PCM1789_MUTE_MASK;
-
-	ret = regmap_update_bits(priv->regmap, PCM1789_SOFT_MUTE,
-				 PCM1789_MUTE_MASK, val);
-
-
-> +static struct snd_soc_dai_driver pcm1789_dai = {
-> +	.name = "pcm1789-hifi",
-> +	.playback = {
-> +		.stream_name = "Playback",
-> +		.channels_min = 2,
-> +		.channels_max = 2,
-> +		.rates = SNDRV_PCM_RATE_CONTINUOUS,
-> +		.rate_min = 10000,
-> +		.rate_max = 200000,
-> +		.formats = PCM1792A_FORMATS, },
-
-Nit: the closing curly brace should be on a separate line.
-
-
-> +	if (type == PCM1789)
-> +		return devm_snd_soc_register_component(dev,
-> +						       &soc_component_dev_pcm1789,
-> +						       &pcm1789_dai, 1);
-> +
-
-Perhaps a "else" here ?
-
->  	return devm_snd_soc_register_component(dev,
->  			&soc_component_dev_pcm179x, &pcm179x_dai, 1);
-
-Thanks!
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Robert
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
