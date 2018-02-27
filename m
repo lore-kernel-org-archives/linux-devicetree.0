@@ -1,109 +1,68 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v3 05/10] pwm: add PWM mode to pwm_config()
-Date: Tue, 27 Feb 2018 15:38:12 +0000
-Message-ID: <20180227153812.txt2vsdygfnobo33@oak.lan>
-References: <1519300881-8136-1-git-send-email-claudiu.beznea@microchip.com>
- <1519300881-8136-6-git-send-email-claudiu.beznea@microchip.com>
- <20180222123308.mypx2r7n6o63mj5z@oak.lan>
- <87po4s2hve.fsf@intel.com>
- <3a70b89c-b470-3723-760c-5294d0a75230@microchip.com>
- <20180227105444.lo4pee7vh4we3foq@oak.lan>
- <8e1d3b30-3543-56fd-7be6-7fe6edcb40d9@microchip.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v2 3/3] gpio: Add Spreadtrum PMIC EIC driver support
+Date: Tue, 27 Feb 2018 17:54:00 +0200
+Message-ID: <CAHp75Vfes+7yKRu1Q+V91c4SxPgNbvBKKDWLxy34Q+3GauRcoQ@mail.gmail.com>
+References: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
+ <f4a2fefb4c3179e7598dbc8141a661833200b922.1519468782.git.baolin.wang@linaro.org>
+ <CAHp75VdvLDEmNs-YUFYf+Og18kaU6j6zAxXc1w31X2vw26ACHQ@mail.gmail.com>
+ <CAMz4kuJ+BmWnSFFvE91Ric-Wm6tzxs_a5UWMx82tPj_ZVvC4tw@mail.gmail.com>
+ <CAHp75VeJiqp74LrsETHTwxd5iaOObRX5bdYXz=rYeHm-4KbgHA@mail.gmail.com> <CAMz4kuJYEfwLHexq-KA6d9+u4+Cx2M9TAeEkHbbU4GJ-Sz50gg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <8e1d3b30-3543-56fd-7be6-7fe6edcb40d9@microchip.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Cc: mark.rutland@arm.com, milo.kim@ti.com, linux-fbdev@vger.kernel.org, sean@mess.org, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, kamil@wypas.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, alexandre.belloni@free-electrons.com, pavel@ucw.cz, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-leds@vger.kernel.org, linux-samsung-soc@vger.kernel.org, shc_work@mail.ru, corbet@lwn.net, linux-doc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, kgene@kernel.org, linux-input@vger.kernel.org, linux@roeck-us.net, linux-media@vger.kernel.org, linux-pwm@vger.kernel.org, jdelvare@suse.com, b.zolnierkie@samsung.com, intel-gfx@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, rodrigo.vivi@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMz4kuJYEfwLHexq-KA6d9+u4+Cx2M9TAeEkHbbU4GJ-Sz50gg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBGZWIgMjcsIDIwMTggYXQgMDE6NDA6NThQTSArMDIwMCwgQ2xhdWRpdSBCZXpuZWEg
-d3JvdGU6Cj4gT24gMjcuMDIuMjAxOCAxMjo1NCwgRGFuaWVsIFRob21wc29uIHdyb3RlOgo+ID4g
-T24gTW9uLCBGZWIgMjYsIDIwMTggYXQgMDQ6MjQ6MTVQTSArMDIwMCwgQ2xhdWRpdSBCZXpuZWEg
-d3JvdGU6Cj4gPj4gT24gMjYuMDIuMjAxOCAxMTo1NywgSmFuaSBOaWt1bGEgd3JvdGU6Cj4gPj4+
-IE9uIFRodSwgMjIgRmViIDIwMTgsIERhbmllbCBUaG9tcHNvbiA8ZGFuaWVsLnRob21wc29uQGxp
-bmFyby5vcmc+IHdyb3RlOgo+ID4+Pj4gT24gVGh1LCBGZWIgMjIsIDIwMTggYXQgMDI6MDE6MTZQ
-TSArMDIwMCwgQ2xhdWRpdSBCZXpuZWEgd3JvdGU6Cj4gPj4+Pj4gQWRkIFBXTSBtb2RlIHRvIHB3
-bV9jb25maWcoKSBmdW5jdGlvbi4gVGhlIGRyaXZlcnMgd2hpY2ggdXNlcyBwd21fY29uZmlnKCkK
-PiA+Pj4+PiB3ZXJlIGFkYXB0ZWQgdG8gdGhpcyBjaGFuZ2UuCj4gPj4+Pj4KPiA+Pj4+PiBTaWdu
-ZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xhdWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT4K
-PiA+Pj4+PiAtLS0KPiA+Pj4+PiAgYXJjaC9hcm0vbWFjaC1zM2MyNHh4L21hY2gtcngxOTUwLmMg
-IHwgMTEgKysrKysrKysrLS0KPiA+Pj4+PiAgZHJpdmVycy9idXMvdHMtbmJ1cy5jICAgICAgICAg
-ICAgICAgIHwgIDIgKy0KPiA+Pj4+PiAgZHJpdmVycy9jbGsvY2xrLXB3bS5jICAgICAgICAgICAg
-ICAgIHwgIDMgKystCj4gPj4+Pj4gIGRyaXZlcnMvZ3B1L2RybS9pOTE1L2ludGVsX3BhbmVsLmMg
-ICB8IDE3ICsrKysrKysrKysrKysrLS0tCj4gPj4+Pj4gIGRyaXZlcnMvaHdtb24vcHdtLWZhbi5j
-ICAgICAgICAgICAgICB8ICAyICstCj4gPj4+Pj4gIGRyaXZlcnMvaW5wdXQvbWlzYy9tYXg3NzY5
-My1oYXB0aWMuYyB8ICAyICstCj4gPj4+Pj4gIGRyaXZlcnMvaW5wdXQvbWlzYy9tYXg4OTk3X2hh
-cHRpYy5jICB8ICA2ICsrKysrLQo+ID4+Pj4+ICBkcml2ZXJzL2xlZHMvbGVkcy1wd20uYyAgICAg
-ICAgICAgICAgfCAgNSArKysrLQo+ID4+Pj4+ICBkcml2ZXJzL21lZGlhL3JjL2lyLXJ4NTEuYyAg
-ICAgICAgICAgfCAgNSArKysrLQo+ID4+Pj4+ICBkcml2ZXJzL21lZGlhL3JjL3B3bS1pci10eC5j
-ICAgICAgICAgfCAgNSArKysrLQo+ID4+Pj4+ICBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9sbTM2
-MzBhX2JsLmMgfCAgNCArKystCj4gPj4+Pj4gIGRyaXZlcnMvdmlkZW8vYmFja2xpZ2h0L2xwODU1
-eF9ibC5jICB8ICA0ICsrKy0KPiA+Pj4+PiAgZHJpdmVycy92aWRlby9iYWNrbGlnaHQvbHA4Nzg4
-X2JsLmMgIHwgIDUgKysrKy0KPiA+Pj4+PiAgZHJpdmVycy92aWRlby9iYWNrbGlnaHQvcHdtX2Js
-LmMgICAgIHwgMTEgKysrKysrKysrLS0KPiA+Pj4+PiAgZHJpdmVycy92aWRlby9mYmRldi9zc2Qx
-MzA3ZmIuYyAgICAgIHwgIDMgKystCj4gPj4+Pj4gIGluY2x1ZGUvbGludXgvcHdtLmggICAgICAg
-ICAgICAgICAgICB8ICA2ICsrKystLQo+ID4+Pj4+ICAxNiBmaWxlcyBjaGFuZ2VkLCA3MCBpbnNl
-cnRpb25zKCspLCAyMSBkZWxldGlvbnMoLSkKPiA+Pj4+Pgo+ID4+Pj4+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9sbTM2MzBhX2JsLmMgYi9kcml2ZXJzL3ZpZGVvL2JhY2ts
-aWdodC9sbTM2MzBhX2JsLmMKPiA+Pj4+PiBpbmRleCAyMDMwYTZiNzdhMDkuLjY5NmZhMjVkYWZk
-MiAxMDA2NDQKPiA+Pj4+PiAtLS0gYS9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9sbTM2MzBhX2Js
-LmMKPiA+Pj4+PiArKysgYi9kcml2ZXJzL3ZpZGVvL2JhY2tsaWdodC9sbTM2MzBhX2JsLmMKPiA+
-Pj4+PiBAQCAtMTY1LDggKzE2NSwxMCBAQCBzdGF0aWMgdm9pZCBsbTM2MzBhX3B3bV9jdHJsKHN0
-cnVjdCBsbTM2MzBhX2NoaXAgKnBjaGlwLCBpbnQgYnIsIGludCBicl9tYXgpCj4gPj4+Pj4gIHsK
-PiA+Pj4+PiAgCXVuc2lnbmVkIGludCBwZXJpb2QgPSBwY2hpcC0+cGRhdGEtPnB3bV9wZXJpb2Q7
-Cj4gPj4+Pj4gIAl1bnNpZ25lZCBpbnQgZHV0eSA9IGJyICogcGVyaW9kIC8gYnJfbWF4Owo+ID4+
-Pj4+ICsJc3RydWN0IHB3bV9jYXBzIGNhcHMgPSB7IH07Cj4gPj4+Pj4gIAo+ID4+Pj4+IC0JcHdt
-X2NvbmZpZyhwY2hpcC0+cHdtZCwgZHV0eSwgcGVyaW9kKTsKPiA+Pj4+PiArCXB3bV9nZXRfY2Fw
-cyhwY2hpcC0+cHdtZC0+Y2hpcCwgcGNoaXAtPnB3bWQsICZjYXBzKTsKPiA+Pj4+PiArCXB3bV9j
-b25maWcocGNoaXAtPnB3bWQsIGR1dHksIHBlcmlvZCwgQklUKGZmcyhjYXBzLm1vZGVzKSAtIDEp
-KTsKPiA+Pj4+Cj4gPj4+PiBXZWxsLi4uIEkgYWRtaXQgSSd2ZSBvbmx5IHJlYWxseSBsb29rZWQg
-YXQgdGhlIHBhdGNoZXMgdGhhdCBpbXBhY3QgCj4gPj4+PiBiYWNrbGlnaHQgYnV0IGRpc3BlcnNp
-bmcgdGhpcyByZWFsbHkgb2RkIGxvb2tpbmcgYml0IHR3aWRkbGluZyAKPiA+Pj4+IHRocm91Z2hv
-dXQgdGhlIGtlcm5lbCBkb2Vzbid0IHN0cmlrZSBtZSBhIGdyZWF0IEFQSSBkZXNpZ24uCj4gPj4+
-Pgo+ID4+Pj4gSU1ITyBjYWxsZXJzIHNob3VsZCBub3QgYmUgcmVxdWlyZWQgdG8gZmluZCB0aGUg
-Zmlyc3Qgc2V0IGJpdCBpbgo+ID4+Pj4gc29tZSBzcGVjaWFsbHkgY3JhZnRlZCBzZXQgb2YgY2Fw
-YWJpbGl0eSBiaXRzIHNpbXBseSB0byBnZXQgc2FuZSAKPiA+Pj4+IGRlZmF1bHQgYmVoYXZpb3Vy
-Lgo+ID4+Pgo+ID4+PiBBZ3JlZWQuIElNSE8gdGhlIHJlZ3VsYXIgdXNlIGNhc2UgYmVjb21lcyBy
-YXRoZXIgdGVkaW91cywgdWdseSwgYW5kCj4gPj4+IGVycm9yIHByb25lLgo+ID4+Cj4gPj4gVXNp
-bmcgc2ltcGx5IFBXTV9NT0RFKE5PUk1BTCkgaW5zdGVhZCBvZiBCSVQoZmZzKGNhcHMubW9kZXMp
-IC0gMSkgd291bGQgYmUgT0sKPiA+PiBmcm9tIHlvdXIgc2lkZT8KPiA+Pgo+ID4+IE9yLCB3aGF0
-IGFib3V0IHVzaW5nIGEgZnVuY3Rpb24gbGlrZSBwd21fbW9kZV9maXJzdCgpIHRvIGdldCB0aGUg
-Zmlyc3Qgc3VwcG9ydGVkCj4gPj4gbW9kZSBieSBQV00gY2hhbm5lbD8KPiA+Pgo+ID4+IE9yLCB3
-b3VsZCB5b3UgcHJlZmVyIHRvIHNvbHZlIHRoaXMgaW5zaWRlIHB3bV9jb25maWcoKSBmdW5jdGlv
-biwgbGV0J3Mgc2F5LCBpbgo+ID4+IGNhc2UgYW4gaW52YWxpZCBtb2RlIGlzIHBhc3NlZCBhcyBh
-cmd1bWVudCwgdG8gbGV0IHB3bV9jb25maWcoKSB0byBjaG9vc2UgdGhlCj4gPj4gZmlyc3QgYXZh
-aWxhYmxlIFBXTSBtb2RlIGZvciBQV00gY2hhbm5lbCBwYXNzZWQgYXMgYXJndW1lbnQ/Cj4gPiAK
-PiA+IFdoYXQgaXMgaXQgdGhhdCBhY3R1YWxseSBuZWVkcyBzb2x2aW5nPwo+ID4gCj4gPiBJZiBh
-IGRyaXZlciByZXF1ZXN0cyBub3JtYWwgbW9kZSBhbmQgdGhlIFBXTSBkcml2ZXIgY2Fubm90IHN1
-cHBvcnQgaXQKPiA+IHdoeSBub3QganVzdCByZXR1cm4gYW4gZXJyb3IgYW4gbW92ZSBvbi4KPiBC
-ZWNhdXNlLCBzaW1wbHksIEkgd2Fzbid0IGF3YXJlIG9mIHdoYXQgdGhlc2UgUFdNIGNsaWVudCBk
-cml2ZXJzIG5lZWRzIGZvci4KCkknbSBhZnJhaWQgeW91IGhhdmUgY29uZnVzZWQgbWUgaGVyZS4K
-CkRpZG4ndCB5b3UganVzdCAqYWRkKiB0aGUgd2hvbGUgY29uY2VwdCBvZiBQV00gY2FwcyB3aXRo
-IHlvdXIgcGF0Y2hlcz8KSG93IGNvdWxkIGFueSBleGlzdGluZyBjYWxsIHNpdGUgZXhwZWN0IGFu
-eXRoaW5nIGV4Y2VwdCBub3JtYWwgbW9kZS4KVW50aWwgbm93IHRoZXJlIGhhcyBiZWVuIG5vIHBv
-c3NpYmxpdHkgdG8gcmVxdWVzdCBhbnl0aGluZyBlbHNlLgoKCj4gPiBQdXQgYW5vdGhlciB3YXks
-IHdoYXQgaXMgdGhlIHVzZSBjYXNlIGZvciBzZWNyZXRseSBhZG9wdGluZyBhIG1vZGUgdGhlCj4g
-PiBjYWxsZXIgZGlkbid0IHdhbnQ/IFVuZGVyIHdoYXQgY2lyY3Vtc3RhbmNlcyBpcyB0aGlzIGEg
-Z29vZCB0aGluZz8KPiBObyBvbmUuLi4gQnV0IEkgd2Fzbid0IGF3YXJlIG9mIHdoYXQgdGhlIFBX
-TSBjbGllbnRzIG5lZWRzIGZvciBmcm9tIHRoZWlyIFBXTQo+IGNvbnRyb2xsZXJzLiBBdCB0aGlz
-IG1vbWVudCBoYXZpbmcgQklUKGZmcyhjYXBzLm1vZGVzKSkgaW5zdGVhZCBvZgo+IFBXTV9NT0RF
-KE5PUk1BTCkgaXMgbW9zdGx5IHRoZSBzYW1lIHNpbmNlIGFsbCB0aGUgZHJpdmVyIHRoYXQgaGFz
-IG5vdCBleHBsaWNpdGx5Cj4gcmVnaXN0ZXJlZCBQV00gY2FwcyB3aWxsIHVzZSBQV00gbm9ybWFs
-IG1vZGUuCj4gCj4gSSB3aWxsIHVzZSBQV01fTU9ERShOT1JNQUwpIGluc3RlYWQgb2YgdGhpcyBp
-biBhbGwgdGhlIGNhc2VzIGlmIHRoaXMgaXMgT0sgZnJvbQo+IHlvdXIgc2lkZS4KPiAKPiBUaGFu
-ayB5b3UsCj4gQ2xhdWRpdSBCZXpuZWEKPiA+IAo+ID4gCj4gPiBEYW5pZWwuCj4gPiAKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Feb 27, 2018 at 4:35 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+> On 26 February 2018 at 20:02, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>> On Mon, Feb 26, 2018 at 5:01 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+>>> On 25 February 2018 at 20:19, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+>>>>> +       for (n = 0; n < chip->ngpio; n++) {
+>>>>> +               if (!(BIT(n) & val))
+>>>>
+>>>> for_each_set_bit().
+>>>>
+>>>> At some point you may need just to go across lib/ in the kernel and
+>>>> see what we have there.
+>>>
+>>> I've considered the for_each_set_bit(), it need one 'unsigned long'
+>>> type parameter, but we get the value from regmap is 'u32' type. So we
+>>> need one extra conversion from 'u32' to 'unsigned long' like:
+>>>
+>>> unsigned long reg = val;
+>>>
+>>> for_each_set_bit(n, &reg, chip->ngpio) {
+>>>         .......
+>>> }
+>>>
+>>> If you like this conversion, then I can change to use
+>>> for_each_set_bit(). Thanks.
+>>
+>> Wouldn't it work like
+>>
+>> unsigned long val;
+>>
+>> ...regmap_read(..., &val);
+>>
+>> ?
+>
+> It can not work, regmap_read() expects 'unsigned int *'.
+
+Ah, OK, than the temporary variable is a left approach.
+
+> But I can
+> convert it like this:
+>
+> for_each_set_bit(n, (unsigned long *)&val, chip->ngpio) {
+>          .......
+> }
+
+No, this is a boilerplate for static analyzers and definitely UB.
+
+-- 
+With Best Regards,
+Andy Shevchenko
