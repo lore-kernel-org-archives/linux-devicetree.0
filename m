@@ -1,83 +1,49 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v8 14/15] cpufreq: Add module to register cpufreq on Krait CPUs
-Date: Tue, 27 Feb 2018 15:58:47 +0100
-Message-ID: <87zi3ujx7c.fsf@bootlin.com>
-References: <1519740422-3835-1-git-send-email-sricharan@codeaurora.org>
-        <1519740422-3835-15-git-send-email-sricharan@codeaurora.org>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: Re: [PATCH] ARM: dts: NSP: Fix amount of RAM on BCM958625HR
+Date: Tue, 27 Feb 2018 10:02:56 -0500
+Message-ID: <CAC3K-4rqYMUBtbwaojWBF-0biEV-WSPpe=0bDocL4TUrrL4gGQ@mail.gmail.com>
+References: <20180227010312.7495-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519740422-3835-15-git-send-email-sricharan@codeaurora.org>
-        (Sricharan R.'s message of "Tue, 27 Feb 2018 19:37:01 +0530")
+In-Reply-To: <20180227010312.7495-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: viresh.kumar@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, robh@kernel.org, linux@arm.linux.org.uk
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sricharan,
- 
- On mar., févr. 27 2018, Sricharan R <sricharan@codeaurora.org> wrote:
+On Mon, Feb 26, 2018 at 8:03 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> Jon attempted to fix the amount of RAM on the BCM958625HR in commit
+> c53beb47f621 ("ARM: dts: NSP: Correct RAM amount for BCM958625HR board")
+> but it seems like we tripped over some poorly documented schematics.
+>
+> The top-level page of the schematics says the board has 2GB, but when
+> you end-up scrolling to page 6, you see two chips of 4GiB (512MB) but
+> what the bootloader really initializes only 512MB, any attempt to use
+> more than that results in data aborts. Fix this again back to 512MB.
+>
+> Fixes: c53beb47f621 ("ARM: dts: NSP: Correct RAM amount for BCM958625HR board")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-> From: Stephen Boyd <sboyd@codeaurora.org>
->
-> Register a cpufreq-generic device whenever we detect that a
-> "qcom,krait" compatible CPU is present in DT.
->
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> [Sricharan: updated to use dev_pm_opp_set_prop_name and
-> 	    nvmem apis]
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+Acked-by: Jon Mason <jon.mason@broadcom.com>
+
 > ---
->  drivers/cpufreq/Kconfig.arm          |  10 ++
->  drivers/cpufreq/Makefile             |   3 +
->  drivers/cpufreq/cpufreq-dt-platdev.c |   5 +
->  drivers/cpufreq/qcom-cpufreq.c       | 183 +++++++++++++++++++++++++++++++++++
->  4 files changed, 201 insertions(+)
->  create mode 100644 drivers/cpufreq/qcom-cpufreq.c
+>  arch/arm/boot/dts/bcm958625hr.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-> index 3a88e33..826f9e7 100644
-> --- a/drivers/cpufreq/Kconfig.arm
-> +++ b/drivers/cpufreq/Kconfig.arm
-> @@ -133,6 +133,16 @@ config ARM_OMAP2PLUS_CPUFREQ
->  	depends on ARCH_OMAP2PLUS
->  	default ARCH_OMAP2PLUS
->  
-> +config ARM_QCOM_CPUFREQ
-> +	bool "CPUfreq driver for the QCOM SoCs with KRAIT processors"
-> +	depends on ARCH_QCOM
-> +	select PM_OPP
-> +	help
-> +	  This enables the CPUFreq driver for Qualcomm SoCs with
-> +	  KRAIT processors.
-> +
-> +	  If in doubt, say N.
-> +
->  config ARM_S3C_CPUFREQ
->  	bool
->  	help
-> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-> index c60c1e1..21894f6 100644
-> --- a/drivers/cpufreq/Makefile
-> +++ b/drivers/cpufreq/Makefile
-> @@ -65,6 +65,9 @@ obj-$(CONFIG_MACH_MVEBU_V7)		+= mvebu-cpufreq.o
->  obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
->  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
->  obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
-> +obj-$(CONFIG_ARM_QCOM_CPUFREQ)		+= qcom-cpufreq.o
-
-These 2 following lines don't seem related to the commit log:
-> +obj-$(CONFIG_ARM_S3C24XX_CPUFREQ)	+= s3c24xx-cpufreq.o
-> +obj-$(CONFIG_ARM_S3C24XX_CPUFREQ_DEBUGFS) += s3c24xx-cpufreq-debugfs.o
-
-Gregory
-
->  obj-$(CONFIG_ARM_S3C2410_CPUFREQ)	+= s3c2410-cpufreq.o
->  obj-$(CONFIG_ARM_S3C2412_CPUFREQ)	+= s3c2412-cpufreq.o
->  obj-$(CONFIG_ARM_S3C2416_CPUFREQ)	+= s3c2416-cpufreq.o
--- 
-Gregory Clement, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
+> diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+> index 6a44b8021702..f0e2008f7490 100644
+> --- a/arch/arm/boot/dts/bcm958625hr.dts
+> +++ b/arch/arm/boot/dts/bcm958625hr.dts
+> @@ -49,7 +49,7 @@
+>
+>         memory {
+>                 device_type = "memory";
+> -               reg = <0x60000000 0x80000000>;
+> +               reg = <0x60000000 0x20000000>;
+>         };
+>
+>         gpio-restart {
+> --
+> 2.14.1
+>
