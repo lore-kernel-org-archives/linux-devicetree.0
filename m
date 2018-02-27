@@ -1,129 +1,60 @@
-Return-Path: <SRS0=FvkB=FS=linaro.org=baolin.wang@kernel.org>
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v2 1/3] dt-bindings: gpio: Add Spreadtrum EIC controller documentation
-Date: Sat, 24 Feb 2018 18:44:18 +0800
-Message-Id: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
-To: linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, andy.shevchenko@gmail.com
+Return-Path: <>
+From: Gaku Inami <gaku.inami.xh@renesas.com>
+Subject: [PATCH 2/5] arm64: dts: renesas: r8a7796: Add multi-cluster definition
+Date: Tue, 27 Feb 2018 11:19:52 +0900
+Message-Id: <1519697995-6061-3-git-send-email-gaku.inami.xh@renesas.com>
+In-Reply-To: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
+References: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gaku Inami <gaku.inami.xh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds the device tree bindings for the Spreadtrum EIC
-controller. The EIC can be seen as a special type of GPIO, which
-can only be used as input mode.
+This patch adds the "cpu-map" for multi-cluster into r8a7796
+device-tree. This definition is used to parse the cpu topology.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
 ---
-Changes since v1:
- - Fix some typos and grammar issues.
- - Add more explanation to make things clear.
- - List all device nodes as examples.
----
- .../devicetree/bindings/gpio/gpio-eic-sprd.txt     |   97 ++++++++++++++++++++
- 1 file changed, 97 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt b/Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
-new file mode 100644
-index 0000000..93d98d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
-@@ -0,0 +1,97 @@
-+Spreadtrum EIC controller bindings
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index f8e9313..154df9b 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -64,6 +64,32 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&a57_0>;
++				};
++				core1 {
++					cpu = <&a57_1>;
++				};
++			};
 +
-+The EIC is the abbreviation of external interrupt controller, which can
-+be used only in input mode. The Spreadtrum platform has 2 EIC controllers,
-+one is in digital chip, and another one is in PMIC. The digital chip EIC
-+controller contains 4 sub-modules: EIC-debounce, EIC-latch, EIC-async and
-+EIC-sync. But the PMIC EIC controller contains only one EIC-debounce sub-
-+module.
++			cluster1 {
++				core0 {
++					cpu = <&a53_0>;
++				};
++				core1 {
++					cpu = <&a53_1>;
++				};
++				core2 {
++					cpu = <&a53_2>;
++				};
++				core3 {
++					cpu = <&a53_3>;
++				};
++			};
++		};
 +
-+The EIC-debounce sub-module provides up to 8 source input signal
-+connections. A debounce mechanism is used to capture the input signals'
-+stable status (millisecond resolution) and a single-trigger mechanism
-+is introduced into this sub-module to enhance the input event detection
-+reliability. In addition, this sub-module's clock can be shut off
-+automatically to reduce power dissipation. Moreover the debounce range
-+is from 1ms to 4s with a step size of 1ms. The input signal will be
-+ignored if it is asserted for less than 1 ms.
-+
-+The EIC-latch sub-module is used to latch some special power down signals
-+and generate interrupts, since the EIC-latch does not depend on the APB
-+clock to capture signals.
-+
-+The EIC-async sub-module uses a 32kHz clock to capture the short signals
-+(microsecond resolution) to generate interrupts by level or edge trigger.
-+
-+The EIC-sync is similar with GPIO's input function, which is a synchronized
-+signal input register. It can generate interrupts by level or edge trigger
-+when detecting input signals.
-+
-+Required properties:
-+- compatible: Should be one of the following:
-+  "sprd,sc9860-eic-debounce",
-+  "sprd,sc9860-eic-latch",
-+  "sprd,sc9860-eic-async",
-+  "sprd,sc9860-eic-sync",
-+  "sprd,sc27xx-eic".
-+- reg: Define the base and range of the I/O address space containing
-+  the GPIO controller registers.
-+- gpio-controller: Marks the device node as a GPIO controller.
-+- #gpio-cells: Should be <2>. The first cell is the gpio number and
-+  the second cell is used to specify optional parameters.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells: Should be <2>. Specifies the number of cells needed
-+  to encode interrupt source.
-+- interrupts: Should be the port interrupt shared by all the gpios.
-+
-+Example:
-+	eic_debounce: gpio@40210000 {
-+		compatible = "sprd,sc9860-eic-debounce";
-+		reg = <0 0x40210000 0 0x80>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	eic_latch: gpio@40210080 {
-+		compatible = "sprd,sc9860-eic-latch";
-+		reg = <0 0x40210080 0 0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	eic_async: gpio@402100a0 {
-+		compatible = "sprd,sc9860-eic-async";
-+		reg = <0 0x402100a0 0 0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	eic_sync: gpio@402100c0 {
-+		compatible = "sprd,sc9860-eic-sync";
-+		reg = <0 0x402100c0 0 0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	pmic_eic: gpio@300 {
-+		compatible = "sprd,sc27xx-eic";
-+		reg = <0x300>;
-+		interrupt-parent = <&sc2731_pmic>;
-+		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
+ 		a57_0: cpu@0 {
+ 			compatible = "arm,cortex-a57", "arm,armv8";
+ 			reg = <0x0>;
 -- 
-1.7.9.5
+2.7.4
