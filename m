@@ -1,119 +1,53 @@
-Return-Path: <robherring2@gmail.com>
-Date: Sun, 18 Feb 2018 20:46:35 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V7 1/7] dt-bindings: ahci-tegra: add binding documentation
-Message-ID: <20180219024635.n6yaussnqdxuop5x@rob-hp-laptop>
-References: <1518456406-21564-1-git-send-email-pchandru@nvidia.com>
- <1518456406-21564-2-git-send-email-pchandru@nvidia.com>
+Return-Path: <SRS0=8hQX=FV=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42100 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1752107AbeB0NuA (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 27 Feb 2018 08:50:00 -0500
+Date: Tue, 27 Feb 2018 13:49:57 +0000
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv4 0/3] spi: support for Socionext Synquacer platform
+Message-ID: <20180227134957.GC11822@sirena.org.uk>
+References: <1519736182-3650-1-git-send-email-jassisinghbrar@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZmUaFz6apKcXQszQ"
 Content-Disposition: inline
-In-Reply-To: <1518456406-21564-2-git-send-email-pchandru@nvidia.com>
-To: Preetham Chandru Ramchandra <pchandru@nvidia.com>
-Cc: thierry.reding@gmail.com, tj@kernel.org, cyndis@kapsi.fi, mark.rutland@arm.com, devicetree@vger.kernel.org, preetham260@gmail.com, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, vbyravarasu@nvidia.com, pkunapuli@nvidia.com
+In-Reply-To: <1519736182-3650-1-git-send-email-jassisinghbrar@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: jassisinghbrar@gmail.com
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, tpiepho@impinj.com, ard.biesheuvel@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, masami.hiramatsu@linaro.org, Jassi Brar <jaswinder.singh@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Feb 12, 2018 at 10:56:40PM +0530, Preetham Chandru Ramchandra wrote:
-> From: Preetham Ramchandra <pchandru@nvidia.com>
-> 
-> This adds bindings documentation for the
-> AHCI controller on Tegra210
-> 
-> Signed-off-by: Preetham Chandru R <pchandru@nvidia.com>
-> ---
-> v7:
-> * For Aux register set drop the Tegra210 since this register
->   set also works on Tegra124
-> * rephrase the sentence for cml1 clock
-> * change the commit subject to include ahci-tegra
-> * drop pll_e since CCF handles it automatically as
->   CML1 is a child clock of it.
-> v4:
-> * changed the commit message
-> * changed 'sata-cold' reset to mandatory for t210 and t124
-> * Removed the regulators for T210 since these regulators
->   will be enabled in phy driver.
-> v3:
-> * Add AUX register.
-> v2:
-> * change cml1, pll_e and phy regulators as optional
->   for T210.
-> ---
->  .../bindings/ata/nvidia,tegra124-ahci.txt          | 35 ++++++++++++++--------
->  1 file changed, 22 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-> index 66c83c3e8915..0f4520a00716 100644
-> --- a/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-> +++ b/Documentation/devicetree/bindings/ata/nvidia,tegra124-ahci.txt
-> @@ -1,20 +1,19 @@
-> -Tegra124 SoC SATA AHCI controller
-> +Tegra SoC SATA AHCI controller
->  
->  Required properties :
-> -- compatible : For Tegra124, must contain "nvidia,tegra124-ahci".  Otherwise,
-> -  must contain '"nvidia,<chip>-ahci", "nvidia,tegra124-ahci"', where <chip>
-> -  is tegra132.
-> -- reg : Should contain 2 entries:
-> +- compatible : Must be one of:
-> +  - Tegra124 : "nvidia,tegra124-ahci"
-> +  - Tegra210 : "nvidia,tegra210-ahci"
 
-Are you dropping T132?
+--ZmUaFz6apKcXQszQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +- reg : Should contain 3 entries:
+On Tue, Feb 27, 2018 at 06:26:22PM +0530, jassisinghbrar@gmail.com wrote:
 
-You can't just add more entries to existing compatibles. Does this apply 
-to T124?
+>  Support for Socionext's FIP controller intended for flash device interfacing.
+> The controller can operate in 'direct' or 'command' mode. One mode directly
+> talks and provide a read/write i/f to the flash device. Other works as plain
+> SPI mode. This driver runs the controller as a SPI controller.
 
->    - AHCI register set (SATA BAR5)
->    - SATA register set
-> +  - AUX register set
->  - interrupts : Defines the interrupt used by SATA
->  - clocks : Must contain an entry for each entry in clock-names.
->    See ../clocks/clock-bindings.txt for details.
->  - clock-names : Must include the following entries:
->    - sata
->    - sata-oob
-> -  - cml1
-> -  - pll_e
->  - resets : Must contain an entry for each entry in reset-names.
->    See ../reset/reset.txt for details.
->  - reset-names : Must include the following entries:
-> @@ -24,9 +23,19 @@ Required properties :
->  - phys : Must contain an entry for each entry in phy-names.
->    See ../phy/phy-bindings.txt for details.
->  - phy-names : Must include the following entries:
-> -  - sata-phy : XUSB PADCTL SATA PHY
-> -- hvdd-supply : Defines the SATA HVDD regulator
-> -- vddio-supply : Defines the SATA VDDIO regulator
-> -- avdd-supply : Defines the SATA AVDD regulator
-> -- target-5v-supply : Defines the SATA 5V power regulator
-> -- target-12v-supply : Defines the SATA 12V power regulator
-> +  - For T124:
-> +    - sata-phy : XUSB PADCTL SATA PHY
-> +  - For T210:
-> +    - sata-0
+If any updates are needed to a patch that's already been applied you
+should submit incremental patches which make those updates.  This avoids
+having to change published git commits which could cause problems for
+people working against git.
 
--names is kind of pointless for a single entry. Differing names is even 
-more pointless.
+--ZmUaFz6apKcXQszQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +- For T124:
-> +  - hvdd-supply : Defines the SATA HVDD regulator
-> +  - vddio-supply : Defines the SATA VDDIO regulator
-> +  - avdd-supply : Defines the SATA AVDD regulator
-> +  - target-5v-supply : Defines the SATA 5V power regulator
-> +  - target-12v-supply : Defines the SATA 12V power regulator
+-----BEGIN PGP SIGNATURE-----
 
-No supplies on T210? The last 2 sound like board level supplies to the 
-drive.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqVYgQACgkQJNaLcl1U
+h9B67Qf+NKTgk0kqcwLbbxAWyov+2aXFo1yQ5xVgbXiRdXMtdz+26vEcH2G0LCUX
+6KQ73JIUWKh2y4/YX5LJZbFd1PEUqRVR8sn2vyQJrozF32ws/+mik4ihypveGFJd
+F4bk7lzjydSg2FmaOGiemNN/FB1HXJbFSXnETPvUf/krrbH4AUh4pdAMOnkka3D/
+f55U3TKRtbpHzczt9RtPfs85FucSOS4ASiVHM9imQqbEFY2Ky767iH0EyQ6owo4Z
+MJvI/Tic01jxfGrE2ZVFBhMSzjaVrtqM2RL/2+7F6bfilmiyRvawoYKKDxx986nY
+IuAy96LJoGYjvacEgTJYoSxxl+vJ0A==
+=lDK1
+-----END PGP SIGNATURE-----
 
-> +
-> +Optional properties:
-> +- clock-names :
-> +  - cml1 :
-> +    cml1 clock should be defined here if the PHY driver
-> +    doesn't manage them. If it does, they should not be.
-> -- 
-> 2.7.4
-> 
+--ZmUaFz6apKcXQszQ--
