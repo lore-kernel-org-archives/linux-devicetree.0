@@ -1,532 +1,233 @@
-Return-Path: <SRS0=oL+B=FW=nvidia.com=rrajk@kernel.org>
-Subject: Re: [PATCH 05/10] hwmon: generic-pwm-tachometer: Add generic PWM
- based tachometer
-References: <1519196339-9377-1-git-send-email-rrajk@nvidia.com>
- <1519196339-9377-6-git-send-email-rrajk@nvidia.com>
- <5172edff-fe29-7ed1-f0d2-b0359ea2c24d@roeck-us.net>
- <2510b525-ec36-b49d-5a62-81f335c0d10d@nvidia.com>
- <cfe0d0ce-3a89-bad0-85ba-6edf1135d2dc@roeck-us.net>
-From: Rajkumar Rampelli <rrajk@nvidia.com>
-Message-ID: <901cf469-1f7d-23f2-e42f-4ea133ef12fc@nvidia.com>
-Date: Wed, 28 Feb 2018 11:37:40 +0530
+Return-Path: <atull@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <cfe0d0ce-3a89-bad0-85ba-6edf1135d2dc@roeck-us.net>
-Content-Type: multipart/alternative;
-	boundary="------------69219CEED6A8032BB783A7C8"
-To: Guenter Roeck <linux@roeck-us.net>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, mperttunen@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ldewangan@nvidia.com
+In-Reply-To: <CAKfKVtGPhb6Mg4UcX58iknEHAvRhp7NzisEONz8Cj+k9OYcu7A@mail.gmail.com>
+References: <1519188826-2047-1-git-send-email-shubhrajyoti.datta@gmail.com>
+ <1519188826-2047-2-git-send-email-shubhrajyoti.datta@gmail.com>
+ <CANk1AXQ1R4dbgDJrUC4pgKtmoCaJhryTnD=bxwwWbEJn0BQcaA@mail.gmail.com>
+ <20180227002832.GA24387@tyrael.ni.corp.natinst.com> <CAKfKVtGPhb6Mg4UcX58iknEHAvRhp7NzisEONz8Cj+k9OYcu7A@mail.gmail.com>
+From: Alan Tull <atull@kernel.org>
+Date: Tue, 27 Feb 2018 11:00:56 -0600
+Message-ID: <CANk1AXR6aSwyQTW=NeYrRUQo2Oe8BysyOzf6VHvBuXaxKwNp-g@mail.gmail.com>
+Subject: Re: [PATCH 2/2] fpga: reset bridge: Add the reset bridge
+Content-Type: text/plain; charset="UTF-8"
+To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Cc: Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, nofooter@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-ID: <devicetree@vger.kernel.org>
 
---------------69219CEED6A8032BB783A7C8
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-
-
-On Wednesday 28 February 2018 11:28 AM, Guenter Roeck wrote:
-> On 02/27/2018 09:38 PM, Rajkumar Rampelli wrote:
+On Mon, Feb 26, 2018 at 10:46 PM, Shubhrajyoti Datta
+<shubhrajyoti.datta@gmail.com> wrote:
+> Hi  Moritz,
+>
+> On Tue, Feb 27, 2018 at 5:58 AM, Moritz Fischer <mdf@kernel.org> wrote:
+>> Hi Shubhrajyoti, Alan
 >>
->> On Wednesday 21 February 2018 08:20 PM, Guenter Roeck wrote:
->>> On 02/20/2018 10:58 PM, Rajkumar Rampelli wrote:
->>>> Add generic PWM based tachometer driver via HWMON interface
->>>> to report the RPM of motor. This drivers get the period/duty
->>>> cycle from PWM IP which captures the motor PWM output.
->>>>
->>>> This driver implements a simple interface for monitoring the speed of
->>>> a fan and exposes it in roatations per minute (RPM) to the user space
->>>> by using the hwmon's sysfs interface
->>>>
->>>> Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
->>>> ---
->>>>   Documentation/hwmon/generic-pwm-tachometer |  17 +++++
->>>>   drivers/hwmon/Kconfig                      |  10 +++
->>>>   drivers/hwmon/Makefile                     |   1 +
->>>>   drivers/hwmon/generic-pwm-tachometer.c     | 112 
->>>> +++++++++++++++++++++++++++++
->>>>   4 files changed, 140 insertions(+)
->>>>   create mode 100644 Documentation/hwmon/generic-pwm-tachometer
->>>>   create mode 100644 drivers/hwmon/generic-pwm-tachometer.c
->>>>
->>>> diff --git a/Documentation/hwmon/generic-pwm-tachometer 
->>>> b/Documentation/hwmon/generic-pwm-tachometer
->>>> new file mode 100644
->>>> index 0000000..e0713ee
->>>> --- /dev/null
->>>> +++ b/Documentation/hwmon/generic-pwm-tachometer
->>>> @@ -0,0 +1,17 @@
->>>> +Kernel driver generic-pwm-tachometer
->>>> +====================================
->>>> +
->>>> +This driver enables the use of a PWM module to monitor a fan. It 
->>>> uses the
->>>> +generic PWM interface and can be used on SoCs as along as the SoC 
->>>> supports
->>>> +Tachometer controller that moniors the Fan speed in periods.
->>>> +
->>>> +Author: Rajkumar Rampelli <rrajk@nvidia.com>
->>>> +
->>>> +Description
->>>> +-----------
->>>> +
->>>> +The driver implements a simple interface for monitoring the Fan 
->>>> speed using
->>>> +PWM module and Tachometer controller. It requests period value 
->>>> through PWM
->>>> +capture interface to Tachometer and measures the Rotations per 
->>>> minute using
->>>> +received period value. It exposes the Fan speed in RPM to the user 
->>>> space by
->>>> +using the hwmon's sysfs interface.
->>>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->>>> index ef23553..8912dcb 100644
->>>> --- a/drivers/hwmon/Kconfig
->>>> +++ b/drivers/hwmon/Kconfig
->>>> @@ -1878,6 +1878,16 @@ config SENSORS_XGENE
->>>>         If you say yes here you get support for the temperature
->>>>         and power sensors for APM X-Gene SoC.
->>>>   +config GENERIC_PWM_TACHOMETER
->>>> +    tristate "Generic PWM based tachometer driver"
->>>> +    depends on PWM
->>>> +    help
->>>> +      Enables a driver to use PWM signal from motor to use
->>>> +      for measuring the motor speed. The RPM is captured by
->>>> +      PWM modules which has PWM capture capability and this
->>>> +      drivers reads the captured data from PWM IP to convert
->>>> +      it to speed in RPM.
->>>> +
->>>>   if ACPI
->>>>     comment "ACPI drivers"
->>>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
->>>> index f814b4a..9dcc374 100644
->>>> --- a/drivers/hwmon/Makefile
->>>> +++ b/drivers/hwmon/Makefile
->>>> @@ -175,6 +175,7 @@ obj-$(CONFIG_SENSORS_WM8350)    += wm8350-hwmon.o
->>>>   obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
->>>>     obj-$(CONFIG_PMBUS)        += pmbus/
->>>> +obj-$(CONFIG_GENERIC_PWM_TACHOMETER) += generic-pwm-tachometer.o
->>>>     ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
->>>>   diff --git a/drivers/hwmon/generic-pwm-tachometer.c 
->>>> b/drivers/hwmon/generic-pwm-tachometer.c
->>>> new file mode 100644
->>>> index 0000000..9354d43
->>>> --- /dev/null
->>>> +++ b/drivers/hwmon/generic-pwm-tachometer.c
->>>> @@ -0,0 +1,112 @@
->>>> +/*
->>>> + * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights reserved.
->>>> + *
->>>> + * This program is free software; you can redistribute it and/or 
->>>> modify it
->>>> + * under the terms and conditions of the GNU General Public License,
->>>> + * version 2, as published by the Free Software Foundation.
->>>> + *
->>>> + * This program is distributed in the hope it will be useful, but 
->>>> WITHOUT
->>>> + * ANY WARRANTY; without even the implied warranty of 
->>>> MERCHANTABILITY or
->>>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public 
->>>> License for
->>>> + * more details.
->>>> + *
->>>> + */
->>>> +
->>>> +#include <linux/module.h>
->>>> +#include <linux/platform_device.h>
->>>> +#include <linux/err.h>
->>>> +#include <linux/pwm.h>
->>>> +#include <linux/hwmon.h>
->>>> +#include <linux/hwmon-sysfs.h>
->>>> +
->>>> +struct pwm_hwmon_tach {
->>>> +    struct device        *dev;
->>>> +    struct pwm_device    *pwm;
->>>> +    struct device        *hwmon;
->>>> +};
->>>> +
->>>> +static ssize_t show_rpm(struct device *dev, struct 
->>>> device_attribute *attr,
->>>> +            char *buf)
->>>> +{
->>>> +    struct pwm_hwmon_tach *ptt = dev_get_drvdata(dev);
->>>> +    struct pwm_device *pwm = ptt->pwm;
->>>> +    struct pwm_capture result;
->>>> +    int err;
->>>> +    unsigned int rpm = 0;
->>>> +
->>>> +    err = pwm_capture(pwm, &result, 0);
->>>> +    if (err < 0) {
->>>> +        dev_err(ptt->dev, "Failed to capture PWM: %d\n", err);
->>>> +        return err;
->>>> +    }
->>>> +
->>>> +    if (result.period)
->>>> +        rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
->>>> +                        result.period);
->>>> +
->>>> +    return sprintf(buf, "%u\n", rpm);
->>>> +}
->>>> +
->>>> +static SENSOR_DEVICE_ATTR(rpm, 0444, show_rpm, NULL, 0);
->>>> +
->>>> +static struct attribute *pwm_tach_attrs[] = {
->>>> +    &sensor_dev_attr_rpm.dev_attr.attr,
->>>> +    NULL,
->>>> +};
+>> On Mon, Feb 26, 2018 at 04:53:59PM -0600, Alan Tull wrote:
+>>> On Tue, Feb 20, 2018 at 10:53 PM,  <shubhrajyoti.datta@gmail.com> wrote:
+>>> > From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+>>> >
+>>> > Adds the reset bridge. After the bitstream load the reset
+>>> > bridge helps in reseting the programable logic. The
+>>> > reset lines depends on the design.
 >>>
->>> "rpm" is not a standard hwmon sysfs attribute. If you don't provide
->>> a single standard hwmon sysfs attribute, having a hwmon driver is 
->>> pointless.
->> Guenter Roeck,
->> I will define a new hwmon sysfs attribute node called 
->> "hwmon_tachometer_attributes" in hwmon.h like below and update the 
->> same in tachometer hwmon driver. Is it fine ?
->> enum hwmon_tachometer_attributes {
+>>> Hi Shubhrajyoti,
+>>>
+>>> OK so adding this 'bridge' will get a reset line to be toggled after
+>>> programming is done.  It looks like it might be generally usable.
+>>> This doesn't look very xilinx specific (i.e. no specific device
+>>> registers, just using a reset), so maybe it is just a 'rst-brige'.
+>>> How is it used?  To hit a reset line on a whole FPGA?
+>>
+>> In zynq-fpga we have the fpga-mgr hit on the reset, which to some
+>> extend I suppose makes sense, since after reload you wanna reset the
+>> entire FPGA space (unless you do PR, where you don't hit on the resets).
+>>
+>> Shubhrajyoti's solution seems more modular I guess, however I don't
+>> really see a good usecase for only hitting a single reset.
+>>
+>> IP that's in the FPGA and needs reset should have their dedicated resets
+>> via normal reset API bindings imho and not rely on bridges to do the
+>> right thing.
+>>
+>> The ZynqMP is fairly complex and I might be missing something here,
+>> so maybe you (Shubhrajyoti) can elaborate a bit more. The paragraph in
+>> the TRM seemed fairly short, and didn't enlighten me as to why it is
+>> required.
 >
-> Are you kidding me ?
+> The FPGA supports both the PR case and independent execution
+> Like  a design can have 2 parts that can have independent execution.
+
+I want to understand you better here.  What do you mean by
+'independent execution'?  Like 2 partial reconfiguration regions that
+each have a single reset to reset the hardware in their region?  Or
+something else?
+
+> In that case they have to have independent resets.
 >
-> Guenter
-Sorry, I just wanted to confirm that whether my understanding is correct 
-or not before implementing it actually.
-Or shall I add this attribute as a part of fan attributes with 
-"hwmon_fan_rpm"? or anyother way to do it ? I need your inputs in fixing it.
+> There are 4 PS-PL lines that could be used by designs.
+> So in that case we should have  multiple resets.
 
---------------69219CEED6A8032BB783A7C8
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Normally, as Moritz is saying, the reset would be handled by the
+driver for the fabric-based hardware.
 
-<html>
-  <head>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <br>
-    <div class="moz-cite-prefix">On Wednesday 28 February 2018 11:28 AM,
-      Guenter Roeck wrote:<br>
-    </div>
-    <blockquote
-      cite="mid:cfe0d0ce-3a89-bad0-85ba-6edf1135d2dc@roeck-us.net"
-      type="cite">On 02/27/2018 09:38 PM, Rajkumar Rampelli wrote:
-      <br>
-      <blockquote type="cite">
-        <br>
-        On Wednesday 21 February 2018 08:20 PM, Guenter Roeck wrote:
-        <br>
-        <blockquote type="cite">On 02/20/2018 10:58 PM, Rajkumar
-          Rampelli wrote:
-          <br>
-          <blockquote type="cite">Add generic PWM based tachometer
-            driver via HWMON interface
-            <br>
-            to report the RPM of motor. This drivers get the period/duty
-            <br>
-            cycle from PWM IP which captures the motor PWM output.
-            <br>
-            <br>
-            This driver implements a simple interface for monitoring the
-            speed of
-            <br>
-            a fan and exposes it in roatations per minute (RPM) to the
-            user space
-            <br>
-            by using the hwmon's sysfs interface
-            <br>
-            <br>
-            Signed-off-by: Rajkumar Rampelli <a class="moz-txt-link-rfc2396E" href="mailto:rrajk@nvidia.com">&lt;rrajk@nvidia.com&gt;</a>
-            <br>
-            ---
-            <br>
-              Documentation/hwmon/generic-pwm-tachometer |  17 +++++
-            <br>
-              drivers/hwmon/Kconfig                      |  10 +++
-            <br>
-              drivers/hwmon/Makefile                     |   1 +
-            <br>
-              drivers/hwmon/generic-pwm-tachometer.c     | 112
-            +++++++++++++++++++++++++++++
-            <br>
-              4 files changed, 140 insertions(+)
-            <br>
-              create mode 100644
-            Documentation/hwmon/generic-pwm-tachometer
-            <br>
-              create mode 100644 drivers/hwmon/generic-pwm-tachometer.c
-            <br>
-            <br>
-            diff --git a/Documentation/hwmon/generic-pwm-tachometer
-            b/Documentation/hwmon/generic-pwm-tachometer
-            <br>
-            new file mode 100644
-            <br>
-            index 0000000..e0713ee
-            <br>
-            --- /dev/null
-            <br>
-            +++ b/Documentation/hwmon/generic-pwm-tachometer
-            <br>
-            @@ -0,0 +1,17 @@
-            <br>
-            +Kernel driver generic-pwm-tachometer
-            <br>
-            +====================================
-            <br>
-            +
-            <br>
-            +This driver enables the use of a PWM module to monitor a
-            fan. It uses the
-            <br>
-            +generic PWM interface and can be used on SoCs as along as
-            the SoC supports
-            <br>
-            +Tachometer controller that moniors the Fan speed in
-            periods.
-            <br>
-            +
-            <br>
-            +Author: Rajkumar Rampelli <a class="moz-txt-link-rfc2396E" href="mailto:rrajk@nvidia.com">&lt;rrajk@nvidia.com&gt;</a>
-            <br>
-            +
-            <br>
-            +Description
-            <br>
-            +-----------
-            <br>
-            +
-            <br>
-            +The driver implements a simple interface for monitoring the
-            Fan speed using
-            <br>
-            +PWM module and Tachometer controller. It requests period
-            value through PWM
-            <br>
-            +capture interface to Tachometer and measures the Rotations
-            per minute using
-            <br>
-            +received period value. It exposes the Fan speed in RPM to
-            the user space by
-            <br>
-            +using the hwmon's sysfs interface.
-            <br>
-            diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-            <br>
-            index ef23553..8912dcb 100644
-            <br>
-            --- a/drivers/hwmon/Kconfig
-            <br>
-            +++ b/drivers/hwmon/Kconfig
-            <br>
-            @@ -1878,6 +1878,16 @@ config SENSORS_XGENE
-            <br>
-                    If you say yes here you get support for the
-            temperature
-            <br>
-                    and power sensors for APM X-Gene SoC.
-            <br>
-              +config GENERIC_PWM_TACHOMETER
-            <br>
-            +    tristate "Generic PWM based tachometer driver"
-            <br>
-            +    depends on PWM
-            <br>
-            +    help
-            <br>
-            +      Enables a driver to use PWM signal from motor to use
-            <br>
-            +      for measuring the motor speed. The RPM is captured by
-            <br>
-            +      PWM modules which has PWM capture capability and this
-            <br>
-            +      drivers reads the captured data from PWM IP to
-            convert
-            <br>
-            +      it to speed in RPM.
-            <br>
-            +
-            <br>
-              if ACPI
-            <br>
-                comment "ACPI drivers"
-            <br>
-            diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-            <br>
-            index f814b4a..9dcc374 100644
-            <br>
-            --- a/drivers/hwmon/Makefile
-            <br>
-            +++ b/drivers/hwmon/Makefile
-            <br>
-            @@ -175,6 +175,7 @@ obj-$(CONFIG_SENSORS_WM8350)    +=
-            wm8350-hwmon.o
-            <br>
-              obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
-            <br>
-                obj-$(CONFIG_PMBUS)        += pmbus/
-            <br>
-            +obj-$(CONFIG_GENERIC_PWM_TACHOMETER) +=
-            generic-pwm-tachometer.o
-            <br>
-                ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
-            <br>
-              diff --git a/drivers/hwmon/generic-pwm-tachometer.c
-            b/drivers/hwmon/generic-pwm-tachometer.c
-            <br>
-            new file mode 100644
-            <br>
-            index 0000000..9354d43
-            <br>
-            --- /dev/null
-            <br>
-            +++ b/drivers/hwmon/generic-pwm-tachometer.c
-            <br>
-            @@ -0,0 +1,112 @@
-            <br>
-            +/*
-            <br>
-            + * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights
-            reserved.
-            <br>
-            + *
-            <br>
-            + * This program is free software; you can redistribute it
-            and/or modify it
-            <br>
-            + * under the terms and conditions of the GNU General Public
-            License,
-            <br>
-            + * version 2, as published by the Free Software Foundation.
-            <br>
-            + *
-            <br>
-            + * This program is distributed in the hope it will be
-            useful, but WITHOUT
-            <br>
-            + * ANY WARRANTY; without even the implied warranty of
-            MERCHANTABILITY or
-            <br>
-            + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
-            Public License for
-            <br>
-            + * more details.
-            <br>
-            + *
-            <br>
-            + */
-            <br>
-            +
-            <br>
-            +#include &lt;linux/module.h&gt;
-            <br>
-            +#include &lt;linux/platform_device.h&gt;
-            <br>
-            +#include &lt;linux/err.h&gt;
-            <br>
-            +#include &lt;linux/pwm.h&gt;
-            <br>
-            +#include &lt;linux/hwmon.h&gt;
-            <br>
-            +#include &lt;linux/hwmon-sysfs.h&gt;
-            <br>
-            +
-            <br>
-            +struct pwm_hwmon_tach {
-            <br>
-            +    struct device        *dev;
-            <br>
-            +    struct pwm_device    *pwm;
-            <br>
-            +    struct device        *hwmon;
-            <br>
-            +};
-            <br>
-            +
-            <br>
-            +static ssize_t show_rpm(struct device *dev, struct
-            device_attribute *attr,
-            <br>
-            +            char *buf)
-            <br>
-            +{
-            <br>
-            +    struct pwm_hwmon_tach *ptt = dev_get_drvdata(dev);
-            <br>
-            +    struct pwm_device *pwm = ptt-&gt;pwm;
-            <br>
-            +    struct pwm_capture result;
-            <br>
-            +    int err;
-            <br>
-            +    unsigned int rpm = 0;
-            <br>
-            +
-            <br>
-            +    err = pwm_capture(pwm, &amp;result, 0);
-            <br>
-            +    if (err &lt; 0) {
-            <br>
-            +        dev_err(ptt-&gt;dev, "Failed to capture PWM: %d\n",
-            err);
-            <br>
-            +        return err;
-            <br>
-            +    }
-            <br>
-            +
-            <br>
-            +    if (result.period)
-            <br>
-            +        rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
-            <br>
-            +                        result.period);
-            <br>
-            +
-            <br>
-            +    return sprintf(buf, "%u\n", rpm);
-            <br>
-            +}
-            <br>
-            +
-            <br>
-            +static SENSOR_DEVICE_ATTR(rpm, 0444, show_rpm, NULL, 0);
-            <br>
-            +
-            <br>
-            +static struct attribute *pwm_tach_attrs[] = {
-            <br>
-            +    &amp;sensor_dev_attr_rpm.dev_attr.attr,
-            <br>
-            +    NULL,
-            <br>
-            +};
-            <br>
-          </blockquote>
-          <br>
-          "rpm" is not a standard hwmon sysfs attribute. If you don't
-          provide
-          <br>
-          a single standard hwmon sysfs attribute, having a hwmon driver
-          is pointless.
-          <br>
-        </blockquote>
-        Guenter Roeck,
-        <br>
-        I will define a new hwmon sysfs attribute node called
-        "hwmon_tachometer_attributes" in hwmon.h like below and update
-        the same in tachometer hwmon driver. Is it fine ?
-        <br>
-        enum hwmon_tachometer_attributes {
-        <br>
-      </blockquote>
-      <br>
-      Are you kidding me ?
-      <br>
-      <br>
-      Guenter
-      <br>
-    </blockquote>
-    Sorry, I just wanted to confirm that whether my understanding is
-    correct or not before implementing it actually.<o:p> <br>
-    </o:p>Or shall I add this attribute as a part of fan attributes with
-    "hwmon_fan_rpm"? or anyother way to do it ? I need your inputs in
-    fixing it.<br>
-  </body>
-</html>
+Alan
 
---------------69219CEED6A8032BB783A7C8--
+>
+>
+>>
+>> Cheers,
+>>
+>> Moritz
+>>>
+>>> Alan
+>>>
+>>> >
+>>> > Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+>>> > ---
+>>> >  drivers/fpga/Kconfig             |   8 ++++
+>>> >  drivers/fpga/Makefile            |   1 +
+>>> >  drivers/fpga/xilinx-rst-bridge.c | 100 +++++++++++++++++++++++++++++++++++++++
+>>> >  3 files changed, 109 insertions(+)
+>>> >  create mode 100644 drivers/fpga/xilinx-rst-bridge.c
+>>> >
+>>> > diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+>>> > index ad5448f..752a907 100644
+>>> > --- a/drivers/fpga/Kconfig
+>>> > +++ b/drivers/fpga/Kconfig
+>>> > @@ -117,4 +117,12 @@ config XILINX_PR_DECOUPLER
+>>> >           region of the FPGA from the busses while that region is
+>>> >           being reprogrammed during partial reconfig.
+>>> >
+>>> > +config XILINX_RST_BRIDGE
+>>> > +       tristate "Xilinx Reset bridge"
+>>> > +       depends on FPGA_BRIDGE
+>>> > +       help
+>>> > +         Say Y to enable drivers for Xilinx Reset bridge.
+>>> > +         After writing the bitstream there has to be a reset.
+>>> > +         The reset lines are design specific.
+>>> > +
+>>> >  endif # FPGA
+>>> > diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+>>> > index f98dcf1..c1b0d13 100644
+>>> > --- a/drivers/fpga/Makefile
+>>> > +++ b/drivers/fpga/Makefile
+>>> > @@ -23,6 +23,7 @@ obj-$(CONFIG_FPGA_BRIDGE)             += fpga-bridge.o
+>>> >  obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)      += altera-hps2fpga.o altera-fpga2sdram.o
+>>> >  obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)     += altera-freeze-bridge.o
+>>> >  obj-$(CONFIG_XILINX_PR_DECOUPLER)      += xilinx-pr-decoupler.o
+>>> > +obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)     += xilinx-rst-bridge.o
+>>> >
+>>> >  # High Level Interfaces
+>>> >  obj-$(CONFIG_FPGA_REGION)              += fpga-region.o
+>>> > diff --git a/drivers/fpga/xilinx-rst-bridge.c b/drivers/fpga/xilinx-rst-bridge.c
+>>> > new file mode 100644
+>>> > index 0000000..8062283
+>>> > --- /dev/null
+>>> > +++ b/drivers/fpga/xilinx-rst-bridge.c
+>>> > @@ -0,0 +1,100 @@
+>>> > +// SPDX-License-Identifier: GPL-2.0
+>>> > +/*
+>>> > + * Xilinx FPGA reset bridge.
+>>> > + * Copyright (c) 2018 Xilinx Inc.
+>>> > + *
+>>> > + */
+>>> > +
+>>> > +#include <linux/kernel.h>
+>>> > +#include <linux/module.h>
+>>> > +#include <linux/of_device.h>
+>>> > +#include <linux/fpga/fpga-bridge.h>
+>>> > +#include <linux/reset.h>
+>>> > +
+>>> > +struct xlnx_rst_bridge_priv {
+>>> > +       struct device *dev;
+>>> > +       bool enable;
+>>> > +};
+>>> > +
+>>> > +static int xlnx_rst_bridge_enable_set(struct fpga_bridge *bridge, bool enable)
+>>> > +{
+>>> > +       struct xlnx_rst_bridge_priv *priv = bridge->priv;
+>>> > +       struct device *dev = priv->dev;
+>>> > +       struct reset_control *rstc;
+>>> > +       int ret = 0;
+>>> > +
+>>> > +       if (enable) {
+>>> > +               rstc = of_reset_control_array_get(dev->of_node, false, false);
+>>> > +               if (IS_ERR(rstc))
+>>> > +                       return PTR_ERR(rstc);
+>>> > +
+>>> > +               ret = reset_control_reset(rstc);
+>>> > +
+>>> > +               reset_control_put(rstc);
+>>> > +
+>>> > +               if (ret)
+>>> > +                       dev_err(dev, "Reset failed\n");
+>>> > +       } else {
+>>> > +               dev_dbg(dev, "Bridge disabled\n");
+>>> > +       }
+>>> > +
+>>> > +       if (!ret)
+>>> > +               priv->enable = enable;
+>>> > +
+>>> > +       return ret;
+>>> > +}
+>>> > +
+>>> > +static int xlnx_rst_bridge_enable_show(struct fpga_bridge *bridge)
+>>> > +{
+>>> > +       struct xlnx_rst_bridge_priv *priv = bridge->priv;
+>>> > +
+>>> > +       return priv->enable;
+>>> > +}
+>>> > +
+>>> > +static struct fpga_bridge_ops xlnx_rst_bridge_ops = {
+>>> > +       .enable_set = xlnx_rst_bridge_enable_set,
+>>> > +       .enable_show = xlnx_rst_bridge_enable_show,
+>>> > +};
+>>> > +
+>>> > +static int xlnx_rst_bridge_probe(struct platform_device *pdev)
+>>> > +{
+>>> > +       struct xlnx_rst_bridge_priv *priv;
+>>> > +       struct device *dev = &pdev->dev;
+>>> > +
+>>> > +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>>> > +       if (!priv)
+>>> > +               return -ENOMEM;
+>>> > +
+>>> > +       priv->dev = dev;
+>>> > +
+>>> > +       return fpga_bridge_register(dev, "xlnx_rst_bridge",
+>>> > +                                   &xlnx_rst_bridge_ops, priv);
+>>> > +}
+>>> > +
+>>> > +static int xlnx_rst_bridge_remove(struct platform_device *pdev)
+>>> > +{
+>>> > +       fpga_bridge_unregister(&pdev->dev);
+>>> > +
+>>> > +       return 0;
+>>> > +}
+>>> > +
+>>> > +static const struct of_device_id xlnx_rst_bridge_of_match[] = {
+>>> > +       { .compatible = "xlnx,rst-bridge", },
+>>> > +       {},
+>>> > +};
+>>> > +MODULE_DEVICE_TABLE(of, xlnx_rst_bridge_of_match);
+>>> > +
+>>> > +static struct platform_driver xlnx_rst_bridge_driver = {
+>>> > +       .probe = xlnx_rst_bridge_probe,
+>>> > +       .remove = xlnx_rst_bridge_remove,
+>>> > +       .driver = {
+>>> > +               .name   = "xlnx_rst_bridge",
+>>> > +               .of_match_table = of_match_ptr(xlnx_rst_bridge_of_match),
+>>> > +       },
+>>> > +};
+>>> > +
+>>> > +module_platform_driver(xlnx_rst_bridge_driver);
+>>> > +
+>>> > +MODULE_DESCRIPTION("Xilinx reset Bridge");
+>>> > +MODULE_AUTHOR("Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>");
+>>> > +MODULE_LICENSE("GPL v2");
+>>> > --
+>>> > 2.1.1
+>>> >
+>>> > --
+>>> > To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
+>>> > the body of a message to majordomo@vger.kernel.org
+>>> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
