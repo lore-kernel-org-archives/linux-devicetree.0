@@ -1,55 +1,34 @@
-Return-Path: <SRS0=8w0u=FU=mleia.com=vz@kernel.org>
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: [PATCH 1/2] dt-bindings: rng: Document Freescale i.MX31 RNGA compatible
-Date: Mon, 26 Feb 2018 20:38:48 +0200
-Message-Id: <20180226183849.11562-2-vz@mleia.com>
-In-Reply-To: <20180226183849.11562-1-vz@mleia.com>
-References: <20180226183849.11562-1-vz@mleia.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 1/2] usb: renesas_usbhs: add binding for r8a77965
+Date: Tue, 27 Feb 2018 17:16:02 +0900
+Message-Id: <1519719363-27850-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1519719363-27850-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1519719363-27850-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Freescale i.MX31 SoC contains a Security Random Number Generator
-Accelerator module (RNGA), which is replaced by RNGB and RNGC modules
-on later i.MX SoC series, the change adds a new compatible property
-to describe the controller.
+This patch adds binding for r8a77965 (R-Car M3-N).
 
-Since all versions of Freescale RNG modules are legacy, apparently
-the documentation file has no more potential for further extensions,
-nevertheless generalize it by removing explicit RNGC specifics.
-
-Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- .../devicetree/bindings/rng/{imx-rngc.txt => imx-rng.txt}      | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
- rename Documentation/devicetree/bindings/rng/{imx-rngc.txt => imx-rng.txt} (59%)
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/rng/imx-rngc.txt b/Documentation/devicetree/bindings/rng/imx-rng.txt
-similarity index 59%
-rename from Documentation/devicetree/bindings/rng/imx-rngc.txt
-rename to Documentation/devicetree/bindings/rng/imx-rng.txt
-index 93c7174..fc10933 100644
---- a/Documentation/devicetree/bindings/rng/imx-rngc.txt
-+++ b/Documentation/devicetree/bindings/rng/imx-rng.txt
-@@ -1,15 +1,13 @@
--Freescale RNGC (Random Number Generator Version C)
--
--The driver also supports version B, which is mostly compatible
--to version C.
-+Freescale RNGA/RNGB/RNGC (Random Number Generator Versions A, B and C)
- 
- Required properties:
- - compatible : should be one of
-+               "fsl,imx31-rnga"
-                "fsl,imx25-rngb"
-                "fsl,imx35-rngc"
- - reg : offset and length of the register set of this block
--- interrupts : the interrupt number for the RNGC block
--- clocks : the RNGC clk source
-+- interrupts : the interrupt number for the RNG block
-+- clocks : the RNG clk source
- 
- Example:
- 
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index d060172..43960fa 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -12,6 +12,7 @@ Required properties:
+ 	- "renesas,usbhs-r8a7794" for r8a7794 (R-Car E2) compatible device
+ 	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
+ 	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
++	- "renesas,usbhs-r8a77965" for r8a77965 (R-Car M3-N) compatible device
+ 	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
+ 	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
+ 	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
 -- 
-2.10.2
+1.9.1
