@@ -1,47 +1,36 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 04/24] dt-bindings: display: add HPD gpio to DVI connector
-Date: Tue, 27 Feb 2018 15:01:06 +0200
-Message-ID: <2302810.aKNTqq5AG3@avalon>
-References: <1518428694-18018-1-git-send-email-tomi.valkeinen@ti.com>
- <1518428694-18018-5-git-send-email-tomi.valkeinen@ti.com>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH 0/2] arm: Support for Renesas RZ/N1D (R9A06G032)
+Date: Tue, 27 Feb 2018 13:10:36 +0000
+Message-ID: <HK2PR0601MB1393B2D7E0C96590482C3726F5C00@HK2PR0601MB1393.apcprd06.prod.outlook.com>
+References: <1519647518-15579-1-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1518428694-18018-5-git-send-email-tomi.valkeinen@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Jyri Sarha <jsarha@ti.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519647518-15579-1-git-send-email-michel.pollet@bp.renesas.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>
+Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>Michel Pollet <michel.pollet@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVG9taSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gTW9uZGF5LCAxMiBGZWJydWFy
-eSAyMDE4IDExOjQ0OjM0IEVFVCBUb21pIFZhbGtlaW5lbiB3cm90ZToKPiBBZGQgaHBkLWdwaW9z
-IHByb3BlcnR5IHRvIGR2aS1jb25uZWN0b3IudHh0Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IFRvbWkg
-VmFsa2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4gQ2M6IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnCgpSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFy
-dEBpZGVhc29uYm9hcmQuY29tPgoKPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvY29ubmVjdG9yL2R2aS1jb25uZWN0b3IudHh0IHwgMSArCj4gMSBmaWxl
-IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4gCj4gZGlmZiAtLWdpdAo+IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvY29ubmVjdG9yL2R2aS1jb25uZWN0b3IudHh0
-Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9jb25uZWN0b3Iv
-ZHZpLWNvbm5lY3Rvci50eHQKPiBpbmRleCBmYzUzZjdjNjBiYzYuLjIwN2U0MmU5ZWJhMCAxMDA2
-NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9jb25u
-ZWN0b3IvZHZpLWNvbm5lY3Rvci50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9jb25uZWN0b3IvZHZpLWNvbm5lY3Rvci50eHQKPiBAQCAtMTAsNiAr
-MTAsNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIGFuYWxvZzogdGhlIGNvbm5lY3RvciBo
-YXMgRFZJIGFuYWxvZyBwaW5zCj4gIC0gZGlnaXRhbDogdGhlIGNvbm5lY3RvciBoYXMgRFZJIGRp
-Z2l0YWwgcGlucwo+ICAtIGR1YWwtbGluazogdGhlIGNvbm5lY3RvciBoYXMgcGlucyBmb3IgRFZJ
-IGR1YWwtbGluawo+ICstIGhwZC1ncGlvczogSFBEIEdQSU8gbnVtYmVyCj4gCj4gIFJlcXVpcmVk
-IG5vZGVzOgo+ICAtIFZpZGVvIHBvcnQgZm9yIERWSSBpbnB1dAoKCi0tIApSZWdhcmRzLAoKTGF1
-cmVudCBQaW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+Hi Simon,
+
+On 26 February 2018, Michel Pollet wrote:
+>=20
+> This series adds the plain basic support for booting a bare
+> kernel on the RZ/N1D-DB Board. It's been trimmed to the strict
+> minimum as a 'base', further patches that will add the
+> rest of the support, pinctrl, clock architecture and quite
+> a few others.
+I spoke to Magnus about helping to get the RZ/N1 patches upstream.
+We're trying to sort out making the device manual and board schematics
+available, hopefully it won't take too long. We're also trying to sort out
+access to a board... that might take a bit longer.
+
+btw, what do you want to do about shmobile_defconfig? Should we add
+any changes needed for RZ/N1 to it? Note that only one IP block is the
+same as R-Car.
+
+Thanks
+Phil
