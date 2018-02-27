@@ -1,17 +1,13 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/4] dt-bindings: arm: Document Renesas V3MSK and Wheat
- board part numbers
-Date: Tue, 27 Feb 2018 13:47:09 +0300
-Message-ID: <36c4cab2-3e41-d5ed-27a4-5a297887cf10@cogentembedded.com>
-References: <1519668225-12548-1-git-send-email-geert+renesas@glider.be>
- <1519668225-12548-3-git-send-email-geert+renesas@glider.be>
- <20180227081711.nnd2r35mu3h7rjz5@verge.net.au>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: imx6dl-colibri-eval-v3: Add chosen node
+Date: Tue, 27 Feb 2018 07:53:30 -0300
+Message-ID: <CAOMZO5BRWhyhS==XDr7BKpqafdCQ0Q4vd-aYVkXXAhFwKd+v0A@mail.gmail.com>
+References: <20180227080023.17682-1-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180227081711.nnd2r35mu3h7rjz5@verge.net.au>
-Content-Language: en-MW
+In-Reply-To: <20180227080023.17682-1-stefan@agner.ch>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,48 +17,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Tue, Feb 27, 2018 at 5:00 AM, Stefan Agner <stefan@agner.ch> wrote:
+> Add Colibri UART_A as default serial console.
+>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 
-On 02/27/2018 11:17 AM, Simon Horman wrote:
-
->> The DT binding documentation for the Renesas V3MSK and Wheat boards
->> lacked board part numbers.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> ---
->>  Documentation/devicetree/bindings/arm/shmobile.txt | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
->> index ded2cd3b5f4df0c8..82908a9447e4b051 100644
->> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
->> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
->> @@ -120,9 +120,9 @@ Boards:
->>      compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
->>    - Stout (ADAS Starterkit, Y-R-CAR-ADAS-SKH2-BOARD)
->>      compatible = "renesas,stout", "renesas,r8a7790"
->> -  - V3MSK
->> +  - V3MSK (Y-ASK-RCAR-V3M-WS10)
-
-   ACK.
-
->>      compatible = "renesas,v3msk", "renesas,r8a77970"
-> 
-> Google also tells me there is WS20, but I guess WS10 what is
-> currently supported upstream.
-
-   At least that's what I have on my desk. :-)
-
->> -  - Wheat
->> +  - Wheat (RTP0RC7792ASKB0010JE)
->>      compatible = "renesas,wheat", "renesas,r8a7792"
-> 
-> I'm unable to confirm the above. Can anyone help?
-
-   Not me -- my documents don't mention this. :-(
-
-MBR, Sergei
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
