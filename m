@@ -1,176 +1,43 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 16/16] ARM64: dts: sun50i: h5: Enable HDMI
- output on H5 boards
-Date: Tue, 27 Feb 2018 23:27:01 +0100
-Message-ID: <20180227222701.9716-17-jernej.skrabec@siol.net>
-References: <20180227222701.9716-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v1 3/4] ASoC: codecs: pcm179x: Add reset gpio
+Date: Tue, 27 Feb 2018 19:30:11 -0300
+Message-ID: <CAOMZO5C+Ub2R6srR+2jv2pY8zwjwkPSecpO1gbXvmXMTTnhU8Q@mail.gmail.com>
+References: <20180227212433.2189-1-mylene.josserand@bootlin.com> <20180227212433.2189-4-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB5FW27KAKGQEWCHD42Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180227222701.9716-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180227212433.2189-4-mylene.josserand@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@bootlin.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, alexandre.belloni@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable HDMI output on all boards with HDMI connector.
+On Tue, Feb 27, 2018 at 6:24 PM, Myl=C3=A8ne Josserand
+<mylene.josserand@bootlin.com> wrote:
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
----
- .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 25 ++++++++++++++++++++++
- .../dts/allwinner/sun50i-h5-orangepi-prime.dts     | 25 ++++++++++++++++++++++
- .../allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 25 ++++++++++++++++++++++
- 3 files changed, 75 insertions(+)
+> +       pcm179x->reset =3D of_get_named_gpio(np, "reset-gpios", 0);
+> +       if (gpio_is_valid(pcm179x->reset)) {
+> +               ret =3D devm_gpio_request_one(dev, pcm179x->reset,
+> +                                           GPIOF_OUT_INIT_LOW,
+> +                                           "pcm179x reset");
+> +               if (ret) {
+> +                       dev_err(dev,
+> +                               "Failed to request GPIO %d as reset pin, =
+error %d\n",
+> +                               pcm179x->reset, ret);
+> +                       return ret;
+> +               }
+> +
+> +               gpio_set_value(pcm179x->reset, 1);
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-index 58505fbc2667..98862c7c7258 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-@@ -67,6 +67,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -121,6 +132,10 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -153,6 +168,16 @@
- 	};
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-index 803566608ed8..b75ca4d7d001 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-prime.dts
-@@ -62,6 +62,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 
-@@ -128,6 +139,10 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -160,6 +175,16 @@
- 	};
- };
- 
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-index eda24d813282..53c8c11620e0 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-@@ -58,6 +58,17 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	connector {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi_out_con>;
-+			};
-+		};
-+	};
-+
- 	reg_vcc3v3: vcc3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3";
-@@ -73,6 +84,20 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	status = "okay";
-+};
-+
-+&hdmi_out {
-+	hdmi_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_vcc3v3>;
- 	bus-width = <4>;
--- 
-2.16.2
+It would be better to use the gpiod API, which takes the GPIO polarity
+into account.
+
+There may be systems that have an inverter connected to this pin, and
+this can be changed in dts via GPIO_ACTIVE_HIGH.
+
+Also, as the reset pin can be connected to an I2C expander, for
+example, so it is safer to use the cansleep variant:
+
+gpiod_set_value_cansleep(pcm179x->reset, 0);
