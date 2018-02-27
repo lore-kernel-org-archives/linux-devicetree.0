@@ -1,43 +1,48 @@
-Return-Path: <SRS0=JN/F=FQ=axis.com=niklas.cassel@kernel.org>
-From: Niklas Cassel <niklas.cassel@axis.com>
-Subject: [PATCH 1/2] dt-bindings: pinctrl: artpec6: add missing pin group uart5nocts
-Date: Thu, 22 Feb 2018 16:22:46 +0100
-Message-Id: <20180222152247.10554-1-niklas.cassel@axis.com>
-To: Jesper Nilsson <jespern@axis.com>, Lars Persson <larper@axis.com>, Niklas Cassel <niklass@axis.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@axis.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH] usb: host: xhci-rcar: add support for r8a77965
+Date: Tue, 27 Feb 2018 17:15:20 +0900
+Message-Id: <1519719320-27792-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: mathias.nyman@intel.com, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add missing pin group uart5nocts (all pins except cts), which has been
-supported by the artpec6 pinctrl driver since its initial submission.
+This patch adds support for r8a77965 (R-Car M3-N).
 
-Fixes: 00df0582eab1 ("pinctrl: Add pincontrol driver for ARTPEC-6 SoC")
-Signed-off-by: Niklas Cassel <niklas.cassel@axis.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/usb/usb-xhci.txt | 1 +
+ drivers/usb/host/xhci-rcar.c                       | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
-index 47284f85ec80..c3f9826692bc 100644
---- a/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
-@@ -20,7 +20,8 @@ Required subnode-properties:
- 		gpio: cpuclkoutgrp0, udlclkoutgrp0, i2c1grp0, i2c2grp0,
- 		      i2c3grp0, i2s0grp0, i2s1grp0, i2srefclkgrp0, spi0grp0,
- 		      spi1grp0, pciedebuggrp0, uart0grp0, uart0grp1, uart1grp0,
--		      uart2grp0, uart2grp1, uart3grp0, uart4grp0, uart5grp0
-+		      uart2grp0, uart2grp1, uart3grp0, uart4grp0, uart5grp0,
-+		      uart5nocts
- 		cpuclkout: cpuclkoutgrp0
- 		udlclkout: udlclkoutgrp0
- 		i2c1: i2c1grp0
-@@ -37,7 +38,7 @@ Required subnode-properties:
- 		uart2: uart2grp0, uart2grp1
- 		uart3: uart3grp0
- 		uart4: uart4grp0
--		uart5: uart5grp0
-+		uart5: uart5grp0, uart5nocts
- 		nand: nandgrp0
- 		sdio0: sdio0grp0
- 		sdio1: sdio1grp0
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index e2ea59b..1651483a 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -13,6 +13,7 @@ Required properties:
+     - "renesas,xhci-r8a7793" for r8a7793 SoC
+     - "renesas,xhci-r8a7795" for r8a7795 SoC
+     - "renesas,xhci-r8a7796" for r8a7796 SoC
++    - "renesas,xhci-r8a77965" for r8a77965 SoC
+     - "renesas,rcar-gen2-xhci" for a generic R-Car Gen2 or RZ/G1 compatible
+       device
+     - "renesas,rcar-gen3-xhci" for a generic R-Car Gen3 compatible device
+diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-rcar.c
+index f0b5596..f33ffc2 100644
+--- a/drivers/usb/host/xhci-rcar.c
++++ b/drivers/usb/host/xhci-rcar.c
+@@ -83,6 +83,10 @@
+ 		.soc_id = "r8a7796",
+ 		.data = (void *)RCAR_XHCI_FIRMWARE_V3,
+ 	},
++	{
++		.soc_id = "r8a77965",
++		.data = (void *)RCAR_XHCI_FIRMWARE_V3,
++	},
+ 	{ /* sentinel */ },
+ };
+ 
 -- 
-2.14.2
+1.9.1
