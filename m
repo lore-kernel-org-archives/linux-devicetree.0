@@ -1,44 +1,53 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v2 0/3] USB OTG on STM32H743
-Date: Tue, 27 Feb 2018 17:04:09 +0100
-Message-ID: <05b1ec7e-8db3-20df-fb1c-3a8853f99307@st.com>
-References: <1519029988-9261-1-git-send-email-amelie.delaunay@st.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 2/2] ARM: dts: imx7s: add Keypad Port module
+Date: Tue, 27 Feb 2018 17:05:44 +0100
+Message-ID: <20180227160544.11446-2-stefan@agner.ch>
+References: <20180227160544.11446-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519029988-9261-1-git-send-email-amelie.delaunay@st.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180227160544.11446-1-stefan@agner.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, Stefan Agner <stefan@agner.ch>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Amélie,
+Add the Keypad Port module. Add it disabled by default since
+only some boards use it. Boards which do need to specify
+additional properties as documented in the device tree bindings.
 
-On 02/19/2018 09:46 AM, Amelie Delaunay wrote:
-> This patchset adds support for USB OTG HS and FS on stm32h743 SoC.
-> It also enables USB OTG HS on stm32h743i-eval board in OTG (DRD) mode. It is
-> possible to use OTG HS in Peripheral or Host mode depending on the USB
-> connector.
-> 
-> ---
-> 
-> Changes in v2:
-> - Fix compatible string (https://patchwork.kernel.org/patch/10222153/)
-> 
-> Amelie Delaunay (3):
->    ARM: dts: stm32: add USB OTG HS support for STM32H743 SoC
->    ARM: dts: stm32: add USB OTG FS support for STM32H743 SoC
->    ARM: dts: stm32: enable USB OTG HS on stm32h743i-eval
-> 
->   arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 20 ++++++++++++++++++++
->   arch/arm/boot/dts/stm32h743.dtsi         | 21 +++++++++++++++++++++
->   arch/arm/boot/dts/stm32h743i-eval.dts    | 16 ++++++++++++++++
->   3 files changed, 57 insertions(+)
-> 
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/boot/dts/imx7s.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I squashed patch 1&2 and applied series on stm32-next.
-
-Regards.
-Alex
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 097b066ed23c..46400ba2217a 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -499,6 +499,14 @@
+ 				status = "disabled";
+ 			};
+ 
++			kpp: kpp@30320000 {
++				compatible = "fsl,imx7d-kpp", "fsl,imx21-kpp";
++				reg = <0x30320000 0x10000>;
++				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX7D_KPP_ROOT_CLK>;
++				status = "disabled";
++			};
++
+ 			iomuxc: iomuxc@30330000 {
+ 				compatible = "fsl,imx7d-iomuxc";
+ 				reg = <0x30330000 0x10000>;
+-- 
+2.16.2
