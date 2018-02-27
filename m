@@ -1,47 +1,62 @@
-Return-Path: <SRS0=VmpS=FQ=ettus.com=moritz.fischer@kernel.org>
-From: Moritz Fischer <mdf@kernel.org>
-Subject: [PATCH v3 1/2] dt-bindings: power: reset: gpio-poweroff: Add 'timeout-ms' property
-Date: Thu, 22 Feb 2018 15:17:13 -0800
-Message-Id: <20180222231714.11843-1-mdf@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, sre@kernel.org, robh+dt@kernel.org, andy.shevchenko@gmail.com, Moritz Fischer <mdf@kernel.org>
+Return-Path: <SRS0=GbRa=FV=mleia.com=vz@kernel.org>
+Subject: Re: [PATCH 2/2] hwrng: mxc-rnga - add driver support on boards with
+ device tree
+References: <20180226183849.11562-1-vz@mleia.com>
+ <20180226183849.11562-3-vz@mleia.com>
+ <20180227094901.644cff57caadc97f65053d29@arm.com>
+ <e5daefb3-7376-061a-96c7-ed708e17f6a2@mleia.com>
+ <20180227133919.696ddfa9493885729ebdccd9@arm.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Message-ID: <6b836cde-d5f7-4bcd-1218-59b11048e0f9@mleia.com>
+Date: Tue, 27 Feb 2018 22:07:03 +0200
+MIME-Version: 1.0
+In-Reply-To: <20180227133919.696ddfa9493885729ebdccd9@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+To: Kim Phillips <kim.phillips@arm.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add 'timeout-ms' property to support boards where the 3s timeout that the
-current driver defaults to is too short.
+On 02/27/2018 09:39 PM, Kim Phillips wrote:
+> On Tue, 27 Feb 2018 18:53:08 +0200
+> Vladimir Zapolskiy <vz@mleia.com> wrote:
+> 
+>> On 02/27/2018 05:49 PM, Kim Phillips wrote:
+>>> On Mon, 26 Feb 2018 20:38:49 +0200
+>>> Vladimir Zapolskiy <vz@mleia.com> wrote:
+>>>
+>>>> +#ifdef CONFIG_OF
+>>>> +static const struct of_device_id mxc_rnga_of_match[] = {
+>>>> +	{ .compatible = "fsl,imx31-rnga", },
+>>>> +	{ /* sentinel */ },
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, mxc_rnga_of_match);
+>>>> +#endif
+>>>> +
+>>>>  static struct platform_driver mxc_rnga_driver = {
+>>>>  	.driver = {
+>>>> -		   .name = "mxc_rnga",
+>>>> -		   },
+>>>> +		.name = "mxc_rnga",
+>>>> +		.of_match_table = of_match_ptr(mxc_rnga_of_match),
+>>>
+>>> Does this build if CONFIG_OF is not set?
+>>
+>> Definitely it is expected to be built, you can verify it directly or
+>> check of_match_ptr() macro definition from include/linux/of.h
+> 
+> Thanks, I verified it by removing the SOC_IMX31 dependency, and with
+> netwinder_defconfig as a base.  I also verified that the #ifdef
+> CONFIG_OF protecting the mxc_rnga_of_match definition is also not
+> needed.
 
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
----
+That's a commonplace observation, but I have serious doubts, if it
+has become a common practice to remove CONFIG_OF and CONFIG_ACPI
+macro guards around device id lists. Still I would prefer to save
+compiled code size.
 
-Changes from v2:
-- Addressed Rob's feedback (timeout_ms -> timeout-ms)
+Arnd or Greg, your valued opinion is much appreciated.
 
-Changes from v1:
-- Addressed Rob's feedback (timeout -> timeout_ms)
-- Added to old example rather than creating separate one
-
----
-
- Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-index e62d53d844cc..6d8980c18c34 100644
---- a/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-+++ b/Documentation/devicetree/bindings/power/reset/gpio-poweroff.txt
-@@ -27,10 +27,13 @@ Optional properties:
-   it to an output when the power-off handler is called. If this optional
-   property is not specified, the GPIO is initialized as an output in its
-   inactive state.
-+- timeout-ms: Time to wait before asserting a WARN_ON(1). If nothing is
-+              specified, 3000 ms is used.
- 
- Examples:
- 
- gpio-poweroff {
- 	compatible = "gpio-poweroff";
- 	gpios = <&gpio 4 0>;
-+	timeout-ms = <3000>;
- };
--- 
-2.16.1
+--
+With best wishes,
+Vladimir
