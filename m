@@ -1,72 +1,42 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: bcm2835-rpi-zero-w: Enable OTG mode
-Date: Mon, 26 Feb 2018 15:32:27 -0800
-Message-ID: <87inajjpis.fsf@anholt.net>
-References: <1519480028-26430-1-git-send-email-stefan.wahren@i2se.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6019371887213542775=="
-Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1519480028-26430-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
-List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH] ARM: dts: NSP: Fix amount of RAM on BCM958625HR
+Date: Mon, 26 Feb 2018 17:03:12 -0800
+Message-ID: <20180227010312.7495-1-f.fainelli@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---===============6019371887213542775==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Jon attempted to fix the amount of RAM on the BCM958625HR in commit
+c53beb47f621 ("ARM: dts: NSP: Correct RAM amount for BCM958625HR board")
+but it seems like we tripped over some poorly documented schematics.
 
---=-=-=
-Content-Type: text/plain
+The top-level page of the schematics says the board has 2GB, but when
+you end-up scrolling to page 6, you see two chips of 4GiB (512MB) but
+what the bootloader really initializes only 512MB, any attempt to use
+more than that results in data aborts. Fix this again back to 512MB.
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+Fixes: c53beb47f621 ("ARM: dts: NSP: Correct RAM amount for BCM958625HR board")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ arch/arm/boot/dts/bcm958625hr.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Since commit 9273083a1530 ("usb: dwc2: Fix TxFIFOn sizes and total TxFIFO
-> size issues") we could use the OTG mode again.
->
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-
-Applied to bcm2835-dt-next.  Thanks!
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlqUmQsACgkQtdYpNtH8
-nuiJqA/+PmMzsvhNKBaQ+Kl/FALnNQ3xsCAwPs51msx74lvn9GdPtSDDtbKmuA1i
-vtO2ixd8HQ6JaI0L4Vkf/apNj98kAJ9XxGjVwjCnQRmtEntNCT84+Zg5BfMiqj9y
-+NA1YnwryaDcZC7Rc7BTL/BFEZOevvrh0aDuGEebN1rCzjOt6EbGXDmAccUv2jwe
-BcrmKcRg4XB6jDtALoHTvbqBtLvi0WkoePoGEgbxIMAxGBLdeD+yDVpfvontQmX0
-2OOzbhkGJTZUpWCB0lEmPpl2aQjNRt0ukfvMMUb3hyck4yYrPCTT04y81GeVkM+T
-fi8kst7UXHbT0Y+lsy3m77YmyduR8ksgwI+GdSNWi/r16zn/1P8v8enlXy1cnKOr
-36lA/c124xmUfu42x/p0We+YiXMlm4LAqgu92XXe3Ew/aNgKecbdYIM/PlqKdWim
-V8GCYD5sxSxr84u+TlriVCqhwiZ3tUghWkogdRFkTHgQRdgpdE0TDzp0DB5tp28+
-hBxOUnzV4gPqYS8eyr+ky217t5M6eIkivCH+mFW78HQRpY+PhrIA8rfbwzmZc7EM
-JyFbB83YekwhEfWK3SbLt7LuaD0vf0/GVbqqfXZsxO57adaBcVz67Tn+LnMN7XuI
-yOWHjJJZO9d1vCn8wo9FHxoJb26UeS2MuYKLp+a8Z/o6NZiGFpw=
-=us0Y
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============6019371887213542775==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-rpi-kernel mailing list
-linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel
-
---===============6019371887213542775==--
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+index 6a44b8021702..f0e2008f7490 100644
+--- a/arch/arm/boot/dts/bcm958625hr.dts
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -49,7 +49,7 @@
+ 
+ 	memory {
+ 		device_type = "memory";
+-		reg = <0x60000000 0x80000000>;
++		reg = <0x60000000 0x20000000>;
+ 	};
+ 
+ 	gpio-restart {
+-- 
+2.14.1
