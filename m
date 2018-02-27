@@ -1,114 +1,65 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [PATCH v5 6/6] drm/bridge/sii8620: use micro-USB cable detection
- logic to detect MHL
-Date: Tue, 27 Feb 2018 08:11:34 +0100
-Message-ID: <20180227071134.28063-7-a.hajda@samsung.com>
-References: <20180227071134.28063-1-a.hajda@samsung.com>
- <CGME20180227071142eucas1p10203dac2558db034a4a3287220213601@eucas1p1.samsung.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v8 2/2] media: V3s: Add support for Allwinner CSI.
+Date: Tue, 27 Feb 2018 08:25:24 +0100
+Message-ID: <20180227072524.5pjoxoo4yowfw43v@flea>
+References: <1519697566-32600-1-git-send-email-yong.deng@magewell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20180227071134.28063-1-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "open list:OPEN FIRMWARE AND FLATTENED DEVICE
- TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maciej Purski <m.purski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fkl5txttwye7c5om"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1519697566-32600-1-git-send-email-yong.deng@magewell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Deng <yong.deng@magewell.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, Hans Verkuil <hans.verkuil@cisco.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Philipp Zabel <p.zabel@pengutronix.de>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Yannick Fertre <yannick.fertre@st.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Todor Tomov <todor.tomov@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.k
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogTWFjaWVqIFB1cnNraSA8bS5wdXJza2lAc2Ftc3VuZy5jb20+CgpDdXJyZW50bHkgTUhM
-IGNoaXAgbXVzdCBiZSB0dXJuZWQgb24gcGVybWFuZW50bHkgdG8gZGV0ZWN0IE1ITCBjYWJsZS4g
-SXQKZHVwbGljYXRlcyBtaWNyby1VU0IgY29udHJvbGxlcidzIChNVUlDKSBmdW5jdGlvbmFsaXR5
-IGFuZCBjb25zdW1lcwp1bm5lY2Vzc2FyeSBwb3dlci4gTGV0cyB1c2UgZXh0Y29uIGF0dGFjaGVk
-IHRvIE1VSUMgdG8gZW5hYmxlIE1ITCBjaGlwCm9ubHkgaWYgaXQgZGV0ZWN0cyBNSEwgY2FibGUu
-CgpTaWduZWQtb2ZmLWJ5OiBNYWNpZWogUHVyc2tpIDxtLnB1cnNraUBzYW1zdW5nLmNvbT4KU2ln
-bmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KLS0tCnY1OiB1
-cGRhdGVkIGV4dGNvbiBBUEkKClRoaXMgaXMgcmV3b3JrIG9mIHRoZSBwYXRjaCBieSBNYWNpZWog
-d2l0aCBmb2xsb3dpbmcgY2hhbmdlczoKLSB1c2UgbWljcm8tVVNCIHBvcnQgYmluZGluZ3MgdG8g
-Z2V0IGV4dGNvbiwgaW5zdGVhZCBvZiBleHRjb24gcHJvcGVydHksCi0gZml4ZWQgcmVtb3ZlIHNl
-cXVlbmNlLAotIGZpeGVkIGV4dGNvbiBnZXQgc3RhdGUgbG9naWMuCgpDb2RlIGZpbmRpbmcgZXh0
-Y29uIG5vZGUgaXMgaGFja3kgSU1PLCBJIGd1ZXNzIHVsdGltYXRlbHkgaXQgc2hvdWxkIGJlIGRv
-bmUKdmlhIHNvbWUgZnJhbWV3b3JrIChtYXliZSBldmVuIGV4dGNvbiksIG9yIGF0IGxlYXN0IHZp
-YSBoZWxwZXIsIEkgaG9wZSBpdApjYW4gc3RheSBhcyBpcyB1bnRpbCB0aGUgcHJvcGVyIHNvbHV0
-aW9uIHdpbGwgYmUgbWVyZ2VkLgoKU2lnbmVkLW9mZi1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpk
-YUBzYW1zdW5nLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpbC1zaWk4NjIwLmMg
-fCA5NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0KIDEgZmlsZSBjaGFuZ2Vk
-LCA5NCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9icmlkZ2Uvc2lsLXNpaTg2MjAuYyBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2Uvc2ls
-LXNpaTg2MjAuYwppbmRleCA5ZTc4NWI4ZTBlYTIuLjYyYjBhZGFiY2FjMiAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zaWwtc2lpODYyMC5jCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9icmlkZ2Uvc2lsLXNpaTg2MjAuYwpAQCAtMTcsNiArMTcsNyBAQAogCiAjaW5jbHVkZSA8bGlu
-dXgvY2xrLmg+CiAjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4KKyNpbmNsdWRlIDxsaW51eC9leHRj
-b24uaD4KICNpbmNsdWRlIDxsaW51eC9ncGlvL2NvbnN1bWVyLmg+CiAjaW5jbHVkZSA8bGludXgv
-aTJjLmg+CiAjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+CkBAIC0yNSw2ICsyNiw3IEBACiAj
-aW5jbHVkZSA8bGludXgvbGlzdC5oPgogI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPgogI2luY2x1
-ZGUgPGxpbnV4L211dGV4Lmg+CisjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KICNpbmNsdWRl
-IDxsaW51eC9yZWd1bGF0b3IvY29uc3VtZXIuaD4KICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+CiAK
-QEAgLTgxLDYgKzgzLDEwIEBAIHN0cnVjdCBzaWk4NjIwIHsKIAlzdHJ1Y3QgZWRpZCAqZWRpZDsK
-IAl1bnNpZ25lZCBpbnQgZ2VuMl93cml0ZV9idXJzdDoxOwogCWVudW0gc2lpODYyMF9tdF9zdGF0
-ZSBtdF9zdGF0ZTsKKwlzdHJ1Y3QgZXh0Y29uX2RldiAqZXh0Y29uOworCXN0cnVjdCBub3RpZmll
-cl9ibG9jayBleHRjb25fbmI7CisJc3RydWN0IHdvcmtfc3RydWN0IGV4dGNvbl93cTsKKwlpbnQg
-Y2FibGVfc3RhdGU7CiAJc3RydWN0IGxpc3RfaGVhZCBtdF9xdWV1ZTsKIAlzdHJ1Y3QgewogCQlp
-bnQgcl9zaXplOwpAQCAtMjE3NSw2ICsyMTgxLDc3IEBAIHN0YXRpYyB2b2lkIHNpaTg2MjBfaW5p
-dF9yY3BfaW5wdXRfZGV2KHN0cnVjdCBzaWk4NjIwICpjdHgpCiAJY3R4LT5yY19kZXYgPSByY19k
-ZXY7CiB9CiAKK3N0YXRpYyB2b2lkIHNpaTg2MjBfY2FibGVfb3V0KHN0cnVjdCBzaWk4NjIwICpj
-dHgpCit7CisJZGlzYWJsZV9pcnEodG9faTJjX2NsaWVudChjdHgtPmRldiktPmlycSk7CisJc2lp
-ODYyMF9od19vZmYoY3R4KTsKK30KKworc3RhdGljIHZvaWQgc2lpODYyMF9leHRjb25fd29yayhz
-dHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspCit7CisJc3RydWN0IHNpaTg2MjAgKmN0eCA9CisJCWNv
-bnRhaW5lcl9vZih3b3JrLCBzdHJ1Y3Qgc2lpODYyMCwgZXh0Y29uX3dxKTsKKwlpbnQgc3RhdGUg
-PSBleHRjb25fZ2V0X3N0YXRlKGN0eC0+ZXh0Y29uLCBFWFRDT05fRElTUF9NSEwpOworCisJaWYg
-KHN0YXRlID09IGN0eC0+Y2FibGVfc3RhdGUpCisJCXJldHVybjsKKworCWN0eC0+Y2FibGVfc3Rh
-dGUgPSBzdGF0ZTsKKworCWlmIChzdGF0ZSA+IDApCisJCXNpaTg2MjBfY2FibGVfaW4oY3R4KTsK
-KwllbHNlCisJCXNpaTg2MjBfY2FibGVfb3V0KGN0eCk7Cit9CisKK3N0YXRpYyBpbnQgc2lpODYy
-MF9leHRjb25fbm90aWZpZXIoc3RydWN0IG5vdGlmaWVyX2Jsb2NrICpzZWxmLAorCQkJdW5zaWdu
-ZWQgbG9uZyBldmVudCwgdm9pZCAqcHRyKQoreworCXN0cnVjdCBzaWk4NjIwICpjdHggPQorCQlj
-b250YWluZXJfb2Yoc2VsZiwgc3RydWN0IHNpaTg2MjAsIGV4dGNvbl9uYik7CisKKwlzY2hlZHVs
-ZV93b3JrKCZjdHgtPmV4dGNvbl93cSk7CisKKwlyZXR1cm4gTk9USUZZX0RPTkU7Cit9CisKK3N0
-YXRpYyBpbnQgc2lpODYyMF9leHRjb25faW5pdChzdHJ1Y3Qgc2lpODYyMCAqY3R4KQoreworCXN0
-cnVjdCBleHRjb25fZGV2ICplZGV2OworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbXVzYiwgKm11aWM7
-CisJaW50IHJldDsKKworCS8qIGdldCBtaWNyby1VU0IgY29ubmVjdG9yIG5vZGUgKi8KKwltdXNi
-ID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9ub2RlKGN0eC0+ZGV2LT5vZl9ub2RlLCAxLCAtMSk7CisJ
-LyogbmV4dCBnZXQgbWljcm8tVVNCIEludGVyZmFjZSBDb250cm9sbGVyIG5vZGUgKi8KKwltdWlj
-ID0gb2ZfZ2V0X25leHRfcGFyZW50KG11c2IpOworCisJaWYgKCFtdWljKSB7CisJCWRldl9pbmZv
-KGN0eC0+ZGV2LCAibm8gZXh0Y29uIGZvdW5kLCBzd2l0Y2hpbmcgdG8gJ2Fsd2F5cyBvbicgbW9k
-ZVxuIik7CisJCXJldHVybiAwOworCX0KKworCWVkZXYgPSBleHRjb25fZmluZF9lZGV2X2J5X25v
-ZGUobXVpYyk7CisJb2Zfbm9kZV9wdXQobXVpYyk7CisJaWYgKElTX0VSUihlZGV2KSkgeworCQlp
-ZiAoUFRSX0VSUihlZGV2KSA9PSAtRVBST0JFX0RFRkVSKQorCQkJcmV0dXJuIC1FUFJPQkVfREVG
-RVI7CisJCWRldl9lcnIoY3R4LT5kZXYsICJJbnZhbGlkIG9yIG1pc3NpbmcgZXh0Y29uXG4iKTsK
-KwkJcmV0dXJuIFBUUl9FUlIoZWRldik7CisJfQorCisJY3R4LT5leHRjb24gPSBlZGV2OworCWN0
-eC0+ZXh0Y29uX25iLm5vdGlmaWVyX2NhbGwgPSBzaWk4NjIwX2V4dGNvbl9ub3RpZmllcjsKKwlJ
-TklUX1dPUksoJmN0eC0+ZXh0Y29uX3dxLCBzaWk4NjIwX2V4dGNvbl93b3JrKTsKKwlyZXQgPSBl
-eHRjb25fcmVnaXN0ZXJfbm90aWZpZXIoZWRldiwgRVhUQ09OX0RJU1BfTUhMLCAmY3R4LT5leHRj
-b25fbmIpOworCWlmIChyZXQpIHsKKwkJZGV2X2VycihjdHgtPmRldiwgImZhaWxlZCB0byByZWdp
-c3RlciBub3RpZmllciBmb3IgTUhMXG4iKTsKKwkJcmV0dXJuIHJldDsKKwl9CisKKwlyZXR1cm4g
-MDsKK30KKwogc3RhdGljIGlubGluZSBzdHJ1Y3Qgc2lpODYyMCAqYnJpZGdlX3RvX3NpaTg2MjAo
-c3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkKIHsKIAlyZXR1cm4gY29udGFpbmVyX29mKGJyaWRn
-ZSwgc3RydWN0IHNpaTg2MjAsIGJyaWRnZSk7CkBAIC0yMzA3LDEzICsyMzg0LDIwIEBAIHN0YXRp
-YyBpbnQgc2lpODYyMF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LAogCWlmIChyZXQp
-CiAJCXJldHVybiByZXQ7CiAKKwlyZXQgPSBzaWk4NjIwX2V4dGNvbl9pbml0KGN0eCk7CisJaWYg
-KHJldCA8IDApIHsKKwkJZGV2X2VycihjdHgtPmRldiwgImZhaWxlZCB0byBpbml0aWFsaXplIEVY
-VENPTlxuIik7CisJCXJldHVybiByZXQ7CisJfQorCiAJaTJjX3NldF9jbGllbnRkYXRhKGNsaWVu
-dCwgY3R4KTsKIAogCWN0eC0+YnJpZGdlLmZ1bmNzID0gJnNpaTg2MjBfYnJpZGdlX2Z1bmNzOwog
-CWN0eC0+YnJpZGdlLm9mX25vZGUgPSBkZXYtPm9mX25vZGU7CiAJZHJtX2JyaWRnZV9hZGQoJmN0
-eC0+YnJpZGdlKTsKIAotCXNpaTg2MjBfY2FibGVfaW4oY3R4KTsKKwlpZiAoIWN0eC0+ZXh0Y29u
-KQorCQlzaWk4NjIwX2NhYmxlX2luKGN0eCk7CiAKIAlyZXR1cm4gMDsKIH0KQEAgLTIzMjIsOCAr
-MjQwNiwxNSBAQCBzdGF0aWMgaW50IHNpaTg2MjBfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50ICpj
-bGllbnQpCiB7CiAJc3RydWN0IHNpaTg2MjAgKmN0eCA9IGkyY19nZXRfY2xpZW50ZGF0YShjbGll
-bnQpOwogCi0JZGlzYWJsZV9pcnEodG9faTJjX2NsaWVudChjdHgtPmRldiktPmlycSk7Ci0Jc2lp
-ODYyMF9od19vZmYoY3R4KTsKKwlpZiAoY3R4LT5leHRjb24pIHsKKwkJZXh0Y29uX3VucmVnaXN0
-ZXJfbm90aWZpZXIoY3R4LT5leHRjb24sIEVYVENPTl9ESVNQX01ITCwKKwkJCQkJICAgJmN0eC0+
-ZXh0Y29uX25iKTsKKwkJZmx1c2hfd29yaygmY3R4LT5leHRjb25fd3EpOworCQlpZiAoY3R4LT5j
-YWJsZV9zdGF0ZSA+IDApCisJCQlzaWk4NjIwX2NhYmxlX291dChjdHgpOworCX0gZWxzZSB7CisJ
-CXNpaTg2MjBfY2FibGVfb3V0KGN0eCk7CisJfQogCWRybV9icmlkZ2VfcmVtb3ZlKCZjdHgtPmJy
-aWRnZSk7CiAKIAlyZXR1cm4gMDsKLS0gCjIuMTYuMgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--fkl5txttwye7c5om
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 27, 2018 at 10:12:46AM +0800, Yong Deng wrote:
+> Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
+> interface and CSI1 is used for parallel interface. This is not
+> documented in datasheet but by test and guess.
+>=20
+> This patch implement a v4l2 framework driver for it.
+>=20
+> Currently, the driver only support the parallel interface. MIPI-CSI2,
+> ISP's support are not included in this patch.
+>=20
+> Tested-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Signed-off-by: Yong Deng <yong.deng@magewell.com>
+
+Reviewed-by: Maxime Ripard <maxime.ripard@bootlin.com>
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--fkl5txttwye7c5om
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqVB+MACgkQ0rTAlCFN
+r3SN/g//bxWocMt6hu3dxRXkZ1oj77FTZkLTsoNzIlcd1zh+buI3HHSoWYilOeVU
+zLJj0nokWoF9FRuryNqiDXFjhOiRqLb3mgvu6HRRWVuQ7xwr1X3IN1ntG8aSy+5m
+zy5xCT89S24QkcZNalZ0YKCM/qs2i12AXw6LMLFdoABeNz9WygFI3tch1qIX/CwT
+IFQVh8ATY0RlYp275+A2OjzB5GSqbIeyMKjaPjWkIVP8iV3KkcuXvIjfMmnqm5Ok
+HvMDJopDYu+95krEEeue82nhFzMSa4npAdu7Vxq2cNS88txV6zj/3dURt7CWk/v6
+B/X2kKU3jH4HZ40BeNeuulSQdmSIlIPZEpYruiqimvurxqNKAQqBOnsiRGU+WWBh
+9HRhhB7/8rSkZj5Dq/Xbrm/4zP1+lAYDL7nHgQeuFBIdosvvQYbzwhnnrbBIN/oU
+qcwIrsjnz9wxzh5QbIMlEIXKLJBpFgmotgbc+A/QqUWzidoYp26JJScFeXcI68H7
+oNW3O3XMdP8q3Q3O8YyWklhHMvEFvo8UBiqf4Fo6J1cYwMxPnL8N/yFQwzNuxyLJ
+1j1tSxAepyrSHj6nvCq+HYMjmbODLCzxlS9Rk86PTM5vNAxNo6bQKxT+HVauwHfd
+JprB6jgC6mCJaqCugHCB+H14H8KdOdSOsL9f3UpfRoEkf5bgYJ8=
+=Kft4
+-----END PGP SIGNATURE-----
+
+--fkl5txttwye7c5om--
