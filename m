@@ -1,76 +1,143 @@
-Return-Path: <>
-From: Gaku Inami <gaku.inami.xh@renesas.com>
-Subject: [PATCH 0/5] Optimization with aware of cpu capacity for R-Car Gen3
-Date: Tue, 27 Feb 2018 11:19:50 +0900
-Message-Id: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
+Return-Path: <SRS0=8hQX=FV=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from galahad.ideasonboard.com ([185.26.127.97]:58800 "EHLO
+        galahad.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751367AbeB0Jw6 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 27 Feb 2018 04:52:58 -0500
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 01/13] media: v4l2-fwnode: Let parse_endpoint callback decide if no remote is error
+Date: Tue, 27 Feb 2018 11:53:46 +0200
+Message-ID: <1977520.QzcRFRQSMO@avalon>
+In-Reply-To: <1519722784.3402.12.camel@pengutronix.de>
+References: <1519263589-19647-1-git-send-email-steve_longerbeam@mentor.com> <20180223124741.d4l4vjahe6beqe65@paasikivi.fi.intel.com> <1519722784.3402.12.camel@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gaku Inami <gaku.inami.xh@renesas.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+Sender: devicetree-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>, Yong Zhi <yong.zhi@intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, niklas.soderlund@ragnatech.se, Sebastian Reichel <sre@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, linux-media@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-These add the scheduler information to be aware cpu capacity. Some
-R-Car SoCs have big LITTLE architecture(e.g. CA57/CA53). It has a
-difference performance/power consumption for each CPUs.
+Hi Philipp,
 
-As the scheduler will be aware the capacity of CPU, the scheduler is
-balancing so that the free capacity of each CPU is even. This means
-that it aggressively migrates tasks to big CPUs(e.g. CA57) with large
-capacity in case of the system load is low and middle, the performance
-of user application is improved than before.
+On Tuesday, 27 February 2018 11:13:04 EET Philipp Zabel wrote:
+> On Fri, 2018-02-23 at 14:47 +0200, Sakari Ailus wrote:
+> > On Fri, Feb 23, 2018 at 12:16:17PM +0100, Philipp Zabel wrote:
+> >> On Fri, 2018-02-23 at 12:05 +0200, Laurent Pinchart wrote:
+> >>> On Friday, 23 February 2018 11:56:52 EET Philipp Zabel wrote:
+> >>>> On Fri, 2018-02-23 at 11:29 +0200, Laurent Pinchart wrote:
+> >>>>> On Thursday, 22 February 2018 03:39:37 EET Steve Longerbeam wrote:
+> >>>>>> For some subdevices, a fwnode endpoint that has no connection to
+> >>>>>> a remote endpoint may not be an error. Let the parse_endpoint
+> >>>>>> callback
+> >>>>> 
+> >>>>> make that decision in v4l2_async_notifier_fwnode_parse_endpoint().
+> >>>>> If
+> >>>>> 
+> >>>>>> the callback indicates that is not an error, skip adding the asd
+> >>>>>> to the notifier and return 0.
+> >>>>>> 
+> >>>>>> For the current users of v4l2_async_notifier_parse_fwnode_endpoints()
+> >>>>>> (omap3isp, rcar-vin, intel-ipu3), return -EINVAL in the callback
+> >>>>>> for unavailable remote fwnodes to maintain the previous behavior.
+> >>>>> 
+> >>>>> I'm not sure this should be a per-driver decision.
+> >>>>> 
+> >>>>> Generally speaking, if an endpoint node has no remote-endpoint
+> >>>>> property, the endpoint node is not needed. I've always considered such
+> >>>>> an endpoint node as invalid. The OF graphs DT bindings are however not
+> >>>>> clear on this subject.
+> >>>> 
+> >>>> Documentation/devicetree/bindings/graph.txt says:
+> >>>>   Each endpoint should contain a 'remote-endpoint' phandle property
+> >>>>   that points to the corresponding endpoint in the port of the
+> >>>>   remote device.
+> >>>> 
+> >>>> ("should", not "must").
+> >>> 
+> >>> The DT bindings documentation has historically used "should" to mean
+> >>> "must" in many places :-( That was a big mistake.
+> >> 
+> >> Maybe I could have worded that better? The intention was to let "should"
+> >> be read as a strong suggestion, like "it is recommended", but not as a
+> >> requirement.
+> > 
+> > Is there a reason for have an endpoint without a remote-endpoint property?
+> 
+> It allows to slightly reduce boilerplate in board device trees at the
+> cost of empty endpoint nodes included from the dtsi in board DTs that
+> don't use them.
+> 
+> > The problem with should (in general when it is used when the intention is
+> > "shall") is that it lets the developer to write broken DT source that is
+> > still conforming to the spec.
+> > 
+> > I don't have a strong preference to change should to shall in this
+> > particular case now but I would have used "shall" to begin with.
+> 
+> I used "should" on purpose, but I'd be fine with giving up on it when
+> all current users of this loophole are transitioned away from it:
+> 
+>   git grep -A1 "endpoint {" arch/ | grep -B1 "};"
+> 
+> I'm very much against enforcing a required remote-endpoint property in
+> core DT parsing code, though.
 
-Since most users for IVI are using CPU with performance oriented than
-power consumption, this change will benefit for their use-cases. Some
-benchmark is improved as an example below.
+Just to make it clear, I'm fine with making the property either optional or 
+mandatory, but I would like the rule to be global, not per-bindings. When the 
+OF graphs bindings were developed we reasoned that there was no use for empty 
+endpoints and that they should thus be forbidden. Now, if we have good use 
+cases for empty endpoints, I don't object them.
 
-UnixBench (1 parallel) on R-Car M3-W (CA57x2 + CA53x4) :
-                                            before      after
- - Dhrystone 2 using register variables    9197952   15534005   +68%
- - Double-Precision Whetstone                 1390       1697   +22%
- - Execl Throughput                            621       1189   +91%
- - File Copy 1024 bufsize 2000 maxblocks     81755     138840   +69%
- - File Copy 256 bufsize 500 maxblocks       25819      40125   +55%
- - File Copy 4096 bufsize 8000 maxblocks    212116     384956   +81%
- - Pipe Throughput                          133006     232866   +75%
- - Pipe-based Context Switching              23973      46271   +93%
- - Process Creation                           1085       2253  +107%
- - Shell Scripts (1 concurrent)                682       1003   +47%
- - Shell Scripts (8 concurrent)                261        319   +22%
- - System Call Overhead                     107912     193681   +79%
- - System Benchmarks Index Score               177        293   +65%
+Regardless of what we decide I agree that we need to support existing device 
+trees and must thus not reject empty endpoints as invalid. We could, however, 
+if we decide to forbid empty endpoints, print a warning to encourage DT 
+authors to fix the problem.
 
-UnixBench (8 parallel) on R-Car H3 (CA57x4 + CA53x4) :
-                                            before      after
- - Dhrystone 2 using register variables   86830146   86498236     0%
- - Double-Precision Whetstone                11640      11783    +1%
- - Execl Throughput                           4196       4207     0%
- - File Copy 1024 bufsize 2000 maxblocks    122995     127868    +3%
- - File Copy 256 bufsize 500 maxblocks       32339      30683    -6%
- - File Copy 4096 bufsize 8000 maxblocks    312526     421738   +34%
- - Pipe Throughput                          904408     896829    -1%
- - Pipe-based Context Switching             136409     122969   -10%
- - Process Creation                           5877       5712    -3%
- - Shell Scripts (1 concurrent)               3533       3279    -7%
- - Shell Scripts (8 concurrent)                467        465     0%
- - System Call Overhead                     738344     735697     0%
- - System Benchmarks Index Score               718        721     0%
-
-based on renesas-devel-20180212-v4.16-rc1
-
-Gaku Inami (5):
-  arm64: dts: renesas: r8a7795: Add multi-cluster definition
-  arm64: dts: renesas: r8a7796: Add multi-cluster definition
-  arm64: dts: renesas: r8a7795: Add cpu capacity-dmips-mhz
-  arm64: dts: renesas: r8a7796: Add cpu capacity-dmips-mhz
-  soc: renesas: rcar-topology: Add support to be aware cpu capacity
-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 40 ++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 32 +++++++++++++++++++++++++
- drivers/soc/renesas/Kconfig              |  4 ++++
- drivers/soc/renesas/Makefile             |  1 +
- drivers/soc/renesas/rcar-topology.c      | 36 ++++++++++++++++++++++++++++
- 5 files changed, 113 insertions(+)
- create mode 100644 drivers/soc/renesas/rcar-topology.c
+> >>>> Later, the remote-node property explicitly lists the remote-endpoint
+> >>>> property as optional.
+> >>> 
+> >>> I've seen that too, and that's why I mentioned that the documentation
+> >>> isn't clear on the subject.
+> >> 
+> >> Do you have a suggestion how to improve the documentation? I thought
+> >> listing the remote-endpoint property under a header called "Optional
+> >> endpoint properties" was pretty clear.
+> >> 
+> >>> This could also be achieved by adding the endpoints in the board DT
+> >>> files. See for instance the hdmi@fead0000 node in
+> >>> arch/arm64/boot/dts/renesas/ r8a7795.dtsi and how it gets extended in
+> >>> arch/arm64/boot/dts/renesas/r8a7795- salvator-x.dts. On the other
+> >>> hand, I also have empty endpoints in the display@feb00000 node of
+> >>> arch/arm64/boot/dts/renesas/r8a7795.dtsi.
+> >> 
+> >> Right, that would be possible.
+> >> 
+> >>> I think we should first decide what we want to do going forward
+> >>> (allowing for empty endpoints or not), clarify the documentation, and
+> >>> then update the code. In any case I don't think it should be a
+> >>> per-device decision.
+> >> 
+> >> There are device trees in the wild that have those empty endpoints, so I
+> >> don't think retroactively declaring the remote-endpoint property
+> >> required is a good idea.
+> > 
+> > You could IMO, but the kernel (and existing drivers) would still need to
+> > work with DT binaries without those bits. And leave comments in the code
+> > why it's there.
+> > 
+> >> Is there any driver that currently benefits from throwing an error on
+> >> empty endpoints in any way? I'd prefer to just let the core ignore empty
+> >> endpoints for all drivers.
+> > 
+> > Not necessarily, but it's overhead in parsing the DT as well as in the
+> > DT source and in the DT binary.
+> 
+> True. I suppose whether or not that is enough reason to change the
+> wording in the existing of-graph bindings is something to be decided on
+> the devicetree list (in Cc).
 
 -- 
-2.7.4
+Regards,
+
+Laurent Pinchart
+
