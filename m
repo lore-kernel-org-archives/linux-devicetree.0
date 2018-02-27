@@ -1,43 +1,33 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v4 5/6] arm: dts: pxa: use reworked NAND controller driver
-Date: Tue, 27 Feb 2018 23:00:12 +0100
-Message-ID: <87a7vu6qkz.fsf@belgarion.home>
-References: <20180219223557.2458-1-miquel.raynal@bootlin.com>
- <20180219223557.2458-6-miquel.raynal@bootlin.com>
- <20180222104618.1ff78b52@bbrezillon> <87efl66vow.fsf@belgarion.home>
- <20180227214245.4267448e@bbrezillon>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v1 3/4] ASoC: codecs: pcm179x: Add reset gpio
+Date: Tue, 27 Feb 2018 23:02:00 +0100
+Message-ID: <20180227230200.67d8ae45@windsurf.lan>
+References: <20180227212433.2189-1-mylene.josserand@bootlin.com>
+        <20180227212433.2189-4-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180227214245.4267448e@bbrezillon> (Boris Brezillon's message
- of "Tue, 27 Feb 2018 21:42:45 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: devicetree@vger.kernel.org, Eric Miao <eric.y.miao@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Antoine Tenart <antoine.tenart@bootlin.com>, Richard Weinberger <richard@nod.at>, Gregory Clement <gregory.clement@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Haojian Zhuang <haojian.zhuang@gmail.com>, Nadav Haklai <nadavh@marvell.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel <linux-arm-kernel-bounces@lists.infradead.org>, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180227212433.2189-4-mylene.josserand@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Boris Brezillon <boris.brezillon@bootlin.com> writes:
+Hello,
 
->> Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
->
-> Unfortunately I didn't have your ack when I prepared the branch, so it's
-> not there. Let me know if this is a problem.
-No it's not.
+On Tue, 27 Feb 2018 22:24:32 +0100, Mylène Josserand wrote:
+> Add a reset gpio to be able to reset this line at startup.
+> 
+> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
 
-Cheers.
+This needs an updated of the DT binding, since it's adding support for
+a new reset-gpios property.
 
+Thanks!
+
+Thomas
 -- 
-Robert
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
