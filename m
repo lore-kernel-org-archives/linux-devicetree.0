@@ -1,211 +1,412 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v5 6/6] drm/bridge/sii8620: use micro-USB cable
- detection logic to detect MHL
-Date: Tue, 27 Feb 2018 20:08:17 +0900
-Message-ID: <5A953C21.5020007@samsung.com>
-References: <20180227071134.28063-1-a.hajda@samsung.com>
-        <CGME20180227071142eucas1p10203dac2558db034a4a3287220213601@eucas1p1.samsung.com>
-        <20180227071134.28063-7-a.hajda@samsung.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] PCI: rockchip: Spilt out common function to init
+ controller
+Date: Tue, 27 Feb 2018 11:29:35 +0000
+Message-ID: <20180227112935.GA7184@e107981-ln.cambridge.arm.com>
+References: <1519348503-243259-1-git-send-email-shawn.lin@rock-chips.com>
+ <1519348606-243485-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20180227071134.28063-7-a.hajda@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Maciej Purski <m.purski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel@lists.freedesktop.org, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1519348606-243485-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Feb 23, 2018 at 09:16:46AM +0800, Shawn Lin wrote:
+> Most of the operations are used for both of host and EP driver,
+> so this patch spilt them out to a new function, rockchip_pcie_init_port
 
-On 2018년 02월 27일 16:11, Andrzej Hajda wrote:
-> From: Maciej Purski <m.purski@samsung.com>
+Here and in the $SUBJECT
+
+s/spilt/split
+
+I will update it myself if there is no v3 required (but I have some
+minor comments on patch 5 so I suspect it will be required).
+
+Lorenzo
+
+> in pcie-rockchip.c and rename the original function to
+> rockchip_pcie_host_init_port to avoid confusion. No functional
+> changed intended.
 > 
-> Currently MHL chip must be turned on permanently to detect MHL cable. It
-> duplicates micro-USB controller's (MUIC) functionality and consumes
-> unnecessary power. Lets use extcon attached to MUIC to enable MHL chip
-> only if it detects MHL cable.
-> 
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
-> v5: updated extcon API
 > 
-> This is rework of the patch by Maciej with following changes:
-> - use micro-USB port bindings to get extcon, instead of extcon property,
-> - fixed remove sequence,
-> - fixed extcon get state logic.
+> Changes in v2: None
 > 
-> Code finding extcon node is hacky IMO, I guess ultimately it should be done
-> via some framework (maybe even extcon), or at least via helper, I hope it
-> can stay as is until the proper solution will be merged.
+>  drivers/pci/rockchip/pcie-rockchip-host.c | 131 ++-------------------------
+>  drivers/pci/rockchip/pcie-rockchip.c      | 141 ++++++++++++++++++++++++++++++
+>  drivers/pci/rockchip/pcie-rockchip.h      |   3 +
+>  3 files changed, 151 insertions(+), 124 deletions(-)
 > 
-> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-> ---
->  drivers/gpu/drm/bridge/sil-sii8620.c | 97 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 94 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
-> index 9e785b8e0ea2..62b0adabcac2 100644
-> --- a/drivers/gpu/drm/bridge/sil-sii8620.c
-> +++ b/drivers/gpu/drm/bridge/sil-sii8620.c
-> @@ -17,6 +17,7 @@
+> diff --git a/drivers/pci/rockchip/pcie-rockchip-host.c b/drivers/pci/rockchip/pcie-rockchip-host.c
+> index 079949c..f5b0492 100644
+> --- a/drivers/pci/rockchip/pcie-rockchip-host.c
+> +++ b/drivers/pci/rockchip/pcie-rockchip-host.c
+> @@ -294,134 +294,17 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
+>   * rockchip_pcie_init_port - Initialize hardware
+>   * @rockchip: PCIe port information
+>   */
+> -static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+> +static int rockchip_pcie_host_init_port(struct rockchip_pcie *rockchip)
+>  {
+>  	struct device *dev = rockchip->dev;
+> -	int err, i;
+> +	int err, i = MAX_LANE_NUM;
+>  	u32 status;
+>  
+>  	gpiod_set_value_cansleep(rockchip->ep_gpio, 0);
+>  
+> -	err = reset_control_assert(rockchip->aclk_rst);
+> -	if (err) {
+> -		dev_err(dev, "assert aclk_rst err %d\n", err);
+> -		return err;
+> -	}
+> -
+> -	err = reset_control_assert(rockchip->pclk_rst);
+> -	if (err) {
+> -		dev_err(dev, "assert pclk_rst err %d\n", err);
+> -		return err;
+> -	}
+> -
+> -	err = reset_control_assert(rockchip->pm_rst);
+> -	if (err) {
+> -		dev_err(dev, "assert pm_rst err %d\n", err);
+> +	err = rockchip_pcie_init_port(rockchip);
+> +	if (err)
+>  		return err;
+> -	}
+> -
+> -	for (i = 0; i < MAX_LANE_NUM; i++) {
+> -		err = phy_init(rockchip->phys[i]);
+> -		if (err) {
+> -			dev_err(dev, "init phy%d err %d\n", i, err);
+> -			goto err_exit_phy;
+> -		}
+> -	}
+> -
+> -	err = reset_control_assert(rockchip->core_rst);
+> -	if (err) {
+> -		dev_err(dev, "assert core_rst err %d\n", err);
+> -		goto err_exit_phy;
+> -	}
+> -
+> -	err = reset_control_assert(rockchip->mgmt_rst);
+> -	if (err) {
+> -		dev_err(dev, "assert mgmt_rst err %d\n", err);
+> -		goto err_exit_phy;
+> -	}
+> -
+> -	err = reset_control_assert(rockchip->mgmt_sticky_rst);
+> -	if (err) {
+> -		dev_err(dev, "assert mgmt_sticky_rst err %d\n", err);
+> -		goto err_exit_phy;
+> -	}
+> -
+> -	err = reset_control_assert(rockchip->pipe_rst);
+> -	if (err) {
+> -		dev_err(dev, "assert pipe_rst err %d\n", err);
+> -		goto err_exit_phy;
+> -	}
+> -
+> -	udelay(10);
+> -
+> -	err = reset_control_deassert(rockchip->pm_rst);
+> -	if (err) {
+> -		dev_err(dev, "deassert pm_rst err %d\n", err);
+> -		goto err_exit_phy;
+> -	}
+> -
+> -	err = reset_control_deassert(rockchip->aclk_rst);
+> -	if (err) {
+> -		dev_err(dev, "deassert aclk_rst err %d\n", err);
+> -		goto err_exit_phy;
+> -	}
+> -
+> -	err = reset_control_deassert(rockchip->pclk_rst);
+> -	if (err) {
+> -		dev_err(dev, "deassert pclk_rst err %d\n", err);
+> -		goto err_exit_phy;
+> -	}
+> -
+> -	if (rockchip->link_gen == 2)
+> -		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_2,
+> -				    PCIE_CLIENT_CONFIG);
+> -	else
+> -		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_1,
+> -				    PCIE_CLIENT_CONFIG);
+> -
+> -	rockchip_pcie_write(rockchip,
+> -			    PCIE_CLIENT_CONF_ENABLE |
+> -			    PCIE_CLIENT_LINK_TRAIN_ENABLE |
+> -			    PCIE_CLIENT_ARI_ENABLE |
+> -			    PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes) |
+> -			    PCIE_CLIENT_MODE_RC,
+> -			    PCIE_CLIENT_CONFIG);
+> -
+> -	for (i = 0; i < MAX_LANE_NUM; i++) {
+> -		err = phy_power_on(rockchip->phys[i]);
+> -		if (err) {
+> -			dev_err(dev, "power on phy%d err %d\n", i, err);
+> -			goto err_power_off_phy;
+> -		}
+> -	}
+> -
+> -	/*
+> -	 * Please don't reorder the deassert sequence of the following
+> -	 * four reset pins.
+> -	 */
+> -	err = reset_control_deassert(rockchip->mgmt_sticky_rst);
+> -	if (err) {
+> -		dev_err(dev, "deassert mgmt_sticky_rst err %d\n", err);
+> -		goto err_power_off_phy;
+> -	}
+> -
+> -	err = reset_control_deassert(rockchip->core_rst);
+> -	if (err) {
+> -		dev_err(dev, "deassert core_rst err %d\n", err);
+> -		goto err_power_off_phy;
+> -	}
+> -
+> -	err = reset_control_deassert(rockchip->mgmt_rst);
+> -	if (err) {
+> -		dev_err(dev, "deassert mgmt_rst err %d\n", err);
+> -		goto err_power_off_phy;
+> -	}
+> -
+> -	err = reset_control_deassert(rockchip->pipe_rst);
+> -	if (err) {
+> -		dev_err(dev, "deassert pipe_rst err %d\n", err);
+> -		goto err_power_off_phy;
+> -	}
+>  
+>  	/* Fix the transmitted FTS count desired to exit from L0s. */
+>  	status = rockchip_pcie_read(rockchip, PCIE_CORE_CTRL_PLC1);
+> @@ -514,8 +397,8 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+>  err_power_off_phy:
+>  	while (i--)
+>  		phy_power_off(rockchip->phys[i]);
+> +
+>  	i = MAX_LANE_NUM;
+> -err_exit_phy:
+>  	while (i--)
+>  		phy_exit(rockchip->phys[i]);
+>  	return err;
+> @@ -1034,7 +917,7 @@ static int __maybe_unused rockchip_pcie_resume_noirq(struct device *dev)
+>  	if (err)
+>  		goto err_disable_0v9;
+>  
+> -	err = rockchip_pcie_init_port(rockchip);
+> +	err = rockchip_pcie_host_init_port(rockchip);
+>  	if (err)
+>  		goto err_pcie_resume;
+>  
+> @@ -1099,7 +982,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  		goto err_set_vpcie;
+>  	}
+>  
+> -	err = rockchip_pcie_init_port(rockchip);
+> +	err = rockchip_pcie_host_init_port(rockchip);
+>  	if (err)
+>  		goto err_vpcie;
+>  
+> diff --git a/drivers/pci/rockchip/pcie-rockchip.c b/drivers/pci/rockchip/pcie-rockchip.c
+> index 6c0063d..d03508c 100644
+> --- a/drivers/pci/rockchip/pcie-rockchip.c
+> +++ b/drivers/pci/rockchip/pcie-rockchip.c
+> @@ -12,6 +12,7 @@
+>   */
 >  
 >  #include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/extcon.h>
+> +#include <linux/delay.h>
 >  #include <linux/gpio/consumer.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
-> @@ -25,6 +26,7 @@
->  #include <linux/list.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of_graph.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
->  
-> @@ -81,6 +83,10 @@ struct sii8620 {
->  	struct edid *edid;
->  	unsigned int gen2_write_burst:1;
->  	enum sii8620_mt_state mt_state;
-> +	struct extcon_dev *extcon;
-> +	struct notifier_block extcon_nb;
-> +	struct work_struct extcon_wq;
-> +	int cable_state;
->  	struct list_head mt_queue;
->  	struct {
->  		int r_size;
-> @@ -2175,6 +2181,77 @@ static void sii8620_init_rcp_input_dev(struct sii8620 *ctx)
->  	ctx->rc_dev = rc_dev;
+>  #include <linux/of_pci.h>
+>  #include <linux/phy/phy.h>
+> @@ -144,6 +145,146 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+>  	return 0;
 >  }
 >  
-> +static void sii8620_cable_out(struct sii8620 *ctx)
+> +int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
 > +{
-> +	disable_irq(to_i2c_client(ctx->dev)->irq);
-> +	sii8620_hw_off(ctx);
-> +}
+> +	struct device *dev = rockchip->dev;
+> +	int err, i;
+> +	u32 regs;
 > +
-> +static void sii8620_extcon_work(struct work_struct *work)
-> +{
-> +	struct sii8620 *ctx =
-> +		container_of(work, struct sii8620, extcon_wq);
-> +	int state = extcon_get_state(ctx->extcon, EXTCON_DISP_MHL);
+> +	err = reset_control_assert(rockchip->aclk_rst);
+> +	if (err) {
+> +		dev_err(dev, "assert aclk_rst err %d\n", err);
+> +		return err;
+> +	}
 > +
-> +	if (state == ctx->cable_state)
-> +		return;
+> +	err = reset_control_assert(rockchip->pclk_rst);
+> +	if (err) {
+> +		dev_err(dev, "assert pclk_rst err %d\n", err);
+> +		return err;
+> +	}
 > +
-> +	ctx->cable_state = state;
+> +	err = reset_control_assert(rockchip->pm_rst);
+> +	if (err) {
+> +		dev_err(dev, "assert pm_rst err %d\n", err);
+> +		return err;
+> +	}
 > +
-> +	if (state > 0)
-> +		sii8620_cable_in(ctx);
+> +	for (i = 0; i < MAX_LANE_NUM; i++) {
+> +		err = phy_init(rockchip->phys[i]);
+> +		if (err) {
+> +			dev_err(dev, "init phy%d err %d\n", i, err);
+> +			goto err_exit_phy;
+> +		}
+> +	}
+> +
+> +	err = reset_control_assert(rockchip->core_rst);
+> +	if (err) {
+> +		dev_err(dev, "assert core_rst err %d\n", err);
+> +		goto err_exit_phy;
+> +	}
+> +
+> +	err = reset_control_assert(rockchip->mgmt_rst);
+> +	if (err) {
+> +		dev_err(dev, "assert mgmt_rst err %d\n", err);
+> +		goto err_exit_phy;
+> +	}
+> +
+> +	err = reset_control_assert(rockchip->mgmt_sticky_rst);
+> +	if (err) {
+> +		dev_err(dev, "assert mgmt_sticky_rst err %d\n", err);
+> +		goto err_exit_phy;
+> +	}
+> +
+> +	err = reset_control_assert(rockchip->pipe_rst);
+> +	if (err) {
+> +		dev_err(dev, "assert pipe_rst err %d\n", err);
+> +		goto err_exit_phy;
+> +	}
+> +
+> +	udelay(10);
+> +
+> +	err = reset_control_deassert(rockchip->pm_rst);
+> +	if (err) {
+> +		dev_err(dev, "deassert pm_rst err %d\n", err);
+> +		goto err_exit_phy;
+> +	}
+> +
+> +	err = reset_control_deassert(rockchip->aclk_rst);
+> +	if (err) {
+> +		dev_err(dev, "deassert aclk_rst err %d\n", err);
+> +		goto err_exit_phy;
+> +	}
+> +
+> +	err = reset_control_deassert(rockchip->pclk_rst);
+> +	if (err) {
+> +		dev_err(dev, "deassert pclk_rst err %d\n", err);
+> +		goto err_exit_phy;
+> +	}
+> +
+> +	if (rockchip->link_gen == 2)
+> +		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_2,
+> +				    PCIE_CLIENT_CONFIG);
 > +	else
-> +		sii8620_cable_out(ctx);
-> +}
+> +		rockchip_pcie_write(rockchip, PCIE_CLIENT_GEN_SEL_1,
+> +				    PCIE_CLIENT_CONFIG);
 > +
-> +static int sii8620_extcon_notifier(struct notifier_block *self,
-> +			unsigned long event, void *ptr)
-> +{
-> +	struct sii8620 *ctx =
-> +		container_of(self, struct sii8620, extcon_nb);
+> +	regs = PCIE_CLIENT_LINK_TRAIN_ENABLE | PCIE_CLIENT_ARI_ENABLE |
+> +		   PCIE_CLIENT_CONF_LANE_NUM(rockchip->lanes);
 > +
-> +	schedule_work(&ctx->extcon_wq);
+> +	if (rockchip->is_rc)
+> +		regs |= PCIE_CLIENT_CONF_ENABLE | PCIE_CLIENT_MODE_RC;
+> +	else
+> +		regs |= PCIE_CLIENT_CONF_DISABLE | PCIE_CLIENT_MODE_EP;
 > +
-> +	return NOTIFY_DONE;
-> +}
+> +	rockchip_pcie_write(rockchip, regs, PCIE_CLIENT_CONFIG);
 > +
-> +static int sii8620_extcon_init(struct sii8620 *ctx)
-> +{
-> +	struct extcon_dev *edev;
-> +	struct device_node *musb, *muic;
-> +	int ret;
-> +
-> +	/* get micro-USB connector node */
-> +	musb = of_graph_get_remote_node(ctx->dev->of_node, 1, -1);
-> +	/* next get micro-USB Interface Controller node */
-> +	muic = of_get_next_parent(musb);
-> +
-> +	if (!muic) {
-> +		dev_info(ctx->dev, "no extcon found, switching to 'always on' mode\n");
-> +		return 0;
+> +	for (i = 0; i < MAX_LANE_NUM; i++) {
+> +		err = phy_power_on(rockchip->phys[i]);
+> +		if (err) {
+> +			dev_err(dev, "power on phy%d err %d\n", i, err);
+> +			goto err_power_off_phy;
+> +		}
 > +	}
 > +
-> +	edev = extcon_find_edev_by_node(muic);
-> +	of_node_put(muic);
-> +	if (IS_ERR(edev)) {
-> +		if (PTR_ERR(edev) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		dev_err(ctx->dev, "Invalid or missing extcon\n");
-> +		return PTR_ERR(edev);
+> +	/*
+> +	 * Please don't reorder the deassert sequence of the following
+> +	 * four reset pins.
+> +	 */
+> +	err = reset_control_deassert(rockchip->mgmt_sticky_rst);
+> +	if (err) {
+> +		dev_err(dev, "deassert mgmt_sticky_rst err %d\n", err);
+> +		goto err_power_off_phy;
 > +	}
 > +
-> +	ctx->extcon = edev;
-> +	ctx->extcon_nb.notifier_call = sii8620_extcon_notifier;
-> +	INIT_WORK(&ctx->extcon_wq, sii8620_extcon_work);
-> +	ret = extcon_register_notifier(edev, EXTCON_DISP_MHL, &ctx->extcon_nb);
-
-You better to use devm_extcon_register_notifier().
-
-> +	if (ret) {
-> +		dev_err(ctx->dev, "failed to register notifier for MHL\n");
-> +		return ret;
+> +	err = reset_control_deassert(rockchip->core_rst);
+> +	if (err) {
+> +		dev_err(dev, "deassert core_rst err %d\n", err);
+> +		goto err_power_off_phy;
+> +	}
+> +
+> +	err = reset_control_deassert(rockchip->mgmt_rst);
+> +	if (err) {
+> +		dev_err(dev, "deassert mgmt_rst err %d\n", err);
+> +		goto err_power_off_phy;
+> +	}
+> +
+> +	err = reset_control_deassert(rockchip->pipe_rst);
+> +	if (err) {
+> +		dev_err(dev, "deassert pipe_rst err %d\n", err);
+> +		goto err_power_off_phy;
 > +	}
 > +
 > +	return 0;
+> +err_power_off_phy:
+> +	while (i--)
+> +		phy_power_off(rockchip->phys[i]);
+> +	i = MAX_LANE_NUM;
+> +err_exit_phy:
+> +	while (i--)
+> +		phy_exit(rockchip->phys[i]);
+> +	return err;
 > +}
 > +
->  static inline struct sii8620 *bridge_to_sii8620(struct drm_bridge *bridge)
+>  int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
 >  {
->  	return container_of(bridge, struct sii8620, bridge);
-> @@ -2307,13 +2384,20 @@ static int sii8620_probe(struct i2c_client *client,
->  	if (ret)
->  		return ret;
->  
-> +	ret = sii8620_extcon_init(ctx);
-> +	if (ret < 0) {
-> +		dev_err(ctx->dev, "failed to initialize EXTCON\n");
-> +		return ret;
-> +	}
-> +
->  	i2c_set_clientdata(client, ctx);
->  
->  	ctx->bridge.funcs = &sii8620_bridge_funcs;
->  	ctx->bridge.of_node = dev->of_node;
->  	drm_bridge_add(&ctx->bridge);
->  
-> -	sii8620_cable_in(ctx);
-> +	if (!ctx->extcon)
-> +		sii8620_cable_in(ctx);
->  
->  	return 0;
+>  	struct device *dev = rockchip->dev;
+> diff --git a/drivers/pci/rockchip/pcie-rockchip.h b/drivers/pci/rockchip/pcie-rockchip.h
+> index c0f84d9..af3e74f 100644
+> --- a/drivers/pci/rockchip/pcie-rockchip.h
+> +++ b/drivers/pci/rockchip/pcie-rockchip.h
+> @@ -27,10 +27,12 @@
+>  #define PCIE_CLIENT_BASE		0x0
+>  #define PCIE_CLIENT_CONFIG		(PCIE_CLIENT_BASE + 0x00)
+>  #define   PCIE_CLIENT_CONF_ENABLE	  HIWORD_UPDATE_BIT(0x0001)
+> +#define   PCIE_CLIENT_CONF_DISABLE	  HIWORD_UPDATE(0x0001, 0)
+>  #define   PCIE_CLIENT_LINK_TRAIN_ENABLE	  HIWORD_UPDATE_BIT(0x0002)
+>  #define   PCIE_CLIENT_ARI_ENABLE	  HIWORD_UPDATE_BIT(0x0008)
+>  #define   PCIE_CLIENT_CONF_LANE_NUM(x)	  HIWORD_UPDATE(0x0030, ENCODE_LANES(x))
+>  #define   PCIE_CLIENT_MODE_RC		  HIWORD_UPDATE_BIT(0x0040)
+> +#define   PCIE_CLIENT_MODE_EP		  HIWORD_UPDATE(0x0040, 0)
+>  #define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
+>  #define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
+>  #define PCIE_CLIENT_DEBUG_OUT_0		(PCIE_CLIENT_BASE + 0x3c)
+> @@ -238,6 +240,7 @@ static void rockchip_pcie_write(struct rockchip_pcie *rockchip, u32 val,
 >  }
-> @@ -2322,8 +2406,15 @@ static int sii8620_remove(struct i2c_client *client)
->  {
->  	struct sii8620 *ctx = i2c_get_clientdata(client);
 >  
-> -	disable_irq(to_i2c_client(ctx->dev)->irq);
-> -	sii8620_hw_off(ctx);
-> +	if (ctx->extcon) {
-> +		extcon_unregister_notifier(ctx->extcon, EXTCON_DISP_MHL,
-> +					   &ctx->extcon_nb);
-
-Don't need to unregister the notifier if using devm_extcon_register_notifier().
-
-> +		flush_work(&ctx->extcon_wq);
-> +		if (ctx->cable_state > 0)
-> +			sii8620_cable_out(ctx);
-> +	} else {
-> +		sii8620_cable_out(ctx);
-> +	}
->  	drm_bridge_remove(&ctx->bridge);
->  
->  	return 0;
+>  int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip);
+> +int rockchip_pcie_init_port(struct rockchip_pcie *rockchip);
+>  int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip);
+>  void rockchip_pcie_deinit_phys(struct rockchip_pcie *rockchip);
+>  int rockchip_pcie_enable_clocks(struct rockchip_pcie *rockchip);
+> -- 
+> 1.9.1
 > 
-
-If you use the resource managed function (devm_extcon_register_notifier), Looks good to me.
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+> 
