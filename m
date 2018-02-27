@@ -1,91 +1,55 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 3/3] gpio: Add Spreadtrum PMIC EIC driver support
-Date: Tue, 27 Feb 2018 10:35:00 +0800
-Message-ID: <CAMz4kuJYEfwLHexq-KA6d9+u4+Cx2M9TAeEkHbbU4GJ-Sz50gg@mail.gmail.com>
-References: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
- <f4a2fefb4c3179e7598dbc8141a661833200b922.1519468782.git.baolin.wang@linaro.org>
- <CAHp75VdvLDEmNs-YUFYf+Og18kaU6j6zAxXc1w31X2vw26ACHQ@mail.gmail.com>
- <CAMz4kuJ+BmWnSFFvE91Ric-Wm6tzxs_a5UWMx82tPj_ZVvC4tw@mail.gmail.com> <CAHp75VeJiqp74LrsETHTwxd5iaOObRX5bdYXz=rYeHm-4KbgHA@mail.gmail.com>
+From: cang@codeaurora.org
+Subject: Re: [PATCH] scsi: ufs-qcom: add number of lanes per direction
+Date: Tue, 27 Feb 2018 13:22:11 +0800
+Message-ID: <f52a0ca12ca45b41467959ee7b5601fe@codeaurora.org>
+References: <20180205121021.11012-1-cang@codeaurora.org>
+ <20180209022915.2kki7avsia2k7tjp@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeJiqp74LrsETHTwxd5iaOObRX5bdYXz=rYeHm-4KbgHA@mail.gmail.com>
+In-Reply-To: <20180209022915.2kki7avsia2k7tjp@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, Gilad Broner <gbroner@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Noa Rubens <noag@codeaurora.org>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Maya Erez <merez@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26 February 2018 at 20:02, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Mon, Feb 26, 2018 at 5:01 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
->> On 25 February 2018 at 20:19, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->>> On Sat, Feb 24, 2018 at 12:44 PM, Baolin Wang <baolin.wang@linaro.org> wrote:
->
->>>> +static int sprd_pmic_eic_direction_input(struct gpio_chip *chip,
->>>> +                                        unsigned int offset)
->>>> +{
->>>> +       /* EICs are always input, nothing need to do here. */
->>>> +       return 0;
->>>> +}
->>>> +
->>>> +static void sprd_pmic_eic_set(struct gpio_chip *chip, unsigned int offset,
->>>> +                             int value)
->>>> +{
->>>> +       /* EICs are always input, nothing need to do here. */
->>>> +}
->>>
->>> Remove both.
->>>
->>> Look at what GPIO core does.
->>
->> I've checked the GPIO core, we need the
->> sprd_pmic_eic_direction_input() returns 0, since user can set GPIOD_IN
->> flag when requesting one GPIO, otherwise it will return errors.
->
-> Right. I thought it depends on presence of direction_output().
->
->> We also need one dummy sprd_pmic_eic_set() when setting debounce for
->> one GPIO, otherwise it will return errors.
->
-> This is pretty much a "feature" of GPIO framework. It shouldn't
-> require ->set() by logic if there is no output facility.
-> OK.
->
->>>> +       for (n = 0; n < chip->ngpio; n++) {
->>>> +               if (!(BIT(n) & val))
->>>
->>> for_each_set_bit().
->>>
->>> At some point you may need just to go across lib/ in the kernel and
->>> see what we have there.
->>
->> I've considered the for_each_set_bit(), it need one 'unsigned long'
->> type parameter, but we get the value from regmap is 'u32' type. So we
->> need one extra conversion from 'u32' to 'unsigned long' like:
->>
->> unsigned long reg = val;
->>
->> for_each_set_bit(n, &reg, chip->ngpio) {
->>         .......
->> }
->>
->> If you like this conversion, then I can change to use
->> for_each_set_bit(). Thanks.
->
-> Wouldn't it work like
->
-> unsigned long val;
->
-> ...regmap_read(..., &val);
->
-> ?
-
-It can not work, regmap_read() expects 'unsigned int *'. But I can
-convert it like this:
-
-for_each_set_bit(n, (unsigned long *)&val, chip->ngpio) {
-         .......
-}
-
--- 
-Baolin.wang
-Best Regards
+On 2018-02-09 10:29, Rob Herring wrote:
+> On Mon, Feb 05, 2018 at 08:02:07PM +0800, Can Guo wrote:
+>> From: Gilad Broner <gbroner@codeaurora.org>
+>> 
+>> Different platforms may have different number of lanes for the UFS 
+>> link.
+>> Add parameter to device tree specifying how many lanes should be
+>> configured for the UFS link. And don't print err message for clocks
+>> that are optional, this leads to unnecessary confusion about failure.
+>> 
+>> Signed-off-by: Gilad Broner <gbroner@codeaurora.org>
+>> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> 
+>> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt 
+>> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> index 5357919..4cee3f9 100644
+>> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> @@ -31,6 +31,9 @@ Optional properties:
+>>  			  defined or a value in the array is "0" then it is assumed
+>>  			  that the frequency is set by the parent clock or a
+>>  			  fixed rate clock source.
+>> +- lanes-per-direction:	number of lanes available per direction - 
+>> either 1 or 2.
+>> +			Note that it is assume same number of lanes is used both 
+>> directions at once.
+> 
+> Seems reasonable until someone does not make things symmetrical. We
+> should design for that case.
+> 
+You are right, I will make changes like using lanes-tx and lanes-rx for 
+Tx/Rx links for asymmetrial senarios and upload V2 patch
+>> +			If not specified, default is 2 lanes per direction.
+>> 
+>>  Note: If above properties are not defined it can be assumed that the 
+>> supply
+>>  regulators or clocks are always on.
