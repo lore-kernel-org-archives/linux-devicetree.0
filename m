@@ -1,47 +1,41 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: enable RTC on stm32f769-disco
-Date: Tue, 27 Feb 2018 17:00:53 +0100
-Message-ID: <b4e88f63-f48b-8333-ca79-0d6f1617a449@st.com>
-References: <1518788832-21714-1-git-send-email-amelie.delaunay@st.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: [PATCH 0/2] SolidRun Clearfog SFP support
+Date: Tue, 27 Feb 2018 16:01:35 +0000
+Message-ID: <20180227160135.GU9418@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518788832-21714-1-git-send-email-amelie.delaunay@st.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Amélie
+Now that mvneta supports SFP, we can add the necessary DT changes to
+Clearfog to support the SFP cages.  This series consists of two patches:
 
-On 02/16/2018 02:47 PM, Amelie Delaunay wrote:
-> This patch enables RTC on stm32f769-disco.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->   arch/arm/boot/dts/stm32f769-disco.dts | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-> index 4463ca1..48cb47f 100644
-> --- a/arch/arm/boot/dts/stm32f769-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f769-disco.dts
-> @@ -73,6 +73,10 @@
->   	clock-frequency = <25000000>;
->   };
->   
-> +&rtc {
-> +	status = "okay";
-> +};
-> +
->   &usart1 {
->   	pinctrl-0 = <&usart1_pins_a>;
->   	pinctrl-names = "default";
-> 
+1. Increase the I2C bus speed with the GPIO expander to 400kHz, as
+   there are bus timing issues that this works around - and as we
+   poll the expander, we need the bus to be reliable.
 
-Applied on stm32-next.
+2. Add the SFP entry to the clearfog DTS.  This includes the
+   maximum power level specification, which is not yet reviewed or
+   merged but has been sent via netdev for net-next.  I'll follow up
+   when the binding has been acked by Rob.
 
-Thanks.
-Alex
+ arch/arm/boot/dts/armada-388-clearfog.dtsi | 52 ++++++++----------------------
+ 1 file changed, 14 insertions(+), 38 deletions(-)
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
