@@ -1,89 +1,114 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/4] dt-bindings: arm: Document Renesas R-Car M3-N-based
- Salvator-X board
-Date: Tue, 27 Feb 2018 22:25:42 +0100
-Message-ID: <CAMuHMdXkpEoKxT-z0FunnfdjUpUZZP8GvbC5wAuj-qseQCVkzQ@mail.gmail.com>
-References: <1519668225-12548-1-git-send-email-geert+renesas@glider.be>
- <1519668225-12548-4-git-send-email-geert+renesas@glider.be>
- <20180227082238.e2kk6s4wogwwltvb@verge.net.au>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v1 1/4] ASoC: codecs: pcm179x: Add PCM1789 id
+Date: Tue, 27 Feb 2018 22:51:40 +0100
+Message-ID: <20180227225140.6f9902b8@windsurf.lan>
+References: <20180227212433.2189-1-mylene.josserand@bootlin.com>
+        <20180227212433.2189-2-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180227082238.e2kk6s4wogwwltvb@verge.net.au>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180227212433.2189-2-mylene.josserand@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hello,
 
-On Tue, Feb 27, 2018 at 9:22 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Mon, Feb 26, 2018 at 07:03:44PM +0100, Geert Uytterhoeven wrote:
->> The Renesas Salvator-X development board can be equipped with an R-Car
->> H3, M3-W, or M3-N SiP, which are pin-compatible.
->>
->> Document board part number and compatible values for the version with
->> R-Car M3-N.
->>
->> The board part number was extracted from a big patch by Takeshi Kihara
->> in the BSP.
+On Tue, 27 Feb 2018 22:24:30 +0100, Mylène Josserand wrote:
+> To prepare the support for the PCM1789, add a new compatible
+> and use the i2c_id to handle, later, the differences between
+> these two DACs even if they are pretty similar.
+> 
+> Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/sound/pcm179x.txt | 2 +-
 
->> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
->> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
->> @@ -108,6 +108,8 @@ Boards:
->>      compatible = "renesas,salvator-x", "renesas,r8a7795"
->>    - Salvator-X (RTP0RC7796SIPB0011S)
->
-> Here we have: Name (Part No)
+The DT binding change should be in a separate patch.
 
-That's the standard (highest number of occurrences) way.
+>  sound/soc/codecs/pcm179x-i2c.c                      | 6 ++++--
+>  sound/soc/codecs/pcm179x.c                          | 3 ++-
+>  sound/soc/codecs/pcm179x.h                          | 8 +++++++-
 
->>      compatible = "renesas,salvator-x", "renesas,r8a7796"
->> +  - Salvator-X (RTP0RC7796SIPB0011S (M3N))
->
-> Here we have: Name (Part No (SoC))
+And this should be together with the PCM1789 support patch. Otherwise
+your series is not bisectable: if we apply only PATCH 1/4, the driver
+supports the new compatible string, but it doesn't have the actual code
+to handle PCM1789. Am I missing something here ?
 
-This one is special: it's basically an M3-N prototype board made by taking
-a Salvator-X/M3-W board, and replacing the M3-W SiP by an M3-N SiP.
-Hence the board part number is the same.
+> -	return pcm179x_common_init(&client->dev, regmap);
+> +	return pcm179x_common_init(&client->dev, regmap, id->driver_data);
 
->> +    compatible = "renesas,salvator-x", "renesas,r8a77965"
->>    - Salvator-XS (Salvator-X 2nd version, RTP0RC7795SIPB0012S)
->
-> And here we have: Name (Version, Part No)
+This can be done in a preparation patch.
 
-AFAIU, "Salvator-XS" really means "Salvator-X 2nd version".
-So it's not "Version", but "Alternative Board Name".
-There's a similar thing with the ULCB boards:
+>  }
+>  
+>  static const struct of_device_id pcm179x_of_match[] = {
+>  	{ .compatible = "ti,pcm1792a", },
+> +	{ .compatible = "ti,pcm1789", },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, pcm179x_of_match);
+>  
+>  static const struct i2c_device_id pcm179x_i2c_ids[] = {
+> -	{ "pcm179x", 0 },
+> +	{ "pcm179x", PCM179X },
 
-  - H3ULCB (R-Car Starter Kit Premier, RTP0RC7795SKBX0010SA00 (H3 ES1.1))
-    H3ULCB (R-Car Starter Kit Premier, RTP0RC77951SKBX010SA00 (H3 ES2.0))
-  - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
+And also this addition.
 
->>      compatible = "renesas,salvator-xs", "renesas,r8a7795"
->>    - Salvator-XS (Salvator-X 2nd version, RTP0RC7796SIPB0012S)
->
-> Can we think about making this more consistent?
+> +	{ "pcm1789", PCM1789 },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, pcm179x_i2c_ids);
+> diff --git a/sound/soc/codecs/pcm179x.c b/sound/soc/codecs/pcm179x.c
+> index 4b311c06f97d..81cbf09319f6 100644
+> --- a/sound/soc/codecs/pcm179x.c
+> +++ b/sound/soc/codecs/pcm179x.c
+> @@ -218,7 +218,8 @@ static const struct snd_soc_component_driver soc_component_dev_pcm179x = {
+>  	.non_legacy_dai_naming	= 1,
+>  };
+>  
+> -int pcm179x_common_init(struct device *dev, struct regmap *regmap)
+> +int pcm179x_common_init(struct device *dev, struct regmap *regmap,
+> +			enum pcm17xx_type type)
 
-I'm afraid not. Naming seems to become only more complex over time...
-Unless you have great hands and great ideas ;-)
+And this done.
 
-Gr{oetje,eeting}s,
+>  {
+>  	struct pcm179x_private *pcm179x;
+>  
+> diff --git a/sound/soc/codecs/pcm179x.h b/sound/soc/codecs/pcm179x.h
+> index cf8681c9a373..8c08689e3b8b 100644
+> --- a/sound/soc/codecs/pcm179x.h
+> +++ b/sound/soc/codecs/pcm179x.h
+> @@ -17,11 +17,17 @@
+>  #ifndef __PCM179X_H__
+>  #define __PCM179X_H__
+>  
+> +enum pcm17xx_type {
+> +	PCM179X,
 
-                        Geert
+And this one.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> +	PCM1789,
+> +};
+> +
+>  #define PCM1792A_FORMATS (SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_S24_LE | \
+>  			  SNDRV_PCM_FMTBIT_S16_LE)
+>  
+>  extern const struct regmap_config pcm179x_regmap_config;
+>  
+> -int pcm179x_common_init(struct device *dev, struct regmap *regmap);
+> +int pcm179x_common_init(struct device *dev, struct regmap *regmap,
+> +			enum pcm17xx_type type);
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+And this one. Just as a "preparation patch" to support multiple codecs
+in the existing pcm179x.c driver.
+
+Thanks!
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
