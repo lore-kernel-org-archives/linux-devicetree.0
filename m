@@ -1,82 +1,93 @@
-Return-Path: <SRS0=kFSR=FN=gmail.com=joel.stan@kernel.org>
-Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
-From: Joel Stanley <joel@jms.id.au>
-Subject: [PATCH v2 1/3] dt-bindings: aspeed-lpc: Document LPC Host Interface Controller
-Date: Mon, 19 Feb 2018 17:54:20 +1030
-Message-Id: <20180219072422.22733-2-joel@jms.id.au>
-In-Reply-To: <20180219072422.22733-1-joel@jms.id.au>
-References: <20180219072422.22733-1-joel@jms.id.au>
-To: Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>, Cyril Bur <cyrilbur@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, Lei YU <mine260309@gmail.com>
+Return-Path: <>
+From: Gaku Inami <gaku.inami.xh@renesas.com>
+Subject: [PATCH 3/5] arm64: dts: renesas: r8a7795: Add cpu capacity-dmips-mhz
+Date: Tue, 27 Feb 2018 11:19:53 +0900
+Message-Id: <1519697995-6061-4-git-send-email-gaku.inami.xh@renesas.com>
+In-Reply-To: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
+References: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gaku Inami <gaku.inami.xh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The LPC Host Interface Controller is part of a BMC SoC that is used for
-communication with the host.
+Set the capacity-dmips-mhz for r8a7795, that is based on dhrystone.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
-v2:
- - Move the content to below the Host Node Children heading
- - Add Rob's review tag
----
- .../devicetree/bindings/mfd/aspeed-lpc.txt         | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+Expected cpu capacity:
+Cortex-A57@1.5GHz: 1024, Cortex-A53@1.2GHz: 411
 
-diff --git a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-index 514d82ced95b..69aadee00d5f 100644
---- a/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-+++ b/Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-@@ -109,9 +109,50 @@ lpc: lpc@1e789000 {
- 	};
- };
+Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index ffcc91e..be15864 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -75,6 +75,7 @@
+ 			enable-method = "psci";
+ 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z>;
+ 			operating-points-v2 = <&cluster0_opp>;
++			capacity-dmips-mhz = <1024>;
+ 			#cooling-cells = <2>;
+ 		};
  
-+BMC Node Children
-+==================
-+
-+
- Host Node Children
- ==================
+@@ -87,6 +88,7 @@
+ 			enable-method = "psci";
+ 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z>;
+ 			operating-points-v2 = <&cluster0_opp>;
++			capacity-dmips-mhz = <1024>;
+ 			#cooling-cells = <2>;
+ 		};
  
-+LPC Host Interface Controller
-+-------------------
-+
-+The LPC Host Interface Controller manages functions exposed to the host such as
-+LPC firmware hub cycles, configuration of the LPC-to-AHB mapping, UART
-+management and bus snoop configuration.
-+
-+Required properties:
-+
-+- compatible:	One of:
-+		"aspeed,ast2400-lpc-ctrl";
-+		"aspeed,ast2500-lpc-ctrl";
-+
-+- reg:		contains offset/length values of the host interface controller
-+		memory regions
-+
-+- clocks:	contains a phandle to the syscon node describing the clocks.
-+		There should then be one cell representing the clock to use
-+
-+- memory-region: A phandle to a reserved_memory region to be used for the LPC
-+		to AHB mapping
-+
-+- flash:	A phandle to the SPI flash controller containing the flash to
-+		be exposed over the LPC to AHB mapping
-+
-+Example:
-+
-+lpc-host@80 {
-+	lpc_ctrl: lpc-ctrl@0 {
-+		compatible = "aspeed,ast2500-lpc-ctrl";
-+		reg = <0x0 0x80>;
-+		clocks = <&syscon ASPEED_CLK_GATE_LCLK>;
-+		memory-region = <&flash_memory>;
-+		flash = <&spi>;
-+	};
-+};
-+
- LPC Host Controller
- -------------------
+@@ -99,6 +101,7 @@
+ 			enable-method = "psci";
+ 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z>;
+ 			operating-points-v2 = <&cluster0_opp>;
++			capacity-dmips-mhz = <1024>;
+ 			#cooling-cells = <2>;
+ 		};
  
+@@ -111,6 +114,7 @@
+ 			enable-method = "psci";
+ 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z>;
+ 			operating-points-v2 = <&cluster0_opp>;
++			capacity-dmips-mhz = <1024>;
+ 			#cooling-cells = <2>;
+ 		};
+ 
+@@ -123,6 +127,7 @@
+ 			enable-method = "psci";
+ 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z2>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			capacity-dmips-mhz = <411>;
+ 		};
+ 
+ 		a53_1: cpu@101 {
+@@ -134,6 +139,7 @@
+ 			enable-method = "psci";
+ 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z2>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			capacity-dmips-mhz = <411>;
+ 		};
+ 
+ 		a53_2: cpu@102 {
+@@ -145,6 +151,7 @@
+ 			enable-method = "psci";
+ 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z2>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			capacity-dmips-mhz = <411>;
+ 		};
+ 
+ 		a53_3: cpu@103 {
+@@ -156,6 +163,7 @@
+ 			enable-method = "psci";
+ 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z2>;
+ 			operating-points-v2 = <&cluster1_opp>;
++			capacity-dmips-mhz = <411>;
+ 		};
+ 
+ 		L2_CA57: cache-controller-0 {
 -- 
-2.15.1
+2.7.4
