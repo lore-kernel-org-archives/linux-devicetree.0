@@ -1,62 +1,46 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 4/6] arm64: dts: exynos: add OF graph between MHL and
- USB connector
-Date: Tue, 27 Feb 2018 15:24:34 -0600
-Message-ID: <CAL_JsqKGVwvqu36D57WbB7bPMt2tOZmvq+ukFuNHbhgiWYuw-w@mail.gmail.com>
-References: <CGME20180221085607eucas1p1a08c82fac832049d79705b4222422fa9@eucas1p1.samsung.com>
- <20180221085541.14556-1-a.hajda@samsung.com>
- <20180221085541.14556-5-a.hajda@samsung.com>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
+Subject: [PATCH v1 0/4] ASoC: Add support for DAC PCM1789
+Date: Tue, 27 Feb 2018 22:24:29 +0100
+Message-ID: <20180227212433.2189-1-mylene.josserand@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180221085541.14556-5-a.hajda@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Linux USB List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chanwoo Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com, alexandre.belloni@bootlin.com, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMjEsIDIwMTggYXQgMjo1NSBBTSwgQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBz
-YW1zdW5nLmNvbT4gd3JvdGU6Cj4gT0YgZ3JhcGggZGVzY3JpYmVzIE1ITCBkYXRhIGxhbmVzIGJl
-dHdlZW4gTUhMIGFuZCByZXNwZWN0aXZlIFVTQgo+IGNvbm5lY3Rvci4KPgo+IFNpZ25lZC1vZmYt
-Ynk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4gLS0tCj4gdjQ6Cj4gLSBh
-ZGRlZCBtaXNzaW5nIHJlZyBwcm9wZXJ0eSBpbiBjb25uZWN0b3IncyBwb3J0IG5vZGUgKEtyenlz
-enRvZikKPiAtLS0KPiAgLi4uL2Jvb3QvZHRzL2V4eW5vcy9leHlub3M1NDMzLXRtMi1jb21tb24u
-ZHRzaSAgICAgfCAzMiArKysrKysrKysrKysrKysrKysrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAy
-OSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
-NjQvYm9vdC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLWNvbW1vbi5kdHNpIGIvYXJjaC9hcm02
-NC9ib290L2R0cy9leHlub3MvZXh5bm9zNTQzMy10bTItY29tbW9uLmR0c2kKPiBpbmRleCBmNjA0
-ZjZiMWE5YzIuLjJlZDUwNmRmOTRkMCAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L2V4eW5vcy9leHlub3M1NDMzLXRtMi1jb21tb24uZHRzaQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvZXh5bm9zL2V4eW5vczU0MzMtdG0yLWNvbW1vbi5kdHNpCj4gQEAgLTgxNyw5ICs4MTcs
-MjIgQEAKPiAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZwbXVfc3lzdGVtX2NvbnRyb2xsZXIg
-MD47Cj4gICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gInh0YWwiOwo+Cj4gLSAgICAgICAg
-ICAgICAgIHBvcnQgewo+IC0gICAgICAgICAgICAgICAgICAgICAgIG1obF90b19oZG1pOiBlbmRw
-b2ludCB7Cj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQg
-PSA8JmhkbWlfdG9fbWhsPjsKPiArICAgICAgICAgICAgICAgcG9ydHMgewo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICNzaXplLWNlbGxzID0gPDA+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICBwb3J0
-QDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+Owo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgbWhsX3RvX2hkbWk6IGVuZHBvaW50IHsKPiArICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZo
-ZG1pX3RvX21obD47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIHBvcnRA
-MSB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47Cj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICBtaGxfdG9fbXVzYl9jb246IGVuZHBvaW50IHsKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0g
-PCZtdXNiX2Nvbl90b19taGw+Owo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsK
-ClRoZXNlIHBvcnRzIGFyZSBtdXR1YWxseSBleGNsdXNpdmUsIHJpZ2h0PyBJZiBzbywgaXQgc2hv
-dWxkIGJlIDEgcG9ydAp3aXRoIDIgZW5kcG9pbnRzLiBQb3J0cyBzaG91bGQgcmVwcmVzZW50IGlu
-ZGVwZW5kZW50IGRhdGEgZmxvd3MuClNvbWV0aGluZyBtdXhlZCBvciByZXBsaWNhdGVkICgxIHRv
-IG1hbnkgY29ubmVjdGlvbikgc2hvdWxkIGJlIGJlCmVuZHBvaW50cy4KClJvYgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hello everyone,
+
+You will find in this series the support of Texas Instrument's DAC
+PCM1789.
+This DAC is very minimalist and is similar to PCM1792a except for
+some differences in registers.
+Series based on asoc tree, "for-next" branch (last commit 130c3888dfdc).
+
+It is important to notice that this DAC needs to always have clocks
+enabled (even without any data) otherwise it will be in a "desynchronized"
+state and can not send data correctly.
+This issue has been solved by performing a reset each time a sound
+is played (see patch 04). This reset can produce a "pop" noise.
+
+Thank you in advance for any review.
+
+Best regards,
+Mylène
+
+Mylène Josserand (4):
+  ASoC: codecs: pcm179x: Add PCM1789 id
+  ASoC: codecs: pcm179x: Add support for PCM1789
+  ASoC: codecs: pcm179x: Add reset gpio
+  ASoC: codecs: pcm179x: Add trigger function to perform a reset
+
+ .../devicetree/bindings/sound/pcm179x.txt          |   2 +-
+ sound/soc/codecs/pcm179x-i2c.c                     |  17 +-
+ sound/soc/codecs/pcm179x.c                         | 242 ++++++++++++++++++++-
+ sound/soc/codecs/pcm179x.h                         |  10 +-
+ 4 files changed, 264 insertions(+), 7 deletions(-)
+
+-- 
+2.11.0
