@@ -1,114 +1,54 @@
-Return-Path: <SRS0=VoxH=FP=ettus.com=moritz.fischer@kernel.org>
-From: Moritz Fischer <mdf@kernel.org>
-Subject: [PATCH] dt-bindings: fpga: Consolidate bridge properties
-Date: Wed, 21 Feb 2018 09:33:06 -0800
-Message-Id: <20180221173306.17265-1-mdf@kernel.org>
-To: linux-fpga@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, atull@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, devicetree@vger.kernel.org, Moritz Fischer <mdf@kernel.org>
+Return-Path: <SRS0=5SpS=FV=gmail.com=jassisinghbrar@kernel.org>
+From: jassisinghbrar@gmail.com
+Subject: [PATCHv4 1/3] dt-bindings: spi: Add DT bindings for Synquacer
+Date: Tue, 27 Feb 2018 18:28:35 +0530
+Message-Id: <1519736315-3931-1-git-send-email-jassisinghbrar@gmail.com>
+In-Reply-To: <1519736182-3650-1-git-send-email-jassisinghbrar@gmail.com>
+References: <1519736182-3650-1-git-send-email-jassisinghbrar@gmail.com>
+To: linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tpiepho@impinj.com, broonie@kernel.org, ard.biesheuvel@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, masami.hiramatsu@linaro.org, Jassi Brar <jaswinder.singh@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Consolidate bridge properties in a single file, instead of duplicating
-the same optional property over and over again.
+From: Jassi Brar <jaswinder.singh@linaro.org>
 
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
-Cc: Alan Tull <atull@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>
+This patch adds documentation for Device-Tree bindings for the
+Socionext Synquacer spi driver.
+
+Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt |  5 +----
- .../devicetree/bindings/fpga/altera-freeze-bridge.txt     |  5 +----
- .../devicetree/bindings/fpga/altera-hps2fpga-bridge.txt   |  5 +----
- Documentation/devicetree/bindings/fpga/fpga-bridge.txt    | 15 +++++++++++++++
- .../devicetree/bindings/fpga/xilinx-pr-decoupler.txt      |  8 ++------
- 5 files changed, 20 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/fpga/fpga-bridge.txt
+ .../devicetree/bindings/spi/spi-synquacer.txt      | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-synquacer.txt
 
-diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
-index 817a8d4bf903..5dd0ff0f7b4e 100644
---- a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
-+++ b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
-@@ -3,10 +3,7 @@ Altera FPGA To SDRAM Bridge Driver
- Required properties:
- - compatible		: Should contain "altr,socfpga-fpga2sdram-bridge"
- 
--Optional properties:
--- bridge-enable		: 0 if driver should disable bridge at startup
--			  1 if driver should enable bridge at startup
--			  Default is to leave bridge in current state.
-+See Documentation/devicetree/bindings/fpga/fpga-bridge.txt for generic bindings.
- 
- Example:
- 	fpga_bridge3: fpga-bridge@ffc25080 {
-diff --git a/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
-index f8e288c71b2d..8b26fbcff3c6 100644
---- a/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
-+++ b/Documentation/devicetree/bindings/fpga/altera-freeze-bridge.txt
-@@ -10,10 +10,7 @@ Required properties:
- - compatible		: Should contain "altr,freeze-bridge-controller"
- - regs			: base address and size for freeze bridge module
- 
--Optional properties:
--- bridge-enable		: 0 if driver should disable bridge at startup
--			  1 if driver should enable bridge at startup
--			  Default is to leave bridge in current state.
-+See Documentation/devicetree/bindings/fpga/fpga-bridge.txt for generic bindings.
- 
- Example:
- 	freeze-controller@100000450 {
-diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
-index 6406f9337eeb..68cce3945b10 100644
---- a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
-+++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
-@@ -9,10 +9,7 @@ Required properties:
- - resets	: Phandle and reset specifier for this bridge's reset
- - clocks	: Clocks used by this module.
- 
--Optional properties:
--- bridge-enable	: 0 if driver should disable bridge at startup.
--		  1 if driver should enable bridge at startup.
--		  Default is to leave bridge in its current state.
-+See Documentation/devicetree/bindings/fpga/fpga-bridge.txt for generic bindings.
- 
- Example:
- 	fpga_bridge0: fpga-bridge@ff400000 {
-diff --git a/Documentation/devicetree/bindings/fpga/fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/fpga-bridge.txt
+diff --git a/Documentation/devicetree/bindings/spi/spi-synquacer.txt b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
 new file mode 100644
-index 000000000000..82607b23a287
+index 0000000..d945a4a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/fpga-bridge.txt
-@@ -0,0 +1,15 @@
-+FPGA Bridge Device Tree Binding
++++ b/Documentation/devicetree/bindings/spi/spi-synquacer.txt
+@@ -0,0 +1,23 @@
++* Socionext Synquacer HS-SPI bindings
 +
-+Moritz Fischer 2018 (Consolidated from previous bindings)
++Required Properties:
++- compatible: should be "socionext,synquacer-spi"
++- reg: physical base address of the controller and length of memory mapped
++       region.
++- clocks: core clock iHCLK. Optional rate clock iPCLK (default is iHCLK)
++- clock-names: Shall be "iHCLK" and "iPCLK" respectively
 +
-+Optional properties:
-+- bridge-enable		: 0 if driver should disable bridge at startup
-+			  1 if driver should enable bridge at startup
-+			  Default is to leave bridge in current state.
++Optional Properties:
++- socionext,use-rtm: boolean, if required to use "retimed clock" for RX
++- socionext,set-aces: boolean, if same active clock edges field to be set.
 +
 +Example:
-+	fpga_bridge3: fpga-bridge@ffc25080 {
-+		compatible = "altr,socfpga-fpga2sdram-bridge";
-+		reg = <0xffc25080 0x4>;
-+		bridge-enable = <0>;
++
++	spi0: spi@ff110000 {
++		compatible = "socionext,synquacer-spi";
++		reg = <0xff110000 0x1000>;
++		clocks = <&clk_fip006_spi>;
++		clock-names = "iHCLK";
++		socionext,use-rtm;
++		socionext,set-aces;
 +	};
-diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-index 8dcfba926bc7..4284d293fa61 100644
---- a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-+++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-@@ -18,12 +18,8 @@ Required properties:
- - clocks		: input clock to IP
- - clock-names		: should contain "aclk"
- 
--Optional properties:
--- bridge-enable		: 0 if driver should disable bridge at startup
--			  1 if driver should enable bridge at startup
--			  Default is to leave bridge in current state.
--
--See Documentation/devicetree/bindings/fpga/fpga-region.txt for generic bindings.
-+See Documentation/devicetree/bindings/fpga/fpga-region.txt and
-+Documentation/devicetree/bindings/fpga/fpga-bridge.txt for generic bindings.
- 
- Example:
- 	fpga-bridge@100000450 {
 -- 
-2.16.1
+2.7.4
