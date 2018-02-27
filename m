@@ -1,11 +1,14 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 1/2] clk: imx: imx7d: add the Keypad Port module clock
-Date: Tue, 27 Feb 2018 17:05:43 +0100
-Message-ID: <20180227160544.11446-1-stefan@agner.ch>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/2] RTC support on STM32H743
+Date: Tue, 27 Feb 2018 17:10:26 +0100
+Message-ID: <d53b5d88-1efa-36ca-e989-bad441d6cb96@st.com>
+References: <1518787000-10675-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1518787000-10675-1-git-send-email-amelie.delaunay@st.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,42 +18,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, Stefan Agner <stefan@agner.ch>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-According to the i.MX7D Reference Manual, the Keypad Port module
-(KPP) requires this clock gate to be enabled.
-
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- drivers/clk/imx/clk-imx7d.c             | 1 +
- include/dt-bindings/clock/imx7d-clock.h | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-index f34f1ecc4690..6b6e8851eabb 100644
---- a/drivers/clk/imx/clk-imx7d.c
-+++ b/drivers/clk/imx/clk-imx7d.c
-@@ -858,6 +858,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 	clks[IMX7D_WDOG2_ROOT_CLK] = imx_clk_gate4("wdog2_root_clk", "wdog_post_div", base + 0x49d0, 0);
- 	clks[IMX7D_WDOG3_ROOT_CLK] = imx_clk_gate4("wdog3_root_clk", "wdog_post_div", base + 0x49e0, 0);
- 	clks[IMX7D_WDOG4_ROOT_CLK] = imx_clk_gate4("wdog4_root_clk", "wdog_post_div", base + 0x49f0, 0);
-+	clks[IMX7D_KPP_ROOT_CLK] = imx_clk_gate4("kpp_root_clk", "ipg_root_clk", base + 0x4aa0, 0);
- 	clks[IMX7D_CSI_MCLK_ROOT_CLK] = imx_clk_gate4("csi_mclk_root_clk", "csi_mclk_post_div", base + 0x4490, 0);
- 	clks[IMX7D_AUDIO_MCLK_ROOT_CLK] = imx_clk_gate4("audio_mclk_root_clk", "audio_mclk_post_div", base + 0x4790, 0);
- 	clks[IMX7D_WRCLK_ROOT_CLK] = imx_clk_gate4("wrclk_root_clk", "wrclk_post_div", base + 0x47a0, 0);
-diff --git a/include/dt-bindings/clock/imx7d-clock.h b/include/dt-bindings/clock/imx7d-clock.h
-index dc51904435d8..7653c8536b64 100644
---- a/include/dt-bindings/clock/imx7d-clock.h
-+++ b/include/dt-bindings/clock/imx7d-clock.h
-@@ -453,5 +453,6 @@
- #define IMX7D_NAND_RAWNAND_CLK		440
- #define IMX7D_NAND_USDHC_BUS_RAWNAND_CLK 441
- #define IMX7D_SNVS_CLK			442
--#define IMX7D_CLK_END			443
-+#define IMX7D_KPP_ROOT_CLK		443
-+#define IMX7D_CLK_END			444
- #endif /* __DT_BINDINGS_CLOCK_IMX7D_H */
--- 
-2.16.2
+SGkgQW3DqWxpZSwKCk9uIDAyLzE2LzIwMTggMDI6MTYgUE0sIEFtZWxpZSBEZWxhdW5heSB3cm90
+ZToKPiBUaGlzIHBhdGNoc2V0IGFkZCBzdXBwb3J0IGZvciBSVEMgb24gU1RNMzJINzQzIGFuZCBl
+bmFibGVzIGl0IG9uIHN0bTMyaDc0M2ktZXZhbC4KPiBUZXN0ZWQgb24gc3RtMzItbmV4dC4KPiAK
+PiBBbWVsaWUgRGVsYXVuYXkgKDIpOgo+ICAgIEFSTTogZHRzOiBzdG0zMjogYWRkIFJUQyBzdXBw
+b3J0IG9uIFNUTTMySDc0Mwo+ICAgIEFSTTogZHRzOiBzdG0zMjogZW5hYmxlIFJUQyBvbiBzdG0z
+Mmg3NDNpLWV2YWwKPiAKPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyaDc0My5kdHNpICAgICAg
+fCAxNSArKysrKysrKysrKysrKysKPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyaDc0M2ktZXZh
+bC5kdHMgfCAgNCArKysrCj4gICAyIGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykKPiAK
+CktidWlsZCBpc3N1ZSBvY2N1cnMgb24gcGF0Y2gxIGJlY2F1c2UgTUFJTlRBSU5FUiBmaWxlIGlz
+IG5vdCBjb3JyZWN0IGZvciAKQVJNL1NUTTMyLiBJIHNlbmQgYSBwYXRjaCB0byBmaXggaXQ6IApo
+dHRwczovL2xrbWwub3JnL2xrbWwvMjAxOC8yLzI2LzM4Ni4gVGhlcmUgaXMgbm8gS2J1aWxkIGlz
+c3VlIGlmIHBhdGNoZXMgCmFyZSBhcHBsaWVkIG9uIHRoZSBjb3JyZWN0IGJyYW5jaDogCmdpdDov
+L2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9hdG9yZ3VlL3N0bTMyLmdp
+dCBzdG0zMi1uZXh0LgoKU28gc2VyaWVzIGFwcGxpZWQgb24gc3RtMzItbmV4dC4KCnJlZ2FyZHMK
+QWxleAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAo=
