@@ -1,86 +1,116 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 2/7] i3c: Add core I3C infrastructure
-Date: Tue, 27 Feb 2018 21:25:15 +0100
-Message-ID: <20180227212515.3a22524a@bbrezillon>
-References: <20171214151610.19153-1-boris.brezillon@free-electrons.com>
-        <20171214151610.19153-3-boris.brezillon@free-electrons.com>
-        <b39f9016-b2ff-6d8d-96b3-945f32ab2b67@synopsys.com>
-        <20180223213000.407461d2@bbrezillon>
-        <1b8fe82f-079b-6f55-0e59-5773027faa8e@synopsys.com>
-        <20180226213607.7161bb0a@bbrezillon>
-        <b9c057ad-47a0-fa35-0f30-8d465d40b6f0@synopsys.com>
-        <MWHPR07MB27833F0CAD2597BFDD37CE6CCAC00@MWHPR07MB2783.namprd07.prod.outlook.com>
-        <MWHPR07MB2783B91A8600A18014178EB2CAC00@MWHPR07MB2783.namprd07.prod.outlook.com>
+Subject: Re: [PATCH v4 5/6] arm: dts: pxa: use reworked NAND controller driver
+Date: Tue, 27 Feb 2018 21:42:45 +0100
+Message-ID: <20180227214245.4267448e@bbrezillon>
+References: <20180219223557.2458-1-miquel.raynal@bootlin.com>
+ <20180219223557.2458-6-miquel.raynal@bootlin.com>
+ <20180222104618.1ff78b52@bbrezillon>
+ <87efl66vow.fsf@belgarion.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <MWHPR07MB2783B91A8600A18014178EB2CAC00@MWHPR07MB2783.namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Przemyslaw Sroka <psroka@cadence.com>
-Cc: Vitor Soares <Vitor.Soares@synopsys.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.m>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <87efl66vow.fsf@belgarion.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: devicetree@vger.kernel.org, Eric Miao <eric.y.miao@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Antoine Tenart <antoine.tenart@bootlin.com>, Richard Weinberger <richard@nod.at>, Gregory Clement <gregory.clement@bootlin.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Haojian Zhuang <haojian.zhuang@gmail.com>, Nadav Haklai <nadavh@marvell.com>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel <linux-arm-kernel-bounces@lists.infradead.org>, Daniel Mack <daniel@zonque.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Przemek,
+Hi Robert,
 
-On Tue, 27 Feb 2018 17:06:37 +0000
-Przemyslaw Sroka <psroka@cadence.com> wrote:
+On Tue, 27 Feb 2018 21:09:51 +0100
+Robert Jarzmik <robert.jarzmik@free.fr> wrote:
 
-> > > >
-> > > > Could you tell me why you think SETDASA is required?  
-> > >
-> > > Yes, you are right... But in my opinion it is required as it does part
-> > > of DAA process.  
-> > 
-> > SETDASA is simply faster than ENTDAA, but only if there is no need to
-> > collect BCR/DCR/PID of such devices. I think most applications would like to
-> > have them as an status information so  after all ENTDAA can be regarded as
-> > an generic approach (unless I'm mistaken).  
+> Boris Brezillon <boris.brezillon@bootlin.com> writes:
 > 
-> Below are 2 examples on how DAA can be executed:
-> 1st:
-> A1) SETDASA to devices with SA
+> > +Arnd and the LAKML
+> >
+> > Hi Miquel,
+> >
+> > Please try to Cc the LAKML and the arm-soc maintainers when you send DT
+> > changes.
+> >
+> > Arnd, Robert, I'd like to apply this patch through the MTD tree since
+> > it depends on patch 1 of this series ("mtd: nand: use Marvell reworked
+> > NAND controller driver with all platforms").
+> > Otherwise, I can leave it to Robert for 4.18.  
+> 
+> This one looks conflict free, so I have no objection if you carry it through
+> your tree.
 
-I'm not even sure all devices with a static address needs to be
-assigned a dynamic address with SETDASA (actually, I'm almost sure
-it's not the case, since, according to section "5.1.9.3 CCC Command
-Definitions" of the spec, all I3C slaves have to support ENTDAA). To me,
-it looks like you'd want to do that only is you really need to reserve
-a specific dynamic address and prevent the DAA step from assigning it
-to another device.
+Already prepared an immutable branch with all patches of this series
+for you to pull in the pxa tree:
 
-> B1) DAA to remaining devices
-> C1) GET BCR/DCR/PID to devices that initially had SA
-> NOTES: C1 is optional and order of B1 and C1 can be changed
+The following changes since commit 7928b2cbe55b2a410a0f5c1f154610059c57b1b2:
 
-While that's true in principle, in Linux we'll always retrieve
-BCR/DCR/PID (and more, like MAXDS), no matter how the device obtained
-its dynamic address.
+  Linux 4.16-rc1 (2018-02-11 15:04:29 -0800)
+
+are available in the git repository at:
+
+  git://git.infradead.org/linux-mtd.git nand/pxa3xx-removal
+
+for you to fetch changes up to fa4d26b6f00e2c3460c2cc070f467c74d163bf40:
+
+  MAINTAINERS: remove entry for deleted pxa3xx_nand driver (2018-02-23 22:12:15 +0100)
+
+----------------------------------------------------------------
+Miquel Raynal (6):
+      mtd: nand: use Marvell reworked NAND controller driver with all platforms
+      mtd: nand: remove deprecated pxa3xx_nand driver
+      mtd: nand: remove useless fields from pxa3xx NAND platform data
+      dt-bindings: mtd: remove pxa3xx NAND controller documentation
+      arm: dts: pxa: use reworked NAND controller driver
+      MAINTAINERS: remove entry for deleted pxa3xx_nand driver
+
+ Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt |   50 -
+ MAINTAINERS                                           |    6 -
+ arch/arm/boot/dts/pxa3xx.dtsi                         |    6 +-
+ arch/arm/configs/cm_x300_defconfig                    |    2 +-
+ arch/arm/configs/pxa3xx_defconfig                     |    3 +-
+ arch/arm/configs/pxa_defconfig                        |    2 +-
+ arch/arm/configs/raumfeld_defconfig                   |    2 +-
+ arch/arm/mach-mmp/ttc_dkb.c                           |    4 +-
+ arch/arm/mach-pxa/cm-x300.c                           |    8 +-
+ arch/arm/mach-pxa/colibri-pxa3xx.c                    |    8 +-
+ arch/arm/mach-pxa/colibri.h                           |    2 +-
+ arch/arm/mach-pxa/littleton.c                         |   10 +-
+ arch/arm/mach-pxa/mxm8x10.c                           |   10 +-
+ arch/arm/mach-pxa/raumfeld.c                          |    6 +-
+ arch/arm/mach-pxa/zylonite.c                          |   10 +-
+ drivers/mtd/nand/Kconfig                              |   11 -
+ drivers/mtd/nand/Makefile                             |    1 -
+ drivers/mtd/nand/marvell_nand.c                       |    3 +-
+ drivers/mtd/nand/pxa3xx_nand.c                        | 2105 ------------------------------------------
+ include/linux/platform_data/mtd-nand-pxa3xx.h         |   43 +-
+ 20 files changed, 43 insertions(+), 2249 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt
+ delete mode 100644 drivers/mtd/nand/pxa3xx_nand.c
+
 
 > 
-> 2nd:
-> A2) DAA to all devices
-> NOTES: no need for any follow up steps as all information is collected during DAA
+> Acked-by: Robert Jarzmik <robert.jarzmik@free.fr>
 
-As said above, that's not exactly how the Linux implementation works.
-Right now I'm ignoring the information retrieved during DAA and forcing
-a GETPID/GETBCR/GETDCR for every discovered device. This approach is
-generating a bit more traffic on the bus, but it also makes the
-implementation more generic, because we have a single function to add
-an I3C device, no matter how it's been assigned a dynamic address.
-
-> 
-> As we can see 2nd approach is more generic and do not see any reason to add special handling for SETDASA unless there is any reasonable reason to do otherwise.
-
-I agree on one thing: as long as you don't have to reserve a specific
-dynamic address, SETDASA is not required. At least, that's my
-understanding.
+Unfortunately I didn't have your ack when I prepared the branch, so it's
+not there. Let me know if this is a problem.
 
 Regards,
 
 Boris
 
+
 -- 
 Boris Brezillon, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
