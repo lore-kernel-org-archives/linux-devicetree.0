@@ -1,118 +1,39 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v2 00/10] R-Car M3-N: Enable EtherAVB device node
-Date: Tue, 27 Feb 2018 11:22:44 +0100
-Message-ID: <1519726974-23160-1-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 01/10] arm64: dts: renesas: salvator-common: Override EtherAVB phy-mode
+Date: Tue, 27 Feb 2018 11:22:45 +0100
+Message-ID: <1519726974-23160-2-git-send-email-jacopo+renesas@jmondi.org>
+References: <1519726974-23160-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519726974-23160-1-git-send-email-jacopo+renesas@jmondi.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: geert@linux-m68k.org, horms@verge.net.au, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon, Geert,
-   in this second iteration I have dropped iommu dependencies for EtherAVB
-and have changed "phy-mode" for all mainlines Gen-3 boards, this time including
-ULCB, Draak, Eagle and V3MSK.
+As the PHY interface installed on the Salvator-X[S] board, provides TX
+channel delay, make the "phy-mode" property a board-specific one, meant
+to override the one specified in the SoC DTSI.
 
-The series add phy-mode as a board property to the following board files:
-- salvator-common.dtsi
-- ulcb.dtsi
-- r8a77995-draak.dts
-- r8a77970-eagle.dts
-- r8a77970-v3msk.dts
+Follow up patches will reset the r8a7795/96/965 SoC DTSI to use "rgmii"
+mode and let the board files override that.
 
-And reset the EtherAVB phy-mode to "rgmii" in the following SoC DTSI:
-- r8a7795.dtsi
-- r8a7796.dtsi
-- r8a77995.dtsi
-- r8a77970.dtsi
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm64/boot/dts/renesas/salvator-common.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-And finally, I added EtherAVB device node for M3-N on top.
-
-I have verified with scripts/dtc/dtx_diff that the only difference compared to
-the previous version for all DTS files is the newly introduced EtherAVB node for
-r8a77965 Salvator-X board.
-
-------------------------------------------------------------------------------
-$ for i in `ls dts-new/*.dtb`; do
-	dt=`basename $i`;
-	echo $dt;
-	./scripts/dtc/dtx_diff dts-old/$dt dts-new/$dt;
-  done
-
-$ r8a7795-es1-h3ulcb.dtb
- r8a7795-es1-h3ulcb-kf.dtb
- r8a7795-es1-salvator-x.dtb
- r8a7795-h3ulcb.dtb
- r8a7795-h3ulcb-kf.dtb
- r8a7795-salvator-x.dtb
- r8a7795-salvator-xs.dtb
- r8a77965-salvator-x.dtb
- --- dts-old/r8a77965-salvator-x.dtb
- +++ dts-new/r8a77965-salvator-x.dtb
- @@ -413,10 +413,17 @@
-  		ethernet@e6800000 {
-  			#address-cells = <0x1>;
-  			#size-cells = <0x0>;
- +			clocks = <0x6 0x1 0x32c>;
- +			compatible = "renesas,etheravb-r8a77965", "renesas,etheravb-rcar-gen3";
- +			interrupt-names = "ch0", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16", "ch17", "ch18", "ch19", "ch20", "ch21", "ch22", "ch23", "ch24";
- +			interrupts = <0x0 0x27 0x4 0x0 0x28 0x4 0x0 0x29 0x4 0x0 0x2a 0x4 0x0 0x2b 0x4 0x0 0x2c 0x4 0x0 0x2d 0x4 0x0 0x2e 0x4 0x0 0x2f 0x4 0x0 0x30 0x4 0x0 0x31 0x4 0x0 0x32 0x4 0x0 0x33 0x4 0x0 0x34 0x4 0x0 0x35 0x4 0x0 0x36 0x4 0x0 0x37 0x4 0x0 0x38 0x4 0x0 0x39 0x4 0x0 0x3a 0x4 0x0 0x3b 0x4 0x0 0x3c 0x4 0x0 0x3d 0x4 0x0 0x3e 0x4 0x0 0x3f 0x4>;
-  			phy-handle = <0x12>;
- +			phy-mode = "rgmii-txid";
-  			pinctrl-0 = <0x11>;
-  			pinctrl-names = "default";
- +			power-domains = <0x1 0x20>;
-  			reg = <0x0 0xe6800000 0x0 0x800 0x0 0xe6a00000 0x0 0x10000>;
- +			resets = <0x6 0x32c>;
-  			status = "okay";
-
-  			ethernet-phy@0 {
- r8a7796-m3ulcb.dtb
- r8a7796-m3ulcb-kf.dtb
- r8a7796-salvator-x.dtb
- r8a7796-salvator-xs.dtb
- r8a77970-eagle.dtb
- r8a77970-v3msk.dtb
- r8a77995-draak.dtb
-------------------------------------------------------------------------------
-
-As per the previous version, this is based on what Simon already picked in his
-development branch.
-
-Branch for testing available at:
-git://jmondi.org/linux m3-n/renesas-drivers-2018-02-13-v4.16-rc1/v2-simon
-
-Thanks
-   j
-
-v1 -> v2:
-- Change rgmii mode in ULCB, Draak, Eagle and V3MSK
-- Reset rgmii mode for r8a77970
-- Drop iommu dependencies and associated patches
-
-Jacopo Mondi (10):
-  arm64: dts: renesas: salvator-common: Override EtherAVB phy-mode
-  arm64: dts: renesas: ulcb: Override EtherAVB phy-mode
-  arm64: dts: renesas: draak: Override EtherAVB phy-mode
-  arm64: dts: renesas: eagle: Override EtherAVB phy-mode
-  arm64: dts: renesas: v3msk: Override EtherAVB phy-mode
-  arm64: dts: renesas: r8a7796: Set EtherAVB phy mode to "rgmii"
-  arm64: dts: renesas: r8a7795: Set EtherAVB phy mode to "rgmii"
-  arm64: dts: renesas: r8a77995: Set EtherAVB phy mode to "rgmii"
-  arm64: dts: renesas: r8a77970: Set EtherAVB phy mode to "rgmii"
-  arm64: dts: renesas: r8a77965: Add EtherAVB device node
-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi         |  2 +-
- arch/arm64/boot/dts/renesas/r8a7796.dtsi         |  2 +-
- arch/arm64/boot/dts/renesas/r8a77965.dtsi        | 43 ++++++++++++++++++++++--
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts   |  1 +
- arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts   |  1 +
- arch/arm64/boot/dts/renesas/r8a77970.dtsi        |  2 +-
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts   |  1 +
- arch/arm64/boot/dts/renesas/r8a77995.dtsi        |  2 +-
- arch/arm64/boot/dts/renesas/salvator-common.dtsi |  1 +
- arch/arm64/boot/dts/renesas/ulcb.dtsi            |  1 +
- 10 files changed, 49 insertions(+), 7 deletions(-)
-
---
+diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+index 8e8ec30..c725f9b 100644
+--- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
++++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+@@ -279,6 +279,7 @@
+ 	pinctrl-0 = <&avb_pins>;
+ 	pinctrl-names = "default";
+ 	phy-handle = <&phy0>;
++	phy-mode = "rgmii-txid";
+ 	status = "okay";
+ 
+ 	phy0: ethernet-phy@0 {
+-- 
 2.7.4
