@@ -1,93 +1,69 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Date: Tue, 27 Feb 2018 19:51:19 +0100 (CET)
-Message-ID: <879698373.164009.1519757479655@email.1und1.de>
-References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
- <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
- <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH 0/3] STM32 Extended TrustZone Protection driver
+Date: Tue, 27 Feb 2018 20:16:59 +0100
+Message-ID: <CA+M3ks6qV_pGdE6mr3n7TiY9VhbqEkrdH6tN=8e-A=oa4UbDHw@mail.gmail.com>
+References: <20180227140926.22996-1-benjamin.gaignard@st.com> <20180227171124.h2yjhicmlfrwr4nh@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Phil Elwell <phil@raspberrypi.org>, linux-bluetooth@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180227171124.h2yjhicmlfrwr4nh@lakrids.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcel,
+2018-02-27 18:11 GMT+01:00 Mark Rutland <mark.rutland@arm.com>:
+> On Tue, Feb 27, 2018 at 03:09:23PM +0100, Benjamin Gaignard wrote:
+>> On early boot stages STM32MP1 platform is able to dedicate some hardware blocks
+>> to a secure OS running in TrustZone.
+>> We need to avoid using those hardware blocks on non-secure context (i.e. kernel)
+>> because read/write access will all be discarded.
+>>
+>> Extended TrustZone Protection driver register itself as listener of
+>> BUS_NOTIFY_BIND_DRIVER and check, given the device address, if the hardware block
+>> could be used in a Linux context. If not it returns NOTIFY_BAD to driver core
+>> to stop driver probing.
+>
+> Huh?
+>
+> If these devices are not usable from the non-secure side, why are they
+> not removed form the DT (or marked disabled)?
+>
+> In other cases, where resources are carved out for the secure side (e.g.
+> DRAM carveouts), that's how we handle things.
+>
 
-> Marcel Holtmann <marcel@holtmann.org> hat am 25. Februar 2018 um 22:38 geschrieben:
-> 
-> 
-> Hi Stefan,
-> 
-> >>> Add BCM43438 (bluetooth) as a serdev slave device of uart0 (pl011/ttyAMA0).
-> >>> This allows to automatically insert the bcm43438 to the bluetooth
-> >>> subsystem instead of relying on patched userspace helpers (hciattach).
-> >>> 
-> >>> In order to keep a debug UART we need to switch to uart1.
-> >>> 
-> >>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> >>> ---
-> >>> arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 14 +++++++++++++-
-> >>> 1 file changed, 13 insertions(+), 1 deletion(-)
-> >>> 
-> >>> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-> >>> index cf53436..b7f79f1 100644
-> >>> --- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-> >>> +++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-> >>> @@ -131,6 +131,18 @@
-> >>> 
-> >>> &uart0 {
-> >>> 	pinctrl-names = "default";
-> >>> -	pinctrl-0 = <&uart0_gpio14>;
-> >>> +	pinctrl-0 = <&uart0_gpio32 &uart0_ctsrts_gpio30>;
-> >>> +	status = "okay";
-> >>> +
-> >>> +	bluetooth {
-> >>> +		compatible = "brcm,bcm43438-bt";
-> >>> +		max-speed = <2000000>;
-> >>> +		shutdown-gpios = <&gpio 45 GPIO_ACTIVE_HIGH>;
-> >>> +	};
-> >>> +};
-> >> 
-> >> is the shutdown GPIO working as expected with this hardware. So even module unload and reload works fine?
-> > 
-> > Yes, unload and reload works fine. 
-> > 
-> >> Meaning we are getting back to the 115200 default baud rate on the UART?
-> > 
-> > I assume that, because reload works as expected. 
-> 
-> awesome. That is good news.
-> 
-> Since you said that the GPIO expander driver for the RPi 3 has been accepted, did you test it there as well?
+That true you can parse and disable a device a boot time but if DT doesn't
+exactly reflect etzpc status bits we will in trouble when try to get access to
+the device.
+Changing the DT is a software protection while etzpc is an hardware protection
+so we need to check it anyway.
 
-Currently not 
+Benjamin
 
-> If so, then it would be good to get a patch that also provides shutdown-gpios for RPi 3.
 
-Sure, but not before this weekend.
-
-> 
-> Regards
-> 
-> Marcel
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Mark.
+>
+>>
+>> NOTE: patches 2 and 3 should be applied only on
+>> git://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
+>> but until this patch: https://lkml.org/lkml/2018/2/26/386
+>> find it way to mailine KBuild will complain about them.
+>>
+>> Benjamin Gaignard (3):
+>>   driver core: check notifier_call_chain return value
+>>   dt-bindings: stm32: Add bindings for Extended TrustZone Protection
+>>   ARM: mach-stm32: Add Extended TrustZone Protection driver
+>>
+>>  .../bindings/arm/stm32/st,stm32mp1-etzpc.txt       |  13 ++
+>>  arch/arm/mach-stm32/Kconfig                        |   7 +
+>>  arch/arm/mach-stm32/Makefile                       |   1 +
+>>  arch/arm/mach-stm32/stm32-etzpc.c                  | 252 +++++++++++++++++++++
+>>  drivers/base/dd.c                                  |   9 +-
+>>  5 files changed, 279 insertions(+), 3 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/st,stm32mp1-etzpc.txt
+>>  create mode 100644 arch/arm/mach-stm32/stm32-etzpc.c
+>>
+>> --
+>> 2.15.0
+>>
