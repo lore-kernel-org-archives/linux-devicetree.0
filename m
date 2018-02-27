@@ -1,23 +1,25 @@
-Return-Path: <SRS0=aylg=FT=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 0/2] Add Renesas R8A77970 PFC driver
-Message-ID: <e32c511f-89cd-254b-8a53-face984abe75@cogentembedded.com>
-Date: Sun, 25 Feb 2018 21:11:21 +0300
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/2] usb: add USB2.0/3.0 peripheral bindings for r8a77965
+Date: Tue, 27 Feb 2018 17:16:01 +0900
+Message-Id: <1519719363-27850-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello!
+This patch set is based on the latest Felipe's usb.git / testing/next
+branch (commit id = 892b3e4a3df3f8fa18053aba65acd5a3dee05325).
 
-Here's a set of 2 patches against the 'sh-pfc' branch of Geert Uytterhoeven's
-'renesas-drivers.git' repo. These patches add the basic support for the R8A77980
-PFC.
 
-[1/2] pinctrl: sh-pfc: add PORT_GP_CFG_25() helper macros
-[2/2] pinctrl: sh-pfc: add R8A77980 PFC support
+Yoshihiro Shimoda (2):
+  usb: renesas_usbhs: add binding for r8a77965
+  usb: gadget: udc: renesas_usb3: add binging for r8a77965
 
-MBR, Sergei
+ Documentation/devicetree/bindings/usb/renesas_usb3.txt  | 1 +
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+-- 
+1.9.1
