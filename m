@@ -1,63 +1,55 @@
-Return-Path: <SRS0=lHfj=FW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga01.intel.com ([192.55.52.88]:23888 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1752427AbeB1Nb3 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 28 Feb 2018 08:31:29 -0500
-Date: Wed, 28 Feb 2018 15:31:26 +0200
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
+MIME-Version: 1.0
+In-Reply-To: <1519402422-9595-3-git-send-email-andy.yeh@intel.com>
+References: <1519402422-9595-1-git-send-email-andy.yeh@intel.com>
+	<1519402422-9595-3-git-send-email-andy.yeh@intel.com>
+Date: Tue, 27 Feb 2018 16:10:31 -0600
+Message-ID: <CAL_JsqKd8dxF1eSkST1GyKCS_bkzALv2aGHC9TXHWfnrxx33SQ@mail.gmail.com>
 Subject: Re: [v5 2/2] media: dt-bindings: Add bindings for Dongwoon DW9807
  voice coil
-Message-ID: <20180228133126.cusxnid64xd5uawu@paasikivi.fi.intel.com>
-References: <1519402422-9595-1-git-send-email-andy.yeh@intel.com>
- <1519402422-9595-3-git-send-email-andy.yeh@intel.com>
- <CAL_JsqKd8dxF1eSkST1GyKCS_bkzALv2aGHC9TXHWfnrxx33SQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKd8dxF1eSkST1GyKCS_bkzALv2aGHC9TXHWfnrxx33SQ@mail.gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andy Yeh <andy.yeh@intel.com>, linux-media@vger.kernel.org, Tomasz Figa <tfiga@google.com>, devicetree@vger.kernel.org, Alan Chiang <alanx.chiang@intel.com>
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Andy Yeh <andy.yeh@intel.com>
+Cc: linux-media@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>, Tomasz Figa <tfiga@google.com>, devicetree@vger.kernel.org, Alan Chiang <alanx.chiang@intel.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Rob,
+On Fri, Feb 23, 2018 at 10:13 AM, Andy Yeh <andy.yeh@intel.com> wrote:
+> From: Alan Chiang <alanx.chiang@intel.com>
+>
+> Dongwoon DW9807 is a voice coil lens driver.
+>
+> Also add a vendor prefix for Dongwoon for one did not exist previously.
 
-Thanks for the review.
+Where's that?
 
-On Tue, Feb 27, 2018 at 04:10:31PM -0600, Rob Herring wrote:
-> On Fri, Feb 23, 2018 at 10:13 AM, Andy Yeh <andy.yeh@intel.com> wrote:
-> > From: Alan Chiang <alanx.chiang@intel.com>
-> >
-> > Dongwoon DW9807 is a voice coil lens driver.
-> >
-> > Also add a vendor prefix for Dongwoon for one did not exist previously.
-> 
-> Where's that?
+>
+> Signed-off-by: Andy Yeh <andy.yeh@intel.com>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt | 9 +++++++++
 
-Added by aece98a912d92444ea9da03b04269407d1308f1f . So that line isn't
-relevant indeed and should be removed.
+DACs generally go in bindings/iio/dac/
 
-> 
-> >
-> > Signed-off-by: Andy Yeh <andy.yeh@intel.com>
-> > ---
-> >  Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt | 9 +++++++++
-> 
-> DACs generally go in bindings/iio/dac/
-
-We have quite a few lens voice coil drivers under bindings/media/i2c now. I
-don't really object to putting this one to bindings/iio/dac but then the
-rest should be moved as well.
-
-The camera LED flash drivers are under bindings/leds so this would actually
-be analoguous to that. The lens voice coil drivers are perhaps still a bit
-more bound to the domain (camera) than the LED flash drivers.
-
-I can send a patch if you think the existing bindings should be moved; let
-me know.
-
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+>  1 file changed, 9 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+> new file mode 100644
+> index 0000000..0a1a860
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+> @@ -0,0 +1,9 @@
+> +Dongwoon Anatech DW9807 voice coil lens driver
+> +
+> +DW9807 is a 10-bit DAC with current sink capability. It is intended for
+> +controlling voice coil lenses.
+> +
+> +Mandatory properties:
+> +
+> +- compatible: "dongwoon,dw9807"
+> +- reg: I2C slave address
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
