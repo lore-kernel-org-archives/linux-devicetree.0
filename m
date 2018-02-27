@@ -1,17 +1,14 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [linux-sunxi] [PATCH 14/15] ARM: dts: sun8i: h3: Enable HDMI
- output on H3 boards
-Date: Tue, 27 Feb 2018 08:07:35 +0100
-Message-ID: <20180227070735.ml3mc4nr4vpge57u@flea>
-References: <20180224214545.3740-1-jernej.skrabec@siol.net>
- <2676311.2IEVhXnSIE@jernej-laptop>
- <4AA78C45-E139-417E-BE89-FE0BFBC409B0@aosc.io>
- <2342395.9m6rrqTry7@jernej-laptop>
- <CAGRGNgU8-uJuns7mAzS-gc81qvVAkS9JS2Tm13p2Qp7dMDCNkg@mail.gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH v5 1/6] dt-bindings: add bindings for USB physical connector
+Date: Tue, 27 Feb 2018 08:11:29 +0100
+Message-ID: <20180227071134.28063-2-a.hajda@samsung.com>
+References: <20180227071134.28063-1-a.hajda@samsung.com>
+ <CGME20180227071138eucas1p17e1e16f13f6d3e3b15a57dc93eb8cf3f@eucas1p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1890922532=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGRGNgU8-uJuns7mAzS-gc81qvVAkS9JS2Tm13p2Qp7dMDCNkg@mail.gmail.com>
+In-reply-to: <20180227071134.28063-1-a.hajda@samsung.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -21,141 +18,74 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Julian Calaby <julian.calaby@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, jernej.skrabec@siol.net, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi <linux-sunxi@googlegroups.com>, dri-devel <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, sboyd@kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "Mailing List,
- Arm" <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+To: "open list:OPEN FIRMWARE AND FLATTENED DEVICE
+ TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Chanwoo Choi <cw00.choi@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1890922532==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hvvzilz5wqazdv4s"
-Content-Disposition: inline
-
-
---hvvzilz5wqazdv4s
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Feb 27, 2018 at 01:29:27PM +1100, Julian Calaby wrote:
-> Hi Jernej,
->=20
-> On Tue, Feb 27, 2018 at 3:27 AM, Jernej =C5=A0krabec <jernej.skrabec@siol=
-=2Enet> wrote:
-> > Hi,
-> >
-> > Dne ponedeljek, 26. februar 2018 ob 17:21:05 CET je Icenowy Zheng napis=
-al(a):
-> >> =E4=BA=8E 2018=E5=B9=B42=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
-=8812:16:44, "Jernej =C5=A0krabec"
-> > <jernej.skrabec@siol.net> =E5=86=99=E5=88=B0:
-> >> >Hi Julian,
-> >> >
-> >> >Dne nedelja, 25. februar 2018 ob 09:11:34 CET je Julian Calaby
-> >> >
-> >> >napisal(a):
-> >> >> Hi Jernej,
-> >> >>
-> >> >> On Sun, Feb 25, 2018 at 8:45 AM, Jernej Skrabec
-> >> >
-> >> ><jernej.skrabec@siol.net>
-> >> >
-> >> >wrote:
-> >> >> > Enable HDMI output on all boards which have HDMI connector.
-> >> >> >
-> >> >> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> >> >> > ---
-> >> >> >
-> >> >> >  arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    | 25
-> >> >> >  ++++++++++++++++++++++ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-> >> >> >
-> >> >> >   | 25 ++++++++++++++++++++++
-> >> >> >
-> >> >> >  arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts | 25
-> >> >> >  ++++++++++++++++++++++ arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts
-> >> >> >
-> >> >> >   | 25 ++++++++++++++++++++++
-> >> >
-> >> >arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-> >> >
-> >> >> >         | 25 ++++++++++++++++++++++
-> >> >> >
-> >> >> >  arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts       | 25
-> >> >> >  ++++++++++++++++++++++ arch/arm/boot/dts/sun8i-h3-orangepi-one.d=
-ts
-> >> >> >
-> >> >> >   | 24 +++++++++++++++++++++
-> >> >
-> >> >arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-> >> >
-> >> >> >        | 25 ++++++++++++++++++++++ 8 files changed, 199
-> >> >
-> >> >insertions(+)
-> >> >
-> >> >> As I understand it, the H2+ is just a slightly trimmed down H3. In
-> >> >> terms of HDMI support, the difference is that the H2+ can't output
-> >> >
-> >> >4k.
-> >> >
-> >> >> If this code is compatible with the H2+, could you please add the
-> >> >> necessary bits and pieces to the h2-plus DTSs too?
-> >> >
-> >> >There are only 3 H2+ boards in kernel and none of them has HDMI
-> >> >connector, so
-> >>
-> >> BPi M2 Zero has miniHDMI connector.
-> >
-> > Ah, sorry, I missed that one. Since I don't have it (or any other board=
- with
-> > H2+) I'm not really comfortable including such patch. If anyone will te=
-st it,
-> > I can include it in next revision.
->=20
-> I have one of those (this is why I'm interested in this patchset) so
-> I'm willing to test, however I can't guarantee I'll get to it quickly.
-
-Then I guess the best way forward will be to keep the current patch as
-is, and you'll send a patch whenever you have the time to test it.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---hvvzilz5wqazdv4s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqVA6gACgkQ0rTAlCFN
-r3Q6vg/9Fm4ScE+f0ZUY+8HUDprDlD6ldpEISEpdTAjAJWM79FS1uGjliUeykw3r
-+W2ILskyTqcyI4vWoV7IfGfdj5AdHYgu4Kl11jgk692Xsli8Tcmj1j1HSeFVGShq
-Zi5uRUDRbWegypGTCqFKp7xpZaMpv+9h3cQ02hdqOzxieu/On9hWWK+2siI7L9Uo
-Og0DPCvyNTnEMFvi+7UHHlKSHVmIrNdx5D8Ey2rk8hC2Y4R4cA4FPFRzGp4sYzor
-GEtKGM/cbB1xFgtCNaUjs4I+pEi8ZGowc7UZ0mVdKHsH7IhkEj1kC+LJRP2r5mMf
-nfLESFP/0ovvg6wTPrwZkLWGnYoEEIH1YgodzwO//2IOZHxrFh+ZL1bGrfQg9mUV
-tqiOP5aRaWCMYZy9NN5MQZ8jajPmQrxBsrrEoB8/B5DDaWRb7vnbNjqhNUVgmTh6
-2C/pHxFZbgMLSXR1Hkj0Ph50AZaQeqO381JsrI6SM5xXnGUrg4K4C7i/xtxyhdWU
-XZXw/rm4kLSCbBHQvNicrILn0PZh0fAKvsmClmFmxv6bMeXPAlRimM+uQjzaR7o/
-vCq253+Ne61sOPSRjgyJl2tqjEof2CIUTYwS8+U+57DYcgg678e2Qv8Br2cdYENX
-kJVUbQ8vbEYm4VMGApRBsWAsakQwgnK0QVuCJ53nhNp4Nu5c5wM=
-=8IBn
------END PGP SIGNATURE-----
-
---hvvzilz5wqazdv4s--
-
---===============1890922532==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1890922532==--
+VGhlc2UgYmluZGluZ3MgYWxsb3cgdG8gZGVzY3JpYmUgbW9zdCBrbm93biBzdGFuZGFyZCBVU0Ig
+Y29ubmVjdG9ycwphbmQgaXQgc2hvdWxkIGJlIHBvc3NpYmxlIHRvIGV4dGVuZCBpdCBpZiBuZWNl
+c3NhcnkuClVTQiBjb25uZWN0b3JzLCBiZXNpZGUgVVNCIGNhbiBiZSB1c2VkIHRvIHJvdXRlIG90
+aGVyIHByb3RvY29scywKZm9yIGV4YW1wbGUgVUFSVCwgQXVkaW8sIE1ITC4gSW4gc3VjaCBjYXNl
+IGV2ZXJ5IGRldmljZSBwYXNzaW5nIGRhdGEKdGhyb3VnaCB0aGUgY29ubmVjdG9yIHNob3VsZCBo
+YXZlIGFwcHJvcHJpYXRlIGdyYXBoIGJpbmRpbmdzLgoKU2lnbmVkLW9mZi1ieTogQW5kcnplaiBI
+YWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KLS0tCnY0OgotIGltcHJvdmVkICd0eXBlJyBkZXNj
+cmlwdGlvbiAoUm9iKSwKLSBpbXByb3ZlZCBkZXNjcmlwdGlvbiBvZiAybmQgZXhhbXBsZSAoUm9i
+KS4KdjM6Ci0gcmVtb3ZlZCBNSEwgcG9ydCAoc2Ftc3VuZyBjb25uZWN0b3Igd2lsbCBoYXZlIHNl
+cGFyYXRlIGJpbmRpbmdzKSwKLSBhZGRlZCAybmQgZXhhbXBsZSBmb3IgVVNCLUMsCi0gaW1wcm92
+ZWQgZm9ybWF0dGluZy4KdjI6Ci0gbW92ZWQgY29ubmVjdG9yIHR5cGUoQSxCLEMpIHRvIGNvbXBh
+dGlibGUgc3RyaW5nIChSb2IpLAotIHJlbmFtZWQgc2l6ZSBwcm9wZXJ0eSB0byB0eXBlIChSb2Ip
+LAotIGNoYW5nZWQgdHlwZSBkZXNjcmlwdGlvbiB0byBiZSBsZXNzIGNvbmZ1c2luZyAoTGF1cmVu
+dCksCi0gcmVtb3ZlZCB2ZW5kb3Igc3BlY2lmaWMgY29tcGF0aWJsZXMgKGltcGxpZWQgYnkgZ3Jh
+cGggcG9ydCBudW1iZXIpLAotIGFkZGVkIHJlcXVpcmVtZW50IG9mIGNvbm5lY3RvciBiZWluZyBh
+IGNoaWxkIG9mIElDIChSb2IpLAotIHJlbW92ZWQgbWF4LW1vZGUgKHN1YnRseSBzdWdnZXN0ZWQg
+YnkgUm9iLCBpdCBzaG91bGQgYmUgZGV0ZWN0ZWQgYW55d2F5CiAgYnkgVVNCIENvbnRyb2xsZXIg
+aW4gcnVudGltZSwgZG93bnNpZGUgaXMgdGhhdCBkZXZpY2UgaXMgbm90IGFibGUgdG8KICByZXBv
+cnQgaXRzIHJlYWwgY2FwYWJpbGl0aWVzLCBtYXliZSBiZXR0ZXIgd291bGQgYmUgdG8gbWFrZSBp
+dCBvcHRpb25hbCg/KSksCi0gYXNzaWduZWQgcG9ydCBudW1iZXJzIHRvIGRhdGEgYnVzZXMgKFJv
+YikuCgpSZWdhcmRzCkFuZHJ6ZWoKLS0tCiAuLi4vYmluZGluZ3MvY29ubmVjdG9yL3VzYi1jb25u
+ZWN0b3IudHh0ICAgICAgICAgICB8IDc1ICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBj
+aGFuZ2VkLCA3NSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnR4dAoKZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jb25uZWN0b3IvdXNiLWNv
+bm5lY3Rvci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY29ubmVjdG9y
+L3VzYi1jb25uZWN0b3IudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAw
+MC4uZTE0NjNmMTRhZjM4Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Nvbm5lY3Rvci91c2ItY29ubmVjdG9yLnR4dApAQCAtMCwwICsxLDc1IEBA
+CitVU0IgQ29ubmVjdG9yCis9PT09PT09PT09PT09CisKK1VTQiBjb25uZWN0b3Igbm9kZSByZXBy
+ZXNlbnRzIHBoeXNpY2FsIFVTQiBjb25uZWN0b3IuIEl0IHNob3VsZCBiZQorYSBjaGlsZCBvZiBV
+U0IgaW50ZXJmYWNlIGNvbnRyb2xsZXIuCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBh
+dGlibGU6IGRlc2NyaWJlcyB0eXBlIG9mIHRoZSBjb25uZWN0b3IsIG11c3QgYmUgb25lIG9mOgor
+ICAgICJ1c2ItYS1jb25uZWN0b3IiLAorICAgICJ1c2ItYi1jb25uZWN0b3IiLAorICAgICJ1c2It
+Yy1jb25uZWN0b3IiLgorCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSBsYWJlbDogc3ltYm9saWMg
+bmFtZSBmb3IgdGhlIGNvbm5lY3RvciwKKy0gdHlwZTogc2l6ZSBvZiB0aGUgY29ubmVjdG9yLCBz
+aG91bGQgYmUgc3BlY2lmaWVkIGluIGNhc2Ugb2YgVVNCLUEsIFVTQi1CCisgIG5vbi1mdWxsc2l6
+ZSBjb25uZWN0b3JzOiAibWluaSIsICJtaWNybyIuCisKK1JlcXVpcmVkIG5vZGVzOgorLSBhbnkg
+ZGF0YSBidXMgdG8gdGhlIGNvbm5lY3RvciBzaG91bGQgYmUgbW9kZWxlZCB1c2luZyB0aGUgT0Yg
+Z3JhcGggYmluZGluZ3MKKyAgc3BlY2lmaWVkIGluIGJpbmRpbmdzL2dyYXBoLnR4dCwgdW5sZXNz
+IHRoZSBidXMgaXMgYmV0d2VlbiBwYXJlbnQgbm9kZSBhbmQKKyAgdGhlIGNvbm5lY3Rvci4gU2lu
+Y2Ugc2luZ2xlIGNvbm5lY3RvciBjYW4gaGF2ZSBtdWx0cGlsZSBkYXRhIGJ1c2VzIGV2ZXJ5IGJ1
+cworICBoYXMgYXNzaWduZWQgT0YgZ3JhcGggcG9ydCBudW1iZXIgYXMgZm9sbG93czoKKyAgICAw
+OiBIaWdoIFNwZWVkIChIUyksIHByZXNlbnQgaW4gYWxsIGNvbm5lY3RvcnMsCisgICAgMTogU3Vw
+ZXIgU3BlZWQgKFNTKSwgcHJlc2VudCBpbiBTUyBjYXBhYmxlIGNvbm5lY3RvcnMsCisgICAgMjog
+U2lkZWJhbmQgdXNlIChTQlUpLCBwcmVzZW50IGluIFVTQi1DLgorCitFeGFtcGxlcworLS0tLS0t
+LS0KKworMS4gTWljcm8tVVNCIGNvbm5lY3RvciB3aXRoIEhTIGxpbmVzIHJvdXRlZCB2aWEgY29u
+dHJvbGxlciAoTVVJQyk6CisKK211aWMtbWF4Nzc4NDNANjYgeworCS4uLgorCXVzYl9jb246IGNv
+bm5lY3RvciB7CisJCWNvbXBhdGlibGUgPSAidXNiLWItY29ubmVjdG9yIjsKKwkJbGFiZWwgPSAi
+bWljcm8tVVNCIjsKKwkJdHlwZSA9ICJtaWNybyI7CisJfTsKK307CisKKzIuIFVTQi1DIGNvbm5l
+Y3RvciBhdHRhY2hlZCB0byBDQyBjb250cm9sbGVyIChzMm1tMDA1KSwgSFMgbGluZXMgcm91dGVk
+Cit0byBjb21wYW5pb24gUE1JQyAobWF4Nzc4NjUpLCBTUyBsaW5lcyB0byBVU0IzIFBIWSBhbmQg
+U0JVIHRvIERpc3BsYXlQb3J0LgorRGlzcGxheVBvcnQgdmlkZW8gbGluZXMgYXJlIHJvdXRlZCB0
+byB0aGUgY29ubmVjdG9yIHZpYSBTUyBtdXggaW4gVVNCMyBQSFkuCisKK2NjaWM6IHMybW0wMDVA
+MzMgeworCS4uLgorCXVzYl9jb246IGNvbm5lY3RvciB7CisJCWNvbXBhdGlibGUgPSAidXNiLWMt
+Y29ubmVjdG9yIjsKKwkJbGFiZWwgPSAiVVNCLUMiOworCisJCXBvcnRzIHsKKwkJCSNhZGRyZXNz
+LWNlbGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCXBvcnRAMCB7CisJCQkJ
+cmVnID0gPDA+OworCQkJCXVzYl9jb25faHM6IGVuZHBvaW50IHsKKwkJCQkJcmVtb3RlLWVuZHBv
+aW50ID0gPCZtYXg3Nzg2NV91c2JjX2hzPjsKKwkJCQl9OworCQkJfTsKKwkJCXBvcnRAMSB7CisJ
+CQkJcmVnID0gPDE+OworCQkJCXVzYl9jb25fc3M6IGVuZHBvaW50IHsKKwkJCQkJcmVtb3RlLWVu
+ZHBvaW50ID0gPCZ1c2JkcmRfcGh5X3NzPjsKKwkJCQl9OworCQkJfTsKKwkJCXBvcnRAMiB7CisJ
+CQkJcmVnID0gPDI+OworCQkJCXVzYl9jb25fc2J1OiBlbmRwb2ludCB7CisJCQkJCXJlbW90ZS1l
+bmRwb2ludCA9IDwmZHBfYXV4PjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKwl9OworfTsKLS0gCjIu
+MTYuMgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
