@@ -1,41 +1,88 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH 0/3] STM32 Extended TrustZone Protection driver
-Date: Tue, 27 Feb 2018 15:09:23 +0100
-Message-ID: <20180227140926.22996-1-benjamin.gaignard@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH v8 05/15] dt-bindings: clock: Document qcom,hfpll
+Date: Tue, 27 Feb 2018 19:36:52 +0530
+Message-ID: <1519740422-3835-6-git-send-email-sricharan@codeaurora.org>
+References: <1519740422-3835-1-git-send-email-sricharan@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519740422-3835-1-git-send-email-sricharan@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: viresh.kumar@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, robh@kernel.org, sricharan@codeaurora.org, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On early boot stages STM32MP1 platform is able to dedicate some hardware blocks
-to a secure OS running in TrustZone.
-We need to avoid using those hardware blocks on non-secure context (i.e. kernel)
-because read/write access will all be discarded.
+From: Stephen Boyd <sboyd@codeaurora.org>
 
-Extended TrustZone Protection driver register itself as listener of
-BUS_NOTIFY_BIND_DRIVER and check, given the device address, if the hardware block
-could be used in a Linux context. If not it returns NOTIFY_BAD to driver core
-to stop driver probing.
+Adds bindings document for qcom,hfpll instantiated within
+the Krait processor subsystem as separate register region.
 
-NOTE: patches 2 and 3 should be applied only on
-git://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
-but until this patch: https://lkml.org/lkml/2018/2/26/386
-find it way to mailine KBuild will complain about them.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+ .../devicetree/bindings/clock/qcom,hfpll.txt       | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,hfpll.txt
 
-Benjamin Gaignard (3):
-  driver core: check notifier_call_chain return value
-  dt-bindings: stm32: Add bindings for Extended TrustZone Protection
-  ARM: mach-stm32: Add Extended TrustZone Protection driver
-
- .../bindings/arm/stm32/st,stm32mp1-etzpc.txt       |  13 ++
- arch/arm/mach-stm32/Kconfig                        |   7 +
- arch/arm/mach-stm32/Makefile                       |   1 +
- arch/arm/mach-stm32/stm32-etzpc.c                  | 252 +++++++++++++++++++++
- drivers/base/dd.c                                  |   9 +-
- 5 files changed, 279 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/st,stm32mp1-etzpc.txt
- create mode 100644 arch/arm/mach-stm32/stm32-etzpc.c
-
+diff --git a/Documentation/devicetree/bindings/clock/qcom,hfpll.txt b/Documentation/devicetree/bindings/clock/qcom,hfpll.txt
+new file mode 100644
+index 0000000..771cb0a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,hfpll.txt
+@@ -0,0 +1,46 @@
++High-Frequency PLL (HFPLL)
++
++PROPERTIES
++
++- compatible:
++	Usage: required
++	Value type: <string>:
++		shall contain only one of the following. The generic
++		compatible "qcom,hfpll" should be also included.
++
++                        "qcom,hfpll-ipq8064", "qcom,hfpll"
++                        "qcom,hfpll-apq8064", "qcom,hfpll"
++                        "qcom,hfpll-msm8974", "qcom,hfpll"
++                        "qcom,hfpll-msm8960", "qcom,hfpll"
++
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: address and size of HPLL registers. An optional second
++		    element specifies the address and size of the alias
++		    register region.
++
++- clock-output-names:
++	Usage: required
++	Value type: <string>
++	Definition: Name of the PLL. Typically hfpllX where X is a CPU number
++		    starting at 0. Otherwise hfpll_Y where Y is more specific
++		    such as "l2".
++
++Example:
++
++1) An HFPLL for the L2 cache.
++
++	clock-controller@f9016000 {
++		compatible = "qcom,hfpll-ipq8064", "qcom,hfpll";
++		reg = <0xf9016000 0x30>;
++		clock-output-names = "hfpll_l2";
++	};
++
++2) An HFPLL for CPU0. This HFPLL has the alias register region.
++
++	clock-controller@f908a000 {
++		compatible = "qcom,hfpll-ipq8064", "qcom,hfpll";
++		reg = <0xf908a000 0x30>, <0xf900a000 0x30>;
++		clock-output-names = "hfpll0";
++	};
 -- 
-2.15.0
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
