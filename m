@@ -1,38 +1,35 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/3] ARM: mach-stm32: Add Extended TrustZone Protection
- driver
-Date: Tue, 27 Feb 2018 17:14:19 +0000
-Message-ID: <20180227171419.3nlz23qzptvew2as@lakrids.cambridge.arm.com>
-References: <20180227140926.22996-1-benjamin.gaignard@st.com>
- <20180227140926.22996-4-benjamin.gaignard@st.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/9] ARM: dts: am33xx/am4372: Add suspend-resume support
+Date: Tue, 27 Feb 2018 09:46:31 -0800
+Message-ID: <20180227174631.GD5448@atomide.com>
+References: <1519011305-17822-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180227140926.22996-4-benjamin.gaignard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+In-Reply-To: <1519011305-17822-1-git-send-email-d-gerlach@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Johan Hovold <johan@kernel.org>, linux-arm-kernel@lists.infradead.org, Keerthy J <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 27, 2018 at 03:09:26PM +0100, Benjamin Gaignard wrote:
- +
-> +static const u32 stm32mp1_ip_addr[] = {
-> +	0x5c008000,	/* 00 stgenc */
-> +	0x54000000,	/* 01 bkpsram */
-> +	0x5c003000,	/* 02 iwdg1 */
-> +	0x5c000000,	/* 03 usart1 */
-> +	0x5c001000,	/* 04 spi6 */
-> +	0x5c002000,	/* 05 i2c4 */
+* Dave Gerlach <d-gerlach@ti.com> [180218 19:35]:
+> Hi,
+> This series is the last needed to enable suspend/resume on am335x/am437x
+> along with [1]. It adds required dt nodes for the emif and core PM code
+> to find the needed sram nodes and marks key devices with ti,no-idle so
+> that the kernel does not idle them. With this suspend to mem can be achieved
+> by following the steps described in [1].
 
-...
+Applying all these into omap-for-v4.17/dt thanks.
 
-This duplicates information that is in the DT, which is unfortunate.
-
-Why can these not be marked disabled inthe DT instead? 
-
-If it's dynamic form boot-to-boot, then the FW can probe this prior to
-entering Linux, and patch the DT appropriately.
-
-Thanks,
-Mark.
+Tony
