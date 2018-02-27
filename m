@@ -1,76 +1,118 @@
-From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH 4/4] dt-bindings: arm: Document Renesas R-Car M3-N-based
- Salvator-XS board
-Date: Tue, 27 Feb 2018 08:41:13 +0000
-Message-ID: <TY1PR06MB0702A5B4087711A3EF947893B7C00@TY1PR06MB0702.apcprd06.prod.outlook.com>
-References: <1519668225-12548-1-git-send-email-geert+renesas@glider.be>
- <1519668225-12548-5-git-send-email-geert+renesas@glider.be>
- <20180227082514.h2pfc7a5qpceb2mb@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180227082514.h2pfc7a5qpceb2mb@verge.net.au>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2 00/10] R-Car M3-N: Enable EtherAVB device node
+Date: Tue, 27 Feb 2018 11:22:44 +0100
+Message-ID: <1519726974-23160-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: geert@linux-m68k.org, horms@verge.net.au, sergei.shtylyov@cogentembedded.com, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
+Hi Simon, Geert,
+   in this second iteration I have dropped iommu dependencies for EtherAVB
+and have changed "phy-mode" for all mainlines Gen-3 boards, this time including
+ULCB, Draak, Eagle and V3MSK.
 
-> From: devicetree-owner@vger.kernel.org [mailto:devicetree-
-> owner@vger.kernel.org] On Behalf Of Simon Horman
-> Sent: 27 February 2018 08:25
-> 
-> On Mon, Feb 26, 2018 at 07:03:45PM +0100, Geert Uytterhoeven wrote:
-> > The Renesas Salvator-XS development board can be equipped with an
-> > R-Car H3, M3-W, or M3-N SiP, which are pin-compatible.
-> >
-> > Document board part number and compatible values for the version with
-> > R-Car M3-N.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt
-> > b/Documentation/devicetree/bindings/arm/shmobile.txt
-> > index 51e4428856be4557..303f04e639431837 100644
-> > --- a/Documentation/devicetree/bindings/arm/shmobile.txt
-> > +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-> > @@ -114,6 +114,8 @@ Boards:
-> >      compatible = "renesas,salvator-xs", "renesas,r8a7795"
-> >    - Salvator-XS (Salvator-X 2nd version, RTP0RC7796SIPB0012S)
-> >      compatible = "renesas,salvator-xs", "renesas,r8a7796"
-> > +  - Salvator-XS (Salvator-X 2nd version, RTP0RC77965SIPB012S)
-> > +    compatible = "renesas,salvator-xs", "renesas,r8a77965"
-> 
-> I am unsure how to verify this part number, can anyone help?
+The series add phy-mode as a board property to the following board files:
+- salvator-common.dtsi
+- ulcb.dtsi
+- r8a77995-draak.dts
+- r8a77970-eagle.dts
+- r8a77970-v3msk.dts
 
-This matches the label on the board.
+And reset the EtherAVB phy-mode to "rgmii" in the following SoC DTSI:
+- r8a7795.dtsi
+- r8a7796.dtsi
+- r8a77995.dtsi
+- r8a77970.dtsi
 
-Kind regards, Chris
+And finally, I added EtherAVB device node for M3-N on top.
 
+I have verified with scripts/dtc/dtx_diff that the only difference compared to
+the previous version for all DTS files is the newly introduced EtherAVB node for
+r8a77965 Salvator-X board.
 
-> Also, the syntax seems inconsistent with that of patch 3/4.
-> 
-> >    - SILK (RTP0RC7794LCB00011S)
-> >      compatible = "renesas,silk", "renesas,r8a7794"
-> >    - SK-RZG1E (YR8A77450S000BE)
-> > --
-> > 2.7.4
-> >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in the
-> body of a message to majordomo@vger.kernel.org More majordomo info at
-> http://vger.kernel.org/majordomo-info.html
+------------------------------------------------------------------------------
+$ for i in `ls dts-new/*.dtb`; do
+	dt=`basename $i`;
+	echo $dt;
+	./scripts/dtc/dtx_diff dts-old/$dt dts-new/$dt;
+  done
+
+$ r8a7795-es1-h3ulcb.dtb
+ r8a7795-es1-h3ulcb-kf.dtb
+ r8a7795-es1-salvator-x.dtb
+ r8a7795-h3ulcb.dtb
+ r8a7795-h3ulcb-kf.dtb
+ r8a7795-salvator-x.dtb
+ r8a7795-salvator-xs.dtb
+ r8a77965-salvator-x.dtb
+ --- dts-old/r8a77965-salvator-x.dtb
+ +++ dts-new/r8a77965-salvator-x.dtb
+ @@ -413,10 +413,17 @@
+  		ethernet@e6800000 {
+  			#address-cells = <0x1>;
+  			#size-cells = <0x0>;
+ +			clocks = <0x6 0x1 0x32c>;
+ +			compatible = "renesas,etheravb-r8a77965", "renesas,etheravb-rcar-gen3";
+ +			interrupt-names = "ch0", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8", "ch9", "ch10", "ch11", "ch12", "ch13", "ch14", "ch15", "ch16", "ch17", "ch18", "ch19", "ch20", "ch21", "ch22", "ch23", "ch24";
+ +			interrupts = <0x0 0x27 0x4 0x0 0x28 0x4 0x0 0x29 0x4 0x0 0x2a 0x4 0x0 0x2b 0x4 0x0 0x2c 0x4 0x0 0x2d 0x4 0x0 0x2e 0x4 0x0 0x2f 0x4 0x0 0x30 0x4 0x0 0x31 0x4 0x0 0x32 0x4 0x0 0x33 0x4 0x0 0x34 0x4 0x0 0x35 0x4 0x0 0x36 0x4 0x0 0x37 0x4 0x0 0x38 0x4 0x0 0x39 0x4 0x0 0x3a 0x4 0x0 0x3b 0x4 0x0 0x3c 0x4 0x0 0x3d 0x4 0x0 0x3e 0x4 0x0 0x3f 0x4>;
+  			phy-handle = <0x12>;
+ +			phy-mode = "rgmii-txid";
+  			pinctrl-0 = <0x11>;
+  			pinctrl-names = "default";
+ +			power-domains = <0x1 0x20>;
+  			reg = <0x0 0xe6800000 0x0 0x800 0x0 0xe6a00000 0x0 0x10000>;
+ +			resets = <0x6 0x32c>;
+  			status = "okay";
+
+  			ethernet-phy@0 {
+ r8a7796-m3ulcb.dtb
+ r8a7796-m3ulcb-kf.dtb
+ r8a7796-salvator-x.dtb
+ r8a7796-salvator-xs.dtb
+ r8a77970-eagle.dtb
+ r8a77970-v3msk.dtb
+ r8a77995-draak.dtb
+------------------------------------------------------------------------------
+
+As per the previous version, this is based on what Simon already picked in his
+development branch.
+
+Branch for testing available at:
+git://jmondi.org/linux m3-n/renesas-drivers-2018-02-13-v4.16-rc1/v2-simon
+
+Thanks
+   j
+
+v1 -> v2:
+- Change rgmii mode in ULCB, Draak, Eagle and V3MSK
+- Reset rgmii mode for r8a77970
+- Drop iommu dependencies and associated patches
+
+Jacopo Mondi (10):
+  arm64: dts: renesas: salvator-common: Override EtherAVB phy-mode
+  arm64: dts: renesas: ulcb: Override EtherAVB phy-mode
+  arm64: dts: renesas: draak: Override EtherAVB phy-mode
+  arm64: dts: renesas: eagle: Override EtherAVB phy-mode
+  arm64: dts: renesas: v3msk: Override EtherAVB phy-mode
+  arm64: dts: renesas: r8a7796: Set EtherAVB phy mode to "rgmii"
+  arm64: dts: renesas: r8a7795: Set EtherAVB phy mode to "rgmii"
+  arm64: dts: renesas: r8a77995: Set EtherAVB phy mode to "rgmii"
+  arm64: dts: renesas: r8a77970: Set EtherAVB phy mode to "rgmii"
+  arm64: dts: renesas: r8a77965: Add EtherAVB device node
+
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi         |  2 +-
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi         |  2 +-
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi        | 43 ++++++++++++++++++++++--
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts   |  1 +
+ arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts   |  1 +
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi        |  2 +-
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts   |  1 +
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi        |  2 +-
+ arch/arm64/boot/dts/renesas/salvator-common.dtsi |  1 +
+ arch/arm64/boot/dts/renesas/ulcb.dtsi            |  1 +
+ 10 files changed, 49 insertions(+), 7 deletions(-)
+
+--
+2.7.4
