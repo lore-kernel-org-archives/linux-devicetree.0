@@ -1,49 +1,52 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [PATCH] ARM: dts: NSP: Fix amount of RAM on BCM958625HR
-Date: Tue, 27 Feb 2018 10:02:56 -0500
-Message-ID: <CAC3K-4rqYMUBtbwaojWBF-0biEV-WSPpe=0bDocL4TUrrL4gGQ@mail.gmail.com>
-References: <20180227010312.7495-1-f.fainelli@gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH] ARM: dts: imx7: add CPU PMU support
+Date: Tue, 27 Feb 2018 16:16:10 +0100
+Message-ID: <20180227151610.21887-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180227010312.7495-1-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, Stefan Agner <stefan@agner.ch>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 26, 2018 at 8:03 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> Jon attempted to fix the amount of RAM on the BCM958625HR in commit
-> c53beb47f621 ("ARM: dts: NSP: Correct RAM amount for BCM958625HR board")
-> but it seems like we tripped over some poorly documented schematics.
->
-> The top-level page of the schematics says the board has 2GB, but when
-> you end-up scrolling to page 6, you see two chips of 4GiB (512MB) but
-> what the bootloader really initializes only 512MB, any attempt to use
-> more than that results in data aborts. Fix this again back to 512MB.
->
-> Fixes: c53beb47f621 ("ARM: dts: NSP: Correct RAM amount for BCM958625HR board")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Enable support for ARM Performance Monitoring Units available
+on the Cortex-A7 CPU. There is only a single interrupt for the
+PMU in both variants of the family, i.MX 7Solo and 7Dual.
 
-Acked-by: Jon Mason <jon.mason@broadcom.com>
+Tested with perf on a i.MX 7Dual:
+  hw perfevents: enabled with armv7_cortex_a7 PMU driver, 5 counters available
 
-> ---
->  arch/arm/boot/dts/bcm958625hr.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
-> index 6a44b8021702..f0e2008f7490 100644
-> --- a/arch/arm/boot/dts/bcm958625hr.dts
-> +++ b/arch/arm/boot/dts/bcm958625hr.dts
-> @@ -49,7 +49,7 @@
->
->         memory {
->                 device_type = "memory";
-> -               reg = <0x60000000 0x80000000>;
-> +               reg = <0x60000000 0x20000000>;
->         };
->
->         gpio-restart {
-> --
-> 2.14.1
->
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/boot/dts/imx7s.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 9aa2bb998552..a6d8f35c4255 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -130,6 +130,12 @@
+ 		#phy-cells = <0>;
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupt-parent = <&gpc>;
++		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>;
++	};
+ 
+ 	replicator {
+ 		/*
+-- 
+2.16.2
