@@ -1,171 +1,124 @@
-Return-Path: <SRS0=Zag9=FP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-cys01nam02on0059.outbound.protection.outlook.com ([104.47.37.59]:35840
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1751168AbeBUErV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 20 Feb 2018 23:47:21 -0500
-From: <shubhrajyoti.datta@gmail.com>
-Subject: [PATCH 2/2] fpga: reset bridge: Add the reset bridge
-Date: Wed, 21 Feb 2018 10:23:46 +0530
-Message-ID: <1519188826-2047-2-git-send-email-shubhrajyoti.datta@gmail.com>
-In-Reply-To: <1519188826-2047-1-git-send-email-shubhrajyoti.datta@gmail.com>
-References: <1519188826-2047-1-git-send-email-shubhrajyoti.datta@gmail.com>
+Return-Path: <SRS0=a1Oa=FV=samsung.com=a.hajda@kernel.org>
+Subject: Re: [PATCH v2 10/12] dt-bindings: connector: add properties for
+ typec power delivery
+From: Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <20522804-65ab-5d48-716a-c199e4c095fc@samsung.com>
+Date: Tue, 27 Feb 2018 09:41:19 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: linux-fpga@vger.kernel.org
-Cc: atull@kernel.org, mdf@kernel.org, robh+dt@kernel.org, michal.simek@xilinx.com, devicetree@vger.kernel.org, shubhrajyoti.datta@gmail.com, nofooter@xilinx.com, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+In-Reply-To: <1519645759-12701-11-git-send-email-jun.li@nxp.com>
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+	<CGME20180226120532epcas5p3c4b0258ec0677939f4241b24da5f48bc@epcas5p3.samsung.com>
+	<1519645759-12701-11-git-send-email-jun.li@nxp.com>
+To: Li Jun <jun.li@nxp.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, heikki.krogerus@linux.intel.com, linux@roeck-us.net
+Cc: mark.rutland@arm.com, yueyao@google.com, peter.chen@nxp.com, garsilva@embeddedor.com, o_leveque@orange.fr, shufan_lee@richtek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-imx@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+On 26.02.2018 12:49, Li Jun wrote:
+> In case of usb-c-connector with power delivery support, add bingdings
+> supported by current typec driver, so user can pass all those properties
+> via dt.
+>
+> Signed-off-by: Li Jun <jun.li@nxp.com>
+> ---
+> Changes for v2:
+> - Added typec properties are based on general usb connector bindings[1]
+>   proposed by Andrzej Hajda.
+> - Use the standard unit suffixes as defined in property-units.txt.
+>
+> [1] https://patchwork.kernel.org/patch/10231447/
+>
+>  .../bindings/connector/usb-connector.txt           | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> index e1463f1..242f6df 100644
+> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> @@ -15,6 +15,30 @@ Optional properties:
+>  - type: size of the connector, should be specified in case of USB-A, USB-B
+>    non-fullsize connectors: "mini", "micro".
+>  
+> +Required properties for usb-c-connector with power delivery support:
+> +- port-type: should be one of "source", "sink" or "dual".
+> +- default-role: preferred power role if port-type is "dual"(drp), should be
+> +  "sink" or "source".
 
-Adds the reset bridge. After the bitstream load the reset
-bridge helps in reseting the programable logic. The 
-reset lines depends on the design. 
+Since port carries data and power, it would be better to explicitly
+mention it in names of properties which can be ambiguous.
+Maybe instead of 'port-type' you can use 'power-role', for example.
+Other thing is that default-role is required only in case of DRP, so
+maybe better would be to squash it in power-role, for example:
+    power-role: should be on of "source", "sink", "dual-source",
+"dual-sink", in case of dual roles suffix determines preferred role.
 
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
- drivers/fpga/Kconfig             |   8 ++++
- drivers/fpga/Makefile            |   1 +
- drivers/fpga/xilinx-rst-bridge.c | 100 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 109 insertions(+)
- create mode 100644 drivers/fpga/xilinx-rst-bridge.c
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index ad5448f..752a907 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -117,4 +117,12 @@ config XILINX_PR_DECOUPLER
- 	  region of the FPGA from the busses while that region is
- 	  being reprogrammed during partial reconfig.
- 
-+config XILINX_RST_BRIDGE
-+	tristate "Xilinx Reset bridge"
-+	depends on FPGA_BRIDGE
-+	help
-+	  Say Y to enable drivers for Xilinx Reset bridge.
-+	  After writing the bitstream there has to be a reset.
-+	  The reset lines are design specific.
-+
- endif # FPGA
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index f98dcf1..c1b0d13 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
- obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
- obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)	+= altera-freeze-bridge.o
- obj-$(CONFIG_XILINX_PR_DECOUPLER)	+= xilinx-pr-decoupler.o
-+obj-$(CONFIG_FPGA_MGR_ZYNQMP_FPGA)	+= xilinx-rst-bridge.o
- 
- # High Level Interfaces
- obj-$(CONFIG_FPGA_REGION)		+= fpga-region.o
-diff --git a/drivers/fpga/xilinx-rst-bridge.c b/drivers/fpga/xilinx-rst-bridge.c
-new file mode 100644
-index 0000000..8062283
---- /dev/null
-+++ b/drivers/fpga/xilinx-rst-bridge.c
-@@ -0,0 +1,100 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Xilinx FPGA reset bridge.
-+ * Copyright (c) 2018 Xilinx Inc.
-+ *
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/fpga/fpga-bridge.h>
-+#include <linux/reset.h>
-+
-+struct xlnx_rst_bridge_priv {
-+	struct device *dev;
-+	bool enable;
-+};
-+
-+static int xlnx_rst_bridge_enable_set(struct fpga_bridge *bridge, bool enable)
-+{
-+	struct xlnx_rst_bridge_priv *priv = bridge->priv;
-+	struct device *dev = priv->dev;
-+	struct reset_control *rstc;
-+	int ret = 0;
-+
-+	if (enable) {
-+		rstc = of_reset_control_array_get(dev->of_node, false, false);
-+		if (IS_ERR(rstc))
-+			return PTR_ERR(rstc);
-+
-+		ret = reset_control_reset(rstc);
-+
-+		reset_control_put(rstc);
-+
-+		if (ret)
-+			dev_err(dev, "Reset failed\n");
-+	} else {
-+		dev_dbg(dev, "Bridge disabled\n");
-+	}
-+
-+	if (!ret)
-+		priv->enable = enable;
-+
-+	return ret;
-+}
-+
-+static int xlnx_rst_bridge_enable_show(struct fpga_bridge *bridge)
-+{
-+	struct xlnx_rst_bridge_priv *priv = bridge->priv;
-+
-+	return priv->enable;
-+}
-+
-+static struct fpga_bridge_ops xlnx_rst_bridge_ops = {
-+	.enable_set = xlnx_rst_bridge_enable_set,
-+	.enable_show = xlnx_rst_bridge_enable_show,
-+};
-+
-+static int xlnx_rst_bridge_probe(struct platform_device *pdev)
-+{
-+	struct xlnx_rst_bridge_priv *priv;
-+	struct device *dev = &pdev->dev;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+
-+	return fpga_bridge_register(dev, "xlnx_rst_bridge",
-+				    &xlnx_rst_bridge_ops, priv);
-+}
-+
-+static int xlnx_rst_bridge_remove(struct platform_device *pdev)
-+{
-+	fpga_bridge_unregister(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id xlnx_rst_bridge_of_match[] = {
-+	{ .compatible = "xlnx,rst-bridge", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, xlnx_rst_bridge_of_match);
-+
-+static struct platform_driver xlnx_rst_bridge_driver = {
-+	.probe = xlnx_rst_bridge_probe,
-+	.remove = xlnx_rst_bridge_remove,
-+	.driver = {
-+		.name	= "xlnx_rst_bridge",
-+		.of_match_table = of_match_ptr(xlnx_rst_bridge_of_match),
-+	},
-+};
-+
-+module_platform_driver(xlnx_rst_bridge_driver);
-+
-+MODULE_DESCRIPTION("Xilinx reset Bridge");
-+MODULE_AUTHOR("Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.1
+> +- src-pdos: An array of u32 with each entry providing supported power
+> +  source data object(PDO), the detailed bit definitions of PDO can be found
+> +  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.2
+> +  Source_Capabilities Message, the order of each entry(PDO) should follow
+> +  the PD spec chapter 6.4.1. Required for power source and power dual role.
+> +- snk-pdos: An array of u32 with each entry providing supported power
+> +  sink data object(PDO), the detailed bit definitions of PDO can be found in
+> +  "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3 Sink
+> +  Capabilities Message, the order of each entry(PDO) should follow the PD
+> +  spec chapter 6.4.1. Required for power sink and power dual role.
 
+We should avoid magic numbers, magic numbers are bad :)
+If we really need to use PDOs here, I think we can re-use PDO_* macros
+[1] - DTC should be able to parse it, maybe some lifting will be necessary.
+
+[1]:
+https://elixir.bootlin.com/linux/v4.16-rc3/source/include/linux/usb/pd.h#L161
+> +- max-snk-microvolt: The max voltage the sink can support in micro volts,
+> +  required for power sink and power dual role.
+> +- max-snk-microamp: The max current the sink can support in micro amps,
+> +  required for power sink and power dual role.
+> +- max-snk-microwatt-hours: The max power the sink can support in micro
+> +  Watt-hours, required for power sink and power dual role.
+> +- op-snk-microwatt-hours: Sink required operating power in micro Watt-hours,
+> +  if source offered power is less then it, Capability Mismatch is set,
+> +  required for power sink and power dual role.
+
+What is the relation between above properties and PDOs specified earlier?
+Are you sure all these props are required?
+
+And general remark regarding all above properties. For me, most of them
+are specific not to the port but to devices responsible for power
+management: chargers, pmics,....
+In many cases these properties are redundant with devices capabilities.
+On the other side I guess in many cases it may be convenient to put them
+here, so I am not sure what is better :)
+
+Regards
+Andrzej
+
+> +
+>  Required nodes:
+>  - any data bus to the connector should be modeled using the OF graph bindings
+>    specified in bindings/graph.txt, unless the bus is between parent node and
+> @@ -73,3 +97,22 @@ ccic: s2mm005@33 {
+>  		};
+>  	};
+>  };
+> +
+> +3. USB-C connector attached to a typec port controller(ptn5110), which has
+> +power delivery support and enables drp.
+> +
+> +typec: ptn5110@50 {
+> +	...
+> +	usb_con: connector {
+> +		compatible = "usb-c-connector";
+> +		label = "USB-C";
+> +		port-type = "dual";
+> +		default-role = "sink";
+> +		src-pdos = <0x380190c8>;
+> +		snk-pdos = <0x380190c8 0x3802d0c8>;
+> +		max-snk-microvolt = <9000>;
+> +		max-snk-microamp = <2000>;
+> +		max-snk-microwatt-hours = <18000>;
+> +		op-snk-microwatt-hours = <9000>;
+> +	};
+> +};
