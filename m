@@ -1,36 +1,50 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH 0/2] arm: Support for Renesas RZ/N1D (R9A06G032)
-Date: Tue, 27 Feb 2018 13:10:36 +0000
-Message-ID: <HK2PR0601MB1393B2D7E0C96590482C3726F5C00@HK2PR0601MB1393.apcprd06.prod.outlook.com>
-References: <1519647518-15579-1-git-send-email-michel.pollet@bp.renesas.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v3 00/14] Add MMCI support for STM32F SoCs family
+Date: Tue, 27 Feb 2018 14:25:34 +0100
+Message-ID: <c4f78733-2544-6cef-97e5-fedcc23de404@st.com>
+References: <1516286070-24927-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519647518-15579-1-git-send-email-michel.pollet@bp.renesas.com>
+In-Reply-To: <1516286070-24927-1-git-send-email-patrice.chotard@st.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>
-Cc: Michel Pollet <michel.pollet@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>Michel Pollet <michel.pollet@bp.renesas.com>
+To: patrice.chotard@st.com, Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi Patrice,
 
-On 26 February 2018, Michel Pollet wrote:
->=20
-> This series adds the plain basic support for booting a bare
-> kernel on the RZ/N1D-DB Board. It's been trimmed to the strict
-> minimum as a 'base', further patches that will add the
-> rest of the support, pinctrl, clock architecture and quite
-> a few others.
-I spoke to Magnus about helping to get the RZ/N1 patches upstream.
-We're trying to sort out making the device manual and board schematics
-available, hopefully it won't take too long. We're also trying to sort out
-access to a board... that might take a bit longer.
+On 01/18/2018 03:34 PM, patrice.chotard@st.com wrote:
+> From: Patrice Chotard <patrice.chotard@st.com>
+> 
+> This series reworks patches submitted one year ago by Andrea Merello [1]
+> but without succeed to merged it.
+> 
+> STM32F4 and STM32F7 SoCs families embeds a variant of the ARM PrimeCell
+> PL18x SD host controller, for which the mmci driver exists.
+> This series adds support for these SoCs to the mmci driver.
+> 
+> As other variants, this one need some specific quirks, that this
+> series address.
+> 
+> This series has been tested on following boards :
+> 	_ stm32f429-eval
+> 	_ stm32f469-disco
+> 	_ stm32f746-eval
+> 	_ stm32f769-disco
+> 
+> DT update for stm32f7 pinctrl, stm32f746-eval and stm32f769-disco boards
+> will be sent later to avoid conflict with pending stm32f7 series [1] which
+> is not yet merged on kernel mainline.
+> 
+> [1] https://www.spinics.net/lists/linux-mmc/msg41616.html
+> [2] https://patchwork.kernel.org/patch/10104447/
+>
+...
 
-btw, what do you want to do about shmobile_defconfig? Should we add
-any changes needed for RZ/N1 to it? Note that only one IP block is the
-same as R-Car.
+Patches 6 to 13 (DT/SoC/configs) applied on stm32-next.
 
 Thanks
-Phil
+Alex
