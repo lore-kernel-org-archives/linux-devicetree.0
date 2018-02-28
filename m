@@ -1,49 +1,107 @@
-From: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 6/6] mfd: axp20x: add battery power supply
- cell for AXP813
-Date: Wed, 28 Feb 2018 11:36:01 +0100
-Message-ID: <dc220101006c4df198b2d410121334a2ae98ad22.1519813976.git-series.quentin.schulz@bootlin.com>
-References: <cover.07d02d245f44e63775b331815e9bf584598d2e9f.1519813976.git-series.quentin.schulz@bootlin.com>
-Reply-To: quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH] ARM: dts: stm32: add SPI support on STM32H743 SoC
+Date: Wed, 28 Feb 2018 11:36:30 +0100
+Message-ID: <1519814190-3208-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBSUM3LKAKGQEXA5E6UY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cover.07d02d245f44e63775b331815e9bf584598d2e9f.1519813976.git-series.quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-In-Reply-To: <cover.07d02d245f44e63775b331815e9bf584598d2e9f.1519813976.git-series.quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-References: <cover.07d02d245f44e63775b331815e9bf584598d2e9f.1519813976.git-series.quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-As axp20x-battery-power-supply now supports AXP813, add a cell for it.
+This patch adds all SPI instances of the STM32H743 SoC.
 
-Signed-off-by: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- drivers/mfd/axp20x.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/stm32h743.dtsi | 61 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index e5516aa..aaf2acb 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -888,6 +888,9 @@ static struct mfd_cell axp813_cells[] = {
- 	}, {
- 		.name			= "axp813-adc",
- 		.of_compatible		= "x-powers,axp813-adc",
-+	}, {
-+		.name		= "axp20x-battery-power-supply",
-+		.of_compatible	= "x-powers,axp813-battery-power-supply",
- 	},
- };
+diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+index 3a28cd2..2bb103e 100644
+--- a/arch/arm/boot/dts/stm32h743.dtsi
++++ b/arch/arm/boot/dts/stm32h743.dtsi
+@@ -101,6 +101,27 @@
+ 			};
+ 		};
  
++		spi2: spi@40003800 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32h7-spi";
++			reg = <0x40003800 0x400>;
++			interrupts = <36>;
++			clocks = <&rcc SPI2_CK>;
++			status = "disabled";
++
++		};
++
++		spi3: spi@40003c00 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32h7-spi";
++			reg = <0x40003c00 0x400>;
++			interrupts = <51>;
++			clocks = <&rcc SPI3_CK>;
++			status = "disabled";
++		};
++
+ 		usart2: serial@40004400 {
+ 			compatible = "st,stm32f7-uart";
+ 			reg = <0x40004400 0x400>;
+@@ -141,6 +162,36 @@
+ 			clocks = <&rcc USART1_CK>;
+ 		};
+ 
++		spi1: spi@40013000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32h7-spi";
++			reg = <0x40013000 0x400>;
++			interrupts = <35>;
++			clocks = <&rcc SPI1_CK>;
++			status = "disabled";
++		};
++
++		spi4: spi@40013400 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32h7-spi";
++			reg = <0x40013400 0x400>;
++			interrupts = <84>;
++			clocks = <&rcc SPI4_CK>;
++			status = "disabled";
++		};
++
++		spi5: spi@40015000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32h7-spi";
++			reg = <0x40015000 0x400>;
++			interrupts = <85>;
++			clocks = <&rcc SPI5_CK>;
++			status = "disabled";
++		};
++
+ 		dma1: dma@40020000 {
+ 			compatible = "st,stm32-dma";
+ 			reg = <0x40020000 0x400>;
+@@ -262,6 +313,16 @@
+ 			reg = <0x58000400 0x400>;
+ 		};
+ 
++		spi6: spi@58001400 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "st,stm32h7-spi";
++			reg = <0x58001400 0x400>;
++			interrupts = <86>;
++			clocks = <&rcc SPI6_CK>;
++			status = "disabled";
++		};
++
+ 		lptimer2: timer@58002400 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
-git-series 0.9.1
+2.7.4
