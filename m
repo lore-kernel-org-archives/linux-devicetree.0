@@ -1,86 +1,224 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH v8 14/15] cpufreq: Add module to register cpufreq on Krait
- CPUs
-Date: Wed, 28 Feb 2018 11:04:26 +0530
-Message-ID: <95e134a6-7992-e16f-dc55-df7af96b31b9@codeaurora.org>
-References: <1519740422-3835-1-git-send-email-sricharan@codeaurora.org>
- <1519740422-3835-15-git-send-email-sricharan@codeaurora.org>
- <87zi3ujx7c.fsf@bootlin.com>
+From: Rajkumar Rampelli <rrajk@nvidia.com>
+Subject: Re: [PATCH 05/10] hwmon: generic-pwm-tachometer: Add generic PWM
+ based tachometer
+Date: Wed, 28 Feb 2018 11:08:20 +0530
+Message-ID: <2510b525-ec36-b49d-5a62-81f335c0d10d@nvidia.com>
+References: <1519196339-9377-1-git-send-email-rrajk@nvidia.com>
+ <1519196339-9377-6-git-send-email-rrajk@nvidia.com>
+ <5172edff-fe29-7ed1-f0d2-b0359ea2c24d@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87zi3ujx7c.fsf@bootlin.com>
-Content-Language: en-US
+In-Reply-To: <5172edff-fe29-7ed1-f0d2-b0359ea2c24d@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: viresh.kumar@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, andy.gross@linaro.org, david.brown@linaro.org, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, robh@kernel.org, linux@arm.linux.org.uk
+To: Guenter Roeck <linux@roeck-us.net>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, mperttunen@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ldewangan@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
 
-On 2/27/2018 8:28 PM, Gregory CLEMENT wrote:
-> Hi Sricharan,
->  
->  On mar., févr. 27 2018, Sricharan R <sricharan@codeaurora.org> wrote:
-> 
->> From: Stephen Boyd <sboyd@codeaurora.org>
+On Wednesday 21 February 2018 08:20 PM, Guenter Roeck wrote:
+> On 02/20/2018 10:58 PM, Rajkumar Rampelli wrote:
+>> Add generic PWM based tachometer driver via HWMON interface
+>> to report the RPM of motor. This drivers get the period/duty
+>> cycle from PWM IP which captures the motor PWM output.
 >>
->> Register a cpufreq-generic device whenever we detect that a
->> "qcom,krait" compatible CPU is present in DT.
+>> This driver implements a simple interface for monitoring the speed of
+>> a fan and exposes it in roatations per minute (RPM) to the user space
+>> by using the hwmon's sysfs interface
 >>
->> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->> [Sricharan: updated to use dev_pm_opp_set_prop_name and
->> 	    nvmem apis]
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+>> Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
 >> ---
->>  drivers/cpufreq/Kconfig.arm          |  10 ++
->>  drivers/cpufreq/Makefile             |   3 +
->>  drivers/cpufreq/cpufreq-dt-platdev.c |   5 +
->>  drivers/cpufreq/qcom-cpufreq.c       | 183 +++++++++++++++++++++++++++++++++++
->>  4 files changed, 201 insertions(+)
->>  create mode 100644 drivers/cpufreq/qcom-cpufreq.c
+>>   Documentation/hwmon/generic-pwm-tachometer |  17 +++++
+>>   drivers/hwmon/Kconfig                      |  10 +++
+>>   drivers/hwmon/Makefile                     |   1 +
+>>   drivers/hwmon/generic-pwm-tachometer.c     | 112 
+>> +++++++++++++++++++++++++++++
+>>   4 files changed, 140 insertions(+)
+>>   create mode 100644 Documentation/hwmon/generic-pwm-tachometer
+>>   create mode 100644 drivers/hwmon/generic-pwm-tachometer.c
 >>
->> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
->> index 3a88e33..826f9e7 100644
->> --- a/drivers/cpufreq/Kconfig.arm
->> +++ b/drivers/cpufreq/Kconfig.arm
->> @@ -133,6 +133,16 @@ config ARM_OMAP2PLUS_CPUFREQ
->>  	depends on ARCH_OMAP2PLUS
->>  	default ARCH_OMAP2PLUS
->>  
->> +config ARM_QCOM_CPUFREQ
->> +	bool "CPUfreq driver for the QCOM SoCs with KRAIT processors"
->> +	depends on ARCH_QCOM
->> +	select PM_OPP
->> +	help
->> +	  This enables the CPUFreq driver for Qualcomm SoCs with
->> +	  KRAIT processors.
+>> diff --git a/Documentation/hwmon/generic-pwm-tachometer 
+>> b/Documentation/hwmon/generic-pwm-tachometer
+>> new file mode 100644
+>> index 0000000..e0713ee
+>> --- /dev/null
+>> +++ b/Documentation/hwmon/generic-pwm-tachometer
+>> @@ -0,0 +1,17 @@
+>> +Kernel driver generic-pwm-tachometer
+>> +====================================
 >> +
->> +	  If in doubt, say N.
+>> +This driver enables the use of a PWM module to monitor a fan. It 
+>> uses the
+>> +generic PWM interface and can be used on SoCs as along as the SoC 
+>> supports
+>> +Tachometer controller that moniors the Fan speed in periods.
 >> +
->>  config ARM_S3C_CPUFREQ
->>  	bool
->>  	help
->> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
->> index c60c1e1..21894f6 100644
->> --- a/drivers/cpufreq/Makefile
->> +++ b/drivers/cpufreq/Makefile
->> @@ -65,6 +65,9 @@ obj-$(CONFIG_MACH_MVEBU_V7)		+= mvebu-cpufreq.o
->>  obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
->>  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
->>  obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
->> +obj-$(CONFIG_ARM_QCOM_CPUFREQ)		+= qcom-cpufreq.o
-> 
-> These 2 following lines don't seem related to the commit log:
->> +obj-$(CONFIG_ARM_S3C24XX_CPUFREQ)	+= s3c24xx-cpufreq.o
->> +obj-$(CONFIG_ARM_S3C24XX_CPUFREQ_DEBUGFS) += s3c24xx-cpufreq-debugfs.o
-> 
-
- oops. Will remove. Rebase mistake. Thanks.
-
-Regards,
- Sricharan-- 
-
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+>> +Author: Rajkumar Rampelli <rrajk@nvidia.com>
+>> +
+>> +Description
+>> +-----------
+>> +
+>> +The driver implements a simple interface for monitoring the Fan 
+>> speed using
+>> +PWM module and Tachometer controller. It requests period value 
+>> through PWM
+>> +capture interface to Tachometer and measures the Rotations per 
+>> minute using
+>> +received period value. It exposes the Fan speed in RPM to the user 
+>> space by
+>> +using the hwmon's sysfs interface.
+>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+>> index ef23553..8912dcb 100644
+>> --- a/drivers/hwmon/Kconfig
+>> +++ b/drivers/hwmon/Kconfig
+>> @@ -1878,6 +1878,16 @@ config SENSORS_XGENE
+>>         If you say yes here you get support for the temperature
+>>         and power sensors for APM X-Gene SoC.
+>>   +config GENERIC_PWM_TACHOMETER
+>> +    tristate "Generic PWM based tachometer driver"
+>> +    depends on PWM
+>> +    help
+>> +      Enables a driver to use PWM signal from motor to use
+>> +      for measuring the motor speed. The RPM is captured by
+>> +      PWM modules which has PWM capture capability and this
+>> +      drivers reads the captured data from PWM IP to convert
+>> +      it to speed in RPM.
+>> +
+>>   if ACPI
+>>     comment "ACPI drivers"
+>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+>> index f814b4a..9dcc374 100644
+>> --- a/drivers/hwmon/Makefile
+>> +++ b/drivers/hwmon/Makefile
+>> @@ -175,6 +175,7 @@ obj-$(CONFIG_SENSORS_WM8350)    += wm8350-hwmon.o
+>>   obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
+>>     obj-$(CONFIG_PMBUS)        += pmbus/
+>> +obj-$(CONFIG_GENERIC_PWM_TACHOMETER) += generic-pwm-tachometer.o
+>>     ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
+>>   diff --git a/drivers/hwmon/generic-pwm-tachometer.c 
+>> b/drivers/hwmon/generic-pwm-tachometer.c
+>> new file mode 100644
+>> index 0000000..9354d43
+>> --- /dev/null
+>> +++ b/drivers/hwmon/generic-pwm-tachometer.c
+>> @@ -0,0 +1,112 @@
+>> +/*
+>> + * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or 
+>> modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but 
+>> WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of 
+>> MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public 
+>> License for
+>> + * more details.
+>> + *
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/err.h>
+>> +#include <linux/pwm.h>
+>> +#include <linux/hwmon.h>
+>> +#include <linux/hwmon-sysfs.h>
+>> +
+>> +struct pwm_hwmon_tach {
+>> +    struct device        *dev;
+>> +    struct pwm_device    *pwm;
+>> +    struct device        *hwmon;
+>> +};
+>> +
+>> +static ssize_t show_rpm(struct device *dev, struct device_attribute 
+>> *attr,
+>> +            char *buf)
+>> +{
+>> +    struct pwm_hwmon_tach *ptt = dev_get_drvdata(dev);
+>> +    struct pwm_device *pwm = ptt->pwm;
+>> +    struct pwm_capture result;
+>> +    int err;
+>> +    unsigned int rpm = 0;
+>> +
+>> +    err = pwm_capture(pwm, &result, 0);
+>> +    if (err < 0) {
+>> +        dev_err(ptt->dev, "Failed to capture PWM: %d\n", err);
+>> +        return err;
+>> +    }
+>> +
+>> +    if (result.period)
+>> +        rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
+>> +                        result.period);
+>> +
+>> +    return sprintf(buf, "%u\n", rpm);
+>> +}
+>> +
+>> +static SENSOR_DEVICE_ATTR(rpm, 0444, show_rpm, NULL, 0);
+>> +
+>> +static struct attribute *pwm_tach_attrs[] = {
+>> +    &sensor_dev_attr_rpm.dev_attr.attr,
+>> +    NULL,
+>> +};
+>
+> "rpm" is not a standard hwmon sysfs attribute. If you don't provide
+> a single standard hwmon sysfs attribute, having a hwmon driver is 
+> pointless.
+Guenter Roeck,
+I will define a new hwmon sysfs attribute node called 
+"hwmon_tachometer_attributes" in hwmon.h like below and update the same 
+in tachometer hwmon driver. Is it fine ?
+enum hwmon_tachometer_attributes {
+         hwmon_tachometer_rpm,
+};
+>> +
+>> +ATTRIBUTE_GROUPS(pwm_tach);
+>> +
+>> +static int pwm_tach_probe(struct platform_device *pdev)
+>> +{
+>> +    struct pwm_hwmon_tach *ptt;
+>> +    int err;
+>> +
+>> +    ptt = devm_kzalloc(&pdev->dev, sizeof(*ptt), GFP_KERNEL);
+>> +    if (!ptt)
+>> +        return -ENOMEM;
+>> +
+>> +    ptt->dev = &pdev->dev;
+>> +
+>> +    platform_set_drvdata(pdev, ptt);
+>> +    dev_set_drvdata(&pdev->dev, ptt);
+>> +
+>
+> None of those is used.
+I will take care in next version of patches.
+>
+>> +    ptt->pwm = devm_of_pwm_get(&pdev->dev, pdev->dev.of_node, NULL);
+>> +    if (IS_ERR(ptt->pwm)) {
+>> +        err = PTR_ERR(ptt->pwm);
+>> +        dev_err(&pdev->dev, "Failed to get pwm handle, err: %d\n",
+>> +            err);
+>> +        return err;
+>> +    }
+>> +
+>> +    ptt->hwmon = devm_hwmon_device_register_with_groups(&pdev->dev,
+>> +                     "pwm_tach", ptt, pwm_tach_groups);
+>
+> Please use the new API - devm_hwmon_device_register_with_info -
+> for new drivers.
+Sure, will take care.
+>
+>> +    if (IS_ERR(ptt->hwmon)) {
+>> +        err = PTR_ERR_OR_ZERO(ptt->hwmon);
+>> +        dev_err(&pdev->dev, "Failed to register hwmon device: %d\n",
+>> +            err);
+>> +        return err;
+>> +    }
+>
+> Please no noise on failure. The failure is going to be a memory 
+> allocation failure,
+> which is reported already, and user space will be informed with the 
+> error code.
+I will take care.
