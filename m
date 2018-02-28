@@ -1,76 +1,77 @@
-Return-Path: <SRS0=lHfj=FW=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-bl2nam02on0112.outbound.protection.outlook.com ([104.47.38.112]:39712
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S932176AbeB1S5q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 28 Feb 2018 13:57:46 -0500
-From: Trent Piepho <tpiepho@impinj.com>
-Subject: Re: [PATCHv4 2/3] spi: Add spi driver for Socionext Synquacer
- platform
-Date: Wed, 28 Feb 2018 18:57:44 +0000
-Message-ID: <1519844264.25567.237.camel@impinj.com>
-References: <1519736182-3650-1-git-send-email-jassisinghbrar@gmail.com>
-         <1519736330-3985-1-git-send-email-jassisinghbrar@gmail.com>
-         <1519840555.25567.218.camel@impinj.com>
-         <CABb+yY3PNoGAazn2JNWZScb_a8iNRmv94B0D=4xFRi3_mb2CXA@mail.gmail.com>
-In-Reply-To: <CABb+yY3PNoGAazn2JNWZScb_a8iNRmv94B0D=4xFRi3_mb2CXA@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E421905ED13C6643AA3927524827F660@namprd06.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=gqjC=FW=linaro.org=ard.biesheuvel@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "masami.hiramatsu@linaro.org" <masami.hiramatsu@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>
+In-Reply-To: <CABb+yY3PNoGAazn2JNWZScb_a8iNRmv94B0D=4xFRi3_mb2CXA@mail.gmail.com>
+References: <1519736182-3650-1-git-send-email-jassisinghbrar@gmail.com>
+ <1519736330-3985-1-git-send-email-jassisinghbrar@gmail.com>
+ <1519840555.25567.218.camel@impinj.com> <CABb+yY3PNoGAazn2JNWZScb_a8iNRmv94B0D=4xFRi3_mb2CXA@mail.gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Wed, 28 Feb 2018 18:36:55 +0000
+Message-ID: <CAKv+Gu-E82Fuj9hUjYLNvuDFQL0-MOSezVN-b8Ti7sU37Nooxw@mail.gmail.com>
+Subject: Re: [PATCHv4 2/3] spi: Add spi driver for Socionext Synquacer platform
+Content-Type: text/plain; charset="UTF-8"
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Trent Piepho <tpiepho@impinj.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "masami.hiramatsu@linaro.org" <masami.hiramatsu@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gV2VkLCAyMDE4LTAyLTI4IGF0IDIzOjU5ICswNTMwLCBKYXNzaSBCcmFyIHdyb3RlOg0KPiBP
-biBXZWQsIEZlYiAyOCwgMjAxOCBhdCAxMToyNSBQTSwgVHJlbnQgUGllcGhvIDx0cGllcGhvQGlt
-cGluai5jb20+IHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAxOC0wMi0yNyBhdCAxODoyOCArMDUzMCwg
-amFzc2lzaW5naGJyYXJAZ21haWwuY29tIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiArY29uZmlnIFNQ
-SV9TWU5RVUFDRVINCj4gPiA+ICsgICAgIHRyaXN0YXRlICJTb2Npb25leHQncyBTeW5xdWFjZXIg
-SGlnaFNwZWVkIFNQSSBjb250cm9sbGVyIg0KPiA+ID4gKyAgICAgZGVwZW5kcyBvbiBBUkNIX1NZ
-TlFVQUNFUiB8fCBDT01QSUxFX1RFU1QNCj4gPiA+ICsgICAgIHNlbGVjdCBTUElfQklUQkFORw0K
-PiA+ID4gKyAgICAgaGVscA0KPiA+ID4gKyAgICAgICBTUEkgZHJpdmVyIGZvciBTb2Npb25leHQn
-cyBIaWdoIHNwZWVkIFNQSSBjb250cm9sbGVyIHdoaWNoIHByb3ZpZGVzDQo+ID4gPiArICAgICAg
-IHZhcmlvdXMgb3BlcmF0aW5nIG1vZGVzIGZvciBpbnRlcmZhY2luZyB0byBzZXJpYWwgcGVyaXBo
-ZXJhbCBkZXZpY2VzDQo+ID4gPiArICAgICAgIHRoYXQgdXNlIHRoZSBkZS1mYWN0byBzdGFuZGFy
-ZCBTUEkgcHJvdG9jb2wuDQo+ID4gPiArDQo+ID4gPiArICAgICAgIEl0IGFsc28gc3VwcG9ydHMg
-dGhlIG5ldyBkdWFsLWJpdCBhbmQgcXVhZC1iaXQgU1BJIHByb3RvY29sLg0KPiA+ID4gKw0KPiA+
-IA0KPiA+IEFzIHNvbWVvbmUgd2hvIGRlc2lnbnMgYW5kIGRldmVsb3BzIGVtYmVkZGVkIExpbnV4
-IGRldmljZXMsIGl0IHdvdWxkIGJlDQo+ID4gcmVhbGx5IHVzZWZ1bCBpZiB0aGVyZSB3YXMgYSBi
-aXQgbW9yZSBkb2N1bWVudGF0aW9uIGFib3V0IHRoZSBkcml2ZXIuDQo+ID4gDQo+ID4gVGhlIGhh
-cmR3YXJlIGRvZXNuJ3Qgc3VwcG9ydCBETUEgb3IgZXZlbiBpbnRlcnJ1cHRzLCBhbmQgbXVzdCBi
-dXN5IHdhaXQNCj4gPiBmb3IgdGhlIGR1cmF0aW9uIG9mIHRoZSBlbnRpcmUgU1BJIHRyYW5zZmVy
-cy4gIFRoYXQncyBraW5kIG9mIGEgQmlnDQo+ID4gRGVhbC4gIEEgZGVzaWduIHRoYXQgaW52b2x2
-ZXMgbG90cyBvZiBTUEkgdHJhbnNmZXJzIG9uIGEgc2xvdyBjbG9jaw0KPiA+IHdpbGwgd29yayBm
-aW5lIG9uIG1vc3QgU1BJIGhhcmR3YXJlLCBidXQgd2lsbCBiZSB1dHRlcmx5IHVuZmVhc2libGUN
-Cj4gPiBoZXJlLiAgSXQgd291bGQgYmUgbmljZSB0byBzYXkgc29tZXRoaW5nIGFib3V0IHRoYXQu
-ICBJJ2QgcHJvYmFibHkgcHV0DQo+ID4gaXQgaW4gZHJpdmVyIGNvZGUuDQo+ID4gDQo+IA0KPiBG
-cm9tIG1hcmtldGluZyBwb2ludCBvZiB2aWV3LCB3aHkgd291bGQgSSB3YW50IHRvIGFkdmVydGlz
-ZSBteSBsaW1pdGF0aW9ucz8gOikNCj4gDQo+IEl0cyBub3QgbGlrZSBhbnkgcmFuZG9tIHBsYXRm
-b3JtIG1pZ2h0IHdhbnQgdG8gdXNlIHRoaXMgZHJpdmVyLCBub3INCj4gdGhlIGVuZHVzZXIgY291
-bGQgZG8gYW55dGhpbmcgYWJvdXQgaXQgKGl0cyBub3QgYSBzL3cgaXNzdWUpLiBUaGUNCj4gZGVj
-aXNpb24gdG8gaW50ZWdyYXRlIHRoZSBpcCBpbiBhIFNvQyBpcyBhbHJlYWR5IHRha2VuIGJlZm9y
-ZSB0aGUNCj4gZHJpdmVyIGlzIHdyaXR0ZW4uIE9idmlvdXNseSB0aGUgdXNlcnMgdGhhdCBuZWVk
-IGhpZ2ggc3BpIHBlcmZvcm1hbmNlDQo+IGFyZSBub3QgaXRzIGludGVuZGVkIHRhcmdldC4NCg0K
-SXQgaGVscHMgd2hlbiBjaG9vc2luZyBoYXJkd2FyZSwgZGVzaWduaW5nIHByb2R1Y3RzLCBhbmQg
-YWxzbyB3aXRoDQpzb2Z0d2FyZSBkZXNpZ24uICBFeGFtcGxlOg0KDQpJIHJlYWxseSBuZWVkIGFu
-b3RoZXIgR1BJTyBwaW4gb24gdGhpcyBTb0MuICBIZXJlJ3MgdGhpcyBpbnRlcnJ1cHQgbGluZQ0K
-ZnJvbSBhIHNwaSBzbGF2ZS4gIEkgZG9uJ3QgbmVlZCB0aGF0IGFuZCBjYW4gdGFrZSB0aGUgcGlu
-LiAgSSBjYW4gcG9sbA0KdGhlIHNsYXZlIGF0IGEgbG93IHJhdGUgYW5kIGl0J2xsIGJlIG9rIGFz
-IHRoZXJlIGlzIG5vIHRpZ2h0IGxhdGVuY3kNCnJlcXVpcmVtZW50Lg0KDQpUaGF0IG1pZ2h0IHVz
-ZSBhIGxvdCBtb3JlIENQVSB0aGF0IG9uZSB3b3VsZCB0aGluay4NCg0KPiBCVFcsIHRoZSBJUCBp
-cyBhY3R1YWxseSBub3QgdGhhdCBiYWQuIEl0IGlzIG1lYW50IGZvciBpbnRlcmZhY2luZw0KPiBm
-bGFzaCBkZXZpY2VzIGFuZCBjYW4gb3BlcmF0ZSBpbiB0d28gbW9kZXMgLSAiZGlyZWN0IiBtb2Rl
-IHdoZXJlIGl0DQo+IG1hcHMgZmxhc2ggbWVtb3J5IGFzIGkvbyByZWdpb24gYW5kIHRoZSBvdGhl
-ciBsYXN0IHJlc29ydCAic3BpIiBtb2RlDQo+IHdoZXJlIHdlIGNvdWxkIG1hbnVhbGx5IGRyaXZl
-IHRoZSBmbGFzaC4gVGhpcyBkcml2ZXIgaW1wbGVtZW50cyB0aGF0DQo+IGxpbWl0ZWQgInNwaSIg
-bW9kZS4NCg0KSGVyZSdzIGFub3RoZXIgZXhhbXBsZSwgc29tZW9uZSBoYXMgYSAiZGlyZWN0IiBm
-bGFzaCBvbiB0aGVpciBoYXJkd2FyZSwNCnByb2JhYmx5IGp1c3QgY29waWVkIGZyb20gdGhlIHJl
-ZmVyZW5jZSBkZXNpZ24uICBJbiBkb2luZyBjb3N0DQplbmdpbmVlcmluZyBmb3IgdGhlIG5leHQg
-cmV2LCB0aGV5IGRldGVybWluZSB0aGF0IHRoZXkgZG9uJ3QgbmVlZCBtdWNoDQpwZXJmb3JtYW5j
-ZSBmcm9tIHRoaXMgZmxhc2ggYW5kIHNob3VsZCBiZSBhYmxlIHRvIHVzZSBhIGNoZWFwZXIgbm9u
-LXZvbCANCnN0b3JhZ2UgcGFydCAoZWVwcm9tLi4pLiAgVGhlIG5ldyBwYXJ0IGhhcyBhIExpbnV4
-IGRyaXZlci4gIE5vIG9uZQ0KcmVhbGl6ZXMgdGhlIHNpZ25pZmljYW5jZSBvZiBzd2l0Y2hpbmcg
-ZnJvbSAiZGlyZWN0IiB0byAic3BpIiBtb2RlLg0KDQoNCg==
+On 28 February 2018 at 18:29, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> On Wed, Feb 28, 2018 at 11:25 PM, Trent Piepho <tpiepho@impinj.com> wrote:
+>> On Tue, 2018-02-27 at 18:28 +0530, jassisinghbrar@gmail.com wrote:
+>>> From: Jassi Brar <jaswinder.singh@linaro.org>
+>>>
+>>> This patch adds support for controller found on synquacer platforms.
+>>>
+>>> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+>>> ---
+>>>  drivers/spi/Kconfig         |  11 +
+>>>  drivers/spi/Makefile        |   1 +
+>>>  drivers/spi/spi-synquacer.c | 663 ++++++++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 675 insertions(+)
+>>>  create mode 100644 drivers/spi/spi-synquacer.c
+>>>
+>>> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+>>> index 6037839..9e04bbe 100644
+>>> --- a/drivers/spi/Kconfig
+>>> +++ b/drivers/spi/Kconfig
+>>> @@ -659,6 +659,17 @@ config SPI_SUN6I
+>>>       help
+>>>         This enables using the SPI controller on the Allwinner A31 SoCs.
+>>>
+>>> +config SPI_SYNQUACER
+>>> +     tristate "Socionext's Synquacer HighSpeed SPI controller"
+>>> +     depends on ARCH_SYNQUACER || COMPILE_TEST
+>>> +     select SPI_BITBANG
+>>> +     help
+>>> +       SPI driver for Socionext's High speed SPI controller which provides
+>>> +       various operating modes for interfacing to serial peripheral devices
+>>> +       that use the de-facto standard SPI protocol.
+>>> +
+>>> +       It also supports the new dual-bit and quad-bit SPI protocol.
+>>> +
+>>
+>> As someone who designs and develops embedded Linux devices, it would be
+>> really useful if there was a bit more documentation about the driver.
+>>
+>> The hardware doesn't support DMA or even interrupts, and must busy wait
+>> for the duration of the entire SPI transfers.  That's kind of a Big
+>> Deal.  A design that involves lots of SPI transfers on a slow clock
+>> will work fine on most SPI hardware, but will be utterly unfeasible
+>> here.  It would be nice to say something about that.  I'd probably put
+>> it in driver code.
+>>
+> From marketing point of view, why would I want to advertise my limitations? :)
+>
+> Its not like any random platform might want to use this driver, nor
+> the enduser could do anything about it (its not a s/w issue). The
+> decision to integrate the ip in a SoC is already taken before the
+> driver is written. Obviously the users that need high spi performance
+> are not its intended target.
+>
+> BTW, the IP is actually not that bad. It is meant for interfacing
+> flash devices and can operate in two modes - "direct" mode where it
+> maps flash memory as i/o region and the other last resort "spi" mode
+> where we could manually drive the flash. This driver implements that
+> limited "spi" mode.
+>
+
+My SoC manual does list interrupts for this IP block. Are you sure
+SynQuacer uses the same version of the IP as before?
