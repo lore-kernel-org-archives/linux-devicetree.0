@@ -1,41 +1,119 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC 0/4] Add support for the Gateworks System Controller
-Date: Wed, 28 Feb 2018 17:56:18 +0100
-Message-ID: <20180228165618.GC29484@lunn.ch>
-References: <1519780874-8558-1-git-send-email-tharvey@gateworks.com>
- <20180228144424.GC12303@lunn.ch>
- <CAJ+vNU3hG7z1mB0xKFZu-8o1r3hj-pOqkfVnWHvxxaxzrpGuzw@mail.gmail.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Add a binding for the sunxi message box
+Date: Wed, 28 Feb 2018 17:17:03 +0000
+Message-ID: <d124c54f-7ac1-2305-0e69-94bc33c6eafe@arm.com>
+References: <20180228022714.30068-1-samuel@sholland.org>
+ <20180228022714.30068-2-samuel@sholland.org>
+ <20180228082843.fga47gfrv2g5kmiz@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU3hG7z1mB0xKFZu-8o1r3hj-pOqkfVnWHvxxaxzrpGuzw@mail.gmail.com>
+In-Reply-To: <20180228082843.fga47gfrv2g5kmiz@flea>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Samuel Holland <samuel@sholland.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tim
+Hi Samuel,
 
-Cool. I would say this is done right.
+thank you very much for writing and posting this!
 
-> One issue I'm trying to figure out the best way to deal with is the
-> fact that the GSC can 'NAK' transactions occasionally which is why I
-> override the regmap read/write functions and provide retries. This
-> resolves the issue for the mfd core driver and sub-module drivers but
-> doesn't resolve the issue with these 'emulated devices' which have
-> their own stand-alone drivers. I'm not sure how to best deal with that
-> yet. I tried to add retires to the i2c adapter but that wasn't
-> accepted upstream because it was too generic and I was told I need to
-> work around it in device-drivers.
+On 28/02/18 08:28, Maxime Ripard wrote:
+> Hi,
+> 
+> On Tue, Feb 27, 2018 at 08:27:12PM -0600, Samuel Holland wrote:
+>> This mailbox hardware is present in several Allwinner sun8i and sun50i
+>> SoCs. Add a device tree binding for it.
+>>
+>> Signed-off-by: Samuel Holland <samuel@sholland.org>
+>> ---
+>>  .../devicetree/bindings/mailbox/sunxi-msgbox.txt   | 40 ++++++++++++++++++++++
+>>  1 file changed, 40 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt b/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
+>> new file mode 100644
+>> index 000000000000..3b3ed7f870a0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
+>> @@ -0,0 +1,40 @@
+>> +Allwinner sunxi Message Box
+>> +===========================
+>> +
+>> +The hardware message box on sunxi SoCs is a two-user mailbox controller
+>> +containing 8 unidirectional FIFOs bonded into 4 bidirectional mailbox channels.
+>> +An interrupt is raised for received messages, but software must poll to know
+>> +when a transmitted message has been acknowledged by the remote user.
+>> +
+>> +Refer to ./mailbox.txt for generic information about mailbox device-tree
+>> +bindings.
+>> +
+>> +Mailbox Device Node:
+>> +====================
+>> +
+>> +Required properties:
+>> +--------------------
+>> +- compatible:		Must be "allwinner,sunxi-msgbox".
+> 
+> The IP change quite often in the Allwinner SoCs, so it would be better
+> to use a more specific compatible there. IIRC that IP was introduced
+> with the A31, so what about sun6i-a31-msgbox?
 
-How about writing an i2c bus driver which sits directly on top of
-another i2c bus? Basically a one port i2c mux.
+As much as I like generic compatible strings ;-) I agree with Maxime
+here. Can you change this to something like:
 
-The current mux code does not seem to directly allow it, since it
-calls i2c_transfer() directly on the parent, where as you want it to
-call your own i2c_transfer function. But maybe you could expended the
-core mux code to allow the i2c_mux_core structure to contain a transfer
-function?
+- compatible: Must contain at least "allwinner,sun6i-a31-msgbox".
+              Should also contain one of the more specific strings, when
+	      used on other SoCs which are compatible:
 
-      Andrew
+And then list the strings for the SoCs which we know of, ideally have
+been tested also?
+
+The rationale behind this is that by listing those strings here we
+reserve them, to cover for future extensions or bugs found in those
+SoCs. So even though the driver would only match on
+"allwinner,sun6i-a31-msgbox" right now, we can extend it in the future.
+The actual DTs would always use:
+	compatible = "allwinner,sun50i-a64-msgbox",
+		     "allwinner,sun6i-a31-msgbox";
+Right now the first string would not match anything, but the second
+would. The driver would use the generic driver functionality.
+Should we find a bug or speciality in the A64, we can add the a64 string
+to the driver and connect it to the workaround, and the actual DTs would
+not need to be touched.
+Does this make sense?
+
+>> +- reg:			Contains the mailbox register address range (base
+>> +			address and length).
+>> +- clocks:		phandle for the clock controller and specifier.
+>> +- clock-names:		Must be "bus".
+
+Maxime:
+Out of curiosity: There is only one clock, and just to gate the APB
+clock to the MMIO registers. So do we need clock-names? Or is this good
+practise these days to allow extending the clocks later in a compatible
+manner? (Thinking of the sunxi pinctrl here.)
+And is "bus" the correct naming? I see "apb" being used as well, is this
+legacy?
+
+Samuel: can you briefly add the purpose of the clock?
+
+>> +- resets:		phandle for the reset controller and specifier.
+>> +- reset-names:		Must be "bus".
+>> +- interrupts:		Contains interrupt information for the mailbox.
+>> +- #mbox-cells		Must be 2 - the indexes of the transmit and receive
+>> +			channels, respectively.
+> 
+> That would prevent any unidirectional communication, wouldn't it?
+> Other mailboxes driver seem to have two mbox channels, one for each
+> direction, which also seem to mimic our DMA bindings (where we are in
+> pretty much the same situation).
+
+I also believe that this should be "1" here, just listing the channel
+ID. It would be up to the DT/firmware author to put the right channel
+(RX or TX) in the consumer node.
+
+Cheers,
+Andre.
