@@ -1,109 +1,180 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] ASoC: add tda7419 audio processor driver
-Date: Wed, 28 Feb 2018 11:00:38 +0000
-Message-ID: <20180228110038.GA6722@sirena.org.uk>
-References: <20180227225128.17815-1-mporter@konsulko.com>
- <20180227225128.17815-3-mporter@konsulko.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3] usb: host: ehci-platform: add support for optional
+ external vbus supply
+Date: Wed, 28 Feb 2018 13:01:40 +0200
+Message-ID: <0d16deee-1fa9-322e-4d6d-b1b023f5b2b9@ti.com>
+References: <1519393611-31367-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180227225128.17815-3-mporter@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519393611-31367-1-git-send-email-amelie.delaunay@st.com>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Amelie Delaunay <amelie.delaunay@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Amelie,
 
---x+6KMIRAuhnl3hBn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 23/02/18 15:46, Amelie Delaunay wrote:
+> On some boards, especially when vbus supply requires large current,
+> and the charge pump on the PHY isn't enough, an external vbus power switch
+> may be used.
+> Add support for optional external vbus supply per port in ehci-platform.
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> 
+> ---
+> Changes in v3:
+>  * Address Felipe Balbi comments: reduce indentation in
+>    ehci_platform_port_power.
+>  * Address Roger Quadros and Alan Stern comments: platforms can have one
+>    external vbus supply per port, so add support to get as many optional
+>    regulator as implemented ports on the host controller.
+> 
+> Changes in v2:
+>  * Address Roger Quadros comments: move regulator_enable/disable from
+>    ehci_platform_power_on/off to ehci_platform_port_power.
+> ---
+>  Documentation/devicetree/bindings/usb/usb-ehci.txt |  1 +
+>  drivers/usb/host/ehci-platform.c                   | 52 +++++++++++++++++++++-
+>  2 files changed, 52 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> index 3efde12..cd576db 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+> @@ -19,6 +19,7 @@ Optional properties:
+>   - phys : phandle + phy specifier pair
+>   - phy-names : "usb"
+>   - resets : phandle + reset specifier pair
+> + - portN_vbus-supply : phandle of regulator supplying vbus for port N
+>  
+>  Example (Sequoia 440EPx):
+>      ehci@e0000300 {
 
-On Tue, Feb 27, 2018 at 05:51:28PM -0500, Matt Porter wrote:
+Sorry for not pointing this out earlier but I think patch to DT bindings
+should come separately (before the driver changes) with the following subject.
 
-> +static bool tda7419_writeable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	return true;
-> +}
+"dt-bindings: usb: ehci: <subject>"
 
-This is the default behaviour, may as well omit it (but equally it does
-no harm).
 
-> +static inline int tda7419_vol_get_value(int val, unsigned int mask,
-> +					int thresh, unsigned int invert)
-> +{
-> +	val &= mask;
-> +	if (val < thresh) {
-> +		if (invert)
-> +			val = 0 - val;
-> +	} else if (val > thresh) {
-
-This feels like something some other device might want to use so might
-warrant pulling out into a general control at some point but I'd not
-insist on doing it now.
-
-> +static struct snd_kcontrol_new tda7419_controls[] = {
-> +SOC_ENUM("Main Source Select", soc_enum_main_src_sel),
-
-Should this be a DAPM route?
-
-> +SOC_SINGLE("Main Source AutoZero", TDA7419_MAIN_SRC_REG,
-> +	   TDA7419_MAIN_SRC_AUTOZERO, 1, 1),
-
-There's a lot of on/off switches for various things in here - these
-should all have Switch at the end of their names so that userspace can
-see how it's expected to display them.  Most of the controls with a max
-value of 1 probably fall into this category.
-
-> +SOC_SINGLE("Clock Fast Mode", TDA7419_MUTE_CLK_REG,
-> +	   TDA7419_CLK_FAST_MODE, 1, 1),
-
-What does this do - should it be in set_sysclk() or something?
-
-> +	/* Configure registers */
-> +	regmap_write(tda7419->regmap, TDA7419_VOLUME_REG, 0xe0);
-> +	regmap_write(tda7419->regmap, TDA7419_MIXING_GAIN_REG, 0x0f);
-> +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_LF_REG, 0xe0);
-> +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_RF_REG, 0xe0);
-> +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_LR_REG, 0xe0);
-> +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_RR_REG, 0xe0);
-> +	regmap_write(tda7419->regmap, TDA7419_MIXING_LEVEL_REG, 0xe0);
-> +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_SUB_REG, 0xe0);
-
-This looks like it's setting default volumes - just leave those at the
-chip defaults and let userspace handle setting them, what works for one
-board may be totally inappropriate on another board and using the chip
-default means we've got some fixed thing we don't need to discuss.
-
-> +static int tda7419_remove(struct i2c_client *i2c)
-> +{
-> +	int i;
-> +	struct tda7419_data *tda7419 = i2c_get_clientdata(i2c);
+> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+> index b065a96..8e9f201 100644
+> --- a/drivers/usb/host/ehci-platform.c
+> +++ b/drivers/usb/host/ehci-platform.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/of.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/reset.h>
+>  #include <linux/usb.h>
+>  #include <linux/usb/hcd.h>
+> @@ -46,6 +47,7 @@ struct ehci_platform_priv {
+>  	struct reset_control *rsts;
+>  	struct phy **phys;
+>  	int num_phys;
+> +	struct regulator **vbus_supplies;
+>  	bool reset_on_resume;
+>  };
+>  
+> @@ -56,7 +58,8 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
+>  	struct platform_device *pdev = to_platform_device(hcd->self.controller);
+>  	struct usb_ehci_pdata *pdata = dev_get_platdata(&pdev->dev);
+>  	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
+> -	int retval;
+> +	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+> +	int portnum, n_ports, retval;
+>  
+>  	ehci->has_synopsys_hc_bug = pdata->has_synopsys_hc_bug;
+>  
+> @@ -71,11 +74,57 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
+>  	if (retval)
+>  		return retval;
+>  
+> +	n_ports = HCS_N_PORTS(ehci->hcs_params);
+> +	priv->vbus_supplies = devm_kcalloc(&pdev->dev, n_ports,
+> +					   sizeof(struct regulator *),
+> +					   GFP_KERNEL);
+> +	if (!priv->vbus_supplies)
+> +		return -ENOMEM;
 > +
-> +	/* Reset registers to defaults */
-> +	for (i = 0; i < ARRAY_SIZE(tda7419_regmap_defaults); i++)
-> +		regmap_write(tda7419->regmap,
-> +			     tda7419_regmap_defaults[i].reg,
-> +			     tda7419_regmap_defaults[i].def);
+> +	for (portnum = 0; portnum < n_ports; portnum++) {
+> +		struct regulator *vbus_supply;
+> +		char id[20];
+> +
+> +		sprintf(id, "port%d_vbus", portnum);
+> +
+> +		vbus_supply = devm_regulator_get_optional(&pdev->dev, id);
+> +		if (IS_ERR(vbus_supply)) {
+> +			retval = PTR_ERR(vbus_supply);
+> +			if (retval == -ENODEV)
+> +				priv->vbus_supplies[portnum] = NULL;
+> +			else
+> +				return retval;
+> +		} else {
+> +			priv->vbus_supplies[portnum] = vbus_supply;
+> +		}
+> +	}
+> +
+>  	if (pdata->no_io_watchdog)
+>  		ehci->need_io_watchdog = 0;
+>  	return 0;
+>  }
+>  
+> +static int ehci_platform_port_power(struct usb_hcd *hcd, int portnum,
+> +				    bool enable)
+> +{
+> +	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+> +	int ret;
+> +
+> +	if (!priv->vbus_supplies[portnum])
+> +		return 0;
+> +
+> +	if (enable)
+> +		ret = regulator_enable(priv->vbus_supplies[portnum]);
+> +	else
+> +		ret = regulator_disable(priv->vbus_supplies[portnum]);
 
-Why are we doing this?  Other drivers don't do it...  if anything I'd
-expect a reset on probe in case the bootloader or something left the
-chip configured.
+A newline could be used here.
 
---x+6KMIRAuhnl3hBn
-Content-Type: application/pgp-signature; name="signature.asc"
+> +	if (ret)
+> +		dev_err(hcd->self.controller,
+> +			"failed to %s vbus supply for port %d: %d\n",
+> +			enable ? "enable" : "disable", portnum, ret);
+> +
+> +	return ret;
+> +}
+> +
+>  static int ehci_platform_power_on(struct platform_device *dev)
+>  {
+>  	struct usb_hcd *hcd = platform_get_drvdata(dev);
+> @@ -134,6 +183,7 @@ static struct hc_driver __read_mostly ehci_platform_hc_driver;
+>  static const struct ehci_driver_overrides platform_overrides __initconst = {
+>  	.reset =		ehci_platform_reset,
+>  	.extra_priv_size =	sizeof(struct ehci_platform_priv),
+> +	.port_power =		ehci_platform_port_power,
+>  };
+>  
+>  static struct usb_ehci_pdata ehci_platform_defaults = {
+> 
 
------BEGIN PGP SIGNATURE-----
+Otherwise, looks good to me. So,
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqWi9UACgkQJNaLcl1U
-h9BvNAf+Kt7wqrYcDAbhkitQVbfFcMWKs9ptkQUJ7gUfe51CTL3LXCUKMaERhR6r
-sU9mECFOm/0cDskE6XyuVDwcvh3IaWyeJ3rM0DoV97DtDQpYBvpuzk5ISBZMlp71
-igzd+rGERaO1u5Hx7nEYJBWdcMUAdJcCeXuQmQPwUY9nTux1YlyCTR+OwpnM+VC9
-lzcB5hJDCQ/Aig0l8d/200magEc/VKG3GA//5yUYjw71pSnt2SEHdScldzMQTL1m
-xASe/cFZtONv3S/SzLBffyJovPTdIWtJVlGvvZfmv2S22b/hqFfEqELHLZC+eHIZ
-YibWqZ27mK7kjkYMzLHUno04OkIF2A==
-=7vZJ
------END PGP SIGNATURE-----
+Reviewed-by: Roger Quadros <rogerq@ti.com>
 
---x+6KMIRAuhnl3hBn--
+-- 
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
