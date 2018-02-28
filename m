@@ -1,1293 +1,532 @@
-Return-Path: <SRS0=DCbQ=FW=codeaurora.org=kramasub@kernel.org>
-From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Subject: [PATCH v3 2/4] soc: qcom: Add GENI based QUP Wrapper driver
-Date: Tue, 27 Feb 2018 18:38:07 -0700
-Message-Id: <1519781889-16117-3-git-send-email-kramasub@codeaurora.org>
-In-Reply-To: <1519781889-16117-1-git-send-email-kramasub@codeaurora.org>
-References: <1519781889-16117-1-git-send-email-kramasub@codeaurora.org>
-To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org
-Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, evgreen@chromium.org, acourbot@chromium.org, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
+Return-Path: <SRS0=oL+B=FW=nvidia.com=rrajk@kernel.org>
+Subject: Re: [PATCH 05/10] hwmon: generic-pwm-tachometer: Add generic PWM
+ based tachometer
+References: <1519196339-9377-1-git-send-email-rrajk@nvidia.com>
+ <1519196339-9377-6-git-send-email-rrajk@nvidia.com>
+ <5172edff-fe29-7ed1-f0d2-b0359ea2c24d@roeck-us.net>
+ <2510b525-ec36-b49d-5a62-81f335c0d10d@nvidia.com>
+ <cfe0d0ce-3a89-bad0-85ba-6edf1135d2dc@roeck-us.net>
+From: Rajkumar Rampelli <rrajk@nvidia.com>
+Message-ID: <901cf469-1f7d-23f2-e42f-4ea133ef12fc@nvidia.com>
+Date: Wed, 28 Feb 2018 11:37:40 +0530
+MIME-Version: 1.0
+In-Reply-To: <cfe0d0ce-3a89-bad0-85ba-6edf1135d2dc@roeck-us.net>
+Content-Type: multipart/alternative;
+	boundary="------------69219CEED6A8032BB783A7C8"
+To: Guenter Roeck <linux@roeck-us.net>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, mperttunen@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ldewangan@nvidia.com
 List-ID: <devicetree@vger.kernel.org>
 
-This driver manages the Generic Interface (GENI) firmware based Qualcomm
-Universal Peripheral (QUP) Wrapper. GENI based QUP is the next generation
-programmable module composed of multiple Serial Engines (SE) and supports
-a wide range of serial interfaces like UART, SPI, I2C, I3C, etc. This
-driver also enables managing the serial interface independent aspects of
-Serial Engines.
+--------------69219CEED6A8032BB783A7C8
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
----
- drivers/soc/qcom/Kconfig        |   9 +
- drivers/soc/qcom/Makefile       |   1 +
- drivers/soc/qcom/qcom-geni-se.c | 971 ++++++++++++++++++++++++++++++++++++++++
- include/linux/qcom-geni-se.h    | 247 ++++++++++
- 4 files changed, 1228 insertions(+)
- create mode 100644 drivers/soc/qcom/qcom-geni-se.c
- create mode 100644 include/linux/qcom-geni-se.h
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index e050eb8..cc460d0 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -3,6 +3,15 @@
- #
- menu "Qualcomm SoC drivers"
- 
-+config QCOM_GENI_SE
-+	tristate "QCOM GENI Serial Engine Driver"
-+	depends on ARCH_QCOM
-+	help
-+	  This module is used to manage Generic Interface (GENI) firmware based
-+	  Qualcomm Technologies, Inc. Universal Peripheral (QUP) Wrapper. This
-+	  module is also used to manage the common aspects of multiple Serial
-+	  Engines present in the QUP.
-+
- config QCOM_GLINK_SSR
- 	tristate "Qualcomm Glink SSR driver"
- 	depends on RPMSG
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index dcebf28..959aa74 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
- obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
- obj-$(CONFIG_QCOM_GSBI)	+=	qcom_gsbi.o
- obj-$(CONFIG_QCOM_MDT_LOADER)	+= mdt_loader.o
-diff --git a/drivers/soc/qcom/qcom-geni-se.c b/drivers/soc/qcom/qcom-geni-se.c
-new file mode 100644
-index 0000000..61335b8
---- /dev/null
-+++ b/drivers/soc/qcom/qcom-geni-se.c
-@@ -0,0 +1,971 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-+
-+#include <linux/clk.h>
-+#include <linux/slab.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/qcom-geni-se.h>
-+
-+/**
-+ * DOC: Overview
-+ *
-+ * Generic Interface (GENI) Serial Engine (SE) Wrapper driver is introduced
-+ * to manage GENI firmware based Qualcomm Universal Peripheral (QUP) Wrapper
-+ * controller. QUP Wrapper is designed to support various serial bus protocols
-+ * like UART, SPI, I2C, I3C, etc.
-+ */
-+
-+/**
-+ * DOC: Hardware description
-+ *
-+ * GENI based QUP is a highly-flexible and programmable module for supporting
-+ * a wide range of serial interfaces like UART, SPI, I2C, I3C, etc. A single
-+ * QUP module can provide upto 8 Serial Interfaces, using its internal
-+ * Serial Engines. The actual configuration is determined by the target
-+ * platform configuration. The protocol supported by each interface is
-+ * determined by the firmware loaded to the Serial Engine. Each SE consists
-+ * of a DMA Engine and GENI sub modules which enable Serial Engines to
-+ * support FIFO and DMA modes of operation.
-+ *
-+ *
-+ *                      +-----------------------------------------+
-+ *                      |QUP Wrapper                              |
-+ *                      |         +----------------------------+  |
-+ *   --QUP & SE Clocks-->         | Serial Engine N            |  +-IO------>
-+ *                      |         | ...                        |  | Interface
-+ *   <---Clock Perf.----+    +----+-----------------------+    |  |
-+ *     State Interface  |    | Serial Engine 1            |    |  |
-+ *                      |    |                            |    |  |
-+ *                      |    |                            |    |  |
-+ *   <--------AHB------->    |                            |    |  |
-+ *                      |    |                            +----+  |
-+ *                      |    |                            |       |
-+ *                      |    |                            |       |
-+ *   <------SE IRQ------+    +----------------------------+       |
-+ *                      |                                         |
-+ *                      +-----------------------------------------+
-+ *
-+ *                         Figure 1: GENI based QUP Wrapper
-+ */
-+
-+/**
-+ * DOC: Software description
-+ *
-+ * GENI SE Wrapper driver is structured into 2 parts:
-+ *
-+ * geni_wrapper represents QUP Wrapper controller. This part of the driver
-+ * manages QUP Wrapper information such as hardware version, clock
-+ * performance table that is common to all the internal Serial Engines.
-+ *
-+ * geni_se represents Serial Engine. This part of the driver manages Serial
-+ * Engine information such as clocks, containing QUP Wrapper etc. This part
-+ * of driver also supports operations(eg. initialize the concerned Serial
-+ * Engine, select between FIFO and DMA mode of operation etc.) that are
-+ * common to all the Serial Engines and are independent of Serial Interfaces.
-+ */
-+
-+#define MAX_CLK_PERF_LEVEL 32
-+#define NUM_AHB_CLKS 2
-+static const char m_ahb_clk[] = "m-ahb";
-+static const char s_ahb_clk[] = "s-ahb";
-+
-+/**
-+ * @struct geni_wrapper - Data structure to represent the QUP Wrapper Core
-+ * @dev:		Device pointer of the QUP wrapper core.
-+ * @base:		Base address of this instance of QUP wrapper core.
-+ * @ahb_clks:		Handle to the primary & secondary AHB clocks.
-+ * @lock:		Lock to protect the device elements.
-+ * @num_clk_levels:	Number of valid clock levels in clk_perf_tbl.
-+ * @clk_perf_tbl:	Table of clock frequency input to Serial Engine clock.
-+ */
-+struct geni_wrapper {
-+	struct device *dev;
-+	void __iomem *base;
-+	struct clk_bulk_data ahb_clks[NUM_AHB_CLKS];
-+	struct mutex lock;
-+	unsigned int num_clk_levels;
-+	unsigned long *clk_perf_tbl;
-+};
-+
-+/* Offset of QUP Hardware Version Register */
-+#define QUP_HW_VER_REG			0x4
-+
-+#define HW_VER_MAJOR_MASK		GENMASK(31, 28)
-+#define HW_VER_MAJOR_SHFT		28
-+#define HW_VER_MINOR_MASK		GENMASK(27, 16)
-+#define HW_VER_MINOR_SHFT		16
-+#define HW_VER_STEP_MASK		GENMASK(15, 0)
-+
-+/* Common SE registers */
-+#define GENI_INIT_CFG_REVISION		0x0
-+#define GENI_S_INIT_CFG_REVISION	0x4
-+#define GENI_OUTPUT_CTRL		0x24
-+#define GENI_CGC_CTRL			0x28
-+#define GENI_CLK_CTRL_RO		0x60
-+#define GENI_IF_DISABLE_RO		0x64
-+#define GENI_FW_REVISION_RO		0x68
-+#define GENI_FW_S_REVISION_RO		0x6c
-+#define SE_GENI_BYTE_GRAN		0x254
-+#define SE_GENI_TX_PACKING_CFG0		0x260
-+#define SE_GENI_TX_PACKING_CFG1		0x264
-+#define SE_GENI_RX_PACKING_CFG0		0x284
-+#define SE_GENI_RX_PACKING_CFG1		0x288
-+#define SE_GENI_M_GP_LENGTH		0x910
-+#define SE_GENI_S_GP_LENGTH		0x914
-+#define SE_DMA_TX_PTR_L			0xc30
-+#define SE_DMA_TX_PTR_H			0xc34
-+#define SE_DMA_TX_ATTR			0xc38
-+#define SE_DMA_TX_LEN			0xc3c
-+#define SE_DMA_TX_IRQ_EN		0xc48
-+#define SE_DMA_TX_IRQ_EN_SET		0xc4c
-+#define SE_DMA_TX_IRQ_EN_CLR		0xc50
-+#define SE_DMA_TX_LEN_IN		0xc54
-+#define SE_DMA_TX_MAX_BURST		0xc5c
-+#define SE_DMA_RX_PTR_L			0xd30
-+#define SE_DMA_RX_PTR_H			0xd34
-+#define SE_DMA_RX_ATTR			0xd38
-+#define SE_DMA_RX_LEN			0xd3c
-+#define SE_DMA_RX_IRQ_EN		0xd48
-+#define SE_DMA_RX_IRQ_EN_SET		0xd4c
-+#define SE_DMA_RX_IRQ_EN_CLR		0xd50
-+#define SE_DMA_RX_LEN_IN		0xd54
-+#define SE_DMA_RX_MAX_BURST		0xd5c
-+#define SE_DMA_RX_FLUSH			0xd60
-+#define SE_GSI_EVENT_EN			0xe18
-+#define SE_IRQ_EN			0xe1c
-+#define SE_HW_PARAM_0			0xe24
-+#define SE_HW_PARAM_1			0xe28
-+#define SE_DMA_GENERAL_CFG		0xe30
-+
-+/* GENI_OUTPUT_CTRL fields */
-+#define DEFAULT_IO_OUTPUT_CTRL_MSK	GENMASK(6, 0)
-+
-+/* GENI_CGC_CTRL fields */
-+#define CFG_AHB_CLK_CGC_ON		BIT(0)
-+#define CFG_AHB_WR_ACLK_CGC_ON		BIT(1)
-+#define DATA_AHB_CLK_CGC_ON		BIT(2)
-+#define SCLK_CGC_ON			BIT(3)
-+#define TX_CLK_CGC_ON			BIT(4)
-+#define RX_CLK_CGC_ON			BIT(5)
-+#define EXT_CLK_CGC_ON			BIT(6)
-+#define PROG_RAM_HCLK_OFF		BIT(8)
-+#define PROG_RAM_SCLK_OFF		BIT(9)
-+#define DEFAULT_CGC_EN			GENMASK(6, 0)
-+
-+/* FW_REVISION_RO fields */
-+#define FW_REV_PROTOCOL_MSK		GENMASK(15, 8)
-+#define FW_REV_PROTOCOL_SHFT		8
-+
-+/* SE_GSI_EVENT_EN fields */
-+#define DMA_RX_EVENT_EN			BIT(0)
-+#define DMA_TX_EVENT_EN			BIT(1)
-+#define GENI_M_EVENT_EN			BIT(2)
-+#define GENI_S_EVENT_EN			BIT(3)
-+
-+/* SE_IRQ_EN fields */
-+#define DMA_RX_IRQ_EN			BIT(0)
-+#define DMA_TX_IRQ_EN			BIT(1)
-+#define GENI_M_IRQ_EN			BIT(2)
-+#define GENI_S_IRQ_EN			BIT(3)
-+
-+/* SE_HW_PARAM_0 fields */
-+#define TX_FIFO_WIDTH_MSK		GENMASK(29, 24)
-+#define TX_FIFO_WIDTH_SHFT		24
-+#define TX_FIFO_DEPTH_MSK		GENMASK(21, 16)
-+#define TX_FIFO_DEPTH_SHFT		16
-+
-+/* SE_HW_PARAM_1 fields */
-+#define RX_FIFO_WIDTH_MSK		GENMASK(29, 24)
-+#define RX_FIFO_WIDTH_SHFT		24
-+#define RX_FIFO_DEPTH_MSK		GENMASK(21, 16)
-+#define RX_FIFO_DEPTH_SHFT		16
-+
-+/* SE_DMA_GENERAL_CFG */
-+#define DMA_RX_CLK_CGC_ON		BIT(0)
-+#define DMA_TX_CLK_CGC_ON		BIT(1)
-+#define DMA_AHB_SLV_CFG_ON		BIT(2)
-+#define AHB_SEC_SLV_CLK_CGC_ON		BIT(3)
-+#define DUMMY_RX_NON_BUFFERABLE		BIT(4)
-+#define RX_DMA_ZERO_PADDING_EN		BIT(5)
-+#define RX_DMA_IRQ_DELAY_MSK		GENMASK(8, 6)
-+#define RX_DMA_IRQ_DELAY_SHFT		6
-+
-+/**
-+ * geni_se_get_qup_hw_version() - Read the QUP wrapper Hardware version
-+ * @se:			Pointer to the corresponding Serial Engine.
-+ * @major:		Buffer for Major Version field.
-+ * @minor:		Buffer for Minor Version field.
-+ * @step:		Buffer for Step Version field.
-+ */
-+void geni_se_get_qup_hw_version(struct geni_se *se, unsigned int *major,
-+				unsigned int *minor, unsigned int *step)
-+{
-+	unsigned int version;
-+	struct geni_wrapper *wrapper = se->wrapper;
-+
-+	version = readl_relaxed(wrapper->base + QUP_HW_VER_REG);
-+	*major = (version & HW_VER_MAJOR_MASK) >> HW_VER_MAJOR_SHFT;
-+	*minor = (version & HW_VER_MINOR_MASK) >> HW_VER_MINOR_SHFT;
-+	*step = version & HW_VER_STEP_MASK;
-+}
-+EXPORT_SYMBOL(geni_se_get_qup_hw_version);
-+
-+/**
-+ * geni_se_read_proto() - Read the protocol configured for a Serial Engine
-+ * @se:	Pointer to the concerned Serial Engine.
-+ *
-+ * Return: Protocol value as configured in the serial engine.
-+ */
-+u32 geni_se_read_proto(struct geni_se *se)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(se->base + GENI_FW_REVISION_RO);
-+
-+	return (val & FW_REV_PROTOCOL_MSK) >> FW_REV_PROTOCOL_SHFT;
-+}
-+EXPORT_SYMBOL(geni_se_read_proto);
-+
-+static void geni_se_io_set_mode(void __iomem *base)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(base + SE_IRQ_EN);
-+	val |= (GENI_M_IRQ_EN | GENI_S_IRQ_EN);
-+	val |= (DMA_TX_IRQ_EN | DMA_RX_IRQ_EN);
-+	writel_relaxed(val, base + SE_IRQ_EN);
-+
-+	val = readl_relaxed(base + SE_GENI_DMA_MODE_EN);
-+	val &= ~GENI_DMA_MODE_EN;
-+	writel_relaxed(val, base + SE_GENI_DMA_MODE_EN);
-+
-+	writel_relaxed(0, base + SE_GSI_EVENT_EN);
-+}
-+
-+static void geni_se_io_init(void __iomem *base)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(base + GENI_CGC_CTRL);
-+	val |= DEFAULT_CGC_EN;
-+	writel_relaxed(val, base + GENI_CGC_CTRL);
-+
-+	val = readl_relaxed(base + SE_DMA_GENERAL_CFG);
-+	val |= AHB_SEC_SLV_CLK_CGC_ON | DMA_AHB_SLV_CFG_ON;
-+	val |= DMA_TX_CLK_CGC_ON | DMA_RX_CLK_CGC_ON;
-+	writel_relaxed(val, base + SE_DMA_GENERAL_CFG);
-+
-+	writel_relaxed(DEFAULT_IO_OUTPUT_CTRL_MSK, base + GENI_OUTPUT_CTRL);
-+	writel_relaxed(FORCE_DEFAULT, base + GENI_FORCE_DEFAULT_REG);
-+}
-+
-+/**
-+ * geni_se_init() - Initialize the GENI Serial Engine
-+ * @se:		Pointer to the concerned Serial Engine.
-+ * @rx_wm:	Receive watermark, in units of FIFO words.
-+ * @rx_rfr_wm:	Ready-for-receive watermark, in units of FIFO words.
-+ *
-+ * This function is used to initialize the GENI serial engine, configure
-+ * receive watermark and ready-for-receive watermarks.
-+ *
-+ * Return: 0 on success, standard Linux error codes on failure/error.
-+ */
-+int geni_se_init(struct geni_se *se, u32 rx_wm, u32 rx_rfr)
-+{
-+	u32 val;
-+
-+	geni_se_io_init(se->base);
-+	geni_se_io_set_mode(se->base);
-+
-+	writel_relaxed(rx_wm, se->base + SE_GENI_RX_WATERMARK_REG);
-+	writel_relaxed(rx_rfr, se->base + SE_GENI_RX_RFR_WATERMARK_REG);
-+
-+	val = readl_relaxed(se->base + SE_GENI_M_IRQ_EN);
-+	val |= M_COMMON_GENI_M_IRQ_EN;
-+	writel_relaxed(val, se->base + SE_GENI_M_IRQ_EN);
-+
-+	val = readl_relaxed(se->base + SE_GENI_S_IRQ_EN);
-+	val |= S_COMMON_GENI_S_IRQ_EN;
-+	writel_relaxed(val, se->base + SE_GENI_S_IRQ_EN);
-+	return 0;
-+}
-+EXPORT_SYMBOL(geni_se_init);
-+
-+static void geni_se_select_fifo_mode(struct geni_se *se)
-+{
-+	u32 proto = geni_se_read_proto(se);
-+	u32 val;
-+
-+	writel_relaxed(0, se->base + SE_GSI_EVENT_EN);
-+	writel_relaxed(0xffffffff, se->base + SE_GENI_M_IRQ_CLEAR);
-+	writel_relaxed(0xffffffff, se->base + SE_GENI_S_IRQ_CLEAR);
-+	writel_relaxed(0xffffffff, se->base + SE_DMA_TX_IRQ_CLR);
-+	writel_relaxed(0xffffffff, se->base + SE_DMA_RX_IRQ_CLR);
-+	writel_relaxed(0xffffffff, se->base + SE_IRQ_EN);
-+
-+	val = readl_relaxed(se->base + SE_GENI_M_IRQ_EN);
-+	if (proto != GENI_SE_UART) {
-+		val |= M_CMD_DONE_EN | M_TX_FIFO_WATERMARK_EN;
-+		val |= M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN;
-+	}
-+	writel_relaxed(val, se->base + SE_GENI_M_IRQ_EN);
-+
-+	val = readl_relaxed(se->base + SE_GENI_S_IRQ_EN);
-+	if (proto != GENI_SE_UART)
-+		val |= S_CMD_DONE_EN;
-+	writel_relaxed(val, se->base + SE_GENI_S_IRQ_EN);
-+
-+	val = readl_relaxed(se->base + SE_GENI_DMA_MODE_EN);
-+	val &= ~GENI_DMA_MODE_EN;
-+	writel_relaxed(val, se->base + SE_GENI_DMA_MODE_EN);
-+}
-+
-+static void geni_se_select_dma_mode(struct geni_se *se)
-+{
-+	u32 val;
-+
-+	writel_relaxed(0, se->base + SE_GSI_EVENT_EN);
-+	writel_relaxed(0xffffffff, se->base + SE_GENI_M_IRQ_CLEAR);
-+	writel_relaxed(0xffffffff, se->base + SE_GENI_S_IRQ_CLEAR);
-+	writel_relaxed(0xffffffff, se->base + SE_DMA_TX_IRQ_CLR);
-+	writel_relaxed(0xffffffff, se->base + SE_DMA_RX_IRQ_CLR);
-+	writel_relaxed(0xffffffff, se->base + SE_IRQ_EN);
-+
-+	val = readl_relaxed(se->base + SE_GENI_DMA_MODE_EN);
-+	val |= GENI_DMA_MODE_EN;
-+	writel_relaxed(val, se->base + SE_GENI_DMA_MODE_EN);
-+}
-+
-+/**
-+ * geni_se_select_mode() - Select the serial engine transfer mode
-+ * @se:		Pointer to the concerned Serial Engine.
-+ * @mode:	Transfer mode to be selected.
-+ */
-+void geni_se_select_mode(struct geni_se *se, int mode)
-+{
-+	WARN_ON(mode != GENI_SE_FIFO && mode != GENI_SE_DMA);
-+
-+	switch (mode) {
-+	case GENI_SE_FIFO:
-+		geni_se_select_fifo_mode(se);
-+		break;
-+	case GENI_SE_DMA:
-+		geni_se_select_dma_mode(se);
-+		break;
-+	}
-+}
-+EXPORT_SYMBOL(geni_se_select_mode);
-+
-+/**
-+ * geni_se_setup_m_cmd() - Setup the primary sequencer
-+ * @se:		Pointer to the concerned Serial Engine.
-+ * @cmd:	Command/Operation to setup in the primary sequencer.
-+ * @params:	Parameter for the sequencer command.
-+ *
-+ * This function is used to configure the primary sequencer with the
-+ * command and its associated parameters.
-+ */
-+void geni_se_setup_m_cmd(struct geni_se *se, u32 cmd, u32 params)
-+{
-+	u32 m_cmd;
-+
-+	m_cmd = (cmd << M_OPCODE_SHFT) | (params & M_PARAMS_MSK);
-+	writel_relaxed(m_cmd, se->base + SE_GENI_M_CMD0);
-+}
-+EXPORT_SYMBOL(geni_se_setup_m_cmd);
-+
-+/**
-+ * geni_se_setup_s_cmd() - Setup the secondary sequencer
-+ * @se:		Pointer to the concerned Serial Engine.
-+ * @cmd:	Command/Operation to setup in the secondary sequencer.
-+ * @params:	Parameter for the sequencer command.
-+ *
-+ * This function is used to configure the secondary sequencer with the
-+ * command and its associated parameters.
-+ */
-+void geni_se_setup_s_cmd(struct geni_se *se, u32 cmd, u32 params)
-+{
-+	u32 s_cmd;
-+
-+	s_cmd = readl_relaxed(se->base + SE_GENI_S_CMD0);
-+	s_cmd &= ~(S_OPCODE_MSK | S_PARAMS_MSK);
-+	s_cmd |= (cmd << S_OPCODE_SHFT);
-+	s_cmd |= (params & S_PARAMS_MSK);
-+	writel_relaxed(s_cmd, se->base + SE_GENI_S_CMD0);
-+}
-+EXPORT_SYMBOL(geni_se_setup_s_cmd);
-+
-+/**
-+ * geni_se_cancel_m_cmd() - Cancel the command configured in the primary
-+ *                          sequencer
-+ * @se:	Pointer to the concerned Serial Engine.
-+ *
-+ * This function is used to cancel the currently configured command in the
-+ * primary sequencer.
-+ */
-+void geni_se_cancel_m_cmd(struct geni_se *se)
-+{
-+	writel_relaxed(M_GENI_CMD_CANCEL, se->base + SE_GENI_M_CMD_CTRL_REG);
-+}
-+EXPORT_SYMBOL(geni_se_cancel_m_cmd);
-+
-+/**
-+ * geni_se_cancel_s_cmd() - Cancel the command configured in the secondary
-+ *                          sequencer
-+ * @se:	Pointer to the concerned Serial Engine.
-+ *
-+ * This function is used to cancel the currently configured command in the
-+ * secondary sequencer.
-+ */
-+void geni_se_cancel_s_cmd(struct geni_se *se)
-+{
-+	writel_relaxed(S_GENI_CMD_CANCEL, se->base + SE_GENI_S_CMD_CTRL_REG);
-+}
-+EXPORT_SYMBOL(geni_se_cancel_s_cmd);
-+
-+/**
-+ * geni_se_abort_m_cmd() - Abort the command configured in the primary sequencer
-+ * @se:	Pointer to the concerned Serial Engine.
-+ *
-+ * This function is used to force abort the currently configured command in the
-+ * primary sequencer.
-+ */
-+void geni_se_abort_m_cmd(struct geni_se *se)
-+{
-+	writel_relaxed(M_GENI_CMD_ABORT, se->base + SE_GENI_M_CMD_CTRL_REG);
-+}
-+EXPORT_SYMBOL(geni_se_abort_m_cmd);
-+
-+/**
-+ * geni_se_abort_s_cmd() - Abort the command configured in the secondary
-+ *                         sequencer
-+ * @se:	Pointer to the concerned Serial Engine.
-+ *
-+ * This function is used to force abort the currently configured command in the
-+ * secondary sequencer.
-+ */
-+void geni_se_abort_s_cmd(struct geni_se *se)
-+{
-+	writel_relaxed(S_GENI_CMD_ABORT, se->base + SE_GENI_S_CMD_CTRL_REG);
-+}
-+EXPORT_SYMBOL(geni_se_abort_s_cmd);
-+
-+/**
-+ * geni_se_get_tx_fifo_depth() - Get the TX fifo depth of the serial engine
-+ * @se:	Pointer to the concerned Serial Engine.
-+ *
-+ * This function is used to get the depth i.e. number of elements in the
-+ * TX fifo of the serial engine.
-+ *
-+ * Return: TX fifo depth in units of FIFO words.
-+ */
-+u32 geni_se_get_tx_fifo_depth(struct geni_se *se)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(se->base + SE_HW_PARAM_0);
-+
-+	return (val & TX_FIFO_DEPTH_MSK) >> TX_FIFO_DEPTH_SHFT;
-+}
-+EXPORT_SYMBOL(geni_se_get_tx_fifo_depth);
-+
-+/**
-+ * geni_se_get_tx_fifo_width() - Get the TX fifo width of the serial engine
-+ * @se:	Pointer to the concerned Serial Engine.
-+ *
-+ * This function is used to get the width i.e. word size per element in the
-+ * TX fifo of the serial engine.
-+ *
-+ * Return: TX fifo width in bits
-+ */
-+u32 geni_se_get_tx_fifo_width(struct geni_se *se)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(se->base + SE_HW_PARAM_0);
-+
-+	return (val & TX_FIFO_WIDTH_MSK) >> TX_FIFO_WIDTH_SHFT;
-+}
-+EXPORT_SYMBOL(geni_se_get_tx_fifo_width);
-+
-+/**
-+ * geni_se_get_rx_fifo_depth() - Get the RX fifo depth of the serial engine
-+ * @se:	Pointer to the concerned Serial Engine.
-+ *
-+ * This function is used to get the depth i.e. number of elements in the
-+ * RX fifo of the serial engine.
-+ *
-+ * Return: RX fifo depth in units of FIFO words
-+ */
-+u32 geni_se_get_rx_fifo_depth(struct geni_se *se)
-+{
-+	u32 val;
-+
-+	val = readl_relaxed(se->base + SE_HW_PARAM_1);
-+
-+	return (val & RX_FIFO_DEPTH_MSK) >> RX_FIFO_DEPTH_SHFT;
-+}
-+EXPORT_SYMBOL(geni_se_get_rx_fifo_depth);
-+
-+/**
-+ * DOC: Overview
-+ *
-+ * GENI FIFO packing is highly configurable. TX/RX packing/unpacking consist
-+ * of up to 4 operations, each operation represented by 4 configuration vectors
-+ * of 10 bits programmed in GENI_TX_PACKING_CFG0 and GENI_TX_PACKING_CFG1 for
-+ * TX FIFO and in GENI_RX_PACKING_CFG0 and GENI_RX_PACKING_CFG1 for RX FIFO.
-+ * Refer to below examples for detailed bit-field description.
-+ *
-+ * Example 1: word_size = 7, packing_mode = 4 x 8, msb_to_lsb = 1
-+ *
-+ *        +-----------+-------+-------+-------+-------+
-+ *        |           | vec_0 | vec_1 | vec_2 | vec_3 |
-+ *        +-----------+-------+-------+-------+-------+
-+ *        | start     | 0x6   | 0xe   | 0x16  | 0x1e  |
-+ *        | direction | 1     | 1     | 1     | 1     |
-+ *        | length    | 6     | 6     | 6     | 6     |
-+ *        | stop      | 0     | 0     | 0     | 1     |
-+ *        +-----------+-------+-------+-------+-------+
-+ *
-+ * Example 2: word_size = 15, packing_mode = 2 x 16, msb_to_lsb = 0
-+ *
-+ *        +-----------+-------+-------+-------+-------+
-+ *        |           | vec_0 | vec_1 | vec_2 | vec_3 |
-+ *        +-----------+-------+-------+-------+-------+
-+ *        | start     | 0x0   | 0x8   | 0x10  | 0x18  |
-+ *        | direction | 0     | 0     | 0     | 0     |
-+ *        | length    | 7     | 6     | 7     | 6     |
-+ *        | stop      | 0     | 0     | 0     | 1     |
-+ *        +-----------+-------+-------+-------+-------+
-+ *
-+ * Example 3: word_size = 23, packing_mode = 1 x 32, msb_to_lsb = 1
-+ *
-+ *        +-----------+-------+-------+-------+-------+
-+ *        |           | vec_0 | vec_1 | vec_2 | vec_3 |
-+ *        +-----------+-------+-------+-------+-------+
-+ *        | start     | 0x16  | 0xe   | 0x6   | 0x0   |
-+ *        | direction | 1     | 1     | 1     | 1     |
-+ *        | length    | 7     | 7     | 6     | 0     |
-+ *        | stop      | 0     | 0     | 1     | 0     |
-+ *        +-----------+-------+-------+-------+-------+
-+ *
-+ */
-+
-+#define NUM_PACKING_VECTORS 4
-+#define PACKING_START_SHIFT 5
-+#define PACKING_DIR_SHIFT 4
-+#define PACKING_LEN_SHIFT 1
-+#define PACKING_STOP_BIT BIT(0)
-+#define PACKING_VECTOR_SHIFT 10
-+/**
-+ * geni_se_config_packing() - Packing configuration of the serial engine
-+ * @se:		Pointer to the concerned Serial Engine
-+ * @bpw:	Bits of data per transfer word.
-+ * @pack_words:	Number of words per fifo element.
-+ * @msb_to_lsb:	Transfer from MSB to LSB or vice-versa.
-+ * @tx_cfg:	Flag to configure the TX Packing.
-+ * @rx_cfg:	Flag to configure the RX Packing.
-+ *
-+ * This function is used to configure the packing rules for the current
-+ * transfer.
-+ */
-+void geni_se_config_packing(struct geni_se *se, int bpw, int pack_words,
-+			    bool msb_to_lsb, bool tx_cfg, bool rx_cfg)
-+{
-+	u32 cfg0, cfg1, cfg[NUM_PACKING_VECTORS] = {0};
-+	int len;
-+	int temp_bpw = bpw;
-+	int idx_start = msb_to_lsb ? bpw - 1 : 0;
-+	int idx = idx_start;
-+	int idx_delta = msb_to_lsb ? -BITS_PER_BYTE : BITS_PER_BYTE;
-+	int ceil_bpw = (bpw + (BITS_PER_BYTE - 1)) & ~(BITS_PER_BYTE - 1);
-+	int iter = (ceil_bpw * pack_words) / BITS_PER_BYTE;
-+	int i;
-+
-+	if (iter <= 0 || iter > NUM_PACKING_VECTORS)
-+		return;
-+
-+	for (i = 0; i < iter; i++) {
-+		if (temp_bpw < BITS_PER_BYTE)
-+			len = temp_bpw - 1;
-+		else
-+			len = BITS_PER_BYTE - 1;
-+
-+		cfg[i] = idx << PACKING_START_SHIFT;
-+		cfg[i] |= msb_to_lsb << PACKING_DIR_SHIFT;
-+		cfg[i] |= len << PACKING_LEN_SHIFT;
-+
-+		if (temp_bpw <= BITS_PER_BYTE) {
-+			idx = ((i + 1) * BITS_PER_BYTE) + idx_start;
-+			temp_bpw = bpw;
-+		} else {
-+			idx = idx + idx_delta;
-+			temp_bpw = temp_bpw - BITS_PER_BYTE;
-+		}
-+	}
-+	cfg[iter - 1] |= PACKING_STOP_BIT;
-+	cfg0 = cfg[0] | (cfg[1] << PACKING_VECTOR_SHIFT);
-+	cfg1 = cfg[2] | (cfg[3] << PACKING_VECTOR_SHIFT);
-+
-+	if (tx_cfg) {
-+		writel_relaxed(cfg0, se->base + SE_GENI_TX_PACKING_CFG0);
-+		writel_relaxed(cfg1, se->base + SE_GENI_TX_PACKING_CFG1);
-+	}
-+	if (rx_cfg) {
-+		writel_relaxed(cfg0, se->base + SE_GENI_RX_PACKING_CFG0);
-+		writel_relaxed(cfg1, se->base + SE_GENI_RX_PACKING_CFG1);
-+	}
-+
-+	/*
-+	 * Number of protocol words in each FIFO entry
-+	 * 0 - 4x8, four words in each entry, max word size of 8 bits
-+	 * 1 - 2x16, two words in each entry, max word size of 16 bits
-+	 * 2 - 1x32, one word in each entry, max word size of 32 bits
-+	 * 3 - undefined
-+	 */
-+	if (pack_words || bpw == 32)
-+		writel_relaxed(bpw / 16, se->base + SE_GENI_BYTE_GRAN);
-+}
-+EXPORT_SYMBOL(geni_se_config_packing);
-+
-+static void geni_se_clks_off(struct geni_se *se)
-+{
-+	struct geni_wrapper *wrapper = se->wrapper;
-+
-+	clk_disable_unprepare(se->clk);
-+	clk_bulk_disable_unprepare(ARRAY_SIZE(wrapper->ahb_clks),
-+						wrapper->ahb_clks);
-+}
-+
-+/**
-+ * geni_se_resources_off() - Turn off resources associated with the serial
-+ *                           engine
-+ * @se:	Pointer to the concerned Serial Engine.
-+ *
-+ * Return: 0 on success, standard Linux error codes on failure/error.
-+ */
-+int geni_se_resources_off(struct geni_se *se)
-+{
-+	int ret;
-+
-+	ret = pinctrl_pm_select_sleep_state(se->dev);
-+	if (ret)
-+		return ret;
-+
-+	geni_se_clks_off(se);
-+	return 0;
-+}
-+EXPORT_SYMBOL(geni_se_resources_off);
-+
-+static int geni_se_clks_on(struct geni_se *se)
-+{
-+	int ret;
-+	struct geni_wrapper *wrapper = se->wrapper;
-+
-+	ret = clk_bulk_prepare_enable(ARRAY_SIZE(wrapper->ahb_clks),
-+						wrapper->ahb_clks);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(se->clk);
-+	if (ret)
-+		clk_bulk_disable_unprepare(ARRAY_SIZE(wrapper->ahb_clks),
-+							wrapper->ahb_clks);
-+	return ret;
-+}
-+
-+/**
-+ * geni_se_resources_on() - Turn on resources associated with the serial
-+ *                          engine
-+ * @se:	Pointer to the concerned Serial Engine.
-+ *
-+ * Return: 0 on success, standard Linux error codes on failure/error.
-+ */
-+int geni_se_resources_on(struct geni_se *se)
-+{
-+	int ret = 0;
-+
-+	ret = geni_se_clks_on(se);
-+	if (ret)
-+		return ret;
-+
-+	ret = pinctrl_pm_select_default_state(se->dev);
-+	if (ret)
-+		geni_se_clks_off(se);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(geni_se_resources_on);
-+
-+/**
-+ * geni_se_clk_tbl_get() - Get the clock table to program DFS
-+ * @se:		Pointer to the concerned Serial Engine.
-+ * @tbl:	Table in which the output is returned.
-+ *
-+ * This function is called by the protocol drivers to determine the different
-+ * clock frequencies supported by Serial Engine Core Clock. The protocol
-+ * drivers use the output to determine the clock frequency index to be
-+ * programmed into DFS.
-+ *
-+ * Return: number of valid performance levels in the table on success,
-+ *	   standard Linux error codes on failure.
-+ */
-+int geni_se_clk_tbl_get(struct geni_se *se, unsigned long **tbl)
-+{
-+	struct geni_wrapper *wrapper = se->wrapper;
-+	unsigned long freq = 0;
-+	int i;
-+	int ret = 0;
-+
-+	mutex_lock(&wrapper->lock);
-+	if (wrapper->clk_perf_tbl) {
-+		*tbl = wrapper->clk_perf_tbl;
-+		ret = wrapper->num_clk_levels;
-+		goto out_unlock;
-+	}
-+
-+	wrapper->clk_perf_tbl = kcalloc(MAX_CLK_PERF_LEVEL,
-+					sizeof(*wrapper->clk_perf_tbl),
-+					GFP_KERNEL);
-+	if (!wrapper->clk_perf_tbl) {
-+		ret = -ENOMEM;
-+		goto out_unlock;
-+	}
-+
-+	for (i = 0; i < MAX_CLK_PERF_LEVEL; i++) {
-+		freq = clk_round_rate(se->clk, freq + 1);
-+		if (!freq || freq == wrapper->clk_perf_tbl[i - 1])
-+			break;
-+		wrapper->clk_perf_tbl[i] = freq;
-+	}
-+	wrapper->num_clk_levels = i;
-+	*tbl = wrapper->clk_perf_tbl;
-+	ret = wrapper->num_clk_levels;
-+out_unlock:
-+	mutex_unlock(&wrapper->lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL(geni_se_clk_tbl_get);
-+
-+/**
-+ * geni_se_clk_freq_match() - Get the matching or closest SE clock frequency
-+ * @se:		Pointer to the concerned Serial Engine.
-+ * @req_freq:	Requested clock frequency.
-+ * @index:	Index of the resultant frequency in the table.
-+ * @res_freq:	Resultant frequency which matches or is closer to the
-+ *		requested frequency.
-+ * @exact:	Flag to indicate exact multiple requirement of the requested
-+ *		frequency.
-+ *
-+ * This function is called by the protocol drivers to determine the matching
-+ * or exact multiple of the requested frequency, as provided by the Serial
-+ * Engine clock in order to meet the performance requirements. If there is
-+ * no matching or exact multiple of the requested frequency found, then it
-+ * selects the closest floor frequency, if exact flag is not set.
-+ *
-+ * Return: 0 on success, standard Linux error codes on failure.
-+ */
-+int geni_se_clk_freq_match(struct geni_se *se, unsigned long req_freq,
-+			   unsigned int *index, unsigned long *res_freq,
-+			   bool exact)
-+{
-+	unsigned long *tbl;
-+	int num_clk_levels;
-+	int i;
-+
-+	num_clk_levels = geni_se_clk_tbl_get(se, &tbl);
-+	if (num_clk_levels < 0)
-+		return num_clk_levels;
-+
-+	if (num_clk_levels == 0)
-+		return -EFAULT;
-+
-+	*res_freq = 0;
-+	for (i = 0; i < num_clk_levels; i++) {
-+		if (!(tbl[i] % req_freq)) {
-+			*index = i;
-+			*res_freq = tbl[i];
-+			return 0;
-+		}
-+
-+		if (!(*res_freq) || ((tbl[i] > *res_freq) &&
-+				     (tbl[i] < req_freq))) {
-+			*index = i;
-+			*res_freq = tbl[i];
-+		}
-+	}
-+
-+	if (exact)
-+		return -ENOKEY;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(geni_se_clk_freq_match);
-+
-+#define GENI_SE_DMA_DONE_EN BIT(0)
-+#define GENI_SE_DMA_EOT_EN BIT(1)
-+#define GENI_SE_DMA_AHB_ERR_EN BIT(2)
-+#define GENI_SE_DMA_EOT_BUF BIT(0)
-+/**
-+ * geni_se_tx_dma_prep() - Prepare the Serial Engine for TX DMA transfer
-+ * @se:			Pointer to the concerned Serial Engine.
-+ * @buf:		Pointer to the TX buffer.
-+ * @len:		Length of the TX buffer.
-+ *
-+ * This function is used to prepare the buffers for DMA TX.
-+ *
-+ * Return: Mapped DMA Address of the buffer on success, NULL on failure.
-+ */
-+dma_addr_t geni_se_tx_dma_prep(struct geni_se *se, void *buf, size_t len)
-+{
-+	dma_addr_t iova;
-+	struct geni_wrapper *wrapper = se->wrapper;
-+	u32 val;
-+
-+	iova = dma_map_single(wrapper->dev, buf, len, DMA_TO_DEVICE);
-+	if (dma_mapping_error(wrapper->dev, iova))
-+		return (dma_addr_t)NULL;
-+
-+	val = GENI_SE_DMA_DONE_EN;
-+	val |= GENI_SE_DMA_EOT_EN;
-+	val |= GENI_SE_DMA_AHB_ERR_EN;
-+	writel_relaxed(val, se->base + SE_DMA_TX_IRQ_EN_SET);
-+	writel_relaxed((u32)iova, se->base + SE_DMA_TX_PTR_L);
-+	writel_relaxed((u32)(iova >> 32), se->base + SE_DMA_TX_PTR_H);
-+	writel_relaxed(GENI_SE_DMA_EOT_BUF, se->base + SE_DMA_TX_ATTR);
-+	writel_relaxed((u32)len, se->base + SE_DMA_TX_LEN);
-+	return iova;
-+}
-+EXPORT_SYMBOL(geni_se_tx_dma_prep);
-+
-+/**
-+ * geni_se_rx_dma_prep() - Prepare the Serial Engine for RX DMA transfer
-+ * @se:			Pointer to the concerned Serial Engine.
-+ * @buf:		Pointer to the RX buffer.
-+ * @len:		Length of the RX buffer.
-+ *
-+ * This function is used to prepare the buffers for DMA RX.
-+ *
-+ * Return: Mapped DMA Address of the buffer on success, NULL on failure.
-+ */
-+dma_addr_t geni_se_rx_dma_prep(struct geni_se *se, void *buf, size_t len)
-+{
-+	dma_addr_t iova;
-+	struct geni_wrapper *wrapper = se->wrapper;
-+	u32 val;
-+
-+	iova = dma_map_single(wrapper->dev, buf, len, DMA_FROM_DEVICE);
-+	if (dma_mapping_error(wrapper->dev, iova))
-+		return (dma_addr_t)NULL;
-+
-+	val = GENI_SE_DMA_DONE_EN;
-+	val |= GENI_SE_DMA_EOT_EN;
-+	val |= GENI_SE_DMA_AHB_ERR_EN;
-+	writel_relaxed(val, se->base + SE_DMA_RX_IRQ_EN_SET);
-+	writel_relaxed((u32)iova, se->base + SE_DMA_RX_PTR_L);
-+	writel_relaxed((u32)(iova >> 32), se->base + SE_DMA_RX_PTR_H);
-+	/* RX does not have EOT buffer type bit. So just reset RX_ATTR */
-+	writel_relaxed(0, se->base + SE_DMA_RX_ATTR);
-+	writel_relaxed((u32)len, se->base + SE_DMA_RX_LEN);
-+	return iova;
-+}
-+EXPORT_SYMBOL(geni_se_rx_dma_prep);
-+
-+/**
-+ * geni_se_tx_dma_unprep() - Unprepare the Serial Engine after TX DMA transfer
-+ * @se:			Pointer to the concerned Serial Engine.
-+ * @iova:		DMA address of the TX buffer.
-+ * @len:		Length of the TX buffer.
-+ *
-+ * This function is used to unprepare the DMA buffers after DMA TX.
-+ */
-+void geni_se_tx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
-+{
-+	struct geni_wrapper *wrapper = se->wrapper;
-+
-+	if (iova)
-+		dma_unmap_single(wrapper->dev, iova, len, DMA_TO_DEVICE);
-+}
-+EXPORT_SYMBOL(geni_se_tx_dma_unprep);
-+
-+/**
-+ * geni_se_rx_dma_unprep() - Unprepare the Serial Engine after RX DMA transfer
-+ * @se:			Pointer to the concerned Serial Engine.
-+ * @iova:		DMA address of the RX buffer.
-+ * @len:		Length of the RX buffer.
-+ *
-+ * This function is used to unprepare the DMA buffers after DMA RX.
-+ */
-+void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len)
-+{
-+	struct geni_wrapper *wrapper = se->wrapper;
-+
-+	if (iova)
-+		dma_unmap_single(wrapper->dev, iova, len, DMA_FROM_DEVICE);
-+}
-+EXPORT_SYMBOL(geni_se_rx_dma_unprep);
-+
-+static int geni_se_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	struct geni_wrapper *wrapper;
-+	int ret;
-+
-+	wrapper = devm_kzalloc(dev, sizeof(*wrapper), GFP_KERNEL);
-+	if (!wrapper)
-+		return -ENOMEM;
-+
-+	wrapper->dev = dev;
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	wrapper->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(wrapper->base)) {
-+		dev_err(dev, "%s: Error mapping the resource\n", __func__);
-+		return -EFAULT;
-+	}
-+
-+	wrapper->ahb_clks[0].id = m_ahb_clk;
-+	wrapper->ahb_clks[1].id = s_ahb_clk;
-+	ret = devm_clk_bulk_get(dev, NUM_AHB_CLKS, wrapper->ahb_clks);
-+	if (ret) {
-+		dev_err(dev, "Err getting AHB clks %d\n", ret);
-+		return ret;
-+	}
-+
-+	mutex_init(&wrapper->lock);
-+	dev_set_drvdata(dev, wrapper);
-+	dev_dbg(dev, "GENI SE Driver probed\n");
-+	return devm_of_platform_populate(dev);
-+}
-+
-+static int geni_se_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct geni_wrapper *wrapper = dev_get_drvdata(dev);
-+
-+	kfree(wrapper->clk_perf_tbl);
-+	return 0;
-+}
-+
-+static const struct of_device_id geni_se_dt_match[] = {
-+	{ .compatible = "qcom,geni-se-qup", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, geni_se_dt_match);
-+
-+static struct platform_driver geni_se_driver = {
-+	.driver = {
-+		.name = "geni_se_qup",
-+		.of_match_table = geni_se_dt_match,
-+	},
-+	.probe = geni_se_probe,
-+	.remove = geni_se_remove,
-+};
-+module_platform_driver(geni_se_driver);
-+
-+MODULE_DESCRIPTION("GENI Serial Engine Driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-new file mode 100644
-index 0000000..4996de7
---- /dev/null
-+++ b/include/linux/qcom-geni-se.h
-@@ -0,0 +1,247 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+/*
-+ * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef _LINUX_QCOM_GENI_SE
-+#define _LINUX_QCOM_GENI_SE
-+#include <linux/clk.h>
-+#include <linux/dma-direction.h>
-+
-+/* Transfer mode supported by GENI Serial Engines */
-+enum geni_se_xfer_mode {
-+	GENI_SE_INVALID,
-+	GENI_SE_FIFO,
-+	GENI_SE_DMA,
-+};
-+
-+/* Protocols supported by GENI Serial Engines */
-+enum geni_se_protocol_types {
-+	GENI_SE_NONE,
-+	GENI_SE_SPI,
-+	GENI_SE_UART,
-+	GENI_SE_I2C,
-+	GENI_SE_I3C,
-+};
-+
-+/**
-+ * struct geni_se - GENI Serial Engine
-+ * @base:		Base Address of the Serial Engine's register block.
-+ * @dev:		Pointer to the Serial Engine device.
-+ * @wrapper:		Pointer to the parent QUP Wrapper core.
-+ * @clk:		Handle to the core serial engine clock.
-+ */
-+struct geni_se {
-+	void __iomem *base;
-+	struct device *dev;
-+	void *wrapper;
-+	struct clk *clk;
-+};
-+
-+/* Common SE registers */
-+#define GENI_FORCE_DEFAULT_REG		0x20
-+#define SE_GENI_STATUS			0x40
-+#define GENI_SER_M_CLK_CFG		0x48
-+#define GENI_SER_S_CLK_CFG		0x4c
-+#define SE_GENI_CLK_SEL			0x7c
-+#define SE_GENI_DMA_MODE_EN		0x258
-+#define SE_GENI_M_CMD0			0x600
-+#define SE_GENI_M_CMD_CTRL_REG		0x604
-+#define SE_GENI_M_IRQ_STATUS		0x610
-+#define SE_GENI_M_IRQ_EN		0x614
-+#define SE_GENI_M_IRQ_CLEAR		0x618
-+#define SE_GENI_S_CMD0			0x630
-+#define SE_GENI_S_CMD_CTRL_REG		0x634
-+#define SE_GENI_S_IRQ_STATUS		0x640
-+#define SE_GENI_S_IRQ_EN		0x644
-+#define SE_GENI_S_IRQ_CLEAR		0x648
-+#define SE_GENI_TX_FIFOn		0x700
-+#define SE_GENI_RX_FIFOn		0x780
-+#define SE_GENI_TX_FIFO_STATUS		0x800
-+#define SE_GENI_RX_FIFO_STATUS		0x804
-+#define SE_GENI_TX_WATERMARK_REG	0x80c
-+#define SE_GENI_RX_WATERMARK_REG	0x810
-+#define SE_GENI_RX_RFR_WATERMARK_REG	0x814
-+#define SE_GENI_IOS			0x908
-+#define SE_DMA_TX_IRQ_STAT		0xc40
-+#define SE_DMA_TX_IRQ_CLR		0xc44
-+#define SE_DMA_TX_FSM_RST		0xc58
-+#define SE_DMA_RX_IRQ_STAT		0xd40
-+#define SE_DMA_RX_IRQ_CLR		0xd44
-+#define SE_DMA_RX_FSM_RST		0xd58
-+
-+/* GENI_FORCE_DEFAULT_REG fields */
-+#define FORCE_DEFAULT	BIT(0)
-+
-+/* GENI_STATUS fields */
-+#define M_GENI_CMD_ACTIVE		BIT(0)
-+#define S_GENI_CMD_ACTIVE		BIT(12)
-+
-+/* GENI_SER_M_CLK_CFG/GENI_SER_S_CLK_CFG */
-+#define SER_CLK_EN			BIT(0)
-+#define CLK_DIV_MSK			GENMASK(15, 4)
-+#define CLK_DIV_SHFT			4
-+
-+/* GENI_CLK_SEL fields */
-+#define CLK_SEL_MSK			GENMASK(2, 0)
-+
-+/* SE_GENI_DMA_MODE_EN */
-+#define GENI_DMA_MODE_EN		BIT(0)
-+
-+/* GENI_M_CMD0 fields */
-+#define M_OPCODE_MSK			GENMASK(31, 27)
-+#define M_OPCODE_SHFT			27
-+#define M_PARAMS_MSK			GENMASK(26, 0)
-+
-+/* GENI_M_CMD_CTRL_REG */
-+#define M_GENI_CMD_CANCEL		BIT(2)
-+#define M_GENI_CMD_ABORT		BIT(1)
-+#define M_GENI_DISABLE			BIT(0)
-+
-+/* GENI_S_CMD0 fields */
-+#define S_OPCODE_MSK			GENMASK(31, 27)
-+#define S_OPCODE_SHFT			27
-+#define S_PARAMS_MSK			GENMASK(26, 0)
-+
-+/* GENI_S_CMD_CTRL_REG */
-+#define S_GENI_CMD_CANCEL		BIT(2)
-+#define S_GENI_CMD_ABORT		BIT(1)
-+#define S_GENI_DISABLE			BIT(0)
-+
-+/* GENI_M_IRQ_EN fields */
-+#define M_CMD_DONE_EN			BIT(0)
-+#define M_CMD_OVERRUN_EN		BIT(1)
-+#define M_ILLEGAL_CMD_EN		BIT(2)
-+#define M_CMD_FAILURE_EN		BIT(3)
-+#define M_CMD_CANCEL_EN			BIT(4)
-+#define M_CMD_ABORT_EN			BIT(5)
-+#define M_TIMESTAMP_EN			BIT(6)
-+#define M_RX_IRQ_EN			BIT(7)
-+#define M_GP_SYNC_IRQ_0_EN		BIT(8)
-+#define M_GP_IRQ_0_EN			BIT(9)
-+#define M_GP_IRQ_1_EN			BIT(10)
-+#define M_GP_IRQ_2_EN			BIT(11)
-+#define M_GP_IRQ_3_EN			BIT(12)
-+#define M_GP_IRQ_4_EN			BIT(13)
-+#define M_GP_IRQ_5_EN			BIT(14)
-+#define M_IO_DATA_DEASSERT_EN		BIT(22)
-+#define M_IO_DATA_ASSERT_EN		BIT(23)
-+#define M_RX_FIFO_RD_ERR_EN		BIT(24)
-+#define M_RX_FIFO_WR_ERR_EN		BIT(25)
-+#define M_RX_FIFO_WATERMARK_EN		BIT(26)
-+#define M_RX_FIFO_LAST_EN		BIT(27)
-+#define M_TX_FIFO_RD_ERR_EN		BIT(28)
-+#define M_TX_FIFO_WR_ERR_EN		BIT(29)
-+#define M_TX_FIFO_WATERMARK_EN		BIT(30)
-+#define M_SEC_IRQ_EN			BIT(31)
-+#define M_COMMON_GENI_M_IRQ_EN	(GENMASK(6, 1) | \
-+				M_IO_DATA_DEASSERT_EN | \
-+				M_IO_DATA_ASSERT_EN | M_RX_FIFO_RD_ERR_EN | \
-+				M_RX_FIFO_WR_ERR_EN | M_TX_FIFO_RD_ERR_EN | \
-+				M_TX_FIFO_WR_ERR_EN)
-+
-+/* GENI_S_IRQ_EN fields */
-+#define S_CMD_DONE_EN			BIT(0)
-+#define S_CMD_OVERRUN_EN		BIT(1)
-+#define S_ILLEGAL_CMD_EN		BIT(2)
-+#define S_CMD_FAILURE_EN		BIT(3)
-+#define S_CMD_CANCEL_EN			BIT(4)
-+#define S_CMD_ABORT_EN			BIT(5)
-+#define S_GP_SYNC_IRQ_0_EN		BIT(8)
-+#define S_GP_IRQ_0_EN			BIT(9)
-+#define S_GP_IRQ_1_EN			BIT(10)
-+#define S_GP_IRQ_2_EN			BIT(11)
-+#define S_GP_IRQ_3_EN			BIT(12)
-+#define S_GP_IRQ_4_EN			BIT(13)
-+#define S_GP_IRQ_5_EN			BIT(14)
-+#define S_IO_DATA_DEASSERT_EN		BIT(22)
-+#define S_IO_DATA_ASSERT_EN		BIT(23)
-+#define S_RX_FIFO_RD_ERR_EN		BIT(24)
-+#define S_RX_FIFO_WR_ERR_EN		BIT(25)
-+#define S_RX_FIFO_WATERMARK_EN		BIT(26)
-+#define S_RX_FIFO_LAST_EN		BIT(27)
-+#define S_COMMON_GENI_S_IRQ_EN	(GENMASK(5, 1) | GENMASK(13, 9) | \
-+				 S_RX_FIFO_RD_ERR_EN | S_RX_FIFO_WR_ERR_EN)
-+
-+/*  GENI_/TX/RX/RX_RFR/_WATERMARK_REG fields */
-+#define WATERMARK_MSK			GENMASK(5, 0)
-+
-+/* GENI_TX_FIFO_STATUS fields */
-+#define TX_FIFO_WC			GENMASK(27, 0)
-+
-+/*  GENI_RX_FIFO_STATUS fields */
-+#define RX_LAST				BIT(31)
-+#define RX_LAST_BYTE_VALID_MSK		GENMASK(30, 28)
-+#define RX_LAST_BYTE_VALID_SHFT		28
-+#define RX_FIFO_WC_MSK			GENMASK(24, 0)
-+
-+/* SE_GENI_IOS fields */
-+#define IO2_DATA_IN			BIT(1)
-+#define RX_DATA_IN			BIT(0)
-+
-+/* SE_DMA_TX_IRQ_STAT Register fields */
-+#define TX_DMA_DONE			BIT(0)
-+#define TX_EOT				BIT(1)
-+#define TX_SBE				BIT(2)
-+#define TX_RESET_DONE			BIT(3)
-+
-+/* SE_DMA_RX_IRQ_STAT Register fields */
-+#define RX_DMA_DONE			BIT(0)
-+#define RX_EOT				BIT(1)
-+#define RX_SBE				BIT(2)
-+#define RX_RESET_DONE			BIT(3)
-+#define RX_FLUSH_DONE			BIT(4)
-+#define RX_GENI_GP_IRQ			GENMASK(10, 5)
-+#define RX_GENI_CANCEL_IRQ		BIT(11)
-+#define RX_GENI_GP_IRQ_EXT		GENMASK(13, 12)
-+
-+#ifdef CONFIG_QCOM_GENI_SE
-+void geni_se_get_qup_hw_version(struct geni_se *se, unsigned int *major,
-+				unsigned int *minor, unsigned int *step);
-+
-+u32 geni_se_read_proto(struct geni_se *se);
-+
-+int geni_se_init(struct geni_se *se, u32 rx_wm, u32 rx_rfr);
-+
-+void geni_se_select_mode(struct geni_se *se, int mode);
-+
-+void geni_se_setup_m_cmd(struct geni_se *se, u32 cmd, u32 params);
-+
-+void geni_se_setup_s_cmd(struct geni_se *se, u32 cmd, u32 params);
-+
-+void geni_se_cancel_m_cmd(struct geni_se *se);
-+
-+void geni_se_cancel_s_cmd(struct geni_se *se);
-+
-+void geni_se_abort_m_cmd(struct geni_se *se);
-+
-+void geni_se_abort_s_cmd(struct geni_se *se);
-+
-+u32 geni_se_get_tx_fifo_depth(struct geni_se *se);
-+
-+u32 geni_se_get_tx_fifo_width(struct geni_se *se);
-+
-+u32 geni_se_get_rx_fifo_depth(struct geni_se *se);
-+
-+void geni_se_config_packing(struct geni_se *se, int bpw, int pack_words,
-+			    bool msb_to_lsb, bool tx_cfg, bool rx_cfg);
-+
-+int geni_se_resources_off(struct geni_se *se);
-+
-+int geni_se_resources_on(struct geni_se *se);
-+
-+int geni_se_clk_tbl_get(struct geni_se *se, unsigned long **tbl);
-+
-+int geni_se_clk_freq_match(struct geni_se *se, unsigned long req_freq,
-+			   unsigned int *index, unsigned long *res_freq,
-+			   bool exact);
-+
-+dma_addr_t geni_se_tx_dma_prep(struct geni_se *se, void *buf, size_t len);
-+
-+dma_addr_t geni_se_rx_dma_prep(struct geni_se *se, void *buf, size_t len);
-+
-+void geni_se_tx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len);
-+
-+void geni_se_rx_dma_unprep(struct geni_se *se, dma_addr_t iova, size_t len);
-+#endif
-+#endif
--- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On Wednesday 28 February 2018 11:28 AM, Guenter Roeck wrote:
+> On 02/27/2018 09:38 PM, Rajkumar Rampelli wrote:
+>>
+>> On Wednesday 21 February 2018 08:20 PM, Guenter Roeck wrote:
+>>> On 02/20/2018 10:58 PM, Rajkumar Rampelli wrote:
+>>>> Add generic PWM based tachometer driver via HWMON interface
+>>>> to report the RPM of motor. This drivers get the period/duty
+>>>> cycle from PWM IP which captures the motor PWM output.
+>>>>
+>>>> This driver implements a simple interface for monitoring the speed of
+>>>> a fan and exposes it in roatations per minute (RPM) to the user space
+>>>> by using the hwmon's sysfs interface
+>>>>
+>>>> Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
+>>>> ---
+>>>>   Documentation/hwmon/generic-pwm-tachometer |  17 +++++
+>>>>   drivers/hwmon/Kconfig                      |  10 +++
+>>>>   drivers/hwmon/Makefile                     |   1 +
+>>>>   drivers/hwmon/generic-pwm-tachometer.c     | 112 
+>>>> +++++++++++++++++++++++++++++
+>>>>   4 files changed, 140 insertions(+)
+>>>>   create mode 100644 Documentation/hwmon/generic-pwm-tachometer
+>>>>   create mode 100644 drivers/hwmon/generic-pwm-tachometer.c
+>>>>
+>>>> diff --git a/Documentation/hwmon/generic-pwm-tachometer 
+>>>> b/Documentation/hwmon/generic-pwm-tachometer
+>>>> new file mode 100644
+>>>> index 0000000..e0713ee
+>>>> --- /dev/null
+>>>> +++ b/Documentation/hwmon/generic-pwm-tachometer
+>>>> @@ -0,0 +1,17 @@
+>>>> +Kernel driver generic-pwm-tachometer
+>>>> +====================================
+>>>> +
+>>>> +This driver enables the use of a PWM module to monitor a fan. It 
+>>>> uses the
+>>>> +generic PWM interface and can be used on SoCs as along as the SoC 
+>>>> supports
+>>>> +Tachometer controller that moniors the Fan speed in periods.
+>>>> +
+>>>> +Author: Rajkumar Rampelli <rrajk@nvidia.com>
+>>>> +
+>>>> +Description
+>>>> +-----------
+>>>> +
+>>>> +The driver implements a simple interface for monitoring the Fan 
+>>>> speed using
+>>>> +PWM module and Tachometer controller. It requests period value 
+>>>> through PWM
+>>>> +capture interface to Tachometer and measures the Rotations per 
+>>>> minute using
+>>>> +received period value. It exposes the Fan speed in RPM to the user 
+>>>> space by
+>>>> +using the hwmon's sysfs interface.
+>>>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+>>>> index ef23553..8912dcb 100644
+>>>> --- a/drivers/hwmon/Kconfig
+>>>> +++ b/drivers/hwmon/Kconfig
+>>>> @@ -1878,6 +1878,16 @@ config SENSORS_XGENE
+>>>>         If you say yes here you get support for the temperature
+>>>>         and power sensors for APM X-Gene SoC.
+>>>>   +config GENERIC_PWM_TACHOMETER
+>>>> +    tristate "Generic PWM based tachometer driver"
+>>>> +    depends on PWM
+>>>> +    help
+>>>> +      Enables a driver to use PWM signal from motor to use
+>>>> +      for measuring the motor speed. The RPM is captured by
+>>>> +      PWM modules which has PWM capture capability and this
+>>>> +      drivers reads the captured data from PWM IP to convert
+>>>> +      it to speed in RPM.
+>>>> +
+>>>>   if ACPI
+>>>>     comment "ACPI drivers"
+>>>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+>>>> index f814b4a..9dcc374 100644
+>>>> --- a/drivers/hwmon/Makefile
+>>>> +++ b/drivers/hwmon/Makefile
+>>>> @@ -175,6 +175,7 @@ obj-$(CONFIG_SENSORS_WM8350)    += wm8350-hwmon.o
+>>>>   obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
+>>>>     obj-$(CONFIG_PMBUS)        += pmbus/
+>>>> +obj-$(CONFIG_GENERIC_PWM_TACHOMETER) += generic-pwm-tachometer.o
+>>>>     ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
+>>>>   diff --git a/drivers/hwmon/generic-pwm-tachometer.c 
+>>>> b/drivers/hwmon/generic-pwm-tachometer.c
+>>>> new file mode 100644
+>>>> index 0000000..9354d43
+>>>> --- /dev/null
+>>>> +++ b/drivers/hwmon/generic-pwm-tachometer.c
+>>>> @@ -0,0 +1,112 @@
+>>>> +/*
+>>>> + * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights reserved.
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or 
+>>>> modify it
+>>>> + * under the terms and conditions of the GNU General Public License,
+>>>> + * version 2, as published by the Free Software Foundation.
+>>>> + *
+>>>> + * This program is distributed in the hope it will be useful, but 
+>>>> WITHOUT
+>>>> + * ANY WARRANTY; without even the implied warranty of 
+>>>> MERCHANTABILITY or
+>>>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public 
+>>>> License for
+>>>> + * more details.
+>>>> + *
+>>>> + */
+>>>> +
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/err.h>
+>>>> +#include <linux/pwm.h>
+>>>> +#include <linux/hwmon.h>
+>>>> +#include <linux/hwmon-sysfs.h>
+>>>> +
+>>>> +struct pwm_hwmon_tach {
+>>>> +    struct device        *dev;
+>>>> +    struct pwm_device    *pwm;
+>>>> +    struct device        *hwmon;
+>>>> +};
+>>>> +
+>>>> +static ssize_t show_rpm(struct device *dev, struct 
+>>>> device_attribute *attr,
+>>>> +            char *buf)
+>>>> +{
+>>>> +    struct pwm_hwmon_tach *ptt = dev_get_drvdata(dev);
+>>>> +    struct pwm_device *pwm = ptt->pwm;
+>>>> +    struct pwm_capture result;
+>>>> +    int err;
+>>>> +    unsigned int rpm = 0;
+>>>> +
+>>>> +    err = pwm_capture(pwm, &result, 0);
+>>>> +    if (err < 0) {
+>>>> +        dev_err(ptt->dev, "Failed to capture PWM: %d\n", err);
+>>>> +        return err;
+>>>> +    }
+>>>> +
+>>>> +    if (result.period)
+>>>> +        rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
+>>>> +                        result.period);
+>>>> +
+>>>> +    return sprintf(buf, "%u\n", rpm);
+>>>> +}
+>>>> +
+>>>> +static SENSOR_DEVICE_ATTR(rpm, 0444, show_rpm, NULL, 0);
+>>>> +
+>>>> +static struct attribute *pwm_tach_attrs[] = {
+>>>> +    &sensor_dev_attr_rpm.dev_attr.attr,
+>>>> +    NULL,
+>>>> +};
+>>>
+>>> "rpm" is not a standard hwmon sysfs attribute. If you don't provide
+>>> a single standard hwmon sysfs attribute, having a hwmon driver is 
+>>> pointless.
+>> Guenter Roeck,
+>> I will define a new hwmon sysfs attribute node called 
+>> "hwmon_tachometer_attributes" in hwmon.h like below and update the 
+>> same in tachometer hwmon driver. Is it fine ?
+>> enum hwmon_tachometer_attributes {
+>
+> Are you kidding me ?
+>
+> Guenter
+Sorry, I just wanted to confirm that whether my understanding is correct 
+or not before implementing it actually.
+Or shall I add this attribute as a part of fan attributes with 
+"hwmon_fan_rpm"? or anyother way to do it ? I need your inputs in fixing it.
+
+--------------69219CEED6A8032BB783A7C8
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <br>
+    <div class="moz-cite-prefix">On Wednesday 28 February 2018 11:28 AM,
+      Guenter Roeck wrote:<br>
+    </div>
+    <blockquote
+      cite="mid:cfe0d0ce-3a89-bad0-85ba-6edf1135d2dc@roeck-us.net"
+      type="cite">On 02/27/2018 09:38 PM, Rajkumar Rampelli wrote:
+      <br>
+      <blockquote type="cite">
+        <br>
+        On Wednesday 21 February 2018 08:20 PM, Guenter Roeck wrote:
+        <br>
+        <blockquote type="cite">On 02/20/2018 10:58 PM, Rajkumar
+          Rampelli wrote:
+          <br>
+          <blockquote type="cite">Add generic PWM based tachometer
+            driver via HWMON interface
+            <br>
+            to report the RPM of motor. This drivers get the period/duty
+            <br>
+            cycle from PWM IP which captures the motor PWM output.
+            <br>
+            <br>
+            This driver implements a simple interface for monitoring the
+            speed of
+            <br>
+            a fan and exposes it in roatations per minute (RPM) to the
+            user space
+            <br>
+            by using the hwmon's sysfs interface
+            <br>
+            <br>
+            Signed-off-by: Rajkumar Rampelli <a class="moz-txt-link-rfc2396E" href="mailto:rrajk@nvidia.com">&lt;rrajk@nvidia.com&gt;</a>
+            <br>
+            ---
+            <br>
+              Documentation/hwmon/generic-pwm-tachometer |  17 +++++
+            <br>
+              drivers/hwmon/Kconfig                      |  10 +++
+            <br>
+              drivers/hwmon/Makefile                     |   1 +
+            <br>
+              drivers/hwmon/generic-pwm-tachometer.c     | 112
+            +++++++++++++++++++++++++++++
+            <br>
+              4 files changed, 140 insertions(+)
+            <br>
+              create mode 100644
+            Documentation/hwmon/generic-pwm-tachometer
+            <br>
+              create mode 100644 drivers/hwmon/generic-pwm-tachometer.c
+            <br>
+            <br>
+            diff --git a/Documentation/hwmon/generic-pwm-tachometer
+            b/Documentation/hwmon/generic-pwm-tachometer
+            <br>
+            new file mode 100644
+            <br>
+            index 0000000..e0713ee
+            <br>
+            --- /dev/null
+            <br>
+            +++ b/Documentation/hwmon/generic-pwm-tachometer
+            <br>
+            @@ -0,0 +1,17 @@
+            <br>
+            +Kernel driver generic-pwm-tachometer
+            <br>
+            +====================================
+            <br>
+            +
+            <br>
+            +This driver enables the use of a PWM module to monitor a
+            fan. It uses the
+            <br>
+            +generic PWM interface and can be used on SoCs as along as
+            the SoC supports
+            <br>
+            +Tachometer controller that moniors the Fan speed in
+            periods.
+            <br>
+            +
+            <br>
+            +Author: Rajkumar Rampelli <a class="moz-txt-link-rfc2396E" href="mailto:rrajk@nvidia.com">&lt;rrajk@nvidia.com&gt;</a>
+            <br>
+            +
+            <br>
+            +Description
+            <br>
+            +-----------
+            <br>
+            +
+            <br>
+            +The driver implements a simple interface for monitoring the
+            Fan speed using
+            <br>
+            +PWM module and Tachometer controller. It requests period
+            value through PWM
+            <br>
+            +capture interface to Tachometer and measures the Rotations
+            per minute using
+            <br>
+            +received period value. It exposes the Fan speed in RPM to
+            the user space by
+            <br>
+            +using the hwmon's sysfs interface.
+            <br>
+            diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+            <br>
+            index ef23553..8912dcb 100644
+            <br>
+            --- a/drivers/hwmon/Kconfig
+            <br>
+            +++ b/drivers/hwmon/Kconfig
+            <br>
+            @@ -1878,6 +1878,16 @@ config SENSORS_XGENE
+            <br>
+                    If you say yes here you get support for the
+            temperature
+            <br>
+                    and power sensors for APM X-Gene SoC.
+            <br>
+              +config GENERIC_PWM_TACHOMETER
+            <br>
+            +    tristate "Generic PWM based tachometer driver"
+            <br>
+            +    depends on PWM
+            <br>
+            +    help
+            <br>
+            +      Enables a driver to use PWM signal from motor to use
+            <br>
+            +      for measuring the motor speed. The RPM is captured by
+            <br>
+            +      PWM modules which has PWM capture capability and this
+            <br>
+            +      drivers reads the captured data from PWM IP to
+            convert
+            <br>
+            +      it to speed in RPM.
+            <br>
+            +
+            <br>
+              if ACPI
+            <br>
+                comment "ACPI drivers"
+            <br>
+            diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+            <br>
+            index f814b4a..9dcc374 100644
+            <br>
+            --- a/drivers/hwmon/Makefile
+            <br>
+            +++ b/drivers/hwmon/Makefile
+            <br>
+            @@ -175,6 +175,7 @@ obj-$(CONFIG_SENSORS_WM8350)    +=
+            wm8350-hwmon.o
+            <br>
+              obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
+            <br>
+                obj-$(CONFIG_PMBUS)        += pmbus/
+            <br>
+            +obj-$(CONFIG_GENERIC_PWM_TACHOMETER) +=
+            generic-pwm-tachometer.o
+            <br>
+                ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
+            <br>
+              diff --git a/drivers/hwmon/generic-pwm-tachometer.c
+            b/drivers/hwmon/generic-pwm-tachometer.c
+            <br>
+            new file mode 100644
+            <br>
+            index 0000000..9354d43
+            <br>
+            --- /dev/null
+            <br>
+            +++ b/drivers/hwmon/generic-pwm-tachometer.c
+            <br>
+            @@ -0,0 +1,112 @@
+            <br>
+            +/*
+            <br>
+            + * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights
+            reserved.
+            <br>
+            + *
+            <br>
+            + * This program is free software; you can redistribute it
+            and/or modify it
+            <br>
+            + * under the terms and conditions of the GNU General Public
+            License,
+            <br>
+            + * version 2, as published by the Free Software Foundation.
+            <br>
+            + *
+            <br>
+            + * This program is distributed in the hope it will be
+            useful, but WITHOUT
+            <br>
+            + * ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or
+            <br>
+            + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+            Public License for
+            <br>
+            + * more details.
+            <br>
+            + *
+            <br>
+            + */
+            <br>
+            +
+            <br>
+            +#include &lt;linux/module.h&gt;
+            <br>
+            +#include &lt;linux/platform_device.h&gt;
+            <br>
+            +#include &lt;linux/err.h&gt;
+            <br>
+            +#include &lt;linux/pwm.h&gt;
+            <br>
+            +#include &lt;linux/hwmon.h&gt;
+            <br>
+            +#include &lt;linux/hwmon-sysfs.h&gt;
+            <br>
+            +
+            <br>
+            +struct pwm_hwmon_tach {
+            <br>
+            +    struct device        *dev;
+            <br>
+            +    struct pwm_device    *pwm;
+            <br>
+            +    struct device        *hwmon;
+            <br>
+            +};
+            <br>
+            +
+            <br>
+            +static ssize_t show_rpm(struct device *dev, struct
+            device_attribute *attr,
+            <br>
+            +            char *buf)
+            <br>
+            +{
+            <br>
+            +    struct pwm_hwmon_tach *ptt = dev_get_drvdata(dev);
+            <br>
+            +    struct pwm_device *pwm = ptt-&gt;pwm;
+            <br>
+            +    struct pwm_capture result;
+            <br>
+            +    int err;
+            <br>
+            +    unsigned int rpm = 0;
+            <br>
+            +
+            <br>
+            +    err = pwm_capture(pwm, &amp;result, 0);
+            <br>
+            +    if (err &lt; 0) {
+            <br>
+            +        dev_err(ptt-&gt;dev, "Failed to capture PWM: %d\n",
+            err);
+            <br>
+            +        return err;
+            <br>
+            +    }
+            <br>
+            +
+            <br>
+            +    if (result.period)
+            <br>
+            +        rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
+            <br>
+            +                        result.period);
+            <br>
+            +
+            <br>
+            +    return sprintf(buf, "%u\n", rpm);
+            <br>
+            +}
+            <br>
+            +
+            <br>
+            +static SENSOR_DEVICE_ATTR(rpm, 0444, show_rpm, NULL, 0);
+            <br>
+            +
+            <br>
+            +static struct attribute *pwm_tach_attrs[] = {
+            <br>
+            +    &amp;sensor_dev_attr_rpm.dev_attr.attr,
+            <br>
+            +    NULL,
+            <br>
+            +};
+            <br>
+          </blockquote>
+          <br>
+          "rpm" is not a standard hwmon sysfs attribute. If you don't
+          provide
+          <br>
+          a single standard hwmon sysfs attribute, having a hwmon driver
+          is pointless.
+          <br>
+        </blockquote>
+        Guenter Roeck,
+        <br>
+        I will define a new hwmon sysfs attribute node called
+        "hwmon_tachometer_attributes" in hwmon.h like below and update
+        the same in tachometer hwmon driver. Is it fine ?
+        <br>
+        enum hwmon_tachometer_attributes {
+        <br>
+      </blockquote>
+      <br>
+      Are you kidding me ?
+      <br>
+      <br>
+      Guenter
+      <br>
+    </blockquote>
+    Sorry, I just wanted to confirm that whether my understanding is
+    correct or not before implementing it actually.<o:p> <br>
+    </o:p>Or shall I add this attribute as a part of fan attributes with
+    "hwmon_fan_rpm"? or anyother way to do it ? I need your inputs in
+    fixing it.<br>
+  </body>
+</html>
+
+--------------69219CEED6A8032BB783A7C8--
