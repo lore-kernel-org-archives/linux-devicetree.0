@@ -1,76 +1,85 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: [PATCH 2/2][v5] driver: mtd: update struct map_info's swap as per map
- requirement
-Date: Wed, 28 Feb 2018 13:03:35 +0530
-Message-ID: <20180228073335.1758-2-prabhakar.kushwaha@nxp.com>
-References: <20180228073335.1758-1-prabhakar.kushwaha@nxp.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 06/16] drm/sun4i: Don't process LVDS if TCON doesn't
+ support it
+Date: Wed, 28 Feb 2018 08:36:08 +0100
+Message-ID: <20180228073608.r2zd3qkiudm2uarm@flea>
+References: <20180227222701.9716-1-jernej.skrabec@siol.net>
+ <20180227222701.9716-7-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180228073335.1758-1-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: boris.brezillon@free-electrons.com, leoyang.li@nxp.com, oss@buserror.net, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Jagdish Gediya <jagdish.gediya@nxp.com>, cyrille.pitchen@wedev4u.fr, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============0277569023=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180227222701.9716-7-jernej.skrabec@siol.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, sboyd@kernel.org, wens@csie.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-It is not necessary for all device's maps to be CFI_HOST_ENDIAN.
-Maps device can be Big endian or little endian.
 
-Currently it is being taken care using CONFIG_MTD_CFI_LE_BYTE_SWAP or
-CONFIG_MTD_CFI_BE_BYTE_SWAP i.e. compile time.
-
-Now update struct map_info's swap field based on device characteristics
-defined in device tree.
-
-Signed-off-by: Jagdish Gediya <jagdish.gediya@nxp.com>
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
----
-Changes for v2: Incorporated review comments from Boris Brezillon
-http://patchwork.ozlabs.org/patch/758381/
-Changes for v3: None
-Changes for v4: Updated code as per new defined binding of physmap.txt
-Changes for v5: Avoid map.swap set in case of endiannes not defined in dts file
-
- drivers/mtd/maps/physmap_of_core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/mtd/maps/physmap_of_core.c b/drivers/mtd/maps/physmap_of_core.c
-index b1bd4faecfb2..527b1682381f 100644
---- a/drivers/mtd/maps/physmap_of_core.c
-+++ b/drivers/mtd/maps/physmap_of_core.c
-@@ -20,6 +20,7 @@
- #include <linux/mtd/map.h>
- #include <linux/mtd/partitions.h>
- #include <linux/mtd/concat.h>
-+#include <linux/mtd/cfi_endian.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_platform.h>
-@@ -233,6 +234,11 @@ static int of_flash_probe(struct platform_device *dev)
- 		info->list[i].map.bankwidth = be32_to_cpup(width);
- 		info->list[i].map.device_node = dp;
- 
-+		if (of_property_read_bool(dp, "big-endian"))
-+			info->list[i].map.swap = CFI_BIG_ENDIAN;
-+		else if (of_property_read_bool(dp, "little-endian"))
-+			info->list[i].map.swap = CFI_LITTLE_ENDIAN;
-+
- 		err = of_flash_probe_gemini(dev, dp, &info->list[i].map);
- 		if (err)
- 			goto err_out;
--- 
-2.14.1
+--===============0277569023==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aqjrippsxme475qi"
+Content-Disposition: inline
 
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--aqjrippsxme475qi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Feb 27, 2018 at 11:26:51PM +0100, Jernej Skrabec wrote:
+> TCON checks for LVDS properties even if it doesn't support it. Add a
+> check to skip that part of the code if TCON doesn't support channel 0.
+>=20
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+
+I have already sent a similar patch here:
+https://lists.freedesktop.org/archives/dri-devel/2018-February/166665.html
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--aqjrippsxme475qi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqWW+cACgkQ0rTAlCFN
+r3SGzQ//SGozme2gO0ALeJqnCLt8CQMYDzC1rRw0xfUb2agk3B881NEi3X5fIJUn
+nTj9yAWBYvff/BlGerf/n6B7DFJdAvH7qX+t5mDIZlh5BxIAWTjmxiTPP0rSNakT
+R2WSoI7yh+lBV4hTSy+DhMQ9mweINss8jQMKRdlnC78St415S7aG5lQ1mAvGWpeZ
+Cf5en3JOsysN8kUQ1EL3gbRC0S+oRZT+Q2WNNlMF2nA8jIMkgENTY425RwJMDPUA
+tIPJN1yeg4NG4IwpUA7TGoZnaT5htu5Z1f9X05AcyBMRo/v3SX+XpitLIYJtG9pQ
+2oFgyTA6dSprW3fC0eRrqxydWh+xo69vdj84RSdRbPRbQINuHobAREkZ85gCFJG2
+DayROsddA9CGM+L9G4nIMOIXjZl93tJLSWAJFhQocS78l1sEaYkSy0FmdV4Ugpui
+uG7/Uyk0mnzW4dBS1afOuuFntoKmgp55qU9KIEtRV9v7FOpuKcoXnkVXuVdo2sbo
+YdrksU8i9TRFLlcZGuH5tB9OUThgL5ZYEJYZKxjf0lP/eBwJpiuWFH5z9pGsZ5hH
+WxZGduaudW0z3K+5vnXt1BDbBye4Gjm2umwYPJjqLihc5/w6kDb8TQSRTjkG9M6n
+0zMAvak60eOlPvZ8w86JsZKSjM1EcUu1V4ZsHTx068cVmQYvwBw=
+=nYue
+-----END PGP SIGNATURE-----
+
+--aqjrippsxme475qi--
+
+--===============0277569023==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0277569023==--
