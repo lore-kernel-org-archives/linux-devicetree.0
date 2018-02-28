@@ -1,46 +1,86 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 0/3] Allwinner sunxi message box support
-Date: Wed, 28 Feb 2018 09:24:59 +0100
-Message-ID: <20180228082459.o3juhfiml3logxwl@flea>
+Subject: Re: [PATCH 1/3] dt-bindings: Add a binding for the sunxi message box
+Date: Wed, 28 Feb 2018 09:28:43 +0100
+Message-ID: <20180228082843.fga47gfrv2g5kmiz@flea>
 References: <20180228022714.30068-1-samuel@sholland.org>
+ <20180228022714.30068-2-samuel@sholland.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l5qwo2fdtjbsha76"
+        protocol="application/pgp-signature"; boundary="5ct4qf4wlve2wiua"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180228022714.30068-1-samuel@sholland.org>
+In-Reply-To: <20180228022714.30068-2-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Samuel Holland <samuel@sholland.org>
 Cc: Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---l5qwo2fdtjbsha76
+--5ct4qf4wlve2wiua
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Tue, Feb 27, 2018 at 08:27:11PM -0600, Samuel Holland wrote:
-> This series adds support for the "hardware message box" in recent
-> Allwinner sunxi SoCs, used for communication with the ARISC management
-> processor (the platform's equivalent of the ARM SCP). The end goal is to
-> use the arm_scpi driver as a client, communicating with firmware running
-> on the ARISC CPU.
+On Tue, Feb 27, 2018 at 08:27:12PM -0600, Samuel Holland wrote:
+> This mailbox hardware is present in several Allwinner sun8i and sun50i
+> SoCs. Add a device tree binding for it.
 >=20
-> This driver has been tested with the base arm_scpi driver (which sends
-> the SCPI_CMD_SCPI_CAPABILITIES command at probe time) and an in-progress
-> firmware application running on the ARISC CPU. Because no firmware for
-> the other end of the mailbox is complete at the moment, I have not
-> included changes to the SoC device trees.
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  .../devicetree/bindings/mailbox/sunxi-msgbox.txt   | 40 ++++++++++++++++=
+++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/sunxi-msgbo=
+x.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt b=
+/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
+> new file mode 100644
+> index 000000000000..3b3ed7f870a0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
+> @@ -0,0 +1,40 @@
+> +Allwinner sunxi Message Box
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> +
+> +The hardware message box on sunxi SoCs is a two-user mailbox controller
+> +containing 8 unidirectional FIFOs bonded into 4 bidirectional mailbox ch=
+annels.
+> +An interrupt is raised for received messages, but software must poll to =
+know
+> +when a transmitted message has been acknowledged by the remote user.
+> +
+> +Refer to ./mailbox.txt for generic information about mailbox device-tree
+> +bindings.
+> +
+> +Mailbox Device Node:
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:		Must be "allwinner,sunxi-msgbox".
 
-This is not directly related to this series, but what is your end goal
-with regard to SCPI? What features do you expect to have there?
+The IP change quite often in the Allwinner SoCs, so it would be better
+to use a more specific compatible there. IIRC that IP was introduced
+with the A31, so what about sun6i-a31-msgbox?
 
-I'm asking because last time we discussed this, SCPI wasn't able to
-abstract all the features the PMIC provides, and thus Linux needed to
-still be able to access it.
+> +- reg:			Contains the mailbox register address range (base
+> +			address and length).
+> +- clocks:		phandle for the clock controller and specifier.
+> +- clock-names:		Must be "bus".
+> +- resets:		phandle for the reset controller and specifier.
+> +- reset-names:		Must be "bus".
+> +- interrupts:		Contains interrupt information for the mailbox.
+> +- #mbox-cells		Must be 2 - the indexes of the transmit and receive
+> +			channels, respectively.
+
+That would prevent any unidirectional communication, wouldn't it?
+Other mailboxes driver seem to have two mbox channels, one for each
+direction, which also seem to mimic our DMA bindings (where we are in
+pretty much the same situation).
 
 Thanks!
 Maxime
@@ -50,24 +90,24 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---l5qwo2fdtjbsha76
+--5ct4qf4wlve2wiua
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqWZ1oACgkQ0rTAlCFN
-r3Qy7A/+IGSgQNPTUq4XWgyjAJhuxUVY2GW8iI8zule2aDwpKGounNqogxC7RZjC
-yeJNM6YFiXkS1Fr8YLBSuPb4jbgJUvXOmjfrZ4/W+LCdxFNnrDDjO9mX9hSaIU8T
-dkTCc0qAZPeIg1BmuYxdjcf6DZv/Mo1h28WxGb1mgiUP6+peRivwzuMv/MJA1Ffy
-RuWQOhL5k1lbM9AbevFfvfqRebIj7dQYZoi+ilI3bzAk4Bg6AgiMJbIR8LHoRKBJ
-yD08TVdkI2wtWm8OdPjbWKra0OzuSORa+0HuW6JZf6FbJz51cWcXa+W4zj6vGMCk
-FDG5E8DZDfJpBaERxqp+Kn7+T/wgvk/EVk0lOFrCubm9MkS9sVEaaMcxY92fAolA
-KOkVtuKzndMwE7YOTxMUhAfKRQuq7S02czQh7GIOF43ZXSeDN1RHku2/1PrEUo45
-RhEB1xywRpfgMM4YJGljUJzSVVoipfFEQXKOG/36khINQun6LCl37r+dyZzBP+ky
-qJFAZaO1LYSDPqrK4zku8idEglw155oo4zWdYAk0Psjv3tzTrRGh9pRUYnLmmgQE
-SQvkJbqiuPOy2XKEt/BFjfhmImD2Z89IVg7gOILOZ5dQMvvRGVxil2ahefofkU73
-AH0GRgk3x0PbUtU10xhY4p57dpDZ2zAD3AfbvjzChvuA6g+u8xM=
-=MbDU
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqWaDoACgkQ0rTAlCFN
+r3SAlw/+JVlP12hEQO3c+N9nXlJJaog946jybj40D0sQC2Oz1+ifJ5uqnl80EudG
+P7dWyZUvyhNPE7iM8UF2ntmZ0m07f8MysUScPmsbke7dIfjDkxEdnnMmXz4coXaX
+jlfJliXNke4EoPZOcVLU2omZl90MQoVUVyFcY+nWZHhIxD0YSEwIt63DV1q5BYLr
+ve2n7h7QIaMwwnU1+5UXv2MIh17f5Do7nesEipF6AYsiOtkuztZ4xMd7kFU1E8md
+BB8rcIyEJ6gVYp0avaIPoxTJlqSXnAoUQWHjGhsEmB3IZ3CL4GIkmSgYibzfyhbo
+B3Tgt98SbNZyKBuqOr8jo85gG3OxZ9vHcQtMf8QTTAzg/F/IegB3iRRKckkTUHeX
++++Sk/wkTonEXAKEatgneGmHtCmVGgRsf4sEiA+W8xaqYiEIwYOw7LSODzvvQ1e+
+SYI496k+rJ9jPLDCgSemBvpOJBRkMPeMOaRxNDP5ywdqlRYsJL4Udb/bz0L96Skh
+qMx2Eh9zXYBElNw89MlXLsp+nIWTfo+MTIp2A5RDkI+Igt+fsG4/Tm/UZB4ucGQE
+lofWAoiFgCwddyXbJZJzZ88pz6/5KHgo4GKWxulbraaqnZ380GiDS8Vchz/yj5C5
+2WVtzVy+ZvMGg/ZFbCJE4vCUoZSYjvdQarXPJGICSCKydhbORrw=
+=CxO8
 -----END PGP SIGNATURE-----
 
---l5qwo2fdtjbsha76--
+--5ct4qf4wlve2wiua--
