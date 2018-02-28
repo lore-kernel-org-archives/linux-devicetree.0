@@ -1,95 +1,96 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 08/13] iommu/rockchip: Control clocks needed to access
-	the IOMMU
-Date: Wed, 28 Feb 2018 15:06:19 +0000
-Message-ID: <34a60ab2-a3af-3302-6612-740cba5460db@arm.com>
-References: <20180124103516.2571-1-jeffy.chen@rock-chips.com>
-	<20180124103516.2571-9-jeffy.chen@rock-chips.com>
-	<20180130170515.3g6wtadqgmehxh5b@rob-hp-laptop>
-	<CAAFQd5A383Ey3Ntg_hcsvzHj2DsSuW6RMQ+kP=LPAZ1YmqjHOg@mail.gmail.com>
-	<CAL_JsqKFW0USD_TgGCO-s4wMBw9O2psToMObjeSEwCNReq-3=w@mail.gmail.com>
-	<5A72F7D2.1050201@rock-chips.com> <5A8FEBC6.4000408@rock-chips.com>
-	<33d1d6bd-3455-5cad-6990-a9ca94063f3a@arm.com>
-	<5A96A809.2020509@rock-chips.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [SPAM]Re: [PATCH v3 4/5] dt-bindings: clock: mediatek: update
+ audsys documentation to adapt MFD device
+Date: Wed, 28 Feb 2018 09:13:21 -0600
+Message-ID: <CAL_Jsq+NK-sUY-qOZ2Xv1ZfWVm-vG0tyAgN_auKeaQxMq58vkw@mail.gmail.com>
+References: <cover.1518424204.git.ryder.lee@mediatek.com>
+ <61928ad523a7aeffb8f16d4caad56836b65ae407.1518424204.git.ryder.lee@mediatek.com>
+ <CAL_JsqJgo0pKJjrs2fdw+q=DJYwht0X5L3Bomz8gf98mEN7hkg@mail.gmail.com>
+ <1519193048.18794.42.camel@mtkswgap22>
+ <CAL_JsqLjcMpS=bLzAV0arLJY143O1XefjSR0djM73E8uC4oJHg@mail.gmail.com>
+ <1519272878.1907.87.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5A96A809.2020509-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519272878.1907.87.camel@mtkswgap22>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: devicetree@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 28/02/18 13:00, JeffyChen wrote:
-> Hi Robin,
-> 
-> Thanks for your reply.
-> 
-> On 02/28/2018 12:59 AM, Robin Murphy wrote:
->>>> the rockchip IOMMU is part of the master block in hardware, so it needs
->>>> to control the master's power domain and some of the master's clocks
->>>> when access it's registers.
->>>>
->>>> and the number of clocks needed here, might be different between each
->>>> IOMMUs(according to which master block it belongs), it's a little like
->>>> our power domain:
->>>> https://elixir.free-electrons.com/linux/latest/source/arch/arm64/boot/dts/rockchip/rk3399.dtsi#L935 
->>>>
->>>>
->>>>
->>>>
->>>> i'm not sure how to describe this correctly, is it ok use something 
->>>> like
->>>> "the same as it's master block"?
->>>
->>> would it make sense to add a property to specify the master who owns
->>> the iommu, and we can get all clocks(only some of those clocks are
->>> actually needed) from it in the of_xlate()? and we can also reuse the
->>> clock-names of that master to build clk_bulk_data and log errors in
->>> clk_bulk_get.
+On Wed, Feb 21, 2018 at 10:14 PM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+> On Wed, 2018-02-21 at 08:10 -0600, Rob Herring wrote:
+>> On Wed, Feb 21, 2018 at 12:04 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+>> > On Mon, 2018-02-19 at 12:29 -0600, Rob Herring wrote:
+>> >> On Mon, Feb 12, 2018 at 5:28 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
+>> >> > The MediaTek audio hardware block that exposes functionalities that are
+>> >> > handled by separate subsystems in the kernel.  These functions are all
+>> >> > mapped somewhere at 0x112xxxxx, and there are some control bits are mixed
+>> >> > up with other functions within the same registers.
+>> >>
+>> >> I still don't think this change is necessary.
+>> >>
+>> >> Just because a hardware block in DT maps to different subsystems in a
+>> >> particular OS doesn't mean you need a DT node for each OS subsystem.
+>> >> What we have subsystems for changes over time and DT shouldn't really
+>> >> be changing based on that. And DT is not the only way to instantiate
+>> >> drivers.
+>> >>
+>> >
+>> > Apart right now we have the definition of both functions. The other
+>> > location is here:../sonud/mt2701-afe-pcm.txt. The ways I could come up
+>> > with are:
 >>
->> I'm inclined to agree with Rob here - if we're to add anything to the
->> binding, it should only be whatever clock inputs are defined for the
->> IOMMU IP block itself. If Linux doesn't properly handle the interconnect
->> clock hierarchy external to a particular integration, that's a separate
->> issue and it's not the binding's problem.
->>
->> I actually quite like the hack of "borrowing" the clocks from
->> dev->of_node in of_xlate() - you shouldn't need any DT changes for that,
->> because you already know that each IOMMU instance only has the one
->> master device anyway.
-> 
-> Thanks:) but actually we are going to support sharing IOMMU between 
-> multiple masters(one of them is the main master i think) in the newer 
-> chips(not yet supported on upstream kernel)...
+>> There are several problems you need to fix. First,
+>> "mediatek,mt2701-audsys" is not documented. It is only used in the
+>> example. Second, bindings/arm/mediatek/mediatek,audsys.txt should move
+>> to bindings/sound/ if it is only audio related functions. Or perhaps
+>> just combine the 2 documents because it is all inconsistent currently.
+>
+> Because the series crossed subsystems but didn't apply at the same time.
+>
+>> The 2 documents are inconsistent as to what is the relationship of
+>> -audsys and -audio (afe) nodes. mt2701-afe-pcm.txt shows that the AFE
+>> is already a child of -audsys. The -audsys node should have
+>> #clock-cells. It should also not be a simple-mfd (another
+>> inconsistency in the binding) because it needs to probe first to
+>> provide clocks to child nodes, and then trigger probing the child
+>> nodes.
+>
+> This is the 1st version I sent before, and the clock parts still under
+> review :( .  But yes, the 2 inconsistent documents should be fixed -
+> this may depend on what we end up doing with the DT appearance.
+>
+> IMHO, apart from overlapping regions with other functions I didn't see
+> any difference between audsys and other clock drivers (providers).
+>
+> For the sake of uniformity, I make the 2 sub-devices parallel and move
+> "simple-mfd" to the top, and the sequences should actually be handled
+> through "probe deferral mechanism" - that would make this kind of
+> situations much easier to manage.
 
-Ha! OK, fair enough, back to the first point then...
+If a child node has a dependency on the parent, probe deferral is not
+the correct solution. The parent should probe first and control
+probing of the chlidren. "simple-mfd" is intended for cases where
+there is no dependency on the parent node.
 
-> So we might have to get all clocks from all masters, or find a way to 
-> specify the main master...and for the multiple masters case, do it in 
-> of_xlate() turns out to be a little racy...maybe we can add a property 
-> to specify main master, and get it's clocks in probe()?
+> BTW, I could make the AFE driver be instantiated/probed from the clock
+> driver but this seems superfluous to me.  Just make sure is this what
+> you want?
 
-I notice that the 4.4 BSP kernel consistently specifies "aclk" and 
-"hclk" for the IOMMU instances - it feels unusual to say "why don't we 
-follow the downstream binding?", but it does look a lot like what I 
-would expect (I'd guess at one for the register slave interface and one 
-for the master interface/general operation?)
+I would think it would be the other way around. The AFE driver creates
+some clocks. Whether that's a separate driver or a single driver is a
+kernel issue that has nothing to do with the binding. IIRC, there's
+several examples in display controllers and camera interfaces where
+those drivers are also clock providers.
 
-If we can implement conceptually-correct clock handling based on an 
-accurate binding, which should cover most cases, and *then* look at 
-hacking around those where it doesn't quite work in practice due to 
-shortcomings elsewhere, that would be ideal, and of course a lot nicer 
-than just jumping straight into piles of hacks.
-
-Robin.
+Rob
