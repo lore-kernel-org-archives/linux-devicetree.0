@@ -1,834 +1,131 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] PCI: rockchip: Add Endpoint controller driver for
- Rockchip PCIe controller
-Date: Wed, 28 Feb 2018 12:11:20 +0000
-Message-ID: <20180228121120.GC18879@e107981-ln.cambridge.arm.com>
-References: <1519348503-243259-1-git-send-email-shawn.lin@rock-chips.com>
- <1519348654-243597-1-git-send-email-shawn.lin@rock-chips.com>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH] arm64: dts: rockchip: Fix rk3399-gru-* s2r (pinctrl hogs,
+ wifi reset)
+Date: Wed, 28 Feb 2018 13:19:13 +0100
+Message-ID: <fe5c8c52-2d01-9244-23b5-3641bbe3cbd0@collabora.com>
+References: <20180227204711.29357-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1519348654-243597-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, cyrille.pitchen-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180227204711.29357-1-dianders@chromium.org>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Douglas Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-[cc: Cyrille]
+Hi Doug,
 
-On Fri, Feb 23, 2018 at 09:17:33AM +0800, Shawn Lin wrote:
-> This patch adds support to the Rockchip PCIe controller in endpoint mode
-> which currently supports up to 32 regions, and each regions should at
-> least be 1MB per TRM.
+On 27/02/18 21:47, Douglas Anderson wrote:
+> Back in the early days when gru devices were still under development
+> we found an issue where the WiFi reset line needed to be configured as
+> early as possible during the boot process to avoid the WiFi module
+> being in a bad state.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> We found that the way to get the kernel to do this in the earliest
+> possible place was to configure this line in the pinctrl hogs, so
+> that's what we did.  For some history here you can see
+> <http://crosreview.com/368770>.  After the time that change landed in
+> the kernel, we landed a firmware change to configure this line even
+> earlier.  See <http://crosreview.com/399919>.  However, even after the
+> firmware change landed we kept the kernel change to deal with the fact
+> that some people working on devices might take a little while to
+> update their firmware.
 > 
+> At this there are definitely zero devices out in the wild that have
+> firmware without the fix in it.  Specifically looking in the firmware
+> branch several critically important fixes for memory stability landed
+> after the patch in coreboot and I know we didn't ship without those.
+> Thus, by now, everyone should have the new firmware and it's safe to
+> not have the kernel set this up in a pinctrl hog.
+> 
+> Historically, even though it wasn't needed to have this in a pinctrl
+> hog, we still kept it since it didn't hurt.  Pinctrl would apply the
+> default hog at bootup and then would never touch things again.  That
+> all changed with commit 981ed1bfbc6c ("pinctrl: Really force states
+> during suspend/resume").  After that commit then we'll re-apply the
+> default hog at resume time and that can screw up the reset state of
+> WiFi.  ...and on rk3399 if you touch a device on PCIe in the wrong way
+> then the whole system can go haywire.  That's what was happening.
+> Specifically you'd resume a rk3399-gru-* device and it would mostly
+> resume, then would crash with some crazy weird crash.
+> 
+> One could say, perhaps, that the recent pinctrl change was at fault
+> (and should be fixed) since it changed behavior.  ...but that's not
+> really true.  The device tree for rk3399-gru is really to blame.
+> Specifically since the pinctrl is defined in the hog and not in the
+> "wlan-pd-n" node then the actual user of this pin doesn't have a
+> pinctrl entry for it.  That's bad.
+> 
+> Let's fix our problems by just moving the control of
+> "wlan_module_reset_l pinctrl" out of the hog and put them in the
+> proper place.
+> 
+> NOTE: in theory, I think it should actually be possible to have a pin
+> controlled _both_ by the hog and by an actual device.  Once the device
+> claims the pin I think the hog is supposed to let go.  I'm not 100%
+> sure that this works and in any case this solution would be more
+> complex than is necessary.
+> 
+> Reported-by: Marc Zyngier <marc.zyngier@arm.com>
+> Fixes: 48f4d9796d99 ("arm64: dts: rockchip: add Gru/Kevin DTS")
+> Fixes: 981ed1bfbc6c ("pinctrl: Really force states during suspend/resume")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 > ---
 > 
-> Changes in v2:
-> - fix some error handling
+>  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 16 +++-------------
+>  1 file changed, 3 insertions(+), 13 deletions(-)
 > 
->  drivers/pci/rockchip/Kconfig            |  12 +
->  drivers/pci/rockchip/Makefile           |   1 +
->  drivers/pci/rockchip/pcie-rockchip-ep.c | 641 ++++++++++++++++++++++++++++++++
->  drivers/pci/rockchip/pcie-rockchip.c    |  25 +-
->  drivers/pci/rockchip/pcie-rockchip.h    |  92 +++++
->  5 files changed, 762 insertions(+), 9 deletions(-)
->  create mode 100644 drivers/pci/rockchip/pcie-rockchip-ep.c
-> 
-> diff --git a/drivers/pci/rockchip/Kconfig b/drivers/pci/rockchip/Kconfig
-> index d655b77..668f850 100644
-> --- a/drivers/pci/rockchip/Kconfig
-> +++ b/drivers/pci/rockchip/Kconfig
-> @@ -17,4 +17,16 @@ config PCIE_ROCKCHIP_HOST
->  	  There is 1 internal PCIe port available to support GEN2 with
->  	  4 slots.
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> index 6e50768a34ce..9ad54751d0d8 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+> @@ -406,8 +406,9 @@
+>  	wlan_pd_n: wlan-pd-n {
+>  		compatible = "regulator-fixed";
+>  		regulator-name = "wlan_pd_n";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&wlan_module_reset_l>;
 >  
-> +config PCIE_ROCKCHIP_EP
-> +	bool "Rockchip PCIe endpoint controller"
-> +	depends on ARCH_ROCKCHIP || COMPILE_TEST
-> +	depends on OF
-> +	depends on PCI_ENDPOINT
-> +	select MFD_SYSCON
-> +	select PCIE_ROCKCHIP
-> +	help
-> +	  Say Y here if you want to support Rockchip PCIe controller in
-> +	  endpoint mode on Rockchip SoC. There is 1 internal PCIe port
-> +	  available to support GEN2 with 4 slots.
-> +
->  endmenu
-> diff --git a/drivers/pci/rockchip/Makefile b/drivers/pci/rockchip/Makefile
-> index 0af40db..8dce495 100644
-> --- a/drivers/pci/rockchip/Makefile
-> +++ b/drivers/pci/rockchip/Makefile
-> @@ -1,3 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_PCIE_ROCKCHIP) += pcie-rockchip.o
->  obj-$(CONFIG_PCIE_ROCKCHIP_HOST) += pcie-rockchip-host.o
-> +obj-$(CONFIG_PCIE_ROCKCHIP_EP) += pcie-rockchip-ep.o
-> diff --git a/drivers/pci/rockchip/pcie-rockchip-ep.c b/drivers/pci/rockchip/pcie-rockchip-ep.c
-> new file mode 100644
-> index 0000000..afe9fc4
-> --- /dev/null
-> +++ b/drivers/pci/rockchip/pcie-rockchip-ep.c
-> @@ -0,0 +1,641 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Rockchip AXI PCIe endpoint controller driver
-> + *
-> + * Copyright (c) 2018 Rockchip, Inc.
-> + *
-> + * Author: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> + *         Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> + *
-> + * Bits taken from Cadence endpoint controller driver
-
-Well, "Bits" is an understatement here; anyway I think this is
-a useless comment so I would remove it.
-
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/pci-epc.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/sizes.h>
-> +#include <linux/delay.h>
-> +#include <linux/configfs.h>
-> +#include <linux/pci-epf.h>
-
-Nit: Alphabetical order.
-
-> +#include "pcie-rockchip.h"
-> +
-> +/**
-> + * struct rockchip_pcie_ep - private data for PCIe endpoint controller driver
-> + * @pcie: Rockchip PCIe controller
-> + * @data: pointer to a 'struct rockchip_pcie_data'
-> + * @ob_region_map: bitmask of mapped outbound regions
-> + * @ob_addr: base addresses in the AXI bus where the outbound regions start
-> + * @irq_phys_addr: base address on the AXI bus where the MSI/legacy IRQ
-> + *		   dedicated outbound regions is mapped.
-> + * @irq_cpu_addr: base address in the CPU space where a write access triggers
-> + *		  the sending of a memory write (MSI) / normal message (legacy
-> + *		  IRQ) TLP through the PCIe bus.
-> + * @irq_pci_addr: used to save the current mapping of the MSI/legacy IRQ
-> + *		  dedicated outbound region.
-> + * @irq_pci_fn: the latest PCI function that has updated the mapping of
-> + *		the MSI/legacy IRQ dedicated outbound region.
-> + * @irq_pending: bitmask of asserted legacy IRQs.
-> + * @max_regions: maximum number of regions supported by hardware
-> + */
-> +struct rockchip_pcie_ep {
-> +	rockchip_pcie_epc	pcie;
-> +	struct pci_epc		*epc;
-> +	unsigned long		ob_region_map;
-> +	phys_addr_t		*ob_addr;
-> +	phys_addr_t		irq_phys_addr;
-> +	void __iomem		*irq_cpu_addr;
-> +	u64			irq_pci_addr;
-> +	u8			irq_pci_fn;
-> +	u8			irq_pending;
-> +	u32			max_regions;
-> +};
-> +
-
-I think struct cdns_pcie_ep layout (whose content is identical)
-is more sensible, follow it.
-
-> +void rockchip_pcie_prog_ep_ob_atu(struct rockchip_pcie *rockchip, u8 fn,
-> +				  u32 r, u32 type, u64 cpu_addr, u64 pci_addr,
-> +				  size_t size, bool is_clr)
-> +{
-> +	u64 sz = 1ULL << fls64(size - 1);
-> +	int num_pass_bits = ilog2(sz);
-> +	u32 addr0, addr1, desc0, desc1;
-> +	bool is_nor_msg = (type == AXI_WRAPPER_NOR_MSG);
-> +
-> +	if (is_clr) {
-> +		rockchip_pcie_write(rockchip, 0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0(r));
-> +		rockchip_pcie_write(rockchip, 0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR1(r));
-> +		rockchip_pcie_write(rockchip, 0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_DESC0(r));
-> +		rockchip_pcie_write(rockchip, 0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_DESC1(r));
-> +		rockchip_pcie_write(rockchip, 0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR0(r));
-> +		rockchip_pcie_write(rockchip, 0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR1(r));
-> +		return;
-> +	}
-
-You can split the (is_clr) path in a separate function, say:
-
-rockchip_pcie_clear_ep_ob_atu()
-
-it would simplify this one.
-
-> +
-> +	/* The minimal region size is 1MB */
-> +	if (num_pass_bits < 8)
-> +		num_pass_bits = 8;
-> +
-> +	cpu_addr -= rockchip->mem_res->start;
-> +	addr0 = ((is_nor_msg ? 0x10 : (num_pass_bits - 1)) &
-> +		PCIE_CORE_OB_REGION_ADDR0_NUM_BITS) |
-> +		(lower_32_bits(cpu_addr) & PCIE_CORE_OB_REGION_ADDR0_LO_ADDR);
-> +	addr1 = upper_32_bits(is_nor_msg ? cpu_addr : pci_addr);
-> +	desc0 = ROCKCHIP_PCIE_AT_OB_REGION_DESC0_DEVFN(fn) | type;
-> +	desc1 = 0;
-> +
-> +	if (is_nor_msg) {
-> +		rockchip_pcie_write(rockchip, 0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0(r));
-> +		rockchip_pcie_write(rockchip, 0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR1(r));
-> +		rockchip_pcie_write(rockchip, desc0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_DESC0(r));
-> +		rockchip_pcie_write(rockchip, desc1,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_DESC1(r));
-> +	} else {
-> +		/* PCI bus address region */
-> +		rockchip_pcie_write(rockchip, addr0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR0(r));
-> +		rockchip_pcie_write(rockchip, addr1,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_PCI_ADDR1(r));
-> +		rockchip_pcie_write(rockchip, desc0,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_DESC0(r));
-> +		rockchip_pcie_write(rockchip, desc1,
-> +				    ROCKCHIP_PCIE_AT_OB_REGION_DESC1(r));
-> +
-> +		addr0 =
-> +		    ((num_pass_bits - 1) & PCIE_CORE_OB_REGION_ADDR0_NUM_BITS) |
-> +		    (lower_32_bits(cpu_addr) &
-> +		     PCIE_CORE_OB_REGION_ADDR0_LO_ADDR);
-> +		addr1 = upper_32_bits(cpu_addr);
-> +	}
-> +
-> +	/* CPU bus address region */
-> +	rockchip_pcie_write(rockchip, addr0,
-> +			    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR0(r));
-> +	rockchip_pcie_write(rockchip, addr1,
-> +			    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR1(r));
-> +}
-> +
-> +static int rockchip_pcie_ep_write_header(struct pci_epc *epc, u8 fn,
-> +					 struct pci_epf_header *hdr)
-> +{
-> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-> +	struct rockchip_pcie *rockchip = &ep->pcie;
-> +
-> +	/* All functions share the same vendor ID with function 0 */
-> +	if (fn == 0) {
-> +		u32 vid_regs = (hdr->vendorid & GENMASK(15, 0)) |
-> +			       (hdr->subsys_vendor_id & GENMASK(31, 16)) << 16;
-> +
-> +		rockchip_pcie_write(rockchip, vid_regs,
-> +				    PCIE_CORE_CONFIG_VENDOR);
-> +	}
-> +
-> +	rockchip_pcie_write(rockchip, hdr->deviceid << 16,
-> +			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) + PCI_VENDOR_ID);
-> +
-> +	rockchip_pcie_write(rockchip,
-> +			    hdr->revid |
-> +			    hdr->progif_code << 8 |
-> +			    hdr->subclass_code << 16 |
-> +			    hdr->baseclass_code << 24,
-> +			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) + PCI_REVISION_ID);
-> +	rockchip_pcie_write(rockchip, hdr->cache_line_size,
-> +			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +			    PCI_CACHE_LINE_SIZE);
-> +	rockchip_pcie_write(rockchip, hdr->subsys_id << 16,
-> +			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +			    PCI_SUBSYSTEM_VENDOR_ID);
-> +	rockchip_pcie_write(rockchip, hdr->interrupt_pin << 8,
-> +			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +			    PCI_INTERRUPT_LINE);
-> +
-> +	return 0;
-> +
-
-Useless empty line.
-
-> +}
-> +
-> +static int rockchip_pcie_ep_set_bar(struct pci_epc *epc, u8 fn,
-> +				    enum pci_barno bar, dma_addr_t bar_phys,
-> +				    size_t size, int flags)
-> +{
-> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-> +	struct rockchip_pcie *rockchip = &ep->pcie;
-> +	u32 addr0, addr1, reg, cfg, b, aperture, ctrl;
-> +	u64 sz;
-> +
-> +	/* BAR size is 2^(aperture + 7) */
-> +	sz = max_t(size_t, size, MIN_EP_APERTURE);
-> +
-> +	/*
-> +	 * roundup_pow_of_two() returns an unsigned long, which is not suited
-> +	 * for 64bit values.
-> +	 */
-> +	sz = 1ULL << fls64(sz - 1);
-> +	aperture = ilog2(sz) - 7; /* 128B -> 0, 256B -> 1, 512B -> 2, ... */
-> +
-> +	if ((flags & PCI_BASE_ADDRESS_SPACE) == PCI_BASE_ADDRESS_SPACE_IO) {
-> +		ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_IO_32BITS;
-> +	} else {
-> +		bool is_prefetch = !!(flags & PCI_BASE_ADDRESS_MEM_PREFETCH);
-> +		bool is_64bits = sz > SZ_2G;
-> +
-> +		if (is_64bits && (bar & 1))
-> +			return -EINVAL;
-> +
-> +		if (is_64bits && is_prefetch)
-> +			ctrl =
-> +			    ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH_MEM_64BITS;
-> +		else if (is_prefetch)
-> +			ctrl =
-> +			    ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_PREFETCH_MEM_32BITS;
-> +		else if (is_64bits)
-> +			ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM_64BITS;
-> +		else
-> +			ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_MEM_32BITS;
-> +	}
-> +
-> +	if (bar < BAR_4) {
-> +		reg = ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG0(fn);
-> +		b = bar;
-> +	} else {
-> +		reg = ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG1(fn);
-> +		b = bar - BAR_4;
-> +	}
-> +
-> +	addr0 = lower_32_bits(bar_phys);
-> +	addr1 = upper_32_bits(bar_phys);
-> +
-> +	cfg = rockchip_pcie_read(rockchip, reg);
-> +	cfg &= ~(ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b) |
-> +		 ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b));
-> +	cfg |= (ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_APERTURE(b, aperture) |
-> +		ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL(b, ctrl));
-> +
-> +	rockchip_pcie_write(rockchip, cfg, reg);
-> +	rockchip_pcie_write(rockchip, addr0,
-> +			    ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar));
-> +	rockchip_pcie_write(rockchip, addr1,
-> +			    ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar));
-> +
-> +	return 0;
-> +}
-> +
-> +static void rockchip_pcie_ep_clear_bar(struct pci_epc *epc, u8 fn,
-> +				       enum pci_barno bar)
-> +{
-> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-> +	struct rockchip_pcie *rockchip = &ep->pcie;
-> +	u32 reg, cfg, b, ctrl;
-> +
-> +	if (bar < BAR_4) {
-> +		reg = ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG0(fn);
-> +		b = bar;
-> +	} else {
-> +		reg = ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG1(fn);
-> +		b = bar - BAR_4;
-> +	}
-> +
-> +	ctrl = ROCKCHIP_PCIE_CORE_BAR_CFG_CTRL_DISABLED;
-> +	cfg = rockchip_pcie_read(rockchip, reg);
-> +	cfg &= ~(ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_APERTURE_MASK(b) |
-> +		 ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL_MASK(b));
-> +	cfg |= ROCKCHIP_PCIE_CORE_EP_FUNC_BAR_CFG_BAR_CTRL(b, ctrl);
-> +
-> +	rockchip_pcie_write(rockchip, cfg, reg);
-> +	rockchip_pcie_write(rockchip, 0x0,
-> +			    ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar));
-> +	rockchip_pcie_write(rockchip, 0x0,
-> +			    ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR1(fn, bar));
-> +
-
-Useless empty line.
-
-> +}
-> +
-> +static int rockchip_pcie_ep_map_addr(struct pci_epc *epc, u8 fn,
-> +				     phys_addr_t addr, u64 pci_addr,
-> +				     size_t size)
-> +{
-> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-> +	struct rockchip_pcie *pcie = &ep->pcie;
-> +	u32 r;
-> +
-> +	r = find_first_zero_bit(&ep->ob_region_map,
-> +				sizeof(ep->ob_region_map) * BITS_PER_LONG);
-> +	if (r >= ep->max_regions - 1) {
-
-Why are we comparing for equality against (max_regions - 1) ? Aren't
-we leaving a region out ?
-
-NB: I know this code is identical to the Cadence driver but copy and
-paste is not a good reason for it and if that's a bug it ought to be
-fixed in both drivers.
-
-> +		dev_err(&epc->dev, "no free outbound region\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	rockchip_pcie_prog_ep_ob_atu(pcie, fn, r, AXI_WRAPPER_MEM_WRITE, addr,
-> +				     pci_addr, size, false);
-> +
-> +	set_bit(r, &ep->ob_region_map);
-> +	ep->ob_addr[r] = addr;
-> +
-> +	return 0;
-> +
-
-Useless empty line.
-
-> +}
-> +
-> +static void rockchip_pcie_ep_unmap_addr(struct pci_epc *epc, u8 fn,
-> +					phys_addr_t addr)
-> +{
-> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-> +	struct rockchip_pcie *rockchip = &ep->pcie;
-> +	u32 r;
-> +
-> +	for (r = 0; r < ep->max_regions - 1; r++)
-> +		if (ep->ob_addr[r] == addr)
-> +			break;
-
-See above for max_regions - 1.
-
-> +
-> +	if (r == ep->max_regions - 1)
-> +		return;
-
-Ditto.
-
-> +
-> +	rockchip_pcie_prog_ep_ob_atu(rockchip, 0, 0, 0, 0, 0, 0, true);
-> +
-> +	ep->ob_addr[r] = 0;
-> +	clear_bit(r, &ep->ob_region_map);
-> +}
-> +
-> +static int rockchip_pcie_ep_set_msi(struct pci_epc *epc, u8 fn,
-> +				    u8 multi_msg_cap)
-> +{
-> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-> +	struct rockchip_pcie *rockchip = &ep->pcie;
-> +	u16 flags;
-> +
-> +	flags = rockchip_pcie_read(rockchip,
-> +				   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +				   ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-> +	flags &= ~ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_MASK;
-> +	flags |=
-> +	   ((multi_msg_cap << 1) <<  ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_OFFSET) |
-> +	   PCI_MSI_FLAGS_64BIT;
-> +	flags &= ~ROCKCHIP_PCIE_EP_MSI_CTRL_MASK_MSI_CAP;
-> +	rockchip_pcie_write(rockchip, flags,
-> +			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +			    ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-> +	return 0;
-> +}
-> +
-> +static int rockchip_pcie_ep_get_msi(struct pci_epc *epc, u8 fn)
-> +{
-> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-> +	struct rockchip_pcie *rockchip = &ep->pcie;
-> +	u16 flags;
-> +
-> +	flags = rockchip_pcie_read(rockchip,
-> +				   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +				   ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-> +	if (!(flags & ROCKCHIP_PCIE_EP_MSI_CTRL_ME))
-> +		return -EINVAL;
-> +
-> +	return ((flags & ROCKCHIP_PCIE_EP_MSI_CTRL_MME_MASK) >>
-> +			ROCKCHIP_PCIE_EP_MSI_CTRL_MME_OFFSET);
-> +}
-> +
-> +static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
-> +					 u8 intx, bool is_asserted)
-> +{
-> +	struct rockchip_pcie *rockchip = &ep->pcie;
-> +	u32 r = ep->max_regions - 1;
-> +	u32 offset;
-> +	u16 status;
-> +	u8 msg_code;
-> +
-> +	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||
-> +		     ep->irq_pci_fn != fn)) {
-> +		rockchip_pcie_prog_ep_ob_atu(rockchip, fn, r,
-> +					     AXI_WRAPPER_NOR_MSG,
-> +					     ep->irq_phys_addr, 0, 0, false);
-> +		ep->irq_pci_addr = ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR;
-> +		ep->irq_pci_fn = fn;
-> +	}
-> +
-> +	intx &= 3;
-> +	if (is_asserted) {
-> +		ep->irq_pending |= BIT(intx);
-> +		msg_code = ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA + intx;
-> +	} else {
-> +		ep->irq_pending &= ~BIT(intx);
-> +		msg_code = ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTA + intx;
-> +	}
-> +
-> +	status = rockchip_pcie_read(rockchip,
-> +				    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +				    ROCKCHIP_PCIE_EP_CMD_STATUS);
-> +	status &= ROCKCHIP_PCIE_EP_CMD_STATUS_IS;
-> +
-> +	if ((status != 0) ^ (ep->irq_pending != 0)) {
-> +		status ^= ROCKCHIP_PCIE_EP_CMD_STATUS_IS;
-> +		rockchip_pcie_write(rockchip, status,
-> +				    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +				    ROCKCHIP_PCIE_EP_CMD_STATUS);
-> +	}
-> +
-> +	offset =
-> +	   ROCKCHIP_PCIE_MSG_ROUTING(ROCKCHIP_PCIE_MSG_ROUTING_LOCAL_INTX) |
-> +	   ROCKCHIP_PCIE_MSG_CODE(msg_code) | ROCKCHIP_PCIE_MSG_NO_DATA;
-> +	writel(0, ep->irq_cpu_addr + offset);
-> +}
-> +
-> +static int rockchip_pcie_ep_send_legacy_irq(struct rockchip_pcie_ep *ep, u8 fn,
-> +					    u8 intx)
-> +{
-> +	u16 cmd;
-> +
-> +	cmd = rockchip_pcie_read(&ep->pcie,
-> +				 ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +				 ROCKCHIP_PCIE_EP_CMD_STATUS);
-> +
-> +	if (cmd & PCI_COMMAND_INTX_DISABLE)
-> +		return -EINVAL;
-> +
-> +	rockchip_pcie_ep_assert_intx(ep, fn, intx, true);
-> +	mdelay(1);
-
-Is there some HW engineering backing this mdelay() value ? That's a
-question for Cadence driver too.
-
-> +	rockchip_pcie_ep_assert_intx(ep, fn, intx, false);
-> +	return 0;
-> +}
-> +
-> +static int rockchip_pcie_ep_send_msi_irq(struct rockchip_pcie_ep *ep, u8 fn,
-> +					 u8 interrupt_num)
-> +{
-> +	struct rockchip_pcie *rockchip = &ep->pcie;
-> +	u16 flags, mme, data, data_mask;
-> +	u8 msi_count;
-> +	u64 pci_addr, pci_addr_mask = 0xff;
-> +
-> +	/* Check MSI enable bit */
-> +	flags = rockchip_pcie_read(&ep->pcie,
-> +				   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +				   ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-> +	if (!(flags & ROCKCHIP_PCIE_EP_MSI_CTRL_ME))
-> +		return -EINVAL;
-> +
-> +	/* Get MSI numbers from MME */
-> +	mme = ((flags & ROCKCHIP_PCIE_EP_MSI_CTRL_MME_MASK) >>
-> +			ROCKCHIP_PCIE_EP_MSI_CTRL_MME_OFFSET);
-> +	msi_count = 1 << mme;
-> +	if (!interrupt_num || interrupt_num > msi_count)
-> +		return -EINVAL;
-> +
-> +	/* Set MSI private data */
-> +	data_mask = msi_count - 1;
-> +	data = rockchip_pcie_read(rockchip,
-> +				  ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +				  ROCKCHIP_PCIE_EP_MSI_CTRL_REG +
-> +				  PCI_MSI_DATA_64);
-> +	data = (data & ~data_mask) | ((interrupt_num - 1) & data_mask);
-> +
-> +	/* Get MSI PCI address */
-> +	pci_addr = rockchip_pcie_read(rockchip,
-> +				      ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +				      ROCKCHIP_PCIE_EP_MSI_CTRL_REG +
-> +				      PCI_MSI_ADDRESS_HI);
-> +	pci_addr <<= 32;
-> +	pci_addr |= rockchip_pcie_read(rockchip,
-> +				       ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-> +				       ROCKCHIP_PCIE_EP_MSI_CTRL_REG +
-> +				       PCI_MSI_ADDRESS_LO);
-> +	pci_addr &= GENMASK_ULL(63, 2);
-> +
-> +	/* Set the outbound region if needed. */
-> +	if (unlikely(ep->irq_pci_addr != (pci_addr & ~pci_addr_mask) ||
-> +		     ep->irq_pci_fn != fn)) {
-> +		rockchip_pcie_prog_ep_ob_atu(rockchip, fn, ep->max_regions - 1,
-> +					     AXI_WRAPPER_MEM_WRITE,
-> +					     ep->irq_phys_addr,
-> +					     pci_addr & ~pci_addr_mask,
-> +					     pci_addr_mask + 1, false);
-> +		ep->irq_pci_addr = (pci_addr & ~pci_addr_mask);
-> +		ep->irq_pci_fn = fn;
-> +	}
-> +
-> +	writew(data, ep->irq_cpu_addr + (pci_addr & pci_addr_mask));
-> +	return 0;
-> +}
-> +
-> +
-
-Useless empty line.
-
-> +static int rockchip_pcie_ep_raise_irq(struct pci_epc *epc, u8 fn,
-> +				      enum pci_epc_irq_type type,
-> +				      u8 interrupt_num)
-> +{
-> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-> +
-> +	switch (type) {
-> +	case PCI_EPC_IRQ_LEGACY:
-> +		return rockchip_pcie_ep_send_legacy_irq(ep, fn, 0);
-
-Why always INTA (question valid on Cadence driver too) ?
-
-> +	case PCI_EPC_IRQ_MSI:
-> +		return rockchip_pcie_ep_send_msi_irq(ep, fn, interrupt_num);
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int rockchip_pcie_ep_start(struct pci_epc *epc)
-> +{
-> +	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
-> +	struct rockchip_pcie *rockchip = &ep->pcie;
-> +	struct pci_epf *epf;
-> +	u32 cfg;
-> +
-> +	cfg = BIT(0);
-> +	list_for_each_entry(epf, &epc->pci_epf, list)
-> +		cfg |= BIT(epf->func_no);
-> +
-> +	rockchip_pcie_write(rockchip, cfg, PCIE_CORE_PHY_FUNC_CFG);
-> +
-> +	list_for_each_entry(epf, &epc->pci_epf, list)
-> +		pci_epf_linkup(epf);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pci_epc_ops rockchip_pcie_epc_ops = {
-> +	.write_header	= rockchip_pcie_ep_write_header,
-> +	.set_bar	= rockchip_pcie_ep_set_bar,
-> +	.clear_bar	= rockchip_pcie_ep_clear_bar,
-> +	.map_addr	= rockchip_pcie_ep_map_addr,
-> +	.unmap_addr	= rockchip_pcie_ep_unmap_addr,
-> +	.set_msi	= rockchip_pcie_ep_set_msi,
-> +	.get_msi	= rockchip_pcie_ep_get_msi,
-> +	.raise_irq	= rockchip_pcie_ep_raise_irq,
-> +	.start		= rockchip_pcie_ep_start,
-> +};
-> +
-> +/**
-> + * rockchip_pcie_parse_dt - Parse Device Tree
-> + * @rockchip: PCIe port information
-
-Missing a parameter. By the way a kerneldoc for this entry does
-not seem that useful to me, you can remove it.
-
-> + *
-> + * Return: '0' on success and error value on failure
-> + */
-> +static int rockchip_pcie_parse_ep_dt(struct rockchip_pcie *rockchip,
-> +				     struct rockchip_pcie_ep *ep)
-> +{
-> +	struct device *dev = rockchip->dev;
-> +	int err;
-> +
-> +	err = rockchip_pcie_parse_dt(rockchip);
-> +	if (err)
-> +		return err;
-> +
-> +	err = rockchip_pcie_get_phys(rockchip);
-> +	if (err)
-> +		return err;
-> +
-> +	err = of_property_read_u32(dev->of_node,
-> +				   "rockchip,max-outbound-regions",
-> +				   &ep->max_regions);
-> +	if (err < 0 || ep->max_regions > MAX_REGION_LIMIT)
-> +		ep->max_regions = MAX_REGION_LIMIT;
-> +
-> +	err = of_property_read_u8(dev->of_node, "max-functions",
-> +				  &ep->epc->max_functions);
-> +	if (err < 0)
-> +		ep->epc->max_functions = 1;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id rockchip_pcie_ep_of_match[] = {
-> +	{ .compatible = "rockchip,rk3399-pcie-ep"},
-> +	{},
-> +};
-> +
-> +static int rockchip_pcie_ep_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct rockchip_pcie_ep *ep;
-> +	rockchip_pcie_epc *rockchip;
-> +	struct pci_epc *epc;
-> +	size_t max_regions;
-> +	int err;
-> +
-> +	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
-> +	if (!ep)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, ep);
-
-What's this used for ?
-
-> +	rockchip = &ep->pcie;
-> +	rockchip->is_rc = false;
-> +	rockchip->dev = dev;
-> +
-> +	epc = devm_pci_epc_create(dev, &rockchip_pcie_epc_ops);
-> +	if (IS_ERR(epc)) {
-> +		dev_err(dev, "failed to create epc device\n");
-> +		return PTR_ERR(epc);
-> +	}
-> +
-> +	ep->epc = epc;
-> +	epc_set_drvdata(epc, ep);
-> +
-> +	err = rockchip_pcie_parse_ep_dt(rockchip, ep);
-> +	if (err)
-> +		return err;
-> +
-> +	err = rockchip_pcie_enable_clocks(rockchip);
-> +	if (err)
-> +		return err;
-> +
-> +	err = rockchip_pcie_init_port(rockchip);
-> +	if (err)
-> +		goto err_disable_clocks;
-> +
-> +	/* Establish the link automatically */
-> +	rockchip_pcie_write(rockchip, PCIE_CLIENT_LINK_TRAIN_ENABLE,
-> +			    PCIE_CLIENT_CONFIG);
-> +
-> +	max_regions = ep->max_regions;
-> +	ep->ob_addr = devm_kzalloc(dev, max_regions * sizeof(*ep->ob_addr),
-> +				   GFP_KERNEL);
-> +
-> +	if (!ep->ob_addr) {
-> +		err = -ENOMEM;
-> +		goto err_uninit_port;
-> +	}
-> +
-> +	/* Only enable function 0 by default */
-> +	rockchip_pcie_write(rockchip, BIT(0), PCIE_CORE_PHY_FUNC_CFG);
-> +
-> +
-
-Useless empty line.
-
-> +	err = pci_epc_mem_init(epc, rockchip->mem_res->start,
-> +			       resource_size(rockchip->mem_res));
-> +	if (err < 0) {
-> +		dev_err(dev, "failed to initialize the memory space\n");
-> +		goto err_uninit_port;
-> +	}
-> +
-> +	ep->irq_cpu_addr = pci_epc_mem_alloc_addr(epc, &ep->irq_phys_addr,
-> +						  SZ_128K);
-> +	if (!ep->irq_cpu_addr) {
-> +		dev_err(dev, "failed to reserve memory space for MSI\n");
-> +		err = -ENOMEM;
-> +		goto err_epc_mem_exit;
-> +	}
-> +
-> +	ep->irq_pci_addr = ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR;
-> +
-> +	return 0;
-> +err_epc_mem_exit:
-> +	pci_epc_mem_exit(epc);
-> +err_uninit_port:
-> +	rockchip_pcie_deinit_phys(rockchip);
-> +err_disable_clocks:
-> +	rockchip_pcie_disable_clocks(rockchip);
-> +	return err;
-> +}
-> +
-> +static struct platform_driver rockchip_pcie_ep_driver = {
-> +	.driver = {
-> +		.name = "rockchip-pcie-ep",
-> +		.of_match_table = rockchip_pcie_ep_of_match,
-> +	},
-> +	.probe = rockchip_pcie_ep_probe,
-> +};
-> +
-> +builtin_platform_driver(rockchip_pcie_ep_driver);
-> diff --git a/drivers/pci/rockchip/pcie-rockchip.c b/drivers/pci/rockchip/pcie-rockchip.c
-> index d03508c..1d38ad7 100644
-> --- a/drivers/pci/rockchip/pcie-rockchip.c
-> +++ b/drivers/pci/rockchip/pcie-rockchip.c
-> @@ -29,15 +29,22 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
->  	struct resource *regs;
->  	int err;
+> -		/* Note the wlan_module_reset_l pinctrl */
+>  		enable-active-high;
+>  		gpio = <&gpio1 11 GPIO_ACTIVE_HIGH>;
 >  
-> -	regs = platform_get_resource_byname(pdev,
-> -					    IORESOURCE_MEM,
-> -					    "axi-base");
-> -	rockchip->reg_base = devm_pci_remap_cfg_resource(dev, regs);
-> -	if (IS_ERR(rockchip->reg_base))
-> -		return PTR_ERR(rockchip->reg_base);
+> @@ -988,12 +989,6 @@ ap_i2c_audio: &i2c8 {
+>  	pinctrl-0 = <
+>  		&ap_pwroff	/* AP will auto-assert this when in S3 */
+>  		&clk_32k	/* This pin is always 32k on gru boards */
 > -
-> -	regs = platform_get_resource_byname(pdev,
-> -					    IORESOURCE_MEM,
-> +	if (rockchip->is_rc) {
-> +		regs = platform_get_resource_byname(pdev,
-> +						    IORESOURCE_MEM,
-> +						    "axi-base");
-> +		rockchip->reg_base = devm_pci_remap_cfg_resource(dev, regs);
-> +		if (IS_ERR(rockchip->reg_base))
-> +			return PTR_ERR(rockchip->reg_base);
-> +	} else {
-> +		rockchip->mem_res =
-> +			platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> +						     "mem-base");
-> +		if (!rockchip->mem_res)
-> +			return -EINVAL;
-> +	}
-> +
-> +	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->  					    "apb-base");
->  	rockchip->apb_base = devm_ioremap_resource(dev, regs);
->  	if (IS_ERR(rockchip->apb_base))
-> diff --git a/drivers/pci/rockchip/pcie-rockchip.h b/drivers/pci/rockchip/pcie-rockchip.h
-> index af3e74f..f4bfc22 100644
-> --- a/drivers/pci/rockchip/pcie-rockchip.h
-> +++ b/drivers/pci/rockchip/pcie-rockchip.h
-> @@ -23,6 +23,9 @@
+> -		/*
+> -		 * We want this driven low ASAP; firmware should help us, but
+> -		 * we can help ourselves too.
+> -		 */
+> -		&wlan_module_reset_l
+>  	>;
+>  
+>  	pcfg_output_low: pcfg-output-low {
+> @@ -1173,12 +1168,7 @@ ap_i2c_audio: &i2c8 {
+>  		};
+>  
+>  		wlan_module_reset_l: wlan-module-reset-l {
+> -			/*
+> -			 * We want this driven low ASAP (As {Soon,Strongly} As
+> -			 * Possible), to avoid leakage through the powered-down
+> -			 * WiFi.
+> -			 */
+> -			rockchip,pins = <1 11 RK_FUNC_GPIO &pcfg_output_low>;
+> +			rockchip,pins = <1 11 RK_FUNC_GPIO &pcfg_pull_none>;
+>  		};
+>  
+>  		bt_host_wake_l: bt-host-wake-l {
+> 
 
-[...]
+In linux-next there are still different issues with s2r, but definitely, this
+patch has allowed me to enable again the PCIE on my Samsung Chromebook Plus, s2r
+goes now a bit further :) So many thanks for the patch.
 
-> +typedef struct rockchip_pcie rockchip_pcie_epc;
+Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-This typedef has no justification and just obfuscates, please remove it.
-
-Thanks,
-Lorenzo
+Regards,
+  Enric
