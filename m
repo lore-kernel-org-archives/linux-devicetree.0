@@ -1,93 +1,119 @@
-Return-Path: <>
-From: Gaku Inami <gaku.inami.xh@renesas.com>
-Subject: [PATCH 3/5] arm64: dts: renesas: r8a7795: Add cpu capacity-dmips-mhz
-Date: Tue, 27 Feb 2018 11:19:53 +0900
-Message-Id: <1519697995-6061-4-git-send-email-gaku.inami.xh@renesas.com>
-In-Reply-To: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
-References: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Gaku Inami <gaku.inami.xh@renesas.com>
+Return-Path: <SRS0=DCbQ=FW=codeaurora.org=kramasub@kernel.org>
+From: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Subject: [PATCH v3 1/4] dt-bindings: soc: qcom: Add device tree binding for GENI SE
+Date: Tue, 27 Feb 2018 18:38:06 -0700
+Message-Id: <1519781889-16117-2-git-send-email-kramasub@codeaurora.org>
+In-Reply-To: <1519781889-16117-1-git-send-email-kramasub@codeaurora.org>
+References: <1519781889-16117-1-git-send-email-kramasub@codeaurora.org>
+To: corbet@lwn.net, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org
+Cc: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, evgreen@chromium.org, acourbot@chromium.org, Sagar Dharia <sdharia@codeaurora.org>, Girish Mahadevan <girishm@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Set the capacity-dmips-mhz for r8a7795, that is based on dhrystone.
+Add device tree binding support for the QCOM GENI SE driver.
 
-Expected cpu capacity:
-Cortex-A57@1.5GHz: 1024, Cortex-A53@1.2GHz: 411
-
-Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
+Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
+Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 89 ++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index ffcc91e..be15864 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -75,6 +75,7 @@
- 			enable-method = "psci";
- 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
-+			capacity-dmips-mhz = <1024>;
- 			#cooling-cells = <2>;
- 		};
- 
-@@ -87,6 +88,7 @@
- 			enable-method = "psci";
- 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
-+			capacity-dmips-mhz = <1024>;
- 			#cooling-cells = <2>;
- 		};
- 
-@@ -99,6 +101,7 @@
- 			enable-method = "psci";
- 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
-+			capacity-dmips-mhz = <1024>;
- 			#cooling-cells = <2>;
- 		};
- 
-@@ -111,6 +114,7 @@
- 			enable-method = "psci";
- 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z>;
- 			operating-points-v2 = <&cluster0_opp>;
-+			capacity-dmips-mhz = <1024>;
- 			#cooling-cells = <2>;
- 		};
- 
-@@ -123,6 +127,7 @@
- 			enable-method = "psci";
- 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
-+			capacity-dmips-mhz = <411>;
- 		};
- 
- 		a53_1: cpu@101 {
-@@ -134,6 +139,7 @@
- 			enable-method = "psci";
- 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
-+			capacity-dmips-mhz = <411>;
- 		};
- 
- 		a53_2: cpu@102 {
-@@ -145,6 +151,7 @@
- 			enable-method = "psci";
- 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
-+			capacity-dmips-mhz = <411>;
- 		};
- 
- 		a53_3: cpu@103 {
-@@ -156,6 +163,7 @@
- 			enable-method = "psci";
- 			clocks =<&cpg CPG_CORE R8A7795_CLK_Z2>;
- 			operating-points-v2 = <&cluster1_opp>;
-+			capacity-dmips-mhz = <411>;
- 		};
- 
- 		L2_CA57: cache-controller-0 {
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+new file mode 100644
+index 0000000..fe6a0c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+@@ -0,0 +1,89 @@
++Qualcomm Technologies, Inc. GENI Serial Engine QUP Wrapper Controller
++
++Generic Interface (GENI) based Qualcomm Universal Peripheral (QUP) wrapper
++is a programmable module for supporting a wide range of serial interfaces
++like UART, SPI, I2C, I3C, etc. A single QUP module can provide upto 8 Serial
++Interfaces, using its internal Serial Engines. The GENI Serial Engine QUP
++Wrapper controller is modeled as a node with zero or more child nodes each
++representing a serial engine.
++
++Required properties:
++- compatible:		Must be "qcom,geni-se-qup".
++- reg:			Must contain QUP register address and length.
++- clock-names:		Must contain "m-ahb" and "s-ahb".
++- clocks:		AHB clocks needed by the device.
++
++Required properties if child node exists:
++- #address-cells: 	Must be <1> for Serial Engine Address
++- #size-cells: 		Must be <1> for Serial Engine Address Size
++- ranges: 		Must be present
++
++Properties for children:
++
++A GENI based QUP wrapper controller node can contain 0 or more child nodes
++representing serial devices.  These serial devices can be a QCOM UART, I2C
++controller, spi controller, or some combination of aforementioned devices.
++Please refer below the child node definitions for the supported serial
++interface protocols.
++
++Qualcomm Technologies Inc. GENI Serial Engine based I2C Controller
++
++Required properties:
++- compatible:		Must be "qcom,geni-i2c".
++- reg: 			Must contain QUP register address and length.
++- interrupts: 		Must contain I2C interrupt.
++- clock-names: 		Must contain "se".
++- clocks: 		Serial engine core clock needed by the device.
++- #address-cells:	Must be <1> for i2c device address.
++- #size-cells:		Must be <0> as i2c addresses have no size component.
++
++Optional property:
++- clock-frequency:	Desired I2C bus clock frequency in Hz.
++			When missing default to 400000Hz.
++
++Child nodes should conform to i2c bus binding as described in i2c.txt.
++
++Qualcomm Technologies Inc. GENI Serial Engine based UART Controller
++
++Required properties:
++- compatible:		Must be "qcom,geni-debug-uart".
++- reg: 			Must contain UART register location and length.
++- interrupts: 		Must contain UART core interrupts.
++- clock-names:		Must contain "se".
++- clocks:		Serial engine core clock needed by the device.
++
++Example:
++	geniqup@8c0000 {
++		compatible = "qcom,geni-se-qup";
++		reg = <0x8c0000 0x6000>;
++		clock-names = "m-ahb", "s-ahb";
++		clocks = <&clock_gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
++			<&clock_gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		i2c0: i2c@a94000 {
++			compatible = "qcom,geni-i2c";
++			reg = <0xa94000 0x4000>;
++			interrupts = <GIC_SPI 358 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "se";
++			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S5_CLK>;
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&qup_1_i2c_5_active>;
++			pinctrl-1 = <&qup_1_i2c_5_sleep>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		uart0: serial@a88000 {
++			compatible = "qcom,geni-debug-uart";
++			reg = <0xa88000 0x7000>;
++			interrupts = <GIC_SPI 355 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "se";
++			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&qup_1_uart_3_active>;
++			pinctrl-1 = <&qup_1_uart_3_sleep>;
++		};
++	}
 -- 
-2.7.4
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
