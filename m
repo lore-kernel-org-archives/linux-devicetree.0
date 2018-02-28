@@ -1,113 +1,196 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH v2 01/16] clk: sunxi-ng: Add check for
- minimal rate to NM PLLs
-Date: Wed, 28 Feb 2018 22:55:03 +0100
-Message-ID: <3220888.aQMeRaSCkl@jernej-laptop>
-References: <20180227222701.9716-1-jernej.skrabec@siol.net> <20180227222701.9716-2-jernej.skrabec@siol.net> <20180228073440.6ejo3wjdqag6h4nl@flea>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH 2/3] dt-bindings: clock: Add bindings for ZynqMP clock driver
+Date: Wed, 28 Feb 2018 14:27:40 -0800
+Message-ID: <1519856861-31384-3-git-send-email-jollys@xilinx.com>
+References: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBOWK3TKAKGQEMLZQB6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180228073440.6ejo3wjdqag6h4nl@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
+Cc: rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add documentation to describe Xilinx ZynqMP clock driver
+bindings.
 
-Dne sreda, 28. februar 2018 ob 08:34:40 CET je Maxime Ripard napisal(a):
-> Hi,
-> 
-> On Tue, Feb 27, 2018 at 11:26:46PM +0100, Jernej Skrabec wrote:
-> > Some NM PLLs doesn't work well when their output clock rate is set below
-> > certain rate.
-> > 
-> > Add support for that constrain.
-> > 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> > ---
-> > 
-> >  drivers/clk/sunxi-ng/ccu_nm.c | 11 +++++++----
-> >  drivers/clk/sunxi-ng/ccu_nm.h | 27 +++++++++++++++++++++++++++
-> >  2 files changed, 34 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/clk/sunxi-ng/ccu_nm.c b/drivers/clk/sunxi-ng/ccu_nm.c
-> > index a16de092bf94..7fc743c78c1b 100644
-> > --- a/drivers/clk/sunxi-ng/ccu_nm.c
-> > +++ b/drivers/clk/sunxi-ng/ccu_nm.c
-> > @@ -20,7 +20,7 @@ struct _ccu_nm {
-> > 
-> >  };
-> >  
-> >  static void ccu_nm_find_best(unsigned long parent, unsigned long rate,
-> > 
-> > -			     struct _ccu_nm *nm)
-> > +			     unsigned long min_rate, struct _ccu_nm *nm)
-> > 
-> >  {
-> >  
-> >  	unsigned long best_rate = 0;
-> >  	unsigned long best_n = 0, best_m = 0;
-> > 
-> > @@ -30,7 +30,7 @@ static void ccu_nm_find_best(unsigned long parent,
-> > unsigned long rate,> 
-> >  		for (_m = nm->min_m; _m <= nm->max_m; _m++) {
-> >  		
-> >  			unsigned long tmp_rate = parent * _n  / _m;
-> > 
-> > -			if (tmp_rate > rate)
-> > +			if (tmp_rate > rate || tmp_rate < min_rate)
-> > 
-> >  				continue;
-> >  			
-> >  			if ((rate - tmp_rate) < (rate - best_rate)) {
-> > 
-> > @@ -117,6 +117,9 @@ static long ccu_nm_round_rate(struct clk_hw *hw,
-> > unsigned long rate,> 
-> >  	if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
-> >  	
-> >  		rate *= nm->fixed_post_div;
-> > 
-> > +	if (rate < nm->min_rate)
-> > +		rate = nm->min_rate;
-> > +
-> 
-> I guess you can just return there. There's no point in trying to find
-> the factors at this point, since the minimum should be a value that
-> can be reached.
-> 
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+---
+ .../devicetree/bindings/clock/xlnx,zynqmp-clk.txt  | 163 +++++++++++++++++++++
+ 1 file changed, 163 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/xlnx,zynqmp-clk.txt
 
-Right, I already tested it and it works.
-
-Best regards,
-Jernej
-
-> >  	if (ccu_frac_helper_has_rate(&nm->common, &nm->frac, rate)) {
-> >  	
-> >  		if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
-> >  		
-> >  			rate /= nm->fixed_post_div;
-> > 
-> > @@ -134,7 +137,7 @@ static long ccu_nm_round_rate(struct clk_hw *hw,
-> > unsigned long rate,> 
-> >  	_nm.min_m = 1;
-> >  	_nm.max_m = nm->m.max ?: 1 << nm->m.width;
-> > 
-> > -	ccu_nm_find_best(*parent_rate, rate, &_nm);
-> > +	ccu_nm_find_best(*parent_rate, rate, nm->min_rate, &_nm);
-> 
-> Therefore, you don't need to change the prototype there either.
-> 
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin (formerly Free Electrons)
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+diff --git a/Documentation/devicetree/bindings/clock/xlnx,zynqmp-clk.txt b/Documentation/devicetree/bindings/clock/xlnx,zynqmp-clk.txt
+new file mode 100644
+index 0000000..d590330
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/xlnx,zynqmp-clk.txt
+@@ -0,0 +1,163 @@
++Device Tree Clock bindings for the Zynq Ultrascale+ MPSoC
++
++The Zynq Ultrascale+ MPSoC has several different clk providers,
++each with there own bindings.
++The purpose of this document is to document their usage.
++
++See clock_bindings.txt for more information on the generic clock bindings.
++
++== Clock Controller ==
++The clock controller is a logical abstraction of Zynq Ultrascale+ MPSoC clock
++tree. It reads required input clock frequencies from the devicetree and acts
++as clock provider for all clock consumers of PS clocks.
++
++Required properties:
++ - #clock-cells : Must be 1
++ - compatible : "xlnx,zynqmp-clk"
++ - clocks : list of clock specifiers which are external input clocks to the
++	    given clock controller. Please refer the next section to find
++	    the input clocks for a given controller.
++ - clock-names : list of names of clocks which are exteral input clocks to the
++		 given clock controller. Please refer to the clock bindings
++		 for more details
++
++Input clocks for zynqmp Ultrascale+ clock controller:
++The Zynq UltraScale+ MPSoC has one primary and four alternative reference clock
++inputs.
++These required clock inputs are the
++ - pss_ref_clk (PS reference clock)
++ - video_clk (reference clock for video system )
++ - pss_alt_ref_clk (alternative PS reference clock)
++ - aux_ref_clk
++ - gt_crx_ref_clk (transceiver reference clock)
++
++The following strings are optional parameters to the 'clock-names' property in
++order to provide an optional (E)MIO clock source.
++ - swdt0_ext_clk
++ - swdt1_ext_clk
++ - gem0_emio_clk
++ - gem1_emio_clk
++ - gem2_emio_clk
++ - gem3_emio_clk
++ - mio_clk_XX		# with XX = 00..77
++ - mio_clk_50_or_51	#for the mux clock to gem tsu from 50 or 51
++
++
++Output clocks for zynqmp Ultrascale+ clock controller:
++Output clocks are registered based on clock information received from firmware.
++Output clock indexes are mentioned below:
++
++Clock ID:	Output clock name:
++-------------------------------------
++0		iopll
++1		rpll
++2		apll
++3		dpll
++4		vpll
++5		iopll_to_fpd
++6		rpll_to_fpd
++7		apll_to_lpd
++8		dpll_to_lpd
++9		vpll_to_lpd
++10		acpu
++11		acpu_half
++12		dbf_fpd
++13		dbf_lpd
++14		dbg_trace
++15		dbg_tstmp
++16		dp_video_ref
++17		dp_audio_ref
++18		dp_stc_ref
++19		gdma_ref
++20		dpdma_ref
++21		ddr_ref
++22		sata_ref
++23		pcie_ref
++24		gpu_ref
++25		gpu_pp0_ref
++26		gpu_pp1_ref
++27		topsw_main
++28		topsw_lsbus
++29		gtgref0_ref
++30		lpd_switch
++31		lpd_lsbus
++32		usb0_bus_ref
++33		usb1_bus_ref
++34		usb3_dual_ref
++35		usb0
++36		usb1
++37		cpu_r5
++38		cpu_r5_core
++39		csu_spb
++40		csu_pll
++41		pcap
++42		iou_switch
++43		gem_tsu_ref
++44		gem_tsu
++45		gem0_ref
++46		gem1_ref
++47		gem2_ref
++48		gem3_ref
++49		gem0_tx
++50		gem1_tx
++51		gem2_tx
++52		gem3_tx
++53		qspi_ref
++54		sdio0_ref
++55		sdio1_ref
++56		uart0_ref
++57		uart1_ref
++58		spi0_ref
++59		spi1_ref
++60		nand_ref
++61		i2c0_ref
++62		i2c1_ref
++63		can0_ref
++64		can1_ref
++65		can0
++66		can1
++67		dll_ref
++68		adma_ref
++69		timestamp_ref
++70		ams_ref
++71		pl0_ref
++72		pl1_ref
++73		pl2_ref
++74		pl3_ref
++75		wdt
++76		iopll_int
++77		iopll_pre_src
++78		iopll_half
++79		iopll_int_mux
++80		iopll_post_src
++81		rpll_int
++82		rpll_pre_src
++83		rpll_half
++84		rpll_int_mux
++85		rpll_post_src
++86		apll_int
++87		apll_pre_src
++88		apll_half
++89		apll_int_mux
++90		apll_post_src
++91		dpll_int
++92		dpll_pre_src
++93		dpll_half
++94		dpll_int_mux
++95		dpll_post_src
++96		vpll_int
++97		vpll_pre_src
++98		vpll_half
++99		vpll_int_mux
++100		vpll_post_src
++101		can0_mio
++102		can1_mio
++
++Example:
++
++clk: clk {
++	#clock-cells = <1>;
++	compatible = "xlnx,zynqmp-clk";
++	clocks = <&pss_ref_clk>, <&video_clk>, <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
++	clock-names = "pss_ref_clk", "video_clk", "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk"
++};
+-- 
+2.7.4
