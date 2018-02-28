@@ -1,86 +1,76 @@
-Return-Path: <SRS0=WWNl=FN=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.free-electrons.com ([62.4.15.54]:49933 "EHLO
-        mail.free-electrons.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S932178AbeBSWgG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 19 Feb 2018 17:36:06 -0500
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 4/6] dt-bindings: mtd: remove pxa3xx NAND controller documentation
-Date: Mon, 19 Feb 2018 23:35:55 +0100
-Message-Id: <20180219223557.2458-5-miquel.raynal@bootlin.com>
-In-Reply-To: <20180219223557.2458-1-miquel.raynal@bootlin.com>
-References: <20180219223557.2458-1-miquel.raynal@bootlin.com>
+Return-Path: <SRS0=lHfj=FW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-bl2nam02on0112.outbound.protection.outlook.com ([104.47.38.112]:39712
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S932176AbeB1S5q (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Feb 2018 13:57:46 -0500
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [PATCHv4 2/3] spi: Add spi driver for Socionext Synquacer
+ platform
+Date: Wed, 28 Feb 2018 18:57:44 +0000
+Message-ID: <1519844264.25567.237.camel@impinj.com>
+References: <1519736182-3650-1-git-send-email-jassisinghbrar@gmail.com>
+         <1519736330-3985-1-git-send-email-jassisinghbrar@gmail.com>
+         <1519840555.25567.218.camel@impinj.com>
+         <CABb+yY3PNoGAazn2JNWZScb_a8iNRmv94B0D=4xFRi3_mb2CXA@mail.gmail.com>
+In-Reply-To: <CABb+yY3PNoGAazn2JNWZScb_a8iNRmv94B0D=4xFRi3_mb2CXA@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E421905ED13C6643AA3927524827F660@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
-Cc: linux-mtd@lists.infradead.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Eric Miao <eric.y.miao@gmail.com>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "masami.hiramatsu@linaro.org" <masami.hiramatsu@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The deprecated pxa3xx_nand.c driver does not exist anymore, it has been
-replaced by marvell_nand.c which has its own up-to-date documentation.
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Tested-by: Robert Jarzmik <robert.jarzmik@free.fr>
----
- .../devicetree/bindings/mtd/pxa3xx-nand.txt        | 50 ----------------------
- 1 file changed, 50 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt b/Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt
-deleted file mode 100644
-index d4ee4da58463..000000000000
---- a/Documentation/devicetree/bindings/mtd/pxa3xx-nand.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--PXA3xx NAND DT bindings
--
--Required properties:
--
-- - compatible:		Should be set to one of the following:
--			marvell,pxa3xx-nand
--			marvell,armada370-nand
--			marvell,armada-8k-nand
-- - reg: 		The register base for the controller
-- - interrupts:		The interrupt to map
-- - #address-cells:	Set to <1> if the node includes partitions
-- - marvell,system-controller: Set to retrieve the syscon node that handles
--			NAND controller related registers (only required
--			with marvell,armada-8k-nand compatible).
--
--Optional properties:
--
-- - dmas:			dma data channel, see dma.txt binding doc
-- - marvell,nand-enable-arbiter:	Set to enable the bus arbiter
-- - marvell,nand-keep-config:	Set to keep the NAND controller config as set
--				by the bootloader
-- - num-cs:			Number of chipselect lines to use
-- - nand-on-flash-bbt: 		boolean to enable on flash bbt option if
--				not present false
-- - nand-ecc-strength:           number of bits to correct per ECC step
-- - nand-ecc-step-size:          number of data bytes covered by a single ECC step
--
--The following ECC strength and step size are currently supported:
--
-- - nand-ecc-strength = <1>, nand-ecc-step-size = <512>
-- - nand-ecc-strength = <4>, nand-ecc-step-size = <512>
-- - nand-ecc-strength = <8>, nand-ecc-step-size = <512>
--
--Example:
--
--	nand0: nand@43100000 {
--		compatible = "marvell,pxa3xx-nand";
--		reg = <0x43100000 90>;
--		interrupts = <45>;
--		dmas = <&pdma 97 0>;
--		dma-names = "data";
--		#address-cells = <1>;
--
--		marvell,nand-enable-arbiter;
--		marvell,nand-keep-config;
--		num-cs = <1>;
--
--		/* partitions (optional) */
--	};
--
--- 
-2.14.1
-
+T24gV2VkLCAyMDE4LTAyLTI4IGF0IDIzOjU5ICswNTMwLCBKYXNzaSBCcmFyIHdyb3RlOg0KPiBP
+biBXZWQsIEZlYiAyOCwgMjAxOCBhdCAxMToyNSBQTSwgVHJlbnQgUGllcGhvIDx0cGllcGhvQGlt
+cGluai5jb20+IHdyb3RlOg0KPiA+IE9uIFR1ZSwgMjAxOC0wMi0yNyBhdCAxODoyOCArMDUzMCwg
+amFzc2lzaW5naGJyYXJAZ21haWwuY29tIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiArY29uZmlnIFNQ
+SV9TWU5RVUFDRVINCj4gPiA+ICsgICAgIHRyaXN0YXRlICJTb2Npb25leHQncyBTeW5xdWFjZXIg
+SGlnaFNwZWVkIFNQSSBjb250cm9sbGVyIg0KPiA+ID4gKyAgICAgZGVwZW5kcyBvbiBBUkNIX1NZ
+TlFVQUNFUiB8fCBDT01QSUxFX1RFU1QNCj4gPiA+ICsgICAgIHNlbGVjdCBTUElfQklUQkFORw0K
+PiA+ID4gKyAgICAgaGVscA0KPiA+ID4gKyAgICAgICBTUEkgZHJpdmVyIGZvciBTb2Npb25leHQn
+cyBIaWdoIHNwZWVkIFNQSSBjb250cm9sbGVyIHdoaWNoIHByb3ZpZGVzDQo+ID4gPiArICAgICAg
+IHZhcmlvdXMgb3BlcmF0aW5nIG1vZGVzIGZvciBpbnRlcmZhY2luZyB0byBzZXJpYWwgcGVyaXBo
+ZXJhbCBkZXZpY2VzDQo+ID4gPiArICAgICAgIHRoYXQgdXNlIHRoZSBkZS1mYWN0byBzdGFuZGFy
+ZCBTUEkgcHJvdG9jb2wuDQo+ID4gPiArDQo+ID4gPiArICAgICAgIEl0IGFsc28gc3VwcG9ydHMg
+dGhlIG5ldyBkdWFsLWJpdCBhbmQgcXVhZC1iaXQgU1BJIHByb3RvY29sLg0KPiA+ID4gKw0KPiA+
+IA0KPiA+IEFzIHNvbWVvbmUgd2hvIGRlc2lnbnMgYW5kIGRldmVsb3BzIGVtYmVkZGVkIExpbnV4
+IGRldmljZXMsIGl0IHdvdWxkIGJlDQo+ID4gcmVhbGx5IHVzZWZ1bCBpZiB0aGVyZSB3YXMgYSBi
+aXQgbW9yZSBkb2N1bWVudGF0aW9uIGFib3V0IHRoZSBkcml2ZXIuDQo+ID4gDQo+ID4gVGhlIGhh
+cmR3YXJlIGRvZXNuJ3Qgc3VwcG9ydCBETUEgb3IgZXZlbiBpbnRlcnJ1cHRzLCBhbmQgbXVzdCBi
+dXN5IHdhaXQNCj4gPiBmb3IgdGhlIGR1cmF0aW9uIG9mIHRoZSBlbnRpcmUgU1BJIHRyYW5zZmVy
+cy4gIFRoYXQncyBraW5kIG9mIGEgQmlnDQo+ID4gRGVhbC4gIEEgZGVzaWduIHRoYXQgaW52b2x2
+ZXMgbG90cyBvZiBTUEkgdHJhbnNmZXJzIG9uIGEgc2xvdyBjbG9jaw0KPiA+IHdpbGwgd29yayBm
+aW5lIG9uIG1vc3QgU1BJIGhhcmR3YXJlLCBidXQgd2lsbCBiZSB1dHRlcmx5IHVuZmVhc2libGUN
+Cj4gPiBoZXJlLiAgSXQgd291bGQgYmUgbmljZSB0byBzYXkgc29tZXRoaW5nIGFib3V0IHRoYXQu
+ICBJJ2QgcHJvYmFibHkgcHV0DQo+ID4gaXQgaW4gZHJpdmVyIGNvZGUuDQo+ID4gDQo+IA0KPiBG
+cm9tIG1hcmtldGluZyBwb2ludCBvZiB2aWV3LCB3aHkgd291bGQgSSB3YW50IHRvIGFkdmVydGlz
+ZSBteSBsaW1pdGF0aW9ucz8gOikNCj4gDQo+IEl0cyBub3QgbGlrZSBhbnkgcmFuZG9tIHBsYXRm
+b3JtIG1pZ2h0IHdhbnQgdG8gdXNlIHRoaXMgZHJpdmVyLCBub3INCj4gdGhlIGVuZHVzZXIgY291
+bGQgZG8gYW55dGhpbmcgYWJvdXQgaXQgKGl0cyBub3QgYSBzL3cgaXNzdWUpLiBUaGUNCj4gZGVj
+aXNpb24gdG8gaW50ZWdyYXRlIHRoZSBpcCBpbiBhIFNvQyBpcyBhbHJlYWR5IHRha2VuIGJlZm9y
+ZSB0aGUNCj4gZHJpdmVyIGlzIHdyaXR0ZW4uIE9idmlvdXNseSB0aGUgdXNlcnMgdGhhdCBuZWVk
+IGhpZ2ggc3BpIHBlcmZvcm1hbmNlDQo+IGFyZSBub3QgaXRzIGludGVuZGVkIHRhcmdldC4NCg0K
+SXQgaGVscHMgd2hlbiBjaG9vc2luZyBoYXJkd2FyZSwgZGVzaWduaW5nIHByb2R1Y3RzLCBhbmQg
+YWxzbyB3aXRoDQpzb2Z0d2FyZSBkZXNpZ24uICBFeGFtcGxlOg0KDQpJIHJlYWxseSBuZWVkIGFu
+b3RoZXIgR1BJTyBwaW4gb24gdGhpcyBTb0MuICBIZXJlJ3MgdGhpcyBpbnRlcnJ1cHQgbGluZQ0K
+ZnJvbSBhIHNwaSBzbGF2ZS4gIEkgZG9uJ3QgbmVlZCB0aGF0IGFuZCBjYW4gdGFrZSB0aGUgcGlu
+LiAgSSBjYW4gcG9sbA0KdGhlIHNsYXZlIGF0IGEgbG93IHJhdGUgYW5kIGl0J2xsIGJlIG9rIGFz
+IHRoZXJlIGlzIG5vIHRpZ2h0IGxhdGVuY3kNCnJlcXVpcmVtZW50Lg0KDQpUaGF0IG1pZ2h0IHVz
+ZSBhIGxvdCBtb3JlIENQVSB0aGF0IG9uZSB3b3VsZCB0aGluay4NCg0KPiBCVFcsIHRoZSBJUCBp
+cyBhY3R1YWxseSBub3QgdGhhdCBiYWQuIEl0IGlzIG1lYW50IGZvciBpbnRlcmZhY2luZw0KPiBm
+bGFzaCBkZXZpY2VzIGFuZCBjYW4gb3BlcmF0ZSBpbiB0d28gbW9kZXMgLSAiZGlyZWN0IiBtb2Rl
+IHdoZXJlIGl0DQo+IG1hcHMgZmxhc2ggbWVtb3J5IGFzIGkvbyByZWdpb24gYW5kIHRoZSBvdGhl
+ciBsYXN0IHJlc29ydCAic3BpIiBtb2RlDQo+IHdoZXJlIHdlIGNvdWxkIG1hbnVhbGx5IGRyaXZl
+IHRoZSBmbGFzaC4gVGhpcyBkcml2ZXIgaW1wbGVtZW50cyB0aGF0DQo+IGxpbWl0ZWQgInNwaSIg
+bW9kZS4NCg0KSGVyZSdzIGFub3RoZXIgZXhhbXBsZSwgc29tZW9uZSBoYXMgYSAiZGlyZWN0IiBm
+bGFzaCBvbiB0aGVpciBoYXJkd2FyZSwNCnByb2JhYmx5IGp1c3QgY29waWVkIGZyb20gdGhlIHJl
+ZmVyZW5jZSBkZXNpZ24uICBJbiBkb2luZyBjb3N0DQplbmdpbmVlcmluZyBmb3IgdGhlIG5leHQg
+cmV2LCB0aGV5IGRldGVybWluZSB0aGF0IHRoZXkgZG9uJ3QgbmVlZCBtdWNoDQpwZXJmb3JtYW5j
+ZSBmcm9tIHRoaXMgZmxhc2ggYW5kIHNob3VsZCBiZSBhYmxlIHRvIHVzZSBhIGNoZWFwZXIgbm9u
+LXZvbCANCnN0b3JhZ2UgcGFydCAoZWVwcm9tLi4pLiAgVGhlIG5ldyBwYXJ0IGhhcyBhIExpbnV4
+IGRyaXZlci4gIE5vIG9uZQ0KcmVhbGl6ZXMgdGhlIHNpZ25pZmljYW5jZSBvZiBzd2l0Y2hpbmcg
+ZnJvbSAiZGlyZWN0IiB0byAic3BpIiBtb2RlLg0KDQoNCg==
