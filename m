@@ -1,85 +1,46 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] PCI: rockchip: Add Endpoint controller driver for
- Rockchip PCIe controller
-Date: Wed, 28 Feb 2018 11:22:29 +0000
-Message-ID: <20180228112229.GB18879@e107981-ln.cambridge.arm.com>
-References: <1519348503-243259-1-git-send-email-shawn.lin@rock-chips.com>
- <1519348654-243597-1-git-send-email-shawn.lin@rock-chips.com>
- <20180227153202.GB7184@e107981-ln.cambridge.arm.com>
- <8244c52c-73d3-5b20-eb39-ddc37968163a@rock-chips.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCHv2 05/17] dt-bindings: display: add HPD gpio to DVI connector
+Date: Wed, 28 Feb 2018 13:26:02 +0200
+Message-ID: <1519817174-20714-6-git-send-email-tomi.valkeinen@ti.com>
+References: <1519817174-20714-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8244c52c-73d3-5b20-eb39-ddc37968163a-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1519817174-20714-1-git-send-email-tomi.valkeinen@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 28, 2018 at 09:40:36AM +0800, Shawn Lin wrote:
-> Dear Lorenzo,
-> 
-> On 2018/2/27 23:32, Lorenzo Pieralisi wrote:
-> >On Fri, Feb 23, 2018 at 09:17:33AM +0800, Shawn Lin wrote:
-> >>This patch adds support to the Rockchip PCIe controller in endpoint mode
-> >>which currently supports up to 32 regions, and each regions should at
-> >>least be 1MB per TRM.
-> >>
-> >>Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >>
-> 
-> >
-> >I reviewed this patch and I then realized that it is not bits, it is
-> >that the drivers are almost identical. Are we talking about the same IP
-> >(possibly with some HW wrapper of sorts) ?
-> >
-> 
-> Nope, I would seriouly say they are not the same IP legally :)
-> If we take about IP, it's referred to a functional entity designed
-> and licensed by the provider, but it's not the case here since
-> 
-> (1) There is nothing about cadence throughout the TRM when upstreamed
-> it in 2016, and actually it was designed much earlier than 2016.
-> (2) Much of the flow was different, and even some of the bit offset is
-> different per my reading of cadence's driver, though most registers
-> looks much similar.
-> 
-> So my best guess was HW guys referenced to cadence's register layout(or
-> the reverse), so they are much partially compatible from the
-> register level POV, but the backend design are different leading to the
-> quite different control flow and also rockchip controller have lots of
-> HW bugs that I didn't see them when reviewing cadence's driver which do
-> the same flow using similar register. That's very common if you search
-> drivers/mmc/host/sdhci*, which means all of them share the *same*
-> register layout and control flow, so it makes software guys' life easy,
-> but still they are different IPs. But it's sightly different here as
-> the pcie registers aren't the totally same and the flow control is
-> different.
-> 
-> Also historically that happened for other controllers designed from
-> rockchip, for instance, SPI controller looks much like designware one,
-> but the flow control was totally differnt preventing SW guys to
-> refactor the designware driver to fit for rockchip one.
-> 
-> This is all I could guess here, hope that help for you.
-
-Well - there is still lots of duplicated code there, which may mean
-duplicate bugs to fix, that's not ideal at all. It would be great if
-we manage to separate common code and glue code (you call it "flow"
-which I have no idea what it refers to) around it.
-
-I will review this patch anyway but this driver and cadence's are pretty
-much indentical, there is not much doubt about that.
-
-Thanks,
-Lorenzo
+QWRkIGhwZC1ncGlvcyBwcm9wZXJ0eSB0byBkdmktY29ubmVjdG9yLnR4dC4KClNpZ25lZC1vZmYt
+Ynk6IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+CkNjOiBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZwpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
+Zz4KUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNv
+bmJvYXJkLmNvbT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9jb25uZWN0b3IvZHZpLWNvbm5lY3Rvci50eHQgfCAxICsKIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2Nvbm5lY3Rvci9kdmktY29ubmVjdG9yLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Nvbm5lY3Rvci9kdmktY29ubmVjdG9yLnR4dAppbmRl
+eCBmYzUzZjdjNjBiYzYuLjIwN2U0MmU5ZWJhMCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvY29ubmVjdG9yL2R2aS1jb25uZWN0b3IudHh0Cisr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Nvbm5lY3Rvci9k
+dmktY29ubmVjdG9yLnR4dApAQCAtMTAsNiArMTAsNyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgog
+LSBhbmFsb2c6IHRoZSBjb25uZWN0b3IgaGFzIERWSSBhbmFsb2cgcGlucwogLSBkaWdpdGFsOiB0
+aGUgY29ubmVjdG9yIGhhcyBEVkkgZGlnaXRhbCBwaW5zCiAtIGR1YWwtbGluazogdGhlIGNvbm5l
+Y3RvciBoYXMgcGlucyBmb3IgRFZJIGR1YWwtbGluaworLSBocGQtZ3Bpb3M6IEhQRCBHUElPIG51
+bWJlcgogCiBSZXF1aXJlZCBub2RlczoKIC0gVmlkZW8gcG9ydCBmb3IgRFZJIGlucHV0Ci0tIApU
+ZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxz
+aW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2ls
+ZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
