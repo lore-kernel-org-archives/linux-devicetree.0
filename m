@@ -1,80 +1,129 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 0/3] STM32 Extended TrustZone Protection driver
-Date: Wed, 28 Feb 2018 18:32:15 +0000
-Message-ID: <09775cf5-ba70-bef6-6196-5f16fd0dc08b@arm.com>
-References: <20180227140926.22996-1-benjamin.gaignard@st.com>
- <20180227171124.h2yjhicmlfrwr4nh@lakrids.cambridge.arm.com>
- <CA+M3ks6qV_pGdE6mr3n7TiY9VhbqEkrdH6tN=8e-A=oa4UbDHw@mail.gmail.com>
- <11c3ceb2-8b8d-de59-a0be-0777a42f63a7@arm.com>
- <CA+M3ks5qR++8Vwwk8=5Oh6DBdT9NF3ysqfjayq4Gze-oke8Ayg@mail.gmail.com>
- <20180228175303.h7qm3zylmfsitmwn@lakrids.cambridge.arm.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 04/10] pinctrl: actions: Add Actions S900 pinctrl driver
+Date: Wed, 28 Feb 2018 20:36:53 +0200
+Message-ID: <CAHp75VchzV9SZb4g0fVP9aoKb7actsehXm8c4wsvVGASgkOc+w@mail.gmail.com>
+References: <20180228181432.26847-1-manivannan.sadhasivam@linaro.org> <20180228181432.26847-5-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180228175303.h7qm3zylmfsitmwn@lakrids.cambridge.arm.com>
-Content-Language: en-US
+In-Reply-To: <20180228181432.26847-5-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 28/02/18 17:53, Mark Rutland wrote:
-[...]
->> It is not about to "check" the DT but if Linux could get access to the
->> hardware.  Hardware block assignment to secure or non-secure world
->> could change at runtime for example I2C block could be manage by
->> secure OS for a trusted application and when it have finish "release"
->> the it for Linux.
-> 
-> The driver does not do this today. It probe the HW once during early
-> boot, then aborts driver probes. It provides no provision for dynamic
-> assignment.
-> 
-> Is this something you plan to implement? How will the secure world
-> notify the non-secure world of its intent to manage a device, or
-> vice-versa?
+On Wed, Feb 28, 2018 at 8:14 PM, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+> Add pinctrl driver for Actions Semi S900 SoC. The driver supports
+> pinctrl, pinmux and pinconf functionalities through a range of registers
+> common to both gpio driver and pinctrl driver.
+>
+> Pinmux functionality is available only for the pin groups while the
+> pinconf functionality is available for both pin groups and individual
+> pins.
 
-Note that this is another thing which in general already happens - 
-control of (and correspondingly, hardware access to) things like display 
-engines and video decoders can get transferred between Linux (well, 
-Android at least) and a trusted OS. You need communication and 
-cooperation between the two sides via channels like tee-supplicant to 
-make it usable, though, at which point the fact that this ETZPC provides 
-non-secure-visible status unlike other TZASCs is rather superfluous - if 
-the secure side could just blindly take ownership of the I2C block in 
-response to some event, while the Linux I2C driver is in the middle of 
-its own transfer, a status bit in a register somewhere else isn't going 
-to be much help overall.
+> +static int owl_set_mux(struct pinctrl_dev *pctrldev,
+> +                               unsigned int function,
+> +                               unsigned int group)
+> +{
 
->> I don't think that could be done by changing DT.
->>
->> I think that dhecking hardware blocks status bits before probe them is
->> also more robust than let
->> each driver discover at probe time that it hardware isn't responding.
-> 
-> I don't follow. Robin and I suggest that gets encoded in the DT, which
-> is *more* efficient than having each driver probe the DT, begin probing,
-> then abort via the notifier.
-> 
-> This really seems like something that should be done *prior* to entering
-> Linux.
+> +       mfpval = readl(pctrl->base + g->mfpctl_reg);
+> +       mfpval &= ~mask;
+> +       mfpval |= val;
+> +       writel(mfpval, pctrl->base + g->mfpctl_reg);
 
-Indeed; the DT by nature describes the initial state of the system at 
-the point that Linux takes control, and thus it really *should* reflect 
-whatever the current ETZPC configuration is. Note what DTSpec actually says:
+This is called owl_update_bits().
 
-     "disabled" 	
+> +static int owl_pin_config_set(struct pinctrl_dev *pctrldev,
+> +                               unsigned int pin,
+> +                               unsigned long *configs,
+> +                               unsigned int num_configs)
+> +{
 
-     Indicates that the device is not presently operational, but it might
-     become operational in the future (for example, something is not
-     plugged in, or switched off).
+> +       int ret = 0;
 
-     Refer to the device binding for details on what disabled means for a
-     given device.
+Redundant assignment?
 
-The fact that the current behaviour of our OF platform code doesn't 
-really respect that last point and makes it tricky to bring 
-initially-unavailable devices to life later is a separate issue.
+> +               mask = (1 << width) - 1;
+> +               mask = mask << bit;
+> +               tmp = readl(pctrl->base + reg);
+> +               tmp &= ~mask;
+> +               tmp |= arg << bit;
+> +               writel(tmp, pctrl->base + reg);
 
-Robin.
+This is called owl_update_bits().
+
+> +}
+
+> +static int owl_group_pinconf_val2arg(const struct owl_pingroup *g,
+> +                               unsigned int param,
+> +                               u32 *arg)
+> +{
+
+> +       case PIN_CONFIG_SLEW_RATE:
+> +               if (*arg)
+> +                       *arg = 1;
+> +               else
+> +                       *arg = 0;
+
+Doesn't slew rate allow a non-binary value?
+
+> +       return 0;
+> +}
+> +
+> +static int owl_group_config_get(struct pinctrl_dev *pctrldev,
+> +                               unsigned int group,
+> +                               unsigned long *config)
+> +{
+> +       int ret = 0;
+
+Redundant assignment.
+
+> +}
+
+> +static int owl_group_config_set(struct pinctrl_dev *pctrldev,
+> +                               unsigned int group,
+> +                               unsigned long *configs,
+> +                               unsigned int num_configs)
+> +{
+> +       int ret = 0;
+
+Redundant assignment, see below.
+
+> +               mask = (1 << width) - 1;
+> +               mask = mask << bit;
+> +               tmp = readl(pctrl->base + reg);
+> +               tmp &= ~mask;
+> +               tmp |= arg << bit;
+> +               writel(tmp, pctrl->base + reg);
+
+This is called owl_update_bits().
+
+> +       return ret;
+
+return 0; ?
+
+> +}
+
+> +int owl_pinctrl_probe(struct platform_device *pdev,
+> +                               struct owl_pinctrl_soc_data *soc_data)
+> +{
+
+> +       clk_prepare_enable(pctrl->clk);
+
+This can fail.
+
+> +}
+
+> +static const struct of_device_id s900_pinctrl_of_match[] = {
+> +       { .compatible = "actions,s900-pinctrl", },
+
+> +       { },
+
+No comma needed.
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
