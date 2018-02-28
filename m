@@ -1,48 +1,48 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH v2 00/16] Implement H3/H5 HDMI driver
-Date: Wed, 28 Feb 2018 22:23:35 +0100
-Message-ID: <2235934.0TF68fluGz@jernej-laptop>
-References: <20180227222701.9716-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v7 10/42] clk: davinci: New driver for davinci PSC clocks
+Date: Wed, 28 Feb 2018 15:40:40 -0600
+Message-ID: <93696fc8-bb93-aa20-3506-3d7216c17cd2@lechnology.com>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
+ <1519071723-31790-11-git-send-email-david@lechnology.com>
+ <CAMpxmJVxfGtO=kh63KF-5Uqew3yy97DsK4FSd14CyyRQTOhrTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBW533TKAKGQEBCHWEFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180227222701.9716-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMpxmJVxfGtO=kh63KF-5Uqew3yy97DsK4FSd14CyyRQTOhrTA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-Dne torek, 27. februar 2018 ob 23:26:45 CET je Jernej Skrabec napisal(a):
-> This series implements H3/H5 HDMI driver. It was tested on OrangePi 2 (H3),
-> OrangePi Plus2e (H3) and OrangePi PC2 (H5) with many resolutions and it
-> works well. Bug, which prevented correct operation for some resolutions,
-> is also fixed.
+On 02/28/2018 06:38 AM, Bartosz Golaszewski wrote:
 > 
-> Code is based on linux-next, next-20180226 tag.
+> I think I found the reason for the strange crashes we were
+> experiencing (emac core->name being NULL) thanks to Sekhar who pointed
+> me in the right direction.
+> 
+> The mdio driver fails to probe with v7 due to the supplied clock rate
+> being wrong. Before failing we register the emac clock with
+> pm_clk_add_clk(). When clock_ops puts the clock, it decreases the
+> reference count of the clock, but we never actually increased it in
+> the first place in the line above. The core clock code then destroys
+> the associated clk_core structure. When the next user comes around (in
+> our case the clk debug functions) the system crashes.
+> 
+> I believe there to be two issues: one is with v7 - we need to increase
+> the clock reference count in davinci_psc_genpd_attach_dev().
+> 
+> Second is the error path in the clock framework - we should remove the
+> destroyed clk_core from the debug list, which is not being done now.
+> 
+> Why we even need to track the refcount of clk_core is a mistery for me
+> though. Stephen, Mike?
+> 
+> Best regards,
+> Bartosz Golaszewski
 
-Today I tried on this series on  next-20180228, but resolution switching 
-doesn't really work. The reason for this is use of clk_set_rate_exclusive() in 
-sun4i_tcon1_mode_set(). If I revert it to ordinary clk_set_rate() it works ok. 
-I investigated a bit and it seems that clocks stays at first set even if tcon 
-(the owner of exclusive lock) request the new one. Example:
+Great find. I figured it had to be something like this, but I wasn't
+able to reproduce the problem yet.
 
-[   69.325732] TCON clk wanted: 148500000
-[   69.325740] TCON real clk: 69272728
-[   69.325770] HDMI clk wanted: 148500000
-[   69.325773] HDMI real clk: 138545455
-[   69.325815] HDMI PHY clk wanted: 148500000
-[   69.325819] HDMI PHY real clk: 138545454
-
-Is there anything I can do to help debug this?
-
-Best regards,
-Jernej
+I suppose it is time to spin up a v8 with some fixes.
