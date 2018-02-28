@@ -1,36 +1,43 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: dts: NSP: Fix amount of RAM on BCM958625HR
-Date: Tue, 27 Feb 2018 16:39:19 -0800
-Message-ID: <cf9e6bc5-094a-e658-cdd6-6495fbe99da6@gmail.com>
-References: <20180227010312.7495-1-f.fainelli@gmail.com>
- <CAC3K-4rqYMUBtbwaojWBF-0biEV-WSPpe=0bDocL4TUrrL4gGQ@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: bcm283x: Fix DTC warnings
+Date: Tue, 27 Feb 2018 16:42:55 -0800
+Message-ID: <86a385df-c3c4-4c68-565e-baa8c2681ade@gmail.com>
+References: <1519481722-22738-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAC3K-4rqYMUBtbwaojWBF-0biEV-WSPpe=0bDocL4TUrrL4gGQ@mail.gmail.com>
+Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1519481722-22738-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
+List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
+ <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/27/2018 07:02 AM, Jon Mason wrote:
-> On Mon, Feb 26, 2018 at 8:03 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
->> Jon attempted to fix the amount of RAM on the BCM958625HR in commit
->> c53beb47f621 ("ARM: dts: NSP: Correct RAM amount for BCM958625HR board")
->> but it seems like we tripped over some poorly documented schematics.
->>
->> The top-level page of the schematics says the board has 2GB, but when
->> you end-up scrolling to page 6, you see two chips of 4GiB (512MB) but
->> what the bootloader really initializes only 512MB, any attempt to use
->> more than that results in data aborts. Fix this again back to 512MB.
->>
->> Fixes: c53beb47f621 ("ARM: dts: NSP: Correct RAM amount for BCM958625HR board")
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On 02/24/2018 06:15 AM, Stefan Wahren wrote:
+> This patch series fixes some DTC warnings, which are only visible with W=1.
 > 
-> Acked-by: Jon Mason <jon.mason@broadcom.com>
+> Stefan Wahren (2):
+>   ARM: dts: bcm283x: Fix unit address of local_intc
+>   ARM: dts: bcm283x: Move arm-pmu out of soc node
+> 
+>  arch/arm/boot/dts/bcm2835.dtsi |  6 +++---
+>  arch/arm/boot/dts/bcm2836.dtsi | 12 ++++++------
+>  arch/arm/boot/dts/bcm2837.dtsi |  2 +-
+>  3 files changed, 10 insertions(+), 10 deletions(-)
+> 
 
-Applied to devicetree/fixes
+Series applied to devicetree/fixes, thanks Stefan. Can you make sure you
+copy bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org for your future submissions?
+That allows me to leverage the patchwork instance behind that list,
+thank you!
 -- 
 Florian
