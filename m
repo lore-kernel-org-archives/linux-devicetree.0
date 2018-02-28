@@ -1,378 +1,189 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH v2 3/4] clk: imx: add SCCG PLL type
-Date: Wed, 28 Feb 2018 20:03:29 +0800
-Message-ID: <20180228120329.GB17222@b29396-OptiPlex-7040>
-References: <20180201175412.9480-1-l.stach@pengutronix.de>
- <20180201175412.9480-3-l.stach@pengutronix.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 3/3] PCI: dra7xx: Enable x2 mode support for dra74x,
+ dra76x and dra72x
+Date: Wed, 28 Feb 2018 17:34:34 +0530
+Message-ID: <ad8c490f-2691-6c58-96a1-59788b88fc84@ti.com>
+References: <20171219085823.8695-1-kishon@ti.com>
+ <20171219085823.8695-4-kishon@ti.com>
+ <20180226103058.GB19841@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180201175412.9480-3-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: "A . s . Dong" <aisheng.dong@nxp.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180226103058.GB19841@e107981-ln.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 01, 2018 at 06:54:11PM +0100, Lucas Stach wrote:
-> The SCCG is a new PLL type introduced on i.MX8. Add support for this.
-> The driver currently misses the PLL lock check, as the preliminary
-> documentation mentions lock configurations, but is quiet about where
-> to find the actual lock status signal.
+Hi Lorenzo,
+
+On Monday 26 February 2018 04:00 PM, Lorenzo Pieralisi wrote:
+> On Tue, Dec 19, 2017 at 02:28:23PM +0530, Kishon Vijay Abraham I wrote:
+>> dra74x/dra76x and dra72x has separate compatible strings. Add support
 > 
-
-Why? Can't use PLL_LOCK bit?
-
-BTW, i think the comments should mention that it breaks down
-the SSCG PLL into two PLLS part with a few extra dividers.
-
-The easiest way for user may compose them into one. But as this PLL indeed
-is much complicated, i'm ok to divide them tempoparily at this stage.
-
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  drivers/clk/imx/Makefile       |   3 +-
->  drivers/clk/imx/clk-sccg-pll.c | 235 +++++++++++++++++++++++++++++++++++++++++
->  drivers/clk/imx/clk.h          |   9 ++
->  3 files changed, 246 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/imx/clk-sccg-pll.c
+> s/has/have
 > 
-> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-> index 9892ae63539c..bfcbd5272d12 100644
-> --- a/drivers/clk/imx/Makefile
-> +++ b/drivers/clk/imx/Makefile
-> @@ -12,7 +12,8 @@ obj-y += \
->  	clk-pllv1.o \
->  	clk-pllv2.o \
->  	clk-pllv3.o \
-> -	clk-pfd.o
-> +	clk-pfd.o \
-> +	clk-sccg-pll.o
->  
->  obj-$(CONFIG_SOC_IMX1)   += clk-imx1.o
->  obj-$(CONFIG_SOC_IMX21)  += clk-imx21.o
-> diff --git a/drivers/clk/imx/clk-sccg-pll.c b/drivers/clk/imx/clk-sccg-pll.c
-> new file mode 100644
-> index 000000000000..3a79f952564b
-> --- /dev/null
-> +++ b/drivers/clk/imx/clk-sccg-pll.c
-> @@ -0,0 +1,235 @@
-> +/*
-> + * Copyright 2017 NXP.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/slab.h>
-> +
-> +#include "clk.h"
-> +
-> +/* PLL CFGs */
-> +#define PLL_CFG0	0x0
-> +#define PLL_CFG1	0x4
-> +#define PLL_CFG2	0x8
-> +
-> +#define PLL_DIVF1_SHIFT	13
-> +#define PLL_DIVF2_SHIFT	7
-> +#define PLL_DIVF_MASK	0x3f
-> +
-> +#define PLL_DIVR1_SHIFT	25
-> +#define PLL_DIVR2_SHIFT	19
-> +#define PLL_DIVR1_MASK	0x3
-> +#define PLL_DIVR2_MASK	0x3f
-> +#define PLL_REF_SHIFT	0
-> +#define PLL_REF_MASK	0x3
-> +
-> +#define PLL_LOCK	31
-> +#define PLL_PD		7
-> +
-> +#define OSC_25M		25000000
-> +#define OSC_27M		27000000
-> +
-> +struct clk_sccg_pll {
-> +	struct clk_hw	hw;
-> +	void __iomem	*base;
-> +};
-> +
-> +#define to_clk_sccg_pll(_hw) container_of(_hw, struct clk_sccg_pll, hw)
-> +
-> +static int clk_pll1_is_prepared(struct clk_hw *hw)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG0);
-> +	return (val & (1 << PLL_PD)) ? 0 : 1;
-
-BM_PLL_PD	BIT(7)
-
-> +}
-> +
-> +static unsigned long clk_pll1_recalc_rate(struct clk_hw *hw,
-> +					 unsigned long parent_rate)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val, divf;
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG2);
-> +	divf = (val >> PLL_DIVF1_SHIFT) & PLL_DIVF_MASK;
-> +
-> +	return parent_rate * 2 * (divf + 1);
-> +}
-> +
-> +static long clk_pll1_round_rate(struct clk_hw *hw, unsigned long rate,
-> +			       unsigned long *prate)
-> +{
-> +	unsigned long parent_rate = *prate;
-> +	u32 div;
-> +
-> +	div = rate / (parent_rate * 2);
-> +
-> +	return parent_rate * div * 2;
-> +}
-> +
-> +static int clk_pll1_set_rate(struct clk_hw *hw, unsigned long rate,
-> +			    unsigned long parent_rate)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val;
-> +	u32 divf;
-> +
-> +	divf = rate / (parent_rate * 2);
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG2);
-> +	val &= ~(PLL_DIVF_MASK << PLL_DIVF1_SHIFT);
-> +	val |= (divf - 1) << PLL_DIVF1_SHIFT;
-> +	writel_relaxed(val, pll->base + PLL_CFG2);
-> +
-> +	/* FIXME: PLL lock check */
-> +
-> +	return 0;
-> +}
-> +
-> +static int clk_pll1_prepare(struct clk_hw *hw)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(pll->base);
-> +	val &= ~(1 << PLL_PD);
-> +	writel_relaxed(val, pll->base);
-> +
-> +	/* FIXME: PLL lock check */
-> +
-> +	return 0;
-> +}
-> +
-> +static void clk_pll1_unprepare(struct clk_hw *hw)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(pll->base);
-> +	val |= (1 << PLL_PD);
-> +	writel_relaxed(val, pll->base);
-> +}
-> +
-> +static unsigned long clk_pll2_recalc_rate(struct clk_hw *hw,
-> +					 unsigned long parent_rate)
-> +{
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +	u32 val, ref, divr1, divf1, divr2, divf2;
-> +	u64 temp64;
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG0);
-> +	switch ((val >> PLL_REF_SHIFT) & PLL_REF_MASK) {
-> +	case 0:
-> +		ref = OSC_25M;
-> +		break;
-> +	case 1:
-> +		ref = OSC_27M;
-> +		break;
-> +	default:
-> +		ref = OSC_25M;
-> +		break;
-> +	}
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG2);
-> +	divr1 = (val >> PLL_DIVR1_SHIFT) & PLL_DIVR1_MASK;
-> +	divr2 = (val >> PLL_DIVR2_SHIFT) & PLL_DIVR2_MASK;
-> +	divf1 = (val >> PLL_DIVF1_SHIFT) & PLL_DIVF_MASK;
-> +	divf2 = (val >> PLL_DIVF2_SHIFT) & PLL_DIVF_MASK;
-> +
-> +	temp64 = ref * 2;
-> +	temp64 *= (divf1 + 1) * (divf2 + 1);
-> +
-> +	do_div(temp64, (divr1 + 1) * (divr2 + 1));
-> +
-
-Here it looks strange to me.
-
-We break down the SSCG PLL into two parts. But here we manually
-calculate the PLL rate from HW register value instead of referring to
-the parent_rate. Seems like a layer violation.
-
-Any strong reason to do this?
-
-> +	return (unsigned long)temp64;
-> +}
-> +
-> +static long clk_pll2_round_rate(struct clk_hw *hw, unsigned long rate,
-> +			       unsigned long *prate)
-> +{
-> +	u32 div;
-> +	unsigned long parent_rate = *prate;
-> +
-> +	div = rate / (parent_rate);
-> +
-> +	return parent_rate * div;
-> +}
-> +
-> +static int clk_pll2_set_rate(struct clk_hw *hw, unsigned long rate,
-> +			    unsigned long parent_rate)
-> +{
-> +	u32 val;
-> +	u32 divf;
-> +	struct clk_sccg_pll *pll = to_clk_sccg_pll(hw);
-> +
-> +	divf = rate / (parent_rate);
-> +
-> +	val = readl_relaxed(pll->base + PLL_CFG2);
-> +	val &= ~(PLL_DIVF_MASK << PLL_DIVF2_SHIFT);
-> +	val |= (divf - 1) << PLL_DIVF2_SHIFT;
-> +	writel_relaxed(val, pll->base + PLL_CFG2);
-
-I wonder pretending the PLL2 as a simple divider (only mult divf2)
-may break the fractional divider capability.
-Probably we shouldn't create another divider behind pll2.
-e.g. sys1_pll2_div
-
-> +
-> +	/* FIXME: PLL lock check */
-> +
-
-check PLL_LOCK here
-
-> +	return 0;
-> +}
-> +
-> +static const struct clk_ops clk_sccg_pll1_ops = {
-> +	.is_prepared	= clk_pll1_is_prepared,
-
-Should this belong to pll2?
-
-> +	.recalc_rate	= clk_pll1_recalc_rate,
-> +	.round_rate	= clk_pll1_round_rate,
-> +	.set_rate	= clk_pll1_set_rate,
-> +};
-> +
-> +static const struct clk_ops clk_sccg_pll2_ops = {
-> +	.prepare	= clk_pll1_prepare,
-> +	.unprepare	= clk_pll1_unprepare,
-> +	.recalc_rate	= clk_pll2_recalc_rate,
-> +	.round_rate	= clk_pll2_round_rate,
-> +	.set_rate	= clk_pll2_set_rate,
-> +};
-> +
-> +struct clk *imx_clk_sccg_pll(const char *name, const char *parent_name,
-> +			     void __iomem *base, enum imx_sccg_pll_type pll_type)
-> +{
-> +	struct clk_sccg_pll *pll;
-> +	struct clk *clk;
-> +	struct clk_init_data init;
-> +
-> +	pll = kzalloc(sizeof(*pll), GFP_KERNEL);
-> +	if (!pll)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	pll->base = base;
-> +	init.name = name;
-> +	switch (pll_type) {
-> +	case SCCG_PLL1:
-> +		init.ops = &clk_sccg_pll1_ops;
-> +		break;
-> +	case SCCG_PLL2:
-> +		init.ops = &clk_sccg_pll2_ops;
-> +		break;
-
-No default?
-
-> +	}
-> +
-> +	init.flags = 0;
-
-Should't assign CLK_SET_RATE_PARENT?
-
-> +	init.parent_names = &parent_name;
-> +	init.num_parents = 1;
-> +
-> +	pll->hw.init = &init;
-> +
-> +	clk = clk_register(NULL, &pll->hw);
-> +	if (IS_ERR(clk))
-> +		kfree(pll);
-> +
-> +	return clk;
-> +}
-> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-> index 287610902ea8..809509758e24 100644
-> --- a/drivers/clk/imx/clk.h
-> +++ b/drivers/clk/imx/clk.h
-> @@ -21,6 +21,11 @@ enum imx_pllv1_type {
->  	IMX_PLLV1_IMX35,
->  };
->  
-> +enum imx_sccg_pll_type {
-> +	SCCG_PLL1,
-> +	SCCG_PLL2,
-> +};
-> +
->  struct clk *imx_clk_pllv1(enum imx_pllv1_type type, const char *name,
->  		const char *parent, void __iomem *base);
->  
-> @@ -30,6 +35,10 @@ struct clk *imx_clk_pllv2(const char *name, const char *parent,
->  struct clk *imx_clk_frac_pll(const char *name, const char *parent_name,
->  			     void __iomem *base);
->  
-> +struct clk *imx_clk_sccg_pll(const char *name, const char *parent_name,
-> +			     void __iomem *base,
-> +			     enum imx_sccg_pll_type pll_type);
-> +
->  enum imx_pllv3_type {
->  	IMX_PLLV3_GENERIC,
->  	IMX_PLLV3_SYS,
-
-Last, overally, i did not see the configuration of SSE bit
-as it changes the formula.
-SSE=0: PLLOUT = REF/DIVR1 * 2 * DIVF1/DIVR2 * DIVF2/DIVQ
-SSE=1: PLLOUT = REF/DIVR1 * 8 * DIVF1/DIVR2 * DIVF2/DIVQ
-
-Are we replying on the default register value?
-
-Regards
-Dong Aisheng
-
-> -- 
-> 2.15.1
+>> for these compatible strings in pci-dra7xx driver to perform syscon
+>> configurations required to get x2 mode working.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  drivers/pci/dwc/pci-dra7xx.c | 90 ++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 90 insertions(+)
+>>
+>> diff --git a/drivers/pci/dwc/pci-dra7xx.c b/drivers/pci/dwc/pci-dra7xx.c
+>> index e77a4ceed74c..3b4427c10228 100644
+>> --- a/drivers/pci/dwc/pci-dra7xx.c
+>> +++ b/drivers/pci/dwc/pci-dra7xx.c
+>> @@ -83,11 +83,15 @@
+>>  #define MSI_REQ_GRANT					BIT(0)
+>>  #define MSI_VECTOR_SHIFT				7
+>>  
+>> +#define PCIE_1LANE_2LANE_SELECTION			BIT(13)
+>> +#define PCIE_B1C0_MODE_SEL				BIT(2)
+>> +
+>>  struct dra7xx_pcie {
+>>  	struct dw_pcie		*pci;
+>>  	void __iomem		*base;		/* DT ti_conf */
+>>  	int			phy_count;	/* DT phy-names count */
+>>  	struct phy		**phy;
+>> +	u32			*b1c0_mask;
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This looks unused in the current patch.
+
+yeah, I'll remove it while sending the next revision.
+> 
+>>  	int			link_gen;
+>>  	struct irq_domain	*irq_domain;
+>>  	enum dw_pcie_device_mode mode;
+>> @@ -95,6 +99,7 @@ struct dra7xx_pcie {
+>>  
+>>  struct dra7xx_pcie_of_data {
+>>  	enum dw_pcie_device_mode mode;
+>> +	u32 b1co_mode_sel_mask;
+>>  };
+>>  
+>>  #define to_dra7xx_pcie(x)	dev_get_drvdata((x)->dev)
+>> @@ -533,6 +538,26 @@ static const struct dra7xx_pcie_of_data dra7xx_pcie_ep_of_data = {
+>>  	.mode = DW_PCIE_EP_TYPE,
+>>  };
+>>  
+>> +static const struct dra7xx_pcie_of_data dra746_pcie_rc_of_data = {
+>> +	.b1co_mode_sel_mask = BIT(2),
+> 
+> Nit: DT guys are more familiar than me on how this data should be
+> encoded but maybe bit offset + length can be better ? I do not know, I
+> have no problem leaving them as masks.
+> 
+>> +	.mode = DW_PCIE_RC_TYPE,
+>> +};
+>> +
+>> +static const struct dra7xx_pcie_of_data dra726_pcie_rc_of_data = {
+>> +	.b1co_mode_sel_mask = GENMASK(3, 2),
+>> +	.mode = DW_PCIE_RC_TYPE,
+>> +};
+>> +
+>> +static const struct dra7xx_pcie_of_data dra746_pcie_ep_of_data = {
+>> +	.b1co_mode_sel_mask = BIT(2),
+>> +	.mode = DW_PCIE_EP_TYPE,
+>> +};
+>> +
+>> +static const struct dra7xx_pcie_of_data dra726_pcie_ep_of_data = {
+>> +	.b1co_mode_sel_mask = GENMASK(3, 2),
+>> +	.mode = DW_PCIE_EP_TYPE,
+>> +};
+>> +
+>>  static const struct of_device_id of_dra7xx_pcie_match[] = {
+>>  	{
+>>  		.compatible = "ti,dra7-pcie",
+>> @@ -542,6 +567,22 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
+>>  		.compatible = "ti,dra7-pcie-ep",
+>>  		.data = &dra7xx_pcie_ep_of_data,
+>>  	},
+>> +	{
+>> +		.compatible = "ti,dra746-pcie-rc",
+>> +		.data = &dra746_pcie_rc_of_data,
+>> +	},
+>> +	{
+>> +		.compatible = "ti,dra726-pcie-rc",
+>> +		.data = &dra726_pcie_rc_of_data,
+>> +	},
+>> +	{
+>> +		.compatible = "ti,dra746-pcie-ep",
+>> +		.data = &dra746_pcie_ep_of_data,
+>> +	},
+>> +	{
+>> +		.compatible = "ti,dra726-pcie-ep",
+>> +		.data = &dra726_pcie_ep_of_data,
+>> +	},
+>>  	{},
+>>  };
+>>  
+>> @@ -587,6 +628,47 @@ static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
+>>  	return ret;
+>>  }
+>>  
+>> +static int dra7xx_pcie_configure_two_lane(struct device *dev,
+>> +					  u32 b1co_mode_sel_mask)
+>> +{
+>> +	struct device_node *np = dev->of_node;
+>> +	struct regmap *pcie_syscon;
+>> +	unsigned int pcie_reg;
+>> +
+>> +	pcie_syscon = syscon_regmap_lookup_by_phandle(np,
+>> +						      "ti,syscon-lane-conf");
+>> +	if (IS_ERR(pcie_syscon)) {
+>> +		dev_err(dev, "unable to get ti,syscon-lane-conf\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (of_property_read_u32_index(np, "ti,syscon-lane-conf", 1,
+>> +				       &pcie_reg)) {
+>> +		dev_err(dev, "couldn't get lane configuration reg offset\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	regmap_update_bits(pcie_syscon, pcie_reg, PCIE_1LANE_2LANE_SELECTION,
+>> +			   PCIE_1LANE_2LANE_SELECTION);
+> 
+> I do not know if this can create issues but the regmap should clear
+> those bits in the error path ?
+
+hmm yeah, maybe we should try to fall back to 1 lane mode.
+> 
+>> +
+>> +	pcie_syscon = syscon_regmap_lookup_by_phandle(np, "ti,syscon-lane-sel");
+>> +	if (IS_ERR(pcie_syscon)) {
+>> +		dev_err(dev, "unable to get ti,syscon-lane-sel\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (of_property_read_u32_index(np, "ti,syscon-lane-sel", 1,
+>> +				       &pcie_reg)) {
+>> +		dev_err(dev, "couldn't get lane selection reg offset\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	regmap_update_bits(pcie_syscon, pcie_reg, b1co_mode_sel_mask,
+>> +			   PCIE_B1C0_MODE_SEL);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>>  {
+>>  	u32 reg;
+>> @@ -608,6 +690,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>>  	const struct of_device_id *match;
+>>  	const struct dra7xx_pcie_of_data *data;
+>>  	enum dw_pcie_device_mode mode;
+>> +	u32 b1co_mode_sel_mask;
+> 
+> Again, do you need this temporary variable (given that you pass the
+> value below) ?
+
+I used so that we don't cross the 80 line character limit below.
+
+Thanks
+Kishon
