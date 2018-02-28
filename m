@@ -1,192 +1,56 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] input: Add RAVE SP Powerbutton driver
-Date: Tue, 27 Feb 2018 20:59:35 -0800
-Message-ID: <20180228045935.GB151045@dtor-ws>
-References: <20180226154130.25774-1-andrew.smirnov@gmail.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v3 3/3] arm64: dts: Hi3660: Add binding for stub clock
+Date: Wed, 28 Feb 2018 13:06:39 +0800
+Message-ID: <20180228050639.GA20745@leoy-ThinkPad-T440>
+References: <1510910852-2175-1-git-send-email-xuyiping@hisilicon.com>
+ <1510910852-2175-4-git-send-email-xuyiping@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180226154130.25774-1-andrew.smirnov@gmail.com>
+In-Reply-To: <1510910852-2175-4-git-send-email-xuyiping@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+To: Xu YiPing <xuyiping@hisilicon.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, xuejiancheng@hisilicon.com, wenpan@hisilicon.com, zhangfei.gao@linaro.org, guodong.xu@linaro.org, zhongkaihua@huawei.com, chenjun14@huawei.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, suzhuangluan@hisilicon.com, xuezhiliang@hisilicon.com, kevin.wangtao@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrey,
+Hi Wei,
 
-On Mon, Feb 26, 2018 at 07:41:29AM -0800, Andrey Smirnov wrote:
-> Add driver that properly handles input event emitted by RAVE SP
-> devices.
+On Fri, Nov 17, 2017 at 05:27:32PM +0800, Xu YiPing wrote:
+> From: Kaihua Zhong <zhongkaihua@huawei.com>
 > 
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: linux-input@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Add DT binding for Hi3660 stub clock driver.
+> 
+> Reviewed-by: Leo Yan <leo.yan@linaro.org>
+> Signed-off-by: Kai Zhao <zhaokai1@hisilicon.com>
+> Signed-off-by: Tao Wang <kevin.wangtao@hisilicon.com>
+> Signed-off-by: Ruyi Wang <wangruyi@huawei.com>
+> Signed-off-by: Kaihua Zhong <zhongkaihua@huawei.com>
+
+Could you help to pick up this patch? Thanks!
+
 > ---
->  drivers/input/misc/Kconfig             |  9 ++++
->  drivers/input/misc/Makefile            |  1 +
->  drivers/input/misc/rave-sp-pwrbutton.c | 92 ++++++++++++++++++++++++++++++++++
->  3 files changed, 102 insertions(+)
->  create mode 100644 drivers/input/misc/rave-sp-pwrbutton.c
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index 62a1312a7387..6a3c753b093b 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -841,4 +841,13 @@ config INPUT_HISI_POWERKEY
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called hisi_powerkey.
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> index 451b6bf..cbbc7f1 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> @@ -293,6 +293,13 @@
+>  			#mbox-cells = <3>;
+>  		};
 >  
-> +config INPUT_RAVE_SP_PWRBUTTON
-> +	tristate "RAVE SP Power button Driver"
-> +	depends on RAVE_SP_CORE
-> +	help
-> +	  Say Y here if you want to enable power key reporting from RAVE SP
+> +		stub_clock: stub_clock@e896b500 {
+> +			compatible = "hisilicon,hi3660-stub-clk";
+> +			reg = <0x0 0xe896b500 0x0 0x0100>;
+> +			#clock-cells = <1>;
+> +			mboxes = <&mailbox 13 3 0>;
+> +		};
 > +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called rave-sp-pwrbutton.
-> +
->  endif
-> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-> index a8f61af865aa..6ebeec1f4dd0 100644
-> --- a/drivers/input/misc/Makefile
-> +++ b/drivers/input/misc/Makefile
-> @@ -80,3 +80,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)		+= wm831x-on.o
->  obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)	+= xen-kbdfront.o
->  obj-$(CONFIG_INPUT_YEALINK)		+= yealink.o
->  obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)	+= ideapad_slidebar.o
-> +obj-$(CONFIG_INPUT_RAVE_SP_PWRBUTTON)	+= rave-sp-pwrbutton.o
-
-Please put it in [somewhat] alphabetical order (even though ideapad is
-out of order). 
-
-
-> diff --git a/drivers/input/misc/rave-sp-pwrbutton.c b/drivers/input/misc/rave-sp-pwrbutton.c
-> new file mode 100644
-> index 000000000000..7511062c724b
-> --- /dev/null
-> +++ b/drivers/input/misc/rave-sp-pwrbutton.c
-> @@ -0,0 +1,92 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +
-> +/*
-> + * Power Button driver for RAVE SP
-> + *
-> + * Copyright (C) 2017 Zodiac Inflight Innovations
-> + *
-> + */
-
-Let's keep SPDX and copyright in the same // comment block.
-
-> +
-> +#include <linux/input.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/rave-sp.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define RAVE_SP_EVNT_BUTTON_PRESS	(RAVE_SP_EVNT_BASE + 0x00)
-> +
-> +struct rave_sp_power_button {
-> +	struct input_dev *idev;
-> +	struct notifier_block nb;
-> +};
-> +
-> +static int rave_sp_power_button_event(struct notifier_block *nb,
-> +				      unsigned long action, void *data)
-> +{
-> +	struct rave_sp_power_button *pb =
-> +		container_of(nb, struct rave_sp_power_button, nb);
-> +	const u8 event = rave_sp_action_unpack_event(action);
-> +	const u8 value = rave_sp_action_unpack_value(action);
-> +	struct input_dev *idev = pb->idev;
-> +
-> +	if (event == RAVE_SP_EVNT_BUTTON_PRESS) {
-> +		input_report_key(idev, KEY_POWER, value);
-> +		input_sync(idev);
-> +
-> +		return NOTIFY_STOP;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int rave_sp_pwrbutton_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct rave_sp_power_button *pb;
-> +	struct input_dev *idev;
-> +	int ret;
-> +
-> +	pb = devm_kzalloc(dev, sizeof(*pb), GFP_KERNEL);
-> +	if (!pb)
-> +		return -ENOMEM;
-> +
-> +	idev = devm_input_allocate_device(dev);
-> +	if (!idev)
-> +		return -ENOMEM;
-> +
-> +	idev->name = pdev->name;
-> +	idev->dev.parent = dev;
-
-Not needed - done by devm_input_allocate_device().
-
-> +
-> +	input_set_capability(idev, EV_KEY, KEY_POWER);
-> +
-> +	ret = input_register_device(idev);
-> +	if (ret)
-> +		return ret;
-
-Please call this "error".
-
-> +
-> +	pb->idev = idev;
-> +	pb->nb.notifier_call = rave_sp_power_button_event;
-> +	pb->nb.priority = 128;
-> +
-> +	return devm_rave_sp_register_event_notifier(dev, &pb->nb);
-
-Prefer
-
-	error = devm_rave...();
-	if (error)
-		return error;
-
-	return 0;
-
-> +}
-> +
-> +static const struct of_device_id rave_sp_pwrbutton_of_match[] = {
-> +	{ .compatible = "zii,rave-sp-pwrbutton" },
-> +	{}
-> +};
-> +
-> +static struct platform_driver rave_sp_pwrbutton_driver = {
-> +	.probe = rave_sp_pwrbutton_probe,
-> +	.driver	= {
-> +		.name = KBUILD_MODNAME,
-> +		.of_match_table = rave_sp_pwrbutton_of_match,
-> +	},
-> +};
-> +module_platform_driver(rave_sp_pwrbutton_driver);
-> +
-> +MODULE_DEVICE_TABLE(of, rave_sp_pwrbutton_of_match);
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>");
-> +MODULE_AUTHOR("Nikita Yushchenko <nikita.yoush@cogentembedded.com>");
-> +MODULE_AUTHOR("Andrey Smirnov <andrew.smirnov@gmail.com>");
-> +MODULE_DESCRIPTION("RAVE SP Power Button driver");
+>  		dual_timer0: timer@fff14000 {
+>  			compatible = "arm,sp804", "arm,primecell";
+>  			reg = <0x0 0xfff14000 0x0 0x1000>;
 > -- 
-> 2.14.3
+> 1.9.1
 > 
-
--- 
-Dmitry
