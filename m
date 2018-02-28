@@ -1,43 +1,39 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
-Date: Wed, 28 Feb 2018 20:57:18 +0300
-Message-ID: <f9574ea2-d8ee-7c9f-b850-874074eddad2@cogentembedded.com>
-References: <23a6ac28-134b-b5dd-69a7-910774c4b8c1@cogentembedded.com>
- <2fd26075-525c-8d86-ef81-f32c73cf3e8b@cogentembedded.com>
- <20180228132707.mgunezg5o4lul7x5@verge.net.au>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 3/3] mailbox: sunxi-msgbox: Add a new mailbox driver
+Date: Wed, 28 Feb 2018 23:44:18 +0530
+Message-ID: <CABb+yY3nfVxoA9wy1ym4mtCTKCZtJjepUTr7OP1uUPmzOEzniA@mail.gmail.com>
+References: <20180228022714.30068-1-samuel@sholland.org> <20180228022714.30068-4-samuel@sholland.org>
+ <CABb+yY2uueAK9kzXzU9DT2a4NtV3kK2dc_wtyFWTBn8=Z6Vi7Q@mail.gmail.com> <d9e14058-6ffb-e54a-1565-f228342ee1f0@sholland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180228132707.mgunezg5o4lul7x5@verge.net.au>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d9e14058-6ffb-e54a-1565-f228342ee1f0@sholland.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Holland <samuel@sholland.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ", linux-arm-kernel"@lists.infradead.org, ", linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-mediatek@lists.infradead.org>srv_heupstream <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/2018 04:27 PM, Simon Horman wrote:
-
->>> Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
->>> 'renesas-devel-20180227-v4.16-rc3' tag. We're adding the R8A77970 FCPVD/VSPD/
->>> DU/LVDS device nodes and then describing the HDMI encoder connected to the LVDS
->>> output (we're omitting the LVDS decoder for now). These patches depend on
->>> the recent R8A77970 DU/LVDS rework patches by Laurent in order to work...	
+On Wed, Feb 28, 2018 at 11:21 PM, Samuel Holland <samuel@sholland.org> wrote:
+> Hi,
+>
+> On 02/28/18 03:16, Jassi Brar wrote:
+>> On Wed, Feb 28, 2018 at 7:57 AM, Samuel Holland <samuel@sholland.org> wrote:
+>> ....
 >>
->>    Need to mention that the DU driver silently fails to probe now. I do
->>    hope that this is not due to my updates. :-)
-> 
-> Please test that theory.
+>>> +/*
+>>> + * The message box hardware provides 8 unidirectional channels. As the mailbox
+>>> + * framework expects them to be bidirectional
+>>>
+>> That is incorrect. Mailbox framework does not require a channel to be
+>> TX and RX capable.
+>
+> Sorry, it would be more accurate to say that the intended mailbox _client_
+> expects the channels to be bidirectional.
+>
+Mailbox clients are very mailbox provider specific. Your client driver
+is unlikely to be reuseable over another controller+remote combo.
+Your client has to know already what a physical channel can do (RX, TX
+or RXTX). There is no api to provide that info.
 
-   Yeah, after sucking in the recent versions of the DU/LVDS patches and uncommenting
-and fixing rejects in a couple patches here, the graphical console works again. :-)
-
-MBR, Sergei
+thanks
