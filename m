@@ -1,124 +1,113 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: Kconfig: OF_OVERLAY, select OF_EARLY_FLATTREE
-Date: Wed, 28 Feb 2018 13:44:44 -0800
-Message-ID: <d0e5e07b-cdf8-0cbc-d073-7f8982433c7f@gmail.com>
-References: <1519000156-14319-1-git-send-email-frowand.list@gmail.com>
- <CAL_JsqLa83SKe5vbCkU8pwjPzBszsHrWQEA-ThMMciMwLO1XmA@mail.gmail.com>
- <300becd6-db35-59e6-1b81-6b1940070df0@gmail.com>
- <CAL_Jsq+BBHT3AyNeHWJe22KioC9s3Jm1d4pydVQLJA6jKoTGXA@mail.gmail.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH v2 01/16] clk: sunxi-ng: Add check for
+ minimal rate to NM PLLs
+Date: Wed, 28 Feb 2018 22:55:03 +0100
+Message-ID: <3220888.aQMeRaSCkl@jernej-laptop>
+References: <20180227222701.9716-1-jernej.skrabec@siol.net> <20180227222701.9716-2-jernej.skrabec@siol.net> <20180228073440.6ejo3wjdqag6h4nl@flea>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+BBHT3AyNeHWJe22KioC9s3Jm1d4pydVQLJA6jKoTGXA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBOWK3TKAKGQEMLZQB6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180228073440.6ejo3wjdqag6h4nl@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/18 12:26, Rob Herring wrote:
-> Sorry for the delay, been away for a few days.
+Hi,
+
+Dne sreda, 28. februar 2018 ob 08:34:40 CET je Maxime Ripard napisal(a):
+> Hi,
 > 
-> On Mon, Feb 19, 2018 at 12:24 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 02/18/18 17:46, Rob Herring wrote:
->>> On Sun, Feb 18, 2018 at 6:29 PM,  <frowand.list@gmail.com> wrote:
->>>> From: Frank Rowand <frank.rowand@sony.com>
->>>>
->>>> kbuild test robot reported a new warning for a recent patch:
->>>>>> drivers/of/overlay.c:832:2: error: implicit declaration of function 'of_fdt_unflatten_tree' [-Werror=implicit-function-declaration]
->>>>      of_fdt_unflatten_tree(new_fdt, NULL, &overlay_root);
->>>>
->>>> The cause is that the prototype for of_fdt_unflatten_tree() in
->>>> include/linux/of_fdt.c is guarded by OF_EARLY_FLATTREE.
+> On Tue, Feb 27, 2018 at 11:26:46PM +0100, Jernej Skrabec wrote:
+> > Some NM PLLs doesn't work well when their output clock rate is set below
+> > certain rate.
+> > 
+> > Add support for that constrain.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
+> > 
+> >  drivers/clk/sunxi-ng/ccu_nm.c | 11 +++++++----
+> >  drivers/clk/sunxi-ng/ccu_nm.h | 27 +++++++++++++++++++++++++++
+> >  2 files changed, 34 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/clk/sunxi-ng/ccu_nm.c b/drivers/clk/sunxi-ng/ccu_nm.c
+> > index a16de092bf94..7fc743c78c1b 100644
+> > --- a/drivers/clk/sunxi-ng/ccu_nm.c
+> > +++ b/drivers/clk/sunxi-ng/ccu_nm.c
+> > @@ -20,7 +20,7 @@ struct _ccu_nm {
+> > 
+> >  };
+> >  
+> >  static void ccu_nm_find_best(unsigned long parent, unsigned long rate,
+> > 
+> > -			     struct _ccu_nm *nm)
+> > +			     unsigned long min_rate, struct _ccu_nm *nm)
+> > 
+> >  {
+> >  
+> >  	unsigned long best_rate = 0;
+> >  	unsigned long best_n = 0, best_m = 0;
+> > 
+> > @@ -30,7 +30,7 @@ static void ccu_nm_find_best(unsigned long parent,
+> > unsigned long rate,> 
+> >  		for (_m = nm->min_m; _m <= nm->max_m; _m++) {
+> >  		
+> >  			unsigned long tmp_rate = parent * _n  / _m;
+> > 
+> > -			if (tmp_rate > rate)
+> > +			if (tmp_rate > rate || tmp_rate < min_rate)
+> > 
+> >  				continue;
+> >  			
+> >  			if ((rate - tmp_rate) < (rate - best_rate)) {
+> > 
+> > @@ -117,6 +117,9 @@ static long ccu_nm_round_rate(struct clk_hw *hw,
+> > unsigned long rate,> 
+> >  	if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> >  	
+> >  		rate *= nm->fixed_post_div;
+> > 
+> > +	if (rate < nm->min_rate)
+> > +		rate = nm->min_rate;
+> > +
 > 
-> Umm, this is not true. of_fdt_unflatten_tree is outside the ifdef for
-> OF_EARLY_FLATTREE.
-
-Brown paper bag.  :-(  As you note below, CONFIG_OF_FLATTREE is the
-relevant option.
-
-
->>>>
->>>> This was a pre-existing problem for any overlay related caller of
->>>> of_fdt_unflatten_device_tree(), who was then going to pass the
->>>> unflattened tree to of_overlay_apply().  After the patch that triggered
->>>> this warning, all other overlay callers of of_fdt_unflatten_device_tree()
->>>> no longer exist, so adding the select to OF_OVERLAY is a sufficient fix.
->>>>
->>>> To reproduce the warning:
->>>>   Use the .config attached to https://lkml.org/lkml/2018/2/17/268
->>>>   make ARCH=i386 olddefconfig
->>>>   make ARCH=i386 CC=gcc-7 drivers/of/overlay.o
->>>>
->>>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->>>> ---
->>>>  drivers/of/Kconfig | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
->>>> index 783e0870bd22..00a6abfaaec7 100644
->>>> --- a/drivers/of/Kconfig
->>>> +++ b/drivers/of/Kconfig
->>>> @@ -92,6 +92,7 @@ config OF_RESOLVE
->>>>  config OF_OVERLAY
->>>>         bool "Device Tree overlays"
->>>>         select OF_DYNAMIC
->>>> +       select OF_EARLY_FLATTREE
+> I guess you can just return there. There's no point in trying to find
+> the factors at this point, since the minimum should be a value that
+> can be reached.
 > 
-> This should really have been OF_FLATTREE...
 
-Yes.  This only fixed the warning because OF_EARLY_FLATTREE selects
-OF_FLATTREE.
+Right, I already tested it and it works.
 
+Best regards,
+Jernej
 
->>> If we do this, we might as well kill OF_EARLY_FLATTREE. What platform
->>> really boots from not FDT, but uses DT without overlays?
->>
->> Making sure I'm understanding...  So you want to remove OF_EARLY_FLATTREE
->> and convert the current users of it to OF_FLATTREE?
+> >  	if (ccu_frac_helper_has_rate(&nm->common, &nm->frac, rate)) {
+> >  	
+> >  		if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> >  		
+> >  			rate /= nm->fixed_post_div;
+> > 
+> > @@ -134,7 +137,7 @@ static long ccu_nm_round_rate(struct clk_hw *hw,
+> > unsigned long rate,> 
+> >  	_nm.min_m = 1;
+> >  	_nm.max_m = nm->m.max ?: 1 << nm->m.width;
+> > 
+> > -	ccu_nm_find_best(*parent_rate, rate, &_nm);
+> > +	ccu_nm_find_best(*parent_rate, rate, nm->min_rate, &_nm);
 > 
-> Right. OF_EARLY_FLATTREE just controls everything that's in __init
-> section anyway. So the question is it worth a kconfig option to
-> control code that's in the __init section and will get discarded
-> anyway?
+> Therefore, you don't need to change the prototype there either.
 > 
+> Maxime
 > 
->> I don't see any way to directly configure OF_FLATTREE and I don't see anyk
->> Kconfig file selecting it, other than drivers/of/Kconfig which selects
->> OF_FLATTREE from OF_EARLY_FLATTREE.  So as far as I can tell, the two
->> config options are essentially a single config option.  Meaning that
->> either one could be replaced by the other.
->>
->> Changing all to OF_FLATTREE will touch more files and thus will be a
->> bit more obtrusive.  It looks like it would take two releases to avoid
->> a flag day change.
->>
->> Changing all to OF_EARLY_FLATTREE can be done in a single release.
-> 
-> I would get rid of OF_EARLY_FLATREE within the DT core code making it
-> do nothing more than select OF_FLATTREE. Then the arches can later
-> just select OF_FLATTREE directly.
-
-OK, will do.
-
-
-> But this is all orthogonal to your issue. I think we need to keep the
-> overlay dependencies on FDT separate. In theory we could support
-> non-FDT sources or some more complex use that needs to unflatten FDT
-> themselves. I don't really want to add another user visible kconfig
-> option (OF_FDT_OVERLAY), so I think as long as we structure things to
-> support that when needed we're fine.
-
-OK, at the "theoretical, what if, keep our options open" level.
-
-I'll add the desire to allow future support of non-FDT sources to
-my general overlay requirements as I propose changes.  So far, my
-proposed patches isolate the FDT source dependency in a single small
-function, so it seems all is OK from that angle.  But all use of overlays 
-for many previous releases requires manually selecting OF_FLATTREE, given
-that FDTs have been the overlay source.  So it seems to make sense for
-OF_OVERLAY to select OF_FLATTREE (not OF_EARLY_FLATTREE as I mistakenly
-chose) now.  And if future non-FDT overlays are implemented in the
-future, re-visit how to select OF_FLATTREE in a more granular manner.
+> --
+> Maxime Ripard, Bootlin (formerly Free Electrons)
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
