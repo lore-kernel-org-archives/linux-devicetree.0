@@ -1,40 +1,85 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 10/10] MAINTAINERS: Add Actions Semi S900 pinctrl and gpio entries
-Date: Wed, 28 Feb 2018 23:19:06 +0530
-Message-ID: <20180228174906.22721-11-manivannan.sadhasivam@linaro.org>
-References: <20180228174906.22721-1-manivannan.sadhasivam@linaro.org>
+From: Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH 1/3] dt-bindings: Add a binding for the sunxi message box
+Date: Wed, 28 Feb 2018 11:52:05 -0600
+Message-ID: <ce95b875-8503-17e8-06ef-86e4b4b434e5@sholland.org>
+References: <20180228022714.30068-1-samuel@sholland.org>
+ <20180228022714.30068-2-samuel@sholland.org>
+ <20180228082843.fga47gfrv2g5kmiz@flea>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180228174906.22721-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20180228082843.fga47gfrv2g5kmiz@flea>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de
-Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add S900 pinctrl and gpio entries under ARCH_ACTIONS
+Hi,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
+On 02/28/18 02:28, Maxime Ripard wrote:
+> On Tue, Feb 27, 2018 at 08:27:12PM -0600, Samuel Holland wrote:
+>> This mailbox hardware is present in several Allwinner sun8i and sun50i
+>> SoCs. Add a device tree binding for it.
+>>
+>> Signed-off-by: Samuel Holland <samuel@sholland.org>
+>> ---
+>>  .../devicetree/bindings/mailbox/sunxi-msgbox.txt   | 40 ++++++++++++++++++++++
+>>  1 file changed, 40 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt b/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
+>> new file mode 100644
+>> index 000000000000..3b3ed7f870a0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mailbox/sunxi-msgbox.txt
+>> @@ -0,0 +1,40 @@
+>> +Allwinner sunxi Message Box
+>> +===========================
+>> +
+>> +The hardware message box on sunxi SoCs is a two-user mailbox controller
+>> +containing 8 unidirectional FIFOs bonded into 4 bidirectional mailbox channels.
+>> +An interrupt is raised for received messages, but software must poll to know
+>> +when a transmitted message has been acknowledged by the remote user.
+>> +
+>> +Refer to ./mailbox.txt for generic information about mailbox device-tree
+>> +bindings.
+>> +
+>> +Mailbox Device Node:
+>> +====================
+>> +
+>> +Required properties:
+>> +--------------------
+>> +- compatible:		Must be "allwinner,sunxi-msgbox".
+> 
+> The IP change quite often in the Allwinner SoCs, so it would be better
+> to use a more specific compatible there. IIRC that IP was introduced
+> with the A31, so what about sun6i-a31-msgbox?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 640dabc4c311..d63793ee545e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1125,10 +1125,14 @@ F:	arch/arm/mach-actions/
- F:	arch/arm/boot/dts/owl-*
- F:	arch/arm64/boot/dts/actions/
- F:	drivers/clocksource/owl-*
-+F:	drivers/gpio/gpio-owl.c
-+F:	drivers/pinctrl/actions/*
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
- F:	include/linux/soc/actions/
- F:	Documentation/devicetree/bindings/arm/actions.txt
-+F:	Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
-+F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
- F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
- F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
- 
--- 
-2.14.1
+Ok, I will do this for v2, following Andre's suggestion. (I knew the AR100 was
+introduced with the A31, but I couldn't find any reference to the msgbox in the
+A31 manual).
+
+>> +- reg:			Contains the mailbox register address range (base
+>> +			address and length).
+>> +- clocks:		phandle for the clock controller and specifier.
+>> +- clock-names:		Must be "bus".
+>> +- resets:		phandle for the reset controller and specifier.
+>> +- reset-names:		Must be "bus".
+>> +- interrupts:		Contains interrupt information for the mailbox.
+>> +- #mbox-cells		Must be 2 - the indexes of the transmit and receive
+>> +			channels, respectively.
+> 
+> That would prevent any unidirectional communication, wouldn't it?
+> Other mailboxes driver seem to have two mbox channels, one for each
+> direction, which also seem to mimic our DMA bindings (where we are in
+> pretty much the same situation).
+
+I've responded to Jassi's comment about the same issue on patch 3.
+
+> Thanks!
+> Maxime
+
+Regards,
+Samuel
