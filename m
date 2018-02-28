@@ -1,76 +1,32 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] PCI: rockchip: Add Endpoint controller driver for
- Rockchip PCIe controller
-Date: Wed, 28 Feb 2018 09:40:36 +0800
-Message-ID: <8244c52c-73d3-5b20-eb39-ddc37968163a@rock-chips.com>
-References: <1519348503-243259-1-git-send-email-shawn.lin@rock-chips.com>
- <1519348654-243597-1-git-send-email-shawn.lin@rock-chips.com>
- <20180227153202.GB7184@e107981-ln.cambridge.arm.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v4 4/4] ARM: dts: imx7s: add CAAM device node
+Date: Wed, 28 Feb 2018 09:41:49 +0800
+Message-ID: <20180228014148.GA3217@dragon>
+References: <20180222142250.31348-1-rui.silva@linaro.org>
+ <20180222142250.31348-5-rui.silva@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180227153202.GB7184-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180222142250.31348-5-rui.silva@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rui Miguel Silva <rui.silva@linaro.org>
+Cc: horia.geanta@nxp.com, aymen.sghaier@nxp.com, Herbert Xu <herbert@gondor.apana.org.au>, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>, Bryan O'Donoghue <pure.logic@nexus-software.ie>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Peng Fan <peng.fan@nxp.com>, "David S. Miller" <davem@davemloft.net>, Lukas Auer <lukas.auer@aisec.fraunhofer.de>
 List-Id: devicetree@vger.kernel.org
 
-Dear Lorenzo,
-
-On 2018/2/27 23:32, Lorenzo Pieralisi wrote:
-> On Fri, Feb 23, 2018 at 09:17:33AM +0800, Shawn Lin wrote:
->> This patch adds support to the Rockchip PCIe controller in endpoint mode
->> which currently supports up to 32 regions, and each regions should at
->> least be 1MB per TRM.
->>
->> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
-
+On Thu, Feb 22, 2018 at 02:22:50PM +0000, Rui Miguel Silva wrote:
+> Add CAAM device node to the i.MX7s device tree.
 > 
-> I reviewed this patch and I then realized that it is not bits, it is
-> that the drivers are almost identical. Are we talking about the same IP
-> (possibly with some HW wrapper of sorts) ?
-> 
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: "Horia Geantă" <horia.geanta@nxp.com>
+> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Peng Fan <peng.fan@nxp.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Lukas Auer <lukas.auer@aisec.fraunhofer.de>
+> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 
-Nope, I would seriouly say they are not the same IP legally :)
-If we take about IP, it's referred to a functional entity designed
-and licensed by the provider, but it's not the case here since
-
-(1) There is nothing about cadence throughout the TRM when upstreamed
-it in 2016, and actually it was designed much earlier than 2016.
-(2) Much of the flow was different, and even some of the bit offset is
-different per my reading of cadence's driver, though most registers
-looks much similar.
-
-So my best guess was HW guys referenced to cadence's register layout(or
-the reverse), so they are much partially compatible from the
-register level POV, but the backend design are different leading to the
-quite different control flow and also rockchip controller have lots of
-HW bugs that I didn't see them when reviewing cadence's driver which do
-the same flow using similar register. That's very common if you search
-drivers/mmc/host/sdhci*, which means all of them share the *same*
-register layout and control flow, so it makes software guys' life easy,
-but still they are different IPs. But it's sightly different here as
-the pcie registers aren't the totally same and the flow control is
-different.
-
-Also historically that happened for other controllers designed from 
-rockchip, for instance, SPI controller looks much like designware one,
-but the flow control was totally differnt preventing SW guys to
-refactor the designware driver to fit for rockchip one.
-
-This is all I could guess here, hope that help for you.
-
-
-> 
-> 
-> 
+Applied this one and "clk: imx7d: add CAAM clock", thanks.
