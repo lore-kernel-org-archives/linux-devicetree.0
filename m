@@ -1,33 +1,70 @@
-Return-Path: <SRS0=JSor=FX=linaro.org=shawn.guo@kernel.org>
-Date: Thu, 1 Mar 2018 09:22:46 +0800
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v2 0/2] Add power control for pcie-histb driver
-Message-ID: <20180301012241.GA28619@dragon>
-References: <1516722337-1533-1-git-send-email-shawn.guo@linaro.org>
+Return-Path: <SRS0=hPS6=FW=gmail.com=jassisinghbrar@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1516722337-1533-1-git-send-email-shawn.guo@linaro.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, Jianguo Sun <sunjianguo1@huawei.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Jiancheng Xue <xuejiancheng@hisilicon.com>
+In-Reply-To: <CAMuHMdWmaovpjuyzjYRRLBKk6g0WDeA8YHDCWwr94shpom0YNA@mail.gmail.com>
+References: <1519736182-3650-1-git-send-email-jassisinghbrar@gmail.com>
+ <1519736330-3985-1-git-send-email-jassisinghbrar@gmail.com> <CAMuHMdWmaovpjuyzjYRRLBKk6g0WDeA8YHDCWwr94shpom0YNA@mail.gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Thu, 1 Mar 2018 00:05:26 +0530
+Message-ID: <CABb+yY2LRqeA-_8g8Q+kwWXAoTYLKXenGLzu=ism_S--9WTJww@mail.gmail.com>
+Subject: Re: [PATCHv4 2/3] spi: Add spi driver for Socionext Synquacer platform
+Content-Type: text/plain; charset="UTF-8"
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-spi <linux-spi@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Trent Piepho <tpiepho@impinj.com>, Mark Brown <broonie@kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jan 23, 2018 at 11:45:35PM +0800, Shawn Guo wrote:
-> The first patch is a small fix which is useful for the second one.
-> This version basically follows Fabio's suggestion to reimplement the
-> first version patch, using a regulator that can be backed by GPIO to
-> control the power to PCIe port.
-> 
-> Shawn Guo (2):
->   PCI: histb: fix error path of histb_pcie_host_enable()
->   PCI: histb: add an optional regulator for PCIe port power control
-> 
->  .../bindings/pci/hisilicon-histb-pcie.txt          |  1 +
->  drivers/pci/dwc/pcie-histb.c                       | 28 ++++++++++++++++++----
->  2 files changed, 25 insertions(+), 4 deletions(-)
+On Wed, Feb 28, 2018 at 4:47 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> Hi Jassi,
+>
+> On Tue, Feb 27, 2018 at 1:58 PM,  <jassisinghbrar@gmail.com> wrote:
+>> From: Jassi Brar <jaswinder.singh@linaro.org>
+>>
+>> This patch adds support for controller found on synquacer platforms.
+>>
+>> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+>
+> Thanks for your patch!
+>
+>> --- /dev/null
+>> +++ b/drivers/spi/spi-synquacer.c
+>
+>> +static void read_fifo(struct synquacer_spi *sspi)
+>> +{
+>> +       u32 len = readl_relaxed(sspi->regs + DMSTATUS);
+>> +       int i;
+>
+> unsigned int, as len is unsigned.
+>
+>> +static void write_fifo(struct synquacer_spi *sspi)
+>> +{
+>> +       u32 len = readl_relaxed(sspi->regs + DMSTATUS);
+>> +       int i;
+>
+> unsigned int, as len is unsigned.
+>
+>> +static int synquacer_spi_config(struct spi_master *master,
+>> +                               struct spi_device *spi,
+>> +                               struct spi_transfer *xfer)
+>> +{
+>> +       struct synquacer_spi *sspi = spi_master_get_devdata(master);
+>> +       unsigned int speed, mode, bpw, cs, bus_width;
+>> +       unsigned long rate;
+>
+> unsigned int, as max_speed_hz is u32, else you'll do a 64/32-bit division later.
+>
+>> +static int synquacer_spi_transfer_one(struct spi_master *master,
+>> +                                     struct spi_device *spi,
+>> +                                     struct spi_transfer *xfer)
+>> +{
+>> +       struct synquacer_spi *sspi = spi_master_get_devdata(master);
+>> +       int ret, words, busy = 0;
+>
+> unsigned int words, as xfr->len is unsigned.
+>
+>> +       unsigned long bpw;
+>
+> unsigned int is plenty (bits_per_word is even u8).
+>
+Will fix all.
 
-Hi Bjorn,
-
-Did you get a chance to look at the series?
-
-Shawn
+Thank you.
