@@ -1,82 +1,69 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v6] rtc: isl12026: Add driver.
-Date: Wed, 28 Feb 2018 16:17:01 +0100
-Message-ID: <20180228151701.GM1479@piout.net>
-References: <20180222200432.22003-1-david.daney@cavium.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH v2 1/2] media: ov2680: dt: Add bindings for OV2680
+Date: Wed, 28 Feb 2018 15:27:22 +0000
+Message-ID: <20180228152723.26392-2-rui.silva@linaro.org>
+References: <20180228152723.26392-1-rui.silva@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180222200432.22003-1-david.daney@cavium.com>
+In-Reply-To: <20180228152723.26392-1-rui.silva@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add device tree binding documentation for the OV2680 camera sensor.
 
-That's mostly good
+CC: devicetree@vger.kernel.org
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+---
+ .../devicetree/bindings/media/i2c/ov2680.txt       | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2680.txt
 
-On 22/02/2018 at 12:04:32 -0800, David Daney wrote:
-> +	priv->rtc->ops = &isl12026_rtc_ops;
-> +	priv->rtc->nvram_old_abi = false;
-
-This allocation is not necessary and I would refer not having t so when
-the ABI goes away, it is not necessary to change this driver.
-
-> +	ret = rtc_register_device(priv->rtc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	memset(&nvm_cfg, 0, sizeof(nvm_cfg));
-> +	nvm_cfg.name = "eeprom";
-
-You probably need something more descriptive, usually the rtc model name
-else, it is difficult (but not impossible) to find where this nvmem is
-actually located when using /sys/bus/nvmem/devices
-isl12026- would be a good choice.
-
-> +	nvm_cfg.read_only = false;
-> +	nvm_cfg.root_only = true;
-
-any reason to have it root only?
-
-> +	nvm_cfg.base_dev = &client->dev;
-> +	nvm_cfg.priv = priv;
-> +	nvm_cfg.stride = 1;
-> +	nvm_cfg.word_size = 1;
-> +	nvm_cfg.size = 512;
-> +	nvm_cfg.reg_read = isl12026_nvm_read;
-> +	nvm_cfg.reg_write = isl12026_nvm_write;
-> +
-> +	return rtc_nvmem_register(priv->rtc, &nvm_cfg);
-
-The probe function must not fail after rtc_register_device has been
-called so you must return 0 here.
-
-It is not currently possible to call rtc_nvmem_register before
-rtc_register_device unless we move the nvmem to the parent device:
-
-diff --git a/drivers/rtc/nvmem.c b/drivers/rtc/nvmem.c
-index 3a02357eb783..17ec4c8d0fad 100644
---- a/drivers/rtc/nvmem.c
-+++ b/drivers/rtc/nvmem.c
-@@ -91,7 +91,7 @@ int rtc_nvmem_register(struct rtc_device *rtc,
-        if (!nvmem_config)
-                return -ENODEV;
- 
--       nvmem_config->dev = &rtc->dev;
-+       nvmem_config->dev = rtc->dev.parent;
-        nvmem_config->owner = rtc->owner;
-        rtc->nvmem = nvmem_register(nvmem_config);
-        if (IS_ERR_OR_NULL(rtc->nvmem))
-
-I'll submit this patch for this cycle before there are many users of the
-interface (converted drivers are still exposing the old ABI).
-
-If you prefer, you can depend on it.
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov2680.txt b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
+new file mode 100644
+index 000000000000..0e29f1a113c0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
+@@ -0,0 +1,40 @@
++* Omnivision OV2680 MIPI CSI-2 sensor
++
++Required Properties:
++- compatible: should be "ovti,ov2680".
++- clocks: reference to the xvclk input clock.
++- clock-names: should be "xvclk".
++
++Optional Properties:
++- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
++		     if any. This is an active high signal to the OV2680.
++
++The device node must contain one 'port' child node for its digital output
++video port, and this port must have a single endpoint in accordance with
++ the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Endpoint node required properties for CSI-2 connection are:
++- remote-endpoint: a phandle to the bus receiver's endpoint node.
++- clock-lanes: should be set to <0> (clock lane on hardware lane 0).
++- data-lanes: should be set to <1> (one CSI-2 lane supported).
++ 
++Example:
++
++&i2c2 {
++	ov2680: camera-sensor@36 {
++		compatible = "ovti,ov2680";
++		reg = <0x36>;
++		clocks = <&osc>;
++		clock-names = "xvclk";
++		powerdown-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
++
++		port {
++			ov2680_mipi_ep: endpoint {
++				remote-endpoint = <&mipi_sensor_ep>;
++				clock-lanes = <0>;
++				data-lanes = <1>;
++			};
++		};
++	};
++};
 -- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.16.2
