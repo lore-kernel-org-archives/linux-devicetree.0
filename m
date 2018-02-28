@@ -1,42 +1,36 @@
-From: Pierre Bourdon <delroth@google.com>
-Subject: [PATCH v3 2/2] dt-bindings: iio: light: Add bh1730fvc bindings
-Date: Wed, 28 Feb 2018 01:15:25 +0100
-Message-ID: <20180228001525.96044-2-delroth@google.com>
-References: <20180228001525.96044-1-delroth@google.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] ARM: dts: NSP: Fix amount of RAM on BCM958625HR
+Date: Tue, 27 Feb 2018 16:39:19 -0800
+Message-ID: <cf9e6bc5-094a-e658-cdd6-6495fbe99da6@gmail.com>
+References: <20180227010312.7495-1-f.fainelli@gmail.com>
+ <CAC3K-4rqYMUBtbwaojWBF-0biEV-WSPpe=0bDocL4TUrrL4gGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180228001525.96044-1-delroth@google.com>
+In-Reply-To: <CAC3K-4rqYMUBtbwaojWBF-0biEV-WSPpe=0bDocL4TUrrL4gGQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Pierre Bourdon <delroth@google.com>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Baluta <daniel.baluta@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Jon Mason <jon.mason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Pierre Bourdon <delroth@google.com>
----
- .../devicetree/bindings/iio/light/bh1730.txt      | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/bh1730.txt
+On 02/27/2018 07:02 AM, Jon Mason wrote:
+> On Mon, Feb 26, 2018 at 8:03 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>> Jon attempted to fix the amount of RAM on the BCM958625HR in commit
+>> c53beb47f621 ("ARM: dts: NSP: Correct RAM amount for BCM958625HR board")
+>> but it seems like we tripped over some poorly documented schematics.
+>>
+>> The top-level page of the schematics says the board has 2GB, but when
+>> you end-up scrolling to page 6, you see two chips of 4GiB (512MB) but
+>> what the bootloader really initializes only 512MB, any attempt to use
+>> more than that results in data aborts. Fix this again back to 512MB.
+>>
+>> Fixes: c53beb47f621 ("ARM: dts: NSP: Correct RAM amount for BCM958625HR board")
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> Acked-by: Jon Mason <jon.mason@broadcom.com>
 
-diff --git a/Documentation/devicetree/bindings/iio/light/bh1730.txt b/Documentation/devicetree/bindings/iio/light/bh1730.txt
-new file mode 100644
-index 000000000000..6b38c4010647
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/bh1730.txt
-@@ -0,0 +1,15 @@
-+* ROHM BH1730FVC ambient light sensor
-+
-+http://www.rohm.com/web/global/products/-/product/BH1730FVC
-+
-+Required properties:
-+
-+  - compatible : should be "rohm,bh1730fvc"
-+  - reg : the I2C address of the sensor
-+
-+Example:
-+
-+bh1730fvc@29 {
-+	compatible = "rohm,bh1730fvc";
-+	reg = <0x29>;
-+};
+Applied to devicetree/fixes
 -- 
-2.16.2.395.g2e18187dfd-goog
+Florian
