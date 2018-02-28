@@ -1,45 +1,76 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx6dl-icore-rqs: Fix invalid PHY address
- assignment for ethernet
-Date: Wed, 28 Feb 2018 14:35:49 +0800
-Message-ID: <20180228063548.GJ3217@dragon>
-References: <1519747143-3036-1-git-send-email-mayhs11saini@gmail.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v4 4/6] arm64: dts: exynos: add OF graph between MHL and
+ USB connector
+Date: Wed, 28 Feb 2018 07:39:34 +0100
+Message-ID: <be8fe638-03c6-c0d1-4c30-1a8f9a195968@samsung.com>
+References: <CGME20180221085607eucas1p1a08c82fac832049d79705b4222422fa9@eucas1p1.samsung.com>
+        <20180221085541.14556-1-a.hajda@samsung.com>
+        <20180221085541.14556-5-a.hajda@samsung.com>
+        <CAL_JsqKGVwvqu36D57WbB7bPMt2tOZmvq+ukFuNHbhgiWYuw-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1519747143-3036-1-git-send-email-mayhs11saini@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shyam saini <mayhs11saini@gmail.com>
-Cc: devicetree@vger.kernel.org, Shyam Saini <shyam@amarulasolutions.com>, robh+dt@kernel.org, jagan@amarulasolutions.com, kernel@pengutronix.de, fabio.estevam@nxp.com, michael@amarulasolutions.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKGVwvqu36D57WbB7bPMt2tOZmvq+ukFuNHbhgiWYuw-w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Inki Dae <inki.dae@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux USB List <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 27, 2018 at 09:29:03PM +0530, shyam saini wrote:
-> From: Shyam Saini <shyam@amarulasolutions.com>
-> 
-> Add "reg" property for ethernet to fix this issue.
-> 
-> Errors in boot logs:
-> mdio_bus 2188000.ethernet-1:
-> /soc/aips-bus@02100000/ethernet@02188000/mdio/ethernet-phy
-> has invalid PHY address
-> 
-> mdio_bus 2188000.ethernet-1: scan phy ethernet-phy at address 0
-> mdio_bus 2188000.ethernet-1: scan phy ethernet-phy at address 1
-> mdio_bus 2188000.ethernet-1: scan phy ethernet-phy at address 2
-> mdio_bus 2188000.ethernet-1: scan phy ethernet-phy at address 3
-> 
-> Reported-by: Shyam Saini <shyam@amarulasolutions.com>
-> Suggested-by: Michael Trimarchi <michael@amarulasolutions.com>
-> Signed-off-by: Shyam Saini <shyam@amarulasolutions.com>
+On 27.02.2018 22:24, Rob Herring wrote:
+> On Wed, Feb 21, 2018 at 2:55 AM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+>> OF graph describes MHL data lanes between MHL and respective USB
+>> connector.
+>>
+>> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+>> ---
+>> v4:
+>> - added missing reg property in connector's port node (Krzysztof)
+>> ---
+>>  .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 32 ++++++++++++++++++++--
+>>  1 file changed, 29 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+>> index f604f6b1a9c2..2ed506df94d0 100644
+>> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+>> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+>> @@ -817,9 +817,22 @@
+>>                 clocks = <&pmu_system_controller 0>;
+>>                 clock-names = "xtal";
+>>
+>> -               port {
+>> -                       mhl_to_hdmi: endpoint {
+>> -                               remote-endpoint = <&hdmi_to_mhl>;
+>> +               ports {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       port@0 {
+>> +                               reg = <0>;
+>> +                               mhl_to_hdmi: endpoint {
+>> +                                       remote-endpoint = <&hdmi_to_mhl>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       port@1 {
+>> +                               reg = <1>;
+>> +                               mhl_to_musb_con: endpoint {
+>> +                                       remote-endpoint = <&musb_con_to_mhl>;
+>> +                               };
+> These ports are mutually exclusive, right? If so, it should be 1 port
+> with 2 endpoints. Ports should represent independent data flows.
+> Something muxed or replicated (1 to many connection) should be be
+> endpoints.
 
-Applied, thanks.
+No, this is HDMI -> MHL bridge, so port 0 is HDMI input, and port 1 is
+MHL output.
+
+Regards
+Andrzej
+
+>
+> Rob
+>
+>
+>
