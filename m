@@ -1,40 +1,50 @@
-From: Bich HEMON <bich.hemon@st.com>
-Subject: [PATCH 2/2] serial: stm32: update interrupt initialization
-Date: Wed, 28 Feb 2018 10:51:17 +0000
-Message-ID: <1519815044-22669-3-git-send-email-bich.hemon@st.com>
-References: <1519815044-22669-1-git-send-email-bich.hemon@st.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: renesas: eagle: add I2C0 support
+Date: Wed, 28 Feb 2018 11:52:36 +0100
+Message-ID: <CAMuHMdW7Uo+xJ---VeRReWcSvGfc9P0GrwwAAoPK9PW-gVxw=w@mail.gmail.com>
+References: <3aaa4464-fc85-3fb4-2026-5d9df357bdff@cogentembedded.com>
+ <f830570f-f7e7-b277-172a-360a20de1aaf@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519815044-22669-1-git-send-email-bich.hemon@st.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Bich HEMON <bich.hemon@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f830570f-f7e7-b277-172a-360a20de1aaf@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-For each port, get each IRQ using its specific name instead of its index.
+On Mon, Feb 26, 2018 at 9:55 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Define the Eagle board dependent part of the I2C0 device node.
+>
+> The I2C0 bus is populated by ON Semiconductor PCA9653 I/O expander and
+> Analog Devices ADV7511W HDMI transmitter (but we're only describing the
+> former chip now).
+>
+> Based on the original (and large) patch by Vladimir Barinov.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Signed-off-by: Bich Hemon <bich.hemon@st.com>
----
- drivers/tty/serial/stm32-usart.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+(lost)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index 0fa735b..5c85cbc 100644
---- a/drivers/tty/serial/stm32-usart.c
-+++ b/drivers/tty/serial/stm32-usart.c
-@@ -680,8 +680,8 @@ static int stm32_init_port(struct stm32_port *stm32port,
- 	port->flags	= UPF_BOOT_AUTOCONF;
- 	port->ops	= &stm32_uart_ops;
- 	port->dev	= &pdev->dev;
--	port->irq	= platform_get_irq(pdev, 0);
--	stm32port->wakeirq = platform_get_irq(pdev, 1);
-+	port->irq	= platform_get_irq_byname(pdev, "event");
-+	stm32port->wakeirq = platform_get_irq_byname(pdev, "wakeup");
- 	stm32port->fifoen = stm32port->info->cfg.has_fifo;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--- 
-1.9.1
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
