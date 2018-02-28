@@ -1,88 +1,47 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH 1/3] drivers: clk: Add clk_get_children support
-Date: Wed, 28 Feb 2018 14:27:39 -0800
-Message-ID: <1519856861-31384-2-git-send-email-jollys@xilinx.com>
-References: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
+Subject: [PATCH 0/3] drivers: clk: Add ZynqMp clock driver support
+Date: Wed, 28 Feb 2018 14:27:38 -0800
+Message-ID: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519856861-31384-1-git-send-email-jollys@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: mturquette@baylibre.com, sboyd@codeaurora.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Tejas Patel <tejasp@xilinx.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>, rajanv@xilinx.com, Jolly Shah <jolly.shah@xilinx.com>, linux-arm-kernel@lists.infradead.org
+Cc: rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jolly Shah <jolly.shah@xilinx.com>
+Add clock driver for ZynqMp. 
+This patchset has dependency on below drivers:
+Firmware Driver:     https://patchwork.kernel.org/patch/10230773/
 
-This API helps to determine the users for any clock.
+Jolly Shah (3):
+  drivers: clk: Add clk_get_children support
+  dt-bindings: clock: Add bindings for ZynqMP clock driver
+  drivers: clk: Add ZynqMP clock driver
 
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
-Signed-off-by: Tejas Patel <tejasp@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
----
- drivers/clk/clk.c            | 28 ++++++++++++++++++++++++++++
- include/linux/clk-provider.h |  1 +
- 2 files changed, 29 insertions(+)
+ .../devicetree/bindings/clock/xlnx,zynqmp-clk.txt  | 163 +++++
+ drivers/clk/Kconfig                                |   1 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk.c                                  |  28 +
+ drivers/clk/zynqmp/Kconfig                         |  10 +
+ drivers/clk/zynqmp/Makefile                        |   4 +
+ drivers/clk/zynqmp/clk-gate-zynqmp.c               | 156 +++++
+ drivers/clk/zynqmp/clk-mux-zynqmp.c                | 189 ++++++
+ drivers/clk/zynqmp/clkc.c                          | 712 +++++++++++++++++++++
+ drivers/clk/zynqmp/divider.c                       | 245 +++++++
+ drivers/clk/zynqmp/pll.c                           | 382 +++++++++++
+ include/linux/clk-provider.h                       |   1 +
+ include/linux/clk/zynqmp.h                         |  45 ++
+ 13 files changed, 1937 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/xlnx,zynqmp-clk.txt
+ create mode 100644 drivers/clk/zynqmp/Kconfig
+ create mode 100644 drivers/clk/zynqmp/Makefile
+ create mode 100644 drivers/clk/zynqmp/clk-gate-zynqmp.c
+ create mode 100644 drivers/clk/zynqmp/clk-mux-zynqmp.c
+ create mode 100644 drivers/clk/zynqmp/clkc.c
+ create mode 100644 drivers/clk/zynqmp/divider.c
+ create mode 100644 drivers/clk/zynqmp/pll.c
+ create mode 100644 include/linux/clk/zynqmp.h
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 0f686a9..947a18b 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -274,6 +274,34 @@ struct clk_hw *clk_hw_get_parent(const struct clk_hw *hw)
- }
- EXPORT_SYMBOL_GPL(clk_hw_get_parent);
- 
-+static unsigned int sibling;
-+
-+static void clk_show_subtree(struct clk_core *c,
-+			     int level)
-+{
-+	struct clk_core *child;
-+
-+	if (!c)
-+		return;
-+
-+	if (level == 1)
-+		sibling++;
-+
-+	hlist_for_each_entry(child, &c->children, child_node)
-+		clk_show_subtree(child, level + 1);
-+}
-+
-+unsigned int clk_get_children(char *name)
-+{
-+	struct clk_core *core;
-+	struct clk *pclk = __clk_lookup(name);
-+
-+	sibling = 0;
-+	core = pclk->core;
-+	clk_show_subtree(core, 0);
-+	return sibling;
-+}
-+
- static struct clk_core *__clk_lookup_subtree(const char *name,
- 					     struct clk_core *core)
- {
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index f711be6..e94dfb2 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -745,6 +745,7 @@ unsigned int __clk_get_enable_count(struct clk *clk);
- unsigned long clk_hw_get_rate(const struct clk_hw *hw);
- unsigned long __clk_get_flags(struct clk *clk);
- unsigned long clk_hw_get_flags(const struct clk_hw *hw);
-+unsigned int clk_get_children(char *name);
- bool clk_hw_is_prepared(const struct clk_hw *hw);
- bool clk_hw_rate_is_protected(const struct clk_hw *hw);
- bool clk_hw_is_enabled(const struct clk_hw *hw);
 -- 
 2.7.4
