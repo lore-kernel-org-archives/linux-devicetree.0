@@ -1,55 +1,67 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 2/2] thermal: imx: add i.MX7 thermal sensor support
-Date: Wed, 28 Feb 2018 23:16:07 +0000
-Message-ID: <AM3PR04MB131547CE6052FAA9CC07CCADF5C70@AM3PR04MB1315.eurprd04.prod.outlook.com>
-References: <1519459369-29083-1-git-send-email-Anson.Huang@nxp.com>
-         <1519459369-29083-2-git-send-email-Anson.Huang@nxp.com>
- <1519838731.16494.8.camel@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 0/6] dtc updates for 4.17
+Date: Wed, 28 Feb 2018 17:32:43 -0600
+Message-ID: <20180228233249.26281-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519838731.16494.8.camel@nxp.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "kernel@pengutronix.de" <kernel@pengutronix.de>, =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCkFuc29uIEh1YW5nDQpCZXN0IFJlZ2FyZHMhDQoNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KPiBGcm9tOiBMZW9uYXJkIENyZXN0ZXogW21haWx0bzpsZW9uYXJkLmNyZXN0ZXpA
-bnhwLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIE1hcmNoIDEsIDIwMTggMToyNiBBTQ0KPiBUbzog
-QW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+OyBydWkuemhhbmdAaW50ZWwuY29tOw0K
-PiBlZHViZXp2YWxAZ21haWwuY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnDQo+IENjOiBkbC1saW51
-eC1pbXggPGxpbnV4LWlteEBueHAuY29tPjsgbGludXgtcG1Admdlci5rZXJuZWwub3JnOw0KPiBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsN
-Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyByb2JoK2R0QGtlcm5lbC5v
-cmc7IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBGYWJpbyBFc3RldmFt
-IDxmYWJpby5lc3RldmFtQG54cC5jb20+Ow0KPiBsaW51eEBhcm1saW51eC5vcmcudWs7IGtlcm5l
-bEBwZW5ndXRyb25peC5kZTsgTG90aGFyIFdhw59tYW5uDQo+IDxMV0BLQVJPLWVsZWN0cm9uaWNz
-LmRlPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFY0IDIvMl0gdGhlcm1hbDogaW14OiBhZGQgaS5N
-WDcgdGhlcm1hbCBzZW5zb3Igc3VwcG9ydA0KPiANCj4gT24gU2F0LCAyMDE4LTAyLTI0IGF0IDE2
-OjAyICswODAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgaS5NWDcg
-dGhlcm1hbCBzZW5zb3Igc3VwcG9ydCwgbW9zdCBvZiB0aGUgaS5NWDcNCj4gPiB0aGVybWFsIHNl
-bnNvciBmdW5jdGlvbnMgYXJlIHNhbWUgd2l0aA0KPiA+IGkuTVg2IGV4Y2VwdCB0aGUgcmVnaXN0
-ZXJzIG9mZnNldC9sYXlvdXQsIHNvIHdlIG1vdmUgdGhvc2UgcmVnaXN0ZXJzDQo+ID4gb2Zmc2V0
-L2xheW91dCBkZWZpbml0aW9ucyB0byBzb2MgZGF0YSBzdHJ1Y3R1cmUuDQo+ID4NCj4gPiBpLk1Y
-NyB1c2VzIHNpbmdsZSBjYWxpYnJhdGlvbiBkYXRhIEAyNUMsIHRoZSBjYWxpYnJhdGlvbiBkYXRh
-IGlzDQo+ID4gbG9jYXRlZCBhdCBPQ09UUCBvZmZzZXQgMHg0RjAsIGJpdFsxNzo5XSwgdGhlIGZv
-cm11bGEgaXMgYXMgYmVsb3c6DQo+ID4NCj4gPiBUbWVhcyA9IChObWVhcyAtIG4xKSArIDI1OyBu
-MSBpcyB0aGUgZnVzZSB2YWx1ZSBmb3IgMjVDLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5z
-b24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmFpIFBp
-bmcgPHBpbmcuYmFpQG54cC5jb20+DQo+IA0KPiBPbiBpbXg3ZCAoYWxzbyA2c3ggYW5kIDZ1bCkg
-T0NPVFAgcmVhZCB3aWxsIGhhbmcgc2lsZW50bHkgaWYgdGhlIG9jb3RwIGNsayBpcyBub3QNCj4g
-ZW5hYmxlZC4gRm9yIGV4YW1wbGUgdGhpcyBjYW4gaGFwcGVuIGlmIGlteF90aGVybWFsIGlzIGJ1
-aWx0IGFzIGEgbW9kdWxlIG9yDQo+IHByb2JlcyBhZnRlciB1bnVzZWQgY2xvY2tzIGFyZSBkaXNh
-YmxlZC4NCj4gDQo+IFRoaXMgZHJpdmVyIGhhcyBzdXBwb3J0IGZvciByZWFkaW5nIG9jb3RwIHZh
-bHVlcyB0aHJvdWdoIHRoZSBvY290cCBudm1lbQ0KPiBkcml2ZXIgKHdoaWNoIGhhbmRsZXMgY2xr
-cyBwcm9wZXJseSkuIFNpbmNlIGlteDdkIGlzIGEgbmV3IGNvbXBhdGlibGUgc3RyaW5nIGZvcg0K
-PiB1cHN0cmVhbSBtYXliZSB5b3UgY291bGQganVzdCBtYWtlIG5ldy1zdHlsZSBiaW5kaW5ncyBt
-YW5kYXRvcnkgYW5kIGRyb3ANCj4gdGhlIGNoYW5nZXMgdG/CoGlteF9pbml0X2Zyb21fdGVtcG1v
-bl9kYXRhPw0KPiANCj4gU2VlwqBjb21taXQgMjA2N2I3NTdlOTcyICgiQVJNOiBkdHM6IGlteDZ1
-bDogQWRkIGlteDZ1bC10ZW1wbW9uIikNCg0KDQpJdCBtYWtlcyBzZW5zZSwgSSBzZW50IG91dCBW
-NSB0byBkcm9wIHRoZSBkaXJlY3QgT0NPVFAgcmVnaXN0ZXIgYWNjZXNzIHN1cHBvcnQsIGFsbCBP
-Q09UUCByZWFkaW5nIHdpbGwNCkJlIHRocm91Z2ggb2NvdHAgbnZtZW0gZHJpdmVyIG9uIGkuTVg3
-RC4NCg0KQW5zb24uDQoNCj4gDQo+IC0tDQo+IFJlZ2FyZHMsDQo+IExlb25hcmQNCg==
+This series updates building dtc with flex and bison rather than using 
+the _shipped files and updates dtc to the current upstream version. The 
+new dtc adds some new warnings, so turn off the noisiest ones. While 
+here adjusting the warnings, we can also now re-enable some that have 
+gotten fixed.
+
+Yamada-san, I figured out why you wanted the dtc update after I wrote 
+the patch to remove the shipped files... :) I guess you may already have 
+a similar patch. I suppose the first patch should go into 4.16, but 
+nothing needs the fix yet. So it may be easier if you can just ack it 
+and I'll keep it with the rest of the series.
+
+Rob
+
+Rob Herring (6):
+  kbuild: remove remaining use of undefined YACC_PREFIX
+  kbuild: add dtc as dependency on .dtb files
+  scripts: re-enable some now fixed dtc warnings
+  scripts/dtc: generate lexer and parser during build instead of
+    shipping
+  scripts/dtc: Update to upstream version v1.4.6-9-gaadd0b65c987
+  scripts: turn off some new dtc warnings by default
+
+ include/linux/libfdt_env.h           |    6 +-
+ scripts/Makefile.lib                 |    9 +-
+ scripts/dtc/Makefile                 |    6 +-
+ scripts/dtc/checks.c                 |  439 ++++---
+ scripts/dtc/dtc-lexer.lex.c_shipped  | 2259 ---------------------------------
+ scripts/dtc/dtc-parser.tab.c_shipped | 2321 ----------------------------------
+ scripts/dtc/dtc-parser.tab.h_shipped |  125 --
+ scripts/dtc/dtc-parser.y             |   17 +-
+ scripts/dtc/dtc.c                    |    7 +-
+ scripts/dtc/dtc.h                    |   11 +-
+ scripts/dtc/flattree.c               |    2 +-
+ scripts/dtc/libfdt/fdt.c             |   13 +-
+ scripts/dtc/libfdt/fdt.h             |    6 +-
+ scripts/dtc/libfdt/fdt_overlay.c     |   51 +
+ scripts/dtc/libfdt/fdt_ro.c          |  132 +-
+ scripts/dtc/libfdt/fdt_rw.c          |   90 +-
+ scripts/dtc/libfdt/fdt_sw.c          |   24 +-
+ scripts/dtc/libfdt/fdt_wip.c         |   10 +-
+ scripts/dtc/libfdt/libfdt.h          |   37 +-
+ scripts/dtc/libfdt/libfdt_env.h      |   33 +-
+ scripts/dtc/libfdt/libfdt_internal.h |   32 +-
+ scripts/dtc/livetree.c               |   10 +-
+ scripts/dtc/srcpos.c                 |    5 -
+ scripts/dtc/srcpos.h                 |    6 +-
+ scripts/dtc/update-dtc-source.sh     |    5 -
+ scripts/dtc/util.h                   |    9 +-
+ scripts/dtc/version_gen.h            |    2 +-
+ 27 files changed, 630 insertions(+), 5037 deletions(-)
+ delete mode 100644 scripts/dtc/dtc-lexer.lex.c_shipped
+ delete mode 100644 scripts/dtc/dtc-parser.tab.c_shipped
+ delete mode 100644 scripts/dtc/dtc-parser.tab.h_shipped
+
+-- 
+2.14.1
