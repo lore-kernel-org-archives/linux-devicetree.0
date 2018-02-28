@@ -1,31 +1,133 @@
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v2] scsi: ufs-qcom: add number of lanes for Tx and Rx links
-Date: Tue, 27 Feb 2018 21:23:44 -0500
-Message-ID: <yq1sh9l4ztb.fsf@oracle.com>
-References: <20180227055500.10416-1-cang@codeaurora.org>
+From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu@cybertrust.co.jp>
+Subject: [PATCH v2] arm: dts: zynq: Add Digilent Zybo Z7 board
+Date: Wed, 28 Feb 2018 11:25:52 +0900
+Message-ID: <20180228022552.9088-1-nobuhiro.iwamatsu@cybertrust.co.jp>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180227055500.10416-1-cang@codeaurora.org> (Can Guo's message
-        of "Tue, 27 Feb 2018 13:46:17 +0800")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Can Guo <cang@codeaurora.org>
-Cc: subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, Gilad Broner <gbroner@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Yaniv Gardi <ygardi@codeaurora.org>, Sujit Reddy Thumma <sthumma@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, Maya Erez <merez@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, Nobuhiro Iwamatsu <nobuhiro.iwamatsu@cybertrust.co.jp>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This add a DTS for the Digilent Zybo Z7 board.
+This board is the successor board of Zybo, these are almost the same except
+for ps-clk-frequency specifications.
 
-Can,
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu@cybertrust.co.jp>
+---
+ v2:
+   - Fix SPDX format
+   - Rebase linux-xlnx/tree/zynq/dt
+   - Add digilent,zynq-zybo-z7 compatible string
+   - Fix memory node.
 
-> Different platforms may have different number of lanes for the UFS
-> Tx/Rx links. Add parameter to device tree specifying how many lanes
-> should be configured for the UFS Tx/Rx links. And don't print err
-> message for clocks that are optional, this leads to unnecessary
-> confusion about failure.
+ Documentation/devicetree/bindings/arm/xilinx.txt |  3 ++
+ arch/arm/boot/dts/Makefile                       |  3 +-
+ arch/arm/boot/dts/zynq-zybo-z7.dts               | 58 ++++++++++++++++++++++++
+ 3 files changed, 63 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/zynq-zybo-z7.dts
 
-Does not apply to 4.17/scsi-queue. Please rebase and repost.
-
-Thanks!
-
+diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
+index 63705a451251..2a5c97275184 100644
+--- a/Documentation/devicetree/bindings/arm/xilinx.txt
++++ b/Documentation/devicetree/bindings/arm/xilinx.txt
+@@ -17,6 +17,9 @@ Additional compatible strings:
+   "xlnx,zynq-zc770-xm012"
+   "xlnx,zynq-zc770-xm013"
+ 
++- Digilent Zybo Z7 board
++  "digilent,zynq-zybo-z7"
++
+ ---------------------------------------------------------------
+ 
+ Xilinx Zynq UltraScale+ MPSoC Platforms Device Tree Bindings
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index d5de3748a80a..7741adcc72f6 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1072,7 +1072,8 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
+ 	zynq-zc770-xm012.dtb \
+ 	zynq-zc770-xm013.dtb \
+ 	zynq-zed.dtb \
+-	zynq-zybo.dtb
++	zynq-zybo.dtb \
++	zynq-zybo-z7.dtb
+ dtb-$(CONFIG_MACH_ARMADA_370) += \
+ 	armada-370-db.dtb \
+ 	armada-370-dlink-dns327l.dtb \
+diff --git a/arch/arm/boot/dts/zynq-zybo-z7.dts b/arch/arm/boot/dts/zynq-zybo-z7.dts
+new file mode 100644
+index 000000000000..1e713dc98920
+--- /dev/null
++++ b/arch/arm/boot/dts/zynq-zybo-z7.dts
+@@ -0,0 +1,58 @@
++// SPDX-License-Identifier: GPL-2.0+
++/dts-v1/;
++#include "zynq-7000.dtsi"
++
++/ {
++	model = "Zynq ZYBO Z7 Development Board";
++	compatible = "digilent,zynq-zybo-z7", "xlnx,zynq-7000";
++
++	aliases {
++		ethernet0 = &gem0;
++		serial0 = &uart1;
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x20000000>;
++	};
++
++	chosen {
++		bootargs = "";
++		stdout-path = "serial0:115200n8";
++	};
++
++	usb_phy0: phy0 {
++		#phy-cells = <0>;
++		compatible = "usb-nop-xceiv";
++		reset-gpios = <&gpio0 46 1>;
++	};
++};
++
++&clkc {
++	ps-clk-frequency = <33333333>;
++};
++
++&gem0 {
++	status = "okay";
++	phy-mode = "rgmii-id";
++	phy-handle = <&ethernet_phy>;
++
++	ethernet_phy: ethernet-phy@0 {
++		reg = <0>;
++		device_type = "ethernet-phy";
++	};
++};
++
++&sdhci0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++	dr_mode = "host";
++	usb-phy = <&usb_phy0>;
++};
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.16.1
