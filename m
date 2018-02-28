@@ -1,62 +1,139 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Subject: [PATCH 1/2][v5] dt-bindings: mtd-physmap: Add endianness supports
-Date: Wed, 28 Feb 2018 13:03:34 +0530
-Message-ID: <20180228073335.1758-1-prabhakar.kushwaha@nxp.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v2 01/16] clk: sunxi-ng: Add check for minimal rate to NM
+ PLLs
+Date: Wed, 28 Feb 2018 08:34:40 +0100
+Message-ID: <20180228073440.6ejo3wjdqag6h4nl@flea>
+References: <20180227222701.9716-1-jernej.skrabec@siol.net>
+ <20180227222701.9716-2-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: boris.brezillon@free-electrons.com, leoyang.li@nxp.com, oss@buserror.net, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, cyrille.pitchen@wedev4u.fr, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============0838818006=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180227222701.9716-2-jernej.skrabec@siol.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, sboyd@kernel.org, wens@csie.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Connection between flash and controller is not necessary to be always
-of same type. It may varies from platform to platform.
 
-Adding endianness (optional) property to provide connection type
-information.
-
-Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes for v2: updated subject
-Changes for v3: fixed typo for "big-endian"
-Changes for v4: Moved binding definition in mtd-physmap.txt
-as discussed at https://patchwork.ozlabs.org/patch/842543/
-Changes for v5: Sending as it is
-
- Documentation/devicetree/bindings/mtd/mtd-physmap.txt | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-index 4a0a48bf4ecb..961a8eed9d0d 100644
---- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-+++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-@@ -41,6 +41,11 @@ additional (optional) property is defined:
- 
-  - erase-size : The chip's physical erase block size in bytes.
- 
-+ The device tree may optionally contain endianness property.
-+ little-endian or big-endian : It represents connection between controller and
-+			flash. If this property is absent, flash is considered
-+			to be host-endian.
-+
- The device tree may optionally contain sub-nodes describing partitions of the
- address space. See partition.txt for more detail.
- 
--- 
-2.14.1
+--===============0838818006==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jbftow7kteudva7c"
+Content-Disposition: inline
 
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--jbftow7kteudva7c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Feb 27, 2018 at 11:26:46PM +0100, Jernej Skrabec wrote:
+> Some NM PLLs doesn't work well when their output clock rate is set below
+> certain rate.
+>=20
+> Add support for that constrain.
+>=20
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/clk/sunxi-ng/ccu_nm.c | 11 +++++++----
+>  drivers/clk/sunxi-ng/ccu_nm.h | 27 +++++++++++++++++++++++++++
+>  2 files changed, 34 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/clk/sunxi-ng/ccu_nm.c b/drivers/clk/sunxi-ng/ccu_nm.c
+> index a16de092bf94..7fc743c78c1b 100644
+> --- a/drivers/clk/sunxi-ng/ccu_nm.c
+> +++ b/drivers/clk/sunxi-ng/ccu_nm.c
+> @@ -20,7 +20,7 @@ struct _ccu_nm {
+>  };
+> =20
+>  static void ccu_nm_find_best(unsigned long parent, unsigned long rate,
+> -			     struct _ccu_nm *nm)
+> +			     unsigned long min_rate, struct _ccu_nm *nm)
+>  {
+>  	unsigned long best_rate =3D 0;
+>  	unsigned long best_n =3D 0, best_m =3D 0;
+> @@ -30,7 +30,7 @@ static void ccu_nm_find_best(unsigned long parent, unsi=
+gned long rate,
+>  		for (_m =3D nm->min_m; _m <=3D nm->max_m; _m++) {
+>  			unsigned long tmp_rate =3D parent * _n  / _m;
+> =20
+> -			if (tmp_rate > rate)
+> +			if (tmp_rate > rate || tmp_rate < min_rate)
+>  				continue;
+> =20
+>  			if ((rate - tmp_rate) < (rate - best_rate)) {
+> @@ -117,6 +117,9 @@ static long ccu_nm_round_rate(struct clk_hw *hw, unsi=
+gned long rate,
+>  	if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
+>  		rate *=3D nm->fixed_post_div;
+> =20
+> +	if (rate < nm->min_rate)
+> +		rate =3D nm->min_rate;
+> +
+
+I guess you can just return there. There's no point in trying to find
+the factors at this point, since the minimum should be a value that
+can be reached.
+
+>  	if (ccu_frac_helper_has_rate(&nm->common, &nm->frac, rate)) {
+>  		if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
+>  			rate /=3D nm->fixed_post_div;
+> @@ -134,7 +137,7 @@ static long ccu_nm_round_rate(struct clk_hw *hw, unsi=
+gned long rate,
+>  	_nm.min_m =3D 1;
+>  	_nm.max_m =3D nm->m.max ?: 1 << nm->m.width;
+> =20
+> -	ccu_nm_find_best(*parent_rate, rate, &_nm);
+> +	ccu_nm_find_best(*parent_rate, rate, nm->min_rate, &_nm);
+
+Therefore, you don't need to change the prototype there either.
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--jbftow7kteudva7c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqWW4wACgkQ0rTAlCFN
+r3TU/BAAmxBKw7Wvwd44uNICrnv1n/tKtG72EEdkJvG4B8OqXY69KckH7941DM9h
+YfujkHMsFqghmXCdMzxunXNHegSy6lM3aNMHQBXfOOj4drBW37WQMyZCc9jBUoAI
+DlmEraJZJDoA1sSSL/BIHSDxlM2EGzmhtB3RZrlcOdNGSPldAqgnEC28NwYbuZxP
+RMAsvwnyL39RVLZy3kSrJ6SNMdcFVvNNbueQhUrFrJAd/bpGbfBNJzj2uUPVODVV
+cwVGbqOe5z0Zno6O7Tp3Zd0+wKC1YwqQ6+K/MYzbXn5p5LIZLu+CcJvk9C2LEj3y
+/tY/XKU++1PSbHdbYIN7ZgNLVrTf9/3lyazgJcm/Wt9D5IplHKyDGZDwTFpW36fX
+R41WQS6YW1i3LJMd4qUBVlZuLtlVLceX6XDl9wxkQAwkSG3dyKPMBzEjVj2w+XUc
+OvNwIxwqmCdAcn12ZpRc3EAisKFzfcDJlMuXCIhKNwvddtGLsbLzXxvLTZUuJtmo
+nsBefriY+5d28sPucEVHtaYlz3276yF3dCi+j4JHrujdROhhuXud/WDPlBT2BecL
+btXOaCKZlbxrXAj2/ZXPz0iKTR2bx9CSGqfBIkkVZ+wfume+72fKpK3cXe3hekPM
+2s8bQ75DlSaEbcTQXNhgzJ8at+fFm9LDQi6MsW57x6hQBnbbzoI=
+=WPSn
+-----END PGP SIGNATURE-----
+
+--jbftow7kteudva7c--
+
+--===============0838818006==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0838818006==--
