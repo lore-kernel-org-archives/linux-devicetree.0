@@ -1,181 +1,226 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 37/37] vfio: Add support for Shared Virtual Addressing
-Date: Wed, 28 Feb 2018 16:25:37 +0000
-Message-ID: <e428976f-c381-309a-be57-264fea5c9b18@arm.com>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
-	<20180212183352.22730-38-jean-philippe.brucker@arm.com>
-	<1e76c66c-952e-71bd-d831-d3a1ded9559c@codeaurora.org>
+From: Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [RFC 0/4] Add support for the Gateworks System Controller
+Date: Wed, 28 Feb 2018 08:34:49 -0800
+Message-ID: <CAJ+vNU3hG7z1mB0xKFZu-8o1r3hj-pOqkfVnWHvxxaxzrpGuzw@mail.gmail.com>
+References: <1519780874-8558-1-git-send-email-tharvey@gateworks.com> <20180228144424.GC12303@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1e76c66c-952e-71bd-d831-d3a1ded9559c-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180228144424.GC12303@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/02/18 01:26, Sinan Kaya wrote:
-[...]
->> +static int vfio_iommu_sva_init(struct device *dev, void *data)
->> +{
-> 
-> data is not getting used.
+On Wed, Feb 28, 2018 at 6:44 AM, Andrew Lunn <andrew@lunn.ch> wrote:
+> On Tue, Feb 27, 2018 at 05:21:10PM -0800, Tim Harvey wrote:
+>> This series adds support for the Gateworks System Controller used on Gateworks
+>> Laguna, Ventana, and Newport product families.
+>>
+>> The GSC is an MSP430 I2C slave controller whose firmware embeds the following
+>> features:
+>>  - I/O expander (16 GPIO's emulating a PCA955x)
+>>  - EEPROM (enumating AT24)
+>>  - RTC (enumating DS1672)
+>
+> Hi Tim
+>
+> Maybe it is in these patches, and i missed it....
+>
+> How do these emulated devices work? Does the controller respond to
+> different addresses for these different emulated devices? Or is it an
+> I2c bus mux?
+>
 
-That's the pointer passed to "iommu_group_for_each_dev", NULL at the
-moment. Next version of this patch will keep some state in data to
-ensure one device per group.
+Andrew,
 
->> +
->> +	int ret;
->> +
->> +	ret = iommu_sva_device_init(dev, IOMMU_SVA_FEAT_PASID |
->> +				    IOMMU_SVA_FEAT_IOPF, 0);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return iommu_register_mm_exit_handler(dev, vfio_iommu_mm_exit);
->> +}
->> +
->> +static int vfio_iommu_sva_shutdown(struct device *dev, void *data)
->> +{
->> +	iommu_sva_device_shutdown(dev);
->> +	iommu_unregister_mm_exit_handler(dev);
->> +
->> +	return 0;
->> +}
->> +
->> +static int vfio_iommu_bind_group(struct vfio_iommu *iommu,
->> +				 struct vfio_group *group,
->> +				 struct vfio_mm *vfio_mm)
->> +{
->> +	int ret;
->> +	int pasid;
->> +
->> +	if (!group->sva_enabled) {
->> +		ret = iommu_group_for_each_dev(group->iommu_group, NULL,
->> +					       vfio_iommu_sva_init);
->> +		if (ret)
->> +			return ret;
->> +
->> +		group->sva_enabled = true;
->> +	}
->> +
->> +	ret = iommu_sva_bind_group(group->iommu_group, vfio_mm->mm, &pasid,
->> +				   IOMMU_SVA_FEAT_PASID | IOMMU_SVA_FEAT_IOPF,
->> +				   vfio_mm);
->> +	if (ret)
->> +		return ret;
-> 
-> don't you need to clean up the work done by vfio_iommu_sva_init() here.
+You didn't miss it - I probably need to explain it better.
 
-Yes I suppose we can, if we enabled during this bind
+The 'emulated devices' do respond on different slave addresses (which
+match one of or the only the slave addresses those parts support). For
+example the device-tree for the GW54xx has the following which are all
+from the GSC which is the only thing on i2c1:
 
-[...]
->> +static long vfio_iommu_type1_bind_process(struct vfio_iommu *iommu,
->> +					  void __user *arg,
->> +					  struct vfio_iommu_type1_bind *bind)
->> +{
->> +	struct vfio_iommu_type1_bind_process params;
->> +	struct vfio_domain *domain;
->> +	struct vfio_group *group;
->> +	struct vfio_mm *vfio_mm;
->> +	struct mm_struct *mm;
->> +	unsigned long minsz;
->> +	int ret = 0;
->> +
->> +	minsz = sizeof(*bind) + sizeof(params);
->> +	if (bind->argsz < minsz)
->> +		return -EINVAL;
->> +
->> +	arg += sizeof(*bind);
->> +	if (copy_from_user(&params, arg, sizeof(params)))
->> +		return -EFAULT;
->> +
->> +	if (params.flags & ~VFIO_IOMMU_BIND_PID)
->> +		return -EINVAL;
->> +
->> +	if (params.flags & VFIO_IOMMU_BIND_PID) {
->> +		mm = vfio_iommu_get_mm_by_vpid(params.pid);
->> +		if (IS_ERR(mm))
->> +			return PTR_ERR(mm);
->> +	} else {
->> +		mm = get_task_mm(current);
->> +		if (!mm)
->> +			return -EINVAL;
->> +	}
-> 
-> I think you can merge mm failure in both states.
+&i2c1 {
+        clock-frequency = <100000>;
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_i2c1>;
+        status = "okay";
 
-Yes, I think vfio_iommu_get_mm_by_vpid could return NULL instead of an
-error pointer, and we can throw -ESRCH in all cases (the existing
-get_task_mm() failure in this driver does return -ESRCH, so it would be
-consistent.)
+        gsc: gsc@20 {
+                compatible = "gw,gsc_v2";
+                reg = <0x20>;
+                interrupt-parent = <&gpio1>;
+                interrupts = <4 GPIO_ACTIVE_LOW>;
+                interrupt-controller;
+                #interrupt-cells = <1>;
 
-[...]
->> +	/*
->> +	 * We can't simply unbind a foreign process by PASID, because the
->> +	 * process might have died and the PASID might have been reallocated to
->> +	 * another process. Instead we need to fetch that process mm by PID
->> +	 * again to make sure we remove the right vfio_mm. In addition, holding
->> +	 * the mm guarantees that mm_users isn't dropped while we unbind and the
->> +	 * exit_mm handler doesn't fire. While not strictly necessary, not
->> +	 * having to care about that race simplifies everyone's life.
->> +	 */
->> +	if (params.flags & VFIO_IOMMU_BIND_PID) {
->> +		mm = vfio_iommu_get_mm_by_vpid(params.pid);
->> +		if (IS_ERR(mm))
->> +			return PTR_ERR(mm);
->> +	} else {
->> +		mm = get_task_mm(current);
->> +		if (!mm)
->> +			return -EINVAL;
->> +	}
->> +
-> 
-> I think you can merge mm failure in both states.
+                gsc_input {
+                        compatible = "gw,gsc-input";
+                };
 
-ok
+                gsc_hwmon {
+                        compatible = "gw,gsc-hwmon";
+                        #address-cells = <1>;
+                        #size-cells = <0>;
 
->> +	ret = -ESRCH;
->> +	mutex_lock(&iommu->lock);
->> +	list_for_each_entry(vfio_mm, &iommu->mm_list, next) {
->> +		if (vfio_mm->mm != mm)
->> +			continue;
->> +
-> 
-> these loops look wierd 
-> 1. for loops + break 
-> 2. for loops + goto
-> 
-> how about closing the for loop here. and then return here if not vfio_mm
-> not found.
+                        hwmon@0 { /* A0: Board Temperature */
+                                type = <0>;
+                                reg = <0x00>;
+                                label = "temp";
+                                /* lookup table */
+                        };
 
-ok
+                        hwmon@1 { /* A1: Input Voltage */
+                                type = <1>;
+                                reg = <0x02>;
+                                label = "Vin";
+                                gw,voltage-divider = <22100 1000>;
+                                gw,offset = <800>;
+                        };
 
->> +		vfio_iommu_unbind(iommu, vfio_mm);
->> +		list_del(&vfio_mm->next);
->> +		kfree(vfio_mm);
->> +		ret = 0;
->> +		break;
->> +	}
->> +	mutex_unlock(&iommu->lock);
->> +	mmput(mm);
->> +
->> +	return ret;
->> +}
->> +
-> 
+                        hwmon@2 { /* A2: 5P0 */
+                                type = <1>;
+                                reg = <0x0b>;
+                                label = "5P0";
+                                gw,voltage-divider = <22100 1000>;
+                        };
 
-Thanks,
-Jean
+                        hwmon@4 { /* A4: 0-5V input */
+                                type = <1>;
+                                reg = <0x14>;
+                                label = "ANL0";
+                                gw,voltage-divider = <10000 10000>;
+                        };
+
+                        hwmon@5 { /* A5: 2P5 PCIe/GigE */
+                                type = <1>;
+                                reg = <0x23>;
+                                label = "2P5";
+                                gw,voltage-divider = <10000 10000>;
+                        };
+
+                        hwmon@6 { /* A6: 1P8 Aud/Vid */
+                                type = <1>;
+                                reg = <0x1d>;
+                                label = "1P8";
+                        };
+
+                        hwmon@7 { /* A7: GPS */
+                                type = <1>;
+                                reg = <0x26>;
+                                label = "GPS";
+                                gw,voltage-divider = <4990 10000>;
+                        };
+
+                        hwmon@12 { /* A12: VDD_CORE */
+                                type = <1>;
+                                reg = <0x3>;
+                                label = "VDD_CORE";
+                        };
+
+                        hwmon@13 { /* A13: VDD_SOC */
+                                type = <1>;
+                                reg = <0x11>;
+                                label = "VDD_SOC";
+                        };
+
+                        hwmon@14 { /* A14: 1P0 PCIe SW */
+                                type = <1>;
+                                reg = <0x20>;
+                                label = "1P0";
+                        };
+
+                        hwmon@15 { /* fan0 */
+                                type = <2>;
+                                reg = <0x2c>;
+                                label = "fan_50p";
+                        };
+
+                        hwmon@16 { /* fan1 */
+                                type = <2>;
+                                reg = <0x2e>;
+                                label = "fan_60p";
+                        };
+
+                        hwmon@17 { /* fan2 */
+                                type = <2>;
+                                reg = <0x30>;
+                                label = "fan_70p";
+                        };
+
+                        hwmon@18 { /* fan3 */
+                                type = <2>;
+                                reg = <0x32>;
+                                label = "fan_80p";
+                        };
+
+                        hwmon@19 { /* fan4 */
+                                type = <2>;
+                                reg = <0x34>;
+                                label = "fan_90p";
+                        };
+
+                        hwmon@20 { /* fan5 */
+                                type = <2>;
+                                reg = <0x36>;
+                                label = "fan_100p";
+                        };
+                };
+        };
+
+        gsc_gpio: pca9555@23 {
+                compatible = "nxp,pca9555";
+                reg = <0x23>;
+                gpio-controller;
+                #gpio-cells = <2>;
+                interrupt-parent = <&gsc>;
+                interrupts = <4>;
+        };
+
+        eeprom1: eeprom@50 {
+                compatible = "atmel,24c02";
+                reg = <0x50>;
+                pagesize = <16>;
+        };
+
+        eeprom2: eeprom@51 {
+                compatible = "atmel,24c02";
+                reg = <0x51>;
+                pagesize = <16>;
+        };
+
+        eeprom3: eeprom@52 {
+                compatible = "atmel,24c02";
+                reg = <0x52>;
+                pagesize = <16>;
+        };
+
+        eeprom4: eeprom@53 {
+                compatible = "atmel,24c02";
+                reg = <0x53>;
+                pagesize = <16>;
+        };
+
+        rtc: ds1672@68 {
+                compatible = "dallas,ds1672";
+                reg = <0x68>;
+        };
+};
+
+
+One issue I'm trying to figure out the best way to deal with is the
+fact that the GSC can 'NAK' transactions occasionally which is why I
+override the regmap read/write functions and provide retries. This
+resolves the issue for the mfd core driver and sub-module drivers but
+doesn't resolve the issue with these 'emulated devices' which have
+their own stand-alone drivers. I'm not sure how to best deal with that
+yet. I tried to add retires to the i2c adapter but that wasn't
+accepted upstream because it was too generic and I was told I need to
+work around it in device-drivers. I'm guessing I need to write my own
+sub-module drivers that will largely duplicate whats in the
+stand-alone drivers (ds1672, at24, pca9553x).
+
+Regards,
+
+Tim
