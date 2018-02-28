@@ -1,35 +1,66 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/2] serial: stm32: update interrupt initialization
-Date: Wed, 28 Feb 2018 17:41:14 +0200
-Message-ID: <CAHp75VeX_L_B2e648LiBrbHNBEg-C3NBw-PUTmQdhHhEb=2N-A@mail.gmail.com>
-References: <1519815044-22669-1-git-send-email-bich.hemon@st.com>
- <1519815044-22669-3-git-send-email-bich.hemon@st.com> <CAHp75Vd+UcUSG7t6SxzTmUkB6d2TAYVmgO92m9iV0YVJ1=XbzA@mail.gmail.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V2 5/5] ARM: configs: stm32: add mmc and ext2/3/4 support
+Date: Wed, 28 Feb 2018 16:47:24 +0100
+Message-ID: <1519832844-28068-6-git-send-email-ludovic.Barre@st.com>
+References: <1519832844-28068-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75Vd+UcUSG7t6SxzTmUkB6d2TAYVmgO92m9iV0YVJ1=XbzA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bich HEMON <bich.hemon@st.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519832844-28068-1-git-send-email-ludovic.Barre@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 28, 2018 at 5:40 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Feb 28, 2018 at 12:51 PM, Bich HEMON <bich.hemon@st.com> wrote:
+From: Ludovic Barre <ludovic.barre@st.com>
 
->> -       port->irq       = platform_get_irq(pdev, 0);
->> -       stm32port->wakeirq = platform_get_irq(pdev, 1);
+This patch adds support of
+-mmc framework and stm32 sdmmc controller
+-ext2/3/4 filesystem
+-LBDAF to support huge file (needed for ext4)
 
->> +       stm32port->wakeirq = platform_get_irq_byname(pdev, "wakeup");
->
-> But this one is redundant since Tony's patch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?h=bleeding-edge&id=da997b22c40473b7db60bde6ea188d35565d10c8
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ arch/arm/configs/stm32_defconfig | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Oh, it'a bout getting a resource by name...
-
-Sorry, discard my previous comment.
-
-
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index 91014ea..2573355 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -15,7 +15,6 @@ CONFIG_EMBEDDED=y
+ # CONFIG_VM_EVENT_COUNTERS is not set
+ # CONFIG_SLUB_DEBUG is not set
+ CONFIG_MODULES=y
+-# CONFIG_LBDAF is not set
+ # CONFIG_BLK_DEV_BSG is not set
+ # CONFIG_IOSCHED_DEADLINE is not set
+ # CONFIG_IOSCHED_CFQ is not set
+@@ -57,6 +56,8 @@ CONFIG_MFD_STMPE=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ # CONFIG_USB_SUPPORT is not set
++CONFIG_MMC=y
++CONFIG_MMC_STM32_SDMMC=y
+ CONFIG_NEW_LEDS=y
+ CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_GPIO=y
+@@ -71,6 +72,7 @@ CONFIG_STM32_MDMA=y
+ CONFIG_IIO=y
+ CONFIG_STM32_ADC_CORE=y
+ CONFIG_STM32_ADC=y
++CONFIG_EXT3_FS=y
+ # CONFIG_FILE_LOCKING is not set
+ # CONFIG_DNOTIFY is not set
+ # CONFIG_INOTIFY_USER is not set
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
