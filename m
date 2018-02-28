@@ -1,143 +1,208 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix rk3399-gru-* s2r (pinctrl hogs,
- wifi reset)
-Date: Wed, 28 Feb 2018 14:01:12 +0000
-Message-ID: <b1c328ac-33e3-363c-9072-3fe4c9e5438e@arm.com>
-References: <20180227204711.29357-1-dianders@chromium.org>
- <fe5c8c52-2d01-9244-23b5-3641bbe3cbd0@collabora.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 05/10] hwmon: generic-pwm-tachometer: Add generic PWM
+ based tachometer
+Date: Wed, 28 Feb 2018 06:29:21 -0800
+Message-ID: <62ba7f67-5a99-51ab-1214-eb68ebb7e642@roeck-us.net>
+References: <1519196339-9377-1-git-send-email-rrajk@nvidia.com>
+ <1519196339-9377-6-git-send-email-rrajk@nvidia.com>
+ <5172edff-fe29-7ed1-f0d2-b0359ea2c24d@roeck-us.net>
+ <2510b525-ec36-b49d-5a62-81f335c0d10d@nvidia.com>
+ <cfe0d0ce-3a89-bad0-85ba-6edf1135d2dc@roeck-us.net>
+ <2628eff2-dd33-34f4-a7e1-cfe46ef88a3f@nvidia.com>
+ <4556a8d2-947d-72c4-2962-3167afb53978@kapsi.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fe5c8c52-2d01-9244-23b5-3641bbe3cbd0@collabora.com>
-Content-Language: en-GB
+In-Reply-To: <4556a8d2-947d-72c4-2962-3167afb53978@kapsi.fi>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Douglas Anderson <dianders@chromium.org>, Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>
+To: Mikko Perttunen <cyndis@kapsi.fi>, Rajkumar Rampelli <rrajk@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, jdelvare@suse.com, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, kstewart@linuxfoundation.org, gregkh@linuxfoundation.org, pombredanne@nexb.com, mmaddireddy@nvidia.com, mperttunen@nvidia.com, arnd@arndb.de, timur@codeaurora.org, andy.gross@linaro.org, xuwei5@hisilicon.com, elder@linaro.org, heiko@sntech.de, krzk@kernel.org, ard.biesheuvel@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ldewangan@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On 28/02/18 12:19, Enric Balletbo i Serra wrote:
-> Hi Doug,
+On 02/27/2018 11:03 PM, Mikko Perttunen wrote:
+> On 02/28/2018 08:12 AM, Rajkumar Rampelli wrote:
+>>
+>> On Wednesday 28 February 2018 11:28 AM, Guenter Roeck wrote:
+>>> On 02/27/2018 09:38 PM, Rajkumar Rampelli wrote:
+>>>>
+>>>> On Wednesday 21 February 2018 08:20 PM, Guenter Roeck wrote:
+>>>>> On 02/20/2018 10:58 PM, Rajkumar Rampelli wrote:
+>>>>>> Add generic PWM based tachometer driver via HWMON interface
+>>>>>> to report the RPM of motor. This drivers get the period/duty
+>>>>>> cycle from PWM IP which captures the motor PWM output.
+>>>>>>
+>>>>>> This driver implements a simple interface for monitoring the speed of
+>>>>>> a fan and exposes it in roatations per minute (RPM) to the user space
+>>>>>> by using the hwmon's sysfs interface
+>>>>>>
+>>>>>> Signed-off-by: Rajkumar Rampelli <rrajk@nvidia.com>
+>>>>>> ---
+>>>>>>   Documentation/hwmon/generic-pwm-tachometer |  17 +++++
+>>>>>>   drivers/hwmon/Kconfig                      |  10 +++
+>>>>>>   drivers/hwmon/Makefile                     |   1 +
+>>>>>>   drivers/hwmon/generic-pwm-tachometer.c     | 112 +++++++++++++++++++++++++++++
+>>>>>>   4 files changed, 140 insertions(+)
+>>>>>>   create mode 100644 Documentation/hwmon/generic-pwm-tachometer
+>>>>>>   create mode 100644 drivers/hwmon/generic-pwm-tachometer.c
+>>>>>>
+>>>>>> diff --git a/Documentation/hwmon/generic-pwm-tachometer b/Documentation/hwmon/generic-pwm-tachometer
+>>>>>> new file mode 100644
+>>>>>> index 0000000..e0713ee
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/hwmon/generic-pwm-tachometer
+>>>>>> @@ -0,0 +1,17 @@
+>>>>>> +Kernel driver generic-pwm-tachometer
+>>>>>> +====================================
+>>>>>> +
+>>>>>> +This driver enables the use of a PWM module to monitor a fan. It uses the
+>>>>>> +generic PWM interface and can be used on SoCs as along as the SoC supports
+>>>>>> +Tachometer controller that moniors the Fan speed in periods.
+>>>>>> +
+>>>>>> +Author: Rajkumar Rampelli <rrajk@nvidia.com>
+>>>>>> +
+>>>>>> +Description
+>>>>>> +-----------
+>>>>>> +
+>>>>>> +The driver implements a simple interface for monitoring the Fan speed using
+>>>>>> +PWM module and Tachometer controller. It requests period value through PWM
+>>>>>> +capture interface to Tachometer and measures the Rotations per minute using
+>>>>>> +received period value. It exposes the Fan speed in RPM to the user space by
+>>>>>> +using the hwmon's sysfs interface.
+>>>>>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+>>>>>> index ef23553..8912dcb 100644
+>>>>>> --- a/drivers/hwmon/Kconfig
+>>>>>> +++ b/drivers/hwmon/Kconfig
+>>>>>> @@ -1878,6 +1878,16 @@ config SENSORS_XGENE
+>>>>>>         If you say yes here you get support for the temperature
+>>>>>>         and power sensors for APM X-Gene SoC.
+>>>>>>   +config GENERIC_PWM_TACHOMETER
+>>>>>> +    tristate "Generic PWM based tachometer driver"
+>>>>>> +    depends on PWM
+>>>>>> +    help
+>>>>>> +      Enables a driver to use PWM signal from motor to use
+>>>>>> +      for measuring the motor speed. The RPM is captured by
+>>>>>> +      PWM modules which has PWM capture capability and this
+>>>>>> +      drivers reads the captured data from PWM IP to convert
+>>>>>> +      it to speed in RPM.
+>>>>>> +
+>>>>>>   if ACPI
+>>>>>>     comment "ACPI drivers"
+>>>>>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+>>>>>> index f814b4a..9dcc374 100644
+>>>>>> --- a/drivers/hwmon/Makefile
+>>>>>> +++ b/drivers/hwmon/Makefile
+>>>>>> @@ -175,6 +175,7 @@ obj-$(CONFIG_SENSORS_WM8350)    += wm8350-hwmon.o
+>>>>>>   obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
+>>>>>>     obj-$(CONFIG_PMBUS)        += pmbus/
+>>>>>> +obj-$(CONFIG_GENERIC_PWM_TACHOMETER) += generic-pwm-tachometer.o
+>>>>>>     ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
+>>>>>>   diff --git a/drivers/hwmon/generic-pwm-tachometer.c b/drivers/hwmon/generic-pwm-tachometer.c
+>>>>>> new file mode 100644
+>>>>>> index 0000000..9354d43
+>>>>>> --- /dev/null
+>>>>>> +++ b/drivers/hwmon/generic-pwm-tachometer.c
+>>>>>> @@ -0,0 +1,112 @@
+>>>>>> +/*
+>>>>>> + * Copyright (c) 2017-2018, NVIDIA CORPORATION.  All rights reserved.
+>>>>>> + *
+>>>>>> + * This program is free software; you can redistribute it and/or modify it
+>>>>>> + * under the terms and conditions of the GNU General Public License,
+>>>>>> + * version 2, as published by the Free Software Foundation.
+>>>>>> + *
+>>>>>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>>>>>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>>>>>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>>>>>> + * more details.
+>>>>>> + *
+>>>>>> + */
+>>>>>> +
+>>>>>> +#include <linux/module.h>
+>>>>>> +#include <linux/platform_device.h>
+>>>>>> +#include <linux/err.h>
+>>>>>> +#include <linux/pwm.h>
+>>>>>> +#include <linux/hwmon.h>
+>>>>>> +#include <linux/hwmon-sysfs.h>
+>>>>>> +
+>>>>>> +struct pwm_hwmon_tach {
+>>>>>> +    struct device        *dev;
+>>>>>> +    struct pwm_device    *pwm;
+>>>>>> +    struct device        *hwmon;
+>>>>>> +};
+>>>>>> +
+>>>>>> +static ssize_t show_rpm(struct device *dev, struct device_attribute *attr,
+>>>>>> +            char *buf)
+>>>>>> +{
+>>>>>> +    struct pwm_hwmon_tach *ptt = dev_get_drvdata(dev);
+>>>>>> +    struct pwm_device *pwm = ptt->pwm;
+>>>>>> +    struct pwm_capture result;
+>>>>>> +    int err;
+>>>>>> +    unsigned int rpm = 0;
+>>>>>> +
+>>>>>> +    err = pwm_capture(pwm, &result, 0);
+>>>>>> +    if (err < 0) {
+>>>>>> +        dev_err(ptt->dev, "Failed to capture PWM: %d\n", err);
+>>>>>> +        return err;
+>>>>>> +    }
+>>>>>> +
+>>>>>> +    if (result.period)
+>>>>>> +        rpm = DIV_ROUND_CLOSEST_ULL(60ULL * NSEC_PER_SEC,
+>>>>>> +                        result.period);
+>>>>>> +
+>>>>>> +    return sprintf(buf, "%u\n", rpm);
+>>>>>> +}
+>>>>>> +
+>>>>>> +static SENSOR_DEVICE_ATTR(rpm, 0444, show_rpm, NULL, 0);
+>>>>>> +
+>>>>>> +static struct attribute *pwm_tach_attrs[] = {
+>>>>>> +    &sensor_dev_attr_rpm.dev_attr.attr,
+>>>>>> +    NULL,
+>>>>>> +};
+>>>>>
+>>>>> "rpm" is not a standard hwmon sysfs attribute. If you don't provide
+>>>>> a single standard hwmon sysfs attribute, having a hwmon driver is pointless.
+>>>> Guenter Roeck,
+>>>> I will define a new hwmon sysfs attribute node called "hwmon_tachometer_attributes" in hwmon.h like below and update the same in tachometer hwmon driver. Is it fine ?
+>>>> enum hwmon_tachometer_attributes {
+>>>
+>>> Are you kidding me ?
+>>>
+>>> Guenter
+>> Sorry, I just wanted to confirm whether my understanding is correct or not before implementing it actually.
+>> Or, shall I add this attribute as a part of fan attributes with "hwmon_fan_rpm" ? or any other way to do it ? I need your inputs in fixing this.
 > 
-> On 27/02/18 21:47, Douglas Anderson wrote:
->> Back in the early days when gru devices were still under development
->> we found an issue where the WiFi reset line needed to be configured as
->> early as possible during the boot process to avoid the WiFi module
->> being in a bad state.
->>
->> We found that the way to get the kernel to do this in the earliest
->> possible place was to configure this line in the pinctrl hogs, so
->> that's what we did.  For some history here you can see
->> <http://crosreview.com/368770>.  After the time that change landed in
->> the kernel, we landed a firmware change to configure this line even
->> earlier.  See <http://crosreview.com/399919>.  However, even after the
->> firmware change landed we kept the kernel change to deal with the fact
->> that some people working on devices might take a little while to
->> update their firmware.
->>
->> At this there are definitely zero devices out in the wild that have
->> firmware without the fix in it.  Specifically looking in the firmware
->> branch several critically important fixes for memory stability landed
->> after the patch in coreboot and I know we didn't ship without those.
->> Thus, by now, everyone should have the new firmware and it's safe to
->> not have the kernel set this up in a pinctrl hog.
->>
->> Historically, even though it wasn't needed to have this in a pinctrl
->> hog, we still kept it since it didn't hurt.  Pinctrl would apply the
->> default hog at bootup and then would never touch things again.  That
->> all changed with commit 981ed1bfbc6c ("pinctrl: Really force states
->> during suspend/resume").  After that commit then we'll re-apply the
->> default hog at resume time and that can screw up the reset state of
->> WiFi.  ...and on rk3399 if you touch a device on PCIe in the wrong way
->> then the whole system can go haywire.  That's what was happening.
->> Specifically you'd resume a rk3399-gru-* device and it would mostly
->> resume, then would crash with some crazy weird crash.
->>
->> One could say, perhaps, that the recent pinctrl change was at fault
->> (and should be fixed) since it changed behavior.  ...but that's not
->> really true.  The device tree for rk3399-gru is really to blame.
->> Specifically since the pinctrl is defined in the hog and not in the
->> "wlan-pd-n" node then the actual user of this pin doesn't have a
->> pinctrl entry for it.  That's bad.
->>
->> Let's fix our problems by just moving the control of
->> "wlan_module_reset_l pinctrl" out of the hog and put them in the
->> proper place.
->>
->> NOTE: in theory, I think it should actually be possible to have a pin
->> controlled _both_ by the hog and by an actual device.  Once the device
->> claims the pin I think the hog is supposed to let go.  I'm not 100%
->> sure that this works and in any case this solution would be more
->> complex than is necessary.
->>
->> Reported-by: Marc Zyngier <marc.zyngier@arm.com>
->> Fixes: 48f4d9796d99 ("arm64: dts: rockchip: add Gru/Kevin DTS")
->> Fixes: 981ed1bfbc6c ("pinctrl: Really force states during suspend/resume")
->> Signed-off-by: Douglas Anderson <dianders@chromium.org>
->> ---
->>
->>  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 16 +++-------------
->>  1 file changed, 3 insertions(+), 13 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
->> index 6e50768a34ce..9ad54751d0d8 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
->> @@ -406,8 +406,9 @@
->>  	wlan_pd_n: wlan-pd-n {
->>  		compatible = "regulator-fixed";
->>  		regulator-name = "wlan_pd_n";
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&wlan_module_reset_l>;
->>  
->> -		/* Note the wlan_module_reset_l pinctrl */
->>  		enable-active-high;
->>  		gpio = <&gpio1 11 GPIO_ACTIVE_HIGH>;
->>  
->> @@ -988,12 +989,6 @@ ap_i2c_audio: &i2c8 {
->>  	pinctrl-0 = <
->>  		&ap_pwroff	/* AP will auto-assert this when in S3 */
->>  		&clk_32k	/* This pin is always 32k on gru boards */
->> -
->> -		/*
->> -		 * We want this driven low ASAP; firmware should help us, but
->> -		 * we can help ourselves too.
->> -		 */
->> -		&wlan_module_reset_l
->>  	>;
->>  
->>  	pcfg_output_low: pcfg-output-low {
->> @@ -1173,12 +1168,7 @@ ap_i2c_audio: &i2c8 {
->>  		};
->>  
->>  		wlan_module_reset_l: wlan-module-reset-l {
->> -			/*
->> -			 * We want this driven low ASAP (As {Soon,Strongly} As
->> -			 * Possible), to avoid leakage through the powered-down
->> -			 * WiFi.
->> -			 */
->> -			rockchip,pins = <1 11 RK_FUNC_GPIO &pcfg_output_low>;
->> +			rockchip,pins = <1 11 RK_FUNC_GPIO &pcfg_pull_none>;
->>  		};
->>  
->>  		bt_host_wake_l: bt-host-wake-l {
->>
+> I think he wants the attribute to be named according to the properties in this document: https://www.kernel.org/doc/Documentation/hwmon/sysfs-interface. I guess the attribute would then map to fan1_input, though I'm not sure if that's 100% correct either since this could technically be attached to something other than a fan. But I would think in practice that's not a big concern.
 > 
-> In linux-next there are still different issues with s2r, but definitely, this
-> patch has allowed me to enable again the PCIE on my Samsung Chromebook Plus, s2r
-> goes now a bit further :) So many thanks for the patch.
+> Guenter,
+> Please correct me as well if I'm wrong.
 > 
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-For the record, I maintain a small branch[1] based on the latest
-mainline, containing fixes only, and not dragging the whole of -next
-into an already fairly unstable kernel. Most things do work (including
-s2r), apart from USB3, external display, and some of the sound stuff.
-Crucially, kexec is now functional, allowing the kernel to be used as a
-bootloader...
+You are absolutely correct.
 
-	M.
+While I am not opposed to ABI changes, the merits of those would need to be
+discussed on the mailing list. But replacing "fan1_input" with "rpm" is
+not an acceptable ABI change, even if it may measure something that turns
+but isn't a fan.
 
-[1]
-https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/log/?h=hack/kevin-4.16
--- 
-Jazz is not dead. It just smells funny...
+If this _is_ in fact supposed to be used for something else but fans, we
+would have to discuss what that might be, and if hwmon is the appropriate
+subsystem to measure and report it. This does to some degree lead back to
+my concern of having the "fan" part of this patch series in the pwm core.
+I am still not sure if that makes sense.
+
+Thanks,
+Guenter
+
+> Thank you,
+> Mikko
+> 
+>>
+>> -- 
+>> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
