@@ -1,91 +1,65 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/3] STM32 Extended TrustZone Protection driver
-Date: Wed, 28 Feb 2018 17:53:03 +0000
-Message-ID: <20180228175303.h7qm3zylmfsitmwn@lakrids.cambridge.arm.com>
-References: <20180227140926.22996-1-benjamin.gaignard@st.com>
- <20180227171124.h2yjhicmlfrwr4nh@lakrids.cambridge.arm.com>
- <CA+M3ks6qV_pGdE6mr3n7TiY9VhbqEkrdH6tN=8e-A=oa4UbDHw@mail.gmail.com>
- <11c3ceb2-8b8d-de59-a0be-0777a42f63a7@arm.com>
- <CA+M3ks5qR++8Vwwk8=5Oh6DBdT9NF3ysqfjayq4Gze-oke8Ayg@mail.gmail.com>
+From: Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH 3/3] mailbox: sunxi-msgbox: Add a new mailbox driver
+Date: Wed, 28 Feb 2018 11:51:59 -0600
+Message-ID: <d9e14058-6ffb-e54a-1565-f228342ee1f0@sholland.org>
+References: <20180228022714.30068-1-samuel@sholland.org>
+ <20180228022714.30068-4-samuel@sholland.org>
+ <CABb+yY2uueAK9kzXzU9DT2a4NtV3kK2dc_wtyFWTBn8=Z6Vi7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+M3ks5qR++8Vwwk8=5Oh6DBdT9NF3ysqfjayq4Gze-oke8Ayg@mail.gmail.com>
+In-Reply-To: <CABb+yY2uueAK9kzXzU9DT2a4NtV3kK2dc_wtyFWTBn8=Z6Vi7Q@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ", linux-arm-kernel"@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 28, 2018 at 08:53:28AM +0100, Benjamin Gaignard wrote:
-> 2018-02-27 20:46 GMT+01:00 Robin Murphy <robin.murphy@arm.com>:
-> > On 27/02/18 19:16, Benjamin Gaignard wrote:
-> >> 2018-02-27 18:11 GMT+01:00 Mark Rutland <mark.rutland@arm.com>:
-> >>> On Tue, Feb 27, 2018 at 03:09:23PM +0100, Benjamin Gaignard wrote:
-> >>>>
-> >>>> On early boot stages STM32MP1 platform is able to dedicate some
-> >>>> hardware blocks to a secure OS running in TrustZone.  We need to
-> >>>> avoid using those hardware blocks on non-secure context (i.e.
-> >>>> kernel) because read/write access will all be discarded.
-> >>>>
-> >>>> Extended TrustZone Protection driver register itself as listener
-> >>>> of BUS_NOTIFY_BIND_DRIVER and check, given the device address, if
-> >>>> the hardware block could be used in a Linux context. If not it
-> >>>> returns NOTIFY_BAD to driver core to stop driver probing.
+Hi,
 
-> >>> If these devices are not usable from the non-secure side, why are they
-> >>> not removed form the DT (or marked disabled)?
-> >>>
-> >>> In other cases, where resources are carved out for the secure side (e.g.
-> >>> DRAM carveouts), that's how we handle things.
-> >>
-> >> That true you can parse and disable a device a boot time but if DT
-> >> doesn't exactly reflect etzpc status bits we will in trouble when
-> >> try to get access to the device.
-> >
-> > Well, yes. If the DT doesn't correctly represent the hardware,
-> > things will probably go wrong; that's hardly a novel concept, and
-> > it's certainly not unique to this particular SoC.
-> >
-> >> Changing the DT is a software protection while etzpc is an hardware
-> >> protection so we need to check it anyway.
-> >
-> > There are several in-tree DT and code examples where devices are marked as
-> > disabled on certain boards/SoC variants/etc. because attempting to access
-> > them can abort/lock up/trigger a secure watchdog reset/etc. The only
-> > "special" thing in this particular situation is apparently that this device
-> > even allows its secure configuration to be probed from the non-secure side
-> > at all.
-> >
-> > Implementing a boardfile so that you can "check" the DT makes very little
-> > sense to me; Linux is not a firmware validation suite.
+On 02/28/18 03:16, Jassi Brar wrote:
+> On Wed, Feb 28, 2018 at 7:57 AM, Samuel Holland <samuel@sholland.org> wrote:
+> ....
 > 
-> It is not about to "check" the DT but if Linux could get access to the
-> hardware.  Hardware block assignment to secure or non-secure world
-> could change at runtime for example I2C block could be manage by
-> secure OS for a trusted application and when it have finish "release"
-> the it for Linux.
+>> +/*
+>> + * The message box hardware provides 8 unidirectional channels. As the mailbox
+>> + * framework expects them to be bidirectional
+>>
+> That is incorrect. Mailbox framework does not require a channel to be
+> TX and RX capable.
 
-The driver does not do this today. It probe the HW once during early
-boot, then aborts driver probes. It provides no provision for dynamic
-assignment.
+Sorry, it would be more accurate to say that the intended mailbox _client_
+expects the channels to be bidirectional.
 
-Is this something you plan to implement? How will the secure world
-notify the non-secure world of its intent to manage a device, or
-vice-versa?
+> You should expose each channel as per its physical capability, let the
+> client configure it for direction (if its bidirectional) and acquire
+> separate channels for RX and TX if it needs to.
 
-> I don't think that could be done by changing DT.
-> 
-> I think that dhecking hardware blocks status bits before probe them is
-> also more robust than let
-> each driver discover at probe time that it hardware isn't responding.
+Is there any way for the mailbox framework to inform the client that a channel
+is uni/bidirectional? Or if the channel supports RX/TX specifically? I couldn't
+find any.
 
-I don't follow. Robin and I suggest that gets encoded in the DT, which
-is *more* efficient than having each driver probe the DT, begin probing,
-then abort via the notifier.
+It looks like all of the clients assume one case or the other, based on the
+hardware they were initially designed to support. For example arm_scpi expects
+one channel per client, while ti_sci and st_remoteproc expect two separate RX
+and TX channels per client.
 
-This really seems like something that should be done *prior* to entering
-Linux.
+Since there's no API for the client to know the hardware properties, modifying
+arm_scpi to support unidirectional mailbox channels would break support for all
+existing bidirectional mailboxes.
 
-Thanks,
-Mark.
+To expose the physical channels individually, there would need to be an API to:
+a) Determine if a mailbox channel supports unidirectional or bidirectional
+   operation.
+b) If a channel is unidirectional, determine which direction(s) it supports.
+c) If a unidirectional channel supports both directions, configure which
+   direction it should run in.
+
+Since that API doesn't currently exist, I wrote the driver to match what the
+intended client expected (as all other mailbox controller drivers currently do).
+
+> Cheers!
+
+Regards,
+Samuel
