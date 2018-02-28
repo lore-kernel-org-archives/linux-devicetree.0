@@ -1,69 +1,55 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 3/3] mailbox: sunxi-msgbox: Add a new mailbox driver
-Date: Wed, 28 Feb 2018 09:32:14 +0100
-Message-ID: <20180228083214.h4oi2kmjjqmoyfhn@flea>
-References: <20180228022714.30068-1-samuel@sholland.org>
- <20180228022714.30068-4-samuel@sholland.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/4] dt-bindings: arm: Document Renesas V3MSK and Wheat
+ board part numbers
+Date: Wed, 28 Feb 2018 09:32:53 +0100
+Message-ID: <CAMuHMdXisBvUDdsb=C7eoLQzpgC7cw5ncD4g2vJOjXM6YFecuw@mail.gmail.com>
+References: <20180228064911.vnax4vyqnq6lry52@verge.net.au>
+ <4a2ae4c8-4a4b-1ea3-3416-2dfdffee6499@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gqrk32numzck6ahn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180228022714.30068-4-samuel@sholland.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Holland <samuel@sholland.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4a2ae4c8-4a4b-1ea3-3416-2dfdffee6499@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sergei,
 
---gqrk32numzck6ahn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Feb 28, 2018 at 8:38 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> On 2/28/2018 9:49 AM, Simon Horman wrote:
+>> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+>> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+>> @@ -120,9 +120,9 @@ Boards:
+>>       compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
+>>     - Stout (ADAS Starterkit, Y-R-CAR-ADAS-SKH2-BOARD)
+>>       compatible = "renesas,stout", "renesas,r8a7790"
+>> -  - V3MSK
+>> +  - V3MSK (Y-ASK-RCAR-V3M-WS10)
+>
+>    https://elinux.org/R-Car/Boards/V3MSK (now that I'm reminded of this
+> site) says the V3MSK's model # is RTP0RC77970SEB0010S.
 
-On Tue, Feb 27, 2018 at 08:27:14PM -0600, Samuel Holland wrote:
-> +	/*
-> +	 * The failure path should not disable the clock or assert the reset,
-> +	 * because the PSCI implementation in firmware relies on this device
-> +	 * being functional. Claiming the clock in this driver is required to
-> +	 * prevent Linux from turning it off.
-> +	 */
-> +	ret =3D clk_prepare_enable(clk);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to enable bus clock: %d\n", ret);
-> +		return ret;
-> +	}
+Nope, that's Eagle :-(
+Check the picture on https://elinux.org/R-Car/Boards/Eagle
 
-You don't need it to be always on though. You only need it to be
-enabled when you access the registers (on both sides I guess?). So you
-could very well enable the clock in your registers accessors in Linux,
-and do the same in the ARISC firmware. That should work.
+Gr{oetje,eeting}s,
 
-Maxime
+                        Geert
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
---gqrk32numzck6ahn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqWaQ0ACgkQ0rTAlCFN
-r3SsEA//RHcMOPjqa3tDFiz6Fp3+OnLXWEP1rskJUxy/Xs7B+OxsH4i3UVsrmpC4
-mbfEt0ZC4PC/g2iXhzGxxEfJEpXvO8h+kYNG93mZ0qaKybskJ1ngFz+sEenP8Qxg
-Ky6jqkhiaI6CGySMh8IPxSSmPEM6RLpYAI/E7QZPQDJBr+Sy7p8f9exLXNLkf36x
-l9PYGJ8RK3zxs7egn9Rjdwxif4Yu8nx8iTZUVbA+ox+Zl2PVBxaD1vLRdAxmDRIc
-1idGOhDssH1ZsyVrgDRhynAGHfDfQYSDjivHyK8r/sEmsZUScm8FdXYpAErKpcxS
-y8sRulCeP7jgwFRWD7qFWPNYCsjua5ra1NXovue9AlioK07Gl1iRQL8umWNM2pWh
-LN/GxE5obcr9zhtAaclCNEwYmn9IOvfmnnIPBTFz+RnTq9cin9s1k8lnk68X0SfA
-qldGEKt4nvPhcYVPY5s4L3/Maq3ox1He6nKJjt+VrnVsCwmlLqZtbW2AUdPsFILh
-dJqGyLngQ0yy7/3aFevf4WWpybhQXfl+GWA9pl/QB0Lmm6N8iverBwmMVxQhgx2T
-VxPnOMviLzlzL29d90LZW9+clnqc3oRh0rXuhihtA3nnJvub8ex9QaWXHp2o0kMe
-13x7DfWo7k13l99LMz4ulSpLbu98K5KCtTul7hQEbc/a8jDTLTA=
-=od8V
------END PGP SIGNATURE-----
-
---gqrk32numzck6ahn--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
