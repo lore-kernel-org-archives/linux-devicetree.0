@@ -1,85 +1,63 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v5 01/26] ARM: shmobile: Add watchdog support
-Date: Wed, 28 Feb 2018 13:57:21 +0100
-Message-ID: <CAMuHMdUx3A_8MeZmrwiBRqUS0oGjwrg13fy1QMsA2SUw+dR0Hg@mail.gmail.com>
-References: <1518457475-4480-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1518457475-4480-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: JeffyChen <jeffy.chen@rock-chips.com>
+Subject: Re: [PATCH v5 08/13] iommu/rockchip: Control clocks needed to access
+ the IOMMU
+Date: Wed, 28 Feb 2018 21:00:57 +0800
+Message-ID: <5A96A809.2020509@rock-chips.com>
+References: <20180124103516.2571-1-jeffy.chen@rock-chips.com> <20180124103516.2571-9-jeffy.chen@rock-chips.com> <20180130170515.3g6wtadqgmehxh5b@rob-hp-laptop> <CAAFQd5A383Ey3Ntg_hcsvzHj2DsSuW6RMQ+kP=LPAZ1YmqjHOg@mail.gmail.com> <CAL_JsqKFW0USD_TgGCO-s4wMBw9O2psToMObjeSEwCNReq-3=w@mail.gmail.com> <5A72F7D2.1050201@rock-chips.com> <5A8FEBC6.4000408@rock-chips.com> <33d1d6bd-3455-5cad-6990-a9ca94063f3a@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1518457475-4480-2-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Wim Van Sebroeck <wim@iguana.be>, linux-clk <linux-clk@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Guenter Roeck <linux@roeck-us.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Linux Watchdog Mailing List <linux-watchdog@vger.kernel.org>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Stephen Boyd <sboyd@codeaurora.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <33d1d6bd-3455-5cad-6990-a9ca94063f3a@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>, Tomasz Figa <tfiga@chromium.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ricky Liang <jcliang@chromium.org>, simon xue <xxm@rock-chips.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
+Hi Robin,
 
-On Mon, Feb 12, 2018 at 6:44 PM, Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> On R-Car Gen2 and RZ/G1 platforms, we use the SBAR registers to make non
-> boot CPUs run a routine designed to bring up SMP and deal with hot plug.
-> The value contained in the SBAR registers is not initialized by a WDT
-> triggered reset, which means that after a WDT triggered reset we jump
-> to the SMP bring up routine, preventing the system from executing the
-> bootrom code.
+Thanks for your reply.
+
+On 02/28/2018 12:59 AM, Robin Murphy wrote:
+>>> the rockchip IOMMU is part of the master block in hardware, so it needs
+>>> to control the master's power domain and some of the master's clocks
+>>> when access it's registers.
+>>>
+>>> and the number of clocks needed here, might be different between each
+>>> IOMMUs(according to which master block it belongs), it's a little like
+>>> our power domain:
+>>> https://elixir.free-electrons.com/linux/latest/source/arch/arm64/boot/dts/rockchip/rk3399.dtsi#L935
+>>>
+>>>
+>>>
+>>> i'm not sure how to describe this correctly, is it ok use something like
+>>> "the same as it's master block"?
+>>
+>> would it make sense to add a property to specify the master who owns
+>> the iommu, and we can get all clocks(only some of those clocks are
+>> actually needed) from it in the of_xlate()? and we can also reuse the
+>> clock-names of that master to build clk_bulk_data and log errors in
+>> clk_bulk_get.
 >
-> The purpose of this patch is to jump to the bootrom code in case of a
-> WDT triggered reset, and keep the SMP functionality untouched.
-> In order to tell if the code had been called due to the WDT overflowing
-> we are testing WOVF from register RWTCSRA.
+> I'm inclined to agree with Rob here - if we're to add anything to the
+> binding, it should only be whatever clock inputs are defined for the
+> IOMMU IP block itself. If Linux doesn't properly handle the interconnect
+> clock hierarchy external to a particular integration, that's a separate
+> issue and it's not the binding's problem.
 >
-> The new function shmobile_boot_vector_gen2 isn't replacing
-> shmobile_boot_vector for backward compatibility reasons. The kernel
-> will install the best option (either shmobile_boot_vector or
-> shmobile_boot_vector_gen2) to ICRAM1 after parsing the device tree,
-> according to the amount of memory available.
+> I actually quite like the hack of "borrowing" the clocks from
+> dev->of_node in of_xlate() - you shouldn't need any DT changes for that,
+> because you already know that each IOMMU instance only has the one
+> master device anyway.
+
+Thanks:) but actually we are going to support sharing IOMMU between 
+multiple masters(one of them is the main master i think) in the newer 
+chips(not yet supported on upstream kernel)...
+
+So we might have to get all clocks from all masters, or find a way to 
+specify the main master...and for the multiple masters case, do it in 
+of_xlate() turns out to be a little racy...maybe we can add a property 
+to specify main master, and get it's clocks in probe()?
+
 >
-> Since shmobile_boot_vector has become bigger, "reg" property of nodes
-> compatible with "renesas,smp-sram" now need to be set to a value
-> greater or equal to "<0 0x60>".
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-
-> --- a/arch/arm/mach-shmobile/common.h
-> +++ b/arch/arm/mach-shmobile/common.h
-> @@ -7,6 +7,12 @@ extern void shmobile_init_delay(void);
->  extern void shmobile_boot_vector(void);
->  extern unsigned long shmobile_boot_fn;
->  extern unsigned long shmobile_boot_size;
-> +#ifdef CONFIG_ARCH_RCAR_GEN2
-
-I think this #ifdef can be removed.
-
-> +extern void shmobile_boot_vector_gen2(void);
-> +extern unsigned long shmobile_boot_fn_gen2;
-> +extern unsigned long shmobile_boot_cpu_gen2;
-> +extern unsigned long shmobile_boot_size_gen2;
-> +#endif /* CONFIG_ARCH_RCAR_GEN2 */
->  extern void shmobile_smp_boot(void);
->  extern void shmobile_smp_sleep(void);
->  extern void shmobile_smp_hook(unsigned int cpu, unsigned long fn,
-
-Apart from that:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Robin.
