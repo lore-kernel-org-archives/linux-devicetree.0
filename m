@@ -1,80 +1,59 @@
-From: Fabien Dessenne <fabien.dessenne@st.com>
-Subject: [PATCH 1/2] dt-bindings: mailbox: add STMicroelectronics STM32 IPCC binding
-Date: Wed, 28 Feb 2018 14:24:29 +0100
-Message-ID: <1519824270-7134-2-git-send-email-fabien.dessenne@st.com>
-References: <1519824270-7134-1-git-send-email-fabien.dessenne@st.com>
+From: Chintan Pandya <cpandya@codeaurora.org>
+Subject: Re: [PATCH v3] of: cache phandle nodes to reduce cost of
+ of_find_node_by_phandle()
+Date: Wed, 28 Feb 2018 18:57:08 +0530
+Message-ID: <ab87b605-6ec4-0b65-89ff-6232c89cb75f@codeaurora.org>
+References: <1518655979-10910-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519824270-7134-1-git-send-email-fabien.dessenne@st.com>
+In-Reply-To: <1518655979-10910-1-git-send-email-frowand.list@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jassi Brar <jassisinghbrar@gmail.com>, Ludovic Barre <ludovic.barre@st.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>, Loic Pallardy <loic.pallardy@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a binding for the STMicroelectronics STM32 IPCC block exposing a
-mailbox mechanism between two processors.
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- .../devicetree/bindings/mailbox/stm32-ipcc.txt     | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
 
-diff --git a/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt b/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
-new file mode 100644
-index 0000000..2321689
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/stm32-ipcc.txt
-@@ -0,0 +1,48 @@
-+* STMicroelectronics STM32 IPCC (Inter-Processor Communication Controller)
-+
-+The IPCC block provides a non blocking signaling mechanism to post and
-+retrieve messages in an atomic way between two processors.
-+It provides the signaling for N bidirectionnal channels. The number of channels
-+(N) can be read from a dedicated register.
-+
-+Required properties:
-+- compatible:   Must be "st,stm32-ipcc"
-+- reg:          Register address range (base address and length)
-+- st,proc_id:   Processor id using the mailbox (0 or 1)
-+- clocks:       Input clock
-+- interrupt-names: List of names for the interrupts described by the interrupt
-+                   property. Must contain the following entries:
-+                   - "rx"
-+                   - "tx"
-+- interrupts:   Interrupt specifiers for "rx channel occupied" and "tx channel
-+                free"
-+- #mbox-cells:  Number of cells required for the mailbox specifier. Must be 1.
-+                The data contained in the mbox specifier of the "mboxes"
-+                property in the client node is the mailbox channel index.
-+
-+Optional properties:
-+- wakeup-source: Flag to indicate whether this device can wake up the system
-+- interrupts:    Wakeup interrupt used to wake up the system.
-+- interrupt-names: "wakeup" for the wakeup interrupt.
-+
-+
-+
-+Example:
-+	ipcc: mailbox@4c001000 {
-+		compatible = "st,stm32-ipcc";
-+		#mbox-cells = <1>;
-+		reg = <0x4c001000 0x400>;
-+		st,proc_id = <0>;
-+		interrupts-extended = <&intc GIC_SPI 100 IRQ_TYPE_NONE>,
-+				      <&intc GIC_SPI 101 IRQ_TYPE_NONE>,
-+				      <&aiec 62 1>;
-+		interrupt-names = "rx", "tx", "wakeup";
-+		clocks = <&rcc_clk IPCC>;
-+		wakeup-source;
-+	}
-+
-+Client:
-+	mbox_test {
-+		...
-+		mboxes = <&ipcc 0>, <&ipcc 1>;
-+	};
+On 2/15/2018 6:22 AM, frowand.list@gmail.com wrote:
+
+> +static void of_populate_phandle_cache(void)
+> +{
+> +	unsigned long flags;
+> +	u32 cache_entries;
+> +	struct device_node *np;
+> +	u32 phandles = 0;
+> +
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+> +
+> +	kfree(phandle_cache);
+> +	phandle_cache = NULL;
+> +
+> +	for_each_of_allnodes(np)
+> +		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
+> +			phandles++;
+> +
+> +	cache_entries = roundup_pow_of_two(phandles);
+> +	phandle_cache_mask = cache_entries - 1;
+> +
+> +	phandle_cache = kcalloc(cache_entries, sizeof(*phandle_cache),
+> +				GFP_ATOMIC);
+> +
+
+NULL check of phandle_cache would be good to have.
+
+> +	for_each_of_allnodes(np)
+> +		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
+> +			phandle_cache[np->phandle & phandle_cache_mask] = np;
+> +
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +}
+
+
+Chintan
 -- 
-2.7.4
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum, a Linux Foundation
+Collaborative Project
