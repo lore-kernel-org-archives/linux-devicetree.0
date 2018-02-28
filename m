@@ -1,85 +1,82 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v2 06/16] drm/sun4i: Don't process LVDS if TCON doesn't
- support it
-Date: Wed, 28 Feb 2018 08:36:08 +0100
-Message-ID: <20180228073608.r2zd3qkiudm2uarm@flea>
-References: <20180227222701.9716-1-jernej.skrabec@siol.net>
- <20180227222701.9716-7-jernej.skrabec@siol.net>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/4] dt-bindings: arm: Document Renesas V3MSK and Wheat
+ board part numbers
+Date: Wed, 28 Feb 2018 10:38:40 +0300
+Message-ID: <4a2ae4c8-4a4b-1ea3-3416-2dfdffee6499@cogentembedded.com>
+References: <20180228064911.vnax4vyqnq6lry52@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0277569023=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180227222701.9716-7-jernej.skrabec@siol.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, sboyd@kernel.org, wens@csie.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180228064911.vnax4vyqnq6lry52@verge.net.au>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 2/28/2018 9:49 AM, Simon Horman wrote:
 
---===============0277569023==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aqjrippsxme475qi"
-Content-Disposition: inline
+[...]
 
+>> On Tue, Feb 27, 2018 at 9:17 AM, Simon Horman <horms@verge.net.au> wrote:
+>>> On Mon, Feb 26, 2018 at 07:03:43PM +0100, Geert Uytterhoeven wrote:
+> 
+> ...
+> 
+>>>> -  - Wheat
+>>>> +  - Wheat (RTP0RC7792ASKB0010JE)
+>>>>       compatible = "renesas,wheat", "renesas,r8a7792"
+>>>
+>>> I'm unable to confirm the above. Can anyone help?
+>>
+>> https://elinux.org/R-Car/Boards/Wheat
+>>
+>> Looks like I misinterpreted the pictures, and
+>> RTP0RC7792ASKB0000JE is the correct part number for Wheat.
+> 
+> Thanks. I've applied the following.
+> 
+> 
+> From: Geert Uytterhoeven <geert+renesas@glider.be>
+> Subject: [PATCH] dt-bindings: arm: Document Renesas V3MSK and Wheat board part
+>   numbers
+> 
+> The DT binding documentation for the Renesas V3MSK and Wheat boards
+> lacked board part numbers.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> [simon: corrected Wheat part number]
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> ---
+>   Documentation/devicetree/bindings/arm/shmobile.txt | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+> index a99359e63b0a..66edc1406bb8 100644
+> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> @@ -120,9 +120,9 @@ Boards:
+>       compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
+>     - Stout (ADAS Starterkit, Y-R-CAR-ADAS-SKH2-BOARD)
+>       compatible = "renesas,stout", "renesas,r8a7790"
+> -  - V3MSK
+> +  - V3MSK (Y-ASK-RCAR-V3M-WS10)
 
---aqjrippsxme475qi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+    https://elinux.org/R-Car/Boards/V3MSK (now that I'm reminded of this site) 
+says the V3MSK's model # is RTP0RC77970SEB0010S.
 
-On Tue, Feb 27, 2018 at 11:26:51PM +0100, Jernej Skrabec wrote:
-> TCON checks for LVDS properties even if it doesn't support it. Add a
-> check to skip that part of the code if TCON doesn't support channel 0.
->=20
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>       compatible = "renesas,v3msk", "renesas,r8a77970"
+> -  - Wheat
+> +  - Wheat (RTP0RC7792ASKB0000JE)
+>       compatible = "renesas,wheat", "renesas,r8a7792"
 
-I have already sent a similar patch here:
-https://lists.freedesktop.org/archives/dri-devel/2018-February/166665.html
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---aqjrippsxme475qi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqWW+cACgkQ0rTAlCFN
-r3SGzQ//SGozme2gO0ALeJqnCLt8CQMYDzC1rRw0xfUb2agk3B881NEi3X5fIJUn
-nTj9yAWBYvff/BlGerf/n6B7DFJdAvH7qX+t5mDIZlh5BxIAWTjmxiTPP0rSNakT
-R2WSoI7yh+lBV4hTSy+DhMQ9mweINss8jQMKRdlnC78St415S7aG5lQ1mAvGWpeZ
-Cf5en3JOsysN8kUQ1EL3gbRC0S+oRZT+Q2WNNlMF2nA8jIMkgENTY425RwJMDPUA
-tIPJN1yeg4NG4IwpUA7TGoZnaT5htu5Z1f9X05AcyBMRo/v3SX+XpitLIYJtG9pQ
-2oFgyTA6dSprW3fC0eRrqxydWh+xo69vdj84RSdRbPRbQINuHobAREkZ85gCFJG2
-DayROsddA9CGM+L9G4nIMOIXjZl93tJLSWAJFhQocS78l1sEaYkSy0FmdV4Ugpui
-uG7/Uyk0mnzW4dBS1afOuuFntoKmgp55qU9KIEtRV9v7FOpuKcoXnkVXuVdo2sbo
-YdrksU8i9TRFLlcZGuH5tB9OUThgL5ZYEJYZKxjf0lP/eBwJpiuWFH5z9pGsZ5hH
-WxZGduaudW0z3K+5vnXt1BDbBye4Gjm2umwYPJjqLihc5/w6kDb8TQSRTjkG9M6n
-0zMAvak60eOlPvZ8w86JsZKSjM1EcUu1V4ZsHTx068cVmQYvwBw=
-=nYue
------END PGP SIGNATURE-----
-
---aqjrippsxme475qi--
-
---===============0277569023==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0277569023==--
+MBR, Sergei
