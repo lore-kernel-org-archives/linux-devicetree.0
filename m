@@ -1,15 +1,13 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/4] dt-bindings: arm: Document Renesas V3MSK and Wheat
- board part numbers
-Date: Wed, 28 Feb 2018 09:32:53 +0100
-Message-ID: <CAMuHMdXisBvUDdsb=C7eoLQzpgC7cw5ncD4g2vJOjXM6YFecuw@mail.gmail.com>
-References: <20180228064911.vnax4vyqnq6lry52@verge.net.au>
- <4a2ae4c8-4a4b-1ea3-3416-2dfdffee6499@cogentembedded.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH] arm64: dts: ls1046a: add a dummy memory 'reg' property
+Date: Wed, 28 Feb 2018 16:43:55 +0800
+Message-ID: <CADRPPNSwH6HEZMjfk=Zgrsw9-4EFaBpS-2_2S46_toxZEPvBDw@mail.gmail.com>
+References: <1519626830-14370-1-git-send-email-shawnguo@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4a2ae4c8-4a4b-1ea3-3416-2dfdffee6499@cogentembedded.com>
+In-Reply-To: <1519626830-14370-1-git-send-email-shawnguo@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,37 +17,46 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mingkai Hu <Mingkai.Hu@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Wed, Feb 28, 2018 at 8:38 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 2/28/2018 9:49 AM, Simon Horman wrote:
->> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
->> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
->> @@ -120,9 +120,9 @@ Boards:
->>       compatible = "renesas,sk-rzg1m", "renesas,r8a7743"
->>     - Stout (ADAS Starterkit, Y-R-CAR-ADAS-SKH2-BOARD)
->>       compatible = "renesas,stout", "renesas,r8a7790"
->> -  - V3MSK
->> +  - V3MSK (Y-ASK-RCAR-V3M-WS10)
+On Mon, Feb 26, 2018 at 2:33 PM, Shawn Guo <shawnguo@kernel.org> wrote:
+> The memory node in fsl-ls1046a.dtsi has no 'reg' property, and causes
+> the dtc warning below.
 >
->    https://elinux.org/R-Car/Boards/V3MSK (now that I'm reminded of this
-> site) says the V3MSK's model # is RTP0RC77970SEB0010S.
+> Warning (unit_address_vs_reg): Node /memory@80000000 has a unit name, but no reg property
+>
+> Let's add a 'reg' property with dummy memory size, since bootloader will
+> need to fill the correct one per board memory configuration anyway.
+>
+> Cc: Mingkai Hu <Mingkai.Hu@nxp.com>
+> Cc: Li Yang <leoyang.li@nxp.com>
+> Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 
-Nope, that's Eagle :-(
-Check the picture on https://elinux.org/R-Car/Boards/Eagle
+Acked-by: Li Yang <leoyang.li@nxp.com>
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index 606ea496f24e..136ebfa9b333 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -131,6 +131,8 @@
+>
+>         memory@80000000 {
+>                 device_type = "memory";
+> +               /* Real size will be filled by bootloader */
+> +               reg = <0x0 0x80000000 0x0 0x0>;
+>         };
+>
+>         sysclk: sysclk {
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
