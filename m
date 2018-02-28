@@ -1,35 +1,36 @@
-From: Jani Nikula <jani.nikula@linux.intel.com>
-Subject: Re: [PATCH v3 05/10] pwm: add PWM mode to pwm_config()
-Date: Wed, 28 Feb 2018 22:04:52 +0200
-Message-ID: <87r2p4hod7.fsf@intel.com>
-References: <1519300881-8136-1-git-send-email-claudiu.beznea@microchip.com>
- <1519300881-8136-6-git-send-email-claudiu.beznea@microchip.com>
- <20180228194429.GD22932@mithrandir>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 1/2] of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
+Date: Wed, 28 Feb 2018 22:19:08 +0200
+Message-ID: <CAHp75Vc4jbJqM0=Yy-1SY6E2WhzHOAAcrn1+KE-jT7MWPtWPpA@mail.gmail.com>
+References: <1519844656-16443-1-git-send-email-frowand.list@gmail.com>
+ <1519844656-16443-2-git-send-email-frowand.list@gmail.com>
+ <CAHp75VfD6Hi0NScdZrYozp9dAqmUUYjcLuPPyRwM31ezxNO2fw@mail.gmail.com> <c5d81c10-8b92-0a5d-93c2-8b8377b1396f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180228194429.GD22932@mithrandir>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: mark.rutland@arm.com, milo.kim@ti.com, linux-fbdev@vger.kernel.org, sean@mess.org, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, kamil@wypas.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, pavel@ucw.cz, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-leds@vger.kernel.org, daniel.thompson@linaro.org, linux-samsung-soc@vger.kernel.org, shc_work@mail.ru, corbet@lwn.net, linux-doc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, kgene@kernel.org, linux-input@vger.kernel.org, linux@roeck-us.net, linux-media@vger.kernel.org, linux-pwm@vger.kernel.org, jdelvare@suse.com, b.zolnierkie@samsung.com, intel-gfx@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, rodrigo.vivi@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.or
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c5d81c10-8b92-0a5d-93c2-8b8377b1396f@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, cpandya@codeaurora.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyOCBGZWIgMjAxOCwgVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5nQGdtYWls
-LmNvbT4gd3JvdGU6Cj4gQW55b25lIHRoYXQgbmVlZHMgc29tZXRoaW5nIG90aGVyIHRoYW4gbm9y
-bWFsIG1vZGUgc2hvdWxkIHVzZSB0aGUgbmV3Cj4gYXRvbWljIFBXTSBBUEkuCgpBdCB0aGUgcmlz
-ayBvZiByZXZlYWxpbmcgbXkgdHJ1ZSBpZ25vcmFuY2UsIHdoYXQgaXMgdGhlIG5ldyBhdG9taWMg
-UFdNCkFQST8gV2hlcmU/IEV4YW1wbGVzIG9mIGhvdyBvbmUgd291bGQgY29udmVydCBvbGQgY29k
-ZSBvdmVyIHRvIHRoZSBuZXcKQVBJPwoKQlIsCkphbmkuCgotLSAKSmFuaSBOaWt1bGEsIEludGVs
-IE9wZW4gU291cmNlIFRlY2hub2xvZ3kgQ2VudGVyCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Feb 28, 2018 at 9:44 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+> On 02/28/18 11:31, Andy Shevchenko wrote:
+>> On Wed, Feb 28, 2018 at 9:04 PM,  <frowand.list@gmail.com> wrote:
+
+>> The question is why O(1) is so important? O(log(n)) wouldn't work?
+>
+> O(1) is not critical.  It was just a nice side result.
+>
+>
+>> Using radix_tree() I suppose allows to dynamically extend or shrink
+>> the cache which would work with DT overlays.
+>
+> The memory usage of the phandle cache in this patch is fairly small.
+> The memory overhead of a radix_tree() would not be justified.
+
+OTOH the advantage I mentioned isn't a good argument?
+
+-- 
+With Best Regards,
+Andy Shevchenko
