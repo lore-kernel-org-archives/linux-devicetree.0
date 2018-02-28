@@ -1,59 +1,38 @@
-From: Chintan Pandya <cpandya@codeaurora.org>
-Subject: Re: [PATCH v3] of: cache phandle nodes to reduce cost of
- of_find_node_by_phandle()
-Date: Wed, 28 Feb 2018 18:57:08 +0530
-Message-ID: <ab87b605-6ec4-0b65-89ff-6232c89cb75f@codeaurora.org>
-References: <1518655979-10910-1-git-send-email-frowand.list@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
+Date: Wed, 28 Feb 2018 14:27:07 +0100
+Message-ID: <20180228132707.mgunezg5o4lul7x5@verge.net.au>
+References: <23a6ac28-134b-b5dd-69a7-910774c4b8c1@cogentembedded.com>
+ <2fd26075-525c-8d86-ef81-f32c73cf3e8b@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1518655979-10910-1-git-send-email-frowand.list@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <2fd26075-525c-8d86-ef81-f32c73cf3e8b@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Feb 27, 2018 at 11:23:39PM +0300, Sergei Shtylyov wrote:
+> On 02/27/2018 11:06 PM, Sergei Shtylyov wrote:
+> 
+> > Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
+> > 'renesas-devel-20180227-v4.16-rc3' tag. We're adding the R8A77970 FCPVD/VSPD/
+> > DU/LVDS device nodes and then describing the HDMI encoder connected to the LVDS
+> > output (we're omitting the LVDS decoder for now). These patches depend on
+> > the recent R8A77970 DU/LVDS rework patches by Laurent in order to work...	
+> 
+>    Need to mention that the DU driver silently fails to probe now. I do
+>    hope that this is not due to my updates. :-)
 
-
-On 2/15/2018 6:22 AM, frowand.list@gmail.com wrote:
-
-> +static void of_populate_phandle_cache(void)
-> +{
-> +	unsigned long flags;
-> +	u32 cache_entries;
-> +	struct device_node *np;
-> +	u32 phandles = 0;
-> +
-> +	raw_spin_lock_irqsave(&devtree_lock, flags);
-> +
-> +	kfree(phandle_cache);
-> +	phandle_cache = NULL;
-> +
-> +	for_each_of_allnodes(np)
-> +		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
-> +			phandles++;
-> +
-> +	cache_entries = roundup_pow_of_two(phandles);
-> +	phandle_cache_mask = cache_entries - 1;
-> +
-> +	phandle_cache = kcalloc(cache_entries, sizeof(*phandle_cache),
-> +				GFP_ATOMIC);
-> +
-
-NULL check of phandle_cache would be good to have.
-
-> +	for_each_of_allnodes(np)
-> +		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
-> +			phandle_cache[np->phandle & phandle_cache_mask] = np;
-> +
-> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +}
-
-
-Chintan
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum, a Linux Foundation
-Collaborative Project
+Please test that theory.
