@@ -1,81 +1,38 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 0/3] add CPUs OPPs to sun8i a83t
-Date: Wed, 28 Feb 2018 15:40:13 +0100
-Message-ID: <20180228144013.ayd65zbezdya7cbo@flea>
-References: <cover.f1ec43f8d2a0151c52434f0952e973b19626f285.1519823347.git-series.quentin.schulz@bootlin.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3] Input: gpio_keys: Add level trigger support for GPIO keys
+Date: Wed, 28 Feb 2018 15:44:18 +0100
+Message-ID: <CAK8P3a1v2GanneaFKpXWjWLt1YzibJ9Bh7vUcd_SH-4jGN_1+A@mail.gmail.com>
+References: <826093167e8fb24723f474b0272f3dcab1b6a97e.1519821626.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6mf4y4m4gj2fmxli"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.f1ec43f8d2a0151c52434f0952e973b19626f285.1519823347.git-series.quentin.schulz@bootlin.com>
+In-Reply-To: <826093167e8fb24723f474b0272f3dcab1b6a97e.1519821626.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@bootlin.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, gregkh <gregkh@linuxfoundation.org>, lumotuwe@gmail.com, Arvind Yadav <arvind.yadav.cs@gmail.com>, josephl@nvidia.com, kstewart@linuxfoundation.org, Philippe Ombredanne <pombredanne@nexb.com>, Thomas Gleixner <tglx@linutronix.de>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 28, 2018 at 1:44 PM, Baolin Wang <baolin.wang@linaro.org> wrote:
+> On some platforms (such as Spreadtrum platform), the GPIO keys can only
+> be triggered by level type. So this patch introduces one property to
+> indicate if the GPIO trigger type is level trigger or edge trigger.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Changes since v2:
+>  - Use 'interrupt' property to indicate the irq type.
+>
+> Changes since v1:
+>  - Diable the GPIO irq until reversing the GPIO level type.
 
---6mf4y4m4gj2fmxli
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've looked at your patch in more detail now, and given it a bit more thought.
 
-On Wed, Feb 28, 2018 at 02:11:19PM +0100, Quentin Schulz wrote:
-> Hi all,
->=20
-> The Allwinner A83T is an octacore A7 divided in two clusters of 4 A7,
-> each cluster having its own regulator and clock.
->=20
-> Let's add the OPPs for each cluster so that we can use cpufreq on this So=
-C.
->=20
-> The operating points were found in Allwinner BSP and fex files and have
-> been tested on a TBS A711 with cpuburn and cpufreq-ljt-stress-test.
->=20
-> Note that there are a few OPPs that are missing:
->=20
-> 1608000000Hz with 920000mV
-> 1800000000Hz with 1000000mV
-> 2016000000Hz with 1080000mV
->=20
-> These OPPs are pretty unstable but it might be due to the SoC quickly
-> overheating (till the board completely shuts down).
-> It seems[1] impossible to reach those frequencies with none or passive
-> cooling, so better leave them out by default.
->=20
-> It's still possible to add those OPPs on a per-board basis though.
->=20
-> [1] http://linux-sunxi.org/User:Tkaiser#First_steps_with_Banana_Pi_M3
+I wonder if you could move that logic into your gpiochip/irqchip driver instead.
+It seems that what you do in the gpio-keys driver is to emulate edge triggered
+behavior on a level triggered irqchip.
 
-Applied all three. The patch 3/3 wasn't ordered properly, so I fixed
-it, and I removed the newline pointed out by Thomas.
+If you put the same logic into the gpio driver, you could simply make it
+pretend to support an edge trigger on both edges and call into the interrupt
+handler whenever the state changes.
 
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---6mf4y4m4gj2fmxli
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqWv0wACgkQ0rTAlCFN
-r3RJXBAAkKBrPoLCjiNPWSC4VcL/RFmryHF6u9AAEi048Plk7i3SFsvKVhwHBjtN
-youjnFAzX7En/rHgAFsK9D4IyvvZW5tcHFwWpo60pwmcHfmikzC7oQeQKaq+F8Lz
-Ldn0eSIfzmn8mPc0yv+v7zvk6eqW9KjrD8H3mRarY2WQwG/QTFFbjRyxmwYoZNOf
-Nq+cgNcGRqS0rByxRmfsVXEPIb/iNEmdTgva0YsrdBoNHmvS22VLlpCiDbRQYx3g
-z/Uz6wZPKwNic3II7CeXvZpm5V2GXJgsFdaLNO1VhBUQk4TH4Br2vRGMijlfqJa0
-uoOazryXiCAABk8YuBmRvwLx5AmIfxtFm4t5+pdgBzGbQA6KrkwIPhEc07Uf4eqF
-eMZR8GwOsiotvug4YP5zW/gJ5vxSE0qPI6WN8UMAnF8eg/P3sC4GcoDer1oj/LYz
-01Z4b8FuSSl6TQHtLTxl8Uo6qSjjjJRr4TUHz7tTIMK4ABznG9pSBwpHm+GZukC+
-WTa0oEwtxflJ0Nk66aVcly1dd7447pYOVEhhdJBGNin4DOL7kbgXmVNolQ0lXQyx
-CysteY+rs7iGxoDyLlKCMcDGABR3jV5m67VDyDf6WsK8+/NaR77h9E7zK8JbTK0C
-XtIB0iwMwanygmwWcqCeZH8Vsu4fQ//CeeYoj9X1E0cWJoys9Hc=
-=Fqwd
------END PGP SIGNATURE-----
-
---6mf4y4m4gj2fmxli--
+        Arnd
