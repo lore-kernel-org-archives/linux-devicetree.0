@@ -1,96 +1,82 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [SPAM]Re: [PATCH v3 4/5] dt-bindings: clock: mediatek: update
- audsys documentation to adapt MFD device
-Date: Wed, 28 Feb 2018 09:13:21 -0600
-Message-ID: <CAL_Jsq+NK-sUY-qOZ2Xv1ZfWVm-vG0tyAgN_auKeaQxMq58vkw@mail.gmail.com>
-References: <cover.1518424204.git.ryder.lee@mediatek.com>
- <61928ad523a7aeffb8f16d4caad56836b65ae407.1518424204.git.ryder.lee@mediatek.com>
- <CAL_JsqJgo0pKJjrs2fdw+q=DJYwht0X5L3Bomz8gf98mEN7hkg@mail.gmail.com>
- <1519193048.18794.42.camel@mtkswgap22>
- <CAL_JsqLjcMpS=bLzAV0arLJY143O1XefjSR0djM73E8uC4oJHg@mail.gmail.com>
- <1519272878.1907.87.camel@mtkswgap22>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v6] rtc: isl12026: Add driver.
+Date: Wed, 28 Feb 2018 16:17:01 +0100
+Message-ID: <20180228151701.GM1479@piout.net>
+References: <20180222200432.22003-1-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519272878.1907.87.camel@mtkswgap22>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: devicetree@vger.kernel.org, Garlic Tseng <garlic.tseng@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, linux-clk <linux-clk@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180222200432.22003-1-david.daney@cavium.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <david.daney@cavium.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Shevchenko <andy.shevchenko@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 21, 2018 at 10:14 PM, Ryder Lee <ryder.lee@mediatek.com> wrote:
-> On Wed, 2018-02-21 at 08:10 -0600, Rob Herring wrote:
->> On Wed, Feb 21, 2018 at 12:04 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
->> > On Mon, 2018-02-19 at 12:29 -0600, Rob Herring wrote:
->> >> On Mon, Feb 12, 2018 at 5:28 AM, Ryder Lee <ryder.lee@mediatek.com> wrote:
->> >> > The MediaTek audio hardware block that exposes functionalities that are
->> >> > handled by separate subsystems in the kernel.  These functions are all
->> >> > mapped somewhere at 0x112xxxxx, and there are some control bits are mixed
->> >> > up with other functions within the same registers.
->> >>
->> >> I still don't think this change is necessary.
->> >>
->> >> Just because a hardware block in DT maps to different subsystems in a
->> >> particular OS doesn't mean you need a DT node for each OS subsystem.
->> >> What we have subsystems for changes over time and DT shouldn't really
->> >> be changing based on that. And DT is not the only way to instantiate
->> >> drivers.
->> >>
->> >
->> > Apart right now we have the definition of both functions. The other
->> > location is here:../sonud/mt2701-afe-pcm.txt. The ways I could come up
->> > with are:
->>
->> There are several problems you need to fix. First,
->> "mediatek,mt2701-audsys" is not documented. It is only used in the
->> example. Second, bindings/arm/mediatek/mediatek,audsys.txt should move
->> to bindings/sound/ if it is only audio related functions. Or perhaps
->> just combine the 2 documents because it is all inconsistent currently.
->
-> Because the series crossed subsystems but didn't apply at the same time.
->
->> The 2 documents are inconsistent as to what is the relationship of
->> -audsys and -audio (afe) nodes. mt2701-afe-pcm.txt shows that the AFE
->> is already a child of -audsys. The -audsys node should have
->> #clock-cells. It should also not be a simple-mfd (another
->> inconsistency in the binding) because it needs to probe first to
->> provide clocks to child nodes, and then trigger probing the child
->> nodes.
->
-> This is the 1st version I sent before, and the clock parts still under
-> review :( .  But yes, the 2 inconsistent documents should be fixed -
-> this may depend on what we end up doing with the DT appearance.
->
-> IMHO, apart from overlapping regions with other functions I didn't see
-> any difference between audsys and other clock drivers (providers).
->
-> For the sake of uniformity, I make the 2 sub-devices parallel and move
-> "simple-mfd" to the top, and the sequences should actually be handled
-> through "probe deferral mechanism" - that would make this kind of
-> situations much easier to manage.
+Hi,
 
-If a child node has a dependency on the parent, probe deferral is not
-the correct solution. The parent should probe first and control
-probing of the chlidren. "simple-mfd" is intended for cases where
-there is no dependency on the parent node.
+That's mostly good
 
-> BTW, I could make the AFE driver be instantiated/probed from the clock
-> driver but this seems superfluous to me.  Just make sure is this what
-> you want?
+On 22/02/2018 at 12:04:32 -0800, David Daney wrote:
+> +	priv->rtc->ops = &isl12026_rtc_ops;
+> +	priv->rtc->nvram_old_abi = false;
 
-I would think it would be the other way around. The AFE driver creates
-some clocks. Whether that's a separate driver or a single driver is a
-kernel issue that has nothing to do with the binding. IIRC, there's
-several examples in display controllers and camera interfaces where
-those drivers are also clock providers.
+This allocation is not necessary and I would refer not having t so when
+the ABI goes away, it is not necessary to change this driver.
 
-Rob
+> +	ret = rtc_register_device(priv->rtc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	memset(&nvm_cfg, 0, sizeof(nvm_cfg));
+> +	nvm_cfg.name = "eeprom";
+
+You probably need something more descriptive, usually the rtc model name
+else, it is difficult (but not impossible) to find where this nvmem is
+actually located when using /sys/bus/nvmem/devices
+isl12026- would be a good choice.
+
+> +	nvm_cfg.read_only = false;
+> +	nvm_cfg.root_only = true;
+
+any reason to have it root only?
+
+> +	nvm_cfg.base_dev = &client->dev;
+> +	nvm_cfg.priv = priv;
+> +	nvm_cfg.stride = 1;
+> +	nvm_cfg.word_size = 1;
+> +	nvm_cfg.size = 512;
+> +	nvm_cfg.reg_read = isl12026_nvm_read;
+> +	nvm_cfg.reg_write = isl12026_nvm_write;
+> +
+> +	return rtc_nvmem_register(priv->rtc, &nvm_cfg);
+
+The probe function must not fail after rtc_register_device has been
+called so you must return 0 here.
+
+It is not currently possible to call rtc_nvmem_register before
+rtc_register_device unless we move the nvmem to the parent device:
+
+diff --git a/drivers/rtc/nvmem.c b/drivers/rtc/nvmem.c
+index 3a02357eb783..17ec4c8d0fad 100644
+--- a/drivers/rtc/nvmem.c
++++ b/drivers/rtc/nvmem.c
+@@ -91,7 +91,7 @@ int rtc_nvmem_register(struct rtc_device *rtc,
+        if (!nvmem_config)
+                return -ENODEV;
+ 
+-       nvmem_config->dev = &rtc->dev;
++       nvmem_config->dev = rtc->dev.parent;
+        nvmem_config->owner = rtc->owner;
+        rtc->nvmem = nvmem_register(nvmem_config);
+        if (IS_ERR_OR_NULL(rtc->nvmem))
+
+I'll submit this patch for this cycle before there are many users of the
+interface (converted drivers are still exposing the old ABI).
+
+If you prefer, you can depend on it.
+
+-- 
+Alexandre Belloni, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
