@@ -1,218 +1,47 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [RESEND PATCH 7/7] arm64: dts: Add SC2731 PMIC dts file for Spreadtrum SC9860
-Date: Wed, 28 Feb 2018 18:47:10 +0800
-Message-ID: <2e0470cdfed459fd01cd92b1ddfcc997848ce425.1519814593.git.baolin.wang@linaro.org>
-References: <5ec790b43c6fea9f36e06b5b20233b2adebd7d50.1519814593.git.baolin.wang@linaro.org>
+From: Bich HEMON <bich.hemon@st.com>
+Subject: [PATCH 1/2] dt-bindings: serial: stm32: add wakeup option using note
+Date: Wed, 28 Feb 2018 10:51:17 +0000
+Message-ID: <1519815044-22669-2-git-send-email-bich.hemon@st.com>
+References: <1519815044-22669-1-git-send-email-bich.hemon@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5ec790b43c6fea9f36e06b5b20233b2adebd7d50.1519814593.git.baolin.wang@linaro.org>
-In-Reply-To: <5ec790b43c6fea9f36e06b5b20233b2adebd7d50.1519814593.git.baolin.wang@linaro.org>
-References: <5ec790b43c6fea9f36e06b5b20233b2adebd7d50.1519814593.git.baolin.wang@linaro.org>
+In-Reply-To: <1519815044-22669-1-git-send-email-bich.hemon@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de
-Cc: chunyan.zhang@linaro.org, orson.zhai@spreadtrum.com, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Bich HEMON <bich.hemon@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The Spreadtrum SC9860 platform has one SC2731 PMIC, and the SC2731
-PMIC integrates all mobile handset power management, audio codec,
-battery management and user interface support function in a single
-chip.
+Update bindings with interrupt-names and wakeup-source information
 
-This patch adds the SC2731 dts file, as well as adding the RTC and
-regulator device node for this PMIC.
-
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Bich Hemon <bich.hemon@st.com>
 ---
- arch/arm64/boot/dts/sprd/sc2731.dtsi      |  169 +++++++++++++++++++++++++++++
- arch/arm64/boot/dts/sprd/sp9860g-1h10.dts |    1 +
- 2 files changed, 170 insertions(+)
- create mode 100644 arch/arm64/boot/dts/sprd/sc2731.dtsi
+ Documentation/devicetree/bindings/serial/st,stm32-usart.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/sprd/sc2731.dtsi b/arch/arm64/boot/dts/sprd/sc2731.dtsi
-new file mode 100644
-index 0000000..4331006
---- /dev/null
-+++ b/arch/arm64/boot/dts/sprd/sc2731.dtsi
-@@ -0,0 +1,169 @@
-+/*
-+ * Spreadtrum SC2731 PMIC dts file
-+ *
-+ * Copyright (C) 2018, Spreadtrum Communications Inc.
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+&adi_bus {
-+	sc2731_pmic: pmic@0 {
-+		compatible = "sprd,sc2731";
-+		reg = <0>;
-+		spi-max-frequency = <26000000>;
-+		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rtc@280 {
-+			compatible = "sprd,sc27xx-rtc", "sprd,sc2731-rtc";
-+			reg = <0x280>;
-+			interrupt-parent = <&sc2731_pmic>;
-+			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		regulators {
-+			compatible = "sprd,sc27xx-regulator";
-+
-+			vddarm0: BUCK_CPU0 {
-+				regulator-name = "vddarm0";
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1996875>;
-+				regulator-ramp-delay = <25000>;
-+				regulator-always-on;
-+			};
-+
-+			vddarm1: BUCK_CPU1 {
-+				regulator-name = "vddarm1";
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1996875>;
-+				regulator-ramp-delay = <25000>;
-+				regulator-always-on;
-+			};
-+
-+			dcdcrf: BUCK_RF {
-+				regulator-name = "dcdcrf";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <2196875>;
-+				regulator-ramp-delay = <25000>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-always-on;
-+			};
-+
-+			vddcama0: LDO_CAMA0 {
-+				regulator-name = "vddcama0";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3750000>;
-+				regulator-enable-ramp-delay = <100>;
-+			};
-+
-+			vddcama1: LDO_CAMA1 {
-+				regulator-name = "vddcama1";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3750000>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddcammot: LDO_CAMMOT {
-+				regulator-name = "vddcammot";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3750000>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddvldo: LDO_VLDO {
-+				regulator-name = "vddvldo";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3750000>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddemmccore: LDO_EMMCCORE {
-+				regulator-name = "vddemmccore";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3750000>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+				regulator-boot-on;
-+			};
-+
-+			vddsdcore: LDO_SDCORE {
-+				regulator-name = "vddsdcore";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3750000>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddsdio: LDO_SDIO {
-+				regulator-name = "vddsdio";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3750000>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddwifipa: LDO_WIFIPA {
-+				regulator-name = "vddwifipa";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3750000>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddusb33: LDO_USB33 {
-+				regulator-name = "vddusb33";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3750000>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddcamd0: LDO_CAMD0 {
-+				regulator-name = "vddcamd0";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1793750>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddcamd1: LDO_CAMD1 {
-+				regulator-name = "vddcamd1";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1793750>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddcon: LDO_CON {
-+				regulator-name = "vddcon";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1793750>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddcamio: LDO_CAMIO {
-+				regulator-name = "vddcamio";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1793750>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+			};
-+
-+			vddsram: LDO_SRAM {
-+				regulator-name = "vddsram";
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <1793750>;
-+				regulator-enable-ramp-delay = <100>;
-+				regulator-ramp-delay = <25000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-index 550f323..3bd18e3 100644
---- a/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-+++ b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-@@ -9,6 +9,7 @@
- /dts-v1/;
+diff --git a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+index d150b04..aaeb564 100644
+--- a/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
++++ b/Documentation/devicetree/bindings/serial/st,stm32-usart.txt
+@@ -10,6 +10,7 @@ Required properties:
+ - interrupts:
+   - The interrupt line for the USART instance,
+   - An optional wake-up interrupt.
++- interrupt-names: Contains "event" for the USART interrupt line.
+ - clocks: The input clock of the USART instance
  
- #include "sc9860.dtsi"
-+#include "sc2731.dtsi"
+ Optional properties:
+@@ -17,6 +18,9 @@ Optional properties:
+ - st,hw-flow-ctrl: bool flag to enable hardware flow control.
+ - dmas: phandle(s) to DMA controller node(s). Refer to stm32-dma.txt
+ - dma-names: "rx" and/or "tx"
++- wakeup-source: bool flag to indicate this device has wakeup capabilities
++- interrupt-names : Should contain "wakeup" if optional wake-up interrupt is
++  used.
  
- / {
- 	model = "Spreadtrum SP9860G 3GFHD Board";
+ Examples:
+ usart4: serial@40004c00 {
 -- 
-1.7.9.5
+1.9.1
