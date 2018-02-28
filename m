@@ -1,587 +1,95 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 1/2] iio: light: add driver for bh1730fvc chips
-Date: Wed, 28 Feb 2018 17:06:09 +0200
-Message-ID: <CAHp75VfEaaJfREj5jBk7uwr2aRL96JN4Co=tir9Foy6L9=_o8A@mail.gmail.com>
-References: <20180228001525.96044-1-delroth@google.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 08/13] iommu/rockchip: Control clocks needed to access
+	the IOMMU
+Date: Wed, 28 Feb 2018 15:06:19 +0000
+Message-ID: <34a60ab2-a3af-3302-6612-740cba5460db@arm.com>
+References: <20180124103516.2571-1-jeffy.chen@rock-chips.com>
+	<20180124103516.2571-9-jeffy.chen@rock-chips.com>
+	<20180130170515.3g6wtadqgmehxh5b@rob-hp-laptop>
+	<CAAFQd5A383Ey3Ntg_hcsvzHj2DsSuW6RMQ+kP=LPAZ1YmqjHOg@mail.gmail.com>
+	<CAL_JsqKFW0USD_TgGCO-s4wMBw9O2psToMObjeSEwCNReq-3=w@mail.gmail.com>
+	<5A72F7D2.1050201@rock-chips.com> <5A8FEBC6.4000408@rock-chips.com>
+	<33d1d6bd-3455-5cad-6990-a9ca94063f3a@arm.com>
+	<5A96A809.2020509@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180228001525.96044-1-delroth@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre Bourdon <delroth@google.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <5A96A809.2020509-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: JeffyChen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ricky Liang <jcliang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 28, 2018 at 2:15 AM, Pierre Bourdon <delroth@google.com> wrote:
-> Ambient light sensor that supports visible light and IR measurements and
-> configurable gain/integration time.
->
-> This is written as an additional driver instead of being added into the
-> existing bh1750 / bh1780 drivers. The bh1730 chip is significantly
-> different from either of these two:
->
-> * bh1750 is not fully smbus compatible and only partially supports
->   continuous reading mode since not all of its supported chips have this
->   feature.
->
-> * bh1780 does gain adjustment in hardware and exposes lux values
->   directly, as opposed to bh1730 which provides two raw channels (IR +
->   visible light) and requires manual gain adjustment and lux computation
->   in the driver.
->
+On 28/02/18 13:00, JeffyChen wrote:
+> Hi Robin,
+> 
+> Thanks for your reply.
+> 
+> On 02/28/2018 12:59 AM, Robin Murphy wrote:
+>>>> the rockchip IOMMU is part of the master block in hardware, so it needs
+>>>> to control the master's power domain and some of the master's clocks
+>>>> when access it's registers.
+>>>>
+>>>> and the number of clocks needed here, might be different between each
+>>>> IOMMUs(according to which master block it belongs), it's a little like
+>>>> our power domain:
+>>>> https://elixir.free-electrons.com/linux/latest/source/arch/arm64/boot/dts/rockchip/rk3399.dtsi#L935 
+>>>>
+>>>>
+>>>>
+>>>>
+>>>> i'm not sure how to describe this correctly, is it ok use something 
+>>>> like
+>>>> "the same as it's master block"?
+>>>
+>>> would it make sense to add a property to specify the master who owns
+>>> the iommu, and we can get all clocks(only some of those clocks are
+>>> actually needed) from it in the of_xlate()? and we can also reuse the
+>>> clock-names of that master to build clk_bulk_data and log errors in
+>>> clk_bulk_get.
+>>
+>> I'm inclined to agree with Rob here - if we're to add anything to the
+>> binding, it should only be whatever clock inputs are defined for the
+>> IOMMU IP block itself. If Linux doesn't properly handle the interconnect
+>> clock hierarchy external to a particular integration, that's a separate
+>> issue and it's not the binding's problem.
+>>
+>> I actually quite like the hack of "borrowing" the clocks from
+>> dev->of_node in of_xlate() - you shouldn't need any DT changes for that,
+>> because you already know that each IOMMU instance only has the one
+>> master device anyway.
+> 
+> Thanks:) but actually we are going to support sharing IOMMU between 
+> multiple masters(one of them is the main master i think) in the newer 
+> chips(not yet supported on upstream kernel)...
 
-FWIW,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Ha! OK, fair enough, back to the first point then...
 
-Some minors below. You might address them.
+> So we might have to get all clocks from all masters, or find a way to 
+> specify the main master...and for the multiple masters case, do it in 
+> of_xlate() turns out to be a little racy...maybe we can add a property 
+> to specify main master, and get it's clocks in probe()?
 
-> Changed in v2:
-> * Split off DT documentation change into a separate commit.
-> * Use i2c's probe_new.
->
-> Changed in v3:
-> * Moved from 64 bit to 32 bit arithmetic where possible.
-> * Changed IIO channel configuration for consistency with other drivers.
-> * Refactored mathematical computations for readability.
-> * Removed unnecessary CONFIG_OF checks.
->
-> Signed-off-by: Pierre Bourdon <delroth@google.com>
-> ---
->  drivers/iio/light/Kconfig  |  10 +
->  drivers/iio/light/Makefile |   1 +
->  drivers/iio/light/bh1730.c | 434 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 445 insertions(+)
->  create mode 100644 drivers/iio/light/bh1730.c
->
-> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-> index 93fd421b10d7..286a7f78762b 100644
-> --- a/drivers/iio/light/Kconfig
-> +++ b/drivers/iio/light/Kconfig
-> @@ -63,6 +63,16 @@ config APDS9960
->           To compile this driver as a module, choose M here: the
->           module will be called apds9960
->
-> +config BH1730
-> +       tristate "ROHM BH1730 ambient light sensor"
-> +       depends on I2C
-> +       help
-> +        Say Y here to build support for the ROHM BH1730FVC ambient
-> +        light sensor.
-> +
-> +        To compile this driver as a module, choose M here: the module will
-> +        be called bh1730.
-> +
->  config BH1750
->         tristate "ROHM BH1750 ambient light sensor"
->         depends on I2C
-> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-> index f714067a7816..eb9010a10536 100644
-> --- a/drivers/iio/light/Makefile
-> +++ b/drivers/iio/light/Makefile
-> @@ -9,6 +9,7 @@ obj-$(CONFIG_ADJD_S311)         += adjd_s311.o
->  obj-$(CONFIG_AL3320A)          += al3320a.o
->  obj-$(CONFIG_APDS9300)         += apds9300.o
->  obj-$(CONFIG_APDS9960)         += apds9960.o
-> +obj-$(CONFIG_BH1730)           += bh1730.o
->  obj-$(CONFIG_BH1750)           += bh1750.o
->  obj-$(CONFIG_BH1780)           += bh1780.o
->  obj-$(CONFIG_CM32181)          += cm32181.o
-> diff --git a/drivers/iio/light/bh1730.c b/drivers/iio/light/bh1730.c
-> new file mode 100644
-> index 000000000000..4a23fbd6ff84
-> --- /dev/null
-> +++ b/drivers/iio/light/bh1730.c
-> @@ -0,0 +1,434 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * ROHM BH1730 ambient light sensor driver
-> + *
-> + * Copyright (c) 2018 Google, Inc.
-> + * Author: Pierre Bourdon <delroth@google.com>
-> + *
-> + * Based on a previous non-iio BH1730FVC driver:
-> + * Copyright (C) 2012 Samsung Electronics. All rights reserved.
-> + * Author: Won Huh <won.huh@samsung.com>
-> + *
-> + * Data sheets:
-> + *  http://www.rohm.com/web/global/datasheet/BH1730FVC/bh1730fvc-e
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/i2c.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/time.h>
-> +
-> +#define BH1730_CMD_BIT BIT(7)
-> +
-> +#define BH1730_REG_CONTROL     0x00
-> +#define BH1730_REG_TIMING      0x01
-> +#define BH1730_REG_INTERRUPT   0x02
-> +#define BH1730_REG_THLLOW      0x03
-> +#define BH1730_REG_THLHIGH     0x04
-> +#define BH1730_REG_THHLOW      0x05
-> +#define BH1730_REG_THHHIGH     0x06
-> +#define BH1730_REG_GAIN                0x07
-> +#define BH1730_REG_ID          0x12
-> +#define BH1730_REG_DATA0LOW    0x14
-> +#define BH1730_REG_DATA0HIGH   0x15
-> +#define BH1730_REG_DATA1LOW    0x16
-> +#define BH1730_REG_DATA1HIGH   0x17
-> +
-> +#define BH1730_CONTROL_POWER_ON                BIT(0)
-> +#define BH1730_CONTROL_MEASURE         BIT(1)
-> +
-> +#define BH1730_INTERNAL_CLOCK_NS       2800
-> +
-> +#define BH1730_DEFAULT_INTEG_MS                150
-> +
-> +enum bh1730_gain {
-> +       BH1730_GAIN_1X = 0,
-> +       BH1730_GAIN_2X,
-> +       BH1730_GAIN_64X,
-> +       BH1730_GAIN_128X,
-> +};
-> +#define BH1730_MAX_GAIN_MULTIPLIER 128
-> +
-> +struct bh1730_data {
-> +       struct i2c_client *client;
-> +       enum bh1730_gain gain;
-> +       int itime;
-> +};
-> +#define BH1730_MAX_GAIN_MULTIPLIER 128
-> +
-> +static int bh1730_read_word(struct bh1730_data *bh1730, u8 reg)
-> +{
-> +       int ret = i2c_smbus_read_word_data(bh1730->client,
-> +                                          BH1730_CMD_BIT | reg);
-> +       if (ret < 0)
-> +               dev_err(&bh1730->client->dev,
-> +                       "i2c read failed error %d, register %01x\n",
-> +                       ret, reg);
-> +
-> +       return ret;
-> +}
-> +
-> +static int bh1730_write(struct bh1730_data *bh1730, u8 reg, u8 val)
-> +{
-> +       int ret = i2c_smbus_write_byte_data(bh1730->client,
-> +                                           BH1730_CMD_BIT | reg,
-> +                                           val);
-> +       if (ret < 0)
-> +               dev_err(&bh1730->client->dev,
-> +                       "i2c write failed error %d, register %01x\n",
-> +                       ret, reg);
-> +
-> +       return ret;
-> +}
-> +
-> +static int gain_setting_to_multiplier(enum bh1730_gain gain)
-> +{
-> +       switch (gain) {
-> +       case BH1730_GAIN_1X:
-> +               return 1;
-> +       case BH1730_GAIN_2X:
-> +               return 2;
-> +       case BH1730_GAIN_64X:
-> +               return 64;
-> +       case BH1730_GAIN_128X:
-> +               return 128;
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +}
-> +
-> +static int bh1730_gain_multiplier(struct bh1730_data *bh1730)
-> +{
-> +       int multiplier = gain_setting_to_multiplier(bh1730->gain);
-> +
-> +       if (multiplier < 0) {
-> +               dev_warn(&bh1730->client->dev,
-> +                        "invalid gain multiplier settings: %d\n",
-> +                        bh1730->gain);
-> +               bh1730->gain = BH1730_GAIN_1X;
-> +               multiplier = 1;
-> +       }
-> +
-> +       return multiplier;
-> +}
-> +
-> +static int bh1730_itime_us(struct bh1730_data *bh1730)
-> +{
-> +       return (BH1730_INTERNAL_CLOCK_NS * 964 * (256 - bh1730->itime))
-> +                       / NSEC_PER_USEC;
+I notice that the 4.4 BSP kernel consistently specifies "aclk" and 
+"hclk" for the IOMMU instances - it feels unusual to say "why don't we 
+follow the downstream binding?", but it does look a lot like what I 
+would expect (I'd guess at one for the register slave interface and one 
+for the master interface/general operation?)
 
-Better to leave / on the above line
+If we can implement conceptually-correct clock handling based on an 
+accurate binding, which should cover most cases, and *then* look at 
+hacking around those where it doesn't quite work in practice due to 
+shortcomings elsewhere, that would be ideal, and of course a lot nicer 
+than just jumping straight into piles of hacks.
 
-Or
-
-/* At worst case mul will be 688296000, so, there is no 32-bit overflow */
-...()
-{
-int mul = BH1730_INTERNAL_CLOCK_NS * 964 * (256 - bh1730->itime);
-
-return mul / NSEC_PER_USEC;
-}
-
-> +}
-> +
-> +static int bh1730_set_gain(struct bh1730_data *bh1730, enum bh1730_gain gain)
-> +{
-> +       int ret = bh1730_write(bh1730, BH1730_REG_GAIN, gain);
-> +
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       bh1730->gain = gain;
-> +
-> +       return 0;
-> +}
-> +
-> +static int bh1730_set_integration_time_ms(struct bh1730_data *bh1730,
-> +                                         int time_ms)
-> +{
-> +       int ret, time_ns, itime;
-> +
-> +       /* Prefilter obviously invalid time_ms values that would overflow. */
-> +       if (time_ms <= 0 || time_ms > 1000)
-> +               goto out_of_range;
-> +
-> +       time_ns = time_ms * NSEC_PER_MSEC;
-> +       itime = 256 - DIV_ROUND_CLOSEST(time_ns,
-> +                                       BH1730_INTERNAL_CLOCK_NS * 964);
-> +
-> +       /* ITIME == 0 is reserved for manual integration mode. */
-
-> +       if (itime <= 0 || itime > 255)
-
-Just side note: Suprisingly how many in_range() implementations we
-have in kernel...
-
-> +               goto out_of_range;
-> +
-> +       ret = bh1730_write(bh1730, BH1730_REG_TIMING, itime);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       bh1730->itime = itime;
-> +
-> +       return 0;
-> +
-> +out_of_range:
-> +       dev_warn(&bh1730->client->dev, "integration time out of range: %dms\n",
-> +                time_ms);
-> +
-> +       return -ERANGE;
-> +}
-> +
-> +static void bh1730_wait_for_next_measurement(struct bh1730_data *bh1730)
-> +{
-> +       udelay(bh1730_itime_us(bh1730) +
-> +               DIV_ROUND_UP(BH1730_INTERNAL_CLOCK_NS * 714, NSEC_PER_USEC));
-
-int step = DIV_ROUND_UP(BH1730_INTERNAL_CLOCK_NS * 714, NSEC_PER_USEC);
-
-udelay(... + step);
-
-?
-
-> +}
-> +
-> +static int bh1730_adjust_gain(struct bh1730_data *bh1730)
-> +{
-> +       int visible, ir, highest, gain, ret, i;
-
-int visible, ir, highest, gain;
-unsigned int i;
-int ret;
-
-> +
-> +       visible = bh1730_read_word(bh1730, BH1730_REG_DATA0LOW);
-> +       if (visible < 0)
-> +               return visible;
-> +
-> +       ir = bh1730_read_word(bh1730, BH1730_REG_DATA1LOW);
-> +       if (ir < 0)
-> +               return ir;
-> +
-> +       highest = max(visible, ir);
-> +
-> +       /*
-> +        * If the read value is being clamped, assume the worst and go to the
-> +        * lowest possible gain. The alternative is doing multiple
-> +        * recalibrations, which would be slower and have the same effect.
-> +        */
-> +       if (highest == USHRT_MAX)
-> +               gain = 1;
-> +       else
-> +               gain = bh1730_gain_multiplier(bh1730);
-> +
-> +       highest = (highest * BH1730_MAX_GAIN_MULTIPLIER) / gain;
-> +
-> +       /*
-> +        * Find the lowest gain multiplier which puts the measured values
-> +        * above 1024. This threshold is chosen to match the gap between 2X
-> +        * multiplier and 64X (next available) while keeping some margin.
-> +        */
-> +       for (i = BH1730_GAIN_1X; i < BH1730_GAIN_128X; ++i) {
-
-> +               int adj = highest * gain_setting_to_multiplier(i) /
-> +                               BH1730_MAX_GAIN_MULTIPLIER;
-
-I would rather
-
-int adj;
-
-adj = ...;
-if (adj ...)
- break;
-
-> +
-> +               if (adj >= 1024)
-> +                       break;
-> +       }
-> +
-> +       if (i != bh1730->gain) {
-> +               ret = bh1730_set_gain(bh1730, i);
-> +               if (ret < 0)
-> +                       return ret;
-> +
-> +               bh1730_wait_for_next_measurement(bh1730);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int bh1730_get_millilux(struct bh1730_data *bh1730)
-> +{
-> +       int visible, ir, visible_coef, ir_coef;
-> +       u64 millilux;
-> +
-> +       visible = bh1730_read_word(bh1730, BH1730_REG_DATA0LOW);
-> +       if (visible < 0)
-> +               return visible;
-> +
-> +       ir = bh1730_read_word(bh1730, BH1730_REG_DATA1LOW);
-> +       if (ir < 0)
-> +               return ir;
-> +
-
-> +       if (ir * 1000 / visible < 500) {
-> +               visible_coef = 5002;
-> +               ir_coef = 7502;
-> +       } else if (ir * 1000 / visible < 754) {
-> +               visible_coef = 2250;
-> +               ir_coef = 2000;
-> +       } else if (ir * 1000 / visible < 1029) {
-> +               visible_coef = 1999;
-> +               ir_coef = 1667;
-> +       } else if (ir * 1000 / visible < 1373) {
-> +               visible_coef = 885;
-> +               ir_coef = 583;
-> +       } else if (ir * 1000 / visible < 1879) {
-> +               visible_coef = 309;
-> +               ir_coef = 165;
-> +       } else {
-> +               return 0;
-> +       }
-
-> +
-> +       millilux = 103ULL * (visible_coef * visible - ir_coef * ir);
-> +       millilux *= USEC_PER_MSEC;
-
-Can it be one line?
-
-> +       do_div(millilux, bh1730_itime_us(bh1730));
-> +       do_div(millilux, bh1730_gain_multiplier(bh1730));
-> +
-> +       /*
-> +        * Overflow here can only happen in extreme conditions:
-> +        * - Completely saturated visible light sensor and no measured IR.
-> +        * - Integration time < 16ms (driver currently defaults to 150ms).
-> +        */
-> +       if (millilux > INT_MAX)
-> +               return -ERANGE;
-> +
-> +       return (int)millilux;
-> +}
-> +
-> +static int bh1730_power_on(struct bh1730_data *bh1730)
-> +{
-> +       return bh1730_write(bh1730, BH1730_REG_CONTROL,
-> +                           BH1730_CONTROL_POWER_ON | BH1730_CONTROL_MEASURE);
-> +}
-> +
-> +static int bh1730_set_defaults(struct bh1730_data *bh1730)
-> +{
-> +       int ret;
-> +
-> +       ret = bh1730_set_gain(bh1730, BH1730_GAIN_1X);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = bh1730_set_integration_time_ms(bh1730, BH1730_DEFAULT_INTEG_MS);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       bh1730_wait_for_next_measurement(bh1730);
-> +
-> +       return 0;
-> +}
-> +
-> +static int bh1730_power_off(struct bh1730_data *bh1730)
-> +{
-> +       return bh1730_write(bh1730, BH1730_REG_CONTROL, 0);
-> +}
-> +
-> +static int bh1730_read_raw(struct iio_dev *indio_dev,
-> +                          struct iio_chan_spec const *chan,
-> +                          int *val, int *val2, long mask)
-> +{
-> +       struct bh1730_data *bh1730 = iio_priv(indio_dev);
-> +       int data_reg, ret;
-> +
-> +       ret = bh1730_adjust_gain(bh1730);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       switch (mask) {
-> +       case IIO_CHAN_INFO_PROCESSED:
-> +               ret = bh1730_get_millilux(bh1730);
-> +               if (ret < 0)
-> +                       return ret;
-> +               *val = ret / 1000;
-> +               *val2 = (ret % 1000) * 1000;
-> +               return IIO_VAL_INT_PLUS_MICRO;
-> +       case IIO_CHAN_INFO_RAW:
-> +               switch (chan->channel2) {
-> +               case IIO_MOD_LIGHT_CLEAR:
-> +                       data_reg = BH1730_REG_DATA0LOW;
-> +                       break;
-> +               case IIO_MOD_LIGHT_IR:
-> +                       data_reg = BH1730_REG_DATA1LOW;
-> +                       break;
-> +               default:
-> +                       return -EINVAL;
-> +               }
-> +               ret = bh1730_read_word(bh1730, data_reg);
-> +               if (ret < 0)
-> +                       return ret;
-> +               ret = ret * 1000 / bh1730_gain_multiplier(bh1730);
-
-> +               *val = ret / 1000;
-> +               *val2 = (ret % 1000) * 1000;
-> +               return IIO_VAL_INT_PLUS_MICRO;
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +}
-> +
-> +static const struct iio_info bh1730_info = {
-> +       .read_raw = bh1730_read_raw,
-> +};
-> +
-> +static const struct iio_chan_spec bh1730_channels[] = {
-> +       {
-> +               .type = IIO_LIGHT,
-> +               .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),
-> +       },
-> +       {
-> +               .type = IIO_INTENSITY,
-> +               .modified = 1,
-> +               .channel2 = IIO_MOD_LIGHT_CLEAR,
-> +               .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +       },
-> +       {
-> +               .type = IIO_INTENSITY,
-> +               .modified = 1,
-> +               .channel2 = IIO_MOD_LIGHT_IR,
-> +               .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +       },
-> +};
-> +
-> +static int bh1730_probe(struct i2c_client *client)
-> +{
-> +       struct bh1730_data *bh1730;
-> +       struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
-> +       struct iio_dev *indio_dev;
-> +       int ret;
-> +
-> +       if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
-> +               return -EIO;
-> +
-> +       indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*bh1730));
-> +       if (!indio_dev)
-> +               return -ENOMEM;
-> +
-> +       bh1730 = iio_priv(indio_dev);
-> +       bh1730->client = client;
-> +       i2c_set_clientdata(client, indio_dev);
-> +
-> +       ret = bh1730_power_on(bh1730);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       ret = bh1730_set_defaults(bh1730);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       indio_dev->dev.parent = &client->dev;
-> +       indio_dev->info = &bh1730_info;
-> +       indio_dev->name = "bh1730";
-> +       indio_dev->channels = bh1730_channels;
-> +       indio_dev->num_channels = ARRAY_SIZE(bh1730_channels);
-> +       indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +       ret = iio_device_register(indio_dev);
-> +       if (ret)
-> +               goto out_power_off;
-> +       return 0;
-> +
-> +out_power_off:
-> +       bh1730_power_off(bh1730);
-> +       return ret;
-> +}
-> +
-> +static int bh1730_remove(struct i2c_client *client)
-> +{
-> +       struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> +       struct bh1730_data *bh1730 = iio_priv(indio_dev);
-> +
-> +       iio_device_unregister(indio_dev);
-> +       return bh1730_power_off(bh1730);
-> +}
-> +
-> +static const struct of_device_id of_bh1730_match[] = {
-> +       { .compatible = "rohm,bh1730fvc" },
-
-> +       {},
-
-No need to have a comma.
-
-> +};
-> +MODULE_DEVICE_TABLE(of, of_bh1730_match);
-> +
-> +static struct i2c_driver bh1730_driver = {
-> +       .probe_new = bh1730_probe,
-> +       .remove = bh1730_remove,
-> +       .driver = {
-> +               .name = "bh1730",
-> +               .of_match_table = of_bh1730_match,
-> +       },
-> +};
-> +module_i2c_driver(bh1730_driver);
-> +
-> +MODULE_AUTHOR("Pierre Bourdon <delroth@google.com>");
-> +MODULE_DESCRIPTION("ROHM BH1730FVC driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.16.2.395.g2e18187dfd-goog
->
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Robin.
