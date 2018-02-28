@@ -1,76 +1,76 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] dt-bindings: pwm: Add generic "pwm-channels" property
-Date: Wed, 28 Feb 2018 01:37:32 +0000
-Message-ID: <20180228013732.8506-1-andre.przywara@arm.com>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] PCI: rockchip: Add Endpoint controller driver for
+ Rockchip PCIe controller
+Date: Wed, 28 Feb 2018 09:40:36 +0800
+Message-ID: <8244c52c-73d3-5b20-eb39-ddc37968163a@rock-chips.com>
+References: <1519348503-243259-1-git-send-email-shawn.lin@rock-chips.com>
+ <1519348654-243597-1-git-send-email-shawn.lin@rock-chips.com>
+ <20180227153202.GB7184@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBEUQ3DKAKGQE6XDBUKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hao5781286-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180227153202.GB7184-4tUPXFaYRHv6sAKXYmQ0tx/iLCjYCKR+VpNB7YpNyf8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Many PWM drivers seem to hardcode the number of PWM channels
-(brcm,iproc-pwm, brcm,kona-pwm.txt). If this is only one device
-supported by the binding, that's probably OK, but for instance for
-sun4i-pwm I see one or two channels, depending on the particular SoC.
-amlogic,meson-gxbb-pwm seems to deduce the number of channels from the
-number of input clocks, and pwm-st has a vendor-specific property for
-that (st,pwm-num-chan).
-To cover all those cases more elegantly in (future) bindings, add a new
-generic property to specify the number of PWM channels a particular
-controller implements.
-For instance the sun4i-pwm driver could be extended to support this for
-future SoCs as well.
+Dear Lorenzo,
 
-Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+On 2018/2/27 23:32, Lorenzo Pieralisi wrote:
+> On Fri, Feb 23, 2018 at 09:17:33AM +0800, Shawn Lin wrote:
+>> This patch adds support to the Rockchip PCIe controller in endpoint mode
+>> which currently supports up to 32 regions, and each regions should at
+>> least be 1MB per TRM.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
 
----
-Hi,
+> 
+> I reviewed this patch and I then realized that it is not bits, it is
+> that the drivers are almost identical. Are we talking about the same IP
+> (possibly with some HW wrapper of sorts) ?
+> 
 
-while looking at the bindings for PWM drivers, I was wondering if we
-should have a generic property to note the number of implemented
-channels? We have something for instance for DMA controllers
-(dma-channels), so adding this to PWM controller bindings sounds
-natural.
-In particular the new sun8i-pwm IP seems to be scalable to a number of
-channels, judging from the register and bit layout and from the bit
-assignment in the manual. I have the gut feeling we will meet this fella
-again in another Allwinner SoC with a different number of channels.
+Nope, I would seriouly say they are not the same IP legally :)
+If we take about IP, it's referred to a functional entity designed
+and licensed by the provider, but it's not the case here since
 
-Thanks!
-Andre.
+(1) There is nothing about cadence throughout the TRM when upstreamed
+it in 2016, and actually it was designed much earlier than 2016.
+(2) Much of the flow was different, and even some of the bit offset is
+different per my reading of cadence's driver, though most registers
+looks much similar.
 
- Documentation/devicetree/bindings/pwm/pwm.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+So my best guess was HW guys referenced to cadence's register layout(or
+the reverse), so they are much partially compatible from the
+register level POV, but the backend design are different leading to the
+quite different control flow and also rockchip controller have lots of
+HW bugs that I didn't see them when reviewing cadence's driver which do
+the same flow using similar register. That's very common if you search
+drivers/mmc/host/sdhci*, which means all of them share the *same*
+register layout and control flow, so it makes software guys' life easy,
+but still they are different IPs. But it's sightly different here as
+the pcie registers aren't the totally same and the flow control is
+different.
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm.txt b/Documentation/devicetree/bindings/pwm/pwm.txt
-index 8556263b8502..770f3aee17af 100644
---- a/Documentation/devicetree/bindings/pwm/pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/pwm.txt
-@@ -60,10 +60,16 @@ Example with optional PWM specifier for inverse polarity
- PWM controller nodes must specify the number of cells used for the
- specifier using the '#pwm-cells' property.
- 
-+A specific controller binding might specify the implemented number of
-+PWM channels using this generic property:
-+	pwm-channels = <8>;
-+This property holds a single 32 bit integer.
-+
- An example PWM controller might look like this:
- 
- 	pwm: pwm@7000a000 {
- 		compatible = "nvidia,tegra20-pwm";
- 		reg = <0x7000a000 0x100>;
- 		#pwm-cells = <2>;
-+		pwm-channels = <4>;
- 	};
--- 
-2.14.1
+Also historically that happened for other controllers designed from 
+rockchip, for instance, SPI controller looks much like designware one,
+but the flow control was totally differnt preventing SW guys to
+refactor the designware driver to fit for rockchip one.
+
+This is all I could guess here, hope that help for you.
+
+
+> 
+> 
+> 
