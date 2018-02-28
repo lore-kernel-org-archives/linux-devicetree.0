@@ -1,69 +1,53 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v2 1/2] media: ov2680: dt: Add bindings for OV2680
-Date: Wed, 28 Feb 2018 15:27:22 +0000
-Message-ID: <20180228152723.26392-2-rui.silva@linaro.org>
-References: <20180228152723.26392-1-rui.silva@linaro.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/2] serial: stm32: update interrupt initialization
+Date: Wed, 28 Feb 2018 17:40:16 +0200
+Message-ID: <CAHp75Vd+UcUSG7t6SxzTmUkB6d2TAYVmgO92m9iV0YVJ1=XbzA@mail.gmail.com>
+References: <1519815044-22669-1-git-send-email-bich.hemon@st.com> <1519815044-22669-3-git-send-email-bich.hemon@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180228152723.26392-1-rui.silva@linaro.org>
+In-Reply-To: <1519815044-22669-3-git-send-email-bich.hemon@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, sakari.ailus@linux.intel.com, hverkuil@xs4all.nl
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Ryan Harkin <ryan.harkin@linaro.org>, Rui Miguel Silva <rui.silva@linaro.org>, devicetree@vger.kernel.org
+To: Bich HEMON <bich.hemon@st.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for the OV2680 camera sensor.
+On Wed, Feb 28, 2018 at 12:51 PM, Bich HEMON <bich.hemon@st.com> wrote:
+> For each port, get each IRQ using its specific name instead of its index.
+>
+> Signed-off-by: Bich Hemon <bich.hemon@st.com>
+> ---
+>  drivers/tty/serial/stm32-usart.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+> index 0fa735b..5c85cbc 100644
+> --- a/drivers/tty/serial/stm32-usart.c
+> +++ b/drivers/tty/serial/stm32-usart.c
+> @@ -680,8 +680,8 @@ static int stm32_init_port(struct stm32_port *stm32port,
+>         port->flags     = UPF_BOOT_AUTOCONF;
+>         port->ops       = &stm32_uart_ops;
+>         port->dev       = &pdev->dev;
+> -       port->irq       = platform_get_irq(pdev, 0);
+> -       stm32port->wakeirq = platform_get_irq(pdev, 1);
 
-CC: devicetree@vger.kernel.org
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- .../devicetree/bindings/media/i2c/ov2680.txt       | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov2680.txt
+> +       port->irq       = platform_get_irq_byname(pdev, "event");
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov2680.txt b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-new file mode 100644
-index 000000000000..0e29f1a113c0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov2680.txt
-@@ -0,0 +1,40 @@
-+* Omnivision OV2680 MIPI CSI-2 sensor
-+
-+Required Properties:
-+- compatible: should be "ovti,ov2680".
-+- clocks: reference to the xvclk input clock.
-+- clock-names: should be "xvclk".
-+
-+Optional Properties:
-+- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
-+		     if any. This is an active high signal to the OV2680.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, and this port must have a single endpoint in accordance with
-+ the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Endpoint node required properties for CSI-2 connection are:
-+- remote-endpoint: a phandle to the bus receiver's endpoint node.
-+- clock-lanes: should be set to <0> (clock lane on hardware lane 0).
-+- data-lanes: should be set to <1> (one CSI-2 lane supported).
-+ 
-+Example:
-+
-+&i2c2 {
-+	ov2680: camera-sensor@36 {
-+		compatible = "ovti,ov2680";
-+		reg = <0x36>;
-+		clocks = <&osc>;
-+		clock-names = "xvclk";
-+		powerdown-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
-+
-+		port {
-+			ov2680_mipi_ep: endpoint {
-+				remote-endpoint = <&mipi_sensor_ep>;
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
-+			};
-+		};
-+	};
-+};
+This is I have no idea about...
+
+> +       stm32port->wakeirq = platform_get_irq_byname(pdev, "wakeup");
+
+But this one is redundant since Tony's patch:
+https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git/commit/?h=bleeding-edge&id=da997b22c40473b7db60bde6ea188d35565d10c8
+
+>         stm32port->fifoen = stm32port->info->cfg.has_fifo;
+>
+>         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> --
+> 1.9.1
+
+
+
 -- 
-2.16.2
+With Best Regards,
+Andy Shevchenko
