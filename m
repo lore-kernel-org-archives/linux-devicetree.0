@@ -1,92 +1,109 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/2] arm64: dts: renesas: r8a77970: add I2C support
-Date: Wed, 28 Feb 2018 11:56:27 +0100
-Message-ID: <CAMuHMdWcwx8=KKf0RajtSXnJY9duaupFmUUKEka=uAmJjTdvoQ@mail.gmail.com>
-References: <3aaa4464-fc85-3fb4-2026-5d9df357bdff@cogentembedded.com>
- <e309d9cd-69c6-7db2-96a4-73bc788b7cfc@cogentembedded.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: add tda7419 audio processor driver
+Date: Wed, 28 Feb 2018 11:00:38 +0000
+Message-ID: <20180228110038.GA6722@sirena.org.uk>
+References: <20180227225128.17815-1-mporter@konsulko.com>
+ <20180227225128.17815-3-mporter@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e309d9cd-69c6-7db2-96a4-73bc788b7cfc@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="x+6KMIRAuhnl3hBn"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180227225128.17815-3-mporter@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@konsulko.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 26, 2018 at 9:54 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Define the generic R8A77970 parts of the I2C[0-4] device node.
->
-> Based on the original (and large) patch by Daisuke Matsushita
-> <daisuke.matsushita.ns@hitachi.com>.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
-> Changes in version 2:
-> - made  use of  the SYSC power domain #define's;
-> - moved the I2C nodes before HSCIF nodes.
 
-auto-repeat below...
+--x+6KMIRAuhnl3hBn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->  arch/arm64/boot/dts/renesas/r8a77970.dtsi |   88 ++++++++++++++++++++++++++++++
->  1 file changed, 88 insertions(+)
->
-> Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-> @@ -19,6 +19,14 @@
->         #address-cells = <2>;
->         #size-cells = <2>;
->
-> +       aliases {
-> +               i2c0 = &i2c0;
-> +               i2c1 = &i2c1;
-> +               i2c2 = &i2c2;
-> +               i2c3 = &i2c3;
-> +               i2c4 = &i2c4;
-> +       };
+On Tue, Feb 27, 2018 at 05:51:28PM -0500, Matt Porter wrote:
+
+> +static bool tda7419_writeable_reg(struct device *dev, unsigned int reg)
+> +{
+> +	return true;
+> +}
+
+This is the default behaviour, may as well omit it (but equally it does
+no harm).
+
+> +static inline int tda7419_vol_get_value(int val, unsigned int mask,
+> +					int thresh, unsigned int invert)
+> +{
+> +	val &= mask;
+> +	if (val < thresh) {
+> +		if (invert)
+> +			val = 0 - val;
+> +	} else if (val > thresh) {
+
+This feels like something some other device might want to use so might
+warrant pulling out into a general control at some point but I'd not
+insist on doing it now.
+
+> +static struct snd_kcontrol_new tda7419_controls[] = {
+> +SOC_ENUM("Main Source Select", soc_enum_main_src_sel),
+
+Should this be a DAPM route?
+
+> +SOC_SINGLE("Main Source AutoZero", TDA7419_MAIN_SRC_REG,
+> +	   TDA7419_MAIN_SRC_AUTOZERO, 1, 1),
+
+There's a lot of on/off switches for various things in here - these
+should all have Switch at the end of their names so that userspace can
+see how it's expected to display them.  Most of the controls with a max
+value of 1 probably fall into this category.
+
+> +SOC_SINGLE("Clock Fast Mode", TDA7419_MUTE_CLK_REG,
+> +	   TDA7419_CLK_FAST_MODE, 1, 1),
+
+What does this do - should it be in set_sysclk() or something?
+
+> +	/* Configure registers */
+> +	regmap_write(tda7419->regmap, TDA7419_VOLUME_REG, 0xe0);
+> +	regmap_write(tda7419->regmap, TDA7419_MIXING_GAIN_REG, 0x0f);
+> +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_LF_REG, 0xe0);
+> +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_RF_REG, 0xe0);
+> +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_LR_REG, 0xe0);
+> +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_RR_REG, 0xe0);
+> +	regmap_write(tda7419->regmap, TDA7419_MIXING_LEVEL_REG, 0xe0);
+> +	regmap_write(tda7419->regmap, TDA7419_ATTENUATOR_SUB_REG, 0xe0);
+
+This looks like it's setting default volumes - just leave those at the
+chip defaults and let userspace handle setting them, what works for one
+board may be totally inappropriate on another board and using the chip
+default means we've got some fixed thing we don't need to discuss.
+
+> +static int tda7419_remove(struct i2c_client *i2c)
+> +{
+> +	int i;
+> +	struct tda7419_data *tda7419 = i2c_get_clientdata(i2c);
 > +
->         psci {
->                 compatible = "arm,psci-1.0", "arm,psci-0.2";
->                 method = "smc";
-> @@ -338,6 +346,86 @@
->                                <&ipmmu_ds1 22>, <&ipmmu_ds1 23>;
->                 };
->
-> +               i2c0: i2c@e6500000 {
-> +                       compatible = "renesas,i2c-r8a77970",
-> +                                    "renesas,rcar-gen3-i2c";
-> +                       reg = <0 0xe6500000 0 0x40>;
-> +                       interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 931>;
-> +                       power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-> +                       resets = <&cpg 931>;
-> +                       dmas = <&dmac1 0x91>, <&dmac1 0x90>;
+> +	/* Reset registers to defaults */
+> +	for (i = 0; i < ARRAY_SIZE(tda7419_regmap_defaults); i++)
+> +		regmap_write(tda7419->regmap,
+> +			     tda7419_regmap_defaults[i].reg,
+> +			     tda7419_regmap_defaults[i].def);
 
-Can't all five i2c interfaces be used with both dmac1 and dmac2?
+Why are we doing this?  Other drivers don't do it...  if anything I'd
+expect a reset on probe in case the bootloader or something left the
+chip configured.
 
-With that fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+--x+6KMIRAuhnl3hBn
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Gr{oetje,eeting}s,
+-----BEGIN PGP SIGNATURE-----
 
-                        Geert
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqWi9UACgkQJNaLcl1U
+h9BvNAf+Kt7wqrYcDAbhkitQVbfFcMWKs9ptkQUJ7gUfe51CTL3LXCUKMaERhR6r
+sU9mECFOm/0cDskE6XyuVDwcvh3IaWyeJ3rM0DoV97DtDQpYBvpuzk5ISBZMlp71
+igzd+rGERaO1u5Hx7nEYJBWdcMUAdJcCeXuQmQPwUY9nTux1YlyCTR+OwpnM+VC9
+lzcB5hJDCQ/Aig0l8d/200magEc/VKG3GA//5yUYjw71pSnt2SEHdScldzMQTL1m
+xASe/cFZtONv3S/SzLBffyJovPTdIWtJVlGvvZfmv2S22b/hqFfEqELHLZC+eHIZ
+YibWqZ27mK7kjkYMzLHUno04OkIF2A==
+=7vZJ
+-----END PGP SIGNATURE-----
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--x+6KMIRAuhnl3hBn--
