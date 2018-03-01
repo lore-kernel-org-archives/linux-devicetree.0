@@ -1,47 +1,62 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3 01/10] dt-bindings: pinctrl: Add bindings for Actions
- S900 SoC
-Date: Thu, 1 Mar 2018 14:55:56 +0530
-Message-ID: <20180301092556.x4a5ohx3iccwsugw@linaro.org>
-References: <20180228181432.26847-1-manivannan.sadhasivam@linaro.org>
- <20180228181432.26847-2-manivannan.sadhasivam@linaro.org>
- <CACRpkdYG_aBJ0WME7NSOdv0pV5Vh_z8GVqQ+tUFnXGA7NGVMUg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v3 5/7] clk: sunxi-ng: add support for the Allwinner H6
+ CCU
+Date: Thu, 1 Mar 2018 10:29:33 +0100
+Message-ID: <20180301092933.eqibjnepoj3ecvo6@flea>
+References: <20180223123555.64009-6-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="s63sgyrl3h62372d"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYG_aBJ0WME7NSOdv0pV5Vh_z8GVqQ+tUFnXGA7NGVMUg@mail.gmail.com>
+In-Reply-To: <20180223123555.64009-6-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-On Thu, Mar 01, 2018 at 10:20:29AM +0100, Linus Walleij wrote:
-> On Wed, Feb 28, 2018 at 7:14 PM, Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> 
-> > Add pinctrl bindings for Actions Semi S900 SoC
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> The previous (v2) version had Rob's Review tag, did you just forget
-> to add it or has something changed?
-> 
 
-My bad. Slipped through the cracks.
+--s63sgyrl3h62372d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> If nothing is changed I can add his tag when applying.
->
+On Fri, Feb 23, 2018 at 08:35:53PM +0800, Icenowy Zheng wrote:
+> The Allwinner H6 SoC has a CCU which has been largely rearranged.
+>=20
+> Add support for it in the sunxi-ng CCU framework.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-I will send out a new version of the whole series, incorporating Andy's
-pinctrl driver review.
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Also, FYI this pacthseries depends on Clock driver patchset I have submitted
-earlier. So far no reply from Stephen yet. He said that he is working on setting
-up his new environment and will begin reviewing shortly.
+Thanks!
+Maxime
 
-Thanks,
-Mani 
-> Yours,
-> Linus Walleij
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--s63sgyrl3h62372d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqXx/wACgkQ0rTAlCFN
+r3QliQ//fe49xJfjzFjOrXyAoTIVrDoHzFPPRbLwC1kMiDypGE/WGyU/ofTX8u3o
+1EjXj2TQorYDHwl/+8QGHOnfnDWg5gUmJOeVCvdS8fhcjReTC8Ofrwnti3SHERjK
+K5YjBYIxByAvZOfAc6ohAKVP2RxuOR1owAEYRIi0/7SvRwH+4LRmCTB9PGiJsqSn
+lenCiR6ZYcP1Ny08VVi620EiLV9aNY8pQBRh1oL/EFudT4Gg3it3L7DIWgYs2on7
+Dpt+UdPxH+ZCpqnlYUGzL/Thw/Kd9F32ZpqWDywzu88g/HPcAXwoTYtYWpOpE3Cu
+mUyf7aSxJ+wkZRcmTlJtbMp94fSDS2ZtZQqF7E1i2YqGtmxrS7pdSQDEcKE6YqKz
+ITZSveu9SmIFkd1NEfpRDDw/ouuzS+IjcR0Unn6TQ9o7knLTMK8nJDDk7dsLpb95
+oRgLBBMwYsalT0XC0m0PtKvqaALRGWEaV6ncOilNKZvgZLb2Wd5o8yQnqLXw7LpP
+BEaI017FQa96DDCXooLP4l1FKsD/s38PvqFQrUGD/OynBvcnehV2tLMHJ0ABvXVT
++aO0poJG6+H4xk4J/m427F9OVTIUcqQJAU8NqPQ/YVp1j0UiLC+aycWXrS1ztBVS
+1nrR3rqp1un4XBs0cbUQBPAuTHSQf7Xr4HVexA47zklbEGwGrss=
+=t6pH
+-----END PGP SIGNATURE-----
+
+--s63sgyrl3h62372d--
