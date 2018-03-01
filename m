@@ -1,10 +1,10 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] arm: dts: rk3288: Add missing #sound-dai-cells
-Date: Thu,  1 Mar 2018 14:25:35 -0600
-Message-ID: <20180301202537.30571-3-robh@kernel.org>
+Subject: [PATCH] arm: dts: omap3: Add missing #sound-dai-cells
+Date: Thu,  1 Mar 2018 14:25:34 -0600
+Message-ID: <20180301202537.30571-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -16,41 +16,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: linux-rockchip@lists.infradead.org, arm@kernel.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, arm@kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-dtc now gives the following warning:
-
-arch/arm/boot/dts/rk3288-tinker.dtb: Warning (sound_dai_property): /sound/simple-audio-card,codec: Missing property '#sound-dai-cells' in node /hdmi@ff980000 or bad phandle (referred from sound-dai[0])
-
-Add the missing #sound-dai-cells property.
-
-Cc: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/arm/boot/dts/rk3288.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 6102e4e7f35c..354aff45c1af 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -927,6 +927,7 @@
- 	i2s: i2s@ff890000 {
- 		compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
- 		reg = <0x0 0xff890000 0x0 0x10000>;
-+		#sound-dai-cells = <0>;
- 		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -1176,6 +1177,7 @@
- 		compatible = "rockchip,rk3288-dw-hdmi";
- 		reg = <0x0 0xff980000 0x0 0x20000>;
- 		reg-io-width = <4>;
-+		#sound-dai-cells = <0>;
- 		rockchip,grf = <&grf>;
- 		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru  PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_HDCP>, <&cru SCLK_HDMI_CEC>;
--- 
-2.14.1
+ZHRjIG5vdyBnaXZlcyB0aGUgZm9sbG93aW5nIHdhcm5pbmdzOgoKYXJjaC9hcm0vYm9vdC9kdHMv
+b21hcDMtZ3RhMDRhMy5kdGI6IFdhcm5pbmcgKHNvdW5kX2RhaV9wcm9wZXJ0eSk6IC9zb3VuZF90
+ZWxlcGhvbnkvc2ltcGxlLWF1ZGlvLWNhcmQsY3B1OiBNaXNzaW5nIHByb3BlcnR5ICcjc291bmQt
+ZGFpLWNlbGxzJyBpbiBub2RlIC9vY3BANjgwMDAwMDAvbWNic3BANDkwMjYwMDAgb3IgYmFkIHBo
+YW5kbGUgKHJlZmVycmVkIGZyb20gc291bmQtZGFpWzBdKQphcmNoL2FybS9ib290L2R0cy9vbWFw
+My1ndGEwNGE0LmR0YjogV2FybmluZyAoc291bmRfZGFpX3Byb3BlcnR5KTogL3NvdW5kX3RlbGVw
+aG9ueS9zaW1wbGUtYXVkaW8tY2FyZCxjcHU6IE1pc3NpbmcgcHJvcGVydHkgJyNzb3VuZC1kYWkt
+Y2VsbHMnIGluIG5vZGUgL29jcEA2ODAwMDAwMC9tY2JzcEA0OTAyNjAwMCBvciBiYWQgcGhhbmRs
+ZSAocmVmZXJyZWQgZnJvbSBzb3VuZC1kYWlbMF0pCmFyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWd0
+YTA0YTUuZHRiOiBXYXJuaW5nIChzb3VuZF9kYWlfcHJvcGVydHkpOiAvc291bmRfdGVsZXBob255
+L3NpbXBsZS1hdWRpby1jYXJkLGNwdTogTWlzc2luZyBwcm9wZXJ0eSAnI3NvdW5kLWRhaS1jZWxs
+cycgaW4gbm9kZSAvb2NwQDY4MDAwMDAwL21jYnNwQDQ5MDI2MDAwIG9yIGJhZCBwaGFuZGxlIChy
+ZWZlcnJlZCBmcm9tIHNvdW5kLWRhaVswXSkKCkFkZCB0aGUgbWlzc2luZyAjc291bmQtZGFpLWNl
+bGxzIHByb3BlcnR5LgoKQ2M6ICJCZW5vw650IENvdXNzb24iIDxiY291c3NvbkBiYXlsaWJyZS5j
+b20+CkNjOiBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPgpDYzogbGludXgtb21hcEB2
+Z2VyLmtlcm5lbC5vcmcKU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
+Zz4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9vbWFwMy5kdHNpIHwgMSArCiAxIGZpbGUgY2hhbmdl
+ZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwMy5k
+dHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMuZHRzaQppbmRleCBhMDA1ODAyY2Q1MmIuLjQw
+NDNlY2IzODAxNiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMuZHRzaQorKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9vbWFwMy5kdHNpCkBAIC01NTcsNiArNTU3LDcgQEAKIAkJCWRt
+YS1uYW1lcyA9ICJ0eCIsICJyeCI7CiAJCQljbG9ja3MgPSA8Jm1jYnNwNF9mY2s+OwogCQkJY2xv
+Y2stbmFtZXMgPSAiZmNrIjsKKwkJCSNzb3VuZC1kYWktY2VsbHMgPSA8MD47CiAJCQlzdGF0dXMg
+PSAiZGlzYWJsZWQiOwogCQl9OwogCi0tIAoyLjE0LjEKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
