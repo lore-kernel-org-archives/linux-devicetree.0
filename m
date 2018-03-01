@@ -1,12 +1,12 @@
 Return-Path: <SRS0=Pbk3=FX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from galahad.ideasonboard.com ([185.26.127.97]:50137 "EHLO
+Received: from galahad.ideasonboard.com ([185.26.127.97]:50138 "EHLO
         galahad.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1162478AbeCAWE7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 1 Mar 2018 17:04:59 -0500
+        with ESMTP id S1161413AbeCAWE5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 1 Mar 2018 17:04:57 -0500
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v7 3/4 - variant 2] drm: rcar-du: Fix legacy DT to create LVDS encoder nodes
-Date: Fri,  2 Mar 2018 00:05:39 +0200
-Message-Id: <20180301220540.11959-5-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v7 3/4 - variant 1] drm: rcar-du: Fix legacy DT to create LVDS encoder nodes
+Date: Fri,  2 Mar 2018 00:05:38 +0200
+Message-Id: <20180301220540.11959-4-laurent.pinchart+renesas@ideasonboard.com>
 In-Reply-To: <20180301220540.11959-1-laurent.pinchart+renesas@ideasonboard.com>
 References: <20180301220540.11959-1-laurent.pinchart+renesas@ideasonboard.com>
 Sender: devicetree-owner@vger.kernel.org
@@ -25,7 +25,7 @@ Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
 Changes since v6:
 
-- Use of_overlay_fdt_apply()
+- Don't free data used by the applied overlay
 
 Changes since v5:
 
@@ -57,14 +57,14 @@ Changes since v1:
 ---
  drivers/gpu/drm/rcar-du/Kconfig                    |   2 +
  drivers/gpu/drm/rcar-du/Makefile                   |   7 +-
- drivers/gpu/drm/rcar-du/rcar_du_of.c               | 321 +++++++++++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_du_of.c               | 334 +++++++++++++++++++++
  drivers/gpu/drm/rcar-du/rcar_du_of.h               |  20 ++
  .../gpu/drm/rcar-du/rcar_du_of_lvds_r8a7790.dts    |  79 +++++
  .../gpu/drm/rcar-du/rcar_du_of_lvds_r8a7791.dts    |  53 ++++
  .../gpu/drm/rcar-du/rcar_du_of_lvds_r8a7793.dts    |  53 ++++
  .../gpu/drm/rcar-du/rcar_du_of_lvds_r8a7795.dts    |  53 ++++
  .../gpu/drm/rcar-du/rcar_du_of_lvds_r8a7796.dts    |  53 ++++
- 9 files changed, 640 insertions(+), 1 deletion(-)
+ 9 files changed, 653 insertions(+), 1 deletion(-)
  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.c
  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.h
  create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of_lvds_r8a7790.dts
@@ -106,10 +106,10 @@ index 0cf5c11030e8..86b337b4be5d 100644
  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
 diff --git a/drivers/gpu/drm/rcar-du/rcar_du_of.c b/drivers/gpu/drm/rcar-du/rcar_du_of.c
 new file mode 100644
-index 000000000000..4e3376c64dfd
+index 000000000000..067278b91caa
 --- /dev/null
 +++ b/drivers/gpu/drm/rcar-du/rcar_du_of.c
-@@ -0,0 +1,321 @@
+@@ -0,0 +1,334 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
 + * rcar_du_of.c - Legacy DT bindings compatibility
@@ -156,8 +156,11 @@ index 000000000000..4e3376c64dfd
 +					   const char *compatible)
 +{
 +	const struct rcar_du_of_overlay *dtb = NULL;
++	struct device_node *node;
 +	unsigned int i;
 +	int ovcs_id;
++	void *data;
++	void *mem;
 +
 +	for (i = 0; dtbs[i].compatible; ++i) {
 +		if (!strcmp(dtbs[i].compatible, compatible)) {
@@ -169,8 +172,18 @@ index 000000000000..4e3376c64dfd
 +	if (!dtb)
 +		return -ENODEV;
 +
++	data = kmemdup(dtb->begin, dtb->end - dtb->begin, GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	mem = of_fdt_unflatten_tree(data, NULL, &node);
++	if (!mem) {
++		kfree(data);
++		return -ENOMEM;
++	}
++
 +	ovcs_id = 0;
-+	return of_overlay_fdt_apply(dtb->begin, &ovcs_id);
++	return of_overlay_apply(node, &ovcs_id);
 +}
 +
 +static int __init rcar_du_of_add_property(struct of_changeset *ocs,
