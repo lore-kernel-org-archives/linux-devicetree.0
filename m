@@ -1,34 +1,77 @@
-Return-Path: <SRS0=zzru=FV=armlinux.org.uk=linux+robh+dt=kernel.org@kernel.org>
-Date: Tue, 27 Feb 2018 15:52:18 +0000
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: [PATCH net-next 0/4] SFP updates
-Message-ID: <20180227155218.GT9418@n2100.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Sender: Russell King - ARM Linux <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org
+Return-Path: <SRS0=Pbk3=FX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:59012 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S965752AbeCAEB1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Feb 2018 23:01:27 -0500
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 3/3] ARM: dts: omap4-droid4: Configure uart1 pins
+Date: Wed, 28 Feb 2018 20:01:07 -0800
+Message-Id: <20180301040107.39444-3-tony@atomide.com>
+In-Reply-To: <20180301040107.39444-1-tony@atomide.com>
+References: <20180301040107.39444-1-tony@atomide.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Included in this series are a further few updates for SFP support:
+These are needed to use the n_gsm driver for TS 27.010 UART
+multiplexing. Note that support for the OOB wake gpio is still
+missing so the UART is not yet usable for n_gsm.
 
-- Adding support for Fiberstore's non-standard BiDi modules operating
-  at 1310nm/1550nm wavelengths rather than the 1000BASE-BX standard of
-  1310nm/1490nm.
-- Adding support for negotiating the PHY interface mode with the MAC,
-  so that modules supporting faster speeds and Gigabit ethernet work
-  with Gigabit-only MACs.
-- Adding support for high power (>1W) SFP modules.
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/omap4-droid4-xt894.dts | 33 ++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
- Documentation/devicetree/bindings/net/sff,sfp.txt |   5 +
- drivers/net/phy/phylink.c                         |  33 +++--
- drivers/net/phy/sfp-bus.c                         | 162 ++++++++++------------
- drivers/net/phy/sfp.c                             | 150 +++++++++++++++++---
- include/linux/sfp.h                               |  18 +--
- 5 files changed, 243 insertions(+), 125 deletions(-)
-
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -557,6 +557,28 @@
+ 		>;
+ 	};
+ 
++	/*
++	 * Note that the v3.0.8 stock userspace dynamically remuxes uart1
++	 * rts pin probably for PM purposes to PIN_INPUT_PULLUP | MUX_MODE7
++	 * when not used. If needed, we can add rts pin remux later based
++	 * on power measurements.
++	 */
++	uart1_pins: pinmux_uart1_pins {
++		pinctrl-single,pins = <
++		/* 0x4a10013c mcspi1_cs2.uart1_cts ag23 */
++		OMAP4_IOPAD(0x13c, PIN_INPUT_PULLUP | MUX_MODE1)
++
++		/* 0x4a10013e mcspi1_cs3.uart1_rts ah23 */
++		OMAP4_IOPAD(0x13e, MUX_MODE1)
++
++		/* 0x4a100140 uart3_cts_rctx.uart1_tx f27 */
++		OMAP4_IOPAD(0x140, PIN_OUTPUT | MUX_MODE1)
++
++		/* 0x4a1001ca dpm_emu14.uart1_rx aa3 */
++		OMAP4_IOPAD(0x1ca, PIN_INPUT_PULLUP | MUX_MODE2)
++		>;
++	};
++
+ 	/* uart3_tx_irtx and uart3_rx_irrx */
+ 	uart3_pins: pinmux_uart3_pins {
+ 		pinctrl-single,pins = <
+@@ -626,6 +648,17 @@
+ 	};
+ };
+ 
++/*
++ * As uart1 is wired to mdm6600 with rts and cts, we can use the cts pin for
++ * uart1 wakeirq.
++ */
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>;
++	interrupts-extended = <&wakeupgen GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH
++			       &omap4_pmx_core 0xfc>;
++};
++
+ &uart3 {
+ 	interrupts-extended = <&wakeupgen GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH
+ 			       &omap4_pmx_core 0x17c>;
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+2.16.2
