@@ -1,52 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] kbuild: add dtc as dependency on .dtb files
-Date: Thu, 1 Mar 2018 07:28:37 -0600
-Message-ID: <CAL_JsqJKc=-qyeiQuPy_fnEQ0xUV0Cem=5nwjKn-KQrqH_X-ow@mail.gmail.com>
-References: <20180228233249.26281-1-robh@kernel.org> <20180228233249.26281-3-robh@kernel.org>
- <CAK7LNAQSJ1uzgmta76rJwDpi08SB5gwcRPxu_TPw0u0XzgGaJA@mail.gmail.com> <CAK7LNAT+_0t4PQxW911a0xL-f54WHGbF8t3rEq2Pfngr3J7BOQ@mail.gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 2/3] mailbox: Avoid NULL dereference in mbox_chan_received_data
+Date: Thu, 1 Mar 2018 19:02:34 +0530
+Message-ID: <CABb+yY04Fdv16RKAOZ=Tr7KnEOCJnXpGF0pEgy8DjREqEixiqA@mail.gmail.com>
+References: <20180228022714.30068-1-samuel@sholland.org> <20180228022714.30068-3-samuel@sholland.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAT+_0t4PQxW911a0xL-f54WHGbF8t3rEq2Pfngr3J7BOQ@mail.gmail.com>
+In-Reply-To: <20180228022714.30068-3-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Gibson <david@gibson.dropbear.id.au>
+To: Samuel Holland <samuel@sholland.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ", linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 28, 2018 at 11:45 PM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> 2018-03-01 13:33 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
->> 2018-03-01 8:32 GMT+09:00 Rob Herring <robh@kernel.org>:
->>> If dtc is rebuilt, we should rebuild .dtb files with the new dtc.
->>>
->>> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>
->>
->> Hmm, I am not 100% sure about this.
->>
->> Is there a case where resulted DTBs
->> depend on DTC version?
->>
->>
->> If I understand correctly,
->> DTS and DTB are 1:1
->> Unlike CC, there is no room for optimization.
+On Wed, Feb 28, 2018 at 7:57 AM, Samuel Holland <samuel@sholland.org> wrote:
+> If a reception IRQ is pending when a mailbox channel is shut down (for
+> example, if the controller uses threaded interrupts), it is possible for
+> mbox_chan_received_data to be called while chan->cl is NULL.
 >
->
-> Maybe I was wrong.
->
-> Is there room for optimization
-> in 'DT strings' section?
+We can add a check in mailbox.c, but that is like shoving it under the carpet.
+How does your code look like?  mbox_chan_received_data() is meant to
+be called from interrupt context as its documentation says.
+Also the controller driver is responsible for ceasing any transient
+xfer before returning from shutdown() callback.
 
-Not sure.
-
-> I guess it is optimized enough to avoid string duplication,
-> but there could be different results
-> without changing the specification.
-
-What I care about is rebuilding so new warnings get emitted especially
-when developing those checks. Right now I have to manually delete the
-dtb files each time.
-
-Rob
+Cheers!
