@@ -1,58 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] pinctrl: sunxi: add support for the
- Allwinner H6 main pin controller
-Date: Thu, 1 Mar 2018 15:19:50 -0600
-Message-ID: <20180301211950.ust7g4jnlncrvwxp@rob-hp-laptop>
-References: <20180223122552.58049-1-icenowy@aosc.io>
- <20180223122552.58049-4-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V5 2/2] thermal: imx: add i.MX7 thermal sensor support
+Date: Thu, 1 Mar 2018 15:22:53 -0600
+Message-ID: <20180301212253.fp4gxes57t2m2tg2@rob-hp-laptop>
+References: <1519859380-15878-1-git-send-email-Anson.Huang@nxp.com>
+ <1519859380-15878-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERB7G44HKAKGQEQEPFFXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180223122552.58049-4-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1519859380-15878-2-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: leonard.crestez@nxp.com, rui.zhang@intel.com, edubezval@gmail.com, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux-imx@nxp.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 23, 2018 at 08:25:48PM +0800, Icenowy Zheng wrote:
-> The Allwinner H6 SoC has two pin controllers, one main controller
-> (called CPUX-PORT in user manual) and one controller in CPUs power
-> domain (called CPUS-PORT in user manual).
+On Thu, Mar 01, 2018 at 07:09:40AM +0800, Anson Huang wrote:
+> This patch adds i.MX7 thermal sensor support, most
+> of the i.MX7 thermal sensor functions are same with
+> i.MX6 except the registers offset/layout, so we move
+> those registers offset/layout definitions to soc data
+> structure.
 > 
-> This commit introduces support for the main pin controller on H6.
+> i.MX7 uses single calibration data @25C, the calibration
+> data is located at OCOTP offset 0x4F0, bit[17:9], the
+> formula is as below:
 > 
-> The pin bank A and B are not wired out and hidden from the SoC's
-> documents, however it's shown that the "ATE" (an AC200 chip
-> co-packaged with the H6 die) is connected to the main SoC die via these
-> pin banks. The information about these banks is just copied from the BSP
-> pinctrl driver, but re-formatted to fit the mainline pinctrl driver
-> format. The GPIO functions are dropped, as they're impossible to use --
-> except a GPIO&IRQ only pin (PB20) which might be the IRQ of ATE.
+> Tmeas = (Nmeas - n1) + 25; n1 is the fuse value for 25C.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> Acked-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Acked-by: Shawn Guo <shawnguo@kernel.org>
 > ---
-> Changes in v3:
-> - SPDX license identifier fix.
-> - Dropped most GPIO functionality at PA/PB.
-> 
-> Changes in v2:
-> - Dropped without_bus_gate description.
-> - Switched to SPDX license identifier.
-> 
->  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
+> changes since V4:
+> 	drop direct OCOTP register access for i.mx7d since it is a new added platform,
+> 	only support reading ocotp values through the ocotp nvmem driver which handles clock.
+>  .../devicetree/bindings/thermal/imx-thermal.txt    |   9 +-
+>  drivers/thermal/imx_thermal.c                      | 295 ++++++++++++++++-----
+>  2 files changed, 239 insertions(+), 65 deletions(-)
 
-Please add acks when posting new versions.
+Please add ack/reviewed-by's when posting new versions.
 
->  drivers/pinctrl/sunxi/Kconfig                      |   4 +
->  drivers/pinctrl/sunxi/Makefile                     |   1 +
->  drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c          | 614 +++++++++++++++++++++
->  4 files changed, 620 insertions(+)
->  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-h6.c
+Rob
