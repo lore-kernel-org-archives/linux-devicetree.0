@@ -1,48 +1,173 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/6] kbuild: remove remaining use of undefined YACC_PREFIX
-Date: Thu, 1 Mar 2018 07:39:50 -0600
-Message-ID: <CAL_Jsq+tDtR-fmqwQy3bGQecB=5ieL4jVrHct8L-mo23btvYTA@mail.gmail.com>
-References: <20180228233249.26281-1-robh@kernel.org> <20180228233249.26281-2-robh@kernel.org>
- <CAK7LNAQLq5MVhT5nZO_MTya7YhHee17UhJ7jnq51oeiJVL26QA@mail.gmail.com> <CAK7LNAQAZQAcTCL__RZoWTH-ROg3ZfPh1aEafcw6TS5vxAwNrA@mail.gmail.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [alsa-devel] [PATCH v1 1/4] ASoC: codecs: pcm179x: Add PCM1789
+ id
+Date: Thu, 1 Mar 2018 14:53:16 +0100
+Message-ID: <20180301145316.4c5355b4@dell-desktop.home>
+References: <20180227212433.2189-1-mylene.josserand@bootlin.com>
+        <20180227212433.2189-2-mylene.josserand@bootlin.com>
+        <20180227225140.6f9902b8@windsurf.lan>
+        <20180301084315.0811f712@dell-desktop.home>
+        <CAOf5uw=9aydTjTQbWJrZW4fFudcS9cp9=c4RhowyLyoWG97Q1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAQAZQAcTCL__RZoWTH-ROg3ZfPh1aEafcw6TS5vxAwNrA@mail.gmail.com>
+In-Reply-To: <CAOf5uw=9aydTjTQbWJrZW4fFudcS9cp9=c4RhowyLyoWG97Q1A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Michael Nazzareno Trimarchi <michael@amarulasolutions.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux-ALSA <alsa-devel@alsa-project.org>, alexandre.belloni@bootlin.com, LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 1, 2018 at 5:35 AM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> Hi Rob,
->
-> 2018-03-01 13:20 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
->> 2018-03-01 8:32 GMT+09:00 Rob Herring <robh@kernel.org>:
->>> Commit eea199b445f6 ("kbuild: remove unnecessary LEX_PREFIX and
->>> YACC_PREFIX") removed YACC_PREFIX definition, but left one use of it. There
->>> was not any build error since there is no user of "cmd_bison_h" currently.
->>> Remove the last remaining occurrence of YACC_PREFIX.
->>>
->>> Fixes: eea199b445f6 ("kbuild: remove unnecessary LEX_PREFIX and YACC_PREFIX")
->>> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>
->> You can replace CC with my
->>
->> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
->
-> I got a reason to send a fixes pull request this week.
->
-> If you do not mind, may I include this one in
-> my Kbuild fixes pull request?
+Hello,
 
-Yes, please do.
+On Thu, 1 Mar 2018 10:04:11 +0100
+Michael Nazzareno Trimarchi <michael@amarulasolutions.com> wrote:
 
->
-> I do not see dependency between 1/6 and the rest of the series.
+> Hi
+> 
+> On Thu, Mar 1, 2018 at 8:43 AM, Mylène Josserand
+> <mylene.josserand@bootlin.com> wrote:
+> > Hello,
+> >
+> > Thank you for the review.
+> >
+> > On Tue, 27 Feb 2018 22:51:40 +0100
+> > Thomas Petazzoni <thomas.petazzoni@bootlin.com> wrote:
+> >  
+> >> Hello,
+> >>
+> >> On Tue, 27 Feb 2018 22:24:30 +0100, Mylène Josserand wrote:  
+> >> > To prepare the support for the PCM1789, add a new compatible
+> >> > and use the i2c_id to handle, later, the differences between
+> >> > these two DACs even if they are pretty similar.
+> >> >
+> >> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
+> >> > ---
+> >> >  Documentation/devicetree/bindings/sound/pcm179x.txt | 2 +-  
+> >>
+> >> The DT binding change should be in a separate patch.
+> >>  
+> >> >  sound/soc/codecs/pcm179x-i2c.c                      | 6 ++++--
+> >> >  sound/soc/codecs/pcm179x.c                          | 3 ++-
+> >> >  sound/soc/codecs/pcm179x.h                          | 8 +++++++-  
+> >>
+> >> And this should be together with the PCM1789 support patch. Otherwise
+> >> your series is not bisectable: if we apply only PATCH 1/4, the driver
+> >> supports the new compatible string, but it doesn't have the actual code
+> >> to handle PCM1789. Am I missing something here ?  
+> >
+> > No, you are right, I will merge it with patch 02.
+> >  
+> 
+> Can you please include me in next series?
 
-Only that dtc won't build without it. :)
+Sure, I will do it.
 
-Rob
+> 
+> I have several hardware running on pcm179x family
+
+Currently, some colleagues recommend me to create a new file for this
+driver instead of adding it in PCM179x driver. I think that I will not
+touch pcm179x driver anymore in my next series.
+
+Best regards,
+
+Mylène
+
+> 
+> Michael
+> 
+> >>  
+> >> > -   return pcm179x_common_init(&client->dev, regmap);
+> >> > +   return pcm179x_common_init(&client->dev, regmap, id->driver_data);  
+> >>
+> >> This can be done in a preparation patch.
+> >>  
+> >> >  }
+> >> >
+> >> >  static const struct of_device_id pcm179x_of_match[] = {
+> >> >     { .compatible = "ti,pcm1792a", },
+> >> > +   { .compatible = "ti,pcm1789", },
+> >> >     { }
+> >> >  };
+> >> >  MODULE_DEVICE_TABLE(of, pcm179x_of_match);
+> >> >
+> >> >  static const struct i2c_device_id pcm179x_i2c_ids[] = {
+> >> > -   { "pcm179x", 0 },
+> >> > +   { "pcm179x", PCM179X },  
+> >>
+> >> And also this addition.
+> >>  
+> >> > +   { "pcm1789", PCM1789 },
+> >> >     { }
+> >> >  };
+> >> >  MODULE_DEVICE_TABLE(i2c, pcm179x_i2c_ids);
+> >> > diff --git a/sound/soc/codecs/pcm179x.c b/sound/soc/codecs/pcm179x.c
+> >> > index 4b311c06f97d..81cbf09319f6 100644
+> >> > --- a/sound/soc/codecs/pcm179x.c
+> >> > +++ b/sound/soc/codecs/pcm179x.c
+> >> > @@ -218,7 +218,8 @@ static const struct snd_soc_component_driver soc_component_dev_pcm179x = {
+> >> >     .non_legacy_dai_naming  = 1,
+> >> >  };
+> >> >
+> >> > -int pcm179x_common_init(struct device *dev, struct regmap *regmap)
+> >> > +int pcm179x_common_init(struct device *dev, struct regmap *regmap,
+> >> > +                   enum pcm17xx_type type)  
+> >>
+> >> And this done.
+> >>  
+> >> >  {
+> >> >     struct pcm179x_private *pcm179x;
+> >> >
+> >> > diff --git a/sound/soc/codecs/pcm179x.h b/sound/soc/codecs/pcm179x.h
+> >> > index cf8681c9a373..8c08689e3b8b 100644
+> >> > --- a/sound/soc/codecs/pcm179x.h
+> >> > +++ b/sound/soc/codecs/pcm179x.h
+> >> > @@ -17,11 +17,17 @@
+> >> >  #ifndef __PCM179X_H__
+> >> >  #define __PCM179X_H__
+> >> >
+> >> > +enum pcm17xx_type {
+> >> > +   PCM179X,  
+> >>
+> >> And this one.
+> >>  
+> >> > +   PCM1789,
+> >> > +};
+> >> > +
+> >> >  #define PCM1792A_FORMATS (SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_S24_LE | \
+> >> >                       SNDRV_PCM_FMTBIT_S16_LE)
+> >> >
+> >> >  extern const struct regmap_config pcm179x_regmap_config;
+> >> >
+> >> > -int pcm179x_common_init(struct device *dev, struct regmap *regmap);
+> >> > +int pcm179x_common_init(struct device *dev, struct regmap *regmap,
+> >> > +                   enum pcm17xx_type type);  
+> >>
+> >> And this one. Just as a "preparation patch" to support multiple codecs
+> >> in the existing pcm179x.c driver.
+> >>
+> >> Thanks!
+> >>
+> >> Thomas  
+> >
+> > Thanks,
+> >
+> > Mylène
+> >
+> > --
+> > Mylène Josserand, Bootlin (formerly Free Electrons)
+> > Embedded Linux and Kernel engineering
+> > http://bootlin.com
+> > _______________________________________________
+> > Alsa-devel mailing list
+> > Alsa-devel@alsa-project.org
+> > http://mailman.alsa-project.org/mailman/listinfo/alsa-devel  
+> 
+> 
+> 
+
+-- 
+Mylène Josserand, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
