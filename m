@@ -1,74 +1,122 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/6] dt-bindings: phy-rockchip-typec: move extcon property
- to be optional.
-Date: Thu, 01 Mar 2018 10:49:52 +0100
-Message-ID: <379977528.QSC4nRyzFz@diego>
-References: <20180301092420.1191-1-enric.balletbo@collabora.com>
- <20180301092420.1191-3-enric.balletbo@collabora.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 1/6] ARM: dts: stm32: Add sdio pins definition for stm32f7
+Date: Thu, 1 Mar 2018 10:51:01 +0100
+Message-ID: <1e73394f-2410-1d2a-a450-d3f1c88d1ca2@st.com>
+References: <1519897421-23803-1-git-send-email-patrice.chotard@st.com>
+ <1519897421-23803-2-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180301092420.1191-3-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gwendal-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vicencb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519897421-23803-2-git-send-email-patrice.chotard@st.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: patrice.chotard@st.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lee.jones@linaro.org
+Cc: mcoquelin.stm32@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
+Hi Patrice
 
-Am Donnerstag, 1. M=E4rz 2018, 10:24:16 CET schrieb Enric Balletbo i Serra:
-> The extcon property is used to detect the cable-state but some boards,
-> like Sapphire, currently does not seem to support, others might just not
-> need, as are supposed to work in host-mode only. So, extcon property is
-> not really a required property, move to be optional instead.
-
-The change itself is justified, the "justification" in the message might
-need some rework, as this sounds more like a kernel-side issue,
-while the extcon should always be optional.
-
-Something like:
-
-The extcon property is used to detect the cable-state but some boards
-just connect the type-c phy to a regular USB-A connector without any
-power-delivery and thus no controller reporting the cable-state.
-So the extcon property is not really a required property, move it to be =
-
-optional instead.
-
-
-For the change itself:
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+On 03/01/2018 10:43 AM, patrice.chotard@st.com wrote:
+> From: Patrice Chotard <patrice.chotard@st.com>
+> 
+> Add sdio pins definition for the 2 sdio instances embeds in stm32f746.
+> 
+> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 > ---
-> =
-
->  Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> =
-
-> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt index
-> 6ea867e3176f..a66f23a01129 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-> @@ -14,6 +14,8 @@ Required properties:
->   - resets : a list of phandle + reset specifier pairs
->   - reset-names : string reset name, must be:
->  		 "uphy", "uphy-pipe", "uphy-tcphy"
+>   arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 62 ++++++++++++++++++++++++++++++++++
+>   1 file changed, 62 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+> index f518de184e52..fb40f0835dd4 100644
+> --- a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
+> @@ -222,6 +222,68 @@
+>   					slew-rate = <2>;
+>   				};
+>   			};
 > +
-> +Optional properties:
->   - extcon : extcon specifier for the Power Delivery
-> =
+> +			sdio_pins: sdio_pins@0 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1 D0 */
+> +						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1 D1 */
+> +						 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1 D2 */
+> +						 <STM32_PINMUX('C', 11, AF12)>, /* SDMMC1 D3 */
+> +						 <STM32_PINMUX('C', 12, AF12)>, /* SDMMC1 CLK */
+> +						 <STM32_PINMUX('D', 2, AF12)>; /* SDMMC1 CMD */
+> +					drive-push-pull;
+> +					slew-rate = <2>;
+> +				};
+> +			};
 
->  Note, there are 2 type-c phys for RK3399, and they are almost identical,
-> except
+if you have 2 pins groups, please use '_a' for the first one. You could 
+have something like:
+
+sdio_pins_a
+sdio_od_pins_a
+
+and
+
+sdio_pins_b
+sdio_od_pins_b
+
+> +			sdio_pins_od: sdio_pins_od@0 {
+> +				pins1 {
+> +					pinmux = <STM32_PINMUX('C', 8, AF12)>, /* SDMMC1 D0 */
+> +						 <STM32_PINMUX('C', 9, AF12)>, /* SDMMC1 D1 */
+> +						 <STM32_PINMUX('C', 10, AF12)>, /* SDMMC1 D2 */
+> +						 <STM32_PINMUX('C', 11, AF12)>, /* SDMMC1 D3 */
+> +						 <STM32_PINMUX('C', 12, AF12)>; /* SDMMC1 CLK */
+> +					drive-push-pull;
+> +					slew-rate = <2>;
+> +				};
+> +
+> +				pins2 {
+> +					pinmux = <STM32_PINMUX('D', 2, AF12)>; /* SDMMC1 CMD */
+> +					drive-open-drain;
+> +					slew-rate = <2>;
+> +				};
+> +			};
+> +
+> +			sdio_pins_b: sdio_pins_b@0 {
+> +				pins {
+> +					pinmux = <STM32_PINMUX('G', 9, AF11)>, /* SDMMC2 D0 */
+> +						 <STM32_PINMUX('G', 10, AF11)>, /* SDMMC2 D1 */
+> +						 <STM32_PINMUX('B', 3, AF10)>, /* SDMMC2 D2 */
+> +						 <STM32_PINMUX('B', 4, AF10)>, /* SDMMC2 D3 */
+> +						 <STM32_PINMUX('D', 6, AF11)>, /* SDMMC2 CLK */
+> +						 <STM32_PINMUX('D', 7, AF11)>; /* SDMMC2 CMD */
+> +					drive-push-pull;
+> +					slew-rate = <2>;
+> +				};
+> +			};
+> +
+> +			sdio_pins_od_b: sdio_pins_od_b@0 {
+> +				pins1 {
+> +					pinmux = <STM32_PINMUX('G', 9, AF11)>, /* SDMMC2 D0 */
+> +						 <STM32_PINMUX('G', 10, AF11)>, /* SDMMC2 D1 */
+> +						 <STM32_PINMUX('B', 3, AF10)>, /* SDMMC2 D2 */
+> +						 <STM32_PINMUX('B', 4, AF10)>, /* SDMMC2 D3 */
+> +						 <STM32_PINMUX('D', 6, AF11)>; /* SDMMC2 CLK */
+> +					drive-push-pull;
+> +					slew-rate = <2>;
+> +				};
+> +
+> +				pins2 {
+> +					pinmux = <STM32_PINMUX('D', 7, AF11)>; /* SDMMC2 CMD */
+> +					drive-open-drain;
+> +					slew-rate = <2>;
+> +				};
+> +			};
+>   		};
+>   	};
+>   };
+> 
