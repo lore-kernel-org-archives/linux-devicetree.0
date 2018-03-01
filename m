@@ -1,49 +1,72 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH v2 14/15] clk: stm32: Add clk entry for SDMMC2 on stm32F769
-Date: Thu, 1 Mar 2018 09:42:20 +0000
-Message-ID: <f1cb9925-6f93-bf1f-1362-3d427bc3b909@st.com>
-References: <1516105859-3525-1-git-send-email-patrice.chotard@st.com>
- <1516105859-3525-15-git-send-email-patrice.chotard@st.com>
- <fb3b26e8-0102-122b-1386-68a661139706@st.com>
- <CACRpkdbd-Zz-JRC-_OfKtx28OvDcf0af93pqraP=XPpAN-geVg@mail.gmail.com>
+From: <patrice.chotard@st.com>
+Subject: [PATCH 4/6] ARM: dts: stm32: Enable sdio1 for stm32f769-disco
+Date: Thu, 1 Mar 2018 10:43:39 +0100
+Message-ID: <1519897421-23803-5-git-send-email-patrice.chotard@st.com>
+References: <1519897421-23803-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdbd-Zz-JRC-_OfKtx28OvDcf0af93pqraP=XPpAN-geVg@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <F64D7FBF20EA9148B4EC11F09E9C09DC@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519897421-23803-1-git-send-email-patrice.chotard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com, lee.jones@linaro.org
+Cc: mcoquelin.stm32@gmail.com, Patrice Chotard <patrice.chotard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus
+From: Patrice Chotard <patrice.chotard@st.com>
 
-On 03/01/2018 10:12 AM, Linus Walleij wrote:
-> On Mon, Feb 26, 2018 at 9:41 AM, Patrice CHOTARD <patrice.chotard@st.com> wrote:
-> 
->> Hi Stephen, Michael
->>
->> It's a gentle reminder as this patch is present on mailing list and
->> acked-by since 01/12/2018
-> 
-> You need Stephen's new kernel.org mail address to reach him.
-> (Added on TO:)
+Adds SDIO related DT nodes for stm32f769-disco board.
 
-Thanks !
+broken-cd property is needed as it misses a pullup on board
+(resistor R76 is missing).
 
-Patrice
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+---
+ arch/arm/boot/dts/stm32f769-disco.dts | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-> 
-> Yours,
-> Linus Walleij
-> 
+diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
+index 9dba286c6d2f..2d922b5d4766 100644
+--- a/arch/arm/boot/dts/stm32f769-disco.dts
++++ b/arch/arm/boot/dts/stm32f769-disco.dts
+@@ -44,6 +44,7 @@
+ #include "stm32f746.dtsi"
+ #include "stm32f769-pinctrl.dtsi"
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+ 	model = "STMicroelectronics STM32F769-DISCO board";
+@@ -62,6 +63,12 @@
+ 		serial0 = &usart1;
+ 	};
+ 
++	mmc_vcard: mmc_vcard {
++		compatible = "regulator-fixed";
++		regulator-name = "mmc_vcard";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
+ };
+ 
+ &cec {
+@@ -74,6 +81,18 @@
+ 	clock-frequency = <25000000>;
+ };
+ 
++&sdio2 {
++	status = "okay";
++	vmmc-supply = <&mmc_vcard>;
++	cd-gpios = <&gpioi 15 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++	broken-cd;
++	pinctrl-names = "default", "opendrain";
++	pinctrl-0 = <&sdio_pins_b>;
++	pinctrl-1 = <&sdio_pins_od_b>;
++	bus-width = <4>;
++};
++
+ &usart1 {
+ 	pinctrl-0 = <&usart1_pins_a>;
+ 	pinctrl-names = "default";
+-- 
+1.9.1
