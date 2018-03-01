@@ -1,71 +1,87 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH v2 2/6] ARM: dts: stm32: Enable sdio1 for stm32f746-disco
-Date: Thu, 1 Mar 2018 11:53:39 +0100
-Message-ID: <1519901623-23216-3-git-send-email-patrice.chotard@st.com>
-References: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH 3/3] mailbox: sunxi-msgbox: Add a new mailbox driver
+Date: Thu, 1 Mar 2018 11:32:32 +0000
+Message-ID: <db1bc925-699e-14e7-f3fb-4dc83e2f6640@arm.com>
+References: <20180228022714.30068-1-samuel@sholland.org>
+ <20180228022714.30068-4-samuel@sholland.org>
+ <20180228083214.h4oi2kmjjqmoyfhn@flea>
+ <fdf86770-6f45-3b3c-50ea-7a8363894639@sholland.org>
+ <20180301103259.nomjbwkw4xbvhbfv@flea>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519901623-23216-1-git-send-email-patrice.chotard@st.com>
+In-Reply-To: <20180301103259.nomjbwkw4xbvhbfv@flea>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com, lee.jones@linaro.org
-Cc: mcoquelin.stm32@gmail.com, Patrice Chotard <patrice.chotard@st.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Samuel Holland <samuel@sholland.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+Hi,
 
-Adds SDIO related DT nodes for stm32f746-disco board.
+On 01/03/18 10:32, Maxime Ripard wrote:
+> On Wed, Feb 28, 2018 at 11:19:11AM -0600, Samuel Holland wrote:
+>> Hi,
+>>
+>> On 02/28/18 02:32, Maxime Ripard wrote:
+>>> On Tue, Feb 27, 2018 at 08:27:14PM -0600, Samuel Holland wrote:
+>>>> +	/*
+>>>> +	 * The failure path should not disable the clock or assert the reset,
+>>>> +	 * because the PSCI implementation in firmware relies on this device
+>>>> +	 * being functional. Claiming the clock in this driver is required to
+>>>> +	 * prevent Linux from turning it off.
+>>>> +	 */
+>>>> +	ret = clk_prepare_enable(clk);
+>>>> +	if (ret) {
+>>>> +		dev_err(dev, "Failed to enable bus clock: %d\n", ret);
+>>>> +		return ret;
+>>>> +	}
+>>>
+>>> You don't need it to be always on though. You only need it to be
+>>> enabled when you access the registers (on both sides I guess?). So you
+>>> could very well enable the clock in your registers accessors in Linux,
+>>> and do the same in the ARISC firmware. That should work.
+>>
+>> It does need to always be on because the *PSCI* implementation (ATF) also uses
+>> SCPI concurrently with Linux (on a separate channel). Turning off the clock
+>> anywhere in Linux could turn it off in the middle of a PSCI SCPI call on a
+>> different CPU, causing ATF to hang in EL3 (which would be very bad).
+> 
+> Then the above code doesn't fix anything. You should mark the clock
+> critical, otherwise that clock will be turned off if the driver is
+> compiled as a module and not loaded (or loaded later), or if the
+> driver is not even compiled in.
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
+... or if the module gets unloaded for some reason. So yes, I agree.
+Actually I was hitting this problem before on several occasions:
+- If firmware (either ATF or on the ARISC) wants to check temperatures,
+it needs to rely on Linux not turning off the THS clock - which it does
+at the moment when there is no Linux driver.
+- If an EFI framebuffer needs to keep running in Linux, we should not
+turn off the HDMI and DE clocks. simplefb solves this, but efifb has no
+simple way of copying this approach.
+- If a type 1 hypervisor like Xen uses the serial console (and exports a
+virtual console to the guest), Linux turns off the now apparently unused
+UART0 gate clock, killing Xen's console. So booting Xen on Allwinner
+requires clk_ignore_unused at the moment.
 
-v2: _ rename sdio_pins / sdio_od_pins to sdio_pins_a / sdio_od_pins_a 
+There are ways to mitigate or workaround each one of these, but I was
+wondering if we should look at a more general approach.
 
- arch/arm/boot/dts/stm32f746-disco.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+The most flexible seems to have some "clock victim" DT node, somewhat
+mimicking the simplefb solution: One DT node which just references
+clocks that are used by other (firmware) components in the system and
+which can't be protected otherwise.
+Normally this node would be empty, but firmware can add clock references
+the moment it needs one clock. So ATF could add the THS clock, and Xen
+could add the UART0 gate clock. This could be done at runtime by the
+firmware or hypervisor. Xen for instance already amends the DT before
+passing it on to Dom0, so copying all the clock references from the UART
+to this node would be easy to implement.
 
-diff --git a/arch/arm/boot/dts/stm32f746-disco.dts b/arch/arm/boot/dts/stm32f746-disco.dts
-index 623b6f2bc361..be94c6ad7e94 100644
---- a/arch/arm/boot/dts/stm32f746-disco.dts
-+++ b/arch/arm/boot/dts/stm32f746-disco.dts
-@@ -44,6 +44,7 @@
- #include "stm32f746.dtsi"
- #include "stm32f746-pinctrl.dtsi"
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "STMicroelectronics STM32F746-DISCO board";
-@@ -76,12 +77,30 @@
- 		regulator-name = "vcc5_host1";
- 		regulator-always-on;
- 	};
-+
-+	mmc_vcard: mmc_vcard {
-+		compatible = "regulator-fixed";
-+		regulator-name = "mmc_vcard";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
- };
- 
- &clk_hse {
- 	clock-frequency = <25000000>;
- };
- 
-+&sdio1 {
-+	status = "okay";
-+	vmmc-supply = <&mmc_vcard>;
-+	cd-gpios = <&gpioc 13 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+	pinctrl-names = "default", "opendrain";
-+	pinctrl-0 = <&sdio_pins_a>;
-+	pinctrl-1 = <&sdio_pins_od_a>;
-+	bus-width = <4>;
-+};
-+
- &usart1 {
- 	pinctrl-0 = <&usart1_pins_b>;
- 	pinctrl-names = "default";
--- 
-1.9.1
+Does that sound worthwhile to pursue? I could sketch up something if
+that makes sense.
+
+Cheers,
+Andre.
