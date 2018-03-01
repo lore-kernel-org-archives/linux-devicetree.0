@@ -1,73 +1,74 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH 3/6] ARM: dts: stm32: Enable sdio1 for stm32f746-eval
-Date: Thu, 1 Mar 2018 10:43:38 +0100
-Message-ID: <1519897421-23803-4-git-send-email-patrice.chotard@st.com>
-References: <1519897421-23803-1-git-send-email-patrice.chotard@st.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/6] dt-bindings: phy-rockchip-typec: move extcon property
+ to be optional.
+Date: Thu, 01 Mar 2018 10:49:52 +0100
+Message-ID: <379977528.QSC4nRyzFz@diego>
+References: <20180301092420.1191-1-enric.balletbo@collabora.com>
+ <20180301092420.1191-3-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519897421-23803-1-git-send-email-patrice.chotard@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com, lee.jones@linaro.org
-Cc: Patrice Chotard <patrice.chotard@st.com>, mcoquelin.stm32@gmail.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180301092420.1191-3-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gwendal-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vicencb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+Hi Enric,
 
-Adds SDIO related DT nodes for stm32f746-eval board.
+Am Donnerstag, 1. M=E4rz 2018, 10:24:16 CET schrieb Enric Balletbo i Serra:
+> The extcon property is used to detect the cable-state but some boards,
+> like Sapphire, currently does not seem to support, others might just not
+> need, as are supposed to work in host-mode only. So, extcon property is
+> not really a required property, move to be optional instead.
 
-broken-cd property is needed as card detect signal is
-connected to a GPIO expander which is not yet supported
-in kernel linux.
+The change itself is justified, the "justification" in the message might
+need some rework, as this sounds more like a kernel-side issue,
+while the extcon should always be optional.
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
- arch/arm/boot/dts/stm32746g-eval.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Something like:
 
-diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
-index b2d4b8c46677..63160199e39a 100644
---- a/arch/arm/boot/dts/stm32746g-eval.dts
-+++ b/arch/arm/boot/dts/stm32746g-eval.dts
-@@ -91,6 +91,13 @@
- 		clocks = <&rcc 0 STM32F7_AHB1_CLOCK(OTGHSULPI)>;
- 		clock-names = "main_clk";
- 	};
-+
-+	mmc_vcard: mmc_vcard {
-+		compatible = "regulator-fixed";
-+		regulator-name = "mmc_vcard";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
- };
- 
- &clk_hse {
-@@ -113,6 +120,16 @@
- 	status = "okay";
- };
- 
-+&sdio1 {
-+	status = "okay";
-+	vmmc-supply = <&mmc_vcard>;
-+	broken-cd;
-+	pinctrl-names = "default", "opendrain";
-+	pinctrl-0 = <&sdio_pins>;
-+	pinctrl-1 = <&sdio_pins_od>;
-+	bus-width = <4>;
-+};
-+
- &usart1 {
- 	pinctrl-0 = <&usart1_pins_a>;
- 	pinctrl-names = "default";
--- 
-1.9.1
+The extcon property is used to detect the cable-state but some boards
+just connect the type-c phy to a regular USB-A connector without any
+power-delivery and thus no controller reporting the cable-state.
+So the extcon property is not really a required property, move it to be =
+
+optional instead.
+
+
+For the change itself:
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+> =
+
+>  Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> =
+
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt index
+> 6ea867e3176f..a66f23a01129 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+> @@ -14,6 +14,8 @@ Required properties:
+>   - resets : a list of phandle + reset specifier pairs
+>   - reset-names : string reset name, must be:
+>  		 "uphy", "uphy-pipe", "uphy-tcphy"
+> +
+> +Optional properties:
+>   - extcon : extcon specifier for the Power Delivery
+> =
+
+>  Note, there are 2 type-c phys for RK3399, and they are almost identical,
+> except
