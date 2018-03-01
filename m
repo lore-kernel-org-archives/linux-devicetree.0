@@ -1,49 +1,32 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 1/3] irqchip/gic-v3-its: add ability to save/restore
- ITS state
-Date: Thu, 1 Mar 2018 11:41:45 +0000
-Message-ID: <20180301114144.nmwu4qtslvj7ogj5@lakrids.cambridge.arm.com>
-References: <20180301054820.42847-1-dbasehore@chromium.org>
- <20180301054820.42847-2-dbasehore@chromium.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] dt-bindings: rockchip-dw-mshc: use consistent clock names
+Date: Thu, 01 Mar 2018 11:57:53 +0100
+Message-ID: <3149874.hkvgG7d5Rc@diego>
+References: <20180301103447.7059-1-john@metanate.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180301054820.42847-2-dbasehore@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Derek Basehore <dbasehore@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Soby.Mathew@arm.com, sudeep.holla@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, tglx@linutronix.de, briannorris@chromium.org, marc.zyngier@arm.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180301103447.7059-1-john@metanate.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: John Keeping <john@metanate.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 28, 2018 at 09:48:18PM -0800, Derek Basehore wrote:
-> Some platforms power off GIC logic in suspend, so we need to
-> save/restore state. The distributor and redistributor registers need
-> to be handled in platform code due to access permissions on those
-> registers, but the ITS registers can be restored in the kernel.
-> 
-> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+Am Donnerstag, 1. M=E4rz 2018, 11:34:47 CET schrieb John Keeping:
+> The names of these clocks are "ciu-drive" and "ciu-sample" as described
+> for the clock-names property.  Avoid confusion by spelling these
+> correctly everywhere they are referenced.
+> =
 
-How much state do we have to save/restore?
+> Signed-off-by: John Keeping <john@metanate.com>
 
-Given we can apparently read all this state, couldn't we *always* save
-the state, then upon resume detect if the state has been lost, restoring
-it if so?
-
-That way, we don't need a property in FW tables for DT or ACPI.
-
-[...]
-
-> @@ -3261,6 +3363,9 @@ static int __init its_probe_one(struct resource *res,
->  		ctlr |= GITS_CTLR_ImDe;
->  	writel_relaxed(ctlr, its->base + GITS_CTLR);
->  
-> +	if (fwnode_property_present(handle, "reset-on-suspend"))
-> +		its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
-
-Does this allow this property on an ACPI system?
-
-If we need this on ACPI, we need a spec update to handle this properly,
-and shouldn't use device properties like this.
-
-Thanks,
-Mark.
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
