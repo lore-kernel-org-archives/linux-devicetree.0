@@ -1,60 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/8] dt-bindings: scsi: hisi_sas: add an property of
- signal attenuation
-Date: Thu, 1 Mar 2018 15:40:10 -0600
-Message-ID: <20180301214010.ptcaoah756z5xias@rob-hp-laptop>
-References: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
- <1519067611-206638-2-git-send-email-john.garry@huawei.com>
+Subject: Re: [PATCH v7 01/42] dt-bindings: clock: Add new bindings for TI
+ Davinci PLL clocks
+Date: Thu, 1 Mar 2018 15:41:27 -0600
+Message-ID: <20180301214127.7fk3p66w6ikfj6kk@rob-hp-laptop>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
+ <1519071723-31790-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1519067611-206638-2-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1519071723-31790-2-git-send-email-david@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, mark.rutland@arm.com, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>
+To: David Lechner <david@lechnology.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 20, 2018 at 03:13:24AM +0800, John Garry wrote:
-> From: Xiaofei Tan <tanxiaofei@huawei.com>
+On Mon, Feb 19, 2018 at 02:21:22PM -0600, David Lechner wrote:
+> This adds a new binding for the PLL IP blocks in the mach-davinci
+> family of processors. Currently, only da850 has device tree support
+> but these bindings can also work for other SoCs in this family just
+> by adding new compatible strings.
 > 
-> For some new boards with hip07 chipset we are required to
-> set PHY config registers differently. The hw property which
-> determines how to set these registers is in the PHY signal
-> attenuation readings.
+> Note: Although these PLL controllers are very similar to the TI Keystone
+> SoCs, we are not re-using those bindings. The Keystone bindings use a
+> legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
+> have a slightly different PLL register layout and a number of quirks
+> that can't be handled by the existing bindings, so the keystone bindings
+> could not be used as-is anyway.
 > 
-> This patch add an devicetree property, signal-attenuation, which
-> is used to describe the signal attenuation of an board.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-> Signed-off-by: John Garry <john.garry@huawei.com>
+> Signed-off-by: David Lechner <david@lechnology.com>
 > ---
->  Documentation/devicetree/bindings/scsi/hisilicon-sas.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-> index df3bef7..bd32ecd 100644
-> --- a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-> +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
-> @@ -53,6 +53,13 @@ Main node required properties:
->  Optional main node properties:
->   - hip06-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
->  			    "am-max-transmissions" limitation.
-> + - signal-attenuation : array of 3 32-bit values, containing de-emphasis,
-
-Needs a vendor prefix.
-
-> +		preshoot, and boost attenuation readings for the board. They
-> +		are used to describe the signal attenuation of the board. These
-> +		values' range is 7600 to 12400, and used to represent -24dB to
-> +		24dB.
-> +		The formula is "y = (x-10000)/10000". For example, 10478
-> +		means 4.78dB.
->  
->  Example:
->  	sas0: sas@c1000000 {
-> -- 
-> 1.9.1
+> v7 changes:
+> - None (there was some debate about having child nodes, but the consensus was
+>   that this is "good enough" as it is)
 > 
+> v6 changes:
+> - Added clock-names property
+> - Added ti,clkmode-square-wave property
+> - Added pllout child node
+> - Added obsclk child node
+> - Expanded examples
+> 
+> 
+>  .../devicetree/bindings/clock/ti/davinci/pll.txt   | 96 ++++++++++++++++++++++
+>  1 file changed, 96 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+
+Reviewed-by: Rob Herring <robh@kernel.org>
