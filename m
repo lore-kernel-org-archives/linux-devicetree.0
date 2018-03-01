@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v4 4/4] of: improve reporting invalid overlay target path
-Date: Thu,  1 Mar 2018 10:00:56 -0800
-Message-ID: <1519927256-4868-5-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v4 2/4] of: Documentation: of_overlay_apply() replaced by of_overlay_fdt_apply()
+Date: Thu,  1 Mar 2018 10:00:54 -0800
+Message-ID: <1519927256-4868-3-git-send-email-frowand.list@gmail.com>
 References: <1519927256-4868-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1519927256-4868-1-git-send-email-frowand.list@gmail.com>
@@ -12,65 +12,25 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Errors while developing the patch to create of_overlay_fdt_apply()
-exposed inadequate error messages to debug problems when overlay
-devicetree fragment nodes contain an invalid target path.  Improve
-the messages in find_target_node() to remedy this.
-
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
+ Documentation/devicetree/overlay-notes.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-changes from v2:
-  - add fragment node name as suggested by Geert
-  - existing error message printed short node name, thus not
-    discriminating between fragments; change to full node name
-  - existing error message printed node address, which is devicetree
-    internal debugging, not useful in an overlay apply error message;
-    remove node address from message
-
- drivers/of/overlay.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 5f6c5569e97d..852e566d7744 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -488,20 +488,30 @@ static int build_changeset(struct overlay_changeset *ovcs)
-  */
- static struct device_node *find_target_node(struct device_node *info_node)
- {
-+	struct device_node *node;
- 	const char *path;
- 	u32 val;
- 	int ret;
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
+index c4aa0adf13ec..5175a24d387e 100644
+--- a/Documentation/devicetree/overlay-notes.txt
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -87,8 +87,8 @@ Overlay in-kernel API
  
- 	ret = of_property_read_u32(info_node, "target", &val);
--	if (!ret)
--		return of_find_node_by_phandle(val);
-+	if (!ret) {
-+		node = of_find_node_by_phandle(val);
-+		if (!node)
-+			pr_err("find target, node: %pOF, phandle 0x%x not found\n",
-+			       info_node, val);
-+		return node;
-+	}
+ The API is quite easy to use.
  
- 	ret = of_property_read_string(info_node, "target-path", &path);
--	if (!ret)
--		return of_find_node_by_path(path);
-+	if (!ret) {
-+		node =  of_find_node_by_path(path);
-+		if (!node)
-+			pr_err("find target, node: %pOF, path '%s' not found\n",
-+			       info_node, path);
-+		return node;
-+	}
+-1. Call of_overlay_apply() to create and apply an overlay changeset. The return
+-value is an error or a cookie identifying this overlay.
++1. Call of_overlay_fdt_apply() to create and apply an overlay changeset. The
++return value is an error or a cookie identifying this overlay.
  
--	pr_err("Failed to find target for node %p (%s)\n",
--		info_node, info_node->name);
-+	pr_err("find target, node: %pOF, no target property\n", info_node);
- 
- 	return NULL;
- }
+ 2. Call of_overlay_remove() to remove and cleanup the overlay changeset
+ previously created via the call to of_overlay_apply(). Removal of an overlay
 -- 
 Frank Rowand <frank.rowand@sony.com>
