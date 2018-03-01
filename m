@@ -1,55 +1,136 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v2 2/2] ARM: dts: imx51-zii-rdu1: Add node for RAVE SP device
-Date: Thu,  1 Mar 2018 11:20:07 -0800
-Message-ID: <20180301192007.29278-2-andrew.smirnov@gmail.com>
-References: <20180301192007.29278-1-andrew.smirnov@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v15 6/9] HISI LPC: Support the LPC host on Hip06/Hip07
+ with DT bindings
+Date: Thu, 01 Mar 2018 21:26:48 +0200
+Message-ID: <1519932408.10722.351.camel@linux.intel.com>
+References: <1519663249-9850-1-git-send-email-john.garry@huawei.com>
+         <1519663249-9850-7-git-send-email-john.garry@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180301192007.29278-1-andrew.smirnov@gmail.com>
+In-Reply-To: <1519663249-9850-7-git-send-email-john.garry@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Guenter Roeck <linux@roeck-us.net>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: John Garry <john.garry@huawei.com>, mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org
+Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de
 List-Id: devicetree@vger.kernel.org
 
-With MFD and watchdog drivers for RAVE SP device support added by
-538ee27290fa ("mfd: Add driver for RAVE Supervisory Processor") and
-c3bb33345721 ("watchdog: Add RAVE SP watchdog driver") add
-corresponding DT node for RDU.
+On Tue, 2018-02-27 at 00:40 +0800, John Garry wrote:
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- arch/arm/boot/dts/imx51-zii-rdu1.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> The low-pin-count(LPC) interface of Hip06/Hip07 accesses the
+> peripherals in
+> I/O port addresses. This patch implements the LPC host controller
+> driver
+> which perform the I/O operations on the underlying hardware.
+> We don't want to touch those existing peripherals' driver, such as
+> ipmi-bt.
+> So this driver applies the indirect-IO introduced in the previous
+> patch
+> after registering an indirect-IO node to the indirect-IO devices list
+> which
+> will be searched in the I/O accessors to retrieve the host-local I/O
+> port.
+> 
+> The driver config is set as a bool instead of a trisate. The reason
+> here is that, by the very nature of the driver providing a logical
+> PIO range, it does not make sense to have this driver as a loadable
+> module. Another more specific reason is that the Huawei D03 board
+> which includes hip06 SoC requires the LPC bus for UART console, so
+> should be built in.
 
-diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-index 5306b78de0ca..84ad5ceefecc 100644
---- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
-+++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
-@@ -568,6 +568,15 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart3>;
- 	status = "okay";
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu1";
-+		current-speed = <38400>;
-+
-+		watchdog {
-+			compatible = "zii,rave-sp-watchdog";
-+		};
-+	};
- };
- 
- &usbh1 {
+Few minor comments below.
+
+> +static inline int wait_lpc_idle(unsigned char *mbase,
+> +				unsigned int waitcnt) {
+> +	do {
+> +		u32 status;
+> +
+> +		status = readl(mbase + LPC_REG_OP_STATUS);
+> +		if (status & LPC_REG_OP_STATUS_IDLE)
+> +			return (status & LPC_REG_OP_STATUS_FINISHED)
+> ? 0 : -EIO;
+> +		ndelay(LPC_NSEC_PERWAIT);
+
+> +	} while (waitcnt--);
+
+} while (--waitcnt);
+
+> +
+> +	return -ETIME;
+> +}
+
+> +
+> +/*
+
+If you would like to have a documentation you need to use proper syntax,
+i.e.
+
+/**
+
+Check the rest of the series for it.
+
+> + * hisi_lpc_target_in - trigger a series of LPC cycles for read
+> operation
+> + * @lpcdev: pointer to hisi lpc device
+> + * @para: some parameters used to control the lpc I/O operations
+> + * @addr: the lpc I/O target port address
+> + * @buf: where the read back data is stored
+> + * @opcnt: how many I/O operations required, i.e. data width
+> + *
+> + * Returns 0 on success, non-zero on fail.
+> + */
+
+> +	do {
+> +		*buf++ = readb(lpcdev->membase + LPC_REG_RDATA);
+> +	} while (--opcnt);
+
+readsb() ?
+
+> +	do {
+> +		writeb(*buf++, lpcdev->membase + LPC_REG_WDATA);
+> +	} while (--opcnt);
+
+writesb() ?
+
+> +static inline unsigned long
+> +hisi_lpc_pio_to_addr(struct hisi_lpc_dev *lpcdev, unsigned long pio)
+> +{
+> +	return pio - lpcdev->io_host->io_start +
+> +		lpcdev->io_host->hw_start;
+
+I would rather put on one line.
+
+> +}
+
+> +	do {
+> +		if (hisi_lpc_target_out(lpcdev, &iopara, addr, buf,
+> +						dwidth))
+
+Fancy indentation. Perhaps put to one line?
+
+> +			break;
+> +		buf += dwidth;
+> +	} while (--count);
+
+
+> +	int ret;
+> +
+> +	lpcdev = devm_kzalloc(dev, sizeof(struct hisi_lpc_dev),
+> GFP_KERNEL);
+
+sizeof(*lpcdev) ?
+
+> +	if (!lpcdev)
+> +		return -ENOMEM;
+
+> +	dev_info(dev, "registered range[%pa - sz:%pa]\n",
+
+This is rather non-standard. We provide for resources the pattern like
+"... [start-end]\n"
+
+> +		 &lpcdev->io_host->io_start,
+> +		 &lpcdev->io_host->size);
+
 -- 
-2.14.3
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
