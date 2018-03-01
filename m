@@ -1,84 +1,93 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 11/25] ASoC: qcom: q6asm: add support to
- audio stream apis
-Date: Thu, 1 Mar 2018 21:33:56 +0000
-Message-ID: <20180301213356.GV12864@sirena.org.uk>
-References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
- <20180213165837.1620-12-srinivas.kandagatla@linaro.org>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH v3 00/16] Implement H3/H5 HDMI driver
+Date: Thu,  1 Mar 2018 22:34:26 +0100
+Message-ID: <20180301213442.16677-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8882713471432277853=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180213165837.1620-12-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: srinivas.kandagatla@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB7XD4HKAKGQEPFT4L7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This series implements H3/H5 HDMI driver. It was tested on OrangePi 2 (H3),
+OrangePi Plus2e (H3) and OrangePi PC2 (H5) with many resolutions and it
+works well.
 
---===============8882713471432277853==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="TG7lY2/6mW/akb80"
-Content-Disposition: inline
+Code is based on linux-next, next-20180228 tag.
 
+Best regards,
+Jernej
 
---TG7lY2/6mW/akb80
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes in v3:
+- Removed TCON patch to skip LVDS procesing
+- Added TCON patch to release exclusive clock lock
+- Minimal clock rate is now returned immediately in round_rate for NM PLLs
 
-On Tue, Feb 13, 2018 at 04:58:23PM +0000, srinivas.kandagatla@linaro.org wr=
-ote:
+Changes in v2:
+- Fixed build warning on arm64
+- Fixed condition in determine_rate function in HDMI PHY clock driver
+- Added defines for polarity settings in HDMI PHY
+- Added patch to skip LVDS code path altogether if TCON doesn't support it.
+- round_rate for NM PLLs now rounds to minimal rate if requested rate is
+  lower.
+- set_rate for NM PLLs doesn't fail if requested rate is lower than minimal
+  (round_rate is called before which already guarantees that rate is not
+   lower than minimal).
 
->  	uint32_t used;
-> @@ -131,7 +191,7 @@ static int q6asm_apr_send_session_pkt(struct q6asm *a=
-, struct audio_client *ac,
-> =20
->  	rc =3D wait_event_timeout(a->mem_wait, (a->mem_state <=3D 0), 5 * HZ);
->  	if (!rc) {
-> -		dev_err(a->dev, "CMD timeout \n");
-> +		dev_err(a->dev, "CMD timeout\n");
->  		rc =3D -ETIMEDOUT;
->  	} else if (a->mem_state < 0) {
->  		rc =3D  q6dsp_errno(a->mem_state);
+Jernej Skrabec (16):
+  clk: sunxi-ng: Add check for minimal rate to NM PLLs
+  clk: sunxi-ng: h3: h5: Add minimal rate for video PLL
+  clk: sunxi-ng: h3: h5: Allow some clocks to set parent rate
+  clk: sunxi-ng: h3: h5: export CLK_PLL_VIDEO
+  dt-bindings: display: sun4i-drm: Add compatibles for H3 HDMI pipeline
+  drm/sun4i: Release exclusive clock lock when disabling TCON
+  drm/sun4i: Add support for H3 display engine
+  drm/sun4i: Add support for H3 mixer 0
+  drm/sun4i: Fix polarity configuration for DW HDMI PHY
+  drm/sun4i: Add support for variants to DW HDMI PHY
+  drm/sun4i: Move and expand DW HDMI PHY register macros
+  drm/sun4i: Add support for H3 HDMI PHY variant
+  drm/sun4i: Allow building on arm64
+  ARM: dts: sunxi: h3/h5: Add HDMI pipeline
+  ARM: dts: sun8i: h3: Enable HDMI output on H3 boards
+  ARM64: dts: sun50i: h5: Enable HDMI output on H5 boards
 
-This should be folded into whatever patch is being fixed.
+ .../bindings/display/sunxi/sun4i-drm.txt           |   6 +
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    |  25 ++
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts          |  25 ++
+ arch/arm/boot/dts/sun8i-h3-libretech-all-h3-cc.dts |  25 ++
+ arch/arm/boot/dts/sun8i-h3-nanopi-m1.dts           |  25 ++
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |  25 ++
+ arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts       |  25 ++
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |  24 ++
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |  25 ++
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 108 ++++++
+ .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  |  25 ++
+ .../dts/allwinner/sun50i-h5-orangepi-prime.dts     |  25 ++
+ .../allwinner/sun50i-h5-orangepi-zero-plus2.dts    |  25 ++
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |  32 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.h                |   4 +-
+ drivers/clk/sunxi-ng/ccu_nm.c                      |   7 +
+ drivers/clk/sunxi-ng/ccu_nm.h                      |  27 ++
+ drivers/gpu/drm/sun4i/Kconfig                      |   2 +-
+ drivers/gpu/drm/sun4i/Makefile                     |   1 +
+ drivers/gpu/drm/sun4i/sun4i_drv.c                  |   1 +
+ drivers/gpu/drm/sun4i/sun4i_tcon.c                 |   6 +-
+ drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h              | 157 ++++++++-
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c             | 369 ++++++++++++++++++---
+ drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c         | 132 ++++++++
+ drivers/gpu/drm/sun4i/sun8i_mixer.c                |  12 +
+ include/dt-bindings/clock/sun8i-h3-ccu.h           |   2 +
+ 26 files changed, 1070 insertions(+), 70 deletions(-)
+ create mode 100644 drivers/gpu/drm/sun4i/sun8i_hdmi_phy_clk.c
 
-> +	open.hdr.opcode =3D ASM_STREAM_CMD_OPEN_WRITE_V3;
-> +	open.mode_flags =3D 0x00;
-> +	open.mode_flags |=3D ASM_LEGACY_STREAM_SESSION;
-
-What is a legacy stream and why are we using it in new code?
-
---TG7lY2/6mW/akb80
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqYccMACgkQJNaLcl1U
-h9B4PAf/XuHY01+J4AY6SjvYrppdjRDO75cG1EFh0grfxKTIwzDe4rz/G31M2XP6
-+o4/4MM/kFyjfLrz6MFGzTli4f0L+XTA5g6xMWNBR88N4VCVeJUG7UtF5qRVdfty
-3q7oFiYNGe1GatCnwT2Vdom5XsezJVOphq0o1n+pZg3/xN3r4Cob7erT1CA3t1we
-St+PE0vCAItwRd4skPzZbYLQ5FbrX7Wg2tYEPaLb6p+DpVxbQbqoCp83TVRH6NVU
-vBXlr2f4RSL1jHbhayVIOdYDpE7/duVy60qFMRDIt7L0FD7q+igro5n1ZuyxsBnB
-evcmg1mok6pN7Bfcjmid04+odETRgA==
-=Yo1h
------END PGP SIGNATURE-----
-
---TG7lY2/6mW/akb80--
-
---===============8882713471432277853==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8882713471432277853==--
+-- 
+2.16.2
