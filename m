@@ -1,46 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 09/42] dt-bindings: clock: New bindings for TI Davinci
- PSC
-Date: Thu, 1 Mar 2018 15:13:13 -0600
-Message-ID: <20180301211313.tahm4kjpma6jsywz@rob-hp-laptop>
-References: <1519071723-31790-1-git-send-email-david@lechnology.com>
- <1519071723-31790-10-git-send-email-david@lechnology.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: firmware: Add bindings for ZynqMP
+ firmware
+Date: Thu, 1 Mar 2018 15:18:23 -0600
+Message-ID: <20180301211823.g5dl5xvtbkhofrpb@rob-hp-laptop>
+References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
+ <1519154467-2896-2-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1519071723-31790-10-git-send-email-david@lechnology.com>
+In-Reply-To: <1519154467-2896-2-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: Jolly Shah <jolly.shah@xilinx.com>
+Cc: ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, michal.simek@xilinx.com, mark.rutland@arm.com, devicetree@vger.kernel.org, rajanv@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 19, 2018 at 02:21:30PM -0600, David Lechner wrote:
-> This adds a new binding for the Power Sleep Controller (PSC) for the
-> mach-davinci family of processors.
+On Tue, Feb 20, 2018 at 11:21:04AM -0800, Jolly Shah wrote:
+> Add documentation to describe Xilinx ZynqMP firmware driver
+> bindings. Firmware driver provides an interface to firmware
+> APIs. Interface APIs can be used by any driver to communicate
+> to PMUFW (Platform Management Unit).
 > 
-> Note: Although TI Keystone has a very similar PSC, we are not using the
-> existing bindings. Keystone is using a legacy one-node-per-clock binding
-> (actually two nodes if you count the separate reset binding for the same
-> IP block). Also, some davinci LPSCs have quirks that aren't handled by
-> the keystone bindings, so we would be adding one compatible string per
-> clock with quirks instead of just a new compatible string for each
-> controller.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
 > ---
-> 
-> v7 changes:
-> - Fixed clock-names property typo
-> - Added #power-domain-cells property
-> 
-> v6 changes:
-> - added clocks and clock-names properties
-> - expanded examples
-> 
-> 
->  .../devicetree/bindings/clock/ti/davinci/psc.txt   | 71 ++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/psc.txt
+>  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
