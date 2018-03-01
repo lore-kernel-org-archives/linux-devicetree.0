@@ -1,136 +1,99 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v15 6/9] HISI LPC: Support the LPC host on Hip06/Hip07
- with DT bindings
-Date: Thu, 01 Mar 2018 21:26:48 +0200
-Message-ID: <1519932408.10722.351.camel@linux.intel.com>
-References: <1519663249-9850-1-git-send-email-john.garry@huawei.com>
-         <1519663249-9850-7-git-send-email-john.garry@huawei.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 06/32] ASoC: rt5651: Configure
+ jack-detect source through a device-property
+Date: Thu, 1 Mar 2018 19:30:46 +0000
+Message-ID: <20180301193046.GJ12864@sirena.org.uk>
+References: <20180225104713.4745-1-hdegoede@redhat.com>
+ <20180225104713.4745-7-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519663249-9850-7-git-send-email-john.garry@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>, mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org
-Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de
+Content-Type: multipart/mixed; boundary="===============7009156257506423356=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180225104713.4745-7-hdegoede@redhat.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Carlo Caione <carlo@endlessm.com>, Bard Liao <bardliao@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-02-27 at 00:40 +0800, John Garry wrote:
 
-> The low-pin-count(LPC) interface of Hip06/Hip07 accesses the
-> peripherals in
-> I/O port addresses. This patch implements the LPC host controller
-> driver
-> which perform the I/O operations on the underlying hardware.
-> We don't want to touch those existing peripherals' driver, such as
-> ipmi-bt.
-> So this driver applies the indirect-IO introduced in the previous
-> patch
-> after registering an indirect-IO node to the indirect-IO devices list
-> which
-> will be searched in the I/O accessors to retrieve the host-local I/O
-> port.
-> 
-> The driver config is set as a bool instead of a trisate. The reason
-> here is that, by the very nature of the driver providing a logical
-> PIO range, it does not make sense to have this driver as a loadable
-> module. Another more specific reason is that the Huawei D03 board
-> which includes hip06 SoC requires the LPC bus for UART console, so
-> should be built in.
+--===============7009156257506423356==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UlxN1C6awaFNesUv"
+Content-Disposition: inline
 
-Few minor comments below.
 
-> +static inline int wait_lpc_idle(unsigned char *mbase,
-> +				unsigned int waitcnt) {
-> +	do {
-> +		u32 status;
+--UlxN1C6awaFNesUv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Feb 25, 2018 at 11:46:47AM +0100, Hans de Goede wrote:
+> Configure the jack-detect source through a device-property which can be
+> set by code outside of the codec driver. Rather then putting platform
+> specific DMI quirks inside the generic codec driver.
+
+> And move the jack-detect-source quirk for the KIANO SlimNote 14.2, which
+> was present inside the codec driver to the machine driver, where we can
+> bundle it together with the other quirks already present for this laptop.
+
+Multiple things in a patch again :/  The property itself is fine but...
+
+> @@ -360,6 +377,13 @@ static int byt_rt5651_init(struct snd_soc_pcm_runtim=
+e *runtime)
+>  			dev_err(card->dev, "unable to set MCLK rate\n");
+>  	}
+> =20
+> +	props[cnt++] =3D PROPERTY_ENTRY_U32("realtek,jack-detect-source",
+> +				BYT_RT5651_JDSRC(byt_rt5651_quirk));
 > +
-> +		status = readl(mbase + LPC_REG_OP_STATUS);
-> +		if (status & LPC_REG_OP_STATUS_IDLE)
-> +			return (status & LPC_REG_OP_STATUS_FINISHED)
-> ? 0 : -EIO;
-> +		ndelay(LPC_NSEC_PERWAIT);
-
-> +	} while (waitcnt--);
-
-} while (--waitcnt);
-
+> +	ret =3D device_add_properties(codec->dev, props);
+> +	if (ret)
+> +		return ret;
 > +
-> +	return -ETIME;
-> +}
+>  	ret =3D snd_soc_card_jack_new(runtime->card, "Headset",
 
-> +
-> +/*
+I'm having a hard time geting comfortable with this; it's all a bit
+fragile feeling to me - someone deciding to centralise the property
+parsing (eg, if they are using a platform where platform data makes
+sense or want to cross-validate with some other property on probe) could
+easily break things and there's not even a comment in the CODEC driver.
+It'll work but it doesn't seem to match expectations for how firmware
+data is provided which is what's bugging me here.  It at least needs a
+"here be dragons" style comment in the code.
 
-If you would like to have a documentation you need to use proper syntax,
-i.e.
+Ideally we'd have a general way to massage the ACPI data at init time
+and could have board files that are instantiated from DMI to do that
+(like are needed even more for SFI) but that's a long way off.
 
-/**
+--UlxN1C6awaFNesUv
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Check the rest of the series for it.
+-----BEGIN PGP SIGNATURE-----
 
-> + * hisi_lpc_target_in - trigger a series of LPC cycles for read
-> operation
-> + * @lpcdev: pointer to hisi lpc device
-> + * @para: some parameters used to control the lpc I/O operations
-> + * @addr: the lpc I/O target port address
-> + * @buf: where the read back data is stored
-> + * @opcnt: how many I/O operations required, i.e. data width
-> + *
-> + * Returns 0 on success, non-zero on fail.
-> + */
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqYVOUACgkQJNaLcl1U
+h9D3cwf+IVSPIk7+7MCgCLrxp9c6tpcZspg5flWnBoUnTlujFmkE/EyO6d/NJxuh
+dM+SLj+4bNAE6JJXFjIs8s1eebheADMpmnMIjhzAF63yMKFQtcwbqwLy0+rKqPv/
+EreEIZUk/iwdWQuPQEn2qmCk92DGwNS/CvjWxKp0QhrBKajzOZNX7Ip8LI+Oej/2
+CnrGJ4A8MHKiwoSTu4XmfAh4fVfRUGihC3+USZ98ow4VyhRSkiKubradSCKZm6F2
+aac6Und/hWVFEle9LRN4nn2qYypTJhPOP1PVmvgaiQahJo7a3saViAM6ivD/nulm
+z/7qWYYbvCazS2ta9Vk/03NUHCbZQg==
+=rnc5
+-----END PGP SIGNATURE-----
 
-> +	do {
-> +		*buf++ = readb(lpcdev->membase + LPC_REG_RDATA);
-> +	} while (--opcnt);
+--UlxN1C6awaFNesUv--
 
-readsb() ?
-
-> +	do {
-> +		writeb(*buf++, lpcdev->membase + LPC_REG_WDATA);
-> +	} while (--opcnt);
-
-writesb() ?
-
-> +static inline unsigned long
-> +hisi_lpc_pio_to_addr(struct hisi_lpc_dev *lpcdev, unsigned long pio)
-> +{
-> +	return pio - lpcdev->io_host->io_start +
-> +		lpcdev->io_host->hw_start;
-
-I would rather put on one line.
-
-> +}
-
-> +	do {
-> +		if (hisi_lpc_target_out(lpcdev, &iopara, addr, buf,
-> +						dwidth))
-
-Fancy indentation. Perhaps put to one line?
-
-> +			break;
-> +		buf += dwidth;
-> +	} while (--count);
+--===============7009156257506423356==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
 
-> +	int ret;
-> +
-> +	lpcdev = devm_kzalloc(dev, sizeof(struct hisi_lpc_dev),
-> GFP_KERNEL);
-
-sizeof(*lpcdev) ?
-
-> +	if (!lpcdev)
-> +		return -ENOMEM;
-
-> +	dev_info(dev, "registered range[%pa - sz:%pa]\n",
-
-This is rather non-standard. We provide for resources the pattern like
-"... [start-end]\n"
-
-> +		 &lpcdev->io_host->io_start,
-> +		 &lpcdev->io_host->size);
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+--===============7009156257506423356==--
