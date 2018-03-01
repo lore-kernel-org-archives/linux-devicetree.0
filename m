@@ -1,75 +1,55 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v7 1/3] irqchip/gic-v3-its: add ability to save/restore
- ITS state
-Date: Thu, 1 Mar 2018 12:29:58 +0000
-Message-ID: <0a74f87a-027a-df7d-ca2d-fc164ec9cdf7@arm.com>
-References: <20180301054820.42847-1-dbasehore@chromium.org>
- <20180301054820.42847-2-dbasehore@chromium.org>
- <20180301114144.nmwu4qtslvj7ogj5@lakrids.cambridge.arm.com>
+From: Bich HEMON <bich.hemon@st.com>
+Subject: [PATCH] can: m_can: select pinctrl state in each suspend/resume
+ function
+Date: Thu, 1 Mar 2018 12:29:50 +0000
+Message-ID: <1519907380-15135-1-git-send-email-bich.hemon@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180301114144.nmwu4qtslvj7ogj5@lakrids.cambridge.arm.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Derek Basehore <dbasehore@chromium.org>
-Cc: linux-kernel@vger.kernel.org, Soby.Mathew@arm.com, sudeep.holla@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, tglx@linutronix.de, briannorris@chromium.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Bich HEMON <bich.hemon@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Make sure to apply the correct pin state in suspend/resume callbacks.
+Putting pins in sleep state saves power.
 
-On 01/03/18 11:41, Mark Rutland wrote:
-> On Wed, Feb 28, 2018 at 09:48:18PM -0800, Derek Basehore wrote:
->> Some platforms power off GIC logic in suspend, so we need to
->> save/restore state. The distributor and redistributor registers need
->> to be handled in platform code due to access permissions on those
->> registers, but the ITS registers can be restored in the kernel.
->>
->> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> 
-> How much state do we have to save/restore?
-> 
-> Given we can apparently read all this state, couldn't we *always* save
-> the state, then upon resume detect if the state has been lost, restoring
-> it if so?
-> 
-> That way, we don't need a property in FW tables for DT or ACPI.
+Signed-off-by: Bich Hemon <bich.hemon@st.com>
+---
+ drivers/net/can/m_can/m_can.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-That's a good point. I guess that we could just compare the saved
-GITS_CTLR register and restore the full state only if the ITS comes back
-as disabled.
-
-I'm just a bit worried that it makes it an implicit convention between
-kernel an FW, which could change in funny ways. Importantly, the PSCI
-spec says states FW should restore *the whole state*. Obviously, it
-cannot to that on HW that doesn't allow you to read out the state, hence
-the DT flag that outlines the departure from the expected behaviour.
-
-I'm happy to go either way, but then I have the feeling that we should
-go back to quirking it on the actual implementation (GIC500 in this
-case) if we're to from the property.
-
-> 
-> [...]
-> 
->> @@ -3261,6 +3363,9 @@ static int __init its_probe_one(struct resource *res,
->>  		ctlr |= GITS_CTLR_ImDe;
->>  	writel_relaxed(ctlr, its->base + GITS_CTLR);
->>  
->> +	if (fwnode_property_present(handle, "reset-on-suspend"))
->> +		its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
-> 
-> Does this allow this property on an ACPI system?
-> 
-> If we need this on ACPI, we need a spec update to handle this properly,
-> and shouldn't use device properties like this.
-
-Well spotted. I guess that dropping the property would fix that
-altogether, assuming we feel that the above is safe enough.
-
-Thoughts?
-
-	M.
+diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+index 2594f77..a86ef69 100644
+--- a/drivers/net/can/m_can/m_can.c
++++ b/drivers/net/can/m_can/m_can.c
+@@ -1700,6 +1700,8 @@ static __maybe_unused int m_can_suspend(struct device *dev)
+ 		m_can_clk_stop(priv);
+ 	}
+ 
++	pinctrl_pm_select_sleep_state(dev);
++
+ 	priv->can.state = CAN_STATE_SLEEPING;
+ 
+ 	return 0;
+@@ -1710,6 +1712,8 @@ static __maybe_unused int m_can_resume(struct device *dev)
+ 	struct net_device *ndev = dev_get_drvdata(dev);
+ 	struct m_can_priv *priv = netdev_priv(ndev);
+ 
++	pinctrl_pm_select_default_state(dev);
++
+ 	m_can_init_ram(priv);
+ 
+ 	priv->can.state = CAN_STATE_ERROR_ACTIVE;
 -- 
-Jazz is not dead. It just smells funny...
+1.9.1
