@@ -1,76 +1,114 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix rk3399-gru-* s2r (pinctrl hogs, wifi reset)
-Date: Thu, 01 Mar 2018 09:43:55 +0100
-Message-ID: <3831527.HjPPvuL6zK@diego>
-References: <20180227204711.29357-1-dianders@chromium.org>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v3] usb: host: ehci-platform: add support for optional
+ external vbus supply
+Date: Thu, 1 Mar 2018 08:47:01 +0000
+Message-ID: <7ea76bf6-49b5-dd69-7764-398ddd88b088@st.com>
+References: <1519393611-31367-1-git-send-email-amelie.delaunay@st.com>
+ <0d16deee-1fa9-322e-4d6d-b1b023f5b2b9@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180227204711.29357-1-dianders@chromium.org>
+In-Reply-To: <0d16deee-1fa9-322e-4d6d-b1b023f5b2b9@ti.com>
+Content-Language: en-US
+Content-ID: <8B172669E9482C4EA0F1DB3519A00B95@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Douglas Anderson <dianders@chromium.org>
-Cc: Brian Norris <briannorris@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Florian Fainelli <f.fainelli@gmail.com>, Matthias Kaehlcke <mka@chromium.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>
+To: Roger Quadros <rogerq@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 27. Februar 2018, 21:47:11 CET schrieb Douglas Anderson:
-> Back in the early days when gru devices were still under development
-> we found an issue where the WiFi reset line needed to be configured as
-> early as possible during the boot process to avoid the WiFi module
-> being in a bad state.
-> 
-> We found that the way to get the kernel to do this in the earliest
-> possible place was to configure this line in the pinctrl hogs, so
-> that's what we did.  For some history here you can see
-> <http://crosreview.com/368770>.  After the time that change landed in
-> the kernel, we landed a firmware change to configure this line even
-> earlier.  See <http://crosreview.com/399919>.  However, even after the
-> firmware change landed we kept the kernel change to deal with the fact
-> that some people working on devices might take a little while to
-> update their firmware.
-> 
-> At this there are definitely zero devices out in the wild that have
-> firmware without the fix in it.  Specifically looking in the firmware
-> branch several critically important fixes for memory stability landed
-> after the patch in coreboot and I know we didn't ship without those.
-> Thus, by now, everyone should have the new firmware and it's safe to
-> not have the kernel set this up in a pinctrl hog.
-> 
-> Historically, even though it wasn't needed to have this in a pinctrl
-> hog, we still kept it since it didn't hurt.  Pinctrl would apply the
-> default hog at bootup and then would never touch things again.  That
-> all changed with commit 981ed1bfbc6c ("pinctrl: Really force states
-> during suspend/resume").  After that commit then we'll re-apply the
-> default hog at resume time and that can screw up the reset state of
-> WiFi.  ...and on rk3399 if you touch a device on PCIe in the wrong way
-> then the whole system can go haywire.  That's what was happening.
-> Specifically you'd resume a rk3399-gru-* device and it would mostly
-> resume, then would crash with some crazy weird crash.
-> 
-> One could say, perhaps, that the recent pinctrl change was at fault
-> (and should be fixed) since it changed behavior.  ...but that's not
-> really true.  The device tree for rk3399-gru is really to blame.
-> Specifically since the pinctrl is defined in the hog and not in the
-> "wlan-pd-n" node then the actual user of this pin doesn't have a
-> pinctrl entry for it.  That's bad.
-> 
-> Let's fix our problems by just moving the control of
-> "wlan_module_reset_l pinctrl" out of the hog and put them in the
-> proper place.
-> 
-> NOTE: in theory, I think it should actually be possible to have a pin
-> controlled _both_ by the hog and by an actual device.  Once the device
-> claims the pin I think the hog is supposed to let go.  I'm not 100%
-> sure that this works and in any case this solution would be more
-> complex than is necessary.
-> 
-> Reported-by: Marc Zyngier <marc.zyngier@arm.com>
-> Fixes: 48f4d9796d99 ("arm64: dts: rockchip: add Gru/Kevin DTS")
-> Fixes: 981ed1bfbc6c ("pinctrl: Really force states during suspend/resume")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-applied as fix for 4.16 with the 2 Tested-tags
-
-
-Thanks
-Heiko
+SGkgUm9nZXIsDQoNCk9uIDAyLzI4LzIwMTggMTI6MDEgUE0sIFJvZ2VyIFF1YWRyb3Mgd3JvdGU6
+DQo+IEhpIEFtZWxpZSwNCj4gDQo+IE9uIDIzLzAyLzE4IDE1OjQ2LCBBbWVsaWUgRGVsYXVuYXkg
+d3JvdGU6DQo+PiBPbiBzb21lIGJvYXJkcywgZXNwZWNpYWxseSB3aGVuIHZidXMgc3VwcGx5IHJl
+cXVpcmVzIGxhcmdlIGN1cnJlbnQsDQo+PiBhbmQgdGhlIGNoYXJnZSBwdW1wIG9uIHRoZSBQSFkg
+aXNuJ3QgZW5vdWdoLCBhbiBleHRlcm5hbCB2YnVzIHBvd2VyIHN3aXRjaA0KPj4gbWF5IGJlIHVz
+ZWQuDQo+PiBBZGQgc3VwcG9ydCBmb3Igb3B0aW9uYWwgZXh0ZXJuYWwgdmJ1cyBzdXBwbHkgcGVy
+IHBvcnQgaW4gZWhjaS1wbGF0Zm9ybS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBBbWVsaWUgRGVs
+YXVuYXkgPGFtZWxpZS5kZWxhdW5heUBzdC5jb20+DQo+Pg0KPj4gLS0tDQo+PiBDaGFuZ2VzIGlu
+IHYzOg0KPj4gICAqIEFkZHJlc3MgRmVsaXBlIEJhbGJpIGNvbW1lbnRzOiByZWR1Y2UgaW5kZW50
+YXRpb24gaW4NCj4+ICAgICBlaGNpX3BsYXRmb3JtX3BvcnRfcG93ZXIuDQo+PiAgICogQWRkcmVz
+cyBSb2dlciBRdWFkcm9zIGFuZCBBbGFuIFN0ZXJuIGNvbW1lbnRzOiBwbGF0Zm9ybXMgY2FuIGhh
+dmUgb25lDQo+PiAgICAgZXh0ZXJuYWwgdmJ1cyBzdXBwbHkgcGVyIHBvcnQsIHNvIGFkZCBzdXBw
+b3J0IHRvIGdldCBhcyBtYW55IG9wdGlvbmFsDQo+PiAgICAgcmVndWxhdG9yIGFzIGltcGxlbWVu
+dGVkIHBvcnRzIG9uIHRoZSBob3N0IGNvbnRyb2xsZXIuDQo+Pg0KPj4gQ2hhbmdlcyBpbiB2MjoN
+Cj4+ICAgKiBBZGRyZXNzIFJvZ2VyIFF1YWRyb3MgY29tbWVudHM6IG1vdmUgcmVndWxhdG9yX2Vu
+YWJsZS9kaXNhYmxlIGZyb20NCj4+ICAgICBlaGNpX3BsYXRmb3JtX3Bvd2VyX29uL29mZiB0byBl
+aGNpX3BsYXRmb3JtX3BvcnRfcG93ZXIuDQo+PiAtLS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3VzYi91c2ItZWhjaS50eHQgfCAgMSArDQo+PiAgIGRyaXZlcnMvdXNi
+L2hvc3QvZWhjaS1wbGF0Zm9ybS5jICAgICAgICAgICAgICAgICAgIHwgNTIgKysrKysrKysrKysr
+KysrKysrKysrLQ0KPj4gICAyIGZpbGVzIGNoYW5nZWQsIDUyIGluc2VydGlvbnMoKyksIDEgZGVs
+ZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3VzYi91c2ItZWhjaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvdXNiL3VzYi1laGNpLnR4dA0KPj4gaW5kZXggM2VmZGUxMi4uY2Q1NzZkYiAxMDA2NDQNCj4+
+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvdXNiLWVoY2kudHh0
+DQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3VzYi1laGNp
+LnR4dA0KPj4gQEAgLTE5LDYgKzE5LDcgQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4+ICAgIC0g
+cGh5cyA6IHBoYW5kbGUgKyBwaHkgc3BlY2lmaWVyIHBhaXINCj4+ICAgIC0gcGh5LW5hbWVzIDog
+InVzYiINCj4+ICAgIC0gcmVzZXRzIDogcGhhbmRsZSArIHJlc2V0IHNwZWNpZmllciBwYWlyDQo+
+PiArIC0gcG9ydE5fdmJ1cy1zdXBwbHkgOiBwaGFuZGxlIG9mIHJlZ3VsYXRvciBzdXBwbHlpbmcg
+dmJ1cyBmb3IgcG9ydCBODQo+PiAgIA0KPj4gICBFeGFtcGxlIChTZXF1b2lhIDQ0MEVQeCk6DQo+
+PiAgICAgICBlaGNpQGUwMDAwMzAwIHsNCj4gDQo+IFNvcnJ5IGZvciBub3QgcG9pbnRpbmcgdGhp
+cyBvdXQgZWFybGllciBidXQgSSB0aGluayBwYXRjaCB0byBEVCBiaW5kaW5ncw0KPiBzaG91bGQg
+Y29tZSBzZXBhcmF0ZWx5IChiZWZvcmUgdGhlIGRyaXZlciBjaGFuZ2VzKSB3aXRoIHRoZSBmb2xs
+b3dpbmcgc3ViamVjdC4NCj4gDQo+ICJkdC1iaW5kaW5nczogdXNiOiBlaGNpOiA8c3ViamVjdD4i
+DQo+IA0KPiANCg0KT2ssIEkgcHJlcGFyZSBhIHY0IHdpdGggdGhpcyBzcGxpdC4gVGhhbmtzIQ0K
+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvaG9zdC9laGNpLXBsYXRmb3JtLmMgYi9kcml2
+ZXJzL3VzYi9ob3N0L2VoY2ktcGxhdGZvcm0uYw0KPj4gaW5kZXggYjA2NWE5Ni4uOGU5ZjIwMSAx
+MDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvdXNiL2hvc3QvZWhjaS1wbGF0Zm9ybS5jDQo+PiArKysg
+Yi9kcml2ZXJzL3VzYi9ob3N0L2VoY2ktcGxhdGZvcm0uYw0KPj4gQEAgLTI5LDYgKzI5LDcgQEAN
+Cj4+ICAgI2luY2x1ZGUgPGxpbnV4L29mLmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC9waHkvcGh5
+Lmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4+ICsjaW5jbHVk
+ZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC9yZXNl
+dC5oPg0KPj4gICAjaW5jbHVkZSA8bGludXgvdXNiLmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC91
+c2IvaGNkLmg+DQo+PiBAQCAtNDYsNiArNDcsNyBAQCBzdHJ1Y3QgZWhjaV9wbGF0Zm9ybV9wcml2
+IHsNCj4+ICAgCXN0cnVjdCByZXNldF9jb250cm9sICpyc3RzOw0KPj4gICAJc3RydWN0IHBoeSAq
+KnBoeXM7DQo+PiAgIAlpbnQgbnVtX3BoeXM7DQo+PiArCXN0cnVjdCByZWd1bGF0b3IgKip2YnVz
+X3N1cHBsaWVzOw0KPj4gICAJYm9vbCByZXNldF9vbl9yZXN1bWU7DQo+PiAgIH07DQo+PiAgIA0K
+Pj4gQEAgLTU2LDcgKzU4LDggQEAgc3RhdGljIGludCBlaGNpX3BsYXRmb3JtX3Jlc2V0KHN0cnVj
+dCB1c2JfaGNkICpoY2QpDQo+PiAgIAlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gdG9f
+cGxhdGZvcm1fZGV2aWNlKGhjZC0+c2VsZi5jb250cm9sbGVyKTsNCj4+ICAgCXN0cnVjdCB1c2Jf
+ZWhjaV9wZGF0YSAqcGRhdGEgPSBkZXZfZ2V0X3BsYXRkYXRhKCZwZGV2LT5kZXYpOw0KPj4gICAJ
+c3RydWN0IGVoY2lfaGNkICplaGNpID0gaGNkX3RvX2VoY2koaGNkKTsNCj4+IC0JaW50IHJldHZh
+bDsNCj4+ICsJc3RydWN0IGVoY2lfcGxhdGZvcm1fcHJpdiAqcHJpdiA9IGhjZF90b19laGNpX3By
+aXYoaGNkKTsNCj4+ICsJaW50IHBvcnRudW0sIG5fcG9ydHMsIHJldHZhbDsNCj4+ICAgDQo+PiAg
+IAllaGNpLT5oYXNfc3lub3BzeXNfaGNfYnVnID0gcGRhdGEtPmhhc19zeW5vcHN5c19oY19idWc7
+DQo+PiAgIA0KPj4gQEAgLTcxLDExICs3NCw1NyBAQCBzdGF0aWMgaW50IGVoY2lfcGxhdGZvcm1f
+cmVzZXQoc3RydWN0IHVzYl9oY2QgKmhjZCkNCj4+ICAgCWlmIChyZXR2YWwpDQo+PiAgIAkJcmV0
+dXJuIHJldHZhbDsNCj4+ICAgDQo+PiArCW5fcG9ydHMgPSBIQ1NfTl9QT1JUUyhlaGNpLT5oY3Nf
+cGFyYW1zKTsNCj4+ICsJcHJpdi0+dmJ1c19zdXBwbGllcyA9IGRldm1fa2NhbGxvYygmcGRldi0+
+ZGV2LCBuX3BvcnRzLA0KPj4gKwkJCQkJICAgc2l6ZW9mKHN0cnVjdCByZWd1bGF0b3IgKiksDQo+
+PiArCQkJCQkgICBHRlBfS0VSTkVMKTsNCj4+ICsJaWYgKCFwcml2LT52YnVzX3N1cHBsaWVzKQ0K
+Pj4gKwkJcmV0dXJuIC1FTk9NRU07DQo+PiArDQo+PiArCWZvciAocG9ydG51bSA9IDA7IHBvcnRu
+dW0gPCBuX3BvcnRzOyBwb3J0bnVtKyspIHsNCj4+ICsJCXN0cnVjdCByZWd1bGF0b3IgKnZidXNf
+c3VwcGx5Ow0KPj4gKwkJY2hhciBpZFsyMF07DQo+PiArDQo+PiArCQlzcHJpbnRmKGlkLCAicG9y
+dCVkX3ZidXMiLCBwb3J0bnVtKTsNCj4+ICsNCj4+ICsJCXZidXNfc3VwcGx5ID0gZGV2bV9yZWd1
+bGF0b3JfZ2V0X29wdGlvbmFsKCZwZGV2LT5kZXYsIGlkKTsNCj4+ICsJCWlmIChJU19FUlIodmJ1
+c19zdXBwbHkpKSB7DQo+PiArCQkJcmV0dmFsID0gUFRSX0VSUih2YnVzX3N1cHBseSk7DQo+PiAr
+CQkJaWYgKHJldHZhbCA9PSAtRU5PREVWKQ0KPj4gKwkJCQlwcml2LT52YnVzX3N1cHBsaWVzW3Bv
+cnRudW1dID0gTlVMTDsNCj4+ICsJCQllbHNlDQo+PiArCQkJCXJldHVybiByZXR2YWw7DQo+PiAr
+CQl9IGVsc2Ugew0KPj4gKwkJCXByaXYtPnZidXNfc3VwcGxpZXNbcG9ydG51bV0gPSB2YnVzX3N1
+cHBseTsNCj4+ICsJCX0NCj4+ICsJfQ0KPj4gKw0KPj4gICAJaWYgKHBkYXRhLT5ub19pb193YXRj
+aGRvZykNCj4+ICAgCQllaGNpLT5uZWVkX2lvX3dhdGNoZG9nID0gMDsNCj4+ICAgCXJldHVybiAw
+Ow0KPj4gICB9DQo+PiAgIA0KPj4gK3N0YXRpYyBpbnQgZWhjaV9wbGF0Zm9ybV9wb3J0X3Bvd2Vy
+KHN0cnVjdCB1c2JfaGNkICpoY2QsIGludCBwb3J0bnVtLA0KPj4gKwkJCQkgICAgYm9vbCBlbmFi
+bGUpDQo+PiArew0KPj4gKwlzdHJ1Y3QgZWhjaV9wbGF0Zm9ybV9wcml2ICpwcml2ID0gaGNkX3Rv
+X2VoY2lfcHJpdihoY2QpOw0KPj4gKwlpbnQgcmV0Ow0KPj4gKw0KPj4gKwlpZiAoIXByaXYtPnZi
+dXNfc3VwcGxpZXNbcG9ydG51bV0pDQo+PiArCQlyZXR1cm4gMDsNCj4+ICsNCj4+ICsJaWYgKGVu
+YWJsZSkNCj4+ICsJCXJldCA9IHJlZ3VsYXRvcl9lbmFibGUocHJpdi0+dmJ1c19zdXBwbGllc1tw
+b3J0bnVtXSk7DQo+PiArCWVsc2UNCj4+ICsJCXJldCA9IHJlZ3VsYXRvcl9kaXNhYmxlKHByaXYt
+PnZidXNfc3VwcGxpZXNbcG9ydG51bV0pOw0KPiANCj4gQSBuZXdsaW5lIGNvdWxkIGJlIHVzZWQg
+aGVyZS4NCj4gDQoNCk9rLg0KDQo+PiArCWlmIChyZXQpDQo+PiArCQlkZXZfZXJyKGhjZC0+c2Vs
+Zi5jb250cm9sbGVyLA0KPj4gKwkJCSJmYWlsZWQgdG8gJXMgdmJ1cyBzdXBwbHkgZm9yIHBvcnQg
+JWQ6ICVkXG4iLA0KPj4gKwkJCWVuYWJsZSA/ICJlbmFibGUiIDogImRpc2FibGUiLCBwb3J0bnVt
+LCByZXQpOw0KPj4gKw0KPj4gKwlyZXR1cm4gcmV0Ow0KPj4gK30NCj4+ICsNCj4+ICAgc3RhdGlj
+IGludCBlaGNpX3BsYXRmb3JtX3Bvd2VyX29uKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldikN
+Cj4+ICAgew0KPj4gICAJc3RydWN0IHVzYl9oY2QgKmhjZCA9IHBsYXRmb3JtX2dldF9kcnZkYXRh
+KGRldik7DQo+PiBAQCAtMTM0LDYgKzE4Myw3IEBAIHN0YXRpYyBzdHJ1Y3QgaGNfZHJpdmVyIF9f
+cmVhZF9tb3N0bHkgZWhjaV9wbGF0Zm9ybV9oY19kcml2ZXI7DQo+PiAgIHN0YXRpYyBjb25zdCBz
+dHJ1Y3QgZWhjaV9kcml2ZXJfb3ZlcnJpZGVzIHBsYXRmb3JtX292ZXJyaWRlcyBfX2luaXRjb25z
+dCA9IHsNCj4+ICAgCS5yZXNldCA9CQllaGNpX3BsYXRmb3JtX3Jlc2V0LA0KPj4gICAJLmV4dHJh
+X3ByaXZfc2l6ZSA9CXNpemVvZihzdHJ1Y3QgZWhjaV9wbGF0Zm9ybV9wcml2KSwNCj4+ICsJLnBv
+cnRfcG93ZXIgPQkJZWhjaV9wbGF0Zm9ybV9wb3J0X3Bvd2VyLA0KPj4gICB9Ow0KPj4gICANCj4+
+ICAgc3RhdGljIHN0cnVjdCB1c2JfZWhjaV9wZGF0YSBlaGNpX3BsYXRmb3JtX2RlZmF1bHRzID0g
+ew0KPj4NCj4gDQo+IE90aGVyd2lzZSwgbG9va3MgZ29vZCB0byBtZS4gU28sDQo+IA0KPiBSZXZp
+ZXdlZC1ieTogUm9nZXIgUXVhZHJvcyA8cm9nZXJxQHRpLmNvbT4NCj4gDQoNClRoYW5rcyE=
