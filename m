@@ -1,211 +1,132 @@
-Return-Path: <SRS0=zrMl=GI=gmail.com=festevam@kernel.org>
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH 1/4] Revert "arm64: dts: fsl: fix ifc simple-bus unit address format warnings"
-Date: Sun, 18 Mar 2018 11:17:28 -0300
-Message-Id: <1521382651-10256-1-git-send-email-festevam@gmail.com>
-To: shawnguo@kernel.org
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>
+Return-Path: <SRS0=hUgu=FX=bootlin.com=maxime.ripard@kernel.org>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: [PATCH v5 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
+Date: Thu,  1 Mar 2018 12:30:48 +0100
+Message-Id: <20180301113049.16470-2-maxime.ripard@bootlin.com>
+In-Reply-To: <20180301113049.16470-1-maxime.ripard@bootlin.com>
+References: <20180301113049.16470-1-maxime.ripard@bootlin.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Fabio Estevam <fabio.estevam@nxp.com>
+The Cadence MIPI-CSI2 TX controller is a CSI2 bridge that supports up to 4
+video streams and can output on up to 4 CSI-2 lanes, depending on the
+hardware implementation.
 
-This reverts commit f81d7af7957539b7808961f929f945381530acb9.
+It can operate with an external D-PHY, an internal one or no D-PHY at all
+in some configurations.
 
-As explained by Rob Herring:
-
-"This "fix" is wrong. Memory controllers with chip selects should have
-the chip select in the unit-address. The correct fix here is you should
-drop "simple-bus"."
-
-Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts  | 6 +++---
- arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts  | 6 +++---
- arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts  | 6 +++---
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts  | 4 ++--
- arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts  | 6 +++---
- arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts  | 4 ++--
- arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi | 6 +++---
- 7 files changed, 19 insertions(+), 19 deletions(-)
+ .../devicetree/bindings/media/cdns,csi2tx.txt      | 98 ++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-index 3a09297..6341281 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-@@ -84,19 +84,19 @@
- 		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
- 	status = "okay";
- 
--	nor@0 {
-+	nor@0,0 {
- 		compatible = "cfi-flash";
- 		reg = <0x0 0x0 0x8000000>;
- 		bank-width = <2>;
- 		device-width = <1>;
- 	};
- 
--	nand@100000000 {
-+	nand@1,0 {
- 		compatible = "fsl,ifc-nand";
- 		reg = <0x1 0x0 0x10000>;
- 	};
- 
--	fpga: board-control@200000000 {
-+	fpga: board-control@2,0 {
- 		compatible = "fsl,ls1043aqds-fpga", "fsl,fpga-qixis";
- 		reg = <0x2 0x0 0x0000100>;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-index 0a82bf9..3dc0c8e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-@@ -97,7 +97,7 @@
- 		  0x1 0x0 0x0 0x7e800000 0x00010000
- 		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
- 
--		nor@0 {
-+		nor@0,0 {
- 			compatible = "cfi-flash";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -106,14 +106,14 @@
- 			device-width = <1>;
- 		};
- 
--		nand@100000000 {
-+		nand@1,0 {
- 			compatible = "fsl,ifc-nand";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			reg = <0x1 0x0 0x10000>;
- 		};
- 
--		cpld: board-control@200000000 {
-+		cpld: board-control@2,0 {
- 			compatible = "fsl,ls1043ardb-cpld";
- 			reg = <0x2 0x0 0x0000100>;
- 		};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-index 410dc61..434383b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-@@ -175,19 +175,19 @@
- 		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
- 	status = "okay";
- 
--	nor@0 {
-+	nor@0,0 {
- 		compatible = "cfi-flash";
- 		reg = <0x0 0x0 0x8000000>;
- 		bank-width = <2>;
- 		device-width = <1>;
- 	};
- 
--	nand@100000000 {
-+	nand@1,0 {
- 		compatible = "fsl,ifc-nand";
- 		reg = <0x1 0x0 0x10000>;
- 	};
- 
--	fpga: board-control@200000000 {
-+	fpga: board-control@2,0 {
- 		compatible = "fsl,ls1046aqds-fpga", "fsl,fpga-qixis";
- 		reg = <0x2 0x0 0x0000100>;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-index 18d3c5b..5dc2782 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-@@ -122,14 +122,14 @@
- 		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
- 	status = "okay";
- 
--	nand@0 {
-+	nand@0,0 {
- 		compatible = "fsl,ifc-nand";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		reg = <0x0 0x0 0x10000>;
- 	};
- 
--	cpld: board-control@200000000 {
-+	cpld: board-control@2,0 {
- 		compatible = "fsl,ls1046ardb-cpld";
- 		reg = <0x2 0x0 0x0000100>;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-index 0b96d6d..3012805 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-@@ -116,19 +116,19 @@
- 		  3 0 0x5 0x20000000 0x00010000>;
- 	status = "okay";
- 
--	nor@0 {
-+	nor@0,0 {
- 		compatible = "cfi-flash";
- 		reg = <0x0 0x0 0x8000000>;
- 		bank-width = <2>;
- 		device-width = <1>;
- 	};
- 
--	nand@200000000 {
-+	nand@2,0 {
- 		compatible = "fsl,ifc-nand";
- 		reg = <0x2 0x0 0x10000>;
- 	};
- 
--	fpga: board-control@300000000 {
-+	fpga: board-control@3,0 {
- 		compatible = "fsl,ls1088aqds-fpga", "fsl,fpga-qixis";
- 		reg = <0x3 0x0 0x0000100>;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-index 3d57008e..4f17601 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-@@ -99,12 +99,12 @@
- 		  2 0 0x5 0x20000000 0x00010000>;
- 	status = "okay";
- 
--	nand@0 {
-+	nand@0,0 {
- 		compatible = "fsl,ifc-nand";
- 		reg = <0x0 0x0 0x10000>;
- 	};
- 
--	fpga: board-control@200000000 {
-+	fpga: board-control@2,0 {
- 		compatible = "fsl,ls1088ardb-fpga", "fsl,fpga-qixis";
- 		reg = <0x2 0x0 0x0000100>;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
-index 5ac3412..1de6188 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
-@@ -58,7 +58,7 @@
- 		  0x2 0x0 0x5 0x30000000 0x00010000
- 		  0x3 0x0 0x5 0x20000000 0x00010000>;
- 
--	nor@0 {
-+	nor@0,0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		compatible = "cfi-flash";
-@@ -67,12 +67,12 @@
- 		device-width = <1>;
- 	};
- 
--	nand@200000000 {
-+	nand@2,0 {
- 	     compatible = "fsl,ifc-nand";
- 	     reg = <0x2 0x0 0x10000>;
- 	};
- 
--	cpld@300000000 {
-+	cpld@3,0 {
- 	     reg = <0x3 0x0 0x10000>;
- 	     compatible = "fsl,ls2080aqds-fpga", "fsl,fpga-qixis";
- 	};
+diff --git a/Documentation/devicetree/bindings/media/cdns,csi2tx.txt b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+new file mode 100644
+index 000000000000..459c6e332f52
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/cdns,csi2tx.txt
+@@ -0,0 +1,98 @@
++Cadence MIPI-CSI2 TX controller
++===============================
++
++The Cadence MIPI-CSI2 TX controller is a CSI-2 bridge supporting up to
++4 CSI lanes in output, and up to 4 different pixel streams in input.
++
++Required properties:
++  - compatible: must be set to "cdns,csi2tx"
++  - reg: base address and size of the memory mapped region
++  - clocks: phandles to the clocks driving the controller
++  - clock-names: must contain:
++    * esc_clk: escape mode clock
++    * p_clk: register bank clock
++    * pixel_if[0-3]_clk: pixel stream output clock, one for each stream
++                         implemented in hardware, between 0 and 3
++
++Optional properties
++  - phys: phandle to the D-PHY. If it is set, phy-names need to be set
++  - phy-names: must contain "dphy"
++
++Required subnodes:
++  - ports: A ports node with one port child node per device input and output
++           port, in accordance with the video interface bindings defined in
++           Documentation/devicetree/bindings/media/video-interfaces.txt. The
++           port nodes are numbered as follows.
++
++           Port Description
++           -----------------------------
++           0    CSI-2 output
++           1    Stream 0 input
++           2    Stream 1 input
++           3    Stream 2 input
++           4    Stream 3 input
++
++           The stream input port nodes are optional if they are not
++           connected to anything at the hardware level or implemented
++           in the design. Since there is only one endpoint per port,
++           the endpoints are not numbered.
++
++Example:
++
++csi2tx: csi-bridge@0d0e1000 {
++	compatible = "cdns,csi2tx";
++	reg = <0x0d0e1000 0x1000>;
++	clocks = <&byteclock>, <&byteclock>,
++		 <&coreclock>, <&coreclock>,
++		 <&coreclock>, <&coreclock>;
++	clock-names = "p_clk", "esc_clk",
++		      "pixel_if0_clk", "pixel_if1_clk",
++		      "pixel_if2_clk", "pixel_if3_clk";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++
++			csi2tx_out: endpoint {
++				remote-endpoint = <&remote_in>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			csi2tx_in_stream0: endpoint {
++				remote-endpoint = <&stream0_out>;
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			csi2tx_in_stream1: endpoint {
++				remote-endpoint = <&stream1_out>;
++			};
++		};
++
++		port@3 {
++			reg = <3>;
++
++			csi2tx_in_stream2: endpoint {
++				remote-endpoint = <&stream2_out>;
++			};
++		};
++
++		port@4 {
++			reg = <4>;
++
++			csi2tx_in_stream3: endpoint {
++				remote-endpoint = <&stream3_out>;
++			};
++		};
++	};
++};
 -- 
-2.7.4
+2.14.3
