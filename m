@@ -1,55 +1,47 @@
-From: Bich HEMON <bich.hemon@st.com>
-Subject: [PATCH] can: m_can: select pinctrl state in each suspend/resume
- function
-Date: Thu, 1 Mar 2018 12:29:50 +0000
-Message-ID: <1519907380-15135-1-git-send-email-bich.hemon@st.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4] Input: gpio_keys: Add level trigger support for GPIO keys
+Date: Thu, 1 Mar 2018 13:37:47 +0100
+Message-ID: <CAK8P3a3iK7Oo_XrkoqXyE0cXBm9Ngx18Yyvk+0UJNN1Gz5DYcQ@mail.gmail.com>
+References: <9ea2faf9c1cf8439f3a8ad495c6a2b49dacad7bd.1519889208.git.baolin.wang@linaro.org>
+ <CAHp75VcgUmOoo-jRbM-Gyp1JTY-2rJri8e7u2miYSvRM_4HmPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Bich HEMON <bich.hemon@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHp75VcgUmOoo-jRbM-Gyp1JTY-2rJri8e7u2miYSvRM_4HmPg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Baolin Wang <baolin.wang@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stephen lu <lumotuwe@gmail.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>, Joseph Lo <josephl@nvidia.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Thomas Gleixner <tglx@linutronix.de>, linux-input <linux-input@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Make sure to apply the correct pin state in suspend/resume callbacks.
-Putting pins in sleep state saves power.
+On Thu, Mar 1, 2018 at 1:09 PM, Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, Mar 1, 2018 at 9:36 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+>> On some platforms (such as Spreadtrum platform), the GPIO keys can only
+>> be triggered by level type. So this patch introduces one trigger_type to
+>> indicate if the button's interrupt type is level trigger or edge trigger.
+>
+>>                         button->irq =
+>>                                 irq_of_parse_and_map(to_of_node(child), 0);
+>
+> AFAIU, 0 means NO_IRQ, thus,
+>
+>> +                       if (button->irq)
+>> +                               button->trigger_type =
+>> +                                       irq_get_trigger_type(button->irq);
+>
+> irq_get_trigger_type(NO_IRQ) should return 0.
+>
+> Therefore, if (button->irq) is redundant.
+> Did I miss anything?
 
-Signed-off-by: Bich Hemon <bich.hemon@st.com>
----
- drivers/net/can/m_can/m_can.c | 4 ++++
- 1 file changed, 4 insertions(+)
+"irq_of_parse_and_map(to_of_node(child), 0);" is the first interrupt. A
+more common way to express the same thing in modern drivers is
+'platform_get_irq(pdev, 0)'.
 
-diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-index 2594f77..a86ef69 100644
---- a/drivers/net/can/m_can/m_can.c
-+++ b/drivers/net/can/m_can/m_can.c
-@@ -1700,6 +1700,8 @@ static __maybe_unused int m_can_suspend(struct device *dev)
- 		m_can_clk_stop(priv);
- 	}
- 
-+	pinctrl_pm_select_sleep_state(dev);
-+
- 	priv->can.state = CAN_STATE_SLEEPING;
- 
- 	return 0;
-@@ -1710,6 +1712,8 @@ static __maybe_unused int m_can_resume(struct device *dev)
- 	struct net_device *ndev = dev_get_drvdata(dev);
- 	struct m_can_priv *priv = netdev_priv(ndev);
- 
-+	pinctrl_pm_select_default_state(dev);
-+
- 	m_can_init_ram(priv);
- 
- 	priv->can.state = CAN_STATE_ERROR_ACTIVE;
--- 
-1.9.1
+However, there is one more thing I'm missing: with my suggestion
+of emulating edge-triggered interrupts in the irqchip/gpio driver, the
+trigger type here should also be 'IRQF_TRIGGER_RISING |
+IRQF_TRIGGER_FALLING' in the DT description, so I don't think
+we need to change the gpio-keys driver at all, just the gpio driver.
+
+       Arnd
