@@ -1,54 +1,116 @@
-Return-Path: <SRS0=f5IU=FN=huawei.com=john.garry@kernel.org>
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH 5/8] scsi: hisi_sas: increase timer expire of internal abort task
-Date: Tue, 20 Feb 2018 03:13:28 +0800
-Message-ID: <1519067611-206638-6-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
-References: <1519067611-206638-1-git-send-email-john.garry@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>, John Garry <john.garry@huawei.com>
+Return-Path: <SRS0=Pbk3=FX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:59006 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S965752AbeCAEBZ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 28 Feb 2018 23:01:25 -0500
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 2/3] ARM: dts: omap4-droid4: Configure MDM6600 USB PHY
+Date: Wed, 28 Feb 2018 20:01:06 -0800
+Message-Id: <20180301040107.39444-2-tony@atomide.com>
+In-Reply-To: <20180301040107.39444-1-tony@atomide.com>
+References: <20180301040107.39444-1-tony@atomide.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Sebastian Reichel <sre@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+Configure MDM6600 USB PHY.
 
-The current 110ms expiry time is not long enough for the internal
-abort task.
-
-The reason is that the internal abort task could be blocked in HW
-if the HW is retrying to set up link. The internal abort task will
-be executed only when the retry process finished.
-
-The maximum time is 5s for the retry of setting up link. So, the timer
-expire should be more than 5s. This patch increases it from 110ms to 6s.
-
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
+Cc: Marcel Partap <mpartap@gmx.net>
+Cc: Michael Scott <michael.scott@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 ---
- drivers/scsi/hisi_sas/hisi_sas_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/omap4-droid4-xt894.dts | 64 ++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 9d16372..9ff8790 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -871,6 +871,7 @@ static void hisi_sas_tmf_timedout(struct timer_list *t)
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -71,6 +71,28 @@
+ 		regulator-always-on;
+ 	};
  
- #define TASK_TIMEOUT 20
- #define TASK_RETRY 3
-+#define INTERNAL_ABORT_TIMEOUT 6
- static int hisi_sas_exec_internal_tmf_task(struct domain_device *device,
- 					   void *parameter, u32 para_len,
- 					   struct hisi_sas_tmf_task *tmf)
-@@ -1574,7 +1575,7 @@ static int hisi_sas_query_task(struct sas_task *task)
- 	task->task_proto = device->tproto;
- 	task->task_done = hisi_sas_task_done;
- 	task->slow_task->timer.function = hisi_sas_tmf_timedout;
--	task->slow_task->timer.expires = jiffies + msecs_to_jiffies(110);
-+	task->slow_task->timer.expires = jiffies + INTERNAL_ABORT_TIMEOUT*HZ;
- 	add_timer(&task->slow_task->timer);
++	/* FS USB Host PHY on port 1 for mdm6600 */
++	fsusb1_phy: usb-phy@1 {
++		compatible = "motorola,mapphone-mdm6600";
++		pinctrl-0 = <&usb_mdm6600_pins>;
++		pinctrl-names = "default";
++		enable-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;     /* gpio_95 */
++		power-gpios = <&gpio2 22 GPIO_ACTIVE_HIGH>;	/* gpio_54 */
++		reset-gpios = <&gpio2 17 GPIO_ACTIVE_HIGH>;	/* gpio_49 */
++		/* mode: gpio_148 gpio_149 */
++		motorola,mode-gpios = <&gpio5 20 GPIO_ACTIVE_HIGH>,
++				      <&gpio5 21 GPIO_ACTIVE_HIGH>;
++		/* cmd: gpio_103 gpio_104 gpio_142 */
++		motorola,cmd-gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>,
++				     <&gpio4 8 GPIO_ACTIVE_HIGH>,
++				     <&gpio5 14 GPIO_ACTIVE_HIGH>;
++		/* status: gpio_52 gpio_53 gpio_55 */
++		motorola,status-gpios = <&gpio2 20 GPIO_ACTIVE_HIGH>,
++					<&gpio2 21 GPIO_ACTIVE_HIGH>,
++					<&gpio2 23 GPIO_ACTIVE_HIGH>;
++		#phy-cells = <0>;
++	};
++
+ 	/* HS USB host TLL nop-phy on port 2 for w3glte */
+ 	hsusb2_phy: usb-phy@2 {
+ 		compatible = "usb-nop-xceiv";
+@@ -459,6 +481,43 @@
+ 		>;
+ 	};
  
- 	res = hisi_sas_internal_abort_task_exec(hisi_hba, sas_dev->device_id,
++	usb_mdm6600_pins: pinmux_usb_mdm6600_pins {
++		pinctrl-single,pins = <
++		/* enable 0x4a1000d8 usbb1_ulpitll_dat7.gpio_95 ag16 */
++		OMAP4_IOPAD(0x0d8, PIN_INPUT | MUX_MODE3)
++
++		/* power 0x4a10007c gpmc_nwp.gpio_54 c25 */
++		OMAP4_IOPAD(0x07c, PIN_OUTPUT | MUX_MODE3)
++
++		/* reset 0x4a100072 gpmc_a25.gpio_49 d20 */
++		OMAP4_IOPAD(0x072, PIN_OUTPUT | MUX_MODE3)
++
++		/* mode0/bpwake 0x4a10014e sdmmc5_dat1.gpio_148 af4 */
++		OMAP4_IOPAD(0x14e, PIN_OUTPUT | MUX_MODE3)
++
++		/* mode1/apwake 0x4a100150 sdmmc5_dat2.gpio_149 ag3 */
++		OMAP4_IOPAD(0x150, PIN_OFF_OUTPUT_LOW | PIN_INPUT | MUX_MODE3)
++
++		/* status0 0x4a10007e gpmc_clk.gpio_55 b22 */
++		OMAP4_IOPAD(0x07e, PIN_INPUT | MUX_MODE3)
++
++		/* status1 0x4a10007a gpmc_ncs3.gpio_53 c22 */
++		OMAP4_IOPAD(0x07a, PIN_INPUT | MUX_MODE3)
++
++		/* status2 0x4a100078 gpmc_ncs2.gpio_52 d21 */
++		OMAP4_IOPAD(0x078, PIN_INPUT | MUX_MODE3)
++
++		/* cmd0 0x4a100094 gpmc_ncs6.gpio_103 c24 */
++		OMAP4_IOPAD(0x094, PIN_OUTPUT | MUX_MODE3)
++
++		/* cmd1 0x4a100096 gpmc_ncs7.gpio_104 d24 */
++		OMAP4_IOPAD(0x096, PIN_OUTPUT | MUX_MODE3)
++
++		/* cmd2 0x4a100142 uart3_rts_sd.gpio_142 f28 */
++		OMAP4_IOPAD(0x142, PIN_OUTPUT | MUX_MODE3)
++		>;
++	};
++
+ 	usb_ulpi_pins: pinmux_usb_ulpi_pins {
+ 		pinctrl-single,pins = <
+ 		OMAP4_IOPAD(0x196, MUX_MODE7)
+@@ -583,6 +642,11 @@
+ 	};
+ };
+ 
++&usbhsohci {
++	phys = <&fsusb1_phy>;
++	phy-names = "usb";
++};
++
+ &usbhsehci {
+ 	phys = <&hsusb2_phy>;
+ };
 -- 
-1.9.1
+2.16.2
