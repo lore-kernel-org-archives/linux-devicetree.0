@@ -1,80 +1,174 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 1/2][v5] dt-bindings: mtd-physmap: Add endianness supports
-Date: Thu, 1 Mar 2018 18:12:48 +0100
-Message-ID: <20180301181248.7212a5c5@bbrezillon>
-References: <20180228073335.1758-1-prabhakar.kushwaha@nxp.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v3 04/10] pinctrl: actions: Add Actions S900 pinctrl
+ driver
+Date: Thu, 1 Mar 2018 22:59:44 +0530
+Message-ID: <20180301172943.cuypepvflte2cynr@linaro.org>
+References: <20180228181432.26847-1-manivannan.sadhasivam@linaro.org>
+ <20180228181432.26847-5-manivannan.sadhasivam@linaro.org>
+ <CAHp75VchzV9SZb4g0fVP9aoKb7actsehXm8c4wsvVGASgkOc+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180228073335.1758-1-prabhakar.kushwaha@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh@kernel.org, boris.brezillon@free-electrons.com, leoyang.li@nxp.com, oss@buserror.net, linux-mtd@lists.infradead.org, cyrille.pitchen@wedev4u.fr, computersforpeace@gmail.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VchzV9SZb4g0fVP9aoKb7actsehXm8c4wsvVGASgkOc+w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, =?utf-8?B?5YiY54Kc?= <liuwei@actions-semi.com>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, amit.kucheria@linaro.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Feb 2018 13:03:34 +0530
-Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com> wrote:
+Hi Andy,
 
-> Connection between flash and controller is not necessary to be always
-> of same type. It may varies from platform to platform.
+On Wed, Feb 28, 2018 at 08:36:53PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 28, 2018 at 8:14 PM, Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
+> > Add pinctrl driver for Actions Semi S900 SoC. The driver supports
+> > pinctrl, pinmux and pinconf functionalities through a range of registers
+> > common to both gpio driver and pinctrl driver.
+> >
+> > Pinmux functionality is available only for the pin groups while the
+> > pinconf functionality is available for both pin groups and individual
+> > pins.
 > 
-> Adding endianness (optional) property to provide connection type
-> information.
+> > +static int owl_set_mux(struct pinctrl_dev *pctrldev,
+> > +                               unsigned int function,
+> > +                               unsigned int group)
+> > +{
 > 
-> Signed-off-by: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> Changes for v2: updated subject
-> Changes for v3: fixed typo for "big-endian"
-> Changes for v4: Moved binding definition in mtd-physmap.txt
-> as discussed at https://patchwork.ozlabs.org/patch/842543/
-> Changes for v5: Sending as it is
+> > +       mfpval = readl(pctrl->base + g->mfpctl_reg);
+> > +       mfpval &= ~mask;
+> > +       mfpval |= val;
+> > +       writel(mfpval, pctrl->base + g->mfpctl_reg);
 > 
->  Documentation/devicetree/bindings/mtd/mtd-physmap.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> This is called owl_update_bits().
+>
+
+Okay. Will add a helper.
+ 
+> > +static int owl_pin_config_set(struct pinctrl_dev *pctrldev,
+> > +                               unsigned int pin,
+> > +                               unsigned long *configs,
+> > +                               unsigned int num_configs)
+> > +{
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-> index 4a0a48bf4ecb..961a8eed9d0d 100644
-> --- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-> +++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-> @@ -41,6 +41,11 @@ additional (optional) property is defined:
->  
->   - erase-size : The chip's physical erase block size in bytes.
->  
-> + The device tree may optionally contain endianness property.
-> + little-endian or big-endian : It represents connection between controller and
-> +			flash.
+> > +       int ret = 0;
+> 
+> Redundant assignment?
+>
 
-Hm, I'm not even sure it has to do with the HW connection of the data
-lines (D0:X), probably more something related to how the flash was
-programmed (some people program the flash using a dedicated programmer
-before soldering it on the board) and the current platform endianness
-(which for some platforms, can be changed with a Kconfig option).
+Ack.
+ 
+> > +               mask = (1 << width) - 1;
+> > +               mask = mask << bit;
+> > +               tmp = readl(pctrl->base + reg);
+> > +               tmp &= ~mask;
+> > +               tmp |= arg << bit;
+> > +               writel(tmp, pctrl->base + reg);
+> 
+> This is called owl_update_bits().
+>
 
-> If this property is absent, flash is considered
-> +			to be host-endian.
+Ack.
 
-The second sentence is no longer valid. Now, if the property is missing
-the behavior is platform/configuration dependent, not necessarily
-host-endian.
+> > +}
+> 
+> > +static int owl_group_pinconf_val2arg(const struct owl_pingroup *g,
+> > +                               unsigned int param,
+> > +                               u32 *arg)
+> > +{
+> 
+> > +       case PIN_CONFIG_SLEW_RATE:
+> > +               if (*arg)
+> > +                       *arg = 1;
+> > +               else
+> > +                       *arg = 0;
+> 
+> Doesn't slew rate allow a non-binary value?
+>
 
-> +
->  The device tree may optionally contain sub-nodes describing partitions of the
->  address space. See partition.txt for more detail.
->  
+As stated in the binding doc, valid values for the slew rate parameter are:
 
+0 - Slow
+1 - Fast
+ 
+> > +       return 0;
+> > +}
+> > +
+> > +static int owl_group_config_get(struct pinctrl_dev *pctrldev,
+> > +                               unsigned int group,
+> > +                               unsigned long *config)
+> > +{
+> > +       int ret = 0;
+> 
+> Redundant assignment.
+> 
 
+Ack.
 
--- 
-Boris Brezillon, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> > +}
+> 
+> > +static int owl_group_config_set(struct pinctrl_dev *pctrldev,
+> > +                               unsigned int group,
+> > +                               unsigned long *configs,
+> > +                               unsigned int num_configs)
+> > +{
+> > +       int ret = 0;
+> 
+> Redundant assignment, see below.
+>
+
+Ack. Will return 0 directly.
+ 
+> > +               mask = (1 << width) - 1;
+> > +               mask = mask << bit;
+> > +               tmp = readl(pctrl->base + reg);
+> > +               tmp &= ~mask;
+> > +               tmp |= arg << bit;
+> > +               writel(tmp, pctrl->base + reg);
+> 
+> This is called owl_update_bits().
+>
+
+Ack.
+ 
+> > +       return ret;
+> 
+> return 0; ?
+> 
+
+Okay.
+
+> > +}
+> 
+> > +int owl_pinctrl_probe(struct platform_device *pdev,
+> > +                               struct owl_pinctrl_soc_data *soc_data)
+> > +{
+> 
+> > +       clk_prepare_enable(pctrl->clk);
+> 
+> This can fail.
+>
+
+Okay. Will add a check.
+ 
+> > +}
+> 
+> > +static const struct of_device_id s900_pinctrl_of_match[] = {
+> > +       { .compatible = "actions,s900-pinctrl", },
+> 
+> > +       { },
+> 
+> No comma needed.
+>
+
+Okay.
+
+Thanks for the review.
+
+Regards,
+Mani
+ 
+> > +};
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
