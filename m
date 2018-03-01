@@ -1,44 +1,86 @@
-Return-Path: <SRS0=x67h=F7=linux-m68k.org=geert@kernel.org>
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] dt-bindings: media: rcar_vin: Use status "okay"
-Date: Fri,  9 Mar 2018 10:34:40 +0100
-Message-Id: <1520588080-31264-1-git-send-email-geert+renesas@glider.be>
-To: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=NcIM=FX=gmail.com=jassisinghbrar@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <CAKv+Gu-E82Fuj9hUjYLNvuDFQL0-MOSezVN-b8Ti7sU37Nooxw@mail.gmail.com>
+References: <1519736182-3650-1-git-send-email-jassisinghbrar@gmail.com>
+ <1519736330-3985-1-git-send-email-jassisinghbrar@gmail.com>
+ <1519840555.25567.218.camel@impinj.com> <CABb+yY3PNoGAazn2JNWZScb_a8iNRmv94B0D=4xFRi3_mb2CXA@mail.gmail.com>
+ <CAKv+Gu-E82Fuj9hUjYLNvuDFQL0-MOSezVN-b8Ti7sU37Nooxw@mail.gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Thu, 1 Mar 2018 19:41:02 +0530
+Message-ID: <CABb+yY3K+JjSMnxVPiEw-_RPUp47haqJy7KXuUUsDG=chQgwmQ@mail.gmail.com>
+Subject: Re: [PATCHv4 2/3] spi: Add spi driver for Socionext Synquacer platform
+Content-Type: text/plain; charset="UTF-8"
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Trent Piepho <tpiepho@impinj.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "masami.hiramatsu@linaro.org" <masami.hiramatsu@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-According to the Devicetree Specification, "ok" is not a valid status.
+On Thu, Mar 1, 2018 at 12:06 AM, Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> On 28 February 2018 at 18:29, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>> On Wed, Feb 28, 2018 at 11:25 PM, Trent Piepho <tpiepho@impinj.com> wrote:
+>>> On Tue, 2018-02-27 at 18:28 +0530, jassisinghbrar@gmail.com wrote:
+>>>> From: Jassi Brar <jaswinder.singh@linaro.org>
+>>>>
+>>>> This patch adds support for controller found on synquacer platforms.
+>>>>
+>>>> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+>>>> ---
+>>>>  drivers/spi/Kconfig         |  11 +
+>>>>  drivers/spi/Makefile        |   1 +
+>>>>  drivers/spi/spi-synquacer.c | 663 ++++++++++++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 675 insertions(+)
+>>>>  create mode 100644 drivers/spi/spi-synquacer.c
+>>>>
+>>>> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+>>>> index 6037839..9e04bbe 100644
+>>>> --- a/drivers/spi/Kconfig
+>>>> +++ b/drivers/spi/Kconfig
+>>>> @@ -659,6 +659,17 @@ config SPI_SUN6I
+>>>>       help
+>>>>         This enables using the SPI controller on the Allwinner A31 SoCs.
+>>>>
+>>>> +config SPI_SYNQUACER
+>>>> +     tristate "Socionext's Synquacer HighSpeed SPI controller"
+>>>> +     depends on ARCH_SYNQUACER || COMPILE_TEST
+>>>> +     select SPI_BITBANG
+>>>> +     help
+>>>> +       SPI driver for Socionext's High speed SPI controller which provides
+>>>> +       various operating modes for interfacing to serial peripheral devices
+>>>> +       that use the de-facto standard SPI protocol.
+>>>> +
+>>>> +       It also supports the new dual-bit and quad-bit SPI protocol.
+>>>> +
+>>>
+>>> As someone who designs and develops embedded Linux devices, it would be
+>>> really useful if there was a bit more documentation about the driver.
+>>>
+>>> The hardware doesn't support DMA or even interrupts, and must busy wait
+>>> for the duration of the entire SPI transfers.  That's kind of a Big
+>>> Deal.  A design that involves lots of SPI transfers on a slow clock
+>>> will work fine on most SPI hardware, but will be utterly unfeasible
+>>> here.  It would be nice to say something about that.  I'd probably put
+>>> it in driver code.
+>>>
+>> From marketing point of view, why would I want to advertise my limitations? :)
+>>
+>> Its not like any random platform might want to use this driver, nor
+>> the enduser could do anything about it (its not a s/w issue). The
+>> decision to integrate the ip in a SoC is already taken before the
+>> driver is written. Obviously the users that need high spi performance
+>> are not its intended target.
+>>
+>> BTW, the IP is actually not that bad. It is meant for interfacing
+>> flash devices and can operate in two modes - "direct" mode where it
+>> maps flash memory as i/o region and the other last resort "spi" mode
+>> where we could manually drive the flash. This driver implements that
+>> limited "spi" mode.
+>>
+>
+> My SoC manual does list interrupts for this IP block. Are you sure
+> SynQuacer uses the same version of the IP as before?
+>
+Having got hold of english specs, the newer version does seem to
+support IRQ despite being named same "FIP006" as before.
+Let me investigate deeper.
 
-Fixes: 47c71bd61b772cd7 ("[media] rcar_vin: add devicetree support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-For the checkpatch TODO list?
-https://www.devicetree.org/
-
- Documentation/devicetree/bindings/media/rcar_vin.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-index 68c5c497b7fa5551..a19517e1c669eb35 100644
---- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-+++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-@@ -81,7 +81,7 @@ Board setup example for Gen2 platforms (vin1 composite video input)
- -------------------------------------------------------------------
- 
- &i2c2   {
--        status = "ok";
-+        status = "okay";
-         pinctrl-0 = <&i2c2_pins>;
-         pinctrl-names = "default";
- 
-@@ -104,7 +104,7 @@ Board setup example for Gen2 platforms (vin1 composite video input)
-         pinctrl-0 = <&vin1_pins>;
-         pinctrl-names = "default";
- 
--        status = "ok";
-+        status = "okay";
- 
-         port {
-                 #address-cells = <1>;
--- 
-2.7.4
+Thanks.
