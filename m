@@ -1,367 +1,136 @@
-Return-Path: <SRS0=EGYy=FZ=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v4 2/2] phy: amlogic: add USB3 PHY support for Meson GXL and GXM
-Date: Sat,  3 Mar 2018 19:47:00 +0100
-Message-Id: <20180303184700.21480-3-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20180303184700.21480-1-martin.blumenstingl@googlemail.com>
-References: <20180303184700.21480-1-martin.blumenstingl@googlemail.com>
-To: kishon@ti.com, linux-amlogic@lists.infradead.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, carlo@caione.org, khilman@baylibre.com, narmstrong@baylibre.com, jbrunet@baylibre.com, yixun.lan@amlogic.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=Pbk3=FX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from galahad.ideasonboard.com ([185.26.127.97]:50133 "EHLO
+        galahad.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1162478AbeCAWEy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 1 Mar 2018 17:04:54 -0500
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v7 0/4] R-Car DU: Convert LVDS code to bridge driver
+Date: Fri,  2 Mar 2018 00:05:35 +0200
+Message-Id: <20180301220540.11959-1-laurent.pinchart+renesas@ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: dri-devel@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This adds a new driver for the USB3 PHY found on Meson GXL and GXM SoCs
-(both SoCs are using the same USB PHY register layout).
+Hello,
 
-Unfortunately there is no documentation for this PHY in the public S905X
-datasheet (published for example by Khadas). What we know so far about
-this PHY:
-- even though the Meson GXL and GXM SoCs do not expose an USB3 port (the
-  dwc3 controller only has USB2 ports enabled) we need to initialize the
-  USB3 PHY (specifically USB_R1_U3H_FLADJ_30MHZ_REG_MASK). Without this
-  initialization high-speed USB devices (especially USB hard disks and
-  thumb drives, slower devices like mice do not seem to be affected)
-- on some boards the USB3 PHY starts in "device mode" - we want to bring
-  it into a known state (by switching it to host mode for now).
-- it is responsible for the OTG detection and for switching the first
-  USB2 PHY between host and peripheral (aka device) mode. an interrupt
-  can be used to detect changes between host and device mode.
+This patch series addresses a design mistake that dates back from the initial
+DU support. Support for the LVDS encoders, which are IP cores separate from
+the DU, was bundled in the DU driver. Worse, both the DU and LVDS were
+described through a single DT node.
 
-There are five inputs to this register area:
-- the clock and reset line for the USB3 PHY itself
-- the clock and reset line for the peripheral mode and OTG detection
-  logic (on the GXL and GXM SoCs these are the same clock and reset line
-  as for the USB3 PHY itself, but Amlogic sees this as two different
-  components - even though they share the same register space - so they
-  have to be passed individually to allow specifying different inputs on
-  other SoCs if needed)
-- the interrupt for the OTG detection logic
+To fix the, patches 1/4 and 2/4 define new DT bindings for the LVDS
+encoders, and deprecate their description inside the DU bindings. To retain
+backward compatibility with existing DT, patch 3/4 then patch the device tree
+at runtime to convert the legacy bindings to the new ones.
 
-The whole OTG detection logic is not implemented yet.
+With the DT side addressed, patch 4/4 converts the LVDS support code to a
+separate bridge driver.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Yixun Lan <yixun.lan@amlogic.com>
----
- drivers/phy/amlogic/Kconfig              |  12 ++
- drivers/phy/amlogic/Makefile             |   1 +
- drivers/phy/amlogic/phy-meson-gxl-usb3.c | 282 +++++++++++++++++++++++++++++++
- 3 files changed, 295 insertions(+)
- create mode 100644 drivers/phy/amlogic/phy-meson-gxl-usb3.c
+I decided to go for live DT patching in patch 3/4 because implementing
+support for both the legacy and new bindings in the driver would have been
+very intrusive, and prevented further cleanups. This version relies more
+heavily on overlays to avoid touching the internals of the OF core compared to
+v2, even if manual fixes to the device tree are still needed.
 
-diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-index ef3625cd25bb..23fe1cda2f70 100644
---- a/drivers/phy/amlogic/Kconfig
-+++ b/drivers/phy/amlogic/Kconfig
-@@ -24,3 +24,15 @@ config PHY_MESON_GXL_USB2
- 	  Enable this to support the Meson USB2 PHYs found in Meson
- 	  GXL and GXM SoCs.
- 	  If unsure, say N.
-+
-+config PHY_MESON_GXL_USB3
-+	tristate "Meson GXL and GXM USB3 PHY drivers"
-+	default ARCH_MESON
-+	depends on OF && (ARCH_MESON || COMPILE_TEST)
-+	depends on USB_SUPPORT
-+	select GENERIC_PHY
-+	select REGMAP_MMIO
-+	help
-+	  Enable this to support the Meson USB3 PHY and OTG detection
-+	  IP block found in Meson GXL and GXM SoCs.
-+	  If unsure, say N.
-diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-index cfdc98715c30..4fd8848c194d 100644
---- a/drivers/phy/amlogic/Makefile
-+++ b/drivers/phy/amlogic/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
- obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
-+obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
-diff --git a/drivers/phy/amlogic/phy-meson-gxl-usb3.c b/drivers/phy/amlogic/phy-meson-gxl-usb3.c
-new file mode 100644
-index 000000000000..d37d94ddf9c0
---- /dev/null
-+++ b/drivers/phy/amlogic/phy-meson-gxl-usb3.c
-@@ -0,0 +1,282 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Meson GXL USB3 PHY and OTG mode detection driver
-+ *
-+ * Copyright (C) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/platform_device.h>
-+
-+#define USB_R0							0x00
-+	#define USB_R0_P30_FSEL_MASK				GENMASK(5, 0)
-+	#define USB_R0_P30_PHY_RESET				BIT(6)
-+	#define USB_R0_P30_TEST_POWERDOWN_HSP			BIT(7)
-+	#define USB_R0_P30_TEST_POWERDOWN_SSP			BIT(8)
-+	#define USB_R0_P30_ACJT_LEVEL_MASK			GENMASK(13, 9)
-+	#define USB_R0_P30_TX_BOOST_LEVEL_MASK			GENMASK(16, 14)
-+	#define USB_R0_P30_LANE0_TX2RX_LOOPBACK			BIT(17)
-+	#define USB_R0_P30_LANE0_EXT_PCLK_REQ			BIT(18)
-+	#define USB_R0_P30_PCS_RX_LOS_MASK_VAL_MASK		GENMASK(28, 19)
-+	#define USB_R0_U2D_SS_SCALEDOWN_MODE_MASK		GENMASK(30, 29)
-+	#define USB_R0_U2D_ACT					BIT(31)
-+
-+#define USB_R1							0x04
-+	#define USB_R1_U3H_BIGENDIAN_GS				BIT(0)
-+	#define USB_R1_U3H_PME_ENABLE				BIT(1)
-+	#define USB_R1_U3H_HUB_PORT_OVERCURRENT_MASK		GENMASK(6, 2)
-+	#define USB_R1_U3H_HUB_PORT_PERM_ATTACH_MASK		GENMASK(11, 7)
-+	#define USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK		GENMASK(15, 12)
-+	#define USB_R1_U3H_HOST_U3_PORT_DISABLE			BIT(16)
-+	#define USB_R1_U3H_HOST_PORT_POWER_CONTROL_PRESENT	BIT(17)
-+	#define USB_R1_U3H_HOST_MSI_ENABLE			BIT(18)
-+	#define USB_R1_U3H_FLADJ_30MHZ_REG_MASK			GENMASK(24, 19)
-+	#define USB_R1_P30_PCS_TX_SWING_FULL_MASK		GENMASK(31, 25)
-+
-+#define USB_R2							0x08
-+	#define USB_R2_P30_CR_DATA_IN_MASK			GENMASK(15, 0)
-+	#define USB_R2_P30_CR_READ				BIT(16)
-+	#define USB_R2_P30_CR_WRITE				BIT(17)
-+	#define USB_R2_P30_CR_CAP_ADDR				BIT(18)
-+	#define USB_R2_P30_CR_CAP_DATA				BIT(19)
-+	#define USB_R2_P30_PCS_TX_DEEMPH_3P5DB_MASK		GENMASK(25, 20)
-+	#define USB_R2_P30_PCS_TX_DEEMPH_6DB_MASK		GENMASK(31, 26)
-+
-+#define USB_R3							0x0c
-+	#define USB_R3_P30_SSC_ENABLE				BIT(0)
-+	#define USB_R3_P30_SSC_RANGE_MASK			GENMASK(3, 1)
-+	#define USB_R3_P30_SSC_REF_CLK_SEL_MASK			GENMASK(12, 4)
-+	#define USB_R3_P30_REF_SSP_EN				BIT(13)
-+	#define USB_R3_P30_LOS_BIAS_MASK			GENMASK(18, 16)
-+	#define USB_R3_P30_LOS_LEVEL_MASK			GENMASK(23, 19)
-+	#define USB_R3_P30_MPLL_MULTIPLIER_MASK			GENMASK(30, 24)
-+
-+#define USB_R4							0x10
-+	#define USB_R4_P21_PORT_RESET_0				BIT(0)
-+	#define USB_R4_P21_SLEEP_M0				BIT(1)
-+	#define USB_R4_MEM_PD_MASK				GENMASK(3, 2)
-+	#define USB_R4_P21_ONLY					BIT(4)
-+
-+#define USB_R5							0x14
-+	#define USB_R5_ID_DIG_SYNC				BIT(0)
-+	#define USB_R5_ID_DIG_REG				BIT(1)
-+	#define USB_R5_ID_DIG_CFG_MASK				GENMASK(3, 2)
-+	#define USB_R5_ID_DIG_EN_0				BIT(4)
-+	#define USB_R5_ID_DIG_EN_1				BIT(5)
-+	#define USB_R5_ID_DIG_CURR				BIT(6)
-+	#define USB_R5_ID_DIG_IRQ				BIT(7)
-+	#define USB_R5_ID_DIG_TH_MASK				GENMASK(15, 8)
-+	#define USB_R5_ID_DIG_CNT_MASK				GENMASK(23, 16)
-+
-+/* read-only register */
-+#define USB_R6							0x18
-+	#define USB_R6_P30_CR_DATA_OUT_MASK			GENMASK(15, 0)
-+	#define USB_R6_P30_CR_ACK				BIT(16)
-+
-+struct phy_meson_gxl_usb3_priv {
-+	struct regmap		*regmap;
-+	enum phy_mode		mode;
-+	struct clk		*clk_phy;
-+	struct clk		*clk_peripheral;
-+	struct reset_control	*reset;
-+};
-+
-+static const struct regmap_config phy_meson_gxl_usb3_regmap_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = USB_R6,
-+};
-+
-+static int phy_meson_gxl_usb3_power_on(struct phy *phy)
-+{
-+	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
-+
-+	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_0,
-+			   USB_R5_ID_DIG_EN_0);
-+	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_1,
-+			   USB_R5_ID_DIG_EN_1);
-+	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_TH_MASK,
-+			   FIELD_PREP(USB_R5_ID_DIG_TH_MASK, 0xff));
-+
-+	return 0;
-+}
-+
-+static int phy_meson_gxl_usb3_power_off(struct phy *phy)
-+{
-+	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
-+
-+	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_0, 0);
-+	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_1, 0);
-+
-+	return 0;
-+}
-+
-+static int phy_meson_gxl_usb3_set_mode(struct phy *phy, enum phy_mode mode)
-+{
-+	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
-+
-+	switch (mode) {
-+	case PHY_MODE_USB_HOST:
-+		regmap_update_bits(priv->regmap, USB_R0, USB_R0_U2D_ACT, 0);
-+		regmap_update_bits(priv->regmap, USB_R4, USB_R4_P21_SLEEP_M0,
-+				   0);
-+		break;
-+
-+	case PHY_MODE_USB_DEVICE:
-+		regmap_update_bits(priv->regmap, USB_R0, USB_R0_U2D_ACT,
-+				   USB_R0_U2D_ACT);
-+		regmap_update_bits(priv->regmap, USB_R4, USB_R4_P21_SLEEP_M0,
-+				   USB_R4_P21_SLEEP_M0);
-+		break;
-+
-+	default:
-+		dev_err(&phy->dev, "unsupported PHY mode %d\n", mode);
-+		return -EINVAL;
-+	}
-+
-+	priv->mode = mode;
-+
-+	return 0;
-+}
-+
-+static int phy_meson_gxl_usb3_init(struct phy *phy)
-+{
-+	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = reset_control_reset(priv->reset);
-+	if (ret)
-+		goto err;
-+
-+	ret = clk_prepare_enable(priv->clk_phy);
-+	if (ret)
-+		goto err;
-+
-+	ret = clk_prepare_enable(priv->clk_peripheral);
-+	if (ret)
-+		goto err_disable_clk_phy;
-+
-+	ret = phy_meson_gxl_usb3_set_mode(phy, priv->mode);
-+	if (ret)
-+		goto err_disable_clk_peripheral;
-+
-+	regmap_update_bits(priv->regmap, USB_R1,
-+			   USB_R1_U3H_FLADJ_30MHZ_REG_MASK,
-+			   FIELD_PREP(USB_R1_U3H_FLADJ_30MHZ_REG_MASK, 0x20));
-+
-+	return 0;
-+
-+err_disable_clk_peripheral:
-+	clk_disable_unprepare(priv->clk_peripheral);
-+err_disable_clk_phy:
-+	clk_disable_unprepare(priv->clk_phy);
-+err:
-+	return ret;
-+}
-+
-+static int phy_meson_gxl_usb3_exit(struct phy *phy)
-+{
-+	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
-+
-+	clk_disable_unprepare(priv->clk_peripheral);
-+	clk_disable_unprepare(priv->clk_phy);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops phy_meson_gxl_usb3_ops = {
-+	.power_on	= phy_meson_gxl_usb3_power_on,
-+	.power_off	= phy_meson_gxl_usb3_power_off,
-+	.set_mode	= phy_meson_gxl_usb3_set_mode,
-+	.init		= phy_meson_gxl_usb3_init,
-+	.exit		= phy_meson_gxl_usb3_exit,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int phy_meson_gxl_usb3_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct phy_meson_gxl_usb3_priv *priv;
-+	struct resource *res;
-+	struct phy *phy;
-+	struct phy_provider *phy_provider;
-+	void __iomem *base;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	priv->regmap = devm_regmap_init_mmio(dev, base,
-+					     &phy_meson_gxl_usb3_regmap_conf);
-+	if (IS_ERR(priv->regmap))
-+		return PTR_ERR(priv->regmap);
-+
-+	priv->clk_phy = devm_clk_get(dev, "phy");
-+	if (IS_ERR(priv->clk_phy))
-+		return PTR_ERR(priv->clk_phy);
-+
-+	priv->clk_peripheral = devm_clk_get(dev, "peripheral");
-+	if (IS_ERR(priv->clk_peripheral))
-+		return PTR_ERR(priv->clk_peripheral);
-+
-+	priv->reset = devm_reset_control_array_get_shared(dev);
-+	if (IS_ERR(priv->reset))
-+		return PTR_ERR(priv->reset);
-+
-+	/*
-+	 * default to host mode as hardware defaults and/or boot-loader
-+	 * behavior can result in this PHY starting up in device mode. this
-+	 * default and the initialization in phy_meson_gxl_usb3_init ensure
-+	 * that we reproducibly start in a known mode on all devices.
-+	 */
-+	priv->mode = PHY_MODE_USB_HOST;
-+
-+	phy = devm_phy_create(dev, np, &phy_meson_gxl_usb3_ops);
-+	if (IS_ERR(phy)) {
-+		ret = PTR_ERR(phy);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to create PHY\n");
-+
-+		return ret;
-+	}
-+
-+	phy_set_drvdata(phy, priv);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id phy_meson_gxl_usb3_of_match[] = {
-+	{ .compatible = "amlogic,meson-gxl-usb3-phy", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, phy_meson_gxl_usb3_of_match);
-+
-+static struct platform_driver phy_meson_gxl_usb3_driver = {
-+	.probe	= phy_meson_gxl_usb3_probe,
-+	.driver	= {
-+		.name		= "phy-meson-gxl-usb3",
-+		.of_match_table	= phy_meson_gxl_usb3_of_match,
-+	},
-+};
-+module_platform_driver(phy_meson_gxl_usb3_driver);
-+
-+MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl@googlemail.com>");
-+MODULE_DESCRIPTION("Meson GXL USB3 PHY and OTG detection driver");
-+MODULE_LICENSE("GPL v2");
+I plan to send a pull request by the end of the week if no new issue is
+discovered.
+
+Compared to v6, patch 3/4 now exists in two variants, to accommodate Frank's
+"[PATCH v4 0/4] of: change overlay apply input data from unflattened" patch
+series. If that series can't make it to v4.17, patch 3/4 variant 1 will be
+used. Otherwise I will go with variant 2.
+
+Compared to v5, I've dropped the OF changeset halpers series as Frank raised
+concerns about hidding it in the middle of a driver patch series. I've thus
+copied the implementation of of_changeset_add_property_copy() in the driver to
+avoid blocking this series. The function arguments are identical, so when the
+OF changeset helpers will land it will be very easy to drop the private copy
+and use the of_changeset_add_property_copy() helper.
+
+Compared to v4, the patch "of: changeset: Add of_changeset_node_move method"
+has been dropped as it's not needed. The patches that update the DT sources to
+the new DU and LVDS bindings have been dropped as well to avoid spamming the
+lists as they depend on the driver changes going in first to avoid
+regressions and haven't been changed.
+
+Compared to v3, this series uses the OF changeset API to update properties
+instead of accessing the internals of the property structure. This removes the
+local implementation of functions to look up nodes by path and update
+properties. In order to do this, I pulled in Pantelis' patch series titled
+"[PATCH v2 0/5] of: dynamic: Changesets helpers & fixes" at Rob's request, and
+rebased it while taking two small review comments into account.
+
+Rob, I'd like this series to be merged in v4.17. As the changeset helpers are
+now a dependency, I'd need you to merge them early (ideally on top of
+v4.16-rc1) and provide a stable branch, or get your ack to merge them through
+Dave's tree if they don't conflict with what you have and will queue for
+v4.17.
+
+This version also drops the small fix to the Porter board device tree that has
+been queued for v4.17 already.
+
+Compared to v2, the biggest change is in patch 3/4. Following Rob's and
+Frank's reviews it was clear that modifying the unflattened DT structure of
+the overlay before applying it wasn't popular. I have thus decided to use one
+overlay source per SoC to move as much of the DT changes to the overlay as
+possible, and only perform manual modifications (that are still needed as some
+of the information is board-specific) on the system DT after applying the
+overlay. As a result the overlay is parsed and applied without being modified.
+
+Compared to v1, this series update the r8a7792 and r8a7794 device tree sources
+and incorporate review feedback as described by the changelogs of individual
+patches.
+
+Laurent Pinchart (4):
+  dt-bindings: display: renesas: Add R-Car LVDS encoder DT bindings
+  dt-bindings: display: renesas: Deprecate LVDS support in the DU
+    bindings
+  drm: rcar-du: Fix legacy DT to create LVDS encoder nodes
+  drm: rcar-du: Convert LVDS encoder code to bridge driver
+
+ .../bindings/display/bridge/renesas,lvds.txt       |  56 +++
+ .../devicetree/bindings/display/renesas,du.txt     |  31 +-
+ MAINTAINERS                                        |   1 +
+ drivers/gpu/drm/rcar-du/Kconfig                    |   6 +-
+ drivers/gpu/drm/rcar-du/Makefile                   |  10 +-
+ drivers/gpu/drm/rcar-du/rcar_du_drv.c              |  21 +-
+ drivers/gpu/drm/rcar-du/rcar_du_drv.h              |   5 -
+ drivers/gpu/drm/rcar-du/rcar_du_encoder.c          | 175 +------
+ drivers/gpu/drm/rcar-du/rcar_du_encoder.h          |  12 -
+ drivers/gpu/drm/rcar-du/rcar_du_kms.c              |  14 +-
+ drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c          |  93 ----
+ drivers/gpu/drm/rcar-du/rcar_du_lvdscon.h          |  24 -
+ drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c          | 238 ----------
+ drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h          |  64 ---
+ drivers/gpu/drm/rcar-du/rcar_du_of.c               | 334 +++++++++++++
+ drivers/gpu/drm/rcar-du/rcar_du_of.h               |  20 +
+ .../gpu/drm/rcar-du/rcar_du_of_lvds_r8a7790.dts    |  79 ++++
+ .../gpu/drm/rcar-du/rcar_du_of_lvds_r8a7791.dts    |  53 +++
+ .../gpu/drm/rcar-du/rcar_du_of_lvds_r8a7793.dts    |  53 +++
+ .../gpu/drm/rcar-du/rcar_du_of_lvds_r8a7795.dts    |  53 +++
+ .../gpu/drm/rcar-du/rcar_du_of_lvds_r8a7796.dts    |  53 +++
+ drivers/gpu/drm/rcar-du/rcar_lvds.c                | 524 +++++++++++++++++++++
+ 22 files changed, 1282 insertions(+), 637 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdscon.c
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdscon.h
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.c
+ delete mode 100644 drivers/gpu/drm/rcar-du/rcar_du_lvdsenc.h
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.c
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of.h
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of_lvds_r8a7790.dts
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of_lvds_r8a7791.dts
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of_lvds_r8a7793.dts
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of_lvds_r8a7795.dts
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_du_of_lvds_r8a7796.dts
+ create mode 100644 drivers/gpu/drm/rcar-du/rcar_lvds.c
+
 -- 
-2.16.2
+Regards,
+
+Laurent Pinchart
+
