@@ -1,141 +1,67 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 3/4] drivers: firmware: xilinx: Add sysfs interface
-Date: Thu, 1 Mar 2018 16:09:11 +0200
-Message-ID: <CAHp75VdqDupw3E6qVj6awHJf0JrT3f7UGbO3YAeWM9Yzg-HE=w@mail.gmail.com>
-References: <1519154467-2896-1-git-send-email-jollys@xilinx.com> <1519154467-2896-4-git-send-email-jollys@xilinx.com>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH v2 0/2] STM32 Extended TrustZone Protection driver
+Date: Thu, 1 Mar 2018 15:15:06 +0100
+Message-ID: <CA+M3ks6YPY6Lx-qBA+-Zrrtzr3Nqyzay=1wBHRGjd7PqJgAb0Q@mail.gmail.com>
+References: <20180301135806.19982-1-benjamin.gaignard@st.com> <20180301140243.3uamdvdcvmsxv6im@lakrids.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519154467-2896-4-git-send-email-jollys@xilinx.com>
+In-Reply-To: <20180301140243.3uamdvdcvmsxv6im@lakrids.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <jolly.shah@xilinx.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Ingo Molnar <mingo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matt Fleming <matt@codeblueprint.co.uk>, Sudeep Holla <sudeep.holla@arm.com>, Heiner Kallweit <hkallweit1@gmail.com>, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, rajanv@xilinx.com, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Jolly Shah <jollys@xilinx.com>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Robin Murphy <robin.murphy@arm.com>, Arnd Bergmann <arnd@arndb.de>, Loic PALLARDY <loic.pallardy@st.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 20, 2018 at 9:21 PM, Jolly Shah <jolly.shah@xilinx.com> wrote:
-> Add Firmware-ggs sysfs interface which provides read/write
-> interface to global storage registers.
+2018-03-01 15:02 GMT+01:00 Mark Rutland <mark.rutland@arm.com>:
+> On Thu, Mar 01, 2018 at 02:58:04PM +0100, Benjamin Gaignard wrote:
+>> On early boot stages STM32MP1 platform is able to dedicate some hardware blocks
+>> to a secure OS running in TrustZone.
+>> We need to avoid using those hardware blocks on non-secure context (i.e. kernel)
+>> because read/write accesses could generate illegale access exceptions.
+>>
+>> Extended TrustZone Protection driver make sure that device is disabled if
+>> non-secure world can't acces to it.
+>>
+>> version 2:
+>> - do not use notifier anymore
+>> - change status property value in device-tree if needed
+>> - use a list of phandle instead of hard coded array
+>
+> As mentioned on v1, I don't think this should be done in Linux at all.
+>
+> If you wish to handle this dynamically, please fixup the DT *before*
+> entering Linux.
+>
+> If you want a sane default in the dts file, put status = "disabled" on
+> all nodes which the secure world might take ownership of.
 
-> +#include <linux/compiler.h>
-> +#include <linux/of.h>
+That is the case, nodes are disabled by ealier boot stages before entering
+in Linux but, since mistakes and/or errors are always possible, fixup the DT
+to avoid illegal access exceptions make sense for me.
 
-> +#include <linux/init.h>
-> +#include <linux/module.h>
+Benjamin
 
-You need to leave one of them.
-
-> +#include <linux/uaccess.h>
-> +#include <linux/slab.h>
-
-> +#include <linux/firmware/xilinx/zynqmp/firmware.h>
-
-Keep it in order? Or add an empty line before?
-
-> +       return sprintf(buf, "0x%x\n", ret_payload[1]);
-
-Hmm... No leading zeroes?
-
-> +static ssize_t write_register(const char *buf, size_t count, u32 read_ioctl,
-> +                             u32 write_ioctl, u32 reg)
-> +{
-> +       char *kern_buff, *inbuf, *tok;
-> +       long mask, value;
-> +       int ret;
-> +       u32 ret_payload[PAYLOAD_ARG_CNT];
-> +       const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-> +
-> +       if (!eemi_ops || !eemi_ops->ioctl)
-> +               return -EFAULT;
-
-> +       kern_buff = kzalloc(count, GFP_KERNEL);
-> +       if (!kern_buff)
-> +               return -ENOMEM;
-> +
-> +       ret = strlcpy(kern_buff, buf, count);
-> +       if (ret < 0) {
-> +               ret = -EFAULT;
-> +               goto err;
-> +       }
-
-kstrndup()
-
-> +
-> +       inbuf = kern_buff;
-> +
-> +       /* Read the write mask */
-> +       tok = strsep(&inbuf, " ");
-> +       if (!tok) {
-> +               ret = -EFAULT;
-> +               goto err;
-> +       }
-> +
-> +       ret = kstrtol(tok, 16, &mask);
-> +       if (ret) {
-
-> +               ret = -EFAULT;
-
-Why to shadow an error?
-
-> +               goto err;
-> +       }
-> +
-> +       /* Read the write value */
-> +       tok = strsep(&inbuf, " ");
-> +       if (!tok) {
-> +               ret = -EFAULT;
-> +               goto err;
-> +       }
-> +
-> +       ret = kstrtol(tok, 16, &value);
-> +       if (ret) {
-
-> +               ret = -EFAULT;
-
-Ditto.
-
-> +               goto err;
-> +       }
-> +
-> +       ret = eemi_ops->ioctl(0, read_ioctl, reg, 0, ret_payload);
-> +       if (ret) {
-
-> +               ret = -EFAULT;
-
-Ditto.
-
-> +               goto err;
-> +       }
-
-> +       ret_payload[1] &= ~mask;
-> +       value &= mask;
-> +       value |= ret_payload[1];
-
-Also canonical one to write in one line:
-
-      value = (value & mask) | (ret_payload[1] & ~mask);
-
-> +
-> +       ret = eemi_ops->ioctl(0, write_ioctl, reg, value, NULL);
-> +       if (ret)
-
-> +               ret = -EFAULT;
-
-Why to shadow an error?
-
-> +
-> +err:
-> +       kfree(kern_buff);
-
-
-> +       if (ret)
-> +               return ret;
-> +
-> +       return count;
-
-return ret ? ret : count;
-
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+>
+> Thanks,
+> Mark.
+>
+>> NOTE: Those patches should be applied only on
+>> git://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
+>> until this patch: https://lkml.org/lkml/2018/2/26/386
+>> find it way to mainline because KBuild will complain about them.
+>>
+>> Benjamin Gaignard (2):
+>>   dt-bindings: stm32: Add bindings for Extended TrustZone Protection
+>>   ARM: mach-stm32: Add Extended TrustZone Protection driver
+>>
+>>  .../bindings/arm/stm32/st,stm32mp1-etzpc.txt       |  25 +++++
+>>  arch/arm/mach-stm32/Kconfig                        |   7 ++
+>>  arch/arm/mach-stm32/Makefile                       |   1 +
+>>  arch/arm/mach-stm32/stm32-etzpc.c                  | 116 +++++++++++++++++++++
+>>  4 files changed, 149 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/stm32/st,stm32mp1-etzpc.txt
+>>  create mode 100644 arch/arm/mach-stm32/stm32-etzpc.c
+>>
+>> --
+>> 2.15.0
+>>
