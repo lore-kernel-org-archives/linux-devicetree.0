@@ -1,45 +1,62 @@
 From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH 0/6] phy: rockchip-typec: fix boards that does not report cable-state.
-Date: Thu,  1 Mar 2018 10:24:14 +0100
-Message-ID: <20180301092420.1191-1-enric.balletbo@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 3/6] arm64: dts: rockchip: enable typec-phy for
+ rk3399-sapphire.
+Date: Thu,  1 Mar 2018 10:24:17 +0100
+Message-ID: <20180301092420.1191-4-enric.balletbo@collabora.com>
+References: <20180301092420.1191-1-enric.balletbo@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180301092420.1191-1-enric.balletbo@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: kishon@ti.com, heiko@sntech.de
-Cc: groeck@chromium.org, gwendal@chromium.org, kernel@collabora.com, vicencb@gmail.com, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Shawn Lin <shawn.lin@rock-chips.com>, Rask Ingemann Lambertsen <rask@formelder.dk>, Catalin Marinas <catalin.marinas@arm.com>, Pierre-Hugues Husson <phh@phh.me>, Corentin Labbe <clabbe.montjoie@gmail.com>, Jacob Chen <jacob-chen@iotwrt.com>, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@g>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, gwendal@chromium.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, vicencb@gmail.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Jacob Chen <jacob-chen@iotwrt.com>, groeck@chromium.org, kernel@collabora.com, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
 Commit c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port
-support for rk3399") introduced a regression on some rk3399 boards,
-and break USB. While some boards have support to report cable-state via
-extcon interface, other boards does not support. This patch series
-tries to fix this.
+support for rk3399") caused a regression regarding the USB3 type-A port.
+During boot, the following message appears a few times:
 
-First and second patch makes extcon optional, the following patches
-enables the typec phyter for others rk3399 boards. It has been tested on
-Samsung Chromebook Plus and Sapphire but not on the other boards, so I'll
-appreciate if someone can test it.
+  dwc3: failed to initialize core
 
-Best regards,
- Enric
+The driver is deferred waiting for the typec-phy, but this never happens
+bceause is disabled. So, enable it.
 
-Enric Balletbo i Serra (6):
-  phy: rockchip-typec: fall back to working in host-mode if extcon is
-    missing.
-  dt-bindings: phy-rockchip-typec: move extcon property to be optional.
-  arm64: dts: rockchip: enable typec-phy for rk3399-sapphire.
-  arm64: dts: rockchip: enable typec-phy for rk3399-firefly.
-  arm64: dts: rockchip: enable typec-phy1 for rk3399-puma.
-  arm64: dts: rockchip: enable typec-phy0 for rk3399-puma-haikou.
+Fixes: c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port support for rk3399")
+Reported-by: Vicente Bergas <vicencb@gmail.com>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
- Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt | 2 ++
- arch/arm64/boot/dts/rockchip/rk3399-firefly.dts              | 8 ++++++++
- arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts          | 4 ++++
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi                | 4 ++++
- arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi            | 8 ++++++++
- drivers/phy/rockchip/phy-rockchip-typec.c                    | 9 ++++++---
- 6 files changed, 32 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+index ce592a4c0c4c..9c685eab4748 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+@@ -557,6 +557,14 @@
+ 	status = "okay";
+ };
+ 
++&tcphy0 {
++	status = "okay";
++};
++
++&tcphy1 {
++	status = "okay";
++};
++
+ &u2phy0 {
+ 	status = "okay";
+ 
 -- 
 2.16.1
