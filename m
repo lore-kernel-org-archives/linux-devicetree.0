@@ -1,66 +1,182 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/6] kbuild: remove remaining use of undefined YACC_PREFIX
-Date: Thu, 1 Mar 2018 09:38:40 -0600
-Message-ID: <CAL_JsqLgbEST-aBog1gf5MQeaH3q9xomXb+HbzPN+Jpe+_yMgg@mail.gmail.com>
-References: <20180228233249.26281-1-robh@kernel.org> <20180228233249.26281-2-robh@kernel.org>
- <CAK7LNAQLq5MVhT5nZO_MTya7YhHee17UhJ7jnq51oeiJVL26QA@mail.gmail.com>
- <CAK7LNAQAZQAcTCL__RZoWTH-ROg3ZfPh1aEafcw6TS5vxAwNrA@mail.gmail.com>
- <CAL_Jsq+tDtR-fmqwQy3bGQecB=5ieL4jVrHct8L-mo23btvYTA@mail.gmail.com> <CAK7LNASjzLW-ssqhDw93eA7O_7ZgUw1sxRBZwK4VERL2B9eC0A@mail.gmail.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH 1/2] input: Add RAVE SP Powerbutton driver
+Date: Thu, 1 Mar 2018 08:05:32 -0800
+Message-ID: <CAHQ1cqHT+kY34XS0oJJvc_61XXcuQE_3L451gWJTT16p7VUpZA@mail.gmail.com>
+References: <20180226154130.25774-1-andrew.smirnov@gmail.com> <20180228045935.GB151045@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNASjzLW-ssqhDw93eA7O_7ZgUw1sxRBZwK4VERL2B9eC0A@mail.gmail.com>
+In-Reply-To: <20180228045935.GB151045@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 1, 2018 at 8:01 AM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> 2018-03-01 22:39 GMT+09:00 Rob Herring <robh@kernel.org>:
->> On Thu, Mar 1, 2018 at 5:35 AM, Masahiro Yamada
->> <yamada.masahiro@socionext.com> wrote:
->>> Hi Rob,
->>>
->>> 2018-03-01 13:20 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
->>>> 2018-03-01 8:32 GMT+09:00 Rob Herring <robh@kernel.org>:
->>>>> Commit eea199b445f6 ("kbuild: remove unnecessary LEX_PREFIX and
->>>>> YACC_PREFIX") removed YACC_PREFIX definition, but left one use of it. There
->>>>> was not any build error since there is no user of "cmd_bison_h" currently.
->>>>> Remove the last remaining occurrence of YACC_PREFIX.
->>>>>
->>>>> Fixes: eea199b445f6 ("kbuild: remove unnecessary LEX_PREFIX and YACC_PREFIX")
->>>>> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
->>>>> Signed-off-by: Rob Herring <robh@kernel.org>
->>>>
->>>> You can replace CC with my
->>>>
->>>> Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->>>
->>>
->>> I got a reason to send a fixes pull request this week.
->>>
->>> If you do not mind, may I include this one in
->>> my Kbuild fixes pull request?
->>
->> Yes, please do.
->>
->>>
->>> I do not see dependency between 1/6 and the rest of the series.
->>
->> Only that dtc won't build without it. :)
->>
+On Tue, Feb 27, 2018 at 8:59 PM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> Hi Andrey,
 >
-> Sorry, I missed that.
-> You are right.
+> On Mon, Feb 26, 2018 at 07:41:29AM -0800, Andrey Smirnov wrote:
+>> Add driver that properly handles input event emitted by RAVE SP
+>> devices.
+>>
+>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Cc: linux-input@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: Guenter Roeck <linux@roeck-us.net>
+>> Cc: Chris Healy <cphealy@gmail.com>
+>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>> ---
+>>  drivers/input/misc/Kconfig             |  9 ++++
+>>  drivers/input/misc/Makefile            |  1 +
+>>  drivers/input/misc/rave-sp-pwrbutton.c | 92 ++++++++++++++++++++++++++++++++++
+>>  3 files changed, 102 insertions(+)
+>>  create mode 100644 drivers/input/misc/rave-sp-pwrbutton.c
+>>
+>> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+>> index 62a1312a7387..6a3c753b093b 100644
+>> --- a/drivers/input/misc/Kconfig
+>> +++ b/drivers/input/misc/Kconfig
+>> @@ -841,4 +841,13 @@ config INPUT_HISI_POWERKEY
+>>         To compile this driver as a module, choose M here: the
+>>         module will be called hisi_powerkey.
+>>
+>> +config INPUT_RAVE_SP_PWRBUTTON
+>> +     tristate "RAVE SP Power button Driver"
+>> +     depends on RAVE_SP_CORE
+>> +     help
+>> +       Say Y here if you want to enable power key reporting from RAVE SP
+>> +
+>> +       To compile this driver as a module, choose M here: the
+>> +       module will be called rave-sp-pwrbutton.
+>> +
+>>  endif
+>> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+>> index a8f61af865aa..6ebeec1f4dd0 100644
+>> --- a/drivers/input/misc/Makefile
+>> +++ b/drivers/input/misc/Makefile
+>> @@ -80,3 +80,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)               += wm831x-on.o
+>>  obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)      += xen-kbdfront.o
+>>  obj-$(CONFIG_INPUT_YEALINK)          += yealink.o
+>>  obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR) += ideapad_slidebar.o
+>> +obj-$(CONFIG_INPUT_RAVE_SP_PWRBUTTON)        += rave-sp-pwrbutton.o
 >
-> I see this series is already queued up in your tree.
+> Please put it in [somewhat] alphabetical order (even though ideapad is
+> out of order).
+>
 
-It is not really queued up, I just pushed out a tree for 0-day
-testing. And it turns out I need strrchr in several places.
+OK, will do in v2.
 
-> So, just keep it in your tree.
+>
+>> diff --git a/drivers/input/misc/rave-sp-pwrbutton.c b/drivers/input/misc/rave-sp-pwrbutton.c
+>> new file mode 100644
+>> index 000000000000..7511062c724b
+>> --- /dev/null
+>> +++ b/drivers/input/misc/rave-sp-pwrbutton.c
+>> @@ -0,0 +1,92 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +
+>> +/*
+>> + * Power Button driver for RAVE SP
+>> + *
+>> + * Copyright (C) 2017 Zodiac Inflight Innovations
+>> + *
+>> + */
+>
+> Let's keep SPDX and copyright in the same // comment block.
+>
 
-Okay.
+This goes against kernel coding style, but sure.
 
-Rob
+>> +
+>> +#include <linux/input.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mfd/rave-sp.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#define RAVE_SP_EVNT_BUTTON_PRESS    (RAVE_SP_EVNT_BASE + 0x00)
+>> +
+>> +struct rave_sp_power_button {
+>> +     struct input_dev *idev;
+>> +     struct notifier_block nb;
+>> +};
+>> +
+>> +static int rave_sp_power_button_event(struct notifier_block *nb,
+>> +                                   unsigned long action, void *data)
+>> +{
+>> +     struct rave_sp_power_button *pb =
+>> +             container_of(nb, struct rave_sp_power_button, nb);
+>> +     const u8 event = rave_sp_action_unpack_event(action);
+>> +     const u8 value = rave_sp_action_unpack_value(action);
+>> +     struct input_dev *idev = pb->idev;
+>> +
+>> +     if (event == RAVE_SP_EVNT_BUTTON_PRESS) {
+>> +             input_report_key(idev, KEY_POWER, value);
+>> +             input_sync(idev);
+>> +
+>> +             return NOTIFY_STOP;
+>> +     }
+>> +
+>> +     return NOTIFY_DONE;
+>> +}
+>> +
+>> +static int rave_sp_pwrbutton_probe(struct platform_device *pdev)
+>> +{
+>> +     struct device *dev = &pdev->dev;
+>> +     struct rave_sp_power_button *pb;
+>> +     struct input_dev *idev;
+>> +     int ret;
+>> +
+>> +     pb = devm_kzalloc(dev, sizeof(*pb), GFP_KERNEL);
+>> +     if (!pb)
+>> +             return -ENOMEM;
+>> +
+>> +     idev = devm_input_allocate_device(dev);
+>> +     if (!idev)
+>> +             return -ENOMEM;
+>> +
+>> +     idev->name = pdev->name;
+>> +     idev->dev.parent = dev;
+>
+> Not needed - done by devm_input_allocate_device().
+>
+
+Good point, will remove.
+
+>> +
+>> +     input_set_capability(idev, EV_KEY, KEY_POWER);
+>> +
+>> +     ret = input_register_device(idev);
+>> +     if (ret)
+>> +             return ret;
+>
+> Please call this "error".
+
+Sure, will do.
+
+>
+>> +
+>> +     pb->idev = idev;
+>> +     pb->nb.notifier_call = rave_sp_power_button_event;
+>> +     pb->nb.priority = 128;
+>> +
+>> +     return devm_rave_sp_register_event_notifier(dev, &pb->nb);
+>
+> Prefer
+>
+>         error = devm_rave...();
+>         if (error)
+>                 return error;
+>
+>         return 0;
+>
+
+OK, will do in v2.
+
+Thanks,
+Andrey Smirnov
