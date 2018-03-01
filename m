@@ -1,77 +1,58 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH 3/3] mailbox: sunxi-msgbox: Add a new mailbox driver
-Date: Thu, 1 Mar 2018 10:52:42 +0530
-Message-ID: <CABb+yY0PZCFtud0qYFNV4LO5A38f=JE=ZwoN2N89c0LiX9zV-Q@mail.gmail.com>
-References: <20180228022714.30068-1-samuel@sholland.org> <20180228022714.30068-4-samuel@sholland.org>
- <CABb+yY2uueAK9kzXzU9DT2a4NtV3kK2dc_wtyFWTBn8=Z6Vi7Q@mail.gmail.com>
- <d9e14058-6ffb-e54a-1565-f228342ee1f0@sholland.org> <CABb+yY3nfVxoA9wy1ym4mtCTKCZtJjepUTr7OP1uUPmzOEzniA@mail.gmail.com>
- <e52b48cb-ce06-f4c4-ce20-9b893139e54d@sholland.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 2/6] kbuild: add dtc as dependency on .dtb files
+Date: Thu, 1 Mar 2018 14:45:49 +0900
+Message-ID: <CAK7LNAT+_0t4PQxW911a0xL-f54WHGbF8t3rEq2Pfngr3J7BOQ@mail.gmail.com>
+References: <20180228233249.26281-1-robh@kernel.org> <20180228233249.26281-3-robh@kernel.org>
+ <CAK7LNAQSJ1uzgmta76rJwDpi08SB5gwcRPxu_TPw0u0XzgGaJA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e52b48cb-ce06-f4c4-ce20-9b893139e54d@sholland.org>
+In-Reply-To: <CAK7LNAQSJ1uzgmta76rJwDpi08SB5gwcRPxu_TPw0u0XzgGaJA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Holland <samuel@sholland.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ", linux-arm-kernel"@lists.infradead.org, srv_heupstream <linux-mediatek@lists.infradead.org>, srv_heupstream <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 1, 2018 at 12:26 AM, Samuel Holland <samuel@sholland.org> wrote:
-> On 02/28/18 12:14, Jassi Brar wrote:
->> On Wed, Feb 28, 2018 at 11:21 PM, Samuel Holland <samuel@sholland.org> wrote:
->>> Hi,
->>>
->>> On 02/28/18 03:16, Jassi Brar wrote:
->>>> On Wed, Feb 28, 2018 at 7:57 AM, Samuel Holland <samuel@sholland.org> wrote:
->>>> ....
->>>>
->>>>> +/*
->>>>> + * The message box hardware provides 8 unidirectional channels. As the mailbox
->>>>> + * framework expects them to be bidirectional
->>>>>
->>>> That is incorrect. Mailbox framework does not require a channel to be
->>>> TX and RX capable.
->>>
->>> Sorry, it would be more accurate to say that the intended mailbox _client_
->>> expects the channels to be bidirectional.
->>>
->> Mailbox clients are very mailbox provider specific. Your client driver
->> is unlikely to be reuseable over another controller+remote combo.
->> Your client has to know already what a physical channel can do (RX, TX
->> or RXTX). There is no api to provide that info.
+2018-03-01 13:33 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> 2018-03-01 8:32 GMT+09:00 Rob Herring <robh@kernel.org>:
+>> If dtc is rebuilt, we should rebuild .dtb files with the new dtc.
+>>
+>> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
 >
-> There's a public specification for SCPI available[1]. I'm writing the remote
-> endpoint to follow that protocol specification. (There's even an explicitly
-> platform-agnostic update to the protocol called SCMI[2]). Ideally, I should be
-> able to reuse the existing Linux client drivers for that protocol.
 >
-Thanks, I have already read those specs. Please note there are two
-parts of the spec - Chapter-4-Protocol and Chapter-5-Transport.
-
-You should definitely be able to reuse the Protocol implementation.
-
-However, transport can vary with platform - that is why it is
-separated out from Protocol. And mailbox is but one instance of
-transport.
-  Consider a platform with "power manager" chip connected via, say,
-I2C - one could still make use of SCMI protocol. Or consider another
-platform that does have mailbox link to the "power manager" but there
-is no shared memory between them - you could then pass packets via the
-mailbox FIFOs.
-  So no, we can't have common transport implementation for every platform.
-
-> Are you
-> suggesting that I need to write a copy of the arm_scpi driver, completely
-> identical except that it requests two mailbox channels per client (sending on
-> one and receiving on the other) instead of one? In the >1000 line file, this is
-> all that I would need to change:
+> Hmm, I am not 100% sure about this.
 >
-I did unsuccessfully try to convince Sudeep to break the
-implementation into platform-agnostic protocol and platform-specific
-transport drivers. That way there would be no duplication of code.
+> Is there a case where resulted DTBs
+> depend on DTC version?
+>
+>
+> If I understand correctly,
+> DTS and DTB are 1:1
+> Unlike CC, there is no room for optimization.
 
-Also please realise that you should not be writing controller driver,
-keeping just one client driver (SCMI/SCPI) in mind. What if another
-platform with same mailbox controller needs 8 TX "broadcast" links?
-The h/w supports the usecase, but your driver wouldn't.
 
-Thanks
+Maybe I was wrong.
+
+Is there room for optimization
+in 'DT strings' section?
+
+I guess it is optimized enough to avoid string duplication,
+but there could be different results
+without changing the specification.
+
+
+
+
+
+> Some possibilities could be:
+>      - specification is updated.
+>     ( /dts-v1/ in DTS should be updated if so)
+>   - buggy DTC version generates broken DTBs.
+>
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
