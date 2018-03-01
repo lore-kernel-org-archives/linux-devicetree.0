@@ -1,39 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/6] kbuild: remove remaining use of undefined YACC_PREFIX
-Date: Wed, 28 Feb 2018 17:32:44 -0600
-Message-ID: <20180228233249.26281-2-robh@kernel.org>
-References: <20180228233249.26281-1-robh@kernel.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] powerpc: dts: replace 'linux,stdout-path' with 'stdout-path'
+Date: Thu, 01 Mar 2018 12:33:08 +1100
+Message-ID: <87606ga8bv.fsf@concordia.ellerman.id.au>
+References: <20180228224406.7049-1-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180228233249.26281-1-robh@kernel.org>
+In-Reply-To: <20180228224406.7049-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Commit eea199b445f6 ("kbuild: remove unnecessary LEX_PREFIX and
-YACC_PREFIX") removed YACC_PREFIX definition, but left one use of it. There
-was not any build error since there is no user of "cmd_bison_h" currently.
-Remove the last remaining occurrence of YACC_PREFIX.
+Rob Herring <robh@kernel.org> writes:
 
-Fixes: eea199b445f6 ("kbuild: remove unnecessary LEX_PREFIX and YACC_PREFIX")
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- scripts/Makefile.lib | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 'linux,stdout-path' has been deprecated for some time in favor of
+> 'stdout-path'. Now dtc will warn on occurrences of 'linux,stdout-path'.
+> Search and replace all the of occurrences with 'stdout-path'.
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 5589bae34af6..1bc2f90cb8c0 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -217,7 +217,7 @@ $(filter %.tab.c,$(targets)): $(obj)/%.tab.c: $(src)/%.y FORCE
- 	$(call if_changed,bison)
- 
- quiet_cmd_bison_h = YACC    $@
--      cmd_bison_h = bison -o/dev/null --defines=$@ -t -l -p $(YACC_PREFIX) $<
-+      cmd_bison_h = bison -o/dev/null --defines=$@ -t -l $<
- 
- ifdef REGENERATE_PARSERS
- .PRECIOUS: $(src)/%.tab.h_shipped
--- 
-2.14.1
+This patch looks OK.
+
+But please remember that not all device trees are generated with dtc, we
+still have machines in the wild that have firmware which use
+"linux,stdout-path" and may never be updated.
+
+cheers
