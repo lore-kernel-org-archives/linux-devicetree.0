@@ -1,50 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 01/42] dt-bindings: clock: Add new bindings for TI
- Davinci PLL clocks
-Date: Thu, 1 Mar 2018 15:41:27 -0600
-Message-ID: <20180301214127.7fk3p66w6ikfj6kk@rob-hp-laptop>
-References: <1519071723-31790-1-git-send-email-david@lechnology.com>
- <1519071723-31790-2-git-send-email-david@lechnology.com>
+Subject: Re: [PATCH v4 6/7] arm64: tegra: Add Tegra194 chip device tree
+Date: Thu, 1 Mar 2018 15:43:57 -0600
+Message-ID: <20180301214357.a7wur5izbpk3udky@rob-hp-laptop>
+References: <20180220115812.24108-1-mperttunen@nvidia.com>
+ <20180220115812.24108-7-mperttunen@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1519071723-31790-2-git-send-email-david@lechnology.com>
+In-Reply-To: <20180220115812.24108-7-mperttunen@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Adam Ford <aford173@gmail.com>, linux-kernel@vger.kernel.org
+To: Mikko Perttunen <mperttunen@nvidia.com>
+Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pombredanne@nexb.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 19, 2018 at 02:21:22PM -0600, David Lechner wrote:
-> This adds a new binding for the PLL IP blocks in the mach-davinci
-> family of processors. Currently, only da850 has device tree support
-> but these bindings can also work for other SoCs in this family just
-> by adding new compatible strings.
+On Tue, Feb 20, 2018 at 01:58:11PM +0200, Mikko Perttunen wrote:
+> Add the chip-level device tree, including binding headers, for the
+> NVIDIA Tegra194 "Xavier" system-on-chip. Only a small subset of devices
+> are initially available, enough to boot to UART console.
 > 
-> Note: Although these PLL controllers are very similar to the TI Keystone
-> SoCs, we are not re-using those bindings. The Keystone bindings use a
-> legacy one-node-per-clock binding. Furthermore, the mach-davinici SoCs
-> have a slightly different PLL register layout and a number of quirks
-> that can't be handled by the existing bindings, so the keystone bindings
-> could not be used as-is anyway.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
 > ---
 > 
-> v7 changes:
-> - None (there was some debate about having child nodes, but the consensus was
->   that this is "good enough" as it is)
+> Notes:
+>     v4:
+>     - fixed copyright headers according to license-rules.rst
+>     - removed comments from clock bindings
+>     
+>     v3:
+>     - added hypervisor-related apertures to GIC node
+>     - removed GPL boilerplate in favor of SPDX and harmonized
+>       copyright headers
 > 
-> v6 changes:
-> - Added clock-names property
-> - Added ti,clkmode-square-wave property
-> - Added pllout child node
-> - Added obsclk child node
-> - Expanded examples
-> 
-> 
->  .../devicetree/bindings/clock/ti/davinci/pll.txt   | 96 ++++++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ti/davinci/pll.txt
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi       | 344 +++++++++++++++++++++++++
+>  include/dt-bindings/clock/tegra194-clock.h     | 321 +++++++++++++++++++++++
+>  include/dt-bindings/gpio/tegra194-gpio.h       |  61 +++++
+>  include/dt-bindings/power/tegra194-powergate.h |  35 +++
+>  include/dt-bindings/reset/tegra194-reset.h     | 152 +++++++++++
+>  5 files changed, 913 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/nvidia/tegra194.dtsi
+>  create mode 100644 include/dt-bindings/clock/tegra194-clock.h
+>  create mode 100644 include/dt-bindings/gpio/tegra194-gpio.h
+>  create mode 100644 include/dt-bindings/power/tegra194-powergate.h
+>  create mode 100644 include/dt-bindings/reset/tegra194-reset.h
 
 Reviewed-by: Rob Herring <robh@kernel.org>
