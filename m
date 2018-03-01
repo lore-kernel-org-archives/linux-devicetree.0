@@ -1,101 +1,61 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 0/3] Allwinner sunxi message box support
-Date: Thu, 1 Mar 2018 11:28:36 +0100
-Message-ID: <20180301102836.odxjy4lak2spujii@flea>
+Subject: Re: [PATCH 3/3] mailbox: sunxi-msgbox: Add a new mailbox driver
+Date: Thu, 1 Mar 2018 11:32:59 +0100
+Message-ID: <20180301103259.nomjbwkw4xbvhbfv@flea>
 References: <20180228022714.30068-1-samuel@sholland.org>
- <20180228082459.o3juhfiml3logxwl@flea>
- <398d54c4-8bfc-c459-f7d4-fba4665d1250@sholland.org>
+ <20180228022714.30068-4-samuel@sholland.org>
+ <20180228083214.h4oi2kmjjqmoyfhn@flea>
+ <fdf86770-6f45-3b3c-50ea-7a8363894639@sholland.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="q2dip6buehh4gsh7"
+        protocol="application/pgp-signature"; boundary="zp7kdmrnxtjungey"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <398d54c4-8bfc-c459-f7d4-fba4665d1250@sholland.org>
+In-Reply-To: <fdf86770-6f45-3b3c-50ea-7a8363894639@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Samuel Holland <samuel@sholland.org>
 Cc: Chen-Yu Tsai <wens@csie.org>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---q2dip6buehh4gsh7
-Content-Type: text/plain; charset=iso-8859-1
+--zp7kdmrnxtjungey
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Feb 28, 2018 at 11:18:50AM -0600, Samuel Holland wrote:
-> On 02/28/18 02:24, Maxime Ripard wrote:
-> > On Tue, Feb 27, 2018 at 08:27:11PM -0600, Samuel Holland wrote:
-> >> This series adds support for the "hardware message box" in recent
-> >> Allwinner sunxi SoCs, used for communication with the ARISC management
-> >> processor (the platform's equivalent of the ARM SCP). The end goal is =
-to
-> >> use the arm_scpi driver as a client, communicating with firmware runni=
-ng
-> >> on the ARISC CPU.
-> >>
-> >> This driver has been tested with the base arm_scpi driver (which sends
-> >> the SCPI_CMD_SCPI_CAPABILITIES command at probe time) and an in-progre=
-ss
-> >> firmware application running on the ARISC CPU. Because no firmware for
-> >> the other end of the mailbox is complete at the moment, I have not
-> >> included changes to the SoC device trees.
+On Wed, Feb 28, 2018 at 11:19:11AM -0600, Samuel Holland wrote:
+> Hi,
+>=20
+> On 02/28/18 02:32, Maxime Ripard wrote:
+> > On Tue, Feb 27, 2018 at 08:27:14PM -0600, Samuel Holland wrote:
+> >> +	/*
+> >> +	 * The failure path should not disable the clock or assert the reset,
+> >> +	 * because the PSCI implementation in firmware relies on this device
+> >> +	 * being functional. Claiming the clock in this driver is required to
+> >> +	 * prevent Linux from turning it off.
+> >> +	 */
+> >> +	ret =3D clk_prepare_enable(clk);
+> >> +	if (ret) {
+> >> +		dev_err(dev, "Failed to enable bus clock: %d\n", ret);
+> >> +		return ret;
+> >> +	}
 > >=20
-> > This is not directly related to this series, but what is your end goal
-> > with regard to SCPI? What features do you expect to have there?
+> > You don't need it to be always on though. You only need it to be
+> > enabled when you access the registers (on both sides I guess?). So you
+> > could very well enable the clock in your registers accessors in Linux,
+> > and do the same in the ARISC firmware. That should work.
 >=20
-> Current plans are to support in SCPI:
-> - SMP bringup and CPU hotplug (via PSCI in ATF)
-> - System reset and poweroff (via PSCI in ATF)
-> - System standby and suspend (via PSCI in ATF)
-> - DVFS for ARM CPUs
-> - Clock control for clocks in R_PRCM (e.g. R_CIR_RX)
-> - Thermal sensor reading
->=20
-> Other planned features of the firmware:
-> - System wakeup from poweroff (via GPIO or interrupt to firmware)
-> - System power/suspend LED control (connected to GPIO or PMIC GPIO)
-> - Polling of thermal sensor in firmware for thermal throttling
+> It does need to always be on because the *PSCI* implementation (ATF) also=
+ uses
+> SCPI concurrently with Linux (on a separate channel). Turning off the clo=
+ck
+> anywhere in Linux could turn it off in the middle of a PSCI SCPI call on a
+> different CPU, causing ATF to hang in EL3 (which would be very bad).
 
-Nice.
-
-> > I'm asking because last time we discussed this, SCPI wasn't able to abs=
-tract
-> > all the features the PMIC provides, and thus Linux needed to still be a=
-ble to
-> > access it.
->=20
-> This should only be an issue for devices with AXP PMICs.
-
-So this should only be an issue for most devices out there :)
-
-> Other devices with GPIO or simple I=B2C regulator control, such as H3
-> and H5 boards, can have all necessary features described with
-> standard SCPI commands. SCPI provides for 127 vendor-defined
-> "extended" commands, which could be used to build a full AXP PMIC
-> driver, or simply provide commands to read/write PMIC registers.
-
-So I'm not sure whether it was your plan, but the last plan that was
-discussed was that the whole RSB bus would be put outside of Linux
-control, hence why I was asking.
-
-And in this case the RSB bus is used to access the PMIC, but also its
-secondary devices such as the audio codec on the AC100/AC200, so we
-really need to have access to the RSB bus in Linux. If you can
-implement that through custom SCPI commands, that works for me though.
-
-Another thing that I'm not quire sure about is how would interrupts be
-reported throuh that mecanism? We want to use the PMIC as an interrupt
-controller for things like VBUS detection, GPIOs or the Jack detect in
-the codec. Is that doable?
-
-> For the moment I'm not concerned with battery powered devices. So
-> right now the relevant boards either a) don't have a PMIC, or b) can
-> have everything but DVFS voltage hard-coded in the firmware.
-
-I wasn't asking you to implement everything from the start, just that
-you consider the rest in your design.
+Then the above code doesn't fix anything. You should mark the clock
+critical, otherwise that clock will be turned off if the driver is
+compiled as a module and not loaded (or loaded later), or if the
+driver is not even compiled in.
 
 Maxime
 
@@ -104,24 +64,24 @@ Maxime Ripard, Bootlin (formerly Free Electrons)
 Embedded Linux and Kernel engineering
 https://bootlin.com
 
---q2dip6buehh4gsh7
+--zp7kdmrnxtjungey
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqX1dMACgkQ0rTAlCFN
-r3QhAQ/9EnasFCsnPOlSBd8Lq9/+KLWQE3QSm4Xtzz4p1ZPF/e0Ph62kHmd86J62
-smdkdbOfONuxRbIWw8qUFeQ5+HKRxUJDs58XnVK8pT9ylZBHhfphUPDe/QpzAJRf
-1mdvceU1d01e6Ea/b4/QzMkt9QzasFMkqd1ZfUT6WE7DZp3pRy2UHGoOX00uG5Kf
-1GaaJsLLfeMo8Qr/pealxr2PkoS+NPhpA+N0zOJFEsKkz/bblQaMYUEFgU0Q6VFh
-H1z7qZnRKHzAMvkRUthNSJ3UISI1gKoRWo3SX9p2XtdKOzYxhqqYTUodRgcww10+
-oJvnfeoD5hG+Hc5UhPIcIYuZAZMbdMYo9wNkQFtS+KpBGUEWU4wFG7Uql5lqv6kq
-SBFhrt92IAF3vUVo7+RX9ZKKOv6JSJJXjiJVngijX7lwcmMNTeUW2NWoc7ZOUyOc
-o2ImMrgyNIR1I7Z6Flj81EqVtorW1/WlthBftbob79rajPiMudyCAVriJQngoYYT
-Dfe33ns25F1KqWhJ+oJZyCi/Yclji6P6CIY4JuAa1InG4iBsNiKRXRkkY+xOEh0U
-6Z00IkiNOs4s+VFD1+VhBIguNsaqN4ulbmIuucyFuf3LZznf/gwdTW5h6oHAZ4dD
-Aed6lDU99COANPbbJPoJFZeHXFaKwePruoNQtJ65yht4lUXtN6Y=
-=4jx+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqX1toACgkQ0rTAlCFN
+r3QrCQ//W43iHw2yA04qQwRg+S9XCDti0+SutM54YaVxFsebKuS3lL46Cn7DZdXt
+EMC+p3pDfMBpKhDDyVYDiGKVFvU1U9ho0J14esSNmos2o9t7hGByjQ54dgQMH3B3
+D1K42KdbTvu7JxWmGl2k+6eLt1QIKovaB4GS2pc0IL++bZInOuOkoa1m/M2s1li3
+EvdYSB1oNhuriqD+kZq4COp11iGuv4MDGtLmaIiltSXqmgb6OqGw+wNExR23kHUk
+porzRqvAXODE7K/rw104xl4ykMp9f4h+eY0NLNHe2uR8inDPEpTGGNYhxKOjQFr6
+XI/8gyhamQSlnaC32rlu7k07EQEm7sdMHmMyJ4awU+schNskN1b46nHMD3Uti2oM
+OEpVFLn9ExFmPiTx4fVUkx8QFCCgc3xkLrFHUJuR0ikRbdciuN+fa1lF67COXoRa
+AyWbBnH2SnjFu1xKurGU77ZVAA2slQdwggJp86+aYxoXGVhNoE14MgfECtUSMJ3F
+TeaurYiXi876b0dYxnDoFNaY1TUE6L5rkD5QG4CDhl8s7v362Ae0/tEEDs0QSl3X
+a5f1K3t24Repvcfh6mPzkGVtjOZ/JP4QFPlprVOU9nQ6yUY7ofl1AsXiWnyrWVED
+rZtsmGqQdLdlgNMKK2fOsaA5jsDtoirvS/+1tJZi+mVrVA4rfZU=
+=eBab
 -----END PGP SIGNATURE-----
 
---q2dip6buehh4gsh7--
+--zp7kdmrnxtjungey--
