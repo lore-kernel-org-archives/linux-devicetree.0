@@ -1,56 +1,96 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] arm: dts: omap3: Add missing #sound-dai-cells
-Date: Thu, 1 Mar 2018 14:32:43 -0800
-Message-ID: <20180301223243.GI62820@atomide.com>
-References: <20180301202537.30571-2-robh@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 06/32] ASoC: rt5651: Configure
+ jack-detect source through a device-property
+Date: Thu, 1 Mar 2018 23:35:30 +0100
+Message-ID: <032d0e59-0d64-7df1-4fca-1709430b754c@redhat.com>
+References: <20180225104713.4745-1-hdegoede@redhat.com>
+ <20180225104713.4745-7-hdegoede@redhat.com>
+ <20180301193046.GJ12864@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180301202537.30571-2-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, arm@kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180301193046.GJ12864@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Carlo Caione <carlo@endlessm.com>, Bard Liao <bardliao@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
-KiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiBbMTgwMzAxIDEyOjI2XToKPiBkdGMgbm93
-IGdpdmVzIHRoZSBmb2xsb3dpbmcgd2FybmluZ3M6Cj4gCj4gYXJjaC9hcm0vYm9vdC9kdHMvb21h
-cDMtZ3RhMDRhMy5kdGI6IFdhcm5pbmcgKHNvdW5kX2RhaV9wcm9wZXJ0eSk6IC9zb3VuZF90ZWxl
-cGhvbnkvc2ltcGxlLWF1ZGlvLWNhcmQsY3B1OiBNaXNzaW5nIHByb3BlcnR5ICcjc291bmQtZGFp
-LWNlbGxzJyBpbiBub2RlIC9vY3BANjgwMDAwMDAvbWNic3BANDkwMjYwMDAgb3IgYmFkIHBoYW5k
-bGUgKHJlZmVycmVkIGZyb20gc291bmQtZGFpWzBdKQo+IGFyY2gvYXJtL2Jvb3QvZHRzL29tYXAz
-LWd0YTA0YTQuZHRiOiBXYXJuaW5nIChzb3VuZF9kYWlfcHJvcGVydHkpOiAvc291bmRfdGVsZXBo
-b255L3NpbXBsZS1hdWRpby1jYXJkLGNwdTogTWlzc2luZyBwcm9wZXJ0eSAnI3NvdW5kLWRhaS1j
-ZWxscycgaW4gbm9kZSAvb2NwQDY4MDAwMDAwL21jYnNwQDQ5MDI2MDAwIG9yIGJhZCBwaGFuZGxl
-IChyZWZlcnJlZCBmcm9tIHNvdW5kLWRhaVswXSkKPiBhcmNoL2FybS9ib290L2R0cy9vbWFwMy1n
-dGEwNGE1LmR0YjogV2FybmluZyAoc291bmRfZGFpX3Byb3BlcnR5KTogL3NvdW5kX3RlbGVwaG9u
-eS9zaW1wbGUtYXVkaW8tY2FyZCxjcHU6IE1pc3NpbmcgcHJvcGVydHkgJyNzb3VuZC1kYWktY2Vs
-bHMnIGluIG5vZGUgL29jcEA2ODAwMDAwMC9tY2JzcEA0OTAyNjAwMCBvciBiYWQgcGhhbmRsZSAo
-cmVmZXJyZWQgZnJvbSBzb3VuZC1kYWlbMF0pCj4gCj4gQWRkIHRoZSBtaXNzaW5nICNzb3VuZC1k
-YWktY2VsbHMgcHJvcGVydHkuCgpJcyB0aGlzIG5lZWRlZCBmb3IgdGhlIGN1cnJlbnQgLXJjIG9y
-IGlzIHY0LjE3IE9LPwoKU29tZWhvdyBJJ20gbm90IHNlZWluZyB0aGVzZSB3aXRoIGN1cnJlbnQg
-LXJjIG9yIG5leHQsIGlzCnRoZXJlIHNvbWUgc3BlY2lhbCBvcHRpb24gKG5vdCBXPTIgOikgdGhh
-dCB5b3UncmUgdXNpbmc/CgpSZWdhcmRzLAoKVG9ueQoKPiBDYzogIkJlbm/DrnQgQ291c3NvbiIg
-PGJjb3Vzc29uQGJheWxpYnJlLmNvbT4KPiBDYzogVG9ueSBMaW5kZ3JlbiA8dG9ueUBhdG9taWRl
-LmNvbT4KPiBDYzogbGludXgtb21hcEB2Z2VyLmtlcm5lbC5vcmcKPiBTaWduZWQtb2ZmLWJ5OiBS
-b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9v
-bWFwMy5kdHNpIHwgMSArCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+IAo+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwMy5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvb21hcDMuZHRzaQo+IGluZGV4IGEwMDU4MDJjZDUyYi4uNDA0M2VjYjM4MDE2IDEwMDY0NAo+
-IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290
-L2R0cy9vbWFwMy5kdHNpCj4gQEAgLTU1Nyw2ICs1NTcsNyBAQAo+ICAJCQlkbWEtbmFtZXMgPSAi
-dHgiLCAicngiOwo+ICAJCQljbG9ja3MgPSA8Jm1jYnNwNF9mY2s+Owo+ICAJCQljbG9jay1uYW1l
-cyA9ICJmY2siOwo+ICsJCQkjc291bmQtZGFpLWNlbGxzID0gPDA+Owo+ICAJCQlzdGF0dXMgPSAi
-ZGlzYWJsZWQiOwo+ICAJCX07Cj4gIAo+IC0tIAo+IDIuMTQuMQo+IAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi,
+
+On 01-03-18 20:30, Mark Brown wrote:
+> On Sun, Feb 25, 2018 at 11:46:47AM +0100, Hans de Goede wrote:
+>> Configure the jack-detect source through a device-property which can be
+>> set by code outside of the codec driver. Rather then putting platform
+>> specific DMI quirks inside the generic codec driver.
+> 
+>> And move the jack-detect-source quirk for the KIANO SlimNote 14.2, which
+>> was present inside the codec driver to the machine driver, where we can
+>> bundle it together with the other quirks already present for this laptop.
+> 
+> Multiple things in a patch again :/
+
+Yes because the property replaces the quirk, I can split the changes between
+the codec and machine driver into 2 patches but then the intermediate state
+will be that the jack-detection no longer works.
+
+> The property itself is fine but...
+> 
+>> @@ -360,6 +377,13 @@ static int byt_rt5651_init(struct snd_soc_pcm_runtime *runtime)
+>>   			dev_err(card->dev, "unable to set MCLK rate\n");
+>>   	}
+>>   
+>> +	props[cnt++] = PROPERTY_ENTRY_U32("realtek,jack-detect-source",
+>> +				BYT_RT5651_JDSRC(byt_rt5651_quirk));
+>> +
+>> +	ret = device_add_properties(codec->dev, props);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>>   	ret = snd_soc_card_jack_new(runtime->card, "Headset",
+> 
+> I'm having a hard time geting comfortable with this; it's all a bit
+> fragile feeling to me - someone deciding to centralise the property
+> parsing (eg, if they are using a platform where platform data makes
+> sense or want to cross-validate with some other property on probe) could
+> easily break things and there's not even a comment in the CODEC driver.
+
+It is not _that_ fragile, but I agree that it would be good to add
+a comment about not moving the property-parsing to the codec driver.
+
+I will rebase and submit a new version with a comment added.
+Do you want me to split this patch into separate codec and machine
+driver patches while at it?
+
+> It'll work but it doesn't seem to match expectations for how firmware
+> data is provided which is what's bugging me here.
+
+The problem here is that the data is not coming from the firmware,
+which is a reality we have to deal with leading to some sort of
+compromise.
+
+> It at least needs a
+> "here be dragons" style comment in the code.
+
+Ack.
+
+> Ideally we'd have a general way to massage the ACPI data at init time
+> and could have board files that are instantiated from DMI to do that
+> (like are needed even more for SFI) but that's a long way off.
+
+Something like DT overlays for ACPI? With the overlays being triggered
+by a DMI match? Interesting concept, but given how much discussion there
+still is surrounding DT overlays I don't see this happening anytime soon.
+
+Regards,
+
+Hans
