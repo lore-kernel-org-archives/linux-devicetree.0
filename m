@@ -1,40 +1,75 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH RESEND] arm64: dts: hi6220: enable watchdog
-Date: Thu,  1 Mar 2018 20:18:47 +0800
-Message-ID: <1519906727-11135-1-git-send-email-leo.yan@linaro.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v7 1/3] irqchip/gic-v3-its: add ability to save/restore
+ ITS state
+Date: Thu, 1 Mar 2018 12:29:58 +0000
+Message-ID: <0a74f87a-027a-df7d-ca2d-fc164ec9cdf7@arm.com>
+References: <20180301054820.42847-1-dbasehore@chromium.org>
+ <20180301054820.42847-2-dbasehore@chromium.org>
+ <20180301114144.nmwu4qtslvj7ogj5@lakrids.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180301114144.nmwu4qtslvj7ogj5@lakrids.cambridge.arm.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Dmitry Shmidt <dimitrysh@google.com>
+To: Mark Rutland <mark.rutland@arm.com>, Derek Basehore <dbasehore@chromium.org>
+Cc: linux-kernel@vger.kernel.org, Soby.Mathew@arm.com, sudeep.holla@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-pm@vger.kernel.org, rafael.j.wysocki@intel.com, tglx@linutronix.de, briannorris@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dmitry Shmidt <dimitrysh@google.com>
+Hi Mark,
 
-This patch is to add watchdog binding for Hi6220 on Hikey board.
+On 01/03/18 11:41, Mark Rutland wrote:
+> On Wed, Feb 28, 2018 at 09:48:18PM -0800, Derek Basehore wrote:
+>> Some platforms power off GIC logic in suspend, so we need to
+>> save/restore state. The distributor and redistributor registers need
+>> to be handled in platform code due to access permissions on those
+>> registers, but the ITS registers can be restored in the kernel.
+>>
+>> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> 
+> How much state do we have to save/restore?
+> 
+> Given we can apparently read all this state, couldn't we *always* save
+> the state, then upon resume detect if the state has been lost, restoring
+> it if so?
+> 
+> That way, we don't need a property in FW tables for DT or ACPI.
 
-Signed-off-by: Dmitry Shmidt <dimitrysh@google.com>
----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+That's a good point. I guess that we could just compare the saved
+GITS_CTLR register and restore the full state only if the ITS comes back
+as disabled.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 6a180d1..e9d5bb6 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -817,6 +817,14 @@
- 			pinctrl-1 = <&sdio_pmx_idle &sdio_clk_cfg_idle &sdio_cfg_idle>;
- 		};
- 
-+		watchdog0: watchdog@f8005000 {
-+			compatible = "arm,sp805-wdt", "arm,primecell";
-+			reg = <0x0 0xf8005000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ao_ctrl HI6220_WDT0_PCLK>;
-+			clock-names = "apb_pclk";
-+		};
-+
- 		tsensor: tsensor@0,f7030700 {
- 			compatible = "hisilicon,tsensor";
- 			reg = <0x0 0xf7030700 0x0 0x1000>;
+I'm just a bit worried that it makes it an implicit convention between
+kernel an FW, which could change in funny ways. Importantly, the PSCI
+spec says states FW should restore *the whole state*. Obviously, it
+cannot to that on HW that doesn't allow you to read out the state, hence
+the DT flag that outlines the departure from the expected behaviour.
+
+I'm happy to go either way, but then I have the feeling that we should
+go back to quirking it on the actual implementation (GIC500 in this
+case) if we're to from the property.
+
+> 
+> [...]
+> 
+>> @@ -3261,6 +3363,9 @@ static int __init its_probe_one(struct resource *res,
+>>  		ctlr |= GITS_CTLR_ImDe;
+>>  	writel_relaxed(ctlr, its->base + GITS_CTLR);
+>>  
+>> +	if (fwnode_property_present(handle, "reset-on-suspend"))
+>> +		its->flags |= ITS_FLAGS_SAVE_SUSPEND_STATE;
+> 
+> Does this allow this property on an ACPI system?
+> 
+> If we need this on ACPI, we need a spec update to handle this properly,
+> and shouldn't use device properties like this.
+
+Well spotted. I guess that dropping the property would fix that
+altogether, assuming we feel that the above is safe enough.
+
+Thoughts?
+
+	M.
 -- 
-2.7.4
+Jazz is not dead. It just smells funny...
