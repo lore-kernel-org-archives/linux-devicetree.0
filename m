@@ -1,42 +1,92 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 2/2] i2c: add support for Socionext SynQuacer I2C controller
-Date: Thu, 1 Mar 2018 20:32:21 +0200
-Message-ID: <CAHp75VcJ4+4-yCm6sKf+Q80FwRMjkjSGMZd5X3hecHQZ9nV7Rw@mail.gmail.com>
-References: <20180301163815.30595-1-ard.biesheuvel@linaro.org> <20180301163815.30595-3-ard.biesheuvel@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: Add panel-timing subnode to
+ simple-panel
+Date: Thu, 01 Mar 2018 20:47:57 +0200
+Message-ID: <1788083.LjPZHSgKBb@avalon>
+References: <20180208174855.55620-1-seanpaul@chromium.org>
+ <20180208174855.55620-4-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180301163815.30595-3-ard.biesheuvel@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Jassi Brar <jassisinghbrar@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180208174855.55620-4-seanpaul@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 1, 2018 at 6:38 PM, Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
-> This is a cleaned up version of the I2C controller driver for
-> the Fujitsu F_I2C IP, which was never supported upstream, and
-> has now been incorporated into the Socionext SynQuacer SoC.
-
-> +static int synquacer_i2c_remove(struct platform_device *pdev)
-> +{
-> +       struct synquacer_i2c *i2c = platform_get_drvdata(pdev);
-> +
-
-> +       platform_set_drvdata(pdev, NULL);
-
-Just noticed, this is redundant for many years since driver core does
-it for every device on removal.
-
-It can be fixed by followup though.
-
-> +       i2c_del_adapter(&i2c->adapter);
-> +       if (!IS_ERR(i2c->pclk))
-> +               clk_disable_unprepare(i2c->pclk);
-> +
-> +       return 0;
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGkgU2VhbiwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gVGh1cnNkYXksIDggRmVicnVh
+cnkgMjAxOCAxOTo0ODo1MCBFRVQgU2VhbiBQYXVsIHdyb3RlOgo+IFRoaXMgcGF0Y2ggYWRkcyBh
+IG5ldyBzdWJub2RlIHRvIHNpbXBsZS1wYW5lbCBhbGxvd2luZyB1cyB0byBvdmVycmlkZQo+IHRo
+ZSB0eXBpY2FsIHRpbWluZyBleHByZXNzZWQgaW4gdGhlIHBhbmVsJ3MgZGlzcGxheV90aW1pbmcu
+Cj4gCj4gQ2hhbmdlcyBpbiB2MjoKPiAgLSBTcGxpdCBvdXQgdGhlIGJpbmRpbmcgaW50byBhIG5l
+dyBwYXRjaCAoUm9iKQo+ICAtIGRpc3BsYXktdGltaW5ncyBpcyBhIG5ldyBzZWN0aW9uIChSb2Ip
+Cj4gIC0gVXNlIHRoZSBmdWxsIGRpc3BsYXktdGltaW5ncyBzdWJub2RlIGluc3RlYWQgb2YgcGlj
+a2luZyB0aGUgdGltaW5nCj4gICAgb3V0IChSb2IvVGhpZXJyeSkKPiBDaGFuZ2VzIGluIHYzOgo+
+ICAtIEdvIGJhY2sgdG8gdXNpbmcgdGhlIHRpbWluZyBzdWJub2RlIGRpcmVjdGx5LCBidXQgcmVu
+YW1lIHRvCj4gICAgcGFuZWwtdGltaW5nIChSb2IpCj4gCj4gQ2M6IERvdWcgQW5kZXJzb24gPGRp
+YW5kZXJzQGNocm9taXVtLm9yZz4KPiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4K
+PiBDYzogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiBDYzogSmVmZnkgQ2hlbiA8
+amVmZnkuY2hlbkByb2NrLWNoaXBzLmNvbT4KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
+bmVsLm9yZz4KPiBDYzogU3TDqXBoYW5lIE1hcmNoZXNpbiA8bWFyY2hldUBjaHJvbWl1bS5vcmc+
+Cj4gQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Cj4gQ2M6IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKPiBDYzogbGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IFNpZ25lZC1v
+ZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgo+IC0tLQo+ICAuLi4vYmlu
+ZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0ICAgICAgICB8IDMwICsrKysrKysr
+KysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKykKPiAKPiBkaWZm
+IC0tZ2l0Cj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
+bC9zaW1wbGUtcGFuZWwudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0IGluZGV4Cj4gNDVhNDU3YWQzOGYwLi43Nzg4
+YjljZTE2MGIgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKPiBAQCAtMTIs
+NiArMTIsMjQgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgLSBlbmFibGUtZ3Bpb3M6IEdQSU8g
+cGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAo+ICAtIGJhY2tsaWdodDogcGhhbmRs
+ZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKPiAKPiArcGFu
+ZWwtdGltaW5nIHN1Ym5vZGUKPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoaXMgb3B0
+aW9uYWwgc3Vibm9kZSBpcyBmb3IgZGV2aWNlcyB3aGljaCByZXF1aXJlIGEgbW9kZSBkaWZmZXJp
+bmcgZnJvbQo+IHRoZQo+ICtwYW5lbCdzICJ0eXBpY2FsIiBkaXNwbGF5IHRpbWluZyBhcyBwcm9n
+cmFtbWVkIGluIHRoZSBzaW1wbGUtcGFuZWwgZHJpdmVyLgoKUGxlYXNlIGRvbid0IHJlZmVyIHRv
+IHBhcnRpY3VsYXIgZHJpdmVycyBpbiBEVCBiaW5kaW5ncy4KCj4gK092ZXJyaWRpbmcgdGhlIGRy
+aXZlciBtb2RlIG11c3Qgb25seSBiZSBkb25lIGluIHRoZSBmb2xsb3dpbmcgc2NlbmFyaW86Cj4g
+KyAtIFRoZSByZXN0cmljdGlvbnMgbW90aXZhdGluZyB0aGUgb3ZlcnJpZGUgY2Fubm90IGJlIGFw
+cGxpZWQgdG8gdGhlCj4gcGxhdGZvcm0ncwo+ICsgICBkaXNwbGF5IGRyaXZlciAoaWU6IGl0IG11
+c3QgYmUgc3BlY2lmaWMgdG8gdGhlIGRldmljZSBub3QgdGhlIHBsYXRmb3JtKQoKSSBmaW5kIHRo
+aXMgcXVpdGUgYW1iaWd1b3VzLiBJIGFzc3VtZSB0aGF0ICJub3QgdGhlIHBsYXRmb3JtIiByZWZl
+cnMgdG8gdGhlIApwbGF0Zm9ybSdzIGRpc3BsYXkgY29udHJvbGxlci4gInBsYXRmb3JtIiB3aXRo
+b3V0IGEgcXVhbGlmaWVyIGlzIHRvbyB2YWd1ZSwgYXMgCkkgZXhwZWN0IHRoZSByZWFzb24gdG8g
+b3ZlcnJpZGUgdGhlIG1vZGUgd2lsbCBjb21lIGZyb20gdGhlIHBsYXRmb3JtJ3MgCnNwZWNpZmlj
+IGludGVyYWN0aW9ucyBiZXR3ZWVuIHRoZSBwYW5lbCwgdGhlIGRpc3BsYXkgY29udHJvbGxlciwg
+dGhlIG90aGVyIApkaXNwbGF5LXJlbGF0ZWQgZGV2aWNlcyBpZiBhbnksIGFuZCB0aGUgUENCLgoK
+PiArIC0gVGhlIHBhbmVsIG11c3Qgbm90IGhhdmUgYSBmaXhlZCBtb2RlIGF0dHJpYnV0ZWQgdG8g
+aXQgaW4gdGhlIGRyaXZlcgoKSSdtIG5vdCBzdXJlIHRvIGZvbGxvdyB5b3UgaGVyZS4KCj4gKyAt
+IFRoZSBwYW5lbCBtdXN0IHByb3ZpZGUgYXQgbGlzdCBvbmUgZGlzcGxheV90aW1pbmcgcmFuZ2Ug
+Ynkgd2hpY2ggdGhlCj4gb3ZlcnJpZGUKPiArICAgbW9kZSBjYW4gYmUgdmFsaWRhdGVkIGFnYWlu
+c3QKPiArIC0gVGhlIG92ZXJyaWRlIG1vZGUgd2lsbCB1c2UgdGhlICd0eXAnIHZhbHVlcyBmcm9t
+IHRoZSBwYW5lbC10aW1pbmdzCj4gc3Vibm9kZQoKVGhlIHBhbmVsLXRpbWluZ3Mgc3Vibm9kZSBo
+YXMgbm8gInR5cCIgdmFsdWVzLiBEbyB5b3UgbWVhbiB0aGF0IHRoZSAKZGlzcGxheV90aW1pbmcg
+Zm9yIHRoZSBwYW5lbCB3aWxsIGhhdmUgaXRzICJ0eXAiIHZhbHVlcyBvdmVycmlkZGVuIGJ5IHRo
+ZSAKdmFsdWVzIGNvbnRhaW5lZCBpbiB0aGUgcGFuZWwtdGltaW5nIG5vZGUgPwoKPiArIC0gWW91
+IG11c3QgcHJvdmlkZSBhbGwgcmVxdWlyZWQgcHJvcGVydGllcyBmb3IgdGhlIHBhbmVsLXRpbWlu
+ZyBzdWJub2RlCj4gKwo+ICtGb3JtYXQgaW5mb3JtYXRpb24gb24gdGhlIHBhbmVsLXRpbWluZyBz
+dWJub2RlIGNhbiBiZSBmb3VuZCBpbgo+ICtkaXNwbGF5LXRpbWluZy50eHQuCj4gKwo+ICsKPiAg
+RXhhbXBsZToKPiAKPiAgCXBhbmVsOiBwYW5lbCB7Cj4gQEAgLTIyLDQgKzQwLDE2IEBAIEV4YW1w
+bGU6Cj4gIAkJZW5hYmxlLWdwaW9zID0gPCZncGlvIDkwIDA+Owo+IAo+ICAJCWJhY2tsaWdodCA9
+IDwmYmFja2xpZ2h0PjsKPiArCj4gKwkJcGFuZWwtdGltaW5nIHsKPiArCQkJY2xvY2stZnJlcXVl
+bmN5ID0gPDI2NjYwNDcyMD47Cj4gKwkJCWhhY3RpdmUgPSA8MjQwMD47Cj4gKwkJCWhmcm9udC1w
+b3JjaCA9IDw0OD47Cj4gKwkJCWhiYWNrLXBvcmNoID0gPDg0PjsKPiArCQkJaHN5bmMtbGVuID0g
+PDMyPjsKPiArCQkJdmFjdGl2ZSA9IDwxNjAwPjsKPiArCQkJdmZyb250LXBvcmNoID0gPDM+Owo+
+ICsJCQl2YmFjay1wb3JjaCA9IDwxMjA+Owo+ICsJCQl2c3luYy1sZW4gPSA8MTA+Owo+ICsJCX07
+Cj4gIAl9OwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
