@@ -1,46 +1,108 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/5] Add R8A77970/V3MSK LVDS/HDMI support
-Date: Thu, 1 Mar 2018 10:54:52 +0100
-Message-ID: <20180301095451.jvsybu5k6pnahfbi@verge.net.au>
-References: <23a6ac28-134b-b5dd-69a7-910774c4b8c1@cogentembedded.com>
- <2fd26075-525c-8d86-ef81-f32c73cf3e8b@cogentembedded.com>
- <20180228132707.mgunezg5o4lul7x5@verge.net.au>
- <f9574ea2-d8ee-7c9f-b850-874074eddad2@cogentembedded.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V2 0/5] mmc: add stm32 sdmmc controller
+Date: Thu, 1 Mar 2018 10:57:40 +0100
+Message-ID: <8f328063-610f-a2e8-5f29-d3f0019384f2@st.com>
+References: <1519832844-28068-1-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFpfPAaLRZLqpyi6RwC1-=7Ao=u+OmEfHaYBABzd_-BKAw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <f9574ea2-d8ee-7c9f-b850-874074eddad2@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFpfPAaLRZLqpyi6RwC1-=7Ao=u+OmEfHaYBABzd_-BKAw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 28, 2018 at 08:57:18PM +0300, Sergei Shtylyov wrote:
-> On 02/28/2018 04:27 PM, Simon Horman wrote:
-> 
-> >>> Here's the set of 5 patches against Simon Horman's 'renesas.git' repo's
-> >>> 'renesas-devel-20180227-v4.16-rc3' tag. We're adding the R8A77970 FCPVD/VSPD/
-> >>> DU/LVDS device nodes and then describing the HDMI encoder connected to the LVDS
-> >>> output (we're omitting the LVDS decoder for now). These patches depend on
-> >>> the recent R8A77970 DU/LVDS rework patches by Laurent in order to work...	
-> >>
-> >>    Need to mention that the DU driver silently fails to probe now. I do
-> >>    hope that this is not due to my updates. :-)
-> > 
-> > Please test that theory.
-> 
->    Yeah, after sucking in the recent versions of the DU/LVDS patches and uncommenting
-> and fixing rejects in a couple patches here, the graphical console works again. :-)
+Hi Ulf
 
-Ok, but does this patchset cause a regression? If so it seems
-that we should wait for driver updates before applying it.
+On 03/01/2018 10:06 AM, Ulf Hansson wrote:
+> Hi Ludovic,
+> 
+> On 28 February 2018 at 16:47, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch serie adds support of stm32 SDMMC controller.
+>> stm32h7 is the first SoC to use stm32 SDMMC controller
+>> (previous SoC had pl180 controller).
+> 
+> I am a not convinced this isn't a new improved variant of the pl180.
+> According to register layout and the code you submitted in patch2,
+> there are great similarities to pl180 and the mmci driver.
+
+In fact, ST designers which created stm32-sdmmc hardware block from 
+scratch are the same which have done the modifications on pl180 variant 
+(stm32 legacy f4, f7).
+So some registers or bits name seem identical (or strongly inspirited) 
+but the engine and features are different.
+
+You could find the datasheet of STM32H7x3 on:
+http://www.st.com/content/ccc/resource/technical/document/reference_manual/group0/c9/a3/76/fa/55/46/45/fa/DM00314099/files/DM00314099.pdf/jcr:content/translations/en.DM00314099.pdf
+
+Chapters: 55 Secure digital input/output MultiMediaCard interface
+(SDMMC)
+
+This hardware block has own roadmap and some features are already in the 
+pipe for next SoC.
+
+For code design: like I also worked on pl180 in the past :-)
+my code is inspirited of this driver.
+
+BR
+Ludo
+
+> 
+> In other words, it more sounds like an improved variant of pl180,
+> hence I am thinking that you should try to extend the mmci driver
+> instead. Could you please have a look at that, unless you can specify
+> more exactly why that isn't suitable?
+> 
+>>
+>> The SDMMC features include the following:
+>> -Full compliance with MultiMediaCard System Specification Version 4.51.
+>>   Card support for three different databus modes:
+>>   1-bit (default), 4-bit and 8-bit.
+>> -Full compliance with SD memory card specifications version 4.1.
+>>   SDR104 speed limited to maximum allowed I/O speed, SPI mode and
+>>   UHS-II mode not supported.
+>> -Full compliance with SDIO card specification version 4.0.
+>>
+>> change V2:
+>> -dt-bindings: properties name
+>> st,dir-output-high; st,neg-edge; st,use-ckin
+>> -dt-bindings: node example s/sdmmc@/mmc@/g
+>> -removes return of enable/disable_imask functions
+>> -adds dev_warn if clk divisor is too short.
+>> -replaces overprotection of n_elem by fail of dma_map_sg
+>> -removes shortcut host->base
+>> -Use device_property_present
+>>
+>> Ludovic Barre (5):
+>>    dt-bindings: mmc: document the stm32 sdmmc bindings
+>>    mmc: add stm32 sdmmc controller driver
+>>    ARM: dts: stm32: add sdmmc support for stm32h743
+>>    ARM: dts: stm32: add sdmmc1 support for stm32h743i-eval
+>>    ARM: configs: stm32: add mmc and ext2/3/4 support
+>>
+>>   .../devicetree/bindings/mmc/st,stm32-sdmmc.txt     |  35 +
+>>   arch/arm/boot/dts/stm32h743-pinctrl.dtsi           |  26 +
+>>   arch/arm/boot/dts/stm32h743.dtsi                   |  26 +
+>>   arch/arm/boot/dts/stm32h743i-eval.dts              |  11 +
+>>   arch/arm/configs/stm32_defconfig                   |   4 +-
+>>   drivers/mmc/host/Kconfig                           |   8 +
+>>   drivers/mmc/host/Makefile                          |   1 +
+>>   drivers/mmc/host/stm32-sdmmc.c                     | 708 +++++++++++++++++++++
+>>   drivers/mmc/host/stm32-sdmmc.h                     | 220 +++++++
+>>   9 files changed, 1038 insertions(+), 1 deletion(-)
+>>   create mode 100644 Documentation/devicetree/bindings/mmc/st,stm32-sdmmc.txt
+>>   create mode 100644 drivers/mmc/host/stm32-sdmmc.c
+>>   create mode 100644 drivers/mmc/host/stm32-sdmmc.h
+>>
+>> --
+>> 2.7.4
+>>
+> 
+> Kind regards
+> Uffe
+> 
