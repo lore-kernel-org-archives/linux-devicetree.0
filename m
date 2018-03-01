@@ -1,52 +1,86 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH RESEND 2/2] usb: dwc2: fix STM32F7 USB OTG HS compatible
-Date: Thu, 1 Mar 2018 11:05:35 +0100
-Message-ID: <1519898735-10319-3-git-send-email-amelie.delaunay@st.com>
-References: <1519898735-10319-1-git-send-email-amelie.delaunay@st.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/2] arm64: dts: renesas: r8a77970: add I2C support
+Date: Thu, 1 Mar 2018 10:54:13 +0100
+Message-ID: <20180301095412.obgrryduesbjinbv@verge.net.au>
+References: <3aaa4464-fc85-3fb4-2026-5d9df357bdff@cogentembedded.com>
+ <e309d9cd-69c6-7db2-96a4-73bc788b7cfc@cogentembedded.com>
+ <CAMuHMdWcwx8=KKf0RajtSXnJY9duaupFmUUKEka=uAmJjTdvoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519898735-10319-1-git-send-email-amelie.delaunay@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Youn <johnyoun@synopsys.com>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWcwx8=KKf0RajtSXnJY9duaupFmUUKEka=uAmJjTdvoQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes compatible for STM32F7 USB OTG HS and consistently rename
-dw2_set_params function.
-The v2 former patch [1] had been acked by Paul Young, but v1 was merged.
+On Wed, Feb 28, 2018 at 11:56:27AM +0100, Geert Uytterhoeven wrote:
+> On Mon, Feb 26, 2018 at 9:54 PM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+> > Define the generic R8A77970 parts of the I2C[0-4] device node.
+> >
+> > Based on the original (and large) patch by Daisuke Matsushita
+> > <daisuke.matsushita.ns@hitachi.com>.
+> >
+> > Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >
+> > ---
+> > Changes in version 2:
+> > - made  use of  the SYSC power domain #define's;
+> > - moved the I2C nodes before HSCIF nodes.
+> 
+> auto-repeat below...
+> 
+> >  arch/arm64/boot/dts/renesas/r8a77970.dtsi |   88 ++++++++++++++++++++++++++++++
+> >  1 file changed, 88 insertions(+)
+> >
+> > Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> > ===================================================================
+> > --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> > +++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+> > @@ -19,6 +19,14 @@
+> >         #address-cells = <2>;
+> >         #size-cells = <2>;
+> >
+> > +       aliases {
+> > +               i2c0 = &i2c0;
+> > +               i2c1 = &i2c1;
+> > +               i2c2 = &i2c2;
+> > +               i2c3 = &i2c3;
+> > +               i2c4 = &i2c4;
+> > +       };
+> > +
+> >         psci {
+> >                 compatible = "arm,psci-1.0", "arm,psci-0.2";
+> >                 method = "smc";
+> > @@ -338,6 +346,86 @@
+> >                                <&ipmmu_ds1 22>, <&ipmmu_ds1 23>;
+> >                 };
+> >
+> > +               i2c0: i2c@e6500000 {
+> > +                       compatible = "renesas,i2c-r8a77970",
+> > +                                    "renesas,rcar-gen3-i2c";
+> > +                       reg = <0 0xe6500000 0 0x40>;
+> > +                       interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&cpg CPG_MOD 931>;
+> > +                       power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
+> > +                       resets = <&cpg 931>;
+> > +                       dmas = <&dmac1 0x91>, <&dmac1 0x90>;
+> 
+> Can't all five i2c interfaces be used with both dmac1 and dmac2?
+> 
+> With that fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[1] https://patchwork.kernel.org/patch/9925573/
-
-Fixes: d8fae8b93682 ("usb: dwc2: add support for STM32F7xx USB OTG HS")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- drivers/usb/dwc2/params.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-index 03fd20f..c4a4749 100644
---- a/drivers/usb/dwc2/params.c
-+++ b/drivers/usb/dwc2/params.c
-@@ -137,7 +137,7 @@ static void dwc2_set_stm32f4x9_fsotg_params(struct dwc2_hsotg *hsotg)
- 	p->activate_stm_fs_transceiver = true;
- }
- 
--static void dwc2_set_stm32f7xx_hsotg_params(struct dwc2_hsotg *hsotg)
-+static void dwc2_set_stm32f7_hsotg_params(struct dwc2_hsotg *hsotg)
- {
- 	struct dwc2_core_params *p = &hsotg->params;
- 
-@@ -164,8 +164,8 @@ const struct of_device_id dwc2_of_match_table[] = {
- 	{ .compatible = "st,stm32f4x9-fsotg",
- 	  .data = dwc2_set_stm32f4x9_fsotg_params },
- 	{ .compatible = "st,stm32f4x9-hsotg" },
--	{ .compatible = "st,stm32f7xx-hsotg",
--	  .data = dwc2_set_stm32f7xx_hsotg_params },
-+	{ .compatible = "st,stm32f7-hsotg",
-+	  .data = dwc2_set_stm32f7_hsotg_params },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
--- 
-2.7.4
+Sergei, please address this review and repost as appropriate.
