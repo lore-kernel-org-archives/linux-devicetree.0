@@ -1,53 +1,65 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>
-Subject: Re: [PATCH 03/37] iommu/sva: Manage process address spaces
-Date: Thu, 1 Mar 2018 09:04:58 +0100
-Message-ID: <cd4d7a98-e45e-7066-345f-52d8eef926a2@amd.com>
-References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
-	<20180212183352.22730-4-jean-philippe.brucker@arm.com>
-	<5A97A324.9050605@linux.intel.com>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v1 3/4] ASoC: codecs: pcm179x: Add reset gpio
+Date: Thu, 1 Mar 2018 09:13:47 +0100
+Message-ID: <20180301091347.6575e621@dell-desktop.home>
+References: <20180227212433.2189-1-mylene.josserand@bootlin.com>
+        <20180227212433.2189-4-mylene.josserand@bootlin.com>
+        <CAOMZO5C+Ub2R6srR+2jv2pY8zwjwkPSecpO1gbXvmXMTTnhU8Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5A97A324.9050605-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Lu Baolu <baolu.lu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5C+Ub2R6srR+2jv2pY8zwjwkPSecpO1gbXvmXMTTnhU8Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, alexandre.belloni@bootlin.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 01.03.2018 um 07:52 schrieb Lu Baolu:
-> Hi Jean,
->
-> On 02/13/2018 02:33 AM, Jean-Philippe Brucker wrote:
->> [SNIP]
->> +	pasid = idr_alloc_cyclic(&iommu_pasid_idr, io_mm, dev_param->min_pasid,
->> +				 dev_param->max_pasid + 1, GFP_ATOMIC);
-> Can the pasid management code be moved into a common library?
-> PASID is not stick to SVA. An IOMMU model device could be designed
-> to use PASID for second level translation (classical DMA translation)
-> as well.
+Hello Fabio,
 
-Yeah, we have the same problem on amdgpu.
+Thank you for the review!
 
-We assign PASIDs to clients even when IOMMU isn't present in the system 
-just because we need it for debugging.
+On Tue, 27 Feb 2018 19:30:11 -0300
+Fabio Estevam <festevam@gmail.com> wrote:
 
-E.g. when the hardware detects that some shader program is doing 
-something nasty we get the PASID in the interrupt and could for example 
-use it to inform the client about the fault.
+> On Tue, Feb 27, 2018 at 6:24 PM, Mylène Josserand
+> <mylene.josserand@bootlin.com> wrote:
+> 
+> > +       pcm179x->reset = of_get_named_gpio(np, "reset-gpios", 0);
+> > +       if (gpio_is_valid(pcm179x->reset)) {
+> > +               ret = devm_gpio_request_one(dev, pcm179x->reset,
+> > +                                           GPIOF_OUT_INIT_LOW,
+> > +                                           "pcm179x reset");
+> > +               if (ret) {
+> > +                       dev_err(dev,
+> > +                               "Failed to request GPIO %d as reset pin, error %d\n",
+> > +                               pcm179x->reset, ret);
+> > +                       return ret;
+> > +               }
+> > +
+> > +               gpio_set_value(pcm179x->reset, 1);  
+> 
+> It would be better to use the gpiod API, which takes the GPIO polarity
+> into account.
+> 
+> There may be systems that have an inverter connected to this pin, and
+> this can be changed in dts via GPIO_ACTIVE_HIGH.
 
-Regards,
-Christian.
+Oh, true, I should have used gpiod. Thanks for pointing me out.
 
->
-> Best regards,
-> Lu Baolu
+> 
+> Also, as the reset pin can be connected to an I2C expander, for
+> example, so it is safer to use the cansleep variant:
+> 
+> gpiod_set_value_cansleep(pcm179x->reset, 0);
+
+Sure, I will update it.
+
+Thanks,
+
+Mylène
+
+-- 
+Mylène Josserand, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+http://bootlin.com
