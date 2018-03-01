@@ -1,123 +1,49 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] dt-bindings: PCI: MediaTek: fix dtc warnings
-Date: Thu, 1 Mar 2018 14:50:18 +0000
-Message-ID: <20180301145018.GA2516@e107981-ln.cambridge.arm.com>
-References: <9940757fe2889f46d0de214c5f277bf3c2074205.1518577579.git.ryder.lee@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v2 0/6] phy: rockchip-typec: fix boards that does not report cable-state.
+Date: Thu,  1 Mar 2018 16:25:09 +0100
+Message-ID: <20180301152515.20940-1-enric.balletbo@collabora.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9940757fe2889f46d0de214c5f277bf3c2074205.1518577579.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: kishon@ti.com, heiko@sntech.de
+Cc: groeck@chromium.org, gwendal@chromium.org, kernel@collabora.com, vicencb@gmail.com, Andre Przywara <andre.przywara@arm.com>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Shawn Lin <shawn.lin@rock-chips.com>, Rask Ingemann Lambertsen <rask@formelder.dk>, Catalin Marinas <catalin.marinas@arm.com>, Pierre-Hugues Husson <phh@phh.me>, Jacob Chen <jacob-chen@iotwrt.com>, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jianqun Xu <jay.xu@rock-chips.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 14, 2018 at 11:27:58AM +0800, Ryder Lee wrote:
-> dtc recently added PCI bus checks. Fix these warnings:
-> 
-> Warning (pci_bridge): Node /pcie@1a140000/pcie@0,0 missing bus-range for PCI bridge
-> Warning (pci_bridge): Node /pcie@1a140000/pcie@1,0 missing bus-range for PCI bridge
-> Warning (pci_bridge): Node /pcie@1a140000/pcie@2,0 missing bus-range for PCI bridge
-> Warning (unit_address_format): Failed prerequisite 'pci_bridge'
-> Warning (pci_device_reg): Failed prerequisite 'pci_bridge'
-> Warning (pci_device_bus_num): Failed prerequisite 'pci_bridge'
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/pci/mediatek-pcie.txt | 11 +++--------
->  1 file changed, 3 insertions(+), 8 deletions(-)
+Hi,
 
-Given that changes to these bindings always went through the PCI tree,
-I've applied this patch to pci/mediatek for v4.17, thanks.
+Commit c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port
+support for rk3399") introduced a regression on some rk3399 boards,
+and break USB. While some boards have support to report cable-state via
+extcon interface, other boards does not support. This patch series
+tries to fix this.
 
-Lorenzo
+First and second patch makes extcon optional, the following patches
+enables the typec phyter for others rk3399 boards. It has been tested on
+Samsung Chromebook Plus and Sapphire but not on the other boards, so I'll
+appreciate if someone can test it.
 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-> index 3a6ce55..20227a8 100644
-> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-> @@ -78,7 +78,7 @@ Examples for MT7623:
->  		#reset-cells = <1>;
->  	};
->  
-> -	pcie: pcie-controller@1a140000 {
-> +	pcie: pcie@1a140000 {
->  		compatible = "mediatek,mt7623-pcie";
->  		device_type = "pci";
->  		reg = <0 0x1a140000 0 0x1000>, /* PCIe shared registers */
-> @@ -111,7 +111,6 @@ Examples for MT7623:
->  			  0x83000000 0 0x60000000 0 0x60000000 0 0x10000000>;	/* memory space */
->  
->  		pcie@0,0 {
-> -			device_type = "pci";
->  			reg = <0x0000 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> @@ -123,7 +122,6 @@ Examples for MT7623:
->  		};
->  
->  		pcie@1,0 {
-> -			device_type = "pci";
->  			reg = <0x0800 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> @@ -135,7 +133,6 @@ Examples for MT7623:
->  		};
->  
->  		pcie@2,0 {
-> -			device_type = "pci";
->  			reg = <0x1000 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> @@ -148,6 +145,7 @@ Examples for MT7623:
->  	};
->  
->  Examples for MT2712:
-> +
->  	pcie: pcie@11700000 {
->  		compatible = "mediatek,mt2712-pcie";
->  		device_type = "pci";
-> @@ -169,7 +167,6 @@ Examples for MT2712:
->  		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x10000000>;
->  
->  		pcie0: pcie@0,0 {
-> -			device_type = "pci";
->  			reg = <0x0000 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> @@ -189,7 +186,6 @@ Examples for MT2712:
->  		};
->  
->  		pcie1: pcie@1,0 {
-> -			device_type = "pci";
->  			reg = <0x0800 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> @@ -210,6 +206,7 @@ Examples for MT2712:
->  	};
->  
->  Examples for MT7622:
-> +
->  	pcie: pcie@1a140000 {
->  		compatible = "mediatek,mt7622-pcie";
->  		device_type = "pci";
-> @@ -243,7 +240,6 @@ Examples for MT7622:
->  		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x10000000>;
->  
->  		pcie0: pcie@0,0 {
-> -			device_type = "pci";
->  			reg = <0x0000 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> @@ -263,7 +259,6 @@ Examples for MT7622:
->  		};
->  
->  		pcie1: pcie@1,0 {
-> -			device_type = "pci";
->  			reg = <0x0800 0 0 0 0>;
->  			#address-cells = <3>;
->  			#size-cells = <2>;
-> -- 
-> 1.9.1
-> 
+Best regards,
+ Enric
+
+Changes in v2:
+- [1/6] Keep the error handling of extcon (Heiko Stubner)
+- [2/6] Rewrite the justification as suggested by Heiko Stuebner.
+
+Enric Balletbo i Serra (6):
+  phy: rockchip-typec: fall back to working in host-mode if extcon is
+    missing.
+  dt-bindings: phy-rockchip-typec: move extcon property to be optional.
+  arm64: dts: rockchip: enable typec-phy for rk3399-sapphire.
+  arm64: dts: rockchip: enable typec-phy for rk3399-firefly.
+  arm64: dts: rockchip: enable typec-phy1 for rk3399-puma.
+  arm64: dts: rockchip: enable typec-phy0 for rk3399-puma-haikou.
+
+ .../devicetree/bindings/phy/phy-rockchip-typec.txt          |  2 ++
+ arch/arm64/boot/dts/rockchip/rk3399-firefly.dts             |  8 ++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts         |  4 ++++
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi               |  4 ++++
+ arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi           |  8 ++++++++
+ drivers/phy/rockchip/phy-rockchip-typec.c                   | 13 ++++++++++---
+ 6 files changed, 36 insertions(+), 3 deletions(-)
+
+-- 
+2.16.1
