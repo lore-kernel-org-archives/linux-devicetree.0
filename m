@@ -1,55 +1,34 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v7 10/42] clk: davinci: New driver for davinci PSC clocks
-Date: Thu, 1 Mar 2018 09:36:14 +0100
-Message-ID: <CAMpxmJVpMgikNfB4HgNCs+ep+EOHqH5bthiW82LsnDqzLfE5mg@mail.gmail.com>
-References: <1519071723-31790-1-git-send-email-david@lechnology.com>
- <1519071723-31790-11-git-send-email-david@lechnology.com> <CAMpxmJVxfGtO=kh63KF-5Uqew3yy97DsK4FSd14CyyRQTOhrTA@mail.gmail.com>
- <93696fc8-bb93-aa20-3506-3d7216c17cd2@lechnology.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v3 0/5] dmaengine: qcom: bam_dma: fixes for remotely
+ controlled bam
+Date: Thu, 1 Mar 2018 14:14:56 +0530
+Message-ID: <20180301084456.GG15443@localhost>
+References: <20180215122511.13517-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <93696fc8-bb93-aa20-3506-3d7216c17cd2@lechnology.com>
+Content-Disposition: inline
+In-Reply-To: <20180215122511.13517-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+To: srinivas.kandagatla@linaro.org
+Cc: andy.gross@linaro.org, dmaengine@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, david.brown@linaro.org, dan.j.williams@intel.com, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, yanhe@quicinc.com, ramkri@qti.qualcomm.com, sdharia@quicinc.com
 List-Id: devicetree@vger.kernel.org
 
-2018-02-28 22:40 GMT+01:00 David Lechner <david@lechnology.com>:
-> On 02/28/2018 06:38 AM, Bartosz Golaszewski wrote:
->>
->>
->> I think I found the reason for the strange crashes we were
->> experiencing (emac core->name being NULL) thanks to Sekhar who pointed
->> me in the right direction.
->>
->> The mdio driver fails to probe with v7 due to the supplied clock rate
->> being wrong. Before failing we register the emac clock with
->> pm_clk_add_clk(). When clock_ops puts the clock, it decreases the
->> reference count of the clock, but we never actually increased it in
->> the first place in the line above. The core clock code then destroys
->> the associated clk_core structure. When the next user comes around (in
->> our case the clk debug functions) the system crashes.
->>
->> I believe there to be two issues: one is with v7 - we need to increase
->> the clock reference count in davinci_psc_genpd_attach_dev().
->>
->> Second is the error path in the clock framework - we should remove the
->> destroyed clk_core from the debug list, which is not being done now.
->>
->> Why we even need to track the refcount of clk_core is a mistery for me
->> though. Stephen, Mike?
->>
->> Best regards,
->> Bartosz Golaszewski
->
->
-> Great find. I figured it had to be something like this, but I wasn't
-> able to reproduce the problem yet.
->
-> I suppose it is time to spin up a v8 with some fixes.
+On Thu, Feb 15, 2018 at 12:25:06PM +0000, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> 
+> Hi Andy,
+> 
+> I did hit few issues while trying out SLIMBus BAM on DB820c, this BAM instance
+> is remotely controlled and powered up after ADSP is booted using QMI commands.
+> 
+> Firstly some of the master registers are written even when the BAM is remotely
+> controlled, and secondly reading registers when bam is not ready yet.
+> 
+> These 4 patches address these issues, there are few more issues like doing PM
+> in simillar usecase, these will be addressed soon.
 
-I still don't know why the mdio clock rate is much lower than in
-mainline though. Any ideas?
+Applied all, thanks
 
-Thanks,
-Bart
+-- 
+~Vinod
