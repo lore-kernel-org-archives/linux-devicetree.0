@@ -1,118 +1,33 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: call/normal switch was Re: omap4-droid4: voice
-	call support was
-Date: Sat, 31 Mar 2018 21:55:24 +0200
-Message-ID: <20180331195524.GB19388@amd>
-References: <20180326155828.ttnduivadob4iqmd@earth.universe>
- <20180327121441.GH29239@sirena.org.uk>
- <20180327222237.wcx2aqznvdrvbaa5@earth.universe>
- <20180328022910.GM29239@sirena.org.uk>
- <20180328140219.f6667up5evrrafkv@earth.universe>
- <20180329014507.GM5700@atomide.com> <20180331145531.GA10404@amd>
- <20180331181935.GX5700@atomide.com> <20180331191939.GA8999@amd>
- <20180331194616.GA19388@amd>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3925253045098251408=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180331194616.GA19388@amd>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, kernel@collabora.com, Dan Williams <dcbw@redhat.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-List-Id: devicetree@vger.kernel.org
-
-
---===============3925253045098251408==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
-Content-Disposition: inline
-
-
---oC1+HKm2/end4ao3
+Return-Path: <SRS0=JSor=FX=linaro.org=shawn.guo@kernel.org>
+Date: Thu, 1 Mar 2018 09:22:46 +0800
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v2 0/2] Add power control for pcie-histb driver
+Message-ID: <20180301012241.GA28619@dragon>
+References: <1516722337-1533-1-git-send-email-shawn.guo@linaro.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1516722337-1533-1-git-send-email-shawn.guo@linaro.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, Jianguo Sun <sunjianguo1@huawei.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Jiancheng Xue <xuejiancheng@hisilicon.com>
+List-ID: <devicetree@vger.kernel.org>
 
-On Sat 2018-03-31 21:46:16, Pavel Machek wrote:
-> On Sat 2018-03-31 21:19:39, Pavel Machek wrote:
-> > On Sat 2018-03-31 11:19:35, Tony Lindgren wrote:
-> > > * Pavel Machek <pavel@ucw.cz> [180331 14:56]:
-> > > > Hi!
-> > > >=20
-> > > > > Hmm well I got audio call hacked to work as a proof of concept ha=
-ck,
-> > > > > see below. Maybe it can be used to verify some of the assumptions
-> > > > > above.
-> > > > >=20
-> > > > > Then.. To split the work a bit, can you guys maybe try to decode
-> > > > > the cpcap register values and try to do a proper ASoC driver patc=
-h?
-> > > >=20
-> > > > This is not proper patch yet, but it should be a step in that
-> > > > direction...
-> > >=20
-> > > Cool :) Microphone still does not work for me.. I tried tweaking
-> > > the alsamixer settings but no mic. This is with cold boot with
-> > > droid4-kexecboot if that might make a difference, we may have
-> > > some register uninitialized somewhere. Any ideas?
-> >=20
-> > Ok, I was focusing on the speaker side.
-> >=20
-> > alsamixer, tab to go to capture settings, set it to 37 37 Mic2 Mic1
-> > should work, according to my notes, but not recently tested and not
-> > tested against real human.
-> >=20
-> > I'll attempt to test it, but something in my userland shuts down
-> > system just after boot 60% of time, which is rather annoying.
->=20
-> Hmm. So I tried again, and setting Mic1 and back in the capture
-> settings crashed the modem. Bang, disconnected from the USB.
+On Tue, Jan 23, 2018 at 11:45:35PM +0800, Shawn Guo wrote:
+> The first patch is a small fix which is useful for the second one.
+> This version basically follows Fabio's suggestion to reimplement the
+> first version patch, using a regulator that can be backed by GPIO to
+> control the power to PCIe port.
+> 
+> Shawn Guo (2):
+>   PCI: histb: fix error path of histb_pcie_host_enable()
+>   PCI: histb: add an optional regulator for PCIe port power control
+> 
+>  .../bindings/pci/hisilicon-histb-pcie.txt          |  1 +
+>  drivers/pci/dwc/pcie-histb.c                       | 28 ++++++++++++++++++----
+>  2 files changed, 25 insertions(+), 4 deletions(-)
 
-Next try, and it worked this time.
+Hi Bjorn,
 
-_Before the call_, set mode to Normal and then Call. Then go to
-capture, and set 100 100 Mic2 Mic1. Then place a call,
+Did you get a chance to look at the series?
 
-AT+CFUN=3D1
-OK
-ATD6;
-
-If you change Mic1 setting, GSM modem will likely crash.
-
-Good luck,
-								Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---oC1+HKm2/end4ao3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlq/56wACgkQMOfwapXb+vJ/qQCeIU54eQpC57waRBl7oeSUY2iq
-bgMAniWkWV59oz3p91PgHzDFqEDcXX1q
-=5l1u
------END PGP SIGNATURE-----
-
---oC1+HKm2/end4ao3--
-
---===============3925253045098251408==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3925253045098251408==--
+Shawn
