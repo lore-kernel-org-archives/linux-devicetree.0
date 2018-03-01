@@ -1,47 +1,55 @@
 From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v2 5/6] arm64: dts: rockchip: enable typec-phy1 for rk3399-puma.
-Date: Thu,  1 Mar 2018 16:25:14 +0100
-Message-ID: <20180301152515.20940-6-enric.balletbo@collabora.com>
+Subject: [PATCH v2 2/6] dt-bindings: phy-rockchip-typec: move extcon property
+ to be optional.
+Date: Thu,  1 Mar 2018 16:25:11 +0100
+Message-ID: <20180301152515.20940-3-enric.balletbo@collabora.com>
 References: <20180301152515.20940-1-enric.balletbo@collabora.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180301152515.20940-1-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: kishon@ti.com, heiko@sntech.de
-Cc: groeck@chromium.org, gwendal@chromium.org, kernel@collabora.com, vicencb@gmail.com, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, Jacob Chen <jacob-chen@iotwrt.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, gwendal@chromium.org, linux-kernel@vger.kernel.org, vicencb@gmail.com, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, groeck@chromium.org, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Commit c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port
-support for rk3399") caused a regression regarding the USB3. During boot,
-the following message appears a few times:
+The extcon property is used to detect the cable-state but some boards
+just connect the type-c phy to a regular USB-A connector without any
+power-delivery and thus no controller reporting the cable-state.
+So the extcon property is not really a required property, move it to be
+optional instead.
 
-      dwc3: failed to initialize core
-
-The driver is deferred waiting for the typec-phy, but this never happens
-beause is disabled. So, enable it.
-
-Fixes: c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port support for rk3399")
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 ---
 
-Changes in v2: None
+Changes in v2:
+- [2/6] Rewrite the justification as suggested by Heiko Stuebner.
 
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index 1fc5060d7027..3a3b24383482 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -505,6 +505,10 @@
- 	};
- };
- 
-+&tcphy1 {
-+	status = "okay";
-+};
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+index 6ea867e3176f..a66f23a01129 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
+@@ -14,6 +14,8 @@ Required properties:
+  - resets : a list of phandle + reset specifier pairs
+  - reset-names : string reset name, must be:
+ 		 "uphy", "uphy-pipe", "uphy-tcphy"
 +
- &u2phy1 {
- 	status = "okay";
++Optional properties:
+  - extcon : extcon specifier for the Power Delivery
  
+ Note, there are 2 type-c phys for RK3399, and they are almost identical, except
 -- 
 2.16.1
