@@ -1,122 +1,75 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH 1/6] ARM: dts: stm32: Add sdio pins definition for stm32f7
-Date: Thu, 1 Mar 2018 10:17:39 +0000
-Message-ID: <fa85e4c1-c646-ae4d-bdb2-0a9b757f19d0@st.com>
-References: <1519897421-23803-1-git-send-email-patrice.chotard@st.com>
- <1519897421-23803-2-git-send-email-patrice.chotard@st.com>
- <1e73394f-2410-1d2a-a450-d3f1c88d1ca2@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1e73394f-2410-1d2a-a450-d3f1c88d1ca2@st.com>
-Content-Language: en-US
-Content-ID: <DA8CC71BB7C9B64AA7A5ACB8282D16DB@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre TORGUE <alexandre.torgue@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>
-Cc: "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>
+From: Jeffy Chen <jeffy.chen@rock-chips.com>
+Subject: [RESEND PATCH v6 00/14] iommu/rockchip: Use OF_IOMMU
+Date: Thu,  1 Mar 2018 18:18:23 +0800
+Message-ID: <20180301101837.27969-1-jeffy.chen@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: jcliang@chromium.org, robin.murphy@arm.com, xxm@rock-chips.com, tfiga@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Romain Perier <romain.perier@collabora.com>, Arnd Bergmann <arnd@arndb.de>, Liang Chen <cl@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Shawn Lin <shawn.lin@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Joerg Roedel <joro@8bytes.org>, Huibin Hong <huibin.hong@rock-chips.com>, David Wu <david.wu@rock-chips.com>, Finley Xiao <finley.xiao@rock-chips.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Heiko Stuebner <heiko@sntech.de>, Jacob Chen <jacob-chen@iotwrt.com>, Kever Yang <kever.yang@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-rockchip@lists.infradead.org, Rocky Hao <rocky.ha>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQWxleA0KDQpPbiAwMy8wMS8yMDE4IDEwOjUxIEFNLCBBbGV4YW5kcmUgVG9yZ3VlIHdyb3Rl
-Og0KPiBIaSBQYXRyaWNlDQo+IA0KPiBPbiAwMy8wMS8yMDE4IDEwOjQzIEFNLCBwYXRyaWNlLmNo
-b3RhcmRAc3QuY29tIHdyb3RlOg0KPj4gRnJvbTogUGF0cmljZSBDaG90YXJkIDxwYXRyaWNlLmNo
-b3RhcmRAc3QuY29tPg0KPj4NCj4+IEFkZCBzZGlvIHBpbnMgZGVmaW5pdGlvbiBmb3IgdGhlIDIg
-c2RpbyBpbnN0YW5jZXMgZW1iZWRzIGluIHN0bTMyZjc0Ni4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5
-OiBQYXRyaWNlIENob3RhcmQgPHBhdHJpY2UuY2hvdGFyZEBzdC5jb20+DQo+PiAtLS0NCj4+IMKg
-IGFyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyZjctcGluY3RybC5kdHNpIHwgNjIgDQo+PiArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+PiDCoCAxIGZpbGUgY2hhbmdlZCwgNjIgaW5z
-ZXJ0aW9ucygrKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMmY3
-LXBpbmN0cmwuZHRzaSANCj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJmNy1waW5jdHJsLmR0
-c2kNCj4+IGluZGV4IGY1MThkZTE4NGU1Mi4uZmI0MGYwODM1ZGQ0IDEwMDY0NA0KPj4gLS0tIGEv
-YXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJmNy1waW5jdHJsLmR0c2kNCj4+ICsrKyBiL2FyY2gvYXJt
-L2Jvb3QvZHRzL3N0bTMyZjctcGluY3RybC5kdHNpDQo+PiBAQCAtMjIyLDYgKzIyMiw2OCBAQA0K
-Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNsZXctcmF0ZSA9
-IDwyPjsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsNCj4+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIH07DQo+PiArDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBzZGlvX3BpbnM6IHNkaW9fcGluc0AwIHsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgcGlucyB7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-cGlubXV4ID0gPFNUTTMyX1BJTk1VWCgnQycsIDgsIEFGMTIpPiwgLyogU0RNTUMxIA0KPj4gRDAg
-Ki8NCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-PFNUTTMyX1BJTk1VWCgnQycsIDksIEFGMTIpPiwgLyogU0RNTUMxIEQxICovDQo+PiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDxTVE0zMl9QSU5NVVgo
-J0MnLCAxMCwgQUYxMik+LCAvKiBTRE1NQzEgRDIgKi8NCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPFNUTTMyX1BJTk1VWCgnQycsIDExLCBBRjEy
-KT4sIC8qIFNETU1DMSBEMyAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCA8U1RNMzJfUElOTVVYKCdDJywgMTIsIEFGMTIpPiwgLyogU0RNTUMx
-IENMSyAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCA8U1RNMzJfUElOTVVYKCdEJywgMiwgQUYxMik+OyAvKiBTRE1NQzEgQ01EICovDQo+PiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZHJpdmUtcHVzaC1wdWxsOw0K
-Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNsZXctcmF0ZSA9IDwy
-PjsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsNCj4+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIH07DQo+IA0KPiBpZiB5b3UgaGF2ZSAyIHBpbnMgZ3JvdXBzLCBwbGVhc2Ug
-dXNlICdfYScgZm9yIHRoZSBmaXJzdCBvbmUuIFlvdSBjb3VsZCANCj4gaGF2ZSBzb21ldGhpbmcg
-bGlrZToNCj4gDQo+IHNkaW9fcGluc19hDQo+IHNkaW9fb2RfcGluc19hDQo+IA0KPiBhbmQNCj4g
-DQo+IHNkaW9fcGluc19iDQo+IHNkaW9fb2RfcGluc19iDQoNCk9rLCBpIHByZXBhcmUgYSB2Mg0K
-DQpUaGFua3MNCg0KUGF0cmljZQ0KDQo+IA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2Rp
-b19waW5zX29kOiBzZGlvX3BpbnNfb2RAMCB7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIHBpbnMxIHsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBwaW5tdXggPSA8U1RNMzJfUElOTVVYKCdDJywgOCwgQUYxMik+LCAvKiBTRE1NQzEgDQo+PiBE
-MCAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCA8U1RNMzJfUElOTVVYKCdDJywgOSwgQUYxMik+LCAvKiBTRE1NQzEgRDEgKi8NCj4+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPFNUTTMyX1BJTk1V
-WCgnQycsIDEwLCBBRjEyKT4sIC8qIFNETU1DMSBEMiAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8U1RNMzJfUElOTVVYKCdDJywgMTEsIEFG
-MTIpPiwgLyogU0RNTUMxIEQzICovDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIDxTVE0zMl9QSU5NVVgoJ0MnLCAxMiwgQUYxMik+OyAvKiBTRE1N
-QzEgQ0xLICovDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZHJp
-dmUtcHVzaC1wdWxsOw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHNsZXctcmF0ZSA9IDwyPjsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfTsN
-Cj4+ICsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGluczIgew0KPj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBpbm11eCA9IDxTVE0zMl9QSU5N
-VVgoJ0QnLCAyLCBBRjEyKT47IC8qIFNETU1DMSANCj4+IENNRCAqLw0KPj4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRyaXZlLW9wZW4tZHJhaW47DQo+PiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2xldy1yYXRlID0gPDI+Ow0KPj4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Ow0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgfTsNCj4+ICsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNkaW9fcGluc19iOiBzZGlv
-X3BpbnNfYkAwIHsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGlucyB7DQo+
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGlubXV4ID0gPFNUTTMy
-X1BJTk1VWCgnRycsIDksIEFGMTEpPiwgLyogU0RNTUMyIA0KPj4gRDAgKi8NCj4+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPFNUTTMyX1BJTk1VWCgn
-RycsIDEwLCBBRjExKT4sIC8qIFNETU1DMiBEMSAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8U1RNMzJfUElOTVVYKCdCJywgMywgQUYxMCk+
-LCAvKiBTRE1NQzIgRDIgKi8NCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgPFNUTTMyX1BJTk1VWCgnQicsIDQsIEFGMTApPiwgLyogU0RNTUMyIEQz
-ICovDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IDxTVE0zMl9QSU5NVVgoJ0QnLCA2LCBBRjExKT4sIC8qIFNETU1DMiBDTEsgKi8NCj4+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPFNUTTMyX1BJTk1V
-WCgnRCcsIDcsIEFGMTEpPjsgLyogU0RNTUMyIENNRCAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRyaXZlLXB1c2gtcHVsbDsNCj4+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzbGV3LXJhdGUgPSA8Mj47DQo+PiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIH07DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Ow0K
-Pj4gKw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2Rpb19waW5zX29kX2I6IHNkaW9fcGlu
-c19vZF9iQDAgew0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwaW5zMSB7DQo+
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGlubXV4ID0gPFNUTTMy
-X1BJTk1VWCgnRycsIDksIEFGMTEpPiwgLyogU0RNTUMyIA0KPj4gRDAgKi8NCj4+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgPFNUTTMyX1BJTk1VWCgn
-RycsIDEwLCBBRjExKT4sIC8qIFNETU1DMiBEMSAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA8U1RNMzJfUElOTVVYKCdCJywgMywgQUYxMCk+
-LCAvKiBTRE1NQzIgRDIgKi8NCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgPFNUTTMyX1BJTk1VWCgnQicsIDQsIEFGMTApPiwgLyogU0RNTUMyIEQz
-ICovDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IDxTVE0zMl9QSU5NVVgoJ0QnLCA2LCBBRjExKT47IC8qIFNETU1DMiBDTEsgKi8NCj4+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkcml2ZS1wdXNoLXB1bGw7DQo+PiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc2xldy1yYXRlID0gPDI+Ow0K
-Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Ow0KPj4gKw0KPj4gK8KgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBwaW5zMiB7DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgcGlubXV4ID0gPFNUTTMyX1BJTk1VWCgnRCcsIDcsIEFGMTEpPjsg
-LyogU0RNTUMyIA0KPj4gQ01EICovDQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgZHJpdmUtb3Blbi1kcmFpbjsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCBzbGV3LXJhdGUgPSA8Mj47DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIH07DQo+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Ow0KPj4gwqDCoMKgwqDC
-oMKgwqDCoMKgIH07DQo+PiDCoMKgwqDCoMKgIH07DQo+PiDCoCB9Ow0KPj4KX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+This series fixes some issues in rockchip iommu driver, and add of_iommu
+support in it.
+
+Changes in v6:
+Add clk names, and modify all iommu nodes in all existing rockchip dts
+Fix dt-binding as Robin suggested.
+Use aclk and iface clk as Rob and Robin suggested, and split binding
+patch.
+
+Changes in v5:
+Use out labels to save the duplication between the error and success paths.
+Use RK_MMU_POLL_PERIOD_US instead of 100.
+Remove clk names.
+Use clk_bulk APIs.
+Avoid race about pm_runtime_get_if_in_use() and pm_runtime_enabled().
+
+Changes in v4:
+Rewrite commit message.
+
+Changes in v3:
+Also remove remove() and module_exit() as Tomasz suggested.
+Loop platform_get_irq() as Robin suggested.
+Add struct rk_iommudata.
+Squash iommu/rockchip: Use iommu_group_get_for_dev() for add_device
+Only call startup() and shutdown() when iommu attached.
+Remove pm_mutex.
+Check runtime PM disabled.
+Check pm_runtime in rk_iommu_irq().
+Remove rk_iommudata->domain.
+
+Changes in v2:
+Move irq request to probe(in patch[0])
+Move bus_set_iommu() to rk_iommu_probe().
+
+Jeffy Chen (10):
+  iommu/rockchip: Prohibit unbind and remove
+  iommu/rockchip: Fix error handling in probe
+  iommu/rockchip: Request irqs in rk_iommu_probe()
+  ARM: dts: rockchip: add clocks in iommu nodes
+  dt-bindings: iommu/rockchip: Add clock property
+  iommu/rockchip: Use IOMMU device for dma mapping operations
+  iommu/rockchip: Use OF_IOMMU to attach devices automatically
+  iommu/rockchip: Fix error handling in init
+  iommu/rockchip: Add runtime PM support
+  iommu/rockchip: Support sharing IOMMU between masters
+
+Tomasz Figa (4):
+  iommu/rockchip: Fix error handling in attach
+  iommu/rockchip: Use iopoll helpers to wait for hardware
+  iommu/rockchip: Fix TLB flush of secondary IOMMUs
+  iommu/rockchip: Control clocks needed to access the IOMMU
+
+ .../devicetree/bindings/iommu/rockchip,iommu.txt   |   7 +
+ arch/arm/boot/dts/rk3036.dtsi                      |   2 +
+ arch/arm/boot/dts/rk322x.dtsi                      |   8 +
+ arch/arm/boot/dts/rk3288.dtsi                      |  12 +
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  10 +
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  10 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  14 +-
+ drivers/iommu/rockchip-iommu.c                     | 600 +++++++++++----------
+ 8 files changed, 374 insertions(+), 289 deletions(-)
+
+-- 
+2.11.0
