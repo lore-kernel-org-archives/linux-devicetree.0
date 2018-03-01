@@ -1,92 +1,135 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 3/6] dt-bindings: Add panel-timing subnode to
- simple-panel
-Date: Thu, 01 Mar 2018 20:47:57 +0200
-Message-ID: <1788083.LjPZHSgKBb@avalon>
-References: <20180208174855.55620-1-seanpaul@chromium.org>
- <20180208174855.55620-4-seanpaul@chromium.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v15 1/9] LIB: Introduce a generic PIO mapping method
+Date: Thu, 01 Mar 2018 21:11:23 +0200
+Message-ID: <1519931483.10722.342.camel@linux.intel.com>
+References: <1519663249-9850-1-git-send-email-john.garry@huawei.com>
+         <1519663249-9850-2-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180208174855.55620-4-seanpaul@chromium.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, =?ISO-8859-1?Q?St=E9phane?= Marchesin <marcheu@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519663249-9850-2-git-send-email-john.garry@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>, mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org
+Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VhbiwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gVGh1cnNkYXksIDggRmVicnVh
-cnkgMjAxOCAxOTo0ODo1MCBFRVQgU2VhbiBQYXVsIHdyb3RlOgo+IFRoaXMgcGF0Y2ggYWRkcyBh
-IG5ldyBzdWJub2RlIHRvIHNpbXBsZS1wYW5lbCBhbGxvd2luZyB1cyB0byBvdmVycmlkZQo+IHRo
-ZSB0eXBpY2FsIHRpbWluZyBleHByZXNzZWQgaW4gdGhlIHBhbmVsJ3MgZGlzcGxheV90aW1pbmcu
-Cj4gCj4gQ2hhbmdlcyBpbiB2MjoKPiAgLSBTcGxpdCBvdXQgdGhlIGJpbmRpbmcgaW50byBhIG5l
-dyBwYXRjaCAoUm9iKQo+ICAtIGRpc3BsYXktdGltaW5ncyBpcyBhIG5ldyBzZWN0aW9uIChSb2Ip
-Cj4gIC0gVXNlIHRoZSBmdWxsIGRpc3BsYXktdGltaW5ncyBzdWJub2RlIGluc3RlYWQgb2YgcGlj
-a2luZyB0aGUgdGltaW5nCj4gICAgb3V0IChSb2IvVGhpZXJyeSkKPiBDaGFuZ2VzIGluIHYzOgo+
-ICAtIEdvIGJhY2sgdG8gdXNpbmcgdGhlIHRpbWluZyBzdWJub2RlIGRpcmVjdGx5LCBidXQgcmVu
-YW1lIHRvCj4gICAgcGFuZWwtdGltaW5nIChSb2IpCj4gCj4gQ2M6IERvdWcgQW5kZXJzb24gPGRp
-YW5kZXJzQGNocm9taXVtLm9yZz4KPiBDYzogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4K
-PiBDYzogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiBDYzogSmVmZnkgQ2hlbiA8
-amVmZnkuY2hlbkByb2NrLWNoaXBzLmNvbT4KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
-bmVsLm9yZz4KPiBDYzogU3TDqXBoYW5lIE1hcmNoZXNpbiA8bWFyY2hldUBjaHJvbWl1bS5vcmc+
-Cj4gQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+Cj4gQ2M6IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKPiBDYzogbGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IFNpZ25lZC1v
-ZmYtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgo+IC0tLQo+ICAuLi4vYmlu
-ZGluZ3MvZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0ICAgICAgICB8IDMwICsrKysrKysr
-KysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKykKPiAKPiBkaWZm
-IC0tZ2l0Cj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9zaW1wbGUtcGFuZWwudHh0Cj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9wYW5lbC9zaW1wbGUtcGFuZWwudHh0IGluZGV4Cj4gNDVhNDU3YWQzOGYwLi43Nzg4
-YjljZTE2MGIgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvc2ltcGxlLXBhbmVsLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpbXBsZS1wYW5lbC50eHQKPiBAQCAtMTIs
-NiArMTIsMjQgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgLSBlbmFibGUtZ3Bpb3M6IEdQSU8g
-cGluIHRvIGVuYWJsZSBvciBkaXNhYmxlIHRoZSBwYW5lbAo+ICAtIGJhY2tsaWdodDogcGhhbmRs
-ZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKPiAKPiArcGFu
-ZWwtdGltaW5nIHN1Ym5vZGUKPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiArCj4gK1RoaXMgb3B0
-aW9uYWwgc3Vibm9kZSBpcyBmb3IgZGV2aWNlcyB3aGljaCByZXF1aXJlIGEgbW9kZSBkaWZmZXJp
-bmcgZnJvbQo+IHRoZQo+ICtwYW5lbCdzICJ0eXBpY2FsIiBkaXNwbGF5IHRpbWluZyBhcyBwcm9n
-cmFtbWVkIGluIHRoZSBzaW1wbGUtcGFuZWwgZHJpdmVyLgoKUGxlYXNlIGRvbid0IHJlZmVyIHRv
-IHBhcnRpY3VsYXIgZHJpdmVycyBpbiBEVCBiaW5kaW5ncy4KCj4gK092ZXJyaWRpbmcgdGhlIGRy
-aXZlciBtb2RlIG11c3Qgb25seSBiZSBkb25lIGluIHRoZSBmb2xsb3dpbmcgc2NlbmFyaW86Cj4g
-KyAtIFRoZSByZXN0cmljdGlvbnMgbW90aXZhdGluZyB0aGUgb3ZlcnJpZGUgY2Fubm90IGJlIGFw
-cGxpZWQgdG8gdGhlCj4gcGxhdGZvcm0ncwo+ICsgICBkaXNwbGF5IGRyaXZlciAoaWU6IGl0IG11
-c3QgYmUgc3BlY2lmaWMgdG8gdGhlIGRldmljZSBub3QgdGhlIHBsYXRmb3JtKQoKSSBmaW5kIHRo
-aXMgcXVpdGUgYW1iaWd1b3VzLiBJIGFzc3VtZSB0aGF0ICJub3QgdGhlIHBsYXRmb3JtIiByZWZl
-cnMgdG8gdGhlIApwbGF0Zm9ybSdzIGRpc3BsYXkgY29udHJvbGxlci4gInBsYXRmb3JtIiB3aXRo
-b3V0IGEgcXVhbGlmaWVyIGlzIHRvbyB2YWd1ZSwgYXMgCkkgZXhwZWN0IHRoZSByZWFzb24gdG8g
-b3ZlcnJpZGUgdGhlIG1vZGUgd2lsbCBjb21lIGZyb20gdGhlIHBsYXRmb3JtJ3MgCnNwZWNpZmlj
-IGludGVyYWN0aW9ucyBiZXR3ZWVuIHRoZSBwYW5lbCwgdGhlIGRpc3BsYXkgY29udHJvbGxlciwg
-dGhlIG90aGVyIApkaXNwbGF5LXJlbGF0ZWQgZGV2aWNlcyBpZiBhbnksIGFuZCB0aGUgUENCLgoK
-PiArIC0gVGhlIHBhbmVsIG11c3Qgbm90IGhhdmUgYSBmaXhlZCBtb2RlIGF0dHJpYnV0ZWQgdG8g
-aXQgaW4gdGhlIGRyaXZlcgoKSSdtIG5vdCBzdXJlIHRvIGZvbGxvdyB5b3UgaGVyZS4KCj4gKyAt
-IFRoZSBwYW5lbCBtdXN0IHByb3ZpZGUgYXQgbGlzdCBvbmUgZGlzcGxheV90aW1pbmcgcmFuZ2Ug
-Ynkgd2hpY2ggdGhlCj4gb3ZlcnJpZGUKPiArICAgbW9kZSBjYW4gYmUgdmFsaWRhdGVkIGFnYWlu
-c3QKPiArIC0gVGhlIG92ZXJyaWRlIG1vZGUgd2lsbCB1c2UgdGhlICd0eXAnIHZhbHVlcyBmcm9t
-IHRoZSBwYW5lbC10aW1pbmdzCj4gc3Vibm9kZQoKVGhlIHBhbmVsLXRpbWluZ3Mgc3Vibm9kZSBo
-YXMgbm8gInR5cCIgdmFsdWVzLiBEbyB5b3UgbWVhbiB0aGF0IHRoZSAKZGlzcGxheV90aW1pbmcg
-Zm9yIHRoZSBwYW5lbCB3aWxsIGhhdmUgaXRzICJ0eXAiIHZhbHVlcyBvdmVycmlkZGVuIGJ5IHRo
-ZSAKdmFsdWVzIGNvbnRhaW5lZCBpbiB0aGUgcGFuZWwtdGltaW5nIG5vZGUgPwoKPiArIC0gWW91
-IG11c3QgcHJvdmlkZSBhbGwgcmVxdWlyZWQgcHJvcGVydGllcyBmb3IgdGhlIHBhbmVsLXRpbWlu
-ZyBzdWJub2RlCj4gKwo+ICtGb3JtYXQgaW5mb3JtYXRpb24gb24gdGhlIHBhbmVsLXRpbWluZyBz
-dWJub2RlIGNhbiBiZSBmb3VuZCBpbgo+ICtkaXNwbGF5LXRpbWluZy50eHQuCj4gKwo+ICsKPiAg
-RXhhbXBsZToKPiAKPiAgCXBhbmVsOiBwYW5lbCB7Cj4gQEAgLTIyLDQgKzQwLDE2IEBAIEV4YW1w
-bGU6Cj4gIAkJZW5hYmxlLWdwaW9zID0gPCZncGlvIDkwIDA+Owo+IAo+ICAJCWJhY2tsaWdodCA9
-IDwmYmFja2xpZ2h0PjsKPiArCj4gKwkJcGFuZWwtdGltaW5nIHsKPiArCQkJY2xvY2stZnJlcXVl
-bmN5ID0gPDI2NjYwNDcyMD47Cj4gKwkJCWhhY3RpdmUgPSA8MjQwMD47Cj4gKwkJCWhmcm9udC1w
-b3JjaCA9IDw0OD47Cj4gKwkJCWhiYWNrLXBvcmNoID0gPDg0PjsKPiArCQkJaHN5bmMtbGVuID0g
-PDMyPjsKPiArCQkJdmFjdGl2ZSA9IDwxNjAwPjsKPiArCQkJdmZyb250LXBvcmNoID0gPDM+Owo+
-ICsJCQl2YmFjay1wb3JjaCA9IDwxMjA+Owo+ICsJCQl2c3luYy1sZW4gPSA8MTA+Owo+ICsJCX07
-Cj4gIAl9OwoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, 2018-02-27 at 00:40 +0800, John Garry wrote:
+> From: Zhichang Yuan <yuanzhichang@hisilicon.com>
+> 
+> In commit 41f8bba7f555 ("of/pci: Add pci_register_io_range() and
+> pci_pio_to_address()"), a new I/O space management was supported. With
+> that driver, the I/O ranges configured for PCI/PCIe hosts on some
+> architectures can be mapped to logical PIO, converted easily between
+> CPU address and the corresponding logicial PIO. Based on this, PCI
+> I/O devices can be accessed in a memory read/write way through the
+> unified in/out accessors.
+> 
+> But on some archs/platforms, there are bus hosts which access I/O
+> peripherals with host-local I/O port addresses rather than memory
+> addresses after memory-mapped.
+> 
+> To support those devices, a more generic I/O mapping method is
+> introduced
+> here. Through this patch, both the CPU addresses and the host-local
+> port
+> can be mapped into the logical PIO space with different logical/fake
+> PIOs.
+> After this, all the I/O accesses to either PCI MMIO devices or host-
+> local
+> I/O peripherals can be unified into the existing I/O accessors defined
+> in
+> asm-generic/io.h and be redirected to the right device-specific hooks
+> based on the input logical PIO.
+> 
+
+A bit more small comments.
+
+
+> +#ifndef __LINUX_LOGIC_PIO_H
+> +#define __LINUX_LOGIC_PIO_H
+> +
+
+> +#ifdef __KERNEL__
+
+Hmm... How the header in include/linux/ can be non-kernel?
+
+> +	list_for_each_entry_rcu(range, &io_range_list, list) {
+
+> +		if (range->flags == LOGIC_PIO_CPU_MMIO &&
+> +				new_range->flags ==
+> LOGIC_PIO_CPU_MMIO) {
+
+It's rather fancy indentation.
+
+> +			if (start >= range->hw_start + range->size ||
+> +			    end < range->hw_start)
+
+Misses {}
+
+> +				allocated_mmio_size += range->size;
+> +			else {
+> +				ret = -EFAULT;
+> +				goto end_register;
+> +			}
+
+> +		if (allocated_mmio_size + new_range->size - 1 >
+> +			MMIO_UPPER_LIMIT) {
+
+Fancy indentation.
+
+> +			if (allocated_mmio_size + SZ_64K - 1 >
+> +			MMIO_UPPER_LIMIT) {
+
+Ditto.
+
+> +		if (allocated_iio_size + new_range->size - 1 >
+> +		    IO_SPACE_LIMIT) {
+
+While this is nothing wrong, like above I would consider to check how
+long it is and consider putting on one line.
+
+> +/**
+> + * logic_pio_to_hwaddr - translate logical PIO to HW address
+> + * @pio: logical PIO value
+> + *
+> + * Returns HW address if valid, -1 otherwise
+
+It can't return -1 when the return type is unsigned.
+
+> + *
+> + * Translate the input logical pio to the corresponding hardware
+> address.
+> + * The input pio should be unique in the whole logical PIO space.
+> + */
+> +resource_size_t logic_pio_to_hwaddr(unsigned long pio)
+> +{
+> +	struct logic_pio_hwaddr *range;
+
+> +	resource_size_t hwaddr = (resource_size_t)-1;
+
+Ditto.
+
+> +	return hwaddr;
+> +}
+
+> +	list_for_each_entry_rcu(range, &io_range_list, list) {
+> +		if (range->flags != LOGIC_PIO_CPU_MMIO)
+> +			continue;
+
+> +		if (addr >= range->hw_start &&
+> +		    addr < range->hw_start + range->size)
+
+Perhaps you may copy'n'paste in_range() macro from fs/ext* files and use
+in this module. At some point it would be good to make it generic.
+
+> +			return addr - range->hw_start +
+> +				range->io_start;
+
+
+> +	}
+
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
