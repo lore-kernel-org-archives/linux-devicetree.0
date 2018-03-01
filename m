@@ -1,64 +1,54 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3 01/10] dt-bindings: pinctrl: Add bindings for Actions
- S900 SoC
-Date: Thu, 1 Mar 2018 16:03:34 +0530
-Message-ID: <20180301103334.jjyxiimsjs4d33nv@linaro.org>
-References: <20180228181432.26847-1-manivannan.sadhasivam@linaro.org>
- <20180228181432.26847-2-manivannan.sadhasivam@linaro.org>
- <CACRpkdYG_aBJ0WME7NSOdv0pV5Vh_z8GVqQ+tUFnXGA7NGVMUg@mail.gmail.com>
- <20180301092556.x4a5ohx3iccwsugw@linaro.org>
- <20180301102300.z2abpg4ao62dibgm@oak.lan>
+From: John Keeping <john@metanate.com>
+Subject: [PATCH] dt-bindings: rockchip-dw-mshc: use consistent clock names
+Date: Thu,  1 Mar 2018 10:34:47 +0000
+Message-ID: <20180301103447.7059-1-john@metanate.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180301102300.z2abpg4ao62dibgm@oak.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, linux-mmc@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, John Keeping <john@metanate.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+The names of these clocks are "ciu-drive" and "ciu-sample" as described
+for the clock-names property.  Avoid confusion by spelling these
+correctly everywhere they are referenced.
 
-On Thu, Mar 01, 2018 at 10:23:00AM +0000, Daniel Thompson wrote:
-> On Thu, Mar 01, 2018 at 02:55:56PM +0530, Manivannan Sadhasivam wrote:
-> > Hi Linus,
-> > On Thu, Mar 01, 2018 at 10:20:29AM +0100, Linus Walleij wrote:
-> > > On Wed, Feb 28, 2018 at 7:14 PM, Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > 
-> > > > Add pinctrl bindings for Actions Semi S900 SoC
-> > > >
-> > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > 
-> > > The previous (v2) version had Rob's Review tag, did you just forget
-> > > to add it or has something changed?
-> > > 
-> > 
-> > My bad. Slipped through the cracks.
-> > 
-> > > If nothing is changed I can add his tag when applying.
-> > >
-> > 
-> > I will send out a new version of the whole series, incorporating Andy's
-> > pinctrl driver review.
-> > 
-> > Also, FYI this pacthseries depends on Clock driver patchset I have submitted
-> > earlier. So far no reply from Stephen yet. He said that he is working on setting
-> > up his new environment and will begin reviewing shortly.
-> 
-> Is the dependancy at runtime (driver is not functional without clocks) or compile
-> time (driver cannot build without other patchset landing)?
->
+Signed-off-by: John Keeping <john@metanate.com>
+---
+ Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-There is no build time dependency only runtime dependency. Driver is pretty
-much useless without clock driver.
-
-Also, there will be merge conflicts when this series gets applied independently.
-Since there is no build time dependency, if Linus decides to apply it now, I
-can generate a new independent patchset.
-
-Thanks,
-Mani 
-> 
-> Daniel.
+diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+index c6558785e61b..8ce49b255974 100644
+--- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+@@ -21,7 +21,7 @@ Required Properties:
+ 	- "rockchip,rk3399-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3399
+ 
+ Optional Properties:
+-* clocks: from common clock binding: if ciu_drive and ciu_sample are
++* clocks: from common clock binding: if ciu-drive and ciu-sample are
+   specified in clock-names, should contain handles to these clocks.
+ 
+ * clock-names: Apart from the clock-names described in synopsys-dw-mshc.txt
+@@ -29,7 +29,7 @@ Optional Properties:
+   to control the clock phases, "ciu-sample" is required for tuning high-
+   speed modes.
+ 
+-* rockchip,default-sample-phase: The default phase to set ciu_sample at
++* rockchip,default-sample-phase: The default phase to set ciu-sample at
+   probing, low speeds or in case where all phases work at tuning time.
+   If not specified 0 deg will be used.
+ 
+-- 
+2.16.2
