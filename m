@@ -1,114 +1,186 @@
 From: Amelie DELAUNAY <amelie.delaunay@st.com>
 Subject: Re: [PATCH v3] usb: host: ehci-platform: add support for optional
  external vbus supply
-Date: Thu, 1 Mar 2018 08:47:01 +0000
-Message-ID: <7ea76bf6-49b5-dd69-7764-398ddd88b088@st.com>
+Date: Thu, 1 Mar 2018 08:49:59 +0000
+Message-ID: <8655fa87-1403-21b9-1aea-69b0f21fbcea@st.com>
 References: <1519393611-31367-1-git-send-email-amelie.delaunay@st.com>
- <0d16deee-1fa9-322e-4d6d-b1b023f5b2b9@ti.com>
+ <dc412433-5a96-ea86-6d97-13877fe4806c@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0d16deee-1fa9-322e-4d6d-b1b023f5b2b9@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <dc412433-5a96-ea86-6d97-13877fe4806c@arm.com>
 Content-Language: en-US
-Content-ID: <8B172669E9482C4EA0F1DB3519A00B95@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-ID: <7E31B96F4DDB00498E5F1A59BB672C00@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Prisk <linux@prisktech.co.nz>, Alan Stern <stern@rowland.harvard.edu>, Roger Quadros <rogerq@ti.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9nZXIsDQoNCk9uIDAyLzI4LzIwMTggMTI6MDEgUE0sIFJvZ2VyIFF1YWRyb3Mgd3JvdGU6
-DQo+IEhpIEFtZWxpZSwNCj4gDQo+IE9uIDIzLzAyLzE4IDE1OjQ2LCBBbWVsaWUgRGVsYXVuYXkg
-d3JvdGU6DQo+PiBPbiBzb21lIGJvYXJkcywgZXNwZWNpYWxseSB3aGVuIHZidXMgc3VwcGx5IHJl
-cXVpcmVzIGxhcmdlIGN1cnJlbnQsDQo+PiBhbmQgdGhlIGNoYXJnZSBwdW1wIG9uIHRoZSBQSFkg
-aXNuJ3QgZW5vdWdoLCBhbiBleHRlcm5hbCB2YnVzIHBvd2VyIHN3aXRjaA0KPj4gbWF5IGJlIHVz
-ZWQuDQo+PiBBZGQgc3VwcG9ydCBmb3Igb3B0aW9uYWwgZXh0ZXJuYWwgdmJ1cyBzdXBwbHkgcGVy
-IHBvcnQgaW4gZWhjaS1wbGF0Zm9ybS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBBbWVsaWUgRGVs
-YXVuYXkgPGFtZWxpZS5kZWxhdW5heUBzdC5jb20+DQo+Pg0KPj4gLS0tDQo+PiBDaGFuZ2VzIGlu
-IHYzOg0KPj4gICAqIEFkZHJlc3MgRmVsaXBlIEJhbGJpIGNvbW1lbnRzOiByZWR1Y2UgaW5kZW50
-YXRpb24gaW4NCj4+ICAgICBlaGNpX3BsYXRmb3JtX3BvcnRfcG93ZXIuDQo+PiAgICogQWRkcmVz
-cyBSb2dlciBRdWFkcm9zIGFuZCBBbGFuIFN0ZXJuIGNvbW1lbnRzOiBwbGF0Zm9ybXMgY2FuIGhh
-dmUgb25lDQo+PiAgICAgZXh0ZXJuYWwgdmJ1cyBzdXBwbHkgcGVyIHBvcnQsIHNvIGFkZCBzdXBw
-b3J0IHRvIGdldCBhcyBtYW55IG9wdGlvbmFsDQo+PiAgICAgcmVndWxhdG9yIGFzIGltcGxlbWVu
-dGVkIHBvcnRzIG9uIHRoZSBob3N0IGNvbnRyb2xsZXIuDQo+Pg0KPj4gQ2hhbmdlcyBpbiB2MjoN
-Cj4+ICAgKiBBZGRyZXNzIFJvZ2VyIFF1YWRyb3MgY29tbWVudHM6IG1vdmUgcmVndWxhdG9yX2Vu
-YWJsZS9kaXNhYmxlIGZyb20NCj4+ICAgICBlaGNpX3BsYXRmb3JtX3Bvd2VyX29uL29mZiB0byBl
-aGNpX3BsYXRmb3JtX3BvcnRfcG93ZXIuDQo+PiAtLS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3VzYi91c2ItZWhjaS50eHQgfCAgMSArDQo+PiAgIGRyaXZlcnMvdXNi
-L2hvc3QvZWhjaS1wbGF0Zm9ybS5jICAgICAgICAgICAgICAgICAgIHwgNTIgKysrKysrKysrKysr
-KysrKysrKysrLQ0KPj4gICAyIGZpbGVzIGNoYW5nZWQsIDUyIGluc2VydGlvbnMoKyksIDEgZGVs
-ZXRpb24oLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3VzYi91c2ItZWhjaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdXNiL3VzYi1laGNpLnR4dA0KPj4gaW5kZXggM2VmZGUxMi4uY2Q1NzZkYiAxMDA2NDQNCj4+
-IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvdXNiLWVoY2kudHh0
-DQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL3VzYi1laGNp
-LnR4dA0KPj4gQEAgLTE5LDYgKzE5LDcgQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4+ICAgIC0g
-cGh5cyA6IHBoYW5kbGUgKyBwaHkgc3BlY2lmaWVyIHBhaXINCj4+ICAgIC0gcGh5LW5hbWVzIDog
-InVzYiINCj4+ICAgIC0gcmVzZXRzIDogcGhhbmRsZSArIHJlc2V0IHNwZWNpZmllciBwYWlyDQo+
-PiArIC0gcG9ydE5fdmJ1cy1zdXBwbHkgOiBwaGFuZGxlIG9mIHJlZ3VsYXRvciBzdXBwbHlpbmcg
-dmJ1cyBmb3IgcG9ydCBODQo+PiAgIA0KPj4gICBFeGFtcGxlIChTZXF1b2lhIDQ0MEVQeCk6DQo+
-PiAgICAgICBlaGNpQGUwMDAwMzAwIHsNCj4gDQo+IFNvcnJ5IGZvciBub3QgcG9pbnRpbmcgdGhp
-cyBvdXQgZWFybGllciBidXQgSSB0aGluayBwYXRjaCB0byBEVCBiaW5kaW5ncw0KPiBzaG91bGQg
-Y29tZSBzZXBhcmF0ZWx5IChiZWZvcmUgdGhlIGRyaXZlciBjaGFuZ2VzKSB3aXRoIHRoZSBmb2xs
-b3dpbmcgc3ViamVjdC4NCj4gDQo+ICJkdC1iaW5kaW5nczogdXNiOiBlaGNpOiA8c3ViamVjdD4i
-DQo+IA0KPiANCg0KT2ssIEkgcHJlcGFyZSBhIHY0IHdpdGggdGhpcyBzcGxpdC4gVGhhbmtzIQ0K
-DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvaG9zdC9laGNpLXBsYXRmb3JtLmMgYi9kcml2
-ZXJzL3VzYi9ob3N0L2VoY2ktcGxhdGZvcm0uYw0KPj4gaW5kZXggYjA2NWE5Ni4uOGU5ZjIwMSAx
-MDA2NDQNCj4+IC0tLSBhL2RyaXZlcnMvdXNiL2hvc3QvZWhjaS1wbGF0Zm9ybS5jDQo+PiArKysg
-Yi9kcml2ZXJzL3VzYi9ob3N0L2VoY2ktcGxhdGZvcm0uYw0KPj4gQEAgLTI5LDYgKzI5LDcgQEAN
-Cj4+ICAgI2luY2x1ZGUgPGxpbnV4L29mLmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC9waHkvcGh5
-Lmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4+ICsjaW5jbHVk
-ZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC9yZXNl
-dC5oPg0KPj4gICAjaW5jbHVkZSA8bGludXgvdXNiLmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC91
-c2IvaGNkLmg+DQo+PiBAQCAtNDYsNiArNDcsNyBAQCBzdHJ1Y3QgZWhjaV9wbGF0Zm9ybV9wcml2
-IHsNCj4+ICAgCXN0cnVjdCByZXNldF9jb250cm9sICpyc3RzOw0KPj4gICAJc3RydWN0IHBoeSAq
-KnBoeXM7DQo+PiAgIAlpbnQgbnVtX3BoeXM7DQo+PiArCXN0cnVjdCByZWd1bGF0b3IgKip2YnVz
-X3N1cHBsaWVzOw0KPj4gICAJYm9vbCByZXNldF9vbl9yZXN1bWU7DQo+PiAgIH07DQo+PiAgIA0K
-Pj4gQEAgLTU2LDcgKzU4LDggQEAgc3RhdGljIGludCBlaGNpX3BsYXRmb3JtX3Jlc2V0KHN0cnVj
-dCB1c2JfaGNkICpoY2QpDQo+PiAgIAlzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2ID0gdG9f
-cGxhdGZvcm1fZGV2aWNlKGhjZC0+c2VsZi5jb250cm9sbGVyKTsNCj4+ICAgCXN0cnVjdCB1c2Jf
-ZWhjaV9wZGF0YSAqcGRhdGEgPSBkZXZfZ2V0X3BsYXRkYXRhKCZwZGV2LT5kZXYpOw0KPj4gICAJ
-c3RydWN0IGVoY2lfaGNkICplaGNpID0gaGNkX3RvX2VoY2koaGNkKTsNCj4+IC0JaW50IHJldHZh
-bDsNCj4+ICsJc3RydWN0IGVoY2lfcGxhdGZvcm1fcHJpdiAqcHJpdiA9IGhjZF90b19laGNpX3By
-aXYoaGNkKTsNCj4+ICsJaW50IHBvcnRudW0sIG5fcG9ydHMsIHJldHZhbDsNCj4+ICAgDQo+PiAg
-IAllaGNpLT5oYXNfc3lub3BzeXNfaGNfYnVnID0gcGRhdGEtPmhhc19zeW5vcHN5c19oY19idWc7
-DQo+PiAgIA0KPj4gQEAgLTcxLDExICs3NCw1NyBAQCBzdGF0aWMgaW50IGVoY2lfcGxhdGZvcm1f
-cmVzZXQoc3RydWN0IHVzYl9oY2QgKmhjZCkNCj4+ICAgCWlmIChyZXR2YWwpDQo+PiAgIAkJcmV0
-dXJuIHJldHZhbDsNCj4+ICAgDQo+PiArCW5fcG9ydHMgPSBIQ1NfTl9QT1JUUyhlaGNpLT5oY3Nf
-cGFyYW1zKTsNCj4+ICsJcHJpdi0+dmJ1c19zdXBwbGllcyA9IGRldm1fa2NhbGxvYygmcGRldi0+
-ZGV2LCBuX3BvcnRzLA0KPj4gKwkJCQkJICAgc2l6ZW9mKHN0cnVjdCByZWd1bGF0b3IgKiksDQo+
-PiArCQkJCQkgICBHRlBfS0VSTkVMKTsNCj4+ICsJaWYgKCFwcml2LT52YnVzX3N1cHBsaWVzKQ0K
-Pj4gKwkJcmV0dXJuIC1FTk9NRU07DQo+PiArDQo+PiArCWZvciAocG9ydG51bSA9IDA7IHBvcnRu
-dW0gPCBuX3BvcnRzOyBwb3J0bnVtKyspIHsNCj4+ICsJCXN0cnVjdCByZWd1bGF0b3IgKnZidXNf
-c3VwcGx5Ow0KPj4gKwkJY2hhciBpZFsyMF07DQo+PiArDQo+PiArCQlzcHJpbnRmKGlkLCAicG9y
-dCVkX3ZidXMiLCBwb3J0bnVtKTsNCj4+ICsNCj4+ICsJCXZidXNfc3VwcGx5ID0gZGV2bV9yZWd1
-bGF0b3JfZ2V0X29wdGlvbmFsKCZwZGV2LT5kZXYsIGlkKTsNCj4+ICsJCWlmIChJU19FUlIodmJ1
-c19zdXBwbHkpKSB7DQo+PiArCQkJcmV0dmFsID0gUFRSX0VSUih2YnVzX3N1cHBseSk7DQo+PiAr
-CQkJaWYgKHJldHZhbCA9PSAtRU5PREVWKQ0KPj4gKwkJCQlwcml2LT52YnVzX3N1cHBsaWVzW3Bv
-cnRudW1dID0gTlVMTDsNCj4+ICsJCQllbHNlDQo+PiArCQkJCXJldHVybiByZXR2YWw7DQo+PiAr
-CQl9IGVsc2Ugew0KPj4gKwkJCXByaXYtPnZidXNfc3VwcGxpZXNbcG9ydG51bV0gPSB2YnVzX3N1
-cHBseTsNCj4+ICsJCX0NCj4+ICsJfQ0KPj4gKw0KPj4gICAJaWYgKHBkYXRhLT5ub19pb193YXRj
-aGRvZykNCj4+ICAgCQllaGNpLT5uZWVkX2lvX3dhdGNoZG9nID0gMDsNCj4+ICAgCXJldHVybiAw
-Ow0KPj4gICB9DQo+PiAgIA0KPj4gK3N0YXRpYyBpbnQgZWhjaV9wbGF0Zm9ybV9wb3J0X3Bvd2Vy
-KHN0cnVjdCB1c2JfaGNkICpoY2QsIGludCBwb3J0bnVtLA0KPj4gKwkJCQkgICAgYm9vbCBlbmFi
-bGUpDQo+PiArew0KPj4gKwlzdHJ1Y3QgZWhjaV9wbGF0Zm9ybV9wcml2ICpwcml2ID0gaGNkX3Rv
-X2VoY2lfcHJpdihoY2QpOw0KPj4gKwlpbnQgcmV0Ow0KPj4gKw0KPj4gKwlpZiAoIXByaXYtPnZi
-dXNfc3VwcGxpZXNbcG9ydG51bV0pDQo+PiArCQlyZXR1cm4gMDsNCj4+ICsNCj4+ICsJaWYgKGVu
-YWJsZSkNCj4+ICsJCXJldCA9IHJlZ3VsYXRvcl9lbmFibGUocHJpdi0+dmJ1c19zdXBwbGllc1tw
-b3J0bnVtXSk7DQo+PiArCWVsc2UNCj4+ICsJCXJldCA9IHJlZ3VsYXRvcl9kaXNhYmxlKHByaXYt
-PnZidXNfc3VwcGxpZXNbcG9ydG51bV0pOw0KPiANCj4gQSBuZXdsaW5lIGNvdWxkIGJlIHVzZWQg
-aGVyZS4NCj4gDQoNCk9rLg0KDQo+PiArCWlmIChyZXQpDQo+PiArCQlkZXZfZXJyKGhjZC0+c2Vs
-Zi5jb250cm9sbGVyLA0KPj4gKwkJCSJmYWlsZWQgdG8gJXMgdmJ1cyBzdXBwbHkgZm9yIHBvcnQg
-JWQ6ICVkXG4iLA0KPj4gKwkJCWVuYWJsZSA/ICJlbmFibGUiIDogImRpc2FibGUiLCBwb3J0bnVt
-LCByZXQpOw0KPj4gKw0KPj4gKwlyZXR1cm4gcmV0Ow0KPj4gK30NCj4+ICsNCj4+ICAgc3RhdGlj
-IGludCBlaGNpX3BsYXRmb3JtX3Bvd2VyX29uKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldikN
-Cj4+ICAgew0KPj4gICAJc3RydWN0IHVzYl9oY2QgKmhjZCA9IHBsYXRmb3JtX2dldF9kcnZkYXRh
-KGRldik7DQo+PiBAQCAtMTM0LDYgKzE4Myw3IEBAIHN0YXRpYyBzdHJ1Y3QgaGNfZHJpdmVyIF9f
-cmVhZF9tb3N0bHkgZWhjaV9wbGF0Zm9ybV9oY19kcml2ZXI7DQo+PiAgIHN0YXRpYyBjb25zdCBz
-dHJ1Y3QgZWhjaV9kcml2ZXJfb3ZlcnJpZGVzIHBsYXRmb3JtX292ZXJyaWRlcyBfX2luaXRjb25z
-dCA9IHsNCj4+ICAgCS5yZXNldCA9CQllaGNpX3BsYXRmb3JtX3Jlc2V0LA0KPj4gICAJLmV4dHJh
-X3ByaXZfc2l6ZSA9CXNpemVvZihzdHJ1Y3QgZWhjaV9wbGF0Zm9ybV9wcml2KSwNCj4+ICsJLnBv
-cnRfcG93ZXIgPQkJZWhjaV9wbGF0Zm9ybV9wb3J0X3Bvd2VyLA0KPj4gICB9Ow0KPj4gICANCj4+
-ICAgc3RhdGljIHN0cnVjdCB1c2JfZWhjaV9wZGF0YSBlaGNpX3BsYXRmb3JtX2RlZmF1bHRzID0g
-ew0KPj4NCj4gDQo+IE90aGVyd2lzZSwgbG9va3MgZ29vZCB0byBtZS4gU28sDQo+IA0KPiBSZXZp
-ZXdlZC1ieTogUm9nZXIgUXVhZHJvcyA8cm9nZXJxQHRpLmNvbT4NCj4gDQoNClRoYW5rcyE=
+Hi Robin,
+
+On 02/28/2018 02:33 PM, Robin Murphy wrote:
+> Hi Amelie,
+> 
+> Just a couple of drive-by coding style comments...
+> 
+> On 23/02/18 13:46, Amelie Delaunay wrote:
+>> On some boards, especially when vbus supply requires large current,
+>> and the charge pump on the PHY isn't enough, an external vbus power switch
+>> may be used.
+>> Add support for optional external vbus supply per port in ehci-platform.
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>>
+>> ---
+>> Changes in v3:
+>>    * Address Felipe Balbi comments: reduce indentation in
+>>      ehci_platform_port_power.
+>>    * Address Roger Quadros and Alan Stern comments: platforms can have one
+>>      external vbus supply per port, so add support to get as many optional
+>>      regulator as implemented ports on the host controller.
+>>
+>> Changes in v2:
+>>    * Address Roger Quadros comments: move regulator_enable/disable from
+>>      ehci_platform_power_on/off to ehci_platform_port_power.
+>> ---
+>>    Documentation/devicetree/bindings/usb/usb-ehci.txt |  1 +
+>>    drivers/usb/host/ehci-platform.c                   | 52 +++++++++++++++++++++-
+>>    2 files changed, 52 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> index 3efde12..cd576db 100644
+>> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+>> @@ -19,6 +19,7 @@ Optional properties:
+>>     - phys : phandle + phy specifier pair
+>>     - phy-names : "usb"
+>>     - resets : phandle + reset specifier pair
+>> + - portN_vbus-supply : phandle of regulator supplying vbus for port N
+>>    
+>>    Example (Sequoia 440EPx):
+>>        ehci@e0000300 {
+>> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+>> index b065a96..8e9f201 100644
+>> --- a/drivers/usb/host/ehci-platform.c
+>> +++ b/drivers/usb/host/ehci-platform.c
+>> @@ -29,6 +29,7 @@
+>>    #include <linux/of.h>
+>>    #include <linux/phy/phy.h>
+>>    #include <linux/platform_device.h>
+>> +#include <linux/regulator/consumer.h>
+>>    #include <linux/reset.h>
+>>    #include <linux/usb.h>
+>>    #include <linux/usb/hcd.h>
+>> @@ -46,6 +47,7 @@ struct ehci_platform_priv {
+>>    	struct reset_control *rsts;
+>>    	struct phy **phys;
+>>    	int num_phys;
+>> +	struct regulator **vbus_supplies;
+>>    	bool reset_on_resume;
+>>    };
+>>    
+>> @@ -56,7 +58,8 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
+>>    	struct platform_device *pdev = to_platform_device(hcd->self.controller);
+>>    	struct usb_ehci_pdata *pdata = dev_get_platdata(&pdev->dev);
+>>    	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
+>> -	int retval;
+>> +	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+>> +	int portnum, n_ports, retval;
+>>    
+>>    	ehci->has_synopsys_hc_bug = pdata->has_synopsys_hc_bug;
+>>    
+>> @@ -71,11 +74,57 @@ static int ehci_platform_reset(struct usb_hcd *hcd)
+>>    	if (retval)
+>>    		return retval;
+>>    
+>> +	n_ports = HCS_N_PORTS(ehci->hcs_params);
+>> +	priv->vbus_supplies = devm_kcalloc(&pdev->dev, n_ports,
+>> +					   sizeof(struct regulator *),
+> 
+> Using "sizeof(*priv->vbus_supplies)" here will prevent people sending
+> annoying cleanup patches later.
+> 
+
+OK, I will fix it in v4.
+
+>> +					   GFP_KERNEL);
+>> +	if (!priv->vbus_supplies)
+>> +		return -ENOMEM;
+>> +
+>> +	for (portnum = 0; portnum < n_ports; portnum++) {
+>> +		struct regulator *vbus_supply;
+>> +		char id[20];
+>> +
+>> +		sprintf(id, "port%d_vbus", portnum);
+>> +
+>> +		vbus_supply = devm_regulator_get_optional(&pdev->dev, id);
+>> +		if (IS_ERR(vbus_supply)) {
+>> +			retval = PTR_ERR(vbus_supply);
+>> +			if (retval == -ENODEV)
+>> +				priv->vbus_supplies[portnum] = NULL;
+> 
+> The array element here hasn't yet been assigned to since kcalloc()
+> initially zeroed it, so this is entirely redundant - you can simply make
+> the comparison a "!=" and remove the "else" case.
+> 
+> Robin.
+> 
+
+Thanks for spotting this! Fix in v4.
+
+Amelie
+
+>> +			else
+>> +				return retval;
+>> +		} else {
+>> +			priv->vbus_supplies[portnum] = vbus_supply;
+>> +		}
+>> +	}
+>> +
+>>    	if (pdata->no_io_watchdog)
+>>    		ehci->need_io_watchdog = 0;
+>>    	return 0;
+>>    }
+>>    
+>> +static int ehci_platform_port_power(struct usb_hcd *hcd, int portnum,
+>> +				    bool enable)
+>> +{
+>> +	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+>> +	int ret;
+>> +
+>> +	if (!priv->vbus_supplies[portnum])
+>> +		return 0;
+>> +
+>> +	if (enable)
+>> +		ret = regulator_enable(priv->vbus_supplies[portnum]);
+>> +	else
+>> +		ret = regulator_disable(priv->vbus_supplies[portnum]);
+>> +	if (ret)
+>> +		dev_err(hcd->self.controller,
+>> +			"failed to %s vbus supply for port %d: %d\n",
+>> +			enable ? "enable" : "disable", portnum, ret);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>    static int ehci_platform_power_on(struct platform_device *dev)
+>>    {
+>>    	struct usb_hcd *hcd = platform_get_drvdata(dev);
+>> @@ -134,6 +183,7 @@ static struct hc_driver __read_mostly ehci_platform_hc_driver;
+>>    static const struct ehci_driver_overrides platform_overrides __initconst = {
+>>    	.reset =		ehci_platform_reset,
+>>    	.extra_priv_size =	sizeof(struct ehci_platform_priv),
+>> +	.port_power =		ehci_platform_port_power,
+>>    };
+>>    
+>>    static struct usb_ehci_pdata ehci_platform_defaults = {
+>>
