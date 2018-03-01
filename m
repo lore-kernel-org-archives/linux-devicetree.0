@@ -1,47 +1,120 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4] Input: gpio_keys: Add level trigger support for GPIO keys
-Date: Thu, 1 Mar 2018 13:37:47 +0100
-Message-ID: <CAK8P3a3iK7Oo_XrkoqXyE0cXBm9Ngx18Yyvk+0UJNN1Gz5DYcQ@mail.gmail.com>
-References: <9ea2faf9c1cf8439f3a8ad495c6a2b49dacad7bd.1519889208.git.baolin.wang@linaro.org>
- <CAHp75VcgUmOoo-jRbM-Gyp1JTY-2rJri8e7u2miYSvRM_4HmPg@mail.gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v5 2/3] dmaengine: mediatek: Add MediaTek High-Speed DMA
+ controller for MT7622 and MT7623 SoC
+Date: Thu, 1 Mar 2018 18:26:49 +0530
+Message-ID: <20180301125649.GH15443@localhost>
+References: <cover.1518857746.git.sean.wang@mediatek.com>
+ <de4177cb2269c99f8d7c5738ac8a64f512122dfd.1518857747.git.sean.wang@mediatek.com>
+ <20180301082329.GD15443@localhost>
+ <1519900021.8089.136.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VcgUmOoo-jRbM-Gyp1JTY-2rJri8e7u2miYSvRM_4HmPg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1519900021.8089.136.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Baolin Wang <baolin.wang@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stephen lu <lumotuwe@gmail.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>, Joseph Lo <josephl@nvidia.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Thomas Gleixner <tglx@linutronix.de>, linux-input <linux-input@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: dan.j.williams@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Fengguang Wu <fengguang.wu@intel.com>, Julia Lawall <julia.lawall@lip6.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 1, 2018 at 1:09 PM, Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Thu, Mar 1, 2018 at 9:36 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
->> On some platforms (such as Spreadtrum platform), the GPIO keys can only
->> be triggered by level type. So this patch introduces one trigger_type to
->> indicate if the button's interrupt type is level trigger or edge trigger.
->
->>                         button->irq =
->>                                 irq_of_parse_and_map(to_of_node(child), 0);
->
-> AFAIU, 0 means NO_IRQ, thus,
->
->> +                       if (button->irq)
->> +                               button->trigger_type =
->> +                                       irq_get_trigger_type(button->irq);
->
-> irq_get_trigger_type(NO_IRQ) should return 0.
->
-> Therefore, if (button->irq) is redundant.
-> Did I miss anything?
+On Thu, Mar 01, 2018 at 06:27:01PM +0800, Sean Wang wrote:
+> On Thu, 2018-03-01 at 13:53 +0530, Vinod Koul wrote:
+> > On Sun, Feb 18, 2018 at 03:08:30AM +0800, sean.wang@mediatek.com wrote:
+> > 
+> > > @@ -0,0 +1,1054 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > // Copyright ...
+> > 
+> > The copyright line needs to follow SPDX tag line
+> > 
+> 
+> okay, I will make it reorder and be something like that
+> 
+> // SPDX-License-Identifier: GPL-2.0
+> /*
+>  * Copyright (c) 2017-2018 MediaTek Inc.
+>  * Author: Sean Wang <sean.wang@mediatek.com>
+>  *
+>  * Driver for MediaTek High-Speed DMA Controller
+>  *
+>  */
 
-"irq_of_parse_and_map(to_of_node(child), 0);" is the first interrupt. A
-more common way to express the same thing in modern drivers is
-'platform_get_irq(pdev, 0)'.
+It needs to be:
 
-However, there is one more thing I'm missing: with my suggestion
-of emulating edge-triggered interrupts in the irqchip/gpio driver, the
-trigger type here should also be 'IRQF_TRIGGER_RISING |
-IRQF_TRIGGER_FALLING' in the DT description, so I don't think
-we need to change the gpio-keys driver at all, just the gpio driver.
+// SPDX-License-Identifier: GPL-2.0
+// Copyright (c) 2017-2018 MediaTek Inc.
 
-       Arnd
+/*
+ * whatever else you want
+ */
+
+The first two lines are in C99 style comment and need to have SPDX tag and
+Copyright info
+
+> the point is I learned from other subsystem makes the driver name be
+> same with the module name with KBUILD_MODNAME.
+> 
+> If you really don't like it, I can just change it into 
+> 
+> #define MTK_DMA_DEV "mtk-hsdma"
+
+It is used only once, why not use KBUILD_MODNAME directly?
+
+> 
+> > > +
+> > > +#define MTK_HSDMA_USEC_POLL		20
+> > > +#define MTK_HSDMA_TIMEOUT_POLL		200000
+> > > +#define MTK_HSDMA_DMA_BUSWIDTHS		BIT(DMA_SLAVE_BUSWIDTH_UNDEFINED)
+> > 
+> > Undefined buswidth??
+
+??
+
+> > > +/**
+> > > + * struct mtk_hsdma_pdesc - This is the struct holding info describing physical
+> > > + *			    descriptor (PD) and its placement must be kept at
+> > > + *			    4-bytes alignment in little endian order.
+> > > + * @desc[1-4]:		    The control pad used to indicate hardware how to
+> > 
+> > pls align to 80char or lesser
+> > 
+> 
+> weird, it seems the line is already with 80 char and pass the
+> checkpatch.pl. or do I misunderstand something ?
+
+Okay please check. With text it helps to wrap before that
+
+> > > +	/*
+> > > +	 * Updating into hardware the pointer of TX ring lets HSDMA to take
+> > > +	 * action for those pending PDs.
+> > > +	 */
+> > > +	mtk_dma_write(hsdma, MTK_HSDMA_TX_CPU, ring->cur_tptr);
+> > > +
+> > > +	spin_unlock_irqrestore(&hsdma->lock, flags);
+> > > +
+> > > +	return !hvd->len ? 0 : -ENOSPC;
+> > 
+> > you already wrote and started txn, so why this?
+> > 
+> 
+> it's possible just partial virtual descriptor fits into hardware and
+> then return -ENOSPC. And it will start it to complete the remaining part
+> as soon as possible when some rooms is being freed.
+
+Either ways you have issued the descriptor, so you succeed right?
+
+> > shouldn't we check if next is in range, we can crash if we get bad value
+> > from hardware..
+> 
+> okay, there are checks for next with ddone bit check and null check in
+> the corresponding descriptor as the following.
+
+what if you get bad next value
+
+> 
+> > > +		rxd = &pc->ring.rxd[next];
+
+resulting in bad ref here
+
+-- 
+~Vinod
