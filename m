@@ -1,35 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 06/10] dt-bindings: vendor: Add Huarui Lighting
-Date: Thu, 1 Mar 2018 16:38:40 -0600
-Message-ID: <20180301223840.qlqnvf665s6w77dm@rob-hp-laptop>
-References: <cover.68c39205c8726547449e3df67b549d89380e51a2.1519204731.git-series.maxime.ripard@bootlin.com>
- <3c76eb1522834b4f6516f9539fec142da939ee9c.1519204731.git-series.maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] dt-bindings: fpga: Consolidate bridge properties
+Date: Thu, 1 Mar 2018 16:41:01 -0600
+Message-ID: <20180301224101.ob4bdmh7nne5zgvf@rob-hp-laptop>
+References: <20180221173306.17265-1-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3c76eb1522834b4f6516f9539fec142da939ee9c.1519204731.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180221173306.17265-1-mdf@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Moritz Fischer <mdf@kernel.org>
+Cc: linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, atull@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMjEsIDIwMTggYXQgMTA6MjA6MzBBTSArMDEwMCwgTWF4aW1lIFJpcGFyZCB3
-cm90ZToKPiBGcm9tOiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25z
-LmNvbT4KPiAKPiBIdWFydWkgTGlnaHRpbmcgbWFrZXMgZGlzcGxheSBwYW5lbCwgYWRkIGl0IHRv
-IHRoZSBsaXN0IG9mIHBhbmVscy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxt
-YXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgfCAxICsKPiAgMSBmaWxlIGNo
-YW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpSZXZpZXdlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
-bmVsLm9yZz4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Feb 21, 2018 at 09:33:06AM -0800, Moritz Fischer wrote:
+> Consolidate bridge properties in a single file, instead of duplicating
+> the same optional property over and over again.
+> 
+> Signed-off-by: Moritz Fischer <mdf@kernel.org>
+> Cc: Alan Tull <atull@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> ---
+>  .../devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt |  5 +----
+>  .../devicetree/bindings/fpga/altera-freeze-bridge.txt     |  5 +----
+>  .../devicetree/bindings/fpga/altera-hps2fpga-bridge.txt   |  5 +----
+>  Documentation/devicetree/bindings/fpga/fpga-bridge.txt    | 15 +++++++++++++++
+>  .../devicetree/bindings/fpga/xilinx-pr-decoupler.txt      |  8 ++------
+>  5 files changed, 20 insertions(+), 18 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/fpga-bridge.txt
+
+Reviewed-by: Rob Herring <robh@kernel.org>
