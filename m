@@ -1,32 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 17/19] dt-bindings: net: ravb: Add support for
- r8a77965 SoC
-Date: Thu, 1 Mar 2018 15:52:09 -0600
-Message-ID: <20180301215209.724aqfekmo6tjczq@rob-hp-laptop>
-References: <1519139541-18783-1-git-send-email-jacopo+renesas@jmondi.org>
- <1519139541-18783-18-git-send-email-jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH v3 01/15] dt-bindings: arm: tegra: Remove duplicated
+ Tegra30+ MC binding
+Date: Thu, 1 Mar 2018 15:53:09 -0600
+Message-ID: <20180301215309.v6gk77j4trwkpn7j@rob-hp-laptop>
+References: <cover.1519141896.git.digetx@gmail.com>
+ <0d1b4a840954796f319621e481ec1a90baee98cc.1519141896.git.digetx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1519139541-18783-18-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <0d1b4a840954796f319621e481ec1a90baee98cc.1519141896.git.digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: geert@linux-m68k.org, horms@verge.net.au, magnus.damm@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, sergei.shtylyov@cogentembedded.com, netdev@vger.kernel.org
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 20, 2018 at 04:12:19PM +0100, Jacopo Mondi wrote:
-> Add documentation for r8a77965 compatible string to renesas ravb device
-> tree bindings documentation.
+On Tue, Feb 20, 2018 at 07:25:14PM +0300, Dmitry Osipenko wrote:
+> There are two bindings for the same Memory Controller. One of the bindings
+> became obsolete long time ago and probably was left unnoticed, remove it
+> for consistency.
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> Acked-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> Cc: sergei.shtylyov@cogentembedded.com, netdev@vger.kernel.org
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../bindings/arm/tegra/nvidia,tegra30-mc.txt           | 18 ------------------
+>  1 file changed, 18 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra30-mc.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
