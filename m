@@ -1,73 +1,52 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: firmware: Add bindings for ZynqMP
- firmware
-Date: Thu, 1 Mar 2018 14:15:24 +0000
-Message-ID: <778329dd-76a7-0151-26d9-30e87e0c888d@arm.com>
-References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
- <1519154467-2896-2-git-send-email-jollys@xilinx.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 0/2] STM32 Extended TrustZone Protection driver
+Date: Thu, 1 Mar 2018 14:19:16 +0000
+Message-ID: <ad7a8214-875e-3c1a-87e1-0403d4328737@arm.com>
+References: <20180301135806.19982-1-benjamin.gaignard@st.com>
+ <20180301140243.3uamdvdcvmsxv6im@lakrids.cambridge.arm.com>
+ <CA+M3ks6YPY6Lx-qBA+-Zrrtzr3Nqyzay=1wBHRGjd7PqJgAb0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519154467-2896-2-git-send-email-jollys@xilinx.com>
+In-Reply-To: <CA+M3ks6YPY6Lx-qBA+-Zrrtzr3Nqyzay=1wBHRGjd7PqJgAb0Q@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <jolly.shah@xilinx.com>, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, hkallweit1@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: ard.biesheuvel@linaro.org, mingo@kernel.org, keescook@chromium.org, dmitry.torokhov@gmail.com, Sudeep Holla <sudeep.holla@arm.com>, rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Loic PALLARDY <loic.pallardy@st.com>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 20/02/18 19:21, Jolly Shah wrote:
-> Add documentation to describe Xilinx ZynqMP firmware driver
-> bindings. Firmware driver provides an interface to firmware
-> APIs. Interface APIs can be used by any driver to communicate
-> to PMUFW (Platform Management Unit).
+On 01/03/18 14:15, Benjamin Gaignard wrote:
+> 2018-03-01 15:02 GMT+01:00 Mark Rutland <mark.rutland@arm.com>:
+>> On Thu, Mar 01, 2018 at 02:58:04PM +0100, Benjamin Gaignard wrote:
+>>> On early boot stages STM32MP1 platform is able to dedicate some hardware blocks
+>>> to a secure OS running in TrustZone.
+>>> We need to avoid using those hardware blocks on non-secure context (i.e. kernel)
+>>> because read/write accesses could generate illegale access exceptions.
+>>>
+>>> Extended TrustZone Protection driver make sure that device is disabled if
+>>> non-secure world can't acces to it.
+>>>
+>>> version 2:
+>>> - do not use notifier anymore
+>>> - change status property value in device-tree if needed
+>>> - use a list of phandle instead of hard coded array
+>>
+>> As mentioned on v1, I don't think this should be done in Linux at all.
+>>
+>> If you wish to handle this dynamically, please fixup the DT *before*
+>> entering Linux.
+>>
+>> If you want a sane default in the dts file, put status = "disabled" on
+>> all nodes which the secure world might take ownership of.
 > 
-> Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-> ---
->  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> new file mode 100644
-> index 0000000..99434ba
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
-> @@ -0,0 +1,24 @@
-> +Xilinx Zynq MPSoC Firmware Device Tree Bindings
-> +
-> +The zynqmp-firmware node describes the interface to platform firmware.
-> +ZynqMP has an interface to communicate with secure firmware. Firmware
-> +driver provides an interface to firmware APIs. Interface APIs can be
-> +used by any driver to communicate to PMUFW(Platform Management Unit).
-> +These requests include clock management, pin control, device control,
-> +power management service, FPGA service and other platform management
-> +services.
-> +
-> +Required properties:
-> + - compatible:	Must contain:  "xlnx,zynqmp-firmware"
-> + - method:	The method of calling the PM-API firmware layer.
-> +		Permitted values are:
-> +		  - "smc" : SMC #0, following the SMCCC
-> +		  - "hvc" : HVC #0, following the SMCCC
-> +
-> +Examples:
-> +	firmware {
-> +		zynqmp_firmware: zynqmp-firmware {
-> +			compatible = "xlnx,zynqmp-firmware";
-> +			method = "smc";
-> +		};
-> +	};
-> 
+> That is the case, nodes are disabled by ealier boot stages before entering
+> in Linux but, since mistakes and/or errors are always possible, fixup the DT
+> to avoid illegal access exceptions make sense for me.
 
-Do you foresee using SMC/HVC for this firmware even on future platforms?
-If not, I suggest to keep the protocol part separate from the transport
-i.e. smc/hvc via ATF. It could be replaced with mailbox or some h/w
-mechanism in future ?
+So why not also run a test on the memory controller in case the 
+bootloader made a mistake in the memory node too? As I mentioned before, 
+if you can't trust the DT to describe your hardware correctly you've 
+already lost.
 
--- 
-Regards,
-Sudeep
+Robin.
