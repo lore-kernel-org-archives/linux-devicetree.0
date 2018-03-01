@@ -1,10 +1,10 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] arm: dts: omap3: Add missing #sound-dai-cells
-Date: Thu,  1 Mar 2018 14:25:34 -0600
-Message-ID: <20180301202537.30571-2-robh@kernel.org>
+Subject: [PATCH] arm: dts: stih4xx: Add missing #sound-dai-cells
+Date: Thu,  1 Mar 2018 14:25:36 -0600
+Message-ID: <20180301202537.30571-4-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -16,33 +16,47 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, arm@kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>
+Cc: arm@kernel.org, Patrice Chotard <patrice.chotard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-ZHRjIG5vdyBnaXZlcyB0aGUgZm9sbG93aW5nIHdhcm5pbmdzOgoKYXJjaC9hcm0vYm9vdC9kdHMv
-b21hcDMtZ3RhMDRhMy5kdGI6IFdhcm5pbmcgKHNvdW5kX2RhaV9wcm9wZXJ0eSk6IC9zb3VuZF90
-ZWxlcGhvbnkvc2ltcGxlLWF1ZGlvLWNhcmQsY3B1OiBNaXNzaW5nIHByb3BlcnR5ICcjc291bmQt
-ZGFpLWNlbGxzJyBpbiBub2RlIC9vY3BANjgwMDAwMDAvbWNic3BANDkwMjYwMDAgb3IgYmFkIHBo
-YW5kbGUgKHJlZmVycmVkIGZyb20gc291bmQtZGFpWzBdKQphcmNoL2FybS9ib290L2R0cy9vbWFw
-My1ndGEwNGE0LmR0YjogV2FybmluZyAoc291bmRfZGFpX3Byb3BlcnR5KTogL3NvdW5kX3RlbGVw
-aG9ueS9zaW1wbGUtYXVkaW8tY2FyZCxjcHU6IE1pc3NpbmcgcHJvcGVydHkgJyNzb3VuZC1kYWkt
-Y2VsbHMnIGluIG5vZGUgL29jcEA2ODAwMDAwMC9tY2JzcEA0OTAyNjAwMCBvciBiYWQgcGhhbmRs
-ZSAocmVmZXJyZWQgZnJvbSBzb3VuZC1kYWlbMF0pCmFyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWd0
-YTA0YTUuZHRiOiBXYXJuaW5nIChzb3VuZF9kYWlfcHJvcGVydHkpOiAvc291bmRfdGVsZXBob255
-L3NpbXBsZS1hdWRpby1jYXJkLGNwdTogTWlzc2luZyBwcm9wZXJ0eSAnI3NvdW5kLWRhaS1jZWxs
-cycgaW4gbm9kZSAvb2NwQDY4MDAwMDAwL21jYnNwQDQ5MDI2MDAwIG9yIGJhZCBwaGFuZGxlIChy
-ZWZlcnJlZCBmcm9tIHNvdW5kLWRhaVswXSkKCkFkZCB0aGUgbWlzc2luZyAjc291bmQtZGFpLWNl
-bGxzIHByb3BlcnR5LgoKQ2M6ICJCZW5vw650IENvdXNzb24iIDxiY291c3NvbkBiYXlsaWJyZS5j
-b20+CkNjOiBUb255IExpbmRncmVuIDx0b255QGF0b21pZGUuY29tPgpDYzogbGludXgtb21hcEB2
-Z2VyLmtlcm5lbC5vcmcKU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
-Zz4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9vbWFwMy5kdHNpIHwgMSArCiAxIGZpbGUgY2hhbmdl
-ZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwMy5k
-dHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMuZHRzaQppbmRleCBhMDA1ODAyY2Q1MmIuLjQw
-NDNlY2IzODAxNiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMuZHRzaQorKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9vbWFwMy5kdHNpCkBAIC01NTcsNiArNTU3LDcgQEAKIAkJCWRt
-YS1uYW1lcyA9ICJ0eCIsICJyeCI7CiAJCQljbG9ja3MgPSA8Jm1jYnNwNF9mY2s+OwogCQkJY2xv
-Y2stbmFtZXMgPSAiZmNrIjsKKwkJCSNzb3VuZC1kYWktY2VsbHMgPSA8MD47CiAJCQlzdGF0dXMg
-PSAiZGlzYWJsZWQiOwogCQl9OwogCi0tIAoyLjE0LjEKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+dtc now gives the following warnings:
+
+arch/arm/boot/dts/stih410-b2120.dtb: Warning (sound_dai_property): /soc/sound/simple-audio-card,dai-link@0/codec: Missing property '#sound-dai-cells' in node /soc/sti-display-subsystem/sti-hdmi@8d04000 or bad phandle (referred from sound-dai[0])
+arch/arm/boot/dts/stih407-b2120.dtb: Warning (sound_dai_property): /soc/sound/simple-audio-card,dai-link@0/codec: Missing property '#sound-dai-cells' in node /soc/sti-display-subsystem/sti-hdmi@8d04000 or bad phandle (referred from sound-dai[0])
+arch/arm/boot/dts/stih410-b2260.dtb: Warning (sound_dai_property): /soc/sound/simple-audio-card,dai-link@0/codec: Missing property '#sound-dai-cells' in node /soc/sti-display-subsystem/sti-hdmi@8d04000 or bad phandle (referred from sound-dai[0])
+
+Add the missing #sound-dai-cells property.
+
+Cc: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ arch/arm/boot/dts/stih407.dtsi | 1 +
+ arch/arm/boot/dts/stih410.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
+index 11fdecd9312e..b592ecbe6420 100644
+--- a/arch/arm/boot/dts/stih407.dtsi
++++ b/arch/arm/boot/dts/stih407.dtsi
+@@ -107,6 +107,7 @@
+ 				compatible = "st,stih407-hdmi";
+ 				reg = <0x8d04000 0x1000>;
+ 				reg-names = "hdmi-reg";
++				#sound-dai-cells = <0>;
+ 				interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
+ 				interrupt-names	= "irq";
+ 				clock-names = "pix",
+diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
+index 68b5ff91d6a7..4bcdbbb70a31 100644
+--- a/arch/arm/boot/dts/stih410.dtsi
++++ b/arch/arm/boot/dts/stih410.dtsi
+@@ -198,6 +198,7 @@
+ 				compatible = "st,stih407-hdmi";
+ 				reg = <0x8d04000 0x1000>;
+ 				reg-names = "hdmi-reg";
++				#sound-dai-cells = <0>;
+ 				interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
+ 				interrupt-names	= "irq";
+ 				clock-names = "pix",
+-- 
+2.14.1
