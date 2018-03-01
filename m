@@ -1,47 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 6/7] arm64: tegra: Add Tegra194 chip device tree
-Date: Thu, 1 Mar 2018 15:43:57 -0600
-Message-ID: <20180301214357.a7wur5izbpk3udky@rob-hp-laptop>
-References: <20180220115812.24108-1-mperttunen@nvidia.com>
- <20180220115812.24108-7-mperttunen@nvidia.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 2/3] gpiolib-of: Support 'reserved-gpio-ranges' property
+Date: Thu, 01 Mar 2018 13:49:56 -0800
+Message-ID: <151994099669.240031.102662015980326125@swboyd.mtv.corp.google.com>
+References: <20180126011400.2191-1-sboyd@codeaurora.org>
+ <20180126011400.2191-3-sboyd@codeaurora.org>
+ <CACRpkda2_nt24pweyQTtB_9gypDJTK1NHRm1LjsinEaK-G8F_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180220115812.24108-7-mperttunen@nvidia.com>
+In-Reply-To: <CACRpkda2_nt24pweyQTtB_9gypDJTK1NHRm1LjsinEaK-G8F_Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, mark.rutland@arm.com, talho@nvidia.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, pombredanne@nexb.com
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Timur Tabi <timur@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-gpio@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 20, 2018 at 01:58:11PM +0200, Mikko Perttunen wrote:
-> Add the chip-level device tree, including binding headers, for the
-> NVIDIA Tegra194 "Xavier" system-on-chip. Only a small subset of devices
-> are initially available, enough to boot to UART console.
+Quoting Linus Walleij (2018-02-07 05:34:19)
+> Hi Stephen,
 > 
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> ---
+> nice work!
 > 
-> Notes:
->     v4:
->     - fixed copyright headers according to license-rules.rst
->     - removed comments from clock bindings
->     
->     v3:
->     - added hypervisor-related apertures to GIC node
->     - removed GPL boilerplate in favor of SPDX and harmonized
->       copyright headers
+> On Fri, Jan 26, 2018 at 2:13 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
 > 
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi       | 344 +++++++++++++++++++++++++
->  include/dt-bindings/clock/tegra194-clock.h     | 321 +++++++++++++++++++++++
->  include/dt-bindings/gpio/tegra194-gpio.h       |  61 +++++
->  include/dt-bindings/power/tegra194-powergate.h |  35 +++
->  include/dt-bindings/reset/tegra194-reset.h     | 152 +++++++++++
->  5 files changed, 913 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/nvidia/tegra194.dtsi
->  create mode 100644 include/dt-bindings/clock/tegra194-clock.h
->  create mode 100644 include/dt-bindings/gpio/tegra194-gpio.h
->  create mode 100644 include/dt-bindings/power/tegra194-powergate.h
->  create mode 100644 include/dt-bindings/reset/tegra194-reset.h
+> > For now, we plumb this into the gpiochip irq APIs so that
+> > GPIO/pinctrl drivers can use the gpiochip_irqchip_irq_valid() to
+> > test validity of GPIOs.
+> 
+> But is that the right thing to do, given that we just took the
+> trouble to define a DT binding that is explicitly about
+> any GPIO, not just IRQ capable ones?
+> 
+> I am worries that the *irq* infix etc on these functions
+> will be a bit confusing.
+> 
+> Is it a lot of work to make it just generic and maybe bake it
+> into the gpio_chip so as to refuse already in
+> gpiod_request_commit() in gpiolib already?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I don't think that it will be too much work to tweak the code to treat
+these as gpios instead of irq lines. It may end up duplicating a bit of code
+that the irq line stuff is already doing, but I'll take a stab at it and
+see how bad it comes out.
