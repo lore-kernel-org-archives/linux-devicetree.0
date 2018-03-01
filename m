@@ -1,128 +1,89 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 4/4] pintcrl: support bias-disable of generic and
- special pins simultaneously
-Date: Thu, 1 Mar 2018 15:43:03 +0800
-Message-ID: <1519890183.8089.114.camel@mtkswgap22>
-References: <1519634042-12063-1-git-send-email-zhiyong.tao@mediatek.com>
-         <1519634042-12063-5-git-send-email-zhiyong.tao@mediatek.com>
-         <1519803217.8089.31.camel@mtkswgap22> <1519804157.23198.9.camel@mhfsdcap03>
-         <1519876072.23198.17.camel@mhfsdcap03>
+From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
+Subject: Re: [PATCH v1 1/4] ASoC: codecs: pcm179x: Add PCM1789
+	id
+Date: Thu, 1 Mar 2018 08:43:15 +0100
+Message-ID: <20180301084315.0811f712@dell-desktop.home>
+References: <20180227212433.2189-1-mylene.josserand@bootlin.com>
+ <20180227212433.2189-2-mylene.josserand@bootlin.com>
+ <20180227225140.6f9902b8@windsurf.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519876072.23198.17.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc: robh+dt@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, hongkun.cao@mediatek.com, srv_heupstream@mediatek.com, linux-gpio@vger.kernel.org, biao.huang@mediatek.com, erin.lo@mediatek.com, liguo.zhang@mediatek.com, linux-kernel@vger.kernel.org, hongzhou.yang@mediatek.com, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180227225140.6f9902b8@windsurf.lan>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-03-01 at 11:47 +0800, Zhiyong Tao wrote:
-> On Wed, 2018-02-28 at 15:49 +0800, Zhiyong Tao wrote:
-> > On Wed, 2018-02-28 at 15:33 +0800, Sean Wang wrote:
-> > > On Mon, 2018-02-26 at 16:34 +0800, Zhiyong Tao wrote:
-> > > > For generic pins, parameter "arg" is 0 or 1.
-> > > > For special pins, bias-disable is set by R0R1,
-> > > > so we need transmited "00" to set bias-disable
-> > > > When we set "bias-disable" as high-z property,
-> > > > the parameter should be "MTK_PUPD_SET_R1R0_00".
-> > > > 
-> > > > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > > > ---
-> > > >  drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 13 +++++++++++--
-> > > >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> > > > index 3cf384f..e88ba04 100644
-> > > > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> > > > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> > > > @@ -301,8 +301,17 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
-> > > >  	 * resistor bit, so we need this special handle.
-> > > >  	 */
-> > > >  	if (pctl->devdata->spec_pull_set) {
-> > > > -		ret = pctl->devdata->spec_pull_set(mtk_get_regmap(pctl, pin),
-> > > > -			pin, pctl->devdata->port_align, isup, arg);
-> > > > +		if (enable) {
-> > > > +			ret = pctl->devdata->spec_pull_set(
-> > > > +				mtk_get_regmap(pctl, pin), pin,
-> > > > +				pctl->devdata->port_align, isup,
-> > > > +				arg);
-> > > > +		} else {
-> > > > +			ret = pctl->devdata->spec_pull_set(
-> > > > +				mtk_get_regmap(pctl, pin), pin,
-> > > > +				pctl->devdata->port_align, isup,
-> > > > +				MTK_PUPD_SET_R1R0_00);
-> > > > +		}
-> > > 
-> > > 
-> > > it looks like you can use as following snippet with reusing original
-> > > logic and less effort on maintaining these common code (?)
-> > ==> Thanks for your suggestion very much. It seems better.
-> > I will change it in v3.
-> 
-> ==>
->  Hi sean,
-> 
-> we try it in our site. we can't change like this.
-> Because we will check "arg" after setting "arg = MTK_PUPD_SET_R1R0_00;".
-> following snippet which check "arg" value is o or 1. If it not, which
-> will print error. so we can't change like this.
-> /* For generic pull config, default arg value should be 0 or 1. */
-> if (arg != 0 && arg != 1) {
-> 	dev_err(pctl->dev, "invalid pull-up argument %d on pin %d .\n", arg,
-> pin);
-> 	return -EINVAL;
-> }
-> 
-> Thanks.
-
-why not rewrite it with
-
-@@ -301,8 +301,10 @@ static int mtk_pconf_set_pull_select(struct
-mtk_pinctrl *pctl,
-         * resistor bit, so we need this special handle.
-         */
-        if (pctl->devdata->spec_pull_set) {
-+               unsigned int r1r0 = enable ? arg : MTK_PUPD_SET_R1R0_00;
-+
-                ret = pctl->devdata->spec_pull_set(mtk_get_regmap(pctl,
-pin),
--                       pin, pctl->devdata->port_align, isup, arg);
-+                       pin, pctl->devdata->port_align, isup, r1r0);
-                if (!ret)
-                        return 0;
-        }
-
-and also I appeared to find another bug in the original code when I had
-a close look at the code path, but it's not related to the patch: 
-
-a special pin would still go through the code path to handle
-generic pin when the special pin uses an invalid argument.
-
-It looks like err-code from pctl->devdata->spec_pull_set cannot be
-used directly to judge its pin type. It's also possible to use it as an
-indication of the real failure during special pin is being set up.
-
-> > > 
-> > > 
-> > > if (pctl->devdata->spec_pull_set) {
-> > > 	+ if (!enable)
-> > > 	+ 	arg = MTK_PUPD_SET_R1R0_00;
-> > > 
-> > > 	ret = pctl->devdata->spec_pull_set(mtk_get_regmap(pctl, pin),
-> > > 		pin, pctl->devdata->port_align, isup, arg);
-> > > 
-> > > 
-> > > Also, it's better to add more comments to such kind of special path for
-> > > allowing future SoCs to follow and extend more easily.
-> > 
-> > ==> Thanks for your suggestion very much. I will add more comments here.
-> > > 
-> > > >  		if (!ret)
-> > > >  			return 0;
-> > > >  	}
-> > > 
-> > > 
-> > 
-> 
-> 
+SGVsbG8sCgpUaGFuayB5b3UgZm9yIHRoZSByZXZpZXcuCgpPbiBUdWUsIDI3IEZlYiAyMDE4IDIy
+OjUxOjQwICswMTAwClRob21hcyBQZXRhenpvbmkgPHRob21hcy5wZXRhenpvbmlAYm9vdGxpbi5j
+b20+IHdyb3RlOgoKPiBIZWxsbywKPiAKPiBPbiBUdWUsIDI3IEZlYiAyMDE4IDIyOjI0OjMwICsw
+MTAwLCBNeWzDqG5lIEpvc3NlcmFuZCB3cm90ZToKPiA+IFRvIHByZXBhcmUgdGhlIHN1cHBvcnQg
+Zm9yIHRoZSBQQ00xNzg5LCBhZGQgYSBuZXcgY29tcGF0aWJsZQo+ID4gYW5kIHVzZSB0aGUgaTJj
+X2lkIHRvIGhhbmRsZSwgbGF0ZXIsIHRoZSBkaWZmZXJlbmNlcyBiZXR3ZWVuCj4gPiB0aGVzZSB0
+d28gREFDcyBldmVuIGlmIHRoZXkgYXJlIHByZXR0eSBzaW1pbGFyLgo+ID4gCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBNeWzDqG5lIEpvc3NlcmFuZCA8bXlsZW5lLmpvc3NlcmFuZEBib290bGluLmNvbT4K
+PiA+IC0tLQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9wY20x
+Nzl4LnR4dCB8IDIgKy0gIAo+IAo+IFRoZSBEVCBiaW5kaW5nIGNoYW5nZSBzaG91bGQgYmUgaW4g
+YSBzZXBhcmF0ZSBwYXRjaC4KPiAKPiA+ICBzb3VuZC9zb2MvY29kZWNzL3BjbTE3OXgtaTJjLmMg
+ICAgICAgICAgICAgICAgICAgICAgfCA2ICsrKystLQo+ID4gIHNvdW5kL3NvYy9jb2RlY3MvcGNt
+MTc5eC5jICAgICAgICAgICAgICAgICAgICAgICAgICB8IDMgKystCj4gPiAgc291bmQvc29jL2Nv
+ZGVjcy9wY20xNzl4LmggICAgICAgICAgICAgICAgICAgICAgICAgIHwgOCArKysrKysrLSAgCj4g
+Cj4gQW5kIHRoaXMgc2hvdWxkIGJlIHRvZ2V0aGVyIHdpdGggdGhlIFBDTTE3ODkgc3VwcG9ydCBw
+YXRjaC4gT3RoZXJ3aXNlCj4geW91ciBzZXJpZXMgaXMgbm90IGJpc2VjdGFibGU6IGlmIHdlIGFw
+cGx5IG9ubHkgUEFUQ0ggMS80LCB0aGUgZHJpdmVyCj4gc3VwcG9ydHMgdGhlIG5ldyBjb21wYXRp
+YmxlIHN0cmluZywgYnV0IGl0IGRvZXNuJ3QgaGF2ZSB0aGUgYWN0dWFsIGNvZGUKPiB0byBoYW5k
+bGUgUENNMTc4OS4gQW0gSSBtaXNzaW5nIHNvbWV0aGluZyBoZXJlID8KCk5vLCB5b3UgYXJlIHJp
+Z2h0LCBJIHdpbGwgbWVyZ2UgaXQgd2l0aCBwYXRjaCAwMi4KCj4gCj4gPiAtCXJldHVybiBwY20x
+Nzl4X2NvbW1vbl9pbml0KCZjbGllbnQtPmRldiwgcmVnbWFwKTsKPiA+ICsJcmV0dXJuIHBjbTE3
+OXhfY29tbW9uX2luaXQoJmNsaWVudC0+ZGV2LCByZWdtYXAsIGlkLT5kcml2ZXJfZGF0YSk7ICAK
+PiAKPiBUaGlzIGNhbiBiZSBkb25lIGluIGEgcHJlcGFyYXRpb24gcGF0Y2guCj4gCj4gPiAgfQo+
+ID4gIAo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBjbTE3OXhfb2ZfbWF0
+Y2hbXSA9IHsKPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJ0aSxwY20xNzkyYSIsIH0sCj4gPiArCXsg
+LmNvbXBhdGlibGUgPSAidGkscGNtMTc4OSIsIH0sCj4gPiAgCXsgfQo+ID4gIH07Cj4gPiAgTU9E
+VUxFX0RFVklDRV9UQUJMRShvZiwgcGNtMTc5eF9vZl9tYXRjaCk7Cj4gPiAgCj4gPiAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBpMmNfZGV2aWNlX2lkIHBjbTE3OXhfaTJjX2lkc1tdID0gewo+ID4gLQl7
+ICJwY20xNzl4IiwgMCB9LAo+ID4gKwl7ICJwY20xNzl4IiwgUENNMTc5WCB9LCAgCj4gCj4gQW5k
+IGFsc28gdGhpcyBhZGRpdGlvbi4KPiAKPiA+ICsJeyAicGNtMTc4OSIsIFBDTTE3ODkgfSwKPiA+
+ICAJeyB9Cj4gPiAgfTsKPiA+ICBNT0RVTEVfREVWSUNFX1RBQkxFKGkyYywgcGNtMTc5eF9pMmNf
+aWRzKTsKPiA+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2MvY29kZWNzL3BjbTE3OXguYyBiL3NvdW5k
+L3NvYy9jb2RlY3MvcGNtMTc5eC5jCj4gPiBpbmRleCA0YjMxMWMwNmY5N2QuLjgxY2JmMDkzMTlm
+NiAxMDA2NDQKPiA+IC0tLSBhL3NvdW5kL3NvYy9jb2RlY3MvcGNtMTc5eC5jCj4gPiArKysgYi9z
+b3VuZC9zb2MvY29kZWNzL3BjbTE3OXguYwo+ID4gQEAgLTIxOCw3ICsyMTgsOCBAQCBzdGF0aWMg
+Y29uc3Qgc3RydWN0IHNuZF9zb2NfY29tcG9uZW50X2RyaXZlciBzb2NfY29tcG9uZW50X2Rldl9w
+Y20xNzl4ID0gewo+ID4gIAkubm9uX2xlZ2FjeV9kYWlfbmFtaW5nCT0gMSwKPiA+ICB9Owo+ID4g
+IAo+ID4gLWludCBwY20xNzl4X2NvbW1vbl9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0
+IHJlZ21hcCAqcmVnbWFwKQo+ID4gK2ludCBwY20xNzl4X2NvbW1vbl9pbml0KHN0cnVjdCBkZXZp
+Y2UgKmRldiwgc3RydWN0IHJlZ21hcCAqcmVnbWFwLAo+ID4gKwkJCWVudW0gcGNtMTd4eF90eXBl
+IHR5cGUpICAKPiAKPiBBbmQgdGhpcyBkb25lLgo+IAo+ID4gIHsKPiA+ICAJc3RydWN0IHBjbTE3
+OXhfcHJpdmF0ZSAqcGNtMTc5eDsKPiA+ICAKPiA+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2MvY29k
+ZWNzL3BjbTE3OXguaCBiL3NvdW5kL3NvYy9jb2RlY3MvcGNtMTc5eC5oCj4gPiBpbmRleCBjZjg2
+ODFjOWEzNzMuLjhjMDg2ODllM2I4YiAxMDA2NDQKPiA+IC0tLSBhL3NvdW5kL3NvYy9jb2RlY3Mv
+cGNtMTc5eC5oCj4gPiArKysgYi9zb3VuZC9zb2MvY29kZWNzL3BjbTE3OXguaAo+ID4gQEAgLTE3
+LDExICsxNywxNyBAQAo+ID4gICNpZm5kZWYgX19QQ00xNzlYX0hfXwo+ID4gICNkZWZpbmUgX19Q
+Q00xNzlYX0hfXwo+ID4gIAo+ID4gK2VudW0gcGNtMTd4eF90eXBlIHsKPiA+ICsJUENNMTc5WCwg
+IAo+IAo+IEFuZCB0aGlzIG9uZS4KPiAKPiA+ICsJUENNMTc4OSwKPiA+ICt9Owo+ID4gKwo+ID4g
+ICNkZWZpbmUgUENNMTc5MkFfRk9STUFUUyAoU05EUlZfUENNX0ZNVEJJVF9TMzJfTEUgfCBTTkRS
+Vl9QQ01fRk1UQklUX1MyNF9MRSB8IFwKPiA+ICAJCQkgIFNORFJWX1BDTV9GTVRCSVRfUzE2X0xF
+KQo+ID4gIAo+ID4gIGV4dGVybiBjb25zdCBzdHJ1Y3QgcmVnbWFwX2NvbmZpZyBwY20xNzl4X3Jl
+Z21hcF9jb25maWc7Cj4gPiAgCj4gPiAtaW50IHBjbTE3OXhfY29tbW9uX2luaXQoc3RydWN0IGRl
+dmljZSAqZGV2LCBzdHJ1Y3QgcmVnbWFwICpyZWdtYXApOwo+ID4gK2ludCBwY20xNzl4X2NvbW1v
+bl9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IHJlZ21hcCAqcmVnbWFwLAo+ID4gKwkJ
+CWVudW0gcGNtMTd4eF90eXBlIHR5cGUpOyAgCj4gCj4gQW5kIHRoaXMgb25lLiBKdXN0IGFzIGEg
+InByZXBhcmF0aW9uIHBhdGNoIiB0byBzdXBwb3J0IG11bHRpcGxlIGNvZGVjcwo+IGluIHRoZSBl
+eGlzdGluZyBwY20xNzl4LmMgZHJpdmVyLgo+IAo+IFRoYW5rcyEKPiAKPiBUaG9tYXMKClRoYW5r
+cywKCk15bMOobmUKCi0tIApNeWzDqG5lIEpvc3NlcmFuZCwgQm9vdGxpbiAoZm9ybWVybHkgRnJl
+ZSBFbGVjdHJvbnMpCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDov
+L2Jvb3RsaW4uY29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpo
+dHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZl
+bAo=
