@@ -1,41 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/6] Introduce STMicroelectronics MultiFunction eXpander
-Date: Thu, 1 Mar 2018 23:28:46 +0100
-Message-ID: <CACRpkdbd=n=6g+20_sn+_Q_xNpQowa_40o1uzCnRm8vnEnantQ@mail.gmail.com>
-References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
- <CACRpkdZYnQC5BusLyK5aAcA2q0NmvHu=TaLhFCfu2M0bgBcjrQ@mail.gmail.com> <276d5f97-55c2-406e-92c7-0d03c7f7a49d@st.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] arm: dts: omap3: Add missing #sound-dai-cells
+Date: Thu, 1 Mar 2018 14:32:43 -0800
+Message-ID: <20180301223243.GI62820@atomide.com>
+References: <20180301202537.30571-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <276d5f97-55c2-406e-92c7-0d03c7f7a49d@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180301202537.30571-2-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, arm@kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 22, 2018 at 4:13 PM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
-
-> ST MFX is different from STMPE as far as the HW is completely different.
-> IDD is a new feature.
-> TS management is completely different.
-> GPIO management looks like but is also rather different.
-> ST MFX counts a first level of 8 interrupts (acked by writing in the ACK
-> register), then a second level of 24 interrupts for GPIOs. GPIO IRQ can
-> be triggered on low level, falling edge, high level, rising edge. GPIO
-> IRQ have to be acked by writing in the GPI_ACK register, GPIO can be
-> output open-drain with/without internal pull-up, output push-pull, input
-> with pull-up/down, input floating or analog.
-
-Okay I am convinced that we need to model this as its own
-driver if it is as different as you say.
-
-But let's keep an eye on STMPE's approaches and what it does
-right and wrong.
-
-If I rewrote the STMPE driver today, the major changes would be
-to use regmap to pass around to subdrivers, and implement a
-combined pin control and GPIO driver, so I think those things should
-be nice to have for the next iteration.
-
-Yours,
-Linus Walleij
+KiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiBbMTgwMzAxIDEyOjI2XToKPiBkdGMgbm93
+IGdpdmVzIHRoZSBmb2xsb3dpbmcgd2FybmluZ3M6Cj4gCj4gYXJjaC9hcm0vYm9vdC9kdHMvb21h
+cDMtZ3RhMDRhMy5kdGI6IFdhcm5pbmcgKHNvdW5kX2RhaV9wcm9wZXJ0eSk6IC9zb3VuZF90ZWxl
+cGhvbnkvc2ltcGxlLWF1ZGlvLWNhcmQsY3B1OiBNaXNzaW5nIHByb3BlcnR5ICcjc291bmQtZGFp
+LWNlbGxzJyBpbiBub2RlIC9vY3BANjgwMDAwMDAvbWNic3BANDkwMjYwMDAgb3IgYmFkIHBoYW5k
+bGUgKHJlZmVycmVkIGZyb20gc291bmQtZGFpWzBdKQo+IGFyY2gvYXJtL2Jvb3QvZHRzL29tYXAz
+LWd0YTA0YTQuZHRiOiBXYXJuaW5nIChzb3VuZF9kYWlfcHJvcGVydHkpOiAvc291bmRfdGVsZXBo
+b255L3NpbXBsZS1hdWRpby1jYXJkLGNwdTogTWlzc2luZyBwcm9wZXJ0eSAnI3NvdW5kLWRhaS1j
+ZWxscycgaW4gbm9kZSAvb2NwQDY4MDAwMDAwL21jYnNwQDQ5MDI2MDAwIG9yIGJhZCBwaGFuZGxl
+IChyZWZlcnJlZCBmcm9tIHNvdW5kLWRhaVswXSkKPiBhcmNoL2FybS9ib290L2R0cy9vbWFwMy1n
+dGEwNGE1LmR0YjogV2FybmluZyAoc291bmRfZGFpX3Byb3BlcnR5KTogL3NvdW5kX3RlbGVwaG9u
+eS9zaW1wbGUtYXVkaW8tY2FyZCxjcHU6IE1pc3NpbmcgcHJvcGVydHkgJyNzb3VuZC1kYWktY2Vs
+bHMnIGluIG5vZGUgL29jcEA2ODAwMDAwMC9tY2JzcEA0OTAyNjAwMCBvciBiYWQgcGhhbmRsZSAo
+cmVmZXJyZWQgZnJvbSBzb3VuZC1kYWlbMF0pCj4gCj4gQWRkIHRoZSBtaXNzaW5nICNzb3VuZC1k
+YWktY2VsbHMgcHJvcGVydHkuCgpJcyB0aGlzIG5lZWRlZCBmb3IgdGhlIGN1cnJlbnQgLXJjIG9y
+IGlzIHY0LjE3IE9LPwoKU29tZWhvdyBJJ20gbm90IHNlZWluZyB0aGVzZSB3aXRoIGN1cnJlbnQg
+LXJjIG9yIG5leHQsIGlzCnRoZXJlIHNvbWUgc3BlY2lhbCBvcHRpb24gKG5vdCBXPTIgOikgdGhh
+dCB5b3UncmUgdXNpbmc/CgpSZWdhcmRzLAoKVG9ueQoKPiBDYzogIkJlbm/DrnQgQ291c3NvbiIg
+PGJjb3Vzc29uQGJheWxpYnJlLmNvbT4KPiBDYzogVG9ueSBMaW5kZ3JlbiA8dG9ueUBhdG9taWRl
+LmNvbT4KPiBDYzogbGludXgtb21hcEB2Z2VyLmtlcm5lbC5vcmcKPiBTaWduZWQtb2ZmLWJ5OiBS
+b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9v
+bWFwMy5kdHNpIHwgMSArCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+IAo+IGRp
+ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwMy5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvb21hcDMuZHRzaQo+IGluZGV4IGEwMDU4MDJjZDUyYi4uNDA0M2VjYjM4MDE2IDEwMDY0NAo+
+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290
+L2R0cy9vbWFwMy5kdHNpCj4gQEAgLTU1Nyw2ICs1NTcsNyBAQAo+ICAJCQlkbWEtbmFtZXMgPSAi
+dHgiLCAicngiOwo+ICAJCQljbG9ja3MgPSA8Jm1jYnNwNF9mY2s+Owo+ICAJCQljbG9jay1uYW1l
+cyA9ICJmY2siOwo+ICsJCQkjc291bmQtZGFpLWNlbGxzID0gPDA+Owo+ICAJCQlzdGF0dXMgPSAi
+ZGlzYWJsZWQiOwo+ICAJCX07Cj4gIAo+IC0tIAo+IDIuMTQuMQo+IAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
