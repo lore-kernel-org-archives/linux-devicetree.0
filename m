@@ -1,31 +1,80 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] ARM: dts: exynos: Remove unused bypass-smu property from Xyref5260
-Date: Thu,  1 Mar 2018 21:34:59 +0100
-Message-ID: <1519936499-23230-1-git-send-email-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 04/25] dt-bindings: sound: qcom: Add
+	bindings for q6afe
+Date: Thu, 1 Mar 2018 20:41:33 +0000
+Message-ID: <20180301204133.GP12864@sirena.org.uk>
+References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
+ <20180213165837.1620-5-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============2373277592384872643=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180213165837.1620-5-srinivas.kandagatla@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: srinivas.kandagatla@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, plai@codeaurora.org, tiwai@suse.com, lgirdwood@gmail.com, david.brown@linaro.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, spatakok@qti.qualcomm.com, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The bypass-smu property is neither used nor documented in bindings.
-Remove it from Xyref5260 board DTS.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/exynos5260-xyref5260.dts | 1 -
- 1 file changed, 1 deletion(-)
+--===============2373277592384872643==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="9pS2hy4/DrI8BQlq"
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/exynos5260-xyref5260.dts b/arch/arm/boot/dts/exynos5260-xyref5260.dts
-index 442eb0353f29..fa19c59b2fb6 100644
---- a/arch/arm/boot/dts/exynos5260-xyref5260.dts
-+++ b/arch/arm/boot/dts/exynos5260-xyref5260.dts
-@@ -65,7 +65,6 @@
- &mmc_0 {
- 	status = "okay";
- 	broken-cd;
--	bypass-smu;
- 	cap-mmc-highspeed;
- 	supports-hs200-mode; /* 200 MHz */
- 	card-detect-delay = <200>;
--- 
-2.7.4
+
+--9pS2hy4/DrI8BQlq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Feb 13, 2018 at 04:58:16PM +0000, srinivas.kandagatla@linaro.org wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+
+Please submit patches using subject lines reflecting the style for the
+subsystem.  This makes it easier for people to identify relevant
+patches.  Look at what existing commits in the area you're changing are
+doing and make sure your subject lines visually resemble what they're
+doing.
+
+> +- but must contain the following property:
+> +
+> +- compatible:
+> +- qcom,apr-svc-id
+> +- qcom,apr-svc-name
+> +- #sound-dai-cells
+
+Property or properties?  It's a bit surprising that both the ID and the
+name are mandatory, does the name actually get used for non-diagnostic
+reasons?
+
+--9pS2hy4/DrI8BQlq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqYZX0ACgkQJNaLcl1U
+h9DVswgAgNJ4G1f96WfH9ZdNbYjqbFopiIHLA51w5qPJCavaMFl900adibi+E4Wd
+I77+PJxyz5HuLtxuZi/ioi2rzhy7HVoPRx/laRpn+PgVE5fwtUfAIHCL4/tqBpA7
+e/rqmW5dbv1H/OuG8sICw164RmcpSB+9IQ03IiJS+sfIP3qRv4ygPiP1353Ba7Jw
+zBER6PLEQ2VL+ASqf/Bhdu4pLJfAUu9OgFoR+7DpK6AFskRaLFCsYqKs7w2y4LWk
+1RcNXjflfvfwlXKO86oONrNcB8wiJSGp8gbRXLEDIG1ydJnr4hLLJ1hjkgl+HwTN
+Ux/aViDUZMRPrqBWIm7mtDotwLUmvg==
+=tDFr
+-----END PGP SIGNATURE-----
+
+--9pS2hy4/DrI8BQlq--
+
+--===============2373277592384872643==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2373277592384872643==--
