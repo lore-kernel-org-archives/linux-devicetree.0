@@ -1,52 +1,239 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 0/7] Add coupled regulators mechanism
-Date: Thu, 1 Mar 2018 19:38:27 +0000
-Message-ID: <20180301193827.GK12864@sirena.org.uk>
-References: <CGME20180122143019eucas1p213b852c98cde3fb8a77b96ab0d372ee6@eucas1p2.samsung.com>
- <1516631412-17542-1-git-send-email-m.purski@samsung.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v15 8/9] HISI LPC: Add ACPI support
+Date: Thu, 01 Mar 2018 21:50:55 +0200
+Message-ID: <1519933855.10722.364.camel@linux.intel.com>
+References: <1519663249-9850-1-git-send-email-john.garry@huawei.com>
+         <1519663249-9850-9-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="j/HO4hzKTNbM1mOX"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1516631412-17542-1-git-send-email-m.purski@samsung.com>
+In-Reply-To: <1519663249-9850-9-git-send-email-john.garry@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: John Garry <john.garry@huawei.com>, mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org
+Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2018-02-27 at 00:40 +0800, John Garry wrote:
+> Based on the previous patches, this patch supports the
+> LPC host on hip06/hip07 for ACPI FW.
+> 
+> It is the responsibility of the LPC host driver to
+> enumerate the child devices, as the ACPI scan code will
+> not enumerate children of "indirect IO" hosts.
+> 
+> The ACPI table for the LPC host controller and the child
+> devices is in the following format:
+>   Device (LPC0) {
+>     Name (_HID, "HISI0191")  // HiSi LPC
+>     Name (_CRS, ResourceTemplate () {
+>       Memory32Fixed (ReadWrite, 0xa01b0000, 0x1000)
+>     })
+>   }
+> 
+>   Device (LPC0.IPMI) {
+>     Name (_HID, "IPI0001")
+>     Name (LORS, ResourceTemplate() {
+>       QWordIO (
+>         ResourceConsumer,
+> 	MinNotFixed,     // _MIF
+> 	MaxNotFixed,     // _MAF
+> 	PosDecode,
+> 	EntireRange,
+> 	0x0,             // _GRA
+> 	0xe4,            // _MIN
+> 	0x3fff,          // _MAX
+> 	0x0,             // _TRA
+> 	0x04,            // _LEN
+> 	, ,
+> 	BTIO
+>       )
+>     })
+> 
+> Since the IO resources of the child devices need to be
+> translated from LPC bus addresses to logical PIO addresses,
+> and we shouldn't modify the resources of the devices
+> generated in the FW scan, a per-child MFD is created as
+> a substitute. The MFD IO resources will be the translated
+> bus addresses of the ACPI child.
 
---j/HO4hzKTNbM1mOX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, this needs to be thought about a bit more.
 
-On Mon, Jan 22, 2018 at 03:30:05PM +0100, Maciej Purski wrote:
-> Hi all,
->=20
-> this patchset adds a new mechanism to the framework - regulators' couplin=
-g.
+I guess I understand what's is the problem with PNP IDs in the driver.
 
-I've had another go through this and way about to apply but I've
-realized that it needs a rebase against the latest regulator tree, the
-changes for suspend states collide with the voltage change code.  Can
-you rebase against my current -next please?  It's just the last patch
-that has merge issues.  Sorry for the delay, this got buried as everyone
-seems to have decided to send me 20+ patch serieses all of a sudden.
+You probe your LPC device quite late.
+One option is to move from classical probe to a event-driven model, i.e.
+via registering a notifier (see acpi_lpss.c), preparing necessary stuff
+at earlier stages and then register devices by their enumeration and
+appearance.
 
---j/HO4hzKTNbM1mOX
-Content-Type: application/pgp-signature; name="signature.asc"
+Though, if I would be you I would seek a opinion from Rafael and Mika
+(maybe others as well).
 
------BEGIN PGP SIGNATURE-----
+See also some comments below.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqYVrMACgkQJNaLcl1U
-h9CcBwf/Z7EpuEA/Et4z2goZyhB8nlgaSQ4qIED45nkW06N2qVUq854R+00XjcML
-brSfzHHbgMGxg/eVbyhSBY2J1gnGmqCcXoNpnkKCou5DwhyJMXsf3V0lr4hnvwP5
-x1/pr6pXSB3YQvUIu/7gdmf90bwJo9Siert+4X9TvUqSF3Q4mZR/TSRC+9ai/ZYJ
-9J21H9o75/VAAOvMTDGW85m8X7Yn4e2UzgC4TFfouvSKmTxd5WNn0xw1V+rYzN+U
-2N2fed1FNV82I4cDa03lwD+FLsbs5L+9BKHtfsiHLonhXjezSLqwXzp1wp7QNo7R
-aXymxXE469/h9RsJ3/jRgrfJv+CrBQ==
-=7j7a
------END PGP SIGNATURE-----
+> +#ifdef CONFIG_ACPI
+> +#define MFD_CHILD_NAME_PREFIX DRV_NAME"-"
 
---j/HO4hzKTNbM1mOX--
+> +#define MFD_CHILD_NAME_LEN (ACPI_ID_LEN +
+> sizeof(MFD_CHILD_NAME_PREFIX))
+
+..._PREFIX) - 1)
+
+?
+
+> +static int hisi_lpc_acpi_xlat_io_res(struct acpi_device *adev,
+> +				     struct acpi_device *host,
+> +				     struct resource *res)
+> +{
+> +	unsigned long sys_port;
+
+> +	resource_size_t len = res->end - res->start;
+
+resource_size()
+
+> +	return 0;
+> +}
+
+
+> +static int hisi_lpc_acpi_set_io_res(struct device *child,
+> +				    struct device *hostdev,
+> +				    const struct resource **res,
+> +				    int *num_res)
+> +{
+
+> +	/*
+> +	 * The following code segment to retrieve the resources is
+> common to
+> +	 * acpi_create_platform_device(), so consider a common helper
+> function
+> +	 * in future.
+> +	 */
+> +	count = acpi_dev_get_resources(adev, &resource_list, NULL,
+> NULL);
+> +	if (count <= 0) {
+> +		dev_dbg(child, "failed to get resources\n");
+
+> +		return count ? count : -EIO;
+
+count == 0 --> return 0;
+
+Is it by design? (I didn't check acpi_create_platform_device() though)
+
+> +	}
+> +
+> +	resources = devm_kcalloc(hostdev, count, sizeof(*resources),
+> +				 GFP_KERNEL);
+> +	if (!resources) {
+> +		dev_warn(hostdev, "could not allocate memory for %d
+> resources\n",
+> +			 count);
+> +		acpi_dev_free_resource_list(&resource_list);
+> +		return -ENOMEM;
+> +	}
+> +	count = 0;
+> +	list_for_each_entry(rentry, &resource_list, node)
+> +		resources[count++] = *rentry->res;
+> +
+> +	acpi_dev_free_resource_list(&resource_list);
+
+> +
+> +	return 0;
+> +}
+
+> +
+> +/*
+> + * hisi_lpc_acpi_probe - probe children for ACPI FW
+> + * @hostdev: LPC host device pointer
+> + *
+> + * Returns 0 when successful, and a negative value for failure.
+> + *
+> + * Scan all child devices and create a per-device MFD with
+> + * logical PIO translated IO resources.
+> + */
+> +static int hisi_lpc_acpi_probe(struct device *hostdev)
+> +{
+> +	struct acpi_device *adev = ACPI_COMPANION(hostdev);
+> +	struct hisi_lpc_mfd_cell *hisi_lpc_mfd_cells;
+> +	struct mfd_cell *mfd_cells;
+> +	struct acpi_device *child;
+> +	int size, ret, count = 0, cell_num = 0;
+> +
+> +	list_for_each_entry(child, &adev->children, node)
+> +		cell_num++;
+> +
+> +	/* allocate the mfd cell and companion acpi info, one per
+> child */
+> +	size = sizeof(*mfd_cells) + sizeof(*hisi_lpc_mfd_cells);
+> +	mfd_cells = devm_kcalloc(hostdev, cell_num, size,
+> GFP_KERNEL);
+> +	if (!mfd_cells)
+> +		return -ENOMEM;
+> +
+
+> +	hisi_lpc_mfd_cells = (struct hisi_lpc_mfd_cell *)
+> +					&mfd_cells[cell_num];
+
+One line, please.
+
+Just noticed that calloc() memory layout is not the same how you are
+using it.
+
+> +	/* Only consider the children of the host */
+> +	list_for_each_entry(child, &adev->children, node) {
+> +		struct mfd_cell *mfd_cell = &mfd_cells[count];
+> +		struct hisi_lpc_mfd_cell *hisi_lpc_mfd_cell =
+> +					&hisi_lpc_mfd_cells[count];
+> +		struct mfd_cell_acpi_match *acpi_match =
+> +					&hisi_lpc_mfd_cell-
+> >acpi_match;
+> +		char *name = hisi_lpc_mfd_cell[count].name;
+> +		char *pnpid = hisi_lpc_mfd_cell[count].pnpid;
+> +		struct mfd_cell_acpi_match match = {
+> +			.pnpid = pnpid,
+> +		};
+> +
+
+> +		snprintf(name, MFD_CHILD_NAME_LEN,
+> MFD_CHILD_NAME_PREFIX"%s",
+> +			 acpi_device_hid(child));
+
+No possibility of identical devices?
+
+> +		snprintf(pnpid, ACPI_ID_LEN, "%s",
+> acpi_device_hid(child));
+> +
+> +		memcpy(acpi_match, &match, sizeof(*acpi_match));
+> +		mfd_cell->name = name;
+> +		mfd_cell->acpi_match = acpi_match;
+> +
+> +		ret = hisi_lpc_acpi_set_io_res(&child->dev, &adev-
+> >dev,
+> +					       &mfd_cell->resources,
+> +					       &mfd_cell-
+> >num_resources);
+> +		if (ret) {
+> +			dev_warn(&child->dev, "set resource
+> fail(%d)\n", ret);
+> +			return ret;
+> +		}
+> +		count++;
+> +	}
+> +
+> +	ret = mfd_add_devices(hostdev, 
+
+> PLATFORM_DEVID_NONE,
+
+You mean it's not possible to have more than one identical device?
+
+> +			      mfd_cells, cell_num, NULL, 0, NULL);
+> +	if (ret) {
+> +		dev_err(hostdev, "failed to add mfd cells (%d)\n",
+> ret);
+> +		return ret;
+> +	}
+
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
