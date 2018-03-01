@@ -1,23 +1,28 @@
-Return-Path: <SRS0=33D/=FX=ti.com=bparrot@kernel.org>
-Date: Thu, 1 Mar 2018 14:35:16 -0600
-From: Benoit Parrot <bparrot@ti.com>
+Return-Path: <SRS0=1nXI=FX=ragnatech.se=niklas.soderlund@kernel.org>
+Date: Thu, 1 Mar 2018 17:26:58 +0100
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
 Subject: Re: [PATCH v5 2/2] v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-Message-ID: <20180301203515.GM6807@ti.com>
+Message-ID: <20180301162658.GB12470@bigcity.dyn.berto.se>
 References: <20180301113049.16470-1-maxime.ripard@bootlin.com>
  <20180301113049.16470-3-maxime.ripard@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <20180301113049.16470-3-maxime.ripard@bootlin.com>
 To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Maxime,
+Hi Maxime,
 
-Thanks you for the patch,
+Thanks for your patch,
 
-Maxime Ripard <maxime.ripard@bootlin.com> wrote on Thu [2018-Mar-01 12:30:49 +0100]:
+I did not do a full review on this series, I only browsed it to check 
+how you handled some CSI-2 related problems. While doing so I noticed a 
+few small issues.
+
+On 2018-03-01 12:30:49 +0100, Maxime Ripard wrote:
 > The Cadence MIPI-CSI2 TX controller is an hardware block meant to be used
 > as a bridge between pixel interfaces and a CSI-2 bus.
 > 
@@ -230,6 +235,9 @@ Maxime Ripard <maxime.ripard@bootlin.com> wrote on Thu [2018-Mar-01 12:30:49 +01
 > +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
 > +
 > +	fmt->format = csi2tx->pad_fmts[fmt->pad];
+
+You should bounds check fmt->pad before using it as an index.
+
 > +
 > +	return 0;
 > +}
@@ -241,6 +249,9 @@ Maxime Ripard <maxime.ripard@bootlin.com> wrote on Thu [2018-Mar-01 12:30:49 +01
 > +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
 > +
 > +	csi2tx->pad_fmts[fmt->pad] = fmt->format;
+
+Same here.
+
 > +
 > +	return 0;
 > +}
@@ -273,11 +284,362 @@ Maxime Ripard <maxime.ripard@bootlin.com> wrote on Thu [2018-Mar-01 12:30:49 +01
 > +
 > +	writel(CSI2TX_DPHY_CLK_WAKEUP_ULPS_CYCLES(32),
 > +	       csi2tx->base + CSI2TX_DPHY_CLK_WAKEUP_REG);
+> +
+> +	/* Put our lanes (clock and data) out of reset */
+> +	reg = CSI2TX_DPHY_CFG_CLK_RESET | CSI2TX_DPHY_CFG_MODE_LPDT;
+> +	for (i = 0; i < csi2tx->num_lanes; i++)
+> +		reg |= CSI2TX_DPHY_CFG_LANE_RESET(csi2tx->lanes[i]);
+> +	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
+> +
+> +	udelay(10);
+> +
+> +	/* Enable our (clock and data) lanes */
+> +	reg |= CSI2TX_DPHY_CFG_CLK_ENABLE;
+> +	for (i = 0; i < csi2tx->num_lanes; i++)
+> +		reg |= CSI2TX_DPHY_CFG_LANE_ENABLE(csi2tx->lanes[i]);
+> +	writel(reg, csi2tx->base + CSI2TX_DPHY_CFG_REG);
+> +
+> +	udelay(10);
+> +
+> +	/* Switch to HS mode */
+> +	reg &= ~CSI2TX_DPHY_CFG_MODE_MASK;
+> +	writel(reg | CSI2TX_DPHY_CFG_MODE_HS,
+> +	       csi2tx->base + CSI2TX_DPHY_CFG_REG);
+> +
+> +	udelay(10);
+> +
+> +	/*
+> +	 * Create a static mapping between the CSI virtual channels
+> +	 * and the input streams.
+> +	 *
+> +	 * This should be enhanced, but v4l2 lacks the support for
+> +	 * changing that mapping dynamically at the moment.
 
-I am sorry if I missed this previously but do all these
-CSI2TX_DPHY* reg access assume that "has_internal_dphy" is true?
+Sakaris work will help with this in the kernel and I have some RFC 
+patches for v4l-utils which can be used to configure it from user-space.
 
+https://www.spinics.net/lists/linux-media/msg126128.html
+
+> +	 *
+> +	 * We're protected from the userspace setting up links at the
+> +	 * same time by the upper layer having called
+> +	 * media_pipeline_start().
+> +	 */
+> +	list_for_each_entry(link, &entity->links, list) {
+> +		struct v4l2_mbus_framefmt *mfmt;
+> +		const struct csi2tx_fmt *fmt;
+> +		unsigned int stream;
+> +		int pad_idx = -1;
+> +
+> +		/* Only consider our enabled input pads */
+> +		for (i = CSI2TX_PAD_SINK_STREAM0; i < CSI2TX_PAD_MAX; i++) {
+> +			struct media_pad *pad = &csi2tx->pads[i];
+> +
+> +			if ((pad == link->sink) &&
+> +			    (link->flags & MEDIA_LNK_FL_ENABLED)) {
+> +				pad_idx = i;
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (pad_idx < 0)
+> +			continue;
+> +
+> +		mfmt = &csi2tx->pad_fmts[i];
+> +		fmt = csitx_get_fmt_from_mbus(mfmt);
+> +		if (!fmt)
+> +			continue;
+> +
+> +		stream = pad_idx - CSI2TX_PAD_SINK_STREAM0;
+> +
+> +		/*
+> +		 * We use the stream ID there, but it's wrong.
+> +		 *
+> +		 * A stream could very well send a data type that is
+> +		 * not equal to its stream ID. We need to find a
+> +		 * proper way to address it.
+> +		 */
+> +		writel(CSI2TX_DT_CFG_DT(fmt->dt),
+> +		       csi2tx->base + CSI2TX_DT_CFG_REG(stream));
+> +
+> +		writel(CSI2TX_DT_FORMAT_BYTES_PER_LINE(mfmt->width * fmt->bpp) |
+> +		       CSI2TX_DT_FORMAT_MAX_LINE_NUM(mfmt->height + 1),
+> +		       csi2tx->base + CSI2TX_DT_FORMAT_REG(stream));
+> +
+> +		/*
+> +		 * TODO: This needs to be calculated based on the
+> +		 * output CSI2 clock rate.
+> +		 */
+> +		writel(CSI2TX_STREAM_IF_CFG_FILL_LEVEL(4),
+> +		       csi2tx->base + CSI2TX_STREAM_IF_CFG_REG(stream));
+> +	}
+> +
+> +	/* Disable the configuration mode */
+> +	writel(0, csi2tx->base + CSI2TX_CONFIG_REG);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csi2tx_stop(struct csi2tx_priv *csi2tx)
+> +{
+
+This can be void as it always return 0.
+
+> +	writel(CSI2TX_CONFIG_CFG_REQ | CSI2TX_CONFIG_SRST_REQ,
+> +	       csi2tx->base + CSI2TX_CONFIG_REG);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csi2tx_s_stream(struct v4l2_subdev *subdev, int enable)
+> +{
+> +	struct csi2tx_priv *csi2tx = v4l2_subdev_to_csi2tx(subdev);
+> +	int ret = 0;
+> +
+> +	mutex_lock(&csi2tx->lock);
+> +
+> +	if (enable) {
+> +		/*
+> +		 * If we're not the first users, there's no need to
+> +		 * enable the whole controller.
+> +		 */
+> +		if (!csi2tx->count) {
+> +			ret = csi2tx_start(csi2tx);
+> +			if (ret)
+> +				goto out;
+> +		}
+> +
+> +		csi2tx->count++;
+> +	} else {
+> +		csi2tx->count--;
+> +
+> +		/*
+> +		 * Let the last user turn off the lights.
+> +		 */
+> +		if (!csi2tx->count) {
+> +			ret = csi2tx_stop(csi2tx);
+> +			if (ret)
+> +				goto out;
+
+csi2tx_stop() always returns 0 no need to check return code here.
+
+
+> +		}
+> +	}
+> +
+> +out:
+> +	mutex_unlock(&csi2tx->lock);
+> +	return ret;
+> +}
+> +
+> +static const struct v4l2_subdev_video_ops csi2tx_video_ops = {
+> +	.s_stream	= csi2tx_s_stream,
+> +};
+> +
+> +static const struct v4l2_subdev_ops csi2tx_subdev_ops = {
+> +	.pad		= &csi2tx_pad_ops,
+> +	.video		= &csi2tx_video_ops,
+> +};
+> +
+> +static int csi2tx_get_resources(struct csi2tx_priv *csi2tx,
+> +				struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	unsigned int i;
+> +	u32 dev_cfg;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	csi2tx->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(csi2tx->base))
+> +		return PTR_ERR(csi2tx->base);
+> +
+> +	csi2tx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
+> +	if (IS_ERR(csi2tx->p_clk)) {
+> +		dev_err(&pdev->dev, "Couldn't get p_clk\n");
+> +		return PTR_ERR(csi2tx->p_clk);
+> +	}
+> +
+> +	csi2tx->esc_clk = devm_clk_get(&pdev->dev, "esc_clk");
+> +	if (IS_ERR(csi2tx->esc_clk)) {
+> +		dev_err(&pdev->dev, "Couldn't get the esc_clk\n");
+> +		return PTR_ERR(csi2tx->esc_clk);
+> +	}
+> +
+> +	clk_prepare_enable(csi2tx->p_clk);
+> +	dev_cfg = readl(csi2tx->base + CSI2TX_DEVICE_CONFIG_REG);
+> +	clk_disable_unprepare(csi2tx->p_clk);
+> +
+> +	csi2tx->max_lanes = dev_cfg & 7;
+> +	if (csi2tx->max_lanes > CSI2TX_LANES_MAX) {
+> +		dev_err(&pdev->dev, "Invalid number of lanes: %u\n",
+> +			csi2tx->max_lanes);
+> +		return -EINVAL;
+> +	}
+> +
+> +	csi2tx->max_streams = (dev_cfg >> 4) & 7;
+> +	if (csi2tx->max_streams > CSI2TX_STREAMS_MAX) {
+> +		dev_err(&pdev->dev, "Invalid number of streams: %u\n",
+> +			csi2tx->max_streams);
+> +		return -EINVAL;
+> +	}
+> +
+> +	csi2tx->has_internal_dphy = (dev_cfg & BIT(3)) ? true : false;
+> +
+> +	for (i = 0; i < csi2tx->max_streams; i++) {
+> +		char clk_name[16];
+> +
+> +		snprintf(clk_name, sizeof(clk_name), "pixel_if%u_clk", i);
+> +		csi2tx->pixel_clk[i] = devm_clk_get(&pdev->dev, clk_name);
+> +		if (IS_ERR(csi2tx->pixel_clk[i])) {
+> +			dev_err(&pdev->dev, "Couldn't get clock %s\n",
+> +				clk_name);
+> +			return PTR_ERR(csi2tx->pixel_clk[i]);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int csi2tx_check_lanes(struct csi2tx_priv *csi2tx)
+> +{
+> +	struct v4l2_fwnode_endpoint v4l2_ep;
+> +	struct device_node *ep;
+> +	int ret;
+> +
+> +	ep = of_graph_get_endpoint_by_regs(csi2tx->dev->of_node, 0, 0);
+> +	if (!ep)
+> +		return -EINVAL;
+> +
+> +	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
+> +	if (ret) {
+> +		dev_err(csi2tx->dev, "Could not parse v4l2 endpoint\n");
+> +		goto out;
+> +	}
+> +
+> +	if (v4l2_ep.bus_type != V4L2_MBUS_CSI2) {
+> +		dev_err(csi2tx->dev, "Unsupported media bus type: 0x%x\n",
+> +			v4l2_ep.bus_type);
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	csi2tx->num_lanes = v4l2_ep.bus.mipi_csi2.num_data_lanes;
+> +	if (csi2tx->num_lanes > csi2tx->max_lanes) {
+> +		dev_err(csi2tx->dev,
+> +			"Current configuration uses more lanes than supported\n");
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	memcpy(csi2tx->lanes, v4l2_ep.bus.mipi_csi2.data_lanes,
+> +	       sizeof(csi2tx->lanes));
+> +
+> +out:
+> +	of_node_put(ep);
+> +	return ret;
+> +}
+> +
+> +static int csi2tx_probe(struct platform_device *pdev)
+> +{
+> +	struct csi2tx_priv *csi2tx;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	csi2tx = kzalloc(sizeof(*csi2tx), GFP_KERNEL);
+
+No real issue I'm just curious, why not use devm_kzalloc() here? You 
+free csi2tx in the remove() callback so not using devm_ will not help 
+with (the potential) v4l2 related lifetime management issues.
+
+> +	if (!csi2tx)
+> +		return -ENOMEM;
+> +	platform_set_drvdata(pdev, csi2tx);
+> +	mutex_init(&csi2tx->lock);
+> +	csi2tx->dev = &pdev->dev;
+> +
+> +	ret = csi2tx_get_resources(csi2tx, pdev);
+> +	if (ret)
+> +		goto err_free_priv;
+> +
+> +	v4l2_subdev_init(&csi2tx->subdev, &csi2tx_subdev_ops);
+> +	csi2tx->subdev.owner = THIS_MODULE;
+> +	csi2tx->subdev.dev = &pdev->dev;
+> +	csi2tx->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	v4l2_set_subdevdata(&csi2tx->subdev, &pdev->dev);
+
+Is this needed?
+
+> +	snprintf(csi2tx->subdev.name, V4L2_SUBDEV_NAME_SIZE, "%s.%s",
+> +		 KBUILD_MODNAME, dev_name(&pdev->dev));
+> +
+> +	ret = csi2tx_check_lanes(csi2tx);
+> +	if (ret)
+> +		goto err_free_priv;
+> +
+> +	/* Create our media pads */
+> +	csi2tx->subdev.entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
+> +	csi2tx->pads[CSI2TX_PAD_SOURCE].flags = MEDIA_PAD_FL_SOURCE;
+> +	for (i = CSI2TX_PAD_SINK_STREAM0; i < CSI2TX_PAD_MAX; i++)
+> +		csi2tx->pads[i].flags = MEDIA_PAD_FL_SINK;
+> +
+> +	for (i = 0; i < CSI2TX_PAD_MAX; i++)
+> +		csi2tx->pad_fmts[i] = fmt_default;
+> +
+> +	ret = media_entity_pads_init(&csi2tx->subdev.entity, CSI2TX_PAD_MAX,
+> +				     csi2tx->pads);
+> +	if (ret)
+> +		goto err_free_priv;
+> +
+> +	ret = v4l2_async_register_subdev(&csi2tx->subdev);
+> +	if (ret < 0)
+> +		goto err_free_priv;
+> +
+> +	dev_info(&pdev->dev,
+> +		 "Probed CSI2TX with %u/%u lanes, %u streams, %s D-PHY\n",
+> +		 csi2tx->num_lanes, csi2tx->max_lanes, csi2tx->max_streams,
+> +		 csi2tx->has_internal_dphy ? "internal" : "no");
+> +
+> +	return 0;
+> +
+> +err_free_priv:
+> +	kfree(csi2tx);
+> +	return ret;
+> +}
+> +
+> +static int csi2tx_remove(struct platform_device *pdev)
+> +{
+> +	struct csi2tx_priv *csi2tx = platform_get_drvdata(pdev);
+> +
+> +	v4l2_async_unregister_subdev(&csi2tx->subdev);
+> +	kfree(csi2tx);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id csi2tx_of_table[] = {
+> +	{ .compatible = "cdns,csi2tx" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, csi2tx_of_table);
+> +
+> +static struct platform_driver csi2tx_driver = {
+> +	.probe	= csi2tx_probe,
+> +	.remove	= csi2tx_remove,
+> +
+> +	.driver	= {
+> +		.name		= "cdns-csi2tx",
+> +		.of_match_table	= csi2tx_of_table,
+> +	},
+> +};
+> +module_platform_driver(csi2tx_driver);
+
+Are MODULE_LICENSE() not needed anymore with the introduction of the 
+SPDX headers?
+
+> -- 
+> 2.14.3
+> 
+
+-- 
 Regards,
-Benoit
-
-[snip]
+Niklas S�derlund
