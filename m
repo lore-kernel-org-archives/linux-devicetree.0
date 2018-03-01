@@ -1,69 +1,102 @@
-Return-Path: <SRS0=tXJj=GQ=martin.sperl.org=kernel@kernel.org>
-From: kernel@martin.sperl.org
-Subject: [PATCH V3 1/3] dt-binding: can: mcp25xxfd: document device tree bindings
-Date: Mon, 26 Mar 2018 16:06:22 +0000
-Message-Id: <20180326160624.32230-2-kernel@martin.sperl.org>
-In-Reply-To: <20180326160624.32230-1-kernel@martin.sperl.org>
-References: <20180326160624.32230-1-kernel@martin.sperl.org>
-To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Martin Sperl <kernel@martin.sperl.org>, Marcel Birthelmer <Marcel.Birthelmer@microchip.com>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>
+Return-Path: <SRS0=Pbk3=FX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from galahad.ideasonboard.com ([185.26.127.97]:50137 "EHLO
+        galahad.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1162480AbeCAWE5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 1 Mar 2018 17:04:57 -0500
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v7 2/4] dt-bindings: display: renesas: Deprecate LVDS support in the DU bindings
+Date: Fri,  2 Mar 2018 00:05:37 +0200
+Message-Id: <20180301220540.11959-3-laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <20180301220540.11959-1-laurent.pinchart+renesas@ideasonboard.com>
+References: <20180301220540.11959-1-laurent.pinchart+renesas@ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: dri-devel@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Sperl <kernel@martin.sperl.org>
+The internal LVDS encoders now have their own DT bindings, representing
+them as part of the DU is deprecated.
 
-Add device-tree bindings for Microcip CanFD Controller mcp2517fd
-
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-
---
-Changelog:
-  V1 -> V2: new more generic name based on feedback from microchip
-            cleanup of dt custom properties removing (most) gpio functions
-  V2 -> V3: added vendor-prefix for gpio-opendrain
-            s/_/-/
-            added gpio-controller
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
 ---
- .../bindings/net/can/microchip,mcp25xxfd.txt       | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+Changes since v1:
 
-diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
-new file mode 100644
-index 000000000000..b388b3eb3905
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
-@@ -0,0 +1,32 @@
-+* Microchip MCP2517 stand-alone CAN controller device tree bindings
-+
-+Required properties:
-+ - compatible: Should be one of the following:
-+   - "microchip,mcp2517fd" for MCP2517fd.
-+ - reg: SPI chip select.
-+ - clocks: The clock feeding the CAN controller.
-+ - interrupt-parent: The parent interrupt controller.
-+ - interrupts: Should contain IRQ line for the CAN controller.
-+ - gpio-controller: Marks the device node as a GPIO controller
-+
-+Optional properties:
-+ - vdd-supply: Regulator that powers the CAN controller.
-+ - xceiver-supply: Regulator that powers the CAN transceiver.
-+ - microchip,clock-out-div = <0|1|2|4|10>: Clock output pin divider
-+					   0 = Start of Frame output
-+					   default: 10
-+ - microchip,clock-div2: bool: divide the internal clock by 2
-+ - microchip,gpio-open-drain: bool: enable open-drain for all pins
-+                                    (except cantx)
-+
-+Example:
-+	can0: can@1 {
-+		compatible = "microchip,mcp2517fd";
-+		reg = <1>;
-+		clocks = <&clk24m>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <13 0x8>;
-+		vdd-supply = <&reg5v0>;
-+		xceiver-supply = <&reg5v0>;
-+		gpio-controller;
-+	};
---
-2.11.0
+- Remove the LVDS reg range from the example
+- Remove the reg-names property
+---
+ .../devicetree/bindings/display/renesas,du.txt     | 31 ++++++++--------------
+ 1 file changed, 11 insertions(+), 20 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+index cd48aba3bc8c..e79cf9b0ad38 100644
+--- a/Documentation/devicetree/bindings/display/renesas,du.txt
++++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+@@ -14,12 +14,7 @@ Required Properties:
+     - "renesas,du-r8a7795" for R8A7795 (R-Car H3) compatible DU
+     - "renesas,du-r8a7796" for R8A7796 (R-Car M3-W) compatible DU
+ 
+-  - reg: A list of base address and length of each memory resource, one for
+-    each entry in the reg-names property.
+-  - reg-names: Name of the memory resources. The DU requires one memory
+-    resource for the DU core (named "du") and one memory resource for each
+-    LVDS encoder (named "lvds.x" with "x" being the LVDS controller numerical
+-    index).
++  - reg: the memory-mapped I/O registers base address and length
+ 
+   - interrupt-parent: phandle of the parent interrupt controller.
+   - interrupts: Interrupt specifiers for the DU interrupts.
+@@ -29,14 +24,13 @@ Required Properties:
+   - clock-names: Name of the clocks. This property is model-dependent.
+     - R8A7779 uses a single functional clock. The clock doesn't need to be
+       named.
+-    - All other DU instances use one functional clock per channel and one
+-      clock per LVDS encoder (if available). The functional clocks must be
+-      named "du.x" with "x" being the channel numerical index. The LVDS clocks
+-      must be named "lvds.x" with "x" being the LVDS encoder numerical index.
+-    - In addition to the functional and encoder clocks, all DU versions also
+-      support externally supplied pixel clocks. Those clocks are optional.
+-      When supplied they must be named "dclkin.x" with "x" being the input
+-      clock numerical index.
++    - All other DU instances use one functional clock per channel The
++      functional clocks must be named "du.x" with "x" being the channel
++      numerical index.
++    - In addition to the functional clocks, all DU versions also support
++      externally supplied pixel clocks. Those clocks are optional. When
++      supplied they must be named "dclkin.x" with "x" being the input clock
++      numerical index.
+ 
+   - vsps: A list of phandle and channel index tuples to the VSPs that handle
+     the memory interfaces for the DU channels. The phandle identifies the VSP
+@@ -69,9 +63,7 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
+ 
+ 	du: display@feb00000 {
+ 		compatible = "renesas,du-r8a7795";
+-		reg = <0 0xfeb00000 0 0x80000>,
+-		      <0 0xfeb90000 0 0x14>;
+-		reg-names = "du", "lvds.0";
++		reg = <0 0xfeb00000 0 0x80000>;
+ 		interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
+@@ -79,9 +71,8 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
+ 		clocks = <&cpg CPG_MOD 724>,
+ 			 <&cpg CPG_MOD 723>,
+ 			 <&cpg CPG_MOD 722>,
+-			 <&cpg CPG_MOD 721>,
+-			 <&cpg CPG_MOD 727>;
+-		clock-names = "du.0", "du.1", "du.2", "du.3", "lvds.0";
++			 <&cpg CPG_MOD 721>;
++		clock-names = "du.0", "du.1", "du.2", "du.3";
+ 		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+ 
+ 		ports {
+-- 
+Regards,
+
+Laurent Pinchart
+
