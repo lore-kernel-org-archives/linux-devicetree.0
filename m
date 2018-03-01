@@ -1,33 +1,35 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] reset: ti-rstctrl: use the reset-simple driver
-Date: Thu, 1 Mar 2018 10:14:47 -0800
-Message-ID: <20180301181447.GG62820@atomide.com>
-References: <20180116011159.1386-1-tony@atomide.com>
- <1516095054.9022.1.camel@pengutronix.de>
- <20180116150314.GC4042@atomide.com>
+Subject: Re: [PATCH 0/2] ARM: dts: amx3xx: add emif interrupt info
+Date: Thu, 1 Mar 2018 10:22:51 -0800
+Message-ID: <20180301182251.GH62820@atomide.com>
+References: <1519657500-15490-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180116150314.GC4042@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Philipp Zabel <philipp.zabel@gmail.com>, Paul Parsons <lost.distance@yahoo.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Mark Rutland <mark.rutland@arm.com>, Nishant Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
+In-Reply-To: <1519657500-15490-1-git-send-email-t-kristo@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, ssantosh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [180116 07:03]:
-> * Philipp Zabel <p.zabel@pengutronix.de> [180116 09:52]:
-> > Looks good to me. Can I move the compatible property when applying?
+* Tero Kristo <t-kristo@ti.com> [180226 07:06]:
+> Hi,
 > 
-> Oops, here's a better version. I also left out the "prcm" part as
-> at some point that should have just ranges instead of both reg and
-> ranges that it currently has.
+> Adding these two patches per the addition of required interrupt property
+> under emif node.
+> 
+> See: https://patchwork.kernel.org/patch/10217053/
 
-Philipp, do you need me to resend v2 of this patch against v4.16-rc?
-
-The changes we discussed with Suman can then be done as
-separate patches as needed :)
-
-Regards,
+Applying both into omap-for-v4.17/dt thanks.
 
 Tony
