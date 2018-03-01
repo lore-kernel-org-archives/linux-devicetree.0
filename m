@@ -1,94 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 04/10] dt-bindings: display: Add Allwinner MIPI-DSI
- bindings
-Date: Thu, 1 Mar 2018 16:15:43 -0600
-Message-ID: <20180301221543.szhh75wplyq4rvhd@rob-hp-laptop>
-References: <cover.68c39205c8726547449e3df67b549d89380e51a2.1519204731.git-series.maxime.ripard@bootlin.com>
- <eb9c3f0c0270334154b48605e2ded542236ced79.1519204731.git-series.maxime.ripard@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/6] Introduce STMicroelectronics MultiFunction eXpander
+Date: Thu, 1 Mar 2018 23:28:46 +0100
+Message-ID: <CACRpkdbd=n=6g+20_sn+_Q_xNpQowa_40o1uzCnRm8vnEnantQ@mail.gmail.com>
+References: <1518100057-23234-1-git-send-email-amelie.delaunay@st.com>
+ <CACRpkdZYnQC5BusLyK5aAcA2q0NmvHu=TaLhFCfu2M0bgBcjrQ@mail.gmail.com> <276d5f97-55c2-406e-92c7-0d03c7f7a49d@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <eb9c3f0c0270334154b48605e2ded542236ced79.1519204731.git-series.maxime.ripard@bootlin.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Daniel Vetter <daniel.vetter@intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <276d5f97-55c2-406e-92c7-0d03c7f7a49d@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMjEsIDIwMTggYXQgMTA6MjA6MjhBTSArMDEwMCwgTWF4aW1lIFJpcGFyZCB3
-cm90ZToKPiBGcm9tOiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25z
-LmNvbT4KPiAKPiBUaGUgQWxsd2lubmVyIFNvQ3MgdXN1YWxseSBjb21lIHdpdGggYSBEU0kgZW5j
-b2Rlci4gQWRkIGEgYmluZGluZyBmb3IgaXQuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWF4aW1lIFJp
-cGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gIERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N1bnhpL3N1bjZpLWRzaS50eHQgfCA4
-NCArKysrKysrLQo+ICAxIGZpbGUgY2hhbmdlZCwgODQgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Vu
-eGkvc3VuNmktZHNpLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW42aS1kc2kudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuNmktZHNpLnR4dAo+IG5ldyBmaWxl
-IG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5jYmNjNjczYjliY2MKPiAtLS0gL2Rl
-di9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-c3VueGkvc3VuNmktZHNpLnR4dAo+IEBAIC0wLDAgKzEsODQgQEAKPiArQWxsd2lubmVyIEEzMSBE
-U0kgRW5jb2Rlcgo+ICs9PT09PT09PT09PT09PT09PT09PT09PT09Cj4gKwo+ICtUaGUgRFNJIHBp
-cGVsaW5lIGNvbnNpc3RzIG9mIHR3byBzZXBhcmF0ZSBibG9ja3M6IHRoZSBEU0kgY29udHJvbGxl
-cgo+ICtpdHNlbGYsIGFuZCBpdHMgYXNzb2NpYXRlZCBELVBIWS4KPiArCj4gK0RTSSBFbmNvZGVy
-Cj4gKy0tLS0tLS0tLS0tCj4gKwo+ICtUaGUgRFNJIEVuY29kZXIgZ2VuZXJhdGVzIHRoZSBEU0kg
-c2lnbmFsIGZyb20gdGhlIFRDT04ncy4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKyAg
-LSBjb21wYXRpYmxlOiB2YWx1ZSBtdXN0IGJlIG9uZSBvZjoKPiArICAgICogYWxsd2lubmVyLHN1
-bjZpLWEzMS1taXBpLWRzaQo+ICsgIC0gcmVnOiBiYXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgbWVt
-b3J5LW1hcHBlZCByZWdpb24KPiArICAtIGludGVycnVwdHM6IGludGVycnVwdCBhc3NvY2lhdGVk
-IHRvIHRoaXMgSVAKPiArICAtIGNsb2NrczogcGhhbmRsZXMgdG8gdGhlIGNsb2NrcyBmZWVkaW5n
-IHRoZSBEU0kgZW5jb2Rlcgo+ICsgICAgKiBidXM6IHRoZSBEU0kgaW50ZXJmYWNlIGNsb2NrCj4g
-KyAgICAqIG1vZDogdGhlIERTSSBtb2R1bGUgY2xvY2sKPiArICAtIGNsb2NrLW5hbWVzOiB0aGUg
-Y2xvY2sgbmFtZXMgbWVudGlvbmVkIGFib3ZlCj4gKyAgLSBwaHlzOiBwaGFuZGxlIHRvIHRoZSBE
-LVBIWQo+ICsgIC0gcGh5LW5hbWVzOiBtdXN0IGJlICJkcGh5Igo+ICsgIC0gcmVzZXRzOiBwaGFu
-ZGxlIHRvIHRoZSByZXNldCBjb250cm9sbGVyIGRyaXZpbmcgdGhlIGVuY29kZXIKPiArCj4gKyAg
-LSBwb3J0czogQSBwb3J0cyBub2RlIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMgYXMgZGVmaW5l
-ZCBpbgo+ICsgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVv
-LWludGVyZmFjZXMudHh0LiBUaGUKPiArICAgIHBvcnQgc2hvdWxkIGJlIHRoZSBpbnB1dCBlbmRw
-b2ludCwgdXN1YWxseSBjb21pbmcgZnJvbSB0aGUKPiArICAgIGFzc29jaWF0ZWQgVENPTi4KPiAr
-Cj4gK0FueSBNSVBJLURTSSBkZXZpY2UgYXR0YWNoZWQgdG8gdGhpcyBzaG91bGQgYmUgZGVzY3Jp
-YmVkIGFjY29yZGluZyB0bwo+ICt0aGUgYmluZGluZ3MgZGVmaW5lZCBpbiAuLi9taXBpLWRzaS1i
-dXMudHh0Cj4gKwo+ICtELVBIWQo+ICstLS0tLQo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoK
-PiArICAtIGNvbXBhdGlibGU6IHZhbHVlIG11c3QgYmUgb25lIG9mOgo+ICsgICAgKiBhbGx3aW5u
-ZXIsc3VuNmktYTMxLW1pcGktZHBoeQo+ICsgIC0gcmVnOiBiYXNlIGFkZHJlc3MgYW5kIHNpemUg
-b2YgbWVtb3J5LW1hcHBlZCByZWdpb24KPiArICAtIGNsb2NrczogcGhhbmRsZXMgdG8gdGhlIGNs
-b2NrcyBmZWVkaW5nIHRoZSBEU0kgZW5jb2Rlcgo+ICsgICAgKiBidXM6IHRoZSBEU0kgaW50ZXJm
-YWNlIGNsb2NrCj4gKyAgICAqIG1vZDogdGhlIERTSSBtb2R1bGUgY2xvY2sKPiArICAtIGNsb2Nr
-LW5hbWVzOiB0aGUgY2xvY2sgbmFtZXMgbWVudGlvbmVkIGFib3ZlCj4gKyAgLSByZXNldHM6IHBo
-YW5kbGUgdG8gdGhlIHJlc2V0IGNvbnRyb2xsZXIgZHJpdmluZyB0aGUgZW5jb2Rlcgo+ICsKPiAr
-RXhhbXBsZToKPiArCj4gK2RzaTA6IGRzaUAxY2EwMDAwIHsKPiArCWNvbXBhdGlibGUgPSAiYWxs
-d2lubmVyLHN1bjZpLWEzMS1taXBpLWRzaSI7Cj4gKwlyZWcgPSA8MHgwMWNhMDAwMCAweDEwMDA+
-Owo+ICsJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDg5IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJ
-Y2xvY2tzID0gPCZjY3UgQ0xLX0JVU19NSVBJX0RTST4sCj4gKwkJIDwmY2N1IENMS19EU0lfU0NM
-Sz47Cj4gKwljbG9jay1uYW1lcyA9ICJidXMiLCAibW9kIjsKPiArCXJlc2V0cyA9IDwmY2N1IFJT
-VF9CVVNfTUlQSV9EU0k+Owo+ICsJcGh5cyA9IDwmZHBoeTA+Owo+ICsJcGh5LW5hbWVzID0gImRw
-aHkiOwo+ICsJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkjc2l6ZS1jZWxscyA9IDwwPjsKPiAr
-Cj4gKwlwYW5lbEAwIHsKPiArCQljb21wYXRpYmxlID0gImh1YXJ1aSxsaHIwNTBoNDEiOwo+ICsJ
-CXJlZyA9IDwwPjsKPiArCQlwb3dlci1ncGlvcyA9IDwmcGlvIDEgNyBHUElPX0FDVElWRV9ISUdI
-PjsgLyogUEIwNyAqLwo+ICsJCXJlc2V0LWdwaW9zID0gPCZyX3BpbyAwIDUgR1BJT19BQ1RJVkVf
-TE9XPjsgLyogUEwwNSAqLwo+ICsJCWJhY2tsaWdodCA9IDwmcHdtX2JsPjsKPiArCX07Cj4gKwo+
-ICsJcG9ydCB7Cj4gKwkJZHNpMF9pbl90Y29uMDogZW5kcG9pbnQgewo+ICsJCQlyZW1vdGUtZW5k
-cG9pbnQgPSA8JnRjb24wX291dF9kc2kwPjsKPiArCQl9Owo+ICsJfTsKCktpbmQgb2Ygb2RkIHRv
-IGhhdmUgYSBtaXh0dXJlIG9mIHBhbmVsIGFuZCBwb3J0LiBJIGd1ZXNzIHRoYXQncyB2YWxpZCAK
-dGhvdWdoLiBJJ2QgcmVjb21tZW5kIHlvdSBwdXQgcG9ydCB1bmRlciBwb3J0cyBub2RlIHNvIGlm
-IHlvdSBldmVyIGhhdmUgCmFub3RoZXIgcG9ydCB5b3UgYXJlIG5vdCBtaXhpbmcgdW5pdC1hZGRy
-ZXNzIHNwYWNlcy4KCldpdGggdGhhdCwKClJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBr
-ZXJuZWwub3JnPgoKPiArfTsKPiArCj4gK2RwaHkwOiBkLXBoeUAxY2ExMDAwIHsKPiArCWNvbXBh
-dGlibGUgPSAiYWxsd2lubmVyLHN1bjZpLWEzMS1taXBpLWRwaHkiOwo+ICsJcmVnID0gPDB4MDFj
-YTEwMDAgMHgxMDAwPjsKPiArCWNsb2NrcyA9IDwmY2N1IENMS19CVVNfTUlQSV9EU0k+LAo+ICsJ
-CSA8JmNjdSBDTEtfRFNJX0RQSFk+Owo+ICsJY2xvY2stbmFtZXMgPSAiYnVzIiwgIm1vZCI7Cj4g
-KwlyZXNldHMgPSA8JmNjdSBSU1RfQlVTX01JUElfRFNJPjsKPiArCSNwaHktY2VsbHMgPSA8MD47
-Cj4gK307Cj4gLS0gCj4gZ2l0LXNlcmllcyAwLjkuMQpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Feb 22, 2018 at 4:13 PM, Amelie DELAUNAY <amelie.delaunay@st.com> wrote:
+
+> ST MFX is different from STMPE as far as the HW is completely different.
+> IDD is a new feature.
+> TS management is completely different.
+> GPIO management looks like but is also rather different.
+> ST MFX counts a first level of 8 interrupts (acked by writing in the ACK
+> register), then a second level of 24 interrupts for GPIOs. GPIO IRQ can
+> be triggered on low level, falling edge, high level, rising edge. GPIO
+> IRQ have to be acked by writing in the GPI_ACK register, GPIO can be
+> output open-drain with/without internal pull-up, output push-pull, input
+> with pull-up/down, input floating or analog.
+
+Okay I am convinced that we need to model this as its own
+driver if it is as different as you say.
+
+But let's keep an eye on STMPE's approaches and what it does
+right and wrong.
+
+If I rewrote the STMPE driver today, the major changes would be
+to use regmap to pass around to subdrivers, and implement a
+combined pin control and GPIO driver, so I think those things should
+be nice to have for the next iteration.
+
+Yours,
+Linus Walleij
