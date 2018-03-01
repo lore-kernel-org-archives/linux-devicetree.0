@@ -1,27 +1,29 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 14/15] clk: stm32: Add clk entry for SDMMC2 on stm32F769
-Date: Thu, 1 Mar 2018 10:12:30 +0100
-Message-ID: <CACRpkdbd-Zz-JRC-_OfKtx28OvDcf0af93pqraP=XPpAN-geVg@mail.gmail.com>
-References: <1516105859-3525-1-git-send-email-patrice.chotard@st.com>
- <1516105859-3525-15-git-send-email-patrice.chotard@st.com> <fb3b26e8-0102-122b-1386-68a661139706@st.com>
+Subject: Re: [PATCH v3 01/10] dt-bindings: pinctrl: Add bindings for Actions
+ S900 SoC
+Date: Thu, 1 Mar 2018 10:20:29 +0100
+Message-ID: <CACRpkdYG_aBJ0WME7NSOdv0pV5Vh_z8GVqQ+tUFnXGA7NGVMUg@mail.gmail.com>
+References: <20180228181432.26847-1-manivannan.sadhasivam@linaro.org> <20180228181432.26847-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fb3b26e8-0102-122b-1386-68a661139706@st.com>
+In-Reply-To: <20180228181432.26847-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrice CHOTARD <patrice.chotard@st.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 26, 2018 at 9:41 AM, Patrice CHOTARD <patrice.chotard@st.com> wrote:
+On Wed, Feb 28, 2018 at 7:14 PM, Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
 
-> Hi Stephen, Michael
+> Add pinctrl bindings for Actions Semi S900 SoC
 >
-> It's a gentle reminder as this patch is present on mailing list and
-> acked-by since 01/12/2018
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-You need Stephen's new kernel.org mail address to reach him.
-(Added on TO:)
+The previous (v2) version had Rob's Review tag, did you just forget
+to add it or has something changed?
+
+If nothing is changed I can add his tag when applying.
 
 Yours,
 Linus Walleij
