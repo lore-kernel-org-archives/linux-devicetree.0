@@ -1,13 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v3 01/16] clk: sunxi-ng: Add check for minimal
- rate to NM PLLs
-Date: Thu,  1 Mar 2018 22:34:27 +0100
-Message-ID: <20180301213442.16677-2-jernej.skrabec@siol.net>
+Subject: [PATCH v3 02/16] clk: sunxi-ng: h3: h5: Add minimal
+ rate for video PLL
+Date: Thu,  1 Mar 2018 22:34:28 +0100
+Message-ID: <20180301213442.16677-3-jernej.skrabec@siol.net>
 References: <20180301213442.16677-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBAHE4HKAKGQEIJB3LKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBAXE4HKAKGQE2PXP6FY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180301213442.16677-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,79 +20,58 @@ To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2F
 Cc: jernej.skrabec-gGgVlfcn5nU@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some NM PLLs doesn't work well when their output clock rate is set below
-certain rate.
+Although user manuals for H3 and H5 SoCs state that minimal rate
+supported by video PLL is around 30 MHz, it seems that in reality
+minimal rate is around 192 MHz.
 
-Add support for that constrain.
+Experiments showed that any rate below 96 MHz doesn't produce any video
+output at all. Even at this frequency, stable output depends on right
+factors. For example, when N = 4 and M = 1, output is stable and when N
+= 8 and M = 2, it's not.
+
+BSP clock driver suggest that minimum stable frequency is 192 MHz. That
+would also be in line with A64 SoC, which has similar periphery.
+
+Set minimal video PLL rate for H3/H5 to 192 MHz.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/clk/sunxi-ng/ccu_nm.c |  7 +++++++
- drivers/clk/sunxi-ng/ccu_nm.h | 27 +++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+)
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu_nm.c b/drivers/clk/sunxi-ng/ccu_nm.c
-index a16de092bf94..4e2073307f34 100644
---- a/drivers/clk/sunxi-ng/ccu_nm.c
-+++ b/drivers/clk/sunxi-ng/ccu_nm.c
-@@ -117,6 +117,13 @@ static long ccu_nm_round_rate(struct clk_hw *hw, unsigned long rate,
- 	if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
- 		rate *= nm->fixed_post_div;
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+index 29bc0566b776..b9f39078c0b2 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+@@ -69,17 +69,18 @@ static SUNXI_CCU_NM_WITH_SDM_GATE_LOCK(pll_audio_base_clk, "pll-audio-base",
+ 				       BIT(28),	/* lock */
+ 				       CLK_SET_RATE_UNGATE);
  
-+	if (rate < nm->min_rate) {
-+		rate = nm->min_rate;
-+		if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
-+			rate /= nm->fixed_post_div;
-+		return rate;
-+	}
-+
- 	if (ccu_frac_helper_has_rate(&nm->common, &nm->frac, rate)) {
- 		if (nm->common.features & CCU_FEATURE_FIXED_POSTDIV)
- 			rate /= nm->fixed_post_div;
-diff --git a/drivers/clk/sunxi-ng/ccu_nm.h b/drivers/clk/sunxi-ng/ccu_nm.h
-index eba586b4c7d0..1d8b459c50b7 100644
---- a/drivers/clk/sunxi-ng/ccu_nm.h
-+++ b/drivers/clk/sunxi-ng/ccu_nm.h
-@@ -37,6 +37,7 @@ struct ccu_nm {
- 	struct ccu_sdm_internal		sdm;
+-static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_video_clk, "pll-video",
+-					"osc24M", 0x0010,
+-					8, 7,		/* N */
+-					0, 4,		/* M */
+-					BIT(24),	/* frac enable */
+-					BIT(25),	/* frac select */
+-					270000000,	/* frac rate 0 */
+-					297000000,	/* frac rate 1 */
+-					BIT(31),	/* gate */
+-					BIT(28),	/* lock */
+-					CLK_SET_RATE_UNGATE);
++static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN(pll_video_clk, "pll-video",
++					    "osc24M", 0x0010,
++					    192000000,	/* Minimum rate */
++					    8, 7,	/* N */
++					    0, 4,	/* M */
++					    BIT(24),	/* frac enable */
++					    BIT(25),	/* frac select */
++					    270000000,	/* frac rate 0 */
++					    297000000,	/* frac rate 1 */
++					    BIT(31),	/* gate */
++					    BIT(28),	/* lock */
++					    CLK_SET_RATE_UNGATE);
  
- 	unsigned int		fixed_post_div;
-+	unsigned int		min_rate;
- 
- 	struct ccu_common	common;
- };
-@@ -88,6 +89,32 @@ struct ccu_nm {
- 		},							\
- 	}
- 
-+#define SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN(_struct, _name, _parent,	\
-+					     _reg, _min_rate,		\
-+					     _nshift, _nwidth,		\
-+					     _mshift, _mwidth,		\
-+					     _frac_en, _frac_sel,	\
-+					     _frac_rate_0, _frac_rate_1,\
-+					     _gate, _lock, _flags)	\
-+	struct ccu_nm _struct = {					\
-+		.enable		= _gate,				\
-+		.lock		= _lock,				\
-+		.n		= _SUNXI_CCU_MULT(_nshift, _nwidth),	\
-+		.m		= _SUNXI_CCU_DIV(_mshift, _mwidth),	\
-+		.frac		= _SUNXI_CCU_FRAC(_frac_en, _frac_sel,	\
-+						  _frac_rate_0,		\
-+						  _frac_rate_1),	\
-+		.min_rate	= _min_rate,				\
-+		.common		= {					\
-+			.reg		= _reg,				\
-+			.features	= CCU_FEATURE_FRACTIONAL,	\
-+			.hw.init	= CLK_HW_INIT(_name,		\
-+						      _parent,		\
-+						      &ccu_nm_ops,	\
-+						      _flags),		\
-+		},							\
-+	}
-+
- #define SUNXI_CCU_NM_WITH_GATE_LOCK(_struct, _name, _parent, _reg,	\
- 				    _nshift, _nwidth,			\
- 				    _mshift, _mwidth,			\
+ static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_ve_clk, "pll-ve",
+ 					"osc24M", 0x0018,
 -- 
 2.16.2
