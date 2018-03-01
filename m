@@ -1,62 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] arm: dts: stih4xx: Add missing #sound-dai-cells
-Date: Thu,  1 Mar 2018 14:25:36 -0600
-Message-ID: <20180301202537.30571-4-robh@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 01/25] dt-bindings: soc: qcom: Add
+	bindings for APR bus
+Date: Thu, 1 Mar 2018 20:34:13 +0000
+Message-ID: <20180301203413.GN12864@sirena.org.uk>
+References: <20180213165837.1620-1-srinivas.kandagatla@linaro.org>
+ <20180213165837.1620-2-srinivas.kandagatla@linaro.org>
+ <20180213231244.ama4bwsehzuh5sr7@rob-hp-laptop>
+ <ae65a9c8-85a3-5494-f4cc-1038fd8c9bd1@linaro.org>
+ <20180218230414.dkd6kb6kd35arcyv@rob-hp-laptop>
+ <636d4ac2-3bc2-7290-1645-0451c089cb8a@linaro.org>
+ <CAL_JsqK3KFBGqpHRaURSrHew1HhObUvFYxuhND-FOQ4tCUaAHg@mail.gmail.com>
+ <465a2ca7-9f74-8977-37ea-29fe3944c27c@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: arm@kernel.org, Patrice Chotard <patrice.chotard@st.com>
+Content-Type: multipart/mixed; boundary="===============7602579530052523267=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <465a2ca7-9f74-8977-37ea-29fe3944c27c@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Banajit Goswami <bgoswami@codeaurora.org>, rohkumar@qti.qualcomm.com, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Patrick Lai <plai@codeaurora.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, David Brown <david.brown@linaro.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, spatakok@qti.qualcomm.com, Andy Gross <andy.gross@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-dtc now gives the following warnings:
 
-arch/arm/boot/dts/stih410-b2120.dtb: Warning (sound_dai_property): /soc/sound/simple-audio-card,dai-link@0/codec: Missing property '#sound-dai-cells' in node /soc/sti-display-subsystem/sti-hdmi@8d04000 or bad phandle (referred from sound-dai[0])
-arch/arm/boot/dts/stih407-b2120.dtb: Warning (sound_dai_property): /soc/sound/simple-audio-card,dai-link@0/codec: Missing property '#sound-dai-cells' in node /soc/sti-display-subsystem/sti-hdmi@8d04000 or bad phandle (referred from sound-dai[0])
-arch/arm/boot/dts/stih410-b2260.dtb: Warning (sound_dai_property): /soc/sound/simple-audio-card,dai-link@0/codec: Missing property '#sound-dai-cells' in node /soc/sti-display-subsystem/sti-hdmi@8d04000 or bad phandle (referred from sound-dai[0])
+--===============7602579530052523267==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3rMDlCEgcaHQQFB+"
+Content-Disposition: inline
 
-Add the missing #sound-dai-cells property.
 
-Cc: Patrice Chotard <patrice.chotard@st.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/arm/boot/dts/stih407.dtsi | 1 +
- arch/arm/boot/dts/stih410.dtsi | 1 +
- 2 files changed, 2 insertions(+)
+--3rMDlCEgcaHQQFB+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
-index 11fdecd9312e..b592ecbe6420 100644
---- a/arch/arm/boot/dts/stih407.dtsi
-+++ b/arch/arm/boot/dts/stih407.dtsi
-@@ -107,6 +107,7 @@
- 				compatible = "st,stih407-hdmi";
- 				reg = <0x8d04000 0x1000>;
- 				reg-names = "hdmi-reg";
-+				#sound-dai-cells = <0>;
- 				interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
- 				interrupt-names	= "irq";
- 				clock-names = "pix",
-diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-index 68b5ff91d6a7..4bcdbbb70a31 100644
---- a/arch/arm/boot/dts/stih410.dtsi
-+++ b/arch/arm/boot/dts/stih410.dtsi
-@@ -198,6 +198,7 @@
- 				compatible = "st,stih407-hdmi";
- 				reg = <0x8d04000 0x1000>;
- 				reg-names = "hdmi-reg";
-+				#sound-dai-cells = <0>;
- 				interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
- 				interrupt-names	= "irq";
- 				clock-names = "pix",
--- 
-2.14.1
+On Thu, Feb 22, 2018 at 10:03:42AM +0000, Srinivas Kandagatla wrote:
+> On 22/02/18 00:14, Rob Herring wrote:
+
+> > Am I saying a single DT node for this? Yes, perhaps.
+> Yes, I will give that a go.
+>=20
+> So we will endup having something like this in DT for one frontend and
+> backend dailink:
+
+Let's not start encoding DPCM into DT, DPCM is very much an
+implemntation detail of the current stack which we're gradually pushing
+towards replacing with something better.  What we want to be doing is
+just treating components inside the SoC the same as components in a
+CODEC, the routing within a SoC being the same as in a CODEC and
+similarly for externally connected devices.
+
+> 		fe@1 {
+>                 	is-fe;
+>                         link-name =3D "MultiMedia1";
+
+In particular having the concept of "front end" in the DT is *very*
+implementation specific.  We should just be describing the connections
+that exist in the system.
+
+--3rMDlCEgcaHQQFB+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqYY8QACgkQJNaLcl1U
+h9A2AQf/afU7I+Vlh5qhOLI+4+E9POiqDGkF2eC13xgr1bKvvC1JNlQFVnEpm4QM
+xonSvnwf2rv7WLTSP6lClTLAjvXdW4qQ5KvfR6U78HxabliiJyK2aiBVjolPWjse
+qvqHHciRTdA3LZmpmGE/rdo3lNAEkiCIHJups7g8spE9Dto6EaMS4Dp05q8OumgD
+1DRyte5vIF9m0geqjgexGeTbADs2SwQvdBDdl1PH2Wap/lan8ricHEBVwJlz94LF
+A2suvzqCPUUpCdd3vf2CaTo50oQf3Zb4mPD0iKXmpIrx2NFnB6DpqvQsH5EMFkD/
+lbxRSeYYJNNSXVbCJYd64Uqez55P3A==
+=9CV7
+-----END PGP SIGNATURE-----
+
+--3rMDlCEgcaHQQFB+--
+
+--===============7602579530052523267==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7602579530052523267==--
