@@ -1,8 +1,8 @@
 From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v2 2/6] dt-bindings: phy-rockchip-typec: move extcon property
- to be optional.
-Date: Thu,  1 Mar 2018 16:25:11 +0100
-Message-ID: <20180301152515.20940-3-enric.balletbo@collabora.com>
+Subject: [PATCH v2 4/6] arm64: dts: rockchip: enable typec-phy for
+ rk3399-firefly.
+Date: Thu,  1 Mar 2018 16:25:13 +0100
+Message-ID: <20180301152515.20940-5-enric.balletbo@collabora.com>
 References: <20180301152515.20940-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,37 +19,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: kishon@ti.com, heiko@sntech.de
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, gwendal@chromium.org, linux-kernel@vger.kernel.org, vicencb@gmail.com, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, groeck@chromium.org, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, gwendal@chromium.org, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, vicencb@gmail.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, groeck@chromium.org, Pierre-Hugues Husson <phh@phh.me>, kernel@collabora.com, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The extcon property is used to detect the cable-state but some boards
-just connect the type-c phy to a regular USB-A connector without any
-power-delivery and thus no controller reporting the cable-state.
-So the extcon property is not really a required property, move it to be
-optional instead.
+Commit c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port
+support for rk3399") caused a regression regarding the USB3. During boot,
+the following message appears a few times:
 
+      dwc3: failed to initialize core
+
+The driver is deferred waiting for the typec-phy, but this never happens
+beause is disabled. So, enable it.
+
+Fixes: c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port support for rk3399")
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 ---
 
-Changes in v2:
-- [2/6] Rewrite the justification as suggested by Heiko Stuebner.
+Changes in v2: None
 
- Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399-firefly.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-index 6ea867e3176f..a66f23a01129 100644
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-typec.txt
-@@ -14,6 +14,8 @@ Required properties:
-  - resets : a list of phandle + reset specifier pairs
-  - reset-names : string reset name, must be:
- 		 "uphy", "uphy-pipe", "uphy-tcphy"
-+
-+Optional properties:
-  - extcon : extcon specifier for the Power Delivery
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+index 4f28628aa091..0e3a9ab4a297 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-firefly.dts
+@@ -670,6 +670,14 @@
+ 	status = "okay";
+ };
  
- Note, there are 2 type-c phys for RK3399, and they are almost identical, except
++&tcphy0 {
++	status = "okay";
++};
++
++&tcphy1 {
++	status = "okay";
++};
++
+ &u2phy0 {
+ 	status = "okay";
+ 
 -- 
 2.16.1
