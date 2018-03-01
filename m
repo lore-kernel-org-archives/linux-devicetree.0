@@ -1,48 +1,82 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 1/2] DT: display: renesas,lvds: document R8A77970 bindings
-Date: Thu, 1 Mar 2018 21:08:41 +0300
-Message-ID: <d79e6c1f-a3ee-68ca-8889-111571cb32a7@cogentembedded.com>
-References: <df9de4e7-cf72-cdb5-5111-9fd616f51509@cogentembedded.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/6] scripts/dtc: generate lexer and parser during build
+ instead of shipping
+Date: Thu, 1 Mar 2018 12:13:49 -0600
+Message-ID: <CAL_JsqLvGAtgnLnQMm9b0qyHdt+RKD1WLqg3PKXQ=WjKwFG9Kw@mail.gmail.com>
+References: <20180228233249.26281-1-robh@kernel.org> <20180228233249.26281-5-robh@kernel.org>
+ <CAK7LNATiM0o4KX1Lt+cP6APVzTMVN195yiuUiD9Ny5roZgrK1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <df9de4e7-cf72-cdb5-5111-9fd616f51509@cogentembedded.com>
-Content-Language: en-MW
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNATiM0o4KX1Lt+cP6APVzTMVN195yiuUiD9Ny5roZgrK1g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIFItQ2FyIFYzTSAoUjhBNzc5NzApIFNvQyBpbiB0aGUgUi1DYXIgTFZEUyBi
-aW5kaW5ncy4KClNpZ25lZC1vZmYtYnk6IFNlcmdlaSBTaHR5bHlvdiA8c2VyZ2VpLnNodHlseW92
-QGNvZ2VudGVtYmVkZGVkLmNvbT4KUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
-bC5vcmc+ClJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlk
-ZWFzb25ib2FyZC5jb20+CgotLS0KQ2hhbmdlcyBpbiB2ZXJzaW9uIDI6Ci0gYWRkZWQgUm9iJ3Mg
-YW5kIExhdXJlbnQncyB0YWdzLgoKIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0IHwgICAgMSArCiAxIGZpbGUgY2hhbmdlZCwg
-MSBpbnNlcnRpb24oKykKCkluZGV4OiBsaW51eC9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dAo9PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Ci0tLSBsaW51
-eC5vcmlnL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9y
-ZW5lc2FzLGx2ZHMudHh0CisrKyBsaW51eC9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dApAQCAtMTMsNiArMTMsNyBAQCBSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgogICAtICJyZW5lc2FzLHI4YTc3OTMtbHZkcyIgZm9yIFI4QTc3OTEg
-KFItQ2FyIE0yLU4pIGNvbXBhdGlibGUgTFZEUyBlbmNvZGVycwogICAtICJyZW5lc2FzLHI4YTc3
-OTUtbHZkcyIgZm9yIFI4QTc3OTUgKFItQ2FyIEgzKSBjb21wYXRpYmxlIExWRFMgZW5jb2RlcnMK
-ICAgLSAicmVuZXNhcyxyOGE3Nzk2LWx2ZHMiIGZvciBSOEE3Nzk2IChSLUNhciBNMy1XKSBjb21w
-YXRpYmxlIExWRFMgZW5jb2RlcnMKKyAgLSAicmVuZXNhcyxyOGE3Nzk3MC1sdmRzIiBmb3IgUjhB
-Nzc5NzAgKFItQ2FyIFYzTSkgY29tcGF0aWJsZSBMVkRTIGVuY29kZXJzCiAKIC0gcmVnOiBCYXNl
-IGFkZHJlc3MgYW5kIGxlbmd0aCBmb3IgdGhlIG1lbW9yeS1tYXBwZWQgcmVnaXN0ZXJzCiAtIGNs
-b2NrczogQSBwaGFuZGxlICsgY2xvY2stc3BlY2lmaWVyIHBhaXIgZm9yIHRoZSBmdW5jdGlvbmFs
-IGNsb2NrCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Feb 28, 2018 at 10:34 PM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> 2018-03-01 8:32 GMT+09:00 Rob Herring <robh@kernel.org>:
+>> Now that the kernel build supports flex and bison, remove the _shipped
+>> files and generate them during the build instead.
+>>
+>> Based on Masahiro's original patch.
+>>
+>> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  scripts/dtc/Makefile                 |    6 +-
+>>  scripts/dtc/dtc-lexer.lex.c_shipped  | 2259 ---------------------------------
+>>  scripts/dtc/dtc-parser.tab.c_shipped | 2321 ----------------------------------
+>>  scripts/dtc/dtc-parser.tab.h_shipped |  125 --
+>>  scripts/dtc/update-dtc-source.sh     |    5 -
+>
+>
+>
+>
+> As you know, this introduces
+> scripts/dtc/dtc-parser.y: warning: 3 shift/reduce conflicts [-Wconflicts-sr]
+> then, the next commit will fix it.
+>
+> I do not have a strong opinion about the parch order.
+> It would be ridiculous to update *_shipped
+> that will be immediately removed.  So, probably this is OK.
+>
+>
+>
+> FWIW.
+>
+> This is completely out of realm of my field since
+> I speak Japanese in my daily life.
+>
+> Is it better to change
+> the 'singular vs plural' in the comment block?
+>
+>
+> # This script assumes that the dtc and the linux git trees are in the
+> # same directory. After building dtc in the dtc directory, it copies the
+> # source files and generated source files into the scripts/dtc directory
+> # in the kernel and creates a git commit updating them to the new
+> # version.
+>
+>
+> After this commit, 'version_gen.h' will be the only generated file.
+> "generated source files" sounds like we have more.
+
+You are right as we do have that hidden generated file. I worry
+changing it could become stale too if we add more generated files
+sometime in the future. I've changed it to "generated source file(s)"
+to cover both cases. Not sure that's really proper English grammar,
+but it is widely used.
+
+> Please take it FWIW.
+> I am just nit-picking
+> according to what I learned at junior high school, which might be wrong.
+>
+>
+>
+> Otherwise,
+>
+> Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+Thanks.
