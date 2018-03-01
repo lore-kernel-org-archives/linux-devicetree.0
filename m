@@ -1,36 +1,40 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4] Input: gpio_keys: Add level trigger support for GPIO keys
-Date: Thu, 1 Mar 2018 14:09:06 +0200
-Message-ID: <CAHp75VcgUmOoo-jRbM-Gyp1JTY-2rJri8e7u2miYSvRM_4HmPg@mail.gmail.com>
-References: <9ea2faf9c1cf8439f3a8ad495c6a2b49dacad7bd.1519889208.git.baolin.wang@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH RESEND] arm64: dts: hi6220: enable watchdog
+Date: Thu,  1 Mar 2018 20:18:47 +0800
+Message-ID: <1519906727-11135-1-git-send-email-leo.yan@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9ea2faf9c1cf8439f3a8ad495c6a2b49dacad7bd.1519889208.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stephen lu <lumotuwe@gmail.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>, Joseph Lo <josephl@nvidia.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Thomas Gleixner <tglx@linutronix.de>, linux-input <linux-input@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+To: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Dmitry Shmidt <dimitrysh@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 1, 2018 at 9:36 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
-> On some platforms (such as Spreadtrum platform), the GPIO keys can only
-> be triggered by level type. So this patch introduces one trigger_type to
-> indicate if the button's interrupt type is level trigger or edge trigger.
+From: Dmitry Shmidt <dimitrysh@google.com>
 
->                         button->irq =
->                                 irq_of_parse_and_map(to_of_node(child), 0);
+This patch is to add watchdog binding for Hi6220 on Hikey board.
 
-AFAIU, 0 means NO_IRQ, thus,
+Signed-off-by: Dmitry Shmidt <dimitrysh@google.com>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> +                       if (button->irq)
-> +                               button->trigger_type =
-> +                                       irq_get_trigger_type(button->irq);
-
-irq_get_trigger_type(NO_IRQ) should return 0.
-
-Therefore, if (button->irq) is redundant.
-Did I miss anything?
-
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 6a180d1..e9d5bb6 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -817,6 +817,14 @@
+ 			pinctrl-1 = <&sdio_pmx_idle &sdio_clk_cfg_idle &sdio_cfg_idle>;
+ 		};
+ 
++		watchdog0: watchdog@f8005000 {
++			compatible = "arm,sp805-wdt", "arm,primecell";
++			reg = <0x0 0xf8005000 0x0 0x1000>;
++			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ao_ctrl HI6220_WDT0_PCLK>;
++			clock-names = "apb_pclk";
++		};
++
+ 		tsensor: tsensor@0,f7030700 {
+ 			compatible = "hisilicon,tsensor";
+ 			reg = <0x0 0xf7030700 0x0 0x1000>;
 -- 
-With Best Regards,
-Andy Shevchenko
+2.7.4
