@@ -1,27 +1,84 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH 2/3] mailbox: Avoid NULL dereference in mbox_chan_received_data
-Date: Thu, 1 Mar 2018 19:02:34 +0530
-Message-ID: <CABb+yY04Fdv16RKAOZ=Tr7KnEOCJnXpGF0pEgy8DjREqEixiqA@mail.gmail.com>
-References: <20180228022714.30068-1-samuel@sholland.org> <20180228022714.30068-3-samuel@sholland.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v5 3/4] drivers: firmware: xilinx: Add sysfs interface
+Date: Thu, 1 Mar 2018 14:32:24 +0100
+Message-ID: <3e14f7b3-52e7-660a-a2f7-cc23b3262f0a@monstr.eu>
+References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
+ <1519154467-2896-4-git-send-email-jollys@xilinx.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="T5SveNFf9S9pbl8ytpIx2dCLdT0veqDBk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180228022714.30068-3-samuel@sholland.org>
+In-Reply-To: <1519154467-2896-4-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Holland <samuel@sholland.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ", linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, srv_heupstream" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
+To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org, mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk, sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org, dmitry.torokhov@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, rajanv@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 28, 2018 at 7:57 AM, Samuel Holland <samuel@sholland.org> wrote:
-> If a reception IRQ is pending when a mailbox channel is shut down (for
-> example, if the controller uses threaded interrupts), it is possible for
-> mbox_chan_received_data to be called while chan->cl is NULL.
->
-We can add a check in mailbox.c, but that is like shoving it under the carpet.
-How does your code look like?  mbox_chan_received_data() is meant to
-be called from interrupt context as its documentation says.
-Also the controller driver is responsible for ceasing any transient
-xfer before returning from shutdown() callback.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--T5SveNFf9S9pbl8ytpIx2dCLdT0veqDBk
+Content-Type: multipart/mixed; boundary="XvUM08OxZLrZUW5ISXBJsNzdJnJoO3JTs";
+ protected-headers="v1"
+From: Michal Simek <monstr@monstr.eu>
+Reply-To: monstr@monstr.eu
+To: Jolly Shah <jolly.shah@xilinx.com>, ard.biesheuvel@linaro.org,
+ mingo@kernel.org, gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
+ sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org,
+ dmitry.torokhov@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org,
+ mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, rajanv@xilinx.com,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Jolly Shah <jollys@xilinx.com>
+Message-ID: <3e14f7b3-52e7-660a-a2f7-cc23b3262f0a@monstr.eu>
+Subject: Re: [PATCH v5 3/4] drivers: firmware: xilinx: Add sysfs interface
+References: <1519154467-2896-1-git-send-email-jollys@xilinx.com>
+ <1519154467-2896-4-git-send-email-jollys@xilinx.com>
+In-Reply-To: <1519154467-2896-4-git-send-email-jollys@xilinx.com>
 
-Cheers!
+--XvUM08OxZLrZUW5ISXBJsNzdJnJoO3JTs
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 20.2.2018 20:21, Jolly Shah wrote:
+> Add Firmware-ggs sysfs interface which provides read/write
+> interface to global storage registers.
+>=20
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+> ---
+>  .../ABI/stable/sysfs-driver-zynqmp-firmware        |  50 ++++
+
+This file name has changed between v4 and v5. File from v4 was correct.
+That's why I am waiting for v6 to be send before this is applied.
+
+Thanks,
+Michal
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
+
+
+
+--XvUM08OxZLrZUW5ISXBJsNzdJnJoO3JTs--
+
+--T5SveNFf9S9pbl8ytpIx2dCLdT0veqDBk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iEYEARECAAYFAlqYAOsACgkQykllyylKDCF6ggCeIpeJunxbLo3V8NGfUDFPBu/y
+L/oAoJU6oRhlFAjv39Mfw4wPs2HhB9Wi
+=OP/I
+-----END PGP SIGNATURE-----
+
+--T5SveNFf9S9pbl8ytpIx2dCLdT0veqDBk--
