@@ -1,83 +1,122 @@
-Return-Path: <SRS0=hUgu=FX=bootlin.com=maxime.ripard@kernel.org>
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v5 0/2] media: v4l: Add support for the Cadence MIPI-CSI2 TX controller
-Date: Thu,  1 Mar 2018 12:30:47 +0100
-Message-Id: <20180301113049.16470-1-maxime.ripard@bootlin.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Return-Path: <SRS0=Pbk3=FX=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from galahad.ideasonboard.com ([185.26.127.97]:50134 "EHLO
+        galahad.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1161413AbeCAWEy (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 1 Mar 2018 17:04:54 -0500
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v7 1/4] dt-bindings: display: renesas: Add R-Car LVDS encoder DT bindings
+Date: Fri,  2 Mar 2018 00:05:36 +0200
+Message-Id: <20180301220540.11959-2-laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <20180301220540.11959-1-laurent.pinchart+renesas@ideasonboard.com>
+References: <20180301220540.11959-1-laurent.pinchart+renesas@ideasonboard.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: dri-devel@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+The Renesas R-Car Gen2 and Gen3 SoCs have internal LVDS encoders. Add
+corresponding device tree bindings.
 
-Here is an attempt at supporting the MIPI-CSI2 TX block from Cadence.
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+---
+Changes since v6:
 
-This IP block is able to receive 4 video streams and stream them over
-a MIPI-CSI2 link using up to 4 lanes. Those streams are basically the
-interfaces to controllers generating some video signals, like a camera
-or a pattern generator.
+- Fixed typo in SoC name
 
-It is able to map input streams to CSI2 virtual channels and datatypes
-dynamically. The streaming devices choose their virtual channels
-through an additional signal that is transparent to the CSI2-TX. The
-datatypes however are yet another additional input signal, and can be
-mapped to any CSI2 datatypes.
+Changes since v1:
 
-Since v4l2 doesn't really allow for that setup at the moment, this
-preliminary version is a rather dumb one in order to start the
-discussion on how to address this properly.
+- Move the SoC name before the IP name in compatible strings
+- Rename parallel input to parallel RGB input
+- Fixed "renesas,r8a7743-lvds" description
+- Document the resets property
+- Fixed typo
+---
+ .../bindings/display/bridge/renesas,lvds.txt       | 56 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
 
-Let me know what you think!
-Maxime
-
-Changes from v4:
-  - After playing a bit with the pad multiplexing patches, found that it
-    was making much more sense to have the subdev notifiers for the source
-    subdev rather for the sink that might even be outside of Linux control.
-    Removed the notifier for now.
-
-Changes from v3:
-  - Added a comment about entity links walk concurrency
-  - Changed the default resolution to 1280x720
-  - Changed usleep_range calls to udelay
-  - Reworked the reference counting mechanism to remove a race
-    condition by adding a mutex instead of an atomic count
-  - Changed the entity function to MEDIA_ENT_F_VID_IF_BRIDGE
-  - Changed the name of the reg variable in _get_resources to dev_cfg
-  - Removed the redundant error message in the devm_ioremap_resource
-    error path
-  - Moved the subdev s_stream call before enabling the TX bridge
-  - Changed some int types to unsigned
-  - Init'd the pad formats properly
-  - Fixed typo in the CSI2TX_LANES_MAX define name
-  - Added Sakari Acked-by
-
-Changes from v2:
-  - Use SPDX license header
-  - Use the lane mapping from DT
-
-Changes from v1:
-  - Add a subdev notifier and start our downstream subdevice in
-    s_stream  
-  - Based the decision to enable the stream or not on the link state
-    instead of whether a format was being set on the pad
-  - Put the controller back in reset when stopping the pipeline
-  - Clarified the enpoints number in the DT binding
-  - Added a default format for the pads
-  - Added some missing const
-  - Added more explicit comments
-  - Rebased on 4.15
-
-Maxime Ripard (2):
-  dt-bindings: media: Add Cadence MIPI-CSI2 TX Device Tree bindings
-  v4l: cadence: Add Cadence MIPI-CSI2 TX driver
-
- .../devicetree/bindings/media/cdns,csi2tx.txt      |  98 ++++
- drivers/media/platform/cadence/Kconfig             |  11 +
- drivers/media/platform/cadence/Makefile            |   1 +
- drivers/media/platform/cadence/cdns-csi2tx.c       | 527 +++++++++++++++++++++
- 4 files changed, 637 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/cdns,csi2tx.txt
- create mode 100644 drivers/media/platform/cadence/cdns-csi2tx.c
-
+diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+new file mode 100644
+index 000000000000..af45ba9d8f90
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+@@ -0,0 +1,56 @@
++Renesas R-Car LVDS Encoder
++==========================
++
++These DT bindings describe the LVDS encoder embedded in the Renesas R-Car
++Gen2, R-Car Gen3 and RZ/G SoCs.
++
++Required properties:
++
++- compatible : Shall contain one of
++  - "renesas,r8a7743-lvds" for R8A7743 (RZ/G1M) compatible LVDS encoders
++  - "renesas,r8a7790-lvds" for R8A7790 (R-Car H2) compatible LVDS encoders
++  - "renesas,r8a7791-lvds" for R8A7791 (R-Car M2-W) compatible LVDS encoders
++  - "renesas,r8a7793-lvds" for R8A7793 (R-Car M2-N) compatible LVDS encoders
++  - "renesas,r8a7795-lvds" for R8A7795 (R-Car H3) compatible LVDS encoders
++  - "renesas,r8a7796-lvds" for R8A7796 (R-Car M3-W) compatible LVDS encoders
++
++- reg: Base address and length for the memory-mapped registers
++- clocks: A phandle + clock-specifier pair for the functional clock
++- resets: A phandle + reset specifier for the module reset
++
++Required nodes:
++
++The LVDS encoder has two video ports. Their connections are modelled using the
++OF graph bindings specified in Documentation/devicetree/bindings/graph.txt.
++
++- Video port 0 corresponds to the parallel RGB input
++- Video port 1 corresponds to the LVDS output
++
++Each port shall have a single endpoint.
++
++
++Example:
++
++	lvds0: lvds@feb90000 {
++		compatible = "renesas,r8a7790-lvds";
++		reg = <0 0xfeb90000 0 0x1c>;
++		clocks = <&cpg CPG_MOD 726>;
++		resets = <&cpg 726>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				lvds0_in: endpoint {
++					remote-endpoint = <&du_out_lvds0>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				lvds0_out: endpoint {
++				};
++			};
++		};
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2afba909724c..13c8ec11135a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -4744,6 +4744,7 @@ F:	drivers/gpu/drm/rcar-du/
+ F:	drivers/gpu/drm/shmobile/
+ F:	include/linux/platform_data/shmob_drm.h
+ F:	Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
++F:	Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+ F:	Documentation/devicetree/bindings/display/renesas,du.txt
+ 
+ DRM DRIVERS FOR ROCKCHIP
 -- 
-2.14.3
+Regards,
+
+Laurent Pinchart
+
