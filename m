@@ -1,97 +1,53 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: add support for STM32 USB PHY
- Controller (USBPHYC)
-Date: Fri, 2 Mar 2018 11:32:57 +0530
-Message-ID: <bac8ba1a-dd66-4df6-1976-c6144e35040c@ti.com>
-References: <1519918245-17333-1-git-send-email-amelie.delaunay@st.com>
- <1519918245-17333-2-git-send-email-amelie.delaunay@st.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: add bindings doc for HiSilicon INNO
+ USB2 PHY
+Date: Fri, 2 Mar 2018 11:55:57 +0530
+Message-ID: <c1f60df2-20d1-53ac-6cf7-9c81baea789c@ti.com>
+References: <1519888940-23235-1-git-send-email-shawn.guo@linaro.org>
+ <1519888940-23235-2-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519918245-17333-2-git-send-email-amelie.delaunay@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519888940-23235-2-git-send-email-shawn.guo@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pengcheng Li <lpc.li@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On Thursday 01 March 2018 09:00 PM, Amelie Delaunay wrote:
-> This patch adds the device tree bindings description for STM32 USBPHYC
-> (USB PHY Controller).
+On Thursday 01 March 2018 12:52 PM, Shawn Guo wrote:
+> From: Pengcheng Li <lpc.li@hisilicon.com>
 > 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> It adds device tree bindings document for HiSilicon INNO USB2 PHY.
+> 
+> Signed-off-by: Pengcheng Li <lpc.li@hisilicon.com>
+> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 > ---
->  .../devicetree/bindings/phy/phy-stm32-usbphyc.txt  | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+>  .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt | 52 ++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+> diff --git a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
 > new file mode 100644
-> index 0000000..1ad3893
+> index 000000000000..b563cf54ca7b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
-> @@ -0,0 +1,46 @@
-> +STMicroelectronics STM32 USB HS PHY controller
+> +++ b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> @@ -0,0 +1,52 @@
+> +HiSilicon INNO USB2 PHY
 > +
-> +The STM32 USBPHYC block contains a dual port High Speed UTMI+ PHY and a UTMI
-> +switch. It controls PHY configuration and status, and the UTMI+ switch that
-> +selects either OTG or HOST controller for the second PHY port. It also sets
-> +PLL configuration.
-> +
-> +USBPHYC
-> +      |_ PLL
-> +      |
-> +      |_ PHY port#1 _________________ HOST controller
-> +      |                    _                 |
-> +      |                  / 1|________________|
-> +      |_ PHY port#2 ----|   |________________
-> +      |                  \_0|                |
-> +      |_ UTMI switch_______|          OTG controller
-> +
-> +
+> +Required properties:
+> +- compatible: Should be one of the following strings:
+> +	"hisilicon,inno-usb2-phy",
+> +	"hisilicon,hi3798cv200-usb2-phy".
+> +- reg: Should be the address space for PHY configuration register in peripheral
+> +  controller, e.g. PERI_USB0 for USB 2.0 PHY01 on Hi3798cv200 SoC.
+> +- #phy-cells: Should be 1. The specifier is the index of the PHY port to
+> +  reference.
 
-This should be modeled as a phy provider node with two separate sub-nodes for
-each of the PHYs.
+This can be '0' if the consumers directly use phandle to the subnodes.
 
 Thanks
 Kishon
-
-> +Required properties:
-> +- compatible: must be "st,stm32mp1-usbphyc"
-> +- reg: address and length of the usb phy control register set
-> +- clocks: phandle + clock specifier for the PLL phy clock
-> +- phy-supply: from the generic phy bindings, phandle to the regulator
-> +  providing 3V3 power to the PHY, see phy-bindings.txt
-> +- vdda1v1-supply: phandle to the regulator providing 1V1 power to the PHY
-> +- vdda1v8-supply: phandle to the regulator providing 1V8 power to the PHY
-> +
-> +Optional properties:
-> +- assigned-clocks: phandle + clock specifier for the PLL phy clock
-> +- assigned-clock-parents: the PLL phy clock parent
-> +- resets: phandle + reset specifier
-> +- st,utmi-switch: should be <0> or <1>, to select USB controller for PHY
-> +  port#2. If not specified, 0 is the default selection.
-> +
-> +
-> +Example:
-> +		usbphyc: usb-phy@5a006000 {
-> +			compatible = "st,stm32mp1-usbphyc";
-> +			reg = <0x5a006000 0x1000>;
-> +			clocks = <&rcc_clk USBPHY_K>;
-> +			resets = <&rcc_rst USBPHY_R>;
-> +			st,utmi-switch = <1>;
-> +			phy-supply = <&vdd_usb>;
-> +			vdda1v1-supply = <&reg11>;
-> +			vdda1v8-supply = <&reg18>
-> +		};
-> 
