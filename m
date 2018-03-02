@@ -1,52 +1,39 @@
-From: Emmanuel Vadot <manu@freebsd.org>
-Subject: [PATCH] dts: sunxi: Add eMMC for NanoPi M1 Plus
-Date: Fri,  2 Mar 2018 22:38:52 +0100
-Message-ID: <20180302213852.64588-1-manu@freebsd.org>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/2] arm64: dts: Add sdm845 GPU/GMU and SMMU
+Date: Fri,  2 Mar 2018 14:56:36 -0700
+Message-ID: <20180302215638.6145-1-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org
-Cc: Emmanuel Vadot <manu@freebsd.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The NanoPi-M1-Plus have a 8GB eMMC, add a node for it.
-This eMMC is always powered with 3.3V.
-
-Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
----
- arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-index a6e61915d648..0ca988e8c72f 100644
---- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-@@ -119,6 +119,16 @@
- 	};
- };
- 
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bits_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	vqmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
--- 
-2.15.1
+QnVpbGRpbmcgb24gdGhlIHNkbTg0NSBjaGFuZ2VzIGZyb20gUmFqZW5kcmEgYW5kIFNNTVUgY2hh
+bmdlcyBmcm9tIFZpdmVrIHRoaXMKaXMgYW4gaW5pdGlhbCBzdGFiIGF0IHRoZSBEVCBub2RlcyBm
+b3IgdGhlIHNkbTg0NSBHUFUgYW5kIEdNVSAoZ3JhcGhpY3MKbWFuYWdlbWVudCB1bml0KSB3aGlj
+aCBpcyByZXNwb25zaWJsZSBmb3IgdGhlIGRpcmVjdCBwb3dlciBjb250cm9sIG9mIHRoZSBHUFUK
+aW5jbHVkaW5nIHRoZSBjb21wYW5pb24gYXJtLXNtbXUtdjIgY29tcGF0aWJsZSBTTU1VLgoKUGxl
+YXNlIHJlZmVyIHRvIGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvMzc0
+MjgvIGZvciB0aGUgZHJpdmVyCmNvZGUuCgpKb3JkYW4gQ3JvdXNlICgyKToKICBkdC1iaW5kaW5n
+czogRG9jdW1lbnQgcWNvbSxhZHJlbm8tZ211CiAgYXJtNjQ6IGR0czogc2RtODQ1OiBTdXBwb3J0
+IEdQVS9HTVUKCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9nbXUudHh0ICAg
+ICAgICB8ICA1NCArKysrKysrKysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21z
+bS9ncHUudHh0ICAgICAgICB8ICAxMCArLQogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0
+NS5kdHNpICAgICAgICAgICAgICAgfCAxMjAgKysrKysrKysrKysrKysrKysrKysrCiAzIGZpbGVz
+IGNoYW5nZWQsIDE4MiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9nbXUu
+dHh0CgotLSAKMi4xNi4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVl
+ZHJlbm8K
