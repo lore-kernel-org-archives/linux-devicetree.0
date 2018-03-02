@@ -1,359 +1,162 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 1/6] reset: qcom: AOSS (Always on subsystem) reset
- controller
-Date: Fri, 02 Mar 2018 11:30:20 +0100
-Message-ID: <1519986620.16239.3.camel@pengutronix.de>
-References: <1519982619-28336-1-git-send-email-sibis@codeaurora.org>
-         <1519982619-28336-2-git-send-email-sibis@codeaurora.org>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v15 1/9] LIB: Introduce a generic PIO mapping method
+Date: Fri, 2 Mar 2018 10:33:26 +0000
+Message-ID: <bf00d184-137d-a2fa-b202-f18ce131fdd6@huawei.com>
+References: <1519663249-9850-1-git-send-email-john.garry@huawei.com>
+ <1519663249-9850-2-git-send-email-john.garry@huawei.com>
+ <1519931483.10722.342.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519982619-28336-2-git-send-email-sibis@codeaurora.org>
+In-Reply-To: <1519931483.10722.342.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sibis <sibis@codeaurora.org>, bjorn.andersson@linaro.org
-Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, ohad@wizery.com, mark.rutland@arm.com, robh+dt@kernel.org, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org
+Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de
 List-Id: devicetree@vger.kernel.org
 
-Hi sibis,
+On 01/03/2018 19:11, Andy Shevchenko wrote:
+> On Tue, 2018-02-27 at 00:40 +0800, John Garry wrote:
+>> From: Zhichang Yuan <yuanzhichang@hisilicon.com>
+>>
+>> In commit 41f8bba7f555 ("of/pci: Add pci_register_io_range() and
+>> pci_pio_to_address()"), a new I/O space management was supported. With
+>> that driver, the I/O ranges configured for PCI/PCIe hosts on some
+>> architectures can be mapped to logical PIO, converted easily between
+>> CPU address and the corresponding logicial PIO. Based on this, PCI
+>> I/O devices can be accessed in a memory read/write way through the
+>> unified in/out accessors.
+>>
+>> But on some archs/platforms, there are bus hosts which access I/O
+>> peripherals with host-local I/O port addresses rather than memory
+>> addresses after memory-mapped.
+>>
+>> To support those devices, a more generic I/O mapping method is
+>> introduced
+>> here. Through this patch, both the CPU addresses and the host-local
+>> port
+>> can be mapped into the logical PIO space with different logical/fake
+>> PIOs.
+>> After this, all the I/O accesses to either PCI MMIO devices or host-
+>> local
+>> I/O peripherals can be unified into the existing I/O accessors defined
+>> in
+>> asm-generic/io.h and be redirected to the right device-specific hooks
+>> based on the input logical PIO.
+>>
+>
+> A bit more small comments.
+>
+>
 
-thank you for the patch. I have a few questions and comments below.
+Hi Andy,
 
-On Fri, 2018-03-02 at 14:53 +0530, sibis wrote:
-> Add reset controller driver for Qualcomm SDM845 SoC to
-> control reset signals provided by AOSS for Modem, Venus
-> ADSP, GPU, Camera, Wireless, Display subsystem
-> 
-> Signed-off-by: sibis <sibis@codeaurora.org>
-> ---
->  .../devicetree/bindings/reset/qcom,aoss-reset.txt  |  54 +++++++
->  drivers/reset/Kconfig                              |  10 ++
->  drivers/reset/Makefile                             |   1 +
->  drivers/reset/reset-qcom-aoss.c                    | 161 +++++++++++++++++++++
->  include/dt-bindings/reset/qcom,aoss-sdm845.h       |  17 +++
->  5 files changed, 243 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
->  create mode 100644 drivers/reset/reset-qcom-aoss.c
->  create mode 100644 include/dt-bindings/reset/qcom,aoss-sdm845.h
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
-> new file mode 100644
-> index 0000000..5318e14
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
-> @@ -0,0 +1,54 @@
-> +Qualcomm AOSS Reset Controller
-> +======================================
-> +
-> +This binding describes a reset-controller found on AOSS (Always on SubSysem)
-> +for Qualcomm SDM845 SoCs.
-> +
-> +Required properties:
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be:
-> +		    "qcom,aoss-reset-sdm845", "syscon"
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: must specify the base address and size of the
-> +		    syscon device.
-> +
-> +
-> +- #reset-cells:
-> +	Usage: required
-> +	Value type: <uint>
-> +	Definition: must be 1; cell entry represents the reset index.
-> +
-> +example:
-> +
-> +aoss_reset: qcom,reset-controller@b2e0100 {
-> +	compatible = "qcom,aoss-reset-sdm845", "syscon";
-> +	reg = <0xc2b0000 0x20004>;
-> +	#reset-cells = <1>;
-> +};
-> +
-> +
-> +Specifying reset lines connected to IP modules
-> +==============================================
-> +
-> +Device nodes that need access to reset lines should
-> +specify them as a reset phandle in their corresponding node as
-> +specified in reset.txt.
-> +
-> +Example:
-> +
-> +	modem-pil@4080000 {
-> +		...
-> +
-> +		resets = <&aoss_reset AOSS_CC_MSS_RESTART>;
-> +		reset-names = "mss_restart";
-> +
-> +		...
-> +        };
-> +
-> +For list of all valid reset indicies see
-> +<dt-bindings/reset/qcom,aoss-sdm845.h>
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 7fc7769..4b1da86 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -81,6 +81,16 @@ config RESET_PISTACHIO
->  	help
->  	  This enables the reset driver for ImgTec Pistachio SoCs.
->  
-> +config RESET_QCOM_AOSS
-> +	bool "Qcom AOSS Reset Driver"
-> +	depends on ARCH_QCOM || COMPILE_TEST
+>> +#ifndef __LINUX_LOGIC_PIO_H
+>> +#define __LINUX_LOGIC_PIO_H
+>> +
+>
+>> +#ifdef __KERNEL__
+>
+> Hmm... How the header in include/linux/ can be non-kernel?
 
-Do all ARCH_QCOM have AOSS? If so, should this be enabled by default?
+I did doubt the legitimacy of this. I think it should be ok to remove.
 
-> +	select MFD_SYSCON
-> +	help
-> +	  This enables the AOSS (Always On SubSystem) reset driver
-> +	  for Qcom SoCs. Say Y if you want to control reset signals
+>
+>> +	list_for_each_entry_rcu(range, &io_range_list, list) {
+>
+>> +		if (range->flags == LOGIC_PIO_CPU_MMIO &&
+>> +				new_range->flags ==
+>> LOGIC_PIO_CPU_MMIO) {
+>
+> It's rather fancy indentation.
 
-Is Qcom and Qualcomm interchangeable?
+Right, I should align these.
 
-> +	  provided by AOSS for Modem, Venus, ADSP, GPU, Camera,
-> +	  Wireless, Display subsystem. Otherwise, say N.
-> +
->  config RESET_SIMPLE
->  	bool "Simple Reset Controller Driver" if COMPILE_TEST
->  	default ARCH_SOCFPGA || ARCH_STM32 || ARCH_STRATIX10 || ARCH_SUNXI || ARCH_ZX
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 132c24f..c30044a 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
->  obj-$(CONFIG_RESET_MESON) += reset-meson.o
->  obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
->  obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
-> +obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
->  obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
->  obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
->  obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
-> diff --git a/drivers/reset/reset-qcom-aoss.c b/drivers/reset/reset-qcom-aoss.c
-> new file mode 100644
-> index 0000000..eb8c69b
-> --- /dev/null
-> +++ b/drivers/reset/reset-qcom-aoss.c
-> @@ -0,0 +1,161 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of_device.h>
-> +#include <dt-bindings/reset/qcom,aoss-sdm845.h>
-> +
-> +struct qcom_aoss_reset_map {
-> +	unsigned int reg;
-> +	u8 bit;
-> +};
-> +
-> +struct qcom_aoss_desc {
-> +	const struct regmap_config *config;
-> +	const struct qcom_aoss_reset_map *resets;
-> +	int delay;
-> +	size_t num_resets;
-> +};
-> +
-> +struct qcom_aoss_reset_data {
-> +	struct reset_controller_dev rcdev;
-> +	struct regmap *regmap;
-> +	const struct qcom_aoss_desc *desc;
-> +};
-> +
-> +static const struct regmap_config aoss_sdm845_regmap_config = {
-> +	.name		= "aoss-reset",
-> +	.reg_bits	= 32,
-> +	.reg_stride	= 4,
-> +	.val_bits	= 32,
-> +	.max_register	= 0x20000,
-> +	.fast_io	= true,
-> +};
-> +
-> +static const struct qcom_aoss_reset_map aoss_sdm845_resets[] = {
-> +	[AOSS_CC_MSS_RESTART] = { 0x0, 0 },
-> +	[AOSS_CC_CAMSS_RESTART] = { 0x1000, 0 },
-> +	[AOSS_CC_VENUS_RESTART] = { 0x2000, 0 },
-> +	[AOSS_CC_GPU_RESTART] = { 0x3000, 0 },
-> +	[AOSS_CC_DISPSS_RESTART] = { 0x4000, 0 },
-> +	[AOSS_CC_WCSS_RESTART] = { 0x10000, 0 },
-> +	[AOSS_CC_LPASS_RESTART] = { 0x20000, 0 },
-> +};
-> +
-> +static const struct qcom_aoss_desc aoss_sdm845_desc = {
-> +	.config = &aoss_sdm845_regmap_config,
-> +	.resets = aoss_sdm845_resets,
-> +	/* Wait 6 32kHz sleep cycles for reset */
-> +	.delay = 200,
-> +	.num_resets = ARRAY_SIZE(aoss_sdm845_resets),
-> +};
-> +
-> +static struct qcom_aoss_reset_data *to_qcom_aoss_reset_data(
-> +				struct reset_controller_dev *rcdev)
-> +{
-> +	return container_of(rcdev, struct qcom_aoss_reset_data, rcdev);
-> +}
-> +
-> +static int qcom_aoss_control_assert(struct reset_controller_dev *rcdev,
-> +					unsigned long idx)
-> +{
-> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
-> +	const struct qcom_aoss_reset_map *map = &data->desc->resets[idx];
-> +
-> +	if (idx >= rcdev->nr_resets)
-> +		return -EINVAL;
+>
+>> +			if (start >= range->hw_start + range->size ||
+>> +			    end < range->hw_start)
+>
+> Misses {}
 
-This check is not necessary. For all drivers that don't set of_xlate,
-the default of_reset_simple_xlate already makes sure no reset_control
-is ever returned with rstc->id >= rcdev->nr_resets.
+Right, I will fix.
 
-> +	return regmap_update_bits(data->regmap, map->reg,
-> +					BIT(map->bit), BIT(map->bit));
-> +}
-> +
-> +static int qcom_aoss_control_deassert(struct reset_controller_dev *rcdev,
-> +					unsigned long idx)
-> +{
-> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
-> +	const struct qcom_aoss_reset_map *map = &data->desc->resets[idx];
-> +
-> +	if (idx >= rcdev->nr_resets)
-> +		return -EINVAL;
+>
+>> +				allocated_mmio_size += range->size;
+>> +			else {
+>> +				ret = -EFAULT;
+>> +				goto end_register;
+>> +			}
+>
+>> +		if (allocated_mmio_size + new_range->size - 1 >
+>> +			MMIO_UPPER_LIMIT) {
+>
+> Fancy indentation.
+>
+>> +			if (allocated_mmio_size + SZ_64K - 1 >
+>> +			MMIO_UPPER_LIMIT) {
+>
+> Ditto.
 
-Same here.
+Will fix both
 
-> +	return regmap_update_bits(data->regmap, map->reg, BIT(map->bit), 0);
-> +}
-> +
-> +static int qcom_aoss_control_reset(struct reset_controller_dev *rcdev,
-> +					unsigned long idx)
-> +{
-> +	struct qcom_aoss_reset_data *data = to_qcom_aoss_reset_data(rcdev);
-> +	int ret;
-> +
-> +	ret = rcdev->ops->assert(rcdev, idx);
+>
+>> +		if (allocated_iio_size + new_range->size - 1 >
+>> +		    IO_SPACE_LIMIT) {
+>
+> While this is nothing wrong, like above I would consider to check how
+> long it is and consider putting on one line.
 
-Don't use the ops function pointers here, just call
-qcom_aoss_control_assert directly.
+Fine. Some symbol names can be shortened to aid this.
 
-> +	if (ret)
-> +		return ret;
-> +
-> +	udelay(data->desc->delay);
-> +
-> +	ret = rcdev->ops->deassert(rcdev, idx);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
+>
+>> +/**
+>> + * logic_pio_to_hwaddr - translate logical PIO to HW address
+>> + * @pio: logical PIO value
+>> + *
+>> + * Returns HW address if valid, -1 otherwise
+>
+> It can't return -1 when the return type is unsigned.
+>
+>> + *
+>> + * Translate the input logical pio to the corresponding hardware
+>> address.
+>> + * The input pio should be unique in the whole logical PIO space.
+>> + */
+>> +resource_size_t logic_pio_to_hwaddr(unsigned long pio)
+>> +{
+>> +	struct logic_pio_hwaddr *range;
+>
+>> +	resource_size_t hwaddr = (resource_size_t)-1;
+>
+> Ditto.
 
-This can be simplified to just
+ok, I should have changed this to ~0 also.
 
-	return qcom_aoss_control_deassert(rcdev, idx);
+>
+>> +	return hwaddr;
+>> +}
+>
+>> +	list_for_each_entry_rcu(range, &io_range_list, list) {
+>> +		if (range->flags != LOGIC_PIO_CPU_MMIO)
+>> +			continue;
+>
+>> +		if (addr >= range->hw_start &&
+>> +		    addr < range->hw_start + range->size)
+>
+> Perhaps you may copy'n'paste in_range() macro from fs/ext* files and use
+> in this module. At some point it would be good to make it generic.
 
-> +}
-> +
-> +static const struct reset_control_ops qcom_aoss_reset_ops = {
-> +	.reset = qcom_aoss_control_reset,
-> +	.assert = qcom_aoss_control_assert,
-> +	.deassert = qcom_aoss_control_deassert,
-> +};
-> +
-> +static int qcom_aoss_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct qcom_aoss_reset_data *data;
-> +	struct device *dev = &pdev->dev;
-> +	const struct qcom_aoss_desc *desc;
-> +
-> +	desc = of_device_get_match_data(&pdev->dev);
+OK, I should be able to copy. It would not be good to include 
+fs/ufs/util.h, but a generic helper would be useful.
 
-You could use dev here instead of pdev->dev.
+>
+>> +			return addr - range->hw_start +
+>> +				range->io_start;
+>
+>
+>> +	}
+>
+>
 
-> +	if (!desc)
-> +		return -EINVAL;
-> +
-> +	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->desc = desc;
-> +	data->regmap = syscon_node_to_regmap(dev->of_node);
-> +	if (IS_ERR(data->regmap)) {
-> +		dev_err(dev, "Unable to get aoss-reset regmap");
-> +		return PTR_ERR(data->regmap);
-> +	}
-> +	regmap_attach_dev(dev, data->regmap, desc->config);
-> +
-> +	data->rcdev.owner = THIS_MODULE;
-> +	data->rcdev.ops = &qcom_aoss_reset_ops;
-> +	data->rcdev.nr_resets = desc->num_resets;
-> +	data->rcdev.of_node = pdev->dev.of_node;
-
-And here.
-
-> +	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
-
-And here.
-
-> +}
-> +
-> +static const struct of_device_id qcom_aoss_reset_of_match[] = {
-> +	{ .compatible = "qcom,aoss-reset-sdm845", .data = &aoss_sdm845_desc},
-
-Consider adding a space between &aoss_sdm845_desc and } ...
-
-> +	{}
-> +};
-> +
-> +static struct platform_driver qcom_aoss_reset_driver = {
-> +	.probe = qcom_aoss_reset_probe,
-> +	.driver  = {
-> +		.name  = "qcom_aoss_reset",
-
-... and removing the superfluous space here.
-
-> +		.of_match_table = qcom_aoss_reset_of_match,
-> +	},
-> +};
-> +
-> +builtin_platform_driver(qcom_aoss_reset_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm AOSS Reset Driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/dt-bindings/reset/qcom,aoss-sdm845.h b/include/dt-bindings/reset/qcom,aoss-sdm845.h
-> new file mode 100644
-> index 0000000..e9b38fc
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/qcom,aoss-sdm845.h
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_RESET_AOSS_SDM_845_H
-> +#define _DT_BINDINGS_RESET_AOSS_SDM_845_H
-> +
-> +#define AOSS_CC_MSS_RESTART	0
-> +#define AOSS_CC_CAMSS_RESTART	1
-> +#define AOSS_CC_VENUS_RESTART	2
-> +#define AOSS_CC_GPU_RESTART	3
-> +#define AOSS_CC_DISPSS_RESTART	4
-> +#define AOSS_CC_WCSS_RESTART	5
-> +#define AOSS_CC_LPASS_RESTART	6
-> +
-> +#endif
-
-regards
-Philipp
+Thanks very much,
+John
