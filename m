@@ -1,35 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] mmc: dw_mmc: remove the deprecated "num-slots"
-Date: Fri, 2 Mar 2018 09:25:23 -0600
-Message-ID: <20180302152523.577q4ru466nt2gvo@rob-hp-laptop>
-References: <20180223064138.18401-1-jh80.chung@samsung.com>
- <CGME20180223064140epcas2p41a734737c3fe7373329a94f485c21fd4@epcas2p4.samsung.com>
- <20180223064138.18401-2-jh80.chung@samsung.com>
+From: Philippe Cornu <philippe.cornu@st.com>
+Subject: [PATCH v2 0/2] drm/panel: Add support for Raydium RM68200 panel
+Date: Fri, 2 Mar 2018 16:32:20 +0100
+Message-ID: <20180302153222.4377-1-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180223064138.18401-2-jh80.chung@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, manabian@gmail.com, dinguyen@kernel.org, will.deacon@arm.com, xuwei5@hisilicon.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Alexandre Torgue <alexandre.torgue@st.com>, Philippe Cornu <philippe.cornu@st.com>, Yannick Fertre <yannick.fertre@st.com>, Vincent Abriou <vincent.abriou@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 23, 2018 at 03:41:34PM +0900, Jaehoon Chung wrote:
-> 'num-slots' property had already deprecated.
-> Remove the 'nom-slots' property that is kept to maintain the compatibility.
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> ---
->  Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt | 5 -----
->  drivers/mmc/host/dw_mmc-pci.c                              | 1 -
->  drivers/mmc/host/dw_mmc.c                                  | 4 ----
->  drivers/mmc/host/dw_mmc.h                                  | 3 ---
->  4 files changed, 13 deletions(-)
-
-Normally I'd say you need to wait some time after updating the dts 
-files, but given that all the users are 1 slot I think this is fine.
-
-For this and the rest of the series:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+VGhlIFJheWRpdW0gU2VtaWNvbmR1Y3RvciBDb3Jwb3JhdGlvbiBSTTY4MjAwIGlzIGEgNS41IiA3
+MjB4MTI4MApURlQgTENEIHBhbmVsIGNvbm5lY3RlZCB1c2luZyBhIE1JUEktRFNJIHZpZGVvIGlu
+dGVyZmFjZS4KClZlcnNpb24gMjoKLSBBZGQgUm9iIEhlcnJpbmcgUmV2aWV3ZWQtYnkgb24gZHQt
+YmluZGluZ3MuCi0gVXBkYXRlIEtjb25maWcgJiBkcml2ZXIgdGhhbmtzIHRvIFRoaWVycnkgUmVk
+aW5nIGNvbW1lbnRzOiBubyBtb3JlCiAgRFJWX05BTUUsIERSTV9XQVJOX09OQ0UgaW5zdGVhZCBv
+ZiBEUlZfTkFNRSB3aGVyZSBhcHBsaWNhYmxlLCB1c2UKICBiYWNrbGlnaHRfZW5hYmxlL2Rpc2Fi
+bGUoKSAmIGRldm1fb2ZfZmluZF9iYWNrbGlnaHQoKSwgbm8gZXh0cmEKICBncGlvIHJlc2V0IHRv
+IDAsIG5vIG1vcmUgbXNnIGlmIHN1Y2Nlc3NmdWwsIHVzZSBSTTY4MjAwIGluc3RlYWQgb2YKICBy
+bTY4MjAwIHdoZXJlIG5lY2Vzc2FyeS4KClZlcnNpb24gMToKLSBJbml0aWFsIGNvbW1pdAoKUGhp
+bGlwcGUgQ29ybnUgKDIpOgogIGR0LWJpbmRpbmdzL2Rpc3BsYXkvcGFuZWw6IEFkZCBzdXBwb3J0
+IGZvciBSYXlkaXVtIHJtNjgyMDAgZHNpIHBhbmVsCiAgZHJtL3BhbmVsOiBBZGQgc3VwcG9ydCBm
+b3IgUmF5ZGl1bSBSTTY4MjAwIHBhbmVsIGRyaXZlcgoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3Bh
+bmVsL3JheWRpdW0scm02ODIwMC50eHQgICAgIHwgIDI1ICsrCiBkcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICB8ICAgOCArCiBkcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9k
+cm0vcGFuZWwvcGFuZWwtcmF5ZGl1bS1ybTY4MjAwLmMgICAgICB8IDQzNyArKysrKysrKysrKysr
+KysrKysrKysKIDQgZmlsZXMgY2hhbmdlZCwgNDcxIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9y
+YXlkaXVtLHJtNjgyMDAudHh0CiBjcmVhdGUgbW9kZSAxMDA3NTUgZHJpdmVycy9ncHUvZHJtL3Bh
+bmVsL3BhbmVsLXJheWRpdW0tcm02ODIwMC5jCgotLSAKMi4xNS4xCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
