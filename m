@@ -1,110 +1,109 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 3/4] drm/omap: Add virtual plane DT parsing support
-Date: Fri, 2 Mar 2018 07:48:03 -0600
-Message-ID: <20180302134804.3690-4-bparrot@ti.com>
-References: <20180302134804.3690-1-bparrot@ti.com>
+From: Amelie DELAUNAY <amelie.delaunay@st.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: add support for STM32 USB PHY
+ Controller (USBPHYC)
+Date: Fri, 2 Mar 2018 14:42:36 +0000
+Message-ID: <6a11cbdc-a7db-31c5-740c-06857f051e38@st.com>
+References: <1519918245-17333-1-git-send-email-amelie.delaunay@st.com>
+ <1519918245-17333-2-git-send-email-amelie.delaunay@st.com>
+ <bac8ba1a-dd66-4df6-1976-c6144e35040c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180302134804.3690-1-bparrot@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <bac8ba1a-dd66-4df6-1976-c6144e35040c@ti.com>
+Content-Language: en-US
+Content-ID: <84EA306B2A90664CBD82979F5E7B325A@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-VmlydHVhbCBwbGFuZXMgYXJlIHVzZWQgdG8gZXh0ZW5kIGRpc3BsYXkgc2l6ZSBjYXBhYmlsaXR5
-IGZvciBkaXNwbGF5CmxhcmdlciB0aGFuIDIwNDggcGl4ZWxzIGJ5IHNwbGl0dGluZyB0aGUgZnJh
-bWUgYnVmZmVyIGVxdWFsbHkgYmV0d2Vlbgp0d28gcGh5c2ljYWwgcGxhbmVzLgoKSGVyZSB3ZSBh
-cmUgYWRkaW5nIERUIHN1cHBvcnQgdG8gcGFyc2UgJ3BsYW5lJyBjaGlsZCBub2RlcyB3aGljaApk
-ZXNjcmliZSBob3cgbG9naWNhbCBwbGFuZXMgYXJlIG1hcHBlZCB0byBwaHlzaWNhbCBwbGFuZShz
-KSBhbmQKd2hpY2ggY3J0YyB0aGV5IGFyZSBhdmFpbGFibGUgb24uCgpTaWduZWQtb2ZmLWJ5OiBC
-ZW5vaXQgUGFycm90IDxicGFycm90QHRpLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vb21hcGRy
-bS9kc3MvZGlzcGMuYyAgIHwgMTEwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysK
-IGRyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL2Rzcy9vbWFwZHNzLmggfCAgMTEgKysrKwogMiBmaWxl
-cyBjaGFuZ2VkLCAxMjEgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9vbWFwZHJtL2Rzcy9kaXNwYy5jIGIvZHJpdmVycy9ncHUvZHJtL29tYXBkcm0vZHNzL2Rpc3Bj
-LmMKaW5kZXggNjI0ZGVlMjJmNDZiLi41NTliNzBkOTc2MmQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9vbWFwZHJtL2Rzcy9kaXNwYy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJt
-L2Rzcy9kaXNwYy5jCkBAIC00MzM0LDYgKzQzMzQsMTE1IEBAIHN0YXRpYyB1MzIgZGlzcGNfZ2V0
-X21lbW9yeV9iYW5kd2lkdGhfbGltaXQodm9pZCkKIAlyZXR1cm4gbGltaXQ7CiB9CiAKK3N0YXRp
-YyBzdHJ1Y3QgZGV2aWNlX25vZGUgKmRpc3BjX29mX2dldF9wbGFuZV9ieV9pZChzdHJ1Y3QgZGV2
-aWNlX25vZGUgKm5vZGUsCisJCQkJCQkgICAgdTMyIGlkKQoreworCXN0cnVjdCBkZXZpY2Vfbm9k
-ZSAqcGxhbmU7CisKKwlmb3JfZWFjaF9jaGlsZF9vZl9ub2RlKG5vZGUsIHBsYW5lKSB7CisJCXUz
-MiBwbGFuZV9pZCA9IDA7CisKKwkJaWYgKG9mX25vZGVfY21wKHBsYW5lLT5uYW1lLCAicGxhbmUi
-KSAhPSAwKQorCQkJY29udGludWU7CisJCW9mX3Byb3BlcnR5X3JlYWRfdTMyKHBsYW5lLCAicmVn
-IiwgJnBsYW5lX2lkKTsKKwkJaWYgKGlkID09IHBsYW5lX2lkKQorCQkJYnJlYWs7CisJfQorCisJ
-cmV0dXJuIHBsYW5lOworfQorCitzdGF0aWMgaW50IGRpc3BjX3BhcnNlX2R0X3BsYW5lX2RhdGEo
-c3RydWN0IGRpc3BjX3BsYW5lX21hcHBpbmdzICpwbGFuZSkKK3sKKwlzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2ID0gZGlzcGMucGRldjsKKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gcGRl
-di0+ZGV2Lm9mX25vZGU7CisJc3RydWN0IGRldmljZV9ub2RlICplcDsKKwlzdHJ1Y3QgcHJvcGVy
-dHkgKnByb3A7CisJY29uc3QgX19iZTMyICpjdXI7CisJdTMyIHY7CisJdTMyIG51bV9vdmxzID0g
-ZGlzcGNfZ2V0X251bV9vdmxzKCk7CisJdW5zaWduZWQgbG9uZyBpbnQgaHdfcGxhbmVfbWFzayA9
-ICgxIDw8IG51bV9vdmxzKSAtIDE7CisJdTMyIG51bV9wbGFuZXM7CisJaW50IGksIGluZGV4Owor
-CisJaWYgKCFucCkKKwkJcmV0dXJuIDA7CisKKwlmb3IgKGkgPSAwOyBpIDwgbnVtX292bHM7IGkr
-KykgeworCQllcCA9IGRpc3BjX29mX2dldF9wbGFuZV9ieV9pZChucCwgaSk7CisJCWlmICghZXAp
-CisJCQlicmVhazsKKwkJaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX2Jvb2woZXAsICJody1wbGFuZXMi
-KSkgeworCQkJZGV2X2VycigmcGRldi0+ZGV2LAorCQkJCSJtYWxmb3JtZWQgcGxhbmUgbm9kZTog
-aHctcGxhbmVzIG1pc3NpbmcuXG4iKTsKKwkJCXJldHVybiAtRUlOVkFMOworCQl9CisKKwkJaW5k
-ZXggPSAwOworCQlvZl9wcm9wZXJ0eV9mb3JfZWFjaF91MzIoZXAsICJody1wbGFuZXMiLCBwcm9w
-LCBjdXIsIHYpIHsKKwkJCWlmICh2ID49IG51bV9vdmxzKSB7CisJCQkJZGV2X2VycigmcGRldi0+
-ZGV2LAorCQkJCQkiaHctcGxhbmVzIHByb3BlcnR5OiAnJWQnIG91dC1vZi1yYW5nZS5cbiIsCisJ
-CQkJCXYpOworCQkJCXJldHVybiAtRUlOVkFMOworCQkJfQorCQkJaWYgKCEoaHdfcGxhbmVfbWFz
-ayAmIEJJVF9NQVNLKHYpKSkgeworCQkJCWRldl9lcnIoJnBkZXYtPmRldiwKKwkJCQkJImh3LXBs
-YW5lcyBwcm9wZXJ0eTogJyVkJyB1c2VkIG1vcmUgdGhhbiBvbmNlLlxuIiwKKwkJCQkJdik7CisJ
-CQkJcmV0dXJuIC1FSU5WQUw7CisJCQl9CisJCQljbGVhcl9iaXQodiwgJmh3X3BsYW5lX21hc2sp
-OworCisJCQlpZiAoaW5kZXggPT0gMCkgeworCQkJCXBsYW5lLT5wbGFuZVtpXS5tYWluX2lkID0g
-djsKKwkJCX0gZWxzZSBpZiAoaW5kZXggPT0gMSkgeworCQkJCXBsYW5lLT5wbGFuZVtpXS5hdXhf
-aWQgPSB2OworCQkJCXBsYW5lLT5wbGFuZVtpXS5pc192aXJ0dWFsID0gdHJ1ZTsKKwkJCX0gZWxz
-ZSBpZiAoaW5kZXggPiAxKSB7CisJCQkJZGV2X2VycigmcGRldi0+ZGV2LAorCQkJCQkiaHctcGxh
-bmVzIHByb3BlcnR5OiBtb3JlIHRoYW4gMiB2YWx1ZXMgc3BlY2lmaWVkLlxuIik7CisJCQkJcmV0
-dXJuIC1FSU5WQUw7CisJCQl9CisJCQlpbmRleCsrOworCQl9CisKKwkJb2ZfcHJvcGVydHlfZm9y
-X2VhY2hfdTMyKGVwLCAiaHctY3J0Y3MiLCBwcm9wLCBjdXIsIHYpIHsKKwkJCWlmICh2ID49IG51
-bV9vdmxzKSB7CisJCQkJZGV2X2VycigmcGRldi0+ZGV2LAorCQkJCQkiaHctY3J0Y3MgcHJvcGVy
-dHk6ICclZCcgb3V0LW9mLXJhbmdlLlxuIiwKKwkJCQkJdik7CisJCQkJcmV0dXJuIC1FSU5WQUw7
-CisJCQl9CisJCQlwbGFuZS0+cGxhbmVbaV0uY3J0Y19tYXNrIHw9IDEgPDwgdjsKKwkJfQorCX0K
-KworCW51bV9wbGFuZXMgPSBpOworCisJaWYgKG51bV9wbGFuZXMpIHsKKwkJZGV2X2RiZygmcGRl
-di0+ZGV2LCAiUGxhbmUgZGVmaW5pdGlvbnMgZm91bmQgZnJvbSBEVDoiKTsKKwkJZm9yIChpID0g
-MDsgaSA8IG51bV9wbGFuZXM7IGkrKykgeworCQkJaWYgKHBsYW5lLT5wbGFuZVtpXS5pc192aXJ0
-dWFsKSB7CisJCQkJZGV2X2RiZygmcGRldi0+ZGV2LAorCQkJCQkicGxhbmUlZDogdmlydHVhbCBo
-dy1wbGFuZXM6ICVkLCAlZCBjcnRjX21hc2s6IDB4JTA0eCIsCisJCQkJCWksIHBsYW5lLT5wbGFu
-ZVtpXS5tYWluX2lkLAorCQkJCQlwbGFuZS0+cGxhbmVbaV0uYXV4X2lkLAorCQkJCQlwbGFuZS0+
-cGxhbmVbaV0uY3J0Y19tYXNrKTsKKwkJCX0gZWxzZSB7CisJCQkJZGV2X2RiZygmcGRldi0+ZGV2
-LAorCQkJCQkicGxhbmUlZDogaHctcGxhbmVzOiAlZCBjcnRjX21hc2s6IDB4JTA0eCIsCisJCQkJ
-CWksIHBsYW5lLT5wbGFuZVtpXS5tYWluX2lkLAorCQkJCQlwbGFuZS0+cGxhbmVbaV0uY3J0Y19t
-YXNrKTsKKwkJCX0KKwkJfQorCX0KKworCXBsYW5lLT5udW1fcGxhbmVzID0gbnVtX3BsYW5lczsK
-KworCXJldHVybiAwOworfQorCiAvKgogICogV29ya2Fyb3VuZCBmb3IgZXJyYXRhIGk3MzQgaW4g
-RFNTIGRpc3BjCiAgKiAgLSBMQ0QxIEdhbW1hIENvcnJlY3Rpb24gSXMgTm90IFdvcmtpbmcgV2hl
-biBHRlggUGlwZSBJcyBEaXNhYmxlZApAQCAtNDUyNSw2ICs0NjM0LDcgQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBkaXNwY19vcHMgZGlzcGNfb3BzID0gewogCS5vdmxfZW5hYmxlID0gZGlzcGNfb3Zs
-X2VuYWJsZSwKIAkub3ZsX3NldHVwID0gZGlzcGNfb3ZsX3NldHVwLAogCS5vdmxfZ2V0X2NvbG9y
-X21vZGVzID0gZGlzcGNfb3ZsX2dldF9jb2xvcl9tb2RlcywKKwkuZ2V0X3BsYW5lX21hcHBpbmcg
-PSBkaXNwY19wYXJzZV9kdF9wbGFuZV9kYXRhLAogfTsKIAogLyogRElTUEMgSFcgSVAgaW5pdGlh
-bGlzYXRpb24gKi8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL2Rzcy9vbWFw
-ZHNzLmggYi9kcml2ZXJzL2dwdS9kcm0vb21hcGRybS9kc3Mvb21hcGRzcy5oCmluZGV4IGY4Zjgz
-ZTgyNmE1Ni4uYjhjOWIzMGJmNWVkIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vb21hcGRy
-bS9kc3Mvb21hcGRzcy5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9vbWFwZHJtL2Rzcy9vbWFwZHNz
-LmgKQEAgLTYzNyw2ICs2MzcsMTYgQEAgdm9pZCBvbWFwZHNzX3NldF9pc19pbml0aWFsaXplZChi
-b29sIHNldCk7CiBzdHJ1Y3QgZGV2aWNlX25vZGUgKmRzc19vZl9wb3J0X2dldF9wYXJlbnRfZGV2
-aWNlKHN0cnVjdCBkZXZpY2Vfbm9kZSAqcG9ydCk7CiB1MzIgZHNzX29mX3BvcnRfZ2V0X3BvcnRf
-bnVtYmVyKHN0cnVjdCBkZXZpY2Vfbm9kZSAqcG9ydCk7CiAKK3N0cnVjdCBkaXNwY19wbGFuZV9t
-YXBwaW5ncyB7CisJc3RydWN0IHsKKwkJdTMyIG1haW5faWQ7CisJCXUzMiBhdXhfaWQ7CisJCXUz
-MiBjcnRjX21hc2s7CisJCWJvb2wJaXNfdmlydHVhbDsKKwl9IHBsYW5lWzRdOworCXUzMiBudW1f
-cGxhbmVzOworfTsKKwogc3RydWN0IGRzc19tZ3Jfb3BzIHsKIAlpbnQgKCpjb25uZWN0KShlbnVt
-IG9tYXBfY2hhbm5lbCBjaGFubmVsLAogCQlzdHJ1Y3Qgb21hcF9kc3NfZGV2aWNlICpkc3QpOwpA
-QCAtNzE5LDYgKzcyOSw3IEBAIHN0cnVjdCBkaXNwY19vcHMgewogCQkJZW51bSBvbWFwX2NoYW5u
-ZWwgY2hhbm5lbCk7CiAKIAljb25zdCB1MzIgKigqb3ZsX2dldF9jb2xvcl9tb2RlcykoZW51bSBv
-bWFwX3BsYW5lX2lkIHBsYW5lKTsKKwlpbnQgKCpnZXRfcGxhbmVfbWFwcGluZykoc3RydWN0IGRp
-c3BjX3BsYW5lX21hcHBpbmdzICpwbGFuZSk7CiB9OwogCiB2b2lkIGRpc3BjX3NldF9vcHMoY29u
-c3Qgc3RydWN0IGRpc3BjX29wcyAqbyk7Ci0tIAoyLjkuMAoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+On 03/02/2018 07:02 AM, Kishon Vijay Abraham I wrote:
+> 
+> 
+> On Thursday 01 March 2018 09:00 PM, Amelie Delaunay wrote:
+>> This patch adds the device tree bindings description for STM32 USBPHYC
+>> (USB PHY Controller).
+>>
+>> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+>> ---
+>>   .../devicetree/bindings/phy/phy-stm32-usbphyc.txt  | 46 ++++++++++++++++++++++
+>>   1 file changed, 46 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+>> new file mode 100644
+>> index 0000000..1ad3893
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+>> @@ -0,0 +1,46 @@
+>> +STMicroelectronics STM32 USB HS PHY controller
+>> +
+>> +The STM32 USBPHYC block contains a dual port High Speed UTMI+ PHY and a UTMI
+>> +switch. It controls PHY configuration and status, and the UTMI+ switch that
+>> +selects either OTG or HOST controller for the second PHY port. It also sets
+>> +PLL configuration.
+>> +
+>> +USBPHYC
+>> +      |_ PLL
+>> +      |
+>> +      |_ PHY port#1 _________________ HOST controller
+>> +      |                    _                 |
+>> +      |                  / 1|________________|
+>> +      |_ PHY port#2 ----|   |________________
+>> +      |                  \_0|                |
+>> +      |_ UTMI switch_______|          OTG controller
+>> +
+>> +
+> 
+> This should be modeled as a phy provider node with two separate sub-nodes for
+> each of the PHYs.
+> 
+> Thanks
+> Kishon
+> 
+
+Thank you for pointing me to the right solution. I send a V3.
+
+Regards,
+Amelie
+
+>> +Required properties:
+>> +- compatible: must be "st,stm32mp1-usbphyc"
+>> +- reg: address and length of the usb phy control register set
+>> +- clocks: phandle + clock specifier for the PLL phy clock
+>> +- phy-supply: from the generic phy bindings, phandle to the regulator
+>> +  providing 3V3 power to the PHY, see phy-bindings.txt
+>> +- vdda1v1-supply: phandle to the regulator providing 1V1 power to the PHY
+>> +- vdda1v8-supply: phandle to the regulator providing 1V8 power to the PHY
+>> +
+>> +Optional properties:
+>> +- assigned-clocks: phandle + clock specifier for the PLL phy clock
+>> +- assigned-clock-parents: the PLL phy clock parent
+>> +- resets: phandle + reset specifier
+>> +- st,utmi-switch: should be <0> or <1>, to select USB controller for PHY
+>> +  port#2. If not specified, 0 is the default selection.
+>> +
+>> +
+>> +Example:
+>> +		usbphyc: usb-phy@5a006000 {
+>> +			compatible = "st,stm32mp1-usbphyc";
+>> +			reg = <0x5a006000 0x1000>;
+>> +			clocks = <&rcc_clk USBPHY_K>;
+>> +			resets = <&rcc_rst USBPHY_R>;
+>> +			st,utmi-switch = <1>;
+>> +			phy-supply = <&vdd_usb>;
+>> +			vdda1v1-supply = <&reg11>;
+>> +			vdda1v8-supply = <&reg18>
+>> +		};
+>>
