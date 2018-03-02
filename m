@@ -1,26 +1,27 @@
 From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH] arm64: dts: hisi: add hns-dsaf cpld control for the hip07
- SoC
-Date: Fri, 2 Mar 2018 16:01:29 +0000
-Message-ID: <5A997559.9060103@hisilicon.com>
-References: <1516278697-244377-1-git-send-email-tanhuazhong@huawei.com>
+Subject: Re: [PATCH] arm64: dts: hikey: Enable HS200 mode on eMMC
+Date: Fri, 2 Mar 2018 16:02:49 +0000
+Message-ID: <5A9975A9.6050409@hisilicon.com>
+References: <20180117203531.17152-1-ryan@edited.us>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516278697-244377-1-git-send-email-tanhuazhong@huawei.com>
+In-Reply-To: <20180117203531.17152-1-ryan@edited.us>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Huazhong Tan <tanhuazhong@huawei.com>
-Cc: linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: oscardagrach <ryan@edited.us>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Huazhong,
+Hi Ryan,
 
-On 2018/1/18 12:31, Huazhong Tan wrote:
-> Add cpld-syscon node to support the cpld control for hns-dsaf
-> on the hip07 SoC.
+On 2018/1/17 20:35, oscardagrach wrote:
+> According to the hi6220 datasheet, the MMC controller is JEDEC eMMC 4.5
+> compliant, in addition to supporting a clock of up to 150MHz. The Hikey
+> schematic also indicates the device utilizes 1.8v signaling. Define these
+> parameters in the device tree to enable HS200 mode.
 > 
-> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+> Signed-off-by: Ryan Grachek <ryan@edited.us>
 > ---
 
 Applied into hisilicon dt tree.
@@ -29,40 +30,21 @@ Thanks!
 BR,
 Wei
 
->  arch/arm64/boot/dts/hisilicon/hip07.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-> index 2c01a21..4bd6416 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-> @@ -1127,6 +1127,12 @@
->  			reg = <0x0 0xc0000000 0x0 0x10000>;
->  		};
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> index 3aee6123d161..964e43e05ac6 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> @@ -299,7 +299,9 @@
+>  		/* GPIO blocks 16 thru 19 do not appear to be routed to pins */
 >  
-> +		dsa_cpld: dsa_cpld@78000010 {
-> +			compatible = "syscon";
-> +			reg = <0x0 0x78000010 0x0 0x100>;
-> +			reg-io-width = <2>;
-> +		};
-> +
->  		pcie_subctl: pcie_subctl@a0000000 {
->  			compatible = "hisilicon,pcie-sas-subctrl", "syscon";
->  			reg = <0x0 0xa0000000 0x0 0x10000>;
-> @@ -1258,6 +1264,7 @@
->  			port@0 {
->  				reg = <0>;
->  				serdes-syscon = <&serdes_ctrl>;
-> +				cpld-syscon = <&dsa_cpld 0x0>;
->  				port-rst-offset = <0>;
->  				port-mode-offset = <0>;
->  				mc-mac-mask = [ff f0 00 00 00 00];
-> @@ -1267,6 +1274,7 @@
->  			port@1 {
->  				reg = <1>;
->  				serdes-syscon= <&serdes_ctrl>;
-> +				cpld-syscon = <&dsa_cpld 0x4>;
->  				port-rst-offset = <1>;
->  				port-mode-offset = <1>;
->  				mc-mac-mask = [ff f0 00 00 00 00];
+>  		dwmmc_0: dwmmc0@f723d000 {
+> +			max-frequency = <150000000>;
+>  			cap-mmc-highspeed;
+> +			mmc-hs200-1_8v;
+>  			non-removable;
+>  			bus-width = <0x8>;
+>  			vmmc-supply = <&ldo19>;
 > 
