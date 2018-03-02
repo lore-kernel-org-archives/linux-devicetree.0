@@ -1,93 +1,48 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] ARM: dts: tpc: Device tree description of the TPC board
-Date: Fri, 2 Mar 2018 15:44:20 +0100
-Message-ID: <20180302144420.37trllgposf4yet3@pengutronix.de>
-References: <20180302121750.12865-1-lukma@denx.de>
- <20180302125159.gufvhyy4ipyunmil@pengutronix.de>
- <20180302142537.25764c8e@jawa>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v4 3/4] dt-bindings: display: amlogic: DT fix
+ s/resets-names/reset-names/
+Date: Fri, 2 Mar 2018 15:52:38 +0100
+Message-ID: <d2be8243-caf1-32e3-bda2-b454a2cc147c@baylibre.com>
+References: <1519998993-14398-1-git-send-email-geert+renesas@glider.be>
+ <1519998993-14398-4-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180302142537.25764c8e@jawa>
+In-Reply-To: <1519998993-14398-4-git-send-email-geert+renesas@glider.be>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Chanho Min <chanho.min@lge.com>
+Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2018 at 02:25:37PM +0100, Lukasz Majewski wrote:
-> Hi Sascha,
+On 02/03/2018 14:56, Geert Uytterhoeven wrote:
+> Fixes: 8cceda5349377e30 ("dt-bindings: Add bindings for the Amlogic Meson dw-hdmi extension")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> v4:
+>   - Add Acked-by,
 > 
-> > Hi Lukasz,
-> > 
-> > On Fri, Mar 02, 2018 at 01:17:50PM +0100, Lukasz Majewski wrote:
-> > > This commit adds device tree description of K+P's TPC board.  
-> > 
-> > Can we get a hint what this board is? I assume this one:
-> > 
-> > Technologic Systems' Full i.MX6 Portfolio Including SBC, COM, and
-> > Touch Panel PCs
+> v3:
+>   - New.
+> ---
+>  Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I just took other imx6q boards as an example - e.g. 
+> diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+> index bf4a18047309a5f8..d8f6268849f43621 100644
+> --- a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+> +++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
+> @@ -43,7 +43,7 @@ Required properties:
+>    and the Amlogic Meson venci clocks as described in
+>    Documentation/devicetree/bindings/clock/clock-bindings.txt,
+>    the clocks are soc specific, the clock-names should be "iahb", "isfr", "venci"
+> -- resets, resets-names: must have the phandles to the HDMI apb, glue and phy
+> +- resets, reset-names: must have the phandles to the HDMI apb, glue and phy
+>    resets as described in :
+>    Documentation/devicetree/bindings/reset/reset.txt,
+>    the reset-names should be "hdmitx_apb", "hdmitx", "hdmitx_phy"
 > 
-> 420127e5a5b53ff2cb5effaa781aed93709b09bb
-> 
-> Generally, descriptions of DTSes are rather short and simple.
-> 
-> > 
-> > Anyway, future developers are thankful if they have the information
-> > around when they have to work on that file or have to decide if it is
-> > to be removed.
-> 
-> IMHO, there is plenty of information around (iMX6 Quad SoC, with
-> components described in dts).
 
-There may be future changes necessary which may be done by people who do
-not know which hardware this. For them it will be convenient to be able
-to search for the hardware and maybe even find a schematics. Anyway, it
-will just help to have that information around.
-
-> > > +&can1 {
-> > > +	status = "disabled";
-> > > +};
-> > > +
-> > > +&can2 {
-> > > +	status = "disabled";
-> > > +};  
-> > 
-> > These are not enabled in your base dtsi, so no need to disabled it
-> > here.
-> 
-> But they can be enabled if needed.
-
-Yes, they can, but that still doesn't make these node references necessary.
-If I read this it seems to me that you explicitly want to disable these
-nodes. A reader can't know you add them for convenience here.
-
-> > > diff --git a/arch/arm/boot/dts/imx6q-kp.dtsi
-> > > b/arch/arm/boot/dts/imx6q-kp.dtsi new file mode 100644
-> > > index 000000000000..47a10fb1d46b
-> > > --- /dev/null
-> > > +++ b/arch/arm/boot/dts/imx6q-kp.dtsi
-> > > +
-> > > +	memory: memory {
-> > > +		reg = <0x10000000 0x40000000>;
-> > > +	};
-> > > +
-> > > +	pwm-buzzer {
-> > > +		compatible = "pwm-backlight";  
-> > 
-> > What is it? A backlight or a buzzer?
-> 
-> It is a buzzer, which is controlled by PWM.
-
-Then you should bind the pwm-beeper driver to it, not a backlight.
-
-Regards,
-  Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
