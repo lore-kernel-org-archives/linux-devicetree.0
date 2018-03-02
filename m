@@ -1,71 +1,85 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v3 3/3] arm64: dts: Hi3660: Add binding for stub clock
-Date: Fri, 2 Mar 2018 15:54:35 +0000
-Message-ID: <5A9973BB.7030907@hisilicon.com>
-References: <1510910852-2175-1-git-send-email-xuyiping@hisilicon.com>
- <1510910852-2175-4-git-send-email-xuyiping@hisilicon.com>
- <20180228050639.GA20745@leoy-ThinkPad-T440>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc node
+Date: Fri, 2 Mar 2018 07:48:02 -0600
+Message-ID: <20180302134804.3690-3-bparrot@ti.com>
+References: <20180302134804.3690-1-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180228050639.GA20745@leoy-ThinkPad-T440>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Xu YiPing <xuyiping@hisilicon.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, xuejiancheng@hisilicon.com, wenpan@hisilicon.com, zhangfei.gao@linaro.org, guodong.xu@linaro.org, zhongkaihua@huawei.com, chenjun14@huawei.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, suzhuangluan@hisilicon.com, xuezhiliang@hisilicon.com, kevin.wangtao@hisilicon.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180302134804.3690-1-bparrot@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leo, YiPing,
-
-On 2018/2/28 5:06, Leo Yan wrote:
-> Hi Wei,
-> 
-> On Fri, Nov 17, 2017 at 05:27:32PM +0800, Xu YiPing wrote:
->> From: Kaihua Zhong <zhongkaihua@huawei.com>
->>
->> Add DT binding for Hi3660 stub clock driver.
->>
->> Reviewed-by: Leo Yan <leo.yan@linaro.org>
->> Signed-off-by: Kai Zhao <zhaokai1@hisilicon.com>
->> Signed-off-by: Tao Wang <kevin.wangtao@hisilicon.com>
->> Signed-off-by: Ruyi Wang <wangruyi@huawei.com>
->> Signed-off-by: Kaihua Zhong <zhongkaihua@huawei.com>
-> 
-> Could you help to pick up this patch? Thanks!
-
-It failed to merge because of the mailbox part.
-Once the mailbox driver is accepted, I will pick up this.
-Thanks!
-
-Best Regards,
-Wei
-
-> 
->> ---
->>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> index 451b6bf..cbbc7f1 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
->> @@ -293,6 +293,13 @@
->>  			#mbox-cells = <3>;
->>  		};
->>  
->> +		stub_clock: stub_clock@e896b500 {
->> +			compatible = "hisilicon,hi3660-stub-clk";
->> +			reg = <0x0 0xe896b500 0x0 0x0100>;
->> +			#clock-cells = <1>;
->> +			mboxes = <&mailbox 13 3 0>;
->> +		};
->> +
->>  		dual_timer0: timer@fff14000 {
->>  			compatible = "arm,sp804", "arm,primecell";
->>  			reg = <0x0 0xfff14000 0x0 0x1000>;
->> -- 
->> 1.9.1
->>
-> 
-> .
-> 
+QWRkICdwbGFuZScgY2hpbGQgbm9kZSB0byBnZW5lcmljIERJU1BDIG5vZGUgYXMgYW4gb3B0aW9u
+YWwKcHJvcGVydHkuCgpTaWduZWQtb2ZmLWJ5OiBCZW5vaXQgUGFycm90IDxicGFycm90QHRpLmNv
+bT4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAtZHNzLnR4
+dCB8IDYzICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA2MyBpbnNlcnRp
+b25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvdGkvdGksb21hcC1kc3MudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0CmluZGV4IDI0OWU1ODhkNzg2NS4uY2IxMDE1
+MjViODA1IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS90aS90aSxvbWFwLWRzcy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0CkBAIC0yNyw2ICsyNywzNCBAQCBESVNQ
+QwogT3B0aW9uYWwgcHJvcGVydGllczoKIC0gbWF4LW1lbW9yeS1iYW5kd2lkdGg6IElucHV0IG1l
+bW9yeSAoZnJvbSBtYWluIG1lbW9yeSB0byBkaXNwYykgYmFuZHdpZHRoIGxpbWl0CiAJCQlpbiBi
+eXRlcyBwZXIgc2Vjb25kCistIHBsYW5lOiBDaGlsZCBub2RlKHMpIHdoaWNoIGRlZmluZXMgd2hp
+Y2ggbG9naWNhbCBwbGFuZSBhcmUgYXZhaWxhYmxlIHRvCisJdGhlIHN5c3RlbS4gSWYgYXQgbGVh
+c3Qgb25lIHBsYW5lIGNoaWxkIG5vZGUgaXMgZGVmaW5lZCB0aGVuCisJb25seSBwbGFuZXMgZGVm
+aW5lZCBieSB0aGVzZSBub2RlcyB3aWxsIGJlIGF2YWlsYWJsZSB0byB0aGUgc3lzdGVtLgorCVBs
+YW5lIG5vZGVzIG11c3QgYmUgc2VxdWVudGlhbCBzdGFydGluZyB3aXRoIHJlZyA9IDwwPiBhcyBE
+VCBwYXJzaW5nCisJd2lsbCBzdG9wIG9uIHRoZSBmaXJzdCBtaXNzaW5nIG51bWJlcmVkIG5vZGUu
+CisJVGhpcyBtZWFucyBpZiBwbGFuZSAjMSBpcyBkZWZpbmVkIGJ1dCBwbGFuZSAjMCBpcyBub3Qg
+dGhlbiBpdCB3aWxsCisJYmUgYXMgaWYgbm9uZSBvZiB0aGUgcGxhbmUgbm9kZXMgd2VyZSBkZWZp
+bmVkLgorCisJRWFjaCBwbGFuZSBub2RlIGNvbnRhaW5zIHRoZSBmb2xsb3dpbmcgcHJvcGVydGll
+czoKKwlSZXF1aXJlZCBwcm9wZXJ0aWVzOgorCS0gcmVnOiAgICAgICBVc2VkIHRvIG51bWJlciB0
+aGUgbG9naWNhbCBwbGFuZQorCS0gaHctcGxhbmVzOiBPbmUgb3IgdHdvIEhXIHBsYW5lIG51bWJl
+cihzKS4KKwkJICAgICBXaGVuIDIgbnVtYmVycyBhcmUgcHJlc2VudCB0aGlzIGluZGljYXRlcyBh
+IHZpcnR1YWwgcGxhbmUKKwkJICAgICBjb21wb3NlZCBvZiB0d28gcGh5c2ljYWwgcGxhbmVzIGlu
+dGVuZGVkIHRvIGJlIHVzZWQKKwkJICAgICB3aGVuIHRoZSBkaXNwbGF5IGlzIGxhcmdlciB0aGVu
+IHRoZSBjYXBhY2l0eSBvZiBhCisJCSAgICAgc2luZ2xlIHBsYW5lIGkuZS4gd2lkZXIgdGhhbiAy
+MDQ4IHBpeGVscy4KKwkJICAgICBUaGUgZmlyc3QgbnVtYmVyIGluIHRoZSBwYWlyIHdpbGwgZGlj
+dGF0ZSB0aGUgY2FwYWJpbGl0aWVzCisJCSAgICAgb2YgdGhlIHZpcnR1YWwgcGxhbmUuIFRoaXMg
+bWVhbnMgdGhhdCBmb3IgcHJvcGVyCisJCSAgICAgb3BlcmF0aW9uIHRoZSB2aXJ0dWFsIHBsYW5l
+IHNob3VsZCBiZSBjb21wb3NlZCBvZiBIVworCQkgICAgIHBsYW5lcyBvZiB0aGUgc2FtZSBjYXBh
+YmlsaXRpZXMuCisJCSAgICAgSWYgR0ZYIHBsYW5lIGlzIHVzZWQgaW4gYSB2aXJ0dWFsIHBsYW5l
+IGl0IHNob3VsZCBiZQorCQkgICAgIHNwZWNpZmllZCBmaXJzdCwgb3RoZXJ3aXNlIHVuZXhwZWN0
+ZWQgYmVoYXZpb3Igd291bGQKKwkJICAgICBiZSBlbmNvdW50ZXJlZC4KKwlPcHRpb25hbCBwcm9w
+ZXJ0eToKKwktIGh3LWNydGNzOiAgT25lIG9yIG1vcmUgSFcgY3J0YyBudW1iZXIocykuCisJCSAg
+ICAgRGVzY3JpYmUgdGhlIGxpc3Qgb2YgQ1JUQ3Mgb24gd2hpY2ggdGhpcyBwbGFuZSBpcworCQkg
+ICAgIGF2YWlsYWJsZS4gSWYgdGhpcyBub2RlIGlzIG5vdCBwcmVzZW50IHRoZW4gdGhlCisJCSAg
+ICAgcGxhbmUgd2lsbCBiZSBhdmFpbGFibGUgb24gYWxsIGF2YWlsYWJsZSBDUlRDcy4KIAogVmlk
+ZW8gUG9ydHMKIC0tLS0tLS0tLS0tCkBAIC0yMTYsMyArMjQ0LDM4IEBAIE9NQVAgSERNSSAtLShI
+RE1JKS0tPiBUUEQxMlMwMTUgLS0oSERNSSktLT4gSERNSSBDb25uZWN0b3IKIAkJfTsKIAl9Owog
+fTsKKworQSBzaG9ydCBleGFtcGxlIG9uIGhvdyB0byBkZWZpbmUgYSB2aXJ0dWFsIHBsYW5lIGNv
+bmZpZ3VyYXRpb24KK3RvIGVuYWJsZSB3aWRlIGRpc3BsYXkgc3VwcG9ydC4KK0hlcmUgd2UgZGVm
+aW5lOgorLSBwbGFuZSMwIHRvIGJlIHRoZSBIVyBwbGFuZSAjMCAoaS5lLiBHRlggcGxhbmUpCisJ
+ICBvbmx5IGF2YWlsYWJsZSBvbiBjcnRjICMwCistIHBsYW5lIzEgdG8gYmUgYSB2aXJ0dWFsIHdp
+ZGUgcGxhbmUgY29tcG9zZWQgb2YgSFcgcGxhbmUgIzEgYW5kICMyCisJICAoaS5lLiBWSUQxICYg
+VklEMikgYXZhaWxhYmxlIG9uIGNydGMgIzAgJiAjMQorLSBwbGFuZSMyIHRvIGJlIHRoZSBIVyBw
+bGFuZSAjMyAoaS5lLiBWSUQzIHBsYW5lKQorCSAgb25seSBhdmFpbGFibGUgb24gY3J0YyAjMAor
+CismZHNzIHsKKyAgICAgICAgZGlzcGNANTgwMDEwMDAgeworICAgICAgICAgICAgICAgICNhZGRy
+ZXNzLWNlbGxzID0gPDE+OworICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+OworCisg
+ICAgICAgICAgICAgICAgcGxhbmVAMCB7CisgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
+MD47CisgICAgICAgICAgICAgICAgICAgICAgICBody1wbGFuZXMgPSA8MD47CisgICAgICAgICAg
+ICAgICAgICAgICAgICBody1jcnRjcyA9IDwwPjsKKyAgICAgICAgICAgICAgICB9OworCisgICAg
+ICAgICAgICAgICAgcGxhbmVAMSB7CisgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47
+CisgICAgICAgICAgICAgICAgICAgICAgICBody1wbGFuZXMgPSA8MSAyPjsKKyAgICAgICAgICAg
+ICAgICAgICAgICAgIGh3LWNydGNzID0gPDAgMT47CisgICAgICAgICAgICAgICAgfTsKKworICAg
+ICAgICAgICAgICAgIHBsYW5lQDIgeworICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDI+
+OworICAgICAgICAgICAgICAgICAgICAgICAgaHctcGxhbmVzID0gPDM+OworICAgICAgICAgICAg
+ICAgICAgICAgICAgaHctY3J0Y3MgPSA8MD47CisgICAgICAgICAgICAgICAgfTsKKyAgICAgICAg
+fTsKK307Ci0tIAoyLjkuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
