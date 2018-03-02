@@ -1,40 +1,49 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 10/10] MAINTAINERS: Add Actions Semi S900 pinctrl and gpio entries
-Date: Fri,  2 Mar 2018 09:20:45 +0530
-Message-ID: <20180302035045.14660-11-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v4 02/10] arm64: dts: actions: Add pinctrl node for S900
+Date: Fri,  2 Mar 2018 09:20:37 +0530
+Message-ID: <20180302035045.14660-3-manivannan.sadhasivam@linaro.org>
 References: <20180302035045.14660-1-manivannan.sadhasivam@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180302035045.14660-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de
-Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: devicetree@vger.kernel.org, daniel.thompson@linaro.org, manivannanece23@gmail.com, hzhang@ucrobotics.com, bdong@ucrobotics.com, liuwei@actions-semi.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-gpio@vger.kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add S900 pinctrl and gpio entries under ARCH_ACTIONS
+Add pinctrl nodes for Actions Semi S900 SoC
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- MAINTAINERS | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/actions/s900.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 640dabc4c311..d63793ee545e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1125,10 +1125,14 @@ F:	arch/arm/mach-actions/
- F:	arch/arm/boot/dts/owl-*
- F:	arch/arm64/boot/dts/actions/
- F:	drivers/clocksource/owl-*
-+F:	drivers/gpio/gpio-owl.c
-+F:	drivers/pinctrl/actions/*
- F:	drivers/soc/actions/
- F:	include/dt-bindings/power/owl-*
- F:	include/linux/soc/actions/
- F:	Documentation/devicetree/bindings/arm/actions.txt
-+F:	Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
-+F:	Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
- F:	Documentation/devicetree/bindings/power/actions,owl-sps.txt
- F:	Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+diff --git a/arch/arm64/boot/dts/actions/s900.dtsi b/arch/arm64/boot/dts/actions/s900.dtsi
+index fee0c9557656..0156483f0f4d 100644
+--- a/arch/arm64/boot/dts/actions/s900.dtsi
++++ b/arch/arm64/boot/dts/actions/s900.dtsi
+@@ -174,6 +174,12 @@
+ 			#clock-cells = <1>;
+ 		};
  
++		pinctrl: pinctrl@e01b0000 {
++			compatible = "actions,s900-pinctrl";
++			reg = <0x0 0xe01b0000 0x0 0x1000>;
++			clocks = <&cmu CLK_GPIO>;
++		};
++
+ 		timer: timer@e0228000 {
+ 			compatible = "actions,s900-timer";
+ 			reg = <0x0 0xe0228000 0x0 0x8000>;
 -- 
 2.14.1
