@@ -1,68 +1,38 @@
-Return-Path: <SRS0=XOdB=F7=vanguardiasur.com.ar=ezequiel@kernel.org>
-From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Subject: [PATCH 06/14] mmc: dt-bindings: add MMC support to JZ4740 SoC
-Date: Fri,  9 Mar 2018 12:12:11 -0300
-Message-Id: <20180309151219.18723-7-ezequiel@vanguardiasur.com.ar>
-In-Reply-To: <20180309151219.18723-1-ezequiel@vanguardiasur.com.ar>
-References: <20180309151219.18723-1-ezequiel@vanguardiasur.com.ar>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Paul Cercueil <paul@crapouillou.net>
-Cc: linux-mmc@vger.kernel.org, linux-mips@linux-mips.org, James Hogan <jhogan@kernel.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=Eo6U=FY=linux-m68k.org=geert@kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 1/2] dt-bindings: pwm: renesas-tpu: Correct example TPU register block size
+Date: Fri,  2 Mar 2018 15:39:44 +0100
+Message-Id: <1520001585-12899-2-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1520001585-12899-1-git-send-email-geert+renesas@glider.be>
+References: <1520001585-12899-1-git-send-email-geert+renesas@glider.be>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the devicetree binding for JZ4740/JZ4780 SoC.
+The Timer Pulse Unit on R-Mobile A1 has registers that lie outside the
+declared register block.  Enlarge the register block size to fix this.
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/mmc/jz4740.txt | 38 ++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/jz4740.txt
+v2:
+  - Add Reviewed-by.
+---
+ Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/jz4740.txt b/Documentation/devicetree/bindings/mmc/jz4740.txt
-new file mode 100644
-index 000000000000..7cd8c432d7c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/jz4740.txt
-@@ -0,0 +1,38 @@
-+* Ingenic JZ47xx MMC controllers
-+
-+This file documents the device tree properties used for the MMC controller in
-+Ingenic JZ4740/JZ4780 SoCs. These are in addition to the core MMC properties
-+described in mmc.txt.
-+
-+Required properties:
-+- compatible: Should be one of the following:
-+  - "ingenic,jz4740-mmc" for the JZ4740
-+  - "ingenic,jz4780-mmc" for the JZ4780
-+- reg: Should contain the MMC controller registers location and length.
-+- interrupts: Should contain the interrupt specifier of the MMC controller.
-+- clocks: Clock for the MMC controller.
-+
-+Optional properties:
-+- dmas: List of DMA specifiers with the controller specific format
-+        as described in the generic DMA client binding. A tx and rx
-+        specifier is required.
-+- dma-names: RX and TX  DMA request names.
-+        Should be "rx" and "tx", in that order.
-+
-+For additional details on DMA client bindings see ../dma/dma.txt.
-+
-+Example:
-+
-+mmc0: mmc@13450000 {
-+	compatible = "ingenic,jz4780-mmc";
-+	reg = <0x13450000 0x1000>;
-+
-+	interrupt-parent = <&intc>;
-+	interrupts = <37>;
-+
-+	clocks = <&cgu JZ4780_CLK_MSC0>;
-+	clock-names = "mmc";
-+
-+	dmas = <&dma JZ4780_DMA_MSC0_RX 0xffffffff>, <&dma JZ4780_DMA_MSC0_TX 0xffffffff>;
-+	dma-names = "rx", "tx";
-+};
+diff --git a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
+index 1aadc804dae4e30b..641b5b4c648340ee 100644
+--- a/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
++++ b/Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt
+@@ -22,6 +22,6 @@ Example: R8A7740 (R-Car A1) TPU controller node
+ 
+ 	tpu: pwm@e6600000 {
+ 		compatible = "renesas,tpu-r8a7740", "renesas,tpu";
+-		reg = <0xe6600000 0x100>;
++		reg = <0xe6600000 0x148>;
+ 		#pwm-cells = <3>;
+ 	};
 -- 
-2.16.2
+2.7.4
