@@ -1,256 +1,95 @@
-From: Maciej Purski <m.purski@samsung.com>
-Subject: [PATCH v5 5/5] regulator: core: Change voltage setting path
-Date: Fri, 02 Mar 2018 09:42:49 +0100
-Message-ID: <1519980169-8491-6-git-send-email-m.purski@samsung.com>
-References: <1519980169-8491-1-git-send-email-m.purski@samsung.com>
-        <CGME20180302085129eucas1p165d7e94517ca9c6fee534f53a88125a9@eucas1p1.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1519980169-8491-1-git-send-email-m.purski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RESEND PATCH v5 0/6] IR support for A83T
+Date: Fri, 2 Mar 2018 13:11:34 +0100
+Message-ID: <85ddc129-d0f8-6299-dca0-81f79f3d04a9@gmail.com>
+References: <20180213122952.8420-1-embed3d@gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBD257DPK24NRB6P64TKAKGQERCHPYKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180213122952.8420-1-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
-different devices on the board are supplied by different regulators
-with non-fixed voltages. If one of these devices temporarily requires
-higher voltage, there might occur a situation that the spread between
-two devices' voltages is so high, that there is a risk of changing
-'high' and 'low' states on the interconnection between devices powered
-by those regulators.
 
-Uncoupled regulators should be a special case of coupled regulators, so
-they should share a common voltage setting path. When enabling,
-disabling or setting voltage of a coupled regulator, all coupled
-regulators should be locked. Regulator's supplies should be locked, when
-setting voltage of a single regulator. Enabling a coupled regulator or
-setting its voltage should not be possible if some of its coupled
-regulators, has not been registered.
 
-Add function for locking coupled regulators. Extract a new function
-regulator_set_voltage_rdev() from regulator_set_voltage_unlocked(),
-which is called when setting voltage of a single regulator.
+On 13.02.2018 13:29, Philipp Rossak wrote:
+> This patch series adds support for the sunxi A83T ir module and enhances
+> the sunxi-ir driver. Right now the base clock frequency for the ir driver
+> is a hard coded define and is set to 8 MHz.
+> This works for the most common ir receivers. On the Sinovoip Bananapi M3
+> the ir receiver needs, a 3 MHz base clock frequency to work without
+> problems with this driver.
+> 
+> This patch series adds support for an optinal property that makes it able
+> to override the default base clock frequency and enables the ir interface
+> on the a83t and the Bananapi M3.
+> 
+> changes since v4:
+> * rename cir pin from cir_pins to r_cir_pin
+> * drop unit-adress from r_cir_pin
+> * add a83t compatible to the cir node
+> * move muxing options to dtsi
+> * rename cir label and reorder it in the bananpim3.dts file
+> 
+> changes since v3:
+> * collecting all acks & reviewd by
+> * fixed typos
+> 
+> changes since v2:
+> * reorder cir pin (alphabetical)
+> * fix typo in documentation
+> 
+> changes since v1:
+> * fix typos, reword Documentation
+> * initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
+> * change dev_info() to dev_dbg()
+> * change naming to cir* in dts/dtsi
+> * Added acked Ackedi-by to related patch
+> * use whole memory block instead of registers needed + fix for h3/h5
+> 
+> changes since rfc:
+> * The property is now optinal. If the property is not available in
+>    the dtb the driver uses the default base clock frequency.
+> * the driver prints out the the selected base clock frequency.
+> * changed devicetree property from base-clk-frequency to clock-frequency
+> 
+> Regards,
+> Philipp
+> 
+> Philipp Rossak (6):
+>    media: rc: update sunxi-ir driver to get base clock frequency from
+>      devicetree
+>    media: dt: bindings: Update binding documentation for sunxi IR
+>      controller
+>    arm: dts: sun8i: a83t: Add the cir pin for the A83T
+>    arm: dts: sun8i: a83t: Add support for the cir interface
+>    arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
+>    arm: dts: sun8i: h3-h5: ir register size should be the whole memory
+>      block
+> 
+>   Documentation/devicetree/bindings/media/sunxi-ir.txt |  3 +++
+>   arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  5 +++++
+>   arch/arm/boot/dts/sun8i-a83t.dtsi                    | 18 ++++++++++++++++++
+>   arch/arm/boot/dts/sunxi-h3-h5.dtsi                   |  2 +-
+>   drivers/media/rc/sunxi-cir.c                         | 19 +++++++++++--------
+>   5 files changed, 38 insertions(+), 9 deletions(-)
+>
 
-Signed-off-by: Maciej Purski <m.purski@samsung.com>
----
- drivers/regulator/core.c | 101 +++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 81 insertions(+), 20 deletions(-)
+I talked yesterday with Maxime about this patch series. And he told me 
+if the first to patches got merged, he will apply the dts patches to the 
+sunxi tree.
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index b24a987..dedf737 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -107,6 +107,9 @@ static int _regulator_do_set_voltage(struct regulator_dev *rdev,
- 				     int min_uV, int max_uV);
- static int regulator_balance_voltage(struct regulator_dev *rdev,
- 				     suspend_state_t state);
-+static int regulator_set_voltage_rdev(struct regulator_dev *rdev,
-+				      int min_uV, int max_uV,
-+				      suspend_state_t state);
- static struct regulator *create_regulator(struct regulator_dev *rdev,
- 					  struct device *dev,
- 					  const char *supply_name);
-@@ -180,6 +183,36 @@ static void regulator_unlock_supply(struct regulator_dev *rdev)
- }
- 
- /**
-+ * regulator_lock_coupled - lock a group of coupled regulators
-+ * @rdev:      regulator source
-+ */
-+static void regulator_lock_coupled(struct regulator_dev *rdev)
-+{
-+	struct coupling_desc *c_desc = &rdev->coupling_desc;
-+	int n_coupled = c_desc->n_coupled;
-+	int i;
-+
-+	for (i = 0; i < n_coupled; i++)
-+		if (c_desc->coupled_rdevs[i])
-+			mutex_lock_nested(&c_desc->coupled_rdevs[i]->mutex, i);
-+}
-+
-+/**
-+ * regulator_unlock_coupled - unlock a group of coupled regulators
-+ * @rdev:      regulator source
-+ */
-+static void regulator_unlock_coupled(struct regulator_dev *rdev)
-+{
-+	struct coupling_desc *c_desc = &rdev->coupling_desc;
-+	int n_coupled = c_desc->n_coupled;
-+	int i;
-+
-+	for (i = 0; i < n_coupled; i++)
-+		if (c_desc->coupled_rdevs[i])
-+			mutex_unlock(&c_desc->coupled_rdevs[i]->mutex);
-+}
-+
-+/**
-  * of_get_regulator - get a regulator device node based on supply name
-  * @dev: Device pointer for the consumer (of regulator) device
-  * @supply: regulator supply name
-@@ -2199,6 +2232,11 @@ int regulator_enable(struct regulator *regulator)
- 	struct regulator_dev *rdev = regulator->rdev;
- 	int ret = 0;
- 
-+	if (rdev->coupling_desc.n_resolved != rdev->coupling_desc.n_coupled) {
-+		rdev_err(rdev, "not all coupled regulators registered\n");
-+		return -EPERM;
-+	}
-+
- 	if (regulator->always_on)
- 		return 0;
- 
-@@ -2208,9 +2246,10 @@ int regulator_enable(struct regulator *regulator)
- 			return ret;
- 	}
- 
--	mutex_lock(&rdev->mutex);
-+	regulator_lock_coupled(rdev);
- 	ret = _regulator_enable(rdev);
--	mutex_unlock(&rdev->mutex);
-+	regulator_balance_voltage(rdev, PM_SUSPEND_ON);
-+	regulator_unlock_coupled(rdev);
- 
- 	if (ret != 0 && rdev->supply)
- 		regulator_disable(rdev->supply);
-@@ -2316,9 +2355,10 @@ int regulator_disable(struct regulator *regulator)
- 	if (regulator->always_on)
- 		return 0;
- 
--	mutex_lock(&rdev->mutex);
-+	regulator_lock_coupled(rdev);
- 	ret = _regulator_disable(rdev);
--	mutex_unlock(&rdev->mutex);
-+	regulator_balance_voltage(rdev, PM_SUSPEND_ON);
-+	regulator_unlock_coupled(rdev);
- 
- 	if (ret == 0 && rdev->supply)
- 		regulator_disable(rdev->supply);
-@@ -2367,10 +2407,11 @@ int regulator_force_disable(struct regulator *regulator)
- 	struct regulator_dev *rdev = regulator->rdev;
- 	int ret;
- 
--	mutex_lock(&rdev->mutex);
-+	regulator_lock_coupled(rdev);
- 	regulator->uA_load = 0;
- 	ret = _regulator_force_disable(regulator->rdev);
--	mutex_unlock(&rdev->mutex);
-+	regulator_balance_voltage(rdev, PM_SUSPEND_ON);
-+	regulator_unlock_coupled(rdev);
- 
- 	if (rdev->supply)
- 		while (rdev->open_count--)
-@@ -2929,8 +2970,12 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 	int ret = 0;
- 	int old_min_uV, old_max_uV;
- 	int current_uV;
--	int best_supply_uV = 0;
--	int supply_change_uV = 0;
-+
-+	if (rdev->coupling_desc.n_resolved != rdev->coupling_desc.n_coupled) {
-+		rdev_err(rdev, "not all coupled regulators registered\n");
-+		ret = -EPERM;
-+		goto out;
-+	}
- 
- 	/* If we're setting the same range as last time the change
- 	 * should be a noop (some cpufreq implementations use the same
-@@ -2974,6 +3019,27 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 	if (ret < 0)
- 		goto out2;
- 
-+	/* for not coupled regulators this will just set the voltage */
-+	ret = regulator_balance_voltage(rdev, state);
-+	if (ret < 0)
-+		goto out2;
-+
-+out:
-+	return 0;
-+out2:
-+	voltage->min_uV = old_min_uV;
-+	voltage->max_uV = old_max_uV;
-+
-+	return ret;
-+}
-+
-+static int regulator_set_voltage_rdev(struct regulator_dev *rdev, int min_uV,
-+				      int max_uV, suspend_state_t state)
-+{
-+	int best_supply_uV = 0;
-+	int supply_change_uV = 0;
-+	int ret;
-+
- 	if (rdev->supply &&
- 	    regulator_ops_is_valid(rdev->supply->rdev,
- 				   REGULATOR_CHANGE_VOLTAGE) &&
-@@ -2985,13 +3051,13 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 		selector = regulator_map_voltage(rdev, min_uV, max_uV);
- 		if (selector < 0) {
- 			ret = selector;
--			goto out2;
-+			goto out;
- 		}
- 
- 		best_supply_uV = _regulator_list_voltage(rdev, selector, 0);
- 		if (best_supply_uV < 0) {
- 			ret = best_supply_uV;
--			goto out2;
-+			goto out;
- 		}
- 
- 		best_supply_uV += rdev->desc->min_dropout_uV;
-@@ -2999,7 +3065,7 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 		current_supply_uV = _regulator_get_voltage(rdev->supply->rdev);
- 		if (current_supply_uV < 0) {
- 			ret = current_supply_uV;
--			goto out2;
-+			goto out;
- 		}
- 
- 		supply_change_uV = best_supply_uV - current_supply_uV;
-@@ -3011,7 +3077,7 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 		if (ret) {
- 			dev_err(&rdev->dev, "Failed to increase supply voltage: %d\n",
- 					ret);
--			goto out2;
-+			goto out;
- 		}
- 	}
- 
-@@ -3021,7 +3087,7 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 		ret = _regulator_do_set_suspend_voltage(rdev, min_uV,
- 							max_uV, state);
- 	if (ret < 0)
--		goto out2;
-+		goto out;
- 
- 	if (supply_change_uV < 0) {
- 		ret = regulator_set_voltage_unlocked(rdev->supply,
-@@ -3035,11 +3101,6 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 
- out:
- 	return ret;
--out2:
--	voltage->min_uV = old_min_uV;
--	voltage->max_uV = old_max_uV;
--
--	return ret;
- }
- 
- static int regulator_get_optimal_voltage(struct regulator_dev *rdev)
-@@ -3254,12 +3315,12 @@ int regulator_set_voltage(struct regulator *regulator, int min_uV, int max_uV)
- {
- 	int ret = 0;
- 
--	regulator_lock_supply(regulator->rdev);
-+	regulator_lock_coupled(regulator->rdev);
- 
- 	ret = regulator_set_voltage_unlocked(regulator, min_uV, max_uV,
- 					     PM_SUSPEND_ON);
- 
--	regulator_unlock_supply(regulator->rdev);
-+	regulator_unlock_coupled(regulator->rdev);
- 
- 	return ret;
- }
--- 
-2.7.4
+Sean, can you merge the first two patches through the rc-core?
+
+Thanks,
+Philipp
