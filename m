@@ -1,107 +1,257 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/8] arm64: zynqmp: Add support for Xilinx zcu102
-Date: Fri, 2 Mar 2018 10:48:03 -0600
-Message-ID: <20180302164803.nb45aqgqvnzxuyn5@rob-hp-laptop>
-References: <cover.1519396753.git.michal.simek@xilinx.com>
- <dd5933d6a49247de4b3b7516ed7fab55d1b3eb90.1519396753.git.michal.simek@xilinx.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: tpc: Device tree description of the TPC board
+Date: Fri, 2 Mar 2018 13:57:02 -0300
+Message-ID: <CAOMZO5BTnfHRkGnROh3LJoGVPcBcQk=rroYip4V1DDBUbkRuKw@mail.gmail.com>
+References: <20180302121750.12865-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dd5933d6a49247de4b3b7516ed7fab55d1b3eb90.1519396753.git.michal.simek@xilinx.com>
+In-Reply-To: <20180302121750.12865-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, monstr@monstr.eu, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Lukasz Majewski <lukma@denx.de>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 23, 2018 at 03:40:25PM +0100, Michal Simek wrote:
-> This patch is adding revA, revB and rev1.0. There are also other
-> revisions between which should be backward compatible with previous
-> versions. Unfortunately all revs are still in use.
-> 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> 
-> Changes in v2:
-> - Remove i2c mw u-boot commands
-> - Use i2c-mux instead of i2cswitch
-> - Use clock generator without numbers.
-> - Use dash in node name zcu102 rev1.0
-> - Record compatible string to xilinx.txt
-> 
->  Documentation/devicetree/bindings/arm/xilinx.txt   |   5 +
->  arch/arm64/boot/dts/xilinx/Makefile                |   3 +
->  .../arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts |  36 ++
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts  | 550 +++++++++++++++++++++
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts  |  42 ++
->  5 files changed, 636 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu102-rev1.0.dts
->  create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
->  create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+Hi Lukasz,
 
-Reviewed-by: Rob Herring <robh@kernel.org> 
+In addition to Sascha's comments:
 
-but...
+On Fri, Mar 2, 2018 at 9:17 AM, Lukasz Majewski <lukma@denx.de> wrote:
 
-
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
+> diff --git a/arch/arm/boot/dts/imx6q-kp-tpc.dts b/arch/arm/boot/dts/imx6q-kp-tpc.dts
 > new file mode 100644
-> index 000000000000..ed3cc684931f
+> index 000000000000..955462e778c9
 > --- /dev/null
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revB.dts
-> @@ -0,0 +1,42 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+> +++ b/arch/arm/boot/dts/imx6q-kp-tpc.dts
+> @@ -0,0 +1,84 @@
 > +/*
-> + * dts file for Xilinx ZynqMP ZCU102 RevB
+> + * Copyright 2018
+> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
 > + *
-> + * (C) Copyright 2016 - 2018, Xilinx, Inc.
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
 > + *
-> + * Michal Simek <michal.simek@xilinx.com>
+> + *  a) This file is licensed under the terms of the GNU General Public
+> + *     License version 2.  This program is licensed "as is" without
+> + *     any warranty of any kind, whether express or implied.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
 > + */
 > +
-> +#include "zynqmp-zcu102-revA.dts"
+
+Please consider using SPDX tag instead.
+
+> +/dts-v1/;
+> +
+> +#include "imx6q-kp.dtsi"
 > +
 > +/ {
-> +	model = "ZynqMP ZCU102 RevB";
-> +	compatible = "xlnx,zynqmp-zcu102-revB", "xlnx,zynqmp-zcu102", "xlnx,zynqmp";
+> +       model = "Freescale i.MX6 Quad K+P TPC Board";
+> +       compatible = "fsl,imx6q-tpc", "fsl,imx6q";
+
+Use the board manufacturer symbol instead.
+
+If needed, add an entry for the vendor at
+Documentation/devicetree/bindings/vendor-prefixes.txt
+
 > +};
 > +
-> +&gem3 {
-> +	phy-handle = <&phyc>;
-> +	phyc: phy@c {
-> +		reg = <0xc>;
-> +		ti,rx-internal-delay = <0x8>;
-> +		ti,tx-internal-delay = <0xa>;
-> +		ti,fifo-depth = <0x1>;
-> +	};
-> +	/* Cleanup from RevA */
-> +	/delete-node/ phy@21;
+> +&lcd_display {
+> +       display-timings {
+> +               800x480x60 {
+> +                       clock-frequency = <34209000>;
+> +                       hactive = <800>;
+> +                       vactive = <480>;
+> +                       hback-porch = <85>;
+> +                       hfront-porch = <15>;
+> +                       vback-porch = <34>;
+> +                       vfront-porch = <10>;
+> +                       hsync-len = <28>;
+> +                       vsync-len = <1>;
+> +                       hsync-active = <1>;
+> +                       vsync-active = <1>;
+> +                       de-active = <1>;
+> +               };
+> +       };
+> +};
+
+We prefer to use a compatible panel entry instead of keeping the panel
+timings inside the dts.
+
+> +
+> +&ipu1_di0_disp0 {
+> +       remote-endpoint = <&lcd_display_in>;
 > +};
 > +
-> +/* Different qspi 512Mbit version */
-
-Stray comment
-
-> +
-> +/* Fix collision with u61 */
-> +&i2c0 {
-> +	i2cswitch@75 {
-
-Missed this name.
-
-This probably creates a new node rather than going into the existing 
-tree. If this compiles, we should fix it to not allow the same 
-unit-address twice.
-
-> +		i2c@2 {
-> +			max15303@1b { /* u8 */
-> +				compatible = "maxim,max15303";
-> +				reg = <0x1b>;
-> +			};
-> +			/delete-node/ max15303@20;
-> +		};
-> +	};
+> +&can1 {
+> +       status = "disabled";
 > +};
-> -- 
-> 1.9.1
-> 
+> +
+> +&can2 {
+> +       status = "disabled";
+> +};
+> +
+> +&uart1 {
+> +       status = "okay";
+> +};
+> +
+> +&uart2 {
+> +       status = "disabled";
+> +};
+> diff --git a/arch/arm/boot/dts/imx6q-kp.dtsi b/arch/arm/boot/dts/imx6q-kp.dtsi
+> new file mode 100644
+> index 000000000000..47a10fb1d46b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-kp.dtsi
+> @@ -0,0 +1,468 @@
+> +/*
+> + * Copyright 2018
+> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is licensed under the terms of the GNU General Public
+> + *     License version 2.  This program is licensed "as is" without
+> + *     any warranty of any kind, whether express or implied.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+
+SPDX, please.
+
+
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               green {
+> +                       label = "led1";
+> +                       gpios = <&gpio3 16 0>;
+
+gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
+
+> +                       linux,default-trigger = "gpio";
+> +                       default-state = "off";
+> +               };
+> +
+> +               red {
+> +                       label = "led0";
+> +                       gpios = <&gpio3 23 0>;
+
+GPIO_ACTIVE_HIGH
+
+> +                       linux,default-trigger = "gpio";
+> +                       default-state = "off";
+> +               };
+> +       };
+> +
+> +       memory: memory {
+> +               reg = <0x10000000 0x40000000>;
+> +       };
+
+ memory@10000000 otherwise warnings are seen when building with W=1.
+
+Make sure that building the dtb with W=1 introduces no warnings.
+
+> +&i2c1 {
+> +       clock-frequency = <400000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c1>;
+> +       status = "okay";
+> +
+> +       goodix_ts@5d {
+> +               compatible = "goodix,gt911";
+> +               reg = <0x5d>;
+> +
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_ts>;
+> +
+
+No need for these blank lines.
+
+> +               interrupt-parent = <&gpio1>;
+> +               interrupts = <9 2>;
+
+Please use an IRQ flag.
+
+> +               irq-gpios = <&gpio1 9 0>;
+
+GPIO_ACTIVE_HIGH
+
+> +               reset-gpios = <&gpio5 2 0>;
+
+GPIO_ACTIVE_HIGH.
+
+> +&i2c2 {
+> +       clock-frequency = <400000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c2>;
+> +       status = "okay";
+> +
+> +       codec: sgtl5000@a {
+> +               compatible = "fsl,sgtl5000";
+> +               #sound-dai-cells = <0>;
+> +               reg = <0x0a>;
+> +
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_codec>;
+> +
+
+No need for these blank lines.
+
+> +               clocks = <&clks IMX6QDL_CLK_CKO>;
+> +               VDDA-supply = <&reg_3p3v>;
+> +               VDDIO-supply = <&reg_3p3v>;
+
+> +&uart2 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_uart2>;
+> +       fsl,uart-has-rtscts;
+
+ fsl,uart-has-rtscts has been deprecated. Please use  uart-has-rtscts instead.
