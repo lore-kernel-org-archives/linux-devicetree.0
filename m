@@ -1,168 +1,97 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 06/11] clk: actions: Add mux clock support
-Date: Fri,  2 Mar 2018 11:18:55 +0530
-Message-ID: <20180302054900.11275-7-manivannan.sadhasivam@linaro.org>
-References: <20180302054900.11275-1-manivannan.sadhasivam@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180302054900.11275-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@kernel.org, afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, davem@davemloft.net, mchehab@kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: add support for STM32 USB PHY
+ Controller (USBPHYC)
+Date: Fri, 2 Mar 2018 11:32:57 +0530
+Message-ID: <bac8ba1a-dd66-4df6-1976-c6144e35040c@ti.com>
+References: <1519918245-17333-1-git-send-email-amelie.delaunay@st.com>
+ <1519918245-17333-2-git-send-email-amelie.delaunay@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1519918245-17333-2-git-send-email-amelie.delaunay@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for Actions Semi mux clock together with helper
-functions to be used in composite clock.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/clk/actions/Makefile  |  1 +
- drivers/clk/actions/owl-mux.c | 60 ++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/actions/owl-mux.h | 61 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 122 insertions(+)
- create mode 100644 drivers/clk/actions/owl-mux.c
- create mode 100644 drivers/clk/actions/owl-mux.h
 
-diff --git a/drivers/clk/actions/Makefile b/drivers/clk/actions/Makefile
-index 1f0917872c9d..2d4aa8f35d90 100644
---- a/drivers/clk/actions/Makefile
-+++ b/drivers/clk/actions/Makefile
-@@ -2,3 +2,4 @@ obj-$(CONFIG_CLK_ACTIONS)	+= clk-owl.o
- 
- clk-owl-y			+= owl-common.o
- clk-owl-y			+= owl-gate.o
-+clk-owl-y			+= owl-mux.o
-diff --git a/drivers/clk/actions/owl-mux.c b/drivers/clk/actions/owl-mux.c
-new file mode 100644
-index 000000000000..f9c6cf2540e4
---- /dev/null
-+++ b/drivers/clk/actions/owl-mux.c
-@@ -0,0 +1,60 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// OWL mux clock driver
-+//
-+// Copyright (c) 2014 Actions Semi Inc.
-+// Author: David Liu <liuwei@actions-semi.com>
-+//
-+// Copyright (c) 2018 Linaro Ltd.
-+// Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+
-+#include <linux/clk-provider.h>
-+#include <linux/regmap.h>
-+
-+#include "owl-mux.h"
-+
-+u8 owl_mux_helper_get_parent(const struct owl_clk_common *common,
-+			     const struct owl_mux_hw *mux_hw)
-+{
-+	u32 reg;
-+	u8 parent;
-+
-+	regmap_read(common->regmap, mux_hw->reg, &reg);
-+	parent = reg >> mux_hw->shift;
-+	parent &= BIT(mux_hw->width) - 1;
-+
-+	return parent;
-+}
-+
-+static u8 owl_mux_get_parent(struct clk_hw *hw)
-+{
-+	struct owl_mux *mux = hw_to_owl_mux(hw);
-+
-+	return owl_mux_helper_get_parent(&mux->common, &mux->mux_hw);
-+}
-+
-+int owl_mux_helper_set_parent(const struct owl_clk_common *common,
-+			      struct owl_mux_hw *mux_hw, u8 index)
-+{
-+	u32 reg;
-+
-+	regmap_read(common->regmap, mux_hw->reg, &reg);
-+	reg &= ~GENMASK(mux_hw->width + mux_hw->shift - 1, mux_hw->shift);
-+	regmap_write(common->regmap, mux_hw->reg,
-+			reg | (index << mux_hw->shift));
-+
-+	return 0;
-+}
-+
-+static int owl_mux_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct owl_mux *mux = hw_to_owl_mux(hw);
-+
-+	return owl_mux_helper_set_parent(&mux->common, &mux->mux_hw, index);
-+}
-+
-+const struct clk_ops owl_mux_ops = {
-+	.get_parent = owl_mux_get_parent,
-+	.set_parent = owl_mux_set_parent,
-+	.determine_rate = __clk_mux_determine_rate,
-+};
-diff --git a/drivers/clk/actions/owl-mux.h b/drivers/clk/actions/owl-mux.h
-new file mode 100644
-index 000000000000..834284c8c3ae
---- /dev/null
-+++ b/drivers/clk/actions/owl-mux.h
-@@ -0,0 +1,61 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// OWL mux clock driver
-+//
-+// Copyright (c) 2014 Actions Semi Inc.
-+// Author: David Liu <liuwei@actions-semi.com>
-+//
-+// Copyright (c) 2018 Linaro Ltd.
-+// Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+
-+#ifndef _OWL_MUX_H_
-+#define _OWL_MUX_H_
-+
-+#include "owl-common.h"
-+
-+struct owl_mux_hw {
-+	u32			reg;
-+	u8			shift;
-+	u8			width;
-+};
-+
-+struct owl_mux {
-+	struct owl_mux_hw	mux_hw;
-+	struct owl_clk_common	common;
-+};
-+
-+#define OWL_MUX_HW(_reg, _shift, _width)		\
-+	{						\
-+		.reg	= _reg,				\
-+		.shift	= _shift,			\
-+		.width	= _width,			\
-+	}
-+
-+#define OWL_MUX(_struct, _name, _parents, _reg,				\
-+		_shift, _width, _flags)					\
-+	struct owl_mux _struct = {					\
-+		.mux_hw	= OWL_MUX_HW(_reg, _shift, _width),		\
-+		.common = {						\
-+			.regmap = NULL,					\
-+			.hw.init = CLK_HW_INIT_PARENTS(_name,		\
-+						       _parents,	\
-+						       &owl_mux_ops,	\
-+						       _flags),		\
-+		},							\
-+	}
-+
-+static inline struct owl_mux *hw_to_owl_mux(const struct clk_hw *hw)
-+{
-+	struct owl_clk_common *common = hw_to_owl_clk_common(hw);
-+
-+	return container_of(common, struct owl_mux, common);
-+}
-+
-+u8 owl_mux_helper_get_parent(const struct owl_clk_common *common,
-+			     const struct owl_mux_hw *mux_hw);
-+int owl_mux_helper_set_parent(const struct owl_clk_common *common,
-+			      struct owl_mux_hw *mux_hw, u8 index);
-+
-+extern const struct clk_ops owl_mux_ops;
-+
-+#endif /* _OWL_MUX_H_ */
--- 
-2.14.1
+On Thursday 01 March 2018 09:00 PM, Amelie Delaunay wrote:
+> This patch adds the device tree bindings description for STM32 USBPHYC
+> (USB PHY Controller).
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>  .../devicetree/bindings/phy/phy-stm32-usbphyc.txt  | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+> new file mode 100644
+> index 0000000..1ad3893
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+> @@ -0,0 +1,46 @@
+> +STMicroelectronics STM32 USB HS PHY controller
+> +
+> +The STM32 USBPHYC block contains a dual port High Speed UTMI+ PHY and a UTMI
+> +switch. It controls PHY configuration and status, and the UTMI+ switch that
+> +selects either OTG or HOST controller for the second PHY port. It also sets
+> +PLL configuration.
+> +
+> +USBPHYC
+> +      |_ PLL
+> +      |
+> +      |_ PHY port#1 _________________ HOST controller
+> +      |                    _                 |
+> +      |                  / 1|________________|
+> +      |_ PHY port#2 ----|   |________________
+> +      |                  \_0|                |
+> +      |_ UTMI switch_______|          OTG controller
+> +
+> +
+
+This should be modeled as a phy provider node with two separate sub-nodes for
+each of the PHYs.
+
+Thanks
+Kishon
+
+> +Required properties:
+> +- compatible: must be "st,stm32mp1-usbphyc"
+> +- reg: address and length of the usb phy control register set
+> +- clocks: phandle + clock specifier for the PLL phy clock
+> +- phy-supply: from the generic phy bindings, phandle to the regulator
+> +  providing 3V3 power to the PHY, see phy-bindings.txt
+> +- vdda1v1-supply: phandle to the regulator providing 1V1 power to the PHY
+> +- vdda1v8-supply: phandle to the regulator providing 1V8 power to the PHY
+> +
+> +Optional properties:
+> +- assigned-clocks: phandle + clock specifier for the PLL phy clock
+> +- assigned-clock-parents: the PLL phy clock parent
+> +- resets: phandle + reset specifier
+> +- st,utmi-switch: should be <0> or <1>, to select USB controller for PHY
+> +  port#2. If not specified, 0 is the default selection.
+> +
+> +
+> +Example:
+> +		usbphyc: usb-phy@5a006000 {
+> +			compatible = "st,stm32mp1-usbphyc";
+> +			reg = <0x5a006000 0x1000>;
+> +			clocks = <&rcc_clk USBPHY_K>;
+> +			resets = <&rcc_rst USBPHY_R>;
+> +			st,utmi-switch = <1>;
+> +			phy-supply = <&vdd_usb>;
+> +			vdda1v1-supply = <&reg11>;
+> +			vdda1v8-supply = <&reg18>
+> +		};
+> 
