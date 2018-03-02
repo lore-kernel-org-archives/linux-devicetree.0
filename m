@@ -1,83 +1,136 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v3 00/16] Implement H3/H5 HDMI driver
-Date: Fri, 2 Mar 2018 10:38:46 +0100
-Message-ID: <20180302093846.blpdniawybhu5ank@flea.lan>
-References: <20180301213442.16677-1-jernej.skrabec@siol.net>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v5 2/3] dmaengine: mediatek: Add MediaTek High-Speed DMA
+ controller for MT7622 and MT7623 SoC
+Date: Fri, 2 Mar 2018 17:51:23 +0800
+Message-ID: <1519984283.8089.182.camel@mtkswgap22>
+References: <cover.1518857746.git.sean.wang@mediatek.com>
+ <de4177cb2269c99f8d7c5738ac8a64f512122dfd.1518857747.git.sean.wang@mediatek.com>
+ <20180301082329.GD15443@localhost> <1519900021.8089.136.camel@mtkswgap22>
+ <20180301125649.GH15443@localhost> <1519973271.8089.166.camel@mtkswgap22>
+ <20180302081706.GL15443@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1091337731=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180301213442.16677-1-jernej.skrabec@siol.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, sboyd@kernel.org, wens@csie.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180302081706.GL15443@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, dmaengine@vger.kernel.org, dan.j.williams@intel.com, Fengguang Wu <fengguang.wu@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 2018-03-02 at 13:47 +0530, Vinod Koul wrote:
+> On Fri, Mar 02, 2018 at 02:47:51PM +0800, Sean Wang wrote:
+> > Hi, Vinod
+> > 
+> > On Thu, 2018-03-01 at 18:26 +0530, Vinod Koul wrote:
+> > > On Thu, Mar 01, 2018 at 06:27:01PM +0800, Sean Wang wrote:
+> > > > On Thu, 2018-03-01 at 13:53 +0530, Vinod Koul wrote:
+> > > > > On Sun, Feb 18, 2018 at 03:08:30AM +0800, sean.wang@mediatek.com wrote:
+> > > > > 
+> > > > > > @@ -0,0 +1,1054 @@
+> > > > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > > // Copyright ...
+> > > > > 
+> > > > > The copyright line needs to follow SPDX tag line
+> > > > > 
+> > > > 
+> > > > okay, I will make it reorder and be something like that
+> > > > 
+> > > > // SPDX-License-Identifier: GPL-2.0
+> > > > /*
+> > > >  * Copyright (c) 2017-2018 MediaTek Inc.
+> > > >  * Author: Sean Wang <sean.wang@mediatek.com>
+> > > >  *
+> > > >  * Driver for MediaTek High-Speed DMA Controller
+> > > >  *
+> > > >  */
+> > > 
+> > > It needs to be:
+> > > 
+> > > // SPDX-License-Identifier: GPL-2.0
+> > > // Copyright (c) 2017-2018 MediaTek Inc.
+> > > 
+> > > /*
+> > >  * whatever else you want
+> > >  */
+> > > 
+> > > The first two lines are in C99 style comment and need to have SPDX tag and
+> > > Copyright info
+> > 
+> > Sure, I can do it using C99 style comments at the first two lines.
+> > 
+> > In addition, I'm really curious where we can find a reference to the
+> > rule and if it 's a strict rule for all the drivers.
+> > 
+> > Because I'm considering whether I should turn other driver into using
+> > the same rule.
+> 
+> Yes that seems to be the rule now https://lkml.org/lkml/2017/11/2/715
+> 
 
---===============1091337731==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qcw2lpw65bzxxh3p"
-Content-Disposition: inline
+Where could I find the rule for the copyright line needed to follow SPDX
+tag line ?
 
+currently, I still seen tons of drivers putting its copyright inside 
+/* ... 
+ * 
+ */
 
---qcw2lpw65bzxxh3p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > > > > > +#define MTK_HSDMA_USEC_POLL		20
+> > > > > > +#define MTK_HSDMA_TIMEOUT_POLL		200000
+> > > > > > +#define MTK_HSDMA_DMA_BUSWIDTHS		BIT(DMA_SLAVE_BUSWIDTH_UNDEFINED)
+> > > > > 
+> > > > > Undefined buswidth??
+> > > 
+> > > ??
+> > 
+> > Sorry for I didn't answer the question in the short time.
+> > 
+> > After spending some time on a confirmation with design, it is
+> > DMA_SLAVE_BUSWIDTH_4_BYTES and not be configurable. 
+> 
+> Then it should be DMA_SLAVE_BUSWIDTH_4_BYTES and not
+> DMA_SLAVE_BUSWIDTH_UNDEFINED...
+> 
 
-On Thu, Mar 01, 2018 at 10:34:26PM +0100, Jernej Skrabec wrote:
-> This series implements H3/H5 HDMI driver. It was tested on OrangePi 2 (H3=
-),
-> OrangePi Plus2e (H3) and OrangePi PC2 (H5) with many resolutions and it
-> works well.
->=20
-> Code is based on linux-next, next-20180228 tag.
+understood, I will do it.
 
-Applied everything, thanks!
-Maxime
+> > > > > shouldn't we check if next is in range, we can crash if we get bad value
+> > > > > from hardware..
+> > > > 
+> > > > okay, there are checks for next with ddone bit check and null check in
+> > > > the corresponding descriptor as the following.
+> > > 
+> > > what if you get bad next value
+> > > 
+> > 
+> > next is not hardware value. it's maintained by software which is always
+> > between 0 to MTK_DMA_SIZE - 1, and definitely doesn't get a bad value.
+> > 
+> > > > 
+> > > > > > +		rxd = &pc->ring.rxd[next];
+> > > 
+> > > resulting in bad ref here
+> > 
+> > rxd is also definitely a good ref
+> 
+> not if next is out of range, say you read -1 or 200000?
+> 
 
---=20
-Maxime Ripard, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+next must be in range because next is calculated by
+MTK_HSDMA_NEXT_DESP_IDX macro which is just a modulo operation
+with MTK_DMA_SIZE.
 
---qcw2lpw65bzxxh3p
-Content-Type: application/pgp-signature; name="signature.asc"
+Currently, MTK_DMA_SIZE is equal to 64 and thus next must be 0 to 63 and
+wraparound.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqZG6UACgkQ0rTAlCFN
-r3Re9g/5AQjjrcTZxuLO+1CQ3T/NgCvDja/mNVg+iZTRJHNVWlITF9bpC0svC0rd
-vOIYMIGBccHimVMSssOxtJiTVBlv2TwZfqDv3+u3M4HMa7n+fz2CFS4n+TuWF3uq
-FmqUvj7TU9VIM0M2XRz4JPwa+b9RrAr6hDiILgyneuw1zK8ZWgVpfarN1s3SZweK
-FAHHgS2ZKWTZ9shyhp3xqq/qEUyqSsNWlvrVVQEJxR9a+cTFTNyzAji4FPNfh/N4
-i0qF5LKl9WH9T+PpAXpW6r0OEEqgGuxGuhXHusnmkctiM+XwmbueNwAs0zTQ2a90
-Vv8gzVV/YIkSRIQXFhj/dTcGhSl5F+gpzApZK85X8uA/ASMsYwqjOfVpIohcai6R
-Tp5JKWb/nj20m3+8IqYK+Ouaoi1g/taRwrUZxXqqaKn93JZ/N7t397SLP2nVAEsJ
-SL6lNhEMW+lbk/k8kLsMTUc7EL03yOj38pf8p+Drunb4bSLz2ckEGu+6ae+rS8NO
-8fT7fvo+lVsm1f68bAbe8iQSwfG214e4qh9agr5v7N/QeXhXnlwerT3vl7qV2xKG
-UkVvIWn0ayk48m7yn9V7oIJh97lnNZrzQGdUzu45z2cqDJmN1DHIIO4acbs9E3X/
-nf5nxrON8nQu/VRMgUolz806Z6F1ZCItlweeDTEj+U2tZET7ssE=
-=2g5K
------END PGP SIGNATURE-----
-
---qcw2lpw65bzxxh3p--
-
---===============1091337731==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1091337731==--
+As to MTK_HSDMA_NEXT_DESP_IDX , it is defined as the following
+#define MTK_HSDMA_NEXT_DESP_IDX(x, y)   (((x) + 1) & ((y) - 1))
