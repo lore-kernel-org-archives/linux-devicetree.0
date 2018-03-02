@@ -1,62 +1,51 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys DW AXI DMA
- bindings
-Date: Fri, 2 Mar 2018 08:32:20 +0000
-Message-ID: <1519979538.4430.7.camel@synopsys.com>
-References: <20180226145628.11892-1-Eugeniy.Paltsev@synopsys.com>
-         <20180226145628.11892-3-Eugeniy.Paltsev@synopsys.com>
-         <20180302081408.GK15443@localhost>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: add bindings doc for HiSilicon INNO
+ USB2 PHY
+Date: Fri, 2 Mar 2018 16:45:18 +0800
+Message-ID: <20180302084516.GD28619@dragon>
+References: <1519888940-23235-1-git-send-email-shawn.guo@linaro.org>
+ <1519888940-23235-2-git-send-email-shawn.guo@linaro.org>
+ <c1f60df2-20d1-53ac-6cf7-9c81baea789c@ti.com>
+ <20180302073740.GC28619@dragon>
+ <05d00dd2-efe2-1166-d982-06df0e3b8611@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180302081408.GK15443@localhost>
-Content-Language: en-US
-Content-ID: <FBD9BA228095204CB9DA256D7E8097A1@internal.synopsys.com>
+Content-Disposition: inline
+In-Reply-To: <05d00dd2-efe2-1166-d982-06df0e3b8611@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "vinod.koul@intel.com" <vinod.koul@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "wan.ahmad.zainie.wan.mohamad@intel.com" <wan.ahmad.zainie.wan.mohamad@intel.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Jianguo Sun <sunjianguo1@huawei.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pengcheng Li <lpc.li@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVmlub2QsDQoNCk9uIEZyaSwgMjAxOC0wMy0wMiBhdCAxMzo0NCArMDUzMCwgVmlub2QgS291
-bCB3cm90ZToNCj4gT24gTW9uLCBGZWIgMjYsIDIwMTggYXQgMDU6NTY6MjhQTSArMDMwMCwgRXVn
-ZW5peSBQYWx0c2V2IHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBkb2N1bWVudGF0aW9uIG9m
-IGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgU3lub3BzeXMNCj4gPiBEZXNpZ25XYXJlIEFY
-SSBETUEgY29udHJvbGxlci4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBFdWdlbml5IFBhbHRz
-ZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5cy5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2RtYS9zbnBzLGR3LWF4aS1kbWFjLnR4dCAgIHwgNDEgKysrKysrKysr
-KysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKQ0KPiA+
-ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rt
-YS9zbnBzLGR3LWF4aS1kbWFjLnR4dA0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3NucHMsZHctYXhpLWRtYWMudHh0IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9zbnBzLGR3LWF4aS1kbWFjLnR4dA0KPiA+
-IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uZjIzN2I3OQ0KPiA+IC0t
-LSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZG1hL3NucHMsZHctYXhpLWRtYWMudHh0DQo+ID4gQEAgLTAsMCArMSw0MSBAQA0KPiA+ICtTeW5v
-cHN5cyBEZXNpZ25XYXJlIEFYSSBETUEgQ29udHJvbGxlcg0KPiA+ICsNCj4gPiArUmVxdWlyZWQg
-cHJvcGVydGllczoNCj4gPiArLSBjb21wYXRpYmxlOiAic25wcyxheGktZG1hLTEuMDFhIg0KPiA+
-ICstIHJlZzogQWRkcmVzcyByYW5nZSBvZiB0aGUgRE1BQyByZWdpc3RlcnMuIFRoaXMgc2hvdWxk
-IGluY2x1ZGUNCj4gPiArICBhbGwgb2YgdGhlIHBlci1jaGFubmVsIHJlZ2lzdGVycy4NCj4gPiAr
-LSBpbnRlcnJ1cHQ6IFNob3VsZCBjb250YWluIHRoZSBETUFDIGludGVycnVwdCBudW1iZXIuDQo+
-ID4gKy0gaW50ZXJydXB0LXBhcmVudDogU2hvdWxkIGJlIHRoZSBwaGFuZGxlIGZvciB0aGUgaW50
-ZXJydXB0IGNvbnRyb2xsZXINCj4gPiArICB0aGF0IHNlcnZpY2VzIGludGVycnVwdHMgZm9yIHRo
-aXMgZGV2aWNlLg0KPiA+ICstIGRtYS1jaGFubmVsczogTnVtYmVyIG9mIGNoYW5uZWxzIHN1cHBv
-cnRlZCBieSBoYXJkd2FyZS4NCj4gPiArLSBzbnBzLGRtYS1tYXN0ZXJzOiBOdW1iZXIgb2YgQVhJ
-IG1hc3RlcnMgc3VwcG9ydGVkIGJ5IHRoZSBoYXJkd2FyZS4NCj4gPiArLSBzbnBzLGRhdGEtd2lk
-dGg6IE1heGltdW0gQVhJIGRhdGEgd2lkdGggc3VwcG9ydGVkIGJ5IGhhcmR3YXJlLg0KPiA+ICsg
-ICgwIC0gOGJpdHMsIDEgLSAxNmJpdHMsIDIgLSAzMmJpdHMsIC4uLiwgNiAtIDUxMmJpdHMpDQo+
-ID4gKy0gc25wcyxwcmlvcml0eTogUHJpb3JpdHkgb2YgY2hhbm5lbC4gQXJyYXkgc2l6ZSBpcyBl
-cXVhbCB0byB0aGUgbnVtYmVyIG9mDQo+ID4gKyAgZG1hLWNoYW5uZWxzLiBQcmlvcml0eSB2YWx1
-ZSBtdXN0IGJlIHByb2dyYW1tZWQgd2l0aGluIFswOmRtYS1jaGFubmVscy0xXQ0KPiA+ICsgIHJh
-bmdlLiAoMCAtIG1pbmltdW0gcHJpb3JpdHkpDQo+ID4gKy0gc25wcyxibG9jay1zaXplOiBNYXhp
-bXVtIGJsb2NrIHNpemUgc3VwcG9ydGVkIGJ5IHRoZSBjb250cm9sbGVyIGNoYW5uZWwuDQo+ID4g
-KyAgQXJyYXkgc2l6ZSBpcyBlcXVhbCB0byB0aGUgbnVtYmVyIG9mIGRtYS1jaGFubmVscy4NCj4g
-PiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gKy0gc25wcyxheGktbWF4LWJ1cnN0
-LWxlbjogUmVzdHJpY3QgbWFzdGVyIEFYSSBidXJzdCBsZW5ndGggYnkgdmFsdWUgc3BlY2lmaWVk
-DQo+ID4gKyAgaW4gdGhpcyBwcm9wZXJ0eS4gSWYgdGhpcyBwcm9wZXJ0eSBpcyBtaXNzaW5nIHRo
-ZSBtYXhpbXVtIEFYSSBidXJzdCBsZW5ndGgNCj4gPiArICBzdXBwb3J0ZWQgYnkgRE1BQyBpcyB1
-c2VkLiBbMToyNTZdDQo+ID4gKw0KPiA+ICtFeGFtcGxlOg0KPiA+ICsNCj4gPiArZG1hYzogZG1h
-LWNvbnRyb2xsZXJAODAwMDAgew0KPiA+ICsJY29tcGF0aWJsZSA9ICJzbnBzLGF4aS1kbWEtMS4w
-MWEiOw0KPiANCj4gZG8gd2UgbmVlZCAic25wcyBoZXJlLi4/DQoNClN5bm9wc3lzIGlzIHRoaXMg
-SVAtYmxvY2sgdmVuZG9yIHNvIHNob3VsZG4ndCB3ZSBwdXQgaXQgdGhhdCB3YXk/DQoNCi1BbGV4
-ZXk=
+On Fri, Mar 02, 2018 at 01:35:43PM +0530, Kishon Vijay Abraham I wrote:
+> >>> diff --git a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> >>> new file mode 100644
+> >>> index 000000000000..b563cf54ca7b
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> >>> @@ -0,0 +1,52 @@
+> >>> +HiSilicon INNO USB2 PHY
+> >>> +
+> >>> +Required properties:
+> >>> +- compatible: Should be one of the following strings:
+> >>> +	"hisilicon,inno-usb2-phy",
+> >>> +	"hisilicon,hi3798cv200-usb2-phy".
+> >>> +- reg: Should be the address space for PHY configuration register in peripheral
+> >>> +  controller, e.g. PERI_USB0 for USB 2.0 PHY01 on Hi3798cv200 SoC.
+> >>> +- #phy-cells: Should be 1. The specifier is the index of the PHY port to
+> >>> +  reference.
+> >>
+> >> This can be '0' if the consumers directly use phandle to the subnodes.
+> > 
+> > Yes, I understand that for most of PHY devices #phy-cells is just 0, and
+> > consumers simply use the phandle without any cell number.  But for this
+> > inno-usb2-phy, every single device contains two PHY ports, and each port
+> 
+> Why not have a separate sub-node for each phy port? Then you can just use
+> phandle to the subnode in the controller node.
+
+It sounds like a sensible suggestion.  I will try to implement that and
+see how it goes.  Thanks.
+
+Shawn
