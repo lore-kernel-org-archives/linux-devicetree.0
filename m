@@ -1,68 +1,41 @@
-Return-Path: <SRS0=kIko=F5=gmail.com=keepcalm444@kernel.org>
-From: Simon Shields <simon@lineageos.org>
-Subject: [PATCH v2 1/2] dt-bindings: leds: document Panasonic AN30259A bindings
-Date: Wed,  7 Mar 2018 11:47:21 +1100
-Message-Id: <20180307004722.23524-2-simon@lineageos.org>
-In-Reply-To: <20180307004722.23524-1-simon@lineageos.org>
-References: <20180307004722.23524-1-simon@lineageos.org>
-To: linux-leds@vger.kernel.org
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Simon Shields <simon@lineageos.org>
+Return-Path: <SRS0=Eo6U=FY=linux-m68k.org=geert@kernel.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 0/2] dt-bindings: pwm: renesas-tpu: Misc Fixes
+Date: Fri,  2 Mar 2018 15:39:43 +0100
+Message-Id: <1520001585-12899-1-git-send-email-geert+renesas@glider.be>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-Signed-off-by: Simon Shields <simon@lineageos.org>
----
- .../devicetree/bindings/leds/leds-an30259a.txt     | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-an30259a.txt
+	Hi Thierry,
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-an30259a.txt b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
-new file mode 100644
-index 000000000000..34ad4b189853
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
-@@ -0,0 +1,43 @@
-+* Panasonic AN30259A 3-channel LED driver
-+
-+The AN30259A is a LED controller capable of driving three LEDs independently. It supports
-+constant current output and sloping current output modes. The chip is connected over I2C.
-+
-+Required properties:
-+	- compatible: Must be "panasonic,an30259a".
-+	- reg: I2C slave address.
-+	- #address-cells: Must be 1.
-+	- #size-cells: Must be 0.
-+
-+Each LED is represented as a sub-node of the panasonic,an30259a node.
-+
-+Required sub-node properties:
-+	- reg: Pin that the LED is connected to. Must be 1, 2, or 3.
-+
-+Optional sub-node properties:
-+	- label: see Documentation/devicetree/bindings/leds/common.txt
-+	- linux,default-trigger: see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+leds@30 {
-+	compatible = "panasonic,an30259a";
-+	reg = <0x30>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	led@1 {
-+		reg = <1>;
-+		linux,default-trigger = "heartbeat";
-+		label = "an30259a:red:notification";
-+	};
-+
-+	led@2 {
-+		reg = <2>;
-+		label = "an30259a:green:notification";
-+	};
-+
-+	led@3 {
-+		reg = <3>;
-+		label = "an30259a:blue:notification";
-+	};
-+};
+Here are two small fixes for the DT bindings of the Renesas Timer Pulse
+Unit.
+
+Changes compared to v1:
+  - Dropped DTS counterpart (applied),
+  - Add Acked-by, Reviewed-by.
+
+Thanks for applying!
+
+Geert Uytterhoeven (2):
+  dt-bindings: pwm: renesas-tpu: Correct example TPU register block size
+  dt-bindings: pwm: renesas-tpu: Correct SoC part numbers and family
+    names
+
+ Documentation/devicetree/bindings/pwm/renesas,tpu-pwm.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
 -- 
-2.16.2
+2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
