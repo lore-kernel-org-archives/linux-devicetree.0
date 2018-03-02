@@ -1,141 +1,42 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH v2 3/8] scsi: hisi_sas: fix the issue of link rate inconsistency
-Date: Fri, 2 Mar 2018 23:06:17 +0800
-Message-ID: <1520003182-26277-4-git-send-email-john.garry@huawei.com>
-References: <1520003182-26277-1-git-send-email-john.garry@huawei.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] dt-bindings: PCI: rockchip: Rename
+ rockchip-pcie.txt to rockchip-pcie-host.txt
+Date: Fri, 2 Mar 2018 09:10:21 -0600
+Message-ID: <20180302151021.jkz4xxtiomikl5df@rob-hp-laptop>
+References: <1519348503-243259-1-git-send-email-shawn.lin@rock-chips.com>
+ <1519348623-243549-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520003182-26277-1-git-send-email-john.garry@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>, John Garry <john.garry@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1519348623-243549-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+On Fri, Feb 23, 2018 at 09:17:03AM +0800, Shawn Lin wrote:
+> Just make it more obvious that this documentation is referenced for
+> adding Rockchip PCIe controller as root complex mode.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> ---
+> 
+> Changes in v2:
+> - remove rockchip,rk3399-pcie-host compatible(Suggested by Rob)
+> 
+>  .../devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/pci/{rockchip-pcie.txt => rockchip-pcie-host.txt} (100%)
 
-In sysfs, there are two files about minimum linkrate, and also
-two files for maximum linkrate. Take maximum linkrate example,
-maximum_linkrate_hw is read-only and indicated by the register
-HARD_PHY_LINKRATE, and maximum_linkrate is read-write and
-corresponding to the register PROG_PHY_LINK_RATE.
-
-But in the function phy_up_v*_hw(), we get *_linkrate value from
-HARD_PHY_LINKRATE. It is not right. This patch is to fix this issue.
-
-Unreferenced PHY-interrupt enum is also removed for v3 hw.
-
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c  |  2 ++
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c |  1 -
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |  8 +-------
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 13 +------------
- 4 files changed, 4 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 2d4dbed..9d16372 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -683,6 +683,8 @@ static void hisi_sas_phy_init(struct hisi_hba *hisi_hba, int phy_no)
- 
- 	phy->hisi_hba = hisi_hba;
- 	phy->port = NULL;
-+	phy->minimum_linkrate = SAS_LINK_RATE_1_5_GBPS;
-+	phy->maximum_linkrate = hisi_hba->hw->phy_get_max_linkrate();
- 	sas_phy->enabled = (phy_no < hisi_hba->n_phy) ? 1 : 0;
- 	sas_phy->class = SAS;
- 	sas_phy->iproto = SAS_PROTOCOL_ALL;
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-index 679e76f..38bbda9 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-@@ -873,7 +873,6 @@ static void phy_set_linkrate_v1_hw(struct hisi_hba *hisi_hba, int phy_no,
- 	sas_phy->phy->maximum_linkrate = max;
- 	sas_phy->phy->minimum_linkrate = min;
- 
--	min -= SAS_LINK_RATE_1_5_GBPS;
- 	max -= SAS_LINK_RATE_1_5_GBPS;
- 
- 	for (i = 0; i <= max; i++)
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index 3a0b4ed..edd0c89 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -1603,7 +1603,6 @@ static void phy_set_linkrate_v2_hw(struct hisi_hba *hisi_hba, int phy_no,
- 	sas_phy->phy->maximum_linkrate = max;
- 	sas_phy->phy->minimum_linkrate = min;
- 
--	min -= SAS_LINK_RATE_1_5_GBPS;
- 	max -= SAS_LINK_RATE_1_5_GBPS;
- 
- 	for (i = 0; i <= max; i++)
-@@ -2684,7 +2683,7 @@ static int prep_abort_v2_hw(struct hisi_hba *hisi_hba,
- static int phy_up_v2_hw(int phy_no, struct hisi_hba *hisi_hba)
- {
- 	int i, res = IRQ_HANDLED;
--	u32 port_id, link_rate, hard_phy_linkrate;
-+	u32 port_id, link_rate;
- 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
- 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
- 	struct device *dev = hisi_hba->dev;
-@@ -2723,11 +2722,6 @@ static int phy_up_v2_hw(int phy_no, struct hisi_hba *hisi_hba)
- 	}
- 
- 	sas_phy->linkrate = link_rate;
--	hard_phy_linkrate = hisi_sas_phy_read32(hisi_hba, phy_no,
--						HARD_PHY_LINKRATE);
--	phy->maximum_linkrate = hard_phy_linkrate & 0xf;
--	phy->minimum_linkrate = (hard_phy_linkrate >> 4) & 0xf;
--
- 	sas_phy->oob_mode = SAS_OOB_MODE;
- 	memcpy(sas_phy->attached_sas_addr, &id->sas_addr, SAS_ADDR_SIZE);
- 	dev_info(dev, "phyup: phy%d link_rate=%d\n", phy_no, link_rate);
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index a1f1868..1ee95ab 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -340,12 +340,6 @@ struct hisi_sas_err_record_v3 {
- #define HISI_SAS_COMMAND_ENTRIES_V3_HW 4096
- #define HISI_SAS_MSI_COUNT_V3_HW 32
- 
--enum {
--	HISI_SAS_PHY_PHY_UPDOWN,
--	HISI_SAS_PHY_CHNL_INT,
--	HISI_SAS_PHY_INT_NR
--};
--
- #define DIR_NO_DATA 0
- #define DIR_TO_INI 1
- #define DIR_TO_DEVICE 2
-@@ -1121,7 +1115,7 @@ static int prep_abort_v3_hw(struct hisi_hba *hisi_hba,
- static int phy_up_v3_hw(int phy_no, struct hisi_hba *hisi_hba)
- {
- 	int i, res = 0;
--	u32 context, port_id, link_rate, hard_phy_linkrate;
-+	u32 context, port_id, link_rate;
- 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
- 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
- 	struct device *dev = hisi_hba->dev;
-@@ -1139,10 +1133,6 @@ static int phy_up_v3_hw(int phy_no, struct hisi_hba *hisi_hba)
- 		goto end;
- 	}
- 	sas_phy->linkrate = link_rate;
--	hard_phy_linkrate = hisi_sas_phy_read32(hisi_hba, phy_no,
--						HARD_PHY_LINKRATE);
--	phy->maximum_linkrate = hard_phy_linkrate & 0xf;
--	phy->minimum_linkrate = (hard_phy_linkrate >> 4) & 0xf;
- 	phy->phy_type &= ~(PORT_TYPE_SAS | PORT_TYPE_SATA);
- 
- 	/* Check for SATA dev */
-@@ -1864,7 +1854,6 @@ static void phy_set_linkrate_v3_hw(struct hisi_hba *hisi_hba, int phy_no,
- 	sas_phy->phy->maximum_linkrate = max;
- 	sas_phy->phy->minimum_linkrate = min;
- 
--	min -= SAS_LINK_RATE_1_5_GBPS;
- 	max -= SAS_LINK_RATE_1_5_GBPS;
- 
- 	for (i = 0; i <= max; i++)
--- 
-1.9.1
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
