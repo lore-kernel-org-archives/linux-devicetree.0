@@ -1,301 +1,108 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: core: Add voltage balancing mechanism" to the regulator tree
-Date: Fri, 02 Mar 2018 12:55:18 +0000
-Message-ID: <E1erkDW-0004Vz-2F@debutante>
-References: <1516631412-17542-7-git-send-email-m.purski@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1516631412-17542-7-git-send-email-m.purski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.orgMark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>linux-kernel@vger.kernel.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 06/32] ASoC: rt5651: Configure
+ jack-detect source through a device-property
+Date: Fri, 2 Mar 2018 13:58:53 +0100
+Message-ID: <bbe1b540-201a-bf6e-9008-0f8d5d4a2a9d@redhat.com>
+References: <20180225104713.4745-1-hdegoede@redhat.com>
+ <20180225104713.4745-7-hdegoede@redhat.com>
+ <20180301193046.GJ12864@sirena.org.uk>
+ <032d0e59-0d64-7df1-4fca-1709430b754c@redhat.com>
+ <2ac828b2-04e1-4b5f-f4db-a543ad5e3535@redhat.com>
+ <20180302121801.GE6255@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180302121801.GE6255@sirena.org.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Carlo Caione <carlo@endlessm.com>, Bard Liao <bardliao@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Hi,
 
-   regulator: core: Add voltage balancing mechanism
+On 02-03-18 13:18, Mark Brown wrote:
+> On Fri, Mar 02, 2018 at 10:32:25AM +0100, Hans de Goede wrote:
+>> On 01-03-18 23:35, Hans de Goede wrote:
+> 
+>>> It is not _that_ fragile, but I agree that it would be good to add
+>>> a comment about not moving the property-parsing to the codec driver.
+> 
+>> So one other solution which comes to mind here is to move the
+>> snd_soc_card_jack_new() call into the codec driver's
+>> rt5651_apply_properties() function (conditional on a jack src being
+>> set in the properties).
+> 
+>> This would make the machine driver code look like this:
+>>
+>> 	props[cnt++] = PROPERTY_ENTRY_...
+>> 	props[cnt++] = PROPERTY_ENTRY_...
+>> 	props[cnt++] = PROPERTY_ENTRY_...
+>> 	props[cnt++] = PROPERTY_ENTRY_...
+> 
+>> 	ret = device_add_properties(codec->dev, props);
+>> 	if (ret)
+>> 		return ret;
+> 
+>> 	ret = rt5651_apply_properties(codec);
+>> 	if (ret)
+>> 		return ret;
+> 
+>> Which makes the ordering really clear without needing any
+>> comments.
+> 
+> It's still unusual to have something outside the driver trigger property
+> parsing, though the EXPORT_SYMBOL_GPL() would make that apparent.
+> 
+>> This will also make the jack-detect device-properties work with
+>> devicetree platforms without any changes to their platform code,
+>> which currently is not the case since the non Intel platform-code
+>> does not call snd_soc_component_set_jack().
+> 
+> What makes you claim that?  Any board with jack detection wired up will
+> call that function.  Not all boards have that configured of course but
+> there's absolutely nothing Intel specific about that interface.
 
-has been applied to the regulator tree at
+Right I'm not claiming the interface is Intel specific, what I'm trying
+to say is that the need for some code outside of the codec driver
+to create the jack means that adding jack-support to DT platforms
+cannot be done through just adding DT properties (once this patch
+is merged), it will still require platform code changes.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+That is fine, I was just thinking it would be convenient if DT
+platforms could lift on the jack-detect work being done for
+the rt5651 driver now with just some DT changes and no other
+changes required.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+>> Thinking more about this I believe that doing the
+>> snd_soc_card_jack_new() call inside the codec driver based on
+>> device-properties is a better solution then doing it in the
+>> machine driver.
+> 
+> No, that's really not a good idea.  Any jacks in the system are part of
+> the system specific wiring, they're not something that's intrinsic to
+> the CODEC.  Even with fairly basic setups you've got options like having
+> a headset jack or separate microphone and headphone jacks.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+OK, so if doing the jack creation in the machine-driver / platform
+code is by design and you want to keep things that way, then I
+assume that what needs changing for v3 of this patch is:
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+1) Split the patch in separate codec + machine-drv patches
+2) Add comments to make the ordering requirements clear to
+both the codec- and machine-driver.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Correct?
 
-Thanks,
-Mark
+Regards,
 
->From a7348f502ab7c8b8678d563427f0f11126a9358e Mon Sep 17 00:00:00 2001
-From: Maciej Purski <m.purski@samsung.com>
-Date: Fri, 2 Mar 2018 09:42:48 +0100
-Subject: [PATCH] regulator: core: Add voltage balancing mechanism
-
-On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
-different devices on the board are supplied by different regulators
-with non-fixed voltages. If one of these devices temporarily requires
-higher voltage, there might occur a situation that the spread between
-two devices' voltages is so high, that there is a risk of changing
-'high' and 'low' states on the interconnection between devices powered
-by those regulators.
-
-Introduce new function regulator_balance_voltage(), which
-keeps max_spread constraint fulfilled between a group of coupled
-regulators. It should be called if a regulator changes its
-voltage or after disabling or enabling. Disabled regulators should
-follow changes of the enabled ones, but their consumers' demands
-shouldn't be taken into account while calculating voltage of other
-coupled regulators.
-
-Find voltages, which are closest to suiting all the consumers' demands,
-while fulfilling max_spread constraint, keeping the following rules:
-- if one regulator is about to rise its voltage, rise others
-  voltages in order to keep the max_spread
-- if a regulator, which has caused rising other regulators, is
-  lowered, lower other regulators if possible
-- if one regulator is about to lower its voltage, but it hasn't caused
-  rising other regulators, don't change its voltage if it breaks the
-  max_spread
-
-Change regulators' voltages step by step, keeping max_spread constraint
-fulfilled all the time. Function regulator_get_optimal_voltage()
-should find the best possible change for the regulator, which doesn't
-break max_spread constraint. In function regulator_balance_voltage()
-optimize number of steps by finding highest voltage difference on
-each iteration.
-
-If a regulator, which is about to change its voltage, is not coupled,
-method regulator_get_optimal_voltage() should simply return the lowest
-voltage fulfilling consumers' demands.
-
-Coupling should be checked only if the system is in PM_SUSPEND_ON state.
-
-Signed-off-by: Maciej Purski <m.purski@samsung.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/core.c | 192 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 192 insertions(+)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 82568cadc37e..064115875865 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -105,6 +105,8 @@ static int _notifier_call_chain(struct regulator_dev *rdev,
- 				  unsigned long event, void *data);
- static int _regulator_do_set_voltage(struct regulator_dev *rdev,
- 				     int min_uV, int max_uV);
-+static int regulator_balance_voltage(struct regulator_dev *rdev,
-+				     suspend_state_t state);
- static struct regulator *create_regulator(struct regulator_dev *rdev,
- 					  struct device *dev,
- 					  const char *supply_name);
-@@ -3034,6 +3036,196 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 	return ret;
- }
- 
-+static int regulator_get_optimal_voltage(struct regulator_dev *rdev)
-+{
-+	struct coupling_desc *c_desc = &rdev->coupling_desc;
-+	struct regulator_dev **c_rdevs = c_desc->coupled_rdevs;
-+	int max_spread = rdev->constraints->max_spread;
-+	int n_coupled = c_desc->n_coupled;
-+	int desired_min_uV, desired_max_uV, min_current_uV = INT_MAX;
-+	int max_current_uV = 0, highest_min_uV = 0, target_uV, possible_uV;
-+	int i, ret;
-+
-+	/* If consumers don't provide any demands, set voltage to min_uV */
-+	desired_min_uV = rdev->constraints->min_uV;
-+	desired_max_uV = rdev->constraints->max_uV;
-+	ret = regulator_check_consumers(rdev,
-+					&desired_min_uV,
-+					&desired_max_uV, PM_SUSPEND_ON);
-+	if (ret < 0)
-+		goto out;
-+
-+	/*
-+	 * If there are no coupled regulators, simply set the voltage demanded
-+	 * by consumers.
-+	 */
-+	if (n_coupled == 1) {
-+		ret = desired_min_uV;
-+		goto out;
-+	}
-+
-+	/* Find highest min desired voltage */
-+	for (i = 0; i < n_coupled; i++) {
-+		int tmp_min = 0;
-+		int tmp_max = INT_MAX;
-+
-+		if (!_regulator_is_enabled(c_rdevs[i]))
-+			continue;
-+
-+		ret = regulator_check_consumers(c_rdevs[i],
-+						&tmp_min,
-+						&tmp_max, PM_SUSPEND_ON);
-+		if (ret < 0)
-+			goto out;
-+
-+		if (tmp_min > highest_min_uV)
-+			highest_min_uV = tmp_min;
-+	}
-+
-+	/*
-+	 * Let target_uV be equal to the desired one if possible.
-+	 * If not, set it to minimum voltage, allowed by other coupled
-+	 * regulators.
-+	 */
-+	target_uV = max(desired_min_uV,  highest_min_uV - max_spread);
-+
-+	/*
-+	 * Find min and max voltages, which currently aren't
-+	 * violating max_spread
-+	 */
-+	for (i = 0; i < n_coupled; i++) {
-+		int tmp_act;
-+
-+		/*
-+		 * Don't check the regulator, which is about
-+		 * to change voltage
-+		 */
-+		if (c_rdevs[i] == rdev)
-+			continue;
-+		if (!_regulator_is_enabled(c_rdevs[i]))
-+			continue;
-+
-+		tmp_act = _regulator_get_voltage(c_rdevs[i]);
-+		if (tmp_act < 0) {
-+			ret = tmp_act;
-+			goto out;
-+		}
-+
-+		if (tmp_act < min_current_uV)
-+			min_current_uV = tmp_act;
-+
-+		if (tmp_act > max_current_uV)
-+			max_current_uV = tmp_act;
-+	}
-+
-+	/* There aren't any other regulators enabled */
-+	if (max_current_uV == 0) {
-+		possible_uV = target_uV;
-+	} else {
-+		/*
-+		 * Correct target voltage, so as it currently isn't
-+		 * violating max_spread
-+		 */
-+		possible_uV = max(target_uV, max_current_uV - max_spread);
-+		possible_uV = min(possible_uV, min_current_uV + max_spread);
-+	}
-+
-+	if (possible_uV > desired_max_uV) {
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+	ret = possible_uV;
-+
-+out:
-+	return ret;
-+}
-+
-+static int regulator_balance_voltage(struct regulator_dev *rdev,
-+				     suspend_state_t state)
-+{
-+	struct regulator_dev **c_rdevs;
-+	struct regulator_dev *best_rdev;
-+	struct coupling_desc *c_desc = &rdev->coupling_desc;
-+	int n_coupled;
-+	int i, best_delta, best_uV, ret = 1;
-+
-+	c_rdevs = c_desc->coupled_rdevs;
-+	n_coupled = c_desc->n_coupled;
-+
-+	/*
-+	 * if system is in a state other than PM_SUSPEND_ON, don't check
-+	 * other coupled regulators
-+	 */
-+	if (state != PM_SUSPEND_ON)
-+		n_coupled = 1;
-+
-+	/*
-+	 * Find the best possible voltage change on each loop. Leave the loop
-+	 * if there isn't any possible change.
-+	 */
-+	while (1) {
-+		best_delta = 0;
-+		best_uV = 0;
-+		best_rdev = NULL;
-+
-+		/*
-+		 * Find highest difference between optimal voltage
-+		 * and current voltage.
-+		 */
-+		for (i = 0; i < n_coupled; i++) {
-+			/*
-+			 * optimal_uV is the best voltage that can be set for
-+			 * i-th regulator at the moment without violating
-+			 * max_spread constraint in order to balance
-+			 * the coupled voltages.
-+			 */
-+			int optimal_uV, current_uV;
-+
-+			optimal_uV = regulator_get_optimal_voltage(c_rdevs[i]);
-+			if (optimal_uV < 0) {
-+				ret = optimal_uV;
-+				goto out;
-+			}
-+
-+			current_uV = _regulator_get_voltage(c_rdevs[i]);
-+			if (current_uV < 0) {
-+				ret = optimal_uV;
-+				goto out;
-+			}
-+
-+			if (abs(best_delta) < abs(optimal_uV - current_uV)) {
-+				best_delta = optimal_uV - current_uV;
-+				best_rdev = c_rdevs[i];
-+				best_uV = optimal_uV;
-+			}
-+		}
-+
-+		/* Nothing to change, return successfully */
-+		if (!best_rdev) {
-+			ret = 0;
-+			goto out;
-+		}
-+
-+		/*
-+		 * Lock just the supply regulators, as the regulator itself
-+		 * is already locked by regulator_lock_coupled().
-+		 */
-+		if (best_rdev->supply)
-+			regulator_lock_supply(best_rdev->supply->rdev);
-+
-+		ret = regulator_set_voltage_rdev(best_rdev, best_uV,
-+						 best_uV, state);
-+		if (best_rdev->supply)
-+			regulator_unlock_supply(best_rdev->supply->rdev);
-+
-+		if (ret < 0)
-+			goto out;
-+	}
-+
-+out:
-+	return ret;
-+}
-+
- /**
-  * regulator_set_voltage - set regulator output voltage
-  * @regulator: regulator source
--- 
-2.16.2
+Hans
