@@ -1,206 +1,169 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 4/8] arm64: zynqmp: Add support for Xilinx zcu104-revA
-Date: Fri, 2 Mar 2018 19:42:26 +0100
-Message-ID: <b73d92a9-bbe0-e4a9-c0d7-c9379ac4ad80@monstr.eu>
-References: <cover.1519396753.git.michal.simek@xilinx.com>
- <68acadbb82fb0a8ac5abb9b1e156b9a9cf5b0f11.1519396753.git.michal.simek@xilinx.com>
- <20180302180258.hex77xmptf5ab3xd@rob-hp-laptop>
-Reply-To: monstr@monstr.eu
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/5] arm: zynq: Add support for Xilinx zc770 xm010 dc1
+ board
+Date: Fri, 2 Mar 2018 12:50:06 -0600
+Message-ID: <20180302185006.yciyjcchsx4aa7lu@rob-hp-laptop>
+References: <cover.1519398009.git.michal.simek@xilinx.com>
+ <f049c5121edab27227337ccd607db4f38f8d76f3.1519398009.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="zj26nuPppTofy5jPafFuDy0eJeVjx9f0s"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180302180258.hex77xmptf5ab3xd@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <f049c5121edab27227337ccd607db4f38f8d76f3.1519398009.git.michal.simek@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---zj26nuPppTofy5jPafFuDy0eJeVjx9f0s
-Content-Type: multipart/mixed; boundary="rsHEz8qLvKsNh7aw0t7DMuIUnuR1pKUFx";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-Reply-To: monstr@monstr.eu
-To: Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org,
- Masahiro Yamada <yamada.masahiro@socionext.com>,
- linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
- Will Deacon <will.deacon@arm.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>,
- linux-arm-kernel@lists.infradead.org
-Message-ID: <b73d92a9-bbe0-e4a9-c0d7-c9379ac4ad80@monstr.eu>
-Subject: Re: [PATCH v2 4/8] arm64: zynqmp: Add support for Xilinx zcu104-revA
-References: <cover.1519396753.git.michal.simek@xilinx.com>
- <68acadbb82fb0a8ac5abb9b1e156b9a9cf5b0f11.1519396753.git.michal.simek@xilinx.com>
- <20180302180258.hex77xmptf5ab3xd@rob-hp-laptop>
-In-Reply-To: <20180302180258.hex77xmptf5ab3xd@rob-hp-laptop>
+On Fri, Feb 23, 2018 at 04:00:20PM +0100, Michal Simek wrote:
+> zc770 is based board which is extended by FMC/DC cards for SoC
+> validation. FMCs/DCs are supposed to cover all SoC configurations.
+> FMC/DC contains ethernet port, can, i2c, sd, qspi, spi, uart and usb.
+> 
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> 
+> Changes in v2:
+> - Record compatible string to xilinx.txt
+> 
+>  Documentation/devicetree/bindings/arm/xilinx.txt |  3 +
+>  arch/arm/boot/dts/Makefile                       |  1 +
+>  arch/arm/boot/dts/zynq-zc770-xm010.dts           | 92 ++++++++++++++++++++++++
+>  3 files changed, 96 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/zynq-zc770-xm010.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
+> index 425c74fcc560..019e69037d42 100644
+> --- a/Documentation/devicetree/bindings/arm/xilinx.txt
+> +++ b/Documentation/devicetree/bindings/arm/xilinx.txt
+> @@ -11,6 +11,9 @@ Additional compatible strings:
+>  - Xilinx internal board cc108
+>    "xlnx,zynq-cc108"
+>  
+> +- Xilinx internal board zc770 with different FMC cards
+> +  "xlnx,zynq-zc770-xm010"
+> +
+>  ---------------------------------------------------------------
+>  
+>  Xilinx Zynq UltraScale+ MPSoC Platforms Device Tree Bindings
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index c6810e84d4d7..be9ffae2a1ec 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1067,6 +1067,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) += \
+>  	zynq-parallella.dtb \
+>  	zynq-zc702.dtb \
+>  	zynq-zc706.dtb \
+> +	zynq-zc770-xm010.dtb \
+>  	zynq-zed.dtb \
+>  	zynq-zybo.dtb
+>  dtb-$(CONFIG_MACH_ARMADA_370) += \
+> diff --git a/arch/arm/boot/dts/zynq-zc770-xm010.dts b/arch/arm/boot/dts/zynq-zc770-xm010.dts
+> new file mode 100644
+> index 000000000000..b1cfb4ede434
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/zynq-zc770-xm010.dts
+> @@ -0,0 +1,92 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Xilinx ZC770 XM010 board DTS
+> + *
+> + * Copyright (C) 2013-2018 Xilinx, Inc.
+> + */
+> +/dts-v1/;
+> +#include "zynq-7000.dtsi"
+> +
+> +/ {
+> +	compatible = "xlnx,zynq-zc770-xm010", "xlnx,zynq-7000";
+> +	model = "Xilinx Zynq";
+> +
+> +	aliases {
+> +		ethernet0 = &gem0;
+> +		i2c0 = &i2c0;
+> +		serial0 = &uart1;
+> +		spi1 = &spi1;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "";
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x40000000>;
+> +	};
+> +
+> +	usb_phy0: phy0 {
+> +		compatible = "usb-nop-xceiv";
+> +		#phy-cells = <0>;
+> +	};
+> +};
+> +
+> +&can0 {
+> +	status = "okay";
+> +};
+> +
+> +&gem0 {
+> +	status = "okay";
+> +	phy-mode = "rgmii-id";
+> +	phy-handle = <&ethernet_phy>;
+> +
+> +	ethernet_phy: ethernet-phy@7 {
+> +		reg = <7>;
+> +		device_type = "ethernet-phy";
+> +	};
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +
+> +	eeprom: eeprom@52 {
+> +		compatible = "atmel,24c02";
+> +		reg = <0x52>;
+> +	};
+> +
+> +};
+> +
+> +&sdhci0 {
+> +	status = "okay";
+> +};
+> +
+> +&spi1 {
+> +	status = "okay";
+> +	num-cs = <4>;
+> +	is-decoded-cs = <0>;
+> +	flash@0 {
+> +		compatible = "sst25wf080", "jedec,spi-nor";
+> +		reg = <1>;
+> +		spi-max-frequency = <1000000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		partition@test {
 
---rsHEz8qLvKsNh7aw0t7DMuIUnuR1pKUFx
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+@test?
 
-On 2.3.2018 19:02, Rob Herring wrote:
-> On Fri, Feb 23, 2018 at 03:40:26PM +0100, Michal Simek wrote:
->> Xilinx zcu104 is another customer board. It is sort of zcu102 clone
->> with some differences.
->>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>
->> Changes in v2:
->> - Remove i2c mw u-boot commands
->> - Record compatible string to xilinx.txt
->>
->>  Documentation/devicetree/bindings/arm/xilinx.txt  |   3 +
->>  arch/arm64/boot/dts/xilinx/Makefile               |   1 +
->>  arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts | 197 +++++++++++++=
-+++++++++
->>  3 files changed, 201 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
->>
->> diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Docume=
-ntation/devicetree/bindings/arm/xilinx.txt
->> index 2b922ec3c82a..a9ce08a68711 100644
->> --- a/Documentation/devicetree/bindings/arm/xilinx.txt
->> +++ b/Documentation/devicetree/bindings/arm/xilinx.txt
->> @@ -26,3 +26,6 @@ Additional compatible strings:
->>    "xlnx,zynqmp-zcu102-revA", "xlnx,zynqmp-zcu102"
->>    "xlnx,zynqmp-zcu102-revB", "xlnx,zynqmp-zcu102"
->>    "xlnx,zynqmp-zcu102-rev1.0", "xlnx,zynqmp-zcu102"
->> +
->> +- Xilinx evaluation board zcu104
->> +  "xlnx,zynqmp-zcu104-revA", "xlnx,zynqmp-zcu104"
->> diff --git a/arch/arm64/boot/dts/xilinx/Makefile b/arch/arm64/boot/dts=
-/xilinx/Makefile
->> index 24e3ce801304..1c039e59c7c3 100644
->> --- a/arch/arm64/boot/dts/xilinx/Makefile
->> +++ b/arch/arm64/boot/dts/xilinx/Makefile
->> @@ -4,3 +4,4 @@ dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zcu100-revC.dtb
->>  dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zcu102-revA.dtb
->>  dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zcu102-revB.dtb
->>  dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zcu102-rev1.0.dtb
->> +dtb-$(CONFIG_ARCH_ZYNQMP) +=3D zynqmp-zcu104-revA.dtb
->> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts b/arch/=
-arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
->> new file mode 100644
->> index 000000000000..89d26f56514b
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu104-revA.dts
->> @@ -0,0 +1,197 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * dts file for Xilinx ZynqMP ZCU104
->> + *
->> + * (C) Copyright 2017 - 2018, Xilinx, Inc.
->> + *
->> + * Michal Simek <michal.simek@xilinx.com>
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include "zynqmp.dtsi"
->> +#include "zynqmp-clk.dtsi"
->> +#include <dt-bindings/gpio/gpio.h>
->> +
->> +/ {
->> +	model =3D "ZynqMP ZCU104 RevA";
->> +	compatible =3D "xlnx,zynqmp-zcu104-revA", "xlnx,zynqmp-zcu104", "xln=
-x,zynqmp";
->> +
->> +	aliases {
->> +		ethernet0 =3D &gem3;
->> +		gpio0 =3D &gpio;
->=20
-> Drop. Not a supported alias.
->=20
->> +		i2c0 =3D &i2c1;
->> +		mmc0 =3D &sdhci1;
->> +		rtc0 =3D &rtc;
->> +		serial0 =3D &uart0;
->> +		serial1 =3D &uart1;
->> +		serial2 =3D &dcc;
->> +		usb0 =3D &usb0;
->=20
-> Drop. Not a supported alias.
->=20
->> +	};
->> +
->> +	chosen {
->> +		bootargs =3D "earlycon";
->> +		stdout-path =3D "serial0:115200n8";
->> +	};
->> +
->> +	memory@0 {
->> +		device_type =3D "memory";
->> +		reg =3D <0x0 0x0 0x0 0x80000000>;
->> +	};
->> +};
->> +
->> +&can1 {
->> +	status =3D "okay";
->> +};
->> +
->> +&dcc {
->> +	status =3D "okay";
->> +};
->> +
->> +&gem3 {
->> +	status =3D "okay";
->> +	phy-handle =3D <&phy0>;
->> +	phy-mode =3D "rgmii-id";
->> +	phy0: phy@c {
->> +		reg =3D <0xc>;
->> +		ti,rx-internal-delay =3D <0x8>;
->> +		ti,tx-internal-delay =3D <0xa>;
->> +		ti,fifo-depth =3D <0x1>;
->> +	};
->> +};
->> +
->> +&gpio {
->> +	status =3D "okay";
->> +};
->> +
->> +&i2c1 {
->> +	status =3D "okay";
->> +	clock-frequency =3D <400000>;
->> +
->> +	/* Another connection to this bus via PL i2c via PCA9306 - u45 */
->> +	i2cswitch@74 { /* u34 */
->=20
-> i2c-mux@74
+Use a partitions node too.
 
-grrr - this was done but squashed to 5/8 instead.
+> +			label = "spi-flash";
 
-Will fix.
+Should be what the partition contains.
 
-M
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
-
-
-
---rsHEz8qLvKsNh7aw0t7DMuIUnuR1pKUFx--
-
---zj26nuPppTofy5jPafFuDy0eJeVjx9f0s
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEARECAAYFAlqZmxIACgkQykllyylKDCH+QACfWaIHsKhyTSV4KSV77T7IJKIf
-y+QAn2L0xR8byCMig3aUJvk0tKAeWVu5
-=7NLu
------END PGP SIGNATURE-----
-
---zj26nuPppTofy5jPafFuDy0eJeVjx9f0s--
+> +			reg = <0x0 0x100000>;
+> +		};
+> +	};
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb0 {
+> +	status = "okay";
+> +	dr_mode = "host";
+> +	usb-phy = <&usb_phy0>;
+> +};
+> -- 
+> 1.9.1
+> 
