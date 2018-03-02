@@ -1,51 +1,252 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 16/19] arm: dts: mt7623: fixup available memory size
- on bananapi-r2
-Date: Fri, 2 Mar 2018 09:42:15 -0600
-Message-ID: <20180302154215.xr3b2zlmuojw5i6l@rob-hp-laptop>
+Subject: Re: [PATCH v1 18/19] arm: dts: mt7623: add MT7623A reference boards
+Date: Fri, 2 Mar 2018 09:45:47 -0600
+Message-ID: <20180302154547.xq5nkmkdk3oenbta@rob-hp-laptop>
 References: <cover.1519378871.git.sean.wang@mediatek.com>
- <e49485aac14bec85c14514c1953f8d7ea5401695.1519378872.git.sean.wang@mediatek.com>
+ <ddffdff293734954ba368be8a54edd3c84a4f4e6.1519378872.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e49485aac14bec85c14514c1953f8d7ea5401695.1519378872.git.sean.wang@mediatek.com>
+In-Reply-To: <ddffdff293734954ba368be8a54edd3c84a4f4e6.1519378872.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: sean.wang@mediatek.com
 Cc: matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 23, 2018 at 06:16:36PM +0800, sean.wang@mediatek.com wrote:
+On Fri, Feb 23, 2018 at 06:16:38PM +0800, sean.wang@mediatek.com wrote:
 > From: Sean Wang <sean.wang@mediatek.com>
 > 
-> There is 2GB DDR3 available on bananapi-r2 board as [1] specified.
+> Add mt7623a-rfb.dtsi where most nodes can be inherited from
+> mt7623n-rfb.dtsi and keep these distinctions from MT7623A boards in
+> mt7623a-rfb.dtsi for most definition can be reused among MT7623A board
+> variants.
 > 
-> [1] http://www.banana-pi.org/r2.html
+> MT7623A has its specific definition of power domain and thus we need
+> to change related devices such as audio, ethernet, crypto, high-speed
+> DMA, NAND, and USB controller to the power domain they specifically
+> belong to. In addition, MT7530 exists as built-in module inside MT7623A
+> SoC and I2C2 and UART[0-1] get being removed and UART2 have distinct pin
+> usage. Those all differences can be totally seen in mt7623a-rfb.dtsi.
 > 
 > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 > ---
->  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 5 +++++
->  1 file changed, 5 insertions(+)
+>  arch/arm/boot/dts/Makefile             |  2 +
+>  arch/arm/boot/dts/mt7623a-rfb-emmc.dts | 22 +++++++++
+>  arch/arm/boot/dts/mt7623a-rfb-nand.dts | 26 +++++++++++
+>  arch/arm/boot/dts/mt7623a-rfb.dtsi     | 84 ++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/mt7623n-rfb.dtsi     | 15 ++++++
+>  5 files changed, 149 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/mt7623a-rfb-emmc.dts
+>  create mode 100644 arch/arm/boot/dts/mt7623a-rfb-nand.dts
+>  create mode 100644 arch/arm/boot/dts/mt7623a-rfb.dtsi
 > 
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index 140ff78..3e8d02c 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -38,6 +38,11 @@
->  			default-state = "off";
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 5af6fce..818817c 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1122,6 +1122,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
+>  	mt6580-evbp1.dtb \
+>  	mt6589-aquaris5.dtb \
+>  	mt6592-evb.dtb \
+> +	mt7623a-rfb-emmc.dtb \
+> +	mt7623a-rfb-nand.dtb \
+>  	mt7623n-rfb-emmc.dtb \
+>  	mt7623n-rfb-nand.dtb \
+>  	mt7623n-bananapi-bpi-r2.dtb \
+> diff --git a/arch/arm/boot/dts/mt7623a-rfb-emmc.dts b/arch/arm/boot/dts/mt7623a-rfb-emmc.dts
+> new file mode 100644
+> index 0000000..ef6398e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt7623a-rfb-emmc.dts
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2017-2018 MediaTek Inc.
+> + * Author: Sean Wang <sean.wang@mediatek.com>
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +#include "mt7623a-rfb.dtsi"
+> +
+> +/ {
+> +	model = "MediaTek MT7623A with eMMC reference board";
+> +	compatible = "mediatek,mt7623a-rfb-emmc", "mediatek,mt7623";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+
+Use stdout-path instead. earlyprintk option only works for a kernel 
+built with a debug uart at a fixed address, so drop it.
+
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/mt7623a-rfb-nand.dts b/arch/arm/boot/dts/mt7623a-rfb-nand.dts
+> new file mode 100644
+> index 0000000..592d5d7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt7623a-rfb-nand.dts
+> @@ -0,0 +1,26 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2017-2018 MediaTek Inc.
+> + * Author: Sean Wang <sean.wang@mediatek.com>
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +#include "mt7623a-rfb.dtsi"
+> +
+> +/ {
+> +	model = "MediaTek MT7623A with NAND reference board";
+> +	compatible = "mediatek,mt7623a-rfb-nand", "mediatek,mt7623";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+
+ditto.
+
+> +	};
+> +};
+> +
+> +&bch {
+> +	status = "okay";
+> +};
+> +
+> +&nandc {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm/boot/dts/mt7623a-rfb.dtsi b/arch/arm/boot/dts/mt7623a-rfb.dtsi
+> new file mode 100644
+> index 0000000..3a15c46
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt7623a-rfb.dtsi
+> @@ -0,0 +1,84 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2017-2018 MediaTek Inc.
+> + * Author: Sean Wang <sean.wang@mediatek.com>
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/power/mt7623a-power.h>
+> +#include "mt7623n-rfb.dtsi"
+> +
+> +/ {
+> +	memory {
+
+Unit-address?
+
+> +		device_type = "memory";
+> +		reg = <0 0x80000000 0 0x20000000>;
+> +	};
+> +};
+> +
+> +&afe {
+> +	power-domains = <&scpsys MT7623A_POWER_DOMAIN_IFR_MSC>;
+> +};
+> +
+> +&cir {
+> +	status = "disabled";
+> +};
+> +
+> +&crypto {
+> +	power-domains = <&scpsys MT7623A_POWER_DOMAIN_ETH>;
+> +};
+> +
+> +&eth {
+> +	power-domains = <&scpsys MT7623A_POWER_DOMAIN_ETH>;
+> +};
+> +
+> +&hsdma {
+> +	power-domains = <&scpsys MT7623A_POWER_DOMAIN_ETH>;
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins_b>;
+> +};
+> +
+> +&mt7530 {
+> +	mediatek,mcm;
+> +	resets = <&ethsys MT2701_ETHSYS_MCM_RST>;
+> +	reset-names = "mcm";
+> +};
+> +
+> +&nandc {
+> +	power-domains = <&scpsys MT7623A_POWER_DOMAIN_IFR_MSC>;
+> +};
+> +
+> +&pcie {
+> +	power-domains = <&scpsys MT7623A_POWER_DOMAIN_HIF>;
+> +};
+> +
+> +&scpsys {
+> +	compatible = "mediatek,mt7623a-scpsys",
+> +		     "syscon";
+> +	clocks = <&topckgen CLK_TOP_ETHIF_SEL>;
+> +	clock-names = "ethif";
+> +};
+> +
+> +&uart0 {
+> +	status = "disabled";
+> +};
+> +
+> +&uart1 {
+> +	status = "disabled";
+> +};
+> +
+> +&uart2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart2_pins_b>;
+> +};
+> +
+> +&usb1 {
+> +	power-domains = <&scpsys MT7623A_POWER_DOMAIN_HIF>;
+> +};
+> +
+> +&usb2 {
+> +	power-domains = <&scpsys MT7623A_POWER_DOMAIN_HIF>;
+> +};
+> diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> index 0237476..07ed15d 100644
+> --- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> +++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+> @@ -380,6 +380,14 @@
+>  		};
+>  	};
+>  
+> +	i2c2_pins_b: i2c2-alt {
+> +		pin-i2c2 {
+> +			pinmux = <MT7623_PIN_122_GPIO122_FUNC_SDA2>,
+> +				 <MT7623_PIN_123_HTPLG_FUNC_SCL2>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+>  	i2s0_pins_a: i2s0-default {
+>  		pin-i2s0 {
+>  			pinmux = <MT7623_PIN_49_I2S0_DATA_FUNC_I2S0_DATA>,
+> @@ -629,6 +637,13 @@
+>  				 <MT7623_PIN_15_GPIO15_FUNC_UTXD2>;
 >  		};
 >  	};
 > +
-> +	memory {
-
-Unit address?
-
-> +		device_type = "memory";
-> +		reg = <0 0x80000000 0 0x80000000>;
+> +	uart2_pins_b: uart2-alt {
+> +		pins-dat {
+> +			pinmux = <MT7623_PIN_200_URXD2_FUNC_URXD2>,
+> +				 <MT7623_PIN_201_UTXD2_FUNC_UTXD2>;
+> +		};
 > +	};
 >  };
 >  
->  &afe {
+>  &pwm {
 > -- 
 > 2.7.4
 > 
