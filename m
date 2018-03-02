@@ -1,36 +1,89 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/2] ARM: dts: armada388-clearfog: add SFP module support
-Date: Fri, 2 Mar 2018 22:56:14 +0100
-Message-ID: <20180302215614.GD25189@lunn.ch>
-References: <20180227160135.GU9418@n2100.armlinux.org.uk>
- <E1eqhha-0004l3-Rd@rmk-PC.armlinux.org.uk>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 2/2] arm64: dts: sdm845: Support GPU/GMU
+Date: Fri,  2 Mar 2018 14:56:38 -0700
+Message-ID: <20180302215638.6145-3-jcrouse@codeaurora.org>
+References: <20180302215638.6145-1-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <E1eqhha-0004l3-Rd@rmk-PC.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180302215638.6145-1-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 27, 2018 at 04:02:02PM +0000, Russell King wrote:
-> Add SFP module support for Clearfog using the SFP phylink support.
-> 
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-
-Tested-by: Andrew Lunn <andrew@lunn.ch>
-
-Using a RoboFiber SFP module, connected to a media converter. Link
-up/down detected.
-
-    Andrew
+QWRkIHRoZSBub2RlcyBhbmQgb3RoZXIgYml0cyB0byBkZXNjcmliZSB0aGUgQWRyZW5vIEdQVSBh
+bmQgR01VCmRldmljZXMuCgpDaGFuZ2UtSWQ6IEliZjRkYzBlYmIwYWMwM2Q4YjZiOGU2NTc0N2Ux
+NDJjNDQwZTcwYjBhClNpZ25lZC1vZmYtYnk6IEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1
+cm9yYS5vcmc+Ci0tLQogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIHwgMTIw
+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTIw
+IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2Rt
+ODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKaW5kZXggN2I1
+YzE2ZWI2M2I3Li5jYzZkMzY3ZWU1NWUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
+cWNvbS9zZG04NDUuZHRzaQorKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0
+c2kKQEAgLTMxMiw1ICszMTIsMTI1IEBACiAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAkJCX07
+CiAJCX07CisKKwkJYWRyZW5vX3NtbXU6IGFybSxzbW11LWFkcmVub0A1MDQwMDAwIHsKKwkJCWNv
+bXBhdGlibGUgPSAicWNvbSxtc204OTk2LXNtbXUtdjIiOworCQkJcmVnID0gPDB4NTA0MDAwMCAw
+eDEwMDAwPjsKKwkJCSNpb21tdS1jZWxscyA9IDwxPjsKKwkJCSNnbG9iYWwtaW50ZXJydXB0cyA9
+IDwyPjsKKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMjkgSVJRX1RZUEVfTEVWRUxfSElHSD4s
+CisJCQkJICAgICA8R0lDX1NQSSAyMzEgSVJRX1RZUEVfTEVWRUxfSElHSD4sCisJCQkJICAgICA8
+R0lDX1NQSSAzNjQgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAorCQkJCSAgICAgPEdJQ19TUEkgMzY1
+IElSUV9UWVBFX0VER0VfUklTSU5HPiwKKwkJCQkgICAgIDxHSUNfU1BJIDM2NiBJUlFfVFlQRV9F
+REdFX1JJU0lORz4sCisJCQkJICAgICA8R0lDX1NQSSAzNjcgSVJRX1RZUEVfRURHRV9SSVNJTkc+
+LAorCQkJCSAgICAgPEdJQ19TUEkgMzY4IElSUV9UWVBFX0VER0VfUklTSU5HPiwKKwkJCQkgICAg
+IDxHSUNfU1BJIDM2OSBJUlFfVFlQRV9FREdFX1JJU0lORz4sCisJCQkJICAgICA8R0lDX1NQSSAz
+NzAgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAorCQkJCSAgICAgPEdJQ19TUEkgMzcxIElSUV9UWVBF
+X0VER0VfUklTSU5HPjsKKwkJCWNsb2NrcyA9IDwmY2xvY2tfZ2NjIEdDQ19HUFVfTUVNTk9DX0dG
+WF9DTEs+LAorCQkJCSA8JmNsb2NrX2djYyBHQ0NfR1BVX0NGR19BSEJfQ0xLPjsKKwkJCWNsb2Nr
+LW5hbWVzID0gImJ1cyIsICJpZmFjZSI7CisKKwkJCXBvd2VyLWRvbWFpbnMgPSA8JmNsb2NrX2dw
+dWNjIEdQVV9DWF9HRFNDPjsKKwkJfTsKKworCQlncHVfb3BwX3RhYmxlOiBhZHJlbm8tb3BwLXRh
+YmxlIHsKKwkJCWNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12MiI7CisKKwkJCW9wcC03
+MTAwMDAwMDAgeworCQkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NzEwMDAwMDAwPjsKKwkJCQlxY29t
+LGFyYy1sZXZlbCA9IDw0MTY+OworCQkJfTsKKworCQkJb3BwLTY3NTAwMDAwMCB7CisJCQkJb3Bw
+LWh6ID0gL2JpdHMvIDY0IDw2NzUwMDAwMDA+OworCQkJCXFjb20sYXJjLWxldmVsID0gPDM4ND47
+CisJCQl9OworCisJCQlvcHAtNTk2MDAwMDAwIHsKKwkJCQlvcHAtaHogPSAvYml0cy8gNjQgPDU5
+NjAwMDAwMD47CisJCQkJcWNvbSxhcmMtbGV2ZWwgPSA8MzIwPjsKKwkJCX07CisKKwkJCW9wcC01
+MjAwMDAwMDAgeworCQkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NTIwMDAwMDAwPjsKKwkJCQlxY29t
+LGFyYy1sZXZlbCA9IDwyNTY+OworCQkJfTsKKworCQkJb3BwLTQxNDAwMDAwMCB7CisJCQkJb3Bw
+LWh6ID0gL2JpdHMvIDY0IDw0MTQwMDAwMDA+OworCQkJCXFjb20sYXJjLWxldmVsID0gPDE5Mj47
+CisJCQl9OworCisJCQlvcHAtMzQyMDAwMDAwIHsKKwkJCQlvcHAtaHogPSAvYml0cy8gNjQgPDM0
+MjAwMDAwMD47CisJCQkJcWNvbSxhcmMtbGV2ZWwgPSA8MTI4PjsKKwkJCX07CisKKwkJCW9wcC0y
+NTcwMDAwMDAgeworCQkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8MjU3MDAwMDAwPjsKKwkJCQlxY29t
+LGFyYy1sZXZlbCA9IDw2ND47CisJCQl9OworCQl9OworCisJCWdwdUA1MDAwMDAwIHsKKwkJCWNv
+bXBhdGlibGUgPSAicWNvbSxhZHJlbm8tNjMwLjIiLCAicWNvbSxhZHJlbm8iOworCQkJI3N0cmVh
+bS1pZC1jZWxscyA9IDwxNj47CisKKwkJCXJlZyA9IDwweDUwMDAwMDAgMHg0MDAwMD47CisJCQly
+ZWctbmFtZXMgPSAia2dzbF8zZDBfcmVnX21lbW9yeSI7CisKKwkJCS8qCisJCQkgKiBMb29rIG1h
+LCBubyBjbG9ja3MhIFRoZSBHUFUgY2xvY2tzIGFuZCBwb3dlciBhcmUKKwkJCSAqIGNvbnRyb2xs
+ZWQgZW50aXJlbHkgYnkgdGhlIEdNVQorCQkJICovCisKKwkJCWludGVycnVwdHMgPSA8R0NJX1NQ
+SSAzMDAgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQlpbnRlcnJ1cHQtbmFtZXMgPSAia2dzbF8z
+ZDBfaXJxIjsKKworCQkJaW9tbXVzID0gPCZhZHJlbm9fc21tdSAwPjsKKworCQkJb3BlcmF0aW5n
+LXBvaW50cy12MiA9IDwmZ3B1X29wcF90YWJsZT47CisKKwkJCWdtdSA9IDwmZ211PjsKKwkJfTsK
+KworCQlnbXVfb3BwX3RhYmxlOiBhZHJlbm8tZ211LW9wcC10YWJsZSB7CisJCQljb21wYXRpYmxl
+ID0gIm9wZXJhdGluZy1wb2ludHMtdjIiOworCisJCQlvcHAtNDAwMDAwMDAwIHsKKwkJCQlvcHAt
+aHogPSAvYml0cy8gNjQgPDQwMDAwMDAwMD47CisJCQkJcWNvbSxhcmMtbGV2ZWwgPSA8MTI4PjsK
+KwkJCX07CisKKwkJCW9wcC0yMDAwMDAwMDAgeworCQkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8MjAw
+MDAwMDAwPjsKKwkJCQlxY29tLGFyYy1sZXZlbCA9IDw0OD47CisJCQl9OworCQl9OworCisJCWdt
+dTogZ211QDUwNmEwMDAgeworCQkJY29tcGF0aWJsZT0icWNvbSxhZHJlbm8tZ211IjsKKworCQkJ
+cmVnID0gPDB4NTA2YTAwMCAweDMwMDAwPiwKKwkJCSAgICAgIDwweGIyMDAwMDAgMHgzMDAwMDA+
+OworCQkJcmVnLW5hbWVzID0gImdtdSIsICJnbXVfcGRjIjsKKworCQkJaW50ZXJydXB0cyA9IDxH
+SUNfU1BJIDMwNCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCQkgICAgIDxHSUNfU1BJIDMwNSBJ
+UlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCWludGVycnVwdC1uYW1lcyA9ICJoZmkiLCAiZ211IjsK
+KworCQkJY2xvY2tzID0gPCZjbG9ja19ncHVjYyBHUFVfQ0NfQ1hfR01VX0NMSz4sCisJCQkJIDwm
+Y2xvY2tfZ3B1Y2MgR1BVX0NDX0NYT19DTEs+LAorCQkJCSA8JmNsb2NrX2djYyBHQ0NfRERSU1Nf
+R1BVX0FYSV9DTEs+LAorCQkJCSA8JmNsb2NrX2djYyBHQ0NfR1BVX01FTU5PQ19HRlhfQ0xLPjsK
+KwkJCWNsb2NrLW5hbWVzID0gImdtdSIsICJjeG8iLCAiYXhpIiwgIm1lbW5vYyI7CisKKwkJCXBv
+d2VyLWRvbWFpbnMgPSA8JmNsb2NrX2dwdWNjIEdQVV9DWF9HRFNDPjsKKwkJCWlvbW11cyA9IDwm
+YWRyZW5vX3NtbXUgNT47CisKKwkJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmdtdV9vcHBfdGFi
+bGU+OworCQl9OwogCX07CiB9OwotLSAKMi4xNi4xCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0Bs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9mcmVlZHJlbm8K
