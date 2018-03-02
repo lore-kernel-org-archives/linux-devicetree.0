@@ -1,45 +1,35 @@
-Return-Path: <SRS0=C5ln=FY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from xavier.telenet-ops.be ([195.130.132.52]:51780 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1424880AbeCBObK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 2 Mar 2018 09:31:10 -0500
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] dt-bindings: at24: Add Renesas R1EX24128
-Date: Fri,  2 Mar 2018 15:31:07 +0100
-Message-Id: <1520001067-12111-1-git-send-email-geert+renesas@glider.be>
-Sender: devicetree-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=bCNP=FY=arm.com=lorenzo.pieralisi@kernel.org>
+Date: Fri, 2 Mar 2018 14:09:08 +0000
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 0/2] Add power control for pcie-histb driver
+Message-ID: <20180302140908.GA15719@e107981-ln.cambridge.arm.com>
+References: <1519953121-28218-1-git-send-email-shawn.guo@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1519953121-28218-1-git-send-email-shawn.guo@linaro.org>
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, Jianguo Sun <sunjianguo1@huawei.com>, Jiancheng Xue <xuejiancheng@hisilicon.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document the compatible value for the Renesas R1EX24128ASAS0A two-wire
-serial interface EEPROM, so it can be used in DTS files without causing
-checkpatch warnings.
+On Fri, Mar 02, 2018 at 09:11:59AM +0800, Shawn Guo wrote:
+> It adds power control support for pcie-histb driver, by utilizing
+> regulator infrastructural.
+> 
+> Changes for v3:
+>  - Incorporate Rob's ACK on bindings doc.
+>  - Capitalize  the first word of patch subject to match drivers/pci
+>    convention.
+>  - Reword vpcie-supply description a bit as per Bjorn's suggestion.
+> 
+> Shawn Guo (2):
+>   PCI: histb: Fix error path of histb_pcie_host_enable()
+>   PCI: histb: Add an optional regulator for PCIe port power control
+> 
+>  .../bindings/pci/hisilicon-histb-pcie.txt          |  1 +
+>  drivers/pci/dwc/pcie-histb.c                       | 28 ++++++++++++++++++----
+>  2 files changed, 25 insertions(+), 4 deletions(-)
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
-v2:
-  - Add Acked-by,
-  - Rebase on top of commit 6da28acf745fe253 ("dt-bindings: at24:
-    consistently document the compatible property").
----
- Documentation/devicetree/bindings/eeprom/at24.txt | 1 +
- 1 file changed, 1 insertion(+)
+Series applied to pci/dwc for v4.17, thanks.
 
-diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
-index 1812c848e369e2a2..0bd685f0cff1b7fa 100644
---- a/Documentation/devicetree/bindings/eeprom/at24.txt
-+++ b/Documentation/devicetree/bindings/eeprom/at24.txt
-@@ -47,6 +47,7 @@ Required properties:
-                 variants of the above. Known such exceptions are listed below:
- 
-                 "renesas,r1ex24002" - the fallback is "atmel,24c02"
-+                "renesas,r1ex24128" - the fallback is "atmel,24c128"
- 
-   - reg: The I2C address of the EEPROM.
- 
--- 
-2.7.4
-
+Lorenzo
