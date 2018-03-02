@@ -1,108 +1,45 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v5 2/3] dmaengine: mediatek: Add MediaTek High-Speed DMA
- controller for MT7622 and MT7623 SoC
-Date: Fri, 2 Mar 2018 13:47:06 +0530
-Message-ID: <20180302081706.GL15443@localhost>
-References: <cover.1518857746.git.sean.wang@mediatek.com>
- <de4177cb2269c99f8d7c5738ac8a64f512122dfd.1518857747.git.sean.wang@mediatek.com>
- <20180301082329.GD15443@localhost>
- <1519900021.8089.136.camel@mtkswgap22>
- <20180301125649.GH15443@localhost>
- <1519973271.8089.166.camel@mtkswgap22>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/2] phy: rcar-gen3-usb3: Add binding for r8a77965
+Date: Fri, 2 Mar 2018 13:44:37 +0530
+Message-ID: <6df55c1d-8855-7aff-af13-cf0f43cc5f8b@ti.com>
+References: <1519710747-26435-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1519710747-26435-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1519973271.8089.166.camel@mtkswgap22>
+In-Reply-To: <1519710747-26435-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: dan.j.williams@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Fengguang Wu <fengguang.wu@intel.com>, Julia Lawall <julia.lawall@lip6.fr>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2018 at 02:47:51PM +0800, Sean Wang wrote:
-> Hi, Vinod
-> 
-> On Thu, 2018-03-01 at 18:26 +0530, Vinod Koul wrote:
-> > On Thu, Mar 01, 2018 at 06:27:01PM +0800, Sean Wang wrote:
-> > > On Thu, 2018-03-01 at 13:53 +0530, Vinod Koul wrote:
-> > > > On Sun, Feb 18, 2018 at 03:08:30AM +0800, sean.wang@mediatek.com wrote:
-> > > > 
-> > > > > @@ -0,0 +1,1054 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > // Copyright ...
-> > > > 
-> > > > The copyright line needs to follow SPDX tag line
-> > > > 
-> > > 
-> > > okay, I will make it reorder and be something like that
-> > > 
-> > > // SPDX-License-Identifier: GPL-2.0
-> > > /*
-> > >  * Copyright (c) 2017-2018 MediaTek Inc.
-> > >  * Author: Sean Wang <sean.wang@mediatek.com>
-> > >  *
-> > >  * Driver for MediaTek High-Speed DMA Controller
-> > >  *
-> > >  */
-> > 
-> > It needs to be:
-> > 
-> > // SPDX-License-Identifier: GPL-2.0
-> > // Copyright (c) 2017-2018 MediaTek Inc.
-> > 
-> > /*
-> >  * whatever else you want
-> >  */
-> > 
-> > The first two lines are in C99 style comment and need to have SPDX tag and
-> > Copyright info
-> 
-> Sure, I can do it using C99 style comments at the first two lines.
-> 
-> In addition, I'm really curious where we can find a reference to the
-> rule and if it 's a strict rule for all the drivers.
-> 
-> Because I'm considering whether I should turn other driver into using
-> the same rule.
 
-Yes that seems to be the rule now https://lkml.org/lkml/2017/11/2/715
 
-> > > > > +#define MTK_HSDMA_USEC_POLL		20
-> > > > > +#define MTK_HSDMA_TIMEOUT_POLL		200000
-> > > > > +#define MTK_HSDMA_DMA_BUSWIDTHS		BIT(DMA_SLAVE_BUSWIDTH_UNDEFINED)
-> > > > 
-> > > > Undefined buswidth??
-> > 
-> > ??
-> 
-> Sorry for I didn't answer the question in the short time.
-> 
-> After spending some time on a confirmation with design, it is
-> DMA_SLAVE_BUSWIDTH_4_BYTES and not be configurable. 
+On Tuesday 27 February 2018 11:22 AM, Yoshihiro Shimoda wrote:
+> This patch adds binding for r8a77965 (R-Car M3-N).
 
-Then it should be DMA_SLAVE_BUSWIDTH_4_BYTES and not
-DMA_SLAVE_BUSWIDTH_UNDEFINED...
+$subject should be  dt-bindings: rcar-gen3-phy-usb3: Add binding for r8a77965
 
-> > > > shouldn't we check if next is in range, we can crash if we get bad value
-> > > > from hardware..
-> > > 
-> > > okay, there are checks for next with ddone bit check and null check in
-> > > the corresponding descriptor as the following.
-> > 
-> > what if you get bad next value
-> > 
+Thanks
+Kishon
 > 
-> next is not hardware value. it's maintained by software which is always
-> between 0 to MTK_DMA_SIZE - 1, and definitely doesn't get a bad value.
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> > > 
-> > > > > +		rxd = &pc->ring.rxd[next];
-> > 
-> > resulting in bad ref here
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
+> index f94cea4..47dd296 100644
+> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
+> @@ -11,6 +11,8 @@ Required properties:
+>  	      SoC.
+>  	      "renesas,r8a7796-usb3-phy" if the device is a part of an R8A7796
+>  	      SoC.
+> +	      "renesas,r8a77965-usb3-phy" if the device is a part of an
+> +	      R8A77965 SoC.
+>  	      "renesas,rcar-gen3-usb3-phy" for a generic R-Car Gen3 compatible
+>  	      device.
+>  
 > 
-> rxd is also definitely a good ref
-
-not if next is out of range, say you read -1 or 200000?
-
--- 
-~Vinod
