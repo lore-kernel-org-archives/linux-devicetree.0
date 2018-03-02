@@ -1,36 +1,66 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 2/2] ASoC: add tda7419 audio processor driver
-Date: Sat, 3 Mar 2018 06:48:09 +0800
-Message-ID: <201803030612.VHNIieNt%fengguang.wu@intel.com>
-References: <20180227225128.17815-3-mporter@konsulko.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v4 4/6] MIPS: mscc: add ocelot PCB123 device tree
+Date: Fri,  2 Mar 2018 23:48:09 +0100
+Message-ID: <20180302224811.26840-5-alexandre.belloni@bootlin.com>
+References: <20180302224811.26840-1-alexandre.belloni@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180227225128.17815-3-mporter@konsulko.com>
+In-Reply-To: <20180302224811.26840-1-alexandre.belloni@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: kbuild-all@01.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: James Hogan <jhogan@kernel.org>, Ralf Baechle <ralf@linux-mips.org>
+Cc: Allan Nielsen <Allan.Nielsen@microsemi.com>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matt,
+Add a device tree for the Microsemi Ocelot PCB123 evaluation board.
 
-I love your patch! Perhaps something to improve:
-
-[auto build test WARNING on asoc/for-next]
-[also build test WARNING on v4.16-rc3 next-20180302]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Matt-Porter/TDA7419-audio-processor-driver/20180303-042824
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-
-
-coccinelle warnings: (new ones prefixed by >>)
-
->> sound/soc/codecs/tda7419.c:151:9-10: WARNING: return of 0/1 in function 'tda7419_vol_is_stereo' with return type bool
-
-Please review and possibly fold the followup patch.
-
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ arch/mips/boot/dts/mscc/Makefile          |  2 ++
+ arch/mips/boot/dts/mscc/ocelot_pcb123.dts | 27 +++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
+ create mode 100644 arch/mips/boot/dts/mscc/ocelot_pcb123.dts
+
+diff --git a/arch/mips/boot/dts/mscc/Makefile b/arch/mips/boot/dts/mscc/Makefile
+index dd08e63a10ba..c51164537c02 100644
+--- a/arch/mips/boot/dts/mscc/Makefile
++++ b/arch/mips/boot/dts/mscc/Makefile
+@@ -1 +1,3 @@
++dtb-$(CONFIG_LEGACY_BOARD_OCELOT)	+= ocelot_pcb123.dtb
++
+ obj-y				+= $(patsubst %.dtb, %.dtb.o, $(dtb-y))
+diff --git a/arch/mips/boot/dts/mscc/ocelot_pcb123.dts b/arch/mips/boot/dts/mscc/ocelot_pcb123.dts
+new file mode 100644
+index 000000000000..42bd404471f6
+--- /dev/null
++++ b/arch/mips/boot/dts/mscc/ocelot_pcb123.dts
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
++/* Copyright (c) 2017 Microsemi Corporation */
++
++/dts-v1/;
++
++#include "ocelot.dtsi"
++
++/ {
++	compatible = "mscc,ocelot-pcb123", "mscc,ocelot";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x0e000000>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
+-- 
+2.16.2
