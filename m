@@ -1,100 +1,134 @@
-From: Maciej Purski <m.purski@samsung.com>
-Subject: [PATCH v5 0/5] Add coupled regulators mechanism
-Date: Fri, 02 Mar 2018 09:42:44 +0100
-Message-ID: <1519980169-8491-1-git-send-email-m.purski@samsung.com>
-References: <CGME20180302085118eucas1p15a6a5ec5f7f47a6f67a45c5e9495b120@eucas1p1.samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V2 0/5] mmc: add stm32 sdmmc controller
+Date: Fri, 2 Mar 2018 09:51:26 +0100
+Message-ID: <cbdd31d8-dbea-4ea3-01ba-443daeb51775@st.com>
+References: <1519832844-28068-1-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFpfPAaLRZLqpyi6RwC1-=7Ao=u+OmEfHaYBABzd_-BKAw@mail.gmail.com>
+ <8f328063-610f-a2e8-5f29-d3f0019384f2@st.com>
+ <CAPDyKFqFWcZnWoUdnfRtj9WA1+ooNCXKfZ94Ddq4j849CH2QOQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFqFWcZnWoUdnfRtj9WA1+ooNCXKfZ94Ddq4j849CH2QOQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-this patchset adds a new mechanism to the framework - regulators' coupling.
-
-On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
-different devices on the board are supplied by different regulators
-with non-fixed voltages. If one of these devices temporarily requires 
-higher voltage, there might occur a situation that the spread between 
-devices' voltages is so high, that there is a risk of changing
-'high' and 'low' states on the interconnection between devices powered
-by those regulators. 
-
-Algorithmicaly the problem was solved by: 
-Inderpal Singh <inderpal.s@samsung.com>
-Doug Anderson <dianders@chromium.org>
-
-The discussion on that subject can be found here:
-https://lkml.org/lkml/2014/4/29/28
-
-Therefore this patchset is an attempt to apply the idea to regulators core
-as concluded in the discussion by Mark Brown and Doug Anderson.
-
-This feature is required to enable support for generic CPUfreq 
-and devfreq drivers for the mentioned boards. 
-
-Note on the locking model:
-When balancing voltage of a group of coupled regulators, we lock all
-of them for the whole operation. When voltage of an individual regulator
-is about to change, its suppliers are additionally locked.
-
-The current assumption is that an uncoupled regulator is a special case
-of a coupled one, so they should share a common voltage setting path.
 
 
-Best regards,
+On 03/01/2018 11:44 AM, Ulf Hansson wrote:
+> On 1 March 2018 at 10:57, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>> Hi Ulf
+>>
+>> On 03/01/2018 10:06 AM, Ulf Hansson wrote:
+>>>
+>>> Hi Ludovic,
+>>>
+>>> On 28 February 2018 at 16:47, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>>>
+>>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>>
+>>>> This patch serie adds support of stm32 SDMMC controller.
+>>>> stm32h7 is the first SoC to use stm32 SDMMC controller
+>>>> (previous SoC had pl180 controller).
+>>>
+>>>
+>>> I am a not convinced this isn't a new improved variant of the pl180.
+>>> According to register layout and the code you submitted in patch2,
+>>> there are great similarities to pl180 and the mmci driver.
+>>
+>>
+>> In fact, ST designers which created stm32-sdmmc hardware block from scratch
+>> are the same which have done the modifications on pl180 variant (stm32
+>> legacy f4, f7).
+>> So some registers or bits name seem identical (or strongly inspirited) but
+>> the engine and features are different.
+> 
+> Well, in that case, I assume the driver would also need work
+> differently, but when looking at the code in patch2 this doesn't seem
+> to be the case.
+> 
 
-	Maciej Purski
+I understand why you push to avoid drivers multiplication. But I'm
+scared to squash 2 different hardware block which are their own roadmap
+in the same drivers. I fear that it complicates the features management 
+and maintenance of this driver.
 
----
-Changes in v5:
-- rebase against current Mark Brown's regulators next
+there are some difference:
+-the stm32-sdmmc use an internal dma (stm32-sdmmc is master on the bus), 
+-idma alignment constraint.
+-idma transfer mode single buffer, double buffer... (future evolution)
+-need a command to stop transmission for data state machine
+-same bit naming could have offset, mask width or set in different register.
+=> I will try to synthesis register difference in a document
+-voltage switch sequence
+-delay block: calibration, tunning (sdr104)
+-reset line required
+-the same feature have not the same impact, example ddr mode
+stm32:no bypass clk, activated in clk register
+pl180: clkreg_neg_edge_enable, activated in datactrl register,
+...
 
-Changes in v4:
-- make paths for coupled and uncoupled regulators common
-- coupling descriptors are now always present in regulator_dev
-- fail to probe if data inconsistency is detected
-- retry to resolve coupling regultors in late init call
-- rebase on top of linux-next 20180119
-- fix commit messages
-- split patches to make the patchset easier to review
+stm32-sdmmc is just at begining of its life cycle. Each revision of this 
+block increases the difference with pl180. Today, I've just push the 
+minimal driver to start a request, but I've not yet send all features of 
+this revision like sdio, sdr104 support. After this revision there 
+already are 2 other revisions in the pipe (at short term).
 
-Changes in v3:
-- move dts parsing code to of_regulator.c, in order to the so,
-  add a new commit in which of_regulator_find_by_node() is moved
-  to of_regulator.c as well
-- improve error messages
-- move max_spread variable to constraints
-- perform resolving of coupled regulators under a list mutex
-- remove useless locking functions
-- some minor refactorization
-- improve commit messages
+I am Out of Office with limited access to my e-mail till 2018 march 12th
+I'll try to think about it on ski slope. euh, in fact no just ski and 
+enjoy ;-)
 
-Changes in RFC v2:
-- allow coupling n regulators (in fact up to constant value, now
-  set to 10)
-- change algorithm to be more readable
-- introduce better locking
-- add more comments
-- split first patch into two
-- update commit messages
-- change sequence of the patches
+BR
+Ludo
 
-Maciej Purski (5):
-  regulator: bindings: Add properties for coupled regulators
-  regulator: core: Parse coupled regulators properties
-  regulator: core: Resolve coupled regulators
-  regulator: core: Add voltage balancing mechanism
-  regulator: core: Change voltage setting path
-
- .../devicetree/bindings/regulator/regulator.txt    |   5 +
- drivers/regulator/core.c                           | 381 ++++++++++++++++++++-
- drivers/regulator/internal.h                       |   6 +
- drivers/regulator/of_regulator.c                   | 149 ++++++++
- include/linux/regulator/driver.h                   |  18 +
- include/linux/regulator/machine.h                  |   4 +
- 6 files changed, 545 insertions(+), 18 deletions(-)
-
--- 
-2.7.4
+>>
+>> You could find the datasheet of STM32H7x3 on:
+>> http://www.st.com/content/ccc/resource/technical/document/reference_manual/group0/c9/a3/76/fa/55/46/45/fa/DM00314099/files/DM00314099.pdf/jcr:content/translations/en.DM00314099.pdf
+>>
+>> Chapters: 55 Secure digital input/output MultiMediaCard interface
+>> (SDMMC)
+> 
+> Thanks for sharing this. However this confirms my view, it looks
+> exactly as a new improved mmci variant. :-)
+> 
+>>
+>> This hardware block has own roadmap and some features are already in the
+>> pipe for next SoC.
+> 
+> That's fine. I don't have a problem extending the mmci driver, even
+> several times, as to cope with new revisions.
+> 
+>>
+>> For code design: like I also worked on pl180 in the past :-)
+>> my code is inspirited of this driver.
+> 
+> Right, that may explain things a bit.
+> 
+> However, besides a re-name of the registers, I really think that the
+> code execution, dealing with IRQs etc, is very similar to the mmci
+> driver. Isn't it?
+> 
+> So, I think it's at least worth to give it a go with the mmci driver
+> first, to see if we can get it to work.
+> 
+> I guess you understand why I am pushing!? This is about maintenance -
+> and I really want to avoid having a yet another driver to maintain,
+> unless we can extend an existing one.
+> 
+> [...]
+> 
+> Kind regards
+> Uffe
+> 
