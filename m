@@ -1,196 +1,74 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] ARM: dts: tpc: Device tree description of the TPC board
-Date: Fri, 2 Mar 2018 13:51:59 +0100
-Message-ID: <20180302125159.gufvhyy4ipyunmil@pengutronix.de>
-References: <20180302121750.12865-1-lukma@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: bindings: Add properties for coupled regulators" to the regulator tree
+Date: Fri, 02 Mar 2018 12:55:27 +0000
+Message-ID: <E1erkDf-0004Yq-4h@debutante>
+References: <1512639975-22241-3-git-send-email-m.purski@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180302121750.12865-1-lukma@denx.de>
+In-Reply-To: <1512639975-22241-3-git-send-email-m.purski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+The patch
 
-On Fri, Mar 02, 2018 at 01:17:50PM +0100, Lukasz Majewski wrote:
-> This commit adds device tree description of K+P's TPC board.
+   regulator: bindings: Add properties for coupled regulators
 
-Can we get a hint what this board is? I assume this one:
+has been applied to the regulator tree at
 
-Technologic Systems' Full i.MX6 Portfolio Including SBC, COM, and Touch
-Panel PCs
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-Anyway, future developers are thankful if they have the information
-around when they have to work on that file or have to decide if it is to
-be removed.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> ---
->  arch/arm/boot/dts/Makefile         |   1 +
->  arch/arm/boot/dts/imx6q-kp-tpc.dts |  84 +++++++
->  arch/arm/boot/dts/imx6q-kp.dtsi    | 468 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 553 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6q-kp-tpc.dts
->  create mode 100644 arch/arm/boot/dts/imx6q-kp.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index ade7a38543dc..c148c4cf28f2 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -459,6 +459,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
->  	imx6q-icore-ofcap10.dtb \
->  	imx6q-icore-ofcap12.dtb \
->  	imx6q-icore-rqs.dtb \
-> +	imx6q-kp-tpc.dtb \
->  	imx6q-marsboard.dtb \
->  	imx6q-mccmon6.dtb \
->  	imx6q-nitrogen6x.dtb \
-> diff --git a/arch/arm/boot/dts/imx6q-kp-tpc.dts b/arch/arm/boot/dts/imx6q-kp-tpc.dts
-> new file mode 100644
-> index 000000000000..955462e778c9
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-kp-tpc.dts
-> +/dts-v1/;
-> +
-> +#include "imx6q-kp.dtsi"
-> +
-> +/ {
-> +	model = "Freescale i.MX6 Quad K+P TPC Board";
-> +	compatible = "fsl,imx6q-tpc", "fsl,imx6q";
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-If it is what I think it is the vendor is not fsl.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> +};
-> +
-> +&lcd_display {
-> +	display-timings {
-> +		800x480x60 {
-> +			clock-frequency = <34209000>;
-> +			hactive = <800>;
-> +			vactive = <480>;
-> +			hback-porch = <85>;
-> +			hfront-porch = <15>;
-> +			vback-porch = <34>;
-> +			vfront-porch = <10>;
-> +			hsync-len = <28>;
-> +			vsync-len = <1>;
-> +			hsync-active = <1>;
-> +			vsync-active = <1>;
-> +			de-active = <1>;
-> +		};
-> +	};
-> +};
-> +
-> +&ipu1_di0_disp0 {
-> +	remote-endpoint = <&lcd_display_in>;
-> +};
-> +
-> +&can1 {
-> +	status = "disabled";
-> +};
-> +
-> +&can2 {
-> +	status = "disabled";
-> +};
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-These are not enabled in your base dtsi, so no need to disabled it here.
+Thanks,
+Mark
 
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
+>From b277c9976cd814d33fd3fa2122cd67ab31486f5b Mon Sep 17 00:00:00 2001
+From: Maciej Purski <m.purski@samsung.com>
+Date: Fri, 2 Mar 2018 09:42:45 +0100
+Subject: [PATCH] regulator: bindings: Add properties for coupled regulators
 
-This is already enabled in your base dtsi.
+Some regulators require keeping their voltage spread below defined
+max_spread.
 
-> +
-> +&uart2 {
-> +	status = "disabled";
-> +};
+Add properties to provide information on regulators' coupling.
 
-This is still disabled, no need to enable.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Maciej Purski <m.purski@samsung.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/regulator/regulator.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> diff --git a/arch/arm/boot/dts/imx6q-kp.dtsi b/arch/arm/boot/dts/imx6q-kp.dtsi
-> new file mode 100644
-> index 000000000000..47a10fb1d46b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-kp.dtsi
-> +
-> +	memory: memory {
-> +		reg = <0x10000000 0x40000000>;
-> +	};
-> +
-> +	pwm-buzzer {
-> +		compatible = "pwm-backlight";
-
-What is it? A backlight or a buzzer?
-
-> +		pwms = <&pwm2 0 500000>; //2kHz
-> +		brightness-levels = <
-> +			0   7  8  9
-> +			10 11 12 13 14 15 16 17 18 19
-> +			20 21 22 23 24 25 26 27 28 29
-> +			30 31 32 33 34 35 36 37 38 39
-> +			40 41 42 43 44 45 46 47 48 49
-> +			50 51 52 53 54 55 56 57 58 59
-> +			60 61 62 63 64 65 66 67 68 69
-> +			70 71 72 73 74 75 76 77 78 79
-> +			80 81 82 83 84 85 86 87 88 89
-> +			90 91 92 93 94 95 96 97 98 99
-> +			100
-> +			>;
-> +		default-brightness-level = <0>;
-> +	};
-> +
-> +	regulators {
-
-AFAIK regulators shall no longer be in a separate subnode.
-
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		reg_usb_h1_vbus: regulator@1 {
-> +			compatible = "regulator-fixed";
-> +			reg = <1>;
-
-drop the reg property and also the @1 in the name.
-
-> +			regulator-name = "usb_h1_vbus";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			enable-active-high;
-> +		};
-> +
-> +		reg_audio: regulator@2 {
-> +			compatible = "regulator-fixed";
-> +			reg = <2>;
-
-ditto
-
-> +			regulator-name = "sgtl5000-supply";
-> +			gpio = <&gpio6 31 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +			regulator-always-on;
-> +		};
-> +
-> +		reg_3p3v: regulator@3 {
-> +			compatible = "regulator-fixed";
-> +			reg = <4>;
-
-ditto.
-
-(You have to change the node names of course to make them unique again)
-
-
-Sascha
-
-
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 2babe15b618d..62510d67cc3a 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -68,6 +68,11 @@ Optional properties:
+ 	0: Disable active discharge.
+ 	1: Enable active discharge.
+ 	Absence of this property will leave configuration to default.
++- regulator-coupled-with: Regulators with which the regulator
++  is coupled. The linkage is 2-way - all coupled regulators should be linked
++  with each other.
++- regulator-coupled-max-spread: Max spread between voltages of coupled regulators
++  in microvolts.
+ 
+ Deprecated properties:
+ - regulator-compatible: If a regulator chip contains multiple
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.16.2
