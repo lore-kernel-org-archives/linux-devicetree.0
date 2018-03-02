@@ -1,219 +1,80 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 2/5] arm: zynq: Add support for Xilinx zc770 xm010 dc1
- board
-Date: Fri, 2 Mar 2018 20:16:27 +0100
-Message-ID: <1ec3a67e-92b3-0453-44a2-24b23ffc9ac2@monstr.eu>
-References: <cover.1519398009.git.michal.simek@xilinx.com>
- <f049c5121edab27227337ccd607db4f38f8d76f3.1519398009.git.michal.simek@xilinx.com>
- <20180302185006.yciyjcchsx4aa7lu@rob-hp-laptop>
-Reply-To: monstr@monstr.eu
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
+ node
+Date: Fri, 2 Mar 2018 13:19:13 -0600
+Message-ID: <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
+References: <20180302134804.3690-1-bparrot@ti.com>
+ <20180302134804.3690-3-bparrot@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="n7k205uWTnJROWKfP9is9FORQovKuwKlP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180302185006.yciyjcchsx4aa7lu@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180302134804.3690-3-bparrot@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Benoit Parrot <bparrot@ti.com>
+Cc: devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---n7k205uWTnJROWKfP9is9FORQovKuwKlP
-Content-Type: multipart/mixed; boundary="AbgkejVHAhXsanA6AHv46YmervkS7jiyg";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-Reply-To: monstr@monstr.eu
-To: Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, Steffen Trumtrar <s.trumtrar@pengutronix.de>,
- linux-kernel@vger.kernel.org,
- Peter Crosthwaite <peter.crosthwaite@xilinx.com>,
- Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
- Josh Cartwright <josh.cartwright@ni.com>,
- Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
-Message-ID: <1ec3a67e-92b3-0453-44a2-24b23ffc9ac2@monstr.eu>
-Subject: Re: [PATCH v2 2/5] arm: zynq: Add support for Xilinx zc770 xm010 dc1
- board
-References: <cover.1519398009.git.michal.simek@xilinx.com>
- <f049c5121edab27227337ccd607db4f38f8d76f3.1519398009.git.michal.simek@xilinx.com>
- <20180302185006.yciyjcchsx4aa7lu@rob-hp-laptop>
-In-Reply-To: <20180302185006.yciyjcchsx4aa7lu@rob-hp-laptop>
-
---AbgkejVHAhXsanA6AHv46YmervkS7jiyg
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-
-On 2.3.2018 19:50, Rob Herring wrote:
-> On Fri, Feb 23, 2018 at 04:00:20PM +0100, Michal Simek wrote:
->> zc770 is based board which is extended by FMC/DC cards for SoC
->> validation. FMCs/DCs are supposed to cover all SoC configurations.
->> FMC/DC contains ethernet port, can, i2c, sd, qspi, spi, uart and usb.
->>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>
->> Changes in v2:
->> - Record compatible string to xilinx.txt
->>
->>  Documentation/devicetree/bindings/arm/xilinx.txt |  3 +
->>  arch/arm/boot/dts/Makefile                       |  1 +
->>  arch/arm/boot/dts/zynq-zc770-xm010.dts           | 92 +++++++++++++++=
-+++++++++
->>  3 files changed, 96 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/zynq-zc770-xm010.dts
->>
->> diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Docume=
-ntation/devicetree/bindings/arm/xilinx.txt
->> index 425c74fcc560..019e69037d42 100644
->> --- a/Documentation/devicetree/bindings/arm/xilinx.txt
->> +++ b/Documentation/devicetree/bindings/arm/xilinx.txt
->> @@ -11,6 +11,9 @@ Additional compatible strings:
->>  - Xilinx internal board cc108
->>    "xlnx,zynq-cc108"
->> =20
->> +- Xilinx internal board zc770 with different FMC cards
->> +  "xlnx,zynq-zc770-xm010"
->> +
->>  ---------------------------------------------------------------
->> =20
->>  Xilinx Zynq UltraScale+ MPSoC Platforms Device Tree Bindings
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index c6810e84d4d7..be9ffae2a1ec 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -1067,6 +1067,7 @@ dtb-$(CONFIG_ARCH_ZYNQ) +=3D \
->>  	zynq-parallella.dtb \
->>  	zynq-zc702.dtb \
->>  	zynq-zc706.dtb \
->> +	zynq-zc770-xm010.dtb \
->>  	zynq-zed.dtb \
->>  	zynq-zybo.dtb
->>  dtb-$(CONFIG_MACH_ARMADA_370) +=3D \
->> diff --git a/arch/arm/boot/dts/zynq-zc770-xm010.dts b/arch/arm/boot/dt=
-s/zynq-zc770-xm010.dts
->> new file mode 100644
->> index 000000000000..b1cfb4ede434
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/zynq-zc770-xm010.dts
->> @@ -0,0 +1,92 @@
->> +// SPDX-License-Identifier: GPL-2.0+
->> +/*
->> + * Xilinx ZC770 XM010 board DTS
->> + *
->> + * Copyright (C) 2013-2018 Xilinx, Inc.
->> + */
->> +/dts-v1/;
->> +#include "zynq-7000.dtsi"
->> +
->> +/ {
->> +	compatible =3D "xlnx,zynq-zc770-xm010", "xlnx,zynq-7000";
->> +	model =3D "Xilinx Zynq";
->> +
->> +	aliases {
->> +		ethernet0 =3D &gem0;
->> +		i2c0 =3D &i2c0;
->> +		serial0 =3D &uart1;
->> +		spi1 =3D &spi1;
->> +	};
->> +
->> +	chosen {
->> +		bootargs =3D "";
->> +		stdout-path =3D "serial0:115200n8";
->> +	};
->> +
->> +	memory@0 {
->> +		device_type =3D "memory";
->> +		reg =3D <0x0 0x40000000>;
->> +	};
->> +
->> +	usb_phy0: phy0 {
->> +		compatible =3D "usb-nop-xceiv";
->> +		#phy-cells =3D <0>;
->> +	};
->> +};
->> +
->> +&can0 {
->> +	status =3D "okay";
->> +};
->> +
->> +&gem0 {
->> +	status =3D "okay";
->> +	phy-mode =3D "rgmii-id";
->> +	phy-handle =3D <&ethernet_phy>;
->> +
->> +	ethernet_phy: ethernet-phy@7 {
->> +		reg =3D <7>;
->> +		device_type =3D "ethernet-phy";
->> +	};
->> +};
->> +
->> +&i2c0 {
->> +	status =3D "okay";
->> +	clock-frequency =3D <400000>;
->> +
->> +	eeprom: eeprom@52 {
->> +		compatible =3D "atmel,24c02";
->> +		reg =3D <0x52>;
->> +	};
->> +
->> +};
->> +
->> +&sdhci0 {
->> +	status =3D "okay";
->> +};
->> +
->> +&spi1 {
->> +	status =3D "okay";
->> +	num-cs =3D <4>;
->> +	is-decoded-cs =3D <0>;
->> +	flash@0 {
->> +		compatible =3D "sst25wf080", "jedec,spi-nor";
->> +		reg =3D <1>;
->> +		spi-max-frequency =3D <1000000>;
->> +		#address-cells =3D <1>;
->> +		#size-cells =3D <1>;
->> +		partition@test {
->=20
-> @test?
->=20
-> Use a partitions node too.
-
-ok done.
-
->=20
->> +			label =3D "spi-flash";
->=20
-> Should be what the partition contains.
-
-
-I have fixed this to data.
-
-Thanks,
-M
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
-
-
-
---AbgkejVHAhXsanA6AHv46YmervkS7jiyg--
-
---n7k205uWTnJROWKfP9is9FORQovKuwKlP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iEYEARECAAYFAlqZowsACgkQykllyylKDCG4igCbBgUNePpMOTFkiehMJ1Y9Kqcc
-iA8AniwvFudHYy3+qjdsWhvenerK2YfE
-=YVS8
------END PGP SIGNATURE-----
-
---n7k205uWTnJROWKfP9is9FORQovKuwKlP--
+T24gRnJpLCBNYXIgMiwgMjAxOCBhdCA3OjQ4IEFNLCBCZW5vaXQgUGFycm90IDxicGFycm90QHRp
+LmNvbT4gd3JvdGU6Cj4gQWRkICdwbGFuZScgY2hpbGQgbm9kZSB0byBnZW5lcmljIERJU1BDIG5v
+ZGUgYXMgYW4gb3B0aW9uYWwKPiBwcm9wZXJ0eS4KCldoeT8gV2hhdCBwcm9ibGVtIGFyZSB5b3Ug
+c29sdmluZz8KCj4KPiBTaWduZWQtb2ZmLWJ5OiBCZW5vaXQgUGFycm90IDxicGFycm90QHRpLmNv
+bT4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwLWRz
+cy50eHQgfCA2MyArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA2MyBp
+bnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0Cj4gaW5kZXggMjQ5ZTU4OGQ3
+ODY1Li5jYjEwMTUyNWI4MDUgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0Cj4gQEAgLTI3
+LDYgKzI3LDM0IEBAIERJU1BDCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gIC0gbWF4LW1lbW9y
+eS1iYW5kd2lkdGg6IElucHV0IG1lbW9yeSAoZnJvbSBtYWluIG1lbW9yeSB0byBkaXNwYykgYmFu
+ZHdpZHRoIGxpbWl0Cj4gICAgICAgICAgICAgICAgICAgICAgICAgaW4gYnl0ZXMgcGVyIHNlY29u
+ZAo+ICstIHBsYW5lOiBDaGlsZCBub2RlKHMpIHdoaWNoIGRlZmluZXMgd2hpY2ggbG9naWNhbCBw
+bGFuZSBhcmUgYXZhaWxhYmxlIHRvCgpUaGlzIGlzIHRoZSAiT3B0aW9uYWwgcHJvcGVydGllcyIg
+c2VjdGlvbiBhbmQgcGxhbmUgaXMgbm90IGEgcHJvcGVydHkuCgo+ICsgICAgICAgdGhlIHN5c3Rl
+bS4gSWYgYXQgbGVhc3Qgb25lIHBsYW5lIGNoaWxkIG5vZGUgaXMgZGVmaW5lZCB0aGVuCj4gKyAg
+ICAgICBvbmx5IHBsYW5lcyBkZWZpbmVkIGJ5IHRoZXNlIG5vZGVzIHdpbGwgYmUgYXZhaWxhYmxl
+IHRvIHRoZSBzeXN0ZW0uCj4gKyAgICAgICBQbGFuZSBub2RlcyBtdXN0IGJlIHNlcXVlbnRpYWwg
+c3RhcnRpbmcgd2l0aCByZWcgPSA8MD4gYXMgRFQgcGFyc2luZwo+ICsgICAgICAgd2lsbCBzdG9w
+IG9uIHRoZSBmaXJzdCBtaXNzaW5nIG51bWJlcmVkIG5vZGUuCj4gKyAgICAgICBUaGlzIG1lYW5z
+IGlmIHBsYW5lICMxIGlzIGRlZmluZWQgYnV0IHBsYW5lICMwIGlzIG5vdCB0aGVuIGl0IHdpbGwK
+PiArICAgICAgIGJlIGFzIGlmIG5vbmUgb2YgdGhlIHBsYW5lIG5vZGVzIHdlcmUgZGVmaW5lZC4K
+PiArCj4gKyAgICAgICBFYWNoIHBsYW5lIG5vZGUgY29udGFpbnMgdGhlIGZvbGxvd2luZyBwcm9w
+ZXJ0aWVzOgo+ICsgICAgICAgUmVxdWlyZWQgcHJvcGVydGllczoKPiArICAgICAgIC0gcmVnOiAg
+ICAgICBVc2VkIHRvIG51bWJlciB0aGUgbG9naWNhbCBwbGFuZQoKSXMgbG9naWNhbCBwbGFuZSBh
+IGgvdyBjb25jZXB0PwoKPiArICAgICAgIC0gaHctcGxhbmVzOiBPbmUgb3IgdHdvIEhXIHBsYW5l
+IG51bWJlcihzKS4KPiArICAgICAgICAgICAgICAgICAgICBXaGVuIDIgbnVtYmVycyBhcmUgcHJl
+c2VudCB0aGlzIGluZGljYXRlcyBhIHZpcnR1YWwgcGxhbmUKPiArICAgICAgICAgICAgICAgICAg
+ICBjb21wb3NlZCBvZiB0d28gcGh5c2ljYWwgcGxhbmVzIGludGVuZGVkIHRvIGJlIHVzZWQKPiAr
+ICAgICAgICAgICAgICAgICAgICB3aGVuIHRoZSBkaXNwbGF5IGlzIGxhcmdlciB0aGVuIHRoZSBj
+YXBhY2l0eSBvZiBhCj4gKyAgICAgICAgICAgICAgICAgICAgc2luZ2xlIHBsYW5lIGkuZS4gd2lk
+ZXIgdGhhbiAyMDQ4IHBpeGVscy4KPiArICAgICAgICAgICAgICAgICAgICBUaGUgZmlyc3QgbnVt
+YmVyIGluIHRoZSBwYWlyIHdpbGwgZGljdGF0ZSB0aGUgY2FwYWJpbGl0aWVzCj4gKyAgICAgICAg
+ICAgICAgICAgICAgb2YgdGhlIHZpcnR1YWwgcGxhbmUuIFRoaXMgbWVhbnMgdGhhdCBmb3IgcHJv
+cGVyCj4gKyAgICAgICAgICAgICAgICAgICAgb3BlcmF0aW9uIHRoZSB2aXJ0dWFsIHBsYW5lIHNo
+b3VsZCBiZSBjb21wb3NlZCBvZiBIVwo+ICsgICAgICAgICAgICAgICAgICAgIHBsYW5lcyBvZiB0
+aGUgc2FtZSBjYXBhYmlsaXRpZXMuCj4gKyAgICAgICAgICAgICAgICAgICAgSWYgR0ZYIHBsYW5l
+IGlzIHVzZWQgaW4gYSB2aXJ0dWFsIHBsYW5lIGl0IHNob3VsZCBiZQo+ICsgICAgICAgICAgICAg
+ICAgICAgIHNwZWNpZmllZCBmaXJzdCwgb3RoZXJ3aXNlIHVuZXhwZWN0ZWQgYmVoYXZpb3Igd291
+bGQKPiArICAgICAgICAgICAgICAgICAgICBiZSBlbmNvdW50ZXJlZC4KPiArICAgICAgIE9wdGlv
+bmFsIHByb3BlcnR5Ogo+ICsgICAgICAgLSBody1jcnRjczogIE9uZSBvciBtb3JlIEhXIGNydGMg
+bnVtYmVyKHMpLgo+ICsgICAgICAgICAgICAgICAgICAgIERlc2NyaWJlIHRoZSBsaXN0IG9mIENS
+VENzIG9uIHdoaWNoIHRoaXMgcGxhbmUgaXMKPiArICAgICAgICAgICAgICAgICAgICBhdmFpbGFi
+bGUuIElmIHRoaXMgbm9kZSBpcyBub3QgcHJlc2VudCB0aGVuIHRoZQo+ICsgICAgICAgICAgICAg
+ICAgICAgIHBsYW5lIHdpbGwgYmUgYXZhaWxhYmxlIG9uIGFsbCBhdmFpbGFibGUgQ1JUQ3MuCgpM
+ZXQncyBub3QgY29weSBhcmNoYWljIHRlcm1zIGZyb20gRFJNIGludG8gYmluZGluZ3MuCgpSZWFs
+bHksIEknbSBza2VwdGljYWwgdGhhdCBhbnkgb2YgdGhpcyBiZWxvbmdzIGluIERULiBGb3IgZXhh
+bXBsZSwKY2FuJ3QgeW91IGZpZ3VyZSBvdXQgeW91IG5lZWQgMiBwaHlzaWNhbCBwbGFuZXMgd2hl
+bmV2ZXIgeW91cgpwYW5lbC90aW1pbmcgd2lkdGggaXMgZ3JlYXRlciB0aGFuIDIwNDg/CgpSb2IK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
