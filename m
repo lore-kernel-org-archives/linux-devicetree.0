@@ -1,98 +1,103 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v5 1/4] of: change overlay apply input data from
- unflattened to FDT
-Date: Fri, 2 Mar 2018 09:28:22 -0800
-Message-ID: <fdfb7ab1-d74c-4398-b86d-cbf4de8d80bf@gmail.com>
-References: <1519955520-29975-1-git-send-email-frowand.list@gmail.com>
- <1519955520-29975-2-git-send-email-frowand.list@gmail.com>
- <CAMuHMdWCjqugdSkpLczcD3xsNWMmsZC8z0RLF7iQfL3V95LMZQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v7 10/42] clk: davinci: New driver for davinci PSC clocks
+Date: Fri, 2 Mar 2018 18:39:41 +0100
+Message-ID: <CAMRc=Mc=QFizXRDS7=_v6K9Z7c7dSBZdLbW9zCR01LFSk08MEg@mail.gmail.com>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
+ <1519071723-31790-11-git-send-email-david@lechnology.com> <CAMpxmJVxfGtO=kh63KF-5Uqew3yy97DsK4FSd14CyyRQTOhrTA@mail.gmail.com>
+ <93696fc8-bb93-aa20-3506-3d7216c17cd2@lechnology.com> <CAMpxmJVpMgikNfB4HgNCs+ep+EOHqH5bthiW82LsnDqzLfE5mg@mail.gmail.com>
+ <6bbe9bf3-24c1-acd9-200d-513520d34558@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWCjqugdSkpLczcD3xsNWMmsZC8z0RLF7iQfL3V95LMZQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <6bbe9bf3-24c1-acd9-200d-513520d34558@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+To: David Lechner <david@lechnology.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/18 01:20, Geert Uytterhoeven wrote:
-> Hi Frank,
-> 
-> On Fri, Mar 2, 2018 at 2:51 AM,  <frowand.list@gmail.com> wrote:
->> There are still some functions in unittest.c that should be tagged
->> __init due to changes in this patch, but modpost is not warning of
->> them and they are not a risk because they are only called from
->> __init functions.  A sweep of unittest.c for functions that
->> should be tagged __init is on the todo list.
-> 
-> If modpost doesn't warn, that merely means your compiler decided to
-> inline all functions with wrong annotations, hiding the problem.
-> Other (versions of) compilers may behave differently, so we do want
-> to get this right.
-> 
-> With my trusty gcc-4.1.2:
-> 
->     WARNING: vmlinux.o(.text+0x342dd4): Section mismatch in reference
-> from the function of_unittest_apply_revert_overlay_check() to the
-> function .init.text:of_unittest_apply_overlay()
->     The function of_unittest_apply_revert_overlay_check() references
->     the function __init of_unittest_apply_overlay().
->     This is often because of_unittest_apply_revert_overlay_check lacks a __init
->     annotation or the annotation of of_unittest_apply_overlay is wrong.
-> 
-> To fix the above:
-> 
-> -static int of_unittest_apply_revert_overlay_check(int overlay_nr,
-> +static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
-> -static void of_unittest_overlay_5(void)
-> +static void __init of_unittest_overlay_5(void)
-> -static void of_unittest_overlay_11(void)
-> +static void __init of_unittest_overlay_11(void)
-
-Yes, that is exactly the extra set of functions I was talking about.  Even
-though I would prefer to annotate them, in practice they will not be a
-problem because they only get called from __init functions (either directly
-or indirectly).  But if Rob will take a patch with them annotated, I will
-spin the series.
-
-
->> --- a/drivers/of/unittest.c
->> +++ b/drivers/of/unittest.c
-> 
->> @@ -2290,18 +2275,29 @@ static __init void of_unittest_overlay_high_level(void)
->>                 __of_attach_node_sysfs(np);
+2018-03-01 17:44 GMT+01:00 David Lechner <david@lechnology.com>:
+> On 03/01/2018 02:36 AM, Bartosz Golaszewski wrote:
 >>
->>         if (of_symbols) {
->> +               struct property *new_prop;
->>                 for_each_property_of_node(overlay_base_symbols, prop) {
-> 
-> drivers/of/unittest.c: In function ‘of_unittest_overlay_high_level’:
-> drivers/of/unittest.c:2193: warning: ‘overlay_base_symbols’ may be
-> used uninitialized in this function
-> 
-> This isn't a new warning, so I guess I never reported it before because I
-> thought it was a false positive (misguided by the "if (of_symbols)" test?).
-> 
-> However, now I believe it is not, and an uninitialized pointer will be
-> dereferenced if of_root has a __symbols__ node, but overlay_base_root hasn't.
+>> 2018-02-28 22:40 GMT+01:00 David Lechner <david@lechnology.com>:
+>>>
+>>> On 02/28/2018 06:38 AM, Bartosz Golaszewski wrote:
+>>>>
+>>>>
+>>>>
+>>>> I think I found the reason for the strange crashes we were
+>>>> experiencing (emac core->name being NULL) thanks to Sekhar who pointed
+>>>> me in the right direction.
+>>>>
+>>>> The mdio driver fails to probe with v7 due to the supplied clock rate
+>>>> being wrong. Before failing we register the emac clock with
+>>>> pm_clk_add_clk(). When clock_ops puts the clock, it decreases the
+>>>> reference count of the clock, but we never actually increased it in
+>>>> the first place in the line above. The core clock code then destroys
+>>>> the associated clk_core structure. When the next user comes around (in
+>>>> our case the clk debug functions) the system crashes.
+>>>>
+>>>> I believe there to be two issues: one is with v7 - we need to increase
+>>>> the clock reference count in davinci_psc_genpd_attach_dev().
+>>>>
+>>>> Second is the error path in the clock framework - we should remove the
+>>>> destroyed clk_core from the debug list, which is not being done now.
+>>>>
+>>>> Why we even need to track the refcount of clk_core is a mistery for me
+>>>> though. Stephen, Mike?
+>>>>
+>>>> Best regards,
+>>>> Bartosz Golaszewski
+>>>
+>>>
+>>>
+>>> Great find. I figured it had to be something like this, but I wasn't
+>>> able to reproduce the problem yet.
+>>>
+>>> I suppose it is time to spin up a v8 with some fixes.
+>>
+>>
+>> I still don't know why the mdio clock rate is much lower than in
+>> mainline though. Any ideas?
+>>
+>> Thanks,
+>> Bart
+>>
+>
+> Now that you have fixed the crash, can you answer the questions I have
+> asked earlier?
+>
+>> Can you post the output of this command so that I can see how your
+>
+> clocks are setup:
+>
+> cat /sys/kernel/debug/clk/clk_summary
+>
+>> Using your workaround, can you run:
+>
+>
+> cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+>
+> If you see:
+>   1e27000.clock-controller: emac  off-0
+>
+> then genpd is not working like it is supposed to. You should see something
+> like this for device that are working:
+>           1e27000.clock-controller: uart2  on
+>     /devices/platform/soc@1c00000/1d0d000.serial        active
 
-Yes, thanks for reporting it.  My gcc isn't this smart.
+I used of_clk_get() in the genpd attach callback so the crash no
+longer happens, but I still can't boot it over NFS due to mdio
+failing. Do you have any idea why the clock rate differs between v7
+and mainline?
 
-Fortunately overlay_base_root does have a __symbols__ node.  But I will fix it
-in a patch outside this series.
+>From the logs I can see that genpd domains are correctly registered,
+and the provider is added (you should probably skip setting up the
+domains in legacy mode though), the pm clocks are enabled (after being
+disabled by mdio after its failed probe()) but the boot process gets
+stuck after the kernel gets an IP address over DHCP (which is strange
+because apparently it had some kind of network connection).
 
+On Monday I'll prepare a small ramfs and boot over tftp only and see from there.
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+Best regards,
+Bartosz
