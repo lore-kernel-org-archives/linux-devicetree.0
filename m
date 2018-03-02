@@ -1,85 +1,60 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc node
-Date: Fri, 2 Mar 2018 07:48:02 -0600
-Message-ID: <20180302134804.3690-3-bparrot@ti.com>
-References: <20180302134804.3690-1-bparrot@ti.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: scsi: hisi_sas: add an property of
+ signal attenuation
+Date: Fri, 2 Mar 2018 09:57:20 -0600
+Message-ID: <CAL_JsqJNxxyBDk_u=Wf2vGbgwa7act2NNc+zmxP7Ne80bFGqRA@mail.gmail.com>
+References: <1520003182-26277-1-git-send-email-john.garry@huawei.com> <1520003182-26277-2-git-send-email-john.garry@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180302134804.3690-1-bparrot@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1520003182-26277-2-git-send-email-john.garry@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Garry <john.garry@huawei.com>
+Cc: "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Mark Rutland <mark.rutland@arm.com>, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, Linuxarm <linuxarm@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaofei Tan <tanxiaofei@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-QWRkICdwbGFuZScgY2hpbGQgbm9kZSB0byBnZW5lcmljIERJU1BDIG5vZGUgYXMgYW4gb3B0aW9u
-YWwKcHJvcGVydHkuCgpTaWduZWQtb2ZmLWJ5OiBCZW5vaXQgUGFycm90IDxicGFycm90QHRpLmNv
-bT4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAtZHNzLnR4
-dCB8IDYzICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA2MyBpbnNlcnRp
-b25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvdGkvdGksb21hcC1kc3MudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0CmluZGV4IDI0OWU1ODhkNzg2NS4uY2IxMDE1
-MjViODA1IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS90aS90aSxvbWFwLWRzcy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0CkBAIC0yNyw2ICsyNywzNCBAQCBESVNQ
-QwogT3B0aW9uYWwgcHJvcGVydGllczoKIC0gbWF4LW1lbW9yeS1iYW5kd2lkdGg6IElucHV0IG1l
-bW9yeSAoZnJvbSBtYWluIG1lbW9yeSB0byBkaXNwYykgYmFuZHdpZHRoIGxpbWl0CiAJCQlpbiBi
-eXRlcyBwZXIgc2Vjb25kCistIHBsYW5lOiBDaGlsZCBub2RlKHMpIHdoaWNoIGRlZmluZXMgd2hp
-Y2ggbG9naWNhbCBwbGFuZSBhcmUgYXZhaWxhYmxlIHRvCisJdGhlIHN5c3RlbS4gSWYgYXQgbGVh
-c3Qgb25lIHBsYW5lIGNoaWxkIG5vZGUgaXMgZGVmaW5lZCB0aGVuCisJb25seSBwbGFuZXMgZGVm
-aW5lZCBieSB0aGVzZSBub2RlcyB3aWxsIGJlIGF2YWlsYWJsZSB0byB0aGUgc3lzdGVtLgorCVBs
-YW5lIG5vZGVzIG11c3QgYmUgc2VxdWVudGlhbCBzdGFydGluZyB3aXRoIHJlZyA9IDwwPiBhcyBE
-VCBwYXJzaW5nCisJd2lsbCBzdG9wIG9uIHRoZSBmaXJzdCBtaXNzaW5nIG51bWJlcmVkIG5vZGUu
-CisJVGhpcyBtZWFucyBpZiBwbGFuZSAjMSBpcyBkZWZpbmVkIGJ1dCBwbGFuZSAjMCBpcyBub3Qg
-dGhlbiBpdCB3aWxsCisJYmUgYXMgaWYgbm9uZSBvZiB0aGUgcGxhbmUgbm9kZXMgd2VyZSBkZWZp
-bmVkLgorCisJRWFjaCBwbGFuZSBub2RlIGNvbnRhaW5zIHRoZSBmb2xsb3dpbmcgcHJvcGVydGll
-czoKKwlSZXF1aXJlZCBwcm9wZXJ0aWVzOgorCS0gcmVnOiAgICAgICBVc2VkIHRvIG51bWJlciB0
-aGUgbG9naWNhbCBwbGFuZQorCS0gaHctcGxhbmVzOiBPbmUgb3IgdHdvIEhXIHBsYW5lIG51bWJl
-cihzKS4KKwkJICAgICBXaGVuIDIgbnVtYmVycyBhcmUgcHJlc2VudCB0aGlzIGluZGljYXRlcyBh
-IHZpcnR1YWwgcGxhbmUKKwkJICAgICBjb21wb3NlZCBvZiB0d28gcGh5c2ljYWwgcGxhbmVzIGlu
-dGVuZGVkIHRvIGJlIHVzZWQKKwkJICAgICB3aGVuIHRoZSBkaXNwbGF5IGlzIGxhcmdlciB0aGVu
-IHRoZSBjYXBhY2l0eSBvZiBhCisJCSAgICAgc2luZ2xlIHBsYW5lIGkuZS4gd2lkZXIgdGhhbiAy
-MDQ4IHBpeGVscy4KKwkJICAgICBUaGUgZmlyc3QgbnVtYmVyIGluIHRoZSBwYWlyIHdpbGwgZGlj
-dGF0ZSB0aGUgY2FwYWJpbGl0aWVzCisJCSAgICAgb2YgdGhlIHZpcnR1YWwgcGxhbmUuIFRoaXMg
-bWVhbnMgdGhhdCBmb3IgcHJvcGVyCisJCSAgICAgb3BlcmF0aW9uIHRoZSB2aXJ0dWFsIHBsYW5l
-IHNob3VsZCBiZSBjb21wb3NlZCBvZiBIVworCQkgICAgIHBsYW5lcyBvZiB0aGUgc2FtZSBjYXBh
-YmlsaXRpZXMuCisJCSAgICAgSWYgR0ZYIHBsYW5lIGlzIHVzZWQgaW4gYSB2aXJ0dWFsIHBsYW5l
-IGl0IHNob3VsZCBiZQorCQkgICAgIHNwZWNpZmllZCBmaXJzdCwgb3RoZXJ3aXNlIHVuZXhwZWN0
-ZWQgYmVoYXZpb3Igd291bGQKKwkJICAgICBiZSBlbmNvdW50ZXJlZC4KKwlPcHRpb25hbCBwcm9w
-ZXJ0eToKKwktIGh3LWNydGNzOiAgT25lIG9yIG1vcmUgSFcgY3J0YyBudW1iZXIocykuCisJCSAg
-ICAgRGVzY3JpYmUgdGhlIGxpc3Qgb2YgQ1JUQ3Mgb24gd2hpY2ggdGhpcyBwbGFuZSBpcworCQkg
-ICAgIGF2YWlsYWJsZS4gSWYgdGhpcyBub2RlIGlzIG5vdCBwcmVzZW50IHRoZW4gdGhlCisJCSAg
-ICAgcGxhbmUgd2lsbCBiZSBhdmFpbGFibGUgb24gYWxsIGF2YWlsYWJsZSBDUlRDcy4KIAogVmlk
-ZW8gUG9ydHMKIC0tLS0tLS0tLS0tCkBAIC0yMTYsMyArMjQ0LDM4IEBAIE9NQVAgSERNSSAtLShI
-RE1JKS0tPiBUUEQxMlMwMTUgLS0oSERNSSktLT4gSERNSSBDb25uZWN0b3IKIAkJfTsKIAl9Owog
-fTsKKworQSBzaG9ydCBleGFtcGxlIG9uIGhvdyB0byBkZWZpbmUgYSB2aXJ0dWFsIHBsYW5lIGNv
-bmZpZ3VyYXRpb24KK3RvIGVuYWJsZSB3aWRlIGRpc3BsYXkgc3VwcG9ydC4KK0hlcmUgd2UgZGVm
-aW5lOgorLSBwbGFuZSMwIHRvIGJlIHRoZSBIVyBwbGFuZSAjMCAoaS5lLiBHRlggcGxhbmUpCisJ
-ICBvbmx5IGF2YWlsYWJsZSBvbiBjcnRjICMwCistIHBsYW5lIzEgdG8gYmUgYSB2aXJ0dWFsIHdp
-ZGUgcGxhbmUgY29tcG9zZWQgb2YgSFcgcGxhbmUgIzEgYW5kICMyCisJICAoaS5lLiBWSUQxICYg
-VklEMikgYXZhaWxhYmxlIG9uIGNydGMgIzAgJiAjMQorLSBwbGFuZSMyIHRvIGJlIHRoZSBIVyBw
-bGFuZSAjMyAoaS5lLiBWSUQzIHBsYW5lKQorCSAgb25seSBhdmFpbGFibGUgb24gY3J0YyAjMAor
-CismZHNzIHsKKyAgICAgICAgZGlzcGNANTgwMDEwMDAgeworICAgICAgICAgICAgICAgICNhZGRy
-ZXNzLWNlbGxzID0gPDE+OworICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+OworCisg
-ICAgICAgICAgICAgICAgcGxhbmVAMCB7CisgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
-MD47CisgICAgICAgICAgICAgICAgICAgICAgICBody1wbGFuZXMgPSA8MD47CisgICAgICAgICAg
-ICAgICAgICAgICAgICBody1jcnRjcyA9IDwwPjsKKyAgICAgICAgICAgICAgICB9OworCisgICAg
-ICAgICAgICAgICAgcGxhbmVAMSB7CisgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MT47
-CisgICAgICAgICAgICAgICAgICAgICAgICBody1wbGFuZXMgPSA8MSAyPjsKKyAgICAgICAgICAg
-ICAgICAgICAgICAgIGh3LWNydGNzID0gPDAgMT47CisgICAgICAgICAgICAgICAgfTsKKworICAg
-ICAgICAgICAgICAgIHBsYW5lQDIgeworICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDI+
-OworICAgICAgICAgICAgICAgICAgICAgICAgaHctcGxhbmVzID0gPDM+OworICAgICAgICAgICAg
-ICAgICAgICAgICAgaHctY3J0Y3MgPSA8MD47CisgICAgICAgICAgICAgICAgfTsKKyAgICAgICAg
-fTsKK307Ci0tIAoyLjkuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Fri, Mar 2, 2018 at 9:06 AM, John Garry <john.garry@huawei.com> wrote:
+> From: Xiaofei Tan <tanxiaofei@huawei.com>
+>
+> For some new boards with hip07 chipset we are required to
+> set PHY config registers differently. The hw property which
+> determines how to set these registers is in the PHY signal
+> attenuation readings.
+>
+> This patch add an devicetree property, hisi-signal-attenuation,
+> which is used to describe the signal attenuation of an board.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>  Documentation/devicetree/bindings/scsi/hisilicon-sas.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> index df3bef7..6f6876a 100644
+> --- a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+> @@ -53,6 +53,13 @@ Main node required properties:
+>  Optional main node properties:
+>   - hip06-sas-v2-quirk-amt : when set, indicates that the v2 controller has the
+>                             "am-max-transmissions" limitation.
+> + - hisi-signal-attenuation : array of 3 32-bit values, containing de-emphasis,
+
+The format for vendor prefixes is: <vendor prefix>,property-name
+
+And should only be ones defined in vendor-prefixes.txt
+
+> +               preshoot, and boost attenuation readings for the board. They
+> +               are used to describe the signal attenuation of the board. These
+> +               values' range is 7600 to 12400, and used to represent -24dB to
+> +               24dB.
+> +               The formula is "y = (x-10000)/10000". For example, 10478
+> +               means 4.78dB.
+>
+>  Example:
+>         sas0: sas@c1000000 {
+> --
+> 1.9.1
+>
