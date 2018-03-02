@@ -1,105 +1,94 @@
-Return-Path: <helgaas@kernel.org>
-Date: Thu, 1 Mar 2018 09:09:11 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 2/2] PCI: histb: add an optional regulator for PCIe
- port power control
-Message-ID: <20180301150910.GB13722@bhelgaas-glaptop.roam.corp.google.com>
-References: <1516722337-1533-1-git-send-email-shawn.guo@linaro.org>
- <1516722337-1533-3-git-send-email-shawn.guo@linaro.org>
+Return-Path: <SRS0=y3e+=FY=bootlin.com=maxime.ripard@kernel.org>
+Date: Fri, 2 Mar 2018 09:15:17 +0100
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v5 0/2] media: v4l: Add support for the Cadence MIPI-CSI2
+ TX controller
+Message-ID: <20180302081517.pkscagz77mrjtzp4@flea.lan>
+References: <20180301113049.16470-1-maxime.ripard@bootlin.com>
+ <20180301161338.GA12470@bigcity.dyn.berto.se>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="v55cl5o2jsrcxmfu"
 Content-Disposition: inline
-In-Reply-To: <1516722337-1533-3-git-send-email-shawn.guo@linaro.org>
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>, Jianguo Sun <sunjianguo1@huawei.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, project-aspen-dev@linaro.org
+In-Reply-To: <20180301161338.GA12470@bigcity.dyn.berto.se>
+To: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Benoit Parrot <bparrot@ti.com>, nm@ti.com, Simon Hatliff <hatliff@cadence.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Jan 23, 2018 at 11:45:37PM +0800, Shawn Guo wrote:
-> The power supply to PCIe port are often controlled by GPIO on some board
-> designs.  Let's add an optional regulator which can be backed by GPIO to
-> control the power.
-> 
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> ---
->  .../bindings/pci/hisilicon-histb-pcie.txt           |  1 +
->  drivers/pci/dwc/pcie-histb.c                        | 21 +++++++++++++++++++++
->  2 files changed, 22 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-> index c84bc027930b..f995664e6d7f 100644
-> --- a/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/hisilicon-histb-pcie.txt
-> @@ -34,6 +34,7 @@ Required properties
->  
->  Optional properties:
->  - reset-gpios: The gpio to generate PCIe PERST# assert and deassert signal.
-> +- vpcie-supply: Should specify the regulator in charge of PCIe port power.
 
-s/Should specify the/The/
+--v55cl5o2jsrcxmfu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->  - phys: List of phandle and phy mode specifier, should be 0.
->  - phy-names: Must be "phy".
->  
-> diff --git a/drivers/pci/dwc/pcie-histb.c b/drivers/pci/dwc/pcie-histb.c
-> index 6395394be5b4..8eb3028432b3 100644
-> --- a/drivers/pci/dwc/pcie-histb.c
-> +++ b/drivers/pci/dwc/pcie-histb.c
-> @@ -64,6 +64,7 @@ struct histb_pcie {
->  	struct reset_control *bus_reset;
->  	void __iomem *ctrl;
->  	int reset_gpio;
-> +	struct regulator *vpcie;
->  };
->  
->  static u32 histb_pcie_readl(struct histb_pcie *histb_pcie, u32 reg)
-> @@ -230,6 +231,9 @@ static void histb_pcie_host_disable(struct histb_pcie *hipcie)
->  
->  	if (gpio_is_valid(hipcie->reset_gpio))
->  		gpio_set_value_cansleep(hipcie->reset_gpio, 0);
-> +
-> +	if (hipcie->vpcie)
-> +		regulator_disable(hipcie->vpcie);
->  }
->  
->  static int histb_pcie_host_enable(struct pcie_port *pp)
-> @@ -240,6 +244,14 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
->  	int ret;
->  
->  	/* power on PCIe device if have */
-> +	if (hipcie->vpcie) {
-> +		ret = regulator_enable(hipcie->vpcie);
-> +		if (ret) {
-> +			dev_err(dev, "failed to enable regulator: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	if (gpio_is_valid(hipcie->reset_gpio))
->  		gpio_set_value_cansleep(hipcie->reset_gpio, 1);
->  
-> @@ -285,6 +297,8 @@ static int histb_pcie_host_enable(struct pcie_port *pp)
->  err_sys_clk:
->  	clk_disable_unprepare(hipcie->bus_clk);
->  err_bus_clk:
-> +	if (hipcie->vpcie)
-> +		regulator_disable(hipcie->vpcie);
->  
->  	return ret;
->  }
-> @@ -334,6 +348,13 @@ static int histb_pcie_probe(struct platform_device *pdev)
->  		return PTR_ERR(pci->dbi_base);
->  	}
->  
-> +	hipcie->vpcie = devm_regulator_get_optional(dev, "vpcie");
-> +	if (IS_ERR(hipcie->vpcie)) {
-> +		if (PTR_ERR(hipcie->vpcie) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		hipcie->vpcie = NULL;
-> +	}
-> +
->  	hipcie->reset_gpio = of_get_named_gpio_flags(np,
->  				"reset-gpios", 0, &of_flags);
->  	if (of_flags & OF_GPIO_ACTIVE_LOW)
-> -- 
-> 1.9.1
-> 
+Hi Niklas,
+
+On Thu, Mar 01, 2018 at 05:13:38PM +0100, Niklas S=F6derlund wrote:
+> On 2018-03-01 12:30:47 +0100, Maxime Ripard wrote:
+> > Here is an attempt at supporting the MIPI-CSI2 TX block from Cadence.
+> >=20
+> > This IP block is able to receive 4 video streams and stream them over
+> > a MIPI-CSI2 link using up to 4 lanes. Those streams are basically the
+> > interfaces to controllers generating some video signals, like a camera
+> > or a pattern generator.
+> >=20
+> > It is able to map input streams to CSI2 virtual channels and datatypes
+> > dynamically. The streaming devices choose their virtual channels
+> > through an additional signal that is transparent to the CSI2-TX. The
+> > datatypes however are yet another additional input signal, and can be
+> > mapped to any CSI2 datatypes.
+> >=20
+> > Since v4l2 doesn't really allow for that setup at the moment, this
+> > preliminary version is a rather dumb one in order to start the
+> > discussion on how to address this properly.
+>=20
+> I'm sure you already are aware of this but in case you are not. Sakari=20
+> have a branch [1] which addresses much of the CSI-2 virtual channel=20
+> problems. It handles data types, virtual channels and format validation=
+=20
+> for pipelines in IMHO good way.  I have used it for my base when=20
+> implementing the R-Car CSI-2 receiver which adds a proposed way on how=20
+> to start and stop streams using Sakaris work [2].
+>=20
+> Would it be possible for you to try this series on-top of Sakaris branch=
+=20
+> and see if it fits your needs? I would be happy if it did and we can=20
+> start the process of trying to get his work upstream so we can clear=20
+> that dependency for our hopefully shared problem :-)
+
+Thanks for pointing this out :)
+
+I already started to look into this a few weeks back, and while it's
+not yet feature complete, it seemed to work quite well for the RX
+case. I haven't had time to test it on the TX controller yet.
+
+So I'd say that for now, his patches look enough to me :)
+
+Maxime
+
+--=20
+Maxime Ripard, Bootlin (formerly Free Electrons)
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--v55cl5o2jsrcxmfu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlqZCBQACgkQ0rTAlCFN
+r3R0rg//YD1lwwe1hQH7dVvSVzYhChsHHv01g5LZ9Ud875yoFLb2IGzOSszdOf9U
+GPrtMbfSTzfBFe+IRo1itTtIyimuZuIjWrvQ+axLjEBJNbH0MlkGNRUOnB3XfQ03
+ag6vMNT3wqdSGG4gUhgLCeaFYV1Q6Sd69WUv7oBnw11BFl4Ok9jHmi5y/WPVvu81
+i0pL/Um70+YL49R41pWSVFLbMrCsIMXCZuaUXUU2cqwIWUxPYOsLAxUcYCXjvIHO
+625Mb/u7J2/+eNzoxFdzxAP8aJWc3iVZ0URMEiiWH4kB56VYyr+/SGXSQfH4X7JA
+ejTbWXvadzmPU/iaZVCcy+WOxqeJqqWVzfzkswHUby2Mr875ss+pooSq/26TsjSE
+TN1Emkl9hHRjirpgZsKHpf8RD2asdx3ZrWyyVBt2F2jxQLO6jVIkAwqff4kkrsny
+xPmThUndNHB3WaoDIjVK3KTaXOFZ0bMStwCq0osXQsc/+7ZOT1hB92KkCGjld2Gk
+iPi0QxY+CfCIpsLY3z8tadYCRu/xOXKybBsubM18f9bxzeOro0BDofLMuiSBqucY
+LRx8eTa803zqP+pqOU7k08y+RBZM8PADsvxUqsF8iXJOfLJxI2wEbid3rSO/frqW
+k/36/YR/0xI8WWanXwf9ipICiLsPE/3epL54fouzLll3rq0Axuo=
+=KJLl
+-----END PGP SIGNATURE-----
+
+--v55cl5o2jsrcxmfu--
