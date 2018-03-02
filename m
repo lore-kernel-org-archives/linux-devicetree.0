@@ -1,48 +1,54 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v4 3/4] dt-bindings: display: amlogic: DT fix
- s/resets-names/reset-names/
-Date: Fri, 2 Mar 2018 15:52:38 +0100
-Message-ID: <d2be8243-caf1-32e3-bda2-b454a2cc147c@baylibre.com>
-References: <1519998993-14398-1-git-send-email-geert+renesas@glider.be>
- <1519998993-14398-4-git-send-email-geert+renesas@glider.be>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH v3 0/2] Introduce STM32 USB PHY Controller driver
+Date: Fri, 2 Mar 2018 15:56:23 +0100
+Message-ID: <1520002585-13113-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519998993-14398-4-git-send-email-geert+renesas@glider.be>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Chanho Min <chanho.min@lge.com>
-Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2018 14:56, Geert Uytterhoeven wrote:
-> Fixes: 8cceda5349377e30 ("dt-bindings: Add bindings for the Amlogic Meson dw-hdmi extension")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> v4:
->   - Add Acked-by,
-> 
-> v3:
->   - New.
-> ---
->  Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-> index bf4a18047309a5f8..d8f6268849f43621 100644
-> --- a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-> +++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-> @@ -43,7 +43,7 @@ Required properties:
->    and the Amlogic Meson venci clocks as described in
->    Documentation/devicetree/bindings/clock/clock-bindings.txt,
->    the clocks are soc specific, the clock-names should be "iahb", "isfr", "venci"
-> -- resets, resets-names: must have the phandles to the HDMI apb, glue and phy
-> +- resets, reset-names: must have the phandles to the HDMI apb, glue and phy
->    resets as described in :
->    Documentation/devicetree/bindings/reset/reset.txt,
->    the reset-names should be "hdmitx_apb", "hdmitx", "hdmitx_phy"
-> 
+This patchset adds support for STMicroelectronics STM32 USB PHY Controller
+(USBPHYC) which is embedded in STM32MP1 SoC.
+The STM32 USBPHYC block contains a dual port High Speed UTMI+ PHY and a UTMI
+switch that selects either USB OTG controller or USB Host controller for the
+second PHY port.
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+Changes in v3:
+* Address Kishon comments: move to phy provider + child phy sub-nodes model.
+* Remove st,utmi-switch property as the information is now passed through
+  phy cell for port#2.
+* Rework phy init/exit by extracting pll management in dedicated functions.
+* Make some clean-up around variable names and defines.
+
+Changes in v2:
+* Update diagram to better describe the context.
+* Change boolean dt propery st,port2-switch-to-host into u32 st,utmi-switch.
+* Silent phy creation failure in case of -EPROBE_DEFER.
+
+Amelie Delaunay (2):
+  dt-bindings: phy: add support for STM32 USB PHY Controller (USBPHYC)
+  phy: stm32: add support for STM32 USB PHY Controller (USBPHYC)
+
+ .../devicetree/bindings/phy/phy-stm32-usbphyc.txt  |  73 ++++
+ drivers/phy/st/Kconfig                             |  14 +
+ drivers/phy/st/Makefile                            |   1 +
+ drivers/phy/st/phy-stm32-usbphyc.c                 | 461 +++++++++++++++++++++
+ 4 files changed, 549 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-stm32-usbphyc.txt
+ create mode 100644 drivers/phy/st/phy-stm32-usbphyc.c
+
+-- 
+2.7.4
