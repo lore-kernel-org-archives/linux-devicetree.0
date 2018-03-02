@@ -1,257 +1,98 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: tpc: Device tree description of the TPC board
-Date: Fri, 2 Mar 2018 13:57:02 -0300
-Message-ID: <CAOMZO5BTnfHRkGnROh3LJoGVPcBcQk=rroYip4V1DDBUbkRuKw@mail.gmail.com>
-References: <20180302121750.12865-1-lukma@denx.de>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v5 1/4] of: change overlay apply input data from
+ unflattened to FDT
+Date: Fri, 2 Mar 2018 09:28:22 -0800
+Message-ID: <fdfb7ab1-d74c-4398-b86d-cbf4de8d80bf@gmail.com>
+References: <1519955520-29975-1-git-send-email-frowand.list@gmail.com>
+ <1519955520-29975-2-git-send-email-frowand.list@gmail.com>
+ <CAMuHMdWCjqugdSkpLczcD3xsNWMmsZC8z0RLF7iQfL3V95LMZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180302121750.12865-1-lukma@denx.de>
+In-Reply-To: <CAMuHMdWCjqugdSkpLczcD3xsNWMmsZC8z0RLF7iQfL3V95LMZQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+On 03/02/18 01:20, Geert Uytterhoeven wrote:
+> Hi Frank,
+> 
+> On Fri, Mar 2, 2018 at 2:51 AM,  <frowand.list@gmail.com> wrote:
+>> There are still some functions in unittest.c that should be tagged
+>> __init due to changes in this patch, but modpost is not warning of
+>> them and they are not a risk because they are only called from
+>> __init functions.  A sweep of unittest.c for functions that
+>> should be tagged __init is on the todo list.
+> 
+> If modpost doesn't warn, that merely means your compiler decided to
+> inline all functions with wrong annotations, hiding the problem.
+> Other (versions of) compilers may behave differently, so we do want
+> to get this right.
+> 
+> With my trusty gcc-4.1.2:
+> 
+>     WARNING: vmlinux.o(.text+0x342dd4): Section mismatch in reference
+> from the function of_unittest_apply_revert_overlay_check() to the
+> function .init.text:of_unittest_apply_overlay()
+>     The function of_unittest_apply_revert_overlay_check() references
+>     the function __init of_unittest_apply_overlay().
+>     This is often because of_unittest_apply_revert_overlay_check lacks a __init
+>     annotation or the annotation of of_unittest_apply_overlay is wrong.
+> 
+> To fix the above:
+> 
+> -static int of_unittest_apply_revert_overlay_check(int overlay_nr,
+> +static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
+> -static void of_unittest_overlay_5(void)
+> +static void __init of_unittest_overlay_5(void)
+> -static void of_unittest_overlay_11(void)
+> +static void __init of_unittest_overlay_11(void)
 
-In addition to Sascha's comments:
-
-On Fri, Mar 2, 2018 at 9:17 AM, Lukasz Majewski <lukma@denx.de> wrote:
-
-> diff --git a/arch/arm/boot/dts/imx6q-kp-tpc.dts b/arch/arm/boot/dts/imx6q-kp-tpc.dts
-> new file mode 100644
-> index 000000000000..955462e778c9
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-kp-tpc.dts
-> @@ -0,0 +1,84 @@
-> +/*
-> + * Copyright 2018
-> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is licensed under the terms of the GNU General Public
-> + *     License version 2.  This program is licensed "as is" without
-> + *     any warranty of any kind, whether express or implied.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-
-Please consider using SPDX tag instead.
-
-> +/dts-v1/;
-> +
-> +#include "imx6q-kp.dtsi"
-> +
-> +/ {
-> +       model = "Freescale i.MX6 Quad K+P TPC Board";
-> +       compatible = "fsl,imx6q-tpc", "fsl,imx6q";
-
-Use the board manufacturer symbol instead.
-
-If needed, add an entry for the vendor at
-Documentation/devicetree/bindings/vendor-prefixes.txt
-
-> +};
-> +
-> +&lcd_display {
-> +       display-timings {
-> +               800x480x60 {
-> +                       clock-frequency = <34209000>;
-> +                       hactive = <800>;
-> +                       vactive = <480>;
-> +                       hback-porch = <85>;
-> +                       hfront-porch = <15>;
-> +                       vback-porch = <34>;
-> +                       vfront-porch = <10>;
-> +                       hsync-len = <28>;
-> +                       vsync-len = <1>;
-> +                       hsync-active = <1>;
-> +                       vsync-active = <1>;
-> +                       de-active = <1>;
-> +               };
-> +       };
-> +};
-
-We prefer to use a compatible panel entry instead of keeping the panel
-timings inside the dts.
-
-> +
-> +&ipu1_di0_disp0 {
-> +       remote-endpoint = <&lcd_display_in>;
-> +};
-> +
-> +&can1 {
-> +       status = "disabled";
-> +};
-> +
-> +&can2 {
-> +       status = "disabled";
-> +};
-> +
-> +&uart1 {
-> +       status = "okay";
-> +};
-> +
-> +&uart2 {
-> +       status = "disabled";
-> +};
-> diff --git a/arch/arm/boot/dts/imx6q-kp.dtsi b/arch/arm/boot/dts/imx6q-kp.dtsi
-> new file mode 100644
-> index 000000000000..47a10fb1d46b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-kp.dtsi
-> @@ -0,0 +1,468 @@
-> +/*
-> + * Copyright 2018
-> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is licensed under the terms of the GNU General Public
-> + *     License version 2.  This program is licensed "as is" without
-> + *     any warranty of any kind, whether express or implied.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-
-SPDX, please.
+Yes, that is exactly the extra set of functions I was talking about.  Even
+though I would prefer to annotate them, in practice they will not be a
+problem because they only get called from __init functions (either directly
+or indirectly).  But if Rob will take a patch with them annotated, I will
+spin the series.
 
 
-> +       leds {
-> +               compatible = "gpio-leds";
-> +
-> +               green {
-> +                       label = "led1";
-> +                       gpios = <&gpio3 16 0>;
+>> --- a/drivers/of/unittest.c
+>> +++ b/drivers/of/unittest.c
+> 
+>> @@ -2290,18 +2275,29 @@ static __init void of_unittest_overlay_high_level(void)
+>>                 __of_attach_node_sysfs(np);
+>>
+>>         if (of_symbols) {
+>> +               struct property *new_prop;
+>>                 for_each_property_of_node(overlay_base_symbols, prop) {
+> 
+> drivers/of/unittest.c: In function ‘of_unittest_overlay_high_level’:
+> drivers/of/unittest.c:2193: warning: ‘overlay_base_symbols’ may be
+> used uninitialized in this function
+> 
+> This isn't a new warning, so I guess I never reported it before because I
+> thought it was a false positive (misguided by the "if (of_symbols)" test?).
+> 
+> However, now I believe it is not, and an uninitialized pointer will be
+> dereferenced if of_root has a __symbols__ node, but overlay_base_root hasn't.
 
-gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
+Yes, thanks for reporting it.  My gcc isn't this smart.
 
-> +                       linux,default-trigger = "gpio";
-> +                       default-state = "off";
-> +               };
-> +
-> +               red {
-> +                       label = "led0";
-> +                       gpios = <&gpio3 23 0>;
+Fortunately overlay_base_root does have a __symbols__ node.  But I will fix it
+in a patch outside this series.
 
-GPIO_ACTIVE_HIGH
 
-> +                       linux,default-trigger = "gpio";
-> +                       default-state = "off";
-> +               };
-> +       };
-> +
-> +       memory: memory {
-> +               reg = <0x10000000 0x40000000>;
-> +       };
-
- memory@10000000 otherwise warnings are seen when building with W=1.
-
-Make sure that building the dtb with W=1 introduces no warnings.
-
-> +&i2c1 {
-> +       clock-frequency = <400000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c1>;
-> +       status = "okay";
-> +
-> +       goodix_ts@5d {
-> +               compatible = "goodix,gt911";
-> +               reg = <0x5d>;
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_ts>;
-> +
-
-No need for these blank lines.
-
-> +               interrupt-parent = <&gpio1>;
-> +               interrupts = <9 2>;
-
-Please use an IRQ flag.
-
-> +               irq-gpios = <&gpio1 9 0>;
-
-GPIO_ACTIVE_HIGH
-
-> +               reset-gpios = <&gpio5 2 0>;
-
-GPIO_ACTIVE_HIGH.
-
-> +&i2c2 {
-> +       clock-frequency = <400000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c2>;
-> +       status = "okay";
-> +
-> +       codec: sgtl5000@a {
-> +               compatible = "fsl,sgtl5000";
-> +               #sound-dai-cells = <0>;
-> +               reg = <0x0a>;
-> +
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_codec>;
-> +
-
-No need for these blank lines.
-
-> +               clocks = <&clks IMX6QDL_CLK_CKO>;
-> +               VDDA-supply = <&reg_3p3v>;
-> +               VDDIO-supply = <&reg_3p3v>;
-
-> +&uart2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_uart2>;
-> +       fsl,uart-has-rtscts;
-
- fsl,uart-has-rtscts has been deprecated. Please use  uart-has-rtscts instead.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
