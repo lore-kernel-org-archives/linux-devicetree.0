@@ -1,44 +1,100 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] ARM64: dts: meson: reduce odroid-c2 eMMC maximum rate
-Date: Fri,  2 Mar 2018 14:44:36 +0100
-Message-ID: <20180302134436.18844-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: ellierevves@gmail.com, Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Benoit Parrot <bparrot@ti.com>
+Subject: [Patch 1/4] dt-bindings: display/ti: Move common dispc bindings to
+ omap-dss.txt
+Date: Fri, 2 Mar 2018 07:48:01 -0600
+Message-ID: <20180302134804.3690-2-bparrot@ti.com>
+References: <20180302134804.3690-1-bparrot@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180302134804.3690-1-bparrot@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Different modules maybe installed by the user on the eMMC connector
-of the odroid-c2. While the red modules are working without an issue,
-it seems some black modules (apparently Samsung based) are having
-issue at 200MHz
-
-While the tuning algorithm introduced in v4.14 enables high speed modes
-on every other tested designs, it seems a problem remains for this
-particular combination of board and eMMC module.
-
-Lowering the maximum frequency of the eMMC on this board until we can
-figure out a better solution.
-
-Fixes: d341ca88eead ("mmc: meson-gx: rework tuning function")
-Suggested-by: Ellie Reeves <ellierevves@gmail.com>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 73a030a5ecf3..43475139576c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -311,7 +311,7 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	max-frequency = <200000000>;
-+	max-frequency = <100000000>;
- 	non-removable;
- 	disable-wp;
- 	cap-mmc-highspeed;
--- 
-2.14.3
+QWRkIGNvbW1vbiBESVNQQyBiaW5kaW5ncyBpbnRvIHRoZSB0b3AgbGV2ZWwgYmluZGluZ3MgZmls
+ZS4KTW92ZSBjb21tb24gYmluZGluZ3MgaGVyZSBpbnN0ZWFkIG9mIGhhdmluZyBtdWx0aXBsZSBj
+b3BpZXMgb2YKdGhlIHNhbWUgaW5mb3JtYXRpb24gaW4gYWxsIG9mIHRoZSB2YXJpYW50IHNwZWNp
+ZmljIGZpbGVzLgoKU2lnbmVkLW9mZi1ieTogQmVub2l0IFBhcnJvdCA8YnBhcnJvdEB0aS5jb20+
+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksZHJh
+Ny1kc3MudHh0ICB8IDUgLS0tLS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3RpL3RpLG9tYXAtZHNzLnR4dCAgfCA3ICsrKysrKysKIERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAyLWRzcy50eHQgfCA0IC0tLS0KIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAzLWRzcy50
+eHQgfCA0IC0tLS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Rp
+L3RpLG9tYXA0LWRzcy50eHQgfCA0IC0tLS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA1LWRzcy50eHQgfCA0IC0tLS0KIDYgZmlsZXMgY2hhbmdl
+ZCwgNyBpbnNlcnRpb25zKCspLCAyMSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxkcmE3LWRzcy50eHQgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxkcmE3LWRzcy50
+eHQKaW5kZXggOTEyNzlmMTA2MGZlLi5jMzBmOWVjMTg5ZWQgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLGRyYTctZHNzLnR4dAorKysg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxkcmE3LWRz
+cy50eHQKQEAgLTQ3LDExICs0Nyw2IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAtIGNsb2Nrczog
+aGFuZGxlIHRvIGZjbGsKIC0gY2xvY2stbmFtZXM6ICJmY2siCiAKLU9wdGlvbmFsIHByb3BlcnRp
+ZXM6Ci0tIG1heC1tZW1vcnktYmFuZHdpZHRoOiBJbnB1dCBtZW1vcnkgKGZyb20gbWFpbiBtZW1v
+cnkgdG8gZGlzcGMpIGJhbmR3aWR0aCBsaW1pdAotCQkJaW4gYnl0ZXMgcGVyIHNlY29uZAotCi0K
+IEhETUkKIC0tLS0KIApkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0CmluZGV4IGUxZWYyOTU2OTMzOC4u
+MjQ5ZTU4OGQ3ODY1IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS90aS90aSxvbWFwLWRzcy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0CkBAIC0yMSw2ICsyMSwxMyBA
+QCBhIFJHQiBwaXhlbCBzdHJlYW0gdG8gZW5jb2RlcnMuCiBUaGUgZW5jb2RlciBtb2R1bGVzIGVu
+Y29kZSB0aGUgcmVjZWl2ZWQgUkdCIHBpeGVsIHN0cmVhbSB0byBhIHZpZGVvIG91dHB1dCBsaWtl
+CiBIRE1JLCBNSVBJIERQSSwgZXRjLgogCitESVNQQworLS0tLS0KKworT3B0aW9uYWwgcHJvcGVy
+dGllczoKKy0gbWF4LW1lbW9yeS1iYW5kd2lkdGg6IElucHV0IG1lbW9yeSAoZnJvbSBtYWluIG1l
+bW9yeSB0byBkaXNwYykgYmFuZHdpZHRoIGxpbWl0CisJCQlpbiBieXRlcyBwZXIgc2Vjb25kCisK
+IFZpZGVvIFBvcnRzCiAtLS0tLS0tLS0tLQogCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwMi1kc3MudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDItZHNzLnR4dAppbmRl
+eCBlZTg2N2M0ZDExNTIuLmFmY2Q1YTg2YzZhNCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDItZHNzLnR4dAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwMi1kc3MudHh0
+CkBAIC0yOCwxMCArMjgsNiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogLSB0aSxod21vZHM6ICJk
+c3NfZGlzcGMiCiAtIGludGVycnVwdHM6IHRoZSBESVNQQyBpbnRlcnJ1cHQKIAotT3B0aW9uYWwg
+cHJvcGVydGllczoKLS0gbWF4LW1lbW9yeS1iYW5kd2lkdGg6IElucHV0IG1lbW9yeSAoZnJvbSBt
+YWluIG1lbW9yeSB0byBkaXNwYykgYmFuZHdpZHRoIGxpbWl0Ci0JCQlpbiBieXRlcyBwZXIgc2Vj
+b25kCi0KIAogUkZCSQogLS0tLQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDMtZHNzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAzLWRzcy50eHQKaW5kZXggY2QwMjUx
+NmE0MGI2Li5kYzY2ZTE0NDdjMzEgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXAzLWRzcy50eHQKKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDMtZHNzLnR4dApAQCAtMzcs
+MTAgKzM3LDYgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIC0gY2xvY2tzOiBoYW5kbGUgdG8gZmNs
+awogLSBjbG9jay1uYW1lczogImZjayIKIAotT3B0aW9uYWwgcHJvcGVydGllczoKLS0gbWF4LW1l
+bW9yeS1iYW5kd2lkdGg6IElucHV0IG1lbW9yeSAoZnJvbSBtYWluIG1lbW9yeSB0byBkaXNwYykg
+YmFuZHdpZHRoIGxpbWl0Ci0JCQlpbiBieXRlcyBwZXIgc2Vjb25kCi0KIAogUkZCSQogLS0tLQpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkv
+dGksb21hcDQtZHNzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3RpL3RpLG9tYXA0LWRzcy50eHQKaW5kZXggMGY4NWY2YjNhNWE4Li5iYzYyNGRiODg4OGQg
+MTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Rp
+L3RpLG9tYXA0LWRzcy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvdGkvdGksb21hcDQtZHNzLnR4dApAQCAtMzYsMTAgKzM2LDYgQEAgUmVxdWlyZWQg
+cHJvcGVydGllczoKIC0gY2xvY2tzOiBoYW5kbGUgdG8gZmNsawogLSBjbG9jay1uYW1lczogImZj
+ayIKIAotT3B0aW9uYWwgcHJvcGVydGllczoKLS0gbWF4LW1lbW9yeS1iYW5kd2lkdGg6IElucHV0
+IG1lbW9yeSAoZnJvbSBtYWluIG1lbW9yeSB0byBkaXNwYykgYmFuZHdpZHRoIGxpbWl0Ci0JCQlp
+biBieXRlcyBwZXIgc2Vjb25kCi0KIAogUkZCSQogLS0tLQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDUtZHNzLnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA1LWRzcy50
+eHQKaW5kZXggMjA4NjEyMTg2NDlmLi4xMThhNDg2YzQ3YmIgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RpL3RpLG9tYXA1LWRzcy50eHQKKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcDUt
+ZHNzLnR4dApAQCAtMzYsMTAgKzM2LDYgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIC0gY2xvY2tz
+OiBoYW5kbGUgdG8gZmNsawogLSBjbG9jay1uYW1lczogImZjayIKIAotT3B0aW9uYWwgcHJvcGVy
+dGllczoKLS0gbWF4LW1lbW9yeS1iYW5kd2lkdGg6IElucHV0IG1lbW9yeSAoZnJvbSBtYWluIG1l
+bW9yeSB0byBkaXNwYykgYmFuZHdpZHRoIGxpbWl0Ci0JCQlpbiBieXRlcyBwZXIgc2Vjb25kCi0K
+IAogUkZCSQogLS0tLQotLSAKMi45LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
