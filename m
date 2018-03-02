@@ -1,142 +1,88 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v4 1/4] of: change overlay apply input data from
- unflattened to FDT
-Date: Thu, 1 Mar 2018 15:38:18 -0800
-Message-ID: <b627b147-b8b6-a6a6-35bb-b02e46879313@gmail.com>
-References: <1519927256-4868-1-git-send-email-frowand.list@gmail.com>
- <1519927256-4868-2-git-send-email-frowand.list@gmail.com>
- <CAL_JsqL9r8d4wZ0qrsE2fbK4siVWwuyq_9x4RcFJta_7RRhUyg@mail.gmail.com>
- <53b47afa-f7df-777a-6a96-d0b986a389fb@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: richard.gong@linux.intel.com
+Subject: [PATCHv2 0/7] Add Intel Stratix10 FPGA manager and service layer
+Date: Thu,  1 Mar 2018 18:19:28 -0600
+Message-ID: <1519949975-13548-1-git-send-email-richard.gong@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53b47afa-f7df-777a-6a96-d0b986a389fb@gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+To: catalin.marinas@arm.com, will.deacon@arm.com, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, atull@kernel.org, mdf@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, yves.vandervennet@linux.intel.com, richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/18 14:36, Frank Rowand wrote:
-> On 03/01/18 13:02, Rob Herring wrote:
->> On Thu, Mar 1, 2018 at 12:00 PM,  <frowand.list@gmail.com> wrote:
->>> From: Frank Rowand <frank.rowand@sony.com>
->>>
->>> Move duplicating and unflattening of an overlay flattened devicetree
->>> (FDT) into the overlay application code.  To accomplish this,
->>> of_overlay_apply() is replaced by of_overlay_fdt_apply().
->>>
->>> The copy of the FDT (aka "duplicate FDT") now belongs to devicetree
->>> code, which is thus responsible for freeing the duplicate FDT.  The
->>> caller of of_overlay_fdt_apply() remains responsible for freeing the
->>> original FDT.
->>>
->>> The unflattened devicetree now belongs to devicetree code, which is
->>> thus responsible for freeing the unflattened devicetree.
->>>
->>> These ownership changes prevent early freeing of the duplicated FDT
->>> or the unflattened devicetree, which could result in use after free
->>> errors.
->>>
->>> of_overlay_fdt_apply() is a private function for the anticipated
->>> overlay loader.
->>>
->>> Update unittest.c to use of_overlay_fdt_apply() instead of
->>> of_overlay_apply().
->>>
->>> Move overlay fragments from artificial locations in
->>> drivers/of/unittest-data/tests-overlay.dtsi into one devicetree
->>> source file per overlay.  This led to changes in
->>> drivers/of/unitest-data/Makefile and drivers/of/unitest.c.
->>>
->>>   - Add overlay directives to the overlay devicetree source files so
->>>     that dtc will compile them as true overlays into one FDT data
->>>     chunk per overlay.
->>>
->>>   - Set CFLAGS for drivers/of/unittest-data/testcases.dts so that
->>>     symbols will be generated for overlay resolution of overlays
->>>     that are no longer artificially contained in testcases.dts
->>>
->>>   - Unflatten and apply each unittest overlay FDT using
->>>     of_overlay_fdt_apply().
->>>
->>>   - Enable the of_resolve_phandles() check for whether the unflattened
->>>     overlay is detached.  This check was previously disabled because the
->>>     overlays from tests-overlay.dtsi were not unflattened into detached
->>>     trees.
->>>
->>>   - Other changes to unittest.c infrastructure to manage multiple test
->>>     FDTs built into the kernel image (access by name instead of
->>>     arbitrary number).
->>>
->>>   - of_unittest_overlay_high_level(): previously unused code to add
->>>     properties from the overlay_base devicetree to the live tree
->>>     was triggered by the restructuring of tests-overlay.dtsi and thus
->>>     testcases.dts.  This exposed two bugs: (1) the need to dup a
->>>     property before adding it, and (2) property 'name' is
->>>     auto-generated in the unflatten code and thus will be a duplicate
->>>     in the __symbols__ node - do not treat this duplicate as an error.
->>>
->>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->>> ---
+From: Richard Gong <richard.gong@intel.com>
 
-< snip >
+This is the 2nd submission of Intel service layer patches. Intel Stratix10
+FPGA manager, which is 1st service layer client, is included in this submission.
 
->>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
->>> index 7a9abaae874d..2d706039ac96 100644
->>> --- a/drivers/of/unittest.c
->>> +++ b/drivers/of/unittest.c
+Service layer patches have been reviewed internally by Alan Tull and other
+colleagues at Intel.
 
-< snip >
+Intel Stratix10 SoC is composed of a 64 bit quad-core ARM Cortex A53 hard
+processor system (HPS) and Secure Device Manager (SDM). SDM is the hardware
+which does the FPGA configuration, QSPI, Crypto and warm reset.
 
->>> @@ -1263,25 +1264,19 @@ static void of_unittest_destroy_tracked_overlays(void)
->>>         } while (defers > 0);
->>>  }
->>>
->>> -static int of_unittest_apply_overlay(int overlay_nr, int unittest_nr,
->>> +static int __init of_unittest_apply_overlay(int overlay_nr, int unittest_nr,
->>>                 int *overlay_id)
->>
->> Why __init? Really, we want to move towards building the unittests as
->> a module and we don't want __init for that. Though maybe __init is a
->> nop for modules, I don't remember offhand.
-> 
-> It has to be a nop for modules.
-> 
-> __init makes sense when the unittests are an initcall.
-> 
-> 
->> In any case, seems like a separate change.
-> 
-> Correct.  It was a gratuitous clean up when I was making other changes
-> to the function.  I'll remove it from this series.
+When the FPGA is configured from HPS, there needs to be a way for HPS to
+notify SDM the location and size of the configuration data. Then SDM will
+get the configuration data from that location and perform the FPGA configuration.
 
-Now I remember, after trying to remove the __init.  I get a modpost warning
-when I build the kernel.
+To meet the whole system security needs and support virtual machine
+requesting communication with SDM, only the secure world of software (EL3,
+Exception Level 3) can interface with SDM. All software entities running
+on other exception levels must channel through the EL3 software whenever it
+needs service from SDM.
 
-Before the patches, the old overlay tests did not apply the overlays from
-overlay FDTs.  Instead the overlay fragment nodes were hand coded into
-the testcases dts, and the overlay apply code just grabbed the fragment
-nodes from the live testcases tree and called the overlay code to apply
-the fragment nodes.
+Intel Stratix10 service layer driver is added to provide the service for
+FPGA configuration. Running at privileged exception level (EL1, Exception
+Level 1), Intel Stratix10 service layer driver interfaces with the service
+provider at EL1 (Intel Stratix10 FPGA Manager) and manages secure monitor
+call (SMC) to communicate with secure monitor software at secure monitor
+exception level (EL3).
 
-With the new FDT based overlay API, I was able to make the test overlays
-actual overlay dts files and dtbs. This change involved changing
-of_unittest_apply_overlay() to no longer call of_overlay_apply() (which
-passed in a pointer to a node from the live testcases tree), but
-instead call overlay_data_apply() (which handles finding the requested
-fdt and applies it).  overlay_data_apply() is already an __init() function.
+Later the Intel Stratix10 service layer driver will be extended to provide
+services for QSPI, Crypto and warm reset.
 
-There are a few more functions that I would expect modpost to warn
-about, but it does not.
+v2: add patches for FPGA manager, FPGA manager binding, dts and defconfig
+    remove intel-service subdirectory and intel-service.h, move intel-smc.h
+    and intel-service.c to driver/misc subdirectory
+    remove global variables
+    change service layer driver be 'default n'
+    correct SPDX markers
+    add timeout for do..while() loop
+    add kernel-doc for the functions and structs, correct multiline comments
+    replace kfifo_in/kfifo_out with kfifo_in_spinlocked/kfifo_out_spinlocked
+    rename struct intel_svc_data (at client header) to intel_svc_client_msg
+    rename struct intel_svc_private_mem to intel_svc_data
+    other corrections/changes from Intel internal code reviews
 
-> There is a mix of some functions being marked __init and some not,
-> so that will be worth another patch someday.
-> 
-> 
->>
->> Rob
->>
-> 
-> 
+Alan Tull (3):
+  dt-bindings: fpga: add Stratix10 SoC FPGA manager binding
+  arm64: dts: stratix10: add fpga manager and region
+  fpga: add intel stratix10 soc fpga manager driver
+
+Richard Gong (4):
+  dt-bindings, firmware: add Intel Stratix10 service layer binding
+  arm64: dts: stratix10: add service driver binding to base dtsi
+  driver, misc: add Intel Stratix10 service layer driver
+  defconfig: enable fpga and service layer
+
+ .../bindings/firmware/intel,stratix10-svc.txt      |  57 ++
+ .../bindings/fpga/intel-stratix10-soc-fpga-mgr.txt |  10 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |  34 +
+ arch/arm64/configs/defconfig                       |   5 +
+ drivers/fpga/Kconfig                               |   6 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/stratix10-soc.c                       | 503 +++++++++++
+ drivers/misc/Kconfig                               |  12 +
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/intel-service.c                       | 960 +++++++++++++++++++++
+ drivers/misc/intel-smc.h                           | 205 +++++
+ include/linux/intel-service-client.h               | 188 ++++
+ 12 files changed, 1982 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+ create mode 100644 Documentation/devicetree/bindings/fpga/intel-stratix10-soc-fpga-mgr.txt
+ create mode 100644 drivers/fpga/stratix10-soc.c
+ create mode 100644 drivers/misc/intel-service.c
+ create mode 100644 drivers/misc/intel-smc.h
+ create mode 100644 include/linux/intel-service-client.h
+
+-- 
+2.7.4
