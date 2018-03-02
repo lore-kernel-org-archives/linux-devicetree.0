@@ -1,116 +1,122 @@
-From: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v3 05/10] pwm: add PWM mode to pwm_config()
-Date: Fri, 2 Mar 2018 11:28:09 +0200
-Message-ID: <585cc4ae-3674-c119-295b-e59f4242e619@microchip.com>
-References: <1519300881-8136-1-git-send-email-claudiu.beznea@microchip.com>
- <1519300881-8136-6-git-send-email-claudiu.beznea@microchip.com>
- <20180228194429.GD22932@mithrandir> <87r2p4hod7.fsf@intel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v2 06/32] ASoC: rt5651: Configure
+ jack-detect source through a device-property
+Date: Fri, 2 Mar 2018 10:32:25 +0100
+Message-ID: <2ac828b2-04e1-4b5f-f4db-a543ad5e3535@redhat.com>
+References: <20180225104713.4745-1-hdegoede@redhat.com>
+ <20180225104713.4745-7-hdegoede@redhat.com>
+ <20180301193046.GJ12864@sirena.org.uk>
+ <032d0e59-0d64-7df1-4fca-1709430b754c@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87r2p4hod7.fsf@intel.com>
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <032d0e59-0d64-7df1-4fca-1709430b754c@redhat.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jani Nikula <jani.nikula@linux.intel.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, milo.kim@ti.com, linux-fbdev@vger.kernel.org, sean@mess.org, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, joonas.lahtinen@linux.intel.com, kamil@wypas.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, pavel@ucw.cz, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-leds@vger.kernel.org, daniel.thompson@linaro.org, linux-samsung-soc@vger.kernel.org, shc_work@mail.ru, corbet@lwn.net, linux-doc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, kgene@kernel.org, linux-input@vger.kernel.org, linux@roeck-us.net, linux-media@vger.kernel.org, linux-pwm@vger.kernel.org, jdelvare@suse.com, b.zolnierkie@samsung.com, intel-gfx@lists.freedesktop.org, robh+dt@kernel.org, jacek.anaszewski@gmail.com, rodrigo.vivi@intel.com, mchehab@kernel.org, linux-arm-kernel@lists.infrade
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Carlo Caione <carlo@endlessm.com>, Bard Liao <bardliao@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On 01-03-18 23:35, Hans de Goede wrote:
+> Hi,
+> =
 
-On 28.02.2018 22:04, Jani Nikula wrote:
-> On Wed, 28 Feb 2018, Thierry Reding <thierry.reding@gmail.com> wrote:
->> Anyone that needs something other than normal mode should use the new
->> atomic PWM API.
-> 
-> At the risk of revealing my true ignorance, what is the new atomic PWM
-> API? Where? Examples of how one would convert old code over to the new
-> API?
-As far as I know, the old PWM core code uses config(), set_polarity(),
-enable(), disable() methods of driver, registered as pwm_ops:
-struct pwm_ops {
+> On 01-03-18 20:30, Mark Brown wrote:
+>> On Sun, Feb 25, 2018 at 11:46:47AM +0100, Hans de Goede wrote:
+>>> Configure the jack-detect source through a device-property which can be
+>>> set by code outside of the codec driver. Rather then putting platform
+>>> specific DMI quirks inside the generic codec driver.
+>>
+>>> And move the jack-detect-source quirk for the KIANO SlimNote 14.2, which
+>>> was present inside the codec driver to the machine driver, where we can
+>>> bundle it together with the other quirks already present for this lapto=
+p.
+>>
+>> Multiple things in a patch again :/
+> =
 
-        int (*request)(struct pwm_chip *chip, struct pwm_device *pwm);
+> Yes because the property replaces the quirk, I can split the changes betw=
+een
+> the codec and machine driver into 2 patches but then the intermediate sta=
+te
+> will be that the jack-detection no longer works.
+> =
 
-        void (*free)(struct pwm_chip *chip, struct pwm_device *pwm);
+>> The property itself is fine but...
+>>
+>>> @@ -360,6 +377,13 @@ static int byt_rt5651_init(struct snd_soc_pcm_runt=
+ime *runtime)
+>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 dev_err(card->dev, "unable to s=
+et MCLK rate\n");
+>>> =A0=A0=A0=A0=A0 }
+>>> +=A0=A0=A0 props[cnt++] =3D PROPERTY_ENTRY_U32("realtek,jack-detect-sou=
+rce",
+>>> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 BYT_RT5651_JDSRC(byt_rt5=
+651_quirk));
+>>> +
+>>> +=A0=A0=A0 ret =3D device_add_properties(codec->dev, props);
+>>> +=A0=A0=A0 if (ret)
+>>> +=A0=A0=A0=A0=A0=A0=A0 return ret;
+>>> +
+>>> =A0=A0=A0=A0=A0 ret =3D snd_soc_card_jack_new(runtime->card, "Headset",
+>>
+>> I'm having a hard time geting comfortable with this; it's all a bit
+>> fragile feeling to me - someone deciding to centralise the property
+>> parsing (eg, if they are using a platform where platform data makes
+>> sense or want to cross-validate with some other property on probe) could
+>> easily break things and there's not even a comment in the CODEC driver.
+> =
 
-        int (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
+> It is not _that_ fragile, but I agree that it would be good to add
+> a comment about not moving the property-parsing to the codec driver.
 
-                      int duty_ns, int period_ns);
+So one other solution which comes to mind here is to move the
+snd_soc_card_jack_new() call into the codec driver's
+rt5651_apply_properties() function (conditional on a jack src being
+set in the properties).
 
-        int (*set_polarity)(struct pwm_chip *chip, struct pwm_device *pwm,
+This would make the machine driver code look like this:
 
-                            enum pwm_polarity polarity);
+	props[cnt++] =3D PROPERTY_ENTRY_...
+	props[cnt++] =3D PROPERTY_ENTRY_...
+	props[cnt++] =3D PROPERTY_ENTRY_...
+	props[cnt++] =3D PROPERTY_ENTRY_...
 
-        int (*capture)(struct pwm_chip *chip, struct pwm_device *pwm,
+	ret =3D device_add_properties(codec->dev, props);
+	if (ret)
+		return ret;
 
-                       struct pwm_capture *result, unsigned long timeout);
+	ret =3D rt5651_apply_properties(codec);
+	if (ret)
+		return ret;
 
-        int (*enable)(struct pwm_chip *chip, struct pwm_device *pwm);
+Which makes the ordering really clear without needing any
+comments.
 
-        void (*disable)(struct pwm_chip *chip, struct pwm_device *pwm);
+This will also make the jack-detect device-properties work with
+devicetree platforms without any changes to their platform code,
+which currently is not the case since the non Intel platform-code
+does not call snd_soc_component_set_jack().
 
-        int (*apply)(struct pwm_chip *chip, struct pwm_device *pwm,
+Thinking more about this I believe that doing the
+snd_soc_card_jack_new() call inside the codec driver based on
+device-properties is a better solution then doing it in the
+machine driver.
 
-                     struct pwm_state *state);
+Please let me know if you agree then I will rework the remaining
+patches accordingly.
 
-        void (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
+Regards,
 
-                          struct pwm_state *state);
-
-#ifdef CONFIG_DEBUG_FS
-
-        void (*dbg_show)(struct pwm_chip *chip, struct seq_file *s);
-
-#endif
-
-        struct module *owner;
-
-};
-
-
-to do settings on hardware. In order to so settings on a PWM the users
-should have been follow the below steps:
-->config()
-->set_polarity()
-->enable()
-Moreover, if the PWM was previously enabled it should have been first
-disable and then to follow the above steps in order to apply a new settings
-on hardware.
-The driver should have been provide, at probe, all the above function:
-->config(), ->set_polarity(), ->disable(), ->enable(), function that were
-used by PWM core.
-
-Now, having atomic PWM, the driver should provide one function to PWM core,
-which is ->apply() function. Every PWM has a state associated, which keeps
-the period, duty cycle, polarity and enable/disable status. The driver's
-->apply() function takes as argument the state that should be applied and
-it takes care of applying this new state directly without asking user to
-call ->disable(), then ->config()/->set_polarity(), then ->enable() to
-apply new hardware settings.
-
-The PWM consumer could set a new state for PWM it uses, using
-pwm_apply_state(pwm, new_state);
-
-Regarding the models to switch on atomic PWM, on the controller side you
-can check for drivers that registers apply function at probe time.
-Regarding the PWM users, you can look for pwm_apply_state()
-(drivers/hwmon/pwm-fan.c or drivers/input/misc/pwm-beeper.c are some examples).
-
-Thierry, please correct me if I'm wrong.
-
-Thank you,
-Claudiu Beznea
-
-> 
-> BR,
-> Jani.
-> 
+Hans
