@@ -1,76 +1,52 @@
-From: frowand.list@gmail.com
-Subject: [PATCH v6 4/4] of: improve reporting invalid overlay target path
-Date: Fri,  2 Mar 2018 13:05:00 -0800
-Message-ID: <1520024700-31315-5-git-send-email-frowand.list@gmail.com>
-References: <1520024700-31315-1-git-send-email-frowand.list@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520024700-31315-1-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org, laurent.pinchart+renesas@ideasonboard.com
+From: Emmanuel Vadot <manu@freebsd.org>
+Subject: [PATCH] dts: sunxi: Add eMMC for NanoPi M1 Plus
+Date: Fri,  2 Mar 2018 22:38:52 +0100
+Message-ID: <20180302213852.64588-1-manu@freebsd.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org
+Cc: Emmanuel Vadot <manu@freebsd.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+The NanoPi-M1-Plus have a 8GB eMMC, add a node for it.
+This eMMC is always powered with 3.3V.
 
-Errors while developing the patch to create of_overlay_fdt_apply()
-exposed inadequate error messages to debug problems when overlay
-devicetree fragment nodes contain an invalid target path.  Improve
-the messages in find_target_node() to remedy this.
-
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+Signed-off-by: Emmanuel Vadot <manu@freebsd.org>
 ---
+ arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-changes from v2:
-  - add fragment node name as suggested by Geert
-  - existing error message printed short node name, thus not
-    discriminating between fragments; change to full node name
-  - existing error message printed node address, which is devicetree
-    internal debugging, not useful in an overlay apply error message;
-    remove node address from message
-
- drivers/of/overlay.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index e3d7f69a8333..b930e05d1215 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -488,20 +488,30 @@ static int build_changeset(struct overlay_changeset *ovcs)
-  */
- static struct device_node *find_target_node(struct device_node *info_node)
- {
-+	struct device_node *node;
- 	const char *path;
- 	u32 val;
- 	int ret;
+diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+index a6e61915d648..0ca988e8c72f 100644
+--- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+@@ -119,6 +119,16 @@
+ 	};
+ };
  
- 	ret = of_property_read_u32(info_node, "target", &val);
--	if (!ret)
--		return of_find_node_by_phandle(val);
-+	if (!ret) {
-+		node = of_find_node_by_phandle(val);
-+		if (!node)
-+			pr_err("find target, node: %pOF, phandle 0x%x not found\n",
-+			       info_node, val);
-+		return node;
-+	}
- 
- 	ret = of_property_read_string(info_node, "target-path", &path);
--	if (!ret)
--		return of_find_node_by_path(path);
-+	if (!ret) {
-+		node =  of_find_node_by_path(path);
-+		if (!node)
-+			pr_err("find target, node: %pOF, path '%s' not found\n",
-+			       info_node, path);
-+		return node;
-+	}
- 
--	pr_err("Failed to find target for node %p (%s)\n",
--		info_node, info_node->name);
-+	pr_err("find target, node: %pOF, no target property\n", info_node);
- 
- 	return NULL;
- }
++&mmc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_8bits_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	vqmmc-supply = <&reg_vcc3v3>;
++	bus-width = <8>;
++	non-removable;
++	status = "okay";
++};
++
+ &ohci1 {
+ 	status = "okay";
+ };
 -- 
-Frank Rowand <frank.rowand@sony.com>
+2.15.1
