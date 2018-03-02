@@ -1,64 +1,90 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv2] phy: mapphone-mdm6600: Add USB PHY driver for MDM6600
- on Droid 4
-Date: Fri, 2 Mar 2018 06:03:31 -0800
-Message-ID: <20180302140331.GK62820@atomide.com>
-References: <20180301035057.37584-1-tony@atomide.com>
- <b39478ec-35ba-d288-bb03-28dda5544e80@ti.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [RESEND PATCH v5 0/6] IR support for A83T
+Date: Fri, 2 Mar 2018 14:10:01 +0000
+Message-ID: <20180302141001.2eqbpahdl7sddtzk@gofer.mess.org>
+References: <20180213122952.8420-1-embed3d@gmail.com>
+ <85ddc129-d0f8-6299-dca0-81f79f3d04a9@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b39478ec-35ba-d288-bb03-28dda5544e80@ti.com>
+In-Reply-To: <85ddc129-d0f8-6299-dca0-81f79f3d04a9@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>
+To: Philipp Rossak <embed3d@gmail.com>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, p.zabel@pengutronix.de, andi.shyti@samsung.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon@ti.com> [180302 08:04]:
-> Hi Tony,
+On Fri, Mar 02, 2018 at 01:11:34PM +0100, Philipp Rossak wrote:
+> On 13.02.2018 13:29, Philipp Rossak wrote:
+> > This patch series adds support for the sunxi A83T ir module and enhances
+> > the sunxi-ir driver. Right now the base clock frequency for the ir driver
+> > is a hard coded define and is set to 8 MHz.
+> > This works for the most common ir receivers. On the Sinovoip Bananapi M3
+> > the ir receiver needs, a 3 MHz base clock frequency to work without
+> > problems with this driver.
+> > 
+> > This patch series adds support for an optinal property that makes it able
+> > to override the default base clock frequency and enables the ir interface
+> > on the a83t and the Bananapi M3.
+> > 
+> > changes since v4:
+> > * rename cir pin from cir_pins to r_cir_pin
+> > * drop unit-adress from r_cir_pin
+> > * add a83t compatible to the cir node
+> > * move muxing options to dtsi
+> > * rename cir label and reorder it in the bananpim3.dts file
+> > 
+> > changes since v3:
+> > * collecting all acks & reviewd by
+> > * fixed typos
+> > 
+> > changes since v2:
+> > * reorder cir pin (alphabetical)
+> > * fix typo in documentation
+> > 
+> > changes since v1:
+> > * fix typos, reword Documentation
+> > * initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
+> > * change dev_info() to dev_dbg()
+> > * change naming to cir* in dts/dtsi
+> > * Added acked Ackedi-by to related patch
+> > * use whole memory block instead of registers needed + fix for h3/h5
+> > 
+> > changes since rfc:
+> > * The property is now optinal. If the property is not available in
+> >    the dtb the driver uses the default base clock frequency.
+> > * the driver prints out the the selected base clock frequency.
+> > * changed devicetree property from base-clk-frequency to clock-frequency
+> > 
+> > Regards,
+> > Philipp
+> > 
+> > Philipp Rossak (6):
+> >    media: rc: update sunxi-ir driver to get base clock frequency from
+> >      devicetree
+> >    media: dt: bindings: Update binding documentation for sunxi IR
+> >      controller
+> >    arm: dts: sun8i: a83t: Add the cir pin for the A83T
+> >    arm: dts: sun8i: a83t: Add support for the cir interface
+> >    arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
+> >    arm: dts: sun8i: h3-h5: ir register size should be the whole memory
+> >      block
+> > 
+> >   Documentation/devicetree/bindings/media/sunxi-ir.txt |  3 +++
+> >   arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  5 +++++
+> >   arch/arm/boot/dts/sun8i-a83t.dtsi                    | 18 ++++++++++++++++++
+> >   arch/arm/boot/dts/sunxi-h3-h5.dtsi                   |  2 +-
+> >   drivers/media/rc/sunxi-cir.c                         | 19 +++++++++++--------
+> >   5 files changed, 38 insertions(+), 9 deletions(-)
+> > 
 > 
-> On Thursday 01 March 2018 09:20 AM, Tony Lindgren wrote:
-> > Let's add support for the GPIO controlled USB PHY on the MDM6600 modem.
-> > It is used on some Motorola Mapphone series of phones and tablets such
-> > as Droid 4.
+> I talked yesterday with Maxime about this patch series. And he told me if
+> the first to patches got merged, he will apply the dts patches to the sunxi
+> tree.
 > 
-> Generally PHY configuration is done for the PHYs that is connected to the USB
-> controllers in the SoC. In that sense it differs from the usual case by
-> programming the PHY in the device.
+> Sean, can you merge the first two patches through the rc-core?
 
-Yup in this case it's the MDM6600 that provides the PHY for the SoC :)
+Sure, no problem.
 
-> > The MDM6600 is hardwired to the first OHCI port in the Droid 4 case, and
-> > is controlled by several GPIOs. The USB PHY is integrated into the MDM6600
-> > device it seems. We know this as we get L3 errors from omap-usb-host if
-> > trying to use the PHY before MDM6600 is configured.
-> 
-> Do you know what phy is connected to the OHCI port. Previously we've seen for
-> having USB devices on the board itself, phy less configurations was used.
-
-We have MDM6600 on *HCI port 1 providing "ohci-phy-4pin-dpdm"
-PHY for the SoC, so not TLL. Then there's another modem W3GLTE on
-port 2 that is using "ehci-tll".
-
-> > --- /dev/null
-> > +++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
-> .
-> .
-> <snip>
-> .
-> .
-> > +
-> > +static int phy_mdm6600_probe(struct platform_device *pdev)
-> > +{
-> > +	struct phy_mdm6600 *ddata;
-> > +	struct usb_otg *otg;
-> 
-> Since it is connected to a OHCI, not sure if we really need to add usb_otg here.
-
-OK yeah that's copy paste leftover from my earlier PHY driver I used
-to start with. Will drop thanks.
-
-Regards,
-
-Tony
+Thanks
+Sean
