@@ -1,103 +1,102 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v7 10/42] clk: davinci: New driver for davinci PSC clocks
-Date: Fri, 2 Mar 2018 18:39:41 +0100
-Message-ID: <CAMRc=Mc=QFizXRDS7=_v6K9Z7c7dSBZdLbW9zCR01LFSk08MEg@mail.gmail.com>
-References: <1519071723-31790-1-git-send-email-david@lechnology.com>
- <1519071723-31790-11-git-send-email-david@lechnology.com> <CAMpxmJVxfGtO=kh63KF-5Uqew3yy97DsK4FSd14CyyRQTOhrTA@mail.gmail.com>
- <93696fc8-bb93-aa20-3506-3d7216c17cd2@lechnology.com> <CAMpxmJVpMgikNfB4HgNCs+ep+EOHqH5bthiW82LsnDqzLfE5mg@mail.gmail.com>
- <6bbe9bf3-24c1-acd9-200d-513520d34558@lechnology.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 06/32] ASoC: rt5651: Configure
+ jack-detect source through a device-property
+Date: Fri, 2 Mar 2018 17:41:11 +0000
+Message-ID: <20180302174111.GA3482@sirena.org.uk>
+References: <20180225104713.4745-1-hdegoede@redhat.com>
+ <20180225104713.4745-7-hdegoede@redhat.com>
+ <20180301193046.GJ12864@sirena.org.uk>
+ <032d0e59-0d64-7df1-4fca-1709430b754c@redhat.com>
+ <2ac828b2-04e1-4b5f-f4db-a543ad5e3535@redhat.com>
+ <20180302121801.GE6255@sirena.org.uk>
+ <bbe1b540-201a-bf6e-9008-0f8d5d4a2a9d@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6bbe9bf3-24c1-acd9-200d-513520d34558@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============7978703334853146564=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <bbe1b540-201a-bf6e-9008-0f8d5d4a2a9d@redhat.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Carlo Caione <carlo@endlessm.com>, Bard Liao <bardliao@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-03-01 17:44 GMT+01:00 David Lechner <david@lechnology.com>:
-> On 03/01/2018 02:36 AM, Bartosz Golaszewski wrote:
->>
->> 2018-02-28 22:40 GMT+01:00 David Lechner <david@lechnology.com>:
->>>
->>> On 02/28/2018 06:38 AM, Bartosz Golaszewski wrote:
->>>>
->>>>
->>>>
->>>> I think I found the reason for the strange crashes we were
->>>> experiencing (emac core->name being NULL) thanks to Sekhar who pointed
->>>> me in the right direction.
->>>>
->>>> The mdio driver fails to probe with v7 due to the supplied clock rate
->>>> being wrong. Before failing we register the emac clock with
->>>> pm_clk_add_clk(). When clock_ops puts the clock, it decreases the
->>>> reference count of the clock, but we never actually increased it in
->>>> the first place in the line above. The core clock code then destroys
->>>> the associated clk_core structure. When the next user comes around (in
->>>> our case the clk debug functions) the system crashes.
->>>>
->>>> I believe there to be two issues: one is with v7 - we need to increase
->>>> the clock reference count in davinci_psc_genpd_attach_dev().
->>>>
->>>> Second is the error path in the clock framework - we should remove the
->>>> destroyed clk_core from the debug list, which is not being done now.
->>>>
->>>> Why we even need to track the refcount of clk_core is a mistery for me
->>>> though. Stephen, Mike?
->>>>
->>>> Best regards,
->>>> Bartosz Golaszewski
->>>
->>>
->>>
->>> Great find. I figured it had to be something like this, but I wasn't
->>> able to reproduce the problem yet.
->>>
->>> I suppose it is time to spin up a v8 with some fixes.
->>
->>
->> I still don't know why the mdio clock rate is much lower than in
->> mainline though. Any ideas?
->>
->> Thanks,
->> Bart
->>
->
-> Now that you have fixed the crash, can you answer the questions I have
-> asked earlier?
->
->> Can you post the output of this command so that I can see how your
->
-> clocks are setup:
->
-> cat /sys/kernel/debug/clk/clk_summary
->
->> Using your workaround, can you run:
->
->
-> cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
->
-> If you see:
->   1e27000.clock-controller: emac  off-0
->
-> then genpd is not working like it is supposed to. You should see something
-> like this for device that are working:
->           1e27000.clock-controller: uart2  on
->     /devices/platform/soc@1c00000/1d0d000.serial        active
 
-I used of_clk_get() in the genpd attach callback so the crash no
-longer happens, but I still can't boot it over NFS due to mdio
-failing. Do you have any idea why the clock rate differs between v7
-and mainline?
+--===============7978703334853146564==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Content-Disposition: inline
 
->From the logs I can see that genpd domains are correctly registered,
-and the provider is added (you should probably skip setting up the
-domains in legacy mode though), the pm clocks are enabled (after being
-disabled by mdio after its failed probe()) but the boot process gets
-stuck after the kernel gets an IP address over DHCP (which is strange
-because apparently it had some kind of network connection).
 
-On Monday I'll prepare a small ramfs and boot over tftp only and see from there.
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Best regards,
-Bartosz
+On Fri, Mar 02, 2018 at 01:58:53PM +0100, Hans de Goede wrote:
+> On 02-03-18 13:18, Mark Brown wrote:
+
+> > What makes you claim that?  Any board with jack detection wired up will
+> > call that function.  Not all boards have that configured of course but
+> > there's absolutely nothing Intel specific about that interface.
+
+> Right I'm not claiming the interface is Intel specific, what I'm trying
+> to say is that the need for some code outside of the codec driver
+> to create the jack means that adding jack-support to DT platforms
+> cannot be done through just adding DT properties (once this patch
+> is merged), it will still require platform code changes.
+
+On DT the situation with generic drivers is much better than it is on
+ACPI so we're actually able to create jacks purely from DT with both the
+simple and graph cards.  This was what drove the creation of the generic
+jack operation rather than device specific function calls, Bard realized
+that the device specific calls were all very similar and adding the call
+allowed the generic cards to work with jacks.
+
+> > No, that's really not a good idea.  Any jacks in the system are part of
+> > the system specific wiring, they're not something that's intrinsic to
+> > the CODEC.  Even with fairly basic setups you've got options like having
+> > a headset jack or separate microphone and headphone jacks.
+
+> OK, so if doing the jack creation in the machine-driver / platform
+> code is by design and you want to keep things that way, then I
+> assume that what needs changing for v3 of this patch is:
+
+> 1) Split the patch in separate codec + machine-drv patches
+> 2) Add comments to make the ordering requirements clear to
+> both the codec- and machine-driver.
+
+> Correct?
+
+Yes, I think so.
+
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqZjLcACgkQJNaLcl1U
+h9Cgdgf/SXcy7/OgfxIfUJi3slNV1Atfw7uOgkrH3nIS8T2Uu1QwE+NI3O4Cdcdj
+5JSEf3bMpuwYxmizN8y/8vPegZhW5FE4iwmhGjDQKzcIDqN7YCN1sPQst31Lqn74
+QbJQvQvbC4vOnSranBpFHsb6eMG30RciJVpdqTqr/sQkYyFLrkJfa5rBhfmmO7Cu
+RpjaTFHGlV+UDRlaV2cFeav4W8PrIMuZ1ADF8fBwnjylBtWnVtkxxp1wAuql94Aq
+VQjDaABXJl4usiQvAXMqwrrMfY3A5Zs9jLx0VrdRSBe3fQ8Hh9tmWlzgdySP91oi
+YHDf4BAw33vEnccTk/2UOWngYgrivQ==
+=rWX0
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
+
+--===============7978703334853146564==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7978703334853146564==--
