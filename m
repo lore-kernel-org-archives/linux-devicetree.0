@@ -1,55 +1,84 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 2/3] gpio: Add Spreadtrum EIC driver support
-Date: Fri, 2 Mar 2018 18:48:45 +0800
-Message-ID: <CAMz4kuJe=joBCzF=SnGEKZhWZANT5uDycb7OtJ+zy=LM+8PLVw@mail.gmail.com>
-References: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
- <2e9852f21fcc6213bdb1cef0c473b9d002ad5670.1519468782.git.baolin.wang@linaro.org>
- <CACRpkdY8hcNYASBFJewVfpiukT+AAR-5WZb0uaJws0B025+GJw@mail.gmail.com>
+From: John Garry <john.garry@huawei.com>
+Subject: Re: [PATCH v15 0/9] LPC: legacy ISA I/O support
+Date: Fri, 2 Mar 2018 10:48:21 +0000
+Message-ID: <5b7024af-33c8-48c8-22bc-8d36ca3eadd8@huawei.com>
+References: <1519663249-9850-1-git-send-email-john.garry@huawei.com>
+ <1519933978.10722.366.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY8hcNYASBFJewVfpiukT+AAR-5WZb0uaJws0B025+GJw@mail.gmail.com>
+In-Reply-To: <1519933978.10722.366.camel@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, mika.westerberg@linux.intel.com, rafael@kernel.org, lorenzo.pieralisi@arm.com, rjw@rjwysocki.net, hanjun.guo@linaro.org, robh+dt@kernel.org, bhelgaas@google.com, arnd@arndb.de, mark.rutland@arm.com, olof@lixom.net, dann.frazier@canonical.com, andy.shevchenko@gmail.com, robh@kernel.org
+Cc: joe@perches.com, benh@kernel.crashing.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, linuxarm@huawei.com, minyard@acm.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, akpm@linux-foundation.org, frowand.list@gmail.com, agraf@suse.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On 2 March 2018 at 17:53, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Sat, Feb 24, 2018 at 11:44 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+On 01/03/2018 19:52, Andy Shevchenko wrote:
+> On Tue, 2018-02-27 at 00:40 +0800, John Garry wrote:
+>> > This patchset supports the IPMI-bt device attached to the Low-Pin-
+>> > Count
+>> > interface implemented on Hisilicon Hip06/Hip07 SoC.
+>> >                         -----------
+>> >                         | LPC host|
+>> >                         |         |
+>> >                         -----------
+>> >                              |
+>> >                 _____________V_______________LPC
+>> >                   |                       |
+>> >                   V                       V
+>> >                                      ------------
+>> >                                      |  BT(ipmi)|
+>> >                                      ------------
+>> >
+>> > When master accesses those peripherals beneath the Hip06/Hip07 LPC, a
+>> > specific
+>> > LPC driver is needed to make LPC host generate the standard LPC I/O
+>> > cycles with
+>> > the target peripherals'I/O port addresses. But on curent arm64 world,
+>> > there is
+>> > no real I/O accesses. All the I/O operations through in/out accessors
+>> > are based
+>> > on MMIO ranges; on Hip06/Hip07 LPC the I/O accesses are performed
+>> > through driver
+>> > specific accessors rather than MMIO.
+>> > To solve this issue and keep the relevant existing peripherals'
+>> > drivers untouched,
+>> > this patchset:
+>> >    - introduces a generic I/O space management framework, logical PIO,
+>> > to support
+>> >       I/O operations on host controllers operating either on MMIO
+>> > buses or on buses
+>> >      requiring specific driver I/O accessors;
+>> >    - redefines the in/out accessors to provide a unified interface for
+>> > both MMIO
+>> >      and driver specific I/O operations. Using logical PIO, th call of
+>> > in/out() from
+>> >      the host children drivers, such as ipmi-si, will be redirected to
+>> > the
+>> >      corresponding device-specific I/O hooks to perform the I/O
+>> > accesses.
+>> >
+>> > Based on this patch-set, all the I/O accesses to Hip06/Hip07 LPC
+>> > peripherals can
+>> > be supported without any changes on the existing ipmi-si driver.
+>> >
+>> > The whole patchset has been tested on Hip07 D05 board both using DTB
+>> > and ACPI.
+>> >
+> I did a review and don't see the patch 8 is ready to go.
 >
->> The Spreadtrum digital-chip EIC controller has 4 sub-modules: debounce EIC,
->> latch EIC, async EIC and sync EIC, and each sub-module can has multiple
->> banks and each bank contains 8 EICs.
->>
->> Each EIC can only be used as input mode, and has the capability to trigger
->> interrupts when detecting input signals.
->>
->> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> ---
->> Changes since v1:
->>  - Add OF_GPIO dependency.
->>  - Fix some typos and grammar issues.
->>  - Simplify the sprd_eic_update() and sprd_eic_read().
->>  - Rename 'sprd_eic_data' to 'sprd_eic_variant_data'.
->>  - Rename sprd_eic_group_base() to sprd_eic_offset_base().
->>  - Split the PMIC EIC support into one separate driver.
->>  - Return -EIO for sprd_eic_direction_input().
->>  - Other optimization.
+> So, to move things forward I may suggest to reorder series that some
+> small preparation stuff can go first w/o dependency to the actual Logic
+> PIO / LPC.
 >
-> This is looking nice!
->
-> I guess we agreed with the input maintainer that what
-> needs to happen is to implement edge trigger emulation
-> for all variants in the driver, test it with the keys and
-> then we should be done.
 
-I want to send one separate patch to implement edge trigger emulation
-for EIC drivers, since we can have some talks for the implementation.
-If there are no other issues for this patch set, I will send out the
-V3 after fixing the issues in patch 3 pointed by Andy. Is it OK?
 
--- 
-Baolin.wang
-Best Regards
+Hi Andy,
+
+As mentioned in the reply to patch #8, as a practical exercise I don't 
+see the reason to change it now. Let's conclude that issue first before 
+deciding on patchset revising.
+
+Thanks very much,
+John
