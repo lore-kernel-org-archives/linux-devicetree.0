@@ -1,193 +1,110 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v10 2/3] NPCM750: add clock tree doc and binding
-Date: Fri, 2 Mar 2018 16:12:36 -0600
-Message-ID: <20180302221236.qsxooi5l53wx6lby@rob-hp-laptop>
-References: <1519553539-15899-1-git-send-email-tali.perry1@gmail.com>
- <1519553539-15899-3-git-send-email-tali.perry1@gmail.com>
+Subject: Re: [PATCH v2 06/32] ASoC: rt5651: Configure
+ jack-detect source through a device-property
+Date: Fri, 2 Mar 2018 16:17:35 -0600
+Message-ID: <20180302221735.u7cvvkkjgn3i2rgp@rob-hp-laptop>
+References: <20180225104713.4745-1-hdegoede@redhat.com>
+ <20180225104713.4745-7-hdegoede@redhat.com>
+ <20180301193046.GJ12864@sirena.org.uk>
+ <032d0e59-0d64-7df1-4fca-1709430b754c@redhat.com>
+ <2ac828b2-04e1-4b5f-f4db-a543ad5e3535@redhat.com>
+ <20180302121801.GE6255@sirena.org.uk>
+ <bbe1b540-201a-bf6e-9008-0f8d5d4a2a9d@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1519553539-15899-3-git-send-email-tali.perry1@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tali Perry <tali.perry1@gmail.com>
-Cc: brendanhiggins@google.com, mark.rutland@arm.com, linux@armlinux.org.uk, avifishman70@gmail.com, tmaimon77@gmail.com, raltherr@google.com, mturquette@baylibre.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org
+In-Reply-To: <bbe1b540-201a-bf6e-9008-0f8d5d4a2a9d@redhat.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Mark Brown <broonie@kernel.org>, Carlo Caione <carlo@endlessm.com>, Bard Liao <bardliao@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 25, 2018 at 12:12:18PM +0200, Tali Perry wrote:
+On Fri, Mar 02, 2018 at 01:58:53PM +0100, Hans de Goede wrote:
+> Hi,
 > 
-Need a commit msg.
-
-The subject should be "dt-bindings: clock: ..."
-
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
+> On 02-03-18 13:18, Mark Brown wrote:
+> > On Fri, Mar 02, 2018 at 10:32:25AM +0100, Hans de Goede wrote:
+> > > On 01-03-18 23:35, Hans de Goede wrote:
+> > 
+> > > > It is not _that_ fragile, but I agree that it would be good to add
+> > > > a comment about not moving the property-parsing to the codec driver.
+> > 
+> > > So one other solution which comes to mind here is to move the
+> > > snd_soc_card_jack_new() call into the codec driver's
+> > > rt5651_apply_properties() function (conditional on a jack src being
+> > > set in the properties).
+> > 
+> > > This would make the machine driver code look like this:
+> > > 
+> > > 	props[cnt++] = PROPERTY_ENTRY_...
+> > > 	props[cnt++] = PROPERTY_ENTRY_...
+> > > 	props[cnt++] = PROPERTY_ENTRY_...
+> > > 	props[cnt++] = PROPERTY_ENTRY_...
+> > 
+> > > 	ret = device_add_properties(codec->dev, props);
+> > > 	if (ret)
+> > > 		return ret;
+> > 
+> > > 	ret = rt5651_apply_properties(codec);
+> > > 	if (ret)
+> > > 		return ret;
+> > 
+> > > Which makes the ordering really clear without needing any
+> > > comments.
+> > 
+> > It's still unusual to have something outside the driver trigger property
+> > parsing, though the EXPORT_SYMBOL_GPL() would make that apparent.
+> > 
+> > > This will also make the jack-detect device-properties work with
+> > > devicetree platforms without any changes to their platform code,
+> > > which currently is not the case since the non Intel platform-code
+> > > does not call snd_soc_component_set_jack().
+> > 
+> > What makes you claim that?  Any board with jack detection wired up will
+> > call that function.  Not all boards have that configured of course but
+> > there's absolutely nothing Intel specific about that interface.
 > 
-> ---
->  .../bindings/clock/nuvoton,npcm750-clk.txt         | 100 +++++++++++++++++++++
->  include/dt-bindings/clock/nuvoton,npcm7xx-clock.h  |  44 +++++++++
->  2 files changed, 144 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
->  create mode 100644 include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
+> Right I'm not claiming the interface is Intel specific, what I'm trying
+> to say is that the need for some code outside of the codec driver
+> to create the jack means that adding jack-support to DT platforms
+> cannot be done through just adding DT properties (once this patch
+> is merged), it will still require platform code changes.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt b/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
-> new file mode 100644
-> index 000000000000..dd17b86bd577
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/nuvoton,npcm750-clk.txt
-> @@ -0,0 +1,100 @@
-> +* Nuvoton NPCM7XX Clock Controller
-> +
-> +Nuvoton Poleg BMC NPCM7XX contains an integrated clock controller, which
-> +generates and supplies clocks to all modules within the BMC.
-> +
-> +External clocks:
-> +
-> +There are six fixed clocks that are generated outside the BMC. All clocks are of
-> +a known fixed value that cannot be changed. clk_refclk, clk_mcbypck and
-> +clk_sysbypck are inputs to the clock controller.
-> +clk_rg1refck, clk_rg2refck and clk_xin are external clocks suppling the
-> +network. They are set on the device tree, but not used by the clock module. The
-> +network devices use them directly.
-> +Example can be found below.
-> +
-> +All available clocks are defined as preprocessor macros in:
-> +dt-bindings/clock/nuvoton,npcm7xx-clock.h
-> +and can be reused as DT sources.
-> +
-> +Required Properties of clock controller:
-> +
-> +	- compatible: "nuvoton,npcm750-clk" : for clock controller of Nuvoton
-> +		  Poleg BMC NPCM750
-> +
-> +	- reg: physical base address of the clock controller and length of
-> +		memory mapped region.
-> +
-> +	- #clock-cells: should be 1.
-> +
-> +Example: Clock controller node:
-> +
-> +	clk: clock-controller@f0801000 {
-> +		compatible = "nuvoton,npcm750-clk";
-> +		#clock-cells = <1>;
-> +		reg = <0xf0801000 0x1000>;
-> +		clock-names = "refclk", "sysbypck", "mcbypck";
-> +		clocks = <&clk_refclk>, <&clk_sysbypck>, <&clk_mcbypck>;
-> +	};
-> +
-> +Example: Required external clocks for network:
-> +
-> +	/* external reference clock */
-> +	clk_refclk: clk-refclk {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <25000000>;
-> +		clock-output-names = "refclk";
-> +	};
-> +
-> +	/* external reference clock for cpu. float in normal operation */
-> +	clk_sysbypck: clk-sysbypck {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <800000000>;
-> +		clock-output-names = "sysbypck";
-> +	};
-> +
-> +	/* external reference clock for MC. float in normal operation */
-> +	clk_mcbypck: clk-mcbypck {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <800000000>;
-> +		clock-output-names = "mcbypck";
-> +	};
-> +
-> +	 /* external clock signal rg1refck, supplied by the phy */
-> +	clk_rg1refck: clk-rg1refck {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <125000000>;
-> +		clock-output-names = "clk_rg1refck";
-> +	};
-> +
-> +	 /* external clock signal rg2refck, supplied by the phy */
-> +	clk_rg2refck: clk-rg2refck {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <125000000>;
-> +		clock-output-names = "clk_rg2refck";
-> +	};
-> +
-> +	clk_xin: clk-xin {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <50000000>;
-> +		clock-output-names = "clk_xin";
-> +	};
-> +
-> +
-> +Example: GMAC controller node that consumes two clocks: a generated clk by the
-> +clock controller and a fixed clock from DT (clk_rg1refck).
-> +
-> +	ethernet0: eth@f0802000 {
-
-ethernet@...
-
-> +		compatible = "snps,dwmac";
-> +		reg = <0xf0802000 0x2000>;
-> +		interrupts = <0 14 4>;
-> +		interrupt-names = "macirq";
-> +		clocks	= <&clk_rg1refck>, <&clk NPCM7XX_CLK_AHB>;
-> +		clock-names = "stmmaceth", "clk_gmac";
-> +	};
-> diff --git a/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h b/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
-> new file mode 100644
-> index 000000000000..f21522605b94
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/nuvoton,npcm7xx-clock.h
-> @@ -0,0 +1,44 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Nuvoton NPCM7xx Clock Generator binding
-> + * clock binding number for all clocks supportted by nuvoton,npcm7xx-clk
-> + *
-> + * Copyright (C) 2018 Nuvoton Technologies tali.perry@nuvoton.com
-> + *
-> + */
-> +
-> +#ifndef __DT_BINDINGS_CLOCK_NPCM7XX_H
-> +#define __DT_BINDINGS_CLOCK_NPCM7XX_H
-> +
-> +
-> +#define NPCM7XX_CLK_CPU 0
-> +#define NPCM7XX_CLK_GFX_PIXEL 1
-> +#define NPCM7XX_CLK_MC 2
-> +#define NPCM7XX_CLK_ADC 3
-> +#define NPCM7XX_CLK_AHB 4
-> +#define NPCM7XX_CLK_TIMER 5
-> +#define NPCM7XX_CLK_UART 6
-> +#define NPCM7XX_CLK_MMC  7
-> +#define NPCM7XX_CLK_SPI3 8
-> +#define NPCM7XX_CLK_PCI  9
-> +#define NPCM7XX_CLK_AXI 10
-> +#define NPCM7XX_CLK_APB4 11
-> +#define NPCM7XX_CLK_APB3 12
-> +#define NPCM7XX_CLK_APB2 13
-> +#define NPCM7XX_CLK_APB1 14
-> +#define NPCM7XX_CLK_APB5 15
-> +#define NPCM7XX_CLK_CLKOUT 16
-> +#define NPCM7XX_CLK_GFX  17
-> +#define NPCM7XX_CLK_SU   18
-> +#define NPCM7XX_CLK_SU48 19
-> +#define NPCM7XX_CLK_SDHC 20
-> +#define NPCM7XX_CLK_SPI0 21
-> +#define NPCM7XX_CLK_SPIX 22
-> +
-> +#define NPCM7XX_CLK_REFCLK 23
-> +#define NPCM7XX_CLK_SYSBYPCK 24
-> +#define NPCM7XX_CLK_MCBYPCK 25
-> +
-> +#define NPCM7XX_NUM_CLOCKS	 (NPCM7XX_CLK_MCBYPCK+1)
-> +
-> +#endif
-> -- 
-> 2.14.1
+> That is fine, I was just thinking it would be convenient if DT
+> platforms could lift on the jack-detect work being done for
+> the rt5651 driver now with just some DT changes and no other
+> changes required.
 > 
+> > > Thinking more about this I believe that doing the
+> > > snd_soc_card_jack_new() call inside the codec driver based on
+> > > device-properties is a better solution then doing it in the
+> > > machine driver.
+> > 
+> > No, that's really not a good idea.  Any jacks in the system are part of
+> > the system specific wiring, they're not something that's intrinsic to
+> > the CODEC.  Even with fairly basic setups you've got options like having
+> > a headset jack or separate microphone and headphone jacks.
+> 
+> OK, so if doing the jack creation in the machine-driver / platform
+> code is by design and you want to keep things that way, then I
+> assume that what needs changing for v3 of this patch is:
+> 
+> 1) Split the patch in separate codec + machine-drv patches
+> 2) Add comments to make the ordering requirements clear to
+> both the codec- and machine-driver.
+> 
+> Correct?
+
+And split bindings to separate patch please.
+
+Rob
