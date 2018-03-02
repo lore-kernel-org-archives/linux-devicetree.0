@@ -1,55 +1,44 @@
-Return-Path: <SRS0=C5ln=FY=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-oi0-f65.google.com ([209.85.218.65]:40256 "EHLO
-        mail-oi0-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1945926AbeCBKRp (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 2 Mar 2018 05:17:45 -0500
-Received: by mail-oi0-f65.google.com with SMTP id c12so6678951oic.7
-        for <devicetree@vger.kernel.org>; Fri, 02 Mar 2018 02:17:45 -0800 (PST)
+Return-Path: <SRS0=TzPi=FY=linaro.org=shawn.guo@kernel.org>
+Date: Fri, 2 Mar 2018 20:36:18 +0800
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH] PCI: histb: add power control GPIO for PCIe slot
+Message-ID: <20180302123616.GE28619@dragon>
+References: <1516669477-20151-1-git-send-email-shawn.guo@linaro.org>
+ <20180302120959.GA13205@e107981-ln.cambridge.arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1517240748-14780-6-git-send-email-ulrich.hecht+renesas@gmail.com>
-References: <1517240748-14780-1-git-send-email-ulrich.hecht+renesas@gmail.com> <1517240748-14780-6-git-send-email-ulrich.hecht+renesas@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 2 Mar 2018 11:17:44 +0100
-Message-ID: <CAMRc=MdBFBqts1G7m9mXfok+ZHTK8EtB=T6Nmn7ACmLQptxyDw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] dt-bindings: at24: add bindings for Rohm BR24T01
-Content-Type: text/plain; charset="UTF-8"
-Sender: devicetree-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, geert@linux-m68k.org, kieran.bingham@ideasonboard.com, Wolfram Sang <wsa@the-dreams.de>, Magnus Damm <magnus.damm@gmail.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180302120959.GA13205@e107981-ln.cambridge.arm.com>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, project-aspen-dev@linaro.org, Jianguo Sun <sunjianguo1@huawei.com>
 List-ID: <devicetree@vger.kernel.org>
 
-2018-01-29 16:45 GMT+01:00 Ulrich Hecht <ulrich.hecht+renesas@gmail.com>:
-> Both manufacturer and name variant.
->
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> ---
->  Documentation/devicetree/bindings/eeprom/at24.txt | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/eeprom/at24.txt b/Documentation/devicetree/bindings/eeprom/at24.txt
-> index 1812c84..dd29937 100644
-> --- a/Documentation/devicetree/bindings/eeprom/at24.txt
-> +++ b/Documentation/devicetree/bindings/eeprom/at24.txt
-> @@ -40,6 +40,7 @@ Required properties:
->                  "microchip",
->                  "ramtron",
->                  "renesas",
-> +                "rohm",
->                  "nxp",
->                  "st",
->
-> @@ -47,6 +48,7 @@ Required properties:
->                  variants of the above. Known such exceptions are listed below:
->
->                  "renesas,r1ex24002" - the fallback is "atmel,24c02"
-> +                "rohm,br24t01" - the fallback is "atmel,24c01"
->
->    - reg: The I2C address of the EEPROM.
->
-> --
-> 2.7.4
->
+Hi Lorenzo,
 
-Applied to for-next, thanks.
+On Fri, Mar 02, 2018 at 12:10:00PM +0000, Lorenzo Pieralisi wrote:
+> Hi Shawn,
+> 
+> On Tue, Jan 23, 2018 at 09:04:37AM +0800, Shawn Guo wrote:
+> > From: Jianguo Sun <sunjianguo1@huawei.com>
+> > 
+> > Besides the GPIO for controlling reset, there is also possibly another
+> > GPIO for turning on/off the power of PCIe slot.  Let's add the support
+> > for that with another optional device tree property 'power-gpios'.
+> > 
+> > Signed-off-by: Jianguo Sun <sunjianguo1@huawei.com>
+> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> > ---
+> >  .../bindings/pci/hisilicon-histb-pcie.txt          |  1 +
+> >  drivers/pci/dwc/pcie-histb.c                       | 28 +++++++++++++++++++---
+> 
+> Is there a dependency between this patch and this series:
+> 
+> https://patchwork.ozlabs.org/project/linux-pci/list/?series=31410
+> 
+> It does not look like, I'd apply the series but I wanted to ask
+> first.
 
-Bart
+This is the v1 of the same series.  Please ignore this one, and only
+review the latest v3.  Sorry for the confusion.
+
+Shawn
