@@ -1,82 +1,129 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 17/32] ASoC: rt5651: Allow specifying
- over-current thresholds through device-properties
-Date: Fri, 2 Mar 2018 16:18:52 -0600
-Message-ID: <20180302221852.p3m5u4xgbbdr4crg@rob-hp-laptop>
-References: <20180225104713.4745-1-hdegoede@redhat.com>
- <20180225104713.4745-18-hdegoede@redhat.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v1 13/19] arm: dts: mt7623: move node mt6323 leds to
+ mt6323.dtsi
+Date: Sat, 3 Mar 2018 06:46:58 +0800
+Message-ID: <1520030818.8089.190.camel@mtkswgap22>
+References: <cover.1519378871.git.sean.wang@mediatek.com>
+         <e8a515a1aeaf06a7162b8b0e390bee615b323303.1519378872.git.sean.wang@mediatek.com>
+         <20180302154050.lfxojro4woucl6lh@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20180225104713.4745-18-hdegoede@redhat.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, Mark Brown <broonie@kernel.org>, Carlo Caione <carlo@endlessm.com>, Bard Liao <bardliao@realtek.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180302154050.lfxojro4woucl6lh@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 25, 2018 at 11:46:58AM +0100, Hans de Goede wrote:
-> OVer-Current-Detection (OVCD) for the micbias current is used to detect if
-> an inserted jack is a headset or headphones (mic shorted to ground).
-> =
+On Fri, 2018-03-02 at 09:40 -0600, Rob Herring wrote:
+> On Fri, Feb 23, 2018 at 06:16:33PM +0800, sean.wang@mediatek.com wrote:
+> > From: Sean Wang <sean.wang@mediatek.com>
+> > 
+> > Since those LEDs are parts of PMIC MT6323, it is reasonable to merge
+> > those LEDs node definition back into mt6323.dtsi. This way can improve
+> > the reusability of those nodes among different boards with the same PMIC.
+> > 
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > Cc: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  arch/arm/boot/dts/mt6323.dtsi                 | 26 ++++++++++++++++++++++++-
+> >  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 28 ---------------------------
+> >  2 files changed, 25 insertions(+), 29 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/mt6323.dtsi b/arch/arm/boot/dts/mt6323.dtsi
+> > index 7c783d6..44c5642 100644
+> > --- a/arch/arm/boot/dts/mt6323.dtsi
+> > +++ b/arch/arm/boot/dts/mt6323.dtsi
+> > @@ -1,5 +1,5 @@
+> >  /*
+> > - * Copyright (c) 2017 MediaTek Inc.
+> > + * Copyright (c) 2017-2018 MediaTek Inc.
+> >   * Author: John Crispin <john@phrozen.org>
+> >   *	   Sean Wang <sean.wang@mediatek.com>
+> >   * This program is free software; you can redistribute it and/or modify
+> > @@ -237,5 +237,29 @@
+> >  				regulator-enable-ramp-delay = <216>;
+> >  			};
+> >  		};
+> > +
+> > +		leds {
+> > +			compatible = "mediatek,mt6323-led";
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			led@0 {
+> > +				reg = <0>;
+> > +				label = "mt6323:isink:green";
+> 
+> Changing the label potentially breaks userspace. And the fact that it is 
+> a green LED is very much board specific. So I think the old location was 
+> correct. You could put the parent node here and leave these child nodes 
+> in the board specific dts file.
+> 
 
-> Some boards may need different values for the OVCD threshold because of a
-> resistor on the board in serial with or parallel to the jack mic contact.
-> =
+yes, I really made a mistake on breaking userspace with a label change.
 
-> This commit adds support for the sofar unset OVCD scale-factor register
-> values and adds support for specifying non-default values for both the
-> current threshold and the scale-factor through device-properties.
-> =
+I will keep the parent node here and then leave these child nodes into
+board specific dts files. thanks for your idea!
 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  Documentation/devicetree/bindings/sound/rt5651.txt | 11 ++++++
-
-Please split to a separate patch.
-
->  include/sound/rt5651.h                             | 11 ++++++
->  sound/soc/codecs/rt5651.c                          | 42 ++++++++++++++++=
-+++++-
->  sound/soc/codecs/rt5651.h                          | 10 ++++++
->  4 files changed, 73 insertions(+), 1 deletion(-)
-> =
-
-> diff --git a/Documentation/devicetree/bindings/sound/rt5651.txt b/Documen=
-tation/devicetree/bindings/sound/rt5651.txt
-> index 1632c0cf6123..8cb7ee8e79cf 100644
-> --- a/Documentation/devicetree/bindings/sound/rt5651.txt
-> +++ b/Documentation/devicetree/bindings/sound/rt5651.txt
-> @@ -22,6 +22,17 @@ Optional properties:
->    2: Use JD1_2 pin for jack-dectect
->    3: Use JD2 pin for jack-dectect
->  =
-
-> +- realtek,over-current-threshold
-> +  u32, micbias over-current detection threshold in =B5A, valid values are
-> +  600, 1500 and 2000=B5A.
-
-Needs a unit suffix as defined in property-units.txt
-
-> +
-> +- realtek,over-current-scale-factor
-> +  u32, micbias over-current detection scale-factor, valid values are:
-> +  0: Scale current by 0.5
-> +  1: Scale current by 0.75
-> +  2: Scale current by 1.0
-> +  3: Scale current by 1.5
-> +
->  Pins on the device (for linking into audio routes) for RT5651:
->  =
-
->    * DMIC L1
+> 
+> > +				default-state = "off";
+> > +			};
+> > +
+> > +			led@1 {
+> > +				reg = <1>;
+> > +				label = "mt6323:isink:red";
+> > +				default-state = "off";
+> > +			};
+> > +
+> > +			led@2 {
+> > +				reg = <2>;
+> > +				label = "mt6323:isink:blue";
+> > +				default-state = "off";
+> > +			};
+> > +		};
+> >  	};
+> >  };
+> > diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> > index 75e61c4..767b225 100644
+> > --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> > +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> > @@ -483,34 +483,6 @@
+> >  	status = "okay";
+> >  };
+> >  
+> > -&pwrap {
+> > -	mt6323 {
+> > -		mt6323led: led {
+> > -			compatible = "mediatek,mt6323-led";
+> > -			#address-cells = <1>;
+> > -			#size-cells = <0>;
+> > -
+> > -			led@0 {
+> > -				reg = <0>;
+> > -				label = "bpi-r2:isink:green";
+> > -				default-state = "off";
+> > -			};
+> > -
+> > -			led@1 {
+> > -				reg = <1>;
+> > -				label = "bpi-r2:isink:red";
+> > -				default-state = "off";
+> > -			};
+> > -
+> > -			led@2 {
+> > -				reg = <2>;
+> > -				label = "bpi-r2:isink:blue";
+> > -				default-state = "off";
+> > -			};
+> > -		};
+> > -	};
+> > -};
+> > -
+> >  &spi0 {
+> >  	pinctrl-names = "default";
+> >  	pinctrl-0 = <&spi0_pins_a>;
+> > -- 
+> > 2.7.4
+> > 
