@@ -1,80 +1,56 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [Patch 2/4] dt-bindings: display/ti: Add plane binding to dispc
- node
-Date: Fri, 2 Mar 2018 13:19:13 -0600
-Message-ID: <CAL_Jsq+tV=gCK=H-KZXRV8gSFigE0kg+47Zj84h4+jw1T_Szjg@mail.gmail.com>
-References: <20180302134804.3690-1-bparrot@ti.com>
- <20180302134804.3690-3-bparrot@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180302134804.3690-3-bparrot@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Benoit Parrot <bparrot@ti.com>
-Cc: devicetree@vger.kernel.org, dri-devel <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH v3 0/5] arm: zynq: Adding new Xilinx boards
+Date: Fri,  2 Mar 2018 20:21:32 +0100
+Message-ID: <cover.1520018484.git.michal.simek@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXIgMiwgMjAxOCBhdCA3OjQ4IEFNLCBCZW5vaXQgUGFycm90IDxicGFycm90QHRp
-LmNvbT4gd3JvdGU6Cj4gQWRkICdwbGFuZScgY2hpbGQgbm9kZSB0byBnZW5lcmljIERJU1BDIG5v
-ZGUgYXMgYW4gb3B0aW9uYWwKPiBwcm9wZXJ0eS4KCldoeT8gV2hhdCBwcm9ibGVtIGFyZSB5b3Ug
-c29sdmluZz8KCj4KPiBTaWduZWQtb2ZmLWJ5OiBCZW5vaXQgUGFycm90IDxicGFycm90QHRpLmNv
-bT4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS90aS90aSxvbWFwLWRz
-cy50eHQgfCA2MyArKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA2MyBp
-bnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0Cj4gaW5kZXggMjQ5ZTU4OGQ3
-ODY1Li5jYjEwMTUyNWI4MDUgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvdGkvdGksb21hcC1kc3MudHh0Cj4gQEAgLTI3
-LDYgKzI3LDM0IEBAIERJU1BDCj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gIC0gbWF4LW1lbW9y
-eS1iYW5kd2lkdGg6IElucHV0IG1lbW9yeSAoZnJvbSBtYWluIG1lbW9yeSB0byBkaXNwYykgYmFu
-ZHdpZHRoIGxpbWl0Cj4gICAgICAgICAgICAgICAgICAgICAgICAgaW4gYnl0ZXMgcGVyIHNlY29u
-ZAo+ICstIHBsYW5lOiBDaGlsZCBub2RlKHMpIHdoaWNoIGRlZmluZXMgd2hpY2ggbG9naWNhbCBw
-bGFuZSBhcmUgYXZhaWxhYmxlIHRvCgpUaGlzIGlzIHRoZSAiT3B0aW9uYWwgcHJvcGVydGllcyIg
-c2VjdGlvbiBhbmQgcGxhbmUgaXMgbm90IGEgcHJvcGVydHkuCgo+ICsgICAgICAgdGhlIHN5c3Rl
-bS4gSWYgYXQgbGVhc3Qgb25lIHBsYW5lIGNoaWxkIG5vZGUgaXMgZGVmaW5lZCB0aGVuCj4gKyAg
-ICAgICBvbmx5IHBsYW5lcyBkZWZpbmVkIGJ5IHRoZXNlIG5vZGVzIHdpbGwgYmUgYXZhaWxhYmxl
-IHRvIHRoZSBzeXN0ZW0uCj4gKyAgICAgICBQbGFuZSBub2RlcyBtdXN0IGJlIHNlcXVlbnRpYWwg
-c3RhcnRpbmcgd2l0aCByZWcgPSA8MD4gYXMgRFQgcGFyc2luZwo+ICsgICAgICAgd2lsbCBzdG9w
-IG9uIHRoZSBmaXJzdCBtaXNzaW5nIG51bWJlcmVkIG5vZGUuCj4gKyAgICAgICBUaGlzIG1lYW5z
-IGlmIHBsYW5lICMxIGlzIGRlZmluZWQgYnV0IHBsYW5lICMwIGlzIG5vdCB0aGVuIGl0IHdpbGwK
-PiArICAgICAgIGJlIGFzIGlmIG5vbmUgb2YgdGhlIHBsYW5lIG5vZGVzIHdlcmUgZGVmaW5lZC4K
-PiArCj4gKyAgICAgICBFYWNoIHBsYW5lIG5vZGUgY29udGFpbnMgdGhlIGZvbGxvd2luZyBwcm9w
-ZXJ0aWVzOgo+ICsgICAgICAgUmVxdWlyZWQgcHJvcGVydGllczoKPiArICAgICAgIC0gcmVnOiAg
-ICAgICBVc2VkIHRvIG51bWJlciB0aGUgbG9naWNhbCBwbGFuZQoKSXMgbG9naWNhbCBwbGFuZSBh
-IGgvdyBjb25jZXB0PwoKPiArICAgICAgIC0gaHctcGxhbmVzOiBPbmUgb3IgdHdvIEhXIHBsYW5l
-IG51bWJlcihzKS4KPiArICAgICAgICAgICAgICAgICAgICBXaGVuIDIgbnVtYmVycyBhcmUgcHJl
-c2VudCB0aGlzIGluZGljYXRlcyBhIHZpcnR1YWwgcGxhbmUKPiArICAgICAgICAgICAgICAgICAg
-ICBjb21wb3NlZCBvZiB0d28gcGh5c2ljYWwgcGxhbmVzIGludGVuZGVkIHRvIGJlIHVzZWQKPiAr
-ICAgICAgICAgICAgICAgICAgICB3aGVuIHRoZSBkaXNwbGF5IGlzIGxhcmdlciB0aGVuIHRoZSBj
-YXBhY2l0eSBvZiBhCj4gKyAgICAgICAgICAgICAgICAgICAgc2luZ2xlIHBsYW5lIGkuZS4gd2lk
-ZXIgdGhhbiAyMDQ4IHBpeGVscy4KPiArICAgICAgICAgICAgICAgICAgICBUaGUgZmlyc3QgbnVt
-YmVyIGluIHRoZSBwYWlyIHdpbGwgZGljdGF0ZSB0aGUgY2FwYWJpbGl0aWVzCj4gKyAgICAgICAg
-ICAgICAgICAgICAgb2YgdGhlIHZpcnR1YWwgcGxhbmUuIFRoaXMgbWVhbnMgdGhhdCBmb3IgcHJv
-cGVyCj4gKyAgICAgICAgICAgICAgICAgICAgb3BlcmF0aW9uIHRoZSB2aXJ0dWFsIHBsYW5lIHNo
-b3VsZCBiZSBjb21wb3NlZCBvZiBIVwo+ICsgICAgICAgICAgICAgICAgICAgIHBsYW5lcyBvZiB0
-aGUgc2FtZSBjYXBhYmlsaXRpZXMuCj4gKyAgICAgICAgICAgICAgICAgICAgSWYgR0ZYIHBsYW5l
-IGlzIHVzZWQgaW4gYSB2aXJ0dWFsIHBsYW5lIGl0IHNob3VsZCBiZQo+ICsgICAgICAgICAgICAg
-ICAgICAgIHNwZWNpZmllZCBmaXJzdCwgb3RoZXJ3aXNlIHVuZXhwZWN0ZWQgYmVoYXZpb3Igd291
-bGQKPiArICAgICAgICAgICAgICAgICAgICBiZSBlbmNvdW50ZXJlZC4KPiArICAgICAgIE9wdGlv
-bmFsIHByb3BlcnR5Ogo+ICsgICAgICAgLSBody1jcnRjczogIE9uZSBvciBtb3JlIEhXIGNydGMg
-bnVtYmVyKHMpLgo+ICsgICAgICAgICAgICAgICAgICAgIERlc2NyaWJlIHRoZSBsaXN0IG9mIENS
-VENzIG9uIHdoaWNoIHRoaXMgcGxhbmUgaXMKPiArICAgICAgICAgICAgICAgICAgICBhdmFpbGFi
-bGUuIElmIHRoaXMgbm9kZSBpcyBub3QgcHJlc2VudCB0aGVuIHRoZQo+ICsgICAgICAgICAgICAg
-ICAgICAgIHBsYW5lIHdpbGwgYmUgYXZhaWxhYmxlIG9uIGFsbCBhdmFpbGFibGUgQ1JUQ3MuCgpM
-ZXQncyBub3QgY29weSBhcmNoYWljIHRlcm1zIGZyb20gRFJNIGludG8gYmluZGluZ3MuCgpSZWFs
-bHksIEknbSBza2VwdGljYWwgdGhhdCBhbnkgb2YgdGhpcyBiZWxvbmdzIGluIERULiBGb3IgZXhh
-bXBsZSwKY2FuJ3QgeW91IGZpZ3VyZSBvdXQgeW91IG5lZWQgMiBwaHlzaWNhbCBwbGFuZXMgd2hl
-bmV2ZXIgeW91cgpwYW5lbC90aW1pbmcgd2lkdGggaXMgZ3JlYXRlciB0aGFuIDIwNDg/CgpSb2IK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+this patchset is adding 5 new dts files which target cc108 and zc770
+boards.
+Please let me know if you see any issue with them.
+
+Series depends on this one patch
+https://lkml.org/lkml/2018/2/23/412
+
+Thanks,
+Michal
+
+Changes in v3:
+- Fix partition for flash
+
+Changes in v2:
+- Record compatible string to xilinx.txt
+- Record compatible string to xilinx.txt
+- Record compatible string to xilinx.txt
+- Record compatible string to xilinx.txt
+- use eeprom as node name instead of at25
+- Record compatible string to xilinx.txt
+
+Michal Simek (5):
+  arm: zynq: Add Xilinx cc108 board
+  arm: zynq: Add support for Xilinx zc770 xm010 dc1 board
+  arm: zynq: Add support for Xilinx zc770 xm011 dc2 board
+  arm: zynq: Add support for Xilinx zc770 xm012 dc3 board
+  arm: zynq: Add support for Xilinx zc770 xm013 dc4 board
+
+ Documentation/devicetree/bindings/arm/xilinx.txt | 11 +++
+ arch/arm/boot/dts/Makefile                       |  5 ++
+ arch/arm/boot/dts/zynq-cc108.dts                 | 75 +++++++++++++++++++
+ arch/arm/boot/dts/zynq-zc770-xm010.dts           | 95 ++++++++++++++++++++++++
+ arch/arm/boot/dts/zynq-zc770-xm011.dts           | 64 ++++++++++++++++
+ arch/arm/boot/dts/zynq-zc770-xm012.dts           | 64 ++++++++++++++++
+ arch/arm/boot/dts/zynq-zc770-xm013.dts           | 78 +++++++++++++++++++
+ 7 files changed, 392 insertions(+)
+ create mode 100644 arch/arm/boot/dts/zynq-cc108.dts
+ create mode 100644 arch/arm/boot/dts/zynq-zc770-xm010.dts
+ create mode 100644 arch/arm/boot/dts/zynq-zc770-xm011.dts
+ create mode 100644 arch/arm/boot/dts/zynq-zc770-xm012.dts
+ create mode 100644 arch/arm/boot/dts/zynq-zc770-xm013.dts
+
+-- 
+1.9.1
