@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH v2 6/8] arm64: zynqmp: Add support for Xilinx zcu111-revA
-Date: Fri, 2 Mar 2018 12:04:39 -0600
-Message-ID: <20180302180439.bzl6zmnpkvaqnekb@rob-hp-laptop>
+Date: Fri, 2 Mar 2018 12:06:42 -0600
+Message-ID: <20180302180642.vctexdelz6z7h6cq@rob-hp-laptop>
 References: <cover.1519396753.git.michal.simek@xilinx.com>
  <db4b958c2280352939de0e7e55bc00d416b694e9.1519396753.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
@@ -89,8 +89,6 @@ On Fri, Feb 23, 2018 at 03:40:28PM +0100, Michal Simek wrote:
 > +		serial1 = &dcc;
 > +		usb0 = &usb0;
 
-Same comments on aliases.
-
-Otherwise,
+And here too.
 
 Reviewed-by: Rob Herring <robh@kernel.org>
