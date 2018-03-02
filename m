@@ -1,94 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/2] dt/bindings: Add bindings for Layerscape external
- irqs
-Date: Fri, 2 Mar 2018 13:49:35 -0600
-Message-ID: <20180302194935.yq3xw4nxyrxuonz5@rob-hp-laptop>
-References: <20180125150230.7234-1-rasmus.villemoes@prevas.dk>
- <20180223210901.23480-1-rasmus.villemoes@prevas.dk>
- <20180223210901.23480-3-rasmus.villemoes@prevas.dk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: klaus.goger@theobroma-systems.com
+Subject: Re: [PATCH v2 6/6] arm64: dts: rockchip: enable typec-phy0 for
+ rk3399-puma-haikou.
+Date: Fri, 2 Mar 2018 20:49:51 +0100
+Message-ID: <FF2D7ADA-3524-4811-921D-3AC6ABA2E588@theobroma-systems.com>
+References: <20180301152515.20940-1-enric.balletbo@collabora.com>
+ <20180301152515.20940-7-enric.balletbo@collabora.com>
+Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180223210901.23480-3-rasmus.villemoes@prevas.dk>
+In-Reply-To: <20180301152515.20940-7-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc: Shawn Guo <shawnguo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Andy Tang <andy.tang@nxp.com>, Alexander Stein <alexander.stein@systec-electronic.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: kishon@ti.com, =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, groeck@chromium.org, gwendal@chromium.org, kernel@collabora.com, vicencb@gmail.com, devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-kernel@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.io>, Will Deacon <will.deacon@arm.com>, Rask Ingemann Lambertsen <rask@formelder.dk>, Catalin Marinas <catalin.marinas@arm.com>, Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 23, 2018 at 10:09:00PM +0100, Rasmus Villemoes wrote:
-> This adds Device Tree binding documentation for the external interrupt
-> lines with configurable polarity present on some Layerscape SOCs.
+
+
+> On 01.03.2018, at 16:25, Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
 > 
-> Signed-off-by: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+> Commit c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port
+> support for rk3399") caused a regression regarding the USB3. During
+> boot, the following message appears a few times:
+> 
+>    dwc3: failed to initialize core
+> 
+> The driver is deferred waiting for the typec-phy, but this never
+> happens beause is disabled. So, enable it.
+> 
+> Fixes: c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port support for rk3399")
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 > ---
->  .../interrupt-controller/fsl,ls-extirq.txt         | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
-> new file mode 100644
-> index 000000000000..e510c715e8f6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-extirq.txt
-> @@ -0,0 +1,44 @@
-> +* Freescale Layerscape external IRQs
+> Changes in v2: None
+> 
+> arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts | 4 ++++
+> 1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts b/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
+> index 9a7486058455..2c9c696d1383 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dts
+> @@ -191,6 +191,10 @@
+> 	status = "okay";
+> };
+> 
+> +&tcphy0 {
+> +	status = "okay";
+> +};
 > +
-> +Some Layerscape SOCs (LS1021A, LS1043A, LS1046A) support inverting
-> +the polarity of certain external interrupt lines.
-> +
-> +The device node must be a child of the node representing the
-> +Supplemental Configuration Unit (SCFG).
-> +
-> +Required properties:
-> +- compatible: should be "fsl,<soc-name>-extirq", e.g. "fsl,ls1021a-extirq".
-> +- interrupt-controller: Identifies the node as an interrupt controller
-> +- #interrupt-cells: Must be 2. The first element is the index of the
-> +  external interrupt line. The second element is the trigger type.
-> +- interrupt-parent: phandle of GIC.
-> +- reg: Specifies the Interrupt Polarity Control Register (INTPCR) in the SCFG.
-> +- fsl,extirq-map: Specifies the mapping to interrupt numbers in the parent
-> +  interrupt controller. Interrupts are mapped one-to-one to parent
-> +  interrupts.
-
-Use the interrupt-map property for this.
-
-> +
-> +Optional properties:
-> +- fsl,bit-reverse: This boolean property should be set on the LS1021A
-> +  if the SCFGREVCR register has been set to all-ones (which is usually
-> +  the case), meaning that all reads and writes of SCFG registers are
-> +  implicitly bit-reversed. Other compatible platforms do not have such
-> +  a register.
-> +
-> +Example:
-> +	scfg: scfg@1570000 {
-> +		compatible = "fsl,ls1021a-scfg", "syscon";
-> +		...
-> +		extirq: interrupt-controller {
-> +			compatible = "fsl,ls1021a-extirq";
-> +			#interrupt-cells = <2>;
-> +			interrupt-controller;
-> +			interrupt-parent = <&gic>;
-> +			reg = <0x1ac>;
-
-This needs the length too. What is buys us is following the standard in 
-which mmio has a #size-cells >= 1. BTW, you need a #size-cells and 
-#address-cells properties in the parent. (I think dtc will complain if 
-not).
-
-> +			fsl,extirq-map = <163 164 165 167 168 169>;
-> +			fsl,bit-reverse;
-> +		};
-> +	};
-> +
-> +
-> +	interrupts-extended = <&gic GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
-> +			      <&extirq 1 IRQ_TYPE_LEVEL_LOW>;
+> &u2phy0 {
+> 	status = "okay";
+> };
 > -- 
-> 2.15.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.16.1
+
+
+Tested-by: Klaus Goger <klaus.goger@theobroma-systems.com>
+
+With usbdrd_dwc3_0 changed to dr_mode = "host"
+
+[   37.176540] usb 6-1: new SuperSpeed USB device number 2 using xhci-hcd
+[   37.203962] usb-storage 6-1:1.0: USB Mass Storage device detected
+[   37.211837] scsi host1: usb-storage 6-1:1.0
+[   38.249378] scsi 1:0:0:0: Direct-Access     SanDisk  Ultra            1.00 PQ: 0 ANSI: 6
+[   38.259097] sd 1:0:0:0: [sdb] 122421248 512-byte logical blocks: (62.7 GB/58.4 GiB)
+[   38.268890] sd 1:0:0:0: [sdb] Write Protect is off
+[   38.274269] sd 1:0:0:0: [sdb] Mode Sense: 43 00 00 00
+[   38.274582] sd 1:0:0:0: [sdb] Write cache: disabled, read cache: enabled, doesn't support DPO or FUA
+[   38.295967]  sdb: sdb1
+[   38.300787] sd 1:0:0:0: [sdb] Attached SCSI removable disk
+< detaching>
+[   45.192248] usb 6-1: USB disconnect, device number 2
+
+— 
+Klaus
