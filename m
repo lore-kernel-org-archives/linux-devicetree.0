@@ -1,45 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/3] gpio: Add Spreadtrum EIC driver support
-Date: Fri, 2 Mar 2018 10:53:00 +0100
-Message-ID: <CACRpkdY8hcNYASBFJewVfpiukT+AAR-5WZb0uaJws0B025+GJw@mail.gmail.com>
-References: <334505d3a13a73ad347427b408ed581832434289.1519468782.git.baolin.wang@linaro.org>
- <2e9852f21fcc6213bdb1cef0c473b9d002ad5670.1519468782.git.baolin.wang@linaro.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] reset: ti-rstctrl: use the reset-simple driver
+Date: Fri, 02 Mar 2018 10:53:30 +0100
+Message-ID: <1519984410.16239.1.camel@pengutronix.de>
+References: <20180116011159.1386-1-tony@atomide.com>
+         <1516095054.9022.1.camel@pengutronix.de>
+         <20180116150314.GC4042@atomide.com> <20180301181447.GG62820@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2e9852f21fcc6213bdb1cef0c473b9d002ad5670.1519468782.git.baolin.wang@linaro.org>
+In-Reply-To: <20180301181447.GG62820@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Philipp Zabel <philipp.zabel@gmail.com>, Paul Parsons <lost.distance@yahoo.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Mark Rutland <mark.rutland@arm.com>, Nishant Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Suman Anna <s-anna@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 24, 2018 at 11:44 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+Hi Tony,
 
-> The Spreadtrum digital-chip EIC controller has 4 sub-modules: debounce EIC,
-> latch EIC, async EIC and sync EIC, and each sub-module can has multiple
-> banks and each bank contains 8 EICs.
->
-> Each EIC can only be used as input mode, and has the capability to trigger
-> interrupts when detecting input signals.
->
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
-> Changes since v1:
->  - Add OF_GPIO dependency.
->  - Fix some typos and grammar issues.
->  - Simplify the sprd_eic_update() and sprd_eic_read().
->  - Rename 'sprd_eic_data' to 'sprd_eic_variant_data'.
->  - Rename sprd_eic_group_base() to sprd_eic_offset_base().
->  - Split the PMIC EIC support into one separate driver.
->  - Return -EIO for sprd_eic_direction_input().
->  - Other optimization.
+On Thu, 2018-03-01 at 10:14 -0800, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [180116 07:03]:
+> > * Philipp Zabel <p.zabel@pengutronix.de> [180116 09:52]:
+> > > Looks good to me. Can I move the compatible property when applying?
+> > 
+> > Oops, here's a better version. I also left out the "prcm" part as
+> > at some point that should have just ranges instead of both reg and
+> > ranges that it currently has.
+> 
+> Philipp, do you need me to resend v2 of this patch against v4.16-rc?
 
-This is looking nice!
+Rebasing onto linux-next or
+  git://git.pengutronix.de/pza/linux.git
+reset/next
+would help me, but is not required.
 
-I guess we agreed with the input maintainer that what
-needs to happen is to implement edge trigger emulation
-for all variants in the driver, test it with the keys and
-then we should be done.
+> The changes we discussed with Suman can then be done as
+> separate patches as needed :)
 
-Yours,
-Linus Walleij
+The discussion just went a bit over my head. If you have reached an
+agreement, could I get Suman's Acked-by for this patch?
+
+regards
+Philipp
