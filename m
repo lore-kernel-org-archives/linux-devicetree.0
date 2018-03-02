@@ -1,60 +1,77 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3] Input: gpio_keys: Add level trigger support for GPIO
- keys
-Date: Thu, 1 Mar 2018 16:44:04 -0800
-Message-ID: <20180302004404.GA242226@dtor-ws>
-References: <826093167e8fb24723f474b0272f3dcab1b6a97e.1519821626.git.baolin.wang@linaro.org>
- <CAK8P3a1v2GanneaFKpXWjWLt1YzibJ9Bh7vUcd_SH-4jGN_1+A@mail.gmail.com>
- <CAMz4kuLNbsZjDPW19V96yL3DzY-bJsjRR=o+w0x4PGyxZFZ0dg@mail.gmail.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v4 1/2] dt-binding: timer: document NPCM7xx timer DT bindings
+Date: Fri, 2 Mar 2018 12:21:57 +1030
+Message-ID: <CACPK8Xeb3ryfi+FXr+mdpk2fPtSTwJXkuBjRhW76vx1SxGQfYQ@mail.gmail.com>
+References: <1519655769-25836-1-git-send-email-tmaimon77@gmail.com> <1519655769-25836-2-git-send-email-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMz4kuLNbsZjDPW19V96yL3DzY-bJsjRR=o+w0x4PGyxZFZ0dg@mail.gmail.com>
+In-Reply-To: <1519655769-25836-2-git-send-email-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, gregkh <gregkh@linuxfoundation.org>, stephen lu <lumotuwe@gmail.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>, Joseph Lo <josephl@nvidia.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Thomas Gleixner <tglx@linutronix.de>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Avi Fishman <avifishman70@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 01, 2018 at 03:35:23PM +0800, Baolin Wang wrote:
-> On 28 February 2018 at 22:44, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Wed, Feb 28, 2018 at 1:44 PM, Baolin Wang <baolin.wang@linaro.org> wrote:
-> >> On some platforms (such as Spreadtrum platform), the GPIO keys can only
-> >> be triggered by level type. So this patch introduces one property to
-> >> indicate if the GPIO trigger type is level trigger or edge trigger.
-> >>
-> >> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> >> ---
-> >> Changes since v2:
-> >>  - Use 'interrupt' property to indicate the irq type.
-> >>
-> >> Changes since v1:
-> >>  - Diable the GPIO irq until reversing the GPIO level type.
-> >
-> > I've looked at your patch in more detail now, and given it a bit more thought.
-> >
-> > I wonder if you could move that logic into your gpiochip/irqchip driver instead.
-> > It seems that what you do in the gpio-keys driver is to emulate edge triggered
-> > behavior on a level triggered irqchip.
-> >
-> > If you put the same logic into the gpio driver, you could simply make it
-> > pretend to support an edge trigger on both edges and call into the interrupt
-> > handler whenever the state changes.
-> >
-> 
-> That is really a good suggestion, which can avoid duplicate level
-> reverse logic in different drivers. So this patch can be simplified
-> just adding one trigger_type to indicate the interrupt type (not
-> always edge trigger). Thanks for your suggestion.
+Hi Tomer,
 
-No, there is no need to add trigger type. The gpio-keys driver expects
-trigger with both edges, falling and rising. If your GPIO chip does not
-support it natively, you need to emulate edge trigger via level
-interrupts by reprogramming trigger from active low to active high and
-back on the fly. This should be done in the gpiochip/irqchip driver.
-There is no need to change gpio-keys driver.
+On Tue, Feb 27, 2018 at 1:06 AM, Tomer Maimon <tmaimon77@gmail.com> wrote:
+> Added device tree binding documentation for Nuvoton NPCM7xx timer.
+>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+>  .../bindings/timer/nuvoton,npcm7xx-timer.txt       | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+>
+> diff --git a/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+> new file mode 100644
+> index 000000000000..c5150522e618
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/nuvoton,npcm7xx-timer.txt
+> @@ -0,0 +1,25 @@
+> +Nuvoton NPCM7xx timer
 
-Thanks.
+Would it make more sense to all this Nuvoton NPCM Timer? This way the
+name stays generic for when you add other systems.
 
--- 
-Dmitry
+> +
+> +Nuvoton NPCM7xx have three timer modules, each timer module provides five 24-bit
+> +timer counters.
+
+
+I notice the timer has a register in the middle of it that is used for
+the watchdog. Should we describe this in the same binding? Even if we
+just add some text that adds
+
+ ... and one watchdog register.
+
+> +
+> +Required properties:
+> +- compatible      : "nuvoton,npcm750-timer" for Poleg NPCM750.
+> +- reg             : Offset and length of the register set for the device.
+> +- interrupts      : Contain the timer interrupt with flags for
+> +                    falling edge.
+> +
+> +Required clocking property, have to be one of:
+> +- clocks          : phandle of timer reference clock.
+> +- clock-frequency : The frequency in Hz of the clock that drives the NPCM7xx
+> +                    timer (usually 25000000).
+> +
+> +Example:
+> +
+> +timer@f0008000 {
+> +    compatible = "nuvoton,npcm750-timer";
+> +    interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> +    reg = <0xf0008000 0x1000>;
+
+This can probably be <0xf0008000 0x50>, as tthe timer hardware only
+has registers up to base + 0x50.
+
+> +    clocks = <&clk NPCM7XX_CLK_TIMER>;
+> +};
+> +
+> --
+> 2.14.1
+>
