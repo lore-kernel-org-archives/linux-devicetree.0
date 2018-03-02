@@ -1,15 +1,15 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v12 3/3] arm64:dts:hisilicon Disable hisilicon smmu node
- on hip06/hip07
-Date: Fri, 2 Mar 2018 16:34:02 +0000
-Message-ID: <5A997CFA.9080306@hisilicon.com>
-References: <20171214160957.13716-1-shameerali.kolothum.thodi@huawei.com>
- <20171214160957.13716-4-shameerali.kolothum.thodi@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: xilinx: Add description for ZynqMP
+Date: Fri, 2 Mar 2018 10:36:27 -0600
+Message-ID: <20180302163627.d33qdksp7i6xhnhm@rob-hp-laptop>
+References: <cover.1519396753.git.michal.simek@xilinx.com>
+ <0bff485b7ad09c0f1e23e82464382b43a918b84d.1519396753.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20171214160957.13716-4-shameerali.kolothum.thodi@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <0bff485b7ad09c0f1e23e82464382b43a918b84d.1519396753.git.michal.simek@xilinx.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,155 +19,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, lorenzo.pieralisi@arm.com, robin.murphy@arm.com, marc.zyngier@arm.com, will.deacon@arm.com
-Cc: devicetree@vger.kernel.org, joro@8bytes.org, john.garry@huawei.com, linuxarm@huawei.com, linux-acpi@vger.kernel.org, iommu@lists.linux-foundation.org, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, monstr@monstr.eu, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shameer,
-
-On 2017/12/14 16:09, Shameer Kolothum wrote:
-> The HiSilicon erratum 161010801 describes the limitation of
-> HiSilicon platforms hip06/hip07 to support the SMMUv3 mappings
-> for MSI transactions.
+On Fri, Feb 23, 2018 at 03:40:23PM +0100, Michal Simek wrote:
+> Record xlnx,zynqmp compatible string.
 > 
-> PCIe controller on these platforms has to differentiate the
-> MSI payload against other DMA payload and has to modify the
-> MSI  payload. This makes it difficult for these platforms to
-> have SMMU translation for MSI. In order to workaround this,
-> ARM SMMUv3 driver requires a quirk to treat the MSI regions
-> separately. Such a quirk is currently missing for DT based
-> systems and therefore we need to explicitly disable the
-> hip06/hip07 smmu entries in dts.
-> 
-> Signed-off-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
-
-Thanks!
-Applied into hisilicon dt tree.
-
-BR,
-Wei
-
->  arch/arm64/boot/dts/hisilicon/hip06.dtsi | 56 ++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/hisilicon/hip07.dtsi | 25 ++++++++++++++
->  2 files changed, 81 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hip06.dtsi b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-> index a049b64..35202eb 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
-> @@ -291,6 +291,13 @@
->  			#interrupt-cells = <2>;
->  			num-pins = <128>;
->  		};
-> +
-> +		mbigen_pcie0: intc_pcie0 {
-> +			msi-parent = <&its_dsa 0x40085>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			num-pins = <10>;
-> +		};
->  	};
->  
->  	mbigen_dsa@c0080000 {
-> @@ -312,6 +319,31 @@
->  		};
->  	};
->  
-> +	/**
-> +	 *  HiSilicon erratum 161010801: This describes the limitation
-> +	 *  of HiSilicon platforms hip06/hip07 to support the SMMUv3
-> +	 *  mappings for PCIe MSI transactions.
-> +	 *  PCIe controller on these platforms has to differentiate the
-> +	 *  MSI payload against other DMA payload and has to modify the
-> +	 *  MSI payload. This makes it difficult for these platforms to
-> +	 *  have a SMMU translation for MSI. In order to workaround this,
-> +	 *  ARM SMMUv3 driver requires a quirk to treat the MSI regions
-> +	 *  separately. Such a quirk is currently missing for DT based
-> +	 *  systems. Hence please make sure that the smmu pcie node on
-> +	 *  hip06 is disabled as this will break the PCIe functionality
-> +	 *  when iommu-map entry is used along with the PCIe node.
-> +	 *  Refer:https://www.spinics.net/lists/arm-kernel/msg602812.html
-> +	 */
-> +	smmu0: smmu_pcie {
-> +		compatible = "arm,smmu-v3";
-> +		reg = <0x0 0xa0040000 0x0 0x20000>;
-> +		#iommu-cells = <1>;
-> +		dma-coherent;
-> +		smmu-cb-memtype = <0x0 0x1>;
-> +		hisilicon,broken-prefetch-cmd;
-> +		status = "disabled";
-> +	};
-> +
->  	soc {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
-> @@ -676,6 +708,30 @@
->  				     <637 1>,<638 1>,<639 1>;
->  			status = "disabled";
->  		};
-> +
-> +		pcie0: pcie@a0090000 {
-> +			compatible = "hisilicon,hip06-pcie-ecam";
-> +			reg = <0 0xb0000000 0 0x2000000>,
-> +			      <0 0xa0090000 0 0x10000>;
-> +			bus-range = <0  31>;
-> +			msi-map = <0x0000 &its_dsa 0x0000 0x2000>;
-> +			msi-map-mask = <0xffff>;
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			device_type = "pci";
-> +			dma-coherent;
-> +			ranges = <0x02000000 0 0xb2000000 0x0 0xb2000000 0
-> +				 0x5ff0000 0x01000000 0 0 0 0xb7ff0000
-> +				 0 0x10000>;
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0xf800 0 0 7>;
-> +			interrupt-map = <0x0 0 0 1 &mbigen_pcie0 650 4
-> +					0x0 0 0 2 &mbigen_pcie0 650 4
-> +					0x0 0 0 3 &mbigen_pcie0 650 4
-> +					0x0 0 0 4 &mbigen_pcie0 650 4>;
-> +			status = "disabled";
-> +		};
-> +
->  	};
->  
->  };
-> diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-> index 2c01a21..3e80bf3 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-> @@ -1083,6 +1083,31 @@
->  		};
->  	};
->  
-> +	/**
-> +	 *  HiSilicon erratum 161010801: This describes the limitation
-> +	 *  of HiSilicon platforms hip06/hip07 to support the SMMUv3
-> +	 *  mappings for PCIe MSI transactions.
-> +	 *  PCIe controller on these platforms has to differentiate the
-> +	 *  MSI payload against other DMA payload and has to modify the
-> +	 *  MSI payload. This makes it difficult for these platforms to
-> +	 *  have a SMMU translation for MSI. In order to workaround this,
-> +	 *  ARM SMMUv3 driver requires a quirk to treat the MSI regions
-> +	 *  separately. Such a quirk is currently missing for DT based
-> +	 *  systems. Hence please make sure that the smmu pcie node on
-> +	 *  hip07 is disabled as this will break the PCIe functionality
-> +	 *  when iommu-map entry is used along with the PCIe node.
-> +	 *  Refer:https://www.spinics.net/lists/arm-kernel/msg602812.html
-> +	 */
-> +	smmu0: smmu_pcie {
-> +		compatible = "arm,smmu-v3";
-> +		reg = <0x0 0xa0040000 0x0 0x20000>;
-> +		#iommu-cells = <1>;
-> +		dma-coherent;
-> +		smmu-cb-memtype = <0x0 0x1>;
-> +		hisilicon,broken-prefetch-cmd;
-> +		status = "disabled";
-> +	};
-> +
->  	soc {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
+> Changes in v2:
+> - New patch in this series
 > 
+>  Documentation/devicetree/bindings/arm/xilinx.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+
+Reviewed-by: Rob Herring <robh@kernel.org> 
