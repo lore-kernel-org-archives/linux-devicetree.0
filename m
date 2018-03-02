@@ -1,37 +1,27 @@
-Return-Path: <SRS0=w7f6=FZ=chromium.org=evgreen@kernel.org>
+Return-Path: <SRS0=C5ln=FY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf0-f173.google.com ([209.85.192.173]:39418 "EHLO
+        mail-pf0-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S932440AbeCBWLs (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 2 Mar 2018 17:11:48 -0500
+Received: by mail-pf0-f173.google.com with SMTP id u5so4564624pfh.6
+        for <devicetree@vger.kernel.org>; Fri, 02 Mar 2018 14:11:48 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+From: Stephen Boyd <swboyd@chromium.org>
 In-Reply-To: <1519781889-16117-5-git-send-email-kramasub@codeaurora.org>
-References: <1519781889-16117-1-git-send-email-kramasub@codeaurora.org> <1519781889-16117-5-git-send-email-kramasub@codeaurora.org>
-From: Evan Green <evgreen@chromium.org>
-Date: Fri, 2 Mar 2018 16:11:59 -0800
-Message-ID: <CAE=gft4Hwqq2gx+b9AmiX1ZZBrSt1Ca2E48JV77wpcQQT0060w@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] tty: serial: msm_geni_serial: Add serial driver
- support for GENI based QUP
-Content-Type: text/plain; charset="UTF-8"
-To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, gregkh@linuxfoundation.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, acourbot@chromium.org, Girish Mahadevan <girishm@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Doug Anderson <dianders@google.com>
+References: <1519781889-16117-1-git-send-email-kramasub@codeaurora.org>
+ <1519781889-16117-5-git-send-email-kramasub@codeaurora.org>
+Message-ID: <152002870571.108663.443363731684218377@swboyd.mtv.corp.google.com>
+Subject: Re: [PATCH v3 4/4] tty: serial: msm_geni_serial: Add serial driver support
+ for GENI based QUP
+Date: Fri, 02 Mar 2018 14:11:45 -0800
+Sender: devicetree-owner@vger.kernel.org
+To: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, andy.gross@linaro.org, corbet@lwn.net, david.brown@linaro.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de
+Cc: linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, evgreen@chromium.org, acourbot@chromium.org, Girish Mahadevan <girishm@codeaurora.org>, Sagar Dharia <sdharia@codeaurora.org>, Doug Anderson <dianders@google.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Karthik,
-
-On Tue, Feb 27, 2018 at 5:38 PM, Karthikeyan Ramasubramanian
-<kramasub@codeaurora.org> wrote:
-> This driver supports GENI based UART Controller in the Qualcomm SOCs. The
-> Qualcomm Generic Interface (GENI) is a programmable module supporting a
-> wide range of serial interfaces including UART. This driver support console
-> operations using FIFO mode of transfer.
->
-> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
-> Signed-off-by: Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
-> Signed-off-by: Sagar Dharia <sdharia@codeaurora.org>
-> Signed-off-by: Doug Anderson <dianders@google.com>
-> ---
->  drivers/tty/serial/Kconfig            |   11 +
->  drivers/tty/serial/Makefile           |    1 +
->  drivers/tty/serial/qcom_geni_serial.c | 1181 +++++++++++++++++++++++++++++++++
->  3 files changed, 1193 insertions(+)
->  create mode 100644 drivers/tty/serial/qcom_geni_serial.c
->
+Quoting Karthikeyan Ramasubramanian (2018-02-27 17:38:09)
 > diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
 > index 3682fd3..c6b1500 100644
 > --- a/drivers/tty/serial/Kconfig
@@ -39,28 +29,39 @@ On Tue, Feb 27, 2018 at 5:38 PM, Karthikeyan Ramasubramanian
 > @@ -1104,6 +1104,17 @@ config SERIAL_MSM_CONSOLE
 >         select SERIAL_CORE_CONSOLE
 >         select SERIAL_EARLYCON
->
+>  =
+
 > +config SERIAL_QCOM_GENI
 > +       bool "QCOM on-chip GENI based serial port support"
+
+This can be tristate.
+
 > +       depends on ARCH_QCOM
+
+|| COMPILE_TEST
+?
+
 > +       depends on QCOM_GENI_SE
+> +       select SERIAL_CORE
 
-My understanding is that this has to be "bool" because there's a
-console in there, and consoles cannot be built as modules. Stephen is
-suggesting splitting this option up into two, so you could have serial
-with or without the console. That's fine, and probably the preferred
-way. However, you do want to make sure that if serial (or what's soon
-to be serial+console) is enabled, that QCOM_GENI_SE has to be built
-=y, and not =m. I'd suggest "select QCOM_GENI_SE" in the new
-SERIAL_QCOM_GENI_CONSOLE (or whatever it's called). As it is now, if
-SERIAL_QCOM_GENI=y and QCOM_GENI_SE=m, there's a build failure.
+This can stay.
 
-GENI_SE is allowed to be built as a module if serial is not enabled
-and I2C is built as a module. In order to keep the dependency arrows
-going in the same direction, you might want the I2C driver to "select
-QCOM_GENI_SE" as well, in order to upgrade GENI_SE to y if I2C is y.
+> +       select SERIAL_CORE_CONSOLE
+> +       select SERIAL_EARLYCON
 
-> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+These two can go to a new config option, like SERIAL_QCOM_GENI_CONSOLE,
+and that would be bool. Please take a look at the existing SERIAL_MSM
+and SERIAL_MSM_CONSOLE setup to understand how to do it.
+
+> +       help
+> +         Serial driver for Qualcomm Technologies Inc's GENI based QUP
+> +         hardware.
+> +
+>  config SERIAL_VT8500
+>         bool "VIA VT8500 on-chip serial port support"
+>         depends on ARCH_VT8500
+> diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/q=
+com_geni_serial.c
 > new file mode 100644
 > index 0000000..8536b7d
 > --- /dev/null
@@ -151,10 +152,111 @@ QCOM_GENI_SE" as well, in order to upgrade GENI_SE to y if I2C is y.
 > +#else
 > +#define RX_BYTES_PW 4
 > +#endif
+> +
+> +struct qcom_geni_serial_port {
+> +       struct uart_port uport;
+> +       struct geni_se se;
+> +       char name[20];
+> +       u32 tx_fifo_depth;
+> +       u32 tx_fifo_width;
+> +       u32 rx_fifo_depth;
+> +       u32 tx_wm;
+> +       u32 rx_wm;
+> +       u32 rx_rfr;
+> +       int xfer_mode;
 
-This seems fishy to me. Does either setting work? If so, why not just
-have one value?
+Can this be an enum?
 
+> +       bool port_setup;
+
+Maybe just 'setup'? Port is in the type already.
+
+> +       int (*handle_rx)(struct uart_port *uport,
+> +                               u32 rx_bytes, bool drop_rx);
+
+s/rx_bytes/bytes/
+s/drop_rx/drop/
+
+> +       unsigned int xmit_size;
+> +       unsigned int cur_baud;
+
+s/cur//
+
+> +       unsigned int tx_bytes_pw;
+> +       unsigned int rx_bytes_pw;
+> +};
+> +
+> +static const struct uart_ops qcom_geni_serial_pops;
+> +static struct uart_driver qcom_geni_console_driver;
+> +static int handle_rx_console(struct uart_port *uport,
+> +                               u32 rx_bytes, bool drop_rx);
+
+s/rx_bytes/bytes/
+s/drop_rx/drop/
+
+> +static unsigned int qcom_geni_serial_tx_empty(struct uart_port *port);
+> +static bool qcom_geni_serial_poll_bit(struct uart_port *uport,
+> +                               int offset, int bit_field, bool set);
+
+No need to forward declare this?
+
+s/bit_// ?
+
+> +static void qcom_geni_serial_stop_rx(struct uart_port *uport);
+> +
+> +static atomic_t uart_line_id =3D ATOMIC_INIT(0);
+
+Do we need this? How about rely on DT to always have aliases instead?
+Given we only have one port I don't actually understand how this is
+supposed to work anyway.
+
+> +static const unsigned long root_freq[] =3D {7372800, 14745600, 19200000,=
+ 29491200,
+> +                                       32000000, 48000000, 64000000, 800=
+00000,
+> +                                       96000000, 100000000};
+> +
+> +#define to_dev_port(ptr, member) \
+> +               container_of(ptr, struct qcom_geni_serial_port, member)
+> +
+> +static struct qcom_geni_serial_port qcom_geni_console_port;
+
+Why singleton? Couldn't there be many?
+
+> +
+> +static void qcom_geni_serial_config_port(struct uart_port *uport, int cf=
+g_flags)
+> +{
+> +       if (cfg_flags & UART_CONFIG_TYPE)
+> +               uport->type =3D PORT_MSM;
+> +}
+> +
+> +static unsigned int qcom_geni_cons_get_mctrl(struct uart_port *uport)
+> +{
+> +       return TIOCM_DSR | TIOCM_CAR | TIOCM_CTS;
+> +}
+> +
+> +static void qcom_geni_cons_set_mctrl(struct uart_port *uport,
+> +                                                       unsigned int mctr=
+l)
+> +{
+> +}
+> +
+> +static const char *qcom_geni_serial_get_type(struct uart_port *uport)
+> +{
+> +       return "MSM";
+> +}
+> +
+> +static struct qcom_geni_serial_port *get_port_from_line(int line)
+> +{
+> +       if ((line < 0) || (line >=3D GENI_UART_CONS_PORTS))
+
+Drop useless parenthesis please.
+
+> +               return ERR_PTR(-ENXIO);
+> +       return &qcom_geni_console_port;
+> +}
+> +
 > +static bool qcom_geni_serial_poll_bit(struct uart_port *uport,
 > +                               int offset, int bit_field, bool set)
 > +{
@@ -162,138 +264,638 @@ have one value?
 > +       struct qcom_geni_serial_port *port;
 > +       unsigned int baud;
 > +       unsigned int fifo_bits;
-> +       unsigned long timeout_us = 20000;
+> +       unsigned long timeout_us =3D 20000;
 > +
-> +       /* Ensure polling is not re-ordered before the prior writes/reads */
+> +       /* Ensure polling is not re-ordered before the prior writes/reads=
+ */
 > +       mb();
 > +
 > +       if (uport->private_data) {
-> +               port = to_dev_port(uport, uport);
-> +               baud = port->cur_baud;
+> +               port =3D to_dev_port(uport, uport);
+> +               baud =3D port->cur_baud;
 > +               if (!baud)
-> +                       baud = 115200;
-> +               fifo_bits = port->tx_fifo_depth * port->tx_fifo_width;
+> +                       baud =3D 115200;
+> +               fifo_bits =3D port->tx_fifo_depth * port->tx_fifo_width;
 > +               /*
-> +                * Total polling iterations based on FIFO worth of bytes to be
+> +                * Total polling iterations based on FIFO worth of bytes =
+to be
 > +                * sent at current baud .Add a little fluff to the wait.
+
+Bad space here                           ^
+
 > +                */
-> +               timeout_us = ((fifo_bits * USEC_PER_SEC) / baud) + 500;
-
-This fluff is a little mysterious, can it be explained at all? Do you
-think the fluff factor is in units of time (as you have it) or bits?
-Time makes sense I guess if we're worried about clock source
-differences.
-
+> +               timeout_us =3D ((fifo_bits * USEC_PER_SEC) / baud) + 500;
+> +       }
 > +
-> +static void qcom_geni_serial_console_write(struct console *co, const char *s,
+> +       return !readl_poll_timeout_atomic(uport->membase + offset, reg,
+> +                        (bool)(reg & bit_field) =3D=3D set, 10, timeout_=
+us);
+> +}
+> +
+> +static void qcom_geni_serial_setup_tx(struct uart_port *uport, u32 xmit_=
+size)
+> +{
+> +       u32 m_cmd;
+> +
+> +       writel_relaxed(xmit_size, uport->membase + SE_UART_TX_TRANS_LEN);
+> +       m_cmd =3D UART_START_TX << M_OPCODE_SHFT;
+> +       writel(m_cmd, uport->membase + SE_GENI_M_CMD0);
+> +}
+> +
+> +static void qcom_geni_serial_poll_tx_done(struct uart_port *uport)
+> +{
+> +       int done;
+> +       u32 irq_clear =3D M_CMD_DONE_EN;
+> +
+> +       done =3D qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+> +                                               M_CMD_DONE_EN, true);
+> +       if (!done) {
+> +               writel_relaxed(M_GENI_CMD_ABORT, uport->membase +
+> +                                               SE_GENI_M_CMD_CTRL_REG);
+> +               irq_clear |=3D M_CMD_ABORT_EN;
+> +               qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+> +                                                       M_CMD_ABORT_EN, t=
+rue);
+> +       }
+> +       writel_relaxed(irq_clear, uport->membase + SE_GENI_M_IRQ_CLEAR);
+> +}
+> +
+> +static void qcom_geni_serial_abort_rx(struct uart_port *uport)
+> +{
+> +       u32 irq_clear =3D S_CMD_DONE_EN | S_CMD_ABORT_EN;
+> +
+> +       writel(S_GENI_CMD_ABORT, uport->membase + SE_GENI_S_CMD_CTRL_REG);
+> +       qcom_geni_serial_poll_bit(uport, SE_GENI_S_CMD_CTRL_REG,
+> +                                       S_GENI_CMD_ABORT, false);
+> +       writel_relaxed(irq_clear, uport->membase + SE_GENI_S_IRQ_CLEAR);
+> +       writel_relaxed(FORCE_DEFAULT, uport->membase + GENI_FORCE_DEFAULT=
+_REG);
+> +}
+> +
+> +#ifdef CONFIG_CONSOLE_POLL
+> +static int qcom_geni_serial_get_char(struct uart_port *uport)
+> +{
+> +       u32 rx_fifo;
+> +       u32 status;
+> +
+> +       status =3D readl_relaxed(uport->membase + SE_GENI_M_IRQ_STATUS);
+> +       writel_relaxed(status, uport->membase + SE_GENI_M_IRQ_CLEAR);
+> +
+> +       status =3D readl_relaxed(uport->membase + SE_GENI_S_IRQ_STATUS);
+> +       writel_relaxed(status, uport->membase + SE_GENI_S_IRQ_CLEAR);
+> +
+> +       /*
+> +        * Ensure the writes to clear interrupts is not re-ordered after
+> +        * reading the data.
+> +        */
+> +       mb();
+> +
+> +       status =3D readl_relaxed(uport->membase + SE_GENI_RX_FIFO_STATUS);
+> +       if (!(status & RX_FIFO_WC_MSK))
+> +               return NO_POLL_CHAR;
+> +
+> +       rx_fifo =3D readl(uport->membase + SE_GENI_RX_FIFOn);
+> +       return rx_fifo & 0xff;
+> +}
+> +
+> +static void qcom_geni_serial_poll_put_char(struct uart_port *uport,
+> +                                                       unsigned char c)
+> +{
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +
+> +       writel_relaxed(port->tx_wm, uport->membase + SE_GENI_TX_WATERMARK=
+_REG);
+> +       qcom_geni_serial_setup_tx(uport, 1);
+> +       WARN_ON(!qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+> +                                               M_TX_FIFO_WATERMARK_EN, t=
+rue));
+> +       writel_relaxed((u32)c, uport->membase + SE_GENI_TX_FIFOn);
+
+Drop useless cast.
+
+> +       writel_relaxed(M_TX_FIFO_WATERMARK_EN, uport->membase +
+> +                                                       SE_GENI_M_IRQ_CLE=
+AR);
+> +       qcom_geni_serial_poll_tx_done(uport);
+> +}
+> +#endif
+> +
+> +#if defined(CONFIG_SERIAL_CORE_CONSOLE) || defined(CONFIG_CONSOLE_POLL)
+> +static void qcom_geni_serial_wr_char(struct uart_port *uport, int ch)
+> +{
+> +       writel_relaxed(ch, uport->membase + SE_GENI_TX_FIFOn);
+> +}
+> +
+> +static void
+> +__qcom_geni_serial_console_write(struct uart_port *uport, const char *s,
+> +                                unsigned int count)
+> +{
+> +       int new_line =3D 0;
+
+Drop
+
+> +       int i;
+> +       u32 bytes_to_send =3D count;
+> +
+> +       for (i =3D 0; i < count; i++) {
+> +               if (s[i] =3D=3D '\n')
+> +                       new_line++;
+
+bytes_to_send++;
+
+> +       }
+> +
+> +       bytes_to_send +=3D new_line;
+
+Drop.
+
+> +       writel_relaxed(DEF_TX_WM, uport->membase + SE_GENI_TX_WATERMARK_R=
+EG);
+> +       qcom_geni_serial_setup_tx(uport, bytes_to_send);
+> +       i =3D 0;
+> +       while (i < count) {
+
+	for (i =3D 0; i < count; ) {
+
+would be more normal, but ok.
+
+> +               size_t chars_to_write =3D 0;
+> +               size_t avail =3D DEF_FIFO_DEPTH_WORDS - DEF_TX_WM;
+> +
+> +               /*
+> +                * If the WM bit never set, then the Tx state machine is =
+not
+> +                * in a valid state, so break, cancel/abort any existing
+> +                * command. Unfortunately the current data being written =
+is
+> +                * lost.
+> +                */
+> +               while (!qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_ST=
+ATUS,
+> +                                               M_TX_FIFO_WATERMARK_EN, t=
+rue))
+
+Does this ever timeout? So many nested while loops makes it hard to
+follow.
+
+> +                       break;
+> +               chars_to_write =3D min_t(size_t, (size_t)(count - i), ava=
+il / 2);
+> +               uart_console_write(uport, (s + i), chars_to_write,
+
+Drop useless parenthesis please.
+
+> +                                               qcom_geni_serial_wr_char);
+> +               writel_relaxed(M_TX_FIFO_WATERMARK_EN, uport->membase +
+> +                                                       SE_GENI_M_IRQ_CLE=
+AR);
+> +               i +=3D chars_to_write;
+> +       }
+> +       qcom_geni_serial_poll_tx_done(uport);
+> +}
+> +
+> +static void qcom_geni_serial_console_write(struct console *co, const cha=
+r *s,
 > +                             unsigned int count)
 > +{
 > +       struct uart_port *uport;
 > +       struct qcom_geni_serial_port *port;
-> +       bool locked = true;
+> +       bool locked =3D true;
 > +       unsigned long flags;
 > +
-> +       WARN_ON(co->index < 0 || co->index >= GENI_UART_CONS_PORTS);
+> +       WARN_ON(co->index < 0 || co->index >=3D GENI_UART_CONS_PORTS);
 > +
-> +       port = get_port_from_line(co->index);
+> +       port =3D get_port_from_line(co->index);
 > +       if (IS_ERR(port))
 > +               return;
 > +
-> +       uport = &port->uport;
+> +       uport =3D &port->uport;
 > +       if (oops_in_progress)
-> +               locked = spin_trylock_irqsave(&uport->lock, flags);
+> +               locked =3D spin_trylock_irqsave(&uport->lock, flags);
 > +       else
 > +               spin_lock_irqsave(&uport->lock, flags);
 > +
 > +       if (locked) {
 > +               __qcom_geni_serial_console_write(uport, s, count);
+
+So if oops is in progress, and we didn't lock here, we don't output
+data? I'd think we would always want to write to the fifo, just make the
+lock grab/release conditional.
+
 > +               spin_unlock_irqrestore(&uport->lock, flags);
-
-I too am a little lost on the locking here. What exactly is the lock
-protecting? Looks like for the most part it's trying to synchronize
-with the ISR? What specifically in the ISR? I just wanted to go
-through and check to make sure whatever the shared resource is is
-appropriately protected.
-
 > +       }
 > +}
 > +
-> +static int handle_rx_console(struct uart_port *uport, u32 rx_bytes, bool drop)
+> +static int handle_rx_console(struct uart_port *uport, u32 rx_bytes, bool=
+ drop)
 > +{
-> +       u32 i = rx_bytes;
+> +       u32 i =3D rx_bytes;
 > +       u32 rx_fifo;
 > +       unsigned char *buf;
 > +       struct tty_port *tport;
-> +       struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
 > +
-> +       tport = &uport->state->port;
+> +       tport =3D &uport->state->port;
 > +       while (i > 0) {
 > +               int c;
-> +               int bytes = i > port->rx_bytes_pw ? port->rx_bytes_pw : i;
+> +               int bytes =3D i > port->rx_bytes_pw ? port->rx_bytes_pw :=
+ i;
+> +
+> +               rx_fifo =3D readl_relaxed(uport->membase + SE_GENI_RX_FIF=
+On);
 
-Please replace this with a min macro.
+Please use ioread32_rep(..., 1) here.
 
+> +               i -=3D bytes;
+> +               if (drop)
+> +                       continue;
+> +               buf =3D (unsigned char *)&rx_fifo;
+
+So that this cast becomes unnecessary, and endian agnostic.
+
+> +
+> +               for (c =3D 0; c < bytes; c++) {
+> +                       int sysrq;
+> +
+> +                       uport->icount.rx++;
+> +                       sysrq =3D uart_handle_sysrq_char(uport, buf[c]);
+
+And so this does the right thing in whatever world we live in.
+
+> +                       if (!sysrq)
+> +                               tty_insert_flip_char(tport, buf[c], TTY_N=
+ORMAL);
+> +               }
+> +       }
+> +       if (!drop)
+> +               tty_flip_buffer_push(tport);
+> +       return 0;
+> +}
+> +#else
+> +static int handle_rx_console(struct uart_port *uport,
+> +                       unsigned int rx_fifo_wc,
+> +                       unsigned int rx_last_byte_valid,
+> +                       unsigned int rx_last,
+> +                       bool drop_rx)
+> +{
+> +       return -EPERM;
+> +}
+> +
+> +#endif /* (CONFIG_SERIAL_CORE_CONSOLE) || defined(CONFIG_CONSOLE_POLL)) =
+*/
+> +
+> +static void qcom_geni_serial_start_tx(struct uart_port *uport)
+> +{
+> +       u32 irq_en;
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +       u32 status;
+> +
+> +       if (port->xfer_mode =3D=3D GENI_SE_FIFO) {
+> +               status =3D readl_relaxed(uport->membase + SE_GENI_STATUS);
+> +               if (status & M_GENI_CMD_ACTIVE)
+> +                       return;
+> +
+> +               if (!qcom_geni_serial_tx_empty(uport))
+> +                       return;
+> +
+> +               /*
+> +                * Ensure writing to IRQ_EN & watermark registers are not
+> +                * re-ordered before checking the status of the Serial
+> +                * Engine and TX FIFO
+> +                */
+> +               mb();
+> +
+> +               irq_en =3D readl_relaxed(uport->membase + SE_GENI_M_IRQ_E=
+N);
+> +               irq_en |=3D M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN;
+> +
+> +               writel_relaxed(port->tx_wm, uport->membase +
+> +                                               SE_GENI_TX_WATERMARK_REG);
+> +               writel_relaxed(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+> +       }
+> +}
+> +
+> +static void qcom_geni_serial_stop_tx(struct uart_port *uport)
+> +{
+> +       u32 irq_en;
+> +       u32 status;
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +
+> +       irq_en =3D readl_relaxed(uport->membase + SE_GENI_M_IRQ_EN);
+> +       irq_en &=3D ~M_CMD_DONE_EN;
+> +       if (port->xfer_mode =3D=3D GENI_SE_FIFO) {
+> +               irq_en &=3D ~M_TX_FIFO_WATERMARK_EN;
+> +               writel_relaxed(0, uport->membase +
+> +                                    SE_GENI_TX_WATERMARK_REG);
+> +       }
+> +       port->xmit_size =3D 0;
+> +       writel_relaxed(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+> +       status =3D readl_relaxed(uport->membase + SE_GENI_STATUS);
+> +       /* Possible stop tx is called multiple times. */
+> +       if (!(status & M_GENI_CMD_ACTIVE))
+> +               return;
+> +
+> +       /*
+> +        * Ensure cancel command write is not re-ordered before checking
+> +        * checking the status of the Primary Sequencer.
+> +        */
+> +       mb();
+> +
+> +       geni_se_cancel_m_cmd(&port->se);
+> +       if (!qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+> +                                               M_CMD_CANCEL_EN, true)) {
+> +               geni_se_abort_m_cmd(&port->se);
+> +               qcom_geni_serial_poll_bit(uport, SE_GENI_M_IRQ_STATUS,
+> +                                               M_CMD_ABORT_EN, true);
+> +               writel_relaxed(M_CMD_ABORT_EN, uport->membase +
+> +                                                       SE_GENI_M_IRQ_CLE=
+AR);
+> +       }
+> +       writel_relaxed(M_CMD_CANCEL_EN, uport->membase + SE_GENI_M_IRQ_CL=
+EAR);
+> +}
+> +
+> +static void qcom_geni_serial_start_rx(struct uart_port *uport)
+> +{
+> +       u32 irq_en;
+> +       u32 status;
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +
+> +       status =3D readl_relaxed(uport->membase + SE_GENI_STATUS);
+> +       if (status & S_GENI_CMD_ACTIVE)
+> +               qcom_geni_serial_stop_rx(uport);
+> +
+> +       /*
+> +        * Ensure setup command write is not re-ordered before checking
+> +        * checking the status of the Secondary Sequencer.
+> +        */
+> +       mb();
+> +
+> +       geni_se_setup_s_cmd(&port->se, UART_START_READ, 0);
+> +
+> +       if (port->xfer_mode =3D=3D GENI_SE_FIFO) {
+> +               irq_en =3D readl_relaxed(uport->membase + SE_GENI_S_IRQ_E=
+N);
+> +               irq_en |=3D S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN;
+> +               writel_relaxed(irq_en, uport->membase + SE_GENI_S_IRQ_EN);
+> +
+> +               irq_en =3D readl_relaxed(uport->membase + SE_GENI_M_IRQ_E=
+N);
+> +               irq_en |=3D M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN;
+> +               writel_relaxed(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+> +       }
+> +}
+> +
+> +static void qcom_geni_serial_stop_rx(struct uart_port *uport)
+> +{
+> +       u32 irq_en;
+> +       u32 status;
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +       u32 irq_clear =3D S_CMD_DONE_EN;
+> +
+> +       if (port->xfer_mode =3D=3D GENI_SE_FIFO) {
+> +               irq_en =3D readl_relaxed(uport->membase + SE_GENI_S_IRQ_E=
+N);
+> +               irq_en &=3D ~(S_RX_FIFO_WATERMARK_EN | S_RX_FIFO_LAST_EN);
+> +               writel_relaxed(irq_en, uport->membase + SE_GENI_S_IRQ_EN);
+> +
+> +               irq_en =3D readl_relaxed(uport->membase + SE_GENI_M_IRQ_E=
+N);
+> +               irq_en &=3D ~(M_RX_FIFO_WATERMARK_EN | M_RX_FIFO_LAST_EN);
+> +               writel_relaxed(irq_en, uport->membase + SE_GENI_M_IRQ_EN);
+> +       }
+> +
+> +       status =3D readl_relaxed(uport->membase + SE_GENI_STATUS);
+> +       /* Possible stop rx is called multiple times. */
+> +       if (!(status & S_GENI_CMD_ACTIVE))
+> +               return;
+> +
+> +       /*
+> +        * Ensure cancel command write is not re-ordered before checking
+> +        * checking the status of the Secondary Sequencer.
+
+Each of these comments has 'checking' twice.
+
+> +        */
+> +       mb();
+> +
+> +       geni_se_cancel_s_cmd(&port->se);
+> +       qcom_geni_serial_poll_bit(uport, SE_GENI_S_CMD_CTRL_REG,
+> +                                       S_GENI_CMD_CANCEL, false);
+> +       status =3D readl_relaxed(uport->membase + SE_GENI_STATUS);
+> +       writel_relaxed(irq_clear, uport->membase + SE_GENI_S_IRQ_CLEAR);
+> +       if (status & S_GENI_CMD_ACTIVE)
+> +               qcom_geni_serial_abort_rx(uport);
+> +}
+> +
+> +static void qcom_geni_serial_handle_rx(struct uart_port *uport, bool dro=
+p_rx)
+
+s/drop_rx/drop/
+
+> +{
+> +       u32 status;
+> +       u32 word_cnt;
+> +       u32 last_word_byte_cnt;
+> +       u32 last_word_partial;
+> +       u32 total_bytes;
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +
+> +       status =3D readl_relaxed(uport->membase + SE_GENI_RX_FIFO_STATUS);
+> +       word_cnt =3D status & RX_FIFO_WC_MSK;
+> +       last_word_partial =3D status & RX_LAST;
+> +       last_word_byte_cnt =3D (status & RX_LAST_BYTE_VALID_MSK) >>
+> +                                               RX_LAST_BYTE_VALID_SHFT;
+> +
+> +       if (!word_cnt)
+> +               return;
+> +       total_bytes =3D port->rx_bytes_pw * (word_cnt - 1);
+> +       if (last_word_partial && last_word_byte_cnt)
+> +               total_bytes +=3D last_word_byte_cnt;
+> +       else
+> +               total_bytes +=3D port->rx_bytes_pw;
+> +       port->handle_rx(uport, total_bytes, drop_rx);
+> +}
+> +
 > +static int qcom_geni_serial_handle_tx(struct uart_port *uport)
 > +{
-> +       int ret = 0;
-> +       struct qcom_geni_serial_port *port = to_dev_port(uport, uport);
-> +       struct circ_buf *xmit = &uport->state->xmit;
+> +       int ret =3D 0;
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +       struct circ_buf *xmit =3D &uport->state->xmit;
 > +       size_t avail;
 > +       size_t remaining;
-> +       int i = 0;
+> +       int i =3D 0;
 > +       u32 status;
 > +       unsigned int chunk;
 > +       int tail;
 > +
-> +       chunk = uart_circ_chars_pending(xmit);
-> +       status = readl_relaxed(uport->membase + SE_GENI_TX_FIFO_STATUS);
+> +       chunk =3D uart_circ_chars_pending(xmit);
+> +       status =3D readl_relaxed(uport->membase + SE_GENI_TX_FIFO_STATUS);
 > +       /* Both FIFO and framework buffer are drained */
-> +       if ((chunk == port->xmit_size) && !status) {
-> +               port->xmit_size = 0;
+> +       if ((chunk =3D=3D port->xmit_size) && !status) {
+
+Drop useless parenthesis.
+
+> +               port->xmit_size =3D 0;
 > +               uart_circ_clear(xmit);
 > +               qcom_geni_serial_stop_tx(uport);
 > +               goto out_write_wakeup;
 > +       }
-> +       chunk -= port->xmit_size;
+> +       chunk -=3D port->xmit_size;
 > +
-> +       avail = (port->tx_fifo_depth - port->tx_wm) * port->tx_bytes_pw;
-> +       tail = (xmit->tail + port->xmit_size) & (UART_XMIT_SIZE - 1);
+> +       avail =3D (port->tx_fifo_depth - port->tx_wm) * port->tx_bytes_pw;
+> +       tail =3D (xmit->tail + port->xmit_size) & (UART_XMIT_SIZE - 1);
 > +       if (chunk > (UART_XMIT_SIZE - tail))
-> +               chunk = UART_XMIT_SIZE - tail;
+> +               chunk =3D UART_XMIT_SIZE - tail;
 > +       if (chunk > avail)
-> +               chunk = avail;
+> +               chunk =3D avail;
 > +
 > +       if (!chunk)
 > +               goto out_write_wakeup;
 > +
 > +       qcom_geni_serial_setup_tx(uport, chunk);
 > +
-> +       remaining = chunk;
+> +       remaining =3D chunk;
 > +       while (i < chunk) {
+
+	for (i =3D 0; i < chunk; ) {
+
 > +               unsigned int tx_bytes;
-> +               unsigned int buf = 0;
+> +               unsigned int buf =3D 0;
 > +               int c;
 > +
-> +               tx_bytes = min_t(size_t, remaining, (size_t)port->tx_bytes_pw);
-> +               for (c = 0; c < tx_bytes ; c++)
-> +                       buf |= (xmit->buf[tail + c] << (c * BITS_PER_BYTE));
+> +               tx_bytes =3D min_t(size_t, remaining, (size_t)port->tx_by=
+tes_pw);
+> +               for (c =3D 0; c < tx_bytes ; c++)
+> +                       buf |=3D (xmit->buf[tail + c] << (c * BITS_PER_BY=
+TE));
 > +
 > +               writel_relaxed(buf, uport->membase + SE_GENI_TX_FIFOn);
 > +
-> +               i += tx_bytes;
-> +               tail = (tail + tx_bytes) & (UART_XMIT_SIZE - 1);
-> +               uport->icount.tx += tx_bytes;
-> +               remaining -= tx_bytes;
+> +               i +=3D tx_bytes;
+> +               tail =3D (tail + tx_bytes) & (UART_XMIT_SIZE - 1);
+> +               uport->icount.tx +=3D tx_bytes;
+> +               remaining -=3D tx_bytes;
 > +       }
 > +       qcom_geni_serial_poll_tx_done(uport);
-> +       port->xmit_size += chunk;
+> +       port->xmit_size +=3D chunk;
 > +out_write_wakeup:
 > +       uart_write_wakeup(uport);
 > +       return ret;
 > +}
+> +
+> +static irqreturn_t qcom_geni_serial_isr(int isr, void *dev)
+> +{
+> +       unsigned int m_irq_status;
+> +       unsigned int s_irq_status;
+> +       struct uart_port *uport =3D dev;
+> +       unsigned long flags;
+> +       unsigned int m_irq_en;
+> +       bool drop_rx =3D false;
+> +       struct tty_port *tport =3D &uport->state->port;
+> +
+> +       if (uport->suspended)
+> +               return IRQ_HANDLED;
+> +
+> +       spin_lock_irqsave(&uport->lock, flags);
+> +       m_irq_status =3D readl_relaxed(uport->membase + SE_GENI_M_IRQ_STA=
+TUS);
+> +       s_irq_status =3D readl_relaxed(uport->membase + SE_GENI_S_IRQ_STA=
+TUS);
+> +       m_irq_en =3D readl_relaxed(uport->membase + SE_GENI_M_IRQ_EN);
+> +       writel_relaxed(m_irq_status, uport->membase + SE_GENI_M_IRQ_CLEAR=
+);
+> +       writel_relaxed(s_irq_status, uport->membase + SE_GENI_S_IRQ_CLEAR=
+);
+> +
+> +       if (WARN_ON(m_irq_status & M_ILLEGAL_CMD_EN))
+> +               goto out_unlock;
+> +
+> +       if (s_irq_status & S_RX_FIFO_WR_ERR_EN) {
+> +               uport->icount.overrun++;
+> +               tty_insert_flip_char(tport, 0, TTY_OVERRUN);
+> +       }
+> +
+> +       if (m_irq_status & (M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN) &&
+> +           m_irq_en & (M_TX_FIFO_WATERMARK_EN | M_CMD_DONE_EN))
+> +               qcom_geni_serial_handle_tx(uport);
+> +
+> +       if (s_irq_status & S_GP_IRQ_0_EN || s_irq_status & S_GP_IRQ_1_EN)=
+ {
+> +               if (s_irq_status & S_GP_IRQ_0_EN)
+> +                       uport->icount.parity++;
+> +               drop_rx =3D true;
+> +       } else if (s_irq_status & S_GP_IRQ_2_EN ||
+> +                                       s_irq_status & S_GP_IRQ_3_EN) {
+> +               uport->icount.brk++;
 
-This function can't fail, please change the return type to void.
+How does break character handling work? I see the accounting here, but
+don't see any uart_handle_break() call anywhere.
 
+> +       }
+> +
+> +       if (s_irq_status & S_RX_FIFO_WATERMARK_EN ||
+> +                                       s_irq_status & S_RX_FIFO_LAST_EN)
+> +               qcom_geni_serial_handle_rx(uport, drop_rx);
+> +
+> +out_unlock:
+> +       spin_unlock_irqrestore(&uport->lock, flags);
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int get_tx_fifo_size(struct qcom_geni_serial_port *port)
+> +{
+> +       struct uart_port *uport;
+> +
+> +       if (!port)
+> +               return -ENODEV;
+> +
+> +       uport =3D &port->uport;
+> +       port->tx_fifo_depth =3D geni_se_get_tx_fifo_depth(&port->se);
+> +       if (!port->tx_fifo_depth) {
+> +               dev_err(uport->dev, "%s:Invalid TX FIFO depth read\n",
+> +                                                               __func__);
+> +               return -ENXIO;
+> +       }
+> +
+> +       port->tx_fifo_width =3D geni_se_get_tx_fifo_width(&port->se);
+> +       if (!port->tx_fifo_width) {
+> +               dev_err(uport->dev, "%s:Invalid TX FIFO width read\n",
+> +                                                               __func__);
+> +               return -ENXIO;
+> +       }
+> +
+> +       port->rx_fifo_depth =3D geni_se_get_rx_fifo_depth(&port->se);
+> +       if (!port->rx_fifo_depth) {
+> +               dev_err(uport->dev, "%s:Invalid RX FIFO depth read\n",
+> +                                                               __func__);
+> +               return -ENXIO;
+> +       }
+
+Are these checks verifying the hardware has a proper setting for fifo
+depth and width? How is that possible to mess up? Do these ever fail?
+
+> +
+> +       uport->fifosize =3D
+> +               (port->tx_fifo_depth * port->tx_fifo_width) / BITS_PER_BY=
+TE;
+> +       return 0;
+> +}
+> +
+> +static void set_rfr_wm(struct qcom_geni_serial_port *port)
+> +{
+> +       /*
+> +        * Set RFR (Flow off) to FIFO_DEPTH - 2.
+> +        * RX WM level at 10% RX_FIFO_DEPTH.
+> +        * TX WM level at 10% TX_FIFO_DEPTH.
+> +        */
+> +       port->rx_rfr =3D port->rx_fifo_depth - 2;
+> +       port->rx_wm =3D UART_CONSOLE_RX_WM;
+> +       port->tx_wm =3D 2;
+
+port->tx_wm =3D DEF_TX_WM?
+
+> +}
 > +
 > +static void qcom_geni_serial_shutdown(struct uart_port *uport)
 > +{
@@ -308,30 +910,540 @@ This function can't fail, please change the return type to void.
 > +       qcom_geni_serial_stop_tx(uport);
 > +       qcom_geni_serial_stop_rx(uport);
 > +       spin_unlock_irqrestore(&uport->lock, flags);
+> +}
+> +
+> +static int qcom_geni_serial_port_setup(struct uart_port *uport)
+> +{
+> +       int ret;
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +       unsigned int rxstale =3D DEFAULT_BITS_PER_CHAR * STALE_TIMEOUT;
+> +
+> +       set_rfr_wm(port);
+> +       writel_relaxed(rxstale, uport->membase + SE_UART_RX_STALE_CNT);
+> +       /*
+> +        * Make an unconditional cancel on the main sequencer to reset
+> +        * it else we could end up in data loss scenarios.
+> +        */
+> +       port->xfer_mode =3D GENI_SE_FIFO;
+> +       qcom_geni_serial_poll_tx_done(uport);
+> +       geni_se_config_packing(&port->se, BITS_PER_BYTE, port->tx_bytes_p=
+w,
+> +                                               false, true, false);
+> +       geni_se_config_packing(&port->se, BITS_PER_BYTE, port->rx_bytes_p=
+w,
+> +                                               false, false, true);
+> +       ret =3D geni_se_init(&port->se, port->rx_wm, port->rx_rfr);
+> +       if (ret) {
+> +               dev_err(uport->dev, "%s: Fail\n", __func__);
+> +               return ret;
+> +       }
+> +
+> +       geni_se_select_mode(&port->se, port->xfer_mode);
+> +       port->port_setup =3D true;
+> +       return ret;
+> +}
+> +
+> +static int qcom_geni_serial_startup(struct uart_port *uport)
+> +{
+> +       int ret;
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +
+> +       scnprintf(port->name, sizeof(port->name),
+> +                 "qcom_serial_geni%d", uport->line);
+> +
+> +       if (geni_se_read_proto(&port->se) !=3D GENI_SE_UART) {
+> +               dev_err(uport->dev, "Invalid FW %d loaded.\n",
+> +                                geni_se_read_proto(&port->se));
 
-This is one part of where I'm confused. What are we protecting here
-with the lock? disable_irq waits for any pending ISRs to finish
-according to its comment, so you know you're not racing with the ISR.
+Please don't read proto twice.
 
+> +               return -ENXIO;
+> +       }
+> +
+> +       get_tx_fifo_size(port);
+> +       if (!port->port_setup) {
+> +               ret =3D qcom_geni_serial_port_setup(uport);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       ret =3D request_irq(uport->irq, qcom_geni_serial_isr, IRQF_TRIGGE=
+R_HIGH,
+> +                                                       port->name, uport=
+);
+> +       if (ret)
+> +               dev_err(uport->dev, "Failed to get IRQ ret %d\n", ret);
+> +       return ret;
+> +}
+> +
+> +static unsigned long get_clk_cfg(unsigned long clk_freq)
+> +{
+> +       int i;
+> +
+> +       for (i =3D 0; i < ARRAY_SIZE(root_freq); i++) {
+> +               if (!(root_freq[i] % clk_freq))
+> +                       return root_freq[i];
+> +       }
+> +       return 0;
+> +}
+> +
 > +static void geni_serial_write_term_regs(struct uart_port *uport,
 > +               u32 tx_trans_cfg, u32 tx_parity_cfg, u32 rx_trans_cfg,
 > +               u32 rx_parity_cfg, u32 bits_per_char, u32 stop_bit_len,
 > +               u32 s_clk_cfg)
 > +{
-> +       writel_relaxed(tx_trans_cfg, uport->membase + SE_UART_TX_TRANS_CFG);
-> +       writel_relaxed(tx_parity_cfg, uport->membase + SE_UART_TX_PARITY_CFG);
-> +       writel_relaxed(rx_trans_cfg, uport->membase + SE_UART_RX_TRANS_CFG);
-> +       writel_relaxed(rx_parity_cfg, uport->membase + SE_UART_RX_PARITY_CFG);
-> +       writel_relaxed(bits_per_char, uport->membase + SE_UART_TX_WORD_LEN);
-> +       writel_relaxed(bits_per_char, uport->membase + SE_UART_RX_WORD_LEN);
-> +       writel_relaxed(stop_bit_len, uport->membase + SE_UART_TX_STOP_BIT_LEN);
+> +       writel_relaxed(tx_trans_cfg, uport->membase + SE_UART_TX_TRANS_CF=
+G);
+> +       writel_relaxed(tx_parity_cfg, uport->membase + SE_UART_TX_PARITY_=
+CFG);
+> +       writel_relaxed(rx_trans_cfg, uport->membase + SE_UART_RX_TRANS_CF=
+G);
+> +       writel_relaxed(rx_parity_cfg, uport->membase + SE_UART_RX_PARITY_=
+CFG);
+> +       writel_relaxed(bits_per_char, uport->membase + SE_UART_TX_WORD_LE=
+N);
+> +       writel_relaxed(bits_per_char, uport->membase + SE_UART_RX_WORD_LE=
+N);
+> +       writel_relaxed(stop_bit_len, uport->membase + SE_UART_TX_STOP_BIT=
+_LEN);
 > +       writel_relaxed(s_clk_cfg, uport->membase + GENI_SER_M_CLK_CFG);
 > +       writel_relaxed(s_clk_cfg, uport->membase + GENI_SER_S_CLK_CFG);
+
+Can you please inline this function into the caller and put the writels
+where the values are calculated? It would reduce the mental work to keep
+track of all the variables to find out that they just get written in the
+end. Also, this is weirdly placed in the file when get_clk_div_rate()
+calls get_clk_cfg() but this function is between them.
+
 > +}
 > +
+> +static unsigned long get_clk_div_rate(unsigned int baud, unsigned int *c=
+lk_div)
+> +{
+> +       unsigned long ser_clk;
+> +       unsigned long desired_clk;
+> +
+> +       desired_clk =3D baud * UART_OVERSAMPLING;
+> +       ser_clk =3D get_clk_cfg(desired_clk);
+> +       if (!ser_clk) {
+> +               pr_err("%s: Can't find matching DFS entry for baud %d\n",
+> +                                                               __func__,=
+ baud);
+> +               return ser_clk;
+> +       }
+> +
+> +       *clk_div =3D ser_clk / desired_clk;
 
-I agree with Stephen's comment, this should be inlined into the single
-place it's called from.
+How wide can clk_div be? It may be better to implement the ser_clk as an
+actual clk in the common clk framework, and then have the serial driver
+or the i2c driver call clk_set_rate() on that clk and have the CCF
+implementation take care of determining the rate that the parent clk can
+supply and how it can fit it into the frequency that the divider can
+support.
 
-Thanks Karthik!
--Evan
+> +       return ser_clk;
+> +}
+> +
+> +static void qcom_geni_serial_set_termios(struct uart_port *uport,
+> +                               struct ktermios *termios, struct ktermios=
+ *old)
+> +{
+> +       unsigned int baud;
+> +       unsigned int bits_per_char;
+> +       unsigned int tx_trans_cfg;
+> +       unsigned int tx_parity_cfg;
+> +       unsigned int rx_trans_cfg;
+> +       unsigned int rx_parity_cfg;
+> +       unsigned int stop_bit_len;
+> +       unsigned int clk_div;
+> +       unsigned long ser_clk_cfg;
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +       unsigned long clk_rate;
+> +
+> +       qcom_geni_serial_stop_rx(uport);
+> +       /* baud rate */
+> +       baud =3D uart_get_baud_rate(uport, termios, old, 300, 4000000);
+> +       port->cur_baud =3D baud;
+> +       clk_rate =3D get_clk_div_rate(baud, &clk_div);
+> +       if (!clk_rate)
+> +               goto out_restart_rx;
+> +
+> +       uport->uartclk =3D clk_rate;
+> +       clk_set_rate(port->se.clk, clk_rate);
+> +       ser_clk_cfg =3D SER_CLK_EN;
+> +       ser_clk_cfg |=3D (clk_div << CLK_DIV_SHFT);
+
+Drop useless cast.
+
+> +
+> +       /* parity */
+> +       tx_trans_cfg =3D readl_relaxed(uport->membase + SE_UART_TX_TRANS_=
+CFG);
+> +       tx_parity_cfg =3D readl_relaxed(uport->membase + SE_UART_TX_PARIT=
+Y_CFG);
+> +       rx_trans_cfg =3D readl_relaxed(uport->membase + SE_UART_RX_TRANS_=
+CFG);
+> +       rx_parity_cfg =3D readl_relaxed(uport->membase + SE_UART_RX_PARIT=
+Y_CFG);
+> +       if (termios->c_cflag & PARENB) {
+> +               tx_trans_cfg |=3D UART_TX_PAR_EN;
+> +               rx_trans_cfg |=3D UART_RX_PAR_EN;
+> +               tx_parity_cfg |=3D PAR_CALC_EN;
+> +               rx_parity_cfg |=3D PAR_CALC_EN;
+> +               if (termios->c_cflag & PARODD) {
+> +                       tx_parity_cfg |=3D PAR_ODD;
+> +                       rx_parity_cfg |=3D PAR_ODD;
+> +               } else if (termios->c_cflag & CMSPAR) {
+> +                       tx_parity_cfg |=3D PAR_SPACE;
+> +                       rx_parity_cfg |=3D PAR_SPACE;
+> +               } else {
+> +                       tx_parity_cfg |=3D PAR_EVEN;
+> +                       rx_parity_cfg |=3D PAR_EVEN;
+> +               }
+> +       } else {
+> +               tx_trans_cfg &=3D ~UART_TX_PAR_EN;
+> +               rx_trans_cfg &=3D ~UART_RX_PAR_EN;
+> +               tx_parity_cfg &=3D ~PAR_CALC_EN;
+> +               rx_parity_cfg &=3D ~PAR_CALC_EN;
+> +       }
+> +
+> +       /* bits per char */
+> +       switch (termios->c_cflag & CSIZE) {
+> +       case CS5:
+> +               bits_per_char =3D 5;
+> +               break;
+> +       case CS6:
+> +               bits_per_char =3D 6;
+> +               break;
+> +       case CS7:
+> +               bits_per_char =3D 7;
+> +               break;
+> +       case CS8:
+> +       default:
+> +               bits_per_char =3D 8;
+> +               break;
+> +       }
+> +
+> +       /* stop bits */
+> +       if (termios->c_cflag & CSTOPB)
+> +               stop_bit_len =3D TX_STOP_BIT_LEN_2;
+> +       else
+> +               stop_bit_len =3D TX_STOP_BIT_LEN_1;
+> +
+> +       /* flow control, clear the CTS_MASK bit if using flow control. */
+> +       if (termios->c_cflag & CRTSCTS)
+> +               tx_trans_cfg &=3D ~UART_CTS_MASK;
+> +       else
+> +               tx_trans_cfg |=3D UART_CTS_MASK;
+> +
+> +       if (baud)
+> +               uart_update_timeout(uport, termios->c_cflag, baud);
+> +
+> +       geni_serial_write_term_regs(uport, tx_trans_cfg, tx_parity_cfg,
+> +               rx_trans_cfg, rx_parity_cfg, bits_per_char, stop_bit_len,
+> +                                                               ser_clk_c=
+fg);
+> +out_restart_rx:
+> +       qcom_geni_serial_start_rx(uport);
+> +}
+> +
+> +static unsigned int qcom_geni_serial_tx_empty(struct uart_port *uport)
+> +{
+> +       return !readl_relaxed(uport->membase + SE_GENI_TX_FIFO_STATUS);
+> +}
+> +
+> +#if defined(CONFIG_SERIAL_CORE_CONSOLE) || defined(CONFIG_CONSOLE_POLL)
+> +static int __init qcom_geni_console_setup(struct console *co, char *opti=
+ons)
+> +{
+> +       struct uart_port *uport;
+> +       struct qcom_geni_serial_port *port;
+> +       int baud;
+> +       int bits =3D 8;
+> +       int parity =3D 'n';
+> +       int flow =3D 'n';
+> +
+> +       if (co->index >=3D GENI_UART_CONS_PORTS  || co->index < 0)
+> +               return -ENXIO;
+> +
+> +       port =3D get_port_from_line(co->index);
+> +       if (IS_ERR(port)) {
+> +               pr_err("Invalid line %d(%d)\n", co->index, (int)PTR_ERR(p=
+ort));
+> +               return PTR_ERR(port);
+> +       }
+> +
+> +       uport =3D &port->uport;
+> +
+> +       if (unlikely(!uport->membase))
+> +               return -ENXIO;
+> +
+> +       if (geni_se_resources_on(&port->se)) {
+> +               dev_err(port->se.dev, "Error turning on resources\n");
+> +               return -ENXIO;
+> +       }
+> +
+> +       if (unlikely(geni_se_read_proto(&port->se) !=3D GENI_SE_UART)) {
+
+Looks like we're validating the configuration of the DT here. Maybe this
+can go into the wrapper code and be put behind some DEBUG_KERNEL check
+so we can debug bad bootloader configurations if needed? Especially if
+this is the only API that's left exposed from the wrapper to the serial
+engine/protocol driver.
+
+> +               geni_se_resources_off(&port->se);
+> +               return -ENXIO;
+> +       }
+> +
+> +       if (!port->port_setup) {
+> +               port->tx_bytes_pw =3D 1;
+> +               port->rx_bytes_pw =3D RX_BYTES_PW;
+> +               qcom_geni_serial_stop_rx(uport);
+> +               qcom_geni_serial_port_setup(uport);
+> +       }
+> +
+> +       if (options)
+> +               uart_parse_options(options, &baud, &parity, &bits, &flow);
+> +
+> +       return uart_set_options(uport, co, baud, parity, bits, flow);
+> +}
+> +
+> +static int console_register(struct uart_driver *drv)
+
+__init
+
+> +{
+> +       return uart_register_driver(drv);
+> +}
+> +
+> +static void console_unregister(struct uart_driver *drv)
+> +{
+> +       uart_unregister_driver(drv);
+> +}
+> +
+> +static struct console cons_ops =3D {
+> +       .name =3D "ttyMSM",
+> +       .write =3D qcom_geni_serial_console_write,
+> +       .device =3D uart_console_device,
+> +       .setup =3D qcom_geni_console_setup,
+> +       .flags =3D CON_PRINTBUFFER,
+> +       .index =3D -1,
+> +       .data =3D &qcom_geni_console_driver,
+> +};
+> +
+> +static struct uart_driver qcom_geni_console_driver =3D {
+> +       .owner =3D THIS_MODULE,
+> +       .driver_name =3D "qcom_geni_console",
+> +       .dev_name =3D "ttyMSM",
+> +       .nr =3D  GENI_UART_CONS_PORTS,
+> +       .cons =3D &cons_ops,
+> +};
+> +#else
+> +static int console_register(struct uart_driver *drv)
+> +{
+> +       return 0;
+> +}
+> +
+> +static void console_unregister(struct uart_driver *drv)
+> +{
+> +}
+> +#endif /* defined(CONFIG_SERIAL_CORE_CONSOLE) || defined(CONFIG_CONSOLE_=
+POLL) */
+> +
+> +static void qcom_geni_serial_cons_pm(struct uart_port *uport,
+> +               unsigned int new_state, unsigned int old_state)
+> +{
+> +       struct qcom_geni_serial_port *port =3D to_dev_port(uport, uport);
+> +
+> +       if (unlikely(!uart_console(uport)))
+> +               return;
+> +
+> +       if (new_state =3D=3D UART_PM_STATE_ON && old_state =3D=3D UART_PM=
+_STATE_OFF)
+> +               geni_se_resources_on(&port->se);
+> +       else if (new_state =3D=3D UART_PM_STATE_OFF &&
+> +                       old_state =3D=3D UART_PM_STATE_ON)
+> +               geni_se_resources_off(&port->se);
+> +}
+> +
+> +static const struct uart_ops qcom_geni_console_pops =3D {
+> +       .tx_empty =3D qcom_geni_serial_tx_empty,
+> +       .stop_tx =3D qcom_geni_serial_stop_tx,
+> +       .start_tx =3D qcom_geni_serial_start_tx,
+> +       .stop_rx =3D qcom_geni_serial_stop_rx,
+> +       .set_termios =3D qcom_geni_serial_set_termios,
+> +       .startup =3D qcom_geni_serial_startup,
+> +       .config_port =3D qcom_geni_serial_config_port,
+> +       .shutdown =3D qcom_geni_serial_shutdown,
+> +       .type =3D qcom_geni_serial_get_type,
+> +       .set_mctrl =3D qcom_geni_cons_set_mctrl,
+> +       .get_mctrl =3D qcom_geni_cons_get_mctrl,
+> +#ifdef CONFIG_CONSOLE_POLL
+> +       .poll_get_char  =3D qcom_geni_serial_get_char,
+> +       .poll_put_char  =3D qcom_geni_serial_poll_put_char,
+> +#endif
+> +       .pm =3D qcom_geni_serial_cons_pm,
+> +};
+> +
+> +static int qcom_geni_serial_probe(struct platform_device *pdev)
+> +{
+> +       int ret =3D 0;
+> +       int line =3D -1;
+> +       struct qcom_geni_serial_port *port;
+> +       struct uart_port *uport;
+> +       struct resource *res;
+> +       struct uart_driver *drv;
+> +
+> +       drv =3D (void *)of_device_get_match_data(&pdev->dev);
+
+Useless cast.
+
+> +       if (!drv) {
+> +               dev_err(&pdev->dev, "%s: No matching device found", __fun=
+c__);
+> +               return -ENODEV;
+> +       }
+> +
+> +       if (pdev->dev.of_node)
+> +               line =3D of_alias_get_id(pdev->dev.of_node, "serial");
+> +       else
+> +               line =3D pdev->id;
+> +
+> +       if (line < 0)
+> +               line =3D atomic_inc_return(&uart_line_id) - 1;
+> +
+> +       if ((line < 0) || (line >=3D GENI_UART_CONS_PORTS))
+
+Useless parenthesis.
+
+> +               return -ENXIO;
+> +       port =3D get_port_from_line(line);
+> +       if (IS_ERR(port)) {
+> +               ret =3D PTR_ERR(port);
+> +               dev_err(&pdev->dev, "Invalid line %d(%d)\n", line, ret);
+> +               return ret;
+> +       }
+> +
+> +       uport =3D &port->uport;
+> +       /* Don't allow 2 drivers to access the same port */
+> +       if (uport->private_data)
+> +               return -ENODEV;
+> +
+> +       uport->dev =3D &pdev->dev;
+> +       port->se.dev =3D &pdev->dev;
+> +       port->se.wrapper =3D dev_get_drvdata(pdev->dev.parent);
+> +       port->se.clk =3D devm_clk_get(&pdev->dev, "se");
+> +       if (IS_ERR(port->se.clk)) {
+> +               ret =3D PTR_ERR(port->se.clk);
+> +               dev_err(&pdev->dev, "Err getting SE Core clk %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       uport->mapbase =3D res->start;
+> +       uport->membase =3D devm_ioremap_resource(&pdev->dev, res);
+> +       if (!uport->membase) {
+
+Check for IS_ERR()
+
+> +               dev_err(&pdev->dev, "Err IO mapping serial iomem");
+
+No need for error message with devm_ioremap_resource()
+
+> +               return -ENOMEM;
+
+return PTR_ERR(..)
+
+Also, I see some serial drivers do the mapping when the port is
+requested. That can't be done here?
+
+> +       }
+> +       port->se.base =3D uport->membase;
+> +
+> +       port->tx_fifo_depth =3D DEF_FIFO_DEPTH_WORDS;
+> +       port->rx_fifo_depth =3D DEF_FIFO_DEPTH_WORDS;
+> +       port->tx_fifo_width =3D DEF_FIFO_WIDTH_BITS;
+> +
+> +       uport->irq =3D platform_get_irq(pdev, 0);
+> +       if (uport->irq < 0) {
+> +               dev_err(&pdev->dev, "Failed to get IRQ %d\n", uport->irq);
+> +               return uport->irq;
+> +       }
+> +
+> +       uport->private_data =3D drv;
+> +       platform_set_drvdata(pdev, port);
+> +       port->handle_rx =3D handle_rx_console;
+> +       port->port_setup =3D false;
+> +       return uart_add_one_port(drv, uport);
+> +}
+> +
+> +static int qcom_geni_serial_remove(struct platform_device *pdev)
+> +{
+> +       struct qcom_geni_serial_port *port =3D platform_get_drvdata(pdev);
+> +       struct uart_driver *drv =3D port->uport.private_data;
+> +
+> +       uart_remove_one_port(drv, &port->uport);
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused qcom_geni_serial_sys_suspend_noirq(struct devi=
+ce *dev)
+> +{
+> +       struct platform_device *pdev =3D to_platform_device(dev);
+> +       struct qcom_geni_serial_port *port =3D platform_get_drvdata(pdev);
+> +       struct uart_port *uport =3D &port->uport;
+> +
+> +       uart_suspend_port(uport->private_data, uport);
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused qcom_geni_serial_sys_resume_noirq(struct devic=
+e *dev)
+> +{
+> +       struct platform_device *pdev =3D to_platform_device(dev);
+> +       struct qcom_geni_serial_port *port =3D platform_get_drvdata(pdev);
+> +       struct uart_port *uport =3D &port->uport;
+> +
+> +       if (console_suspend_enabled && uport->suspended) {
+> +               uart_resume_port(uport->private_data, uport);
+> +               disable_irq(uport->irq);
+> +       }
+> +       return 0;
+> +}
+> +
+> +static const struct dev_pm_ops qcom_geni_serial_pm_ops =3D {
+> +       .suspend_noirq =3D qcom_geni_serial_sys_suspend_noirq,
+> +       .resume_noirq =3D qcom_geni_serial_sys_resume_noirq,
+
+Why are these noirq variants? Please add a comment.
+
+> +};
+> +
+> +static const struct of_device_id qcom_geni_serial_match_table[] =3D {
+> +       { .compatible =3D "qcom,geni-debug-uart",
+> +                               .data =3D &qcom_geni_console_driver, },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_geni_serial_match_table);
+> +
+> +static struct platform_driver qcom_geni_serial_platform_driver =3D {
+> +       .remove =3D qcom_geni_serial_remove,
+> +       .probe =3D qcom_geni_serial_probe,
+> +       .driver =3D {
+> +               .name =3D "qcom_geni_serial",
+> +               .of_match_table =3D qcom_geni_serial_match_table,
+> +               .pm =3D &qcom_geni_serial_pm_ops,
+> +       },
+> +};
+> +
+> +static int __init qcom_geni_serial_init(void)
+> +{
+> +       int ret =3D 0;
+
+Drop assignment please.
+
+> +
+> +       qcom_geni_console_port.uport.iotype =3D UPIO_MEM;
+> +       qcom_geni_console_port.uport.ops =3D &qcom_geni_console_pops;
+> +       qcom_geni_console_port.uport.flags =3D UPF_BOOT_AUTOCONF;
+> +       qcom_geni_console_port.uport.line =3D 0;
