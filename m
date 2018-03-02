@@ -1,83 +1,43 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 1/2] dt-bindings: Document qcom,adreno-gmu
-Date: Fri,  2 Mar 2018 14:56:37 -0700
-Message-ID: <20180302215638.6145-2-jcrouse@codeaurora.org>
-References: <20180302215638.6145-1-jcrouse@codeaurora.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 2/2] ARM: dts: armada388-clearfog: add SFP module support
+Date: Fri, 2 Mar 2018 22:02:15 +0000
+Message-ID: <20180302220215.GC9418@n2100.armlinux.org.uk>
+References: <20180227160135.GU9418@n2100.armlinux.org.uk>
+ <E1eqhha-0004l3-Rd@rmk-PC.armlinux.org.uk>
+ <20180302215614.GD25189@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180302215638.6145-1-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180302215614.GD25189@lunn.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgQWRyZW5vIEdNVSBkZXZp
-Y2UKYXZhaWxhYmxlIG9uIEFkcmVubyBhNnh4IHRhcmdldHMuCgpDaGFuZ2UtSWQ6IEkzY2ZkNWZi
-MzVhYjAwNDVlMzk5MDVmZjEyMzkzMDA2ZTYwZjFhMTI0ClNpZ25lZC1vZmYtYnk6IEpvcmRhbiBD
-cm91c2UgPGpjcm91c2VAY29kZWF1cm9yYS5vcmc+Ci0tLQogLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9tc20vZ211LnR4dCAgICAgICAgfCA1NCArKysrKysrKysrKysrKysrKysrKysr
-CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0ICAgICAgICB8IDEw
-ICsrKy0KIDIgZmlsZXMgY2hhbmdlZCwgNjIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkK
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9tc20vZ211LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L21zbS9nbXUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvbXNtL2dtdS50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAw
-MDAwMDAwMDAwLi5mNjViYjQ5ZmZmMzYKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dApAQCAtMCwwICsxLDU0IEBA
-CitRdWFsY29tbSBhZHJlbm8vc25hcGRyYWdvbiBHTVUgKEdyYXBoaWNzIG1hbmFnZW1lbnQgdW5p
-dCkKKworVGhlIEdNVSBpcyBhIHByb2dyYW1tYWJsZSBwb3dlciBjb250cm9sbGVyIGZvciB0aGUg
-R1BVLiB0aGUgQ1BVIGNvbnRyb2xzIHRoZQorR01VIHdoaWNoIGluIHR1cm4gaGFuZGxlcyBwb3dl
-ciBjb250cm9scyBmb3IgdGhlIEdQVS4KKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0
-aWJsZToKKyAgKiAicWNvbSxhZHJlbm8tZ211IgorLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVz
-cyBhbmQgbGVuZ3RoIG9mIHRoZSBHTVUgcmVnaXN0ZXJzLgorLSByZWctbmFtZXM6IE1hdGNoaW5n
-IG5hbWVzIGZvciB0aGUgcmVnaXN0ZXIgcmVnaW9ucworICAqICJnbXUiCisgICogImdtdV9wZGMi
-CistIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFscyBmcm9tIHRoZSBHTVUuCistIGlu
-dGVycnVwdC1uYW1lczogTWF0Y2hpbmcgbmFtZXMgZm9yIHRoZSBpbnRlcnJ1cHRzCisgICogImhm
-aSIKKyAgKiAiZ211IgorLSBjbG9ja3M6IHBoYW5kbGVzIHRvIHRoZSBkZXZpY2UgY2xvY2tzCist
-IGNsb2NrLW5hbWVzOiBNYXRjaGluZyBuYW1lcyBmb3IgdGhlIGNsb2NrcworICAgKiAiZ211Igor
-ICAgKiAiY3hvIgorICAgKiAiYXhpIgorICAgKiAibW5vYyIKKy0gcG93ZXItZG9tYWluczogc2hv
-dWxkIGJlIDwmY2xvY2tfZ3B1Y2MgR1BVX0NYX0dEU0M+CistIGlvbW11czogcGhhbmRsZSB0byB0
-aGUgYWRyZW5vIGlvbW11CistIG9wZXJhdGluZy1wb2ludHMtdjI6IHBoYW5kbGUgdG8gdGhlIE9Q
-UCBvcGVyYXRpbmcgcG9pbnRzCisKK0V4YW1wbGU6CisKKy8geworCS4uLgorCisJZ211OiBnbXVA
-NTA2YTAwMCB7CisJCWNvbXBhdGlibGU9InFjb20sYWRyZW5vLWdtdSI7CisKKwkJcmVnID0gPDB4
-NTA2YTAwMCAweDMwMDAwPiwKKwkJCTwweGIyMDAwMDAgMHgzMDAwMDA+OworCQlyZWctbmFtZXMg
-PSAiZ211IiwgImdtdV9wZGMiOworCisJCWludGVycnVwdHMgPSA8R0lDX1NQSSAzMDQgSVJRX1RZ
-UEVfTEVWRUxfSElHSD4sCisJCQk8R0lDX1NQSSAzMDUgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJ
-CWludGVycnVwdC1uYW1lcyA9ICJoZmkiLCAiZ211IjsKKworCQljbG9ja3MgPSA8JmNsb2NrX2dw
-dWNjIEdQVV9DQ19DWF9HTVVfQ0xLPiwKKwkJCTwmY2xvY2tfZ3B1Y2MgR1BVX0NDX0NYT19DTEs+
-LAorCQkJPCZjbG9ja19nY2MgR0NDX0REUlNTX0dQVV9BWElfQ0xLPiwKKwkJCTwmY2xvY2tfZ2Nj
-IEdDQ19HUFVfTUVNTk9DX0dGWF9DTEs+OworCQljbG9jay1uYW1lcyA9ICJnbXUiLCAiY3hvIiwg
-ImF4aSIsICJtZW1ub2MiOworCisJCXBvd2VyLWRvbWFpbnMgPSA8JmNsb2NrX2dwdWNjIEdQVV9D
-WF9HRFNDPjsKKwkJaW9tbXVzID0gPCZhZHJlbm9fc21tdSA1PjsKKworCWkJb3BlcmF0aW5nLXBv
-aW50cy12MiA9IDwmZ211X29wcF90YWJsZT47CisJfTsKK307CmRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0CmluZGV4IDQzZmFj
-MGZlMDliYi4uMGUyMDc0OThlZGQzIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dApAQCAtOCwxMiArOCwxOCBAQCBSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgogICB3aXRoIHRoZSBjaGlwLWlkLgogLSByZWc6IFBoeXNpY2FsIGJh
-c2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgogLSBp
-bnRlcnJ1cHRzOiBUaGUgaW50ZXJydXB0IHNpZ25hbCBmcm9tIHRoZSBncHUuCi0tIGNsb2Nrczog
-ZGV2aWNlIGNsb2NrcworCitPcHRpb25hbCBwcm9wZXJ0aWVzLgorLSBjbG9ja3M6IGRldmljZSBj
-bG9ja3MuIFJlcXVpcmVkIGZvciBhM3h4LCBhNHh4IGFuZCBhNXh4IHRhcmdldHMuIGE2eHggYW5k
-CisgIG5ld2VyIHdpdGggYSBHTVUgYXR0YWNoZWQgZG8gbm90IGhhdmUgZGlyZWN0IGNsb2NrIGNv
-bnRyb2wgZnJvbSB0aGUgQ1BVIGFuZAorICBkbyBub3QgbmVlZCB0byBwcm92aWRlIGNsb2NrIHBy
-b3BlcnRpZXMuCiAgIFNlZSAuLi9jbG9ja3MvY2xvY2stYmluZGluZ3MudHh0IGZvciBkZXRhaWxz
-LgotLSBjbG9jay1uYW1lczogdGhlIGZvbGxvd2luZyBjbG9ja3MgYXJlIHJlcXVpcmVkOgorLSBj
-bG9jay1uYW1lczogdGhlIGZvbGxvd2luZyBjbG9ja3MgY2FuIGJlIHByb3ZpZGVkOgogICAqICJj
-b3JlIgogICAqICJpZmFjZSIKICAgKiAibWVtX2lmYWNlIgorLSBnbXU6IEZvciBhNnh4IGFuZCBu
-ZXdlciB0YXJnZXRzIGEgcGhhbmRsZSB0byB0aGUgR01VIGRldmljZSB0aGF0IHdpbGwKKyAgY29u
-dHJvbCB0aGUgcG93ZXIgZm9yIHRoZSBHUFUKIAogRXhhbXBsZToKIAotLSAKMi4xNi4xCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFp
-bGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On Fri, Mar 02, 2018 at 10:56:14PM +0100, Andrew Lunn wrote:
+> On Tue, Feb 27, 2018 at 04:02:02PM +0000, Russell King wrote:
+> > Add SFP module support for Clearfog using the SFP phylink support.
+> > 
+> > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+> 
+> Tested-by: Andrew Lunn <andrew@lunn.ch>
+> 
+> Using a RoboFiber SFP module, connected to a media converter. Link
+> up/down detected.
+
+ethtool -m should also work.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
