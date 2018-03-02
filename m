@@ -1,90 +1,63 @@
-From: Sean Young <sean@mess.org>
-Subject: Re: [RESEND PATCH v5 0/6] IR support for A83T
-Date: Fri, 2 Mar 2018 14:10:01 +0000
-Message-ID: <20180302141001.2eqbpahdl7sddtzk@gofer.mess.org>
-References: <20180213122952.8420-1-embed3d@gmail.com>
- <85ddc129-d0f8-6299-dca0-81f79f3d04a9@gmail.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH v8 00/15] Krait clocks + Krait CPUfreq
+Date: Fri, 2 Mar 2018 19:42:41 +0530
+Message-ID: <e133630b-36b2-ed0e-3052-3e2e1c958405@codeaurora.org>
+References: <1519740422-3835-1-git-send-email-sricharan@codeaurora.org>
+ <CACRpkdbu9Kxvuwr-nLHxyEYiTeGK38o7MKCFf-MMjYxwgcJPPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <85ddc129-d0f8-6299-dca0-81f79f3d04a9@gmail.com>
+In-Reply-To: <CACRpkdbu9Kxvuwr-nLHxyEYiTeGK38o7MKCFf-MMjYxwgcJPPA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Rossak <embed3d@gmail.com>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, p.zabel@pengutronix.de, andi.shyti@samsung.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Maxime Ripard <maxime.ripard@bootlin.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, viresh kumar <viresh.kumar@linaro.org>, Michael Turquette <mturquette@baylibre.com>, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Linux ARM <linux-arm-kernel>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2018 at 01:11:34PM +0100, Philipp Rossak wrote:
-> On 13.02.2018 13:29, Philipp Rossak wrote:
-> > This patch series adds support for the sunxi A83T ir module and enhances
-> > the sunxi-ir driver. Right now the base clock frequency for the ir driver
-> > is a hard coded define and is set to 8 MHz.
-> > This works for the most common ir receivers. On the Sinovoip Bananapi M3
-> > the ir receiver needs, a 3 MHz base clock frequency to work without
-> > problems with this driver.
-> > 
-> > This patch series adds support for an optinal property that makes it able
-> > to override the default base clock frequency and enables the ir interface
-> > on the a83t and the Bananapi M3.
-> > 
-> > changes since v4:
-> > * rename cir pin from cir_pins to r_cir_pin
-> > * drop unit-adress from r_cir_pin
-> > * add a83t compatible to the cir node
-> > * move muxing options to dtsi
-> > * rename cir label and reorder it in the bananpim3.dts file
-> > 
-> > changes since v3:
-> > * collecting all acks & reviewd by
-> > * fixed typos
-> > 
-> > changes since v2:
-> > * reorder cir pin (alphabetical)
-> > * fix typo in documentation
-> > 
-> > changes since v1:
-> > * fix typos, reword Documentation
-> > * initialize 'b_clk_freq' to 'SUNXI_IR_BASE_CLK' & remove if statement
-> > * change dev_info() to dev_dbg()
-> > * change naming to cir* in dts/dtsi
-> > * Added acked Ackedi-by to related patch
-> > * use whole memory block instead of registers needed + fix for h3/h5
-> > 
-> > changes since rfc:
-> > * The property is now optinal. If the property is not available in
-> >    the dtb the driver uses the default base clock frequency.
-> > * the driver prints out the the selected base clock frequency.
-> > * changed devicetree property from base-clk-frequency to clock-frequency
-> > 
-> > Regards,
-> > Philipp
-> > 
-> > Philipp Rossak (6):
-> >    media: rc: update sunxi-ir driver to get base clock frequency from
-> >      devicetree
-> >    media: dt: bindings: Update binding documentation for sunxi IR
-> >      controller
-> >    arm: dts: sun8i: a83t: Add the cir pin for the A83T
-> >    arm: dts: sun8i: a83t: Add support for the cir interface
-> >    arm: dts: sun8i: a83t: bananapi-m3: Enable IR controller
-> >    arm: dts: sun8i: h3-h5: ir register size should be the whole memory
-> >      block
-> > 
-> >   Documentation/devicetree/bindings/media/sunxi-ir.txt |  3 +++
-> >   arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts         |  5 +++++
-> >   arch/arm/boot/dts/sun8i-a83t.dtsi                    | 18 ++++++++++++++++++
-> >   arch/arm/boot/dts/sunxi-h3-h5.dtsi                   |  2 +-
-> >   drivers/media/rc/sunxi-cir.c                         | 19 +++++++++++--------
-> >   5 files changed, 38 insertions(+), 9 deletions(-)
-> > 
-> 
-> I talked yesterday with Maxime about this patch series. And he told me if
-> the first to patches got merged, he will apply the dts patches to the sunxi
-> tree.
-> 
-> Sean, can you merge the first two patches through the rc-core?
+Hi Linus,
 
-Sure, no problem.
+On 3/1/2018 6:58 PM, Linus Walleij wrote:
+> Hi Sricharan,
+> 
+> thanks for picking up Stephen's patch set and working on this
+> clocking business!
+> 
+> Would you happen to know if the MSM8660/APQ8060 that
+> I'm using a bit has the same Krait clocking so I need to augment
+> that SoC to use this too (on top of this, naturally, this is a good first
+> step)?
+> 
 
-Thanks
-Sean
+After digging a bit for data, looks like the clock controller in msm8660
+is called the acpuclk/scplls [1] . So the support for these clocks have
+to be added. rpm_pm8901_regulators is in place.
+
+Looks like it is using the same PVS cpufreq table as in Krait. so once
+the support for clks is added, the krait cpufreq bindings can be used.
+ 
+[1] https://bitbucket.org/carvsdriver/android_kernel_samsung_msm8660-common/src/0a8b2f30db72e00d6e0b9ad1b9630fe33099ccd0/arch/arm/mach-msm/acpuclock-8x60.c?at=moretz&fileviewer=file-view-default 
+
+> On Tue, Feb 27, 2018 at 3:06 PM, Sricharan R <sricharan@codeaurora.org> wrote:
+> 
+>>   * Dropped the DT update from the series. Will send separatelyssbi
+> 
+> Are these available somewhere so I can test the sum total on
+> the Nexus 7 and see if I get some graphics? I've been sticking a
+> patch from Stephen's series in for some time and it makes the
+> MDP graphics works on the 2013 Nexus 7.
+> 
+
+ok, Nexus 7 -> apq8064 right ?
+
+Just pushed the data for apq8064 as per latest bindings for reference [1].
+Don't have an board to test that data. Also have not added the cpu-supply
+as well.
+
+[1] https://github.com/sricharanaz/kernel/commit/464aa4fd5fc642a6b296d5ad438211042496dabb
+
+Regards,
+ Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
