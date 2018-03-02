@@ -1,74 +1,87 @@
-From: Claudiu Beznea <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH v3 05/10] pwm: add PWM mode to pwm_config()
-Date: Fri, 2 Mar 2018 11:19:43 +0200
-Message-ID: <0c3fc3ba-8640-0b2c-a9ec-ab848227c92d@microchip.com>
-References: <1519300881-8136-1-git-send-email-claudiu.beznea@microchip.com>
- <1519300881-8136-6-git-send-email-claudiu.beznea@microchip.com>
- <20180228194429.GD22932@mithrandir>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5 1/4] of: change overlay apply input data from
+ unflattened to FDT
+Date: Fri, 2 Mar 2018 10:20:32 +0100
+Message-ID: <CAMuHMdWCjqugdSkpLczcD3xsNWMmsZC8z0RLF7iQfL3V95LMZQ@mail.gmail.com>
+References: <1519955520-29975-1-git-send-email-frowand.list@gmail.com> <1519955520-29975-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180228194429.GD22932@mithrandir>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, milo.kim@ti.com, linux-fbdev@vger.kernel.org, sean@mess.org, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, joonas.lahtinen@linux.intel.com, kamil@wypas.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, pavel@ucw.cz, lee.jones@linaro.org, linux-clk@vger.kernel.org, linux-leds@vger.kernel.org, daniel.thompson@linaro.org, linux-samsung-soc@vger.kernel.org, shc_work@mail.ru, corbet@lwn.net, linux-doc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, kgene@kernel.org, linux-input@vger.kernel.org, linux@roeck-us.net, linux-media@vger.kernel.org, linux-pwm@vger.kernel.org, jdelvare@suse.com, b.zolnierkie@samsung.com, intel-gfx@lists.freedesktop.org, jani.nikula@linux.intel.com, robh+dt@kernel.org, jacek.anaszewski@gmail.com, rodrigo.vivi@intel.com, mchehab@kernel.orgl
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1519955520-29975-2-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Frank,
 
+On Fri, Mar 2, 2018 at 2:51 AM,  <frowand.list@gmail.com> wrote:
+> There are still some functions in unittest.c that should be tagged
+> __init due to changes in this patch, but modpost is not warning of
+> them and they are not a risk because they are only called from
+> __init functions.  A sweep of unittest.c for functions that
+> should be tagged __init is on the todo list.
 
-On 28.02.2018 21:44, Thierry Reding wrote:
-> On Thu, Feb 22, 2018 at 02:01:16PM +0200, Claudiu Beznea wrote:
->> Add PWM mode to pwm_config() function. The drivers which uses pwm_config()
->> were adapted to this change.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
->> ---
->>  arch/arm/mach-s3c24xx/mach-rx1950.c  | 11 +++++++++--
->>  drivers/bus/ts-nbus.c                |  2 +-
->>  drivers/clk/clk-pwm.c                |  3 ++-
->>  drivers/gpu/drm/i915/intel_panel.c   | 17 ++++++++++++++---
->>  drivers/hwmon/pwm-fan.c              |  2 +-
->>  drivers/input/misc/max77693-haptic.c |  2 +-
->>  drivers/input/misc/max8997_haptic.c  |  6 +++++-
->>  drivers/leds/leds-pwm.c              |  5 ++++-
->>  drivers/media/rc/ir-rx51.c           |  5 ++++-
->>  drivers/media/rc/pwm-ir-tx.c         |  5 ++++-
->>  drivers/video/backlight/lm3630a_bl.c |  4 +++-
->>  drivers/video/backlight/lp855x_bl.c  |  4 +++-
->>  drivers/video/backlight/lp8788_bl.c  |  5 ++++-
->>  drivers/video/backlight/pwm_bl.c     | 11 +++++++++--
->>  drivers/video/fbdev/ssd1307fb.c      |  3 ++-
->>  include/linux/pwm.h                  |  6 ++++--
->>  16 files changed, 70 insertions(+), 21 deletions(-)
-> 
-> I don't think it makes sense to leak mode support into the legacy API.
-> The pwm_config() function is considered legacy
-I missed this aspect.
+If modpost doesn't warn, that merely means your compiler decided to
+inline all functions with wrong annotations, hiding the problem.
+Other (versions of) compilers may behave differently, so we do want
+to get this right.
 
- and should eventually go
-> away. As such it doesn't make sense to integrate a new feature such as
-> PWM modes into it. 
-Agree.
+With my trusty gcc-4.1.2:
 
-All users of pwm_config() assume normal mode, and
-> that's what pwm_config() should provide.
-Agree.
+    WARNING: vmlinux.o(.text+0x342dd4): Section mismatch in reference
+from the function of_unittest_apply_revert_overlay_check() to the
+function .init.text:of_unittest_apply_overlay()
+    The function of_unittest_apply_revert_overlay_check() references
+    the function __init of_unittest_apply_overlay().
+    This is often because of_unittest_apply_revert_overlay_check lacks a __=
+init
+    annotation or the annotation of of_unittest_apply_overlay is wrong.
 
-> 
-> Anyone that needs something other than normal mode should use the new
-> atomic PWM API.
-Agree.
+To fix the above:
 
-> 
-> Thierry
-> 
+-static int of_unittest_apply_revert_overlay_check(int overlay_nr,
++static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
+-static void of_unittest_overlay_5(void)
++static void __init of_unittest_overlay_5(void)
+-static void of_unittest_overlay_11(void)
++static void __init of_unittest_overlay_11(void)
+
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+
+> @@ -2290,18 +2275,29 @@ static __init void of_unittest_overlay_high_level=
+(void)
+>                 __of_attach_node_sysfs(np);
+>
+>         if (of_symbols) {
+> +               struct property *new_prop;
+>                 for_each_property_of_node(overlay_base_symbols, prop) {
+
+drivers/of/unittest.c: In function =E2=80=98of_unittest_overlay_high_level=
+=E2=80=99:
+drivers/of/unittest.c:2193: warning: =E2=80=98overlay_base_symbols=E2=80=99=
+ may be
+used uninitialized in this function
+
+This isn't a new warning, so I guess I never reported it before because I
+thought it was a false positive (misguided by the "if (of_symbols)" test?).
+
+However, now I believe it is not, and an uninitialized pointer will be
+dereferenced if of_root has a __symbols__ node, but overlay_base_root hasn'=
+t.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
