@@ -1,61 +1,100 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v3] Input: gpio_keys: Add level trigger support for GPIO keys
-Date: Fri, 2 Mar 2018 11:10:31 +0800
-Message-ID: <CAMz4ku+Ruz=O9NE4x+cm4tFXR+en7mKX4D0aP841qKrdRMMP6Q@mail.gmail.com>
-References: <826093167e8fb24723f474b0272f3dcab1b6a97e.1519821626.git.baolin.wang@linaro.org>
- <CAK8P3a1v2GanneaFKpXWjWLt1YzibJ9Bh7vUcd_SH-4jGN_1+A@mail.gmail.com>
- <CAMz4kuLNbsZjDPW19V96yL3DzY-bJsjRR=o+w0x4PGyxZFZ0dg@mail.gmail.com> <20180302004404.GA242226@dtor-ws>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v4 00/10] Add Actions Semi S900 pinctrl and gpio support
+Date: Fri,  2 Mar 2018 09:20:35 +0530
+Message-ID: <20180302035045.14660-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180302004404.GA242226@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, gregkh <gregkh@linuxfoundation.org>, stephen lu <lumotuwe@gmail.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>, Joseph Lo <josephl@nvidia.com>, Kate Stewart <kstewart@linuxfoundation.org>, Philippe Ombredanne <pombredanne@nexb.com>, Thomas Gleixner <tglx@linutronix.de>, "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+To: linus.walleij@linaro.org, robh+dt@kernel.org, afaerber@suse.de
+Cc: liuwei@actions-semi.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2 March 2018 at 08:44, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> On Thu, Mar 01, 2018 at 03:35:23PM +0800, Baolin Wang wrote:
->> On 28 February 2018 at 22:44, Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Wed, Feb 28, 2018 at 1:44 PM, Baolin Wang <baolin.wang@linaro.org> wrote:
->> >> On some platforms (such as Spreadtrum platform), the GPIO keys can only
->> >> be triggered by level type. So this patch introduces one property to
->> >> indicate if the GPIO trigger type is level trigger or edge trigger.
->> >>
->> >> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> >> ---
->> >> Changes since v2:
->> >>  - Use 'interrupt' property to indicate the irq type.
->> >>
->> >> Changes since v1:
->> >>  - Diable the GPIO irq until reversing the GPIO level type.
->> >
->> > I've looked at your patch in more detail now, and given it a bit more thought.
->> >
->> > I wonder if you could move that logic into your gpiochip/irqchip driver instead.
->> > It seems that what you do in the gpio-keys driver is to emulate edge triggered
->> > behavior on a level triggered irqchip.
->> >
->> > If you put the same logic into the gpio driver, you could simply make it
->> > pretend to support an edge trigger on both edges and call into the interrupt
->> > handler whenever the state changes.
->> >
->>
->> That is really a good suggestion, which can avoid duplicate level
->> reverse logic in different drivers. So this patch can be simplified
->> just adding one trigger_type to indicate the interrupt type (not
->> always edge trigger). Thanks for your suggestion.
->
-> No, there is no need to add trigger type. The gpio-keys driver expects
-> trigger with both edges, falling and rising. If your GPIO chip does not
-> support it natively, you need to emulate edge trigger via level
-> interrupts by reprogramming trigger from active low to active high and
-> back on the fly. This should be done in the gpiochip/irqchip driver.
-> There is no need to change gpio-keys driver.
+This patchset adds pinctrl and gpio support for Actions Semi S900 SoC.
+Pinctrl and gpio subsystems share the common set of register range but
+implemented as individual drivers for making it less complex.
 
-Yes, you are right, It can work on my platform after modifying my GPIO
-driver like you and Arnd's suggestion. Thanks for all your help.
+Pinmux functions are only accessible for pin groups while pinconf
+parameters are available for both pin groups and individual pins.
+
+gpio-line-names has been added for the Bubblegum-96 board matching the
+96Boards CE specification v1.0.
+
+Both pinctrl and gpio drivers are verified using the Bubblegum-96 board.
+
+This patchset depends on the clock driver which is still under review:
+https://lkml.org/lkml/2018/2/9/831
+
+There is also S500 pinctrl and gpio driver developed by Andreas Farber
+independently to this patchset.
+https://github.com/afaerber/linux/commits/bg96-next
+
+If this patchseries seems to be good enough to add base OWL pinctrl and
+gpio support. Then, we may decide on adding S500 support on top of this later
+by reusing the pinctrl definitions from Andreas.
+
+Thanks,
+Mani
+
+Changes in v4:
+
+* Incorporated Andy's review for pinctrl driver
+* Used _relaxed functions for pinctrl driver
+* Added Andy's Reviewed-by tag for gpio driver
+* Added (back) Rob's Reviewed-by tag for pinctrl bindings
+
+Changes in v3:
+
+* Simplified owl_gpio_set_reg() with _relaxed functions
+* Added interrupt controller properties to gpio node bindings as suggested
+  by Rob
+* Minor code cleanups
+
+Changes in v2:
+
+* Implemented each GPIO bank as its own gpio-controller
+* Added gpio-ranges property
+* Modified pin group to follow pad names instead of register names
+* Incorporated review comments from Andy
+* Incorporated review comments from Andreas
+* Fixed the MODULE_LICENSE with respect to SPDX tag
+* Added Reviewed by tag from Rob for pinctrl binding
+
+Manivannan Sadhasivam (10):
+  dt-bindings: pinctrl: Add bindings for Actions S900 SoC
+  arm64: dts: actions: Add pinctrl node for S900
+  arm64: actions: Enable PINCTRL in platforms Kconfig
+  pinctrl: actions: Add Actions S900 pinctrl driver
+  dt-bindings: gpio: Add gpio nodes for Actions S900 SoC
+  arm64: dts: actions: Add S900 gpio nodes
+  arm64: dts: actions: Add gpio line names to Bubblegum-96 board
+  gpio: Add gpio driver for Actions OWL S900 SoC
+  MAINTAINERS: Add reviewer for ACTIONS platforms
+  MAINTAINERS: Add Actions Semi S900 pinctrl and gpio entries
+
+ .../devicetree/bindings/gpio/actions,owl-gpio.txt  |   95 +
+ .../bindings/pinctrl/actions,s900-pinctrl.txt      |  178 ++
+ MAINTAINERS                                        |    5 +
+ arch/arm64/Kconfig.platforms                       |    1 +
+ arch/arm64/boot/dts/actions/s900-bubblegum-96.dts  |  201 ++
+ arch/arm64/boot/dts/actions/s900.dtsi              |   54 +
+ drivers/gpio/Kconfig                               |    8 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-owl.c                            |  218 ++
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/actions/Kconfig                    |   12 +
+ drivers/pinctrl/actions/Makefile                   |    2 +
+ drivers/pinctrl/actions/pinctrl-owl.c              |  579 +++++
+ drivers/pinctrl/actions/pinctrl-owl.h              |  142 ++
+ drivers/pinctrl/actions/pinctrl-s900.c             | 2505 ++++++++++++++++++++
+ 16 files changed, 4003 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/actions,owl-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/actions,s900-pinctrl.txt
+ create mode 100644 drivers/gpio/gpio-owl.c
+ create mode 100644 drivers/pinctrl/actions/Kconfig
+ create mode 100644 drivers/pinctrl/actions/Makefile
+ create mode 100644 drivers/pinctrl/actions/pinctrl-owl.c
+ create mode 100644 drivers/pinctrl/actions/pinctrl-owl.h
+ create mode 100644 drivers/pinctrl/actions/pinctrl-s900.c
 
 -- 
-Baolin.wang
-Best Regards
+2.14.1
