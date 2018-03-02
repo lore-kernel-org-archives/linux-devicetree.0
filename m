@@ -1,87 +1,42 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v5 1/4] of: change overlay apply input data from
- unflattened to FDT
-Date: Fri, 2 Mar 2018 10:20:32 +0100
-Message-ID: <CAMuHMdWCjqugdSkpLczcD3xsNWMmsZC8z0RLF7iQfL3V95LMZQ@mail.gmail.com>
-References: <1519955520-29975-1-git-send-email-frowand.list@gmail.com> <1519955520-29975-2-git-send-email-frowand.list@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: sibis <sibis@codeaurora.org>
+Subject: [PATCH 0/6] Add support for remoteproc modem-pil on SDM845 SoCs
+Date: Fri,  2 Mar 2018 14:53:33 +0530
+Message-ID: <1519982619-28336-1-git-send-email-sibis@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519955520-29975-2-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+To: bjorn.andersson@linaro.org
+Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, p.zabel@pengutronix.de, ohad@wizery.com, mark.rutland@arm.com, robh+dt@kernel.org, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+This patch series add support for remoteproc Q6v5 modem-pil on Qualcomm
+SDM845 SoC. The first patch adds AOSS (Always on subsystem) reset driver
+to provide for mss reset line. The third patch adds the APCS offset for
+SDM845. The last couple of patches add the resets sequence for Q6 on
+SDM845 and adds helper functions for arbitrary reset assert/deassert
+sequences.
 
-On Fri, Mar 2, 2018 at 2:51 AM,  <frowand.list@gmail.com> wrote:
-> There are still some functions in unittest.c that should be tagged
-> __init due to changes in this patch, but modpost is not warning of
-> them and they are not a risk because they are only called from
-> __init functions.  A sweep of unittest.c for functions that
-> should be tagged __init is on the todo list.
+sibis (6):
+  reset: qcom: AOSS (Always on subsystem) reset controller
+  dt-bindings: mailbox: Add APCS global binding for SDM845 SoCs
+  mailbox: Add support for Qualcomm SDM845 SoCs
+  dt-bindings: remoteproc: Add Q6v5 Modem PIL binding for SDM845
+  remoteproc: qcom: Add support for mss remoteproc on SDM845
+  remoteproc: qcom: Reorder active clks enable and reset
 
-If modpost doesn't warn, that merely means your compiler decided to
-inline all functions with wrong annotations, hiding the problem.
-Other (versions of) compilers may behave differently, so we do want
-to get this right.
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     |   3 +-
+ .../devicetree/bindings/remoteproc/qcom,q6v5.txt   |   5 +-
+ .../devicetree/bindings/reset/qcom,aoss-reset.txt  |  54 +++++++
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            |   1 +
+ drivers/remoteproc/qcom_q6v5_pil.c                 | 149 +++++++++++++++++--
+ drivers/reset/Kconfig                              |  10 ++
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-qcom-aoss.c                    | 161 +++++++++++++++++++++
+ include/dt-bindings/reset/qcom,aoss-sdm845.h       |  17 +++
+ 9 files changed, 386 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reset/qcom,aoss-reset.txt
+ create mode 100644 drivers/reset/reset-qcom-aoss.c
+ create mode 100644 include/dt-bindings/reset/qcom,aoss-sdm845.h
 
-With my trusty gcc-4.1.2:
-
-    WARNING: vmlinux.o(.text+0x342dd4): Section mismatch in reference
-from the function of_unittest_apply_revert_overlay_check() to the
-function .init.text:of_unittest_apply_overlay()
-    The function of_unittest_apply_revert_overlay_check() references
-    the function __init of_unittest_apply_overlay().
-    This is often because of_unittest_apply_revert_overlay_check lacks a __=
-init
-    annotation or the annotation of of_unittest_apply_overlay is wrong.
-
-To fix the above:
-
--static int of_unittest_apply_revert_overlay_check(int overlay_nr,
-+static int __init of_unittest_apply_revert_overlay_check(int overlay_nr,
--static void of_unittest_overlay_5(void)
-+static void __init of_unittest_overlay_5(void)
--static void of_unittest_overlay_11(void)
-+static void __init of_unittest_overlay_11(void)
-
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-
-> @@ -2290,18 +2275,29 @@ static __init void of_unittest_overlay_high_level=
-(void)
->                 __of_attach_node_sysfs(np);
->
->         if (of_symbols) {
-> +               struct property *new_prop;
->                 for_each_property_of_node(overlay_base_symbols, prop) {
-
-drivers/of/unittest.c: In function =E2=80=98of_unittest_overlay_high_level=
-=E2=80=99:
-drivers/of/unittest.c:2193: warning: =E2=80=98overlay_base_symbols=E2=80=99=
- may be
-used uninitialized in this function
-
-This isn't a new warning, so I guess I never reported it before because I
-thought it was a false positive (misguided by the "if (of_symbols)" test?).
-
-However, now I believe it is not, and an uninitialized pointer will be
-dereferenced if of_root has a __symbols__ node, but overlay_base_root hasn'=
-t.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
