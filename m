@@ -1,75 +1,367 @@
-Return-Path: <SRS0=BPvz=FX=mleia.com=vz@kernel.org>
-Subject: Re: [PATCH 2/2] hwrng: mxc-rnga - add driver support on boards with
- device tree
-From: Vladimir Zapolskiy <vz@mleia.com>
-References: <20180226183849.11562-1-vz@mleia.com>
- <20180226183849.11562-3-vz@mleia.com>
- <20180227094901.644cff57caadc97f65053d29@arm.com>
- <e5daefb3-7376-061a-96c7-ed708e17f6a2@mleia.com>
- <20180227133919.696ddfa9493885729ebdccd9@arm.com>
- <6b836cde-d5f7-4bcd-1218-59b11048e0f9@mleia.com>
-Message-ID: <e5713927-08a3-9ee0-588b-c190d45a125c@mleia.com>
-Date: Thu, 1 Mar 2018 23:21:57 +0200
-MIME-Version: 1.0
-In-Reply-To: <6b836cde-d5f7-4bcd-1218-59b11048e0f9@mleia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Kim Phillips <kim.phillips@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org
+Return-Path: <SRS0=EGYy=FZ=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v4 2/2] phy: amlogic: add USB3 PHY support for Meson GXL and GXM
+Date: Sat,  3 Mar 2018 19:47:00 +0100
+Message-Id: <20180303184700.21480-3-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20180303184700.21480-1-martin.blumenstingl@googlemail.com>
+References: <20180303184700.21480-1-martin.blumenstingl@googlemail.com>
+To: kishon@ti.com, linux-amlogic@lists.infradead.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, carlo@caione.org, khilman@baylibre.com, narmstrong@baylibre.com, jbrunet@baylibre.com, yixun.lan@amlogic.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 02/27/2018 10:07 PM, Vladimir Zapolskiy wrote:
-> On 02/27/2018 09:39 PM, Kim Phillips wrote:
->> On Tue, 27 Feb 2018 18:53:08 +0200
->> Vladimir Zapolskiy <vz@mleia.com> wrote:
->>
->>> On 02/27/2018 05:49 PM, Kim Phillips wrote:
->>>> On Mon, 26 Feb 2018 20:38:49 +0200
->>>> Vladimir Zapolskiy <vz@mleia.com> wrote:
->>>>
->>>>> +#ifdef CONFIG_OF
->>>>> +static const struct of_device_id mxc_rnga_of_match[] = {
->>>>> +	{ .compatible = "fsl,imx31-rnga", },
->>>>> +	{ /* sentinel */ },
->>>>> +};
->>>>> +MODULE_DEVICE_TABLE(of, mxc_rnga_of_match);
->>>>> +#endif
->>>>> +
->>>>>  static struct platform_driver mxc_rnga_driver = {
->>>>>  	.driver = {
->>>>> -		   .name = "mxc_rnga",
->>>>> -		   },
->>>>> +		.name = "mxc_rnga",
->>>>> +		.of_match_table = of_match_ptr(mxc_rnga_of_match),
->>>>
->>>> Does this build if CONFIG_OF is not set?
->>>
->>> Definitely it is expected to be built, you can verify it directly or
->>> check of_match_ptr() macro definition from include/linux/of.h
->>
->> Thanks, I verified it by removing the SOC_IMX31 dependency, and with
->> netwinder_defconfig as a base.  I also verified that the #ifdef
->> CONFIG_OF protecting the mxc_rnga_of_match definition is also not
->> needed.
-> 
-> That's a commonplace observation, but I have serious doubts, if it
-> has become a common practice to remove CONFIG_OF and CONFIG_ACPI
-> macro guards around device id lists. Still I would prefer to save
-> compiled code size.
-> 
+This adds a new driver for the USB3 PHY found on Meson GXL and GXM SoCs
+(both SoCs are using the same USB PHY register layout).
 
-I checked that all flavours of i.MX SoCs are under multiplatform build.
-FWIW only 1 iMX31 board has DT support and 10 of them use platform
-data, and I'd like to change the ratio. So it would be proper to
-remove the set CONFIG_OF guard.
+Unfortunately there is no documentation for this PHY in the public S905X
+datasheet (published for example by Khadas). What we know so far about
+this PHY:
+- even though the Meson GXL and GXM SoCs do not expose an USB3 port (the
+  dwc3 controller only has USB2 ports enabled) we need to initialize the
+  USB3 PHY (specifically USB_R1_U3H_FLADJ_30MHZ_REG_MASK). Without this
+  initialization high-speed USB devices (especially USB hard disks and
+  thumb drives, slower devices like mice do not seem to be affected)
+- on some boards the USB3 PHY starts in "device mode" - we want to bring
+  it into a known state (by switching it to host mode for now).
+- it is responsible for the OTG detection and for switching the first
+  USB2 PHY between host and peripheral (aka device) mode. an interrupt
+  can be used to detect changes between host and device mode.
 
-But what is significantly more important is that i.MX31 RNGA should
-be defined as compatible with i.MX21 RNGA, and it obligates me to send
-v2 with the corrected compatible name, I'll make both changes.
+There are five inputs to this register area:
+- the clock and reset line for the USB3 PHY itself
+- the clock and reset line for the peripheral mode and OTG detection
+  logic (on the GXL and GXM SoCs these are the same clock and reset line
+  as for the USB3 PHY itself, but Amlogic sees this as two different
+  components - even though they share the same register space - so they
+  have to be passed individually to allow specifying different inputs on
+  other SoCs if needed)
+- the interrupt for the OTG detection logic
 
-Thanks Kim for attracting my attention to possible improvements.
+The whole OTG detection logic is not implemented yet.
 
---
-With best wishes,
-Vladimir
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Yixun Lan <yixun.lan@amlogic.com>
+---
+ drivers/phy/amlogic/Kconfig              |  12 ++
+ drivers/phy/amlogic/Makefile             |   1 +
+ drivers/phy/amlogic/phy-meson-gxl-usb3.c | 282 +++++++++++++++++++++++++++++++
+ 3 files changed, 295 insertions(+)
+ create mode 100644 drivers/phy/amlogic/phy-meson-gxl-usb3.c
+
+diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+index ef3625cd25bb..23fe1cda2f70 100644
+--- a/drivers/phy/amlogic/Kconfig
++++ b/drivers/phy/amlogic/Kconfig
+@@ -24,3 +24,15 @@ config PHY_MESON_GXL_USB2
+ 	  Enable this to support the Meson USB2 PHYs found in Meson
+ 	  GXL and GXM SoCs.
+ 	  If unsure, say N.
++
++config PHY_MESON_GXL_USB3
++	tristate "Meson GXL and GXM USB3 PHY drivers"
++	default ARCH_MESON
++	depends on OF && (ARCH_MESON || COMPILE_TEST)
++	depends on USB_SUPPORT
++	select GENERIC_PHY
++	select REGMAP_MMIO
++	help
++	  Enable this to support the Meson USB3 PHY and OTG detection
++	  IP block found in Meson GXL and GXM SoCs.
++	  If unsure, say N.
+diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+index cfdc98715c30..4fd8848c194d 100644
+--- a/drivers/phy/amlogic/Makefile
++++ b/drivers/phy/amlogic/Makefile
+@@ -1,2 +1,3 @@
+ obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
+ obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
++obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
+diff --git a/drivers/phy/amlogic/phy-meson-gxl-usb3.c b/drivers/phy/amlogic/phy-meson-gxl-usb3.c
+new file mode 100644
+index 000000000000..d37d94ddf9c0
+--- /dev/null
++++ b/drivers/phy/amlogic/phy-meson-gxl-usb3.c
+@@ -0,0 +1,282 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Meson GXL USB3 PHY and OTG mode detection driver
++ *
++ * Copyright (C) 2018 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
++ */
++
++#include <linux/bitfield.h>
++#include <linux/bitops.h>
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/phy/phy.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++#include <linux/platform_device.h>
++
++#define USB_R0							0x00
++	#define USB_R0_P30_FSEL_MASK				GENMASK(5, 0)
++	#define USB_R0_P30_PHY_RESET				BIT(6)
++	#define USB_R0_P30_TEST_POWERDOWN_HSP			BIT(7)
++	#define USB_R0_P30_TEST_POWERDOWN_SSP			BIT(8)
++	#define USB_R0_P30_ACJT_LEVEL_MASK			GENMASK(13, 9)
++	#define USB_R0_P30_TX_BOOST_LEVEL_MASK			GENMASK(16, 14)
++	#define USB_R0_P30_LANE0_TX2RX_LOOPBACK			BIT(17)
++	#define USB_R0_P30_LANE0_EXT_PCLK_REQ			BIT(18)
++	#define USB_R0_P30_PCS_RX_LOS_MASK_VAL_MASK		GENMASK(28, 19)
++	#define USB_R0_U2D_SS_SCALEDOWN_MODE_MASK		GENMASK(30, 29)
++	#define USB_R0_U2D_ACT					BIT(31)
++
++#define USB_R1							0x04
++	#define USB_R1_U3H_BIGENDIAN_GS				BIT(0)
++	#define USB_R1_U3H_PME_ENABLE				BIT(1)
++	#define USB_R1_U3H_HUB_PORT_OVERCURRENT_MASK		GENMASK(6, 2)
++	#define USB_R1_U3H_HUB_PORT_PERM_ATTACH_MASK		GENMASK(11, 7)
++	#define USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK		GENMASK(15, 12)
++	#define USB_R1_U3H_HOST_U3_PORT_DISABLE			BIT(16)
++	#define USB_R1_U3H_HOST_PORT_POWER_CONTROL_PRESENT	BIT(17)
++	#define USB_R1_U3H_HOST_MSI_ENABLE			BIT(18)
++	#define USB_R1_U3H_FLADJ_30MHZ_REG_MASK			GENMASK(24, 19)
++	#define USB_R1_P30_PCS_TX_SWING_FULL_MASK		GENMASK(31, 25)
++
++#define USB_R2							0x08
++	#define USB_R2_P30_CR_DATA_IN_MASK			GENMASK(15, 0)
++	#define USB_R2_P30_CR_READ				BIT(16)
++	#define USB_R2_P30_CR_WRITE				BIT(17)
++	#define USB_R2_P30_CR_CAP_ADDR				BIT(18)
++	#define USB_R2_P30_CR_CAP_DATA				BIT(19)
++	#define USB_R2_P30_PCS_TX_DEEMPH_3P5DB_MASK		GENMASK(25, 20)
++	#define USB_R2_P30_PCS_TX_DEEMPH_6DB_MASK		GENMASK(31, 26)
++
++#define USB_R3							0x0c
++	#define USB_R3_P30_SSC_ENABLE				BIT(0)
++	#define USB_R3_P30_SSC_RANGE_MASK			GENMASK(3, 1)
++	#define USB_R3_P30_SSC_REF_CLK_SEL_MASK			GENMASK(12, 4)
++	#define USB_R3_P30_REF_SSP_EN				BIT(13)
++	#define USB_R3_P30_LOS_BIAS_MASK			GENMASK(18, 16)
++	#define USB_R3_P30_LOS_LEVEL_MASK			GENMASK(23, 19)
++	#define USB_R3_P30_MPLL_MULTIPLIER_MASK			GENMASK(30, 24)
++
++#define USB_R4							0x10
++	#define USB_R4_P21_PORT_RESET_0				BIT(0)
++	#define USB_R4_P21_SLEEP_M0				BIT(1)
++	#define USB_R4_MEM_PD_MASK				GENMASK(3, 2)
++	#define USB_R4_P21_ONLY					BIT(4)
++
++#define USB_R5							0x14
++	#define USB_R5_ID_DIG_SYNC				BIT(0)
++	#define USB_R5_ID_DIG_REG				BIT(1)
++	#define USB_R5_ID_DIG_CFG_MASK				GENMASK(3, 2)
++	#define USB_R5_ID_DIG_EN_0				BIT(4)
++	#define USB_R5_ID_DIG_EN_1				BIT(5)
++	#define USB_R5_ID_DIG_CURR				BIT(6)
++	#define USB_R5_ID_DIG_IRQ				BIT(7)
++	#define USB_R5_ID_DIG_TH_MASK				GENMASK(15, 8)
++	#define USB_R5_ID_DIG_CNT_MASK				GENMASK(23, 16)
++
++/* read-only register */
++#define USB_R6							0x18
++	#define USB_R6_P30_CR_DATA_OUT_MASK			GENMASK(15, 0)
++	#define USB_R6_P30_CR_ACK				BIT(16)
++
++struct phy_meson_gxl_usb3_priv {
++	struct regmap		*regmap;
++	enum phy_mode		mode;
++	struct clk		*clk_phy;
++	struct clk		*clk_peripheral;
++	struct reset_control	*reset;
++};
++
++static const struct regmap_config phy_meson_gxl_usb3_regmap_conf = {
++	.reg_bits = 8,
++	.val_bits = 32,
++	.reg_stride = 4,
++	.max_register = USB_R6,
++};
++
++static int phy_meson_gxl_usb3_power_on(struct phy *phy)
++{
++	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
++
++	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_0,
++			   USB_R5_ID_DIG_EN_0);
++	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_1,
++			   USB_R5_ID_DIG_EN_1);
++	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_TH_MASK,
++			   FIELD_PREP(USB_R5_ID_DIG_TH_MASK, 0xff));
++
++	return 0;
++}
++
++static int phy_meson_gxl_usb3_power_off(struct phy *phy)
++{
++	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
++
++	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_0, 0);
++	regmap_update_bits(priv->regmap, USB_R5, USB_R5_ID_DIG_EN_1, 0);
++
++	return 0;
++}
++
++static int phy_meson_gxl_usb3_set_mode(struct phy *phy, enum phy_mode mode)
++{
++	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
++
++	switch (mode) {
++	case PHY_MODE_USB_HOST:
++		regmap_update_bits(priv->regmap, USB_R0, USB_R0_U2D_ACT, 0);
++		regmap_update_bits(priv->regmap, USB_R4, USB_R4_P21_SLEEP_M0,
++				   0);
++		break;
++
++	case PHY_MODE_USB_DEVICE:
++		regmap_update_bits(priv->regmap, USB_R0, USB_R0_U2D_ACT,
++				   USB_R0_U2D_ACT);
++		regmap_update_bits(priv->regmap, USB_R4, USB_R4_P21_SLEEP_M0,
++				   USB_R4_P21_SLEEP_M0);
++		break;
++
++	default:
++		dev_err(&phy->dev, "unsupported PHY mode %d\n", mode);
++		return -EINVAL;
++	}
++
++	priv->mode = mode;
++
++	return 0;
++}
++
++static int phy_meson_gxl_usb3_init(struct phy *phy)
++{
++	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
++	int ret;
++
++	ret = reset_control_reset(priv->reset);
++	if (ret)
++		goto err;
++
++	ret = clk_prepare_enable(priv->clk_phy);
++	if (ret)
++		goto err;
++
++	ret = clk_prepare_enable(priv->clk_peripheral);
++	if (ret)
++		goto err_disable_clk_phy;
++
++	ret = phy_meson_gxl_usb3_set_mode(phy, priv->mode);
++	if (ret)
++		goto err_disable_clk_peripheral;
++
++	regmap_update_bits(priv->regmap, USB_R1,
++			   USB_R1_U3H_FLADJ_30MHZ_REG_MASK,
++			   FIELD_PREP(USB_R1_U3H_FLADJ_30MHZ_REG_MASK, 0x20));
++
++	return 0;
++
++err_disable_clk_peripheral:
++	clk_disable_unprepare(priv->clk_peripheral);
++err_disable_clk_phy:
++	clk_disable_unprepare(priv->clk_phy);
++err:
++	return ret;
++}
++
++static int phy_meson_gxl_usb3_exit(struct phy *phy)
++{
++	struct phy_meson_gxl_usb3_priv *priv = phy_get_drvdata(phy);
++
++	clk_disable_unprepare(priv->clk_peripheral);
++	clk_disable_unprepare(priv->clk_phy);
++
++	return 0;
++}
++
++static const struct phy_ops phy_meson_gxl_usb3_ops = {
++	.power_on	= phy_meson_gxl_usb3_power_on,
++	.power_off	= phy_meson_gxl_usb3_power_off,
++	.set_mode	= phy_meson_gxl_usb3_set_mode,
++	.init		= phy_meson_gxl_usb3_init,
++	.exit		= phy_meson_gxl_usb3_exit,
++	.owner		= THIS_MODULE,
++};
++
++static int phy_meson_gxl_usb3_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct phy_meson_gxl_usb3_priv *priv;
++	struct resource *res;
++	struct phy *phy;
++	struct phy_provider *phy_provider;
++	void __iomem *base;
++	int ret;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	priv->regmap = devm_regmap_init_mmio(dev, base,
++					     &phy_meson_gxl_usb3_regmap_conf);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
++	priv->clk_phy = devm_clk_get(dev, "phy");
++	if (IS_ERR(priv->clk_phy))
++		return PTR_ERR(priv->clk_phy);
++
++	priv->clk_peripheral = devm_clk_get(dev, "peripheral");
++	if (IS_ERR(priv->clk_peripheral))
++		return PTR_ERR(priv->clk_peripheral);
++
++	priv->reset = devm_reset_control_array_get_shared(dev);
++	if (IS_ERR(priv->reset))
++		return PTR_ERR(priv->reset);
++
++	/*
++	 * default to host mode as hardware defaults and/or boot-loader
++	 * behavior can result in this PHY starting up in device mode. this
++	 * default and the initialization in phy_meson_gxl_usb3_init ensure
++	 * that we reproducibly start in a known mode on all devices.
++	 */
++	priv->mode = PHY_MODE_USB_HOST;
++
++	phy = devm_phy_create(dev, np, &phy_meson_gxl_usb3_ops);
++	if (IS_ERR(phy)) {
++		ret = PTR_ERR(phy);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "failed to create PHY\n");
++
++		return ret;
++	}
++
++	phy_set_drvdata(phy, priv);
++
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++
++	return PTR_ERR_OR_ZERO(phy_provider);
++}
++
++static const struct of_device_id phy_meson_gxl_usb3_of_match[] = {
++	{ .compatible = "amlogic,meson-gxl-usb3-phy", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, phy_meson_gxl_usb3_of_match);
++
++static struct platform_driver phy_meson_gxl_usb3_driver = {
++	.probe	= phy_meson_gxl_usb3_probe,
++	.driver	= {
++		.name		= "phy-meson-gxl-usb3",
++		.of_match_table	= phy_meson_gxl_usb3_of_match,
++	},
++};
++module_platform_driver(phy_meson_gxl_usb3_driver);
++
++MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl@googlemail.com>");
++MODULE_DESCRIPTION("Meson GXL USB3 PHY and OTG detection driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.16.2
