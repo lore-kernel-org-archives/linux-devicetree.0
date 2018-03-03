@@ -1,36 +1,61 @@
-From: =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= <jezz@sysmic.org>
-Subject: [PATCH] ARM: dts: imx6dl: Fix typo in Engicam i.CoreM6 DualLite/Solo RQS
-Date: Sat,  3 Mar 2018 11:34:29 +0100
-Message-ID: <20180303103429.3063-1-jezz@sysmic.org>
+From: Vicente Bergas <vicencb@gmail.com>
+Subject: Re: [PATCH v2 3/6] arm64: dts: rockchip: enable typec-phy for rk3399-sapphire.
+Date: Sat, 3 Mar 2018 12:17:53 +0100
+Message-ID: <CAAMcf8CZ4JnytkdDoUmxxvjBR4T1QNNHDSzFsj_z8-Nm_ky=tA@mail.gmail.com>
+References: <20180301152515.20940-1-enric.balletbo@collabora.com> <20180301152515.20940-4-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180301152515.20940-4-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= <jezz@sysmic.org>
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: kishon@ti.com, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, groeck@chromium.org, gwendal@chromium.org, kernel@collabora.com, devicetree@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>, Jacob Chen <jacob-chen@iotwrt.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Obviously "Engicam i.CoreM6 DualLite/Solo RQS" include an imx6dl, not
-an imx6q.
+On Thu, Mar 1, 2018 at 4:25 PM, Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+> Commit c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port
+> support for rk3399") caused a regression regarding the USB3 type-A port.
+> During boot, the following message appears a few times:
+>
+>   dwc3: failed to initialize core
+>
+> The driver is deferred waiting for the typec-phy, but this never happens
+> bceause is disabled. So, enable it.
+>
+> Fixes: c301b327aea898af ("arm64: dts: rockchip: add usb3-phy otg-port support for rk3399")
+> Reported-by: Vicente Bergas <vicencb@gmail.com>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+>
+> Changes in v2: None
+>
+>  arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+> index ce592a4c0c4c..9c685eab4748 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi
+> @@ -557,6 +557,14 @@
+>         status = "okay";
+>  };
+>
+> +&tcphy0 {
+> +       status = "okay";
+> +};
+> +
+> +&tcphy1 {
+> +       status = "okay";
+> +};
+> +
+>  &u2phy0 {
+>         status = "okay";
+>
+> --
+> 2.16.1
 
-Signed-off-by: Jérôme Pouiller <jezz@sysmic.org>
----
- arch/arm/boot/dts/imx6dl-icore-rqs.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Tested-by: Vicente Bergas <vicencb@gmail.com>
 
-diff --git a/arch/arm/boot/dts/imx6dl-icore-rqs.dts b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-index cf42c2f5cdc7..1281bc39b7ab 100644
---- a/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-+++ b/arch/arm/boot/dts/imx6dl-icore-rqs.dts
-@@ -42,7 +42,7 @@
- 
- /dts-v1/;
- 
--#include "imx6q.dtsi"
-+#include "imx6dl.dtsi"
- #include "imx6qdl-icore-rqs.dtsi"
- 
- / {
--- 
-2.11.0
+Thank you,
+  Vicente.
