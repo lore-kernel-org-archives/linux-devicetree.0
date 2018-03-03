@@ -1,24 +1,67 @@
-Return-Path: <robherring2@gmail.com>
-Date: Mon, 5 Mar 2018 16:16:26 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] usb: renesas_usbhs: add binding for r8a77965
-Message-ID: <20180305221626.6tup3a6jcw2slyb4@rob-hp-laptop>
-References: <1519719363-27850-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1519719363-27850-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1519719363-27850-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: balbi@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=EGYy=FZ=googlemail.com=martin.blumenstingl@kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v4 1/2] dt-bindings: phy: Add support for the USB3 PHY on Amlogic Meson GXL SoCs
+Date: Sat,  3 Mar 2018 19:46:59 +0100
+Message-Id: <20180303184700.21480-2-martin.blumenstingl@googlemail.com>
+In-Reply-To: <20180303184700.21480-1-martin.blumenstingl@googlemail.com>
+References: <20180303184700.21480-1-martin.blumenstingl@googlemail.com>
+To: kishon@ti.com, linux-amlogic@lists.infradead.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, carlo@caione.org, khilman@baylibre.com, narmstrong@baylibre.com, jbrunet@baylibre.com, yixun.lan@amlogic.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Feb 27, 2018 at 05:16:02PM +0900, Yoshihiro Shimoda wrote:
-> This patch adds binding for r8a77965 (R-Car M3-N).
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
->  1 file changed, 1 insertion(+)
+Amlogic Meson GXL SoCs use a dwc3 controller with two (GXM - a variant
+for GXL, has three) USB2 ports. The first USB2 port supports host and
+peripheral (also called "device") mode.
+While the dwc3 controller has no USB3 port enabled we still need the
+USB3 PHY to be initialized. Otherwise high-speed USB transfers (for
+example with a USB flash drive) may time out (most often seen on boards
+with mainline u-boot, where the bootloader does not initialize the USB3
+PHY registers).
 
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: Yixun Lan <yixun.lan@amlogic.com>
+---
+ .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+new file mode 100644
+index 000000000000..114947e1de3d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
+@@ -0,0 +1,31 @@
++* Amlogic Meson GXL and GXM USB3 PHY and OTG detection binding
++
++Required properties:
++- compatible:	Should be "amlogic,meson-gxl-usb3-phy"
++- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
++- reg:		The base address and length of the registers
++- interrupts:	the interrupt specifier for the OTG detection
++- clocks:	phandles to the clocks for
++		- the USB3 PHY
++		- and peripheral mode/OTG detection
++- clock-names:	must contain "phy" and "peripheral"
++- resets:	phandle to the reset lines for:
++		- the USB3 PHY and
++		- peripheral mode/OTG detection
++- reset-names:	must contain "phy" and "peripheral"
++
++Optional properties:
++- phy-supply:	see phy-bindings.txt in this directory
++
++
++Example:
++	usb3_phy0: phy@78080 {
++		compatible = "amlogic,meson-gxl-usb3-phy";
++		#phy-cells = <0>;
++		reg = <0x0 0x78080 0x0 0x20>;
++		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clkc CLKID_USB_OTG>, <&clkc_AO CLKID_AO_CEC_32K>;
++		clock-names = "phy", "peripheral";
++		resets = <&reset RESET_USB_OTG>, <&reset RESET_USB_OTG>;
++		reset-names = "phy", "peripheral";
++	};
+-- 
+2.16.2
