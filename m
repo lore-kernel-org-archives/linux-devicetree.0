@@ -1,68 +1,32 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 1/2] iio: light: add driver for bh1730fvc chips
-Date: Sat, 3 Mar 2018 16:15:07 +0000
-Message-ID: <20180303161507.2f60345f@archlinux>
-References: <20180228001525.96044-1-delroth@google.com>
-        <CAHp75VfEaaJfREj5jBk7uwr2aRL96JN4Co=tir9Foy6L9=_o8A@mail.gmail.com>
-        <20180303153723.40773aae@archlinux>
-        <CAHp75VeEXdUMw2Skr=jDjUL+Rz=Xu-0S3Mw-X6MvjAXet974hw@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 0/2] Add R8A77970/Eagle I2C support
+Date: Sat, 3 Mar 2018 22:02:41 +0300
+Message-ID: <23c5b1f4-d92b-455f-7288-5aabd002183a@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeEXdUMw2Skr=jDjUL+Rz=Xu-0S3Mw-X6MvjAXet974hw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Pierre Bourdon <delroth@google.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-MW
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 3 Mar 2018 17:44:44 +0200
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+Hello!
 
-> On Sat, Mar 3, 2018 at 5:37 PM, Jonathan Cameron <jic23@kernel.org> wrote:
-> > On Wed, 28 Feb 2018 17:06:09 +0200  
-> >> On Wed, Feb 28, 2018 at 2:15 AM, Pierre Bourdon <delroth@google.com> wrote:  
-> 
-> Better to address even minors before submission.
+Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-20180301-v4.16-rc3' tag. We're adding the R8A77970 I2C nodes
+and then describing the PCA9654 I/O expander connected to the I2C0 bus.
 
-Absolutely.
+[1/2] arm64: dts: renesas: r8a77970: add I2C support
+[2/2] arm64: dts: renesas: eagle: add I2C0 support
 
-> 
-> >> > +       if (itime <= 0 || itime > 255)  
-> >>
-> >> Just side note: Suprisingly how many in_range() implementations we
-> >> have in kernel...  
-> > I guess one of those things that is so simple it's not worth having
-> > one true in_range to rule them all ;)  
-> 
-> We have already several implementations of the macro.
-> 
-> >> > +static int bh1730_adjust_gain(struct bh1730_data *bh1730)
-> >> > +{
-> >> > +       int visible, ir, highest, gain, ret, i;  
-> >>
-> >> int visible, ir, highest, gain;
-> >> unsigned int i;  
-> >
-> > Is there a strong reason for this one that I'm missing?
-> > (beyond personal taste!)  
-> 
-> First of all, I'm far from being fan of mixing int ret into other
-> variable definitions.
-> 
-> unsigned int i OTOH shows explicitly that we have counter which is not
-> supposed to be negative.
-Given it's specifically indexing over an enum (which can have any definition
-it likes) I wouldn't normally care, but fair enough.
-
-> 
-> int i in most of the cases will work, so, it's a minor. I'm not
-> insisting, though having counter variable on separate line is also a
-> good thing.
-> 
-> In general, having different things in one line is a bad idea for my opinion.
-Agreed.
-
-> 
-> >> int ret;  
-> 
+WBR, Sergei
