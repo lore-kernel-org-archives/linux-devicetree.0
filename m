@@ -1,220 +1,42 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH] pinctrl: bc2835: Add brcm,level property
-Date: Sat, 3 Mar 2018 15:21:56 +0100 (CET)
-Message-ID: <431699005.307231.1520086916739@email.1und1.de>
-References: <1519321475-973-1-git-send-email-matheus@castello.eng.br>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] dt-bindings: iio: adc: stm32-dfsdm: fix types, add
+ missing pinctrl
+Date: Sat, 3 Mar 2018 15:08:05 +0000
+Message-ID: <20180303150805.39f07a54@archlinux>
+References: <1519384260-23875-1-git-send-email-fabrice.gasnier@st.com>
+        <20180302162513.umh2a2g4io3x26uz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519321475-973-1-git-send-email-matheus@castello.eng.br>
+In-Reply-To: <20180302162513.umh2a2g4io3x26uz@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Castello <matheus@castello.eng.br>
-Cc: linus.walleij@linaro.org, eric@anholt.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Fabrice Gasnier <fabrice.gasnier@st.com>, linux@armlinux.org.uk, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, benjamin.gaignard@linaro.org, arnaud.pouliquen@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Matheus,
+On Fri, 2 Mar 2018 10:25:13 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-sorry for my late reply.
-
-> Matheus Castello <matheus@castello.eng.br> hat am 22. Februar 2018 um 18:44 geschrieben:
+> On Fri, Feb 23, 2018 at 12:11:00PM +0100, Fabrice Gasnier wrote:
+> > - Add missing pinctrl description. Support is made optional as dfsdm
+> >   may use internal sources (e.g. via registers)
+> > - Fix typo in IIO STM32 DFSDM filter "MANCH_F" description.
+> > Basically, this should be "falling edge = logic 0", not "1" that applies
+> > to "MANCH_R".
+> > BTW, make the description complete by describing both rising/falling
+> > edges as described in reference manuals.
+> > 
+> > Fixes: 6c82f947fc97 ("IIO: add DT bindings for stm32 DFSDM filter")
+> > 
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> > ---
+> >  Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)  
 > 
-> 
-> Property to set initial value of pin output buffer.
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  .../bindings/pinctrl/brcm,bcm2835-gpio.txt         |  5 +-
->  drivers/pinctrl/bcm/pinctrl-bcm2835.c              | 90 +++++++++++++++++-----
->  2 files changed, 75 insertions(+), 20 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-> index 2569866..6834f1d 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,bcm2835-gpio.txt
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing.
 
-Changes to the devicetree binding should be a separate patch. Please read [1] and use the get_maintainers script for all patches.
+Thanks,
 
-[1] - https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/submitting-patches.txt
-
-> @@ -54,8 +54,11 @@ Optional subnode-properties:
->    0: none
->    1: down
->    2: up
-> +- brcm,level: Integer, representing the value of output buffer to apply to the pin(s):
-> +  0: low
-> +  1: high
-
-As Linus suggested please don't introduce new legacy properties. We already have generic ones for this. After mention the supported properties, simply make a reference to the generic binding.
-
->  
-> -Each of brcm,function and brcm,pull may contain either a single value which
-> +Each of brcm,function, brcm,pull and brcm,level may contain either a single value which
->  will be applied to all pins in brcm,pins, or 1 value for each entry in
->  brcm,pins.
->  
-> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> index 785c366..0ace548 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> @@ -73,6 +73,8 @@
->  enum bcm2835_pinconf_param {
->  	/* argument: bcm2835_pinconf_pull */
->  	BCM2835_PINCONF_PARAM_PULL,
-> +	/* argument: bcm2835_pinconf_level */
-> +	BCM2835_PINCONF_PARAM_LEVEL,
->  };
->  
->  #define BCM2835_PINCONF_PACK(_param_, _arg_) ((_param_) << 16 | (_arg_))
-> @@ -725,16 +727,42 @@ static int bcm2835_pctl_dt_node_to_map_pull(struct bcm2835_pinctrl *pc,
->  	return 0;
->  }
->  
-> +static int bcm2835_pctl_dt_node_to_map_level(struct bcm2835_pinctrl *pc,
-> +		struct device_node *np, u32 pin, u32 level,
-> +		struct pinctrl_map **maps)
-> +{
-> +	struct pinctrl_map *map = *maps;
-> +	unsigned long *configs;
-> +
-> +	if (level > 2) {
-> +		dev_err(pc->dev, "%pOF: invalid brcm,level %d\n", np, level);
-> +		return -EINVAL;
-> +	}
-> +
-> +	configs = kzalloc(sizeof(*configs), GFP_KERNEL);
-> +	if (!configs)
-> +		return -ENOMEM;
-> +	configs[0] = BCM2835_PINCONF_PACK(BCM2835_PINCONF_PARAM_LEVEL, level);
-> +
-> +	map->type = PIN_MAP_TYPE_CONFIGS_PIN;
-> +	map->data.configs.group_or_pin = bcm2835_gpio_pins[pin].name;
-> +	map->data.configs.configs = configs;
-> +	map->data.configs.num_configs = 1;
-> +	(*maps)++;
-> +
-> +	return 0;
-> +}
-> +
->  static int bcm2835_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
->  		struct device_node *np,
->  		struct pinctrl_map **map, unsigned *num_maps)
->  {
->  	struct bcm2835_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
-> -	struct property *pins, *funcs, *pulls;
-> -	int num_pins, num_funcs, num_pulls, maps_per_pin;
-> +	struct property *pins, *funcs, *pulls, *levels;
-> +	int num_pins, num_funcs, num_pulls, num_levels, maps_per_pin;
->  	struct pinctrl_map *maps, *cur_map;
->  	int i, err;
-> -	u32 pin, func, pull;
-> +	u32 pin, func, pull, level;
->  
->  	pins = of_find_property(np, "brcm,pins", NULL);
->  	if (!pins) {
-> @@ -744,6 +772,7 @@ static int bcm2835_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
->  
->  	funcs = of_find_property(np, "brcm,function", NULL);
->  	pulls = of_find_property(np, "brcm,pull", NULL);
-> +	levels = of_find_property(np, "brcm,level", NULL);
->  
->  	if (!funcs && !pulls) {
->  		dev_err(pc->dev,
-> @@ -755,6 +784,7 @@ static int bcm2835_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
->  	num_pins = pins->length / 4;
->  	num_funcs = funcs ? (funcs->length / 4) : 0;
->  	num_pulls = pulls ? (pulls->length / 4) : 0;
-> +	num_levels = levels ? (levels->length / 4) : 0;
->  
->  	if (num_funcs > 1 && num_funcs != num_pins) {
->  		dev_err(pc->dev,
-> @@ -770,11 +800,20 @@ static int bcm2835_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
->  		return -EINVAL;
->  	}
->  
-> +	if (num_levels > 1 && num_levels != num_pins) {
-> +		dev_err(pc->dev,
-> +			"%pOF: brcm,level must have 1 or %d entries\n",
-> +			np, num_pins);
-> +		return -EINVAL;
-> +	}
-> +
->  	maps_per_pin = 0;
->  	if (num_funcs)
->  		maps_per_pin++;
->  	if (num_pulls)
->  		maps_per_pin++;
-> +	if (num_levels)
-> +		maps_per_pin++;
->  	cur_map = maps = kzalloc(num_pins * maps_per_pin * sizeof(*maps),
->  				GFP_KERNEL);
->  	if (!maps)
-> @@ -811,6 +850,17 @@ static int bcm2835_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
->  			if (err)
->  				goto out;
->  		}
-> +		if (num_levels) {
-> +			err = of_property_read_u32_index(np, "brcm,level",
-> +					(num_levels > 1) ? i : 0, &level);
-> +			if (err)
-> +				goto out;
-> +
-> +			err = bcm2835_pctl_dt_node_to_map_level(pc, np, pin,
-> +							level, &cur_map);
-> +			if (err)
-> +				goto out;
-> +		}
->  	}
->  
->  	*map = maps;
-> @@ -931,23 +981,25 @@ static int bcm2835_pinconf_set(struct pinctrl_dev *pctldev,
->  		param = BCM2835_PINCONF_UNPACK_PARAM(configs[i]);
->  		arg = BCM2835_PINCONF_UNPACK_ARG(configs[i]);
->  
-> -		if (param != BCM2835_PINCONF_PARAM_PULL)
-> +		if (param == BCM2835_PINCONF_PARAM_PULL) {
-> +			off = GPIO_REG_OFFSET(pin);
-> +			bit = GPIO_REG_SHIFT(pin);
-> +
-> +			bcm2835_gpio_wr(pc, GPPUD, arg & 3);
-> +			/*
-> +			* Docs say to wait 150 cycles, but not of what. We assume a
-> +			* 1 MHz clock here, which is pretty slow...
-> +			*/
-> +			udelay(150);
-> +			bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), BIT(bit));
-> +			udelay(150);
-> +			bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), 0);
-> +		} else if (param == BCM2835_PINCONF_PARAM_LEVEL) {
-> +			/* write in register */
-> +			bcm2835_gpio_set_bit(pc, arg ? GPSET0 : GPCLR0, pin);
-> +		} else {
-
-Please separate the restructuring and the really new code into 2 patches. This make it easier to review.
-
-Thanks
-Stefan
-
->  			return -EINVAL;
-> -
-> -		off = GPIO_REG_OFFSET(pin);
-> -		bit = GPIO_REG_SHIFT(pin);
-> -
-> -		bcm2835_gpio_wr(pc, GPPUD, arg & 3);
-> -		/*
-> -		 * BCM2835 datasheet say to wait 150 cycles, but not of what.
-> -		 * But the VideoCore firmware delay for this operation
-> -		 * based nearly on the same amount of VPU cycles and this clock
-> -		 * runs at 250 MHz.
-> -		 */
-> -		udelay(1);
-> -		bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), BIT(bit));
-> -		udelay(1);
-> -		bcm2835_gpio_wr(pc, GPPUDCLK0 + (off * 4), 0);
-> +		}
->  	} /* for each config */
->  
->  	return 0;
-> -- 
-> 2.7.4
->
+Jonathan
