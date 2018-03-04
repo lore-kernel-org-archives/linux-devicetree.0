@@ -1,72 +1,40 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH 2/2] ARM: dts: armada388-clearfog: add SFP module support
-Date: Sun, 4 Mar 2018 14:13:24 +0200
-Message-ID: <20180304121324.ut3d3i2vpdopae7o@sapphire.tkos.co.il>
-References: <20180227160135.GU9418@n2100.armlinux.org.uk>
- <E1eqhha-0004l3-Rd@rmk-PC.armlinux.org.uk>
+From: Ilia Lin <ilialin@codeaurora.org>
+Subject: [PATCH 0/2] Add SAW support to QCOM SPMI driver
+Date: Sun,  4 Mar 2018 14:31:47 +0200
+Message-ID: <1520166709-554-1-git-send-email-ilialin@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <E1eqhha-0004l3-Rd@rmk-PC.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <rmk+kernel@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=y
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org, mark.rutland@arm.com
+Cc: ilialin@codeaurora.org, amit.kucheria@linaro.org, nicolas.dechesne@linaro.org, celster@codeaurora.org, tfinkel@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+The SAW is the “Subsystem Power Manager (SPM),
+Adaptive Voltage Scaling (AVS)
+and Dynamic Current Management (DCM) Wrapper”,
+that is, a core that contains logic to implement the SPM, AVS,
+and DCM functions. The SAW manages power controls for a client core
+such as a CPU.
 
-On Tue, Feb 27, 2018 at 04:02:02PM +0000, Russell King wrote:
-> Add SFP module support for Clearfog using the SFP phylink support.
-> 
-> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
+The PMIC regulators supplying power to the CPU cores should not
+be controlled by the SPMI accesses directly, but through the SAW
+interface.
 
-Tested-by: Baruch Siach <baruch@tkos.co.il>
+The patch series adds SAW support to the SPMI regulator driver.
+The special SAW controlled regulators should be configured by
+device tree handle. The SPI driver will handle those regulators
+separately through the SAW interface, instead of SPMI.
 
-Tested on Clearfog base with kernel version 4.16-rc3. The SFP module is 1G 
-copper Linktel LX1801CNR.
+Ilia Lin (2):
+  regulator: qcom_spmi: Add support for SAW
+  dt-bindings: Add support for SAW documentation
 
-ethtool output:
-
-	Identifier                                : 0x03 (SFP)
-	Extended identifier                       : 0x04 (GBIC/SFP defined by 2-wire interface ID)
-	Connector                                 : 0x00 (unknown or unspecified)
-	Transceiver codes                         : 0x00 0x00 0x00 0x08 0x00 0x00 0x00 0x00
-	Transceiver type                          : Ethernet: 1000BASE-T
-	Encoding                                  : 0x01 (8B/10B)
-	BR, Nominal                               : 1300MBd
-	Rate identifier                           : 0x00 (unspecified)
-	Length (SMF,km)                           : 0km
-	Length (SMF)                              : 0m
-	Length (50um)                             : 0m
-	Length (62.5um)                           : 0m
-	Length (Copper)                           : 100m
-	Length (OM3)                              : 0m
-	Laser wavelength                          : 0nm
-	Vendor name                               : LINKTEL
-	Vendor OUI                                : 00:00:00
-	Vendor PN                                 : LX1801CNR
-	Vendor rev                                : 1.0
-	Option values                             : 0x00 0x10
-	Option                                    : TX_DISABLE implemented
-	BR margin, max                            : 0%
-	BR margin, min                            : 0%
-	Vendor SN                                 : 1172623927
-	Date code                                 : 170628
-
-Thanks,
-baruch
+ .../bindings/regulator/qcom,spmi-regulator.txt     |  45 +++++++
+ drivers/regulator/qcom_spmi-regulator.c            | 133 ++++++++++++++++++++-
+ 2 files changed, 175 insertions(+), 3 deletions(-)
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
