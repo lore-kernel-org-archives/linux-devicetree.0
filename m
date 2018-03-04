@@ -1,90 +1,72 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: [GIT PULL] of_overlay_fdt_apply() v7 for 4.17
-Date: Sun, 4 Mar 2018 00:48:33 -0800
-Message-ID: <617f14dc-63f7-e59c-4fa8-813b4ebd3c34@gmail.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH 2/2] ARM: dts: armada388-clearfog: add SFP module support
+Date: Sun, 4 Mar 2018 14:13:24 +0200
+Message-ID: <20180304121324.ut3d3i2vpdopae7o@sapphire.tkos.co.il>
+References: <20180227160135.GU9418@n2100.armlinux.org.uk>
+ <E1eqhha-0004l3-Rd@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ivan Gorinov <ivan.gorinov@intel.com>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <E1eqhha-0004l3-Rd@rmk-PC.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Russell,
 
-Please pull the changes to create the overlay FDT apply API.
+On Tue, Feb 27, 2018 at 04:02:02PM +0000, Russell King wrote:
+> Add SFP module support for Clearfog using the SFP phylink support.
+> 
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 
-This is the v7 changes.
+Tested-by: Baruch Siach <baruch@tkos.co.il>
 
--Frank
+Tested on Clearfog base with kernel version 4.16-rc3. The SFP module is 1G 
+copper Linktel LX1801CNR.
 
-The following changes since commit 7928b2cbe55b2a410a0f5c1f154610059c57b1b2:
+ethtool output:
 
-  Linux 4.16-rc1 (2018-02-11 15:04:29 -0800)
+	Identifier                                : 0x03 (SFP)
+	Extended identifier                       : 0x04 (GBIC/SFP defined by 2-wire interface ID)
+	Connector                                 : 0x00 (unknown or unspecified)
+	Transceiver codes                         : 0x00 0x00 0x00 0x08 0x00 0x00 0x00 0x00
+	Transceiver type                          : Ethernet: 1000BASE-T
+	Encoding                                  : 0x01 (8B/10B)
+	BR, Nominal                               : 1300MBd
+	Rate identifier                           : 0x00 (unspecified)
+	Length (SMF,km)                           : 0km
+	Length (SMF)                              : 0m
+	Length (50um)                             : 0m
+	Length (62.5um)                           : 0m
+	Length (Copper)                           : 100m
+	Length (OM3)                              : 0m
+	Laser wavelength                          : 0nm
+	Vendor name                               : LINKTEL
+	Vendor OUI                                : 00:00:00
+	Vendor PN                                 : LX1801CNR
+	Vendor rev                                : 1.0
+	Option values                             : 0x00 0x10
+	Option                                    : TX_DISABLE implemented
+	BR margin, max                            : 0%
+	BR margin, min                            : 0%
+	Vendor SN                                 : 1172623927
+	Date code                                 : 170628
 
-are available in the git repository at:
+Thanks,
+baruch
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/frowand/linux.git tags/overlay_apply_fdt_v7-for-4.17
-
-for you to fetch changes up to e547c0031697a0cb5ff7f4a66754fb3e082754ff:
-
-  of: improve reporting invalid overlay target path (2018-03-04 00:29:40 -0800)
-
-----------------------------------------------------------------
-Move duplicating and unflattening of an overlay flattened devicetree
-(FDT) into the overlay application code.  To accomplish this,
-of_overlay_apply() is replaced by of_overlay_fdt_apply().
-
-----------------------------------------------------------------
-Frank Rowand (5):
-      x86: devicetree: fix config option around x86_flattree_get_config()
-      of: change overlay apply input data from unflattened to FDT
-      of: Documentation: of_overlay_apply() replaced by of_overlay_fdt_apply()
-      of: convert unittest overlay devicetree source to sugar syntax
-      of: improve reporting invalid overlay target path
-
- Documentation/devicetree/overlay-notes.txt       |   4 +-
- arch/x86/kernel/devicetree.c                     |   2 +-
- drivers/of/Kconfig                               |   1 +
- drivers/of/overlay.c                             | 134 ++++++++--
- drivers/of/resolver.c                            |   6 -
- drivers/of/unittest-data/Makefile                |  28 ++-
- drivers/of/unittest-data/overlay.dts             | 101 ++++----
- drivers/of/unittest-data/overlay_0.dts           |  14 ++
- drivers/of/unittest-data/overlay_1.dts           |  14 ++
- drivers/of/unittest-data/overlay_10.dts          |  27 ++
- drivers/of/unittest-data/overlay_11.dts          |  28 +++
- drivers/of/unittest-data/overlay_12.dts          |  14 ++
- drivers/of/unittest-data/overlay_13.dts          |  14 ++
- drivers/of/unittest-data/overlay_15.dts          |  30 +++
- drivers/of/unittest-data/overlay_2.dts           |   9 +
- drivers/of/unittest-data/overlay_3.dts           |   9 +
- drivers/of/unittest-data/overlay_4.dts           |  18 ++
- drivers/of/unittest-data/overlay_5.dts           |   9 +
- drivers/of/unittest-data/overlay_6.dts           |  10 +
- drivers/of/unittest-data/overlay_7.dts           |  10 +
- drivers/of/unittest-data/overlay_8.dts           |  10 +
- drivers/of/unittest-data/overlay_9.dts           |  10 +
- drivers/of/unittest-data/overlay_bad_phandle.dts |  23 +-
- drivers/of/unittest-data/overlay_bad_symbol.dts  |  25 +-
- drivers/of/unittest-data/tests-overlay.dtsi      | 217 +---------------
- drivers/of/unittest.c                            | 300 +++++++++++------------
- include/linux/of.h                               |   6 +-
- 27 files changed, 586 insertions(+), 487 deletions(-)
- create mode 100644 drivers/of/unittest-data/overlay_0.dts
- create mode 100644 drivers/of/unittest-data/overlay_1.dts
- create mode 100644 drivers/of/unittest-data/overlay_10.dts
- create mode 100644 drivers/of/unittest-data/overlay_11.dts
- create mode 100644 drivers/of/unittest-data/overlay_12.dts
- create mode 100644 drivers/of/unittest-data/overlay_13.dts
- create mode 100644 drivers/of/unittest-data/overlay_15.dts
- create mode 100644 drivers/of/unittest-data/overlay_2.dts
- create mode 100644 drivers/of/unittest-data/overlay_3.dts
- create mode 100644 drivers/of/unittest-data/overlay_4.dts
- create mode 100644 drivers/of/unittest-data/overlay_5.dts
- create mode 100644 drivers/of/unittest-data/overlay_6.dts
- create mode 100644 drivers/of/unittest-data/overlay_7.dts
- create mode 100644 drivers/of/unittest-data/overlay_8.dts
- create mode 100644 drivers/of/unittest-data/overlay_9.dts
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
