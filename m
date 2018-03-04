@@ -1,103 +1,50 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH 2/2] ARM: dts: armada388-clearfog: add SFP module support
-Date: Sun, 4 Mar 2018 15:19:28 +0200
-Message-ID: <20180304131928.pxm545alwhmf5u6j@sapphire.tkos.co.il>
-References: <20180227160135.GU9418@n2100.armlinux.org.uk>
- <E1eqhha-0004l3-Rd@rmk-PC.armlinux.org.uk>
- <20180304121324.ut3d3i2vpdopae7o@sapphire.tkos.co.il>
- <20180304124905.GF9418@n2100.armlinux.org.uk>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v3 02/22] ASoC: rt5651: Add devicetree-bindings
+	for jack-detect
+Date: Sun,  4 Mar 2018 15:35:50 +0100
+Message-ID: <20180304143610.21125-3-hdegoede@redhat.com>
+References: <20180304143610.21125-1-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="4cwqguc3mevke6qq"
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180304124905.GF9418@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180304143610.21125-1-hdegoede@redhat.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Bard Liao <bardliao@realtek.com>, Oder Chiou <oder_chiou@realtek.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, alsa-devel@alsa-project.org, Carlo Caione <carlo@endlessm.com>, devicetree@vger.kernel.org, Takashi Iwai <tiwai@suse.com>
 List-Id: devicetree@vger.kernel.org
 
-
---4cwqguc3mevke6qq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Russell,
-
-On Sun, Mar 04, 2018 at 12:49:06PM +0000, Russell King - ARM Linux wrote:
-> On Sun, Mar 04, 2018 at 02:13:24PM +0200, Baruch Siach wrote:
-> > On Tue, Feb 27, 2018 at 04:02:02PM +0000, Russell King wrote:
-> > > Add SFP module support for Clearfog using the SFP phylink support.
-> > > 
-> > > Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
-> > 
-> > Tested-by: Baruch Siach <baruch@tkos.co.il>
-> > 
-> > Tested on Clearfog base with kernel version 4.16-rc3. The SFP module is 1G 
-> > copper Linktel LX1801CNR.
-> 
-> Thanks for testing.
-> 
-> Please also send the "ethtool -m eth2 raw on > foo.bin" output as well
-> so I can build a database of module EEPROMs, which allows me to validate
-> the SFP parsing code against.  Alternatively, please send the "hex on"
-> if you think that's more convenient.
-
-Here are both. Binary file md5sum: 3635c7ceff2127d4d6bf04339b657440
-
-Offset		Values
-------		------
-0x0000:		03 04 00 00 00 00 08 00 00 00 00 01 0d 00 00 00 
-0x0010:		00 00 64 00 4c 49 4e 4b 54 45 4c 20 20 20 20 20 
-0x0020:		20 20 20 20 00 00 00 00 4c 58 31 38 30 31 43 4e 
-0x0030:		52 20 20 20 20 20 20 20 31 2e 30 20 00 00 00 94 
-0x0040:		00 10 00 00 31 31 37 32 36 32 33 39 32 37 20 20 
-0x0050:		20 20 20 20 31 37 30 36 32 38 20 20 00 00 00 50 
-0x0060:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-0x0070:		00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-0x0080:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-0x0090:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-0x00a0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-0x00b0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-0x00c0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-0x00d0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-0x00e0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-0x00f0:		ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff 
-
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
-
---4cwqguc3mevke6qq
-Content-Type: application/octet-stream
-Content-Disposition: attachment; filename="sfp.bin"
-Content-Transfer-Encoding: base64
-
-AwQAAAAACAAAAAABDQAAAAAAZABMSU5LVEVMICAgICAgICAgAAAAAExYMTgwMUNOUiAgICAg
-ICAxLjAgAAAAlAAQAAAxMTcyNjIzOTI3ICAgICAgMTcwNjI4ICAAAABQAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAD/////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////w==
-
---4cwqguc3mevke6qq
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---4cwqguc3mevke6qq--
+QWRkIG5ldyBwcm9wZXJ0aWVzIHRvIHRoZSBydDU2NTEgZHQtYmluZGluZ3MgZm9yIGNvbmZpZ3Vy
+aW5nIHRoZQpqYWNrLWRldGVjdCBzb3VyY2UgYW5kIG92ZXItY3VycmVudCBkZXRlY3Qgc2V0dGlu
+Z3MuCgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKU2lnbmVkLW9mZi1ieTogSGFucyBk
+ZSBHb2VkZSA8aGRlZ29lZGVAcmVkaGF0LmNvbT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3Mvc291bmQvcnQ1NjUxLnR4dCB8IDE3ICsrKysrKysrKysrKysrKysrCiAxIGZp
+bGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9ydDU2NTEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3NvdW5kL3J0NTY1MS50eHQKaW5kZXggMzg3NTIzMzA5NWY1Li43ODkw
+YWE5NDc3ZjggMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b3VuZC9ydDU2NTEudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9z
+b3VuZC9ydDU2NTEudHh0CkBAIC0xNiw2ICsxNiwyMyBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgog
+LSByZWFsdGVrLGRtaWMtZW4KICAgQm9vbGVhbi4gdHJ1ZSBpZiBkbWljIGlzIHVzZWQuCiAKKy0g
+cmVhbHRlayxqYWNrLWRldGVjdC1zb3VyY2UKKyAgdTMyLiBWYWxpZCB2YWx1ZXM6CisgIDE6IFVz
+ZSBKRDFfMSBwaW4gZm9yIGphY2stZGVjdGVjdAorICAyOiBVc2UgSkQxXzIgcGluIGZvciBqYWNr
+LWRlY3RlY3QKKyAgMzogVXNlIEpEMiBwaW4gZm9yIGphY2stZGVjdGVjdAorCistIHJlYWx0ZWss
+b3Zlci1jdXJyZW50LXRocmVzaG9sZC1taWNyb2FtcAorICB1MzIsIG1pY2JpYXMgb3Zlci1jdXJy
+ZW50IGRldGVjdGlvbiB0aHJlc2hvbGQgaW4gwrVBLCB2YWxpZCB2YWx1ZXMgYXJlCisgIDYwMCwg
+MTUwMCBhbmQgMjAwMMK1QS4KKworLSByZWFsdGVrLG92ZXItY3VycmVudC1zY2FsZS1mYWN0b3IK
+KyAgdTMyLCBtaWNiaWFzIG92ZXItY3VycmVudCBkZXRlY3Rpb24gc2NhbGUtZmFjdG9yLCB2YWxp
+ZCB2YWx1ZXMgYXJlOgorICAwOiBTY2FsZSBjdXJyZW50IGJ5IDAuNQorICAxOiBTY2FsZSBjdXJy
+ZW50IGJ5IDAuNzUKKyAgMjogU2NhbGUgY3VycmVudCBieSAxLjAKKyAgMzogU2NhbGUgY3VycmVu
+dCBieSAxLjUKKwogUGlucyBvbiB0aGUgZGV2aWNlIChmb3IgbGlua2luZyBpbnRvIGF1ZGlvIHJv
+dXRlcykgZm9yIFJUNTY1MToKIAogICAqIERNSUMgTDEKLS0gCjIuMTQuMwoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxp
+c3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVj
+dC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
