@@ -1,42 +1,48 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH v5 4/4] arm64: dts: sdm845: Add serial console support
-Date: Mon, 5 Mar 2018 16:13:35 +0530
-Message-ID: <9d24e89f-38be-59e4-6f76-c273dd4d4e79@codeaurora.org>
-References: <20180222061208.2031-1-rnayak@codeaurora.org>
- <20180222061208.2031-5-rnayak@codeaurora.org>
- <20180304195930.GQ93895@bjorns-mbp-2.lan>
+From: Denis OSTERLAND <denis.osterland@diehl.com>
+Subject: [PATCH v3 0/4] rtc: isl1208: fixes, documentation and isl1219 support
+Date: Mon, 5 Mar 2018 10:43:53 +0000
+Message-ID: <1520246373-19023-1-git-send-email-Denis.Osterland@diehl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180304195930.GQ93895@bjorns-mbp-2.lan>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: andy.gross@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, marc.zyngier@arm.com, Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+To: "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mgr@pengutronix.de" <mgr@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "jdelvare@suse.com" <jdelvare@suse.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Denis OSTERLAND <denis.osterland@diehl.com>
 List-Id: devicetree@vger.kernel.org
 
+changes since v2:
+Fix rebase issue in 2/4 and 3/4, where 2/4 uses a data type declared 3/4.
+
+changes since v1:
+Represent isl1219 tamper detection as RTC timestamp event,
+instead of hwmon intrusion sensor.
+Switch to rtc_register_device, to fix possible race conditions in probe.
+Add documentation of the two possible interrupt sources for isl1219.
+Support "evdet" named interrupt souce.
+
+Michael Grzeschik (2):
+  rtc: isl1208: enable interrupt after context preparation
+  rtc: isl1208: add support for isl1219 with tamper detection
+
+Denis Osterland (2):
+  rtc: isl1208: switch to rtc_register_device
+  rtc: isl1208: Add "evdet" interrupt source for isl1219.
+
+ .../devicetree/bindings/rtc/isil,isl1219.txt       |  28 +++
+ drivers/rtc/rtc-isl1208.c                          | 209 +++++++++++++++++----
+ 2 files changed, 203 insertions(+), 34 deletions(-)
+
+Message-Id: 1519821214-22379-1-git-send-email-Denis.Osterland@diehl.com
+Message-Id: 20180123121801.4214-1-m.grzeschik@pengutronix.de
 
 
-On 03/05/2018 01:29 AM, Bjorn Andersson wrote:
-> On Wed 21 Feb 22:12 PST 2018, Rajendra Nayak wrote:
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> [..]
->> +			qup_uart2: serial@a84000 {
->> +				compatible = "qcom,geni-debug-uart";
->> +				reg = <0xa84000 0x4000>;
->> +				reg-names = "se-phys";
->> +				clock-names = "se-clk";
-> 
-> This was changed to "se" in v3 of the GENI patchset, with that this
-> boots nicely again.
-
-Thanks Bjorn for testing.
-
-Karthik, it would be good if you could include just this patch from this series as part
-of your GENI series for the next (and subsequent) repost, with updates as needed based on
-binding changes?
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Diehl AKO Stiftung & Co. KG, Pfannerstraße 75-83, 88239 Wangen im Allgäu
+Bereichsvorstand: Dr.-Ing. Michael Siedentop (Sprecher), Josef Fellner (Mitglied)
+Sitz der Gesellschaft: Wangen i.A. – Registergericht: Amtsgericht Ulm HRA 620609 – Persönlich haftende Gesellschafterin: Diehl Verwaltungs-Stiftung – Sitz: Nürnberg – Registergericht: Amtsgericht Nürnberg HRA 11756 –
+Vorstand: Dr.-Ing. E.h. Thomas Diehl (†) (Vorsitzender), Herr Dipl.-Wirtsch.-Ing. Wolfgang Weggen (stellvertretender Vorsitzender), Dipl.-Kfm. Claus Günther, Dipl.-Kfm. Frank Gutzeit, Dr.-Ing. Heinrich Schunk, Dr.-Ing. Michael Siedentop , Dipl.-Kfm. Dr.-Ing. Martin Sommer, Dipl.-Ing. (FH) Rainer von Borstel, Vorsitzender des Aufsichtsrates: Dr. Klaus Maier
+___________________________________________________________________________________________________
+Der Inhalt der vorstehenden E-Mail ist nicht rechtlich bindend. Diese E-Mail enthaelt vertrauliche und/oder rechtlich geschuetzte Informationen.
+Informieren Sie uns bitte, wenn Sie diese E-Mail faelschlicherweise erhalten haben. Bitte loeschen Sie in diesem Fall die Nachricht. Jede unerlaubte Form der Reproduktion, Bekanntgabe, Aenderung, Verteilung und/oder Publikation dieser E-Mail ist strengstens untersagt.
+The contents of the above mentioned e-mail is not legally binding. This e-mail contains confidential and/or legally protected information. Please inform us if you have received this e-mail by mistake and delete it in such a case. Each unauthorized reproduction, disclosure, alteration, distribution and/or publication of this e-mail is strictly prohibited.
