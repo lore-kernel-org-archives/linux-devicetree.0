@@ -1,60 +1,71 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH] arm64: dts: stratix10: Add PL330 DMAC to Stratix10 dts
-Date: Mon, 5 Mar 2018 09:27:45 -0600
-Message-ID: <855c7ccd-d675-7d4f-f380-a2e11233d331@kernel.org>
-References: <1519141127-22038-1-git-send-email-graham.moore@linux.intel.com>
+From: Jordan Crouse <jcrouse@codeaurora.org>
+Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Support GPU/GMU
+Date: Mon, 5 Mar 2018 08:28:18 -0700
+Message-ID: <20180305152818.GC15200@jcrouse-lnx.qualcomm.com>
+References: <20180302215638.6145-1-jcrouse@codeaurora.org>
+ <20180302215638.6145-3-jcrouse@codeaurora.org>
+ <20180305044221.GC23018@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519141127-22038-1-git-send-email-graham.moore@linux.intel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Graham Moore <graham.moore@linux.intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180305044221.GC23018@vireshk-i7>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: nm@ti.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, vireshk@kernel.org, freedreno@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/20/2018 09:38 AM, Graham Moore wrote:
-> The Stratix10 SoCFPGA uses the PL330 DMAC.  This patch adds the PL330
-> DMAC to the Stratix10 device tree.
-> 
-> Signed-off-by: Graham Moore <graham.moore@linux.intel.com>
-> ---
->  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> index aa4080d..0666c0f 100644
-> --- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> +++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-> @@ -711,6 +711,25 @@
->  			reg = <0xffe00000 0x100000>;
->  		};
->  
-> +		pdma: pdma@ffda0000 {
-> +			compatible = "arm,pl330", "arm,primecell";
-> +			reg = <0xffda0000 0x1000>;
-> +			interrupts = <0 81 4>,
-> +				     <0 82 4>,
-> +				     <0 83 4>,
-> +				     <0 84 4>,
-> +				     <0 85 4>,
-> +				     <0 86 4>,
-> +				     <0 87 4>,
-> +				     <0 88 4>,
-> +				     <0 89 4>;
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
-> +			clocks = <&l4_main_clk>;
-
-This clock doesn't exist. Can you please resend this patch based on the
-clock driver patch?
-
-please base your updated patch with :
-
-https://git.kernel.org/pub/scm/linux/kernel/git/dinguyen/linux.git/log/?h=socfpga_for_next_v4.17_dts
-
-Dinh
+T24gTW9uLCBNYXIgMDUsIDIwMTggYXQgMTA6MTI6MjFBTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
+b3RlOgo+IE9uIDAyLTAzLTE4LCAxNDo1NiwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+IEFkZCB0
+aGUgbm9kZXMgYW5kIG90aGVyIGJpdHMgdG8gZGVzY3JpYmUgdGhlIEFkcmVubyBHUFUgYW5kIEdN
+VQo+ID4gZGV2aWNlcy4KPiA+IAo+ID4gQ2hhbmdlLUlkOiBJYmY0ZGMwZWJiMGFjMDNkOGI2Yjhl
+NjU3NDdlMTQyYzQ0MGU3MGIwYQo+IAo+IFJlbW92ZSBpdCA/CgoqIFNoYWtlcyBmaXN0IGF0IEdl
+cnJpdCAqCgo+ID4gU2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVy
+b3JhLm9yZz4KPiA+IC0tLQo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRz
+aSB8IDEyMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBj
+aGFuZ2VkLCAxMjAgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02
+NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3Nk
+bTg0NS5kdHNpCj4gPiBpbmRleCA3YjVjMTZlYjYzYjcuLmNjNmQzNjdlZTU1ZSAxMDA2NDQKPiA+
+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+ID4gKysrIGIvYXJj
+aC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gPiBAQCAtMzEyLDUgKzMxMiwxMjUg
+QEAKPiA+ICAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICAJCQl9Owo+ID4gIAkJfTsKPiA+
+ICsKPiA+ICsJCWFkcmVub19zbW11OiBhcm0sc21tdS1hZHJlbm9ANTA0MDAwMCB7Cj4gPiArCQkJ
+Y29tcGF0aWJsZSA9ICJxY29tLG1zbTg5OTYtc21tdS12MiI7Cj4gPiArCQkJcmVnID0gPDB4NTA0
+MDAwMCAweDEwMDAwPjsKPiA+ICsJCQkjaW9tbXUtY2VsbHMgPSA8MT47Cj4gPiArCQkJI2dsb2Jh
+bC1pbnRlcnJ1cHRzID0gPDI+Owo+ID4gKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMjkgSVJR
+X1RZUEVfTEVWRUxfSElHSD4sCj4gPiArCQkJCSAgICAgPEdJQ19TUEkgMjMxIElSUV9UWVBFX0xF
+VkVMX0hJR0g+LAo+ID4gKwkJCQkgICAgIDxHSUNfU1BJIDM2NCBJUlFfVFlQRV9FREdFX1JJU0lO
+Rz4sCj4gPiArCQkJCSAgICAgPEdJQ19TUEkgMzY1IElSUV9UWVBFX0VER0VfUklTSU5HPiwKPiA+
+ICsJCQkJICAgICA8R0lDX1NQSSAzNjYgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAo+ID4gKwkJCQkg
+ICAgIDxHSUNfU1BJIDM2NyBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gPiArCQkJCSAgICAgPEdJ
+Q19TUEkgMzY4IElSUV9UWVBFX0VER0VfUklTSU5HPiwKPiA+ICsJCQkJICAgICA8R0lDX1NQSSAz
+NjkgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAo+ID4gKwkJCQkgICAgIDxHSUNfU1BJIDM3MCBJUlFf
+VFlQRV9FREdFX1JJU0lORz4sCj4gPiArCQkJCSAgICAgPEdJQ19TUEkgMzcxIElSUV9UWVBFX0VE
+R0VfUklTSU5HPjsKPiA+ICsJCQljbG9ja3MgPSA8JmNsb2NrX2djYyBHQ0NfR1BVX01FTU5PQ19H
+RlhfQ0xLPiwKPiA+ICsJCQkJIDwmY2xvY2tfZ2NjIEdDQ19HUFVfQ0ZHX0FIQl9DTEs+Owo+ID4g
+KwkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJpZmFjZSI7Cj4gPiArCj4gPiArCQkJcG93ZXItZG9t
+YWlucyA9IDwmY2xvY2tfZ3B1Y2MgR1BVX0NYX0dEU0M+Owo+ID4gKwkJfTsKPiA+ICsKPiA+ICsJ
+CWdwdV9vcHBfdGFibGU6IGFkcmVuby1vcHAtdGFibGUgewo+ID4gKwkJCWNvbXBhdGlibGUgPSAi
+b3BlcmF0aW5nLXBvaW50cy12MiI7Cj4gPiArCj4gPiArCQkJb3BwLTcxMDAwMDAwMCB7Cj4gPiAr
+CQkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NzEwMDAwMDAwPjsKPiA+ICsJCQkJcWNvbSxhcmMtbGV2
+ZWwgPSA8NDE2PjsKPiAKPiBJIGFtIG5vdCBzdXJlIGlmIEkgc2F3IHdoZXJlIHRoaXMgaXMgZGVm
+aW5lZCA/CgpJJ20gZ2xhZCB5b3UgYnJvdWdodCB0aGlzIHVwIC0gSSB3YXMgdHJ5aW5nIHRvIGZp
+bmQgYSBwbGFjZSBpbiB0aGUgZG9jdW1lbnRhdGlvbgp0byBwdXQgaXQsIGJ1dCBzaW5jZSB0YXJn
+ZXQgc3BlY2lmaWMgbm9kZXMgd291bGQgYmUgYSBuZXcgdHJpY2sgZm9yIE9QUCBJIGRpZG4ndApx
+dWl0ZSBrbm93IGhvdyB0byBnbyBhYm91dCBkb2luZyBpdC4gRG8gd2UganVzdCBsaXN0IHRoZW0g
+YXMgT3B0aW9uYWw6IG9yCnNob3VsZCB3ZSBhZGQgYSB0YXJnZXQgc3BlY2lmaWMgc2VjdGlvbiB0
+byB0aGUgZG9jdW1lbnRhdGlvbiBhbmQgbGlzdCB0aGVtIG91dAp0aGVyZSBpbnN0ZWFkPwoKSm9y
+ZGFuCgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVy
+IG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQ
+cm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
