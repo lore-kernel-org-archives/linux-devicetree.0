@@ -1,15 +1,14 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [usb-next PATCH v11 5/8] usb: host: xhci-mtk: remove custom USB
- PHY handling
-Date: Mon, 5 Mar 2018 16:31:29 +0800
-Message-ID: <1520238689.8089.227.camel@mtkswgap22>
-References: <20180303214309.25643-1-martin.blumenstingl@googlemail.com>
- <20180303214309.25643-6-martin.blumenstingl@googlemail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: add SPI support on STM32H743 SoC
+Date: Mon, 5 Mar 2018 09:42:48 +0100
+Message-ID: <f14b8e89-6487-1a1c-7f66-a0dcd3cd705b@st.com>
+References: <1519814190-3208-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180303214309.25643-6-martin.blumenstingl@googlemail.com>
+In-Reply-To: <1519814190-3208-1-git-send-email-amelie.delaunay@st.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,226 +18,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, arnd@arndb.de, felipe.balbi@linux.intel.com, Peter.Chen@nxp.com, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, linux-usb@vger.kernel.org, yixun.lan@amlogic.com, jonathanh@nvidia.com, mathias.nyman@intel.com, narmstrong@baylibre.com, robh+dt@kernel.org, thierry.reding@gmail.com, linux@prisktech.co.nz, linux-amlogic@lists.infradead.org, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Martin
-
-Tested-by: Sean Wang <sean.wang@mediatek.com>
-
-I've tested the series with U2 storage and U3 ethernet devices on both
-boards MT7623 BPI-R2 and MT7622 RFB1 using xhci-mtk driver, they are
-still working well.
-
-Below is related logs for test devices probing
-
-----
-
-# [   42.590356] usb 2-1: new SuperSpeed USB device number 2 using
-xhci-mtk
-[   42.719883] usb-storage 2-1:1.0: USB Mass Storage device detected
-[   42.726339] scsi host2: usb-storage 2-1:1.0
-[   43.815572] scsi 2:0:0:0: Direct-Access     Kingston DataTraveler 3.0
-PMAP PQ: 0 ANSI: 6
-[   44.792938] sd 2:0:0:0: [sda] 30728832 512-byte logical blocks: (15.7
-GB/14.7 GiB)
-[   44.800658] sd 2:0:0:0: [sda] Write Protect is off
-[   44.805582] sd 2:0:0:0: [sda] No Caching mode page found
-[   44.810888] sd 2:0:0:0: [sda] Assuming drive cache: write through
-
-----
-
-# [  134.270617] usb 2-1: new SuperSpeed USB device number 3 using
-xhci-mtk
-[  134.664163] ax88179_178a 2-1:1.0 eth1: register 'ax88179_178a' at
-usb-1a1c0000.usb-1, ASIX AX88179 USB 3.0 Gigabit Ethernet,
-00:11:6b:68:4c:9e
-
-
-On Sat, 2018-03-03 at 22:43 +0100, Martin Blumenstingl wrote:
-> The new PHY wrapper is now wired up in the core HCD code. This means
-> that PHYs are now controlled (initialized, enabled, disabled, exited)
-> without requiring any host-driver specific code.
-> Remove the custom USB PHY handling from the xhci-mtk driver as the core
-> HCD code now handles this.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  drivers/usb/host/xhci-mtk.c | 98 +--------------------------------------------
->  1 file changed, 2 insertions(+), 96 deletions(-)
-> 
-> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-> index b0ab4d5e2751..7334da9e9779 100644
-> --- a/drivers/usb/host/xhci-mtk.c
-> +++ b/drivers/usb/host/xhci-mtk.c
-> @@ -14,7 +14,6 @@
->  #include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> -#include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/regmap.h>
-> @@ -352,62 +351,6 @@ static const struct xhci_driver_overrides xhci_mtk_overrides __initconst = {
->  
->  static struct hc_driver __read_mostly xhci_mtk_hc_driver;
->  
-> -static int xhci_mtk_phy_init(struct xhci_hcd_mtk *mtk)
-> -{
-> -	int i;
-> -	int ret;
-> -
-> -	for (i = 0; i < mtk->num_phys; i++) {
-> -		ret = phy_init(mtk->phys[i]);
-> -		if (ret)
-> -			goto exit_phy;
-> -	}
-> -	return 0;
-> -
-> -exit_phy:
-> -	for (; i > 0; i--)
-> -		phy_exit(mtk->phys[i - 1]);
-> -
-> -	return ret;
-> -}
-> -
-> -static int xhci_mtk_phy_exit(struct xhci_hcd_mtk *mtk)
-> -{
-> -	int i;
-> -
-> -	for (i = 0; i < mtk->num_phys; i++)
-> -		phy_exit(mtk->phys[i]);
-> -
-> -	return 0;
-> -}
-> -
-> -static int xhci_mtk_phy_power_on(struct xhci_hcd_mtk *mtk)
-> -{
-> -	int i;
-> -	int ret;
-> -
-> -	for (i = 0; i < mtk->num_phys; i++) {
-> -		ret = phy_power_on(mtk->phys[i]);
-> -		if (ret)
-> -			goto power_off_phy;
-> -	}
-> -	return 0;
-> -
-> -power_off_phy:
-> -	for (; i > 0; i--)
-> -		phy_power_off(mtk->phys[i - 1]);
-> -
-> -	return ret;
-> -}
-> -
-> -static void xhci_mtk_phy_power_off(struct xhci_hcd_mtk *mtk)
-> -{
-> -	unsigned int i;
-> -
-> -	for (i = 0; i < mtk->num_phys; i++)
-> -		phy_power_off(mtk->phys[i]);
-> -}
-> -
->  static int xhci_mtk_ldos_enable(struct xhci_hcd_mtk *mtk)
->  {
->  	int ret;
-> @@ -488,8 +431,6 @@ static int xhci_mtk_probe(struct platform_device *pdev)
->  	struct xhci_hcd *xhci;
->  	struct resource *res;
->  	struct usb_hcd *hcd;
-> -	struct phy *phy;
-> -	int phy_num;
->  	int ret = -ENODEV;
->  	int irq;
->  
-> @@ -529,16 +470,6 @@ static int xhci_mtk_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	mtk->num_phys = of_count_phandle_with_args(node,
-> -			"phys", "#phy-cells");
-> -	if (mtk->num_phys > 0) {
-> -		mtk->phys = devm_kcalloc(dev, mtk->num_phys,
-> -					sizeof(*mtk->phys), GFP_KERNEL);
-> -		if (!mtk->phys)
-> -			return -ENOMEM;
-> -	} else {
-> -		mtk->num_phys = 0;
-> -	}
->  	pm_runtime_enable(dev);
->  	pm_runtime_get_sync(dev);
->  	device_enable_async_suspend(dev);
-> @@ -596,23 +527,6 @@ static int xhci_mtk_probe(struct platform_device *pdev)
->  		mtk->has_ippc = false;
->  	}
->  
-> -	for (phy_num = 0; phy_num < mtk->num_phys; phy_num++) {
-> -		phy = devm_of_phy_get_by_index(dev, node, phy_num);
-> -		if (IS_ERR(phy)) {
-> -			ret = PTR_ERR(phy);
-> -			goto put_usb2_hcd;
-> -		}
-> -		mtk->phys[phy_num] = phy;
-> -	}
-> -
-> -	ret = xhci_mtk_phy_init(mtk);
-> -	if (ret)
-> -		goto put_usb2_hcd;
-> -
-> -	ret = xhci_mtk_phy_power_on(mtk);
-> -	if (ret)
-> -		goto exit_phys;
-> -
->  	device_init_wakeup(dev, true);
->  
->  	xhci = hcd_to_xhci(hcd);
-> @@ -630,7 +544,7 @@ static int xhci_mtk_probe(struct platform_device *pdev)
->  			dev_name(dev), hcd);
->  	if (!xhci->shared_hcd) {
->  		ret = -ENOMEM;
-> -		goto power_off_phys;
-> +		goto disable_device_wakeup;
->  	}
->  
->  	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
-> @@ -653,13 +567,9 @@ static int xhci_mtk_probe(struct platform_device *pdev)
->  	xhci_mtk_sch_exit(mtk);
->  	usb_put_hcd(xhci->shared_hcd);
->  
-> -power_off_phys:
-> -	xhci_mtk_phy_power_off(mtk);
-> +disable_device_wakeup:
->  	device_init_wakeup(dev, false);
->  
-> -exit_phys:
-> -	xhci_mtk_phy_exit(mtk);
-> -
->  put_usb2_hcd:
->  	usb_put_hcd(hcd);
->  
-> @@ -682,8 +592,6 @@ static int xhci_mtk_remove(struct platform_device *dev)
->  	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
->  
->  	usb_remove_hcd(xhci->shared_hcd);
-> -	xhci_mtk_phy_power_off(mtk);
-> -	xhci_mtk_phy_exit(mtk);
->  	device_init_wakeup(&dev->dev, false);
->  
->  	usb_remove_hcd(hcd);
-> @@ -718,7 +626,6 @@ static int __maybe_unused xhci_mtk_suspend(struct device *dev)
->  	del_timer_sync(&xhci->shared_hcd->rh_timer);
->  
->  	xhci_mtk_host_disable(mtk);
-> -	xhci_mtk_phy_power_off(mtk);
->  	xhci_mtk_clks_disable(mtk);
->  	usb_wakeup_set(mtk, true);
->  	return 0;
-> @@ -732,7 +639,6 @@ static int __maybe_unused xhci_mtk_resume(struct device *dev)
->  
->  	usb_wakeup_set(mtk, false);
->  	xhci_mtk_clks_enable(mtk);
-> -	xhci_mtk_phy_power_on(mtk);
->  	xhci_mtk_host_enable(mtk);
->  
->  	xhci_dbg(xhci, "%s: restart port polling\n", __func__);
+SGkgQW3DqWxpZQoKT24gMDIvMjgvMjAxOCAxMTozNiBBTSwgQW1lbGllIERlbGF1bmF5IHdyb3Rl
+Ogo+IFRoaXMgcGF0Y2ggYWRkcyBhbGwgU1BJIGluc3RhbmNlcyBvZiB0aGUgU1RNMzJINzQzIFNv
+Qy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBbWVsaWUgRGVsYXVuYXkgPGFtZWxpZS5kZWxhdW5heUBz
+dC5jb20+Cj4gLS0tCgpBcHBsaWVkIG9uIHN0bTMyLW5leHQuCgpUaGFua3MuCkFsZXgKCj4gICBh
+cmNoL2FybS9ib290L2R0cy9zdG0zMmg3NDMuZHRzaSB8IDYxICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysKPiAgIDEgZmlsZSBjaGFuZ2VkLCA2MSBpbnNlcnRpb25zKCsp
+Cj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyaDc0My5kdHNpIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvc3RtMzJoNzQzLmR0c2kKPiBpbmRleCAzYTI4Y2QyLi4yYmIxMDNlIDEw
+MDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0bTMyaDc0My5kdHNpCj4gKysrIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvc3RtMzJoNzQzLmR0c2kKPiBAQCAtMTAxLDYgKzEwMSwyNyBAQAo+ICAg
+CQkJfTsKPiAgIAkJfTsKPiAgIAo+ICsJCXNwaTI6IHNwaUA0MDAwMzgwMCB7Cj4gKwkJCSNhZGRy
+ZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCQkJY29tcGF0aWJs
+ZSA9ICJzdCxzdG0zMmg3LXNwaSI7Cj4gKwkJCXJlZyA9IDwweDQwMDAzODAwIDB4NDAwPjsKPiAr
+CQkJaW50ZXJydXB0cyA9IDwzNj47Cj4gKwkJCWNsb2NrcyA9IDwmcmNjIFNQSTJfQ0s+Owo+ICsJ
+CQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsKPiArCQl9Owo+ICsKPiArCQlzcGkzOiBzcGlANDAw
+MDNjMDAgewo+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2VsbHMgPSA8
+MD47Cj4gKwkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzJoNy1zcGkiOwo+ICsJCQlyZWcgPSA8MHg0
+MDAwM2MwMCAweDQwMD47Cj4gKwkJCWludGVycnVwdHMgPSA8NTE+Owo+ICsJCQljbG9ja3MgPSA8
+JnJjYyBTUEkzX0NLPjsKPiArCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiArCQl9Owo+ICsKPiAg
+IAkJdXNhcnQyOiBzZXJpYWxANDAwMDQ0MDAgewo+ICAgCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0z
+MmY3LXVhcnQiOwo+ICAgCQkJcmVnID0gPDB4NDAwMDQ0MDAgMHg0MDA+Owo+IEBAIC0xNDEsNiAr
+MTYyLDM2IEBACj4gICAJCQljbG9ja3MgPSA8JnJjYyBVU0FSVDFfQ0s+Owo+ICAgCQl9Owo+ICAg
+Cj4gKwkJc3BpMTogc3BpQDQwMDEzMDAwIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4g
+KwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQljb21wYXRpYmxlID0gInN0LHN0bTMyaDctc3Bp
+IjsKPiArCQkJcmVnID0gPDB4NDAwMTMwMDAgMHg0MDA+Owo+ICsJCQlpbnRlcnJ1cHRzID0gPDM1
+PjsKPiArCQkJY2xvY2tzID0gPCZyY2MgU1BJMV9DSz47Cj4gKwkJCXN0YXR1cyA9ICJkaXNhYmxl
+ZCI7Cj4gKwkJfTsKPiArCj4gKwkJc3BpNDogc3BpQDQwMDEzNDAwIHsKPiArCQkJI2FkZHJlc3Mt
+Y2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQljb21wYXRpYmxlID0g
+InN0LHN0bTMyaDctc3BpIjsKPiArCQkJcmVnID0gPDB4NDAwMTM0MDAgMHg0MDA+Owo+ICsJCQlp
+bnRlcnJ1cHRzID0gPDg0PjsKPiArCQkJY2xvY2tzID0gPCZyY2MgU1BJNF9DSz47Cj4gKwkJCXN0
+YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwkJfTsKPiArCj4gKwkJc3BpNTogc3BpQDQwMDE1MDAwIHsK
+PiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJ
+CQljb21wYXRpYmxlID0gInN0LHN0bTMyaDctc3BpIjsKPiArCQkJcmVnID0gPDB4NDAwMTUwMDAg
+MHg0MDA+Owo+ICsJCQlpbnRlcnJ1cHRzID0gPDg1PjsKPiArCQkJY2xvY2tzID0gPCZyY2MgU1BJ
+NV9DSz47Cj4gKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwkJfTsKPiArCj4gICAJCWRtYTE6
+IGRtYUA0MDAyMDAwMCB7Cj4gICAJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLWRtYSI7Cj4gICAJ
+CQlyZWcgPSA8MHg0MDAyMDAwMCAweDQwMD47Cj4gQEAgLTI2Miw2ICszMTMsMTYgQEAKPiAgIAkJ
+CXJlZyA9IDwweDU4MDAwNDAwIDB4NDAwPjsKPiAgIAkJfTsKPiAgIAo+ICsJCXNwaTY6IHNwaUA1
+ODAwMTQwMCB7Cj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+ICsJCQkjc2l6ZS1jZWxscyA9
+IDwwPjsKPiArCQkJY29tcGF0aWJsZSA9ICJzdCxzdG0zMmg3LXNwaSI7Cj4gKwkJCXJlZyA9IDww
+eDU4MDAxNDAwIDB4NDAwPjsKPiArCQkJaW50ZXJydXB0cyA9IDw4Nj47Cj4gKwkJCWNsb2NrcyA9
+IDwmcmNjIFNQSTZfQ0s+Owo+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCX07Cj4gKwo+
+ICAgCQlscHRpbWVyMjogdGltZXJANTgwMDI0MDAgewo+ICAgCQkJI2FkZHJlc3MtY2VsbHMgPSA8
+MT47Cj4gICAJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiAKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
