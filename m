@@ -1,71 +1,90 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: soc: Add ZynqMP PM bindings
-Date: Mon, 5 Mar 2018 16:33:28 -0600
-Message-ID: <20180305223328.la462hdwwsymvusk@rob-hp-laptop>
-References: <1519773866-18196-1-git-send-email-jollys@xilinx.com>
- <1519773866-18196-2-git-send-email-jollys@xilinx.com>
+Subject: Re: [PATCH 1/2] dt-bindings: power: Add ZynqMP power domain bindings
+Date: Mon, 5 Mar 2018 16:39:05 -0600
+Message-ID: <20180305223905.65nnunv63fyg7bye@rob-hp-laptop>
+References: <1519775750-21297-1-git-send-email-jollys@xilinx.com>
+ <1519775750-21297-2-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1519773866-18196-2-git-send-email-jollys@xilinx.com>
+In-Reply-To: <1519775750-21297-2-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jolly Shah <jolly.shah@xilinx.com>
 Cc: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, mark.rutland@arm.com, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 27, 2018 at 03:24:25PM -0800, Jolly Shah wrote:
-> Add documentation to describe Xilinx ZynqMP power management
-> bindings.
+On Tue, Feb 27, 2018 at 03:55:49PM -0800, Jolly Shah wrote:
+> Add documentation to describe ZynqMP power domain bindings.
 > 
 > Signed-off-by: Jolly Shah <jollys@xilinx.com>
 > Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
 > ---
->  .../bindings/soc/xilinx/xlnx,zynqmp-power.txt      | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-power.txt
+>  .../devicetree/bindings/power/zynqmp-genpd.txt     | 46 ++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/zynqmp-genpd.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-power.txt b/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-power.txt
+> diff --git a/Documentation/devicetree/bindings/power/zynqmp-genpd.txt b/Documentation/devicetree/bindings/power/zynqmp-genpd.txt
 > new file mode 100644
-> index 0000000..5b7d963
+> index 0000000..25f9711
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-power.txt
-> @@ -0,0 +1,28 @@
-> +Xilinx Zynq MPSoC Power Management Device Tree Bindings
+> +++ b/Documentation/devicetree/bindings/power/zynqmp-genpd.txt
+> @@ -0,0 +1,46 @@
+> +Device Tree bindings for Xilinx Zynq MPSoC PM domains
 > +
-> +The zynqmp-power node describes the power management configurations.
-
-That really tells me nothing. What aspect of power management does this 
-interface control?
-
+> +The binding for zynqmp-genpd follow the common generic PM domain binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/power/power_domain.txt
+> +
+> +== Zynq MPSoC Generic PM Domain Node ==
 > +
 > +Required properties:
-> + - compatible	: Must contain:  "xlnx,zynqmp-power"
-> + - mbox-names	: Name given to channels seen in the 'mboxes' property.
-> +		  "rx" - Mailbox corresponding to receive path
-> +		  "tx" - Mailbox corresponding to transmit path
-> + - mboxes	: Standard property to specify a Mailbox. Each value of
-> +		  the mboxes property should contain a phandle to the
-> +		  mailbox controller device node and an args specifier
-> +		  that will be the phandle to the intended sub-mailbox
-> +		  child node to be used for communication. See
-> +		  Documentation/devicetree/bindings/mailbox/mailbox.txt
-> +		  for more details about the generic mailbox controller
-> +		  and client driver bindings. Also see
-> +		  Documentation/devicetree/bindings/mailbox/ \
-> +		  xlnx,zynqmp-ipi-mailbox.txt for typical controller that
-> +		  is used to communicate with this System controllers.
+> + - compatible: Must be: "xlnx,zynqmp-genpd"
 
-No need to define a standard property here. Just need to say how many 
-entries and refer to the common binding.
+genpd is a Linux term. The DT should contain a power controller that 
+controls physical power islands on a chip.
 
 > +
-> +Examples:
-> +	zynqmp_power: zynqmp-power {
-> +		compatible = "xlnx,zynqmp-power";
-> +		mboxes = <&ipi_mailbox_pmu0 0>,
-> +			 <&ipi_mailbox_pmu0 1>;
-> +		mbox-names = "tx", "rx";
+> +This node contains a number of subnodes, each representing a single PM domain
+> +that PM domain consumer devices reference.
+> +
+> +== PM Domain Nodes ==
+> +
+> +Required properties:
+> + - #power-domain-cells: Number of cells in a PM domain specifier. Must be 0.
+> + - pd-id: List of domain identifiers of as defined by platform firmware. These
+> +	  identifiers are passed to the PM firmware.
+> +
+> +Example:
+> +	zynqmp-genpd {
+> +		compatible = "xlnx,zynqmp-genpd";
+
+What's the control interface for controlling the domains?
+> +
+> +		pd_usb0: pd-usb0 {
+> +			pd-id = <22>;
+> +			#power-domain-cells = <0>;
+
+There's no need for all these sub nodes. Make #power-domain-cells 1 and 
+put the id in the cell value.
+
+> +		};
+> +
+> +		pd_sata: pd-sata {
+> +			pd-id = <28>;
+> +			#power-domain-cells = <0>;
+> +		};
+> +
+> +		pd_gpu: pd-gpu {
+> +			pd-id = <58 20 21>;
+> +			#power-domain-cells = <0x0>;
+> +		};
+> +	};
+> +
+> +	sata0: ahci@SATA_AHCI_HBA {
+> +		...
+> +		power-domains = <&pd_sata>;
+> +		...
 > +	};
 > -- 
 > 2.7.4
