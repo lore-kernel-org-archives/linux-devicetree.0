@@ -1,82 +1,65 @@
-Return-Path: <SRS0=V/0G=F3=linux.intel.com=heikki.krogerus@kernel.org>
-Date: Mon, 5 Mar 2018 11:53:46 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v2 03/12] staging: typec: tcpci: support port config
+Return-Path: <SRS0=TUNP=F3=nxp.com=jun.li@kernel.org>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v2 03/12] staging: typec: tcpci: support port config
  passed via dt
-Message-ID: <20180305095346.GB10598@kuha.fi.intel.com>
+Date: Mon, 5 Mar 2018 08:53:00 +0000
+Message-ID: <VI1PR0402MB39176A73FBA147B7F1153EA389DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
  <1519645759-12701-4-git-send-email-jun.li@nxp.com>
  <20180226140604.GD25535@kuha.fi.intel.com>
  <VI1PR0402MB3917FFA57640C5B4B7030FA789C10@VI1PR0402MB3917.eurprd04.prod.outlook.com>
  <20180227110302.GE25535@kuha.fi.intel.com>
- <VI1PR0402MB39176A73FBA147B7F1153EA389DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+In-Reply-To: <20180227110302.GE25535@kuha.fi.intel.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB39176A73FBA147B7F1153EA389DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-To: Jun Li <jun.li@nxp.com>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Mar 05, 2018 at 08:53:00AM +0000, Jun Li wrote:
-> > On Mon, Feb 26, 2018 at 02:30:53PM +0000, Jun Li wrote:
-> > > > > +	child = of_get_child_by_name(tcpci->dev->of_node, "connector");
-> > > > > +	if (!child) {
-> > > > > +		dev_err(tcpci->dev, "failed to get connector node.\n");
-> > > > > +		return -EINVAL;
-> > > > > +	}
-> > > >
-> > > > Why do you need separate child node for the connector? You will
-> > > > always have only one connector per tcpc, i.e. the tcpci already
-> > > > represents the connector and all its capabilities.
-> > > >
-> > > This is my original idea, my understanding is Rob expects those
-> > > properties should apply for a common usb connector node[1], that way I
-> > > need add a child node for it, sorry I didn't make the dt-binding
-> > > patches come first in this series, please see patch 10,11.
-> > >
-> > > [1]
-> > >
-> > https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fpat
-> > >
-> > chwork.kernel.org%2Fpatch%2F10231447%2F&data=02%7C01%7Cjun.li%40
-> > nxp.co
-> > >
-> > m%7Ce37ed8b084374e241d2e08d57dd1b02a%7C686ea1d3bc2b4c6fa92cd9
-> > 9c5c30163
-> > >
-> > 5%7C0%7C0%7C636553261972212376&sdata=hSNiAfXoTTzK3TjjkjWo7OJL7
-> > %2B3gDHT
-> > > I8NO0FQviDd4%3D&reserved=0
-> > 
-> > But was the idea really to put properties like the TCPC capabilities under the
-> > usb connector child node? That will force us to extract the same properties
-> > in two different methods in every USB Type-C driver. One extracting them
-> > from DT, and another from other FW interfaces and build-in properties.
-> > 
-> > To avoid that, let's just expect to get these properties in the node for tcpc,
-> > not the usb connector child.
-> 
-> I misunderstood it's better to put typec props under connector node in all cases
-> so we can have a unified typec description. As Rob comments that's only required
-> for multiple connectors for one controller, not for simple connector like my case,
-> I will put those props under tcpc node.
-
-Hold on! I was not considering multi-port PD/Type-C controllers.
-
-I'm wrong about the child node forcing us to have two methods for
-extracting the properties in the drivers. It does mean we can not use
-device_property* functions as the child node is not (yet) bind to any
-struct device, but we can still use fwnode_property* functions, which
-is fine.
-
-So it actually does make sense to define those properties for the
-"connector" node instead of TCPC parent. They are generic "Type-C"
-properties (right?), so we may want to use them with multiport
-devices as well.
-
-
-Br,
-
--- 
-heikki
+SGkNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBIZWlra2kgS3JvZ2Vy
+dXMgW21haWx0bzpoZWlra2kua3JvZ2VydXNAbGludXguaW50ZWwuY29tXQ0KPiBTZW50OiAyMDE4
+xOoy1MIyN8jVIDE5OjAzDQo+IFRvOiBKdW4gTGkgPGp1bi5saUBueHAuY29tPg0KPiBDYzogZ3Jl
+Z2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsgbGludXhAcm9lY2st
+dXMubmV0Ow0KPiBhLmhhamRhQHNhbXN1bmcuY29tOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgeXVl
+eWFvQGdvb2dsZS5jb207DQo+IFBldGVyIENoZW4gPHBldGVyLmNoZW5AbnhwLmNvbT47IGdhcnNp
+bHZhQGVtYmVkZGVkb3IuY29tOw0KPiBvX2xldmVxdWVAb3JhbmdlLmZyOyBzaHVmYW5fbGVlQHJp
+Y2h0ZWsuY29tOyBsaW51eC11c2JAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDog
+UmU6IFtQQVRDSCB2MiAwMy8xMl0gc3RhZ2luZzogdHlwZWM6IHRjcGNpOiBzdXBwb3J0IHBvcnQg
+Y29uZmlnDQo+IHBhc3NlZCB2aWEgZHQNCj4gDQo+IEhpLA0KPiANCj4gT24gTW9uLCBGZWIgMjYs
+IDIwMTggYXQgMDI6MzA6NTNQTSArMDAwMCwgSnVuIExpIHdyb3RlOg0KPiA+ID4gPiArCWNoaWxk
+ID0gb2ZfZ2V0X2NoaWxkX2J5X25hbWUodGNwY2ktPmRldi0+b2Zfbm9kZSwgImNvbm5lY3RvciIp
+Ow0KPiA+ID4gPiArCWlmICghY2hpbGQpIHsNCj4gPiA+ID4gKwkJZGV2X2Vycih0Y3BjaS0+ZGV2
+LCAiZmFpbGVkIHRvIGdldCBjb25uZWN0b3Igbm9kZS5cbiIpOw0KPiA+ID4gPiArCQlyZXR1cm4g
+LUVJTlZBTDsNCj4gPiA+ID4gKwl9DQo+ID4gPg0KPiA+ID4gV2h5IGRvIHlvdSBuZWVkIHNlcGFy
+YXRlIGNoaWxkIG5vZGUgZm9yIHRoZSBjb25uZWN0b3I/IFlvdSB3aWxsDQo+ID4gPiBhbHdheXMg
+aGF2ZSBvbmx5IG9uZSBjb25uZWN0b3IgcGVyIHRjcGMsIGkuZS4gdGhlIHRjcGNpIGFscmVhZHkN
+Cj4gPiA+IHJlcHJlc2VudHMgdGhlIGNvbm5lY3RvciBhbmQgYWxsIGl0cyBjYXBhYmlsaXRpZXMu
+DQo+ID4gPg0KPiA+IFRoaXMgaXMgbXkgb3JpZ2luYWwgaWRlYSwgbXkgdW5kZXJzdGFuZGluZyBp
+cyBSb2IgZXhwZWN0cyB0aG9zZQ0KPiA+IHByb3BlcnRpZXMgc2hvdWxkIGFwcGx5IGZvciBhIGNv
+bW1vbiB1c2IgY29ubmVjdG9yIG5vZGVbMV0sIHRoYXQgd2F5IEkNCj4gPiBuZWVkIGFkZCBhIGNo
+aWxkIG5vZGUgZm9yIGl0LCBzb3JyeSBJIGRpZG4ndCBtYWtlIHRoZSBkdC1iaW5kaW5nDQo+ID4g
+cGF0Y2hlcyBjb21lIGZpcnN0IGluIHRoaXMgc2VyaWVzLCBwbGVhc2Ugc2VlIHBhdGNoIDEwLDEx
+Lg0KPiA+DQo+ID4gWzFdDQo+ID4NCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3RlY3Rp
+b24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRnBhdA0KPiA+DQo+IGNod29yay5rZXJu
+ZWwub3JnJTJGcGF0Y2glMkYxMDIzMTQ0NyUyRiZkYXRhPTAyJTdDMDElN0NqdW4ubGklNDANCj4g
+bnhwLmNvDQo+ID4NCj4gbSU3Q2UzN2VkOGIwODQzNzRlMjQxZDJlMDhkNTdkZDFiMDJhJTdDNjg2
+ZWExZDNiYzJiNGM2ZmE5MmNkOQ0KPiA5YzVjMzAxNjMNCj4gPg0KPiA1JTdDMCU3QzAlN0M2MzY1
+NTMyNjE5NzIyMTIzNzYmc2RhdGE9aFNOaUFmWG9UVHpLM1RqamtqV283T0pMNw0KPiAlMkIzZ0RI
+VA0KPiA+IEk4Tk8wRlF2aURkNCUzRCZyZXNlcnZlZD0wDQo+IA0KPiBCdXQgd2FzIHRoZSBpZGVh
+IHJlYWxseSB0byBwdXQgcHJvcGVydGllcyBsaWtlIHRoZSBUQ1BDIGNhcGFiaWxpdGllcyB1bmRl
+ciB0aGUNCj4gdXNiIGNvbm5lY3RvciBjaGlsZCBub2RlPyBUaGF0IHdpbGwgZm9yY2UgdXMgdG8g
+ZXh0cmFjdCB0aGUgc2FtZSBwcm9wZXJ0aWVzDQo+IGluIHR3byBkaWZmZXJlbnQgbWV0aG9kcyBp
+biBldmVyeSBVU0IgVHlwZS1DIGRyaXZlci4gT25lIGV4dHJhY3RpbmcgdGhlbQ0KPiBmcm9tIERU
+LCBhbmQgYW5vdGhlciBmcm9tIG90aGVyIEZXIGludGVyZmFjZXMgYW5kIGJ1aWxkLWluIHByb3Bl
+cnRpZXMuDQo+IA0KPiBUbyBhdm9pZCB0aGF0LCBsZXQncyBqdXN0IGV4cGVjdCB0byBnZXQgdGhl
+c2UgcHJvcGVydGllcyBpbiB0aGUgbm9kZSBmb3IgdGNwYywNCj4gbm90IHRoZSB1c2IgY29ubmVj
+dG9yIGNoaWxkLg0KDQpJIG1pc3VuZGVyc3Rvb2QgaXQncyBiZXR0ZXIgdG8gcHV0IHR5cGVjIHBy
+b3BzIHVuZGVyIGNvbm5lY3RvciBub2RlIGluIGFsbCBjYXNlcw0Kc28gd2UgY2FuIGhhdmUgYSB1
+bmlmaWVkIHR5cGVjIGRlc2NyaXB0aW9uLiBBcyBSb2IgY29tbWVudHMgdGhhdCdzIG9ubHkgcmVx
+dWlyZWQNCmZvciBtdWx0aXBsZSBjb25uZWN0b3JzIGZvciBvbmUgY29udHJvbGxlciwgbm90IGZv
+ciBzaW1wbGUgY29ubmVjdG9yIGxpa2UgbXkgY2FzZSwNCkkgd2lsbCBwdXQgdGhvc2UgcHJvcHMg
+dW5kZXIgdGNwYyBub2RlLg0KDQpKdW4gTGkNCj4gDQo+IA0KPiBUaGFua3MsDQo+IA0KPiAtLQ0K
+PiBoZWlra2kNCg==
