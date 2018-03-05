@@ -1,13 +1,13 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: rcar-gen3-phy-usb2: Add bindings for r8a77965
-Date: Mon, 5 Mar 2018 09:18:12 +0100
-Message-ID: <CAMuHMdWS8WQJQ8+5vffpv3WtBoFKkd=h2ZBpFNcYVY5YQ-ZDGA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] phy: rcar-gen3-usb2: Add support for r8a77965
+Date: Mon, 5 Mar 2018 09:18:57 +0100
+Message-ID: <CAMuHMdVyEXs940YzGyVuMXYomxUbng_8DSKabODpsBsBDgcs_w@mail.gmail.com>
 References: <1520227965-4471-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1520227965-4471-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1520227965-4471-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520227965-4471-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1520227965-4471-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
@@ -15,7 +15,8 @@ List-Id: devicetree@vger.kernel.org
 
 On Mon, Mar 5, 2018 at 6:32 AM, Yoshihiro Shimoda
 <yoshihiro.shimoda.uh@renesas.com> wrote:
-> This patch adds support for r8a77965 (R-Car M3-N).
+> This patch adds support for r8a77965 (R-Car M3-N). This SoC has
+> dedicated pins.
 >
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
