@@ -1,46 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] of: unittest: clean up changeset test
-Date: Mon, 5 Mar 2018 15:39:10 -0600
-Message-ID: <20180305213910.olvnsprxw4rpjkzv@rob-hp-laptop>
-References: <1519682483-19828-1-git-send-email-frowand.list@gmail.com>
- <1519682483-19828-2-git-send-email-frowand.list@gmail.com>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 07/37] iommu: Add a page fault handler
+Date: Mon, 5 Mar 2018 16:44:48 -0500
+Message-ID: <b2a3d2a7-7042-aef3-0def-05e64e39d046@codeaurora.org>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-8-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1519682483-19828-2-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, geert@linux-m68k.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180212183352.22730-8-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 26, 2018 at 02:01:22PM -0800, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> In preparation for fixing __of_node_dup(), clean up the unittest
-> function that calls it.
-> 
-> Devicetree nodes created from a flattened device tree have a name
-> property.  Follow this convention for nodes added by a changeset.
+On 2/12/2018 1:33 PM, Jean-Philippe Brucker wrote:
+> +static int iommu_queue_fault(struct iommu_domain *domain, struct device *dev,
+> +			     struct iommu_fault_event *evt)
+> +{
+> +	struct iommu_fault_group *group;
+> +	struct iommu_fault_context *fault, *next;
+> +
+> +	if (!iommu_fault_queue)
+> +		return -ENOSYS;
+> +
+> +	if (!evt->last_req) {
+> +		fault = kzalloc(sizeof(*fault), GFP_KERNEL);
+> +		if (!fault)
+> +			return -ENOMEM;
+> +
+> +		fault->evt = *evt;
+> +		fault->dev = dev;
+> +
+> +		/* Non-last request of a group. Postpone until the last one */
+> +		spin_lock(&iommu_partial_faults_lock);
+> +		list_add_tail(&fault->head, &iommu_partial_faults);
+> +		spin_unlock(&iommu_partial_faults_lock);
+> +
+> +		return IOMMU_PAGE_RESP_HANDLED;
+> +	}
+> +
+> +	group = kzalloc(sizeof(*group), GFP_KERNEL);
+> +	if (!group)
+> +		return -ENOMEM;
 
-I'd like to get rid of that property as it should be redundant, but 
-that's somewhat orthogonal to this.
+Release the requests in iommu_partial_faults here.
 
-It also shouldn't be up to the caller to have to do this either, but 
-that's already broken in the current API.
-
-So I've applied these.
-
-> 
-> For node added by changeset, remove incorrect initialization of
-> child node pointer.
-> 
-> Add an additional node pointer 'changeset' to more naturally reflect
-> where in the tree the changeset is added.
-> 
-> Make changeset add property error messages unique.
-> 
-> Add whitespace to break apart logic blocks.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
