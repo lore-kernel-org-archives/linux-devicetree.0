@@ -1,94 +1,35 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: Re: [PATCH v2 1/2] dmaengine: Introduce DW AXI DMAC driver
-Date: Mon, 5 Mar 2018 15:26:07 +0000
-Message-ID: <1520263566.3152.17.camel@synopsys.com>
-References: <20180226145628.11892-1-Eugeniy.Paltsev@synopsys.com>
- <20180226145628.11892-2-Eugeniy.Paltsev@synopsys.com>
- <CAHp75Vc6KtppecYJBtuXTGCzXySOUZiYqxBfb6w69f1j3J0jDQ@mail.gmail.com>
+From: =?UTF-8?Q?Joonas_Kylm=c3=a4l=c3=a4?= <joonas.kylmala-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v3 15/16] ARM: dts: sun8i: h3: Enable HDMI
+ output on H3 boards
+Date: Mon, 05 Mar 2018 15:27:00 +0000
+Message-ID: <57afe052-9a8c-f63b-ee43-5bad8cd1d193@iki.fi>
+References: <20180301213442.16677-1-jernej.skrabec@siol.net>
+ <20180301213442.16677-16-jernej.skrabec@siol.net>
+Reply-To: joonas.kylmala-X3B1VOXEql0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAHp75Vc6KtppecYJBtuXTGCzXySOUZiYqxBfb6w69f1j3J0jDQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDKPPPP3Z4PBBYWD6XKAKGQEKR5YY3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180301213442.16677-16-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 Content-Language: en-US
-Content-ID: <78788F79FADF0D4D91A0F9E14416F4D6@internal.synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wan.ahmad.zainie.wan.mohamad@intel.com" <wan.ahmad.zainie.wan.mohamad@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-02-26 at 18:42 +0200, Andy Shevchenko wrote:
-> On Mon, Feb 26, 2018 at 4:56 PM, Eugeniy Paltsev
-> <Eugeniy.Paltsev@synopsys.com> wrote:
-> > +static int parse_device_properties(struct axi_dma_chip *chip)
-> > +{
-> > +       ret = device_property_read_u32(dev, "snps,dma-masters", &tmp);
-> 
-> Why it has prefix?
-> 
-> > +       ret = device_property_read_u32(dev, "snps,data-width", &tmp);
-> 
-> Ditto.
-> 
-> > +       ret = device_property_read_u32_array(dev, "snps,block-size", carr,
-> > +                                            chip->dw->hdata->nr_channels);
-> 
-> (perhaps this one can be moved outside of local namespace)
-> 
-> > +       ret = device_property_read_u32_array(dev, "snps,priority", carr,
-> > +                                            chip->dw->hdata->nr_channels);
-> 
-> Can you use just "priority"?
-> 
-> 
+Jernej Skrabec:
+> +&hdmi_out {
+> +	hdmi_out_con: endpoint {
+> +		remote-endpoint = <&hdmi_con_in>;
+> +	};
+> +};
 
-Rob Herring asked me to add vendor prefix to this properties.
-See http://patchwork.ozlabs.org/patch/719708/
+This node is added to all the DTS files you enabled HDMI on. Is it
+something that could be instead put to the DTSI file?
 
--------------------->8--------------------------
-> > +Required properties:
-> > +- compatible: "snps,axi-dma"
-> 
-> Too generic. This needs an IP version at least.
-> 
-> > +- reg: Address range of the DMAC registers. This should include
-> > +  all of the per-channel registers.
-> > +- interrupt: Should contain the DMAC interrupt number.
-> > +- interrupt-parent: Should be the phandle for the interrupt controller
-> > +  that services interrupts for this device.
-> > +- dma-channels: Number of channels supported by hardware.
-> > +- dma-masters: Number of AXI masters supported by the hardware.
-> > +- data-width: Maximum AXI data width supported by hardware.
-> > +  (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
-> 
-> > +- priority: Priority of channel. Array property. Priority value must be
-> > +  programmed within [0:dma-channels-1] range. (0 - minimum priority)
-> > +- block-size: Maximum block size supported by the controller channel. Array
-> > +  property.
-> 
-> Other than dma-channels, all these either need vendor prefix.
-> 
--------------------->8--------------------------
-
-
-
-On Fri, 2018-03-02 at 13:44 +0530, Vinod Koul wrote:
-> On Mon, Feb 26, 2018 at 05:56:28PM +0300, Eugeniy Paltsev wrote:
-> > +dmac: dma-controller@80000 {
-> > +	compatible = "snps,axi-dma-1.01a";
-> 
-> do we need "snps here..?
-> 
-
-Ditto.
-
--- 
- Eugeniy Paltsev
+Joonas
