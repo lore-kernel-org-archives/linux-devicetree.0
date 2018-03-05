@@ -1,59 +1,35 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 1/2] ASoC: codecs: Add support for PCM1789
-Date: Mon, 5 Mar 2018 16:57:15 +0100
-Message-ID: <20180305155715.GJ3035@piout.net>
-References: <20180305124817.7421-1-mylene.josserand@bootlin.com>
- <20180305124817.7421-2-mylene.josserand@bootlin.com>
- <20180305154910.GJ8588@sirena.org.uk>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v5 0/5] Add coupled regulators mechanism
+Date: Mon, 5 Mar 2018 12:57:39 -0300
+Message-ID: <CAOMZO5Cdg4Njd5kXT4tqnJngSPr9NNHdSpoqT3UfmHYYpvuj1g@mail.gmail.com>
+References: <CGME20180302085118eucas1p15a6a5ec5f7f47a6f67a45c5e9495b120@eucas1p1.samsung.com>
+ <1519980169-8491-1-git-send-email-m.purski@samsung.com> <CAOMZO5C3YPKvZN+aORA+Jga-P=XgfG2xw7u6Ose5p6Twet2KLw@mail.gmail.com>
+ <6fc780e4-3594-2ca5-dc4e-7e147dc4e40f@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180305154910.GJ8588@sirena.org.uk>
+In-Reply-To: <6fc780e4-3594-2ca5-dc4e-7e147dc4e40f@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>, lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, michael@amarulasolutions.com
+To: Maciej Purski <m.purski@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/2018 at 15:49:10 +0000, Mark Brown wrote:
-> On Mon, Mar 05, 2018 at 01:48:16PM +0100, Mylène Josserand wrote:
-> 
-> > --- /dev/null
-> > +++ b/sound/soc/codecs/pcm1789-i2c.c
-> > @@ -0,0 +1,76 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * PCM1789 ASoC I2C driver
-> > + *
-> > + * Copyright (c) Bootlin 2018
-> > + *
-> > + * Mylène Josserand <mylene.josserand@bootlin.com>
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License
-> 
-> Please don't mix C and C++ style comments in a single comment like this
-> - it looks unintentional.  Just use the same style for the whole thing.
-> You also don't need to include all the boilerplate with the SPDX header.
-> 
+Hi Maciej,
 
-I think Linus made it clear that he wants the SPDX header to be a
-C++ comment, the documentation has:
+On Mon, Mar 5, 2018 at 11:40 AM, Maciej Purski <m.purski@samsung.com> wrote:
+> Hi Fabio,
+> thank you for your response.
+> Could you tell me on which board precisely (on which DTS) has this issue
+> occurred?
 
-"
-2. Style:
+I tested it on a imx6dl-wandboard.dtb.
 
-   The SPDX license identifier is added in form of a comment.  The comment
-   style depends on the file type::
+kernelci.org also shows other imx6 boards that cannot boot with
+today's linux-next.
 
-      C source: // SPDX-License-Identifier: <SPDX License Expression>
-"
+> Also, I don't understand, did you boot successfully and you got only a
+> lockdep warning or you encountered an actual deadlock?
 
-I agree the boilerplate should be removed.
+No, with this series I am not able to boot till the Linux prompt.
 
-
--- 
-Alexandre Belloni, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks
