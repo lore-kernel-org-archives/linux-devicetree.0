@@ -1,173 +1,113 @@
-Return-Path: <SRS0=w9Ya=FY=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=9mlS=F3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-qt0-f194.google.com ([209.85.216.194]:42094 "EHLO
+        mail-qt0-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1751462AbeCER0p (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 5 Mar 2018 12:26:45 -0500
 MIME-Version: 1.0
-Sender: geert.uytterhoeven@gmail.com
-In-Reply-To: <df503f34-f333-0312-f5c7-15339ce4984c@cogentembedded.com>
-References: <e32c511f-89cd-254b-8a53-face984abe75@cogentembedded.com>
- <00a01c1b-560a-2ea5-0724-53b8a140ec34@cogentembedded.com> <CAMuHMdV=McUALycmAgdEwxp0sMP1FerrM6n4nGoYdrtJthrK1w@mail.gmail.com>
- <df503f34-f333-0312-f5c7-15339ce4984c@cogentembedded.com>
+In-Reply-To: <1520270260-16009-1-git-send-email-geert+renesas@glider.be>
+References: <1520270260-16009-1-git-send-email-geert+renesas@glider.be>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 2 Mar 2018 19:47:56 +0100
-Message-ID: <CAMuHMdXUrm3cHjMEcG8uz+bFVP2KL2dLPL=x9_URwhCaF5T=Wg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: sh-pfc: add R8A77980 PFC support
+Date: Mon, 5 Mar 2018 18:26:44 +0100
+Message-ID: <CAMuHMdXsvGcBgNAn3_pVD3q68yzP_chvkjvDZUwpSsYhiYkT3w@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: Add support for dynamic instances
 Content-Type: text/plain; charset="UTF-8"
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, linux-serial@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Sergei,
+CC devicetree
 
-On Mon, Feb 26, 2018 at 5:53 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 02/26/2018 03:42 PM, Geert Uytterhoeven wrote:
->>> Add the PFC support for the R8A77980 SoC including pin groups for some
->>> on-chip devices such as AVB, CAN-FD, GETHER, [H]SCIF, I2C, INTC-EX, MMC,
->>> MSIOF, PWM, and VIN...
->>>
->>> Based on the original (and large) patch by Vladimir Barinov.
->>>
->>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> Thanks for your patch!
->>
->> To avoid scaring off potential reviewers, it may be better to not include that
->> many pin groups and functions in future initial submissions.
->> This also helps if issues are detected during review in some of them (like
->> below), delaying queuing of basic functionality and other correct parts.
->>
->> I only looked at CPU_ALL_PORT(), pins, groups, and functions.
->> Comments below.
->>
->>> --- /dev/null
->>> +++ renesas-drivers/drivers/pinctrl/sh-pfc/pfc-r8a77980.c
->>
->>> +/* - AVB -------------------------------------------------------------------- */
->>> +static const unsigned int avb_link_pins[] = {
->>> +       /* AVB_LINK */
->>> +       RCAR_GP_PIN(1, 18),
->>> +};
->>> +static const unsigned int avb_link_mux[] = {
->>> +       AVB_LINK_MARK,
->>> +};
->>> +static const unsigned int avb_magic_pins[] = {
->>> +       /* AVB_MAGIC */
->>> +       RCAR_GP_PIN(1, 16),
->>> +};
->>> +static const unsigned int avb_magic_mux[] = {
->>> +       AVB_MAGIC_MARK,
->>> +};
->>> +static const unsigned int avb_phy_int_pins[] = {
->>> +       /* AVB_PHY_INT */
->>> +       RCAR_GP_PIN(1, 17),
->>> +};
->>> +static const unsigned int avb_phy_int_mux[] = {
->>> +       AVB_PHY_INT_MARK,
->>> +};
->>> +static const unsigned int avb_mdio_pins[] = {
->>> +       /* AVB_MDC, AVB_MDIO */
->>> +       RCAR_GP_PIN(1, 15), RCAR_GP_PIN(1, 14),
->>> +};
->>> +static const unsigned int avb_mdio_mux[] = {
->>> +       AVB_MDC_MARK, AVB_MDIO_MARK,
->>> +};
->>
->> The grouping is different from other R-Car Gen3 SoCs.
+On Mon, Mar 5, 2018 at 6:17 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> On DT platforms, the sh-sci driver requires the presence of "serialN"
+> aliases in DT, from which instance IDs are derived.  If a DT alias is
+> missing, the drivers fails to probe the corresponding serial port.
 >
->    Not true AFAICS -- only the group naming is different.
-
-Oh, so we can have both groups names, and be compatible?
-
->>> +/* - CANFD0 ----------------------------------------------------------------- */
->>> +static const unsigned int canfd0_data_a_pins[] = {
->>> +       /* CANFD0_TX, CANFD0_RX */
->>> +       RCAR_GP_PIN(1, 21), RCAR_GP_PIN(1, 22),
->>> +};
->>> +static const unsigned int canfd0_data_a_mux[] = {
->>> +       CANFD0_TX_A_MARK, CANFD0_RX_A_MARK,
->>> +};
->>> +static const unsigned int canfd_clk_a_pins[] = {
->>> +       /* CANFD_CLK */
->>> +       RCAR_GP_PIN(1, 25),
->>> +};
->>> +static const unsigned int canfd_clk_a_mux[] = {
->>> +       CANFD_CLK_A_MARK,
->>> +};
->>> +static const unsigned int canfd0_data_b_pins[] = {
->>> +       /* CANFD0_TX, CANFD0_RX */
->>> +       RCAR_GP_PIN(3, 6), RCAR_GP_PIN(3, 7),
->>> +};
->>> +static const unsigned int canfd0_data_b_mux[] = {
->>> +       CANFD0_TX_B_MARK, CANFD0_RX_B_MARK,
->>> +};
->>> +static const unsigned int canfd_clk_b_pins[] = {
->>> +       /* CANFD_CLK */
->>> +       RCAR_GP_PIN(3, 8),
->>> +};
->>> +static const unsigned int canfd_clk_b_mux[] = {
->>> +       CANFD_CLK_B_MARK,
->>> +};
->>
->> Please move the canfd_clk pins to their own section.
+> This becomes cumbersome when considering DT overlays, as currently
+> there is no upstream support for dynamically updating the /aliases node
+> in DT.  Furthermore, even in the presence of such support, hardcoded
+> instance IDs in independent overlays are prone to conflicts.
 >
->    Are you aware the CANFD_CLK is controlled by MOD_SEL0.SEL_CANFD0? If it's allowed
-> to have the pins controlled by a single MOD_SEL field in the diff groups, I'll place
-> CANFD_CLK into a separate group...
-
-SEL_CANFD0 switches between the A and B groups for CANFD0_TX, CANFD0_RX,
-and CANFD0_CLK together.
-So all three pins must use either group A, or group B. That's something the
-user must do correctly anyway.
-
-However, the CANFD_CLK pin is shared between the CANFD0 and CANFD1
-modules.  So a user who uses CANFD1, and not CANFD0, still has to configure
-pinmuxing for CANFD_CLK.
-
->>> +/* - HSCIF0 ----------------------------------------------------------------- */
->>
->>> +static const unsigned int scif_clk_a_pins[] = {
->>> +       /* SCIF_CLK */
->>> +       RCAR_GP_PIN(0, 10),
->>> +};
->>> +static const unsigned int scif_clk_a_mux[] = {
->>> +       SCIF_CLK_A_MARK,
->>> +};
->>
->>
->> [...]
->>
->>> +static const unsigned int scif_clk_b_pins[] = {
->>> +       /* SCIF_CLK */
->>> +       RCAR_GP_PIN(1, 25),
->>> +};
->>> +static const unsigned int scif_clk_b_mux[] = {
->>> +       SCIF_CLK_B_MARK,
->>> +};
->>
->> Please move the scif_clk pins to their own section, as they are shared by
->> HSCIF and SCIF.
+> Hence add support for dynamic instance IDs, to be used in the absence of
+> a DT alias.  This makes serial ports behave similar to I2C and SPI
+> buses, which already support dynamic instances.
 >
->    Again, the same bit in MOD_SEL0...
-
-Same story: SCIF_CLK is shared by the HSCIFx and SCIFx modules.
-Still puts the responsability in the hands of the board designer: he must
-know not to select SCIF_CLK_A and HSCIF0_B, or SCIF_CLK_B and HSCIF0_A.
-
-On this SoC, the limitations seem to be worse than on other members of
-the same family.
-
-However, on other SoCs you have similar limitations. E.g. on H3/M3-W/M3-N
-you cannot select scif5_data_a and scif5_clk_b, as they are both controlled
-through sel_scif5, although the driver has them in separate groups.
-But that is done to allow using only RX/TX functionality, and using the
-CTS/RTS pins for something else (a completely different function, or GPIO).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Ports in use are tracked using a simple bitmask of type unsigned long,
+> which is sufficient to handle all current hardware (max. 18 ports).
+> The maximum number of serial ports is still fixed, and configurable
+> through Kconfig.  Range validation is done through both Kconfig and a
+> compile-time check.
+>
+> Due to the fixed maximum number of serial ports, dynamic and static
+> instances share the same ID space.  Static instances added later are
+> rejected when conflicting with dynamic instances registered earlier.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/tty/serial/Kconfig  | 2 ++
+>  drivers/tty/serial/sh-sci.c | 8 ++++++++
+>  2 files changed, 10 insertions(+)
+>
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 3682fd3e960cbd64..76005dc5f6246593 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -762,6 +762,8 @@ config SERIAL_SH_SCI
+>
+>  config SERIAL_SH_SCI_NR_UARTS
+>         int "Maximum number of SCI(F) serial ports" if EXPERT
+> +       range 1 64 if 64BIT
+> +       range 1 32 if !64BIT
+>         depends on SERIAL_SH_SCI
+>         default "3" if H8300
+>         default "10" if SUPERH
+> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+> index 9e1dfbb4b40bf849..3a03d391fcc72656 100644
+> --- a/drivers/tty/serial/sh-sci.c
+> +++ b/drivers/tty/serial/sh-sci.c
+> @@ -159,6 +159,7 @@ struct sci_port {
+>  #define SCI_NPORTS CONFIG_SERIAL_SH_SCI_NR_UARTS
+>
+>  static struct sci_port sci_ports[SCI_NPORTS];
+> +static unsigned long sci_ports_in_use;
+>  static struct uart_driver sci_uart_driver;
+>
+>  static inline struct sci_port *
+> @@ -3011,6 +3012,7 @@ static int sci_remove(struct platform_device *dev)
+>  {
+>         struct sci_port *port = platform_get_drvdata(dev);
+>
+> +       sci_ports_in_use &= ~BIT(port->port.line);
+>         uart_remove_one_port(&sci_uart_driver, &port->port);
+>
+>         sci_cleanup_single(port);
+> @@ -3092,6 +3094,8 @@ static struct plat_sci_port *sci_parse_dt(struct platform_device *pdev,
+>
+>         /* Get the line number from the aliases node. */
+>         id = of_alias_get_id(np, "serial");
+> +       if (id < 0 && ~sci_ports_in_use)
+> +               id = ffz(sci_ports_in_use);
+>         if (id < 0) {
+>                 dev_err(&pdev->dev, "failed to get alias id (%d)\n", id);
+>                 return NULL;
+> @@ -3126,6 +3130,9 @@ static int sci_probe_single(struct platform_device *dev,
+>                 dev_notice(&dev->dev, "Consider bumping CONFIG_SERIAL_SH_SCI_NR_UARTS!\n");
+>                 return -EINVAL;
+>         }
+> +       BUILD_BUG_ON(SCI_NPORTS > sizeof(sci_ports_in_use) * 8);
+> +       if (sci_ports_in_use & BIT(index))
+> +               return -EBUSY;
+>
+>         mutex_lock(&sci_uart_registration_lock);
+>         if (!sci_uart_driver.state) {
+> @@ -3224,6 +3231,7 @@ static int sci_probe(struct platform_device *dev)
+>         sh_bios_gdb_detach();
+>  #endif
+>
+> +       sci_ports_in_use |= BIT(dev_id);
+>         return 0;
+>  }
+>
+> --
+> 2.7.4
