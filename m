@@ -1,141 +1,96 @@
-From: John Garry <john.garry@huawei.com>
-Subject: [PATCH v3 3/8] scsi: hisi_sas: fix the issue of link rate inconsistency
-Date: Mon, 5 Mar 2018 22:48:45 +0800
-Message-ID: <1520261330-204596-4-git-send-email-john.garry@huawei.com>
-References: <1520261330-204596-1-git-send-email-john.garry@huawei.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 1/6] Docs: dt: add fsl-mc iommu-parent device-tree binding
+Date: Mon, 5 Mar 2018 14:53:21 +0000
+Message-ID: <5cdeded1-ca3c-339a-bf73-73401e7dd4ed@arm.com>
+References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
+ <1520260166-29387-2-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520261330-204596-1-git-send-email-john.garry@huawei.com>
+In-Reply-To: <1520260166-29387-2-git-send-email-nipun.gupta@nxp.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, Xiaofei Tan <tanxiaofei@huawei.com>, John Garry <john.garry@huawei.com>
+To: Nipun Gupta <nipun.gupta@nxp.com>, will.deacon@arm.com, mark.rutland@arm.com, catalin.marinas@arm.com
+Cc: iommu@lists.linux-foundation.org, robh+dt@kernel.org, hch@lst.de, m.szyprowski@samsung.com, gregkh@linuxfoundation.org, joro@8bytes.org, leoyang.li@nxp.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, bharat.bhushan@nxp.com, stuyoder@gmail.com, laurentiu.tudor@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-From: Xiaofei Tan <tanxiaofei@huawei.com>
+On 05/03/18 14:29, Nipun Gupta wrote:
+> The existing IOMMU bindings cannot be used to specify the relationship
+> between fsl-mc devices and IOMMUs. This patch adds a binding for
+> mapping fsl-mc devices to IOMMUs, using a new iommu-parent property.
 
-In sysfs, there are two files about minimum linkrate, and also
-two files for maximum linkrate. Take maximum linkrate example,
-maximum_linkrate_hw is read-only and indicated by the register
-HARD_PHY_LINKRATE, and maximum_linkrate is read-write and
-corresponding to the register PROG_PHY_LINK_RATE.
+Given that allowing "msi-parent" for #msi-cells > 1 is merely a 
+backward-compatibility bodge full of hard-coded assumptions, why would 
+we want to knowingly introduce a similarly unpleasant equivalent for 
+IOMMUs? What's wrong with "iommu-map"?
 
-But in the function phy_up_v*_hw(), we get *_linkrate value from
-HARD_PHY_LINKRATE. It is not right. This patch is to fix this issue.
+> Signed-off-by: Nipun Gupta <nipun.gupta@nxp.com>
+> ---
+>   .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 31 ++++++++++++++++++++++
+>   1 file changed, 31 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> index 6611a7c..011c7d6 100644
+> --- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+> @@ -9,6 +9,24 @@ blocks that can be used to create functional hardware objects/devices
+>   such as network interfaces, crypto accelerator instances, L2 switches,
+>   etc.
+>   
+> +For an overview of the DPAA2 architecture and fsl-mc bus see:
+> +drivers/staging/fsl-mc/README.txt
+> +
+> +As described in the above overview, all DPAA2 objects in a DPRC share the
+> +same hardware "isolation context" and a 10-bit value called an ICID
+> +(isolation context id) is expressed by the hardware to identify
+> +the requester.
 
-Unreferenced PHY-interrupt enum is also removed for v3 hw.
+IOW, precisely the case for which "{msi,iommu}-map" exist. Yes, I know 
+they're currently documented under bindings/pci, but they're not really 
+intended to be absolutely PCI-specific.
 
-Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c  |  2 ++
- drivers/scsi/hisi_sas/hisi_sas_v1_hw.c |  1 -
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c |  8 +-------
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 13 +------------
- 4 files changed, 4 insertions(+), 20 deletions(-)
+Robin.
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index 2d4dbed..9d16372 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -683,6 +683,8 @@ static void hisi_sas_phy_init(struct hisi_hba *hisi_hba, int phy_no)
- 
- 	phy->hisi_hba = hisi_hba;
- 	phy->port = NULL;
-+	phy->minimum_linkrate = SAS_LINK_RATE_1_5_GBPS;
-+	phy->maximum_linkrate = hisi_hba->hw->phy_get_max_linkrate();
- 	sas_phy->enabled = (phy_no < hisi_hba->n_phy) ? 1 : 0;
- 	sas_phy->class = SAS;
- 	sas_phy->iproto = SAS_PROTOCOL_ALL;
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-index 679e76f..38bbda9 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v1_hw.c
-@@ -873,7 +873,6 @@ static void phy_set_linkrate_v1_hw(struct hisi_hba *hisi_hba, int phy_no,
- 	sas_phy->phy->maximum_linkrate = max;
- 	sas_phy->phy->minimum_linkrate = min;
- 
--	min -= SAS_LINK_RATE_1_5_GBPS;
- 	max -= SAS_LINK_RATE_1_5_GBPS;
- 
- 	for (i = 0; i <= max; i++)
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index 42b3fd6..67be346 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -1603,7 +1603,6 @@ static void phy_set_linkrate_v2_hw(struct hisi_hba *hisi_hba, int phy_no,
- 	sas_phy->phy->maximum_linkrate = max;
- 	sas_phy->phy->minimum_linkrate = min;
- 
--	min -= SAS_LINK_RATE_1_5_GBPS;
- 	max -= SAS_LINK_RATE_1_5_GBPS;
- 
- 	for (i = 0; i <= max; i++)
-@@ -2684,7 +2683,7 @@ static int prep_abort_v2_hw(struct hisi_hba *hisi_hba,
- static int phy_up_v2_hw(int phy_no, struct hisi_hba *hisi_hba)
- {
- 	int i, res = IRQ_HANDLED;
--	u32 port_id, link_rate, hard_phy_linkrate;
-+	u32 port_id, link_rate;
- 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
- 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
- 	struct device *dev = hisi_hba->dev;
-@@ -2723,11 +2722,6 @@ static int phy_up_v2_hw(int phy_no, struct hisi_hba *hisi_hba)
- 	}
- 
- 	sas_phy->linkrate = link_rate;
--	hard_phy_linkrate = hisi_sas_phy_read32(hisi_hba, phy_no,
--						HARD_PHY_LINKRATE);
--	phy->maximum_linkrate = hard_phy_linkrate & 0xf;
--	phy->minimum_linkrate = (hard_phy_linkrate >> 4) & 0xf;
--
- 	sas_phy->oob_mode = SAS_OOB_MODE;
- 	memcpy(sas_phy->attached_sas_addr, &id->sas_addr, SAS_ADDR_SIZE);
- 	dev_info(dev, "phyup: phy%d link_rate=%d\n", phy_no, link_rate);
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index a1f1868..1ee95ab 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -340,12 +340,6 @@ struct hisi_sas_err_record_v3 {
- #define HISI_SAS_COMMAND_ENTRIES_V3_HW 4096
- #define HISI_SAS_MSI_COUNT_V3_HW 32
- 
--enum {
--	HISI_SAS_PHY_PHY_UPDOWN,
--	HISI_SAS_PHY_CHNL_INT,
--	HISI_SAS_PHY_INT_NR
--};
--
- #define DIR_NO_DATA 0
- #define DIR_TO_INI 1
- #define DIR_TO_DEVICE 2
-@@ -1121,7 +1115,7 @@ static int prep_abort_v3_hw(struct hisi_hba *hisi_hba,
- static int phy_up_v3_hw(int phy_no, struct hisi_hba *hisi_hba)
- {
- 	int i, res = 0;
--	u32 context, port_id, link_rate, hard_phy_linkrate;
-+	u32 context, port_id, link_rate;
- 	struct hisi_sas_phy *phy = &hisi_hba->phy[phy_no];
- 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
- 	struct device *dev = hisi_hba->dev;
-@@ -1139,10 +1133,6 @@ static int phy_up_v3_hw(int phy_no, struct hisi_hba *hisi_hba)
- 		goto end;
- 	}
- 	sas_phy->linkrate = link_rate;
--	hard_phy_linkrate = hisi_sas_phy_read32(hisi_hba, phy_no,
--						HARD_PHY_LINKRATE);
--	phy->maximum_linkrate = hard_phy_linkrate & 0xf;
--	phy->minimum_linkrate = (hard_phy_linkrate >> 4) & 0xf;
- 	phy->phy_type &= ~(PORT_TYPE_SAS | PORT_TYPE_SATA);
- 
- 	/* Check for SATA dev */
-@@ -1864,7 +1854,6 @@ static void phy_set_linkrate_v3_hw(struct hisi_hba *hisi_hba, int phy_no,
- 	sas_phy->phy->maximum_linkrate = max;
- 	sas_phy->phy->minimum_linkrate = min;
- 
--	min -= SAS_LINK_RATE_1_5_GBPS;
- 	max -= SAS_LINK_RATE_1_5_GBPS;
- 
- 	for (i = 0; i <= max; i++)
--- 
-1.9.1
+> +The generic 'iommus' property is cannot be used to describe the relationship
+> +between fsl-mc and IOMMUs, so an iommu-parent property is used to define
+> +the same.
+> +
+> +For generic IOMMU bindings, see
+> +Documentation/devicetree/bindings/iommu/iommu.txt.
+> +
+> +For arm-smmu binding, see:
+> +Documentation/devicetree/bindings/iommu/arm,smmu.txt.
+> +
+>   Required properties:
+>   
+>       - compatible
+> @@ -88,14 +106,27 @@ Sub-nodes:
+>                 Value type: <phandle>
+>                 Definition: Specifies the phandle to the PHY device node associated
+>                             with the this dpmac.
+> +Optional properties:
+> +
+> +- iommu-parent: Maps the devices on fsl-mc bus to an IOMMU.
+> +  The property specifies the IOMMU behind which the devices on
+> +  fsl-mc bus are residing.
+>   
+>   Example:
+>   
+> +        smmu: iommu@5000000 {
+> +               compatible = "arm,mmu-500";
+> +               #iommu-cells = <1>;
+> +               stream-match-mask = <0x7C00>;
+> +               ...
+> +        };
+> +
+>           fsl_mc: fsl-mc@80c000000 {
+>                   compatible = "fsl,qoriq-mc";
+>                   reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal base */
+>                         <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+>                   msi-parent = <&its>;
+> +                iommu-parent = <&smmu>;
+>                   #address-cells = <3>;
+>                   #size-cells = <1>;
+>   
+> 
