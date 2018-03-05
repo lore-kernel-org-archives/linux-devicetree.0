@@ -1,35 +1,56 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] clk: imx: imx7d: add the Keypad Port module clock
-Date: Mon, 5 Mar 2018 16:22:44 -0600
-Message-ID: <20180305222244.xa42gzjru2ysezyu@rob-hp-laptop>
-References: <20180227160544.11446-1-stefan@agner.ch>
+Subject: Re: [PATCH 1/2] ASoC: add tda7419 audio processor binding
+Date: Mon, 5 Mar 2018 16:29:54 -0600
+Message-ID: <20180305222954.chitmlvsklszods7@rob-hp-laptop>
+References: <20180227225128.17815-1-mporter@konsulko.com>
+ <20180227225128.17815-2-mporter@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180227160544.11446-1-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180227225128.17815-2-mporter@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@konsulko.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 27, 2018 at 05:05:43PM +0100, Stefan Agner wrote:
-> According to the i.MX7D Reference Manual, the Keypad Port module
-> (KPP) requires this clock gate to be enabled.
+On Tue, Feb 27, 2018 at 05:51:27PM -0500, Matt Porter wrote:
+> DeviceTree binding for the tda7419 audio processor.
 > 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Signed-off-by: Matt Porter <mporter@konsulko.com>
 > ---
->  drivers/clk/imx/clk-imx7d.c             | 1 +
->  include/dt-bindings/clock/imx7d-clock.h | 3 ++-
->  2 files changed, 3 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/sound/tda7419.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/tda7419.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/tda7419.txt b/Documentation/devicetree/bindings/sound/tda7419.txt
+> new file mode 100644
+> index 000000000000..919318315600
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/tda7419.txt
+> @@ -0,0 +1,15 @@
+> +TDA7419 audio processor
+> +
+> +This device supports I2C only.
+> +
+> +Required properties:
+> +
+> +- compatible : "st,tda7419"
+> +- reg : the I2C address of the device.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+For completeness:
+
+st,mute-gpios for MUTE pin?
+
+vdd-supply?
+
+> +
+> +Example:
+> +
+> +ap: tda7419@44 {
+> +	compatible = "st,tda7419";
+> +	reg = <0x44>;
+> +};
+> -- 
+> 2.11.0
+> 
