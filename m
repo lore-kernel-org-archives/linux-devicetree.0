@@ -1,131 +1,126 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCHv3] tlv320dac33: Add device tree bindings
-Date: Mon, 5 Mar 2018 14:52:06 +0200
-Message-ID: <3edfbd7c-c8f8-f031-30d2-90b441e63688@ti.com>
-References: <20180129230539.GA18280@amd> <20180131190112.GA31608@amd>
- <20b9ff40-a869-a165-07a2-2a103830efb3@ti.com> <20180205082445.GA18274@amd>
- <20180206121122.GG5681@sirena.org.uk> <20180206134906.GA7842@amd>
- <20180206152722.GH5681@sirena.org.uk> <20180224205704.GB5132@amd>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V2 0/5] mmc: add stm32 sdmmc controller
+Date: Mon, 5 Mar 2018 13:53:25 +0100
+Message-ID: <CAPDyKFopp6aSXO0vguWah44vBqfvuRvFHUSNbynjFE8NFPnNRA@mail.gmail.com>
+References: <1519832844-28068-1-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFpfPAaLRZLqpyi6RwC1-=7Ao=u+OmEfHaYBABzd_-BKAw@mail.gmail.com>
+ <8f328063-610f-a2e8-5f29-d3f0019384f2@st.com> <CAPDyKFqFWcZnWoUdnfRtj9WA1+ooNCXKfZ94Ddq4j849CH2QOQ@mail.gmail.com>
+ <cbdd31d8-dbea-4ea3-01ba-443daeb51775@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180224205704.GB5132@amd>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Pavel Machek <pavel@ucw.cz>, Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, tony@atomide.com, abcloriens@gmail.com, tiwai@suse.com, martijn@brixit.nl, =?UTF-8?Q?Filip_Matijevi=c4=87?= <filip.matijevic.pz@gmail.com>, patrikbachan@gmail.com, ivo.g.dimitrov.75@gmail.com, khilman@kernel.org, serge@hallyn.com, devicetree@vger.kernel.org, pali.rohar@gmail.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, aaro.koskinen@iki.fi, linux-kernel@vger.kernel.org, clayton@craftyguy.net, sakari.ailus@linux.intel.com, sre@kernel.org, bhumirks@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cbdd31d8-dbea-4ea3-01ba-443daeb51775@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic BARRE <ludovic.barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Gerald Baeza <gerald.baeza@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2018-02-24 22:57, Pavel Machek wrote:
-> On Tue 2018-02-06 15:27:22, Mark Brown wrote:
->> On Tue, Feb 06, 2018 at 02:49:06PM +0100, Pavel Machek wrote:
->>> On Tue 2018-02-06 12:11:22, Mark Brown wrote:
+On 2 March 2018 at 09:51, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>
+>
+> On 03/01/2018 11:44 AM, Ulf Hansson wrote:
 >>
->>>> Please submit patches using subject lines reflecting the style for the
->>>> subsystem.  This makes it easier for people to identify relevant
->>>> patches.  Look at what existing commits in the area you're changing are
->>>> doing and make sure your subject lines visually resemble what they're
->>>> doing.
+>> On 1 March 2018 at 10:57, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>>>
+>>> Hi Ulf
+>>>
+>>> On 03/01/2018 10:06 AM, Ulf Hansson wrote:
+>>>>
+>>>>
+>>>> Hi Ludovic,
+>>>>
+>>>> On 28 February 2018 at 16:47, Ludovic Barre <ludovic.Barre@st.com>
+>>>> wrote:
+>>>>>
+>>>>>
+>>>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>>>
+>>>>> This patch serie adds support of stm32 SDMMC controller.
+>>>>> stm32h7 is the first SoC to use stm32 SDMMC controller
+>>>>> (previous SoC had pl180 controller).
+>>>>
+>>>>
+>>>>
+>>>> I am a not convinced this isn't a new improved variant of the pl180.
+>>>> According to register layout and the code you submitted in patch2,
+>>>> there are great similarities to pl180 and the mmci driver.
+>>>
+>>>
+>>>
+>>> In fact, ST designers which created stm32-sdmmc hardware block from
+>>> scratch
+>>> are the same which have done the modifications on pl180 variant (stm32
+>>> legacy f4, f7).
+>>> So some registers or bits name seem identical (or strongly inspirited)
+>>> but
+>>> the engine and features are different.
 >>
->>> AFAICT this goes to Documentation, not sound.
 >>
->> Even if that were the case you're not following the commonly accepted
->> practice there either.
+>> Well, in that case, I assume the driver would also need work
+>> differently, but when looking at the code in patch2 this doesn't seem
+>> to be the case.
 >>
->>> If you have any comments on V1 of this patch, that would be nice, I'd
->>> like to get that merged once we are finished with the bindings.
->>
->> It is the middle of the merge window, please be a bit more patient.
-> =
+>
+> I understand why you push to avoid drivers multiplication. But I'm
+> scared to squash 2 different hardware block which are their own roadmap
+> in the same drivers. I fear that it complicates the features management and
+> maintenance of this driver.
 
-> For the record, patch currently looks like this. If you have some
-> comments on the code, I'd like to hear them.
-> =
+It may require more work for you to upstream the code you need. You
+may even have to re-factor existing code in mmci before you can add
+your specific parts on top.
 
-> Best regards,
-> diff --git a/sound/soc/codecs/tlv320dac33.c b/sound/soc/codecs/tlv320dac3=
-3.c
-> index 8c71d2f..7302789 100644
-> --- a/sound/soc/codecs/tlv320dac33.c
-> +++ b/sound/soc/codecs/tlv320dac33.c
+However, whether it gets complicated or not, I think much depends on
+the quality of the code changes we make. Both sdhci and dw_mmc gives
+an idea of how we can deal with variant differences, in particular
+when variant changes are a bit bigger.
 
-...
+In the mmci case, so far the controller that differs the most, is the
+qcom variant, which also has the built-in DMA support, similar to your
+new ST variant. Perhaps there is some code we can re-use around that.
 
-> @@ -1511,10 +1509,26 @@ static int dac33_i2c_probe(struct i2c_client *cli=
-ent,
->  =
+>
+> there are some difference:
+> -the stm32-sdmmc use an internal dma (stm32-sdmmc is master on the bus),
+> -idma alignment constraint.
+> -idma transfer mode single buffer, double buffer... (future evolution)
+> -need a command to stop transmission for data state machine
+> -same bit naming could have offset, mask width or set in different register.
+> => I will try to synthesis register difference in a document
+> -voltage switch sequence
+> -delay block: calibration, tunning (sdr104)
+> -reset line required
+> -the same feature have not the same impact, example ddr mode
+> stm32:no bypass clk, activated in clk register
+> pl180: clkreg_neg_edge_enable, activated in datactrl register,
 
->  	i2c_set_clientdata(client, dac33);
->  =
+Doesn't sound like this couldn't be done, yes there are differences
+but not that much.
 
-> -	dac33->power_gpio =3D pdata->power_gpio;
-> -	dac33->burst_bclkdiv =3D pdata->burst_bclkdiv;
-> -	dac33->keep_bclk =3D pdata->keep_bclk;
-> -	dac33->mode1_latency =3D pdata->mode1_latency;
-> +	if (pdata) {
-> +		dac33->power_gpio =3D pdata->power_gpio;
-> +		dac33->burst_bclkdiv =3D pdata->burst_bclkdiv;
-> +		dac33->keep_bclk =3D pdata->keep_bclk;
-> +		dac33->mode1_latency =3D pdata->mode1_latency;
-> +	} else if (np) {
-> +		ret =3D of_get_named_gpio(np, "power-gpios", 0);
-> +		if (ret >=3D 0)
-> +			dac33->power_gpio =3D ret;
-> +		else
-> +			dac33->power_gpio =3D -1;
+Sure we may need re-work the core driver mmci code, maybe convert it
+to set of library function instead and invent a couple mmci specific
+callbacks. As I said, sdhci and dw_mmc already does it, so I am sure
+it can be done.
 
-the code checks for (dac33->power_gpio >=3D 0) in live path, I guess you
-can just skip the power_gpio =3D -1 in case we don't have GPIO
-Handling of EPROBE_DEFER might be something we might want for the GPIO.
+> ...
+>
+> stm32-sdmmc is just at begining of its life cycle. Each revision of this
+> block increases the difference with pl180. Today, I've just push the minimal
 
-> +
-> +		if (of_property_read_bool(np, "ti,keep-bclk"))
-> +			dac33->keep_bclk =3D true;
-> +
-> +		of_property_read_u32(np, "ti,burst-bclkdiv", &dac33->burst_bclkdiv);
-> +	} else {
-> +		dev_err(&client->dev, "Platform data not set\n");
-> +		return -ENODEV;
-> +	}
->  	if (!dac33->mode1_latency)
->  		dac33->mode1_latency =3D 10000; /* 10ms */
->  	dac33->irq =3D client->irq;
-> @@ -1580,9 +1594,16 @@ static const struct i2c_device_id tlv320dac33_i2c_=
-id[] =3D {
->  };
->  MODULE_DEVICE_TABLE(i2c, tlv320dac33_i2c_id);
->  =
+That's fine, this happens all the time to sdhci and dw_mmc variants.
+Again, if it works for them, it should work for mmci.
 
-> +static const struct of_device_id tlv320dac33_of_match[] =3D {
-> +	{ .compatible =3D "ti,tlv320dac33", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(i2c, tlv320dac33_of_match);
-> +
->  static struct i2c_driver tlv320dac33_i2c_driver =3D {
->  	.driver =3D {
->  		.name =3D "tlv320dac33-codec",
-> +		.of_match_table =3D of_match_ptr(tlv320dac33_of_match),
->  	},
->  	.probe		=3D dac33_i2c_probe,
->  	.remove		=3D dac33_i2c_remove,
-> =
+> driver to start a request, but I've not yet send all features of this
+> revision like sdio, sdr104 support. After this revision there already are 2
+> other revisions in the pipe (at short term).
+>
+> I am Out of Office with limited access to my e-mail till 2018 march 12th
+> I'll try to think about it on ski slope. euh, in fact no just ski and enjoy
+> ;-)
 
-> =
+Enjoy you skiing and let's talk more when you get back!
 
+[...]
 
-- P=E9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Kind regards
+Uffe
