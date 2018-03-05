@@ -1,50 +1,70 @@
-From: Karthik Ramasubramanian <kramasub@codeaurora.org>
-Subject: Re: [PATCH v5 4/4] arm64: dts: sdm845: Add serial console support
-Date: Mon, 5 Mar 2018 10:50:35 -0700
-Message-ID: <b6421601-a20b-cd98-4dfd-aad7141fecb5@codeaurora.org>
-References: <20180222061208.2031-1-rnayak@codeaurora.org>
- <20180222061208.2031-5-rnayak@codeaurora.org>
- <20180304195930.GQ93895@bjorns-mbp-2.lan>
- <9d24e89f-38be-59e4-6f76-c273dd4d4e79@codeaurora.org>
+From: James Hogan <jhogan@kernel.org>
+Subject: Re: [PATCH v2 6/8] MIPS: jz4780: dts: Fix watchdog node
+Date: Mon, 5 Mar 2018 18:25:03 +0000
+Message-ID: <20180305182502.GG4197@saruman>
+References: <20171228162939.3928-2-paul@crapouillou.net>
+ <20171230135108.6834-1-paul@crapouillou.net>
+ <20171230135108.6834-6-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="V32M1hWVjliPHW+c"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9d24e89f-38be-59e4-6f76-c273dd4d4e79@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20171230135108.6834-6-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: andy.gross@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sboyd@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, marc.zyngier@arm.com
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--V32M1hWVjliPHW+c
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 3/5/2018 3:43 AM, Rajendra Nayak wrote:
-> 
-> 
-> On 03/05/2018 01:29 AM, Bjorn Andersson wrote:
->> On Wed 21 Feb 22:12 PST 2018, Rajendra Nayak wrote:
->>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> [..]
->>> +			qup_uart2: serial@a84000 {
->>> +				compatible = "qcom,geni-debug-uart";
->>> +				reg = <0xa84000 0x4000>;
->>> +				reg-names = "se-phys";
->>> +				clock-names = "se-clk";
->>
->> This was changed to "se" in v3 of the GENI patchset, with that this
->> boots nicely again.
-> 
-> Thanks Bjorn for testing.
-> 
-> Karthik, it would be good if you could include just this patch from this series as part
-> of your GENI series for the next (and subsequent) repost, with updates as needed based on
-> binding changes?
-> 
-I will include this patch in my next submission.
+On Sat, Dec 30, 2017 at 02:51:06PM +0100, Paul Cercueil wrote:
+> diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/=
+ingenic/jz4780.dtsi
+> index 9b5794667aee..a52f59bf58c7 100644
+> --- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
+> @@ -221,7 +221,10 @@
+> =20
+>  	watchdog: watchdog@10002000 {
+>  		compatible =3D "ingenic,jz4780-watchdog";
+> -		reg =3D <0x10002000 0x100>;
+> +		reg =3D <0x10002000 0x10>;
 
-Regards,
-Karthik.
--- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Should the example in
+Documentation/devicetree/bindings/watchdog/ingenic,jz4740-wdt.txt be
+updated too?
+
+Regardless,
+Acked-by: James Hogan <jhogan@kernel.org>
+
+Cheers
+James
+
+
+--V32M1hWVjliPHW+c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlqdi3YACgkQbAtpk944
+dnrLfxAAh8UzJNhjGjaxSpbWP/AjinkyNVwGe3Grpvql4g0kuxloc7LXlOCW6hZW
+v7n+7D792ieqlFE9xImWAtdP4ZQNwv/sUv6Bfbkb7z47auqyzsv7M8OfT1CMQ9zP
+nYPSesq2xRg6a/UXFPfLp83V0eZtEz4KUsz17s8wzM3U2Bu5gX36zKa2FxwMc4I7
+P5hoHRRRLCTXHQGEXgeOJvY+/vJFr3Vcbh2J39elNv9UXyZmp75gah6cYrrhGvb8
+ggaQKOUkkVDJ4WPw4NFbFksDC8LFxq4ykEmsOmH1W6XFmodjUFbKA3I5ihIu7Zpm
+UM9rAltpUiZawmRaucLCwpEXw5jA3FLUCqOLkC9oNyd4r/iLhbRk+I7bvazjKSbo
+kc5RsfidekdYXGl5hNPkK3lfCMNFoWON5Me8q5UWxIcYoUj+0IQx+GxS7tPiRr0R
+c+Xkmg3eQxQIQZD1bRDlRGTjqigMZjdMffPLh3RJMFcmwWXsTAQJBk6IK8wHBXqv
+c/Y3lyoOZAT6yZLSutRyBSrzrkdowaVE457NHcQgdLFL16ZtVlLA8qsIXe2PmhTK
++TkhuX8dDJYYPeWCfAznozO/rancNHhsRwzCIatMyBnCq/7xOVbLyH1QhHCCv4wd
+i5cnhVAIVPUehr0WWIec163Tdu4dUvksHv6MRJ/17LDWQ6AJdS8=
+=rurv
+-----END PGP SIGNATURE-----
+
+--V32M1hWVjliPHW+c--
