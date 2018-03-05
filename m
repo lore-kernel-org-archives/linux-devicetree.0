@@ -1,35 +1,111 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH 2/2] phy: rcar-gen3-usb3: Add binding for r8a77965
-Date: Mon, 5 Mar 2018 05:19:17 +0000
-Message-ID: <TY1PR06MB0992BB23EF4B56F1D7719D2CD8DA0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1519710747-26435-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1519710747-26435-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <6df55c1d-8855-7aff-af13-cf0f43cc5f8b@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6df55c1d-8855-7aff-af13-cf0f43cc5f8b@ti.com>
-Content-Language: ja-JP
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
+ slave
+Date: Mon, 5 Mar 2018 06:19:27 +0100
+Message-ID: <423BE2B6-2209-4390-B420-FA7267318A09@holtmann.org>
+References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+ <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
+ <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
+ <648118289.71086.1519593373795@email.1und1.de>
+ <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
+ <395166283.280598.1520200683559@email.1und1.de>
+Mime-Version: 1.0 (Mac OS X Mail 11.2 \(3445.5.20\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <395166283.280598.1520200683559@email.1und1.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, =?utf-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-> From: Kishon Vijay Abraham I, Sent: Friday, March 2, 2018 5:15 PM
->=20
-> On Tuesday 27 February 2018 11:22 AM, Yoshihiro Shimoda wrote:
-> > This patch adds binding for r8a77965 (R-Car M3-N).
->=20
-> $subject should be  dt-bindings: rcar-gen3-phy-usb3: Add binding for r8a7=
-7965
-
-I will revise this in v2.
-
-Best regards,
-Yoshihiro Shimoda
-
-> Thanks
-> Kishon
+SGkgU3RlZmFuLAoKPj4+Pj4gQWRkIEJDTTQzNDM4IChibHVldG9vdGgpIGFzIGEgc2VyZGV2IHNs
+YXZlIGRldmljZSBvZiB1YXJ0MCAocGwwMTEvdHR5QU1BMCkuCj4+Pj4+IFRoaXMgYWxsb3dzIHRv
+IGF1dG9tYXRpY2FsbHkgaW5zZXJ0IHRoZSBiY200MzQzOCB0byB0aGUgYmx1ZXRvb3RoCj4+Pj4+
+IHN1YnN5c3RlbSBpbnN0ZWFkIG9mIHJlbHlpbmcgb24gcGF0Y2hlZCB1c2Vyc3BhY2UgaGVscGVy
+cyAoaGNpYXR0YWNoKS4KPj4+Pj4gCj4+Pj4+IEluIG9yZGVyIHRvIGtlZXAgYSBkZWJ1ZyBVQVJU
+IHdlIG5lZWQgdG8gc3dpdGNoIHRvIHVhcnQxLgo+Pj4+PiAKPj4+Pj4gU2lnbmVkLW9mZi1ieTog
+U3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4KPj4+Pj4gLS0tCj4+Pj4+IGFy
+Y2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMgfCAxNCArKysrKysrKysrKysr
+LQo+Pj4+PiAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+
+Pj4+PiAKPj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXpl
+cm8tdy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16ZXJvLXcuZHRzCj4+Pj4+
+IGluZGV4IGNmNTM0MzYuLmI3Zjc5ZjEgMTAwNjQ0Cj4+Pj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMKPj4+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+YmNtMjgzNS1ycGktemVyby13LmR0cwo+Pj4+PiBAQCAtMTMxLDYgKzEzMSwxOCBAQAo+Pj4+PiAK
+Pj4+Pj4gJnVhcnQwIHsKPj4+Pj4gCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4+Pj4+IC0J
+cGluY3RybC0wID0gPCZ1YXJ0MF9ncGlvMTQ+Owo+Pj4+PiArCXBpbmN0cmwtMCA9IDwmdWFydDBf
+Z3BpbzMyICZ1YXJ0MF9jdHNydHNfZ3BpbzMwPjsKPj4+Pj4gKwlzdGF0dXMgPSAib2theSI7Cj4+
+Pj4+ICsKPj4+Pj4gKwlibHVldG9vdGggewo+Pj4+PiArCQljb21wYXRpYmxlID0gImJyY20sYmNt
+NDM0MzgtYnQiOwo+Pj4+PiArCQltYXgtc3BlZWQgPSA8MjAwMDAwMD47Cj4+Pj4+ICsJCXNodXRk
+b3duLWdwaW9zID0gPCZncGlvIDQ1IEdQSU9fQUNUSVZFX0hJR0g+Owo+Pj4+PiArCX07Cj4+Pj4+
+ICt9Owo+Pj4+IAo+Pj4+IGlzIHRoZSBzaHV0ZG93biBHUElPIHdvcmtpbmcgYXMgZXhwZWN0ZWQg
+d2l0aCB0aGlzIGhhcmR3YXJlLiBTbyBldmVuIG1vZHVsZSB1bmxvYWQgYW5kIHJlbG9hZCB3b3Jr
+cyBmaW5lPwo+Pj4gCj4+PiBZZXMsIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZpbmUuIAo+Pj4g
+Cj4+Pj4gTWVhbmluZyB3ZSBhcmUgZ2V0dGluZyBiYWNrIHRvIHRoZSAxMTUyMDAgZGVmYXVsdCBi
+YXVkIHJhdGUgb24gdGhlIFVBUlQ/Cj4+PiAKPj4+IEkgYXNzdW1lIHRoYXQsIGJlY2F1c2UgcmVs
+b2FkIHdvcmtzIGFzIGV4cGVjdGVkLiAKPj4gCj4+IGF3ZXNvbWUuIFRoYXQgaXMgZ29vZCBuZXdz
+Lgo+PiAKPj4gU2luY2UgeW91IHNhaWQgdGhhdCB0aGUgR1BJTyBleHBhbmRlciBkcml2ZXIgZm9y
+IHRoZSBSUGkgMyBoYXMgYmVlbiBhY2NlcHRlZCwgZGlkIHlvdSB0ZXN0IGl0IHRoZXJlIGFzIHdl
+bGw/IElmIHNvLCB0aGVuIGl0IHdvdWxkIGJlIGdvb2QgdG8gZ2V0IGEgcGF0Y2ggdGhhdCBhbHNv
+IHByb3ZpZGVzIHNodXRkb3duLWdwaW9zIGZvciBSUGkgMy4KPiAKPiBzbyBoZXJlIGNvbWVzIHRo
+ZSBiYWQgbmV3cy4gaGNpX2JjbSB1c2VzIGdwaW9kX3NldF92YWx1ZSgpIHdoaWNoIGlzIGZvciBp
+bnRlcnJ1cHQgY29udGV4dCwgYnV0IHRoZSBncGlvIGV4cGFuZGVyIGNhbiBzbGVlcC4gU28gd2Ug
+d2lsbCBnZXQgdGhpcyB3YXJuaW5nOgo+IAo+IFsgICAgNC44MDI0NDddIC0tLS0tLS0tLS0tLVsg
+Y3V0IGhlcmUgXS0tLS0tLS0tLS0tLQo+IFsgICAgNC44MDI0ODVdIFdBUk5JTkc6IENQVTogMyBQ
+SUQ6IDkxIGF0IGRyaXZlcnMvZ3Bpby9ncGlvbGliLmM6Mjk4NiBncGlvZF9zZXRfdmFsdWUrMHg1
+MC8weDU4Cj4gWyAgICA0LjgwMjQ4OV0gTW9kdWxlcyBsaW5rZWQgaW46IGhjaV91YXJ0IGFjOTdf
+YnVzIGJ0YmNtIHNuZF9wY21fZG1hZW5naW5lIGJsdWV0b290aCBzbmRfcGNtIHNuZF90aW1lciBl
+Y2RoX2dlbmVyaWMgc25kIHNvdW5kY29yZSBiY20yODM1X3RoZXJtYWwgY3JjMzJfYXJtX2NlCj4g
+WyAgICA0LjgwMjU0M10gQ1BVOiAzIFBJRDogOTEgQ29tbToga3dvcmtlci91ODoyIE5vdCB0YWlu
+dGVkIDQuMTYuMC1yYzMtbmV4dC0yMDE4MDMwMi1kaXJ0eSAjNAo+IFsgICAgNC44MDI1NDddIEhh
+cmR3YXJlIG5hbWU6IEJDTTI4MzUKPiBbICAgIDQuODAyNTYyXSBXb3JrcXVldWU6IGV2ZW50c191
+bmJvdW5kIGFzeW5jX3J1bl9lbnRyeV9mbgo+IFsgICAgNC44MDI1OTNdIFs8YzAzMTE5YTQ+XSAo
+dW53aW5kX2JhY2t0cmFjZSkgZnJvbSBbPGMwMzBjYzI0Pl0gKHNob3dfc3RhY2srMHgxMC8weDE0
+KQo+IFsgICAgNC44MDI2MTJdIFs8YzAzMGNjMjQ+XSAoc2hvd19zdGFjaykgZnJvbSBbPGMwZDhl
+OWRjPl0gKGR1bXBfc3RhY2srMHg4Yy8weGEwKQo+IFsgICAgNC44MDI2MjhdIFs8YzBkOGU5ZGM+
+XSAoZHVtcF9zdGFjaykgZnJvbSBbPGMwMzQzYTJjPl0gKF9fd2FybisweGUwLzB4ZjgpCj4gWyAg
+ICA0LjgwMjY0MF0gWzxjMDM0M2EyYz5dIChfX3dhcm4pIGZyb20gWzxjMDM0M2I1Yz5dICh3YXJu
+X3Nsb3dwYXRoX251bGwrMHg0MC8weDQ4KQo+IFsgICAgNC44MDI2NTJdIFs8YzAzNDNiNWM+XSAo
+d2Fybl9zbG93cGF0aF9udWxsKSBmcm9tIFs8YzA2ZDBkZTA+XSAoZ3Bpb2Rfc2V0X3ZhbHVlKzB4
+NTAvMHg1OCkKPiBbICAgIDQuODAyNjkzXSBbPGMwNmQwZGUwPl0gKGdwaW9kX3NldF92YWx1ZSkg
+ZnJvbSBbPGJmMGUyZTkwPl0gKGJjbV9ncGlvX3NldF9zaHV0ZG93bisweGMvMHgxNCBbaGNpX3Vh
+cnRdKQo+IFsgICAgNC44MDI3NTddIFs8YmYwZTJlOTA+XSAoYmNtX2dwaW9fc2V0X3NodXRkb3du
+IFtoY2lfdWFydF0pIGZyb20gWzxiZjBlMmE2ND5dIChiY21fZ3Bpb19zZXRfcG93ZXIrMHgxOC8w
+eDE0MCBbaGNpX3VhcnRdKQo+IFsgICAgNC44MDI4MDZdIFs8YmYwZTJhNjQ+XSAoYmNtX2dwaW9f
+c2V0X3Bvd2VyIFtoY2lfdWFydF0pIGZyb20gWzxiZjBlMmU0Yz5dIChiY21fc2VyZGV2X3Byb2Jl
+KzB4NjQvMHg5YyBbaGNpX3VhcnRdKQo+IFsgICAgNC44MDI4NDhdIFs8YmYwZTJlNGM+XSAoYmNt
+X3NlcmRldl9wcm9iZSBbaGNpX3VhcnRdKSBmcm9tIFs8YzA4ZjI1Mjg+XSAoZHJpdmVyX3Byb2Jl
+X2RldmljZSsweDI1NC8weDMyYykKPiBbICAgIDQuODAyODYzXSBbPGMwOGYyNTI4Pl0gKGRyaXZl
+cl9wcm9iZV9kZXZpY2UpIGZyb20gWzxjMDhmMjZhND5dIChfX2RyaXZlcl9hdHRhY2grMHhhNC8w
+eGE4KQo+IFsgICAgNC44MDI4NzhdIFs8YzA4ZjI2YTQ+XSAoX19kcml2ZXJfYXR0YWNoKSBmcm9t
+IFs8YzA4ZjA4Yjg+XSAoYnVzX2Zvcl9lYWNoX2RldisweDc0LzB4YjQpCj4gWyAgICA0LjgwMjg5
+NV0gWzxjMDhmMDhiOD5dIChidXNfZm9yX2VhY2hfZGV2KSBmcm9tIFs8YzAzNjY0OTg+XSAoYXN5
+bmNfcnVuX2VudHJ5X2ZuKzB4NDQvMHgxMDgpCj4gWyAgICA0LjgwMjkxMF0gWzxjMDM2NjQ5OD5d
+IChhc3luY19ydW5fZW50cnlfZm4pIGZyb20gWzxjMDM1ZDU5ND5dIChwcm9jZXNzX29uZV93b3Jr
+KzB4MjAwLzB4NGY4KQo+IFsgICAgNC44MDI5MjNdIFs8YzAzNWQ1OTQ+XSAocHJvY2Vzc19vbmVf
+d29yaykgZnJvbSBbPGMwMzVlNGE4Pl0gKHdvcmtlcl90aHJlYWQrMHg0Yy8weDVkNCkKPiBbICAg
+IDQuODAyOTM4XSBbPGMwMzVlNGE4Pl0gKHdvcmtlcl90aHJlYWQpIGZyb20gWzxjMDM2MzMwMD5d
+IChrdGhyZWFkKzB4MTUwLzB4MTU4KQo+IFsgICAgNC44MDI5NTJdIFs8YzAzNjMzMDA+XSAoa3Ro
+cmVhZCkgZnJvbSBbPGMwMzAxMGU4Pl0gKHJldF9mcm9tX2ZvcmsrMHgxNC8weDJjKQo+IFsgICAg
+NC44MDI5NTddIEV4Y2VwdGlvbiBzdGFjaygweGVkOTU5ZmIwIHRvIDB4ZWQ5NTlmZjgpCj4gWyAg
+ICA0LjgwMjk2Nl0gOWZhMDogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMDAw
+MDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAKPiBbICAgIDQuODAyOTc3XSA5ZmMwOiAw
+MDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAw
+MDAwMCAwMDAwMDAwMAo+IFsgICAgNC44MDI5ODZdIDlmZTA6IDAwMDAwMDAwIDAwMDAwMDAwIDAw
+MDAwMDAwIDAwMDAwMDAwIDAwMDAwMDEzIDAwMDAwMDAwCj4gWyAgICA0LjgwMjk5M10gLS0tWyBl
+bmQgdHJhY2UgYjk0N2Y5ZDRjNDBmYTI2MSBd4oCUCgp0aGF0IGlzIHdlaXJkIHNpbmNlIHdlIHNo
+b3VsZCBiZSBlaXRoZXIgaW4gYSBwcm9iZSBjb250ZXh0IG9yIGluIGhkZXYtPm9wZW4gY29udGV4
+dCBhbmQgYm90aCBjYW4gc2xlZXAgYXMgZmFyIGFzIEkga25vdy4KClJlZ2FyZHMKCk1hcmNlbAoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
