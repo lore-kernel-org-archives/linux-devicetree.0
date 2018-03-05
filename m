@@ -1,83 +1,419 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/6] Docs: dt: add fsl-mc iommu-parent device-tree binding
-Date: Mon, 5 Mar 2018 15:37:29 +0000
-Message-ID: <f382e92a-8ab5-7c93-1f39-fe6797e5c876@arm.com>
-References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
-	<1520260166-29387-2-git-send-email-nipun.gupta@nxp.com>
-	<5cdeded1-ca3c-339a-bf73-73401e7dd4ed@arm.com>
-	<HE1PR0401MB24254CBDB8B6F537D08B925DE6DA0@HE1PR0401MB2425.eurprd04.prod.outlook.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 3/3] gpio: Add Spreadtrum PMIC EIC driver support
+Date: Mon, 5 Mar 2018 17:46:26 +0200
+Message-ID: <CAHp75VdmiESNg_06iby8Y0FgK47AHkJdu1kVYiBch82zGcnv-g@mail.gmail.com>
+References: <787c9f115db06390549bfee366b7f70faf312286.1520218279.git.baolin.wang@linaro.org>
+ <c84c05b6619a17848a11335f881f42153a4e51c0.1520218279.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <HE1PR0401MB24254CBDB8B6F537D08B925DE6DA0-B0v07Ae2taqTjcJO+iVGAo3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hch-jcswGhMUV9g@public.gmane.org" <hch-jcswGhMUV9g@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c84c05b6619a17848a11335f881f42153a4e51c0.1520218279.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/18 15:00, Nipun Gupta wrote:
-> 
-> 
->> -----Original Message-----
->> From: Robin Murphy [mailto:robin.murphy-5wv7dgnIgG8@public.gmane.org]
->> Sent: Monday, March 05, 2018 20:23
->> To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>; will.deacon-5wv7dgnIgG8@public.gmane.org;
->> mark.rutland-5wv7dgnIgG8@public.gmane.org; catalin.marinas-5wv7dgnIgG8@public.gmane.org
->> Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; hch-jcswGhMUV9g@public.gmane.org;
->> m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org; gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org;
->> Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; linux-
->> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
->> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Bharat Bhushan
->> <bharat.bhushan-3arQi8VN3Tc@public.gmane.org>; stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; Laurentiu Tudor
->> <laurentiu.tudor-3arQi8VN3Tc@public.gmane.org>
->> Subject: Re: [PATCH 1/6] Docs: dt: add fsl-mc iommu-parent device-tree binding
->>
->> On 05/03/18 14:29, Nipun Gupta wrote:
->>> The existing IOMMU bindings cannot be used to specify the relationship
->>> between fsl-mc devices and IOMMUs. This patch adds a binding for
->>> mapping fsl-mc devices to IOMMUs, using a new iommu-parent property.
->>
->> Given that allowing "msi-parent" for #msi-cells > 1 is merely a
->> backward-compatibility bodge full of hard-coded assumptions, why would
->> we want to knowingly introduce a similarly unpleasant equivalent for
->> IOMMUs? What's wrong with "iommu-map"?
-> 
-> Hi Robin,
-> 
-> With 'msi-parent' the property is fixed up to have msi-map. In this case there is
-> no fixup required and simple 'iommu-parent' property can be used, with MC bus
-> itself providing the stream-id's (in the code execution via FW).
-> 
-> We can also use the iommu-map property similar to PCI, which will require u-boot
-> fixup. But then it leads to little bit complications of u-boot - kernel compatibility.
+On Mon, Mar 5, 2018 at 4:56 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+> The Spreadtrum PMIC EIC controller contains only one bank of debounce EIC,
+> and this bank contains 16 EICs. Each EIC can only be used as input mode,
+> as well as supporting the debounce and the capability to trigger interrupts
+> when detecting input signals.
+>
 
-What needs fixing up? With a stream-map-mask in place to ignore the 
-upper Stream ID bits, you just need:
+FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-	iommu-map = <0 &smmu 0 0x80>;
+for entire series.
 
-to say that the lower bits of the ICID value map directly to the lower 
-bits of the Stream ID value - that's the same fixed property of the 
-hardware that you're wanting to assume in iommu-parent.
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Changes since v2:
+>  - Fix coding style issue.
+>  - Fix possible overflow.
+>  - Use for_each_set_bit().
+>
+> Changes since v1:
+>  - New patch.
+> ---
+>  drivers/gpio/Kconfig              |    8 +
+>  drivers/gpio/Makefile             |    1 +
+>  drivers/gpio/gpio-pmic-eic-sprd.c |  330 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 339 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-pmic-eic-sprd.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index c937407..f642314 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -380,6 +380,14 @@ config GPIO_PL061
+>         help
+>           Say yes here to support the PrimeCell PL061 GPIO device
+>
+> +config GPIO_PMIC_EIC_SPRD
+> +       tristate "Spreadtrum PMIC EIC support"
+> +       depends on MFD_SC27XX_PMIC || COMPILE_TEST
+> +       depends on OF_GPIO
+> +       select GPIOLIB_IRQCHIP
+> +       help
+> +         Say yes here to support Spreadtrum PMIC EIC device.
+> +
+>  config GPIO_PXA
+>         bool "PXA GPIO support"
+>         depends on ARCH_PXA || ARCH_MMP
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 66eaa9e..50ba64b 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -99,6 +99,7 @@ obj-$(CONFIG_GPIO_PCI_IDIO_16)        += gpio-pci-idio-16.o
+>  obj-$(CONFIG_GPIO_PCIE_IDIO_24)        += gpio-pcie-idio-24.o
+>  obj-$(CONFIG_GPIO_PISOSR)      += gpio-pisosr.o
+>  obj-$(CONFIG_GPIO_PL061)       += gpio-pl061.o
+> +obj-$(CONFIG_GPIO_PMIC_EIC_SPRD)       += gpio-pmic-eic-sprd.o
+>  obj-$(CONFIG_GPIO_PXA)         += gpio-pxa.o
+>  obj-$(CONFIG_GPIO_RC5T583)     += gpio-rc5t583.o
+>  obj-$(CONFIG_GPIO_RDC321X)     += gpio-rdc321x.o
+> diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
+> new file mode 100644
+> index 0000000..66d68d9
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-pmic-eic-sprd.c
+> @@ -0,0 +1,330 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 Spreadtrum Communications Inc.
+> + * Copyright (C) 2018 Linaro Ltd.
+> + */
+> +
+> +#include <linux/gpio/driver.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +/* EIC registers definition */
+> +#define SPRD_PMIC_EIC_DATA             0x0
+> +#define SPRD_PMIC_EIC_DMSK             0x4
+> +#define SPRD_PMIC_EIC_IEV              0x14
+> +#define SPRD_PMIC_EIC_IE               0x18
+> +#define SPRD_PMIC_EIC_RIS              0x1c
+> +#define SPRD_PMIC_EIC_MIS              0x20
+> +#define SPRD_PMIC_EIC_IC               0x24
+> +#define SPRD_PMIC_EIC_TRIG             0x28
+> +#define SPRD_PMIC_EIC_CTRL0            0x40
+> +
+> +/*
+> + * The PMIC EIC controller only has one bank, and each bank now can contain
+> + * 16 EICs.
+> + */
+> +#define SPRD_PMIC_EIC_PER_BANK_NR      16
+> +#define SPRD_PMIC_EIC_NR               SPRD_PMIC_EIC_PER_BANK_NR
+> +#define SPRD_PMIC_EIC_DATA_MASK                GENMASK(15, 0)
+> +#define SPRD_PMIC_EIC_BIT(x)           ((x) & (SPRD_PMIC_EIC_PER_BANK_NR - 1))
+> +#define SPRD_PMIC_EIC_DBNC_MASK                GENMASK(11, 0)
+> +
+> +/*
+> + * These registers are modified under the irq bus lock and cached to avoid
+> + * unnecessary writes in bus_sync_unlock.
+> + */
+> +enum {
+> +       REG_IEV,
+> +       REG_IE,
+> +       REG_TRIG,
+> +       CACHE_NR_REGS
+> +};
+> +
+> +/**
+> + * struct sprd_pmic_eic - PMIC EIC controller
+> + * @chip: the gpio_chip structure.
+> + * @intc: the irq_chip structure.
+> + * @regmap: the regmap from the parent device.
+> + * @offset: the EIC controller's offset address of the PMIC.
+> + * @reg: the array to cache the EIC registers.
+> + * @buslock: for bus lock/sync and unlock.
+> + * @irq: the interrupt number of the PMIC EIC conteroller.
+> + */
+> +struct sprd_pmic_eic {
+> +       struct gpio_chip chip;
+> +       struct irq_chip intc;
+> +       struct regmap *map;
+> +       u32 offset;
+> +       u8 reg[CACHE_NR_REGS];
+> +       struct mutex buslock;
+> +       int irq;
+> +};
+> +
+> +static void sprd_pmic_eic_update(struct gpio_chip *chip, unsigned int offset,
+> +                                u16 reg, unsigned int val)
+> +{
+> +       struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
+> +       u32 shift = SPRD_PMIC_EIC_BIT(offset);
+> +
+> +       regmap_update_bits(pmic_eic->map, pmic_eic->offset + reg,
+> +                          BIT(shift), val << shift);
+> +}
+> +
+> +static int sprd_pmic_eic_read(struct gpio_chip *chip, unsigned int offset,
+> +                             u16 reg)
+> +{
+> +       struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
+> +       u32 value;
+> +       int ret;
+> +
+> +       ret = regmap_read(pmic_eic->map, pmic_eic->offset + reg, &value);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return !!(value & BIT(SPRD_PMIC_EIC_BIT(offset)));
+> +}
+> +
+> +static int sprd_pmic_eic_request(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_DMSK, 1);
+> +       return 0;
+> +}
+> +
+> +static void sprd_pmic_eic_free(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_DMSK, 0);
+> +}
+> +
+> +static int sprd_pmic_eic_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       return sprd_pmic_eic_read(chip, offset, SPRD_PMIC_EIC_DATA);
+> +}
+> +
+> +static int sprd_pmic_eic_direction_input(struct gpio_chip *chip,
+> +                                        unsigned int offset)
+> +{
+> +       /* EICs are always input, nothing need to do here. */
+> +       return 0;
+> +}
+> +
+> +static void sprd_pmic_eic_set(struct gpio_chip *chip, unsigned int offset,
+> +                             int value)
+> +{
+> +       /* EICs are always input, nothing need to do here. */
+> +}
+> +
+> +static int sprd_pmic_eic_set_debounce(struct gpio_chip *chip,
+> +                                     unsigned int offset,
+> +                                     unsigned int debounce)
+> +{
+> +       struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
+> +       u32 reg, value;
+> +       int ret;
+> +
+> +       reg = SPRD_PMIC_EIC_CTRL0 + SPRD_PMIC_EIC_BIT(offset) * 0x4;
+> +       ret = regmap_read(pmic_eic->map, pmic_eic->offset + reg, &value);
+> +       if (ret)
+> +               return ret;
+> +
+> +       value &= ~SPRD_PMIC_EIC_DBNC_MASK;
+> +       value |= (debounce / 1000) & SPRD_PMIC_EIC_DBNC_MASK;
+> +       return regmap_write(pmic_eic->map, pmic_eic->offset + reg, value);
+> +}
+> +
+> +static int sprd_pmic_eic_set_config(struct gpio_chip *chip, unsigned int offset,
+> +                                   unsigned long config)
+> +{
+> +       unsigned long param = pinconf_to_config_param(config);
+> +       u32 arg = pinconf_to_config_argument(config);
+> +
+> +       if (param == PIN_CONFIG_INPUT_DEBOUNCE)
+> +               return sprd_pmic_eic_set_debounce(chip, offset, arg);
+> +
+> +       return -ENOTSUPP;
+> +}
+> +
+> +static void sprd_pmic_eic_irq_mask(struct irq_data *data)
+> +{
+> +       struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
+> +
+> +       pmic_eic->reg[REG_IE] = 0;
+> +       pmic_eic->reg[REG_TRIG] = 0;
+> +}
+> +
+> +static void sprd_pmic_eic_irq_unmask(struct irq_data *data)
+> +{
+> +       struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
+> +
+> +       pmic_eic->reg[REG_IE] = 1;
+> +       pmic_eic->reg[REG_TRIG] = 1;
+> +}
+> +
+> +static int sprd_pmic_eic_irq_set_type(struct irq_data *data,
+> +                                     unsigned int flow_type)
+> +{
+> +       struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
+> +
+> +       switch (flow_type) {
+> +       case IRQ_TYPE_LEVEL_HIGH:
+> +               pmic_eic->reg[REG_IEV] = 1;
+> +               break;
+> +       case IRQ_TYPE_LEVEL_LOW:
+> +               pmic_eic->reg[REG_IEV] = 0;
+> +               break;
+> +       default:
+> +               return -ENOTSUPP;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void sprd_pmic_eic_bus_lock(struct irq_data *data)
+> +{
+> +       struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
+> +
+> +       mutex_lock(&pmic_eic->buslock);
+> +}
+> +
+> +static void sprd_pmic_eic_bus_sync_unlock(struct irq_data *data)
+> +{
+> +       struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+> +       struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
+> +       u32 offset = irqd_to_hwirq(data);
+> +
+> +       /* Set irq type */
+> +       sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IEV,
+> +                            pmic_eic->reg[REG_IEV]);
+> +       /* Set irq unmask */
+> +       sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IE,
+> +                            pmic_eic->reg[REG_IE]);
+> +       /* Generate trigger start pulse for debounce EIC */
+> +       sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_TRIG,
+> +                            pmic_eic->reg[REG_TRIG]);
+> +
+> +       mutex_unlock(&pmic_eic->buslock);
+> +}
+> +
+> +static irqreturn_t sprd_pmic_eic_irq_handler(int irq, void *data)
+> +{
+> +       struct sprd_pmic_eic *pmic_eic = data;
+> +       struct gpio_chip *chip = &pmic_eic->chip;
+> +       unsigned long status;
+> +       u32 n, girq, val;
+> +       int ret;
+> +
+> +       ret = regmap_read(pmic_eic->map, pmic_eic->offset + SPRD_PMIC_EIC_MIS,
+> +                         &val);
+> +       if (ret)
+> +               return IRQ_RETVAL(ret);
+> +
+> +       status = val & SPRD_PMIC_EIC_DATA_MASK;
+> +
+> +       for_each_set_bit(n, &status, chip->ngpio) {
+> +               /* Clear the interrupt */
+> +               sprd_pmic_eic_update(chip, n, SPRD_PMIC_EIC_IC, 1);
+> +
+> +               girq = irq_find_mapping(chip->irq.domain, n);
+> +               handle_nested_irq(girq);
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int sprd_pmic_eic_probe(struct platform_device *pdev)
+> +{
+> +       struct gpio_irq_chip *irq;
+> +       struct sprd_pmic_eic *pmic_eic;
+> +       int ret;
+> +
+> +       pmic_eic = devm_kzalloc(&pdev->dev, sizeof(*pmic_eic), GFP_KERNEL);
+> +       if (!pmic_eic)
+> +               return -ENOMEM;
+> +
+> +       mutex_init(&pmic_eic->buslock);
+> +
+> +       pmic_eic->irq = platform_get_irq(pdev, 0);
+> +       if (pmic_eic->irq < 0) {
+> +               dev_err(&pdev->dev, "Failed to get PMIC EIC interrupt.\n");
+> +               return pmic_eic->irq;
+> +       }
+> +
+> +       pmic_eic->map = dev_get_regmap(pdev->dev.parent, NULL);
+> +       if (!pmic_eic->map)
+> +               return -ENODEV;
+> +
+> +       ret = of_property_read_u32(pdev->dev.of_node, "reg", &pmic_eic->offset);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to get PMIC EIC base address.\n");
+> +               return ret;
+> +       }
+> +
+> +       ret = devm_request_threaded_irq(&pdev->dev, pmic_eic->irq, NULL,
+> +                                       sprd_pmic_eic_irq_handler,
+> +                                       IRQF_TRIGGER_LOW |
+> +                                       IRQF_ONESHOT | IRQF_NO_SUSPEND,
+> +                                       dev_name(&pdev->dev), pmic_eic);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "Failed to request PMIC EIC IRQ.\n");
+> +               return ret;
+> +       }
+> +
+> +       pmic_eic->chip.label = dev_name(&pdev->dev);
+> +       pmic_eic->chip.ngpio = SPRD_PMIC_EIC_NR;
+> +       pmic_eic->chip.base = -1;
+> +       pmic_eic->chip.parent = &pdev->dev;
+> +       pmic_eic->chip.of_node = pdev->dev.of_node;
+> +       pmic_eic->chip.direction_input = sprd_pmic_eic_direction_input;
+> +       pmic_eic->chip.request = sprd_pmic_eic_request;
+> +       pmic_eic->chip.free = sprd_pmic_eic_free;
+> +       pmic_eic->chip.set_config = sprd_pmic_eic_set_config;
+> +       pmic_eic->chip.set = sprd_pmic_eic_set;
+> +       pmic_eic->chip.get = sprd_pmic_eic_get;
+> +
+> +       pmic_eic->intc.name = dev_name(&pdev->dev);
+> +       pmic_eic->intc.irq_mask = sprd_pmic_eic_irq_mask;
+> +       pmic_eic->intc.irq_unmask = sprd_pmic_eic_irq_unmask;
+> +       pmic_eic->intc.irq_set_type = sprd_pmic_eic_irq_set_type;
+> +       pmic_eic->intc.irq_bus_lock = sprd_pmic_eic_bus_lock;
+> +       pmic_eic->intc.irq_bus_sync_unlock = sprd_pmic_eic_bus_sync_unlock;
+> +       pmic_eic->intc.flags = IRQCHIP_SKIP_SET_WAKE;
+> +
+> +       irq = &pmic_eic->chip.irq;
+> +       irq->chip = &pmic_eic->intc;
+> +       irq->threaded = true;
+> +
+> +       ret = devm_gpiochip_add_data(&pdev->dev, &pmic_eic->chip, pmic_eic);
+> +       if (ret < 0) {
+> +               dev_err(&pdev->dev, "Could not register gpiochip %d.\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, pmic_eic);
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id sprd_pmic_eic_of_match[] = {
+> +       { .compatible = "sprd,sc27xx-eic", },
+> +       { /* end of list */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sprd_pmic_eic_of_match);
+> +
+> +static struct platform_driver sprd_pmic_eic_driver = {
+> +       .probe = sprd_pmic_eic_probe,
+> +       .driver = {
+> +               .name = "sprd-pmic-eic",
+> +               .of_match_table = sprd_pmic_eic_of_match,
+> +       },
+> +};
+> +
+> +module_platform_driver(sprd_pmic_eic_driver);
+> +
+> +MODULE_DESCRIPTION("Spreadtrum PMIC EIC driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.7.9.5
+>
 
-> If you suggest we can re-use the iommu-map property. What is your opinion?
 
-I think it makes a lot more sense to directly use the property which 
-already exists, than to introduce a new one to merely assume one 
-hard-coded value of the existing one. Extending msi-parent to msi-map 
-was a case of "oops, it turns out we need more flexibility here"; for 
-the case of iommu-map I can't imagine any justification for saying 
-"oops, we need less flexibility here" (saving 9 whole bytes in the DT 
-really is irrelevant).
 
-Robin.
+-- 
+With Best Regards,
+Andy Shevchenko
