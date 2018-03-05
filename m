@@ -1,7 +1,7 @@
 From: sibis <sibis@codeaurora.org>
-Subject: [PATCH 3/6] mailbox: Add support for Qualcomm SDM845 SoCs
-Date: Mon,  5 Mar 2018 15:23:30 +0530
-Message-ID: <1520243613-30393-4-git-send-email-sibis@codeaurora.org>
+Subject: [PATCH 2/6] dt-bindings: mailbox: Add APCS global binding for SDM845 SoCs
+Date: Mon,  5 Mar 2018 15:23:29 +0530
+Message-ID: <1520243613-30393-3-git-send-email-sibis@codeaurora.org>
 References: <1520243613-30393-1-git-send-email-sibis@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1520243613-30393-1-git-send-email-sibis@codeaurora.org>
@@ -10,25 +10,27 @@ To: bjorn.andersson@linaro.org
 Cc: linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, jassisinghbrar@gmail.com, p.zabel@pengutronix.de, ohad@wizery.com, mark.rutland@arm.com, robh+dt@kernel.org, kyan@codeaurora.org, sricharan@codeaurora.org, akdwived@codeaurora.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the corresponding APCS offset for SDM845 SoC
+Include SDM845 APCS binding to the list of possible bindings
 
 Signed-off-by: sibis <sibis@codeaurora.org>
 ---
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index 57bde0d..62d704d 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -125,6 +125,7 @@ static int qcom_apcs_ipc_remove(struct platform_device *pdev)
- static const struct of_device_id qcom_apcs_ipc_of_match[] = {
- 	{ .compatible = "qcom,msm8916-apcs-kpss-global", .data = (void *)8 },
- 	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = (void *)16 },
-+	{ .compatible = "qcom,sdm845-apcs-hmss-global", .data = (void *)12 },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, qcom_apcs_ipc_of_match);
+diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+index 16964f0..a60d2b2 100644
+--- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
++++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+@@ -9,7 +9,8 @@ platforms.
+ 	Value type: <string>
+ 	Definition: must be one of:
+ 		    "qcom,msm8916-apcs-kpss-global",
+-		    "qcom,msm8996-apcs-hmss-global"
++		    "qcom,msm8996-apcs-hmss-global",
++		    "qcom,sdm845-apcs-hmss-global"
+ 
+ - reg:
+ 	Usage: required
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
