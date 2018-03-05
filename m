@@ -1,75 +1,28 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH] thermal: of: Allow selection of thermal governor in DT
-Date: Tue,  6 Mar 2018 00:06:45 +0530
-Message-ID: <3b80853abb45a9e067cf7a16754b07bb67712457.1520274879.git.amit.kucheria@linaro.org>
-References: <cover.1520274879.git.amit.kucheria@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v5 0/5] Add coupled regulators mechanism
+Date: Mon, 5 Mar 2018 16:30:34 -0300
+Message-ID: <CAOMZO5BqoEDEzPvVjAbE-e8SS5qLFc8WHQted-3hwYYTvQgajQ@mail.gmail.com>
+References: <CGME20180302085118eucas1p15a6a5ec5f7f47a6f67a45c5e9495b120@eucas1p1.samsung.com>
+ <1519980169-8491-1-git-send-email-m.purski@samsung.com> <CAOMZO5C3YPKvZN+aORA+Jga-P=XgfG2xw7u6Ose5p6Twet2KLw@mail.gmail.com>
+ <6fc780e4-3594-2ca5-dc4e-7e147dc4e40f@samsung.com> <CAOMZO5Cdg4Njd5kXT4tqnJngSPr9NNHdSpoqT3UfmHYYpvuj1g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1520274879.git.amit.kucheria@linaro.org>
+In-Reply-To: <CAOMZO5Cdg4Njd5kXT4tqnJngSPr9NNHdSpoqT3UfmHYYpvuj1g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Ram Chandrasekar <rkumbako@codeaurora.org>, ilina@codeaurora.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maciej Purski <m.purski@samsung.com>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ram Chandrasekar <rkumbako@codeaurora.org>
+Hi Maciej,
 
-There is currently no way for the governor to be selected for each thermal
-zone in devicetree. This results in the default governor being used for all
-thermal zones even though no such restriction exists in the core code.
+On Mon, Mar 5, 2018 at 12:57 PM, Fabio Estevam <festevam@gmail.com> wrote:
 
-Add support for specifying the thermal governor to be used for a thermal
-zone in the devicetree. The devicetree config should specify the governor
-name as a string that matches any available governors. If not specified, we
-maintain the current behaviour of using the default governor.
+> kernelci.org also shows other imx6 boards that cannot boot with
+> today's linux-next.
 
-Signed-off-by: Ram Chandrasekar <rkumbako@codeaurora.org>
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- Documentation/devicetree/bindings/thermal/thermal.txt | 8 ++++++++
- drivers/thermal/of-thermal.c                          | 6 ++++++
- 2 files changed, 14 insertions(+)
+Here are the completes logs in case they help:
 
-diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-index 1719d47..fced9d3 100644
---- a/Documentation/devicetree/bindings/thermal/thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-@@ -168,6 +168,14 @@ Optional property:
- 			by means of sensor ID. Additional coefficients are
- 			interpreted as constant offset.
- 
-+- thermal-governor:     Thermal governor to be used for this thermal zone.
-+			Expected values are:
-+			"step_wise": Use step wise governor.
-+			"fair_share": Use fair share governor.
-+			"user_space": Use user space governor.
-+			"power_allocator": Use power allocator governor.
-+  Type: string
-+
- - sustainable-power:	An estimate of the sustainable power (in mW) that the
-   Type: unsigned	thermal zone can dissipate at the desired
-   Size: one cell	control temperature.  For reference, the
-diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-index e09f035..a884b01 100644
---- a/drivers/thermal/of-thermal.c
-+++ b/drivers/thermal/of-thermal.c
-@@ -974,6 +974,7 @@ int __init of_parse_thermal_zones(void)
- 		struct thermal_zone_params *tzp;
- 		int i, mask = 0;
- 		u32 prop;
-+		const char *governor_name;
- 
- 		tz = thermal_of_build_thermal_zone(child);
- 		if (IS_ERR(tz)) {
-@@ -996,6 +997,11 @@ int __init of_parse_thermal_zones(void)
- 		/* No hwmon because there might be hwmon drivers registering */
- 		tzp->no_hwmon = true;
- 
-+		if (!of_property_read_string(child, "thermal-governor",
-+						&governor_name))
-+			strlcpy(tzp->governor_name, governor_name,
-+					THERMAL_NAME_LENGTH);
-+
- 		if (!of_property_read_u32(child, "sustainable-power", &prop))
- 			tzp->sustainable_power = prop;
- 
--- 
-2.7.4
+https://storage.kernelci.org/next/master/next-20180305/arm/imx_v6_v7_defconfig/lab-free-electrons/boot-imx6q-nitrogen6x.txt
+
+https://storage.kernelci.org/next/master/next-20180305/arm/imx_v6_v7_defconfig/lab-baylibre-seattle/boot-imx6dl-wandboard_solo.txt
