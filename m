@@ -1,7 +1,7 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 2/5] staging: vc04_services: Remove cache-line-size property.
-Date: Mon,  5 Mar 2018 12:28:03 -0800
-Message-ID: <20180305202806.21219-3-eric@anholt.net>
+Subject: [PATCH 1/5] staging: vc04_services: Remove dead FRAGMENTS_T
+Date: Mon,  5 Mar 2018 12:28:02 -0800
+Message-ID: <20180305202806.21219-2-eric@anholt.net>
 References: <20180305202806.21219-1-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180305202806.21219-1-eric@anholt.net>
@@ -10,92 +10,26 @@ To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-This was just a way for the DT-passed value to get out of sync with
-what Linux has configured the ARM for.
+It's not used in-tree, or in the downstream tree.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
- .../interface/vchiq_arm/vchiq_2835_arm.c           | 25 +++++++---------------
- .../interface/vchiq_arm/vchiq_pagelist.h           |  1 -
- 2 files changed, 8 insertions(+), 18 deletions(-)
+ drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-index b59ef14890aa..e0e01c812036 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -77,7 +77,6 @@ struct vchiq_pagelist_info {
- };
- 
- static void __iomem *g_regs;
--static unsigned int g_cache_line_size = sizeof(CACHE_LINE_SIZE);
- static unsigned int g_fragments_size;
- static char *g_fragments_base;
- static char *g_free_fragments;
-@@ -117,15 +116,7 @@ int vchiq_platform_init(struct platform_device *pdev, VCHIQ_STATE_T *state)
- 	if (err < 0)
- 		return err;
- 
--	err = of_property_read_u32(dev->of_node, "cache-line-size",
--				   &g_cache_line_size);
--
--	if (err) {
--		dev_err(dev, "Missing cache-line-size property\n");
--		return -ENODEV;
--	}
--
--	g_fragments_size = 2 * g_cache_line_size;
-+	g_fragments_size = 2 * cache_line_size();
- 
- 	/* Allocate space for the channels in coherent memory */
- 	slot_mem_size = PAGE_ALIGN(TOTAL_SLOTS * VCHIQ_SLOT_SIZE);
-@@ -548,9 +539,9 @@ create_pagelist(char __user *buf, size_t count, unsigned short type)
- 
- 	/* Partial cache lines (fragments) require special measures */
- 	if ((type == PAGELIST_READ) &&
--		((pagelist->offset & (g_cache_line_size - 1)) ||
-+		((pagelist->offset & (cache_line_size() - 1)) ||
- 		((pagelist->offset + pagelist->length) &
--		(g_cache_line_size - 1)))) {
-+		 (cache_line_size() - 1)))) {
- 		char *fragments;
- 
- 		if (down_interruptible(&g_free_fragments_sema) != 0) {
-@@ -598,10 +589,10 @@ free_pagelist(struct vchiq_pagelist_info *pagelistinfo,
- 			g_fragments_size;
- 		int head_bytes, tail_bytes;
- 
--		head_bytes = (g_cache_line_size - pagelist->offset) &
--			(g_cache_line_size - 1);
-+		head_bytes = (cache_line_size() - pagelist->offset) &
-+			(cache_line_size() - 1);
- 		tail_bytes = (pagelist->offset + actual) &
--			(g_cache_line_size - 1);
-+			(cache_line_size() - 1);
- 
- 		if ((actual >= 0) && (head_bytes != 0)) {
- 			if (head_bytes > actual)
-@@ -617,8 +608,8 @@ free_pagelist(struct vchiq_pagelist_info *pagelistinfo,
- 			(tail_bytes != 0)) {
- 			memcpy((char *)kmap(pages[num_pages - 1]) +
- 				((pagelist->offset + actual) &
--				(PAGE_SIZE - 1) & ~(g_cache_line_size - 1)),
--				fragments + g_cache_line_size,
-+				(PAGE_SIZE - 1) & ~(cache_line_size() - 1)),
-+				fragments + cache_line_size(),
- 				tail_bytes);
- 			kunmap(pages[num_pages - 1]);
- 		}
 diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
-index a6c5f7cc78f0..bec411061554 100644
+index 926c247fd9d3..a6c5f7cc78f0 100644
 --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
 +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_pagelist.h
-@@ -34,7 +34,6 @@
- #ifndef VCHIQ_PAGELIST_H
- #define VCHIQ_PAGELIST_H
+@@ -49,9 +49,4 @@ typedef struct pagelist_struct {
+ 			 */
+ } PAGELIST_T;
  
--#define CACHE_LINE_SIZE 32
- #define PAGELIST_WRITE 0
- #define PAGELIST_READ 1
- #define PAGELIST_READ_WITH_FRAGMENTS 2
+-typedef struct fragments_struct {
+-	char headbuf[CACHE_LINE_SIZE];
+-	char tailbuf[CACHE_LINE_SIZE];
+-} FRAGMENTS_T;
+-
+ #endif /* VCHIQ_PAGELIST_H */
 -- 
 2.16.2
