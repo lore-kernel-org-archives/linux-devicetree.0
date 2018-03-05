@@ -1,162 +1,135 @@
-From: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@bootlin.com>
-Subject: Re: [PATCH v4 10/10] ARM: sunxi: smp: Add initialization of CNTVOFF
-Date: Mon, 5 Mar 2018 08:51:48 +0100
-Message-ID: <20180305085148.1de2a99c@dell-desktop.home>
-References: <20180223133742.26044-1-mylene.josserand@bootlin.com>
-        <20180223133742.26044-11-mylene.josserand@bootlin.com>
-        <CAGb2v67SuK9Xr7_dVb7RVGXUJwYRKnTiJwDrOJ-Su5CXmm7HXA@mail.gmail.com>
-        <20180226101252.ozdsxjvawgkemz2c@flea.lan>
-        <CAGb2v64SaBR-_nL9S20eXe57r_kJTiqSg-di=_mZrv3Yx2-2JA@mail.gmail.com>
+From: Denis OSTERLAND <denis.osterland@diehl.com>
+Subject: Re: [PATCH v2 2/4] rtc: isl1208: switch to rtc_register_device
+Date: Mon, 5 Mar 2018 07:44:21 +0000
+Message-ID: <1520235861.5012.2.camel@diehl.com>
+References: <1519821214-22379-3-git-send-email-Denis.Osterland@diehl.com>
+         <201803031057.mSGucTXN%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v64SaBR-_nL9S20eXe57r_kJTiqSg-di=_mZrv3Yx2-2JA@mail.gmail.com>
+In-Reply-To: <201803031057.mSGucTXN%fengguang.wu@intel.com>
+Content-Language: en-US
+Content-ID: <C8F36F68720D564DBDDA93D629CEDE6D@diehl.internal>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, LABBE Corentin <clabbe.montjoie@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, quentin.schulz@bootlin.com
+To: "lkp@intel.com" <lkp@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mgr@pengutronix.de" <mgr@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "linux@roeck-us.net" <linux@roeck-us.net>, "jdelvare@suse.com" <jdelvare@suse.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "kbuild-all@01.org" <kbuild-all@01.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Mon, 26 Feb 2018 18:25:10 +0800
-Chen-Yu Tsai <wens@csie.org> wrote:
-
-> On Mon, Feb 26, 2018 at 6:12 PM, Maxime Ripard
-> <maxime.ripard@bootlin.com> wrote:
-> > On Sat, Feb 24, 2018 at 12:17:13AM +0800, Chen-Yu Tsai wrote:  
-> >> On Fri, Feb 23, 2018 at 9:37 PM, Mylène Josserand
-> >> <mylene.josserand@bootlin.com> wrote:  
-> >> > On Cortex-A7, the CNTVOFF register from arch timer is uninitialized.
-> >> > It should be done by the bootloader but it is currently not the case,
-> >> > even for boot CPU because this SoC is booting in secure mode.
-> >> > It leads to an random offset value meaning that each CPU will have a
-> >> > different time, which isn't working very well.
-> >> >
-> >> > Add assembly code used for boot CPU and secondary CPU cores to make
-> >> > sure that the CNTVOFF register is initialized.
-> >> >
-> >> > Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
-> >> > ---
-> >> >  arch/arm/mach-sunxi/headsmp.S | 21 +++++++++++++++++++++
-> >> >  arch/arm/mach-sunxi/sunxi.c   |  4 ++++
-> >> >  2 files changed, 25 insertions(+)
-> >> >
-> >> > diff --git a/arch/arm/mach-sunxi/headsmp.S b/arch/arm/mach-sunxi/headsmp.S
-> >> > index d5c97e945e69..605896251927 100644
-> >> > --- a/arch/arm/mach-sunxi/headsmp.S
-> >> > +++ b/arch/arm/mach-sunxi/headsmp.S
-> >> > @@ -65,9 +65,30 @@ ENTRY(sunxi_mc_smp_cluster_cache_enable)
-> >> >         first: .word sunxi_mc_smp_first_comer - .
-> >> >  ENDPROC(sunxi_mc_smp_cluster_cache_enable)
-> >> >
-> >> > +ENTRY(sunxi_init_cntvoff)
-> >> > +       /*
-> >> > +        * CNTVOFF has to be initialized either from non-secure Hypervisor
-> >> > +        * mode or secure Monitor mode with SCR.NS==1. If TrustZone is enabled
-> >> > +        * then it should be handled by the secure code
-> >> > +        */
-> >> > +       cps     #MON_MODE
-> >> > +       mrc     p15, 0, r1, c1, c1, 0           /* Get Secure Config */
-> >> > +       orr     r0, r1, #1
-> >> > +       mcr     p15, 0, r0, c1, c1, 0           /* Set Non Secure bit */
-> >> > +       instr_sync
-> >> > +       mov     r0, #0
-> >> > +       mcrr    p15, 4, r0, r0, c14             /* CNTVOFF = 0 */
-> >> > +       instr_sync
-> >> > +       mcr     p15, 0, r1, c1, c1, 0           /* Set Secure bit */
-> >> > +       instr_sync
-> >> > +       cps     #SVC_MODE
-> >> > +       ret     lr
-> >> > +ENDPROC(sunxi_init_cntvoff)  
-> >>
-> >> There is no need to move all the assembly into a separate file, just
-> >> to add this function. Everything can be inlined as a naked function.
-> >> The "instr_sync" macro can be replaced with "isb", which is what it
-> >> expands to anyway.
-> >>
-> >> I really want to keep everything self-contained without global symbols,
-> >> and in C files if possible.  
-> >
-> > What is the rationale for keeping it in C files (beside the global
-> > symbols)? Because the syntax is quite ugly, and it's much easier to
-> > read, review and amend using a separate file.  
-> 
-> Global symbols and keeping everything in one place I guess.
-> This symbol would be used in a few places, so I suppose having it
-> in a separate assembly file would be OK.
-
-Okay so I will keep it in a separate file.
-
-> 
-> >> >  #ifdef CONFIG_SMP
-> >> >  ENTRY(sunxi_boot)
-> >> >         bl      sunxi_mc_smp_cluster_cache_enable
-> >> > +       bl      sunxi_init_cntvoff
-> >> >         b       secondary_startup
-> >> >  ENDPROC(sunxi_boot)
-> >> >
-> >> > diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-> >> > index 5e9602ce1573..4bb041492b54 100644
-> >> > --- a/arch/arm/mach-sunxi/sunxi.c
-> >> > +++ b/arch/arm/mach-sunxi/sunxi.c
-> >> > @@ -37,8 +37,12 @@ static const char * const sun6i_board_dt_compat[] = {
-> >> >  };
-> >> >
-> >> >  extern void __init sun6i_reset_init(void);
-> >> > +extern void sunxi_init_cntvoff(void);
-> >> > +
-> >> >  static void __init sun6i_timer_init(void)
-> >> >  {
-> >> > +       sunxi_init_cntvoff();  
-> >>
-> >> You should check the enable-method to see if PSCI is set or not,
-> >> as an indicator whether the kernel is booted secure or non-secure.  
-> >
-> > It's an indicator, but it's not really a perfect one. You could very
-> > well have your kernel booted in non-secure, without PSCI. Or even with
-> > PSCI, but without the SMP ops.
-> >
-> > We have a quite big number of these cases already, where, depending on
-> > the configuration, we might not have access to the device we write to,
-> > the number of hacks to just enable that device for non-secure is a
-> > good example of that.  
-> 
-> I wouldn't consider them hacks though. The hardware gives the option
-> to have control of many devices delegated solely to secure-only, or
-> secure/non-secure. Our present model is to support everything we can
-> in Linux directly, instead of through some firmware interface to a
-> non-existent firmware.
-
-I am not sure to understand what is the conclusion about it.
-Should I use "psci"/enable-method or should I use another mechanism to
-detect we are in secure/non-secure (if it exists)?
-
-Otherwise, for the moment, I can use machine-compatible on sun8i-a83t
-and we will see later how we can handle it in a better way.
-
-Thank you in advance,
-
-Best regards,
-
-Mylène
-
--- 
-Mylène Josserand, Bootlin (formerly Free Electrons)
-Embedded Linux and Kernel engineering
-http://bootlin.com
-
-
-> 
-> ChenYu
-> 
-> >> AFAIK trying to set CNTVOFF under non-secure would be very bad.  
-> >
-> > Just like any other access we do :/
-> >
-> > Maxime
-> >
-> > --
-> > Maxime Ripard, Bootlin (formerly Free Electrons)
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com  
+SGksDQoNCmFuIG9idmlvdXMgbWlzdGFrZSBieSBtZS4NCmlzbDEyMDggaXMgaW50cm9kdWNl
+ZCBpbiBwYXRjaCAzLzQuDQpJIHdpbGwgc2VuZCB2My4NClNvcnJ5IGZvciB0aGF0Lg0KDQpS
+ZWdhcmRzIERlbmlzDQoNCkFtIFNhbXN0YWcsIGRlbiAwMy4wMy4yMDE4LCAxMDozNSArMDgw
+MCBzY2hyaWViIGtidWlsZCB0ZXN0IHJvYm90Og0KPiBIaSBEZW5pcywNCj4gDQo+IFRoYW5r
+IHlvdSBmb3IgdGhlIHBhdGNoISBZZXQgc29tZXRoaW5nIHRvIGltcHJvdmU6DQo+IA0KPiBb
+YXV0byBidWlsZCB0ZXN0IEVSUk9SIG9uIGFiZWxsb25pL3J0Yy1uZXh0XQ0KPiBbYWxzbyBi
+dWlsZCB0ZXN0IEVSUk9SIG9uIHY0LjE2LXJjMyBuZXh0LTIwMTgwMzAyXQ0KPiBbaWYgeW91
+ciBwYXRjaCBpcyBhcHBsaWVkIHRvIHRoZSB3cm9uZyBnaXQgdHJlZSwgcGxlYXNlIGRyb3Ag
+dXMgYSBub3RlIHRvIGhlbHAgaW1wcm92ZSB0aGUgc3lzdGVtXQ0KPiANCj4gdXJsOsKgwqDC
+oMKgaHR0cHM6Ly9naXRodWIuY29tLzBkYXktY2kvbGludXgvY29tbWl0cy9EZW5pcy1PU1RF
+UkxBTkQvcnRjLWlzbDEyMDgtZml4ZXMtZG9jdW1lbnRhdGlvbi1hbmQtaXNsMTIxOS1zdXBw
+b3J0LzIwMTgwMzAzLTA5MzQwNQ0KPiBiYXNlOsKgwqDCoGh0dHBzOi8vZ2l0Lmtlcm5lbC5v
+cmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2FiZWxsb25pL2xpbnV4LmdpdCBydGMtbmV4
+dA0KPiBjb25maWc6IHg4Nl82NC1yYW5kY29uZmlnLXgwMTctMjAxODA4IChhdHRhY2hlZCBh
+cyAuY29uZmlnKQ0KPiBjb21waWxlcjogZ2NjLTcgKERlYmlhbiA3LjMuMC0xKSA3LjMuMA0K
+PiByZXByb2R1Y2U6DQo+IMKgwqDCoMKgwqDCoMKgwqAjIHNhdmUgdGhlIGF0dGFjaGVkIC5j
+b25maWcgdG8gbGludXggYnVpbGQgdHJlZQ0KPiDCoMKgwqDCoMKgwqDCoMKgbWFrZSBBUkNI
+PXg4Nl82NMKgDQo+IA0KPiBOb3RlOiB0aGUgbGludXgtcmV2aWV3L0RlbmlzLU9TVEVSTEFO
+RC9ydGMtaXNsMTIwOC1maXhlcy1kb2N1bWVudGF0aW9uLWFuZC1pc2wxMjE5LXN1cHBvcnQv
+MjAxODAzMDMtMDkzNDA1IEhFQUQgMWQzY2Y4ODJlY2QwNjE4NDc5NjhkYTE1MTFlYzk1NmI5
+YmY3MGQzMyBidWlsZHMgZmluZS4NCj4gwqDCoMKgwqDCoMKgSXQgb25seSBodXJ0cyBiaXNl
+Y3RpYmlsaXR5Lg0KPiANCj4gQWxsIGVycm9yL3dhcm5pbmdzIChuZXcgb25lcyBwcmVmaXhl
+ZCBieSA+Pik6DQo+IA0KPiDCoMKgwqBJbiBmaWxlIGluY2x1ZGVkIGZyb20gZHJpdmVycy9y
+dGMvcnRjLWlzbDEyMDguYzoxNjowOg0KPiDCoMKgwqBkcml2ZXJzL3J0Yy9ydGMtaXNsMTIw
+OC5jOiBJbiBmdW5jdGlvbiAnaXNsMTIwOF9wcm9iZSc6DQo+ID4gDQo+ID4gPiANCj4gPiA+
+IGRyaXZlcnMvcnRjL3J0Yy1pc2wxMjA4LmM6Njc3OjI5OiBlcnJvcjogJ2lzbDEyMDgnIHVu
+ZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9uKQ0KPiDCoMKgwqDCoMKgcmV0
+dXJuIHJ0Y19yZWdpc3Rlcl9kZXZpY2UoaXNsMTIwOC0+cnRjKTsNCj4gwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoF4N
+Cj4gwqDCoMKgaW5jbHVkZS9saW51eC9ydGMuaDoyNjE6Mzc6IG5vdGU6IGluIGRlZmluaXRp
+b24gb2YgbWFjcm8gJ3J0Y19yZWdpc3Rlcl9kZXZpY2UnDQo+IMKgwqDCoMKgwqBfX3J0Y19y
+ZWdpc3Rlcl9kZXZpY2UoVEhJU19NT0RVTEUsIGRldmljZSkNCj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBefn5+fn4NCj4gwqDCoMKgZHJpdmVycy9ydGMvcnRjLWlzbDEyMDguYzo2
+Nzc6Mjk6IG5vdGU6IGVhY2ggdW5kZWNsYXJlZCBpZGVudGlmaWVyIGlzIHJlcG9ydGVkIG9u
+bHkgb25jZSBmb3IgZWFjaCBmdW5jdGlvbiBpdCBhcHBlYXJzIGluDQo+IMKgwqDCoMKgwqBy
+ZXR1cm4gcnRjX3JlZ2lzdGVyX2RldmljZShpc2wxMjA4LT5ydGMpOw0KPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+Xg0KPiDCoMKgwqBpbmNsdWRlL2xpbnV4L3J0Yy5oOjI2MTozNzogbm90ZTogaW4gZGVmaW5p
+dGlvbiBvZiBtYWNybyAncnRjX3JlZ2lzdGVyX2RldmljZScNCj4gwqDCoMKgwqDCoF9fcnRj
+X3JlZ2lzdGVyX2RldmljZShUSElTX01PRFVMRSwgZGV2aWNlKQ0KPiDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoF5+fn5+fg0KPiA+IA0KPiA+ID4gDQo+ID4gPiBkcml2ZXJzL3J0Yy9y
+dGMtaXNsMTIwOC5jOjY3ODoxOiB3YXJuaW5nOiBjb250cm9sIHJlYWNoZXMgZW5kIG9mIG5v
+bi12b2lkIGZ1bmN0aW9uIFstV3JldHVybi10eXBlXQ0KPiDCoMKgwqDCoH0NCj4gwqDCoMKg
+wqBeDQo+IA0KPiB2aW0gKy9pc2wxMjA4ICs2NzcgZHJpdmVycy9ydGMvcnRjLWlzbDEyMDgu
+Yw0KPiANCj4gwqDCoMKgNjI1CQ0KPiDCoMKgwqA2MjYJc3RhdGljIGludA0KPiDCoMKgwqA2
+MjcJaXNsMTIwOF9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LCBjb25zdCBzdHJ1
+Y3QgaTJjX2RldmljZV9pZCAqaWQpDQo+IMKgwqDCoDYyOAl7DQo+IMKgwqDCoDYyOQkJaW50
+IHJjID0gMDsNCj4gwqDCoMKgNjMwCQlzdHJ1Y3QgcnRjX2RldmljZSAqcnRjOw0KPiDCoMKg
+wqA2MzEJDQo+IMKgwqDCoDYzMgkJaWYgKCFpMmNfY2hlY2tfZnVuY3Rpb25hbGl0eShjbGll
+bnQtPmFkYXB0ZXIsIEkyQ19GVU5DX0kyQykpDQo+IMKgwqDCoDYzMwkJCXJldHVybiAtRU5P
+REVWOw0KPiDCoMKgwqA2MzQJDQo+IMKgwqDCoDYzNQkJaWYgKGlzbDEyMDhfaTJjX3ZhbGlk
+YXRlX2NsaWVudChjbGllbnQpIDwgMCkNCj4gwqDCoMKgNjM2CQkJcmV0dXJuIC1FTk9ERVY7
+DQo+IMKgwqDCoDYzNwkNCj4gwqDCoMKgNjM4CQlydGMgPSBkZXZtX3J0Y19hbGxvY2F0ZV9k
+ZXZpY2UoJmNsaWVudC0+ZGV2KTsNCj4gwqDCoMKgNjM5CQlpZiAoSVNfRVJSKHJ0YykpDQo+
+IMKgwqDCoDY0MAkJCXJldHVybiBQVFJfRVJSKHJ0Yyk7DQo+IMKgwqDCoDY0MQkNCj4gwqDC
+oMKgNjQyCQlydGMtPm9wcyA9ICZpc2wxMjA4X3J0Y19vcHM7DQo+IMKgwqDCoDY0MwkNCj4g
+wqDCoMKgNjQ0CQlpMmNfc2V0X2NsaWVudGRhdGEoY2xpZW50LCBydGMpOw0KPiDCoMKgwqA2
+NDUJDQo+IMKgwqDCoDY0NgkJcmMgPSBpc2wxMjA4X2kyY19nZXRfc3IoY2xpZW50KTsNCj4g
+wqDCoMKgNjQ3CQlpZiAocmMgPCAwKSB7DQo+IMKgwqDCoDY0OAkJCWRldl9lcnIoJmNsaWVu
+dC0+ZGV2LCAicmVhZGluZyBzdGF0dXMgZmFpbGVkXG4iKTsNCj4gwqDCoMKgNjQ5CQkJcmV0
+dXJuIHJjOw0KPiDCoMKgwqA2NTAJCX0NCj4gwqDCoMKgNjUxCQ0KPiDCoMKgwqA2NTIJCWlm
+IChyYyAmIElTTDEyMDhfUkVHX1NSX1JUQ0YpDQo+IMKgwqDCoDY1MwkJCWRldl93YXJuKCZj
+bGllbnQtPmRldiwgInJ0YyBwb3dlciBmYWlsdXJlIGRldGVjdGVkLCAiDQo+IMKgwqDCoDY1
+NAkJCQnCoCJwbGVhc2Ugc2V0IGNsb2NrLlxuIik7DQo+IMKgwqDCoDY1NQkNCj4gwqDCoMKg
+NjU2CQlyYyA9IHN5c2ZzX2NyZWF0ZV9ncm91cCgmY2xpZW50LT5kZXYua29iaiwgJmlzbDEy
+MDhfcnRjX3N5c2ZzX2ZpbGVzKTsNCj4gwqDCoMKgNjU3CQlpZiAocmMpDQo+IMKgwqDCoDY1
+OAkJCXJldHVybiByYzsNCj4gwqDCoMKgNjU5CQ0KPiDCoMKgwqA2NjAJCWlmIChjbGllbnQt
+PmlycSA+IDApIHsNCj4gwqDCoMKgNjYxCQkJcmMgPSBkZXZtX3JlcXVlc3RfdGhyZWFkZWRf
+aXJxKCZjbGllbnQtPmRldiwgY2xpZW50LT5pcnEsIE5VTEwsDQo+IMKgwqDCoDY2MgkJCQkJ
+CcKgwqDCoMKgwqDCoMKgaXNsMTIwOF9ydGNfaW50ZXJydXB0LA0KPiDCoMKgwqA2NjMJCQkJ
+CQnCoMKgwqDCoMKgwqDCoElSUUZfU0hBUkVEIHwgSVJRRl9PTkVTSE9ULA0KPiDCoMKgwqA2
+NjQJCQkJCQnCoMKgwqDCoMKgwqDCoGlzbDEyMDhfZHJpdmVyLmRyaXZlci5uYW1lLA0KPiDC
+oMKgwqA2NjUJCQkJCQnCoMKgwqDCoMKgwqDCoGNsaWVudCk7DQo+IMKgwqDCoDY2NgkJCWlm
+ICghcmMpIHsNCj4gwqDCoMKgNjY3CQkJCWRldmljZV9pbml0X3dha2V1cCgmY2xpZW50LT5k
+ZXYsIDEpOw0KPiDCoMKgwqA2NjgJCQkJZW5hYmxlX2lycV93YWtlKGNsaWVudC0+aXJxKTsN
+Cj4gwqDCoMKgNjY5CQkJfSBlbHNlIHsNCj4gwqDCoMKgNjcwCQkJCWRldl9lcnIoJmNsaWVu
+dC0+ZGV2LA0KPiDCoMKgwqA2NzEJCQkJCSJVbmFibGUgdG8gcmVxdWVzdCBpcnEgJWQsIG5v
+IGFsYXJtIHN1cHBvcnRcbiIsDQo+IMKgwqDCoDY3MgkJCQkJY2xpZW50LT5pcnEpOw0KPiDC
+oMKgwqA2NzMJCQkJY2xpZW50LT5pcnEgPSAwOw0KPiDCoMKgwqA2NzQJCQl9DQo+IMKgwqDC
+oDY3NQkJfQ0KPiDCoMKgwqA2NzYJDQo+IMKgPiA2NzcJCXJldHVybiBydGNfcmVnaXN0ZXJf
+ZGV2aWNlKGlzbDEyMDgtPnJ0Yyk7DQo+IMKgPiA2NzgJfQ0KPiDCoMKgwqA2NzkJDQo+IA0K
+PiAtLS0NCj4gMC1EQVkga2VybmVsIHRlc3QgaW5mcmFzdHJ1Y3R1cmXCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoE9wZW4gU291cmNlIFRlY2hub2xvZ3kgQ2VudGVyDQo+IGh0
+dHBzOi8vbGlzdHMuMDEub3JnL3BpcGVybWFpbC9rYnVpbGQtYWxswqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBJbnRlbCBDb3Jwb3JhdGlvbg0KRGllaGwgQUtPIFN0
+aWZ0dW5nICYgQ28uIEtHLCBQZmFubmVyc3RyYcOfZSA3NS04MywgODgyMzkgV2FuZ2VuIGlt
+IEFsbGfDpHUNCkJlcmVpY2hzdm9yc3RhbmQ6IERyLi1JbmcuIE1pY2hhZWwgU2llZGVudG9w
+IChTcHJlY2hlciksIEpvc2VmIEZlbGxuZXIgKE1pdGdsaWVkKQ0KU2l0eiBkZXIgR2VzZWxs
+c2NoYWZ0OiBXYW5nZW4gaS5BLiDigJMgUmVnaXN0ZXJnZXJpY2h0OiBBbXRzZ2VyaWNodCBV
+bG0gSFJBIDYyMDYwOSDigJMgUGVyc8O2bmxpY2ggaGFmdGVuZGUgR2VzZWxsc2NoYWZ0ZXJp
+bjogRGllaGwgVmVyd2FsdHVuZ3MtU3RpZnR1bmcg4oCTIFNpdHo6IE7DvHJuYmVyZyDigJMg
+UmVnaXN0ZXJnZXJpY2h0OiBBbXRzZ2VyaWNodCBOw7xybmJlcmcgSFJBIDExNzU2IOKAkw0K
+Vm9yc3RhbmQ6IERyLi1JbmcuIEUuaC4gVGhvbWFzIERpZWhsICjigKApIChWb3JzaXR6ZW5k
+ZXIpLCBIZXJyIERpcGwuLVdpcnRzY2guLUluZy4gV29sZmdhbmcgV2VnZ2VuIChzdGVsbHZl
+cnRyZXRlbmRlciBWb3JzaXR6ZW5kZXIpLCBEaXBsLi1LZm0uIENsYXVzIEfDvG50aGVyLCBE
+aXBsLi1LZm0uIEZyYW5rIEd1dHplaXQsIERyLi1JbmcuIEhlaW5yaWNoIFNjaHVuaywgRHIu
+LUluZy4gTWljaGFlbCBTaWVkZW50b3AgLCBEaXBsLi1LZm0uIERyLi1JbmcuIE1hcnRpbiBT
+b21tZXIsIERpcGwuLUluZy4gKEZIKSBSYWluZXIgdm9uIEJvcnN0ZWwsIFZvcnNpdHplbmRl
+ciBkZXMgQXVmc2ljaHRzcmF0ZXM6IERyLiBLbGF1cyBNYWllcg0KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQpEZXIgSW5oYWx0IGRlciB2b3JzdGVo
+ZW5kZW4gRS1NYWlsIGlzdCBuaWNodCByZWNodGxpY2ggYmluZGVuZC4gRGllc2UgRS1NYWls
+IGVudGhhZWx0IHZlcnRyYXVsaWNoZSB1bmQvb2RlciByZWNodGxpY2ggZ2VzY2h1ZXR6dGUg
+SW5mb3JtYXRpb25lbi4NCkluZm9ybWllcmVuIFNpZSB1bnMgYml0dGUsIHdlbm4gU2llIGRp
+ZXNlIEUtTWFpbCBmYWVsc2NobGljaGVyd2Vpc2UgZXJoYWx0ZW4gaGFiZW4uIEJpdHRlIGxv
+ZXNjaGVuIFNpZSBpbiBkaWVzZW0gRmFsbCBkaWUgTmFjaHJpY2h0LiBKZWRlIHVuZXJsYXVi
+dGUgRm9ybSBkZXIgUmVwcm9kdWt0aW9uLCBCZWthbm50Z2FiZSwgQWVuZGVydW5nLCBWZXJ0
+ZWlsdW5nIHVuZC9vZGVyIFB1Ymxpa2F0aW9uIGRpZXNlciBFLU1haWwgaXN0IHN0cmVuZ3N0
+ZW5zIHVudGVyc2FndC4NClRoZSBjb250ZW50cyBvZiB0aGUgYWJvdmUgbWVudGlvbmVkIGUt
+bWFpbCBpcyBub3QgbGVnYWxseSBiaW5kaW5nLiBUaGlzIGUtbWFpbCBjb250YWlucyBjb25m
+aWRlbnRpYWwgYW5kL29yIGxlZ2FsbHkgcHJvdGVjdGVkIGluZm9ybWF0aW9uLiBQbGVhc2Ug
+aW5mb3JtIHVzIGlmIHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGJ5IG1pc3Rha2Ug
+YW5kIGRlbGV0ZSBpdCBpbiBzdWNoIGEgY2FzZS4gRWFjaCB1bmF1dGhvcml6ZWQgcmVwcm9k
+dWN0aW9uLCBkaXNjbG9zdXJlLCBhbHRlcmF0aW9uLCBkaXN0cmlidXRpb24gYW5kL29yIHB1
+YmxpY2F0aW9uIG9mIHRoaXMgZS1tYWlsIGlzIHN0cmljdGx5IHByb2hpYml0ZWQu
