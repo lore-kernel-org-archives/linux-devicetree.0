@@ -1,77 +1,30 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys DW AXI DMA
- bindings
-Date: Mon, 5 Mar 2018 11:02:56 +0530
-Message-ID: <20180305053256.GN15443@localhost>
-References: <20180226145628.11892-1-Eugeniy.Paltsev@synopsys.com>
- <20180226145628.11892-3-Eugeniy.Paltsev@synopsys.com>
- <20180302081408.GK15443@localhost>
- <1519979538.4430.7.camel@synopsys.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 0/3] phy: rcar-gen3-usb[23]: Add support for r8a77965
+Date: Mon,  5 Mar 2018 14:32:42 +0900
+Message-ID: <1520227965-4471-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1519979538.4430.7.camel@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "wan.ahmad.zainie.wan.mohamad@intel.com" <wan.ahmad.zainie.wan.mohamad@intel.com>
+To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 02, 2018 at 08:32:20AM +0000, Alexey Brodkin wrote:
-> Hi Vinod,
-> 
-> On Fri, 2018-03-02 at 13:44 +0530, Vinod Koul wrote:
-> > On Mon, Feb 26, 2018 at 05:56:28PM +0300, Eugeniy Paltsev wrote:
-> > > This patch adds documentation of device tree bindings for the Synopsys
-> > > DesignWare AXI DMA controller.
-> > > 
-> > > Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> > > ---
-> > >  .../devicetree/bindings/dma/snps,dw-axi-dmac.txt   | 41 ++++++++++++++++++++++
-> > >  1 file changed, 41 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-> > > new file mode 100644
-> > > index 0000000..f237b79
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/dma/snps,dw-axi-dmac.txt
-> > > @@ -0,0 +1,41 @@
-> > > +Synopsys DesignWare AXI DMA Controller
-> > > +
-> > > +Required properties:
-> > > +- compatible: "snps,axi-dma-1.01a"
-> > > +- reg: Address range of the DMAC registers. This should include
-> > > +  all of the per-channel registers.
-> > > +- interrupt: Should contain the DMAC interrupt number.
-> > > +- interrupt-parent: Should be the phandle for the interrupt controller
-> > > +  that services interrupts for this device.
-> > > +- dma-channels: Number of channels supported by hardware.
-> > > +- snps,dma-masters: Number of AXI masters supported by the hardware.
-> > > +- snps,data-width: Maximum AXI data width supported by hardware.
-> > > +  (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
-> > > +- snps,priority: Priority of channel. Array size is equal to the number of
-> > > +  dma-channels. Priority value must be programmed within [0:dma-channels-1]
-> > > +  range. (0 - minimum priority)
-> > > +- snps,block-size: Maximum block size supported by the controller channel.
-> > > +  Array size is equal to the number of dma-channels.
-> > > +
-> > > +Optional properties:
-> > > +- snps,axi-max-burst-len: Restrict master AXI burst length by value specified
-> > > +  in this property. If this property is missing the maximum AXI burst length
-> > > +  supported by DMAC is used. [1:256]
-> > > +
-> > > +Example:
-> > > +
-> > > +dmac: dma-controller@80000 {
-> > > +	compatible = "snps,axi-dma-1.01a";
-> > 
-> > do we need "snps here..?
-> 
-> Synopsys is this IP-block vendor so shouldn't we put it that way?
+This patch set adds R-Car Gen3 USB 2.0 and 3.0 support for R8A77965.
 
-Not a DT expert but why should vendor name come here, you can read the
-properties from device node, vendor name seems redundant to me
+Changes from v1:
+ - Separate patch1 to dt-bindings and adding of_device_id table entry.
+ - Revise the subject for dt-bindings patch(es).
+
+Yoshihiro Shimoda (3):
+  dt-bindings: rcar-gen3-phy-usb2: Add bindings for r8a77965
+  phy: rcar-gen3-usb2: Add support for r8a77965
+  dt-bindings: rcar-gen3-phy-usb3: Add bindings for r8a77965
+
+ Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 2 ++
+ Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt | 2 ++
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c                     | 4 ++++
+ 3 files changed, 8 insertions(+)
 
 -- 
-~Vinod
+1.9.1
