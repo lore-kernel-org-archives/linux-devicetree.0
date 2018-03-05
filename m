@@ -1,71 +1,74 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [PATCH 2/2] arm64: dts: sdm845: Support GPU/GMU
-Date: Mon, 5 Mar 2018 08:28:18 -0700
-Message-ID: <20180305152818.GC15200@jcrouse-lnx.qualcomm.com>
-References: <20180302215638.6145-1-jcrouse@codeaurora.org>
- <20180302215638.6145-3-jcrouse@codeaurora.org>
- <20180305044221.GC23018@vireshk-i7>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: STi: Fix aliases property name for STi boards
+Date: Mon, 5 Mar 2018 09:28:08 -0600
+Message-ID: <CABGGiszEcvKHGE54vOXPBUJeReAKbgmrxRyRxNfQQoL6D54GCw@mail.gmail.com>
+References: <1520262025-21088-1-git-send-email-patrice.chotard@st.com> <1520262025-21088-2-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180305044221.GC23018@vireshk-i7>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: nm@ti.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, vireshk@kernel.org, freedreno@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1520262025-21088-2-git-send-email-patrice.chotard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: patrice.chotard@st.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux@armlinux.org.uk, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jslaby@suse.com, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXIgMDUsIDIwMTggYXQgMTA6MTI6MjFBTSArMDUzMCwgVmlyZXNoIEt1bWFyIHdy
-b3RlOgo+IE9uIDAyLTAzLTE4LCAxNDo1NiwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+IEFkZCB0
-aGUgbm9kZXMgYW5kIG90aGVyIGJpdHMgdG8gZGVzY3JpYmUgdGhlIEFkcmVubyBHUFUgYW5kIEdN
-VQo+ID4gZGV2aWNlcy4KPiA+IAo+ID4gQ2hhbmdlLUlkOiBJYmY0ZGMwZWJiMGFjMDNkOGI2Yjhl
-NjU3NDdlMTQyYzQ0MGU3MGIwYQo+IAo+IFJlbW92ZSBpdCA/CgoqIFNoYWtlcyBmaXN0IGF0IEdl
-cnJpdCAqCgo+ID4gU2lnbmVkLW9mZi1ieTogSm9yZGFuIENyb3VzZSA8amNyb3VzZUBjb2RlYXVy
-b3JhLm9yZz4KPiA+IC0tLQo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRz
-aSB8IDEyMCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBj
-aGFuZ2VkLCAxMjAgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02
-NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3Nk
-bTg0NS5kdHNpCj4gPiBpbmRleCA3YjVjMTZlYjYzYjcuLmNjNmQzNjdlZTU1ZSAxMDA2NDQKPiA+
-IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+ID4gKysrIGIvYXJj
-aC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gPiBAQCAtMzEyLDUgKzMxMiwxMjUg
-QEAKPiA+ICAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICAJCQl9Owo+ID4gIAkJfTsKPiA+
-ICsKPiA+ICsJCWFkcmVub19zbW11OiBhcm0sc21tdS1hZHJlbm9ANTA0MDAwMCB7Cj4gPiArCQkJ
-Y29tcGF0aWJsZSA9ICJxY29tLG1zbTg5OTYtc21tdS12MiI7Cj4gPiArCQkJcmVnID0gPDB4NTA0
-MDAwMCAweDEwMDAwPjsKPiA+ICsJCQkjaW9tbXUtY2VsbHMgPSA8MT47Cj4gPiArCQkJI2dsb2Jh
-bC1pbnRlcnJ1cHRzID0gPDI+Owo+ID4gKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyMjkgSVJR
-X1RZUEVfTEVWRUxfSElHSD4sCj4gPiArCQkJCSAgICAgPEdJQ19TUEkgMjMxIElSUV9UWVBFX0xF
-VkVMX0hJR0g+LAo+ID4gKwkJCQkgICAgIDxHSUNfU1BJIDM2NCBJUlFfVFlQRV9FREdFX1JJU0lO
-Rz4sCj4gPiArCQkJCSAgICAgPEdJQ19TUEkgMzY1IElSUV9UWVBFX0VER0VfUklTSU5HPiwKPiA+
-ICsJCQkJICAgICA8R0lDX1NQSSAzNjYgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAo+ID4gKwkJCQkg
-ICAgIDxHSUNfU1BJIDM2NyBJUlFfVFlQRV9FREdFX1JJU0lORz4sCj4gPiArCQkJCSAgICAgPEdJ
-Q19TUEkgMzY4IElSUV9UWVBFX0VER0VfUklTSU5HPiwKPiA+ICsJCQkJICAgICA8R0lDX1NQSSAz
-NjkgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAo+ID4gKwkJCQkgICAgIDxHSUNfU1BJIDM3MCBJUlFf
-VFlQRV9FREdFX1JJU0lORz4sCj4gPiArCQkJCSAgICAgPEdJQ19TUEkgMzcxIElSUV9UWVBFX0VE
-R0VfUklTSU5HPjsKPiA+ICsJCQljbG9ja3MgPSA8JmNsb2NrX2djYyBHQ0NfR1BVX01FTU5PQ19H
-RlhfQ0xLPiwKPiA+ICsJCQkJIDwmY2xvY2tfZ2NjIEdDQ19HUFVfQ0ZHX0FIQl9DTEs+Owo+ID4g
-KwkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJpZmFjZSI7Cj4gPiArCj4gPiArCQkJcG93ZXItZG9t
-YWlucyA9IDwmY2xvY2tfZ3B1Y2MgR1BVX0NYX0dEU0M+Owo+ID4gKwkJfTsKPiA+ICsKPiA+ICsJ
-CWdwdV9vcHBfdGFibGU6IGFkcmVuby1vcHAtdGFibGUgewo+ID4gKwkJCWNvbXBhdGlibGUgPSAi
-b3BlcmF0aW5nLXBvaW50cy12MiI7Cj4gPiArCj4gPiArCQkJb3BwLTcxMDAwMDAwMCB7Cj4gPiAr
-CQkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8NzEwMDAwMDAwPjsKPiA+ICsJCQkJcWNvbSxhcmMtbGV2
-ZWwgPSA8NDE2PjsKPiAKPiBJIGFtIG5vdCBzdXJlIGlmIEkgc2F3IHdoZXJlIHRoaXMgaXMgZGVm
-aW5lZCA/CgpJJ20gZ2xhZCB5b3UgYnJvdWdodCB0aGlzIHVwIC0gSSB3YXMgdHJ5aW5nIHRvIGZp
-bmQgYSBwbGFjZSBpbiB0aGUgZG9jdW1lbnRhdGlvbgp0byBwdXQgaXQsIGJ1dCBzaW5jZSB0YXJn
-ZXQgc3BlY2lmaWMgbm9kZXMgd291bGQgYmUgYSBuZXcgdHJpY2sgZm9yIE9QUCBJIGRpZG4ndApx
-dWl0ZSBrbm93IGhvdyB0byBnbyBhYm91dCBkb2luZyBpdC4gRG8gd2UganVzdCBsaXN0IHRoZW0g
-YXMgT3B0aW9uYWw6IG9yCnNob3VsZCB3ZSBhZGQgYSB0YXJnZXQgc3BlY2lmaWMgc2VjdGlvbiB0
-byB0aGUgZG9jdW1lbnRhdGlvbiBhbmQgbGlzdCB0aGVtIG91dAp0aGVyZSBpbnN0ZWFkPwoKSm9y
-ZGFuCgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVy
-IG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQ
-cm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Mar 5, 2018 at 9:00 AM,  <patrice.chotard@st.com> wrote:
+> From: Patrice Chotard <patrice.chotard@st.com>
+>
+> Since dtc v1.4.6-9-gaadd0b65c987, aliases property name must
+> be lowercase only.
+> This allows to fix following warnings when compiling dtb
+> with W=1 option :
+
+I'm so glad to see fixes before the dtc update landed in the kernel tree!
+
+> arch/arm/boot/dts/stih418-b2199.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+> arch/arm/boot/dts/stih407-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+> arch/arm/boot/dts/stih410-b2260.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+> arch/arm/boot/dts/stih410-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+>
+> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+> ---
+>  arch/arm/boot/dts/stih407-b2120.dts | 4 ++--
+>  arch/arm/boot/dts/stih410-b2120.dts | 4 ++--
+>  arch/arm/boot/dts/stih410-b2260.dts | 4 ++--
+>  arch/arm/boot/dts/stih418-b2199.dts | 4 ++--
+>  4 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
+> index c8ad905d0309..fa1186af6574 100644
+> --- a/arch/arm/boot/dts/stih407-b2120.dts
+> +++ b/arch/arm/boot/dts/stih407-b2120.dts
+> @@ -14,7 +14,7 @@
+>         compatible = "st,stih407-b2120", "st,stih407";
+>
+>         chosen {
+> -               bootargs = "console=ttyAS0,115200 clk_ignore_unused";
+> +               bootargs = "console=ttyas0,115200 clk_ignore_unused";
+
+The kernel change for this is an ABI breakage both DT <-> kernel and
+kernel <-> userspace.
+
+Really, if you are okay with doing this, you should change it to ttySx IMO.
+
+>                 linux,stdout-path = &sbc_serial0;
+
+And since you have this, you don't even need the console praram.
+
+>         };
+>
+> @@ -24,7 +24,7 @@
+>         };
+>
+>         aliases {
+> -               ttyAS0 = &sbc_serial0;
+> +               ttyas0 = &sbc_serial0;
+
+The correct fix is use "serialN" for aliases.
+
+I have a check for only known alias names which would give a better
+warning, but David thought it was too restrictive.
+
+>                 ethernet0 = &ethernet0;
+>         };
+>
