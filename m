@@ -1,18 +1,14 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH 1/2] ARM: dts: STi: Fix aliases property name for STi
- boards
-Date: Mon, 5 Mar 2018 16:53:23 +0000
-Message-ID: <4bf43157-9214-c160-3f69-1e56f8cfdf98@st.com>
-References: <1520262025-21088-1-git-send-email-patrice.chotard@st.com>
- <1520262025-21088-2-git-send-email-patrice.chotard@st.com>
- <CABGGiszEcvKHGE54vOXPBUJeReAKbgmrxRyRxNfQQoL6D54GCw@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add dp83867 CLK_OUT muxing
+Date: Mon, 05 Mar 2018 18:04:48 +0100
+Message-ID: <8543411.nbQLj7Vctj@diego>
+References: <1520253911-46218-1-git-send-email-d.schultz@phytec.de>
+ <3530074.WSbKf9j6h0@phil> <cecf3c08-d43d-c340-c5ff-30e41e338469@phytec.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABGGiszEcvKHGE54vOXPBUJeReAKbgmrxRyRxNfQQoL6D54GCw@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <3A1A3AD27E1B9A4CAF36F84D026FB51B@st.com>
+In-Reply-To: <cecf3c08-d43d-c340-c5ff-30e41e338469@phytec.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,87 +18,85 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "jslaby@suse.com" <jslaby@suse.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Daniel Schultz <d.schultz@phytec.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, w.egorov@phytec.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
+Hi Daniel,
 
-On 03/05/2018 04:28 PM, Rob Herring wrote:
-> On Mon, Mar 5, 2018 at 9:00 AM,  <patrice.chotard@st.com> wrote:
->> From: Patrice Chotard <patrice.chotard@st.com>
->>
->> Since dtc v1.4.6-9-gaadd0b65c987, aliases property name must
->> be lowercase only.
->> This allows to fix following warnings when compiling dtb
->> with W=1 option :
-> 
-> I'm so glad to see fixes before the dtc update landed in the kernel tree!
+Am Montag, 5. M=E4rz 2018, 16:57:13 CET schrieb Daniel Schultz:
+> On 03/05/2018 03:15 PM, Heiko Stuebner wrote:
+> > Am Montag, 5. M=E4rz 2018, 13:45:11 CET schrieb Daniel Schultz:
+> >> The CLK_O_SEL default is synchronous to XI input clock, which is 25 MH=
+z.
+> >> Set CLK_O_SEL to channel A transmit clock so we have 125 MHz on CLK_OU=
+T.
+> >> =
 
-;-)
+> >> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+> >> ---
+> >> =
 
-> 
->> arch/arm/boot/dts/stih418-b2199.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
->> arch/arm/boot/dts/stih407-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
->> arch/arm/boot/dts/stih410-b2260.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
->> arch/arm/boot/dts/stih410-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
->>
->> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
->> ---
->>   arch/arm/boot/dts/stih407-b2120.dts | 4 ++--
->>   arch/arm/boot/dts/stih410-b2120.dts | 4 ++--
->>   arch/arm/boot/dts/stih410-b2260.dts | 4 ++--
->>   arch/arm/boot/dts/stih418-b2199.dts | 4 ++--
->>   4 files changed, 8 insertions(+), 8 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
->> index c8ad905d0309..fa1186af6574 100644
->> --- a/arch/arm/boot/dts/stih407-b2120.dts
->> +++ b/arch/arm/boot/dts/stih407-b2120.dts
->> @@ -14,7 +14,7 @@
->>          compatible = "st,stih407-b2120", "st,stih407";
->>
->>          chosen {
->> -               bootargs = "console=ttyAS0,115200 clk_ignore_unused";
->> +               bootargs = "console=ttyas0,115200 clk_ignore_unused";
-> 
-> The kernel change for this is an ABI breakage both DT <-> kernel and
-> kernel <-> userspace.
-> 
-> Really, if you are okay with doing this, you should change it to ttySx IMO.
+> >> The binding will be added with the next merge of net-next:
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/com=
+mit
+> >> /?id=3D9708fb630d19ee51ae3aeb3a533e3010da0e8570
+> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/log/Do=
+cum
+> entation/devicetree/bindings/net/ti,dp83867.txt
+> =
 
-OK i will use serialN instead
+> If I search in the master branch, I get the patch. Did I searched wrong?
 
-> 
->>                  linux,stdout-path = &sbc_serial0;
-> 
-> And since you have this, you don't even need the console praram.
+no ... seems I was just blind :-)
 
-Ok, i will remove stdout-path in an additional patch
-
-> 
->>          };
->>
->> @@ -24,7 +24,7 @@
->>          };
->>
->>          aliases {
->> -               ttyAS0 = &sbc_serial0;
->> +               ttyas0 = &sbc_serial0;
-> 
-> The correct fix is use "serialN" for aliases.
-
-Ok
-
-> 
-> I have a check for only known alias names which would give a better
-> warning, but David thought it was too restrictive.
-> 
->>                  ethernet0 = &ethernet0;
->>          };
->>
+Heiko
 
 
-Thanks
+> > I did find the commit, but no related change of the dp83867 dt binding
+> > document [0], including a review by dt-maintainers.
+> > =
 
-Patrice
+> > While your property does not look overly complicated, the binding
+> > should be updated nontheless.
+> > =
+
+> > =
+
+> > Heiko
+> > =
+
+> > [0]
+> > https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/log/=
+Do
+> > cumentation/devicetree/bindings/net/ti,dp83867.txt?id=3D9708fb630d19ee5=
+1ae3a
+> > eb3a533e3010da0e8570> =
+
+> >>   arch/arm/boot/dts/rk3288-phycore-som.dtsi | 1 +
+> >>   1 file changed, 1 insertion(+)
+> >> =
+
+> >> diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+> >> b/arch/arm/boot/dts/rk3288-phycore-som.dtsi index bdd80aa..e60535d
+> >> 100644
+> >> --- a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+> >> +++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
+> >> @@ -141,6 +141,7 @@
+> >> =
+
+> >>   			ti,tx-internal-delay =3D <DP83867_RGMIIDCTL_2_00_NS>;
+> >>   			ti,fifo-depth =3D <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
+> >>   			enet-phy-lane-no-swap;
+> >> =
+
+> >> +			ti,clk-output-sel =3D <DP83867_CLK_O_SEL_CHN_A_TCLK>;
+> >> =
+
+> >>   		};
+> >>   	=
+
+> >>   	};
+> >>   =
+
+> >>   };
