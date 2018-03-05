@@ -1,123 +1,108 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v7 10/42] clk: davinci: New driver for davinci PSC clocks
-Date: Mon, 5 Mar 2018 10:23:55 -0600
-Message-ID: <d1b91c10-fe11-452e-2c68-86e95fb58266@lechnology.com>
-References: <1519071723-31790-1-git-send-email-david@lechnology.com>
- <1519071723-31790-11-git-send-email-david@lechnology.com>
- <CAMpxmJVxfGtO=kh63KF-5Uqew3yy97DsK4FSd14CyyRQTOhrTA@mail.gmail.com>
- <93696fc8-bb93-aa20-3506-3d7216c17cd2@lechnology.com>
- <CAMpxmJVpMgikNfB4HgNCs+ep+EOHqH5bthiW82LsnDqzLfE5mg@mail.gmail.com>
- <6bbe9bf3-24c1-acd9-200d-513520d34558@lechnology.com>
- <CAMRc=Mdhi=byn4gPY6tVxgGjn9cgvc3smUkjV=Ku9i3euaZZtQ@mail.gmail.com>
+From: Patrice CHOTARD <patrice.chotard@st.com>
+Subject: Re: [PATCH 1/2] ARM: dts: STi: Fix aliases property name for STi
+ boards
+Date: Mon, 5 Mar 2018 16:53:23 +0000
+Message-ID: <4bf43157-9214-c160-3f69-1e56f8cfdf98@st.com>
+References: <1520262025-21088-1-git-send-email-patrice.chotard@st.com>
+ <1520262025-21088-2-git-send-email-patrice.chotard@st.com>
+ <CABGGiszEcvKHGE54vOXPBUJeReAKbgmrxRyRxNfQQoL6D54GCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=Mdhi=byn4gPY6tVxgGjn9cgvc3smUkjV=Ku9i3euaZZtQ@mail.gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CABGGiszEcvKHGE54vOXPBUJeReAKbgmrxRyRxNfQQoL6D54GCw@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+Content-ID: <3A1A3AD27E1B9A4CAF36F84D026FB51B@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "jslaby@suse.com" <jslaby@suse.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2018 07:02 AM, Bartosz Golaszewski wrote:
-> 2018-03-01 17:44 GMT+01:00 David Lechner <david@lechnology.com>:
->> On 03/01/2018 02:36 AM, Bartosz Golaszewski wrote:
->>>
->>> 2018-02-28 22:40 GMT+01:00 David Lechner <david@lechnology.com>:
->>>>
->>>> On 02/28/2018 06:38 AM, Bartosz Golaszewski wrote:
->>>>>
->>>>>
->>>>>
->>>>> I think I found the reason for the strange crashes we were
->>>>> experiencing (emac core->name being NULL) thanks to Sekhar who pointed
->>>>> me in the right direction.
->>>>>
->>>>> The mdio driver fails to probe with v7 due to the supplied clock rate
->>>>> being wrong. Before failing we register the emac clock with
->>>>> pm_clk_add_clk(). When clock_ops puts the clock, it decreases the
->>>>> reference count of the clock, but we never actually increased it in
->>>>> the first place in the line above. The core clock code then destroys
->>>>> the associated clk_core structure. When the next user comes around (in
->>>>> our case the clk debug functions) the system crashes.
->>>>>
->>>>> I believe there to be two issues: one is with v7 - we need to increase
->>>>> the clock reference count in davinci_psc_genpd_attach_dev().
->>>>>
->>>>> Second is the error path in the clock framework - we should remove the
->>>>> destroyed clk_core from the debug list, which is not being done now.
->>>>>
->>>>> Why we even need to track the refcount of clk_core is a mistery for me
->>>>> though. Stephen, Mike?
->>>>>
->>>>> Best regards,
->>>>> Bartosz Golaszewski
->>>>
->>>>
->>>>
->>>> Great find. I figured it had to be something like this, but I wasn't
->>>> able to reproduce the problem yet.
->>>>
->>>> I suppose it is time to spin up a v8 with some fixes.
->>>
->>>
->>> I still don't know why the mdio clock rate is much lower than in
->>> mainline though. Any ideas?
->>>
->>> Thanks,
->>> Bart
->>>
->>
->> Now that you have fixed the crash, can you answer the questions I have
->> asked earlier?
->>
->>> Can you post the output of this command so that I can see how your
->>
->> clocks are setup:
->>
->> cat /sys/kernel/debug/clk/clk_summary
->>
->>> Using your workaround, can you run:
->>
->>
->> cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
->>
->> If you see:
->>    1e27000.clock-controller: emac  off-0
->>
->> then genpd is not working like it is supposed to. You should see something
->> like this for device that are working:
->>            1e27000.clock-controller: uart2  on
->>      /devices/platform/soc@1c00000/1d0d000.serial        active
-> 
-> Hi David, Sekhar,
-> 
-> I tried booting the board today over tftp but didn't succeed. I then
-> switched to a normal boot from SD card and the boot process froze at
-> the same moment (right after the DHCP config, or after rtc config if I
-> disabled DHCP in bootargs). I then realized that the emac clock can't
-> be the culprit. After some digging I found out that the late_initcall
-> to clk_disable_unused() disables sysclk6 - the parent of the arm
-> clock, which of course freezes the device.
-> 
-> If I remove the call to clk_disable_unused(), I can boot just fine.
-> 
-> The following other clocks are disabled before pll0_sysclk6:
-> pll1_sysclk3
-> pll0_obsclk
-> pll0_sysclk7
-> 
-> davinci_lpsc_clk_enable() is never called for these clocks - in fact
-> it's not called for any parent that's not explicitly defined in
-> psc-da850.c - I believe this may be one of the reasons. I will get
-> back to debugging it tomorrow.
-> 
-> Best regards,
-> Bartosz Golaszewski
-> 
+Hi Rob
 
-Thanks for continuing to dig into this. I think I know what needs to
-be done now. I think I don't have the dependencies quite right where
-the PSC clocks are being registered before the PLL clocks, in which
-case they aren't getting the correct parent clock.
+On 03/05/2018 04:28 PM, Rob Herring wrote:
+> On Mon, Mar 5, 2018 at 9:00 AM,  <patrice.chotard@st.com> wrote:
+>> From: Patrice Chotard <patrice.chotard@st.com>
+>>
+>> Since dtc v1.4.6-9-gaadd0b65c987, aliases property name must
+>> be lowercase only.
+>> This allows to fix following warnings when compiling dtb
+>> with W=1 option :
+> 
+> I'm so glad to see fixes before the dtc update landed in the kernel tree!
+
+;-)
+
+> 
+>> arch/arm/boot/dts/stih418-b2199.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+>> arch/arm/boot/dts/stih407-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+>> arch/arm/boot/dts/stih410-b2260.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+>> arch/arm/boot/dts/stih410-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
+>>
+>> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+>> ---
+>>   arch/arm/boot/dts/stih407-b2120.dts | 4 ++--
+>>   arch/arm/boot/dts/stih410-b2120.dts | 4 ++--
+>>   arch/arm/boot/dts/stih410-b2260.dts | 4 ++--
+>>   arch/arm/boot/dts/stih418-b2199.dts | 4 ++--
+>>   4 files changed, 8 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
+>> index c8ad905d0309..fa1186af6574 100644
+>> --- a/arch/arm/boot/dts/stih407-b2120.dts
+>> +++ b/arch/arm/boot/dts/stih407-b2120.dts
+>> @@ -14,7 +14,7 @@
+>>          compatible = "st,stih407-b2120", "st,stih407";
+>>
+>>          chosen {
+>> -               bootargs = "console=ttyAS0,115200 clk_ignore_unused";
+>> +               bootargs = "console=ttyas0,115200 clk_ignore_unused";
+> 
+> The kernel change for this is an ABI breakage both DT <-> kernel and
+> kernel <-> userspace.
+> 
+> Really, if you are okay with doing this, you should change it to ttySx IMO.
+
+OK i will use serialN instead
+
+> 
+>>                  linux,stdout-path = &sbc_serial0;
+> 
+> And since you have this, you don't even need the console praram.
+
+Ok, i will remove stdout-path in an additional patch
+
+> 
+>>          };
+>>
+>> @@ -24,7 +24,7 @@
+>>          };
+>>
+>>          aliases {
+>> -               ttyAS0 = &sbc_serial0;
+>> +               ttyas0 = &sbc_serial0;
+> 
+> The correct fix is use "serialN" for aliases.
+
+Ok
+
+> 
+> I have a check for only known alias names which would give a better
+> warning, but David thought it was too restrictive.
+> 
+>>                  ethernet0 = &ethernet0;
+>>          };
+>>
+
+
+Thanks
+
+Patrice
