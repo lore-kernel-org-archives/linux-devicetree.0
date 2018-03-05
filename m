@@ -1,51 +1,39 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 4/5] arm64: dts: renesas: r8a7796: Add cpu
- capacity-dmips-mhz
-Date: Mon, 5 Mar 2018 11:24:18 +0100
-Message-ID: <CAMuHMdWpUJXvuFpTzE0t3ysLEC8exa169J64H2Q0w4NH_+k=gg@mail.gmail.com>
-References: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
- <1519697995-6061-5-git-send-email-gaku.inami.xh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519697995-6061-5-git-send-email-gaku.inami.xh@renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gaku Inami <gaku.inami.xh@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v6 1/6] ARM: imx6q: provide documentation for new fsl,pmic-stby-poweroff property
+Date: Mon,  5 Mar 2018 11:25:18 +0100
+Message-ID: <20180305102524.5905-2-o.rempel@pengutronix.de>
+References: <20180305102524.5905-1-o.rempel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180305102524.5905-1-o.rempel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Inami-san,
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/clock/imx6q-clock.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-On Tue, Feb 27, 2018 at 3:19 AM, Gaku Inami <gaku.inami.xh@renesas.com> wrote:
-> Set the capacity-dmips-mhz for r8a7796, that is based on dhrystone.
->
-> Expected cpu capacity:
-> Cortex-A57@1.5Ghz: 1024, Cortex-A53@1.2GHz: 411
-
-Thanks for your patch!
-
-> Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-But same comment as for r8a7795.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+index a45ca67a9d5f..e1308346e00d 100644
+--- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+@@ -6,6 +6,14 @@ Required properties:
+ - interrupts: Should contain CCM interrupt
+ - #clock-cells: Should be <1>
+ 
++Optional properties:
++- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
++  on power off.
++  Use this property if the SoC should be powered off by external power
++  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
++  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
++  be using "syscon-poweroff" driver instead.
++
+ The clock consumer should specify the desired clock by having the clock
+ ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
+ for the full list of i.MX6 Quad and DualLite clock IDs.
+-- 
+2.16.1
