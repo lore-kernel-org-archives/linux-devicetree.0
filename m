@@ -1,45 +1,46 @@
-Return-Path: <SRS0=yMxL=F5=arm.com=kim.phillips@kernel.org>
-Date: Wed, 7 Mar 2018 10:13:32 -0600
-From: Kim Phillips <kim.phillips@arm.com>
+Return-Path: <SRS0=PZ0u=F3=gmail.com=festevam@kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <4e2a63d3-9011-24fb-15b7-d021748931ac@mleia.com>
+References: <20180305222100.29351-1-vz@mleia.com> <20180305222100.29351-3-vz@mleia.com>
+ <CAOMZO5DmtaAoZ5CEJDHjLSc4dwjHB4p1uO69-x8KNJ6bvvT7Dw@mail.gmail.com> <4e2a63d3-9011-24fb-15b7-d021748931ac@mleia.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Mon, 5 Mar 2018 20:58:11 -0300
+Message-ID: <CAOMZO5AVdcXy-z6Zked_EuSzDY0OWRnmmixcyewSzL=M3uq72A@mail.gmail.com>
 Subject: Re: [PATCH v2 2/2] hwrng: mxc-rnga - add driver support on boards
  with device tree
-Message-Id: <20180307101332.0fb08a8b830b96f3bb94e5c6@arm.com>
-In-Reply-To: <20180305222100.29351-3-vz@mleia.com>
-References: <20180305222100.29351-1-vz@mleia.com>
-	<20180305222100.29351-3-vz@mleia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 To: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, 6 Mar 2018 00:21:00 +0200
-Vladimir Zapolskiy <vz@mleia.com> wrote:
+Hi Vladimir,
 
-> The driver works well on i.MX31 powered boards with device description
-> taken from board device tree, the only change to add to the driver is
-> the missing OF device id, the affected list of included headers and
-> indentation in platform driver struct are beautified a little.
-> 
-> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
-> ---
-> Changes from v1 to v2:
-> * a kernel for iMX boards is always built with multiplatform support,
->   thus CONFIG_OF guards were removed, thanks to Kim Phillips for review,
+On Mon, Mar 5, 2018 at 8:44 PM, Vladimir Zapolskiy <vz@mleia.com> wrote:
 
-That's not necessarily the reason, e.g., of_match_table is available to
-be assigned even if CONFIG_OF is not set.  Recall, I tested building
-without CONFIG_OF by removing the SOC_IMX31 dependency in Kconfig, and
-building with netwinder_defconfig as a base.
+> Yes, I have a pretty good i.MX31 dtsi change (tested everything but USB
+> and multimedia, and that notorious watchdog problem still has to be
+> agreed with Uwe and solved), but I'm trying to save my time a little, and
+> my plan is to send everything altogether as a single imx31.dtsi update
+> (without instant pinctrl though). And basically RNGA support is the only
+> missing part at the moment.
 
-Nevertheless, this v2 is much easier to review without the ifdef
-CONFIG_OF, so:
+Ok, that's good news.
 
-Reviewed-by: Kim Phillips <kim.phillips@arm.com>
+> Yes, I have a complete and well tested i.MX31 pinctrl driver, it is done
+> similarly to all known Freescale pin controller drivers.
 
-Thanks,
+It would be nice if you could post it even in the current form.
 
-Kim
+> I sort of dislike it, and my preference is to "upgrade" it to utilize
+> generic pin multiplexing with groups, functions and pin configuration
+> as it is described in pinctrl-bindings.txt, then hopefully some ideas
 
-p.s. my responses typically have lower latencies when I'm added to cc.
+On i.MX8M there was a recent discussion about using the new generic
+pinctl versus the old method where we encode the pinmux value in dts.
+
+i.MX maintainers are in favor of the old method, so that we can have
+this same scheme for all i.MX variants.
+
+Well, that is a topic for another mailing list :-)
+
+Thanks
