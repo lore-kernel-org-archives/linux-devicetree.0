@@ -1,96 +1,100 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 1/6] Docs: dt: add fsl-mc iommu-parent device-tree binding
-Date: Mon, 5 Mar 2018 14:53:21 +0000
-Message-ID: <5cdeded1-ca3c-339a-bf73-73401e7dd4ed@arm.com>
+From: Nipun Gupta <nipun.gupta@nxp.com>
+Subject: RE: [PATCH 1/6] Docs: dt: add fsl-mc iommu-parent device-tree binding
+Date: Mon, 5 Mar 2018 15:00:37 +0000
+Message-ID: <HE1PR0401MB24254CBDB8B6F537D08B925DE6DA0@HE1PR0401MB2425.eurprd04.prod.outlook.com>
 References: <1520260166-29387-1-git-send-email-nipun.gupta@nxp.com>
  <1520260166-29387-2-git-send-email-nipun.gupta@nxp.com>
+ <5cdeded1-ca3c-339a-bf73-73401e7dd4ed@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520260166-29387-2-git-send-email-nipun.gupta@nxp.com>
-Content-Language: en-GB
+In-Reply-To: <5cdeded1-ca3c-339a-bf73-73401e7dd4ed@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nipun Gupta <nipun.gupta@nxp.com>, will.deacon@arm.com, mark.rutland@arm.com, catalin.marinas@arm.com
-Cc: iommu@lists.linux-foundation.org, robh+dt@kernel.org, hch@lst.de, m.szyprowski@samsung.com, gregkh@linuxfoundation.org, joro@8bytes.org, leoyang.li@nxp.com, shawnguo@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, bharat.bhushan@nxp.com, stuyoder@gmail.com, laurentiu.tudor@nxp.com
+To: Robin Murphy <robin.murphy@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
+Cc: "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "hch@lst.de" <hch@lst.de>, "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "joro@8bytes.org" <joro@8bytes.org>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Bharat Bhushan <bharat.bhushan@nxp.com>, "stuyoder@gmail.com" <stuyoder@gmail.com>, Laurentiu Tudor <laurentiu.tudor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/18 14:29, Nipun Gupta wrote:
-> The existing IOMMU bindings cannot be used to specify the relationship
-> between fsl-mc devices and IOMMUs. This patch adds a binding for
-> mapping fsl-mc devices to IOMMUs, using a new iommu-parent property.
-
-Given that allowing "msi-parent" for #msi-cells > 1 is merely a 
-backward-compatibility bodge full of hard-coded assumptions, why would 
-we want to knowingly introduce a similarly unpleasant equivalent for 
-IOMMUs? What's wrong with "iommu-map"?
-
-> Signed-off-by: Nipun Gupta <nipun.gupta@nxp.com>
-> ---
->   .../devicetree/bindings/misc/fsl,qoriq-mc.txt      | 31 ++++++++++++++++++++++
->   1 file changed, 31 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> index 6611a7c..011c7d6 100644
-> --- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> +++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
-> @@ -9,6 +9,24 @@ blocks that can be used to create functional hardware objects/devices
->   such as network interfaces, crypto accelerator instances, L2 switches,
->   etc.
->   
-> +For an overview of the DPAA2 architecture and fsl-mc bus see:
-> +drivers/staging/fsl-mc/README.txt
-> +
-> +As described in the above overview, all DPAA2 objects in a DPRC share the
-> +same hardware "isolation context" and a 10-bit value called an ICID
-> +(isolation context id) is expressed by the hardware to identify
-> +the requester.
-
-IOW, precisely the case for which "{msi,iommu}-map" exist. Yes, I know 
-they're currently documented under bindings/pci, but they're not really 
-intended to be absolutely PCI-specific.
-
-Robin.
-
-> +The generic 'iommus' property is cannot be used to describe the relationship
-> +between fsl-mc and IOMMUs, so an iommu-parent property is used to define
-> +the same.
-> +
-> +For generic IOMMU bindings, see
-> +Documentation/devicetree/bindings/iommu/iommu.txt.
-> +
-> +For arm-smmu binding, see:
-> +Documentation/devicetree/bindings/iommu/arm,smmu.txt.
-> +
->   Required properties:
->   
->       - compatible
-> @@ -88,14 +106,27 @@ Sub-nodes:
->                 Value type: <phandle>
->                 Definition: Specifies the phandle to the PHY device node associated
->                             with the this dpmac.
-> +Optional properties:
-> +
-> +- iommu-parent: Maps the devices on fsl-mc bus to an IOMMU.
-> +  The property specifies the IOMMU behind which the devices on
-> +  fsl-mc bus are residing.
->   
->   Example:
->   
-> +        smmu: iommu@5000000 {
-> +               compatible = "arm,mmu-500";
-> +               #iommu-cells = <1>;
-> +               stream-match-mask = <0x7C00>;
-> +               ...
-> +        };
-> +
->           fsl_mc: fsl-mc@80c000000 {
->                   compatible = "fsl,qoriq-mc";
->                   reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal base */
->                         <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
->                   msi-parent = <&its>;
-> +                iommu-parent = <&smmu>;
->                   #address-cells = <3>;
->                   #size-cells = <1>;
->   
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUm9iaW4gTXVycGh5IFtt
+YWlsdG86cm9iaW4ubXVycGh5QGFybS5jb21dDQo+IFNlbnQ6IE1vbmRheSwgTWFyY2ggMDUsIDIw
+MTggMjA6MjMNCj4gVG86IE5pcHVuIEd1cHRhIDxuaXB1bi5ndXB0YUBueHAuY29tPjsgd2lsbC5k
+ZWFjb25AYXJtLmNvbTsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bh
+cm0uY29tDQo+IENjOiBpb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZzsgcm9iaCtkdEBr
+ZXJuZWwub3JnOyBoY2hAbHN0LmRlOw0KPiBtLnN6eXByb3dza2lAc2Ftc3VuZy5jb207IGdyZWdr
+aEBsaW51eGZvdW5kYXRpb24ub3JnOyBqb3JvQDhieXRlcy5vcmc7DQo+IExlbyBMaSA8bGVveWFu
+Zy5saUBueHAuY29tPjsgc2hhd25ndW9Aa2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2Vy
+Lmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsg
+QmhhcmF0IEJodXNoYW4NCj4gPGJoYXJhdC5iaHVzaGFuQG54cC5jb20+OyBzdHV5b2RlckBnbWFp
+bC5jb207IExhdXJlbnRpdSBUdWRvcg0KPiA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+IFN1
+YmplY3Q6IFJlOiBbUEFUQ0ggMS82XSBEb2NzOiBkdDogYWRkIGZzbC1tYyBpb21tdS1wYXJlbnQg
+ZGV2aWNlLXRyZWUgYmluZGluZw0KPiANCj4gT24gMDUvMDMvMTggMTQ6MjksIE5pcHVuIEd1cHRh
+IHdyb3RlOg0KPiA+IFRoZSBleGlzdGluZyBJT01NVSBiaW5kaW5ncyBjYW5ub3QgYmUgdXNlZCB0
+byBzcGVjaWZ5IHRoZSByZWxhdGlvbnNoaXANCj4gPiBiZXR3ZWVuIGZzbC1tYyBkZXZpY2VzIGFu
+ZCBJT01NVXMuIFRoaXMgcGF0Y2ggYWRkcyBhIGJpbmRpbmcgZm9yDQo+ID4gbWFwcGluZyBmc2wt
+bWMgZGV2aWNlcyB0byBJT01NVXMsIHVzaW5nIGEgbmV3IGlvbW11LXBhcmVudCBwcm9wZXJ0eS4N
+Cj4gDQo+IEdpdmVuIHRoYXQgYWxsb3dpbmcgIm1zaS1wYXJlbnQiIGZvciAjbXNpLWNlbGxzID4g
+MSBpcyBtZXJlbHkgYQ0KPiBiYWNrd2FyZC1jb21wYXRpYmlsaXR5IGJvZGdlIGZ1bGwgb2YgaGFy
+ZC1jb2RlZCBhc3N1bXB0aW9ucywgd2h5IHdvdWxkDQo+IHdlIHdhbnQgdG8ga25vd2luZ2x5IGlu
+dHJvZHVjZSBhIHNpbWlsYXJseSB1bnBsZWFzYW50IGVxdWl2YWxlbnQgZm9yDQo+IElPTU1Vcz8g
+V2hhdCdzIHdyb25nIHdpdGggImlvbW11LW1hcCI/DQoNCkhpIFJvYmluLA0KDQpXaXRoICdtc2kt
+cGFyZW50JyB0aGUgcHJvcGVydHkgaXMgZml4ZWQgdXAgdG8gaGF2ZSBtc2ktbWFwLiBJbiB0aGlz
+IGNhc2UgdGhlcmUgaXMNCm5vIGZpeHVwIHJlcXVpcmVkIGFuZCBzaW1wbGUgJ2lvbW11LXBhcmVu
+dCcgcHJvcGVydHkgY2FuIGJlIHVzZWQsIHdpdGggTUMgYnVzDQppdHNlbGYgcHJvdmlkaW5nIHRo
+ZSBzdHJlYW0taWQncyAoaW4gdGhlIGNvZGUgZXhlY3V0aW9uIHZpYSBGVykuDQoNCldlIGNhbiBh
+bHNvIHVzZSB0aGUgaW9tbXUtbWFwIHByb3BlcnR5IHNpbWlsYXIgdG8gUENJLCB3aGljaCB3aWxs
+IHJlcXVpcmUgdS1ib290DQpmaXh1cC4gQnV0IHRoZW4gaXQgbGVhZHMgdG8gbGl0dGxlIGJpdCBj
+b21wbGljYXRpb25zIG9mIHUtYm9vdCAtIGtlcm5lbCBjb21wYXRpYmlsaXR5Lg0KDQpJZiB5b3Ug
+c3VnZ2VzdCB3ZSBjYW4gcmUtdXNlIHRoZSBpb21tdS1tYXAgcHJvcGVydHkuIFdoYXQgaXMgeW91
+ciBvcGluaW9uPw0KDQpUaGFua3MsDQpOaXB1bg0KDQo+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE5p
+cHVuIEd1cHRhIDxuaXB1bi5ndXB0YUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICAgLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbWlzYy9mc2wscW9yaXEtbWMudHh0ICAgICAgfCAzMQ0KPiArKysrKysr
+KysrKysrKysrKysrKysrDQo+ID4gICAxIGZpbGUgY2hhbmdlZCwgMzEgaW5zZXJ0aW9ucygrKQ0K
+PiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+aXNjL2ZzbCxxb3JpcS1tYy50eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWlzYy9mc2wscW9yaXEtbWMudHh0DQo+ID4gaW5kZXggNjYxMWE3Yy4uMDExYzdkNiAxMDA2
+NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWlzYy9mc2ws
+cW9yaXEtbWMudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21pc2MvZnNsLHFvcmlxLW1jLnR4dA0KPiA+IEBAIC05LDYgKzksMjQgQEAgYmxvY2tzIHRoYXQg
+Y2FuIGJlIHVzZWQgdG8gY3JlYXRlIGZ1bmN0aW9uYWwgaGFyZHdhcmUNCj4gb2JqZWN0cy9kZXZp
+Y2VzDQo+ID4gICBzdWNoIGFzIG5ldHdvcmsgaW50ZXJmYWNlcywgY3J5cHRvIGFjY2VsZXJhdG9y
+IGluc3RhbmNlcywgTDIgc3dpdGNoZXMsDQo+ID4gICBldGMuDQo+ID4NCj4gPiArRm9yIGFuIG92
+ZXJ2aWV3IG9mIHRoZSBEUEFBMiBhcmNoaXRlY3R1cmUgYW5kIGZzbC1tYyBidXMgc2VlOg0KPiA+
+ICtkcml2ZXJzL3N0YWdpbmcvZnNsLW1jL1JFQURNRS50eHQNCj4gPiArDQo+ID4gK0FzIGRlc2Ny
+aWJlZCBpbiB0aGUgYWJvdmUgb3ZlcnZpZXcsIGFsbCBEUEFBMiBvYmplY3RzIGluIGEgRFBSQyBz
+aGFyZSB0aGUNCj4gPiArc2FtZSBoYXJkd2FyZSAiaXNvbGF0aW9uIGNvbnRleHQiIGFuZCBhIDEw
+LWJpdCB2YWx1ZSBjYWxsZWQgYW4gSUNJRA0KPiA+ICsoaXNvbGF0aW9uIGNvbnRleHQgaWQpIGlz
+IGV4cHJlc3NlZCBieSB0aGUgaGFyZHdhcmUgdG8gaWRlbnRpZnkNCj4gPiArdGhlIHJlcXVlc3Rl
+ci4NCj4gDQo+IElPVywgcHJlY2lzZWx5IHRoZSBjYXNlIGZvciB3aGljaCAie21zaSxpb21tdX0t
+bWFwIiBleGlzdC4gWWVzLCBJIGtub3cNCj4gdGhleSdyZSBjdXJyZW50bHkgZG9jdW1lbnRlZCB1
+bmRlciBiaW5kaW5ncy9wY2ksIGJ1dCB0aGV5J3JlIG5vdCByZWFsbHkNCj4gaW50ZW5kZWQgdG8g
+YmUgYWJzb2x1dGVseSBQQ0ktc3BlY2lmaWMuDQo+IA0KPiBSb2Jpbi4NCj4gDQo+ID4gK1RoZSBn
+ZW5lcmljICdpb21tdXMnIHByb3BlcnR5IGlzIGNhbm5vdCBiZSB1c2VkIHRvIGRlc2NyaWJlIHRo
+ZSByZWxhdGlvbnNoaXANCj4gPiArYmV0d2VlbiBmc2wtbWMgYW5kIElPTU1Vcywgc28gYW4gaW9t
+bXUtcGFyZW50IHByb3BlcnR5IGlzIHVzZWQgdG8gZGVmaW5lDQo+ID4gK3RoZSBzYW1lLg0KPiA+
+ICsNCj4gPiArRm9yIGdlbmVyaWMgSU9NTVUgYmluZGluZ3MsIHNlZQ0KPiA+ICtEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvaW9tbXUudHh0Lg0KPiA+ICsNCj4gPiArRm9y
+IGFybS1zbW11IGJpbmRpbmcsIHNlZToNCj4gPiArRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2lvbW11L2FybSxzbW11LnR4dC4NCj4gPiArDQo+ID4gICBSZXF1aXJlZCBwcm9wZXJ0
+aWVzOg0KPiA+DQo+ID4gICAgICAgLSBjb21wYXRpYmxlDQo+ID4gQEAgLTg4LDE0ICsxMDYsMjcg
+QEAgU3ViLW5vZGVzOg0KPiA+ICAgICAgICAgICAgICAgICBWYWx1ZSB0eXBlOiA8cGhhbmRsZT4N
+Cj4gPiAgICAgICAgICAgICAgICAgRGVmaW5pdGlvbjogU3BlY2lmaWVzIHRoZSBwaGFuZGxlIHRv
+IHRoZSBQSFkgZGV2aWNlIG5vZGUgYXNzb2NpYXRlZA0KPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB3aXRoIHRoZSB0aGlzIGRwbWFjLg0KPiA+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOg0K
+PiA+ICsNCj4gPiArLSBpb21tdS1wYXJlbnQ6IE1hcHMgdGhlIGRldmljZXMgb24gZnNsLW1jIGJ1
+cyB0byBhbiBJT01NVS4NCj4gPiArICBUaGUgcHJvcGVydHkgc3BlY2lmaWVzIHRoZSBJT01NVSBi
+ZWhpbmQgd2hpY2ggdGhlIGRldmljZXMgb24NCj4gPiArICBmc2wtbWMgYnVzIGFyZSByZXNpZGlu
+Zy4NCj4gPg0KPiA+ICAgRXhhbXBsZToNCj4gPg0KPiA+ICsgICAgICAgIHNtbXU6IGlvbW11QDUw
+MDAwMDAgew0KPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFybSxtbXUtNTAwIjsN
+Cj4gPiArICAgICAgICAgICAgICAgI2lvbW11LWNlbGxzID0gPDE+Ow0KPiA+ICsgICAgICAgICAg
+ICAgICBzdHJlYW0tbWF0Y2gtbWFzayA9IDwweDdDMDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAu
+Li4NCj4gPiArICAgICAgICB9Ow0KPiA+ICsNCj4gPiAgICAgICAgICAgZnNsX21jOiBmc2wtbWNA
+ODBjMDAwMDAwIHsNCj4gPiAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImZzbCxxb3Jp
+cS1tYyI7DQo+ID4gICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MDAwMDAwMDggMHgwYzAwMDAw
+MCAwIDB4NDA+LCAgICAvKiBNQyBwb3J0YWwgYmFzZSAqLw0KPiA+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIDwweDAwMDAwMDAwIDB4MDgzNDAwMDAgMCAweDQwMDAwPjsgLyogTUMgY29udHJvbCBy
+ZWcgKi8NCj4gPiAgICAgICAgICAgICAgICAgICBtc2ktcGFyZW50ID0gPCZpdHM+Ow0KPiA+ICsg
+ICAgICAgICAgICAgICAgaW9tbXUtcGFyZW50ID0gPCZzbW11PjsNCj4gPiAgICAgICAgICAgICAg
+ICAgICAjYWRkcmVzcy1jZWxscyA9IDwzPjsNCj4gPiAgICAgICAgICAgICAgICAgICAjc2l6ZS1j
+ZWxscyA9IDwxPjsNCj4gPg0KPiA+DQo=
