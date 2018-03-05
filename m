@@ -1,76 +1,132 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v8 0/5] iommu/arm-smmu: Add runtime pm/sleep support
-Date: Mon, 5 Mar 2018 22:49:14 +0530
-Message-ID: <73b16f5c-fe19-e652-dfd0-de7196d4cec0@codeaurora.org>
-References: <20180302101050.6191-1-vivek.gautam@codeaurora.org>
-	<CAAFQd5AZoCgVts=DOET7js5VPi4ONM2m9R-WM6pWHud26XDVfA@mail.gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v7 10/42] clk: davinci: New driver for davinci PSC clocks
+Date: Mon, 5 Mar 2018 11:46:46 -0600
+Message-ID: <919e6c76-0818-b330-b0f0-71c3c3f4518d@lechnology.com>
+References: <1519071723-31790-1-git-send-email-david@lechnology.com>
+ <1519071723-31790-11-git-send-email-david@lechnology.com>
+ <CAMpxmJVxfGtO=kh63KF-5Uqew3yy97DsK4FSd14CyyRQTOhrTA@mail.gmail.com>
+ <93696fc8-bb93-aa20-3506-3d7216c17cd2@lechnology.com>
+ <CAMpxmJVpMgikNfB4HgNCs+ep+EOHqH5bthiW82LsnDqzLfE5mg@mail.gmail.com>
+ <6bbe9bf3-24c1-acd9-200d-513520d34558@lechnology.com>
+ <CAMRc=Mdhi=byn4gPY6tVxgGjn9cgvc3smUkjV=Ku9i3euaZZtQ@mail.gmail.com>
+ <d1b91c10-fe11-452e-2c68-86e95fb58266@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAAFQd5AZoCgVts=DOET7js5VPi4ONM2m9R-WM6pWHud26XDVfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d1b91c10-fe11-452e-2c68-86e95fb58266@lechnology.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "open list:IOMMU DRIVERS" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
-
-
-On 3/5/2018 6:55 PM, Tomasz Figa wrote:
-> Hi Vivek,
->
-> On Fri, Mar 2, 2018 at 7:10 PM, Vivek Gautam
-> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> This series provides the support for turning on the arm-smmu's
->> clocks/power domains using runtime pm. This is done using the
->> recently introduced device links patches, which lets the smmu's
->> runtime to follow the master's runtime pm, so the smmu remains
->> powered only when the masters use it.
+On 03/05/2018 10:23 AM, David Lechner wrote:
+> On 03/05/2018 07:02 AM, Bartosz Golaszewski wrote:
+>> 2018-03-01 17:44 GMT+01:00 David Lechner <david@lechnology.com>:
+>>> On 03/01/2018 02:36 AM, Bartosz Golaszewski wrote:
+>>>>
+>>>> 2018-02-28 22:40 GMT+01:00 David Lechner <david@lechnology.com>:
+>>>>>
+>>>>> On 02/28/2018 06:38 AM, Bartosz Golaszewski wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> I think I found the reason for the strange crashes we were
+>>>>>> experiencing (emac core->name being NULL) thanks to Sekhar who pointed
+>>>>>> me in the right direction.
+>>>>>>
+>>>>>> The mdio driver fails to probe with v7 due to the supplied clock rate
+>>>>>> being wrong. Before failing we register the emac clock with
+>>>>>> pm_clk_add_clk(). When clock_ops puts the clock, it decreases the
+>>>>>> reference count of the clock, but we never actually increased it in
+>>>>>> the first place in the line above. The core clock code then destroys
+>>>>>> the associated clk_core structure. When the next user comes around (in
+>>>>>> our case the clk debug functions) the system crashes.
+>>>>>>
+>>>>>> I believe there to be two issues: one is with v7 - we need to increase
+>>>>>> the clock reference count in davinci_psc_genpd_attach_dev().
+>>>>>>
+>>>>>> Second is the error path in the clock framework - we should remove the
+>>>>>> destroyed clk_core from the debug list, which is not being done now.
+>>>>>>
+>>>>>> Why we even need to track the refcount of clk_core is a mistery for me
+>>>>>> though. Stephen, Mike?
+>>>>>>
+>>>>>> Best regards,
+>>>>>> Bartosz Golaszewski
+>>>>>
+>>>>>
+>>>>>
+>>>>> Great find. I figured it had to be something like this, but I wasn't
+>>>>> able to reproduce the problem yet.
+>>>>>
+>>>>> I suppose it is time to spin up a v8 with some fixes.
+>>>>
+>>>>
+>>>> I still don't know why the mdio clock rate is much lower than in
+>>>> mainline though. Any ideas?
+>>>>
+>>>> Thanks,
+>>>> Bart
+>>>>
+>>>
+>>> Now that you have fixed the crash, can you answer the questions I have
+>>> asked earlier?
+>>>
+>>>> Can you post the output of this command so that I can see how your
+>>>
+>>> clocks are setup:
+>>>
+>>> cat /sys/kernel/debug/clk/clk_summary
+>>>
+>>>> Using your workaround, can you run:
+>>>
+>>>
+>>> cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
+>>>
+>>> If you see:
+>>>    1e27000.clock-controller: emac  off-0
+>>>
+>>> then genpd is not working like it is supposed to. You should see something
+>>> like this for device that are working:
+>>>            1e27000.clock-controller: uart2  on
+>>>      /devices/platform/soc@1c00000/1d0d000.serial        active
 >>
->> It also adds support for Qcom's arm-smmu-v2 variant that
->> has different clocks and power requirements.
+>> Hi David, Sekhar,
 >>
->> Took some reference from the exynos runtime patches [1].
+>> I tried booting the board today over tftp but didn't succeed. I then
+>> switched to a normal boot from SD card and the boot process froze at
+>> the same moment (right after the DHCP config, or after rtc config if I
+>> disabled DHCP in bootargs). I then realized that the emac clock can't
+>> be the culprit. After some digging I found out that the late_initcall
+>> to clk_disable_unused() disables sysclk6 - the parent of the arm
+>> clock, which of course freezes the device.
 >>
->> After another round of discussion [3], we now finally seem to be
->> in agreement to add a flag based on compatible, a flag that would
->> indicate if a particular implementation of arm-smmu supports
->> runtime pm or not.
->> This lets us to use the much-argued pm_runtime_get_sync/put_sync()
->> calls in map/unmap callbacks so that the clients do not have to
->> worry about handling any of the arm-smmu's power.
->> The patch that exported couple of pm_runtime suppliers APIS, viz.
->> pm_runtime_get_suppliers(), and pm_runtime_put_suppliers() can be
->> dropped since we don't have a user now for these APIs.
->> Thanks Rafael for reviewing the changes, but looks like we don't
->> need to export those APIs for some more time. :)
+>> If I remove the call to clk_disable_unused(), I can boot just fine.
 >>
->> Previous version of this patch series is @ [5].
-> Thanks for addressing my comments. There is still a bit of space for
-> improving the granularity of power management, as far as I understood
-> how it works on SDM845 correctly, but as a first step, this should at
-> least let things work.
+>> The following other clocks are disabled before pll0_sysclk6:
+>> pll1_sysclk3
+>> pll0_obsclk
+>> pll0_sysclk7
+>>
+>> davinci_lpsc_clk_enable() is never called for these clocks - in fact
+>> it's not called for any parent that's not explicitly defined in
+>> psc-da850.c - I believe this may be one of the reasons. I will get
+>> back to debugging it tomorrow.
+>>
+>> Best regards,
+>> Bartosz Golaszewski
+>>
+> 
+> Thanks for continuing to dig into this. I think I know what needs to
+> be done now. I think I don't have the dependencies quite right where
+> the PSC clocks are being registered before the PLL clocks, in which
+> case they aren't getting the correct parent clock.
+> 
 
-Sure. I will be sending a patch, based on this series, to add 
-'qcom,smmu-500'
-that enables *rpm_suported* flag for us.
-We can try to take care of some of the things with that.
-> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Bartosz,
 
-Thanks for the review.
-
-regards
-Vivek
->
-> Best regards,
-> Tomasz
+One more thing to check: I think I had some typos in da850.dtsi where
+I wrote clock_names instead of clock-names. Please make sure this is
+fixed in your working branch.
