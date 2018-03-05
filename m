@@ -1,111 +1,117 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v7 10/42] clk: davinci: New driver for davinci PSC clocks
-Date: Mon, 5 Mar 2018 14:02:17 +0100
-Message-ID: <CAMRc=Mdhi=byn4gPY6tVxgGjn9cgvc3smUkjV=Ku9i3euaZZtQ@mail.gmail.com>
-References: <1519071723-31790-1-git-send-email-david@lechnology.com>
- <1519071723-31790-11-git-send-email-david@lechnology.com> <CAMpxmJVxfGtO=kh63KF-5Uqew3yy97DsK4FSd14CyyRQTOhrTA@mail.gmail.com>
- <93696fc8-bb93-aa20-3506-3d7216c17cd2@lechnology.com> <CAMpxmJVpMgikNfB4HgNCs+ep+EOHqH5bthiW82LsnDqzLfE5mg@mail.gmail.com>
- <6bbe9bf3-24c1-acd9-200d-513520d34558@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [PATCH] regulator: core: Fix build errors
+Date: Mon, 05 Mar 2018 14:03:59 +0100
+Message-ID: <1520255039-11136-1-git-send-email-m.purski@samsung.com>
+References: <CGME20180305130412eucas1p225fe12cfbdec20475a578a2b0463d0f5@eucas1p2.samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6bbe9bf3-24c1-acd9-200d-513520d34558@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-clk@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Adam Ford <aford173@gmail.com>, LKML <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maciej Purski <m.purski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2018-03-01 17:44 GMT+01:00 David Lechner <david@lechnology.com>:
-> On 03/01/2018 02:36 AM, Bartosz Golaszewski wrote:
->>
->> 2018-02-28 22:40 GMT+01:00 David Lechner <david@lechnology.com>:
->>>
->>> On 02/28/2018 06:38 AM, Bartosz Golaszewski wrote:
->>>>
->>>>
->>>>
->>>> I think I found the reason for the strange crashes we were
->>>> experiencing (emac core->name being NULL) thanks to Sekhar who pointed
->>>> me in the right direction.
->>>>
->>>> The mdio driver fails to probe with v7 due to the supplied clock rate
->>>> being wrong. Before failing we register the emac clock with
->>>> pm_clk_add_clk(). When clock_ops puts the clock, it decreases the
->>>> reference count of the clock, but we never actually increased it in
->>>> the first place in the line above. The core clock code then destroys
->>>> the associated clk_core structure. When the next user comes around (in
->>>> our case the clk debug functions) the system crashes.
->>>>
->>>> I believe there to be two issues: one is with v7 - we need to increase
->>>> the clock reference count in davinci_psc_genpd_attach_dev().
->>>>
->>>> Second is the error path in the clock framework - we should remove the
->>>> destroyed clk_core from the debug list, which is not being done now.
->>>>
->>>> Why we even need to track the refcount of clk_core is a mistery for me
->>>> though. Stephen, Mike?
->>>>
->>>> Best regards,
->>>> Bartosz Golaszewski
->>>
->>>
->>>
->>> Great find. I figured it had to be something like this, but I wasn't
->>> able to reproduce the problem yet.
->>>
->>> I suppose it is time to spin up a v8 with some fixes.
->>
->>
->> I still don't know why the mdio clock rate is much lower than in
->> mainline though. Any ideas?
->>
->> Thanks,
->> Bart
->>
->
-> Now that you have fixed the crash, can you answer the questions I have
-> asked earlier?
->
->> Can you post the output of this command so that I can see how your
->
-> clocks are setup:
->
-> cat /sys/kernel/debug/clk/clk_summary
->
->> Using your workaround, can you run:
->
->
-> cat /sys/kernel/debug/pm_genpd/pm_genpd_summary
->
-> If you see:
->   1e27000.clock-controller: emac  off-0
->
-> then genpd is not working like it is supposed to. You should see something
-> like this for device that are working:
->           1e27000.clock-controller: uart2  on
->     /devices/platform/soc@1c00000/1d0d000.serial        active
+Build errors detected by kbuild test robot occur on non-of
+architectures.
 
-Hi David, Sekhar,
+This patch fixes this behavior as well as using plain integer instead
+of NULL in of_count_phandle_with_args().
 
-I tried booting the board today over tftp but didn't succeed. I then
-switched to a normal boot from SD card and the boot process froze at
-the same moment (right after the DHCP config, or after rtc config if I
-disabled DHCP in bootargs). I then realized that the emac clock can't
-be the culprit. After some digging I found out that the late_initcall
-to clk_disable_unused() disables sysclk6 - the parent of the arm
-clock, which of course freezes the device.
+Fixes: 0c55103 ("regulator: core: Parse coupled regulators properties")
+Signed-off-by: Maciej Purski <m.purski@samsung.com>
+---
+ drivers/regulator/internal.h     | 34 ++++++++++++++++++++++++++--------
+ drivers/regulator/of_regulator.c |  8 +++++---
+ 2 files changed, 31 insertions(+), 11 deletions(-)
 
-If I remove the call to clk_disable_unused(), I can boot just fine.
-
-The following other clocks are disabled before pll0_sysclk6:
-pll1_sysclk3
-pll0_obsclk
-pll0_sysclk7
-
-davinci_lpsc_clk_enable() is never called for these clocks - in fact
-it's not called for any parent that's not explicitly defined in
-psc-da850.c - I believe this may be one of the reasons. I will get
-back to debugging it tomorrow.
-
-Best regards,
-Bartosz Golaszewski
+diff --git a/drivers/regulator/internal.h b/drivers/regulator/internal.h
+index f253a47..485db15 100644
+--- a/drivers/regulator/internal.h
++++ b/drivers/regulator/internal.h
+@@ -63,6 +63,14 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
+ 			         const struct regulator_desc *desc,
+ 				 struct regulator_config *config,
+ 				 struct device_node **node);
++
++struct regulator_dev *of_parse_coupled_regulator(struct regulator_dev *rdev,
++						 int index);
++
++int of_get_n_coupled(struct regulator_dev *rdev);
++
++bool of_check_coupling_data(struct regulator_dev *rdev);
++
+ #else
+ static inline struct regulator_init_data *
+ regulator_of_get_init_data(struct device *dev,
+@@ -72,8 +80,25 @@ regulator_of_get_init_data(struct device *dev,
+ {
+ 	return NULL;
+ }
+-#endif
+ 
++static inline struct regulator_dev *
++of_parse_coupled_regulator(struct regulator_dev *rdev,
++			   int index)
++{
++	return NULL;
++}
++
++static inline int of_get_n_coupled(struct regulator_dev *rdev)
++{
++	return 0;
++}
++
++static inline bool of_check_coupling_data(struct regulator_dev *rdev)
++{
++	return false;
++}
++
++#endif
+ enum regulator_get_type {
+ 	NORMAL_GET,
+ 	EXCLUSIVE_GET,
+@@ -83,11 +108,4 @@ enum regulator_get_type {
+ 
+ struct regulator *_regulator_get(struct device *dev, const char *id,
+ 				 enum regulator_get_type get_type);
+-
+-struct regulator_dev *of_parse_coupled_regulator(struct regulator_dev *rdev,
+-						 int index);
+-
+-int of_get_n_coupled(struct regulator_dev *rdev);
+-
+-bool of_check_coupling_data(struct regulator_dev *rdev);
+ #endif
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index cf3210c..c6e61c7 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -421,7 +421,8 @@ int of_get_n_coupled(struct regulator_dev *rdev)
+ 	int n_phandles;
+ 
+ 	n_phandles = of_count_phandle_with_args(node,
+-						"regulator-coupled-with", 0);
++						"regulator-coupled-with",
++						NULL);
+ 
+ 	return (n_phandles > 0) ? n_phandles : 0;
+ }
+@@ -434,7 +435,8 @@ static bool of_coupling_find_node(struct device_node *src,
+ 	bool found = false;
+ 
+ 	n_phandles = of_count_phandle_with_args(src,
+-						"regulator-coupled-with", 0);
++						"regulator-coupled-with",
++						NULL);
+ 
+ 	for (i = 0; i < n_phandles; i++) {
+ 		struct device_node *tmp = of_parse_phandle(src,
+@@ -495,7 +497,7 @@ bool of_check_coupling_data(struct regulator_dev *rdev)
+ 
+ 		c_n_phandles = of_count_phandle_with_args(c_node,
+ 							  "regulator-coupled-with",
+-							  0);
++							  NULL);
+ 
+ 		if (c_n_phandles != n_phandles) {
+ 			dev_err(&rdev->dev, "number of couped reg phandles mismatch\n");
+-- 
+2.7.4
