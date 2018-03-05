@@ -1,208 +1,334 @@
-From: Maciej Purski <m.purski@samsung.com>
-Subject: Re: [PATCH v5 0/5] Add coupled regulators mechanism
-Date: Mon, 05 Mar 2018 15:40:07 +0100
-Message-ID: <6fc780e4-3594-2ca5-dc4e-7e147dc4e40f@samsung.com>
-References: <CGME20180302085118eucas1p15a6a5ec5f7f47a6f67a45c5e9495b120@eucas1p1.samsung.com>
-        <1519980169-8491-1-git-send-email-m.purski@samsung.com>
-        <CAOMZO5C3YPKvZN+aORA+Jga-P=XgfG2xw7u6Ose5p6Twet2KLw@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 2/2] watchdog: Add Nuvoton NPCM watchdog driver
+Date: Mon, 5 Mar 2018 06:29:50 -0800
+Message-ID: <3b5b9ee6-10a5-adf5-6cff-2e0efde215b3@roeck-us.net>
+References: <20180305114541.9917-1-joel@jms.id.au>
+ <20180305114541.9917-3-joel@jms.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAOMZO5C3YPKvZN+aORA+Jga-P=XgfG2xw7u6Ose5p6Twet2KLw@mail.gmail.com>
-Content-language: en-US
+In-Reply-To: <20180305114541.9917-3-joel@jms.id.au>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Doug Anderson <dianders@chromium.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Joel Stanley <joel@jms.id.au>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>, Avi Fishman <avifishman70@gmail.com>, Brendan Higgins <brendanhiggins@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
-thank you for your response.
-Could you tell me on which board precisely (on which DTS) has this issue occurred?
-Also, I don't understand, did you boot successfully and you got only a lockdep 
-warning or you encountered an actual deadlock?
+Hi Joel,
 
-Best regards,
-Maciej Purski
+On 03/05/2018 03:45 AM, Joel Stanley wrote:
+> The Nuvoton NPCM750 has a watchdog implemented as a single register
+> inside the timer peripheral.
+> 
+> This driver exposes that watchdog as a standard watchdog device with
+> coarse timeout intervals, limited by the combination of prescaler and
+> counter that is provided by the hardware. The calculation is taken from
+> the Nuvoton vendor tree.
+> 
+> There is a pre-timeout IRQ that is wired up. This timeout always occurs
+> 1024 clocks before the timeout.
+> 
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+> v2:
+>   - Make MODULE_LICENCE gpl v2 to match SPDX
+>   - Remove unused struct device pointer
+>   - Remove unused setting of drvdata
+>   - Add linux/bitops.h
+>   - Sort includes
+>   - Remove unused fiq include
+>   - Update timeout with achieved value
+> ---
+>   drivers/watchdog/Kconfig    |  11 +++
+>   drivers/watchdog/Makefile   |   1 +
+>   drivers/watchdog/npcm_wdt.c | 230 ++++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 242 insertions(+)
+>   create mode 100644 drivers/watchdog/npcm_wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index aff773bcebdb..0c1cc68894e6 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -513,6 +513,17 @@ config COH901327_WATCHDOG
+>   	  This watchdog is used to reset the system and thus cannot be
+>   	  compiled as a module.
+>   
+> +config NPCM7XX_WATCHDOG
+> +	bool "NPCM750 watchdog"
+> +	depends on ARCH_NPCM || COMPILE_TEST
+> +	default y if ARCH_NPCM750
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include Watchdog timer support for the
+> +	  watchdog embedded into the NPCM7xx.
+> +	  This watchdog is used to reset the system and thus cannot be
+> +	  compiled as a module.
+> +
+>   config TWL4030_WATCHDOG
+>   	tristate "TWL4030 Watchdog"
+>   	depends on TWL4030_CORE
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 0474d38aa854..97a5afb5cad2 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -61,6 +61,7 @@ obj-$(CONFIG_ORION_WATCHDOG) += orion_wdt.o
+>   obj-$(CONFIG_SUNXI_WATCHDOG) += sunxi_wdt.o
+>   obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
+>   obj-$(CONFIG_COH901327_WATCHDOG) += coh901327_wdt.o
+> +obj-$(CONFIG_NPCM7XX_WATCHDOG) += npcm_wdt.o
+>   obj-$(CONFIG_STMP3XXX_RTC_WATCHDOG) += stmp3xxx_rtc_wdt.o
+>   obj-$(CONFIG_NUC900_WATCHDOG) += nuc900_wdt.o
+>   obj-$(CONFIG_TS4800_WATCHDOG) += ts4800_wdt.o
+> diff --git a/drivers/watchdog/npcm_wdt.c b/drivers/watchdog/npcm_wdt.c
+> new file mode 100644
+> index 000000000000..2cfc58714d8d
+> --- /dev/null
+> +++ b/drivers/watchdog/npcm_wdt.c
+> @@ -0,0 +1,230 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2018 Nuvoton Technology corporation.
+> +// Copyright (c) 2018 IBM Corp.
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define NPCM_WTCR	0x1C
+> +
+> +#define NPCM_WTCLK	(BIT(10) | BIT(11))	/* Clock divider */
+> +#define NPCM_WTE	BIT(7)			/* Enable */
+> +#define NPCM_WTIE	BIT(6)			/* Enable irq */
+> +#define NPCM_WTIS	(BIT(4) | BIT(5))	/* Interval selection */
+> +#define NPCM_WTIF	BIT(3)			/* Interrupt flag*/
+> +#define NPCM_WTRF	BIT(2)			/* Reset flag */
+> +#define NPCM_WTRE	BIT(1)			/* Reset enable */
+> +#define NPCM_WTR	BIT(0)			/* Reset counter */
+> +
+> +/*
+> + * Watchdog timeouts
+> + *
+> + * 170     msec:    WTCLK=01 WTIS=00     VAL= 0x400
+> + * 670     msec:    WTCLK=01 WTIS=01     VAL= 0x410
+> + * 1360    msec:    WTCLK=10 WTIS=00     VAL= 0x800
+> + * 2700    msec:    WTCLK=01 WTIS=10     VAL= 0x420
+> + * 5360    msec:    WTCLK=10 WTIS=01     VAL= 0x810
+> + * 10700   msec:    WTCLK=01 WTIS=11     VAL= 0x430
+> + * 21600   msec:    WTCLK=10 WTIS=10     VAL= 0x820
+> + * 43000   msec:    WTCLK=11 WTIS=00     VAL= 0xC00
+> + * 85600   msec:    WTCLK=10 WTIS=11     VAL= 0x830
+> + * 172000  msec:    WTCLK=11 WTIS=01     VAL= 0xC10
+> + * 687000  msec:    WTCLK=11 WTIS=10     VAL= 0xC20
+> + * 2750000 msec:    WTCLK=11 WTIS=11     VAL= 0xC30
+> + */
+> +
+> +struct npcm_wdt {
+> +	struct watchdog_device  wdd;
+> +	void __iomem		*reg;
+> +};
+> +
+> +static inline struct npcm_wdt *to_npcm_wdt(struct watchdog_device *wdd)
+> +{
+> +	return container_of(wdd, struct npcm_wdt, wdd);
+> +}
+> +
+> +static int npcm_wdt_ping(struct watchdog_device *wdd)
+> +{
+> +	struct npcm_wdt *wdt = to_npcm_wdt(wdd);
+> +	u32 val;
+> +
+> +	val = readl(wdt->reg);
+> +	writel(val | NPCM_WTR, wdt->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static int npcm_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct npcm_wdt *wdt = to_npcm_wdt(wdd);
+> +	u32 val;
+> +
+> +	val = NPCM_WTRE | NPCM_WTE | NPCM_WTR | NPCM_WTIE;
+> +
+> +	if (wdd->timeout < 2) {
+> +		val |= 0x800;
+> +		wdd->timeout = 1;
+> +	} else if (wdd->timeout < 3) {
+> +		val |= 0x420;
+> +		wdd->timeout = 2;
+> +	} else if (wdd->timeout < 6) {
+> +		val |= 0x810;
+> +		wdd->timeout = 5;
+> +	} else if (wdd->timeout < 11) {
+> +		val |= 0x430;
+> +		wdd->timeout = 10;
+> +	} else if (wdd->timeout < 22) {
+> +		val |= 0x820;
+> +		wdd->timeout = 21;
+> +	} else if (wdd->timeout < 44) {
+> +		val |= 0xC00;
+> +		wdd->timeout = 43;
+> +	} else if (wdd->timeout < 87) {
+> +		val |= 0x830;
+> +		wdd->timeout = 86;
+> +	} else if (wdd->timeout < 173) {
+> +		val |= 0xC10;
+> +		wdd->timeout = 172;
+> +	} else if (wdd->timeout < 688) {
+> +		val |= 0xC20;
+> +		wdd->timeout = 687;
+> +	} else {
+> +		val |= 0xC30;
+> +		wdd->timeout = 2750;
+> +	}
+> +
+> +	writel(val, wdt->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static int npcm_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct npcm_wdt *wdt = to_npcm_wdt(wdd);
+> +
+> +	writel(0, wdt->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +
+> +static int npcm_wdt_set_timeout(struct watchdog_device *wdd,
+> +				unsigned int timeout)
+> +{
+> +	/* timeout is updated with the achieved value in npcm_wdt_start */
 
+Yes, but only if the watchdog is running. If it is not running, userspace
+would end up being confused. While it is extra effort, you'll have to set
+->timeout to the correct value here, not in the start function.
 
-On 03/05/2018 01:34 PM, Fabio Estevam wrote:
-> Hi Maciej,
-> 
-> On Fri, Mar 2, 2018 at 5:42 AM, Maciej Purski <m.purski@samsung.com> wrote:
->> Hi all,
->>
->> this patchset adds a new mechanism to the framework - regulators' coupling.
->>
->> On Odroid XU3/4 and other Exynos5422 based boards there is a case, that
->> different devices on the board are supplied by different regulators
->> with non-fixed voltages. If one of these devices temporarily requires
->> higher voltage, there might occur a situation that the spread between
->> devices' voltages is so high, that there is a risk of changing
->> 'high' and 'low' states on the interconnection between devices powered
->> by those regulators.
->>
->> Algorithmicaly the problem was solved by:
->> Inderpal Singh <inderpal.s@samsung.com>
->> Doug Anderson <dianders@chromium.org>
->>
->> The discussion on that subject can be found here:
->> https://lkml.org/lkml/2014/4/29/28
->>
->> Therefore this patchset is an attempt to apply the idea to regulators core
->> as concluded in the discussion by Mark Brown and Doug Anderson.
->>
->> This feature is required to enable support for generic CPUfreq
->> and devfreq drivers for the mentioned boards.
->>
->> Note on the locking model:
->> When balancing voltage of a group of coupled regulators, we lock all
->> of them for the whole operation. When voltage of an individual regulator
->> is about to change, its suppliers are additionally locked.
->>
->> The current assumption is that an uncoupled regulator is a special case
->> of a coupled one, so they should share a common voltage setting path.
-> 
-> This series breaks has reached linux-next 20180305 and it breaks
-> booting on imx6:
-> 
-> [    0.269646] imx-pgc-pd imx-pgc-power-domain.0: Linked as a consumer
-> to 20dc000.gpc
-> [    0.270348]
-> [    0.270363] ============================================
-> [    0.270373] WARNING: possible recursive locking detected
-> [    0.270385] 4.16.0-rc3-next-20180305 #156 Not tainted
-> [    0.270397] --------------------------------------------
-> [    0.270408] swapper/0/1 is trying to acquire lock:
-> [    0.270419]  (&rdev->mutex){+.+.}, at: [<c04d80c4>]
-> regulator_lock_supply+0x24/0x44
-> [    0.270460]
-> [    0.270460] but task is already holding lock:
-> [    0.270471]  (&rdev->mutex){+.+.}, at: [<c04dc6e4>]
-> regulator_enable+0x78/0x298
-> [    0.270502]
-> [    0.270502] other info that might help us debug this:
-> [    0.270513]  Possible unsafe locking scenario:
-> [    0.270513]
-> [    0.270523]        CPU0
-> [    0.270532]        ----
-> [    0.270540]   lock(&rdev->mutex);
-> [    0.270555]   lock(&rdev->mutex);
-> [    0.270572]
-> [    0.270572]  *** DEADLOCK ***
-> [    0.270572]
-> [    0.270585]  May be due to missing lock nesting notation
-> [    0.270585]
-> [    0.270598] 3 locks held by swapper/0/1:
-> [    0.270606]  #0:  (&dev->mutex){....}, at: [<c057f368>]
-> __driver_attach+0x58/0xcc
-> [    0.270642]  #1:  (&dev->mutex){....}, at: [<c057f378>]
-> __driver_attach+0x68/0xcc
-> [    0.270672]  #2:  (&rdev->mutex){+.+.}, at: [<c04dc6e4>]
-> regulator_enable+0x78/0x298
-> [    0.270701]
-> [    0.270701] stack backtrace:
-> [    0.270719] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-> 4.16.0-rc3-next-20180305 #156
-> [    0.270731] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-> [    0.270741] Backtrace:
-> [    0.270767] [<c010d154>] (dump_backtrace) from [<c010d414>]
-> (show_stack+0x18/0x1c)
-> [    0.270783]  r7:00000000 r6:60000093 r5:00000000 r4:c1078360
-> [    0.270805] [<c010d3fc>] (show_stack) from [<c0a4724c>]
-> (dump_stack+0xb4/0xe8)
-> [    0.270830] [<c0a47198>] (dump_stack) from [<c0174f4c>]
-> (__lock_acquire+0x13a4/0x199c)
-> [    0.270848]  r9:c17d75fc r8:c11ae35c r7:c17c73b0 r6:ec060000
-> r5:ec060570 r4:c11ae35c
-> [    0.270867] [<c0173ba8>] (__lock_acquire) from [<c0175d68>]
-> (lock_acquire+0x70/0x90)
-> [    0.270883]  r10:00000000 r9:ec195800 r8:00000001 r7:00000001
-> r6:60000013 r5:00000000
-> [    0.270893]  r4:ffffe000
-> [    0.270914] [<c0175cf8>] (lock_acquire) from [<c0a60760>]
-> (__mutex_lock+0x64/0x978)
-> [    0.270929]  r8:00000001 r7:00000001 r6:00000000 r5:00000000 r4:ec00b89c
-> [    0.270947] [<c0a606fc>] (__mutex_lock) from [<c0a61098>]
-> (mutex_lock_nested+0x24/0x2c)
-> [    0.270963]  r10:00000000 r9:ec195800 r8:00000001 r7:00000001
-> r6:ec195800 r5:00000000
-> [    0.270975]  r4:ec00b800
-> [    0.270992] [<c0a61074>] (mutex_lock_nested) from [<c04d80c4>]
-> (regulator_lock_supply+0x24/0x44)
-> [    0.271013] [<c04d80a0>] (regulator_lock_supply) from [<c04da9b0>]
-> (regulator_balance_voltage+0x298/0x584)
-> [    0.271024]  r5:000b1008 r4:ec195800
-> [    0.271042] [<c04da718>] (regulator_balance_voltage) from
-> [<c04dc748>] (regulator_enable+0xdc/0x298)
-> [    0.271059]  r10:00000000 r9:00000000 r8:00000001 r7:00000001
-> r6:ec195800 r5:ec195824
-> [    0.271069]  r4:00000001
-> [    0.271086] [<c04dc66c>] (regulator_enable) from [<c04d6dd8>]
-> (imx6_pm_domain_power_on+0x30/0x1b4)
-> [    0.271102]  r9:00000000 r8:c102d114 r7:c1008908 r6:c102d114
-> r5:ec3d7a00 r4:ec3d7a00
-> [    0.271119] [<c04d6da8>] (imx6_pm_domain_power_on) from
-> [<c04d6d18>] (imx_pgc_power_domain_probe+0x64/0xf4)
-> [    0.271135]  r8:c102d114 r7:ec49c810 r6:c102d114 r5:ec49c800 r4:ec3d7a00
-> [    0.271153] [<c04d6cb4>] (imx_pgc_power_domain_probe) from
-> [<c0580ef0>] (platform_drv_probe+0x54/0xb8)
-> [    0.271168]  r7:fffffdfb r6:c102d114 r5:ec49c810 r4:ec49c810
-> [    0.271189] [<c0580e9c>] (platform_drv_probe) from [<c057f288>]
-> (driver_probe_device+0x2b0/0x338)
-> [    0.271204]  r7:c17e234c r6:00000000 r5:c17e2348 r4:ec49c810
-> [    0.271222] [<c057efd8>] (driver_probe_device) from [<c057f3d8>]
-> (__driver_attach+0xc8/0xcc)
-> [    0.271237]  r10:c0f00630 r9:00000000 r8:c1008908 r7:c1008908
-> r6:ec49c844 r5:c102d114
-> [    0.271248]  r4:ec49c810 r3:00000000
-> [    0.271267] [<c057f310>] (__driver_attach) from [<c057d348>]
-> (bus_for_each_dev+0x6c/0xbc)
-> [    0.271280]  r7:c1008908 r6:c057f310 r5:c102d114 r4:00000000
-> [    0.271298] [<c057d2dc>] (bus_for_each_dev) from [<c057eb64>]
-> (driver_attach+0x20/0x28)
-> [    0.271314]  r7:00000000 r6:c103b0a8 r5:ec479b00 r4:c102d114
-> [    0.271332] [<c057eb44>] (driver_attach) from [<c057e588>]
-> (bus_add_driver+0x18c/0x214)
-> [    0.271351] [<c057e3fc>] (bus_add_driver) from [<c057fdbc>]
-> (driver_register+0x80/0x100)
-> [    0.271366]  r7:c0e125e4 r6:c0f63850 r5:c0f41c18 r4:c102d114
-> [    0.271383] [<c057fd3c>] (driver_register) from [<c0580e44>]
-> (__platform_driver_register+0x38/0x4c)
-> [    0.271396]  r5:c0f41c18 r4:ffffe000
-> [    0.271418] [<c0580e0c>] (__platform_driver_register) from
-> [<c0f41c30>] (imx_pgc_power_domain_driver_init+0x18/0x20)
-> [    0.271438] [<c0f41c18>] (imx_pgc_power_domain_driver_init) from
-> [<c0102764>] (do_one_initcall+0x50/0x1a0)
-> [    0.271464] [<c0102714>] (do_one_initcall) from [<c0f00f04>]
-> (kernel_init_freeable+0x118/0x1d0)
-> [    0.271481]  r9:c0f63858 r8:000000f2 r7:c0e125e4 r6:c0f63850
-> r5:c1079f80 r4:c0f77ab4
-> [    0.271508] [<c0f00dec>] (kernel_init_freeable) from [<c0a5c6f0>]
-> (kernel_init+0x10/0x118)
-> [    0.271524]  r10:00000000 r9:00000000 r8:00000000 r7:00000000
-> r6:00000000 r5:c0a5c6e0
-> [    0.271533]  r4:00000000
-> [    0.271552] [<c0a5c6e0>] (kernel_init) from [<c01010b4>]
-> (ret_from_fork+0x14/0x20)
-> [    0.271564] Exception stack(0xec069fb0 to 0xec069ff8)
-> [    0.271579] 9fa0:                                     00000000
-> 00000000 00000000 00000000
-> [    0.271594] 9fc0: 00000000 00000000 00000000 00000000 00000000
-> 00000000 00000000 00000000
-> [    0.271609] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> [    0.271621]  r5:c0a5c6e0 r4:00000000
-> [    0.271723] imx-pgc-pd imx-pgc-power-domain.1: Linked as a consumer
-> to 20dc000.gpc
-> [    0.273566] 2020000.serial: ttymxc0 at MMIO 0x2020000 (irq = 26,
-> base_baud = 5000000) is a IMX
-> [    1.660948] console [ttymxc0] enabled
-> [    1.666242] 21ec000.serial: ttymxc2 at MMIO 0x21ec000 (irq = 65,
-> base_baud = 5000000) is a IMX
-> [    1.683484] etnaviv etnaviv: bound 130000.gpu (ops gpu_ops)
-> [    1.689464] etnaviv etnaviv: bound 134000.gpu (ops gpu_ops)
-> 
-> If I revert this series I am able to boot again.
-> 
-> 
+> +	wdd->timeout = timeout;
+> +	if (watchdog_active(wdd))
+> +		npcm_wdt_start(wdd);
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t npcm_wdt_interrupt(int irq, void *data)
+> +{
+> +	struct npcm_wdt *wdt = data;
+> +
+> +	watchdog_notify_pretimeout(&wdt->wdd);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int npcm_wdt_restart(struct watchdog_device *wdd,
+> +			    unsigned long action, void *data)
+> +{
+> +	struct npcm_wdt *wdt = to_npcm_wdt(wdd);
+> +
+> +	writel(NPCM_WTR | NPCM_WTRE | NPCM_WTE, wdt->reg);
+> +	udelay(1000);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct watchdog_info npcm_wdt_info = {
+> +	.identity	= KBUILD_MODNAME,
+> +	.options	= WDIOF_SETTIMEOUT
+> +			| WDIOF_KEEPALIVEPING
+> +			| WDIOF_MAGICCLOSE,
+> +};
+> +
+> +static const struct watchdog_ops npcm_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = npcm_wdt_start,
+> +	.stop = npcm_wdt_stop,
+> +	.ping = npcm_wdt_ping,
+> +	.set_timeout = npcm_wdt_set_timeout,
+> +	.restart = npcm_wdt_restart,
+> +};
+> +
+> +static int npcm_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct npcm_wdt *wdt;
+> +	struct resource *res;
+> +	int irq;
+> +	int ret;
+> +
+> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	wdt->reg = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(wdt->reg))
+> +		return PTR_ERR(wdt->reg);
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (!irq)
+> +		return -EINVAL;
+> +
+> +	wdt->wdd.info = &npcm_wdt_info;
+> +	wdt->wdd.ops = &npcm_wdt_ops;
+> +	wdt->wdd.min_timeout = 1;
+> +	wdt->wdd.max_timeout = 2750;
+> +	wdt->wdd.parent = dev;
+> +
+> +	wdt->wdd.timeout = 86;
+> +	watchdog_init_timeout(&wdt->wdd, 0, dev);
+> +
+
+One thought ...
+
+The rest of the code suggests that it is possible to detect if the watchdog
+is already running, and its selected timeout. While not mandatory, it might
+make sense to detect that situation, tell the watchdog core, and keep it running.
+
+Otherwise, it might make sense to call the stop function before registering
+the watchdog to ensure that it isn't running.
+
+> +	ret = devm_request_irq(dev, irq, npcm_wdt_interrupt, 0,
+> +			"watchdog", wdt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_watchdog_register_device(dev, &wdt->wdd);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register watchdog\n");
+> +		return ret;
+> +	}
+> +
+> +	dev_info(dev, "NPCM watchdog driver enabled\n");
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id npcm_wdt_match[] = {
+> +	{.compatible = "nuvoton,npcm750-wdt"},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, npcm_wdt_match);
+> +#endif
+> +
+> +static struct platform_driver npcm_wdt_driver = {
+> +	.probe		= npcm_wdt_probe,
+> +	.driver		= {
+> +		.name	= "npcm-wdt",
+> +		.of_match_table = of_match_ptr(npcm_wdt_match),
+> +	},
+> +};
+> +module_platform_driver(npcm_wdt_driver);
+> +
+> +MODULE_AUTHOR("Joel Stanley");
+> +MODULE_DESCRIPTION("Watchdog driver for NPCM");
+> +MODULE_LICENSE("GPL v2");
 > 
