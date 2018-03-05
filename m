@@ -1,59 +1,118 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 2/2] watchdog: Add Nuvoton NPCM watchdog driver
-Date: Mon, 5 Mar 2018 16:13:28 +1030
-Message-ID: <CACPK8XfBphFYxJKbHBWLjZFOOVt6m-c7fDZvFwqbBNx+0dm+DQ@mail.gmail.com>
-References: <20180302063746.10993-1-joel@jms.id.au> <20180302063746.10993-3-joel@jms.id.au>
- <684152b5-4992-68b5-5abf-78ea2d6b34bc@roeck-us.net>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
+ slave
+Date: Mon, 5 Mar 2018 07:28:24 +0100 (CET)
+Message-ID: <1219888621.198216.1520231304685@email.1und1.de>
+References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+ <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
+ <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
+ <648118289.71086.1519593373795@email.1und1.de>
+ <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
+ <395166283.280598.1520200683559@email.1und1.de>
+ <423BE2B6-2209-4390-B420-FA7267318A09@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <684152b5-4992-68b5-5abf-78ea2d6b34bc@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tomer Maimon <tmaimon77@gmail.com>, Avi Fishman <avifishman70@gmail.com>, Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <423BE2B6-2209-4390-B420-FA7267318A09@holtmann.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hedberg <johan.hedberg@gmail.com>, =?UTF-8?Q?Fr=C3=A9d=C3=A9ric_Danis?= <frederic.danis.oss@gmail.com>, Phil Elwell <phil@raspberrypi.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Lukas Wunner <lukas@wunner.de>, linux-rpi-kernel@lists.infradead.org, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 3, 2018 at 12:29 AM, Guenter Roeck <linux@roeck-us.net> wrote:
->> +static int npcm_wdt_start(struct watchdog_device *wdd)
->> +{
->> +       struct npcm_wdt *wdt = to_npcm_wdt(wdd);
->> +       u32 val;
->> +
->> +       val = NPCM_WTRE | NPCM_WTE | NPCM_WTR | NPCM_WTIE;
->> +
->> +       if (wdd->timeout < 2)
->> +               val |= 0x800;
->> +       else if (wdd->timeout < 3)
->> +               val |= 0x420;
->> +       else if (wdd->timeout < 6)
->> +               val |= 0x810;
->> +       else if (wdd->timeout < 11)
->> +               val |= 0x430;
->> +       else if (wdd->timeout < 22)
->> +               val |= 0x820;
->> +       else if (wdd->timeout < 44)
->> +               val |= 0xC00;
->> +       else if (wdd->timeout < 87)
->> +               val |= 0x830;
->> +       else if (wdd->timeout < 173)
->> +               val |= 0xC10;
->> +       else if (wdd->timeout < 688)
->> +               val |= 0xC20;
->> +       else if (wdd->timeout < 2751)
->> +               val |= 0xC30;
->> +       else
->> +               val |= 0x830;
->
->
-> I am lost here. If the requested timeout is 2751, the actual timeout
-> is set to 85.6 seconds. Why ?
->
-
-I suspect this was the default, so the original code decided to fall
-back to this value.
-
-I think it would make more sense to use 2750.
-
-Cheers,
-
-Joel
+SGkgTWFyY2VsLAoKPiBNYXJjZWwgSG9sdG1hbm4gPG1hcmNlbEBob2x0bWFubi5vcmc+IGhhdCBh
+bSA1LiBNw6RyeiAyMDE4IHVtIDA2OjE5IGdlc2NocmllYmVuOgo+IAo+IAo+IEhpIFN0ZWZhbiwK
+PiAKPiA+Pj4+PiBBZGQgQkNNNDM0MzggKGJsdWV0b290aCkgYXMgYSBzZXJkZXYgc2xhdmUgZGV2
+aWNlIG9mIHVhcnQwIChwbDAxMS90dHlBTUEwKS4KPiA+Pj4+PiBUaGlzIGFsbG93cyB0byBhdXRv
+bWF0aWNhbGx5IGluc2VydCB0aGUgYmNtNDM0MzggdG8gdGhlIGJsdWV0b290aAo+ID4+Pj4+IHN1
+YnN5c3RlbSBpbnN0ZWFkIG9mIHJlbHlpbmcgb24gcGF0Y2hlZCB1c2Vyc3BhY2UgaGVscGVycyAo
+aGNpYXR0YWNoKS4KPiA+Pj4+PiAKPiA+Pj4+PiBJbiBvcmRlciB0byBrZWVwIGEgZGVidWcgVUFS
+VCB3ZSBuZWVkIHRvIHN3aXRjaCB0byB1YXJ0MS4KPiA+Pj4+PiAKPiA+Pj4+PiBTaWduZWQtb2Zm
+LWJ5OiBTdGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+ID4+Pj4+IC0tLQo+
+ID4+Pj4+IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLXplcm8tdy5kdHMgfCAxNCArKysr
+KysrKysrKysrLQo+ID4+Pj4+IDEgZmlsZSBjaGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAxIGRl
+bGV0aW9uKC0pCj4gPj4+Pj4gCj4gPj4+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2JjbTI4MzUtcnBpLXplcm8tdy5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16
+ZXJvLXcuZHRzCj4gPj4+Pj4gaW5kZXggY2Y1MzQzNi4uYjdmNzlmMSAxMDA2NDQKPiA+Pj4+PiAt
+LS0gYS9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS16ZXJvLXcuZHRzCj4gPj4+Pj4gKysr
+IGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjgzNS1ycGktemVyby13LmR0cwo+ID4+Pj4+IEBAIC0x
+MzEsNiArMTMxLDE4IEBACj4gPj4+Pj4gCj4gPj4+Pj4gJnVhcnQwIHsKPiA+Pj4+PiAJcGluY3Ry
+bC1uYW1lcyA9ICJkZWZhdWx0IjsKPiA+Pj4+PiAtCXBpbmN0cmwtMCA9IDwmdWFydDBfZ3BpbzE0
+PjsKPiA+Pj4+PiArCXBpbmN0cmwtMCA9IDwmdWFydDBfZ3BpbzMyICZ1YXJ0MF9jdHNydHNfZ3Bp
+bzMwPjsKPiA+Pj4+PiArCXN0YXR1cyA9ICJva2F5IjsKPiA+Pj4+PiArCj4gPj4+Pj4gKwlibHVl
+dG9vdGggewo+ID4+Pj4+ICsJCWNvbXBhdGlibGUgPSAiYnJjbSxiY200MzQzOC1idCI7Cj4gPj4+
+Pj4gKwkJbWF4LXNwZWVkID0gPDIwMDAwMDA+Owo+ID4+Pj4+ICsJCXNodXRkb3duLWdwaW9zID0g
+PCZncGlvIDQ1IEdQSU9fQUNUSVZFX0hJR0g+Owo+ID4+Pj4+ICsJfTsKPiA+Pj4+PiArfTsKPiA+
+Pj4+IAo+ID4+Pj4gaXMgdGhlIHNodXRkb3duIEdQSU8gd29ya2luZyBhcyBleHBlY3RlZCB3aXRo
+IHRoaXMgaGFyZHdhcmUuIFNvIGV2ZW4gbW9kdWxlIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZp
+bmU/Cj4gPj4+IAo+ID4+PiBZZXMsIHVubG9hZCBhbmQgcmVsb2FkIHdvcmtzIGZpbmUuIAo+ID4+
+PiAKPiA+Pj4+IE1lYW5pbmcgd2UgYXJlIGdldHRpbmcgYmFjayB0byB0aGUgMTE1MjAwIGRlZmF1
+bHQgYmF1ZCByYXRlIG9uIHRoZSBVQVJUPwo+ID4+PiAKPiA+Pj4gSSBhc3N1bWUgdGhhdCwgYmVj
+YXVzZSByZWxvYWQgd29ya3MgYXMgZXhwZWN0ZWQuIAo+ID4+IAo+ID4+IGF3ZXNvbWUuIFRoYXQg
+aXMgZ29vZCBuZXdzLgo+ID4+IAo+ID4+IFNpbmNlIHlvdSBzYWlkIHRoYXQgdGhlIEdQSU8gZXhw
+YW5kZXIgZHJpdmVyIGZvciB0aGUgUlBpIDMgaGFzIGJlZW4gYWNjZXB0ZWQsIGRpZCB5b3UgdGVz
+dCBpdCB0aGVyZSBhcyB3ZWxsPyBJZiBzbywgdGhlbiBpdCB3b3VsZCBiZSBnb29kIHRvIGdldCBh
+IHBhdGNoIHRoYXQgYWxzbyBwcm92aWRlcyBzaHV0ZG93bi1ncGlvcyBmb3IgUlBpIDMuCj4gPiAK
+PiA+IHNvIGhlcmUgY29tZXMgdGhlIGJhZCBuZXdzLiBoY2lfYmNtIHVzZXMgZ3Bpb2Rfc2V0X3Zh
+bHVlKCkgd2hpY2ggaXMgZm9yIGludGVycnVwdCBjb250ZXh0LCBidXQgdGhlIGdwaW8gZXhwYW5k
+ZXIgY2FuIHNsZWVwLiBTbyB3ZSB3aWxsIGdldCB0aGlzIHdhcm5pbmc6Cj4gPiAKPiA+IFsgICAg
+NC44MDI0NDddIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQo+ID4gWyAgICA0
+LjgwMjQ4NV0gV0FSTklORzogQ1BVOiAzIFBJRDogOTEgYXQgZHJpdmVycy9ncGlvL2dwaW9saWIu
+YzoyOTg2IGdwaW9kX3NldF92YWx1ZSsweDUwLzB4NTgKPiA+IFsgICAgNC44MDI0ODldIE1vZHVs
+ZXMgbGlua2VkIGluOiBoY2lfdWFydCBhYzk3X2J1cyBidGJjbSBzbmRfcGNtX2RtYWVuZ2luZSBi
+bHVldG9vdGggc25kX3BjbSBzbmRfdGltZXIgZWNkaF9nZW5lcmljIHNuZCBzb3VuZGNvcmUgYmNt
+MjgzNV90aGVybWFsIGNyYzMyX2FybV9jZQo+ID4gWyAgICA0LjgwMjU0M10gQ1BVOiAzIFBJRDog
+OTEgQ29tbToga3dvcmtlci91ODoyIE5vdCB0YWludGVkIDQuMTYuMC1yYzMtbmV4dC0yMDE4MDMw
+Mi1kaXJ0eSAjNAo+ID4gWyAgICA0LjgwMjU0N10gSGFyZHdhcmUgbmFtZTogQkNNMjgzNQo+ID4g
+WyAgICA0LjgwMjU2Ml0gV29ya3F1ZXVlOiBldmVudHNfdW5ib3VuZCBhc3luY19ydW5fZW50cnlf
+Zm4KPiA+IFsgICAgNC44MDI1OTNdIFs8YzAzMTE5YTQ+XSAodW53aW5kX2JhY2t0cmFjZSkgZnJv
+bSBbPGMwMzBjYzI0Pl0gKHNob3dfc3RhY2srMHgxMC8weDE0KQo+ID4gWyAgICA0LjgwMjYxMl0g
+WzxjMDMwY2MyND5dIChzaG93X3N0YWNrKSBmcm9tIFs8YzBkOGU5ZGM+XSAoZHVtcF9zdGFjaysw
+eDhjLzB4YTApCj4gPiBbICAgIDQuODAyNjI4XSBbPGMwZDhlOWRjPl0gKGR1bXBfc3RhY2spIGZy
+b20gWzxjMDM0M2EyYz5dIChfX3dhcm4rMHhlMC8weGY4KQo+ID4gWyAgICA0LjgwMjY0MF0gWzxj
+MDM0M2EyYz5dIChfX3dhcm4pIGZyb20gWzxjMDM0M2I1Yz5dICh3YXJuX3Nsb3dwYXRoX251bGwr
+MHg0MC8weDQ4KQo+ID4gWyAgICA0LjgwMjY1Ml0gWzxjMDM0M2I1Yz5dICh3YXJuX3Nsb3dwYXRo
+X251bGwpIGZyb20gWzxjMDZkMGRlMD5dIChncGlvZF9zZXRfdmFsdWUrMHg1MC8weDU4KQo+ID4g
+WyAgICA0LjgwMjY5M10gWzxjMDZkMGRlMD5dIChncGlvZF9zZXRfdmFsdWUpIGZyb20gWzxiZjBl
+MmU5MD5dIChiY21fZ3Bpb19zZXRfc2h1dGRvd24rMHhjLzB4MTQgW2hjaV91YXJ0XSkKPiA+IFsg
+ICAgNC44MDI3NTddIFs8YmYwZTJlOTA+XSAoYmNtX2dwaW9fc2V0X3NodXRkb3duIFtoY2lfdWFy
+dF0pIGZyb20gWzxiZjBlMmE2ND5dIChiY21fZ3Bpb19zZXRfcG93ZXIrMHgxOC8weDE0MCBbaGNp
+X3VhcnRdKQo+ID4gWyAgICA0LjgwMjgwNl0gWzxiZjBlMmE2ND5dIChiY21fZ3Bpb19zZXRfcG93
+ZXIgW2hjaV91YXJ0XSkgZnJvbSBbPGJmMGUyZTRjPl0gKGJjbV9zZXJkZXZfcHJvYmUrMHg2NC8w
+eDljIFtoY2lfdWFydF0pCj4gPiBbICAgIDQuODAyODQ4XSBbPGJmMGUyZTRjPl0gKGJjbV9zZXJk
+ZXZfcHJvYmUgW2hjaV91YXJ0XSkgZnJvbSBbPGMwOGYyNTI4Pl0gKGRyaXZlcl9wcm9iZV9kZXZp
+Y2UrMHgyNTQvMHgzMmMpCj4gPiBbICAgIDQuODAyODYzXSBbPGMwOGYyNTI4Pl0gKGRyaXZlcl9w
+cm9iZV9kZXZpY2UpIGZyb20gWzxjMDhmMjZhND5dIChfX2RyaXZlcl9hdHRhY2grMHhhNC8weGE4
+KQo+ID4gWyAgICA0LjgwMjg3OF0gWzxjMDhmMjZhND5dIChfX2RyaXZlcl9hdHRhY2gpIGZyb20g
+WzxjMDhmMDhiOD5dIChidXNfZm9yX2VhY2hfZGV2KzB4NzQvMHhiNCkKPiA+IFsgICAgNC44MDI4
+OTVdIFs8YzA4ZjA4Yjg+XSAoYnVzX2Zvcl9lYWNoX2RldikgZnJvbSBbPGMwMzY2NDk4Pl0gKGFz
+eW5jX3J1bl9lbnRyeV9mbisweDQ0LzB4MTA4KQo+ID4gWyAgICA0LjgwMjkxMF0gWzxjMDM2NjQ5
+OD5dIChhc3luY19ydW5fZW50cnlfZm4pIGZyb20gWzxjMDM1ZDU5ND5dIChwcm9jZXNzX29uZV93
+b3JrKzB4MjAwLzB4NGY4KQo+ID4gWyAgICA0LjgwMjkyM10gWzxjMDM1ZDU5ND5dIChwcm9jZXNz
+X29uZV93b3JrKSBmcm9tIFs8YzAzNWU0YTg+XSAod29ya2VyX3RocmVhZCsweDRjLzB4NWQ0KQo+
+ID4gWyAgICA0LjgwMjkzOF0gWzxjMDM1ZTRhOD5dICh3b3JrZXJfdGhyZWFkKSBmcm9tIFs8YzAz
+NjMzMDA+XSAoa3RocmVhZCsweDE1MC8weDE1OCkKPiA+IFsgICAgNC44MDI5NTJdIFs8YzAzNjMz
+MDA+XSAoa3RocmVhZCkgZnJvbSBbPGMwMzAxMGU4Pl0gKHJldF9mcm9tX2ZvcmsrMHgxNC8weDJj
+KQo+ID4gWyAgICA0LjgwMjk1N10gRXhjZXB0aW9uIHN0YWNrKDB4ZWQ5NTlmYjAgdG8gMHhlZDk1
+OWZmOCkKPiA+IFsgICAgNC44MDI5NjZdIDlmYTA6ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwCj4gPiBbICAgIDQu
+ODAyOTc3XSA5ZmMwOiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAw
+MCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMAo+ID4gWyAgICA0LjgwMjk4Nl0gOWZlMDogMDAw
+MDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMTMgMDAwMDAwMDAKPiA+IFsg
+ICAgNC44MDI5OTNdIC0tLVsgZW5kIHRyYWNlIGI5NDdmOWQ0YzQwZmEyNjEgXeKAlAo+IAo+IHRo
+YXQgaXMgd2VpcmQgc2luY2Ugd2Ugc2hvdWxkIGJlIGVpdGhlciBpbiBhIHByb2JlIGNvbnRleHQg
+b3IgaW4gaGRldi0+b3BlbiBjb250ZXh0IGFuZCBib3RoIGNhbiBzbGVlcCBhcyBmYXIgYXMgSSBr
+bm93LgoKb2theSBpbiB0aGlzIGNhc2Ugd2UgY2FuIHJlcGxhY2UgZ3Bpb2Rfc2V0X3ZhbHVlIHdp
+dGggZ3Bpb2Rfc2V0X3ZhbHVlX2NhbnNsZWVwLgoKU3RlZmFuCgo+IAo+IFJlZ2FyZHMKPiAKPiBN
+YXJjZWwKPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
