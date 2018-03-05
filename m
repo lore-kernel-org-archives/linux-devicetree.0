@@ -1,44 +1,53 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 0/5] VCHI DT bindings
-Date: Mon,  5 Mar 2018 12:28:01 -0800
-Message-ID: <20180305202806.21219-1-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 4/5] ARM: dts: bcm2835: Add VCHI node to the Raspberry Pi
+ boards.
+Date: Mon,  5 Mar 2018 12:28:05 -0800
+Message-ID: <20180305202806.21219-5-eric@anholt.net>
+References: <20180305202806.21219-1-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180305202806.21219-1-eric@anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This series removes a gross DT property and adds a DT binding for the
-VCHI driver so that we can start probing it automatically on RPi.
+The VCHI firmware communication channel operates in parallel with our
+other mailbox-based channel.  This is the communication channel that
+exposes the firmware's media decode/encode and ISP interfaces.
 
-This is useful immediately as it lets you use vcgencmd for measuring
-clocks (we have code for this in Linux but no userland interface).
-It'll also be useful as a base for getting the consumer drivers to
-probe automatically, which I'm expecting we'll do using a bus provided
-by VCHI, since we'll be able to do some service discovery on VCHI.
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-VCHI itself can't just use a bus from the firmware driver, because of
-the regs and interrupts -- the firmware link it has is just to allow a
-request to the VPU to bring up VCHI on this hardware doorbell.
-
-Greg: I'm good with merging patch 1 whenever, but I'd like to make
-sure Stefan has a chance to take a look at the cache-line-size
-property change, at least.
-
-Eric Anholt (5):
-  staging: vc04_services: Remove dead FRAGMENTS_T
-  staging: vc04_services: Remove cache-line-size property.
-  dt-bindings: soc: Add a binding for the Broadcom VCHI services.
-  ARM: dts: bcm2835: Add VCHI node to the Raspberry Pi boards.
-  staging: vc04_services: Mark the "DT bindings" job done.
-
- .../bindings/soc/bcm/brcm,bcm2835-vchiq.txt        | 18 ++++++++++++++++
- arch/arm/boot/dts/bcm2835-rpi.dtsi                 |  7 ++++++
- drivers/staging/vc04_services/interface/vchi/TODO  |  9 ++------
- .../interface/vchiq_arm/vchiq_2835_arm.c           | 25 +++++++---------------
- .../interface/vchiq_arm/vchiq_pagelist.h           |  6 ------
- 5 files changed, 35 insertions(+), 30 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
-
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index e36c392a2b8f..c128bc6a1435 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -27,6 +27,13 @@
+ 			firmware = <&firmware>;
+ 			#power-domain-cells = <1>;
+ 		};
++
++		vchi@7e00b840 {
++			compatible = "brcm,bcm2835-vchiq";
++			reg = <0x7e00b840 0xf>;
++			interrupts = <0 2>;
++			firmware = <&firmware>;
++		};
+ 	};
+ };
+ 
 -- 
 2.16.2
