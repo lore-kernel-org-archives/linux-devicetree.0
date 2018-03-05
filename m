@@ -1,90 +1,48 @@
-Return-Path: <SRS0=Ax0d=F6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from bmailout2.hostsharing.net ([83.223.90.240]:39925 "EHLO
-        bmailout2.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S934574AbeCHK41 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 8 Mar 2018 05:56:27 -0500
-Date: Thu, 8 Mar 2018 11:56:24 +0100
-From: Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial
- slave
-Message-ID: <20180308105624.GA2316@wunner.de>
-References: <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org>
- <648118289.71086.1519593373795@email.1und1.de>
- <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org>
- <438185389.274708.1520422108782@email.1und1.de>
- <03B9ACBE-3ACA-40C4-9DA2-6A57D1AD96E0@holtmann.org>
- <2071508922.276811.1520426568577@email.1und1.de>
- <87sh9bvh3r.fsf@anholt.net>
- <D48AB207-F7F4-46D8-AC65-EC5CF76A6084@holtmann.org>
- <87muzjfr8l.fsf@anholt.net>
- <698451580.263856.1520467358497@email.1und1.de>
+Return-Path: <SRS0=eYkg=F3=linaro.org=loic.poulain@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <698451580.263856.1520467358497@email.1und1.de>
-Sender: devicetree-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Phil Elwell <phil@raspberrypi.org>, Johan Hedberg <johan.hedberg@gmail.com>, =?iso-8859-1?Q?Fr=E9d=E9ric?= Danis <frederic.danis.oss@gmail.com>, devicetree <devicetree@vger.kernel.org>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org, Christoph Gysin <christoph.gysin@gmail.com>
+In-Reply-To: <524739BF-BD94-4276-BDAB-31B4944D24C3@holtmann.org>
+References: <1519567855-26105-1-git-send-email-stefan.wahren@i2se.com>
+ <1519567855-26105-4-git-send-email-stefan.wahren@i2se.com>
+ <84F7E645-59B4-4618-8C91-A5CD654E16A6@holtmann.org> <648118289.71086.1519593373795@email.1und1.de>
+ <9D6209F2-5389-4F4E-844D-6A8683044F88@holtmann.org> <395166283.280598.1520200683559@email.1und1.de>
+ <423BE2B6-2209-4390-B420-FA7267318A09@holtmann.org> <1219888621.198216.1520231304685@email.1und1.de>
+ <524739BF-BD94-4276-BDAB-31B4944D24C3@holtmann.org>
+From: Loic Poulain <loic.poulain@linaro.org>
+Date: Mon, 5 Mar 2018 08:55:34 +0100
+Message-ID: <CAMZdPi8ab7n0B9qYyZaJAGf4qRH8eYXcUJ=B8pyvyLWyaNVX+Q@mail.gmail.com>
+Subject: Re: [PATCH 3/4] ARM: dts: bcm2835-rpi-zero-w: Add bcm43438 serial slave
+Content-Type: multipart/alternative; boundary="001a113d028806bf620566a5a92b"
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Lukas Wunner <lukas@wunner.de>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, Johan Hedberg <johan.hedberg@gmail.com>, devicetree <devicetree@vger.kernel.org>, Loic Poulain <loic.poulain@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Phil Elwell <phil@raspberrypi.org>, =?UTF-8?B?RnLDqWTDqXJpYyBEYW5pcw==?= <frederic.danis.oss@gmail.com>, Linux Bluetooth mailing list <linux-bluetooth@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Mar 08, 2018 at 01:02:38AM +0100, Stefan Wahren wrote:
-> > >>>>> after applying Loic's patch and the necessary patch for the
-> > >>>>> RPi 3 dts file (see below), i will get this output:
-> > >>>>> 
-> > >>>>> [    4.873246] Bluetooth: HCI UART driver ver 2.3
-> > >>>>> [    4.873260] Bluetooth: HCI UART protocol H4 registered
-> > >>>>> [    4.873265] Bluetooth: HCI UART protocol Three-wire (H5) registered
-> > >>>>> [    4.873751] Bluetooth: HCI UART protocol Broadcom registered
-> > >>>>> [    4.877279] uart-pl011 3f201000.serial: no DMA platform data
-> > >>>>> [    6.952382] Bluetooth: hci0: command 0xfc18 tx timeout
-> > >>>>> [   15.192298] Bluetooth: hci0: BCM: failed to write update baudrate (-110)
-> > >>>>> [   15.192312] Bluetooth: hci0: Failed to set baudrate
-> > >>>>> [   15.316415] Bluetooth: hci0: BCM: chip id 94
-> > >>>>> [   15.318567] Bluetooth: hci0: BCM: features 0x2e
-> > >>>>> [   15.341538] Bluetooth: hci0: BCM43430A1
-> > >>>>> [   15.341560] Bluetooth: hci0: BCM43430A1 (001.002.009) build 0000
-> > >>>>> [   19.112670] Bluetooth: hci0: BCM (001.002.009) build 0360
-> > >>>>> [  274.713732] Bluetooth: hci0: command 0x0c14 tx timeout
-> > >>>>> [  274.714085] Bluetooth: hci0: Frame reassembly failed (-84)
-> > >>>>> [  317.275941] Bluetooth: hci0: last event is not cmd complete (0x0f)
-> > >>>>> 
-> > >>>>> I don't see these errors on RPi Zero W. Maybe the reason for
-> > >>>>> this is the lack of hardware flowcontrol on RPi 3.
-> > >>>> 
-> > >>>> maybe it needs some time after switching the hardware on. Have
-> > >>>> you tried to sleep for a bit at the end of bcm_gpio_set_power?
->  
-> after applying this patch [1] the RPi 3 specific probing errors disappear.
-> 
-> But this is only a quick hack. The proper solution would be to extend
-> hci_h5 in order to support the BCM43438.
-> 
-> [1] - https://github.com/lategoodbye/rpi-zero/commit/ed5900296dfb7aec7f467477440751e7367a1881
+--001a113d028806bf620566a5a92b
+Content-Type: text/plain; charset="UTF-8"
 
-Users of the MacBookPro13,1 and MacBookPro14,1 are reporting similar
-timeouts when the Bluetooth controller is reset on ->setup.
+> >>
+> >> that is weird since we should be either in a probe context or in
+hdev->open context and both can sleep as far as I know.
 
-These are the models without touchbar.  The models with touchbar
-(MBP13,2, MBP13,3, MBP14,2, MBP14,3) as well as the 12" MacBooks
-(MB8,1, MB9,1, MB10,1) do not suffer from this issue.
+Yes but this is an explicit warning in gpiolib based on gpio controller
+capabilities,
+not on current context (WARN_ON(desc->gdev->chip->can_sleep)).
 
-Christoph Gysin (+cc) reports that applying your patch on 4.16-rc4 gets
-Bluetooth working on his MBP13,1:
-https://github.com/Dunedan/mbp-2016-linux/issues/29#issuecomment-371434970
+So, since we are always in process/thread context here, it seems safe to
+use the _cansleep version.
 
-For some reason, not toggling the device_wake pin in bcm_gpio_set_power()
-also fixed the issue for those users.  They did complain about stuttering
-audio though.
+Regards,
+Loic
 
-Users of the touchbar models reported that stuttering audio only occurs
-when the GNOME Bluetooth control panel is open. Closing it made the
-stuttering audio go away.  But apparently on the non-touchbar models,
-the stuttering persisted regardless.  Both the stuttering audio as well as
-the timeouts on ->setup might be explained by a lack of hardware flow
-control on those models.  The chipset (and thus the UART) is identical
-on the touchbar versus non-touchbar models.  It would seem odd if Apple
-did not wire CTS consistently on all models.
+--001a113d028806bf620566a5a92b
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+<div dir=3D"ltr">&gt; &gt;&gt;<br>&gt; &gt;&gt; that is weird since we shou=
+ld be either in a probe context or in hdev-&gt;open context and both can sl=
+eep as far as I know.<br><br>Yes but this is an explicit warning in gpiolib=
+ based on gpio controller capabilities,<br>not on current context (WARN_ON(=
+desc-&gt;gdev-&gt;chip-&gt;can_sleep)).<br><br>So, since we are always in p=
+rocess/thread context here, it seems safe to use the _cansleep version.<br>=
+<br>Regards,<br>Loic<br></div>
 
-Lukas
+--001a113d028806bf620566a5a92b--
