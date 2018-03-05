@@ -1,46 +1,47 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 5/5] staging: vc04_services: Mark the "DT bindings" job done.
-Date: Mon,  5 Mar 2018 12:28:06 -0800
-Message-ID: <20180305202806.21219-6-eric@anholt.net>
-References: <20180305202806.21219-1-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180305202806.21219-1-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
+From: =?UTF-8?Q?Joonas_Kylm=c3=a4l=c3=a4?= <joonas.kylmala-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v3 15/16] ARM: dts: sun8i: h3: Enable HDMI
+ output on H3 boards
+Date: Mon, 05 Mar 2018 20:43:00 +0000
+Message-ID: <7f34f281-fa61-44b4-60a0-fa4843bc27c1@iki.fi>
+References: <20180301213442.16677-1-jernej.skrabec@siol.net>
+ <20180301213442.16677-16-jernej.skrabec@siol.net>
+ <57afe052-9a8c-f63b-ee43-5bad8cd1d193@iki.fi>
+ <24923386.1anQU1Bm90@jernej-laptop>
+Reply-To: joonas.kylmala-X3B1VOXEql0@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDKPPPP3Z4PBBBOY63KAKGQEDZM3XCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <24923386.1anQU1Bm90@jernej-laptop>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Jernej_=c5=a0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now we just need to get the other drivers merged and finish the style
-cleanups/garbage collecting so we can get out of staging.
+Jernej =C5=A0krabec:
+> I guess that would mean also including connector node (hdmi_con_in) in DT=
+SI,=20
+> since it is referenced inside. However, not all boards have HDMI connecto=
+r, so=20
+> I didn't include it in DTSI.
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
- drivers/staging/vc04_services/interface/vchi/TODO | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+You're absolutely right on this. I wish there was someway to get rid of
+this duplication but that's a whole different problem to discuss.
 
-diff --git a/drivers/staging/vc04_services/interface/vchi/TODO b/drivers/staging/vc04_services/interface/vchi/TODO
-index df93154b1aa6..46b20a1961a2 100644
---- a/drivers/staging/vc04_services/interface/vchi/TODO
-+++ b/drivers/staging/vc04_services/interface/vchi/TODO
-@@ -1,9 +1,4 @@
--1) Write a DT binding doc and get the corresponding DT node merged to
--   bcm2835.
--
--This will let the driver probe when enabled.
--
--2) Import drivers using VCHI.
-+1) Import drivers using VCHI.
- 
- VCHI is just a tool to let drivers talk to the firmware.  Here are
- some of the ones we want:
-@@ -26,7 +21,7 @@ some of the ones we want:
-   to manage these buffers as dmabufs so that we can zero-copy import
-   camera images into vc4 for rendering/display.
- 
--3) Garbage-collect unused code
-+2) Garbage-collect unused code
- 
- One of the reasons this driver wasn't upstreamed previously was that
- there's a lot code that got built that's probably unnecessary these
--- 
-2.16.2
+Great work by the way!
+
+Joonas
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
