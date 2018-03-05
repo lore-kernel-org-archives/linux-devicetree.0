@@ -1,68 +1,33 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: add bindings for USB physical
- connector
-Date: Mon, 5 Mar 2018 09:18:10 +0100
-Message-ID: <8434f820-5016-1e5a-c3cb-5d7789dd69c1@samsung.com>
-References: <20180227071134.28063-1-a.hajda@samsung.com>
- <CGME20180227071138eucas1p17e1e16f13f6d3e3b15a57dc93eb8cf3f@eucas1p1.samsung.com>
- <20180227071134.28063-2-a.hajda@samsung.com>
- <20180302131315.GA10598@kuha.fi.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: rcar-gen3-phy-usb2: Add bindings for r8a77965
+Date: Mon, 5 Mar 2018 09:18:12 +0100
+Message-ID: <CAMuHMdWS8WQJQ8+5vffpv3WtBoFKkd=h2ZBpFNcYVY5YQ-ZDGA@mail.gmail.com>
+References: <1520227965-4471-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1520227965-4471-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180302131315.GA10598@kuha.fi.intel.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1520227965-4471-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIuMDMuMjAxOCAxNDoxMywgSGVpa2tpIEtyb2dlcnVzIHdyb3RlOgo+IEhpLAo+Cj4gT24g
-VHVlLCBGZWIgMjcsIDIwMTggYXQgMDg6MTE6MjlBTSArMDEwMCwgQW5kcnplaiBIYWpkYSB3cm90
-ZToKPj4gKzIuIFVTQi1DIGNvbm5lY3RvciBhdHRhY2hlZCB0byBDQyBjb250cm9sbGVyIChzMm1t
-MDA1KSwgSFMgbGluZXMgcm91dGVkCj4+ICt0byBjb21wYW5pb24gUE1JQyAobWF4Nzc4NjUpLCBT
-UyBsaW5lcyB0byBVU0IzIFBIWSBhbmQgU0JVIHRvIERpc3BsYXlQb3J0Lgo+PiArRGlzcGxheVBv
-cnQgdmlkZW8gbGluZXMgYXJlIHJvdXRlZCB0byB0aGUgY29ubmVjdG9yIHZpYSBTUyBtdXggaW4g
-VVNCMyBQSFkuCj4+ICsKPj4gK2NjaWM6IHMybW0wMDVAMzMgewo+PiArCS4uLgo+PiArCXVzYl9j
-b246IGNvbm5lY3RvciB7Cj4+ICsJCWNvbXBhdGlibGUgPSAidXNiLWMtY29ubmVjdG9yIjsKPj4g
-KwkJbGFiZWwgPSAiVVNCLUMiOwo+IElzIHRoaXMgY2hpbGQgbm9kZSByZWFsbHkgbmVjZXNzYXJ5
-PyBUaGVyZSB3aWxsIG5ldmVyIGJlIG1vcmUgdGhlbgo+IG9uZSBjb25uZWN0b3IgcGVyIENDIGxp
-bmUuCgpCdXQgdGhlcmUgY2FuIGJlIG1vcmUgY29ubmVjdG9ycy9jYy1saW5lcyBwZXIgSUMsIGZv
-ciBleGFtcGxlIEVaLVBEIENDRzVbMV0uCgpbMV06Cmh0dHA6Ly93d3cuY3lwcmVzcy5jb20vcHJv
-ZHVjdHMvZXotcGQtY2NnNS10d28tcG9ydC11c2ItdHlwZS1jLWFuZC1wb3dlci1kZWxpdmVyeQoK
-Pgo+IFdlIHNob3VsZCBwcmVmZXIgZGV2aWNlX2dyYXBoKiBmdW5jdGlvbnMgb3ZlciBvZl9ncmFw
-aCogYW5kCkkgZ3Vlc3MgeW91IG1lYW4gZndub2RlX2dyYXBoKiBmdW5jdGlvbnMuCj4gYWNwaV9n
-cmFwaCogZnVuY3Rpb25zIGluIHRoZSBkcml2ZXJzIHNvIHdlIGRvbid0IGhhdmUgdG8gaGFuZGxl
-IHRoZQo+IHNhbWUgdGhpbmcgbXVsdGlwbGUgdGltZXMgd2l0aCBzZXBhcmF0ZSBBUElzLiBJcyBp
-dCBzdGlsbCBwb3NzaWJsZSBpZgo+IHRoZXJlIGlzIHRoYXQgY29ubmVjdG9yIGNoaWxkIG5vZGU/
-CgpCaW5kaW5ncyBwcm9wb3NlZCBoZXJlIGFyZSBPRiBiaW5kaW5ncywgSSBzdXBwb3NlIHRoZSBt
-b3N0IGltcG9ydGFudCBpcwp0byBmb2xsb3cgT0Ygc3BlY2lmaWNhdGlvbiBhbmQgZ3VpZGVsaW5l
-cyBhbmQgdGhlc2UgYmluZGluZ3MgdHJpZXMgdG8KZm9sbG93IGl0LgpJdCBsb29rcyBsaWtlIGl0
-IHNob3VsZCBub3QgYmUgYSBwcm9ibGVtIGZvciBmd25vZGUgZnJhbWV3b3JrIHRvIGhhbmRsZQpz
-dWNoIGJpbmRpbmdzLCBidXQgaXQgaXMganVzdCBteSBndWVzcy4gSSBoYXZlIG5vdCBzZWVuIGFu
-eSBmd25vZGUqCnNwZWNpZmljYXRpb24gSSBhbSBub3Qgc3VyZSB3aGF0IGlzIHRoZSByZWFsIHB1
-cnBvc2Ugb2YgdGhpcyBmcmFtZXdvcmssCmJ1dCBpdCBzZWVtcyB0byBiZSBqdXN0IGluLWtlcm5l
-bCBhYnN0cmFjdGlvbiBmb3IgZGlmZmVyZW50IGZpcm13YXJlCnN0YW5kYXJkcyAoT0YsIEFDUEkp
-LCBzbyBldmVuIGlmIGl0IGxhY2tzIGF0IHRoZSBtb21lbnQgc29tZQpmdW5jdGlvbmFsaXR5IGl0
-IHNob3VsZCBub3QgYmUgYSBiYXJyaWVyIGZvciBPRiBiaW5kaW5ncy4KClJlZ2FyZHMKQW5kcnpl
-agoKPgo+PiArCQlwb3J0cyB7Cj4+ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKwkJCSNz
-aXplLWNlbGxzID0gPDA+Owo+PiArCj4+ICsJCQlwb3J0QDAgewo+PiArCQkJCXJlZyA9IDwwPjsK
-Pj4gKwkJCQl1c2JfY29uX2hzOiBlbmRwb2ludCB7Cj4+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9
-IDwmbWF4Nzc4NjVfdXNiY19ocz47Cj4+ICsJCQkJfTsKPj4gKwkJCX07Cj4+ICsJCQlwb3J0QDEg
-ewo+PiArCQkJCXJlZyA9IDwxPjsKPj4gKwkJCQl1c2JfY29uX3NzOiBlbmRwb2ludCB7Cj4+ICsJ
-CQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdXNiZHJkX3BoeV9zcz47Cj4+ICsJCQkJfTsKPj4gKwkJ
-CX07Cj4+ICsJCQlwb3J0QDIgewo+PiArCQkJCXJlZyA9IDwyPjsKPj4gKwkJCQl1c2JfY29uX3Ni
-dTogZW5kcG9pbnQgewo+PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRwX2F1eD47Cj4+ICsJ
-CQkJfTsKPj4gKwkJCX07Cj4+ICsJCX07Cj4+ICsJfTsKPj4gK307Cj4KPiBUaGFua3MsCj4KCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Mar 5, 2018 at 6:32 AM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> This patch adds support for r8a77965 (R-Car M3-N).
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
