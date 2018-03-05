@@ -1,87 +1,38 @@
-From: Daniel Schultz <d.schultz@phytec.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add dp83867 CLK_OUT muxing
-Date: Mon, 5 Mar 2018 16:57:13 +0100
-Message-ID: <cecf3c08-d43d-c340-c5ff-30e41e338469@phytec.de>
-References: <1520253911-46218-1-git-send-email-d.schultz@phytec.de>
- <3530074.WSbKf9j6h0@phil>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH v2 1/2] dmaengine: Introduce DW AXI DMAC driver
+Date: Mon, 5 Mar 2018 15:56:37 +0000
+Message-ID: <1520265396.3152.27.camel@synopsys.com>
+References: <20180226145628.11892-1-Eugeniy.Paltsev@synopsys.com>
+         <20180226145628.11892-2-Eugeniy.Paltsev@synopsys.com>
+         <CAHp75Vc6KtppecYJBtuXTGCzXySOUZiYqxBfb6w69f1j3J0jDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3530074.WSbKf9j6h0@phil>
-Content-Language: de-DE
+In-Reply-To: <CAHp75Vc6KtppecYJBtuXTGCzXySOUZiYqxBfb6w69f1j3J0jDQ@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <FDE8ACC55BBB764A9982F947CC578253@internal.synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, w.egorov@phytec.de
+To: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+Cc: "vinod.koul@intel.com" <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "wan.ahmad.zainie.wan.mohamad@intel.com" <wan.ahmad.zainie.wan.mohamad@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-
-On 03/05/2018 03:15 PM, Heiko Stuebner wrote:
-> Hi Daniel,
->
-> Am Montag, 5. März 2018, 13:45:11 CET schrieb Daniel Schultz:
->> The CLK_O_SEL default is synchronous to XI input clock, which is 25 MHz.
->> Set CLK_O_SEL to channel A transmit clock so we have 125 MHz on CLK_OUT.
->>
->> Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
->> ---
->>
->> The binding will be added with the next merge of net-next:
->> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/?id=9708fb630d19ee51ae3aeb3a533e3010da0e8570
-https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/log/Documentation/devicetree/bindings/net/ti,dp83867.txt
-
-If I search in the master branch, I get the patch. Did I searched wrong?
-
-Daniel
-> I did find the commit, but no related change of the dp83867 dt binding
-> document [0], including a review by dt-maintainers.
->
-> While your property does not look overly complicated, the binding
-> should be updated nontheless.
->
->
-> Heiko
->
-> [0] https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/log/Documentation/devicetree/bindings/net/ti,dp83867.txt?id=9708fb630d19ee51ae3aeb3a533e3010da0e8570
->
->>   arch/arm/boot/dts/rk3288-phycore-som.dtsi | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
->> index bdd80aa..e60535d 100644
->> --- a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
->> +++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
->> @@ -141,6 +141,7 @@
->>   			ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
->>   			ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
->>   			enet-phy-lane-no-swap;
->> +			ti,clk-output-sel = <DP83867_CLK_O_SEL_CHN_A_TCLK>;
->>   		};
->>   	};
->>   };
->>
->
-
--- 
-Mit freundlichen Grüßen,
-With best regards,
-   Daniel Schultz
-
-- Entwicklung -
-Tel.: 	+49 6131 92 21 457
-d.schultz@phytec.de
-www.phytec.de
-
-Sie finden uns auch auf: Facebook, LinkedIn, Xing, YouTube
-
-PHYTEC Messtechnik GmbH | Robert-Koch-Str. 39 | 55129 Mainz, Germany
-Geschäftsführer: Dipl.-Ing. Michael Mitezki, Dipl.-Ing. Bodo Huber |
-Handelsregister Mainz HRB 4656 | Finanzamt Mainz-Mitte | St.Nr. 266500608,
-DE 149059855
-This E-Mail may contain confidential or privileged information. If you are
-not the intended recipient (or have received this E-Mail in error) please
-notify the sender immediately and destroy this E-Mail. Any unauthorized
-copying, disclosure or distribution of the material in this E-Mail is
-strictly forbidden.
+T24gTW9uLCAyMDE4LTAyLTI2IGF0IDE4OjQyICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6
+DQo+IE9uIE1vbiwgRmViIDI2LCAyMDE4IGF0IDQ6NTYgUE0sIEV1Z2VuaXkgUGFsdHNldg0KPiA8
+RXVnZW5peS5QYWx0c2V2QHN5bm9wc3lzLmNvbT4gd3JvdGU6DQo+IA0KPiA+ICsgICAgICAgY2hp
+cC0+Y29yZV9jbGsgPSBkZXZtX2Nsa19nZXQoY2hpcC0+ZGV2LCAiY29yZS1jbGsiKTsNCj4gDQo+
+IERvZXMgdGhlIG5hbWUgY29tZSBmcm9tIGRhdGFzaGVldD8NCj4gDQo+ID4gKyAgICAgICBjaGlw
+LT5jZmdyX2NsayA9IGRldm1fY2xrX2dldChjaGlwLT5kZXYsICJjZmdyLWNsayIpOw0KPiANCj4g
+RGl0dG8/DQoNClllcywgdGhlc2UgbmFtZXMgY2FtZSBmcm9tIGRhdGFzaGVldC4NCg0KPiA+ICsg
+ICAgICAgfQ0KPiA+ICsgICAgICAgLyogRW5hYmxlIGNsayBiZWZvcmUgYWNjZXNzaW5nIHRvIHJl
+Z2lzdGVycyAqLw0KPiA+ICsgICAgICAgY2xrX3ByZXBhcmVfZW5hYmxlKGNoaXAtPmNmZ3JfY2xr
+KTsNCj4gPiArICAgICAgIGNsa19wcmVwYXJlX2VuYWJsZShjaGlwLT5jb3JlX2Nsayk7DQo+IA0K
+PiBFYWNoIG9mIHRoZW0gbWF5IGZhaWwuIElzIGl0IG9rYXk/DQoNCkFzIGl0IGlzIGRyaXZlciBy
+ZW1vdmUgY2FsbGJhY2sgSSBndWVzcyBpdCBpcyBva2F5Lg0KDQo+ID4gK3N0YXRpYyBjb25zdCBz
+dHJ1Y3QgZGV2X3BtX29wcyBkd19heGlfZG1hX3BtX29wcyA9IHsNCj4gPiArICAgICAgIFNFVF9S
+VU5USU1FX1BNX09QUyhheGlfZG1hX3J1bnRpbWVfc3VzcGVuZCwgYXhpX2RtYV9ydW50aW1lX3Jl
+c3VtZSwgTlVMTCkNCj4gPiArfTsNCj4gDQo+IE5vIHN5c3RlbSBzdXNwZW5kPw0KDQpBcmUgeW91
+IHRhbGtpbmcgYWJvdXQgU0VUX1NZU1RFTV9TTEVFUF9QTV9PUFM/DQpJIGRvbid0IGltcGxlbWVu
+dCB0aGVzZSBPUFMgYXMgd2UgZG9uJ3QgaGF2ZSBhbnkgcGxhdGZvcm0gd2hpY2ggaGFzIERXIEFY
+SSBETUFDDQphbmQgc3VwcG9ydHMgc2xlZXBpbmcgLSBzbyBJIGNhbid0IHRlc3QgdGhlbS4NCg0K
+LS0gDQogRXVnZW5peSBQYWx0c2V2
