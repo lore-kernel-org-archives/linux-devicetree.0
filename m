@@ -1,67 +1,92 @@
-Return-Path: <SRS0=EGYy=FZ=googlemail.com=martin.blumenstingl@kernel.org>
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v4 1/2] dt-bindings: phy: Add support for the USB3 PHY on Amlogic Meson GXL SoCs
-Date: Sat,  3 Mar 2018 19:46:59 +0100
-Message-Id: <20180303184700.21480-2-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20180303184700.21480-1-martin.blumenstingl@googlemail.com>
-References: <20180303184700.21480-1-martin.blumenstingl@googlemail.com>
-To: kishon@ti.com, linux-amlogic@lists.infradead.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, carlo@caione.org, khilman@baylibre.com, narmstrong@baylibre.com, jbrunet@baylibre.com, yixun.lan@amlogic.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Return-Path: <SRS0=TUNP=F3=nxp.com=jun.li@kernel.org>
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v2 01/12] usb: typec: add API to get port type and
+ preferred role
+Date: Mon, 5 Mar 2018 07:54:48 +0000
+Message-ID: <VI1PR0402MB3917174CA90066FC8D3A406489DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+ <1519645759-12701-2-git-send-email-jun.li@nxp.com>
+ <20180226131912.GB25535@kuha.fi.intel.com>
+In-Reply-To: <20180226131912.GB25535@kuha.fi.intel.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Amlogic Meson GXL SoCs use a dwc3 controller with two (GXM - a variant
-for GXL, has three) USB2 ports. The first USB2 port supports host and
-peripheral (also called "device") mode.
-While the dwc3 controller has no USB3 port enabled we still need the
-USB3 PHY to be initialized. Otherwise high-speed USB transfers (for
-example with a USB flash drive) may time out (most often seen on boards
-with mainline u-boot, where the bootloader does not initialize the USB3
-PHY registers).
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Tested-by: Yixun Lan <yixun.lan@amlogic.com>
----
- .../devicetree/bindings/phy/meson-gxl-usb3-phy.txt | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
-new file mode 100644
-index 000000000000..114947e1de3d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/meson-gxl-usb3-phy.txt
-@@ -0,0 +1,31 @@
-+* Amlogic Meson GXL and GXM USB3 PHY and OTG detection binding
-+
-+Required properties:
-+- compatible:	Should be "amlogic,meson-gxl-usb3-phy"
-+- #phys-cells:	must be 0 (see phy-bindings.txt in this directory)
-+- reg:		The base address and length of the registers
-+- interrupts:	the interrupt specifier for the OTG detection
-+- clocks:	phandles to the clocks for
-+		- the USB3 PHY
-+		- and peripheral mode/OTG detection
-+- clock-names:	must contain "phy" and "peripheral"
-+- resets:	phandle to the reset lines for:
-+		- the USB3 PHY and
-+		- peripheral mode/OTG detection
-+- reset-names:	must contain "phy" and "peripheral"
-+
-+Optional properties:
-+- phy-supply:	see phy-bindings.txt in this directory
-+
-+
-+Example:
-+	usb3_phy0: phy@78080 {
-+		compatible = "amlogic,meson-gxl-usb3-phy";
-+		#phy-cells = <0>;
-+		reg = <0x0 0x78080 0x0 0x20>;
-+		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&clkc CLKID_USB_OTG>, <&clkc_AO CLKID_AO_CEC_32K>;
-+		clock-names = "phy", "peripheral";
-+		resets = <&reset RESET_USB_OTG>, <&reset RESET_USB_OTG>;
-+		reset-names = "phy", "peripheral";
-+	};
--- 
-2.16.2
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEhlaWtraSBLcm9nZXJ1cyBb
+bWFpbHRvOmhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb21dDQo+IFNlbnQ6IDIwMTjE6jLU
+wjI2yNUgMjE6MTkNCj4gVG86IEp1biBMaSA8anVuLmxpQG54cC5jb20+DQo+IENjOiBncmVna2hA
+bGludXhmb3VuZGF0aW9uLm9yZzsgcm9iaCtkdEBrZXJuZWwub3JnOyBsaW51eEByb2Vjay11cy5u
+ZXQ7DQo+IGEuaGFqZGFAc2Ftc3VuZy5jb207IG1hcmsucnV0bGFuZEBhcm0uY29tOyB5dWV5YW9A
+Z29vZ2xlLmNvbTsNCj4gUGV0ZXIgQ2hlbiA8cGV0ZXIuY2hlbkBueHAuY29tPjsgZ2Fyc2lsdmFA
+ZW1iZWRkZWRvci5jb207DQo+IG9fbGV2ZXF1ZUBvcmFuZ2UuZnI7IHNodWZhbl9sZWVAcmljaHRl
+ay5jb207IGxpbnV4LXVzYkB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBkbC1saW51eC1pbXggPGxpbnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTog
+W1BBVENIIHYyIDAxLzEyXSB1c2I6IHR5cGVjOiBhZGQgQVBJIHRvIGdldCBwb3J0IHR5cGUgYW5k
+DQo+IHByZWZlcnJlZCByb2xlDQo+IA0KPiBPbiBNb24sIEZlYiAyNiwgMjAxOCBhdCAwNzo0OTow
+OFBNICswODAwLCBMaSBKdW4gd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBhZGQgMiBBUElzIHRvIGdl
+dCBwb3J0IHR5cGUgYW5kIHByZWZlcnJlZCByb2xlIGZyb20NCj4gPiBmaXJtd2FyZSBkZXNjcmlw
+dGlvbi4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IExpIEp1biA8anVuLmxpQG54cC5jb20+DQo+
+ID4NCj4gPiAtLS0NCj4gPiBjaGFuZ2UgZm9yIHYyDQo+ID4gLSBDaGFuZ2UgdGhlIDIgQVBJcyBu
+YW1lIGFuZCBpbnB1dCBwYXJhIHRvIGJlIGRldmljZV9ub2RlIHBvaW50ZXIuDQo+IA0KPiBXaHk/
+DQo+IA0KPiBZb3UgYXJlIG9ubHkgZGVhbGluZyB3aXRoIGRldmljZSBwcm9wZXJ0aWVzIGhlcmUs
+IHNvIHBsZWFzZSBtb3ZlIGJhY2sgdG8NCj4gdXNpbmcgdGhlIHVuaWZpZWQgZGV2aWNlIHByb3Bl
+cnR5IEFQSS4NCj4gDQoNCldpbGwgY2hhbmdlIGl0IGJhY2sgaW4gbmV4dCB2ZXJzaW9uLg0KDQo+
+ID4gIGRyaXZlcnMvdXNiL3R5cGVjL3R5cGVjLmMgfCA0Ng0KPiA+ICsrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVkZS9saW51eC91c2IvdHlw
+ZWMuaCB8ICAyICsrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgNDggaW5zZXJ0aW9ucygrKQ0KPiA+
+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNiL3R5cGVjL3R5cGVjLmMgYi9kcml2ZXJzL3Vz
+Yi90eXBlYy90eXBlYy5jDQo+ID4gaW5kZXggNzM1NzI2Yy4uZTdiMjgwMiAxMDA2NDQNCj4gPiAt
+LS0gYS9kcml2ZXJzL3VzYi90eXBlYy90eXBlYy5jDQo+ID4gKysrIGIvZHJpdmVycy91c2IvdHlw
+ZWMvdHlwZWMuYw0KPiA+IEBAIC05LDYgKzksNyBAQA0KPiA+ICAjaW5jbHVkZSA8bGludXgvZGV2
+aWNlLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxp
+bnV4L211dGV4Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiANCj4gTm8gbmVlZCBm
+b3IgdGhhdC4NCj4gDQo+ID4gICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ID4gICNpbmNsdWRl
+IDxsaW51eC91c2IvdHlwZWMuaD4NCj4gPg0KPiA+IEBAIC0xMjQ2LDYgKzEyNDcsNTEgQEAgdm9p
+ZCB0eXBlY19zZXRfcHdyX29wbW9kZShzdHJ1Y3QgdHlwZWNfcG9ydA0KPiA+ICpwb3J0LCAgfSAg
+RVhQT1JUX1NZTUJPTF9HUEwodHlwZWNfc2V0X3B3cl9vcG1vZGUpOw0KPiA+DQo+ID4gKy8qKg0K
+PiA+ICsgKiB0eXBlY19vZl9nZXRfcG9ydF90eXBlIC0gR2V0IHRoZSB0eXBlYyBwb3J0IHR5cGUN
+Cj4gPiArICogQG5wOiBkZXZpY2Ugbm9kZSBmcm9tIHdoaWNoIHRoZSBwcm9wZXJ0eSB2YWx1ZSBp
+cyB0byBiZSByZWFkLg0KPiA+ICsgKg0KPiA+ICsgKiBUaGlzIHJvdXRpbmUgaXMgdXNlZCBieSB0
+eXBlYyBoYXJkd2FyZSBkcml2ZXIgdG8gcmVhZCBwcm9wZXJ0eQ0KPiA+ICtwb3J0IHR5cGUNCj4g
+PiArICogZnJvbSB0aGUgZGV2aWNlIGZpcm13YXJlIGRlc2NyaXB0aW9uLg0KPiA+ICsgKg0KPiA+
+ICsgKiBSZXR1cm5zIHR5cGVjX3BvcnRfdHlwZSBpZiBzdWNjZXNzLCBvdGhlcndpc2UgbmVnYXRp
+dmUgZXJyb3IgY29kZS4NCj4gPiArICovDQo+ID4gK2ludCB0eXBlY19vZl9nZXRfcG9ydF90eXBl
+KHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApDQo+IA0KPiBpbnQgdHlwZWNfZ2V0X3BvcnRfdHlwZShz
+dHJ1Y3QgZGV2aWNlICpkZXYpDQo+IA0KPiBJIHdvdWxkIGV4cGVjdCB5b3UgdG8gaGF2ZSB0aGUg
+ZnVuY3Rpb24gbGlrZSB0aGF0IGV2ZW4gaWYgeW91IHJlYWxseSB3ZXJlDQo+IGNhbGxpbmcgb2Zf
+KiBmdW5jdGlvbnMgaW4gaXQgc28gd2Ugd291bGQgbm90IG5lZWQgdG8gY2hhbmdlIHRoZSBBUEkg
+bGF0ZXINCj4gb25jZSBzdXBwb3J0IGZvciBBQ1BJIG9yIHNvbWUgb3RoZXIgdHlwZSBvZiBGVyBp
+bnRlcmZhY2UgaXMgYWRkZWQuIEJ1dCBhcw0KPiBzYWlkLCB0aGF0IHdpbGwgbm90IGJlIHRoZSBj
+YXNlLCBhbmQgeW91IG5lZWQgdG8gdXNlDQo+IGRldmljZV9wcm9wZXJ0eV8qIGZ1bmN0aW9ucyBp
+bnN0ZWFkLg0KPiANCj4gPiArew0KPiA+ICsJY29uc3QgY2hhciAqdHlwZV9zdHI7DQo+ID4gKwlp
+bnQgcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKG5wLCAi
+cG9ydC10eXBlIiwgJnR5cGVfc3RyKTsNCj4gDQo+IHJldCA9IGRldmljZV9wcm9wZXJ0eV9yZWFk
+X3N0cmluZyhkZXYsICJwb3J0LXR5cGUiLCAmdHlwZV9zdHIpOw0KPiANCj4gPiArCWlmIChyZXQg
+PCAwKQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0dXJuIG1hdGNoX3N0cmlu
+Zyh0eXBlY19wb3J0X3R5cGVzLCBBUlJBWV9TSVpFKHR5cGVjX3BvcnRfdHlwZXMpLA0KPiA+ICsJ
+CQkJCQkJCSB0eXBlX3N0cik7DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZTUJPTF9HUEwodHlwZWNf
+Z2V0X3BvcnRfdHlwZSk7DQo+IA0KPiBOb3RlIHRoYXQgeW91IGFyZSBzdGlsbCBleHBvcnRpbmcg
+dGhlIG9sZCBmdW5jdGlvbiBuYW1lLCBidXQgdGhhdCdzIGZpbmUuIEp1c3QNCj4gY2hhbmdlIHRo
+ZSBmdW5jdGlvbiBuYW1lIGJhY2sgdG8gdGhlIG9yaWdpbmFsLg0KPiANCg0Kd2lsbCBjaGFuZ2Ug
+aXQgYmFjay4NCg0KPiA+ICsvKioNCj4gPiArICogdHlwZWNfb2ZfZ2V0X3ByZWZlcnJlZF9yb2xl
+IC0gR2V0IHRoZSB0eXBlYyBwcmVmZXJyZWQgcm9sZQ0KPiA+ICsgKiBAbnA6IGRldmljZSBub2Rl
+IGZyb20gd2hpY2ggdGhlIHByb3BlcnR5IHZhbHVlIGlzIHRvIGJlIHJlYWQuDQo+ID4gKyAqDQo+
+ID4gKyAqIFRoaXMgcm91dGluZSBpcyB1c2VkIGJ5IHR5cGVjIGhhcmR3YXJlIGRyaXZlciB0byBy
+ZWFkIHByb3BlcnR5DQo+ID4gK2RlZmF1bHQgcm9sZQ0KPiA+ICsgKiBmcm9tIHRoZSBkZXZpY2Ug
+ZmlybXdhcmUgZGVzY3JpcHRpb24uDQo+ID4gKyAqDQo+ID4gKyAqIFJldHVybnMgdHlwZWNfcm9s
+ZSBpZiBzdWNjZXNzLCBvdGhlcndpc2UgbmVnYXRpdmUgZXJyb3IgY29kZS4NCj4gPiArICovDQo+
+ID4gK2ludCB0eXBlY19vZl9nZXRfcHJlZmVycmVkX3JvbGUoc3RydWN0IGRldmljZV9ub2RlICpu
+cCkNCj4gDQo+IGludCB0eXBlY19nZXRfcHJlZmVycmVkX3JvbGUoc3RydWN0IGRldmljZSBkZXYp
+DQo+IA0KPiA+ICt7DQo+ID4gKwljb25zdCBjaGFyICpwb3dlcl9zdHI7DQo+ID4gKwlpbnQgcmV0
+Ow0KPiA+ICsNCj4gPiArCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKG5wLCAiZGVmYXVs
+dC1yb2xlIiwgJnBvd2VyX3N0cik7DQo+IA0KPiByZXQgPSBkZXZpY2VfcHJvcGVydHlfcmVhZF9z
+dHJpbmcoZGV2LCAiZGVmYXVsdC1yb2xlIiwgJnR5cGVfc3RyKTsNCj4gDQo+ID4gKwlpZiAocmV0
+IDwgMCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCXJldHVybiBtYXRjaF9zdHJp
+bmcodHlwZWNfcm9sZXMsIEFSUkFZX1NJWkUodHlwZWNfcm9sZXMpLA0KPiA+ICtwb3dlcl9zdHIp
+OyB9IEVYUE9SVF9TWU1CT0xfR1BMKHR5cGVjX2dldF9wcmVmZXJyZWRfcm9sZSk7DQo+ID4gKw0K
+PiA+ICAvKiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0gKi8NCj4gDQo+
+IFRoYW5rcywNCj4gDQo+IC0tDQo+IGhlaWtraQ0K
