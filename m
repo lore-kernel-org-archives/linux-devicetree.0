@@ -1,12 +1,12 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] arm: add basic support for Renesas RZ/N1 boards
-Date: Mon, 5 Mar 2018 10:43:29 +0100
-Message-ID: <CAMuHMdWV+_L0MO3vY0w4tec37Ycs2rDN-a93B0YwBeSnG2_wrA@mail.gmail.com>
-References: <1519647518-15579-1-git-send-email-michel.pollet@bp.renesas.com> <1519647518-15579-2-git-send-email-michel.pollet@bp.renesas.com>
+Subject: Re: [PATCH 2/2] arm: rzn1: Add basic support for RZN1D-DB Board
+Date: Mon, 5 Mar 2018 10:52:16 +0100
+Message-ID: <CAMuHMdVdXh428vfLW5has3THUWq5x6iA-6CLL+uQudOGOJfTrA@mail.gmail.com>
+References: <1519647518-15579-1-git-send-email-michel.pollet@bp.renesas.com> <1519647518-15579-3-git-send-email-michel.pollet@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1519647518-15579-2-git-send-email-michel.pollet@bp.renesas.com>
+In-Reply-To: <1519647518-15579-3-git-send-email-michel.pollet@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Michel Pollet <michel.pollet@bp.renesas.com>
 Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
@@ -16,244 +16,65 @@ Hi Michel,
 
 On Mon, Feb 26, 2018 at 1:18 PM, Michel Pollet
 <michel.pollet@bp.renesas.com> wrote:
-> This adds the Renesas RZ/N1 CPU and bare bone support.
->
-> This currently only handles generic parts (gic, architected timer)
-> and a UART.
-> This also relies on the bootloader to set the pinctrl and clocks.
+> Only enables the uart0 for now, and also relies on the bootloader
+> for setting up the clocks and pinctrl.
 >
 > Signed-off-by: Michel Pollet <michel.pollet@bp.renesas.com>
 
 Thanks for your patch!
 
-This should be split in separate patches:
+This should be split in two parts:
 
->  Documentation/devicetree/bindings/arm/shmobile.txt |   3 +-
+>  Documentation/devicetree/bindings/arm/shmobile.txt |  2 ++
 
 1. DT bindings
 
->  arch/arm/boot/dts/rzn1.dtsi                        |  94 +++
+>  arch/arm/boot/dts/rzn1d400-db.dts                  | 25 ++++++++++++++++++++++
 
-2. SoC DTS file
-
->  arch/arm/mach-shmobile/Kconfig                     |   5 +
-
-3. Platform Kconfig symbol
-
->  arch/arm/mach-shmobile/Makefile                    |   1 +
->  arch/arm/mach-shmobile/setup-r9a06g032.c           |  60 ++
-
-Please no more board files for new platforms (see below).
-
->  .../dt-bindings/interrupt-controller/rzn1-irq.h    | 137 ++++
-
-DTS files are much easier to compare with the datasheet if the interrupt
-numbers are present in the DTS files theirselves.
-
->  include/dt-bindings/soc/renesas,rzn1-map.h         | 173 +++++
-
-Same for base addresses.
-
-> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
-> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-> @@ -47,7 +47,8 @@ SoCs:
->      compatible = "renesas,r8a77980"
->    - R-Car D3 (R8A77995)
->      compatible = "renesas,r8a77995"
-> -
-> +  - RZ/N1D (R9A06G032)
-> +    compatible = "renesas,r9a06g032"
-
-BTW, are R9A06G032NGBG and R9A06G032VGBA the same SoC,
-just in different packages?
+2. Board DTS + (missing) arch/arm/boot/dts/Makefile update.
 
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/rzn1.dtsi
+> +++ b/arch/arm/boot/dts/rzn1d400-db.dts
 
-So faw we always named the SoC-specific DTS files after the SoC part
-number => r9a06g032.dtsi.
+Why the 400? 400-pin package?
 
-> @@ -0,0 +1,94 @@
+Please follow <SoC>-<board>.dts naming convention, i.e.
+r9a06g032-rzn1d-db.dts
+
+> @@ -0,0 +1,25 @@
 > +/*
-> + * Base Device Tree Source for the Renesas RZ/N1 SoC
+> + * Device Tree Source for the RZN1D-DB Board
 > + *
 > + * Copyright (C) 2018 Renesas Electronics Europe Limited
 > + *
 > + * SPDX-License-Identifier: GPL-2.0
 > + */
 > +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/interrupt-controller/rzn1-irq.h>
-> +#include <dt-bindings/soc/renesas,rzn1-map.h>
-> +#include <dt-bindings/gpio/gpio.h>
+> +/dts-v1/;
 > +
-> +#include "skeleton.dtsi"
+> +#include "rzn1.dtsi"
 > +
 > +/ {
-> +       compatible = "renesas,r9a06g032";
-> +       interrupt-parent = <&gic>;
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
+> +       model = "RZN1D-DB Board";
+> +       compatible = "renesas,rzn1d-db", "renesas,r9a06g032";
 > +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <0>;
-> +               };
-> +               cpu@1 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a7";
-> +                       reg = <1>;
-> +               };
-> +       };
-> +       aliases {
-> +               serial0 = &uart0;
-> +       };
-> +       arm_timer: timer {
-> +               compatible = "arm,armv7-timer";
-> +               arm,cpu-registers-not-fw-configured;
-> +               interrupts =
-> +                       <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-> +                               IRQ_TYPE_LEVEL_LOW)>,
-> +                       <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-> +                               IRQ_TYPE_LEVEL_LOW)>,
-> +                       <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
-> +                               IRQ_TYPE_LEVEL_LOW)>,
-> +                       <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
-> +                               IRQ_TYPE_LEVEL_LOW)>;
-> +       };
-> +       gic: interrupt-controller@RZN1_GIC_BASE {
+> +       chosen {
+> +               bootargs = "console=ttyS0,115200";
 
-On-SoC devices should be grouped under an "soc" node.
-You can move the "interrupt-parent = <&gic>;" there, too.
+"console=" is not needed, as it is handled by stdout-path these days,
+so you can remove bootargs for now.
 
-> +               compatible = "arm,cortex-a7-gic";
+> +               stdout-path = &uart0;
 
-As the RZ/N1D's User's Manul refers to the GIC-400 manuals, I assume
-this is a GIC-400 => "arm,gic-400".
+stdout-path = "serial0:115200n8";
 
-You can check by reading the GIC_DIST_IIDR register.
+Please move the serial0 alias definition to the board DTS, as labeling
+of serial ports
+is board-specific.
 
-> +               reg = <0x44101000 0x1000>,      /* Distributer */
-> +                     <0x44102000 0x1000>,      /* CPU interface */
+> +               linux,stdout-path = &uart0;
 
-Shouldn't the size of the second region be 0x2000?
-
-> +       bus {
-
-Oh, you do have an "soc" node. Please call it "soc".
-
-> --- /dev/null
-> +++ b/arch/arm/mach-shmobile/setup-r9a06g032.c
-> @@ -0,0 +1,60 @@
-> +/*
-> + * RZ/N1 processor support file
-> + *
-> + * Copyright (C) 2018 Renesas Electronics Europe Limited
-> + *
-> + * Michel Pollet <michel.pollet@bp.renesas.com>, <buserror@gmail.com>
-> + *
-> + */
-> + /* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#include <asm/mach/arch.h>
-> +#include <dt-bindings/soc/renesas,rzn1-map.h>
-> +#include <linux/kernel.h>
-> +#include <linux/io.h>
-> +#include <linux/of_platform.h>
-> +#include <soc/rzn1/sysctrl.h>
-> +
-> +static void __iomem *sysctrl_base_addr;
-> +
-> +static void rzn1_sysctrl_init(void)
-> +{
-> +       if (sysctrl_base_addr)
-> +               return;
-> +       sysctrl_base_addr = ioremap(RZN1_SYSTEM_CTRL_BASE,
-> +                                       RZN1_SYSTEM_CTRL_SIZE);
-
-These values should be obtained from DT.
-
-> +       BUG_ON(!sysctrl_base_addr);
-> +}
-> +
-> +void __iomem *rzn1_sysctrl_base(void)
-> +{
-> +       if (!sysctrl_base_addr)
-> +               rzn1_sysctrl_init();
-> +       return sysctrl_base_addr;
-> +}
-> +EXPORT_SYMBOL(rzn1_sysctrl_base);
-
-Looks like this is a "system controller", providing a bunch of registers
-to a collection of random functionality, to be used by various drivers.
-
-Please see:
-  Documentation/devicetree/bindings/mfd/syscon.txt
-  include/linux/mfd/syscon.h
-  drivers/mfd/syscon.c
-
-> +static void rzn1_restart(enum reboot_mode mode, const char *cmd)
-> +{
-> +       rzn1_sysctrl_writel(
-> +                       rzn1_sysctrl_readl(RZN1_SYSCTRL_REG_RSTEN) |
-> +                       BIT(RZN1_SYSCTRL_REG_RSTEN_SWRST_EN) |
-> +                               BIT(RZN1_SYSCTRL_REG_RSTEN_MRESET_EN),
-> +                       RZN1_SYSCTRL_REG_RSTEN);
-> +       rzn1_sysctrl_writel(
-> +                       rzn1_sysctrl_readl(RZN1_SYSCTRL_REG_RSTCTRL) |
-> +                       BIT(RZN1_SYSCTRL_REG_RSTCTRL_SWRST_REQ),
-> +                       RZN1_SYSCTRL_REG_RSTCTRL);
-> +}
-
-This should be a reset driver under drivers/power/reset/.
-Or perhaps you can even do without a driver, check
-Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-
-> --- /dev/null
-> +++ b/include/soc/rzn1/sysctrl.h
-> @@ -0,0 +1,736 @@
-> +/*
-> + * Copyright (C) 2018 Renesas Electronics Europe Limited
-> + * All rights reserved.
-> + *
-> + * SPDX-License-Identifier: (GPL-2.0+ OR BSD)
-
-Not mentioned in Documentation/process/license-rules.rst
-
-Do you mean any of:
-
-    SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
-    SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-
-or something different?
-
-> +/*
-> + * Get the base address for the sysctrl block.
-> + * Ensure use does not conflict with anything else that acesses the SYSCTRL
-> + */
-> +void __iomem *rzn1_sysctrl_base(void);
-> +
-> +static inline u32 rzn1_sysctrl_readl(u32 reg)
-> +{
-> +       BUG_ON(reg >= RZN1_SYSTEM_CTRL_SIZE);
-
-Please no BUG_ON().
-
-> +       return readl(rzn1_sysctrl_base() + reg);
-> +}
-> +
-> +static inline void rzn1_sysctrl_writel(u32 value, u32 reg)
-> +{
-> +       BUG_ON(reg >= RZN1_SYSTEM_CTRL_SIZE);
-> +       writel(value, rzn1_sysctrl_base() + reg);
-> +}
-
-Probably all of this can be removed if you use the syscon abstraction.
+linux,stdout-path is deprecated, please remove it.
 
 Gr{oetje,eeting}s,
 
