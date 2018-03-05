@@ -1,12 +1,11 @@
 From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH 4/4] [DO NOT MERGE] ARM: dts: sun8i: Add CAM500B camera module
- to the Nano Pi M1+
-Date: Mon,  5 Mar 2018 11:04:32 +0100
-Message-ID: <20180305100432.15009-5-maxime.ripard@bootlin.com>
+Subject: [PATCH 1/4] dt-bindings: media: sun6i: Add A31 and H3 compatibles
+Date: Mon,  5 Mar 2018 11:04:29 +0100
+Message-ID: <20180305100432.15009-2-maxime.ripard@bootlin.com>
 References: <20180305100432.15009-1-maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20180305100432.15009-1-maxime.ripard@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
@@ -22,74 +21,31 @@ To: Mauro Carvalho Chehab <mchehab@kernel.org>, Yong Deng <yong.deng@magewell.co
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Mylene Josserand <mylene.josserand@bootlin.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRAYm9vdGxpbi5jb20+CgpU
-aGUgTmFubyBQaSBNMSsgY29tZXMgd2l0aCBhbiBvcHRpb25hbCBzZW5zb3IgYmFzZWQgb24gdGhl
-IG92NTY0MCBmcm9tCk9tbml2aXNpb24uIEVuYWJsZSB0aGUgc3VwcG9ydCBmb3IgaXQgaW4gdGhl
-IERULgoKU2lnbmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRA
-Ym9vdGxpbi5jb20+ClNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRA
-Ym9vdGxpbi5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktaDMtbmFub3BpLW0xLXBs
-dXMuZHRzIHwgODUgKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwg
-ODUgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWgz
-LW5hbm9waS1tMS1wbHVzLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWgzLW5hbm9waS1t
-MS1wbHVzLmR0cwppbmRleCBkN2I2ZTFhYzU0MWEuLmEyZDFjNmJiODQwNiAxMDA2NDQKLS0tIGEv
-YXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktaDMtbmFub3BpLW0xLXBsdXMuZHRzCisrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL3N1bjhpLWgzLW5hbm9waS1tMS1wbHVzLmR0cwpAQCAtNTIsNiArNTIsMzcg
-QEAKIAkJZXRoZXJuZXQxID0gJnNkaW9fd2lmaTsKIAl9OwogCisJY2FtX3hjbGs6IGNhbS14Y2xr
-IHsKKyAgICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8MD47CisgICAgICAgICAgICAgICAg
-Y29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7CisgICAgICAgICAgICAgICAgY2xvY2stZnJlcXVl
-bmN5ID0gPDI0MDAwMDAwPjsKKyAgICAgICAgICAgICAgICBjbG9jay1vdXRwdXQtbmFtZXMgPSAi
-Y2FtLXhjbGsiOworICAgICAgICB9OworCisgICAgICAgIHJlZ19jYW1fYXZkZDogY2FtLWF2ZGQg
-eworICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKKyAgICAg
-ICAgICAgICAgICByZWd1bGF0b3ItbmFtZSA9ICJjYW01MDBiLWF2ZGQiOworICAgICAgICAgICAg
-ICAgIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDI4MDAwMDA+OworICAgICAgICAgICAgICAg
-IHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDI4MDAwMDA+OworICAgICAgICAgICAgICAgIHZp
-bi1zdXBwbHkgPSA8JnJlZ192Y2MzdjM+OworICAgICAgICB9OworCisgICAgICAgIHJlZ19jYW1f
-ZG92ZGQ6IGNhbS1kb3ZkZCB7CisgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJyZWd1bGF0
-b3ItZml4ZWQiOworICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gImNhbTUwMGItZG92
-ZGQiOworICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAwMDA+
-OworICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4MDAwMDA+Owor
-ICAgICAgICAgICAgICAgIHZpbi1zdXBwbHkgPSA8JnJlZ192Y2MzdjM+OworICAgICAgICB9Owor
-CisgICAgICAgIHJlZ19jYW1fZHZkZDogY2FtLWR2ZGQgeworICAgICAgICAgICAgICAgIGNvbXBh
-dGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKKyAgICAgICAgICAgICAgICByZWd1bGF0b3ItbmFt
-ZSA9ICJjYW01MDBiLWR2ZGQiOworICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1taW4tbWljcm92
-b2x0ID0gPDE1MDAwMDA+OworICAgICAgICAgICAgICAgIHJlZ3VsYXRvci1tYXgtbWljcm92b2x0
-ID0gPDE1MDAwMDA+OworICAgICAgICAgICAgICAgIHZpbi1zdXBwbHkgPSA8JnJlZ192Y2MzdjM+
-OworICAgICAgICB9OworCiAJcmVnX2dtYWNfM3YzOiBnbWFjLTN2MyB7CiAJCWNvbXBhdGlibGUg
-PSAicmVndWxhdG9yLWZpeGVkIjsKIAkJcmVndWxhdG9yLW5hbWUgPSAiZ21hYy0zdjMiOwpAQCAt
-NjksNiArMTAwLDI2IEBACiAJfTsKIH07CiAKKyZjc2kgeworICAgICAgICBzdGF0dXMgPSAib2th
-eSI7CisKKyAgICAgICAgcG9ydCB7CisgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8
-MT47CisgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47CisKKyAgICAgICAgICAgICAg
-ICAvKiBQYXJhbGxlbCBidXMgZW5kcG9pbnQgKi8KKyAgICAgICAgICAgICAgICBjc2lfZnJvbV9v
-djU2NDA6IGVuZHBvaW50IHsKKyAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2lu
-dCA9IDwmb3Y1NjQwX3RvX2NzaT47CisgICAgICAgICAgICAgICAgICAgICAgICBidXMtd2lkdGgg
-PSA8OD47CisgICAgICAgICAgICAgICAgICAgICAgICBkYXRhLXNoaWZ0ID0gPDI+OworICAgICAg
-ICAgICAgICAgICAgICAgICAgaHN5bmMtYWN0aXZlID0gPDE+OyAvKiBBY3RpdmUgaGlnaCAqLwor
-ICAgICAgICAgICAgICAgICAgICAgICAgdnN5bmMtYWN0aXZlID0gPDA+OyAvKiBBY3RpdmUgbG93
-ICovCisgICAgICAgICAgICAgICAgICAgICAgICBkYXRhLWFjdGl2ZSA9IDwxPjsgIC8qIEFjdGl2
-ZSBoaWdoICovCisgICAgICAgICAgICAgICAgICAgICAgICBwY2xrLXNhbXBsZSA9IDwxPjsgIC8q
-IFJpc2luZyAqLworICAgICAgICAgICAgICAgIH07CisgICAgICAgIH07Cit9OworCiAmZWhjaTEg
-ewogCXN0YXR1cyA9ICJva2F5IjsKIH07CkBAIC05NCw2ICsxNDUsNDAgQEAKIAl9OwogfTsKIAor
-JmkyYzIgeworCXN0YXR1cyA9ICJva2F5IjsKKworCW92NTY0MDogY2FtZXJhQDNjIHsKKyAgICAg
-ICAgICAgICAgICBjb21wYXRpYmxlID0gIm92dGksb3Y1NjQwIjsKKyAgICAgICAgICAgICAgICBy
-ZWcgPSA8MHgzYz47CisgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjYW1feGNsaz47CisgICAg
-ICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAieGNsayI7CisKKyAgICAgICAgICAgICAgICByZXNl
-dC1ncGlvcyA9IDwmcGlvIDQgMTQgR1BJT19BQ1RJVkVfTE9XPjsKKyAgICAgICAgICAgICAgICBw
-b3dlcmRvd24tZ3Bpb3MgPSA8JnBpbyA0IDE1IEdQSU9fQUNUSVZFX0hJR0g+OworICAgICAgICAg
-ICAgICAgIEFWREQtc3VwcGx5ID0gPCZyZWdfY2FtX2F2ZGQ+OworICAgICAgICAgICAgICAgIERP
-VkRELXN1cHBseSA9IDwmcmVnX2NhbV9kb3ZkZD47CisgICAgICAgICAgICAgICAgRFZERC1zdXBw
-bHkgPSA8JnJlZ19jYW1fZHZkZD47CisKKyAgICAgICAgICAgICAgICBwb3J0IHsKKyAgICAgICAg
-ICAgICAgICAgICAgICAgIG92NTY0MF90b19jc2k6IGVuZHBvaW50IHsKKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgcmVtb3RlLWVuZHBvaW50ID0gPCZjc2lfZnJvbV9vdjU2NDA+Owor
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBidXMtd2lkdGggPSA8OD47CisgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGEtc2hpZnQgPSA8Mj47CisgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIGhzeW5jLWFjdGl2ZSA9IDwxPjsgLyogQWN0aXZlIGhpZ2ggKi8K
-KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdnN5bmMtYWN0aXZlID0gPDA+OyAvKiBB
-Y3RpdmUgbG93ICovCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGEtYWN0aXZl
-ID0gPDE+OyAgLyogQWN0aXZlIGhpZ2ggKi8KKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgcGNsay1zYW1wbGUgPSA8MT47ICAvKiBSaXNpbmcgKi8KKyAgICAgICAgICAgICAgICAgICAg
-ICAgIH07CisgICAgICAgICAgICAgICAgfTsKKyAgICAgICAgfTsKKworfTsKKworJmkyYzJfcGlu
-cyB7CisJYmlhcy1wdWxsLXVwOworfTsKKwogJmlyIHsKIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1
-bHQiOwogCXBpbmN0cmwtMCA9IDwmaXJfcGluc19hPjsKLS0gCjIuMTQuMwoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+The H3 has a slightly different CSI controller (no BT656, no CCI) which
+looks a lot like the original A31 controller. Add a compatible for the A31,
+and more specific compatible the for the H3 to be used in combination for
+the A31.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+---
+ Documentation/devicetree/bindings/media/sun6i-csi.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+index 2ff47a9507a6..18a5b3068b25 100644
+--- a/Documentation/devicetree/bindings/media/sun6i-csi.txt
++++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+@@ -5,7 +5,10 @@ Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
+ interface and CSI1 is used for parallel interface.
+ 
+ Required properties:
+-  - compatible: value must be "allwinner,sun8i-v3s-csi"
++  - compatible: value must be one of:
++    * "allwinner,sun6i-a31-csi", along with, optionally:
++      + "allwinner,sun8i-h3-csi"
++    * "allwinner,sun8i-v3s-csi"
+   - reg: base address and size of the memory-mapped region.
+   - interrupts: interrupt associated to this IP
+   - clocks: phandles to the clocks feeding the CSI
+-- 
+2.14.3
