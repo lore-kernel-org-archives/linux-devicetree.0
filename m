@@ -1,84 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] ASoC: codecs: Add support for PCM1789
-Date: Mon, 5 Mar 2018 15:49:10 +0000
-Message-ID: <20180305154910.GJ8588@sirena.org.uk>
-References: <20180305124817.7421-1-mylene.josserand@bootlin.com>
- <20180305124817.7421-2-mylene.josserand@bootlin.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH 1/2] ARM: dts: armada388-clearfog: increase speed of i2c0
+ to 400kHz
+Date: Mon, 05 Mar 2018 16:48:54 +0100
+Message-ID: <87d10i5xqx.fsf@bootlin.com>
+References: <20180227160135.GU9418@n2100.armlinux.org.uk>
+ <E1eqhhV-0004ku-Nd@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n8884J15jRwcBTvu"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180305124817.7421-2-mylene.josserand@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@bootlin.com, thomas.petazzoni@bootlin.com, michael@amarulasolutions.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <E1eqhhV-0004ku-Nd@rmk-PC.armlinux.org.uk> (Russell King's
+ message of "Tue, 27 Feb 2018 16:01:57 +0000")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---n8884J15jRwcBTvu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 05, 2018 at 01:48:16PM +0100, Myl=E8ne Josserand wrote:
-
-> --- /dev/null
-> +++ b/sound/soc/codecs/pcm1789-i2c.c
-> @@ -0,0 +1,76 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCM1789 ASoC I2C driver
-> + *
-> + * Copyright (c) Bootlin 2018
-> + *
-> + * Myl=E8ne Josserand <mylene.josserand@bootlin.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-
-Please don't mix C and C++ style comments in a single comment like this
-- it looks unintentional.  Just use the same style for the whole thing.
-You also don't need to include all the boilerplate with the SPDX header.
-
-> +static bool pcm1789_accessible_reg(struct device *dev, unsigned int reg)
-> +{
-> +	return reg >=3D PCM1789_MUTE_CONTROL && reg <=3D PCM1789_DAC_VOL_RIGHT;
-> +}
-> +
-> +static bool pcm1789_writeable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	return pcm1789_accessible_reg(dev, reg);
-> +}
-
-> +static void pcm1789_work_queue(struct work_struct *work)
-> +{
-> +	struct pcm1789_private *priv =3D container_of(work,
-> +						    struct pcm1789_private,
-> +						    work);
-> +
-> +	/* Perform a software reset to remove codec from desynchronized state */
-> +	if (regmap_update_bits(priv->regmap, PCM1789_MUTE_CONTROL,
-> +			       0x3 << PCM1789_MUTE_SRET, 0) < 0)
-> +		dev_err(priv->dev, "Error while setting SRET");
-> +}
-
-A reset sounds like we'd also need to resync the register map,
-presumably this is something else?  The comment could be clearer.
-
---n8884J15jRwcBTvu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqdZvUACgkQJNaLcl1U
-h9ArPgf/doY6KKkVX5LZMkHvKd+IQYpFQit1dIzFg1IQEU63IJnFwKu29BMIVMk0
-8czRzrLQQkM/S9+vEHqRYLJYUjAVZFA0I1QeVsc504gnIHl9eDLZE0heXbOTWkpu
-rN6lTw8+7t8rm9b1wPnp8SXsqWM+3NaF+Kc02T0bvb2xW+gM/gYvYDqfM2oV2Kfm
-267+/ekaYiYGolHbFlK6zmyH/2EyawKnDXQw5dTJ9dA9AlyYXMKFFoiigBVzcYFM
-GK6R7PRZqCPj44nUBsGirId6WeE7CJU+DI9ZAZRIBugJrcsuS0+oxuafBkhkaUZH
-BmjWvGV7wGXis0ecQ3munLn5Bsw/Bg==
-=+ja3
------END PGP SIGNATURE-----
-
---n8884J15jRwcBTvu--
+SGkgUnVzc2VsbCwKIAogT24gbWFyLiwgZsOpdnIuIDI3IDIwMTgsIFJ1c3NlbGwgS2luZyA8cm1r
+K2tlcm5lbEBhcm1saW51eC5vcmcudWs+IHdyb3RlOgoKPiBBbGwgdGhlIGRldmljZXMgb24gSTJD
+MCBzdXBwb3J0IGZhc3QgbW9kZSwgc28gaW5jcmVhc2UgdGhlIGJ1cyBzcGVlZAo+IHRvIG1hdGNo
+LgoKSSBhZ3JlZSB3aXRoIHRoaXMgcGFydC4gSSBkaWRuJ3QgcGF5IGF0dGVudGlvbiB0byBpdCBp
+biB0aGUgaW5pdGlhbApzdWJtaXNzaW9uIGJ1dCBub3cgSSd2ZSBjaGVja2VkIGl0LCBhbmQgaW5k
+ZWVkIGFjY29yZGluZyB0byB0aGUKZGF0YXNoZWV0IHRoZSBNQ1AzMDIxIHN1cHBvcnQgInN0YW5k
+YXJkICgxMDAga0h6KSBhbmQgRmFzdCAoNDAwIGtIeikgSTJDCkNvbXBhdGlibGUgbW9kZXMiCgo+
+IFRoZSBBcm1hZGEgMzg4IGlzIGtub3duIHRvIGhhdmUgYSB0aW1pbmcgaXNzdWUgd2hlbiBpbgo+
+IHN0YW5kYXJkIG1vZGUsIHdoaWNoIHdlIGJlbGlldmUgY2F1c2VzIHRoZSBmaWN0aWNpb3VzIGRl
+dmljZSBhdCAweDY0Cj4gdG8gYXBwZWFyLgoKVGhpcyBlcnJhdGEgIkZFLTg0NzE4ODkgSTJDIFJl
+cGVhdGVkIFN0YXJ0IGlzIG5vdCBzdXBwb3J0ZWQgaW4gc3RhbmRhcmQKbW9kZSAodXAgdG8gMTAw
+SykiIHdhcyBzdXBwb3NlZCB0byBiZSBmaXhlZCB3aXRoIHRoZSBjb21taXQgYzFkMTViNjhhYWI4
+CigiaTJjOiBtdjY0eHh4OiBGaXggdGltaW5nIGlzc3VlIG9uIEFybWFkYSBYUCAoZXJyYXRhIEZF
+LTg0NzE4ODkpIikuIEFuZAppdCB3YXMgdXNlZCBvbiB0aGUgQXJtYWRhIDM4eCBTb0NzIHNpbmNl
+IGZiZmZlZTc0OTg2YyAoIkFSTTogZHRzOiBGaXggSTJDCnJlcGVhdGVkIHN0YXJ0IGlzc3VlIG9u
+IEFybWFkYS0zOHgiKSBpbiA0LjE0LgoKU28gSSB0aGluayB0aGF0IG5vdyBldmVuIGF0IDEwMGtI
+eiB0aGUgZmljdGljaW91cyBkZXZpY2Ugc2hvdWxkIG5vdAphcHBlYXIgYW55IG1vcmUuIElmIGl0
+IGlzIHN0aWxsIHRoZSBjYXNlIHRoZW4gdGhlcmUgbWlnaHQgYmUgYW4gaXNzdWUKd2l0aCB0aGUg
+Zml4IGluIHRoZSAyYyBkcml2ZXIuCgpHcmVnb3J5Cgo+Cj4gU2lnbmVkLW9mZi1ieTogUnVzc2Vs
+bCBLaW5nIDxybWsra2VybmVsQGFybWxpbnV4Lm9yZy51az4KPiAtLS0KPiAgYXJjaC9hcm0vYm9v
+dC9kdHMvYXJtYWRhLTM4OC1jbGVhcmZvZy5kdHNpIHwgNyArKy0tLS0tCj4gIDEgZmlsZSBjaGFu
+Z2VkLCAyIGluc2VydGlvbnMoKyksIDUgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM4OC1jbGVhcmZvZy5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
+dHMvYXJtYWRhLTM4OC1jbGVhcmZvZy5kdHNpCj4gaW5kZXggNjhhY2ZjOTY4NzA2Li4wZTNiMWYx
+NDBlNmQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM4OC1jbGVhcmZv
+Zy5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM4OC1jbGVhcmZvZy5kdHNp
+Cj4gQEAgLTE0Myw4ICsxNDMsNyBAQAo+ICB9Owo+ICAKPiAgJmkyYzAgewo+IC0JLyogSXMgdGhl
+cmUgYW55dGhpbmcgb24gdGhpcz8gKi8KPiAtCWNsb2NrLWZyZXF1ZW5jeSA9IDwxMDAwMDA+Owo+
+ICsJY2xvY2stZnJlcXVlbmN5ID0gPDQwMDAwMD47Cj4gIAlwaW5jdHJsLTAgPSA8JmkyYzBfcGlu
+cz47Cj4gIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICAJc3RhdHVzID0gIm9rYXkiOwo+
+IEBAIC0yMzksMTMgKzIzOCwxMSBAQAo+ICAJCX07Cj4gIAl9Owo+ICAKPiAtCS8qIFRoZSBNQ1Az
+MDIxIGlzIDEwMGtIeiBjbG9jayBvbmx5ICovCj4gKwkvKiBUaGUgTUNQMzAyMSBzdXBwb3J0cyBz
+dGFuZGFyZCBhbmQgZmFzdCBtb2RlcyAqLwo+ICAJbWlrcm9idXNfYWRjOiBtY3AzMDIxQDRjIHsK
+PiAgCQljb21wYXRpYmxlID0gIm1pY3JvY2hpcCxtY3AzMDIxIjsKPiAgCQlyZWcgPSA8MHg0Yz47
+Cj4gIAl9Owo+IC0KPiAtCS8qIEFsc28gc29tZXRoaW5nIGF0IDB4NjQgKi8KPiAgfTsKPiAgCj4g
+ICZpMmMxIHsKPiAtLSAKPiAyLjcuNAo+CgotLSAKR3JlZ29yeSBDbGVtZW50LCBCb290bGluIChm
+b3JtZXJseSBGcmVlIEVsZWN0cm9ucykKRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVl
+cmluZwpodHRwOi8vYm9vdGxpbi5jb20KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
