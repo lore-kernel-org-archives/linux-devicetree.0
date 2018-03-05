@@ -1,39 +1,28 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add dp83867 CLK_OUT muxing
-Date: Mon, 05 Mar 2018 22:08:14 +0100
-Message-ID: <2707703.8mZIocJ1Ne@diego>
-References: <1520253911-46218-1-git-send-email-d.schultz@phytec.de> <3380975.Amu1WGHSQ5@diego>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document R-Car M3-N
+ support
+Date: Mon, 5 Mar 2018 15:08:39 -0600
+Message-ID: <20180305210839.25q72wkoubsuceg7@rob-hp-laptop>
+References: <1519658712-22910-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3380975.Amu1WGHSQ5@diego>
+Content-Disposition: inline
+In-Reply-To: <1519658712-22910-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Schultz <d.schultz@phytec.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, w.egorov@phytec.de
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 5. März 2018, 21:25:30 CET schrieb Heiko Stübner:
-> Am Montag, 5. März 2018, 13:45:11 CET schrieb Daniel Schultz:
-> > The CLK_O_SEL default is synchronous to XI input clock, which is 25 MHz.
-> > Set CLK_O_SEL to channel A transmit clock so we have 125 MHz on CLK_OUT.
-> > 
-> > Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
+On Mon, Feb 26, 2018 at 04:25:12PM +0100, Geert Uytterhoeven wrote:
+> Document support for the Interrupt Controller for Externel Devices
+> (INTC-EX) in the Renesas M3-N (r8a77965) SoC.
 > 
-> applied for 4.17
+> No driver update is needed.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-had to move it to 4.18 though.
-
-The change to the dt-binding header goes through the networking
-tree and will only get merged for 4.17-rc1 .
-
-So devicetree changes in a different branch aren't available at this
-point.
-
-One commonly practiced alternative is that you provide a v2
-with the actual hex values instead of the constants for 4.17
-and a follow-up patch replacing them with the constants
-that I can apply for 4.18.
-
-
-Heiko
+Reviewed-by: Rob Herring <robh@kernel.org>
