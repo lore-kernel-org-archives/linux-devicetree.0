@@ -1,66 +1,35 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 2/2] mmc: mediatek: add support for MT7622 SoC
-Date: Mon, 5 Mar 2018 09:45:59 +0100
-Message-ID: <CAPDyKFq6kPXsxHMCkCfvmm1t1ccs-ZgFY=z6YhuKdza5+WuLLw@mail.gmail.com>
-References: <6cb1d6d4ee40a61f7b33aed1711753342590d0dd.1520232933.git.sean.wang@mediatek.com>
- <83a3ee9471cc7312b9cc43bcf692939e90af34ba.1520232933.git.sean.wang@mediatek.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 0/2] Add R8A77970/Eagle I2C support
+Date: Mon, 5 Mar 2018 10:10:12 +0100
+Message-ID: <20180305091009.fj4f6riash7ibklw@verge.net.au>
+References: <23c5b1f4-d92b-455f-7288-5aabd002183a@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <83a3ee9471cc7312b9cc43bcf692939e90af34ba.1520232933.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chaotian Jing <chaotian.jing@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <23c5b1f4-d92b-455f-7288-5aabd002183a@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5 March 2018 at 08:03,  <sean.wang@mediatek.com> wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
->
-> Just applying the existing logic and adding its own characteristics into
-> the space pointed by an extra entry of struct of_device_id to have support
-> of MT7622 SoC.
->
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Tested-by: Jumin Li <jumin.li@mediatek.com>
+On Sat, Mar 03, 2018 at 10:02:41PM +0300, Sergei Shtylyov wrote:
+> Hello!
+> 
+> Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+> 'renesas-devel-20180301-v4.16-rc3' tag. We're adding the R8A77970 I2C nodes
+> and then describing the PCA9654 I/O expander connected to the I2C0 bus.
+> 
+> [1/2] arm64: dts: renesas: r8a77970: add I2C support
+> [2/2] arm64: dts: renesas: eagle: add I2C0 support
 
-Thanks, applied for next!
-
-Kind regards
-Uffe
-
-> ---
->  drivers/mmc/host/mtk-sd.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index 6457a7d..cb274e8 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -438,11 +438,23 @@ static const struct mtk_mmc_compatible mt2712_compat = {
->         .enhance_rx = true,
->  };
->
-> +static const struct mtk_mmc_compatible mt7622_compat = {
-> +       .clk_div_bits = 12,
-> +       .hs400_tune = false,
-> +       .pad_tune_reg = MSDC_PAD_TUNE0,
-> +       .async_fifo = true,
-> +       .data_tune = true,
-> +       .busy_check = true,
-> +       .stop_clk_fix = true,
-> +       .enhance_rx = true,
-> +};
-> +
->  static const struct of_device_id msdc_of_ids[] = {
->         { .compatible = "mediatek,mt8135-mmc", .data = &mt8135_compat},
->         { .compatible = "mediatek,mt8173-mmc", .data = &mt8173_compat},
->         { .compatible = "mediatek,mt2701-mmc", .data = &mt2701_compat},
->         { .compatible = "mediatek,mt2712-mmc", .data = &mt2712_compat},
-> +       { .compatible = "mediatek,mt7622-mmc", .data = &mt7622_compat},
->         {}
->  };
->  MODULE_DEVICE_TABLE(of, msdc_of_ids);
-> --
-> 2.7.4
->
+Thanks, applied.
