@@ -1,105 +1,36 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: Document the Synopsys DW AXI DMA
- bindings
-Date: Mon, 5 Mar 2018 21:49:23 +0000
-Message-ID: <1520286562.4366.13.camel@synopsys.com>
-References: <20180226145628.11892-1-Eugeniy.Paltsev@synopsys.com>
-         <20180226145628.11892-3-Eugeniy.Paltsev@synopsys.com>
-         <20180302081408.GK15443@localhost> <1519979538.4430.7.camel@synopsys.com>
-         <20180305053256.GN15443@localhost>
-         <20180305210751.7wzo2lqvyldijkot@rob-hp-laptop>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 07/37] iommu: Add a page fault handler
+Date: Mon, 5 Mar 2018 16:53:17 -0500
+Message-ID: <77afa195-4842-a112-eba5-409b861b5315@codeaurora.org>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-8-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180305210751.7wzo2lqvyldijkot@rob-hp-laptop>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180212183352.22730-8-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
 Content-Language: en-US
-Content-ID: <AF78EA1C8FD37B4ABE3B4AD3B15F45BA@internal.synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh@kernel.org" <robh@kernel.org>, "vinod.koul@intel.com" <vinod.koul@intel.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "wan.ahmad.zainie.wan.mohamad@intel.com" <wan.ahmad.zainie.wan.mohamad@intel.com>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiBNb24sIDIwMTgtMDMtMDUgYXQgMTU6MDcgLTA2MDAsIFJvYiBIZXJyaW5n
-IHdyb3RlOg0KPiBPbiBNb24sIE1hciAwNSwgMjAxOCBhdCAxMTowMjo1NkFNICswNTMwLCBWaW5v
-ZCBLb3VsIHdyb3RlOg0KPiA+IE9uIEZyaSwgTWFyIDAyLCAyMDE4IGF0IDA4OjMyOjIwQU0gKzAw
-MDAsIEFsZXhleSBCcm9ka2luIHdyb3RlOg0KPiA+ID4gSGkgVmlub2QsDQo+ID4gPiANCj4gPiA+
-IE9uIEZyaSwgMjAxOC0wMy0wMiBhdCAxMzo0NCArMDUzMCwgVmlub2QgS291bCB3cm90ZToNCj4g
-PiA+ID4gT24gTW9uLCBGZWIgMjYsIDIwMTggYXQgMDU6NTY6MjhQTSArMDMwMCwgRXVnZW5peSBQ
-YWx0c2V2IHdyb3RlOg0KPiA+ID4gPiA+IFRoaXMgcGF0Y2ggYWRkcyBkb2N1bWVudGF0aW9uIG9m
-IGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgU3lub3BzeXMNCj4gPiA+ID4gPiBEZXNpZ25X
-YXJlIEFYSSBETUEgY29udHJvbGxlci4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBTaWduZWQtb2Zm
-LWJ5OiBFdWdlbml5IFBhbHRzZXYgPEV1Z2VuaXkuUGFsdHNldkBzeW5vcHN5cy5jb20+DQo+ID4g
-PiA+ID4gLS0tDQo+ID4gPiA+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9zbnBzLGR3
-LWF4aS1kbWFjLnR4dCAgIHwgNDEgKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gPiA+ICAx
-IGZpbGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPiA+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9zbnBzLGR3LWF4aS1k
-bWFjLnR4dA0KPiA+ID4gPiA+IA0KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3NucHMsZHctYXhpLWRtYWMudHh0IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9zbnBzLGR3LWF4aS1kbWFjLnR4dA0KPiA+ID4g
-PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gPiA+ID4gaW5kZXggMDAwMDAwMC4uZjIzN2I3
-OQ0KPiA+ID4gPiA+IC0tLSAvZGV2L251bGwNCj4gPiA+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3NucHMsZHctYXhpLWRtYWMudHh0DQo+ID4gPiA+ID4g
-QEAgLTAsMCArMSw0MSBAQA0KPiA+ID4gPiA+ICtTeW5vcHN5cyBEZXNpZ25XYXJlIEFYSSBETUEg
-Q29udHJvbGxlcg0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArUmVxdWlyZWQgcHJvcGVydGllczoN
-Cj4gPiA+ID4gPiArLSBjb21wYXRpYmxlOiAic25wcyxheGktZG1hLTEuMDFhIg0KPiA+ID4gPiA+
-ICstIHJlZzogQWRkcmVzcyByYW5nZSBvZiB0aGUgRE1BQyByZWdpc3RlcnMuIFRoaXMgc2hvdWxk
-IGluY2x1ZGUNCj4gPiA+ID4gPiArICBhbGwgb2YgdGhlIHBlci1jaGFubmVsIHJlZ2lzdGVycy4N
-Cj4gPiA+ID4gPiArLSBpbnRlcnJ1cHQ6IFNob3VsZCBjb250YWluIHRoZSBETUFDIGludGVycnVw
-dCBudW1iZXIuDQo+ID4gPiA+ID4gKy0gaW50ZXJydXB0LXBhcmVudDogU2hvdWxkIGJlIHRoZSBw
-aGFuZGxlIGZvciB0aGUgaW50ZXJydXB0IGNvbnRyb2xsZXINCj4gPiA+ID4gPiArICB0aGF0IHNl
-cnZpY2VzIGludGVycnVwdHMgZm9yIHRoaXMgZGV2aWNlLg0KPiA+ID4gPiA+ICstIGRtYS1jaGFu
-bmVsczogTnVtYmVyIG9mIGNoYW5uZWxzIHN1cHBvcnRlZCBieSBoYXJkd2FyZS4NCj4gPiA+ID4g
-PiArLSBzbnBzLGRtYS1tYXN0ZXJzOiBOdW1iZXIgb2YgQVhJIG1hc3RlcnMgc3VwcG9ydGVkIGJ5
-IHRoZSBoYXJkd2FyZS4NCj4gPiA+ID4gPiArLSBzbnBzLGRhdGEtd2lkdGg6IE1heGltdW0gQVhJ
-IGRhdGEgd2lkdGggc3VwcG9ydGVkIGJ5IGhhcmR3YXJlLg0KPiA+ID4gPiA+ICsgICgwIC0gOGJp
-dHMsIDEgLSAxNmJpdHMsIDIgLSAzMmJpdHMsIC4uLiwgNiAtIDUxMmJpdHMpDQo+ID4gPiA+ID4g
-Ky0gc25wcyxwcmlvcml0eTogUHJpb3JpdHkgb2YgY2hhbm5lbC4gQXJyYXkgc2l6ZSBpcyBlcXVh
-bCB0byB0aGUgbnVtYmVyIG9mDQo+ID4gPiA+ID4gKyAgZG1hLWNoYW5uZWxzLiBQcmlvcml0eSB2
-YWx1ZSBtdXN0IGJlIHByb2dyYW1tZWQgd2l0aGluIFswOmRtYS1jaGFubmVscy0xXQ0KPiA+ID4g
-PiA+ICsgIHJhbmdlLiAoMCAtIG1pbmltdW0gcHJpb3JpdHkpDQo+ID4gPiA+ID4gKy0gc25wcyxi
-bG9jay1zaXplOiBNYXhpbXVtIGJsb2NrIHNpemUgc3VwcG9ydGVkIGJ5IHRoZSBjb250cm9sbGVy
-IGNoYW5uZWwuDQo+ID4gPiA+ID4gKyAgQXJyYXkgc2l6ZSBpcyBlcXVhbCB0byB0aGUgbnVtYmVy
-IG9mIGRtYS1jaGFubmVscy4NCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gK09wdGlvbmFsIHByb3Bl
-cnRpZXM6DQo+ID4gPiA+ID4gKy0gc25wcyxheGktbWF4LWJ1cnN0LWxlbjogUmVzdHJpY3QgbWFz
-dGVyIEFYSSBidXJzdCBsZW5ndGggYnkgdmFsdWUgc3BlY2lmaWVkDQo+ID4gPiA+ID4gKyAgaW4g
-dGhpcyBwcm9wZXJ0eS4gSWYgdGhpcyBwcm9wZXJ0eSBpcyBtaXNzaW5nIHRoZSBtYXhpbXVtIEFY
-SSBidXJzdCBsZW5ndGgNCj4gPiA+ID4gPiArICBzdXBwb3J0ZWQgYnkgRE1BQyBpcyB1c2VkLiBb
-MToyNTZdDQo+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ICtFeGFtcGxlOg0KPiA+ID4gPiA+ICsNCj4g
-PiA+ID4gPiArZG1hYzogZG1hLWNvbnRyb2xsZXJAODAwMDAgew0KPiA+ID4gPiA+ICsJY29tcGF0
-aWJsZSA9ICJzbnBzLGF4aS1kbWEtMS4wMWEiOw0KPiA+ID4gPiANCj4gPiA+ID4gZG8gd2UgbmVl
-ZCAic25wcyBoZXJlLi4/DQo+ID4gPiANCj4gPiA+IFN5bm9wc3lzIGlzIHRoaXMgSVAtYmxvY2sg
-dmVuZG9yIHNvIHNob3VsZG4ndCB3ZSBwdXQgaXQgdGhhdCB3YXk/DQo+ID4gDQo+ID4gTm90IGEg
-RFQgZXhwZXJ0IGJ1dCB3aHkgc2hvdWxkIHZlbmRvciBuYW1lIGNvbWUgaGVyZSwgeW91IGNhbiBy
-ZWFkIHRoZQ0KPiA+IHByb3BlcnRpZXMgZnJvbSBkZXZpY2Ugbm9kZSwgdmVuZG9yIG5hbWUgc2Vl
-bXMgcmVkdW5kYW50IHRvIG1lDQo+IA0KPiBJIGRvbid0IGZvbGxvdy4uLg0KPiANCj4gSW4gYW55
-IGNhc2UsIHllcywgaXQgbXVzdCBoYXZlIGEgdmVuZG9yIHByZWZpeC4gSXQgc2hvdWxkIGFsc28g
-aGF2ZSBhIA0KPiBjb21wYXRpYmxlIGZvciB0aGUgdmVuZG9yKHMpIHRoYXQgaW50ZWdyYXRlIHRo
-ZSBibG9jayBiZWNhdXNlIHRoZXkgYWxsIA0KPiBicmVhayBpdCBpbiBkaWZmZXJlbnQgd2F5cy4g
-U3BlYWtpbmcgb2Ygd2hpY2gsIHdlIGFscmVhZHkgaGF2ZSANCj4gc25wcy1kbWEudHh0IGFuZCBh
-dCBsZWFzdCBBbmFsb2cgRGV2aWNlcyBiaW5kaW5nIHVzaW5nIGEgU3lub3BzeXMgRE1BLiANCj4g
-V2hhdCdzIHRoZSBkaWZmZXJlbmNlPw0KPiANCg0KVGhlcmUncyBpbmRlZWQgc29tZSBjb25mdXNp
-b24uDQoNCjEuIEFzIGEgcGFydCBvZiBhIF9uZXdfZHJpdmVyXyBzdWJtaXNzaW9uIHdlJ3JlIHBy
-ZXBhcmluZyBEVCBiaW5kaW5ncyBkb2NzIHdoZXJlIHdlDQogICBuZWVkIHRvIHJlcXVpcmUgc29t
-ZSBjb21wYXRpYmxlIHN0cmluZy4uLiB3ZWxsIGF0IGxlYXN0IG1hbnkgb3RoZXIgYmluZGluZyBk
-b2NzDQogICBkbyBzbyBpZiBJJ20gbm90IG1pc3Rha2VuLiBBbmQgc28gd2UgcHJvcG9zZSB0byBy
-ZXF1aXJlICJzbnBzLGF4aS1kbWEtMS4wMWEiDQogICB3aGVyZSB2ZXJzaW9uIG1hdGNoZXMgaW1w
-bGVtZW50YXRpb24gaW4gYW4gU29DIHdlIGN1cnJlbnRseSBoYXZlLg0KDQoyLiBJbiB0aGF0IHN0
-cmluZyB3ZSBtZW50aW9uIFN5bm9wc3lzIGFzIGEgdmVuZG9yIGJ1dCBmb3IgZHJpdmVyIGFsb25l
-ICh3aXRob3V0IGFueSBwYXJ0aWN1bGFyIFNvQykNCiAgIGl0IGlzIHJlbGFldGVkIHRvIElQLWJs
-b2NrIHdoaWNoIG1pZ2h0IGVuZC11cCBiZWluZyB1c2VkIGluIG1hbnkgZGlmZmVyZW50IFNvQ3Mu
-DQoNCjMuIFN5bm9wc3lzIGhhcyAyIGNvbXBsZXRlbHkgZGlmZmVyZW50IERNQUMgSVAtYmxvY2tz
-LiBXZWxsLWtub3duIEFIQiBETUFDLCBzZWUgWzFdLCBbMl0NCiAgIGFuZCBBWEkgRE1BQywgc2Vl
-IFszXSB3aGljaCBpcyBub3QgeWV0IHVzZWQgYW55d2hlcmUgYW5kIHRoYXQncyB0aGUgb25lIHdl
-J3JlIGRpc2N1c3NpbmcNCiAgIGN1cnJlbnRseS4NCg0KNC4gVGhpcyBEVyBBWEkgRE1BQyBzZWVt
-cyB0byBoYXZlIG5vdGhpbmcgdG8gZG8gd2l0aCBtZW50aW9uZWQgImRtYS1heGktZG1hYy5jIiB3
-aGljaA0KICAgQlRXIGhhcyBjb21wYXRpYmxlID0gImFkaSxheGktZG1hYy0xLjAwLmEiLg0KICAg
-DQpBcyBhbiB1bmRlcmxpbmUgSSBkb24ndCBzZWUgYW55IG90aGVyIG9wdGlvbiBmb3IgImRlZmF1
-bHQiIGNvbXBhdGlibGUgZm9yIHRoYXQNCmJyYW5kIG5ldyBETUFDIGRyaXZlciwgdGhvdWdoIG9u
-Y2Ugd2Ugc3RhcnQgYWRkaW5nIFNvQyB0aGF0IHJlYWxseSB1c2UgdGhhdCBJUC1ibG9jaw0Kd2Ug
-bWF5IGdldCBtb3JlIGNvbXBhdGlibGUgc3RyaW5ncyBpZiBpbXBsZW1lbnRhdGlvbnMgZGlmZmVy
-IGZyb20gd2hhdCB3ZSBoYXZlIG5vdy4NCg0KWzFdIGh0dHBzOi8vd3d3LnN5bm9wc3lzLmNvbS9k
-dy9pcGRpci5waHA/Yz1EV19haGJfZG1hYw0KWzJdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHVi
-L3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL2RyaXZlcnMvZG1h
-L2R3DQpbM10gaHR0cHM6Ly93d3cuc3lub3BzeXMuY29tL2R3L2lwZGlyLnBocD9jPURXX2F4aV9k
-bWFjDQoNClJlZ2FyZHMsDQpBbGV4ZXk=
+On 2/12/2018 1:33 PM, Jean-Philippe Brucker wrote:
+> +static struct workqueue_struct *iommu_fault_queue;
+
+Is there anyway we can make this fault queue per struct device?
+Since this is common code, I think it needs some care.
+
+
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
