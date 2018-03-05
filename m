@@ -1,91 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: power: Add ZynqMP power domain bindings
-Date: Mon, 5 Mar 2018 16:39:05 -0600
-Message-ID: <20180305223905.65nnunv63fyg7bye@rob-hp-laptop>
-References: <1519775750-21297-1-git-send-email-jollys@xilinx.com>
- <1519775750-21297-2-git-send-email-jollys@xilinx.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH net-next] dt-bindings: net: dsa: marvell: describe
+ compatibility string
+Date: Mon, 5 Mar 2018 23:41:26 +0100
+Message-ID: <20180305224126.GB17529@lunn.ch>
+References: <1520287522-308-1-git-send-email-brandon.streiff@ni.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1519775750-21297-2-git-send-email-jollys@xilinx.com>
+In-Reply-To: <1520287522-308-1-git-send-email-brandon.streiff@ni.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jolly Shah <jolly.shah@xilinx.com>
-Cc: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, mark.rutland@arm.com, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+To: Brandon Streiff <brandon.streiff@ni.com>
+Cc: Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 27, 2018 at 03:55:49PM -0800, Jolly Shah wrote:
-> Add documentation to describe ZynqMP power domain bindings.
+On Mon, Mar 05, 2018 at 04:05:22PM -0600, Brandon Streiff wrote:
+> There are two compatibility strings for mv88e6xxx, but it isn't clear
+> from the documentation why only those two exist when the mv88e6xxx driver
+> supports more than the 6085 and 6190. Briefly describe how the compatible
+> property is used, and provide guidance on which to use.
 > 
-> Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
-> ---
->  .../devicetree/bindings/power/zynqmp-genpd.txt     | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/zynqmp-genpd.txt
+> The model list comes from looking at port_base_addr values (0x0 vs 0x10)
+> in drivers/net/dsa/mv88e6xxx/chip.c.
 > 
-> diff --git a/Documentation/devicetree/bindings/power/zynqmp-genpd.txt b/Documentation/devicetree/bindings/power/zynqmp-genpd.txt
-> new file mode 100644
-> index 0000000..25f9711
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/zynqmp-genpd.txt
-> @@ -0,0 +1,46 @@
-> +Device Tree bindings for Xilinx Zynq MPSoC PM domains
-> +
-> +The binding for zynqmp-genpd follow the common generic PM domain binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/power/power_domain.txt
-> +
-> +== Zynq MPSoC Generic PM Domain Node ==
-> +
-> +Required properties:
-> + - compatible: Must be: "xlnx,zynqmp-genpd"
+> Signed-off-by: Brandon Streiff <brandon.streiff@ni.com>
 
-genpd is a Linux term. The DT should contain a power controller that 
-controls physical power islands on a chip.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-> +
-> +This node contains a number of subnodes, each representing a single PM domain
-> +that PM domain consumer devices reference.
-> +
-> +== PM Domain Nodes ==
-> +
-> +Required properties:
-> + - #power-domain-cells: Number of cells in a PM domain specifier. Must be 0.
-> + - pd-id: List of domain identifiers of as defined by platform firmware. These
-> +	  identifiers are passed to the PM firmware.
-> +
-> +Example:
-> +	zynqmp-genpd {
-> +		compatible = "xlnx,zynqmp-genpd";
-
-What's the control interface for controlling the domains?
-> +
-> +		pd_usb0: pd-usb0 {
-> +			pd-id = <22>;
-> +			#power-domain-cells = <0>;
-
-There's no need for all these sub nodes. Make #power-domain-cells 1 and 
-put the id in the cell value.
-
-> +		};
-> +
-> +		pd_sata: pd-sata {
-> +			pd-id = <28>;
-> +			#power-domain-cells = <0>;
-> +		};
-> +
-> +		pd_gpu: pd-gpu {
-> +			pd-id = <58 20 21>;
-> +			#power-domain-cells = <0x0>;
-> +		};
-> +	};
-> +
-> +	sata0: ahci@SATA_AHCI_HBA {
-> +		...
-> +		power-domains = <&pd_sata>;
-> +		...
-> +	};
-> -- 
-> 2.7.4
-> 
+    Andrew
