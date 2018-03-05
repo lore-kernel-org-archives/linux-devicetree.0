@@ -1,17 +1,18 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 Subject: Re: [PATCH 1/2] ARM: dts: armada388-clearfog: increase speed of i2c0
  to 400kHz
-Date: Mon, 5 Mar 2018 16:09:30 +0000
-Message-ID: <20180305160929.GG9418@n2100.armlinux.org.uk>
+Date: Mon, 05 Mar 2018 17:22:53 +0100
+Message-ID: <878tb65w6a.fsf@bootlin.com>
 References: <20180227160135.GU9418@n2100.armlinux.org.uk>
  <E1eqhhV-0004ku-Nd@rmk-PC.armlinux.org.uk>
  <87d10i5xqx.fsf@bootlin.com>
+ <20180305160929.GG9418@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <87d10i5xqx.fsf@bootlin.com>
+In-Reply-To: <20180305160929.GG9418@n2100.armlinux.org.uk> (Russell King's
+ message of "Mon, 5 Mar 2018 16:09:30 +0000")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,105 +22,75 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
 Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 05, 2018 at 04:48:54PM +0100, Gregory CLEMENT wrote:
-> Hi Russell,
->  =
-
->  On mar., f=E9vr. 27 2018, Russell King <rmk+kernel@armlinux.org.uk> wrot=
-e:
-> =
-
-> > All the devices on I2C0 support fast mode, so increase the bus speed
-> > to match.
-> =
-
-> I agree with this part. I didn't pay attention to it in the initial
-> submission but now I've checked it, and indeed according to the
-> datasheet the MCP3021 support "standard (100 kHz) and Fast (400 kHz) I2C
-> Compatible modes"
-> =
-
-> > The Armada 388 is known to have a timing issue when in
-> > standard mode, which we believe causes the ficticious device at 0x64
-> > to appear.
-> =
-
-> This errata "FE-8471889 I2C Repeated Start is not supported in standard
-> mode (up to 100K)" was supposed to be fixed with the commit c1d15b68aab8
-> ("i2c: mv64xxx: Fix timing issue on Armada XP (errata FE-8471889)"). And
-> it was used on the Armada 38x SoCs since fbffee74986c ("ARM: dts: Fix I2C
-> repeated start issue on Armada-38x") in 4.14.
-
-The commit pre-dates 4.14, and the commit message was correct at the time
-it was committed (Nov 29 2016).  I don't know whether its still the case
-that the ficticious device still appears, but increasing the bus speed is
-still a sensible thing to do if the devices all support it.
-
-> So I think that now even at 100kHz the ficticious device should not
-> appear any more. If it is still the case then there might be an issue
-> with the fix in the 2c driver.
-> =
-
-> Gregory
-> =
-
-> >
-> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> > ---
-> >  arch/arm/boot/dts/armada-388-clearfog.dtsi | 7 ++-----
-> >  1 file changed, 2 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/armada-388-clearfog.dtsi b/arch/arm/boot=
-/dts/armada-388-clearfog.dtsi
-> > index 68acfc968706..0e3b1f140e6d 100644
-> > --- a/arch/arm/boot/dts/armada-388-clearfog.dtsi
-> > +++ b/arch/arm/boot/dts/armada-388-clearfog.dtsi
-> > @@ -143,8 +143,7 @@
-> >  };
-> >  =
-
-> >  &i2c0 {
-> > -	/* Is there anything on this? */
-> > -	clock-frequency =3D <100000>;
-> > +	clock-frequency =3D <400000>;
-> >  	pinctrl-0 =3D <&i2c0_pins>;
-> >  	pinctrl-names =3D "default";
-> >  	status =3D "okay";
-> > @@ -239,13 +238,11 @@
-> >  		};
-> >  	};
-> >  =
-
-> > -	/* The MCP3021 is 100kHz clock only */
-> > +	/* The MCP3021 supports standard and fast modes */
-> >  	mikrobus_adc: mcp3021@4c {
-> >  		compatible =3D "microchip,mcp3021";
-> >  		reg =3D <0x4c>;
-> >  	};
-> > -
-> > -	/* Also something at 0x64 */
-> >  };
-> >  =
-
-> >  &i2c1 {
-> > -- =
-
-> > 2.7.4
-> >
-> =
-
-> -- =
-
-> Gregory Clement, Bootlin (formerly Free Electrons)
-> Embedded Linux and Kernel engineering
-> http://bootlin.com
-
--- =
-
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
-According to speedtest.net: 8.21Mbps down 510kbps up
+SGkgUnVzc2VsbCBLaW5nLAogCiBPbiBsdW4uLCBtYXJzIDA1IDIwMTgsIFJ1c3NlbGwgS2luZyAt
+IEFSTSBMaW51eCA8bGludXhAYXJtbGludXgub3JnLnVrPiB3cm90ZToKCj4gT24gTW9uLCBNYXIg
+MDUsIDIwMTggYXQgMDQ6NDg6NTRQTSArMDEwMCwgR3JlZ29yeSBDTEVNRU5UIHdyb3RlOgo+PiBI
+aSBSdXNzZWxsLAo+PiAgCj4+ICBPbiBtYXIuLCBmw6l2ci4gMjcgMjAxOCwgUnVzc2VsbCBLaW5n
+IDxybWsra2VybmVsQGFybWxpbnV4Lm9yZy51az4gd3JvdGU6Cj4+IAo+PiA+IEFsbCB0aGUgZGV2
+aWNlcyBvbiBJMkMwIHN1cHBvcnQgZmFzdCBtb2RlLCBzbyBpbmNyZWFzZSB0aGUgYnVzIHNwZWVk
+Cj4+ID4gdG8gbWF0Y2guCj4+IAo+PiBJIGFncmVlIHdpdGggdGhpcyBwYXJ0LiBJIGRpZG4ndCBw
+YXkgYXR0ZW50aW9uIHRvIGl0IGluIHRoZSBpbml0aWFsCj4+IHN1Ym1pc3Npb24gYnV0IG5vdyBJ
+J3ZlIGNoZWNrZWQgaXQsIGFuZCBpbmRlZWQgYWNjb3JkaW5nIHRvIHRoZQo+PiBkYXRhc2hlZXQg
+dGhlIE1DUDMwMjEgc3VwcG9ydCAic3RhbmRhcmQgKDEwMCBrSHopIGFuZCBGYXN0ICg0MDAga0h6
+KSBJMkMKPj4gQ29tcGF0aWJsZSBtb2RlcyIKPj4gCj4+ID4gVGhlIEFybWFkYSAzODggaXMga25v
+d24gdG8gaGF2ZSBhIHRpbWluZyBpc3N1ZSB3aGVuIGluCj4+ID4gc3RhbmRhcmQgbW9kZSwgd2hp
+Y2ggd2UgYmVsaWV2ZSBjYXVzZXMgdGhlIGZpY3RpY2lvdXMgZGV2aWNlIGF0IDB4NjQKPj4gPiB0
+byBhcHBlYXIuCj4+IAo+PiBUaGlzIGVycmF0YSAiRkUtODQ3MTg4OSBJMkMgUmVwZWF0ZWQgU3Rh
+cnQgaXMgbm90IHN1cHBvcnRlZCBpbiBzdGFuZGFyZAo+PiBtb2RlICh1cCB0byAxMDBLKSIgd2Fz
+IHN1cHBvc2VkIHRvIGJlIGZpeGVkIHdpdGggdGhlIGNvbW1pdCBjMWQxNWI2OGFhYjgKPj4gKCJp
+MmM6IG12NjR4eHg6IEZpeCB0aW1pbmcgaXNzdWUgb24gQXJtYWRhIFhQIChlcnJhdGEgRkUtODQ3
+MTg4OSkiKS4gQW5kCj4+IGl0IHdhcyB1c2VkIG9uIHRoZSBBcm1hZGEgMzh4IFNvQ3Mgc2luY2Ug
+ZmJmZmVlNzQ5ODZjICgiQVJNOiBkdHM6IEZpeCBJMkMKPj4gcmVwZWF0ZWQgc3RhcnQgaXNzdWUg
+b24gQXJtYWRhLTM4eCIpIGluIDQuMTQuCj4KPiBUaGUgY29tbWl0IHByZS1kYXRlcyA0LjE0LCBh
+bmQgdGhlIGNvbW1pdCBtZXNzYWdlIHdhcyBjb3JyZWN0IGF0IHRoZSB0aW1lCj4gaXQgd2FzIGNv
+bW1pdHRlZCAoTm92IDI5IDIwMTYpLiAgSSBkb24ndCBrbm93IHdoZXRoZXIgaXRzIHN0aWxsIHRo
+ZSBjYXNlCj4gdGhhdCB0aGUgZmljdGljaW91cyBkZXZpY2Ugc3RpbGwgYXBwZWFycywgYnV0IGlu
+Y3JlYXNpbmcgdGhlIGJ1cyBzcGVlZCBpcwo+IHN0aWxsIGEgc2Vuc2libGUgdGhpbmcgdG8gZG8g
+aWYgdGhlIGRldmljZXMgYWxsIHN1cHBvcnQgaXQuCgpJIGFncmVlIHRvIGFwcGx5IGl0LiBJIHdh
+cyBjb25jZXJuZWQgYnkgdGhlIGZhY3QgdGhhdCB0aGUgaTJjIGZpeCBtaWdodApub3Qgd29yay4g
+SSd2ZSBqdXN0IHRlc3RlZCBpdCBhbmQgYnkgdXNpbmcgdGhlICJtYXJ2ZWxsLG12NzgyMzAtYTAt
+aTJjIgp0aGVyZSB3YXMgbm8gbW9yZSBmaWN0aWNpb3VzIGRldmljZSBhdCAxMDBLSHosIHNvIEkg
+YW0gaGFwcHkgd2l0aCBpdC4KCkluIG9yZGVyIHRvIG1ha2Uga25vdyB0aGF0IG5vdyB0aGUgU3Rh
+bmRhcmQgbW9kZSBpcyB3b3JraW5nIG9uIEFybWFkYQozOHgsIEkgd2lsbCBqdXN0IGFkZCBhIHRo
+ZSBmb2xsb3dpbmcgY29tbWVudCB0byB5b3VyIGNvbW1pdCBsb2c6CgpbZ3JlZ29yeS5jbGVtZW50
+QGJvb3RsaW4uY29tOiBOb3RlIHRoYXQgc2luY2UgdGhlIGNvbW1pdCBmYmZmZWU3NDk4NmMKKCJB
+Uk06IGR0czogRml4IEkyQyByZXBlYXRlZCBzdGFydCBpc3N1ZSBvbiBBcm1hZGEtMzh4IikgaW4g
+NC4xNCwgdGhlCnRpbWluZyBpc3N1ZSBpcyBtYW5hZ2VkIGZvciB0aGUgQXJtYWRhIDM4eCBTb0Nz
+Ll0KClRoYW5rcywKCkdyZWdvcnkKCj4KPj4gU28gSSB0aGluayB0aGF0IG5vdyBldmVuIGF0IDEw
+MGtIeiB0aGUgZmljdGljaW91cyBkZXZpY2Ugc2hvdWxkIG5vdAo+PiBhcHBlYXIgYW55IG1vcmUu
+IElmIGl0IGlzIHN0aWxsIHRoZSBjYXNlIHRoZW4gdGhlcmUgbWlnaHQgYmUgYW4gaXNzdWUKPj4g
+d2l0aCB0aGUgZml4IGluIHRoZSAyYyBkcml2ZXIuCj4+IAo+PiBHcmVnb3J5Cj4+IAo+PiA+Cj4+
+ID4gU2lnbmVkLW9mZi1ieTogUnVzc2VsbCBLaW5nIDxybWsra2VybmVsQGFybWxpbnV4Lm9yZy51
+az4KPj4gPiAtLS0KPj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM4OC1jbGVhcmZvZy5k
+dHNpIHwgNyArKy0tLS0tCj4+ID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDUg
+ZGVsZXRpb25zKC0pCj4+ID4KPj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXJt
+YWRhLTM4OC1jbGVhcmZvZy5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM4OC1jbGVh
+cmZvZy5kdHNpCj4+ID4gaW5kZXggNjhhY2ZjOTY4NzA2Li4wZTNiMWYxNDBlNmQgMTAwNjQ0Cj4+
+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM4OC1jbGVhcmZvZy5kdHNpCj4+ID4g
+KysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLTM4OC1jbGVhcmZvZy5kdHNpCj4+ID4gQEAg
+LTE0Myw4ICsxNDMsNyBAQAo+PiA+ICB9Owo+PiA+ICAKPj4gPiAgJmkyYzAgewo+PiA+IC0JLyog
+SXMgdGhlcmUgYW55dGhpbmcgb24gdGhpcz8gKi8KPj4gPiAtCWNsb2NrLWZyZXF1ZW5jeSA9IDwx
+MDAwMDA+Owo+PiA+ICsJY2xvY2stZnJlcXVlbmN5ID0gPDQwMDAwMD47Cj4+ID4gIAlwaW5jdHJs
+LTAgPSA8JmkyYzBfcGlucz47Cj4+ID4gIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwo+PiA+
+ICAJc3RhdHVzID0gIm9rYXkiOwo+PiA+IEBAIC0yMzksMTMgKzIzOCwxMSBAQAo+PiA+ICAJCX07
+Cj4+ID4gIAl9Owo+PiA+ICAKPj4gPiAtCS8qIFRoZSBNQ1AzMDIxIGlzIDEwMGtIeiBjbG9jayBv
+bmx5ICovCj4+ID4gKwkvKiBUaGUgTUNQMzAyMSBzdXBwb3J0cyBzdGFuZGFyZCBhbmQgZmFzdCBt
+b2RlcyAqLwo+PiA+ICAJbWlrcm9idXNfYWRjOiBtY3AzMDIxQDRjIHsKPj4gPiAgCQljb21wYXRp
+YmxlID0gIm1pY3JvY2hpcCxtY3AzMDIxIjsKPj4gPiAgCQlyZWcgPSA8MHg0Yz47Cj4+ID4gIAl9
+Owo+PiA+IC0KPj4gPiAtCS8qIEFsc28gc29tZXRoaW5nIGF0IDB4NjQgKi8KPj4gPiAgfTsKPj4g
+PiAgCj4+ID4gICZpMmMxIHsKPj4gPiAtLSAKPj4gPiAyLjcuNAo+PiA+Cj4+IAo+PiAtLSAKPj4g
+R3JlZ29yeSBDbGVtZW50LCBCb290bGluIChmb3JtZXJseSBGcmVlIEVsZWN0cm9ucykKPj4gRW1i
+ZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwo+PiBodHRwOi8vYm9vdGxpbi5jb20K
+Pgo+IC0tIAo+IFJNSydzIFBhdGNoIHN5c3RlbTogaHR0cDovL3d3dy5hcm1saW51eC5vcmcudWsv
+ZGV2ZWxvcGVyL3BhdGNoZXMvCj4gRlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZSBpbiBz
+dWJ1cmJpYTogc3luYyBhdCA4LjhNYnBzIGRvd24gNjMwa2JwcyB1cAo+IEFjY29yZGluZyB0byBz
+cGVlZHRlc3QubmV0OiA4LjIxTWJwcyBkb3duIDUxMGticHMgdXAKCi0tIApHcmVnb3J5IENsZW1l
+bnQsIEJvb3RsaW4gKGZvcm1lcmx5IEZyZWUgRWxlY3Ryb25zKQpFbWJlZGRlZCBMaW51eCBhbmQg
+S2VybmVsIGVuZ2luZWVyaW5nCmh0dHA6Ly9ib290bGluLmNvbQoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
