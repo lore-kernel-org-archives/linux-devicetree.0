@@ -1,36 +1,55 @@
-From: Daniel Schultz <d.schultz@phytec.de>
-Subject: [PATCH] ARM: dts: rockchip: Add dp83867 CLK_OUT muxing
-Date: Mon, 5 Mar 2018 13:45:11 +0100
-Message-ID: <1520253911-46218-1-git-send-email-d.schultz@phytec.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: w.egorov@phytec.de
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
+Subject: [PATCH v2 0/2] ASoC: Add support for DAC PCM1789
+Date: Mon,  5 Mar 2018 13:48:15 +0100
+Message-ID: <20180305124817.7421-1-mylene.josserand@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, michael@amarulasolutions.com, alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, mylene.josserand@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-The CLK_O_SEL default is synchronous to XI input clock, which is 25 MHz.
-Set CLK_O_SEL to channel A transmit clock so we have 125 MHz on CLK_OUT.
-
-Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
----
-
-The binding will be added with the next merge of net-next:
-https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/?id=9708fb630d19ee51ae3aeb3a533e3010da0e8570
-
- arch/arm/boot/dts/rk3288-phycore-som.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-phycore-som.dtsi b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
-index bdd80aa..e60535d 100644
---- a/arch/arm/boot/dts/rk3288-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/rk3288-phycore-som.dtsi
-@@ -141,6 +141,7 @@
- 			ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
- 			ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
- 			enet-phy-lane-no-swap;
-+			ti,clk-output-sel = <DP83867_CLK_O_SEL_CHN_A_TCLK>;
- 		};
- 	};
- };
--- 
-2.7.4
+SGVsbG8gZXZlcnlvbmUsCgpUaGUgY3VycmVudCBzZXJpZXMgaXMgdGhlIHNlY29uZCB2ZXJzaW9u
+IHRvIGFkZCB0aGUgc3VwcG9ydCBvZiBUZXhhcwpJbnN0cnVtZW50J3MgREFDIFBDTTE3ODkuIFRo
+aXMgREFDIGlzIHZlcnkgbWluaW1hbGlzdCBhbmQgZG9lcwpub3QgaGF2ZSBtYW55IHJlZ2lzdGVy
+cy4KCkl0IGlzIGltcG9ydGFudCB0byBub3RpY2UgdGhhdCB0aGlzIERBQyBuZWVkcyB0byBhbHdh
+eXMgaGF2ZSBjbG9ja3MKZW5hYmxlZCAoZXZlbiB3aXRob3V0IGFueSBkYXRhKSBvdGhlcndpc2Ug
+aXQgd2lsbCBiZSBpbiBhICJkZXN5bmNocm9uaXplZCIKc3RhdGUgYW5kIGNhbiBub3Qgc2VuZCBk
+YXRhIGNvcnJlY3RseS4KVGhpcyBpc3N1ZSBoYXMgYmVlbiBzb2x2ZWQgYnkgcGVyZm9ybWluZyBh
+IHJlc2V0IGVhY2ggdGltZSBhIHNvdW5kCmlzIHBsYXllZC4gVGhpcyByZXNldCBjYW4gcHJvZHVj
+ZSBhICJwb3AiIG5vaXNlLgoKRGVwZW5kaW5nIG9uIHlvdXIgREFJLCB5b3Ugd2lsbCBuZWVkIHRv
+IHByb3ZpZGUgYW5kIGVuYWJsZSB0aGUgTUNMSwp0byBiZSBhYmxlIHRvIGNvbW11bmljYXRlIHdp
+dGggdGhpcyBjb2RlYyB0aHJvdWdodCBpMmMuCgpDaGFuZ2VzIHNpbmNlIHYxOgoJLSBDcmVhdGUg
+YSBuZXcgZmlsZSB0byBzdXBwb3J0IHBjbTE3ODkgaW5zdGVhZCBvZiBjb252ZXJ0aW5nIHRoZQoJ
+ZXhpc3RpbmcgcGNtMTc5eCBkcml2ZXIuIEFsbCB0aGUgcGF0Y2hlcyBhcmUgbWVyZ2VkIGludG8g
+b25lIHBhdGNoLgoJLSBVcGRhdGUgdGhlIGNvZGUgdG8gdXNlIGdwaW9kIGZvciB0aGUgcmVzZXQu
+CgktIEFkZCBzb21lIGZpeGVzIGFjY29yZGluZyB0byBUaG9tYXMgUGV0YXp6b25pJ3MgcmV2aWV3
+cwoJLSBDcmVhdGUgYSBuZXcgcGF0Y2ggdG8gYWRkIGRldmljZS10cmVlIGJpbmRpbmdzIGZvciB0
+aGlzIG5ldyBEQUMuCgpUaGFuayB5b3UgaW4gYWR2YW5jZSBmb3IgYW55IHJldmlldy4KCkJlc3Qg
+cmVnYXJkcywKTXlsw6huZQoKTXlsw6huZSBKb3NzZXJhbmQgKDIpOgogIEFTb0M6IGNvZGVjczog
+QWRkIHN1cHBvcnQgZm9yIFBDTTE3ODkKICBBU29DOiBBZGQgYmluZGluZ3MgZm9yIFBDTTE3ODkK
+CiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9wY20xNzg5LnR4dCAgICAgICAgICB8ICAy
+MSArKwogc291bmQvc29jL2NvZGVjcy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgMTIgKwogc291bmQvc29jL2NvZGVjcy9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDQgKwogc291bmQvc29jL2NvZGVjcy9wY20xNzg5LWkyYy5jICAgICAgICAgICAgICAg
+ICAgICAgfCAgNzYgKysrKysrCiBzb3VuZC9zb2MvY29kZWNzL3BjbTE3ODkuYyAgICAgICAgICAg
+ICAgICAgICAgICAgICB8IDI4OCArKysrKysrKysrKysrKysrKysrKysKIHNvdW5kL3NvYy9jb2Rl
+Y3MvcGNtMTc4OS5oICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDI4ICsrCiA2IGZpbGVzIGNo
+YW5nZWQsIDQyOSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3BjbTE3ODkudHh0CiBjcmVhdGUgbW9kZSAxMDA2
+NDQgc291bmQvc29jL2NvZGVjcy9wY20xNzg5LWkyYy5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgc291
+bmQvc29jL2NvZGVjcy9wY20xNzg5LmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBzb3VuZC9zb2MvY29k
+ZWNzL3BjbTE3ODkuaAoKLS0gCjIuMTEuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNh
+LXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9hbHNhLWRldmVsCg==
