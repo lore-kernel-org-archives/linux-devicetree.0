@@ -1,74 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] ARM: dts: STi: Fix aliases property name for STi boards
-Date: Mon, 5 Mar 2018 09:28:08 -0600
-Message-ID: <CABGGiszEcvKHGE54vOXPBUJeReAKbgmrxRyRxNfQQoL6D54GCw@mail.gmail.com>
-References: <1520262025-21088-1-git-send-email-patrice.chotard@st.com> <1520262025-21088-2-git-send-email-patrice.chotard@st.com>
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 03/37] iommu/sva: Manage process address spaces
+Date: Mon, 5 Mar 2018 10:28:42 -0500
+Message-ID: <27a044ee-0ed7-0470-0fef-289d0d5cf5e8@codeaurora.org>
+References: <20180212183352.22730-1-jean-philippe.brucker@arm.com>
+	<20180212183352.22730-4-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520262025-21088-2-git-send-email-patrice.chotard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: patrice.chotard@st.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux@armlinux.org.uk, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, jslaby@suse.com, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180212183352.22730-4-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 5, 2018 at 9:00 AM,  <patrice.chotard@st.com> wrote:
-> From: Patrice Chotard <patrice.chotard@st.com>
->
-> Since dtc v1.4.6-9-gaadd0b65c987, aliases property name must
-> be lowercase only.
-> This allows to fix following warnings when compiling dtb
-> with W=1 option :
+On 2/12/2018 1:33 PM, Jean-Philippe Brucker wrote:
+> +static void io_mm_free(struct io_mm *io_mm)
+> +{
+> +	struct mm_struct *mm;
+> +	void (*release)(struct io_mm *);
+> +
+> +	release = io_mm->release;
+> +	mm = io_mm->mm;
+> +
+> +	release(io_mm);
 
-I'm so glad to see fixes before the dtc update landed in the kernel tree!
+Is there any reason why you can't call iommu->release()
+here directly? Why do you need the release local variable?
 
-> arch/arm/boot/dts/stih418-b2199.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-> arch/arm/boot/dts/stih407-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-> arch/arm/boot/dts/stih410-b2260.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
-> arch/arm/boot/dts/stih410-b2120.dtb: Warning (alias_paths): /aliases: aliases property name must include only lowercase and '-'
->
-> Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
-> ---
->  arch/arm/boot/dts/stih407-b2120.dts | 4 ++--
->  arch/arm/boot/dts/stih410-b2120.dts | 4 ++--
->  arch/arm/boot/dts/stih410-b2260.dts | 4 ++--
->  arch/arm/boot/dts/stih418-b2199.dts | 4 ++--
->  4 files changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
-> index c8ad905d0309..fa1186af6574 100644
-> --- a/arch/arm/boot/dts/stih407-b2120.dts
-> +++ b/arch/arm/boot/dts/stih407-b2120.dts
-> @@ -14,7 +14,7 @@
->         compatible = "st,stih407-b2120", "st,stih407";
->
->         chosen {
-> -               bootargs = "console=ttyAS0,115200 clk_ignore_unused";
-> +               bootargs = "console=ttyas0,115200 clk_ignore_unused";
+> +	mmdrop(mm);
+> +}
+> +
 
-The kernel change for this is an ABI breakage both DT <-> kernel and
-kernel <-> userspace.
 
-Really, if you are okay with doing this, you should change it to ttySx IMO.
-
->                 linux,stdout-path = &sbc_serial0;
-
-And since you have this, you don't even need the console praram.
-
->         };
->
-> @@ -24,7 +24,7 @@
->         };
->
->         aliases {
-> -               ttyAS0 = &sbc_serial0;
-> +               ttyas0 = &sbc_serial0;
-
-The correct fix is use "serialN" for aliases.
-
-I have a check for only known alias names which would give a better
-warning, but David thought it was too restrictive.
-
->                 ethernet0 = &ethernet0;
->         };
->
+-- 
+Sinan Kaya
+Qualcomm Datacenter Technologies, Inc. as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project.
