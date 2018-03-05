@@ -1,15 +1,15 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH] arm: dts: stih4xx: Add missing #sound-dai-cells
-Date: Mon, 5 Mar 2018 10:37:17 +0000
-Message-ID: <5fca2bc1-1f8e-1760-9e6a-802661af0f7e@st.com>
-References: <20180301202537.30571-4-robh@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/5] arm64: dts: renesas: r8a7795: Add multi-cluster
+ definition
+Date: Mon, 5 Mar 2018 11:37:41 +0100
+Message-ID: <CAMuHMdUHbYCD-9yF4=_xe1_Fk_oMS6Shxjqkw-D+Pwfzb5q93A@mail.gmail.com>
+References: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
+ <1519697995-6061-2-git-send-email-gaku.inami.xh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180301202537.30571-4-robh@kernel.org>
-Content-Language: en-US
-Content-ID: <5C95063CF29AD84AAA686F292D6182DE@st.com>
+In-Reply-To: <1519697995-6061-2-git-send-email-gaku.inami.xh@renesas.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,61 +19,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "arm@kernel.org" <arm@kernel.org>
+To: Gaku Inami <gaku.inami.xh@renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
+On Tue, Feb 27, 2018 at 3:19 AM, Gaku Inami <gaku.inami.xh@renesas.com> wrote:
+> This patch adds the "cpu-map" for multi-cluster into r8a7795
+> device-tree. This definition is used to parse the cpu topology.
+>
+> Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
 
-On 03/01/2018 09:25 PM, Rob Herring wrote:
-> dtc now gives the following warnings:
-> 
-> arch/arm/boot/dts/stih410-b2120.dtb: Warning (sound_dai_property): /soc/sound/simple-audio-card,dai-link@0/codec: Missing property '#sound-dai-cells' in node /soc/sti-display-subsystem/sti-hdmi@8d04000 or bad phandle (referred from sound-dai[0])
-> arch/arm/boot/dts/stih407-b2120.dtb: Warning (sound_dai_property): /soc/sound/simple-audio-card,dai-link@0/codec: Missing property '#sound-dai-cells' in node /soc/sti-display-subsystem/sti-hdmi@8d04000 or bad phandle (referred from sound-dai[0])
-> arch/arm/boot/dts/stih410-b2260.dtb: Warning (sound_dai_property): /soc/sound/simple-audio-card,dai-link@0/codec: Missing property '#sound-dai-cells' in node /soc/sti-display-subsystem/sti-hdmi@8d04000 or bad phandle (referred from sound-dai[0])
-> 
-> Add the missing #sound-dai-cells property.
-> 
-> Cc: Patrice Chotard <patrice.chotard@st.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->   arch/arm/boot/dts/stih407.dtsi | 1 +
->   arch/arm/boot/dts/stih410.dtsi | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
-> index 11fdecd9312e..b592ecbe6420 100644
-> --- a/arch/arm/boot/dts/stih407.dtsi
-> +++ b/arch/arm/boot/dts/stih407.dtsi
-> @@ -107,6 +107,7 @@
->   				compatible = "st,stih407-hdmi";
->   				reg = <0x8d04000 0x1000>;
->   				reg-names = "hdmi-reg";
-> +				#sound-dai-cells = <0>;
->   				interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
->   				interrupt-names	= "irq";
->   				clock-names = "pix",
-> diff --git a/arch/arm/boot/dts/stih410.dtsi b/arch/arm/boot/dts/stih410.dtsi
-> index 68b5ff91d6a7..4bcdbbb70a31 100644
-> --- a/arch/arm/boot/dts/stih410.dtsi
-> +++ b/arch/arm/boot/dts/stih410.dtsi
-> @@ -198,6 +198,7 @@
->   				compatible = "st,stih407-hdmi";
->   				reg = <0x8d04000 0x1000>;
->   				reg-names = "hdmi-reg";
-> +				#sound-dai-cells = <0>;
->   				interrupts = <GIC_SPI 106 IRQ_TYPE_NONE>;
->   				interrupt-names	= "irq";
->   				clock-names = "pix",
-> 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Acked-by: Patrice Chotard <patrice.chotard@st.com>
+Gr{oetje,eeting}s,
 
-Will you take this patch in your remotes/Rob_Herring/dtc-update branch ?
-Or I can add this patch to my next STi pull-request.
+                        Geert
 
-Let me know.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Thanks
-
-Patrice
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
