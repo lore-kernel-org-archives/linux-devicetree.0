@@ -1,8 +1,7 @@
 From: Denis OSTERLAND <denis.osterland@diehl.com>
-Subject: [PATCH v3 4/4] rtc: isl1208: Add "evdet" interrupt source for
- isl1219.
-Date: Mon, 5 Mar 2018 10:43:52 +0000
-Message-ID: <1520246373-19023-5-git-send-email-Denis.Osterland@diehl.com>
+Subject: [PATCH v3 2/4] rtc: isl1208: switch to rtc_register_device
+Date: Mon, 5 Mar 2018 10:43:53 +0000
+Message-ID: <1520246373-19023-3-git-send-email-Denis.Osterland@diehl.com>
 References: <1520246373-19023-1-git-send-email-Denis.Osterland@diehl.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -17,105 +16,45 @@ List-Id: devicetree@vger.kernel.org
 
 From: Denis Osterland <Denis.Osterland@diehl.com>
 
-Add support for "evdet" named interrupt source.
+Fix possible race condition.
+It is not allowed to return with an error code after RTC is registered.
 
-The check if i2c client irq matches evdet irq is needed
-for the case that there is only one interrupt named "evdet".
-In this case i2c client code handles this like an unnamed
-interrupt souce and assigns the value.
-
+Suggested-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 Signed-off-by: Denis Osterland <Denis.Osterland@diehl.com>
 Reviewed-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 ---
- drivers/rtc/rtc-isl1208.c | 47 +++++++++++++++++++++++++++++++----------------
- 1 file changed, 31 insertions(+), 16 deletions(-)
+ drivers/rtc/rtc-isl1208.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/rtc/rtc-isl1208.c b/drivers/rtc/rtc-isl1208.c
-index 164371b..f2f148b 100644
+index a13a4ba..1a2c38c 100644
 --- a/drivers/rtc/rtc-isl1208.c
 +++ b/drivers/rtc/rtc-isl1208.c
-@@ -14,6 +14,7 @@
- #include <linux/i2c.h>
- #include <linux/bcd.h>
- #include <linux/rtc.h>
-+#include <linux/of_irq.h>
+@@ -635,12 +635,12 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (isl1208_i2c_validate_client(client) < 0)
+ 		return -ENODEV;
  
- /* Register map */
- /* rtc section */
-@@ -79,6 +80,7 @@ enum {
- struct isl1208 {
- 	struct rtc_device *rtc;
- 	const struct attribute_group *sysfs_files;
-+	int evdet_irq;
- };
+-	rtc = devm_rtc_device_register(&client->dev, isl1208_driver.driver.name,
+-				  &isl1208_rtc_ops,
+-				  THIS_MODULE);
++	rtc = devm_rtc_allocate_device(&client->dev);
+ 	if (IS_ERR(rtc))
+ 		return PTR_ERR(rtc);
  
- /* block read */
-@@ -730,6 +732,24 @@ static const struct attribute_group isl1219_rtc_sysfs_files = {
- 	.attrs	= isl1219_rtc_attrs,
- };
- 
-+static int isl1208_setup_irq(struct i2c_client *client, int irq)
-+{
-+	int rc = devm_request_threaded_irq(&client->dev, irq, NULL,
-+					isl1208_rtc_interrupt,
-+					IRQF_SHARED | IRQF_ONESHOT,
-+					isl1208_driver.driver.name,
-+					client);
-+	if (!rc) {
-+		device_init_wakeup(&client->dev, 1);
-+		enable_irq_wake(irq);
-+	} else {
-+		dev_err(&client->dev,
-+			"Unable to request irq %d, no alarm support\n",
-+			irq);
-+	}
-+	return rc;
-+}
++	rtc->ops = &isl1208_rtc_ops;
 +
- static int
- isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
- {
-@@ -772,6 +792,8 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 			return rc;
+ 	i2c_set_clientdata(client, rtc);
+ 
+ 	rc = isl1208_i2c_get_sr(client);
+@@ -674,7 +674,7 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
  		}
- 		isl1208->sysfs_files = &isl1219_rtc_sysfs_files;
-+		isl1208->evdet_irq = of_irq_get_byname(client->dev.of_node,
-+								"evdet");
- 	} else {
- 		isl1208->sysfs_files = &isl1208_rtc_sysfs_files;
  	}
-@@ -780,22 +802,15 @@ isl1208_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	if (rc)
- 		return rc;
  
--	if (client->irq > 0) {
--		rc = devm_request_threaded_irq(&client->dev, client->irq, NULL,
--					       isl1208_rtc_interrupt,
--					       IRQF_SHARED | IRQF_ONESHOT,
--					       isl1208_driver.driver.name,
--					       client);
--		if (!rc) {
--			device_init_wakeup(&client->dev, 1);
--			enable_irq_wake(client->irq);
--		} else {
--			dev_err(&client->dev,
--				"Unable to request irq %d, no alarm support\n",
--				client->irq);
--			client->irq = 0;
--		}
--	}
-+	if (client->irq > 0)
-+		rc = isl1208_setup_irq(client, client->irq);
-+	if (rc)
-+		return rc;
-+
-+	if (isl1208->evdet_irq > 0 && isl1208->evdet_irq != client->irq)
-+		rc = isl1208_setup_irq(client, isl1208->evdet_irq);
-+	if (rc)
-+		return rc;
- 
- 	return rtc_register_device(isl1208->rtc);
+-	return 0;
++	return rtc_register_device(rtc);
  }
+ 
+ static int
 -- 
 2.7.4
 
