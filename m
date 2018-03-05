@@ -1,188 +1,51 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: [PATCH v2 1/4] dt-bindings: mfd: Add Gateworks System Controller bindings
-Date: Mon,  5 Mar 2018 14:02:38 -0800
-Message-ID: <1520287361-12569-2-git-send-email-tharvey@gateworks.com>
-References: <1520287361-12569-1-git-send-email-tharvey@gateworks.com>
+From: Brandon Streiff <brandon.streiff@ni.com>
+Subject: [PATCH net-next] dt-bindings: net: dsa: marvell: describe compatibility string
+Date: Mon, 5 Mar 2018 16:05:22 -0600
+Message-ID: <1520287522-308-1-git-send-email-brandon.streiff@ni.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1520287361-12569-1-git-send-email-tharvey@gateworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brandon Streiff <brandon.streiff@ni.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation of device-tree bindings for the
-Gateworks System Controller (GSC).
+There are two compatibility strings for mv88e6xxx, but it isn't clear
+from the documentation why only those two exist when the mv88e6xxx driver
+supports more than the 6085 and 6190. Briefly describe how the compatible
+property is used, and provide guidance on which to use.
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+The model list comes from looking at port_base_addr values (0x0 vs 0x10)
+in drivers/net/dsa/mv88e6xxx/chip.c.
+
+Signed-off-by: Brandon Streiff <brandon.streiff@ni.com>
 ---
- Documentation/devicetree/bindings/mfd/gsc.txt | 159 ++++++++++++++++++++++++++
- 1 file changed, 159 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/gsc.txt
+ Documentation/devicetree/bindings/net/dsa/marvell.txt | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/gsc.txt b/Documentation/devicetree/bindings/mfd/gsc.txt
-new file mode 100644
-index 0000000..fe5d114
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/gsc.txt
-@@ -0,0 +1,159 @@
-+Gateworks System Controller multi-function device
+diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+index 1d4d0f4..caf71e2 100644
+--- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
++++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+@@ -13,9 +13,18 @@ placed as a child node of an mdio device.
+ The properties described here are those specific to Marvell devices.
+ Additional required and optional properties can be found in dsa.txt.
+ 
++The compatibility string is used only to find an identification register,
++which is at a different MDIO base address in different switch families.
++- "marvell,mv88e6085"	: Switch has base address 0x10. Use with models:
++			  6085, 6095, 6097, 6123, 6131, 6141, 6161, 6165,
++			  6171, 6172, 6175, 6176, 6185, 6240, 6320, 6321,
++			  6341, 6350, 6351, 6352
++- "marvell,mv88e6190"	: Switch has base address 0x00. Use with models:
++			  6190, 6190X, 6191, 6290, 6390, 6390X
 +
-+The GSC is a Multifunction I2C slave device with the following submodules:
-+- WDT
-+- GPIO
-+- Pushbutton controller
-+- HWMON
-+
-+Required properties:
-+- compatible : Must be "gw,gsc_v1", "gw,gsc_v2", "gw,gsc_v3"
-+- reg: I2C address of the device
-+- interrupts: interrupt triggered by GSC_IRQ# signal
-+- interrupt-parent: Interrupt controller GSC is connected to
-+- #interrupt-cells: should be <1>, index of the interrupt within the
-+  controller, in accordance with the "one cell" variant of
-+  <devicetree/bindings/interrupt-controller/interrupt.txt>
-+
-+Optional nodes:
-+* watchdog:
-+The GSC provides a Watchdog monitor which can power cycle the board's
-+primary power supply on most board models when tripped.
-+
-+Required properties:
-+- compatible: must be "gw,gsc-watchdog"
-+
-+* input:
-+The GSC provides an input device capable of dispatching Linux Input events
-+for user pushbutton events, tamper switch events, etc.
-+
-+Required properties:
-+- compatible: must be "gw,gsc-input"
-+
-+* hwmon:
-+The GSC provides a set of Analog to Digitcal Converter (ADC) pins used for
-+temperature and/or voltage monitoring.
-+
-+Required properties:
-+- compatible: must be "gw,gsc-hwmon"
-+
-+Example:
-+
-+	gsc: gsc@20 {
-+		compatible = "gw,gsc_v2";
-+		reg = <0x20>;
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <4 GPIO_ACTIVE_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		gsc_input {
-+			compatible = "gw,gsc-input";
-+		};
-+
-+		gsc_watchdog {
-+			compatible = "gw,gsc-watchdog";
-+		};
-+
-+		gsc_hwmon {
-+			compatible = "gw,gsc-hwmon";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			hwmon@0 { /* A0: Board Temperature */
-+				type = <0>;
-+				reg = <0x00>;
-+				label = "temp";
-+			};
-+
-+			hwmon@1 { /* A1: Input Voltage */
-+				type = <1>;
-+				reg = <0x02>;
-+				label = "Vin";
-+			};
-+
-+			hwmon@2 { /* A2: 5P0 */
-+				type = <1>;
-+				reg = <0x0b>;
-+				label = "5P0";
-+			};
-+
-+			hwmon@4 { /* A4: 0-5V input */
-+				type = <1>;
-+				reg = <0x14>;
-+				label = "ANL0";
-+			};
-+
-+			hwmon@5 { /* A5: 2P5 PCIe/GigE */
-+				type = <1>;
-+				reg = <0x23>;
-+				label = "2P5";
-+			};
-+
-+			hwmon@6 { /* A6: 1P8 Aud/Vid */
-+				type = <1>;
-+				reg = <0x1d>;
-+				label = "1P8";
-+			};
-+
-+			hwmon@7 { /* A7: GPS */
-+				type = <1>;
-+				reg = <0x26>;
-+				label = "GPS";
-+			};
-+
-+			hwmon@12 { /* A12: VDD_CORE */
-+				type = <1>;
-+				reg = <0x3>;
-+				label = "VDD_CORE";
-+			};
-+
-+			hwmon@13 { /* A13: VDD_SOC */
-+				type = <1>;
-+				reg = <0x11>;
-+				label = "VDD_SOC";
-+			};
-+
-+			hwmon@14 { /* A14: 1P0 PCIe SW */
-+				type = <1>;
-+				reg = <0x20>;
-+				label = "1P0";
-+			};
-+
-+			hwmon@15 { /* fan0 */
-+				type = <2>;
-+				reg = <0x2c>;
-+				label = "fan_50p";
-+			};
-+
-+			hwmon@16 { /* fan1 */
-+				type = <2>;
-+				reg = <0x2e>;
-+				label = "fan_60p";
-+			};
-+
-+			hwmon@17 { /* fan2 */
-+				type = <2>;
-+				reg = <0x30>;
-+				label = "fan_70p";
-+			};
-+
-+			hwmon@18 { /* fan3 */
-+				type = <2>;
-+				reg = <0x32>;
-+				label = "fan_80p";
-+			};
-+
-+			hwmon@19 { /* fan4 */
-+				type = <2>;
-+				reg = <0x34>;
-+				label = "fan_90p";
-+			};
-+
-+			hwmon@20 { /* fan5 */
-+				type = <2>;
-+				reg = <0x36>;
-+				label = "fan_100p";
-+			};
-+		};
-+	};
+ Required properties:
+ - compatible		: Should be one of "marvell,mv88e6085" or
+-			  "marvell,mv88e6190"
++			  "marvell,mv88e6190" as indicated above
+ - reg			: Address on the MII bus for the switch.
+ 
+ Optional properties:
 -- 
-2.7.4
+2.1.4
