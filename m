@@ -1,65 +1,103 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/8] dt-bindings: scsi: hisi_sas: add an property of
- signal attenuation
-Date: Mon, 5 Mar 2018 08:05:22 -0600
-Message-ID: <CAL_JsqLJc53uDBeXAa=Sa=2E6x=r6uYy9GBjH0qwvO0+MVmSCg@mail.gmail.com>
-References: <1520003182-26277-1-git-send-email-john.garry@huawei.com>
- <1520003182-26277-2-git-send-email-john.garry@huawei.com> <CAL_JsqJNxxyBDk_u=Wf2vGbgwa7act2NNc+zmxP7Ne80bFGqRA@mail.gmail.com>
- <7f62130c-723a-c9ab-533b-48e8addf3dba@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 18/19] arm: dts: mt7623: add MT7623A reference boards
+Date: Mon, 5 Mar 2018 08:10:56 -0600
+Message-ID: <CAL_JsqKLYVN8G28GNYVQc=Kduij+0b82ydKG1D=7hh8sPE4GYA@mail.gmail.com>
+References: <cover.1519378871.git.sean.wang@mediatek.com> <ddffdff293734954ba368be8a54edd3c84a4f4e6.1519378872.git.sean.wang@mediatek.com>
+ <20180302154547.xq5nkmkdk3oenbta@rob-hp-laptop> <1520043343.8089.216.camel@mtkswgap22>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7f62130c-723a-c9ab-533b-48e8addf3dba@huawei.com>
+In-Reply-To: <1520043343.8089.216.camel@mtkswgap22>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Mark Rutland <mark.rutland@arm.com>, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, Linuxarm <linuxarm@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xiaofei Tan <tanxiaofei@huawei.com>
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 2, 2018 at 10:10 AM, John Garry <john.garry@huawei.com> wrote:
-> On 02/03/2018 15:57, Rob Herring wrote:
+On Fri, Mar 2, 2018 at 8:15 PM, Sean Wang <sean.wang@mediatek.com> wrote:
+> On Fri, 2018-03-02 at 09:45 -0600, Rob Herring wrote:
+>> On Fri, Feb 23, 2018 at 06:16:38PM +0800, sean.wang@mediatek.com wrote:
+>> > From: Sean Wang <sean.wang@mediatek.com>
+>> >
+>> > Add mt7623a-rfb.dtsi where most nodes can be inherited from
+>> > mt7623n-rfb.dtsi and keep these distinctions from MT7623A boards in
+>> > mt7623a-rfb.dtsi for most definition can be reused among MT7623A board
+>> > variants.
+>> >
+>> > MT7623A has its specific definition of power domain and thus we need
+>> > to change related devices such as audio, ethernet, crypto, high-speed
+>> > DMA, NAND, and USB controller to the power domain they specifically
+>> > belong to. In addition, MT7530 exists as built-in module inside MT7623A
+>> > SoC and I2C2 and UART[0-1] get being removed and UART2 have distinct pin
+>> > usage. Those all differences can be totally seen in mt7623a-rfb.dtsi.
+>> >
+>> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+>> > ---
+>> >  arch/arm/boot/dts/Makefile             |  2 +
+>> >  arch/arm/boot/dts/mt7623a-rfb-emmc.dts | 22 +++++++++
+>> >  arch/arm/boot/dts/mt7623a-rfb-nand.dts | 26 +++++++++++
+>> >  arch/arm/boot/dts/mt7623a-rfb.dtsi     | 84 ++++++++++++++++++++++++++++++++++
+>> >  arch/arm/boot/dts/mt7623n-rfb.dtsi     | 15 ++++++
+>> >  5 files changed, 149 insertions(+)
+>> >  create mode 100644 arch/arm/boot/dts/mt7623a-rfb-emmc.dts
+>> >  create mode 100644 arch/arm/boot/dts/mt7623a-rfb-nand.dts
+>> >  create mode 100644 arch/arm/boot/dts/mt7623a-rfb.dtsi
+>> >
+>> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> > index 5af6fce..818817c 100644
+>> > --- a/arch/arm/boot/dts/Makefile
+>> > +++ b/arch/arm/boot/dts/Makefile
+>> > @@ -1122,6 +1122,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
+>> >     mt6580-evbp1.dtb \
+>> >     mt6589-aquaris5.dtb \
+>> >     mt6592-evb.dtb \
+>> > +   mt7623a-rfb-emmc.dtb \
+>> > +   mt7623a-rfb-nand.dtb \
+>> >     mt7623n-rfb-emmc.dtb \
+>> >     mt7623n-rfb-nand.dtb \
+>> >     mt7623n-bananapi-bpi-r2.dtb \
+>> > diff --git a/arch/arm/boot/dts/mt7623a-rfb-emmc.dts b/arch/arm/boot/dts/mt7623a-rfb-emmc.dts
+>> > new file mode 100644
+>> > index 0000000..ef6398e
+>> > --- /dev/null
+>> > +++ b/arch/arm/boot/dts/mt7623a-rfb-emmc.dts
+>> > @@ -0,0 +1,22 @@
+>> > +// SPDX-License-Identifier: GPL-2.0
+>> > +/*
+>> > + * Copyright (c) 2017-2018 MediaTek Inc.
+>> > + * Author: Sean Wang <sean.wang@mediatek.com>
+>> > + *
+>> > + */
+>> > +
+>> > +/dts-v1/;
+>> > +#include "mt7623a-rfb.dtsi"
+>> > +
+>> > +/ {
+>> > +   model = "MediaTek MT7623A with eMMC reference board";
+>> > +   compatible = "mediatek,mt7623a-rfb-emmc", "mediatek,mt7623";
+>> > +
+>> > +   chosen {
+>> > +           bootargs = "console=ttyS0,115200n8 earlyprintk";
 >>
->> On Fri, Mar 2, 2018 at 9:06 AM, John Garry <john.garry@huawei.com> wrote:
->>>
->>> > From: Xiaofei Tan <tanxiaofei@huawei.com>
->>> >
->>> > For some new boards with hip07 chipset we are required to
->>> > set PHY config registers differently. The hw property which
->>> > determines how to set these registers is in the PHY signal
->>> > attenuation readings.
->>> >
->>> > This patch add an devicetree property, hisi-signal-attenuation,
->>> > which is used to describe the signal attenuation of an board.
->>> >
->>> > Cc: Rob Herring <robh+dt@kernel.org>
->>> > Cc: Mark Rutland <mark.rutland@arm.com>
->>> > Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
->>> > Signed-off-by: John Garry <john.garry@huawei.com>
->>> > ---
->>> >  Documentation/devicetree/bindings/scsi/hisilicon-sas.txt | 7 +++++++
->>> >  1 file changed, 7 insertions(+)
->>> >
->>> > diff --git a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
->>> > b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
->>> > index df3bef7..6f6876a 100644
->>> > --- a/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
->>> > +++ b/Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
->>> > @@ -53,6 +53,13 @@ Main node required properties:
->>> >  Optional main node properties:
->>> >   - hip06-sas-v2-quirk-amt : when set, indicates that the v2 controller
->>> > has the
->>> >                             "am-max-transmissions" limitation.
->>> > + - hisi-signal-attenuation : array of 3 32-bit values, containing
->>> > de-emphasis,
+>> Use stdout-path instead. earlyprintk option only works for a kernel
+>> built with a debug uart at a fixed address, so drop it.
 >>
->> The format for vendor prefixes is: <vendor prefix>,property-name
->>
->> And should only be ones defined in vendor-prefixes.txt
 >
+> thanks, I will try and have stdout-path instead.
 >
-> Hi Rob,
->
-> To save a v4, that would be "hisilicon,signal-attenuation", right?
+> But for earlyprintk, our kernel can support and be built with a debug
+> uart at a fixed address and it is greatly useful to know what's going
+> on when a system hang happens on certain device's initialization prior
+> to uart initialization such as PCI device.
 
-Right.
+These days, you only need earlyprintk for *really* early console like
+in the assembly boot entry code and before the DT is unflattened. For
+anything else, use earlycon instead because earlycon is a runtime
+option.
+
+> Thus, I consider to keep it there in special on such kinds of
+> development boards for debugging purpose.
+
+Then add this option when you are doing debug. But for what's
+"shipped" in mainline, you should not have this enabled.
 
 Rob
