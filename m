@@ -1,74 +1,125 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] ASoC: codecs: Add support for
-	PCM1789
-Date: Mon, 5 Mar 2018 15:59:38 +0000
-Message-ID: <20180305155938.GL8588@sirena.org.uk>
-References: <20180305124817.7421-1-mylene.josserand@bootlin.com>
- <20180305124817.7421-2-mylene.josserand@bootlin.com>
- <20180305154910.GJ8588@sirena.org.uk>
- <20180305155715.GJ3035@piout.net>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 1/2] ARM: dts: armada388-clearfog: increase speed of i2c0
+ to 400kHz
+Date: Mon, 5 Mar 2018 16:09:30 +0000
+Message-ID: <20180305160929.GG9418@n2100.armlinux.org.uk>
+References: <20180227160135.GU9418@n2100.armlinux.org.uk>
+ <E1eqhhV-0004ku-Nd@rmk-PC.armlinux.org.uk>
+ <87d10i5xqx.fsf@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7806872185062814237=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180305155715.GJ3035@piout.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, michael@amarulasolutions.com, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, thomas.petazzoni@bootlin.com, =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@bootlin.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <87d10i5xqx.fsf@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 05, 2018 at 04:48:54PM +0100, Gregory CLEMENT wrote:
+> Hi Russell,
+>  =
 
---===============7806872185062814237==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="j3olVFx0FsM75XyV"
-Content-Disposition: inline
+>  On mar., f=E9vr. 27 2018, Russell King <rmk+kernel@armlinux.org.uk> wrot=
+e:
+> =
 
+> > All the devices on I2C0 support fast mode, so increase the bus speed
+> > to match.
+> =
 
---j3olVFx0FsM75XyV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I agree with this part. I didn't pay attention to it in the initial
+> submission but now I've checked it, and indeed according to the
+> datasheet the MCP3021 support "standard (100 kHz) and Fast (400 kHz) I2C
+> Compatible modes"
+> =
 
-On Mon, Mar 05, 2018 at 04:57:15PM +0100, Alexandre Belloni wrote:
-> On 05/03/2018 at 15:49:10 +0000, Mark Brown wrote:
+> > The Armada 388 is known to have a timing issue when in
+> > standard mode, which we believe causes the ficticious device at 0x64
+> > to appear.
+> =
 
-> > Please don't mix C and C++ style comments in a single comment like this
-> > - it looks unintentional.  Just use the same style for the whole thing.
-> > You also don't need to include all the boilerplate with the SPDX header.
+> This errata "FE-8471889 I2C Repeated Start is not supported in standard
+> mode (up to 100K)" was supposed to be fixed with the commit c1d15b68aab8
+> ("i2c: mv64xxx: Fix timing issue on Armada XP (errata FE-8471889)"). And
+> it was used on the Armada 38x SoCs since fbffee74986c ("ARM: dts: Fix I2C
+> repeated start issue on Armada-38x") in 4.14.
 
-> I think Linus made it clear that he wants the SPDX header to be a
-> C++ comment, the documentation has:
+The commit pre-dates 4.14, and the commit message was correct at the time
+it was committed (Nov 29 2016).  I don't know whether its still the case
+that the ficticious device still appears, but increasing the bus speed is
+still a sensible thing to do if the devices all support it.
 
-Sure, so make the entire thing a C++ comment then.
+> So I think that now even at 100kHz the ficticious device should not
+> appear any more. If it is still the case then there might be an issue
+> with the fix in the 2c driver.
+> =
 
---j3olVFx0FsM75XyV
-Content-Type: application/pgp-signature; name="signature.asc"
+> Gregory
+> =
 
------BEGIN PGP SIGNATURE-----
+> >
+> > Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> > ---
+> >  arch/arm/boot/dts/armada-388-clearfog.dtsi | 7 ++-----
+> >  1 file changed, 2 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/armada-388-clearfog.dtsi b/arch/arm/boot=
+/dts/armada-388-clearfog.dtsi
+> > index 68acfc968706..0e3b1f140e6d 100644
+> > --- a/arch/arm/boot/dts/armada-388-clearfog.dtsi
+> > +++ b/arch/arm/boot/dts/armada-388-clearfog.dtsi
+> > @@ -143,8 +143,7 @@
+> >  };
+> >  =
 
-iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlqdaWkACgkQJNaLcl1U
-h9CiUgf40Hp+gzXwR2TkhGpq5wjdnZSOKngsP8WUfonuZTnnEkE2ejOVjAMVgpOM
-U0ljr1dg/Hg6tfbWNFRYflY31V+PPjfw+KnPuqNxjNFYj1t5GTL3sTrjrLf8RwSU
-v1mgbevFejwxwk4vDhhdx869XZIiWUfnGk7vfAxJIQDi0BWfB6b31nBQmPv11sO0
-pXi/l/ZBtmP29pfLoM1XxzKC3zwZ3dn9ESVkKMgKlnBUGGjsqHpNZTEmj+VB3KHL
-Sg9nTyqmF5zwiNBNnddqriWee+2M+/7ZUBUWj+inCCfC7mLkbFZfB43BHVfl20cl
-kY2El6N9CDLWgJHJUYA4Y8RQRhAe
-=er+z
------END PGP SIGNATURE-----
+> >  &i2c0 {
+> > -	/* Is there anything on this? */
+> > -	clock-frequency =3D <100000>;
+> > +	clock-frequency =3D <400000>;
+> >  	pinctrl-0 =3D <&i2c0_pins>;
+> >  	pinctrl-names =3D "default";
+> >  	status =3D "okay";
+> > @@ -239,13 +238,11 @@
+> >  		};
+> >  	};
+> >  =
 
---j3olVFx0FsM75XyV--
+> > -	/* The MCP3021 is 100kHz clock only */
+> > +	/* The MCP3021 supports standard and fast modes */
+> >  	mikrobus_adc: mcp3021@4c {
+> >  		compatible =3D "microchip,mcp3021";
+> >  		reg =3D <0x4c>;
+> >  	};
+> > -
+> > -	/* Also something at 0x64 */
+> >  };
+> >  =
 
---===============7806872185062814237==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> >  &i2c1 {
+> > -- =
 
+> > 2.7.4
+> >
+> =
 
---===============7806872185062814237==--
+> -- =
+
+> Gregory Clement, Bootlin (formerly Free Electrons)
+> Embedded Linux and Kernel engineering
+> http://bootlin.com
+
+-- =
+
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
