@@ -1,43 +1,38 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/5] arm64: dts: renesas: r8a7796: Add multi-cluster
- definition
-Date: Mon, 5 Mar 2018 11:38:42 +0100
-Message-ID: <CAMuHMdVdK5-NgO2o2aiwk8YrdXoY63L7h2jzA7-WpKqvmgE21g@mail.gmail.com>
-References: <1519697995-6061-1-git-send-email-gaku.inami.xh@renesas.com>
- <1519697995-6061-3-git-send-email-gaku.inami.xh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1519697995-6061-3-git-send-email-gaku.inami.xh@renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gaku Inami <gaku.inami.xh@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Joel Stanley <joel@jms.id.au>
+Subject: [PATCH v2 0/2] watchdog: Add Nuvoton NPCM (Poleg) driver
+Date: Mon,  5 Mar 2018 22:15:39 +1030
+Message-ID: <20180305114541.9917-1-joel@jms.id.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>, Avi Fishman <avifishman70@gmail.com>, Brendan Higgins <brendanhiggins@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 27, 2018 at 3:19 AM, Gaku Inami <gaku.inami.xh@renesas.com> wrote:
-> This patch adds the "cpu-map" for multi-cluster into r8a7796
-> device-tree. This definition is used to parse the cpu topology.
->
-> Signed-off-by: Gaku Inami <gaku.inami.xh@renesas.com>
+v2: Address comments from Guenter and Marcus
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This is a driver for the Poleg board that is in the process of being
+upstreamed. I have tested it on an evaluation board.
 
-Gr{oetje,eeting}s,
+The watchdog is a single register inside of the timer IP. This made me
+think about how to describe the device tree bindings for a while, but
+after some discussion I settled on describing the watchdog separately,
+and giving it's own compatible string, and it's own driver.
 
-                        Geert
+The timer is being reviewed over here:
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+ https://lkml.org/lkml/2018/2/26/492
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Joel Stanley (2):
+  dt-bindings: watchdog: Add Nuvoton NPCM description
+  watchdog: Add Nuvoton NPCM watchdog driver
+
+ .../bindings/watchdog/nuvoton,npcm-wdt.txt         |  28 +++
+ drivers/watchdog/Kconfig                           |  11 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/npcm_wdt.c                        | 230 +++++++++++++++++++++
+ 4 files changed, 270 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+ create mode 100644 drivers/watchdog/npcm_wdt.c
+
+-- 
+2.15.1
