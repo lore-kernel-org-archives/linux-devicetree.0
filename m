@@ -1,51 +1,66 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [linux-sunxi] [PATCH v3 15/16] ARM: dts: sun8i: h3: Enable HDMI
- output on H3 boards
-Date: Mon, 05 Mar 2018 19:24:44 +0100
-Message-ID: <24923386.1anQU1Bm90@jernej-laptop>
-References: <20180301213442.16677-1-jernej.skrabec@siol.net>
- <20180301213442.16677-16-jernej.skrabec@siol.net>
- <57afe052-9a8c-f63b-ee43-5bad8cd1d193@iki.fi>
+From: James Hogan <jhogan@kernel.org>
+Subject: Re: [PATCH v2 7/8] MIPS: qi_lb60: Enable the jz4740-wdt driver
+Date: Mon, 5 Mar 2018 18:28:21 +0000
+Message-ID: <20180305182821.GH4197@saruman>
+References: <20171228162939.3928-2-paul@crapouillou.net>
+ <20171230135108.6834-1-paul@crapouillou.net>
+ <20171230135108.6834-7-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <57afe052-9a8c-f63b-ee43-5bad8cd1d193@iki.fi>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: joonas.kylmala@iki.fi
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, mturquette@baylibre.com, wens@csie.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, linux-sunxi@googlegroups.com, robh+dt@kernel.org, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="X1xGqyAVbSpAWs5A"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20171230135108.6834-7-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
 
-Dne ponedeljek, 05. marec 2018 ob 16:27:00 CET je Joonas Kylm=E4l=E4 napisa=
-l(a):
-> Jernej Skrabec:
-> > +&hdmi_out {
-> > +	hdmi_out_con: endpoint {
-> > +		remote-endpoint =3D <&hdmi_con_in>;
-> > +	};
-> > +};
-> =
+--X1xGqyAVbSpAWs5A
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> This node is added to all the DTS files you enabled HDMI on. Is it
-> something that could be instead put to the DTSI file?
+On Sat, Dec 30, 2017 at 02:51:07PM +0100, Paul Cercueil wrote:
+> The watchdog is an useful piece of hardware, so there's no reason not to
+> enable it.
 
-I guess that would mean also including connector node (hdmi_con_in) in DTSI=
-, =
+Presumably this is important for restart to work after the change in the
+next patch? Probably worth mentioning that too if thats the case.
 
-since it is referenced inside. However, not all boards have HDMI connector,=
- so =
+>=20
+> This commit enables the Kconfig option in the qi_lb60 defconfig.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-I didn't include it in DTSI.
+The change looks good to me though
 
-Best regards,
-Jernej
+Acked-by: James Hogan <jhogan@kernel.org>
+
+Cheers
+James
+=20
+
+--X1xGqyAVbSpAWs5A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEd80NauSabkiESfLYbAtpk944dnoFAlqdjEQACgkQbAtpk944
+dnpRnxAAoEQxrhZDUqJpdLEym/nqSZ24dEWfXloChiM4PcKwSpxyNIgCPr0Xj7aT
+Ec9v6SxIR9ChLkqtDxa0nkt+XM6vubmCsFlCpp57yFwobg8C6jOl+A/c4MtICsj0
+p3ec9IB5Uh/Od5zrXYLo62OQauO7h7oUC6pHXsNyND8LMhxoXlHIQ5L6OujNSMZs
+ZV8zR+fo46iaj+zGdSVTaZynGh8oW2VxMzzwu47Zntv3YYYa00OqDvuaQGF89WNJ
+WZme4o2tCVcqZk6E4z4Ax3L0eU46c0W4ZAknRto7pfoi4UmghMqEJ7sGj1syriwS
+OQsLzwzIV2+OGyPQd5EKdZhJxEQ1BUZXAoovF9AieImvsn+l59VmYtpxcm6mT8JO
+fJJDkazoKJMsbX64k/dYFsRSfCqUo0jUX3ZJoBUSsCaWJTxwYeWwVUHUYpBoGdU4
+lSjLgEWtgKEy9JtjQZl34QXMmcqvPar8pnMF/egWK8vKi7HVa6YxJg8eJ5zezBRk
+QgpXFxa1YpybVi/00Z9vuFUFg2TXXoNd3vOZnSoX/Mr40Fg5K04yvHZEiaJn/3/Q
+SIUfpYHU3h+IXZDftAC+TD3k9iJetNyUZ5S8I2L5dtf4fmYzIGLmJVfHIW/dqduf
+6pkqTEkLgaLx5LRRTZwk0cgtFuK00rQ/9RJndl5qSLiKTq+8FZI=
+=Fr2u
+-----END PGP SIGNATURE-----
+
+--X1xGqyAVbSpAWs5A--
