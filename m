@@ -1,56 +1,72 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] ASoC: add tda7419 audio processor binding
-Date: Mon, 5 Mar 2018 16:29:54 -0600
-Message-ID: <20180305222954.chitmlvsklszods7@rob-hp-laptop>
-References: <20180227225128.17815-1-mporter@konsulko.com>
- <20180227225128.17815-2-mporter@konsulko.com>
+Subject: Re: [PATCH 1/2] dt-bindings: soc: Add ZynqMP PM bindings
+Date: Mon, 5 Mar 2018 16:33:28 -0600
+Message-ID: <20180305223328.la462hdwwsymvusk@rob-hp-laptop>
+References: <1519773866-18196-1-git-send-email-jollys@xilinx.com>
+ <1519773866-18196-2-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180227225128.17815-2-mporter@konsulko.com>
+In-Reply-To: <1519773866-18196-2-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@konsulko.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jolly Shah <jolly.shah@xilinx.com>
+Cc: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, mark.rutland@arm.com, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 27, 2018 at 05:51:27PM -0500, Matt Porter wrote:
-> DeviceTree binding for the tda7419 audio processor.
+On Tue, Feb 27, 2018 at 03:24:25PM -0800, Jolly Shah wrote:
+> Add documentation to describe Xilinx ZynqMP power management
+> bindings.
 > 
-> Signed-off-by: Matt Porter <mporter@konsulko.com>
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
 > ---
->  Documentation/devicetree/bindings/sound/tda7419.txt | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/tda7419.txt
+>  .../bindings/soc/xilinx/xlnx,zynqmp-power.txt      | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-power.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/tda7419.txt b/Documentation/devicetree/bindings/sound/tda7419.txt
+> diff --git a/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-power.txt b/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-power.txt
 > new file mode 100644
-> index 000000000000..919318315600
+> index 0000000..5b7d963
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/tda7419.txt
-> @@ -0,0 +1,15 @@
-> +TDA7419 audio processor
+> +++ b/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-power.txt
+> @@ -0,0 +1,28 @@
+> +Xilinx Zynq MPSoC Power Management Device Tree Bindings
 > +
-> +This device supports I2C only.
+> +The zynqmp-power node describes the power management configurations.
+
+That really tells me nothing. What aspect of power management does this 
+interface control?
+
 > +
 > +Required properties:
+> + - compatible	: Must contain:  "xlnx,zynqmp-power"
+> + - mbox-names	: Name given to channels seen in the 'mboxes' property.
+> +		  "rx" - Mailbox corresponding to receive path
+> +		  "tx" - Mailbox corresponding to transmit path
+> + - mboxes	: Standard property to specify a Mailbox. Each value of
+> +		  the mboxes property should contain a phandle to the
+> +		  mailbox controller device node and an args specifier
+> +		  that will be the phandle to the intended sub-mailbox
+> +		  child node to be used for communication. See
+> +		  Documentation/devicetree/bindings/mailbox/mailbox.txt
+> +		  for more details about the generic mailbox controller
+> +		  and client driver bindings. Also see
+> +		  Documentation/devicetree/bindings/mailbox/ \
+> +		  xlnx,zynqmp-ipi-mailbox.txt for typical controller that
+> +		  is used to communicate with this System controllers.
+
+No need to define a standard property here. Just need to say how many 
+entries and refer to the common binding.
+
 > +
-> +- compatible : "st,tda7419"
-> +- reg : the I2C address of the device.
-
-For completeness:
-
-st,mute-gpios for MUTE pin?
-
-vdd-supply?
-
-> +
-> +Example:
-> +
-> +ap: tda7419@44 {
-> +	compatible = "st,tda7419";
-> +	reg = <0x44>;
-> +};
+> +Examples:
+> +	zynqmp_power: zynqmp-power {
+> +		compatible = "xlnx,zynqmp-power";
+> +		mboxes = <&ipi_mailbox_pmu0 0>,
+> +			 <&ipi_mailbox_pmu0 1>;
+> +		mbox-names = "tx", "rx";
+> +	};
 > -- 
-> 2.11.0
+> 2.7.4
 > 
