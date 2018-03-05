@@ -1,200 +1,97 @@
-Return-Path: <SRS0=Q/1x=FY=gmail.com=ddaney.cavm@kernel.org>
+Return-Path: <SRS0=9mlS=F3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-db5eur01on0083.outbound.protection.outlook.com ([104.47.2.83]:39452
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751490AbeCEIlC (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 5 Mar 2018 03:41:02 -0500
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v2 02/12] usb: typec: add API to get sink and source
+ config
+Date: Mon, 5 Mar 2018 08:40:57 +0000
+Message-ID: <VI1PR0402MB3917AFDD69DD2645002C5FB289DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
+ <1519645759-12701-3-git-send-email-jun.li@nxp.com>
+ <20180226133213.GC25535@kuha.fi.intel.com>
+In-Reply-To: <20180226133213.GC25535@kuha.fi.intel.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20180228151701.GM1479@piout.net>
-References: <20180222200432.22003-1-david.daney@cavium.com> <20180228151701.GM1479@piout.net>
-From: David Daney <ddaney.cavm@gmail.com>
-Date: Fri, 2 Mar 2018 08:22:22 -0800
-Message-ID: <CAKjEs9FbNDKNs5j-aZAmHCYO1YE5g70vLyuk1hGDNvvRWj977w@mail.gmail.com>
-Subject: Re: [PATCH v6] rtc: isl12026: Add driver.
-Content-Type: multipart/alternative; boundary="001a114b04a89b6f5d056670615e"
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: David Daney <david.daney@cavium.com>, Alessandro Zummo <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
---001a114b04a89b6f5d056670615e
-Content-Type: text/plain; charset="UTF-8"
-
-I am no longer able to test this patch as I lost access to the hardware.
-
-If someone else wants to take charge of the patch, that would be great.
-
-Sorry I couldn't drive this to completion,
-David Daney
-
-On Wed, Feb 28, 2018 at 7:17 AM, Alexandre Belloni <
-alexandre.belloni@free-electrons.com> wrote:
-
-> Hi,
->
-> That's mostly good
->
-> On 22/02/2018 at 12:04:32 -0800, David Daney wrote:
-> > +     priv->rtc->ops = &isl12026_rtc_ops;
-> > +     priv->rtc->nvram_old_abi = false;
->
-> This allocation is not necessary and I would refer not having t so when
-> the ABI goes away, it is not necessary to change this driver.
->
-> > +     ret = rtc_register_device(priv->rtc);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     memset(&nvm_cfg, 0, sizeof(nvm_cfg));
-> > +     nvm_cfg.name = "eeprom";
->
-> You probably need something more descriptive, usually the rtc model name
-> else, it is difficult (but not impossible) to find where this nvmem is
-> actually located when using /sys/bus/nvmem/devices
-> isl12026- would be a good choice.
->
-> > +     nvm_cfg.read_only = false;
-> > +     nvm_cfg.root_only = true;
->
-> any reason to have it root only?
->
-> > +     nvm_cfg.base_dev = &client->dev;
-> > +     nvm_cfg.priv = priv;
-> > +     nvm_cfg.stride = 1;
-> > +     nvm_cfg.word_size = 1;
-> > +     nvm_cfg.size = 512;
-> > +     nvm_cfg.reg_read = isl12026_nvm_read;
-> > +     nvm_cfg.reg_write = isl12026_nvm_write;
-> > +
-> > +     return rtc_nvmem_register(priv->rtc, &nvm_cfg);
->
-> The probe function must not fail after rtc_register_device has been
-> called so you must return 0 here.
->
-> It is not currently possible to call rtc_nvmem_register before
-> rtc_register_device unless we move the nvmem to the parent device:
->
-> diff --git a/drivers/rtc/nvmem.c b/drivers/rtc/nvmem.c
-> index 3a02357eb783..17ec4c8d0fad 100644
-> --- a/drivers/rtc/nvmem.c
-> +++ b/drivers/rtc/nvmem.c
-> @@ -91,7 +91,7 @@ int rtc_nvmem_register(struct rtc_device *rtc,
->         if (!nvmem_config)
->                 return -ENODEV;
->
-> -       nvmem_config->dev = &rtc->dev;
-> +       nvmem_config->dev = rtc->dev.parent;
->         nvmem_config->owner = rtc->owner;
->         rtc->nvmem = nvmem_register(nvmem_config);
->         if (IS_ERR_OR_NULL(rtc->nvmem))
->
-> I'll submit this patch for this cycle before there are many users of the
-> interface (converted drivers are still exposing the old ABI).
->
-> If you prefer, you can depend on it.
->
-> --
-> Alexandre Belloni, Bootlin (formerly Free Electrons)
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
---001a114b04a89b6f5d056670615e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">I am no longer able to test this patch as I lost access to=
- the hardware.<div><br></div><div>If someone else wants to take charge of t=
-he patch, that would be great.</div><div><br></div><div>Sorry I couldn&#39;=
-t drive this to completion,</div><div>David Daney</div></div><div class=3D"=
-gmail_extra"><br><div class=3D"gmail_quote">On Wed, Feb 28, 2018 at 7:17 AM=
-, Alexandre Belloni <span dir=3D"ltr">&lt;<a href=3D"mailto:alexandre.bello=
-ni@free-electrons.com" target=3D"_blank">alexandre.belloni@free-electrons.c=
-om</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"marg=
-in:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Hi,<br>
-<br>
-That&#39;s mostly good<br>
-<span class=3D""><br>
-On 22/02/2018 at 12:04:32 -0800, David Daney wrote:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0priv-&gt;rtc-&gt;ops =3D &amp;isl12026_rtc_ops;<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0priv-&gt;rtc-&gt;nvram_old_abi =3D false;<br>
-<br>
-</span>This allocation is not necessary and I would refer not having t so w=
-hen<br>
-the ABI goes away, it is not necessary to change this driver.<br>
-<span class=3D""><br>
-&gt; +=C2=A0 =C2=A0 =C2=A0ret =3D rtc_register_device(priv-&gt;rtc)<wbr>;<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (ret)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0memset(&amp;nvm_cfg, 0, sizeof(nvm_cfg));<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0<a href=3D"http://nvm_cfg.name" rel=3D"noreferrer=
-" target=3D"_blank">nvm_cfg.name</a> =3D &quot;eeprom&quot;;<br>
-<br>
-</span>You probably need something more descriptive, usually the rtc model =
-name<br>
-else, it is difficult (but not impossible) to find where this nvmem is<br>
-actually located when using /sys/bus/nvmem/devices<br>
-isl12026- would be a good choice.<br>
-<span class=3D""><br>
-&gt; +=C2=A0 =C2=A0 =C2=A0nvm_cfg.read_only =3D false;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0nvm_cfg.root_only =3D true;<br>
-<br>
-</span>any reason to have it root only?<br>
-<span class=3D""><br>
-&gt; +=C2=A0 =C2=A0 =C2=A0nvm_cfg.base_dev =3D &amp;client-&gt;dev;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0nvm_cfg.priv =3D priv;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0nvm_cfg.stride =3D 1;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0nvm_cfg.word_size =3D 1;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0nvm_cfg.size =3D 512;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0nvm_cfg.reg_read =3D isl12026_nvm_read;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0nvm_cfg.reg_write =3D isl12026_nvm_write;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return rtc_nvmem_register(priv-&gt;rtc, &amp;nvm_=
-cfg);<br>
-<br>
-</span>The probe function must not fail after rtc_register_device has been<=
-br>
-called so you must return 0 here.<br>
-<br>
-It is not currently possible to call rtc_nvmem_register before<br>
-rtc_register_device unless we move the nvmem to the parent device:<br>
-<br>
-diff --git a/drivers/rtc/nvmem.c b/drivers/rtc/nvmem.c<br>
-index 3a02357eb783..17ec4c8d0fad 100644<br>
---- a/drivers/rtc/nvmem.c<br>
-+++ b/drivers/rtc/nvmem.c<br>
-@@ -91,7 +91,7 @@ int rtc_nvmem_register(struct rtc_device *rtc,<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!nvmem_config)<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENODEV;<br>
-<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0nvmem_config-&gt;dev =3D &amp;rtc-&gt;dev;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0nvmem_config-&gt;dev =3D rtc-&gt;dev.parent;<br=
->
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 nvmem_config-&gt;owner =3D rtc-&gt;owner;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 rtc-&gt;nvmem =3D nvmem_register(nvmem_config);=
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (IS_ERR_OR_NULL(rtc-&gt;nvmem))<br>
-<br>
-I&#39;ll submit this patch for this cycle before there are many users of th=
-e<br>
-interface (converted drivers are still exposing the old ABI).<br>
-<br>
-If you prefer, you can depend on it.<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
---<br>
-Alexandre Belloni, Bootlin (formerly Free Electrons)<br>
-Embedded Linux and Kernel engineering<br>
-<a href=3D"https://bootlin.com" rel=3D"noreferrer" target=3D"_blank">https:=
-//bootlin.com</a><br>
-</font></span><div class=3D"HOEnZb"><div class=3D"h5">--<br>
-To unsubscribe from this list: send the line &quot;unsubscribe devicetree&q=
-uot; in<br>
-the body of a message to <a href=3D"mailto:majordomo@vger.kernel.org">major=
-domo@vger.kernel.org</a><br>
-More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordomo-in=
-fo.html" rel=3D"noreferrer" target=3D"_blank">http://vger.kernel.org/<wbr>m=
-ajordomo-info.html</a><br>
-</div></div></blockquote></div><br></div>
-
---001a114b04a89b6f5d056670615e--
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogSGVpa2tpIEtyb2dlcnVz
+IFttYWlsdG86aGVpa2tpLmtyb2dlcnVzQGxpbnV4LmludGVsLmNvbV0NCj4gU2VudDogMjAxOMTq
+MtTCMjbI1SAyMTozMg0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gQ2M6IGdyZWdr
+aEBsaW51eGZvdW5kYXRpb24ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IGxpbnV4QHJvZWNrLXVz
+Lm5ldDsNCj4gYS5oYWpkYUBzYW1zdW5nLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IHl1ZXlh
+b0Bnb29nbGUuY29tOw0KPiBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54cC5jb20+OyBnYXJzaWx2
+YUBlbWJlZGRlZG9yLmNvbTsNCj4gb19sZXZlcXVlQG9yYW5nZS5mcjsgc2h1ZmFuX2xlZUByaWNo
+dGVrLmNvbTsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJl
+OiBbUEFUQ0ggdjIgMDIvMTJdIHVzYjogdHlwZWM6IGFkZCBBUEkgdG8gZ2V0IHNpbmsgYW5kIHNv
+dXJjZQ0KPiBjb25maWcNCj4gDQo+IEhpLA0KPiANCj4gT24gTW9uLCBGZWIgMjYsIDIwMTggYXQg
+MDc6NDk6MDlQTSArMDgwMCwgTGkgSnVuIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRkIDIgQVBJ
+cyB0byBnZXQgc2luayBhbmQgc291cmNlIHBvd2VyIGNvbmZpZyBmcm9tDQo+ID4gZmlybXdhcmUg
+ZGVzY3JpcHRpb24uDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMaSBKdW4gPGp1bi5saUBueHAu
+Y29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMgfCA0Mw0KPiA+ICsr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgaW5jbHVkZS9s
+aW51eC91c2IvdGNwbS5oIHwgIDIgKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA0NSBpbnNlcnRp
+b25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jIGIv
+ZHJpdmVycy91c2IvdHlwZWMvdGNwbS5jIGluZGV4DQo+ID4gZjRkNTYzZS4uNDA5ZjFkMCAxMDA2
+NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3VzYi90eXBlYy90Y3BtLmMNCj4gPiArKysgYi9kcml2ZXJz
+L3VzYi90eXBlYy90Y3BtLmMNCj4gPiBAQCAtMTIsNiArMTIsNyBAQA0KPiA+ICAjaW5jbHVkZSA8
+bGludXgva2VybmVsLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2lu
+Y2x1ZGUgPGxpbnV4L211dGV4Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiANCj4g
+Tm8gbmVlZCBmb3IgdGhhdC4gVGhlcmUgaXMgbm90aGluZyBEVCBvbmx5IHNwZWNpZmljIGhlcmUu
+DQo+IA0KPiBBcyBpbiAwMS8xMiwgeW91IG9ubHkgaGF2ZSBkZXZpY2UgcHJvcGVydGllcyBoZXJl
+LCBzbyB1c2UgdGhlIHVuaWZpZWQgZGV2aWNlDQo+IHByb3BlcnR5IEFQSSBpbnN0ZWFkIG9mIG9m
+X3Byb3BlcnR5XyogZnVuY3Rpb25zLg0KDQpJIHdpbGwgdXNlIGRldmljZSBwcm9wZXJ0eSBBUEks
+IGFsc28gYXMgdGhlIGJlbG93IHNpbmsgcHJvcHM6DQoibWF4LXNuay1taWNyb3ZvbHQiDQoibWF4
+LXNuay1taWNyb2FtcCINCiJtYXgtc25rLW1pY3Jvd2F0dC1ob3VycyINCiJvcC1zbmstbWljcm93
+YXR0LWhvdXJzIg0KYXJlIHJlZHVuZGFudCBub3csIG9ubHkgUERPIGlzIHJlcXVpcmVkLCBJIHdp
+bGwgY29tYmluZSB0aGUgYmVsb3cgMiBBUElzDQp0byBiZSBvbmU6DQppbnQgdGNwbV9nZXRfcGRv
+cyhzdHJ1Y3QgZGV2aWNlICpkZXYsIGJvb2wgc2luaywgc3RydWN0IHRjcGNfY29uZmlnICp0Y2Zn
+KQ0KDQpKdW4gTGkNCj4gDQo+ID4gICNpbmNsdWRlIDxsaW51eC9wcm9jX2ZzLmg+DQo+ID4gICNp
+bmNsdWRlIDxsaW51eC9zY2hlZC9jbG9jay5oPg0KPiA+ICAjaW5jbHVkZSA8bGludXgvc2VxX2Zp
+bGUuaD4NCj4gPiBAQCAtMzU4OSw2ICszNTkwLDQ4IEBAIHN0YXRpYyBpbnQgdGNwbV9jb3B5X3Zk
+b3ModTMyICpkZXN0X3ZkbywNCj4gY29uc3QgdTMyICpzcmNfdmRvLA0KPiA+ICAJcmV0dXJuIG5y
+X3ZkbzsNCj4gPiAgfQ0KPiA+DQo+ID4gK2ludCB0Y3BtX29mX2dldF9zcmNfY29uZmlnKHN0cnVj
+dCBkZXZpY2Vfbm9kZSAqbnAsIHN0cnVjdCB0Y3BjX2NvbmZpZw0KPiA+ICsqdGNmZykgew0KPiA+
+ICsJaW50IHJldDsNCj4gPiArDQo+ID4gKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3ZhcmlhYmxl
+X3UzMl9hcnJheShucCwgInNyYy1wZG9zIiwNCj4gPiArCQkJCXRjZmctPnNyY19wZG8sIDEsIFBE
+T19NQVhfT0JKRUNUUyk7DQo+ID4gKwlpZiAocmV0ID4gMCkNCj4gPiArCQl0Y2ZnLT5ucl9zcmNf
+cGRvID0gcmV0Ow0KPiA+ICsNCj4gPiArCXJldHVybiByZXQ7DQo+ID4gK30NCj4gPiArRVhQT1JU
+X1NZTUJPTF9HUEwodGNwbV9vZl9nZXRfcGRvcyk7DQo+ID4gKw0KPiA+ICtpbnQgdGNwbV9vZl9n
+ZXRfc25rX2NvbmZpZyhzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLCBzdHJ1Y3QgdGNwY19jb25maWcN
+Cj4gPiArKnRjZmcpIHsNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gb2ZfcHJv
+cGVydHlfcmVhZF92YXJpYWJsZV91MzJfYXJyYXkobnAsICJzbmstcGRvcyIsDQo+ID4gKwkJCQl0
+Y2ZnLT5zbmtfcGRvLCAxLCBQRE9fTUFYX09CSkVDVFMpOw0KPiA+ICsJaWYgKHJldCA+IDApDQo+
+ID4gKwkJdGNmZy0+bnJfc25rX3BkbyA9IHJldDsNCj4gPiArCWVsc2UNCj4gPiArCQlyZXR1cm4g
+cmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAibWF4LXNu
+ay1taWNyb3ZvbHQiLA0KPiAmdGNmZy0+bWF4X3Nua19tdik7DQo+ID4gKwlpZiAocmV0KQ0KPiA+
+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIo
+bnAsICJtYXgtc25rLW1pY3JvYW1wIiwNCj4gJnRjZmctPm1heF9zbmtfbWEpOw0KPiA+ICsJaWYg
+KHJldCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArCXJldCA9IG9mX3Byb3BlcnR5
+X3JlYWRfdTMyKG5wLCAibWF4LXNuay1taWNyb3dhdHQtaG91cnMiLA0KPiA+ICsJCQkJICAgJnRj
+ZmctPm1heF9zbmtfbXcpOw0KPiA+ICsJaWYgKHJldCkNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+
+ICsNCj4gPiArCXJldHVybiBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgIm9wLXNuay1taWNyb3dh
+dHQtaG91cnMiLA0KPiA+ICsJCQkJICAgICZ0Y2ZnLT5vcGVyYXRpbmdfc25rX213KTsNCj4gPiAr
+fQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTCh0Y3BtX29mX2dldF9wZG9zKTsNCj4gPiArDQo+ID4g
+IGludCB0Y3BtX3VwZGF0ZV9zb3VyY2VfY2FwYWJpbGl0aWVzKHN0cnVjdCB0Y3BtX3BvcnQgKnBv
+cnQsIGNvbnN0IHUzMg0KPiAqcGRvLA0KPiA+ICAJCQkJICAgIHVuc2lnbmVkIGludCBucl9wZG8p
+DQo+ID4gIHsNCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC91c2IvdGNwbS5oIGIvaW5j
+bHVkZS9saW51eC91c2IvdGNwbS5oIGluZGV4DQo+ID4gY2ExYzBiNS4uOTYyZWZmMSAxMDA2NDQN
+Cj4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3VzYi90Y3BtLmgNCj4gPiArKysgYi9pbmNsdWRlL2xp
+bnV4L3VzYi90Y3BtLmgNCj4gPiBAQCAtMTkxLDYgKzE5MSw4IEBAIGludCB0Y3BtX3VwZGF0ZV9z
+aW5rX2NhcGFiaWxpdGllcyhzdHJ1Y3QNCj4gdGNwbV9wb3J0ICpwb3J0LCBjb25zdCB1MzIgKnBk
+bywNCj4gPiAgCQkJCSAgdW5zaWduZWQgaW50IG1heF9zbmtfbWEsDQo+ID4gIAkJCQkgIHVuc2ln
+bmVkIGludCBtYXhfc25rX213LA0KPiA+ICAJCQkJICB1bnNpZ25lZCBpbnQgb3BlcmF0aW5nX3Nu
+a19tdyk7DQo+ID4gK2ludCB0Y3BtX29mX2dldF9zcmNfY29uZmlnKHN0cnVjdCBkZXZpY2Vfbm9k
+ZSAqbnAsIHN0cnVjdCB0Y3BjX2NvbmZpZw0KPiA+ICsqdGNmZyk7IGludCB0Y3BtX29mX2dldF9z
+bmtfY29uZmlnKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIHN0cnVjdA0KPiA+ICt0Y3BjX2NvbmZp
+ZyAqdGNmZyk7DQo+ID4NCj4gPiAgdm9pZCB0Y3BtX3ZidXNfY2hhbmdlKHN0cnVjdCB0Y3BtX3Bv
+cnQgKnBvcnQpOyAgdm9pZA0KPiA+IHRjcG1fY2NfY2hhbmdlKHN0cnVjdCB0Y3BtX3BvcnQgKnBv
+cnQpOw0KPiANCj4gVGhhbmtzLA0KPiANCj4gLS0NCj4gaGVpa2tpDQo=
