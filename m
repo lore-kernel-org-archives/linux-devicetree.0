@@ -1,9 +1,14 @@
-Return-Path: <SRS0=V/0G=F3=linux.intel.com=heikki.krogerus@kernel.org>
-Date: Mon, 5 Mar 2018 13:30:05 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v2 03/12] staging: typec: tcpci: support port config
+Return-Path: <SRS0=9mlS=F3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ve1eur01on0041.outbound.protection.outlook.com ([104.47.1.41]:22064
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S933054AbeCEKfM (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 5 Mar 2018 05:35:12 -0500
+From: Jun Li <jun.li@nxp.com>
+Subject: RE: [PATCH v2 03/12] staging: typec: tcpci: support port config
  passed via dt
-Message-ID: <20180305113005.GD10598@kuha.fi.intel.com>
+Date: Mon, 5 Mar 2018 10:35:07 +0000
+Message-ID: <VI1PR0402MB39173B772C2642C4ECC626B589DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
 References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
  <1519645759-12701-4-git-send-email-jun.li@nxp.com>
  <20180226140604.GD25535@kuha.fi.intel.com>
@@ -11,77 +16,75 @@ References: <1519645759-12701-1-git-send-email-jun.li@nxp.com>
  <20180227110302.GE25535@kuha.fi.intel.com>
  <VI1PR0402MB39176A73FBA147B7F1153EA389DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
  <20180305095346.GB10598@kuha.fi.intel.com>
- <VI1PR0402MB39173B772C2642C4ECC626B589DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
+In-Reply-To: <20180305095346.GB10598@kuha.fi.intel.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB39173B772C2642C4ECC626B589DA0@VI1PR0402MB3917.eurprd04.prod.outlook.com>
-To: Jun Li <jun.li@nxp.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "a.hajda@samsung.com" <a.hajda@samsung.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "yueyao@google.com" <yueyao@google.com>, Peter Chen <peter.chen@nxp.com>, "garsilva@embeddedor.com" <garsilva@embeddedor.com>, "o_leveque@orange.fr" <o_leveque@orange.fr>, "shufan_lee@richtek.com" <shufan_lee@richtek.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-
-On Mon, Mar 05, 2018 at 10:35:07AM +0000, Jun Li wrote:
-> > So it actually does make sense to define those properties for the
-> > "connector" node instead of TCPC parent. They are generic "Type-C"
-> > properties (right?), so we may want to use them with multiport devices as
-> > well.
-> > 
-> 
-> Yes, that's the idea of my v2, I will keep this but via fwnode_property*.
-
-Cool. While at it, can you also add a patch to this series where the
-fwnode is bind to the port? Something like this:
-
-diff --git a/drivers/staging/typec/tcpci.c b/drivers/staging/typec/tcpci.c
-index 9bd4412356c9..ac4e7605f9d5 100644
---- a/drivers/staging/typec/tcpci.c
-+++ b/drivers/staging/typec/tcpci.c
-@@ -452,6 +452,8 @@ static int tcpci_probe(struct i2c_client *client,
-        if (IS_ERR(tcpci->regmap))
-                return PTR_ERR(tcpci->regmap);
-
-+       tcpci->tcpc.fwnode = device_get_named_child_node(&client->dev, "connector");
-+
-        tcpci->tcpc.init = tcpci_init;
-        tcpci->tcpc.get_vbus = tcpci_get_vbus;
-        tcpci->tcpc.set_vbus = tcpci_set_vbus;
-diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-index f4d563ee7690..68a0ead400c0 100644
---- a/drivers/usb/typec/tcpm.c
-+++ b/drivers/usb/typec/tcpm.c
-@@ -3729,6 +3729,7 @@ struct tcpm_port *tcpm_register_port(struct device *dev, struct tcpc_dev *tcpc)
-        else
-                port->try_role = TYPEC_NO_PREFERRED_ROLE;
-
-+       port->typec_caps.fwnode = tcpc->fwnode;
-        port->typec_caps.prefer_role = tcpc->config->default_role;
-        port->typec_caps.type = tcpc->config->type;
-        port->typec_caps.revision = 0x0120;     /* Type-C spec release 1.2 */
-diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-index ca1c0b57f03f..a25ebfea054d 100644
---- a/include/linux/usb/tcpm.h
-+++ b/include/linux/usb/tcpm.h
-@@ -127,6 +127,7 @@ struct tcpc_mux_dev {
- /**
-  * struct tcpc_dev - Port configuration and callback functions
-  * @config:    Pointer to port configuration
-+ * @fwnode:    Pointer to port fwnode
-  * @get_vbus:  Called to read current VBUS state
-  * @get_current_limit:
-  *             Optional; called by the tcpm core when configured as a snk
-@@ -155,6 +156,7 @@ struct tcpc_mux_dev {
-  */
- struct tcpc_dev {
-        const struct tcpc_config *config;
-+       struct fwnode_handle *fwnode;
-
-        int (*init)(struct tcpc_dev *dev);
-        int (*get_vbus)(struct tcpc_dev *dev);
-
-
-Thanks,
-
--- 
-heikki
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEhlaWtraSBLcm9nZXJ1cyBb
+bWFpbHRvOmhlaWtraS5rcm9nZXJ1c0BsaW51eC5pbnRlbC5jb21dDQo+IFNlbnQ6IDIwMTjE6jPU
+wjXI1SAxNzo1NA0KPiBUbzogSnVuIExpIDxqdW4ubGlAbnhwLmNvbT4NCj4gQ2M6IGdyZWdraEBs
+aW51eGZvdW5kYXRpb24ub3JnOyByb2JoK2R0QGtlcm5lbC5vcmc7IGxpbnV4QHJvZWNrLXVzLm5l
+dDsNCj4gYS5oYWpkYUBzYW1zdW5nLmNvbTsgbWFyay5ydXRsYW5kQGFybS5jb207IHl1ZXlhb0Bn
+b29nbGUuY29tOw0KPiBQZXRlciBDaGVuIDxwZXRlci5jaGVuQG54cC5jb20+OyBnYXJzaWx2YUBl
+bWJlZGRlZG9yLmNvbTsNCj4gb19sZXZlcXVlQG9yYW5nZS5mcjsgc2h1ZmFuX2xlZUByaWNodGVr
+LmNvbTsgbGludXgtdXNiQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBb
+UEFUQ0ggdjIgMDMvMTJdIHN0YWdpbmc6IHR5cGVjOiB0Y3BjaTogc3VwcG9ydCBwb3J0IGNvbmZp
+Zw0KPiBwYXNzZWQgdmlhIGR0DQo+IA0KPiBPbiBNb24sIE1hciAwNSwgMjAxOCBhdCAwODo1Mzow
+MEFNICswMDAwLCBKdW4gTGkgd3JvdGU6DQo+ID4gPiBPbiBNb24sIEZlYiAyNiwgMjAxOCBhdCAw
+MjozMDo1M1BNICswMDAwLCBKdW4gTGkgd3JvdGU6DQo+ID4gPiA+ID4gPiArCWNoaWxkID0gb2Zf
+Z2V0X2NoaWxkX2J5X25hbWUodGNwY2ktPmRldi0+b2Zfbm9kZSwNCj4gImNvbm5lY3RvciIpOw0K
+PiA+ID4gPiA+ID4gKwlpZiAoIWNoaWxkKSB7DQo+ID4gPiA+ID4gPiArCQlkZXZfZXJyKHRjcGNp
+LT5kZXYsICJmYWlsZWQgdG8gZ2V0IGNvbm5lY3RvciBub2RlLlxuIik7DQo+ID4gPiA+ID4gPiAr
+CQlyZXR1cm4gLUVJTlZBTDsNCj4gPiA+ID4gPiA+ICsJfQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4g
+V2h5IGRvIHlvdSBuZWVkIHNlcGFyYXRlIGNoaWxkIG5vZGUgZm9yIHRoZSBjb25uZWN0b3I/IFlv
+dSB3aWxsDQo+ID4gPiA+ID4gYWx3YXlzIGhhdmUgb25seSBvbmUgY29ubmVjdG9yIHBlciB0Y3Bj
+LCBpLmUuIHRoZSB0Y3BjaSBhbHJlYWR5DQo+ID4gPiA+ID4gcmVwcmVzZW50cyB0aGUgY29ubmVj
+dG9yIGFuZCBhbGwgaXRzIGNhcGFiaWxpdGllcy4NCj4gPiA+ID4gPg0KPiA+ID4gPiBUaGlzIGlz
+IG15IG9yaWdpbmFsIGlkZWEsIG15IHVuZGVyc3RhbmRpbmcgaXMgUm9iIGV4cGVjdHMgdGhvc2UN
+Cj4gPiA+ID4gcHJvcGVydGllcyBzaG91bGQgYXBwbHkgZm9yIGEgY29tbW9uIHVzYiBjb25uZWN0
+b3Igbm9kZVsxXSwgdGhhdA0KPiA+ID4gPiB3YXkgSSBuZWVkIGFkZCBhIGNoaWxkIG5vZGUgZm9y
+IGl0LCBzb3JyeSBJIGRpZG4ndCBtYWtlIHRoZQ0KPiA+ID4gPiBkdC1iaW5kaW5nIHBhdGNoZXMg
+Y29tZSBmaXJzdCBpbiB0aGlzIHNlcmllcywgcGxlYXNlIHNlZSBwYXRjaCAxMCwxMS4NCj4gPiA+
+ID4NCj4gPiA+ID4gWzFdDQo+ID4gPiA+DQo+ID4gPg0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlu
+a3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGcA0KPiA+ID4gYXQN
+Cj4gPiA+ID4NCj4gPiA+DQo+IGNod29yay5rZXJuZWwub3JnJTJGcGF0Y2glMkYxMDIzMTQ0NyUy
+RiZkYXRhPTAyJTdDMDElN0NqdW4ubGklNDANCj4gPiA+IG54cC5jbw0KPiA+ID4gPg0KPiA+ID4N
+Cj4gbSU3Q2UzN2VkOGIwODQzNzRlMjQxZDJlMDhkNTdkZDFiMDJhJTdDNjg2ZWExZDNiYzJiNGM2
+ZmE5MmNkOQ0KPiA+ID4gOWM1YzMwMTYzDQo+ID4gPiA+DQo+ID4gPg0KPiA1JTdDMCU3QzAlN0M2
+MzY1NTMyNjE5NzIyMTIzNzYmc2RhdGE9aFNOaUFmWG9UVHpLM1RqamtqV283T0pMNw0KPiA+ID4g
+JTJCM2dESFQNCj4gPiA+ID4gSThOTzBGUXZpRGQ0JTNEJnJlc2VydmVkPTANCj4gPiA+DQo+ID4g
+PiBCdXQgd2FzIHRoZSBpZGVhIHJlYWxseSB0byBwdXQgcHJvcGVydGllcyBsaWtlIHRoZSBUQ1BD
+IGNhcGFiaWxpdGllcw0KPiA+ID4gdW5kZXIgdGhlIHVzYiBjb25uZWN0b3IgY2hpbGQgbm9kZT8g
+VGhhdCB3aWxsIGZvcmNlIHVzIHRvIGV4dHJhY3QNCj4gPiA+IHRoZSBzYW1lIHByb3BlcnRpZXMg
+aW4gdHdvIGRpZmZlcmVudCBtZXRob2RzIGluIGV2ZXJ5IFVTQiBUeXBlLUMNCj4gPiA+IGRyaXZl
+ci4gT25lIGV4dHJhY3RpbmcgdGhlbSBmcm9tIERULCBhbmQgYW5vdGhlciBmcm9tIG90aGVyIEZX
+DQo+IGludGVyZmFjZXMgYW5kIGJ1aWxkLWluIHByb3BlcnRpZXMuDQo+ID4gPg0KPiA+ID4gVG8g
+YXZvaWQgdGhhdCwgbGV0J3MganVzdCBleHBlY3QgdG8gZ2V0IHRoZXNlIHByb3BlcnRpZXMgaW4g
+dGhlIG5vZGUNCj4gPiA+IGZvciB0Y3BjLCBub3QgdGhlIHVzYiBjb25uZWN0b3IgY2hpbGQuDQo+
+ID4NCj4gPiBJIG1pc3VuZGVyc3Rvb2QgaXQncyBiZXR0ZXIgdG8gcHV0IHR5cGVjIHByb3BzIHVu
+ZGVyIGNvbm5lY3RvciBub2RlIGluDQo+ID4gYWxsIGNhc2VzIHNvIHdlIGNhbiBoYXZlIGEgdW5p
+ZmllZCB0eXBlYyBkZXNjcmlwdGlvbi4gQXMgUm9iIGNvbW1lbnRzDQo+ID4gdGhhdCdzIG9ubHkg
+cmVxdWlyZWQgZm9yIG11bHRpcGxlIGNvbm5lY3RvcnMgZm9yIG9uZSBjb250cm9sbGVyLCBub3QN
+Cj4gPiBmb3Igc2ltcGxlIGNvbm5lY3RvciBsaWtlIG15IGNhc2UsIEkgd2lsbCBwdXQgdGhvc2Ug
+cHJvcHMgdW5kZXIgdGNwYyBub2RlLg0KPiANCj4gSG9sZCBvbiEgSSB3YXMgbm90IGNvbnNpZGVy
+aW5nIG11bHRpLXBvcnQgUEQvVHlwZS1DIGNvbnRyb2xsZXJzLg0KPiANCj4gSSdtIHdyb25nIGFi
+b3V0IHRoZSBjaGlsZCBub2RlIGZvcmNpbmcgdXMgdG8gaGF2ZSB0d28gbWV0aG9kcyBmb3INCj4g
+ZXh0cmFjdGluZyB0aGUgcHJvcGVydGllcyBpbiB0aGUgZHJpdmVycy4gSXQgZG9lcyBtZWFuIHdl
+IGNhbiBub3QgdXNlDQo+IGRldmljZV9wcm9wZXJ0eSogZnVuY3Rpb25zIGFzIHRoZSBjaGlsZCBu
+b2RlIGlzIG5vdCAoeWV0KSBiaW5kIHRvIGFueSBzdHJ1Y3QNCj4gZGV2aWNlLCBidXQgd2UgY2Fu
+IHN0aWxsIHVzZSBmd25vZGVfcHJvcGVydHkqIGZ1bmN0aW9ucywgd2hpY2ggaXMgZmluZS4NCj4g
+DQoNClllcywgZndub2RlX3Byb3BlcnR5KiBmdW5jdGlvbiBjYW4gYmUgdXNlZCBpbiB0aGlzIGNh
+c2UuDQoNCj4gU28gaXQgYWN0dWFsbHkgZG9lcyBtYWtlIHNlbnNlIHRvIGRlZmluZSB0aG9zZSBw
+cm9wZXJ0aWVzIGZvciB0aGUNCj4gImNvbm5lY3RvciIgbm9kZSBpbnN0ZWFkIG9mIFRDUEMgcGFy
+ZW50LiBUaGV5IGFyZSBnZW5lcmljICJUeXBlLUMiDQo+IHByb3BlcnRpZXMgKHJpZ2h0PyksIHNv
+IHdlIG1heSB3YW50IHRvIHVzZSB0aGVtIHdpdGggbXVsdGlwb3J0IGRldmljZXMgYXMNCj4gd2Vs
+bC4NCj4gDQoNClllcywgdGhhdCdzIHRoZSBpZGVhIG9mIG15IHYyLCBJIHdpbGwga2VlcCB0aGlz
+IGJ1dCB2aWEgZndub2RlX3Byb3BlcnR5Ki4NCg0KPiANCj4gQnIsDQo+IA0KPiAtLQ0KPiBoZWlr
+a2kNCg==
